@@ -12,8 +12,8 @@ This repository connects the papers, formal developments, experiments, and addit
 
 | Entrance | Contents and current state |
 |---|---|
-| [Komorebi Math](docs/LIBRARIES.md#komorebi-math) | Independently staged Python library. Its selected source is R4 Block 21 on the `1.0.0b4` line. |
-| [Polyphase Float](docs/LIBRARIES.md#polyphase-float) | Independently staged C library, version 0.18.0. |
+| [Komorebi Math](docs/LIBRARIES.md#komorebi-math) | Imported Python library in its own private repository. Its selected source is R4 Block 21 on the `1.0.0b4` line. |
+| [Polyphase Float](docs/LIBRARIES.md#polyphase-float) | Imported C library, version 0.18.0, in its own private repository. |
 | [Papers](papers/README.md) | Papers I–XII and further editions, with actual import status. |
 | [Formalizations](formal/README.md) | Imported Research Preview 1 and the separate project environments still to recover. |
 | [Experiments](experiments/README.md) | AI, scientific, and computational studies being reconciled with their source and controls. |
@@ -38,7 +38,7 @@ These commands run a finite reference computation and artifact checks. The separ
 
 This is a repository assembly candidate. Imported bytes and recorded verification are distinguished from checks executed on this candidate. Selected source editions awaiting import remain visible in the contribution ledger. The historical 87-entry register is an inclusion baseline, not a current theorem census or proof of complete corpus coverage.
 
-The planned destinations are [Operation-KOMOREBI](https://github.com/KomorebiP/Operation-KOMOREBI), [komorebi-math](https://github.com/KomorebiP/komorebi-math), and [polyphase-float](https://github.com/KomorebiP/polyphase-float). These URLs are targets; their remote availability has not been confirmed for this candidate.
+The three private repositories are populated: [Operation-KOMOREBI](https://github.com/KomorebiP/Operation-KOMOREBI), [komorebi-math](https://github.com/KomorebiP/komorebi-math), and [polyphase-float](https://github.com/KomorebiP/polyphase-float). The [GitHub import status](docs/GITHUB_IMPORT_STATUS.md) binds the imported snapshots and subsequent repairs to actual remote commits and records their verification scope.
 
 [Distribution status](docs/DISTRIBUTION_STATUS.md) records component terms and unresolved choices. No blanket license is applied by this assembly.
 

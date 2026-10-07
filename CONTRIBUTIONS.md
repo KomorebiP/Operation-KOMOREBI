@@ -12,7 +12,7 @@ The [machine-readable ledger](manifests/contributions.json) contains stable iden
 | [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](papers/paper-i/README.md) | imported | Expanded written proofs, finite tests, contract rows and mapped declarations are distinct. No new Lean or numerical replay in this import. |
 | [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](papers/paper-ii/README.md) | imported | Raw original Lean transcripts were not recovered. Current evidence is static map/source reconciliation plus separately recorded computations; no new Lean replay. |
 | [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](papers/paper-iii/README.md) | imported | Expanded nonlinear/analytic work exceeds the finite formal contract. Visual/computational replay in the edition was partial; no new Lean replay in this import. |
-| [Paper IV: Cyclic analytic functions, reciprocal families, and spectral zero data](papers/paper-iv/README.md) | imported | Imported standard fact11.1 and open questions lie outside the contract. The current import checks source identity; it performs no new Lean or numerical replay. |
+| [Paper IV: Cyclic analytic functions, reciprocal families, and spectral zero data](papers/paper-iv/README.md) | imported | Imported standard fact 11.1 and open questions lie outside the contract. Fresh bounded replay passed 818 numeric rows and four rational cubic brackets; fresh Lean and complete numerical reproduction remain unexecuted. |
 | Paper V: Polyphase signal calculus | selected source pending import | Final reader edition and source candidate selected; actual import and statement/evidence reconciliation pending. |
 | Paper VI: Transfer semigroups: stochastic, Bayesian, fractional, and PDE realizations | selected source pending import | Final reader edition and source candidate selected; actual import and statement/evidence reconciliation pending. |
 | Paper VII: Quantum seed calculus | selected source pending import | Final reader edition and source candidate selected; actual import and statement/evidence reconciliation pending. |
@@ -25,8 +25,8 @@ The [machine-readable ledger](manifests/contributions.json) contains stable iden
 | Signal Reconstruction | selected source pending import | Exact imported claim scope and component verification remain pending. |
 | [Quadratic-Form Engine / K-COS](papers/quadratic-form-kcos/README.md) | imported | The Lean layer covers exact finite algebra and consequences of valid bounds. Gaussian laws, infinite COS series, the transcendental interval backend and the full Python engine remain outside it. This import performs no new Lean or numerical replay. |
 | OSL and Neuralese | selected source pending import | Historical scientific failures remain. Larger verifier attempts were incomplete; no neural retraining, population replication, or Lean proof check occurred. |
-| Komorebi Math R4 Block 21 | separate repository candidate | The 5 October independent audit found core certificate/arithmetic and optimizer defects; current repair and documentation reconciliation are component-specific. |
-| Polyphase Float 0.18.0 | separate repository candidate | Existing LGPL-3.0-or-later terms; signed-zero and interval-factorial audit findings require exact revision-specific treatment. |
+| Komorebi Math R4 Block 21 | separate repository populated | The 5 October independent audit found core certificate/arithmetic and optimizer defects; current repair and documentation reconciliation are component-specific. |
+| Polyphase Float 0.18.0 | separate repository populated | Existing LGPL-3.0-or-later terms; signed-zero and interval-factorial audit findings require exact revision-specific treatment. |
 
 ## Historical Part I register
 
@@ -126,6 +126,6 @@ Later editions are selected above. They do not silently erase earlier results or
 
 ## Dispositions
 
-An imported component has actual source at the named directory. A selected source pending import has a resolved candidate but no claimed source availability here. Historical entries awaiting source reconciliation preserve the contribution while its exact current source and evidence are recovered. Independent libraries are staged separately and await actual remote revision bindings.
+An imported component has actual source at the named directory. A selected source pending import has a resolved candidate but no claimed source availability here. Historical entries awaiting source reconciliation preserve the contribution while its exact current source and evidence are recovered. Independent libraries are populated in separate private repositories; [GitHub import status](docs/GITHUB_IMPORT_STATUS.md) records their actual revisions and qualification scope.
 
 No content is called a superseded duplicate without byte/content preservation evidence. Open mathematics does not erase its completed subresults. See [distribution status](docs/DISTRIBUTION_STATUS.md) for component terms and publication decisions.
