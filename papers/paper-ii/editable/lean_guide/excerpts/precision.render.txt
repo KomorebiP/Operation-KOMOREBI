@@ -1,0 +1,16 @@
+structure PrecisionCertificate \{R : Type u\} \{S : Type v\} [Ring R] [Ring S]
+    (filtration : MultiplicativeFiltration R) (q : R →+* S) (L : ℕ) : Prop where
+  map_eq_zero : ∀ \{x : R\}, filtration.Mem L x → q x = 0
+
+/-- A transfer word whose cumulative weight reaches `L` vanishes in every realization carrying a
+precision-`L` certificate. -/
+theorem wordProduct_vanishes_at_precision \{R : Type u\} \{S : Type v\}
+    [Ring R] [Ring S] (filtration : MultiplicativeFiltration R)
+    (q : R →+* S) (L : ℕ) (certificate : PrecisionCertificate filtration q L)
+    \{E : Type w\} (weight : E → ℕ) (edge : E → R)
+    (hedge : ∀ e, filtration.Mem (weight e) (edge e))
+    (word : List E) (hweight : L ≤ wordWeight weight word) :
+    q (wordProduct edge word) = 0 := by
+  apply certificate.map_eq_zero
+  apply filtration.antitone hweight
+  exact filtration.wordProduct_mem weight edge hedge word

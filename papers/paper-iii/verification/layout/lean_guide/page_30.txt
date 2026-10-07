@@ -1,0 +1,38 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+lake --wfail build
+python3 scripts/verify_theorem_map.py
+lake env lean -E warning KomorebiPaperIII/KernelAudit.lean
+Retain the exit code and the complete standard output and error stream for every command. The
+first command builds the project. The second checks the human map against the compiled envi-
+ronment and the original manuscript. The third regenerates the axiom reports and namespace
+result. A missing dependency, toolchain failure, timeout, or nonzero exit is not a passing proof
+run.
+The release also supplies bash VERIFY.sh --full. That path creates a temporary copy, regenerates
+figures, runs Lean and its gates, rebuilds the original finite manuscript, and verifies the original
+artifact hashes. It requires its documented TeX, graphics, Python, and Lean dependencies. It
+verifies the preserved finite release, not the newly expanded companion PDF.
+7.6 Rebuilding this guide
+In the editable guide directory, python3 build.py runs XeLaTeX four times on the supplied source
+and generated data. It does not invoke Lean and does not regenerate data. This separation allows
+a typesetting replay without changing the preserved provenance tables.
+To regenerate the guide’s static data, run build_guide_data.py --source PATH, where PATH is the
+preserved finite release root containing formalization/lean, kernel_audit_output.txt, and SHA2
+56SUMS.txt. In the delivered package, the default points to ../../source/finite. The generator
+uses only Python’s standard library and never edits the source release.
+The data generator writes the complete map, lexical source locations, import list, pins, exact ex-
+cerpts, and static audit. The traditional-paper locator table is editorial navigation supplied by the
+adjacent traditional source directory or the explicit --traditional argument. Changing a locator
+does not alter the theorem map or extend the formal contract.
+7.7 The edition’s verification boundary
+The current guide has source-exact excerpts, a complete 41-row map, a preserved inherited tran-
+script, and fresh static reconciliation. Its PDF is newly compiled and inspected. The broader pack-
+age separately records computational checks and the traditional paper’s bounded mathematical
+review. These records have distinct subjects and should not be combined into an unsupported
+claim that every new ordinary theorem was freshly proved in Lean.
+The finite v1.0.1 contract is a concrete formal accomplishment with explicit types and evidence. Its
+boundary is just as concrete. A future formal expansion should add the missing types and proofs,
+update the map deliberately, execute the pinned or newly documented environment, and retain
+the new transcript.
+29

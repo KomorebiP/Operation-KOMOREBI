@@ -1,0 +1,62 @@
+name: Pinned Lean replay (manual release gate)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lean-replay-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  lean-proof-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      LEAN_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - name: Check the sealed source before bootstrap
+        run: python -B tools/check_github_ready.py
+      - name: Obtain the pinned toolchain and locked mathlib cache
+        id: bootstrap
+        uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596 # v1.6.0
+        with:
+          lake-package-directory: padic
+          auto-config: 'false'
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'true'
+          use-github-cache: 'false'
+          check-reservoir-eligibility: 'false'
+          leanchecker: 'false'
+          nanoda: 'false'
+          axiom-audit: 'false'
+      - name: Recheck frozen files after public dependency bootstrap
+        run: python -B tools/check_github_ready.py
+      - name: Clean project build, full axiom inventories, and strict negative controls
+        id: proof_replay
+        run: python -B tools/replay_lean.py --clean --timeout 1800 --output padic/results/github_lean_replay
+      - name: Validate the full receipt against this checkout
+        run: python -B tools/check_proof_receipt.py padic/results/github_lean_replay
+      - name: Record bootstrap and proof step outcomes even after failure
+        if: always()
+        env:
+          BOOTSTRAP_OUTCOME: ${{ steps.bootstrap.outcome }}
+          REPLAY_OUTCOME: ${{ steps.proof_replay.outcome }}
+        run: python -B tools/record_workflow_context.py --output padic/results/github_lean_replay/WORKFLOW_CONTEXT.json
+      - name: Recheck frozen files even after a failed proof replay
+        if: always()
+        run: python -B tools/check_github_ready.py
+      - name: Retain fresh proof receipts separately from historical evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lean-replay-${{ github.sha }}-${{ github.run_attempt }}
+          path: padic/results/github_lean_replay/
+          if-no-files-found: warn
+          retention-days: 30

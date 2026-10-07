@@ -1,0 +1,51 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+2.3 From a transfer power to a finite walk sum
+The transfer operator is 𝑇= ∑𝑒∈𝐸𝐸𝑒. Four related objects are kept separate:
+1. wordExpansion recursively left-multiplies by 𝑇.
+2. tupleWordOp converts a tuple Fin n →E to an execution list.
+3. explicitWordExpansion sums every length-𝑛tuple.
+4. walkExpansion keeps precisely the composable tuples.
+At length zero there is one empty tuple, not zero tuples. Its contribution is the identity. This is
+why the explicit sum agrees with 𝑇0.
+To pass from length 𝑛to length 𝑛+ 1, the proof separates a tuple into its first 𝑛entries and its
+final entry. Fin.snocEquiv supplies the finite indexing equivalence. Appending that final edge
+left-multiplies the already executed prefix.
+Source: KomorebiPaperIII/EdgeOperators.lean.
+theorem explicitWordExpansion_succ
+[Fintype E] [Fintype V] [DecidableEq V] [Semiring R]
+(n : ℕ) :
+explicitWordExpansion G S (n + 1) =
+transferOp G S * explicitWordExpansion G S n := by
+unfold explicitWordExpansion
+rw [←(Fin.snocEquiv (fun _ : Fin (n + 1) ↦E)).sum_comp]
+rw [Fintype.sum_prod_type]
+change (∑final : E, ∑prior : Fin n →E,
+tupleWordOp G S (n + 1) (Fin.snoc prior final)) = _
+simp only [tupleWordOp_snoc]
+unfold transferOp
+rw [Finset.sum_mul]
+simp_rw [Finset.mul_sum]
+This is a finite distributivity argument. It uses neither an infinite geometric series nor a conver-
+gence limit. The proof then identifies the recursive expansion with the explicit tuple sum by in-
+duction on 𝑛.
+Pruning the tuple sum uses the broken-word theorem term by term:
+Source: KomorebiPaperIII/EdgeOperators.lean.
+theorem explicitWordExpansion_eq_walkExpansion
+[Fintype E] [Fintype V] [DecidableEq V] [Semiring R]
+(n : ℕ) :
+explicitWordExpansion G S n = walkExpansion G S n := by
+classical
+unfold explicitWordExpansion walkExpansion
+apply Finset.sum_congr rfl
+intro word _
+by_cases hwalk : Composable G (List.ofFn word)
+· simp [hwalk]
+· have hzero : tupleWordOp G S n word = 0 :=
+wordOp_eq_zero_of_not_composable G S (List.ofFn word) hwalk
+simp [hwalk, hzero]
+When a tuple is composable, the filtered term is unchanged. When it is not, its unfiltered operator
+was already zero. Combining this equality with the recursive power identity gives transferOp_p
+ow_eq_walkExpansion.
+8

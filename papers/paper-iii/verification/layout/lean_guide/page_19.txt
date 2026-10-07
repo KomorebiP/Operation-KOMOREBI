@@ -1,0 +1,20 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem indexedPathTransport_eq_direct_of_flat (hflat : C.Flat) :
+∀{a b : X} (path : VertexPath X a b),
+indexedPathTransport C path = C.transport a b := by
+intro a b path
+induction path with
+| nil a => exact (C.transport_self a).symm
+| cons a b c rest ih =>
+simp only [indexedPathTransport]
+rw [ih]
+exact hflat a b c
+The loop corollary takes path : VertexPath X a a. Its output is then already an automorphism
+of F a, and the self law identifies it with the identity. This avoids an extra coercion between a
+computed endpoint and the initial vertex.
+The paths are finite syntax. Nothing here states that an infinite composition exists or that approx-
+imating finite paths converge. The finite endpoint theorem is exact on its stated domain.
+18

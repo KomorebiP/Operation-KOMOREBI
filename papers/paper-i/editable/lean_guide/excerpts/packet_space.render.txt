@@ -1,0 +1,23 @@
+/-- The explicit product of the projector ranges. -/
+abbrev PacketSpace (P : LinearProjectorFamily R M ι) : Type max v w :=
+  (i : ι) → LinearMap.range (P.proj i)
+
+/-- Analysis, with each projected value certified to lie in its projector range. -/
+def rangeAnalysis (P : LinearProjectorFamily R M ι) : M →ₗ[R] PacketSpace P where
+  toFun x i := ⟨P.proj i x, ⟨x, rfl⟩⟩
+  map_add' x y := by
+    funext i
+    apply Subtype.ext
+    exact (P.proj i).map_add x y
+  map_smul' c x := by
+    funext i
+    apply Subtype.ext
+    exact (P.proj i).map_smul c x
+
+/-- Synthesis is the direct finite sum of packet values. -/
+def rangeSynthesis (P : LinearProjectorFamily R M ι) : PacketSpace P →ₗ[R] M where
+  toFun packets := ∑ i, (packets i : M)
+  map_add' packets packets' := by
+    simp only [Pi.add_apply, Submodule.coe_add, Finset.sum_add_distrib]
+  map_smul' c packets := by
+    simp only [Pi.smul_apply, SetLike.val_smul, Finset.smul_sum, RingHom.id_apply]

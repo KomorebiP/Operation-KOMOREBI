@@ -1,0 +1,18 @@
+/-- First-isomorphism presentation for one seed, with its exact range. -/
+noncomputable def oneSeedQuotientEquivRange (x : M) :
+    (A ⧸ LinearMap.ker (oneSeedMap A M x)) ≃ₗ[A]
+      LinearMap.range (oneSeedMap A M x) :=
+  (oneSeedMap A M x).quotKerEquivRange
+
+/--
+The range-valued quotient equivalence is the canonical presentation map:
+the class of `a` is sent to the range element represented by `a • x`.
+This is the explicit glue between the first-isomorphism construction and the
+formula used in the manuscript.
+-/
+@[simp]
+theorem oneSeedQuotientEquivRange_apply_mk (x : M) (a : A) :
+    (oneSeedQuotientEquivRange A M x) (Submodule.Quotient.mk a) =
+      ⟨a • x, by
+        exact ⟨a, rfl⟩⟩ := by
+  rfl

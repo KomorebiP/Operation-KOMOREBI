@@ -1,0 +1,170 @@
+{
+  "schema": "komorebi.psci.typed_signatures.v1",
+  "count": 20,
+  "records": {
+    "PSC-I-D-SEED-SYSTEM": {
+      "params": [
+        "A:OperatorAlgebra",
+        "M:Module(A)",
+        "S:FiniteFamily(M)"
+      ],
+      "returns": "SeedSystem(A,M,S)"
+    },
+    "PSC-I-D-GENERATED-HULL": {
+      "params": [
+        "A:OperatorAlgebra",
+        "M:Module(A)",
+        "S:Family(M)"
+      ],
+      "returns": "Submodule(M)"
+    },
+    "PSC-I-D-SEED-RANK": {
+      "params": [
+        "A:OperatorAlgebra",
+        "M:Module(A)"
+      ],
+      "returns": "Cardinal"
+    },
+    "PSC-I-D-PACKET-SYSTEM": {
+      "params": [
+        "K:Field",
+        "X:VectorSpace(K)",
+        "I:FiniteIndexSet",
+        "P:I\u2192End(X)"
+      ],
+      "requires": [
+        "idempotent(P)",
+        "pairwise_annihilating(P)",
+        "sum(P)=id_X"
+      ],
+      "returns": "PacketSystem(X,I)"
+    },
+    "PSC-I-D-ANALYSIS-SYNTHESIS": {
+      "params": [
+        "P:PacketSystem(X,I)"
+      ],
+      "returns": [
+        "Analyze_P:X\u2192DirectSum(I,PacketSpace(P,i))",
+        "Synthesize_P:DirectSum(I,PacketSpace(P,i))\u2192X"
+      ]
+    },
+    "PSC-I-T-EXACT-PACKET-COORDINATES": {
+      "params": [
+        "P:PacketSystem(X,I)"
+      ],
+      "returns": "Equivalence(X,DirectSum(I,PacketSpace(P,i)))",
+      "certificate": "exact_inverse"
+    },
+    "PSC-I-D-TRANSFER-BLOCK": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "T:End(X)",
+        "alpha:I",
+        "beta:I"
+      ],
+      "returns": "LinearMap(PacketSpace(P,alpha),PacketSpace(P,beta))"
+    },
+    "PSC-I-T-OPERATOR-RECONSTRUCTION": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "T:End(X)"
+      ],
+      "returns": "Equality(T,Sum(alpha,beta,TransferBlock(P,T,beta,alpha)))"
+    },
+    "PSC-I-T-BLOCK-MULTIPLICATION": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "S:End(X)",
+        "T:End(X)",
+        "alpha:I",
+        "gamma:I"
+      ],
+      "returns": "Equality(Block(S\u2218T,gamma,alpha),Sum(beta,Block(S,gamma,beta)\u2218Block(T,beta,alpha)))"
+    },
+    "PSC-I-C-BLOCK-POWERS": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "T:End(X)",
+        "m:Nat"
+      ],
+      "returns": "PacketPathExpansion(T,m)"
+    },
+    "PSC-I-T-BLOCK-INTERTWINING": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "Q:PacketSystem(Y,J)",
+        "T:End(X)",
+        "S:End(Y)",
+        "U:LinearMap(X,Y)"
+      ],
+      "returns": "Iff(U\u2218T=S\u2218U,LocalBlockIntertwining(P,Q,T,S,U))"
+    },
+    "PSC-I-T-BLOCK-ALGEBRA": {
+      "params": [
+        "P:PacketSystem(X,I)"
+      ],
+      "returns": "AlgebraEquiv(End(X),DependentBlockAlgebra(P))"
+    },
+    "PSC-I-D-SUPPORT-RELATION": {
+      "params": [
+        "I:FiniteIndexSet",
+        "R:Relation(I)"
+      ],
+      "returns": "SupportSpace(R)"
+    },
+    "PSC-I-T-COORDINATE-TRANSPORT": {
+      "params": [
+        "U:LinearEquiv(X,Y)",
+        "P:PacketSystem(X,I)",
+        "T:End(X)"
+      ],
+      "returns": "TransportedPacketOperator(U,P,T)"
+    },
+    "PSC-I-T-PACKET-EXACT-SEQUENCE": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "K:InvariantSubspace(P)"
+      ],
+      "returns": "PacketwiseShortExactSequence(K,X,X/K)"
+    },
+    "PSC-I-T-QUOTIENT-PACKET-DESCENT": {
+      "params": [
+        "P:PacketSystem(X,I)",
+        "K:InvariantSubspace(P)"
+      ],
+      "returns": "PacketSystem(X/K,I)"
+    },
+    "PSC-I-T-NATURALITY": {
+      "params": [
+        "Phi:PacketCompatibleOperatorMorphism",
+        "S:SeedSet"
+      ],
+      "returns": "NaturalityCertificate(Phi,S)"
+    },
+    "PSC-I-D-REALIZATION-FUNCTOR": {
+      "params": [
+        "F:AdditiveFunctor(C,D)",
+        "profile:PreservationProfile"
+      ],
+      "returns": "RealizationFunctor(C,D,profile)"
+    },
+    "PSC-I-T-REALIZATION-EXPORT": {
+      "params": [
+        "Theta:TheoremRecord",
+        "F:RealizationFunctor"
+      ],
+      "requires": [
+        "operations_used(Theta)\u2286verified_preservation(F)",
+        "target_hypotheses_verified"
+      ],
+      "returns": "TransportCertificate(Theta,F)"
+    },
+    "PSC-I-D-SEMANTIC-REALIZATION": {
+      "params": [
+        "Theta:TheoremRecord",
+        "F:RealizationFunctor"
+      ],
+      "returns": "SemanticRealizationCriterion(Theta,F)"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+3 Heterogeneous products and exact coordinates
+3.1 What varies in a heterogeneous path
+There are two different kinds of heterogeneity. The matrix factor may change at every step while
+the packet index type stays fixed. Alternatively, the source, intermediate, and target packet types
+themselves may differ. The formal component includes an arbitrary-length theorem of the first
+kind and separate two- and three-step theorems of the second kind.
+The two-step statement exposes its types completely:
+Source: KomorebiPaperIII/EdgeExtensions.lean.
+theorem heterogeneousPacketPathExpansion_two
+{I0 : Type u0} {I1 : Type u1} {I2 : Type u2}
+[Fintype I1] [NonUnitalNonAssocSemiring R]
+(first : Matrix I1 I0 R) (second : Matrix I2 I1 R)
+(source : I0) (target : I2) :
+(second * first) target source =
+∑middle : I1, second target middle * first middle source := by
+rw [Matrix.mul_apply]
+Only the intermediate type I1 needs a finite enumeration. The source and target types are not
+enumerated in this entrywise identity. The coefficient hypothesis is NonUnitalNonAssocSemiring R;
+no multiplicative unit or associativity is needed for a single two-factor entry sum.
+The three-step statement introduces two finite intermediate types and a semiring:
+Source: KomorebiPaperIII/EdgeExtensions.lean.
+theorem heterogeneousPacketPathExpansion_three
+{I0 : Type u0} {I1 : Type u1} {I2 : Type u2} {I3 : Type u3}
+[Fintype I1] [Fintype I2] [Semiring R]
+(first : Matrix I1 I0 R) (second : Matrix I2 I1 R)
+(third : Matrix I3 I2 R) (source : I0) (target : I3) :
+((third * second) * first) target source =
+∑middle2 : I2, ∑middle1 : I1,
+(third target middle2 * second middle2 middle1) * first middle1 source := by
+rw [Matrix.mul_apply]
+simp_rw [Matrix.mul_apply, Finset.sum_mul]
+rw [Finset.sum_comm]
+The parentheses on the coefficient product match (third * second) * first. The proof expands
+matrix multiplication twice, distributes multiplication across a finite sum, and exchanges the two
+finite sums. It does not coerce three different packet index types into one.
+3.2 Arbitrary finite length on one packet type
+heterogeneousProduct evaluates a list of square matrices in execution order. The head acts first
+and appears on the right. heterogeneousPathSum independently sums the intermediate packet at
+each recursive step. Its empty case is the identity coefficient, equal to one when source and target
+agree and zero otherwise.
+11

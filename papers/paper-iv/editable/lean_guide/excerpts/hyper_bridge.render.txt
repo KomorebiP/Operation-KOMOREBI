@@ -1,0 +1,35 @@
+theorem entireTransfer_hypergeometric \{N j : ℕ\} (hN : 0 < N) (hj : j < N)
+    \{omega : ℂ\} (ho : IsPrimitiveRoot omega N) (lambda z : ℂ) :
+    entireTransfer N j omega lambda z =
+      (lambda*z)^j / (j.factorial : ℂ) *
+        residueHypergeometric N j ((lambda*z)^N / (N : ℂ)^N) := by
+  let f := fun m => PowerSeries.coeff m (transferSection N j lambda) * z^m
+  have hi : Function.Injective (fun q : ℕ => N*q+j) := by
+    intro a b h
+    exact Nat.eq_of_mul_eq_mul_left hN (Nat.add_right_cancel h)
+  have hf : ∀ m, m ∉ Set.range (fun q : ℕ => N*q+j) → f m = 0 := by
+    intro m hm
+    have he : m%N ≠ j := by
+      intro he
+      apply hm
+      use m/N
+      change N*(m/N)+j=m
+      rw [← he, Nat.add_comm, Nat.mod_add_div]
+    simp [f, coeff_transferSection, transferSectionCoeff, he]
+  have ha := (hi.hasSum_iff hf).2 (hasSum_entireTransfer hN hj ho lambda z)
+  have hh := (residueHypergeometric_hasSum hN hj ((lambda*z)^N / (N : ℂ)^N)).mul_left
+    ((lambda*z)^j / (j.factorial : ℂ))
+  apply ha.unique
+  apply hh.congr_fun
+  intro q
+  dsimp [Function.comp_def, f]
+  rw [coeff_transferSection, transferSectionCoeff,
+    show (N*q+j)%N = j by simp [Nat.add_mod, Nat.mod_eq_of_lt hj]]
+  simp only [one_div, map_inv₀, map_natCast]
+  have hn := congrArg (fun a : ℚ => (a : ℂ)) (residueZeroFCoeff_normalization hN j q)
+  push_cast at hn
+  rw [← hn]
+  simp only [div_eq_mul_inv, mul_pow, inv_pow, ← pow_mul]
+  rw [pow_add, pow_add]
+  simp only [ite_true]
+  ring

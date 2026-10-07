@@ -1,0 +1,18 @@
+/-- If a continuous packet projector annihilates an algebraic generated
+hull, then it also annihilates its closed topological hull. -/
+theorem closure_le_ker_of_le_ker
+    (Q : X →L[𝕜] X) (H : Submodule 𝕜 X) (hH : H ≤ Q.ker) :
+    H.topologicalClosure ≤ Q.ker :=
+  Submodule.topologicalClosure_minimal H hH (ContinuousLinearMap.isClosed_ker Q)
+
+/-- A nonzero unreachable packet prevents topological generation. -/
+theorem topological_reachability_obstruction
+    (Q : X →L[𝕜] X) (H : Submodule 𝕜 X)
+    (hQ : Q ≠ 0) (hH : H ≤ Q.ker) :
+    H.topologicalClosure ≠ ⊤ := by
+  intro htop
+  apply hQ
+  apply ContinuousLinearMap.ext
+  intro x
+  have hx : x ∈ H.topologicalClosure := by rw [htop]; trivial
+  exact (closure_le_ker_of_le_ker Q H hH hx : Q x = 0)

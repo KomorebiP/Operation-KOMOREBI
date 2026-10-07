@@ -1,0 +1,51 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Source: KomorebiPaperIII/EdgeOperators.lean.
+def wordOp [Fintype V] [DecidableEq V] [Semiring R]
+(G : PacketGraph V E) (S : EdgeSystem G R) : List E →Matrix V V R
+| [] => 1
+| e :: rest => wordOp G S rest * edgeOp G S e
+@[simp] theorem wordOp_nil [Fintype V] [DecidableEq V] [Semiring R] :
+wordOp G S [] = 1 :=
+rfl
+@[simp] theorem wordOp_singleton [Fintype V] [DecidableEq V] [Semiring R]
+(e : E) : wordOp G S [e] = edgeOp G S e := by
+simp [wordOp]
+Thus [e,f,g] evaluates to 𝐸𝑔𝐸𝑓𝐸𝑒. The empty list evaluates to the identity matrix, including when
+the finite vertex type is empty. The formal definitions cover the empty case directly.
+The concatenation law is an efficient test of orientation:
+Source: KomorebiPaperIII/EdgeOperators.lean.
+theorem wordOp_append [Fintype V] [DecidableEq V] [Semiring R]
+(first second : List E) :
+wordOp G S (first ++ second) = wordOp G S second * wordOp G S first := by
+induction first with
+| nil => simp
+| cons e rest ih =>
+simp [wordOp, ih, Matrix.mul_assoc]
+The operator for first ++ second is the operator for second multiplied by the operator for first.
+The proof is list induction plus associativity. Its order is essential in a noncommutative coefficient
+system.
+The next theorem removes every word with a broken interface, not just a break at the start.
+Source: KomorebiPaperIII/EdgeOperators.lean.
+theorem wordOp_eq_zero_of_not_composable
+[Fintype V] [DecidableEq V] [Semiring R]
+(word : List E) (h : ¬ Composable G word) :
+wordOp G S word = 0 := by
+induction word with
+| nil => simp [Composable] at h
+| cons e rest ih =>
+cases rest with
+| nil => simp [Composable] at h
+| cons f tail =>
+simp only [Composable, not_and_or] at h
+rcases h with hbreak | htail
+· exact wordOp_eq_zero_of_first_break G S e f tail hbreak
+· change wordOp G S (f :: tail) * edgeOp G S e = 0
+rw [ih htail]
+simp
+The induction distinguishes a first-pair mismatch from a mismatch in the tail. The former invokes
+the two-edge support result. The latter uses the induction hypothesis to make the tail operator zero.
+Empty and singleton words cannot satisfy the noncomposability hypothesis, so those branches
+eliminate a contradiction.
+7

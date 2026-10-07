@@ -1,0 +1,17 @@
+def smithZModMulHom (p weight depth : ℕ) :
+    ZMod (p ^ depth) →+ ZMod (p ^ depth) :=
+  nsmulAddMonoidHom (p ^ weight)
+
+/-- The actual solution fibre of the one-coordinate Smith congruence
+`p ^ weight * x = target` modulo `p ^ depth`. -/
+abbrev SmithZModFiber (p weight depth : ℕ) (target : ZMod (p ^ depth)) :=
+  ↥(smithZModMulHom p weight depth ⁻¹' \{target\})
+
+/-- The concrete fibre is finite, inherited from the finite quotient `ZMod (p ^ depth)`. -/
+noncomputable instance smithZModFiberFintype (p weight depth : ℕ) [NeZero (p ^ depth)]
+    (target : ZMod (p ^ depth)) : Fintype (SmithZModFiber p weight depth target) :=
+  Fintype.ofFinite _
+
+/-- Concrete divisibility admissibility for a one-coordinate Smith congruence. -/
+def SmithZModAdmissible (p weight depth : ℕ) (target : ZMod (p ^ depth)) : Prop :=
+  p ^ min weight depth ∣ target.val

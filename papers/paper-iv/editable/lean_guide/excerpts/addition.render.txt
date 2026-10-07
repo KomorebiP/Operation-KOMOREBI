@@ -1,0 +1,7 @@
+theorem reciprocalCoeff_addition (N n : ℕ) (r s : R) :
+    reciprocalCoeff N n (r + s) =
+      ∑ q ∈ Finset.range (n + 1),
+        ((N * n).choose (N * q) : R) *
+          reciprocalCoeff N q r * reciprocalCoeff N (n - q) s := by
+  exact reciprocal_block_convolution
+    (constantCoeff_negativeLogDenominator N) N n r s

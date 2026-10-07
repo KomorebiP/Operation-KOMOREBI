@@ -1,0 +1,6 @@
+theorem pointwiseRootAverage_projector {N : ℕ} (hN : 0 < N) {omega : ℂ}
+    (ho : IsPrimitiveRoot omega N) (i j : ℕ) (f : ℂ → ℂ) (z : ℂ) :
+    pointwiseRootAverage N i omega (pointwiseRootAverage N j omega f) z =
+      if j % N = i % N then pointwiseRootAverage N j omega f z else 0 := by
+  exact pointwiseRootAverage_of_covariant hN ho (mapsTo_univ _ _) i j _
+    (fun w _ => pointwiseRootAverage_covariant hN ho j f w) (mem_univ z)

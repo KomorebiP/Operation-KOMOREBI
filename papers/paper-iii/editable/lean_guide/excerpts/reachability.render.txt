@@ -1,0 +1,15 @@
+theorem transferOp_pow_mulVec_apply_eq_zero_of_unreachable_support
+    [Fintype E] [Fintype V] [DecidableEq V] [Semiring R]
+    (n : ℕ) (x : V → R) (support : Set V) (target : V)
+    (hx : ∀ source, source ∉ support → x source = 0)
+    (hunreachable : ∀ source, source ∈ support → ¬ Reachable G source target) :
+    ((transferOp G S ^ n) *ᵥ x) target = 0 := by
+  rw [Matrix.mulVec_apply_eq_sum]
+  apply Finset.sum_eq_zero
+  intro source _
+  by_cases hsource : source ∈ support
+  · rw [transferOp_pow_apply_eq_zero_of_not_reachable G S n source target
+      (hunreachable source hsource)]
+    simp
+  · rw [hx source hsource]
+    simp

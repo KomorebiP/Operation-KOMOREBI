@@ -1,0 +1,14 @@
+theorem heterogeneousPacketPathExpansion
+    [Fintype V] [DecidableEq V] [Semiring R]
+    (steps : List (Matrix V V R)) (source target : V) :
+    heterogeneousProduct steps target source =
+      heterogeneousPathSum steps source target := by
+  induction steps generalizing source target with
+  | nil =>
+      by_cases h : source = target
+      · subst target
+        simp [heterogeneousProduct, heterogeneousPathSum]
+      · have hreverse : target ≠ source := fun h' => h h'.symm
+        simp [heterogeneousProduct, heterogeneousPathSum, hreverse]
+  | cons step rest ih =>
+      simp [heterogeneousProduct, heterogeneousPathSum, Matrix.mul_apply, ih]

@@ -1,0 +1,33 @@
+name: Extended reference audit (finite evidence)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reference-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.13'
+      - name: Check frozen source before execution
+        run: python -B tools/check_github_ready.py
+      - name: Install pinned reference dependency
+        run: python -m pip install --disable-pip-version-check -r padic/requirements-reference.txt
+      - name: Run exact reference audit (not a Lean proof)
+        run: python -B padic/verification/audit_residual.py
+      - name: Recheck source after execution
+        if: always()
+        run: python -B tools/check_github_ready.py
+      - name: Retain fresh finite evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: reference-audit-${{ github.sha }}-${{ github.run_attempt }}
+          path: padic/results/audit_residual.json
+          if-no-files-found: warn
+          retention-days: 14

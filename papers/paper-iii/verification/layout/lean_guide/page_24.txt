@@ -1,0 +1,38 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Source: KomorebiPaperIII/HolonomyBlocks.lean.
+theorem block_gauge_of_commutes
+(gauge : M ≃ₗ[R] M) (map : M →ₗ[R] M)
+(hpreserves : P.PacketPreserving gauge) (target source : I) :
+P.block (gaugeConjugate gauge map) target source =
+gaugeConjugate gauge (P.block map target source) := by
+ext value
+simp only [block, gaugeConjugate, LinearMap.comp_apply,
+LinearEquiv.coe_toLinearMap]
+have htarget (y : M) :
+P.projector target (gauge y) = gauge (P.projector target y) :=
+(LinearMap.congr_fun (hpreserves target) y).symm
+have hsource :
+gauge.symm (P.projector source value) =
+P.projector source (gauge.symm value) :=
+LinearMap.congr_fun
+(P.symm_commutes_of_packetPreserving gauge hpreserves source) value
+calc
+P.projector target
+(gauge (map (gauge.symm (P.projector source value)))) =
+gauge
+(P.projector target
+(map (gauge.symm (P.projector source value)))) :=
+htarget _
+_ = gauge
+(P.projector target
+(map (P.projector source (gauge.symm value)))) := by
+rw [hsource]
+Consequently each block is conjugated separately, and each block’s zero or nonzero status is in-
+variant. Row 37 specializes this statement to a triangle obstruction and requires P.PacketPreser
+ving (G a) at the base vertex.
+An arbitrary gauge need not preserve the blocks of a fixed resolution. The unconditional fact
+is conjugation of the total obstruction. The conditional fact is conjugation of each fixed block.
+Keeping those hypotheses distinct is essential when interpreting a packet obstruction diagram.
+23

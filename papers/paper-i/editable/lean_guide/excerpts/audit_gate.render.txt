@@ -1,0 +1,22 @@
+run_cmd do
+  let env ← getEnv
+  let mut audited : Nat := 0
+  for (name, info) in env.checked.get.constants.toList do
+    if Name.isPrefixOf `Komorebi name || Name.isPrefixOf `KomorebiVerification name then
+      audited := audited + 1
+      if info.isUnsafe then
+        throwError "unsafe project declaration: \{name\}"
+      match info with
+      | .axiomInfo _ =>
+          throwError "project axiom declaration: \{name\}"
+      | .opaqueInfo _ =>
+          throwError "opaque project declaration: \{name\}"
+      | _ => pure ()
+      let axioms ← Lean.collectAxioms name
+      for axiomName in axioms do
+        unless axiomName == ``propext || axiomName == ``Classical.choice ||
+            axiomName == ``Quot.sound do
+          throwError "unexpected axiom \{axiomName\} in project declaration \{name\}"
+  if audited == 0 then
+    throwError "kernel audit found no project declarations"
+  logInfo m!"FAIL-CLOSED KERNEL AUDIT PASS: \{audited\} project declarations; allowed axioms only: propext, Classical.choice, Quot.sound"

@@ -1,0 +1,51 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+The forward direction rewrites the map as its double block sum. The reverse direction substitutes
+the zero map into the definition of a block. This result is a detector for the whole map even when
+the projectors overlap.
+5.4 Extracting a packet-supported witness
+Idempotence is needed for the stronger witness statement:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem exists_packetWitness_of_block_ne_zero
+(A : M →ₗ[R] M) (mu nu : I) (hne : P.block A mu nu ≠0) :
+∃x, P.projector nu x = x ∧P.projector mu (A x) ≠0 := by
+classical
+have hexists : ∃y, P.block A mu nu y ≠0 := by
+by_contra h
+apply hne
+ext y
+by_contra hy
+exact h ⟨y, hy⟩
+rcases hexists with ⟨y, hy⟩
+refine ⟨P.projector nu y, ?_, ?_⟩
+· have hid := congrArg (fun L : M →ₗ[R] M ↦L y) (P.idempotent nu)
+simpa using hid
+· simpa [block] using hy
+A nonzero block supplies some vector 𝑦on which that block is nonzero. The proof then takes
+𝑥= 𝑃𝜈𝑦. Idempotence ensures 𝑃𝜈𝑥= 𝑥, and the original nonzero block value becomes 𝑃𝜇𝐴𝑥≠0.
+The extraction is classical. It proves existence and does not supply a numerical search routine for
+an arbitrary module. Its input is a proof that a block is nonzero. It does not decide that predicate
+for the user.
+Apply these results to 𝑂= 𝐻−𝐼on the base fiber of a fixed triangle. The declarations in rows 33
+and 34 show
+Δ = 0
+⟺
+𝐻= 𝐼
+⟺
+𝑂= 0
+⟺
+(∀𝜇, 𝜈) 𝑃𝜇𝑂𝑃𝜈= 0.
+The complete-map theorem obstructionDetection_equivalences records the three equivalences
+joining these four criteria. Nonzero obstruction blocks inherit the packet-supported witness theo-
+rem.
+5.5 When a fixed packet pattern survives a gauge
+Total obstruction always transforms by conjugation at the base vertex. For a fixed packet family to
+transform block by block, the gauge must commute with every projector.
+Source: KomorebiPaperIII/HolonomyBlocks.lean.
+def PacketPreserving (gauge : M ≃ₗ[R] M) : Prop :=
+∀packet, gauge.toLinearMap.comp (P.projector packet) =
+(P.projector packet).comp gauge.toLinearMap
+The source first proves that the inverse gauge also commutes with the projectors. That permits
+moving both the gauge and its inverse past the output and input projectors:
+22

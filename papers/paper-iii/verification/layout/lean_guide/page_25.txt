@@ -1,0 +1,47 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+6 Operation trees and candidate-specific certificates
+6.1 The grammar does not assume algebraic laws
+The nonlinear module starts with a finite syntax tree. Inputs, constants, unary labels, and binary
+labels can each have their own type.
+Source: KomorebiPaperIII/NonlinearObstructions.lean.
+inductive OperationTree
+(Input : Type u) (Constant : Type v) (Unary : Type w) (Binary : Type x)
+where
+| input : Input →OperationTree Input Constant Unary Binary
+| constant : Constant →OperationTree Input Constant Unary Binary
+| unary : Unary →OperationTree Input Constant Unary Binary →
+OperationTree Input Constant Unary Binary
+| binary : Binary →OperationTree Input Constant Unary Binary →
+OperationTree Input Constant Unary Binary →
+OperationTree Input Constant Unary Binary
+Evaluation supplies four functions: input values, constant values, unary semantics, and binary
+semantics. Unary and binary semantics are arbitrary functions on one common value type. They
+are not assumed additive, multilinear, differentiable, associative, or commutative. This generality
+is what makes the locality theorem applicable to any chosen semantics.
+Every tree has finitely many nodes. The input type itself need not be finite. The function inputs
+computes a finite set of names appearing in the tree:
+Source: KomorebiPaperIII/NonlinearObstructions.lean.
+def inputs [DecidableEq Input] :
+OperationTree Input Constant Unary Binary →Finset Input
+| .input i => {i}
+| .constant _ => ∅
+| .unary _ child => inputs child
+| .binary _ left right => inputs left ∪inputs right
+A constant reads no input. A unary node reads exactly the names read by its child. A binary node
+reads the union of its two children’s names. Because this is a set, repeated uses of one input are
+recorded once. The semantics may still depend nonlinearly on repeated occurrences.
+6.2 The locality proof follows the syntax
+Source: KomorebiPaperIII/NonlinearObstructions.lean.
+theorem eval_congr_on_inputs [DecidableEq Input]
+(tree : OperationTree Input Constant Unary Binary)
+(first second : Input →Value)
+(constantValue : Constant →Value)
+(unaryValue : Unary →Value →Value)
+(binaryValue : Binary →Value →Value →Value)
+(hagree : ∀i ∈tree.inputs, first i = second i) :
+tree.eval first constantValue unaryValue binaryValue =
+tree.eval second constantValue unaryValue binaryValue := by
+induction tree with
+24

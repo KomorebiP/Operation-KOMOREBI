@@ -1,0 +1,134 @@
+--- upstream/code/python/seed_calculus/visuals.py
++++ journal/code/python/seed_calculus/visuals.py
+@@ -32,7 +32,7 @@
+     stems: list[str] = []
+ 
+     # 1. Fixed seed grammar.
+-    fig, ax = plt.subplots(figsize=(11.5, 3.8))
++    fig, ax = plt.subplots(figsize=(11.5, 2.8))
+     labels = ["seed", "address", "operate", "project", "constrain", "complete", "reconstruct"]
+     x = np.arange(len(labels))
+     for i in range(len(labels) - 1):
+@@ -49,7 +49,7 @@
+     ax.set_xlim(-0.6, len(labels) - 0.4)
+     ax.set_ylim(-0.8, 0.8)
+     ax.axis("off")
+-    ax.set_title("The fixed production grammar of Paper I", pad=18)
++    ax.set_title("Organization of the seed and reconstruction data", pad=18)
+     _save(fig, out, "01_seed_operator_grammar")
+     stems.append("01_seed_operator_grammar")
+ 
+@@ -63,6 +63,8 @@
+     fig, ax = plt.subplots(figsize=(6.7, 5.4))
+     image = ax.imshow(norms, aspect="equal")
+     fig.colorbar(image, ax=ax, label="Frobenius norm of embedded block")
++    ax.set_xticks(range(len(projectors)))
++    ax.set_yticks(range(len(projectors)))
+     ax.set_xlabel("input packet alpha")
+     ax.set_ylabel("output packet beta")
+     ax.set_title("Operator resolved into transfer blocks")
+@@ -108,6 +110,7 @@
+     ax.plot(ns, ranks, marker="o")
+     ax.set_xlabel("number of vertices")
+     ax.set_ylabel("adjacency-algebra seed rank")
++    ax.set_xticks([2, 5, 10, 15, 20])
+     ax.set_yticks([1])
+     ax.set_title("Path graphs have one adjacency seed")
+     ax.grid(alpha=0.25)
+@@ -121,6 +124,7 @@
+     ax.plot(ns, ranks, marker="o")
+     ax.set_xlabel("number of vertices")
+     ax.set_ylabel("adjacency-algebra seed rank")
++    ax.set_xticks([3, 5, 10, 15, 20])
+     ax.set_yticks(sorted(set(ranks)))
+     ax.set_title("Cycle graphs require two adjacency seeds")
+     ax.grid(alpha=0.25)
+@@ -136,10 +140,10 @@
+     )
+     fig, ax = plt.subplots(figsize=(6.5, 5.6))
+     image = ax.imshow(pattern, aspect="equal", vmin=0, vmax=1)
+-    fig.colorbar(image, ax=ax, label="nonzero transfer")
++    fig.colorbar(image, ax=ax, ticks=[0, 1], label="nonzero transfer")
+     ax.set_xlabel("input residue packet")
+     ax.set_ylabel("output residue packet")
+-    ax.set_title("The shift is a cyclic packet transfer")
++    ax.set_title("Finite periodic shift: 24 coordinates, 6 residue packets")
+     _save(fig, out, "07_shift_packet_transfer")
+     stems.append("07_shift_packet_transfer")
+ 
+@@ -147,7 +151,7 @@
+     multiplication = np.array([[0, 1], [1, 0]], dtype=float)
+     fig, ax = plt.subplots(figsize=(5.8, 4.9))
+     image = ax.imshow(multiplication, aspect="equal", vmin=0, vmax=1)
+-    fig.colorbar(image, ax=ax, label="nonzero block of multiplication by y")
++    fig.colorbar(image, ax=ax, ticks=[0, 1], label="nonzero block of multiplication by y")
+     ax.set_xticks([0, 1], ["even input", "odd input"])
+     ax.set_yticks([0, 1], ["even output", "odd output"])
+     ax.set_title(r"Packet transfer for $M_y$ in $k[x,y]/(y^2-x^3+x)$")
+@@ -166,41 +170,36 @@
+     fig, ax = plt.subplots(figsize=(6.6, 5.4))
+     image = ax.imshow(gram, aspect="equal")
+     fig.colorbar(image, ax=ax, label="norm of product")
++    ax.set_xticks([0, 1, 2])
++    ax.set_yticks([0, 1, 2])
+     ax.set_xlabel("transported packet")
+     ax.set_ylabel("transported packet")
+-    ax.set_title("Idempotence and annihilation survive coordinate transport")
++    ax.set_title("Products of transported projectors")
+     _save(fig, out, "09_coordinate_transport")
+     stems.append("09_coordinate_transport")
+ 
+-    # 10. Paper I theorem dependency layers.
+-    labels = ["typed grammar", "generated hull", "packet analysis", "transfer algebra", "seed rank", "functoriality", "worked models"]
+-    x = np.arange(len(labels))
+-    fig, ax = plt.subplots(figsize=(11.3, 4.0))
+-    y = np.array([0, 0.4, 0.0, 0.4, 0.0, 0.4, 0.0])
+-    for i in range(len(labels) - 1):
+-        ax.annotate(
+-            "",
+-            xy=(i + 1, y[i + 1]),
+-            xytext=(i, y[i]),
+-            arrowprops={"arrowstyle": "->", "shrinkA": 9, "shrinkB": 9},
+-            zorder=2,
+-        )
+-    ax.scatter(x, y, s=220, zorder=3)
+-    for i, label in enumerate(labels):
+-        offset = 0.18 if y[i] > 0 else -0.18
+-        vertical_alignment = "bottom" if y[i] > 0 else "top"
+-        ax.text(
+-            i,
+-            y[i] + offset,
+-            label,
+-            ha="center",
+-            va=vertical_alignment,
+-            fontsize=10,
+-        )
+-    ax.set_xlim(-0.6, len(labels) - 0.4)
+-    ax.set_ylim(-0.7, 1.1)
+-    ax.axis("off")
+-    ax.set_title("Logical dependency of the foundational paper")
++    # 10. Two proof families. This is a structural overview, not an exhaustive
++    # graph extracted from Lean declaration dependencies.
++    fig, ax = plt.subplots(figsize=(11.3, 3.8))
++    positions = {
++        "grammar": (0.0, 0.7), "hull": (2.0, 0.7), "rank": (4.0, 0.7),
++        "projectors": (0.0, -0.7), "analysis": (2.0, -0.7), "blocks": (4.0, -0.7),
++        "models": (6.0, 0.0),
++    }
++    labels = {
++        "grammar": "fixed operator\ngrammar", "hull": "hulls and\npresentations", "rank": "generator counts\nand bounds",
++        "projectors": "finite projector\nsystem", "analysis": "analysis and\nsynthesis", "blocks": "blocks and\ntransport", "models": "worked\nrealizations",
++    }
++    edges = [("grammar", "hull"), ("hull", "rank"), ("projectors", "analysis"), ("analysis", "blocks"), ("rank", "models"), ("blocks", "models")]
++    for first, second in edges:
++        ax.annotate("", xy=positions[second], xytext=positions[first],
++                    arrowprops={"arrowstyle": "->", "shrinkA": 12, "shrinkB": 12}, zorder=2)
++    for name, (x, y) in positions.items():
++        ax.scatter([x], [y], s=110, zorder=3)
++        offset = 0.2 if y >= 0 else -0.2
++        ax.text(x, y + offset, labels[name], ha="center", va="bottom" if offset > 0 else "top", fontsize=10)
++    ax.set_xlim(-0.9, 6.9); ax.set_ylim(-1.4, 1.45); ax.axis("off")
++    ax.set_title("Two proof families meet in the worked realizations")
+     _save(fig, out, "10_theorem_dependency")
+     stems.append("10_theorem_dependency")
+ 

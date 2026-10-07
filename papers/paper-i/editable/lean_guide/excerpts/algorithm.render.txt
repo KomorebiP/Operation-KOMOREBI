@@ -1,0 +1,33 @@
+/-- A stopped closure pass is exactly the operator hull. -/
+theorem orbitClosureIter_eq_orbitHull_of_stop
+    (operators : ι → Module.End k V) (seeds : Set V) (n : ℕ)
+    (hStop : orbitClosureIter operators seeds (n + 1) =
+      orbitClosureIter operators seeds n) :
+    orbitClosureIter operators seeds n = orbitHull operators seeds := by
+  apply le_antisymm
+  · exact orbitClosureIter_le_orbitHull operators seeds n
+  · apply orbitHull_le operators seeds
+    · exact seeds_subset_orbitClosureIter operators seeds n
+    · apply invariant_of_orbitClosureStep_eq operators
+      simpa [orbitClosureIter] using hStop
+
+/--
+In finite dimension the ascending closure algorithm stops after finitely many
+passes, and its stopped output is exactly the least invariant seed hull.
+-/
+theorem orbitHull_algorithm_terminates_and_correct
+    [FiniteDimensional k V]
+    (operators : ι → Module.End k V) (seeds : Set V) :
+    ∃ n : ℕ,
+      orbitClosureIter operators seeds (n + 1) =
+        orbitClosureIter operators seeds n ∧
+      orbitClosureIter operators seeds n = orbitHull operators seeds := by
+  have hEventually := eventuallyConst_of_isNoetherian
+    (orbitClosureChain operators seeds)
+  rw [Filter.eventuallyConst_atTop] at hEventually
+  obtain ⟨n, hn⟩ := hEventually
+  have hStop : orbitClosureIter operators seeds (n + 1) =
+      orbitClosureIter operators seeds n := by
+    exact hn (n + 1) (Nat.le_succ n)
+  exact ⟨n, hStop,
+    orbitClosureIter_eq_orbitHull_of_stop operators seeds n hStop⟩

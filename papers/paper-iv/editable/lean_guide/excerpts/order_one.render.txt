@@ -1,0 +1,7 @@
+theorem canonicalSignedDenominator_one (z : ℂ) :
+    canonicalSignedDenominator 1 z = Complex.exp (-z) := by
+  have h := entireSigned_independent_roots (N := 1) (j := 0) (by omega) (by omega)
+    (canonicalPrimitiveRoot_isPrimitive (by omega)) IsPrimitiveRoot.one
+    (canonicalSignedRoot_pow (by omega)) (show (-1 : ℂ) ^ 1 = -1 by simp) z
+  change canonicalSignedDenominator 1 z = _ at h
+  simpa [entireSigned, entireTransfer] using h

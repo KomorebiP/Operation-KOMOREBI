@@ -1,0 +1,3030 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.92in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{aliascnt}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{xurl}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=1000
+\exhyphenpenalty=1000
+\tolerance=2000
+\emergencystretch=3em
+
+% Keep the release PDF deterministic across clean rebuilds.
+\ifdefined\pdfinfoomitdate
+  \pdfinfoomitdate=1
+\fi
+\ifdefined\pdftrailerid
+  \pdftrailerid{}
+\fi
+\ifdefined\pdfsuppressptexinfo
+  \pdfsuppressptexinfo=15
+\fi
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+\newaliascnt{boundary}{theorem}
+\newtheorem{boundary}[boundary]{Boundary}
+\aliascntresetthe{boundary}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+\crefname{boundary}{boundary}{boundaries}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\Bcal}{\mathcal B}
+\newcommand{\Ecal}{\mathcal E}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Zcal}{\mathcal Z}
+\newcommand{\Dfun}{\mathsf D}
+\newcommand{\Efun}{\mathsf E}
+\newcommand{\Sfun}{\mathsf S}
+\newcommand{\Tfun}{\mathsf T}
+\newcommand{\Cfun}{\mathsf C}
+\newcommand{\Thetafun}{\mathsf\Theta}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\type}{\operatorname{type}}
+\newcommand{\Log}{\operatorname{Log}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Fdet}{\operatorname{det}_{\!F}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\leanname}[1]{\nolinkurl{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\definecolor{leanblue}{RGB}{20,72,135}
+\definecolor{statusgray}{RGB}{86,86,86}
+
+\newcommand{\statusleanfour}[1]{%
+  \par\smallskip\noindent
+  {\color{leanblue}\textbf{Formal status: Lean-backed in Paper IV.}}\par
+  \begingroup\small\raggedright\leanname{#1}\par\endgroup\smallskip}
+\newcommand{\statusleanprior}[1]{%
+  \par\smallskip\noindent
+  {\color{leanblue}\textbf{Formal status: inherited Lean-backed result.}}\par
+  \begingroup\small\raggedright\leanname{#1}\par\endgroup\smallskip}
+\newcommand{\statusarticle}{%
+  \par\smallskip\noindent
+  {\color{statusgray}\textbf{Formal status: article proof; Lean formalization pending.}}%
+  \par\smallskip}
+
+\title{\textbf{Projector-Resolved Seed Calculus IV}\\[0.45em]
+\large Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data}
+\author{Komorebi P.}
+\date{Version 1.0.0 --- September 5, 2026}
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Cyclic exponential sections, reciprocal families, zero geometry, and spectral zero data},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Projector-Resolved Seed Calculus IV}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Fix a positive integer $N$. Root-of-unity projection of the exponential
+produces residue-class sections that, for $\lambda\ne0$, form a basis for
+$y^{(N)}=\lambda^N y$. The signed sections for $y^{(N)}=-y$ yield the
+denominator $\Dfun_N$ and its reduced form $\Delta_N$. We derive reciprocal
+coefficient polynomials, Bell and Newton recurrences, an additive parameter
+law, and residue-section Appell and theta families. For $N\geq2$,
+$\Delta_N$ has order $1/N$. We specialize classical two-term zero theory for
+exponential sums to the regular exponent polygon. In this equal-weight family,
+conjugation symmetry combined with unique near-model localization places all
+sufficiently large zeros exactly on the symmetry rays, and direct expansion
+gives their leading displacement and derivative sign. The classical perimeter
+law yields zero-counting asymptotics with explicit leading constants and
+bounded error. These results give genus-zero products, the standard diagonal
+Fredholm representation, zero-power-sum formulas for reciprocal and
+logarithmic coefficients, nearest-zero coefficient asymptotics, and
+meromorphic continuation of the symmetry-orbit zero zeta by comparison with
+the Hurwitz zeta function. Complex powers are interpreted either formally or
+through a fixed logarithm on a zero-free domain. The paper treats only this
+cyclic analytic family. Arithmetic interpolation, general nonlinear trees,
+general resolvent theory, and abstract completion are reserved for Papers IX,
+III, VI, and X.
+\end{abstract}
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\textwidth}
+\textbf{Formalization and evidence boundary.}
+The released Paper IV Lean contract covers all 68 theorem-like manuscript
+results under their stated hypotheses. The accompanying v1.0.0 theorem map
+and formalization ledger identify the declarations and their scopes.
+Imported standard fact 11.1 remains explicitly imported and is not needed by
+the checked growth-order proofs. Open problems remain open. Complex powers
+retain their specified logarithms and domains; conditional asymptotic
+statements retain their assumptions. Finite computations are regression
+evidence. Formal verification checks the encoded specifications and does
+not establish historical priority or replace independent mathematical review.
+\end{minipage}}
+\end{center}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{Introduction}\label{sec:introduction}
+
+For a power series
+\[
+F(z)=\sum_{m\geq 0}a_mz^m
+\]
+and a positive integer $N$, the coefficients may be separated according to the residue of $m$ modulo $N$.  Root-of-unity averaging gives exact projection operators for this separation.  This elementary construction is usually called a multisection or a root filter.  It appears throughout the classical theory of generating functions and special functions.  Background on multisections, hypergeometric functions, and related coefficient systems may be found in \cite{Rainville1960,AndrewsAskeyRoy1999,Comtet1974}.
+
+Papers I and II developed typed seed grammars, exact projector packets, and
+finite residue-projector algebra, while Paper III treated typed edge operators
+and exact coordinate transport \cite{PaperI2026,PaperII2026,PaperIII2026}.
+The root filter used below is the finite cyclic scalar specialization of that
+earlier projector calculus. The signed companion matrix is likewise a concrete
+cyclic instance, not a replacement for Paper III's general typed-edge theory.
+
+This article follows the consequences of applying the cyclic projections to the exponential function.  The projected exponentials form a finite differential system.  After one sign is inserted around the derivative cycle, they form a basis for
+\[
+y^{(N)}=-y.
+\]
+The section with initial value one is
+\[
+\Dfun_N(z)=\sum_{n\geq 0}(-1)^n\frac{z^{Nn}}{(Nn)!}.
+\]
+Its reciprocal powers produce polynomial coefficient families. Its logarithmic
+derivative produces a scalar higher Riccati identity. The same reciprocal
+construction applied to every exponential section gives normalized
+residue-section functions and ordinary Appell polynomial sequences. These
+cyclic exponential sections and their matrix addition laws belong to the
+generalized-hyperbolic-function literature
+\cite{Schwaiger1992,Muldoon2005}. Appell and binomial-type sequences are
+discussed in \cite{Roman1984,Comtet1974}.
+
+The second half of the paper concerns the zeros of $\Dfun_N$.  The finite exponential sum
+\[
+\Dfun_N(z)=\frac1N\sum_{\eta^N=-1}e^{\eta z}
+\]
+has a regular polygon of exponents.  The general relation between an exponent polygon and the zero strips of an exponential sum goes back to P\'olya and Langer.  Later developments include the work of Moreno and the treatment in Levin's monograph \cite{Polya1920,Langer1931,Moreno1973,Levin1980}. Bleher and Mallison give a particularly close general result: for convex-polygon exponential sums they locate all sufficiently large zeros in two-term strips and prove exponential localization and simplicity \cite{BleherMallison2006}. The regular polygon and conjugation symmetry of the present family specialize that theory to $N$ exact rays. We give a self-contained specialization because its notation is used throughout the product and zeta theory, and we compute the leading displacement term for this family. The resulting counting formulas have explicit leading constants and bounded error.
+
+The rotational symmetry is more useful after the change of variable $w=z^N$.  There is an entire function
+\[
+\Delta_N(w)=\sum_{n\geq 0}(-1)^n\frac{w^n}{(Nn)!}
+\]
+with
+\[
+\Dfun_N(z)=\Delta_N(z^N).
+\]
+For $N\geq2$, the order of $\Delta_N$ is $1/N$.  Its Hadamard product therefore has genus zero.  The logarithm of this product identifies the transfer tangent coefficients with power sums of the reduced zeros.  The large zero formula also compares the reduced zero zeta with a Hurwitz zeta function.  Standard material on entire functions, canonical products, and exponential sums appears in \cite{Boas1954,Levin1980,Titchmarsh1939}.  We use singularity analysis in the form described in \cite{FlajoletSedgewick2009} and the classical continuation of the Hurwitz zeta function from \cite{Apostol1976}.
+
+The cyclic exponential sections and their matrix addition laws have a
+classical literature. The tools used below---Appell and binomial-type
+sequences, canonical products, singularity analysis, and Fredholm
+determinants---are also standard. Our aim is to organize this symmetric
+specialization and link its reciprocal coefficients to reduced-zero data. No
+historical priority is asserted for the component constructions.
+
+
+
+\section{A map of the construction}\label{sec:map}
+
+Two variables appear throughout the paper.  The variable $z$ carries the differential equation and the rotational symmetry.  The reduced variable
+\[
+w=z^N
+\]
+records one representative from each rotational orbit.  Confusing these variables hides the main simplification.  The denominator $\Dfun_N$ has order one as a function of $z$, while $\Delta_N$ has order $1/N$ as a function of $w$.
+
+The analytic objects are introduced in the following order.  First,
+\[
+\Efun_{N,j}(z)
+=
+\sum_{n\geq0}\frac{z^{Nn+j}}{(Nn+j)!}
+\]
+is the residue $j$ part of the exponential.  Second,
+\[
+\Dfun_{N,j}(z)
+=
+\sum_{n\geq0}(-1)^n\frac{z^{Nn+j}}{(Nn+j)!}
+\]
+is the signed basis for $y^{(N)}=-y$.  The section $\Dfun_N=\Dfun_{N,0}$ is the denominator used in the reciprocal family
+\[
+\Sfun_N^{(r)}=\Dfun_N^{-r}.
+\]
+Its logarithmic derivative is $\Tfun_N$.
+
+A different reciprocal family comes from normalizing each exponential section at the origin.  The function
+\[
+\Cfun_{N,j}(z)
+=
+\frac{z^j/j!}{\Efun_{N,j}(z)}
+\]
+is a unit series in $z^N$.  Its powers, after multiplication by $e^{xz}$, give Appell polynomials.  The theta family couples a scaled argument with a reciprocal order.
+
+The zero theory begins only after these algebraic relations have been established.  The factorization
+\[
+\Dfun_N(z)=\Delta_N(z^N)
+\]
+turns every orbit of $N$ zeros in the $z$ plane into one zero in the $w$ plane.  The large zeros in the $z$ plane are located by two dominant exponentials.  The zeros in the $w$ plane then give a genus zero product.  The logarithm of that product returns to the coefficient theory through
+\[
+\text{zero power sums}
+=
+\text{logarithmic coefficients}.
+\]
+This equality is the bridge between the first and second halves of the paper.
+
+All powers with a complex parameter are first defined as formal series at the origin.  An analytic interpretation requires a simply connected zero-free region and one fixed logarithm.  Integer reciprocal powers are globally meromorphic and do not require a branch choice.
+
+The main statements fall into five groups.  The finite algebra model in \cref{sec:finite_algebra} explains the derivative cycles and addition laws through one exponential identity.  The coefficient theory in \cref{sec:reciprocal_powers} gives two complementary recurrences, one from the original denominator and one from its logarithm.  The Appell theory in \cref{sec:residue_section} supplies both formal differential-operator formulas and a convolution law in the space and order parameters.  The zero analysis in \cref{sec:zero_geometry} specializes classical two-term exponential-sum theory, uses symmetry to place the uniquely localized large zeros on the rays, and computes a leading correction.  The product theory in \cref{sec:hadamard} gives the standard diagonal Fredholm encoding of the genus-zero product.
+
+The article keeps formal and analytic statements separate.  A formal identity needs only the unit constant term of the relevant series.  A holomorphic complex power also needs a zero-free domain and a chosen logarithm.  A meromorphic coefficient asymptotic is stated only for positive integral reciprocal order unless an additional branch domain is specified.
+
+\section{Cyclic projection of analytic functions}\label{sec:cyclic_projection}
+
+Fix $N\geq1$ and write
+\[
+\omega=e^{2\pi i/N}.
+\]
+Let $\Omega$ be a disk centered at the origin, with the whole plane allowed, and assume that $\Omega$ is invariant under multiplication by $\omega$.  For a holomorphic function $F$ on $\Omega$, define
+\[
+(\Bcal_{N,j}F)(z)
+=
+\frac1N\sum_{\ell=0}^{N-1}\omega^{-j\ell}F(\omega^\ell z),
+\qquad 0\leq j<N.
+\]
+The same formula is valid for formal power series.
+
+\begin{theorem}[Root filter]\label{thm:root_filter}
+If
+\[
+F(z)=\sum_{m\geq0}a_mz^m,
+\]
+then
+\[
+\Bcal_{N,j}F(z)
+=
+\sum_{m\equiv j\bmod N}a_mz^m.
+\]
+The operators satisfy
+\[
+\Bcal_{N,i}\Bcal_{N,j}=\delta_{ij}\Bcal_{N,j}
+\]
+and
+\[
+\sum_{j=0}^{N-1}\Bcal_{N,j}=I.
+\]
+\end{theorem}
+
+\begin{proof}
+Substitution of the power series gives
+\[
+\Bcal_{N,j}F(z)
+=
+\sum_{m\geq0}a_mz^m
+\left(
+\frac1N\sum_{\ell=0}^{N-1}\omega^{(m-j)\ell}
+\right).
+\]
+The inner average is one when $m\equiv j\bmod N$ and zero otherwise.  The operator identities follow from the disjoint residue classes.
+\end{proof}
+
+\begin{proposition}[Covariance characterization]\label{prop:covariance}
+A holomorphic function $F$ belongs to the range of $\Bcal_{N,j}$ if and only if
+\[
+F(\omega z)=\omega^jF(z).
+\]
+\end{proposition}
+
+\begin{proof}
+Every monomial selected by $\Bcal_{N,j}$ has the stated covariance.  Conversely, write $F=\sum_k\Bcal_{N,k}F$.  Replacing $z$ by $\omega z$ gives
+\[
+\sum_k\omega^k\Bcal_{N,k}F
+=
+\omega^j\sum_k\Bcal_{N,k}F.
+\]
+Application of $\Bcal_{N,k}$ gives
+\[
+(\omega^k-\omega^j)\Bcal_{N,k}F=0.
+\]
+The powers $1,\omega,\ldots,\omega^{N-1}$ are distinct, so
+$\Bcal_{N,k}F=0$ for $k\ne j$.
+\end{proof}
+
+Multiplication is not diagonal in these coordinates. The residue labels add
+modulo $N$; this is the scalar cyclic instance of the packet product from
+Paper I.
+
+\begin{theorem}[Cyclic product law]\label{thm:cyclic_product}
+If $F$ and $G$ are holomorphic on the same rotation-invariant domain, then
+\[
+\Bcal_{N,k}(FG)
+=
+\sum_{\substack{0\leq i,j<N\\ i+j\equiv k\bmod N}}
+(\Bcal_{N,i}F)(\Bcal_{N,j}G).
+\]
+\end{theorem}
+
+\begin{proof}
+Write $F=\sum_iF_i$ and $G=\sum_jG_j$, where
+$F_i=\Bcal_{N,i}F$ and $G_j=\Bcal_{N,j}G$.  Their covariance gives
+\[
+(F_iG_j)(\omega z)=\omega^{i+j}F_i(z)G_j(z),
+\]
+so $F_iG_j$ belongs to the packet labelled by $i+j$ modulo $N$.
+Expanding the finite product and applying $\Bcal_{N,k}$ gives the formula.
+\end{proof}
+
+\begin{remark}\label{rem:formal_analytic}
+Every identity in this section holds formally.  In the holomorphic setting, the finite projector sums preserve local uniform convergence.  No choice of branch is involved.
+\end{remark}
+
+\section{The transfer exponential basis}\label{sec:transfer_exponential}
+
+\begin{definition}\label{def:transfer_exponential}
+For $\lambda\in\CC$ and $0\leq j<N$, define
+\[
+\Efun_{N,j}(\lambda z)
+=
+\Bcal_{N,j}(e^{\lambda z})
+=
+\sum_{n\geq0}\frac{(\lambda z)^{Nn+j}}{(Nn+j)!}.
+\]
+\end{definition}
+
+\begin{theorem}[Differential cycle and initial data]\label{thm:exponential_cycle}
+For $1\leq j<N$,
+\[
+\frac{d}{dz}\Efun_{N,j}(\lambda z)
+=
+\lambda\Efun_{N,j-1}(\lambda z),
+\]
+while
+\[
+\frac{d}{dz}\Efun_{N,0}(\lambda z)
+=
+\lambda\Efun_{N,N-1}(\lambda z).
+\]
+Thus
+\[
+\frac{d^N}{dz^N}\Efun_{N,j}(\lambda z)
+=
+\lambda^N\Efun_{N,j}(\lambda z).
+\]
+For $0\leq k<N$,
+\[
+\left.\frac{d^k}{dz^k}\Efun_{N,j}(\lambda z)\right|_{z=0}
+=
+\delta_{kj}\lambda^j.
+\]
+If $\lambda\ne0$, the $N$ functions $\Efun_{N,j}(\lambda z)$ form a basis of the solution space of $y^{(N)}=\lambda^Ny$.
+\end{theorem}
+
+\begin{proof}
+Termwise differentiation gives the cyclic derivative formulas.  One full cycle contributes $\lambda^N$.  The first nonzero term of $\Efun_{N,j}(\lambda z)$ is $(\lambda z)^j/j!$, which gives the initial data.  The initial value vectors are linearly independent when $\lambda\ne0$.  The solution space of an order $N$ constant coefficient equation has dimension $N$, so these functions form a basis.
+\end{proof}
+
+
+\begin{corollary}[Wronskian of the transfer basis]\label{cor:wronskians}
+Assume $N\geq2$. For $\lambda\ne0$, the Wronskian of the ordered basis
+\[
+\Efun_{N,0}(\lambda z),\ldots,\Efun_{N,N-1}(\lambda z)
+\]
+is the constant
+\[
+\lambda^{N(N-1)/2}.
+\]
+\end{corollary}
+
+\begin{proof}
+At the origin, the derivative matrix is diagonal with entries
+\[
+1,\lambda,\ldots,\lambda^{N-1}.
+\]
+For an explicit determinant proof, write each basis function as a finite
+sum of exponentials with exponents $a_\ell=\lambda\omega^\ell$.
+Its derivative matrix factors as
+\[
+W(z)=V\,\operatorname{diag}(e^{a_\ell z})\,C,
+\qquad V_{k\ell}=a_\ell^k,
+\]
+where $C$ is the constant matrix of Fourier weights. Thus
+\[
+\det W(z)=e^{z\sum_\ell a_\ell}\det W(0)=\det W(0),
+\]
+because $N\geq2$ implies $\sum_\ell\omega^\ell=0$.
+The product of the diagonal initial values is the stated power of $\lambda$.
+\end{proof}
+
+\begin{corollary}[Addition law]\label{cor:exponential_addition}
+For $0\leq k<N$,
+\[
+\Efun_{N,k}(\lambda(z+w))
+=
+\sum_{\substack{0\leq i,j<N\\ i+j\equiv k\bmod N}}
+\Efun_{N,i}(\lambda z)\Efun_{N,j}(\lambda w).
+\]
+\end{corollary}
+
+\begin{proof}
+Expand $e^{\lambda(z+w)}=e^{\lambda z}e^{\lambda w}$ as a
+bivariate power series.  A term $z^a w^b$ contributes to the
+$k$th section exactly when $a+b\equiv k\bmod N$.  Grouping first by
+$i\equiv a\bmod N$ and $j\equiv b\bmod N$ gives the displayed sum.
+\end{proof}
+
+The basis also has a scalar hypergeometric form.
+
+\begin{theorem}[Hypergeometric form]\label{thm:hypergeometric_form}
+Let
+\[
+A_{N,j}
+=
+\left\{
+\frac{j+m}{N}
+\mathrel{:}
+1\leq m\leq N
+\text{ and }
+j+m\ne N
+\right\}.
+\]
+Then
+\[
+\Efun_{N,j}(\lambda z)
+=
+\frac{(\lambda z)^j}{j!}
+{}_0F_{N-1}
+\left(
+\begin{matrix}-\\ A_{N,j}\end{matrix}
+\mathrel{,}
+\frac{(\lambda z)^N}{N^N}
+\right).
+\]
+\end{theorem}
+
+\begin{proof}
+The multiplication formula for the gamma function gives
+\[
+(Nn+j)!
+=
+j!N^{Nn}n!
+\prod_{a\in A_{N,j}}(a)_n.
+\]
+Indeed, the $N$ Pochhammer factors supplied by the multiplication formula
+are $((j+m)/N)_n$ for $1\leq m\leq N$; the excluded factor is
+$((j+N-j)/N)_n=(1)_n=n!$.
+Insertion into the defining series gives the stated hypergeometric expansion.
+\end{proof}
+
+\begin{example}\label{ex:classical_exponential}
+For $N=1$, the only section is $e^{\lambda z}$.  For $N=2$,
+\[
+\Efun_{2,0}(z)=\cosh z,
+\qquad
+\Efun_{2,1}(z)=\sinh z.
+\]
+These are classical instances of the same cyclic basis.
+\end{example}
+
+\section{Signed cyclic sections and the distinguished denominator}\label{sec:signed_system}
+
+\begin{definition}\label{def:signed_sections}
+For $0\leq j<N$, define
+\[
+\Dfun_{N,j}(z)
+=
+\sum_{n\geq0}(-1)^n\frac{z^{Nn+j}}{(Nn+j)!}.
+\]
+The distinguished signed denominator is
+\[
+\Dfun_N(z)=\Dfun_{N,0}(z).
+\]
+\end{definition}
+
+Fix any $\rho\in\CC$ with $\rho^N=-1$.
+
+\begin{proposition}[Relation with the transfer exponential]\label{prop:signed_exponential_relation}
+For every $j$,
+\[
+\Dfun_{N,j}(z)
+=
+\rho^{-j}\Efun_{N,j}(\rho z).
+\]
+\end{proposition}
+
+\begin{proof}
+The coefficient of $z^{Nn+j}$ on the right is
+\[
+\rho^{-j}\rho^{Nn+j}\frac1{(Nn+j)!}
+=
+(-1)^n\frac1{(Nn+j)!}.
+\]
+\end{proof}
+
+\begin{theorem}[Signed derivative cycle]\label{thm:signed_cycle}
+For $1\leq j<N$,
+\[
+\Dfun_{N,j}'=\Dfun_{N,j-1},
+\]
+and
+\[
+\Dfun_{N,0}'=-\Dfun_{N,N-1}.
+\]
+Every signed section satisfies
+\[
+\Dfun_{N,j}^{(N)}=-\Dfun_{N,j}.
+\]
+The $N$ signed sections form the basis of $y^{(N)}=-y$ determined by
+\[
+\Dfun_{N,j}^{(k)}(0)=\delta_{jk}
+\]
+for $0\leq j,k<N$.
+\end{theorem}
+
+\begin{proof}
+The derivative formulas follow directly from the series.  The first nonzero term of $\Dfun_{N,j}$ is $z^j/j!$, so the initial value matrix is the identity.  The basis statement follows from the dimension of the solution space.
+\end{proof}
+
+\begin{corollary}[Wronskian of the signed basis]\label{cor:signed_wronskian}
+Assume $N\geq2$. The Wronskian of
+\[
+\Dfun_{N,0}(z),\ldots,\Dfun_{N,N-1}(z)
+\]
+is one.
+\end{corollary}
+
+\begin{proof}
+The derivative matrix at the origin is the identity. The determinant
+factorization in the proof of \cref{cor:wronskians} applies with
+$a_\ell=\rho\omega^\ell$ and with the signed-section Fourier weights.
+Since $\sum_\ell a_\ell=0$, the determinant is constant and equals one.
+\end{proof}
+
+
+\begin{proposition}[Twisted addition law]\label{prop:signed_addition}
+For $0\leq k<N$,
+\[
+\Dfun_{N,k}(z+w)
+=
+\sum_{\substack{0\leq i,j<N\\ i+j\equiv k\bmod N}}
+(-1)^{\lfloor(i+j)/N\rfloor}
+\Dfun_{N,i}(z)\Dfun_{N,j}(w).
+\]
+\end{proposition}
+
+\begin{proof}
+Use \cref{prop:signed_exponential_relation,cor:exponential_addition}.  The factor introduced by a pair $(i,j)$ is
+\[
+\rho^{i+j-k}.
+\]
+Since $0\leq i+j\leq2N-2$ and $i+j\equiv k\bmod N$, this factor is one when $i+j=k$ and $-1$ when $i+j=k+N$.
+\end{proof}
+
+\begin{theorem}[Finite exponential representation]\label{thm:finite_exponential_representation}
+Let
+\[
+\Rcal_N=\{\eta\in\CC\mathrel{:}\eta^N=-1\}.
+\]
+Then
+\[
+\Dfun_N(z)
+=
+\frac1N\sum_{\eta\in\Rcal_N}e^{\eta z}.
+\]
+More generally,
+\[
+\Dfun_{N,j}(z)
+=
+\frac{\rho^{-j}}N
+\sum_{\ell=0}^{N-1}
+\omega^{-j\ell}e^{\rho\omega^\ell z}.
+\]
+\end{theorem}
+
+\begin{proof}
+The second formula is the root filter expression for $\rho^{-j}\Efun_{N,j}(\rho z)$.  The first is the case $j=0$.
+\end{proof}
+
+\begin{definition}\label{def:reduced_denominator}
+Define the reduced denominator
+\[
+\Delta_N(w)
+=
+\sum_{n\geq0}(-1)^n\frac{w^n}{(Nn)!}.
+\]
+Then
+\[
+\Dfun_N(z)=\Delta_N(z^N).
+\]
+\end{definition}
+
+\begin{corollary}[Symmetries]\label{cor:denominator_symmetries}
+The denominator satisfies
+\[
+\Dfun_N(\omega z)=\Dfun_N(z)
+\]
+and
+\[
+\Dfun_N(\overline z)=\overline{\Dfun_N(z)}.
+\]
+Its nonzero zeros occur in orbits under multiplication by the $N$th roots of unity and under complex conjugation.
+\end{corollary}
+
+\begin{proof}
+The first identity follows from the powers $z^{Nn}$.  The second follows from the real coefficients.  Both symmetries preserve the zero set and multiplicity.
+\end{proof}
+
+\begin{example}\label{ex:small_denominators}
+The first denominators are
+\[
+\Dfun_1(z)=e^{-z},
+\qquad
+\Dfun_2(z)=\cos z.
+\]
+For $N=3$,
+\[
+\Dfun_3(z)
+=
+\frac13\left(
+e^{-z}
++2e^{z/2}\cos\left(\frac{\sqrt3z}{2}\right)
+\right).
+\]
+For $N=4$,
+\[
+\Dfun_4(z)
+=
+\cos\left(\frac z{\sqrt2}\right)
+\cosh\left(\frac z{\sqrt2}\right).
+\]
+\end{example}
+
+\section{A finite algebra and matrix model}\label{sec:finite_algebra}
+
+The derivative and addition laws can be read from one finite algebra identity.  This formulation also identifies the exponent polygon as the spectrum of a signed cyclic shift.
+
+\begin{definition}\label{def:cyclic_algebras}
+Let
+\[
+\mathfrak A_N^+=\CC[\xi]/(\xi^N-1)
+\]
+and
+\[
+\mathfrak A_N^-=\CC[\xi]/(\xi^N+1).
+\]
+Every element has a unique representative of degree below $N$.
+\end{definition}
+
+\begin{theorem}[Finite algebra exponential identities]\label{thm:finite_algebra_exponentials}
+In $\mathfrak A_N^+$ one has
+\[
+e^{\lambda z\xi}
+=
+\sum_{j=0}^{N-1}\Efun_{N,j}(\lambda z)\xi^j.
+\]
+In $\mathfrak A_N^-$ one has
+\[
+e^{z\xi}
+=
+\sum_{j=0}^{N-1}\Dfun_{N,j}(z)\xi^j.
+\]
+Differentiation and multiplication of these identities recover the cyclic derivative systems and the two addition laws.
+\end{theorem}
+
+\begin{proof}
+Expand the exponential and write every exponent uniquely as $Nn+j$.  In $\mathfrak A_N^+$, the relation $\xi^{Nn+j}=\xi^j$ gives the transfer sections.  In $\mathfrak A_N^-$, the relation $\xi^{Nn+j}=(-1)^n\xi^j$ gives the signed sections.
+
+Differentiation multiplies by $\lambda\xi$ in the first algebra and by $\xi$ in the second.  Reduction of the product by the defining relation gives the derivative cycles.  The identity
+\[
+e^{(z+w)\xi}=e^{z\xi}e^{w\xi}
+\]
+gives the addition laws after comparison of the coefficients of $1,\xi,\ldots,\xi^{N-1}$.
+\end{proof}
+
+\begin{definition}\label{def:signed_shift_matrix}
+Let $J_N$ be the signed cyclic shift on the standard basis $e_0,\ldots,e_{N-1}$ of $\CC^N$, defined by
+\[
+J_Ne_j=e_{j+1}
+\quad (0\leq j<N-1),
+\qquad
+J_Ne_{N-1}=-e_0.
+\]
+Then $J_N^N=-I$.
+\end{definition}
+
+\begin{theorem}[Companion matrix realization]\label{thm:companion_matrix_realization}
+Put
+\[
+\mathbf D_N(z)
+=
+\begin{pmatrix}
+\Dfun_{N,0}(z)\\
+\Dfun_{N,1}(z)\\
+\vdots\\
+\Dfun_{N,N-1}(z)
+\end{pmatrix}.
+\]
+Then
+\[
+\mathbf D_N(z)=e^{zJ_N}e_0
+\]
+and
+\[
+\Dfun_N(z)=\frac1N\tr(e^{zJ_N}).
+\]
+The eigenvalues of $J_N$ are the $N$ roots of $-1$, each with multiplicity one.
+\end{theorem}
+
+\begin{proof}
+The vector $e^{zJ_N}e_0$ has derivative $J_Ne^{zJ_N}e_0$ and initial value $e_0$.  Its components therefore satisfy the same signed derivative cycle and initial data as $\mathbf D_N$.  Uniqueness for the linear system gives the first identity.
+
+The vectors
+\[
+e_0,J_Ne_0,\ldots,J_N^{N-1}e_0
+\]
+are the standard basis.  Thus $e_0$ is cyclic for $J_N$, so the
+minimal polynomial of $J_N$ has degree $N$.  Since $J_N^N=-I$, that
+minimal polynomial divides $x^N+1$ and therefore equals $x^N+1$.
+The characteristic polynomial has the same degree and is divisible
+by the minimal polynomial, so it too equals $x^N+1$.  This polynomial
+has distinct roots.  Consequently $J_N$ is diagonalizable and its
+spectrum consists of all $N$ roots of $-1$, each once.  Hence
+\[
+\tr(e^{zJ_N})
+=
+\sum_{\eta^N=-1}e^{\eta z}
+=
+N\Dfun_N(z)
+\]
+by \cref{thm:finite_exponential_representation}.
+\end{proof}
+
+\begin{corollary}[Entries of the fundamental matrix]\label{cor:fundamental_matrix_entries}
+For $0\leq p,q<N$, let $d_{pq}$ be the member of $\{0,\ldots,N-1\}$ congruent to $p-q$ modulo $N$.  Put
+\[
+\varepsilon_{pq}
+=
+\begin{cases}
+1,&p\geq q,\\
+-1,&p<q.
+\end{cases}
+\]
+Then
+\[
+\bigl(e^{zJ_N}\bigr)_{pq}
+=
+\varepsilon_{pq}\Dfun_{N,d_{pq}}(z).
+\]
+Thus every entry of the fundamental matrix is one of the signed sections, with the sign recording whether the cyclic path from $q$ to $p$ crosses the signed edge.
+\end{corollary}
+
+\begin{proof}
+For every nonnegative integer $n$,
+\[
+J_N^{Nn+d_{pq}}e_q
+=
+(-1)^n\varepsilon_{pq}e_p.
+\]
+Only powers whose exponent is congruent to $d_{pq}$ modulo $N$ contribute to the $(p,q)$ entry of the exponential.  Therefore
+\[
+\bigl(e^{zJ_N}\bigr)_{pq}
+=
+\varepsilon_{pq}
+\sum_{n\geq0}(-1)^n
+\frac{z^{Nn+d_{pq}}}{(Nn+d_{pq})!}.
+\]
+This is the stated formula.
+\end{proof}
+
+\begin{corollary}[Addition and inversion laws for the companion matrix]\label{cor:companion_addition_inversion}
+Assume $N\geq2$.  The matrix
+\[
+U_N(z)=e^{zJ_N}
+\]
+satisfies
+\[
+U_N(z+w)=U_N(z)U_N(w),
+\qquad
+U_N(z)^{-1}=U_N(-z),
+\qquad
+\det U_N(z)=1.
+\]
+Its first column is $\mathbf D_N(z)$, and all of its entries are given by \cref{cor:fundamental_matrix_entries}.
+\end{corollary}
+
+\begin{proof}
+The first two identities are the exponential group law.  Since $\tr J_N=0$,
+\[
+\det(e^{zJ_N})=e^{z\tr J_N}=1.
+\]
+The first column statement is \cref{thm:companion_matrix_realization}.
+\end{proof}
+
+\section{Reciprocal powers and parameter polynomials}\label{sec:reciprocal_powers}
+
+Since $\Dfun_N(0)=1$, its formal logarithm is defined at the origin.  On a
+simply connected zero-free region containing the origin, there is a unique
+holomorphic branch normalized by $\log\Dfun_N(0)=0$, and its germ at the
+origin agrees with the formal logarithm.
+
+\begin{definition}\label{def:reciprocal_family}
+For $r\in\CC$, define
+\[
+\Sfun_N^{(r)}(z)
+=
+\Dfun_N(z)^{-r}
+=
+\exp\bigl(-r\log\Dfun_N(z)\bigr).
+\]
+Write
+\[
+\Sfun_N^{(r)}(z)
+=
+\sum_{n\geq0}P_{N,n}(r)\frac{z^{Nn}}{(Nn)!}.
+\]
+Define the logarithmic coefficients $\kappa_{N,m}$ by
+\[
+-\log\Delta_N(w)
+=
+\sum_{m\geq1}\kappa_{N,m}\frac{w^m}{m}.
+\]
+\end{definition}
+
+The polynomial dependence on $r$ can be read directly from the formal logarithm.  We use the complete exponential Bell polynomials $B_n$ defined by
+\[
+\exp\left(\sum_{m\geq1}x_m\frac{t^m}{m!}\right)
+=
+\sum_{n\geq0}B_n(x_1,\ldots,x_n)\frac{t^n}{n!}.
+\]
+
+\begin{theorem}[Bell polynomial formula]\label{thm:reciprocal_bell}
+For every $n\geq0$,
+\[
+P_{N,n}(r)
+=
+\frac{(Nn)!}{n!}
+B_n\bigl(
+ r\kappa_{N,1},
+ r\,1!\,\kappa_{N,2},
+ \ldots,
+ r\,(n-1)!\,\kappa_{N,n}
+\bigr).
+\]
+For $n\geq1$, this is a polynomial in $r$ of exact degree $n$.  Its leading coefficient is
+\[
+\frac{(Nn)!}{n!(N!)^n}.
+\]
+\end{theorem}
+
+\begin{proof}
+The identity
+\[
+\Delta_N(w)^{-r}
+=
+\exp\left(
+ r\sum_{m\geq1}\kappa_{N,m}\frac{w^m}{m}
+\right)
+\]
+fits the defining generating function for $B_n$ with
+\[
+x_m=r(m-1)!\kappa_{N,m}.
+\]
+The coefficient of $w^n$ is therefore the displayed Bell polynomial divided by $n!$.  Multiplication by $(Nn)!$ gives $P_{N,n}(r)$.  Since
+\[
+\Delta_N(w)=1-\frac{w}{N!}+O(w^2),
+\]
+we have $\kappa_{N,1}=1/N!$.  The term $x_1^n$ gives the stated leading coefficient, which is nonzero.
+\end{proof}
+
+The coefficients also satisfy a triangular recurrence that does not require the logarithmic coefficients to be known first.
+
+\begin{theorem}[Parameter recurrence]\label{thm:parameter_recurrence}
+We have $P_{N,0}(r)=1$.  For $n\geq1$,
+\[
+\begin{aligned}
+P_{N,n}(r)
+={}&-
+\sum_{k=1}^{n-1}
+(-1)^k
+\binom{Nn-1}{Nk}
+P_{N,n-k}(r)
+\\
+&-r
+\sum_{k=1}^{n}
+(-1)^k
+\binom{Nn-1}{Nk-1}
+P_{N,n-k}(r).
+\end{aligned}
+\]
+\end{theorem}
+
+\begin{proof}
+Set $S=\Dfun_N^{-r}$.  Logarithmic differentiation gives
+\[
+\Dfun_NS'+r\Dfun_N'S=0.
+\]
+Taking the coefficient of $z^{Nn-1}/(Nn-1)!$ gives
+\[
+\sum_{k=0}^{n-1}(-1)^k
+\binom{Nn-1}{Nk}P_{N,n-k}(r)
++r\sum_{k=1}^{n}(-1)^k
+\binom{Nn-1}{Nk-1}P_{N,n-k}(r)=0.
+\]
+The term with $k=0$ in the first sum is $P_{N,n}(r)$, and every
+other term has a smaller block index.  Rearrangement gives the formula.
+\end{proof}
+
+\begin{theorem}[Additive parameter law for reciprocal powers]\label{thm:reciprocal_parameter_addition}
+For all $r,s\in\CC$,
+\[
+\Sfun_N^{(r)}(z)\Sfun_N^{(s)}(z)
+=
+\Sfun_N^{(r+s)}(z)
+\]
+as a formal identity and on every common zero-free region with a fixed logarithm.  Consequently,
+\[
+P_{N,n}(r+s)
+=
+\sum_{q=0}^{n}
+\binom{Nn}{Nq}
+P_{N,q}(r)P_{N,n-q}(s).
+\]
+\end{theorem}
+
+\begin{proof}
+Both statements follow by adding the exponents of the same logarithm and then multiplying the block exponential generating series.
+\end{proof}
+
+\begin{corollary}[A sequence of binomial type]\label{cor:binomial_type}
+Define
+\[
+A_{N,n}(r)
+=
+\frac{n!}{(Nn)!}P_{N,n}(r).
+\]
+Then
+\[
+A_{N,n}(r+s)
+=
+\sum_{q=0}^{n}
+\binom nq
+A_{N,q}(r)A_{N,n-q}(s).
+\]
+Thus $(A_{N,n})_{n\geq0}$ is a polynomial sequence of binomial type.
+\end{corollary}
+
+\begin{proof}
+Multiply the coefficient identity in \cref{thm:reciprocal_parameter_addition} by $n!/(Nn)!$ and simplify the factorials.
+\end{proof}
+
+
+The recurrence in \cref{thm:parameter_recurrence} uses the coefficients of the original denominator.  A second recurrence uses only the logarithmic coefficients and is often shorter.
+
+\begin{theorem}[Logarithmic Newton recurrence]\label{thm:logarithmic_newton_recurrence}
+Set
+\[
+b_{N,n}(r)=\frac{P_{N,n}(r)}{(Nn)!}.
+\]
+Then $b_{N,0}(r)=1$ and
+for every $n\geq1$,
+\[
+nb_{N,n}(r)
+=
+r\sum_{k=1}^{n}\kappa_{N,k}b_{N,n-k}(r).
+\]
+Equivalently,
+\[
+P_{N,n}(r)
+=
+\frac r n
+\sum_{k=1}^{n}
+\frac{(Nn)!}{(N(n-k))!}
+\kappa_{N,k}P_{N,n-k}(r).
+\]
+If $p_k=r\kappa_{N,k}$, then, for $n\geq1$,
+\[
+b_{N,n}(r)
+=
+\frac1{n!}
+\det
+\begin{pmatrix}
+p_1&-1&0&\cdots&0\\
+p_2&p_1&-2&\cdots&0\\
+p_3&p_2&p_1&\ddots&\vdots\\
+\vdots&\vdots&\ddots&\ddots&-(n-1)\\
+p_n&p_{n-1}&\cdots&p_2&p_1
+\end{pmatrix}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+B_r(w)=\Delta_N(w)^{-r}
+=
+\sum_{n\geq0}b_{N,n}(r)w^n.
+\]
+Logarithmic differentiation gives
+\[
+\frac{B_r'(w)}{B_r(w)}
+=
+r\sum_{k\geq1}\kappa_{N,k}w^{k-1}.
+\]
+Comparison of the coefficient of $w^{n-1}$ proves the recurrence.
+
+Let $D_n$ denote the displayed determinant and put $D_0=1$.  Expansion of this lower Hessenberg determinant gives
+\[
+D_n
+=
+\sum_{k=1}^{n}
+\frac{(n-1)!}{(n-k)!}p_kD_{n-k}.
+\]
+Here the cofactor sign is cancelled by the product of the negative
+superdiagonal entries $-1,-2,\ldots,-(k-1)$.
+Thus $D_n/n!$ satisfies the same recurrence and initial value as $b_{N,n}(r)$.
+\end{proof}
+
+\begin{corollary}[The first three reciprocal polynomials]\label{cor:first_reciprocal_polynomials}
+For every $N\geq1$,
+\[
+P_{N,1}(r)=r,
+\]
+\[
+P_{N,2}(r)
+=
+r\left[
+\frac12\binom{2N}{N}(r+1)-1
+\right],
+\]
+and
+\[
+P_{N,3}(r)
+=
+r\left[
+\frac{(3N)!}{6(N!)^3}(r+1)(r+2)
+-
+\binom{3N}{N}(r+1)
++1
+\right].
+\]
+\end{corollary}
+
+\begin{proof}
+The first logarithmic coefficients are
+\[
+\kappa_{N,1}=\frac1{N!},
+\]
+\[
+\kappa_{N,2}=\frac1{(N!)^2}-\frac2{(2N)!},
+\]
+and
+\[
+\kappa_{N,3}
+=
+\frac1{(N!)^3}
+-
+\frac3{N!(2N)!}
++
+\frac3{(3N)!}.
+\]
+Insert these values into \cref{thm:reciprocal_bell} and simplify.
+\end{proof}
+
+\begin{corollary}\label{cor:factor_r}
+For $n\geq1$, the polynomial $P_{N,n}(r)$ is divisible by $r$.
+\end{corollary}
+
+\begin{proof}
+At $r=0$, the reciprocal family is the constant function one.  Every positive-index block coefficient therefore vanishes.
+\end{proof}
+
+\begin{example}\label{ex:reciprocal_polynomials}
+For $N=1$, one has $\Dfun_1(z)^{-r}=e^{rz}$ and $P_{1,n}(r)=r^n$.  For $N=2$,
+\[
+P_{2,1}(r)=r,
+\]
+\[
+P_{2,2}(r)=r(3r+2),
+\]
+and
+\[
+P_{2,3}(r)=r(15r^2+30r+16).
+\]
+At $r=1$, these are the positive secant coefficients.
+\end{example}
+
+\section{Logarithmic derivatives and Riccati equations}\label{sec:tangent}
+
+\begin{definition}\label{def:transfer_tangent}
+Define the transfer tangent
+\[
+\Tfun_N(z)
+=-\frac{\Dfun_N'(z)}{\Dfun_N(z)}.
+\]
+Its block expansion has the form
+\[
+\Tfun_N(z)
+=
+\sum_{n\geq0}T_N(n)
+\frac{z^{Nn+N-1}}{(Nn+N-1)!}.
+\]
+\end{definition}
+
+\begin{proposition}[Logarithmic coefficient formula]\label{prop:tangent_kappa}
+The transfer tangent satisfies
+\[
+\Tfun_N(z)
+=
+N\sum_{m\geq1}\kappa_{N,m}z^{Nm-1}.
+\]
+Equivalently,
+\[
+T_N(n)
+=
+N(Nn+N-1)!\kappa_{N,n+1}.
+\]
+\end{proposition}
+
+\begin{proof}
+Since $\Dfun_N(z)=\Delta_N(z^N)$,
+\[
+-\frac{\Dfun_N'(z)}{\Dfun_N(z)}
+=
+-Nz^{N-1}\frac{\Delta_N'(z^N)}{\Delta_N(z^N)}.
+\]
+Differentiate the defining series for $-\log\Delta_N$ and compare coefficients.
+\end{proof}
+
+\begin{theorem}[Tangent recurrence]\label{thm:tangent_recurrence}
+The coefficients satisfy $T_N(0)=1$ and
+\[
+T_N(n)
+=
+(-1)^n
+-
+\sum_{k=1}^{n}
+(-1)^k
+\binom{Nn+N-1}{Nk}
+T_N(n-k).
+\]
+\end{theorem}
+
+\begin{proof}
+The defining equation is
+\[
+\Dfun_N\Tfun_N=-\Dfun_N'.
+\]
+Extracting the coefficient of $z^{Nn+N-1}/(Nn+N-1)!$ gives
+\[
+\sum_{k=0}^{n}(-1)^k
+\binom{Nn+N-1}{Nk}T_N(n-k)=(-1)^n.
+\]
+Isolating the $k=0$ term gives the recurrence.
+\end{proof}
+
+\begin{corollary}[Derivative of the reciprocal family]\label{cor:reciprocal_derivative}
+For every $r\in\CC$, the formal identity
+\[
+\frac{d}{dz}\Sfun_N^{(r)}(z)
+=
+r\Tfun_N(z)\Sfun_N^{(r)}(z)
+\]
+holds.  The same identity holds analytically on every zero-free
+domain on which the logarithm used to define $\Sfun_N^{(r)}$ is fixed.
+\end{corollary}
+
+\begin{proof}
+Differentiate $\Dfun_N^{-r}$ on a zero-free region.  The formal identity follows from the same logarithmic calculation.
+\end{proof}
+
+For a function $g$, define the complete differential Bell polynomial $Y_N$ by
+\[
+\frac{d^N}{dz^N}e^{g(z)}
+=
+e^{g(z)}Y_N\bigl(g',g'',\ldots,g^{(N)}\bigr).
+\]
+
+\begin{theorem}[Scalar higher Riccati identity]\label{thm:higher_riccati}
+At every point of the open set $\{z:\Dfun_N(z)\ne0\}$,
+\[
+Y_N\bigl(
+-\Tfun_N,
+-\Tfun_N',
+\ldots,
+-\Tfun_N^{(N-1)}
+\bigr)
+=-1.
+\]
+\end{theorem}
+
+\begin{proof}
+Write $\Dfun_N=e^g$ locally.  Then $g'=-\Tfun_N$.  Divide the equation $\Dfun_N^{(N)}=-\Dfun_N$ by $\Dfun_N$ and use the defining identity for $Y_N$.
+\end{proof}
+
+This scalar identity follows from one ordinary differential equation. It does
+not redevelop the general nonlinear operation-tree theory of Paper III.
+
+\begin{example}\label{ex:ordinary_tangent}
+For $N=1$, $\Tfun_1=1$.  For $N=2$, $\Dfun_2=\cos z$ and $\Tfun_2=\tan z$.  The Riccati equation becomes
+\[
+\Tfun_2'=1+\Tfun_2^2.
+\]
+\end{example}
+
+\section{Residue-section reciprocals and Appell systems}\label{sec:residue_section}
+
+The section $\Efun_{N,j}$ has a forced zero of order $j$ at the origin.  Removing it leaves a unit series in $z^N$.
+
+\begin{definition}\label{def:normalized_section}
+For $0\leq j<N$, define
+\[
+\Phi_{N,j}(w)
+=
+j!\sum_{n\geq0}\frac{w^n}{(Nn+j)!}.
+\]
+Then
+\[
+\Efun_{N,j}(z)
+=
+\frac{z^j}{j!}\Phi_{N,j}(z^N).
+\]
+Define the residue-section reciprocal function
+\[
+\Cfun_{N,j}(z)
+=
+\Phi_{N,j}(z^N)^{-1}
+=
+\frac{z^j/j!}{\Efun_{N,j}(z)}.
+\]
+For $j>0$, the last quotient at $z=0$ is interpreted by its removable
+continuation, namely the first expression in the display.
+Write
+\[
+\Cfun_{N,j}(z)
+=
+\sum_{n\geq0}C_{N,j}(n)\frac{z^{Nn}}{(Nn)!}.
+\]
+\end{definition}
+
+\begin{theorem}[Triangular inverse system]\label{thm:triangular_inverse}
+The coefficients are determined by $C_{N,j}(0)=1$ and
+\[
+\sum_{q=0}^{n}
+\binom{Nn+j}{Nq}
+C_{N,j}(q)
+=
+\delta_{n0}.
+\]
+For $n\geq1$,
+\[
+C_{N,j}(n)
+=
+-
+\frac{
+\displaystyle\sum_{q=0}^{n-1}
+\binom{Nn+j}{Nq}C_{N,j}(q)
+}{
+\displaystyle\binom{Nn+j}{Nn}
+}.
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the defining series for $\Cfun_{N,j}$ and $\Efun_{N,j}$.  Their product is $z^j/j!$.  At degree $Nn+j$, multiplication by $(Nn+j)!$ gives the stated binomial coefficient.  The diagonal coefficient is nonzero, so the system is triangular.
+\end{proof}
+
+\begin{definition}\label{def:residue_section_power}
+For $r\in\CC$, define formal coefficients $C_{N,j,n}(r)$ by
+\[
+\Cfun_{N,j}(z)^r
+=
+\sum_{n\geq0}C_{N,j,n}(r)\frac{z^{Nn}}{(Nn)!}.
+\]
+On a simply connected region that avoids the zeros of $\Phi_{N,j}(z^N)$, the same definition uses the holomorphic and nonvanishing function $\Cfun_{N,j}$ together with one fixed logarithm.
+\end{definition}
+
+\begin{theorem}[Parameter-addition law for residue-section reciprocals]\label{thm:residue_section_parameter_addition}
+For each $n\geq1$, the coefficient $C_{N,j,n}(r)$ is a polynomial in $r$ of exact degree $n$.  Its leading coefficient is
+\[
+\frac{(Nn)!}{n!}
+\left(-\frac{j!}{(N+j)!}\right)^n.
+\]
+It satisfies
+\[
+C_{N,j,n}(r+s)
+=
+\sum_{q=0}^{n}
+\binom{Nn}{Nq}
+C_{N,j,q}(r)C_{N,j,n-q}(s).
+\]
+In particular,
+\[
+C_{N,j,n}(1)=C_{N,j}(n).
+\]
+\end{theorem}
+
+\begin{proof}
+The unit series $\Phi_{N,j}(w)^{-1}$ has a formal logarithm with zero constant term.  Its linear term is
+\[
+-\frac{j!}{(N+j)!}w.
+\]
+Exponentiation after multiplication by $r$ shows that the coefficient of $w^n$ is a polynomial of degree at most $n$.  The $n$th power of the linear logarithmic term gives the displayed nonzero leading coefficient, so the degree is exactly $n$.  Multiplication of the powers with parameters $r$ and $s$ gives the coefficient identity.
+More explicitly, before the factorial normalization the coefficient of
+$r^nw^n$ is
+\[
+\frac1{n!}\left(-\frac{j!}{(N+j)!}\right)^n;
+\]
+thus multiplication by $(Nn)!$ gives the displayed leading coefficient.
+\end{proof}
+
+\begin{definition}\label{def:block_appell}
+Define polynomials $E_m^{(N,j,r)}(x)$ by
+\[
+\Cfun_{N,j}(z)^re^{xz}
+=
+\sum_{m\geq0}E_m^{(N,j,r)}(x)\frac{z^m}{m!}.
+\]
+\end{definition}
+
+\begin{theorem}[Appell laws]\label{thm:appell_laws}
+For $m\geq1$, the polynomials satisfy
+\[
+\frac{d}{dx}E_m^{(N,j,r)}(x)
+=
+mE_{m-1}^{(N,j,r)}(x)
+\]
+and, for $m\geq0$,
+\[
+E_m^{(N,j,r)}(x+y)
+=
+\sum_{q=0}^{m}
+\binom mq
+E_q^{(N,j,r)}(x)y^{m-q}.
+\]
+\end{theorem}
+
+\begin{proof}
+Differentiate the generating function with respect to $x$ for the first identity.  Multiply it by $e^{yz}$ and compare coefficients for the second.
+\end{proof}
+
+\begin{proposition}[Explicit Appell polynomial]\label{prop:explicit_appell}
+For every $m\geq0$,
+\[
+E_m^{(N,j,r)}(x)
+=
+\sum_{0\leq n\leq m/N}
+\binom{m}{Nn}
+C_{N,j,n}(r)x^{m-Nn}.
+\]
+\end{proposition}
+
+\begin{proof}
+Multiply the block series for $\Cfun_{N,j}^r$ by the exponential series and collect the coefficient of total degree $m$.
+\end{proof}
+
+
+\begin{theorem}[Joint Appell convolution in the space and order parameters]\label{thm:appell_two_parameter_convolution}
+For all $r,s,x,y\in\CC$ and $m\geq0$,
+\[
+E_m^{(N,j,r+s)}(x+y)
+=
+\sum_{q=0}^{m}
+\binom mq
+E_q^{(N,j,r)}(x)
+E_{m-q}^{(N,j,s)}(y).
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the generating functions
+\[
+\Cfun_{N,j}(z)^re^{xz}
+\quad\hbox{and}\quad
+\Cfun_{N,j}(z)^se^{yz}.
+\]
+Their product is the generating function with parameters $r+s$ and $x+y$.  Coefficient comparison gives the formula.
+\end{proof}
+
+\begin{proposition}[Formal differential-operator representation on polynomials]\label{prop:appell_operator_form}
+Let a formal series $A(z)=\sum_{q\geq0}a_qz^q/q!$ act on polynomials by
+\[
+A(\partial_x)f(x)
+=
+\sum_{q\geq0}\frac{a_q}{q!}\partial_x^qf(x).
+\]
+The power $r$ is applied to the formal symbol before the substitution $z=\partial_x$.  Then
+\[
+E_m^{(N,j,r)}(x)
+=
+\Cfun_{N,j}(\partial_x)^r x^m.
+\]
+The inverse relation is
+\[
+x^m
+=
+\Phi_{N,j}(\partial_x^N)^r
+E_m^{(N,j,r)}(x).
+\]
+Both sums are finite on every polynomial.
+\end{proposition}
+
+\begin{proof}
+Applying $A(\partial_x)$ to $e^{xz}$ multiplies it by $A(z)$.  Taking
+$A=\Cfun_{N,j}^r$ gives the first identity by the defining generating
+function.  Constant coefficient operators on polynomials satisfy
+\[
+(AB)(\partial_x)=A(\partial_x)B(\partial_x),
+\]
+because all derivative sums are finite and powers of $\partial_x$
+commute.  The two formal symbols
+\[
+\Cfun_{N,j}(z)^r=\Phi_{N,j}(z^N)^{-r}
+\quad\hbox{and}\quad
+\Phi_{N,j}(z^N)^r
+\]
+multiply to one.  Their substitutions at $z=\partial_x$ are therefore
+inverse constant coefficient operators on polynomials, which proves
+the second identity.
+\end{proof}
+
+
+\begin{corollary}[Appell symmetry]\label{cor:appell_symmetry}
+Each polynomial $E_m^{(N,j,r)}$ is monic of degree $m$, and
+\[
+E_m^{(N,j,r)}(\omega x)
+=
+\omega^mE_m^{(N,j,r)}(x).
+\]
+\end{corollary}
+
+\begin{proof}
+The term $n=0$ in \cref{prop:explicit_appell} is $x^m$.  Every other exponent is $m-Nn$, so replacement of $x$ by $\omega x$ multiplies every term by $\omega^m$.
+\end{proof}
+
+\begin{example}\label{ex:euler_boundaries}
+For $(N,j)=(2,0)$,
+\[
+\Cfun_{2,0}(z)=\sech z.
+\]
+For $(N,j)=(2,1)$,
+\[
+\Cfun_{2,1}(z)=\frac z{\sinh z}.
+\]
+The first case is a scaled and translated Euler family.  In fact, if $E_m(x)$ denotes the classical Euler polynomial, then
+\[
+E_m^{(2,0,1)}(x)
+=
+2^mE_m\left(\frac{x+1}{2}\right).
+\]
+If $B_m(x)$ denotes the classical Bernoulli polynomial, the second case has
+the exact identification
+\[
+E_m^{(2,1,1)}(x)
+=
+2^mB_m\left(\frac{x+1}{2}\right),
+\]
+obtained by substituting $t=2z$ in
+$t e^{yt}/(e^t-1)$.
+\end{example}
+
+\section{Scaled reciprocal coupling and theta polynomials}\label{sec:theta}
+
+\begin{definition}\label{def:unsigned_denominator}
+Set
+\[
+H_N(z)=\Efun_{N,0}(z)
+=
+\sum_{n\geq0}\frac{z^{Nn}}{(Nn)!}.
+\]
+For $u\in\CC$, define $\Thetafun_{N,n}(u)$ by
+\[
+H_N(uz)^{-1}H_N(z)^{-u}
+=
+\sum_{n\geq0}\Thetafun_{N,n}(u)\frac{z^{Nn}}{(Nn)!}.
+\]
+This is first a formal identity at the origin.  Analytically, it is interpreted
+on a common simply connected zero-free region with the branch of
+$\log H_N$ normalized by $\log H_N(0)=0$.
+\end{definition}
+
+\begin{theorem}[Theta reconstruction]\label{thm:theta_reconstruction}
+For every $n\geq0$,
+\[
+\Thetafun_{N,n}(u)
+=
+(-1)^n
+\sum_{q=0}^{n}
+\binom{Nn}{Nq}
+P_{N,q}(1)u^{Nq}P_{N,n-q}(u).
+\]
+Thus $\Thetafun_{N,n}$ is a polynomial of degree at most $Nn$.
+\end{theorem}
+
+\begin{proof}
+Choose $\rho$ with $\rho^N=-1$.  Then
+\[
+H_N(z)=\Dfun_N(\rho z).
+\]
+The coefficient of $z^{Nn}$ in $H_N(z)^{-r}$ is therefore $(-1)^nP_{N,n}(r)/(Nn)!$.  Apply this to $H_N(uz)^{-1}$ and $H_N(z)^{-u}$, then multiply the two block series.
+\end{proof}
+
+\begin{proposition}[Trivial parameter factors]\label{prop:theta_factors}
+For $n\geq1$, the polynomial $\Thetafun_{N,n}(u)$ is divisible by $u$.  If $N$ is even, it is also divisible by $u+1$.
+\end{proposition}
+
+\begin{proof}
+At $u=0$, the defining product is one.  Hence every positive-index coefficient vanishes.  If $N$ is even, then $H_N(-z)=H_N(z)$.  At $u=-1$, the product is again one, so every positive-index coefficient vanishes there as well.
+\end{proof}
+
+
+\begin{proposition}[Theta Newton recurrence]\label{prop:theta_newton_recurrence}
+Put
+\[
+\theta_{N,n}(u)=\frac{\Thetafun_{N,n}(u)}{(Nn)!}.
+\]
+Then $\theta_{N,0}(u)=1$ and
+\[
+n\theta_{N,n}(u)
+=
+\sum_{m=1}^{n}
+(-1)^m\kappa_{N,m}
+\bigl(u^{Nm}+u\bigr)
+\theta_{N,n-m}(u).
+\]
+In particular,
+\[
+\Thetafun_{N,1}(u)=-(u^N+u).
+\]
+\end{proposition}
+
+\begin{proof}
+Write $w=z^N$.  Since $H_N(z)=\Delta_N(-w)$,
+\[
+-\log H_N(z)
+=
+\sum_{m\geq1}(-1)^m\kappa_{N,m}\frac{w^m}{m}.
+\]
+The logarithm of the theta generating function is therefore
+\[
+\sum_{m\geq1}
+(-1)^m\kappa_{N,m}
+\bigl(u^{Nm}+u\bigr)
+\frac{w^m}{m}.
+\]
+Logarithmic differentiation and coefficient comparison give the recurrence.  The case $n=1$ uses $\kappa_{N,1}=1/N!$.
+\end{proof}
+
+\begin{example}\label{ex:theta_even}
+For $N=2$,
+\[
+\Thetafun_{2,1}(u)=-u(u+1)
+\]
+and
+\[
+\Thetafun_{2,2}(u)
+=
+u(u+1)(5u^2+u+2).
+\]
+The two factors predicted by \cref{prop:theta_factors} are visible.
+\end{example}
+
+\section{Growth and the geometry of the large zeros}\label{sec:zero_geometry}
+
+We now assume $N\geq2$.  Write
+\[
+\eta_k=e^{(2k+1)\pi i/N},
+\qquad 0\leq k<N.
+\]
+These are the vertices of a regular polygon and
+\[
+\Dfun_N(z)=\frac1N\sum_{k=0}^{N-1}e^{\eta_kz}.
+\]
+
+\begin{standardfact}[Order from Taylor coefficients]\label{sf:coefficient_order}
+If $f(w)=\sum_{n\geq0}a_nw^n$ is an entire function with infinitely many nonzero coefficients, then
+\[
+\ord f
+=
+\limsup_{\substack{n\to\infty\\a_n\ne0}}
+\frac{n\log n}{\log(1/|a_n|)}.
+\]
+Canonical products for entire functions of order below one have genus zero.  We use these standard facts in the form given in \cite{Boas1954,Titchmarsh1939}.
+\end{standardfact}
+
+\begin{proposition}[Orders and exponential type]\label{prop:orders}
+For $N\geq2$,
+\[
+\ord\Delta_N=\frac1N.
+\]
+The function $\Dfun_N$ has order one and exponential type one.
+\end{proposition}
+
+\begin{proof}
+The coefficient of $w^n$ in $\Delta_N$ has modulus $1/(Nn)!$.
+Stirling's formula and \cref{sf:coefficient_order} give order $1/N$.
+Since $M_{f(\,\cdot\,^N)}(r)=M_f(r^N)$ for the maximum modulus,
+composition with $z^N$ multiplies the order by $N$ and gives order one
+for $\Dfun_N$.
+
+The finite exponential representation gives
+\[
+|\Dfun_N(z)|\leq e^{|z|},
+\]
+so the type is at most one.  Choose a root $\eta_0$ and put $z=t\overline{\eta_0}$ with $t>0$.  The term $e^{\eta_0z}=e^t$ has strictly larger real exponent than every other term.  Hence
+\[
+\Dfun_N(t\overline{\eta_0})
+=
+\frac1Ne^t(1+o(1)).
+\]
+The type is therefore one.
+\end{proof}
+
+
+\begin{definition}\label{def:indicator_polygon}
+For $\theta\in\mathbb R$, define
+\[
+h_N(\theta)
+=
+\max_{0\leq k<N}
+\cos\left(\theta+\frac{(2k+1)\pi}{N}\right).
+\]
+The tie directions are
+\[
+\mathfrak T_N
+=
+\left\{\frac{2\pi k}{N}:0\leq k<N\right\}
+\quad\bmod 2\pi.
+\]
+\end{definition}
+
+\begin{theorem}[Indicator polygon and dominant sectors]\label{thm:indicator_polygon}
+The indicator of $\Dfun_N$ equals $h_N$, with the limsup taken over radii where $\Dfun_N(re^{i\theta})\ne0$:
+\[
+\limsup_{r\to\infty}
+\frac1r\log|\Dfun_N(re^{i\theta})|
+=
+h_N(\theta).
+\]
+If $K$ is a compact set of directions disjoint from $\mathfrak T_N$, then there are $\delta>0$ and $R>0$ such that, for each $\theta\in K$, one root $\eta(\theta)$ of $-1$ satisfies
+\[
+\Dfun_N(re^{i\theta})
+=
+\frac1N
+\exp\bigl(\eta(\theta)re^{i\theta}\bigr)
+\left(1+O(e^{-\delta r})\right)
+\]
+uniformly for $r\geq R$.  In particular, no sufficiently large zero can lie in those directions.
+\end{theorem}
+
+\begin{proof}
+For $z=re^{i\theta}$, the real part of the exponent $\eta_kz$ is
+\[
+r\cos\left(\theta+\frac{(2k+1)\pi}{N}\right).
+\]
+The triangle inequality gives the upper indicator bound $h_N(\theta)$.
+
+Away from a tie direction, the maximizing vertex is unique.  It is constant
+on each connected component of the complement of the tie directions.  A
+compact set avoiding all ties meets only finitely many such components, and
+compactness gives one uniform positive lower bound for every relevant
+projection gap.  Division by the maximizing exponential gives the stated
+uniform asymptotic and the zero-free conclusion.
+
+At a tie direction exactly two adjacent vertices attain the maximum.  After rotation it is enough to take $\theta=0$.  The two dominant terms give
+\[
+\frac2N e^{c_Nr}\cos(s_Nr)
+\]
+and every other term is exponentially smaller.  Along a sequence on which $|\cos(s_Nr)|\geq1/2$, the lower indicator bound is $c_N=h_N(0)$.  Rotational symmetry treats every tie direction.
+\end{proof}
+
+The zero strings are governed by two adjacent exponents.  Put
+\[
+a_N=\frac\pi N,
+\qquad
+s_N=\sin a_N,
+\qquad
+c_N=\cos a_N,
+\]
+and
+\[
+A_N=\frac\pi{s_N},
+\qquad
+ t_m=A_N\left(m+\frac12\right).
+\]
+For $N\geq3$, also put
+\[
+\gamma_N=c_N-\cos(3a_N)>0.
+\]
+
+\begin{lemma}[Two term dominance]\label{lem:two_term_dominance}
+Assume $N\geq3$.  There are positive constants $Y$, $R$, and $C$ with the following properties.
+
+If $z=x+iy$ lies in the sector $|\arg z|\leq a_N$, has $x\geq R$, and is a zero of $\Dfun_N$, then $|y|\leq Y$.
+
+On the strip $x\geq R$ and $|y|\leq Y$, define
+\[
+R_N(z)
+=
+\sum_{\substack{\eta^N=-1\\
+\eta\ne e^{ia_N},e^{-ia_N}}}
+\exp\bigl((\eta-e^{-ia_N})z\bigr).
+\]
+Then
+\[
+N e^{-e^{-ia_N}z}\Dfun_N(z)
+=
+1+e^{2is_Nz}+R_N(z),
+\]
+and, for $q=0,1,2$,
+\[
+|R_N^{(q)}(z)|
+\leq
+C e^{-\gamma_Nx}.
+\]
+\end{lemma}
+
+\begin{proof}
+A direct projection estimate gives the stronger bound
+\[
+Y=\frac{\log(N-1)}{2s_N}
+\]
+for every zero in the sector, without a large-radius assumption.
+Write $z=re^{i\theta}$ with $0\leq\theta\leq a_N$ and $r\geq0$.
+For $0\leq\ell\leq N-2$, the angle
+$\theta+(2\ell+1)a_N$ lies between $a_N+\theta$ and
+$2\pi-a_N-\theta$. Monotonicity of cosine on $[0,\pi]$, followed by
+reflection about $\pi$, therefore gives
+\[
+\Re(\eta_\ell z)\leq r\cos(a_N+\theta).
+\]
+The remaining vertex $e^{-ia_N}$ has projection $r\cos(a_N-\theta)$.
+Their difference is at least $2s_Nr\sin\theta=2s_Ny$.
+If $\Dfun_N(z)=0$, divide its finite exponential sum by the term
+with exponent $e^{-ia_N}z$ and apply the triangle inequality:
+\[
+1\leq(N-1)e^{-2s_Ny}.
+\]
+Thus $y\leq Y$. Conjugation gives the same bound for $-y$ on the lower
+half sector. Since $N\geq3$ and $s_N>0$, this $Y$ is positive.
+
+On the resulting strip, the roots $e^{ia_N}$ and $e^{-ia_N}$ have
+real part $c_N$, while each remaining root $\eta=u+iv$ satisfies
+$u\leq\cos(3a_N)=c_N-\gamma_N$. Hence
+\[
+\Re\bigl((\eta-e^{-ia_N})z\bigr)
+\leq-\gamma_Nx+2Y.
+\]
+Division by $e^{e^{-ia_N}z}$ gives the displayed normalization.
+Each differentiation multiplies a remainder term by
+$\eta-e^{-ia_N}$, whose modulus is at most two. Thus, for $q=0,1,2$,
+\[
+|R_N^{(q)}(z)|\leq(N-2)2^qe^{2Y}e^{-\gamma_Nx}.
+\]
+One may take $R=1$ and $C=4(N-2)e^{2Y}$.
+\end{proof}
+
+\begin{lemma}[Near cancellation of two exponentials]\label{lem:near_cancellation}
+For every $M>0$, there are constants $\varepsilon_M>0$ and $C_M>0$ such that the following holds.  If
+\[
+|\Re w|\leq M
+\]
+and
+\[
+|1+e^w|\leq\varepsilon_M,
+\]
+then there is a unique integer $m$ with
+\[
+|w-(2m+1)\pi i|
+\leq
+C_M|1+e^w|.
+\]
+\end{lemma}
+
+\begin{proof}
+In fact, the constants $\varepsilon_M=1/2$ and $C_M=3/2$ work
+for every complex $w$, without the strip restriction. Put
+$u=-(1+e^w)$ and $L=\log(1+u)=\log(-e^w)$, using the principal
+logarithm. The elementary logarithm estimate on $|u|\leq1/2$ gives
+$|L|\leq(3/2)|u|$. Since $e^{L+\pi i}=e^w$, there is an integer
+$m$ such that
+\[
+w=L+(2m+1)\pi i.
+\]
+This gives the required distance bound. Distinct centers are separated
+by at least $2\pi$, whereas two centers satisfying the bound would
+be separated by at most $3|1+e^w|\leq3/2$. Thus the integer is unique.
+The formal proof uses the convergent logarithm estimate and the exact
+periodicity theorem for the complex exponential.
+\end{proof}
+
+\begin{theorem}[Large zero strings]\label{thm:large_zero_strings}
+Assume $N\geq3$.  There are constants $m_0$, $C$, and $\gamma>0$ and a sequence of positive real simple zeros $(\tau_m)_{m\geq m_0}$ of $\Dfun_N$ such that
+\[
+\tau_m
+=
+ t_m+O(e^{-\gamma t_m}).
+\]
+Every zero of sufficiently large modulus is of the form
+\[
+\omega^k\tau_m
+\]
+for a unique $0\leq k<N$ and a unique $m\geq m_0$.
+
+The derivatives satisfy
+\[
+\Dfun_N'(\omega^k\tau_m)
+=
+\omega^{-k}\Dfun_N'(\tau_m)
+\]
+and
+\[
+|\Dfun_N'(\tau_m)|
+=
+\frac{2s_N}{N}e^{c_N\tau_m}
+\left(1+O(e^{-\gamma\tau_m})\right).
+\]
+\end{theorem}
+
+\begin{proof}
+Work first in the sector $|\arg z|\leq a_N$.  By \cref{lem:two_term_dominance}, every sufficiently large zero lies in a fixed strip about the positive real axis.  Put
+\[
+G(z)=N e^{-e^{-ia_N}z}\Dfun_N(z).
+\]
+Then
+\[
+G(z)=1+e^{2is_Nz}+R_N(z)
+\]
+with an exponentially small remainder and derivative.
+
+If $G(z)=0$, then
+\[
+|1+e^{2is_Nz}|
+\leq
+C e^{-\gamma_N\Re z}.
+\]
+The real part of $2is_Nz$ is bounded in the strip.  Apply
+\cref{lem:near_cancellation} with $w=2is_Nz$.  There is a unique
+integer $m$ such that
+\[
+|z-t_m|\leq C_1e^{-\gamma_N\Re z},
+\]
+where
+\[
+ t_m=\frac{(2m+1)\pi}{2s_N}.
+\]
+In particular, $|\Re z-t_m|=o(1)$.  For all sufficiently large zeros
+we have $|\Re z-t_m|\leq1$, and hence
+\[
+|z-t_m|\leq C_2e^{-\gamma_Nt_m}
+\]
+with a constant independent of $m$.
+Because $\Re z\to+\infty$ in this argument, the corresponding integers
+$m$ are eventually nonnegative and tend to infinity.
+
+Fix a large $m$, put $a=2is_N$, and consider the closed disk
+$B_m=\{z:|z-t_m|\leq 1/(2s_N)\}$. The remainder bounds hold
+uniformly on these fixed-radius disks. For sufficiently large $m$,
+$|R_N|\leq 1/2$ and $|R_N'|\leq s_N/2$ there. Define
+\[
+\Phi_m(z)=t_m+\frac{\log(1+R_N(z))}{2is_N},
+\]
+using the principal logarithm. The estimate
+$|\log(1+u)|\leq(3/2)|u|$ shows that $\Phi_m$ maps $B_m$ into
+itself. The derivative bound $|\Phi_m'|\leq1/2$ makes it a contraction.
+Banach's fixed-point theorem gives a unique fixed point.
+On $B_m$, $|a(z-t_m)|\leq1<\pi$, so the principal logarithm inverts
+the exponential and the fixed-point equation is equivalent to $G(z)=0$.
+Moreover,
+\[
+|z-t_m|\leq\frac{3}{4s_N}|R_N(z)|=O(e^{-\gamma_Nt_m}).
+\]
+At this zero,
+\[
+|G'(z)|\geq |a|\,|1+R_N(z)|-|R_N'(z)|\geq s_N/2>0,
+\]
+so the zero is simple. The disks are mutually disjoint because their
+diameter $1/s_N$ is smaller than the center spacing $\pi/s_N$.
+Enlarging the strip if necessary, these disks lie inside the fundamental
+sector and the fixed strip for large $m$.
+
+The localization estimate puts every sufficiently large zero in the
+fundamental sector into one of these disks.  The zero sets of $G$ and
+$\Dfun_N$ coincide because their prefactor is nonzero.  Each disk is
+invariant under complex conjugation, and $\Dfun_N$ has real
+coefficients.  The conjugate of its unique zero is therefore the same
+zero.  It is real, positive for large $m$, and simple by the
+derivative bound above.  Denote it by $\tau_m$.
+
+The parts of the fundamental sector away from the positive tie ray,
+including its boundary rays, were already excluded uniformly.
+Rotational invariance now gives every remaining large zero as
+$\omega^k\tau_m$.  Distinct rays and the disjoint disks give uniqueness
+of $k$ and $m$.  Taking $\gamma=\gamma_N$ proves the zero location in
+the statement.
+
+Differentiate the normalized expression.  At $z=\tau_m$,
+\[
+G'(\tau_m)
+=
+2is_Ne^{2is_N\tau_m}+R_N'(\tau_m)
+=
+-2is_N+O(e^{-\gamma_N\tau_m}).
+\]
+Since $G(\tau_m)=0$,
+\[
+\Dfun_N'(\tau_m)
+=
+\frac1N e^{e^{-ia_N}\tau_m}G'(\tau_m).
+\]
+Taking absolute values gives the derivative asymptotic.  Differentiating $\Dfun_N(\omega z)=\Dfun_N(z)$ gives the rotation formula.
+\end{proof}
+
+\begin{theorem}[Leading displacement term and derivative sign]\label{thm:first_zero_correction}
+With the notation of \cref{lem:two_term_dominance,thm:large_zero_strings},
+\[
+\tau_m
+=
+t_m+
+\frac{R_N(t_m)}{2is_N}
++
+O(e^{-2\gamma_Nt_m}).
+\]
+The quotient $R_N(t_m)/(2is_N)$ is real.  One also has
+\[
+\Dfun_N'(\tau_m)
+=
+(-1)^{m+1}
+\frac{2s_N}{N}
+e^{c_N\tau_m}
+\left(1+O(e^{-\gamma_N\tau_m})\right).
+\]
+\end{theorem}
+
+\begin{proof}
+Put $\delta_m=\tau_m-t_m$.  The large zero theorem gives $\delta_m=O(e^{-\gamma_Nt_m})$.  Since $e^{2is_Nt_m}=-1$,
+\[
+1+e^{2is_N(t_m+\delta_m)}
+=
+-2is_N\delta_m+O(\delta_m^2).
+\]
+The remainder estimate through the first derivative gives
+\[
+R_N(t_m+\delta_m)
+=
+R_N(t_m)+O(e^{-\gamma_Nt_m}|\delta_m|).
+\]
+Substitution in the zero equation gives the displacement formula.
+
+At the real point $t_m$, the normalized value
+\[
+N e^{-e^{-ia_N}t_m}\Dfun_N(t_m)
+\]
+is purely imaginary.  The two dominant terms cancel there, so $R_N(t_m)$ is purely imaginary and the displayed correction is real.
+
+For the derivative, use the formula in the proof of \cref{thm:large_zero_strings} and
+\[
+e^{-is_N\tau_m}
+=
+(-1)^m(-i)
+\left(1+O(e^{-\gamma_N\tau_m})\right).
+\]
+The stated real sign follows.
+\end{proof}
+
+\begin{corollary}[Leading correction for $N=3$]\label{cor:N3_zero_correction}
+For $N=3$,
+\[
+t_m=\frac{2\pi}{\sqrt3}\left(m+\frac12\right)
+\]
+and
+\[
+\tau_m
+=
+t_m+
+\frac{(-1)^m}{\sqrt3}e^{-3t_m/2}
++
+O(e^{-3t_m}).
+\]
+\end{corollary}
+
+\begin{proof}
+The only nondominant exponent is $-1$.  Hence
+\[
+R_3(t)
+=
+\exp\left(\left(-\frac32+\frac{\sqrt3}{2}i\right)t\right).
+\]
+At $t=t_m$, its phase is $i(-1)^m$.  Insert this value into \cref{thm:first_zero_correction}.
+\end{proof}
+
+\begin{corollary}[The case $N=2$]\label{cor:case_two_zeros}
+For $N=2$,
+\[
+\Dfun_2(z)=\cos z.
+\]
+Its zeros are
+\[
+\pm\left(m+\frac12\right)\pi,
+\qquad m\geq0,
+\]
+and all are simple.  They agree with the formula $t_m=A_2(m+1/2)$.
+\end{corollary}
+
+\begin{proof}
+This is the standard zero set of the cosine function.
+\end{proof}
+
+\begin{corollary}[Eventual simplicity and exact rays]\label{cor:eventual_simplicity}
+For every $N\geq2$, all but finitely many zeros of $\Dfun_N$ are simple.  Every sufficiently large zero lies on one of the rays
+\[
+\omega^k(0,\infty),
+\qquad 0\leq k<N.
+\]
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:large_zero_strings} for $N\geq3$ and \cref{cor:case_two_zeros} for $N=2$.
+\end{proof}
+
+
+\begin{example}[Exact fourth-order strings]\label{ex:fourth_order_zeros}
+For $N=4$,
+\[
+\Dfun_4(z)
+=
+\cos\left(\frac z{\sqrt2}\right)
+\cosh\left(\frac z{\sqrt2}\right).
+\]
+The positive zeros are exactly
+\[
+\tau_m
+=
+\sqrt2\pi\left(m+\frac12\right)
+=
+A_4\left(m+\frac12\right).
+\]
+Rotation by the fourth roots of unity gives the real and imaginary zero strings.  In this case the error term in \cref{thm:large_zero_strings} is identically zero.
+\end{example}
+
+\begin{corollary}[Reduced zeros]\label{cor:reduced_zeros}
+Let $\Lambda_N$ be the nonzero zero multiset of $\Delta_N$.  All but finitely many members of $\Lambda_N$ are positive and simple.  They can be indexed as
+\[
+\lambda_m=\tau_m^N
+\]
+for all sufficiently large $m$.  If $N\geq3$, the notation may be chosen
+as in \cref{thm:large_zero_strings}, and
+\[
+\lambda_m
+=
+ t_m^N
++O\left(t_m^{N-1}e^{-\gamma t_m}\right).
+\]
+For $N=2$, take $\tau_m=t_m=\pi(m+1/2)$ for $m\geq0$; then
+$\lambda_m=t_m^2$ exactly.
+\end{corollary}
+
+\begin{proof}
+The identity $\Dfun_N(z)=\Delta_N(z^N)$ identifies each orbit of $N$ nonzero zeros of $\Dfun_N$ with one zero of $\Delta_N$.  For $N\geq3$, the large orbit representatives are the positive zeros $\tau_m$ from \cref{thm:large_zero_strings}; for $N=2$, use \cref{cor:case_two_zeros}.  Simplicity is preserved because
+\[
+\Dfun_N'(z)=Nz^{N-1}\Delta_N'(z^N)
+\]
+and $z\ne0$.  The asymptotic follows by expanding $\tau_m^N$ about $t_m$.
+\end{proof}
+
+\begin{theorem}[Zero counting asymptotics]\label{thm:zero_counting}
+Let $n_{\Dfun_N}(R)$ count the zeros of $\Dfun_N$ in $|z|\leq R$, with multiplicity.  Let $n_{\Delta_N}(R)$ count the zeros of $\Delta_N$ in $|w|\leq R$.  Then, as $R\to\infty$,
+\[
+n_{\Dfun_N}(R)
+=
+\frac{N\sin(\pi/N)}{\pi}R+O(1)
+\]
+and
+\[
+n_{\Delta_N}(R)
+=
+\frac{\sin(\pi/N)}{\pi}R^{1/N}+O(1).
+\]
+\end{theorem}
+
+\begin{proof}
+Each of the $N$ rays contains one large zero near
+\[
+ t_m=\frac\pi{\sin(\pi/N)}\left(m+\frac12\right).
+\]
+Since $\tau_m-t_m=o(1)$ and the model spacing is the positive constant
+$A_N$, replacing $\tau_m\leq R$ by $t_m\leq R$ changes the count by at
+most a bounded amount.
+The number of such indices with $t_m\leq R$ is
+\[
+\frac{\sin(\pi/N)}\pi R+O(1).
+\]
+Multiplication by $N$ and addition of the finite exceptional set give the first formula.  The second follows from
+\[
+n_{\Dfun_N}(R^{1/N})=Nn_{\Delta_N}(R).
+\]
+\end{proof}
+
+
+\begin{corollary}[Zero exponents]\label{cor:exponent_of_convergence}
+The exponent of convergence of the nonzero zeros of $\Dfun_N$ is one.  The exponent of convergence of the zeros of $\Delta_N$ is $1/N$.
+\end{corollary}
+
+\begin{proof}
+The asymptotic counting formulas in \cref{thm:zero_counting} give the two exponents by partial summation.
+\end{proof}
+
+\section{Hadamard products and zero power sums}\label{sec:hadamard}
+
+The reduction from $z$ to $w=z^N$ removes the rotational repetition of the zeros.
+
+\begin{theorem}[Genus zero product]\label{thm:genus_zero_product}
+For $N\geq2$, let $\Lambda_N$ be the nonzero zero multiset of $\Delta_N$.  Then
+\[
+\Delta_N(w)
+=
+\prod_{\lambda\in\Lambda_N}
+\left(1-\frac w\lambda\right),
+\]
+where the product converges locally uniformly.  Consequently,
+\[
+\Dfun_N(z)
+=
+\prod_{\lambda\in\Lambda_N}
+\left(1-\frac{z^N}{\lambda}\right).
+\]
+\end{theorem}
+
+\begin{proof}
+By \cref{prop:orders}, the order of $\Delta_N$ is $1/N<1$.  By
+\cref{cor:reduced_zeros}, it has infinitely many zeros, and
+\cref{cor:exponent_of_convergence} gives
+\[
+\sum_{\lambda\in\Lambda_N}|\lambda|^{-1}<\infty.
+\]
+Hadamard factorization therefore gives a canonical product of genus zero.
+The only possible exponential factor is a nonzero constant because the order
+is below one.  Since $\Delta_N(0)=1$, that constant is one.  Substitution of
+$w=z^N$ gives the second formula.
+\end{proof}
+
+
+\begin{theorem}[Diagonal Fredholm determinant representation]\label{thm:trace_class_model}
+Let $I_N$ be a multiplicity-sensitive countable index set for $\Lambda_N$
+and put $\mathcal H_N=\ell^2(I_N)$.  On its standard orthonormal basis,
+define the diagonal operator
+\[
+K_Ne_\lambda=\lambda^{-1}e_\lambda.
+\]
+Then $K_N$ is trace class and
+\[
+\Delta_N(w)=\Fdet(I-wK_N).
+\]
+For every $m\geq1$,
+\[
+\kappa_{N,m}=\tr(K_N^m).
+\]
+\end{theorem}
+
+\begin{proof}
+By \cref{cor:exponent_of_convergence},
+\[
+\sum_{\lambda\in\Lambda_N}|\lambda|^{-1}<\infty.
+\]
+Thus the diagonal operator $K_N$ is trace class.  Its Fredholm determinant is the locally uniform product
+\[
+\Fdet(I-wK_N)
+=
+\prod_{\lambda\in\Lambda_N}
+\left(1-\frac w\lambda\right),
+\]
+which equals $\Delta_N(w)$ by \cref{thm:genus_zero_product}.
+
+Taking the logarithm gives
+\[
+-\log\Delta_N(w)
+=
+\sum_{m\geq1}\frac{w^m}{m}\tr(K_N^m)
+\]
+near the origin.  Comparison with the definition of $\kappa_{N,m}$ proves the trace identity.
+\end{proof}
+
+This is the standard diagonal encoding of this family's genus-zero product.
+It is not a general trace-class resolvent or Feshbach theorem.
+
+\begin{corollary}[Complete symmetric function form]\label{cor:complete_symmetric_form}
+For a positive integer $r$, let each eigenvalue $\lambda^{-1}$ of $K_N$ be repeated $r$ times.  If $h_n$ denotes the complete homogeneous symmetric function of degree $n$ in this absolutely summable multiset, then
+\[
+\frac{P_{N,n}(r)}{(Nn)!}=h_n.
+\]
+For arbitrary complex $r$, the Bell polynomial formula is the polynomial continuation obtained by multiplying every power sum by $r$.
+\end{corollary}
+
+\begin{proof}
+The generating function for the complete homogeneous symmetric functions is
+\[
+\prod_{\lambda\in\Lambda_N}
+\left(1-\frac w\lambda\right)^{-r}
+=
+\Delta_N(w)^{-r}.
+\]
+Coefficient comparison gives the first identity.  Power sums determine the complete homogeneous functions through the Newton recurrence.  Replacing each power sum by $r$ times itself gives \cref{thm:reciprocal_bell,thm:logarithmic_newton_recurrence}.
+\end{proof}
+
+
+\begin{proposition}[Products for the normalized sections]\label{prop:normalized_section_product}
+For every $0\leq j<N$, the entire function
+\[
+\Phi_{N,j}(w)
+=
+j!\sum_{n\geq0}\frac{w^n}{(Nn+j)!}
+\]
+has order $1/N$.  If $N\geq2$ and $\Lambda_{N,j}$ is its nonzero zero multiset, then
+\[
+\Phi_{N,j}(w)
+=
+\prod_{\mu\in\Lambda_{N,j}}
+\left(1-\frac w\mu\right).
+\]
+For $m\geq1$, put
+\[
+\sigma_{N,j,m}
+=
+\sum_{\mu\in\Lambda_{N,j}}\mu^{-m}.
+\]
+Then
+\[
+C_{N,j,n}(r)
+=
+\frac{(Nn)!}{n!}
+B_n\bigl(
+ r\sigma_{N,j,1},
+ r1!\sigma_{N,j,2},
+ \ldots,
+ r(n-1)!\sigma_{N,j,n}
+\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+The coefficient formula for the order gives $1/N$.  The function is not a polynomial.  An entire function of order below one with only finitely many zeros would be a polynomial times a constant by Hadamard factorization, which is impossible here.  The genus zero product follows as in \cref{thm:genus_zero_product}.
+
+Taking the logarithm gives
+\[
+-\log\Phi_{N,j}(w)
+=
+\sum_{m\geq1}\sigma_{N,j,m}\frac{w^m}{m}.
+\]
+Since $\Cfun_{N,j}(z)^r=\Phi_{N,j}(z^N)^{-r}$, the Bell polynomial calculation from \cref{thm:reciprocal_bell} gives the coefficient formula.
+\end{proof}
+
+\begin{definition}\label{def:zero_power_sums}
+For $m\geq1$, define
+\[
+\sigma_{N,m}
+=
+\sum_{\lambda\in\Lambda_N}\lambda^{-m},
+\]
+with multiplicities.
+\end{definition}
+
+The series converges absolutely because the exponent of convergence of $\Lambda_N$ is $1/N<1$.
+
+\begin{theorem}[Newton sums for the reduced zeros]\label{thm:newton_sums}
+For $|w|$ below the least zero modulus, with the analytic logarithm
+normalized to zero at the origin,
+\[
+-\log\Delta_N(w)
+=
+\sum_{m\geq1}\sigma_{N,m}\frac{w^m}{m}.
+\]
+Thus
+\[
+\kappa_{N,m}=\sigma_{N,m}.
+\]
+If
+\[
+a_m=\frac{(-1)^m}{(Nm)!},
+\qquad a_0=1,
+\]
+then
+\[
+\sigma_{N,m}
+=
+-ma_m-
+\sum_{k=1}^{m-1}a_k\sigma_{N,m-k}.
+\]
+\end{theorem}
+
+\begin{proof}
+Take the logarithm of the product in \cref{thm:genus_zero_product}.  Absolute convergence in a disk below the first zero permits termwise expansion
+\[
+-\log\left(1-\frac w\lambda\right)
+=
+\sum_{m\geq1}\frac{w^m}{m\lambda^m}.
+\]
+This gives the logarithmic formula and identifies $\kappa_{N,m}$ with $\sigma_{N,m}$.
+
+Differentiate the product identity in logarithmic form to obtain
+\[
+\Delta_N'(w)
+=
+-\Delta_N(w)
+\sum_{m\geq1}\sigma_{N,m}w^{m-1}.
+\]
+Comparison of the coefficient of $w^{m-1}$ gives
+\[
+ma_m
+=
+-\sum_{k=0}^{m-1}a_k\sigma_{N,m-k}.
+\]
+Solving for $\sigma_{N,m}$ gives the recurrence.
+\end{proof}
+
+
+
+\begin{corollary}[Convergent Mittag--Leffler partial-fraction form]\label{cor:mittag_leffler_tangent}
+Away from the zeros of $\Dfun_N$,
+\[
+\Tfun_N(z)
+=
+Nz^{N-1}
+\sum_{\lambda\in\Lambda_N}
+\frac1{\lambda-z^N}.
+\]
+The series converges absolutely and locally uniformly on compact sets
+away from the poles.  Thus no regularizing terms are required.
+\end{corollary}
+
+\begin{proof}
+Logarithmic differentiation of the genus zero product gives
+\[
+-\frac{\Delta_N'(w)}{\Delta_N(w)}
+=
+\sum_{\lambda\in\Lambda_N}\frac1{\lambda-w}.
+\]
+The series is locally uniform because $\sum_{\lambda}|\lambda|^{-1}<\infty$.  Substitute $w=z^N$ and use the chain rule.
+\end{proof}
+
+\begin{proposition}[Theta Bell polynomial formula]\label{prop:theta_bell}
+Put
+\[
+\widetilde{\sigma}_{N,m}=(-1)^m\sigma_{N,m}.
+\]
+Then
+\[
+\Thetafun_{N,n}(u)
+=
+\frac{(Nn)!}{n!}
+B_n\bigl(
+ \widetilde{\sigma}_{N,1}(u^N+u),
+ 1!\widetilde{\sigma}_{N,2}(u^{2N}+u),
+ \ldots,
+ (n-1)!\widetilde{\sigma}_{N,n}(u^{nN}+u)
+\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+The reduced unsigned denominator is
+\[
+\Psi_N(w)=\sum_{n\geq0}\frac{w^n}{(Nn)!}=\Delta_N(-w).
+\]
+By \cref{thm:newton_sums},
+\[
+-\log\Psi_N(w)
+=
+\sum_{m\geq1}\widetilde{\sigma}_{N,m}\frac{w^m}{m}.
+\]
+With $w=z^N$, the logarithm of the theta generating function is
+\[
+\sum_{m\geq1}
+\widetilde{\sigma}_{N,m}(u^{Nm}+u)\frac{w^m}{m}.
+\]
+The complete Bell polynomial formula follows.
+\end{proof}
+
+\begin{corollary}[Tangent coefficients as zero sums]\label{cor:tangent_zero_sums}
+For every $n\geq0$,
+\[
+T_N(n)
+=
+N(Nn+N-1)!\sigma_{N,n+1}.
+\]
+\end{corollary}
+
+\begin{proof}
+Combine \cref{prop:tangent_kappa,thm:newton_sums}.
+\end{proof}
+
+\begin{corollary}[Reciprocal coefficients from zero data]\label{cor:reciprocal_zero_data}
+For every $n\geq0$,
+\[
+P_{N,n}(r)
+=
+\frac{(Nn)!}{n!}
+B_n\bigl(
+ r\sigma_{N,1},
+ r1!\sigma_{N,2},
+ \ldots,
+ r(n-1)!\sigma_{N,n}
+\bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:reciprocal_bell,thm:newton_sums}.
+\end{proof}
+
+\begin{example}[The cosine orbit sums]\label{ex:cosine_orbit_sums}
+For $N=2$,
+\[
+\Delta_2(w)=\cos\sqrt w.
+\]
+Its zeros are
+\[
+\lambda_m=\pi^2\left(m+\frac12\right)^2,
+\qquad m\geq0.
+\]
+Hence
+\[
+\sigma_{2,q}
+=
+\frac{2^{2q}-1}{\pi^{2q}}\zeta(2q).
+\]
+The identity in \cref{cor:tangent_zero_sums} recovers the classical tangent coefficients from these zero power sums.
+\end{example}
+
+\section{Coefficient asymptotics from the nearest zeros}\label{sec:coefficient_asymptotics}
+
+For an entire function $f$, let $\Zcal(f)$ denote its multiset of nonzero zeros.  Let $r$ be a positive integer.  Then $\Dfun_N^{-r}$ is meromorphic and a simple zero of $\Dfun_N$ becomes a pole of order $r$.
+
+\begin{theorem}[Nearest-pole coefficient expansion]\label{thm:nearest_circle_expansion}
+Let $r\in\ZZ_{>0}$.  Suppose the zeros of $\Dfun_N$ of least modulus
+$R$ are simple and form the finite set $\Zcal_R$.  Suppose the next
+zero modulus is $R_2>R$.  At each $\rho\in\Zcal_R$, write the principal
+part
+\[
+\Dfun_N(z)^{-r}
+=
+\sum_{\ell=1}^{r}
+ a_{\rho,\ell}
+\left(1-\frac z\rho\right)^{-\ell}
++
+O(1).
+\]
+Then, for every $R_*$ with $R<R_*<R_2$ and $m=Nn$, as $n\to\infty$,
+\[
+P_{N,n}(r)
+=
+ m!
+\sum_{\rho\in\Zcal_R}
+\sum_{\ell=1}^{r}
+ a_{\rho,\ell}
+\binom{m+\ell-1}{\ell-1}
+\rho^{-m}
++
+O_{R_*}(m!R_*^{-m}).
+\]
+The leading Laurent coefficient is
+\[
+a_{\rho,r}
+=
+(-\rho\Dfun_N'(\rho))^{-r}.
+\]
+\end{theorem}
+
+\begin{proof}
+Subtract the complete principal parts at the zeros on $|z|=R$.  The remainder is holomorphic on $|z|<R_2$, hence on a neighborhood of every closed disk $|z|\leq R_*<R_2$.  Cauchy's estimate gives an ordinary coefficient bound $O_{R_*}(R_*^{-m})$.  The coefficient of $z^m$ in
+\[
+\left(1-\frac z\rho\right)^{-\ell}
+\]
+is
+\[
+\binom{m+\ell-1}{\ell-1}\rho^{-m}.
+\]
+Multiplication by $m!$ converts the ordinary coefficient to $P_{N,n}(r)$.
+
+Near a simple zero,
+\[
+\Dfun_N(z)
+=
+-\rho\Dfun_N'(\rho)
+\left(1-\frac z\rho\right)
++O\left(\left(1-\frac z\rho\right)^2\right).
+\]
+Raising to the power $-r$ gives the formula for $a_{\rho,r}$.
+\end{proof}
+
+\begin{corollary}[Leading dominant zero term]\label{cor:leading_dominant_zero}
+Under the hypotheses of \cref{thm:nearest_circle_expansion},
+\[
+\begin{aligned}
+P_{N,n}(r)
+={}&m!\binom{m+r-1}{r-1}
+\sum_{\rho\in\Zcal_R}
+\frac{\rho^{-m}}{(-\rho\Dfun_N'(\rho))^r}
+\\
+&+O\left(m!m^{r-2}R^{-m}\right)
++O_{R_*}\left(m!R_*^{-m}\right).
+\end{aligned}
+\]
+For $r=1$, the first error term is absent.
+\end{corollary}
+
+\begin{proof}
+The terms with $\ell<r$ in \cref{thm:nearest_circle_expansion} are bounded by a constant times $m^{r-2}R^{-m}$.  The term with $\ell=r$ gives the displayed main term.
+\end{proof}
+
+
+\begin{corollary}[Orbit reduced nearest circle term]\label{cor:orbit_reduced_asymptotic}
+Assume the hypotheses of \cref{thm:nearest_circle_expansion}.  Choose one representative from each orbit of the nearest zeros under multiplication by $\omega$, and call the resulting set $\Zcal_R^{\mathrm{orb}}$.  With $m=Nn$,
+\[
+\begin{aligned}
+P_{N,n}(r)
+={}&N m!\binom{m+r-1}{r-1}
+\sum_{\tau\in\Zcal_R^{\mathrm{orb}}}
+\frac{\tau^{-m}}{(-\tau\Dfun_N'(\tau))^r}
+\\
+&+O\left(m!m^{r-2}R^{-m}\right)
++O_{R_*}\left(m!R_*^{-m}\right).
+\end{aligned}
+\]
+For $r=1$, the first error term is absent.
+\end{corollary}
+
+\begin{proof}
+If $\rho=\omega^k\tau$, then
+\[
+\Dfun_N'(\rho)=\omega^{-k}\Dfun_N'(\tau).
+\]
+Therefore
+\[
+-\rho\Dfun_N'(\rho)
+=-\tau\Dfun_N'(\tau).
+\]
+Since $m=Nn$, one also has $\rho^{-m}=\tau^{-m}$.  Every orbit therefore contributes $N$ equal terms in \cref{cor:leading_dominant_zero}.
+\end{proof}
+
+\begin{corollary}[Secant asymptotic]\label{cor:secant_asymptotic}
+For $N=2$ and $r=1$,
+\[
+P_{2,n}(1)
+\sim
+2(2n)!\left(\frac2\pi\right)^{2n+1}.
+\]
+\end{corollary}
+
+\begin{proof}
+The nearest zeros of $\cos z$ are $\rho=\pm\pi/2$, both simple.  Their contributions in \cref{cor:leading_dominant_zero} are equal.
+\end{proof}
+
+\section{Zero zeta functions}\label{sec:zero_zeta}
+
+The zero counting theorem gives the exact abscissae of absolute convergence.  The exponentially accurate zero locations give more.  They compare the zero zeta with a Hurwitz zeta function.
+
+\begin{definition}\label{def:absolute_zero_zetas}
+Define
+\[
+\mathfrak Z_N^{\mathrm{abs}}(s)
+=
+\sum_{\rho\in\Zcal(\Dfun_N)}|\rho|^{-s}
+\]
+and
+\[
+\mathfrak Z_N^{\mathrm{red}}(s)
+=
+\sum_{\lambda\in\Lambda_N}|\lambda|^{-s},
+\]
+with multiplicities.  Each term means $e^{-s\log|\rho|}$ or $e^{-s\log|\lambda|}$.
+\end{definition}
+
+\begin{theorem}[Abscissae of absolute convergence]\label{thm:zeta_convergence}
+The series $\mathfrak Z_N^{\mathrm{abs}}$ converges absolutely and locally uniformly when
+\[
+\Re s>1.
+\]
+It fails to converge absolutely when $\Re s\leq1$.  The series $\mathfrak Z_N^{\mathrm{red}}$ converges absolutely and locally uniformly when
+\[
+\Re s>\frac1N.
+\]
+It fails to converge absolutely when $\Re s\leq1/N$.  Both functions are holomorphic on their open half planes of absolute convergence.
+\end{theorem}
+
+\begin{proof}
+By \cref{thm:zero_counting}, the zeros of $\Dfun_N$ have linear counting density, while the reduced zeros have counting order $R^{1/N}$.  Partial summation gives absolute convergence in the stated open half planes.  The positive terms obtained after taking absolute values diverge on the boundary and to its left.  Local uniform convergence follows by the Weierstrass test on compact subsets.
+\end{proof}
+
+\begin{theorem}[Meromorphic continuation of the symmetry-orbit zero zeta]\label{thm:zeta_continuation}
+Put
+\[
+A_N=\frac\pi{\sin(\pi/N)}.
+\]
+There is an entire function $Q_N^{\mathrm{red}}$ such that
+\[
+\mathfrak Z_N^{\mathrm{red}}(s)
+=
+A_N^{-Ns}\zeta\left(Ns,\frac12\right)+Q_N^{\mathrm{red}}(s)
+\]
+on $\Re s>1/N$.  The right hand side gives a meromorphic continuation to $\CC$ with one simple pole at $s=1/N$.  Its residue is
+\[
+\frac{\sin(\pi/N)}{N\pi}.
+\]
+
+There is an entire function $Q_N^{\mathrm{abs}}$ such that, initially on
+$\Re s>1$,
+\[
+\mathfrak Z_N^{\mathrm{abs}}(s)
+=
+N A_N^{-s}\zeta\left(s,\frac12\right)+Q_N^{\mathrm{abs}}(s).
+\]
+Thus $\mathfrak Z_N^{\mathrm{abs}}$ continues meromorphically to $\CC$ with one simple pole at $s=1$, of residue
+\[
+\frac{N\sin(\pi/N)}\pi.
+\]
+\end{theorem}
+
+\begin{proof}
+For $N=2$, \cref{cor:case_two_zeros} and
+$\Dfun_2(z)=\Delta_2(z^2)$ give
+\[
+\lambda_m=\pi^2\left(m+\frac12\right)^2,
+\qquad m\geq0.
+\]
+Thus the first formula holds with $Q_2^{\mathrm{red}}=0$.
+
+For $N\geq3$, \cref{cor:reduced_zeros} writes all but finitely many reduced zeros as
+\[
+\lambda_m
+=
+\left(A_N\left(m+\frac12\right)\right)^N(1+\varepsilon_m)
+\]
+where $\lambda_m>0$, $1+\varepsilon_m>0$, and
+\[
+\varepsilon_m
+=
+O\left(t_m^{-1}e^{-\gamma t_m}\right).
+\]
+On every compact set of $s$ values,
+\[
+(1+\varepsilon_m)^{-s}-1
+=
+O(|\varepsilon_m|)
+\]
+uniformly for large $m$.  The difference
+\[
+\lambda_m^{-s}
+-
+A_N^{-Ns}\left(m+\frac12\right)^{-Ns}
+\]
+therefore has a normally convergent sum on every compact subset of
+$\CC$.  Indeed, the model power has at most polynomial growth in $m$
+on a compact set, while $|\varepsilon_m|$ decays exponentially.  The
+finitely many exceptional terms $|\lambda|^{-s}$ and the finitely many
+omitted model terms are entire functions of $s$.  Their addition to the
+normally convergent tail defines $Q_N^{\mathrm{red}}$ and proves the
+first formula. Thus that formula is established for every $N\geq2$.
+
+In either case, the Hurwitz zeta function has a meromorphic continuation with one simple pole at its first argument equal to one and residue one.  Composition with $Ns$ gives the stated pole and residue.
+
+For every $N\geq2$, each nonzero zero $\lambda$ of $\Delta_N$ gives $N$ zeros of $\Dfun_N$, each of modulus $|\lambda|^{1/N}$.  Hence
+\[
+\mathfrak Z_N^{\mathrm{abs}}(s)
+=
+N\mathfrak Z_N^{\mathrm{red}}(s/N).
+\]
+Substitution gives the second formula with
+\[
+Q_N^{\mathrm{abs}}(s)=NQ_N^{\mathrm{red}}(s/N),
+\]
+which is entire.
+\end{proof}
+
+\begin{corollary}[Exact zeta models in orders two and four]\label{cor:exact_zeta_models}
+For $N=2$,
+\[
+\mathfrak Z_2^{\mathrm{red}}(s)
+=
+\pi^{-2s}\zeta\left(2s,\frac12\right)
+\]
+and
+\[
+\mathfrak Z_2^{\mathrm{abs}}(s)
+=
+2\pi^{-s}\zeta\left(s,\frac12\right).
+\]
+For $N=4$, put $A_4=\sqrt2\pi$.  Then
+\[
+\mathfrak Z_4^{\mathrm{red}}(s)
+=
+A_4^{-4s}\zeta\left(4s,\frac12\right)
+\]
+and
+\[
+\mathfrak Z_4^{\mathrm{abs}}(s)
+=
+4A_4^{-s}\zeta\left(s,\frac12\right).
+\]
+In these two cases the entire correction terms in \cref{thm:zeta_continuation} vanish identically.
+\end{corollary}
+
+\begin{proof}
+For $N=2$, the reduced zeros are
+\[
+\pi^2\left(m+\frac12\right)^2,
+\qquad m\geq0.
+\]
+For $N=4$, \cref{ex:fourth_order_zeros} gives the reduced zeros
+\[
+A_4^4\left(m+\frac12\right)^4,
+\qquad m\geq0.
+\]
+Summing their negative powers proves the reduced formulas.  The absolute formulas follow from
+\[
+\mathfrak Z_N^{\mathrm{abs}}(s)
+=
+N\mathfrak Z_N^{\mathrm{red}}(s/N).
+\]
+\end{proof}
+
+\begin{definition}\label{def:branch_orbit_zeta}
+Choose a logarithm for each member of the finite exceptional part of $\Lambda_N$.  Use the real logarithm for the eventual positive sequence.  Define
+\[
+\mathfrak Z_N^{\mathrm{orb}}(s)
+=
+\sum_{\lambda\in\Lambda_N}e^{-s\Log\lambda}.
+\]
+This series is initially defined on $\Re s>1/N$.
+\end{definition}
+
+\begin{corollary}[Branch-dependent symmetry-orbit continuation]\label{cor:branch_grouped_continuation}
+The branch-dependent orbit zeta $\mathfrak Z_N^{\mathrm{orb}}$ continues meromorphically to $\CC$.  It has the same single pole and residue as $\mathfrak Z_N^{\mathrm{red}}$.  Changing the logarithms of the finite exceptional zeros changes the continuation by an entire function.
+\end{corollary}
+
+\begin{proof}
+The tail consists of positive reduced zeros, so it has the same comparison with the Hurwitz zeta.  Only finitely many terms depend on the branch choices.
+\end{proof}
+
+\begin{definition}\label{def:derivative_weighted_zeta}
+Let $q$ be a positive integer.  Choose logarithms of the simple zeros of $\Dfun_N$ with arguments in a fixed bounded interval.  Define
+\[
+\mathfrak Z_{N,q}^{\mathrm{der}}(s)
+=
+\sum_{\substack{\Dfun_N(\rho)=0\\ \Dfun_N'(\rho)\ne0}}
+\frac{e^{-s\Log\rho}}{\Dfun_N'(\rho)^q}.
+\]
+\end{definition}
+
+\begin{theorem}[Derivative-weighted convergence]\label{thm:derivative_weighted_convergence}
+If $N\geq3$ and $q\geq1$, the series $\mathfrak Z_{N,q}^{\mathrm{der}}(s)$ converges locally uniformly for every $s\in\CC$.  It therefore defines an entire function.
+
+For $N=2$, the series converges absolutely and locally uniformly on
+$\Re s>1$, where it defines a holomorphic function.
+\end{theorem}
+
+\begin{proof}
+For $N\geq3$, \cref{thm:large_zero_strings} gives
+\[
+|\Dfun_N'(\rho)|^{-1}
+\leq
+C e^{-c_N|\rho|}
+\]
+for every sufficiently large simple zero.  Let $L$ be a compact subset
+of the $s$ plane.  Because the chosen arguments of the zeros lie in a
+fixed bounded interval, there are constants $C_L$ and $M_L$ such that
+\[
+\sup_{s\in L}|e^{-s\Log\rho}|
+\leq C_L|\rho|^{M_L}
+\]
+for every sufficiently large zero.  Hence the absolute value of the
+corresponding summand is at most
+\[
+C_L'|\rho|^{M_L}e^{-q c_N|\rho|}.
+\]
+The linear zero counting estimate makes this majorant summable.  The
+Weierstrass test gives absolute local uniform convergence of the
+series of entire summands, so its sum is entire.  The finite exceptional
+set causes no difficulty.
+
+For $N=2$, the derivative of the cosine has modulus one at every zero.  The assertion then follows from the linear zero spacing.
+\end{proof}
+
+\begin{remark}\label{rem:multiple_zeros}
+The derivative weighted sum omits the finitely many zeros that might be multiple.  A treatment of those zeros requires the complete principal parts of $\Dfun_N^{-q}$ rather than the single derivative weight.
+\end{remark}
+
+\section{Scope boundaries and further questions}\label{sec:further_questions}
+
+The large-zero theorem settles eventual simplicity but does not classify the
+finite exceptional set. A remaining question is whether every zero of
+$\Dfun_N$ is simple and every reduced zero of $\Delta_N$ is positive. Both
+statements hold for $N=2$ and $N=4$. The argument here proves them only outside
+a compact set for general $N$.
+
+The leading correction in \cref{thm:first_zero_correction} may admit iteration
+to a full exponential expansion for $\tau_m$. Such an expansion is an open
+problem, not a result of this paper. It could refine the entire correction in
+the zero-zeta comparison and lead to explicit special values.
+
+The symmetry-orbit zero zeta has a meromorphic continuation with one pole. No
+functional equation is obtained. A branch-dependent sum over the $N$ roots of
+each reduced zero must specify logarithms on the rays.
+
+The coefficient families in
+\cref{sec:reciprocal_powers,sec:residue_section,sec:theta} have exact formal
+parameter-addition laws. Their arithmetic behavior, including odd-prime
+congruences, dyadic weighting, and $p$-adic or Amice--Mahler interpolation,
+belongs to Paper IX. General bounded-operator semigroup, resolvent, and
+Feshbach theory belongs to Paper VI. Paper III owns general nonlinear
+operation trees, while abstract completion and occupancy questions belong to
+Paper X. None of those theories is inferred from the scalar complex-analytic
+results proved here.
+
+\section{Formalization ledger for version 1.0.0}\label{sec:formalization_ledger}
+
+The released Lean project uses Lean 4 v4.34.0-rc2 and Mathlib revision
+\leanname{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}
+\cite{deMouraUllrich2021,mathlib2020}. Its 151 theorem-map rows resolve to
+1164 unique declarations in the namespace \leanname{Komorebi.PaperIV}:
+953 theorem declarations and 211 constructions. The full namespace audit scans
+2234 declarations, including 1999 theorem declarations. A warning-fatal
+build and the supplied kernel audit allow only
+\leanname{propext}, \leanname{Classical.choice}, and
+\leanname{Quot.sound} as standard transitive axioms.
+
+\begingroup
+\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}p{0.70\textwidth}@{}}
+\toprule
+Manuscript records & Compiled Paper IV scope \\
+\midrule
+\endfirsthead
+\toprule
+Manuscript records & Compiled Paper IV scope (continued) \\
+\midrule
+\endhead
+3.1--3.3 & Actual holomorphic root filters, convergent coefficient
+selection, orthogonal resolution, the exact range--covariance characterization,
+and the complete pointwise cyclic product law. The formal versions hold as well. \\
+4.1--4.5 and 5.1--5.8 & Entire sections, finite exponential formulas,
+derivative cycles, both Wronskians, and unique entire ODE basis expansions.
+Both pointwise addition laws and denominator symmetries are checked.
+The exact ordinary hypergeometric formula follows from the omitted-parameter
+list, Gamma normalization, and Mathlib's everywhere convergent series. \\
+6.1--6.6 & Quotient-algebra power bases and actual exponential-series
+convergence in the finite-dimensional coefficient topology; both pointwise
+section-coordinate identities. Signed-shift powers, all matrix-exponential
+entries, group laws and trace are checked. The characteristic polynomial
+$X^N+1$, its distinct roots, exact spectrum and determinant one are proved. \\
+7.1--7.8 & Named reciprocal families, exact parameter recurrences, Bell
+formula, parameter degree and leading coefficient, and polynomial divisibility.
+Parameter addition holds with any single fixed holomorphic logarithm on the
+stated domain. Newton's recurrence gives the literal Hessenberg determinant;
+all three compact reciprocal-polynomial formulas are checked. \\
+8.1--8.5 & The full tangent coefficient series has the exact kappa and
+factorial normalization, including $N=1$. Reciprocal differentiation holds on
+every stated fixed-logarithm domain. The actual higher Riccati identity holds
+at every point where the denominator is nonzero. \\
+9.1--9.10 & Arbitrary-parameter residue reciprocals and their analytic germs,
+polynomial degree and leading term, sparse Appell laws, joint convolution,
+monicity and covariance. The Hasse and derivative-truncation encodings are
+proved equal; the named Appell polynomial satisfies both the forward action
+and the exact $\Phi_{N,j}(\partial_x^N)^r$ inverse formula. \\
+10.1--10.4 & Exact formal theta reconstruction, polynomial lift and degree,
+literal divisibility by $u$ and, for even $N$, by $u+1$, and the theta Newton
+recurrence with its first coefficient. \\
+11.2, 11.4--11.11 & Two-sided maximum-modulus bounds prove exact order
+and type. The indicator limit holds in every direction, including ties;
+dominant-exponential errors and zero-freeness are uniform on compact sets
+avoiding ties. Near cancellation and the order-two zero set are checked.
+For $N\geq3$, gap and remainder bounds, sector confinement, global exhaustion
+and multiplicity identities give the full large-zero-string theorem.
+The real leading correction, quadratic exponential error, signed derivative
+asymptotic, eventual alternating sign and cubic correction are checked. \\
+11.13--11.15 & The reduced series is entire, and
+$\Dfun_N(z)=\Delta_N(z^N)$ preserves multiplicity away from zero. Finite
+exceptional sets, eventual positive simple reduced zeros, and their stated
+displacement are checked, including $N=2$. Both full disk-counting laws
+retain all exceptional multiplicities. The full-zero reciprocal sums have
+exact thresholds $s>1$ and $s>1/N$, including boundary divergence. \\
+12.1 & For every $N\geq2$, the complete multiplicity-indexed product
+converges uniformly on compact sets and equals $\Delta_N$. Jensen and Poisson
+estimates prove rigidity of the actual quotient from derived growth bounds;
+no growth certificate remains. The original-variable product for $D_N$
+is also checked. \\
+12.2--12.4 & The actual diagonal operator is trace class, with a
+basis-independent trace and determinant given by limits of actual finite
+compressions. Infinite complete homogeneous coefficients are limits of finite
+monomial sums. Every normalized section has exact order $1/N$; for $N\geq2$
+its full zero product and zero-moment Bell formulas are proved. The actual
+complex-power germ at zero has the named residue Taylor coefficients. \\
+12.6--12.10 & The normalized logarithm on each zero-free disk has the
+convergent zero-moment series. Its coefficients equal $\kappa_{N,m}$ and
+satisfy Newton's recurrence. The Mittag--Leffler tangent expansion converges
+absolutely and locally uniformly away from poles. Tangent coefficients and
+the named reciprocal and theta families have their exact zero-moment Bell
+formulas. The full tangent series is identified with the analytic function. \\
+13.1--13.4 & Analytic division constructs each simple-zero principal part;
+its leading coefficient is uniquely determined. Removing the principal parts
+gives a holomorphic remainder and the exact factorial-scaled Cauchy estimate.
+Both leading-term errors are bounded, with the first absent for $r=1$.
+Rotation gives the orbit-reduced main term. The secant formula holds as a
+ratio limit, with an exponentially vanishing relative error. \\
+14.2--14.4, 14.6 & The exact all-zero sums retain analytic multiplicity.
+Their sharp absolute-convergence domains, boundary divergence and local
+uniform convergence are checked. Both Hurwitz comparisons, entire corrections,
+global meromorphic continuations, unique simple poles and exact residues are
+proved. The order-two/four models have identically zero corrections. Branch
+choices on the finite exceptional part change the continuation by an entire
+function and preserve its pole and residue. \\
+14.8 & The derivative-weighted series uses every actual simple zero and genuine
+logarithms with bounded arguments. Absolute and local uniform convergence and
+an entire sum are proved for $N\geq3$; for $N=2$, absolute/local uniform
+convergence and holomorphy hold on $\Re s>1$. \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+The declaration-level theorem map is authoritative. All 68 theorem-like
+records have their full scoped statements covered: 68 full, zero partial,
+and zero unmapped. Rows 143--151 close the final fifteen partial records
+without altering their statements or assumptions. Imported standard fact
+11.1 remains imported. Formal identities, normalized analytic germs, and
+fixed-logarithm domain identities retain their respective stated meanings.
+Finite computations do not change these proof boundaries.
+
+\section{Conclusion}\label{sec:conclusion}
+
+Cyclic projection turns the exponential into a finite differential basis, and
+the signed cycle produces the distinguished denominator $\Dfun_N$. Its
+reciprocal powers yield Bell and Newton recurrences, an additive parameter
+law, Appell systems, and theta polynomials. Reduction by $w=z^N$ then connects
+the reciprocal coefficients to a genus-zero product and reduced-zero power
+sums.
+
+Classical two-term localization, specialized to the regular exponent polygon
+and combined with reflection symmetry, places all sufficiently large zeros
+on symmetry rays. The displacement, derivative and counting estimates yield
+the family-specific Hurwitz comparison for the orbit zero zeta.
+
+\begingroup
+\small
+\let\prscbibliography\thebibliography
+\renewcommand{\thebibliography}[1]{\prscbibliography{#1}\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}}
+\bibliographystyle{alpha}
+\bibliography{references}
+\endgroup
+
+\end{document}

@@ -1,0 +1,46 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+throwError "Paper III namespace theorem count changed: expected 229, found {theorems}"
+logInfo m!"FAIL-CLOSED PAPER III v1.0.1 KERNEL AUDIT PASS: {audited} declarations
+({theorems} theoremInfo); 143 explicit mapped targets; allowed axioms only: propext,
+Classical.choice, Quot.sound"
+↪
+↪
+The gate rejects unsafe declarations, project axioms, opaque declarations, and any collected axiom
+outside propext, Classical.choice, and Quot.sound. It also checks the exact namespace and
+theorem-kind counts. These expected counts are version-specific: a legitimate addition requires
+revisiting them, not deleting the checks to make the build pass.
+The source-policy check additionally rejects proof placeholders and specified shortcuts. Text scan-
+ning alone cannot establish a theorem’s correctness. It is one gate among the build, compiled map
+checks, axiom traversal, and source-integrity checks.
+7.3 Reading the inherited transcript
+The saved transcript has 143 named records. Some say that the target depends on no axioms.
+Others list a subset of the allowed standard basis. The final line records 468 audited namespace
+declarations, including 229 theoremInfo entries, and 143 explicit mapped targets.
+The difference between 88 and 229 is not a discrepancy. Eighty-eight counts the theorem dec-
+larations deliberately mapped to the paper. The compiled namespace count includes generated
+theorems and other supporting theorem entries. Similarly, 143 and 468 refer to different denomi-
+nators: mapped human-facing targets versus every compiled entry under the audited namespace.
+This guide checked that the transcript’s named records agree with the map and the audit directives.
+It also checked the transcript hash against the inherited report. That establishes consistency and
+byte identity of the preserved materials. It does not authenticate an external compiler session by
+itself. A new execution is the direct way to regenerate compiler evidence from those sources.
+7.4 The inherited Papers I–II references
+Paper III records twelve unique declarations from the separately verified Papers I–II v1.2.1 bundle.
+They appear in fourteen manuscript references because two refinement declarations are used twice.
+The bundle is pinned by SHA-256:
+a20cf9353f0e882834d31e665dfd819a04e43fa606d402309be63e3b94447052
+The standalone Paper III project does not import or recompile those declarations. Its gate validates
+inherited annotations against INHERITED_DEPENDENCY_MANIFEST_v1.2.1.md. These references must
+therefore be described as inherited evidence. They are not extra entries in the 143-target Paper III
+namespace audit. Appendix B prints the exact dependency names and roles.
+7.5 Replay from a preserved source copy
+The source release offers an offline integrity mode. From its root, run:
+bash VERIFY.sh
+This mode checks release membership, checksums, map and audit consistency, manuscript status
+references, and the saved transcript. It does not run Lean. It is suitable for checking that a copied
+release still matches its own preserved manifest.
+For a new formal run, work in a copy of the preserved release. From formalization/lean, run the
+release’s documented commands in order:
+28

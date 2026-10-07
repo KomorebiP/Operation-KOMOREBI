@@ -1,0 +1,597 @@
+% Exact worked exposition. The original manuscript and Lean sources are unchanged.
+
+\vpage{1}{Three kinds of resolution}{PAPER II / A WORKED VISUAL GUIDE}{Traditional paper: Definition 3.4 (p. 7); Theorem 5.10 (p. 19); Theorem 7.7 (p. 28)}
+Paper II asks three different questions that can all sound like ``increase the resolution.'' This guide separates them, then follows small objects far enough that the distinctions can be computed rather than merely named.
+
+\vfig[.96]{three_resolutions}
+\captiontext{Three different operations. On the left, all coefficients survive a regrouping. In the middle, an integer weight controls which operator words can matter modulo a chosen power. On the right, a rational projector needs a denominator cleared before integral precision can be recovered.}
+
+\head{Address resolution}
+A coefficient such as $x_6$ can sit in the even packet, then the residue-$2$ packet modulo $4$, then the residue-$6$ packet modulo $8$. Its value does not become more accurate. Its \emph{address becomes more specific}, while the full object remains exactly reconstructible.
+
+\head{Arithmetic precision}
+An operator word with total filtration weight at least $L$ vanishes in the specified depth-$L$ quotient. Increasing $L$ can make additional words relevant. This is a change in the precision of the ring in which the answer is required, not a lossless rearrangement of one fixed list.
+
+\head{Separation precision}
+For the integral involution used later, $E_+=(I+A)/2$ is an exact rational projector but not an integral one at $2$. One extra input digit suffices to recover the projected difference to the requested precision. The packet is present over the fraction field even when its integral separation is delayed.
+
+\takeaway{Keep three quantities distinct: the packet address, the precision cutoff, and the denominator weight. Finer addresses do not automatically improve arithmetic precision or remove a spectral denominator.}
+
+\vpage{2}{An atlas of the refinement layer}{ORIENTATION / SYMBOLS WITH JOBS}{Traditional paper: Definition 3.2 (p. 6); Definition 3.4 (p. 7); Definition 7.6 (p. 27)}
+The same letter can have different roles in different realizations. The table fixes the roles used here. Every small matrix in the guide is explicitly supplied; no diagonalization or classification theorem is inferred from a picture.
+
+{\small
+\begin{tabularx}{\linewidth}{@{}p{.15\linewidth}Yp{.28\linewidth}@{}}\toprule
+\textbf{Object} & \textbf{Role} & \textbf{Worked instance}\\\midrule
+$P_{N,j}$ & Retain coefficients with address $j$ modulo $N$. & Even/odd masks, then mod-$4$ and mod-$8$ masks.\\
+$\mathcal A_N,\mathcal S_N$ & Split into range-restricted packet vectors, then sum them. & A permutation/interleaving of eight coordinates.\\
+$J,C$ & Exact refinement and regrouping. In the defect chapter, $C$ may instead be any supplied coarsening map. & A permutation in V--5; a shear in V--22.\\
+$T_{ba}$ & Input packet $a$, output packet $b$: $P_bTP_a$. & Blocks of a finite cyclic filter.\\
+$D,H,A$ & $T=D+H=D(I+A)$, with $A=D^{-1}H$. & Explicit integral $2\times2$ matrices.\\
+$w(e),W(\gamma)$ & Positive certified edge gain and its additive word weight. & $w(a)=1$, $w(b)=2$.\\
+$L$ & Precision depth in a quotient such as $\ZZ/2^L\ZZ$. & $L=5$ gives arithmetic modulo $32$.\\
+$A(t),Z(t)$ & Polynomial graph adjacency and unsigned walk-count series. & Two parallel edges remain distinct.\\
+$E,\Lambda,s$ & A rational projector, a specified lattice, and a clearing exponent. & $E_+$ has local weight $1$ at $2$.\\
+$(s_i)$ & Directional weights of a supplied Smith diagonal. & $(1,2)$ modulo $8$ or $(0,1,3)$ across depths.\\
+$\Delta$ & The failure of an independently chosen operator to intertwine: $CT_f-T_cC$. & One nonzero entry $1/16$.\\\bottomrule
+\end{tabularx}}
+
+\head{Suggested reading routes}
+For exact coordinates, read \pagerefV{3}--\pagerefV{8}, then the finite filter on \pagerefV{20}. For weighted inversion and counting, read \pagerefV{9}--\pagerefV{13}. For arithmetic separation and congruence fibers, read \pagerefV{14}--\pagerefV{19}. The final pages distinguish nonlinear chart geometry, error propagation, and the formal contract.
+
+\takeaway{Operator words carry signed matrix values. Graph walks carry unsigned counts. Smith normal form concerns linear congruences; the Smith impedance chart on V--21 is a different, nonlinear construction.}
+
+\vpage{3}{Follow one coefficient through the tower}{MODEL A / LOSSLESS ADDRESS REFINEMENT}{Traditional paper: Theorem 3.3 (p. 6); Theorem 4.6 (p. 13)}
+Take a vector $x=(x_0,\ldots,x_{15})$. A packet is not a single summary number: it retains every coefficient at its selected addresses. For example,
+\[
+P_{2,0}x=(x_0,0,x_2,0,\ldots,x_{14},0).
+\]
+The rail below lists the addresses in each packet. Its display order groups descendants under their parents; it is not the increasing-residue order used in the matrix example on V--5.
+
+\vfig[.96]{coefficient_tower}
+\captiontext{Every row contains all sixteen addresses exactly once. A heavier boundary separates packet ranges. The numbers are coefficient addresses, not new coefficient values. There is no interpolation, averaging, or omitted high-frequency tail.}
+
+The address $6$ is even, is $2$ modulo $4$, and is $6$ modulo $8$. Its coefficient therefore lies in the successive ranges
+\[
+P_{8,6}X\subseteq P_{4,2}X\subseteq P_{2,0}X.
+\]
+The corresponding identities hold as operators:
+\[
+P_{2,0}=P_{4,0}+P_{4,2},\qquad
+P_{4,2}=P_{8,2}+P_{8,6}.
+\]
+Applying either composite parent selector to $P_{8,6}x$ leaves it unchanged; applying the odd selector kills it. This is parent--child absorption, not an approximate resemblance between nearby scales.
+
+\head{Why the reconstruction is unique}
+If a vector is a sum of components in disjoint packet ranges, apply the projector for one range. All other components vanish and the selected component remains. Thus every child component is recovered uniquely from the sum.
+
+\takeaway{Refinement is a sharper address book for the same coefficients. The total number of free coordinates does not change.}
+
+\vpage{4}{Regrouping is not averaging}{MODEL A / THE MEANING OF COARSENING}{Traditional paper: Definition 3.4 (p. 7); Theorem 3.5 (p. 7)}
+The word \emph{coarsening} can suggest compression. In the exact coordinate theorem it means regrouping complete packet vectors. A different operation---replacing each packet by one scalar sum---really does lose information.
+
+For $x=(1,2,3,4)$, the fine packets are the four coordinate-supported vectors. Regrouping gives $(1,0,3,0)$ and $(0,2,0,4)$. Every original coordinate remains available in one of these two vectors.
+
+\vfig[.98]{regrouping_not_averaging}
+\captiontext{The left and middle panels store the same four independent coordinates. The right panel instead applies a $2\times4$ numerical incidence matrix to four scalar entries. That is not the range-restricted exact coordinate map.}
+
+Define
+\[
+X_N^{\rm pkt}=\bigoplus_j P_{N,j}X,
+\qquad
+\mathcal A_Nx=(P_{N,j}x)_j,
+\qquad
+\mathcal S_N(x_j)_j=\sum_jx_j.
+\]
+Completeness and mutual annihilation give both inverse laws. Consequently,
+\[
+J=\mathcal A_4\mathcal S_2,\qquad C=\mathcal A_2\mathcal S_4,
+\qquad CJ=I,\quad JC=I.
+\]
+The apparently larger list of fine packets simply has smaller individual packet spaces.
+
+\head{A kernel witnesses genuine information loss}
+For the scalar incidence matrix $B$ drawn on the right,
+\[
+B(1,0,-1,0)^\mathsf T=0.
+\]
+The zero vector and $(1,0,-1,0)$ therefore have the same two scalar summaries. No inverse can recover the original four scalars from that output alone.
+
+\takeaway{Ask what each packet stores. A list of full packet vectors can be exactly invertible; a list of packet means or totals generally is not.}
+
+\vpage{5}{The operator changes coordinates too}{MODEL A / COHERENCE AND NATURALITY}{Traditional paper: Theorem 3.5 (p. 7); Theorem 3.8 (p. 8)}
+Use a finite periodic carrier $X=\QQ^8$ for this example. Let $Se_j=e_{j+1\bmod8}$ and let
+\[
+T=I+2S+S^2.
+\]
+This is a concrete cyclic model, not an unannounced boundary convention for the finitely supported signal on V--20. Write $R_N$ for the permutation that groups coordinates in increasing residue order modulo $N$.
+
+\vfig[.99]{operator_naturality}
+\captiontext{Actual $8\times8$ matrices. Dots are zero entries; the other entries are exact integers. Heavy lines mark the packet blocks: size four at level two and size two at level four.}
+
+The reordered operators and change of coordinates are
+\[
+\widehat T_N=R_NTR_N^{-1},\qquad J_{4,2}=R_4R_2^{-1}.
+\]
+Multiplication cancels the intermediate coordinate maps:
+\[
+J_{4,2}\widehat T_2=\widehat T_4J_{4,2},\qquad
+J_{8,4}J_{4,2}=J_{8,2}.
+\]
+Thus it makes no difference whether the operator is applied before or after a consistent coordinate change. One must transport the operator, not merely reuse the same numerical matrix under a new ordering.
+
+\head{Refined blocks still reconstruct the same map}
+A coarse block expands as
+\[
+P_bTP_a=\sum_{\beta\succ b,\,\alpha\succ a}P_\beta TP_\alpha.
+\]
+The terms are maps embedded in the original source and target spaces. Adding their norms, or adding their matrix entries after forgetting the embeddings, is not this operator identity.
+
+\takeaway{The fine matrix contains a different block organization of the same operator. An independently guessed coarse matrix is a separate approximation problem, measured later by a defect.}
+
+\vpage{6}{Selectors survive without division}{MODEL A / RESIDUE MASKS IN CHARACTERISTIC TWO}{Traditional paper: Proposition 4.2 (p. 12)}
+Work first in $\mathbb F_2$, where $1+1=0$. The eight coefficients below are just a finite display of a coefficient sequence. The even and odd projectors are diagonal masks with entries zero and one.
+
+\vfig[.95]{division_free_masks}
+\captiontext{Each nonzero input coefficient is retained by exactly one mask. Reconstruction is exact over $\mathbb F_2$. No average and no root of unity is used.}
+
+For a general coefficient ring and a positive integer $N$, the definition is
+\[
+(P_{N,j}x)_n=\begin{cases}x_n,&n\equiv j\pmod N,\\0,&\text{otherwise}.\end{cases}
+\]
+An address belongs to one residue class, so applying two masks either keeps that same coefficient or kills it. This proves
+\[
+P_{N,i}P_{N,j}=\delta_{ij}P_{N,j},\qquad \sum_jP_{N,j}=I.
+\]
+The argument is coordinatewise and does not require the coefficients to form a field.
+
+\head{Why the usual even/odd average is a different formula}
+Over a field of characteristic not two, parity extraction can be represented using $F(z)$ and $F(-z)$ and division by $2$. In characteristic two, $-z=z$ and $2=0$, so that formula cannot be used. The coefficient mask, however, still distinguishes even from odd \emph{exponents}.
+
+This distinction also explains the later involution example. Failure to reduce a rational spectral projector containing $1/2$ does not make every integral coefficient-address selector disappear.
+
+\takeaway{The basic object is the address selector. A Fourier average is one possible realization of it and has additional algebraic hypotheses.}
+
+\vpage{7}{A Fourier certificate you can inspect}{MODEL A / AN EXACT NINE-ENTRY TABLE}{Traditional paper: Theorem 4.3 (p. 12)}
+Take $N=3$ and work in $\mathbb F_7$. Set
+\[
+\omega=2,\qquad \omega^{-1}=4,\qquad \eta=3^{-1}=5.
+\]
+Here $2^3=1$ and neither $2$ nor $2^2$ is one. The unnormalized geometric sums are the entries in the first matrix.
+
+\vfig[.97]{finite_fourier_table}
+\captiontext{All entries are exact residues modulo seven. Multiplying the diagonal value $3$ by $5$ produces $1$. The lower calculation is a genuine failed Fourier certificate in a different coefficient ring.}
+
+On the monomial $z^n$, define $UF(z)=F(2z)$. The proposed projector acts by
+\[
+5\sum_{k=0}^2 4^{jk}2^{nk}.
+\]
+The identity $2^3=1$ makes this depend only on $n\bmod3$. The nine-entry table therefore establishes the formula for every exponent once periodicity is used, rather than requiring a separate test at every coefficient.
+
+\head{Order alone is not sufficient over every ring}
+In $\mathbb F_3\times\mathbb F_3$, the element $(-1,1)$ has order two, but one component is a trivial character. Its nontrivial Fourier sum does not vanish in that component. Thus an element of order $N$ in a ring with zero divisors is not, by itself, the full orthogonality certificate.
+
+\takeaway{The finite table is a checkable sufficient input. Over a field a primitive root supplies it; over a more general ring, inspect the actual table instead of inferring orthogonality from order alone.}
+
+\vpage{8}{One address, two independent residues}{MODEL A / THE DYADIC--ODD RECTANGLE}{Traditional paper: Corollary 4.9 (p. 14)}
+Because $4$ and $3$ are coprime, a residue modulo $12$ is specified by a column $a=n\bmod4$ and a row $b=n\bmod3$. Each cell contains the unique combined address.
+
+\vfig[.96]{crt_address_grid}
+\captiontext{The twelve cells are a permutation of $0,\ldots,11$, not twelve extra degrees of freedom. The selected cell contains every integer congruent to $7$ modulo $12$.}
+
+An explicit reconstruction formula is
+\[
+n\equiv9a+4b\pmod{12},
+\]
+because $9$ is one modulo four and zero modulo three, while $4$ has the opposite pair of residues. For $(a,b)=(3,1)$ this gives $31\equiv7$.
+
+Applying the two masks in either order gives
+\[
+P_{12,7}=P_{4,3}P_{3,1}=P_{3,1}P_{4,3}.
+\]
+More generally, an address survives exactly when it satisfies both congruences. The coprime reconstruction identifies this intersection with one combined residue class.
+
+\head{The hypothesis can be seen failing}
+Replace $4$ and $3$ by $4$ and $6$. The requirements $n\equiv0\pmod4$ and $n\equiv1\pmod6$ are incompatible: the first makes $n$ even and the second makes it odd. A full rectangular address product no longer exists. Compatible pairs must agree modulo the greatest common divisor.
+
+\takeaway{CRT separates address coordinates. It does not claim that dyadic and odd spectral projectors have the same denominator weights or the same lifting behavior.}
+
+\vpage{9}{Which words can survive precision five?}{MODEL B / ORDERED TRANSFERS IN A FILTERED RING}{Traditional paper: Theorem 5.10 (p. 19); Corollary 5.11 (p. 20)}
+Let $E_{ij}$ send the $j$th basis vector to the $i$th. In integral $2\times2$ matrices set
+\[
+a=2E_{01},\qquad b=4E_{10},\qquad A=a+b.
+\]
+Their certified dyadic weights are $1$ and $2$. At precision $L=5$, every word of weight at least five vanishes modulo $32$.
+
+\vfig[.97]{weighted_word_cutoff}
+\captiontext{All nonzero retained terms of the signed inverse sum, followed by the first discarded nonzero word. The empty word contributes $I$. Other words of weight below five can still be zero because $a^2=b^2=0$.}
+
+The words are \emph{written matrix products}: in $ab$, the map $b$ acts first. Therefore
+\[
+ab=8E_{00},\qquad ba=8E_{11},\qquad aba=16E_{01}.
+\]
+The two products $ab$ and $ba$ cannot be identified merely because they have equal weight. Both their order and their source/target information matter.
+
+The pruning rule supplies a sufficient reason for a term to vanish. It is not an assertion that every word below the threshold contributes nontrivially. Packet incompatibility and algebraic relations can remove additional words.
+
+\takeaway{Length controls the sign; cumulative weight controls precision; the ordered matrix product controls the actual contribution. None of these three can replace the others.}
+
+\vpage{10}{An inverse computed in both orders}{MODEL B / A COMPLETE MODULO-32 CALCULATION}{Traditional paper: Theorem 5.10 (p. 19); Corollary 5.11 (p. 20)}
+Keep the matrices from V--9 and choose
+\[
+D=\begin{pmatrix}1&1\\0&1\end{pmatrix},\quad
+D^{-1}=\begin{pmatrix}1&-1\\0&1\end{pmatrix},\quad
+T=D(I+A)=\begin{pmatrix}5&3\\4&1\end{pmatrix}.
+\]
+The six retained contributions sum to
+\[
+S=I-a-b+ab+ba-aba
+=\begin{pmatrix}9&-18\\-4&9\end{pmatrix}.
+\]
+The required inverse is $K=SD^{-1}$ in the quotient, not $D^{-1}S$.
+
+\vfig[.98]{modular_inverse}
+\captiontext{The displayed $K$ uses canonical residues from $0$ to $31$. Both left and right products are the identity modulo $32$. These are exact modular equalities, not floating-point residuals.}
+
+One can verify the claim without trusting the word expansion:
+\[
+TK=\begin{pmatrix}129&64\\64&33\end{pmatrix}\equiv I,
+\qquad
+KT=\begin{pmatrix}65&32\\192&97\end{pmatrix}\equiv I\pmod{32}.
+\]
+The cancellation of the exterior factor $D$ explains the order. Since $T=D(I+A)$, multiply its inverse by $D^{-1}$ on the \emph{right} of the inverse of $I+A$.
+
+\head{What the finite theorem does not require}
+There is no claim here that the same integer series converges in the ordinary real matrix norm. The quotient kills all sufficiently deep products, so a finite sum suffices. The complete normed-ring theorem is a separate result with its own strict contraction hypothesis.
+
+\takeaway{A correct noncommutative formula must work on both sides and preserve the order of its factors. Here the entire result can be checked by two integer matrix products.}
+
+\vpage{11}{The residual tells you when to stop}{MODEL B / A CERTIFIED CUTOFF, NOT A HEURISTIC}{Traditional paper: Theorem 5.10 (p. 19); Corollary 5.11 (p. 20); Algorithm B.2 (p. 49)}
+For $S_N=\sum_{k=0}^{N-1}(-A)^k$, telescoping gives
+\[
+(I+A)S_N=S_N(I+A)=I-(-A)^N.
+\]
+Thus the exact residual is known. To certify precision $L$, it is enough to show that every residual entry is divisible by $2^L$.
+
+\vfig[.94]{inverse_residual_depth}
+\captiontext{The plotted values are the minimum dyadic valuations of the nonzero entries of $(-A)^N$. The dashed line is the requested cutoff $L=5$. This is an exact valuation profile, not a measured numerical convergence curve.}
+
+In this particular model, $A^2=8I$. Therefore
+\[
+v_2(A^{2k})=3k,\qquad v_2(A^{2k+1})=3k+1,
+\]
+where the matrix valuation means the minimum entry valuation. Three geometric terms leave a residual of valuation four and do not suffice modulo $32$. Four terms leave valuation six and do suffice.
+
+The generic positive-weight estimate is more conservative. If every edge weight is at least $m>0$, a word of length $N$ has weight at least $mN$. Hence the cutoff
+\[
+N=\left\lceil\frac Lm\right\rceil
+\]
+is sufficient. Here the certified minimum weight is $m=1$, so the generic choice is five. The extra identity $A^2=8I$ justifies stopping at four in this example.
+
+\takeaway{A structural identity may improve a cutoff. An observed small real norm or an arbitrarily larger claimed minimum edge weight does not supply that certificate.}
+
+\vpage{12}{Walks are not simple paths}{MODEL C / A GRAPH WITH PARALLEL EDGES}{Traditional paper: Theorem 6.6 (p. 23)}
+Consider the directed graph below. The loop $\ell$ has weight one, the two distinct edges $a,b$ from $0$ to $1$ each have weight two, and the return edge $r$ has weight one.
+
+\vfig[.96]{weighted_multigraph}
+\captiontext{Every word on the right is read chronologically from left to right as an edge traversal. This is intentionally different from the right-to-left action of a written operator product in V--9.}
+
+A walk may revisit a vertex and reuse an edge. At total weight five there are six walks from $0$ to $1$. Two use three loops followed by either $a$ or $b$. Four travel to $1$, return to $0$, and travel to $1$ again, with two independent choices of parallel edge.
+
+Their multiplicities enter the polynomial adjacency matrix:
+\[
+A(t)=\begin{pmatrix}t&2t^2\\t&0\end{pmatrix}.
+\]
+The coefficient $2$ remembers the two distinct edges. Replacing it by $1$ would count a different graph.
+
+\head{The first-edge decomposition}
+Let $a_n(s,t)$ count walks of total weight $n$ from $s$ to $t$. Removing the first edge gives
+\[
+a_n(s,t)=\mathbf1_{s=t,\,n=0}
+ +\sum_{\substack{e:\,\mathrm{source}(e)=s\\w(e)\le n}}
+ a_{n-w(e)}(\mathrm{target}(e),t).
+\]
+The empty walk is allowed precisely on the diagonal at weight zero. Positive weights ensure that every contributing walk has length at most $n$, so enumeration at each fixed weight is finite.
+
+\takeaway{The graph series counts unsigned walks, including repetitions and parallel-edge multiplicity. It does not count simple paths, and it does not know whether an associated operator product vanishes or cancels.}
+
+\vpage{13}{A finite graph produces its denominator}{MODEL C / AUTOMATIC RATIONALITY AND RECURRENCE}{Traditional paper: Theorem 6.6 (p. 23); Corollary 6.7 (p. 24)}
+For the graph on V--12, compute the determinant and adjugate rather than guessing a recurrence:
+\[
+I-A(t)=\begin{pmatrix}1-t&-2t^2\\-t&1\end{pmatrix},
+\quad Q(t)=1-t-2t^3,
+\quad \operatorname{adj}(I-A)_{0,1}=2t^2.
+\]
+Since $Q(0)=1$, its inverse exists as a formal power series with integer coefficients.
+
+\vfig[.99]{zeta_recurrence}
+\captiontext{The coefficients are independently computed by the first-edge recurrence and checked against the rational series through weight $24$. Literal edge-walk enumeration supplies a third check through weight $10$.}
+
+From $QZ_{0,1}=2t^2$ one obtains
+\[
+a_0=a_1=0,\quad a_2=2,\qquad a_n=a_{n-1}+2a_{n-3}\quad(n\ge3).
+\]
+The numerator is responsible for the initial exception. Omitting it would incorrectly force the entire series to vanish.
+
+\head{Three boundaries of this calculation}
+This is a \emph{formal} series identity; no analytic convergence at a chosen real or complex value of $t$ is needed. The canonical determinant need not be the minimal denominator after cancellation. Finally, positive weights prevent infinitely many walks at a fixed weight: a single weight-zero loop would already give the infinitely many distinct walks $1,\ell,\ell^2,\ldots$ at weight zero.
+
+\takeaway{Finite positive-weight graph data determine a rational series and an eventual recurrence. The proof does not begin by assuming a certificate $QZ=P$ that already contains that conclusion.}
+
+\vpage{14}{Separate before dividing}{MODEL D / AN EVALUATED B\'EZOUT CERTIFICATE}{Traditional paper: Theorem 7.5 (p. 27); Definition 7.6 (p. 27)}
+Use the integral involution
+\[
+A=\begin{pmatrix}1&1\\0&-1\end{pmatrix},\qquad A^2=I.
+\]
+With $F=A-I$ and $G=A+I$, the identities
+\[
+-F+G=2I,\qquad FG=0
+\]
+are an explicit evaluated B\'ezout certificate. Here all the required commutations follow because these operators are polynomials in the same matrix.
+
+\vfig[.96]{bezout_normalization}
+\captiontext{The denominator-free numerator is quasi-idempotent: $N^2=2N$. Division by the nonzero scalar $2$ gives an idempotent over the fraction field. It does not yet make the projector integral on the selected lattice.}
+
+The numerator $N=G$ acts by $2$ on $\ker(A-I)$ and by zero on $\ker(A+I)$. Thus
+\[
+E_+=\frac12N
+=\begin{pmatrix}1&1/2\\0&0\end{pmatrix}
+\]
+is the required separator. The complementary projector is $E_-=I-E_+$.
+
+\head{A denominator bound need not be minimal}
+The same projector can be presented with the inflated certificate $-2F+2G=4I$. Its numerator is $2G$ and its normalization is still $E_+$. This supplies a two-digit clearing bound at $2$, although one digit is enough. Thus the valuation of a supplied certificate gives an upper bound, not automatically the least possible weight.
+
+For the original sign factors the concrete resultant is $\operatorname{Res}(x-1,x+1)=2$ and the bound is sharp. That equality is special to this displayed calculation, not a universal minimality theorem for every resultant certificate.
+
+\takeaway{First check the evaluated identities and the numerator. Then normalize in the fraction field. Finally ask what denominator is needed on the particular lattice.}
+
+\vpage{15}{Where the dyadic digit is lost}{MODEL D / THE EIGENLATTICE HAS INDEX TWO}{Traditional paper: Proposition 9.3 (p. 34)}
+The eigenspaces are spanned by $(1,0)$ and $(-1,2)$. Their integral eigenvectors do not form an integral basis of $\ZZ^2$. The change-of-basis determinant is two.
+
+\vfig[.94]{dyadic_eigenlattice}
+\captiontext{An ordinary integer-lattice picture, not a drawing of the topology of $\QQ_2$. Filled dots have even second coordinate; unfilled dots lie in the other coset. The hollow point at $(1/2,0)$ records the image of an integral vector under $E_+$.}
+
+Write
+\[
+B=\begin{pmatrix}1&-1\\0&2\end{pmatrix},\qquad
+AB=B\diag(1,-1),\qquad
+E_+=B\diag(1,0)B^{-1}.
+\]
+The index-two eigenlattice explains the denominator in $B^{-1}$ and in the projector. Over the localized lattice $\Lambda_p=\ZZ_{(p)}^2$, the number $2$ is a unit for every odd prime $p$. Hence the local denominator weight is zero there and one at $p=2$.
+
+This is a \emph{local} assertion. Odd localization does not change the fact that the displayed eigenvectors span an index-two sublattice inside the ordinary integer lattice.
+
+\head{The special fiber does not retain the rational splitting}
+Modulo two, $x-1=x+1$ and $A$ becomes a nontrivial unipotent matrix. The entries $1/2$ in $E_\pm$ cannot be reduced modulo two. By contrast, the coefficient selectors on V--6 use only zero and one and remain available.
+
+\takeaway{The obstruction is in integral separation, not in the existence of the two rational eigenspaces. The lattice is part of the question.}
+
+\vpage{16}{One extra digit is genuinely necessary}{MODEL D / A SHARP PRECISION-DELAY EXAMPLE}{Traditional paper: Theorem 7.7 (p. 28); Proposition 9.3 (p. 34)}
+The projector acts by
+\[
+E_+(x,y)=(x+y/2,0).
+\]
+Its factor $1/2$ can consume one dyadic digit. The claim concerns differences: if the inputs agree modulo $2^{m+1}\Lambda$, their projected differences lie in $2^m\Lambda$.
+
+\vfig[.97]{precision_delay}
+\captiontext{For $m=3$, inputs differing by $(0,8)$ agree modulo eight, but their projected outputs differ by $(4,0)$ and do not. Raising the input agreement to modulo sixteen makes the projected outputs agree modulo eight.}
+
+The example works at every positive depth:
+\[
+E_+(0,2^m)=(2^{m-1},0)\notin2^m\Lambda,
+\qquad
+E_+(0,2^{m+1})=(2^m,0)\in2^m\Lambda.
+\]
+Thus a zero-delay promise fails, while one extra input digit is sufficient. This witnesses sharpness for the specified projector and lattice.
+
+\head{The general calculation is just as short}
+If $\pi^sE\Lambda\subseteq\Lambda$ and $x-y=\pi^{m+s}v$, then
+\[
+E(x-y)=\pi^m(\pi^sEv)\in\pi^m\Lambda.
+\]
+No rounding procedure is hiding in this identity. Nor does it authorize reducing $E$ modulo $\pi$ when its entries are nonintegral. Individual projected points may lie in a fractional lattice; the theorem controls their difference at the stated integral scale.
+
+\head{Accuracy and branching are different views}
+The later Smith example records how many inputs share one output at finite depth. Here we ask how accurately an input must be known to determine a projected output difference. Both involve directional divisibility, but they are different questions.
+
+\takeaway{The phrase ``one lost digit'' has an exact meaning: both a sufficiency theorem and an explicit pair of inputs showing that a smaller delay fails.}
+
+\vpage{17}{See every Smith fiber modulo eight}{MODEL E / TWO DIRECTIONAL WEIGHTS}{Traditional paper: Theorem 10.6 (p. 38)}
+Consider the actual map of finite sets
+\[
+(\ZZ/8\ZZ)^2\longrightarrow(\ZZ/8\ZZ)^2,
+\qquad (x,y)\longmapsto(2x,4y).
+\]
+The first coordinate of the output must be even. The second must be zero or four. Those are precisely the attainable targets in the right panel.
+
+\vfig[.95]{smith_fibre_grid}
+\captiontext{All sixty-four input points and all sixty-four possible target addresses are shown. The eight filled target points are the image. Every attainable target has exactly eight preimages; the other fifty-six targets have none.}
+
+For a specific attainable target $(2,4)$,
+\[
+2x\equiv2\pmod8\iff x\in\{1,5\},\qquad
+4y\equiv4\pmod8\iff y\in\{1,3,5,7\}.
+\]
+The coordinate choices are independent, giving $2\cdot4=8$ solutions. The entire carrier is partitioned consistently:
+\[
+8\text{ attainable targets}\ \times\ 8\text{ inputs per target}=64.
+\]
+For an inadmissible target, such as $(1,4)$ or $(2,2)$, the fiber is empty; the same nonzero cardinality formula must not be applied to it.
+
+\head{The arithmetic behind the picture}
+Multiplication by $p^s$ modulo $p^L$ has kernel size $p^{\min(s,L)}$. Its image consists exactly of residues whose canonical representatives are divisible by that same power. The displayed model has $p=2$, $L=3$ and weights $(1,2)$.
+
+\takeaway{A directional weight has two consequences: a divisibility condition on the target and a conditional multiplicity of inputs. Solvability comes before counting.}
+
+\vpage{18}{Transport the whole solution fiber}{MODEL E / EXPLICIT SMITH COORDINATES}{Traditional paper: Theorem 10.6 (p. 38)}
+The preceding diagonal system can be connected to a nondiagonal one by a concrete unimodular change of variables. Supply
+\[
+M=\begin{pmatrix}2&2\\0&4\end{pmatrix},\quad
+V=\begin{pmatrix}1&-1\\0&1\end{pmatrix},\quad
+MV=\diag(2,4)=D.
+\]
+Since $\det V=1$, the correspondence $x=Vy$ is bijective modulo eight, and $Mx=b$ is equivalent to $Dy=b$.
+
+\vfig[.95]{smith_coordinate_transport}
+\captiontext{The exact eight-point fiber of the target $(2,4)$, before and after the supplied coordinate shear. Coordinates are residues in $\{0,\ldots,7\}$; no straight-line interpolation on this modular grid is intended.}
+
+For example, the diagonal solution $y=(1,3)$ corresponds to
+\[
+x=Vy=(-2,3)\equiv(6,3)\pmod8,
+\]
+and $M(6,3)^\mathsf T=(18,12)^\mathsf T\equiv(2,4)^\mathsf T$. Applying the inverse shear recovers the original solution.
+
+\head{Two boundary cases worth keeping visible}
+A unit diagonal coordinate has exactly one solution for every target. A literal zero coordinate has all eight possible inputs when its target is zero, and no input when the target is nonzero. A zero coordinate is not inverted or silently omitted.
+
+The example verifies the displayed diagonalization by multiplication. It does not construct a Smith normal form for an arbitrary matrix or general DVR. The source theorem begins with diagonal data; a general structure theorem supplying those data remains a separate input.
+
+\takeaway{A supplied invertible change of coordinates transports existence, every individual solution, and the fiber count. It cannot turn an inadmissible target into an admissible one without transforming the target as prescribed.}
+
+\vpage{19}{Precision exposes directional freedom}{MODEL E / A DEPTH-BY-DEPTH FIBER BUDGET}{Traditional paper: Theorem 10.6 (p. 38)}
+Take $p=2$ and the supplied diagonal weights $(s_0,s_1,s_2)=(0,1,3)$. At depth $L$, an admissible target has
+\[
+2^{W(L)}\text{ solutions},\qquad
+W(L)=\min(0,L)+\min(1,L)+\min(3,L).
+\]
+Each direction contributes only the amount visible at the current depth.
+
+\vfig[.93]{smith_depth_budget}
+\captiontext{The stacked height records the exponent $W(L)$; the label above each bar records the actual number of solutions. The zero-weight direction contributes no branching. This is a finite cardinality calculation, not an information-theoretic assumption about random inputs.}
+
+The values are
+\[
+\begin{array}{c|rrrrrr}
+L&1&2&3&4&5&6\\\hline
+W(L)&2&3&4&4&4&4\\
+\#\text{ solutions}&4&8&16&16&16&16.
+\end{array}
+\]
+Once $L\ge3$, the nonzero weights have been fully exposed and the admissible fiber cardinality stabilizes at sixteen. The input space still grows as $2^{3L}$; the number of attainable targets grows accordingly.
+
+At depth six, $(1,2,8)$ is admissible and gives sixteen solutions. Replacing the last coordinate by four makes the target inadmissible and gives zero solutions, even though the weights and depth are unchanged.
+
+\head{What changes with a zero diagonal factor?}
+A literal zero factor contributes $L$, not a fixed eventual weight, and requires a zero target coordinate. Its fiber therefore keeps growing with the modulus. That case must not be mistaken for a finite nonzero Smith weight.
+
+\takeaway{The scalar sum of weights gives the count, but the separate weights give the admissibility conditions. Keeping only a determinant valuation can hide which target coordinate fails.}
+
+\vpage{20}{Filter first or split first: same output}{MODEL F / A FINITE POLYPHASE REALIZATION}{Traditional paper: Algorithm B.1 (p. 49)}
+Use the finitely supported signal $x=(1,2,3,4,5,6)$ and the filter $h=(1,2,1)$. Outside the displayed support, the input is zero. Let $e_m=x_{2m}$ and $o_m=x_{2m+1}$.
+
+\vfig[.96]{finite_polyphase_filter}
+\captiontext{Exact integer convolution, including both output tail coefficients. The two bottom rows are the even and odd output phases. Interleaving them reconstructs the full eight-term output.}
+
+If $w$ denotes one delay on a phase sequence, the filter becomes
+\[
+\begin{pmatrix}y_{\rm even}\\y_{\rm odd}\end{pmatrix}
+=
+\underbrace{\begin{pmatrix}1+w&2w\\2&1+w\end{pmatrix}}_{H_{\rm phase}(w)}
+\begin{pmatrix}e\\o\end{pmatrix}.
+\]
+The cross-phase delay is not optional. A unit shift sends an odd sample to the next even position, while it sends an even sample to the odd position in the same phase block.
+
+Here $e=1+3w+5w^2$ and $o=2+4w+6w^2$, so direct polynomial multiplication gives
+\[
+y_{\rm even}=1+8w+16w^2+17w^3,
+\qquad
+y_{\rm odd}=4+12w+20w^2+6w^3.
+\]
+This is the same result as ordinary convolution followed by residue extraction. No numerical transform or limiting argument is needed because every sequence is finitely supported.
+
+\takeaway{A phase matrix is not just a sparsity pattern. Its delay factors carry the quotient-and-remainder information needed when a shift crosses a phase boundary.}
+
+\vpage{21}{Two Smith constructions, different roles}{MODEL G / A NONLINEAR PHASE ORBIT}{Traditional paper: Section 12.3, Smith-phase identity (p. 45)}
+Smith \emph{normal form} concerns linear congruences. The Smith \emph{impedance chart} uses the nonlinear coordinate change
+\[
+\Gamma=\frac{z-1}{z+1},\qquad z=\frac{1+\Gamma}{1-\Gamma}.
+\]
+They share a name, not a mathematical definition. Sample the reflection circle at the exact algebraic points $\Gamma_k=\tfrac12 e^{ik\pi/4}$.
+
+\vfig[.96]{smith_chart_orbit}
+\captiontext{Matching labels identify the same point in the two coordinates. All eight points are computed algebraically; only their placement on the page is rendered numerically. The outer left circle is $|\Gamma|=1$, not part of the sampled radius-$1/2$ orbit.}
+
+The half-turn $\Gamma\mapsto-\Gamma$ gives
+\[
+z\longmapsto\frac1z,\qquad z\ne0,-1.
+\]
+Thus the labels $0$ and $4$ are $3$ and $1/3$. Label $2$ is $(3+4i)/5$, and the opposite point is its reciprocal. The domain restrictions come from the forward and inverse coordinate denominators.
+
+These sampled phase points are not linear idempotent ranges. Refining from two to four to eight samples inserts more points on the same orbit; it does not imply a linear packet decomposition of impedance values.
+
+\takeaway{The chart is a geometric realization of phase action. Its nonlinear coordinate sensitivity near $\Gamma=\pm1$ is not the Smith congruence-fiber count and not a new linear projector theorem.}
+
+\vpage{22}{A small defect can grow under powers}{MODEL H / EXACT TELESCOPING, EXPLICIT GROWTH}{Traditional paper: Theorem 11.1 (p. 39); Corollary 11.3 (p. 39)}
+Choose an invertible coordinate shear but independently keep the same numerical operator at both levels:
+\[
+C=\begin{pmatrix}1&\varepsilon\\0&1\end{pmatrix},\quad
+T_f=T_c=\diag(1,2),\quad \varepsilon=\frac1{16}.
+\]
+Then $\Delta=CT_f-T_cC=\varepsilon E_{01}$. Exact coordinate invertibility has not forced these independently selected operators to intertwine.
+
+\vfig[.95]{power_defect_growth}
+\captiontext{Actual defects and certified upper bounds in the induced infinity norm, both divided by $\varepsilon$. All heights are exact integers. The upper estimate is valid but need not be tight.}
+
+Direct multiplication gives
+\[
+CT_f^n-T_c^nC=\varepsilon(2^n-1)E_{01}.
+\]
+The general telescoping formula explains every contribution:
+\[
+CT_f^n-T_c^nC
+=\sum_{k=0}^{n-1}T_c^{n-1-k}\Delta T_f^k.
+\]
+Since both operator norms are two, the source theorem bounds the error by $n2^{n-1}\varepsilon$. It does not promise a uniform-in-$n$ small error merely because $\varepsilon$ is small.
+
+Had we chosen the transported operator $T_c'=CT_fC^{-1}$, the defect would be zero and every polynomial action would intertwine exactly. That is a different choice of coarse operator, not a stronger conclusion from the faulty one.
+
+\takeaway{Separate coordinate coherence from operator consistency. A one-step defect is propagated by the dynamics on both sides; the telescoping identity tells you exactly how.}
+
+\vpage{23}{Resolvents amplify errors near poles}{MODEL H / A DOMAIN-SENSITIVE COMPARISON}{Traditional paper: Theorem 11.5 (p. 40)}
+For the same model, take $z\notin\{1,2\}$ and form the actual inverse matrices
+\[
+R_f=(zI-T_f)^{-1},\qquad R_c=(zI-T_c)^{-1}.
+\]
+Their off-diagonal intertwining error is
+\[
+CR_f-R_cC=R_c\Delta R_f
+=\frac{\varepsilon}{(z-1)(z-2)}E_{01}.
+\]
+Both inverse hypotheses matter; neither resolvent is asserted at a pole.
+
+\vfig[.94]{resolvent_amplification}
+\captiontext{The bars show exact amplification factors for five rational choices $z>2$. Rows are separate samples, not equally spaced positions on the $z$ axis. The coefficient $\varepsilon=1/16$ has been divided out.}
+
+At $z=3$ the amplification factor is only $1/2$. At $z=201/100$, it is $10000/101$, so a small one-step defect can create a much larger resolvent defect. This follows from the exact formula rather than from unstable floating-point subtraction of two nearly singular inverses.
+
+The certified general norm estimate is
+\[
+\|CR_f-R_cC\|
+\le \|R_c\|\,\|\Delta\|\,\|R_f\|.
+\]
+The paper also proves a one-sided-witness version: a left inverse for the coarse shift and a right inverse for the fine shift suffice for the algebraic identity. That does not turn arbitrary one-sided witnesses into a claim of two-sided resolvent existence.
+
+\takeaway{A small local defect is meaningful only together with control of the surrounding operators or inverses. Near a pole, the domain and amplification factors are part of the theorem, not technical decoration.}
+
+\vpage{24}{Read the certificates with the pictures}{PROOF BOUNDARY / HOW TO USE THIS GUIDE}{Formal source: v1.2.1 / Lean component v1.1.1 / 25-row scoped contract}
+The original release has a frozen twenty-five-item formal contract: twenty-one numbered main-text definitions/results, one Smith-phase identity, and three algorithm specifications. Its recorded Lean evidence is preserved unchanged. This guide adds explanatory models, not a new claim that every illustrative calculation has been formalized in Lean.
+
+{\small
+\begin{tabularx}{\linewidth}{@{}p{.28\linewidth}YY@{}}\toprule
+\textbf{Topic} & \textbf{What is supplied or checked} & \textbf{Do not infer}\\\midrule
+Exact refinement & Complete projector families; a parent map when parent--child formulas are used. & A canonical refinement for every arbitrary pair of decompositions.\\
+Fourier realization & A finite orthogonality table, or field/root hypotheses that provide it. & Orthogonality from multiplicative order alone over every ring.\\
+Weighted inversion & A two-sided inverse of $D$, a multiplicative filtration, and positive certified gains. & Convergence in every possible complete filtered algebra.\\
+Graph rationality & A finite positive-weight multigraph; its actual determinant and adjugate. & Simple-path counts, analytic convergence everywhere, or operator noncancellation.\\
+Spectral separation & Evaluated B\'ezout identities and explicit lattice-preservation data. & Automatic construction or minimality of every resultant certificate.\\
+Smith congruences & Concrete diagonal data modulo $p^L$, with $p>1$. & An automatically constructed general-DVR Smith normal form.\\
+Linear defects & Actual typed maps and the stated inverse or norm witnesses. & Small propagated errors independent of time or distance from a pole.\\\bottomrule
+\end{tabularx}}
+
+\head{Reproduce the explanatory calculations}
+The new source contains \textbf{118 named exact checks}. Each finite range is recorded in the file \texttt{EXACT\_CHECKS.json}. They cover masks, CRT labels, modular inverse products, graph enumeration, rational recurrences, lattice denominators, complete finite fibers, phase identities, and defect formulas. Graphics are generated from those same exact model definitions. Numerical placement of geometric points is only a rendering step.
+
+For this edition, the preserved Python suite was rerun in an isolated working directory: all 48 tests passed. All 118 exact visual checks passed, and all 22 regenerated vector plates matched their source bytes. Thirteen PDF/PNG figure pairs were regenerated and presence-checked; nine numerical summary rows passed the recorded comparison. These checks are not a fresh Lean build. The traditional companion integrates the expanded mathematics and records its local hypothesis corrections. The inherited 25-row formal contract retains its original scope.
+
+\takeaway{Use the guide to understand what a theorem says and why its hypotheses matter. Use the theorem map and preserved proof sources to identify the precise formal result. Neither a picture nor a finite test expands that result's scope.}

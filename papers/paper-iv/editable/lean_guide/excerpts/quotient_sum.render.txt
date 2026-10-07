@@ -1,0 +1,21 @@
+theorem hasSum_cyclicAlgebra_exponential \{N : ℕ\} (hN : 0 < N)
+    \{omega : ℂ\} (ho : IsPrimitiveRoot omega N) (x : A) (hx : x^N = 1)
+    (lambda z : ℂ) :
+    HasSum (fun m : ℕ => ((lambda*z)^m / (m.factorial : ℂ)) • x^m)
+      (∑ j : Fin N, entireTransfer N j.val omega lambda z • x^j.val) := by
+  have h := hasSum_sum (s := Finset.univ) (fun j (_ : j ∈ (Finset.univ : Finset (Fin N))) =>
+    (hasSum_entireTransfer hN j.isLt ho lambda z).smul_const (x^j.val))
+  apply h.congr_fun
+  intro m
+  have hxmod : x^m = x^(m%N) := by
+    calc
+      x^m = x^(m%N + N*(m/N)) := by rw [Nat.mod_add_div]
+      _ = x^(m%N) := by rw [pow_add, pow_mul, hx]; simp
+  rw [hxmod, Finset.sum_eq_single (⟨m%N, Nat.mod_lt m hN⟩ : Fin N)]
+  · simp only [coeff_transferSection, transferSectionCoeff, ite_true]
+    congr 1
+    simp [mul_pow, div_eq_mul_inv, mul_assoc, mul_left_comm, mul_comm]
+  · intro j _ hj
+    have hne : m%N ≠ j.val := by intro he; apply hj; exact Fin.ext he.symm
+    simp [coeff_transferSection, transferSectionCoeff, hne]
+  · simp

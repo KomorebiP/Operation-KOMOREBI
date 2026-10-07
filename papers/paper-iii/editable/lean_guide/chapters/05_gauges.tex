@@ -1,0 +1,69 @@
+\clearpage
+\section{Gauge reconstruction and packet obstruction blocks}
+\subsection{The gauge action fixes its own convention}
+A gauge is a family of fiber automorphisms $G_a:F(a)\to F(a)$. The source convention is
+\[
+ \Gamma^G_{a,b}=G_b\Gamma_{a,b}G_a^{-1}.
+\]
+The definition has to prove that the new pair maps satisfy the self and reverse laws, because its return value is again a reversible connection.
+\excerpt{ReversibleConnections}{gauge}
+The proof of each structural law is pointwise cancellation. Flatness is not needed to define the gauge action.
+
+The defect has different source and target fibers, so it transforms with a gauge at each end:
+\excerpt{ReversibleConnections}{gauge_defect}
+Thus $\Delta^G_{a,b,c}=G_c\Delta_{a,b,c}G_a^{-1}$. Holonomy is based at $a$, so both endpoint gauges are at that vertex:
+\excerpt{ReversibleConnections}{gauge_holonomy}
+This is conjugation, not equality of the original and transformed matrices. Identity versus nonidentity is invariant, and the source also proves the cocycle condition and flatness invariant. A coordinate change may alter entries while preserving these exact statements.
+
+\subsection{Reconstructing a flat connection from canonical transport}
+Suppose a family of frames $\Psi_a:F(a)\simeq M$ and a base vertex $o$ are supplied. The canonical connection is $K_{a,b}=\Psi_b^{-1}\Psi_a$. The source defines
+\[
+ G_a=\Gamma_{o,a}K_{a,o}.
+\]
+Its type is a gauge on each fiber:
+\excerpt{ReversibleConnections}{flat_gauge}
+The reconstruction theorem proves $\Gamma_{a,b}=G_bK_{a,b}G_a^{-1}$ under flatness.
+\excerpt{ReversibleConnections}{flat_reconstruction}
+The proof first exposes the inverse of the defined gauge, then cancels the canonical frame maps. What remains is $\Gamma_{o,b}\Gamma_{a,o}=\Gamma_{a,b}$, the flatness equation at $a,o,b$.
+
+The theorem is relative to supplied frames and a supplied vertex. It does not silently choose a vertex from an empty type. Nor does this declaration prove a classification theorem for topological bundles. Its result is an explicit algebraic formula for a flat normalized reversible pair connection on the supplied data.
+
+\subsection{A packet resolution need not be orthogonal}
+The formal packet-resolution interface asks for a finite complete family of idempotent endomorphisms.
+\excerpt{ReversibleConnections}{packet_resolution}
+Completeness is $\sum_iP_i=I$. Idempotence is $P_i^2=P_i$. The structure does not assert pairwise orthogonality. The block from input packet $\nu$ to output packet $\mu$ is
+\[
+ A_{\mu\nu}=P_\mu A P_\nu.
+\]
+Reconstruction only needs completeness on both sides:
+\excerpt{ReversibleConnections}{block_reconstruction}
+The proof converts the operator completeness equation to its pointwise form. It combines the finite inner sum using linearity, applies completeness at the input, and then uses completeness at the output. No orthogonality cancellation appears.
+
+All blocks vanish if and only if the map vanishes:
+\excerpt{ReversibleConnections}{block_detection}
+The forward direction rewrites the map as its double block sum. The reverse direction substitutes the zero map into the definition of a block. This result is a detector for the whole map even when the projectors overlap.
+
+\subsection{Extracting a packet-supported witness}
+Idempotence is needed for the stronger witness statement:
+\excerpt{ReversibleConnections}{packet_witness}
+A nonzero block supplies some vector $y$ on which that block is nonzero. The proof then takes $x=P_\nu y$. Idempotence ensures $P_\nu x=x$, and the original nonzero block value becomes $P_\mu Ax\ne0$.
+
+The extraction is classical. It proves existence and does not supply a numerical search routine for an arbitrary module. Its input is a proof that a block is nonzero. It does not decide that predicate for the user.
+
+Apply these results to $O=H-I$ on the base fiber of a fixed triangle. The declarations in rows 33 and 34 show
+\[
+ \Delta=0\quad\Longleftrightarrow\quad H=I
+ \quad\Longleftrightarrow\quad O=0
+ \quad\Longleftrightarrow\quad
+ (\forall\mu,\nu)\;P_\mu O P_\nu=0.
+\]
+The complete-map theorem \code{obstructionDetection_equivalences} records the three equivalences joining these four criteria. Nonzero obstruction blocks inherit the packet-supported witness theorem.
+
+\subsection{When a fixed packet pattern survives a gauge}
+Total obstruction always transforms by conjugation at the base vertex. For a \emph{fixed} packet family to transform block by block, the gauge must commute with every projector.
+\excerpt{HolonomyBlocks}{packet_preserving}
+The source first proves that the inverse gauge also commutes with the projectors. That permits moving both the gauge and its inverse past the output and input projectors:
+\excerpt{HolonomyBlocks}{block_gauge}
+Consequently each block is conjugated separately, and each block's zero or nonzero status is invariant. Row 37 specializes this statement to a triangle obstruction and requires \code{P.PacketPreserving (G a)} at the base vertex.
+
+An arbitrary gauge need not preserve the blocks of a fixed resolution. The unconditional fact is conjugation of the total obstruction. The conditional fact is conjugation of each fixed block. Keeping those hypotheses distinct is essential when interpreting a packet obstruction diagram.

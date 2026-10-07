@@ -1,0 +1,84 @@
+\begin{center}
+\fbox{\begin{minipage}{0.91\linewidth}
+\textbf{Fresh formal verification: passed.}
+The project contains 26 checked theorem declarations and 8 definitions.
+The pinned Lean 4.34.0-rc2 compiler accepted the project build, both
+mathematical source modules, the root import, and the 34-declaration
+axiom audit. Every audited project declaration uses only
+\texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound};
+no \texttt{sorryAx} or custom axiom occurs.
+A valid arithmetic control was accepted without axioms. A false arithmetic
+control and an acceptance theorem missing its error-budget premise were
+both rejected with exit code 1.
+This certifies the finite algebra and arithmetic claims listed in this
+companion, under their stated hypotheses.
+\end{minipage}}
+\end{center}
+
+
+The focused namespace is \texttt{KomorebiQCOS}.  Its 26 theorem declarations
+cover exact finite algebra and arithmetic consequences of supplied bounds.
+The model supplies the real factor \(A\), uses finite column sets and finite
+sample indices, and does not formalize the preprocessing that produced that
+factor.  Its sample Gram convention is \(AA^\top\).  Applying a statistic
+with normalization \(Q=\tfrac12v^\top Kv\) requires carrying that scalar
+factor explicitly.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{.25\linewidth}p{.33\linewidth}p{.33\linewidth}@{}}
+\toprule
+Traditional claim & Named Lean declarations & Exact formal coverage\\
+\midrule
+Column blocking and partition refinement &
+\path{gramEntry_union}, \path{gramEntry_reindex} &
+Entrywise Gram additivity for disjoint finite blocks and invariance under a
+matching bijective reindexing\\[2mm]
+Streamed sample-kernel action &
+\path{matrixAction_gram_eq_streamed}, \path{streamedAction_union} &
+Exact finite interchange of sums and block accumulation for \(Kv=A(A^\top v)\)\\[2mm]
+Additivity of operator/statistic &
+\path{matrixAction_gram_union}, \path{quadraticForm_gram_union} &
+Disjoint block sums preserve the action and quadratic form\\[2mm]
+Gram positivity &
+\path{quadraticForm_gram_eq_energy}, \path{quadraticForm_gram_nonneg} &
+Exact sum-of-squares identity and nonnegativity\\[2mm]
+Supplied coefficient order &
+\path{weightedSquares_mono}, \path{weightedSquares_tail_imp} &
+Pointwise order and event implication for supplied weighted sums of squares;
+no eigenvalue construction or probability measure\\[2mm]
+Combining layer errors &
+\path{errorBound_compose} &
+Triangle-inequality addition of two assumed absolute error bounds\\[2mm]
+Requested-budget acceptance &
+\path{errorBound_accept} &
+An assumed error bound meets an assumed larger tolerance; no machine ratio
+or numerical-rounding implementation\\[2mm]
+Enclosure and positivity &
+\path{enclosed_positive} &
+A supplied interval with a positive lower endpoint gives positivity of its
+enclosed real value\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+No row substitutes a short algebraic lemma for the full corresponding
+traditional theorem.  In particular, the pointwise coefficient theorem is
+one leaf of probabilistic tail sandwiching.  The enclosure theorem composes
+supplied bounds; it does not prove their numerical construction.
+
+The following remain outside this focused formal module: Gaussian rotation
+and distributional reduction, the finite spectral theorem, Weyl inclusion,
+phase-graph support and pruning estimates, QR spectral equivalence, residual
+completion and moment inequalities, complex logarithmic packet expansion,
+folding/COS inversion and analytic remainder bounds, interval-library
+correctness, directed serialization, controller software, and hardware
+execution.  Their evidence is given by the traditional proofs, source audits,
+and numerical checks stated elsewhere.
+
+Compiler verification and standard axiom dependencies are recorded in the
+Lean companion and its declaration inventory.  The reproducible companion
+includes \texttt{FiniteGram.lean}, \texttt{Certificates.lean}, and the explicit
+axiom-audit entry point.  Compiler acceptance establishes the listed Lean
+statements for the exact-real model; it does not establish the omitted
+numerical or probabilistic claims.

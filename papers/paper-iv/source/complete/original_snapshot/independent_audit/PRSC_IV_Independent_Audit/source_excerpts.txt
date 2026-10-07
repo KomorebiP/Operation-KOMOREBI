@@ -1,0 +1,638 @@
+
+===== README.md =====
+    1 # Paper IV v1.0.0
+    2 
+    3 **Komorebi P. — September 5, 2026**
+    4 
+    5 All 68 theorem-like manuscript results now have their full scoped statements covered in Lean: 68 full, 0 partial, 0 unmapped. The last 15 partial records are closed by nine new modules. The original statements and hypotheses are preserved.
+    6 
+    7 The 151-row map covers 1164 declarations (953 theorems and 211 constructions). The namespace audit covers 2234 declarations, including 1999 theorem declarations. The warning-fatal integration build passes 3521 jobs. The existing 43 semantic checks are retained. Permitted transitive axioms: `propext`, `Classical.choice`, `Quot.sound`.
+    8 
+    9 The package contains the PDF and LaTeX, complete Lean sources and pinned lockfile, reviewed theorem map and declaration-kind contract, kernel audit, checksum manifest and reproduction scripts. Build caches are excluded.
+   10 
+   11 The general coefficient-order criterion, imported standard fact 11.1, remains explicitly imported; it is outside the 68 results and is not needed by the checked order proofs. Open problems and historical priority are outside this contract. Complex powers retain their stated branch domains; conditional asymptotic theorems retain their original hypotheses.
+   12 
+   13 Run from a short extraction path:
+   14 
+   15 ```sh
+   16 ./VERIFY.sh --release --archive /path/to/PRSC_IV_v1.0.0.zip
+   17 ```
+   18 
+   19 See `provenance/COMPLETION_STATUS.md` for result-level coverage and `formalization/lean/LEAN_THEOREM_MAP_v1.0.0.md` for exact declarations.
+
+===== provenance/EVIDENCE_BOUNDARY.md =====
+    1 # Paper IV evidence boundary
+    2 
+    3 This file records what each kind of evidence in the Paper IV development
+    4 release does and does not establish.
+    5 
+    6 ## Four evidence classes
+    7 
+    8 | Code | Evidence | Meaning |
+    9 |---|---|---|
+   10 | `L` | Lean-backed declaration | A named theorem or construction compiles in the pinned Lean/Mathlib environment. |
+   11 | `P` | Article proof | The manuscript contains a mathematical proof, but the result is not necessarily in Lean. |
+   12 | `I` | Imported fact | The manuscript invokes a cited standard theorem with its hypotheses stated. |
+   13 | `C` | Finite computation | A symbolic or numerical test checks selected finite instances. It is regression evidence, not a universal proof. |
+   14 
+   15 The register's `L(full)` code means the full scoped manuscript result is covered by the aggregate of its map rows. All 68 theorem-like records are full. Every proof is checked under the pinned environment; finite computations do not establish universal theorems.
+   16 
+   17 Complex powers use a formal series, a normalized analytic germ, or a single fixed holomorphic logarithm on the stated zero-free domain. The diagonal determinant is the paper's actual trace-class specialization. Nearest-pole results retain positive integral reciprocal order and simple-nearest-zero hypotheses. Imported standard fact 11.1 remains imported; the checked growth-order proofs do not depend on it. Open claims of universal simplicity, positivity of every reduced zero, full displacement expansions and a zeta functional equation remain open.
+   18 
+   19 ## Audit of the inherited computational package
+   20 
+   21 The following findings are retained from the earlier audit, not claimed as
+   22 new computations in checkpoint 0.14.0. The recovered pre-release package reported `1246/1246` strengthened checks,
+   23 `647/647` legacy checks, and `981/981` table rows. Independent reruns reproduced
+   24 those totals after installing undeclared dependencies. The checks are finite:
+   25 
+   26 - 942 bounded exact-symbolic instances
+   27 - 275 finite numerical examples
+   28 - 15 text or build-hygiene checks
+   29 - 14 unconditional pass markers
+   30 
+   31 Mutation testing changed a projector identity by a false factor of two and a
+   32 zero-counting constant by a false factor of seven; the strengthened suite still
+   33 reported `1246/1246`. The suite therefore cannot serve as theorem proof.
+   34 
+   35 The old archive is retained only as provenance outside the canonical release.
+   36 Its SHA-256 is:
+   37 
+   38 `ac3b97e1f9ae1086ed082a5cdf2e8c6486e0d1bf0c176bd275afaa03a1d2b9b5`
+   39 
+   40 ## Scope allocation in the twelve-paper series
+   41 
+   42 - Paper III owns general nonlinear operation trees.
+   43 - Paper VI owns bounded-operator semigroup, resolvent, and Feshbach theory.
+   44 - Paper IX owns arithmetic congruences and p-adic/Amice--Mahler interpolation.
+   45 - Paper X owns abstract completion and occupancy questions.
+   46 
+   47 Paper IV retains the scalar cyclic analytic family and its specialized diagonal
+   48 determinant model. It does not claim any of the four general theories above.
+
+===== provenance/RUN_ENVIRONMENT.md =====
+    1 # Reproduction environment — v1.0.0
+    2 
+    3 Lean 4.34.0-rc2, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d; Mathlib aeb72f1e9981b6d35b426b16dca7759be3e7ba06. All nine dependency revisions remain pinned. The optional executable-path shim supplies the known executable path in this runtime and changes no proof checker; ordinary installations do not require it.
+    4 
+    5 Nine new modules add 57 mapped declarations. All 15 formerly partial records are closed. The warning-fatal integration build passes 3521 jobs. The live namespace audit covers 2234 declarations / 1999 theoremInfo declarations. All dependencies are restricted to the three disclosed standard axioms. The 43 existing semantic checks are retained.
+    6 
+    7 Release checks cover exact name/kind resolution, aggregate manuscript associations, full namespace kernel dependencies, deterministic PDF reconstruction, fonts and structure, archive CRC/checksum/path parity, and a fresh extracted build with a revision-checked external dependency cache. The final archive contains no build caches.
+
+===== formalization/lean/KomorebiPaperIV/AnalyticReciprocalLaws.lean =====
+    1 /-
+    2 Copyright (c) 2026 Komorebi P. All rights reserved.
+    3 Authors: Komorebi P.
+    4 -/
+    5 import KomorebiPaperIV.CanonicalPartialFractions
+    6 import KomorebiPaperIV.AnalyticCycles
+    7 
+    8 namespace Komorebi.PaperIV
+    9 open Set Filter
+   10 open scoped Topology
+   11 noncomputable section
+   12 
+   13 /-- An actual analytic logarithm on a stated domain. -/
+   14 def IsLogarithmOn (f L : ℂ → ℂ) (s : Set ℂ) : Prop :=
+   15   DifferentiableOn ℂ L s ∧ ∀ z ∈ s, Complex.exp (L z) = f z
+   16 
+   17 /-- Reciprocal powers using one fixed logarithm on the whole domain. -/
+   18 def logarithmPower (L : ℂ → ℂ) (r : ℂ) (z : ℂ) : ℂ :=
+   19   Complex.exp (-r * L z)
+   20 
+   21 theorem logarithmPower_add (L : ℂ → ℂ) (r t z : ℂ) :
+   22     logarithmPower L r z * logarithmPower L t z = logarithmPower L (r + t) z := by
+   23   unfold logarithmPower
+   24   rw [← Complex.exp_add]
+   25   congr 1
+   26   ring
+   27 
+   28 theorem IsLogarithmOn.nonzero {f L : ℂ → ℂ} {s : Set ℂ}
+   29     (hL : IsLogarithmOn f L s) {z : ℂ} (hz : z ∈ s) : f z ≠ 0 := by
+   30   rw [← hL.2 z hz]
+   31   exact Complex.exp_ne_zero _
+   32 
+   33 theorem IsLogarithmOn.deriv {f L : ℂ → ℂ} {s : Set ℂ}
+   34     (hs : IsOpen s) (hL : IsLogarithmOn f L s) {z : ℂ} (hz : z ∈ s) :
+   35     deriv L z = logDeriv f z := by
+   36   have hd := (hL.1 z hz).differentiableAt (hs.mem_nhds hz)
+   37   have he : (fun w => Complex.exp (L w)) =ᶠ[𝓝 z] f :=
+   38     eventually_of_mem (hs.mem_nhds hz) (fun w hw => hL.2 w hw)
+   39   have h := he.deriv_eq
+   40   rw [hd.hasDerivAt.cexp.deriv, hL.2 z hz] at h
+   41   rw [logDeriv_apply]
+   42   apply (eq_div_iff (hL.nonzero hz)).mpr
+   43   simpa [mul_comm] using h
+   44 
+   45 theorem hasDerivAt_logarithmPower {f L : ℂ → ℂ} {s : Set ℂ}
+   46     (hs : IsOpen s) (hL : IsLogarithmOn f L s) (r : ℂ) {z : ℂ} (hz : z ∈ s) :
+   47     HasDerivAt (logarithmPower L r)
+   48       (r * (-logDeriv f z) * logarithmPower L r z) z := by
+   49   change HasDerivAt (fun w => Complex.exp (-r * L w))
+   50     (r * (-logDeriv f z) * Complex.exp (-r * L z)) z
+   51   have hd := (hL.1 z hz).differentiableAt (hs.mem_nhds hz)
+   52   have h := (hd.hasDerivAt.const_mul (-r)).cexp
+   53   rw [hL.deriv hs hz] at h
+   54   simpa only [logarithmPower, neg_mul, mul_neg, mul_assoc, mul_left_comm, mul_comm] using h
+   55 
+   56 theorem reciprocal_fixed_log_derivative {N : ℕ} {L : ℂ → ℂ} {s : Set ℂ}
+   57     (hs : IsOpen s) (hL : IsLogarithmOn (canonicalSignedDenominator N) L s)
+   58     (r : ℂ) {z : ℂ} (hz : z ∈ s) :
+   59     deriv (logarithmPower L r) z =
+   60       r * analyticTransferTangent N z * logarithmPower L r z :=
+   61   (hasDerivAt_logarithmPower hs hL r hz).deriv
+   62 
+   63 /-- Evaluation of the complete differential Bell polynomial on successive
+   64 derivatives of a function. Its defining recurrence is Y_(n+1)=Y_n'+gY_n. -/
+   65 def analyticDifferentialBell (g : ℂ → ℂ) : ℕ → ℂ → ℂ
+   66   | 0 => fun _ => 1
+   67   | n + 1 => fun z => deriv (analyticDifferentialBell g n) z + g z * analyticDifferentialBell g n z
+   68 
+   69 theorem analyticOnNhd_differentialBell {g : ℂ → ℂ} {s : Set ℂ}
+   70     (hg : AnalyticOnNhd ℂ g s) (n : ℕ) : AnalyticOnNhd ℂ (analyticDifferentialBell g n) s := by
+   71   induction n with
+   72   | zero => intro z _; exact analyticAt_const
+   73   | succ n ih => exact ih.deriv.add (hg.mul ih)
+   74 
+   75 theorem iteratedDeriv_eq_analyticDifferentialBell {f g : ℂ → ℂ} {s : Set ℂ}
+   76     (hs : IsOpen s) (hf : AnalyticOnNhd ℂ f s) (hg : AnalyticOnNhd ℂ g s)
+   77     (hfg : ∀ z ∈ s, deriv f z = g z * f z) (n : ℕ) :
+   78     ∀ z ∈ s, iteratedDeriv n f z = analyticDifferentialBell g n z * f z := by
+   79   induction n with
+   80   | zero => intro z _; simp [analyticDifferentialBell]
+   81   | succ n ih =>
+   82     intro z hz
+   83     have he : iteratedDeriv n f =ᶠ[𝓝 z]
+   84         (fun w => analyticDifferentialBell g n w * f w) :=
+   85       eventually_of_mem (hs.mem_nhds hz) (fun w hw => ih w hw)
+   86     rw [iteratedDeriv_succ, he.deriv_eq,
+   87       ((analyticOnNhd_differentialBell hg n z hz).differentiableAt.hasDerivAt.fun_mul
+   88         (hf z hz).differentiableAt.hasDerivAt).deriv,
+   89       hfg z hz]
+   90     simp only [analyticDifferentialBell]
+   91     ring
+   92 
+   93 theorem analytic_higher_riccati {N : ℕ} (hN : 0 < N) {z : ℂ}
+   94     (hz : canonicalSignedDenominator N z ≠ 0) :
+   95     analyticDifferentialBell (fun w => -analyticTransferTangent N w) N z = -1 := by
+   96   let f := canonicalSignedDenominator N
+   97   let s := {w : ℂ | f w ≠ 0}
+   98   have hf : Differentiable ℂ f := fun w =>
+   99     (analyticAt_entireSigned N 0 (canonicalPrimitiveRoot N) (canonicalSignedRoot N) w).differentiableAt
+  100   have hs : IsOpen s := isOpen_ne_fun hf.continuous continuous_const
+  101   have hg : AnalyticOnNhd ℂ (fun w => -analyticTransferTangent N w) s := by
+  102     intro w hw
+  103     change AnalyticAt ℂ (fun w => -(-logDeriv f w)) w
+  104     simp only [neg_neg, logDeriv_apply]
+  105     have hfa := hf.analyticAt w
+  106     have hfd := hfa.deriv
+  107     exact hfd.fun_div hfa (show f w ≠ 0 from hw)
+  108   have hfg : ∀ w ∈ s, deriv f w = (-analyticTransferTangent N w) * f w := by
+  109     intro w hw
+  110     change deriv f w = -(-logDeriv f w) * f w
+  111     simp only [neg_neg, logDeriv_apply]
+  112     exact (div_mul_cancel₀ _ hw).symm
+  113   have he := iteratedDeriv_eq_analyticDifferentialBell hs (fun w _ => hf.analyticAt w) hg hfg N z hz
+  114   have hode := entireSigned_ode (canonicalPrimitiveRoot_isPrimitive hN) (canonicalSignedRoot_pow hN) 0 z
+  115   change deriv^[N] f z = -f z at hode
+  116   rw [iteratedDeriv_eq_iterate, hode] at he
+  117   apply mul_right_cancel₀ hz
+  118   calc
+  119     _ = -f z := he.symm
+  120     _ = _ := by ring
+  121 
+  122 end
+  123 end Komorebi.PaperIV
+
+===== formalization/lean/KomorebiPaperIV/NewtonDeterminant.lean =====
+    1 /-
+    2 Copyright (c) 2026 Komorebi P. All rights reserved.
+    3 Authors: Komorebi P.
+    4 -/
+    5 import KomorebiPaperIV.ReciprocalCompletion
+    6 import Mathlib.LinearAlgebra.Matrix.Block
+    7 import Mathlib.Data.Nat.Factorial.BigOperators
+    8 
+    9 namespace Komorebi.PaperIV
+   10 noncomputable section
+   11 open Matrix Finset
+   12 variable {K : Type*} [Field K] [CharZero K]
+   13 
+   14 /-- Newton's lower Hessenberg matrix, including its negative superdiagonal. -/
+   15 def newtonHessenberg (p : ℕ → K) (n : ℕ) : Matrix (Fin n) (Fin n) K :=
+   16   fun i j => (if j.val ≤ i.val then p (i.val+1-j.val) else 0) -
+   17     (if j.val = i.val+1 then (i.val+1 : K) else 0)
+   18 
+   19 omit [CharZero K] in
+   20 private theorem newton_column_sum (p b : ℕ → K) (n : ℕ)
+   21     (hb : ∀ i, ∑ j ∈ range (i+1), b j * p (i+1-j) = (i+1 : K)*b (i+1))
+   22     (i : Fin (n+1)) :
+   23     (∑ j : Fin (n+1), b j.val * newtonHessenberg p (n+1) i j) =
+   24       if i = Fin.last n then (n+1 : K)*b (n+1) else 0 := by
+   25   have hi : i.val+1 ≤ n+1 := i.isLt
+   26   simp only [newtonHessenberg, mul_sub, sum_sub_distrib]
+   27   rw [Fin.sum_univ_eq_sum_range (f := fun j => b j * (if j ≤ i.val then p (i.val+1-j) else 0)),
+   28     Fin.sum_univ_eq_sum_range (f := fun j => b j * (if j = i.val+1 then (i.val+1 : K) else 0))]
+   29   have hl : (∑ j ∈ range (n+1), b j * (if j ≤ i.val then p (i.val+1-j) else 0)) =
+   30       ∑ j ∈ range (i.val+1), b j*p (i.val+1-j) := by
+   31     symm
+   32     calc
+   33       _ = ∑ j ∈ range (i.val+1), b j * (if j ≤ i.val then p (i.val+1-j) else 0) := by
+   34         apply sum_congr rfl
+   35         intro j hj
+   36         simp only [show j ≤ i.val by have := mem_range.mp hj; omega, ite_true]
+   37       _ = _ := sum_subset (range_mono hi) (by
+   38         intro j _ hj
+   39         simp only [show ¬ j ≤ i.val by simpa using hj, ite_false, mul_zero])
+   40   rw [hl, hb]
+   41   by_cases hiLast : i = Fin.last n
+   42   · subst i
+   43     simp only [Fin.val_last, ite_true]
+   44     have hz : (∑ j ∈ range (n+1), b j * (if j = n+1 then (n+1 : K) else 0)) = 0 := by
+   45       apply sum_eq_zero
+   46       intro j hj
+   47       simp only [show j ≠ n+1 by have := mem_range.mp hj; omega, ite_false, mul_zero]
+   48     rw [hz, sub_zero]
+   49   · have hil : i.val+1 < n+1 := by
+   50       have hn : i.val ≠ n := by intro h; apply hiLast; exact Fin.ext h
+   51       omega
+   52     rw [sum_eq_single (i.val+1)]
+   53     · simp [hiLast, mul_comm]
+   54     · intro j _ hj
+   55       simp only [hj, ite_false, mul_zero]
+   56     · exact fun h => (h (mem_range.mpr hil)).elim
+   57 
+   58 /-- The exact determinant solution of Newton's recurrence. -/
+   59 theorem newtonHessenberg_det (p b : ℕ → K) (hb0 : b 0 = 1)
+   60     (hb : ∀ i, ∑ j ∈ range (i+1), b j*p (i+1-j) = (i+1 : K)*b (i+1))
+   61     (n : ℕ) : (newtonHessenberg p n).det = (n.factorial : K)*b n := by
+   62   classical
+   63   cases n with
+   64   | zero => simp [hb0, Matrix.det_isEmpty]
+   65   | succ n =>
+   66     let H := newtonHessenberg p (n+1)
+   67     let C := H.updateCol 0 (fun i => if i = Fin.last n then (n+1 : K)*b (n+1) else 0)
+   68     have hc : C.det = H.det := by
+   69       have h := Matrix.det_updateCol_sum H 0 (fun j => b j.val)
+   70       simp only [Fin.val_zero, hb0, smul_eq_mul, one_mul] at h
+   71       have he : (fun i => if i = Fin.last n then (n+1 : K)*b (n+1) else 0) =
+   72           (fun i => ∑ j, b j.val * H i j) := by
+   73         funext i
+   74         exact (newton_column_sum p b n hb i).symm
+   75       change (H.updateCol 0 _).det = H.det
+   76       rw [he]
+   77       exact h
+   78     have hm : C.submatrix (Fin.last n).succAbove Fin.succ =
+   79         fun i j : Fin n => newtonHessenberg p (n+1) i.castSucc j.succ := by
+   80       ext i j
+   81       simp [C, H, Matrix.submatrix, Matrix.updateCol, Fin.succ_ne_zero]
+   82     have ht : (C.submatrix (Fin.last n).succAbove Fin.succ).IsLowerTriangular := by
+   83       rw [hm]
+   84       intro i j hij
+   85       simp only [newtonHessenberg, Fin.val_castSucc, Fin.val_succ]
+   86       have hij' : i.val < j.val := hij
+   87       simp [show ¬ j.val+1 ≤ i.val by omega, show j.val ≠ i.val by omega]
+   88     have hd : (C.submatrix (Fin.last n).succAbove Fin.succ).det =
+   89         (-1 : K)^n * (n.factorial : K) := by
+   90       rw [Matrix.det_of_isLowerTriangular _ ht, hm]
+   91       simp only [newtonHessenberg, Fin.val_castSucc, Fin.val_succ,
+   92         Nat.not_succ_le_self, ite_false, ite_true, zero_sub]
+   93       rw [Finset.prod_neg]
+   94       simp only [card_univ, Fintype.card_fin]
+   95       congr 1
+   96       rw [Fin.prod_univ_eq_prod_range (f := fun j => (j : K)+1), Nat.factorial_eq_prod_range_add_one, Nat.cast_prod]
+   97       apply prod_congr rfl
+   98       intro j _
+   99       simp
+  100     rw [← hc, Matrix.det_succ_column_zero, sum_eq_single (Fin.last n)]
+  101     · simp only [C, Matrix.updateCol_self, Fin.val_last, ite_true]
+  102       rw [hd, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
+  103       have hs : (-1 : K)^n * (-1)^n = 1 := by rw [← mul_pow]; simp
+  104       calc
+  105         _ = ((-1 : K)^n * (-1)^n) * ((n+1 : K)*(n.factorial : K)*b (n+1)) := by ring
+  106         _ = _ := by rw [hs, one_mul]
+  107     · intro i _ hi
+  108       simp [C, hi]
+  109     · simp
+  110 
+  111 /-- The Newton determinant printed in Theorem 7.6. -/
+  112 theorem reciprocalOrdCoeff_newton_determinant (N n : ℕ) (r : K) :
+  113     reciprocalOrdCoeff N n r = (n.factorial : K)⁻¹ *
+  114       (newtonHessenberg (fun k => r*kappaCoeff N k) n).det := by
+  115   have hb0 : reciprocalOrdCoeff N 0 r = 1 := by simp [reciprocalOrdCoeff]
+  116   have hb (i : ℕ) : ∑ j ∈ range (i+1), reciprocalOrdCoeff N j r *
+  117       (r*kappaCoeff N (i+1-j)) = (i+1 : K)*reciprocalOrdCoeff N (i+1) r := by
+  118     have h := reciprocalOrdCoeff_newton N r i
+  119     rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] at h
+  120     rw [h, mul_sum]
+  121     apply sum_congr rfl
+  122     intro j hj
+  123     have he : i-j+1=i+1-j := by have := mem_range.mp hj; omega
+  124     rw [he]
+  125     ring
+  126   rw [newtonHessenberg_det _ _ hb0 hb]
+  127   have hf : (n.factorial : K) ≠ 0 := by exact_mod_cast n.factorial_ne_zero
+  128   field_simp
+  129 
+  130 end
+  131 end Komorebi.PaperIV
+
+===== formalization/lean/KomorebiPaperIV/HypergeometricAnalytic.lean =====
+    1 /-
+    2 Copyright (c) 2026 Komorebi P. All rights reserved.
+    3 Authors: Komorebi P.
+    4 -/
+    5 import KomorebiPaperIV.HypergeometricCompletion
+    6 import KomorebiPaperIV.EntireBridge
+    7 import Mathlib.Analysis.SpecialFunctions.RegularizedHypergeometric
+    8 
+    9 namespace Komorebi.PaperIV
+   10 noncomputable section
+   11 open Finset
+   12 
+   13 /-- Exactly the manuscript's denominator parameters, with the parameter 1 omitted. -/
+   14 def residueHypergeometricParameters (N j : ℕ) : Multiset ℂ :=
+   15   ((range N).erase (N-j-1)).val.map (fun a => ((j+a+1 : ℕ) : ℂ)/(N : ℂ))
+   16 
+   17 theorem residueHypergeometricParameters_card {N j : ℕ} (hj : j < N) :
+   18     (residueHypergeometricParameters N j).card = N-1 := by
+   19   rw [residueHypergeometricParameters, Multiset.card_map]
+   20   change ((range N).erase (N-j-1)).card = N-1
+   21   rw [Finset.card_erase_of_mem (show N-j-1 ∈ range N by simp; omega), card_range]
+   22 
+   23 theorem residueHypergeometricParameters_re_pos {N j : ℕ} (hN : 0 < N)
+   24     {c : ℂ} (hc : c ∈ residueHypergeometricParameters N j) : 0 < c.re := by
+   25   obtain ⟨a, _, rfl⟩ := Multiset.mem_map.mp hc
+   26   have hNr : (0 : ℝ) < N := by exact_mod_cast hN
+   27   simpa using div_pos (show (0 : ℝ) < (j+a+1 : ℕ) by positivity) hNr
+   28 
+   29 private theorem pochhammer_ratCast (q : ℕ) (x : ℚ) :
+   30     (((ascPochhammer ℚ q).eval x : ℚ) : ℂ) = (ascPochhammer ℂ q).eval (x : ℂ) := by
+   31   simpa using (Polynomial.eval_map_apply (f := Rat.castHom ℂ)
+   32     (p := ascPochhammer ℚ q) x).symm
+   33 
+   34 private theorem residuePochhammerProduct_erase {N j : ℕ} (hN : 0 < N) (hj : j < N) (q : ℕ) :
+   35     (residuePochhammerProduct N j q : ℂ) = (q.factorial : ℂ) *
+   36       ((residueHypergeometricParameters N j).map (ascPochhammer ℂ q).eval).prod := by
+   37   have ho := congrArg (fun x : ℚ => (x : ℂ))
+   38     (omitted_residuePochhammer_eq_factorial hN hj q)
+   39   simp only [pochhammer_ratCast, Rat.cast_div, Rat.cast_natCast] at ho
+   40   have he := Finset.mul_prod_erase (range N)
+   41     (fun a => (ascPochhammer ℂ q).eval (((j+a+1 : ℕ) : ℂ)/(N : ℂ)))
+   42     (show N-j-1 ∈ range N by simp; omega)
+   43   rw [ho] at he
+   44   rw [residuePochhammerProduct, Rat.cast_prod]
+   45   simp only [pochhammer_ratCast, Rat.cast_div, Rat.cast_natCast]
+   46   simpa only [residueHypergeometricParameters, Multiset.map_map,
+   47     Finset.prod_eq_multiset_prod, Function.comp_apply] using he.symm
+   48 
+   49 /-- Gamma normalization converts Mathlib's regularized coefficients to ordinary coefficients. -/
+   50 theorem regularized_zeroF_normalization (b : Multiset ℂ)
+   51     (hb : ∀ c ∈ b, ∀ k : ℕ, c ≠ -(k : ℂ)) (q : ℕ) :
+   52     (b.map Complex.Gamma).prod * Complex.regularizedHGFunCoeff 0 b q =
+   53       ((q.factorial : ℂ) * (b.map (ascPochhammer ℂ q).eval).prod)⁻¹ := by
+   54   have hn : (b.map Complex.Gamma).prod ≠ 0 := by
+   55     apply Multiset.prod_ne_zero
+   56     intro hc
+   57     obtain ⟨a, ha, he⟩ := Multiset.mem_map.mp hc
+   58     exact Complex.Gamma_ne_zero (hb a ha) he
+   59   have hp : (b.map (ascPochhammer ℂ q).eval).prod =
+   60       (b.map (fun c => Complex.Gamma (c+q))).prod / (b.map Complex.Gamma).prod := by
+   61     rw [← Multiset.prod_map_div]
+   62     congr 1
+   63     apply Multiset.map_congr rfl
+   64     intro c hc
+   65     exact (Complex.Gamma_add_nat_div_Gamma_eq c (hb c hc)).symm
+   66   rw [Complex.regularizedHGFunCoeff, hp]
+   67   simp only [Multiset.map_zero, Multiset.prod_zero, one_div]
+   68   field_simp
+   69 
+   70 /-- Ordinary `₀F_{N-1}` with the paper's literal parameter multiset. -/
+   71 def residueHypergeometric (N j : ℕ) (w : ℂ) : ℂ :=
+   72   ((residueHypergeometricParameters N j).map Complex.Gamma).prod *
+   73     Complex.regularizedHGFun 0 (residueHypergeometricParameters N j) w
+   74 
+   75 theorem residueHypergeometric_hasSum {N j : ℕ} (hN : 0 < N) (hj : j < N) (w : ℂ) :
+   76     HasSum (fun q => (residueZeroFCoeff N j q : ℂ) * w^q)
+   77       (residueHypergeometric N j w) := by
+   78   let b := residueHypergeometricParameters N j
+   79   have hb : ∀ c ∈ b, ∀ k : ℕ, c ≠ -(k : ℂ) := by
+   80     intro c hc k he
+   81     have hp := residueHypergeometricParameters_re_pos hN hc
+   82     rw [he] at hp
+   83     simp only [Complex.neg_re, Complex.natCast_re] at hp
+   84     have hk : (0 : ℝ) ≤ k := Nat.cast_nonneg k
+   85     linarith
+   86   have hs := (Complex.regularizedHGFunSeries 0 b).hasSum (x := w) (by
+   87     rw [Complex.radius_regularizedHGFunSeries_eq_top (by simp)]
+   88     simp)
+   89   have h := hs.mul_left (b.map Complex.Gamma).prod
+   90   change HasSum _ (residueHypergeometric N j w) at h
+   91   apply h.congr_fun
+   92   intro q
+   93   simp only [Complex.regularizedHGFunSeries, FormalMultilinearSeries.ofScalars_apply_eq,
+   94     smul_eq_mul, ← mul_assoc, regularized_zeroF_normalization b hb]
+   95   rw [← residuePochhammerProduct_erase hN hj]
+   96   simp [residueZeroFCoeff]
+   97 
+   98 /-- The pointwise hypergeometric formula, with ordinary normalization and exactly N-1 parameters. -/
+   99 theorem entireTransfer_hypergeometric {N j : ℕ} (hN : 0 < N) (hj : j < N)
+  100     {omega : ℂ} (ho : IsPrimitiveRoot omega N) (lambda z : ℂ) :
+  101     entireTransfer N j omega lambda z =
+  102       (lambda*z)^j / (j.factorial : ℂ) *
+  103         residueHypergeometric N j ((lambda*z)^N / (N : ℂ)^N) := by
+  104   let f := fun m => PowerSeries.coeff m (transferSection N j lambda) * z^m
+  105   have hi : Function.Injective (fun q : ℕ => N*q+j) := by
+  106     intro a b h
+  107     exact Nat.eq_of_mul_eq_mul_left hN (Nat.add_right_cancel h)
+  108   have hf : ∀ m, m ∉ Set.range (fun q : ℕ => N*q+j) → f m = 0 := by
+  109     intro m hm
+  110     have he : m%N ≠ j := by
+  111       intro he
+  112       apply hm
+  113       use m/N
+  114       change N*(m/N)+j=m
+  115       rw [← he, Nat.add_comm, Nat.mod_add_div]
+  116     simp [f, coeff_transferSection, transferSectionCoeff, he]
+  117   have ha := (hi.hasSum_iff hf).2 (hasSum_entireTransfer hN hj ho lambda z)
+  118   have hh := (residueHypergeometric_hasSum hN hj ((lambda*z)^N / (N : ℂ)^N)).mul_left
+  119     ((lambda*z)^j / (j.factorial : ℂ))
+  120   apply ha.unique
+  121   apply hh.congr_fun
+  122   intro q
+  123   dsimp [Function.comp_def, f]
+  124   rw [coeff_transferSection, transferSectionCoeff,
+  125     show (N*q+j)%N = j by simp [Nat.add_mod, Nat.mod_eq_of_lt hj]]
+  126   simp only [one_div, map_inv₀, map_natCast]
+  127   have hn := congrArg (fun a : ℚ => (a : ℂ)) (residueZeroFCoeff_normalization hN j q)
+  128   push_cast at hn
+  129   rw [← hn]
+  130   simp only [div_eq_mul_inv, mul_pow, inv_pow, ← pow_mul]
+  131   rw [pow_add, pow_add]
+  132   simp only [ite_true]
+  133   ring
+  134 
+  135 end
+  136 end Komorebi.PaperIV
+
+===== formalization/lean/KomorebiPaperIV/HadamardIdentification.lean =====
+    1 /-
+    2 Copyright (c) 2026 Komorebi P. All rights reserved.
+    3 Authors: Komorebi P.
+    4 -/
+    5 import KomorebiPaperIV.EntireQuotientGrowth
+    6 import KomorebiPaperIV.CanonicalProductGrowth
+    7 
+    8 namespace Komorebi.PaperIV
+    9 noncomputable section
+   10 open Set Filter
+   11 open scoped Topology
+   12 
+   13 /-- The actual quotient is identically one. No growth certificate is assumed:
+   14 the zero-power bounds, product estimate and Jensen-Poisson estimate prove it. -/
+   15 theorem entireReducedDenominator_quotient_eq_one {N : ℕ} (hN : 2 ≤ N) :
+   16     canonicalProductQuotient (entireReducedDenominator N) = 1 := by
+   17   obtain ⟨hQ, hn, h0, he⟩ := entireReducedDenominator_product_quotient hN
+   18   obtain ⟨g, hg, hg0, hgexp⟩ := entire_normalized_exists_log hQ hn h0
+   19   obtain ⟨C, hC, hbound⟩ := entireReducedDenominator_and_product_growth hN
+   20   have hf : Differentiable ℂ (entireReducedDenominator N) :=
+   21     fun z => (analyticAt_entireReducedDenominator (by omega) z).differentiableAt
+   22   have hP := fullCanonicalProduct_entire (entireReducedDenominator_reciprocal_zeros_summable hN)
+   23   have hgz : g = 0 := entire_sublinear_factor_rigidity hf hP hg
+   24     (fullCanonicalProduct_zero _) hg0 (fun z => by rw [hgexp]; exact he z)
+   25     hC (by norm_num : (3 / 4 : ℝ) < 1) hbound
+   26   funext z
+   27   rw [← hgexp z, hgz]
+   28   exact Complex.exp_zero
+   29 
+   30 /-- The complete genus-zero Hadamard product for every N ≥ 2, including all
+   31 exceptional zeros repeated according to their analytic multiplicities. -/
+   32 theorem entireReducedDenominator_eq_fullCanonicalProduct {N : ℕ} (hN : 2 ≤ N) :
+   33     entireReducedDenominator N = fullCanonicalProduct (entireReducedDenominator N) := by
+   34   funext z
+   35   have he := (entireReducedDenominator_product_quotient hN).2.2.2 z
+   36   rw [entireReducedDenominator_quotient_eq_one hN, Pi.one_apply, mul_one] at he
+   37   exact he.symm
+   38 
+   39 /-- Full statement of Theorem 12.1: equality and convergence uniformly on
+   40 each compact subset for the product over the entire zero multiset. -/
+   41 theorem entireReducedDenominator_hadamard_uniform {N : ℕ} (hN : 2 ≤ N)
+   42     {K : Set ℂ} (hK : IsCompact K) :
+   43     HasProdUniformlyOn
+   44       (fun (i : ZeroMultiplicityIndex (entireReducedDenominator N)) w => 1 - w / indexedZero i)
+   45       (entireReducedDenominator N) K := by
+   46   simpa only [← entireReducedDenominator_eq_fullCanonicalProduct hN] using
+   47     fullCanonicalProduct_uniform_on_compact
+   48       (entireReducedDenominator_reciprocal_zeros_summable hN) hK
+   49 
+   50 theorem canonicalSignedDenominator_hadamard {N : ℕ} (hN : 2 ≤ N) (z : ℂ) :
+   51     canonicalSignedDenominator N z =
+   52       ∏' i : ZeroMultiplicityIndex (entireReducedDenominator N), (1 - z ^ N / indexedZero i) := by
+   53   calc
+   54     _ = entireReducedDenominator N (z ^ N) := canonicalSignedDenominator_eq_reduced_power (by omega) z
+   55     _ = fullCanonicalProduct (entireReducedDenominator N) (z ^ N) :=
+   56       congrFun (entireReducedDenominator_eq_fullCanonicalProduct hN) _
+   57     _ = _ := rfl
+   58 
+   59 end
+   60 end Komorebi.PaperIV
+
+===== formalization/lean/KomorebiPaperIV/DiagonalFredholm.lean =====
+    1 /-
+    2 Copyright (c) 2026 Komorebi P. All rights reserved.
+    3 Authors: Komorebi P.
+    4 -/
+    5 import KomorebiPaperIV.DiagonalTrace
+    6 import KomorebiPaperIV.InfiniteSymmetric
+    7 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+    8 
+    9 namespace Komorebi.PaperIV
+   10 noncomputable section
+   11 open Set Filter InnerProductSpace
+   12 open scoped Topology Classical InnerProductSpace
+   13 
+   14 def diagonalCompression {ι : Type} (a : ι → ℂ) (S : Finset ι) : Matrix S S ℂ :=
+   15   fun i j => ⟪diagonalHilbertBasis ι i.val, diagonalOperator a (diagonalHilbertBasis ι j.val)⟫_ℂ
+   16 
+   17 theorem diagonalCompression_eq_diagonal {ι : Type} {a : ι → ℂ}
+   18     (ha : Summable (fun i => ‖a i‖)) (S : Finset ι) :
+   19     diagonalCompression a S = Matrix.diagonal (fun i : S => a i.val) := by
+   20   ext i j
+   21   simp only [diagonalCompression, diagonalHilbertBasis_inner, diagonalOperator_apply ha,
+   22     diagonalHilbertBasis_apply, Matrix.diagonal_apply]
+   23   by_cases h : i = j
+   24   · simp [h]
+   25   · have hv : i.val ≠ j.val := fun he => h (Subtype.ext he)
+   26     simp [h, hv]
+   27 
+   28 theorem diagonalCompression_determinant {ι : Type} {a : ι → ℂ}
+   29     (ha : Summable (fun i => ‖a i‖)) (S : Finset ι) (w : ℂ) :
+   30     Matrix.det (1 - w • diagonalCompression a S) = ∏ i ∈ S, (1 - w * a i) := by
+   31   have he : (1 - w • diagonalCompression a S) = Matrix.diagonal (fun i : S => 1 - w * a i.val) := by
+   32     rw [diagonalCompression_eq_diagonal ha]
+   33     ext i j
+   34     by_cases h : i = j <;> simp [h]
+   35   rw [he, Matrix.det_diagonal]
+   36   exact Finset.prod_coe_sort S (fun i => 1 - w * a i)
+   37 
+   38 /-- Specialized diagonal Fredholm determinant, obtained as a limit of the
+   39 actual finite-compression determinants in the next theorem. -/
+   40 def diagonalFredholmDeterminant {ι : Type} (a : ι → ℂ) (w : ℂ) : ℂ := ∏' i, (1 - w * a i)
+   41 
+   42 theorem diagonalFredholmDeterminant_compression_limit {ι : Type} {a : ι → ℂ}
+   43     (ha : Summable (fun i => ‖a i‖)) (w : ℂ) :
+   44     Tendsto (fun S : Finset ι => Matrix.det (1 - w • diagonalCompression a S)) atTop
+   45       (𝓝 (diagonalFredholmDeterminant a w)) := by
+   46   have hm : Summable (fun i => ‖w * a i‖) := by simpa only [norm_mul] using ha.mul_left ‖w‖
+   47   simpa only [diagonalCompression_determinant ha, diagonalFredholmDeterminant] using!
+   48     (multipliable_one_sub_of_summable hm).hasProd
+   49 
+   50 def reducedZeroEigenvalue (N : ℕ) (i : ZeroMultiplicityIndex (entireReducedDenominator N)) : ℂ :=
+   51   (indexedZero i)⁻¹
+   52 
+   53 theorem reducedZeroEigenvalue_norm_summable {N : ℕ} (hN : 2 ≤ N) :
+   54     Summable (fun i => ‖reducedZeroEigenvalue N i‖) := by
+   55   simpa [reducedZeroEigenvalue, norm_inv, one_div] using zeroMultiplicity_reciprocal_summable
+   56     (entireReducedDenominator_reciprocal_zeros_summable hN)
+   57 
+   58 def reducedZeroOperator (N : ℕ) := diagonalOperator (reducedZeroEigenvalue N)
+   59 
+   60 theorem reducedZeroOperator_traceClass {N : ℕ} (hN : 2 ≤ N) :
+   61     IsHilbertTraceClass (reducedZeroOperator N) :=
+   62   diagonalOperator_traceClass (reducedZeroEigenvalue_norm_summable hN)
+   63 
+   64 theorem reducedZeroOperator_basis {N : ℕ} (hN : 2 ≤ N)
+   65     (i : ZeroMultiplicityIndex (entireReducedDenominator N)) :
+   66     reducedZeroOperator N (diagonalHilbertBasis _ i) =
+   67       (indexedZero i)⁻¹ • diagonalHilbertBasis _ i :=
+   68   diagonalOperator_apply_basis (reducedZeroEigenvalue_norm_summable hN) i
+   69 
+   70 theorem reducedZeroOperator_fredholm {N : ℕ} (hN : 2 ≤ N) (w : ℂ) :
+   71     diagonalFredholmDeterminant (reducedZeroEigenvalue N) w = entireReducedDenominator N w := by
+   72   calc
+   73     _ = fullCanonicalProduct (entireReducedDenominator N) w := by
+   74       simp only [diagonalFredholmDeterminant, reducedZeroEigenvalue, fullCanonicalProduct, div_eq_mul_inv]
+   75     _ = _ := congrFun (entireReducedDenominator_eq_fullCanonicalProduct hN).symm w
+   76 
+   77 theorem reducedZeroOperator_trace_power {N m : ℕ} (hN : 2 ≤ N) (hm : 0 < m)
+   78     {κ : Type} (b : HilbertBasis κ ℂ (lp (fun _ : ZeroMultiplicityIndex (entireReducedDenominator N) => ℂ) 2)) :
+   79     hilbertBasisTrace b (reducedZeroOperator N ^ m) = kappaCoeff (R := ℂ) N m := by
+   80   rw [reducedZeroOperator, diagonalOperator_pow_trace (reducedZeroEigenvalue_norm_summable hN) m
+   81     (summable_norm_positive_powers (reducedZeroEigenvalue_norm_summable hN) hm),
+   82     kappaCoeff_eq_zeroPowerSum hN hm]
+   83   simp [reducedZeroEigenvalue, zeroPowerSum, one_div, inv_pow]
+   84 
+   85 /-- The actual compression determinants converge uniformly on every compact
+   86 set to the manuscript's entire denominator. -/
+   87 theorem reducedZeroOperator_finite_determinants_uniform {N : ℕ} (hN : 2 ≤ N)
+   88     {K : Set ℂ} (hK : IsCompact K) :
+   89     TendstoUniformlyOn
+   90       (fun S : Finset (ZeroMultiplicityIndex (entireReducedDenominator N)) =>
+   91         fun w => Matrix.det (1 - w • diagonalCompression (reducedZeroEigenvalue N) S))
+   92       (entireReducedDenominator N) atTop K := by
+   93   have h := (entireReducedDenominator_hadamard_uniform hN hK).tendstoUniformlyOn
+   94   simpa only [diagonalCompression_determinant (reducedZeroEigenvalue_norm_summable hN),
+   95     reducedZeroEigenvalue, div_eq_mul_inv, Finset.prod_fn] using h
+   96 
+   97 end
+   98 end Komorebi.PaperIV

@@ -1,0 +1,49 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+| input i =>
+exact hagree i (by simp [inputs])
+| constant c =>
+rfl
+| unary op child ih =>
+simp only [eval]
+congr 1
+exact ih fun i hi ↦hagree i (by simpa [inputs] using hi)
+| binary op left right ihLeft ihRight =>
+simp only [eval]
+congr 1
+· exact ihLeft fun i hi ↦hagree i (by simp [inputs, hi])
+· exact ihRight fun i hi ↦hagree i (by simp [inputs, hi])
+In an input case, the agreement hypothesis applies to that input’s singleton support. In a constant
+case, both evaluations are definitionally equal. At a unary node, the induction hypothesis identifies
+the child values, and applying the same unary function preserves equality. At a binary node, the
+two child induction hypotheses apply because each child’s support lies in the union.
+The result is one directional statement: agreement on the syntactically named inputs implies equal
+evaluation. It does not claim every named input is semantically influential. For example, an oper-
+ation may ignore one argument. The syntactic support remains a safe dependency set.
+If tree.inputs = ∅, agreement on the empty set is vacuous, so the value is independent of the input
+environment. The source proves this as eval_eq_of_inputs_eq_empty. Constants and semantics
+are held fixed between the two evaluations. Changing the semantics would require a different
+comparison theorem.
+6.3 What the nonlinear extension adds outside this contract
+The traditional companion develops stronger ordinary statements about typed or colored trees,
+multilinear packet expansions, composition defects, and higher-order structures. The finite Lean
+contract contains the common-value unary/binary grammar and its input-locality theorem. It
+does not contain the dependent colored-tree development or a tree-level Faà di Bruno theorem.
+This boundary is mathematical, not stylistic. A colored tree needs compatibility between node
+input and output types. A multilinear packet expansion needs algebraic hypotheses absent from
+arbitrary unary and binary semantics. The existing locality proof cannot certify these statements
+by a change of terminology.
+6.4 Residuals and a fixed proposed solution
+The obstruction API asks for a function residual : Candidate →Packet →Residual, with only
+Zero Residual assumed. A candidate is a solution when every packet residual is zero. A certificate
+stores one packet at which its residual is nonzero:
+Source: KomorebiPaperIII/NonlinearObstructions.lean.
+structure ObstructionPacket
+(residual : Candidate →Packet →Residual) (candidate : Candidate) where
+packet : Packet
+nonzero : residual candidate packet ≠0
+The candidate appears in the certificate’s type. A certificate for one candidate cannot directly be
+passed as a certificate for a different one. The theorem ObstructionPacket.not_isSolution
+contradicts the all-packet zero condition at exactly the stored packet.
+25

@@ -1,0 +1,8 @@
+theorem derivative_signedSection_zero \{N : ℕ\} (hN : 0 < N) :
+    PowerSeries.derivative R (signedSection (R := R) N 0) =
+      -signedSection (R := R) N (N - 1) := by
+  rw [signedSection, derivative_exponentialGeneratingSeries, signedSection]
+  ext n
+  simp only [coeff_exponentialGeneratingSeries, map_neg]
+  rw [signedSectionCoeff_succ_zero hN]
+  ring

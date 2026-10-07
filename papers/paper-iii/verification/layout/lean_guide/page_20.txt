@@ -1,0 +1,50 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+5 Gauge reconstruction and packet obstruction blocks
+5.1 The gauge action fixes its own convention
+A gauge is a family of fiber automorphisms 𝐺𝑎∶𝐹(𝑎) →𝐹(𝑎). The source convention is
+Γ𝐺
+𝑎,𝑏= 𝐺𝑏Γ𝑎,𝑏𝐺−1
+𝑎.
+The definition has to prove that the new pair maps satisfy the self and reverse laws, because its
+return value is again a reversible connection.
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+def gauge (G : Gauge (R := R) (F := F)) : ReversibleConnection R X F where
+transport a b := ((G a).symm.trans (C.transport a b)).trans (G b)
+transport_self a := by
+apply LinearEquiv.ext
+intro x
+rw [C.transport_self]
+simp
+transport_reverse a b := by
+rw [C.transport_reverse a b]
+apply LinearEquiv.ext
+intro x
+simp
+The proof of each structural law is pointwise cancellation. Flatness is not needed to define the
+gauge action.
+The defect has different source and target fibers, so it transforms with a gauge at each end:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem gauge_cocycleDefect
+(G : Gauge (R := R) (F := F)) (a b c : X) :
+(C.gauge G).cocycleDefect a b c =
+(G c).toLinearMap.comp
+((C.cocycleDefect a b c).comp (G a).symm.toLinearMap) := by
+ext x
+simp [gauge, cocycleDefect]
+Thus Δ𝐺
+𝑎,𝑏,𝑐= 𝐺𝑐Δ𝑎,𝑏,𝑐𝐺−1
+𝑎. Holonomy is based at 𝑎, so both endpoint gauges are at that vertex:
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem gauge_triangleHolonomy
+(G : Gauge (R := R) (F := F)) (a b c : X) :
+(C.gauge G).triangleHolonomy a b c =
+((G a).symm.trans (C.triangleHolonomy a b c)).trans (G a) := by
+apply LinearEquiv.ext
+intro x
+simp [gauge, triangleHolonomy]
+This is conjugation, not equality of the original and transformed matrices. Identity versus non-
+identity is invariant, and the source also proves the cocycle condition and flatness invariant. A
+coordinate change may alter entries while preserving these exact statements.
+19

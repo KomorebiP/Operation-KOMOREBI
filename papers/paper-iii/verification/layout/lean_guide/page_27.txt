@@ -1,0 +1,35 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Classically, failure of that all-packet zero condition supplies a nonempty certificate type. The com-
+bined equivalence is:
+Source: KomorebiPaperIII/NonlinearObstructions.lean.
+theorem not_isSolution_iff_nonempty_obstructionPacket
+{residual : Candidate →Packet →Residual} {candidate : Candidate} :
+¬ IsSolution residual candidate ↔
+Nonempty (ObstructionPacket residual candidate) := by
+constructor
+· exact obstructionPacket_of_not_isSolution
+· rintro ⟨certificate⟩
+exact certificate.not_isSolution
+The output is Nonempty (ObstructionPacket residual candidate). This is a proposition asserting
+that the certificate type has an inhabitant. It is not a computable function that enumerates packets
+or finds one within a time bound.
+Neither Packet nor Candidate needs a finite enumeration for this logical equivalence. The adjective
+“finite” in the overall contract describes the walk sums, paths, packet resolutions, and operation-
+tree syntax where finiteness is imposed. It should not be misread as an extra Fintype assumption
+on this candidate theorem.
+6.5 The quantifiers determine the conclusion
+For one proposed candidate 𝑐, the theorem says
+¬(∀𝑝, 𝑟(𝑐, 𝑝) = 0)
+⟺
+a certificate of 𝑟(𝑐, 𝑝) ≠0 exists.
+To show that a global solution does not exist, one needs the additional assertion that every can-
+didate fails, or an argument producing an obstruction for each candidate. To prove existence of
+a global solution, one must produce a candidate with every residual zero. Neither conclusion
+follows merely from the certificate interface.
+The interface is nevertheless useful: it makes local failure portable and checkable once a witness
+is supplied. The formal type records the residual, the candidate, the packet, and the exact nonzero
+assertion. A later theorem can build on these data without confusing rejection of one candidate
+with a universal impossibility result.
+26

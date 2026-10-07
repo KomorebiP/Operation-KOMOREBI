@@ -1,0 +1,561 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\setmainfont{P052}[BoldFont={P052-Bold},ItalicFont={P052-Italic},BoldItalicFont={P052-BoldItalic}]
+\setsansfont{Nimbus Sans}[BoldFont={NimbusSans-Bold},ItalicFont={NimbusSans-Italic},BoldItalicFont={NimbusSans-BoldItalic}]
+\setmonofont{DejaVu Sans Mono}[Scale=.80]
+\newfontfamily\codemathfont{Latin Modern Math}
+\newcommand{\CodeSymbol}[1]{\ifnum"#1="29F8\ensuremath{\big/}\else{\codemathfont\symbol{"#1}}\fi}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\setmathfont{Latin Modern Math}
+\usepackage{xcolor,booktabs,longtable,array,enumitem,microtype}
+\usepackage{listings,fvextra,xurl,hyperref,bookmark,fancyhdr,titlesec,needspace}
+\definecolor{teal}{HTML}{164C51}
+\definecolor{muted}{HTML}{516466}
+\definecolor{pale}{HTML}{F2F6F6}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,pdftitle={Paper I: Lean Guide},pdfauthor={Komorebi P.},bookmarksnumbered=true}
+\urlstyle{tt}
+\newcommand{\code}[1]{\nolinkurl{#1}}
+\newcommand{\source}[1]{\par\smallskip{\footnotesize\color{muted}Source: \code{#1}.}\par\smallskip}
+\newcommand{\excerpt}[2]{\source{KomorebiVerification/#1.lean}\VerbatimInput[fontsize=\small,frame=leftline,rulecolor=\color{teal},framesep=6pt,breaklines=true,breakanywhere=true,commandchars=\\\{\},xleftmargin=8pt]{excerpts/#2.render.txt}}
+\titleformat{\section}{\Large\sffamily\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{teal}}{\thesubsection}{.65em}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{teal}}{\thesubsubsection}{.65em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .6ex}{1ex}
+\titlespacing*{\subsection}{0pt}{2ex plus .4ex}{.7ex}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{.55em}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,topsep=.4em,leftmargin=1.5em}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{muted}KOMOREBI \quad PAPER I}
+\fancyhead[R]{\small\sffamily\color{muted}LEAN GUIDE}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\lstset{basicstyle=\ttfamily\small,backgroundcolor=\color{pale},frame=single,rulecolor=\color{pale},framerule=0pt,xleftmargin=5pt,xrightmargin=5pt,aboveskip=7pt,belowskip=7pt,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,showstringspaces=false,tabsize=2,escapeinside={(*@}{@*)}}
+\begin{document}
+\begin{titlepage}
+\vspace*{18mm}
+{\sffamily\large\color{teal}OPERATION KOMOREBI}\par
+\vspace{14mm}
+{\fontsize{32}{37}\selectfont Projector-Resolved\\Seed Calculus I}\par
+\vspace{8mm}
+{\fontsize{25}{29}\selectfont\sffamily\color{teal}The Lean Guide}\par
+\vspace{6mm}
+{\Large Types, proof architecture, and reproducible evidence}\par
+\vspace{16mm}
+{\large Komorebi P.}\par
+{Final companion edition \textperiodcentered\ 5 October 2026}\par
+\vfill
+\begin{minipage}{.94\textwidth}
+This guide explains the complete 35-row contract of the preserved Paper I formal component, teaches its principal constructions from actual source, and shows how to reproduce and interpret its verification. It accompanies the traditional and machine-native editions without equating their distinct statement inventories.
+\medskip
+
+\textbf{Evidence at this edition.} Twenty local Lean files are byte-identical to the source hashes in the preserved successful verification of 12 September 2026. The 84 mapped targets and 1,126 audited namespace entries are inherited kernel evidence. This guide's new verification is a static identity check. No new Lean compiler run is claimed.
+\end{minipage}
+\vspace{10mm}
+\end{titlepage}
+\tableofcontents
+\clearpage
+
+\section{Reading the three companions together}
+
+The traditional paper develops the mathematical language and its examples. The machine-native paper gives stable records, typed dependencies, semantic profiles, and executable validation interfaces. This guide makes the Lean development usable: where the definitions live, what each theorem actually accepts, how its proof works, and what evidence connects the delivered source to an accepted kernel run.
+
+The main formal component is the 20-file project preserved at \code{source/traditional_v1.3.1/formalization/lean/} in the final package. Its formal-component version is 1.0.2. It was originally aligned to the corrected journal manuscript 1.3.0 and retained unchanged in distribution 1.3.1. The traditional final edition also contains an expanded core with 108 stable records. Those records are a different inventory from the 35 Lean contract rows.
+
+An exact scoped result should remain exact when republished. The guide therefore retains both the scope and the exclusions of every contract row. For example, the formal split-semisimple result proves a formula after algebra and module equivalences are supplied. The expanded traditional paper also discusses the general division-ring formula. Their shared subject does not make these identical formal statements.
+
+\subsection{What the numbers count}
+
+\begin{tabular}{p{.17\textwidth}p{.75\textwidth}}
+\toprule Quantity & Meaning \\\midrule
+20 source files & Local Lean files, including the import aggregator, focused Mathlib import file, and standalone audit. \\
+35 contract rows & Mathematical statement families and specifications in the normative v1.0.2 map. \\
+84 mapped targets & Distinct Lean declaration names used by those rows. They include definitions and equivalences as well as theorems. \\
+1,126 entries & Project-namespace entries inspected by the historical audit, including generated helpers. \\
+108 stable records & The expanded machine-paper inventory. Only an explicitly mapped subset carries its attached Lean evidence. \\
+\bottomrule
+\end{tabular}
+
+None of these figures is a count of 1,126 independent new theorems. The useful unit of mathematical coverage is a statement together with its hypotheses, its precise conclusion, its declaration target, and the evidence attached to that target.
+
+\subsection{Suggested reading routes}
+
+A reader new to Lean can begin with Sections~\ref{sec:types}--\ref{sec:packets}, which unpack the syntax through exact packet coordinates. A mathematician checking coverage can go directly to the exhaustive map in Section~\ref{sec:map}, then inspect the relevant source type and proof. A contributor preparing a build should read Sections~\ref{sec:replay} and~\ref{sec:evidence} before interpreting any successful command.
+
+The displayed Lean listings are excerpts from the preserved source. Their surrounding imports, namespace declarations, and section variables remain in the original files. They are reading excerpts, not advertised standalone files. The editable companion includes their source ranges and hashes in \code{generated/excerpts.json}.
+
+\section{The type system as mathematical bookkeeping}\label{sec:types}
+
+Lean's types carry assumptions that would otherwise be easy to leave implicit. A statement over a semiring and a module is not automatically a statement about a Hilbert space. A linear equivalence is not automatically a continuous linear equivalence. An endomorphism over the ground field is not automatically linear over a larger acting algebra.
+
+\begin{longtable}{p{.27\textwidth}p{.64\textwidth}}
+\toprule Lean expression & Mathematical role \\\midrule\endhead
+\code{[Semiring R]} & An instance supplying the semiring laws for the coefficient object. Square brackets request typeclass synthesis. \\
+\code{[Module R M]} & The scalar action and its laws. The module is over the named scalar object, not an unspecified field. \\
+\code{M →ₗ[R] N} & An $R$-linear map, with additive and scalar compatibility bundled into the value. \\
+\code{Module.End R M} & The endomorphism type $\operatorname{End}_R(M)$. \\
+\code{M ≃ₗ[R] N} & A linear equivalence with inverse laws. \\
+\code{X →L[k] Y} & A continuous linear map between normed spaces. The uppercase $L$ is significant. \\
+\code{X ≃L[k] Y} & A continuous linear equivalence. \\
+\code{M →ₛₗ[σ] N} & A semilinear map along the specified scalar homomorphism $\sigma$. \\
+\code{LinearMap.range f} & The range as a submodule. An element includes a witness that it is attained by $f$. \\
+\code{[Fintype ι]} & A finite enumeration of the index type, allowing finite sums over all indices. \\
+\code{ι →₀ A} & Finitely supported coefficient families, the free $A$-module on the label type. \\
+\code{IsLeast S R} & Both $R\in S$ and $R\leq r$ for every $r\in S$. This packages upper and lower bounds. \\
+\bottomrule
+\end{longtable}
+
+Curly-braced arguments are implicit parameters inferred from use. Round-bracketed arguments are explicit inputs. A section's \code{variable} declarations can supply parameters to all later declarations that use them. Therefore a theorem copied without its section context can look less constrained than its actual elaborated type. The preserved \code{mapped_declarations.log} prints every mapped type with universe information and is the right companion when checking the complete signature.
+
+The package disables automatic implicit-variable invention with \code{autoImplicit = false} and \code{relaxedAutoImplicit = false}. This makes a misspelled or undeclared variable an error instead of silently introducing a new parameter. It does not remove explicit hypotheses, nor prove that a chosen formal statement is the intended prose statement.
+
+\subsection{Proof terms and the tactics used here}
+
+\code{exact h} closes the current goal with an existing proof of its type. \code{rfl} proves a definitional equality after reduction. \code{rw} substitutes proved equalities. \code{simp} applies a collection of simplification lemmas and produces a proof term. \code{funext} reduces equality of functions to equality at each input. \code{Subtype.ext} reduces equality of range elements to equality of their underlying vectors.
+
+The command \code{classical} makes classical instances available during elaboration. It is not a placeholder. Some resulting declarations depend on \code{Classical.choice}; the audit records this explicitly. A \code{noncomputable def} can define a mathematically precise object through choice or noncomputable library constructions. It does not by itself provide executable numerical code.
+
+These distinctions matter particularly for graph rank. A formula defined using a finite exact spectrum may be mathematically well-defined and formally verified while still not being an extracted eigensolver.
+
+\section{The source architecture}
+
+The project is organized around a finite algebraic core, seed generation, concrete matrix models, operator and packet completion, and a separate analytic component. \code{MathlibImports.lean} centralizes the focused external imports. This replaced earlier blanket imports without changing the mathematics of the pre-existing nineteen source files.
+
+\begin{longtable}{p{.30\textwidth}p{.61\textwidth}}
+\toprule Layer & Main responsibility \\\midrule\endhead
+Projector core & \code{ProjectorCore}, \code{ExactCoordinates}, \code{FibreRefinement}, and \code{ResidueProjectors}: finite masks, range coordinates, exact reconstruction, and refinement. \\
+Transport and blocks & \code{PaperITransport} and \code{PaperIBlockCompletion}: conjugation, naturality, operator-level block identities, and support patterns. \\
+Seed rank & \code{SeedRankBasics} and \code{SeedRankOperations}: generation, free presentations, cardinal minima, semilinear transport, products, tensor bounds, and scalar quotients. \\
+Matrix realizations & \code{SemisimpleSeedRank}, \code{FullMatrixCyclicity}, \code{SemisimpleCompletion}: concrete row-space bounds and their connection to canonical seed rank. \\
+One operator & \code{PathGraphKrylov} and \code{SingleOperatorGraph}: polynomial orbits, exact minimum certificates, paths, and cycles. \\
+Packet completion & \code{PacketNaturalityCompletion}: dependent block algebra, support, reachability, strict morphisms, and the typed-quiver certificate. \\
+Analysis & \code{TopologicalCompletion}: bounded projectors, closure, dense realization, completion, and the bilateral shift. \\
+Models and specifications & \code{EllipticAlgorithms}: the elliptic quotient model and the three finite mathematical algorithm specifications. \\
+Audit & \code{KernelAudit}: concrete instantiations, the exact mapped-target list, and the namespace-wide axiom gate. \\
+\bottomrule
+\end{longtable}
+
+The full direct-import table is generated from the delivered files in Appendix~\ref{app:imports}. It is an import graph, not a claim that every imported theorem is a logical dependency of every declaration in the importing module. A declaration's transitive axiom set is obtained separately from the Lean environment.
+
+\section{Exact packet coordinates, from assumptions to inverse laws}\label{sec:packets}
+
+The starting object is a finite family of linear projectors. Its structure records three separate laws: each map is idempotent, different maps annihilate one another, and their finite sum is the identity.
+\excerpt{ProjectorCore}{projector_structure}
+
+Here orthogonality means pairwise annihilation. An inner product is not among the assumptions, so this word is algebraic at this stage. Self-adjointness appears only in the later adjoint result.
+
+Write $P_i$ for the maps. The intended coordinates are
+\[
+\mathcal P=\prod_{i\in I}\operatorname{range}(P_i),\qquad
+\mathsf A(x)=(P_i x)_i,\qquad
+\mathsf S((x_i)_i)=\sum_i x_i.
+\]
+The type of the packet space is crucial. It is the product of independently defined ranges. It is not defined as the image of analysis, and synthesis is the ordinary sum. Thus the reverse inverse law must be proved.
+\excerpt{ExactCoordinates}{packet_space}
+
+The term \code{⟨P.proj i x, ⟨x, rfl⟩⟩} has two layers. The outer pair contains the vector and its range-membership proof. The inner pair gives the preimage $x$ and the equality showing that projecting it gives the required vector. The coercion \code{(packets i : M)} later forgets this proof component and returns the underlying vector for summation.
+
+\subsection{Why the two directions use different hypotheses}
+
+Synthesis after analysis is exactly completeness:
+\[
+\mathsf S\mathsf A(x)=\sum_iP_i x=x.
+\]
+Analysis after synthesis uses the range conditions as well. If $x_j\in\operatorname{range}(P_j)$, choose a preimage $y_j$. Idempotence gives $P_jx_j=x_j$, while pairwise annihilation gives $P_i x_j=0$ for $i\ne j$. Consequently
+\[
+P_i\Bigl(\sum_j x_j\Bigr)=\sum_jP_i x_j=x_i.
+\]
+The source follows this reasoning directly.
+\excerpt{ExactCoordinates}{inverse_laws}
+
+After \code{funext i}, the goal concerns one packet. \code{Subtype.ext} removes the irrelevant distinction between the proof components of range elements. \code{map_sum} distributes the linear projector over the finite sum. \code{Finset.sum_eq_single i} separates the surviving diagonal term from the annihilated off-diagonal terms. The final \code{simp} handles the finite-set side condition.
+
+Once the two laws are established, the linear equivalence merely packages them.
+\excerpt{ExactCoordinates}{coordinate_equiv}
+
+There is no inverse selected by choice at this step. Both maps are already explicit. The proof is stronger than recovery of vectors that happen to lie in the image of analysis: it covers every tuple of valid range packets.
+
+\subsection{Four coordinates and two parity packets}
+
+The standalone audit specializes the construction to $\mathbb Q^4$. Fine labels are $0,1,2,3$ and the fine address is the identity. The coarse address is reduction modulo two. For
+\[
+x=(a,b,c,d),\qquad
+Q_0x=(a,0,c,0),\qquad Q_1x=(0,b,0,d),
+\]
+the fine projections isolate one coordinate, and
+\[
+Q_0=P_0+P_2,\qquad Q_1=P_1+P_3.
+\]
+The general fibre constructor proves its laws from masks, rather than requiring the user to supply them for each instance.
+\excerpt{FibreRefinement}{fibre_family}
+The audit then proves the parity formula by specializing the independent coarse/fine refinement theorem.
+\excerpt{KernelAudit}{refinement}
+
+This is an instance of the theorem for an arbitrary input vector, not a comparison of a few sampled rational vectors. The same audit instantiates reconstruction of an arbitrary linear operator on $\mathbb Q^4$ from all sixteen fine blocks.
+
+\section{Transfer blocks, support, and transport}
+
+For source projectors $P_i$, target projectors $Q_j$, and a linear map $T:M\to N$, the output-first convention is
+\[
+T_{ji}=Q_jTP_i.
+\]
+The declaration \code{Komorebi.Foundation.transferBlock} has arguments source family, target family, map, output label, input label. Getting the last two arguments reversed can produce a well-typed but different map when source and target spaces coincide. The guide uses output-first indices throughout.
+
+\subsection{Reconstruction and multiplication}
+
+Completeness of both families gives
+\[
+T=\sum_j\sum_i Q_jTP_i.
+\]
+For $U:N\to L$ and a third family $S_k$, completeness of the middle family gives
+\[
+(UT)_{ki}=\sum_j U_{kj}T_{ji}.
+\]
+The earlier core proves pointwise identities. \code{PaperIBlockCompletion} promotes them to equality of linear maps using extensionality. Contract rows 19 and 20 are classified as stronger than the single-space manuscript instances because the compiled maps may have different source, middle, and target modules.
+
+The block-algebra development then restricts each map to the actual source packet and gives it codomain the actual target packet. This yields a dependent family
+\[
+B_{ji}:\operatorname{range}(P_i)\longrightarrow_R\operatorname{range}(P_j),
+\]
+which is genuinely the full packet-to-packet Hom space. Its multiplication is the finite sum of composable maps. The equivalence with ambient endomorphisms is not a definition of the block space as the image of ambient operators. Both restriction and synthesis are separately constructed and proved inverse.
+
+\subsection{Why nonzero packets appear in converse statements}
+
+If a support relation is transitive, supported blocks are closed under multiplication. Conversely, to detect a missing compositional edge from universal multiplication closure, one needs blocks whose composite is nonzero. Contract row 25 works over a field, with every packet range nontrivial and arbitrary packet-Hom blocks available. Those hypotheses provide the witnesses used by the converse.
+
+A zero packet can make a relation edge mathematically invisible. The expanded edition therefore explicitly includes the necessary nonzero-packet assumptions in its corrected $*$-support and source-component-count corollaries. Those editorial corrections do not create new Lean theorems. Row 25 already states its nontriviality scope, and all twenty formal source files remain unchanged.
+
+\subsection{A reachability obstruction is a lower-bound certificate}
+
+The reachability module first shows that word orbits of packet-supported seeds remain in the support reachable from those seeds. If a nonzero packet is unreachable, the generated algebraic hull is proper. The conclusion depends on the seed support as well as the graph. It is not a general rule saying that the number of graph sources equals unrestricted seed rank.
+
+The typed-quiver model makes the distinction concrete. It uses $U=k^2$, $V=k^3$, the embedding
+$A(u_1,u_2)=(u_1,u_2,0)$, and the projection $B(v_1,v_2,v_3)=(v_1,v_2)$. Although $BA=1_U$, the vector $(0,0,1)$ in $V$ is outside $\operatorname{range}(A)$. No family supported solely at $U$ generates the whole representation. A source seed and the missing $V$-direction give the displayed generating pair. Contract row 30 is the certificate for this model, not a classification of arbitrary quivers.
+
+\subsection{Coordinate transport and strict naturality}
+
+A linear equivalence $C:M\simeq N$ transports projectors by $P_i\mapsto CP_iC^{-1}$ and operators by $T\mapsto CTC^{-1}$. Blocks and their zero/nonzero pattern then transport exactly. The inverse matters: a noninjective realization can kill a nonzero block.
+
+The strict-naturality module also handles semilinear realized actions, with explicit algebra maps and packet-label maps. Its generated-hull statement uses the exact image algebra. Surjectivity gives the appropriate rank inequality; equality and complete edge correspondence require the stronger bijectivity hypotheses recorded in row 28. The injective label map excludes packet merging from that particular strict interface.
+
+\section{Generation and seed rank}
+
+Seed rank depends on an acting algebra. It is not simply vector-space dimension. One vector generates the natural module of a full matrix algebra, whereas a scalar action on $k^n$ needs $n$ independent generators.
+
+The foundational definitions use the existing span-rank API for the top submodule.
+\excerpt{SeedRankBasics}{seed_definitions}
+
+The cardinal-valued rank makes sense without finite generation. The natural-valued \code{seedFinrank} is the finite-generation minimum only under the hypotheses used by the finite-rank theorems. The zero module has rank zero. The cyclic/rank-one equivalence therefore includes a nontriviality hypothesis.
+
+\subsection{The one-seed presentation}
+
+For a seed $s\in M$, the presentation map is $a\mapsto a\cdot s$. Its range is exactly the cyclic submodule. Therefore $s$ generates if and only if this map is surjective.
+\excerpt{SeedRankBasics}{one_seed}
+
+The first isomorphism theorem then supplies the quotient-to-range equivalence.
+\excerpt{SeedRankBasics}{quotient}
+
+The displayed application theorem is an important connection to the paper: the equivalence sends the class of $a$ to the actual vector $a\cdot s$. It is not merely an unspecified isomorphism between abstract objects with the right dimensions.
+
+For a noncommutative acting algebra, the kernel here is a left submodule of the regular module. The theorem does not promote it to a two-sided ideal. Likewise, no norm or bounded completion is manufactured by this algebraic construction. The analytic completion result needs a supplied continuous isometry with dense range.
+
+For several seeds, \code{Finsupp.linearCombination} evaluates a finitely supported coefficient family. This works for arbitrary label types. The finite-minimum theorem states that, when the module is finite, its seed finrank is the least $n$ admitting a surjection from \code{Fin n →₀ A}.
+
+\subsection{Surjections, image algebras, and two product actions}
+
+Under a surjective semilinear map $f:M\to N$ along $\sigma:A\to B$, an $A$-generating set maps to a $B$-generating set. Coefficients in the image of $\sigma$ are already available in $B$, so the rank inequality does not require $\sigma$ itself to be onto. An equality statement requires more: either the scalar map is surjective or the target action is literally restricted to the image algebra.
+
+For products there are two different actions. A shared algebra acts diagonally on $M\times N$, producing an upper bound by the sum of ranks. Independent actions use $A\times B$ and yield the maximum of the two ranks. Coordinate idempotents in $A\times B$ separate the two components, which is precisely what a general shared action may fail to do.
+
+The tensor theorem proves an upper bound under its stated commuting-action and scalar-tower laws. The scalar-quotient theorem gives a lower bound when the action on a finite-dimensional quotient factors through a character. A dimension bound for an arbitrary quotient would be a different statement.
+
+\subsection{A complete constructive example: full matrix cyclicity}
+
+Suppose $x\ne0$ in $k^n$. Choose a coordinate $j$ with $x_j\ne0$. For any target vector $y$, make a matrix with only column $j$ nonzero and entries $a_{ij}=y_i/x_j$. Then $Ax=y$. The source is short enough to read in full.
+\excerpt{FullMatrixCyclicity}{full_matrix}
+
+The initial contradiction argument finds the nonzero coordinate. The matrix is then explicitly defined and supplied as the witness to the existential goal. Function extensionality reduces $Ax=y$ to its coordinates; simplification evaluates the finite sum and cancels the nonzero denominator. Later declarations connect this concrete cyclicity predicate to \code{Generates} and canonical seed rank. Row 11 records the result for $n>0$.
+
+\section{Certificate inputs and what their proofs establish}\label{sec:certificates}
+
+Several important statements are deliberately certificate-explicit. Their hypotheses encode mathematical data that a separate construction or classical theorem would supply. The Lean proof checks the implication from those data. The certificate is not a project axiom, and it is not a proof of its own existence from bare input.
+
+\subsection{The split-semisimple formula}
+
+The concrete block module consists of $d\times m$ matrices under left multiplication by $M_d(k)$. Each seed supplies at most $d$ independent row directions. The exact count is
+\[
+\left\lceil\frac{m}{d}\right\rceil\qquad(d>0).
+\]
+For a finite product of blocks, independent actions combine by the maximum. \code{SemisimpleCompletion} connects these row-space arguments to \code{seedRank}. The abstract theorem consumes an algebra equivalence to the product of full matrix algebras and a compatible semilinear module equivalence to the product of matrix modules.
+
+The output is a genuine rank formula for the supplied realization. The development does not derive a Wedderburn decomposition from an arbitrary semisimple algebra, nor the nonsplit division-algebra form in the expanded paper. A reader applying row 10 should identify the supplied equivalences before quoting its conclusion.
+
+\subsection{Single-operator seed number: the upper and lower halves}
+
+For an operator $T$, the formalization first works with polynomial orbits $p(T)v$. It then proves a bridge to the genuine image algebra $k[T]=\operatorname{Algebra.adjoin}_k\{T\}$. This prevents an informal change of acting algebra from being hidden in the seed-number notation.
+
+The primary-decomposition theorem uses an attained bound $R$ on block multiplicities. For each seed index $a<R$, it adds the $a$th block generator from each primary packet, inserting zero when that packet has fewer blocks. Polynomial extraction certificates recover the individual block generators from these padded sums. Thus $R$ seeds suffice. A surjective quotient on which $T$ acts as a scalar gives the opposite bound.
+\excerpt{SingleOperatorGraph}{primary_certificate}
+
+The signature has three groups of data. First, \code{hbound} and \code{hmax} make $R$ an attained maximum. Second, \code{hblocks} and \code{hextract} supply the orbit-generation and extraction information for the upper bound. Third, \code{q}, \code{hq}, and \code{hqT} supply the scalar quotient and polynomial intertwining law for the lower bound.
+
+The proof constructs an \code{IsLeast} pair. Its first component is the padded generating family. Its second component takes an arbitrary generating family and uses the quotient at \code{maxEigen} to force its cardinality to be at least $R$. The hard distinction is visible in the type: the existence of these quotient and extraction certificates is an input. The file does not independently construct general Jordan form or Chinese-remainder primary projectors from a bare matrix.
+
+\subsection{The cyclic-matrix bridge}
+
+Row 14 derives the four-way cyclicity statement after two canonical-form bridges have been supplied: geometric multiplicity agrees with block multiplicity, and equality of minimal and characteristic polynomials is equivalent to one block per eigenvalue. Lean verifies their use in the equivalence chain. It does not reconstruct those bridges from arbitrary matrix data in this component.
+
+The row is marked stronger because its compiled implication omits a separately inherited finite-label hypothesis from the manuscript. Stronger refers to this precise change in the typed statement. It does not mean that the supplied canonical-form hypotheses disappeared.
+
+\subsection{Graphs, paths, and cycles}
+
+The general graph formula takes an eigenbasis grouped by multiplicity, an attained maximum, and polynomial projectors or distinct eigenvalue labels. It does not infer an eigenbasis from the word ``symmetric.'' The source also proves two concrete families independently: a path endpoint generates over any field, and a complex simple cycle has minimum two.
+
+For the path, the endpoint Krylov matrix has zero entries below its diagonal and ones on the diagonal: a walk of length $r$ cannot reach a vertex farther than $r$, and exactly one length-$r$ walk reaches vertex $r$. Hence its determinant is one. This yields cyclicity without a numerical eigendecomposition.
+
+For cycles, two adjacent delta vectors generate by the adjacency recurrence. Over $\mathbb C$, two distinct Fourier characters with the same adjacency eigenvalue provide a two-dimensional scalar quotient, supplying the lower bound. The resulting minimum-two theorem applies to the simple cycle on $n+3$ vertices.
+
+\section{Topology and mathematical algorithms}
+
+\subsection{Bounded packets and closed-hull obstructions}
+
+The analytic structure replaces linear maps by continuous linear maps. Bounded idempotents have closed ranges. Finite analysis and synthesis become continuous linear maps and then a continuous linear equivalence. The algebraic inverse-law pattern remains visible, while continuity is carried in the types.
+
+For a dense submodule $M\subseteq X$ and a bounded idempotent $P$, the closure of $P(M)$ is the full range of $P$. The theorem does not require that $M$ be invariant under $P$. This is why the source map records the exact scope rather than summarizing the statement only as ``completion preserves packets.''
+
+The topological obstruction is especially transparent:
+\excerpt{TopologicalCompletion}{topological_obstruction}
+
+The kernel of a continuous linear map is closed. If an algebraic hull lies in that kernel, so does its closure. If the map is nonzero, the closure cannot be the whole space. This analytic theorem consumes the kernel inclusion; it does not independently derive graph reachability. The algebraic and analytic arguments join at that explicit inclusion.
+
+\subsection{Dense realizations and completed presentations}
+
+A continuous surjection intertwining the stated operator families sends a dense source hull to a dense target hull. Dense range already suffices for that density conclusion. Exact equality of a source packet's image with a target packet requires the surjectivity used by the packet-range theorem. Neither conclusion needs an unspoken open-mapping argument.
+
+For completed free presentations, the supplied map is a continuous linear isometry with dense range into a complete target. Its completion extension is an isometry with closed and dense range, hence surjective. This gives a continuous linear equivalence. Further theorems prove intertwining of supplied bounded operators and uniqueness of the continuous extension.
+
+The bilateral-shift result uses an actual reindexing representation on $\ell^2(\mathbb Z)$, not an assumed abstract shift action. Its translates of $\delta_0$ recover all delta vectors, whose linear span is dense. The final statement says that one is the least finite seed cardinality for dense generation by this representation. It does not establish an unrestricted cardinal-valued Laurent-algebra rank.
+
+\subsection{Orbit closure: why termination is not code extraction}
+
+The finite algorithm specification begins with the span of the seeds and repeatedly adds the images under the input operators:
+\[
+W_0=\operatorname{span}(S),\qquad
+W_{n+1}=W_n+\sum_i T_i(W_n).
+\]
+Each iterate lies in the least invariant hull. If two successive iterates agree, the stopped subspace is invariant and contains the seeds, so it equals that hull. Finite dimensionality makes the ascending chain eventually constant.
+\excerpt{EllipticAlgorithms}{algorithm}
+
+The proof's termination argument uses the Noetherian property of the submodule lattice. It establishes existence of a stopping index and correctness of the stopped subspace. It does not extract a basis-maintenance loop, a decidable rank test, or a complexity bound. Those belong to an implementation refinement that would require its own proof.
+
+The transfer-block specification is similarly exact at the mathematical level: its table consists of the blocks, summing it gives the original map, and its support predicate is block nonvanishing. It does not verify floating-point tolerances or a sparse edge-list generator.
+
+The exact graph-rank specification takes the finite-spectrum maximum of exact eigenspace dimensions. Its correctness theorem consumes an eigenbasis, projector-polynomial data, spectrum coverage, eigenspace dimensions, and an attained maximum. Its definition is marked \code{noncomputable}. A Python experiment and this specification can support the same formula while remaining different forms of evidence.
+
+\subsection{The elliptic example and scalar discipline}
+
+The same source module includes a concrete algebraic model for
+\[
+k[x,y]/(y^2-(x^3-x)).
+\]
+It constructs quotient and quadratic normal-form realizations, explicit two-coefficient packet coordinates, and multiplication operators. It proves the relation $M_y^2=M_x^3-M_x$ and one-seed generation of the regular module.
+
+The coefficient projectors are linear over the ground field, but not over the full coordinate algebra. The file contains explicit witnesses to that failure. This is an instructive type boundary: the acting algebra for generation may be larger than the scalar algebra over which packet maps are linear. These additional checked declarations are part of the namespace audit but are not counted as extra rows in the 35-row contract.
+
+\section{Replaying the preserved verification}\label{sec:replay}
+
+The source pins Lean to \code{leanprover/lean4:v4.34.0-rc2}. The exact Mathlib revision is \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. Every transitive package pin is listed in Appendix~\ref{app:pins}. A matching installed compiler and dependency cache are prerequisites. The final paper package does not itself supply that compiler or the complete cache.
+
+The following commands are quoted from the component's documented workflow, adapted to the final package layout. They were not run as part of authoring this guide. Use a working copy for new output and keep the preserved release intact.
+
+\subsection{A normal provisioned Lake environment}
+
+From the final package root:
+\begin{lstlisting}
+cd source/traditional_v1.3.1/formalization/lean
+lake --wfail build
+lake env lean -DwarningAsError=true \
+  KomorebiVerification/KernelAudit.lean
+\end{lstlisting}
+
+The audit is standalone; it is not imported by the root library aggregator. Consequently a successful library build is not the same thing as a successful explicit audit. These two commands also do not perform every identity check and negative control of the full verifier.
+
+Avoid changing the manifest with \code{lake update} when reproducing the historical dependency state. A newer compiler or newer Mathlib can be useful in a separate porting branch, but its success would be a different verification event with different inputs.
+
+\subsection{The portable-kit verifier}
+
+For the matching Linux x86-64 kit used by the preserved workflow, begin in the final package root. Set \code{KIT} to the separately provisioned portable kit and use a new empty output directory.
+\begin{lstlisting}
+KIT="/path/to/Komorebi_Portable_Lean_4.34.0-rc2"
+cd source/traditional_v1.3.1
+bash "$KIT/run.sh" lake -d "$KIT/workspace" env python3 \
+  "$PWD/scripts/verify_lean.py" \
+  --project "$PWD/formalization/lean" \
+  --kit "$KIT" \
+  --out "$PWD/verification/lean_recheck"
+\end{lstlisting}
+
+The kit is external to this paper package. The verifier checks both manifest revisions and the actual Git HEAD of every cached dependency. It compares toolchain pins and checks the reported compiler version. These checks prevent a conveniently available but different cache from silently standing in for the documented one.
+
+The verifier discovers all local Lean files, resolves their local import graph, and compiles them in dependency order to a fresh \code{objects/} directory. It refuses an output directory that already contains local \code{.olean} files. That restriction makes the local compilation claim stronger than a build that could reuse prior project objects.
+
+Compiler invocations use:
+\begin{lstlisting}
+lean -j1 -DwarningAsError=true \
+  -DautoImplicit=false -DrelaxedAutoImplicit=false \
+  -DmaxSynthPendingDepth=3
+\end{lstlisting}
+
+Each invocation has a recorded command, return code, duration, and log hash. The project modules are newly compiled in that workflow, while matching upstream cached dependencies are reused. A report of this local fresh build does not claim that Mathlib or Lean itself was independently rebuilt.
+
+\subsection{The two deliberate rejection controls}
+
+After compilation, map reconciliation, and the audit, the verifier asks Lean to reject two small examples. The first asserts a false equality and tries to prove it by decision. The second uses a placeholder, which warnings-as-errors must reject.
+\begin{lstlisting}
+-- FalseEquality.lean: expected rejection
+import Mathlib.Data.Nat.Basic
+example : (0 : Nat) = 1 := by decide
+
+-- Placeholder.lean: expected rejection
+import Mathlib.Data.Nat.Basic
+example : (0 : Nat) = 1 := by sorry
+\end{lstlisting}
+
+These files are negative controls under verification directories. They are not part of the main library and are not unfinished proofs in it. A nonzero exit code alone is insufficient for a passing control: the verifier also checks for the intended diagnostic and rejects timeouts, unknown imports, missing objects, and unsupported-option failures. This ensures that a broken compiler setup is not mistaken for logical rejection.
+
+The preserved final run recorded both controls with exit code 1 and the intended diagnostic. The larger archived build-job totals elsewhere in the distribution describe other runs and must not be reused as this run's local-module count.
+
+\section{Interpreting the evidence}\label{sec:evidence}
+
+The preserved successful execution began at 03:34:26 UTC and finished at 03:36:11 UTC on 12 September 2026. Its authoritative machine record is \code{source/traditional_v1.3.1/verification/lean/fresh_verification.json}. The source hash list, raw logs, and exact command records belong to that event even when the containing package has a later editorial date.
+
+The guide's new static check compares the delivered twenty source hashes against that record, compares all twenty-four execution-log hashes, reconciles the 35 rows and 84 distinct targets with \code{KernelAudit.lean}, and checks the historical printed axiom-report inventory. These checks passed. They establish identity and internal consistency of the delivered evidence. They do not perform another elaboration or kernel run.
+
+\subsection{The namespace-wide gate}
+
+The audit enumerates imported declarations owned by the two project namespaces. It rejects unsafe declarations, custom axiom declarations, and opaque project declarations. For every enumerated declaration it collects transitive axioms and accepts only \code{propext}, \code{Classical.choice}, and \code{Quot.sound}.
+\excerpt{KernelAudit}{audit_gate}
+
+The zero-entry check matters: an audit that accidentally imports nothing must fail. The final count is an environment-inventory count, not a count of handwritten mathematical theorems. The separate mapped-target pass resolves each of the eighty-four names, prints its type, and checks its axiom report.
+
+The source-policy scanner also rejects a specified list of forbidden constructs after removing nested comments and string contents. This catches prohibited source forms early. Its role is complementary to the environment audit. Neither a string scan nor a metadata label alone replaces kernel acceptance.
+
+\subsection{What each layer establishes}
+
+\begin{longtable}{p{.24\textwidth}p{.67\textwidth}}
+\toprule Evidence layer & Interpretation \\\midrule\endhead
+File hash identity & The present bytes equal the bytes identified by a record. This says nothing by itself about the correctness of those bytes. \\
+Compiler acceptance & The declarations elaborate and their proof terms are accepted in the stated environment. The exact hypotheses remain part of the result. \\
+Axiom audit & The enumerated declarations have only the allowed transitive foundational dependencies. \\
+Normative scope map & The editorial bridge between prose claims and particular compiled declarations, including exclusions. This bridge still requires mathematical reading. \\
+Negative controls & The tested setup rejects the selected false proof and placeholder for the intended reasons. This is a useful pipeline check, not a proof of every possible failure mode. \\
+Python tests & Finite implementation behavior checked by those tests. They are not a universal Lean theorem. \\
+Machine record map & An explicit association between selected stable record IDs and attached evidence. A record's existence is not its proof. \\
+\bottomrule
+\end{longtable}
+
+The allowlisted principles are standard Lean/Mathlib foundations. The audit does not claim axiom-free mathematics in an absolute sense. It also does not prove historical priority, performance claims, or the absence of defects in the compiler, trusted kernel, or dependency cache. These are the ordinary boundaries of the recorded verification method, not gaps secretly filled by the count of mapped declarations.
+
+\section{The expanded paper and machine-native crosswalk}
+
+The machine companion carries its own older seven-source-file attached tranche, version 0.2.0, and an explicit eight-record map. Its inherited acceptance date is 2 September 2026. That tranche shares some finite-projector material with the larger twenty-file formal component, but it is a separate packaged evidence scope.
+
+The current machine revision 1.0.1 retains the expanded inventory of 108 stable records while correcting two explicit nonzero-packet hypotheses in the source and corresponding statement records. A metadata repair or statement correction does not automatically enlarge the attached Lean map. The following eight mappings describe the attached machine tranche's own evidence allocation.
+
+\begin{longtable}{p{.51\textwidth}p{.40\textwidth}}
+\toprule Stable machine record & Attached Lean subject \\\midrule\endhead
+\code{PSC-I-D-PACKET-SYSTEM} & Finite linear-projector structure. \\
+\code{PSC-I-D-ANALYSIS-SYNTHESIS} & Range packet space and the two coordinate maps. \\
+\code{PSC-I-T-EXACT-PACKET-COORDINATES} & Range-restricted linear equivalence. \\
+\code{PSC-I-C-PACKETWISE-EQUALITY} & Equality detected by the finite complete family. \\
+\code{PSC-I-D-TRANSFER-BLOCK} & Definition of the typed block. \\
+\code{PSC-I-T-OPERATOR-RECONSTRUCTION} & Pointwise finite reconstruction. \\
+\code{PSC-I-T-BLOCK-MULTIPLICATION} & Pointwise finite composition identity. \\
+\code{PSC-I-T-SUPPORT-PATTERN-ALGEBRA} & Transitive ordinary-matrix support is multiplicatively closed; not the whole expanded iff criterion. \\
+\bottomrule
+\end{longtable}
+
+The larger component can inform a broader semantic crosswalk. Rows 1--2 concern free presentations, rows 3--9 concern seed-rank operations, rows 10--14 concern split-semisimple and operator formulas, rows 15--29 concern packets, blocks, support, and transport. Rows 30--35 concern the supplementary worked models and algorithm specifications. This is a navigation aid. Where the expanded statement adds a division-ring generalization, an infinite family, an existence theorem, or a different categorical interface, the old scoped result must not be silently relabeled as a proof of the expanded statement.
+
+The final package's \code{COMPANION_CROSSWALK} is the series-level navigation record. The machine-readable \code{generated/theorem_map.json} accompanying this guide preserves all thirty-five contract scopes and their exact declaration lists. Unmapped expanded statements remain unmapped until an explicit type-level comparison and accepted proof support a new mapping.
+
+\section{How to extend the formal development}
+
+A useful extension adds a theorem with a clear source statement, a type that exposes its genuine inputs, and evidence that can be replayed. The easiest way to lose that clarity is to hide the desired conclusion inside an unnamed certificate and then announce that the original unconditional theorem has been formalized.
+
+\begin{enumerate}
+\item Identify the exact new statement and its relation to the current contract. Decide whether it is a new row, a stronger replacement, or a helper used by an existing row.
+\item Inspect the current types before designing another abstraction. For finite packets, reuse range subtypes and actual Hom blocks. For topology, use continuous linear maps and state completeness where it is needed.
+\item Separate supplied data from proved consequences. A new canonical-form constructor should have its own existence theorem, not only a theorem taking a canonical-form certificate as an argument.
+\item Prove or import the bridge from the new representation to the manuscript's object. A result about a bespoke rank predicate needs a theorem relating it to canonical seed rank before it can replace the existing formula.
+\item Compile the changed modules in the pinned environment, update the normative map deliberately, and update the audit inventory to exactly the desired mapped surface.
+\item Run the explicit audit and the full verifier with a new output directory. Preserve prior records and record new hashes rather than overwriting the date of the old evidence.
+\item Review the new source-to-prose correspondence. Kernel acceptance proves the typed theorem. The review establishes that this is the intended theorem and that its public summary retains the hypotheses.
+\end{enumerate}
+
+\subsection{Three concrete extension directions}
+
+For the primary-decomposition rows, a substantive next step is construction of the needed extraction polynomials and scalar-quotient certificates from a stated decomposition theorem, followed by a bridge from a bare operator under explicit field assumptions. For graph rank, an implementation refinement would relate executable spectral or algebraic data to the exact certificates, with a separate proof of each algorithmic step. For the expanded packet theory, countable unconditional sums require a topology and convergence interface different from the finite \code{Fintype} API.
+
+These are different tasks from increasing a declaration count. Each closes a named input boundary or extends an exact scope. A completed extension should say which boundary has changed and exhibit the theorem that changed it.
+
+\subsection{Troubleshooting a replay}
+
+An unknown module or missing object indicates an environment or import-path problem, not a false mathematical theorem. A pin mismatch means the cached dependency state is different from the recorded release. A refusal of nonempty output means the verifier is protecting the local rebuild claim; choose a new output directory. A warning-as-error failure requires reading the diagnostic before deciding whether the source, compiler version, or style policy changed.
+
+A mapped-name failure after a rename is not solved by silently removing the map entry. Either preserve the public declaration name, or update the map and record the new correspondence. A new unexpected axiom requires tracing its transitive dependency before acceptance. A changed source hash is expected after a deliberate edit, but it ends byte-identity with the old accepted source and requires fresh evidence for the changed file.
+
+\clearpage
+\section{The complete 35-row contract}\label{sec:map}
+
+This section reproduces the normative map's statement titles, declaration names, exact scopes, and exclusions. The numbering belongs to the corrected journal formalization contract. It is not the numbering of the expanded traditional paper or the stable machine-record inventory.
+
+``Exact'' means exact at the scope printed in the row. ``Stronger'' means the mapped declaration removes a specified hypothesis, treats a more general typed setting, or includes an additional endpoint. Rows 10, 13, 14, 32, and 35 are certificate-explicit. The precise certificate boundaries appear both here and in Section~\ref{sec:certificates}.
+
+The long qualified names are intentionally retained. They allow a reader or a tool to search the source, issue \texttt{\#check}, and compare the printed type without guessing a namespace.
+\input{generated/theorem_map.tex}
+
+\clearpage
+\appendix
+\section{Direct local imports}\label{app:imports}
+The prefix \code{KomorebiVerification.} is omitted from module names in this table. The root aggregator remains \code{KomorebiVerification}. The table is generated from the actual local import lines. External Mathlib imports are not expanded here.
+\input{generated/local_imports.tex}
+
+\section{Pinned dependencies}\label{app:pins}
+The compiler pin is \code{leanprover/lean4:v4.34.0-rc2}. The preserved accepted run reported compiler commit \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Package revisions below come from the preserved Lake manifest, not from a live dependency update.
+\input{generated/dependency_pins.tex}
+
+\clearpage
+\section{Guide source, data, and reproducibility}
+
+The editable guide directory contains this \LaTeX{} source, exact source excerpts, generated contract and import tables, machine-readable JSON, and \code{build_guide_data.py}. The data generator is read-only with respect to the preserved formal component. It imports the preserved verifier's comment-aware scanning function, compares source and log hashes, reconciles map inventories, and extracts listings. It never invokes Lean.
+
+From \code{editable/lean_guide/} in the final package:
+\begin{lstlisting}
+python3 build_guide_data.py \
+  --source ../../source/traditional_v1.3.1
+xelatex -interaction=nonstopmode -halt-on-error \
+  Paper_I_Lean_Guide_Final.tex
+xelatex -interaction=nonstopmode -halt-on-error \
+  Paper_I_Lean_Guide_Final.tex
+xelatex -interaction=nonstopmode -halt-on-error \
+  Paper_I_Lean_Guide_Final.tex
+\end{lstlisting}
+
+The PDF uses P052, Nimbus Sans, DejaVu Sans Mono, and Latin Modern Math fonts with XeLaTeX. A TeX installation must provide the packages listed in the preamble. Rendering the resulting PDF is a separate presentation check; it is not a Lean verification step.
+
+\begin{longtable}{p{.42\textwidth}p{.49\textwidth}}
+\toprule Companion file & Purpose \\\midrule\endhead
+\code{generated/static_identity_audit.json} & Executed static identity checks, including every compared source and log hash. \\
+\code{generated/theorem_map.json} & All 35 contract rows and 84 target names with their scopes and exclusions. \\
+\code{generated/local_imports.json} & Direct import graph of the 20 local files. \\
+\code{generated/excerpts.json} & Source file, line range, full-source hash, and excerpt hash for each displayed listing. \\
+\code{source/traditional_v1.3.1/verification/lean/} & Preserved successful compiler record and raw logs, relative to the package root. \\
+\bottomrule
+\end{longtable}
+
+The final guide was proofread in self-review mode against the preserved source definitions and theorem map. It does not modify a mathematical token in those source files. The guide's explanations, formulas, and scope summaries remain subordinate to the exact formal signatures and the normative exclusions recorded above.
+\end{document}

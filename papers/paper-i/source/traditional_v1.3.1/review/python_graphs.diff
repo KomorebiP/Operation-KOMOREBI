@@ -1,0 +1,19 @@
+--- upstream/code/python/seed_calculus/graphs.py
++++ journal/code/python/seed_calculus/graphs.py
+@@ -24,8 +24,16 @@
+ 
+ 
+ def symmetric_graph_seed_rank(adjacency: sp.Matrix) -> int:
++    """Seed count for a real symmetric adjacency matrix, over the complex field.
++
++    This uses the classical spectral theorem and SymPy's eigenvalue routine,
++    not a formally verified eigensolver. Use exact entries for exact checks.
++    Complex symmetry alone does not imply diagonalizability.
++    """
+     if adjacency.rows != adjacency.cols or adjacency != adjacency.T:
+         raise ValueError("adjacency matrix must be symmetric")
++    if any(entry.is_real is not True for entry in adjacency):
++        raise ValueError("the spectral shortcut requires proven-real entries")
+     return max(adjacency.eigenvals().values(), default=0)
+ 
+ 

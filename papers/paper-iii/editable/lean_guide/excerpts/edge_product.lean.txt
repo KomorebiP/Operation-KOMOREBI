@@ -1,0 +1,12 @@
+theorem edgeOp_mul_edgeOp_of_composable
+    [Fintype V] [DecidableEq V] [Semiring R]
+    (e f : E) (h : G.target e = G.source f) :
+    edgeOp G S f * edgeOp G S e =
+      packetMatrix (G.source e) (G.target f)
+        (S.coefficient f * S.coefficient e) := by
+  ext row column
+  by_cases hrow : row = G.target f
+  · by_cases hcolumn : column = G.source e
+    · simp [edgeOp, packetMatrix, Matrix.mul_apply, h, hrow, hcolumn]
+    · simp [edgeOp, packetMatrix, Matrix.mul_apply, h, hcolumn]
+  · simp [edgeOp, packetMatrix, Matrix.mul_apply, hrow]

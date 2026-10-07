@@ -1,0 +1,7 @@
+structure LinearProjectorFamily
+    (R : Type u) (M : Type v) (ι : Type w)
+    [Semiring R] [AddCommMonoid M] [Module R M] [Fintype ι] where
+  proj : ι → Module.End R M
+  idempotent : ∀ i x, proj i (proj i x) = proj i x
+  orthogonal : ∀ \{i j\}, i ≠ j → ∀ x, proj i (proj j x) = 0
+  complete : ∀ x, (∑ i, proj i x) = x

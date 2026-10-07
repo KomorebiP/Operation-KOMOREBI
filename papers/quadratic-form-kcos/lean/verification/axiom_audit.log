@@ -1,0 +1,113 @@
+KomorebiQCOS.Enclosed (value lower upper : ℝ) : Prop
+'KomorebiQCOS.Enclosed' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.ErrorBound (value estimate radius : ℝ) : Prop
+'KomorebiQCOS.ErrorBound' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_order {value lower upper : ℝ} (h : KomorebiQCOS.Enclosed value lower upper) : lower ≤ upper
+'KomorebiQCOS.enclosed_order' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_add {x y lx ux ly uy : ℝ} (hx : KomorebiQCOS.Enclosed x lx ux)
+  (hy : KomorebiQCOS.Enclosed y ly uy) : KomorebiQCOS.Enclosed (x + y) (lx + ly) (ux + uy)
+'KomorebiQCOS.enclosed_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_scale {value lower upper a : ℝ} (ha : 0 ≤ a) (h : KomorebiQCOS.Enclosed value lower upper) :
+  KomorebiQCOS.Enclosed (a * value) (a * lower) (a * upper)
+'KomorebiQCOS.enclosed_scale' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_widen {value lower upper lo hi : ℝ} (h : KomorebiQCOS.Enclosed value lower upper)
+  (hl : lo ≤ lower) (hu : upper ≤ hi) : KomorebiQCOS.Enclosed value lo hi
+'KomorebiQCOS.enclosed_widen' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_intersect {value l₁ u₁ l₂ u₂ : ℝ} (h₁ : KomorebiQCOS.Enclosed value l₁ u₁)
+  (h₂ : KomorebiQCOS.Enclosed value l₂ u₂) : KomorebiQCOS.Enclosed value (max l₁ l₂) (min u₁ u₂)
+'KomorebiQCOS.enclosed_intersect' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.errorBound_iff_enclosed (value estimate radius : ℝ) :
+  KomorebiQCOS.ErrorBound value estimate radius ↔ KomorebiQCOS.Enclosed value (estimate - radius) (estimate + radius)
+'KomorebiQCOS.errorBound_iff_enclosed' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.errorBound_compose {value middle estimate analytic arithmetic : ℝ}
+  (ha : KomorebiQCOS.ErrorBound value middle analytic) (hr : KomorebiQCOS.ErrorBound middle estimate arithmetic) :
+  KomorebiQCOS.ErrorBound value estimate (analytic + arithmetic)
+'KomorebiQCOS.errorBound_compose' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.errorBound_accept {value middle estimate analytic arithmetic tolerance : ℝ}
+  (ha : KomorebiQCOS.ErrorBound value middle analytic) (hr : KomorebiQCOS.ErrorBound middle estimate arithmetic)
+  (hbudget : analytic + arithmetic ≤ tolerance) : KomorebiQCOS.ErrorBound value estimate tolerance
+'KomorebiQCOS.errorBound_accept' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_positive {value lower upper : ℝ} (h : KomorebiQCOS.Enclosed value lower upper) (hl : 0 < lower) :
+  0 < value
+'KomorebiQCOS.enclosed_positive' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.enclosed_monotone {f : ℝ → ℝ} (hf : Monotone f) {value lower upper : ℝ}
+  (h : KomorebiQCOS.Enclosed value lower upper) : KomorebiQCOS.Enclosed (f value) (f lower) (f upper)
+'KomorebiQCOS.enclosed_monotone' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.gramEntry.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} (s : Finset Variant) (A : Row → Variant → ℝ)
+  (i j : Row) : ℝ
+'KomorebiQCOS.gramEntry' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.matrixAction.{u_1} {Row : Type u_1} [Fintype Row] (K : Row → Row → ℝ) (v : Row → ℝ) (i : Row) : ℝ
+'KomorebiQCOS.matrixAction' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.streamedAction.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row] (s : Finset Variant)
+  (A : Row → Variant → ℝ) (v : Row → ℝ) (i : Row) : ℝ
+'KomorebiQCOS.streamedAction' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.quadraticForm.{u_1} {Row : Type u_1} [Fintype Row] (K : Row → Row → ℝ) (v : Row → ℝ) : ℝ
+'KomorebiQCOS.quadraticForm' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.factorEnergy.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row] (s : Finset Variant)
+  (A : Row → Variant → ℝ) (v : Row → ℝ) : ℝ
+'KomorebiQCOS.factorEnergy' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.gramEntry_empty.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} (A : Row → Variant → ℝ) (i j : Row) :
+  KomorebiQCOS.gramEntry ∅ A i j = 0
+'KomorebiQCOS.gramEntry_empty' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.gramEntry_singleton.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} (k : Variant) (A : Row → Variant → ℝ)
+  (i j : Row) : KomorebiQCOS.gramEntry {k} A i j = A i k * A j k
+'KomorebiQCOS.gramEntry_singleton' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.gramEntry_symm.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} (s : Finset Variant)
+  (A : Row → Variant → ℝ) (i j : Row) : KomorebiQCOS.gramEntry s A i j = KomorebiQCOS.gramEntry s A j i
+'KomorebiQCOS.gramEntry_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.gramEntry_union.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [DecidableEq Variant]
+  (s t : Finset Variant) (h : Disjoint s t) (A : Row → Variant → ℝ) (i j : Row) :
+  KomorebiQCOS.gramEntry (s ∪ t) A i j = KomorebiQCOS.gramEntry s A i j + KomorebiQCOS.gramEntry t A i j
+'KomorebiQCOS.gramEntry_union' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.gramEntry_reindex.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} (s : Finset Variant)
+  (e : Variant ≃ Variant) (A : Row → Variant → ℝ) (i j : Row) :
+  KomorebiQCOS.gramEntry (Finset.map e.toEmbedding s) (fun i k => A i (e.symm k)) i j = KomorebiQCOS.gramEntry s A i j
+'KomorebiQCOS.gramEntry_reindex' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.matrixAction_gram_eq_streamed.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row]
+  (s : Finset Variant) (A : Row → Variant → ℝ) (v : Row → ℝ) (i : Row) :
+  KomorebiQCOS.matrixAction (KomorebiQCOS.gramEntry s A) v i = KomorebiQCOS.streamedAction s A v i
+'KomorebiQCOS.matrixAction_gram_eq_streamed' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.matrixAction_add.{u_1} {Row : Type u_1} [Fintype Row] (K L : Row → Row → ℝ) (v : Row → ℝ) (i : Row) :
+  KomorebiQCOS.matrixAction (fun i j => K i j + L i j) v i =
+    KomorebiQCOS.matrixAction K v i + KomorebiQCOS.matrixAction L v i
+'KomorebiQCOS.matrixAction_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.matrixAction_gram_union.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row]
+  [DecidableEq Variant] (s t : Finset Variant) (h : Disjoint s t) (A : Row → Variant → ℝ) (v : Row → ℝ) (i : Row) :
+  KomorebiQCOS.matrixAction (KomorebiQCOS.gramEntry (s ∪ t) A) v i =
+    KomorebiQCOS.matrixAction (KomorebiQCOS.gramEntry s A) v i +
+      KomorebiQCOS.matrixAction (KomorebiQCOS.gramEntry t A) v i
+'KomorebiQCOS.matrixAction_gram_union' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.streamedAction_union.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row] [DecidableEq Variant]
+  (s t : Finset Variant) (h : Disjoint s t) (A : Row → Variant → ℝ) (v : Row → ℝ) (i : Row) :
+  KomorebiQCOS.streamedAction (s ∪ t) A v i = KomorebiQCOS.streamedAction s A v i + KomorebiQCOS.streamedAction t A v i
+'KomorebiQCOS.streamedAction_union' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.quadraticForm_add.{u_1} {Row : Type u_1} [Fintype Row] (K L : Row → Row → ℝ) (v : Row → ℝ) :
+  KomorebiQCOS.quadraticForm (fun i j => K i j + L i j) v =
+    KomorebiQCOS.quadraticForm K v + KomorebiQCOS.quadraticForm L v
+'KomorebiQCOS.quadraticForm_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.quadraticForm_gram_eq_energy.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row]
+  (s : Finset Variant) (A : Row → Variant → ℝ) (v : Row → ℝ) :
+  KomorebiQCOS.quadraticForm (KomorebiQCOS.gramEntry s A) v = KomorebiQCOS.factorEnergy s A v
+'KomorebiQCOS.quadraticForm_gram_eq_energy' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.quadraticForm_gram_nonneg.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row]
+  (s : Finset Variant) (A : Row → Variant → ℝ) (v : Row → ℝ) :
+  0 ≤ KomorebiQCOS.quadraticForm (KomorebiQCOS.gramEntry s A) v
+'KomorebiQCOS.quadraticForm_gram_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.quadraticForm_gram_union.{u_1, u_2} {Row : Type u_1} {Variant : Type u_2} [Fintype Row]
+  [DecidableEq Variant] (s t : Finset Variant) (h : Disjoint s t) (A : Row → Variant → ℝ) (v : Row → ℝ) :
+  KomorebiQCOS.quadraticForm (KomorebiQCOS.gramEntry (s ∪ t) A) v =
+    KomorebiQCOS.quadraticForm (KomorebiQCOS.gramEntry s A) v +
+      KomorebiQCOS.quadraticForm (KomorebiQCOS.gramEntry t A) v
+'KomorebiQCOS.quadraticForm_gram_union' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.weightedSquares.{u_2} {Variant : Type u_2} (s : Finset Variant) (coeff z : Variant → ℝ) : ℝ
+'KomorebiQCOS.weightedSquares' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.weightedSquares_mono.{u_2} {Variant : Type u_2} (s : Finset Variant) (lower upper z : Variant → ℝ)
+  (h : ∀ k ∈ s, lower k ≤ upper k) : KomorebiQCOS.weightedSquares s lower z ≤ KomorebiQCOS.weightedSquares s upper z
+'KomorebiQCOS.weightedSquares_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.weightedSquares_nonneg.{u_2} {Variant : Type u_2} (s : Finset Variant) (coeff z : Variant → ℝ)
+  (h : ∀ k ∈ s, 0 ≤ coeff k) : 0 ≤ KomorebiQCOS.weightedSquares s coeff z
+'KomorebiQCOS.weightedSquares_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiQCOS.weightedSquares_tail_imp.{u_2} {Variant : Type u_2} (s : Finset Variant) (lower upper z : Variant → ℝ)
+  (q : ℝ) (h : ∀ k ∈ s, lower k ≤ upper k) (htail : q ≤ KomorebiQCOS.weightedSquares s lower z) :
+  q ≤ KomorebiQCOS.weightedSquares s upper z
+'KomorebiQCOS.weightedSquares_tail_imp' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -1,0 +1,1201 @@
+--- upstream/paper/Projector_Resolved_Seed_Calculus_I.tex
++++ journal/paper/Projector_Resolved_Seed_Calculus_I.tex
+@@ -1,10 +1,11 @@
+ \documentclass[11pt]{article}
+ 
+ \usepackage[T1]{fontenc}
+-\usepackage{lmodern}
+-\usepackage[margin=0.92in]{geometry}
++\usepackage{ebgaramond,sourcesanspro}
++\usepackage[letterpaper,left=0.90in,right=0.90in,top=0.72in,bottom=0.73in,includeheadfoot]{geometry}
+ \usepackage{microtype}
+-\usepackage{amsmath,amssymb,amsthm,mathtools}
++\usepackage{amsmath,amsthm,mathtools}
++\usepackage{newtxmath}
+ \usepackage{booktabs,longtable,array,tabularx}
+ \usepackage{graphicx}
+ \usepackage{xcolor}
+@@ -16,12 +17,47 @@
+ \usepackage{caption}
+ \usepackage{bm}
+ \usepackage{needspace}
++\usepackage{titlesec,etoolbox,bookmark}
++\usepackage[section]{placeins}
++\definecolor{accent}{HTML}{137668}
++\definecolor{muted}{HTML}{536568}
++\definecolor{rulegray}{HTML}{D7E2E0}
++\frenchspacing
++\setlength{\parindent}{1.15em}
++\setlength{\parskip}{0.12em}
++\emergencystretch=2em
++\clubpenalty=10000
++\widowpenalty=10000
++\displaywidowpenalty=10000
++\raggedbottom
++\renewcommand{\baselinestretch}{1.035}
++\titleformat{\section}{\sffamily\bfseries\large\raggedright}{\color{accent}\thesection}{0.7em}{}
++\titleformat{\subsection}{\sffamily\bfseries\normalsize\raggedright}{\thesubsection}{0.65em}{}
++\titlespacing*{\section}{0pt}{1.35\baselineskip}{0.48\baselineskip}
++\titlespacing*{\subsection}{0pt}{0.95\baselineskip}{0.3\baselineskip}
++\pretocmd{\section}{\Needspace{7\baselineskip}}{}{}
++\pretocmd{\subsection}{\Needspace{6\baselineskip}}{}{}
++\captionsetup{font=small,labelfont={sf,bf},labelsep=period,justification=raggedright,singlelinecheck=false,skip=7pt}
++\setlength{\textfloatsep}{15pt plus 3pt minus 2pt}
++\setlength{\floatsep}{12pt plus 2pt minus 2pt}
++\renewcommand{\topfraction}{.88}
++\renewcommand{\bottomfraction}{.75}
++\renewcommand{\textfraction}{.10}
++\renewcommand{\floatpagefraction}{.65}
++\setcounter{topnumber}{3}
++\setcounter{bottomnumber}{2}
++\AtBeginEnvironment{theorem}{\Needspace{4\baselineskip}}
++\AtBeginEnvironment{proposition}{\Needspace{4\baselineskip}}
++\AtBeginEnvironment{corollary}{\Needspace{4\baselineskip}}
++\AtBeginEnvironment{definition}{\Needspace{3\baselineskip}}
++\AtBeginEnvironment{construction}{\Needspace{4\baselineskip}}
++
+ 
+ \graphicspath{{figures/}}
+ \allowdisplaybreaks
+ 
+ \hypersetup{
+-  pdftitle={Projector-Resolved Seed Calculus I, Version 1.2.1},
++  pdftitle={Projector-Resolved Seed Calculus I, Journal edition 1.3.0},
+   pdfauthor={Komorebi P.},
+   pdfsubject={Typed seeds, operator grammars, seed rank, packet analysis, and exact reconstruction},
+   colorlinks=true,
+@@ -32,10 +68,15 @@
+ 
+ \pagestyle{fancy}
+ \fancyhf{}
+-\fancyhead[L]{Projector-Resolved Seed Calculus I}
+-\fancyhead[R]{Komorebi P.}
+-\fancyfoot[C]{\thepage}
++\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}JOURNAL OF KOMOREBI MATHEMATICS}
++\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{muted}CORE SERIES / I}
++\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}Projector-resolved seed calculus}
++\fancyfoot[R]{\sffamily\fontsize{8.5}{10}\selectfont\color{accent}\thepage}
++\renewcommand{\headrulewidth}{0.3pt}
++\renewcommand{\footrulewidth}{0pt}
+ \setlength{\headheight}{14pt}
++\setlength{\headsep}{17pt}
++\setlength{\footskip}{24pt}
+ 
+ \newtheorem{theorem}{Theorem}[section]
+ \newtheorem{proposition}[theorem]{Proposition}
+@@ -78,7 +119,7 @@
+ \newcommand{\op}{\mathrm{op}}
+ \newcommand{\closure}[1]{\overline{#1}}
+ \newcommand{\packet}[2]{#1_{#2}}
+-\newcommand{\paperversion}{1.2.1}
++\newcommand{\paperversion}{1.3.0}
+ \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+ \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+ 
+@@ -91,79 +132,90 @@
+   keepspaces=true
+ }
+ 
+-\title{\textbf{Projector-Resolved Seed Calculus I}\\[0.45em]
+-\large Typed Seeds, Operator Grammars, and Exact Reconstruction}
+-\author{Komorebi P.}
+-\date{Version \paperversion\\3 September 2026}
+-
+ \begin{document}
+-\maketitle
+-
+-\begin{abstract}
+-This paper isolates the foundational layer of a projector-resolved seed calculus. A seed is not treated as a mysterious object that already contains its consequences. The operative datum is a typed ambient system, a fixed operator grammar, a finite or controlled seed family, declared relations, a packet decomposition, and a topology or completion rule. In the linear core, these data form a module over an operator algebra or, in the typed setting, a representation of a path algebra with relations. This formulation gives precise definitions of generated hull and seed rank; exact analysis and synthesis maps; packet transfer blocks; coordinate transport; quotient realization; and naturality under intertwining morphisms. From explicitly supplied split-product equivalences, the paper proves the semisimple multiplicity formula
+-\[
+-\srank_{\cA}(X)=\max_i\left\lceil\frac{m_i}{d_i}\right\rceil
+-\]
+-for finite-dimensional modules. From explicit primary-decomposition certificates it proves the finite single-operator formula
+-\[
+-\srank_{\bbk[T]}(X)=\max_{\lambda}m_{\lambda},
+-\]
+-where the displayed multiplicities are certified by block generation, polynomial extraction, and scalar quotient maps. Classical Jordan theory identifies these $m_{\lambda}$ with $\dim\ker(T-\lambda I)$ in its usual setting; that classification step is not counted as a checked conclusion. The paper also proves the analogous diagonalizable formula from a supplied finite eigenbasis with distinct eigenvalue labels, and gives unconditional all-size theorems for nonempty paths and complex cycles. Detailed models cover a quadratic coordinate algebra, the bilateral shift, full matrix modules, certified primary operators, and graph adjacency operators. The purpose is not to claim that every object is generated by one seed, nor that established algebra has been replaced. Its contribution is a common algebraic language for generation, decomposition, transfer, completion, and reconstruction. Version~\paperversion{} is theorem-complete in Lean for every named mathematical statement at the precise scope written here; classical existence and classification results used to produce certificates are identified separately rather than counted as kernel-checked conclusions.
+-\end{abstract}
+-
+-\begin{center}
+-\fbox{\begin{minipage}{0.91\textwidth}
+-\textbf{Scope.} This first installment establishes the linear, algebraic, and bounded-operator foundation. Structures requiring additional nonlinear, arithmetic, or physical hypotheses are outside its claims. Jordan existence, Wedderburn--Artin classification, the finite-dimensional spectral theorem, and the geometry of the displayed elliptic curve remain cited classical inputs. Named results that use them are stated with the resulting decomposition, eigenbasis, polynomial, or quotient certificates as explicit hypotheses. The Lean kernel checks every named mathematical conclusion at that certificate-explicit scope.
+-\end{minipage}}
+-\end{center}
+-
+-\tableofcontents
+-\listoffigures
+-\listoftables
++\thispagestyle{empty}
++\noindent{\sffamily\bfseries\small\color{accent}\textls[75]{JOURNAL OF KOMOREBI MATHEMATICS}}\par
++\vspace{0.5em}
++\noindent{\sffamily\footnotesize\color{muted}CORE SERIES I\hfill JOURNAL EDITION / v\paperversion}\par
++\vspace{0.55em}
++\noindent{\color{accent}\rule{\textwidth}{1.0pt}}\par
++\vspace{1.1em}
++\noindent{\sffamily\bfseries\fontsize{30}{33}\selectfont Projector-resolved\\seed calculus I\par}
++\vspace{0.55em}
++\noindent{\fontsize{17}{20}\selectfont\itshape Typed seeds, operator grammars,\\and exact reconstruction\par}
++\vspace{0.85em}
++\noindent{\sffamily\bfseries Komorebi P.}\par
++\vspace{0.2em}
++\noindent{\sffamily\footnotesize\color{muted}12 September 2026}\par
++\vspace{1.1em}
++\noindent{\sffamily\bfseries\small ABSTRACT}\par\smallskip
++\noindent
++A generating family is meaningful only relative to a specified operator algebra.
++We develop a common framework for generation and reconstruction in which a
++module is equipped with a fixed operator grammar, relations, and a finite
++family of pairwise annihilating idempotents. The projectors give exact
++analysis and synthesis maps, while the blocks $P_\beta T P_\alpha$ encode
++operator composition and transfer between packet spaces. We study the
++minimum number of module generators, called seed rank relative to the
++grammar, and its behavior under quotients, direct sums, tensor products,
++coordinate changes, and intertwining maps.
++
++For a supplied split semisimple presentation, the generator count is
++$\max_i\lceil m_i/d_i\rceil$. For a single operator with explicit primary
++data, it is the largest certified block multiplicity. These formulas are
++proved from the stated decomposition and quotient data, not from new
++classification theorems. Bounded projectors extend the coordinate calculus
++to normed spaces and completions. Worked models include a quadratic
++coordinate algebra, a bilateral shift, matrix modules, a typed quiver,
++and path and cycle adjacency operators.
++
++The accompanying Lean development checks 35 registered claims at their
++stated scope, including three mathematical algorithm specifications.
++The source-to-statement map separates these results from the classical
++existence theorems used to supply their hypotheses and from the finite
++computations in the Python companion.
++
++\smallskip
++\noindent{\sffamily\footnotesize\color{muted}\textbf{Keywords.} Module generators; idempotent decompositions; block operators; cyclic vectors; formal verification.}\par
++\vspace{0.6em}
++\noindent{\color{rulegray}\rule{\textwidth}{0.5pt}}\par
++
+ \clearpage
+-
+ \section{The foundational problem}
+ 
+-\subsection{Generation is not hidden encoding}
+-
+-A statement such as ``one seed generates every object'' is empty unless the admissible operations are fixed before the target is chosen. Given a target vector $x$, one can always define an operator that maps a preferred seed directly to $x$. That construction merely stores the answer inside the operator. It does not reveal a reusable calculus.
+-
+-The nontrivial question is the following.
+-
+-\begin{quote}
+-Given a small and fixed operator grammar, which objects are generated by a finite seed family, how many seeds are necessary, how can the generated object be decomposed into exact packets, and which features survive a change of coordinates or realization?
+-\end{quote}
+-
+-The production language used throughout the series is
+-\[
+-\boxed{
+-\text{seed}
+-\longrightarrow
+-\text{address}
+-\longrightarrow
+-\text{operate}
+-\longrightarrow
+-\text{project}
+-\longrightarrow
+-\text{constrain}
+-\longrightarrow
+-\text{complete}
+-\longrightarrow
+-\text{reconstruct}.
+-}
+-\]
+-Paper I gives a rigorous meaning to each term in the linear setting.
++\subsection{Generation relative to a fixed grammar}
++
++Fix a unital operator algebra $\cA$ acting on a vector space $X$.
++The question whether a family $S$ generates $X$ depends on this action:
++the same vector may be cyclic for one algebra and fail to be cyclic for
++another. Choosing an operator separately for each target would conceal
++rather than solve the generation problem. The operator grammar must
++therefore be specified before the target is chosen.
++
++Our aim is to keep the generating action and a decomposition of $X$ in the
++same description. A finite family of idempotents gives packet coordinates;
++each operator then has a table of packet-to-packet blocks. Module generators
++answer which vectors can be reached, and the blocks describe how the
++operators move between the chosen components. Relations and topology enter
++when the realization is a quotient or a completion.
++
++The resulting language combines standard module theory with explicit
++coordinate and transport identities. The term \emph{seed rank} records the
++minimum number of generators relative to the declared action. It is not a
++replacement for the classical module invariant. The contribution here is
++to develop these ingredients together, with proofs, worked realizations,
++and a precise correspondence to a formal library.
+ 
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.96\textwidth]{01_seed_operator_grammar.pdf}
+-\caption{The fixed production grammar used in Paper I.}
++\caption{Schematic organization of the seed, operator, relation, and reconstruction data. This is a guide to the presentation, not an additional formal theorem.}
+ \label{fig:grammar}
+ \end{figure}
+ 
+ \subsection{What is proved here}
+ 
+-The main internally proved statements are:
++The paper develops the following results:
+ \begin{enumerate}[label=(\roman*)]
+ \item exact packet analysis and synthesis for finite idempotent decompositions;
+ \item the transfer-block decomposition and its composition law;
+@@ -175,19 +227,24 @@
+ \item exact worked models in coordinate algebras, bounded shift systems, matrix modules, a finite typed quiver, paths, and cycles.
+ \end{enumerate}
+ 
+-\subsection{What is not proved here}
+-
+-This paper does not assert:
+-\begin{enumerate}[label=(\alph*)]
+-\item that all mathematical objects have seed rank one;
+-\item that one literal scalar seed is shared by all domains;
+-\item that the operator grammar alone chooses physically or arithmetically correct equations;
+-\item that every packet family is orthogonal;
+-\item that infinite packet sums converge without a stated topology;
+-\item that the terminology by itself establishes historical priority over all equivalent formalisms.
+-\item that Lean constructs Wedderburn or Jordan decompositions, derives diagonalizability from graph symmetry, or implements a verified exact eigensolver;
+-\item that the Lean algebraic model proves projective smoothness, genus, or the geometric interpretation of the elliptic discriminant.
+-\end{enumerate}
++\subsection{Scope and conventions}
++
++The core is linear. Packet families are finite unless a mode of convergence
++is specified, and pairwise annihilation does not mean orthogonality for an
++inner product. Normed-space statements use bounded linear operators over
++a nontrivially normed field; the Hilbert-space statements use $\R$ or $\C$.
++Unless stated otherwise, the algebraic ground ring is a field $\bbk$.
++For the semiring-valued generator inequalities, a generated hull means the
++subsemimodule spanned by the seed family.
++
++Classification results enter only through explicit data. In particular,
++a chosen split algebra and module equivalence, primary generators,
++polynomial projectors, scalar quotient maps, or an eigenbasis must be supplied
++where the theorem requires them. Their existence is a separate classical
++input. The formal development does not include a general Jordan or
++Wedderburn construction, an exact eigensolver, or the projective geometry
++of the coordinate-ring example. These boundaries are recorded again,
++claim by claim, in the verification ledger.
+ 
+ \section{Typed operator grammars}
+ 
+@@ -211,17 +268,17 @@
+ \[
+ X_p=X_{a_r}\cdots X_{a_1}.
+ \]
+-The trivial path $e_v$ acts as the identity on $X_v$. Linear combinations of paths form the path algebra $\bbk Q$. For quiver representations, path algebras, and bound quiver algebras, see \cite[Chs.~I--II]{assemSimsonSkowronski2006}.
++The trivial path $e_v$ acts as the identity on $X_v$. Linear combinations of paths form the path algebra $\bbk Q$. For quiver representations, path algebras, and bound quiver algebras, see \cite{assemSimsonSkowronski2006}.
+ 
+ \begin{definition}[Relations]
+ A relation is a $\bbk$-linear combination of paths with common initial and terminal vertices. A relation ideal $I\subseteq\bbk Q$ is a two-sided ideal generated by declared relations. A realization satisfies the relations when every element of $I$ acts as zero.
+ \end{definition}
+ 
+-Thus a finite typed linear grammar with relations is a module over the bound path algebra
++Thus a realization of the finite typed grammar satisfying the relations is a module over the path algebra with relations
+ \[
+ \bbk Q/I.
+ \]
+-The path-algebra formulation is not an analogy. It is an exact algebraic encoding of typed operator composition.
++Composition of typed operations is represented by path multiplication.
+ 
+ Because $Q_0$ is finite,
+ \[
+@@ -244,7 +301,7 @@
+ \begin{definition}[Linear seed system]
+ A linear seed system is a tuple
+ \[
+-\boxed{
++{
+ \Seed=(X,S,\cA,\cR,\cP,\tau),
+ }
+ \]
+@@ -262,7 +319,7 @@
+ =
+ \Span_{\bbk}\{As:A\in\cA,\ s\in S\}.
+ \]
+-It is the smallest $\cA$-invariant subspace containing $S$.
++It is the smallest $\cA$-invariant subspace containing $S$. We write $\Hull_{\cA}(s)$ for $\Hull_{\cA}(\{s\})$.
+ \end{definition}
+ 
+ \begin{definition}[Topological hull]
+@@ -312,17 +369,17 @@
+ \]
+ is a left ideal of $F$, and there is a canonical isomorphism of left $F$-modules
+ \[
+-\boxed{
++{
+ F/I_s\cong\Hull_F(s).
+ }
+ \]
+-The seed $s$ generates $X$ if and only if $\Phi_s$ is surjective. For the completion clause, suppose instead that $X$ is a Banach space and that $F/I_s$ has been supplied with a norm for which the induced map
++The seed $s$ generates $X$ if and only if $\Phi_s$ is surjective. For the completion clause, let $\bbk$ be a nontrivially normed field, let $X$ be a Banach space over $\bbk$, and suppose that $F/I_s$ has been supplied with a norm for which the induced map
+ \[
+ \bar\Phi_s:F/I_s\longrightarrow X
+ \]
+ is a continuous linear isometry with dense range. Then $\bar\Phi_s$ extends uniquely to a continuous linear equivalence
+ \[
+-\boxed{\widehat{F/I_s}\simeq_L X.}
++{\widehat{F/I_s}\simeq_L X.}
+ \]
+ If bounded operators $A$ on $F/I_s$ and $B$ on $X$ satisfy
+ \(
+@@ -359,7 +416,7 @@
+ \]
+ Then $N_S=\ker\Phi_S$ is a left $F$-submodule and
+ \[
+-\boxed{
++{
+ F^m/N_S\cong\Hull_F(S).
+ }
+ \]
+@@ -367,11 +424,11 @@
+ \[
+ F^{(\{1,\ldots,n\})}\twoheadrightarrow X.
+ \]
+-This is the classical minimal number of module generators, commonly denoted $\mu_F(X)$; see \cite[Ch.~1]{lam1999modules}. For an arbitrary generating family indexed by $J$, the same presentation uses the direct-sum free module $F^{(J)}$.
++This is the classical minimal number of module generators, commonly denoted $\mu_F(X)$; see \cite{lam1999modules}. For an arbitrary generating family indexed by $J$, the same presentation uses the direct-sum free module $F^{(J)}$.
+ \end{theorem}
+ 
+ \begin{proof}
+-The map $\Phi_S$ is $F$-linear. The first isomorphism theorem for modules gives the claimed quotient. The final statement is simply the definition of the minimal number of module generators.
++The map $\Phi_S$ is $F$-linear. The first isomorphism theorem for modules gives the claimed quotient. A surjection from $F^n$ is determined by the images of its $n$ standard generators, and those images generate its target. Conversely, every $n$-element generating family defines such a surjection. Taking the least $n$ proves the final assertion.
+ \end{proof}
+ 
+ \subsection{Algebra generation and module generation}
+@@ -394,7 +451,7 @@
+ \begin{definition}[Seed rank]
+ The seed rank of an $\cA$-module $X$ is the least cardinal
+ \[
+-\boxed{
++{
+ \srank_{\cA}(X)
+ =
+ \min\bigl\{|S|:S\subseteq X,\ \Hull_{\cA}(S)=X\bigr\}.
+@@ -410,7 +467,7 @@
+ \[
+ \srank_{\cA}(0)=\srank_{\cA,\tau}(0)=0.
+ \]
+-For finitely generated modules the algebraic rank is a nonnegative integer; otherwise it may be an infinite cardinal. Algebraically, this is the standard invariant $\mu_{\cA}(X)$, with the term \emph{seed rank} retaining the declared operator algebra as part of the datum \cite[Ch.~1]{lam1999modules}.
++For finitely generated modules the algebraic rank is a nonnegative integer; otherwise it may be an infinite cardinal. Algebraically, this is the standard invariant $\mu_{\cA}(X)$, with the term \emph{seed rank} retaining the declared operator algebra as part of the datum \cite{lam1999modules}.
+ A vector $s$ is cyclic when $\Hull_{\cA}(s)=X$.
+ \end{definition}
+ 
+@@ -425,7 +482,7 @@
+ \end{proposition}
+ 
+ \begin{proof}
+-This is immediate from the definition, but it is conceptually important: the one-seed question is exactly the cyclic-module question once the operator algebra has been fixed.
++A cyclic vector gives a one-element generating set. Conversely, a generating set of cardinality one consists of a cyclic vector. Since $X$ is nonzero, the empty family does not generate.
+ \end{proof}
+ 
+ \subsection{Functorial bounds}
+@@ -438,7 +495,7 @@
+ \]
+ for all $A\in\cA$ and $x\in X$. Then
+ \[
+-\boxed{
++{
+ \srank_{\cB}(Y)\le \srank_{\cA}(X).
+ }
+ \]
+@@ -479,7 +536,7 @@
+ \label{prop:shared-direct-sum}
+ If one algebra $\cA$ acts diagonally on $X\oplus Y$, then
+ \[
+-\boxed{
++{
+ \srank_{\cA}(X\oplus Y)
+ \le
+ \srank_{\cA}(X)+\srank_{\cA}(Y).
+@@ -495,7 +552,7 @@
+ \label{thm:independent-direct-sum}
+ Let $\cA$ act on $X$ and $\cB$ act on $Y$. Under the product algebra $\cA\times\cB$,
+ \[
+-\boxed{
++{
+ \srank_{\cA\times\cB}(X\oplus Y)
+ =
+ \max\{\srank_{\cA}(X),\srank_{\cB}(Y)\}.
+@@ -514,7 +571,7 @@
+ (a\otimes b)(x\otimes y)=(ax)\otimes(by),
+ \]
+ \[
+-\boxed{
++{
+ \srank_{\cA\otimes\cB}(X\otimes Y)
+ \le
+ \srank_{\cA}(X)\srank_{\cB}(Y).
+@@ -562,12 +619,12 @@
+ \]
+ If $r=\dim_{\bbk}Y$, then
+ \[
+-\boxed{\srank_{\cA}(X)\ge r.}
++{\srank_{\cA}(X)\ge r.}
+ \]
+ \end{proposition}
+ 
+ \begin{proof}
+-The orbit of one vector in $Y$ is contained in its one-dimensional span because all operators act scalarly. Therefore $r$ independent quotient directions require at least $r$ image seeds. Apply quotient monotonicity.
++The orbit of a vector in $Y$ is contained in its span, which has dimension at most one, because all operators act scalarly. Therefore $r$ independent quotient directions require at least $r$ image seeds. Apply quotient monotonicity.
+ \end{proof}
+ 
+ \begin{example}[Primary quotient]
+@@ -590,7 +647,7 @@
+ 
+ \section{The semisimple multiplicity theorem}
+ 
+-The first substantial closed formula for seed rank appears once a split-product decomposition has been fixed. The classical Wedderburn--Artin theorem and the standard description of modules over full matrix algebras provide such data in the usual finite-dimensional split-semisimple setting \cite[Ch.~1]{lam2001noncommutative}\cite[Ch.~7]{lam1999modules}. The theorem below makes the data explicit: it proves the formula after an algebra equivalence and a compatible module equivalence have been supplied; it does not assert the classification theorem that produces them.
++The first substantial closed formula for seed rank appears once a split-product decomposition has been fixed. The classical Wedderburn--Artin theorem and the standard description of modules over full matrix algebras provide such data in the usual finite-dimensional split-semisimple setting \cite{lam2001noncommutative}\cite{lam1999modules}. The theorem below makes the data explicit: it proves the formula after an algebra equivalence and a compatible module equivalence have been supplied; it does not assert the classification theorem that produces them.
+ 
+ \begin{theorem}[Semisimple multiplicity formula]
+ \label{thm:semisimple}
+@@ -604,7 +661,7 @@
+ \]
+ Assume $d_i\ge1$ for every $i$. Then
+ \[
+-\boxed{
++{
+ \srank_{\cA}(X)
+ =
+ \max_{i\in I}
+@@ -663,7 +720,7 @@
+ \end{figure}
+ 
+ \begin{remark}[Non-algebraically-closed fields]
+-The stated theorem works over any field once the displayed split matrix-algebra and module equivalences are supplied. A general semisimple algebra over a non-splitting field can instead involve nontrivial division algebras of endomorphisms, and its intrinsic formula must use dimensions over those division algebras; see \cite[Ch.~5]{lam2001noncommutative}.
++The stated theorem works over any field once the displayed split matrix-algebra and module equivalences are supplied. A general semisimple algebra over a non-splitting field can instead involve nontrivial division algebras of endomorphisms, and its intrinsic formula must use dimensions over those division algebras; see \cite{lam2001noncommutative}.
+ \end{remark}
+ 
+ \section{One operator and the cyclic-vector theorem}
+@@ -674,7 +731,7 @@
+ kernel-checked result from an explicit certificate.  Classical
+ $\bbk[t]$-module, primary-decomposition, and canonical-form theory explains
+ how such certificates arise in the standard finite-dimensional setting
+-\cite[pp.~139--203]{roman2008}; see also \cite{hornJohnson2012}.
++\cite{roman2008}; see also \cite{hornJohnson2012}.
+ 
+ \begin{theorem}[Single-operator seed number from primary data]
+ \label{thm:single-operator}
+@@ -710,7 +767,7 @@
+ Then $R$ is the least natural number $r$ for which $r$ polynomial-orbit
+ seeds generate $X$:
+ \[
+-\boxed{
++{
+ R=\min\left\{r\in\N:
+ \begin{array}{l}
+ \text{there exist }u_1,\ldots,u_r\in X\text{ with}\\[2pt]
+@@ -726,7 +783,7 @@
+ \]
+ polynomial-orbit generation is exactly module generation, and therefore
+ \[
+-\boxed{
++{
+ \mu_{\bbk[T]}(X)=R,
+ \qquad
+ \srank_{\bbk[T]}(X)=(R:\operatorname{Cardinal}).
+@@ -792,18 +849,20 @@
+ \end{boundary}
+ 
+ \begin{example}[Companion operator]
+-A companion matrix carries an explicit one-block certificate.  If $e_1$ is
+-the first coordinate vector in the convention used by the numerical
+-companion, then
++For a companion matrix of size $n\ge1$, use the convention in which
++$e_1$ is the first coordinate vector and
+ \[
+ e_1,Te_1,\ldots,T^{n-1}e_1
+ \]
+-form a basis, so the certificate has $R=1$.  Its Krylov rank grows by one at
+-every step.
++is a basis. This Krylov basis proves cyclicity over the ground field,
++without a splitting hypothesis. It does not by itself supply the scalar
++primary data of \cref{thm:single-operator}. The nilpotent companion used in
++the computational example has one primary block at zero, so it also
++admits that theorem's certificate with $R=1$.
+ \end{example}
+ 
+ \begin{example}[Repeated primary blocks]
+-Let
++Let $m\ge1$ and
+ \[
+ T=J_m(\lambda)\oplus J_m(\lambda).
+ \]
+@@ -868,7 +927,7 @@
+ \label{thm:analysis-synthesis}
+ For every finite packet system,
+ \[
+-\boxed{
++{
+ \mathcal S_{\cP}\mathcal A_{\cP}=I_X,
+ \qquad
+ \mathcal A_{\cP}\mathcal S_{\cP}=I_{\oplus X_{\alpha}}.
+@@ -913,13 +972,13 @@
+ 
+ \subsection{Continuous packets and closed ranges}
+ 
+-The finite packet theorem extends cleanly to Banach and Hilbert spaces when the projectors are bounded. We use standard conventions for continuous linear maps, closed subspaces, and completion \cite[pp.~12--121]{schaeferWolff1999}\cite[pp.~1--123]{conway1990}.
++The finite packet theorem extends cleanly to Banach and Hilbert spaces when the projectors are bounded. We use standard conventions for continuous linear maps, closed subspaces, and completion \cite{schaeferWolff1999}\cite{conway1990}.
+ 
+ \begin{theorem}[Topological packet isomorphism]
+ \label{thm:topological-packets}
+ Let $X$ be a Banach space and let $(P_i)_{i\in I}$ be a finite family of bounded pairwise annihilating idempotents with sum $I$. Then each packet $X_i=P_iX$ is closed, and analysis is a continuous linear equivalence
+ \[
+-\boxed{
++{
+ \mathcal A_{\cP}:X\simeq_L\prod_{i\in I}X_i
+ }
+ \]
+@@ -938,7 +997,7 @@
+ \label{cor:completion-packet-split}
+ Let $X$ be a normed space, let $M\subseteq X$ be a dense linear subspace, and let $P_i$ be a bounded idempotent. Then
+ \[
+-\boxed{\closure{P_iM}=P_iX.}
++{\closure{P_iM}=P_iX.}
+ \]
+ For a finite bounded packet family this holds for every packet, so packet extraction commutes with completion in this precise sense. No invariance hypothesis $P_iM\subseteq M$ is needed for the equality.
+ \end{corollary}
+@@ -958,7 +1017,7 @@
+ \begin{definition}[Transfer block]
+ For $T\in\End(X)$ define
+ \[
+-\boxed{
++{
+ T_{\beta\alpha}=P_{\beta}TP_{\alpha}.
+ }
+ \]
+@@ -969,7 +1028,7 @@
+ \label{thm:operator-reconstruction}
+ Every operator has the exact decomposition
+ \[
+-\boxed{
++{
+ T=\sum_{\alpha,\beta}T_{\beta\alpha}.
+ }
+ \]
+@@ -992,7 +1051,7 @@
+ \label{thm:block-composition}
+ If $S,T\in\End(X)$, then
+ \[
+-\boxed{
++{
+ (ST)_{\gamma\alpha}
+ =
+ \sum_{\beta}S_{\gamma\beta}T_{\beta\alpha}.
+@@ -1052,7 +1111,7 @@
+ \label{thm:block-algebra}
+ Restriction of the transfer blocks gives an algebra isomorphism
+ \[
+-\boxed{
++{
+ \End_{\bbk}(X)
+ \cong
+ \prod_{\beta,\alpha}\Hom_{\bbk}(X_{\alpha},X_{\beta}),
+@@ -1146,7 +1205,7 @@
+ 
+ For the topological extension, let the realization be normed and let $Q$ be a nonzero bounded packet projector. Once the algebraic argument has established $H\subseteq\ker Q$, continuity gives
+ \[
+-\boxed{\closure H\subseteq\ker Q,\qquad \closure H\ne X.}
++{\closure H\subseteq\ker Q,\qquad \closure H\ne X.}
+ \]
+ \end{proposition}
+ 
+@@ -1155,7 +1214,7 @@
+ \end{proof}
+ 
+ \begin{remark}
+-One vector may have nonzero components in several source packets. Consequently, the number of source components is a lower bound only for packet-pure seed families. No general directed minimum-seed theorem is claimed here.
++A seed may have components in several packets. A count of source strongly connected components therefore gives a lower bound only when each seed is supported in a single packet and every counted component contains a nonzero packet. Reachability alone does not determine the minimum size of an unrestricted seed family.
+ \end{remark}
+ 
+ \section{Coordinate transport and naturality}
+@@ -1173,7 +1232,7 @@
+ \label{thm:coordinate-transport}
+ The family $\{Q_{\alpha}\}$ is a packet system on $Y$, and its transfer blocks satisfy
+ \[
+-\boxed{
++{
+ Q_{\beta}T^UQ_{\alpha}
+ =
+ U(P_{\beta}TP_{\alpha})U^{-1}.
+@@ -1276,29 +1335,39 @@
+ \Phi A=\varphi(A)\Phi
+ \qquad(A\in\cA).
+ \]
+-If
++Here $\Hull_{\cA}(S)$ denotes the span of finite word orbits in the operator family, including the empty word. If
+ \[
+ \closure{\Hull_{\cA}(S)}=X,
+ \]
+ then
+ \[
+-\boxed{\closure{\Hull_{\cB}(\Phi(S))}=Y.}
++{\closure{\Hull_{\cB}(\Phi(S))}=Y.}
+ \]
+ Separately, if bounded operators $P$ on $X$ and $Q$ on $Y$ satisfy $\Phi P=Q\Phi$, then
+ \[
+-\boxed{\Phi(PX)=QY.}
++{\Phi(PX)=QY.}
+ \]
+ \end{theorem}
+ 
+ \begin{proof}
+-Intertwining sends the algebraic source hull into the target hull. Surjectivity and continuity imply that the image of the dense source hull is dense in $Y$, so the target hull has dense closure. For packets, one inclusion follows from intertwining. Conversely, if $y=Qy$, choose $x$ with $\Phi x=y$; then
+-\[
+- y=Q\Phi x=\Phi Px.
+-\]
++Intertwining each generator intertwines every finite word, so the image
++of the algebraic source hull lies in the target hull. By continuity,
++$\Phi(\overline{\Hull_{\cA}(S)})$ lies in the closure of that image.
++The former set is $Y$ by density and surjectivity, which proves the first
++conclusion.
++
++For the range identity, intertwining gives $\Phi(PX)\subseteq QY$.
++Conversely, take $y\in QY$ and write $y=Qz$ with $z\in Y$.
++Choose $x\in X$ with $\Phi x=z$. Then
++\[
++ y=Qz=Q\Phi x=\Phi Px.
++\]
++Thus $QY\subseteq\Phi(PX)$. No idempotence assumption on $P$ or $Q$
++is used in this argument.
+ \end{proof}
+ 
+ \begin{boundary}
+-Surjectivity is essential for both conclusions, and boundedness supplies continuity. Openness and completeness of $X$ or $Y$ are not required. Identifying a completed presentation with a Banach target, as in \cref{thm:one-seed-presentation}, separately requires the isometry and completeness hypotheses stated there.
++Surjectivity yields both conclusions as stated. Dense range of $\Phi$ would suffice for the density conclusion alone, but does not in general give the exact range identity. Neither openness nor completeness of $X$ or $Y$ is required. Identifying a completed presentation with a Banach target, as in \cref{thm:one-seed-presentation}, separately requires the isometry and completeness hypotheses stated there.
+ \end{boundary}
+ 
+ \section{A typed quiver model}
+@@ -1363,7 +1432,7 @@
+ \[
+ A=\bbk[x,y]/(y^2-x^3+x).
+ \]
+-The affine equation $y^2=x^3-x$ has classical discriminant $64$, which is nonzero under this hypothesis; standard algebraic geometry then identifies its smooth projective completion as an elliptic curve \cite[Ch.~III]{silverman2009}. The Lean development checks the algebraic implication $2\ne0\Rightarrow64\ne0$, the quotient normal form, and the operator identities below. It does not formalize projective smoothness, genus, or the geometric identification of the discriminant. The packet computation itself uses only the displayed quotient-ring relation.
++The affine equation $y^2=x^3-x$ has classical discriminant $64$, which is nonzero under this hypothesis; standard algebraic geometry then identifies its smooth projective completion as an elliptic curve \cite{silverman2009}. The Lean development checks the algebraic implication $2\ne0\Rightarrow64\ne0$, the quotient normal form, and the operator identities below. It does not formalize projective smoothness, genus, or the geometric identification of the discriminant. The packet computation itself uses only the displayed quotient-ring relation.
+ Every class has a unique normal form
+ \[
+ f(x,y)=a(x)+y b(x).
+@@ -1397,7 +1466,7 @@
+ \qquad
+ P_1(a+yb)=yb.
+ \]
+-These are $\bbk$-linear orthogonal idempotents and satisfy $P_0+P_1=I$. They are not $A$-linear module maps: multiplication by $y$ exchanges the two packets.
++These are $\bbk$-linear pairwise annihilating idempotents and satisfy $P_0+P_1=I$. They are not $A$-linear module maps: multiplication by $y$ exchanges the two packets.
+ 
+ Identify the packet coefficients by
+ \[
+@@ -1407,7 +1476,7 @@
+ \]
+ In these ordered coefficient coordinates, with $M_x$ and $M_{x^3-x}$ denoting multiplication on $\bbk[x]$,
+ \[
+-\boxed{
++{
+ M_x=
+ \begin{pmatrix}
+ M_x&0\\
+@@ -1443,7 +1512,7 @@
+ \]
+ Then
+ \[
+-\boxed{
++{
+ fg
+ =
+ \bigl(a_0b_0+(x^3-x)a_1b_1\bigr)
+@@ -1500,7 +1569,7 @@
+ (S_mx)[n]=x[n-m]
+ \qquad(m,n\in\Z).
+ \]
+-Thus $S_0=I$, $S_{m+r}=S_mS_r$, and $S_1$ is the usual bilateral shift. We use the standard Hilbert-space and bounded-operator conventions of \cite[Chs.~I--II]{conway1990}.
++Thus $S_0=I$, $S_{m+r}=S_mS_r$, and $S_1$ is the usual bilateral shift. We use the standard Hilbert-space and bounded-operator conventions of \cite{conway1990}.
+ The impulse $\delta_0$ satisfies
+ \[
+ S_m\delta_0=\delta_m
+@@ -1511,7 +1580,7 @@
+ \label{prop:shift-seed}
+ For $n\in\N$, let $G(n)$ mean that some $n$-element finite seed set has dense hull under the declared family $\{S_m:m\in\Z\}$. Then
+ \[
+-\boxed{
++{
+ 1=\min\{n\in\N:G(n)\}.
+ }
+ \]
+@@ -1538,7 +1607,7 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.66\textwidth]{07_shift_packet_transfer.pdf}
+-\caption{Residue-packet block pattern of the bilateral shift. Each input residue class transfers into the next output residue class.}
++\caption{Residue-packet support in the 24-coordinate periodic shift model with six packets. Each input residue transfers into the next output residue. The infinite bilateral-shift theorem is established separately in the text.}
+ \label{fig:shift-transfer}
+ \end{figure}
+ 
+@@ -1589,7 +1658,7 @@
+ $m_{\lambda_*}=R$ for some $\lambda_*$, then $R$ is the least natural number
+ of adjacency seeds:
+ \[
+-\boxed{
++{
+ R=\min\left\{r\in\N:
+ \begin{array}{l}
+ \text{there exist }s_1,\ldots,s_r\text{ with}\\[2pt]
+@@ -1614,7 +1683,7 @@
+ For a finite undirected graph over $\C$, the real-symmetric spectral theorem
+ classically supplies a certificate of the displayed kind, and the numbers
+ $m_{\lambda}$ are the usual eigenvalue multiplicities; see
+-\cite[Chs.~1--2]{brouwerHaemers2012}.  The formal declaration verifies the
++\cite{brouwerHaemers2012}.  The formal declaration verifies the
+ seed-number formula from the supplied eigenbasis and distinct eigenvalue
+ labels.  It does not derive diagonalizability from symmetry or implement an
+ eigensolver.
+@@ -1626,7 +1695,7 @@
+ vector for the adjacency operator.  Consequently one is the least finite
+ adjacency-seed number:
+ \[
+-\boxed{
++{
+ 1=\min\left\{r\in\N:
+ \exists s_1,\ldots,s_r,\quad
+ \bbk^n=\Span_{\bbk}\{p(A_{P_n})s_j:p\in\bbk[t],\ 1\le j\le r\}
+@@ -1667,14 +1736,28 @@
+ two-dimensional scalar obstruction.  Hence, for every $n\ge3$, two is the
+ least finite adjacency-seed number:
+ \[
+-\boxed{
++{
+ 2=\min\left\{r\in\N:
+ \exists s_1,\ldots,s_r,\quad
+ \C^n=\Span_{\C}\{p(A_{C_n})s_j:p\in\C[t],\ 1\le j\le r\}
+ \right\}.
+ }
+ \]
+-Classically, the same lower bound is visible in the eigenvalues
++To see the upper bound directly, index the vertices modulo $n$.
++The identity $Ae_j=e_{j-1}+e_{j+1}$ recovers successive vertex vectors
++from $e_0$ and $e_1$, over any field. For the lower bound over $\C$, let
++$\zeta$ be a primitive $n$th root of unity and define
++\[
++q(x)=\left(\sum_{j=0}^{n-1}\zeta^j x_j,
++             \sum_{j=0}^{n-1}\zeta^{-j}x_j\right).
++\]
++Then $q(Ax)=(\zeta+\zeta^{-1})q(x)$. The images of $e_0$ and $e_1$
++are $(1,1)$ and $(\zeta,\zeta^{-1})$, which are independent because
++$\zeta\ne\zeta^{-1}$ for $n\ge3$. Thus $q$ is a two-dimensional
++scalar quotient, and \cref{prop:scalar-quotient-obstruction} gives the
++matching lower bound.
++
++The usual spectral description writes the eigenvalues as
+ \[
+ \lambda_k=2\cos\frac{2\pi k}{n},
+ \qquad 0\le k<n.
+@@ -1719,7 +1802,7 @@
+ 
+ The invariant content is:
+ \[
+-\boxed{
++{
+ \begin{aligned}
+ &\text{generated hull: }\Hull_{\cA}(S),\\
+ &\text{seed complexity: }\srank_{\cA}(X),\\
+@@ -1735,13 +1818,13 @@
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.96\textwidth]{10_theorem_dependency.pdf}
+-\caption{Logical dependency of the first paper. The applications appear only after the grammar, hull, packet, transfer, rank, and functoriality layers are fixed.}
++\caption{Structural overview of the two proof families. The generator and packet arguments meet in the worked realizations. This diagram is not an exhaustive graph of Lean declaration dependencies.}
+ \label{fig:dependency}
+ \end{figure}
+ 
+ \section{Computational certificates}
+ 
+-The accompanying Python package is not used as a substitute for proof. It provides exact symbolic checks and finite numerical regression tests for formulas already proved. Every finite range and randomly generated case below is recorded as a sampled implementation certificate, not as evidence for an unrestricted theorem.
++The accompanying Python package is not used as a substitute for proof. It provides exact symbolic checks and finite numerical regression tests for formulas already proved. The computed ranges and random seeds are recorded explicitly. These checks do not extend a theorem beyond its hypotheses or certify an unrestricted numerical implementation. The journal companion also tests integer counts beyond floating-point precision and rejects the unsupported complex-symmetric spectral shortcut.
+ 
+ \subsection{Test suite}
+ 
+@@ -1764,7 +1847,7 @@
+ 
+ \begin{table}[htbp]
+ \centering
+-\caption{Representative machine-readable certificates.}
++\caption{Representative computed checks from the journal-edition run.}
+ \label{tab:results}
+ \begin{tabular}{L{0.57\textwidth}r}
+ \toprule
+@@ -1781,7 +1864,7 @@
+ Sampled path graph seed ranks, $2\le n\le12$ & $1$ \\
+ Sampled cycle graph seed ranks, $3\le n\le12$ & $2$ \\
+ Full $M_4(\R)$ orbit dimensions for two sampled nonzero seeds & $4,4$ \\
+-Automated tests & $18/18$ passed \\
++Automated tests & $33/33$ passed \\
+ \bottomrule
+ \end{tabular}
+ \end{table}
+@@ -1869,13 +1952,25 @@
+ 
+ \section{Formal verification record}
+ 
+-The release includes a source-linked Lean 4/Mathlib component, independently versioned v1.0.1. Every one of the 32 named mathematical statements and three mathematical algorithm specifications in the v1.2.1 completion contract is matched by an imported declaration whose hypotheses and conclusion are equal to or stronger than the wording in this manuscript. The authoritative 35-row declaration map is \path{formalization/lean/LEAN_THEOREM_MAP_v1.0.1.md}. Classification and existence inputs, code extraction, performance, numerical experiments, bibliography, and historical priority are outside that theorem-completion denominator.
++The accompanying formal development uses Lean 4.34.0-rc2 \cite{demouraUllrich2021}
++and a pinned Mathlib revision \cite{mathlib2020}. Its 35-row contract links 32 registered mathematical
++claims and three mathematical algorithm specifications to 84 named targets.
++Some targets are construction definitions rather than theorem declarations;
++the target count is not a count of 84 independent theorems. The map records
++the hypotheses and exclusions of each result in
++\path{formalization/lean/LEAN_THEOREM_MAP_v1.0.2.md}.
++
++For this journal edition, the project sources were rebuilt in a fresh object
++directory using a focused import module. The eight former blanket Mathlib
++imports were replaced, but no existing formal statement or proof body was
++changed. This reduces the memory required to check the development. The
++pinned Mathlib dependency cache was reused, not independently rebuilt.
+ 
+ \begingroup
+ \small
+ \setlength{\tabcolsep}{3pt}
+ \begin{longtable}{L{0.24\textwidth}L{0.29\textwidth}L{0.36\textwidth}}
+-\caption{Principal modules in the accompanying Lean tranche.}
++\caption{Principal modules in the accompanying Lean development.}
+ \label{tab:lean-modules}\\
+ \toprule
+ Module & Representative declaration & Checked scope \\
+@@ -1913,7 +2008,20 @@
+ \end{longtable}
+ \endgroup
+ 
+-With the pinned toolchain and dependency manifest, the warning-fatal public aggregate build completed all 8,883 jobs. An executable checker resolved all 84 unique declarations in the 35-row map and required a direct axiom report for each. A separate fail-closed audit traversed 1,126 compiled project declarations and found no project-specific axiom, theorem placeholder, explicit opaque constant, or unsafe declaration. Depending on the theorem, \texttt{\#print axioms} reports only the standard Lean/Mathlib principles \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}; it reports no \texttt{sorryAx}. The exact commands, source hashes, and environment record are included in \path{formalization/lean/VERIFICATION_REPORT.md}.
++The fresh checks compile all 20 local modules, resolve all 84 mapped
++targets, and run the fail-closed audit over 1,126 project declarations,
++including definitions and generated helpers. The reported transitive axiom
++dependencies are confined to \texttt{propext}, \texttt{Classical.choice},
++and \texttt{Quot.sound}. Separate negative controls require Lean to reject
++a false natural-number equality and to reject a theorem placeholder when
++warnings are treated as errors. Commands, source hashes, type signatures,
++and unedited compiler output are included in the verification supplement.
++
++The earlier v1.2.1 record reported an 8,883-job aggregate build. That is
++historical evidence, not the job count of this audit. The present checks
++establish acceptance of the accompanying local declarations relative to the
++pinned imported library. They do not certify every sentence of exposition,
++independent mathematical novelty, or a general executable eigensolver.
+ 
+ The certificate boundary is material. Lean checks the implications from chosen split decompositions, primary data, eigenbases, projector polynomials, quotient maps, and spectrum-coverage certificates. It does not construct those certificates from Wedderburn--Artin, Jordan, the spectral theorem, graph symmetry, or an eigensolver. Likewise, the Lean elliptic-coordinate module checks the quotient algebra and operator identities, not projective smoothness or genus.
+ 
+@@ -1936,7 +2044,142 @@
+ 
+ \subsection{Claim-status ledger}
+ 
+-In \cref{tab:claim-status}, \texttt{P} means that a proof is supplied in this paper, without implying historical novelty; \texttt{C} means classical or reformulated from established theory; \texttt{I} means that the companion package checks finite computed instances; and \texttt{L} means that the stated scope has been checked in the accompanying Lean component. Every row carries \texttt{L} in v1.2.1. A Lean entry applies only to the scope named in the final column; exact declaration names appear in \path{formalization/lean/LEAN_THEOREM_MAP_v1.0.1.md}.
++In \cref{tab:claim-status}, \texttt{P} means that a proof is supplied in this paper, without implying historical novelty; \texttt{C} means classical or reformulated from established theory; \texttt{I} means that the companion package checks finite computed instances; and \texttt{L} means that the stated scope has been checked in the accompanying Lean component. Each of the 35 registered rows carries \texttt{L} at its specified scope. A Lean entry applies only to the scope named in the final column; exact declaration names appear in \path{formalization/lean/LEAN_THEOREM_MAP_v1.0.2.md}.
++
++The full ledger appears in Appendix~\ref{app:claim-ledger}. Its row
++identifiers are unchanged from the v1.2.1 contract, so the journal article
++and the archived formal record can be compared without renumbering results.
++
++\subsection{Framework-level contribution}
++
++The organizing choice is to keep the acting algebra, generated module,
++relations, projector coordinates, and realization maps explicit throughout.
++The same seed-rank and transfer identities can then be used in each worked
++model without changing their meaning. The definitions and formulas retain
++their classical module-theoretic content; the common presentation and
++source-linked proofs make their hypotheses easier to compare and reuse.
++
++This is a framework and formalization contribution. It is not a priority
++claim for minimal generator numbers, idempotent decompositions, or cyclic
++module theory. A broader comparison with systems theory, quiver
++representations, and multiresolution methods requires separate treatment.
++
++\subsection{Roadmap boundary}
++
++Nested refinement, nonlinear packet maps, and domain-specific realizations are roadmap items. They are not used to justify any theorem in Paper I, and no Paper I result depends on a conjecture.
++
++\section{Conclusion}
++
++A fixed operator algebra turns a generation claim into a question about a
++module. A finite projector family gives exact coordinates on that module,
++and the transfer blocks recover both the operator and its composition law.
++Relations determine the presentation; topology determines which closures
++or completions are justified.
++
++The multiplicity formulas show why these distinctions matter. A cyclic
++component may require several generators when it is repeated under a shared
++action. A path has an endpoint Krylov basis, whereas a complex cycle has a
++two-dimensional scalar quotient that prevents one-seed generation. The
++number of seeds is therefore a property of the action, not of a preferred
++coordinate description.
++
++The results collected here provide a common starting point for subsequent
++realizations: a specified grammar, a generated module, a minimum generator
++count, packet coordinates, and exact transport identities. The formal record
++preserves the assumptions on which those statements depend. Extensions can
++build on this core without confusing a chosen decomposition with a proof
++that such a decomposition exists.
++
++\appendix
++
++\section{Notation and status conventions}
++
++\begin{longtable}{L{0.21\textwidth}L{0.70\textwidth}}
++\caption{Notation used throughout Paper I.}\label{tab:notation}\\
++\toprule
++Symbol & Meaning \\
++\midrule
++\endfirsthead
++\toprule
++Symbol & Meaning \\
++\midrule
++\endhead
++$Q$ & quiver of operator types and primitive typed operations \\
++$\bbk Q/I$ & path algebra with declared relations \\
++$X$ & ambient module or topological vector space \\
++$S$ & seed family \\
++$\cA$ & unital operator algebra acting on $X$ \\
++$\Hull_{\cA}(S)$ & algebraic operator hull \\
++$\srank_{\cA}(X)$ & minimal number of module seeds \\
++$P_{\alpha}$ & packet projector \\
++$X_{\alpha}=P_{\alpha}X$ & packet space \\
++$T_{\beta\alpha}=P_{\beta}TP_{\alpha}$ & transfer block \\
++$\mathcal A_{\cP}$ & packet analysis map \\
++$\mathcal S_{\cP}$ & packet synthesis map \\
++$\Phi A=\varphi(A)\Phi$ & intertwining condition \\
++\bottomrule
++\end{longtable}
++
++Environment labels describe a statement's local role; the independent proof and machine-evidence classifications are the \texttt{P/C/I/L} codes in \cref{tab:claim-status}. A \emph{boundary} records something intentionally not claimed. Roadmap items are not theorems, and no theorem in Paper I is marked conjectural.
++
++\section{Proof dependency map}
++
++The logical order is:
++\[
++\begin{aligned}
++&\text{typed grammar and path algebra}\\
++&\qquad\Downarrow\\
++&\text{generated hull and free presentation}\\
++&\qquad\Downarrow\\
++&\text{seed rank and functorial bounds}\\
++&\qquad\Downarrow\\
++&\text{semisimple and single-operator formulas},
++\end{aligned}
++\]
++while independently
++\[
++\begin{aligned}
++&\text{idempotent packet system}\\
++&\qquad\Downarrow\\
++&\text{analysis/synthesis and transfer blocks}\\
++&\qquad\Downarrow\\
++&\text{coordinate transport and naturality}.
++\end{aligned}
++\]
++The two branches meet in the worked models, where the generated module is explicitly resolved into packet coordinates.
++
++\section{Reproducibility layout}
++
++The journal source package is organized as follows:
++\begin{lstlisting}
++Komorebi_Paper_I_Journal_v1.3.0/
++  README.md
++  SHA256SUMS.txt
++  paper/                 LaTeX source, PDF, figures
++  formalization/lean/    pinned Lean sources and claim map
++  code/python/           symbolic and numerical companion
++  results/               regenerated examples and figure record
++  verification/          compiler logs, types, tests, environment
++  review/                corrections and source comparisons
++  provenance/            original release record
++  scripts/               repeatable verification and build tools
++\end{lstlisting}
++
++The verification supplement records the exact source hashes and observed
++outcomes of each executed check. The Python figure-and-example command
++records only the outputs it produces; it does not report that Lean, tests,
++or PDF review have passed merely because those checks passed in a previous
++release. Test results, compiler acceptance, and visual inspection have
++separate records.
++
++The formal development is pinned by \texttt{lean-toolchain} and
++\texttt{lake-manifest.json}. The fresh audit reuses matching dependency
++objects and rebuilds the local sources. Reproducing the full dependency
++build is a distinct operation. The manuscript's written proofs, the
++source-to-statement correspondence, and the compiler checks likewise
++remain separate parts of the review.
++
++\section{Claim-status ledger}\label{app:claim-ledger}
+ 
+ \begingroup
+ \small
+@@ -1991,150 +2234,6 @@
+ \end{longtable}
+ \endgroup
+ 
+-\subsection{Framework-level contribution}
+-
+-The distinctive content of the program is the decision to retain the same objects and equations throughout later realizations:
+-\begin{enumerate}[label=(\roman*)]
+-\item a typed seed system rather than an unspecified ``starting object'';
+-\item seed rank relative to a declared grammar;
+-\item packet analysis and synthesis as exact coordinates;
+-\item operator-valued transfer matrices;
+-\item relations and completions as part of the seed datum;
+-\item morphisms that preserve generation, packets, and transfer blocks;
+-\item an explicit boundary between generation and hidden encoding.
+-\end{enumerate}
+-
+-Whether every piece of this organization is historically unprecedented requires comparison with equivalent languages in module theory, systems theory, quiver representations, multiresolution analysis, and category theory. The paper therefore claims a coherent formal foundation and proved theorem package, not a completed priority judgment.
+-
+-\subsection{Roadmap boundary}
+-
+-Nested refinement, nonlinear packet maps, and domain-specific realizations are roadmap items. They are not used to justify any theorem in Paper I, and no Paper I result depends on a conjecture.
+-
+-\section{Conclusion}
+-
+-A seed calculus becomes mathematically meaningful only after the operator library, relations, projectors, and completion are declared. Under those conditions, the foundational questions reduce to familiar but powerful algebraic invariants:
+-\[
+-\boxed{
+-\begin{aligned}
+-&\text{What module is generated?}\\
+-&\text{How many seeds are required?}\\
+-&\text{Which packets reconstruct the object?}\\
+-&\text{Which transfer blocks connect them?}\\
+-&\text{Which relations define the quotient?}\\
+-&\text{Which properties survive coordinate transport and realization?}
+-\end{aligned}
+-}
+-\]
+-
+-The answer is not always one seed. The semisimple and single-operator formulas show exactly why multiplicity can force several seeds. That negative result is as important as one-seed examples: it prevents universality from becoming an unfalsifiable slogan.
+-
+-The foundation established here can be summarized as
+-\[
+-\boxed{
+-\begin{gathered}
+-\text{typed grammar}+\text{generated module}+\text{seed rank}\\
+-+\text{packet coordinates}+\text{transfer algebra}\\
+-+\text{relations}+\text{completion}+\text{naturality}.
+-\end{gathered}
+-}
+-\]
+-This package is intended as a stable interface for later domain-specific work.
+-
+-\appendix
+-
+-\section{Notation and status conventions}
+-
+-\begin{longtable}{L{0.21\textwidth}L{0.70\textwidth}}
+-\caption{Notation used throughout Paper I.}\label{tab:notation}\\
+-\toprule
+-Symbol & Meaning \\
+-\midrule
+-\endfirsthead
+-\toprule
+-Symbol & Meaning \\
+-\midrule
+-\endhead
+-$Q$ & quiver of operator types and primitive typed operations \\
+-$\bbk Q/I$ & path algebra with declared relations \\
+-$X$ & ambient module or topological vector space \\
+-$S$ & seed family \\
+-$\cA$ & unital operator algebra acting on $X$ \\
+-$\Hull_{\cA}(S)$ & algebraic operator hull \\
+-$\srank_{\cA}(X)$ & minimal number of module seeds \\
+-$P_{\alpha}$ & packet projector \\
+-$X_{\alpha}=P_{\alpha}X$ & packet space \\
+-$T_{\beta\alpha}=P_{\beta}TP_{\alpha}$ & transfer block \\
+-$\mathcal A_{\cP}$ & packet analysis map \\
+-$\mathcal S_{\cP}$ & packet synthesis map \\
+-$\Phi A=\varphi(A)\Phi$ & intertwining condition \\
+-\bottomrule
+-\end{longtable}
+-
+-Environment labels describe a statement's local role; the independent proof and machine-evidence classifications are the \texttt{P/C/I/L} codes in \cref{tab:claim-status}. A \emph{boundary} records something intentionally not claimed. Roadmap items are not theorems, and no theorem in Paper I is marked conjectural.
+-
+-\section{Proof dependency map}
+-
+-The logical order is:
+-\[
+-\begin{aligned}
+-&\text{typed grammar and path algebra}\\
+-&\qquad\Downarrow\\
+-&\text{generated hull and free presentation}\\
+-&\qquad\Downarrow\\
+-&\text{seed rank and functorial bounds}\\
+-&\qquad\Downarrow\\
+-&\text{semisimple and single-operator formulas},
+-\end{aligned}
+-\]
+-while independently
+-\[
+-\begin{aligned}
+-&\text{idempotent packet system}\\
+-&\qquad\Downarrow\\
+-&\text{analysis/synthesis and transfer blocks}\\
+-&\qquad\Downarrow\\
+-&\text{coordinate transport and naturality}.
+-\end{aligned}
+-\]
+-The two branches meet in the worked models, where the generated module is explicitly resolved into packet coordinates.
+-
+-\section{Reproducibility layout}
+-
+-The immutable v\paperversion\ release has the following canonical structure:
+-\begin{lstlisting}
+-Projector_Resolved_Seed_Calculus_I_v1.2.1/
+-  README.md
+-  CHANGELOG.md
+-  RELEASE.json
+-  REPRODUCIBILITY.md
+-  CITATION.cff
+-  CITATION.bib
+-  LICENSE_STATUS.md
+-  MANIFEST.md
+-  SHA256SUMS.txt
+-  Run_All.ps1
+-  Run_All.sh
+-  paper/
+-    Projector_Resolved_Seed_Calculus_I.tex
+-    Projector_Resolved_Seed_Calculus_I.pdf
+-    figures/
+-  code/python/
+-    seed_calculus/
+-    tests/
+-    pyproject.toml
+-    requirements.in
+-    requirements.lock.txt
+-    run_all.py
+-    dist/
+-  formalization/lean/
+-  results/
+-  provenance/
+-\end{lstlisting}
+-
+-The top-level \texttt{Run\_All.ps1} and \texttt{Run\_All.sh} copy the release to a temporary directory, reproduce the Python results and figures, execute the tests, rebuild and smoke-test the wheel, run the warning-fatal Lean build, theorem-map checker, and fail-closed kernel audit, and recompile the paper. The canonical extracted release is not modified. Exact tool versions, random seeds, tolerances, commands, and result classifications are recorded in \texttt{REPRODUCIBILITY.md} and \texttt{results/run\_record.json}. The sorted checksum manifest covers the release members but excludes itself; the archive has a separate external SHA-256 sidecar.
+-
+-The file \texttt{provenance/Paper\_I\_Audit\_Ledger\_v0.1.0.md} is preserved as a historical audit of v1.0.0. Current completion artifacts in the same directory describe v1.2.1 and do not rewrite that historical record.
+-
+ \begingroup
+ \small
+ \begin{thebibliography}{99}
+@@ -2200,6 +2299,21 @@
+ Springer, New York, 2009.
+ \href{https://doi.org/10.1007/978-0-387-09494-6}{doi:10.1007/978-0-387-09494-6}.
+ 
++
++\bibitem{demouraUllrich2021}
++L. de Moura and S. Ullrich,
++\emph{The Lean 4 Theorem Prover and Programming Language},
++in Automated Deduction---CADE 28, Lecture Notes in Computer Science 12699,
++Springer, Cham, 2021, pp. 625--635.
++\href{https://doi.org/10.1007/978-3-030-79876-5_37}{doi:10.1007/978-3-030-79876-5\_37}.
++
++\bibitem{mathlib2020}
++The mathlib Community,
++\emph{The Lean Mathematical Library},
++in Proceedings of the 9th ACM SIGPLAN International Conference on Certified
++Programs and Proofs, ACM, 2020, pp. 367--381.
++\href{https://doi.org/10.1145/3372885.3373824}{doi:10.1145/3372885.3373824}.
++
+ \end{thebibliography}
+ \endgroup
+ 

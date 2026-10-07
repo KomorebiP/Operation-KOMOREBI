@@ -1,0 +1,12 @@
+theorem entireReducedDenominator_zeta_eq_hurwitz \{N : ℕ\} (hN : 2 ≤ N)
+    \{s : ℂ\} (hs : 1 / (N : ℝ) < s.re) :
+    absoluteZeroZeta (entireReducedDenominator N) s =
+      hurwitzLatticeModel (Real.pi / Real.sin (Real.pi / N)) N s + reducedZetaCorrection hN s := by
+  let e := canonicalZeroEnumeration hN
+  have hsN : 1 < ((N : ℂ) * s).re := by
+    simp only [Complex.mul_re, Complex.natCast_re, Complex.natCast_im, zero_mul, sub_zero]
+    exact (div_lt_iff₀ (by exact_mod_cast (show 0 < N by omega) : (0 : ℝ) < N)).mp hs |>.trans_eq (mul_comm _ _)
+  rw [e.reducedZeta_decomposition hN hs, e.root_zeta_eq_model hN hsN]
+  simp only [hurwitzLatticeModel, Nat.cast_one, one_mul, reducedZetaCorrection]
+  dsimp [e]
+  ring

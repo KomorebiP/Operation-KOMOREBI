@@ -1,0 +1,22 @@
+theorem residueHypergeometric_hasSum {N j : ℕ} (hN : 0 < N) (hj : j < N) (w : ℂ) :
+    HasSum (fun q => (residueZeroFCoeff N j q : ℂ) * w^q)
+      (residueHypergeometric N j w) := by
+  let b := residueHypergeometricParameters N j
+  have hb : ∀ c ∈ b, ∀ k : ℕ, c ≠ -(k : ℂ) := by
+    intro c hc k he
+    have hp := residueHypergeometricParameters_re_pos hN hc
+    rw [he] at hp
+    simp only [Complex.neg_re, Complex.natCast_re] at hp
+    have hk : (0 : ℝ) ≤ k := Nat.cast_nonneg k
+    linarith
+  have hs := (Complex.regularizedHGFunSeries 0 b).hasSum (x := w) (by
+    rw [Complex.radius_regularizedHGFunSeries_eq_top (by simp)]
+    simp)
+  have h := hs.mul_left (b.map Complex.Gamma).prod
+  change HasSum _ (residueHypergeometric N j w) at h
+  apply h.congr_fun
+  intro q
+  simp only [Complex.regularizedHGFunSeries, FormalMultilinearSeries.ofScalars_apply_eq,
+    smul_eq_mul, ← mul_assoc, regularized_zeroF_normalization b hb]
+  rw [← residuePochhammerProduct_erase hN hj]
+  simp [residueZeroFCoeff]

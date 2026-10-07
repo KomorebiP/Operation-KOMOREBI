@@ -1,0 +1,11 @@
+theorem heterogeneousPacketPathExpansion_three
+    {I0 : Type u0} {I1 : Type u1} {I2 : Type u2} {I3 : Type u3}
+    [Fintype I1] [Fintype I2] [Semiring R]
+    (first : Matrix I1 I0 R) (second : Matrix I2 I1 R)
+    (third : Matrix I3 I2 R) (source : I0) (target : I3) :
+    ((third * second) * first) target source =
+      ∑ middle2 : I2, ∑ middle1 : I1,
+        (third target middle2 * second middle2 middle1) * first middle1 source := by
+  rw [Matrix.mul_apply]
+  simp_rw [Matrix.mul_apply, Finset.sum_mul]
+  rw [Finset.sum_comm]

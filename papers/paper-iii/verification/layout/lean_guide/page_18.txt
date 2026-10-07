@@ -1,0 +1,44 @@
+KOMOREBI
+PAPER III
+LEAN GUIDE
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem triangleHolonomy_sub_id (a b c : X) :
+C.triangleObstruction a b c =
+(C.transport c a).toLinearMap.comp (C.cocycleDefect a b c) := by
+ext x
+simp only [triangleObstruction, triangleHolonomy, cocycleDefect,
+LinearMap.sub_apply, LinearMap.id_apply, LinearMap.comp_apply,
+LinearEquiv.coe_toLinearMap, LinearEquiv.trans_apply, map_sub]
+rw [C.transport_reverse a c]
+simp
+Pointwise, the identity reads
+(𝐻−𝐼)𝑥= Γ𝑐,𝑎(Γ𝑏,𝑐Γ𝑎,𝑏𝑥−Γ𝑎,𝑐𝑥).
+Linearity moves the subtraction through Γ𝑐,𝑎. The reverse law makes Γ𝑐,𝑎Γ𝑎,𝑐the identity. The
+source proof uses exactly these two steps after unfolding the definitions.
+Because Γ𝑐,𝑎is injective, the obstruction is zero exactly when the defect is zero. Additive defect
+zero is the cocycle equation. Holonomy minus identity zero is identity holonomy. The theorem
+chain establishes these equivalences at a fixed ordered triple before quantifying over every triple.
+Source: KomorebiPaperIII/ReversibleConnections.lean.
+theorem flat_iff_triangleHolonomy_eq_refl :
+C.Flat ↔∀a b c,
+C.triangleHolonomy a b c = LinearEquiv.refl R (F a) := by
+constructor
+· intro hflat a b c
+rw [←C.cocycleDefect_eq_zero_iff_triangleHolonomy_eq_refl a b c,
+C.cocycleDefect_eq_zero_iff_cocycleAt]
+exact hflat a b c
+· intro hhol a b c
+rw [←C.cocycleDefect_eq_zero_iff_cocycleAt,
+C.cocycleDefect_eq_zero_iff_triangleHolonomy_eq_refl]
+exact hhol a b c
+Here Flat means the pair-cocycle law at every triple of vertices. It is a global algebraic condition
+on all pair transports. It is not a differential curvature condition obtained from a limiting process
+or a local chart cover.
+4.5 Finite paths and their endpoint types
+The list-based path function returns F start ≃l[R] F (pathEndpoint start vertices). The re-
+turn type depends on the endpoint computed from the list. Flatness lets induction replace every
+remaining segment by direct transport, then collapse the next triangle by the cocycle law.
+The indexed alternative packages the endpoints in the path’s type. VertexPath X a b is a finite
+path from 𝑎to 𝑏. An empty path has equal endpoints; a constructor prefixes a step to a path from
+the intermediate vertex. Its transport theorem is:
+17
