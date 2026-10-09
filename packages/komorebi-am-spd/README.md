@@ -322,7 +322,9 @@ The baseline suite includes centered Fourier low pass, sparse DCT, joint global 
 
 ## Exact paper replay
 
-The package bundles checksummed archived images and core packet bases, the recorded packet history, matched comparison table, and authoritative result ledger. Historical replay recomputes the downstream singular, tree, and portfolio stages with a frozen v0.3 numerical backend. This keeps replay independent of later font rasterization and transform sampling changes; new decompositions use the corrected v1.0 backend.
+The package bundles checksummed archived images, core packet bases, and the original singular, Lagrange-tree, and exact-budget-tree seed coordinates and costs used for budget reopening. The recorded packet history, matched comparison table, and authoritative result ledger are also retained.
+
+Replay freshly recomputes the three seed models with the frozen v0.3 numerical backend and checks the archived directions for finite values, orthogonality, agreement with fresh seed spans, projected reconstructions, and scalar costs. It then uses the archived seed coordinates for backward removal and freshly computes replacement directions, global refits, and final portfolio selection. Fresh SVD/tree calculations validate the seed models; their regenerated directions do not replace the archived reopening coordinates. Replay does not rerun the original geometry-discovery search. New decompositions use the corrected v1.0 backend.
 
 ```powershell
 am-spd reproduce-paper --list-cases

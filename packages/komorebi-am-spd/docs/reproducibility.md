@@ -24,7 +24,9 @@ The standard suite checks the public API, normalized-raster archive identity to 
 
 ## Exact paper replay through the installed package
 
-Version 1.0.0 bundles checksummed archived source images and core packet bases, packet history, and reference ledgers. Replay recomputes downstream singular, tree, and portfolio stages with the byte-preserved v0.3 backend. New decompositions use the corrected v1.0 backend. Anchoring the historical source and core avoids changes in font rasterization and transform sampling across dependency versions; replay does not repeat the original geometry-discovery search.
+Version 1.0.0 bundles checksummed archived source images, core packet bases, packet history, reference ledgers, and the original singular, Lagrange-tree, and exact-budget-tree seed coordinates and costs used for budget reopening.
+
+Replay freshly computes the three seed models with the byte-preserved v0.3 backend. Before retaining the archived reopening coordinates, it checks finite values, orthogonality, agreement with the freshly computed seed spans, projected reconstructions, and scalar costs. These checks are recorded in `seed_anchor_checks`. Backward removal uses the archived seed coordinates; replacement directions, global refits, and final portfolio search are computed afresh. Fresh SVD/tree calculations validate the seed models, while their regenerated directions do not replace the archived reopening coordinates. Replay does not repeat the original geometry-discovery search. New decompositions use the corrected v1.0 backend.
 
 ```powershell
 $env:OPENBLAS_NUM_THREADS = "1"

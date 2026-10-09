@@ -139,6 +139,61 @@ def _load_paper_core(case: str) -> tuple[np.ndarray, atlas.ReconstructionResult]
     return image, core
 
 
+def _historical_seed_bases(case: str) -> dict[str, tuple[np.ndarray, np.ndarray]]:
+    """Read original seed coordinates, not final or replacement directions."""
+    payload = resources.files("am_spd.resources").joinpath(f"paper_fixture_{case}.npz").read_bytes()
+    provenance = json.loads(_resource_text("paper_backend_provenance.json"))
+    if hashlib.sha256(payload).hexdigest() != provenance["cases"][case]["fixture_sha256"]:
+        raise ValueError(f"historical paper fixture checksum mismatch: {case}")
+    labels = {"greedy": "singular", "lagrange_tree": "lagrange", "exact_budget_tree": "exact"}
+    with np.load(io.BytesIO(payload), allow_pickle=False) as stored:
+        return {name: (stored[f"{key}_directions"].copy(), stored[f"{key}_costs"].copy()) for name, key in labels.items()}
+
+
+def _anchor_reopening_seed(
+    image: np.ndarray,
+    core_basis: np.ndarray,
+    reconstruction: np.ndarray,
+    directions: list[np.ndarray],
+    costs: list[float],
+    archived_directions: np.ndarray,
+    archived_costs: np.ndarray,
+) -> tuple[list[np.ndarray], list[float], dict[str, float]]:
+    """Check a recomputed seed and retain its historical reopening coordinates.
+
+    An SVD can rotate equally weighted modes without changing the full-span
+    projection. Removing individual modes depends on those coordinates, so
+    historical replay must retain them even though new decompositions may
+    choose a different, equally valid basis.
+    """
+    archived = archived_directions.reshape(len(archived_directions), -1).T
+    fresh = np.column_stack([direction.reshape(-1) for direction in directions])
+    if len(costs) != len(directions):
+        raise ValueError("recomputed historical seed cost count differs from direction count")
+    if archived.shape != fresh.shape or archived_costs.shape != (archived.shape[1],):
+        raise ValueError("historical seed shape differs from the recomputed seed")
+    if not np.isfinite(archived).all() or not np.isfinite(archived_costs).all() or np.any(archived_costs < 0):
+        raise ValueError("historical seed arrays must be finite with nonnegative costs")
+    if not all(np.isfinite(value).all() for value in (image, core_basis, reconstruction, fresh, costs)):
+        raise ValueError("recomputed historical seed arrays must be finite")
+    if np.any(np.asarray(costs) < 0):
+        raise ValueError("recomputed historical seed costs must be nonnegative")
+    orthogonality = float(np.linalg.norm(archived.T @ archived - np.eye(archived.shape[1])))
+    core_cross = float(np.linalg.norm(core_basis.T @ archived))
+    span_error = float(np.linalg.norm(archived - fresh @ (fresh.T @ archived)))
+    target = image.reshape(-1)
+    projection = core_basis @ (core_basis.T @ target) + archived @ (archived.T @ target)
+    projection_error = float(np.max(np.abs(projection.reshape(image.shape) - reconstruction)))
+    cost_error = abs(float(np.sum(archived_costs)) - float(sum(costs)))
+    checks = {
+        "orthogonality_error": orthogonality, "core_cross_error": core_cross,
+        "span_error": span_error, "projection_error": projection_error, "cost_error": cost_error,
+    }
+    if not all(np.isfinite(value) for value in checks.values()) or max(checks.values()) > 1e-7:
+        raise ValueError(f"historical seed disagrees with fresh span/projection/cost: {checks}")
+    return list(archived_directions), [float(value) for value in archived_costs], checks
+
+
 def load_reference_packet_history() -> dict[str, list[dict[str, str]]]:
     rows = list(csv.DictReader(_resource_text("packet_history.csv").splitlines()))
     grouped: dict[str, list[dict[str, str]]] = {}
@@ -273,6 +328,17 @@ def reproduce_paper_case(
             [float(exact_cost)] * len(exact_tree.directions),
         ),
     ]
+    archived_bases = _historical_seed_bases(case)
+    core_basis = singular.core_channel_basis(core_result.active_atoms, image.shape[2])
+    seed_anchor_checks: dict[str, dict[str, float]] = {}
+    anchored_seeds = []
+    for seed_name, reconstruction, directions, costs in seeds:
+        retained, retained_costs, checks = _anchor_reopening_seed(
+            image, core_basis, reconstruction, directions, costs, *archived_bases[seed_name],
+        )
+        anchored_seeds.append((seed_name, reconstruction, retained, retained_costs))
+        seed_anchor_checks[seed_name] = checks
+    seeds = anchored_seeds
     portfolios = [
         final.seed_portfolio(
             case,
@@ -300,6 +366,8 @@ def reproduce_paper_case(
         "case": case,
         "replay_backend": "frozen-0.3.0",
         "replay_input": "checksummed-archived-source-and-core",
+        "reopening_basis": "checksummed-original-archived-seed-coordinates",
+        "seed_anchor_checks": seed_anchor_checks,
         "parameter_budget": parameter_budget,
         "original_exact_rmse": final.exact_rmse(image, original.reconstruction),
         "original_bounded_rmse": float(original_metrics["rmse"]),
@@ -357,7 +425,7 @@ def reproduce_paper_case(
         lagrange_tree_result=lagrange_tree,
         exact_tree_result=exact_tree,
         portfolios=portfolios,
-        run_metadata={"historical_replay": True, "replay_backend": "frozen-0.3.0", "replay_input": "checksummed-archived-source-and-core", "parameter_budget_scope": "downstream_scalar_proxy"},
+        run_metadata={"historical_replay": True, "replay_backend": "frozen-0.3.0", "replay_input": "checksummed-archived-source-and-core", "reopening_basis": "checksummed-original-archived-seed-coordinates", "seed_anchor_checks": seed_anchor_checks, "parameter_budget_scope": "downstream_scalar_proxy"},
     )
     comparison = compare_paper_reference(summary, reference)
     paper_result = PaperCaseResult(case, result, summary, reference, comparison)
