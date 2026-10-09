@@ -1,0 +1,47 @@
+\scriptsize\setlength{\tabcolsep}{3pt}\begin{longtable}{@{}L{0.16\linewidth}L{0.29\linewidth}rrrr@{}}
+\caption{Direct SVD and Singular Packet Decomposition comparison.}\label{tab:svd-spd}\\
+\toprule Case & Method & RMSE & SSIM & Edge RMSE & Added parameters\\\midrule
+\endfirsthead\toprule Case & Method & RMSE & SSIM & Edge RMSE & Added parameters\\\midrule\endhead
+synthetic geometry & global SVD, rank 22 & 0.036736 & 0.8505 & 0.045686 & 4950\\
+synthetic geometry & pure singular packets, 22 & 0.044286 & 0.8148 & 0.056642 & 4391\\
+synthetic geometry & packet core, 44 & 0.027841 & 0.9712 & 0.049632 & --\\
+synthetic geometry & packet core + 22 DCT coordinates & 0.026957 & 0.9645 & 0.047588 & 110\\
+synthetic geometry & packet core + parameter-matched residual SVD & 0.007631 & 0.9907 & 0.010610 & 2025\\
+synthetic geometry & packet core + 22 adaptive singular packets & 0.003726 & 0.9974 & 0.005311 & 2241\\
+synthetic text curves & global SVD, rank 22 & 0.021527 & 0.9660 & 0.031816 & 4950\\
+synthetic text curves & pure singular packets, 22 & 0.027079 & 0.9452 & 0.039884 & 4399\\
+synthetic text curves & packet core, 44 & 0.018993 & 0.9773 & 0.030976 & --\\
+synthetic text curves & packet core + 22 DCT coordinates & 0.017660 & 0.9809 & 0.030076 & 110\\
+synthetic text curves & packet core + parameter-matched residual SVD & 0.005063 & 0.9958 & 0.007231 & 2475\\
+synthetic text curves & packet core + 22 adaptive singular packets & 0.003394 & 0.9981 & 0.004501 & 2639\\
+camera & global SVD, rank 22 & 0.009686 & 0.9748 & 0.012173 & 2486\\
+camera & pure singular packets, 22 & 0.011713 & 0.9681 & 0.015185 & 2541\\
+camera & packet core, 44 & 0.047631 & 0.8149 & 0.076694 & --\\
+camera & packet core + 22 DCT coordinates & 0.045070 & 0.8033 & 0.070887 & 66\\
+camera & packet core + parameter-matched residual SVD & 0.015359 & 0.9444 & 0.019775 & 2034\\
+camera & packet core + 22 adaptive singular packets & 0.014921 & 0.9458 & 0.019076 & 2123\\
+astronaut & global SVD, rank 22 & 0.024875 & 0.9767 & 0.027807 & 4950\\
+astronaut & pure singular packets, 22 & 0.025464 & 0.9757 & 0.028095 & 5063\\
+astronaut & packet core, 44 & 0.097366 & 0.7603 & 0.116895 & --\\
+astronaut & packet core + 22 DCT coordinates & 0.090254 & 0.7940 & 0.107059 & 110\\
+astronaut & packet core + parameter-matched residual SVD & 0.033127 & 0.9571 & 0.036047 & 4950\\
+astronaut & packet core + 22 adaptive singular packets & 0.032976 & 0.9567 & 0.035665 & 5060\\
+\bottomrule\end{longtable}
+
+\begin{table}[H]\centering
+\caption{Canonical SVD of the selected packet span.}\label{tab:packet-span-svd}
+\small\begin{tabular}{lrrrrrr}\toprule Case & Packets & Rank & Condition & 99\% energy & 99.9\% energy & Top-10 energy\\\midrule
+synthetic geometry & 44 & 44 & 47.53 & 26 & 38 & 0.923\\
+synthetic text curves & 44 & 44 & 33.14 & 22 & 36 & 0.956\\
+camera & 44 & 44 & 43.53 & 17 & 27 & 0.960\\
+astronaut & 44 & 44 & 6.99 & 30 & 41 & 0.918\\
+\bottomrule\end{tabular}\end{table}
+
+\begin{table}[H]\centering
+\caption{Parameter-matched residual comparison.}\label{tab:param-matched}
+\small\begin{tabular}{lrrrrr}\toprule Case & SPD modes & SPD parameters & SVD rank & SVD parameters & RMSE: SPD / SVD\\\midrule
+synthetic geometry & 22 & 2241 & 9 & 2025 & 0.003726 / 0.007631\\
+synthetic text curves & 22 & 2639 & 11 & 2475 & 0.003394 / 0.005063\\
+camera & 22 & 2123 & 18 & 2034 & 0.014921 / 0.015359\\
+astronaut & 22 & 5060 & 22 & 4950 & 0.032976 / 0.033127\\
+\bottomrule\end{tabular}\end{table}
