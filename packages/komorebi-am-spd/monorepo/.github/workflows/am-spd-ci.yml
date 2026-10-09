@@ -61,3 +61,21 @@ jobs:
         run: python -m pytest
       - name: Full package verification
         run: python -m am_spd verify --full
+      - name: Strict synthetic geometry replay on Python 3.13
+        if: matrix.python == '3.13'
+        shell: bash
+        run: |
+          set -euo pipefail
+          replay_root="$RUNNER_TEMP/am-spd-ci-paper-replay"
+          if command -v cygpath >/dev/null 2>&1; then
+            replay_root="$(cygpath -u "$RUNNER_TEMP")/am-spd-ci-paper-replay"
+          fi
+          mkdir -p "$replay_root"
+          python -m am_spd reproduce-paper --cases synthetic_geometry --strict-reference --output-dir "$replay_root/output" 2>&1 | tee "$replay_root/replay.log"
+      - name: Retain strict synthetic geometry replay evidence
+        if: always() && matrix.python == '3.13'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: am-spd-ci-paper-replay-${{ matrix.os }}-${{ matrix.python }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/am-spd-ci-paper-replay/**
+          if-no-files-found: ignore

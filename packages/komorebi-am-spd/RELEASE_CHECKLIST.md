@@ -23,14 +23,14 @@ Check an item only after its current-release evidence is available. Archived 0.3
 
 | Check | Evidence | Result |
 |---|---|---|
-| Python/environment | `validation/source-qualified/summary.json` | Linux CPython 3.12.14; exact dependency versions recorded |
-| Package tests | `validation/source-qualified/pytest.xml` | 232 passed |
-| Ruff and compilation | `validation/source-qualified/*` | Passed; frozen historical modules remain byte-preserved and excluded from lint |
-| Full package verification | `validation/source-qualified/integration.json` | 20 checks passed |
-| Paper replay | `validation/paper-replay-final/paper_reproduction_summary.json` | All four required comparisons passed; optional historical diagnostics retained |
+| Python/environment | `validation/source-release-final/summary.json` | Linux CPython 3.12.14; exact dependency versions recorded |
+| Package tests | `validation/source-release-final/pytest.xml` | 240 passed |
+| Ruff and compilation | `validation/source-release-final/*` | Passed; frozen historical modules remain byte-preserved and excluded from lint |
+| Full package verification | `validation/source-release-final/integration.json` | 20 checks passed |
+| Paper replay | `validation/wheel-release/paper/paper_reproduction_summary.json` | All four required comparisons passed; optional historical diagnostics retained |
 | Historical source integrity | `validation/historical/historical_summary.json` | 292 files unchanged; core, SPD, multiscale and final suites passed |
-| Wheel installation | `validation/wheel-qualified/summary.json` | Clean offline install; full verification and strict text replay passed outside checkout |
-| Source distribution | `validation/sdist-qualified/` | Passed: clean offline install, 232 extracted tests, 20 integration checks and unchanged archive hash |
+| Wheel installation | `validation/wheel-release/summary.json` | Clean offline install; full verification and strict four-case replay passed outside checkout |
+| Source distribution | `validation/sdist-release/` | Passed: clean offline install, 240 extracted tests, 20 integration checks and unchanged archive hash |
 | Offline installation | `validation/offline-linux/summary.json`, `validation/windows_offline_preflight.json` | Linux execution passed; 19 Windows wheels/31 dependency edges passed metadata checks; Windows native execution is delegated to gated hosted release workflow |
 | Script/workflow validation | Workflows use pinned actions; Bash and YAML checked | PowerShell reviewed, not executed on this host |
 | Deliverable integrity | `RELEASE_SHA256SUMS.txt` and release audit | Frozen distribution hashes recorded; source import records Git blob hashes |

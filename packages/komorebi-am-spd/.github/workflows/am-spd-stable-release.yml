@@ -175,10 +175,10 @@ jobs:
           assert version("komorebi-am-spd") == "1.0.0"
           assert not Path(am_spd.__file__).resolve().is_relative_to(Path(os.environ["GITHUB_WORKSPACE"]).resolve())
           PY
-          "$runtime" -m am_spd info
-          "$runtime" -m am_spd verify --full
-          "$runtime" -m am_spd reproduce-paper --strict-reference --output-dir "$RUNNER_TEMP/am-spd-release-wheel-replay"
-      - name: Qualify the source distribution independently with all 232 tests
+          "$runtime" -m am_spd info 2>"$RUNNER_TEMP/am-spd-release-wheel-info.stderr.log" | tee "$RUNNER_TEMP/am-spd-release-wheel-info.json"
+          "$runtime" -m am_spd verify --full 2>"$RUNNER_TEMP/am-spd-release-wheel-verification.stderr.log" | tee "$RUNNER_TEMP/am-spd-release-wheel-verification.json"
+          "$runtime" -m am_spd reproduce-paper --strict-reference --output-dir "$RUNNER_TEMP/am-spd-release-wheel-replay" 2>&1 | tee "$RUNNER_TEMP/am-spd-release-wheel-replay.log"
+      - name: Qualify the source distribution independently with all 240 tests
         run: |
           set -euo pipefail
           unset PYTHONPATH
@@ -196,18 +196,18 @@ jobs:
           PY
           source_dir="$RUNNER_TEMP/am-spd-release-sdist-source/komorebi_am_spd-1.0.0"
           cd "$source_dir"
-          "$runtime" -m pytest --import-mode=importlib --junitxml="$RUNNER_TEMP/am-spd-release-sdist-tests.xml"
+          "$runtime" -m pytest --import-mode=importlib --junitxml="$RUNNER_TEMP/am-spd-release-sdist-tests.xml" 2>&1 | tee "$RUNNER_TEMP/am-spd-release-sdist-tests.log"
           "$runtime" - <<'PY'
           import os
           import xml.etree.ElementTree as ET
           from pathlib import Path
           report = ET.parse(Path(os.environ["RUNNER_TEMP"]) / "am-spd-release-sdist-tests.xml")
           suites = list(report.getroot().iter("testsuite"))
-          assert sum(int(suite.attrib["tests"]) for suite in suites) == 232, "Expected the audited 232-test suite"
+          assert sum(int(suite.attrib["tests"]) for suite in suites) == 240, "Expected the audited 240-test suite"
           assert all(int(suite.attrib.get(key, 0)) == 0 for suite in suites for key in ("errors", "failures", "skipped"))
           PY
           cd "$RUNNER_TEMP"
-          "$runtime" -m am_spd verify --full
+          "$runtime" -m am_spd verify --full 2>"$RUNNER_TEMP/am-spd-release-sdist-verification.stderr.log" | tee "$RUNNER_TEMP/am-spd-release-sdist-verification.json"
       - name: Prepare the locked Windows CPython 3.13 offline bundle
         env:
           TESTED_MAIN_SHA: ${{ needs.gate.outputs.sha }}
@@ -257,12 +257,29 @@ jobs:
           name: am-spd-windows-offline-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/am-spd-offline/komorebi-am-spd-1.0.0-windows-cp313.zip
           if-no-files-found: error
-      - name: Retain source-distribution test evidence
+      - name: Retain wheel verification and complete replay evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: am-spd-release-wheel-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/am-spd-release-wheel-info.json
+            ${{ runner.temp }}/am-spd-release-wheel-info.stderr.log
+            ${{ runner.temp }}/am-spd-release-wheel-verification.json
+            ${{ runner.temp }}/am-spd-release-wheel-verification.stderr.log
+            ${{ runner.temp }}/am-spd-release-wheel-replay.log
+            ${{ runner.temp }}/am-spd-release-wheel-replay/**
+          if-no-files-found: ignore
+      - name: Retain source-distribution test and verification evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: am-spd-release-tests-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/am-spd-release-sdist-tests.xml
+          path: |
+            ${{ runner.temp }}/am-spd-release-sdist-tests.xml
+            ${{ runner.temp }}/am-spd-release-sdist-tests.log
+            ${{ runner.temp }}/am-spd-release-sdist-verification.json
+            ${{ runner.temp }}/am-spd-release-sdist-verification.stderr.log
           if-no-files-found: ignore
 
   windows_offline:

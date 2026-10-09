@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Recover historical replay inputs and packet cores from checked model archives.
+"""Recover historical inputs, packet cores and seed coordinates from model archives.
 
 Usage:
     python scripts/build_paper_fixtures.py --archive-root PATH_TO_PAPER_REPLAY
 
 The root must contain CASE/CASE.amspd for each of the four published cases.
-This preserves the archived source and core instead of regenerating masks
-with potentially changed imaging dependencies. It does not copy final results
-into the replay calculation or change the reference benchmark numbers.
+This preserves the archived source, core and initial seed coordinates across
+changed imaging dependencies and nonunique SVD bases. It does not copy final
+results into replay or change the reference benchmark numbers.
 """
 from __future__ import annotations
 
@@ -20,7 +20,11 @@ from pathlib import Path
 import numpy as np
 
 CASES = ("synthetic_geometry", "synthetic_text_curves", "camera", "astronaut")
-FIXTURE_KEYS = ("source", "core_atoms", "core_coefficients", "packet_specs_json", "packet_history_json")
+FIXTURE_KEYS = (
+    "source", "core_atoms", "core_coefficients", "packet_specs_json", "packet_history_json",
+    "singular_directions", "singular_costs", "lagrange_directions", "lagrange_costs",
+    "exact_directions", "exact_costs",
+)
 
 
 def sha256(path: Path) -> str:
@@ -64,6 +68,22 @@ def build_fixtures(archive_root: Path, repo_root: Path) -> dict[str, object]:
             "packet_specs_json": np.array(json.dumps(model.packet_specs, sort_keys=True, allow_nan=False)),
             "packet_history_json": np.array(json.dumps(model.packet_history, sort_keys=True, allow_nan=False)),
         }
+        for label, directions, records in (
+            ("singular", model.singular_directions, model.singular_modes),
+            ("lagrange", model.lagrange_directions, model.lagrange_tree_selections),
+            ("exact", model.exact_directions, model.exact_tree_selections),
+        ):
+            if directions is None or not len(directions):
+                raise ValueError(f"archived model lacks historical seed directions: {case}/{label}")
+            payload[f"{label}_directions"] = np.asarray(directions, dtype=np.float64)
+            if label == "singular":
+                costs = np.array([record["parameter_count"] for record in records], dtype=np.float64)
+            else:
+                parameters = sum(record["model"]["parameter_count"] for record in records)
+                costs = np.full(len(directions), parameters / len(directions), dtype=np.float64)
+            if costs.shape != (len(directions),):
+                raise ValueError(f"archived seed costs do not match directions: {case}/{label}")
+            payload[f"{label}_costs"] = costs
         destination = resources / f"paper_fixture_{case}.npz"
         np.savez_compressed(destination, **payload)
         with np.load(destination, allow_pickle=False) as recovered:
@@ -84,12 +104,13 @@ def build_fixtures(archive_root: Path, repo_root: Path) -> dict[str, object]:
             "packet_count": len(model.packet_specs),
             "packet_history_count": len(model.packet_history),
             "source_clipping_max_delta": float(np.max(np.abs(decoded - source))),
+            "seed_basis_origin": "Original archived model direction arrays, copied without rotating or refitting.",
         }
     provenance.update({
-        "fixture_schema_version": 1,
+        "fixture_schema_version": 2,
         "fixture_keys": list(FIXTURE_KEYS),
-        "fixture_recovery_method": "Validated archived v0.3 model: source = clip(decode('exact'), 0, 1); original packet atoms, coefficients, specification records and selection history copied without refitting.",
-        "fixture_scope": "Historical input/core anchors only. Downstream SPD, tree and portfolio stages are freshly executed by the frozen v0.3 replay backend. Archived final approximations are not bundled in these fixtures.",
+        "fixture_recovery_method": "Validated archived v0.3 model: source = clip(decode('exact'), 0, 1); original packet atoms, coefficients, specification records, selection history and singular/Lagrange/exact seed direction arrays copied without refitting. Singular costs come from archived modes; tree unit costs are recovered from archived selected-model totals, as in the original algorithm.",
+        "fixture_scope": "Historical source/core and seed coordinate anchors only. Initial SPD/tree calculations are freshly executed and checked for matching spans, projections and costs. Reopening uses the original archived coordinates because degenerate SVD bases are not unique across LAPACK platforms. Every replacement search and final portfolio selection is freshly executed. Archived final approximations, replacement directions and final winners are not bundled in these fixtures.",
         "generation_command": "python scripts/build_paper_fixtures.py --archive-root PATH_TO_PAPER_REPLAY",
         "cases": cases,
     })

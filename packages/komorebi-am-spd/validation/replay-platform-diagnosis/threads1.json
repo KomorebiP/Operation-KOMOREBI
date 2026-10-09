@@ -1,0 +1,210 @@
+{
+  "label": "threads1",
+  "exit_code": 0,
+  "elapsed_seconds": 10.604085979000956,
+  "native_thread_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+    "-c",
+    "OUTPUT='/workspace/scratch/b79c7ffc9c0a/amspd_work/komorebi-am-spd/validation/replay-platform-diagnosis/threads1'\nimport json, platform, time\nimport numpy as np\nfrom am_spd.reference import reproduce_paper_case\ntry:\n from threadpoolctl import threadpool_info\n info=threadpool_info()\nexcept ImportError:\n info=[]\nstarted=time.monotonic()\nr=reproduce_paper_case(\"synthetic_geometry\",strict_reference=False,output_dir=OUTPUT,include_input=True)\nprint(json.dumps({\"python\":platform.python_version(),\"blas\":info,\"elapsed_seconds\":time.monotonic()-started,\"summary\":r.summary,\"comparison\":r.comparison},sort_keys=True))\n"
+  ],
+  "details": {
+    "blas": [
+      {
+        "architecture": "SkylakeX",
+        "filepath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-fdde5778.so",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "threading_layer": "pthreads",
+        "user_api": "blas",
+        "version": "0.3.30"
+      },
+      {
+        "architecture": "Zen",
+        "filepath": "/root/.local/lib/python3.12/site-packages/opencv_python_headless.libs/libopenblasp-r0-59ffcd50.3.15.so",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "threading_layer": "pthreads",
+        "user_api": "blas",
+        "version": "0.3.15"
+      },
+      {
+        "architecture": "SkylakeX",
+        "filepath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-6cdc3b4a.so",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libscipy_openblas",
+        "threading_layer": "pthreads",
+        "user_api": "blas",
+        "version": "0.3.30"
+      }
+    ],
+    "comparison": {
+      "absolute_tolerance": 5e-08,
+      "all_fields_passed": false,
+      "diagnostic_differences": [
+        "lagrange_tree_exact_rmse",
+        "lagrange_tree_parameters"
+      ],
+      "diagnostic_fields": [
+        "lagrange_tree_exact_rmse",
+        "lagrange_tree_parameters",
+        "selected_seed"
+      ],
+      "fields": {
+        "exact_budget_tree_exact_rmse": {
+          "delta": 0.0,
+          "expected": 0.004364665543842993,
+          "match": true,
+          "observed": 0.004364665543842993,
+          "required": true
+        },
+        "exact_budget_tree_parameters": {
+          "delta": 0,
+          "expected": 2235,
+          "match": true,
+          "observed": 2235,
+          "required": true
+        },
+        "final_bounded_rmse": {
+          "delta": 0.0,
+          "expected": 0.00315546699605173,
+          "match": true,
+          "observed": 0.00315546699605173,
+          "required": true
+        },
+        "final_exact_rmse": {
+          "delta": 0.0,
+          "expected": 0.00315546699605173,
+          "match": true,
+          "observed": 0.00315546699605173,
+          "required": true
+        },
+        "final_parameters": {
+          "delta": 0,
+          "expected": 2224,
+          "match": true,
+          "observed": 2224,
+          "required": true
+        },
+        "final_ssim": {
+          "delta": 0.0,
+          "expected": 0.9979780817530596,
+          "match": true,
+          "observed": 0.9979780817530596,
+          "required": true
+        },
+        "frontier_states": {
+          "delta": 0,
+          "expected": 457,
+          "match": true,
+          "observed": 457,
+          "required": true
+        },
+        "lagrange_tree_exact_rmse": {
+          "delta": 0.0003135126538846818,
+          "expected": 0.004349161099268695,
+          "match": false,
+          "observed": 0.0046626737531533765,
+          "required": false
+        },
+        "lagrange_tree_parameters": {
+          "delta": -89,
+          "expected": 2228,
+          "match": false,
+          "observed": 2139,
+          "required": false
+        },
+        "original_bounded_rmse": {
+          "delta": 0.0,
+          "expected": 0.00372623200294885,
+          "match": true,
+          "observed": 0.00372623200294885,
+          "required": true
+        },
+        "original_exact_rmse": {
+          "delta": 0.0,
+          "expected": 0.00372623200294885,
+          "match": true,
+          "observed": 0.00372623200294885,
+          "required": true
+        },
+        "parameter_budget": {
+          "delta": 0,
+          "expected": 2241,
+          "match": true,
+          "observed": 2241,
+          "required": true
+        },
+        "selected_reopened_fraction": {
+          "delta": 0.0,
+          "expected": 0.45,
+          "match": true,
+          "observed": 0.45,
+          "required": true
+        },
+        "selected_seed": {
+          "expected": "exact_budget_tree",
+          "final_reconstruction_equivalent": true,
+          "match": true,
+          "observed": "exact_budget_tree",
+          "required": false
+        }
+      },
+      "passed": true,
+      "relative_tolerance": 5e-07,
+      "required_fields": [
+        "parameter_budget",
+        "original_exact_rmse",
+        "original_bounded_rmse",
+        "exact_budget_tree_exact_rmse",
+        "exact_budget_tree_parameters",
+        "frontier_states",
+        "final_exact_rmse",
+        "final_bounded_rmse",
+        "final_ssim",
+        "final_parameters",
+        "selected_reopened_fraction"
+      ]
+    },
+    "elapsed_seconds": 9.362178650997521,
+    "python": "3.12.14",
+    "summary": {
+      "beats_matched_residual_svd": true,
+      "case": "synthetic_geometry",
+      "exact_budget_global_error_squared": 0.17922527235281324,
+      "exact_budget_local_error_squared": 0.21120044562356818,
+      "exact_budget_runtime_seconds": 0.26797572700161254,
+      "exact_budget_tree_exact_rmse": 0.004364665543842993,
+      "exact_budget_tree_parameters": 2235,
+      "final_bounded_rmse": 0.00315546699605173,
+      "final_exact_rmse": 0.00315546699605173,
+      "final_parameters": 2224,
+      "final_ssim": 0.9979780817530596,
+      "frontier_states": 457,
+      "improvement_fraction": 0.15317484430530104,
+      "kept_seed_modes": 24,
+      "lagrange_tree_exact_rmse": 0.0046626737531533765,
+      "lagrange_tree_parameters": 2139,
+      "matched_residual_svd_rmse": 0.007631147203839809,
+      "nonregression": true,
+      "original_bounded_rmse": 0.00372623200294885,
+      "original_exact_rmse": 0.00372623200294885,
+      "parameter_budget": 2241,
+      "removed_seed_modes": 21,
+      "replacement_blocks": 7,
+      "replacement_components": 11,
+      "replay_backend": "frozen-0.3.0",
+      "replay_input": "checksummed-archived-source-and-core",
+      "selected_reopened_fraction": 0.45,
+      "selected_seed": "exact_budget_tree",
+      "within_budget": true
+    }
+  }
+}
