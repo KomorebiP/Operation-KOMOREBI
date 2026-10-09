@@ -197,7 +197,7 @@ Imports the AM-SPD 1.0.0 image-decomposition package at packages/komorebi-am-spd
 
 The package preserves normalized floating-point rasters through unthresholded residual closure, with roundoff explicitly reported. Image previews remain quantized display outputs. Historical paper replay uses frozen, checksummed fixtures and reports archived diagnostic differences separately; it does not rerun the original moving search or certify every current configuration.
 
-Validation from release preparation: 228 package tests passed, alongside full package verification, installed-wheel/source-distribution checks, strict benchmark replay, and preserved-source checksum checks. Root workflows cover Python 3.10 through 3.13 on Linux and 3.12/3.13 on Windows, with independent distribution checks and copied-tree historical verification.
+Validation from release preparation: 232 package tests passed, alongside full package verification, installed-wheel/source-distribution checks, strict benchmark replay, and preserved-source checksum checks. Root workflows cover Python 3.10 through 3.13 on Linux and 3.12/3.13 on Windows, with independent distribution checks and copied-tree historical verification.
 
 Windows runtime checks and hosted GitHub Actions were not executed in the Linux release-preparation environment. Their results remain separate from the recorded local validation. This import does not create a public release, publish to PyPI, or change the distribution terms of other components.
 "@

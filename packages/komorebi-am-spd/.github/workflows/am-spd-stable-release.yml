@@ -178,7 +178,7 @@ jobs:
           "$runtime" -m am_spd info
           "$runtime" -m am_spd verify --full
           "$runtime" -m am_spd reproduce-paper --strict-reference --output-dir "$RUNNER_TEMP/am-spd-release-wheel-replay"
-      - name: Qualify the source distribution independently with all 228 tests
+      - name: Qualify the source distribution independently with all 232 tests
         run: |
           set -euo pipefail
           unset PYTHONPATH
@@ -203,7 +203,7 @@ jobs:
           from pathlib import Path
           report = ET.parse(Path(os.environ["RUNNER_TEMP"]) / "am-spd-release-sdist-tests.xml")
           suites = list(report.getroot().iter("testsuite"))
-          assert sum(int(suite.attrib["tests"]) for suite in suites) == 228, "Expected the audited 228-test suite"
+          assert sum(int(suite.attrib["tests"]) for suite in suites) == 232, "Expected the audited 232-test suite"
           assert all(int(suite.attrib.get(key, 0)) == 0 for suite in suites for key in ("errors", "failures", "skipped"))
           PY
           cd "$RUNNER_TEMP"

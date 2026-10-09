@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import inspect
 import json
 import math
 import time
@@ -36,6 +37,22 @@ RED = "#E76F51"
 YELLOW = "#E9C46A"
 PAPER = "#FAFAF7"
 PACKET_COLORS = [BLUE, TEAL, ORANGE, MAGENTA, RED, YELLOW, "#6C5CE7", "#00A8CC"]
+
+_OBJECTS_MAX_SIZE = "max_size" in inspect.signature(morphology.remove_small_objects).parameters
+_HOLES_MAX_SIZE = "max_size" in inspect.signature(morphology.remove_small_holes).parameters
+
+
+def _remove_small_objects(mask: Array, min_size: int) -> Array:
+    """Keep objects of size N across the old strict and new inclusive APIs."""
+    if _OBJECTS_MAX_SIZE:
+        return morphology.remove_small_objects(mask, max_size=min_size - 1)
+    return morphology.remove_small_objects(mask, min_size=min_size)
+
+
+def _remove_small_holes(mask: Array, min_size: int) -> Array:
+    if _HOLES_MAX_SIZE:
+        return morphology.remove_small_holes(mask, max_size=min_size - 1)
+    return morphology.remove_small_holes(mask, area_threshold=min_size)
 
 
 # ---------------------------------------------------------------------------
@@ -397,8 +414,8 @@ class InfinitePacketGenerator:
                     ("above", values >= threshold),
                     ("below", values <= threshold),
                 ):
-                    clean = morphology.remove_small_objects(mask, max_size=max(9, self.height * self.width // 700 - 1))
-                    clean = morphology.remove_small_holes(clean, max_size=max(9, self.height * self.width // 700 - 1))
+                    clean = _remove_small_objects(mask, min_size=max(10, self.height * self.width // 700))
+                    clean = _remove_small_holes(clean, min_size=max(10, self.height * self.width // 700))
                     labels = measure.label(clean)
                     for region in measure.regionprops(labels):
                         if region.area < max(10, self.height * self.width // 700):
@@ -639,7 +656,7 @@ class InfinitePacketGenerator:
         for quantile in (0.78, 0.88, 0.95):
             threshold = float(np.quantile(magnitude, quantile))
             mask = magnitude >= max(threshold, 1e-12)
-            mask = morphology.remove_small_objects(mask, max_size=max(1, min_size - 1))
+            mask = _remove_small_objects(mask, min_size=max(2, min_size))
             labels = measure.label(mask)
             regions = sorted(measure.regionprops(labels), key=lambda region: region.area, reverse=True)
             for region in regions[:max_components]:
