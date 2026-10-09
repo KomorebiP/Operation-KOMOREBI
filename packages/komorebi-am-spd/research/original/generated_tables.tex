@@ -1,0 +1,105 @@
+\begin{longtable}{llrrrr}
+\caption{Benchmark metrics for every case and method.}\label{tab:benchmark}\\
+\toprule Case & Method & RMSE & PSNR & SSIM & Edge RMSE\\\midrule
+\endfirsthead\toprule Case & Method & RMSE & PSNR & SSIM & Edge RMSE\\\midrule\endhead
+synthetic geometry & fourier & 0.141263 & 16.999 & 0.4787 & 0.225829\\
+synthetic geometry & dct & 0.124429 & 18.102 & 0.4812 & 0.187015\\
+synthetic geometry & quadtree & 0.157849 & 16.035 & 0.5156 & 0.237191\\
+synthetic geometry & tv & 0.019953 & 34.000 & 0.9664 & 0.031600\\
+synthetic geometry & packet core & 0.027841 & 31.106 & 0.9712 & 0.049632\\
+synthetic geometry & packet completed & 0.026957 & 31.387 & 0.9645 & 0.047588\\
+synthetic text curves & fourier & 0.116976 & 18.638 & 0.5586 & 0.183483\\
+synthetic text curves & dct & 0.093288 & 20.604 & 0.6009 & 0.148784\\
+synthetic text curves & quadtree & 0.130630 & 17.679 & 0.5051 & 0.214813\\
+synthetic text curves & tv & 0.019793 & 34.070 & 0.9709 & 0.029843\\
+synthetic text curves & packet core & 0.018993 & 34.428 & 0.9773 & 0.030976\\
+synthetic text curves & packet completed & 0.017660 & 35.060 & 0.9809 & 0.030076\\
+camera & fourier & 0.096803 & 20.282 & 0.5406 & 0.142583\\
+camera & dct & 0.072395 & 22.806 & 0.6094 & 0.116351\\
+camera & quadtree & 0.091801 & 20.743 & 0.5955 & 0.158815\\
+camera & tv & 0.028897 & 30.783 & 0.8989 & 0.044118\\
+camera & packet core & 0.047631 & 26.442 & 0.8149 & 0.076694\\
+camera & packet completed & 0.045070 & 26.922 & 0.8033 & 0.070887\\
+astronaut & fourier & 0.172403 & 15.269 & 0.3948 & 0.222275\\
+astronaut & dct & 0.138125 & 17.195 & 0.5696 & 0.178496\\
+astronaut & quadtree & 0.178929 & 14.946 & 0.3153 & 0.232900\\
+astronaut & tv & 0.041007 & 27.743 & 0.9392 & 0.049107\\
+astronaut & packet core & 0.097366 & 20.232 & 0.7603 & 0.116895\\
+astronaut & packet completed & 0.090254 & 20.891 & 0.7940 & 0.107059\\
+\bottomrule\end{longtable}
+
+\begin{longtable}{llr}
+\caption{Selected packet types in the four image reconstructions.}\label{tab:kinds}\\
+\toprule Case & Packet type & Count\\\midrule
+\endfirsthead\toprule Case & Packet type & Count\\\midrule\endhead
+astronaut & dct & 1\\
+astronaut & mask & 28\\
+astronaut & masked poly & 1\\
+astronaut & morph & 11\\
+astronaut & quadtree & 1\\
+astronaut & soft mask & 1\\
+camera & affine & 3\\
+camera & mask & 22\\
+camera & masked dct & 5\\
+camera & masked poly & 1\\
+camera & morph & 8\\
+camera & quadtree & 2\\
+camera & radial & 1\\
+camera & soft mask & 1\\
+synthetic geometry & combine & 4\\
+synthetic geometry & dct & 3\\
+synthetic geometry & mask & 19\\
+synthetic geometry & masked dct & 5\\
+synthetic geometry & masked poly & 4\\
+synthetic geometry & morph & 8\\
+synthetic text curves & affine & 1\\
+synthetic text curves & dct & 4\\
+synthetic text curves & mask & 22\\
+synthetic text curves & masked dct & 4\\
+synthetic text curves & masked poly & 6\\
+synthetic text curves & morph & 6\\
+\bottomrule\end{longtable}
+
+\begin{table}[H]\centering
+\caption{Earlier budget sweep for the same packet-selection architecture.}\label{tab:budget}
+\small\begin{tabular}{rrrrrr}\toprule Packet budget & Residual budget & Core RMSE & Completed RMSE & Seconds & Selected\\\midrule
+8 & 4 & 0.098988 & 0.091417 & 0.162 & 8\\
+16 & 8 & 0.083805 & 0.077948 & 0.399 & 16\\
+24 & 12 & 0.054446 & 0.050016 & 0.560 & 24\\
+32 & 16 & 0.042908 & 0.040863 & 0.894 & 32\\
+48 & 24 & 0.027053 & 0.025120 & 1.513 & 48\\
+\bottomrule\end{tabular}\end{table}
+
+\begin{table}[H]\centering
+\caption{Earlier fixed-budget scaling sweep.}\label{tab:scaling}
+\small\begin{tabular}{rrrrr}\toprule Side length & Pixels & Seconds & Core RMSE & Packets\\\midrule
+32 & 1024 & 0.481 & 0.033871 & 28\\
+48 & 2304 & 0.626 & 0.032763 & 28\\
+64 & 4096 & 1.445 & 0.047798 & 28\\
+80 & 6400 & 1.894 & 0.034348 & 28\\
+\bottomrule\end{tabular}\end{table}
+
+\begin{longtable}{L{0.55\linewidth}L{0.33\linewidth}}
+\caption{Verification ledger.}\label{tab:tests}\\
+\toprule Check & Recorded value\\\midrule
+\endfirsthead\toprule Check & Recorded value\\\midrule\endhead
+archive identity & 5.551115e-17\\
+monotone residual max increase & 0.000000e+00\\
+pixel completion residual & 5.796179e-10\\
+native step residual & 2.220446e-15\\
+native step range violation & 4.385101e-16\\
+affine perturbation distance & 8.124038e+00\\
+radial perturbation distance & 4.789757e+00\\
+dct finite & True\\
+fourier finite & True\\
+global refit stationarity & 2.120856e-08\\
+bounded synthesis nonexpansive ratio & 7.080496e-01\\
+residual completion ratio & 7.413943e-01\\
+shared mask color residual & 5.551115e-16\\
+distinct descendants from one packet & 29\\
+dyadic translation step ratio & 7.812500e-03\\
+soft boundary finite & True\\
+compositional packet finite & True\\
+initial image derived seed masks & 60\\
+test groups & 16\\
+\bottomrule\end{longtable}

@@ -1,0 +1,1689 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.63in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{graphicx,booktabs,array,longtable,tabularx,multicol}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{needspace}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.misc,calc}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Muted}{HTML}{566573}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{PaleBlue}{HTML}{E6F0F4}
+\definecolor{PaleTeal}{HTML}{E6F3F1}
+\definecolor{PaleOrange}{HTML}{FBF0E6}
+\definecolor{PaleMagenta}{HTML}{F4EAF1}
+\definecolor{CodeGray}{HTML}{F3F4F5}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=Blue,
+  urlcolor=Blue,
+  pdftitle={Projector-Resolved Adaptive Multiscale Singular Packet Decomposition: Final Theory and Verification},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Exact multiscale budget frontiers, singular-packet proofs, three-seed replacement, stress testing, and exact residual closure},
+  pdfcreator={},pdfproducer={}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\scriptsize\color{Muted} Adaptive Multiscale Singular Packet Decomposition}
+\fancyfoot[R]{\scriptsize\color{Muted}\thepage}
+\setlength{\footskip}{0.28in}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\raggedbottom
+\graphicspath{{figures/}}
+\captionsetup{font=small,labelfont=bf}
+\setlist[itemize]{leftmargin=1.35em,itemsep=2.5pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.55em,itemsep=3pt,topsep=3pt}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{boundary}[theorem]{Boundary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\IPPA}{\textsc{ippa}}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\ip}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\Callout}[2][PaleBlue]{\noindent\colorbox{#1}{\parbox{0.965\linewidth}{\vspace{3pt}#2\vspace{3pt}}}}
+\newcommand{\InlinePart}[1]{%
+  \Needspace{15\baselineskip}%
+  \vspace{1.5em}%
+  {\color{Blue}\LARGE\bfseries #1\par}%
+  \vspace{0.55em}%
+  {\color{Blue}\rule{\linewidth}{1.1pt}}\par%
+  \vspace{0.75em}%
+}
+\newcommand{\Visual}[4][0.49\textheight]{%
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\linewidth,height=#1,keepaspectratio]{#2.pdf}
+\caption{#3}
+\label{fig:#2}
+\vspace{2pt}
+\begin{minipage}{0.94\linewidth}\small\textbf{Reading the figure.} #4\end{minipage}
+\end{figure}
+}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\fontsize{6.8}{8.0}\selectfont,
+  backgroundcolor=\color{CodeGray},
+  frame=single,
+  rulecolor=\color{Muted!45},
+  numbers=left,
+  numberstyle=\tiny\color{Muted},
+  numbersep=7pt,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  tabsize=4,
+  keywordstyle=\color{Blue}\bfseries,
+  commentstyle=\color{Teal!80!black},
+  stringstyle=\color{Magenta!90!black},
+  columns=fullflexible,
+  keepspaces=true
+}
+\lstset{style=pythonstyle}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[PaleBlue] (current page.south west) rectangle (current page.north east);
+  \fill[PaleTeal] ([xshift=-2.75in]current page.north east) rectangle (current page.north east);
+  \draw[Blue,line width=4pt] ([xshift=.55in,yshift=-.45in]current page.north west) -- ([xshift=-.55in,yshift=-.45in]current page.north east);
+  \draw[Magenta,line width=2pt] ([xshift=.55in,yshift=.65in]current page.south west) -- ([xshift=-.55in,yshift=.65in]current page.south east);
+\end{tikzpicture}
+\vspace*{0.74in}
+{\fontsize{13}{15}\selectfont\color{Blue}\bfseries FINAL THEORY AND VERIFICATION EDITION\par}
+\vspace{0.20in}
+{\fontsize{27}{31}\selectfont\bfseries Adaptive Multiscale\par}\vspace{0.05in}
+{\fontsize{27}{31}\selectfont\bfseries Singular Packet Decomposition\par}
+\vspace{0.18in}
+{\fontsize{15}{19}\selectfont\color{Muted} Exact budget frontiers, moving variable-rank subspaces, three-seed replacement, proofs, and exact residual closure\par}
+\vspace{0.45in}
+\begin{minipage}{0.78\linewidth}
+\large
+The method began as a moving packet search and grew into a finite optimization theory. Geometry proposes where to look. Local singular models decide how much rank is needed. Exact budget frontiers choose a complete multiscale pruning. A three-seed portfolio can reopen weak decisions without losing the best completed model. The residual archive keeps the full image exact at every stage.
+\end{minipage}
+\vfill
+{\fontsize{18}{21}\selectfont\bfseries Komorebi P.\par}
+\vspace{0.3in}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\pagenumbering{arabic}
+
+\begin{abstract}
+Adaptive Multiscale Singular Packet Decomposition began with a simple practical problem. A global singular-value decomposition is powerful, but it does not say where a feature lives, which boundary it belongs to, or whether a local region should be split before rank is assigned. A fixed geometric dictionary has the opposite weakness. It can preserve interpretable supports, but it cannot anticipate every texture, shading pattern, or residual mode. AM-SPD joins the two ideas. Geometry proposes supports, local singular models choose orientation and rank, a multiscale tree allocates a finite parameter budget, and an exact residual archive preserves everything the compressed model does not explain.
+
+The final formulation replaces the earlier multiplier sweep with an exact Pareto dynamic program. For every node and every integer budget, the recursion compares each admissible stop model with every allocation across the children. It returns the exact best pruning for the declared finite tree, unfolding family, rank range, additive squared-error objective, and scalar parameter model. Once a tree has been chosen, all retained directions are refitted globally, so the reported reconstruction cannot be worse than the additive tree model that proposed the span.
+
+The final portfolio retains three complete starting points: the original greedy singular-packet path, the Lagrange-tree path, and the exact-budget tree path. Each unchanged seed remains available. Each is also reopened at several declared budget fractions and completed with new residual blocks. Selecting the smallest-error member of this finite portfolio gives an exact nonregression guarantee over the tested candidates.
+
+Under the inherited four-image budgets, the final bounded RMSE values are
+\[
+0.003155,\qquad 0.003141,\qquad 0.005064,\qquad 0.010691.
+\]
+These are reductions of about $15.3\%$, $7.5\%$, $66.1\%$, and $67.6\%$ from the original SPD results. The final portfolio also improves on the approximately parameter-matched residual SVD in all four cases.
+
+A separate ten-image suite compares global SVD, two restricted rank-one trees, and the full variable-rank model under a common budget. The full model matches or improves on both packet ablations in every case and beats the matched global SVD in seven of ten. A noise study shows a different boundary: the representation is not automatically a denoiser. Only nine of thirty-six noisy scenarios improve on the noisy input under the uncalibrated fixed-budget rule.
+
+The proof-oriented verification suite checks $12{,}154$ deterministic and randomized scenarios in eleven groups. It includes $9{,}960$ exact comparisons between dynamic programming and exhaustive tree enumeration, together with local SVD identities, block-gain calculations, projection monotonicity, singular-gap stability, region partitions, archive identities, and portfolio nonregression.
+
+The reconstruction contract remains exact at every finite stage:
+\[
+\boxed{F=\widehat F+R_{\mathrm{archive}}.}
+\]
+The packet model may be compressed. The full image is still accounted for.
+\end{abstract}
+
+\begingroup
+\small
+\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+
+\section*{A plain-language map}
+\addcontentsline{toc}{section}{A plain-language map}
+The method now has a simple division of labor.
+
+\begin{itemize}
+\item Geometry decides where a packet lives.
+\item Singular values decide how many local directions are worth keeping.
+\item The tree decides whether a region should stay whole or split.
+\item Backward replacement repairs decisions that looked useful early but became redundant later.
+\item The residual archive preserves every value that the finite model has not yet explained.
+\end{itemize}
+
+The proofs in this edition match those jobs. Local SVD gives the best fixed-support rank model. The Pareto recursion gives the exact finite-tree answer at every integer budget. Orthogonal projection gives the exact gain of a new block and the monotonicity of global refitting. Portfolio inclusion gives nonregression. None of those results is extended beyond the model actually evaluated.
+
+\InlinePart{I. What changes when the packet is unknown}
+
+\section{From one recovered edge to a full image}
+The earlier Gibbs construction begins with a decomposition
+\[
+f=s+j,
+\]
+where the smooth packet $s$ is reconstructed spectrally and the discontinuous packet $j$ is synthesized directly. When $j$ is known, the persistent Gibbs term disappears because the jump is no longer approximated by a finite global trigonometric polynomial.
+
+A full image changes the problem. There may be hundreds or thousands of interacting boundaries, textures, gradients, shadows, thin curves, disconnected components, and partially transparent transitions. A fixed finite dictionary cannot contain every possible object. Even a very large dictionary is fragile when the correct packet lies between its entries.
+
+The correct extension is not one universal precomputed dictionary. It is a \emph{generative atlas} whose packets move toward the residual geometry.
+
+\Callout[PaleOrange]{The word ``infinite'' does not mean that infinitely many arrays are stored. It means that a finite grammar can generate a countably infinite refinement tree, while the algorithm evaluates only a finite active frontier at every step.}
+
+\section{Three claims that must remain distinct}
+The reconstruction has three logically different layers.
+
+\begin{enumerate}
+\item \textbf{Sparse packet approximation.} A finite set of geometric and smooth packets approximates the image.
+\item \textbf{Exact residual accounting.} The image equals the approximation plus the stored residual at every finite stage.
+\item \textbf{Exact finite closure.} Pixel-depth dyadic packets span the entire finite raster space.
+\end{enumerate}
+
+The first claim is about efficiency and interpretation. The second is an exact identity. The third is a completeness theorem. Confusing them would make the method appear stronger than it is.
+
+\Visual{19_global_reconstruction_contract}{The three reconstruction guarantees are kept separate.}{The geometric core is the compressed interpretable model. The exact archive preserves all information that has not yet entered that model. Pixel-depth refinement is a guaranteed fallback rather than a claim that every image has a short semantic description.}
+
+\section{Why global Fourier truncation is still the wrong endpoint}
+For an image with a jump curve $\Sigma$, a finite global Fourier approximation must represent both sides of the jump and the discontinuity itself using one smooth basis. Oscillatory boundary layers appear normal to $\Sigma$. Filtering can reduce the oscillation, but it broadens or biases the transition.
+
+A packet reconstruction instead writes
+\[
+f=\sum_{m} a_m\mathbf 1_{\Omega_m}+g,
+\]
+where the geometry packets $\mathbf 1_{\Omega_m}$ carry the jumps and $g$ contains the residual smooth or textured content. If the packet boundaries are exact, the discontinuities are not approximated by the smooth residual basis.
+
+\begin{theorem}[Boundary-completed reconstruction]
+Let $\Omega_1,\ldots,\Omega_M$ form an exact measurable partition of the image domain. Suppose $g_m=f|_{\Omega_m}$ is approximated by a local operator $A_{m,N}$ that never crosses another packet boundary. Define
+\[
+R_Nf=\sum_{m=1}^{M}\mathbf 1_{\Omega_m}A_{m,N}(g_m).
+\]
+Then, away from the selected one-sided boundary convention,
+\[
+\norm{R_Nf-f}_{\infty}
+\le
+\max_m\norm{A_{m,N}g_m-g_m}_{L^\infty(\Omega_m)}.
+\]
+No additional persistent Gibbs term appears.
+\end{theorem}
+
+\begin{proof}
+At an interior point of $\Omega_m$, every packet except $m$ vanishes. The reconstruction error is exactly the local smooth approximation error on that packet. The jump is carried by the packet boundary itself.
+\end{proof}
+
+\InlinePart{II. The infinite perturbation packet atlas}
+
+\section{Seed packets extracted from the image}
+The atlas begins with a finite collection of imperfect proposals. These are not assumed to be correct objects. They are starting coordinates.
+
+The implementation extracts seeds from:
+\begin{itemize}
+\item Felzenszwalb segmentations at three scales
+\item SLIC superpixels at three resolutions
+\item connected components above and below channel quantiles
+\item filled contours derived from Canny edges
+\item low-frequency DCT atoms
+\item dyadic quadtree cells
+\item residual components created during the search
+\end{itemize}
+
+Different seeds fail differently. Superpixels follow local color. Threshold components follow intensity. Contours follow gradient closure. Quadtree cells make no semantic assumption. Their union is a redundant proposal atlas rather than one privileged segmentation.
+
+\Visual{11_seed_atlas}{Image-derived seed masks before residual refinement.}{The seeds are intentionally overlapping and imperfect. Their role is to place the generator near useful parts of geometry. The later perturbation and composition stages are what prevent the finite seed set from becoming a hard dictionary boundary.}
+
+\section{A countably infinite grammar}
+Let $\mathscr P_0$ denote the finite seed set. At depth $d$, define a finite family of transforms $\mathcal T_d$ containing:
+\[
+\begin{aligned}
+&\text{translations of size }2^{-d},\\
+&\text{rotations of size }2^{-d},\\
+&\text{log-scale changes of size }2^{-d},\\
+&\text{radial boundary modes with dyadic amplitudes and phases},\\
+&\text{soft signed-distance boundaries},\\
+&\text{morphological and local texture refinements},\\
+&\text{binary unions, intersections, differences, and symmetric differences}.
+\end{aligned}
+\]
+
+The generated atlas is
+\[
+\boxed{
+\mathscr P_\infty
+=
+\bigcup_{d\ge0}
+\mathcal T_d\circ\mathcal T_{d-1}\circ\cdots\circ\mathcal T_1(\mathscr P_0).
+}
+\]
+
+Every level is finite, so $\mathscr P_\infty$ is countable. It is never stored in full.
+
+\begin{proposition}[Dyadic density of the represented transform parameters]
+Within every bounded translation, rotation, and log-scale interval, the dyadic parameter schedules used by the generator are dense. If the action of the corresponding transform on a packet is continuous in $L^2$, the transformed packets generated along all depths are dense in that bounded transformation orbit.
+\end{proposition}
+
+\begin{proof}
+Dyadic rationals are dense in every bounded real interval. Finite signed sums of increments proportional to $2^{-d}$ approximate any bounded target parameter. Continuity of the transform action transfers parameter convergence to $L^2$ convergence of the packet.
+\end{proof}
+
+\Visual{16_dyadic_dense_perturbations}{Dyadic perturbations shrink along a lineage.}{The displayed translation, rotation, and scale steps halve with depth. Repeated selection does not cycle through one fixed menu. It opens progressively finer neighborhoods around packets that continue to explain the residual.}
+
+\section{Unary geometric refinements}
+A selected mask can generate:
+\begin{itemize}
+\item translated, rotated, and scaled affine children
+\item dilated, eroded, and ribbon children
+\item radial Fourier boundary warps
+\item signed-distance soft masks at decreasing transition widths
+\item masked polynomial coordinate fields
+\item masked local DCT atoms
+\end{itemize}
+
+These children separate two tasks that are often conflated. Boundary perturbations change the geometry. Masked polynomial and cosine atoms change the field inside an existing geometry.
+
+\Visual{02_perturbation_family}{One seed packet generates many geometric descendants.}{The first family already includes motion, scale, morphology, and oscillatory boundary modes. The refined implementation continues these transformations at dyadically decreasing step sizes rather than stopping at the pictured examples.}
+
+\Visual{18_soft_boundary_continuum}{Soft boundaries approach hard packets through decreasing transition widths.}{Soft masks allow subpixel movement and differentiable boundary adjustment. The hard packet is recovered as the transition width tends toward zero on a fixed raster.}
+
+\section{Binary packet composition}
+Objects are not always perturbations of one connected seed. Text, articulated shapes, repeated motifs, and separated regions may be built from several local pieces. The grammar therefore includes
+\[
+P\cup Q,
+\qquad
+P\cap Q,
+\qquad
+P\setminus Q,
+\qquad
+P\triangle Q.
+\]
+
+Each combined packet can itself become a new parent and undergo further geometric and field refinement. This creates a compositional tree rather than a list of isolated templates.
+
+\Visual{17_compositional_packet_grammar}{Binary packet composition.}{Two local proposals can be joined, intersected, subtracted, or symmetrically differenced. The resulting packet is eligible for the same endless unary perturbation grammar as every other selected object.}
+
+\section{Residual seeds and the moving atlas}
+The atlas is not generated independently of the reconstruction. At scheduled iterations the residual magnitude is thresholded at several quantiles. Connected residual components become new seed masks. High-energy quadtree cells are also exposed and selectively subdivided.
+
+Thus the atlas moves according to
+\[
+\boxed{
+\mathscr P_{K+1}
+=
+\mathscr P_K
+\cup
+\operatorname{Descendants}(P_K)
+\cup
+\operatorname{ResidualSeeds}(r_K)
+\cup
+\operatorname{DyadicRefinement}(r_K).
+}
+\]
+
+The packet generator and reconstruction are coupled. The current error determines where the coordinate system becomes more detailed.
+
+\Visual{08_packet_genealogy}{A selected packet genealogy.}{The search is not a flat ranking of a static dictionary. Children exist because a parent was useful. New residual components can also enter as roots, which lets the atlas recover from poor initial proposals.}
+
+\Visual{10_packet_family_growth}{Potential family size under repeated refinement.}{The number of possible descendants grows without requiring their storage. The algorithm sees only a bounded frontier, while the fallback dyadic tree guarantees that unexplained regions remain reachable.}
+
+\InlinePart{III. Global adaptive synthesis}
+
+\section{Shared spatial packets with multichannel coefficients}
+A spatial atom $p\in\R^{HW}$ is shared across color channels. Its coefficient is a vector
+\[
+\gamma_p\in\R^C.
+\]
+The reconstruction from active atoms $p_1,\ldots,p_K$ is
+\[
+\widehat f_K(x)=\sum_{k=1}^{K}p_k(x)\gamma_k.
+\]
+This separates object support from color or feature values. One mask can represent a colored region without requiring one duplicate geometry packet per channel.
+
+\section{Exact global refitting}
+Let
+\[
+A_K=[p_1\ \cdots\ p_K]
+\]
+and let $F\in\R^{HW\times C}$ be the flattened image. The active coefficients are
+\[
+\Gamma_K
+=
+\arg\min_{\Gamma}\norm{F-A_K\Gamma}_F^2.
+\]
+The implementation solves the normal equations with a small ridge for numerical conditioning and falls back to least squares if needed.
+
+\begin{theorem}[Monotone residual under nested global refitting]
+If
+\[
+V_K=\operatorname{span}\{p_1,\ldots,p_K\}
+\subseteq
+V_{K+1},
+\]
+and $\widehat F_K$ is the orthogonal least-squares projection of $F$ onto $V_K\otimes\R^C$, then
+\[
+\norm{F-\widehat F_{K+1}}_F
+\le
+\norm{F-\widehat F_K}_F.
+\]
+\end{theorem}
+
+\begin{proof}
+The minimization domain at stage $K$ is contained in the domain at stage $K+1$. The minimum over the larger set cannot be larger.
+\end{proof}
+
+The measured residual sequences were nonincreasing to numerical precision in every tested reconstruction.
+
+\Visual{05_global_convergence}{Residual norm during global packet selection.}{Every accepted packet enlarges the active span. All coefficients are refitted together, so earlier packets can change their amplitudes when a better explanation enters.}
+
+\section{Exact candidate gain}
+Let $r_K$ be the current multichannel residual and let $p$ be a candidate. Orthogonalize the candidate against the active span:
+\[
+p_\perp=(I-P_{V_K})p.
+\]
+When $p_\perp\ne0$, the exact reduction in squared residual is
+\[
+\boxed{
+G(p\mid V_K)
+=
+\frac{\norm{p_\perp^{\mathsf T}r_K}_2^2}{\norm{p_\perp}_2^2}.
+}
+\]
+The score used by the implementation is
+\[
+\operatorname{score}(p)
+=
+\frac{G(p\mid V_K)}{1+\lambda\,\operatorname{complexity}(p)}.
+\]
+This is not a correlation heuristic alone. It estimates the exact global least-squares benefit after removing the part of the candidate already represented by active packets.
+
+\section{Finite-frontier best-first search}
+At each iteration the candidate pool may be much larger than the evaluation budget. The implementation retains a deterministic shallow frontier and samples from the deeper frontier. This keeps the search moving while preserving access to recently generated fine descendants.
+
+\begin{algorithm}[Infinite perturbation packet reconstruction]
+Given an image $f$, a maximum selected-packet count $K$, and a finite candidate-evaluation budget:
+\begin{enumerate}
+\item Generate the image-derived seed atlas and a constant packet.
+\item Fit the active coefficients globally.
+\item Generate residual seeds and high-energy quadtree packets on schedule.
+\item Evaluate a finite frontier using the exact orthogonal gain divided by packet complexity.
+\item Select the highest-scoring nonduplicate atom.
+\item Globally refit every active coefficient.
+\item Generate dyadically finer descendants and compositional children of the selected packet.
+\item Store the exact residual.
+\item Repeat until the packet budget or residual tolerance is reached.
+\item Optionally complete the residual using sparse DCT packets, local refinement, or pixel-depth packets.
+\end{enumerate}
+\end{algorithm}
+
+\Visual{01_architecture}{Architecture of the infinite perturbation packet atlas.}{Image-derived seeds and residual proposals feed a lazy generator. The selected packet forest is globally refitted. The residual is both an exact archive and the signal that decides where new coordinates should appear.}
+
+\section{The exact residual archive}
+At every finite step define
+\[
+r_K=f-\widehat f_K.
+\]
+Then
+\[
+\boxed{f=\widehat f_K+r_K.}
+\]
+The identity is elementary, but its role is central. Approximation never destroys the omitted information. Compression, interpretation, and exact storage remain distinct operations.
+
+\Visual{07_exact_residual_archive}{The exact archive identity.}{The reconstruction is the current model. The residual is not discarded. It is an exact complementary packet that can be stored, transmitted, further modeled, or used to generate the next local geometry proposals.}
+
+\section{Residual completion}
+The benchmark uses a second stage
+\[
+\widehat f_{K,L}
+=
+\Pi_{[0,1]}
+\left(
+\widehat f_K+D_Lr_K
+\right),
+\]
+where $D_Lr_K$ is the best $L$-coefficient DCT component of the residual and $\Pi_{[0,1]}$ clips to the physical image range.
+
+\begin{proposition}[Orthogonal residual completion]
+If $D_L$ is an orthogonal projector onto an $L$-dimensional residual subspace, then
+\[
+\norm{r_K-D_Lr_K}_2
+\le
+\norm{r_K}_2.
+\]
+\end{proposition}
+
+\begin{proposition}[Bounded synthesis is nonexpansive]
+For every truth image $f\in[0,1]^{H\times W\times C}$,
+\[
+\norm{\Pi_{[0,1]}(g)-f}_2
+\le
+\norm{g-f}_2.
+\]
+\end{proposition}
+
+\begin{proof}
+Coordinatewise projection onto a closed interval is the metric projection onto a closed convex set. Metric projections in Euclidean space are nonexpansive relative to every point in the set.
+\end{proof}
+
+\Visual{12_core_vs_completion}{Geometric core and residual-completed reconstruction.}{The geometric forest explains boundaries and regions. The residual DCT stage captures remaining global smooth or textured structure. The two layers remain separately inspectable.}
+
+\InlinePart{IV. Exactness, finite closure, and Gibbs behavior}
+
+\section{Native edge synthesis}
+A step packet reconstructed from a constant atom and its exact region mask has no overshoot. The verification suite reconstructs a two-dimensional step to a maximum error of order $10^{-15}$.
+
+\begin{theorem}[Exact native packet synthesis]
+Suppose
+\[
+f=g+a\mathbf 1_\Omega
+\]
+with an exact packet $\mathbf 1_\Omega$ in the active span and $g$ in the selected smooth span. Then the least-squares reconstruction equals $f$ exactly. In particular, it introduces no Gibbs overshoot along $\partial\Omega$.
+\end{theorem}
+
+\section{Approximate geometry remains measurable}
+Let
+\[
+j=a\mathbf 1_\Omega,
+\qquad
+\widehat j=\widehat a\mathbf 1_{\widehat\Omega}.
+\]
+For $1\le p<\infty$,
+\[
+\boxed{
+\norm{j-\widehat j}_{L^p}
+\le
+|a-\widehat a|\,\mu(\Omega)^{1/p}
++
+|\widehat a|\,\mu(\Omega\triangle\widehat\Omega)^{1/p}.
+}
+\]
+
+\begin{proof}
+Add and subtract $\widehat a\mathbf 1_\Omega$. The amplitude term is supported on $\Omega$. The geometry term has magnitude $|\widehat a|$ on the symmetric difference.
+\end{proof}
+
+This inequality states the honest boundary of unknown-packet reconstruction. If the geometry is not exact, the remaining boundary error is controlled by amplitude error and symmetric-difference area. It is not renamed as an exact solution.
+
+\Visual{06_boundary_cross_section}{A boundary cross-section through global and packet reconstructions.}{The global spectral approximation spreads its error around the discontinuity. A native packet keeps the discontinuity in the geometry coordinate. Approximate packet boundaries produce localized geometry residuals rather than a universal oscillatory tail.}
+
+\section{Dyadic finite closure}
+For a finite $H\times W$ raster, let $e_{yx}$ be the indicator of pixel $(y,x)$. Then
+\[
+\{e_{yx}:0\le y<H,\ 0\le x<W\}
+\]
+is the standard basis of $\R^{HW}$. With one coefficient vector per pixel it spans $\R^{HW\times C}$.
+
+\begin{theorem}[Exact finite-image closure]
+Every finite image can be reconstructed exactly from pixel-depth spatial packets and one coefficient vector per color channel.
+\end{theorem}
+
+\begin{proof}
+For every pixel, select its standard indicator and use the image value at that pixel as the channel coefficient. Summing the packets returns every coordinate exactly.
+\end{proof}
+
+The implementation reaches these packets through dyadic quadtree refinement or by direct residual completion. This proves completeness, not semantic sparsity.
+
+\Visual{13_pixel_completion_certificate}{Pixel-depth completion on a small image.}{The first ten packets leave a visible residual. The coordinate fallback closes that residual to numerical solve tolerance. This is the finite exact endpoint of the atlas.}
+
+\Visual{09_exactness_paths}{Two exactness paths.}{The archive path is exact at every stage because it stores the residual. The synthesis path becomes exact after the packet system reaches a complete finite basis.}
+
+\InlinePart{V. Full-image experiments}
+
+\section{Experimental design}
+The main benchmark uses four $56\times56$ RGB images:
+\begin{itemize}
+\item a synthetic image with piecewise-smooth fields and several geometric objects
+\item a synthetic image containing text-like curves and narrow structures
+\item the standard camera image converted to three channels
+\item the standard astronaut image
+\end{itemize}
+
+The geometric core selects forty-four packets. A twenty-two-coefficient residual DCT completion is then applied. Comparisons use global low-pass Fourier reconstruction, best-coefficient DCT reconstruction, adaptive quadtree reconstruction, and total-variation denoising.
+
+The comparison is not perfectly cost matched. Total variation is an iterative regularized estimator rather than a finite packet selection method. It is included because it is a strong edge-preserving baseline.
+
+\section{Synthetic geometry}
+\Visual[0.44\textheight]{08_synthetic_geometry_methods}{Reconstruction methods on the synthetic geometry image.}{The packet core captures regions and boundary structure. Residual completion reduces the remaining field error. Total variation remains slightly more accurate in RMSE, while the packet representation exposes an explicit geometric decomposition.}
+
+\Visual[0.37\textheight]{09_synthetic_geometry_residuals}{Residual maps for the synthetic geometry image.}{Global spectral errors are distributed around boundaries. The completed packet residual is smaller and more localized.}
+
+\Visual[0.36\textheight]{10_synthetic_geometry_snapshots}{Anytime packet reconstruction of the synthetic geometry image.}{The image becomes recognizable before the full packet budget is reached. Later packets refine geometry and local field behavior rather than rebuilding the entire image from scratch.}
+
+\Visual[0.38\textheight]{11_synthetic_geometry_convergence_packets}{Convergence and selected packets for the synthetic geometry image.}{The final forest includes ordinary masks, morphology, local cosine and polynomial packets, DCT packets, and four binary composition packets.}
+
+The completed packet reconstruction has
+\[
+\operatorname{RMSE}=0.026957,
+\qquad
+\operatorname{SSIM}=0.9645.
+\]
+Its RMSE is approximately $17\%$ of the Fourier error and $20\%$ of the DCT error.
+
+\section{Synthetic text and curves}
+\Visual[0.44\textheight]{12_synthetic_text_curves_methods}{Reconstruction methods on the text-and-curves image.}{Thin and curved structures require several local masks, field packets, and one affine refinement. The completed packet reconstruction slightly outperforms the tested total-variation setting in RMSE and SSIM.}
+
+\Visual[0.37\textheight]{13_synthetic_text_curves_residuals}{Residual maps for text and curves.}{Most of the remaining packet error lies on the finest strokes and local intensity variations.}
+
+\Visual[0.36\textheight]{14_synthetic_text_curves_snapshots}{Anytime reconstruction of text and curves.}{The active atlas grows from broad region proposals toward local stroke and field corrections.}
+
+\Visual[0.38\textheight]{15_synthetic_text_curves_convergence_packets}{Convergence and selected packets for text and curves.}{The completed packet method reaches RMSE $0.017660$ and SSIM $0.9809$ under the reported budget.}
+
+\section{Camera image}
+\Visual[0.44\textheight]{16_camera_methods}{Reconstruction methods on the camera image.}{The packet method improves strongly over Fourier, DCT, and quadtree baselines, but the tested total-variation method remains more accurate. Natural textures and gradual illumination expose limits of the present geometry grammar.}
+
+\Visual[0.37\textheight]{17_camera_residuals}{Camera residual maps.}{The geometric forest captures major regions. Fine texture and intensity variation remain the dominant residual.}
+
+\Visual[0.36\textheight]{18_camera_snapshots}{Anytime camera reconstruction.}{The global subject and high-contrast boundaries emerge early. Later refinements concentrate on local detail.}
+
+\Visual[0.38\textheight]{19_camera_convergence_packets}{Camera convergence and packet examples.}{The selected forest includes affine, radial, soft-boundary, local DCT, polynomial, morphology, and quadtree packets.}
+
+\section{Astronaut image}
+\Visual[0.44\textheight]{20_astronaut_methods}{Reconstruction methods on the astronaut image.}{The packet completion roughly halves the Fourier RMSE but does not match total variation. The image has dense texture, shading, facial structure, and many interacting boundaries.}
+
+\Visual[0.37\textheight]{21_astronaut_residuals}{Astronaut residual maps.}{The residual identifies the structures missing from the current grammar, especially fine texture and complex local illumination.}
+
+\Visual[0.36\textheight]{22_astronaut_snapshots}{Anytime astronaut reconstruction.}{Broad object masks appear first. The finite budget is not enough to recover the full natural-image detail.}
+
+\Visual[0.38\textheight]{23_astronaut_convergence_packets}{Astronaut convergence and packet examples.}{The example is a useful negative control. An endless atlas can continue refining, but a fixed budget still imposes a real approximation limit.}
+
+\section{Global metric comparison}
+\Visual{03_global_metrics}{RMSE and SSIM across the four cases.}{The packet completion consistently improves on global Fourier and DCT reconstruction. Its strongest relative performance is on images whose boundaries and local fields are well matched by the generated grammar.}
+
+\input{generated_tables.tex}
+
+\section{Budget and scaling behavior}
+\Visual{14_budget_sweep}{Earlier packet-budget sweep.}{Error decreases as the selected forest grows. The geometric core and residual completion are separately visible. The sweep predates the final dyadic-dense grammar but uses the same global selection and refitting architecture.}
+
+\Visual{15_resolution_scaling}{Earlier fixed-budget resolution sweep.}{Runtime grows with pixel count under a fixed selected-packet budget. Approximation error is not monotone in resolution because the image geometry and finite candidate frontier change with raster size.}
+
+
+\InlinePart{VI. Singular Packet Decomposition}
+
+\section{Is the packet atlas a form of SVD?}
+The resemblance is real, but the two constructions begin at different places.
+
+A global image SVD starts from one fixed matrix representation of the image and finds the best approximation of a chosen rank. The perturbation atlas starts from a generative family of local geometric and smooth packets. It discovers a useful span before asking for canonical coordinates inside that span.
+
+The original packet search is therefore closer to orthogonal matching pursuit with a moving dictionary than to SVD. Singular Packet Decomposition enters after packet discovery and again during residual refinement.
+
+\Callout[PaleTeal]{The concise answer is: the moving atlas is not itself SVD. Once a packet span has been selected, its canonical orthogonal form is exactly an SVD. Local SVD modes can then be fed back into the moving atlas as new packets.}
+
+\section{Canonical singular packets of a selected atlas}
+Let
+\[
+P_K=\begin{bmatrix}p_1&\cdots&p_K\end{bmatrix}\in\R^{N\times K}
+\]
+be the selected spatial packet matrix, where $N=HW$. Let
+\[
+A_K\in\R^{K\times C}
+\]
+contain the channel coefficients. The packet-core reconstruction is
+\[
+\widehat F_K=P_KA_K.
+\]
+
+Take the thin SVD
+\[
+P_K=U_K\Sigma_KV_K^{\mathsf T}.
+\]
+Define
+\[
+B_K=\Sigma_KV_K^{\mathsf T}A_K.
+\]
+Then
+\[
+\boxed{\widehat F_K=U_KB_K.}
+\]
+
+\begin{definition}[Singular packet]
+A column of $U_K$ is a \emph{singular packet} of the selected atlas. It is an orthonormal coordinate direction obtained from the geometry-aware packet span rather than from the image matrix alone.
+\end{definition}
+
+\begin{theorem}[Exact singular-packet reparameterization]
+The singular-packet representation $U_KB_K$ is exactly equal to the original globally refitted packet reconstruction $P_KA_K$.
+\end{theorem}
+
+\begin{proof}
+Substitute the SVD of $P_K$:
+\[
+P_KA_K
+=U_K\Sigma_KV_K^{\mathsf T}A_K
+=U_KB_K.
+\]
+\end{proof}
+
+The computation gives
+\[
+\boxed{
+\max_{\text{four cases}}
+\|P_KA_K-U_KB_K\|_\infty
+=5.75\times10^{-14}.
+}
+\]
+This residual is floating-point roundoff.
+
+\section{Energy ordering and exact truncation inside the packet span}
+Write the rows of $B_K$ as $b_j^{\mathsf T}$. Since the columns of $U_K$ are orthonormal,
+\[
+\|\widehat F_K\|_F^2
+=\sum_j\|b_j\|_2^2.
+\]
+For a subset $J$ of singular coordinates,
+\[
+\left\|
+\widehat F_K-
+\sum_{j\in J}u_jb_j^{\mathsf T}
+\right\|_F^2
+=
+\sum_{j\notin J}\|b_j\|_2^2.
+\]
+Therefore the best $m$-coordinate truncation in this canonical packet basis keeps the $m$ rows with largest $\|b_j\|_2^2$.
+
+The first ten singular packets carry between $91.8\%$ and $96.0\%$ of packet-core energy in the four tests. Retaining $99\%$ requires between seventeen and thirty singular packets. The selected packet matrices remain full rank, but their condition numbers range from about seven to forty-eight. SVD therefore exposes meaningful redundancy even when no atom is exactly dependent.
+
+\Visual{53_packet_span_rank_condition}{Rank and conditioning of the selected packet spans.}{Every final packet matrix has numerical rank forty-four. The singular spectrum nevertheless shows substantial anisotropy. Canonical singular packets make that anisotropy explicit and give a stable orthonormal synthesis basis.}
+
+\section{Global image SVD}
+For comparison, reshape the image as
+\[
+F\in\R^{H\times(WC)}.
+\]
+Its SVD is
+\[
+F=U_F\Sigma_FV_F^{\mathsf T}.
+\]
+The rank-$r$ truncation
+\[
+F_r=U_{F,r}\Sigma_{F,r}V_{F,r}^{\mathsf T}
+\]
+is the best rank-$r$ approximation in Frobenius norm for this matricization.
+
+This is a strong and necessary baseline. It also has a different inductive bias.
+
+\begin{itemize}
+\item Global SVD modes are dense across the full image width and row direction.
+\item Packet atoms may be discontinuous, localized, compositional, and tied to explicit regions.
+\item A rank-one SVD mode stores roughly $H+WC+1$ scalar values.
+\item A simple packet may need only a small geometry descriptor and one coefficient vector, though seed-mask storage must be counted in any genuine compression claim.
+\end{itemize}
+
+\begin{boundary}[What SVD optimality means]
+The best rank theorem makes global SVD optimal inside the chosen global matrix-rank class. It does not make that class optimal among nonlinear geometric packet models, local rank models, sparse transforms, or mixed representations.
+\end{boundary}
+
+\section{Adaptive local singular packets}
+The residual layer now contains a second generative mechanism.
+
+Let $r_K$ be the residual after the geometric packet core. Let $\Omega$ be a dyadic cell or a bounding region inherited from a selected packet. Reshape the residual patch as
+\[
+R_\Omega\in\R^{h_\Omega\times(w_\Omega C)}.
+\]
+Take its leading SVD mode
+\[
+R_\Omega
+=\sigma_1u_1v_1^{\mathsf T}+\text{remaining terms}.
+\]
+Embed
+\[
+s_\Omega=\sigma_1u_1v_1^{\mathsf T}
+\]
+back into the full image and set it to zero outside $\Omega$.
+
+This embedded object is a local singular-packet proposal. It is generated from both a packet region and a data-adaptive rank-one mode.
+
+\begin{algorithm}[Adaptive singular-packet refinement]
+At each iteration:
+\begin{enumerate}
+\item rank candidate regions by residual energy divided by a parameter-cost penalty
+\item compute the leading local SVD mode in the strongest regions
+\item orthogonalize each candidate against the current geometric and singular-packet span
+\item select the best nondegenerate direction
+\item append its normalized orthogonal component
+\item update the exact global orthogonal projection
+\end{enumerate}
+\end{algorithm}
+
+\section{Monotone singular-packet gain}
+Let $Q$ have orthonormal columns spanning the current reconstruction space, and let $r=(I-QQ^{\mathsf T})f$ be the residual. For a candidate direction $d$, define
+\[
+q=(I-QQ^{\mathsf T})d.
+\]
+If $q\ne0$, append
+\[
+\widetilde q=\frac q{\|q\|_2}.
+\]
+The updated projection removes
+\[
+\langle r,\widetilde q\rangle\widetilde q
+\]
+from the residual.
+
+\begin{theorem}[Exact gain]
+The squared residual decreases by
+\[
+\boxed{
+\|r\|_2^2-\|r_{\mathrm{new}}\|_2^2
+=
+\frac{|\langle r,q\rangle|^2}{\|q\|_2^2}
+\ge0.
+}
+\]
+\end{theorem}
+
+The measured residual sequence was monotone in all four cases.
+
+\section{Pure SPD and hybrid SPD}
+Two models were tested.
+
+\begin{enumerate}
+\item \textbf{Pure SPD.} A constant packet is followed by twenty-two adaptive local singular packets.
+\item \textbf{Hybrid PR-SPD.} The recorded forty-four-packet geometric core is followed by twenty-two adaptive local singular packets.
+\end{enumerate}
+
+Pure SPD is directly comparable to a rank-twenty-two global SVD at the component level. Global SVD is better on all four tests, although the difference is small on the camera and astronaut images. This is consistent with global low-rank optimality.
+
+The hybrid answers a different question. It asks whether an explicit geometric span followed by local singular modes can use its parameters more efficiently than a global residual SVD.
+
+\section{Benchmark replay and metric correction}
+The final packet histories were replayed exactly rather than rerunning the expensive frontier search. During this audit, the reconstruction metric was corrected. The earlier helper globally rescaled any reconstruction that left $[0,1]$. That operation is not a decoder and can materially change the approximation. The revised metric uses bounded synthesis,
+\[
+\widehat f\longmapsto\min(1,\max(0,\widehat f)),
+\]
+without min--max renormalization.
+
+The replayed packet histories and the corrected bounded metric are the authoritative benchmark in this edition. This correction improves the reported packet-core results and makes the comparison reproducible from the stored history.
+
+\section{Direct comparison with SVD}
+The main comparison uses twenty-two global SVD modes or twenty-two adaptive singular packets. A second comparison matches approximate added scalar-parameter counts. One joint rank-one SVD mode for a $56\times56$ RGB image uses about
+\[
+56+3\cdot56+1=225
+\]
+scalars. A local singular packet uses
+\[
+h_\Omega+Cw_\Omega+6
+\]
+scalars under the descriptor used in the benchmark.
+
+\input{generated_spd_tables.tex}
+
+\Visual[0.45\textheight]{52_global_svd_spd_rmse}{Global comparison of SVD and packet methods.}{Global SVD is a strong pure low-rank model. The hybrid singular-packet method is strongest on the structured synthetic images and becomes competitive with global SVD on the natural images after the geometry core is supplemented by local singular modes.}
+
+\Visual[0.43\textheight]{54_residual_completion_scatter}{Residual completion methods.}{At similar added parameter counts, adaptive singular packets improve on parameter-matched global residual SVD in all four cases. At the same component count, global residual SVD remains slightly better in two cases because each global rank-one component carries more parameters.}
+
+\section{Synthetic geometry under SVD and SPD}
+\Visual[0.48\textheight]{36_synthetic_geometry_svd_spd_comparison}{SVD and singular-packet reconstructions of synthetic geometry.}{The geometric core already resolves the discontinuities. Local singular packets then model smooth fields and remaining local structure. The hybrid result reaches RMSE $0.003726$, compared with $0.036736$ for rank-twenty-two global SVD.}
+\Visual[0.42\textheight]{37_synthetic_geometry_singular_spectra}{Packet singular spectrum and hybrid convergence.}{The packet-span SVD is exact. The local singular-packet residual falls monotonically over twenty-two updates.}
+\Visual[0.42\textheight]{38_synthetic_geometry_rate_distortion}{Residual rate-distortion comparison for synthetic geometry.}{Global residual SVD is strongest at equal component count. Singular packets are stronger at approximately matched added parameter count because their modes concentrate on selected regions.}
+\Visual[0.46\textheight]{39_synthetic_geometry_singular_packet_supports}{Adaptive singular-packet supports for synthetic geometry.}{The selected rectangles move between broad field corrections and localized boundary or object regions. The singular vectors inside each region remain data adaptive.}
+
+\section{Synthetic text and curves under SVD and SPD}
+\Visual[0.48\textheight]{40_synthetic_text_curves_svd_spd_comparison}{SVD and singular-packet reconstructions of text and curves.}{The hybrid result reaches RMSE $0.003394$. Thin structures benefit from geometry packets before low-rank residual completion.}
+\Visual[0.42\textheight]{41_synthetic_text_curves_singular_spectra}{Packet singular spectrum and convergence for text and curves.}{Twenty-two singular packet coordinates retain $99\%$ of packet-core energy. The residual refinement remains monotone.}
+\Visual[0.42\textheight]{42_synthetic_text_curves_rate_distortion}{Residual rate-distortion comparison for text and curves.}{The global residual SVD has the lowest error at twenty-two full components. The local singular packets achieve lower error when the comparison is adjusted to similar parameter counts.}
+\Visual[0.46\textheight]{43_synthetic_text_curves_singular_packet_supports}{Adaptive singular supports for text and curves.}{Several selected regions follow narrow strokes and curved boundaries rather than spanning the entire image.}
+
+\section{Camera under SVD and SPD}
+\Visual[0.48\textheight]{44_camera_svd_spd_comparison}{SVD and singular-packet reconstructions of the camera image.}{Global SVD remains the strongest pure model. Hybrid SPD reduces packet-core RMSE from $0.047631$ to $0.014921$ and approaches the parameter-matched residual SVD result $0.015359$.}
+\Visual[0.42\textheight]{45_camera_singular_spectra}{Camera packet spectrum and singular refinement.}{The packet core has a moderately ill-conditioned span. Its top ten singular coordinates carry about $96\%$ of core energy.}
+\Visual[0.42\textheight]{46_camera_rate_distortion}{Camera residual rate-distortion comparison.}{DCT residual coordinates are inexpensive but weak at this small budget. Local and global singular modes capture natural-image variation more effectively.}
+\Visual[0.46\textheight]{47_camera_singular_packet_supports}{Adaptive camera singular-packet supports.}{The local rank modes repeatedly select high-variance subject and background regions.}
+
+\section{Astronaut under SVD and SPD}
+\Visual[0.48\textheight]{48_astronaut_svd_spd_comparison}{SVD and singular-packet reconstructions of the astronaut image.}{Pure SPD and global SVD are close. The hybrid reaches RMSE $0.032976$, slightly below the globally refitted residual-SVD result $0.033127$ at a similar parameter count.}
+\Visual[0.42\textheight]{49_astronaut_singular_spectra}{Astronaut packet spectrum and convergence.}{The packet span is better conditioned than in the other tests, but more singular coordinates are needed to retain the same energy because the image contains denser structure.}
+\Visual[0.42\textheight]{50_astronaut_rate_distortion}{Astronaut residual rate-distortion comparison.}{Global and local singular modes have nearly identical parameter-aware performance at the final budget.}
+\Visual[0.46\textheight]{51_astronaut_singular_packet_supports}{Adaptive astronaut singular-packet supports.}{The support path remains broader than in the synthetic cases because texture, shading, and object boundaries overlap throughout the image.}
+
+\section{What the SVD comparison changes}
+The comparison leads to a sharper architecture.
+
+\begin{enumerate}
+\item Use the perturbation grammar to discover discontinuities, objects, and local coordinate neighborhoods.
+\item Replace the selected nonorthogonal packet atoms by their canonical singular packets for stable synthesis and energy ordering.
+\item Generate local singular modes from residual regions where the semantic grammar is incomplete.
+\item Keep DCT or wavelet coordinates for very low-cost residual updates.
+\item Preserve the exact residual archive and the pixel-depth closure path.
+\end{enumerate}
+
+The resulting model is neither a conventional global SVD nor a fixed packet dictionary. It is a moving union of geometry-aware subspaces, each equipped with its own singular coordinates.
+
+\begin{definition}[Projector-Resolved Singular Packet Decomposition]
+PR-SPD is the decomposition obtained by selecting a finite geometry-aware packet span, replacing that span by its canonical singular coordinates, and extending it with adaptively localized singular modes drawn from the current residual.
+\end{definition}
+
+\InlinePart{VII. Intermediate two-seed AM-SPD}
+
+\section{Why a single forward decomposition is not enough}
+The first Singular Packet Decomposition adds one local rank-one mode at a time. That construction established that a local singular direction can be treated as a packet, orthogonalized against the full active span, and globally refitted without increasing the residual.
+
+It also commits early. A mode that looks useful at iteration five may become redundant after iteration twenty. A fixed dyadic tree has the opposite strength. It can optimize a complete multiscale pruning, but it is restricted to one region hierarchy. The refined algorithm therefore carries two completed decompositions and allows either one to be partially reopened.
+
+\begin{definition}[Adaptive multiscale singular packet]
+An adaptive multiscale singular packet is a tuple
+\[
+\mathcal P_\nu=(\Omega_\nu,o_\nu,r_\nu,U_\nu,C_\nu,\pi_\nu),
+\]
+where $\Omega_\nu$ is its support, $o_\nu$ is the selected unfolding, $r_\nu$ is its local rank, $U_\nu$ is the embedded orthonormal packet subspace, $C_\nu$ is its declared parameter cost, and $\pi_\nu$ records its parent or residual source.
+\end{definition}
+
+The finite reconstruction class is
+\[
+\boxed{
+F=P_KA_K+\sum_{\nu\in\mathcal T}U_\nu\gamma_\nu+R_{K,\mathcal T}.
+}
+\]
+The geometric packet core remains explicit. The singular packets carry local shading, texture, and unresolved correlation. The archive keeps everything not yet represented.
+
+\section{Local singular subspaces}
+A residual patch has shape $h\times w\times C$. The algorithm tests
+\[
+R_\Omega^{\mathrm{row}}\in\R^{h\times wC},
+\qquad
+R_\Omega^{\mathrm{column}}\in\R^{w\times hC},
+\qquad
+R_\Omega^{\mathrm{channel}}\in\R^{C\times hw}.
+\]
+For orientation $o$ and rank $r$,
+\[
+R_{\Omega,o,r}=\sum_{j=1}^{r}\sigma_j u_jv_j^{\mathsf T}.
+\]
+The best local rank theorem proved in Part VIII makes this the optimal rank-$r$ model for that local unfolding. The algorithm compares several unfoldings because low-rank truncation depends on how the local tensor is matricized.
+
+For the row unfolding, the declared scalar parameter count is
+\[
+C_{\Omega,\mathrm{row},r}=6+r(h+wC+1).
+\]
+The other orientations use the corresponding matrix dimensions. This is a consistent parameter model, not a complete entropy code.
+
+\section{Exact best basis on a finite tree}
+A dyadic tree is built over the residual. Each node can stop with one local singular model or split into all of its children. For rate multiplier $\lambda$,
+\[
+J_{\mathrm{keep}}(\nu,o,r)=E_{\nu,o,r}+\lambda C_{\nu,o,r}.
+\]
+
+\begin{theorem}[Finite-tree recursion]
+For a declared finite tree and additive local costs,
+\[
+J^*(\nu)=\min\left\{
+\min_{o,r}J_{\mathrm{keep}}(\nu,o,r),
+\sum_{\mu\in\operatorname{ch}(\nu)}J^*(\mu)
+\right\}
+\]
+returns a globally optimal pruning for the chosen $\lambda$.
+\end{theorem}
+
+\begin{proof}
+Every representation of a leaf is a stop model. Every representation of an internal node either stops at that node or represents every child. The induction hypothesis supplies the optimal value in each child subtree. Taking the smaller complete alternative proves the recursion.
+\end{proof}
+
+The implementation follows the finite rate--distortion path, keeps each distinct pruning that appears, and chooses the smallest exact residual that fits the inherited budget. The theorem applies to this declared tree only.
+
+\section{Moving residual regions}
+The tree is not the whole atlas. During backward replacement, the finite frontier is regenerated from:
+\begin{itemize}
+\item dyadic rectangles
+\item packet bounding boxes
+\item connected components of large residual magnitude
+\item connected components of large residual gradient
+\item translated, expanded, and contracted descendants
+\end{itemize}
+A support can become useful only after neighboring packets have been removed. The moving stage lets the algorithm leave the initial tree.
+
+\section{Exact post-projection gain}
+Let $B$ be the active orthonormal basis and let $D$ contain the raw directions of one candidate block. Remove the represented span:
+\[
+D_\perp=(I-BB^{\mathsf T})D.
+\]
+Let $Q$ be an orthonormal basis of $\operatorname{range}D_\perp$. For current residual $r$,
+\[
+\boxed{G(D\mid B)=\|Q^{\mathsf T}r\|_2^2.}
+\]
+
+\begin{proposition}[Block improvement]
+After adding $Q$ and globally refitting,
+\[
+\|r_{\mathrm{new}}\|_2^2=\|r\|_2^2-G(D\mid B).
+\]
+\end{proposition}
+
+\begin{proof}
+The new basis directions are orthonormal and orthogonal to the old span. Pythagoras gives the exact reduction.
+\end{proof}
+
+Candidate ranking uses
+\[
+\operatorname{score}(D)=\frac{G(D\mid B)}{C(D)^\alpha}.
+\]
+The gain is exact. The cost exponent is a declared search preference.
+
+\section{Backward replacement}
+Suppose a seed decomposition contains directions $q_j$ with costs $C_j$. Define the seed value
+\[
+\eta_j=\frac{|\langle F,q_j\rangle|^2}{C_j}.
+\]
+For a reopened fraction $\rho$, the algorithm removes the lowest-value directions until approximately $\rho$ of the added budget has been released. It then regenerates residual regions, inserts new variable-rank blocks, and globally refits the complete surviving span.
+
+The cycle is
+\[
+\boxed{
+\text{forward decomposition}
+\longrightarrow
+\text{weak-mode deletion}
+\longrightarrow
+\text{moving support search}
+\longrightarrow
+\text{global refit}.
+}
+\]
+The deletion order is a heuristic. Every completed candidate is judged by its exact residual.
+
+\section{Two seed families}
+The first seed is the original greedy rank-one SPD. It remains effective when a small number of isolated modes explain the residual.
+
+The second seed is the exact finite-tree best basis. It is stronger when broad and local structures should be resolved at different depths before the moving search begins.
+
+Each seed is retained unchanged and is also tested at several reopened fractions.
+
+\begin{theorem}[Intermediate two-seed nonregression]
+Let $\mathfrak F$ contain the unchanged greedy seed, the unchanged tree seed, and all declared backward-replacement candidates. If
+\[
+\widehat F_* = \arg\min_{\widehat F\in\mathfrak F}\|F-\widehat F\|_F,
+\]
+then
+\[
+\|F-\widehat F_*\|_F
+\le
+\min\{\|F-\widehat F_{\mathrm{greedy}}\|_F,\|F-\widehat F_{\mathrm{tree}}\|_F\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Both unchanged seeds belong to $\mathfrak F$. The minimum over the portfolio cannot exceed either included value.
+\end{proof}
+
+\section{Two-seed benchmark that led to the final model}
+This intermediate benchmark retains the four $56\times56$ images and the added-parameter budgets from the earlier SPD comparison. It records the two-seed stage that motivated the exact-budget and three-seed final formulation in the next part.
+
+\input{generated_am_spd_v2_tables.tex}
+
+\Visual[0.46\textheight]{98_final_am_spd_global_rmse}{Final RMSE comparison.}{AM-SPD improves on the original SPD and the approximately parameter-matched residual SVD in every case. The largest gains occur on the two natural images.}
+\Visual[0.42\textheight]{99_final_am_spd_improvement}{Improvement relative to the original SPD.}{Backward replacement reduces bounded RMSE by $6.9\%$, $4.0\%$, $61.5\%$, and $67.6\%$ on the four images.}
+\Visual[0.42\textheight]{100_final_am_spd_portfolio_structure}{Winning seeds and reopened fractions.}{Synthetic geometry selects the greedy seed. The other three images select the tree seed. The reopened fraction ranges from $12\%$ to $35\%$.}
+
+\section{Synthetic geometry}
+The synthetic-geometry result starts from the greedy seed. Four directions are removed. Five blocks contribute six replacement directions. The final model uses $2218$ of $2241$ parameters.
+
+\Visual[0.47\textheight]{78_synthetic_geometry_final_am_spd}{Final synthetic-geometry reconstruction.}{The exact RMSE falls from $0.003726$ to $0.003470$. The residual panels show the structure recovered by the backward step.}
+\Visual[0.42\textheight]{79_synthetic_geometry_two_seed_portfolio}{Synthetic-geometry portfolio path.}{The greedy seed remains stronger than the tree seed. Reopening $35\%$ of its added budget gives the best final candidate.}
+\Visual[0.43\textheight]{80_synthetic_geometry_final_supports}{Synthetic-geometry replacement supports.}{The selected blocks revisit supports that were not retained by the original forward path.}
+\Visual[0.40\textheight]{81_synthetic_geometry_final_rmse}{Synthetic-geometry seed and final error.}{The final bar records a strict improvement while staying below the inherited parameter ceiling.}
+\Visual[0.40\textheight]{82_synthetic_geometry_final_action}{Synthetic-geometry action summary.}{The final representation combines eighteen retained seed directions with six new local components.}
+
+\section{Synthetic text and curves}
+The text-and-curves result starts from the tree seed. Fifteen directions are reopened, and four blocks contribute seven replacement components. The final model uses $2602$ of $2639$ parameters.
+
+\Visual[0.47\textheight]{83_synthetic_text_curves_final_am_spd}{Final text-and-curves reconstruction.}{The exact RMSE falls from $0.003394$ to $0.003260$. The improvement is smaller than on the natural images because the original geometry-aware representation was already strong.}
+\Visual[0.42\textheight]{84_synthetic_text_curves_two_seed_portfolio}{Text-and-curves portfolio path.}{The tree family becomes best after reopening $25\%$ of its added budget.}
+\Visual[0.43\textheight]{85_synthetic_text_curves_final_supports}{Text-and-curves replacement supports.}{Residual-derived regions concentrate on strokes, curved boundaries, and unresolved local fields.}
+\Visual[0.40\textheight]{86_synthetic_text_curves_final_rmse}{Text-and-curves seed and final error.}{The backward-forward step produces a strict reduction under the original budget.}
+\Visual[0.40\textheight]{87_synthetic_text_curves_final_action}{Text-and-curves action summary.}{The final candidate retains thirty-eight tree directions and adds seven replacement components.}
+
+\section{Camera}
+The camera result starts from the tree seed and reopens $12\%$ of the budget. Five directions are removed. Six moving blocks contribute seven new components. The final model uses $2121$ of $2123$ parameters.
+
+\Visual[0.47\textheight]{88_camera_final_am_spd}{Final camera reconstruction.}{The tree seed lowers RMSE substantially. Backward replacement lowers it again to $0.005738$ and raises SSIM to $0.986003$.}
+\Visual[0.42\textheight]{89_camera_two_seed_portfolio}{Camera portfolio path.}{The tree family dominates the greedy family throughout the tested range. The best point occurs after a moderate reopening of the tree budget.}
+\Visual[0.43\textheight]{90_camera_final_supports}{Camera replacement supports.}{The new blocks target residual regions rather than rebuilding the whole image.}
+\Visual[0.40\textheight]{91_camera_final_rmse}{Camera seed and final error.}{The final error is below the original SPD, the tree seed, and the matched residual SVD.}
+\Visual[0.40\textheight]{92_camera_final_action}{Camera action summary.}{Most tree directions survive. A small number of new local modes produces the final reduction.}
+
+\section{Astronaut}
+The astronaut result also begins from the tree seed and reopens $12\%$ of the budget. Nine directions are removed. Four moving blocks add five components. The final representation uses $5017$ of $5060$ parameters.
+
+\Visual[0.47\textheight]{93_astronaut_final_am_spd}{Final astronaut reconstruction.}{Bounded RMSE falls from $0.032976$ to $0.010691$. The final SSIM is $0.994331$.}
+\Visual[0.42\textheight]{94_astronaut_two_seed_portfolio}{Astronaut portfolio path.}{The exact tree is the stronger initial representation. Backward replacement produces a further large improvement.}
+\Visual[0.43\textheight]{95_astronaut_final_supports}{Astronaut replacement supports.}{The selected supports are mixed scale and residual driven.}
+\Visual[0.40\textheight]{96_astronaut_final_rmse}{Astronaut seed and final error.}{The final model reduces bounded RMSE by $67.6\%$ relative to the original SPD.}
+\Visual[0.40\textheight]{97_astronaut_final_action}{Astronaut action summary.}{The final candidate preserves fifty-seven tree directions and spends the reopened budget on five new components.}
+
+\section{What the two-seed stage established}
+The final portfolio beats the approximately parameter-matched residual SVD in all four reported cases. This does not contradict global SVD optimality. The residual SVD is optimal in one fixed global unfolding and rank. AM-SPD searches a finite union of supports, depths, unfoldings, ranks, seed families, and backward-replacement paths.
+
+The exact tree recursion is globally optimal only for the declared tree. The final selector is globally exact only over the declared finite portfolio. The moving replacement stage remains greedy.
+
+\begin{boundary}[Coding boundary]
+The reported parameter count measures the added singular representation consistently across methods. It does not yet include a complete entropy-coded cost for the inherited geometric packet core, the seed identifier, or every support descriptor.
+\end{boundary}
+
+\begin{boundary}[Closure boundary]
+At every stage,
+\[
+F=\widehat F+R_{\mathrm{archive}}.
+\]
+Sparse approximation and exact finite closure remain separate claims.
+\end{boundary}
+
+\InlinePart{VIII. Final formulation, complete proofs, and stress tests}
+
+\section{The final finite model}
+AM-SPD is easiest to understand as a careful separation of three jobs.
+
+\begin{enumerate}
+\item The geometric atlas proposes supports and interpretable packets.
+\item Local singular models choose the rank and orientation inside each support.
+\item The residual archive keeps every value that the finite model has not yet explained.
+\end{enumerate}
+
+For a selected tree $\mathcal T$, write
+\[
+\widehat F_{\mathcal T}
+=
+P_KA_K
++
+\sum_{\nu\in\mathcal T}
+M_{\Omega_\nu}
+\left(
+U_\nu\Sigma_\nu V_\nu^{\mathsf T}
+\right).
+\]
+The finite approximation is allowed to be sparse or lossy. The complete image is not:
+\[
+\boxed{
+F=\widehat F_{\mathcal T}+R_{\mathrm{archive}}.
+}
+\]
+This identity is the reconstruction contract carried through the whole method.
+
+\begin{definition}[Final singular packet]
+A singular packet is a tuple
+\[
+\mathcal P_\nu
+=
+(\Omega_\nu,o_\nu,r_\nu,Q_\nu,\sigma_\nu,C_\nu,\pi_\nu),
+\]
+where $\Omega_\nu$ is the support, $o_\nu$ is the unfolding, $r_\nu$ is the local rank, $Q_\nu$ is the embedded orthonormal packet basis, $\sigma_\nu$ stores the selected singular values, $C_\nu$ is the declared cost, and $\pi_\nu$ records its parent or residual source.
+\end{definition}
+
+A packet is therefore more than one singular vector. It is a supported local subspace with its own scale, rank, coordinate orientation, cost, and genealogy.
+
+\section{Best local rank model}
+Let $A\in\R^{m\times n}$ be one unfolded residual patch with singular values
+\[
+\sigma_1\ge\sigma_2\ge\cdots\ge0.
+\]
+Define
+\[
+A_r=\sum_{j=1}^{r}\sigma_j u_jv_j^{\mathsf T}.
+\]
+
+\begin{theorem}[Best local rank-$r$ packet]
+For every matrix $B$ of rank at most $r$,
+\[
+\boxed{
+\|A-A_r\|_F^2
+=
+\sum_{j>r}\sigma_j^2
+\le
+\|A-B\|_F^2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let $P$ be the orthogonal projector onto the column space of $B$. Since $PB=B$,
+\[
+A-B=(I-P)A+(PA-B).
+\]
+The two terms are orthogonal in Frobenius inner product, so
+\[
+\|A-B\|_F^2
+=
+\|(I-P)A\|_F^2+
+\|PA-B\|_F^2
+\ge
+\|(I-P)A\|_F^2.
+\]
+Write $AA^{\mathsf T}=\sum_j\sigma_j^2u_ju_j^{\mathsf T}$. Then
+\[
+\|PA\|_F^2
+=
+\operatorname{tr}(PAA^{\mathsf T})
+=
+\sum_j\sigma_j^2\|Pu_j\|_2^2.
+\]
+The weights $\|Pu_j\|_2^2$ lie in $[0,1]$ and sum to $\operatorname{rank}P\le r$. Their weighted sum is largest when the first $r$ weights are one and the rest are zero. Hence
+\[
+\|PA\|_F^2\le\sum_{j=1}^{r}\sigma_j^2.
+\]
+Therefore
+\[
+\|(I-P)A\|_F^2
+\ge
+\sum_{j>r}\sigma_j^2.
+\]
+Taking $P$ onto $\operatorname{span}\{u_1,\ldots,u_r\}$ and $B=A_r$ gives equality.
+\end{proof}
+
+This theorem is applied independently to the row, column, and channel unfoldings. The orientation is part of the packet search because the same local tensor can have very different ranks under different matricizations.
+
+\section{Exact post-projection block gain}
+Let $V$ be the current reconstruction space, let $P_V$ be its orthogonal projector, and let
+\[
+r=(I-P_V)F
+\]
+be the current residual. A candidate block has raw direction matrix $D$. Remove its represented component:
+\[
+D_\perp=(I-P_V)D.
+\]
+Let $Q$ have orthonormal columns spanning $\operatorname{range}D_\perp$.
+
+\begin{theorem}[Exact block gain]
+After enlarging the active space from $V$ to $V\oplus\operatorname{range}Q$ and refitting globally,
+\[
+\boxed{
+\|r\|_2^2-\|r_{\mathrm{new}}\|_2^2
+=\|Q^{\mathsf T}r\|_2^2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The columns of $Q$ are orthonormal and orthogonal to $V$. Thus
+\[
+r=QQ^{\mathsf T}r+(I-QQ^{\mathsf T})r
+\]
+is an orthogonal decomposition. The second term is the new residual. Pythagoras gives
+\[
+\|r\|_2^2
+=\|Q^{\mathsf T}r\|_2^2+
+\|r_{\mathrm{new}}\|_2^2.
+\]
+\end{proof}
+
+The gain is exact. The complexity exponent used to rank candidates is a search preference, not part of the theorem.
+
+\begin{corollary}[Monotone global refit]
+If the accepted active spaces satisfy
+\[
+V_0\subseteq V_1\subseteq\cdots,
+\]
+then
+\[
+\boxed{
+\|F-P_{V_{k+1}}F\|_2
+\le
+\|F-P_{V_k}F\|_2.
+}
+\]
+\end{corollary}
+
+\section{Exact integer-budget tree optimization}
+The earlier implementation swept a Lagrange multiplier. That traces useful rate--distortion points, but it can skip a Pareto state that matters at one exact integer budget. The final tree engine stores the nondominated cost--error frontier directly.
+
+For a node $\nu$ and integer budget $B$, let $E_\nu(B)$ be the smallest additive local squared error achievable in the subtree rooted at $\nu$. A zero-rank model is included with cost zero, so every budget is feasible.
+
+If $\mathcal M_\nu$ is the finite set of stop models at $\nu$, then
+\[
+\boxed{
+E_\nu(B)
+=
+\min\left\{
+\min_{\substack{m\in\mathcal M_\nu\\ C_m\le B}}E_m,
+\quad
+\min_{B_1+\cdots+B_s\le B}
+\sum_{j=1}^{s}E_{\mu_j}(B_j)
+\right\},
+}
+\]
+where $\mu_1,\ldots,\mu_s$ are the children of $\nu$.
+
+\begin{theorem}[Exact Pareto tree theorem]
+For the declared finite tree, local unfolding family, rank range, additive squared-error model, and integer cost model, the recursion above returns the minimum local error at every budget.
+\end{theorem}
+
+\begin{proof}
+At a leaf, every admissible representation is one local stop model, so the formula is exact. Assume it is exact for the children of an internal node. Any complete representation of the node has exactly two forms. It either stops at the node with one model, or it splits and represents every child. In the split case, the total cost and local squared error are sums of the child values. The induction hypothesis makes each child allocation optimal. Taking the minimum over the stop choices and every integer budget allocation therefore covers every admissible pruning and chooses the best one.
+\end{proof}
+
+The implementation stores only nondominated states. A state $(C_2,E_2)$ is discarded when another state satisfies
+\[
+C_1\le C_2,
+\qquad
+E_1\le E_2,
+\]
+with at least one strict inequality. This pruning changes neither the answer nor the proof.
+
+\Visual[0.47\textheight]{101_exact_budget_frontiers}{Exact Pareto frontiers for the four benchmark images.}{Each point is a nondominated local tree model. The dashed line is the inherited budget. The frontier records every cost level that can matter, rather than only the points exposed by a Lagrange multiplier.}
+
+\Visual[0.42\textheight]{103_frontier_size_runtime}{Frontier size and exact-tree runtime.}{The four exact frontiers contain between 457 and 1,378 states. Their measured construction time ranges from about a quarter second to under two seconds in the reported environment.}
+
+\section{Local tree optimality and global refitting}
+The exact tree theorem concerns the additive local residual model. Once a pruning has been chosen, its directions are placed beside the inherited geometric core and globally orthogonalized. This second projection may improve the reconstruction because it can exploit interactions that the additive local objective intentionally ignores.
+
+\begin{proposition}[Global refit cannot hurt a selected tree]
+Let $\widehat F_{\mathrm{local}}$ be the additive tree reconstruction and let $W$ be the span of the inherited core and every selected local direction. Then
+\[
+\boxed{
+\|F-P_WF\|_F
+\le
+\|F-\widehat F_{\mathrm{local}}\|_F.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The additive reconstruction belongs to $W$. Orthogonal projection is the least-squares minimizer over $W$, so its error cannot exceed the error of any other member of $W$.
+\end{proof}
+
+\section{Three-seed replacement and nonregression}
+The final portfolio contains three complete seeds:
+
+\begin{enumerate}
+\item the original greedy rank-one SPD path
+\item the Lagrange-sweep tree path
+\item the exact-budget Pareto tree path
+\end{enumerate}
+
+Each unchanged seed is retained. Each is also tested after reopening several fractions of its added budget and refilling that budget with moving residual blocks.
+
+\begin{theorem}[Finite-portfolio nonregression]
+Let $\mathfrak F$ contain every unchanged seed and every completed replacement candidate. If
+\[
+\widehat F_*
+=
+\arg\min_{G\in\mathfrak F}\|F-G\|_F,
+\]
+then $\widehat F_*$ is no worse than any seed included in $\mathfrak F$.
+\end{theorem}
+
+\begin{proof}
+Every seed is an element of the set over which the minimum is taken.
+\end{proof}
+
+The final selector is exact over this finite portfolio. The moving support proposals inside a replacement run remain greedy.
+
+\Visual[0.43\textheight]{102_exact_budget_comparison}{Exact-budget tree and final three-seed portfolio.}{The exact tree improves the Lagrange tree on the text-and-curves and astronaut images, while the two tree seeds tie on camera. The replacement portfolio lowers the final error again.}
+
+\section{Singular-value stability certificate}
+A packet rank should not change because of a perturbation smaller than the gap that separates retained and discarded modes.
+
+\begin{lemma}[Singular values are Lipschitz]
+For matrices $A$ and $E$ of the same shape,
+\[
+\boxed{
+|\sigma_j(A+E)-\sigma_j(A)|
+\le
+\|E\|_2
+}
+\]
+for every $j$.
+\end{lemma}
+
+\begin{proof}
+Use the min--max formula
+\[
+\sigma_j(A)
+=
+\min_{\dim S=n-j+1}
+\max_{x\in S,\ \|x\|_2=1}
+\|Ax\|_2.
+\]
+For every unit vector,
+\[
+\|(A+E)x\|_2
+\le
+\|Ax\|_2+\|E\|_2.
+\]
+Taking the max and then the min gives
+\[
+\sigma_j(A+E)\le\sigma_j(A)+\|E\|_2.
+\]
+Swap $A$ and $A+E$ to obtain the reverse inequality.
+\end{proof}
+
+\begin{corollary}[Stable rank decision]
+If
+\[
+\gamma=\sigma_r(A)-\sigma_{r+1}(A)>2\|E\|_2,
+\]
+then the midpoint threshold between $\sigma_r(A)$ and $\sigma_{r+1}(A)$ selects the same rank for $A$ and $A+E$.
+\end{corollary}
+
+The singular gap is therefore a natural confidence score for a local packet rank.
+
+\section{Final four-image result}
+The final run uses the exact-budget tree as a third seed and retains the two earlier seeds. Two images select the exact-budget seed. Two select the Lagrange tree. The unchanged greedy seed remains available but is not selected in this final run.
+
+\input{generated_am_spd_final_tables.tex}
+
+The final bounded RMSE values are
+\[
+\boxed{
+0.003155,\quad
+0.003141,\quad
+0.005064,\quad
+0.010691.
+}
+\]
+Relative to the original SPD, the bounded-error reductions are approximately
+\[
+15.3\%,\quad7.5\%,\quad66.1\%,\quad67.6\%.
+\]
+The mean exact-error reduction across the four cases is $39.2\%$.
+
+\section{Ten-case stress suite}
+The additional suite uses five synthetic images and five natural images at $32\times32$ under one common parameter budget. It compares:
+
+\begin{itemize}
+\item one global SVD unfolding
+\item a row-only rank-one tree
+\item a row/column rank-one tree
+\item the full row/column/channel variable-rank tree
+\end{itemize}
+
+The full model improves on both rank-one tree ablations in all ten cases. It beats the parameter-matched global SVD in seven of ten cases. The median error ratio is
+\[
+\frac{\mathrm{RMSE}_{\mathrm{AM\text{-}SPD}}}{\mathrm{RMSE}_{\mathrm{global\ SVD}}}
+=0.947,
+\]
+and the median ratio to the row-only rank-one tree is
+\[
+0.624.
+\]
+
+\Visual[0.45\textheight]{101_final_stress_rmse}{Ten-case stress comparison.}{No single model wins every image. The full local model is strongest on seven cases, ties the exact low-rank checkerboard case, and loses to global SVD on two highly global textures.}
+
+\Visual[0.40\textheight]{102_final_stress_ablation_gain}{Ablation gain from orientation and rank adaptation.}{Every case benefits or ties when column, channel, and higher-rank local packets are added to the row-only rank-one tree.}
+
+\Visual[0.43\textheight]{103_final_stress_structure}{Selected orientations, ranks, and budgets.}{The optimizer uses different local structures for different images. Channel packets become important for color blocks, the moon, and natural images.}
+
+\Visual[0.49\textheight]{104_final_stress_reconstructions}{Representative stress-suite reconstructions.}{The diagonal edge benefits from local support. The oriented texture remains difficult. Natural images show the tradeoff between one global low-rank model and many local low-rank packets.}
+
+\section{Noise behavior is not automatic denoising}
+A fixed-budget approximation can denoise when its model bias is smaller than the noise being removed. It can also be worse than the noisy input when the clean-image approximation error already exceeds the noise level.
+
+The final noise stress contains 36 noisy scenarios across four images, three noise levels, and three random seeds. The tree is closer to the clean image than the noisy input in nine scenarios. The mean selection Jaccard score is $0.622$. The diagonal-edge model denoises reliably at the two larger noise levels. The oriented texture and astronaut remain approximation limited at this budget.
+
+\Visual[0.47\textheight]{105_final_noise_stress}{Noise stress under one fixed budget.}{The result is intentionally mixed. The tree suppresses larger noise on the simpler edge image and on the camera at the highest noise level. It is not a universal denoiser.}
+
+\Visual[0.40\textheight]{106_final_noise_selection}{Selection stability and denoising gain.}{Support choices remain moderately stable, but the clean support is not frozen. A noise-aware objective would need an explicit statistical penalty rather than the deterministic approximation objective used here.}
+
+\section{Comprehensive verification}
+The final property suite covers exact matricization round trips, local SVD optimality, orthogonal-complement construction, exact block gain, monotone refitting, exact budget dynamic programming, spatial partitioning, singular-gap stability, archive identities, portfolio nonregression, and consistency of every reported benchmark.
+
+All
+\[
+\boxed{12{,}154/12{,}154}
+\]
+property scenarios passed. The exact tree recursion alone was compared with brute-force enumeration at every budget in $120$ randomized trees, giving $9{,}960$ exact budget checks.
+
+The earlier layers also remain intact:
+
+\begin{itemize}
+\item sixteen core packet-atlas groups passed
+\item eight Singular Packet Decomposition groups passed
+\item fifteen AM-SPD portfolio groups passed
+\item eleven final proof and stress groups passed
+\end{itemize}
+
+The largest residual in the new property suite was below $10^{-13}$.
+
+\section{What is now exact and what remains heuristic}
+The final formulation has a clean boundary.
+
+\begin{itemize}
+\item The local rank-$r$ model is exact for its declared unfolding and support.
+\item The integer-budget tree frontier is exact for the declared finite tree and additive local objective.
+\item Global refitting is exact least squares on the selected span.
+\item The finite three-seed portfolio selector is exact over the candidates that were actually completed.
+\item Backward deletion order and moving residual-region proposals remain heuristic.
+\item The scalar parameter count remains a storage proxy rather than a complete entropy-coded rate.
+\item Exact image closure still comes from the residual archive or complete finite coordinates.
+\end{itemize}
+
+This is the final finite theory claimed by the present implementation. It is strong enough to prove the optimization statements actually used by the code, while keeping open-ended geometry learning separate from those proofs.
+
+\InlinePart{IX. What ``endless'' does and does not mean}
+
+
+\section{Endless is a generation property}
+The atlas is endless in three senses.
+
+\begin{enumerate}
+\item \textbf{Parameter depth.} Dyadic translations, rotations, scales, boundary amplitudes, and phases continue to finer resolutions.
+\item \textbf{Compositional depth.} Every selected combination can become a new parent.
+\item \textbf{Spatial depth.} The quadtree continues until singleton pixels.
+\end{enumerate}
+
+No finite computation visits all packets. The algorithm remains an anytime best-first traversal of a countably infinite tree.
+
+\section{Why this helps unknown packets}
+A fixed dictionary fails when the true object lies between templates. The perturbation atlas replaces nearest-template selection by a local coordinate search. Residual seeds allow the search to leave its original neighborhoods. Binary composition allows several local pieces to become one global packet. The dyadic fallback prevents a permanently unexplained region from becoming unreachable.
+
+This changes the reconstruction problem from
+\[
+\text{``Which stored packet is the object?''}
+\]
+to
+\[
+\boxed{
+\text{``Which finite path through the generative atlas explains the object to the required tolerance?''}
+}
+\]
+
+\section{What is still missing}
+The current implementation is not yet a universal geometry learner. Several important directions remain.
+
+\begin{itemize}
+\item Learn boundary deformations from residual gradients rather than evaluating a finite perturbation frontier.
+\item Introduce spline, level-set, and neural implicit packets while keeping exact residual accounting.
+\item Use multiscale branch-and-bound to certify that no unvisited packet can beat the current candidate gain.
+\item Extend spatial masks to video tubes and three-dimensional surfaces.
+\item Replace repeated normal-equation solves with incremental QR or Cholesky updates.
+\item Develop a rate-distortion theory for the semantic packet forest and residual archive.
+\item Extend singular packets from local matrix rank to multiscale tensor and video-tube ranks.
+\item Account for seed-mask transmission cost in a complete rate-distortion code.
+\end{itemize}
+
+\begin{boundary}[No universal finite-budget sparsity claim]
+The existence of a countably infinite dense generator and an exact pixel fallback does not imply that every image has a short representation in the semantic grammar. The astronaut experiment demonstrates this boundary directly.
+\end{boundary}
+
+\begin{boundary}[No automatic unknown-boundary theorem]
+Residual-driven perturbation can improve an approximate geometry, but exact unknown continuous-boundary recovery still requires identifiability, sampling, noise, and stability hypotheses. When those hypotheses fail, the residual remains the correct certificate.
+\end{boundary}
+
+\section{The final reconstruction contract}
+The proposed full-image architecture is
+\[
+\boxed{
+\begin{aligned}
+f
+&=
+\underbrace{\sum_{k=1}^{K}p_k\gamma_k}_{\text{generated geometric and local-field core}}
++
+\underbrace{S_Mr_K}_{\text{DCT, wavelet, or singular residual packets}}
++
+\underbrace{r_{K,L}}_{\text{exact remaining archive}}.
+\end{aligned}
+}
+\]
+
+At any time, the last term may be preserved exactly, further modeled, or closed by complete finite coordinates. The calculus therefore does not have to choose between semantic approximation and lossless reconstruction. It records both.
+
+\section{Conclusion}
+AM-SPD now has a complete finite formulation.
+
+\[
+\boxed{
+\begin{gathered}
+\text{moving geometric atlas}
+\longrightarrow
+\text{three complete singular seeds}
+\longrightarrow
+\text{exact integer-budget tree frontiers}\\
+\longrightarrow
+\text{backward budget reopening}
+\longrightarrow
+\text{moving variable-rank replacement}
+\longrightarrow
+\text{exact finite portfolio selection}\\
+\longrightarrow
+\text{residual archive or complete finite closure}.
+\end{gathered}
+}
+\]
+
+The central improvement is not simply a lower error number. Early decisions are no longer permanent. The tree can choose mixed depth and mixed rank under an exact budget. The portfolio can keep a strong seed intact or reopen only the part that has become inefficient. Every accepted span is refitted globally. Every finite reconstruction still carries its exact residual.
+
+The final bounded RMSE values are
+\[
+0.003155,\quad0.003141,\quad0.005064,\quad0.010691.
+\]
+They improve on the original SPD by roughly $15.3\%$, $7.5\%$, $66.1\%$, and $67.6\%$. The ten-case stress suite shows where the model helps and where a single global SVD remains stronger. The noise study shows that deterministic approximation is not automatically denoising. Those negative results are part of the final account rather than exceptions hidden from it.
+
+The exact claims are now limited to their proper domains. The local rank theorem is exact for one support and unfolding. The budget recursion is exact for the declared finite tree and additive local objective. The final selector is exact over the completed finite portfolio. Moving region generation remains heuristic. The parameter count remains a proxy until a full entropy code is specified.
+
+The reconstruction identity does not change:
+\[
+\boxed{F=\widehat F+R_{\mathrm{archive}}.}
+\]
+The finite model explains as much structure as its budget allows. The archive preserves the rest without ambiguity.
+
+\appendix
+
+\section{Verification ledger}
+The final release keeps every earlier verification layer and adds a proof-oriented property suite.
+
+\begin{itemize}
+\item sixteen core packet-atlas groups pass
+\item eight Singular Packet Decomposition groups pass
+\item fifteen AM-SPD portfolio groups pass
+\item eleven final proof and stress groups pass
+\item all $12{,}154$ property scenarios pass
+\end{itemize}
+
+The property suite includes $9{,}960$ exact budget comparisons between the Pareto recursion and brute-force tree enumeration. It also checks local SVD tail errors, orientation round trips, block-gain identities, orthogonal complements, monotone refits, region partitions, singular-gap stability, exact archive identities, and portfolio nonregression. The largest new numerical residual is below $10^{-13}$.
+
+
+
+\section{Machine-readable outputs}
+The release contains:
+\begin{itemize}
+\item \texttt{results/infinite\_packet\_results.json}
+\item \texttt{results/tests\_output.json}
+\item \texttt{tables/benchmark\_metrics.csv}
+\item \texttt{tables/packet\_history.csv}
+\item \texttt{tables/budget\_experiment.csv}
+\item \texttt{tables/scaling\_experiment.csv}
+\item ninety-two vector-PDF figures and ninety-two matching PNG files in the final source tree
+\item \texttt{results/singular\_packet\_results.json}
+\item \texttt{results/singular\_packet\_verification.json}
+\item \texttt{tables/svd\_spd\_metrics.csv}
+\item \texttt{tables/singular\_packet\_modes.csv}
+\item \texttt{results/adaptive\_multiscale\_spd\_v2\_results.json}
+\item \texttt{tables/am\_spd\_v2\_summary.csv}
+\item four per-case trial tables and result ledgers
+\item \texttt{results/adaptive\_multiscale\_spd\_final\_results.json}
+\item \texttt{results/am\_spd\_final\_stress.json}
+\item \texttt{results/am\_spd\_final\_noise\_stress.json}
+\item \texttt{results/am\_spd\_final\_verification.json}
+\item \texttt{tables/am\_spd\_final\_summary.csv}
+\item \texttt{tables/am\_spd\_final\_stress.csv}
+\item \texttt{tables/am\_spd\_final\_noise\_stress.csv}
+\end{itemize}
+
+\section{Reproduction commands}
+From the source directory:
+\begin{lstlisting}[language=bash,numbers=none]
+python infinite_packet_gibbs_reconstruction.py --tests-only
+python verify_singular_packet_decomposition.py
+python verify_am_spd.py
+python adaptive_multiscale_spd_final.py --base .
+python aggregate_am_spd_final_results.py
+python am_spd_final_stress.py --base . --size 32 --budget 720
+python am_spd_noise_stress_small.py
+python verify_am_spd_final.py
+python generate_am_spd_final_tables.py
+python generate_am_spd_final_figures.py
+pdflatex -interaction=nonstopmode -halt-on-error Projector_Resolved_Adaptive_Multiscale_Singular_Packet_Decomposition_Final.tex
+pdflatex -interaction=nonstopmode -halt-on-error Projector_Resolved_Adaptive_Multiscale_Singular_Packet_Decomposition_Final.tex
+pdflatex -interaction=nonstopmode -halt-on-error Projector_Resolved_Adaptive_Multiscale_Singular_Packet_Decomposition_Final.tex
+\end{lstlisting}
+
+The complete benchmark is intentionally more expensive than the verification suite because it repeatedly evaluates image-derived candidate frontiers and globally refits four reconstructions.
+
+\section{Core implementation}
+The following program contains the infinite packet grammar, global solver, exact fallback, original benchmarks, tests, figures, tables, and result writer.
+
+\lstinputlisting{infinite_packet_gibbs_reconstruction.py}
+
+\section{Singular Packet Decomposition extension}
+The following program replays the final packet histories, constructs the canonical packet-span SVD, generates adaptive local singular packets, performs the direct SVD comparisons, and writes the revised figures and tables.
+
+\lstinputlisting{singular_packet_decomposition_extension.py}
+
+\section{Adaptive multiscale core}
+The following program implements local unfoldings, exact finite-tree dynamic programming, residual region generation, orthogonal-complement construction, and moving variable-rank block search.
+
+\lstinputlisting{adaptive_multiscale_spd.py}
+
+\section{Intermediate two-seed backward-replacement portfolio}
+The final program builds both seed families, evaluates declared reopened fractions, refills the budget, selects the exact lowest-residual candidate, and writes the final figures and tables.
+
+\lstinputlisting{adaptive_multiscale_spd_v2.py}
+
+\section{Final table generation and verification}
+\lstinputlisting{generate_am_spd_v2_tables.py}
+\lstinputlisting{verify_am_spd.py}
+
+\section{Exact-budget and three-seed implementation}
+The final optimizer, frontier construction, three-seed portfolio, and final result writer are contained in the following program.
+
+\lstinputlisting{adaptive_multiscale_spd_final.py}
+
+\section{Exact Pareto reference implementation}
+The following module gives a compact reference implementation of the integer-budget frontier used by the proof-oriented tests.
+
+\lstinputlisting{adaptive_multiscale_spd_exact.py}
+
+\section{Stress, aggregation, figure, and verification programs}
+\lstinputlisting{aggregate_am_spd_final_results.py}
+\lstinputlisting{am_spd_final_stress.py}
+\lstinputlisting{am_spd_noise_stress_small.py}
+\lstinputlisting{verify_am_spd_final.py}
+\lstinputlisting{generate_am_spd_final_tables.py}
+\lstinputlisting{generate_am_spd_final_figures.py}
+
+
+
+\end{document}
