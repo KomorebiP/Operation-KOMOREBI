@@ -1,0 +1,99 @@
+import KomorebiSpace.ResolutionViews
+import Mathlib.CategoryTheory.CofilteredSystem
+
+set_option autoImplicit false
+
+/-!
+# KS58: finite-fiber realization and persistent images
+
+The finite cofiltered-system theorem from the pinned mathlib is applied to an
+explicit functor made from the original Resolution. An actual coordinatewise
+equivalence connects its sections to Resolution.Point. The evaluation image
+is identified with the intersection of the later restriction images.
+-/
+universe u
+noncomputable section
+namespace KomorebiSpace.Resolution.FiniteExistence
+open CategoryTheory Opposite
+variable (X : Resolution.{u})
+
+def diagram : ℕᵒᵖ ⥤ Type u where
+  obj n := X.Obj n.unop
+  map f := TypeCat.ofHom (X.restrict (leOfHom f.unop))
+  map_id n := by ext x; exact X.restrict_refl n.unop x
+  map_comp f g := by
+    ext x
+    exact (X.restrict_trans (leOfHom g.unop) (leOfHom f.unop) x).symm
+
+def pointEquivSections : X.Point ≃ (diagram X).sections where
+  toFun s := ⟨fun n => s.val n.unop, fun f => s.property _ _ (leOfHom f.unop)⟩
+  invFun s := ⟨fun n => s.val (op n), fun _ _ h => s.property (homOfLE h).op⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+@[simp] theorem sections_coordinate (s : X.Point) (n : ℕ) :
+    (pointEquivSections X s).val (op n) = s.val n := rfl
+
+/-- Persistent values are defined by actual later images, not by extendability. -/
+def persistentImage (n : ℕ) : Set (X.Obj n) :=
+  {x | ∀ (m : ℕ) (h : n ≤ m), x ∈ Set.range (X.restrict h)}
+
+theorem persistent_iff_eventual (n : ℕ) (x : X.Obj n) :
+    x ∈ persistentImage X n ↔ x ∈ (diagram X).eventualRange (op n) := by
+  constructor
+  · intro h
+    exact (diagram X).mem_eventualRange_iff.mpr (fun {j} f => h j.unop (leOfHom f.unop))
+  · intro h m hnm
+    exact ((diagram X).mem_eventualRange_iff.mp h) (homOfLE hnm).op
+
+variable [∀ n, Finite (X.Obj n)] [∀ n, Nonempty (X.Obj n)]
+
+instance diagram_finite : ∀ n, Finite ((diagram X).obj n) :=
+  fun n => inferInstanceAs (Finite (X.Obj n.unop))
+instance diagram_nonempty : ∀ n, Nonempty ((diagram X).obj n) :=
+  fun n => inferInstanceAs (Nonempty (X.Obj n.unop))
+
+theorem nonempty_point : Nonempty X.Point := by
+  obtain ⟨s, hs⟩ := nonempty_sections_of_finite_inverse_system (diagram X)
+  exact ⟨(pointEquivSections X).symm ⟨s, hs⟩⟩
+
+theorem nonempty_ambient : Nonempty X.views.Ambient := by
+  obtain ⟨s⟩ := nonempty_point X
+  exact ⟨X.ambientEquiv.symm s⟩
+
+omit [∀ n, Nonempty (X.Obj n)] in
+theorem mittagLeffler : (diagram X).IsMittagLeffler :=
+  (diagram X).isMittagLeffler_of_exists_finite_range
+    (fun j => ⟨j, 𝟙 j, Set.toFinite _⟩)
+
+/-- The range of actual evaluation is exactly the persistent image. -/
+theorem evaluation_range (n : ℕ) :
+    Set.range (fun s : X.Point => s.val n) = persistentImage X n := by
+  ext x
+  constructor
+  · rintro ⟨s, rfl⟩ m h
+    exact ⟨s.val m, s.property n m h⟩
+  · intro hx
+    let F := diagram X
+    have hm : F.IsMittagLeffler := mittagLeffler X
+    have : ∀ j, Nonempty (F.toEventualRanges.obj j) := F.toEventualRanges_nonempty hm
+    let y : F.toEventualRanges.obj (op n) :=
+      ⟨x, (persistent_iff_eventual X n x).mp hx⟩
+    obtain ⟨s, hs⟩ := F.toEventualRanges.eval_section_surjective_of_surjective
+      (F.surjective_toEventualRanges hm) (op n) y
+    refine ⟨(pointEquivSections X).symm (F.toEventualRangesSectionsEquiv s), ?_⟩
+    exact congrArg Subtype.val hs
+
+theorem extension_iff_persistent (n : ℕ) (x : X.Obj n) :
+    (∃ s : X.Point, s.val n = x) ↔
+      ∀ (m : ℕ) (h : n ≤ m), ∃ z : X.Obj m, X.restrict h z = x := by
+  change x ∈ Set.range (fun s : X.Point => s.val n) ↔ x ∈ persistentImage X n
+  rw [evaluation_range]
+
+theorem persistent_nonempty (n : ℕ) : (persistentImage X n).Nonempty := by
+  obtain ⟨s⟩ := nonempty_point X
+  rw [← evaluation_range]
+  exact ⟨s.val n, ⟨s, rfl⟩⟩
+
+end KomorebiSpace.Resolution.FiniteExistence
+end

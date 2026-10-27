@@ -1,0 +1,214 @@
+import KomorebiSpace.BoundedParity
+import KomorebiSpace.ResidualSampling
+import KomorebiSpace.SplitTowerCanonicity
+
+set_option autoImplicit false
+
+/-!
+# A section of actual dyadic residual coarsening
+
+Target sections lift a coarse residual to the odd edge of each pair. The even
+edge is zero. No source propagation-gap assumption is used.
+-/
+universe u v
+noncomputable section
+namespace KomorebiSpace
+namespace DyadicResidual
+open BanachTower
+open scoped NNReal ENNReal
+variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+variable (X Y : BanachTower.{u,v} 𝕜)
+variable (hX : ∀ n, ‖X.down n‖ ≤ 1) (hY : ∀ n, ‖Y.down n‖ ≤ 1)
+
+abbrev schedule (n : ℕ) := 2*n
+
+theorem schedule_monotone : Monotone schedule := fun _ _ h => Nat.mul_le_mul_left 2 h
+
+theorem schedule_gap (n : ℕ) : schedule (n+1) - schedule n ≤ 2 := by
+  simp [schedule, Nat.mul_add]
+
+abbrev sampled (X : BanachTower.{u,v} 𝕜) (hX : ∀ n, ‖X.down n‖ ≤ 1) :=
+  resample X hX schedule schedule_monotone
+
+abbrev Coarse := Residuals (sampled X hX) (sampled Y hY)
+
+def coarsen : Residuals X Y →L[𝕜] Coarse X Y hX hY :=
+  residualSampleCLM X Y hX hY schedule schedule_monotone 2 schedule_gap
+
+/-- Coarse residuals are transported pair sums, not samples. -/
+theorem coarsen_pair (r : Residuals X Y) (n : ℕ) :
+    coarsen X Y hX hY r n =
+      (Y.down (2*n)).comp (r (2*n+1)) + (r (2*n)).comp (X.down (2*n+1)) := by
+  change blockSum X Y r (show 2*n ≤ 2*(n+1) from schedule_monotone (Nat.le_succ n)) = _
+  rw [blockSum_succ X Y r (show 2*n ≤ 2*n+1 by omega)]
+  simp
+
+variable (L : Splitting Y)
+
+def oddLift (c : Coarse X Y hX hY) (n : ℕ) : X.Obj (2*n+1+1) →L[𝕜] Y.Obj (2*n+1) :=
+  (L.up (2*n)).comp (c n)
+
+theorem oddLift_bound (c : Coarse X Y hX hY) (n : ℕ) :
+    ‖oddLift X Y hX hY L c n‖ ≤ (L.bound : ℝ) * ‖c‖ := by
+  exact ((L.up (2*n)).opNorm_comp_le (c n)).trans
+    (mul_le_mul (L.up_bound _) (lp.norm_apply_le_norm ENNReal.top_ne_zero c n)
+      (norm_nonneg _) (NNReal.coe_nonneg _))
+
+def oddLiftFamily (c : Coarse X Y hX hY) :
+    BoundedParity.Odd (E := fun n => X.Obj (n+1) →L[𝕜] Y.Obj n) :=
+  ⟨oddLift X Y hX hY L c, memℓp_infty ⟨(L.bound : ℝ)*‖c‖, by
+    rintro _ ⟨n, rfl⟩
+    exact oddLift_bound X Y hX hY L c n⟩⟩
+
+def liftLinear : Coarse X Y hX hY →ₗ[𝕜] Residuals X Y where
+  toFun c := BoundedParity.merge (0, oddLiftFamily X Y hX hY L c)
+  map_add' c d := by
+    apply lp.ext
+    apply BoundedParity.family_ext
+    · intro n; simp only [BoundedParity.merge_even, lp.coeFn_add, Pi.add_apply]; simp
+    · intro n
+      simp only [BoundedParity.merge_odd, lp.coeFn_add, Pi.add_apply]
+      apply ContinuousLinearMap.ext
+      intro x
+      change L.up (2*n) (c n x + d n x) = L.up (2*n) (c n x) + L.up (2*n) (d n x)
+      exact map_add (L.up (2*n)) _ _
+  map_smul' a c := by
+    apply lp.ext
+    apply BoundedParity.family_ext
+    · intro n; simp only [BoundedParity.merge_even, lp.coeFn_smul, Pi.smul_apply]; simp
+    · intro n
+      simp only [BoundedParity.merge_odd, lp.coeFn_smul, Pi.smul_apply]
+      apply ContinuousLinearMap.ext
+      intro x
+      change L.up (2*n) (a • c n x) = a • L.up (2*n) (c n x)
+      exact map_smul (L.up (2*n)) a _
+
+theorem liftLinear_bound (c : Coarse X Y hX hY) :
+    ‖liftLinear X Y hX hY L c‖ ≤ (L.bound : ℝ) * ‖c‖ := by
+  apply (BoundedParity.merge_bound _).trans
+  change max ‖(0 : BoundedParity.Even (E := fun n => X.Obj (n+1) →L[𝕜] Y.Obj n))‖
+    ‖oddLiftFamily X Y hX hY L c‖ ≤ _
+  apply max_le
+  · simp only [norm_zero]; positivity
+  · apply lp.norm_le_of_forall_le (by positivity)
+    exact oddLift_bound X Y hX hY L c
+
+/-- A bounded right inverse for block coarsening, without a propagation gap. -/
+def lift : Coarse X Y hX hY →L[𝕜] Residuals X Y :=
+  (liftLinear X Y hX hY L).mkContinuous (L.bound : ℝ) (liftLinear_bound X Y hX hY L)
+
+@[simp] theorem lift_even (c : Coarse X Y hX hY) (n : ℕ) :
+    lift X Y hX hY L c (2*n) = 0 := BoundedParity.merge_even _ n
+
+@[simp] theorem lift_odd (c : Coarse X Y hX hY) (n : ℕ) :
+    lift X Y hX hY L c (2*n+1) = (L.up (2*n)).comp (c n) :=
+  BoundedParity.merge_odd _ n
+
+theorem lift_bound (c : Coarse X Y hX hY) :
+    ‖lift X Y hX hY L c‖ ≤ (L.bound : ℝ)*‖c‖ := liftLinear_bound X Y hX hY L c
+
+theorem lift_opNorm : ‖lift X Y hX hY L‖ ≤ (L.bound : ℝ) :=
+  ContinuousLinearMap.opNorm_le_bound _ (NNReal.coe_nonneg _) (lift_bound X Y hX hY L)
+
+@[simp] theorem coarsen_lift (c : Coarse X Y hX hY) :
+    coarsen X Y hX hY (lift X Y hX hY L c) = c := by
+  apply lp.ext
+  funext n
+  rw [coarsen_pair, lift_even, lift_odd]
+  ext x
+  change Y.down (2*n) (L.up (2*n) (c n x)) + 0 = c n x
+  rw [L.down_up_apply, add_zero]
+
+/-- This is a section of the actual v0.6 block-accumulation operator. -/
+def sectionC : SplitDefect.Section (coarsen X Y hX hY) where
+  lift := lift X Y hX hY L
+  right_inv := coarsen_lift X Y hX hY L
+
+/-- All residual information invisible to this choice of coarse observation. -/
+def hidden : Residuals X Y →L[𝕜] Residuals X Y := (sectionC X Y hX hY L).project
+
+@[simp] theorem hidden_apply (r : Residuals X Y) :
+    hidden X Y hX hY L r = r - lift X Y hX hY L (coarsen X Y hX hY r) := rfl
+
+@[simp] theorem hidden_coarsen (r : Residuals X Y) :
+    coarsen X Y hX hY (hidden X Y hX hY L r) = 0 :=
+  (sectionC X Y hX hY L).project_exact r
+
+@[simp] theorem hidden_idempotent (r : Residuals X Y) :
+    hidden X Y hX hY L (hidden X Y hX hY L r) = hidden X Y hX hY L r :=
+  (sectionC X Y hX hY L).project_idempotent r
+
+@[simp] theorem hidden_even (r : Residuals X Y) (n : ℕ) :
+    hidden X Y hX hY L r (2*n) = r (2*n) := by simp [hidden_apply]
+
+@[simp] theorem hidden_odd (r : Residuals X Y) (n : ℕ) :
+    hidden X Y hX hY L r (2*n+1) =
+      r (2*n+1) - oddLift X Y hX hY L (coarsen X Y hX hY r) n := by
+  change (r - lift X Y hX hY L (coarsen X Y hX hY r)) (2*n+1) = _
+  change r (2*n+1) - lift X Y hX hY L (coarsen X Y hX hY r) (2*n+1) = _
+  rw [lift_odd]
+  rfl
+
+/-- Fine data are recovered exactly from coarse data and hidden detail. -/
+theorem reconstruction (r : Residuals X Y) :
+    hidden X Y hX hY L r + lift X Y hX hY L (coarsen X Y hX hY r) = r := by
+  rw [hidden_apply]; abel
+
+/-- A complete characterization of the dyadic coarsening kernel. -/
+theorem kernel_iff (r : Residuals X Y) : coarsen X Y hX hY r = 0 ↔
+    ∀ n, (Y.down (2*n)).comp (r (2*n+1)) = -(r (2*n)).comp (X.down (2*n+1)) := by
+  constructor
+  · intro h n
+    have hn := congrArg (fun c : Coarse X Y hX hY => c n) h
+    rw [coarsen_pair] at hn
+    exact eq_neg_of_add_eq_zero_left hn
+  · intro h
+    apply lp.ext
+    funext n
+    rw [coarsen_pair, h n]
+    ext x
+    change -(r (2*n) (X.down (2*n+1) x)) + r (2*n) (X.down (2*n+1) x) = 0
+    exact neg_add_cancel _
+
+/-- A continuous linear lossless residual coordinate system. -/
+def coordinates : Residuals X Y ≃L[𝕜]
+    ((coarsen X Y hX hY).ker × Coarse X Y hX hY) := (sectionC X Y hX hY L).chart
+
+theorem reconstruction_bound (r : Residuals X Y) :
+    ‖r‖ ≤ ‖hidden X Y hX hY L r‖ + (L.bound : ℝ)*‖coarsen X Y hX hY r‖ := by
+  have hj := lift_bound X Y hX hY L (coarsen X Y hX hY r)
+  have ha := norm_add_le (hidden X Y hX hY L r)
+    (lift X Y hX hY L (coarsen X Y hX hY r))
+  rw [reconstruction] at ha
+  linarith only [ha, hj]
+
+theorem hidden_bound (r : Residuals X Y) :
+    ‖hidden X Y hX hY L r‖ ≤ (1 + 2*(L.bound : ℝ))*‖r‖ := by
+  have hj := lift_bound X Y hX hY L (coarsen X Y hX hY r)
+  have hc := residualSampleCLM_bound X Y hX hY schedule schedule_monotone 2 schedule_gap r
+  change ‖coarsen X Y hX hY r‖ ≤ 2*‖r‖ at hc
+  have hm := mul_le_mul_of_nonneg_left hc (NNReal.coe_nonneg L.bound)
+  have ha := norm_sub_le r (lift X Y hX hY L (coarsen X Y hX hY r))
+  rw [hidden_apply]
+  nlinarith only [ha, hj, hm]
+
+/-- Coarse exactness plus zero retained detail is equivalent to fine exactness. -/
+theorem exactness_detected (f : Candidates X Y) :
+    Exact X Y f ↔
+      Exact (sampled X hX) (sampled Y hY)
+        (sampleCLM X Y hX hY schedule schedule_monotone f) ∧
+      hidden X Y hX hY L (differential X Y f) = 0 := by
+  rw [exact_iff_differential_zero, exact_iff_differential_zero,
+    resampling_chain X Y hX hY schedule schedule_monotone 2 schedule_gap]
+  constructor
+  · intro h
+    simp [h]
+  · rintro ⟨hc, hh⟩
+    change coarsen X Y hX hY (differential X Y f) = 0 at hc
+    have h := reconstruction X Y hX hY L (differential X Y f)
+    rw [hc, hh, map_zero, zero_add] at h
+    exact h.symm
+
+end DyadicResidual
+end KomorebiSpace
+end

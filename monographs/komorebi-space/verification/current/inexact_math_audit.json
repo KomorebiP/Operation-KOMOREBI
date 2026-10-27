@@ -1,0 +1,158 @@
+{
+  "schema": "mathbox.independent-proof-audit.v1",
+  "reviewer": "/root/v115_proof_review",
+  "review_kind": "independent raw-source mathematical audit",
+  "date_utc": "2026-10-15T02:25:19.082330+00:00",
+  "parent_publication_sha256": "73e9c5caa36f4ba05029c01481b345ce24cf9b1905dfb012ed21dd4bcfe86dc0",
+  "primary_verdict": "proved as written",
+  "target_declaration": "KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate",
+  "target_path": "publication/lean/KomorebiSpace/DiagonalInexactRate.lean",
+  "claim": "For all s,a in real lp(N,2), real delta,kappa,epsilon with 0<delta<=1, kappa>=0, norm(s-b)<=delta and norm(T*(T a-s)+alpha a)<=epsilon<=kappa*alpha*delta^(1/3), where T u(j)=u(j)/(j+1), w(j)=1/(j+1), b=T w, m=ceil(delta^(-2/3)) and alpha=m^(-2), norm(a-w)<=(sqrt(2)+1+kappa)*delta^(1/3).",
+  "input_sha256": {
+    "publication/lean/KomorebiSpace/DiagonalInexactRate.lean": "9afe32989eb89da7781aee5b73008ee86f9ce418d24c72af9c6a74bad6f976a7",
+    "publication/lean/KomorebiSpace/DiagonalNoisyRate.lean": "55ad01c40e768c2ab7d70895ff5576c2576751137ebb7994198f1ebe27e2d21e",
+    "publication/lean/KomorebiSpace/InfiniteDiagonalModel.lean": "da72d7f6ccaa870581c23409837955e54db8be2a732354716e908fe9266501d2",
+    "publication/lean/KomorebiSpace/DiagonalDefinitions.lean": "751bf02816f74e2fe8a8bc9f45c22f9538d087d1af536af3835e4906f4015f54",
+    "publication/lean/KomorebiSpace/DiagonalSeriesBounds.lean": "fc606b9db34f39179ba3cedcc43504325bd14dfdba6de8c46ad7bd6a70a31cb2",
+    "publication/lean/KomorebiSpace/RegularizedHilbertRepair.lean": "b57ee2a27d7c30e35c17a90655aad21a967ae73f830d84ee81a22a2c92276ae4",
+    "publication/source/chapters/05k_stopping_rules.tex": "506439d12645a2957ac545075702d323c589fe333e96d15174d4ddd8b4541603",
+    "publication/source/chapters/05i_diagonal_regularization.tex": "f10d921f0272d27f0894547767736c32c5f094c7f77a4016b400527a73a229c2",
+    "publication/lean/lean-toolchain": "8190e75a201741065fe508b28955dd64dd72d090babe5f70ce6848879d68ae88",
+    "publication/lean/lake-manifest.json": "7e28e00cb45e028f411ea69972d18a9964f4c3affaf0212389afa9d1fe13df47"
+  },
+  "obligations": [
+    {
+      "id": "O01",
+      "status": "passed",
+      "obligation": "Infinite domain and coordinate indexing",
+      "finding": "H = lp (fun _ : \u2115 => \u211d) 2; index j = j+1; all quantified proposals and measured data are elements of H.",
+      "evidence": "InfiniteDiagonalModel.lean:20,46-72; DiagonalDefinitions.lean:9"
+    },
+    {
+      "id": "O02",
+      "status": "passed",
+      "obligation": "Concrete operator and target",
+      "finding": "(Tu)_j=u_j/(j+1), w_j=1/(j+1), b=T w with b_j=1/(j+1)^2; injectivity proves w is the unique and minimum-norm preimage of b.",
+      "evidence": "InfiniteDiagonalModel.lean:87-109,111-134,200-208"
+    },
+    {
+      "id": "O03",
+      "status": "passed",
+      "obligation": "Literal schedule and parameter",
+      "finding": "m=Nat.ceil(delta^(-(2:\u211d)/3)); noiseSchedule is definitionally this schedule; alpha m=((m:\u211d)^2)^(-1).",
+      "evidence": "DiagonalInexactRate.lean:15-22; DiagonalNoisyRate.lean:14; InfiniteDiagonalModel.lean:140"
+    },
+    {
+      "id": "O04",
+      "status": "passed",
+      "obligation": "Positivity and cancellation",
+      "finding": "delta>0 gives delta^(-2/3)>0, m>=1, alpha m>0. Division by alpha is justified by div_le_iff\u2080 h\u03b1.",
+      "evidence": "DiagonalInexactRate.lean:21-22,37"
+    },
+    {
+      "id": "O05",
+      "status": "passed",
+      "obligation": "Measured residual identity",
+      "finding": "gradient T alpha s a = T.adjoint (T a-s)+alpha\u2022a, so the solver certificate uses s, not b.",
+      "evidence": "DiagonalInexactRate.lean:23-30; RegularizedHilbertRepair.lean:18-20,60"
+    },
+    {
+      "id": "O06",
+      "status": "passed",
+      "obligation": "Certificate implication",
+      "finding": "For the same alpha and measured datum s, norm(a-correction(s))<=norm(gradient(s,a))/alpha; combining hsolve and h\u03b5 cancels positive alpha to obtain kappa*delta^(1/3).",
+      "evidence": "DiagonalInexactRate.lean:33-40; RegularizedHilbertRepair.lean:129-148"
+    },
+    {
+      "id": "O07",
+      "status": "passed",
+      "obligation": "No hidden exact-data bias hypothesis",
+      "finding": "corollary_30_3 obtains diagonal_bias_bound internally; c_eq_correction, norm_bias_sq and B_upper establish the concrete infinite bias bound sqrt(2/m).",
+      "evidence": "DiagonalNoisyRate.lean:136-165; InfiniteDiagonalModel.lean:210-227; DiagonalSeriesBounds.lean:349-353"
+    },
+    {
+      "id": "O08",
+      "status": "passed",
+      "obligation": "No finite surrogate",
+      "finding": "norm_sq_eq_tsum identifies genuine lp norm squares; B is an infinite tsum. Prefix and tail bounds prove B_upper by summable decomposition; no truncation error is dropped.",
+      "evidence": "InfiniteDiagonalModel.lean:180-196,225-227; DiagonalDefinitions.lean:18; DiagonalSeriesBounds.lean:157-174,325-353"
+    },
+    {
+      "id": "O09",
+      "status": "passed",
+      "obligation": "Data noise constant",
+      "finding": "data_noise_bound gives norm(correction(s)-correction(b))<=norm(s-b)/(2*sqrt(alpha)); at alpha=m^-2 and m>0 this is delta*m/2.",
+      "evidence": "RegularizedHilbertRepair.lean:190-215; DiagonalNoisyRate.lean:91-119"
+    },
+    {
+      "id": "O10",
+      "status": "passed",
+      "obligation": "Rounding constants",
+      "finding": "For u=delta^-2/3>=1, u<=m<=2u. Hence sqrt(2/m)<=sqrt(2)*delta^(1/3) and delta*m/2<=delta^(1/3).",
+      "evidence": "DiagonalNoisyRate.lean:40-88"
+    },
+    {
+      "id": "O11",
+      "status": "passed",
+      "obligation": "Final triangle inequality",
+      "finding": "The intermediate correction is the measured-data minimizer; summing its error to w and solver error gives exactly (sqrt(2)+1+kappa)*delta^(1/3).",
+      "evidence": "DiagonalInexactRate.lean:41-51"
+    },
+    {
+      "id": "O12",
+      "status": "passed",
+      "obligation": "Quantifiers and boundaries",
+      "finding": "All s,a:H and real epsilon are covered under the stated inequalities; epsilon>=0 follows from hsolve. delta=1 gives m=1 and alpha=1; kappa=0 forces zero measured normal residual. delta=0 is intentionally excluded.",
+      "evidence": "DiagonalInexactRate.lean:12-19"
+    },
+    {
+      "id": "O13",
+      "status": "passed",
+      "obligation": "Printed target correspondence",
+      "finding": "The target subsection uses the attainable WR12 datum and inherited measured-data and normal-residual hypotheses. Lean identifies its a-dagger with w and retains every printed constant and ceiling.",
+      "evidence": "05k_stopping_rules.tex:126-140; 05i_diagonal_regularization.tex:145-184"
+    },
+    {
+      "id": "O14",
+      "status": "passed",
+      "obligation": "Exact-source elaboration and axioms",
+      "finding": "The frozen source copied verbatim into InexactAuditProbe.lean compiles with -j1, warningAsError=true and autoImplicit=false. Printed type contains no extra premises. Reported axioms are propext, Classical.choice, Quot.sound, with no sorryAx.",
+      "evidence": "reviews/InexactAuditProbe.lean; reviews/inexact_math_audit_probe.log"
+    },
+    {
+      "id": "O15",
+      "status": "out of scope",
+      "obligation": "Broader stopping law and escaping conclusion",
+      "finding": "The audited declaration proves the concrete finite-delta attainable rate only; it does not claim universal optimality or convergence for the escaping datum.",
+      "evidence": "DiagonalInexactRate.lean:12-19"
+    }
+  ],
+  "kernel_check": {
+    "command": "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/scripts/lean_env.sh lake env lean -j1 -DwarningAsError=true -DautoImplicit=false /workspace/scratch/5d9f7f8127b0/publication_v115/reviews/InexactAuditProbe.lean",
+    "cwd": "/workspace/scratch/5d9f7f8127b0/publication_v115/publication/lean",
+    "exit_code": 0,
+    "log": "reviews/inexact_math_audit_probe.log",
+    "probe": "reviews/InexactAuditProbe.lean",
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "scope": "Fresh elaboration of exact target source; imported existing dependency oleans. Raw relevant dependency sources also inspected. No whole-project build claimed."
+  },
+  "output_sha256": {
+    "reviews/InexactAuditProbe.lean": "0187c92fed457bc8e74660a5abb733c2875c77c79e5f811e0719becf1cbfb7ca",
+    "reviews/inexact_math_audit_probe.log": "b5d3ac2020965570d4569faf4744e224d002dfb8d9ddb2b2503cd87a3cb79cb1"
+  },
+  "remaining_gap": null,
+  "production_edits": false,
+  "external_source_conditions": [],
+  "strongest_safe_statement": "The exact universally quantified concrete attainable inexact-rate theorem stated above, on the genuine infinite Hilbert space.",
+  "next_check": "No mathematical repair required for this frozen declaration; retain the recorded source hash when integrating.",
+  "publication_status_rereview": {
+    "path": "publication/source/chapters/05k_stopping_rules.tex",
+    "sha256": "c24603387f4ec8fb297cd294bd9a919af2ce8bf920719ba3189b5a47c7640009",
+    "verdict": "passed",
+    "finding": "The added paragraph correctly identifies diagonal_inexact_rounded_rate, the actual infinite operator, measured residual, literal ceiling, and internally derived bias. The mathematical target is unchanged."
+  }
+}

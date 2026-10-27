@@ -1,0 +1,96 @@
+--- accepted/Komorebi_Space_Lean_Guide.tex
++++ publication/Komorebi_Space_Lean_Guide.tex
+@@ -10,6 +10,7 @@
+ \newcommand{\guidechapter}[1]{\par\Needspace{8\baselineskip}\section{#1}}
+ \begin{document}
+ \KomorebiCover
++\input{publication_notice}
+ \section*{About this guide}
+ This guide connects the mathematical statements of \emph{Komorebi Space} to their Lean definitions and proofs. It is intended for readers who want to inspect a theorem's hypotheses, use the library in another formal development, or reproduce its verification. The monograph supplies the mathematical narrative. The present volume supplies the route from that narrative to exact declarations.
+ 
+--- accepted/Komorebi_Space_Monograph.tex
++++ publication/Komorebi_Space_Monograph.tex
+@@ -11,6 +11,7 @@
+ \begin{document}
+ \SeriesCover
+ \pagenumbering{roman}
++\input{publication_notice}
+ \input{../../shared/series-front}
+ \section*{Preface}
+ A mathematical object can appear in several forms: as local data, as a sequence of finite observations, as a family of coordinates, or as the output of an approximate calculation. These descriptions may agree, fail to agree, or agree only after a correction. This monograph studies the conditions under which they describe one coherent realization.
+--- accepted/Komorebi_Space_Visual_Guide.tex
++++ publication/Komorebi_Space_Visual_Guide.tex
+@@ -16,6 +16,7 @@
+   \vfill{\small\color{KomorebiMuted}Definitions, proofs, and general hypotheses: #3.\par}}
+ \begin{document}
+ \KomorebiCover
++\input{publication_notice}
+ \pdfbookmark[0]{Contents}{visual-contents}
+ \begingroup
+ \makeatletter
+--- accepted/komorebi-publication.sty
++++ publication/komorebi-publication.sty
+@@ -32,12 +32,12 @@
+   \@ifpackageloaded{unicode-math}{\setmathfont{latinmodern-math.otf}}{}
+ 
+ \fi
+-\providecommand{\KomorebiTitle}{Operation Komorebi}
++\providecommand{\KomorebiTitle}{Realization Calculus}
+ \providecommand{\KomorebiSubtitle}{}
+ \providecommand{\KomorebiSeries}{Research paper}
+ \providecommand{\KomorebiKind}{Traditional paper}
+ \providecommand{\KomorebiEdition}{Publication standard 1.0 / 8 October 2026}
+-\providecommand{\KomorebiShortTitle}{Operation Komorebi}
++\providecommand{\KomorebiShortTitle}{Realization Calculus}
+ \providecommand{\KomorebiTitleSize}{34}
+ \providecommand{\KomorebiTitleLeading}{39}
+ \providecommand{\KomorebiProfile}{classical}
+@@ -56,10 +56,10 @@
+   \pagestyle{fancy}\fancyhf{}%
+   \fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}\KomorebiShortTitle}%
+   \fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}\KomorebiKind}%
+-  \fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}OPERATION KOMOREBI}%
++  \fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}REALIZATION CALCULUS}%
+   \fancyfoot[R]{\sffamily\fontsize{9}{11}\selectfont\color{KomorebiPine}\thepage}%
+   \renewcommand{\headrulewidth}{.35pt}\renewcommand{\footrulewidth}{0pt}%
+-  \fancypagestyle{plain}{\fancyhf{}\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}OPERATION KOMOREBI}\fancyfoot[R]{\sffamily\small\color{KomorebiPine}\thepage}\renewcommand{\headrulewidth}{0pt}}%
++  \fancypagestyle{plain}{\fancyhf{}\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}REALIZATION CALCULUS}\fancyfoot[R]{\sffamily\small\color{KomorebiPine}\thepage}\renewcommand{\headrulewidth}{0pt}}%
+   \titleformat{\section}{\sffamily\Large\bfseries\color{KomorebiPine}}{\thesection}{.65em}{}%
+   \titleformat{\subsection}{\sffamily\large\bfseries\color{KomorebiInk}}{\thesubsection}{.65em}{}%
+   \titleformat{\subsubsection}{\sffamily\normalsize\bfseries\color{KomorebiInk}}{\thesubsubsection}{.65em}{}%
+@@ -67,22 +67,16 @@
+   \titlespacing*{\subsection}{0pt}{1.8ex plus .8ex minus .2ex}{.7ex}%
+   \@ifundefined{chapter}{}{\titleformat{\chapter}[display]{\sffamily\bfseries\color{KomorebiPine}}{\small\MakeUppercase{\chaptertitlename}\ \thechapter}{8pt}{\Huge}\titlespacing*{\chapter}{0pt}{12pt}{24pt}}%
+   \@ifpackageloaded{caption}{\captionsetup{font=small,labelfont={bf,sf},skip=7pt}}{}%
+-  \@ifpackageloaded{hyperref}{\hypersetup{colorlinks=true,linkcolor=KomorebiPine,citecolor=KomorebiPine,urlcolor=KomorebiPine,pdfauthor={Komorebi P.},pdftitle={\KomorebiTitle},pdfsubject={Operation Komorebi / \KomorebiKind}}}{}%
++  \@ifpackageloaded{hyperref}{\hypersetup{colorlinks=true,linkcolor=KomorebiPine,citecolor=KomorebiPine,urlcolor=KomorebiPine,pdfauthor={Komorebi P.},pdftitle={\KomorebiTitle},pdfsubject={Realization Calculus / \KomorebiKind}}}{}%
+ }
+ \newcommand{\KomorebiCover}{%
+   \clearpage\@ifpackageloaded{hyperref}{\hypersetup{pageanchor=false}}{}\thispagestyle{empty}\begingroup
+   \begin{tikzpicture}[remember picture,overlay]
+     \fill[KomorebiWarm] (current page.south west) rectangle (current page.north east);
+     \fill[KomorebiPine] (current page.north west) rectangle ([xshift=8pt]current page.south west);
+-    \draw[KomorebiPine!38,line width=.8pt] ([xshift=-.65in,yshift=-.65in]current page.north east) .. controls ++(-1.9in,-.1in) and ++(.4in,1.4in) .. ([xshift=-.8in,yshift=-3.15in]current page.north east);
+-    \foreach \t in {0,...,7}{
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(-.38in,.06in) and ++(-.55in,.18in) .. ++(-.7in,.28in);
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(.3in,-.08in) and ++(.4in,-.24in) .. ++(.52in,-.35in);
+-    }
+   \end{tikzpicture}
+   \color{KomorebiInk}\sffamily
+-  \noindent{\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}OPERATION KOMOREBI}\par
+-  \vspace{5pt}{\fontsize{9}{12}\selectfont\color{KomorebiMuted}REALIZATION CALCULUS}\par
++  \noindent{\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}REALIZATION CALCULUS}\par
+   \vspace*{.68in}
+   {\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}\MakeUppercase{\KomorebiSeries}}\par
+   \vspace{14pt}
+--- accepted/preamble.tex
++++ publication/preamble.tex
+@@ -11,7 +11,7 @@
+ \renewcommand{\KomorebiSubtitle}{Coherent realizations, obstructions, and descent}
+ \renewcommand{\KomorebiSeries}{Foundations of the Realization Calculus}
+ \renewcommand{\KomorebiKind}{Monograph}
+-\renewcommand{\KomorebiEdition}{Publication edition 1.15.0 / 15 October 2026}
++\renewcommand{\KomorebiEdition}{}
+ \renewcommand{\KomorebiShortTitle}{Komorebi Space}
+ \renewcommand{\KomorebiProfile}{monograph}
+ \KomorebiSetup

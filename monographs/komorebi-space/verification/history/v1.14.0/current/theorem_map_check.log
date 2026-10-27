@@ -1,0 +1,501 @@
+KomorebiSpace.Resolution.Map.onLimit_unique.{u, v} {X : KomorebiSpace.Resolution} {Y : KomorebiSpace.Resolution}
+  (f : X.Map Y) (g : X.Point → Y.Point) (hg : ∀ (x : X.Point) (n : ℕ), ↑(g x) n = f.app n (↑x n)) : g = f.onLimit
+KomorebiSpace.Resolution.Cone.exists_unique_lift.{u, v} {X : KomorebiSpace.Resolution} {S : Type v} (c : X.Cone S) :
+  ∃! f, ∀ (s : S) (n : ℕ), ↑(f s) n = c.leg n s
+KomorebiSpace.Resolution.realize_coordinate.{u, v} {X : KomorebiSpace.Resolution} {Y : KomorebiSpace.Resolution}
+  {S : Type u} {T : Type v} (eX : S ≃ X.Point) (eY : T ≃ Y.Point) (f : X.Map Y) (s : S) (n : ℕ) :
+  ↑(eY (KomorebiSpace.Resolution.realize eX eY f s)) n = f.app n (↑(eX s) n)
+KomorebiSpace.Resolution.Adjacent.pointEquiv.{u} (V : ℕ → Type u) (down : (n : ℕ) → V (n + 1) → V n) :
+  { x // ∀ (n : ℕ), down n (x (n + 1)) = x n } ≃ (KomorebiSpace.Resolution.Adjacent.resolution V down).Point
+KomorebiSpace.Resolution.exists_presentation_of_finitelyObserved.{u, v} {X : KomorebiSpace.Resolution}
+  {Y : KomorebiSpace.Resolution} (hX : X.ProjectionSurjective) (F : X.Point → Y.Point)
+  (hF : KomorebiSpace.Resolution.FinitelyObserved F) : ∃ f, f.onLimit = F
+KomorebiSpace.Resolution.realization_image_iff.{u, v} {X : KomorebiSpace.Resolution} {Y : KomorebiSpace.Resolution}
+  (hX : X.ProjectionSurjective) (F : X.Point → Y.Point) :
+  (∃ f, f.onLimit = F) ↔ KomorebiSpace.Resolution.FinitelyObserved F
+KomorebiSpace.Resolution.finiteObservationEquiv.{u, v} {X : KomorebiSpace.Resolution} {Y : KomorebiSpace.Resolution}
+  (hX : X.ProjectionSurjective) : X.EventualHom Y ≃ { F // KomorebiSpace.Resolution.FinitelyObserved F }
+KomorebiSpace.ScheduleNormObstruction.cofinal_sampling_changes_norm :
+  ‖KomorebiSpace.ScheduleNormObstruction.geometricCandidate‖ ≠ ‖KomorebiSpace.ScheduleNormObstruction.sampledCandidate‖
+KomorebiSpace.CorrectionProblem.obstruction_zero_iff.{u, v, w} {E : Type u} {R : Type v} {S : Type w} [AddCommGroup E]
+  [AddCommGroup R] [AddCommGroup S] (P : KomorebiSpace.CorrectionProblem E R S) (x : E) :
+  P.obstruction x = 0 ↔ ∃ a, P.semantics a = 0 ∧ P.residual a = P.residual x
+KomorebiSpace.CorrectionProblem.flatten_iff.{u, v, w} {E : Type u} {R : Type v} {S : Type w} [AddCommGroup E]
+  [AddCommGroup R] [AddCommGroup S] (P : KomorebiSpace.CorrectionProblem E R S) (x : E) :
+  P.obstruction x = 0 ↔ ∃ y, P.residual y = 0 ∧ P.semantics y = P.semantics x
+KomorebiSpace.CorrectionProblem.obstruction_invariant.{u, v, w} {E : Type u} {R : Type v} {S : Type w} [AddCommGroup E]
+  [AddCommGroup R] [AddCommGroup S] (P : KomorebiSpace.CorrectionProblem E R S) (x a : E) (ha : P.semantics a = 0) :
+  P.obstruction (x - a) = P.obstruction x
+KomorebiSpace.CorrectionProblem.nonzero_certificate.{u, v, w, z} {E : Type u} {R : Type v} {S : Type w} [AddCommGroup E]
+  [AddCommGroup R] [AddCommGroup S] (P : KomorebiSpace.CorrectionProblem E R S) {D : Type z} [AddCommGroup D]
+  (L : R →+ D) (x : E) (annihilate : ∀ (a : E), P.semantics a = 0 → L (P.residual a) = 0)
+  (witness : L (P.residual x) ≠ 0) : P.obstruction x ≠ 0
+KomorebiSpace.CorrectionProblem.exists_unique_translation.{u, v, w} {E : Type u} {R : Type v} {S : Type w}
+  [AddCommGroup E] [AddCommGroup R] [AddCommGroup S] (P : KomorebiSpace.CorrectionProblem E R S) {s : S}
+  (x y : P.ExactFiber s) : ∃! h, P.translateFiber h x = y
+KomorebiSpace.CorrectionProblem.fiberParameters.{u, v, w} {E : Type u} {R : Type v} {S : Type w} [AddCommGroup E]
+  [AddCommGroup R] [AddCommGroup S] (P : KomorebiSpace.CorrectionProblem E R S) {s : S} (base : P.ExactFiber s) :
+  ↥P.homogeneous ≃ P.ExactFiber s
+KomorebiSpace.ViewSystem.evaluations_jointly_injective.{u, v, w} {V : Type u} [CategoryTheory.Category.{v, u} V]
+  (F : KomorebiSpace.ViewSystem V) {x y : F.Ambient} (h : ∀ (a : V), F.evaluate a x = F.evaluate a y) : x = y
+KomorebiSpace.ViewSystem.Cone.exists_unique_lift.{u, v, w, z} {V : Type u} [CategoryTheory.Category.{v, u} V]
+  {F : KomorebiSpace.ViewSystem V} {T : Type z} (c : F.Cone T) : ∃! g, ∀ (x : T) (a : V), F.evaluate a (g x) = c.leg a x
+KomorebiSpace.GroupViewSystem.CocycleMatching.descentEquiv.{u, v, w, z} {V : Type u} [CategoryTheory.Category.{v, u} V]
+  {G : V → Type w} [(a : V) → Group (G a)] {I : Type z} {F : KomorebiSpace.GroupViewSystem V G} {U : I → Set V}
+  (h : KomorebiSpace.GroupViewSystem.CompositionCover U) : F.Cocycle ≃ F.CocycleMatching U
+KomorebiSpace.GroupViewSystem.CocycleDescentData.effective.{u, v, w, z} {V : Type u} [CategoryTheory.Category.{v, u} V]
+  {G : V → Type w} [(a : V) → Group (G a)] {I : Type z} {F : KomorebiSpace.GroupViewSystem V G} {U : I → Set V}
+  (D : F.CocycleDescentData U) (h : KomorebiSpace.GroupViewSystem.CompositionCover U) : Nonempty D.Effectuation
+KomorebiSpace.GroupViewSystem.CocycleDescentData.descentEquivalence.{u, v, w, z} {V : Type u}
+  [CategoryTheory.Category.{v, u} V] {G : V → Type w} [(a : V) → Group (G a)] {I : Type z}
+  (F : KomorebiSpace.GroupViewSystem V G) (U : I → Set V) (h : KomorebiSpace.GroupViewSystem.CompositionCover U) :
+  F.GaugeObject ∅ ≌ F.CocycleDescentData U
+KomorebiSpace.GroupViewSystem.patch_isStack.{u, v, w} {V : Type u} [CategoryTheory.Category.{v, u} V] {G : V → Type w}
+  [(a : V) → Group (G a)] (F : KomorebiSpace.GroupViewSystem V G) :
+  F.patchPseudofunctor.IsStack (KomorebiSpace.CompositionSite.topology V)
+KomorebiSpace.BanachTower.Splitting.correction_bound.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  (X : KomorebiSpace.BanachTower 𝕜) {Y : KomorebiSpace.BanachTower 𝕜} (L : Y.Splitting) (hgap : ↑L.bound * ↑X.bound < 1)
+  (r : ↥(X.Residuals Y)) :
+  ‖(KomorebiSpace.BanachTower.Splitting.correction X L hgap) r‖ ≤ KomorebiSpace.BanachTower.Splitting.gain X L * ‖r‖
+KomorebiSpace.BanachTower.Splitting.repair_exact.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  (X : KomorebiSpace.BanachTower 𝕜) {Y : KomorebiSpace.BanachTower 𝕜} (L : Y.Splitting) (hgap : ↑L.bound * ↑X.bound < 1)
+  (f : ↥(X.Candidates Y)) : X.Exact Y ((KomorebiSpace.BanachTower.Splitting.repair X L hgap) f)
+KomorebiSpace.BanachTower.repair_and_realize.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  (X Y : KomorebiSpace.BanachTower 𝕜) (A : ↥(X.Residuals Y) →L[𝕜] ↥(X.Candidates Y)) (k : ℕ) (q : ℝ) (hq₀ : 0 ≤ q)
+  (hq₁ : q < 1) (hkeep : ∀ (r : ↥(X.Residuals Y)), ↑(A r) k = 0)
+  (hcontract :
+    ∀ (f : ↥(X.Candidates Y)),
+      ‖(X.differential Y) f - (X.differential Y) (A ((X.differential Y) f))‖ ≤ q * ‖(X.differential Y) f‖)
+  (f : ↥(X.Candidates Y)) :
+  ∃ g F,
+    X.Exact Y g ∧
+      ↑g k = ↑f k ∧
+        Filter.Tendsto (KomorebiSpace.RepairDynamics.orbit (X.differential Y) A f) Filter.atTop (nhds g) ∧
+          dist f g ≤ ‖A‖ / (1 - q) * ‖(X.differential Y) f‖ ∧
+            (∀ (x : X.Point) (n : ℕ), ↑(F x) n = (↑g n) (↑x n)) ∧ ∀ (x : X.Point), ↑(F x) k = (↑f k) (↑x k)
+KomorebiSpace.DyadicResidual.System.infinite_details_injective.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System 𝕜) (r s : ↥(T.source.Residuals T.target))
+  (h : ∀ (j : ℕ), T.cascade.detail r j = T.cascade.detail s j) : r = s
+KomorebiSpace.DyadicResidual.System.absolute_residual_reconstruction.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System 𝕜) (r : ↥(T.source.Residuals T.target))
+  (hs : Summable fun n => ‖T.cascade.detailTerm r n‖) : ∑' (n : ℕ), T.cascade.detailTerm r n = r
+KomorebiSpace.DyadicResidual.System.residual_reconstruction_of_coarse_decay.{u, v} {𝕜 : Type u}
+  [NontriviallyNormedField 𝕜] (T : KomorebiSpace.DyadicResidual.System 𝕜) (hL : T.target_splitting.bound ≤ 1)
+  (r : ↥(T.source.Residuals T.target)) (hr : Filter.Tendsto (fun N => ‖T.cascade.level r N‖) Filter.atTop (nhds 0)) :
+  Filter.Tendsto (fun N => ∑ n ∈ Finset.range N, T.cascade.detailTerm r n) Filter.atTop (nhds r)
+KomorebiSpace.DyadicResidual.System.coordinatewise_reconstruction.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System 𝕜) (r : ↥(T.source.Residuals T.target)) (k : ℕ) :
+  Filter.Tendsto (fun N => ↑((T.reconstructedResidual N) r) k) Filter.atTop (nhds (↑r k))
+KomorebiSpace.OverlapTransport.Routing.correction_bound.{u, v} {V : Type u} {H : Type v} [NormedAddCommGroup H]
+  [NormedSpace ℝ H] (e : KomorebiSpace.OverlapTransport.Frames) {graph : SimpleGraph V} [Fintype V] {o : V}
+  (routing : KomorebiSpace.OverlapTransport.Routing graph o) (r : KomorebiSpace.OverlapTransport.Edges graph → H) :
+  ‖(KomorebiSpace.OverlapTransport.Routing.correction e routing) r‖ ≤ ↑routing.radius * ‖r‖
+KomorebiSpace.OverlapTransport.Routing.unique_exact_repair.{u, v} {V : Type u} {H : Type v} [NormedAddCommGroup H]
+  [NormedSpace ℝ H] (e : KomorebiSpace.OverlapTransport.Frames) {graph : SimpleGraph V} [Fintype V] {o : V}
+  (routing : KomorebiSpace.OverlapTransport.Routing graph o) (x : V → H) :
+  ∃! y, (KomorebiSpace.OverlapTransport.edgeDifferential e graph) y = 0 ∧ y o = x o
+KomorebiSpace.OverlapTransport.Routing.routes_agree_on_actual_residual.{u, v} {V : Type u} {H : Type v}
+  [NormedAddCommGroup H] [NormedSpace ℝ H] (e : KomorebiSpace.OverlapTransport.Frames) {graph : SimpleGraph V}
+  [Fintype V] {o : V} (routing other : KomorebiSpace.OverlapTransport.Routing graph o) (x : V → H) :
+  (KomorebiSpace.OverlapTransport.Routing.correction e routing)
+      ((KomorebiSpace.OverlapTransport.edgeDifferential e graph) x) =
+    (KomorebiSpace.OverlapTransport.Routing.correction e other)
+      ((KomorebiSpace.OverlapTransport.edgeDifferential e graph) x)
+KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair_parallel.{u, v} {V : Type u} {H : Type v}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [Fintype V]
+  (T : KomorebiSpace.AmplifiedTransport.Connection V H) {graph : SimpleGraph V} {o : V}
+  (p : KomorebiSpace.OverlapTransport.Routing graph o) (x : V → H) :
+  T.Parallel graph ((KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair T p) x)
+KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair_error.{u, v} {V : Type u} {H : Type v}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [Fintype V]
+  (T : KomorebiSpace.AmplifiedTransport.Connection V H) {graph : SimpleGraph V} {o : V}
+  (p : KomorebiSpace.OverlapTransport.Routing graph o)
+  (hr : IsClosed (Set.range ⇑(KomorebiSpace.AmplifiedTransport.Rooted.rootResidualMap T p))) (x : V → H) :
+  ‖x - (KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair T p) x‖ ≤
+    KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.stabilityGain T p hr * ‖(T.differential graph) x‖
+KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.closed_range_iff_global_bound.{u, v} {V : Type u} {H : Type v}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [Fintype V]
+  (T : KomorebiSpace.AmplifiedTransport.Connection V H) {graph : SimpleGraph V} {o : V}
+  (p : KomorebiSpace.OverlapTransport.Routing graph o) :
+  IsClosed (Set.range ⇑(KomorebiSpace.AmplifiedTransport.Rooted.rootResidualMap T p)) ↔
+    ∃ C,
+      0 ≤ C ∧
+        ∀ (x : V → H),
+          ‖x - (KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair T p) x‖ ≤
+            C * ‖(T.differential graph) x‖
+KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair_route_independent.{u, v} {V : Type u} {H : Type v}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [Fintype V]
+  (T : KomorebiSpace.AmplifiedTransport.Connection V H) {graph : SimpleGraph V} {o : V}
+  (p q : KomorebiSpace.OverlapTransport.Routing graph o) :
+  KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair T p =
+    KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.orthogonalRepair T q
+KomorebiSpace.ProtectedHilbertRepair.exists_unique_nearest.{u, v, w} {E : Type u} {R : Type v} {S : Type w}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [NormedAddCommGroup R] [NormedSpace ℝ R]
+  [NormedAddCommGroup S] [NormedSpace ℝ S] (D : E →L[ℝ] R) (p : E →L[ℝ] S) (x : E)
+  (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible D p x) :
+  ∃! y, D y = 0 ∧ p y = p x ∧ ∀ (z : E), D z = 0 → p z = p x → ‖x - y‖ ≤ ‖x - z‖
+KomorebiSpace.ProtectedHilbertRepair.repair_pythagoras.{u, v, w} {E : Type u} {R : Type v} {S : Type w}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [NormedAddCommGroup R] [NormedSpace ℝ R]
+  [NormedAddCommGroup S] [NormedSpace ℝ S] (D : E →L[ℝ] R) (p : E →L[ℝ] S) (x : E)
+  (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible D p x) (y : E) (hy : D y = 0) (hp : p y = p x) :
+  ‖x - y‖ ^ 2 =
+    ‖x - KomorebiSpace.ProtectedHilbertRepair.repair D p x hx‖ ^ 2 +
+      ‖KomorebiSpace.ProtectedHilbertRepair.repair D p x hx - y‖ ^ 2
+KomorebiSpace.ProtectedHilbertRepair.closed_range_iff_protected_bound.{u, v, w} {E : Type u} {R : Type v} {S : Type w}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [NormedAddCommGroup R] [NormedSpace ℝ R]
+  [NormedAddCommGroup S] [NormedSpace ℝ S] (D : E →L[ℝ] R) (p : E →L[ℝ] S) [CompleteSpace R] :
+  IsClosed (Set.range ⇑(KomorebiSpace.ProtectedHilbertRepair.restricted D p)) ↔
+    ∃ C,
+      0 ≤ C ∧
+        ∀ (x : E) (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible D p x),
+          ‖x - KomorebiSpace.ProtectedHilbertRepair.repair D p x hx‖ ≤ C * ‖D x‖
+KomorebiSpace.BoundedApproximateRealization.exists_solution_of_bounded_approximation.{u_1, u_2} {H : Type u_1}
+  {Y : Type u_2} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+  [InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (u : ℕ → H) (r : Y) (M : ℝ) (hbound : ∀ (n : ℕ), ‖u n‖ ≤ M)
+  (himage : Filter.Tendsto (fun n => T (u n)) Filter.atTop (nhds r)) : ∃ a, T a = r ∧ ‖a‖ ≤ M
+KomorebiSpace.BoundedApproximateRealization.norm_tendsto_atTop_of_not_mem_range.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (u : ℕ → H) (r : Y) (hr : r ∉ Set.range ⇑T)
+  (himage : Filter.Tendsto (fun n => T (u n)) Filter.atTop (nhds r)) :
+  Filter.Tendsto (fun n => ‖u n‖) Filter.atTop Filter.atTop
+KomorebiSpace.NestedMinimumCorrections.nested_affine_energy.{u_1} {H : Type u_1} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty)
+  (hc : ∀ (n : ℕ), IsClosed ↑(A n)) (hnest : Antitone A) {n m : ℕ} (hnm : n ≤ m) :
+  ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc m -
+          KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^
+      2 =
+    ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc m‖ ^ 2 -
+      ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^ 2
+KomorebiSpace.NestedMinimumCorrections.nested_affine_intersection_iff_bounded.{u_1} {H : Type u_1}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] (A : ℕ → AffineSubspace ℝ H)
+  (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)) (hnest : Antitone A) :
+  (∃ x, ∀ (n : ℕ), x ∈ A n) ↔ ∃ M, ∀ (n : ℕ), ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ≤ M
+KomorebiSpace.NestedMinimumCorrections.nested_affine_strong_realization.{u_1} {H : Type u_1} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty)
+  (hc : ∀ (n : ℕ), IsClosed ↑(A n)) (hnest : Antitone A)
+  (hb : ∃ M, ∀ (n : ℕ), ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ≤ M) :
+  ∃ aStar,
+    Filter.Tendsto (KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc) Filter.atTop (nhds aStar) ∧
+      KomorebiSpace.NestedMinimumCorrections.IsMinimum (⋂ n, ↑(A n)) aStar ∧
+        (∀ (b : H), KomorebiSpace.NestedMinimumCorrections.IsMinimum (⋂ n, ↑(A n)) b → b = aStar) ∧
+          ∀ (n : ℕ),
+            ‖aStar - KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^ 2 =
+              ‖aStar‖ ^ 2 - ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^ 2
+KomorebiSpace.NestedMinimumCorrections.nested_affine_escape.{u_1} {H : Type u_1} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty)
+  (hc : ∀ (n : ℕ), IsClosed ↑(A n)) (hnest : Antitone A) (hempty : ¬∃ x, ∀ (n : ℕ), x ∈ A n) :
+  Filter.Tendsto (fun n => ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖) Filter.atTop
+    Filter.atTop
+KomorebiSpace.ProtectedBoundedRealization.exists_exact_repair_of_bounded_approximation.{u_1, u_2, u_3} {E : Type u_1}
+  {Y : Type u_2} {Z : Type u_3} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [NormedAddCommGroup Y]
+  [InnerProductSpace ℝ Y] [CompleteSpace Y] [NormedAddCommGroup Z] [NormedSpace ℝ Z] (D : E →L[ℝ] Y) (p : E →L[ℝ] Z)
+  (f : E) (u : ℕ → ↥(↑p).ker) (M : ℝ) (hbound : ∀ (n : ℕ), ‖u n‖ ≤ M)
+  (hresidual : Filter.Tendsto (fun n => ‖D ↑(u n) - D f‖) Filter.atTop (nhds 0)) :
+  ∃ y, D y = 0 ∧ p y = p f ∧ ‖f - y‖ ≤ M
+KomorebiSpace.RegularizedHilbertRepair.exists_unique_minimizer.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (α : ℝ) (hα : 0 < α) (r : Y) :
+  ∃! a,
+    ∀ (b : H),
+      KomorebiSpace.RegularizedHilbertRepair.objective T α r a ≤
+        KomorebiSpace.RegularizedHilbertRepair.objective T α r b
+KomorebiSpace.RegularizedHilbertRepair.energy_identity.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (α : ℝ) (hα : 0 < α) (r : Y) (a : H) :
+  KomorebiSpace.RegularizedHilbertRepair.objective T α r a -
+      KomorebiSpace.RegularizedHilbertRepair.objective T α r
+        (KomorebiSpace.RegularizedHilbertRepair.correction T α hα r) =
+    ‖T (a - KomorebiSpace.RegularizedHilbertRepair.correction T α hα r)‖ ^ 2 +
+      α * ‖a - KomorebiSpace.RegularizedHilbertRepair.correction T α hα r‖ ^ 2
+KomorebiSpace.RegularizedHilbertRepair.correction_error_bound.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (α : ℝ) (hα : 0 < α) (r : Y) (a : H) :
+  ‖a - KomorebiSpace.RegularizedHilbertRepair.correction T α hα r‖ ≤
+    ‖KomorebiSpace.RegularizedHilbertRepair.gradient T α r a‖ / α
+KomorebiSpace.RegularizedHilbertRepair.objective_gap_bound.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (α : ℝ) (hα : 0 < α) (r : Y) (a : H) :
+  KomorebiSpace.RegularizedHilbertRepair.objective T α r a -
+      KomorebiSpace.RegularizedHilbertRepair.objective T α r
+        (KomorebiSpace.RegularizedHilbertRepair.correction T α hα r) ≤
+    ‖KomorebiSpace.RegularizedHilbertRepair.gradient T α r a‖ ^ 2 / α
+KomorebiSpace.RegularizationCertificates.primal_dual_gap.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (α : ℝ) (hα : 0 < α) (r z : Y) (a : H) :
+  KomorebiSpace.RegularizedHilbertRepair.objective T α r a - KomorebiSpace.RegularizationCertificates.dual T α r z =
+    ‖T a - r + z‖ ^ 2 + ‖(ContinuousLinearMap.adjoint T) z - α • a‖ ^ 2 / α
+KomorebiSpace.RegularizationCertificates.residual_witness_gap.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (α : ℝ) (hα : 0 < α) (r : Y) (a : H) :
+  KomorebiSpace.RegularizedHilbertRepair.objective T α r a -
+      KomorebiSpace.RegularizationCertificates.dual T α r (r - T a) =
+    ‖KomorebiSpace.RegularizedHilbertRepair.gradient T α r a‖ ^ 2 / α
+KomorebiSpace.BudgetProfile.exists_budget_minimizer.{u_1, u_2} {H : Type u_1} {Y : Type u_2} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (r : Y) {M : ℝ} (hM : 0 ≤ M) : ∃ a, ‖a‖ ≤ M ∧ ‖r - T a‖ = KomorebiSpace.BudgetProfile.beta T r M
+KomorebiSpace.BudgetProfile.beta_eq_floor_iff.{u_1, u_2} {H : Type u_1} {Y : Type u_2} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (r : Y) {M : ℝ} (hM : 0 ≤ M) :
+  KomorebiSpace.BudgetProfile.beta T r M = ‖r - KomorebiSpace.BudgetProfile.projectedDatum T r‖ ↔
+    ∃ a, T a = KomorebiSpace.BudgetProfile.projectedDatum T r ∧ ‖a‖ ≤ M
+KomorebiSpace.BudgetProfileGeometry.beta_profile_bounds.{u_1, u_2} {H : Type u_1} {Y : Type u_2} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (r : Y) {M₁ M₂ : ℝ} (h₁ : 0 ≤ M₁) (h₁₂ : M₁ ≤ M₂) :
+  0 ≤ KomorebiSpace.BudgetProfile.beta T r M₁ - KomorebiSpace.BudgetProfile.beta T r M₂ ∧
+    KomorebiSpace.BudgetProfile.beta T r M₁ - KomorebiSpace.BudgetProfile.beta T r M₂ ≤ ‖T‖ * (M₂ - M₁)
+KomorebiSpace.BudgetProfileGeometry.beta_convex_combination.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M₁ M₂ t : ℝ} (h₁ : 0 ≤ M₁) (h₂ : 0 ≤ M₂) (ht : 0 ≤ t) (ht₁ : t ≤ 1) :
+  KomorebiSpace.BudgetProfile.beta T r (t * M₁ + (1 - t) * M₂) ≤
+    t * KomorebiSpace.BudgetProfile.beta T r M₁ + (1 - t) * KomorebiSpace.BudgetProfile.beta T r M₂
+KomorebiSpace.BudgetDuality.sharp_budget_duality.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (r : Y) {M : ℝ} (hM : 0 ≤ M) :
+  IsGreatest ((fun z => inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖) '' Metric.closedBall 0 1)
+    (KomorebiSpace.BudgetProfile.beta T r M)
+KomorebiSpace.BudgetDuality.strict_exclusion_certificate.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (r : Y) {M ε : ℝ} {z : Y} (hz : ‖z‖ ≤ 1)
+  (hcert : ε < inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖) : ¬∃ a, ‖a‖ ≤ M ∧ ‖r - T a‖ ≤ ε
+KomorebiSpace.BudgetRobustness.beta_abs_sub_le.{u_1, u_2} {H : Type u_1} {Y : Type u_2} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace H] [CompleteSpace Y]
+  (T S : H →L[ℝ] Y) (r s : Y) {η δ M : ℝ} (hM : 0 ≤ M) (hTS : ‖T - S‖ ≤ η) (hrs : ‖r - s‖ ≤ δ) :
+  |KomorebiSpace.BudgetProfile.beta T r M - KomorebiSpace.BudgetProfile.beta S s M| ≤ δ + η * M
+KomorebiSpace.BudgetRobustness.nominal_dual_lower_certificate.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace H]
+  [CompleteSpace Y] (T S : H →L[ℝ] Y) (r s : Y) {η δ M : ℝ} (hM : 0 ≤ M) (hTS : ‖T - S‖ ≤ η) (hrs : ‖r - s‖ ≤ δ) {z : Y}
+  (hz : ‖z‖ ≤ 1) :
+  inner ℝ s z - M * ‖(ContinuousLinearMap.adjoint S) z‖ - δ - η * M ≤ KomorebiSpace.BudgetProfile.beta T r M
+KomorebiSpace.RegularizationLimits.fitted_tendsto_projectedDatum.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) :
+  Filter.Tendsto (fun α => T (KomorebiSpace.RegularizationLimits.path T r α)) (nhdsWithin 0 (Set.Ioi 0))
+    (nhds (KomorebiSpace.BudgetProfile.projectedDatum T r))
+KomorebiSpace.RegularizationLimits.weighted_penalty_tendsto_zero.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) :
+  Filter.Tendsto (fun α => α * ‖KomorebiSpace.RegularizationLimits.path T r α‖ ^ 2) (nhdsWithin 0 (Set.Ioi 0)) (nhds 0)
+KomorebiSpace.RegularizationLimits.norm_tendsto_atTop_of_not_mem_range.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) (hr : KomorebiSpace.BudgetProfile.projectedDatum T r ∉ Set.range ⇑T) :
+  Filter.Tendsto (fun α => ‖KomorebiSpace.RegularizationLimits.path T r α‖) (nhdsWithin 0 (Set.Ioi 0)) Filter.atTop
+KomorebiSpace.RegularizationStrongLimit.exists_unique_minimum_and_limit.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) (hb : KomorebiSpace.BudgetProfile.projectedDatum T r ∈ Set.range ⇑T) :
+  ∃! a,
+    (T a = KomorebiSpace.BudgetProfile.projectedDatum T r ∧
+        ∀ (x : H), T x = KomorebiSpace.BudgetProfile.projectedDatum T r → ‖a‖ ≤ ‖x‖) ∧
+      Filter.Tendsto (KomorebiSpace.RegularizationLimits.path T r) (nhdsWithin 0 (Set.Ioi 0)) (nhds a)
+KomorebiSpace.RegularizationNoiseLimits.stopping_three_term_bound.{u, v} {H : Type u} {Y : Type v}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r s : Y) (a aMin : H) {α δ ε : ℝ} (hα : 0 < α) (hdata : ‖s - r‖ ≤ δ)
+  (hsolver : ‖KomorebiSpace.RegularizedHilbertRepair.gradient T α s a‖ ≤ ε) :
+  ‖a - aMin‖ ≤ ε / α + δ / (2 * √α) + ‖KomorebiSpace.RegularizationLimits.path T r α - aMin‖
+KomorebiSpace.RegularizationNoiseLimits.data_noise_coefficient_attained (α : ℝ) (hα : 0 < α) (r s : ℝ) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction (KomorebiSpace.RegularizationNoiseLimits.scalarSharpOperator α) α
+          hα r -
+        KomorebiSpace.RegularizedHilbertRepair.correction
+          (KomorebiSpace.RegularizationNoiseLimits.scalarSharpOperator α) α hα s‖ =
+    ‖r - s‖ / (2 * √α)
+KomorebiSpace.RegularizationNoiseLimits.stopping_rule_sequence.{u, v} {H : Type u} {Y : Type v} [NormedAddCommGroup H]
+  [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y]
+  (T : H →L[ℝ] Y) (r : Y) (s : ℕ → Y) (a : ℕ → H) (aMin : H) (α δ ε : ℕ → ℝ)
+  (ha : T aMin = KomorebiSpace.BudgetProfile.projectedDatum T r)
+  (hmin : ∀ (x : H), T x = KomorebiSpace.BudgetProfile.projectedDatum T r → ‖aMin‖ ≤ ‖x‖) (hpos : ∀ (n : ℕ), 0 < α n)
+  (hα : Filter.Tendsto α Filter.atTop (nhds 0)) (hdata : ∀ (n : ℕ), ‖s n - r‖ ≤ δ n)
+  (hsolver : ∀ (n : ℕ), ‖KomorebiSpace.RegularizedHilbertRepair.gradient T (α n) (s n) (a n)‖ ≤ ε n)
+  (hnoise : Filter.Tendsto (fun n => δ n / √(α n)) Filter.atTop (nhds 0))
+  (hsolve : Filter.Tendsto (fun n => ε n / α n) Filter.atTop (nhds 0)) :
+  Filter.Tendsto a Filter.atTop (nhds aMin) ∧
+    ∀ (n : ℕ),
+      ‖a n - aMin‖ ≤ ε n / α n + δ n / (2 * √(α n)) + ‖KomorebiSpace.RegularizationLimits.path T r (α n) - aMin‖
+KomorebiSpace.CoordinateCovector.protected_coordinate_certificate.{u, u_1, u_2, u_3, u_4, u_5} {ι : Type u} [Fintype ι]
+  [DecidableEq ι] {E : Type u_1} {Y : Type u_2} {Z : Type u_3} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+  [CompleteSpace E] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] [CompleteSpace Y] [NormedAddCommGroup Z]
+  [NormedSpace ℝ Z] {κ : Type u_4} {η : Type u_5} [Fintype κ] [Fintype η] (D : E →L[ℝ] Y) (p : E →L[ℝ] Z)
+  (B : Module.Basis ι ℝ ↥(↑p).ker) (eE : OrthonormalBasis η ℝ E) (eY : OrthonormalBasis κ ℝ Y) (α : ℝ) (c : ι → ℝ)
+  (r : Y) :
+  have Bm := KomorebiSpace.CoordinateCovector.operatorMatrix B eE (↑p).ker.subtypeL;
+  have dm := KomorebiSpace.CoordinateCovector.operatorMatrix eE.toBasis eY D;
+  have S := dm * Bm;
+  have G := Bm.transpose * Bm;
+  have q :=
+    KomorebiSpace.CoordinateCovector.normalResidual S G α c
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates eY r);
+  have g :=
+    KomorebiSpace.RegularizedHilbertRepair.gradient (KomorebiSpace.ProtectedHilbertRepair.restricted D p) α r
+      (KomorebiSpace.CoordinateCovector.synthesis B c);
+  g =
+      (↑p).ker.orthogonalProjectionOnto
+          ((ContinuousLinearMap.adjoint D) (D ↑(KomorebiSpace.CoordinateCovector.synthesis B c) - r)) +
+        α • KomorebiSpace.CoordinateCovector.synthesis B c ∧
+    IsUnit G ∧
+      KomorebiSpace.CoordinateCovector.orthonormalCoordinates eE ↑g = Bm.mulVec (G⁻¹.mulVec q) ∧
+        ‖↑g‖ ^ 2 = q ⬝ᵥ G⁻¹.mulVec q
+KomorebiSpace.CoordinateCovector.normalResidual_basis_change.{u_1, u_2} {m : Type u_1} {n : Type u_2} [Fintype m]
+  [Fintype n] [DecidableEq n] (S : Matrix m n ℝ) (G C : Matrix n n ℝ) (hC : IsUnit C) (α : ℝ) (c : n → ℝ) (r : m → ℝ) :
+  KomorebiSpace.CoordinateCovector.normalResidual (S * C) (C.transpose * G * C) α (C⁻¹.mulVec c) r =
+    C.transpose.mulVec (KomorebiSpace.CoordinateCovector.normalResidual S G α c r)
+KomorebiSpace.CoordinateCovector.normalResidual_certificate_basis_change.{u_1, u_2} {m : Type u_1} {n : Type u_2}
+  [Fintype m] [Fintype n] [DecidableEq n] (S : Matrix m n ℝ) (G C : Matrix n n ℝ) (hC : IsUnit C) (α : ℝ) (c : n → ℝ)
+  (r : m → ℝ) :
+  have q' := KomorebiSpace.CoordinateCovector.normalResidual (S * C) (C.transpose * G * C) α (C⁻¹.mulVec c) r;
+  q' ⬝ᵥ (C.transpose * G * C)⁻¹.mulVec q' =
+    KomorebiSpace.CoordinateCovector.normalResidual S G α c r ⬝ᵥ
+      G⁻¹.mulVec (KomorebiSpace.CoordinateCovector.normalResidual S G α c r)
+KomorebiSpace.CoordinateCovector.changedBasis_same_vector.{u_2, u_4} {n : Type u_2} [Fintype n] [DecidableEq n]
+  {H : Type u_4} [AddCommGroup H] [Module ℝ H] (B : Module.Basis n ℝ H) (C : Matrix n n ℝ) (hC : IsUnit C) (c : n → ℝ) :
+  (KomorebiSpace.CoordinateCovector.changedBasis B C hC).equivFun.symm (C⁻¹.mulVec c) = B.equivFun.symm c
+KomorebiSpace.DiagonalRegularization.index (j : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.aCoord (m j : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.vCoord (m j : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.A (m : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.B (m : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.partialA (m K : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.partialB (m K : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.H : Type
+KomorebiSpace.DiagonalRegularization.T :
+  KomorebiSpace.DiagonalRegularization.H →L[ℝ] KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.w : KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.a (m : ℕ) : KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.v (m : ℕ) : KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.b : KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.c (m : ℕ) : KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.alpha (m : ℕ) : ℝ
+KomorebiSpace.DiagonalRegularization.hardPrefix (N : ℕ) : KomorebiSpace.DiagonalRegularization.H
+KomorebiSpace.DiagonalRegularization.T_opNorm_le_one : ‖KomorebiSpace.DiagonalRegularization.T‖ ≤ 1
+KomorebiSpace.DiagonalRegularization.T_adjoint :
+  ContinuousLinearMap.adjoint KomorebiSpace.DiagonalRegularization.T = KomorebiSpace.DiagonalRegularization.T
+KomorebiSpace.DiagonalRegularization.T_injective : Function.Injective ⇑KomorebiSpace.DiagonalRegularization.T
+KomorebiSpace.DiagonalRegularization.a_eq_correction {m : ℕ} (hm : 1 ≤ m) :
+  KomorebiSpace.DiagonalRegularization.a m =
+    KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+      (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ KomorebiSpace.DiagonalRegularization.w
+KomorebiSpace.DiagonalRegularization.residual_eq_v (m : ℕ) :
+  KomorebiSpace.DiagonalRegularization.w -
+      KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.a m) =
+    KomorebiSpace.DiagonalRegularization.v m
+KomorebiSpace.DiagonalRegularization.norm_hardPrefix_residual_sq (N : ℕ) :
+  ‖KomorebiSpace.DiagonalRegularization.w -
+          KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.hardPrefix N)‖ ^
+      2 =
+    ∑' (j : ℕ), KomorebiSpace.DiagonalRegularization.wCoord (j + N) ^ 2
+KomorebiSpace.DiagonalRegularization.b_preimage_unique (x : KomorebiSpace.DiagonalRegularization.H)
+  (hx : KomorebiSpace.DiagonalRegularization.T x = KomorebiSpace.DiagonalRegularization.b) :
+  x = KomorebiSpace.DiagonalRegularization.w
+KomorebiSpace.DiagonalRegularization.c_eq_correction {m : ℕ} (hm : 1 ≤ m) :
+  KomorebiSpace.DiagonalRegularization.c m =
+    KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+      (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ KomorebiSpace.DiagonalRegularization.b
+KomorebiSpace.DiagonalRegularization.norm_bias_sq (m : ℕ) :
+  ‖KomorebiSpace.DiagonalRegularization.c m - KomorebiSpace.DiagonalRegularization.w‖ ^ 2 =
+    KomorebiSpace.DiagonalRegularization.B m
+KomorebiSpace.DiagonalRegularization.budget_at_sqrt_A {m : ℕ} (hm : 1 ≤ m) :
+  KomorebiSpace.BudgetProfile.beta KomorebiSpace.DiagonalRegularization.T KomorebiSpace.DiagonalRegularization.w
+      √(KomorebiSpace.DiagonalRegularization.A m) =
+    √(KomorebiSpace.DiagonalRegularization.B m)
+KomorebiSpace.DiagonalRegularization.norm_hardPrefix_sq (N : ℕ) :
+  ‖KomorebiSpace.DiagonalRegularization.hardPrefix N‖ ^ 2 = ↑N
+KomorebiSpace.DiagonalRegularization.a_unique_minimizer {m : ℕ} (hm : 1 ≤ m) :
+  (∀ (x : KomorebiSpace.DiagonalRegularization.H),
+      KomorebiSpace.RegularizedHilbertRepair.objective KomorebiSpace.DiagonalRegularization.T
+          (KomorebiSpace.DiagonalRegularization.alpha m) KomorebiSpace.DiagonalRegularization.w
+          (KomorebiSpace.DiagonalRegularization.a m) ≤
+        KomorebiSpace.RegularizedHilbertRepair.objective KomorebiSpace.DiagonalRegularization.T
+          (KomorebiSpace.DiagonalRegularization.alpha m) KomorebiSpace.DiagonalRegularization.w x) ∧
+    ∀ (x : KomorebiSpace.DiagonalRegularization.H),
+      (∀ (y : KomorebiSpace.DiagonalRegularization.H),
+          KomorebiSpace.RegularizedHilbertRepair.objective KomorebiSpace.DiagonalRegularization.T
+              (KomorebiSpace.DiagonalRegularization.alpha m) KomorebiSpace.DiagonalRegularization.w x ≤
+            KomorebiSpace.RegularizedHilbertRepair.objective KomorebiSpace.DiagonalRegularization.T
+              (KomorebiSpace.DiagonalRegularization.alpha m) KomorebiSpace.DiagonalRegularization.w y) →
+        x = KomorebiSpace.DiagonalRegularization.a m
+KomorebiSpace.DiagonalRegularization.proposition_30_1 (m K : ℕ) (hm : 1 ≤ m) (hmK : m ≤ K) :
+  KomorebiSpace.DiagonalRegularization.a m =
+      KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+        (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ KomorebiSpace.DiagonalRegularization.w ∧
+    KomorebiSpace.DiagonalRegularization.w -
+          KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.a m) =
+        KomorebiSpace.DiagonalRegularization.v m ∧
+      ‖KomorebiSpace.DiagonalRegularization.a m‖ ^ 2 = KomorebiSpace.DiagonalRegularization.A m ∧
+        ‖KomorebiSpace.DiagonalRegularization.v m‖ ^ 2 = KomorebiSpace.DiagonalRegularization.B m ∧
+          ↑m / 4 ≤ KomorebiSpace.DiagonalRegularization.A m ∧
+            KomorebiSpace.DiagonalRegularization.A m ≤ 4 * ↑m / 3 ∧
+              1 / (4 * (↑m + 1)) ≤ KomorebiSpace.DiagonalRegularization.B m ∧
+                KomorebiSpace.DiagonalRegularization.B m ≤ 2 / ↑m ∧
+                  0 ≤ KomorebiSpace.DiagonalRegularization.A m - KomorebiSpace.DiagonalRegularization.partialA m K ∧
+                    KomorebiSpace.DiagonalRegularization.A m - KomorebiSpace.DiagonalRegularization.partialA m K ≤
+                        ↑m ^ 4 / (3 * ↑K ^ 3) ∧
+                      0 ≤ KomorebiSpace.DiagonalRegularization.B m - KomorebiSpace.DiagonalRegularization.partialB m K ∧
+                        KomorebiSpace.DiagonalRegularization.B m - KomorebiSpace.DiagonalRegularization.partialB m K ≤
+                          1 / ↑K
+KomorebiSpace.DiagonalRegularization.proposition_30_1_series (m K : ℕ) (hm : 1 ≤ m) (hmK : m ≤ K) :
+  ↑m / 4 ≤ KomorebiSpace.DiagonalRegularization.A m ∧
+    KomorebiSpace.DiagonalRegularization.A m ≤ 4 * ↑m / 3 ∧
+      1 / (4 * (↑m + 1)) ≤ KomorebiSpace.DiagonalRegularization.B m ∧
+        KomorebiSpace.DiagonalRegularization.B m ≤ 2 / ↑m ∧
+          0 ≤ KomorebiSpace.DiagonalRegularization.A m - KomorebiSpace.DiagonalRegularization.partialA m K ∧
+            KomorebiSpace.DiagonalRegularization.A m - KomorebiSpace.DiagonalRegularization.partialA m K ≤
+                ↑m ^ 4 / (3 * ↑K ^ 3) ∧
+              0 ≤ KomorebiSpace.DiagonalRegularization.B m - KomorebiSpace.DiagonalRegularization.partialB m K ∧
+                KomorebiSpace.DiagonalRegularization.B m - KomorebiSpace.DiagonalRegularization.partialB m K ≤ 1 / ↑K
+KomorebiSpace.DiagonalRegularization.tendsto_A_div :
+  Filter.Tendsto (fun m => KomorebiSpace.DiagonalRegularization.A m / ↑m) Filter.atTop (nhds (Real.pi / 4))
+KomorebiSpace.DiagonalRegularization.tendsto_mul_B :
+  Filter.Tendsto (fun m => ↑m * KomorebiSpace.DiagonalRegularization.B m) Filter.atTop (nhds (Real.pi / 4))
+KomorebiSpace.DiagonalRegularization.tendsto_actual_budget_product :
+  Filter.Tendsto
+    (fun M =>
+      M *
+        KomorebiSpace.BudgetProfile.beta KomorebiSpace.DiagonalRegularization.T KomorebiSpace.DiagonalRegularization.w
+          M)
+    Filter.atTop (nhds (Real.pi / 4))
+KomorebiSpace.DiagonalRegularization.tendsto_sqrt_mul_hardPrefix_residual :
+  Filter.Tendsto
+    (fun N =>
+      √↑N *
+        ‖KomorebiSpace.DiagonalRegularization.w -
+            KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.hardPrefix N)‖)
+    Filter.atTop (nhds 1)
+KomorebiSpace.DiagonalRegularization.sharp_diagonal_budget_asymptotic :
+  Filter.Tendsto (fun m => KomorebiSpace.DiagonalRegularization.A m / ↑m) Filter.atTop (nhds (Real.pi / 4)) ∧
+    Filter.Tendsto (fun m => ↑m * KomorebiSpace.DiagonalRegularization.B m) Filter.atTop (nhds (Real.pi / 4)) ∧
+      Filter.Tendsto
+          (fun M =>
+            M *
+              KomorebiSpace.BudgetProfile.beta KomorebiSpace.DiagonalRegularization.T
+                KomorebiSpace.DiagonalRegularization.w M)
+          Filter.atTop (nhds (Real.pi / 4)) ∧
+        Filter.Tendsto
+          (fun N =>
+            √↑N *
+              ‖KomorebiSpace.DiagonalRegularization.w -
+                  KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.hardPrefix N)‖)
+          Filter.atTop (nhds 1)
+KomorebiSpace.DiagonalRegularization.tendsto_budget_product_of_mesh (u : ℕ → ℝ) (β : ℝ → ℝ) (c : ℝ)
+  (hpos : ∀ (n : ℕ), 0 < u n) (hmono : Monotone u) (hu : Filter.Tendsto u Filter.atTop Filter.atTop)
+  (hβmono : AntitoneOn β (Set.Ici 0)) (hβnonneg : ∀ (M : ℝ), 0 ≤ M → 0 ≤ β M)
+  (hratio : Filter.Tendsto (fun n => u (n + 1) / u n) Filter.atTop (nhds 1))
+  (hprod : Filter.Tendsto (fun n => u n * β (u n)) Filter.atTop (nhds c)) :
+  Filter.Tendsto (fun M => M * β M) Filter.atTop (nhds c)
+KomorebiSpace.DiagonalRegularization.noiseSchedule (δ : ℝ) : ℕ
+KomorebiSpace.DiagonalRegularization.diagonal_bias_bound {m : ℕ} (hm : 1 ≤ m) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+          (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ KomorebiSpace.DiagonalRegularization.b -
+        KomorebiSpace.DiagonalRegularization.w‖ ≤
+    √(2 / ↑m)
+KomorebiSpace.DiagonalRegularization.diagonal_noisy_error (s : KomorebiSpace.DiagonalRegularization.H) {m : ℕ}
+  (hm : 1 ≤ m) {δ : ℝ} (hdata : ‖s - KomorebiSpace.DiagonalRegularization.b‖ ≤ δ) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+          (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ s -
+        KomorebiSpace.DiagonalRegularization.w‖ ≤
+    √(2 / ↑m) + δ * ↑m / 2
+KomorebiSpace.DiagonalRegularization.corollary_30_3 (s : KomorebiSpace.DiagonalRegularization.H) {δ : ℝ} (hδ : 0 < δ)
+  (hδ₁ : δ ≤ 1) (hdata : ‖s - KomorebiSpace.DiagonalRegularization.b‖ ≤ δ) :
+  let m := ⌈δ ^ (-2 / 3)⌉₊;
+  have hm := ⋯;
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+            (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ s -
+          KomorebiSpace.DiagonalRegularization.w‖ ≤
+      √(2 / ↑m) + δ * ↑m / 2 ∧
+    √(2 / ↑m) + δ * ↑m / 2 ≤ (√2 + 1) * δ ^ (1 / 3)
