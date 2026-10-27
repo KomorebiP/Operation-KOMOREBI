@@ -1,0 +1,16 @@
+module session_three_agent
+lineage L_A
+lineage L_B
+lineage L_C
+agent A lineage L_A
+agent B lineage L_B
+agent C lineage L_C
+session Relay participants ["A","B","C"] initial A_to_B
+session_transition Relay A_to_B communicate A B -> B_to_C
+session_transition Relay B_to_C communicate B C -> complete
+start_session Relay
+observe message by A content "shared-causal-hypothesis" confidence 0.90
+communicate message from A to B as message_B in Relay
+communicate message_B from B to C as message_C in Relay
+assert session Relay state complete
+assert packet message_C provenance communicated

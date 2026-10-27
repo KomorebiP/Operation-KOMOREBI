@@ -1,0 +1,10 @@
+module tool_effect
+lineage L_A
+agent A lineage L_A
+grant A effect toolCall
+observe query_ready by A content "database-query-validated" confidence 0.96
+endorse query_ready by A threshold 0.90
+authorize query_ready by A for toolCall
+plan run_query by A using query_ready effect toolCall
+execute run_query by A
+assert action run_query executed true

@@ -1,0 +1,15 @@
+module session_protocol
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+session CooperativeDiagnosis participants ["A","B"] initial waiting_for_A
+session_transition CooperativeDiagnosis waiting_for_A communicate A B -> waiting_for_B
+session_transition CooperativeDiagnosis waiting_for_B communicate B A -> ready
+start_session CooperativeDiagnosis
+observe map by A content "north-corridor-open" confidence 0.92
+communicate map from A to B as map_at_B in CooperativeDiagnosis
+assert session CooperativeDiagnosis state waiting_for_B
+observe hazard by B content "north-corridor-hazard" confidence 0.91
+communicate hazard from B to A as hazard_at_A in CooperativeDiagnosis
+assert session CooperativeDiagnosis state ready

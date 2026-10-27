@@ -1,0 +1,10 @@
+# EXPECT-ERROR: reachable deadlocks
+module session_deadlock
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+session S participants ["A","B"] initial waiting_A
+session_transition S waiting_A communicate A B -> waiting_B
+session_terminal S ready
+verify_session S

@@ -1,0 +1,14 @@
+module shared_workspace
+lineage L_A
+lineage L_B
+lineage L_C
+agent A lineage L_A
+agent B lineage L_B
+agent C lineage L_C
+observe map_fragment by A content "north-corridor-open" confidence 0.92
+communicate map_fragment from A to B as map_at_B
+communicate map_at_B from B to C as map_at_C
+assert packet map_at_B provenance communicated
+assert packet map_at_C provenance communicated
+assert packet map_at_C accessible_to C true
+assert memory C contains map_at_C as observed false

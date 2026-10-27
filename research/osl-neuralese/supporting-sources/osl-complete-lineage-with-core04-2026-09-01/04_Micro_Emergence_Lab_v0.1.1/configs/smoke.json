@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.1.1",
+  "preset": "smoke",
+  "seed": 1729,
+  "runtime": {
+    "offline": true,
+    "deterministic": true,
+    "device": "auto",
+    "num_workers": 0,
+    "pretrained_downloads": false
+  },
+  "dataset": {
+    "seed": 1729,
+    "worlds": ["algebra", "provenance", "resources"],
+    "renderers": ["direct", "narrative", "dialogue", "log", "passive"],
+    "split_sizes": {
+      "train": 60,
+      "renaming_train": 12,
+      "renaming_scrambled_train": 12,
+      "iid_validation": 12,
+      "iid_test": 12,
+      "lexical": 12,
+      "heldout_pair": 12,
+      "heldout_triple": 12,
+      "law": 12,
+      "length": 12,
+      "counterfactual": 12,
+      "renaming": 12
+    },
+    "train_min_length": 1,
+    "train_max_length": 3,
+    "length_test_min": 4,
+    "length_test_max": 5,
+    "include_formal_fields": true
+  },
+  "baselines": {
+    "majority": true,
+    "question_majority": true,
+    "tfidf": true,
+    "tfidf_max_features": 10000
+  },
+  "training": {
+    "default_arm": "answer_only",
+    "architectures": ["transformer"],
+    "arms": ["answer_only", "role_bind_augmented", "role_bind_scrambled"],
+    "epochs": 1,
+    "batch_size": 16,
+    "lr": 0.0005,
+    "max_length": 128,
+    "num_workers": 0,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "early_stopping_patience": 1,
+    "selection_metric": "query_macro_accuracy",
+    "amp": false,
+    "checkpoint_every_epoch": true,
+    "model": {
+      "d_model": 64,
+      "n_heads": 4,
+      "n_layers": 1,
+      "d_ff": 128,
+      "dropout": 0.1,
+      "representation_dim": 32,
+      "operator_dim": 8
+    },
+    "loss_weights": {
+      "answer": 1.0,
+      "state": 0.25,
+      "equivalence": 0.1,
+      "operator_alignment": 0.05,
+      "operator_laws": 0.05
+    }
+  },
+  "evaluation": {
+    "batch_size": 32,
+    "bootstrap_samples": 0,
+    "checkpoint": "last",
+    "save_predictions": true,
+    "adjudication": {
+      "required_splits": ["lexical", "heldout_pair", "heldout_triple", "renaming"]
+    }
+  },
+  "quotient": {
+    "enabled": true,
+    "candidate_dimensions": [2, 4, 8],
+    "temperatures": [1.0, 0.25],
+    "max_iterations": 20
+  },
+  "report": {
+    "make_figures": true,
+    "format": "markdown"
+  }
+}

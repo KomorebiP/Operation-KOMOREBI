@@ -1,0 +1,16 @@
+# EXPECT-ERROR: stale or semantically invalid
+module stale_use_proof
+lineage L_A
+agent A lineage L_A
+grant A effect externalAct
+observe e by A content "event" confidence 0.95
+endorse e by A threshold 0.9
+authorize e by A for planning
+proof pa access e by A
+proof po origin e source A lineage L_A
+proof pc clear e for A
+proof pe endorsement e by A
+proof pu authorization e by A for planning
+proof p_use use e by A for planning from ["pa","po","pc","pe","pu"]
+authorize e by A for externalAct
+plan act by A using e effect externalAct requires p_use

@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.1.1",
+  "preset": "standard",
+  "seed": 1729,
+  "runtime": {
+    "offline": true,
+    "deterministic": true,
+    "device": "auto",
+    "num_workers": 0,
+    "pretrained_downloads": false
+  },
+  "dataset": {
+    "seed": 1729,
+    "worlds": ["algebra", "provenance", "resources"],
+    "renderers": ["direct", "narrative", "dialogue", "log", "passive"],
+    "split_sizes": {
+      "train": 20000,
+      "renaming_train": 2000,
+      "renaming_scrambled_train": 2000,
+      "iid_validation": 2000,
+      "iid_test": 2000,
+      "lexical": 2000,
+      "heldout_pair": 2000,
+      "heldout_triple": 2000,
+      "law": 2000,
+      "length": 2000,
+      "counterfactual": 2000,
+      "renaming": 1998
+    },
+    "train_min_length": 1,
+    "train_max_length": 4,
+    "length_test_min": 5,
+    "length_test_max": 8,
+    "include_formal_fields": true
+  },
+  "baselines": {
+    "majority": true,
+    "question_majority": true,
+    "tfidf": true,
+    "tfidf_max_features": 100000
+  },
+  "training": {
+    "default_arm": "answer_only",
+    "architectures": ["transformer"],
+    "arms": [
+      "answer_only",
+      "role_bind_augmented",
+      "role_bind_scrambled",
+      "state_supervised",
+      "equivalence_regularized",
+      "combined"
+    ],
+    "epochs": 8,
+    "batch_size": 32,
+    "lr": 0.0003,
+    "max_length": 256,
+    "num_workers": 0,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "early_stopping_patience": 3,
+    "selection_metric": "query_macro_accuracy",
+    "amp": true,
+    "checkpoint_every_epoch": true,
+    "model": {
+      "d_model": 192,
+      "n_heads": 6,
+      "n_layers": 4,
+      "d_ff": 512,
+      "dropout": 0.1,
+      "representation_dim": 96,
+      "operator_dim": 16
+    },
+    "loss_weights": {
+      "answer": 1.0,
+      "state": 0.35,
+      "equivalence": 0.2,
+      "operator_alignment": 0.1,
+      "operator_laws": 0.1
+    }
+  },
+  "evaluation": {
+    "batch_size": 64,
+    "bootstrap_samples": 1000,
+    "checkpoint": "best",
+    "save_predictions": true,
+    "adjudication": {
+      "required_splits": ["lexical", "heldout_pair", "heldout_triple", "renaming"],
+      "minimum_split_accuracy": 0.55,
+      "minimum_margin_over_control": 0.02
+    }
+  },
+  "quotient": {
+    "enabled": true,
+    "candidate_dimensions": [2, 4, 8, 16, 32],
+    "temperatures": [2.0, 1.0, 0.5, 0.25, 0.1],
+    "max_iterations": 250
+  },
+  "report": {
+    "make_figures": true,
+    "format": "markdown",
+    "include_per_split_tables": true,
+    "include_negative_controls": true
+  }
+}

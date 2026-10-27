@@ -1,0 +1,16 @@
+module contract_invariants
+lineage L_A
+agent A lineage L_A
+contract no_foreign always no_foreign_observed
+contract no_simulated always no_simulated_observed
+contract no_quarantine_endorse always quarantine_blocks_endorsement
+contract capability_required always capability_confinement
+observe real_event by A content "real-event" confidence 0.97
+write_memory real_event by A as observed
+simulate imagined by A content "imagined-event" confidence 0.60
+write_memory imagined by A as simulated
+check_contracts
+assert contract no_foreign violations 0
+assert contract no_simulated violations 0
+assert contract no_quarantine_endorse violations 0
+assert contract capability_required violations 0

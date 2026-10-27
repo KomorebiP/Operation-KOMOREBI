@@ -1,0 +1,417 @@
+\section{Static and operational semantics of OSL-Core}
+\label{sec:osl-semantics}
+
+This section gives a finite semantics for the executable subset.  The purpose is
+twofold: to make the proposed language concrete, and to separate the behavior
+actually implemented by the reference interpreter from the richer language
+family proposed elsewhere in the manuscript.
+
+\subsection{Static contexts}
+
+A typing state is the tuple
+\[
+(\Gamma,\Delta,\Pi,\Omega),
+\]
+where persistent declarations lie in \(\Gamma\), linear resources in
+\(\Delta\), proved propositions in \(\Pi\), and effect capabilities in
+\(\Omega\).  A complete judgment is
+\[
+\Gamma;\Delta;\Pi;\Omega
+\vdash s\;\mathsf{ok}
+\dashv\Delta'
+\;!\;\mathcal E.
+\]
+The statement consumes resources from \(\Delta\), returns \(\Delta'\), and may
+emit effects in \(\mathcal E\).
+
+Representative declarations are:
+\[
+\Gamma(a)=\texttt{Agent}[L_a],
+\qquad
+\Gamma(P)=\texttt{Operator}[\tau\Rightarrow\tau],
+\qquad
+\Omega(a)\subseteq\Effects.
+\]
+Observation resources have the linear type
+\[
+\Obs_a(c):\mathsf{linear}.
+\]
+Origin records are persistent:
+\[
+\Origin_a(c):\mathsf{persistent}.
+\]
+
+\subsection{Runtime configuration}
+
+A runtime configuration is
+\[
+\Sigma=
+(A,L,X,V,O,P,M,Q,C,R,E),
+\]
+where:
+\begin{longtable}{p{0.10\textwidth}p{0.78\textwidth}}
+\toprule
+Field & Meaning \\
+\midrule
+\endfirsthead
+\toprule
+Field & Meaning \\
+\midrule
+\endhead
+\(A\) & agents and their active lineages \\
+\(L\) & lineage parent relation \\
+\(X\) & typed spaces \\
+\(V\) & vector and tensor values \\
+\(O\) & typed operators \\
+\(P\) & provenance-aware packets \\
+\(M\) & autobiographical memory records \\
+\(Q\) & quarantine relation \\
+\(C\) & runtime effect capabilities \\
+\(R\) & canonical receipts \\
+\(E\) & event log \\
+\bottomrule
+\end{longtable}
+The small-step relation is
+\[
+\langle\Sigma,s\rangle
+\longrightarrow
+\langle\Sigma',s'\rangle.
+\]
+A completed statement reduces to \(\mathsf{skip}\).  A failed verifier check
+reduces to an explicit rejection state
+\(\mathsf{reject}(r)\) carrying a reason and the pre-rejection runtime snapshot.
+
+\subsection{Observation rule}
+
+If agent \(a\) exists with active lineage \(L_a\), then
+\[
+\frac{
+  a\in A
+}{
+  \langle\Sigma,
+  \operatorname{observe}\;x\;\operatorname{by}\;a\;c\;q
+  \rangle
+  \longrightarrow
+  \langle
+  \Sigma[P\mapsto P[x\mapsto p]],\mathsf{skip}
+  \rangle
+}
+\]
+where
+\[
+p=(c,a,L_a,\mathsf{observed},q,
+\{a\},\{a\},\varnothing,\varnothing,\varnothing,\{a\},\bot,d_p).
+\]
+The observation constructor is the only primitive rule in the finite core that
+creates \(\Obs_a(c)\).
+
+\subsection{Communication rule}
+
+Let \(p\) be accessible to sender \(a\).  Communication creates a new packet
+\(p'\) accessible and bound to recipient \(b\), but it preserves the original
+source and creates no observation token for \(b\):
+\[
+\frac{
+  a\in\operatorname{Access}(p)
+  \qquad
+  b\in A
+}{
+  \operatorname{send}_{a\to b}(p)
+  \longrightarrow
+  p'
+}
+\]
+with
+\[
+\begin{aligned}
+\operatorname{content}(p')&=\operatorname{content}(p),\\
+\operatorname{source}(p')&=\operatorname{source}(p),\\
+\operatorname{lineage}(p')&=\operatorname{lineage}(p),\\
+\operatorname{prov}(p')&=\mathsf{communicated},\\
+\operatorname{ObsTokens}(p')&=\varnothing,\\
+\operatorname{parent}(p')&=d_p.
+\end{aligned}
+\]
+This rule implements provenance transport rather than provenance reassignment.
+
+\subsection{Injection and quarantine}
+
+External injection produces
+\[
+p_{\mathrm{inj}}
+=(c,\mathsf{external},\mathsf{external},\mathsf{injected},q,
+\{a\},\varnothing,\{a\},\varnothing,\varnothing,\varnothing,\bot,d_p).
+\]
+The packet is accessible but not self-bound, and the receiving agent is in its
+quarantine set.  This gives a formal dissociation:
+\[
+J_ac
+\wedge
+Q_ac
+\wedge
+\neg B_ac.
+\]
+The same content may therefore participate in inspection without authorizing
+memory or action.
+
+\subsection{Endorsement rule}
+
+Endorsement is permitted when content is accessible, unquarantined, and meets a
+confidence threshold:
+\[
+\frac{
+  a\in\operatorname{Access}(p)
+  \qquad
+  a\notin\operatorname{Quarantine}(p)
+  \qquad
+  q(p)\ge\theta
+}{
+  \operatorname{endorse}_a(p,\theta)
+  \longrightarrow
+  K_a^{q(p)}p
+}.
+\]
+No endorsement rule removes provenance or creates autobiographical ownership.
+
+\subsection{Authorization rule}
+
+A use scope \(\chi\) may be authorized only for accessible, bound,
+unquarantined content:
+\[
+\frac{
+  a\in\operatorname{Access}(p)
+  \qquad
+  a\in\operatorname{Bound}(p)
+  \qquad
+  a\notin\operatorname{Quarantine}(p)
+}{
+  \operatorname{authorize}_a(p,\chi)
+  \longrightarrow
+  \Auth_a(p,\chi)
+}.
+\]
+Authorization does not grant the runtime effect capability itself.
+
+\subsection{Memory-write rule}
+
+Let \(\operatorname{Compat}(\rho,\kappa)\) be the declared compatibility
+relation between packet provenance and requested memory class.  Ordinary memory
+write requires
+\[
+\frac{
+  a\in\operatorname{Access}(p)
+  \quad
+  a\in\operatorname{Bound}(p)
+  \quad
+  a\notin\operatorname{Quarantine}(p)
+  \quad
+  \operatorname{Compat}(\rho(p),\kappa)
+}{
+  \operatorname{writeMemory}_a^\kappa(p)
+  \longrightarrow
+  M_a\cup\{m(p,\kappa)\}
+}.
+\]
+For \(\kappa=\mathsf{observed}\), the additional premises are
+\[
+\Obs_a(p)
+\quad\text{and}\quad
+\operatorname{sourceLineage}(p)=L_a.
+\]
+Thus a communicated packet cannot be written as the recipient's direct
+observation even when its content and confidence are unchanged.
+
+\subsection{Planning rule}
+
+A plan instruction creates an action value when
+\[
+\begin{aligned}
+&a\in\operatorname{Access}(p),
+&&a\in\operatorname{Bound}(p),\\
+&a\in\operatorname{Endorsed}(p),
+&&a\notin\operatorname{Quarantine}(p),\\
+&\Auth_a(p,\mathsf{planning})
+&&\text{or}\quad\Auth_a(p,e).
+\end{aligned}
+\]
+The resulting action has type \(\texttt{Action}[\{e\}]\).  It is not yet an
+external effect.
+
+\subsection{Execution rule}
+
+Execution checks the runtime capability:
+\[
+\frac{
+  u:\texttt{Action}[\{e\}]
+  \qquad
+  e\in\Omega(a)
+}{
+  \operatorname{execute}_a(u)
+  \longrightarrow
+  \operatorname{emit}(e,u)
+}.
+\]
+If \(e\notin\Omega(a)\), the runtime rejects the transition.  This is the
+concrete separation between proof-gated planning and capability-gated action.
+
+\subsection{Simulation isolation}
+
+In the full language, simulation runs under a capability transform
+\[
+\operatorname{Sandbox}(\Omega)
+=
+\Omega\setminus
+\{\mathsf{externalAct},\mathsf{toolCall},\mathsf{modifyModel}\}.
+\]
+Every packet produced by the simulated program is relabeled
+\(\mathsf{simulated}\), and every attempted excluded effect is rejected.  The
+finite interpreter implements the simulated provenance constructor but leaves
+nested program execution as an open extension.
+
+\subsection{Numeric operator semantics}
+
+A finite operator declaration
+\[
+T:\texttt{State}[n]\Rightarrow\texttt{State}[m]
+\]
+is represented by a matrix \(T\in\mathbb R^{m\times n}\).  Application is
+matrix multiplication.  Projector validation checks
+\[
+\|P^2-P\|_F\le\tau.
+\]
+Coordinate transport checks invertibility and computes
+\[
+A'=TAT^{-1}.
+\]
+An intertwiner check accepts when
+\[
+\|TA-BT\|_F\le\tau.
+\]
+The numerical backend is deterministic for fixed arrays, tolerance, NumPy
+version, and linear-algebra environment, subject to ordinary floating-point
+qualifications.
+
+\subsection{Canonical receipts}
+
+A state-changing instruction emits
+\[
+r=(i,k,\operatorname{payload},d_r),
+\]
+where \(i\) is the monotonically increasing receipt index, \(k\) is the
+transition kind, and
+\[
+d_r=\operatorname{SHA256}
+\left(
+\operatorname{CanonicalJSON}(i,k,\operatorname{payload})
+\right).
+\]
+Canonicalization sorts mappings and sets, fixes separators, rejects NaN, and
+normalizes the represented packet fields.  Again, the digest proves integrity
+of the serialized claim, not truth, authorship, or authorization.
+
+\subsection{Metatheoretic properties of the finite core}
+
+\begin{theorem}[Determinism of the reference transition relation]
+Fix the runtime primitives, numerical backend, and program text.  For every
+finite reference configuration \(\Sigma\) and statement \(s\), there is at most
+one pair \((\Sigma',s')\) such that
+\[
+\langle\Sigma,s\rangle
+\longrightarrow
+\langle\Sigma',s'\rangle.
+\]
+\end{theorem}
+
+\begin{proof}
+The grammar is line-disjoint: after comment and whitespace removal, each
+accepted statement matches exactly one command form.  Every command performs a
+deterministic lookup and deterministic state update.  Matrix operations are
+functions of their explicit arrays and tolerances.  Policy rejection is also
+deterministic.  Therefore one statement has at most one successor.
+\end{proof}
+
+\begin{theorem}[Provenance non-forging in the finite core]
+Suppose packet \(p_B\) is obtained solely by communicating packet \(p_A\) from
+agent \(A\) to distinct agent \(B\).  Then the transition cannot introduce
+\(\Obs_B(p_B)\).  Consequently \(p_B\) cannot be written as
+\(\mathsf{observed}\) memory by \(B\) through the declared memory rule.
+\end{theorem}
+
+\begin{proof}
+The communication constructor sets the observation-token set of the target
+packet to the empty set.  The only constructor that introduces an observation
+token is direct observation by the same active agent and lineage.  The observed
+memory rule requires \(\Obs_B(p_B)\), so the write is rejected.
+\end{proof}
+
+\begin{corollary}[Same content does not collapse provenance]
+A direct observation and an injected or communicated packet may contain
+identical strings while yielding different legal memory actions.
+\end{corollary}
+
+\begin{theorem}[Capability confinement in the finite core]
+If action \(u\) declares effect \(e\) and \(e\notin\Omega(a)\), then
+\(\operatorname{execute}_a(u)\) is rejected and emits no external effect.
+\end{theorem}
+
+\begin{proof}
+The execution rule checks membership in the capability set before marking the
+action executed or appending an execution receipt.  Failure returns the
+pre-execution state together with a rejection reason.
+\end{proof}
+
+\begin{theorem}[Simulation provenance separation]
+A packet created by the simulation constructor cannot satisfy the direct
+observation premise of the observed-memory rule.
+\end{theorem}
+
+\begin{proof}
+Simulation sets provenance to \(\mathsf{simulated}\) and creates no observation
+token.  Both the provenance compatibility check and the observation-token
+premise therefore fail for an observed-memory write.
+\end{proof}
+
+\begin{theorem}[Safe progress for closed finite programs]
+Let a finite \OSLCore program be closed with respect to all identifiers.  At
+each statement, either the program performs the unique declared transition, or
+it reaches an explicit verifier rejection.  It does not silently reinterpret a
+failed proof as a successful transition.
+\end{theorem}
+
+\begin{proof}
+By case analysis over the finite grammar.  Every form either satisfies all
+premises and returns its deterministic successor, or one checked premise fails
+and raises the explicit rejection state.  There is no implicit cast from an
+incompatible provenance or missing capability to a permitted one.
+\end{proof}
+
+\subsection{Reference interpreter}
+
+The accompanying implementation is organized as follows:
+\begin{verbatim}
+reference/
+|-- osl_core.py
+`-- run_examples.py
+examples/
+|-- 01_direct_observation.osl
+|-- ...
+`-- 114_linear_ownership_reused.osl
+tests/
+`-- test_osl_core.py
+\end{verbatim}
+The interpreter is deliberately compact enough to audit.  It contains a parser,
+runtime state, canonical receipts, operator checks, provenance policies, action
+capabilities, assertions, and a command-line interface.  Running
+\begin{verbatim}
+PYTHONPATH=reference python reference/run_examples.py
+\end{verbatim}
+executes all sixty-six packaged programs and checks that the twenty-four negative programs
+are rejected for their declared reasons.
+
+\begin{provedbox}
+\textbf{Finite mechanized evidence.} The v0.5 release adds a parser-independent compact abstract transition kernel, five decomposed exhaustive finite models, deterministic source-to-statement-boundary replay, runtime-state invariant checking, and an independent dictionary-based receipt/proof kernel. Together they cover 2,330 exhaustively reached abstract states, 47,958 finite transition checks, 66 source programs, 1,149 emitted receipts, and 70 proof terms. All declared checks pass. The exact domains and trust boundaries are stated in \cref{sec:osl-core-v03}.
+\end{provedbox}
+
+\begin{placeholderbox}
+\textbf{Remaining proof-assistant obligation.} The Python runtime and certificate generators remain trusted software. A full formalization should prove parser-to-AST correspondence, preservation, progress with typed safe rejection, linear-resource preservation, receipt-trace correspondence, rollback equivalence, and a typed-fragment noninterference theorem in a proof assistant.
+\end{placeholderbox}

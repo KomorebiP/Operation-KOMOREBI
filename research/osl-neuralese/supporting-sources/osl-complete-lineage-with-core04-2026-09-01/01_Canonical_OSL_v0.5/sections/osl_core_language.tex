@@ -1,0 +1,420 @@
+\section{OSL-Core: a concrete operator-symbolic language}
+\label{sec:osl-core}
+
+The preceding definition describes a family of languages.  This section fixes a
+small concrete member of that family, called \OSLCore.  Its purpose is not to
+replace neural computation or to settle every metatheoretic question.  It is a
+reference intermediate language in which operator declarations, provenance,
+proof obligations, memory writes, communication, effects, and action
+authorization can be stated in one typed program.
+
+\begin{statusbox}
+The release accompanying this manuscript includes a deterministic reference
+interpreter for a finite subset, sixty-six source programs, sixty-one automated tests,
+and a machine-readable example-suite result.  The interpreter implements the
+operational policies described below for finite arrays, provenance-aware
+packets, first-class proofs, bounded capabilities, temporal contracts,
+transactions, session protocols, neural proposals, memory writes, planning,
+effects, and receipts.  It does not implement
+the complete higher-order, stochastic, nonlinear, or proof-assistant semantics
+proposed elsewhere in the paper.
+\end{statusbox}
+
+\subsection{Design goals}
+
+\OSLCore is designed around twelve requirements.
+\begin{enumerate}[leftmargin=1.7em]
+  \item \textbf{Typed operator composition.}  States and transformations carry
+  explicit source and target types.
+  \item \textbf{Coordinate tolerance.}  Meaning may be preserved by an
+  intertwiner or transported operator even when concrete vectors differ.
+  \item \textbf{Provenance conservation.}  Communication preserves source and
+  lineage rather than converting foreign content into direct observation.
+  \item \textbf{Linear evidence resources.}  Observation and authorization
+  tokens cannot be silently forged or duplicated.
+  \item \textbf{Effect confinement.}  External action, tool calls, memory
+  writes, communication, simulation, and model modification are separate
+  effects.
+  \item \textbf{Safe rejection.}  A program that lacks a proof or capability is
+  rejected or quarantined rather than implicitly coerced into validity.
+  \item \textbf{Canonical receipts.}  Every state-changing instruction emits a
+  canonical record whose digest binds the declared transition.
+  \item \textbf{Hybrid execution.}  Learned latent modules may propose states
+  and operators, while the typed verifier controls which proposals may become
+  memory or action.
+  \item \textbf{First-class proofs.}  Access, origin, clearance, endorsement,
+  authorization, ownership, and use may be materialized as digest-bound proof
+  terms rather than remaining implicit runtime flags.
+  \item \textbf{Temporal contracts.}  Safety invariants and bounded response
+  obligations are monitored over the execution trace.
+  \item \textbf{Transactional repair.}  Memory and model updates may be
+  checkpointed, committed, or rolled back atomically in the finite runtime.
+  \item \textbf{Protocol-typed sharing.}  Finite-state sessions constrain the
+  order and participants of shared-workspace communication.
+\end{enumerate}
+
+\subsection{Lexical conventions}
+
+Identifiers begin with a letter or underscore and may contain letters, digits,
+underscores, and hyphens.  Comments begin with \texttt{\#}.  Strings are
+UTF-8 double-quoted literals.  Numeric arrays use JSON-compatible bracket
+notation.  Every source statement occupies one logical line in the reference
+subset, although a production parser would permit ordinary block layout.
+
+The language is case-sensitive.  Reserved words are shown in
+\cref{lst:osl-keywords}.  Canonical serialization normalizes field order,
+numeric precision, set order, and whitespace before hashing; textual spelling
+is therefore not itself a trusted provenance source.
+
+\begin{lstlisting}[style=osl,caption={Reserved words in the finite reference subset.},label={lst:osl-keywords}]
+module lineage extends agent grant effect
+space dim vector in values operator kind matrix
+apply transport check_projector check_intertwiner between and tolerance
+observe infer simulate inject communicate from to as
+bind quarantine endorse threshold authorize for write_memory
+plan using expected execute feedback observed
+proof mode persistent affine linear requires attest neural_propose admit reject_candidate
+contract after within check_contracts begin_transaction commit_transaction rollback_transaction
+session participants initial session_transition session_terminal verify_session start_session
+secret metadata receipt_check verify_receipts
+assert packet provenance accessible_to quarantined_by
+memory contains action executed vector approx parent show
+\end{lstlisting}
+
+\subsection{Concrete type grammar}
+
+The abstract type universe is refined to the following concrete family:
+\[
+\begin{aligned}
+\tau ::= {}&
+\texttt{Bool}
+\mid \texttt{Nat}
+\mid \texttt{Real}
+\mid \texttt{String}
+\mid \texttt{Agent}
+\mid \texttt{Lineage}\\
+&\mid \texttt{State}[n]
+\mid \texttt{Tensor}[d_1,\ldots,d_k]
+\mid \texttt{Operator}[\tau\Rightarrow\sigma]\\
+&\mid \texttt{Packet}[\kappa,\tau]
+\mid \texttt{Workspace}[a,\tau]
+\mid \texttt{Memory}[a,\kappa,\tau]\\
+&\mid \texttt{Proof}[\varphi]
+\mid \texttt{Action}[\mathcal E]
+\mid \texttt{Receipt}[\varphi]
+\mid \texttt{Distribution}[\tau].
+\end{aligned}
+\]
+Here \(n,d_i\in\mathbb N_{>0}\), \(a\) is an agent, \(\kappa\) is a
+provenance class, and \(\mathcal E\) is an effect row.
+
+\begin{longtable}{p{0.26\textwidth}p{0.30\textwidth}p{0.34\textwidth}}
+\toprule
+Type & Static role & Runtime interpretation \\
+\midrule
+\endfirsthead
+\toprule
+Type & Static role & Runtime interpretation \\
+\midrule
+\endhead
+\texttt{State[n]} & finite causal or latent state & vector in \(\mathbb R^n\) in the reference backend \\
+\texttt{Tensor[d1,...,dk]} & higher-order structured state & multidimensional array or tensor-network handle \\
+\texttt{Operator[t=>s]} & typed transformation & matrix, nonlinear map, symbolic operator, or verified external primitive \\
+\texttt{Packet[k,t]} & content with provenance class \(k\) & canonical content, source, lineage, confidence, authorization, digest \\
+\texttt{Workspace[a,t]} & content accessible to agent \(a\) & packet admitted to the private or shared workspace \\
+\texttt{Memory[a,k,t]} & autobiographical record of class \(k\) & immutable record linked to a source packet digest \\
+\texttt{Proof[p]} & evidence for proposition \(p\) & proof term, capability, or verifier receipt \\
+\texttt{Action[E]} & action whose effects are in \(E\) & planned transition awaiting capability-checked execution \\
+\texttt{Receipt[p]} & canonical transition witness & integrity-bound record supporting proposition \(p\) \\
+\bottomrule
+\end{longtable}
+
+\subsection{Provenance classes}
+
+The concrete provenance class is
+\[
+\kappa\in
+\left\{
+\begin{array}{l}
+\mathsf{observed},\mathsf{inferred},\mathsf{recalled},
+\mathsf{simulated},\mathsf{communicated},\mathsf{injected},\\
+\mathsf{foreign},\mathsf{reconstructed},\mathsf{conflicted},
+\mathsf{unresolved}
+\end{array}
+\right\}.
+\]
+These tags are not mere comments.  They constrain the constructors available
+for memory and planning.  The same decoded content may inhabit distinct packet
+types:
+\[
+\texttt{Packet[observed,RouteStatus]}
+\quad\text{and}\quad
+\texttt{Packet[injected,RouteStatus]}.
+\]
+The types share a content carrier but have different admissible eliminations.
+
+\subsection{Resource qualifiers}
+
+A production language should distinguish at least three resource modes:
+\[
+q::=\mathsf{persistent}\mid\mathsf{affine}\mid\mathsf{linear}.
+\]
+Persistent values may be copied.  Affine values may be used at most once.
+Linear values must be consumed exactly once unless an explicit escrow or
+cancellation proof is supplied.  Direct observation tokens, one-shot
+capabilities, and cryptographic nonces are linear.  Content strings and public
+operator declarations are normally persistent.
+
+The full static judgment is
+\[
+\Gamma;\Delta;\Pi;\Omega
+\vdash e:\tau
+\dashv\Delta'
+\;!\;\mathcal E,
+\]
+where:
+\begin{itemize}[leftmargin=1.6em]
+  \item \(\Gamma\) contains persistent variables and declarations;
+  \item \(\Delta\) contains affine or linear evidence resources;
+  \item \(\Pi\) contains proved propositions and trusted policy assumptions;
+  \item \(\Omega\) contains effect capabilities;
+  \item \(\Delta'\) records unconsumed resources;
+  \item \(\mathcal E\) is the emitted effect row.
+\end{itemize}
+The finite Python interpreter enforces the most important resource distinction
+operationally: a communicated packet contains an origin record but no new
+observation token for the recipient.
+
+\subsection{Effect rows and capabilities}
+
+Effect rows are finite sets drawn from
+\[
+\Effects=
+\{
+\mathsf{read},
+\mathsf{writeMemory},
+\mathsf{communicate},
+\mathsf{toolCall},
+\mathsf{externalAct},
+\mathsf{simulate},
+\mathsf{modifyModel}
+\}.
+\]
+An effect may be inferred statically, authorized symbolically, and separately
+granted as a runtime capability.  These are different gates:
+\[
+\operatorname{WellTyped}
+\not\Rightarrow
+\operatorname{Authorized}
+\not\Rightarrow
+\operatorname{CapabilityPresent}.
+\]
+This three-stage separation is deliberate.  A plan may be mathematically
+well-formed but still lack permission or execution capability.
+
+\subsection{Surface grammar}
+
+\Cref{lst:osl-ebnf} gives the declarative grammar for the reference subset.  It
+is intentionally compact enough to inspect manually.  A larger implementation
+would add parametric polymorphism, modules, recursive data, stochastic kernels,
+pattern matching, asynchronous channels, and verified foreign-function
+interfaces.
+
+\lstinputlisting[style=osl,caption={EBNF for OSL-Core 0.3.},label={lst:osl-ebnf}]{reference/osl_core.ebnf}
+
+\subsection{Declaration forms}
+
+A source file begins by declaring a module, lineages, agents, spaces, and
+operators.  For example:
+\begin{lstlisting}[style=osl]
+module mapping_agent
+lineage L_root
+lineage L_mobile extends L_root
+agent Mapper lineage L_mobile
+grant Mapper effect externalAct
+space Hidden dim 3
+operator Pself : Hidden -> Hidden kind projector
+  matrix [[1,0,0],[0,1,0],[0,0,0]]
+\end{lstlisting}
+A lineage declaration creates an explicit parent relation.  It does not by
+itself prove identity preservation; it only creates the object on which later
+transformation and receipt proofs may operate.
+
+\subsection{Operator forms}
+
+The concrete subset recognizes four operator roles:
+\[
+\mathsf{linear},\quad
+\mathsf{projector},\quad
+\mathsf{transport},\quad
+\mathsf{external}.
+\]
+The interpreter implements finite linear and projector matrices.  A projector
+declaration is accepted only when
+\[
+\|P^2-P\|\leq\tau_P.
+\]
+Transport of an endomorphism is compiled to
+\[
+P'=TPT^{-1}.
+\]
+The command
+\begin{lstlisting}[style=osl]
+check_intertwiner T between A and B tolerance 1e-9
+\end{lstlisting}
+checks
+\[
+\|TA-BT\|\leq 10^{-9}.
+\]
+A future nonlinear backend would replace matrices by typed callable objects and
+would check an approximate conjugacy or bisimulation obligation.
+
+\subsection{Packet constructors}
+
+The four primitive event constructors have distinct semantics:
+\begin{align*}
+\operatorname{observe}_a(c,q)
+&:\texttt{Packet[observed,Content]},\\
+\operatorname{infer}_a(c\mid p,q)
+&:\texttt{Packet[inferred,Content]},\\
+\operatorname{simulate}_a(c,q)
+&:\texttt{Packet[simulated,Content]},\\
+\operatorname{inject}_{\mathrm{ext}\to a}(c,q)
+&:\texttt{Packet[injected,Content]}.
+\end{align*}
+Only the observation constructor creates the linear token
+\(\Obs_a(c)\).  Simulation creates a self-generated source record but no
+observation token.  Injection creates workspace access and immediate
+quarantine, but no self-binding or ownership authorization.
+
+\subsection{Communication}
+
+Communication copies content but transports provenance:
+\[
+\frac{
+  p:\texttt{Packet}[\kappa,\tau]
+  \qquad
+  \Access_A(p)
+}{
+  \operatorname{send}_{A\to B}(p):
+  \texttt{Packet}[\mathsf{communicated},\tau]
+}.
+\]
+The result contains
+\[
+\Origin_A(p)\otimes\Access_B(p),
+\]
+not \(\Obs_B(p)\).  Repeated forwarding retains the original source and a
+parent-digest chain; it does not rewrite the content as a direct observation by
+each intermediate agent.
+
+\subsection{Binding, endorsement, and authorization}
+
+The language separates three judgments that are often conflated:
+\begin{enumerate}[leftmargin=1.7em]
+  \item \texttt{bind} associates accessible content with an agent's active
+  planning context or lineage;
+  \item \texttt{endorse} checks whether confidence exceeds a declared threshold
+  and whether quarantine is absent;
+  \item \texttt{authorize} grants a named use such as planning, communication,
+  or a particular effect.
+\end{enumerate}
+Thus:
+\[
+\operatorname{Bound}(p,a)
+\not\Rightarrow
+\operatorname{Endorsed}(p,a)
+\not\Rightarrow
+\operatorname{Authorized}(p,a,\chi).
+\]
+The distinctions permit the system to maintain an accessible but disputed
+claim, a believed but non-actionable claim, or an actionable claim whose effect
+is still blocked by the capability layer.
+
+\subsection{Memory writes}
+
+A memory instruction has the form
+\begin{lstlisting}[style=osl]
+write_memory event_at_A by A as communicated
+\end{lstlisting}
+and compiles to a proof obligation:
+\[
+\operatorname{Accessible}_A(p)
+\wedge
+\operatorname{Bound}_A(p)
+\wedge
+\operatorname{Compatible}(\rho(p),\kappa)
+\wedge
+\neg\operatorname{Quarantined}_A(p).
+\]
+For \(\kappa=\mathsf{observed}\), it additionally requires a nonforgeable
+observation token matching the active agent and lineage.  A communicated packet
+may be stored as communicated knowledge, but not as the receiver's direct
+observation.
+
+\subsection{Planning and execution}
+
+Planning creates a typed action but does not execute it:
+\begin{lstlisting}[style=osl]
+plan alternate_route by A using route_blocked effect externalAct expected 1.0
+\end{lstlisting}
+The source packet must be accessible, bound, endorsed, authorized for planning
+or the named effect, and unquarantined.  Execution is a second transition:
+\begin{lstlisting}[style=osl]
+execute alternate_route by A
+\end{lstlisting}
+which checks that the agent possesses the runtime capability
+\(\mathsf{externalAct}\).  This separation permits dry-run planning,
+third-party verification, human approval, or sandbox evaluation before any
+external effect occurs.
+
+\subsection{Feedback}
+
+The command
+\begin{lstlisting}[style=osl]
+feedback alternate_route by A observed 1.2
+\end{lstlisting}
+links the observed consequence to the action receipt.  If an expected value was
+recorded, the runtime also emits the prediction error
+\[
+e=r_{\mathrm{observed}}-r_{\mathrm{expected}}.
+\]
+The finite core records the error but does not prescribe one universal learning
+rule.  A recurrent agent may use it to update confidence, request more evidence,
+retrain an operator, or reopen a quarantined hypothesis.
+
+\subsection{Assertions and executable specification}
+
+Packaged examples contain executable assertions such as:
+\begin{lstlisting}[style=osl]
+assert packet route_at_A provenance communicated
+assert memory A contains route_at_A as observed false
+assert action alternate_route executed true
+assert vector self_x approx [2.0,-1.0,0.0] tolerance 1e-12
+\end{lstlisting}
+These assertions are part of the example harness, not the trusted runtime
+language.  They state expected postconditions and provide a compact executable
+specification of the intended semantics.
+
+\subsection{Canonical packet representation}
+
+A runtime packet is the canonical tuple
+\[
+p=
+(c,a_{\mathrm{src}},L_{\mathrm{src}},\kappa,q,
+A,B,Q,K,\mathcal U,\mathcal O,d_{\mathrm{parent}},d_p),
+\]
+where:
+\begin{itemize}[leftmargin=1.6em]
+  \item \(A\) is the set of agents with access;
+  \item \(B\) is the set of agents to which the packet is currently bound;
+  \item \(Q\) is the quarantine set;
+  \item \(K\) is the endorsement set;
+  \item \(\mathcal U\) is the authorization map;
+  \item \(\mathcal O\) is the set of direct-observation tokens;
+  \item \(d_{\mathrm{parent}}\) links derived or communicated content to its
+  source packet;
+  \item \(d_p\) is the canonical packet digest.
+\end{itemize}
+The digest establishes integrity of the canonical representation.  It does not
+establish authorship, truth, or semantic authorization.

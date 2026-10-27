@@ -1,0 +1,15 @@
+module static_complex
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+session S participants ["A","B"] initial start
+session_transition S start communicate A B -> done
+contract c always no_foreign_observed
+secret hidden value "private"
+metadata fixed value "canonical" source trusted
+observe e by A content "event" confidence 0.9
+start_session S
+communicate e from A to B as eB in S
+assert session S state done
+check_contracts

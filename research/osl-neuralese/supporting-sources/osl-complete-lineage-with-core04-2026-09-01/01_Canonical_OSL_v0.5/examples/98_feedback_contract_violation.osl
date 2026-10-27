@@ -1,0 +1,11 @@
+# EXPECT-ERROR: lacks feedback
+module feedback_contract_violation
+lineage L_A
+agent A lineage L_A
+grant A effect externalAct
+contract feedback_required after execute require feedback within 2
+observe e by A content "act" confidence 0.95
+endorse e by A threshold 0.9
+authorize e by A for planning
+plan act by A using e effect externalAct
+execute act by A

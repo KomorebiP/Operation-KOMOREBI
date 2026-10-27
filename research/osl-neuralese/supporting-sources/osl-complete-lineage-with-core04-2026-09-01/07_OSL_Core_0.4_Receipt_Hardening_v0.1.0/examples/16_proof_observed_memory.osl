@@ -1,0 +1,12 @@
+module proof_observed_memory
+lineage L_A
+agent A lineage L_A
+observe event by A content "sensor-A-observed-event" confidence 0.98
+proof p_access access event by A
+proof p_origin origin event source A lineage L_A
+proof p_clear clear event for A
+proof p_observation observation event by A
+proof p_ownership ownership event by A as observed from ["p_access","p_origin","p_clear","p_observation"]
+write_memory event by A as observed requires p_ownership
+assert proof p_ownership valid true
+assert memory A contains event as observed true

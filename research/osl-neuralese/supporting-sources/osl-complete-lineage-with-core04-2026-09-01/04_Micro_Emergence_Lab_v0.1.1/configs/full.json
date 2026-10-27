@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1.1",
+  "preset": "full",
+  "seed": 1729,
+  "runtime": {
+    "offline": true,
+    "deterministic": true,
+    "device": "auto",
+    "num_workers": 0,
+    "pretrained_downloads": false
+  },
+  "dataset": {
+    "seed": 1729,
+    "worlds": ["algebra", "provenance", "resources"],
+    "renderers": ["direct", "narrative", "dialogue", "log", "passive"],
+    "split_sizes": {
+      "train": 100000,
+      "renaming_train": 10000,
+      "renaming_scrambled_train": 10000,
+      "iid_validation": 10000,
+      "iid_test": 10000,
+      "lexical": 10000,
+      "heldout_pair": 10000,
+      "heldout_triple": 10000,
+      "law": 10000,
+      "length": 10000,
+      "counterfactual": 10000,
+      "renaming": 9999
+    },
+    "train_min_length": 1,
+    "train_max_length": 4,
+    "length_test_min": 5,
+    "length_test_max": 12,
+    "include_formal_fields": true
+  },
+  "baselines": {
+    "majority": true,
+    "question_majority": true,
+    "tfidf": true,
+    "tfidf_max_features": 250000
+  },
+  "training": {
+    "default_arm": "answer_only",
+    "architectures": ["transformer"],
+    "arms": [
+      "answer_only",
+      "role_bind_augmented",
+      "role_bind_scrambled",
+      "state_supervised",
+      "equivalence_regularized",
+      "operator_regularized",
+      "combined"
+    ],
+    "epochs": 15,
+    "batch_size": 32,
+    "lr": 0.00025,
+    "max_length": 384,
+    "num_workers": 0,
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "early_stopping_patience": 4,
+    "selection_metric": "query_macro_accuracy",
+    "amp": true,
+    "checkpoint_every_epoch": true,
+    "model": {
+      "d_model": 256,
+      "n_heads": 8,
+      "n_layers": 6,
+      "d_ff": 768,
+      "dropout": 0.1,
+      "representation_dim": 128,
+      "operator_dim": 24
+    },
+    "loss_weights": {
+      "answer": 1.0,
+      "state": 0.4,
+      "equivalence": 0.25,
+      "operator_alignment": 0.125,
+      "operator_laws": 0.125
+    }
+  },
+  "evaluation": {
+    "batch_size": 64,
+    "bootstrap_samples": 5000,
+    "checkpoint": "best",
+    "save_predictions": true,
+    "adjudication": {
+      "required_splits": ["lexical", "heldout_pair", "heldout_triple", "renaming"],
+      "minimum_split_accuracy": 0.55,
+      "minimum_margin_over_control": 0.02
+    }
+  },
+  "quotient": {
+    "enabled": true,
+    "candidate_dimensions": [2, 4, 8, 16, 24, 32, 48, 64],
+    "temperatures": [4.0, 2.0, 1.0, 0.5, 0.25, 0.1, 0.05],
+    "max_iterations": 1000
+  },
+  "report": {
+    "make_figures": true,
+    "format": "markdown",
+    "include_per_split_tables": true,
+    "include_negative_controls": true,
+    "include_confidence_intervals": true
+  }
+}

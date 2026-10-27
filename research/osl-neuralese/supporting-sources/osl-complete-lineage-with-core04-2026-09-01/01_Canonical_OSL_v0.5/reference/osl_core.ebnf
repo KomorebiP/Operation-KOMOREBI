@@ -1,0 +1,130 @@
+(* OSL-Core 0.3 finite concrete grammar.  Every statement occupies one line. *)
+
+program       ::= statement* ;
+statement     ::= moduleDecl | lineageDecl | agentDecl
+                | grantDecl | revokeDecl
+                | spaceDecl | vectorDecl | operatorDecl | applyStmt
+                | transportStmt | operatorCheck
+                | observeStmt | inferStmt | simulateStmt | injectStmt
+                | neuralProposal | communicateStmt | bindStmt
+                | quarantineStmt | endorseStmt | authorizeStmt
+                | proofStmt | attestationStmt | candidateDecision
+                | memoryStmt | planStmt | executeStmt | feedbackStmt
+                | contractDecl | contractCheck | receiptCheck
+                | transactionStmt
+                | sessionDecl | sessionTransition | sessionTerminal
+                | sessionVerify | sessionStart
+                | secretDecl | metadataDecl
+                | assertStmt | "show" ;
+
+moduleDecl    ::= "module" Id ;
+lineageDecl   ::= "lineage" Id ["extends" Id] ;
+agentDecl     ::= "agent" Id "lineage" Id ;
+
+grantDecl     ::= "grant" Id "effect" Effect
+                  ["uses" Nat] ["until" Nat] ;
+revokeDecl    ::= "revoke" Id "effect" Effect ;
+
+spaceDecl     ::= "space" Id "dim" Nat ;
+vectorDecl    ::= "vector" Id "in" Id "values" Array ;
+operatorDecl  ::= "operator" Id ":" Id "->" Id
+                  "kind" OperatorKind "matrix" Matrix ;
+applyStmt     ::= "apply" Id "=" Id "(" Id ")" ;
+transportStmt ::= "transport" Id "via" Id "as" Id ;
+operatorCheck ::= "check_projector" Id ["tolerance" Real]
+                | "check_intertwiner" Id "between" Id "and" Id
+                  ["tolerance" Real] ;
+
+observeStmt   ::= "observe" Id "by" Id "content" String
+                  "confidence" Probability ;
+inferStmt     ::= "infer" Id "by" Id "from" Id "content" String
+                  "confidence" Probability ;
+simulateStmt  ::= "simulate" Id "by" Id "content" String
+                  "confidence" Probability ;
+injectStmt    ::= "inject" Id "to" Id "content" String
+                  "confidence" Probability ;
+neuralProposal ::= "neural_propose" Id "to" Id "feature" Id
+                   "content" String "confidence" Probability ;
+
+communicateStmt ::= "communicate" Id "from" Id "to" Id "as" Id
+                    ["in" Id] ;
+bindStmt      ::= "bind" Id "to" Id ;
+quarantineStmt ::= "quarantine" Id "by" Id ;
+endorseStmt   ::= "endorse" Id "by" Id "threshold" Probability ;
+authorizeStmt ::= "authorize" Id "by" Id "for" Id
+                  ["requires" Id] ;
+
+proofStmt     ::= proofCore ["mode" ProofMode] ;
+proofCore     ::= "proof" Id "access" Id "by" Id
+                | "proof" Id "origin" Id "source" Id "lineage" Id
+                | "proof" Id "clear" Id "for" Id
+                | "proof" Id "endorsement" Id "by" Id
+                | "proof" Id "authorization" Id "by" Id "for" Id
+                | "proof" Id "observation" Id "by" Id
+                | "proof" Id "capability" Effect "by" Id
+                | "proof" Id "use" Id "by" Id "for" Id
+                  "from" NameArray
+                | "proof" Id "ownership" Id "by" Id "as" Provenance
+                  "from" NameArray ;
+ProofMode     ::= "persistent" | "affine" | "linear" ;
+
+attestationStmt ::= "attest" "origin" Id "by" Id "lineage" Id
+                    "as" Id
+                  | "attest" "relevance" Id "by" Id "for" Id
+                    "as" Id ;
+
+candidateDecision ::= "admit" Id "by" Id "using" NameArray
+                    | "reject_candidate" Id "by" Id ;
+
+memoryStmt    ::= "write_memory" Id "by" Id "as" Provenance
+                  ["requires" Id] ;
+planStmt      ::= "plan" Id "by" Id "using" Id "effect" Effect
+                  { "expected" Real | "requires" Id } ;
+executeStmt   ::= "execute" Id "by" Id ;
+feedbackStmt  ::= "feedback" Id "by" Id "observed" Real ;
+
+contractDecl  ::= "contract" Id "always" ContractTemplate
+                | "contract" Id "after" "execute" "require" "feedback"
+                  "within" Nat ;
+contractCheck ::= "check_contracts" ;
+receiptCheck  ::= "verify_receipts" ;
+
+transactionStmt ::= "begin_transaction" Id
+                  | "commit_transaction" Id
+                  | "rollback_transaction" Id ;
+
+sessionDecl   ::= "session" Id "participants" NameArray
+                  "initial" Id ;
+sessionTransition ::= "session_transition" Id Id
+                      "communicate" Id Id "->" Id ;
+sessionTerminal ::= "session_terminal" Id Id ;
+sessionVerify  ::= "verify_session" Id ;
+sessionStart  ::= "start_session" Id ;
+
+secretDecl    ::= "secret" Id "value" JSONValue ;
+metadataDecl  ::= "metadata" Id "value" JSONValue
+                  "source" MetadataSource
+                | "metadata" Id "from_secret" Id
+                  "source" MetadataSource ;
+
+assertStmt    ::= "assert" Assertion ;
+
+OperatorKind  ::= "linear" | "projector" | "transport" | "external" ;
+Provenance    ::= "observed" | "inferred" | "recalled" | "simulated"
+                | "communicated" | "injected" | "foreign"
+                | "reconstructed" | "conflicted" | "unresolved" ;
+Effect        ::= "read" | "writeMemory" | "communicate" | "toolCall"
+                | "externalAct" | "simulate" | "modifyModel" ;
+ContractTemplate ::= "no_foreign_observed" | "no_simulated_observed"
+                   | "quarantine_blocks_endorsement"
+                   | "capability_confinement" ;
+MetadataSource ::= "trusted" | "agent" ;
+Probability   ::= Real ;
+NameArray     ::= "[" [String {"," String}] "]" ;
+Array         ::= JSON array ;
+Matrix        ::= JSON nested array ;
+JSONValue     ::= JSON scalar, array, or object accepted on one line ;
+Id            ::= letter {letter | digit | "_" | "-"} ;
+Nat           ::= digit {digit} ;
+Real          ::= signed decimal or scientific-notation number ;
+String        ::= JSON string ;

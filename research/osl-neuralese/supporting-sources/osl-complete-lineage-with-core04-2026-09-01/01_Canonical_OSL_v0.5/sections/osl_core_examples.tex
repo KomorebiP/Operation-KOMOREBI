@@ -1,0 +1,400 @@
+\section{Worked OSL-Core programs}
+\label{sec:osl-examples}
+
+This section develops the language through executable programs.  The examples
+are small by design.  Each isolates one semantic distinction so that the
+relevant authorization path can be inspected.  All listings are included in the
+release and executed by the reference suite.
+
+\subsection{Example inventory}
+
+\begin{longtable}{p{0.07\textwidth}p{0.25\textwidth}p{0.57\textwidth}}
+\toprule
+No. & Program & Property exercised \\
+\midrule
+\endfirsthead
+\toprule
+No. & Program & Property exercised \\
+\midrule
+\endhead
+1 & direct observation & nonforgeable observation token and observed-memory write \\
+2 & communicated route & access without recipient observation ownership; proof-gated action \\
+3 & injected quarantine & accessible content that is neither self-bound nor actionable \\
+4 & simulated dream & simulated autobiography distinct from waking observation \\
+5 & projector & typed operator application and projector certification \\
+6 & coordinate transport & conjugation-invariant projector transport \\
+7 & intertwiner & functional meaning preserved across coordinate systems \\
+8 & fork lineage & explicit common parent without forced unique continuation \\
+9 & planner binding & endorsed and authorized content causes external action \\
+10 & inference chain & inferred memory remains distinct from observation \\
+11 & foreign memory & communication preserves source lineage and blocks false observation \\
+12 & feedback cycle & action receipt linked to observed consequence and prediction error \\
+13 & shared workspace & repeated forwarding preserves foreign origin \\
+14 & reconstruction & safe storage of a provisional reconstructed claim \\
+15 & tool effect & separate planning proof and tool-call capability \\
+16--27 & mechanized core & proofs, bounded capabilities, contracts, transactions, neural proposals, and sessions \\
+28--31 & paired metadata traces & safe and secret-dependent metadata for relational auditing \\
+32--42 & extended positive programs & repeated capabilities, multiparty sessions, proof resources, receipt checks, and verified terminal protocols \\
+91--114 & negative programs & provenance, proof, capability, contract, protocol, neural-boundary, rollback, resource, and session-verification violations \\
+\bottomrule
+\end{longtable}
+
+\subsection{Direct observation and typed autobiography}
+
+The first program constructs a direct observation by agent \(A\) and writes it
+to memory under the \(\mathsf{observed}\) class.
+
+\lstinputlisting[style=osl,caption={Direct observation creates the required observation token.},label={lst:ex-direct}]{examples/01_direct_observation.osl}
+
+The semantic path is
+\[
+\operatorname{sensor}_A(c)
+\longrightarrow
+\Obs_A(c)
+\longrightarrow
+O_A^{\mathsf{observed}}c
+\longrightarrow
+M_A[c:\mathsf{observed}].
+\]
+The source agent and active lineage agree.  No communication or reconstruction
+step intervenes, so the observed-memory constructor is legal.
+
+\subsection{Communicated evidence and action}
+
+\lstinputlisting[style=osl,caption={A communicated observation guides action without becoming the recipient's direct observation.},label={lst:ex-comm}]{examples/02_communicated_route.osl}
+
+Agent \(B\) directly observes that a route is blocked.  Agent \(A\) receives the
+same content with provenance \(\mathsf{communicated}\).  The program verifies
+three independent facts:
+\begin{align*}
+J_A r_{\mathrm{blocked}},\qquad
+O_A^{\mathsf{communicated}}r_{\mathrm{blocked}},\qquad
+\neg O_A^{\mathsf{observed}}r_{\mathrm{blocked}}.
+\end{align*}
+The content may still be endorsed, authorized for planning, and used to produce
+an external action.  The language therefore does not confuse
+\emph{autobiographical ownership} with \emph{epistemic or instrumental use}.
+
+\subsection{Activation injection and quarantine}
+
+\lstinputlisting[style=osl,caption={Injected content is accessible but quarantined.},label={lst:ex-inject}]{examples/03_injected_quarantine.osl}
+
+The resulting state satisfies
+\[
+J_Ac\wedge Q_Ac\wedge\neg B_Ac.
+\]
+A monitor or interpretability process can inspect the content, but ordinary
+endorsement, memory write, and planning are blocked.  This is the minimal
+operator-symbolic response to an activation-level content injection whose
+semantic source is not trusted.
+
+\subsection{Dream content and simulation provenance}
+
+\lstinputlisting[style=osl,caption={Internally generated dream content is stored as simulated, never as direct observation.},label={lst:ex-dream}]{examples/04_simulated_dream.osl}
+
+The program records a possible route in autobiographical memory under
+\(\mathsf{simulated}\).  This supports later reasoning about what was imagined
+without rewriting the actual history:
+\[
+O_A^{\mathsf{simulated}}c
+\wedge
+\neg O_A^{\mathsf{observed}}c.
+\]
+A waking validation step could later justify an inferred or reconstructed
+belief, but it would still not convert the original dream into a past
+observation.
+
+\subsection{Projector declaration and application}
+
+\lstinputlisting[style=osl,caption={A certified self projector selects a typed packet of state.},label={lst:ex-projector}]{examples/05_operator_projector.osl}
+
+Here
+\[
+P_{\mathrm{self}}
+=
+\begin{pmatrix}
+1&0&0\\
+0&1&0\\
+0&0&0
+\end{pmatrix}
+\]
+satisfies \(P_{\mathrm{self}}^2=P_{\mathrm{self}}\).  Applying it to
+\(x=(2,-1,4)^\top\) gives
+\[
+P_{\mathrm{self}}x=(2,-1,0)^\top.
+\]
+The example is elementary, but the same typing discipline extends to learned
+moving projectors and packet-valued operators.
+
+\subsection{Coordinate transport}
+
+\lstinputlisting[style=osl,caption={A projector is transported through a coordinate rotation.},label={lst:ex-transport}]{examples/06_coordinate_transport.osl}
+
+The transport matrix is
+\[
+T=
+\begin{pmatrix}
+0&-1\\
+1&0
+\end{pmatrix}.
+\]
+The language compiles
+\[
+P_{\mathrm{rot}}=TPT^{-1}
+=
+\begin{pmatrix}
+0&0\\
+0&1
+\end{pmatrix}.
+\]
+The projector is different in coordinates but represents the transported packet
+relation.  This example illustrates why operator meaning is defined up to
+conjugacy rather than by literal matrix entries.
+
+\subsection{Exact semantic intertwiner}
+
+\lstinputlisting[style=osl,caption={An exact intertwiner preserves the abstract action of an operator.},label={lst:ex-intertwiner}]{examples/07_intertwiner.osl}
+
+The program checks
+\[
+TA=BT.
+\]
+Agent or model \(A\) may represent one latent operation by
+\(\operatorname{diag}(2,1)\), while model \(B\) represents the same abstract
+operation by \(\operatorname{diag}(1,2)\).  The rotation \(T\) establishes the
+semantic correspondence.  Shared language therefore depends on preserved
+operator equations, not coordinate equality.
+
+\subsection{Fork lineage}
+
+\lstinputlisting[style=osl,caption={Two declared descendants share one lineage parent.},label={lst:ex-fork}]{examples/08_fork_lineage.osl}
+
+The source declarations encode the cospan
+\[
+L_{\mathrm{left}}
+\longleftarrow
+L_{\mathrm{root}}
+\longrightarrow
+L_{\mathrm{right}}.
+\]
+They deliberately do not include a constructor
+\(\operatorname{uniqueContinuation}\).  A later adjudicator may prove that one,
+both, or neither branch satisfies a task-specific continuity criterion, but the
+grammar does not create uniqueness by default.
+
+\subsection{Planner binding and capability gating}
+
+\lstinputlisting[style=osl,caption={Planning and execution are separate proof gates.},label={lst:ex-plan}]{examples/09_planner_binding.osl}
+
+The content first becomes observed, endorsed, and authorized for planning.  The
+planner creates an action with effect \(\mathsf{externalAct}\).  Execution then
+requires the separately granted runtime capability.  The complete proof path is
+\[
+\Obs_A(c)
+\to K_Ac
+\to\Auth_A(c,\mathsf{planning})
+\to\operatorname{Plan}(u)
+\to\operatorname{Cap}_A(\mathsf{externalAct})
+\to\operatorname{Execute}(u).
+\]
+
+\subsection{Inference is not observation}
+
+\lstinputlisting[style=osl,caption={A causal inference is stored under an inferred memory type.},label={lst:ex-infer}]{examples/10_inference_chain.osl}
+
+Wet ground is observed directly.  Recent rain is inferred.  The memory system
+therefore retains
+\[
+O_A^{\mathsf{observed}}(\text{wet ground})
+\quad\text{and}\quad
+O_A^{\mathsf{inferred}}(\text{recent rain}),
+\]
+not two direct observations.  This distinction matters when later evidence
+refutes the inference while leaving the original observation intact.
+
+\subsection{Foreign content and autobiographical safety}
+
+\lstinputlisting[style=osl,caption={Foreign content can be remembered as communicated without becoming personal observation.},label={lst:ex-foreign}]{examples/11_foreign_memory.osl}
+
+The program permits \(B\) to store the event as communicated knowledge.  It
+forbids the stronger claim that \(B\) directly observed the source event.  This
+is the basic ownership-safety property needed by shared latent workspaces,
+retrieval systems, tool outputs, and imported memories.
+
+\subsection{Consequence feedback}
+
+\lstinputlisting[style=osl,caption={An action receipt is closed by an observed consequence.},label={lst:ex-feedback}]{examples/12_feedback_cycle.osl}
+
+The plan records expected value \(2.0\); execution returns \(2.75\).  The
+feedback receipt records
+\[
+e=2.75-2.0=0.75.
+\]
+The finite core does not hard-code one learning rule.  A recurrent runtime may
+translate this error into increased evidence demand, model revision, or
+operator recalibration.
+
+\subsection{Three-agent shared workspace}
+
+\lstinputlisting[style=osl,caption={Repeated forwarding preserves the original source rather than creating a chain of false observations.},label={lst:ex-shared}]{examples/13_shared_workspace.osl}
+
+The content passes from \(A\) to \(B\) and then to \(C\).  Its immediate parent
+digest changes at each transport, but the source agent and source lineage remain
+those of \(A\).  Agent \(C\) receives useful shared content while its own
+autobiography remains distinct.
+
+\subsection{Provisional reconstruction}
+
+\lstinputlisting[style=osl,caption={A provisional reconstruction is retained under a weaker provenance class.},label={lst:ex-reconstruct}]{examples/14_reconstructed_memory.osl}
+
+The current finite interpreter stores the result as an inference.  The full
+language introduces an explicit \(\mathsf{reconstructed}\) constructor whose
+proof object would contain:
+\[
+(H,T_{\mathrm{old}\to\mathrm{new}},\mathcal E,\rho,\epsilon,\sigma,V).
+\]
+This is a useful boundary between what the executable reference subset already
+enforces and what remains to be developed in the repair calculus.
+
+\subsection{Tool-call effect}
+
+\lstinputlisting[style=osl,caption={A tool call requires both a planning proof and a runtime tool capability.},label={lst:ex-tool}]{examples/15_tool_effect.osl}
+
+A model may reason that a database query is useful without automatically being
+able to call the database.  The language permits verification, review, or human
+approval between the plan and the effect.
+
+\subsection{Negative examples as language tests}
+
+The twenty-four negative programs are part of the specification.  A valid
+implementation must reject them for the declared reason.
+
+\begin{longtable}{p{0.27\textwidth}p{0.30\textwidth}p{0.32\textwidth}}
+\toprule
+Program & Attempted violation & Required response \\
+\midrule
+\endfirsthead
+\toprule
+Program & Attempted violation & Required response \\
+\midrule
+\endhead
+\path{91_forge_observation.osl} & store communicated content as recipient observation & reject provenance incompatibility or missing observation token \\
+\path{92_plan_without_proof.osl} & plan from unendorsed content & reject missing epistemic proof \\
+\path{93_execute_without_capability.osl} & emit external action without capability & reject before effect emission \\
+\path{94_bad_projector.osl} & declare non-idempotent matrix as projector & reject declaration \\
+\path{95_endorse_quarantined.osl} & endorse injected quarantined content & reject endorsement \\
+\path{96_stale_use_proof.osl} & reuse a composite proof after packet mutation & reject stale proof state digest \\
+\path{97_session_order_violation.osl} & communicate outside declared session order & reject missing protocol transition \\
+\path{98_feedback_contract_violation.osl} & terminate without required feedback & reject outstanding temporal obligation \\
+\path{99_neural_missing_relevance.osl} & admit a latent proposal without relevance attestation & reject incomplete admission proof \\
+\path{100_capability_exhausted.osl} & execute after a one-use capability is consumed & reject exhausted capability \\
+\path{101_capability_expired.osl} & execute after the capability deadline & reject expired capability \\
+\path{102_unknown_proof_static.osl} & reference an undeclared proof & reject during static checking \\
+\path{103_nested_transaction.osl} & nest transactions in the finite fragment & reject unsupported nesting \\
+\path{104_ownership_missing_observation.osl} & construct observed ownership without observation proof & reject missing premise \\
+\path{105_neural_endorse_before_admit.osl} & endorse a provisional latent proposal & reject quarantine violation \\
+\path{106_wrong_proof_scope.osl} & use a proof for the wrong control scope & reject scope mismatch \\
+\path{107_transaction_auto_rollback.osl} & fail a numerical obligation inside a transaction & rollback and reject \\
+\path{108_linear_proof_reused.osl} & consume one linear proof twice & reject stale or exhausted proof \\
+\path{109_linear_proof_unconsumed.osl} & terminate with an unused linear proof & reject terminal linear obligation \\
+\path{110_affine_proof_reused.osl} & reuse an affine proof & reject second use \\
+\path{111_session_deadlock.osl} & verify a protocol with a reachable nonterminal deadlock & reject graph certificate \\
+\path{112_terminal_outgoing.osl} & verify a terminal with an outgoing transition & reject graph certificate \\
+\path{113_unverified_terminal_session.osl} & execute a terminal-labelled protocol without graph verification & reject unverified-session requirement \\
+\path{114_linear_ownership_reused.osl} & reuse a linear ownership proof for two writes & reject second autobiographical authorization \\
+\bottomrule
+\end{longtable}
+
+\lstinputlisting[style=osl,caption={Negative example: communication cannot forge direct observation.},label={lst:ex-negative}]{examples/91_forge_observation.osl}
+
+The example suite treats correct rejection as a pass.  This is important:
+language safety is not measured only by how many programs execute, but by
+whether prohibited proof paths remain unconstructible.
+
+\subsection{Source-to-IR lowering example}
+
+Consider the surface program:
+\begin{lstlisting}[style=osl]
+observe blocked by B content "route-3-blocked" confidence 0.94
+communicate blocked from B to A as blocked_at_A
+endorse blocked_at_A by A threshold 0.80
+authorize blocked_at_A by A for planning
+plan alternate_route by A using blocked_at_A effect externalAct
+\end{lstlisting}
+A compiler may lower it to static-single-assignment IR:
+\begin{syntaxbox}
+\begin{verbatim}
+%p0 : Packet[observed,RouteStatus]
+    = observe B "route-3-blocked" conf 0.94
+    produces %obs0 : Obs[B,%p0]
+
+%p1 : Packet[communicated,RouteStatus]
+    = send %p0 B -> A
+    carries Origin[%p1,B], Parent[%p1,digest(%p0)]
+
+%k2 : Proof[Endorsed[A,%p1]]
+    = threshold %p1 0.80
+
+%u3 : Proof[Authorized[A,%p1,planning]]
+    = policy route_policy %p1 using %k2
+
+%a4 : Action[{externalAct}]
+    = plan A alternate_route using %p1 requires %k2,%u3
+\end{verbatim}
+\end{syntaxbox}
+The IR makes implicit obligations explicit.  No instruction introduces
+\(\Obs_A(\%p1)\), so the recipient cannot later compile the packet into an
+observed autobiographical write.
+
+\subsection{A tensor-valued operator example}
+
+The reference interpreter uses vectors and matrices, but the surface language
+extends naturally:
+\begin{lstlisting}[style=osl]
+space Episode : Tensor[agent=2,time=16,modality=4,feature=32]
+operator Attend : Episode -> Workspace[A,Tensor[time=4,feature=16]]
+    kind nonlinear effect {read}
+operator BindSelf : Workspace[A,*] -> Workspace[A,*]
+    requires Proof[CurrentLineage(A,L_A)]
+\end{lstlisting}
+A tensor backend would type-check named axes, compile contractions, and attach
+provenance to the resulting packet.  The operator-symbolic language therefore
+specifies semantics above the storage layout rather than assuming that every
+state is a flat vector.
+
+\subsection{A nonlinear repair example}
+
+A future nonlinear extension may express:
+\begin{lstlisting}[style=osl]
+let anomaly : Residual = compare predict(self_model, action) with observation
+hypotheses H = abduct {
+    world_change,
+    sensor_remap,
+    self_representation_change,
+    memory_corruption,
+    unknown
+} minimizing prediction_loss + 0.1*description_length
+probe p = choose_information_gain(H) risk <= 0.02
+repair candidate = validate best(H) using p
+transaction {
+    modify_model candidate
+    require regression_loss <= baseline
+    require provenance_violations == 0
+} else rollback
+\end{lstlisting}
+This syntax is not implemented by the finite reference interpreter.  It records
+the intended direction: repair should be a proof-carrying, reversible program,
+not an unconstrained latent rewrite.
+
+\subsection{Example-suite result}
+
+The packaged suite contains thirty-six accepted programs and seventeen expected
+rejections.  The release command
+\begin{verbatim}
+PYTHONPATH=reference python reference/run_examples.py --json
+\end{verbatim}
+produces \texttt{EXAMPLE\_RESULTS.json}.  In the verified build, all sixty-six
+programs match their declared status, and both paired-trace audit expectations
+are satisfied.  The result demonstrates internal
+conformance of the reference subset; it is not evidence that trained neural
+models already use \OSLCore internally.

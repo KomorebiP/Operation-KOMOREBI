@@ -1,0 +1,452 @@
+\section{OSL-Core 0.2: mechanized finite control layer}
+\label{sec:osl-v02}
+
+\OSLCore 0.2 is the next finite implementation step.  It does not attempt to
+mechanize the complete higher-order theory, but it moves several obligations
+from prose into executable syntax and runtime objects.  Programs are parsed
+into an explicit abstract syntax tree, checked before execution, and then
+interpreted by a deterministic state machine.  Proof terms, temporal
+contracts, transactions, finite-state sessions, bounded capabilities, neural
+boundary proposals, and paired-trace metadata audits are represented directly.
+
+\begin{statusbox}
+The accompanying implementation contains 53 executable programs, 26 focused
+automated tests, two paired-trace noninterference audits, an explicit parser and
+static checker, and JSON schemas for packets, proofs, and capabilities.  All 53
+programs match their declared acceptance or rejection status.  The safe audit
+pair preserves the same public projection under two different secrets; the
+leaky pair is rejected by the audit because public metadata changes with the
+secret.  These are bounded executable checks, not a universal proof of the
+full language.
+\end{statusbox}
+
+\subsection{Explicit abstract syntax and static checking}
+
+Version 0.1 interpreted source lines directly.  Version 0.2 first constructs a
+finite syntax tree
+\[
+  \operatorname{AST}(P)
+  = (s_1,\ldots,s_n),
+\]
+where every statement stores its command kind, normalized arguments, source
+line, and line number.  A declaration-oriented static pass verifies, before
+runtime mutation, that:
+\begin{itemize}[leftmargin=1.6em]
+  \item lineages and agents are declared before use;
+  \item operator source and target spaces exist;
+  \item packets, proofs, actions, contracts, sessions, and secrets are named
+  consistently;
+  \item proof premises are already declared;
+  \item capability effects and memory provenance classes are members of the
+  finite language vocabulary;
+  \item transactions are properly nested in the supported nonnested fragment;
+  \item session participants and protocol references exist.
+\end{itemize}
+
+The static report is itself canonicalized and receipt-bound before execution.
+This does not replace dynamic checking.  Matrix idempotence, proof freshness,
+capability exhaustion, contract deadlines, and session-state transitions remain
+runtime properties.
+
+\begin{proposition}[Static pre-execution separation]
+If a program fails the OSL-Core 0.2 static pass, then no program declaration or
+runtime effect from that program is executed by the reference interpreter.
+\end{proposition}
+
+\begin{proof}
+The interpreter calls the parser and static checker before entering the
+statement-execution loop.  A static exception is returned before the runtime
+step counter is advanced or any source statement is dispatched.  The only
+state possibly present is the empty initial configuration.
+\end{proof}
+
+\subsection{First-class proof terms}
+
+Proofs are now named runtime objects rather than only implicit conditions.  A
+proof term has the finite form
+\[
+ p=
+ \left(
+ \begin{array}{l}
+ \mathsf{name},\mathsf{kind},\mathsf{subject},\mathsf{agent},
+ \mathsf{scope},\mathsf{memoryClass},\\
+ \mathsf{sourceAgent},\mathsf{sourceLineage},
+ \mathsf{premises},\mathsf{claims},\\
+ d_{\mathrm{content}},d_{\mathrm{state}},t,
+ \mathsf{trusted},d_p
+ \end{array}
+ \right).
+\]
+The stable content digest binds the proof to semantic content and original
+provenance.  Composite use and ownership proofs additionally contain the
+current mutable packet-state digest.  This makes them invalid after a relevant
+state mutation.
+
+Primitive proof constructors include:
+\begin{lstlisting}[style=osl]
+proof p_access access route_at_A by A
+proof p_origin origin route_at_A source B lineage L_B
+proof p_clear clear route_at_A for A
+proof p_end endorsement route_at_A by A
+proof p_auth authorization route_at_A by A for planning
+proof p_obs observation event by A
+proof p_cap capability externalAct by A
+\end{lstlisting}
+
+A composite planning proof is:
+\begin{lstlisting}[style=osl]
+proof p_use use route_at_A by A for planning
+    from ["p_access","p_origin","p_clear","p_end","p_auth"]
+\end{lstlisting}
+The one-line concrete syntax is used in executable files; the line break above
+is typographical.
+
+An autobiographical ownership proof is:
+\begin{lstlisting}[style=osl]
+proof p_own ownership event by A as observed
+    from ["p_access","p_origin","p_clear","p_observation"]
+\end{lstlisting}
+
+\begin{theorem}[Finite proof-state freshness]
+Let $p$ be a composite use or ownership proof constructed for packet $c$ at
+packet-state digest $d$.  If a later state mutation changes the canonical packet
+digest to $d'\neq d$, then $p$ is rejected by every OSL-Core 0.2 instruction
+requiring a fresh composite proof.
+\end{theorem}
+
+\begin{proof}
+Composite proof validation requires equality between the stored
+$d_{\mathrm{state}}(p)$ and the current packet digest.  The mutation changes the
+latter to $d'$, while the immutable proof retains $d$.  The equality premise
+therefore fails and execution reaches an explicit rejection.
+\end{proof}
+
+This is a finite revocation mechanism.  For example, a proof constructed before
+an additional authorization or quarantine transition cannot silently authorize
+a later plan.
+
+\subsection{Proof-carrying planning example}
+
+\lstinputlisting[style=osl,caption={A communicated observation is carried into planning by a named proof object.},label={lst:v02-proof-plan}]{examples/17_proof_planning.osl}
+
+The proof path can be summarized as
+\[
+\begin{tikzcd}[column sep=small]
+\Access_A(c)
+  \arrow[r]
+& \Origin_B(c)
+  \arrow[r]
+& \operatorname{Clear}_A(c)
+  \arrow[r]
+& K_A(c)
+  \arrow[r]
+& \Auth_A(c,\mathsf{planning})
+  \arrow[r]
+& \operatorname{UseProof}_A(c).
+\end{tikzcd}
+\]
+The action separately consumes a bounded external-action capability.  Proof of
+content use and authority to emit an effect remain distinct.
+
+\subsection{Bounded and expiring capabilities}
+
+A capability is represented as
+\[
+  \operatorname{Cap}
+  (a,e,n,t_{\max},\rho,d),
+\]
+where $n\in\mathbb N\cup\{\infty\}$ is the remaining use budget and
+$t_{\max}\in\mathbb N\cup\{\infty\}$ is the final valid runtime step.  The
+surface syntax is:
+\begin{lstlisting}[style=osl]
+grant A effect externalAct uses 2 until 100
+revoke A effect externalAct
+\end{lstlisting}
+Execution succeeds only if the capability exists, has not expired, and has
+positive remaining use budget.  A successful execution decrements a finite
+budget.
+
+\begin{proposition}[Finite capability confinement]
+In the OSL-Core 0.2 runtime, an action declaring effect $e$ cannot enter the
+executed state unless the acting agent possesses a nonexpired capability for
+$e$ with positive remaining budget.
+\end{proposition}
+
+\begin{proof}
+The execution transition resolves the exact effect capability before mutating
+the action.  Missing, expired, or exhausted capabilities raise a rejection.  On
+success, the capability digest is bound into the action and a finite use count
+is decremented.
+\end{proof}
+
+\lstinputlisting[style=osl,caption={A one-use tool capability is consumed by execution.},label={lst:v02-capability}]{examples/18_bounded_capability.osl}
+
+\subsection{Temporal contracts}
+
+The finite contract layer supports invariant templates and bounded response
+obligations.  Examples are:
+\begin{lstlisting}[style=osl]
+contract no_foreign always no_foreign_observed
+contract no_simulated always no_simulated_observed
+contract no_quarantine_endorse always quarantine_blocks_endorsement
+contract capability_required always capability_confinement
+contract feedback_required after execute require feedback within 3
+\end{lstlisting}
+
+The feedback contract maintains a finite obligation map
+\[
+  \mathcal O_t:\mathsf{ActionName}\rightharpoonup\mathbb N,
+\]
+where $\mathcal O_t(u)$ is the due step for feedback on executed action $u$.
+An execution inserts a deadline.  Matching feedback removes it.  A due step
+passed without discharge, or an outstanding obligation at program termination,
+causes rejection.
+
+\begin{theorem}[Finite deadline-monitor soundness]
+For every accepted OSL-Core 0.2 program containing a contract
+\[
+  \operatorname{execute}(u)
+  \Rightarrow
+  \Diamond_{\leq k}\operatorname{feedback}(u),
+\]
+every executed action occurring after contract declaration has a matching
+feedback event no later than the monitor deadline.
+\end{theorem}
+
+\begin{proof}
+The monitor inserts $u\mapsto t+k$ when the execute receipt is emitted.  A
+matching feedback receipt removes $u$.  The runtime checks for overdue
+obligations after every statement and treats every remaining obligation as a
+violation at termination.  Hence any accepted execution has discharged every
+inserted obligation within the declared bound.
+\end{proof}
+
+\lstinputlisting[style=osl,caption={A bounded response contract closes an action with feedback.},label={lst:v02-contract}]{examples/19_feedback_contract.osl}
+
+\subsection{Transactional updates and rollback}
+
+The transaction fragment is:
+\begin{lstlisting}[style=osl]
+begin_transaction repair
+    # state-changing instructions
+commit_transaction repair
+\end{lstlisting}
+or
+\begin{lstlisting}[style=osl]
+rollback_transaction repair
+\end{lstlisting}
+
+At transaction entry the finite runtime creates a deep checkpoint of the
+canonical state.  Explicit rollback restores that checkpoint.  Any dynamic
+rejection while the transaction is active also restores the checkpoint before
+returning the rejection.  A rollback receipt records the checkpoint digest,
+reason, begin step, and restored-state digest.
+
+\begin{proposition}[Finite rollback atomicity]
+Let $\Sigma_0$ be the runtime state immediately before transaction entry.  If a
+transaction is explicitly or automatically rolled back, every program object
+created after entry is absent from the restored application state, except for
+the rollback audit receipt and the advanced audit step.
+\end{proposition}
+
+\begin{proof}
+The runtime stores a deep copy of $\Sigma_0$ before transaction-body mutation.
+Rollback replaces the active state with that copy and only then appends the
+rollback receipt.  Objects created in the discarded branch are therefore not
+members of the restored state maps.
+\end{proof}
+
+\lstinputlisting[style=osl,caption={A temporary autobiographical write is removed by explicit rollback.},label={lst:v02-rollback}]{examples/21_transaction_manual_rollback.osl}
+
+Transactions are not nested in the finite language.  A production language
+would require compositional transaction semantics, external-effect
+compensation, durable storage, and concurrency control.
+
+\subsection{Finite-state shared-workspace sessions}
+
+A session specifies participants, an initial protocol state, and allowed
+communication transitions:
+\begin{lstlisting}[style=osl]
+session CooperativeDiagnosis participants ["A","B"] initial waiting_for_A
+session_transition CooperativeDiagnosis waiting_for_A
+    communicate A B -> waiting_for_B
+session_transition CooperativeDiagnosis waiting_for_B
+    communicate B A -> ready
+start_session CooperativeDiagnosis
+\end{lstlisting}
+
+A communication annotated with
+\begin{lstlisting}[style=osl]
+communicate map from A to B as map_at_B in CooperativeDiagnosis
+\end{lstlisting}
+can execute only when the protocol has a matching transition from its current
+state.
+
+\begin{theorem}[Finite session trace conformance]
+Every accepted communication event labeled by session $S$ occurs along one of
+$S$'s declared transitions, and the recorded session history is a path from the
+initial state through those transitions.
+\end{theorem}
+
+\begin{proof}
+The communication instruction queries the transition table at
+\[
+  (q,\mathsf{communicate},a,b),
+\]
+where $q$ is the current session state. Missing entries reject before packet
+creation. Existing entries update the state to the declared target and append
+the same edge to session history. Induction on the number of session-labeled
+communications gives the result.
+\end{proof}
+
+\lstinputlisting[style=osl,caption={A two-agent evidence-exchange session enforces message order.},label={lst:v02-session}]{examples/24_session_protocol.osl}
+
+This is a finite session-type monitor rather than a full asynchronous session
+type system.  It does not yet prove deadlock freedom, liveness under scheduler
+assumptions, or multiparty compatibility beyond the declared trace table.
+
+\subsection{Neural boundary proposals}
+
+The neural-to-symbolic interface does not convert a decoded activation directly
+into trusted memory or action.  It creates a provisional packet:
+\begin{lstlisting}[style=osl]
+neural_propose latent_claim to A feature feature_441
+    content "route-may-be-blocked" confidence 0.84
+\end{lstlisting}
+with status $\mathsf{provisional}$, provenance $\mathsf{unresolved}$, immediate
+quarantine, and obligations
+\[
+  \{\mathsf{origin},\mathsf{lineage},\mathsf{task\_relevance}\}.
+\]
+Trusted boundary components may then issue attestations:
+\begin{lstlisting}[style=osl]
+attest origin latent_claim by A lineage L_A as p_origin
+attest relevance latent_claim by A for planning as p_relevance
+admit latent_claim by A using ["p_origin","p_relevance"]
+\end{lstlisting}
+Admission changes the packet to an inferred, self-bound, nonquarantined state.
+It creates no direct-observation token.
+
+\lstinputlisting[style=osl,caption={A latent proposal remains quarantined until trusted origin and relevance obligations are discharged.},label={lst:v02-neural}]{examples/22_neural_candidate_admission.osl}
+
+\begin{boundarybox}
+The attestation primitives are explicit trusted-boundary assumptions.  The
+finite implementation does not infer causal origin from neural activations.  A
+real neural boundary would need causal interventions, model-specific feature
+identification, calibration, and adversarial validation.  OSL-Core 0.2 proves
+only that an unvalidated proposal cannot silently bypass the declared
+quarantine and admission path.
+\end{boundarybox}
+
+\subsection{Paired-trace noninterference audit}
+
+Programs may register private secret values and publish public metadata.  The
+public projection excludes secret values and retains only their digests.  The
+paired auditor compares two accepted executions satisfying different registered
+secret digests.  Let $\pi$ and $\pi'$ be the two traces and
+$\operatorname{Pub}$ the declared public projection.  The tested property is
+\[
+  \operatorname{SecretDigest}(\pi)
+  \neq
+  \operatorname{SecretDigest}(\pi')
+  \quad\Longrightarrow\quad
+  \operatorname{Pub}(\pi)
+  =
+  \operatorname{Pub}(\pi').
+\]
+
+The safe pair uses trusted constant metadata:
+\begin{lstlisting}[style=osl]
+secret private_goal value "alpha"
+metadata timestamp value 7 source trusted
+\end{lstlisting}
+and the paired run changes only the secret value.  The public projections are
+identical.
+
+The leaky pair publishes agent-controlled metadata derived from the secret:
+\begin{lstlisting}[style=osl]
+metadata covert from_secret private_goal source agent
+\end{lstlisting}
+The audit reports a public difference and returns failure.
+
+\begin{proposition}[Paired audit correctness]
+For two accepted finite runs, the OSL-Core 0.2 auditor reports
+noninterference exactly when their canonical public projections are equal after
+removing the derived public-digest field.
+\end{proposition}
+
+\begin{proof}
+The auditor recursively compares every key, list element, type, and scalar value
+of the two canonical projections.  It returns success precisely when the
+difference set is empty.
+\end{proof}
+
+\begin{boundarybox}
+This is a paired-execution test, not a HyperLTL proof over every possible
+secret, context, schedule, message, or latent state.  It can falsify
+noninterference for a pair and can verify equality for a declared pair.  It
+cannot establish universal covert-channel absence.
+\end{boundarybox}
+
+\subsection{Mechanized finite guarantees and their limits}
+
+The implemented core now checks the following properties directly:
+\begin{enumerate}[leftmargin=1.7em]
+  \item every accepted source file has a parsed AST and successful static report;
+  \item direct observation is the only ordinary constructor of observation tokens;
+  \item communicated, simulated, injected, and provisional neural contents do
+  not become direct observations without the missing constructor;
+  \item named composite proofs are packet-version sensitive;
+  \item finite capability budgets and expiration steps are enforced at execution;
+  \item declared finite temporal contracts are checked after every statement and
+  at termination;
+  \item transaction rejection restores the checkpointed application state;
+  \item session-labeled messages follow the declared finite-state protocol;
+  \item public paired traces can be compared for metadata noninterference;
+  \item fixed source, backend, and environment produce deterministic snapshots
+  and proof digests.
+\end{enumerate}
+
+These checks do not constitute a proof-assistant mechanization of preservation
+and progress for the full language.  In particular, the parser and runtime are
+ordinary Python programs, trusted attestations remain trusted assumptions,
+external effects are modeled rather than sandboxed, and concurrency is absent.
+
+\subsection{Expanded implementation map}
+
+\begin{verbatim}
+reference/
+|-- osl_model.py              # canonical runtime and proof objects
+|-- osl_parser.py             # AST parser and static checker
+|-- osl_core.py               # deterministic operational semantics
+|-- osl_check.py              # static-check CLI
+|-- audit_noninterference.py  # paired-trace public audit
+|-- run_examples.py           # 53 programs plus two audit pairs
+|-- osl_core.ebnf             # concrete grammar
+|-- packet.schema.json
+|-- proof.schema.json
+`-- capability.schema.json
+examples/
+|-- 01_... through 36_...     # accepted programs
+`-- 91_... through 107_...   # expected rejections
+tests/
+|-- test_osl_core.py
+`-- test_osl_core_v02.py
+\end{verbatim}
+
+\subsection{Next metatheoretic step}
+
+The next formal milestone is to move the finite data model and operational rules
+into a proof assistant.  The target suite is:
+\begin{enumerate}[leftmargin=1.7em]
+  \item preservation for the typed AST;
+  \item progress to a value, next state, or declared rejection;
+  \item linear provenance non-forging;
+  \item effect and capability confinement;
+  \item temporal-monitor soundness;
+  \item transaction rollback refinement;
+  \item session fidelity;
+  \item compiler correctness for neural proposal lowering.
+\end{enumerate}
+Until then, the executable core should be interpreted as a transparent
+reference semantics with adversarial tests, not as a small trusted kernel.

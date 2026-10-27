@@ -1,0 +1,376 @@
+\section{OSL-Core 0.3: finite metatheory and an independent audit kernel}
+\label{sec:osl-core-v03}
+
+Version 0.2 made proof, authority, time, rollback, and protocol state executable.  Version 0.3 addresses the next question: which of those guarantees can be checked independently of a small catalog of intended executions?  The answer is deliberately finite.  We add resource-sensitive proof terms, a source-bound append-only audit chain, independent receipt replay, complete finite transition exploration, graph-level protocol verification, and an explicit-flow certificate for a restricted information-flow fragment.
+
+The resulting evidence has three distinct layers:
+\begin{enumerate}[leftmargin=1.7em]
+  \item \textbf{source conformance:} every packaged program is parsed, statically checked, executed twice, and compared with its declared acceptance or rejection result;
+  \item \textbf{independent trace reconstruction:} a second kernel consumes receipts rather than trusting the runtime's final state and reconstructs packets, proofs, memories, capabilities, actions, sessions, and transaction boundaries;
+  \item \textbf{complete finite abstraction:} two independently written abstract semantics enumerate every reachable state under finite command alphabets and check preservation, progress with explicit rejection, and declared invariants on every transition.
+\end{enumerate}
+No one layer subsumes the others.  Program conformance connects the surface language to behavior, independent replay reduces trust in the interpreter's own report, and exhaustive abstraction checks all behaviors of the declared finite models rather than only sampled source programs.
+
+\begin{boundarybox}
+The phrase \emph{finite metatheory} is literal.  The certificates below exhaustively cover the declared bounded state machines and verify the packaged finite receipt rules.  They are not a Lean, Coq, Agda, or Isabelle proof of the complete Python implementation; they do not cover unbounded recursion, arbitrary external effects, implicit neural channels, or all distributed executions.
+\end{boundarybox}
+
+\subsection{Resource-sensitive proof terms}
+
+Version 0.3 refines the proof context by assigning every proof one of three resource modes:
+\[
+\mathsf{mode}(p)\in
+\{\mathsf{persistent},\mathsf{affine},\mathsf{linear}\}.
+\]
+A persistent proof may be used arbitrarily often.  An affine proof may be used at most once.  A linear proof must be used exactly once before normal program termination.  This is a runtime realization of the distinction among unrestricted, weakening-only, and exactly-once resources.
+
+Let the proof store be partitioned as
+\[
+\Pi=\Pi_{!}\uplus\Pi_{?}\uplus\Delta,
+\]
+where \(\Pi_{!}\) contains persistent proofs, \(\Pi_{?}\) affine proofs, and \(\Delta\) linear proofs.  A proof-use transition is written
+\[
+(s,p)\xrightarrow{\mathsf{consume}}s'.
+\]
+For persistent \(p\), the resource state is unchanged.  For affine or linear \(p\), a one-use counter changes from one to zero and a consumption receipt records the step.
+
+\begin{definition}[Finite proof-resource safety]
+A completed finite execution is proof-resource safe when:
+\begin{enumerate}[label=(\roman*),leftmargin=1.7em]
+  \item no affine or linear proof is consumed more than once;
+  \item every linear proof is consumed exactly once on normal completion;
+  \item an explicitly rejected execution may terminate with an unconsumed linear proof only when the rejection itself records the unmet linear obligation;
+  \item every proof consumption is linked to the construction digest of the consumed proof.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Finite proof-resource preservation]
+\label{thm:finite-proof-resource}
+For the OSL-Core 0.3 proof-use transition, if the proof-resource store is well formed before an accepted step, it is well formed afterward.  In particular, no accepted transition increases the remaining-use count of an affine or linear proof, and no proof with zero remaining uses can authorize a second operation.
+\end{theorem}
+
+\begin{proof}
+The finite transition has two cases.  A persistent proof is checked for semantic freshness and leaves its use count undefined.  An affine or linear proof is accepted only when its remaining-use count is positive; the transition subtracts exactly one and records the consumption step.  The only initial finite count is one, so the post-state count is zero.  Every later use fails the positive-count guard.  No other transition modifies proof use counts.  Hence well-formedness and the at-most-once property are preserved.  The exactly-once condition for linear proofs is checked at normal program termination.  \qedhere
+\end{proof}
+
+\begin{lstlisting}[style=osl,caption={A linear planning proof that is consumed exactly once.}]
+proof p_access access obstacle by A mode persistent
+proof p_origin origin obstacle source B lineage L_B mode persistent
+proof p_clear clear obstacle for A mode persistent
+proof p_endorse endorsement obstacle by A mode persistent
+proof p_auth authorization obstacle by A for planning mode persistent
+
+proof p_use use obstacle by A for planning
+    from ["p_access","p_origin","p_clear","p_endorse","p_auth"]
+    mode linear
+
+plan alternate_route by A
+    using obstacle
+    effect externalAct
+    requires p_use
+\end{lstlisting}
+
+A second use of \texttt{p\_use} rejects.  A normally completing program that constructs but never uses a linear proof also rejects.  By contrast, an unused affine proof is legal.
+
+\subsection{Source-bound append-only audit semantics}
+
+The ordinary runtime state is intentionally separated from its audit log.  Transactions may roll back mutable semantic state, but they do not erase receipts already emitted.  Let
+\[
+r_0,r_1,\ldots,r_n
+\]
+be the audit sequence.  Every receipt contains
+\[
+(i,d_{i-1},k_i,p_i,d_i),
+\]
+where \(i\) is the index, \(d_{i-1}\) the previous receipt digest, \(k_i\) the receipt kind, \(p_i\) the canonical payload, and
+\[
+d_i=H(i,d_{i-1},k_i,p_i).
+\]
+The initial predecessor digest is the all-zero string.
+
+Every source statement additionally emits a boundary receipt containing:
+\begin{itemize}[leftmargin=1.6em]
+  \item source line number and statement kind;
+  \item a digest of the canonical source statement;
+  \item semantic-state digests before and after the statement;
+  \item indices of receipts emitted by the statement;
+  \item acceptance or explicit rejection status;
+  \item rollback status where applicable.
+\end{itemize}
+A successful source program ends with an explicit completion receipt; an unsuccessful one ends with an explicit rejection receipt.  Thus a partial trace cannot be mistaken for a successful completed run merely because its last internal receipt is well formed.
+
+\begin{definition}[Statement continuity]
+A boundary sequence \(b_1,\ldots,b_m\) is semantically continuous when
+\[
+\mathsf{after}(b_i)=\mathsf{before}(b_{i+1})
+\qquad(1\le i<m).
+\]
+For a rejected transactional statement, the after-digest refers to the restored checkpoint state.
+\end{definition}
+
+\begin{proposition}[Hash-chain tamper evidence]
+\label{prop:hash-chain}
+Assume collision resistance of \(H\) and canonical serialization.  Any mutation, insertion, deletion, or reordering of a receipt changes the verified chain tip unless every affected digest from the mutation point onward is recomputed.  Recomputing those digests does not by itself restore semantic validity under the independent kernel.
+\end{proposition}
+
+\begin{proof}
+The first altered record either has an incorrect index, an incorrect predecessor digest, or a changed canonical payload.  In the last case collision resistance implies a changed current digest.  Every later receipt commits to its predecessor, propagating the difference to the chain tip.  An attacker who recomputes the suffix can restore syntactic chaining, but the independent kernel separately checks provenance, proof construction, capability consumption, memory compatibility, session transitions, and final-state correspondence.  Thus hash validity and semantic validity remain distinct.  \qedhere
+\end{proof}
+
+\begin{proposition}[Rollback audit persistence]
+Let a transaction begin at audit index \(i\), emit finite internal receipts, fail, and restore semantic state \(s_i\).  The append-only trace retains the transaction-begin, internal-attempt, rollback, statement-reject, and program-reject records, while the post-rollback semantic digest equals the checkpoint digest.
+\end{proposition}
+
+\begin{proof}
+The checkpoint is a copy of mutable runtime state, whereas the audit sequence is stored outside that object.  Rollback replaces the mutable state by the checkpoint and appends a rollback receipt to the external audit sequence.  The state equality follows by construction, while audit persistence follows from append-only storage.  \qedhere
+\end{proof}
+
+\subsection{Independent receipt and proof reconstruction}
+
+The independent kernel does not accept the runtime's final snapshot as an explanation of its own behavior.  It consumes the append-only audit sequence and rebuilds finite semantic objects from receipt payloads.  It independently checks:
+\begin{enumerate}[leftmargin=1.7em]
+  \item receipt indices, predecessor links, and canonical digests;
+  \item packet content and state digests;
+  \item parent-packet existence and source preservation;
+  \item proof construction digests, premises, freshness, scope, and resource consumption;
+  \item memory-class compatibility and observed-memory non-forging;
+  \item capability grants, expiration, revocation, and use consumption;
+  \item plan, execution, and feedback correspondence;
+  \item finite session transitions and declared terminal verification;
+  \item transaction begins, commits, rollbacks, and rolled-back ranges;
+  \item correspondence between the reconstructed state and the runtime's final public snapshot.
+\end{enumerate}
+
+The trust relationship is shown in \cref{fig:v03-trust-stack}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  node distance=1.2cm,
+  box/.style={draw,rounded corners,align=center,minimum width=4.6cm,minimum height=0.85cm,fill=blue!4},
+  arr/.style={-{Latex[length=2.2mm]},thick}
+]
+\node[box] (src) {OSL source program\\and declared expected outcome};
+\node[box,below=of src] (run) {Parser, static checker,\\and reference runtime};
+\node[box,below=of run] (audit) {Append-only source-bound\\receipt chain};
+\node[box,below left=1.2cm and 0.3cm of audit] (trace) {Deterministic replay\\and statement boundaries};
+\node[box,below right=1.2cm and 0.3cm of audit] (kernel) {Independent receipt\\and proof kernel};
+\node[box,below=2.5cm of audit] (finite) {Exhaustive finite transition models\\and invariant certificates};
+\draw[arr] (src)--(run);
+\draw[arr] (run)--(audit);
+\draw[arr] (audit)--(trace);
+\draw[arr] (audit)--(kernel);
+\draw[arr] (trace)--(finite);
+\draw[arr] (kernel)--(finite);
+\end{tikzpicture}
+\caption{The v0.3 trust stack.  The independent kernel reduces reliance on the runtime's self-description, while the finite abstractions check complete bounded state spaces rather than only source examples.}
+\label{fig:v03-trust-stack}
+\end{figure}
+
+\begin{theorem}[Finite receipt-kernel soundness relative to its rules]
+\label{thm:receipt-kernel-relative}
+For a finite audit sequence accepted by the independent OSL-Core 0.3 kernel, every reconstructed observed-memory record has a source-consistent direct-observation token, every consumed affine or linear proof was previously constructed and available, every accepted execution is backed by an available capability, and every session advance follows a declared transition.
+\end{theorem}
+
+\begin{proof}
+The verifier processes receipts in order.  Packet, proof, capability, action, and session tables are populated only through corresponding constructor receipts whose canonical digests are checked.  Each protected operation queries the reconstructed table before updating it.  Observed memory requires a compatible packet provenance and observation token; proof consumption requires availability; execution requires a reconstructed grant with positive unexpired capacity; and session advancement requires a matching transition tuple.  A violation records a failed kernel property and prevents acceptance.  The theorem is relative to this finite verifier and its declared receipt grammar.  \qedhere
+\end{proof}
+
+The packaged 66-program suite produced 1,149 audit receipts, 70 proof terms, 13 memory records, and two rollback events.  All 66 traces were independently accepted by the kernel, including the 24 programs whose intended result was safe rejection.
+
+\subsection{Complete finite abstract kernel}
+
+The integrated abstract kernel compresses packet, provenance, proof, capability, planning, and feedback status into a finite state tuple
+\[
+z=(\rho,a,b,q,e,u,m,c,p,x,f,\ldots).
+\]
+A finite alphabet of 26 commands includes observation, simulation, injection, admission, communication, binding, quarantine, endorsement, authorization, proof derivation, planning, capability grant or revocation, execution, feedback, and typed memory writes.
+
+Let \(K_0\) be the initial state and \(\delta:K\times\Sigma\to K+\mathsf{Reject}\) the deterministic abstract transition.  Breadth-first exploration computes the least reachable fixpoint
+\[
+\mathsf{Reach}(K_0)
+=
+\mu X.\left(\{K_0\}\cup\delta(X,\Sigma)\right),
+\]
+where rejected transitions remain explicit outcomes but do not add new states.
+
+\begin{theorem}[Exhaustive integrated-kernel certificate]
+\label{thm:integrated-kernel-certificate}
+For the declared OSL-Core 0.3 abstract kernel, exhaustive exploration reaches exactly 740 states and examines 19,240 state-command pairs.  All reachable states satisfy the declared well-formedness predicate, and every transition satisfies the finite checks for preservation, progress with explicit rejection, provenance non-forging, ownership gating, quarantine confinement, proof freshness, effect confinement, capability consumption, feedback causality, contract-obligation creation and discharge, and source preservation.
+\end{theorem}
+
+\begin{proof}
+The certificate enumerates the finite state graph by breadth-first search until no new state is discovered.  For each reached state and every command in the fixed alphabet, it computes the transition, checks post-state well-formedness where accepted, and evaluates the declared transition properties.  The emitted graph digest commits to the sorted states, commands, and edges.  The packaged certificate reports zero failures.  This is a computer-assisted exhaustive proof for the encoded finite model.  \qedhere
+\end{proof}
+
+The certificate records 6,464 accepted and 12,776 explicitly rejected transitions.  Rejection is part of progress: a well-formed state and command either produce one well-formed successor or one declared finite error reason.
+
+\subsection{Decomposed finite metacore}
+
+A second metatheory implementation uses five smaller transition systems.  This decomposition makes model assumptions and checked invariants easier to inspect.  \Cref{tab:metacore-results} reports the complete fixpoints.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{0.25\textwidth}rrp{0.39\textwidth}@{}}
+\toprule
+Model & States & Attempts & Principal check \\
+\midrule
+Provenance/ownership & 1,301 & 26,020 & no forged observed memory \\
+Bounded capability & 256 & 2,560 & confinement and one-use consumption \\
+Feedback deadline & 24 & 96 & no overdue accepted state \\
+Transaction atomicity & 6 & 36 & rollback equivalence \\
+Session fidelity & 3 & 6 & trace follows protocol \\
+\midrule
+Total & 1,590 & 28,718 & all declared checks pass \\
+\bottomrule
+\end{tabular}
+\caption{Complete finite fixpoints in the decomposed metacore.  Accepted and rejected transition counts are retained in the machine-readable certificate.}
+\label{tab:metacore-results}
+\end{table}
+
+\begin{theorem}[Decomposed finite preservation and safe progress]
+For each model in \cref{tab:metacore-results}, every reachable state is well formed, every accepted transition preserves well-formedness and its model-specific invariant, and every attempted command either reaches one accepted successor or one explicit rejected outcome.  The listed state sets are fixed points of their respective reachability operators.
+\end{theorem}
+
+\begin{proof}
+Each finite model supplies an initial state, command alphabet, well-formedness predicate, admissibility predicate, deterministic step function, and invariant family.  The common explorer performs complete breadth-first enumeration, evaluates every command from every reached state, and checks that the resulting discovered set is closed.  The five packaged certificates contain no counterexample and report fixed-point completion.  \qedhere
+\end{proof}
+
+Together, the integrated and decomposed models reach
+\[
+740+1{,}590=2{,}330
+\]
+abstract states and evaluate
+\[
+19{,}240+28{,}718=47{,}958
+\]
+finite transition cases.  These numbers must not be added to source-program counts as though they were independent empirical trials; they are complete checks of two formalized bounded abstractions.
+
+\subsection{Verified finite session graphs}
+
+The v0.2 session monitor enforced local message order.  Version 0.3 adds an offline graph verifier.  A finite protocol is
+\[
+\mathcal P=(Q,q_0,E,F),
+\]
+where \(Q\) is the finite state set, \(q_0\) the initial state, \(E\subseteq Q\times\mathsf{Msg}\times Q\) the transition relation, and \(F\subseteq Q\) the declared terminal states.
+
+A protocol passes the finite verifier when:
+\begin{enumerate}[label=(\roman*),leftmargin=1.7em]
+  \item transition keys are deterministic;
+  \item at least one terminal state is declared;
+  \item every declared terminal is reachable;
+  \item no reachable nonterminal state is a deadlock;
+  \item no terminal state has an outgoing transition;
+  \item every reachable state can reach a terminal state.
+\end{enumerate}
+
+\begin{theorem}[Finite protocol completion]
+\label{thm:finite-protocol-completion}
+If a finite protocol passes the conditions above, then every reachable nonterminal state has at least one finite path to a declared terminal, no accepted trace can advance after entering a terminal, and every monitored message step is a path in \(E\).
+\end{theorem}
+
+\begin{proof}
+The final condition supplies a terminal-reaching path from every reachable state.  The deadlock condition excludes nonterminal states with no outgoing edge.  Terminal states have no outgoing transition, so the runtime deactivates the session upon entry and cannot accept a later monitored message.  Local runtime advancement checks membership in \(E\), establishing trace fidelity.  \qedhere
+\end{proof}
+
+\begin{lstlisting}[style=osl,caption={A finite protocol whose terminal state is verified before execution.}]
+session CooperativeDiagnosis
+    participants ["A","B"]
+    initial waiting_A
+
+session_transition CooperativeDiagnosis waiting_A
+    communicate A B -> waiting_B
+session_transition CooperativeDiagnosis waiting_B
+    communicate B A -> ready
+session_terminal CooperativeDiagnosis ready
+verify_session CooperativeDiagnosis
+start_session CooperativeDiagnosis
+\end{lstlisting}
+
+The packaged negative programs exhibit three distinct rejections: a reachable nonterminal deadlock, a terminal state with outgoing transitions, and an attempted start of a declared-terminal protocol that was not first verified.
+
+\subsection{Static and dynamic information-flow certificates}
+
+The restricted static information-flow fragment treats private secrets and public metadata as nodes in a dependency graph.  An explicit statement
+\begin{lstlisting}[style=osl,numbers=none]
+metadata covert from_secret private_goal source agent
+\end{lstlisting}
+adds an edge
+\[
+\mathsf{secret:private\_goal}\to\mathsf{metadata:covert}.
+\]
+A program passes the static certificate when no path exists from any declared secret to any declared public metadata node.
+
+\begin{theorem}[Explicit-flow noninterference in the supported fragment]
+For a program in the finite metadata fragment, if the static dependency graph has no path from a declared secret to a public metadata node, then changing secret values while holding all nonsecret literal metadata declarations fixed cannot change metadata values through the supported explicit \texttt{from\_secret} construction.
+\end{theorem}
+
+\begin{proof}
+The only secret-dependent metadata constructor in the supported grammar introduces a direct dependency edge.  In its absence, public metadata values are functions only of their literal declarations.  Hence changing a secret cannot alter those values through a supported explicit dependency.  The statement does not cover implicit control flow, timing, operator choice, floating-point residues, or external tools.  \qedhere
+\end{proof}
+
+The static checker classifies both safe metadata examples as noninterfering and both deliberate leak examples as leaking.  A separate paired-run audit executes two programs that differ only in the secret.  The safe public projections are identical; the deliberate leak differs at both the public value and its digest.  The static and dynamic tests are complementary: one checks source dependency in a restricted grammar, while the other checks one declared pair of actual executions.
+
+\subsection{Integrated verification totals}
+
+\Cref{tab:v03-evidence} summarizes the packaged v0.3 evidence after regeneration from the same source tree.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lr}
+\toprule
+Evidence item & Verified count \\
+\midrule
+Source programs matching declared outcome & 66 of 66 \\
+Accepted source programs & 42 \\
+Expected safe rejections & 24 \\
+Paired public-projection audits & 2 of 2 \\
+Deterministically replayed source traces & 66 of 66 \\
+Independently verified receipt traces & 66 of 66 \\
+Independently reconstructed receipts & 1,149 \\
+Independently reconstructed proof terms & 70 \\
+Focused Python tests & 61 \\
+Integrated abstract states & 740 \\
+Integrated abstract transitions & 19,240 \\
+Decomposed abstract states & 1,590 \\
+Decomposed transition attempts & 28,718 \\
+Total finite abstract states & 2,330 \\
+Total finite transition checks & 47,958 \\
+\bottomrule
+\end{tabular}
+\caption{Finite OSL-Core 0.3 verification evidence.  Counts refer to different evidence layers and are not interchangeable empirical sample sizes.}
+\label{tab:v03-evidence}
+\end{table}
+
+The source suite includes positive examples for exactly-once proof consumption, affine nonuse, terminal session verification, explicit receipt-chain checking, linear ownership proofs, and a three-agent verified protocol.  Negative cases cover proof reuse, unmet linear obligations, reachable protocol deadlock, terminal outgoing edges, unverified session start, and reuse of a consumed linear ownership proof.
+
+\begin{provedbox}
+Within the declared finite semantics, OSL-Core 0.3 now has executable evidence for: source-level conformance; deterministic semantic replay; statement-boundary continuity; append-only rollback auditing; persistent, affine, and linear proof resources; independent proof and receipt reconstruction; provenance non-forging; capability confinement; feedback obligations; finite session safety and terminal reachability; and explicit secret-to-metadata flow detection.
+\end{provedbox}
+
+\subsection{What the computer-assisted results do and do not prove}
+
+The finite results strengthen the project in three ways.  First, they remove dependence on a handful of illustrative programs by checking complete abstract state spaces.  Second, they reduce circular trust by reconstructing semantic objects from receipts with a separately written kernel.  Third, they make negative behavior first class: safe rejection, rollback, proof exhaustion, contract violation, and protocol deadlock are represented and verified rather than treated as incidental exceptions.
+
+They do not establish that the full interpreter is free of implementation bugs.  Both Python implementations may share a misunderstood specification.  Cryptographic receipts provide tamper evidence, not principal authentication.  Trusted neural attestations remain trust roots.  The static flow certificate covers an explicit syntax fragment rather than arbitrary covert channels.  Session verification is finite and synchronous rather than a proof of general asynchronous multiparty liveness.
+
+\begin{placeholderbox}
+\textbf{Proof-assistant correspondence.}  The next metatheoretic milestone is a small mechanized calculus whose syntax, typing, operational semantics, proof-resource accounting, and receipt relation are defined in a proof assistant.  The primary targets are preservation, progress with declared rejection, linear-resource conservation, receipt-to-transition correspondence, rollback equivalence, and extraction of a verified checker.  The current exhaustive certificates provide executable specifications and regression oracles for that development; they are not a substitute for it.
+\end{placeholderbox}
+
+\subsection{Reproducible verification pipeline}
+
+The packaged pipeline is:
+\begin{verbatim}
+source examples
+  -> parser and static checker
+  -> deterministic source execution
+  -> append-only audit traces
+  -> deterministic replay verifier
+  -> independent receipt/proof kernel
+  -> integrated finite kernel
+  -> decomposed finite metacore
+  -> unified certificate
+\end{verbatim}
+The unified certificate commits to the component certificate digests and records the finite claim boundary.  Rebuilding a component changes the unified verification digest.  This produces a compact, auditable map from source examples to the finite abstract theorems stated in this section.

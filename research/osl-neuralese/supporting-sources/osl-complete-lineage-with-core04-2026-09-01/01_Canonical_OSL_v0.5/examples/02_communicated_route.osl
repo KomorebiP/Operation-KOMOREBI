@@ -1,0 +1,18 @@
+module communicated_route
+lineage L_A
+lineage L_B
+agent A lineage L_A
+agent B lineage L_B
+grant A effect externalAct
+observe route_blocked by B content "route-3-blocked" confidence 0.94
+communicate route_blocked from B to A as route_blocked_at_A
+endorse route_blocked_at_A by A threshold 0.80
+authorize route_blocked_at_A by A for planning
+write_memory route_blocked_at_A by A as communicated
+plan alternate_route by A using route_blocked_at_A effect externalAct expected 1.0
+execute alternate_route by A
+feedback alternate_route by A observed 1.2
+assert packet route_blocked_at_A provenance communicated
+assert memory A contains route_blocked_at_A as communicated true
+assert memory A contains route_blocked_at_A as observed false
+assert action alternate_route executed true

@@ -1,0 +1,13 @@
+module transaction_memory_commit
+lineage L_A
+agent A lineage L_A
+begin_transaction autobiographical_commit
+observe episode by A content "episode-42" confidence 0.96
+proof p_access access episode by A
+proof p_origin origin episode source A lineage L_A
+proof p_clear clear episode for A
+proof p_obs observation episode by A
+proof p_own ownership episode by A as observed from ["p_access","p_origin","p_clear","p_obs"]
+write_memory episode by A as observed requires p_own
+commit_transaction autobiographical_commit
+assert memory A contains episode as observed true
