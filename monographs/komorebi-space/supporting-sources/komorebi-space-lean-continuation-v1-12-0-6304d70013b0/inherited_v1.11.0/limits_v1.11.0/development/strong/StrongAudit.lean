@@ -1,0 +1,20 @@
+import KomorebiSpace.RegularizationStrongLimit
+
+set_option pp.universes true
+set_option pp.explicit true
+
+#check @KomorebiSpace.RegularizationStrongLimit.exists_unique_minimum_preimage
+#check @KomorebiSpace.RegularizationStrongLimit.norm_tendsto_of_minimum
+#check @KomorebiSpace.RegularizationStrongLimit.tendsto_of_norm_energy_le
+#check @KomorebiSpace.RegularizationStrongLimit.correction_distance_sq_le
+#check @KomorebiSpace.RegularizationStrongLimit.correction_norm_le
+#check @KomorebiSpace.RegularizationStrongLimit.path_tendsto_of_minimum
+#check @KomorebiSpace.RegularizationStrongLimit.exists_unique_minimum_and_limit
+
+#print axioms KomorebiSpace.RegularizationStrongLimit.exists_unique_minimum_preimage
+#print axioms KomorebiSpace.RegularizationStrongLimit.norm_tendsto_of_minimum
+#print axioms KomorebiSpace.RegularizationStrongLimit.tendsto_of_norm_energy_le
+#print axioms KomorebiSpace.RegularizationStrongLimit.correction_distance_sq_le
+#print axioms KomorebiSpace.RegularizationStrongLimit.correction_norm_le
+#print axioms KomorebiSpace.RegularizationStrongLimit.path_tendsto_of_minimum
+#print axioms KomorebiSpace.RegularizationStrongLimit.exists_unique_minimum_and_limit

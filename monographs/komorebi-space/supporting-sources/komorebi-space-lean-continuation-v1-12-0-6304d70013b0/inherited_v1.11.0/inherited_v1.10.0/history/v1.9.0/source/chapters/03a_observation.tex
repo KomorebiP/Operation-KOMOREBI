@@ -1,0 +1,196 @@
+\chap{Finite observations and realized transformations}\label{sec:observation}
+The point-space construction has a converse question. Given a function between coherent realization spaces, can it be represented by compatible maps between finite views? The answer is not automatically yes. This section constructs the relevant category of reindexed maps and identifies its realized functions under an explicit observability hypothesis.
+
+\subsection{An output level may require a finer input level}
+Let \(X\) and \(Y\) be sequential set-valued resolutions. Write \(\rho^X_{i,j}:X_j\to X_i\) for composite restriction. A reindexed transport consists of a monotone schedule \(\phi:\N\to\N\) and maps
+\[
+ f_n:X_{\phi(n)}\longrightarrow Y_n
+\]
+satisfying, for \(i\le j\),
+\begin{equation}\label{eq:scheduled-naturality}
+ \rho^Y_{i,j}f_j=f_i\rho^X_{\phi(i),\phi(j)}.
+\end{equation}
+The schedule records how much input is used for each output level. Monotonicity means that asking for more output never forces the representation to discard input already available. It does not require strict growth, a bounded look-ahead, or an efficiency estimate.
+
+The realized map is
+\[
+ |f|:\operatorname{Point}(X)\to\operatorname{Point}(Y),\qquad
+ |f|(x)_n=f_n(x_{\phi(n)}).
+\]
+Equation~\eqref{eq:scheduled-naturality} proves that this is a coherent output. A second transport \(g_n:Y_{\psi(n)}\to Z_n\) composes with \(f\) using schedule \(\phi\circ\psi\) and coordinate map \(g_n f_{\psi(n)}\). The order of the schedules is fixed by the types, not by the order in which their letters are written in prose.
+
+\subsection{Equality is witnessed at finite stages}
+Two different schedules can represent the same transformation. To compare \((\phi,f)\) and \((\psi,g)\), require that for every output level \(n\) there be a finite level \(k\ge\phi(n),\psi(n)\) with
+\begin{equation}\label{eq:eventual-equality}
+ f_n\rho^X_{\phi(n),k}=g_n\rho^X_{\psi(n),k}
+ \quad\text{as functions on all of }X_k.
+\end{equation}
+Call this eventual equality. The witnessing \(k\) may depend on \(n\). Equality is required on the whole finite-level fiber, not only on states that happen to extend globally.
+
+\begin{theorem}[The eventual transport category]\label{KS61}
+Eventual equality is an equivalence relation and is preserved by composition. Its quotient therefore gives a category of resolutions and eventual transports. Realization descends to a functor into sets, preserving identities and composition.
+\end{theorem}
+\begin{proof}
+A finite-stage equality remains true after moving to a later stage. Indeed, if it holds on $X_k$ and $\ell\ge k$, precompose both sides with $\rho^X_{k,\ell}$ and use the composite-restriction laws. Reflexivity uses $k=\phi(n)$, symmetry reverses the equality, and transitivity moves two witnesses to their maximum. The shared middle presentation then cancels as a literal function on that common fiber. This proves an equivalence relation without referring to global points.
+
+We check compatibility with composition with all indices displayed. Write $f,f'$ with schedules $\phi,\phi'$ and $g,g'$ with schedules $\psi,\psi'$. Fix an output level $n$. Choose $j\ge\psi(n),\psi'(n)$ with
+\[
+ g_n\rho^Y_{\psi(n),j}=g'_n\rho^Y_{\psi'(n),j}.
+\]
+Next choose $k\ge\phi(j),\phi'(j)$ with
+\[
+ f_j\rho^X_{\phi(j),k}=f'_j\rho^X_{\phi'(j),k}.
+\]
+Monotonicity implies that $k$ is also at least both composite input levels. Applying the naturality equations and then the two witness equations gives
+\[
+\begin{aligned}
+ g_nf_{\psi(n)}\rho^X_{\phi(\psi(n)),k}
+ &=g_n\rho^Y_{\psi(n),j}f_j\rho^X_{\phi(j),k}\\
+ &=g'_n\rho^Y_{\psi'(n),j}f_j\rho^X_{\phi(j),k}\\
+ &=g'_n\rho^Y_{\psi'(n),j}f'_j\rho^X_{\phi'(j),k}\\
+ &=g'_nf'_{\psi'(n)}\rho^X_{\phi'(\psi'(n)),k}.
+\end{aligned}
+\]
+This is the required equality on every element of $X_k$. Thus composition descends to classes. The representative composition is associative because function composition and schedule composition are associative. The schedule $n\mapsto n$ with identity coordinate maps gives both identity laws. Hence the quotient has the claimed category structure.
+
+Finally, evaluate a witness equation at the $k$th coordinate of a coherent point $x$. Its two restricted arguments become $x_{\phi(n)}$ and $x_{\psi(n)}$, proving equality of the realized outputs. Thus realization is well defined on the quotient. For a composite, direct evaluation gives
+\[
+ |g\circ f|(x)_n=g_n\bigl(f_{\psi(n)}(x_{\phi(\psi(n))})\bigr)
+ =(|g|(|f|(x)))_n.
+\]
+The identity law is equally coordinatewise. Joint determination of output points proves the functor laws.
+\end{proof}
+\source{KS61}
+This is an actual quotient category in the formal source. No identification with the full procategory of an arbitrary base category is needed or claimed. The objects here are sequential set-valued resolutions, and the equivalence relation is the finite-stage relation just defined.
+
+\subsection{When global behavior determines the finite presentation}
+Say that \(X\) has surjective point projections when
+\[
+ \forall k\quad \operatorname{ev}_k:\operatorname{Point}(X)\to X_k
+ \quad\text{is onto}.
+\]
+This means that every finite input state really occurs in some coherent global input. It is stronger than nonemptiness of the global space.
+
+\begin{theorem}[Faithfulness on an observable source]\label{KS62}
+If \(X\) has surjective point projections, two reindexed maps out of \(X\) are eventually equal exactly when they induce the same realized function. Surjective adjacent bonding maps are a sufficient condition for surjective point projections.
+\end{theorem}
+\begin{proof}
+Realized equality follows from eventual equality by the preceding theorem, so only its converse remains. Suppose \(|f|=|g|\). Fix the output level \(n\), and let \(k=\max\{\phi(n),\psi(n)\}\). To prove equality of two maps defined on \(X_k\), fix an arbitrary element \(a\in X_k\). The assumed surjectivity of \(\operatorname{ev}_k\) supplies a coherent point \(x\) with \(x_k=a\). Equality of the two realized maps gives equality of their output coordinates:
+\[
+ f_n(x_{\phi(n)})=g_n(x_{\psi(n)}).
+\]
+Coherence of \(x\) rewrites this as
+\[
+ f_n\bigl(\rho^X_{\phi(n),k}(a)\bigr)
+ =g_n\bigl(\rho^X_{\psi(n),k}(a)\bigr).
+\]
+The index \(k\) was selected before \(a\), so this is one common finite-stage equality for \emph{all} elements of \(X_k\). It is exactly the witness required by eventual equality at output \(n\). Repeating for each \(n\) proves faithfulness.
+
+For the sufficient condition on bonding maps, fix \(k\) and \(a\in X_k\). Define coordinates below \(k\) by restriction of \(a\). At each later stage use surjectivity of the adjacent bonding map to choose a preimage of the coordinate already chosen. Recursion with classical choice constructs the upper tail. Adjacent equations hold by construction, and induction on the interval length gives every composite equation. This produces a point evaluating to \(a\). If a fiber is empty, the statement that each of its elements lifts is vacuous, as required by surjectivity onto that fiber. Without the projection-surjectivity assumption, equality on realizable inputs alone need not identify finite maps on values that never occur in a global point.
+\end{proof}
+\source{KS62}
+The hypothesis is sufficient, not presented as a characterization of every source on which faithfulness happens to hold. Its role in the proof is precise: it converts a statement about globally realized inputs into a statement about all finite inputs.
+
+Without it, global behavior can lose information. For example, use \(X_n=\{m\in\N:m\ge n\}\) with inclusion bonds and a constant Boolean output tower. The source point space is empty. The two transports that always output false and always output true induce the same function from the empty set, but disagree at every finite stage. Every \(X_k\) is nonempty, so no eventual equality witness exists. This calculation uses the finite-prefix boundary of KS54 and does not identify empty global behavior with equality of finite presentations.
+
+\subsection{The exact image of realization}
+For a function \(F:\operatorname{Point}(X)\to\operatorname{Point}(Y)\), define finite observation by the quantifiers
+\begin{equation}\label{eq:finite-observation}
+ \forall n\ \exists k\ \exists a:X_k\to Y_n\ \forall x:\quad
+ F(x)_n=a(x_k).
+\end{equation}
+The input level is uniform over all global inputs for each fixed output level. It may vary with the output level. This is not the weaker condition that each individual input can be inspected to some input-dependent finite depth.
+
+\begin{theorem}[Characterization of realized transformations]\label{KS63}
+If \(X\) has surjective point projections, realization induces a bijection
+\[
+ \operatorname{EventualHom}(X,Y)
+ \simeq
+ \{F:\operatorname{Point}(X)\to\operatorname{Point}(Y):F
+ \text{ is finitely observed}\}.
+\]
+\end{theorem}
+\begin{proof}
+For a reindexed map $(\phi,f)$, the formula $|f|(x)_n=f_n(x_{\phi(n)})$ immediately supplies a finite-observation witness for each $n$. Eventual equality does not affect the realized function by KS61, so this defines a map from the quotient to the stated set of functions.
+
+For surjectivity, let $F$ be finitely observed. Choose one pair $(k_n,a_n)$ at each output level, satisfying $F(x)_n=a_n(x_{k_n})$ for every coherent input. Define
+\[
+ \phi(n)=\max_{0\le i\le n}k_i,
+ \qquad f_n=a_n\rho^X_{k_n,\phi(n)}.
+\]
+The maximum is of a nonempty finite set. It gives a monotone schedule with $k_n\le\phi(n)$. For every point $x$, coherence in $X$ gives
+\[
+ f_n(x_{\phi(n)})
+ =a_n\bigl(\rho^X_{k_n,\phi(n)}x_{\phi(n)}\bigr)
+ =a_n(x_{k_n})=F(x)_n.                                      \tag{*}
+\]
+
+The remaining obligation is naturality on \emph{all} finite states. Fix $i\le j$ and $u\in X_{\phi(j)}$. By surjectivity of that point projection, choose $x$ with $x_{\phi(j)}=u$. Equation (*) and output coherence yield
+\[
+\begin{aligned}
+ \rho^Y_{i,j}f_j(u)&=\rho^Y_{i,j}F(x)_j=F(x)_i,\\
+ f_i\rho^X_{\phi(i),\phi(j)}(u)&=f_i(x_{\phi(i)})=F(x)_i.
+\end{aligned}
+\]
+The state $u$ was arbitrary. Hence the two finite-level functions are equal, which proves scheduled naturality. The resulting transport realizes $F$ by (*).
+
+Different witness choices can give different schedules and coordinate maps, but the realized function is still $F$. By KS62 these transports are eventually equal, so their quotient class is independent of all choices. The same faithfulness result says that two classes with equal realized functions are identical. We have proved both surjectivity and injectivity, including the well-definedness of the inverse choice construction. No bound on the growth of $\phi$ follows from these quantifiers.
+\end{proof}
+\source{KS63}
+The finite-level compatibility is derived in this proof. It is not inserted as an additional field in the hypothesis that \(F\) is finitely observed. This is one of the useful bridges between a global description of a transformation and an actual presentation in the resolution calculus.
+
+\fixedplate{20_schedule}{Independent finite-observation witnesses need not use a monotone input schedule. Taking the running maximum produces one without changing the realized function. The map at the enlarged level first restricts to the originally sufficient level. This construction gives no efficiency bound on how large those levels are.}{fig:schedule}
+
+\subsection{Binary prefixes: a complete interpretation}
+Let \(X_n\) consist of binary words of length \(n\), with prefix restriction. A coherent point is exactly an infinite binary sequence: its length-\(n\) view is its first \(n\) bits. Every prefix extends, for example by appending zeros. Hence the source satisfies the hypothesis of the characterization theorem.
+
+Bitwise complementation is represented at level \(n\) by complementing the first \(n\) bits. The left shift \(F(x)_i=x_{i+1}\) uses the schedule \(\phi(n)=n+1\). A nearest-neighbor difference over \(\mathbb F_2\),
+\[
+ G(x)_i=x_i+x_{i+1},
+\]
+also uses \(n+1\) input bits for \(n\) output bits. Applying \(G\) twice uses \(n+2\) bits, and the middle terms cancel:
+\[
+ G(G(x))_i=x_i+x_{i+2}.
+\]
+The compatible finite maps make each statement meaningful on the entire coherent sequence, not merely on one chosen truncation. These are worked instances of the scheduled formulas. The finite regression suite checks their prefix compatibility independently.
+
+Not every set function on these points is finitely observed. Consider the Boolean output that is one exactly when every input bit is zero, regarded as a point of the constant Boolean tower. Given any proposed finite level \(k\), compare the all-zero sequence with a sequence whose first one occurs at position \(k\). Their first \(k\) bits agree, but the outputs differ. Therefore no finite witness \(a:X_k\to\{0,1\}\) can compute even that one output coordinate. This rules out a reindexed presentation by the forward direction of the theorem.
+
+The obstruction in this example is one of information, not a runtime benchmark. No amount of computation on the specified finite prefix distinguishes those two inputs. The theorem does not prohibit a different mathematical representation that supplies more information as part of each view. Changing the available view is changing the input model.
+
+\subsection{Cofinal changes also preserve the morphism calculus}
+A monotone unbounded schedule \(\theta\) gives the sampled resolution \(X_\theta\). There is a transport from \(X\) to \(X_\theta\) that reads the selected level. For the reverse direction choose, for each \(n\), a level \(j(n)\) with \(n\le\theta(j(n))\), and restrict the available value down to \(X_n\). Taking a least such index gives a monotone schedule.
+
+\begin{theorem}[Cofinal invariance of eventual transports]\label{KS64}
+Sampling and recovery are inverse in the eventual transport category. Consequently, for monotone unbounded schedules \(\theta\) and \(\eta\), there is a bijection
+\[
+ \operatorname{EventualHom}(X,Y)
+ \simeq
+ \operatorname{EventualHom}(X_\theta,Y_\eta).
+\]
+On point spaces it agrees with the previously constructed cofinal realization equivalences.
+\end{theorem}
+\begin{proof}
+Let \(s:X\to X_\theta\) be sampling, with schedule \(\theta\) and identity level maps. For recovery choose the least \(j(n)\) with \(n\le\theta(j(n))\). Unboundedness makes this set nonempty. Increasing \(n\) only strengthens the inequality, so \(j\) is monotone. The level map of \(r:X_\theta\to X\) is \(\rho^X_{n,\theta(j(n))}\). Composite restriction proves its naturality.
+
+The composite \(rs:X\to X\) reads level \(\theta(j(n))\) and restricts to \(n\). At that very stage its map agrees with the identity transport after restriction from \(\theta(j(n))\) to \(n\). Thus \(rs\) is eventually equal to the identity.
+
+For \(sr:X_\theta\to X_\theta\), the schedule at output \(n\) is \(j(\theta(n))\), and the level map is \(\rho^X_{\theta(n),\theta(j(\theta(n)))}\). Compare it with the identity at a sampled index
+\[
+ k\ge\max\{n,j(\theta(n))\}.
+\]
+Restricting either route from level \(k\) of the sampled system gives the same original restriction \(\rho^X_{\theta(n),\theta(k)}\). This proves eventual equality even when \(\theta\) has repeated values. Hence the two classes are inverse isomorphisms, without requiring them to be literal inverse schedules.
+
+Write \(s_X,r_X\) and \(s_Y,r_Y\) for the sampling and recovery isomorphisms of source and target. The asserted Hom map is
+\[
+ [f]\longmapsto s_Y[f]r_X,
+\]
+with inverse \([g]\mapsto r_Y[g]s_X\). Associativity and the two inverse equations cancel the inserted pairs, proving both round trips. Applying the realization functor transports these equations to point spaces, where sampling and recovery are the cofinal point equivalences already constructed. No norm invariance or surjectivity of source point projections is needed for this categorical conjugation argument.
+\end{proof}
+\source{KS64}
+This strengthens cofinal invariance from points to a specified category of transformations. It still does not make raw residual norms invariant, identify every global set function with a finite presentation, or preserve the numerical conditioning of a repair. Those are separate questions, addressed by the defect maps in the next sections.
+
+\Needspace{7\baselineskip}
+\begin{insight}
+For a projection-surjective source, eventual finite presentations correspond exactly to uniformly finite observations at each output level. This is a precise machine-oriented representation theorem. It is not a claim that every represented map is computationally efficient, or that every arbitrary function of an infinite input has such a presentation.
+\end{insight}

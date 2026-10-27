@@ -1,0 +1,20 @@
+tendsto_sum_nat_add.{u_2} {G : Type u_2} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] [T2Space G]
+  (f : ℕ → G) : Filter.Tendsto (fun i => ∑' (k : ℕ), f (k + i)) Filter.atTop (nhds 0)
+summable_const_iff.{u_2, u_4} {β : Type u_2} {G : Type u_4} [TopologicalSpace G] [AddCommGroup G]
+  [IsTopologicalAddGroup G] [Infinite β] [T2Space G] (a : G) : (Summable fun x => a) ↔ a = 0
+mem_closure_of_tendsto.{u, u_1} {X : Type u} [TopologicalSpace X] {α : Type u_1} {x : X} {s : Set X} {f : α → X}
+  {b : Filter α} [b.NeBot] (hf : Filter.Tendsto f b (nhds x)) (h : ∀ᶠ (x : α) in b, f x ∈ s) : x ∈ closure s
+tendsto_iff_norm_sub_tendsto_zero.{u_1, u_4} {α : Type u_1} {E : Type u_4} [SeminormedAddCommGroup E] {f : α → E}
+  {a : Filter α} {b : E} : Filter.Tendsto f a (nhds b) ↔ Filter.Tendsto (fun e => ‖f e - b‖) a (nhds 0)
+Metric.tendsto_nhds.{u, v} {α : Type u} {β : Type v} [PseudoMetricSpace α] {f : Filter β} {u : β → α} {a : α} :
+  Filter.Tendsto u f (nhds a) ↔ ∀ ε > 0, ∀ᶠ (x : β) in f, dist (u x) a < ε
+Summable.tendsto_atTop_zero.{u_2} {G : Type u_2} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G]
+  {f : ℕ → G} (hf : Summable f) : Filter.Tendsto f Filter.atTop (nhds 0)
+/workspace/scratch/5d9f7f8127b0/publication_v115/records/range_api_checks.lean:9:7: error(lean.unknownIdentifier): Unknown identifier `tendsto_norm_zero_iff`
+tendsto_sub_nhds_zero_iff.{u_1, u_3} {G : Type u_1} [AddGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G]
+  {α : Type u_3} {l : Filter α} {x : G} {u : α → G} :
+  Filter.Tendsto (fun x_1 => u x_1 - x) l (nhds 0) ↔ Filter.Tendsto u l (nhds x)
+Summable.tsum_eq_zero_add.{u_2} {G : Type u_2} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G]
+  [T2Space G] {f : ℕ → G} (hf : Summable f) : ∑' (b : ℕ), f b = f 0 + ∑' (b : ℕ), f (b + 1)
+Real.continuous_sqrt : Continuous fun x => √x
+Real.sqrt_sq {x : ℝ} (h : 0 ≤ x) : √(x ^ 2) = x

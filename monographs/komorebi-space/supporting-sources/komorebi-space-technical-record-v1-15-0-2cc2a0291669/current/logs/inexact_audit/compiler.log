@@ -1,0 +1,1278 @@
+KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate (s a : KomorebiSpace.DiagonalRegularization.H)
+  {δ κ ε : ℝ} (hδ : LT.lt.{0} 0 δ) (hδ₁ : LE.le.{0} δ 1) (hκ : LE.le.{0} 0 κ)
+  (hdata : LE.le.{0} (norm.{0} (HSub.hSub.{0, 0, 0} s KomorebiSpace.DiagonalRegularization.b)) δ)
+  (hsolve :
+    LE.le.{0}
+      (norm.{0}
+        (HAdd.hAdd.{0, 0, 0}
+          ((ContinuousLinearMap.adjoint.{0, 0, 0} KomorebiSpace.DiagonalRegularization.T)
+            (HSub.hSub.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.T a) s))
+          (HSMul.hSMul.{0, 0, 0}
+            (KomorebiSpace.DiagonalRegularization.alpha (Nat.ceil.{0} (HPow.hPow.{0, 0, 0} δ (-2 / 3)))) a)))
+      ε)
+  (hε :
+    LE.le.{0} ε
+      (HMul.hMul.{0, 0, 0}
+        (HMul.hMul.{0, 0, 0} κ
+          (KomorebiSpace.DiagonalRegularization.alpha (Nat.ceil.{0} (HPow.hPow.{0, 0, 0} δ (-2 / 3)))))
+        (HPow.hPow.{0, 0, 0} δ (1 / 3)))) :
+  LE.le.{0} (norm.{0} (HSub.hSub.{0, 0, 0} a KomorebiSpace.DiagonalRegularization.w))
+    (HMul.hMul.{0, 0, 0} (HAdd.hAdd.{0, 0, 0} (HAdd.hAdd.{0, 0, 0} (√2) 1) κ) (HPow.hPow.{0, 0, 0} δ (1 / 3)))
+'KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+theorem KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate : ∀
+  (s a : KomorebiSpace.DiagonalRegularization.H) {δ κ ε : ℝ},
+  LT.lt.{0} 0 δ →
+    LE.le.{0} δ 1 →
+      LE.le.{0} 0 κ →
+        LE.le.{0} (norm.{0} (HSub.hSub.{0, 0, 0} s KomorebiSpace.DiagonalRegularization.b)) δ →
+          LE.le.{0}
+              (norm.{0}
+                (HAdd.hAdd.{0, 0, 0}
+                  ((ContinuousLinearMap.adjoint.{0, 0, 0} KomorebiSpace.DiagonalRegularization.T)
+                    (HSub.hSub.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.T a) s))
+                  (HSMul.hSMul.{0, 0, 0}
+                    (KomorebiSpace.DiagonalRegularization.alpha (Nat.ceil.{0} (HPow.hPow.{0, 0, 0} δ (-2 / 3)))) a)))
+              ε →
+            LE.le.{0} ε
+                (HMul.hMul.{0, 0, 0}
+                  (HMul.hMul.{0, 0, 0} κ
+                    (KomorebiSpace.DiagonalRegularization.alpha (Nat.ceil.{0} (HPow.hPow.{0, 0, 0} δ (-2 / 3)))))
+                  (HPow.hPow.{0, 0, 0} δ (1 / 3))) →
+              LE.le.{0} (norm.{0} (HSub.hSub.{0, 0, 0} a KomorebiSpace.DiagonalRegularization.w))
+                (HMul.hMul.{0, 0, 0} (HAdd.hAdd.{0, 0, 0} (HAdd.hAdd.{0, 0, 0} (√2) 1) κ)
+                  (HPow.hPow.{0, 0, 0} δ (1 / 3))) :=
+fun s a {δ κ ε} hδ hδ₁ hκ hdata hsolve hε =>
+  let m := Nat.ceil.{0} (HPow.hPow.{0, 0, 0} δ (-2 / 3));
+  have hm := KomorebiSpace.DiagonalRegularization.one_le_noiseSchedule hδ;
+  have hα := KomorebiSpace.DiagonalRegularization.alpha_pos hm;
+  have hres :=
+    have he :=
+      Eq.mpr.{0}
+        (id.{0}
+          (congrArg.{1, 1}
+            (Eq.{1}
+              (HSub.hSub.{0, 0, 0}
+                (HAdd.hAdd.{0, 0, 0}
+                  ((ContinuousLinearMap.adjoint.{0, 0, 0} KomorebiSpace.DiagonalRegularization.T)
+                    (KomorebiSpace.DiagonalRegularization.T a))
+                  (HSMul.hSMul.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m) a))
+                ((ContinuousLinearMap.adjoint.{0, 0, 0} KomorebiSpace.DiagonalRegularization.T) s)))
+            (congrFun'.{1, 1}
+              (congrArg.{1, 1} HAdd.hAdd.{0, 0, 0}
+                (map_sub.{0, 0, 0} (ContinuousLinearMap.adjoint.{0, 0, 0} KomorebiSpace.DiagonalRegularization.T)
+                  (KomorebiSpace.DiagonalRegularization.T a) s))
+              (HSMul.hSMul.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m) a))))
+        (KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate._abel_1_1 s a);
+    Eq.mpr.{0} (id.{0} (congrArg.{1, 1} (fun _a => LE.le.{0} (norm.{0} _a) ε) he)) hsolve;
+  have hbudget := mul_nonneg.{0} hκ (LT.lt.le.{0} (Real.rpow_pos_of_pos hδ (1 / 3)));
+  have hsolver :=
+    LE.le.trans.{0}
+      (KomorebiSpace.RegularizedHilbertRepair.correction_error_bound.{0, 0} KomorebiSpace.DiagonalRegularization.T
+        (KomorebiSpace.DiagonalRegularization.alpha m) hα s a)
+      ((div_le_iff₀.{0} hα).mpr
+        (have hr := LE.le.trans.{0} hres hε;
+        id.{0}
+          (fun hr =>
+            le_of_not_gt.{0} fun a_1 =>
+              Mathlib.Tactic.Linarith.lt_irrefl.{0}
+                (Eq.mp.{0}
+                  (congrArg.{1, 1} (fun _a => LT.lt.{0} _a 0)
+                    (Mathlib.Tactic.Ring.of_eq.{1}
+                      (Mathlib.Tactic.Ring.Common.add_congr.{0}
+                        (Mathlib.Tactic.Ring.Common.sub_congr.{0}
+                          (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                            (Mathlib.Tactic.Ring.cast_pos.{0} (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                            (Mathlib.Tactic.Ring.Common.atom_pf.{0}
+                              (norm.{0}
+                                (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                  KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.alpha m)
+                                  s a))
+                              rfl.{1}
+                              (Eq.mpr.{0}
+                                (id.{0}
+                                  (congrArg.{1, 1}
+                                    (fun _a =>
+                                      Eq.{1}
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0}
+                                            (norm.{0}
+                                              (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                                KomorebiSpace.DiagonalRegularization.T
+                                                (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                            (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0}
+                                            (norm.{0}
+                                              (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                                KomorebiSpace.DiagonalRegularization.T
+                                                (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                            (Nat.rawCast.{0} 1))
+                                          _a))
+                                    (Eq.symm.{1} rfl.{1})))
+                                (Eq.refl.{1}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0}
+                                      (norm.{0}
+                                        (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                          KomorebiSpace.DiagonalRegularization.T
+                                          (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1)))))
+                            (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                              (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_pf_right.{0}
+                                  (norm.{0}
+                                    (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                      KomorebiSpace.DiagonalRegularization.T
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                  (Nat.rawCast.{0} 1)
+                                  (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                    (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                      (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                      (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0}
+                                        (norm.{0}
+                                          (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                            KomorebiSpace.DiagonalRegularization.T
+                                            (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0)))
+                              (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0}
+                                      (norm.{0}
+                                        (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                          KomorebiSpace.DiagonalRegularization.T
+                                          (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1))
+                                  0))
+                              (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0}
+                                      (norm.{0}
+                                        (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                          KomorebiSpace.DiagonalRegularization.T
+                                          (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1))
+                                  0))))
+                          (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                            (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                              (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                                (Mathlib.Tactic.Ring.cast_pos.{0}
+                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                (Mathlib.Tactic.Ring.Common.atom_pf.{0} κ rfl.{1}
+                                  (Eq.mpr.{0}
+                                    (id.{0}
+                                      (congrArg.{1, 1}
+                                        (fun _a =>
+                                          Eq.{1}
+                                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                              (Nat.rawCast.{0} 1))
+                                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) _a))
+                                        (Eq.symm.{1} rfl.{1})))
+                                    (Eq.refl.{1}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1)))))
+                                (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} κ (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                    (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                    (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                      (HAdd.hAdd.{0, 0, 0}
+                                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))
+                                        0)))
+                                  (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))))
+                              (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                                (Mathlib.Tactic.Ring.cast_pos.{0}
+                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                (Mathlib.Tactic.Ring.Common.atom_pf.{0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                  rfl.{1}
+                                  (Eq.mpr.{0}
+                                    (id.{0}
+                                      (congrArg.{1, 1}
+                                        (fun _a =>
+                                          Eq.{1}
+                                            (HMul.hMul.{0, 0, 0}
+                                              (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                                (Nat.rawCast.{0} 1))
+                                              (Nat.rawCast.{0} 1))
+                                            (HMul.hMul.{0, 0, 0}
+                                              (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                                (Nat.rawCast.{0} 1))
+                                              _a))
+                                        (Eq.symm.{1} rfl.{1})))
+                                    (Eq.refl.{1}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1)))))
+                                (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0}
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                    (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                    (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                      (HAdd.hAdd.{0, 0, 0}
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                            (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))
+                                        0)))
+                                  (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))))
+                              (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} κ (Nat.rawCast.{0} 1)
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0}
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1)))))
+                                  (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1)))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                            (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1)))
+                                      0)))
+                                (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1)))
+                                    0))))
+                            (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                              (Mathlib.Tactic.Ring.cast_pos.{0}
+                                (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                              (Mathlib.Tactic.Ring.Common.atom_pf.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) rfl.{1}
+                                (Eq.mpr.{0}
+                                  (id.{0}
+                                    (congrArg.{1, 1}
+                                      (fun _a =>
+                                        Eq.{1}
+                                          (HMul.hMul.{0, 0, 0}
+                                            (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                            (Nat.rawCast.{0} 1))
+                                          (HMul.hMul.{0, 0, 0}
+                                            (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                            _a))
+                                      (Eq.symm.{1} rfl.{1})))
+                                  (Eq.refl.{1}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1)))))
+                              (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                    (Nat.rawCast.{0} 1)
+                                    (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                      (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                        (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                        (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                  (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0)))
+                                (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0))))
+                            (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                              (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} κ (Nat.rawCast.{0} 1)
+                                  (Mathlib.Tactic.Ring.Common.mul_pf_left.{0}
+                                    (KomorebiSpace.DiagonalRegularization.alpha m) (Nat.rawCast.{0} 1)
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                      (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))))
+                                (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))))
+                                    0)))
+                              (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1))
+                                  0))
+                              (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))))
+                                  0))))
+                          (Mathlib.Tactic.Ring.Common.sub_pf.{0}
+                            (Mathlib.Tactic.Ring.Common.neg_add.{0}
+                              (Mathlib.Tactic.Ring.Common.neg_mul.{0} κ (Nat.rawCast.{0} 1)
+                                (Mathlib.Tactic.Ring.Common.neg_mul.{0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                  (Nat.rawCast.{0} 1)
+                                  (Mathlib.Tactic.Ring.Common.neg_mul.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                    (Nat.rawCast.{0} 1)
+                                    (Mathlib.Meta.NormNum.IsInt.to_raw_eq.{0}
+                                      (Mathlib.Meta.NormNum.isInt_neg.{0} (Eq.refl.{1} Neg.neg.{0})
+                                        (Mathlib.Meta.NormNum.IsNat.to_isInt.{0}
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1))
+                                        (Eq.refl.{1} (Int.negOfNat 1)))))))
+                              Mathlib.Tactic.Ring.Common.neg_zero.{0})
+                            (Mathlib.Tactic.Ring.Common.add_pf_add_lt.{0}
+                              (HMul.hMul.{0, 0, 0}
+                                (HPow.hPow.{0, 0, 0}
+                                  (norm.{0}
+                                    (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                      KomorebiSpace.DiagonalRegularization.T
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                  (Nat.rawCast.{0} 1))
+                                (Nat.rawCast.{0} 1))
+                              (Mathlib.Tactic.Ring.Common.add_pf_zero_add.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Int.rawCast.{0} (Int.negOfNat 1)))))
+                                  0)))))
+                        (Mathlib.Tactic.Ring.Common.sub_congr.{0}
+                          (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                            (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                              (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                                (Mathlib.Tactic.Ring.cast_pos.{0}
+                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                (Mathlib.Tactic.Ring.Common.atom_pf.{0} κ rfl.{1}
+                                  (Eq.mpr.{0}
+                                    (id.{0}
+                                      (congrArg.{1, 1}
+                                        (fun _a =>
+                                          Eq.{1}
+                                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                              (Nat.rawCast.{0} 1))
+                                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) _a))
+                                        (Eq.symm.{1} rfl.{1})))
+                                    (Eq.refl.{1}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1)))))
+                                (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} κ (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                    (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                    (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                      (HAdd.hAdd.{0, 0, 0}
+                                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))
+                                        0)))
+                                  (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))))
+                              (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                                (Mathlib.Tactic.Ring.cast_pos.{0}
+                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                (Mathlib.Tactic.Ring.Common.atom_pf.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) rfl.{1}
+                                  (Eq.mpr.{0}
+                                    (id.{0}
+                                      (congrArg.{1, 1}
+                                        (fun _a =>
+                                          Eq.{1}
+                                            (HMul.hMul.{0, 0, 0}
+                                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                              (Nat.rawCast.{0} 1))
+                                            (HMul.hMul.{0, 0, 0}
+                                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                              _a))
+                                        (Eq.symm.{1} rfl.{1})))
+                                    (Eq.refl.{1}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1)))))
+                                (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                      (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                    (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                    (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                      (HAdd.hAdd.{0, 0, 0}
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))
+                                        0)))
+                                  (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0))))
+                              (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} κ (Nat.rawCast.{0} 1)
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                      (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1)))))
+                                  (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1)))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1)))
+                                      0)))
+                                (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1)))
+                                    0))))
+                            (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                              (Mathlib.Tactic.Ring.cast_pos.{0}
+                                (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                              (Mathlib.Tactic.Ring.Common.atom_pf.{0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                rfl.{1}
+                                (Eq.mpr.{0}
+                                  (id.{0}
+                                    (congrArg.{1, 1}
+                                      (fun _a =>
+                                        Eq.{1}
+                                          (HMul.hMul.{0, 0, 0}
+                                            (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                              (Nat.rawCast.{0} 1))
+                                            (Nat.rawCast.{0} 1))
+                                          (HMul.hMul.{0, 0, 0}
+                                            (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                              (Nat.rawCast.{0} 1))
+                                            _a))
+                                      (Eq.symm.{1} rfl.{1})))
+                                  (Eq.refl.{1}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1)))))
+                              (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                  (Mathlib.Tactic.Ring.Common.mul_pf_right.{0}
+                                    (KomorebiSpace.DiagonalRegularization.alpha m) (Nat.rawCast.{0} 1)
+                                    (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                      (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                        (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                        (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                  (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                  (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                    (HAdd.hAdd.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))
+                                      0)))
+                                (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0))))
+                            (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                              (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} κ (Nat.rawCast.{0} 1)
+                                  (Mathlib.Tactic.Ring.Common.mul_pf_right.{0}
+                                    (KomorebiSpace.DiagonalRegularization.alpha m) (Nat.rawCast.{0} 1)
+                                    (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                      (Nat.rawCast.{0} 1)
+                                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))))
+                                (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                          (Nat.rawCast.{0} 1))
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))))
+                                    0)))
+                              (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1))
+                                  0))
+                              (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))))
+                                  0))))
+                          (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                            (Mathlib.Tactic.Ring.cast_pos.{0} (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                            (Mathlib.Tactic.Ring.Common.atom_pf.{0}
+                              (norm.{0}
+                                (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                  KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.alpha m)
+                                  s a))
+                              rfl.{1}
+                              (Eq.mpr.{0}
+                                (id.{0}
+                                  (congrArg.{1, 1}
+                                    (fun _a =>
+                                      Eq.{1}
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0}
+                                            (norm.{0}
+                                              (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                                KomorebiSpace.DiagonalRegularization.T
+                                                (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                            (Nat.rawCast.{0} 1))
+                                          (Nat.rawCast.{0} 1))
+                                        (HMul.hMul.{0, 0, 0}
+                                          (HPow.hPow.{0, 0, 0}
+                                            (norm.{0}
+                                              (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                                KomorebiSpace.DiagonalRegularization.T
+                                                (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                            (Nat.rawCast.{0} 1))
+                                          _a))
+                                    (Eq.symm.{1} rfl.{1})))
+                                (Eq.refl.{1}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0}
+                                      (norm.{0}
+                                        (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                          KomorebiSpace.DiagonalRegularization.T
+                                          (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1)))))
+                            (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                              (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                                (Mathlib.Tactic.Ring.Common.mul_pf_right.{0}
+                                  (norm.{0}
+                                    (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                      KomorebiSpace.DiagonalRegularization.T
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                  (Nat.rawCast.{0} 1)
+                                  (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                                    (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                      (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                      (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Eq.refl.{1} 1))))
+                                (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                                (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                  (HAdd.hAdd.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0}
+                                        (norm.{0}
+                                          (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                            KomorebiSpace.DiagonalRegularization.T
+                                            (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                        (Nat.rawCast.{0} 1))
+                                      (Nat.rawCast.{0} 1))
+                                    0)))
+                              (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0}
+                                      (norm.{0}
+                                        (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                          KomorebiSpace.DiagonalRegularization.T
+                                          (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1))
+                                  0))
+                              (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HPow.hPow.{0, 0, 0}
+                                      (norm.{0}
+                                        (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                          KomorebiSpace.DiagonalRegularization.T
+                                          (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                      (Nat.rawCast.{0} 1))
+                                    (Nat.rawCast.{0} 1))
+                                  0))))
+                          (Mathlib.Tactic.Ring.Common.sub_pf.{0}
+                            (Mathlib.Tactic.Ring.Common.neg_add.{0}
+                              (Mathlib.Tactic.Ring.Common.neg_mul.{0}
+                                (norm.{0}
+                                  (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                    KomorebiSpace.DiagonalRegularization.T
+                                    (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                (Nat.rawCast.{0} 1)
+                                (Mathlib.Meta.NormNum.IsInt.to_raw_eq.{0}
+                                  (Mathlib.Meta.NormNum.isInt_neg.{0} (Eq.refl.{1} Neg.neg.{0})
+                                    (Mathlib.Meta.NormNum.IsNat.to_isInt.{0}
+                                      (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1))
+                                    (Eq.refl.{1} (Int.negOfNat 1)))))
+                              Mathlib.Tactic.Ring.Common.neg_zero.{0})
+                            (Mathlib.Tactic.Ring.Common.add_pf_add_gt.{0}
+                              (HMul.hMul.{0, 0, 0}
+                                (HPow.hPow.{0, 0, 0}
+                                  (norm.{0}
+                                    (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                      KomorebiSpace.DiagonalRegularization.T
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) s a))
+                                  (Nat.rawCast.{0} 1))
+                                (Int.rawCast.{0} (Int.negOfNat 1)))
+                              (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                                (HAdd.hAdd.{0, 0, 0}
+                                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HPow.hPow.{0, 0, 0} (KomorebiSpace.DiagonalRegularization.alpha m)
+                                        (Nat.rawCast.{0} 1))
+                                      (HMul.hMul.{0, 0, 0}
+                                        (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                        (Nat.rawCast.{0} 1))))
+                                  0)))))
+                        (Mathlib.Tactic.Ring.Common.add_pf_add_overlap_zero.{0}
+                          (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero.{0}
+                            (norm.{0}
+                              (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                KomorebiSpace.DiagonalRegularization.T (KomorebiSpace.DiagonalRegularization.alpha m) s
+                                a))
+                            (Nat.rawCast.{0} 1)
+                            (Mathlib.Meta.NormNum.IsInt.to_isNat.{0}
+                              (Mathlib.Meta.NormNum.isInt_add.{0} (Eq.refl.{1} HAdd.hAdd.{0, 0, 0})
+                                (Mathlib.Meta.NormNum.IsNat.to_isInt.{0} (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1))
+                                (Mathlib.Meta.NormNum.IsInt.of_raw.{0} ℝ (Int.negOfNat 1))
+                                (Eq.refl.{1} (Int.ofNat 0)))))
+                          (Mathlib.Tactic.Ring.Common.add_pf_add_overlap_zero.{0}
+                            (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero.{0} κ (Nat.rawCast.{0} 1)
+                              (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero.{0}
+                                (KomorebiSpace.DiagonalRegularization.alpha m) (Nat.rawCast.{0} 1)
+                                (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3))
+                                  (Nat.rawCast.{0} 1)
+                                  (Mathlib.Meta.NormNum.IsInt.to_isNat.{0}
+                                    (Mathlib.Meta.NormNum.isInt_add.{0} (Eq.refl.{1} HAdd.hAdd.{0, 0, 0})
+                                      (Mathlib.Meta.NormNum.IsInt.of_raw.{0} ℝ (Int.negOfNat 1))
+                                      (Mathlib.Meta.NormNum.IsNat.to_isInt.{0}
+                                        (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1))
+                                      (Eq.refl.{1} (Int.ofNat 0)))))))
+                            (Mathlib.Tactic.Ring.Common.add_pf_zero_add.{0} 0))))
+                      (Mathlib.Tactic.Ring.cast_zero.{0} (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_zero.{0}))))
+                  (Mathlib.Tactic.Linarith.add_lt_of_le_of_neg.{0}
+                    (Eq.mp.{0}
+                      (congrArg.{1, 1} (fun _a => LE.le.{0} _a 0)
+                        (Mathlib.Tactic.Linarith.without_one_mul.{0}
+                          (Mathlib.Tactic.CancelDenoms.derive_trans.{0}
+                            (Eq.trans.{1}
+                              (congrArg.{1, 1}
+                                (HSub.hSub.{0, 0, 0}
+                                  (norm.{0}
+                                    (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                      KomorebiSpace.DiagonalRegularization.T
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) s a)))
+                                (Eq.trans.{1}
+                                  (congrArg.{1, 1}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} κ (KomorebiSpace.DiagonalRegularization.alpha m)))
+                                    (Eq.trans.{1}
+                                      (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                        (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                          (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                            (Mathlib.Meta.NormNum.isNNRat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                              (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                              (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                              (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                          Nat.cast_one.{0} (Eq.refl.{1} 3)))
+                                      (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                        (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                          (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                            (Mathlib.Meta.NormNum.isNNRat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                              (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                              (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                              (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                          Nat.cast_one.{0} (Eq.refl.{1} 3)))))
+                                  (congrArg.{1, 1}
+                                    (HMul.hMul.{0, 0, 0}
+                                      (HMul.hMul.{0, 0, 0} κ (KomorebiSpace.DiagonalRegularization.alpha m)))
+                                    (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                      (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                        (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                          (Mathlib.Meta.NormNum.isNNRat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                            (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                              (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                            (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                              (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                            (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                        Nat.cast_one.{0} (Eq.refl.{1} 3))))))
+                              (congrArg.{1, 1}
+                                (HSub.hSub.{0, 0, 0}
+                                  (norm.{0}
+                                    (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                      KomorebiSpace.DiagonalRegularization.T
+                                      (KomorebiSpace.DiagonalRegularization.alpha m) s a)))
+                                (congrArg.{1, 1}
+                                  (HMul.hMul.{0, 0, 0}
+                                    (HMul.hMul.{0, 0, 0} κ (KomorebiSpace.DiagonalRegularization.alpha m)))
+                                  (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                    (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                      (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                        (Mathlib.Meta.NormNum.isNNRat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                          (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                            (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                          (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                            (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                              (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                          (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                      Nat.cast_one.{0} (Eq.refl.{1} 3))))))
+                            (Mathlib.Tactic.CancelDenoms.sub_subst.{0} rfl.{1}
+                              (Mathlib.Tactic.CancelDenoms.mul_subst.{0}
+                                (Mathlib.Tactic.CancelDenoms.mul_subst.{0} rfl.{1} rfl.{1}
+                                  (Mathlib.Meta.NormNum.isNat_eq_true.{0}
+                                    (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                      (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})
+                                      (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}) (Eq.refl.{1} 1))
+                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})))
+                                rfl.{1}
+                                (Mathlib.Meta.NormNum.isNat_eq_true.{0}
+                                  (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})
+                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}) (Eq.refl.{1} 1))
+                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})))))))
+                      (Mathlib.Tactic.Linarith.sub_nonpos_of_le.{0} hr))
+                    (Eq.mp.{0}
+                      (congrArg.{1, 1} (fun _a => LT.lt.{0} _a 0)
+                        (Mathlib.Tactic.Linarith.without_one_mul.{0}
+                          (Mathlib.Tactic.CancelDenoms.derive_trans.{0}
+                            (Eq.trans.{1}
+                              (congrFun'.{1, 1}
+                                (congrArg.{1, 1} HSub.hSub.{0, 0, 0}
+                                  (Eq.trans.{1}
+                                    (congrFun'.{1, 1}
+                                      (congrArg.{1, 1} HMul.hMul.{0, 0, 0}
+                                        (Eq.trans.{1}
+                                          (congrArg.{1, 1} (HMul.hMul.{0, 0, 0} κ)
+                                            (Eq.trans.{1}
+                                              (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                                (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                                  (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                                    (Mathlib.Meta.NormNum.isNNRat_mul.{0}
+                                                      (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                                      (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                        (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                                      (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                        (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                          (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                                      (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                                  Nat.cast_one.{0} (Eq.refl.{1} 3)))
+                                              (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                                (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                                  (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                                    (Mathlib.Meta.NormNum.isNNRat_mul.{0}
+                                                      (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                                      (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                        (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                                      (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                        (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                          (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                                      (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                                  Nat.cast_one.{0} (Eq.refl.{1} 3)))))
+                                          (congrArg.{1, 1} (HMul.hMul.{0, 0, 0} κ)
+                                            (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                              (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                                (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                                  (Mathlib.Meta.NormNum.isNNRat_mul.{0}
+                                                    (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                                    (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                      (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                                    (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                      (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                        (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                                    (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                                Nat.cast_one.{0} (Eq.refl.{1} 3))))))
+                                      (KomorebiSpace.DiagonalRegularization.alpha m))
+                                    (congrFun'.{1, 1}
+                                      (congrArg.{1, 1} HMul.hMul.{0, 0, 0}
+                                        (congrArg.{1, 1} (HMul.hMul.{0, 0, 0} κ)
+                                          (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                            (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                              (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                                (Mathlib.Meta.NormNum.isNNRat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                                  (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                                  (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                    (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                      (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                                  (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                              Nat.cast_one.{0} (Eq.refl.{1} 3)))))
+                                      (KomorebiSpace.DiagonalRegularization.alpha m))))
+                                (norm.{0}
+                                  (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                    KomorebiSpace.DiagonalRegularization.T
+                                    (KomorebiSpace.DiagonalRegularization.alpha m) s a)))
+                              (congrFun'.{1, 1}
+                                (congrArg.{1, 1} HSub.hSub.{0, 0, 0}
+                                  (congrFun'.{1, 1}
+                                    (congrArg.{1, 1} HMul.hMul.{0, 0, 0}
+                                      (congrArg.{1, 1} (HMul.hMul.{0, 0, 0} κ)
+                                        (congrArg.{1, 1} (HPow.hPow.{0, 0, 0} δ)
+                                          (Mathlib.Meta.NormNum.IsNNRat.to_eq.{0}
+                                            (Mathlib.Meta.NormNum.isNNRat_div.{0}
+                                              (Mathlib.Meta.NormNum.isNNRat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                                (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                                                (Mathlib.Meta.NormNum.isNNRat_inv_pos.{0}
+                                                  (Mathlib.Meta.NormNum.IsNat.to_isNNRat.{0}
+                                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ (Eq.refl.{1} 3))))
+                                                (Eq.refl.{1} (Nat.mul 1 1)) (Eq.refl.{1} 3)))
+                                            Nat.cast_one.{0} (Eq.refl.{1} 3)))))
+                                    (KomorebiSpace.DiagonalRegularization.alpha m)))
+                                (norm.{0}
+                                  (KomorebiSpace.RegularizedHilbertRepair.gradient.{0, 0}
+                                    KomorebiSpace.DiagonalRegularization.T
+                                    (KomorebiSpace.DiagonalRegularization.alpha m) s a))))
+                            (Mathlib.Tactic.CancelDenoms.sub_subst.{0}
+                              (Mathlib.Tactic.CancelDenoms.mul_subst.{0}
+                                (Mathlib.Tactic.CancelDenoms.mul_subst.{0} rfl.{1} rfl.{1}
+                                  (Mathlib.Meta.NormNum.isNat_eq_true.{0}
+                                    (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                      (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})
+                                      (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}) (Eq.refl.{1} 1))
+                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})))
+                                rfl.{1}
+                                (Mathlib.Meta.NormNum.isNat_eq_true.{0}
+                                  (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})
+                                    (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}) (Eq.refl.{1} 1))
+                                  (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0})))
+                              rfl.{1}))))
+                      (Mathlib.Tactic.Linarith.sub_neg_of_lt.{0} a_1)))))
+          hr));
+  have hnoisy := KomorebiSpace.DiagonalRegularization.corollary_30_3 s hδ hδ₁ hdata;
+  id.{0}
+    (fun hnoisy =>
+      have he := KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate._abel_1_3 s a hα;
+      Eq.mpr.{0}
+        (id.{0}
+          (congrArg.{1, 1}
+            (fun _a =>
+              LE.le.{0} (norm.{0} _a)
+                (HMul.hMul.{0, 0, 0} (HAdd.hAdd.{0, 0, 0} (HAdd.hAdd.{0, 0, 0} (√2) 1) κ)
+                  (HPow.hPow.{0, 0, 0} δ (1 / 3))))
+            he))
+        (LE.le.trans.{0}
+          (norm_add_le.{0}
+            (HSub.hSub.{0, 0, 0} a
+              (KomorebiSpace.RegularizedHilbertRepair.correction.{0, 0} KomorebiSpace.DiagonalRegularization.T
+                (KomorebiSpace.DiagonalRegularization.alpha m) hα s))
+            (HSub.hSub.{0, 0, 0}
+              (KomorebiSpace.RegularizedHilbertRepair.correction.{0, 0} KomorebiSpace.DiagonalRegularization.T
+                (KomorebiSpace.DiagonalRegularization.alpha m) hα s)
+              KomorebiSpace.DiagonalRegularization.w))
+          (LE.le.trans_eq.{0} (add_le_add.{0} hsolver (LE.le.trans.{0} hnoisy.left hnoisy.right))
+            (Mathlib.Tactic.Ring.of_eq.{1}
+              (Mathlib.Tactic.Ring.Common.add_congr.{0}
+                (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                  (Mathlib.Tactic.Ring.Common.atom_pf.{0} κ rfl.{1}
+                    (Eq.mpr.{0}
+                      (id.{0}
+                        (congrArg.{1, 1}
+                          (fun _a =>
+                            Eq.{1} (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1))
+                              (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) _a))
+                          (Eq.symm.{1} rfl.{1})))
+                      (Eq.refl.{1}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))))
+                  (Mathlib.Tactic.Ring.Common.atom_pf.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) rfl.{1}
+                    (Eq.mpr.{0}
+                      (id.{0}
+                        (congrArg.{1, 1}
+                          (fun _a =>
+                            Eq.{1}
+                              (HMul.hMul.{0, 0, 0}
+                                (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                (Nat.rawCast.{0} 1))
+                              (HMul.hMul.{0, 0, 0}
+                                (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)) _a))
+                          (Eq.symm.{1} rfl.{1})))
+                      (Eq.refl.{1}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                          (Nat.rawCast.{0} 1)))))
+                  (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                    (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                      (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} κ (Nat.rawCast.{0} 1)
+                        (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)
+                          (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                            (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                              (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                              (Eq.refl.{1} 1)))))
+                      (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0}
+                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                              (Nat.rawCast.{0} 1)))
+                          0)))
+                    (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                      (HAdd.hAdd.{0, 0, 0}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                          (Nat.rawCast.{0} 1))
+                        0))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                      (HAdd.hAdd.{0, 0, 0}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (Nat.rawCast.{0} 1)))
+                        0))))
+                (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                  (Mathlib.Tactic.Ring.Common.add_congr.{0}
+                    (Mathlib.Tactic.Ring.Common.atom_pf.{0} (√2) rfl.{1}
+                      (Eq.mpr.{0}
+                        (id.{0}
+                          (congrArg.{1, 1}
+                            (fun _a =>
+                              Eq.{1}
+                                (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1))
+                                (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) _a))
+                            (Eq.symm.{1} rfl.{1})))
+                        (Eq.refl.{1}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))))
+                    (Mathlib.Tactic.Ring.cast_pos.{0} (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_gt.{0} (Nat.rawCast.{0} 1)
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)) 0))))
+                  (Mathlib.Tactic.Ring.Common.atom_pf.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) rfl.{1}
+                    (Eq.mpr.{0}
+                      (id.{0}
+                        (congrArg.{1, 1}
+                          (fun _a =>
+                            Eq.{1}
+                              (HMul.hMul.{0, 0, 0}
+                                (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                                (Nat.rawCast.{0} 1))
+                              (HMul.hMul.{0, 0, 0}
+                                (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)) _a))
+                          (Eq.symm.{1} rfl.{1})))
+                      (Eq.refl.{1}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                          (Nat.rawCast.{0} 1)))))
+                  (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                    (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                      (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)
+                        (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                          (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                            (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                            (Eq.refl.{1} 1))))
+                      (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (Nat.rawCast.{0} 1))
+                          0)))
+                    (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                      (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                        (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)
+                          (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} (√2) (Nat.rawCast.{0} 1)
+                            (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                              (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                (Eq.refl.{1} 1)))))
+                        (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                        (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                          (HAdd.hAdd.{0, 0, 0}
+                            (HMul.hMul.{0, 0, 0}
+                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                              (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                            0)))
+                      (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (Nat.rawCast.{0} 1))
+                          0))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                          0)))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt.{0}
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                        (Nat.rawCast.{0} 1))
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                          0)))))
+                (Mathlib.Tactic.Ring.Common.add_pf_add_lt.{0}
+                  (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                      (Nat.rawCast.{0} 1)))
+                  (Mathlib.Tactic.Ring.Common.add_pf_zero_add.{0}
+                    (HAdd.hAdd.{0, 0, 0}
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                        (Nat.rawCast.{0} 1))
+                      (HAdd.hAdd.{0, 0, 0}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                        0)))))
+              (Mathlib.Tactic.Ring.Common.mul_congr.{0}
+                (Mathlib.Tactic.Ring.Common.add_congr.{0}
+                  (Mathlib.Tactic.Ring.Common.add_congr.{0}
+                    (Mathlib.Tactic.Ring.Common.atom_pf.{0} (√2) rfl.{1}
+                      (Eq.mpr.{0}
+                        (id.{0}
+                          (congrArg.{1, 1}
+                            (fun _a =>
+                              Eq.{1}
+                                (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1))
+                                (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) _a))
+                            (Eq.symm.{1} rfl.{1})))
+                        (Eq.refl.{1}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))))
+                    (Mathlib.Tactic.Ring.cast_pos.{0} (Mathlib.Meta.NormNum.isNat_ofNat.{0} ℝ Nat.cast_one.{0}))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_gt.{0} (Nat.rawCast.{0} 1)
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)) 0))))
+                  (Mathlib.Tactic.Ring.Common.atom_pf.{0} κ rfl.{1}
+                    (Eq.mpr.{0}
+                      (id.{0}
+                        (congrArg.{1, 1}
+                          (fun _a =>
+                            Eq.{1} (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1))
+                              (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) _a))
+                          (Eq.symm.{1} rfl.{1})))
+                      (Eq.refl.{1}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))))
+                  (Mathlib.Tactic.Ring.Common.add_pf_add_lt.{0} (Nat.rawCast.{0} 1)
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_gt.{0}
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1))
+                          0)))))
+                (Mathlib.Tactic.Ring.Common.atom_pf.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) rfl.{1}
+                  (Eq.mpr.{0}
+                    (id.{0}
+                      (congrArg.{1, 1}
+                        (fun _a =>
+                          Eq.{1}
+                            (HMul.hMul.{0, 0, 0}
+                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                              (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0}
+                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)) _a))
+                        (Eq.symm.{1} rfl.{1})))
+                    (Eq.refl.{1}
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                        (Nat.rawCast.{0} 1)))))
+                (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                  (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                    (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)
+                      (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                        (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                          (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                          (Eq.refl.{1} 1))))
+                    (Mathlib.Tactic.Ring.Common.mul_zero.{0} (Nat.rawCast.{0} 1))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                      (HAdd.hAdd.{0, 0, 0}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                          (Nat.rawCast.{0} 1))
+                        0)))
+                  (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                    (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                      (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} κ (Nat.rawCast.{0} 1)
+                        (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)
+                          (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                            (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                              (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                              (Eq.refl.{1} 1)))))
+                      (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0}
+                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                              (Nat.rawCast.{0} 1)))
+                          0)))
+                    (Mathlib.Tactic.Ring.Common.add_mul.{0}
+                      (Mathlib.Tactic.Ring.Common.mul_add.{0}
+                        (Mathlib.Tactic.Ring.Common.mul_pf_right.{0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1)
+                          (Mathlib.Tactic.Ring.Common.mul_pf_left.{0} (√2) (Nat.rawCast.{0} 1)
+                            (Mathlib.Meta.NormNum.IsNat.to_raw_eq.{0}
+                              (Mathlib.Meta.NormNum.isNat_mul.{0} (Eq.refl.{1} HMul.hMul.{0, 0, 0})
+                                (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw.{0} ℝ 1)
+                                (Eq.refl.{1} 1)))))
+                        (Mathlib.Tactic.Ring.Common.mul_zero.{0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                        (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                          (HAdd.hAdd.{0, 0, 0}
+                            (HMul.hMul.{0, 0, 0}
+                              (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                              (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                            0)))
+                      (Mathlib.Tactic.Ring.Common.zero_mul.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (Nat.rawCast.{0} 1))
+                          0))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                          0)))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt.{0}
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                        (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                          (Nat.rawCast.{0} 1)))
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                          0))))
+                  (Mathlib.Tactic.Ring.Common.add_pf_add_gt.{0}
+                    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} κ (Nat.rawCast.{0} 1))
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                        (Nat.rawCast.{0} 1)))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt.{0}
+                      (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                        (Nat.rawCast.{0} 1))
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add.{0}
+                        (HAdd.hAdd.{0, 0, 0}
+                          (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HPow.hPow.{0, 0, 0} δ (1 / 3)) (Nat.rawCast.{0} 1))
+                            (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (√2) (Nat.rawCast.{0} 1)) (Nat.rawCast.{0} 1)))
+                          0))))))))))
+    hnoisy

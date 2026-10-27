@@ -1,0 +1,185 @@
+\chap{The attainable residual at a fixed correction budget}\label{sec:budget-frontier}
+The unrestricted floor $\dist(r,\ran T)$ forgets how large a correction must be. To retain that information, fix a nonnegative budget $M$ and define
+\[
+ \beta_{T,r}(M)=\inf_{\norm a\le M}\norm{r-Ta}.
+\]
+The norm is the actual correction norm in $H=\ker p$. It is not the norm of arbitrary coordinates used to represent that kernel. The function $\beta$ describes the smallest residual compatible with a declared amount of allowed change.
+
+\subsection{At every finite budget the residual minimum exists}
+\begin{theorem}[Attainment and shape of the budget profile]\label{WR03}
+For a bounded linear map between real Hilbert spaces, the infimum defining $\beta(M)$ is attained for every $M\ge0$. The profile is nonincreasing and convex. For $0\le M_1\le M_2$,
+\[
+ 0\le\beta(M_1)-\beta(M_2)\le\norm T(M_2-M_1).
+\]
+Writing $C=\overline{\ran T}$, $b=P_Cr$, and $q=\norm{r-b}$, one has
+\[
+ \lim_{M\to\infty}\beta(M)=q.
+\]
+The equality $\beta(M)=q$ at a finite budget is equivalent to the existence of $a$ with $Ta=b$ and $\norm a\le M$. In particular,
+\[
+ \beta(M)=0\quad\Longleftrightarrow\quad
+ \exists a\in H:\ Ta=r,\ \norm a\le M.
+\]
+\end{theorem}
+\begin{proof}
+The feasible ball is nonempty because it contains zero, and the infimum lies between zero and $\norm r$. Choose $a_n$ in that ball with $\norm{r-Ta_n}\to\beta(M)$. A weakly convergent subsequence has limit $a$ with $\norm a\le M$. Bounded linearity makes $r-Ta_{n_k}$ converge weakly to $r-Ta$. Applying weak lower semicontinuity in the target gives
+\[
+ \norm{r-Ta}\le\liminf_k\norm{r-Ta_{n_k}}=\beta(M).
+\]
+The reverse inequality holds by the definition of the infimum, so $a$ attains it. When $M=0$ the only feasible correction is zero, and the same conclusion reads $\beta(0)=\norm r$.
+
+For convexity, take minimizers $a_1,a_2$ at budgets $M_1,M_2$ and $t\in[0,1]$. The candidate $a_t=ta_1+(1-t)a_2$ satisfies
+\[
+ \norm{a_t}\le tM_1+(1-t)M_2,
+\]
+and its residual is $t(r-Ta_1)+(1-t)(r-Ta_2)$. The triangle inequality therefore gives
+\[
+ \beta(tM_1+(1-t)M_2)\le t\beta(M_1)+(1-t)\beta(M_2).
+\]
+Monotonicity follows from inclusion of balls. If $0\le M_1\le M_2$ and $M_2>0$, choose a minimizer $a_2$ at $M_2$ and put $a_1'=(M_1/M_2)a_2$. Then $\norm{a_1'}\le M_1$ and $\norm{a_2-a_1'}\le M_2-M_1$, so
+\[
+ \beta(M_1)\le\norm{r-Ta_1'}
+ \le\beta(M_2)+\norm T(M_2-M_1).
+\]
+Together with monotonicity this proves the Lipschitz estimate. The omitted case $M_2=0$ has $M_1=0$ and is equality.
+
+Since $r-b$ is orthogonal to $C$ and $b-Ta\in C$, every correction satisfies
+\begin{equation}\label{eq:range-decomposition}
+ \norm{r-Ta}^2=q^2+\norm{b-Ta}^2.
+\end{equation}
+Thus $\beta(M)\ge q$. Given $\epsilon>0$, range density in $C$ supplies one correction $a$ with $\norm{b-Ta}<\epsilon$. For every $M\ge\norm a$ it follows that
+\[
+ q\le\beta(M)\le\sqrt{q^2+\epsilon^2}.
+\]
+First letting the budget increase and then letting $\epsilon\downarrow0$ proves the limit.
+
+Finally, if $\beta(M)=q$, choose an attaining correction in that ball. The orthogonal identity forces $\norm{b-Ta}^2=0$, hence $Ta=b$. Conversely such a correction attains residual $q$. Setting $q=0$ proves the exact-feasibility criterion. Attainment at fixed budget is essential to the forward implication: a zero unrestricted infimum would not itself supply a preimage.
+\end{proof}
+\written{WR03}
+
+Although $\ran T$ may not be closed, the image $T(\{a:\norm a\le M\})$ of each closed budget ball is closed and convex. To see closedness, take a convergent sequence in that image, lift it to the bounded ball, and apply the weak limit argument. The nonclosed range is the increasing union of these closed images. Passing to an unlimited budget can therefore lose closedness even though every fixed-budget optimization is well posed.
+
+The best residual vector is unique because it is the projection of $r$ onto a closed convex set. Its preimages can differ by vectors in $\ker T$. Among those preimages there is a unique least norm correction. These two uniqueness statements should not be confused with injectivity of $T$.
+
+\subsection{A dual witness can rule out every correction in the budget}
+\begin{theorem}[A sharp budget certificate]\label{WR04}
+For every $M\ge0$,
+\begin{equation}\label{eq:budget-dual}
+ \beta_{T,r}(M)=
+ \max_{\norm z\le1}\bigl(\langle r,z\rangle-M\norm{T^*z}\bigr).
+\end{equation}
+Thus any single $z$ with $\norm z\le1$ and
+\[
+ \langle r,z\rangle-M\norm{T^*z}>\varepsilon
+\]
+certifies that no correction of norm at most $M$ has residual at most $\varepsilon$.
+\end{theorem}
+\begin{proof}
+For every $\norm a\le M$ and $\norm z\le1$, the adjoint identity and Cauchy--Schwarz give
+\[
+\begin{aligned}
+ \langle r,z\rangle-M\norm{T^*z}
+ &=\langle r-Ta,z\rangle+\langle a,T^*z\rangle-M\norm{T^*z}\\
+ &\le\langle r-Ta,z\rangle
+ \le\norm{r-Ta}.
+\end{aligned}
+\]
+Taking the infimum over corrections proves that every proposed dual value is at most $\beta(M)$. This part alone already proves the impossibility certificate.
+
+To prove sharpness, let $a_M$ be an attaining correction from WR03 and put $v=r-Ta_M$. If $v=0$, then $\beta(M)=0$ and $z=0$ attains the dual bound. Assume henceforth $v\ne0$ and set $z=v/\norm v$.
+
+Fix any feasible $a$ and put $h=a-a_M$. The segment $a_M+th$ is feasible for $0\le t\le1$. Minimality gives, for $t>0$,
+\[
+ 0\le\norm{v-tTh}^2-\norm v^2
+   =-2t\langle v,Th\rangle+t^2\norm{Th}^2.
+\]
+Divide by $t$ and let $t\downarrow0$. It follows that $\langle v,T(a-a_M)\rangle\le0$, hence
+\[
+ \langle T^*z,a\rangle\le\langle T^*z,a_M\rangle
+ \quad(\norm a\le M).
+\]
+The support value of a Hilbert ball can be computed directly. If $T^*z\ne0$ and $M>0$, it is attained at $a=M T^*z/\norm{T^*z}$ and equals $M\norm{T^*z}$. If either factor is zero, every feasible pairing is zero at its maximum and the same formula holds. Thus
+\[
+ \langle T^*z,a_M\rangle=M\norm{T^*z}.
+\]
+Substituting this equality gives
+\[
+ \langle r,z\rangle-M\norm{T^*z}
+ =\langle r-Ta_M,z\rangle=\norm v=\beta(M).
+\]
+We have constructed an attaining witness and thereby justified the word ``maximum.'' The proof uses one-sided variations in a convex ball, not an unproved exchange of an infimum and a supremum.
+\end{proof}
+\written{WR04}
+
+In finite dimensions this is a checkable inequality, not merely an optimization prescription. A program may propose the correction or the witness. The displayed inequality can be verified independently of the proposal procedure. In a protected ambient calculation, use the restricted adjoint, not $d^*$ without projection onto $\ker p$.
+
+\subsection{A two-dimensional calculation of the supporting witness}
+Take
+\[
+ T=\begin{pmatrix}1&0\\0&1/2\end{pmatrix},\qquad r=(1,1),\qquad
+ a=(1/2,2/5),\qquad v=r-Ta=(1/2,4/5).
+\]
+Then $T^*v=a$. At the budget $M=\norm a=\sqrt{41}/10$, the normalized vector $z=v/\norm v$ gives
+\[
+ \langle r,v\rangle-\norm a\norm{T^*v}
+ =\frac{13}{10}-\frac{41}{100}=\frac{89}{100}=\norm v^2.
+\]
+Consequently $a$ is a globally optimal budgeted correction and $\beta(M)=\sqrt{89}/10$. It is not necessary to compare it with a dense numerical grid of competing vectors. The supporting witness proves optimality over the entire ball.
+
+\fixedplate{32_budget_certificate}{The image of a Euclidean correction ball is an ellipse. The nearest reachable point has a residual normal to a supporting line. That same residual, normalized, is the dual witness in the exact budget formula. The plotted point and budget are the rational example in the text.}{fig:budget-certificate}
+
+\subsection{How measurement and model uncertainty affect the budget}
+\begin{theorem}[A robust budget profile]\label{WR05}
+Suppose $\widetilde T:H\to Y$ and $\widetilde r\in Y$ satisfy
+\[
+ \norm{T-\widetilde T}\le\eta,\qquad
+ \norm{r-\widetilde r}\le\delta,\qquad\eta,\delta\ge0.
+\]
+For every $M\ge0$,
+\[
+ \abs{\beta_{T,r}(M)-\beta_{\widetilde T,\widetilde r}(M)}
+ \le\delta+\eta M.
+\]
+In particular, for $\norm z\le1$,
+\[
+ \beta_{T,r}(M)\ge
+ \langle\widetilde r,z\rangle-M\norm{\widetilde T^*z}
+       -\delta-\eta M.
+\]
+\end{theorem}
+\begin{proof}
+Fix a feasible correction $a$. The two residual vectors have difference
+\[
+ (r-Ta)-(\widetilde r-\widetilde Ta)
+ =(r-\widetilde r)-(T-\widetilde T)a,
+\]
+whose norm is at most $c=\delta+\eta M$. The reverse triangle inequality therefore gives both inequalities
+\[
+ \norm{r-Ta}\le\norm{\widetilde r-\widetilde Ta}+c,
+ \qquad
+ \norm{\widetilde r-\widetilde Ta}\le\norm{r-Ta}+c.
+\]
+The domain of feasible corrections is identical in the two problems. Taking the infimum of each inequality over that common domain yields
+\[
+ \beta_{T,r}(M)\le\beta_{\widetilde T,\widetilde r}(M)+c,
+ \qquad
+ \beta_{\widetilde T,\widetilde r}(M)\le\beta_{T,r}(M)+c.
+\]
+These are precisely the absolute-value bound. One could equivalently evaluate at the two attained minimizers, but no relation between those minimizers is needed.
+
+For any admissible $z$, WR04 for the nominal problem gives
+\[
+ \beta_{\widetilde T,\widetilde r}(M)
+ \ge\langle\widetilde r,z\rangle-M\norm{\widetilde T^*z}.
+\]
+Combine this with the lower half of the preceding comparison. The result is a certificate against every correction in the original fixed ball, reduced by the explicit uncertainty allowance. If the correction space itself changed, the common-domain step would fail and this proof would no longer apply.
+\end{proof}
+\written{WR05}
+
+This estimate identifies a practical boundary of increasingly large corrections. A model error $\eta$ is amplified by the correction budget even if the measured residual is tiny. The candidate-level inequality is
+\[
+ \norm{r-Ta}\le\norm{\widetilde r-\widetilde Ta}+\delta+\eta\norm a.
+\]
+The theorem compares maps on one fixed correction space. It does not cover an uncertain preservation map whose kernel itself changes.
+
+\fixedplate{33_budget_uncertainty}{The nominal budget profile is surrounded by the rigorous uncertainty band $\delta+\eta M$. A large budget can improve the nominal fit while enlarging the uncertainty in that conclusion. The example uses $T=1$, $r=1$, $\delta=1/20$, and $\eta=1/10$.}{fig:budget-uncertainty}

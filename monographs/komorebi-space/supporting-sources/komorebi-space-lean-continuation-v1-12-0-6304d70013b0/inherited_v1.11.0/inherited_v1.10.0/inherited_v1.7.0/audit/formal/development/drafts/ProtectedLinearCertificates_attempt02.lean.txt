@@ -1,0 +1,208 @@
+import Mathlib.LinearAlgebra.Dual.Lemmas
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.LinearAlgebra.Matrix.ToLin
+import Mathlib.LinearAlgebra.Matrix.Rank
+import Mathlib.Tactic.LinearCombination
+import Mathlib.Tactic.Abel
+
+set_option autoImplicit false
+
+/-!
+# KS57: exact protected answers or normalized algebraic obstruction certificates
+
+The alternative is proved for linear maps over an arbitrary field. A finite
+matrix specialization retains actual row-vector equations. The proof does
+not assume an elimination algorithm is correct, and does not certify the
+separate Python implementation for arbitrary inputs.
+-/
+universe u v w z
+noncomputable section
+namespace KomorebiSpace.ProtectedLinearCertificates
+open Module
+variable {K : Type u} [Field K]
+variable {E : Type v} {R : Type w} {S : Type z}
+variable [AddCommGroup E] [Module K E]
+variable [AddCommGroup R] [Module K R]
+variable [AddCommGroup S] [Module K S]
+variable (D : E →ₗ[K] R) (p : E →ₗ[K] S)
+
+def Answer (x y : E) : Prop := D y = 0 ∧ p y = p x
+
+def Certificate (x : E) : Prop :=
+  ∃ (lam : R →ₗ[K] K) (mu : S →ₗ[K] K),
+    lam.comp D = mu.comp p ∧ lam (D x) = 1
+
+/-- A certificate directly contradicts the equations of a protected answer. -/
+theorem certificate_excludes_answer (x : E) (hc : Certificate D p x) :
+    ¬ ∃ y, Answer D p x y := by
+  rintro ⟨y, hy⟩
+  obtain ⟨lam, mu, hrel, hn⟩ := hc
+  have hzero : (1 : K) = 0 := calc
+    1 = lam (D x) := hn.symm
+    _ = mu (p x) := LinearMap.congr_fun hrel x
+    _ = mu (p y) := congrArg mu hy.2.symm
+    _ = lam (D y) := (LinearMap.congr_fun hrel y).symm
+    _ = 0 := by rw [hy.1, map_zero]
+  exact one_ne_zero hzero
+
+/-- Feasibility is membership in the range of the actual stacked operator. -/
+theorem answer_iff_stacked_range (x : E) :
+    (∃ y, Answer D p x y) ↔ (0, p x) ∈ LinearMap.range (D.prod p) := by
+  constructor
+  · rintro ⟨y, hd, hp⟩
+    exact ⟨y, Prod.ext hd hp⟩
+  · rintro ⟨y, hy⟩
+    exact ⟨y, congrArg Prod.fst hy, congrArg Prod.snd hy⟩
+
+/-- Algebraic dual separation supplies a normalized witness when the stacked system fails. -/
+theorem certificate_of_no_answer (x : E) (hn : ¬ ∃ y, Answer D p x y) :
+    Certificate D p x := by
+  have hb : (0, p x) ∉ LinearMap.range (D.prod p) := by
+    intro h
+    exact hn ((answer_iff_stacked_range D p x).mpr h)
+  obtain ⟨f, hf, hmap⟩ := Submodule.exists_dual_map_eq_bot_of_notMem hb inferInstance
+  let w : (R × S) →ₗ[K] K := (f (0, p x))⁻¹ • f
+  have hw (y : E) : w (D y, p y) = 0 := by
+    have hz : f (D y, p y) ∈ (LinearMap.range (D.prod p)).map f :=
+      ⟨(D y, p y), ⟨y, rfl⟩, rfl⟩
+    rw [hmap] at hz
+    change f (D y, p y) = 0 at hz
+    change (f (0, p x))⁻¹ * f (D y, p y) = 0
+    rw [hz, mul_zero]
+  have hwb : w (0, p x) = 1 := inv_mul_cancel₀ hf
+  let lam : R →ₗ[K] K := -(w.comp (LinearMap.inl K R S))
+  let mu : S →ₗ[K] K := w.comp (LinearMap.inr K R S)
+  have hsum (y : E) : w (D y, 0) + w (0, p y) = 0 := by
+    rw [← map_add]
+    simpa only [Prod.mk_add_mk, add_zero, zero_add] using hw y
+  refine ⟨lam, mu, ?_, ?_⟩
+  · ext y
+    change -w (D y, 0) = w (0, p y)
+    linear_combination -hsum y
+  · change -w (D x, 0) = 1
+    have hs := hsum x
+    rw [hwb] at hs
+    linear_combination -hs
+
+theorem certificate_iff_no_answer (x : E) :
+    Certificate D p x ↔ ¬ ∃ y, Answer D p x y :=
+  ⟨certificate_excludes_answer D p x, certificate_of_no_answer D p x⟩
+
+theorem answer_or_certificate (x : E) :
+    (∃ y, Answer D p x y) ∨ Certificate D p x := by
+  classical
+  by_cases h : ∃ y, Answer D p x y
+  · exact Or.inl h
+  · exact Or.inr (certificate_of_no_answer D p x h)
+
+/-- Exactly one alternative holds. -/
+theorem exclusive_alternative (x : E) :
+    ((∃ y, Answer D p x y) ∨ Certificate D p x) ∧
+    ¬ ((∃ y, Answer D p x y) ∧ Certificate D p x) :=
+  ⟨answer_or_certificate D p x, fun h => certificate_excludes_answer D p x h.2 h.1⟩
+
+def ambiguity : Submodule K E := D.ker ⊓ p.ker
+
+theorem answer_iff_difference (x y₀ y : E) (hy₀ : Answer D p x y₀) :
+    Answer D p x y ↔ y-y₀ ∈ ambiguity D p := by
+  change (D y = 0 ∧ p y = p x) ↔ (D (y-y₀)=0 ∧ p (y-y₀)=0)
+  rw [map_sub, map_sub, hy₀.1, hy₀.2, sub_zero, sub_eq_zero]
+
+/-- Once an answer is chosen, the whole fiber is its affine translate by the ambiguity space. -/
+def answerEquivAmbiguity (x y₀ : E) (hy₀ : Answer D p x y₀) :
+    {y : E // Answer D p x y} ≃ ambiguity D p where
+  toFun y := ⟨y.val-y₀, (answer_iff_difference D p x y₀ y.val hy₀).mp y.property⟩
+  invFun h := ⟨y₀+h.val, (answer_iff_difference D p x y₀ _ hy₀).mpr (by
+    simpa only [add_sub_cancel_left] using h.property)⟩
+  left_inv y := by apply Subtype.ext; change y₀+(y.val-y₀)=y.val; abel
+  right_inv h := by apply Subtype.ext; change (y₀+h.val)-y₀=h.val; abel
+
+theorem stacked_kernel : (D.prod p).ker = ambiguity D p := by
+  ext y
+  change ((D y, p y) = (0,0)) ↔ (D y=0 ∧ p y=0)
+  simp only [Prod.mk.injEq]
+
+/-- Rank-nullity includes zero-dimensional sources and targets. -/
+theorem ambiguity_finrank [FiniteDimensional K E] :
+    Module.finrank K (ambiguity D p) =
+      Module.finrank K E - Module.finrank K (LinearMap.range (D.prod p)) := by
+  have h := LinearMap.finrank_range_add_finrank_ker (D.prod p)
+  rw [stacked_kernel] at h
+  omega
+
+end KomorebiSpace.ProtectedLinearCertificates
+
+namespace KomorebiSpace.ProtectedLinearCertificates
+open Matrix Module
+variable {K : Type u} [Field K]
+variable {m n s : Type*} [Fintype m] [Fintype n] [Fintype s]
+
+/-- Coordinate row of an algebraic functional in the standard finite basis. -/
+def rowCoefficients {ι : Type*} [Fintype ι] (f : (ι → K) →ₗ[K] K) : ι → K := by
+  classical
+  exact fun i => f (fun j => if i=j then 1 else 0)
+
+theorem linear_form_apply {ι : Type*} [Fintype ι]
+    (f : (ι → K) →ₗ[K] K) (x : ι → K) :
+    f x = rowCoefficients f ⬝ᵥ x := by
+  classical
+  rw [LinearMap.pi_apply_eq_sum_univ]
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact mul_comm _ _
+
+/-- Literal matrix row certificates, rather than an unspecified dual obstruction. -/
+theorem matrix_certificate_iff (A : Matrix m n K) (P : Matrix s n K) (x : n → K) :
+    (¬ ∃ y : n → K, A *ᵥ y = 0 ∧ P *ᵥ y = P *ᵥ x) ↔
+      ∃ (lam : m → K) (mu : s → K), lam ᵥ* A = mu ᵥ* P ∧ lam ⬝ᵥ (A *ᵥ x) = 1 := by
+  constructor
+  · intro h
+    obtain ⟨lam, mu, hrel, hn⟩ := certificate_of_no_answer A.mulVecLin P.mulVecLin x h
+    refine ⟨rowCoefficients lam, rowCoefficients mu, ?_, ?_⟩
+    · classical
+      funext j
+      have he := LinearMap.congr_fun hrel (Pi.single j 1)
+      change lam (A *ᵥ Pi.single j 1) = mu (P *ᵥ Pi.single j 1) at he
+      rw [linear_form_apply, linear_form_apply] at he
+      simpa only [Matrix.mulVec_single_one, Matrix.col_apply] using he
+    · rw [← linear_form_apply]
+      exact hn
+  · rintro ⟨lam, mu, hrel, hn⟩
+    apply certificate_excludes_answer A.mulVecLin P.mulVecLin x
+    refine ⟨dotProductBilin K K lam, dotProductBilin K K mu, ?_, hn⟩
+    ext y
+    change lam ⬝ᵥ (A *ᵥ y) = mu ⬝ᵥ (P *ᵥ y)
+    rw [Matrix.dotProduct_mulVec, Matrix.dotProduct_mulVec, hrel]
+
+theorem matrix_exclusive_alternative (A : Matrix m n K) (P : Matrix s n K) (x : n → K) :
+    ((∃ y : n → K, A *ᵥ y = 0 ∧ P *ᵥ y = P *ᵥ x) ∨
+      ∃ (lam : m → K) (mu : s → K), lam ᵥ* A = mu ᵥ* P ∧ lam ⬝ᵥ (A *ᵥ x) = 1) ∧
+    ¬ ((∃ y : n → K, A *ᵥ y = 0 ∧ P *ᵥ y = P *ᵥ x) ∧
+      ∃ (lam : m → K) (mu : s → K), lam ᵥ* A = mu ᵥ* P ∧ lam ⬝ᵥ (A *ᵥ x) = 1) := by
+  rw [← matrix_certificate_iff]
+  exact ⟨Classical.em _, fun h => h.2 h.1⟩
+
+theorem stacked_matrix_kernel (A : Matrix m n K) (P : Matrix s n K) :
+    (Matrix.fromRows A P).mulVecLin.ker = ambiguity A.mulVecLin P.mulVecLin := by
+  ext y
+  change ((Matrix.fromRows A P) *ᵥ y = 0) ↔ (A *ᵥ y = 0 ∧ P *ᵥ y = 0)
+  constructor
+  · intro h
+    exact ⟨funext (fun i => congrFun h (Sum.inl i)), funext (fun i => congrFun h (Sum.inr i))⟩
+  · rintro ⟨hA, hP⟩
+    funext i
+    cases i with
+    | inl j => exact congrFun hA j
+    | inr j => exact congrFun hP j
+
+theorem matrix_ambiguity_dimension (A : Matrix m n K) (P : Matrix s n K) :
+    Module.finrank K (ambiguity A.mulVecLin P.mulVecLin) =
+      Fintype.card n - (Matrix.fromRows A P).rank := by
+  have h := LinearMap.finrank_range_add_finrank_ker (Matrix.fromRows A P).mulVecLin
+  rw [stacked_matrix_kernel, Module.finrank_fintype_fun_eq_card] at h
+  change (Matrix.fromRows A P).rank +
+    Module.finrank K (ambiguity A.mulVecLin P.mulVecLin) = Fintype.card n at h
+  omega
+
+end KomorebiSpace.ProtectedLinearCertificates
+end

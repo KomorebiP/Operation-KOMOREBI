@@ -1,0 +1,6 @@
+import KomorebiSpace.DiagonalInexactRate
+set_option autoImplicit false
+set_option pp.universes true
+#check KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate
+#print axioms KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate
+#print KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate

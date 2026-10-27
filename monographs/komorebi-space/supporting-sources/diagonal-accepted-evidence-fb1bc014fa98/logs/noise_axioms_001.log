@@ -1,0 +1,105 @@
+SOURCE_SHA256 7d9c1dc93a313e6611bd70ab66b79d5b506cb0f2d16da1b15bbaf464e00d486f
+COMMAND ['/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/scripts/lean_env.sh', 'lake', 'env', 'lean', '-DwarningAsError=true', '/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/records/noise_axioms.lean']
+EXIT 0
+KomorebiSpace.DiagonalRegularization.noiseSchedule (δ : ℝ) : ℕ
+'KomorebiSpace.DiagonalRegularization.noiseSchedule' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.noiseSchedule_pos {δ : ℝ} (hδ : 0 < δ) :
+  0 < KomorebiSpace.DiagonalRegularization.noiseSchedule δ
+'KomorebiSpace.DiagonalRegularization.noiseSchedule_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.one_le_noiseSchedule {δ : ℝ} (hδ : 0 < δ) :
+  1 ≤ KomorebiSpace.DiagonalRegularization.noiseSchedule δ
+'KomorebiSpace.DiagonalRegularization.one_le_noiseSchedule' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.noiseSchedule_bounds {δ : ℝ} (hδ : 0 < δ) (hδ₁ : δ ≤ 1) :
+  δ ^ (-2 / 3) ≤ ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) ∧
+    ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) ≤ 2 * δ ^ (-2 / 3)
+'KomorebiSpace.DiagonalRegularization.noiseSchedule_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.noiseSchedule_bias_bound {δ : ℝ} (hδ : 0 < δ) (hδ₁ : δ ≤ 1) :
+  √(2 / ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ)) ≤ √2 * δ ^ (1 / 3)
+'KomorebiSpace.DiagonalRegularization.noiseSchedule_bias_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiSpace.DiagonalRegularization.noiseSchedule_noise_bound {δ : ℝ} (hδ : 0 < δ) (hδ₁ : δ ≤ 1) :
+  δ * ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) / 2 ≤ δ ^ (1 / 3)
+'KomorebiSpace.DiagonalRegularization.noiseSchedule_noise_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiSpace.DiagonalRegularization.noiseSchedule_rate {δ : ℝ} (hδ : 0 < δ) (hδ₁ : δ ≤ 1) :
+  √(2 / ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ)) +
+      δ * ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) / 2 ≤
+    (√2 + 1) * δ ^ (1 / 3)
+'KomorebiSpace.DiagonalRegularization.noiseSchedule_rate' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.noisy_error_of_bias_bound.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r s : Y) (aMin : H) (m : ℕ) (hm : 1 ≤ m) {δ : ℝ} (hdata : ‖s - r‖ ≤ δ)
+  (hα : 0 < (↑m ^ 2)⁻¹)
+  (hbias : ‖KomorebiSpace.RegularizedHilbertRepair.correction T (↑m ^ 2)⁻¹ hα r - aMin‖ ≤ √(2 / ↑m)) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction T (↑m ^ 2)⁻¹ hα s - aMin‖ ≤ √(2 / ↑m) + δ * ↑m / 2
+'KomorebiSpace.DiagonalRegularization.noisy_error_of_bias_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiSpace.DiagonalRegularization.noisy_rounded_rate_of_bias_bound.{u_1, u_2} {H : Type u_1} {Y : Type u_2}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y]
+  [CompleteSpace Y] (T : H →L[ℝ] Y) (r s : Y) (aMin : H) {δ : ℝ} (hδ : 0 < δ) (hδ₁ : δ ≤ 1) (hdata : ‖s - r‖ ≤ δ)
+  (hα : 0 < (↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) ^ 2)⁻¹)
+  (hbias :
+    ‖KomorebiSpace.RegularizedHilbertRepair.correction T (↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) ^ 2)⁻¹
+            hα r -
+          aMin‖ ≤
+      √(2 / ↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ))) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction T (↑(KomorebiSpace.DiagonalRegularization.noiseSchedule δ) ^ 2)⁻¹
+          hα s -
+        aMin‖ ≤
+    (√2 + 1) * δ ^ (1 / 3)
+'KomorebiSpace.DiagonalRegularization.noisy_rounded_rate_of_bias_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiSpace.DiagonalRegularization.diagonal_bias_bound {m : ℕ} (hm : 1 ≤ m) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+          (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ KomorebiSpace.DiagonalRegularization.b -
+        KomorebiSpace.DiagonalRegularization.w‖ ≤
+    √(2 / ↑m)
+'KomorebiSpace.DiagonalRegularization.diagonal_bias_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.diagonal_noisy_error (s : KomorebiSpace.DiagonalRegularization.H) {m : ℕ}
+  (hm : 1 ≤ m) {δ : ℝ} (hdata : ‖s - KomorebiSpace.DiagonalRegularization.b‖ ≤ δ) :
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+          (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ s -
+        KomorebiSpace.DiagonalRegularization.w‖ ≤
+    √(2 / ↑m) + δ * ↑m / 2
+'KomorebiSpace.DiagonalRegularization.diagonal_noisy_error' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.corollary_30_3 (s : KomorebiSpace.DiagonalRegularization.H) {δ : ℝ} (hδ : 0 < δ)
+  (hδ₁ : δ ≤ 1) (hdata : ‖s - KomorebiSpace.DiagonalRegularization.b‖ ≤ δ) :
+  let m := ⌈δ ^ (-2 / 3)⌉₊;
+  have hm := ⋯;
+  ‖KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+            (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ s -
+          KomorebiSpace.DiagonalRegularization.w‖ ≤
+      √(2 / ↑m) + δ * ↑m / 2 ∧
+    √(2 / ↑m) + δ * ↑m / 2 ≤ (√2 + 1) * δ ^ (1 / 3)
+'KomorebiSpace.DiagonalRegularization.corollary_30_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.b_apply (j : ℕ) :
+  ↑KomorebiSpace.DiagonalRegularization.b j = KomorebiSpace.DiagonalRegularization.bCoord j
+'KomorebiSpace.DiagonalRegularization.b_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.w_apply (j : ℕ) :
+  ↑KomorebiSpace.DiagonalRegularization.w j = KomorebiSpace.DiagonalRegularization.wCoord j
+'KomorebiSpace.DiagonalRegularization.w_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.c_apply (m j : ℕ) :
+  ↑(KomorebiSpace.DiagonalRegularization.c m) j = KomorebiSpace.DiagonalRegularization.cCoord m j
+'KomorebiSpace.DiagonalRegularization.c_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.T_w_eq_b :
+  KomorebiSpace.DiagonalRegularization.T KomorebiSpace.DiagonalRegularization.w = KomorebiSpace.DiagonalRegularization.b
+'KomorebiSpace.DiagonalRegularization.T_w_eq_b' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.w_minimum_norm_preimage (x : KomorebiSpace.DiagonalRegularization.H)
+  (hx : KomorebiSpace.DiagonalRegularization.T x = KomorebiSpace.DiagonalRegularization.b) :
+  ‖KomorebiSpace.DiagonalRegularization.w‖ ≤ ‖x‖
+'KomorebiSpace.DiagonalRegularization.w_minimum_norm_preimage' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiSpace.DiagonalRegularization.c_eq_correction {m : ℕ} (hm : 1 ≤ m) :
+  KomorebiSpace.DiagonalRegularization.c m =
+    KomorebiSpace.RegularizedHilbertRepair.correction KomorebiSpace.DiagonalRegularization.T
+      (KomorebiSpace.DiagonalRegularization.alpha m) ⋯ KomorebiSpace.DiagonalRegularization.b
+'KomorebiSpace.DiagonalRegularization.c_eq_correction' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiSpace.DiagonalRegularization.norm_bias_sq (m : ℕ) :
+  ‖KomorebiSpace.DiagonalRegularization.c m - KomorebiSpace.DiagonalRegularization.w‖ ^ 2 =
+    KomorebiSpace.DiagonalRegularization.B m
+'KomorebiSpace.DiagonalRegularization.norm_bias_sq' depends on axioms: [propext, Classical.choice, Quot.sound]

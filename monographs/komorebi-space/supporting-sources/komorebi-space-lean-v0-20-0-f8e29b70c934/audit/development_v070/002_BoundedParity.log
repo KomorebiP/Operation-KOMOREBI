@@ -1,0 +1,76 @@
+KomorebiSpace/BoundedParity.lean:28:28: error: unsolved goals
+E : ℕ → Type v
+a : (n : ℕ) → E (2 * n)
+b : (n : ℕ) → E (2 * n + 1)
+n : ℕ
+⊢ ⋯ ▸ a (2 * n / 2) = a n
+KomorebiSpace/BoundedParity.lean:31:30: error: unsolved goals
+E : ℕ → Type v
+a : (n : ℕ) → E (2 * n)
+b : (n : ℕ) → E (2 * n + 1)
+n : ℕ
+⊢ ⋯ ▸ b ((2 * n + 1) / 2) = b n
+KomorebiSpace/BoundedParity.lean:74:13: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  join ?a ?b (2 * ?n)
+in the target expression
+  (fun i => ‖join (↑z.1) (↑z.2) i‖) (2 * (n / 2)) ≤ max ‖z.1‖ ‖z.2‖
+
+case inl
+𝕜 : Type u
+inst✝² : NontriviallyNormedField 𝕜
+E : ℕ → Type v
+inst✝¹ : (n : ℕ) → NormedAddCommGroup (E n)
+inst✝ : (n : ℕ) → NormedSpace 𝕜 (E n)
+z : ↥Even × ↥Odd
+n : ℕ
+h : n = 2 * (n / 2)
+⊢ (fun i => ‖join (↑z.1) (↑z.2) i‖) (2 * (n / 2)) ≤ max ‖z.1‖ ‖z.2‖
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun x => x ∈ lp (fun n => E (2 * n)) ∞
+  has type
+    (PreLp fun n => E (2 * n)) → Prop
+  but is expected to have type
+    ((i : ℕ) → (fun n => E (2 * n)) i) → Prop
+  in the application
+    @Subtype.val ((i : ℕ) → (fun n => E (2 * n)) i) fun x => x ∈ lp (fun n => E (2 * n)) ∞
+KomorebiSpace/BoundedParity.lean:76:13: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  join ?a ?b (2 * ?n + 1)
+in the target expression
+  (fun i => ‖join (↑z.1) (↑z.2) i‖) (2 * (n / 2) + 1) ≤ max ‖z.1‖ ‖z.2‖
+
+case inr
+𝕜 : Type u
+inst✝² : NontriviallyNormedField 𝕜
+E : ℕ → Type v
+inst✝¹ : (n : ℕ) → NormedAddCommGroup (E n)
+inst✝ : (n : ℕ) → NormedSpace 𝕜 (E n)
+z : ↥Even × ↥Odd
+n : ℕ
+h : n = 2 * (n / 2) + 1
+⊢ (fun i => ‖join (↑z.1) (↑z.2) i‖) (2 * (n / 2) + 1) ≤ max ‖z.1‖ ‖z.2‖
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun x => x ∈ lp (fun n => E (2 * n)) ∞
+  has type
+    (PreLp fun n => E (2 * n)) → Prop
+  but is expected to have type
+    ((i : ℕ) → (fun n => E (2 * n)) i) → Prop
+  in the application
+    @Subtype.val ((i : ℕ) → (fun n => E (2 * n)) i) fun x => x ∈ lp (fun n => E (2 * n)) ∞
+KomorebiSpace/BoundedParity.lean:113:17: error: Type mismatch: After simplification, term
+  merge_bound z
+ has type
+  @LE.le ℝ Real.instLE ‖merge z‖ ‖z‖
+but is expected to have type
+  @LE.le ℝ Real.instLE ‖splitLinear.symm z‖ ‖z‖
+KomorebiSpace/BoundedParity.lean:123:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  ‖merge (even f, odd f)‖ ≤ ‖even f‖ ∨ ‖merge (even f, odd f)‖ ≤ ‖odd f‖
+but is expected to have type
+  ‖f‖ ≤ ‖splitLinear f‖

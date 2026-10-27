@@ -1,0 +1,124 @@
+\chap{The attainable residual at a fixed correction budget}\label{sec:budget-frontier}
+The unrestricted floor $\dist(r,\ran T)$ forgets how large a correction must be. To retain that information, fix a nonnegative budget $M$ and define
+\[
+ \beta_{T,r}(M)=\inf_{\norm a\le M}\norm{r-Ta}.
+\]
+The norm is the actual correction norm in $H=\ker p$. It is not the norm of arbitrary coordinates used to represent that kernel. The function $\beta$ describes the smallest residual compatible with a declared amount of allowed change.
+
+\subsection{At every finite budget the residual minimum exists}
+\begin{theorem}[Attainment and shape of the budget profile]\label{WR03}
+For a bounded linear map between real Hilbert spaces, the infimum defining $\beta(M)$ is attained for every $M\ge0$. The profile is nonincreasing and convex. For $0\le M_1\le M_2$,
+\[
+ 0\le\beta(M_1)-\beta(M_2)\le\norm T(M_2-M_1).
+\]
+Writing $C=\overline{\ran T}$, $b=P_Cr$, and $q=\norm{r-b}$, one has
+\[
+ \lim_{M\to\infty}\beta(M)=q.
+\]
+The equality $\beta(M)=q$ at a finite budget is equivalent to the existence of $a$ with $Ta=b$ and $\norm a\le M$. In particular,
+\[
+ \beta(M)=0\quad\Longleftrightarrow\quad
+ \exists a\in H:\ Ta=r,\ \norm a\le M.
+\]
+\end{theorem}
+\begin{proof}
+Choose a minimizing sequence in the ball of radius $M$. WR01's weak subsequence argument gives a weak limit in the same ball. The residuals converge weakly to $r-Ta$, and weak lower semicontinuity of the norm shows that this limit attains the minimum.
+
+For convexity, mix minimizers at budgets $M_1,M_2$. Their convex combination has norm at most the same convex combination of the budgets, and the triangle inequality bounds its residual by the corresponding combination of residuals. Monotonicity follows from inclusion of the balls. For the Lipschitz estimate with $M_2>0$, scale a minimizer $a_2$ by $M_1/M_2$. The scaled correction is feasible at $M_1$ and differs from $a_2$ in norm by at most $M_2-M_1$. The case $M_2=0$ is immediate.
+
+All $Ta$ lie in $C$. Hence
+\begin{equation}\label{eq:range-decomposition}
+ \norm{r-Ta}^2=q^2+\norm{b-Ta}^2.
+\end{equation}
+This bounds the profile below by $q$. Since $b$ is in the closure of the range, some finite correction achieves residual below any number strictly larger than $q$. That correction belongs to a sufficiently large budget ball, proving the limit. Finally, attainment and \eqref{eq:range-decomposition} give all the stated equality criteria.
+\end{proof}
+\written{WR03}
+
+Although $\ran T$ may not be closed, the image $T(\{a:\norm a\le M\})$ of each closed budget ball is closed and convex. To see closedness, take a convergent sequence in that image, lift it to the bounded ball, and apply the weak limit argument. The nonclosed range is the increasing union of these closed images. Passing to an unlimited budget can therefore lose closedness even though every fixed-budget optimization is well posed.
+
+The best residual vector is unique because it is the projection of $r$ onto a closed convex set. Its preimages can differ by vectors in $\ker T$. Among those preimages there is a unique least norm correction. These two uniqueness statements should not be confused with injectivity of $T$.
+
+\subsection{A dual witness can rule out every correction in the budget}
+\begin{theorem}[A sharp budget certificate]\label{WR04}
+For every $M\ge0$,
+\begin{equation}\label{eq:budget-dual}
+ \beta_{T,r}(M)=
+ \max_{\norm z\le1}\bigl(\langle r,z\rangle-M\norm{T^*z}\bigr).
+\end{equation}
+Thus any single $z$ with $\norm z\le1$ and
+\[
+ \langle r,z\rangle-M\norm{T^*z}>\varepsilon
+\]
+certifies that no correction of norm at most $M$ has residual at most $\varepsilon$.
+\end{theorem}
+\begin{proof}
+For every feasible $a$ and every $\norm z\le1$,
+\[
+ \langle r,z\rangle-M\norm{T^*z}
+ \le\langle r-Ta,z\rangle\le\norm{r-Ta}.
+\]
+This proves one inequality. Let $a_M$ minimize the residual, and set $v=r-Ta_M$. If $v=0$, the upper bound is zero and $z=0$ attains it. Otherwise let $z=v/\norm v$.
+
+Minimality on the convex ball implies
+\[
+ \langle v,T(a-a_M)\rangle\le0
+ \quad\text{for every }\norm a\le M.
+\]
+This follows by differentiating the residual square along the segment from $a_M$ to $a$ at its initial endpoint. Therefore $a_M$ maximizes $\langle T^*z,a\rangle$ on the ball. Its value is $M\norm{T^*z}$, including the cases $M=0$ and $T^*z=0$. Substitution gives
+\[
+ \langle r,z\rangle-M\norm{T^*z}
+ =\langle r-Ta_M,z\rangle=\norm v=\beta(M).
+\]
+The maximum is thus attained by a specified witness, without an appeal to an interchange of infimum and supremum.
+\end{proof}
+\written{WR04}
+
+In finite dimensions this is a checkable inequality, not merely an optimization prescription. A program may propose the correction or the witness. The displayed inequality can be verified independently of the proposal procedure. In a protected ambient calculation, use the restricted adjoint, not $d^*$ without projection onto $\ker p$.
+
+\subsection{A two-dimensional calculation of the supporting witness}
+Take
+\[
+ T=\begin{pmatrix}1&0\\0&1/2\end{pmatrix},\qquad r=(1,1),\qquad
+ a=(1/2,2/5),\qquad v=r-Ta=(1/2,4/5).
+\]
+Then $T^*v=a$. At the budget $M=\norm a=\sqrt{41}/10$, the normalized vector $z=v/\norm v$ gives
+\[
+ \langle r,v\rangle-\norm a\norm{T^*v}
+ =\frac{13}{10}-\frac{41}{100}=\frac{89}{100}=\norm v^2.
+\]
+Consequently $a$ is a globally optimal budgeted correction and $\beta(M)=\sqrt{89}/10$. It is not necessary to compare it with a dense numerical grid of competing vectors. The supporting witness proves optimality over the entire ball.
+
+\fixedplate{32_budget_certificate}{The image of a Euclidean correction ball is an ellipse. The nearest reachable point has a residual normal to a supporting line. That same residual, normalized, is the dual witness in the exact budget formula. The plotted point and budget are the rational example in the text.}{fig:budget-certificate}
+
+\subsection{How measurement and model uncertainty affect the budget}
+\begin{theorem}[A robust budget profile]\label{WR05}
+Suppose $\widetilde T:H\to Y$ and $\widetilde r\in Y$ satisfy
+\[
+ \norm{T-\widetilde T}\le\eta,\qquad
+ \norm{r-\widetilde r}\le\delta,\qquad\eta,\delta\ge0.
+\]
+For every $M\ge0$,
+\[
+ \abs{\beta_{T,r}(M)-\beta_{\widetilde T,\widetilde r}(M)}
+ \le\delta+\eta M.
+\]
+In particular, for $\norm z\le1$,
+\[
+ \beta_{T,r}(M)\ge
+ \langle\widetilde r,z\rangle-M\norm{\widetilde T^*z}
+       -\delta-\eta M.
+\]
+\end{theorem}
+\begin{proof}
+At any correction with $\norm a\le M$, the two residual vectors differ by
+$(r-\widetilde r)-(T-\widetilde T)a$, of norm at most $\delta+\eta M$. The reverse triangle inequality bounds the difference between their norms by the same number. Take infima in each direction. Apply WR04 to the nominal system for the second assertion.
+\end{proof}
+\written{WR05}
+
+This estimate identifies a practical boundary of increasingly large corrections. A model error $\eta$ is amplified by the correction budget even if the measured residual is tiny. The candidate-level inequality is
+\[
+ \norm{r-Ta}\le\norm{\widetilde r-\widetilde Ta}+\delta+\eta\norm a.
+\]
+The theorem compares maps on one fixed correction space. It does not cover an uncertain preservation map whose kernel itself changes.
+
+\fixedplate{33_budget_uncertainty}{The nominal budget profile is surrounded by the rigorous uncertainty band $\delta+\eta M$. A large budget can improve the nominal fit while enlarging the uncertainty in that conclusion. The example uses $T=1$, $r=1$, $\delta=1/20$, and $\eta=1/10$.}{fig:budget-uncertainty}

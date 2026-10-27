@@ -1,0 +1,135 @@
+\partnote{Realizations and their obstructions}{A global object is not added to local data by terminology. It is a family satisfying every prescribed transition equation. The first task is to construct the space of such families and to keep its possible emptiness visible.}
+\section{Views and coherent realizations}\label{sec:views}
+\subsection{The data of a view system}
+Fix a small category \(\V\), or work in fixed universes so that the products below exist in the chosen ambient universe. A \emph{view} is an object of \(\V\). It can encode a resolution level, a coordinate presentation, or a context in which part of an object is visible. These interpretations are mathematical choices, not additional axioms.
+
+\begin{definition}[View system]
+A view system consists of sets \(F_v\) and maps
+\[
+ f^*:F_w\longrightarrow F_v\qquad(f:v\longrightarrow w)
+\]
+satisfying \((1_v)^*=\id\) and \((g\circ f)^*=f^*g^*\). Equivalently, it is a contravariant functor \(F:\V^{\mathrm{op}}\to\Set\).
+\end{definition}
+The direction matters. An arrow \(v\to w\) induces a restriction from the fiber at \(w\) to the fiber at \(v\). A restriction need not be invertible. A category with several arrows between two views can retain different routes between their descriptions. Replacing it by a preorder can lose those routes and the constraints they impose.
+
+\begin{definition}[Strict Komorebi realization]
+The ambient realization set is
+\begin{equation}\label{eq:ambient}
+ \mathfrak K(F)=\Gamma(F)=
+ \left\{x\in\prod_{v\in\Ob\V}F_v:
+ f^*(x_w)=x_v\text{ for every }f:v\to w\right\}.
+\end{equation}
+A point of \(\mathfrak K(F)\) is a whole coherent family. Its value in view \(v\) is the evaluation \(\operatorname{ev}_v(x)=x_v\).
+\end{definition}
+The raw product contains all families, including inconsistent ones. Equation~\eqref{eq:ambient} cuts out the exact families. No nonemptiness hypothesis is built into the definition.
+
+\begin{theorem}[Joint determination and the universal property]\label{KS01}
+The evaluations jointly determine a realization. If a set \(T\) carries maps \(c_v:T\to F_v\) satisfying \(f^*c_w=c_v\), there is a unique map \(c:T\to\Gamma(F)\) satisfying \(\operatorname{ev}_v c=c_v\) for every view.
+\end{theorem}
+\begin{proof}
+Equality of all evaluations is equality of the underlying dependent families. The coherence proofs do not create additional elements of the subset. For the universal property, define \(c(t)_v=c_v(t)\). The assumed equations make this family coherent. Any other lift has the same coordinate at every \(v\), so joint determination proves equality.
+\end{proof}
+\source{KS01}
+Thus the strict construction is precisely the ordinary limit of the view diagram, with the usual limit interpretation in the sequential case~\cite{stacks-limits}. This identifies its mathematical content and its universal property. It does not supply a universal view diagram for every possible mathematical question.
+
+\plate{01_views}{The same realization is evaluated in several views. Compatibility is imposed along the arrows, not inferred from the fact that all displayed fibers exist. The ambient family belongs to the simultaneous solution set of the transition equations.}{fig:views}
+
+\subsection{Maps of realizations}
+Let \(\alpha:F\to G\) consist of maps \(\alpha_v:F_v\to G_v\) with
+\[
+ \alpha_v f_F^*=f_G^*\alpha_w.
+\]
+The induced map on realizations is \(\Gamma(\alpha)(x)_v=\alpha_v(x_v)\). The naturality square is exactly what is needed to show that the image family is coherent.
+
+\begin{proposition}[Functorial transport]\label{KS02}
+These induced maps preserve identities and composition:
+\[
+ \Gamma(\id_F)=\id_{\Gamma(F)},\qquad
+ \Gamma(\beta\alpha)=\Gamma(\beta)\Gamma(\alpha).
+\]
+\end{proposition}
+\begin{proof}
+Evaluate each side at an arbitrary view and apply the corresponding identity for the coordinate maps. Theorem~\ref{KS01} then identifies the maps on the whole realization set.
+\end{proof}
+\source{KS02}
+An arbitrary collection of fiber maps need not define a map on realizations. Its compatibility equations are part of the theorem, not a convention that can be omitted after a notation has been chosen.
+
+\subsection{A global view and a useful warning}
+\begin{proposition}[Terminal evaluation]\label{KS03}
+If \(t\) is terminal in \(\V\), evaluation induces an equivalence \(\Gamma(F)\simeq F_t\).
+\end{proposition}
+\begin{proof}
+For \(a\in F_t\), take its restriction along the unique arrow \(v\to t\) at each view. Uniqueness of the arrow to \(t\), together with the functor laws, proves coherence. Evaluation at \(t\) recovers \(a\). Conversely, any coherent family is the restriction of its coordinate at \(t\).
+\end{proof}
+\source{KS03}
+This proposition is both useful and diagnostic. If the supposedly reconstructed global object has already been placed in a terminal fiber, the limit recovers that fiber. The proposition does not prove that arbitrary partial data have a preimage there.
+
+The category of elements \(\int_\V F\) and \(\Gamma(F)\) also have different roles. The former organizes individual appearances and their transitions. The latter selects coherent families across all views. In the basic source layer the category of elements is explanatory notation, while the actual Lean record directly implements families and their coherence.
+
+\chap{Partial data, gluing, and correspondence fibers}\label{sec:glue}
+\subsection{Prescribed views}
+For \(U\subseteq\Ob\V\), use the full subcategory on \(U\). A partial section \(s\in\Gamma_U(F)\) satisfies all transition equations whose endpoints lie in \(U\). Define
+\begin{equation}\label{eq:extension}
+ \Ext_U(s)=\{x\in\Gamma(F):x|_U=s\}.
+\end{equation}
+This fiber can be empty, a singleton, or much larger. A partial section is already coherent on its prescribed domain. A raw assignment that fails an internal transition equation is not a partial section of this kind.
+
+Let \((U_i)_{i\in I}\) be full patches. A matching family consists of \(s_i\in\Gamma_{U_i}(F)\) with equal values on every overlap. The relevant covering condition is
+\begin{equation}\label{eq:transitioncover}
+ \text{for every }f:v\to w,\quad
+ \text{some }U_i\text{ contains both }v\text{ and }w.
+\end{equation}
+Identities imply that this condition also covers every object.
+
+\begin{theorem}[Strict gluing]\label{KS04}
+Under \eqref{eq:transitioncover}, restriction induces an equivalence
+\[
+ \Gamma(F)\simeq\Match(F,(U_i)).
+\]
+Every fixed matching family has a unique global glue.
+\end{theorem}
+\begin{proof}
+At each \(v\), select a patch containing it and set \(x_v\) equal to that patch's value. Agreement on overlaps makes the value independent of the selection. For an arrow \(f:v\to w\), choose a patch containing both endpoints. Its internal coherence proves \(f^*x_w=x_v\). Thus the assembled family is global. Any global section restricting to the given family has the same value at every object, so it is unique. Restriction after assembly, and assembly after restriction, are identities by their coordinate formulas.
+\end{proof}
+\source{KS04}
+The proof explains why object coverage alone is insufficient. Coherence is an equation attached to an arrow, so existence of a glue must see that equation somewhere in the local data.
+
+\begin{example}[An object cover with no glue]\label{KS05}
+Take two views \(0\to1\), Boolean fibers, and the identity restriction. The singleton patches cover all objects. A local value false at \(0\) and true at \(1\) agrees on the empty overlap, yet no global section realizes both values. A global family would have to assign the same Boolean to both views.
+\end{example}
+\source{KS05}
+Object coverage does prove uniqueness of a possible glue. It does not prove its existence. This distinction persists when sets are replaced by objects with symmetries.
+
+\subsection{Correspondences must also be coherent}
+Suppose natural maps form a span \(F\xleftarrow{p}M\xrightarrow{q}G\), and fix \(a\in\Gamma(F)\), \(b\in\Gamma(G)\). At each view define the ordinary fiber
+\[
+ B_{a,b}(v)=\{m\in M_v:p_v(m)=a_v,\ q_v(m)=b_v\}.
+\]
+Naturality and coherence provide its restrictions. A global bridge is an element of
+\[
+ \mathfrak B(a,b)=\{z\in\Gamma(M):\Gamma(p)z=a,\ \Gamma(q)z=b\}.
+\]
+
+\begin{theorem}[Fiber and section compatibility]\label{KS06}
+There is a coordinate preserving equivalence
+\[
+ \Gamma(B_{a,b})\simeq\mathfrak B(a,b).
+\]
+Under a transition cover, matching local bridge sections glue to a unique global bridge with both prescribed projections unchanged.
+\end{theorem}
+\begin{proof}
+A section of the fiber system is a coherent family in \(M\) together with the two coordinate equations. Forget the fiber membership proofs to obtain a global bridge. Conversely, the two equations for a global bridge yield their coordinate equations by evaluation, so attach these proofs to the coherent family. The constructions are inverse. Apply Theorem~\ref{KS04} to the fiber system for the gluing statement.
+\end{proof}
+\source{KS06}
+These are ordinary fibers. They do not retain comparison isomorphisms or automorphisms. Section~\ref{sec:relative} constructs the appropriate groupoid version when this information matters.
+
+\subsection{Locally inhabited does not mean globally inhabited}
+\begin{example}[The loop with no coherent choice]\label{KS07}
+Let the view category have one object and automorphism group \(C_2\). Let its nonidentity arrow act on a two element set by swapping the elements. The fiber is nonempty and every transport is bijective. Nevertheless a global section would be a fixed point of the swap, and there is none.
+\end{example}
+\source{KS07}
+The problem is not missing local elements or noninvertible transition maps. It is the absence of an element satisfying the loop equation. Inserting a point in each fiber does not certify a coherent selection of those points.
+
+\begin{insight}
+The strict theory already distinguishes three levels: possible local appearances, compatible partial descriptions, and an actual global realization. A correspondence must pass through the same levels. Local nonemptiness of its fibers is not a globalization theorem.
+\end{insight}

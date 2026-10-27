@@ -1,0 +1,113 @@
+\clearpage
+\chap{A bounded repair budget can recover existence}\label{sec:bounded-realization}
+The preceding example does not merely lack a convergent iteration. It has no bounded family of increasingly accurate protected corrections. This suggests a converse question. If approximate corrections stay in one bounded region, does an exact answer exist?
+
+For bounded linear equations in a Hilbert space, the answer is yes. This is an existence statement, not a claim that the given sequence converges in norm. A stronger conclusion becomes available when the candidates are the least norm solutions of nested finite constraint systems.
+
+\begin{scopebox}
+This chapter and the next three retain the WR01--WR12 identifiers. Every proof is printed. The present chapter remains written-only. The later regularized optimizer and parameter results WR06--WR07 now have a separately verified focused Lean counterpart. Fixed-parameter estimates within WR09 are also formalized, but its limit statement is not. Each result carries its own evidence label. Exact finite models have separate executable checks. The Hilbert and regularization background is classical \cite{clason-inverse}. No novelty is claimed for weak compactness or quadratic regularization.
+\end{scopebox}
+
+\subsection{The correction space is the protected kernel}
+Let $E,Y,Z$ be real Hilbert spaces, let $d:E\to Y$ and $p:E\to Z$ be bounded linear maps, and fix a raw candidate $f\in E$. Write
+\[
+ H=\ker p,\qquad T=d|_H:H\to Y,\qquad r=df.
+\]
+The space $H$ is a closed Hilbert subspace with the norm inherited from $E$. An allowed correction is $a\in H$, and its repaired candidate is $f-a$. Thus
+\[
+ p(f-a)=pf,\qquad d(f-a)=r-Ta.
+\]
+The protected exact problem is precisely $Ta=r$. Restricting the domain before optimizing is important. A penalty on $\norm{pa}$ would only discourage a change in the protected data, not prohibit it.
+
+The adjoint below always means $T^*:Y\to H$, taken with the inherited Hilbert metric on $H$. In ambient coordinates this is the projection of $d^*$ onto $H$. A coordinate basis of $\ker p$ need not be orthonormal. Its Gram matrix must then be included in any calculation of correction energy.
+
+\subsection{The compactness needed for the existence argument}
+\begin{lemma}[Bounded sequences have weakly convergent subsequences]\label{lem:weak-subsequence}
+Every bounded sequence $(a_n)$ in a real Hilbert space has a subsequence converging weakly to some $a$. Moreover,
+\[
+ \norm a\le\liminf_k\norm{a_{n_k}}.
+\]
+\end{lemma}
+\begin{proof}
+All $a_n$ lie in their separable closed linear span $H_0$. In the infinite dimensional case, choose a countable orthonormal basis $(e_j)$ of $H_0$. Each scalar sequence $\langle a_n,e_j\rangle$ is bounded. Successive subsequences and a diagonal choice produce a subsequence on which every such coordinate converges, say to $c_j$. If $\norm{a_n}\le M$, Bessel's inequality on any finite set gives
+\[
+ \sum_{j=1}^{J}c_j^2
+ =\lim_k\sum_{j=1}^{J}\langle a_{n_k},e_j\rangle^2\le M^2.
+\]
+Consequently $a=\sum_{j\ge1}c_je_j$ belongs to $H_0$ and has norm at most $M$. To test weak convergence against $h\in H_0$, approximate $h$ by a finite linear combination of the $e_j$. Coordinate convergence handles that finite part, while Cauchy--Schwarz bounds the remaining inner products uniformly by $2M$ times the approximation error. The component of any $h\in H_0^\perp$ pairs to zero with the entire sequence and its limit. The finite dimensional case uses the same argument with finitely many coordinates. The zero space is immediate.
+
+Finally, when $a\ne0$, weak convergence tested against $a/\norm a$ gives $\norm a\le\liminf_k\norm{a_{n_k}}$. The inequality is automatic when $a=0$.
+\end{proof}
+
+\begin{theorem}[Bounded approximate feasibility]\label{WR01}
+For a bounded linear map $T:H\to Y$ between real Hilbert spaces and $r\in Y$, the following are equivalent:
+\[
+ \begin{split}
+ &r\in\ran T,\\
+ &\text{there is a bounded sequence }(a_n)\subset H
+       \text{ with }\norm{Ta_n-r}\longrightarrow0.
+ \end{split}
+\]
+If all $\norm{a_n}\le M$, an exact solution exists with norm at most $M$.
+\end{theorem}
+\begin{proof}
+An exact solution gives a constant sequence. In the other direction, take a weakly convergent subsequence $a_{n_k}\rightharpoonup a$. For every $y\in Y$,
+\[
+ \langle Ta,y\rangle
+ =\langle a,T^*y\rangle
+ =\lim_k\langle a_{n_k},T^*y\rangle
+ =\lim_k\langle Ta_{n_k},y\rangle
+ =\langle r,y\rangle.
+\]
+Thus $Ta=r$. The norm statement follows from the lemma.
+\end{proof}
+\written{WR01}
+
+No closed range assumption appears. The theorem concerns a single datum and a bounded family of its corrections. Closed range is the stronger, uniform statement that every attainable datum admits a correction controlled by one residual gain.
+
+An immediate contrapositive is useful. If $r\in\overline{\ran T}\setminus\ran T$, then every sequence with $Ta_n\to r$ satisfies $\norm{a_n}\to\infty$. Otherwise infinitely many terms would lie in one bounded ball, contradicting the theorem along that subsequence. This recovers the escape mechanism of Section~\ref{sec:escape} without using the diagonal formula.
+
+\subsection{Existence does not make an arbitrary sequence converge strongly}
+Take $H=Y=\ell^2$ and $Te_n=e_n/n$. The vectors $a_n=e_n$ have norm one and satisfy $Ta_n\to0$. An exact answer exists, namely zero. Yet $\norm{e_n-e_m}=\sqrt2$ for $n\ne m$, so no subsequence converges in norm.
+
+The conclusion of WR01 is the existence of a weak limit along a subsequence that solves the equation. It is not summable movement, a strong convergence rate, or a selection rule for the original candidates. The minimum correction for the zero datum is zero, which this particular sequence never approaches in norm.
+
+\subsection{Minimum energy finite repairs do converge strongly}
+\fixedplate{31_nested_energy}{Minimum energy finite corrections behave differently for two data under the same diagonal operator. Bounded partial energy produces a strong Hilbert realization. Escaping partial energy accompanies a coherent product-space point outside the Hilbert space. The attainable energy lies below the explicit bound two.}{fig:nested-energy}
+
+Suppose now that $A_1\supseteq A_2\supseteq\cdots$ are nonempty closed affine subsets of a real Hilbert correction space $H$. A typical $A_n$ consists of corrections satisfying the first $n$ bounded linear observation equations. The sets are affine because the equations are linear, and closed because the observations are continuous.
+
+Let $a_n$ be the unique point of $A_n$ nearest to zero, and put $m_n=\norm{a_n}$. The Hilbert projection theorem supplies these points. It can also be proved directly: a sequence approaching the minimum norm is Cauchy by the parallelogram identity, its limit belongs to the closed convex set, and the same identity gives uniqueness.
+
+\begin{theorem}[A uniform finite budget yields a strong realization]\label{WR02}
+For the nested affine sets above, $m_n$ is nondecreasing, and for $m\ge n$,
+\begin{equation}\label{eq:nested-energy}
+ \norm{a_m-a_n}^2=m_m^2-m_n^2.
+\end{equation}
+Their intersection is nonempty if and only if $\sup_n m_n<\infty$. In that case $a_n$ converges in norm to the unique least norm point $a_*\in\bigcap_n A_n$, with
+\[
+ \norm{a_*-a_n}^2=\norm{a_*}^2-\norm{a_n}^2.
+\]
+If the intersection is empty, then $m_n\to\infty$.
+\end{theorem}
+\begin{proof}
+Write $A_n=a_n+L_n$, where $L_n$ is a closed linear subspace. Minimality of $a_n$ on every line $a_n+t\ell$, $\ell\in L_n$, gives $\langle a_n,\ell\rangle=0$. Since $a_m-a_n\in L_n$ when $m\ge n$, the Pythagorean identity proves \eqref{eq:nested-energy}. Monotonicity also follows directly from $A_m\subseteq A_n$.
+
+If $m_n$ is bounded, $m_n^2$ converges, and \eqref{eq:nested-energy} makes $(a_n)$ Cauchy. Completeness gives $a_*$. For each fixed $n$, the tail lies in the closed set $A_n$, so $a_*\in A_n$. Every $a\in\bigcap_n A_n$ has $\norm a\ge m_n$ for every $n$. Passing to the limit shows $\norm a\ge\norm{a_*}$. Uniqueness follows from strict convexity of the norm square. Letting $m\to\infty$ in \eqref{eq:nested-energy} proves the error formula.
+
+Conversely, any point in the intersection bounds all $m_n$ from above. If the intersection is empty, the nondecreasing sequence $m_n$ must therefore be unbounded and hence tend to infinity.
+\end{proof}
+\written{WR02}
+
+The finite answers need not extend one another coordinate by coordinate. Their shared feature is minimum energy in one common ambient Hilbert space. This is the extra geometry that forces their differences to be orthogonal to the earlier minimizers.
+
+For the attainable diagonal datum $r_n=1/n^2$ under $Tu=(u_n/n)$, the first $N$ equations force $a_n=1/n$ for $n\le N$. Their minimum energy completion is zero beyond $N$, and
+\[
+ m_N^2=\sum_{n=1}^{N}\frac1{n^2}\le2.
+\]
+These corrections converge strongly to $(1/n)$. For the escaping datum $r_n=1/n$, the corresponding energy is $m_N^2=N$. Every finite equation is again solved, but the budget test now rules out an ambient solution.
+
+
+\begin{insight}
+Finite consistency is not enough by itself. For nested closed affine problems in one Hilbert space, a uniform bound on the minimum correction norms is exactly what upgrades finite feasibility to ambient feasibility. This is a datum-specific test, not a uniform inverse bound for the operator.
+\end{insight}

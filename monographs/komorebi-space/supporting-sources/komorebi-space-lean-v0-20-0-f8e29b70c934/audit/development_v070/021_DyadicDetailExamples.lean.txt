@@ -1,0 +1,91 @@
+import KomorebiSpace.DyadicResidualDetails
+import KomorebiSpace.ResidualAliasing
+
+set_option autoImplicit false
+
+/-!
+# Hidden residual witnesses
+
+The previous all-level aliasing candidate retains its full nonzero defect in
+its hidden-detail coordinate. A separate finite-dimensional block witnesses
+information in the target-restriction kernel, not just adjacent cancellation.
+-/
+noncomputable section
+namespace KomorebiSpace
+namespace DyadicDetailExamples
+open BanachTower
+open ResidualAliasing
+
+/-- Identity target sections for the actual scalar tower. -/
+def scalarSplitting : Splitting scalar where
+  up _ := ContinuousLinearMap.id ℝ ℝ
+  down_up _ := by ext x; rfl
+  bound := 1
+  up_bound _ := ContinuousLinearMap.norm_id_le
+
+abbrev pairCoarsen := DyadicResidual.coarsen scalar scalar scalar_contractive scalar_contractive
+abbrev pairHidden := DyadicResidual.hidden scalar scalar scalar_contractive scalar_contractive scalarSplitting
+abbrev fine := differential scalar scalar candidate
+
+theorem alternating_coarse_zero : pairCoarsen fine = 0 := by
+  apply lp.ext
+  funext n
+  rw [DyadicResidual.coarsen_pair, fine_defect_even, fine_defect_odd]
+  ext x
+  change -x + x = 0
+  exact neg_add_cancel _
+
+/-- The discarded coordinate is the whole fine residual in this example. -/
+theorem alternating_hidden_full : pairHidden fine = fine := by
+  rw [DyadicResidual.hidden_apply, alternating_coarse_zero, map_zero, sub_zero]
+
+theorem alternating_hidden_norm : ‖pairHidden fine‖ = 1 := by
+  rw [alternating_hidden_full]
+  exact fine_residual_norm
+
+theorem alternating_vertical_zero (n : ℕ) :
+    DyadicResidual.innovation scalar scalar scalarSplitting fine n = 0 := by
+  ext x
+  change fine (2*n+1) x - fine (2*n+1) x = 0
+  exact sub_self _
+
+/-- Zero coarse data do not erase the incompatibility when the detail is retained. -/
+theorem alternating_detected : pairCoarsen fine = 0 ∧ pairHidden fine ≠ 0 := by
+  refine ⟨alternating_coarse_zero, ?_⟩
+  intro h
+  have hn := alternating_hidden_norm
+  rw [h, norm_zero] at hn
+  norm_num at hn
+
+/-- This namespace is a finite block, not an asserted infinite tower. -/
+namespace BlockKernelWitness
+
+def down : (ℝ × ℝ) →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+
+def up : ℝ →L[ℝ] (ℝ × ℝ) := (ContinuousLinearMap.id ℝ ℝ).prod 0
+
+def vertical : ℝ →L[ℝ] (ℝ × ℝ) := (0 : ℝ →L[ℝ] ℝ).prod (ContinuousLinearMap.id ℝ ℝ)
+
+@[simp] theorem down_up : down.comp up = ContinuousLinearMap.id ℝ ℝ := by ext x; rfl
+
+@[simp] theorem down_vertical : down.comp vertical = 0 := by ext x; rfl
+
+theorem vertical_nonzero : vertical ≠ 0 := by
+  intro h
+  have hc := congrArg (fun f : ℝ →L[ℝ] (ℝ × ℝ) => (f 1).2) h
+  change (1 : ℝ) = 0 at hc
+  norm_num at hc
+
+theorem vertical_is_its_innovation : vertical - up.comp (down.comp vertical) = vertical := by
+  rw [down_vertical]
+  simp
+
+/-- Coarse data and the even edge alone cannot detect this additional channel. -/
+theorem coarse_even_insufficient :
+    down.comp vertical = down.comp (0 : ℝ →L[ℝ] (ℝ × ℝ)) ∧ vertical ≠ 0 := by
+  exact ⟨by simp, vertical_nonzero⟩
+
+end BlockKernelWitness
+end DyadicDetailExamples
+end KomorebiSpace
+end

@@ -1,0 +1,462 @@
+\partnote{The geometry of exact realization}{A categorical space of realizations does not come with a numerical distance by default. In a declared linear model, the compatibility equations become a bounded operator. Closed range, holonomy, and conditioning then determine what small residuals actually guarantee.}
+\section{Graph views, holonomy, and reconstruction}\label{sec:graph}
+\subsection{Actual transports on a finite graph}
+Let a finite connected simple graph have vertex set \(V\), root \(o\), and a chosen route \(p_i:o\to i\) for every vertex, with the route at \(o\) empty. Use a common real normed fiber \(H\). An inverse consistent connection assigns continuous linear equivalences \(\tau_{ij}\), with \(\tau_{ji}=\tau_{ij}^{-1}\). Our convention is that \(\tau_{ij}\) carries the value at \(j\) into the coordinates at \(i\).
+
+The candidate and residual spaces are finite products with maximum norms:
+\[
+ E=\prod_{i\in V}H,\qquad
+ R=\prod_{(i,j)\in\vec E}H,\qquad
+ (dx)_{ij}=\tau_{ij}x_j-x_i.
+\]
+Both orientations of an edge are retained. If \(M\) bounds the norms of all measured edge maps, then \(\norm d\le M+1\). The empty edge case has the usual zero residual.
+
+Distinct walks are retained as arrows of the view category. The product along a walk \(q=(i_0,\ldots,i_m)\) is
+\[
+ T_q=\tau_{i_0i_1}\cdots\tau_{i_{m-1}i_m}.
+\]
+Concatenation gives the restriction composition law. An exact vertex family defines a coherent walk-view section, and a coherent walk-view section satisfies every edge equation. Thus this graph construction returns to the original ambient realization type rather than creating a disconnected numerical model.
+
+\subsection{Transported residuals and path gains}
+\begin{proposition}[The path telescope]\label{KS40}
+For a walk \(q=(i_0,\ldots,i_m)\),
+\[
+ T_qx_{i_m}-x_{i_0}
+ =\sum_{k=0}^{m-1}
+ (\tau_{i_0i_1}\cdots\tau_{i_{k-1}i_k})(dx)_{i_ki_{k+1}}.
+\]
+The empty prefix is the identity. If \(\gamma(q)\) is the sum of the products of preceding edge norms, then
+\[
+ \norm{T_qx_{i_m}-x_{i_0}}\le\gamma(q)\norm{dx}_\infty.
+\]
+\end{proposition}
+\begin{proof}
+Expand each summand. Its positive transported endpoint cancels the negative endpoint of the next summand, leaving only the two boundary terms. Apply the triangle inequality and the operator product bound to obtain the estimate.
+\end{proof}
+\source{KS40}
+For isometric maps, \(\gamma(q)\le|q|\). For arbitrary bounded equivalences, route length cannot replace the amplification gain. Reversing a route can have a different gain, even though its transport is the inverse map.
+
+\subsection{Holonomy is the remaining exactness condition}
+Write \(T_i=T_{p_i}\). Reconstruction from a proposed root value is
+\[
+ (R_pz)_i=T_i^{-1}z.
+\]
+For each directed edge define the root loop operator
+\[
+ K_{ij}=T_i\tau_{ij}T_j^{-1},\qquad
+ K=\bigcap_{(i,j)\in\vec E}\ker(K_{ij}-I).
+\]
+Each \(K_{ij}\) is the transport around an actual rooted loop. No flatness assumption has been made.
+
+\begin{theorem}[Holonomy classification]\label{KS41}
+Evaluation at the root and reconstruction give an equivalence
+\[
+ K\simeq_L\ker d.
+\]
+A root value extends to an exact vertex family precisely when it lies in \(K\), and that extension is unique. The space \(K\) is independent of the chosen routes. Reconstruction is route independent on \(K\).
+\end{theorem}
+\begin{proof}
+Multiply the edge defect of a reconstructed family by \(T_i\):
+\[
+ T_i(dR_pz)_{ij}=K_{ij}z-z.
+\]
+Thus reconstruction is exact precisely when \(z\in K\). Conversely, an exact family has zero defect along every walk by the telescope, so \(T_ix_i=x_o\). Hence \(x=R_p(x_o)\), which proves uniqueness and both inverse identities.
+
+The root values arising from exact families are independent of the routes used to discover them. This identifies \(K\) intrinsically as the image of root evaluation on \(\ker d\), proving route independence. The same uniqueness proves route independence of reconstruction on \(K\). Boundedness of the finite family of transports and their inverses gives the continuous linear equivalence.
+\end{proof}
+\source{KS41}
+With isometric transports the equivalence is an isometry for the vertex maximum norm, because every reconstructed coordinate has the root norm. With general bounded equivalences, it need not be an isometry.
+
+\plate{09_holonomy}{Tree routes reconstruct from an anchor. The remaining edges close loops and impose fixed-vector equations at that anchor. A nontrivial loop can obstruct an arbitrary seed without preventing every nonzero seed from extending. The fixed space, rather than the identity of the whole loop operator, is the relevant realization condition.}{fig:holonomy}
+
+\subsection{Prescribed observations remain visible}
+If a prescribed vertex set \(U\) contains \(o\), a candidate \(x\) has an exact repair preserving \(x|_U\) precisely when
+\[
+ x_o\in K\quad\text{and}\quad (R_px_o)|_U=x|_U.
+\]
+Necessity follows from the classification. Sufficiency is the reconstructed family itself. The source identifies this criterion with the earlier obstruction class in \(R/d(\ker p_U)\). A graph seed test is therefore an instance of the same protected correction problem, not a replacement for it.
+
+\chap{Closed range is the stability boundary}\label{sec:closed}
+\subsection{Projection exists before a residual estimate}
+Let \(E\) be a real Hilbert space and \(R\) a real Banach space. Let \(D:E\to R\) be continuous linear. The kernel \(K=\ker D\) is closed, so its orthogonal projection \(q=P_K\) exists~\cite{mathlib-projection}.
+
+\begin{proposition}[Exact orthogonal repair]\label{KS42}
+For every \(x\in E\),
+\[
+ D(qx)=0,\quad q^2=q,\quad\norm{qx}\le\norm x,
+\]
+and \(qx\) is the unique closest point to \(x\) in \(K\).
+\end{proposition}
+\begin{proof}
+Orthogonal decomposition gives \(x=qx+(x-qx)\), with the two components in \(K\) and \(K^\perp\). For \(y\in K\),
+\[
+ \norm{x-y}^2=\norm{x-qx}^2+\norm{qx-y}^2.
+\]
+This proves best approximation and uniqueness. The other statements follow from the defining projection properties.
+\end{proof}
+\source{KS42}
+No closed range assumption on \(D\) is needed for this projection. Such an assumption enters when the size of the residual is asked to control the distance to the exact space.
+
+\begin{theorem}[Closed range and quantitative exactness]\label{KS43}
+The following are equivalent:
+\begin{enumerate}
+\item \(\ran D\) is closed.
+\item There is \(C\ge0\) with \(\norm{x-qx}\le C\norm{Dx}\) for all \(x\).
+\item There is \(C\ge0\) such that every \(x\) has some exact \(y\) with \(\norm{x-y}\le C\norm{Dx}\).
+\end{enumerate}
+When the range is closed, the least admissible constant is the operator norm of the inverse of \(D:K^\perp\to\ran D\). In the zero operator case that inverse has zero dimensional domain and its norm is zero.
+\end{theorem}
+\begin{proof}
+The restriction \(D_\perp:K^\perp\to\ran D\) is bijective. If the range is closed it is Banach, so the bounded inverse theorem makes \(D_\perp^{-1}\) continuous~\cite{mathlib-banach}. Since \(x-qx\in K^\perp\),
+\[
+ x-qx=D_\perp^{-1}(Dx),
+\]
+which gives the estimate. Any constant in that estimate bounds the inverse norm by applying it to \(u\in K^\perp\), so the constant is optimal.
+
+Conversely suppose the estimate holds. If \(Du_n\) converges with \(u_n\in K^\perp\), then
+\[
+ \norm{u_n-u_m}\le C\norm{Du_n-Du_m}.
+\]
+The sequence \(u_n\) is Cauchy and converges in the closed subspace \(K^\perp\). Continuity of \(D\) puts the residual limit in its range. Hence the range is closed. The second condition implies the third by taking \(y=qx\), while best approximation makes the third imply the second.
+\end{proof}
+\source{KS43}
+The last equivalence is important. A nonlinear choice of exact answers cannot bypass the failure of a uniform residual bound. Failure of closed range is not merely a defect of one selected projection algorithm.
+
+\subsection{A small residual far from exactness}
+On \(\ell^2(\N)\), index the standard basis from one and define \(De_n=n^{-1}e_n\). The map is bounded and injective, so its exact space is zero. Yet
+\[
+ \norm{e_n}=1,\qquad\norm{De_n}=1/n\longrightarrow0.
+\]
+No finite \(C\) can bound \(\dist(e_n,\ker D)\) by \(C\norm{De_n}\). The range is not closed. For example finite truncations of \((1/n)_{n\ge1}\) belong to the range and converge in \(\ell^2\), but a preimage of the limit would be the constant sequence, which does not belong to \(\ell^2\).
+
+This printed diagonal model illustrates the criterion. The general unit-witness obstruction is present in the recovered Hilbert source. The particular infinite diagonal construction is not represented as a newly compiled Lean theorem in this publication.
+
+\plate{10_closed_range}{Residual size controls distance to the exact space only when transverse directions have a positive lower bound. The diagonal example sends unit vectors to residuals tending to zero, so no uniform inverse gain exists. Exact projection still exists.}{fig:closed}
+
+\subsection{Norm zero versus algebraic zero}
+If an additive correction image is not closed, distance to that image can vanish without actual membership. Thus an infimum of residual error can be zero while the exact protected correction is unattained. The algebraic obstruction quotient and its possible seminorm answer different questions. One must identify a closed image, compactness condition, or other attainment principle before replacing one question by the other.
+
+\subsection{Stable repair with protected data}
+The preceding orthogonal projection does not generally preserve a separately declared observable. To join the analytic theory to Section~\ref{sec:protected}, let \(p:E\to S\) be continuous linear into a normed space. Define
+\[
+ M=\ker p,\qquad B=D|_M:M\to R,\qquad H=M\cap\ker D.
+\]
+The closed subspace \(M\) inherits its Hilbert structure from \(E\). A candidate \(x\) is \emph{feasible} for protected repair when an exact \(y\) with \(p(y)=p(x)\) exists. The algebraic criterion is still \(Dx\in\ran B\).
+
+\begin{theorem}[Nearest feasible protected repair]\label{KS56}
+Every feasible \(x\) has a unique closest exact answer \(y_*\) preserving \(p(x)\). Its correction \(h_*=x-y_*\) is the unique vector in the orthogonal complement of \(\ker B\) inside \(M\) satisfying \(Bh_*=Dx\). For every other feasible answer \(y\),
+\[
+ \norm{x-y}^2=\norm{x-y_*}^2+\norm{y_*-y}^2.
+\]
+Moreover, the following conditions are equivalent:
+\[
+ \ran B\text{ is closed}
+ \quad\Longleftrightarrow\quad
+ \exists C\ge0\ \forall\text{ feasible }x:
+ \norm{x-y_*}\le C\norm{Dx}.
+\]
+When these conditions hold, the least nonnegative constant is the transverse inverse norm of \(B\), including the zero-range case.
+\end{theorem}
+\begin{proof}
+Choose any permitted correction \(h_0\in M\) with \(Bh_0=Dx\). All permitted corrections are the affine space \(h_0+\ker B\). Since \(\ker B\) is closed in \(M\), write
+\[
+ h_* = h_0-P_{\ker B}^{M}h_0.
+\]
+It has the same image under \(B\), is orthogonal to \(\ker B\) in \(M\), and is independent of the initial choice of \(h_0\). Every other correction is uniquely \(h_*+h\) with \(h\in\ker B\). Orthogonality gives the displayed distance identity after putting \(y_*=x-h_*\). This proves existence, uniqueness, and optimality without a closed-range assumption.
+
+If \(\ran B\) is closed, apply Theorem~\ref{KS43} to \(B\) on the Hilbert space \(M\). Its bounded transverse inverse gives the asserted estimate. Conversely, every \(x\in M\) is feasible, since the zero vector is an exact answer with the same protected value. On this subspace the proposed estimate is exactly the residual estimate for distance to \(\ker B\). Theorem~\ref{KS43} forces \(\ran B\) to be closed and identifies the least constant.
+\end{proof}
+\source{KS56}
+The relevant stability boundary is therefore \(D(\ker p)\), not automatically \(D(E)\). Restricting permitted changes can turn a well-conditioned unconstrained problem into an obstructed or poorly conditioned protected one. The nearest protected answer is generally not \(P_{\ker D}x\).
+
+For \(D(x_1,x_2,x_3)=x_1-x_2\), \(p(x)=(x_1,x_3)\), and \(x=(2,0,5)\), the ordinary orthogonal answer is \((1,1,5)\). The protected answer is \((2,2,5)\). The respective squared errors are two and four. Both have zero residual, but only the latter preserves the declared data. The theorem is formalized in \code{ProtectedHilbertRepair.lean}, using the actual operator on \(\ker p\). The displayed three-coordinate values are an illustrative calculation, not a separate universal algorithm.
+
+\plate{15_protected_geometry}{The same compatibility equation permits different repair problems. Orthogonal repair chooses the nearest point on the diagonal. Preserving the first coordinate forces a vertical correction to a different point. The third coordinate is fixed at five throughout.}{fig:protectedgeometry}
+
+\chap{Holonomy repair and transport amplification}\label{sec:holonomyrepair}
+\subsection{An orthogonal anchor, not a global least squares answer}
+Return to the graph model with a real Hilbert fiber. The root residual is
+\[
+ \mathcal H z=(K_{ij}z-z)_{ij},\qquad K=\ker\mathcal H.
+\]
+Let \(q=P_K\), and define
+\[
+ Px=R_p(qx_o).
+\]
+This is always exact, fixes exact families, and is idempotent. It is the unique exact family preserving the feasible component \(qx_o\) of the anchor. Its orthogonality is on the anchor fiber. The vertex and edge norms are still maximum norms.
+
+For example on a two-vertex identity connection, \((0,2)\) with root value zero is repaired to \((0,0)\). The constant family \((1,1)\) is closer in the maximum norm, but it does not preserve the anchor. The operator \(P\) is not being claimed to be a global nearest-point projection in that norm.
+
+\subsection{Every factor in the bound has a meaning}
+Define the route gain
+\[
+ A_p=\max_i\gamma(\overline{p_i}),
+\]
+using reverse routes so that the error is measured in each destination view. The path telescope gives
+\[
+ \norm{x-R_p(x_o)}_\infty\le A_p\norm{dx}_\infty.
+\]
+Let \(N_p\) be the residual normalization \((N_pr)_{ij}=T_ir_{ij}\). The exact identity \(\mathcal H=N_pdR_p\) implies
+\[
+ \norm{\mathcal H(x_o)}_\infty
+ \le\norm{N_p}(\norm d A_p+1)\norm{dx}_\infty.
+\]
+
+\begin{theorem}[Amplified holonomy repair]\label{KS44}
+If \(\ran\mathcal H\) is closed and \(\kappa\) is its transverse inverse gain, then
+\begin{equation}\label{eq:graphgain}
+ \norm{x-Px}_\infty\le
+ \left[A_p+\norm{R_p}\kappa\norm{N_p}(\norm d A_p+1)\right]
+ \norm{dx}_\infty.
+\end{equation}
+The range condition is necessary for the existence of any uniform bound of distance to an exact family by \(\norm{dx}_\infty\). It is automatic for a fixed finite dimensional fiber, but not uniformly quantitative across all connections.
+\end{theorem}
+\begin{proof}
+Insert the uncorrected anchor reconstruction:
+\[
+ \norm{x-Px}_\infty
+ \le\norm{x-R_px_o}_\infty+
+\norm{R_p}\norm{x_o-qx_o}.
+\]
+Apply the path estimate and Theorem~\ref{KS43} to \(\mathcal H\), then use the normalized residual bound. This proves \eqref{eq:graphgain}.
+
+For necessity, apply a proposed global distance estimate to \(R_pz\), with \(z\in K^\perp\). An exact comparison has root value in \(K\), so root evaluation bounds \(\dist(z,K)\) by the global distance. Since \(dR_pz=N_p^{-1}\mathcal Hz\) and normalization has bounded inverse on the finite residual product, this supplies a finite residual estimate for \(\mathcal H\). Theorem~\ref{KS43} forces closed range. In finite dimension every linear image is closed.
+\end{proof}
+\source{KS44}
+For isometric transports, one can use \(\norm{R_p}\le1\), \(\norm{N_p}\le1\), \(\norm d\le2\), and \(A_p\le r\), where \(r\) is the route radius. The bound reduces to
+\[
+ \norm{x-Px}_\infty\le[r+\kappa(2r+1)]\norm{dx}_\infty.
+\]
+The exact repair is route independent for a fixed root and inner product. A chosen upper bound involving route gains need not have the same numerical value for different routes.
+
+\subsection{Flatness does not remove amplification}
+Consider a scalar chain with \(n+1\) vertices and coordinates \(e_i(z)=2^iz\). Set \(\tau_{ij}=e_ie_j^{-1}\). This connection is flat, but reverse transport along one edge multiplies norms by two. Let
+\[
+ x_i=8\cdot2^i-1,\qquad y_i=7\cdot2^i.
+\]
+The family \(y\) is exact and preserves \(x_o=7\). On a forward edge the residual of \(x\) is \(1/2\), and on its reverse it is \(-1\). Thus
+\[
+ \norm{dx}_\infty=1,\qquad
+ \norm{x-Px}_\infty=2^n-1.
+\]
+A route length bound of \(n\) fails. This is amplification with trivial holonomy, distinct from poor conditioning of the fixed space of a nearly trivial loop.
+\source{KS45}
+\plate{17_amplification}{A flat connection can still amplify a fixed residual. Both orientations of every edge are measured, giving residual norm one. Root-preserving repair has error \(2^n-1\), which exceeds the route-length estimate once \(n\ge2\). The vertical scale is logarithmic.}{fig:amplification}
+
+\subsection{Small holonomy can still be poorly conditioned}
+In \(\R^2\), the rational rotation
+\[
+ U_t=\frac1{1+t^2}
+ \begin{pmatrix}1-t^2&-2t\\2t&1-t^2\end{pmatrix}
+\]
+satisfies
+\[
+ \norm{(U_t-I)z}^2=\frac{4t^2}{1+t^2}\norm z^2.
+\]
+For \(t\ne0\) its fixed space is zero and its residual gain is \(\sqrt{1+t^2}/(2|t|)\), which diverges as \(t\to0\). At \(t=0\), the entire fiber is fixed. Therefore small loop discrepancy does not supply a uniform stable realization estimate. The fixed directions and their conditioning must be analyzed together.
+
+\chap{Quantitative descent in a common Hilbert model}\label{sec:quantitative}
+\subsection{Local exactness and matching are separate operators}
+Let \(E\) be a real Hilbert space of raw local candidates. Let \(D:E\to R\) measure local equation defects and \(C:E\to Y\) measure overlap mismatch, with Banach targets. Put
+\[
+ L=\ker D,\qquad B=C|_L,
+ \qquad M=\ker D\cap\ker C.
+\]
+The exact matched families form \(M\). First project to \(L\), then project inside \(L\) to \(\ker B\). Denote the resulting map by \(P\).
+
+\begin{theorem}[The two-stage repair is the joint projection]\label{KS46}
+The operator \(P\) is the orthogonal projection onto \(M\), equivalently onto the kernel of \(\Delta=(D,C)\). If \(u=x-P_Lx\) and \(v=P_Lx-Px\), then
+\[
+ u\perp v,\qquad\norm{x-Px}^2=\norm u^2+\norm v^2.
+\]
+\end{theorem}
+\begin{proof}
+The output lies in \(L\cap\ker C\). The first error \(u\) belongs to \(L^\perp\), and the second error belongs to \(L\) and is orthogonal to \(M\). Hence their sum is orthogonal to \(M\), which characterizes the joint projection. Their mutual orthogonality gives the identity.
+\end{proof}
+\source{KS46}
+This identity does not require the local and overlap operators to commute. The second projection is taken in the already exact subspace, not in the whole raw space without restriction.
+
+For a concrete failure of the unrestricted procedure, take \(L=\{(a,0)\}\) and \(\ker C=\{(a,a)\}\) in \(\R^2\). Their intersection is zero. Starting from \((1,0)\), projection to \(L\) does nothing, while subsequent projection to \(\ker C\) gives \((1/2,1/2)\), which is no longer in \(L\). The restricted second stage instead gives the correct joint answer zero.
+
+\plate{11_descent}{Local correction and overlap correction are orthogonal errors when the second problem is restricted to the locally exact subspace. Their composition is the projection onto the joint exact space. The overlap range inside that subspace is the additional stability obligation.}{fig:quantdescent}
+
+\subsection{A stable repair requires a stable matching problem}
+Suppose \(\ran D\) and \(\ran B\) are closed, with residual gains \(a,b\). Then
+\[
+ \norm u\le a\norm{Dx},\qquad
+ \norm v\le b\norm{CP_Lx}
+ \le b(\norm{Cx}+\norm C\,a\norm{Dx}).
+\]
+Therefore
+\begin{equation}\label{eq:jointgain}
+ \norm{x-Px}\le
+ a(1+b\norm C)\norm{Dx}+b\norm{Cx}.
+\end{equation}
+The Pythagorean identity gives the sharper estimate
+\[
+ \norm{x-Px}^2\le
+ a^2\norm{Dx}^2+b^2\bigl(\norm{Cx}+a\norm C\norm{Dx}\bigr)^2.
+\]
+For the maximum norm on \(R\times Y\), two sufficient gains are therefore
+\[
+ G_2=\sqrt{a^2+b^2(1+a\norm C)^2}
+ \le G_1=a(1+b\norm C)+b.
+\]
+The inequality follows from \(\sqrt{u^2+v^2}\le u+v\) for nonnegative \(u,v\). The archived interface supplies the sum-type gain \(G_1\), while its squared-error theorem also yields \(G_2\). Neither is claimed to be the least joint gain. In either bound, \(\norm C\) may be replaced by any certified bound on \(C\) restricted to \((\ker D)^\perp\).
+
+\begin{theorem}[Closed range for the joint defect]\label{KS47}
+Assume \(\ran D\) is closed. Then
+\[
+ \ran(D,C)\text{ is closed}\quad\Longleftrightarrow\quad
+ \ran(C|_{\ker D})\text{ is closed}.
+\]
+Under either condition, a finite joint residual-to-repair bound exists.
+\end{theorem}
+\begin{proof}
+If the joint range is closed and \(Bk_n\to y\) with \(k_n\in\ker D\), the joint values \((0,Bk_n)\) converge to \((0,y)\). Closedness supplies \(k\in\ker D\) with \(Ck=y\), proving the forward implication.
+
+Conversely let \((Dx_n,Cx_n)\to(r,y)\). Write \(x_n=u_n+k_n\), with \(u_n\in(\ker D)^\perp\) and \(k_n\in\ker D\). Closed range of \(D\) implies \(r\in\ran D\) and makes its transverse inverse bounded, so \(u_n\to u\) with \(Du=r\). Then \(Bk_n=Cx_n-Cu_n\to y-Cu\). Closed range of \(B\) supplies \(k\in\ker D\) with \(Ck=y-Cu\). The limit is \((D(u+k),C(u+k))\), so the joint range is closed. The final assertion follows from Theorem~\ref{KS43}, or directly from \eqref{eq:jointgain}.
+\end{proof}
+\source{KS47}
+
+
+This Hilbert model is a quantitative counterpart of gluing, but it is not a norm on an arbitrary categorical stack. It starts from a fixed raw candidate space, fixed norms, and actual local and overlap operators. Changing those choices requires its own comparison.
+
+\chap{Controlled motion of exact spaces}\label{sec:motion}
+\subsection{A two-sided condition number theorem}
+Let \(D,D':E\to R\) be continuous linear maps from a real Hilbert space to the same normed target. Write \(q=P_{\ker D}\), \(q'=P_{\ker D'}\). Suppose
+\[
+ \norm{(I-q)x}\le C\norm{Dx},\qquad
+ \norm{(I-q')x}\le C'\norm{D'x},\qquad C,C'\ge0,
+\]
+and \(\norm{D-D'}\le\varepsilon\).
+
+\begin{theorem}[Motion of the exact projector]\label{KS48}
+Without either kernel inclusion as a hypothesis,
+\begin{equation}\label{eq:motion}
+ \norm{q-q'}\le\max(C,C')\varepsilon.
+\end{equation}
+In particular a uniform residual gain \(M\) makes \(D\mapsto P_{\ker D}\) \(M\)-Lipschitz on the class of operators carrying that gain.
+\end{theorem}
+\begin{proof}
+For \(z\in\ker D'\),
+\[
+ \norm{(I-q)z}\le C\norm{(D-D')z}\le C\varepsilon\norm z.
+\]
+Interchanging the roles gives \(\norm{(I-q')w}\le C'\varepsilon\norm w\) on \(\ker D\). Since orthogonal projections are self-adjoint, the latter estimate also bounds \(q(I-q')\) by \(C'\varepsilon\).
+
+For any \(x\), decompose
+\[
+ (q-q')x=q(I-q')x-(I-q)q'x.
+\]
+These two terms are orthogonal, the first in \(\ran q\) and the second in its orthogonal complement. Applying the cross estimates to the two orthogonal components \((I-q')x\) and \(q'x\) gives
+\[
+ \norm{(q-q')x}^2
+ \le\varepsilon^2\left((C')^2\norm{(I-q')x}^2+C^2\norm{q'x}^2\right)
+ \le\varepsilon^2\max(C,C')^2\norm x^2.
+\]
+Take square roots and the operator supremum.
+\end{proof}
+\source{KS48}
+There is no smallness threshold when both certificates are already supplied. The estimate can be uninformative when their gains are large. Knowing only the old certificate is a different situation.
+
+For changing input as well as model, the same theorem gives
+\[
+ \norm{qx-q'y}\le\norm{x-y}+\max(C,C')\varepsilon\norm y.
+\]
+It also bounds the change in distance to the exact space by \(\max(C,C')\varepsilon\norm x\).
+
+\subsection{Constructing the new certificate}
+Assume the target \(R\) is Banach and \(A:R\to E\) is a continuous linear right inverse of \(D\), with \(DA=I\), \(\norm A\le a\), and \(a\varepsilon<1\). Set
+\[
+ T=(D-D')A,\qquad Z=(I-T)^{-1},\qquad A'=AZ.
+\]
+The inverse is supplied by the convergent Neumann series because \(\norm T\le a\varepsilon<1\).
+
+\begin{theorem}[Stable surjectivity and derived repair]\label{KS49}
+The perturbed map is surjective, with
+\[
+ D'A'=I,\qquad \norm{A'}\le\frac{a}{1-a\varepsilon}.
+\]
+Its exact projection satisfies
+\[
+ \norm{x-q'x}\le\frac{a}{1-a\varepsilon}\norm{D'x},\qquad
+ \norm{q-q'}\le\frac{a\varepsilon}{1-a\varepsilon}.
+\]
+\end{theorem}
+\begin{proof}
+The identity \(D'A=I-T\) gives \(D'A'=I\), and the Neumann inverse has norm at most \((1-a\varepsilon)^{-1}\). The vector \(x-A'D'x\) is exact for \(D'\), so best approximation bounds the projection error by \(\norm{A'D'x}\). The same argument gives old gain at most \(a\). Apply Theorem~\ref{KS48} with these two gains.
+\end{proof}
+\source{KS49}
+If a measured residual \(y\) satisfies \(\norm{D'x-y}\le\eta\), the distance to the new exact space is at most \(a(\norm y+\eta)/(1-a\varepsilon)\). The uncertainty radius remains a quantity to justify in the application. The theorem does not estimate it statistically.
+
+For a surjective Hilbert-source operator, the right inverse need not be a separate unexplained input. The inverse of \(D:(\ker D)^\perp\to R\), followed by inclusion, constructs it. A known residual certificate bounds its norm. Surjectivity is still substantive, and cannot be assumed for a redundant residual map whose target contains unattainable directions.
+
+\subsection{An equivalence between the moving kernels}
+\begin{theorem}[Explicit kernel transport]\label{KS50}
+Under the hypotheses of Theorem~\ref{KS49},
+\[
+ J:\ker D\simeq_L\ker D',\qquad Jx=x-A'D'x,
+\]
+with inverse \(y\mapsto y-ADy\). Moreover
+\[
+ \norm{Jx-x}\le\frac{a\varepsilon}{1-a\varepsilon}\norm x.
+\]
+\end{theorem}
+\begin{proof}
+Let \(R_0=I-AD\), \(R_1=I-A'D'\). They retract onto their respective kernels. Since \(A'=AZ\), one has \(R_0A'=0\). Also \(D'A=I-T\) gives \(R_1A=0\). Hence \(R_0R_1x=x\) on \(\ker D\), and \(R_1R_0y=y\) on \(\ker D'\). This proves both inverse identities. On \(\ker D\), \(D'x=(D'-D)x\), so the displacement estimate follows from the bound on \(A'\).
+\end{proof}
+\source{KS50}
+The map \(J\) depends on the selected splitting. It is not generally the restriction of the orthogonal projection \(q'\). Equivalence of exact spaces and nearest-point repair answer different questions.
+
+\subsection{An all-real worked model}
+Let \(D_t(x,y)=x+ty\). Its kernel is the line \(\{(-tb,b):b\in\R\}\), and its orthogonal projector is
+\begin{equation}\label{eq:lineprojector}
+ q_t=\frac1{1+t^2}
+ \begin{pmatrix}t^2&-t\\-t&1\end{pmatrix}.
+\end{equation}
+The common right inverse \(r\mapsto(r,0)\) supplies gain at most one for every \(t\), and \(\norm{D_s-D_t}=|s-t|\). The general theorem gives \(\norm{q_s-q_t}\le|s-t|\).
+
+\begin{proposition}[Exact motion of the line]\label{KS51}
+For every real \(t\),
+\[
+ \norm{(q_t-q_0)x}^2=\frac{t^2}{1+t^2}\norm x^2,
+ \qquad \norm{q_t-q_0}=\frac{|t|}{\sqrt{1+t^2}}.
+\]
+In the small perturbation interface, kernel transport sends \((0,b)\) to \((-tb,b)\). Orthogonal projection instead sends it to \((-tb/(1+t^2),b/(1+t^2))\).
+\end{proposition}
+\begin{proof}
+The matrix in \eqref{eq:lineprojector} is symmetric, idempotent, and has range equal to the displayed kernel, so it is the projector. Squaring its symmetric difference from \(q_0\) gives \(t^2/(1+t^2)\) times the identity. This proves the all-vector identity and the operator norm, using a unit vector for equality. The two image formulas follow by substitution. The generic strict-radius interface applies when \(|t|<1\), although the displayed line formulas are valid for every real \(t\).
+\end{proof}
+\source{KS51}
+
+\plate{12_moving_line}{The exact space can move continuously without remaining equal to the original kernel. Transport along a chosen splitting preserves a coordinate, while orthogonal projection minimizes distance. In the line example these two maps have different formulas even though both land in the same exact space.}{fig:movingline}
+
+\subsection{What fails without the hypotheses}
+Take \(D_0=\operatorname{diag}(1,0)\) and \(D_t=\operatorname{diag}(1,t)\). The operator difference has norm \(|t|\). For every nonzero \(t\), however, the new kernel is zero, while the old kernel is the vertical axis. Their projections differ in norm by one. Operator closeness alone does not imply kernel continuity.
+
+More generally, suppose a unit vector \(x\) is old exact but orthogonal to the new kernel. Every new residual gain \(C'\) obeys
+\[
+ 1=\norm{x-q'x}\le C'\norm{D'x}\le C'\varepsilon.
+\]
+Losing an exact direction under a small operator change forces the new gain to grow. At the strict radius boundary, \(D=I\), \(A=I\), and \(D'=0\) have \(a=\varepsilon=1\), yet \(D'\) is not surjective. Thus the strict condition in Theorem~\ref{KS49} cannot be replaced universally by a non-strict one.
+\source{KS52}
+\plate{18_rank_loss}{Two families can have the same small operator-change norm and very different exact-space motion. A moving line retains a uniform residual gain. The rank-changing diagonal family loses an exact direction for every nonzero parameter, so its projector gap remains one.}{fig:rankloss}
+
+\subsection{Motion of the actual descent repair}
+Compare pairs \((D,C)\) and \((D',C')\) on the same raw Hilbert space. Suppose each pair has closed local range and closed overlap range on its own locally exact subspace. Let \(G,G'\) be the resulting joint residual gains. If
+\[
+ \norm{D-D'}\le\varepsilon_D,\qquad
+ \norm{C-C'}\le\varepsilon_C,
+\]
+then the maximum norm on the target product gives
+\[
+ \norm{(D,C)-(D',C')}\le\max(\varepsilon_D,\varepsilon_C).
+\]
+Applying Theorem~\ref{KS48} to the joint operators, and using the actual two-stage identity of Theorem~\ref{KS46}, gives
+\begin{equation}\label{eq:descentmotion}
+ \norm{P_{D,C}-P_{D',C'}}
+ \le\max(G,G')\max(\varepsilon_D,\varepsilon_C).
+\end{equation}
+This is a comparison of the original repair maps, not a replacement definition that happens to have a similar kernel. Both the local equations and overlap conditions can change. The raw space and its inner product remain fixed.
+\source{KS53}

@@ -1,0 +1,13 @@
+# Lean guide integration and self-review
+
+Proofread: the changed portions of `publication/source/Komorebi_Space_Lean_Guide.tex` and `publication/source/lean_guide_map.tex` for publication v1.14.0.
+
+- Routine edits: refreshed the formal coverage statement, documented four import entrypoints and both full-edition imports, replaced obsolete written-only claims, clarified separate historical and diagonal audit scopes, and extended the thematic source table by seven modules.
+- Authorized substantive addition: a 128-line API chapter grounded in the accepted frozen Lean source and independent statement reviews. It explains the actual infinite Hilbert model, positive coordinate shift, unique global optimizer, exact infinite energies and tails, complete real-budget asymptotic, hard-prefix comparator, attainable datum, and literal ceiling noise schedule. It includes 21 exact fully qualified API references and a compact inspection example.
+- Mathematical-token changes to pre-existing mathematical statements or proofs: none. New displays transcribe the accepted theorem types and use the monograph's existing notation. No production Lean file was changed.
+- Boundary distinctions preserved: the operator API states its named upper norm bound, Proposition 30.1 is represented by its combined wrapper together with the explicit uniqueness theorem and coordinate definitions, the limit ranges over all real budgets, and Corollary 30.3 has no assumed bias hypothesis. The historical 156-target/44-control audit is distinguished from the eight-source/273-declaration/eight-control diagonal audit.
+- Validation: all 21 diagonal API references were found in the accepted source. LaTeX environment nesting passed in both edited files. Every edition-count macro is defined. No obsolete written-only or three-entrypoint claim remains. The root release task reported a successful integrated Lake build of both entrypoints; this is described separately from the historical and diagonal audits. The metadata owner independently validated the selected theorem map against source hashes and the accepted declaration inventory.
+- Unresolved issues: none in the changed mathematical prose and source references. PDF compilation and page-by-page visual review remain with the root release task; no PDF was compiled by this agent.
+- Coverage: only changed hunks and the nearby definitions, theorem types, proof summaries, and audit statements needed to establish their meaning. This is a prose/API self-review, not a new independent proof audit of the entire library.
+
+Source hashes, exact API identifiers, and static check results are in `LEAN_GUIDE_REVIEW.json`. Original copies and unified diffs are retained alongside this report.

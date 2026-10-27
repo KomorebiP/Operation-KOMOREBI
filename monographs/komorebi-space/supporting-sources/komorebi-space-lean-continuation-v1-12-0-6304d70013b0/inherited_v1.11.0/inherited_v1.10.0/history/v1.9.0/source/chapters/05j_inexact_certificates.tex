@@ -1,0 +1,176 @@
+\chap{Certifying an inexact protected correction}\label{sec:inexact-repair}
+An existence theorem for a regularized optimizer does not guarantee that a numerical procedure has reached it. The procedure may stop early, use a poorly scaled basis, or report the residual of the wrong equation. These are mathematical distinctions, not implementation details that can be deferred until after a certificate has been interpreted.
+
+The relevant question is now more specific. Given a proposed correction, what quantities can be checked without first computing the exact optimizer? The answer is a normal-equation residual and, independently, a primal and dual objective gap. Both give quantitative statements about the declared regularized problem. Neither promises that the original unregularized realization problem is solvable.
+
+\begin{scopebox}
+The current formal extension constructs the positive-parameter optimizer rather than assuming it exists. It proves the energy identity, global uniqueness, and the estimates in this chapter, with a separate bridge to the actual protected kernel. The weak compactness, infinite-limit, and diagonal asymptotic arguments retain their separately stated verification scopes. The exact Python certificate verifier is tested, not universally verified as a refinement of Lean.
+\end{scopebox}
+
+\subsection{There are three different residuals}
+Keep $H=\ker p$, $T=d|_H$, and a residual datum $r$. Fix $\alpha>0$. Write $a_\alpha$ for WR06's unique minimizer and let $a\in H$ be any proposed correction. Three quantities now have different meanings:
+\[
+ v=r-Ta,\qquad
+ g=T^*(Ta-r)+\alpha a,\qquad
+ e=a-a_\alpha.
+\]
+The vector $v$ is the fit residual. The vector $g$ is the normal-equation residual, equal to one half of the derivative of the quadratic objective after identifying the dual with $H$. The vector $e$ is the unknown correction error. The exact optimizer generally has $v\ne0$ but always has $g=0$.
+
+The adjoint in $g$ is the restricted adjoint on $H$, not the unrestricted ambient adjoint. Equivalently,
+\[
+ T^*v=P_Hd^*v.
+\]
+Thus the correction certificate must measure the part of the normal equation that belongs to the permitted correction space. A numerical program that forgets this projection can incorrectly reject an exact protected optimizer.
+
+\subsection{A posteriori correction and fit bounds}
+\begin{theorem}[Normal residual as a solver certificate]\label{WR13}
+For every proposed $a\in H$,
+\begin{align}
+ \norm{a-a_\alpha}&\le\frac{\norm g}{\alpha},\label{eq:solver-error}\\
+ \norm{T(a-a_\alpha)}&\le\frac{\norm g}{2\sqrt\alpha},\label{eq:solver-fit}\\
+ 0\le J_\alpha(a)-J_\alpha(a_\alpha)&\le\frac{\norm g^2}{\alpha}.
+ \label{eq:solver-objective}
+\end{align}
+\end{theorem}
+\begin{proof}
+Let $e=a-a_\alpha$ and $B=T^*T+\alpha I$. The normal equation of the constructed optimizer gives
+\[
+ Be=(T^*T+\alpha I)a-T^*r=g.
+\]
+Pairing with $e$ yields the exact identity
+\begin{equation}\label{eq:solver-energy}
+ \norm{Te}^2+\alpha\norm e^2=\langle g,e\rangle
+ \le\norm g\norm e.
+\end{equation}
+If $e=0$, all three conclusions hold with zero error. Otherwise drop the first nonnegative term and divide by $\alpha\norm e>0$ to obtain $\norm e\le\norm g/\alpha$.
+
+To obtain the sharper fitted-data bound, retain the quadratic dependence on $\norm e$ instead of substituting the first estimate. Multiplying \eqref{eq:solver-energy} by $\alpha$ and rearranging gives
+\[
+\begin{aligned}
+ \alpha\norm{Te}^2
+ &\le\alpha\norm g\norm e-\alpha^2\norm e^2\\
+ &=\frac{\norm g^2}{4}
+     -\left(\alpha\norm e-\frac{\norm g}{2}\right)^2
+ \le\frac{\norm g^2}{4}.
+\end{aligned}
+\]
+Division by $\alpha$ and square roots give the factor $1/(2\sqrt\alpha)$.
+
+By WR06 the objective gap is exactly $\norm{Te}^2+\alpha\norm e^2$, hence by \eqref{eq:solver-energy} it is also $\langle g,e\rangle$. It is nonnegative and satisfies
+\[
+ J_\alpha(a)-J_\alpha(a_\alpha)
+ \le\norm g\norm e\le\frac{\norm g^2}{\alpha}.
+\]
+Every certificate quantity on the right is computed from the proposal $a$ and the declared problem. The unknown optimizer was used to prove the guarantee, but it is not required to evaluate the certificate.
+\end{proof}
+\written{WR13}
+
+\paragraph{Sharp scalar examples.} For the first sharpness statement take $T=0$ on $\R$ and a nonzero error. Then $g=\alpha e$. For the second, take $T=\sqrt\alpha\,I$ on $\R$, so $g=2\alpha e$ and $\norm{Te}=\norm g/(2\sqrt\alpha)$. These examples establish worst-case sharpness, not simultaneous equality for every operator.
+
+For a fixed raw vector $f$, the corresponding repaired candidates are $f-a$ and $f-a_\alpha$. Their distance is exactly $\norm e$. Both preserve $pf$ because both corrections belong to $H$. The theorem therefore controls a genuine protected candidate error, not just an intermediate coordinate vector.
+
+\fixedplate{37_solver_amplification}{A fixed normal-equation tolerance has different consequences at different regularization parameters. The curves are universal certified upper bounds for a declared normal-residual norm, not observed errors of a particular experiment. The correction estimate grows as $\alpha^{-1}$ while the fitted-data estimate grows as $\alpha^{-1/2}$.}{fig:solver-amplification}
+
+\subsection{Why a vanishing normal residual is not enough}
+Let $T=0$ on $\R$, let $r=0$, and take $\alpha_n=n^{-2}$ for $n\ge1$. The exact optimizer is zero for every such $n$. The fixed proposal $a_n=1$ instead has
+\[
+ v_n=0,\qquad g_n=\alpha_n\longrightarrow0,\qquad
+ J_{\alpha_n}(a_n)=\alpha_n\longrightarrow0,
+ \qquad\abs{a_n-a_{\alpha_n}}=1.
+\]
+Thus the fit residual, the normal residual, and even the absolute objective value can all tend to zero without convergence to the selected optimizer. The certificate correctly reports $\abs{g_n}/\alpha_n=1$.
+
+This is not an infinite-dimensional obstruction. It occurs in one dimension because the regularizing penalty itself disappears. The question is not whether the reported residual is small in isolation, but whether it is small relative to the parameter that converts it into an error bound.
+
+\subsection{A dual certificate does not require solving the normal equation}
+For an arbitrary $z\in Y$, define
+\[
+ \mathcal D_\alpha(z)=2\langle r,z\rangle-\norm z^2
+                    -\frac{\norm{T^*z}^2}{\alpha}.
+\]
+Unlike the fixed-budget witness in WR04, this dual witness has no unit-norm constraint. Its quadratic penalties supply the control.
+
+\begin{theorem}[Exact regularized primal and dual gap]\label{WR14}
+For every $a\in H$ and $z\in Y$,
+\begin{equation}\label{eq:regularized-duality-gap}
+ J_\alpha(a)-\mathcal D_\alpha(z)
+ =\norm{Ta-r+z}^2+
+   \frac{\norm{T^*z-\alpha a}^2}{\alpha}.
+\end{equation}
+Consequently $\mathcal D_\alpha(z)\le J_\alpha(a)$ for every pair. At
+$a=a_\alpha$ and $z=z_\alpha=r-Ta_\alpha$, equality holds, so the dual maximum is attained and equals the primal minimum. Moreover,
+\[
+ \alpha\norm{a-a_\alpha}^2
+ \le J_\alpha(a)-\mathcal D_\alpha(z).
+\]
+For the easily computed choice $z=r-Ta$,
+\begin{equation}\label{eq:residual-dual-gap}
+ J_\alpha(a)-\mathcal D_\alpha(r-Ta)=\frac{\norm g^2}{\alpha}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+For arbitrary $a,z$, expand the first square as
+\[
+ \norm{Ta-r+z}^2
+ =\norm{Ta-r}^2+\norm z^2+2\langle Ta,z\rangle-2\langle r,z\rangle,
+\]
+and the scaled second square as
+\[
+ \frac{\norm{T^*z-\alpha a}^2}{\alpha}
+ =\frac{\norm{T^*z}^2}{\alpha}+\alpha\norm a^2
+       -2\langle T^*z,a\rangle.
+\]
+The adjoint identity cancels $2\langle Ta,z\rangle$ against the last term. The remaining expression is
+\[
+ \norm{Ta-r}^2+\alpha\norm a^2
+ -\left(2\langle r,z\rangle-\norm z^2
+                    -\alpha^{-1}\norm{T^*z}^2\right),
+\]
+which is the asserted gap. Its nonnegativity gives weak duality for every pair, without any constraint on the witness norm.
+
+Set $a=a_\alpha$ and $z_\alpha=r-Ta_\alpha$. The first square is zero by this definition. The normal equation gives $T^*z_\alpha=\alpha a_\alpha$, so the second is zero as well. Therefore
+\[
+ \mathcal D_\alpha(z_\alpha)=J_\alpha(a_\alpha).
+\]
+For every other $z$, weak duality with $a_\alpha$ gives $\mathcal D_\alpha(z)\le J_\alpha(a_\alpha)$. This proves attainment of the dual maximum and equality with the primal minimum directly.
+
+For a general proposed pair $(a,z)$, decompose its gap as
+\[
+ J_\alpha(a)-\mathcal D_\alpha(z)
+ =[J_\alpha(a)-J_\alpha(a_\alpha)]
+  +[J_\alpha(a_\alpha)-\mathcal D_\alpha(z)].
+\]
+The second bracket is nonnegative by weak duality, while WR06 bounds the first below by $\alpha\norm{a-a_\alpha}^2$. This proves the correction-error certificate.
+
+Finally take $z=r-Ta$. The first square in the gap is zero, while $T^*z-\alpha a=-g$. The second becomes $\norm g^2/\alpha$, proving the residual-witness formula. A small duality gap controls optimizer error only after division by the specified positive parameter.
+\end{proof}
+\written{WR14}
+
+A proposed correction and a proposed dual witness can come from different procedures. The verifier only needs the mathematical problem, the two vectors, and the displayed identities. A poor witness remains valid as a lower bound, but can give a loose gap. The residual witness avoids a second optimization routine and recovers WR13's bound exactly.
+
+\subsection{A protected example with every certificate calculated}
+Take
+\[
+ d(x,y)=x,\qquad p(x,y)=x-y,\qquad f=(1,0),\qquad r=df=1,\qquad\alpha=1.
+\]
+Every allowed correction has the form $(t,t)$. The objective is
+\[
+ J(t,t)=(t-1)^2+2t^2,
+\]
+so $a_\alpha=(1/3,1/3)$ and $J(a_\alpha)=2/3$. Suppose a procedure returns only $a=(1/4,1/4)$. Then
+\[
+ v=\frac34,\qquad T^*v=(3/8,3/8),\qquad
+ g=(-1/8,-1/8),\qquad\norm g^2=\frac1{32}.
+\]
+The actual correction-error square is $1/72$, while the certified upper bound is $1/32$. The actual fitted-error square is $1/144$, while the sharper bound in WR13 is $1/128$.
+
+The proposed objective is $11/16$. Its actual excess over the optimum is $1/48$. The residual witness gives
+\[
+ \mathcal D_1(3/4)=\frac{21}{32},\qquad
+ J(a)-\mathcal D_1(3/4)=\frac1{32}.
+\]
+The duality gap is an upper bound for suboptimality, not necessarily the exact suboptimality. Both repaired candidates preserve $p(f)=1$.
+
+\fixedplate{38_objective_certificate}{The objective on the actual protected line is $3t^2-2t+1$. The proposed correction at $t=1/4$, exact minimizer at $t=1/3$, and residual-witness lower bound are distinct. The vertical gap to the dual level is the checkable certificate. The smaller gap to the minimum is the true suboptimality.}{fig:objective-certificate}
+
+The supplied program \path{examples/inexact_repair_certificate.py} verifies this calculation without calling the optimizer. It also accepts a user-supplied dual witness. Every reported scalar is rational, and all norm error bounds are stored as squared quantities so that no rounding of a square root is required.

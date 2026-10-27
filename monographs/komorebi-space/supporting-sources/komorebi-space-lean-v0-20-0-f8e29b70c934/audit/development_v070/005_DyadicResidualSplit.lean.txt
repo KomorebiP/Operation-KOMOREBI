@@ -1,0 +1,52 @@
+import KomorebiSpace.BoundedParity
+import KomorebiSpace.ResidualSampling
+import KomorebiSpace.SplitTowerCanonicity
+
+set_option autoImplicit false
+
+/-!
+# A section of actual dyadic residual coarsening
+
+Target sections lift a coarse residual to the odd edge of each pair. The even
+edge is zero. No source propagation-gap assumption is used.
+-/
+universe u v
+noncomputable section
+namespace KomorebiSpace
+namespace DyadicResidual
+open BanachTower
+open scoped NNReal ENNReal
+variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+variable (X Y : BanachTower.{u,v} 𝕜)
+variable (hX : ∀ n, ‖X.down n‖ ≤ 1) (hY : ∀ n, ‖Y.down n‖ ≤ 1)
+
+def schedule (n : ℕ) := 2*n
+
+theorem schedule_monotone : Monotone schedule := fun _ _ h => Nat.mul_le_mul_left 2 h
+
+theorem schedule_gap (n : ℕ) : schedule (n+1) - schedule n ≤ 2 := by
+  simp [schedule, Nat.mul_add]
+
+abbrev sampled (X : BanachTower.{u,v} 𝕜) (hX : ∀ n, ‖X.down n‖ ≤ 1) :=
+  resample X hX schedule schedule_monotone
+
+abbrev Coarse := Residuals (sampled X hX) (sampled Y hY)
+
+abbrev coarsen := residualSampleCLM X Y hX hY schedule schedule_monotone 2 schedule_gap
+
+/-- Coarse residuals are transported pair sums, not samples. -/
+theorem coarsen_pair (r : Residuals X Y) (n : ℕ) :
+    coarsen X Y hX hY r n =
+      (Y.down (2*n)).comp (r (2*n+1)) + (r (2*n)).comp (X.down (2*n+1)) := by
+  change blockSum X Y r (show 2*n ≤ 2*(n+1) from schedule_monotone (Nat.le_succ n)) = _
+  rw [blockSum_succ X Y r (show 2*n ≤ 2*n+1 by omega)]
+  simp
+
+variable (L : Splitting Y)
+
+def oddLift (c : Coarse X Y hX hY) (n : ℕ) : X.Obj (2*n+1+1) →L[𝕜] Y.Obj (2*n+1) :=
+  (L.up (2*n)).comp (c n)
+
+end DyadicResidual
+end KomorebiSpace
+end

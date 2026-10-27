@@ -1,0 +1,193 @@
+\chap{A complete regularization diagnostic for the escaping model}\label{sec:diagonal-regularization}
+The abstract alternatives become explicit for the diagonal model. They also answer a natural objection to the hard prefix corrections: perhaps a smoother correction could fit increasingly well without escaping. It can fit more efficiently, but it cannot avoid the obstruction.
+
+\subsection{The entire regularized family is explicit}
+Use $Tu=(u_n/n)$ and $r=w=(1/n)$ as in Section~\ref{sec:escape}. Choose $\alpha=m^{-2}$ for an integer $m\ge1$. The normal equation in each coordinate gives
+\[
+ a^{(m)}_n=\frac{m^2}{m^2+n^2},\qquad
+ v^{(m)}_n=r_n-(Ta^{(m)})_n=\frac{n}{m^2+n^2}.
+\]
+The repaired ambient candidate is $(-a^{(m)},1)$. Its protected coordinate is one for every $m$.
+
+\begin{proposition}[Energy, residual, and certified tails]\label{WR10}
+The displayed $a^{(m)}$ belongs to $\ell^2$ and is the unique regularized correction at $\alpha=m^{-2}$. Set
+\[
+ A_m=\norm{a^{(m)}}^2=\sum_{n\ge1}\frac{m^4}{(m^2+n^2)^2},\qquad
+ B_m=\norm{v^{(m)}}^2=\sum_{n\ge1}\frac{n^2}{(m^2+n^2)^2}.
+\]
+Then
+\begin{equation}\label{eq:soft-bounds}
+ \frac m4\le A_m\le\frac{4m}{3},\qquad
+ \frac1{4(m+1)}\le B_m\le\frac2m.
+\end{equation}
+For the sums $A_{m,K},B_{m,K}$ through any integer $K\ge m$,
+\begin{equation}\label{eq:soft-tails}
+ 0\le A_m-A_{m,K}\le\frac{m^4}{3K^3},\qquad
+ 0\le B_m-B_{m,K}\le\frac1K.
+\end{equation}
+\end{proposition}
+\begin{proof}
+For $n>m$, one has $(a_n^{(m)})^2\le m^4/n^4$, so the correction sequence is square-summable. The diagonal operator is bounded with norm one, and $w=(1/n)\in\ell^2$, hence the residual sequence is also in $\ell^2$. The operator is self-adjoint, and the coordinate equality
+\[
+ \frac1n\frac{n}{m^2+n^2}
+ =m^{-2}\frac{m^2}{m^2+n^2}
+\]
+proves $T^*v^{(m)}=\alpha a^{(m)}$ as an equality of Hilbert vectors. WR06 therefore identifies this actual infinite vector as the unique minimizer, rather than just a coordinatewise candidate.
+
+For $1\le n\le m$, $m^2/(m^2+n^2)\ge1/2$. There are $m$ such coordinates, so $A_m\ge m/4$. For the upper bound, the first $m$ squares are at most one, and the decreasing function $x^{-4}$ gives
+\[
+ \sum_{n>m}\frac1{n^4}\le\int_m^\infty x^{-4}\,dx=\frac1{3m^3}.
+\]
+Thus $A_m\le m+m^4/(3m^3)=4m/3$.
+
+For $n\le m$, the residual square is at most $n^2/m^4$. The exact identity
+\[
+ \sum_{n=1}^m n^2=\frac{m(m+1)(2m+1)}6\le m^3
+\]
+holds for $m\ge1$, so this part contributes at most $1/m$. For $n>m$, each residual square is at most $1/n^2$, whose tail is at most $1/m$. This proves $B_m\le2/m$.
+
+For the lower bound, $n>m$ implies $m^2+n^2\le2n^2$, hence
+\[
+ \frac{n^2}{(m^2+n^2)^2}\ge\frac1{4n^2}.
+\]
+The other direction of the decreasing-function integral comparison gives
+\[
+ \sum_{n>m}\frac1{n^2}\ge\int_{m+1}^\infty x^{-2}\,dx=\frac1{m+1}.
+\]
+This proves $B_m\ge1/(4(m+1))$.
+
+Finally, for $K\ge m$, both omitted tails consist of nonnegative terms. Bound the first by $m^4\sum_{n>K}n^{-4}$ and the second by $\sum_{n>K}n^{-2}$. The same upper integral comparisons give the two certified remainders in \eqref{eq:soft-tails}. No finite truncation is substituted for an equality of infinite energies.
+\end{proof}
+\written{WR10}
+
+Thus the correction norm grows on the order of $\sqrt m$, the residual norm decays on the order of $m^{-1/2}$, and the penalty $\alpha A_m=A_m/m^2$ tends to zero. The smooth correction avoids the hard discontinuity at a prefix boundary, but it still approaches the forbidden constant sequence coordinate by coordinate.
+
+\fixedplate{35_regularized_escape}{At each fixed coordinate, the soft correction approaches one as $m$ tends to infinity. Its transition moves outward as $m$ increases. The chart compares three exact coordinate formulas $m^2/(m^2+n^2)$, not finite approximations to an unspecified optimization procedure. Every displayed sequence has finite energy, but the family's energies are unbounded.}{fig:regularized-escape}
+
+\subsection{The sharp asymptotic correction cost}
+The preceding bounds establish divergence and decay. The leading constant can also be computed, which permits a meaningful comparison with hard prefix repair.
+
+\begin{theorem}[A sharp budget asymptotic for the diagonal datum]\label{WR11}
+As $m\to\infty$,
+\[
+ \frac{A_m}{m}\longrightarrow\frac\pi4,\qquad
+ mB_m\longrightarrow\frac\pi4.
+\]
+For the exact budget profile of this infinite problem,
+\begin{equation}\label{eq:sharp-budget}
+ \lim_{M\to\infty}M\beta_{T,w}(M)=\frac\pi4.
+\end{equation}
+The hard prefix correction at budget $M=\sqrt N$ instead has
+\[
+ \sqrt N\,\norm{w-T\mathbf1_N}\longrightarrow1.
+\]
+\end{theorem}
+\begin{proof}
+\emph{Step 1: control the infinite Riemann sums uniformly.} Define
+\[
+ f(x)=\frac1{(1+x^2)^2},\qquad
+ g(x)=\frac{x^2}{(1+x^2)^2}.
+\]
+Then $A_m/m=m^{-1}\sum_{n\ge1}f(n/m)$ and $mB_m=m^{-1}\sum_{n\ge1}g(n/m)$. Fix $L\ge2$ and put $N=\lfloor mL\rfloor$. On $[0,L]$, both functions are uniformly continuous. If $\omega_f(h)$ is a modulus of continuity there, comparison on the $N$ intervals of length $1/m$ gives
+\[
+ \left|\frac1m\sum_{n=1}^N f(n/m)-\int_0^{N/m}f(x)\,dx\right|
+ \le L\omega_f(1/m).
+\]
+The missing interval $[N/m,L]$ has length below $1/m$ and a bounded integrand, so it contributes a term tending to zero. The same argument applies to $g$. This proves convergence of each truncated sum to its integral on $[0,L]$.
+
+The tails require a bound independent of sufficiently fine discretization. Since $N\ge mL/2$, the inequalities $f(x)\le x^{-4}$ and $g(x)\le x^{-2}$ give
+\[
+ \frac1m\sum_{n>N}f(n/m)
+ \le m^3\sum_{n>N}n^{-4}\le\frac{m^3}{3N^3}
+ \le\frac8{3L^3},
+\]
+\[
+ \frac1m\sum_{n>N}g(n/m)
+ \le m\sum_{n>N}n^{-2}\le\frac mN\le\frac2L.
+\]
+The integral tails are at most $1/(3L^3)$ and $1/L$. Given an error tolerance, choose $L$ first to control both discrete and integral tails, then choose $m$ to control the compact-interval sums. This justifies passing from finite-interval Riemann convergence to the full half-line sums. No uncontrolled interchange of two infinite limits is involved.
+
+\emph{Step 2: evaluate the integrals.} The substitution $x=\tan\theta$ gives $dx=\sec^2\theta\,d\theta$ and $1+x^2=\sec^2\theta$, so
+\[
+ \int_0^\infty f(x)\,dx=\int_0^{\pi/2}\cos^2\theta\,d\theta=\frac\pi4,
+ \qquad
+ \int_0^\infty g(x)\,dx=\int_0^{\pi/2}\sin^2\theta\,d\theta=\frac\pi4.
+\]
+Step 1 now proves the two stated asymptotics.
+
+\emph{Step 3: move from regularization parameters to arbitrary budgets.} Set $M_m=\sqrt{A_m}$. Every positive coordinate $m^2/(m^2+n^2)$ increases strictly with $m$, so $A_m$, and hence $M_m$, increases strictly. Since $A_m/m\to c=\pi/4>0$, these budgets tend to infinity and
+\[
+ \left(\frac{M_{m+1}}{M_m}\right)^2
+ =\frac{A_{m+1}/(m+1)}{A_m/m}\frac{m+1}{m}\longrightarrow1.
+\]
+WR07 identifies $\beta(M_m)=\sqrt{B_m}$. Thus
+\[
+ M_m\beta(M_m)=\sqrt{(A_m/m)(mB_m)}\longrightarrow c.
+\]
+For every sufficiently large $M$, choose $m$ with $M_m\le M\le M_{m+1}$. Monotonicity of $\beta$ gives
+\[
+ M_m\beta(M_{m+1})\le M\beta(M)\le M_{m+1}\beta(M_m).
+\]
+The lower bound is $(M_m/M_{m+1})[M_{m+1}\beta(M_{m+1})]$ and the upper is $(M_{m+1}/M_m)[M_m\beta(M_m)]$. Both tend to $c$, proving the full budget limit, not merely convergence on a selected subsequence of budgets.
+
+\emph{Step 4: compare the hard-prefix method.} That correction has norm $\sqrt N$ and residual square $\sum_{n>N}n^{-2}$. Integral comparison yields
+\[
+ \frac{N}{N+1}\le N\sum_{n>N}\frac1{n^2}\le1.
+\]
+Taking the limit and then a square root gives its leading product one. The two constants are consequently compared at large actual correction budgets, rather than at arbitrarily equated parameter labels.
+\end{proof}
+\written{WR11}
+
+At large matched correction budgets, the optimal soft repair therefore has about $\pi/4$ times the hard-prefix residual. This improves the efficiency of approximation, not the existence result. Both residuals tend to zero only as the budget tends to infinity. The limiting constant is a calculation for this declared model, not a universal regularization efficiency factor.
+
+\fixedplate{36_budget_product}{The plotted intervals enclose the actual infinite quantities $\sqrt{A_mB_m}$, using finite sums plus the proved tails. The corresponding hard-prefix intervals enclose $\sqrt{N\sum_{n>N}n^{-2}}$ with $N=m$. These have different natural budget sequences. Their limits give the matched-budget asymptotic constants $\pi/4$ and one.}{fig:budget-product}
+
+\subsection{The same operator has an attainable datum}
+Change only the residual to $b_n=1/n^2$. Its minimum norm preimage is $a^\dagger_n=1/n\in\ell^2$. At $\alpha=m^{-2}$, the regularized correction is
+\[
+ c^{(m)}_n=\frac{m^2}{n(m^2+n^2)},\qquad
+ a^\dagger_n-c^{(m)}_n=\frac{n}{m^2+n^2}.
+\]
+The bias square is exactly the previously computed $B_m$. This links the two cases without conflating their existence hypotheses: the escaping residual of one problem is the regularization bias of an attainable problem.
+
+\begin{corollary}[An explicit noisy attainable repair]\label{WR12}
+For the attainable datum $b=(1/n^2)$, suppose $\norm{\widetilde b-b}\le\delta$ with $0<\delta\le1$. Choose
+\[
+ m=\lceil\delta^{-2/3}\rceil,\qquad\alpha=m^{-2}.
+\]
+Then the noisy regularized correction satisfies
+\[
+ \norm{a_\alpha(\widetilde b)-a^\dagger}
+ \le\sqrt{\frac2m}+\frac{\delta m}{2}
+ \le(\sqrt2+1)\delta^{1/3}.
+\]
+\end{corollary}
+\begin{proof}
+The exact-data bias has coordinates $n/(m^2+n^2)$, so its squared norm is precisely $B_m$. By WR10,
+\[
+ \norm{a_{m^{-2}}(b)-a^\dagger}\le\sqrt{2/m}.
+\]
+WR09 at the same parameter gives
+\[
+ \norm{a_{m^{-2}}(\widetilde b)-a_{m^{-2}}(b)}
+ \le\frac{\delta}{2\sqrt{m^{-2}}}=\frac{\delta m}{2}.
+\]
+The triangle inequality proves the first bound.
+
+Because $0<\delta\le1$, the number $u=\delta^{-2/3}$ is at least one. The ceiling satisfies $u\le m<u+1\le2u$. Therefore
+\[
+ \sqrt{2/m}\le\sqrt2\,\delta^{1/3},
+ \qquad \frac{\delta m}{2}\le\delta u=\delta^{1/3}.
+\]
+Adding these estimates proves the displayed rate with every ceiling factor accounted for. The positive-noise condition is needed to define this particular finite integer choice. The statement does not prescribe an infinite $m$ at $\delta=0$, nor does it use a probabilistic assumption on the perturbation.
+\end{proof}
+\written{WR12}
+
+This is a deterministic guarantee for the specified datum and Hilbert noise bound. It is not a statistical confidence statement. The identical parameter rule in the escaping problem cannot produce convergence to an exact protected Hilbert solution, because no such solution exists.
+
+\subsection{What the calculation permits a machine to certify}
+The finite program can check a normal equation, exact preservation, and a quadratic optimality identity. It can return a dual witness ruling out a smaller residual at a given budget. In the infinite diagonal example it can return partial sums together with rational tail enclosures. Those are distinct certificates with distinct conclusions.
+
+None of them alone establishes unrestricted semantic realizability. The bounded-budget theorem needs a genuinely uniform bound. The exactification theorem needs control of candidate movement. The regularization limit needs actual attainment of the projected datum. The repeated appearance of a small residual does not replace any of those hypotheses.
+
+The useful next diagnostic is therefore not just ``Did the residual decrease?'' It is ``What happened to the correction norm, what quantity was preserved, and what existence theorem applies to this datum?''

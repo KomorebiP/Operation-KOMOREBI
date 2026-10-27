@@ -1,0 +1,110 @@
+\clearpage
+\chap{Proof and formal verification}\label{app:written}
+The printed arguments and the accompanying Lean development have complementary roles. The text explains constructions and their mathematical context. A Lean declaration fixes a precise statement whose proof is checked by the kernel. A correspondence between them records the actual hypotheses and conclusion, while allowing the formal proof to use a different route.
+
+All \EditionPrincipalGroups\ principal theorem groups on bounded realization, budgets, regularization, and certificates have complete formal counterparts. The table identifies these statements by their numbers in the main text. This coverage concerns the stated results, rather than every proof route or illustrative calculation.
+
+\begin{longtable}{@{}p{.11\linewidth}p{.60\linewidth}p{.22\linewidth}@{}}
+\toprule Result & Topic & Formal counterpart\\\midrule\endhead
+\ref{WR01} & Bounded approximate feasibility & Verified\\[4pt]
+\ref{WR02} & Nested affine minimum corrections & Verified\\[4pt]
+\ref{WR03} & Attainment and shape of the budget profile & Verified\\[4pt]
+\ref{WR04} & Sharp budget certificate & Verified\\[4pt]
+\ref{WR05} & Robust budget comparison & Verified\\[4pt]
+\ref{WR06} & Unique regularized correction & Verified\\[4pt]
+\ref{WR07} & Parameter and budget comparison & Verified\\[4pt]
+\ref{WR08} & Regularization limit alternative & Verified\\[4pt]
+\ref{WR09} & Data sensitivity and convergent parameter choice & Verified\\[4pt]
+\ref{WR10} & Infinite diagonal family and certified tails & Verified\\[4pt]
+\ref{WR11} & Sharp diagonal budget asymptotic & Verified\\[4pt]
+\ref{WR12} & Rounded noisy diagonal rate & Verified\\[4pt]
+\ref{WR13} & Normal-residual solver certificate & Verified\\[4pt]
+\ref{WR14} & Regularized primal and dual gap & Verified\\[4pt]
+\ref{WR15} & Coordinate certificate and arbitrary basis change & Verified\\[4pt]
+\ref{WR16} & Consistent inexact stopping rule & Verified\\
+\bottomrule\end{longtable}
+
+\subsection{Bounded realization and budget geometry}\label{app:wr-source-map}
+The formal bounded-realization theorem concerns bounded linear maps between real Hilbert spaces. It gives an exact preimage within the same norm bound as the approximating corrections. Its proof uses compactness of a dual ball and the Riesz isometric equivalence. The printed proof uses the weak-subsequence lemma, Lemma~\ref{lem:weak-subsequence}, whose particular proof route is not separately formalized here. Neither route requires separability or closed range. Neither asserts strong convergence of the original approximating sequence.
+
+The nested-constraint theorem constructs the minimum-norm points of nonempty closed affine sets. It proves the exact energy identity, norm monotonicity, and the equivalence between a nonempty intersection and bounded minimum norms. Under that bound, the corrections converge strongly to the unique minimum-norm point of the intersection. If the intersection is empty, their norms tend to infinity. The affine assumption is retained: for general convex sets the corresponding energy statement is an inequality.
+
+\begin{longtable}{@{}p{.38\linewidth}p{.55\linewidth}@{}}
+\toprule Namespace & Representative declarations\\\midrule\endhead
+\path{BoundedApproximateRealization} & \path{exists_solution_of_bounded_residual_tendsto_zero}\newline\path{mem_range_iff_bounded_approximation}\newline\path{norm_tendsto_atTop_of_not_mem_range}\\[5pt]
+\path{NestedMinimumCorrections} & \path{nested_affine_energy}\newline\path{nested_affine_intersection_iff_bounded}\newline\path{nested_affine_strong_realization}\newline\path{nested_affine_escape}\\[5pt]
+\path{ProtectedBoundedRealization} & \path{exists_exact_repair_of_bounded_approximation}\\
+\bottomrule\end{longtable}
+All namespaces in this appendix have the prefix \path{KomorebiSpace}. The protected application uses the actual subtype $\ker p$ with its inherited Hilbert norm. It constructs a repaired candidate preserving the declared observable and the original correction budget.
+
+The budget-profile theorems concern bounded operators between real complete Hilbert spaces. The budget is nonnegative and may be zero. Attainment of a residual minimum over a bounded correction ball does not require the entire operator range to be closed. The sharp support formula supplies an actual maximizing witness, expressed formally by \code{IsGreatest}. It does not infer attainment from the mere existence of a supremum.
+
+\begin{longtable}{@{}p{.38\linewidth}p{.55\linewidth}@{}}
+\toprule Namespace & Representative declarations\\\midrule\endhead
+\path{BudgetProfile} & \path{exists_budget_minimizer}\newline\path{beta_eq_iInf}\newline\path{beta_tendsto_floor}\newline\path{beta_eq_floor_iff}\newline\path{beta_eq_zero_iff}\\[5pt]
+\path{BudgetProfileGeometry} & \path{beta_antitone}\newline\path{beta_zero}\newline\path{beta_convex_combination}\newline\path{beta_profile_bounds}\\[5pt]
+\path{BudgetDuality} & \path{dualValue_le_beta}\newline\path{exists_attaining_dual_witness}\newline\path{sharp_budget_duality}\newline\path{strict_exclusion_certificate}\\[5pt]
+\path{BudgetRobustness} & \path{candidate_residual_le}\newline\path{beta_abs_sub_le}\newline\path{nominal_dual_lower_certificate}\newline\path{excludes_budget_of_nominal_dual_certificate}\\
+\bottomrule\end{longtable}
+
+The robustness comparison uses the same correction space for both problems. Its bound $\delta+\eta M$ controls data and operator uncertainty at budget $M$. A changing protected kernel is a different problem and is not covered by that estimate.
+
+\subsection{Regularization, noise, and stopping}
+For positive parameter $\alpha$, the regularized normal operator is constructed as a continuous linear equivalence. Its inverse defines the correction. The formal development proves uniqueness, the energy identity, parameter monotonicity, budget optimality, and the two data-sensitivity estimates. The fixed-space protected application uses the restricted operator and its actual adjoint.
+
+The limit theory distinguishes projection onto the closure of the range from membership in the range itself. Fitted values converge to the projected datum and residual norms converge to the irreducible floor. If that projected datum is attained, the corrections converge in norm to its unique minimum-norm preimage. Otherwise their norms tend to infinity. The data and stopping theorems use this limit theorem together with their explicit parameter, noise, and solver-tolerance assumptions.
+
+\begin{longtable}{@{}p{.38\linewidth}p{.55\linewidth}@{}}
+\toprule Namespace & Representative declarations\\\midrule\endhead
+\path{RegularizedHilbertRepair} & \path{exists_unique_minimizer}\newline\path{energy_identity}\newline\path{residual_best_at_budget}\newline\path{parameter_norm_antitone}\newline\path{parameter_residual_monotone}\newline\path{data_noise_bound}\newline\path{data_fitted_bound}\\[5pt]
+\path{RegularizationLimits} & \path{fitted_tendsto_projectedDatum}\newline\path{residual_norm_tendsto_floor}\newline\path{weighted_penalty_tendsto_zero}\newline\path{norm_tendsto_atTop_of_not_mem_range}\\[5pt]
+\path{RegularizationStrongLimit} & \path{exists_unique_minimum_and_limit}\\[5pt]
+\path{RegularizationNoiseLimits} & \path{data_noise_coefficient_attained}\newline\path{noisy_parameter_choice}\newline\path{inexact_parameter_choice}\newline\path{stopping_rule_sequence}\\
+\bottomrule\end{longtable}
+
+The stopping theorem compares proposals, exact regularized corrections, and the intended minimum correction in one fixed Hilbert model. It includes the pointwise three-term bound and the convergence conclusion. Protection is exact at every index. The explicit diagonal schedule at the end of Section~\ref{sec:stopping-rules} combines this solver bound with the formalized noisy rate in Corollary~\ref{WR12}. The declaration \path{DiagonalRegularization.diagonal_inexact_rounded_rate} proves this specialization with the literal ceiling, the data-noise hypothesis, and the actual measured-data normal-residual bound. The exact-data bias estimate is derived rather than assumed.
+
+\subsection{Certificates and their coordinate metric}
+The solver certificate controls correction error, fitted error, and objective excess through the actual Hilbert normal residual. The primal and dual identity supplies objective bracketing and a correction-distance bound for an arbitrary dual witness. These are universal statements over the declared Hilbert spaces, with $\alpha>0$ wherever coercivity is used.
+
+\begin{longtable}{@{}p{.38\linewidth}p{.55\linewidth}@{}}
+\toprule Namespace & Representative declarations\\\midrule\endhead
+\path{RegularizedHilbertRepair} & \path{correction_error_bound}\newline\path{fitted_error_bound}\newline\path{objective_gap_bound}\\[5pt]
+\path{RegularizationCertificates} & \path{primal_dual_gap}\newline\path{dual_maximizer}\newline\path{gap_controls_correction}\newline\path{residual_witness_gap}\\[5pt]
+\path{CoordinateCovector} & \path{gram_isUnit}\newline\path{protected_coordinate_certificate}\newline\path{computed_normalResidual_changedBasis}\newline\path{computed_certificate_changedBasis}\newline\path{changedBasis_coordinates}\\
+\bottomrule\end{longtable}
+
+The coordinate certificate uses a basis of the entire permitted correction space, with its inherited Hilbert metric. The proof derives invertibility of the Gram matrix from that basis, identifies the coordinate residual with the pairings of the Hilbert normal residual, and proves
+\[
+ g=BG^{-1}q,\qquad \norm g^2=q^{\mathsf T}G^{-1}q.
+\]
+Every invertible basis change is allowed. The changed coordinates describe the same correction, the residual transforms as a covector, and the displayed squared norm is invariant. The proof includes the zero-dimensional correction space. It does not replace the Hilbert norm by a coordinate supremum norm or assume that the basis is orthonormal. These metric identities hold for every real $\alpha$. The optimizer estimates still require positive $\alpha$.
+
+\subsection{The infinite diagonal example}
+Proposition~\ref{WR10}, Theorem~\ref{WR11}, and Corollary~\ref{WR12} have formal counterparts in the namespace \path{KomorebiSpace.DiagonalRegularization}. The formal space is the real Hilbert space \code{lp} at exponent two. Its natural index starts at zero, so formal coordinate $j$ denotes printed coordinate $n=j+1$. The operator, data, corrections, residuals, and hard prefixes are elements or maps of that actual infinite space.
+
+\begin{longtable}{@{}p{.16\linewidth}p{.77\linewidth}@{}}
+\toprule Result & Declarations in \path{DiagonalRegularization}\\\midrule\endhead
+\ref{WR10} & \path{proposition_30_1}\newline\path{a_unique_minimizer}\\[5pt]
+\ref{WR11} & \path{sharp_diagonal_budget_asymptotic}\\[5pt]
+\ref{WR12} & \path{corollary_30_3}\\[5pt]
+Inexact rate & \path{diagonal_inexact_rounded_rate}\\[5pt]
+Range & \path{T_not_closed_range}\newline\path{w_mem_closure_not_range}\\
+\bottomrule\end{longtable}
+
+The first pair identifies the universal regularized correction, proves it is the unique global minimizer, equates the infinite squared norms with $A_m$ and $B_m$, and proves all four global bounds and both nonnegative omitted-tail bounds. The asymptotic theorem proves both scalar limits, the budget-profile limit $\pi/4$ over all real $M$ tending to infinity, and the hard-prefix comparison with constant one. Its budget conclusion is not restricted to the regularization mesh.
+
+The noisy theorem uses the actual attainable datum and its minimum-norm preimage. It retains the literal ceiling in $m=\lceil\delta^{-2/3}\rceil$ and proves both displayed inequalities for every Hilbert perturbation within the stated noise bound. The bias estimate is derived within the model. The inexact rate adds the stated solver tolerance to this same model and parameter choice.
+
+The range obstruction uses actual unit coordinate vectors with residual norm $1/(j+1)$ and applies the general unit-witness theorem. The hard-prefix images converge in Hilbert norm to $w$, placing it in the closure of the range. An exact preimage would have every coordinate equal to one, contradicting square summability. These declarations formalize the concrete example following Theorem~\ref{KS43}. Exact finite enclosures remain separate illustrations of the infinite results.
+
+\subsection{Verification record and trust boundary}
+The source contains \EditionTargets\ compilation targets (\EditionProductionModules\ production modules and \EditionRoots\ entry points), \EditionTheorems\ explicit theorem or lemma declarations, and \EditionDeclarations\ exported declarations. The latter includes definitions and generated helpers; neither count measures independent mathematical discoveries.
+
+A fresh replay compiled every target with warnings treated as errors and automatic implicit parameters disabled. It audited all project declarations by defining module and recursive axiom dependencies, rejecting unsafe declarations and project-specific axioms. Source, compiler, installed-cache, and generated-object identities bind the results to this run.
+
+All 56 diagnostic controls had their specified outcomes: 18 successes, 35 intended elaboration rejections, and three axiom-policy rejections. The suite reran the 52 accepted controls and added four for the range obstruction and inexact rate. Earlier records remain as historical evidence.
+
+The environment is Lean 4.34.0-rc2 with mathlib commit
+\begin{quote}\small\path{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{quote}
+Permitted axioms are \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. Lean's compiler and kernel and the pinned external dependency cache remain trusted; the cache was recorded but not rebuilt. Finite executable examples provide separate computational evidence; they are not verified extractions of the Lean proofs.

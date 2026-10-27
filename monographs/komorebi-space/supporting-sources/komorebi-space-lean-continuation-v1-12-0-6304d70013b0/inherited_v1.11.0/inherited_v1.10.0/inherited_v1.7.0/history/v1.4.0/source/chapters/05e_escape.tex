@@ -1,0 +1,124 @@
+\clearpage
+\chap{Exact finite repairs can escape the intended ambient space}\label{sec:escape}
+This model links the algebraic obstruction, the numerical floor, the movement of approximations, and the semantic image of an inverse limit. It uses a diagonal operator whose entries are completely explicit. Every finite problem is solvable. The protected infinite problem is not.
+
+\subsection{The complete spaces and the preservation rule}
+Index sequences by the positive integers. Set
+\[
+ E=\ell^2(\N_{>0};\R)\oplus\R,\qquad
+ R=\ell^2(\N_{>0};\R),\qquad
+ \norm{(u,t)}_E^2=\sum_{n\ge1}|u_n|^2+|t|^2.
+\]
+Let \(w=(1/n)_{n\ge1}\). It belongs to \(\ell^2\), because
+\[
+ \sum_{n\ge1}\frac1{n^2}
+ \le1+\sum_{n\ge2}\frac1{n(n-1)}=2.
+\]
+Define the defect and protected observable by
+\[
+ d(u,t)_n=\frac{u_n+t}{n},\qquad p(u,t)=t.
+\]
+The diagonal map \(T:u\mapsto(u_n/n)_n\) has operator norm one. Since \(d(u,t)=Tu+tw\),
+\[
+ \norm{d(u,t)}\le\norm u+|t|\norm w
+ \le\sqrt{1+\norm w^2}\,\norm{(u,t)}_E.
+\]
+Thus both \(d\) and \(p\) are continuous linear maps between the declared complete spaces. No failure of completeness or continuity is built into the model.
+
+Take the raw candidate \(f_0=(0,1)\). Its residual is \(w\), and the coordinate that must be preserved is \(t=1\). An exact protected answer would require
+\[
+ u_n=-1\quad\text{for every }n.
+\]
+That sequence does not lie in \(\ell^2\). Consequently no answer in \(E\) is both exact and protected.
+
+In fact \(\ker d=\{0\}\). If \(d(u,t)=0\), then \(u_n=-t\) for every \(n\). A constant square-summable sequence must have constant zero, so \(t=0\) and \(u=0\). There is an exact answer after abandoning the preservation rule, namely zero, but it changes \(p(f_0)=1\) to zero. Even a trivial ambiguity space does not imply feasibility.
+
+\subsection{The obstruction class is nonzero while its floor is zero}
+The admissible correction space is \(\ker p=\ell^2\oplus\{0\}\), with correction image
+\[
+ B=d(\ker p)=\ran T
+  =\{r\in\ell^2:(nr_n)_{n\ge1}\in\ell^2\}.
+\]
+It contains every finitely supported sequence, so it is dense in \(R\). But \(w\notin B\), because \((nw_n)_n=(1,1,\ldots)\) is not square summable. Therefore
+\[
+ [w]\ne0\text{ in }R/B,\qquad \nu_B(w)=0.
+\]
+This is the middle row of the preceding classification. The example is a worked Hilbert-space derivation and is not a newly compiled Lean instance. Its finite-coordinate calculations are independently tested. The general floor and exactification results are linked by KS71--KS77 to the retained formal source.
+
+\subsection{A complete calculation of the finite repairs}
+Let \(\mathbf 1_N\) be one in coordinates \(1,\ldots,N\) and zero elsewhere. Put
+\[
+ a_N=(\mathbf 1_N,0),\qquad f_N=f_0-a_N=(-\mathbf 1_N,1).
+\]
+Then \(p(f_N)=1\), and the first \(N\) residual coordinates vanish exactly. The remaining residual and movement satisfy
+\[
+ d(f_N)_n=\begin{cases}0&n\le N,\\1/n&n>N,\end{cases}
+ \qquad \norm{a_N}^2=N,\qquad \norm{f_N}^2=N+1.
+\]
+For every \(N\ge1\), telescoping comparisons give
+\begin{equation}\label{eq:escape-tail}
+ \frac1{N+1}\le\norm{d(f_N)}^2
+ =\sum_{n>N}\frac1{n^2}\le\frac1N.
+\end{equation}
+Indeed \(1/[n(n+1)]\le1/n^2\le1/[n(n-1)]\) for \(n\ge2\). Summing the two telescoping bounds proves \eqref{eq:escape-tail} without numerically evaluating an infinite series.
+
+The residual tends to zero, but the corrections grow like \(\sqrt N\). Successive candidates differ by a unit coordinate, so
+\[
+ \norm{f_{N+1}-f_N}=1.
+\]
+The movement series diverges and the sequence is not Cauchy. This is exactly the hypothesis missing from the summable exactification theorem.
+
+\begin{center}
+\begin{tabular}{@{}rrrr@{}}
+\toprule Repaired coordinates \(N\) & \(\norm{a_N}\) & Residual square interval & Finite inverse gain\\\midrule
+1 & 1 & \([1/2,1]\) & 1\\
+4 & 2 & \([1/5,1/4]\) & 4\\
+16 & 4 & \([1/17,1/16]\) & 16\\
+64 & 8 & \([1/65,1/64]\) & 64\\\bottomrule
+\end{tabular}
+\end{center}
+The intervals bound the \emph{infinite} residual remaining after the displayed repair. The inverse-gain column concerns a different finite operator, defined below. Keeping those meanings separate prevents a finite success from being mistaken for a uniform infinite certificate.
+
+\plate{28_escaping_repair}{The squared correction size is $N$, while the infinite residual square lies between $1/(N+1)$ and $1/N$. The plotted band consists of proved bounds, not a numerical truncation of the tail. Smaller residuals require larger changes and do not produce a convergent candidate.}{fig:escaping-repair}
+
+\subsection{Escape is not an accident of this particular algorithm}
+Suppose an arbitrary protected candidate \((u,1)\) satisfies \(\norm{d(u,1)}\le\varepsilon\). On its first \(N\) coordinates,
+\[
+ \sum_{n=1}^{N}|u_n+1|^2
+ \le N^2\sum_{n=1}^{N}\frac{|u_n+1|^2}{n^2}
+ \le N^2\varepsilon^2.
+\]
+The reverse triangle inequality in \(\R^N\) gives
+\begin{equation}\label{eq:escape-necessity}
+ \norm u\ge\sqrt N-N\varepsilon\qquad(N\ge1).
+\end{equation}
+If a sequence of protected candidates has residual tending to zero, then for each fixed \(N\), its eventual correction norms are at least, for example, \(\sqrt N/2\). Taking \(N\) arbitrarily large shows that these norms must tend to infinity. There is no uniformly bounded family of protected corrections with arbitrarily small residual.
+
+Thus changing the iteration rule cannot fix the obstruction while preserving all the declared requirements. One must change the input, the preservation contract, or the intended ambient class. The inequality is a quantitative obstruction to a bounded repair procedure, rather than a failure report from one chosen recurrence.
+
+\subsection{Every finite operator is invertible, but the gains diverge}
+On \(\R^N\), let
+\[
+ T_N=\operatorname{diag}(1,1/2,\ldots,1/N).
+\]
+It is invertible and \(\norm{T_N^{-1}}=N\) in the Euclidean norm. The upper bound follows by multiplying each coordinate by an integer at most \(N\), and equality is attained at the last coordinate vector. Full finite rank therefore supplies no uniform gain as \(N\to\infty\).
+
+In the infinite space, \(\norm{e_n}=1\) but \(\norm{Te_n}=1/n\), while \(\ker T=\{0\}\). A uniform estimate
+\(\dist(u,\ker T)\le C\norm{Tu}\) would force \(1\le C/n\) for every \(n\), which is impossible. This agrees with the nonclosed range already established directly. The low residual directions do not reflect new exact vectors. They reflect increasingly ill-conditioned approximate directions.
+
+\subsection{A coherent inverse-limit point still exists in a larger space}
+At each finite level, the protected exact equations have the unique solution
+\[
+ (-1,\ldots,-1;1)\in\R^N\oplus\R.
+\]
+Truncation maps the solution at level \(N+1\) to the one at level \(N\). These finite solution sets are singletons, so their inverse limit is also a singleton. Its coordinate description is
+\[
+ (-1,-1,\ldots;1)\in\R^{\N_{>0}}\times\R.
+\]
+The coherent point is not missing. It lies outside the intended \(\ell^2\)-based semantic space.
+
+This example does not contradict finite-fiber existence. It distinguishes the ordinary inverse limit of finite views from the image of a separate comparison map that sends square-summable semantic objects to their finite prefixes. The prescribed coherent point is not in that image. Replacing \(\ell^2\) by all sequences makes the equation solvable, but changes the topology and the class of allowed objects.
+
+\begin{insight}
+\textbf{Four statements, four answers.} Every finite prefix is exactly solvable. The ordinary coherent inverse-limit point exists. Its protected Hilbert realization does not exist. Approximate protected Hilbert realizations have residuals tending to zero only at the cost of unbounded correction size. All four facts hold simultaneously in one explicit model.
+\end{insight}

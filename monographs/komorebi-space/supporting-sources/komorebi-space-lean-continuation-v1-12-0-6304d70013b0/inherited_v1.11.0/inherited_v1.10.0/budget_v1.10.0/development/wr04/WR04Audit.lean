@@ -1,0 +1,20 @@
+import KomorebiSpace.BudgetDuality
+set_option autoImplicit false
+
+#print KomorebiSpace.BudgetDuality.dualValue_le_residual
+#print KomorebiSpace.BudgetDuality.ball_support_eq
+#print KomorebiSpace.BudgetDuality.exists_sharp_witness_of_variational
+#print KomorebiSpace.BudgetDuality.dualValue_le_beta
+#print KomorebiSpace.BudgetDuality.minimizer_variational
+#print KomorebiSpace.BudgetDuality.exists_attaining_dual_witness
+#print KomorebiSpace.BudgetDuality.sharp_budget_duality
+#print KomorebiSpace.BudgetDuality.strict_exclusion_certificate
+
+#print axioms KomorebiSpace.BudgetDuality.dualValue_le_residual
+#print axioms KomorebiSpace.BudgetDuality.ball_support_eq
+#print axioms KomorebiSpace.BudgetDuality.exists_sharp_witness_of_variational
+#print axioms KomorebiSpace.BudgetDuality.dualValue_le_beta
+#print axioms KomorebiSpace.BudgetDuality.minimizer_variational
+#print axioms KomorebiSpace.BudgetDuality.exists_attaining_dual_witness
+#print axioms KomorebiSpace.BudgetDuality.sharp_budget_duality
+#print axioms KomorebiSpace.BudgetDuality.strict_exclusion_certificate

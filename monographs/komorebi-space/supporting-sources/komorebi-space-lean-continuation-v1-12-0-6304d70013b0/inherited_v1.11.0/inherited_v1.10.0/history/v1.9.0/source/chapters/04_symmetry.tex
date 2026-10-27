@@ -1,0 +1,456 @@
+\partnote{Symmetry and effective descent}{A set of solutions forgets the witnesses relating equivalent solutions. The next layer retains those witnesses, their composition, and their automorphisms. Gluing then has to respect the overlap identifications themselves.}
+\section{Nonabelian coherence and relative trivialization}\label{sec:gauge}
+\subsection{Coherent transition labels}
+Fix groups \(G_v\) and restriction homomorphisms \(f^*:G_w\to G_v\), with the same identity and composition laws as before. The groups need not commute and the homomorphisms need not be bijective.
+
+\begin{definition}[Cocycle]
+A cocycle is a family \(c_f\in G_v\) for every \(f:v\to w\), satisfying
+\[
+ c_{1_v}=1,\qquad c_{g\circ f}=c_f f^*(c_g).
+\]
+It determines a twisted view system with maps
+\[
+ T_c(f)(x)=c_f f^*(x).
+\]
+A section of the twisted system satisfies \(x_v=c_f f^*(x_w)\).
+\end{definition}
+The cocycle law says that the transition rules compose coherently. It does not assert that the twisted system has a section. The coherent transition system and a global trivialization of that system are different objects.
+
+For a family \(a=(a_v)\in\prod_vG_v\), define
+\begin{equation}\label{eq:gauge}
+ (a\cdot c)_f=a_vc_f[f^*(a_w)]^{-1}.
+\end{equation}
+
+\begin{proposition}[Gauge action and its groupoid]\label{KS30}
+Equation~\eqref{eq:gauge} defines an action on cocycles. A gauge carrying \(c\) to \(d\) induces an equivalence of twisted section sets by \(x_v\mapsto a_vx_v\). The cocycles and actual gauges form a groupoid: an arrow \(a:c\to d\) followed by \(b:d\to e\) has label \(ba\).
+\end{proposition}
+\begin{proof}
+First, $T_c$ really is a view system. For $f:v\to w$, $g:w\to z$, and $x\in G_z$, the homomorphism and cocycle laws give
+\[
+ T_c(f)T_c(g)(x)=c_ff^*(c_gg^*x)
+ =c_ff^*(c_g)f^*g^*x=c_{g\circ f}(g\circ f)^*x.
+\]
+The identity equation follows from $c_{1_v}=1$. No rearrangement of factors is involved.
+
+Put $d=a\cdot c$. Its identity label is $a_v1a_v^{-1}=1$. For a composite, expand all factors in their original order:
+\[
+\begin{aligned}
+ d_f f^*(d_g)
+ &=a_vc_f[f^*(a_w)]^{-1}
+   f^*(a_wc_g[g^*(a_z)]^{-1})\\
+ &=a_vc_f[f^*(a_w)]^{-1}f^*(a_w)f^*(c_g)
+       [f^*g^*(a_z)]^{-1}\\
+ &=a_vc_{g\circ f}[(g\circ f)^*(a_z)]^{-1}
+ =d_{g\circ f}.
+\end{aligned}
+\]
+Thus the gauge formula preserves the cocycle condition. For two gauges $a,b$, substitution gives
+\[
+ (a\cdot(b\cdot c))_f
+ =a_vb_vc_f[f^*(b_w)]^{-1}[f^*(a_w)]^{-1}
+ =((ab)\cdot c)_f.
+\]
+The reversed order in the two inverse factors is exactly the formula for the inverse of a product. The identity gauge acts trivially.
+
+If $d=a\cdot c$ and $x$ is a section of $T_c$, put $y_v=a_vx_v$. Then
+\[
+ d_ff^*(y_w)
+ =a_vc_f[f^*(a_w)]^{-1}f^*(a_w)f^*(x_w)
+ =a_vx_v=y_v.
+\]
+The inverse map is multiplication by $a_v^{-1}$ at each view, proving an equivalence of the actual section sets.
+
+For the groupoid, an arrow $a:c\to d$ means the equation $a\cdot c=d$. If $b:d\to e$, then $(ba)\cdot c=b\cdot(a\cdot c)=e$, giving composition. The identity label is $1$ and the inverse label is $a^{-1}$. Associativity and the two inverse identities now follow from the corresponding multiplication laws in the product group. The label $ba$ is therefore forced by the order of application, not an arbitrary notational convention.
+\end{proof}
+\source{KS30}
+The action groupoid \(Z^1(\V;G)//\prod_vG_v\) retains comparison witnesses. Its orbit set \(Z^1(\V;G)/\prod_vG_v\) retains only isomorphism classes. There is no reason for the orbit set to be a group in this nonabelian setting.
+
+\subsection{Automorphisms and ambiguity are not the same question}
+The stabilizer of a cocycle is the group of families with
+\[
+ a_v=c_f f^*(a_w)c_f^{-1}.
+\]
+If one gauge \(a:c\to d\) is known, all gauges from \(c\) to \(d\) are uniquely of the form \(ah\), with \(h\in\Stab(c)\). Indeed \(a^{-1}b\) stabilizes \(c\) for every other gauge \(b\). This is the ordinary Hom torsor principle in a groupoid.
+
+That symmetry group must not be confused with the set of global trivializations of one fixed cocycle. The latter will be parametrized by ordinary coherent group elements, after one trivialization has been selected.
+
+\subsection{The relative obstruction without commutativity}
+Prescribe a coherent partial section \(s\) of \(T_c\) on \(U\). The based gauge group is
+\[
+ \mathcal G_U=\{a\in\prod_vG_v:a_u=1\text{ for }u\in U\}.
+\]
+Choose a raw family \(q\) equal to \(s\) on \(U\). Identity elements can be used elsewhere. Normalize the labels by
+\[
+ c^q_f=q_v^{-1}c_f f^*(q_w).
+\]
+Its labels on arrows internal to \(U\) are one. Define the pointed orbit obstruction
+\[
+ \mathfrak o_U(c,s)=[c^q]\in Z^1(\V;G)/\mathcal G_U,
+\]
+whose neutral point is the class of the trivial cocycle.
+
+\begin{theorem}[Nonabelian relative extension]\label{KS31}
+The obstruction is independent of the raw lift. It is neutral exactly when \(s\) extends to a global section of \(T_c\).
+\end{theorem}
+\begin{proof}
+The normalized label $c^q$ is the gauge transform of $c$ by $q^{-1}$, so KS30 makes it a cocycle. If $f:v\to w$ is internal to $U$, the partial-section equation says $q_v=c_ff^*(q_w)$, and therefore $c_f^q=1$ on that arrow.
+
+If $t$ is another raw lift, define $a_v=t_v^{-1}q_v$. On $U$ both lifts equal $s$, so $a_v=1$ and $a\in\mathcal G_U$. Its action is
+\[
+\begin{aligned}
+ (a\cdot c^q)_f
+ &=t_v^{-1}q_v\,q_v^{-1}c_ff^*(q_w)
+       [f^*(t_w^{-1}q_w)]^{-1}\\
+ &=t_v^{-1}c_ff^*(q_w)
+       [f^*(q_w)]^{-1}f^*(t_w)
+ =t_v^{-1}c_ff^*(t_w)=c_f^t.
+\end{aligned}
+\]
+Thus changing the raw lift leaves the based orbit unchanged.
+
+Suppose the orbit is neutral. Equality of orbit classes means there exists an actual based gauge $b$ with $b\cdot c^q=1$. At an arrow $f:v\to w$, this equation is
+\[
+ b_vq_v^{-1}c_ff^*(q_w)[f^*(b_w)]^{-1}=1.
+\]
+Multiply on the left by $q_vb_v^{-1}$. Homomorphic preservation of products then gives
+\[
+ c_ff^*(q_wb_w^{-1})=q_vb_v^{-1}.
+\]
+Therefore $x_v=q_vb_v^{-1}$ is a twisted coherent family. On $U$, $b_v=1$ and $q_v=s_v$, so it extends the prescribed section.
+
+Conversely, suppose $x$ is a global twisted section extending $s$. Put $b_v=x_v^{-1}q_v$. This is based, and direct substitution gives
+\[
+ (b\cdot c^q)_f
+ =x_v^{-1}c_ff^*(x_w)=1,
+\]
+where the last equality is precisely the section equation for $x$. Hence the obstruction is neutral. These arguments establish the result using group cancellation only. In particular they do not assume an additive quotient, a norm on labels, or a decision procedure for finding $b$.
+\end{proof}
+\source{KS31}
+The orbit is defined from actual cocycles and an actual group action. It is not a Boolean test defined to be neutral precisely when an extension exists. Deciding orbit membership in arbitrary groups remains a separate problem.
+
+Let
+\[
+ H_U=\{h:f^*(h_w)=h_v\text{ for every }f,\ h|_U=1\}.
+\]
+
+\begin{theorem}[The nonabelian extension torsor]\label{KS32}
+Given one extension \(x_0\), the map \(h\mapsto x_0h\) is an equivalence from \(H_U\) to the extension set. The extension is unique if and only if the obstruction is neutral and \(H_U\) is trivial.
+\end{theorem}
+\begin{proof}
+Take \(h\in H_U\). Its pointwise product with the chosen extension \(x_0\) agrees with the prescribed data on \(U\), because \(h|_U=1\). For an arrow \(f:v\to w\), the coefficient homomorphism preserves multiplication and the two coherence equations give
+\[
+ c_f f^*((x_0)_wh_w)
+ =c_f f^*((x_0)_w)f^*(h_w)
+ =(x_0)_vh_v.
+\]
+Thus \(x_0h\) is another twisted extension.
+
+Conversely, if \(x\) is a twisted extension of the same prescribed data, define \(h_v=(x_0)_v^{-1}x_v\). On \(U\) its value is one. For every arrow,
+\[
+ \begin{aligned}
+ h_v
+ &=[c_f f^*((x_0)_w)]^{-1}[c_f f^*(x_w)]\\
+ &=f^*((x_0)_w)^{-1}c_f^{-1}c_f f^*(x_w)\\
+ &=f^*((x_0)_w^{-1}x_w)=f^*(h_w).
+ \end{aligned}
+\]
+The cancellation uses inverse multiplication in its actual order. No commuting factors have been moved past one another. Hence \(h\in H_U\). Pointwise group cancellation shows that \(h\mapsto x_0h\) and \(x\mapsto x_0^{-1}x\) are inverse maps.
+
+The extension set is nonempty precisely when the earlier orbit obstruction is neutral. Once it is nonempty, the displayed bijection makes it a singleton precisely when \(H_U\) has only its identity element. Both conditions are needed for unique existence. Changing the chosen extension changes the parametrization, not the extension set or the criterion.
+\end{proof}
+\source{KS32}
+The additive theory is recovered by applying a multiplicative type tag to an additive view system and choosing the trivial cocycle. The normalized label then becomes \(f^*q_w-q_v\). The source proves agreement of the actual extension sets and vanishing criteria. It does not identify the whole nonabelian orbit set with every element of the larger additive arrow residual quotient.
+
+\subsection{A small noncommutative model}
+\begin{example}[A \(C_2\) loop with \(S_3\) coefficients]\label{KS33}
+Take one view with a loop \(\sigma\) satisfying \(\sigma^2=1\), and constant coefficients in a group \(H\). A cocycle is determined by an involution \(p\in H\). Gauge equivalence is conjugacy, and its automorphisms form the centralizer of \(p\).
+
+For \(H=S_3\), the involutions are the identity and the three transpositions. There are exactly two orbit classes. The identity cocycle has automorphism group \(S_3\), which is noncommutative. A nonidentity involution gives a coherent cocycle whose regular twisted section equation \(x=px\) has no solution.
+\end{example}
+\begin{proof}
+The only nontrivial cocycle relation is \(p^2=1\). At a single view the gauge action is \(p\mapsto apa^{-1}\). All three transpositions are conjugate and none is conjugate to the identity. The stabilizer is therefore the centralizer. Finally \(x=px\) implies \(p=1\) after multiplication by \(x^{-1}\).
+\end{proof}
+\source{KS33}
+The example makes an important boundary visible. A cocycle can exist and glue as an object even when it admits no global trivializing section. Stackhood will concern the former gluing problem, not a claim that every cocycle becomes trivial.
+
+\plate{06_groupoid}{The orbit set sees two classes in the \(C_2\)-to-\(S_3\) example. The groupoid also retains the arrows between conjugate transpositions and all automorphisms. Collapsing the arrows loses information that matters in descent.}{fig:groupoid}
+
+\chap{Effective gluing of objects and their identifications}\label{sec:descent}
+\subsection{Why pairwise agreement is not the right datum}
+For objects with symmetry, local descriptions need not be literally equal on overlaps. They may instead come with specified isomorphisms. Those isomorphisms must satisfy their own composition law. It is not enough to know that some isomorphism exists for each pair.
+
+Let \(U_i\) be full patches in \(\V\). Assume the composition cover condition
+\begin{equation}\label{eq:compositioncover}
+ \forall(v\xrightarrow f w\xrightarrow g z),\quad
+ \exists i:\ v,w,z\in U_i.
+\end{equation}
+By inserting identity arrows, this implies coverage of objects and arrows.
+
+A descent datum consists of local cocycles \(c_i\) and overlap gauges \(a_{ij}(v)\) with
+\begin{align}
+ c_j(f)&=a_{ij}(v)c_i(f)[f^*a_{ij}(w)]^{-1},\label{eq:localgauge}\\
+ a_{ik}(v)&=a_{jk}(v)a_{ij}(v).\label{eq:triple}
+\end{align}
+The triple equation implies \(a_{ii}=1\) and \(a_{ji}=a_{ij}^{-1}\). A morphism of descent data is a family of local gauges \(r_i\) satisfying
+\[
+ r_j(v)a_{ij}(v)=a'_{ij}(v)r_i(v).
+\]
+These objects and arrows form a groupoid.
+
+\begin{theorem}[Effective cocycle descent]\label{KS34}
+Under \eqref{eq:compositioncover}, restriction is an equivalence between the global cocycle gauge groupoid and the groupoid of descent data. The overlap gauges supplied in the datum are realized, not discarded.
+\end{theorem}
+\begin{proof}
+\emph{Step 1: normalize the supplied identifications.} The triple-overlap equation with all indices equal gives $a_{ii}=a_{ii}a_{ii}$, hence $a_{ii}=1$. With indices $i,j,i$ it gives $a_{ji}a_{ij}=1$, hence $a_{ji}=a_{ij}^{-1}$. Composition coverage implies object coverage by inserting identity arrows. Choose a containing patch $\kappa(v)$ for each view and put
+\[
+ b_i(v)=a_{\kappa(v),i}(v)\quad(v\in U_i).
+\]
+At a point of $U_i\cap U_j$, the triple law, now on patches $\kappa(v),i,j$, gives
+\[
+ b_j(v)=a_{ij}(v)b_i(v).                                    \tag{*}
+\]
+The two endpoints of an arrow may have different reference patches. No common reference patch is being assumed.
+
+\emph{Step 2: obtain literal matching labels.} Define
+\[
+ \widetilde c_i(f)=b_i(v)^{-1}c_i(f)f^*(b_i(w))
+ \quad(f:v\to w\text{ in }U_i).
+\]
+This is a gauge transform and hence a cocycle on $U_i$. If the arrow lies also in $U_j$, substitute the original overlap equation and (*) at its two endpoints:
+\[
+\begin{aligned}
+ \widetilde c_j(f)
+ &=b_i(v)^{-1}a_{ij}(v)^{-1}
+   a_{ij}(v)c_i(f)[f^*a_{ij}(w)]^{-1}
+   f^*(a_{ij}(w)b_i(w))\\
+ &=b_i(v)^{-1}c_i(f)f^*(b_i(w))
+ =\widetilde c_i(f).
+\end{aligned}
+\]
+Every cancellation is between neighboring inverse factors. Commutativity is not required.
+
+\emph{Step 3: construct the global cocycle.} Every arrow is contained in a patch, again by inserting an identity in a composable pair. Define $c_f$ to be $\widetilde c_i(f)$ in any such patch. Step 2 proves independence. For an identity arrow, choose a patch through its view to obtain $c_{1_v}=1$. For $f:v\to w$ and $g:w\to z$, composition coverage supplies a patch containing all three vertices. Fullness places $f$, $g$, and $g\circ f$ in that same patch. Its cocycle law therefore proves
+\[
+ c_{g\circ f}=\widetilde c_i(g\circ f)
+ =\widetilde c_i(f)f^*(\widetilde c_i(g))=c_ff^*(c_g).
+\]
+This is the exact point where composition coverage, rather than arrow coverage alone, is used.
+
+Undoing the normalization proves
+\[
+ b_i(v)c_f[f^*(b_i(w))]^{-1}=c_i(f).
+\]
+Together with (*), these gauges constitute an isomorphism from the restriction of $c$ to the supplied descent datum. They implement its original overlaps, proving essential surjectivity of restriction.
+
+\emph{Step 4: retain every morphism.} Let $c,d$ be global cocycles. Their canonical restrictions have identity overlap gauges. A morphism between those restrictions is consequently a family $r_i$ satisfying $r_j(v)=r_i(v)$ on each overlap. Assemble $r_v$ from any containing patch. For an arrow choose a patch containing both endpoints. Its gauge equation proves
+\[
+ d_f=r_vc_f[f^*(r_w)]^{-1}.
+\]
+Thus $r$ is a global gauge. Its restriction is the original family. Conversely, assembling the restrictions of a global gauge preserves every coordinate and returns that gauge. Restriction is therefore bijective on each Hom set, not merely injective on isomorphism classes. This is full faithfulness.
+
+\emph{Step 5: obtain an equivalence.} For each descent object choose the global cocycle and isomorphism constructed above. For an arrow between descent objects, conjugate it by these two chosen isomorphisms and use the unique preimage under the Hom bijection of Step 4. This defines the arrow map of a quasi-inverse. Uniqueness of the preimage verifies its identity and composition laws, and the chosen isomorphisms provide the comparison to the identity functor. Hence the restriction functor is an equivalence of groupoids. Different patch choices can alter the representative but not this conclusion.
+\end{proof}
+\source{KS34}
+
+\subsection{The correct uniqueness statement}
+Suppose \((c,b_i)\) and \((c',b'_i)\) realize the same descent datum. The only possible compatible comparison is
+\[
+ g_v=b'_i(v)^{-1}b_i(v),
+\]
+using any patch through \(v\). The overlap identities make it independent of the patch, and \(b'_ig=b_i\). It is therefore the unique global comparison respecting the fixed local identifications.
+
+This is not a statement that the underlying cocycle has no automorphisms. Those automorphisms can reappear when the local identifications are forgotten. Nor does the construction choose one representative independently of every reference patch. It proves that the choices are related by the appropriate unique comparison.
+
+\subsection{A failed triple}
+Let \(t\ne1\) be an involution and ask for frames \(b_0,b_1,b_2\) satisfying
+\[
+ b_1=tb_0,\qquad b_2=tb_1,\qquad b_2=tb_0.
+\]
+The first two give \(b_2=b_0\), while the third forces \(t=1\). Each displayed transition is individually invertible, but they cannot be the overlap identifications of a global frame. The defect lies in the triple relation.
+
+\plate{07_cover}{Object coverage, arrow coverage, and composition coverage are distinct. The proper two-view patches on a three-view chain see every arrow but no patch sees the relation \(0\to1\to2\). The four proper three-view patches on a four-view chain do cover every composable pair.}{fig:cover}
+
+\chap{A genuine stack on the composition site}\label{sec:stack}
+The preceding theorem can be placed in a standard site, rather than called stack-like. We use the usual effective-descent meaning of a stack~\cite{stacks-stack,mathlib-stack}. The base of this site is the inclusion poset of full patches
+\[
+ \mathcal P(\V)=(\operatorname{Set}(\Ob\V),\subseteq).
+\]
+This patch category is different from the original category of views.
+
+\subsection{The topology is defined without assuming effectivity}
+For a composable pair \(q=(v\xrightarrow f w\xrightarrow g z)\), let its support be \(|q|=\{v,w,z\}\). A sieve \(\mathcal R\) on \(W\) is covering when
+\begin{equation}\label{eq:site}
+ |q|\subseteq W\quad\Longrightarrow\quad
+ (|q|\hookrightarrow W)\in\mathcal R
+ \quad\text{for every composable }q.
+\end{equation}
+This condition depends only on the view category, not on the coefficient groups or on a promised global realization.
+
+\begin{proposition}[The composition topology]\label{KS35}
+Condition~\eqref{eq:site} defines a Grothendieck topology \(J_{\mathrm{comp}}\). The sieve generated by a family of inclusions \(U_i\subseteq W\) is covering exactly when the family covers every composition support in \(W\).
+\end{proposition}
+\begin{proof}
+In the inclusion poset, identify a sieve on $W$ with a downward-closed collection of subsets of $W$. Pullback along $Z\subseteq W$ consists of those subsets of $Z$ that were already members of the original sieve. We verify the three topology axioms using this description.
+
+The maximal sieve contains every subset of $W$, hence every composition support. For stability under pullback, let $\mathcal R$ cover $W$ and let $q$ be a composable pair whose support lies in $Z\subseteq W$. The same pair lies in the full patch $W$, so $|q|\in\mathcal R$. Since $|q|\subseteq Z$, it belongs to the pulled-back sieve on $Z$. Thus that sieve covers $Z$.
+
+For transitivity, suppose $\mathcal R$ covers $W$, and that for every $U\in\mathcal R$ the pullback of a sieve $\mathcal T$ to $U$ covers $U$. Fix a composable pair $q$ in $W$. Its support $S=|q|$ belongs to $\mathcal R$. Since patches are full, $q$ is also a composable pair in $S$. The covering condition for the pullback of $\mathcal T$ to $S$ therefore puts the identity inclusion $S\subseteq S$ in that pullback. By the definition of pullback, this says $S\in\mathcal T$. It holds for every $q$, so $\mathcal T$ covers $W$.
+
+Finally, the sieve generated by $U_i\subseteq W$ consists exactly of the subpatches $Z$ contained in at least one $U_i$. One inclusion follows because a sieve contains all restrictions of its generators. The reverse inclusion follows because this collection is itself downward closed and contains all generators, hence is the smallest such sieve. Consequently a support belongs to the generated sieve exactly when some $U_i$ contains all its endpoints. This proves the family characterization. When $W$ is empty, there are no composable pairs to test, so even the empty sieve is covering.
+\end{proof}
+\source{KS35}
+Intersections of a covering family with a subpatch remain covering. Replacing each member by a covering family again gives a cover. Identities imply coverage of single views and arrows. The empty patch admits the empty cover.
+
+\subsection{The actual patch pseudofunctor}
+On a patch \(W\), use
+\[
+ \mathfrak K_G(W)=Z^1(\V|_W;G|_W)//\prod_{v\in W}G_v.
+\]
+Restriction keeps the existing cocycle values and gauge values on the smaller patch. It first gives a strict category valued functor on the opposite patch poset. Its standard pseudofunctor form has identity comparison isomorphisms, with the required coherence laws.
+
+\begin{theorem}[Stackhood on the composition site]\label{KS36}
+The patch pseudofunctor \(\mathfrak K_G\) is a stack for \(J_{\mathrm{comp}}\). It satisfies the standard condition of descent for morphisms and effective descent for objects on every covering sieve.
+\end{theorem}
+\begin{proof}
+We use the equivalence-of-descent-categories formulation of stackhood for the already constructed patch pseudofunctor. Its restriction maps act on actual cocycle labels and gauge values. Their identity and composition laws have been proved, so the descent condition is applied to a specified pseudofunctor, not assumed as part of its definition.
+
+\emph{From standard descent data to overlap labels.} For a covering family $(U_i\subseteq W)$, standard descent data provide local objects and comparison gauges on common subpatches, natural under further restriction. At a view $v\in U_i\cap U_j$, restrict the comparison to the singleton patch $\{v\}$ and call its value $a_{ij}(v)$. To verify the gauge equation along $f:v\to w$ in an overlap, use the comparison on $U_i\cap U_j$, which is a full patch containing the arrow. Naturality identifies its two endpoint values with the singleton values. Its own gauge equation then becomes \eqref{eq:localgauge}. Evaluating the standard triple-comparison identity at a singleton gives \eqref{eq:triple}. Thus these labels form the concrete descent datum of KS34.
+
+\emph{From the concrete realization back to standard data.} By KS34 there is a global cocycle $c$ and local gauges $b_i$ implementing these overlaps. On any common subpatch $Z\subseteq U_i\cap U_j$, the required equation between gauge arrows is an equality of their values at every $v\in Z$. At such a view it is $b_j(v)=a_{ij}(v)b_i(v)$, already proved by the construction. Equality of coordinate functions proves equality of the arrows on $Z$. Thus every standard common-subpatch equation holds, not only the equations on singleton tests. This gives an isomorphism from the standard restriction of $c$ to the original standard descent object.
+
+\emph{Morphisms.} A standard morphism between restrictions of global objects has local gauge components. Its comparison equations at singleton patches show that these components agree on overlaps. The Hom gluing map from KS34 yields a unique global gauge. Conversely, a global gauge restricts to those components and satisfies all common-subpatch equations. Restriction and gluing are inverse on every Hom set. Standard restriction is therefore fully faithful as well as essentially surjective, hence an equivalence.
+
+\emph{Every covering sieve.} Let $\mathcal R$ be an arbitrary covering sieve on $W$. Index a family by all its member inclusions $U\subseteq W$. Each composition support belongs to this family by the covering definition, so it is a composition cover. Its generated sieve is exactly $\mathcal R$: one inclusion uses that $\mathcal R$ is downward closed, and the other uses each member as its own generator. The family argument therefore proves the descent equivalence on the original sieve. Applying it to every covering sieve proves both descent of morphisms and effectiveness of objects. These are the required standard stack conditions \cite{stacks-stack,mathlib-stack}.
+\end{proof}
+\source{KS36}
+The principal source declaration is \code{GroupViewSystem.patch_isStack}. Its target is mathlib's \code{Pseudofunctor.IsStack}, not a project predicate that repeats the conclusion as an assumption.
+
+\subsection{The cover is nontrivial, but specific}
+On a four-view chain, take the four patches obtained by deleting one vertex. All patches are proper, yet every composable pair has at most three endpoints and lies in one of them. The theorem genuinely glues pieces smaller than the whole object.
+
+On the three-view chain, the analogous proper patches cover each object and each arrow but miss the support of \(0\to1\to2\). They do not form a cover in this topology. Consequently the theorem is neither vacuous nor an unrestricted gluing principle.
+
+\begin{scopebox}
+\textbf{Exact scope.} This is an ordinary stack of strict group valued cocycle realizations on a specified combinatorial site. It is not an infinity-stack, a universal heterogeneous atlas, or an arithmetic existence theorem. The stack theorem glues coherent cocycles with their overlap isomorphisms. It does not assert that every resulting cocycle has a global trivialization.
+\end{scopebox}
+
+\chap{Equivalent presentations and identified boundaries}\label{sec:relative}
+\subsection{Transporting the same question}
+Let \(H:\V\to\W\) be part of a category equivalence, with inverse \(L\) and counit \(\varepsilon:HL\Rightarrow\id_\W\). Pull a view system \(F\) on \(\W\) back along \(H\). Sampling a global section gives \((H^*x)_v=x_{Hv}\).
+
+\begin{proposition}[Equivalence of section spaces]\label{KS37}
+Pullback induces \(\Gamma(F)\simeq\Gamma(H^*F)\). If \(U\subseteq\Ob\W\) is closed under isomorphism and \(U'=H^{-1}U\), it also induces
+\[
+ \Ext_U^F(s)\simeq\Ext_{U'}^{H^*F}(H^*s).
+\]
+Existence and uniqueness of the prescribed extension are preserved and reflected.
+\end{proposition}
+\begin{proof}
+Write the unit of the equivalence as $\eta:I_\V\Rightarrow LH$, and take the unit and counit with their triangle identities. Set $t_w=\varepsilon_w^{-1}:w\to HLw$. Given $y\in\Gamma(H^*F)$, define
+\[
+ (Ry)_w=F(t_w)y_{Lw}.
+\]
+For an arrow $f:w\to w'$, naturality of the inverse counit states
+\[
+ HL(f)\,t_w=t_{w'}f.
+\]
+Contravariance of $F$ and coherence of $y$ therefore give
+\[
+\begin{aligned}
+ F(f)(Ry)_{w'}
+ &=F(f)F(t_{w'})y_{Lw'}\\
+ &=F(t_w)F(HL(f))y_{Lw'}
+ =F(t_w)y_{Lw}=(Ry)_w.
+\end{aligned}
+\]
+Thus recovery gives an actual coherent section.
+
+If $x\in\Gamma(F)$, coherence along $t_w$ gives
+\[
+ (RH^*x)_w=F(t_w)x_{HLw}=x_w.
+\]
+For the other composite, the triangle identity says $t_{Hv}=H(\eta_v)$. Coherence of $y$ along $\eta_v:v\to LHv$ yields
+\[
+ (H^*Ry)_v=F(t_{Hv})y_{LHv}=F(H\eta_v)y_{LHv}=y_v.
+\]
+These coordinate equations prove both inverse identities.
+
+For the relative claim, pullback clearly sends an extension of $s$ to an extension of $H^*s$ on $U'=H^{-1}U$. Conversely suppose $y$ extends $H^*s$. If $w\in U$, the isomorphism $w\cong HLw$ and isomorphism closure imply $HLw\in U$. Hence $Lw\in U'$ and $y_{Lw}=s_{HLw}$. Both endpoints of $t_w$ lie in $U$, so partial coherence gives
+\[
+ (Ry)_w=F(t_w)s_{HLw}=s_w.
+\]
+Recovery therefore preserves the required boundary. The two inverse identities remain valid on the subsets of extensions. Bijections preserve nonemptiness and identify any two elements exactly when their images are equal, proving preservation and reflection of existence and uniqueness.
+\end{proof}
+\source{KS37}
+The coefficients really are pulled back. This does not compare unrelated coefficient systems simply because their diagrams look alike. Isomorphism closure is a sufficient general hypothesis for the relative statement. The theorem does not assert that every unsaturated domain fails.
+
+For group coefficients, the invisible coherent groups \(H_U\) are transported by a multiplicative equivalence, and the parameterizations \(x_0h\) commute with pullback. Thus feasibility and ambiguity are both retained. This is more than a comparison of the number of extensions. It is not an assertion that every possible based gauge orbit set is presentation independent.
+
+\subsection{Why a boundary must retain its identification}
+Let \(R:\mathcal C\to\mathcal D\) be a functor between groupoids, and fix \(b\in\mathcal D\). A realization over \(b\) should include a chosen isomorphism to \(b\), rather than require literal equality of representatives.
+
+\begin{definition}[Marked realization groupoid]
+The objects of \(\mathcal E_b(R)\) are pairs \((x,\phi)\), with \(x\in\mathcal C\) and \(\phi:Rx\xrightarrow{\sim}b\). An arrow \((x,\phi)\to(y,\psi)\) is an arrow \(a:x\to y\) with \(\psi R(a)=\phi\).
+\end{definition}
+Composition and inverses preserve this equation, so this is a groupoid. It is the explicit groupoid homotopy fiber construction, without invoking a higher categorical interface.
+
+\begin{proposition}[Existence and invisible automorphisms]\label{KS38}
+The groupoid \(\mathcal E_b(R)\) is nonempty exactly when \(b\) is in the essential image of \(R\). An automorphism of \((x,\phi)\) is an automorphism \(a\) of \(x\) satisfying \(R(a)=1_{Rx}\).
+\end{proposition}
+\begin{proof}
+The first assertion is the object definition. For the second, the boundary equation is \(\phi R(a)=\phi\). Cancel the isomorphism \(\phi\). Conversely \(R(a)=1\) makes the equation hold.
+\end{proof}
+\source{KS38}
+This retains precisely the symmetries invisible at the identified boundary. It avoids freezing arbitrary representative coordinates and then mistaking the result for an invariant realization problem.
+
+\plate{08_marked}{The chosen boundary identification is part of a realization. A comparison must commute with it. Under an equivalent presentation, the comparison square may commute through an isomorphism rather than a literal equality, and the marked realization groupoid is still transported correctly.}{fig:marked}
+
+\subsection{Weakly commuting squares are enough}
+Suppose \(E:\mathcal C\to\mathcal C'\) and \(K:\mathcal D\to\mathcal D'\) are equivalences, with functors \(R,R'\) and a natural isomorphism
+\[
+ \sigma:KR\xRightarrow{\sim}R'E.
+\]
+The square is not required to commute literally.
+
+\begin{theorem}[Invariance of the marked realization problem]\label{KS39}
+The map
+\[
+ (x,\phi)\longmapsto(Ex,K(\phi)\sigma_x^{-1}),\qquad a\longmapsto E(a)
+\]
+defines an equivalence \(\mathcal E_b(R)\simeq\mathcal E_{Kb}(R')\).
+\end{theorem}
+\begin{proof}
+For an object $(x,\phi)$ put $\beta_x=K(\phi)\sigma_x^{-1}:R'Ex\to Kb$. This is an isomorphism of the required type. If $a:(x,\phi)\to(y,\psi)$, naturality of $\sigma$ says
+\[
+ R'E(a)\sigma_x=\sigma_yKR(a),
+ \qquad \sigma_y^{-1}R'E(a)=KR(a)\sigma_x^{-1}.
+\]
+Consequently
+\[
+ \beta_yR'E(a)
+ =K(\psi)KR(a)\sigma_x^{-1}
+ =K(\psi R(a))\sigma_x^{-1}
+ =K(\phi)\sigma_x^{-1}=\beta_x.
+\]
+So $E(a)$ is a marked arrow. Identity and composition are preserved because the underlying arrow map is that of the functor $E$.
+
+To prove full faithfulness, start with a marked arrow $u:Ex\to Ey$ between the transported objects. Full faithfulness of $E$ gives a unique $a:x\to y$ with $E(a)=u$. Its marked equation, rewritten by the naturality identity above, is
+\[
+ K(\psi R(a))\sigma_x^{-1}=K(\phi)\sigma_x^{-1}.
+\]
+Cancel the isomorphism on the right and use faithfulness of $K$ to obtain $\psi R(a)=\phi$. Thus the lifted arrow is marked. Uniqueness of the underlying lift also proves uniqueness as a marked arrow, giving a bijection on every Hom set.
+
+For essential surjectivity, let $(y,\psi)$ be a target realization. Choose $x$ and an isomorphism $i:Ex\to y$, using essential surjectivity of $E$. Fullness of $K$ lifts the well-typed composite
+\[
+ KRx\xrightarrow{\sigma_x}R'Ex
+ \xrightarrow{R'(i)}R'y\xrightarrow{\psi}Kb
+\]
+to an arrow $\phi:Rx\to b$. Since $\mathcal D$ is a groupoid, $\phi$ is automatically an isomorphism. Its image satisfies $K(\phi)=\psi R'(i)\sigma_x$, hence $\beta_x=\psi R'(i)$. This is precisely the condition for $i$ to be an arrow from the transported realization to $(y,\psi)$. It is an isomorphism because all categories involved are groupoids.
+
+We have verified full faithfulness and essential surjectivity of the specified transport functor. Choosing these preimages and lifting arrows through the Hom bijections constructs a quasi-inverse, as in KS34, proving the claimed equivalence. No literal equality $KR=R'E$ was used.
+\end{proof}
+\source{KS39}
+Apply this to the actual restriction functors between cocycle patch groupoids and the equivalences induced by an equivalent view presentation. The full realization problem, including comparison witnesses and automorphisms, is transported.
+
+Replacing \(b\) by an isomorphic boundary \(b'\) also gives an equivalence, by composing the identification with \(b\to b'\). For \(R=\id\), the marked realization groupoid has center \((b,1_b)\), and between \((x,\phi)\) and \((y,\psi)\) there is exactly one compatible arrow \(\psi^{-1}\phi\). This is a useful example of contractible realization data, not a claim that the original groupoid has no symmetries.
+

@@ -1,0 +1,183 @@
+@KomorebiSpace.CoordinateCovector.normalResidual.{u_1,
+    u_2} : {m : Type u_1} →
+  {n : Type u_2} →
+    [Fintype.{u_1} m] →
+      [Fintype.{u_2} n] → Matrix.{u_1, u_2, 0} m n ℝ → Matrix.{u_2, u_2, 0} n n ℝ → ℝ → (n → ℝ) → (m → ℝ) → n → ℝ
+'KomorebiSpace.CoordinateCovector.normalResidual' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.gram_matrix_basis_change.{u_1,
+    u_2} : ∀ {m : Type u_1} {n : Type u_2} [inst : Fintype.{u_1} m] [inst_1 : Fintype.{u_2} n]
+  (B : Matrix.{u_1, u_2, 0} m n ℝ) (C : Matrix.{u_2, u_2, 0} n n ℝ),
+  Eq.{u_2 + 1}
+    (HMul.hMul.{max u_1 u_2, max u_1 u_2, u_2}
+      (Matrix.transpose.{0, u_1, u_2} (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} B C))
+      (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} B C))
+    (HMul.hMul.{u_2, u_2, u_2}
+      (HMul.hMul.{u_2, u_2, u_2} (Matrix.transpose.{0, u_2, u_2} C)
+        (HMul.hMul.{max u_1 u_2, max u_1 u_2, u_2} (Matrix.transpose.{0, u_1, u_2} B) B))
+      C)
+'KomorebiSpace.CoordinateCovector.gram_matrix_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.observation_matrix_basis_change.{u_1, u_2,
+    u_3} : ∀ {m : Type u_1} {n : Type u_2} {k : Type u_3} [inst : Fintype.{u_1} m] [inst_1 : Fintype.{u_2} n]
+  (d : Matrix.{u_3, u_1, 0} k m ℝ) (B : Matrix.{u_1, u_2, 0} m n ℝ) (C : Matrix.{u_2, u_2, 0} n n ℝ),
+  Eq.{max (u_2 + 1) (u_3 + 1)}
+    (HMul.hMul.{max u_1 u_3, max u_1 u_2, max u_2 u_3} d (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} B C))
+    (HMul.hMul.{max u_2 u_3, u_2, max u_2 u_3} (HMul.hMul.{max u_1 u_3, max u_1 u_2, max u_2 u_3} d B) C)
+'KomorebiSpace.CoordinateCovector.observation_matrix_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.transpose_mulVec_dotProduct.{u_1,
+    u_2} : ∀ {m : Type u_1} {n : Type u_2} [inst : Fintype.{u_1} m] [inst_1 : Fintype.{u_2} n]
+  (C : Matrix.{u_1, u_2, 0} m n ℝ) (q : m → ℝ) (v : n → ℝ),
+  Eq.{1} (dotProduct.{0, u_2} (Matrix.mulVec.{0, u_2, u_1} (Matrix.transpose.{0, u_1, u_2} C) q) v)
+    (dotProduct.{0, u_1} q (Matrix.mulVec.{0, u_1, u_2} C v))
+'KomorebiSpace.CoordinateCovector.transpose_mulVec_dotProduct' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.change_mul_inverse_mulVec.{u_1} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n]
+  [inst_1 : DecidableEq.{u_1 + 1} n] (C : Matrix.{u_1, u_1, 0} n n ℝ),
+  IsUnit.{u_1} C →
+    ∀ (c : n → ℝ), Eq.{u_1 + 1} (Matrix.mulVec.{0, u_1, u_1} C (Matrix.mulVec.{0, u_1, u_1} (Inv.inv.{u_1} C) c)) c
+'KomorebiSpace.CoordinateCovector.change_mul_inverse_mulVec' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.correction_basis_change.{u_1,
+    u_2} : ∀ {m : Type u_1} {n : Type u_2} [inst : Fintype.{u_2} n] [inst_1 : DecidableEq.{u_2 + 1} n]
+  (B : Matrix.{u_1, u_2, 0} m n ℝ) (C : Matrix.{u_2, u_2, 0} n n ℝ),
+  IsUnit.{u_2} C →
+    ∀ (c : n → ℝ),
+      Eq.{u_1 + 1}
+        (Matrix.mulVec.{0, u_1, u_2} (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} B C)
+          (Matrix.mulVec.{0, u_2, u_2} (Inv.inv.{u_2} C) c))
+        (Matrix.mulVec.{0, u_1, u_2} B c)
+'KomorebiSpace.CoordinateCovector.correction_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.coordinates_basis_change.{u_1,
+    u_2} : ∀ {m : Type u_1} {n : Type u_2} [inst : Fintype.{u_2} n] [inst_1 : DecidableEq.{u_2 + 1} n]
+  (B : Matrix.{u_1, u_2, 0} m n ℝ),
+  Function.Injective.{u_2 + 1, u_1 + 1} (Matrix.mulVec.{0, u_1, u_2} B) →
+    ∀ (C : Matrix.{u_2, u_2, 0} n n ℝ),
+      IsUnit.{u_2} C →
+        ∀ (c c' : n → ℝ),
+          Eq.{u_1 + 1} (Matrix.mulVec.{0, u_1, u_2} (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} B C) c')
+              (Matrix.mulVec.{0, u_1, u_2} B c) ↔
+            Eq.{u_2 + 1} c' (Matrix.mulVec.{0, u_2, u_2} (Inv.inv.{u_2} C) c)
+'KomorebiSpace.CoordinateCovector.coordinates_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.normalResidual_basis_change.{u_1,
+    u_2} : ∀ {m : Type u_1} {n : Type u_2} [inst : Fintype.{u_1} m] [inst_1 : Fintype.{u_2} n]
+  [inst_2 : DecidableEq.{u_2 + 1} n] (S : Matrix.{u_1, u_2, 0} m n ℝ) (G C : Matrix.{u_2, u_2, 0} n n ℝ),
+  IsUnit.{u_2} C →
+    ∀ (α : ℝ) (c : n → ℝ) (r : m → ℝ),
+      Eq.{u_2 + 1}
+        (KomorebiSpace.CoordinateCovector.normalResidual.{u_1, u_2} (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} S C)
+          (HMul.hMul.{u_2, u_2, u_2} (HMul.hMul.{u_2, u_2, u_2} (Matrix.transpose.{0, u_2, u_2} C) G) C) α
+          (Matrix.mulVec.{0, u_2, u_2} (Inv.inv.{u_2} C) c) r)
+        (Matrix.mulVec.{0, u_2, u_2} (Matrix.transpose.{0, u_2, u_2} C)
+          (KomorebiSpace.CoordinateCovector.normalResidual.{u_1, u_2} S G α c r))
+'KomorebiSpace.CoordinateCovector.normalResidual_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.inverse_gram_basis_change.{u_1} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n]
+  [inst_1 : DecidableEq.{u_1 + 1} n] (G C : Matrix.{u_1, u_1, 0} n n ℝ),
+  Eq.{u_1 + 1}
+    (Inv.inv.{u_1} (HMul.hMul.{u_1, u_1, u_1} (HMul.hMul.{u_1, u_1, u_1} (Matrix.transpose.{0, u_1, u_1} C) G) C))
+    (HMul.hMul.{u_1, u_1, u_1} (HMul.hMul.{u_1, u_1, u_1} (Inv.inv.{u_1} C) (Inv.inv.{u_1} G))
+      (Matrix.transpose.{0, u_1, u_1} (Inv.inv.{u_1} C)))
+'KomorebiSpace.CoordinateCovector.inverse_gram_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.inverse_gram_quadratic_basis_change.{u_1} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n]
+  [inst_1 : DecidableEq.{u_1 + 1} n] (G C : Matrix.{u_1, u_1, 0} n n ℝ),
+  IsUnit.{u_1} C →
+    ∀ (q : n → ℝ),
+      Eq.{1}
+        (dotProduct.{0, u_1} (Matrix.mulVec.{0, u_1, u_1} (Matrix.transpose.{0, u_1, u_1} C) q)
+          (Matrix.mulVec.{0, u_1, u_1}
+            (Inv.inv.{u_1}
+              (HMul.hMul.{u_1, u_1, u_1} (HMul.hMul.{u_1, u_1, u_1} (Matrix.transpose.{0, u_1, u_1} C) G) C))
+            (Matrix.mulVec.{0, u_1, u_1} (Matrix.transpose.{0, u_1, u_1} C) q)))
+        (dotProduct.{0, u_1} q (Matrix.mulVec.{0, u_1, u_1} (Inv.inv.{u_1} G) q))
+'KomorebiSpace.CoordinateCovector.inverse_gram_quadratic_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.normalResidual_certificate_basis_change.{u_1,
+    u_2} : ∀ {m : Type u_1} {n : Type u_2} [inst : Fintype.{u_1} m] [inst_1 : Fintype.{u_2} n]
+  [inst_2 : DecidableEq.{u_2 + 1} n] (S : Matrix.{u_1, u_2, 0} m n ℝ) (G C : Matrix.{u_2, u_2, 0} n n ℝ),
+  IsUnit.{u_2} C →
+    ∀ (α : ℝ) (c : n → ℝ) (r : m → ℝ),
+      have q' :=
+        KomorebiSpace.CoordinateCovector.normalResidual.{u_1, u_2} (HMul.hMul.{max u_1 u_2, u_2, max u_1 u_2} S C)
+          (HMul.hMul.{u_2, u_2, u_2} (HMul.hMul.{u_2, u_2, u_2} (Matrix.transpose.{0, u_2, u_2} C) G) C) α
+          (Matrix.mulVec.{0, u_2, u_2} (Inv.inv.{u_2} C) c) r;
+      Eq.{1}
+        (dotProduct.{0, u_2} q'
+          (Matrix.mulVec.{0, u_2, u_2}
+            (Inv.inv.{u_2}
+              (HMul.hMul.{u_2, u_2, u_2} (HMul.hMul.{u_2, u_2, u_2} (Matrix.transpose.{0, u_2, u_2} C) G) C))
+            q'))
+        (dotProduct.{0, u_2} (KomorebiSpace.CoordinateCovector.normalResidual.{u_1, u_2} S G α c r)
+          (Matrix.mulVec.{0, u_2, u_2} (Inv.inv.{u_2} G)
+            (KomorebiSpace.CoordinateCovector.normalResidual.{u_1, u_2} S G α c r)))
+'KomorebiSpace.CoordinateCovector.normalResidual_certificate_basis_change' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.zero_dimensional_certificate : ∀ (G : Matrix.{0, 0, 0} (Fin 0) (Fin 0) ℝ)
+  (q : Fin 0 → ℝ), Eq.{1} (dotProduct.{0, 0} q (Matrix.mulVec.{0, 0, 0} (Inv.inv.{0} G) q)) 0
+'KomorebiSpace.CoordinateCovector.zero_dimensional_certificate' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.changedBasis.{u_1,
+    u_2} : {n : Type u_1} →
+  [inst : Fintype.{u_1} n] →
+    [inst_1 : DecidableEq.{u_1 + 1} n] →
+      {H : Type u_2} →
+        [inst_2 : AddCommGroup.{u_2} H] →
+          [inst_3 : Module.{0, u_2} ℝ H] →
+            Module.Basis.{u_1, 0, u_2} n ℝ H →
+              (C : Matrix.{u_1, u_1, 0} n n ℝ) → IsUnit.{u_1} C → Module.Basis.{u_1, 0, u_2} n ℝ H
+'KomorebiSpace.CoordinateCovector.changedBasis' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.changedBasis_apply.{u_1,
+    u_2} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n] [inst_1 : DecidableEq.{u_1 + 1} n] {H : Type u_2}
+  [inst_2 : AddCommGroup.{u_2} H] [inst_3 : Module.{0, u_2} ℝ H] (B : Module.Basis.{u_1, 0, u_2} n ℝ H)
+  (C : Matrix.{u_1, u_1, 0} n n ℝ) (hC : IsUnit.{u_1} C) (j : n),
+  Eq.{u_2 + 1} ((KomorebiSpace.CoordinateCovector.changedBasis.{u_1, u_2} B C hC) j)
+    ((LinearEquiv.symm.{0, 0, u_2, u_1} (Module.Basis.equivFun.{u_1, 0, u_2} B)) fun i => C i j)
+'KomorebiSpace.CoordinateCovector.changedBasis_apply' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.changedBasis_synthesis.{u_1,
+    u_2} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n] [inst_1 : DecidableEq.{u_1 + 1} n] {H : Type u_2}
+  [inst_2 : AddCommGroup.{u_2} H] [inst_3 : Module.{0, u_2} ℝ H] (B : Module.Basis.{u_1, 0, u_2} n ℝ H)
+  (C : Matrix.{u_1, u_1, 0} n n ℝ) (hC : IsUnit.{u_1} C) (c : n → ℝ),
+  Eq.{u_2 + 1}
+    ((LinearEquiv.symm.{0, 0, u_2, u_1}
+        (Module.Basis.equivFun.{u_1, 0, u_2} (KomorebiSpace.CoordinateCovector.changedBasis.{u_1, u_2} B C hC)))
+      c)
+    ((LinearEquiv.symm.{0, 0, u_2, u_1} (Module.Basis.equivFun.{u_1, 0, u_2} B)) (Matrix.mulVec.{0, u_1, u_1} C c))
+'KomorebiSpace.CoordinateCovector.changedBasis_synthesis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.changedBasis_same_vector.{u_1,
+    u_2} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n] [inst_1 : DecidableEq.{u_1 + 1} n] {H : Type u_2}
+  [inst_2 : AddCommGroup.{u_2} H] [inst_3 : Module.{0, u_2} ℝ H] (B : Module.Basis.{u_1, 0, u_2} n ℝ H)
+  (C : Matrix.{u_1, u_1, 0} n n ℝ) (hC : IsUnit.{u_1} C) (c : n → ℝ),
+  Eq.{u_2 + 1}
+    ((LinearEquiv.symm.{0, 0, u_2, u_1}
+        (Module.Basis.equivFun.{u_1, 0, u_2} (KomorebiSpace.CoordinateCovector.changedBasis.{u_1, u_2} B C hC)))
+      (Matrix.mulVec.{0, u_1, u_1} (Inv.inv.{u_1} C) c))
+    ((LinearEquiv.symm.{0, 0, u_2, u_1} (Module.Basis.equivFun.{u_1, 0, u_2} B)) c)
+'KomorebiSpace.CoordinateCovector.changedBasis_same_vector' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@KomorebiSpace.CoordinateCovector.changedBasis_coordinates.{u_1,
+    u_2} : ∀ {n : Type u_1} [inst : Fintype.{u_1} n] [inst_1 : DecidableEq.{u_1 + 1} n] {H : Type u_2}
+  [inst_2 : AddCommGroup.{u_2} H] [inst_3 : Module.{0, u_2} ℝ H] (B : Module.Basis.{u_1, 0, u_2} n ℝ H)
+  (C : Matrix.{u_1, u_1, 0} n n ℝ) (hC : IsUnit.{u_1} C) (x : H),
+  Eq.{u_1 + 1}
+    ((Module.Basis.equivFun.{u_1, 0, u_2} (KomorebiSpace.CoordinateCovector.changedBasis.{u_1, u_2} B C hC)) x)
+    (Matrix.mulVec.{0, u_1, u_1} (Inv.inv.{u_1} C) ((Module.Basis.equivFun.{u_1, 0, u_2} B) x))
+'KomorebiSpace.CoordinateCovector.changedBasis_coordinates' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]

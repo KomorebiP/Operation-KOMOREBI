@@ -1,0 +1,9 @@
+import KomorebiSpace.MonotoneBudgetAsymptotic
+#print axioms KomorebiSpace.DiagonalRegularization.exists_budget_mesh_bracket
+#print axioms KomorebiSpace.DiagonalRegularization.budgetMeshIndex
+#print axioms KomorebiSpace.DiagonalRegularization.budgetMeshIndex_bracket
+#print axioms KomorebiSpace.DiagonalRegularization.budgetMeshIndex_tendsto
+#print axioms KomorebiSpace.DiagonalRegularization.tendsto_budget_mesh_lower
+#print axioms KomorebiSpace.DiagonalRegularization.tendsto_budget_mesh_upper
+#print axioms KomorebiSpace.DiagonalRegularization.tendsto_budget_product_of_mesh
+#check KomorebiSpace.DiagonalRegularization.tendsto_budget_product_of_mesh

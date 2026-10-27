@@ -1,0 +1,13 @@
+import KomorebiSpace.InfiniteDiagonalModel
+import KomorebiSpace.HilbertKernelProjection
+#check tendsto_sum_nat_add
+#check summable_const_iff
+#check mem_closure_of_tendsto
+#check tendsto_iff_norm_sub_tendsto_zero
+#check Metric.tendsto_nhds
+#check Summable.tendsto_atTop_zero
+#check tendsto_norm_zero_iff
+#check tendsto_sub_nhds_zero_iff
+#check Summable.tsum_eq_zero_add
+#check Real.continuous_sqrt
+#check Real.sqrt_sq

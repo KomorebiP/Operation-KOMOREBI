@@ -1,0 +1,79 @@
+KomorebiSpace/HolonomyTransport.lean:43:62: error: don't know how to synthesize placeholder
+context:
+V : Type u
+H : Type v
+inst✝¹ : NormedAddCommGroup H
+inst✝ : NormedSpace ℝ H
+T : Connection V H
+graph : SimpleGraph V
+i k v✝ : V
+h : graph.Adj i v✝
+p : graph.Walk v✝ k
+⊢ V
+KomorebiSpace/HolonomyTransport.lean:45:0: error: Not a definitional equality: the left-hand side
+  (T.walkTransport SimpleGraph.Walk.nil) z
+is not definitionally equal to the right-hand side
+  z
+KomorebiSpace/HolonomyTransport.lean:46:74: error: Type mismatch
+  rfl
+has type
+  ?m.16 = ?m.16
+but is expected to have type
+  (T.walkTransport SimpleGraph.Walk.nil) z = z
+KomorebiSpace/HolonomyTransport.lean:48:0: error: Not a definitional equality: the left-hand side
+  (T.walkTransport (SimpleGraph.Walk.cons h p)) z
+is not definitionally equal to the right-hand side
+  (T.transport i j) ((T.walkTransport p) z)
+KomorebiSpace/HolonomyTransport.lean:50:77: error: Type mismatch
+  rfl
+has type
+  ?m.35 = ?m.35
+but is expected to have type
+  (T.walkTransport (SimpleGraph.Walk.cons h p)) z = (T.transport i j) ((T.walkTransport p) z)
+KomorebiSpace/HolonomyTransport.lean:56:11: error: Tactic `rfl` failed: The left-hand side
+  (T.walkTransport (SimpleGraph.Walk.nil.append q)) z
+is not definitionally equal to the right-hand side
+  (T.walkTransport SimpleGraph.Walk.nil) ((T.walkTransport q) z)
+
+case nil
+V : Type u
+H : Type v
+inst✝¹ : NormedAddCommGroup H
+inst✝ : NormedSpace ℝ H
+T : Connection V H
+graph : SimpleGraph V
+i j k : V
+z : H
+u✝ : V
+q : graph.Walk u✝ k
+⊢ (T.walkTransport (SimpleGraph.Walk.nil.append q)) z = (T.walkTransport SimpleGraph.Walk.nil) ((T.walkTransport q) z)
+KomorebiSpace/HolonomyTransport.lean:57:19: error: Type mismatch: After simplification, term
+  congrArg
+ has type
+  ∀ (f : ?m.62 → ?m.63), ?m.64 = ?m.65 → f ?m.64 = f ?m.65
+but is expected to have type
+  (T.transport u✝ v✝) ((T.walkTransport (p.append q)) z) =
+    (T.transport u✝ v✝) ((T.walkTransport p) ((T.walkTransport q) z))
+KomorebiSpace/HolonomyTransport.lean:58:15: error: unexpected token '('; expected command
+KomorebiSpace/HolonomyTransport.lean:63:11: error: Tactic `rfl` failed: The left-hand side
+  (T.walkTransport SimpleGraph.Walk.nil) (x u✝)
+is not definitionally equal to the right-hand side
+  x u✝
+
+case nil
+V : Type u
+H : Type v
+inst✝¹ : NormedAddCommGroup H
+inst✝ : NormedSpace ℝ H
+T : Connection V H
+graph : SimpleGraph V
+x : V → H
+hx : T.Parallel graph x
+i j u✝ : V
+⊢ (T.walkTransport SimpleGraph.Walk.nil) (x u✝) = x u✝
+KomorebiSpace/HolonomyTransport.lean:71:4: error: Type mismatch
+  hx i j (SimpleGraph.Walk.cons h SimpleGraph.Walk.nil)
+has type
+  (T.walkTransport (SimpleGraph.Walk.cons h SimpleGraph.Walk.nil)) (x j) = x i
+but is expected to have type
+  (T.transport i j) (x j) = x i

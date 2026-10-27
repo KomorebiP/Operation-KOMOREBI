@@ -1,0 +1,391 @@
+KomorebiSpace.CoordinateCovector.synthesis.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) (c : ι → ℝ) : H
+'KomorebiSpace.CoordinateCovector.synthesis' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.pairings.{u, v} {ι : Type u} {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) (x : H) : ι → ℝ
+'KomorebiSpace.CoordinateCovector.pairings' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gram.{u, v} {ι : Type u} {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) : Matrix.{u, u, 0} ι ι ℝ
+'KomorebiSpace.CoordinateCovector.gram' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.synthesis_eq_sum.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) (c : ι → ℝ) :
+  Eq.{v + 1} (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c) (∑ i, HSMul.hSMul.{0, v, v} (c i) (B i))
+'KomorebiSpace.CoordinateCovector.synthesis_eq_sum' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.synthesis_injective.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) :
+  Function.Injective.{u + 1, v + 1} (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B)
+'KomorebiSpace.CoordinateCovector.synthesis_injective' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.pairings_synthesis.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) (c : ι → ℝ) :
+  Eq.{u + 1}
+    (KomorebiSpace.CoordinateCovector.pairings.{u, v} B (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c))
+    (Matrix.mulVec.{0, u, u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B) c)
+'KomorebiSpace.CoordinateCovector.pairings_synthesis' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.inner_synthesis.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) (c : ι → ℝ) (x : H) :
+  Eq.{1} (inner.{0, v} ℝ (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c) x)
+    (dotProduct.{0, u} c (KomorebiSpace.CoordinateCovector.pairings.{u, v} B x))
+'KomorebiSpace.CoordinateCovector.inner_synthesis' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gram_posDef.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] (B : Module.Basis.{u, 0, v} ι ℝ H) :
+  Matrix.PosDef.{u, 0} (KomorebiSpace.CoordinateCovector.gram.{u, v} B)
+'KomorebiSpace.CoordinateCovector.gram_posDef' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gram_isUnit.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] (B : Module.Basis.{u, 0, v} ι ℝ H) :
+  IsUnit.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B)
+'KomorebiSpace.CoordinateCovector.gram_isUnit' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.inverse_gram_pairings.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (x : H) :
+  Eq.{u + 1}
+    (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B))
+      (KomorebiSpace.CoordinateCovector.pairings.{u, v} B x))
+    ((Module.Basis.equivFun.{u, 0, v} B) x)
+'KomorebiSpace.CoordinateCovector.inverse_gram_pairings' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.reconstruct.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] (B : Module.Basis.{u, 0, v} ι ℝ H) (x : H) :
+  Eq.{v + 1} x
+    (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B))
+        (KomorebiSpace.CoordinateCovector.pairings.{u, v} B x)))
+'KomorebiSpace.CoordinateCovector.reconstruct' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.norm_sq_pairings.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (x : H) :
+  Eq.{1} (HPow.hPow.{0, 0, 0} (norm.{v} x) 2)
+    (dotProduct.{0, u} (KomorebiSpace.CoordinateCovector.pairings.{u, v} B x)
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B))
+        (KomorebiSpace.CoordinateCovector.pairings.{u, v} B x)))
+'KomorebiSpace.CoordinateCovector.norm_sq_pairings' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.dotProduct_eq_euclidean_inner.{u} {ι : Type u} [Fintype.{u} ι] (c d : ι → ℝ) :
+  Eq.{1} (dotProduct.{0, u} c d) (inner.{0, u} ℝ (WithLp.toLp.{u} 2 c) (WithLp.toLp.{u} 2 d))
+'KomorebiSpace.CoordinateCovector.dotProduct_eq_euclidean_inner' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.norm_sq_eq_zero_of_empty_basis.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] [IsEmpty.{u + 1} ι]
+  (B : Module.Basis.{u, 0, v} ι ℝ H) (x : H) : Eq.{1} (HPow.hPow.{0, 0, 0} (norm.{v} x) 2) 0
+'KomorebiSpace.CoordinateCovector.norm_sq_eq_zero_of_empty_basis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.pairings_changedBasis.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (C : Matrix.{u, u, 0} ι ι ℝ) (hC : IsUnit.{u} C) (x : H) :
+  Eq.{u + 1}
+    (KomorebiSpace.CoordinateCovector.pairings.{u, v} (KomorebiSpace.CoordinateCovector.changedBasis.{u, v} B C hC) x)
+    (Matrix.mulVec.{0, u, u} (Matrix.transpose.{0, u, u} C) (KomorebiSpace.CoordinateCovector.pairings.{u, v} B x))
+'KomorebiSpace.CoordinateCovector.pairings_changedBasis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gram_changedBasis.{u, v} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (C : Matrix.{u, u, 0} ι ι ℝ) (hC : IsUnit.{u} C) :
+  Eq.{u + 1}
+    (KomorebiSpace.CoordinateCovector.gram.{u, v} (KomorebiSpace.CoordinateCovector.changedBasis.{u, v} B C hC))
+    (HMul.hMul.{u, u, u}
+      (HMul.hMul.{u, u, u} (Matrix.transpose.{0, u, u} C) (KomorebiSpace.CoordinateCovector.gram.{u, v} B)) C)
+'KomorebiSpace.CoordinateCovector.gram_changedBasis' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} {κ : Type w} [Fintype.{w} κ] {Y : Type u_1}
+  [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y] (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y) (y : Y) : κ → ℝ
+'KomorebiSpace.CoordinateCovector.orthonormalCoordinates' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.basisMatrix.{u, v, w} {ι : Type u} {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] {κ : Type w} [Fintype.{w} κ] (e : OrthonormalBasis.{w, 0, v} κ ℝ H)
+  (B : Module.Basis.{u, 0, v} ι ℝ H) : Matrix.{w, u, 0} κ ι ℝ
+'KomorebiSpace.CoordinateCovector.basisMatrix' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gram_eq_transpose_mul.{u, v, w} {ι : Type u} {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] {κ : Type w} [Fintype.{w} κ] (e : OrthonormalBasis.{w, 0, v} κ ℝ H)
+  (B : Module.Basis.{u, 0, v} ι ℝ H) :
+  Eq.{u + 1} (KomorebiSpace.CoordinateCovector.gram.{u, v} B)
+    (HMul.hMul.{max u w, max u w, u}
+      (Matrix.transpose.{0, w, u} (KomorebiSpace.CoordinateCovector.basisMatrix.{u, v, w} e B))
+      (KomorebiSpace.CoordinateCovector.basisMatrix.{u, v, w} e B))
+'KomorebiSpace.CoordinateCovector.gram_eq_transpose_mul' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} {ι : Type u} {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] {κ : Type w} [Fintype.{w} κ] {Y : Type u_1} [NormedAddCommGroup.{u_1} Y]
+  [InnerProductSpace.{0, u_1} ℝ Y] (B : Module.Basis.{u, 0, v} ι ℝ H) (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y)
+  (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) : Matrix.{w, u, 0} κ ι ℝ
+'KomorebiSpace.CoordinateCovector.operatorMatrix' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.operatorMatrix_synthesis.{u, v, w, u_1} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] {κ : Type w} [Fintype.{w} κ] {Y : Type u_1}
+  [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y) (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (c : ι → ℝ) :
+  Eq.{w + 1}
+    (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e
+      (T (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c)))
+    (Matrix.mulVec.{0, w, u} (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T) c)
+'KomorebiSpace.CoordinateCovector.operatorMatrix_synthesis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.operatorMatrix_changedBasis.{u, v, w, u_1} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] {κ : Type w} [Fintype.{w} κ]
+  {Y : Type u_1} [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y) (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y)
+  (C : Matrix.{u, u, 0} ι ι ℝ) (hC : IsUnit.{u} C) :
+  Eq.{max (u + 1) (w + 1)}
+    (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1}
+      (KomorebiSpace.CoordinateCovector.changedBasis.{u, v} B C hC) e T)
+    (HMul.hMul.{max u w, u, max u w} (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T) C)
+'KomorebiSpace.CoordinateCovector.operatorMatrix_changedBasis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.computed_normalResidual_changedBasis.{u, v, w, u_1} {ι : Type u} [Fintype.{u} ι]
+  {H : Type v} [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] {κ : Type w}
+  [Fintype.{w} κ] {Y : Type u_1} [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y]
+  (B : Module.Basis.{u, 0, v} ι ℝ H) (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y)
+  (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (C : Matrix.{u, u, 0} ι ι ℝ) (hC : IsUnit.{u} C)
+  (α : ℝ) (c : ι → ℝ) (r : Y) :
+  Eq.{u + 1}
+    (KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1}
+        (KomorebiSpace.CoordinateCovector.changedBasis.{u, v} B C hC) e T)
+      (KomorebiSpace.CoordinateCovector.gram.{u, v} (KomorebiSpace.CoordinateCovector.changedBasis.{u, v} B C hC)) α
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} C) c)
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r))
+    (Matrix.mulVec.{0, u, u} (Matrix.transpose.{0, u, u} C)
+      (KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+        (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T)
+        (KomorebiSpace.CoordinateCovector.gram.{u, v} B) α c
+        (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r)))
+'KomorebiSpace.CoordinateCovector.computed_normalResidual_changedBasis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.computed_certificate_changedBasis.{u, v, w, u_1} {ι : Type u} [Fintype.{u} ι]
+  {H : Type v} [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] {κ : Type w}
+  [Fintype.{w} κ] {Y : Type u_1} [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y]
+  (B : Module.Basis.{u, 0, v} ι ℝ H) (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y)
+  (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (C : Matrix.{u, u, 0} ι ι ℝ) (hC : IsUnit.{u} C)
+  (α : ℝ) (c : ι → ℝ) (r : Y) :
+  have B' := KomorebiSpace.CoordinateCovector.changedBasis.{u, v} B C hC;
+  have q' :=
+    KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B' e T)
+      (KomorebiSpace.CoordinateCovector.gram.{u, v} B') α (Matrix.mulVec.{0, u, u} (Inv.inv.{u} C) c)
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r);
+  have q :=
+    KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T)
+      (KomorebiSpace.CoordinateCovector.gram.{u, v} B) α c
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r);
+  Eq.{1}
+    (dotProduct.{0, u} q' (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B')) q'))
+    (dotProduct.{0, u} q (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B)) q))
+'KomorebiSpace.CoordinateCovector.computed_certificate_changedBasis' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.pairings_adjoint.{u, v, w, u_1} {ι : Type u} {H : Type v} [NormedAddCommGroup.{v} H]
+  [InnerProductSpace.{0, v} ℝ H] {κ : Type w} [Fintype.{w} κ] {Y : Type u_1} [NormedAddCommGroup.{u_1} Y]
+  [InnerProductSpace.{0, u_1} ℝ Y] [CompleteSpace.{v} H] [CompleteSpace.{u_1} Y] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y) (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (y : Y) :
+  Eq.{u + 1} (KomorebiSpace.CoordinateCovector.pairings.{u, v} B ((ContinuousLinearMap.adjoint.{0, v, u_1} T) y))
+    (Matrix.mulVec.{0, u, w}
+      (Matrix.transpose.{0, w, u} (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T))
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e y))
+'KomorebiSpace.CoordinateCovector.pairings_adjoint' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.normalResidual_eq_pairings.{u, v, w, u_1} {ι : Type u} [Fintype.{u} ι] {H : Type v}
+  [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] {κ : Type w} [Fintype.{w} κ] {Y : Type u_1}
+  [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y] [CompleteSpace.{v} H] [CompleteSpace.{u_1} Y]
+  (B : Module.Basis.{u, 0, v} ι ℝ H) (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y)
+  (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (α : ℝ) (c : ι → ℝ) (r : Y) :
+  Eq.{u + 1}
+    (KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T)
+      (KomorebiSpace.CoordinateCovector.gram.{u, v} B) α c
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r))
+    (KomorebiSpace.CoordinateCovector.pairings.{u, v} B
+      (KomorebiSpace.RegularizedHilbertRepair.gradient.{v, u_1} T α r
+        (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c)))
+'KomorebiSpace.CoordinateCovector.normalResidual_eq_pairings' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gradient_eq_synthesis_inverse_normalResidual.{u, v, w, u_1} {ι : Type u}
+  [Fintype.{u} ι] {H : Type v} [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι]
+  {κ : Type w} [Fintype.{w} κ] {Y : Type u_1} [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y]
+  [CompleteSpace.{v} H] [CompleteSpace.{u_1} Y] (B : Module.Basis.{u, 0, v} ι ℝ H)
+  (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y) (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (α : ℝ)
+  (c : ι → ℝ) (r : Y) :
+  Eq.{v + 1}
+    (KomorebiSpace.RegularizedHilbertRepair.gradient.{v, u_1} T α r
+      (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c))
+    (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B))
+        (KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+          (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T)
+          (KomorebiSpace.CoordinateCovector.gram.{u, v} B) α c
+          (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r))))
+'KomorebiSpace.CoordinateCovector.gradient_eq_synthesis_inverse_normalResidual' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.gradient_norm_sq_eq_normalResidual.{u, v, w, u_1} {ι : Type u} [Fintype.{u} ι]
+  {H : Type v} [NormedAddCommGroup.{v} H] [InnerProductSpace.{0, v} ℝ H] [DecidableEq.{u + 1} ι] {κ : Type w}
+  [Fintype.{w} κ] {Y : Type u_1} [NormedAddCommGroup.{u_1} Y] [InnerProductSpace.{0, u_1} ℝ Y] [CompleteSpace.{v} H]
+  [CompleteSpace.{u_1} Y] (B : Module.Basis.{u, 0, v} ι ℝ H) (e : OrthonormalBasis.{w, 0, u_1} κ ℝ Y)
+  (T : ContinuousLinearMap.{0, 0, v, u_1} (RingHom.id.{0} ℝ) H Y) (α : ℝ) (c : ι → ℝ) (r : Y) :
+  Eq.{1}
+    (HPow.hPow.{0, 0, 0}
+      (norm.{v}
+        (KomorebiSpace.RegularizedHilbertRepair.gradient.{v, u_1} T α r
+          (KomorebiSpace.CoordinateCovector.synthesis.{u, v} B c)))
+      2)
+    (dotProduct.{0, u}
+      (KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+        (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T)
+        (KomorebiSpace.CoordinateCovector.gram.{u, v} B) α c
+        (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r))
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, v} B))
+        (KomorebiSpace.CoordinateCovector.normalResidual.{w, u}
+          (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, v, w, u_1} B e T)
+          (KomorebiSpace.CoordinateCovector.gram.{u, v} B) α c
+          (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{w, u_1} e r))))
+'KomorebiSpace.CoordinateCovector.gradient_norm_sq_eq_normalResidual' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.protected_gradient_eq_projected.{u_1, u_2, u_3} {E : Type u_1} {Y : Type u_2}
+  {Z : Type u_3} [NormedAddCommGroup.{u_1} E] [InnerProductSpace.{0, u_1} ℝ E] [CompleteSpace.{u_1} E]
+  [NormedAddCommGroup.{u_2} Y] [InnerProductSpace.{0, u_2} ℝ Y] [CompleteSpace.{u_2} Y] [NormedAddCommGroup.{u_3} Z]
+  [NormedSpace.{0, u_3} ℝ Z] (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E Y)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Z) (α : ℝ) (r : Y)
+  (a : ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)) :
+  Eq.{u_1 + 1}
+    (KomorebiSpace.RegularizedHilbertRepair.gradient.{u_1, u_2}
+      (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p) α r a)
+    (HAdd.hAdd.{u_1, u_1, u_1}
+      ((Submodule.orthogonalProjectionOnto.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))
+        ((ContinuousLinearMap.adjoint.{0, u_1, u_2} D) (HSub.hSub.{u_2, u_2, u_2} (D ↑a) r)))
+      (HSMul.hSMul.{0, u_1, u_1} α a))
+'KomorebiSpace.CoordinateCovector.protected_gradient_eq_projected' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.protected_gram_eq_transpose_mul.{u, u_1, u_3, u_5} {ι : Type u} {E : Type u_1}
+  {Z : Type u_3} [NormedAddCommGroup.{u_1} E] [InnerProductSpace.{0, u_1} ℝ E] [NormedAddCommGroup.{u_3} Z]
+  [NormedSpace.{0, u_3} ℝ Z] {η : Type u_5} [Fintype.{u_5} η]
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Z)
+  (B : Module.Basis.{u, 0, u_1} ι ℝ ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)) (eE : OrthonormalBasis.{u_5, 0, u_1} η ℝ E) :
+  Eq.{u + 1} (KomorebiSpace.CoordinateCovector.gram.{u, u_1} B)
+    (HMul.hMul.{max u u_5, max u u_5, u}
+      (Matrix.transpose.{0, u_5, u}
+        (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_5, u_1} B eE
+          (Submodule.subtypeL.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))))
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_5, u_1} B eE
+        (Submodule.subtypeL.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))))
+'KomorebiSpace.CoordinateCovector.protected_gram_eq_transpose_mul' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.protected_operatorMatrix_eq_mul.{u, u_1, u_2, u_3, u_4, u_5} {ι : Type u}
+  {E : Type u_1} {Y : Type u_2} {Z : Type u_3} [NormedAddCommGroup.{u_1} E] [InnerProductSpace.{0, u_1} ℝ E]
+  [NormedAddCommGroup.{u_2} Y] [InnerProductSpace.{0, u_2} ℝ Y] [NormedAddCommGroup.{u_3} Z] [NormedSpace.{0, u_3} ℝ Z]
+  {κ : Type u_4} {η : Type u_5} [Fintype.{u_4} κ] [Fintype.{u_5} η]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E Y)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Z)
+  (B : Module.Basis.{u, 0, u_1} ι ℝ ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)) (eE : OrthonormalBasis.{u_5, 0, u_1} η ℝ E)
+  (eY : OrthonormalBasis.{u_4, 0, u_2} κ ℝ Y) :
+  Eq.{max (u + 1) (u_4 + 1)}
+    (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_4, u_2} B eY
+      (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p))
+    (HMul.hMul.{max u_4 u_5, max u u_5, max u u_4}
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u_5, u_1, u_4, u_2} (OrthonormalBasis.toBasis.{u_5, 0, u_1} eE)
+        eY D)
+      (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_5, u_1} B eE
+        (Submodule.subtypeL.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))))
+'KomorebiSpace.CoordinateCovector.protected_operatorMatrix_eq_mul' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.protected_gradient_eq_synthesis_inverse_normalResidual.{u, u_1, u_2, u_3, u_4}
+  {ι : Type u} [Fintype.{u} ι] [DecidableEq.{u + 1} ι] {E : Type u_1} {Y : Type u_2} {Z : Type u_3}
+  [NormedAddCommGroup.{u_1} E] [InnerProductSpace.{0, u_1} ℝ E] [CompleteSpace.{u_1} E] [NormedAddCommGroup.{u_2} Y]
+  [InnerProductSpace.{0, u_2} ℝ Y] [CompleteSpace.{u_2} Y] [NormedAddCommGroup.{u_3} Z] [NormedSpace.{0, u_3} ℝ Z]
+  {κ : Type u_4} [Fintype.{u_4} κ] (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E Y)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Z)
+  (B : Module.Basis.{u, 0, u_1} ι ℝ ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)) (eY : OrthonormalBasis.{u_4, 0, u_2} κ ℝ Y)
+  (α : ℝ) (c : ι → ℝ) (r : Y) :
+  Eq.{u_1 + 1}
+    (HAdd.hAdd.{u_1, u_1, u_1}
+      ((Submodule.orthogonalProjectionOnto.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))
+        ((ContinuousLinearMap.adjoint.{0, u_1, u_2} D)
+          (HSub.hSub.{u_2, u_2, u_2} (D ↑(KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c)) r)))
+      (HSMul.hSMul.{0, u_1, u_1} α (KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c)))
+    (KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, u_1} B))
+        (KomorebiSpace.CoordinateCovector.normalResidual.{u_4, u}
+          (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_4, u_2} B eY
+            (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p))
+          (KomorebiSpace.CoordinateCovector.gram.{u, u_1} B) α c
+          (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{u_4, u_2} eY r))))
+'KomorebiSpace.CoordinateCovector.protected_gradient_eq_synthesis_inverse_normalResidual' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.protected_gradient_norm_sq_eq_normalResidual.{u, u_1, u_2, u_3, u_4} {ι : Type u}
+  [Fintype.{u} ι] [DecidableEq.{u + 1} ι] {E : Type u_1} {Y : Type u_2} {Z : Type u_3} [NormedAddCommGroup.{u_1} E]
+  [InnerProductSpace.{0, u_1} ℝ E] [CompleteSpace.{u_1} E] [NormedAddCommGroup.{u_2} Y] [InnerProductSpace.{0, u_2} ℝ Y]
+  [CompleteSpace.{u_2} Y] [NormedAddCommGroup.{u_3} Z] [NormedSpace.{0, u_3} ℝ Z] {κ : Type u_4} [Fintype.{u_4} κ]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E Y)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Z)
+  (B : Module.Basis.{u, 0, u_1} ι ℝ ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)) (eY : OrthonormalBasis.{u_4, 0, u_2} κ ℝ Y)
+  (α : ℝ) (c : ι → ℝ) (r : Y) :
+  Eq.{1}
+    (HPow.hPow.{0, 0, 0}
+      (norm.{u_1}
+        (HAdd.hAdd.{u_1, u_1, u_1}
+          (↑((Submodule.orthogonalProjectionOnto.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))
+              ((ContinuousLinearMap.adjoint.{0, u_1, u_2} D)
+                (HSub.hSub.{u_2, u_2, u_2} (D ↑(KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c)) r))))
+          (HSMul.hSMul.{0, u_1, u_1} α ↑(KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c))))
+      2)
+    (dotProduct.{0, u}
+      (KomorebiSpace.CoordinateCovector.normalResidual.{u_4, u}
+        (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_4, u_2} B eY
+          (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p))
+        (KomorebiSpace.CoordinateCovector.gram.{u, u_1} B) α c
+        (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{u_4, u_2} eY r))
+      (Matrix.mulVec.{0, u, u} (Inv.inv.{u} (KomorebiSpace.CoordinateCovector.gram.{u, u_1} B))
+        (KomorebiSpace.CoordinateCovector.normalResidual.{u_4, u}
+          (KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_4, u_2} B eY
+            (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p))
+          (KomorebiSpace.CoordinateCovector.gram.{u, u_1} B) α c
+          (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{u_4, u_2} eY r))))
+'KomorebiSpace.CoordinateCovector.protected_gradient_norm_sq_eq_normalResidual' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+KomorebiSpace.CoordinateCovector.protected_coordinate_certificate.{u, u_1, u_2, u_3, u_4, u_5} {ι : Type u}
+  [Fintype.{u} ι] [DecidableEq.{u + 1} ι] {E : Type u_1} {Y : Type u_2} {Z : Type u_3} [NormedAddCommGroup.{u_1} E]
+  [InnerProductSpace.{0, u_1} ℝ E] [CompleteSpace.{u_1} E] [NormedAddCommGroup.{u_2} Y] [InnerProductSpace.{0, u_2} ℝ Y]
+  [CompleteSpace.{u_2} Y] [NormedAddCommGroup.{u_3} Z] [NormedSpace.{0, u_3} ℝ Z] {κ : Type u_4} {η : Type u_5}
+  [Fintype.{u_4} κ] [Fintype.{u_5} η] (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E Y)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Z)
+  (B : Module.Basis.{u, 0, u_1} ι ℝ ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)) (eE : OrthonormalBasis.{u_5, 0, u_1} η ℝ E)
+  (eY : OrthonormalBasis.{u_4, 0, u_2} κ ℝ Y) (α : ℝ) (c : ι → ℝ) (r : Y) :
+  have Bm :=
+    KomorebiSpace.CoordinateCovector.operatorMatrix.{u, u_1, u_5, u_1} B eE
+      (Submodule.subtypeL.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p));
+  have dm :=
+    KomorebiSpace.CoordinateCovector.operatorMatrix.{u_5, u_1, u_4, u_2} (OrthonormalBasis.toBasis.{u_5, 0, u_1} eE) eY
+      D;
+  have S := HMul.hMul.{max u_4 u_5, max u u_5, max u u_4} dm Bm;
+  have G := HMul.hMul.{max u u_5, max u u_5, u} (Matrix.transpose.{0, u_5, u} Bm) Bm;
+  have q :=
+    KomorebiSpace.CoordinateCovector.normalResidual.{u_4, u} S G α c
+      (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{u_4, u_2} eY r);
+  have g :=
+    KomorebiSpace.RegularizedHilbertRepair.gradient.{u_1, u_2}
+      (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p) α r
+      (KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c);
+  Eq.{u_1 + 1} g
+      (HAdd.hAdd.{u_1, u_1, u_1}
+        ((Submodule.orthogonalProjectionOnto.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_3} ↑p))
+          ((ContinuousLinearMap.adjoint.{0, u_1, u_2} D)
+            (HSub.hSub.{u_2, u_2, u_2} (D ↑(KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c)) r)))
+        (HSMul.hSMul.{0, u_1, u_1} α (KomorebiSpace.CoordinateCovector.synthesis.{u, u_1} B c))) ∧
+    IsUnit.{u} G ∧
+      Eq.{u_5 + 1} (KomorebiSpace.CoordinateCovector.orthonormalCoordinates.{u_5, u_1} eE ↑g)
+          (Matrix.mulVec.{0, u_5, u} Bm (Matrix.mulVec.{0, u, u} (Inv.inv.{u} G) q)) ∧
+        Eq.{1} (HPow.hPow.{0, 0, 0} (norm.{u_1} ↑g) 2) (dotProduct.{0, u} q (Matrix.mulVec.{0, u, u} (Inv.inv.{u} G) q))
+'KomorebiSpace.CoordinateCovector.protected_coordinate_certificate' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]

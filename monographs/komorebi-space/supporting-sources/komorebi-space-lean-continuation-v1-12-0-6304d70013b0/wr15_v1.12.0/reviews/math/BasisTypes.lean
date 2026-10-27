@@ -1,0 +1,39 @@
+import KomorebiSpace.CoordinateBasisChange
+set_option autoImplicit false
+set_option pp.universes true
+set_option pp.fullNames true
+
+#check @KomorebiSpace.CoordinateCovector.normalResidual
+#print axioms KomorebiSpace.CoordinateCovector.normalResidual
+#check @KomorebiSpace.CoordinateCovector.gram_matrix_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.gram_matrix_basis_change
+#check @KomorebiSpace.CoordinateCovector.observation_matrix_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.observation_matrix_basis_change
+#check @KomorebiSpace.CoordinateCovector.transpose_mulVec_dotProduct
+#print axioms KomorebiSpace.CoordinateCovector.transpose_mulVec_dotProduct
+#check @KomorebiSpace.CoordinateCovector.change_mul_inverse_mulVec
+#print axioms KomorebiSpace.CoordinateCovector.change_mul_inverse_mulVec
+#check @KomorebiSpace.CoordinateCovector.correction_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.correction_basis_change
+#check @KomorebiSpace.CoordinateCovector.coordinates_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.coordinates_basis_change
+#check @KomorebiSpace.CoordinateCovector.normalResidual_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.normalResidual_basis_change
+#check @KomorebiSpace.CoordinateCovector.inverse_gram_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.inverse_gram_basis_change
+#check @KomorebiSpace.CoordinateCovector.inverse_gram_quadratic_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.inverse_gram_quadratic_basis_change
+#check @KomorebiSpace.CoordinateCovector.normalResidual_certificate_basis_change
+#print axioms KomorebiSpace.CoordinateCovector.normalResidual_certificate_basis_change
+#check @KomorebiSpace.CoordinateCovector.zero_dimensional_certificate
+#print axioms KomorebiSpace.CoordinateCovector.zero_dimensional_certificate
+#check @KomorebiSpace.CoordinateCovector.changedBasis
+#print axioms KomorebiSpace.CoordinateCovector.changedBasis
+#check @KomorebiSpace.CoordinateCovector.changedBasis_apply
+#print axioms KomorebiSpace.CoordinateCovector.changedBasis_apply
+#check @KomorebiSpace.CoordinateCovector.changedBasis_synthesis
+#print axioms KomorebiSpace.CoordinateCovector.changedBasis_synthesis
+#check @KomorebiSpace.CoordinateCovector.changedBasis_same_vector
+#print axioms KomorebiSpace.CoordinateCovector.changedBasis_same_vector
+#check @KomorebiSpace.CoordinateCovector.changedBasis_coordinates
+#print axioms KomorebiSpace.CoordinateCovector.changedBasis_coordinates

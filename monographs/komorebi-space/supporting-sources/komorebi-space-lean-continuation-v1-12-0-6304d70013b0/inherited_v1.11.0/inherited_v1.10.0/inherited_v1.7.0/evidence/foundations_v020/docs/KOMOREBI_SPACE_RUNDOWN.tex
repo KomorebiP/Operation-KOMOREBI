@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.87in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype,booktabs,array,xcolor}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{fancyhdr}
+\hypersetup{pdftitle={Komorebi Space: Effective Groupoid Descent},pdfauthor={Komorebi P.},pdfsubject={Definition, reconstruction theorem, proof and scope}}
+\definecolor{ink}{HTML}{20354A}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Komorebi Space}}
+\fancyhead[R]{\small v0.13.0}
+\fancyfoot[L]{\small Komorebi P.}
+\fancyfoot[R]{\small\thepage}
+\setlength{\headheight}{15pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\abovedisplayskip}{9pt}
+\setlength{\belowdisplayskip}{9pt}
+\newcommand{\V}{\mathcal V}
+\newcommand{\K}{\mathfrak K}
+\newcommand{\G}{\mathcal G}
+\newcommand{\DD}{\operatorname{DD}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\ev}{\operatorname{ev}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\source}[1]{\par{\footnotesize\textsf{Lean source:} \texttt{#1}}\par}
+\begin{document}
+\thispagestyle{plain}
+{\Large\color{ink}\textbf{Komorebi Space}}\\[4pt]
+{\large Coherent views, residuals, and effective groupoid descent}\\[7pt]
+{\small Komorebi P.\quad |\quad Mathematical rundown\quad |\quad Version 0.13.0}
+\vspace{10pt}
+
+\section*{1. What the space is}
+A Komorebi space is a construction relative to a specified system of mathematical views. A view can record a representation, a resolution level, or both. The arrows specify which changes of view are admissible. The framework does not assume that every representation change is invertible, or that a universal view system has been selected.
+
+Let $\V$ be a category of views and let
+\[
+F:\V^{op}\longrightarrow\mathbf{Set}
+\]
+assign possible realizations $F(v)$ to each view. An arrow $f:v\to w$ has a restriction map $f^*:F(w)\to F(v)$, with $(1_v)^*=\id$ and $(g\circ f)^*=f^*g^*$. The strict ambient realization space is
+\[
+\boxed{\K(F)=\Gamma(F)=
+\left\{(x_v)_v\in\prod_v F(v)\;\middle|\;
+ f^*(x_w)=x_v\text{ for every }f:v\to w\right\}.}
+\]
+A point is an entire coherent family, not one preferred presentation. Evaluation
+\[
+\ev_v:\K(F)\to F(v),\qquad\ev_v(x)=x_v
+\]
+recovers its appearance at one view. The evaluations jointly determine the point. More strongly, every compatible family of maps $T\to F(v)$ factors uniquely through $T\to\K(F)$. This is the usual limit universal property, realized explicitly in the formalization.
+
+The collection of individual appearances and the space of coherent families are different objects. The former organizes viewwise data. The latter imposes all transition equations. A fiber can be nonempty while no coherent global family exists.
+
+\subsection*{The additive residual and extension problem}
+When the fibers are abelian groups and restriction is additive, set
+\[
+E=\prod_v A_v,\qquad R=\prod_{f:v\to w}A_v,\qquad
+(\delta x)_f=f^*(x_w)-x_v.
+\]
+Then $\Gamma(A)=\ker\delta$. For prescribed coherent data $s$ on $U\subseteq\operatorname{Ob}(\V)$, let $p_U$ restrict a raw family to $U$. With any raw extension $\widetilde s$, define
+\[
+\mathfrak o_U(s)=[\delta\widetilde s]\in R/\delta(\ker p_U),
+\qquad H_U=\ker\delta\cap\ker p_U.
+\]
+The obstruction is independent of the raw extension. The checked criteria are
+\[
+\mathfrak o_U(s)=0\iff s\text{ has a global extension},
+\]
+\[
+s\text{ has exactly one extension}\iff
+\mathfrak o_U(s)=0\ \text{and}\ H_U=\{0\}.
+\]
+A nonempty extension fiber is a translated copy of $H_U$. Existence and uniqueness are separate conclusions.
+\source{ViewSections.lean; SectionObstruction.lean; SectionExtensionFibers.lean}
+
+\clearpage
+\section*{2. Retaining symmetries rather than only solutions}
+A set of realizations does not record every equivalence or automorphism. The nonabelian layer uses arbitrary groups $G_v$ with restriction homomorphisms
+\[
+f^*:G_w\to G_v.
+\]
+No commutativity or invertibility of these homomorphisms is assumed. A coherent transition system, or cocycle, consists of labels $c_f\in G_v$ satisfying
+\[
+\boxed{c_{1_v}=1,\qquad c_{g\circ f}=c_f\,f^*(c_g).}
+\]
+A family $a=(a_v)_v\in\G:=\prod_vG_v$ changes local trivializations by
+\[
+\boxed{(a\cdot c)_f=a_vc_f[f^*(a_w)]^{-1}.}
+\]
+This is an action. An arrow labelled $a$, followed by one labelled $b$, has label $ba$. Inverses are given by $a^{-1}$.
+
+The symmetry-retaining Komorebi construction is the action groupoid
+\[
+\K_G=Z^1(\V;G)//\G,
+\qquad
+\operatorname{Hom}_{\K_G}(c,d)=\{a:a\cdot c=d\}.
+\]
+The double slash denotes a groupoid, not just a quotient set. Its objects are cocycles, and its arrows are actual changes of trivialization. The orbit set $Z^1(\V;G)/\G$ remembers only isomorphism classes.
+
+\subsection*{Coherence is not global triviality}
+A cocycle determines a twisted set-valued system
+\[
+T_c(f)(x)=c_f f^*(x).
+\]
+A global section of that system satisfies
+\[
+x_v=c_f f^*(x_w).
+\]
+The cocycle law says that the transition rules compose coherently. It does not assert that a coherent choice of $x$ exists.
+
+For example, take one view with a loop $\sigma$ satisfying $\sigma^2=1$, and constant coefficients $H$. Cocycle labels are involutions $p\in H$. Gauge equivalence is conjugacy of involutions, and automorphisms are centralizers. If $p\ne1$, the regular twisted section equation $x=px$ has no solution, even though the transition cocycle is valid.
+
+\subsection*{What the next theorem must preserve}
+Local objects must be allowed to differ on overlaps. What is supplied is an isomorphism between them, not literal equality of their labels. Those isomorphisms must themselves satisfy a compatibility law on triple overlaps. The new theorem glues this full datum while retaining morphisms and automorphisms.
+
+In this version the global gauge groupoid is unframed. Earlier results allow a prescribed framing domain, but the new equivalence below is stated for the empty framing domain. This avoids silently asserting a stronger framed extension.
+\source{GroupViewSystems.lean; CocycleGaugeGroupoid.lean; CocycleExamples.lean}
+
+\clearpage
+\section*{3. The new effective descent theorem}
+Let $(U_i)_{i\in I}$ be subsets of view objects, each regarded as a full subcategory. Assume a \textbf{composition cover}:
+\[
+\boxed{\forall\bigl(v\xrightarrow f w\xrightarrow g z\bigr),\quad
+\exists i:\ v,w,z\in U_i.}
+\tag{C}
+\]
+Every composable pair must be visible inside one patch. Identities make this condition imply coverage of individual objects and arrows.
+
+A descent datum consists of a local cocycle $c_i$ on each patch and overlap gauges $a_{ij}(v)$, for $v\in U_i\cap U_j$, satisfying
+\[
+\boxed{c_j(f)=a_{ij}(v)c_i(f)[f^*a_{ij}(w)]^{-1}}
+\tag{D1}
+\]
+for overlap arrows $f:v\to w$, together with
+\[
+\boxed{a_{ik}(v)=a_{jk}(v)a_{ij}(v)}
+\tag{D2}
+\]
+on triple overlaps. The order in (D2) is essential. The identity and inverse laws $a_{ii}=1$ and $a_{ji}=a_{ij}^{-1}$ follow from it.
+
+A morphism from $(c_i,a_{ij})$ to $(c'_i,a'_{ij})$ is a family of local gauges $r_i$ satisfying the local gauge equations and
+\[
+r_j(v)a_{ij}(v)=a'_{ij}(v)r_i(v).
+\]
+These data form a groupoid $\DD(U;G)$, with composition and inverses proved in Lean.
+
+\subsection*{Theorem}
+Under (C), restriction is an equivalence of groupoids:
+\[
+\boxed{\Res:\K_G\simeq\DD(U;G).}
+\]
+Restriction sends a global cocycle to its local restrictions with identity overlap gauges. The theorem says:
+
+\begin{enumerate}
+\item Every coherent descent datum is isomorphic to the restrictions of a constructed global cocycle.
+\item Every compatible local morphism between restrictions comes from exactly one global morphism.
+\end{enumerate}
+Thus the theorem is stronger than existence alone, and stronger than a bijection of isomorphism classes. It preserves the arrow structure.
+
+\subsection*{The exact Lean construction}
+{\small\ttfamily\raggedright
+KomorebiSpace.GroupViewSystem.\\
+CocycleDescentData.descentEquivalence\par}
+Its result is a Lean categorical equivalence between \texttt{F.GaugeObject} on the empty framing domain and \texttt{F.CocycleDescentData U}. The forward functor is the explicit restriction functor. Full faithfulness and essential surjectivity are proved before invoking mathlib's standard equivalence construction.
+\source{DescentDataGroupoid.lean; DescentEquivalence.lean}
+
+\clearpage
+\section*{4. How gluing is constructed}
+Choose, for each view $v$, a reference patch $\kappa(v)$ containing it. No preferred reference patch is assumed. Define
+\[
+b_i(v)=a_{\kappa(v),i}(v).
+\]
+The triple-overlap equation gives
+\[
+b_j(v)=a_{ij}(v)b_i(v).
+\tag{1}
+\]
+Now express the local cocycles in these reference frames:
+\[
+\widetilde c_i(f)=b_i(v)^{-1}c_i(f)f^*(b_i(w)).
+\tag{2}
+\]
+Substituting (D1) and (1) shows that $\widetilde c_i(f)=\widetilde c_j(f)$ on overlap arrows. The labels now agree literally. The earlier strict gluing theorem produces one global cocycle $c$.
+
+The local identifications are retained:
+\[
+\boxed{b_i(v)c_f[f^*(b_i(w))]^{-1}=c_i(f),\qquad b_j=a_{ij}b_i.}
+\]
+Consequently the original overlap gauges are realized, not replaced by unspecified pairwise equivalences.
+
+\subsection*{Uniqueness with the correct qualification}
+An effectuation is a global cocycle together with its local comparison gauges. For two effectuations $(c,b)$ and $(c',b')$, define
+\[
+\boxed{g_v=b_i'(v)^{-1}b_i(v).}
+\]
+The overlap laws prove that the expression is independent of the patch containing $v$. It is a global gauge from $c$ to $c'$, and
+\[
+b'_ig=b_i.
+\]
+Any comparison satisfying this equation must have the displayed value of $g$. Hence it is unique. These comparisons satisfy the identity and composition laws.
+
+This does not eliminate ordinary automorphisms of $c$. It gives uniqueness \emph{among comparisons compatible with the fixed local identifications}. Changing reference patches can change the literal global representative, but not its isomorphism class as a realization of the descent datum.
+
+\subsection*{Why the full groupoid equivalence follows}
+Between the restrictions of two global cocycles, overlap gauges are identities. The overlap equation for a morphism reduces to literal agreement of its local gauge values. The previous gauge-descent theorem glues these values uniquely. This proves full faithfulness.
+
+For an arbitrary descent datum, the constructed $c$ and gauges $b_i$ give an isomorphism from its restrictions to that datum. This proves essential surjectivity. Both properties are established for the explicit restriction functor.
+\source{EffectiveCocycleDescent.lean; DescentComparison.lean; DescentEquivalence.lean}
+
+\clearpage
+\section*{5. A noncommutative test and the boundary}
+Take four ordered views $0\le1\le2\le3$, constant coefficient group $S_3$, and four proper patches
+\[
+U_i=\{0,1,2,3\}\setminus\{i\}.
+\]
+Every composable triple lies in a patch, although no patch contains the whole system. The checked example has local labels on a common arrow
+\[
+c_0(1\to2)=(01),\qquad c_3(1\to2)=(12).
+\]
+They are unequal. The overlap gauges relate them, and their triple product has the required noncommutative order. The general construction gives a global representative and an actual isomorphism to an independently constructed benchmark.
+
+\subsection*{Pairwise equivalence is not enough}
+Let $t=(01)$. Suppose three proposed overlap gauges required
+\[
+b_1=tb_0,\qquad b_2=tb_1,\qquad b_2=tb_0.
+\]
+The first two imply $b_2=b_0$, whereas the last would force $t=1$. Thus no such comparisons exist. Every proposed gauge is individually invertible, but the triple law fails. This impossibility is also proved in Lean.
+
+\subsection*{Established scope}
+\begin{tabular}{@{}p{0.30\linewidth}p{0.66\linewidth}@{}}
+\toprule
+\textbf{Established} & Effective gluing through overlap gauges, unique compatible comparisons, and an equivalence of the specified cocycle groupoids under composition covers.\\[5pt]
+\textbf{Still separate} & A verified Grothendieck topology, arbitrary site descent, stackification, higher categorical coefficients, analytic gauge estimates, and arithmetic correspondence theorems.\\[5pt]
+\textbf{Choice dependence} & The view system is input. A reference frame chooses a representative. The theorem gives controlled equivalence, not an absolutely canonical presentation.\\
+\bottomrule
+\end{tabular}
+
+\subsection*{Proof, verification, and background}
+The five new modules preserve all 78 earlier proof-module sources. The delivery receipt records the build and axiom audits. Independent exact $S_3$ tests check 216 chain cocycles under all 81 reference choices per datum. Those tests supplement the universal Lean proofs.
+
+The abstract descent principle is established mathematics. This continuation integrates it with the actual Komorebi view and gauge constructions. Background definitions are in the Stacks Project, \href{https://stacks.math.columbia.edu/tag/02ZC}{tag 02ZC} and \href{https://stacks.math.columbia.edu/tag/0268}{tag 0268}.
+
+\textbf{Conclusion.} Local descriptions need not be literally identical. Specified, coherent changes of representation suffice for global reconstruction under the proved cover hypothesis, with symmetries retained.
+\source{EffectiveDescentExamples.lean; docs/EFFECTIVE\_GROUPOID\_DESCENT.md}
+\end{document}

@@ -1,0 +1,30 @@
+KomorebiSpace/HolonomyRepair.lean:25:8: error: automatically included section variable(s) unused in theorem `KomorebiSpace.HolonomyTransport.Rooted.rootResidual_zero_iff`:
+  [Fintype V]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype V] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+KomorebiSpace/HolonomyRepair.lean:73:54: error: unsolved goals
+V : Type u
+H : Type v
+inst✝² : NormedAddCommGroup H
+inst✝¹ : NormedSpace ℝ H
+inst✝ : Fintype V
+T : Connection V H
+graph : SimpleGraph V
+o : V
+p : OverlapTransport.Routing graph o
+x : V → H
+ht :
+  ‖(T.differential graph) (reconstruct T p (x o))‖ ≤
+    ‖(T.differential graph) (reconstruct T p (x o) - x)‖ + ‖(T.differential graph) x‖
+hd : ‖(T.differentialLinear graph) (reconstruct T p (x o) - x)‖ ≤ 2 * ‖x - reconstruct T p (x o)‖
+he : ‖x - reconstruct T p (x o)‖ ≤ ↑p.radius * ‖(T.differential graph) x‖
+⊢ 0 ≤ ?m.298
+KomorebiSpace/HolonomyRepair.lean:100:8: error: Type mismatch
+  add_le_add_left (mul_le_mul_of_nonneg_left (rootResidual_anchor_bound T p x) hK) ?m.281
+has type
+  K * ‖rootResidual T p (x o)‖ + ?m.281 ≤ K * ((2 * ↑p.radius + 1) * ‖(T.differential graph) x‖) + ?m.281
+but is expected to have type
+  ↑p.radius * ‖(T.differential graph) x‖ + K * ‖rootResidual T p (x o)‖ ≤
+    ↑p.radius * ‖(T.differential graph) x‖ + K * ((2 * ↑p.radius + 1) * ‖(T.differential graph) x‖)

@@ -1,0 +1,40 @@
+import KomorebiSpace.DiagonalNoisyRate
+
+#check KomorebiSpace.DiagonalRegularization.noiseSchedule
+#print axioms KomorebiSpace.DiagonalRegularization.noiseSchedule
+#check KomorebiSpace.DiagonalRegularization.noiseSchedule_pos
+#print axioms KomorebiSpace.DiagonalRegularization.noiseSchedule_pos
+#check KomorebiSpace.DiagonalRegularization.one_le_noiseSchedule
+#print axioms KomorebiSpace.DiagonalRegularization.one_le_noiseSchedule
+#check KomorebiSpace.DiagonalRegularization.noiseSchedule_bounds
+#print axioms KomorebiSpace.DiagonalRegularization.noiseSchedule_bounds
+#check KomorebiSpace.DiagonalRegularization.noiseSchedule_bias_bound
+#print axioms KomorebiSpace.DiagonalRegularization.noiseSchedule_bias_bound
+#check KomorebiSpace.DiagonalRegularization.noiseSchedule_noise_bound
+#print axioms KomorebiSpace.DiagonalRegularization.noiseSchedule_noise_bound
+#check KomorebiSpace.DiagonalRegularization.noiseSchedule_rate
+#print axioms KomorebiSpace.DiagonalRegularization.noiseSchedule_rate
+#check KomorebiSpace.DiagonalRegularization.noisy_error_of_bias_bound
+#print axioms KomorebiSpace.DiagonalRegularization.noisy_error_of_bias_bound
+#check KomorebiSpace.DiagonalRegularization.noisy_rounded_rate_of_bias_bound
+#print axioms KomorebiSpace.DiagonalRegularization.noisy_rounded_rate_of_bias_bound
+#check KomorebiSpace.DiagonalRegularization.diagonal_bias_bound
+#print axioms KomorebiSpace.DiagonalRegularization.diagonal_bias_bound
+#check KomorebiSpace.DiagonalRegularization.diagonal_noisy_error
+#print axioms KomorebiSpace.DiagonalRegularization.diagonal_noisy_error
+#check KomorebiSpace.DiagonalRegularization.corollary_30_3
+#print axioms KomorebiSpace.DiagonalRegularization.corollary_30_3
+#check KomorebiSpace.DiagonalRegularization.b_apply
+#print axioms KomorebiSpace.DiagonalRegularization.b_apply
+#check KomorebiSpace.DiagonalRegularization.w_apply
+#print axioms KomorebiSpace.DiagonalRegularization.w_apply
+#check KomorebiSpace.DiagonalRegularization.c_apply
+#print axioms KomorebiSpace.DiagonalRegularization.c_apply
+#check KomorebiSpace.DiagonalRegularization.T_w_eq_b
+#print axioms KomorebiSpace.DiagonalRegularization.T_w_eq_b
+#check KomorebiSpace.DiagonalRegularization.w_minimum_norm_preimage
+#print axioms KomorebiSpace.DiagonalRegularization.w_minimum_norm_preimage
+#check KomorebiSpace.DiagonalRegularization.c_eq_correction
+#print axioms KomorebiSpace.DiagonalRegularization.c_eq_correction
+#check KomorebiSpace.DiagonalRegularization.norm_bias_sq
+#print axioms KomorebiSpace.DiagonalRegularization.norm_bias_sq

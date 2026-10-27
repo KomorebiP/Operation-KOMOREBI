@@ -1,0 +1,103 @@
+{
+  "status": "PASS",
+  "source_type_comparison": "Editorial independent audit, not automatic translation of prose",
+  "claims": {
+    "WR01": {
+      "budget_preserving_existence": {
+        "declaration": "KomorebiSpace.BoundedApproximateRealization.exists_solution_of_bounded_residual_tendsto_zero",
+        "type": "∀ {H : Type u_1} {Y : Type u_2} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H]\n  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (u : ℕ → H) (r : Y)\n  (M : ℝ),\n  (∀ (n : ℕ), ‖u n‖ ≤ M) → Filter.Tendsto (fun n => ‖T (u n) - r‖) Filter.atTop (nhds 0) → ∃ a, T a = r ∧ ‖a‖ ≤ M",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "equivalence": {
+        "declaration": "KomorebiSpace.BoundedApproximateRealization.mem_range_iff_bounded_approximation",
+        "type": "∀ {H : Type u_1} {Y : Type u_2} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H]\n  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y),\n  r ∈ Set.range ⇑T ↔ ∃ u M, (∀ (n : ℕ), ‖u n‖ ≤ M) ∧ Filter.Tendsto (fun n => ‖T (u n) - r‖) Filter.atTop (nhds 0)",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "escape": {
+        "declaration": "KomorebiSpace.BoundedApproximateRealization.norm_tendsto_atTop_of_not_mem_range",
+        "type": "∀ {H : Type u_1} {Y : Type u_2} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H]\n  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (u : ℕ → H),\n  ∀ r ∉ Set.range ⇑T,\n    Filter.Tendsto (fun n => T (u n)) Filter.atTop (nhds r) → Filter.Tendsto (fun n => ‖u n‖) Filter.atTop Filter.atTop",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    },
+    "WR02": {
+      "construction": {
+        "declaration": "KomorebiSpace.NestedMinimumCorrections.affineCorrections_spec",
+        "type": "∀ {H : Type u_1} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]\n  (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)) (n : ℕ),\n  KomorebiSpace.NestedMinimumCorrections.IsMinimum (↑(A n))\n    (KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n)",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "monotone": {
+        "declaration": "KomorebiSpace.NestedMinimumCorrections.nested_affine_norm_monotone",
+        "type": "∀ {H : Type u_1} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]\n  (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)),\n  Antitone A → Monotone fun n => ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "finite_energy": {
+        "declaration": "KomorebiSpace.NestedMinimumCorrections.nested_affine_energy",
+        "type": "∀ {H : Type u_1} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]\n  (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)),\n  Antitone A →\n    ∀ {n m : ℕ},\n      n ≤ m →\n        ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc m -\n                KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^\n            2 =\n          ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc m‖ ^ 2 -\n            ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^ 2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "equivalence": {
+        "declaration": "KomorebiSpace.NestedMinimumCorrections.nested_affine_intersection_iff_bounded",
+        "type": "∀ {H : Type u_1} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]\n  (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)),\n  Antitone A →\n    ((∃ x, ∀ (n : ℕ), x ∈ A n) ↔\n      ∃ M, ∀ (n : ℕ), ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ≤ M)",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "strong_limit_unique_minimum_and_limit_energy": {
+        "declaration": "KomorebiSpace.NestedMinimumCorrections.nested_affine_strong_realization",
+        "type": "∀ {H : Type u_1} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]\n  (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)),\n  Antitone A →\n    (∃ M, ∀ (n : ℕ), ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ≤ M) →\n      ∃ aStar,\n        Filter.Tendsto (KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc) Filter.atTop (nhds aStar) ∧\n          KomorebiSpace.NestedMinimumCorrections.IsMinimum (⋂ n, ↑(A n)) aStar ∧\n            (∀ (b : H), KomorebiSpace.NestedMinimumCorrections.IsMinimum (⋂ n, ↑(A n)) b → b = aStar) ∧\n              ∀ (n : ℕ),\n                ‖aStar - KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^ 2 =\n                  ‖aStar‖ ^ 2 - ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖ ^ 2",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      },
+      "escape": {
+        "declaration": "KomorebiSpace.NestedMinimumCorrections.nested_affine_escape",
+        "type": "∀ {H : Type u_1} [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]\n  (A : ℕ → AffineSubspace ℝ H) (hne : ∀ (n : ℕ), (↑(A n)).Nonempty) (hc : ∀ (n : ℕ), IsClosed ↑(A n)),\n  Antitone A →\n    (¬∃ x, ∀ (n : ℕ), x ∈ A n) →\n      Filter.Tendsto (fun n => ‖KomorebiSpace.NestedMinimumCorrections.affineCorrections A hne hc n‖) Filter.atTop\n        Filter.atTop",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    },
+    "protected_bridge": {
+      "same_budget_exact_protected_candidate": {
+        "declaration": "KomorebiSpace.ProtectedBoundedRealization.exists_exact_repair_of_bounded_approximation",
+        "type": "∀ {E : Type u_1} {Y : Type u_2} {Z : Type u_3} [inst : NormedAddCommGroup E] [inst_1 : InnerProductSpace ℝ E]\n  [CompleteSpace E] [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y]\n  [inst_6 : NormedAddCommGroup Z] [inst_7 : NormedSpace ℝ Z] (D : E →L[ℝ] Y) (p : E →L[ℝ] Z) (f : E) (u : ℕ → ↥(↑p).ker)\n  (M : ℝ),\n  (∀ (n : ℕ), ‖u n‖ ≤ M) →\n    Filter.Tendsto (fun n => ‖D ↑(u n) - D f‖) Filter.atTop (nhds 0) → ∃ y, D y = 0 ∧ p y = p f ∧ ‖f - y‖ ≤ M",
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ]
+      }
+    }
+  },
+  "axiom_report_sha256": "d979223813cf5710993c2e117c856c45699e1a68b8e9f8fd9034dd5adc42a9b0"
+}

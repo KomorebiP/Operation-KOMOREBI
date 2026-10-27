@@ -1,0 +1,111 @@
+{
+  "base_checkpoint": "v115-start-from-73e9c5c",
+  "parent_publication_sha256": "73e9c5caa36f4ba05029c01481b345ce24cf9b1905dfb012ed21dd4bcfe86dc0",
+  "result": "proved_and_strictly_compiled",
+  "independent_review": "pending_parent_assignment",
+  "production_file": "publication/lean/KomorebiSpace/DiagonalInexactRate.lean",
+  "source_sha256": "9afe32989eb89da7781aee5b73008ee86f9ce418d24c72af9c6a74bad6f976a7",
+  "new_explicit_theorem_count": 1,
+  "theorem": "KomorebiSpace.DiagonalRegularization.diagonal_inexact_rounded_rate",
+  "actual_model": "KomorebiSpace.DiagonalRegularization.H, T, b, w",
+  "schedule": "m = Nat.ceil (\u03b4 ^ (-(2 : \u211d) / 3)); \u03b1 = alpha m = ((m : \u211d)^2)\u207b\u00b9",
+  "hypotheses": [
+    "0 < \u03b4",
+    "\u03b4 \u2264 1",
+    "0 \u2264 \u03ba",
+    "\u2016s - b\u2016 \u2264 \u03b4",
+    "\u2016T.adjoint (T a - s) + alpha (Nat.ceil (\u03b4 ^ (-(2 : \u211d) / 3))) \u2022 a\u2016 \u2264 \u03b5",
+    "\u03b5 \u2264 \u03ba * alpha (Nat.ceil (\u03b4 ^ (-(2 : \u211d) / 3))) * \u03b4 ^ ((1 : \u211d) / 3)"
+  ],
+  "conclusion": "\u2016a - w\u2016 \u2264 (Real.sqrt 2 + 1 + \u03ba) * \u03b4 ^ ((1 : \u211d) / 3)",
+  "proof_dependencies": [
+    "KomorebiSpace.DiagonalRegularization.one_le_noiseSchedule",
+    "KomorebiSpace.DiagonalRegularization.alpha_pos",
+    "KomorebiSpace.RegularizedHilbertRepair.correction_error_bound",
+    "KomorebiSpace.DiagonalRegularization.corollary_30_3",
+    "norm_add_le"
+  ],
+  "axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "axiom_audit": {
+    "command": [
+      "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/scripts/lean_env.sh",
+      "lake",
+      "env",
+      "lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-DautoImplicit=false",
+      "/workspace/scratch/5d9f7f8127b0/publication_v115/logs/inexact_audit/PrintInexactRate.lean"
+    ],
+    "cwd": "/workspace/scratch/5d9f7f8127b0/publication_v115/publication/lean",
+    "exit_code": 0,
+    "elapsed_seconds": 3.572601795196533,
+    "audit_source_sha256": "6801818c5441d91a14bf11ac7887d98d9a95df31d073f8041eaf93f7ef59291f",
+    "production_source_sha256": "9afe32989eb89da7781aee5b73008ee86f9ce418d24c72af9c6a74bad6f976a7"
+  },
+  "compile_attempts": [
+    {
+      "command": [
+        "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/scripts/lean_env.sh",
+        "lake",
+        "env",
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "-DautoImplicit=false",
+        "-o",
+        ".lake/build/lib/lean/KomorebiSpace/DiagonalInexactRate.olean",
+        "KomorebiSpace/DiagonalInexactRate.lean"
+      ],
+      "cwd": "/workspace/scratch/5d9f7f8127b0/publication_v115/publication/lean",
+      "exit_code": 1,
+      "elapsed_seconds": 9.585476398468018,
+      "source_sha256": "69fec6a9ba2bd0ddc2d56be38c7bf49a4b2f383b18c3baf9d9c22a33a35d6b5a",
+      "evidence_directory": "logs/inexact_attempts/attempt_001"
+    },
+    {
+      "command": [
+        "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/scripts/lean_env.sh",
+        "lake",
+        "env",
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "-DautoImplicit=false",
+        "-o",
+        ".lake/build/lib/lean/KomorebiSpace/DiagonalInexactRate.olean",
+        "KomorebiSpace/DiagonalInexactRate.lean"
+      ],
+      "cwd": "/workspace/scratch/5d9f7f8127b0/publication_v115/publication/lean",
+      "exit_code": 0,
+      "elapsed_seconds": 6.492974758148193,
+      "source_sha256": "9afe32989eb89da7781aee5b73008ee86f9ce418d24c72af9c6a74bad6f976a7",
+      "evidence_directory": "logs/inexact_attempts/attempt_002"
+    }
+  ],
+  "failure_history": [
+    {
+      "attempt": 1,
+      "classification": "implementation_tactic_normalization",
+      "actual_exit_code": 1,
+      "cause": "nlinarith treated alpha m and alpha (Nat.ceil ...) as distinct atoms until the local abbreviation was explicitly normalized.",
+      "repair": "Added change _ \u2264 \u03ba * alpha m * \u03b4 ^ ((1 : \u211d) / 3) at hr before the scalar calculation.",
+      "mathematical_target_changed": false
+    }
+  ],
+  "self_review": {
+    "literal_schedule": true,
+    "measured_datum_used_in_normal_residual": true,
+    "actual_infinite_Hilbert_model": true,
+    "no_assumed_bias_bound": true,
+    "positive_parameter_before_division": true,
+    "rounded_outer_constant_preserved": true,
+    "conclusion_is_norm_bound_not_squared_norm": true,
+    "no_new_axioms_or_admitted_proofs": true,
+    "epsilon_nonnegativity": "Already follows from hsolve because a norm is nonnegative; not silently required as an additional assumption."
+  }
+}

@@ -1,0 +1,28 @@
+KomorebiSpace/SectionViewEquivalence.lean:40:23: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (𝟭 W).map f ≫ e.counitIso.inv.app b
+in the target expression
+  F.pull (f ≫ GroupViewSystem.returnArrow e b) (↑x (e.inverse.obj b)) =
+    F.pull (GroupViewSystem.returnArrow e a) (↑x (e.inverse.obj a))
+
+V : Type u₁
+inst✝¹ : Category.{v₁, u₁} V
+W : Type u₂
+inst✝ : Category.{v₂, u₂} W
+F : ViewSystem W
+e : V ≌ W
+x : (F.reindex e.functor).Ambient
+a b : W
+f : a ⟶ b
+⊢ F.pull (f ≫ GroupViewSystem.returnArrow e b) (↑x (e.inverse.obj b)) =
+    F.pull (GroupViewSystem.returnArrow e a) (↑x (e.inverse.obj a))
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    x
+  has type
+    (F.reindex e.functor).Ambient
+  but is expected to have type
+    { x // ∀ (a b : V) (f : a ⟶ b), (F.reindex e.functor).pull f (x b) = x a }
+  in the application
+    ↑x

@@ -1,0 +1,44 @@
+KomorebiSpace/CofinalTransports.lean:19:19: error(lean.unknownIdentifier): Unknown constant `Nat.find`
+KomorebiSpace/CofinalTransports.lean:22:35: error(lean.unknownIdentifier): Unknown constant `Nat.find_spec`
+KomorebiSpace/CofinalTransports.lean:27:8: error(lean.unknownIdentifier): Unknown constant `Nat.find_min'`
+KomorebiSpace/CofinalTransports.lean:47:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  X.restrict ?hij (X.restrict ?hjk ?x)
+in the target expression
+  X.restrict hij (X.restrict ⋯ x) = X.restrict ⋯ (X.restrict ⋯ x)
+
+X : Resolution
+φ : ℕ → ℕ
+hφ : Monotone φ
+hcof : UnboundedSchedule φ
+i j : ℕ
+hij : i ≤ j
+x : (X.reindex φ hφ).Obj (ceilingIndex hcof j)
+⊢ X.restrict hij (X.restrict ⋯ x) = X.restrict ⋯ (X.restrict ⋯ x)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    x
+  has type
+    (X.reindex φ hφ).Obj (ceilingIndex hcof j)
+  but is expected to have type
+    X.Obj (φ (ceilingIndex hcof j))
+  in the application
+    X.restrict ⋯ x
+KomorebiSpace/CofinalTransports.lean:73:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  X.restrict ?hij (X.restrict ?hjk ?x)
+in the target expression
+  X.restrict ⋯ (X.restrict ⋯ x) = X.restrict ⋯ x
+
+X : Resolution
+φ : ℕ → ℕ
+hφ : Monotone φ
+hcof : UnboundedSchedule φ
+n : ℕ
+x : (X.reindex φ hφ).Obj (max (ceilingIndex hcof (φ n)) n)
+⊢ X.restrict ⋯ (X.restrict ⋯ x) = X.restrict ⋯ x
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    hφ

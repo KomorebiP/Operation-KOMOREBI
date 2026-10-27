@@ -1,0 +1,156 @@
+import KomorebiSpace.DyadicResidualSplit
+
+set_option autoImplicit false
+
+/-!
+# Explicit hidden-detail channels
+
+Within each pair, retain the even residual and the component of the odd
+residual killed by target restriction. Together with the coarse residual,
+these channels admit exact reconstruction. Every bounded independent choice
+of the channels, with the stated kernel constraint, is realized uniquely.
+-/
+universe u v
+noncomputable section
+namespace KomorebiSpace
+namespace DyadicResidual
+open BanachTower
+open scoped NNReal ENNReal
+variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+variable (X Y : BanachTower.{u,v} 𝕜)
+variable (hX : ∀ n, ‖X.down n‖ ≤ 1) (hY : ∀ n, ‖Y.down n‖ ≤ 1)
+variable (L : Splitting Y)
+
+abbrev EvenResidual := BoundedParity.Even (E := fun n => X.Obj (n+1) →L[𝕜] Y.Obj n)
+abbrev OddResidual := BoundedParity.Odd (E := fun n => X.Obj (n+1) →L[𝕜] Y.Obj n)
+
+/-- The odd residual component invisible under target restriction. -/
+def innovation (r : Residuals X Y) (n : ℕ) : X.Obj (2*n+1+1) →L[𝕜] Y.Obj (2*n+1) :=
+  r (2*n+1) - (L.up (2*n)).comp ((Y.down (2*n)).comp (r (2*n+1)))
+
+@[simp] theorem innovation_down (r : Residuals X Y) (n : ℕ) :
+    (Y.down (2*n)).comp (innovation X Y L r n) = 0 := by
+  ext x
+  change Y.down (2*n) (r (2*n+1) x - L.up (2*n) (Y.down (2*n) (r (2*n+1) x))) = 0
+  rw [map_sub, L.down_up_apply, sub_self]
+
+theorem innovation_add (r t : Residuals X Y) (n : ℕ) :
+    innovation X Y L (r+t) n = innovation X Y L r n + innovation X Y L t n := by
+  ext x
+  simp only [innovation, lp.coeFn_add, Pi.add_apply, ContinuousLinearMap.comp_apply,
+    sub_apply, add_apply, map_add]
+  abel
+
+theorem innovation_sub (r t : Residuals X Y) (n : ℕ) :
+    innovation X Y L (r-t) n = innovation X Y L r n - innovation X Y L t n := by
+  ext x
+  simp only [innovation, lp.coeFn_sub, Pi.sub_apply, ContinuousLinearMap.comp_apply,
+    sub_apply, map_sub]
+  abel
+
+@[simp] theorem innovation_zero (n : ℕ) : innovation X Y L 0 n = 0 := by
+  ext x
+  change 0 - L.up (2*n) (Y.down (2*n) 0) = 0
+  simp
+
+@[simp] theorem innovation_lift (c : Coarse X Y hX hY) (n : ℕ) :
+    innovation X Y L (lift X Y hX hY L c) n = 0 := by
+  unfold innovation
+  rw [lift_odd]
+  ext x
+  change L.up (2*n) (c n x) - L.up (2*n) (Y.down (2*n) (L.up (2*n) (c n x))) = 0
+  rw [L.down_up_apply, sub_self]
+
+@[simp] theorem innovation_hidden (r : Residuals X Y) (n : ℕ) :
+    innovation X Y L (hidden X Y hX hY L r) n = innovation X Y L r n := by
+  rw [hidden_apply, innovation_sub, innovation_lift, sub_zero]
+
+/-- Reconstruction at a single odd edge, retaining both sorts of hidden detail. -/
+theorem reconstruct_odd (r : Residuals X Y) (n : ℕ) :
+    r (2*n+1) = innovation X Y L r n + (L.up (2*n)).comp
+      (coarsen X Y hX hY r n - (r (2*n)).comp (X.down (2*n+1))) := by
+  rw [coarsen_pair, add_sub_cancel_right]
+  unfold innovation
+  abel
+
+theorem hidden_odd_details (r : Residuals X Y) (n : ℕ) :
+    hidden X Y hX hY L r (2*n+1) = innovation X Y L r n -
+      (L.up (2*n)).comp ((r (2*n)).comp (X.down (2*n+1))) := by
+  rw [hidden_odd]
+  unfold oddLift innovation
+  rw [coarsen_pair, ContinuousLinearMap.comp_add]
+  abel
+
+/-- The three channels jointly distinguish every bounded residual family. -/
+theorem channels_injective (r t : Residuals X Y)
+    (hc : coarsen X Y hX hY r = coarsen X Y hX hY t)
+    (he : ∀ n, r (2*n) = t (2*n))
+    (hv : ∀ n, innovation X Y L r n = innovation X Y L t n) : r = t := by
+  apply lp.ext
+  apply BoundedParity.family_ext
+  · exact he
+  · intro n
+    rw [reconstruct_odd X Y hX hY L r n, reconstruct_odd X Y hX hY L t n, hc, he n, hv n]
+
+/-- Produce a residual family from independent bounded coarse and detail channels. -/
+def synthesize (c : Coarse X Y hX hY) (a : EvenResidual X Y) (b : OddResidual X Y) :
+    Residuals X Y := hidden X Y hX hY L (BoundedParity.merge (a,b)) + lift X Y hX hY L c
+
+@[simp] theorem synthesize_coarse (c : Coarse X Y hX hY) (a : EvenResidual X Y)
+    (b : OddResidual X Y) : coarsen X Y hX hY (synthesize X Y hX hY L c a b) = c := by
+  unfold synthesize
+  rw [map_add, hidden_coarsen, coarsen_lift, zero_add]
+
+@[simp] theorem synthesize_even (c : Coarse X Y hX hY) (a : EvenResidual X Y)
+    (b : OddResidual X Y) (n : ℕ) : synthesize X Y hX hY L c a b (2*n) = a n := by
+  change hidden X Y hX hY L (BoundedParity.merge (a,b)) (2*n) + lift X Y hX hY L c (2*n) = _
+  rw [hidden_even, lift_even, BoundedParity.merge_even, add_zero]
+
+theorem synthesize_innovation (c : Coarse X Y hX hY) (a : EvenResidual X Y)
+    (b : OddResidual X Y) (hb : ∀ n, (Y.down (2*n)).comp (b n) = 0) (n : ℕ) :
+    innovation X Y L (synthesize X Y hX hY L c a b) n = b n := by
+  unfold synthesize
+  rw [innovation_add, innovation_hidden, innovation_lift, add_zero]
+  unfold innovation
+  rw [BoundedParity.merge_odd, hb n]
+  simp
+
+/-- The reconstructed odd edge uses the vertical kernel detail b and the even detail a. -/
+theorem synthesize_odd (c : Coarse X Y hX hY) (a : EvenResidual X Y)
+    (b : OddResidual X Y) (hb : ∀ n, (Y.down (2*n)).comp (b n) = 0) (n : ℕ) :
+    synthesize X Y hX hY L c a b (2*n+1) =
+      b n + (L.up (2*n)).comp (c n - (a n).comp (X.down (2*n+1))) := by
+  rw [reconstruct_odd X Y hX hY L, synthesize_innovation X Y hX hY L c a b hb,
+    synthesize_coarse, synthesize_even]
+
+/-- Existence and uniqueness for all independent bounded channels. -/
+theorem unique_synthesis (c : Coarse X Y hX hY) (a : EvenResidual X Y)
+    (b : OddResidual X Y) (hb : ∀ n, (Y.down (2*n)).comp (b n) = 0) :
+    ∃! r : Residuals X Y, coarsen X Y hX hY r = c ∧
+      (∀ n, r (2*n) = a n) ∧ (∀ n, innovation X Y L r n = b n) := by
+  refine ⟨synthesize X Y hX hY L c a b, ⟨synthesize_coarse X Y hX hY L c a b,
+    synthesize_even X Y hX hY L c a b, synthesize_innovation X Y hX hY L c a b hb⟩, ?_⟩
+  intro r hr
+  apply channels_injective X Y hX hY L
+  · rw [hr.1, synthesize_coarse]
+  · intro n; rw [hr.2.1 n, synthesize_even]
+  · intro n; rw [hr.2.2 n, synthesize_innovation X Y hX hY L c a b hb]
+
+/-- A channel budget is a rigorous bound on the reconstructed fine residual. -/
+theorem synthesize_bound (c : Coarse X Y hX hY) (a : EvenResidual X Y)
+    (b : OddResidual X Y) :
+    ‖synthesize X Y hX hY L c a b‖ ≤
+      (1+2*(L.bound : ℝ))*max ‖a‖ ‖b‖ + (L.bound : ℝ)*‖c‖ := by
+  have hh := hidden_bound X Y hX hY L (BoundedParity.merge (a,b))
+  have hj := lift_bound X Y hX hY L c
+  have hm := BoundedParity.merge_bound (E := fun n => X.Obj (n+1) →L[𝕜] Y.Obj n) (a,b)
+  have ha := norm_add_le (hidden X Y hX hY L (BoundedParity.merge (a,b)))
+    (lift X Y hX hY L c)
+  change ‖BoundedParity.merge (E := fun n => X.Obj (n+1) →L[𝕜] Y.Obj n) (a,b)‖ ≤ max ‖a‖ ‖b‖ at hm
+  change ‖synthesize X Y hX hY L c a b‖ ≤ _ at ha
+  have hs : 0 ≤ (L.bound : ℝ) := NNReal.coe_nonneg _
+  nlinarith only [hh, hj, hm, ha, hs]
+
+end DyadicResidual
+end KomorebiSpace
+end

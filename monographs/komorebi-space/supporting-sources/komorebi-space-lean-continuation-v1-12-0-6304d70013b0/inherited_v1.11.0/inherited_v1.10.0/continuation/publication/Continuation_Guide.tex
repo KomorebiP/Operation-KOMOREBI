@@ -1,0 +1,803 @@
+\documentclass[11pt]{article}
+\usepackage{geometry,fontspec}
+\usepackage{amsmath,amssymb,amsthm,booktabs,longtable,array,calc}
+\usepackage{xcolor,hyperref,bookmark,fancyhdr,microtype}
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Komorebi Space}
+\renewcommand{\KomorebiSubtitle}{Bounded realization and minimum corrections}
+\renewcommand{\KomorebiSeries}{Foundations of the Realization Calculus}
+\renewcommand{\KomorebiKind}{Formal continuation}
+\renewcommand{\KomorebiEdition}{Formal continuation 1.8.0}
+\renewcommand{\KomorebiShortTitle}{Komorebi Space}
+\KomorebiSetup
+\setmainfont{DejaVuSerif.ttf}[Path=/usr/share/fonts/truetype/dejavu/,BoldFont=DejaVuSerif-Bold.ttf,ItalicFont=DejaVuSerif.ttf,ItalicFeatures={FakeSlant=0.18},BoldItalicFont=DejaVuSerif-Bold.ttf,BoldItalicFeatures={FakeSlant=0.18}]
+\setsansfont{NimbusSans-Regular.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
+\definecolor{pine}{HTML}{204F43}
+\hypersetup{colorlinks=true,linkcolor=pine,urlcolor=pine,pdftitle={Komorebi Space: Formal Continuation v1.8.0}}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{2em}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\begin{document}
+\KomorebiCover
+\hypertarget{what-this-continuation-closes}{%
+\section{What this continuation
+closes}\label{what-this-continuation-closes}}
+
+\textbf{WR01 and WR02 now have compiled formal counterparts under their
+published real Hilbert-space hypotheses.} The new development also
+connects bounded approximation to the actual protected correction
+kernel. An independent review compared the public Lean theorem types
+with every clause of the two printed groups.
+
+This package continues the proof-expanded v1.7.0 monograph. The
+inherited 161-page monograph, 43-page visual guide, and 36-page evidence
+guide are retained as historical reader documents. This guide supplies
+the updated formal status. It is a formal continuation, not a claim that
+those three older PDFs were re-typeset.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Result
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Formal scope now established
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+WR01 & A bounded approximating sequence gives an exact preimage within
+the same norm budget. The range equivalence and divergence to infinity
+for unattained data are included. \\
+WR02 & Minimum-norm points of arbitrary nested nonempty closed affine
+sets converge strongly exactly when their norms stay bounded. Finite and
+limiting energy identities, uniqueness, and divergence are included. \\
+Protected realization & An exact repaired candidate preserves the
+declared observable and stays within the original correction budget. \\
+Convex auxiliary result & Nested closed convex minimum points satisfy
+the energy inequality and the bounded-intersection criterion. The affine
+case retains the stronger equality. \\
+\end{longtable}
+
+\hypertarget{evidence-and-its-scope}{%
+\section{Evidence and its scope}\label{evidence-and-its-scope}}
+
+The predecessor ZIP and all 2,270 payload hashes were checked before
+editing. All 169 inherited files across its two formal source trees
+remain unchanged. The accepted old evidence is preserved rather than
+overwritten.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Check
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Accepted result
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Clean combined baseline & 144 source targets, joining the canonical core
+and regularization extension. \\
+New production sources & 3 new modules compiled from source. \\
+Final imported declaration audit & 4,872 declarations, including
+generated declarations. \\
+Axiom dependencies & Only \texttt{propext}, \texttt{Classical.choice},
+and \texttt{Quot.sound}. \\
+Controls & 4 positive files, 14 compiler rejection files, and 2
+axiom-policy rejection files. \\
+\end{longtable}
+
+The final integration reuses only source-bound, hash-checked project
+objects from the newly accepted clean combined baseline. It compiles the
+additions and final entrypoint, exports a fresh audit of the entire
+final imported scope, and reruns the controls. This is an incremental
+extension of a fresh clean baseline. It is not described as a second
+empty-directory rebuild of every final source.
+
+The official Lean compiler and kernel, standard axioms, and pinned
+compiled dependency caches remain trusted. Mathlib was not rebuilt from
+source. Compilation and axiom checks do not automatically verify prose
+translations or the Python implementations. No numerical suite was rerun
+merely to increase a test count.
+
+\hypertarget{how-the-arguments-fit-together}{%
+\section{How the arguments fit
+together}\label{how-the-arguments-fit-together}}
+
+The WR01 Lean proof uses compactness of a dual norm ball, Riesz
+representation, and continuous evaluation against the adjoint. It
+retains the exact budget and makes no separability or closed-range
+assumption. It does not separately formalize the monograph's printed
+weak-subsequence construction.
+
+The WR02 proof constructs minimum points on the actual closed convex
+sets. A projection inequality bounds distance by the change in squared
+norms. Bounded energy then makes the sequence Cauchy. Completeness
+supplies a strong limit, and closedness places that limit in every
+constraint set. Affineness upgrades the inequality to the exact
+Pythagorean identity.
+
+The next sections give an alternative written route that uses this same
+projection mechanism for WR01--WR03. That route passed independent
+mathematical review. \textbf{WR03 remains written-only:} a reviewed
+alternate proof is not a new compiled counterpart for its complete
+budget-profile statement.
+
+\hypertarget{what-remains}{%
+\section{What remains}\label{what-remains}}
+
+The WR catalogue now has \textbf{six complete groups, two partial
+groups, and eight written-only groups}. The complete groups are WR01,
+WR02, WR06, WR07, WR13, and WR14. WR09 and WR16 retain their pointwise
+formal inequalities and still require the limiting conclusions. The
+written-only groups are WR03--WR05, WR08, WR10--WR12, and WR15.
+
+The next formal block is WR03--WR05: fixed-budget attainment and profile
+geometry, sharp dual certificates, and robustness under model and data
+uncertainty. WR08 then supports the remaining regularization limits.
+Full proof-to-source review of the rest of the book and synchronized
+publication remain separate obligations.
+
+Development failures were retained. They included missing typeclass
+information, elaboration and simplification mismatches, strict-linter
+failures in proof fixtures, and an incomplete local import list during
+bridge testing. They were corrected before the accepted runs. The first
+direct compiler launch also needed the offline runtime's documented
+executable-path adapter. Exact failed and accepted logs are included in
+the package.
+
+The first guide build failed because the LuaLaTeX font loader was
+unavailable. XeLaTeX provided the working font backend. A second build
+found an equation tag inside an alignment block. Moving the tag to the
+outer display corrected that typesetting error without changing the
+equation. Font substitutions were resolved before the final page review.
+
+\hypertarget{a-common-projection-proof-for-bounded-realization}{%
+\section{A common projection proof for bounded
+realization}\label{a-common-projection-proof-for-bounded-realization}}
+
+The following derivation preserves the existing WR01--WR03 claims and
+uses the projection theorem proved in the monograph's analytic appendix.
+Elementary norm identities, real suprema and infima, and completeness
+are the remaining background. The general convex inequality is kept
+distinct from the affine equality.
+
+\hypertarget{precise-background-statement}{%
+\subsection{Precise background
+statement}\label{precise-background-statement}}
+
+Let \(H\) be a real Hilbert space. In particular \(H\) is complete and
+contains zero, even when \(H\) is the zero-dimensional space. For every
+nonempty closed convex set \(C \subseteq H\) there is a unique point
+\(p \in C\) such that
+
+\[
+\forall x\in C,\qquad \|p\|\le \|x\|.
+\]
+
+Putting the point to be projected equal to zero in
+\texttt{lem:projection-tool} gives
+
+\[
+\forall x\in C,\qquad
+\langle -p,x-p\rangle\le0,
+\quad\text{equivalently}\quad
+\langle p,x-p\rangle\ge0.                 \tag{1}
+\]
+
+Consequently
+
+\nopagebreak[4]
+
+\[
+\begin{aligned}
+\|x\|^2
+ &=\|p\|^2+2\langle p,x-p\rangle+\|x-p\|^2\\
+ &\ge\|p\|^2+\|x-p\|^2,
+\end{aligned}
+\]
+
+so
+
+\nopagebreak[4]
+
+\[
+\forall x\in C,\qquad
+\|x-p\|^2\le\|x\|^2-\|p\|^2.           \tag{2}
+\]
+
+This is the exact sign needed for the argument. For a general convex
+\(C\) it is an inequality, not an equality. In the affine case, applying
+(1) to both signs of every direction gives orthogonality and therefore
+equality.
+
+\hypertarget{nested-convex-projection-lemma}{%
+\subsection{Nested convex projection
+lemma}\label{nested-convex-projection-lemma}}
+
+\textbf{Statement with quantifiers.} Let \((C_n)\) indexed by
+\(n \in \mathbb{N}\) be sets in a real Hilbert space \(H\). Assume
+
+\[
+\begin{gathered}
+\forall n\in\mathbb N,\quad
+C_n\ne\varnothing,\quad C_n\text{ is closed and convex},\\
+\forall n,m\in\mathbb N,\quad n\le m\Longrightarrow C_m\subseteq C_n.
+\end{gathered}
+\]
+
+Let \(p_n\) be the unique minimum-norm element of \(C_n\). Then
+
+\[
+n\le m\Longrightarrow
+\|p_n\|\le\|p_m\|,
+\qquad
+\|p_m-p_n\|^2\le\|p_m\|^2-\|p_n\|^2. \tag{3}
+\]
+
+Moreover, the following conditions are equivalent:
+
+\[
+\bigcap_{n\in\mathbb N}C_n\ne\varnothing,
+\qquad
+\exists M\in[0,\infty)\ \forall n\in\mathbb N,\quad\|p_n\|\le M.
+                                                               \tag{4}
+\]
+
+When they hold, there is a unique minimum-norm point \(p_*\) in the
+intersection, \(p_n \to p_*\) in norm, and
+
+\[
+\forall n\in\mathbb N,\qquad
+\|p_*-p_n\|^2\le\|p_*\|^2-\|p_n\|^2.  \tag{5}
+\]
+
+For any specified \(M\) bounding all the norms, \(\|p_*\|\le M\). If the
+intersection is empty, the minimum norms tend to positive infinity in
+the precise sense
+
+\[
+\forall R\in\mathbb R\ \exists N\in\mathbb N\ \forall n\ge N,
+\qquad \|p_n\|>R.                       \tag{6}
+\]
+
+\textbf{Proof.} For \(n \le m\), nesting puts \(p_m\) in \(C_n\).
+Minimality gives the norm comparison, and (2) with \(C = C_n\),
+\(p = p_n\), and \(x = p_m\) gives (3).
+
+Suppose a finite \(M\) bounds all norms. The increasing real sequence
+\(e_n = \|p_n\|^2\) lies in \([0,M^2]\). Let
+
+\[
+L=\sup\{e_n:n\in\mathbb N\}.
+\]
+
+This is a finite real number. For every \(\varepsilon > 0\), the
+defining approximation property of the supremum gives an index \(N\)
+with
+
+\[
+L-e_N<\varepsilon^2.
+\]
+
+For arbitrary \(m,n \ge N\), exchange the two indices if needed so that
+\(n \le m\). By (3), monotonicity, and the upper bound \(L\),
+
+\[
+\|p_m-p_n\|^2\le e_m-e_n\le L-e_N<\varepsilon^2.
+\]
+
+The norm is nonnegative, hence \(\|p_m-p_n\| < \varepsilon\). This
+proves the full Cauchy condition, not merely a bound on successive
+differences. Completeness supplies \(p_*\) with \(p_n \to p_*\) in norm.
+Fix \(k\). Every \(n \ge k\) satisfies \(p_n \in C_k\). Closedness of
+\(C_k\) therefore gives \(p_* \in C_k\). Since \(k\) was arbitrary,
+\(p_*\) lies in the intersection. Norm continuity also gives
+\(\|p_*\| \le M\).
+
+For any \(x\) in the intersection and every \(n\), minimality in \(C_n\)
+gives \(\|p_n\| \le \|x\|\). Passing to the limit gives
+\(\|p_*\| \le \|x\|\). The intersection is closed and convex, because
+each of its constituent sets is closed and convex. It is now known to be
+nonempty. Uniqueness of its minimum-norm point follows from the
+projection lemma. Applying (2) directly to \(x = p_*\) in \(C_n\) proves
+(5). Equivalently, (5) follows by passing \(m \to \infty\) in (3).
+
+Conversely, if \(x\) belongs to the intersection, then the finite number
+\(M = \|x\|\) bounds every \(\|p_n\|\). This proves (4). If the
+intersection is empty, the minimum norms cannot be bounded. Given
+\(R \ge 0\), choose \(N\) with \(\|p_N\| > R\) and use monotonicity for
+every \(n \ge N\). For \(R < 0\), nonnegativity suffices with \(N = 0\).
+This proves (6).
+
+\textbf{What the lemma does not say.} An arbitrary sequence
+\(x_n \in C_n\) need not converge. It is the sequence of unique
+minimum-norm points \(p_n\) that converges when its norms are bounded.
+No effective rate is supplied unless a rate for the scalar energy
+deficit \(L-e_n\) is separately available. Formula (5) is an exact bound
+relative to that deficit, not a computable uniform rate over all input
+problems.
+
+\hypertarget{wr01-bounded-approximate-feasibility}{%
+\subsection{WR01: bounded approximate
+feasibility}\label{wr01-bounded-approximate-feasibility}}
+
+Let \(H\) and \(Y\) be real Hilbert spaces, \(T : H \to Y\) a bounded
+linear map, and \(r \in Y\). Fix a real number \(M \ge 0\). The useful
+fixed-budget form is
+
+\[
+\begin{aligned}
+&\exists a\in H,\quad \|a\|\le M\ \text{ and }\ Ta=r\\
+&\quad\Longleftrightarrow\quad
+\exists (u_j)_{j\in\mathbb N}\subseteq H,\\
+&\qquad
+ (\forall j,\ \|u_j\|\le M)
+ \ \text{ and }\ \|Tu_j-r\|\longrightarrow0.       
+\end{aligned}
+\tag{7}\]
+
+The theorem's unfixed-budget equivalence follows by existentially
+quantifying \(M\). A sequence whose norms have some finite upper bound
+has such a nonnegative upper bound, so this is the usual meaning of
+bounded sequence.
+
+\textbf{Forward implication.} If \(a\) solves the equation with
+\(\|a\| \le M\), choose \(u_j = a\) for every \(j\). Its residual is
+identically zero.
+
+\textbf{Reverse implication.} Suppose the sequence \(u_j\) satisfies the
+right side of (7). For \(n \in \mathbb{N}\) put
+
+\[
+\delta_n=\frac1{n+1},\qquad
+C_n=\{a\in H:\ \|a\|\le M,\quad\|Ta-r\|\le\delta_n\}. \tag{8}
+\]
+
+Here \(n+1\) is interpreted as a positive real number. Thus
+\(\delta_n > 0\), \(\delta_n\) decreases with \(n\), and
+\(\delta_n \to 0\).
+
+Each \(C_n\) is nonempty. Indeed, residual convergence gives some \(j\)
+with \(\|Tu_j-r\| < \delta_n\), while the original uniform norm bound
+already gives \(\|u_j\| \le M\). No assertion that the same \(j\) works
+for all \(n\) is used. No monotone selection of such indices is needed.
+
+Each \(C_n\) is closed. The two maps \(a \mapsto \|a\|\) and
+\(a \mapsto \|Ta-r\|\) are continuous, the latter because \(T\) is
+bounded and linear. Their real sublevel sets at \(M\) and \(\delta_n\)
+are closed, and \(C_n\) is their intersection.
+
+Each \(C_n\) is convex. For \(a,b \in C_n\) and \(\theta \in [0,1]\),
+linearity and the triangle inequality give
+
+\[
+\|\theta a+(1-\theta)b\|
+ \le\theta\|a\|+(1-\theta)\|b\|\le M,
+\]
+
+and
+
+\nopagebreak[4]
+
+\[
+\begin{aligned}
+\|T(\theta a+(1-\theta)b)-r\|
+ &=\|\theta(Ta-r)+(1-\theta)(Tb-r)\|\\
+ &\le\theta\|Ta-r\|+(1-\theta)\|Tb-r\|\le\delta_n.
+\end{aligned}
+\]
+
+Finally, \(C_m \subseteq C_n\) whenever \(n \le m\), since
+\(\delta_m \le \delta_n\).
+
+Let \(p_n\) be the minimum-norm point of \(C_n\). Its membership gives
+\(\|p_n\| \le M\). The nested convex projection lemma supplies a norm
+limit \(p_*\) belonging to every \(C_n\). Hence
+
+\[
+\|p_*\|\le M,
+\qquad
+\forall n,\quad\|Tp_*-r\|\le\frac1{n+1}.
+\]
+
+The last nonnegative norm must be zero: if it were positive, choose
+\(n\) with \(1/(n+1)\) smaller than it. Therefore \(Tp_* = r\),
+establishing (7).
+
+This constructs a strongly convergent sequence of auxiliary minimizers
+\(p_n\). It makes no strong-convergence assertion about the given
+sequence \(u_j\) and does not assert that \(p_n\) is a subsequence of
+\(u_j\). The original monograph's orthonormal-sequence counterexample
+remains valid without alteration.
+
+\textbf{Optional selection observation.} The intersection of the sets in
+(8) is precisely the set of exact solutions of norm at most \(M\). The
+auxiliary limit is its unique minimum-norm point. It is also the
+minimum-norm point of the full nonempty exact fiber: any exact solution
+of smaller norm would lie in the same budget ball and contradict
+minimality. This observation is not needed to change the principal WR01
+statement.
+
+\textbf{Escape corollary with exact quantifiers.} Suppose
+\(r \notin \operatorname{ran} T\) and \(Tu_j \to r\) in norm. Then
+\(\|u_j\| \to \infty\). If not, there is \(R \ge 0\) with arbitrarily
+late indices \(j\) satisfying \(\|u_j\| \le R\). Recursively choose
+strictly increasing such indices \(j_k\). The subsequence remains
+residual-convergent and is bounded by \(R\). Applying (7) to this
+subsequence produces a preimage of \(r\), a contradiction. The corollary
+does not claim that arbitrary unattainable data have approximate
+preimages. When \(r\) is outside the closure of the range, no
+residual-convergent sequence of this kind exists.
+
+\hypertarget{wr02-the-affine-equality-and-all-conclusions}{%
+\subsection{WR02: the affine equality and all
+conclusions}\label{wr02-the-affine-equality-and-all-conclusions}}
+
+Suppose \((A_n)\) is a nested sequence of nonempty closed affine subsets
+of \(H\), and let \(a_n\) be its minimum-norm points. These sets are
+convex, so the preceding nested lemma already proves the equivalence
+between nonempty intersection and bounded minimum norms, strong
+convergence in the bounded case, uniqueness of the least-norm limit, and
+divergence of norms in the empty-intersection case.
+
+To retain the exact WR02 identities, fix \(n\) and write
+\(A_n = a_n + L_n\), where \(L_n\) is its linear direction space. For
+every \(h \in L_n\), both \(a_n+h\) and \(a_n-h\) lie in \(A_n\). The
+two instances of (1) give
+
+\[
+\langle a_n,h\rangle\ge0,
+\qquad
+-\langle a_n,h\rangle\ge0.
+\]
+
+Thus \(a_n\) is orthogonal to \(L_n\). If \(n \le m\), then
+\(a_m \in A_n\) and \(a_m-a_n \in L_n\). The norm expansion now has zero
+cross term:
+
+\[
+\|a_m\|^2
+ =\|a_n\|^2+\|a_m-a_n\|^2.
+\]
+
+Consequently
+
+\nopagebreak[4]
+
+\[
+\|a_m-a_n\|^2=\|a_m\|^2-\|a_n\|^2\qquad(n\le m). \tag{9}
+\]
+
+If the minimum norms are bounded, the strong limit \(a_*\) belongs to
+\(A_n\) for every \(n\). Therefore \(a_*-a_n \in L_n\), and the same
+orthogonality proves directly
+
+\[
+\|a_*-a_n\|^2=\|a_*\|^2-\|a_n\|^2.                \tag{10}
+\]
+
+This preserves all clauses of the inherited WR02 statement. Affinity is
+essential to (9) and (10). For nested convex subsets \([1,\infty)\) and
+\([2,\infty)\) of \(\mathbb{R}\), the minimum points are 1 and 2. Their
+squared distance is 1 while the difference of squared norms is 3. Thus
+the general convex inequality is strict in this elementary example.
+
+\hypertarget{wr03-fixed-budget-attainment-without-weak-subsequences}{%
+\subsection{WR03: fixed-budget attainment without weak
+subsequences}\label{wr03-fixed-budget-attainment-without-weak-subsequences}}
+
+Continue with \(T : H \to Y\) bounded linear, \(r \in Y\), and
+\(M \ge 0\). Define
+
+\[
+B_M=\{a\in H:\|a\|\le M\},\qquad
+S_M=\{\|r-Ta\|:a\in B_M\},\qquad
+\beta(M)=\inf S_M.                                \tag{11}
+\]
+
+Since \(0 \in B_M\), the set \(S_M\) is nonempty and contains \(\|r\|\).
+It is bounded below by zero. Therefore \(\beta(M)\) is a finite real
+number with \(0 \le \beta(M) \le \|r\|\), and
+
+\[
+\forall a\in B_M,\qquad \beta(M)\le\|r-Ta\|.        \tag{12}
+\]
+
+For every positive \(\delta\), the defining infimum property supplies an
+\(a \in B_M\) such that
+
+\[
+\|r-Ta\|<\beta(M)+\delta.                          \tag{13}
+\]
+
+To justify the strict inequality, if all residuals were at least
+\(\beta(M)+\delta\), that larger number would be a lower bound of
+\(S_M\), contrary to \(\beta(M)\) being its greatest lower bound.
+
+Set, for every \(n \in \mathbb{N}\),
+
+\[
+C_n=\{a\in H:\ \|a\|\le M,\quad
+           \|r-Ta\|\le\beta(M)+1/(n+1)\}.          \tag{14}
+\]
+
+Property (13) proves nonemptiness. Continuity and the convexity
+calculation in Section 5.3 prove closedness and convexity. The residual
+thresholds decrease, so the sets are nested. Their minimum-norm points
+\(p_n\) all have norm at most \(M\). The nested convex projection lemma
+gives a strong limit \(a_M\) in every \(C_n\). Thus \(\|a_M\| \le M\)
+and
+
+\[
+\forall n,\qquad
+\|r-Ta_M\|\le\beta(M)+1/(n+1).
+\]
+
+Letting \(n \to \infty\) gives \(\|r-Ta_M\| \le \beta(M)\). Inequality
+(12) gives the reverse inequality. Hence
+
+\[
+\|a_M\|\le M,\qquad \|r-Ta_M\|=\beta(M).          \tag{15}
+\]
+
+The infimum is attained. This proof does not presuppose that \(T(B_M)\)
+is closed, and it does not assume the residual-minimizing corrections
+are bounded independently of \(M\). \(M\) is fixed throughout this
+construction.
+
+The intersection in (14) consists exactly of the budget-optimal
+corrections. Thus the auxiliary construction selects their unique
+minimum-norm member. Existence of some optimum, rather than this
+additional selection description, is the inherited principal claim.
+
+\hypertarget{remaining-wr03-clauses}{%
+\subsection{Remaining WR03 clauses}\label{remaining-wr03-clauses}}
+
+These arguments retain the source theorem's precise scope and can be
+combined with Section 5.5 to give a complete replacement proof.
+
+\hypertarget{monotonicity}{%
+\subsubsection{Monotonicity}\label{monotonicity}}
+
+If \(0 \le M_1 \le M_2\), then \(B_{M_1} \subseteq B_{M_2}\). Taking the
+infimum over the larger set cannot increase it, so
+
+\[
+\beta(M_2)\le\beta(M_1).
+\]
+
+\hypertarget{convexity-on-the-nonnegative-budget-ray}{%
+\subsubsection{Convexity on the nonnegative budget
+ray}\label{convexity-on-the-nonnegative-budget-ray}}
+
+Let \(M_1,M_2 \ge 0\) and \(\theta \in [0,1]\). Choose attained
+minimizers \(a_1,a_2\) supplied by (15). The correction
+\(a_{\theta} = \theta a_1+(1-\theta )a_2\) satisfies
+
+\[
+\|a_\theta\|\le\theta M_1+(1-\theta)M_2.
+\]
+
+Its residual is \(\theta (r-Ta_1)+(1-\theta )(r-Ta_2)\). Therefore
+
+\[
+\begin{aligned}
+\beta(\theta M_1+(1-\theta)M_2)
+ &\le\|r-Ta_\theta\|\\
+ &\le\theta\beta(M_1)+(1-\theta)\beta(M_2).
+\end{aligned}
+\]
+
+This proves convexity, including \(\theta = 0\), \(\theta = 1\), and
+equal or zero budgets.
+
+\hypertarget{the-operator-norm-lipschitz-bound}{%
+\subsubsection{The operator-norm Lipschitz
+bound}\label{the-operator-norm-lipschitz-bound}}
+
+Suppose \(0 \le M_1 \le M_2\). If \(M_2 = 0\) then \(M_1 = 0\) and the
+desired estimate is equality. Otherwise \(M_2 > 0\). Choose an optimum
+\(a_2\) at \(M_2\) and let \(a' = (M_1/M_2)a_2\). Since
+\(0 \le M_1/M_2 \le 1\),
+
+\[
+\|a'\|\le M_1,
+\quad
+\|a_2-a'\|=(1-M_1/M_2)\|a_2\|\le M_2-M_1.
+\]
+
+Using the candidate \(a'\), the triangle inequality, boundedness of
+\(T\), and then monotonicity,
+
+\[
+\begin{aligned}
+\beta(M_1)
+ &\le\|r-Ta'\|\\
+ &\le\|r-Ta_2\|+\|T(a_2-a')\|\\
+ &\le\beta(M_2)+\|T\|(M_2-M_1),
+\end{aligned}
+\]
+
+and hence
+
+\[
+0\le\beta(M_1)-\beta(M_2)\le\|T\|(M_2-M_1).        \tag{16}
+\]
+
+\hypertarget{limit-as-the-budget-tends-to-infinity}{%
+\subsubsection{Limit as the budget tends to
+infinity}\label{limit-as-the-budget-tends-to-infinity}}
+
+Let \(C\) be the closure of \(\operatorname{ran} T\). It is a closed
+linear subspace of \(Y\). The inherited projection lemma supplies
+\(b = P_C r\) with \(r-b\) orthogonal to \(C\). Put \(q = \|r-b\|\). For
+every \(a \in H\), the vector \(b-Ta\) lies in \(C\). The Pythagorean
+identity gives
+
+\[
+\|r-Ta\|^2=q^2+\|b-Ta\|^2.                        \tag{17}
+\]
+
+Thus every residual is at least \(q\), so \(\beta(M) \ge q\) for every
+\(M \ge 0\).
+
+For every \(\varepsilon > 0\), the fact
+\(b \in \operatorname{closure}(\operatorname{ran} T)\) gives some
+\(a_{\varepsilon} \in H\) with
+
+\[
+\|b-Ta_\varepsilon\|<\varepsilon.
+\]
+
+Set \(M_0 = \|a_{\varepsilon}\|\). For every real \(M \ge M_0\), this
+one correction is feasible and
+
+\[
+q\le\beta(M)\le\|r-Ta_\varepsilon\|
+ \le\|r-b\|+\|b-Ta_\varepsilon\|<q+\varepsilon.
+\]
+
+This proves the real-parameter limit directly:
+
+\[
+\forall\varepsilon>0\ \exists M_0\ge0\ \forall M\ge M_0,
+\quad |\beta(M)-q|<\varepsilon.
+\]
+
+The order of choices is explicit: choose an approximate preimage
+depending on \(\varepsilon\), then choose the budget threshold. No
+uniform correction bound as \(\varepsilon \to 0\) is asserted.
+
+\hypertarget{equality-with-the-residual-floor}{%
+\subsubsection{Equality with the residual
+floor}\label{equality-with-the-residual-floor}}
+
+For fixed \(M \ge 0\), suppose \(\beta(M) = q\). Choose an attained
+optimum \(a_M\) from (15). Substituting in (17) gives
+
+\[
+q^2=q^2+\|b-Ta_M\|^2,
+\]
+
+so \(Ta_M = b\) and \(\|a_M\| \le M\). Conversely, if \(a\) satisfies
+\(Ta = b\) and \(\|a\| \le M\), its residual is \(q\), giving
+\(\beta(M) \le q\). The opposite inequality already holds. Thus
+
+\[
+\beta(M)=q
+\quad\Longleftrightarrow\quad
+\exists a\in H,\quad Ta=b\text{ and }\|a\|\le M.    \tag{18}
+\]
+
+Finally, independently of whether \(q\) is zero in advance, attainment
+implies
+
+\[
+\beta(M)=0
+\quad\Longleftrightarrow\quad
+\exists a\in H,\quad Ta=r\text{ and }\|a\|\le M.    \tag{19}
+\]
+
+For the forward direction use an attained optimizer and the fact that a
+vector of norm zero is zero. For the reverse direction evaluate the
+nonnegative infimum at the exact correction. This avoids silently
+presupposing \(q = 0\) before exact feasibility is known.
+
+\hypertarget{closed-budget-ball-images-and-the-stated-uniqueness-distinctions}{%
+\subsection{Closed budget-ball images and the stated uniqueness
+distinctions}\label{closed-budget-ball-images-and-the-stated-uniqueness-distinctions}}
+
+The prose after WR03 states that \(T(B_M)\) is closed and convex even if
+\(\operatorname{ran} T\) is not closed. This also has a proof
+independent of weak subsequences once Section 5.3 is available.
+
+Convexity follows because \(B_M\) is convex and \(T\) is linear. To
+prove closedness, take any sequence \(y_j \in T(B_M)\) converging in
+norm to \(y\). For each \(j\) choose \(u_j \in B_M\) with
+\(Tu_j = y_j\). Then \(\|u_j\| \le M\) and \(Tu_j \to y\). Applying (7)
+with datum \(y\) yields \(u \in B_M\) satisfying \(Tu = y\). Thus
+\(y \in T(B_M)\). Sequential closedness is closedness in the norm metric
+on \(Y\).
+
+The set \(T(B_M)\) is nonempty because it contains zero. Projection of
+\(r\) onto this nonempty closed convex set therefore gives a unique
+reachable datum \(y_M\) minimizing its distance to \(r\). The residual
+vector \(r-y_M\) is unique, regardless of whether \(T\) is injective.
+This is uniqueness of the best image and residual, not uniqueness of all
+its preimages.
+
+The fiber \(F = \{a \in H : Ta = y_M\}\) is a nonempty closed affine
+set. Its minimum-norm point \(a_{\mathrm{min}}\) exists and is unique.
+Some member \(a_0\) of the fiber has norm at most \(M\) because
+\(y_M \in T(B_M)\). Therefore
+\(\|a_{\mathrm{min}}\| \le \|a_0\| \le M\). Hence this uniquely selected
+least-norm fiber point is itself a budget-optimal correction. Other
+budget-optimal corrections can exist if the fiber contains further
+points inside the ball.
+
+The range is the union of the closed budget images at integer budgets:
+every \(a\) has finite norm, so there is an integer \(n\) with
+\(\|a\| \le n\). No conclusion that this increasing union is closed is
+used or valid in general.
+
+\newpage
+
+\hypertarget{boundary-cases-and-scope-checks}{%
+\subsection{Boundary cases and scope
+checks}\label{boundary-cases-and-scope-checks}}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Case
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Conclusion and proof check
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(M = 0\) & The budget ball is \(\{0\}\). WR01's premise forces
+\(r = 0\) since \(Tu_j = T0 = 0\) for all \(j\). WR03 has
+\(\beta(0) = \|r\|\) with optimizer \(0\). The nested sets used in both
+proofs contain \(0\) whenever their stated hypotheses hold. \\
+\(H = \{0\}\) & \(T\) is the zero map. WR01 is equivalent to \(r = 0\).
+WR03 gives \(\beta(M) = \|r\|\) for every \(M \ge 0\), \(C = \{0\}\),
+\(b = 0\), and \(q = \|r\|\). The fiber for the optimal image is
+\(\{0\}\). \\
+\(Y = \{0\}\) & \(r = 0\) and \(T = 0\). WR01 always has solution \(0\).
+WR03 gives \(\beta(M) = 0\) for every \(M \ge 0\). Residual uniqueness
+remains true. Corrections need not be unique when \(H\) is
+nontrivial. \\
+General \(T = 0\) & Same constant budget profile \(\|r\|\), no division
+by \(\|T\|\), and the Lipschitz right side is zero. \\
+A zero minimum norm in the nested lemma & No division by a norm occurs.
+The supremum energy proof works unchanged, including when \(L = 0\). \\
+An empty constraint set & Excluded explicitly in the nested projection
+lemma. It cannot silently be passed to the projection theorem.
+Nonemptiness is separately proved for every constructed \(C_n\). \\
+Empty intersection & Allowed. It occurs exactly when the minimum norms
+are unbounded, and monotonicity strengthens unboundedness to divergence
+to infinity. \\
+A supposedly empty Hilbert space & Not a possible vector-space case,
+because zero exists. Zero dimension is the relevant degenerate case. \\
+Nonclosed \(\operatorname{ran} T\) & Allowed throughout. Fixed-budget
+attainment does not imply global range closedness. \\
+Nonseparable \(H\) or \(Y\) & Allowed. The proof makes no separability
+assumption and no basis choice. \\
+\end{longtable}
+
+The nested convex lemma is stated for a countable nested sequence. The
+applications only require countably many residual thresholds. This file
+does not claim a general theorem for an arbitrary directed family of
+closed convex sets.
+\end{document}

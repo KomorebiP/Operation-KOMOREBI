@@ -1,0 +1,183 @@
+\clearpage
+\chap{Analytic facts used in the proofs}\label{app:proof-tools}
+This appendix supplies the analytic ingredients used at several points in the book. They are classical facts, not additional novelty claims. Writing out their proofs makes the dependence on completeness, convexity, the inner product, and the declared operator norm visible. The statements are restricted to the real Hilbert and real Banach settings used in the main arguments. Their role in the source correspondence is background support, not a new KS or WR entry.
+
+The projection and inverse constructions have standard formal counterparts in the mathematical library cited in \cite{mathlib-projection,mathlib-banach}. The regularization context is also discussed in \cite{clason-inverse}. The arguments below are ordinary written proofs. Retaining an accepted Lean source tree does not by itself give a new compiler record for this appendix.
+
+\subsection{Projection onto a closed convex set}
+\begin{lemma}[Existence, uniqueness, and the variational inequality]\label{lem:projection-tool}
+Let \(H\) be a real Hilbert space, let \(C\subseteq H\) be nonempty, closed, and convex, and fix \(x\in H\). There is a unique \(c\in C\) minimizing \(\norm{x-c}\). It is characterized by
+\begin{equation}\label{eq:projection-variational}
+ \langle x-c,z-c\rangle\le0\qquad(z\in C).
+\end{equation}
+If \(C=c_0+L\) is a closed affine subspace with direction space \(L\), the condition is \(x-c\perp L\).
+\end{lemma}
+\begin{proof}
+\textbf{Produce a Cauchy minimizing sequence.} Put \(d=\inf_{z\in C}\norm{x-z}\). Nonemptiness makes this a finite nonnegative real number. Choose \(c_n\in C\) so that \(\norm{x-c_n}\to d\). Convexity places \((c_n+c_m)/2\) in \(C\). The parallelogram identity gives
+\[
+ \norm{c_n-c_m}^2
+ =2\norm{x-c_n}^2+2\norm{x-c_m}^2
+   -4\left\|x-\frac{c_n+c_m}{2}\right\|^2
+ \le2\norm{x-c_n}^2+2\norm{x-c_m}^2-4d^2.
+\]
+The right side tends to zero as both indices tend to infinity. Thus \((c_n)\) is Cauchy. Completeness supplies a limit \(c\in H\), closedness puts it in \(C\), and continuity of the norm gives \(\norm{x-c}=d\). A minimizing sequence in an arbitrary closed set need not have been Cauchy. The midpoint was the essential use of convexity.
+
+\textbf{Prove uniqueness.} If \(c,c'\in C\) both attain \(d\), the same midpoint inequality gives
+\[
+ \norm{c-c'}^2\le2d^2+2d^2-4d^2=0.
+\]
+Therefore \(c=c'\).
+
+\textbf{Derive the variational inequality.} For \(z\in C\) and \(0<t\le1\), convexity makes \(c+t(z-c)\) feasible. Minimality and the inner-product expansion yield
+\[
+ 0\le\norm{x-c-t(z-c)}^2-\norm{x-c}^2
+   =-2t\langle x-c,z-c\rangle+t^2\norm{z-c}^2.
+\]
+Divide by the positive number \(t\) and let \(t\downarrow0\). This gives \eqref{eq:projection-variational}. Conversely, if that inequality holds, then for every \(z\in C\),
+\[
+ \norm{x-z}^2
+ =\norm{x-c}^2-2\langle x-c,z-c\rangle+\norm{z-c}^2
+ \ge\norm{x-c}^2.
+\]
+It therefore characterizes the unique minimizer.
+
+For an affine subspace, \(c+h\) and \(c-h\) are feasible for every \(h\in L\). Applying the inequality with both signs gives \(\langle x-c,h\rangle=0\). Orthogonality conversely implies the same variational inequality. In this case the preceding expansion becomes the Pythagorean equality, not merely an inequality.
+\end{proof}
+
+For a closed linear subspace \(L\), denote its projection by \(P_L\). The lemma gives a unique decomposition
+\[
+ x=P_Lx+(x-P_Lx),\qquad P_Lx\in L,\quad x-P_Lx\in L^\perp.
+\]
+Adding two such decompositions, or multiplying one by a scalar, proves linearity by uniqueness. The Pythagorean identity gives \(\norm{P_Lx}\le\norm{x}\), so \(P_L\) is bounded. It fixes \(L\), annihilates \(L^\perp\), and satisfies \(P_L^2=P_L\). For \(x,y\in H\), orthogonality gives
+\[
+ \langle P_Lx,y\rangle=\langle P_Lx,P_Ly\rangle
+ =\langle x,P_Ly\rangle.
+\]
+Thus \(P_L\) is self-adjoint. These properties are conclusions of the construction, not extra data assumed for a proposed projection.
+
+\subsection{Riesz representation and the adjoint}
+\begin{lemma}[Representing a bounded functional]\label{lem:riesz-tool}
+For every bounded real linear functional \(\ell:H\to\R\) on a real Hilbert space, there is a unique \(u\in H\) with
+\[
+ \ell(h)=\langle h,u\rangle\quad(h\in H),\qquad \norm{\ell}=\norm{u}.
+\]
+\end{lemma}
+\begin{proof}
+If \(\ell=0\), take \(u=0\). Otherwise choose \(x\) with \(\ell(x)\ne0\). Boundedness makes \(L=\ker\ell\) closed. Use Lemma~\ref{lem:projection-tool} to form \(v=x-P_Lx\). Then \(v\perp L\) and \(\ell(v)=\ell(x)\ne0\), in particular \(v\ne0\).
+
+For any \(h\in H\), the vector \(h-\ell(h)v/\ell(v)\) belongs to \(L\). Pairing it with \(v\) therefore gives
+\[
+ \langle h,v\rangle=\frac{\ell(h)}{\ell(v)}\norm{v}^2.
+\]
+Consequently \(u=\ell(v)v/\norm{v}^2\) represents \(\ell\). If \(u'\) also represents it, pairing the difference of the two formulas with \(h=u-u'\) gives \(\norm{u-u'}^2=0\), hence uniqueness.
+
+Cauchy--Schwarz gives \(|\ell(h)|\le\norm{u}\norm{h}\), so \(\norm{\ell}\le\norm{u}\). If \(u\ne0\), the unit vector \(h=u/\norm{u}\) gives the reverse inequality. The zero case was already included.
+\end{proof}
+
+Let \(T:H\to R\) be a bounded linear map between real Hilbert spaces. For fixed \(z\in R\), the functional \(h\mapsto\langle Th,z\rangle\) is bounded by \(\norm{T}\norm{z}\norm{h}\). The lemma therefore defines a unique vector \(T^*z\in H\) with
+\[
+ \langle Th,z\rangle=\langle h,T^*z\rangle.
+\]
+Uniqueness of representatives proves that \(T^*\) is linear. The same bound proves \(\norm{T^*z}\le\norm{T}\norm{z}\). Conversely,
+\[
+ \norm{Th}=\sup_{\norm{z}\le1}|\langle Th,z\rangle|
+ \le\norm{T^*}\norm{h},
+\]
+where the first equality follows by testing \(z=Th/\norm{Th}\) when \(Th\ne0\). Hence \(\norm{T^*}=\norm{T}\).
+
+The defining pairing also gives the identity
+\begin{equation}\label{eq:adjoint-range-orthogonal}
+ (\ran T)^\perp=\ker T^*.
+\end{equation}
+Indeed, \(z\) is orthogonal to every \(Th\) exactly when \(\langle h,T^*z\rangle=0\) for every \(h\), which is equivalent to \(T^*z=0\). Orthogonal complements do not change on taking closure. The projection decomposition then gives
+\[
+ \overline{\ran T}=(\ker T^*)^\perp.
+\]
+This is why a self-adjoint injective operator has dense range. It does not yet say its range is closed. In the regularized normal-operator proof, the coercive lower bound supplies that separate fact.
+
+\subsection{Why a bounded bijection has a bounded inverse}
+The closed-range arguments use the inverse theorem only after proving that the relevant source and target subspaces are complete and that the restricted map is bijective. The following derivation records the missing analytic step.
+
+\begin{lemma}[Baire's complete-space principle]\label{lem:baire-tool}
+A nonempty complete metric space cannot be the union of countably many closed sets with empty interior.
+\end{lemma}
+\begin{proof}
+Suppose \(F_1,F_2,\ldots\) are closed with empty interior. Choose a nonempty open ball whose closed ball \(B_1\), of positive radius at most \(1/2\), avoids \(F_1\). Such a choice is possible because the complement of \(F_1\) is open and meets every nonempty open set. Recursively choose a closed ball \(B_{n+1}\) of positive radius at most \(2^{-(n+1)}\), contained in the open ball with the same center and radius as \(B_n\), and disjoint from \(F_{n+1}\). The intersection of that open ball with the complement of \(F_{n+1}\) is nonempty and open, so it contains a sufficiently small closed ball. This also covers the case of isolated points.
+
+The centers form a Cauchy sequence: all centers after stage \(n\) lie in \(B_n\), whose diameter is at most \(2^{1-n}\). Completeness gives a limit. For each fixed \(n\), a tail of centers lies in the closed set \(B_n\), so the limit lies there. It therefore belongs to no \(F_n\), contradicting that these sets cover the space.
+\end{proof}
+
+\begin{lemma}[Continuous inverse for Banach spaces]\label{lem:inverse-tool}
+Let \(S:X\to Y\) be a bounded linear surjection between real Banach spaces. There is a constant \(C<\infty\) such that every \(y\in Y\) has a preimage \(x\) with \(\norm{x}\le C\norm{y}\). If \(S\) is also injective, its inverse is bounded linear.
+\end{lemma}
+\begin{proof}
+If \(Y=\{0\}\), take the zero preimage. Otherwise write \(B_X\) for the closed unit ball. Surjectivity gives
+\[
+ Y=\bigcup_{n\ge1}\overline{S(nB_X)}.
+\]
+By Lemma~\ref{lem:baire-tool}, at least one of the closed sets on the right has nonempty interior. Thus there are \(n\ge1\), \(y_0\in Y\), and \(\rho>0\) such that
+\[
+ B(y_0,\rho)\subseteq\overline{S(nB_X)}.
+\]
+Here \(B(y_0,\rho)\) is an open ball. If \(\norm{h}<\rho\), both \(y_0+h\) and \(y_0\) belong to this closure. Choose approximating image sequences for both. Subtracting their preimages shows \(h\in\overline{S(2nB_X)}\). Scaling by \(2n\) gives a constant \(c=\rho/(2n)>0\) with
+\begin{equation}\label{eq:inverse-closure-ball}
+ B(0,c)\subseteq\overline{S(B_X)}.
+\end{equation}
+This only gives approximate preimages. We next turn them into an actual preimage with a summable budget.
+
+For a nonzero residual \(r\in Y\), set \(\lambda=2\norm{r}/c\). The vector \(r/\lambda\) has norm \(c/2\), so \eqref{eq:inverse-closure-ball} supplies \(z\in B_X\) with
+\[
+ \norm{Sz-r/\lambda}\le c/4.
+\]
+Then \(u=\lambda z\) satisfies
+\[
+ \norm{u}\le 2\norm{r}/c,\qquad
+ \norm{r-Su}\le\norm{r}/2.
+\]
+If the residual is zero, choose \(u=0\). Start from \(r_0=y\), repeat this construction, and define \(r_{j+1}=r_j-Su_j\). Induction yields
+\[
+ \norm{r_j}\le2^{-j}\norm{y},\qquad
+ \sum_{j\ge0}\norm{u_j}\le\frac{4}{c}\norm{y}.
+\]
+The series of preimages converges in \(X\) by completeness, to a vector \(x\) with the displayed norm bound. Continuity of \(S\), together with the finite telescoping equation
+\[
+ S\left(\sum_{j=0}^{N-1}u_j\right)=y-r_N,
+\]
+proves \(Sx=y\). Thus we may take \(C=4/c\).
+
+If \(S\) is bijective, the preimage is unique. Uniqueness makes the inverse additive and homogeneous, and the bound just obtained makes it continuous. In the merely surjective case the construction does not assert a linear choice of preimage. In particular it does not assert that every Banach-space surjection has a bounded linear right inverse.
+\end{proof}
+
+For example, in Theorem~\ref{KS43} the map to be inverted has source \((\ker D)^\perp\) and target \(\ran D\). Both are closed subspaces of the stated Banach spaces. The inverse lemma applies only after the proof has established those closedness and bijectivity facts. It would not apply with an unclosed range equipped with its inherited norm.
+
+\subsection{Neumann inversion with both inverse identities}
+\begin{lemma}[A strict perturbation radius]\label{lem:neumann-tool}
+Let \(W\) be a real Banach space and \(T:W\to W\) bounded linear, with \(\norm{T}\le\theta<1\) and \(\theta\ge0\). Then
+\[
+ Z=\sum_{j=0}^{\infty}T^j
+\]
+exists in operator norm and satisfies
+\[
+ (I-T)Z=Z(I-T)=I,\qquad \norm{Z}\le\frac1{1-\theta}.
+\]
+\end{lemma}
+\begin{proof}
+First recall why the space of bounded operators on \(W\) is complete. An operator-norm Cauchy sequence \(A_n\) makes \(A_nx\) Cauchy for each \(x\), and hence defines \(Ax=\lim_nA_nx\). Pointwise limits preserve linearity. The sequence of operator norms is bounded, so the pointwise limit is a bounded operator. For a fixed sufficiently large \(n\), pass \(m\to\infty\) in \(\norm{(A_n-A_m)x}\le\varepsilon\norm{x}\) to obtain \(\norm{(A_n-A)x}\le\varepsilon\norm{x}\). Taking the supremum over the unit ball proves operator-norm convergence. Completeness of \(W\) is the step that produced each pointwise limit.
+
+Submultiplicativity gives \(\norm{T^j}\le\theta^j\), with the convention \(T^0=I\). The finite partial sums are therefore operator-norm Cauchy, since for \(M>N\),
+\[
+ \left\|\sum_{j=N+1}^{M}T^j\right\|
+ \le\sum_{j=N+1}^{M}\theta^j\le\frac{\theta^{N+1}}{1-\theta}.
+\]
+Their limit \(Z\) has norm at most \(\sum_{j\ge0}\theta^j=1/(1-\theta)\). The operator identities for finite sums are
+\[
+ (I-T)\sum_{j=0}^{N}T^j=I-T^{N+1},\qquad
+ \left(\sum_{j=0}^{N}T^j\right)(I-T)=I-T^{N+1}.
+\]
+Multiplication by a fixed bounded operator is continuous in operator norm, and \(\norm{T^{N+1}}\le\theta^{N+1}\to0\). Passing to the limit proves both inverse identities. When \(W\) is the zero space the same statements hold, with its unique identity map. When \(\theta=1\), the summable tail and decay used here disappear, so the proof supplies no endpoint conclusion.
+\end{proof}
+
+\subsection{The dependency order}
+The analytic arguments can now be read without a circular invocation of their conclusions. Projection gives the orthogonal decomposition and Riesz representation. The latter gives adjoints and the relation between range and adjoint kernel. Baire's principle independently gives the Banach inverse theorem. Those ingredients yield closed-range estimates and the positive regularized normal inverse. Neumann's series gives the separate small-perturbation inverse and its explicit radius.
+
+The weak-subsequence proof in Section~\ref{sec:bounded-realization} uses projection onto the closed separable span generated by the sequence, followed by a coordinate diagonal argument. It does not assume that the whole ambient Hilbert space is separable. The budget-attainment and regularization-limit proofs use that sequential result. Strong convergence is proved later from the minimum-norm condition and the norm identities, not inferred from weak convergence alone.

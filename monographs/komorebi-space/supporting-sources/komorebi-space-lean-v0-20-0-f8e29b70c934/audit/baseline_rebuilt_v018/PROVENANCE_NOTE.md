@@ -1,0 +1,1 @@
+This directory is copied from the complete fresh v0.18 rebuild in this session. Original command paths and timestamps are retained, not rewritten. The report contains source and binary hashes used by the v0.19 extension replay. It is baseline evidence, not a full v0.19 build.

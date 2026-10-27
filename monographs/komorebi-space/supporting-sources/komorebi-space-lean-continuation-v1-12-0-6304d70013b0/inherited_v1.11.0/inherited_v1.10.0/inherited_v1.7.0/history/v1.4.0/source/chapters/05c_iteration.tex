@@ -1,0 +1,172 @@
+\partnote{From approximation to exact realization}{A vanishing defect is a statement about measurements. A limiting realization also requires control of the candidate itself. This part follows the movement of approximate answers, the closure of admissible correction images, and the meaning of the ambient completion.}
+\chap{Exactification without a fixed contraction rate}\label{sec:variable-exactification}
+The constructed linear repair in Section~\ref{sec:split} is a useful special case of a more general principle. One can prove convergence without one fixed contraction factor, without a linear update rule, and without a globally Lipschitz iteration. What must not be lost is control of the total movement.
+
+\subsection{The two limits that must be established}
+Let \((M,\dist)\) be a complete metric space. Let \(\omega:M\to[0,\infty)\) be a nonnegative residual function, and call a point exact when \(\omega(x)=0\). We regard \(\omega\) as a real-valued function when discussing continuity. Assume it is lower semicontinuous, so that every sublevel set \(\{x:\omega(x)\le a\}\) is closed.
+
+For an approximation sequence \(f_n\), the statements
+\[
+ \omega(f_n)\longrightarrow0
+ \quad\text{and}\quad
+ f_n\longrightarrow x
+\]
+are different. The first concerns the observed discrepancy. The second concerns the mathematical candidate in the chosen metric. Neither implies the other without additional hypotheses.
+
+\begin{theorem}[Summable movement gives exactification]\label{KS71}
+Suppose \(b_n\ge0\), \(\sum_{n=0}^{\infty}b_n<\infty\), and
+\[
+ \dist(f_n,f_{n+1})\le b_n,\qquad \omega(f_n)\longrightarrow0.
+\]
+Then there is a limit \(x\in M\) satisfying
+\[
+ f_n\longrightarrow x,\qquad\omega(x)=0,\qquad
+ \dist(f_n,x)\le\sum_{k=n}^{\infty}b_k.
+\]
+\end{theorem}
+\begin{proof}
+For \(m>n\), the triangle inequality gives
+\[
+ \dist(f_n,f_m)\le\sum_{k=n}^{m-1}b_k.
+\]
+The tail of a convergent nonnegative series tends to zero, so \((f_n)\) is Cauchy. Completeness supplies its limit \(x\). Taking \(m\to\infty\) in the preceding inequality gives the tail estimate.
+
+For each \(\varepsilon>0\), the residual eventually lies in the closed sublevel set \(\{z:\omega(z)\le\varepsilon\}\). Its limit belongs to that set. Therefore \(\omega(x)\le\varepsilon\) for every positive \(\varepsilon\). Nonnegativity implies \(\omega(x)=0\).
+\end{proof}
+\source{KS71}
+The formal theorem is slightly more general: it is stated in a complete pseudometric space. In a metric space the limit of this fixed sequence is unique. That does not mean different admissible approximation procedures select the same exact point.
+
+\subsection{Variable rates and a movement budget}
+Let \(q_n,C_n\ge0\), and define the prefix product
+\[
+ Q_0=1,\qquad Q_{n+1}=q_nQ_n.
+\]
+Assume
+\begin{equation}\label{eq:variable-rate}
+ \omega(f_{n+1})\le q_n\omega(f_n),\qquad
+ \dist(f_n,f_{n+1})\le C_n\omega(f_n).
+\end{equation}
+
+\begin{theorem}[Variable-rate exactification]\label{KS72}
+If \(Q_n\to0\) and \(\sum_n C_nQ_n<\infty\), then \((f_n)\) has an exact limit and
+\begin{equation}\label{eq:variable-tail}
+ \dist(f_n,x)\le\omega(f_0)\sum_{k=n}^{\infty}C_kQ_k.
+\end{equation}
+For constant \(q_n=q\in[0,1)\) and constant \(C_n=C\), the sharper restarted estimate is
+\[
+ \dist(f_n,x)\le\frac{C}{1-q}\,\omega(f_n).
+\]
+\end{theorem}
+\begin{proof}
+Induction in \eqref{eq:variable-rate} yields \(0\le\omega(f_n)\le Q_n\omega(f_0)\). The residual therefore tends to zero, and the step sizes are bounded by the summable sequence \(C_nQ_n\omega(f_0)\). Apply Theorem~\ref{KS71}.
+
+For constant rates, restart the same induction at index \(n\). The residual at \(n+k\) is at most \(q^k\omega(f_n)\), so the movement from \(f_n\) to its limit is at most \(C\omega(f_n)\sum_{k\ge0}q^k\). Summing the geometric series proves the last estimate. No division by an individual residual is needed, so a zero residual causes no exceptional case.
+\end{proof}
+\source{KS72}
+The individual factors \(q_n\) need not all be below one. Temporary residual increases are permitted if the prefix products decay and the weighted movements remain summable. Conversely, a decaying product is not enough when its movement budget diverges.
+
+\subsection{A convergent path with no uniform geometric factor}
+In \(\R^2\) with the maximum norm, fix \(s\in\R\) and take
+\[
+ f_n=(s,(n+1)^{-1}),\qquad \omega(u,r)=|r|.
+\]
+The protected coordinate is the first one. Direct calculation gives
+\[
+ q_n=\frac{n+1}{n+2},\quad Q_n=\frac1{n+1},\quad
+ C_n=\frac1{n+2},\quad
+ \dist(f_n,f_{n+1})=\frac1{(n+1)(n+2)}.
+\]
+No constant \(q<1\) bounds all the ratios \(q_n\), since they tend to one. Nevertheless
+\[
+ \sum_{k=n}^{\infty}C_kQ_k
+ =\sum_{k=n}^{\infty}\left(\frac1{k+1}-\frac1{k+2}\right)
+ =\frac1{n+1}.
+\]
+The limit is \((s,0)\), and the error bound is an equality. The model shows why the variable-rate theorem is not merely a rephrasing of a fixed geometric contraction.
+
+\plate{25_summable_path}{Polynomial residual decay can still give an exact limit with a sharp error certificate. The residual $1/(n+1)$ is not summable, but the actual movement $1/((n+1)(n+2))$ is. The theorem uses the movement series.}{fig:summable-path}
+
+\subsection{Residual bursts can be compatible with convergence}
+Set \(q_{2k}=2\), \(q_{2k+1}=1/8\). Then
+\[
+ Q_{2k}=4^{-k},\qquad Q_{2k+1}=2\cdot4^{-k}.
+\]
+For \(f_n=(s,Q_n)\), the residual doubles at the start of every pair of steps. Choose \(C_{2k}=1\) and \(C_{2k+1}=7/8\). These give equality in the movement bound, and
+\[
+ \sum_{n=0}^{\infty}C_nQ_n
+ =\sum_{k=0}^{\infty}\left(1+\frac74\right)4^{-k}
+ =\frac{11}{3}.
+\]
+Thus \(f_n\to(s,0)\) despite infinitely many increases. Starting at an even index \(2k\), the remaining movement budget is \(\frac{11}{3}4^{-k}\). At an odd index \(2k+1\), it is \(\frac83 4^{-k}\). These bounds are larger than the actual distance because the path repeatedly moves away and returns.
+
+\plate{26_residual_bursts}{The residual increases at every even-to-odd step, but each two-step product is $1/4$. A convergent product and a summable movement budget control the whole path. Monotonicity of individual residual values is not assumed by the variable-rate theorem.}{fig:residual-bursts}
+
+\subsection{Protected meaning survives a controlled limit}
+Return to Banach and normed linear spaces, with continuous linear maps \(d:E\to R\) and \(p:E\to S\). Put \(\omega(f)=\norm{df}\). The residual is continuous, hence lower semicontinuous.
+
+\begin{proposition}[Controlled paths kill the actual obstruction]\label{KS73}
+Suppose \(E\) is complete, \(\norm{df_n}\to0\), \(p(f_n)=p(f_0)\), and \(\dist(f_n,f_{n+1})\le b_n\) for a summable nonnegative budget. Then there is \(x\) with
+\[
+ f_n\to x,\qquad dx=0,\qquad p(x)=p(f_0),
+\]
+and the constrained obstruction \([df_0]\in R/d(\ker p)\) vanishes.
+\end{proposition}
+\begin{proof}
+Theorem~\ref{KS71} gives the limit and \(dx=0\). By continuity, \(p(x)=\lim_n p(f_n)=p(f_0)\). Consequently \(a=f_0-x\) lies in \(\ker p\) and satisfies \(da=df_0\). It is an actual admissible correction, so the quotient class is zero.
+\end{proof}
+\source{KS73}
+This proposition converts a controlled approximation argument into a statement about the algebraic quotient defined earlier. Merely showing that \(df_n\to0\) would not produce the admissible vector \(f_0-x\), because there might be no candidate limit \(x\).
+
+\subsection{When two repair paths select the same point}
+\begin{proposition}[Path independence requires a comparison]\label{KS74}
+Let \(f_n\to x\) and \(g_n\to y\) in a metric space. If
+\[
+ \dist(f_n,g_n)\le\beta_n,\qquad\beta_n\to0,
+\]
+then \(x=y\). In contrast, exactness and preservation of a nonzero observable alone do not force a unique answer.
+\end{proposition}
+\begin{proof}
+Continuity of distance and the squeeze theorem give \(\dist(x,y)=0\), hence equality. For the last assertion use \(E=\R\times(\R\times\R)\), defect \(d(s,u,r)=r\), and observable \(p(s,u,r)=s\). The points \((1,0,0)\) and \((1,1,0)\) are distinct exact answers with the same nonzero protected value.
+\end{proof}
+\source{KS74}
+A stronger worked example uses actual convergent paths from the \emph{same} initial input:
+\[
+ f_n^{(a)}=(s,a(1-2^{-n}),2^{-n})\qquad(a\in\R).
+\]
+All paths begin at \((s,0,1)\), keep \(p=s\), and have residual \(2^{-n}\). Their maximum-norm movements are \(\frac12\max\{|a|,1\}2^{-n}\), so every path satisfies geometric exactification. Their limits are \((s,a,0)\). For different \(a,b\),
+\[
+ \dist(f_n^{(a)},f_n^{(b)})=|a-b|(1-2^{-n})\longrightarrow|a-b|,
+\]
+not zero. The missing uniqueness hypothesis is visible in the exact direction along which the paths separate.
+
+\plate{27_path_limits}{All paths start at the same candidate, have the same residual at each step, and preserve the same coordinate $s$. They converge to different exact points because the coordinate $u$ is unprotected. A vanishing residual is not a path-comparison budget.}{fig:path-limits}
+
+\subsection{Changing the sampling schedule does not preserve a rate}
+A residual profile \(\eta_n\) indexed by resolution is not an iteration trajectory. Nevertheless a useful convergence property is invariant under a cofinal schedule when the profile is monotone.
+
+\begin{proposition}[Cofinal sampling of a decreasing profile]\label{KS75}
+Suppose \(\eta_n\ge0\) is nonincreasing and \(\phi:\N\to\N\) is monotone and unbounded. Then
+\[
+ \eta_n\to0\quad\Longleftrightarrow\quad\eta_{\phi(n)}\to0.
+\]
+Without the monotonicity of \(\eta\), the reverse implication can fail even for a cofinal schedule.
+\end{proposition}
+\begin{proof}
+The schedule tends to infinity, so convergence of the full profile implies convergence of the sampled one. Conversely, choose a sampled value below any prescribed \(\varepsilon>0\). Every later index of the original profile has no larger value, by monotonicity. This proves convergence of the full profile.
+
+For failure without monotonicity, take \(\eta_{2n}=0\), \(\eta_{2n+1}=1\), and \(\phi(n)=2n\). All sampled values vanish, but infinitely many original values equal one.
+\end{proof}
+\source{KS75}
+Even in the decreasing case, the numerical rate changes. The profile \(\eta_n=1/(n+1)\), sampled at \(\phi(n)=2^n-1\), becomes \(2^{-n}\). This is exponential decay in the \emph{number of observations}, not a proof of a faster correction process at the original resolution scale.
+
+\subsection{Three hypotheses that cannot simply be dropped}
+\textbf{Summable movement.} In maximum-norm \(\R^3\), let
+\[
+ f_n=(s,H_n,(n+1)^{-1}),\qquad
+ H_n=\sum_{j=1}^{n}\frac1j.
+\]
+The first coordinate is protected and the residual is the last coordinate. It tends to zero with the same ratios as the polynomial example. The movement equals \(1/(n+1)\), however, and the unprotected coordinate diverges. Here \(C_n=1\), so \(\sum C_nQ_n\) is the divergent harmonic series. Residual decay and semantic preservation hold, but exactification of this path fails.
+
+\textbf{Completeness.} In the metric space \((0,\infty)\), take \(f_n=1/(n+1)\) and \(\omega(x)=x\). The steps are summable and the residual tends to zero, but there is no limit in this space. Completing the space adds the missing zero. It is essential to say whether that completion belongs to the intended model.
+
+\textbf{Lower semicontinuity.} In \(\R\), define \(\omega(0)=1\) and \(\omega(x)=0\) for \(x\ne0\). The same positive sequence converges with summable movement and residual zero at every step, yet its limit is not exact. The zero sublevel set is not closed. This example isolates why convergence of measurements along a sequence must interact correctly with the ambient topology.

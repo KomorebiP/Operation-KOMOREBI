@@ -1,0 +1,257 @@
+\clearpage
+\chap{Regularization selects a protected correction}\label{sec:regularized-repair}
+A fixed budget asks how small the residual can become without exceeding an allowed correction size. Quadratic regularization reverses the emphasis. It asks for the best compromise between the residual and the size of the change. The resulting problem has a unique answer even when the exact protected equation has no solution.
+
+That last sentence is both its usefulness and its limitation. The existence of a regularized answer is not a proof of exact realizability. The limiting behavior, rather than the mere existence of the minimizer, supplies the diagnosis.
+
+\subsection{The normal equation is derived in the protected space}
+For $\alpha>0$, define on $H=\ker p$
+\[
+ J_\alpha(a)=\norm{Ta-r}^2+\alpha\norm a^2.
+\]
+Both norms are the declared Hilbert norms. All minimizers below are corrections in $H$, so preservation is exact for every parameter, not just in the limit. This is ordinary quadratic Tikhonov regularization applied to the actual protected correction operator. The standard regularization background is discussed in \cite{clason-inverse}. The proof here does not require $T$ to be compact.
+
+\begin{theorem}[A unique regularized correction]\label{WR06}
+For every $\alpha>0$, there is a unique minimizer
+\[
+ a_\alpha=(T^*T+\alpha I)^{-1}T^*r.
+\]
+It satisfies $T^*(r-Ta_\alpha)=\alpha a_\alpha$. For every $a\in H$,
+\begin{equation}\label{eq:regularization-energy}
+ J_\alpha(a)-J_\alpha(a_\alpha)
+ =\norm{T(a-a_\alpha)}^2+\alpha\norm{a-a_\alpha}^2.
+\end{equation}
+\end{theorem}
+\begin{proof}
+\emph{Step 1: the normal operator has an actual bounded inverse.} Let $B=T^*T+\alpha I:H\to H$. It is bounded and self-adjoint. For every $h\in H$,
+\[
+ \langle Bh,h\rangle=\norm{Th}^2+\alpha\norm h^2
+ \ge\alpha\norm h^2.
+\]
+If $h\ne0$, Cauchy--Schwarz and division by $\norm h$ give $\norm{Bh}\ge\alpha\norm h$. The same inequality holds at zero. It implies injectivity of $B$.
+
+To prove closedness of its range, suppose $Bh_n\to y$. Applying the lower bound to $h_n-h_m$ gives
+\[
+ \norm{h_n-h_m}\le\alpha^{-1}\norm{Bh_n-Bh_m}.
+\]
+Thus $h_n$ is Cauchy. Completeness of $H$ supplies a limit $h$, and continuity gives $Bh=y$. If $y$ is orthogonal to the range of $B$, then for every $h$,
+\[
+ 0=\langle Bh,y\rangle=\langle h,By\rangle.
+\]
+Taking $h=By$ gives $By=0$, and injectivity gives $y=0$. A closed subspace with zero orthogonal complement is the whole Hilbert space, so $\ran B=H$.
+
+The inverse therefore exists. Its linearity follows from uniqueness of preimages, and its bound is $\norm{B^{-1}y}\le\alpha^{-1}\norm y$. This construction does not assume closedness of $\ran T$. It uses the positive term $\alpha I$ in the normal operator.
+
+\emph{Step 2: define the optimizer and prove its normal equation.} Set $a_\alpha=B^{-1}T^*r$. Then $Ba_\alpha=T^*r$, or equivalently
+\[
+ T^*(Ta_\alpha-r)+\alpha a_\alpha=0.
+\]
+Because the construction takes place in $H=\ker p$, it already satisfies the exact protection requirement.
+
+\emph{Step 3: prove global minimality, rather than just stationarity.} Write any proposed correction as $a=a_\alpha+h$ and set $s=Ta_\alpha-r$. Expanding both squared norms gives
+\[
+\begin{aligned}
+ J_\alpha(a_\alpha+h)-J_\alpha(a_\alpha)
+ &=\norm{Th}^2+\alpha\norm h^2
+     +2\langle s,Th\rangle+2\alpha\langle a_\alpha,h\rangle\\
+ &=\norm{Th}^2+\alpha\norm h^2
+     +2\langle T^*s+\alpha a_\alpha,h\rangle\\
+ &=\norm{Th}^2+\alpha\norm h^2.
+\end{aligned}
+\]
+This is the asserted energy identity. It is nonnegative and, since $\alpha>0$, vanishes only for $h=0$. Therefore $a_\alpha$ is the unique global minimizer. In the zero correction space, the same construction and identities reduce to its single element, zero.
+\end{proof}
+\written{WR06}
+
+A declared regularization parameter is part of the problem. A calculation that changes $\alpha$ is solving a different optimization problem, even if the protected data and forward operator stay fixed. On the other hand, the preservation condition itself does not change with $\alpha$.
+
+\subsection{Coordinate bases must retain the correction metric}
+In finite dimensions, let $B$ have linearly independent columns spanning $\ker p$. Write $a=Bc$. The coefficient vector $c$ is a representation of the correction, not necessarily an isometric one. Set
+\[
+ S=dB,\qquad G=B^{\mathsf T}B.
+\]
+The correct coordinate equation is
+\begin{equation}\label{eq:gram-regularization}
+ (S^{\mathsf T}S+\alpha G)c=S^{\mathsf T}r.
+\end{equation}
+The matrix $G$ is positive definite because the columns are independent. Replacing $G$ by the identity changes the meaning of correction size unless the chosen basis is orthonormal.
+
+For example, let $d(a_1,a_2)=a_1$, $p(a_1,a_2)=a_1-a_2$, $r=1$, and $\alpha=1$. A basis of $\ker p$ is the column $B=(1,1)^{\mathsf T}$. Here $S=1$ and $G=2$, so the correction is $(1/3,1/3)$. Penalizing the coordinate with $G=1$ instead gives $(1/2,1/2)$. The latter is not the optimizer for the ambient Euclidean norm. The difference is a metric change, not a discrepancy between equivalent calculations.
+
+The executable example in this edition constructs the nullspace basis over the rationals, retains its Gram matrix, solves \eqref{eq:gram-regularization}, and returns both the correction and an exact normal-equation residual. It also handles a zero-dimensional protected kernel without pretending that a nonzero correction exists.
+
+\subsection{Parameter monotonicity and the fixed-budget problem}
+\begin{proposition}[Regularized answers lie on the budget frontier]\label{WR07}
+If $0<\alpha<\gamma$, then
+\[
+ \norm{a_\alpha}\ge\norm{a_\gamma},\qquad
+ \norm{r-Ta_\alpha}\le\norm{r-Ta_\gamma}.
+\]
+At $M_\alpha=\norm{a_\alpha}$,
+\[
+ \beta(M_\alpha)=\norm{r-Ta_\alpha}.
+\]
+When $v_\alpha=r-Ta_\alpha\ne0$, its normalization is an optimizing witness in WR04 at that budget.
+\end{proposition}
+\begin{proof}
+Let $A_\alpha=\norm{a_\alpha}^2$ and $R_\alpha=\norm{r-Ta_\alpha}^2$. Comparing the two admissible minimizers in each other's objectives gives
+\[
+ R_\alpha+\alpha A_\alpha\le R_\gamma+\alpha A_\gamma,
+ \qquad R_\gamma+\gamma A_\gamma\le R_\alpha+\gamma A_\alpha.
+\]
+Add these inequalities and cancel the residual terms. The result is
+\[
+ (\gamma-\alpha)(A_\alpha-A_\gamma)\ge0.
+\]
+Since $\gamma>\alpha$, it follows that $A_\alpha\ge A_\gamma$. Return to the first comparison to obtain
+\[
+ R_\alpha-R_\gamma\le\alpha(A_\gamma-A_\alpha)\le0.
+\]
+Taking square roots, which preserves order for nonnegative numbers, proves both monotonicity statements.
+
+At $M_\alpha=\norm{a_\alpha}$, the vector $a_\alpha$ is budget-feasible. If another correction $a$ in that ball had strictly smaller residual norm, then
+\[
+ J_\alpha(a)
+ =\norm{r-Ta}^2+\alpha\norm a^2
+ <\norm{r-Ta_\alpha}^2+\alpha\norm{a_\alpha}^2,
+\]
+contradicting its defining minimality. Thus it attains the budget frontier.
+
+For the witness statement, let $v=r-Ta_\alpha\ne0$. The normal equation gives $T^*v=\alpha a_\alpha$. Also $r=v+Ta_\alpha$, hence
+\[
+ \langle r,v\rangle
+ =\norm v^2+\langle a_\alpha,T^*v\rangle
+ =\norm v^2+\alpha\norm{a_\alpha}^2.
+\]
+For $z=v/\norm v$, the support penalty is
+\[
+ M_\alpha\norm{T^*z}
+ =\frac{\alpha\norm{a_\alpha}^2}{\norm v}.
+\]
+Subtracting it from $\langle r,z\rangle$ yields $\norm v=\beta(M_\alpha)$, so this is an optimizing witness. This calculation also covers a zero correction $a_\alpha$ with nonzero residual. If $v=0$, normalization is unavailable, but the zero witness attains the zero budget residual.
+\end{proof}
+\written{WR07}
+
+This links a penalized calculation to a hard-budget certificate. It does not say that every larger budget must produce a different answer. Once the least-squares floor is attained, excess budget can be irrelevant. If $T^*r=0$, every regularized correction is zero and the entire profile is constant.
+
+\subsection{The limit separates projection from actual realizability}
+Keep $C=\overline{\ran T}$, $b=P_Cr$, and $q=\norm{r-b}$. Since $r-b\in\ker T^*$, the regularized corrections depend on $b$, not on the component that is orthogonal to the closure of all attainable residuals.
+
+\begin{theorem}[The regularization limit alternative]\label{WR08}
+As $\alpha\downarrow0$,
+\[
+ Ta_\alpha\longrightarrow b,\qquad
+ \norm{r-Ta_\alpha}\longrightarrow q,\qquad
+ \alpha\norm{a_\alpha}^2\longrightarrow0.
+\]
+If $b\in\ran T$, let $a^\dagger$ be its unique minimum norm preimage. Then
+\[
+ a_\alpha\longrightarrow a^\dagger\quad\text{in norm}.
+\]
+If $b\notin\ran T$, then $\norm{a_\alpha}\to\infty$.
+\end{theorem}
+\begin{proof}
+\emph{Step 1: identify the unavoidable component.} Since $r-b\perp\overline{\ran T}$, the adjoint identity gives $T^*(r-b)=0$. Thus $a_\alpha(r)=a_\alpha(b)$. For every correction the orthogonal decomposition is
+\[
+ \norm{r-Ta}^2=q^2+\norm{b-Ta}^2.
+\]
+In particular both the residual square and the minimum objective are at least $q^2$.
+
+\emph{Step 2: take the small-parameter limit in the correct order.} Let $\epsilon>0$. Since $b$ lies in the closure of the range, choose a single $a\in H$ with $\norm{r-Ta}^2<q^2+\epsilon$. This $a$ is chosen before $\alpha$. Minimality gives
+\[
+ q^2\le\norm{r-Ta_\alpha}^2
+ \le J_\alpha(a_\alpha)
+ \le q^2+\epsilon+\alpha\norm a^2.
+\]
+For sufficiently small $\alpha$, the last term is below $q^2+2\epsilon$ (and if $a=0$ it is already below $q^2+\epsilon$). Hence both intervening quantities tend to $q^2$. Their difference is $\alpha\norm{a_\alpha}^2$, which tends to zero. The orthogonal decomposition now implies $\norm{Ta_\alpha-b}^2\to0$, and taking square roots gives the first two limits.
+
+\emph{Step 3: when the projected datum is attained, obtain a uniform bound.} Suppose $b\in\ran T$. The preimage set is a nonempty closed affine subset, so projection of zero supplies its unique minimum-norm element $a^\dagger$. Comparing with it and subtracting $q^2$ gives
+\[
+ \norm{Ta_\alpha-b}^2+\alpha\norm{a_\alpha}^2
+ \le\alpha\norm{a^\dagger}^2.
+\]
+Thus $\norm{a_\alpha}\le\norm{a^\dagger}$ for every $\alpha>0$. This bound does not follow merely from the previously proved vanishing weighted penalty.
+
+\emph{Step 4: strengthen weak convergence to norm convergence.} Take an arbitrary sequence $\alpha_n\downarrow0$, or more generally positive $\alpha_n\to0$. The bound supplies a weakly convergent subsequence $a_{\alpha_{n_k}}\rightharpoonup a$. Since its images converge in norm to $b$, the adjoint pairing argument of WR01 yields $Ta=b$. Weak lower semicontinuity gives
+\[
+ \norm a\le\liminf_k\norm{a_{\alpha_{n_k}}}
+ \le\norm{a^\dagger}.
+\]
+Minimality and uniqueness of $a^\dagger$ force $a=a^\dagger$. Moreover the same lower bound, together with the uniform upper bound, gives convergence of the norms to $\norm{a^\dagger}$. In a real Hilbert space,
+\[
+ \norm{a_{\alpha_{n_k}}-a^\dagger}^2
+ =\norm{a_{\alpha_{n_k}}}^2+\norm{a^\dagger}^2
+       -2\langle a_{\alpha_{n_k}},a^\dagger\rangle\longrightarrow0.
+\]
+Thus this subsequence converges strongly. If the full positive-parameter family failed to converge strongly, there would be an $\epsilon>0$ and parameters $\alpha_n\to0$ whose corrections all stayed at distance at least $\epsilon$ from $a^\dagger$. The argument just given would produce a strongly convergent subsequence of them, a contradiction. This proves the limit for the entire parameter family.
+
+\emph{Step 5: in the unattained case the norms tend to infinity.} If $b\notin\ran T$ and the norms failed to tend to infinity, there would exist $M<\infty$ and positive $\alpha_n\to0$ with $\norm{a_{\alpha_n}}\le M$. Their images still tend to $b$ by Step 2. WR01 would then put $b$ in the actual range, a contradiction. This proves divergence of the norms, not just unboundedness somewhere along the path.
+\end{proof}
+\written{WR08}
+
+The vanishing penalty $\alpha\norm{a_\alpha}^2$ is not a boundedness certificate for $a_\alpha$. Its coefficient is tending to zero. In the escaping case, the penalty and residual can both tend to zero while the actual corrections diverge.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}p{.17\linewidth}p{.26\linewidth}X@{}}
+\toprule Residual floor & Is $b$ attained? & Limit of the protected corrections\\\midrule
+$q=0$ & Yes & Strong convergence to the nearest exact protected correction.\\[3pt]
+$q=0$ & No & Residual vanishes, correction norms diverge, no exact protected answer.\\[3pt]
+$q>0$ & Yes & Strong convergence to the least norm least-squares correction, not an exact answer.\\[3pt]
+$q>0$ & No & A positive residual floor and diverging correction norms occur together.\\\bottomrule
+\end{tabularx}
+\end{center}
+
+The last case is not hypothetical. Let $Tu=(u_n/n)$ on $\ell^2$, define $Su=(Tu,0)$ into $\ell^2\oplus\R$, and take $r=((1/n),1)$. Then $b=((1/n),0)$ is in the closure but not the range, while $q=1$. The same escaping corrections as before coexist with an irreducible orthogonal residual. Positive floor and unbounded correction cost are independent features.
+
+\subsection{Noise is controlled at a fixed parameter}
+\fixedplate{34_noise_filter}{For one singular value $\sigma$, the response to residual-data noise is $\sigma/(\sigma^2+\alpha)$. Its maximum occurs at $\sigma=\sqrt\alpha$ and equals $1/(2\sqrt\alpha)$. The plot evaluates this formula and the universal horizontal bounds at three explicit positive parameters.}{fig:noise-filter}
+
+\begin{theorem}[Data sensitivity and a convergent parameter choice]\label{WR09}
+For two residual data $r,\widetilde r$ with $\norm{r-\widetilde r}\le\delta$ and the same $T,\alpha$,
+\[
+ \norm{a_\alpha(r)-a_\alpha(\widetilde r)}
+ \le\frac{\delta}{2\sqrt\alpha},\qquad
+ \norm{T(a_\alpha(r)-a_\alpha(\widetilde r))}\le\delta.
+\]
+The coefficient $1/(2\sqrt\alpha)$ is sharp over bounded linear Hilbert operators. If $b=P_Cr\in\ran T$, $\alpha(\delta)\to0$, and $\delta/\sqrt{\alpha(\delta)}\to0$, then the noisy corrections converge strongly to $a^\dagger$ as $\delta\to0$.
+\end{theorem}
+\begin{proof}
+Both corrections are constructed at the same positive parameter and in the same Hilbert correction space. Let $h=a_\alpha(\widetilde r)-a_\alpha(r)$ and $e=\widetilde r-r$. Subtract the two normal equations to obtain
+\[
+ (T^*T+\alpha I)h=T^*e.
+\]
+Pair with $h$ and use the adjoint identity:
+\[
+ \norm{Th}^2+\alpha\norm h^2
+ =\langle e,Th\rangle\le\delta\norm{Th}.
+\]
+Put $t=\norm{Th}\ge0$. If $t>0$, dropping the nonnegative penalty and dividing by $t$ gives $t\le\delta$. If $t=0$, that inequality is already true. Completing the scalar square gives
+\[
+ \alpha\norm h^2\le\delta t-t^2
+ =\frac{\delta^2}{4}-(t-\delta/2)^2
+ \le\frac{\delta^2}{4}.
+\]
+Because $\alpha>0$, taking square roots proves the correction bound. This also explains why the coefficient is $1/(2\sqrt\alpha)$ rather than the coarser $\norm T/\alpha$ obtained by bounding the inverse alone.
+
+For sharpness at a fixed parameter, take $H=Y=\R$ and $T=\sqrt\alpha\,I$. The solution map is multiplication by
+\[
+ \frac{\sqrt\alpha}{\alpha+\alpha}=\frac1{2\sqrt\alpha}.
+\]
+Any nonzero data perturbation attains the first bound. This is worst-case sharpness across operators at that parameter, not a claim of equality for every fixed operator and every parameter.
+
+For the limiting statement, insert the exact-data correction at the selected parameter:
+\[
+ \norm{a_{\alpha(\delta)}(\widetilde r)-a^\dagger}
+ \le\frac{\delta}{2\sqrt{\alpha(\delta)}}
+       +\norm{a_{\alpha(\delta)}(r)-a^\dagger}.
+\]
+The first term tends to zero by the noise/parameter hypothesis. The second tends to zero by the attained-projection case of WR08, because the selected parameter tends to zero. Both statements require the same fixed operator and Hilbert metrics. The conclusion is a least-squares correction when the unavoidable residual component is nonzero.
+\end{proof}
+\written{WR09}
+
+The theorem does not manufacture an exact solution when $r$ is outside the range. For the positive-floor attainable case it converges to a least-squares correction. For the unattainable projected datum it cannot produce a bounded exact-data limit. The range hypothesis must therefore precede the parameter-choice conclusion.
+
+
+\begin{insight}
+Regularization gives a unique, exactly protected answer at every positive parameter. Whether those answers converge to an exact realization, converge only to a best approximation, or escape is determined by the projected datum's actual range membership. A smooth regularized path does not erase that distinction.
+\end{insight}

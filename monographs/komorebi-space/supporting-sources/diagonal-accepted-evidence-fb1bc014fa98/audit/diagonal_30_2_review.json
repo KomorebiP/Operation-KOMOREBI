@@ -1,0 +1,249 @@
+{
+  "audit_kind": "independent read-only source reasoning and printed-to-formal statement match",
+  "verdict": "proved as written",
+  "claim": "All four conclusions of printed Theorem 30.2 on the actual infinite real Hilbert diagonal model.",
+  "reviewed_at_utc": "2026-10-14T21:17:22.746521+00:00",
+  "authoritative_target": {
+    "file": "proofs/PRINTED_DIAGONAL_THEOREMS.tex",
+    "label": "WR11",
+    "printed_number": "30.2",
+    "sha256": "f10d921f0272d27f0894547767736c32c5f094c7f77a4016b400527a73a229c2"
+  },
+  "claim_card": {
+    "space": "H=lp (fun _:Nat => Real) 2",
+    "index": "j denotes positive printed coordinate n=j+1",
+    "operator": "(Tu)_n=u_n/n",
+    "datum": "w_n=1/n",
+    "quantifiers": "m,N range over natural indices tending to infinity; M ranges over ALL real budgets tending to infinity.",
+    "conclusions": [
+      "A_m/m -> \u03c0/4",
+      "m B_m -> \u03c0/4",
+      "M beta(T,w,M) -> \u03c0/4 as M:Real tends to infinity",
+      "sqrt(N) * norm(w\u2212T hardPrefix(N)) -> 1"
+    ],
+    "hypotheses": "The fixed explicitly constructed real Hilbert model; no additional assumed asymptotic or compactness input is passed to the final theorem.",
+    "norms": "Actual inherited lp/Hilbert norms; beta is the residual distance to the image of the closed correction ball.",
+    "coefficient_domain": "Real",
+    "exceptions": "m=0 and N=0 are finite initial values excluded when needed by eventual positive-index statements."
+  },
+  "source_identities": {
+    "proofs/PRINTED_DIAGONAL_THEOREMS.tex": "f10d921f0272d27f0894547767736c32c5f094c7f77a4016b400527a73a229c2",
+    "lean/KomorebiSpace/DiagonalAsymptotic.lean": "6d1cb7c7e068b9e007c0304359db172ee3ecd66bd90fae6a72d23076de0a0c47",
+    "lean/KomorebiSpace/MonotoneBudgetAsymptotic.lean": "47c6d7fc0097933c3db9a39baf9ed9306a05f81741c99950fa7cfdca806bb372",
+    "lean/KomorebiSpace/InfiniteDiagonalModel.lean": "da72d7f6ccaa870581c23409837955e54db8be2a732354716e908fe9266501d2",
+    "lean/KomorebiSpace/DiagonalSeriesBounds.lean": "fc606b9db34f39179ba3cedcc43504325bd14dfdba6de8c46ad7bd6a70a31cb2",
+    "lean/KomorebiSpace/DiagonalDefinitions.lean": "751bf02816f74e2fe8a8bc9f45c22f9538d087d1af536af3835e4906f4015f54",
+    "lean/KomorebiSpace/BudgetProfile.lean": "a11931c108e046080539e346bbf910a99395da0ee51dc8634f8101bb9c95170f",
+    "lean/KomorebiSpace/BudgetProfileGeometry.lean": "edee3c011c62ef35c044fa5fe415a493ab6c0ff960970e7d7af72a71113757c6",
+    "lean/KomorebiSpace/RegularizedHilbertRepair.lean": "b57ee2a27d7c30e35c17a90655aad21a967ae73f830d84ee81a22a2c92276ae4"
+  },
+  "coverage": {
+    "read_in_full": [
+      "lean/KomorebiSpace/DiagonalAsymptotic.lean",
+      "lean/KomorebiSpace/MonotoneBudgetAsymptotic.lean",
+      "lean/KomorebiSpace/InfiniteDiagonalModel.lean"
+    ],
+    "printed_target": "Theorem WR11 and its surrounding diagonal definitions and proof",
+    "supporting_files": "Relevant definitions/theorems inspected in DiagonalDefinitions, DiagonalSeriesBounds, BudgetProfile, BudgetProfileGeometry, RegularizedHilbertRepair; this is not a fresh complete audit of those pre-existing proof files."
+  },
+  "dependency_graph": [
+    {
+      "node": "Actual Hilbert realization and norm/budget identities",
+      "depends_on": [
+        "DiagonalDefinitions",
+        "DiagonalSeriesBounds",
+        "InfiniteDiagonalModel",
+        "RegularizedHilbertRepair",
+        "BudgetProfile"
+      ],
+      "leaf_kind": "internal proof dependencies"
+    },
+    {
+      "node": "Scalar asymptotic constants",
+      "depends_on": [
+        "kernelH/kernelF integrability and antitonicity",
+        "explicit kernelF antiderivative",
+        "pinned sum-integral comparison theorems",
+        "scaled rightSum bounds",
+        "exact sample identities"
+      ],
+      "leaf_kind": "internal proofs and pinned mathematical-library theorems"
+    },
+    {
+      "node": "Full real-budget limit",
+      "depends_on": [
+        "scalar limits",
+        "actual budget-at-norm identity",
+        "positive monotone divergent ratio-one mesh",
+        "first-crossing bracket index",
+        "nonnegative antitone budget profile",
+        "two-sided squeeze"
+      ],
+      "leaf_kind": "internal proofs"
+    },
+    {
+      "node": "Hard-prefix comparator",
+      "depends_on": [
+        "actual finite-support Hilbert vector",
+        "exact norm sqrt(N)",
+        "exact omitted infinite tail",
+        "reciprocal-square tail bounds",
+        "square-root continuity"
+      ],
+      "leaf_kind": "internal proofs and pinned continuity theorem"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "actual_model",
+      "status": "passed",
+      "reason": "H is real lp at exponent 2. Natural j denotes printed n=j+1. T is bounded coordinate multiplication by 1/n, w has coordinates 1/n, A and B are actual infinite squared norms.",
+      "locator": "InfiniteDiagonalModel: H, T_apply, w_apply, norm_a_sq, norm_v_sq; DiagonalDefinitions: index, A, B"
+    },
+    {
+      "id": "constants",
+      "status": "passed",
+      "reason": "kernelH=(1+x\u00b2)^(-1) has half-line integral \u03c0/2; kernelF=kernelH\u00b2 has integral \u03c0/4, proved through its explicit antiderivative. The B limit uses kernelH\u2212kernelF and hence \u03c0/2\u2212\u03c0/4=\u03c0/4.",
+      "locator": "DiagonalAsymptotic: kernelH_integral, kernelF_antiderivative, kernelF_integral, tendsto_A_div, tendsto_mul_B"
+    },
+    {
+      "id": "infinite_sum_control",
+      "status": "passed",
+      "reason": "For each nonnegative decreasing integrable kernel, integral\u2212k(0)/m \u2264 rightSum \u2264 integral. The comparison is for actual infinite summable samples. It supplies an explicit vanishing error, without a finite-window extrapolation or uncontrolled interchange of limits.",
+      "locator": "DiagonalAsymptotic: scaled_kernel_integrable, scaled_kernel_integral, rightSum_bounds, rightSum_tendsto"
+    },
+    {
+      "id": "residual_sample_identity",
+      "status": "passed",
+      "reason": "kernelH((j+1)/m)=aCoord\u00b2+m\u00b2*vCoord\u00b2; summability permits addition and scalar extraction, yielding mB=rightSum(kernelH)\u2212rightSum(kernelF). No false monotonicity of the residual kernel is assumed.",
+      "locator": "DiagonalAsymptotic: kernelH_sample, mul_B_eq_rightSum_sub"
+    },
+    {
+      "id": "budget_identity",
+      "status": "passed",
+      "reason": "beta is infDist to T of the actual closed Hilbert correction ball. The regularized correction minimizes residual among corrections of no larger norm, so beta(T,w,sqrt A_m)=sqrt B_m.",
+      "locator": "BudgetProfile: beta, beta_eq_iInf; InfiniteDiagonalModel: budget_at_a_norm, budget_at_sqrt_A"
+    },
+    {
+      "id": "mesh",
+      "status": "passed",
+      "reason": "budgetMesh(n)=sqrt(A(n+1)) is positive, monotone, divergent, with consecutive ratio tending to 1. The shift excludes the degenerate m=0 term; all algebra involving division is eventually restricted to m\u22651. Strict monotonicity is not needed by the proved transfer lemma.",
+      "locator": "DiagonalAsymptotic: A_pos, A_monotone, A_tendsto_atTop, A_successor_ratio_tendsto, budgetMesh_pos, budgetMesh_monotone, budgetMesh_tendsto_atTop, budgetMesh_ratio_tendsto"
+    },
+    {
+      "id": "all_real_budgets",
+      "status": "passed",
+      "reason": "First crossing supplies u_n\u2264M<u_(n+1) for each sufficiently large real M. Monotonicity of u proves the chosen n tends to infinity. Antitonicity and nonnegativity of beta give both sandwich inequalities; ratio and sampled-product limits prove Tendsto over M:\u211d atTop.",
+      "locator": "MonotoneBudgetAsymptotic: exists_budget_mesh_bracket, budgetMeshIndex_tendsto, tendsto_budget_mesh_lower, tendsto_budget_mesh_upper, tendsto_budget_product_of_mesh; DiagonalAsymptotic: tendsto_actual_budget_product"
+    },
+    {
+      "id": "hard_prefix",
+      "status": "passed",
+      "reason": "hardPrefix N is the sum of the first N unit coordinate vectors in H, has squared norm N, and residual square exactly sum over j\u22650 of 1/(N+j+1)\u00b2. The integral bounds N/(N+1)\u2264N*tail\u22641 give the norm-product limit 1.",
+      "locator": "InfiniteDiagonalModel: hardPrefix, hardPrefix_apply, norm_hardPrefix_sq, norm_hardPrefix_residual_sq; DiagonalAsymptotic: hardPrefixTail_bounds, mul_hardPrefixTail_tendsto, tendsto_hardPrefix_product"
+    },
+    {
+      "id": "printed_statement_match",
+      "status": "passed",
+      "reason": "The bundled theorem contains exactly the two scalar limits, the full real-budget limit with constant \u03c0/4, and the printed sqrt(N) hard-prefix residual limit 1. No asymptotic conclusion is supplied as a hypothesis.",
+      "locator": "DiagonalAsymptotic: tendsto_sqrt_mul_hardPrefix_residual, sharp_diagonal_budget_asymptotic"
+    },
+    {
+      "id": "boundary_cases",
+      "status": "passed",
+      "reason": "Zero natural indices are harmless finite initial terms; positive scales and nonzero denominators are supplied for every eventual identity. Real budgets are eventually above the positive initial mesh point, so no negative-budget assumption is used.",
+      "locator": "Positive-scale hypotheses and eventually_ge_atTop 1 / eventually_ge_atTop (u 0) steps"
+    },
+    {
+      "id": "recorded_compilation",
+      "status": "passed",
+      "reason": "Inspected run14: frozen source before/after hashes match; exit0 with warningAsError; empty clean log. This is author-recorded compilation evidence, not a fresh compiler run by this reviewer.",
+      "locator": "records/asymptotic_runs.json run14; logs/asymptotic_compile_014.log"
+    },
+    {
+      "id": "axiom_record",
+      "status": "passed",
+      "reason": "All 47 reported declaration axiom sets, including the final bundled theorem, are subsets of propext, Classical.choice, Quot.sound.",
+      "locator": "logs/asymptotic_axioms.log"
+    }
+  ],
+  "decisive_evidence": [
+    "Final bundled statement has M explicitly typed Real rather than a natural mesh parameter.",
+    "budgetMeshIndex is selected for every sufficiently large real M and tends to infinity; both sandwich bounds retain required sign hypotheses.",
+    "The nonmonotone residual integrand is handled as the difference of two proved monotone integrable kernel sums.",
+    "hardPrefix is an element of the same infinite Hilbert space, and its budget and residual norm are proved there."
+  ],
+  "pinned_library_leaves_checked": [
+    {
+      "file": "lean/.lake/packages/mathlib/Mathlib/Analysis/SumIntegralComparisons.lean",
+      "sha256": "394571591e6af1aca59fc0c72b6c74050b511b95fa646c7665832a11251c77c1"
+    },
+    {
+      "file": "lean/.lake/packages/mathlib/Mathlib/Analysis/SpecialFunctions/ImproperIntegrals.lean",
+      "sha256": "f0f82c899d17f6644c94dedc1b3b7837c4a3b78692d7b4276de7a7051a11bc4d"
+    },
+    {
+      "file": "lean/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/IntegralEqImproper.lean",
+      "sha256": "ffecc4f2ef64fde604d2b878b0b38a55b2af05d25614e212924ca86956d97e06"
+    }
+  ],
+  "compilation_evidence": {
+    "fresh_reviewer_compilation": false,
+    "author_run": {
+      "run": 14,
+      "argv": [
+        "../scripts/lean_env.sh",
+        "timeout",
+        "90",
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "-o",
+        ".lake/build/lib/lean/KomorebiSpace/DiagonalAsymptotic.olean",
+        "KomorebiSpace/DiagonalAsymptotic.lean"
+      ],
+      "cwd": "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/lean",
+      "started_unix": 1792012479.473221,
+      "duration_seconds": 4.211451292037964,
+      "exit_code": 0,
+      "source_sha256_before": "6d1cb7c7e068b9e007c0304359db172ee3ecd66bd90fae6a72d23076de0a0c47",
+      "source_sha256_after": "6d1cb7c7e068b9e007c0304359db172ee3ecd66bd90fae6a72d23076de0a0c47",
+      "log": "logs/asymptotic_compile_014.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "author_axiom_run": {
+      "run": "axiom_audit",
+      "argv": [
+        "../scripts/lean_env.sh",
+        "timeout",
+        "60",
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/logs/asymptotic_axioms.lean"
+      ],
+      "cwd": "/workspace/scratch/5d9f7f8127b0/komorebi_diagonal_formalization/lean",
+      "started_unix": 1792012518.579738,
+      "duration_seconds": 3.1154890060424805,
+      "exit_code": 0,
+      "source_sha256_before": "6d1cb7c7e068b9e007c0304359db172ee3ecd66bd90fae6a72d23076de0a0c47",
+      "source_sha256_after": "6d1cb7c7e068b9e007c0304359db172ee3ecd66bd90fae6a72d23076de0a0c47",
+      "audit_source": "logs/asymptotic_axioms.lean",
+      "audit_sha256": "a3eafb0af6bfa106ee180358347e3a42689b42f59c2acf9705829ab22eb2e1b1",
+      "log": "logs/asymptotic_axioms.log",
+      "log_sha256": "96d6e9e9b434cbf2431f40368094b8c919d0f05db2f5f3c08286966581d2019e"
+    },
+    "axiom_sets_inspected": 47,
+    "unexpected_axioms": [],
+    "trust_boundary": "Lean compiler/kernel, the recorded pinned mathlib dependency objects, and the three permitted standard axioms. This review does not independently rebuild the external cache or reconcile every imported object with source."
+  },
+  "findings": [],
+  "remaining_gap": "No mathematical or printed-statement correspondence gap identified for Theorem 30.2. Final package replay/object identity reconciliation remains the root verification task.",
+  "strongest_safe_statement": "The frozen source proves all four conclusions of Theorem 30.2 on the actual model, supported by its inspected clean compilation and axiom records.",
+  "next_check": "Use the planned root exact-source replay and archive identity check; no further mathematical repair is indicated.",
+  "source_edits": [],
+  "new_computational_experiments": [],
+  "failures_during_review": []
+}

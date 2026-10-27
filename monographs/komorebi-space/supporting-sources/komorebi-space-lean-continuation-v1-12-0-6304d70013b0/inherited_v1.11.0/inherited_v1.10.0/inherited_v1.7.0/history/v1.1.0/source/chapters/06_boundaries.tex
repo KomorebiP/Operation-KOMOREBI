@@ -1,0 +1,112 @@
+\chap{Mathematical meaning and the remaining boundaries}\label{sec:meaning}
+\subsection{A relative theory can be complete without being absolute}
+The strict space \(\Gamma(F)\) is canonical relative to its diagram: its universal property determines it up to the appropriate unique isomorphism. The additive obstruction is canonical relative to its admissible corrections. A marked realization problem is invariant under the specified comparison equivalences. A repair can be canonical relative to a protected observable, or orthogonal relative to a fixed inner product.
+
+These are meaningful and different kinds of canonicity. They need not culminate in one object independent of every choice of views, coefficients, topology, semantics, and geometry. Some changes of view intentionally forget information. Others strengthen the question. Treating every such change as an equivalence would remove the very distinctions the calculus is designed to preserve.
+
+The appropriate central statement is therefore not that every possible mathematical presentation lives in one fixed universal space. It is that a declared system of representations can be organized into coherent realizations, with explicit extension, comparison, and repair problems. A proposed bridge between two such systems has to show what structure it preserves and what information it loses.
+
+\subsection{Internal realization and intended objects}
+Suppose a separate category \(\mathcal S\) contains the intended semantic objects of an application, and a realization construction gives a comparison functor
+\[
+ \mathcal R:\mathcal S\longrightarrow\mathcal K,
+\]
+where \(\mathcal K\) is the relevant category or groupoid of coherent data. Defining \(\mathcal K\) does not establish that \(\mathcal R\) is faithful, full, or essentially surjective. These are new mathematical questions about the actual semantic comparison.
+
+Faithfulness asks whether distinct semantic arrows can become indistinguishable. Fullness asks whether every compatible comparison comes from a semantic one. Essential surjectivity asks whether every intended coherent datum is realized by an actual semantic object. Depending on the application, one may seek only a restricted image or a classified obstruction to belonging to it.
+
+This distinction prevents a formal globalization of encoded data from being mistaken for an unrestricted arithmetic or physical existence theorem. The abstract construction does not manufacture missing semantic objects.
+
+\subsection{Every finite test can pass while the infinite problem fails}
+\begin{example}[Finite prefixes without a global point]\label{KS54}
+Let \(X_n=\{m\in\N:m\ge n\}\), with bonding maps given by inclusion. Every level is nonempty, and every finite prefix has a coherent point. The inverse limit is nevertheless empty.
+\end{example}
+\begin{proof}
+For a prefix ending at \(N\), assign the integer \(N\) at every level. All inclusions preserve it. In a global point, however, the inclusion equations force every coordinate to be the same integer \(m\), while membership at level \(n\) requires \(m\ge n\) for every \(n\). Taking \(n=m+1\) is a contradiction.
+\end{proof}
+\source{KS54}
+This elementary printed counterexample is not added to the recovered Lean library by this edition. It explains why inverse-limit existence needs more than separate finite solvability. Finiteness, compactness, surjectivity, or another coherence principle must be proved in the relevant application. The example does not contradict the strict gluing theorem: a compatible matching family of all prefixes was never supplied.
+
+\subsection{A positive infinite-existence criterion}
+The failed example isolates a missing compactness or lifting hypothesis. Finite fibers supply a concrete positive criterion without requiring every bonding map to be surjective.
+
+\begin{proposition}[Finite fibers and persistent images]\label{KS58}
+Let \((X_n,\rho_n)\) be a sequential inverse system of nonempty finite sets. Its inverse limit is nonempty. More precisely, if \(\rho_{n,m}:X_m\to X_n\) is composite restriction, then
+\[
+ \im(\operatorname{ev}_n)=Y_n,
+ \qquad Y_n=\bigcap_{m\ge n}\im\rho_{n,m}.
+\]
+Thus a prescribed value at level \(n\) extends precisely when it survives every later image.
+\end{proposition}
+\begin{proof}
+The images in the finite set \(X_n\) form a decreasing sequence of nonempty subsets, so they stabilize to a nonempty \(Y_n\). The maps \(\rho_n\) send \(Y_{n+1}\) into \(Y_n\). They are onto these subsets: given \(y\in Y_n\), choose a later stage \(m\) after both image sequences at levels \(n\) and \(n+1\) have stabilized. Lift \(y\) to \(X_m\) and restrict that lift to \(X_{n+1}\). It belongs to \(Y_{n+1}\) and maps to \(y\).
+
+Choose successive preimages in these nonempty finite fibers. They give a coherent family. Starting at any specified \(y\in Y_n\), and restricting to earlier levels, proves the claimed evaluation image. The reverse inclusion follows by restricting a global family from each later stage.
+\end{proof}
+\source{KS58}
+This is the standard finite-set inverse-limit principle, here with its sequential persistent-image proof~\cite{stacks-limits}. It is a written addition, not a new Lean declaration. It uses ordinary classical choice for the infinite selection. Surjective bonding maps on arbitrary nonempty sets give a second sufficient condition by direct recursive lifting. Neither criterion says that arbitrary data in a non-surjective finite tower extend.
+
+\subsection{A finite computation that exposes the preservation contract}
+Consider a raw vector \(x=(2,0,5)\in\R^3\) with defect \(d(x)=x_1-x_2\). Unconstrained orthogonal repair gives \((1,1,5)\), with squared error two. If the first and third coordinates must be preserved, the unique exact repair is \((2,2,5)\), with squared error four.
+
+Both outputs are exact. Only one satisfies the second preservation problem. Neither theorem contradicts the other because the admissible changes differ. An implementation that reports only zero residual would not distinguish the two tasks.
+
+For a finite linear system over a field, the same question admits independently checkable positive and negative certificates. Let \(A\in\K^{m\times n}\) encode compatibility, \(P\in\K^{p\times n}\) the protected values, and \(x\in\K^n\) the raw candidate. Let the columns of \(N\) be a basis of \(\ker P\). The correction equation is
+\[
+ ANz=Ax,\qquad y=x-Nz.
+\]
+It is equivalent to the stacked system \(Ay=0\), \(Py=Px\).
+
+\begin{proposition}[A finite certificate alternative]\label{KS57}
+Exactly one of the following occurs:
+\begin{enumerate}
+\item There is \(y\) with \(Ay=0\) and \(Py=Px\). Every answer is \(y+H\), where \(H=\ker A\cap\ker P\).
+\item There are row vectors \(\lambda\in\K^{1\times m}\) and \(\mu\in\K^{1\times p}\) with
+\[
+ \lambda A=\mu P,\qquad\lambda Ax=1.
+\]
+\end{enumerate}
+The negative witness annihilates every admissible correction defect, since \(\lambda AN=\mu PN=0\). The ambiguity dimension in the positive case is
+\[
+ \dim H=n-\operatorname{rank}\begin{pmatrix}A\\P\end{pmatrix}.
+\]
+\end{proposition}
+\begin{proof}
+Row-reduce \(T=\begin{pmatrix}A\\P\end{pmatrix}\) with right side \(b=\begin{pmatrix}0\\Px\end{pmatrix}\), retaining the invertible row-operation matrix. A consistent reduced system supplies an answer, and differences of answers are exactly \(\ker T\). Rank-nullity gives the dimension.
+
+Otherwise a row combination \(w=(u,v)\) satisfies \(wT=0\) and \(wb=\alpha\ne0\). Put \(\lambda=-u/\alpha\), \(\mu=v/\alpha\). Then \(\lambda A=\mu P\) and \(\lambda Ax=\mu Px=1\). Conversely an exact protected answer would imply
+\[
+ 1=\lambda Ax=\mu Px=\mu Py=\lambda Ay=0,
+\]
+which is impossible in a field. Therefore the alternatives are exclusive and exhaustive.
+\end{proof}
+\source{KS57}
+
+\subsection{One equation, three preservation problems}
+For the following three cases work over \(\Q\), with \(A=(1,-1,0)\) and \(x=(2,0,5)\). With \(P(x)=(x_1,x_3)\), the unique answer is \((2,2,5)\). With \(P(x)=x_3\), the entire answer set is \(\{(t,t,5):t\in\Q\}\). With \(P(x)=(x_1,x_2)\), no answer exists. In this last case
+\[
+ \lambda=(1/2),\qquad\mu=(1/2,-1/2)
+\]
+is a normalized negative certificate over \(\Q\) or \(\R\): \(\lambda A=\mu P\) and \(\lambda Ax=1\).
+
+The package implements this finite interface over \(\Q\) in \code{examples/protected\_repair.py}. It returns a particular exact answer and an ambiguity basis, or a normalized dual witness. Its verifier checks the certificate equations directly. A Gaussian particular answer is \emph{not} advertised as the nearest answer of Theorem~\ref{KS56}. That is a separate geometric selection.
+
+Exact field elimination does not solve the integer parity problem by changing its coefficient domain. Over \(\Q\), \(2m=1\) has the solution \(1/2\). Over \(\Z\), it has none. The rational interface rejects floating-point inputs rather than silently treating an approximate decimal as exact arithmetic. Its finite tests establish the tested implementation behavior, not an arbitrary-input Lean refinement theorem.
+
+\subsection{Why this is relevant to machine reasoning}
+The framework gives a machine explicit mathematical objects to manipulate: views, restrictions, partial realizations, typed defects, admissible corrections, and comparison witnesses. A successful step can carry both an output and a certificate of what remained fixed. A failed step can return an obstruction in a specified quotient rather than an unexplained failure flag.
+
+The split coordinate theorem is especially direct. In its stated class, the same candidate is represented by protected information and residual data, and repair zeros only the residual coordinate. The descent theorem explains which local certificates can be assembled. The analytic results explain when a small measured defect has a quantitatively reliable meaning.
+
+These observations motivate a machine oriented mathematical language. They do not establish an autonomous reasoning system, an empirical intelligence gain, or a general efficient algorithm. Classical choice, infinite products, quotient membership, and bounded inverse constructions can be mathematically valid without yielding executable finite procedures. Implementation claims need their own specifications and tests.
+
+\subsection{What this monograph closes, and what it leaves open}
+The book supplies a coherent account of strict realization spaces, additive and nonabelian extension problems, split tower repair, retained multiscale detail, a genuine composition-site stack, presentation transport, graph holonomy, closed-range stability, and moving exact spaces. Each layer is attached to the data that make it meaningful.
+
+The following broader targets are not conclusions of this edition: arbitrary higher categorical coefficients and infinity-stack descent, unrestricted changes of view doctrine, norm reconstruction for every bounded infinite residual hierarchy, nonlinear or unknown-connection repair, perturbation across changing Hilbert geometries without new comparison data, and semantic essential surjectivity for unrestricted arithmetic or physical applications.
+
+The proof infrastructure also has a separate next task: recover and reconcile any additional historical modules, choose a pinned integrated source lineage, and run a full fresh cumulative compiler and axiom audit on that lineage. This is an integration obligation, not a reason to label the explicit mathematical constructions in this book merely speculative.
+
+\begin{insight}
+\textbf{The organizing principle.} Coherent realization, obstruction to extension, freedom of completion, and stability of repair belong to one mathematical conversation. Their unification is useful precisely when it does not identify them with one another.
+\end{insight}

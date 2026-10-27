@@ -1,0 +1,513 @@
+theorem KomorebiSpace.BudgetDuality.dualValue_le_residual.{u, v} : ∀ {H : Type u} {Y : Type v}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]
+  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y)
+  {M : ℝ} {a : H}, ‖a‖ ≤ M → ∀ {z : Y}, ‖z‖ ≤ 1 → inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖ ≤ ‖r - T a‖ :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+    [InnerProductSpace ℝ Y] [CompleteSpace Y] T r {M} {a} ha {z} hz =>
+  have hres :=
+    Trans.trans (Trans.trans (real_inner_le_norm (r - T a) z) (mul_le_mul_of_nonneg_left hz (norm_nonneg (r - T a))))
+      (mul_one ‖r - T a‖);
+  have himage :=
+    Trans.trans
+      (Trans.trans (Eq.symm (ContinuousLinearMap.adjoint_inner_right T a z))
+        (real_inner_le_norm a ((ContinuousLinearMap.adjoint T) z)))
+      (mul_le_mul_of_nonneg_right ha (norm_nonneg ((ContinuousLinearMap.adjoint T) z)));
+  le_of_not_gt fun a_1 =>
+    Mathlib.Tactic.Linarith.lt_irrefl
+      (Eq.mp
+        (congrArg (fun _a => _a < 0)
+          (Mathlib.Tactic.Ring.of_eq
+            (Mathlib.Tactic.Ring.Common.add_congr
+              (Mathlib.Tactic.Ring.Common.add_congr
+                (Mathlib.Tactic.Ring.Common.sub_congr
+                  (Mathlib.Tactic.Ring.Common.sub_congr
+                    (Mathlib.Tactic.Ring.Common.atom_pf (inner ℝ r z) rfl
+                      (Eq.mpr
+                        (id
+                          (congrArg
+                            (fun _a => inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1 = inner ℝ r z ^ Nat.rawCast 1 * _a)
+                            (Eq.symm rfl)))
+                        (Eq.refl (inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                    (Mathlib.Tactic.Ring.Common.atom_pf (inner ℝ (T a) z) rfl
+                      (Eq.mpr
+                        (id
+                          (congrArg
+                            (fun _a =>
+                              inner ℝ (T a) z ^ Nat.rawCast 1 * Nat.rawCast 1 = inner ℝ (T a) z ^ Nat.rawCast 1 * _a)
+                            (Eq.symm rfl)))
+                        (Eq.refl (inner ℝ (T a) z ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                    (Mathlib.Tactic.Ring.Common.sub_pf
+                      (Mathlib.Tactic.Ring.Common.neg_add
+                        (Mathlib.Tactic.Ring.Common.neg_mul (inner ℝ (T a) z) (Nat.rawCast 1)
+                          (Mathlib.Meta.NormNum.IsInt.to_raw_eq
+                            (Mathlib.Meta.NormNum.isInt_neg (Eq.refl Neg.neg)
+                              (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                              (Eq.refl (Int.negOfNat 1)))))
+                        Mathlib.Tactic.Ring.Common.neg_zero)
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_lt (inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1)
+                        (Mathlib.Tactic.Ring.Common.add_pf_zero_add
+                          (inner ℝ (T a) z ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast + 0)))))
+                  (Mathlib.Tactic.Ring.Common.atom_pf ‖r - T a‖ rfl
+                    (Eq.mpr
+                      (id
+                        (congrArg (fun _a => ‖r - T a‖ ^ Nat.rawCast 1 * Nat.rawCast 1 = ‖r - T a‖ ^ Nat.rawCast 1 * _a)
+                          (Eq.symm rfl)))
+                      (Eq.refl (‖r - T a‖ ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                  (Mathlib.Tactic.Ring.Common.sub_pf
+                    (Mathlib.Tactic.Ring.Common.neg_add
+                      (Mathlib.Tactic.Ring.Common.neg_mul ‖r - T a‖ (Nat.rawCast 1)
+                        (Mathlib.Meta.NormNum.IsInt.to_raw_eq
+                          (Mathlib.Meta.NormNum.isInt_neg (Eq.refl Neg.neg)
+                            (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                            (Eq.refl (Int.negOfNat 1)))))
+                      Mathlib.Tactic.Ring.Common.neg_zero)
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt (inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1)
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_lt
+                        (inner ℝ (T a) z ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast)
+                        (Mathlib.Tactic.Ring.Common.add_pf_zero_add
+                          (‖r - T a‖ ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast + 0))))))
+                (Mathlib.Tactic.Ring.Common.sub_congr
+                  (Mathlib.Tactic.Ring.Common.atom_pf (inner ℝ (T a) z) rfl
+                    (Eq.mpr
+                      (id
+                        (congrArg
+                          (fun _a =>
+                            inner ℝ (T a) z ^ Nat.rawCast 1 * Nat.rawCast 1 = inner ℝ (T a) z ^ Nat.rawCast 1 * _a)
+                          (Eq.symm rfl)))
+                      (Eq.refl (inner ℝ (T a) z ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                  (Mathlib.Tactic.Ring.Common.mul_congr
+                    (Mathlib.Tactic.Ring.Common.atom_pf M rfl
+                      (Eq.mpr
+                        (id
+                          (congrArg (fun _a => M ^ Nat.rawCast 1 * Nat.rawCast 1 = M ^ Nat.rawCast 1 * _a)
+                            (Eq.symm rfl)))
+                        (Eq.refl (M ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                    (Mathlib.Tactic.Ring.Common.atom_pf ‖(ContinuousLinearMap.adjoint T) z‖ rfl
+                      (Eq.mpr
+                        (id
+                          (congrArg
+                            (fun _a =>
+                              ‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1 =
+                                ‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * _a)
+                            (Eq.symm rfl)))
+                        (Eq.refl (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                    (Mathlib.Tactic.Ring.Common.add_mul
+                      (Mathlib.Tactic.Ring.Common.mul_add
+                        (Mathlib.Tactic.Ring.Common.mul_pf_left M (Nat.rawCast 1)
+                          (Mathlib.Tactic.Ring.Common.mul_pf_right ‖(ContinuousLinearMap.adjoint T) z‖ (Nat.rawCast 1)
+                            (Mathlib.Meta.NormNum.IsNat.to_raw_eq
+                              (Mathlib.Meta.NormNum.isNat_mul (Eq.refl HMul.hMul)
+                                (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1)
+                                (Eq.refl 1)))))
+                        (Mathlib.Tactic.Ring.Common.mul_zero (M ^ Nat.rawCast 1 * Nat.rawCast 1))
+                        (Mathlib.Tactic.Ring.Common.add_pf_add_zero
+                          (M ^ Nat.rawCast 1 * (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1) +
+                            0)))
+                      (Mathlib.Tactic.Ring.Common.zero_mul
+                        (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1 + 0))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero
+                        (M ^ Nat.rawCast 1 * (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1) +
+                          0))))
+                  (Mathlib.Tactic.Ring.Common.sub_pf
+                    (Mathlib.Tactic.Ring.Common.neg_add
+                      (Mathlib.Tactic.Ring.Common.neg_mul M (Nat.rawCast 1)
+                        (Mathlib.Tactic.Ring.Common.neg_mul ‖(ContinuousLinearMap.adjoint T) z‖ (Nat.rawCast 1)
+                          (Mathlib.Meta.NormNum.IsInt.to_raw_eq
+                            (Mathlib.Meta.NormNum.isInt_neg (Eq.refl Neg.neg)
+                              (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                              (Eq.refl (Int.negOfNat 1))))))
+                      Mathlib.Tactic.Ring.Common.neg_zero)
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt (inner ℝ (T a) z ^ Nat.rawCast 1 * Nat.rawCast 1)
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add
+                        (M ^ Nat.rawCast 1 *
+                            (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast) +
+                          0)))))
+                (Mathlib.Tactic.Ring.Common.add_pf_add_lt (inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1)
+                  (Mathlib.Tactic.Ring.Common.add_pf_add_overlap_zero
+                    (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero (inner ℝ (T a) z) (Nat.rawCast 1)
+                      (Mathlib.Meta.NormNum.IsInt.to_isNat
+                        (Mathlib.Meta.NormNum.isInt_add (Eq.refl HAdd.hAdd)
+                          (Mathlib.Meta.NormNum.IsInt.of_raw ℝ (Int.negOfNat 1))
+                          (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                          (Eq.refl (Int.ofNat 0)))))
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt (‖r - T a‖ ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast)
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add
+                        (M ^ Nat.rawCast 1 *
+                            (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast) +
+                          0))))))
+              (Mathlib.Tactic.Ring.Common.sub_congr
+                (Mathlib.Tactic.Ring.Common.atom_pf ‖r - T a‖ rfl
+                  (Eq.mpr
+                    (id
+                      (congrArg (fun _a => ‖r - T a‖ ^ Nat.rawCast 1 * Nat.rawCast 1 = ‖r - T a‖ ^ Nat.rawCast 1 * _a)
+                        (Eq.symm rfl)))
+                    (Eq.refl (‖r - T a‖ ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                (Mathlib.Tactic.Ring.Common.sub_congr
+                  (Mathlib.Tactic.Ring.Common.atom_pf (inner ℝ r z) rfl
+                    (Eq.mpr
+                      (id
+                        (congrArg
+                          (fun _a => inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1 = inner ℝ r z ^ Nat.rawCast 1 * _a)
+                          (Eq.symm rfl)))
+                      (Eq.refl (inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                  (Mathlib.Tactic.Ring.Common.mul_congr
+                    (Mathlib.Tactic.Ring.Common.atom_pf M rfl
+                      (Eq.mpr
+                        (id
+                          (congrArg (fun _a => M ^ Nat.rawCast 1 * Nat.rawCast 1 = M ^ Nat.rawCast 1 * _a)
+                            (Eq.symm rfl)))
+                        (Eq.refl (M ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                    (Mathlib.Tactic.Ring.Common.atom_pf ‖(ContinuousLinearMap.adjoint T) z‖ rfl
+                      (Eq.mpr
+                        (id
+                          (congrArg
+                            (fun _a =>
+                              ‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1 =
+                                ‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * _a)
+                            (Eq.symm rfl)))
+                        (Eq.refl (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1))))
+                    (Mathlib.Tactic.Ring.Common.add_mul
+                      (Mathlib.Tactic.Ring.Common.mul_add
+                        (Mathlib.Tactic.Ring.Common.mul_pf_left M (Nat.rawCast 1)
+                          (Mathlib.Tactic.Ring.Common.mul_pf_right ‖(ContinuousLinearMap.adjoint T) z‖ (Nat.rawCast 1)
+                            (Mathlib.Meta.NormNum.IsNat.to_raw_eq
+                              (Mathlib.Meta.NormNum.isNat_mul (Eq.refl HMul.hMul)
+                                (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1) (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1)
+                                (Eq.refl 1)))))
+                        (Mathlib.Tactic.Ring.Common.mul_zero (M ^ Nat.rawCast 1 * Nat.rawCast 1))
+                        (Mathlib.Tactic.Ring.Common.add_pf_add_zero
+                          (M ^ Nat.rawCast 1 * (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1) +
+                            0)))
+                      (Mathlib.Tactic.Ring.Common.zero_mul
+                        (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1 + 0))
+                      (Mathlib.Tactic.Ring.Common.add_pf_add_zero
+                        (M ^ Nat.rawCast 1 * (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1) +
+                          0))))
+                  (Mathlib.Tactic.Ring.Common.sub_pf
+                    (Mathlib.Tactic.Ring.Common.neg_add
+                      (Mathlib.Tactic.Ring.Common.neg_mul M (Nat.rawCast 1)
+                        (Mathlib.Tactic.Ring.Common.neg_mul ‖(ContinuousLinearMap.adjoint T) z‖ (Nat.rawCast 1)
+                          (Mathlib.Meta.NormNum.IsInt.to_raw_eq
+                            (Mathlib.Meta.NormNum.isInt_neg (Eq.refl Neg.neg)
+                              (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                              (Eq.refl (Int.negOfNat 1))))))
+                      Mathlib.Tactic.Ring.Common.neg_zero)
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt (inner ℝ r z ^ Nat.rawCast 1 * Nat.rawCast 1)
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add
+                        (M ^ Nat.rawCast 1 *
+                            (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast) +
+                          0)))))
+                (Mathlib.Tactic.Ring.Common.sub_pf
+                  (Mathlib.Tactic.Ring.Common.neg_add
+                    (Mathlib.Tactic.Ring.Common.neg_mul (inner ℝ r z) (Nat.rawCast 1)
+                      (Mathlib.Meta.NormNum.IsInt.to_raw_eq
+                        (Mathlib.Meta.NormNum.isInt_neg (Eq.refl Neg.neg)
+                          (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                          (Eq.refl (Int.negOfNat 1)))))
+                    (Mathlib.Tactic.Ring.Common.neg_add
+                      (Mathlib.Tactic.Ring.Common.neg_mul M (Nat.rawCast 1)
+                        (Mathlib.Tactic.Ring.Common.neg_mul ‖(ContinuousLinearMap.adjoint T) z‖ (Nat.rawCast 1)
+                          (Mathlib.Meta.NormNum.IsNat.to_raw_eq
+                            (Mathlib.Meta.NormNum.IsInt.to_isNat
+                              (Mathlib.Meta.NormNum.isInt_neg (Eq.refl Neg.neg)
+                                (Mathlib.Meta.NormNum.IsInt.of_raw ℝ (Int.negOfNat 1)) (Eq.refl (Int.ofNat 1)))))))
+                      Mathlib.Tactic.Ring.Common.neg_zero))
+                  (Mathlib.Tactic.Ring.Common.add_pf_add_gt (inner ℝ r z ^ Nat.rawCast 1 * (Int.negOfNat 1).rawCast)
+                    (Mathlib.Tactic.Ring.Common.add_pf_add_lt (‖r - T a‖ ^ Nat.rawCast 1 * Nat.rawCast 1)
+                      (Mathlib.Tactic.Ring.Common.add_pf_zero_add
+                        (M ^ Nat.rawCast 1 * (‖(ContinuousLinearMap.adjoint T) z‖ ^ Nat.rawCast 1 * Nat.rawCast 1) +
+                          0))))))
+              (Mathlib.Tactic.Ring.Common.add_pf_add_overlap_zero
+                (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero (inner ℝ r z) (Nat.rawCast 1)
+                  (Mathlib.Meta.NormNum.IsInt.to_isNat
+                    (Mathlib.Meta.NormNum.isInt_add (Eq.refl HAdd.hAdd)
+                      (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                      (Mathlib.Meta.NormNum.IsInt.of_raw ℝ (Int.negOfNat 1)) (Eq.refl (Int.ofNat 0)))))
+                (Mathlib.Tactic.Ring.Common.add_pf_add_overlap_zero
+                  (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero ‖r - T a‖ (Nat.rawCast 1)
+                    (Mathlib.Meta.NormNum.IsInt.to_isNat
+                      (Mathlib.Meta.NormNum.isInt_add (Eq.refl HAdd.hAdd)
+                        (Mathlib.Meta.NormNum.IsInt.of_raw ℝ (Int.negOfNat 1))
+                        (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                        (Eq.refl (Int.ofNat 0)))))
+                  (Mathlib.Tactic.Ring.Common.add_pf_add_overlap_zero
+                    (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero M (Nat.rawCast 1)
+                      (Mathlib.Tactic.Ring.Common.add_overlap_pf_zero ‖(ContinuousLinearMap.adjoint T) z‖
+                        (Nat.rawCast 1)
+                        (Mathlib.Meta.NormNum.IsInt.to_isNat
+                          (Mathlib.Meta.NormNum.isInt_add (Eq.refl HAdd.hAdd)
+                            (Mathlib.Meta.NormNum.IsInt.of_raw ℝ (Int.negOfNat 1))
+                            (Mathlib.Meta.NormNum.IsNat.to_isInt (Mathlib.Meta.NormNum.IsNat.of_raw ℝ 1))
+                            (Eq.refl (Int.ofNat 0))))))
+                    (Mathlib.Tactic.Ring.Common.add_pf_zero_add 0)))))
+            (Mathlib.Tactic.Ring.cast_zero (Mathlib.Meta.NormNum.isNat_ofNat ℝ Nat.cast_zero))))
+        (Mathlib.Tactic.Linarith.add_lt_of_le_of_neg
+          (Mathlib.Tactic.Linarith.add_nonpos
+            (Mathlib.Tactic.Linarith.sub_nonpos_of_le
+              (Eq.mp (congrArg (fun _a => _a ≤ ‖r - T a‖) (inner_sub_left r (T a) z)) hres))
+            (Mathlib.Tactic.Linarith.sub_nonpos_of_le himage))
+          (Mathlib.Tactic.Linarith.sub_neg_of_lt a_1)))
+theorem KomorebiSpace.BudgetDuality.ball_support_eq.{u} : ∀ {H : Type u} [inst : NormedAddCommGroup H]
+  [inst_1 : InnerProductSpace ℝ H] {M : ℝ},
+  0 ≤ M → ∀ (g a : H), ‖a‖ ≤ M → (∀ (b : H), ‖b‖ ≤ M → inner ℝ b g ≤ inner ℝ a g) → inner ℝ a g = M * ‖g‖ :=
+fun {H} [NormedAddCommGroup H] [InnerProductSpace ℝ H] {M} hM g a ha hmax =>
+  if hg : g = 0 then
+    of_eq_true
+      (Eq.trans
+        (congr (congrArg Eq (Eq.trans (congrArg (inner ℝ a) hg) (inner_zero_right a)))
+          (Eq.trans (congrArg (HMul.hMul M) (Eq.trans (congrArg norm hg) norm_zero)) (mul_zero M)))
+        (eq_self 0))
+  else
+    have hgpos := norm_pos_iff.mpr hg;
+    have hgn := ne_of_gt hgpos;
+    have hn :=
+      Eq.mpr (id (congrArg (fun _a => _a = M) (norm_smul (M / ‖g‖) g)))
+        (Eq.mpr (id (congrArg (fun _a => _a * ‖g‖ = M) (Real.norm_eq_abs (M / ‖g‖))))
+          (Eq.mpr (id (congrArg (fun _a => _a * ‖g‖ = M) (abs_of_nonneg (div_nonneg hM (LT.lt.le hgpos)))))
+            (div_mul_cancel₀ M hgn)));
+    have hi :=
+      Eq.mpr (id (congrArg (fun _a => _a = M * ‖g‖) (real_inner_smul_left g g (M / ‖g‖))))
+        (Eq.mpr (id (congrArg (fun _a => M / ‖g‖ * _a = M * ‖g‖) (real_inner_self_eq_norm_sq g)))
+          (of_eq_true
+            (Eq.trans
+              (Mathlib.Tactic.FieldSimp.eq_eq_cancel_eq
+                (Mathlib.Tactic.FieldSimp.eq_mul_of_eq_eq_eq_mul
+                  (Eq.trans
+                    (congr_arg₂ HMul.hMul (Eq.trans (congr_arg₂ HDiv.hDiv rfl rfl) rfl)
+                      (Eq.trans (congr_arg (fun x => x ^ 2) rfl) rfl))
+                    rfl)
+                  (Eq.trans
+                    (Mathlib.Tactic.FieldSimp.NF.mul_eq_eval
+                      (Mathlib.Tactic.FieldSimp.NF.div_eq_eval
+                        (Eq.trans (Eq.refl M) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval M))
+                        (Eq.trans (Eq.refl ‖g‖) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval ‖g‖))
+                        (Mathlib.Tactic.FieldSimp.NF.div_eq_eval₃ (1, ‖g‖) (div_one ((1, M) ::ᵣ []).eval)))
+                      (Mathlib.Tactic.FieldSimp.NF.pow_eq_eval (of_decide_eq_true (id (Eq.refl true)))
+                        (Eq.trans (Eq.refl ‖g‖) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval ‖g‖)))
+                      (Mathlib.Tactic.FieldSimp.NF.mul_eq_eval₂ (-1) 2 ‖g‖ (mul_one ((1, M) ::ᵣ []).eval)))
+                    (Eq.symm
+                      (Mathlib.Tactic.FieldSimp.NF.eval_cons_mul_eval 1 ‖g‖
+                        (Mathlib.Tactic.FieldSimp.NF.eval_mul_eval_cons 1 M
+                          (one_mul (Mathlib.Tactic.FieldSimp.NF.eval []))))))
+                  rfl
+                  (Mathlib.Tactic.FieldSimp.eq_div_of_eq_one_of_subst
+                    (Mathlib.Tactic.FieldSimp.NF.cons_eq_div_of_eq_div 1 M (Eq.symm (div_one 1)))
+                    (Eq.mpr (id (congrArg (fun _a => _a = M) (Mathlib.Tactic.FieldSimp.NF.eval_cons (1, M) [])))
+                      (Eq.trans (one_mul (Mathlib.Tactic.FieldSimp.zpow' (1, M).2 (1, M).1))
+                        (Mathlib.Tactic.FieldSimp.zpow'_one M)))))
+                (Mathlib.Tactic.FieldSimp.eq_mul_of_eq_eq_eq_mul (Eq.trans (congr_arg₂ HMul.hMul rfl rfl) rfl)
+                  (Eq.trans
+                    (Mathlib.Tactic.FieldSimp.NF.mul_eq_eval
+                      (Eq.trans (Eq.refl M) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval M))
+                      (Eq.trans (Eq.refl ‖g‖) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval ‖g‖))
+                      (Mathlib.Tactic.FieldSimp.NF.mul_eq_eval₃ (1, ‖g‖) (mul_one ((1, M) ::ᵣ []).eval)))
+                    (Eq.symm
+                      (Mathlib.Tactic.FieldSimp.NF.eval_cons_mul_eval 1 ‖g‖
+                        (Mathlib.Tactic.FieldSimp.NF.eval_mul_eval_cons 1 M
+                          (one_mul (Mathlib.Tactic.FieldSimp.NF.eval []))))))
+                  rfl
+                  (Mathlib.Tactic.FieldSimp.eq_div_of_eq_one_of_subst
+                    (Mathlib.Tactic.FieldSimp.NF.cons_eq_div_of_eq_div 1 M (Eq.symm (div_one 1)))
+                    (Eq.mpr (id (congrArg (fun _a => _a = M) (Mathlib.Tactic.FieldSimp.NF.eval_cons (1, M) [])))
+                      (Eq.trans (one_mul (Mathlib.Tactic.FieldSimp.zpow' (1, M).2 (1, M).1))
+                        (Mathlib.Tactic.FieldSimp.zpow'_one M)))))
+                (Mathlib.Tactic.FieldSimp.NF.cons_ne_zero 1 hgn one_ne_zero))
+              (eq_self M))));
+    le_antisymm (LE.le.trans (real_inner_le_norm a g) (mul_le_mul_of_nonneg_right ha (norm_nonneg g)))
+      (Eq.mp (congrFun' (congrArg LE.le hi) (inner ℝ a g)) (hmax ((M / ‖g‖) • g) (Eq.le hn)))
+theorem KomorebiSpace.BudgetDuality.exists_sharp_witness_of_variational.{u, v} : ∀ {H : Type u} {Y : Type v}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]
+  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y)
+  {M : ℝ},
+  0 ≤ M →
+    ∀ (a : H),
+      ‖a‖ ≤ M →
+        (∀ (b : H), ‖b‖ ≤ M → inner ℝ (r - T a) (T b - T a) ≤ 0) →
+          ∃ z, ‖z‖ ≤ 1 ∧ inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖ = ‖r - T a‖ :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+    [InnerProductSpace ℝ Y] [CompleteSpace Y] T r {M} hM a ha hvar =>
+  if hv : r - T a = 0 then
+    Exists.intro 0
+      ⟨of_eq_true (Eq.trans (congrFun' (congrArg LE.le norm_zero) 1) zero_le_one._simp_1),
+        of_eq_true
+          (Eq.trans
+            (congr
+              (congrArg Eq
+                (Eq.trans
+                  (congr (congrArg HSub.hSub (inner_zero_right r))
+                    (Eq.trans
+                      (congrArg (HMul.hMul M)
+                        (Eq.trans (congrArg norm (map_zero (ContinuousLinearMap.adjoint T))) norm_zero))
+                      (mul_zero M)))
+                  (sub_self 0)))
+              (Eq.trans (congrArg norm hv) norm_zero))
+            (eq_self 0))⟩
+  else
+    have hvpos := norm_pos_iff.mpr hv;
+    have hvn := ne_of_gt hvpos;
+    let z := ‖r - T a‖⁻¹ • (r - T a);
+    have hz :=
+      id
+        (Eq.mpr (id (congrArg (fun _a => _a = 1) (norm_smul ‖r - T a‖⁻¹ (r - T a))))
+          (Eq.mpr (id (congrArg (fun _a => _a * ‖r - T a‖ = 1) (Real.norm_eq_abs ‖r - T a‖⁻¹)))
+            (Eq.mpr (id (congrArg (fun _a => _a * ‖r - T a‖ = 1) (abs_of_pos (inv_pos.mpr hvpos))))
+              (Eq.mpr (id (congrArg (fun _a => _a = 1) (inv_mul_cancel₀ hvn))) (Eq.refl 1)))));
+    have hmax := fun b hb =>
+      have hi := hvar b hb;
+      Eq.mpr
+        (id
+          (congrArg (fun _a => _a ≤ inner ℝ a ((ContinuousLinearMap.adjoint T) z))
+            (ContinuousLinearMap.adjoint_inner_right T b z)))
+        (Eq.mpr (id (congrArg (fun _a => inner ℝ (T b) z ≤ _a) (ContinuousLinearMap.adjoint_inner_right T a z)))
+          (id
+            (Eq.mpr
+              (id
+                (congrArg (fun _a => _a ≤ inner ℝ (T a) (‖r - T a‖⁻¹ • (r - T a)))
+                  (real_inner_smul_right (T b) (r - T a) ‖r - T a‖⁻¹)))
+              (Eq.mpr
+                (id
+                  (congrArg (fun _a => ‖r - T a‖⁻¹ * inner ℝ (T b) (r - T a) ≤ _a)
+                    (real_inner_smul_right (T a) (r - T a) ‖r - T a‖⁻¹)))
+                (have hi' :=
+                  Eq.mp (congr (congrArg LE.le (real_inner_comm (T b) (r - T a))) (real_inner_comm (T a) (r - T a)))
+                    (sub_nonpos.mp (Eq.mp (congrArg (fun _a => _a ≤ 0) (inner_sub_right (r - T a) (T b) (T a))) hi));
+                mul_le_mul_of_nonneg_left hi' (inv_nonneg.mpr (LT.lt.le hvpos)))))));
+    have hs := KomorebiSpace.BudgetDuality.ball_support_eq hM ((ContinuousLinearMap.adjoint T) z) a ha hmax;
+    have hir :=
+      id
+        (Eq.mpr (id (congrArg (fun _a => _a = ‖r - T a‖) (real_inner_smul_right (r - T a) (r - T a) ‖r - T a‖⁻¹)))
+          (Eq.mpr (id (congrArg (fun _a => ‖r - T a‖⁻¹ * _a = ‖r - T a‖) (real_inner_self_eq_norm_sq (r - T a))))
+            (of_eq_true
+              (Eq.trans
+                (Mathlib.Tactic.FieldSimp.eq_eq_cancel_eq
+                  (Mathlib.Tactic.FieldSimp.eq_mul_of_eq_eq_eq_mul
+                    (Eq.trans
+                      (congr_arg₂ HMul.hMul (Eq.trans (congr_arg Inv.inv rfl) rfl)
+                        (Eq.trans (congr_arg (fun x => x ^ 2) rfl) rfl))
+                      rfl)
+                    (Eq.trans
+                      (Mathlib.Tactic.FieldSimp.NF.mul_eq_eval
+                        (Mathlib.Tactic.FieldSimp.NF.inv_eq_eval
+                          (Eq.trans (Eq.refl ‖r - T a‖) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval ‖r - T a‖)))
+                        (Mathlib.Tactic.FieldSimp.NF.pow_eq_eval (of_decide_eq_true (id (Eq.refl true)))
+                          (Eq.trans (Eq.refl ‖r - T a‖) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval ‖r - T a‖)))
+                        (Mathlib.Tactic.FieldSimp.NF.mul_eq_eval₂ (-1) 2 ‖r - T a‖
+                          (one_mul (Mathlib.Tactic.FieldSimp.NF.eval []))))
+                      (Eq.symm
+                        (Mathlib.Tactic.FieldSimp.NF.eval_cons_mul_eval 1 ‖r - T a‖
+                          (one_mul (Mathlib.Tactic.FieldSimp.NF.eval [])))))
+                    rfl (Mathlib.Tactic.FieldSimp.eq_div_of_eq_one_of_subst (Eq.symm (div_one 1)) rfl))
+                  (Mathlib.Tactic.FieldSimp.eq_mul_of_eq_eq_eq_mul rfl
+                    (Eq.trans (Eq.trans (Eq.refl ‖r - T a‖) (Mathlib.Tactic.FieldSimp.NF.atom_eq_eval ‖r - T a‖))
+                      (Eq.symm
+                        (Mathlib.Tactic.FieldSimp.NF.eval_cons_mul_eval 1 ‖r - T a‖
+                          (one_mul (Mathlib.Tactic.FieldSimp.NF.eval [])))))
+                    rfl (Mathlib.Tactic.FieldSimp.eq_div_of_eq_one_of_subst (Eq.symm (div_one 1)) rfl))
+                  (Mathlib.Tactic.FieldSimp.NF.cons_ne_zero 1 hvn one_ne_zero))
+                (eq_self 1)))));
+    Exists.intro z
+      ⟨Eq.le hz,
+        Eq.mpr (id (congrArg (fun _a => inner ℝ r z - _a = ‖r - T a‖) (Eq.symm hs)))
+          (Eq.mpr
+            (id (congrArg (fun _a => inner ℝ r z - _a = ‖r - T a‖) (ContinuousLinearMap.adjoint_inner_right T a z)))
+            (Eq.mpr (id (congrArg (fun _a => _a = ‖r - T a‖) (Eq.symm (inner_sub_left r (T a) z)))) hir))⟩
+theorem KomorebiSpace.BudgetDuality.dualValue_le_beta.{u, v} : ∀ {H : Type u} {Y : Type v} [inst : NormedAddCommGroup H]
+  [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H] [inst_3 : NormedAddCommGroup Y]
+  [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ},
+  0 ≤ M →
+    ∀ {z : Y},
+      ‖z‖ ≤ 1 → inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖ ≤ KomorebiSpace.BudgetProfile.beta T r M :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+    [InnerProductSpace ℝ Y] [CompleteSpace Y] T r {M} hM {z} hz =>
+  Exists.casesOn (KomorebiSpace.BudgetProfile.exists_budget_minimizer T r hM) fun a h =>
+    And.casesOn h fun ha heq => LE.le.trans_eq (KomorebiSpace.BudgetDuality.dualValue_le_residual T r ha hz) heq
+theorem KomorebiSpace.BudgetDuality.minimizer_variational.{u, v} : ∀ {H : Type u} {Y : Type v}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ} (a : H),
+  ‖a‖ ≤ M →
+    ‖r - T a‖ = KomorebiSpace.BudgetProfile.beta T r M → ∀ (b : H), ‖b‖ ≤ M → inner ℝ (r - T a) (T b - T a) ≤ 0 :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [NormedAddCommGroup Y] [InnerProductSpace ℝ Y] T r {M} a ha
+    hmin =>
+  have ha' :=
+    Exists.intro a
+      ⟨Eq.mpr
+          (id
+            (Eq.trans KomorebiSpace.BudgetDuality.minimizer_variational._simp_1_1
+              (congrFun' (congrArg LE.le (dist_zero_right a)) M)))
+          ha,
+        rfl⟩;
+  have hmin' :=
+    Eq.mp
+      (congrArg (Eq ‖r - T a‖) (Eq.trans Metric.infDist_eq_iInf (congrArg iInf (funext fun y => dist_eq_norm r ↑y))))
+      hmin;
+  have hv := (norm_eq_iInf_iff_real_inner_le_zero (KomorebiSpace.BudgetProfile.convex_budget_image T M) ha').mp hmin';
+  fun b hb =>
+  hv (T b)
+    (Exists.intro b
+      ⟨Eq.mpr
+          (id
+            (Eq.trans KomorebiSpace.BudgetDuality.minimizer_variational._simp_1_1
+              (congrFun' (congrArg LE.le (dist_zero_right b)) M)))
+          hb,
+        rfl⟩)
+theorem KomorebiSpace.BudgetDuality.exists_attaining_dual_witness.{u, v} : ∀ {H : Type u} {Y : Type v}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]
+  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y)
+  {M : ℝ},
+  0 ≤ M →
+    ∃ z, ‖z‖ ≤ 1 ∧ inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖ = KomorebiSpace.BudgetProfile.beta T r M :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+    [InnerProductSpace ℝ Y] [CompleteSpace Y] T r {M} hM =>
+  Exists.casesOn (KomorebiSpace.BudgetProfile.exists_budget_minimizer T r hM) fun a h =>
+    And.casesOn h fun ha heq =>
+      Exists.casesOn
+        (KomorebiSpace.BudgetDuality.exists_sharp_witness_of_variational T r hM a ha
+          (KomorebiSpace.BudgetDuality.minimizer_variational T r a ha heq))
+        fun z h => And.casesOn h fun hz hvalue => Exists.intro z ⟨hz, Eq.trans hvalue heq⟩
+theorem KomorebiSpace.BudgetDuality.sharp_budget_duality.{u, v} : ∀ {H : Type u} {Y : Type v}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]
+  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y)
+  {M : ℝ},
+  0 ≤ M →
+    IsGreatest ((fun z => inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖) '' Metric.closedBall 0 1)
+      (KomorebiSpace.BudgetProfile.beta T r M) :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+    [InnerProductSpace ℝ Y] [CompleteSpace Y] T r {M} hM =>
+  Exists.casesOn (KomorebiSpace.BudgetDuality.exists_attaining_dual_witness T r hM) fun z h =>
+    And.casesOn h fun hz heq =>
+      ⟨Exists.intro z
+          ⟨Eq.mpr
+              (id
+                (Eq.trans KomorebiSpace.BudgetDuality.sharp_budget_duality._simp_1_1
+                  (congrFun' (congrArg LE.le (dist_zero_right z)) 1)))
+              hz,
+            heq⟩,
+        fun ⦃a⦄ a_1 =>
+        Exists.casesOn a_1 fun w h =>
+          And.casesOn h fun hw right =>
+            right ▸
+              KomorebiSpace.BudgetDuality.dualValue_le_beta T r hM
+                (Eq.mp
+                  (Eq.trans KomorebiSpace.BudgetDuality.sharp_budget_duality._simp_1_1
+                    (congrFun' (congrArg LE.le (dist_zero_right w)) 1))
+                  hw)⟩
+theorem KomorebiSpace.BudgetDuality.strict_exclusion_certificate.{u, v} : ∀ {H : Type u} {Y : Type v}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : CompleteSpace H]
+  [inst_3 : NormedAddCommGroup Y] [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y)
+  {M ε : ℝ} {z : Y},
+  ‖z‖ ≤ 1 → ε < inner ℝ r z - M * ‖(ContinuousLinearMap.adjoint T) z‖ → ¬∃ a, ‖a‖ ≤ M ∧ ‖r - T a‖ ≤ ε :=
+fun {H} {Y} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [NormedAddCommGroup Y]
+    [InnerProductSpace ℝ Y] [CompleteSpace Y] T r {M ε} {z} hz hcert a =>
+  Exists.casesOn a fun a h =>
+    And.casesOn h fun ha hres =>
+      not_lt_of_ge (LE.le.trans (KomorebiSpace.BudgetDuality.dualValue_le_residual T r ha hz) hres) hcert
+'KomorebiSpace.BudgetDuality.dualValue_le_residual' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiSpace.BudgetDuality.ball_support_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiSpace.BudgetDuality.exists_sharp_witness_of_variational' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'KomorebiSpace.BudgetDuality.dualValue_le_beta' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiSpace.BudgetDuality.minimizer_variational' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiSpace.BudgetDuality.exists_attaining_dual_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiSpace.BudgetDuality.sharp_budget_duality' depends on axioms: [propext, Classical.choice, Quot.sound]
+'KomorebiSpace.BudgetDuality.strict_exclusion_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]

@@ -1,0 +1,35 @@
+import KomorebiSpace.RegularizationLimits
+
+set_option pp.universes true
+set_option pp.explicit true
+
+#check KomorebiSpace.RegularizationLimits.path
+#print axioms KomorebiSpace.RegularizationLimits.path
+
+#check KomorebiSpace.RegularizationLimits.path_of_pos
+#print axioms KomorebiSpace.RegularizationLimits.path_of_pos
+
+#check KomorebiSpace.RegularizationLimits.eventual_pos
+#print axioms KomorebiSpace.RegularizationLimits.eventual_pos
+
+#check KomorebiSpace.RegularizationLimits.objective_comparison
+#print axioms KomorebiSpace.RegularizationLimits.objective_comparison
+
+#check KomorebiSpace.RegularizationLimits.projected_energy_tendsto_zero
+#print axioms KomorebiSpace.RegularizationLimits.projected_energy_tendsto_zero
+
+#check KomorebiSpace.RegularizationLimits.projected_error_sq_tendsto_zero
+#print axioms KomorebiSpace.RegularizationLimits.projected_error_sq_tendsto_zero
+
+#check KomorebiSpace.RegularizationLimits.fitted_tendsto_projectedDatum
+#print axioms KomorebiSpace.RegularizationLimits.fitted_tendsto_projectedDatum
+
+#check KomorebiSpace.RegularizationLimits.residual_norm_tendsto_floor
+#print axioms KomorebiSpace.RegularizationLimits.residual_norm_tendsto_floor
+
+#check KomorebiSpace.RegularizationLimits.weighted_penalty_tendsto_zero
+#print axioms KomorebiSpace.RegularizationLimits.weighted_penalty_tendsto_zero
+
+#check KomorebiSpace.RegularizationLimits.norm_tendsto_atTop_of_not_mem_range
+#print axioms KomorebiSpace.RegularizationLimits.norm_tendsto_atTop_of_not_mem_range
+

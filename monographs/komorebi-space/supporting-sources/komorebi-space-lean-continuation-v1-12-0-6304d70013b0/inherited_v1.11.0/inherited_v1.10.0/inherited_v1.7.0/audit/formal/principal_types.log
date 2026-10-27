@@ -1,0 +1,1434 @@
+@KomorebiSpace.ViewSystem.evaluations_jointly_injective.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  (F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V) {x y : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_3} F},
+  (∀ (a : V),
+      Eq.{u_3 + 1} (KomorebiSpace.ViewSystem.evaluate.{u_1, u_2, u_3} F a x)
+        (KomorebiSpace.ViewSystem.evaluate.{u_1, u_2, u_3} F a y)) →
+    Eq.{max (u_1 + 1) (u_3 + 1)} x y
+@KomorebiSpace.ViewSystem.Cone.exists_unique_lift.{u_1, u_2, u_3,
+    u_4} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  {F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V} {T : Type u_4}
+  (c : KomorebiSpace.ViewSystem.Cone.{u_1, u_2, u_3, u_4} F T),
+  ExistsUnique.{max (max (u_1 + 1) (u_3 + 1)) (u_4 + 1)} fun g =>
+    ∀ (x : T) (a : V),
+      Eq.{u_3 + 1} (KomorebiSpace.ViewSystem.evaluate.{u_1, u_2, u_3} F a (g x))
+        (KomorebiSpace.ViewSystem.Cone.leg.{u_1, u_2, u_3, u_4} c a x)
+@KomorebiSpace.ViewSystem.Morphism.onAmbient_id.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  {F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V} (x : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_3} F),
+  Eq.{max (u_1 + 1) (u_3 + 1)}
+    (KomorebiSpace.ViewSystem.Morphism.onAmbient.{u_1, u_2, u_3, u_3}
+      (KomorebiSpace.ViewSystem.Morphism.id.{u_1, u_2, u_3} F) x)
+    x
+@KomorebiSpace.ViewSystem.Morphism.onAmbient_comp.{u_1, u_2, u_3, u_4,
+    u_5} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  {F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V} {G : KomorebiSpace.ViewSystem.{u_1, u_2, u_4} V}
+  {H : KomorebiSpace.ViewSystem.{u_1, u_2, u_5} V} (f : KomorebiSpace.ViewSystem.Morphism.{u_1, u_2, u_3, u_4} F G)
+  (g : KomorebiSpace.ViewSystem.Morphism.{u_1, u_2, u_4, u_5} G H)
+  (x : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_3} F),
+  Eq.{max (u_5 + 1) (u_1 + 1)}
+    (KomorebiSpace.ViewSystem.Morphism.onAmbient.{u_1, u_2, u_3, u_5}
+      (KomorebiSpace.ViewSystem.Morphism.comp.{u_1, u_2, u_3, u_4, u_5} f g) x)
+    (KomorebiSpace.ViewSystem.Morphism.onAmbient.{u_1, u_2, u_4, u_5} g
+      (KomorebiSpace.ViewSystem.Morphism.onAmbient.{u_1, u_2, u_3, u_4} f x))
+@KomorebiSpace.ViewSystem.terminalEvaluationEquiv.{u_1, u_2,
+    u_3} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    (F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V) →
+      (t : V) →
+        (toTop : (a : V) → Quiver.Hom.{u_2, u_1} a t) →
+          Eq.{u_2 + 1} (toTop t) (CategoryTheory.CategoryStruct.id.{u_2, u_1} t) →
+            (∀ (a b : V) (f : Quiver.Hom.{u_2, u_1} a b),
+                Eq.{u_2 + 1} (CategoryTheory.CategoryStruct.comp.{u_2, u_1} f (toTop b)) (toTop a)) →
+              Equiv.{max (u_1 + 1) (u_3 + 1), u_3 + 1} (KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_3} F)
+                (KomorebiSpace.ViewSystem.Obj.{u_1, u_2, u_3} F t)
+@KomorebiSpace.ViewSystem.gluingEquiv.{u_1, u_2, u_3,
+    u_4} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    (F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V) →
+      {I : Type u_4} →
+        (U : I → Set.{u_1} V) →
+          KomorebiSpace.ViewSystem.TransitionCover.{u_1, u_2, u_4} U →
+            Equiv.{max (u_1 + 1) (u_3 + 1), max (max (u_4 + 1) (u_3 + 1)) (u_1 + 1)}
+              (KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_3} F)
+              (KomorebiSpace.ViewSystem.Matching.{u_1, u_2, u_3, u_4} F U)
+@KomorebiSpace.ViewSystem.Matching.exists_unique_glue.{u_1, u_2, u_3,
+    u_4} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  {F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V} {I : Type u_4} {U : I → Set.{u_1} V},
+  KomorebiSpace.ViewSystem.TransitionCover.{u_1, u_2, u_4} U →
+    ∀ (m : KomorebiSpace.ViewSystem.Matching.{u_1, u_2, u_3, u_4} F U),
+      ExistsUnique.{max (u_1 + 1) (u_3 + 1)} fun s =>
+        ∀ (i : I),
+          Eq.{max (u_1 + 1) (u_3 + 1)} (KomorebiSpace.ViewSystem.restrict.{u_1, u_2, u_3} F (U i) s)
+            (KomorebiSpace.ViewSystem.Matching.localSection.{u_1, u_2, u_3, u_4} m i)
+KomorebiSpace.ViewBoundaryExamples.singleton_matching_not_gluable : ¬∃ s,
+    ∀ (i : Fin 2),
+      Eq.{1}
+        (KomorebiSpace.ViewSystem.restrict.{0, 0, 0} (KomorebiSpace.ViewSystem.constant.{0, 0, 0} (Fin 2) Bool)
+          (KomorebiSpace.ViewBoundaryExamples.singletonPatches i) s)
+        (KomorebiSpace.ViewSystem.Matching.localSection.{0, 0, 0, 0} KomorebiSpace.ViewBoundaryExamples.separatedLocals
+          i)
+@KomorebiSpace.ViewSystem.bridgeEquiv.{u_1, u_2, u_3, u_4,
+    u_5} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    {M : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V} →
+      {F : KomorebiSpace.ViewSystem.{u_1, u_2, u_4} V} →
+        {G : KomorebiSpace.ViewSystem.{u_1, u_2, u_5} V} →
+          (p : KomorebiSpace.ViewSystem.Morphism.{u_1, u_2, u_3, u_4} M F) →
+            (q : KomorebiSpace.ViewSystem.Morphism.{u_1, u_2, u_3, u_5} M G) →
+              (a : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_4} F) →
+                (b : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_5} G) →
+                  Equiv.{max (u_1 + 1) (u_3 + 1), max (u_3 + 1) (u_1 + 1)}
+                    (KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_3}
+                      (KomorebiSpace.ViewSystem.bridgeSystem.{u_1, u_2, u_3, u_4, u_5} p q a b))
+                    (KomorebiSpace.ViewSystem.GlobalBridge.{u_1, u_2, u_3, u_4, u_5} p q a b)
+@KomorebiSpace.ViewSystem.bridge_exists_iff_matching.{u_1, u_2, u_3, u_4, u_5,
+    u_6} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  {M : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V} {F : KomorebiSpace.ViewSystem.{u_1, u_2, u_4} V}
+  {G : KomorebiSpace.ViewSystem.{u_1, u_2, u_5} V} (p : KomorebiSpace.ViewSystem.Morphism.{u_1, u_2, u_3, u_4} M F)
+  (q : KomorebiSpace.ViewSystem.Morphism.{u_1, u_2, u_3, u_5} M G)
+  (a : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_4} F) (b : KomorebiSpace.ViewSystem.Ambient.{u_1, u_2, u_5} G)
+  {I : Type u_6} (U : I → Set.{u_1} V),
+  KomorebiSpace.ViewSystem.TransitionCover.{u_1, u_2, u_6} U →
+    (Nonempty.{max (u_3 + 1) (u_1 + 1)} (KomorebiSpace.ViewSystem.GlobalBridge.{u_1, u_2, u_3, u_4, u_5} p q a b) ↔
+      Nonempty.{max (max (u_6 + 1) (u_3 + 1)) (u_1 + 1)}
+        (KomorebiSpace.ViewSystem.Matching.{u_1, u_2, u_3, u_6}
+          (KomorebiSpace.ViewSystem.bridgeSystem.{u_1, u_2, u_3, u_4, u_5} p q a b) U))
+KomorebiSpace.ViewBoundaryExamples.swap_no_ambient : ¬Nonempty.{1}
+    (KomorebiSpace.ViewSystem.Ambient.{0, 0, 0} KomorebiSpace.ViewBoundaryExamples.swapViews)
+KomorebiSpace.ViewBoundaryExamples.swap_transports_bijective : ∀ (a b : KomorebiSpace.ViewBoundaryExamples.LoopView)
+  (f : Quiver.Hom.{0, 0} a b),
+  Function.Bijective.{1, 1} (KomorebiSpace.ViewSystem.pull.{0, 0, 0} KomorebiSpace.ViewBoundaryExamples.swapViews f)
+@KomorebiSpace.AdditiveViewSystem.differential_comp.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (x : (a : V) → A a) {a b c : V} (f : Quiver.Hom.{u_2, u_1} a b) (g : Quiver.Hom.{u_2, u_1} b c),
+  Eq.{u_3 + 1}
+    ((KomorebiSpace.AdditiveViewSystem.differential.{u_1, u_2, u_3} F) x a c
+      (CategoryTheory.CategoryStruct.comp.{u_2, u_1} f g))
+    (HAdd.hAdd.{u_3, u_3, u_3}
+      ((KomorebiSpace.AdditiveViewSystem.pull.{u_1, u_2, u_3} F f)
+        ((KomorebiSpace.AdditiveViewSystem.differential.{u_1, u_2, u_3} F) x b c g))
+      ((KomorebiSpace.AdditiveViewSystem.differential.{u_1, u_2, u_3} F) x a b f))
+@KomorebiSpace.AdditiveViewSystem.differential_zero_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (x : (a : V) → A a),
+  Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} ((KomorebiSpace.AdditiveViewSystem.differential.{u_1, u_2, u_3} F) x) 0 ↔
+    ∀ (a b : V) (f : Quiver.Hom.{u_2, u_1} a b),
+      Eq.{u_3 + 1} ((KomorebiSpace.AdditiveViewSystem.pull.{u_1, u_2, u_3} F f) (x b)) (x a)
+@KomorebiSpace.AdditiveViewSystem.extensionClass_zero_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (U : Set.{u_1} V)
+  (s : KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U),
+  Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} (KomorebiSpace.AdditiveViewSystem.extensionClass.{u_1, u_2, u_3} F U s)
+      0 ↔
+    Nonempty.{max (u_1 + 1) (u_3 + 1)}
+      (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3} (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U
+        s)
+@KomorebiSpace.AdditiveViewSystem.extensionClass_independent.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (U : Set.{u_1} V)
+  (s : KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U)
+  (x : (a : V) → A a),
+  (∀ (a : ↑U), Eq.{u_3 + 1} (x ↑a) (↑s a)) →
+    Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)}
+      (KomorebiSpace.CorrectionProblem.obstruction.{max u_1 u_3, max (max u_1 u_2) u_3, max u_1 u_3}
+        (KomorebiSpace.AdditiveViewSystem.problem.{u_1, u_2, u_3} F U) x)
+      (KomorebiSpace.AdditiveViewSystem.extensionClass.{u_1, u_2, u_3} F U s)
+@KomorebiSpace.AdditiveViewSystem.extensionParameters.{u_1, u_2,
+    u_3} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    {A : V → Type u_3} →
+      [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] →
+        (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A) →
+          (U : Set.{u_1} V) →
+            (s :
+                KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3}
+                  (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U) →
+              KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3}
+                  (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U s →
+                Equiv.{max (u_1 + 1) (u_3 + 1), max (u_1 + 1) (u_3 + 1)}
+                  (↥(KomorebiSpace.AdditiveViewSystem.ambiguity.{u_1, u_2, u_3} F U))
+                  (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3}
+                    (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U s)
+@KomorebiSpace.AdditiveViewSystem.unique_extension_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (U : Set.{u_1} V)
+  (s : KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U),
+  (ExistsUnique.{max (u_1 + 1) (u_3 + 1)} fun x =>
+      Eq.{max (u_1 + 1) (u_3 + 1)}
+        (KomorebiSpace.ViewSystem.restrict.{u_1, u_2, u_3} (KomorebiSpace.AdditiveViewSystem.views.{u_1, u_2, u_3} F) U
+          x)
+        s) ↔
+    Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} (KomorebiSpace.AdditiveViewSystem.extensionClass.{u_1, u_2, u_3} F U s)
+        0 ∧
+      Eq.{max (u_1 + 1) (u_3 + 1)} (KomorebiSpace.AdditiveViewSystem.ambiguity.{u_1, u_2, u_3} F U)
+        Bot.bot.{max u_1 u_3}
+KomorebiSpace.SectionExtensionExample.extensionClass_zero_iff_even : ∀ (k : ℤ),
+  Eq.{1}
+      (KomorebiSpace.AdditiveViewSystem.extensionClass.{0, 0, 0} KomorebiSpace.SectionExtensionExample.integerViews
+        KomorebiSpace.SectionExtensionExample.prescribedView (KomorebiSpace.SectionExtensionExample.localInteger k))
+      0 ↔
+    ∃ m, Eq.{1} k (HMul.hMul.{0, 0, 0} 2 m)
+KomorebiSpace.SectionExtensionExample.odd_seed_obstructed : Ne.{1}
+  (KomorebiSpace.AdditiveViewSystem.extensionClass.{0, 0, 0} KomorebiSpace.SectionExtensionExample.integerViews
+    KomorebiSpace.SectionExtensionExample.prescribedView (KomorebiSpace.SectionExtensionExample.localInteger 1))
+  0
+KomorebiSpace.SectionExtensionExample.nonzero_seed_extends : Nonempty.{1}
+  (KomorebiSpace.ViewSystem.Extensions.{0, 0, 0}
+    (KomorebiSpace.AdditiveViewSystem.views.{0, 0, 0} KomorebiSpace.SectionExtensionExample.integerViews)
+    KomorebiSpace.SectionExtensionExample.prescribedView (KomorebiSpace.SectionExtensionExample.localInteger 2))
+@KomorebiSpace.AdditiveViewSystem.connecting_kernel_eq_range.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (U : Set.{u_1} V),
+  Eq.{max (u_1 + 1) (u_3 + 1)}
+    (AddMonoidHom.ker.{max u_1 u_3, max (max u_1 u_2) u_3}
+      (KomorebiSpace.AdditiveViewSystem.connectingHom.{u_1, u_2, u_3} F U))
+    (AddMonoidHom.range.{max u_1 u_3, max u_1 u_3}
+      (KomorebiSpace.AdditiveViewSystem.restrictionHom.{u_1, u_2, u_3} F U))
+@KomorebiSpace.AdditiveViewSystem.restriction_surjective_iff_connecting_zero.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {A : V → Type u_3}
+  [inst_1 : (a : V) → AddCommGroup.{u_3} (A a)] (F : KomorebiSpace.AdditiveViewSystem.{u_1, u_2, u_3} V A)
+  (U : Set.{u_1} V),
+  Function.Surjective.{max (u_1 + 1) (u_3 + 1), max (u_1 + 1) (u_3 + 1)}
+      ⇑(KomorebiSpace.AdditiveViewSystem.restrictionHom.{u_1, u_2, u_3} F U) ↔
+    Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} (KomorebiSpace.AdditiveViewSystem.connectingHom.{u_1, u_2, u_3} F U) 0
+@KomorebiSpace.ViewSystem.extensionStages.{u_1, u_2,
+    u_3} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    (F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V) →
+      {U W : Set.{u_1} V} →
+        (h : U ⊆ W) →
+          (s : KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} F U) →
+            Equiv.{max (u_1 + 1) (u_3 + 1), (max u_1 u_3) + 1}
+              (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3} F U s)
+              ((t : KomorebiSpace.ViewSystem.Intermediate.{u_1, u_2, u_3} F h s) ×
+                KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3} F W ↑t)
+@KomorebiSpace.ViewSystem.extension_nonempty_iff_intermediate.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V]
+  (F : KomorebiSpace.ViewSystem.{u_1, u_2, u_3} V) {U W : Set.{u_1} V} (h : U ⊆ W)
+  (s : KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} F U),
+  Nonempty.{max (u_1 + 1) (u_3 + 1)} (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3} F U s) ↔
+    ∃ t, Nonempty.{max (u_1 + 1) (u_3 + 1)} (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3} F W ↑t)
+@KomorebiSpace.CorrectionProblem.flatten_iff.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : AddCommGroup.{u_1} E] [inst_1 : AddCommGroup.{u_2} R]
+  [inst_2 : AddCommGroup.{u_3} S] (P : KomorebiSpace.CorrectionProblem.{u_1, u_2, u_3} E R S) (x : E),
+  Eq.{u_2 + 1} (KomorebiSpace.CorrectionProblem.obstruction.{u_1, u_2, u_3} P x) 0 ↔
+    ∃ y,
+      Eq.{u_2 + 1} ((KomorebiSpace.CorrectionProblem.residual.{u_1, u_2, u_3} P) y) 0 ∧
+        Eq.{u_3 + 1} ((KomorebiSpace.CorrectionProblem.semantics.{u_1, u_2, u_3} P) y)
+          ((KomorebiSpace.CorrectionProblem.semantics.{u_1, u_2, u_3} P) x)
+@KomorebiSpace.CorrectionProblem.obstruction_invariant.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : AddCommGroup.{u_1} E] [inst_1 : AddCommGroup.{u_2} R]
+  [inst_2 : AddCommGroup.{u_3} S] (P : KomorebiSpace.CorrectionProblem.{u_1, u_2, u_3} E R S) (x a : E),
+  Eq.{u_3 + 1} ((KomorebiSpace.CorrectionProblem.semantics.{u_1, u_2, u_3} P) a) 0 →
+    Eq.{u_2 + 1} (KomorebiSpace.CorrectionProblem.obstruction.{u_1, u_2, u_3} P (HSub.hSub.{u_1, u_1, u_1} x a))
+      (KomorebiSpace.CorrectionProblem.obstruction.{u_1, u_2, u_3} P x)
+@KomorebiSpace.CorrectionProblem.nonzero_certificate.{u_1, u_2, u_3,
+    u_4} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : AddCommGroup.{u_1} E] [inst_1 : AddCommGroup.{u_2} R]
+  [inst_2 : AddCommGroup.{u_3} S] (P : KomorebiSpace.CorrectionProblem.{u_1, u_2, u_3} E R S) {D : Type u_4}
+  [inst_3 : AddCommGroup.{u_4} D] (L : AddMonoidHom.{u_2, u_4} R D) (x : E),
+  (∀ (a : E),
+      Eq.{u_3 + 1} ((KomorebiSpace.CorrectionProblem.semantics.{u_1, u_2, u_3} P) a) 0 →
+        Eq.{u_4 + 1} (L ((KomorebiSpace.CorrectionProblem.residual.{u_1, u_2, u_3} P) a)) 0) →
+    Ne.{u_4 + 1} (L ((KomorebiSpace.CorrectionProblem.residual.{u_1, u_2, u_3} P) x)) 0 →
+      Ne.{u_2 + 1} (KomorebiSpace.CorrectionProblem.obstruction.{u_1, u_2, u_3} P x) 0
+@KomorebiSpace.Tower.PreHom.exact_comp.{u_1,
+    u_2} : ∀ {C : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} C] {X Y Z : KomorebiSpace.Tower.{u_1, u_2} C}
+  {f : KomorebiSpace.Tower.PreHom.{u_1, u_2} X Y} {g : KomorebiSpace.Tower.PreHom.{u_1, u_2} Y Z},
+  KomorebiSpace.Tower.PreHom.Exact.{u_1, u_2} f →
+    KomorebiSpace.Tower.PreHom.Exact.{u_1, u_2} g →
+      KomorebiSpace.Tower.PreHom.Exact.{u_1, u_2} (KomorebiSpace.Tower.PreHom.comp.{u_1, u_2} f g)
+@KomorebiSpace.Resolution.Map.onLimit_comp.{u_1, u_2,
+    u_3} : ∀ {X : KomorebiSpace.Resolution.{u_1}} {Y : KomorebiSpace.Resolution.{u_2}}
+  {Z : KomorebiSpace.Resolution.{u_3}} (f : KomorebiSpace.Resolution.Map.{u_1, u_2} X Y)
+  (g : KomorebiSpace.Resolution.Map.{u_2, u_3} Y Z) (x : KomorebiSpace.Resolution.Point.{u_1} X),
+  Eq.{u_3 + 1}
+    (KomorebiSpace.Resolution.Map.onLimit.{u_1, u_3} (KomorebiSpace.Resolution.Map.comp.{u_1, u_2, u_3} f g) x)
+    (KomorebiSpace.Resolution.Map.onLimit.{u_2, u_3} g (KomorebiSpace.Resolution.Map.onLimit.{u_1, u_2} f x))
+@KomorebiSpace.Tower.PreHom.defect_comp.{u_1,
+    u_2} : ∀ {C : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} C] {X Y Z : KomorebiSpace.Tower.{u_1, u_2} C}
+  [inst_1 : CategoryTheory.Preadditive.{u_2, u_1} C] (f : KomorebiSpace.Tower.PreHom.{u_1, u_2} X Y)
+  (g : KomorebiSpace.Tower.PreHom.{u_1, u_2} Y Z) (n : ℕ),
+  Eq.{u_2 + 1} (KomorebiSpace.Tower.PreHom.defect.{u_1, u_2} (KomorebiSpace.Tower.PreHom.comp.{u_1, u_2} f g) n)
+    (HAdd.hAdd.{u_2, u_2, u_2}
+      (CategoryTheory.CategoryStruct.comp.{u_2, u_1}
+        (KomorebiSpace.Tower.PreHom.app.{u_1, u_2} f (HAdd.hAdd.{0, 0, 0} n 1))
+        (KomorebiSpace.Tower.PreHom.defect.{u_1, u_2} g n))
+      (CategoryTheory.CategoryStruct.comp.{u_2, u_1} (KomorebiSpace.Tower.PreHom.defect.{u_1, u_2} f n)
+        (KomorebiSpace.Tower.PreHom.app.{u_1, u_2} g n)))
+@KomorebiSpace.TowerCorrection.exact_iff_differential_zero.{u_1,
+    u_2} : ∀ {C : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} C]
+  [inst_1 : CategoryTheory.Preadditive.{u_2, u_1} C] (X Y : KomorebiSpace.Tower.{u_1, u_2} C)
+  (f : KomorebiSpace.TowerCorrection.Candidates.{u_1, u_2} X Y),
+  KomorebiSpace.Tower.PreHom.Exact.{u_1, u_2} (KomorebiSpace.TowerCorrection.asPreHom.{u_1, u_2} f) ↔
+    Eq.{u_2 + 1} ((KomorebiSpace.TowerCorrection.differential.{u_1, u_2} X Y) f) 0
+KomorebiSpace.Resolution.cofinalEquiv.{u_1} : (X : KomorebiSpace.Resolution.{u_1}) →
+  (φ : ℕ → ℕ) →
+    (hφ : Monotone.{0, 0} φ) →
+      KomorebiSpace.Resolution.UnboundedSchedule φ →
+        Equiv.{u_1 + 1, u_1 + 1} (KomorebiSpace.Resolution.Point.{u_1} X)
+          (KomorebiSpace.Resolution.Point.{u_1} (KomorebiSpace.Resolution.reindex.{u_1} X φ hφ))
+@KomorebiSpace.RepairDynamics.exactification_from_correction_operator.{u_1, u_2, u_3,
+    u_4} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] {E : Type u_2} {R : Type u_3} {S : Type u_4}
+  [inst_1 : NormedAddCommGroup.{u_2} E] [inst_2 : NormedSpace.{u_1, u_2} 𝕜 E] [inst_3 : NormedAddCommGroup.{u_3} R]
+  [inst_4 : NormedSpace.{u_1, u_3} 𝕜 R] [inst_5 : NormedAddCommGroup.{u_4} S] [inst_6 : NormedSpace.{u_1, u_4} 𝕜 S]
+  [CompleteSpace.{u_2} E] (d : ContinuousLinearMap.{u_1, u_1, u_2, u_3} (RingHom.id.{u_1} 𝕜) E R)
+  (p : ContinuousLinearMap.{u_1, u_1, u_2, u_4} (RingHom.id.{u_1} 𝕜) E S)
+  (A : ContinuousLinearMap.{u_1, u_1, u_3, u_2} (RingHom.id.{u_1} 𝕜) R E) (q : ℝ),
+  LE.le.{0} 0 q →
+    LT.lt.{0} q 1 →
+      (∀ (r : R), Eq.{u_4 + 1} (p (A r)) 0) →
+        (∀ (x : E),
+            LE.le.{0} (norm.{u_3} (HSub.hSub.{u_3, u_3, u_3} (d x) (d (A (d x)))))
+              (HMul.hMul.{0, 0, 0} q (norm.{u_3} (d x)))) →
+          ∀ (x : E),
+            ∃ y,
+              Filter.Tendsto.{0, u_2} (KomorebiSpace.RepairDynamics.orbit.{u_1, u_2, u_3} d A x) Filter.atTop.{0}
+                  (nhds.{u_2} y) ∧
+                Eq.{u_3 + 1} (d y) 0 ∧
+                  Eq.{u_4 + 1} (p y) (p x) ∧
+                    ∀ (n : ℕ),
+                      LE.le.{0} (dist.{u_2} (KomorebiSpace.RepairDynamics.orbit.{u_1, u_2, u_3} d A x n) y)
+                        (HMul.hMul.{0, 0, 0} (HDiv.hDiv.{0, 0, 0} (norm.{max u_2 u_3} A) (HSub.hSub.{0, 0, 0} 1 q))
+                          (norm.{u_3} (d (KomorebiSpace.RepairDynamics.orbit.{u_1, u_2, u_3} d A x n))))
+@KomorebiSpace.RepairDynamics.Scheme.projection_bound.{u_1, u_2, u_3,
+    u_4} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] {E : Type u_2} {R : Type u_3} {S : Type u_4}
+  [inst_1 : NormedAddCommGroup.{u_2} E] [inst_2 : NormedSpace.{u_1, u_2} 𝕜 E] [inst_3 : NormedAddCommGroup.{u_3} R]
+  [inst_4 : NormedSpace.{u_1, u_3} 𝕜 R] [inst_5 : NormedAddCommGroup.{u_4} S] [inst_6 : NormedSpace.{u_1, u_4} 𝕜 S]
+  [inst_7 : CompleteSpace.{u_2} E] {d : ContinuousLinearMap.{u_1, u_1, u_2, u_3} (RingHom.id.{u_1} 𝕜) E R}
+  {p : ContinuousLinearMap.{u_1, u_1, u_2, u_4} (RingHom.id.{u_1} 𝕜) E S}
+  (B : KomorebiSpace.RepairDynamics.Scheme.{u_1, u_2, u_3, u_4} d p),
+  LE.le.{0} (norm.{u_2} (KomorebiSpace.RepairDynamics.Scheme.projection.{u_1, u_2, u_3, u_4} B))
+    (KomorebiSpace.RepairDynamics.Scheme.stabilityConstant.{u_1, u_2, u_3, u_4} B)
+@KomorebiSpace.RepairDynamics.Scheme.projection_idempotent.{u_1, u_2, u_3,
+    u_4} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] {E : Type u_2} {R : Type u_3} {S : Type u_4}
+  [inst_1 : NormedAddCommGroup.{u_2} E] [inst_2 : NormedSpace.{u_1, u_2} 𝕜 E] [inst_3 : NormedAddCommGroup.{u_3} R]
+  [inst_4 : NormedSpace.{u_1, u_3} 𝕜 R] [inst_5 : NormedAddCommGroup.{u_4} S] [inst_6 : NormedSpace.{u_1, u_4} 𝕜 S]
+  [inst_7 : CompleteSpace.{u_2} E] {d : ContinuousLinearMap.{u_1, u_1, u_2, u_3} (RingHom.id.{u_1} 𝕜) E R}
+  {p : ContinuousLinearMap.{u_1, u_1, u_2, u_4} (RingHom.id.{u_1} 𝕜) E S}
+  (B : KomorebiSpace.RepairDynamics.Scheme.{u_1, u_2, u_3, u_4} d p) (x : E),
+  Eq.{u_2 + 1}
+    ((KomorebiSpace.RepairDynamics.Scheme.projection.{u_1, u_2, u_3, u_4} B)
+      ((KomorebiSpace.RepairDynamics.Scheme.projection.{u_1, u_2, u_3, u_4} B) x))
+    ((KomorebiSpace.RepairDynamics.Scheme.projection.{u_1, u_2, u_3, u_4} B) x)
+@KomorebiSpace.BanachTower.Splitting.differential_correction.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  {Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜} (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y)
+  (hgap :
+    LT.lt.{0}
+      (HMul.hMul.{0, 0, 0} ↑(KomorebiSpace.BanachTower.Splitting.bound.{u_1, u_2} L)
+        ↑(KomorebiSpace.BanachTower.bound.{u_1, u_2} X))
+      1)
+  (r : ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} X Y)),
+  Eq.{u_2 + 1}
+    ((KomorebiSpace.BanachTower.differential.{u_1, u_2} X Y)
+      ((KomorebiSpace.BanachTower.Splitting.correction.{u_1, u_2} X L hgap) r))
+    r
+@KomorebiSpace.BanachTower.Splitting.repair_error.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  {Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜} (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y)
+  (hgap :
+    LT.lt.{0}
+      (HMul.hMul.{0, 0, 0} ↑(KomorebiSpace.BanachTower.Splitting.bound.{u_1, u_2} L)
+        ↑(KomorebiSpace.BanachTower.bound.{u_1, u_2} X))
+      1)
+  (f : ↥(KomorebiSpace.BanachTower.Candidates.{u_1, u_2} X Y)),
+  LE.le.{0}
+    (norm.{u_2} (HSub.hSub.{u_2, u_2, u_2} f ((KomorebiSpace.BanachTower.Splitting.repair.{u_1, u_2} X L hgap) f)))
+    (HMul.hMul.{0, 0, 0} (KomorebiSpace.BanachTower.Splitting.gain.{u_1, u_2} X L)
+      (norm.{u_2} ((KomorebiSpace.BanachTower.differential.{u_1, u_2} X Y) f)))
+@KomorebiSpace.BanachTower.Splitting.coordinates.{u_1,
+    u_2} : {𝕜 : Type u_1} →
+  [inst : NontriviallyNormedField.{u_1} 𝕜] →
+    (X : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜) →
+      {Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜} →
+        (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y) →
+          LT.lt.{0}
+              (HMul.hMul.{0, 0, 0} ↑(KomorebiSpace.BanachTower.Splitting.bound.{u_1, u_2} L)
+                ↑(KomorebiSpace.BanachTower.bound.{u_1, u_2} X))
+              1 →
+            ContinuousLinearEquiv.{u_1, u_1, u_2, u_2} (RingHom.id.{u_1} 𝕜)
+              (↥(KomorebiSpace.BanachTower.Candidates.{u_1, u_2} X Y))
+              (Prod.{u_2, u_2} ↥(KomorebiSpace.BanachTower.Splitting.semanticSpace.{u_1, u_2} X L)
+                ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} X Y))
+@KomorebiSpace.BanachTower.Splitting.coordinate_inverse.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  {Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜} (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y)
+  (hgap :
+    LT.lt.{0}
+      (HMul.hMul.{0, 0, 0} ↑(KomorebiSpace.BanachTower.Splitting.bound.{u_1, u_2} L)
+        ↑(KomorebiSpace.BanachTower.bound.{u_1, u_2} X))
+      1)
+  (z :
+    Prod.{u_2, u_2} ↥(KomorebiSpace.BanachTower.Splitting.semanticSpace.{u_1, u_2} X L)
+      ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} X Y)),
+  Eq.{u_2 + 1}
+    ((LinearEquiv.symm.{u_1, u_1, u_2, u_2} (KomorebiSpace.BanachTower.Splitting.coordinateEquiv.{u_1, u_2} X L hgap))
+      z)
+    (HAdd.hAdd.{u_2, u_2, u_2} ((KomorebiSpace.BanachTower.Splitting.repair.{u_1, u_2} X L hgap) ↑z.1)
+      ((KomorebiSpace.BanachTower.Splitting.correction.{u_1, u_2} X L hgap) z.2))
+@KomorebiSpace.BanachTower.Splitting.residual_observable_injective.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  {Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜} (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y)
+  (f g : ↥(KomorebiSpace.BanachTower.Candidates.{u_1, u_2} X Y)),
+  Eq.{u_2 + 1} ((KomorebiSpace.BanachTower.differential.{u_1, u_2} X Y) f)
+      ((KomorebiSpace.BanachTower.differential.{u_1, u_2} X Y) g) →
+    Eq.{u_2 + 1} ((KomorebiSpace.BanachTower.Splitting.observable.{u_1, u_2} X L) f)
+        ((KomorebiSpace.BanachTower.Splitting.observable.{u_1, u_2} X L) g) →
+      Eq.{u_2 + 1} f g
+KomorebiSpace.GrowingTower.identityRepair_formula : ∀ (n : ℕ) (x : KomorebiSpace.GrowingTower.Stage n)
+  (i : Fin (HAdd.hAdd.{0, 0, 0} n 1)),
+  Eq.{1} ((↑(KomorebiSpace.GrowingTower.exactRepair KomorebiSpace.GrowingTower.identityCandidate) n) x i)
+    (HMul.hMul.{0, 0, 0} (HPow.hPow.{0, 0, 0} (1 / 2) (HSub.hSub.{0, 0, 0} n ↑i)) (x i))
+KomorebiSpace.IdentityTowerObstruction.no_bounded_primitive : ¬∃ f,
+    Eq.{1}
+      ((KomorebiSpace.BanachTower.differential.{0, 0} KomorebiSpace.IdentityTowerObstruction.realTower
+          KomorebiSpace.IdentityTowerObstruction.realTower)
+        f)
+      KomorebiSpace.IdentityTowerObstruction.unitResidual
+KomorebiSpace.IdentityTowerObstruction.repair_exists_but_right_inverse_does_not : (∀
+    (f :
+      ↥(KomorebiSpace.BanachTower.Candidates.{0, 0} KomorebiSpace.IdentityTowerObstruction.realTower
+          KomorebiSpace.IdentityTowerObstruction.realTower)),
+    ExistsUnique.{1} fun g =>
+      KomorebiSpace.BanachTower.Exact.{0, 0} KomorebiSpace.IdentityTowerObstruction.realTower
+          KomorebiSpace.IdentityTowerObstruction.realTower g ∧
+        Eq.{1} (↑g 0) (↑f 0)) ∧
+  ¬∃ A,
+      ∀
+        (r :
+          ↥(KomorebiSpace.BanachTower.Residuals.{0, 0} KomorebiSpace.IdentityTowerObstruction.realTower
+              KomorebiSpace.IdentityTowerObstruction.realTower)),
+        Eq.{1}
+          ((KomorebiSpace.BanachTower.differential.{0, 0} KomorebiSpace.IdentityTowerObstruction.realTower
+              KomorebiSpace.IdentityTowerObstruction.realTower)
+            (A r))
+          r
+KomorebiSpace.SplittingDependence.repair_operators_differ : Ne.{1} KomorebiSpace.SplittingDependence.skewRepair
+  KomorebiSpace.GrowingTower.exactRepair
+KomorebiSpace.SplittingDependence.protected_profiles_differ : Ne.{1}
+  ((KomorebiSpace.BanachTower.Splitting.observable.{0, 0} KomorebiSpace.GrowingTower.source
+      KomorebiSpace.SplittingDependence.skewSplitting)
+    KomorebiSpace.GrowingTower.identityCandidate)
+  ((KomorebiSpace.BanachTower.Splitting.observable.{0, 0} KomorebiSpace.GrowingTower.source
+      KomorebiSpace.GrowingTower.targetSplitting)
+    KomorebiSpace.GrowingTower.identityCandidate)
+@KomorebiSpace.DyadicResidual.coarsen_pair.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  (hX : ∀ (n : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.BanachTower.down.{u_1, u_2} X n)) 1)
+  (hY : ∀ (n : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.BanachTower.down.{u_1, u_2} Y n)) 1)
+  (r : ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} X Y)) (n : ℕ),
+  Eq.{u_2 + 1} (↑((KomorebiSpace.DyadicResidual.coarsen.{u_1, u_2} X Y hX hY) r) n)
+    (HAdd.hAdd.{u_2, u_2, u_2}
+      (ContinuousLinearMap.comp.{u_1, u_1, u_1, u_2, u_2, u_2}
+        (KomorebiSpace.BanachTower.down.{u_1, u_2} Y (HMul.hMul.{0, 0, 0} 2 n))
+        (↑r (HAdd.hAdd.{0, 0, 0} (HMul.hMul.{0, 0, 0} 2 n) 1)))
+      (ContinuousLinearMap.comp.{u_1, u_1, u_1, u_2, u_2, u_2} (↑r (HMul.hMul.{0, 0, 0} 2 n))
+        (KomorebiSpace.BanachTower.down.{u_1, u_2} X (HAdd.hAdd.{0, 0, 0} (HMul.hMul.{0, 0, 0} 2 n) 1))))
+@KomorebiSpace.DyadicResidual.coarsen_lift.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  (hX : ∀ (n : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.BanachTower.down.{u_1, u_2} X n)) 1)
+  (hY : ∀ (n : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.BanachTower.down.{u_1, u_2} Y n)) 1)
+  (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y)
+  (c : ↥(KomorebiSpace.DyadicResidual.Coarse.{u_1, u_2} X Y hX hY)),
+  Eq.{u_2 + 1}
+    ((KomorebiSpace.DyadicResidual.coarsen.{u_1, u_2} X Y hX hY)
+      ((KomorebiSpace.DyadicResidual.lift.{u_1, u_2} X Y hX hY L) c))
+    c
+@KomorebiSpace.DyadicResidual.reconstruction.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (X Y : KomorebiSpace.BanachTower.{u_1, u_2} 𝕜)
+  (hX : ∀ (n : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.BanachTower.down.{u_1, u_2} X n)) 1)
+  (hY : ∀ (n : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.BanachTower.down.{u_1, u_2} Y n)) 1)
+  (L : KomorebiSpace.BanachTower.Splitting.{u_1, u_2} Y) (r : ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} X Y)),
+  Eq.{u_2 + 1}
+    (HAdd.hAdd.{u_2, u_2, u_2} ((KomorebiSpace.DyadicResidual.hidden.{u_1, u_2} X Y hX hY L) r)
+      ((KomorebiSpace.DyadicResidual.lift.{u_1, u_2} X Y hX hY L)
+        ((KomorebiSpace.DyadicResidual.coarsen.{u_1, u_2} X Y hX hY) r)))
+    r
+@KomorebiSpace.CoarseningCascade.remainder_nested_left.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (T : KomorebiSpace.CoarseningCascade.{u_1, u_2} 𝕜)
+  (m n : ℕ),
+  LE.le.{0} m n →
+    ∀ (x : KomorebiSpace.CoarseningCascade.Obj.{u_1, u_2} T 0),
+      Eq.{u_2 + 1}
+        ((KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T m)
+          ((KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T n) x))
+        ((KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T n) x)
+@KomorebiSpace.CoarseningCascade.remainder_nested_right.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (T : KomorebiSpace.CoarseningCascade.{u_1, u_2} 𝕜)
+  (m n : ℕ),
+  LE.le.{0} m n →
+    ∀ (x : KomorebiSpace.CoarseningCascade.Obj.{u_1, u_2} T 0),
+      Eq.{u_2 + 1}
+        ((KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T n)
+          ((KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T m) x))
+        ((KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T n) x)
+@KomorebiSpace.CoarseningCascade.persistent_iff_details_zero.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (T : KomorebiSpace.CoarseningCascade.{u_1, u_2} 𝕜)
+  (x : KomorebiSpace.CoarseningCascade.Obj.{u_1, u_2} T 0),
+  Membership.mem.{u_2, u_2} (KomorebiSpace.CoarseningCascade.persistent.{u_1, u_2} T) x ↔
+    ∀ (n : ℕ), Eq.{u_2 + 1} (KomorebiSpace.CoarseningCascade.detail.{u_1, u_2} T x n) 0
+@KomorebiSpace.CoarseningCascade.reconstruction.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (T : KomorebiSpace.CoarseningCascade.{u_1, u_2} 𝕜)
+  (x : KomorebiSpace.CoarseningCascade.Obj.{u_1, u_2} T 0) (N : ℕ),
+  Eq.{u_2 + 1} x
+    (HAdd.hAdd.{u_2, u_2, u_2} (∑ n ∈ Finset.range N, KomorebiSpace.CoarseningCascade.detailTerm.{u_1, u_2} T x n)
+      ((KomorebiSpace.CoarseningCascade.restore.{u_1, u_2} T N)
+        (KomorebiSpace.CoarseningCascade.level.{u_1, u_2} T x N)))
+@KomorebiSpace.CoarseningCascade.recoverable_iff_closure_finiteCore.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (T : KomorebiSpace.CoarseningCascade.{u_1, u_2} 𝕜)
+  (K : ℝ),
+  LE.le.{0} 0 K →
+    (∀ (N : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T N)) K) →
+      ∀ (x : KomorebiSpace.CoarseningCascade.Obj.{u_1, u_2} T 0),
+        Membership.mem.{u_2, u_2} (KomorebiSpace.CoarseningCascade.recoverable.{u_1, u_2} T) x ↔
+          Membership.mem.{u_2, u_2} (closure.{u_2} (KomorebiSpace.CoarseningCascade.finiteCore.{u_1, u_2} T)) x
+@KomorebiSpace.CoarseningCascade.all_recoverable_iff_dense.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜] (T : KomorebiSpace.CoarseningCascade.{u_1, u_2} 𝕜)
+  (K : ℝ),
+  LE.le.{0} 0 K →
+    (∀ (N : ℕ), LE.le.{0} (norm.{u_2} (KomorebiSpace.CoarseningCascade.remainder.{u_1, u_2} T N)) K) →
+      ((∀ (x : KomorebiSpace.CoarseningCascade.Obj.{u_1, u_2} T 0),
+          Membership.mem.{u_2, u_2} (KomorebiSpace.CoarseningCascade.recoverable.{u_1, u_2} T) x) ↔
+        Dense.{u_2} (KomorebiSpace.CoarseningCascade.finiteCore.{u_1, u_2} T))
+@KomorebiSpace.DyadicResidual.System.infinite_details_injective.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r s :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T))),
+  (∀ (j : ℕ),
+      Eq.{u_2 + 1}
+        (KomorebiSpace.CoarseningCascade.detail.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.cascade.{u_1, u_2} T) r
+          j)
+        (KomorebiSpace.CoarseningCascade.detail.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.cascade.{u_1, u_2} T) s
+          j)) →
+    Eq.{u_2 + 1} r s
+@KomorebiSpace.DyadicResidual.System.reconstruction_coordinate.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T)))
+  (N k : ℕ),
+  LT.lt.{0} (HAdd.hAdd.{0, 0, 0} k 1) (HPow.hPow.{0, 0, 0} 2 N) →
+    Eq.{u_2 + 1} (↑((KomorebiSpace.DyadicResidual.System.reconstructedResidual.{u_1, u_2} T N) r) k) (↑r k)
+KomorebiSpace.SequenceCascade.recoverable_iff_vanishes : ∀ (f : ↥KomorebiSpace.SequenceCascade.Space),
+  Membership.mem.{0, 0} (KomorebiSpace.CoarseningCascade.recoverable.{0, 0} KomorebiSpace.SequenceCascade.system) f ↔
+    Filter.Tendsto.{0, 0} (fun n => ↑f n) Filter.atTop.{0} (nhds.{0} 0)
+KomorebiSpace.SequenceCascade.ones_remainder_norm : ∀ (N : ℕ),
+  Eq.{1}
+    (norm.{0}
+      ((KomorebiSpace.CoarseningCascade.remainder.{0, 0} KomorebiSpace.SequenceCascade.system N)
+        KomorebiSpace.SequenceCascade.ones))
+    1
+KomorebiSpace.SequenceCascade.geometric_reconstruction_error : ∀ (q : ℝ) (hq0 : LE.le.{0} 0 q) (hq1 : LT.lt.{0} q 1)
+  (N : ℕ),
+  Eq.{1}
+    (norm.{0}
+      (HSub.hSub.{0, 0, 0} (KomorebiSpace.SequenceCascade.geometric q hq0 hq1)
+        ((KomorebiSpace.CoarseningCascade.reconstructed.{0, 0} KomorebiSpace.SequenceCascade.system N)
+          (KomorebiSpace.SequenceCascade.geometric q hq0 hq1))))
+    (HPow.hPow.{0, 0, 0} q N)
+@KomorebiSpace.GroupViewSystem.twisted_coherent_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {G : V → Type u_3}
+  [inst_1 : (a : V) → Group.{u_3} (G a)] (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G)
+  (c : KomorebiSpace.GroupViewSystem.Cocycle.{u_1, u_2, u_3} F) (x : (v : V) → G v),
+  (∀ (v w : V) (f : Quiver.Hom.{u_2, u_1} v w),
+      Eq.{u_3 + 1}
+        (KomorebiSpace.ViewSystem.pull.{u_1, u_2, u_3} (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c)
+          f (x w))
+        (x v)) ↔
+    ∀ (v w : V) (f : Quiver.Hom.{u_2, u_1} v w),
+      Eq.{u_3 + 1} (KomorebiSpace.GroupViewSystem.Cocycle.edge.{u_1, u_2, u_3} c f)
+        (HMul.hMul.{u_3, u_3, u_3} (x v)
+          (Inv.inv.{u_3} ((KomorebiSpace.GroupViewSystem.pull.{u_1, u_2, u_3} F f) (x w))))
+@KomorebiSpace.GroupViewSystem.gaugeSetoid.{u_1, u_2,
+    u_3} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    {G : V → Type u_3} →
+      [inst_1 : (a : V) → Group.{u_3} (G a)] →
+        (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G) →
+          Set.{u_1} V →
+            Setoid.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} (KomorebiSpace.GroupViewSystem.Cocycle.{u_1, u_2, u_3} F)
+@KomorebiSpace.GroupViewSystem.extensionOrbit_neutral_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {G : V → Type u_3}
+  [inst_1 : (a : V) → Group.{u_3} (G a)] (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G)
+  (c : KomorebiSpace.GroupViewSystem.Cocycle.{u_1, u_2, u_3} F) (U : Set.{u_1} V)
+  (s :
+    KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c)
+      U),
+  Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} (KomorebiSpace.GroupViewSystem.extensionOrbit.{u_1, u_2, u_3} F c U s)
+      (KomorebiSpace.GroupViewSystem.neutralClass.{u_1, u_2, u_3} F U) ↔
+    Nonempty.{max (u_1 + 1) (u_3 + 1)}
+      (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3}
+        (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c) U s)
+@KomorebiSpace.GroupViewSystem.extensionOrbit_independent.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {G : V → Type u_3}
+  [inst_1 : (a : V) → Group.{u_3} (G a)] (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G)
+  (c : KomorebiSpace.GroupViewSystem.Cocycle.{u_1, u_2, u_3} F) (U : Set.{u_1} V)
+  (s :
+    KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c) U)
+  (q : (v : V) → G v),
+  (∀ (v : ↑U), Eq.{u_3 + 1} (q ↑v) (↑s v)) →
+    Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)}
+      (KomorebiSpace.GroupViewSystem.orbitClass.{u_1, u_2, u_3} F U
+        (KomorebiSpace.GroupViewSystem.normalize.{u_1, u_2, u_3} F c q))
+      (KomorebiSpace.GroupViewSystem.extensionOrbit.{u_1, u_2, u_3} F c U s)
+@KomorebiSpace.GroupViewSystem.extensionParameters.{u_1, u_2,
+    u_3} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    {G : V → Type u_3} →
+      [inst_1 : (a : V) → Group.{u_3} (G a)] →
+        (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G) →
+          (c : KomorebiSpace.GroupViewSystem.Cocycle.{u_1, u_2, u_3} F) →
+            (U : Set.{u_1} V) →
+              (s :
+                  KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3}
+                    (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c) U) →
+                KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3}
+                    (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c) U s →
+                  Equiv.{max (u_1 + 1) (u_3 + 1), max (u_1 + 1) (u_3 + 1)}
+                    (↥(KomorebiSpace.GroupViewSystem.invisible.{u_1, u_2, u_3} F U))
+                    (KomorebiSpace.ViewSystem.Extensions.{u_1, u_2, u_3}
+                      (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c) U s)
+@KomorebiSpace.GroupViewSystem.unique_extension_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {G : V → Type u_3}
+  [inst_1 : (a : V) → Group.{u_3} (G a)] (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G)
+  (c : KomorebiSpace.GroupViewSystem.Cocycle.{u_1, u_2, u_3} F) (U : Set.{u_1} V)
+  (s :
+    KomorebiSpace.ViewSystem.Partial.{u_1, u_2, u_3} (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c)
+      U),
+  (ExistsUnique.{max (u_1 + 1) (u_3 + 1)} fun x =>
+      Eq.{max (u_1 + 1) (u_3 + 1)}
+        (KomorebiSpace.ViewSystem.restrict.{u_1, u_2, u_3}
+          (KomorebiSpace.GroupViewSystem.twistedViews.{u_1, u_2, u_3} F c) U x)
+        s) ↔
+    Eq.{max (max (u_1 + 1) (u_2 + 1)) (u_3 + 1)} (KomorebiSpace.GroupViewSystem.extensionOrbit.{u_1, u_2, u_3} F c U s)
+        (KomorebiSpace.GroupViewSystem.neutralClass.{u_1, u_2, u_3} F U) ∧
+      Subsingleton.{max (u_1 + 1) (u_3 + 1)} ↥(KomorebiSpace.GroupViewSystem.invisible.{u_1, u_2, u_3} F U)
+KomorebiSpace.CocycleExamples.s3_orbit_dichotomy : ∀
+  (c :
+    KomorebiSpace.GroupViewSystem.Cocycle.{0, 0, 0}
+      (KomorebiSpace.CocycleExamples.loopCoefficients.{0} KomorebiSpace.CocycleExamples.S3)),
+  Eq.{1}
+      (KomorebiSpace.GroupViewSystem.orbitClass.{0, 0, 0}
+        (KomorebiSpace.CocycleExamples.loopCoefficients.{0} KomorebiSpace.CocycleExamples.S3)
+        EmptyCollection.emptyCollection.{0} c)
+      (KomorebiSpace.GroupViewSystem.neutralClass.{0, 0, 0}
+        (KomorebiSpace.CocycleExamples.loopCoefficients.{0} KomorebiSpace.CocycleExamples.S3)
+        EmptyCollection.emptyCollection.{0}) ∨
+    Eq.{1}
+      (KomorebiSpace.GroupViewSystem.orbitClass.{0, 0, 0}
+        (KomorebiSpace.CocycleExamples.loopCoefficients.{0} KomorebiSpace.CocycleExamples.S3)
+        EmptyCollection.emptyCollection.{0} c)
+      (KomorebiSpace.GroupViewSystem.orbitClass.{0, 0, 0}
+        (KomorebiSpace.CocycleExamples.loopCoefficients.{0} KomorebiSpace.CocycleExamples.S3)
+        EmptyCollection.emptyCollection.{0}
+        (KomorebiSpace.GroupViewSystem.GaugeObject.labels.{0, 0, 0} KomorebiSpace.CocycleExamples.nontrivialObject))
+KomorebiSpace.CocycleExamples.actual_automorphisms_noncommute : Ne.{1}
+  (CategoryTheory.CategoryStruct.comp.{0, 0}
+    (KomorebiSpace.CocycleExamples.trivialAutomorphism KomorebiSpace.CocycleExamples.transposition)
+    (KomorebiSpace.CocycleExamples.trivialAutomorphism KomorebiSpace.CocycleExamples.otherTransposition))
+  (CategoryTheory.CategoryStruct.comp.{0, 0}
+    (KomorebiSpace.CocycleExamples.trivialAutomorphism KomorebiSpace.CocycleExamples.otherTransposition)
+    (KomorebiSpace.CocycleExamples.trivialAutomorphism KomorebiSpace.CocycleExamples.transposition))
+@KomorebiSpace.CocycleExamples.involution_trivial_iff.{u_1} : ∀ {H : Type u_1} [inst : Group.{u_1} H] (p : H)
+  (hp : Eq.{u_1 + 1} (HMul.hMul.{u_1, u_1, u_1} p p) 1),
+  Eq.{u_1 + 1}
+      (KomorebiSpace.GroupViewSystem.orbitClass.{0, 0, u_1} (KomorebiSpace.CocycleExamples.loopCoefficients.{u_1} H)
+        EmptyCollection.emptyCollection.{0} (KomorebiSpace.CocycleExamples.involutionCocycle.{u_1} p hp))
+      (KomorebiSpace.GroupViewSystem.neutralClass.{0, 0, u_1} (KomorebiSpace.CocycleExamples.loopCoefficients.{u_1} H)
+        EmptyCollection.emptyCollection.{0}) ↔
+    Eq.{u_1 + 1} p 1
+@KomorebiSpace.GroupViewSystem.CocycleDescentData.descentEquivalence.{u_1, u_2, u_3,
+    u_4} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    {G : V → Type u_3} →
+      [inst_1 : (a : V) → Group.{u_3} (G a)] →
+        {I : Type u_4} →
+          (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G) →
+            (U : I → Set.{u_1} V) →
+              KomorebiSpace.GroupViewSystem.CompositionCover.{u_1, u_2, u_4} U →
+                CategoryTheory.Equivalence.{max u_1 u_3, max (max u_1 u_3) u_4, max (max u_1 u_2) u_3,
+                    max (max (max u_1 u_2) u_3) u_4}
+                  (KomorebiSpace.GroupViewSystem.GaugeObject.{u_1, u_2, u_3} F EmptyCollection.emptyCollection.{u_1})
+                  (KomorebiSpace.GroupViewSystem.CocycleDescentData.{u_1, u_2, u_3, u_4} F U)
+@KomorebiSpace.GroupViewSystem.CocycleDescentData.Effectuation.exists_unique_comparison.{u_1, u_2, u_3,
+    u_4} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {G : V → Type u_3}
+  [inst_1 : (a : V) → Group.{u_3} (G a)] {I : Type u_4} {F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G}
+  {U : I → Set.{u_1} V} {D : KomorebiSpace.GroupViewSystem.CocycleDescentData.{u_1, u_2, u_3, u_4} F U}
+  (E E' : KomorebiSpace.GroupViewSystem.CocycleDescentData.Effectuation.{u_1, u_2, u_3, u_4} D),
+  KomorebiSpace.ViewSystem.TransitionCover.{u_1, u_2, u_4} U →
+    ExistsUnique.{max (u_1 + 1) (u_3 + 1)} fun a =>
+      KomorebiSpace.GroupViewSystem.CocycleDescentData.Effectuation.Compatible.{u_1, u_2, u_3, u_4} E E' a
+KomorebiSpace.CompositionSite.topology.{u_1,
+  u_2} : (V : Type u_1) →
+  [CategoryTheory.Category.{u_2, u_1} V] → CategoryTheory.GrothendieckTopology.{u_1, u_1} (Set.{u_1} V)
+@KomorebiSpace.CompositionSite.ofArrows_covering_iff.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {I : Type u_3} (W : Set.{u_1} V)
+  (U : I → Set.{u_1} V) (hU : ∀ (i : I), U i ⊆ W),
+  Membership.mem.{u_1, u_1} ((KomorebiSpace.CompositionSite.topology.{u_1, u_2} V) W)
+      (CategoryTheory.Sieve.ofArrows.{u_1, u_1, u_3} U fun i => CategoryTheory.homOfLE.{u_1} ⋯) ↔
+    KomorebiSpace.CompositionSite.FamilyCovers.{u_1, u_2, u_3} W U
+@KomorebiSpace.GroupViewSystem.patch_isStack.{u_1, u_2,
+    u_3} : ∀ {V : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} V] {G : V → Type u_3}
+  [inst_1 : (a : V) → Group.{u_3} (G a)] (F : KomorebiSpace.GroupViewSystem.{u_1, u_2, u_3} V G),
+  CategoryTheory.Pseudofunctor.IsStack.{max u_1 u_3, u_1, max (max u_1 u_2) u_3, u_1}
+    (KomorebiSpace.GroupViewSystem.patchPseudofunctor.{u_1, u_2, u_3} F)
+    (KomorebiSpace.CompositionSite.topology.{u_1, u_2} V)
+@KomorebiSpace.ViewSystem.viewEquivalence.{u_1, u_2, u_3, u_4,
+    u_5} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_3, u_1} V] →
+    {W : Type u_2} →
+      [inst_1 : CategoryTheory.Category.{u_4, u_2} W] →
+        (F : KomorebiSpace.ViewSystem.{u_2, u_4, u_5} W) →
+          (e : CategoryTheory.Equivalence.{u_3, u_4, u_1, u_2} V W) →
+            Equiv.{max (u_2 + 1) (u_5 + 1), max (u_1 + 1) (u_5 + 1)}
+              (KomorebiSpace.ViewSystem.Ambient.{u_2, u_4, u_5} F)
+              (KomorebiSpace.ViewSystem.Ambient.{u_1, u_3, u_5}
+                (KomorebiSpace.ViewSystem.reindex.{u_1, u_2, u_3, u_4, u_5} F
+                  (CategoryTheory.Equivalence.functor.{u_3, u_4, u_1, u_2} e)))
+@KomorebiSpace.ViewSystem.relativeViewEquivalence.{u_1, u_2, u_3, u_4,
+    u_5} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_3, u_1} V] →
+    {W : Type u_2} →
+      [inst_1 : CategoryTheory.Category.{u_4, u_2} W] →
+        (F : KomorebiSpace.ViewSystem.{u_2, u_4, u_5} W) →
+          (e : CategoryTheory.Equivalence.{u_3, u_4, u_1, u_2} V W) →
+            (U : Set.{u_2} W) →
+              KomorebiSpace.CompositionSite.IsoClosed.{u_2, u_4} U →
+                (s : KomorebiSpace.ViewSystem.Partial.{u_2, u_4, u_5} F U) →
+                  Equiv.{max (u_2 + 1) (u_5 + 1), max (u_1 + 1) (u_5 + 1)}
+                    (KomorebiSpace.ViewSystem.Extensions.{u_2, u_4, u_5} F U s)
+                    (KomorebiSpace.ViewSystem.Extensions.{u_1, u_3, u_5}
+                      (KomorebiSpace.ViewSystem.reindex.{u_1, u_2, u_3, u_4, u_5} F
+                        (CategoryTheory.Equivalence.functor.{u_3, u_4, u_1, u_2} e))
+                      (Set.preimage.{u_1, u_2}
+                        (CategoryTheory.Functor.obj.{u_3, u_4, u_1, u_2}
+                          (CategoryTheory.Equivalence.functor.{u_3, u_4, u_1, u_2} e))
+                        U)
+                      (KomorebiSpace.ViewSystem.reindexPartial.{u_1, u_2, u_3, u_4, u_5} F
+                        (CategoryTheory.Equivalence.functor.{u_3, u_4, u_1, u_2} e) U s))
+@KomorebiSpace.GroupViewSystem.invisibleViewEquivalence.{u_1, u_2, u_3, u_4,
+    u_5} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_3, u_1} V] →
+    {W : Type u_2} →
+      [inst_1 : CategoryTheory.Category.{u_4, u_2} W] →
+        {G : W → Type u_5} →
+          [inst_2 : (a : W) → Group.{u_5} (G a)] →
+            (F : KomorebiSpace.GroupViewSystem.{u_2, u_4, u_5} W G) →
+              (e : CategoryTheory.Equivalence.{u_3, u_4, u_1, u_2} V W) →
+                (U : Set.{u_2} W) →
+                  KomorebiSpace.CompositionSite.IsoClosed.{u_2, u_4} U →
+                    MulEquiv.{max u_2 u_5, max u_1 u_5} ↥(KomorebiSpace.GroupViewSystem.invisible.{u_2, u_4, u_5} F U)
+                      ↥(KomorebiSpace.GroupViewSystem.invisible.{u_1, u_3, u_5}
+                          (KomorebiSpace.GroupViewSystem.reindex.{u_1, u_2, u_3, u_4, u_5} F
+                            (CategoryTheory.Equivalence.functor.{u_3, u_4, u_1, u_2} e))
+                          (Set.preimage.{u_1, u_2}
+                            (CategoryTheory.Functor.obj.{u_3, u_4, u_1, u_2}
+                              (CategoryTheory.Equivalence.functor.{u_3, u_4, u_1, u_2} e))
+                            U))
+@KomorebiSpace.MarkedRealization.nonempty_iff.{u_1, u_2, u_3,
+    u_4} : ∀ {C : Type u_1} [inst : CategoryTheory.Groupoid.{u_3, u_1} C] {D : Type u_2}
+  [inst_1 : CategoryTheory.Groupoid.{u_4, u_2} D] (F : CategoryTheory.Functor.{u_3, u_4, u_1, u_2} C D) (b : D),
+  Nonempty.{max (u_4 + 1) (u_1 + 1)} (KomorebiSpace.MarkedRealization.{u_1, u_2, u_3, u_4} F b) ↔
+    ∃ x, Nonempty.{u_4 + 1} (CategoryTheory.Iso.{u_4, u_2} (CategoryTheory.Functor.obj.{u_3, u_4, u_1, u_2} F x) b)
+@KomorebiSpace.MarkedRealization.endomorphism_condition.{u_1, u_2, u_3,
+    u_4} : ∀ {C : Type u_1} [inst : CategoryTheory.Groupoid.{u_3, u_1} C] {D : Type u_2}
+  [inst_1 : CategoryTheory.Groupoid.{u_4, u_2} D] {F : CategoryTheory.Functor.{u_3, u_4, u_1, u_2} C D} {b : D}
+  (x : KomorebiSpace.MarkedRealization.{u_1, u_2, u_3, u_4} F b)
+  (a :
+    Quiver.Hom.{u_3, u_1} (KomorebiSpace.MarkedRealization.obj.{u_1, u_2, u_3, u_4} x)
+      (KomorebiSpace.MarkedRealization.obj.{u_1, u_2, u_3, u_4} x)),
+  Eq.{u_4 + 1}
+      (CategoryTheory.CategoryStruct.comp.{u_4, u_2} (CategoryTheory.Functor.map.{u_3, u_4, u_1, u_2} F a)
+        (KomorebiSpace.MarkedRealization.identify.{u_1, u_2, u_3, u_4} x))
+      (KomorebiSpace.MarkedRealization.identify.{u_1, u_2, u_3, u_4} x) ↔
+    Eq.{u_4 + 1} (CategoryTheory.Functor.map.{u_3, u_4, u_1, u_2} F a)
+      (CategoryTheory.CategoryStruct.id.{u_4, u_2}
+        (CategoryTheory.Functor.obj.{u_3, u_4, u_1, u_2} F
+          (KomorebiSpace.MarkedRealization.obj.{u_1, u_2, u_3, u_4} x)))
+@KomorebiSpace.MarkedRealization.transportEquivalence.{u_1, u_2, u_3, u_4, u_5, u_6, u_7,
+    u_8} : {C : Type u_1} →
+  [inst : CategoryTheory.Groupoid.{u_5, u_1} C] →
+    {D : Type u_2} →
+      [inst_1 : CategoryTheory.Groupoid.{u_6, u_2} D] →
+        {C' : Type u_3} →
+          [inst_2 : CategoryTheory.Groupoid.{u_7, u_3} C'] →
+            {D' : Type u_4} →
+              [inst_3 : CategoryTheory.Groupoid.{u_8, u_4} D'] →
+                {F : CategoryTheory.Functor.{u_5, u_6, u_1, u_2} C D} →
+                  {F' : CategoryTheory.Functor.{u_7, u_8, u_3, u_4} C' D'} →
+                    (E : CategoryTheory.Functor.{u_5, u_7, u_1, u_3} C C') →
+                      (K : CategoryTheory.Functor.{u_6, u_8, u_2, u_4} D D') →
+                        CategoryTheory.Iso.{max u_1 u_8, max (max (max u_4 u_1) u_8) u_5}
+                            (CategoryTheory.Functor.comp.{u_5, u_6, u_8, u_1, u_2, u_4} F K)
+                            (CategoryTheory.Functor.comp.{u_5, u_7, u_8, u_1, u_3, u_4} E F') →
+                          (b : D) →
+                            [CategoryTheory.Functor.IsEquivalence.{u_5, u_7, u_1, u_3} E] →
+                              [CategoryTheory.Functor.IsEquivalence.{u_6, u_8, u_2, u_4} K] →
+                                CategoryTheory.Equivalence.{u_5, u_7, max u_6 u_1, max u_8 u_3}
+                                  (KomorebiSpace.MarkedRealization.{u_1, u_2, u_5, u_6} F b)
+                                  (KomorebiSpace.MarkedRealization.{u_3, u_4, u_7, u_8} F'
+                                    (CategoryTheory.Functor.obj.{u_6, u_8, u_2, u_4} K b))
+@KomorebiSpace.MarkedRealization.transportHomEquiv.{u_1, u_2, u_3, u_4, u_5, u_6, u_7,
+    u_8} : {C : Type u_1} →
+  [inst : CategoryTheory.Groupoid.{u_5, u_1} C] →
+    {D : Type u_2} →
+      [inst_1 : CategoryTheory.Groupoid.{u_6, u_2} D] →
+        {C' : Type u_3} →
+          [inst_2 : CategoryTheory.Groupoid.{u_7, u_3} C'] →
+            {D' : Type u_4} →
+              [inst_3 : CategoryTheory.Groupoid.{u_8, u_4} D'] →
+                {F : CategoryTheory.Functor.{u_5, u_6, u_1, u_2} C D} →
+                  {F' : CategoryTheory.Functor.{u_7, u_8, u_3, u_4} C' D'} →
+                    (E : CategoryTheory.Functor.{u_5, u_7, u_1, u_3} C C') →
+                      (K : CategoryTheory.Functor.{u_6, u_8, u_2, u_4} D D') →
+                        (s :
+                            CategoryTheory.Iso.{max u_1 u_8, max (max (max u_4 u_1) u_8) u_5}
+                              (CategoryTheory.Functor.comp.{u_5, u_6, u_8, u_1, u_2, u_4} F K)
+                              (CategoryTheory.Functor.comp.{u_5, u_7, u_8, u_1, u_3, u_4} E F')) →
+                          (b : D) →
+                            [CategoryTheory.Functor.Full.{u_5, u_7, u_1, u_3} E] →
+                              [CategoryTheory.Functor.Faithful.{u_5, u_7, u_1, u_3} E] →
+                                [CategoryTheory.Functor.Faithful.{u_6, u_8, u_2, u_4} K] →
+                                  (x y : KomorebiSpace.MarkedRealization.{u_1, u_2, u_5, u_6} F b) →
+                                    Equiv.{u_5 + 1, u_7 + 1} (Quiver.Hom.{u_5, max u_1 u_6} x y)
+                                      (Quiver.Hom.{u_7, max u_3 u_8}
+                                        (CategoryTheory.Functor.obj.{u_5, u_7, max u_1 u_6, max u_3 u_8}
+                                          (KomorebiSpace.MarkedRealization.transport.{u_1, u_2, u_3, u_4, u_5, u_6, u_7,
+                                              u_8}
+                                            E K s b)
+                                          x)
+                                        (CategoryTheory.Functor.obj.{u_5, u_7, max u_1 u_6, max u_3 u_8}
+                                          (KomorebiSpace.MarkedRealization.transport.{u_1, u_2, u_3, u_4, u_5, u_6, u_7,
+                                              u_8}
+                                            E K s b)
+                                          y))
+@KomorebiSpace.AmplifiedTransport.Connection.walkSum_defect.{u_1,
+    u_2} : ∀ {V : Type u_1} {H : Type u_2} [inst : NormedAddCommGroup.{u_2} H] [inst_1 : NormedSpace.{0, u_2} ℝ H]
+  (T : KomorebiSpace.AmplifiedTransport.Connection.{u_1, u_2} V H) {graph : SimpleGraph.{u_1} V} (x : V → H) {i j : V}
+  (p : SimpleGraph.Walk.{u_1} graph i j),
+  Eq.{u_2 + 1}
+    (KomorebiSpace.AmplifiedTransport.Connection.walkSum.{u_1, u_2} T
+      (fun a => KomorebiSpace.AmplifiedTransport.Connection.defect.{u_1, u_2} T x (↑a).1 (↑a).2) p)
+    (HSub.hSub.{u_2, u_2, u_2} ((KomorebiSpace.AmplifiedTransport.Connection.walkTransport.{u_1, u_2} T p) (x j)) (x i))
+@KomorebiSpace.AmplifiedTransport.Connection.walk_error.{u_1,
+    u_2} : ∀ {V : Type u_1} {H : Type u_2} [inst : NormedAddCommGroup.{u_2} H] [inst_1 : NormedSpace.{0, u_2} ℝ H]
+  (T : KomorebiSpace.AmplifiedTransport.Connection.{u_1, u_2} V H) {graph : SimpleGraph.{u_1} V}
+  [inst_2 : Fintype.{u_1} V] (x : V → H) {i j : V} (p : SimpleGraph.Walk.{u_1} graph i j),
+  LE.le.{0}
+    (norm.{u_2}
+      (HSub.hSub.{u_2, u_2, u_2} ((KomorebiSpace.AmplifiedTransport.Connection.walkTransport.{u_1, u_2} T p) (x j))
+        (x i)))
+    (HMul.hMul.{0, 0, 0} (KomorebiSpace.AmplifiedTransport.Connection.walkGain.{u_1, u_2} T p)
+      (norm.{max u_1 u_2} ((KomorebiSpace.AmplifiedTransport.Connection.differential.{u_1, u_2} T graph) x)))
+@KomorebiSpace.AmplifiedTransport.Rooted.parameterEquiv.{u_1,
+    u_2} : {V : Type u_1} →
+  {H : Type u_2} →
+    [inst : NormedAddCommGroup.{u_2} H] →
+      [inst_1 : NormedSpace.{0, u_2} ℝ H] →
+        (T : KomorebiSpace.AmplifiedTransport.Connection.{u_1, u_2} V H) →
+          {graph : SimpleGraph.{u_1} V} →
+            {o : V} →
+              (p : KomorebiSpace.OverlapTransport.Routing.{u_1} graph o) →
+                [inst_2 : Fintype.{u_1} V] →
+                  ContinuousLinearEquiv.{0, 0, u_2, max u_1 u_2} (RingHom.id.{0} ℝ)
+                    ↥(KomorebiSpace.AmplifiedTransport.Rooted.fixedSpace.{u_1, u_2} T p)
+                    ↥(KomorebiSpace.AmplifiedTransport.Rooted.parallelSpace.{u_1, u_2} T)
+@KomorebiSpace.AmplifiedTransport.Rooted.fixedSpace_route_independent.{u_1,
+    u_2} : ∀ {V : Type u_1} {H : Type u_2} [inst : NormedAddCommGroup.{u_2} H] [inst_1 : NormedSpace.{0, u_2} ℝ H]
+  (T : KomorebiSpace.AmplifiedTransport.Connection.{u_1, u_2} V H) {graph : SimpleGraph.{u_1} V} {o : V}
+  (p q : KomorebiSpace.OverlapTransport.Routing.{u_1} graph o),
+  Eq.{u_2 + 1} (KomorebiSpace.AmplifiedTransport.Rooted.fixedSpace.{u_1, u_2} T p)
+    (KomorebiSpace.AmplifiedTransport.Rooted.fixedSpace.{u_1, u_2} T q)
+@KomorebiSpace.HilbertKernelProjection.unconditional_exact_repair.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R) (x : E),
+  Eq.{u_2 + 1} (d ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x)) 0 ∧
+    LE.le.{0} (norm.{u_1} ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x)) (norm.{u_1} x)
+@KomorebiSpace.HilbertKernelProjection.projection_best.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R) (x y : E),
+  Eq.{u_2 + 1} (d y) 0 →
+    LE.le.{0}
+      (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x)))
+      (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x y))
+@KomorebiSpace.HilbertKernelProjection.projection_unique.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R) (x y : E),
+  Eq.{u_2 + 1} (d y) 0 →
+    Membership.mem.{u_1, u_1} (Submodule.orthogonal.{0, u_1} (LinearMap.ker.{0, 0, u_1, u_2} ↑d))
+        (HSub.hSub.{u_1, u_1, u_1} x y) →
+      Eq.{u_1 + 1} ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x) y
+@KomorebiSpace.HilbertKernelProjection.closed_range_iff_bound.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R) [CompleteSpace.{u_2} R],
+  IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑d) ↔
+    ∃ C,
+      LE.le.{0} 0 C ∧
+        ∀ (x : E),
+          LE.le.{0}
+            (norm.{u_1}
+              (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x)))
+            (HMul.hMul.{0, 0, 0} C (norm.{u_2} (d x)))
+@KomorebiSpace.HilbertKernelProjection.closed_range_iff_near_exact.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R) [CompleteSpace.{u_2} R],
+  IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑d) ↔
+    ∃ C,
+      LE.le.{0} 0 C ∧
+        ∀ (x : E),
+          ∃ y,
+            Eq.{u_2 + 1} (d y) 0 ∧
+              LE.le.{0} (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x y)) (HMul.hMul.{0, 0, 0} C (norm.{u_2} (d x)))
+@KomorebiSpace.HilbertKernelProjection.gain_characterization.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R) [inst_5 : CompleteSpace.{u_2} R]
+  (hd : IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑d)) (C : ℝ),
+  LE.le.{0} 0 C →
+    ((∀ (x : E),
+        LE.le.{0}
+          (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x)))
+          (HMul.hMul.{0, 0, 0} C (norm.{u_2} (d x)))) ↔
+      LE.le.{0} (KomorebiSpace.HilbertKernelProjection.gain.{u_1, u_2} d hd) C)
+@KomorebiSpace.AmplifiedTransport.Rooted.orthogonalRepair_error.{u_1,
+    u_2} : ∀ {V : Type u_1} {H : Type u_2} [inst : NormedAddCommGroup.{u_2} H] [inst_1 : InnerProductSpace.{0, u_2} ℝ H]
+  [inst_2 : FiniteDimensional.{0, u_2} ℝ H] [inst_3 : Fintype.{u_1} V]
+  (T : KomorebiSpace.AmplifiedTransport.Connection.{u_1, u_2} V H) {graph : SimpleGraph.{u_1} V} {o : V}
+  (p : KomorebiSpace.OverlapTransport.Routing.{u_1} graph o) (x : V → H),
+  LE.le.{0}
+    (norm.{max u_1 u_2}
+      (HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2} x
+        ((KomorebiSpace.AmplifiedTransport.Rooted.orthogonalRepair.{u_1, u_2} T p) x)))
+    (HMul.hMul.{0, 0, 0} (KomorebiSpace.AmplifiedTransport.Rooted.stabilityGain.{u_1, u_2} T p)
+      (norm.{max u_1 u_2} ((KomorebiSpace.AmplifiedTransport.Connection.differential.{u_1, u_2} T graph) x)))
+@KomorebiSpace.AmplifiedTransport.Rooted.Hilbert.closed_range_iff_near_parallel.{u_1,
+    u_2} : ∀ {V : Type u_1} {H : Type u_2} [inst : NormedAddCommGroup.{u_2} H] [inst_1 : InnerProductSpace.{0, u_2} ℝ H]
+  [CompleteSpace.{u_2} H] [inst_3 : Fintype.{u_1} V] (T : KomorebiSpace.AmplifiedTransport.Connection.{u_1, u_2} V H)
+  {graph : SimpleGraph.{u_1} V} {o : V} (p : KomorebiSpace.OverlapTransport.Routing.{u_1} graph o),
+  IsClosed.{max u_1 u_2}
+      (Set.range.{max u_1 u_2, u_2 + 1} ⇑(KomorebiSpace.AmplifiedTransport.Rooted.rootResidualMap.{u_1, u_2} T p)) ↔
+    ∃ C,
+      LE.le.{0} 0 C ∧
+        ∀ (x : V → H),
+          ∃ y,
+            KomorebiSpace.AmplifiedTransport.Connection.Parallel.{u_1, u_2} T graph y ∧
+              LE.le.{0} (norm.{max u_1 u_2} (HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2} x y))
+                (HMul.hMul.{0, 0, 0} C
+                  (norm.{max u_1 u_2}
+                    ((KomorebiSpace.AmplifiedTransport.Connection.differential.{u_1, u_2} T graph) x)))
+KomorebiSpace.AmplifiedTransport.Examples.exponential_amplification : ∀ (n : ℕ),
+  LT.lt.{0} 0 n →
+    Eq.{1} (KomorebiSpace.AmplifiedTransport.Examples.candidate n 0) 7 ∧
+      Eq.{1}
+          (norm.{0}
+            ((KomorebiSpace.AmplifiedTransport.Connection.differential.{0, 0}
+                (KomorebiSpace.AmplifiedTransport.Examples.chainConnection n)
+                (KomorebiSpace.OverlapTransport.Examples.chain n))
+              (KomorebiSpace.AmplifiedTransport.Examples.candidate n)))
+          1 ∧
+        Eq.{1}
+          (norm.{0}
+            (HSub.hSub.{0, 0, 0} (KomorebiSpace.AmplifiedTransport.Examples.candidate n)
+              ((KomorebiSpace.AmplifiedTransport.Rooted.orthogonalRepair.{0, 0}
+                  (KomorebiSpace.AmplifiedTransport.Examples.chainConnection n)
+                  (KomorebiSpace.OverlapTransport.Examples.chainRouting n))
+                (KomorebiSpace.AmplifiedTransport.Examples.candidate n))))
+          (HSub.hSub.{0, 0, 0} (HPow.hPow.{0, 0, 0} 2 n) 1)
+KomorebiSpace.AmplifiedTransport.Examples.length_only_bound_false : ¬LE.le.{0}
+    (norm.{0}
+      (HSub.hSub.{0, 0, 0} (KomorebiSpace.AmplifiedTransport.Examples.candidate 3)
+        ((KomorebiSpace.AmplifiedTransport.Rooted.orthogonalRepair.{0, 0}
+            (KomorebiSpace.AmplifiedTransport.Examples.chainConnection 3)
+            (KomorebiSpace.OverlapTransport.Examples.chainRouting 3))
+          (KomorebiSpace.AmplifiedTransport.Examples.candidate 3))))
+    (HMul.hMul.{0, 0, 0} 3
+      (norm.{0}
+        ((KomorebiSpace.AmplifiedTransport.Connection.differential.{0, 0}
+            (KomorebiSpace.AmplifiedTransport.Examples.chainConnection 3)
+            (KomorebiSpace.OverlapTransport.Examples.chain 3))
+          (KomorebiSpace.AmplifiedTransport.Examples.candidate 3))))
+@KomorebiSpace.QuantitativeDescent.repair_eq_projection.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} Y] [inst_6 : NormedSpace.{0, u_3} ℝ Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y) (x : E),
+  Eq.{u_1 + 1} ((KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D C) x)
+    ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, max u_2 u_3}
+        (KomorebiSpace.QuantitativeDescent.joint.{u_1, u_2, u_3} D C))
+      x)
+@KomorebiSpace.QuantitativeDescent.error_squared.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} Y] [inst_6 : NormedSpace.{0, u_3} ℝ Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y) (x : E),
+  Eq.{1}
+    (HPow.hPow.{0, 0, 0}
+      (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D C) x))) 2)
+    (HAdd.hAdd.{0, 0, 0}
+      (HPow.hPow.{0, 0, 0}
+        (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} D) x)))
+        2)
+      (HPow.hPow.{0, 0, 0}
+        (norm.{u_1}
+          (HSub.hSub.{u_1, u_1, u_1} ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} D) x)
+            ((KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D C) x)))
+        2))
+@KomorebiSpace.QuantitativeDescent.repair_error_squared.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} Y] [inst_6 : NormedSpace.{0, u_3} ℝ Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y) {a b γ : ℝ},
+  LE.le.{0} 0 a →
+    LE.le.{0} 0 b →
+      LE.le.{0} 0 γ →
+        (∀ (x : E),
+            LE.le.{0}
+              (norm.{u_1}
+                (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} D) x)))
+              (HMul.hMul.{0, 0, 0} a (norm.{u_2} (D x)))) →
+          (∀ (z : ↥(LinearMap.ker.{0, 0, u_1, u_2} ↑D)),
+              LE.le.{0}
+                (norm.{u_1}
+                  (HSub.hSub.{u_1, u_1, u_1} z
+                    ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_3}
+                        (KomorebiSpace.QuantitativeDescent.matching.{u_1, u_2, u_3} D C))
+                      z)))
+                (HMul.hMul.{0, 0, 0} b
+                  (norm.{u_3} ((KomorebiSpace.QuantitativeDescent.matching.{u_1, u_2, u_3} D C) z)))) →
+            KomorebiSpace.QuantitativeDescent.InteractionBound.{u_1, u_2, u_3} D C γ →
+              ∀ (x : E),
+                LE.le.{0}
+                  (HPow.hPow.{0, 0, 0}
+                    (norm.{u_1}
+                      (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D C) x)))
+                    2)
+                  (HAdd.hAdd.{0, 0, 0} (HPow.hPow.{0, 0, 0} (HMul.hMul.{0, 0, 0} a (norm.{u_2} (D x))) 2)
+                    (HPow.hPow.{0, 0, 0}
+                      (HMul.hMul.{0, 0, 0} b
+                        (HAdd.hAdd.{0, 0, 0} (norm.{u_3} (C x))
+                          (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} γ a) (norm.{u_2} (D x)))))
+                      2))
+@KomorebiSpace.QuantitativeDescent.operator_interaction.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : NormedAddCommGroup.{u_2} R] [inst_3 : NormedSpace.{0, u_2} ℝ R]
+  [inst_4 : NormedAddCommGroup.{u_3} Y] [inst_5 : NormedSpace.{0, u_3} ℝ Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y),
+  KomorebiSpace.QuantitativeDescent.InteractionBound.{u_1, u_2, u_3} D C (norm.{max u_1 u_3} C)
+@KomorebiSpace.QuantitativeDescent.joint_closed_iff_matching_closed.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} Y] [inst_6 : NormedSpace.{0, u_3} ℝ Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y) [CompleteSpace.{u_2} R] [CompleteSpace.{u_3} Y],
+  IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑D) →
+    (IsClosed.{max u_2 u_3}
+        (Set.range.{max u_2 u_3, u_1 + 1} ⇑(KomorebiSpace.QuantitativeDescent.joint.{u_1, u_2, u_3} D C)) ↔
+      IsClosed.{u_3} (Set.range.{u_3, u_1 + 1} ⇑(KomorebiSpace.QuantitativeDescent.matching.{u_1, u_2, u_3} D C)))
+@KomorebiSpace.QuantitativeDescent.stable_repair.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} Y] [inst_6 : NormedSpace.{0, u_3} ℝ Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y) [inst_7 : CompleteSpace.{u_2} R]
+  [inst_8 : CompleteSpace.{u_3} Y] (hD : IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑D))
+  (hB : IsClosed.{u_3} (Set.range.{u_3, u_1 + 1} ⇑(KomorebiSpace.QuantitativeDescent.matching.{u_1, u_2, u_3} D C)))
+  (x : E),
+  LE.le.{0}
+    (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x ((KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D C) x)))
+    (HMul.hMul.{0, 0, 0} (KomorebiSpace.QuantitativeDescent.stabilityGain.{u_1, u_2, u_3} D C hD hB)
+      (norm.{max u_2 u_3} ((KomorebiSpace.QuantitativeDescent.joint.{u_1, u_2, u_3} D C) x)))
+@KomorebiSpace.MovingKernel.projection_motion.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (B : KomorebiSpace.ResidualRobustness.Bound.{u_1, u_2} d) (B' : KomorebiSpace.ResidualRobustness.Bound.{u_1, u_2} e)
+  {ε : ℝ},
+  LE.le.{0} 0 ε →
+    (∀ (x : E),
+        LE.le.{0} (norm.{u_2} ((HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2} d e) x))
+          (HMul.hMul.{0, 0, 0} ε (norm.{u_1} x))) →
+      ∀ (x : E),
+        LE.le.{0}
+          (norm.{u_1}
+            (HSub.hSub.{u_1, u_1, u_1} ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d) x)
+              ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} e) x)))
+          (HMul.hMul.{0, 0, 0}
+            (HMul.hMul.{0, 0, 0}
+              (max.{0} (KomorebiSpace.ResidualRobustness.Bound.constant.{u_1, u_2} B)
+                (KomorebiSpace.ResidualRobustness.Bound.constant.{u_1, u_2} B'))
+              ε)
+            (norm.{u_1} x))
+@KomorebiSpace.MovingKernel.projection_lipschitz.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (M : NNReal),
+  LipschitzWith.{max u_1 u_2, u_1} M fun f => KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} ↑f
+@KomorebiSpace.SplitKernel.Certificate.perturbed_right_inverse.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : NormedAddCommGroup.{u_2} R] [inst_3 : NormedSpace.{0, u_2} ℝ R] [inst_4 : CompleteSpace.{u_2} R]
+  {d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R}
+  (T : KomorebiSpace.SplitKernel.Certificate.{u_1, u_2} d e) (r : R),
+  Eq.{u_2 + 1} (e ((KomorebiSpace.SplitKernel.Certificate.perturbedSection.{u_1, u_2} T) r)) r
+@KomorebiSpace.SplitKernel.Certificate.perturbed_section_bound.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : NormedAddCommGroup.{u_2} R] [inst_3 : NormedSpace.{0, u_2} ℝ R] [inst_4 : CompleteSpace.{u_2} R]
+  {d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R}
+  (T : KomorebiSpace.SplitKernel.Certificate.{u_1, u_2} d e) (r : R),
+  LE.le.{0} (norm.{u_1} ((KomorebiSpace.SplitKernel.Certificate.perturbedSection.{u_1, u_2} T) r))
+    (HMul.hMul.{0, 0, 0}
+      (HDiv.hDiv.{0, 0, 0} (KomorebiSpace.SplitKernel.Certificate.constant.{u_1, u_2} T)
+        (HSub.hSub.{0, 0, 0} 1
+          (HMul.hMul.{0, 0, 0} (KomorebiSpace.SplitKernel.Certificate.constant.{u_1, u_2} T)
+            (KomorebiSpace.SplitKernel.Certificate.epsilon.{u_1, u_2} T))))
+      (norm.{u_2} r))
+@KomorebiSpace.SplitKernel.Certificate.projection_motion.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  [CompleteSpace.{u_2} R] {d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R}
+  (T : KomorebiSpace.SplitKernel.Certificate.{u_1, u_2} d e),
+  LE.le.{0}
+    (norm.{u_1}
+      (HSub.hSub.{u_1, u_1, u_1} (KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} d)
+        (KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} e)))
+    (HDiv.hDiv.{0, 0, 0}
+      (HMul.hMul.{0, 0, 0} (KomorebiSpace.SplitKernel.Certificate.constant.{u_1, u_2} T)
+        (KomorebiSpace.SplitKernel.Certificate.epsilon.{u_1, u_2} T))
+      (HSub.hSub.{0, 0, 0} 1
+        (HMul.hMul.{0, 0, 0} (KomorebiSpace.SplitKernel.Certificate.constant.{u_1, u_2} T)
+          (KomorebiSpace.SplitKernel.Certificate.epsilon.{u_1, u_2} T))))
+@KomorebiSpace.SplitKernel.Certificate.kernelEquiv.{u_1,
+    u_2} : {E : Type u_1} →
+  {R : Type u_2} →
+    [inst : NormedAddCommGroup.{u_1} E] →
+      [inst_1 : InnerProductSpace.{0, u_1} ℝ E] →
+        [inst_2 : NormedAddCommGroup.{u_2} R] →
+          [inst_3 : NormedSpace.{0, u_2} ℝ R] →
+            [CompleteSpace.{u_2} R] →
+              {d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R} →
+                KomorebiSpace.SplitKernel.Certificate.{u_1, u_2} d e →
+                  ContinuousLinearEquiv.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) ↥(LinearMap.ker.{0, 0, u_1, u_2} ↑d)
+                    ↥(LinearMap.ker.{0, 0, u_1, u_2} ↑e)
+@KomorebiSpace.SplitKernel.Certificate.kernel_transport_error.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  [inst_5 : CompleteSpace.{u_2} R] {d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R}
+  (T : KomorebiSpace.SplitKernel.Certificate.{u_1, u_2} d e) (x : ↥(LinearMap.ker.{0, 0, u_1, u_2} ↑d)),
+  LE.le.{0}
+    (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} ↑((KomorebiSpace.SplitKernel.Certificate.kernelEquiv.{u_1, u_2} T) x) ↑x))
+    (HMul.hMul.{0, 0, 0}
+      (HDiv.hDiv.{0, 0, 0}
+        (HMul.hMul.{0, 0, 0} (KomorebiSpace.SplitKernel.Certificate.constant.{u_1, u_2} T)
+          (KomorebiSpace.SplitKernel.Certificate.epsilon.{u_1, u_2} T))
+        (HSub.hSub.{0, 0, 0} 1
+          (HMul.hMul.{0, 0, 0} (KomorebiSpace.SplitKernel.Certificate.constant.{u_1, u_2} T)
+            (KomorebiSpace.SplitKernel.Certificate.epsilon.{u_1, u_2} T))))
+      (norm.{u_1} ↑x))
+KomorebiSpace.MovingKernelExamples.projection_formula : ∀ (t : ℝ) (x : KomorebiSpace.MovingKernelExamples.H),
+  Eq.{1} ((KomorebiSpace.HilbertKernelProjection.projection.{0, 0} (KomorebiSpace.MovingKernelExamples.defect t)) x)
+    (KomorebiSpace.MovingKernelExamples.projected t x)
+KomorebiSpace.MovingKernelExamples.motion_opNorm_exact : ∀ (t : ℝ),
+  Eq.{1}
+    (norm.{0}
+      (HSub.hSub.{0, 0, 0}
+        (KomorebiSpace.HilbertKernelProjection.projection.{0, 0} (KomorebiSpace.MovingKernelExamples.defect t))
+        (KomorebiSpace.HilbertKernelProjection.projection.{0, 0} (KomorebiSpace.MovingKernelExamples.defect 0))))
+    √(HDiv.hDiv.{0, 0, 0} (HPow.hPow.{0, 0, 0} t 2) (HAdd.hAdd.{0, 0, 0} 1 (HPow.hPow.{0, 0, 0} t 2)))
+KomorebiSpace.MovingKernelExamples.kernel_transport_formula : ∀ (t : ℝ) (ht : LT.lt.{0} (abs.{0} t) 1) (b : ℝ),
+  Eq.{1}
+    (↑((KomorebiSpace.SplitKernel.Certificate.kernelEquiv.{0, 0}
+          (KomorebiSpace.MovingKernelExamples.intervalCertificate t ht))
+        (Subtype.mk.{1} (KomorebiSpace.MovingKernelExamples.vec 0 b) ⋯)))
+    (KomorebiSpace.MovingKernelExamples.vec (HMul.hMul.{0, 0, 0} (Neg.neg.{0} t) b) b)
+@KomorebiSpace.MovingKernel.lost_exact_unit_forces_gain.{u_1,
+    u_2} : ∀ {E : Type u_1} {R : Type u_2} [inst : NormedAddCommGroup.{u_1} E] [inst_1 : InnerProductSpace.{0, u_1} ℝ E]
+  [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R] [inst_4 : NormedSpace.{0, u_2} ℝ R]
+  (d e : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (B' : KomorebiSpace.ResidualRobustness.Bound.{u_1, u_2} e) {ε : ℝ},
+  LE.le.{0} (norm.{max u_1 u_2} (HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2} d e)) ε →
+    ∀ (x : E),
+      Eq.{u_2 + 1} (d x) 0 →
+        Eq.{1} (norm.{u_1} x) 1 →
+          Eq.{u_1 + 1} ((KomorebiSpace.HilbertKernelProjection.projection.{u_1, u_2} e) x) 0 →
+            LE.le.{0} 1 (HMul.hMul.{0, 0, 0} (KomorebiSpace.ResidualRobustness.Bound.constant.{u_1, u_2} B') ε)
+KomorebiSpace.MovingKernelExamples.closed_radius_failure : LE.le.{0}
+    (norm.{0} (HSub.hSub.{0, 0, 0} (ContinuousLinearMap.id.{0, 0} ℝ ℝ) 0)) 1 ∧
+  ¬Function.Surjective.{1, 1} ⇑0
+@KomorebiSpace.MovingDescent.repair_motion.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {Y : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : CompleteSpace.{u_2} R] [inst_6 : NormedAddCommGroup.{u_3} Y]
+  [inst_7 : NormedSpace.{0, u_3} ℝ Y] [inst_8 : CompleteSpace.{u_3} Y]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y)
+  (D' : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (C' : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E Y) (hD : IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑D))
+  (hB : IsClosed.{u_3} (Set.range.{u_3, u_1 + 1} ⇑(KomorebiSpace.QuantitativeDescent.matching.{u_1, u_2, u_3} D C)))
+  (hD' : IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑D'))
+  (hB' : IsClosed.{u_3} (Set.range.{u_3, u_1 + 1} ⇑(KomorebiSpace.QuantitativeDescent.matching.{u_1, u_2, u_3} D' C')))
+  {εD εC : ℝ},
+  LE.le.{0} (norm.{max u_1 u_2} (HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2} D D')) εD →
+    LE.le.{0} (norm.{max u_1 u_3} (HSub.hSub.{max u_1 u_3, max u_1 u_3, max u_1 u_3} C C')) εC →
+      LE.le.{0}
+        (norm.{u_1}
+          (HSub.hSub.{u_1, u_1, u_1} (KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D C)
+            (KomorebiSpace.QuantitativeDescent.repair.{u_1, u_2, u_3} D' C')))
+        (HMul.hMul.{0, 0, 0}
+          (max.{0} (KomorebiSpace.QuantitativeDescent.stabilityGain.{u_1, u_2, u_3} D C hD hB)
+            (KomorebiSpace.QuantitativeDescent.stabilityGain.{u_1, u_2, u_3} D' C' hD' hB'))
+          (max.{0} εD εC))
+KomorebiSpace.FinitePrefixBoundary.every_prefix_nonempty : ∀ (N : ℕ),
+  Nonempty.{1}
+    (KomorebiSpace.ViewSystem.Partial.{0, 0, 0}
+      (KomorebiSpace.Resolution.views.{0} KomorebiSpace.FinitePrefixBoundary.escaping)
+      (KomorebiSpace.Resolution.prefixViews N))
+KomorebiSpace.FinitePrefixBoundary.no_point : IsEmpty.{1}
+  (KomorebiSpace.Resolution.Point.{0} KomorebiSpace.FinitePrefixBoundary.escaping)
+KomorebiSpace.FinitePrefixBoundary.no_ambient : IsEmpty.{1}
+  (KomorebiSpace.ViewSystem.Ambient.{0, 0, 0}
+    (KomorebiSpace.Resolution.views.{0} KomorebiSpace.FinitePrefixBoundary.escaping))
+KomorebiSpace.FinitePrefixBoundary.no_matching_prefixes : IsEmpty.{1}
+  (KomorebiSpace.ViewSystem.Matching.{0, 0, 0, 0}
+    (KomorebiSpace.Resolution.views.{0} KomorebiSpace.FinitePrefixBoundary.escaping)
+    KomorebiSpace.Resolution.prefixViews)
+@KomorebiSpace.DyadicResidual.System.finite_details_zero_coordinate_of_not_dvd.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T)))
+  (N j k : ℕ),
+  (∀ (i : ℕ),
+      LT.lt.{0} i N →
+        Eq.{u_2 + 1}
+          (KomorebiSpace.CoarseningCascade.detail.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.cascade.{u_1, u_2} T)
+            r (HAdd.hAdd.{0, 0, 0} j i))
+          0) →
+    ¬Dvd.dvd.{0} (HPow.hPow.{0, 0, 0} 2 N) (HAdd.hAdd.{0, 0, 0} k 1) →
+      Eq.{u_2 + 1} (↑(KomorebiSpace.DyadicResidual.System.residualLevel.{u_1, u_2} T r j) k) 0
+@KomorebiSpace.DyadicResidual.System.remainder_coordinate_zero_of_not_dvd.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T)))
+  (N k : ℕ),
+  ¬Dvd.dvd.{0} (HPow.hPow.{0, 0, 0} 2 N) (HAdd.hAdd.{0, 0, 0} k 1) →
+    Eq.{u_2 + 1} (↑((KomorebiSpace.DyadicResidual.System.residualRemainder.{u_1, u_2} T N) r) k) 0
+@KomorebiSpace.DyadicResidual.System.reconstruction_coordinate_of_not_dvd.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T)))
+  (N k : ℕ),
+  ¬Dvd.dvd.{0} (HPow.hPow.{0, 0, 0} 2 N) (HAdd.hAdd.{0, 0, 0} k 1) →
+    Eq.{u_2 + 1} (↑((KomorebiSpace.DyadicResidual.System.reconstructedResidual.{u_1, u_2} T N) r) k) (↑r k)
+@KomorebiSpace.DyadicResidual.System.nonzero_remainder_requires_divisibility.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T)))
+  (N k : ℕ),
+  Ne.{u_2 + 1} (↑((KomorebiSpace.DyadicResidual.System.residualRemainder.{u_1, u_2} T N) r) k) 0 →
+    Dvd.dvd.{0} (HPow.hPow.{0, 0, 0} 2 N) (HAdd.hAdd.{0, 0, 0} k 1)
+@KomorebiSpace.DyadicResidual.System.reconstruction_after_valuation.{u_1,
+    u_2} : ∀ {𝕜 : Type u_1} [inst : NontriviallyNormedField.{u_1} 𝕜]
+  (T : KomorebiSpace.DyadicResidual.System.{u_1, u_2} 𝕜)
+  (r :
+    ↥(KomorebiSpace.BanachTower.Residuals.{u_1, u_2} (KomorebiSpace.DyadicResidual.System.source.{u_1, u_2} T)
+        (KomorebiSpace.DyadicResidual.System.target.{u_1, u_2} T)))
+  (N k : ℕ),
+  LT.lt.{0} (padicValNat 2 (HAdd.hAdd.{0, 0, 0} k 1)) N →
+    Eq.{u_2 + 1} (↑((KomorebiSpace.DyadicResidual.System.reconstructedResidual.{u_1, u_2} T N) r) k) (↑r k)
+@KomorebiSpace.ProtectedHilbertRepair.feasible_iff_answer.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : NormedAddCommGroup.{u_2} R] [inst_3 : NormedSpace.{0, u_2} ℝ R]
+  [inst_4 : NormedAddCommGroup.{u_3} S] [inst_5 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) (x : E),
+  KomorebiSpace.ProtectedHilbertRepair.Feasible.{u_1, u_2, u_3} D p x ↔
+    ∃ y, Eq.{u_2 + 1} (D y) 0 ∧ Eq.{u_3 + 1} (p y) (p x)
+@KomorebiSpace.ProtectedHilbertRepair.leastCorrection_unique.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} S] [inst_6 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) (x : E)
+  (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible.{u_1, u_2, u_3} D p x) (h : ↥(LinearMap.ker.{0, 0, u_1, u_3} ↑p)),
+  Eq.{u_2 + 1} ((KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p) h) (D x) →
+    Membership.mem.{u_1, u_1}
+        (Submodule.orthogonal.{0, u_1}
+          (LinearMap.ker.{0, 0, u_1, u_2} ↑(KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p)))
+        h →
+      Eq.{u_1 + 1} h (KomorebiSpace.ProtectedHilbertRepair.leastCorrection.{u_1, u_2, u_3} D p x hx)
+@KomorebiSpace.ProtectedHilbertRepair.exists_unique_nearest.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} S] [inst_6 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) (x : E),
+  KomorebiSpace.ProtectedHilbertRepair.Feasible.{u_1, u_2, u_3} D p x →
+    ExistsUnique.{u_1 + 1} fun y =>
+      Eq.{u_2 + 1} (D y) 0 ∧
+        Eq.{u_3 + 1} (p y) (p x) ∧
+          ∀ (z : E),
+            Eq.{u_2 + 1} (D z) 0 →
+              Eq.{u_3 + 1} (p z) (p x) →
+                LE.le.{0} (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x y)) (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x z))
+@KomorebiSpace.ProtectedHilbertRepair.repair_pythagoras.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} S] [inst_6 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) (x : E)
+  (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible.{u_1, u_2, u_3} D p x) (y : E),
+  Eq.{u_2 + 1} (D y) 0 →
+    Eq.{u_3 + 1} (p y) (p x) →
+      Eq.{1} (HPow.hPow.{0, 0, 0} (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x y)) 2)
+        (HAdd.hAdd.{0, 0, 0}
+          (HPow.hPow.{0, 0, 0}
+            (norm.{u_1}
+              (HSub.hSub.{u_1, u_1, u_1} x (KomorebiSpace.ProtectedHilbertRepair.repair.{u_1, u_2, u_3} D p x hx)))
+            2)
+          (HPow.hPow.{0, 0, 0}
+            (norm.{u_1}
+              (HSub.hSub.{u_1, u_1, u_1} (KomorebiSpace.ProtectedHilbertRepair.repair.{u_1, u_2, u_3} D p x hx) y))
+            2))
+@KomorebiSpace.ProtectedHilbertRepair.closed_range_iff_protected_bound.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} S] [inst_6 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) [CompleteSpace.{u_2} R],
+  IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑(KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p)) ↔
+    ∃ C,
+      LE.le.{0} 0 C ∧
+        ∀ (x : E) (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible.{u_1, u_2, u_3} D p x),
+          LE.le.{0}
+            (norm.{u_1}
+              (HSub.hSub.{u_1, u_1, u_1} x (KomorebiSpace.ProtectedHilbertRepair.repair.{u_1, u_2, u_3} D p x hx)))
+            (HMul.hMul.{0, 0, 0} C (norm.{u_2} (D x)))
+@KomorebiSpace.ProtectedHilbertRepair.gain_characterization.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} S] [inst_6 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) [inst_7 : CompleteSpace.{u_2} R]
+  (hc :
+    IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑(KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p)))
+  (C : ℝ),
+  LE.le.{0} 0 C →
+    ((∀ (x : E) (hx : KomorebiSpace.ProtectedHilbertRepair.Feasible.{u_1, u_2, u_3} D p x),
+        LE.le.{0}
+          (norm.{u_1}
+            (HSub.hSub.{u_1, u_1, u_1} x (KomorebiSpace.ProtectedHilbertRepair.repair.{u_1, u_2, u_3} D p x hx)))
+          (HMul.hMul.{0, 0, 0} C (norm.{u_2} (D x)))) ↔
+      LE.le.{0} (KomorebiSpace.ProtectedHilbertRepair.gain.{u_1, u_2, u_3} D p hc) C)
+@KomorebiSpace.ProtectedHilbertRepair.gain_zero_iff.{u_1, u_2,
+    u_3} : ∀ {E : Type u_1} {R : Type u_2} {S : Type u_3} [inst : NormedAddCommGroup.{u_1} E]
+  [inst_1 : InnerProductSpace.{0, u_1} ℝ E] [inst_2 : CompleteSpace.{u_1} E] [inst_3 : NormedAddCommGroup.{u_2} R]
+  [inst_4 : NormedSpace.{0, u_2} ℝ R] [inst_5 : NormedAddCommGroup.{u_3} S] [inst_6 : NormedSpace.{0, u_3} ℝ S]
+  (D : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) E R)
+  (p : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) E S) [inst_7 : CompleteSpace.{u_2} R]
+  (hc :
+    IsClosed.{u_2} (Set.range.{u_2, u_1 + 1} ⇑(KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p))),
+  Eq.{1} (KomorebiSpace.ProtectedHilbertRepair.gain.{u_1, u_2, u_3} D p hc) 0 ↔
+    Eq.{max (u_1 + 1) (u_2 + 1)} (KomorebiSpace.ProtectedHilbertRepair.restricted.{u_1, u_2, u_3} D p) 0
+@KomorebiSpace.ProtectedLinearCertificates.matrix_certificate_iff.{u_1, u_2, u_3,
+    u_4} : ∀ {K : Type u_1} [inst : Field.{u_1} K] {m : Type u_2} {n : Type u_3} {s : Type u_4}
+  [inst_1 : Fintype.{u_2} m] [inst_2 : Fintype.{u_3} n] [inst_3 : Fintype.{u_4} s] (A : Matrix.{u_2, u_3, u_1} m n K)
+  (P : Matrix.{u_4, u_3, u_1} s n K) (x : n → K),
+  (¬∃ y,
+        Eq.{max (u_1 + 1) (u_2 + 1)} (Matrix.mulVec.{u_1, u_2, u_3} A y) 0 ∧
+          Eq.{max (u_1 + 1) (u_4 + 1)} (Matrix.mulVec.{u_1, u_4, u_3} P y) (Matrix.mulVec.{u_1, u_4, u_3} P x)) ↔
+    ∃ lam mu,
+      Eq.{max (u_1 + 1) (u_3 + 1)} (Matrix.vecMul.{u_1, u_2, u_3} lam A) (Matrix.vecMul.{u_1, u_4, u_3} mu P) ∧
+        Eq.{u_1 + 1} (dotProduct.{u_1, u_2} lam (Matrix.mulVec.{u_1, u_2, u_3} A x)) 1
+@KomorebiSpace.ProtectedLinearCertificates.matrix_exclusive_alternative.{u_1, u_2, u_3,
+    u_4} : ∀ {K : Type u_1} [inst : Field.{u_1} K] {m : Type u_2} {n : Type u_3} {s : Type u_4}
+  [inst_1 : Fintype.{u_2} m] [inst_2 : Fintype.{u_3} n] [inst_3 : Fintype.{u_4} s] (A : Matrix.{u_2, u_3, u_1} m n K)
+  (P : Matrix.{u_4, u_3, u_1} s n K) (x : n → K),
+  ((∃ y,
+        Eq.{max (u_1 + 1) (u_2 + 1)} (Matrix.mulVec.{u_1, u_2, u_3} A y) 0 ∧
+          Eq.{max (u_1 + 1) (u_4 + 1)} (Matrix.mulVec.{u_1, u_4, u_3} P y) (Matrix.mulVec.{u_1, u_4, u_3} P x)) ∨
+      ∃ lam mu,
+        Eq.{max (u_1 + 1) (u_3 + 1)} (Matrix.vecMul.{u_1, u_2, u_3} lam A) (Matrix.vecMul.{u_1, u_4, u_3} mu P) ∧
+          Eq.{u_1 + 1} (dotProduct.{u_1, u_2} lam (Matrix.mulVec.{u_1, u_2, u_3} A x)) 1) ∧
+    ¬((∃ y,
+          Eq.{max (u_1 + 1) (u_2 + 1)} (Matrix.mulVec.{u_1, u_2, u_3} A y) 0 ∧
+            Eq.{max (u_1 + 1) (u_4 + 1)} (Matrix.mulVec.{u_1, u_4, u_3} P y) (Matrix.mulVec.{u_1, u_4, u_3} P x)) ∧
+        ∃ lam mu,
+          Eq.{max (u_1 + 1) (u_3 + 1)} (Matrix.vecMul.{u_1, u_2, u_3} lam A) (Matrix.vecMul.{u_1, u_4, u_3} mu P) ∧
+            Eq.{u_1 + 1} (dotProduct.{u_1, u_2} lam (Matrix.mulVec.{u_1, u_2, u_3} A x)) 1)
+@KomorebiSpace.ProtectedLinearCertificates.answerEquivAmbiguity.{u_1, u_2, u_3,
+    u_4} : {K : Type u_1} →
+  [inst : Field.{u_1} K] →
+    {E : Type u_2} →
+      {R : Type u_3} →
+        {S : Type u_4} →
+          [inst_1 : AddCommGroup.{u_2} E] →
+            [inst_2 : Module.{u_1, u_2} K E] →
+              [inst_3 : AddCommGroup.{u_3} R] →
+                [inst_4 : Module.{u_1, u_3} K R] →
+                  [inst_5 : AddCommGroup.{u_4} S] →
+                    [inst_6 : Module.{u_1, u_4} K S] →
+                      (D : LinearMap.{u_1, u_1, u_2, u_3} (RingHom.id.{u_1} K) E R) →
+                        (p : LinearMap.{u_1, u_1, u_2, u_4} (RingHom.id.{u_1} K) E S) →
+                          (x y₀ : E) →
+                            KomorebiSpace.ProtectedLinearCertificates.Answer.{u_1, u_2, u_3, u_4} D p x y₀ →
+                              Equiv.{u_2 + 1, u_2 + 1}
+                                (Subtype.{u_2 + 1} fun y =>
+                                  KomorebiSpace.ProtectedLinearCertificates.Answer.{u_1, u_2, u_3, u_4} D p x y)
+                                ↥(KomorebiSpace.ProtectedLinearCertificates.ambiguity.{u_1, u_2, u_3, u_4} D p)
+@KomorebiSpace.ProtectedLinearCertificates.matrix_ambiguity_dimension.{u_1, u_2, u_3,
+    u_4} : ∀ {K : Type u_1} [inst : Field.{u_1} K] {m : Type u_2} {n : Type u_3} {s : Type u_4}
+  [inst_1 : Fintype.{u_3} n] (A : Matrix.{u_2, u_3, u_1} m n K) (P : Matrix.{u_4, u_3, u_1} s n K),
+  Eq.{1}
+    (Module.finrank.{u_1, max u_1 u_3} K
+      ↥(KomorebiSpace.ProtectedLinearCertificates.ambiguity.{u_1, max u_1 u_3, max u_1 u_2, max u_1 u_4}
+          (Matrix.mulVecLin.{u_1, u_2, u_3} A) (Matrix.mulVecLin.{u_1, u_4, u_3} P)))
+    (HSub.hSub.{0, 0, 0} (Fintype.card.{u_3} n)
+      (Matrix.rank.{max u_2 u_4, u_3, u_1}
+        (KomorebiSpace.ProtectedLinearCertificates.stackedMatrix.{u_1, u_2, u_3, u_4} A P)))
+KomorebiSpace.Resolution.FiniteExistence.pointEquivSections.{u_1} : (X : KomorebiSpace.Resolution.{u_1}) →
+  Equiv.{u_1 + 1, u_1 + 1} (KomorebiSpace.Resolution.Point.{u_1} X)
+    ↑(CategoryTheory.Functor.sections.{0, u_1, 0} (KomorebiSpace.Resolution.FiniteExistence.diagram.{u_1} X))
+KomorebiSpace.Resolution.FiniteExistence.nonempty_point.{u_1} : ∀ (X : KomorebiSpace.Resolution.{u_1})
+  [∀ (n : ℕ), Finite.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)]
+  [∀ (n : ℕ), Nonempty.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)],
+  Nonempty.{u_1 + 1} (KomorebiSpace.Resolution.Point.{u_1} X)
+KomorebiSpace.Resolution.FiniteExistence.nonempty_ambient.{u_1} : ∀ (X : KomorebiSpace.Resolution.{u_1})
+  [∀ (n : ℕ), Finite.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)]
+  [∀ (n : ℕ), Nonempty.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)],
+  Nonempty.{u_1 + 1} (KomorebiSpace.ViewSystem.Ambient.{0, 0, u_1} (KomorebiSpace.Resolution.views.{u_1} X))
+KomorebiSpace.Resolution.FiniteExistence.evaluation_range.{u_1} : ∀ (X : KomorebiSpace.Resolution.{u_1})
+  [∀ (n : ℕ), Finite.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)]
+  [∀ (n : ℕ), Nonempty.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)] (n : ℕ),
+  Eq.{u_1 + 1} (Set.range.{u_1, u_1 + 1} fun s => ↑s n)
+    (KomorebiSpace.Resolution.FiniteExistence.persistentImage.{u_1} X n)
+KomorebiSpace.Resolution.FiniteExistence.extension_iff_persistent.{u_1} : ∀ (X : KomorebiSpace.Resolution.{u_1})
+  [∀ (n : ℕ), Finite.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)]
+  [∀ (n : ℕ), Nonempty.{u_1 + 1} (KomorebiSpace.Resolution.Obj.{u_1} X n)] (n : ℕ)
+  (x : KomorebiSpace.Resolution.Obj.{u_1} X n),
+  (∃ s, Eq.{u_1 + 1} (↑s n) x) ↔
+    ∀ (m : ℕ) (h : LE.le.{0} n m), ∃ z, Eq.{u_1 + 1} (KomorebiSpace.Resolution.restrict.{u_1} X h z) x

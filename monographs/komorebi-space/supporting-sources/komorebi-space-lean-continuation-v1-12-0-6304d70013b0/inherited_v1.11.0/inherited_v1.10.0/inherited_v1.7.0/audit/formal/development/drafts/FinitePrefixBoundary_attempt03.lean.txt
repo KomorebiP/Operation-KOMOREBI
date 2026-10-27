@@ -1,0 +1,49 @@
+import KomorebiSpace.ResolutionViews
+
+set_option autoImplicit false
+
+/-!
+# KS54: finite-prefix solvability need not produce a global realization
+
+The fibers are the actual subsets {m : Nat | n ≤ m}. Prefix witnesses inhabit
+ViewSystem.Partial, and global emptiness concerns the existing Resolution.Point
+and ViewSystem.Ambient constructions.
+-/
+namespace KomorebiSpace
+namespace FinitePrefixBoundary
+open CategoryTheory Resolution
+
+def escaping : Resolution where
+  Obj n := {m : ℕ // n ≤ m}
+  restrict h x := ⟨x.val, h.trans x.property⟩
+  restrict_refl _ _ := rfl
+  restrict_trans _ _ _ := rfl
+
+theorem level_nonempty (n : ℕ) : Nonempty (escaping.Obj n) :=
+  ⟨⟨n, Nat.le_refl n⟩⟩
+
+def prefix (N : ℕ) : escaping.views.Partial (prefixViews N) :=
+  ⟨fun n => ⟨N, n.property⟩, fun _ _ _ => rfl⟩
+
+theorem every_prefix_nonempty (N : ℕ) :
+    Nonempty (escaping.views.Partial (prefixViews N)) := ⟨prefix N⟩
+
+theorem no_point : IsEmpty escaping.Point := by
+  refine ⟨fun s => ?_⟩
+  let m := (s.val 0).val
+  have he : (s.val (m+1)).val = m :=
+    congrArg Subtype.val (s.property 0 (m+1) (Nat.zero_le _))
+  have hm := (s.val (m+1)).property
+  rw [he] at hm
+  exact Nat.not_succ_le_self m hm
+
+theorem no_ambient : IsEmpty escaping.views.Ambient :=
+  ⟨fun s => no_point.false (escaping.ambientEquiv s)⟩
+
+/-- The finite witnesses do not form the compatible matching datum needed by gluing. -/
+theorem no_matching_prefixes :
+    IsEmpty (ViewSystem.Matching escaping.views prefixViews) :=
+  ⟨fun s => no_ambient.false (escaping.prefixSectionEquiv.symm s)⟩
+
+end FinitePrefixBoundary
+end KomorebiSpace

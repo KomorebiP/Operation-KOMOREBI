@@ -1,0 +1,245 @@
+\documentclass[11pt]{article}
+\input{preamble}
+\renewcommand{\KomorebiKind}{Visual guide}
+\renewcommand{\KomorebiSubtitle}{A visual guide to coherent realization}
+\renewcommand{\KomorebiEdition}{Companion edition 1.2.0 / 11 October 2026}
+\newcommand{\visualpage}[3]{\clearpage\pdfbookmark[1]{#1}{plate:#3}\section*{#1}\noindent #2\par\vspace{10pt}\begin{center}\resizebox{.98\linewidth}{!}{\input{figures/#3}}\end{center}\vspace{7pt}}
+\newcommand{\vsource}[1]{\par\medskip{\footnotesize\sffamily\color{KomorebiMuted}Monograph concordance: #1.}\par}
+\begin{document}
+\KomorebiCover
+\section*{Reading the pictures}
+The diagrams in this guide describe mathematical objects with declared rules. A node is not a metaphor for unspecified information. An arrow has a domain, a codomain, and a mathematical interpretation. A loop can impose a new equation. A projection may preserve one quantity while changing another.
+
+The eighteen plates follow four questions.
+\begin{enumerate}
+\item Which collections of local data form a coherent realization?
+\item What prevents prescribed data from extending, and what remains free after extension?
+\item How do symmetries and overlap identifications survive gluing?
+\item When does a small residual guarantee a nearby exact answer?
+\end{enumerate}
+
+The accompanying monograph supplies the definitions and proofs. Stable identifiers such as KS09 point to its source concordance and the machine-readable ledger. A diagram does not replace the hypotheses of the result it illustrates.
+
+\begin{insight}
+\textbf{The organizing distinction}\par
+A local appearance is a coordinate. A realization is a compatible family of coordinates. A symmetry compares realizations. An obstruction records a failure that the permitted corrections cannot remove.
+\end{insight}
+
+\subsection*{The meaning of color and line}
+In the schematic diagrams, green marks retained structure and ochre marks a discrepancy or correction. The numerical charts have their own labelled legends. Their meaning is encoded by labels, markers, and line patterns, not by color alone. Open and filled squares in Plate 16 distinguish recovered coordinates from possible support. Every chart evaluates the formula printed beside it. The three-dimensional projection plate uses genuine spatial coordinates, not a perspective sketch.
+
+\subsection*{Verification boundary}
+The publication includes fresh exact arithmetic checks of the illustrated finite models, an integrated Lean source replay, and a declaration axiom audit. The five previously written-only principal items now have formal declarations. Pictures and finite implementation tests remain distinct from universal typed proofs. The rational program has not been proved to refine Lean for arbitrary inputs, and no theorem about every intended Komorebi model is claimed.
+
+\visualpage{01 / A realization has several appearances}{A global point is an entire compatible family. Evaluating the point at a view reveals one appearance, but an individual appearance need not determine the point.}{01_views.tex}
+\[
+ \Gamma(F)=\{(x_v)_v:f^*x_w=x_v\text{ for every }f:v\to w\}.
+\]
+The arrows between fibers run opposite to the arrows in the view category. This contravariance expresses restriction: a more extensive description is mapped to the information retained by another view. Compatibility requires both direct and composite restrictions to agree.
+
+The evaluations jointly determine the point. More strongly, a compatible family of maps from any set \(T\) factors uniquely through \(\Gamma(F)\). This is the limit universal property.
+\begin{scopebox}The system of views is input. The construction does not select one universal view system, and it does not guarantee that the resulting set is nonempty.\end{scopebox}
+\vsource{KS01--KS03}
+
+\visualpage{02 / An obstruction is a quotient of actual defects}{Start with a partial section. Extend it arbitrarily as raw data, measure its defect, and ask whether an admissible correction can cancel that defect.}{02_extension.tex}
+\[
+ \mathfrak o_U(s)=[\delta\widetilde s]\in R/\delta(\ker p_U),
+ \qquad
+ \mathfrak o_U(s)=0\iff\Ext_U(s)\ne\varnothing.
+\]
+The denominator is the set of residuals produced by changes invisible on the prescribed views. Two raw lifts of the same partial section differ by such a change. Their obstruction classes therefore agree.
+
+Once an extension exists, the invisible coherent changes form the ambiguity group \(H_U=\ker\delta\cap\ker p_U\). Existence is controlled by the quotient. Uniqueness is controlled by this different kernel.
+\begin{scopebox}The obstruction is defined before testing solvability. Nevertheless the quotient construction does not provide a general decision procedure for membership.\end{scopebox}
+\vsource{KS08--KS15}
+
+\visualpage{03 / The smallest nontrivial extension problem}{The coarse value is prescribed. The finer value must be an integer whose double is that coarse value. Filled points extend. Crosses do not.}{13_parity.tex}
+\[
+ x_0=2x_1,\qquad \Ext_{\{0\}}(k)=\{m\in\Z:2m=k\}.
+\]
+For an even seed, the extension is unique. For an odd seed, it is absent. The seed \(2\) extends as \((2,1)\), so the construction is not limited to the zero realization.
+
+Adding an independent unprescribed integer coordinate changes the number of extensions of every even seed from one to infinitely many. It leaves the parity obstruction unchanged. This separates feasibility from ambiguity in a model that can be checked completely.
+\begin{scopebox}The ambient realization space is nonempty, but not every prescribed partial datum belongs to the image of restriction.\end{scopebox}
+\vsource{KS09--KS12}
+
+\visualpage{04 / Exact maps commute with restriction}{An exact transport is not just a map at each level. Every adjacent square must commute. The same requirement then holds over any finite interval of the tower.}{03_tower.tex}
+\[
+ (\partial f)_n=\rho^Y_nf_{n+1}-f_n\rho^X_n,
+ \qquad \partial f=0\iff f\text{ is exact}.
+\]
+Exact transports induce maps on coherent inverse-limit points. Their residual obeys a precise Leibniz identity under composition:
+\[
+ \partial(gf)_n=(\partial g)_nf_{n+1}+g_n(\partial f)_n.
+\]
+A cofinal schedule preserves the coherent point space. It need not preserve the numerical residual of an arbitrary inexact family. Subsampling can cancel adjacent defects.
+\begin{scopebox}A fixed-level tower category is not automatically the full procategory. Reindexing and eventual equality of maps require their own construction.\end{scopebox}
+\vsource{KS16--KS18}
+
+\visualpage{05 / Repair changes the residual coordinate}{Under the split-tower hypotheses, a candidate has two exact coordinates: protected information and actual compatibility residual. Repair sets the second coordinate to zero.}{04_split.tex}
+\[
+ \Phi(f)=(p_Lf,\partial f),\qquad
+ \Phi^{-1}(s,r)=Ps+Ar,\qquad P=I-A\partial.
+\]
+The chosen target sections define the innovation observable \(p_L\). It retains the seed and the new target-kernel components at every level. The correction \(Ar\) changes neither of these protected components.
+
+A propagation gap, \(SB_X<1\), makes the recursive right inverse bounded. Its gain is at most \(S/(1-SB_X)\). This is a derived repair map, not an assumed existence statement.
+\begin{scopebox}The coordinate equivalence is not generally an isometry. The protected observable and the repaired answer can change when the splitting changes.\end{scopebox}
+\vsource{KS19--KS24}
+
+\visualpage{06 / Retain the detail that coarsening removes}{A right inverse of the coarsener supplies a chosen lift. Subtracting the lifted coarse part leaves the detail. Repeating this construction gives an exact finite telescoping decomposition.}{05_cascade.tex}
+\[
+ C_jJ_j=I,\qquad h_j=(I-J_jC_j)x_j,\qquad
+ x=S_Nx+Q_Nx.
+\]
+Here \(S_Nx\) is the sum of the retained details lifted back to the original level. The remainder \(Q_Nx\) is the coarse part also restored to the original level. Both terms live in the same space, so their difference and norm are meaningful.
+
+Every finite identity is exact. Passing to an infinite reconstruction is a different question: the restored remainder must converge to zero in the chosen topology.
+\begin{scopebox}A coarse observation alone can lose information. The pair consisting of coarse data and retained detail is lossless under the stated splitting identity.\end{scopebox}
+\vsource{KS25--KS29}
+
+\visualpage{07 / Every coordinate can recover while the norm does not}{For the shift cascade on bounded sequences, the remainder consists of the tail in its original coordinates. Every fixed coordinate eventually disappears from the remainder.}{14_tail.tex}
+\[
+ (Q_Nx)_i=\begin{cases}0&i<N,\\x_i&i\ge N.\end{cases}
+ \qquad \norm{Q_N\mathbf1}_\infty=1.
+\]
+The displayed constant sequence is recovered at each fixed coordinate, but the uniform error never decreases. Its unrecovered mass moves farther out instead of shrinking.
+
+In this model, norm recovery occurs precisely for \(c_0\), the sequences tending to zero. More generally, uniformly bounded remainder projections give norm recovery exactly on the closure of the finite core.
+\begin{scopebox}Coordinatewise convergence, uniform convergence, and existence of a coherent inverse-limit point are different assertions. No one of these topologies should be substituted for another.\end{scopebox}
+\vsource{KS26--KS29}
+
+\visualpage{08 / A groupoid remembers more than an orbit set}{A cocycle records coherent transition rules. Gauge arrows compare those rules. Passing to an orbit set forgets the comparison witnesses and the automorphisms.}{06_groupoid.tex}
+\[
+ c_{gf}=c_ff^*(c_g),\qquad
+ (a\cdot c)_f=a_vc_f[f^*(a_w)]^{-1}.
+\]
+For a single \(C_2\) loop with coefficients in \(S_3\), cocycles correspond to involutions. There are four involutions but only two conjugacy classes: the identity and the three transpositions. The identity object's automorphism group is \(S_3\), which is noncommutative.
+
+A nonidentity loop cocycle is coherent transition data. Its associated regular twisted section equation \(x=px\) has no solution. Coherence of rules is not the same as existence of a global trivialization.
+\begin{scopebox}A single orbit does not imply a unique comparison map or a trivial symmetry group.\end{scopebox}
+\vsource{KS30--KS33}
+
+\visualpage{09 / Cover the equations that must be checked}{Covering all objects is weaker than covering all arrows. For nonabelian cocycles, the composition equations involve composable pairs, which may require three view objects at once.}{07_cover.tex}
+\[
+ \forall(v\xrightarrow f w\xrightarrow g z),\quad
+ \exists i:\ \{v,w,z\}\subseteq U_i.
+\]
+On three ordered views, all proper two-view patches cover every individual arrow but miss the full composition support. On four ordered views, the four proper three-view patches cover every composable pair. No patch has to be the whole space.
+
+This composition-cover rule generates a Grothendieck topology on full patches. The actual cocycle pseudofunctor satisfies mathlib's standard stack property for that topology. Objects glue up to the supplied overlap isomorphisms, and compatible morphisms glue as well.
+\begin{scopebox}The stack theorem is for this specified coefficient system and site. It is not an assertion that every possible Komorebi doctrine has effective descent.\end{scopebox}
+\vsource{KS34--KS36}
+
+\visualpage{10 / Keep the identification of the boundary}{A realization over a boundary is an object together with an actual identification of its image with that boundary. A comparison is allowed only when it respects that identification.}{08_marked.tex}
+\[
+ \mathcal E_b(R)=\{(x,\phi):\phi:Rx\xrightarrow{\sim}b\},
+ \qquad \psi R(a)=\phi.
+\]
+The marked realization groupoid retains automorphisms invisible at the boundary. Replacing a boundary by an isomorphic one transports the problem rather than forcing literal equality of representatives.
+
+When a square of restriction functors commutes up to a specified natural isomorphism, equivalences on its horizontal sides induce an equivalence of the marked realization groupoids. The comparison isomorphism is used in the construction.
+\begin{scopebox}Presentation invariance is relative to actual equivalences, pulled-back coefficients, and the stated domain hypotheses. Arbitrary changes of representation are not automatically lossless.\end{scopebox}
+\vsource{KS37--KS39}
+
+\visualpage{11 / Loops select the feasible anchor}{Chosen routes reconstruct vertex data from a root value. Every extra edge closes a loop. A reconstructed family is exact precisely when the anchor is fixed by all resulting loop operators.}{09_holonomy.tex}
+\[
+ K=\bigcap_{(i,j)}\ker(K_{ij}-I),\qquad
+ \{\text{parallel families}\}\simeq K.
+\]
+The reflection on the right fixes one line. The anchor may vary on that line, but its transverse component cannot be part of an exact parallel family. Orthogonal projection to \(K\), followed by route reconstruction, gives a specific exact repair.
+
+In a nonisometric connection, route products amplify defects. A flat scalar chain can have edge residual one and root-preserving repair error \(2^n-1\). Flatness alone is not a quantitative estimate.
+\begin{scopebox}Orthogonality is defined on the anchor fiber. The reconstructed graph repair is not asserted to be a nearest point for the global maximum norm.\end{scopebox}
+\vsource{KS40--KS45}
+
+\visualpage{12 / Exactness and stable recovery are different}{The orthogonal projection onto a closed kernel exists. A uniform estimate of the correction size by the residual requires more: the range of the defect operator must be closed.}{10_closed_range.tex}
+\[
+ \ran D\text{ closed}\iff
+ \exists C\ge0\ \forall x:\norm{x-P_{\ker D}x}\le C\norm{Dx}.
+\]
+For \(D(x_n)=(x_n/n)\) on \(\ell^2\), the unit vectors remain distance one from the zero kernel while their residuals tend to zero. The chart shows these two quantities at the indicated indices. There is no uniform inverse gain.
+
+This failure cannot be removed merely by choosing a nonlinear rule for selecting exact answers. If any such rule had the same uniform distance estimate, best approximation would give the forbidden projection estimate.
+\begin{scopebox}A zero residual characterizes exactness. A small residual gives proximity only after an appropriate stability certificate has been proved.\end{scopebox}
+\vsource{KS42--KS44}
+
+\visualpage{13 / Correct the overlap inside the locally exact space}{First project to the kernel of the local defect. Then solve the overlap problem within that kernel. This nested construction preserves local exactness during the second correction.}{11_descent.tex}
+\[
+ L=\ker D,\qquad M=\ker D\cap\ker C,
+ \qquad P_MP_L=P_M.
+\]
+The picture uses \(D(x)=x_3\), \(C(x)=x_2\), and \(x=(2,2,3)\). Its first correction has length three. The second has length two. They are perpendicular, so the total squared error is thirteen. Both stages are nontrivial, and the joint answer is \((2,0,0)\).
+
+Stability requires control of the local operator and of the overlap operator restricted to \(L\). With closed local range, closed range of that restricted matching map is equivalent to closed range of the joint defect.
+\begin{scopebox}Projecting independently to \(\ker D\) and then to \(\ker C\) is a different procedure. The second unrestricted projection need not preserve the first constraint.\end{scopebox}
+\vsource{KS46--KS47}
+
+\visualpage{14 / An exact space can move without being preserved}{For \(D_t(x,y)=x+ty\), the kernel is the moving line \(x=-ty\). The left panel distinguishes orthogonal repair from a splitting-dependent transport of an old exact vector.}{12_moving_line.tex}
+\[
+ q_t=\frac1{1+t^2}\begin{pmatrix}t^2&-t\\-t&1\end{pmatrix},
+ \qquad\norm{q_t-q_0}=\frac{|t|}{\sqrt{1+t^2}}.
+\]
+The right panel compares the exact norm with the general upper bound \(|t|\). The general theorem controls projector motion by \(\max(C,C')\norm{D-D'}\), where each model has its own residual certificate.
+
+At the plotted values \(t=3/4\), \(b=2\), the transported point is \((-3/2,2)\), while the nearest point is \((-24/25,32/25)\). The projector gap is exactly \(3/5\). Both points lie on the new exact line, but they implement different choices.
+\begin{scopebox}Continuity of the exact space is not literal equality of kernels. Both certificate control and the distinction between orthogonal projection and chosen transport matter.\end{scopebox}
+\vsource{KS48--KS53}
+
+
+\visualpage{15 / The preserved information changes the answer}{The raw point is \((2,0,5)\). Compatibility requires equality of the first two coordinates. The third coordinate remains five and is omitted from the drawing.}{15_protected_geometry.tex}
+\[
+ y_{\rm nearest}=(1,1,5),\qquad
+ y_{\rm protected}=(2,2,5).
+\]
+Unrestricted orthogonal repair has squared error two. Preserving the first and third coordinates forces squared error four. Both answers are exact. Only the second belongs to the declared protected slice.
+
+For a bounded observable \(p\), permissible corrections lie in \(M=\ker p\). The correct analytic operator is \(B=D|_M\). Feasible answers have a unique nearest representative, and a uniform residual-to-error bound exists precisely when \(\ran B\) is closed.
+\begin{scopebox}The relevant range is \(D(\ker p)\). A small residual alone does not certify that the preserved information is correct, or even that protected repair is feasible.\end{scopebox}
+\vsource{KS14--KS15, KS56--KS57. The latter two items now have formal counterparts}
+
+\visualpage{16 / The actual dyadic remainder has sparse support}{In the dyadic tower lift, every even coordinate is zero. An odd coordinate is a section applied to a coarser value. Repeating this rule locates every coordinate at which a remainder can survive.}{16_dyadic_support.tex}
+\[
+ (Q_Nr)_k\ne0\ \Longrightarrow\ 2^N\mid(k+1).
+\]
+The filled squares show \emph{possible} support, not necessarily nonzero values. At depth two, only indices \(3,7,11,15,\ldots\) can remain. At depth three, only \(7,15,23,\ldots\) can remain. Coordinate \(k\) has recovered once \(N>\nu_2(k+1)\).
+
+The parity induction is now written out in the monograph. It respects the changing residual spaces at each depth. For scalar identity bonds and a constant-one residual, each displayed surviving value is \(2^N\). This also shows why fixed-coordinate recovery alone is not a uniform-norm statement.
+\begin{scopebox}This is the actual dyadic support rule. Plate 07 is the different shift cascade. The two models illustrate the same topological distinction without having the same support pattern.\end{scopebox}
+\vsource{KS28, KS55. The sharper support proposition KS55 is now formalized}
+
+\visualpage{17 / Flat transport can amplify a small defect}{On the flat scalar chain with coordinates \(e_i(z)=2^iz\), choose \(x_i=8\cdot2^i-1\). Exact repair preserving the root value seven is \(y_i=7\cdot2^i\).}{17_amplification.tex}
+\[
+ \norm{dx}_\infty=1,\qquad
+ \norm{x-y}_\infty=2^n-1.
+\]
+At eight edges, the measured defect is still one while the root-preserving correction has norm 255. The vertical axis is logarithmic and explicitly labelled. Route length grows only linearly.
+
+The connection is flat: no inconsistent loop is responsible for the effect. The amplification comes from the products of nonisometric transport maps. An estimate must include their gains rather than only the number of edges.
+\begin{scopebox}This is not a counterexample to the amplified repair theorem. It is a concrete reason for the transport factors in that theorem. Nor is root-preserving repair claimed to minimize the global maximum-norm error.\end{scopebox}
+\vsource{KS40--KS45}
+
+\visualpage{18 / A rank jump breaks projector continuity}{Both compared families have operator error \(\varepsilon\) from their own reference at zero. Their exact spaces behave differently. The axis moves toward smaller errors from left to right.}{18_rank_loss.tex}
+\[
+ D_t=(1\ \ t),\qquad
+ A_t=\begin{pmatrix}1&0\\0&t\end{pmatrix}.
+\]
+The line kernel of \(D_t\) moves continuously, with gap \(|t|/\sqrt{1+t^2}\). For \(A_t\), the kernel at zero is the vertical axis, but at every nonzero \(t\) it is zero. Its projector therefore stays distance one from the reference projector.
+
+For small nonzero \(t\), the diagonal family's residual gain is at least \(1/|t|\). The required certificate deteriorates just as the operator error shrinks. The two-sided motion theorem retains this dependence.
+\begin{scopebox}A small operator perturbation is not a rank-stability theorem. Controlled residual certificates, or a proved split-surjective radius, supply the missing hypothesis.\end{scopebox}
+\vsource{KS48--KS53}
+
+\clearpage\section*{The complete picture}
+The set-valued layer asks whether the views agree. The additive layer measures their failure to agree and restricts which corrections are permitted. The groupoid layer retains symmetries and comparison witnesses. The stack layer glues coherent local objects on a specified site. The analytic layer asks how large a correction is required and how that correction changes when the model changes.
+
+These layers share comparison maps, not an unrestricted identity. Passing from one to another requires the hypotheses printed in the monograph. A coherent family does not automatically realize every intended semantic object, and a theorem about one declared norm is not automatically a theorem about another.
+
+\begin{insight}
+\textbf{A practical reading rule}\par
+Before applying a Komorebi Space result, identify the views, the restrictions, the protected data, the permitted corrections, and the kind of conclusion required. Existence, uniqueness, symmetry, convergence, and stable recovery have different mathematical tests.
+\end{insight}
+
+\subsection*{Companion materials}
+The traditional monograph contains the proofs and background references. The Lean guide contains the declaration correspondence, source lineage, current integrated verification record, historical evidence, and reproduction instructions. The package includes the figure sources, exact checks, and an executable three-case preservation example. All five formerly written-only principal items now have formal counterparts. The universal typed theorems remain distinct from the finite tests of the Python implementation.
+\end{document}

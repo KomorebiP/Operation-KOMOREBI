@@ -1,0 +1,51 @@
+KomorebiSpace/ResidualProfiles.lean:26:27: error(lean.unknownIdentifier): Unknown identifier `hX`
+KomorebiSpace/ResidualProfiles.lean:26:30: error(lean.unknownIdentifier): Unknown identifier `hY`
+KomorebiSpace/ResidualProfiles.lean:51:38: error(lean.unknownIdentifier): Unknown identifier `hX`
+KomorebiSpace/ResidualProfiles.lean:51:41: error(lean.unknownIdentifier): Unknown identifier `hY`
+KomorebiSpace/ResidualProfiles.lean:39:76: error: unsolved goals
+𝕜 : Type u
+inst✝ : NontriviallyNormedField 𝕜
+X Y : BanachTower 𝕜
+r : (n : ℕ) → X.Obj (n + 1) →L[𝕜] Y.Obj n
+hr : Tendsto (fun n => ‖r n‖) atTop (𝓝 0)
+φ : ℕ → ℕ
+hφ : Monotone φ
+hc : Resolution.UnboundedSchedule φ
+M : ℕ
+hgap : ∀ (n : ℕ), φ (n + 1) - φ n ≤ M
+ε : ℝ
+hε : ε > 0
+hden : 0 < ↑M + 1
+he : 0 < ε / (↑M + 1)
+ht : ∀ᶠ (k : ℕ) in atTop, ‖r k‖ < ε / (↑M + 1)
+N : ℕ
+hN : ∀ (b : ℕ), N ≤ b → ‖r b‖ < ε / (↑M + 1)
+K : ℕ
+hK : N ≤ φ K
+n : ℕ
+hn : n ≥ K
+hφN : N ≤ φ n
+⊢ dist ‖X.blockSum Y r ⋯‖ 0 < ε
+KomorebiSpace/ResidualProfiles.lean:67:40: error: Application type mismatch: The argument
+  hX
+has type
+  ∀ (n : ℕ), ‖X.down n‖ ≤ 1
+of sort `Prop` but is expected to have type
+  (n : ℕ) → X.Obj (n + 1) →L[𝕜] Y.Obj n
+of sort `Type v` in the application
+  blockSum_cofinal_vanish X Y hX
+KomorebiSpace/ResidualProfiles.lean:66:54: error: unsolved goals
+𝕜 : Type u
+inst✝ : NontriviallyNormedField 𝕜
+X Y : BanachTower 𝕜
+hX : ∀ (n : ℕ), ‖X.down n‖ ≤ 1
+hY : ∀ (n : ℕ), ‖Y.down n‖ ≤ 1
+f : ↥(X.Candidates Y)
+hf : Tendsto (fun n => ‖↑((X.differential Y) f) n‖) atTop (𝓝 0)
+φ : ℕ → ℕ
+hφ : Monotone φ
+hc : Resolution.UnboundedSchedule φ
+M : ℕ
+hgap : ∀ (n : ℕ), φ (n + 1) - φ n ≤ M
+⊢ Tendsto (fun n => ‖↑(((X.resample hX φ hφ).differential (Y.resample hY φ hφ)) ((X.sampleCLM Y hX hY φ hφ) f)) n‖)
+    atTop (𝓝 0)

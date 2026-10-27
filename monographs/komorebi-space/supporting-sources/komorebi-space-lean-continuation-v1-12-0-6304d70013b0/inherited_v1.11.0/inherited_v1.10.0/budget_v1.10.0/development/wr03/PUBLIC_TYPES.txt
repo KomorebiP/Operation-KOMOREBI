@@ -1,0 +1,108 @@
+def KomorebiSpace.BudgetProfile.beta.{u_1, u_2} : {H : Type u_1} →
+  {Y : Type u_2} →
+    [inst : NormedAddCommGroup H] →
+      [inst_1 : InnerProductSpace ℝ H] →
+        [inst_2 : NormedAddCommGroup Y] → [inst_3 : InnerProductSpace ℝ Y] → (H →L[ℝ] Y) → Y → ℝ → ℝ
+
+theorem KomorebiSpace.BudgetProfile.convex_budget_image.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y) (M : ℝ), Convex ℝ (⇑T '' Metric.closedBall 0 M)
+
+theorem KomorebiSpace.BudgetProfile.isClosed_budget_image.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H] [inst_3 : NormedAddCommGroup Y]
+  [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (M : ℝ), IsClosed (⇑T '' Metric.closedBall 0 M)
+
+theorem KomorebiSpace.BudgetProfile.budget_image_nonempty.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y) {M : ℝ}, 0 ≤ M → (⇑T '' Metric.closedBall 0 M).Nonempty
+
+theorem KomorebiSpace.BudgetProfile.beta_nonneg.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y) (r : Y) (M : ℝ), 0 ≤ KomorebiSpace.BudgetProfile.beta T r M
+
+theorem KomorebiSpace.BudgetProfile.beta_le_residual.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ} {a : H},
+  ‖a‖ ≤ M → KomorebiSpace.BudgetProfile.beta T r M ≤ ‖r - T a‖
+
+theorem KomorebiSpace.BudgetProfile.exists_budget_minimizer.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H] [inst_3 : NormedAddCommGroup Y]
+  [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ},
+  0 ≤ M → ∃ a, ‖a‖ ≤ M ∧ ‖r - T a‖ = KomorebiSpace.BudgetProfile.beta T r M
+
+theorem KomorebiSpace.BudgetProfile.beta_eq_iInf.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H] [inst_3 : NormedAddCommGroup Y]
+  [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ},
+  0 ≤ M → KomorebiSpace.BudgetProfile.beta T r M = ⨅ a, ‖r - T ↑a‖
+
+def KomorebiSpace.BudgetProfile.rangeClosure.{u_1, u_2} : {H : Type u_1} →
+  {Y : Type u_2} →
+    [inst : NormedAddCommGroup H] →
+      [inst_1 : InnerProductSpace ℝ H] →
+        [inst_2 : NormedAddCommGroup Y] → [inst_3 : InnerProductSpace ℝ Y] → (H →L[ℝ] Y) → Submodule ℝ Y
+
+@[defeq] theorem KomorebiSpace.BudgetProfile.rangeClosure_coe.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y),
+  ↑(KomorebiSpace.BudgetProfile.rangeClosure T) = closure (Set.range ⇑T)
+
+theorem KomorebiSpace.BudgetProfile.rangeClosure_completeSpace.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y),
+  CompleteSpace ↥(KomorebiSpace.BudgetProfile.rangeClosure T)
+
+def KomorebiSpace.BudgetProfile.projectedDatum.{u_1, u_2} : {H : Type u_1} →
+  {Y : Type u_2} →
+    [inst : NormedAddCommGroup H] →
+      [inst_1 : InnerProductSpace ℝ H] →
+        [inst_2 : NormedAddCommGroup Y] → [inst_3 : InnerProductSpace ℝ Y] → [CompleteSpace Y] → (H →L[ℝ] Y) → Y → Y
+
+theorem KomorebiSpace.BudgetProfile.projectedDatum_mem.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [inst_4 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y),
+  KomorebiSpace.BudgetProfile.projectedDatum T r ∈ KomorebiSpace.BudgetProfile.rangeClosure T
+
+theorem KomorebiSpace.BudgetProfile.apply_mem_rangeClosure.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] (T : H →L[ℝ] Y) (a : H), T a ∈ KomorebiSpace.BudgetProfile.rangeClosure T
+
+theorem KomorebiSpace.BudgetProfile.residual_sq_decomposition.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [inst_4 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) (a : H),
+  ‖r - T a‖ ^ 2 =
+    ‖r - KomorebiSpace.BudgetProfile.projectedDatum T r‖ ^ 2 +
+      ‖KomorebiSpace.BudgetProfile.projectedDatum T r - T a‖ ^ 2
+
+theorem KomorebiSpace.BudgetProfile.projected_residual_eq_infDist.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [inst_4 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y),
+  ‖r - KomorebiSpace.BudgetProfile.projectedDatum T r‖ = Metric.infDist r (closure (Set.range ⇑T))
+
+theorem KomorebiSpace.BudgetProfile.floor_le_beta.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [inst_4 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ},
+  0 ≤ M → ‖r - KomorebiSpace.BudgetProfile.projectedDatum T r‖ ≤ KomorebiSpace.BudgetProfile.beta T r M
+
+theorem KomorebiSpace.BudgetProfile.beta_eq_floor_iff.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H] [inst_3 : NormedAddCommGroup Y]
+  [inst_4 : InnerProductSpace ℝ Y] [inst_5 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ},
+  0 ≤ M →
+    (KomorebiSpace.BudgetProfile.beta T r M = ‖r - KomorebiSpace.BudgetProfile.projectedDatum T r‖ ↔
+      ∃ a, T a = KomorebiSpace.BudgetProfile.projectedDatum T r ∧ ‖a‖ ≤ M)
+
+theorem KomorebiSpace.BudgetProfile.beta_eq_zero_iff.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [CompleteSpace H] [inst_3 : NormedAddCommGroup Y]
+  [inst_4 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y) {M : ℝ},
+  0 ≤ M → (KomorebiSpace.BudgetProfile.beta T r M = 0 ↔ ∃ a, T a = r ∧ ‖a‖ ≤ M)
+
+theorem KomorebiSpace.BudgetProfile.beta_tendsto_infDist.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y),
+  Filter.Tendsto (KomorebiSpace.BudgetProfile.beta T r) Filter.atTop
+    (nhds (Metric.infDist r (closure (Set.range ⇑T))))
+
+theorem KomorebiSpace.BudgetProfile.beta_tendsto_floor.{u_1, u_2} : ∀ {H : Type u_1} {Y : Type u_2}
+  [inst : NormedAddCommGroup H] [inst_1 : InnerProductSpace ℝ H] [inst_2 : NormedAddCommGroup Y]
+  [inst_3 : InnerProductSpace ℝ Y] [inst_4 : CompleteSpace Y] (T : H →L[ℝ] Y) (r : Y),
+  Filter.Tendsto (KomorebiSpace.BudgetProfile.beta T r) Filter.atTop
+    (nhds ‖r - KomorebiSpace.BudgetProfile.projectedDatum T r‖)

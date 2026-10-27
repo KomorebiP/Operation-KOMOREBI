@@ -1,0 +1,214 @@
+\chap{The additive obstruction and the space of extensions}\label{sec:obstruction}
+The strict definition gives a system of equations. In an additive setting, that system has an actual differential, and the failure to extend prescribed data has a quotient valued obstruction.
+
+\subsection{The compatibility differential}
+Assume each fiber \(A_v\) is an abelian group and each restriction is additive. Set
+\[
+ E=\prod_v A_v,\qquad R=\prod_{f:v\to w}A_v,
+ \qquad (\delta x)_f=f^*(x_w)-x_v.
+\]
+The group \(R\) retains an entry for every arrow. It is not silently identified with a cohomology group.
+
+\begin{proposition}[Differential identities]\label{KS08}
+The map \(\delta:E\to R\) is additive, \(\Gamma(A)=\ker\delta\), and
+\[
+ (\delta x)_{1_v}=0,\qquad
+ (\delta x)_{g\circ f}=f^*((\delta x)_g)+(\delta x)_f.
+\]
+\end{proposition}
+\begin{proof}
+Additivity follows coordinate by coordinate. Vanishing is exactly the defining coherence equation. For composition, add and subtract \(f^*x_w\):
+\[
+ f^*g^*x_z-x_v
+ =f^*(g^*x_z-x_w)+(f^*x_w-x_v).
+\]
+The identity equation uses \((1_v)^*=\id\).
+\end{proof}
+\source{KS08}
+This exact formula is more informative than a scalar error score. It specifies how defects transform and combine. Norms can be added later, but they do not replace the typed residual.
+
+\subsection{The admissible corrections}
+Fix \(U\subseteq\Ob\V\). Write \(p_U:E\to\prod_{v\in U}A_v\) for raw restriction. A correction preserving the prescribed values belongs to \(\ker p_U\). Its possible defects form the subgroup
+\[
+ B_U=\delta(\ker p_U)\le R.
+\]
+For a partial section \(s\), choose any raw extension \(\widetilde s\), for example zero off \(U\), and define
+\begin{equation}\label{eq:obstruction}
+ Q_U=R/B_U,\qquad
+ \mathfrak o_U(s)=[\delta\widetilde s]\in Q_U.
+\end{equation}
+If another raw extension is chosen, their difference vanishes on \(U\), so its differential belongs to \(B_U\). Thus the class is independent of the lift.
+
+\begin{theorem}[Extension criterion]\label{KS09}
+For every coherent partial section,
+\[
+ \mathfrak o_U(s)=0\quad\Longleftrightarrow\quad\Ext_U(s)\ne\varnothing.
+\]
+\end{theorem}
+\begin{proof}
+Let $\pi_U:R\to R/B_U$ be the quotient homomorphism. By the definition of a quotient by a subgroup,
+\[
+ \pi_U(r)=0\quad\Longleftrightarrow\quad r\in B_U.
+\]
+Here $B_U$ is the \emph{image} of $\ker p_U$ under $\delta$. Consequently membership of $\delta\widetilde s$ means the existence of a specific $h\in E$ satisfying both $p_Uh=0$ and $\delta h=\delta\widetilde s$. The subgroup need not be closed in any topology. No topology has been introduced.
+
+If such $h$ exists, set $x=\widetilde s-h$. Additivity gives the two equations separately:
+\[
+ \delta x=\delta\widetilde s-\delta h=0,
+ \qquad p_Ux=p_U\widetilde s-p_Uh=s.
+\]
+The first equation puts $x$ in $\Gamma(A)$, and the second puts that coherent family in $\Ext_U(s)$.
+
+Conversely, take $x\in\Ext_U(s)$ and set $h=\widetilde s-x$. Since both raw families restrict to $s$, one has $p_Uh=0$. Since $\delta x=0$, one has $\delta h=\delta\widetilde s$. This witnesses $\delta\widetilde s\in B_U$, hence vanishing of its quotient class.
+
+The proof is independent of the selected raw lift. Indeed, if $\widetilde s'$ is another lift, $k=\widetilde s'-\widetilde s$ lies in $\ker p_U$, and
+\[
+ \delta\widetilde s'-\delta\widetilde s=\delta k\in B_U.
+\]
+Thus the two quotient classes agree before either feasibility direction is invoked. A raw lift always exists in this additive model by using zero outside $U$. Constructing a raw lift does not solve the coherence equations.
+\end{proof}
+\source{KS09}
+The quotient is constructed before the solvability test. The theorem therefore does not define obstruction circularly by saying that it vanishes when a solution exists. It also does not give a decision procedure for membership in an arbitrary subgroup of an infinite product.
+
+\plate{02_extension}{The raw family is repaired only along directions invisible on the prescribed views. The obstruction records whether its defect lies in the image of those admissible directions. Once an extension exists, a different kernel measures the remaining freedom.}{fig:extension}
+
+\subsection{Existence is not uniqueness}
+Define the ambiguity group
+\[
+ H_U=\ker\delta\cap\ker p_U.
+\]
+It consists of coherent changes that are invisible on the prescribed domain.
+
+\begin{theorem}[Classification of a nonempty extension fiber]\label{KS10}
+If \(x_0\in\Ext_U(s)\), translation gives an equivalence
+\[
+ H_U\simeq\Ext_U(s),\qquad h\longmapsto x_0+h.
+\]
+Consequently the extension is unique exactly when \(\mathfrak o_U(s)=0\) and \(H_U=0\).
+\end{theorem}
+\begin{proof}
+Define $\Theta:H_U\to\Ext_U(s)$ by $\Theta(h)=x_0+h$. It lands in the extension set because
+\[
+ \delta(x_0+h)=\delta x_0+\delta h=0,
+ \qquad p_U(x_0+h)=s+0=s.
+\]
+Define $\Psi:\Ext_U(s)\to H_U$ by $\Psi(x)=x-x_0$. Its differential is zero, and its restriction is $s-s=0$, so the claimed target is correct. The formulas give
+\[
+ \Psi\Theta(h)=x_0+h-x_0=h,\qquad
+ \Theta\Psi(x)=x_0+(x-x_0)=x.
+\]
+This proves the equivalence rather than only a comparison of cardinalities.
+
+If $H_U=\{0\}$, the parameter of every extension is zero, so every extension equals $x_0$. Conversely, if $x_0$ is the only extension, then for any $h\in H_U$ the equality $x_0+h=x_0$ forces $h=0$ by cancellation. Combining this observation with the existence criterion proves the stated necessary and sufficient condition for a unique extension.
+
+The choice of $x_0$ only supplies an origin for the parameters. If $x_1=x_0+h_1$ is used instead, the parameter of $x$ changes from $x-x_0$ to $x-x_1=(x-x_0)-h_1$. The affine set of answers itself has not changed.
+\end{proof}
+\source{KS10}
+An extension fiber is therefore an affine copy, or torsor, of the invisible coherent group. Selecting one solution gives coordinates on the fiber. Without a selected solution, the affine structure does not designate an origin.
+
+\begin{example}[Parity and an independent ambiguity]
+For two views with \(f^*(m)=2m\) on \(\Z\), a prescribed value \(k\) at the coarse view extends exactly when \(k\) is even. The extension is \((k,k/2)\) and is unique. In particular \(1\) is obstructed and \(2\) extends nontrivially. The parity statement is an instance of Theorem~\ref{KS09} in the original source. If a separate, disconnected integer view is added and left unprescribed, every extendable seed has infinitely many completions. This last variant is a direct application of Theorem~\ref{KS10}, not a claim that the parity obstruction has changed.
+\end{example}
+\source{KS11}
+
+\subsection{The exact sequence behind the criterion}
+The additive structures make restriction a homomorphism
+\(r_U:\Gamma(A)\to\Gamma_U(A)\). Using the zero extension, or lift independence, \(\mathfrak o_U\) is also a homomorphism.
+
+\begin{proposition}[Exactness at partial sections]\label{KS12}
+The sequence
+\[
+ \Gamma(A)\xrightarrow{r_U}\Gamma_U(A)
+ \xrightarrow{\mathfrak o_U}Q_U
+\]
+is exact at \(\Gamma_U(A)\). Thus \(\ker\mathfrak o_U=\im r_U\), and restriction is onto precisely when \(\mathfrak o_U\) is the zero map.
+\end{proposition}
+\begin{proof}
+First verify that $\mathfrak o_U$ is a homomorphism, since exactness is being asserted in an additive setting. Given $s,t\in\Gamma_U(A)$, choose raw lifts $\widetilde s,\widetilde t$. Their sum lifts $s+t$. Lift independence and additivity imply
+\[
+ \mathfrak o_U(s+t)
+ =[\delta(\widetilde s+\widetilde t)]
+ =[\delta\widetilde s]+[\delta\widetilde t]
+ =\mathfrak o_U(s)+\mathfrak o_U(t).
+\]
+The zero lift gives $\mathfrak o_U(0)=0$. Restriction $r_U$ is a homomorphism because addition of global sections is coordinatewise.
+
+If $s=r_Ux$ for a global section $x$, use $x$ itself as a raw lift. Its differential vanishes, so $\mathfrak o_U(s)=0$. This proves $\im r_U\subseteq\ker\mathfrak o_U$. If $s\in\ker\mathfrak o_U$, the extension criterion constructs a global $x$ restricting to $s$, proving the reverse inclusion.
+
+Finally, $r_U$ is surjective exactly when its image is all of $\Gamma_U(A)$. By the equality just proved, this is equivalent to every partial section having zero obstruction, which says that $\mathfrak o_U$ is the zero homomorphism. Nothing here claims that its image is all of $Q_U$.
+\end{proof}
+\source{KS12}
+No surjectivity onto the entire residual quotient is asserted. The residual group contains many entries that need not arise as the differential of a partial lift.
+
+\subsection{Extension in stages}
+For \(U\subseteq W\subseteq\Ob\V\), an extension first to \(W\) and then globally must retain the intermediate choice. There is an explicit equivalence
+\begin{equation}\label{eq:stages}
+ \Ext_U(s)\simeq
+ \coprod_{\substack{t\in\Gamma_W(A)\\t|_U=s}}\Ext_W(t).
+\end{equation}
+It sends a global extension to its restriction to \(W\), together with itself as an extension of that restriction. The inverse forgets the intermediate coordinate. These operations are inverse because the required intermediate coordinate of a global section is its actual restriction. A coherent intermediate choice can still be obstructed, even when a different intermediate choice completes. Equation~\eqref{eq:stages} is why extension by stages is a dependent sum rather than a statement that every branch succeeds.
+\source{KS13}
+
+\chap{Protected correction as a general principle}\label{sec:protected}
+The additive extension theorem is a particular instance of a useful general construction. Let \(E,R,S\) be abelian groups, with additive maps \(d:E\to R\) and \(p:E\to S\). The residual \(d\) measures compatibility, and \(p\) specifies the information that repair must preserve.
+
+\begin{theorem}[Semantics preserving correction]\label{KS14}
+For \(x\in E\), the following conditions are equivalent:
+\[
+\begin{aligned}
+ &[dx]=0\text{ in }R/d(\ker p),\\
+ &\exists h\in E:\ p(h)=0,\quad d(h)=d(x),\\
+ &\exists y\in E:\ d(y)=0,\quad p(y)=p(x).
+\end{aligned}
+\]
+The class of \(dx\) is unchanged when an admissible correction is subtracted from \(x\).
+\end{theorem}
+\begin{proof}
+The image $d(\ker p)$ is a subgroup of $R$. The defining property of the quotient says
+\[
+ [dx]=0\quad\Longleftrightarrow\quad
+ dx\in d(\ker p)
+ \quad\Longleftrightarrow\quad
+ \exists h\in E:\ ph=0,\ dh=dx.
+\]
+This is the first equivalence with its witness made explicit.
+
+For the second, a permitted $h$ gives $y=x-h$. Then
+\[
+ dy=dx-dh=0,\qquad py=px-ph=px.
+\]
+Conversely an exact $y$ with $py=px$ gives $h=x-y$, which satisfies $ph=0$ and $dh=dx$. The two witness transformations are inverse: subtracting $h$ from $x$ and then subtracting that answer from $x$ recovers $h$, and conversely.
+
+To verify invariance, fix any $h$ with $ph=0$. Then $d(x-h)=dx-dh$, and $dh$ lies in the subgroup divided out. Therefore $[d(x-h)]=[dx]$. This does not assert that the residual itself is unchanged. It asserts that permitted changes can alter the residual only within its already correctable coset.
+\end{proof}
+\source{KS14}
+Here \emph{semantics} means the declared mathematical observable \(p\). It is not an assertion that one homomorphism captures every meaning of every object. In a tower, \(p\) might preserve a seed operator and every new output component. In a graph, it might preserve designated vertex values. Different choices give different problems.
+
+\begin{proposition}[A certificate of impossibility]\label{KS15}
+Let \(L:R\to D\) be additive. If \(L\) vanishes on \(d(\ker p)\) but \(L(dx)\ne0\), no exact \(y\) can preserve \(p(x)\).
+\end{proposition}
+\begin{proof}
+Suppose, for contradiction, that $dy=0$ and $py=px$. Then $h=x-y$ satisfies $ph=0$ and $dh=dx$. By the annihilation hypothesis,
+\[
+ L(dx)=L(dh)=0,
+\]
+contrary to the assumed nonzero value. This already proves impossibility directly.
+
+Equivalently, if $r-r'\in d(\ker p)$, then $L(r-r')=0$, so $L(r)=L(r')$. Hence $\overline L([r])=L(r)$ is a well-defined homomorphism on $R/d(\ker p)$. Its value on $[dx]$ is nonzero. This supplies the quotient interpretation of the same contradiction, without assuming that every nonzero quotient class can be detected by a map into one fixed preferred coefficient group.
+\end{proof}
+\source{KS15}
+This is often the most economical negative proof. One need not classify every possible correction. It is enough to find an invariant annihilating all admissible corrections but not the observed defect.
+
+\subsection{Why unrestricted cancellation is empty information}
+If every correction is permitted, taking \(h=x\) leaves the exact candidate zero. Thus \(\exists h:d(x-h)=0\) is automatic. It says nothing about recovering an object of interest. A repair theorem becomes informative only when it preserves something, is quantitatively controlled, or satisfies a comparison property that excludes arbitrary replacement.
+
+\begin{example}[A rigid obstruction]
+Take \(E=R=S=\Z\), \(d=p=\id\), and \(x=1\). The only admissible correction is zero, while the residual is nonzero. Hence there is no exact answer preserving the observed value. This is not a failure of the formalism. It is the correct certificate for an incompatible demand.
+\end{example}
+
+\subsection{What an obstruction does not yet provide}
+An algebraic quotient does not automatically carry a useful norm. A zero infimum of distances to its boundary subgroup does not imply membership unless closure is controlled. Nor does vanishing supply a preferred correction when \(\ker d\cap\ker p\) is nontrivial. These two issues lead to different parts of the book: ambiguity is treated algebraically and through groupoids, while closed range and condition numbers enter the analytic theory.
+
+\begin{insight}
+A repair problem is not determined by its defect alone. It is determined by the defect \emph{and} the admissible changes. Keeping the pair \((d,p)\) explicit prevents a successful cancellation from being mistaken for a successful reconstruction.
+\end{insight}

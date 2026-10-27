@@ -1,0 +1,149 @@
+{
+  "title": "Komorebi Space: Completion Plan after v1.14.0",
+  "recorded_utc": "2026-10-15T02:11:49.402552+00:00",
+  "status": "Proposed completion plan; no new proofs or release edits executed in this planning review.",
+  "baseline": {
+    "edition": "1.14.0",
+    "publication_sha256": "73e9c5caa36f4ba05029c01481b345ce24cf9b1905dfb012ed21dd4bcfe86dc0",
+    "principal_analytic_groups_formalized": 16,
+    "principal_analytic_groups_total": 16,
+    "production_modules": 160,
+    "import_entrypoints": 4,
+    "explicit_theorem_lemma_declarations": 1846,
+    "exported_declarations": 5321,
+    "selected_declarations_checked": 109,
+    "integrated_build_jobs": 3820,
+    "books_pages": {
+      "monograph": 160,
+      "lean_guide": 23,
+      "visual_guide": 19
+    },
+    "calibration": "The principal theorem conclusions are established under their stated hypotheses. This is not a claim that every alternative printed proof, illustration, or Python implementation is formalized."
+  },
+  "recommendation": "Freeze the mathematical scope. Add two small formal corollaries connecting existing results, finish integrated reproducibility, add a short existing-example crosswalk and reuse metadata, then verify the actually distributed files and freeze the next edition.",
+  "tasks": [
+    {
+      "id": "formal-correspondence",
+      "status": "planned",
+      "priority": 1,
+      "work": [
+        {
+          "target": "Named diagonal inexact-solver rate",
+          "printed_source": "source/chapters/05k_stopping_rules.tex, Retaining the explicit diagonal rate with an inexact solver",
+          "contract": "For 0 < delta <= 1, kappa >= 0, m = ceil(delta^(-2/3)), alpha = m^(-2), measured data within delta, and measured normal residual <= epsilon <= kappa * alpha * delta^(1/3), prove norm(a-a_dagger) <= (sqrt(2)+1+kappa)*delta^(1/3). Preserve the actual infinite Hilbert model and literal ceiling.",
+          "existing_inputs": [
+            "DiagonalRegularization.corollary_30_3",
+            "RegularizedHilbertRepair.correction_error_bound",
+            "RegularizationNoiseLimits.solver_data_path_bound"
+          ],
+          "classification": "Printed consequence of already formalized results, not an unresolved principal theorem."
+        },
+        {
+          "target": "Actual diagonal closed-range obstruction",
+          "printed_source": "source/chapters/05_geometry.tex, diagonal unit-vector example",
+          "contract": "For the existing diagonal T on the actual square-summable Hilbert space, instantiate the unit-vector witnesses and prove its range is not closed. Do not claim the entire protected product-space example is thereby formalized.",
+          "existing_inputs": [
+            "InfiniteDiagonalModel.lean",
+            "HilbertKernelProjection.not_closed_range_of_unit_witnesses"
+          ],
+          "optional_endpoint": "Membership of the escaping datum in closure(range T) but not range T, only if obtained directly from the same checked instance."
+        }
+      ],
+      "acceptance": [
+        "Kernel-checked exact statements with all hypotheses preserved",
+        "No admitted proof or new project axiom",
+        "Independent printed/formal correspondence review",
+        "Update existing coverage map and qualifications"
+      ]
+    },
+    {
+      "id": "integrated-reproduction",
+      "status": "planned",
+      "priority": 2,
+      "work": [
+        "Provide one top-level low-memory verification command or runbook using the pinned native toolchain.",
+        "From a fresh extraction, rebuild the integrated project sources, audit the full current declaration environment and replay the existing 44 parent controls and 8 diagonal controls, plus targeted controls for new corollaries.",
+        "Keep expected compiler rejections and axiom-policy rejections distinguishable from unexpected failures.",
+        "Record exact source identities, commands, outputs, runtime identities and scope."
+      ],
+      "acceptance": [
+        "One documented route reproduces the declared project checks",
+        "Actual counts regenerated rather than assumed unchanged",
+        "No requirement to bundle or rebuild all external dependencies; retain explicit trust boundary"
+      ],
+      "classification": "Release reproducibility improvement, not evidence that accepted proofs currently fail."
+    },
+    {
+      "id": "reader-and-reuse",
+      "status": "planned",
+      "priority": 3,
+      "work": [
+        "Add a short crosswalk for the existing exact-rational inexact-certificate example: mathematical problem, monograph statement, Lean declaration, executable command, expected certificate and interpretation.",
+        "Use existing examples instead of adding a second demo suite.",
+        "Add explicit reuse terms for code and written material after the owner chooses them; add machine-readable citation metadata."
+      ],
+      "acceptance": [
+        "A reader can follow one complete example to the corresponding proof and reproduce its exact expected output",
+        "Reuse terms are explicit and owner-approved",
+        "Keep the visual guide complementary and avoid padding the monograph"
+      ],
+      "decision_needed": "License terms for code and written material; do not silently choose legal terms."
+    },
+    {
+      "id": "final-release",
+      "status": "planned",
+      "priority": 4,
+      "work": [
+        "Proofread and render only changed material, retaining prior reviews for unchanged content.",
+        "Regenerate all affected maps, inventories and checksums.",
+        "Validate the actual downloaded final files and archive entries. Record canonical build/archived PDF identities separately from distributed PDFs carrying added provenance.",
+        "Preserve v1.14.0 and technical history, issue the next coherent edition, then freeze."
+      ],
+      "acceptance": [
+        "All formal additions and integrated checks meet their stated acceptance conditions",
+        "No unresolved contradiction in coverage, evidence scope or release metadata",
+        "Delivered files match their applicable checksum records",
+        "Changed pages pass visual review",
+        "One release archive and durable technical record contain all required sources and evidence"
+      ]
+    }
+  ],
+  "deferred_not_release_gates": [
+    "Formalizing the alternate weak-subsequence proof of the already-established bounded-realization theorem",
+    "Formalizing every explanatory sentence or illustrative calculation",
+    "Proving the full Python solver implementation correct or extracting it from Lean",
+    "Nonlinear repair, arbitrary higher categorical coefficients, infinity-stack descent, unrestricted changes of view doctrine, changing Hilbert geometries without comparison data, unrestricted arithmetic or physical semantic surjectivity",
+    "Additional chapters, a second visual guide, or a new demonstration suite"
+  ],
+  "delivery_check_correction": {
+    "finding": "The saved standalone monograph differs bytewise from the original archived PDF and contains an embedded Content Credentials/C2PA object.",
+    "cause_of_missed_detection": "The prior delivery check verified local original files after saving, not freshly downloaded saved copies.",
+    "original": {
+      "bytes": 1139003,
+      "sha256": "f09d49d73af62c02684fe0dd45f54c37c6f8bdfe868eac90e0f42345774724c7"
+    },
+    "saved": {
+      "library_file_id": "libfile_4d21781d850c8191896b8029c48c4278",
+      "bytes": 1360938,
+      "sha256": "73c1f341a5568a4c61c4d8ddeafe53ccf9d8220dc00b1a817c4579d81fac01b2"
+    },
+    "checks_performed": {
+      "same_page_count": 160,
+      "identical_extracted_page_text": true,
+      "identical_page_rasters_at_72_dpi": 160,
+      "embedded_object_name": "Content Credentials"
+    },
+    "scope": "One saved standalone monograph inspected. Other saved PDFs are not yet checked. No provenance signature validation claimed.",
+    "consequence": "Current published build hashes identify canonical originals. Future delivery metadata must distinguish those from downloaded distribution copies. No mathematical-content difference found."
+  },
+  "planning_review": {
+    "source_inspection": "Read-only review of current monograph boundaries, correspondence appendices, stopping-rule and geometry examples, Lean APIs, usage instructions, existing Python examples and reuse metadata.",
+    "independent_reviews": [
+      "completion_scope_review",
+      "completion_release_review"
+    ],
+    "new_Lean_runs": 0,
+    "new_proofs_claimed": 0
+  },
+  "definition_of_done": "A reader can unpack the release, identify what is proved and what remains outside scope, reproduce the declared project checks through one documented route, run an existing example and connect its certificate to the mathematics, and identify the author, reuse terms and exact file versions. New research ambitions are not prerequisites for this completion."
+}

@@ -1,0 +1,81 @@
+KomorebiSpace/SequenceCascade.lean:37:48: error: unexpected identifier; expected '}'
+KomorebiSpace/SequenceCascade.lean:62:51: error: unexpected identifier; expected '}'
+KomorebiSpace/SequenceCascade.lean:77:2: error: Tactic `rfl` failed: The left-hand side
+  ↑(down (up f))
+is not definitionally equal to the right-hand side
+  ↑f
+
+f : ↥Space
+⊢ ↑(down (up f)) = ↑f
+KomorebiSpace/SequenceCascade.lean:90:4: error: 'change' tactic failed, pattern
+  ↑(system.level f N) (k + 1) = ↑f (k + (N + 1))
+is not definitionally equal to target
+  ↑(system.level f (N + 1)) k = ↑f (k + (N + 1))
+KomorebiSpace/SequenceCascade.lean:99:9: error: unsolved goals
+case zero
+f : ↥Space
+k : ℕ
+⊢ ↑((system.restore 0) f) k = ↑f k
+KomorebiSpace/SequenceCascade.lean:107:6: error: Tactic `rfl` failed: The left-hand side
+  ↑(up f) (k - (N + 1) + 1)
+is not definitionally equal to the right-hand side
+  ↑f (k - (N + 1))
+
+case pos
+N : ℕ
+ih : ∀ (f : ↥Space) (k : ℕ), ↑((system.restore N) f) k = if N ≤ k then ↑f (k - N) else 0
+f : ↥Space
+k : ℕ
+h : N + 1 ≤ k
+hNk : N ≤ k
+he : k - N = k - (N + 1) + 1
+⊢ ↑(up f) (k - (N + 1) + 1) = ↑f (k - (N + 1))
+KomorebiSpace/SequenceCascade.lean:112:8: error: Tactic `rfl` failed: The left-hand side
+  ↑(up f) 0
+is not definitionally equal to the right-hand side
+  0
+
+case pos
+N : ℕ
+ih : ∀ (f : ↥Space) (k : ℕ), ↑((system.restore N) f) k = if N ≤ k then ↑f (k - N) else 0
+f : ↥Space
+k : ℕ
+h : ¬N + 1 ≤ k
+hNk : N ≤ k
+he : k - N = 0
+⊢ ↑(up f) 0 = 0
+KomorebiSpace/SequenceCascade.lean:122:4: error: omega could not prove the goal:
+a possible counterexample may satisfy the constraints
+  b ≥ 0
+  a ≥ 0
+  a - b ≥ 0
+where
+ a := ↑k
+ b := ↑N
+KomorebiSpace/SequenceCascade.lean:148:4: error: Type mismatch: After simplification, term
+  hh
+ has type
+  ‖↑((system.remainder N) f) N‖ ≤ ‖(system.remainder N) f‖
+but is expected to have type
+  ‖↑f N‖ ≤ ‖(system.remainder N) f‖
+KomorebiSpace/SequenceCascade.lean:199:4: error: Type mismatch: After simplification, term
+  hh
+ has type
+  ‖↑((system.remainder N) ⟨fun x => 1, ones._proof_1⟩) N‖ ≤ ‖(system.remainder N) ⟨fun x => 1, ones._proof_1⟩‖
+but is expected to have type
+  1 ≤ ‖(system.remainder N) ⟨fun x => 1, ones._proof_1⟩‖
+KomorebiSpace/SequenceCascade.lean:205:66: error: Application type mismatch: The argument
+  hh
+has type
+  Tendsto (fun x => ‖(system.remainder x) ones‖) atTop (𝓝 0)
+but is expected to have type
+  Tendsto (fun x => 1) ?m.38 (𝓝 0)
+in the application
+  tendsto_nhds_unique tendsto_const_nhds hh
+KomorebiSpace/SequenceCascade.lean:204:13: error: This simp argument is unused:
+  ones_remainder_norm
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only at hh
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

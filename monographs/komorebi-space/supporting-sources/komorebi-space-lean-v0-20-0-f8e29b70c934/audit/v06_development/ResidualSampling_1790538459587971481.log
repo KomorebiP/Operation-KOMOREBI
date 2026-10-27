@@ -1,0 +1,24 @@
+KomorebiSpace/ResidualSampling.lean:136:32: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (X.restriction ?h) ?x
+in the target expression
+  (Resolution.Adjacent.resolution Y.Obj fun n => ⇑(Y.down n)).restrict ⋯ ((↑f (φ (n + 1))) x) =
+    (↑f (φ n)) ((X.restriction ⋯) x)
+
+𝕜 : Type u
+inst✝ : NontriviallyNormedField 𝕜
+X Y : BanachTower 𝕜
+hX : ∀ (n : ℕ), ‖X.down n‖ ≤ 1
+hY : ∀ (n : ℕ), ‖Y.down n‖ ≤ 1
+φ : ℕ → ℕ
+hφ : Monotone φ
+f : ↥(X.Candidates Y)
+hf : X.Exact Y f
+n : ℕ
+x : (X.resample hX φ hφ).Obj (n + 1)
+⊢ (Resolution.Adjacent.resolution Y.Obj fun n => ⇑(Y.down n)).restrict ⋯ ((↑f (φ (n + 1))) x) =
+    (↑f (φ n)) ((X.restriction ⋯) x)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    hφ

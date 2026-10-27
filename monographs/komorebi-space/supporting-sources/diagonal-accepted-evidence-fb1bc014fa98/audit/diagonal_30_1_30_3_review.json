@@ -1,0 +1,518 @@
+{
+  "schema": "komorebi-independent-claim-match-audit-v1",
+  "created_utc": "2026-10-14T21:15:52.687736+00:00",
+  "reviewer": "/root/monograph_change_audit",
+  "primary_verdict": "proved as written",
+  "verdict_scope": "The exact mathematical conclusions and target-contract obligations for Proposition 30.1 and Corollary 30.3, for the hashed sources listed here. This does not include Theorem 30.2.",
+  "basis": "Independent inspection of raw definitions, statements, proof code and local library leaves; independent derivation of critical implications; actual Lean type/axiom inspection distinct from mathematical reasoning. Author completion labels were not used as evidence.",
+  "parent_publication_sha256": "67e308826abe33873e1d99d6fcf70bb14df65d6b511597b295b0bf430520a990",
+  "parent_byte_checks": {
+    "printed_diagonal_chapter": true,
+    "RegularizedHilbertRepair.lean": true,
+    "BudgetProfile.lean": true
+  },
+  "environment": {
+    "lean_pin": "leanprover/lean4:v4.34.0-rc2",
+    "observed_lean": "Lean (version 4.34.0-rc2, x86_64-unknown-linux-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)",
+    "mathlib_manifest_rev": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+    "observed_mathlib_checkout": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "normalized_claims": {
+    "Proposition_30_1": "For all natural m>=1 on real l2(N), with positive printed coordinate n=j+1 and alpha=1/m^2, a_n=m^2/(m^2+n^2) is the unique global minimizer of ||Tx-w||^2+alpha||x||^2. Its residual is v_n=n/(m^2+n^2). A=||a||^2 and B=||v||^2 are the full infinite sums; m/4<=A<=4m/3 and 1/[4(m+1)]<=B<=2/m. For all natural K>=m, prefixes contain exactly n=1,...,K, and 0<=A-A_K<=m^4/(3K^3), 0<=B-B_K<=1/K.",
+    "Corollary_30_3": "For b_n=1/n^2 and its unique minimum-norm preimage w_n=1/n, c_n=m^2/[n(m^2+n^2)] is the regularized correction at alpha=1/m^2 and ||c-w||^2=B. For every s in the full l2 with ||s-b||<=delta, 0<delta<=1, and literal m=ceil(delta^(-2/3)), ||correction(T,alpha,s)-w||<=sqrt(2/m)+delta*m/2<=(sqrt(2)+1)delta^(1/3)."
+  },
+  "obligation_counts": {
+    "passed": 25,
+    "failed": 0,
+    "conditional": 0,
+    "not addressed": 0,
+    "out of scope": 3
+  },
+  "obligations": [
+    {
+      "id": "O01",
+      "obligation": "Frozen target and inherited dependency binding",
+      "status": "passed",
+      "finding": "Printed chapter is byte-identical to parent 05i_diagonal_regularization.tex; inherited RegularizedHilbertRepair and BudgetProfile are byte-identical to the specified parent ZIP.",
+      "evidence": "Direct ZIP-byte comparison; BASELINE.json checked"
+    },
+    {
+      "id": "O02",
+      "obligation": "Actual infinite real Hilbert space",
+      "status": "passed",
+      "finding": "H is lp (fun _ : Nat => Real) 2. Membership requires the full squared-coordinate series to converge. There is no finite dimension or support bound.",
+      "evidence": "H; hilbert_mem_of_sq_summable; mathlib Memℓp/lp/inner_eq_tsum"
+    },
+    {
+      "id": "O03",
+      "obligation": "Positive coordinate and finite-prefix convention",
+      "status": "passed",
+      "finding": "index j = j+1; Finset.range K is exactly printed n=1,...,K. The shifted remaining series starts at n=K+1.",
+      "evidence": "index; partialA; partialB; A_sub_partial_eq_tsum; B_sub_partial_eq_tsum"
+    },
+    {
+      "id": "O04",
+      "obligation": "Parameter, denominators, and domain",
+      "status": "passed",
+      "finding": "m>=1 makes alpha=m^(-2)>0; j+1>0 gives all coordinate denominators positive. K>=m makes K>=1.",
+      "evidence": "index_pos; denominator_pos; alpha_pos; proposition_30_1_series"
+    },
+    {
+      "id": "O05",
+      "obligation": "Bounded operator and adjoint",
+      "status": "passed",
+      "finding": "T u has coordinate u_j/(j+1), acts on the full H, has operator norm <=1, and is self-adjoint by the infinite inner-product formula.",
+      "evidence": "Tlinear; T; T_apply; T_opNorm_le_one; T_adjoint"
+    },
+    {
+      "id": "O06",
+      "obligation": "Square summability and vector construction",
+      "status": "passed",
+      "finding": "w, a m, v m are genuine elements of H using p=2 and p=4 series comparisons; b and c are images under continuous T.",
+      "evidence": "summable_wCoord_sq; summable_aCoord_sq; summable_vCoord_sq; w; a; v; b; c"
+    },
+    {
+      "id": "O07",
+      "obligation": "Displayed a is the universal regularized correction",
+      "status": "passed",
+      "finding": "For every m>=1, its coordinate normal equation lifts by lp.ext to a Hilbert-vector equality, and normal_unique identifies a with correction T alpha w.",
+      "evidence": "a_apply; a_normal; a_eq_correction; RegularizedHilbertRepair.normal_unique"
+    },
+    {
+      "id": "O08",
+      "obligation": "Unique global minimizer over all H",
+      "status": "passed",
+      "finding": "The objective is ||T x-w||^2+alpha||x||^2. The wrapper quantifies every competitor x:H and every possible global minimizer; the energy identity yields uniqueness.",
+      "evidence": "a_unique_minimizer; RegularizedHilbertRepair.energy_identity/correction_best/correction_unique"
+    },
+    {
+      "id": "O09",
+      "obligation": "Residual and actual infinite norm identities",
+      "status": "passed",
+      "finding": "w-T(a m)=v m; ||a m||^2=A m and ||v m||^2=B m are the full infinite squared norms with the displayed rational summands.",
+      "evidence": "residual_eq_v; norm_sq_eq_tsum; norm_a_sq; norm_v_sq; A; B"
+    },
+    {
+      "id": "O10",
+      "obligation": "A lower bound m/4",
+      "status": "passed",
+      "finding": "All m coordinates n<=m contribute at least 1/4; full series dominates the prefix.",
+      "evidence": "aCoord_sq_lower_prefix; A_lower"
+    },
+    {
+      "id": "O11",
+      "obligation": "A upper bound 4m/3",
+      "status": "passed",
+      "finding": "The first m summands are <=1; the remaining sum is <=m^4/(3m^3)=m/3.",
+      "evidence": "partialA_upper; A_tail_upper; A_upper"
+    },
+    {
+      "id": "O12",
+      "obligation": "B lower bound 1/(4(m+1))",
+      "status": "passed",
+      "finding": "For n>m the summand is >=1/(4n^2); exact lower telescoping comparison gives sum_{n>m} n^(-2)>=1/(m+1).",
+      "evidence": "vCoord_sq_lower_tail; series_tail_sq_lower; B_lower"
+    },
+    {
+      "id": "O13",
+      "obligation": "B upper bound 2/m",
+      "status": "passed",
+      "finding": "The first m summands are each <=1/m^2; the remaining sum is <=1/m. This valid proof differs from the printed sum-of-squares route.",
+      "evidence": "vCoord_sq_upper_parameter; partialB_parameter_upper; B_tail_upper; B_upper"
+    },
+    {
+      "id": "O14",
+      "obligation": "Finite-cutoff A tail",
+      "status": "passed",
+      "finding": "For every K>=m, 0<=A-partialA<=m^4/(3K^3), with exact full-minus-prefix equality before comparison.",
+      "evidence": "A_sub_partial_eq_tsum; A_tail_nonneg; A_tail_upper"
+    },
+    {
+      "id": "O15",
+      "obligation": "Finite-cutoff B tail",
+      "status": "passed",
+      "finding": "For every K>=m, 0<=B-partialB<=1/K, with exact full-minus-prefix equality before comparison.",
+      "evidence": "B_sub_partial_eq_tsum; B_tail_nonneg; B_tail_upper"
+    },
+    {
+      "id": "O16",
+      "obligation": "Actual attainable b and minimum-norm preimage",
+      "status": "passed",
+      "finding": "b_j=1/(j+1)^2, w_j=1/(j+1), T w=b. Since every multiplier is nonzero, T is injective, so w is the unique preimage and thus minimum norm.",
+      "evidence": "b_apply; w_apply; T_w_eq_b; T_injective; b_preimage_unique; w_minimum_norm_preimage"
+    },
+    {
+      "id": "O17",
+      "obligation": "Actual c and its universal optimizer identity",
+      "status": "passed",
+      "finding": "c=T(a m) has the displayed m^2/[n(m^2+n^2)] coordinates, and applying T to the a-normal equation proves the b-normal equation.",
+      "evidence": "c_apply; c_normal; c_eq_correction"
+    },
+    {
+      "id": "O18",
+      "obligation": "Bias is the same infinite residual",
+      "status": "passed",
+      "finding": "w-c=v and ||c-w||^2=B, with norm symmetry handling the sign. The bound sqrt(2/m) is discharged for actual b.",
+      "evidence": "w_sub_c_eq_v; norm_bias_sq; diagonal_bias_bound"
+    },
+    {
+      "id": "O19",
+      "obligation": "Arbitrary full-Hilbert noisy datum",
+      "status": "passed",
+      "finding": "s ranges over every H, constrained only by ||s-b||<=delta and the stated delta range. No coordinatewise, finite-support, probabilistic, or extra bias hypothesis remains.",
+      "evidence": "diagonal_noisy_error; corollary_30_3"
+    },
+    {
+      "id": "O20",
+      "obligation": "Sharp propagated noise term",
+      "status": "passed",
+      "finding": "The universal estimate is ||correction(s)-correction(b)||<=||s-b||/(2 sqrt(alpha)); alpha=m^(-2) and m>0 give delta*m/2.",
+      "evidence": "RegularizedHilbertRepair.correction_data_energy/data_noise_squared/data_noise_bound; noisy_error_of_bias_bound"
+    },
+    {
+      "id": "O21",
+      "obligation": "Literal ceiling and real powers",
+      "status": "passed",
+      "finding": "The final theorem literally sets m=Nat.ceil(delta^(-(2:Real)/3)); delta^(1/3) uses real exponentiation. Positive delta makes m>=1.",
+      "evidence": "noiseSchedule; one_le_noiseSchedule; corollary_30_3"
+    },
+    {
+      "id": "O22",
+      "obligation": "Ceiling factors and final constant",
+      "status": "passed",
+      "finding": "For 0<delta<=1, u=delta^(-2/3)>=1 and u<=m< u+1<=2u. Hence sqrt(2/m)<=sqrt(2)*delta^(1/3) and delta*m/2<=delta^(1/3).",
+      "evidence": "noiseSchedule_bounds; noiseSchedule_bias_bound; noiseSchedule_noise_bound; noiseSchedule_rate"
+    },
+    {
+      "id": "O23",
+      "obligation": "Full target interface with no added mathematical hypotheses",
+      "status": "passed",
+      "finding": "proposition_30_1 combines vector identities and all bounds/tails; a_unique_minimizer supplies explicit global uniqueness. corollary_30_3 carries both inequalities with the actual model.",
+      "evidence": "DiagonalTheorems.lean; actual elaborated types printed independently"
+    },
+    {
+      "id": "O24",
+      "obligation": "Kernel axiom boundary for final declarations",
+      "status": "passed",
+      "finding": "Fresh recursive #print axioms for proposition_30_1 and corollary_30_3, and six model/interface declarations, report only the three permitted standard axioms.",
+      "evidence": "Independent stdin elaboration, exit 0, warnings rejected"
+    },
+    {
+      "id": "O25",
+      "obligation": "No admission or project-axiom substitution in reviewed new source",
+      "status": "passed",
+      "finding": "Token scan of the five new reviewed modules found no sorry, admit, axiom, or unsafe occurrence; raw source and final recursive axiom output were also inspected.",
+      "evidence": "Five raw module sources and fresh recursive axiom output"
+    },
+    {
+      "id": "S01",
+      "obligation": "Theorem 30.2 and live asymptotic modules",
+      "status": "out of scope",
+      "finding": "No verdict on pi/4 series asymptotics, all-real-budget transfer, or hard-prefix limiting comparison.",
+      "evidence": "Explicit parent scope"
+    },
+    {
+      "id": "S02",
+      "obligation": "Full clean dependency rebuild",
+      "status": "out of scope",
+      "finding": "No full build was run. The fresh check elaborated the raw theorem interface against existing imported artifacts; final complete build provenance is the parent build task.",
+      "evidence": "Explicit parent scope"
+    },
+    {
+      "id": "S03",
+      "obligation": "Every surrounding expository sentence as a separately named Lean theorem",
+      "status": "out of scope",
+      "finding": "Ambient protected-coordinate prose and growth/asymptotic commentary are not added target obligations. The auxiliary printed ||T||=1 follows mathematically using the first unit vector, but only <=1 is a named declaration here.",
+      "evidence": "Target conclusions and contract delimit this audit"
+    }
+  ],
+  "critical_independent_derivations": [
+    {
+      "id": "C1",
+      "claim": "Normal equation identifies a global, unique minimizer",
+      "derivation": "For n=j+1>0, (n^(-2)+m^(-2))*m^2/(m^2+n^2)=n^(-2). This is (T*T+alpha I)a=T*w in H, not merely coordinates outside H. For any competitor x, expansion gives J(x)-J(a)=||T(x-a)||^2+alpha||x-a||^2. Both terms are nonnegative, and alpha>0 forces x=a at equality."
+    },
+    {
+      "id": "C2",
+      "claim": "Infinite tails have the claimed orientation and constants",
+      "derivation": "For x>0, 1/x-1/(x+1)-1/(x+1)^2=1/[x(x+1)^2]>=0; 1/x^2-(1/x-1/(x+1))=1/[x^2(x+1)]>=0; and 1/(3x^3)-1/(3(x+1)^3)-1/(x+1)^4=(6x^2+4x+1)/[3x^3(x+1)^4]>=0. Finite telescoping at x=K+j gives the upper bounds 1/K and 1/(3K^3). The lower square comparison starts at x=K+1, giving 1/(K+1) after the reciprocal remainder tends to zero. Summability is established before identifying norms and tails."
+    },
+    {
+      "id": "C3",
+      "claim": "All four bounds follow without a truncation surrogate",
+      "derivation": "For n<=m, a_n>=1/2, yielding A>=m/4. With a_n^2<=1 on the prefix and <=m^4/n^4 outside it, A<=4m/3. The elementary inequality mn<=m^2+n^2 gives v_n^2<=1/m^2, so the prefix contributes <=1/m; the tail contributes <=1/m. For n>m, v_n>=1/(2n), and the lower reciprocal-square tail gives B>=1/[4(m+1)]."
+    },
+    {
+      "id": "C4",
+      "claim": "Actual attainable datum and bias, not an assumed generic model",
+      "derivation": "T w=b coordinatewise. All weights 1/(j+1) are nonzero, so the preimage is unique. T commutes with its normal operator because T*=T and alpha is scalar; applying T to the a-normal equation gives the c-normal equation for c=T a and b=T w. Thus c is the universal correction for b. Algebra gives w-c=v, and the norm square is B."
+    },
+    {
+      "id": "C5",
+      "claim": "Sharp deterministic noise amplification and literal rounding",
+      "derivation": "For e=correction(s)-correction(b), the normal equation gives ||Te||^2+alpha||e||^2=<s-b,Te><=delta||Te||. Completing the square yields 4alpha||e||^2<=delta^2. With sqrt(alpha)=1/m this is ||e||<=delta*m/2. The triangle inequality adds bias <=sqrt(2/m). Put u=delta^(-2/3)>=1 and m=ceil(u), then u<=m<=2u. Because u*(delta^(1/3))^2=1 and delta*u=delta^(1/3), the two terms sum to at most (sqrt(2)+1)delta^(1/3)."
+    }
+  ],
+  "dependency_edges": [
+    [
+      "DiagonalDefinitions",
+      "DiagonalSeriesBounds"
+    ],
+    [
+      "DiagonalSeriesBounds",
+      "InfiniteDiagonalModel"
+    ],
+    [
+      "RegularizedHilbertRepair.normal_unique",
+      "a_eq_correction"
+    ],
+    [
+      "RegularizedHilbertRepair.energy_identity",
+      "a_unique_minimizer"
+    ],
+    [
+      "a_eq_correction",
+      "proposition_30_1"
+    ],
+    [
+      "proposition_30_1_series",
+      "proposition_30_1"
+    ],
+    [
+      "c_eq_correction + norm_bias_sq + B_upper",
+      "diagonal_bias_bound"
+    ],
+    [
+      "RegularizedHilbertRepair.data_noise_bound + diagonal_bias_bound",
+      "diagonal_noisy_error"
+    ],
+    [
+      "diagonal_noisy_error + noiseSchedule_rate",
+      "corollary_30_3"
+    ]
+  ],
+  "boundary_cases": [
+    {
+      "case": "m=1 and K=m",
+      "finding": "All positive denominators and full tail identities remain valid; prefix has exactly n=1."
+    },
+    {
+      "case": "delta=1",
+      "finding": "u=1, literal ceil is m=1, alpha=1; both estimates and the factor-two ceiling bound remain valid."
+    },
+    {
+      "case": "delta approaches zero from above",
+      "finding": "Each delta>0 gives finite m>=1; no delta=0 case or uniform finite upper bound on m is asserted."
+    },
+    {
+      "case": "arbitrary infinite-support noise",
+      "finding": "Allowed because s:H is unrestricted apart from the norm inequality."
+    }
+  ],
+  "compiler_binding_check": {
+    "command": [
+      "scripts/lean_env.sh",
+      "lake",
+      "env",
+      "lean",
+      "-DwarningAsError=true",
+      "--stdin"
+    ],
+    "cwd": "lean",
+    "input_construction": "Current raw DiagonalTheorems.lean followed by #print and #print axioms for the listed fully qualified declarations, in listed order.",
+    "declarations": [
+      "H",
+      "T",
+      "a_unique_minimizer",
+      "proposition_30_1",
+      "corollary_30_3",
+      "c_eq_correction",
+      "norm_bias_sq",
+      "w_minimum_norm_preimage"
+    ],
+    "namespace": "KomorebiSpace.DiagonalRegularization",
+    "stdin_sha256": "3b308428ad1961f413bbeef412b1a877099fc6b812a9d4bbe2b80181ea816e31",
+    "stdout_sha256": "e53e9ddaa36346a70165915770009a3099202a1f4c10fb971568bc5bb3ba437a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exit_code": 0,
+    "warnings_rejected": true,
+    "permitted_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "observed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "new_project_axioms": [],
+    "write_output_option_used": false,
+    "full_build": false,
+    "raw_stdout_location": "Tool transcript; digest retained here. Existing project axiom logs are separately hashed in inputs."
+  },
+  "unresolved_issues": [],
+  "mismatches": [],
+  "limitations": [
+    "This is an independent claim-match and mathematical dependency review of Proposition 30.1/WR10 and Corollary 30.3/WR12, not a proof audit of the entire monograph or all pinned mathlib proofs.",
+    "Theorem 30.2/WR11 and live asymptotic modules are outside scope. Reading the budget-profile definition and its direct bridge does not certify the asymptotic theorem.",
+    "Fresh Lean validation was restricted to elaborating the raw DiagonalTheorems source via stdin and inspecting eight declarations and their recursive axioms. No full dependency rebuild, numerical experiment, or external literature search was performed.",
+    "Imported .olean files were used for that narrow check. Raw current source was reviewed independently; a clean complete source-to-artifact build remains separate release evidence.",
+    "The source hashes below, rather than author status reports, delimit this verdict. A later change to any relevant definition, proof, target, or dependency requires a corresponding review update.",
+    "The full Proposition 30.1 claim is represented by proposition_30_1 together with a_unique_minimizer and coordinate definitions/lemmas. The single proposition_30_1 type does not restate global minimizer uniqueness textually.",
+    "No source or proof was modified. Only this Markdown report and its JSON counterpart were written."
+  ],
+  "inputs": [
+    {
+      "path": "records/TARGET_CONTRACT.md",
+      "sha256": "55d1cae3ffa7d9b7a48678b08cd34312286736e81682b174ba4b3a573d5481f7",
+      "bytes": 3219,
+      "role": "primary"
+    },
+    {
+      "path": "proofs/PRINTED_DIAGONAL_THEOREMS.tex",
+      "sha256": "f10d921f0272d27f0894547767736c32c5f094c7f77a4016b400527a73a229c2",
+      "bytes": 11555,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/DiagonalDefinitions.lean",
+      "sha256": "751bf02816f74e2fe8a8bc9f45c22f9538d087d1af536af3835e4906f4015f54",
+      "bytes": 934,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/DiagonalSeriesBounds.lean",
+      "sha256": "fc606b9db34f39179ba3cedcc43504325bd14dfdba6de8c46ad7bd6a70a31cb2",
+      "bytes": 16309,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/InfiniteDiagonalModel.lean",
+      "sha256": "da72d7f6ccaa870581c23409837955e54db8be2a732354716e908fe9266501d2",
+      "bytes": 11654,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/DiagonalNoisyRate.lean",
+      "sha256": "55ad01c40e768c2ab7d70895ff5576c2576751137ebb7994198f1ebe27e2d21e",
+      "bytes": 8273,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/DiagonalTheorems.lean",
+      "sha256": "5b6200399270a02d87fc9e578137e5a8a496d404fa042a419f7a1ba138b207d7",
+      "bytes": 1777,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/RegularizedHilbertRepair.lean",
+      "sha256": "b57ee2a27d7c30e35c17a90655aad21a967ae73f830d84ee81a22a2c92276ae4",
+      "bytes": 11987,
+      "role": "primary"
+    },
+    {
+      "path": "lean/KomorebiSpace/BudgetProfile.lean",
+      "sha256": "a11931c108e046080539e346bbf910a99395da0ee51dc8634f8101bb9c95170f",
+      "bytes": 8865,
+      "role": "primary"
+    },
+    {
+      "path": "records/BASELINE.json",
+      "sha256": "4df78e95e2e288746c669b5ad79f9de6ff3aac2df98c5b6ce3b22e03eb91c0cb",
+      "bytes": 19232,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "scripts/lean_env.sh",
+      "sha256": "14c76783600717d3d74aa0cf7d38541ec6088cd1d1734ea69732f611dafffb34",
+      "bytes": 408,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "lean/lean-toolchain",
+      "sha256": "8190e75a201741065fe508b28955dd64dd72d090babe5f70ce6848879d68ae88",
+      "bytes": 29,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "lean/lake-manifest.json",
+      "sha256": "7e28e00cb45e028f411ea69972d18a9964f4c3affaf0212389afa9d1fe13df47",
+      "bytes": 3579,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "logs/hilbert_axiom_audit.lean",
+      "sha256": "bd017d67c30f9551aa950222df2e371e591a1069b49dfa6bbb233f19ef7bf1e1",
+      "bytes": 3082,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "logs/hilbert_axiom_audit.log",
+      "sha256": "6cf8060df7df9217fb8c95794a7a4294cc0a4b7ebc38ed63c5e6fb4e25c2d922",
+      "bytes": 5303,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "records/series_axioms.lean",
+      "sha256": "809bc7c656b6a1a4218789a4027ae95b2d7a019e38ef76ca8e0a86d793d21179",
+      "bytes": 3351,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "logs/series_axioms.log",
+      "sha256": "288699d5f04d8362863338b5dbe9ee403dab0fefa9047aaa1fa8067c4f9a1057",
+      "bytes": 6308,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "records/noise_axioms.lean",
+      "sha256": "7d9c1dc93a313e6611bd70ab66b79d5b506cb0f2d16da1b15bbaf464e00d486f",
+      "bytes": 2535,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "logs/noise_axioms_001.log",
+      "sha256": "a9d3bccba4ec395ea4bb623887b02b17b07b536419848934e46da79b93181789",
+      "bytes": 8182,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "logs/theorem_interface_001.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "records/hilbert_inventory.json",
+      "sha256": "cbe3ccfd5a2fdd6c27847f573066866fa6acd603898af6f0bb6d3d26624683c3",
+      "bytes": 1270,
+      "role": "binding_evidence"
+    },
+    {
+      "path": "lean/.lake/packages/mathlib/Mathlib/Analysis/Normed/Lp/lpSpace.lean",
+      "sha256": "20be210fd24a56462a072e57e9adfaa68020010a198ce016a30bd615c11813af",
+      "bytes": 58233,
+      "role": "pinned_library_leaf"
+    },
+    {
+      "path": "lean/.lake/packages/mathlib/Mathlib/Analysis/InnerProductSpace/l2Space.lean",
+      "sha256": "b676e33fe380e3672f4472900aee9ae28516b127edd0174cab4c3d91b84a765c",
+      "bytes": 27827,
+      "role": "pinned_library_leaf"
+    },
+    {
+      "path": "lean/.lake/packages/mathlib/Mathlib/Analysis/PSeries.lean",
+      "sha256": "d9d4d77f20ce7b777a713b21059694612f38b6498e9d5659f3e73bb921d1f595",
+      "bytes": 22152,
+      "role": "pinned_library_leaf"
+    },
+    {
+      "path": "lean/.lake/packages/mathlib/Mathlib/Analysis/InnerProductSpace/LaxMilgram.lean",
+      "sha256": "eba401b4723e7107cb57769a28232f1f1d1eb670eaca647f7cdc66a9c67091cb",
+      "bytes": 4320,
+      "role": "pinned_library_leaf"
+    }
+  ],
+  "markdown_sha256": "bf85473535e87fe17d8ab0c148674e0fa51cdd3e1354fc04acb81d0bfbf29dc8"
+}

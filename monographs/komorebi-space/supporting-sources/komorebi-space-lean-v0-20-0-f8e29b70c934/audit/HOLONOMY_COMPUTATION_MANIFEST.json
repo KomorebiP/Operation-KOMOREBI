@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "claim_id": "KSPACE-v018-HOLONOMY-FINITE-AUDIT",
+  "repository": {
+    "commit": null,
+    "dirty": true,
+    "baseline_archive_sha256": "aa97496cc420ab23adcafe962d42fd4c756d925df834e22bec97dbbb7139df81"
+  },
+  "command": [
+    "python",
+    "/mnt/data/Komorebi_Space_Lean_v0.18.0/checks/computation/holonomy_exact.py",
+    "--output",
+    "/mnt/data/Komorebi_Space_Lean_v0.18.0/audit/holonomy_exact.json"
+  ],
+  "environment": {
+    "software": [
+      {
+        "name": "Python",
+        "version": "3.13.5"
+      }
+    ],
+    "hardware": "Linux x86_64 container, 4 CPU quota, 4 GiB memory cgroup; no GPU used"
+  },
+  "mathematics": {
+    "assertion_tested": "Finite exact audit of fixed-anchor classification, actual loop transport, route bounds, route independence, and sharp reflection repair",
+    "coefficient_domain": "fractions.Fraction; signed 2x2 permutation matrices; exact Gaussian elimination",
+    "conventions": "t[i,j] maps j to i; A*B applies B then A; vertex/edge sup norms",
+    "inputs": [
+      {
+        "path": "checks/computation/holonomy_exact.py",
+        "sha256": "74e5cdd01e813dac39b04527f0c7e0ca2c1b85889948cf6da044e2fb9e7fb8d7"
+      }
+    ],
+    "bounds": {
+      "vertices": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "graph_shapes": [
+        "path",
+        "star",
+        "cycle",
+        "complete"
+      ],
+      "connection_fixtures_per_graph": 6,
+      "candidates_per_connection": 8,
+      "reflection_horizontal_fixtures": 3,
+      "reflection_vertical_values": [
+        "-1",
+        "-1/2",
+        "0",
+        "1/2",
+        "1"
+      ]
+    },
+    "non_claims": [
+      "Finite fixtures do not enumerate all graphs, connections or vectors.",
+      "Universal claims come from Lean, not this computation.",
+      "No nonisometric, nonlinear or unknown-connection repair is tested."
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "not used",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-09-28T15:46:02.314336+00:00",
+    "runtime_seconds": 4.3595336449998285,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "audit/holonomy_exact.json",
+      "sha256": "ea2a80428dd9f4d514bbf632e9d077e78b940494d78fbf4260608a70f9c61cd0"
+    }
+  ],
+  "checks": [
+    "Independent exact Gaussian elimination of the full graph differential and the rooted holonomy constraints.",
+    "Closed-walk matrix product compared with route-normalized edge holonomy.",
+    "All four false-claim controls rejected.",
+    "11641 assertions passed."
+  ],
+  "result": "implementation and finite assertion verified in the stated range",
+  "residual_risks": [
+    "Finite graph, coefficient and vector fixtures only.",
+    "Python runtime and this code are not independently formally verified.",
+    "Universal conclusions require the separate Lean proof terms."
+  ]
+}

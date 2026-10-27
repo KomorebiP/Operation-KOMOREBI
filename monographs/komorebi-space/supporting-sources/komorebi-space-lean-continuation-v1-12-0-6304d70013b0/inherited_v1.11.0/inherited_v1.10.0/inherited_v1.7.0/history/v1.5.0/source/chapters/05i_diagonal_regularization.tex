@@ -1,0 +1,137 @@
+\chap{A complete regularization diagnostic for the escaping model}\label{sec:diagonal-regularization}
+The abstract alternatives become explicit for the diagonal model. They also answer a natural objection to the hard prefix corrections: perhaps a smoother correction could fit increasingly well without escaping. It can fit more efficiently, but it cannot avoid the obstruction.
+
+\subsection{The entire regularized family is explicit}
+Use $Tu=(u_n/n)$ and $r=w=(1/n)$ as in Section~\ref{sec:escape}. Choose $\alpha=m^{-2}$ for an integer $m\ge1$. The normal equation in each coordinate gives
+\[
+ a^{(m)}_n=\frac{m^2}{m^2+n^2},\qquad
+ v^{(m)}_n=r_n-(Ta^{(m)})_n=\frac{n}{m^2+n^2}.
+\]
+The repaired ambient candidate is $(-a^{(m)},1)$. Its protected coordinate is one for every $m$.
+
+\begin{proposition}[Energy, residual, and certified tails]\label{WR10}
+The displayed $a^{(m)}$ belongs to $\ell^2$ and is the unique regularized correction at $\alpha=m^{-2}$. Set
+\[
+ A_m=\norm{a^{(m)}}^2=\sum_{n\ge1}\frac{m^4}{(m^2+n^2)^2},\qquad
+ B_m=\norm{v^{(m)}}^2=\sum_{n\ge1}\frac{n^2}{(m^2+n^2)^2}.
+\]
+Then
+\begin{equation}\label{eq:soft-bounds}
+ \frac m4\le A_m\le\frac{4m}{3},\qquad
+ \frac1{4(m+1)}\le B_m\le\frac2m.
+\end{equation}
+For the sums $A_{m,K},B_{m,K}$ through any integer $K\ge m$,
+\begin{equation}\label{eq:soft-tails}
+ 0\le A_m-A_{m,K}\le\frac{m^4}{3K^3},\qquad
+ 0\le B_m-B_{m,K}\le\frac1K.
+\end{equation}
+\end{proposition}
+\begin{proof}
+For $n>m$, the correction square is at most $m^4/n^4$, whose sum converges. The residual belongs to $\ell^2$ because $T$ is bounded and $r\in\ell^2$. The coordinate normal equation is
+\[
+ \frac1n\frac{n}{m^2+n^2}=m^{-2}\frac{m^2}{m^2+n^2}.
+\]
+It holds in $\ell^2$, so WR06 proves global optimality.
+
+For $n\le m$, the correction coordinate is at least $1/2$, yielding $A_m\ge m/4$. Bound its first $m$ squares by one and use
+$\sum_{n>m}n^{-4}\le\int_m^\infty x^{-4}\,dx=1/(3m^3)$ for the tail. This gives $A_m\le m+m/3$.
+
+The residual square on $n\le m$ is at most $n^2/m^4$, whose sum is at most $1/m$. The remaining sum is at most $\sum_{n>m}n^{-2}\le1/m$. For its lower bound, $n>m$ implies $(m^2+n^2)^2\le4n^4$, so
+\[
+ B_m\ge\frac14\sum_{n>m}\frac1{n^2}\ge\frac1{4(m+1)}.
+\]
+The same comparisons beyond $K$ give \eqref{eq:soft-tails}. All tail bounds concern the actual infinite sums.
+\end{proof}
+\written{WR10}
+
+Thus the correction norm grows on the order of $\sqrt m$, the residual norm decays on the order of $m^{-1/2}$, and the penalty $\alpha A_m=A_m/m^2$ tends to zero. The smooth correction avoids the hard discontinuity at a prefix boundary, but it still approaches the forbidden constant sequence coordinate by coordinate.
+
+\fixedplate{35_regularized_escape}{At each fixed coordinate, the soft correction approaches one as $m$ tends to infinity. Its transition moves outward as $m$ increases. The chart compares three exact coordinate formulas $m^2/(m^2+n^2)$, not finite approximations to an unspecified optimization procedure. Every displayed sequence has finite energy, but the family's energies are unbounded.}{fig:regularized-escape}
+
+\subsection{The sharp asymptotic correction cost}
+The preceding bounds establish divergence and decay. The leading constant can also be computed, which permits a meaningful comparison with hard prefix repair.
+
+\begin{theorem}[A sharp budget asymptotic for the diagonal datum]\label{WR11}
+As $m\to\infty$,
+\[
+ \frac{A_m}{m}\longrightarrow\frac\pi4,\qquad
+ mB_m\longrightarrow\frac\pi4.
+\]
+For the exact budget profile of this infinite problem,
+\begin{equation}\label{eq:sharp-budget}
+ \lim_{M\to\infty}M\beta_{T,w}(M)=\frac\pi4.
+\end{equation}
+The hard prefix correction at budget $M=\sqrt N$ instead has
+\[
+ \sqrt N\,\norm{w-T\mathbf1_N}\longrightarrow1.
+\]
+\end{theorem}
+\begin{proof}
+The two normalized sums are Riemann sums on the positive half line:
+\[
+ \frac{A_m}{m}=\frac1m\sum_{n\ge1}\frac1{(1+(n/m)^2)^2},\qquad
+ mB_m=\frac1m\sum_{n\ge1}\frac{(n/m)^2}{(1+(n/m)^2)^2}.
+\]
+On every bounded interval, ordinary Riemann convergence applies. Beyond $L>1$, the first function is bounded by $x^{-4}$ and the second by $x^{-2}$. Their sum tails are bounded uniformly for sufficiently large $m$ by constants times $L^{-3}$ and $L^{-1}$, respectively. The corresponding integral tails have the same bounds. Letting $m\to\infty$ first on the bounded interval and then $L\to\infty$ proves convergence of the full sums.
+
+The substitution $x=\tan\theta$ gives
+\[
+ \int_0^\infty\frac{dx}{(1+x^2)^2}
+ =\int_0^{\pi/2}\cos^2\theta\,d\theta=\frac\pi4,
+\]
+\[
+ \int_0^\infty\frac{x^2\,dx}{(1+x^2)^2}
+ =\int_0^{\pi/2}\sin^2\theta\,d\theta=\frac\pi4.
+\]
+Put $M_m=\sqrt{A_m}$. These budgets increase strictly to infinity, and $M_{m+1}/M_m\to1$ by the first asymptotic. WR07 gives $\beta(M_m)=\sqrt{B_m}$, so
+$M_m\beta(M_m)=\sqrt{A_mB_m}\to\pi/4$.
+For $M_m\le M\le M_{m+1}$, monotonicity of $\beta$ yields
+\[
+ M_m\beta(M_{m+1})\le M\beta(M)\le M_{m+1}\beta(M_m).
+\]
+Both bounds tend to $\pi/4$, proving \eqref{eq:sharp-budget}. Finally, the earlier telescoping tail enclosure gives
+\[
+ \frac{N}{N+1}\le N\sum_{n>N}\frac1{n^2}\le1,
+\]
+which proves the hard-prefix limit.
+\end{proof}
+\written{WR11}
+
+At large matched correction budgets, the optimal soft repair therefore has about $\pi/4$ times the hard-prefix residual. This improves the efficiency of approximation, not the existence result. Both residuals tend to zero only as the budget tends to infinity. The limiting constant is a calculation for this declared model, not a universal regularization efficiency factor.
+
+\fixedplate{36_budget_product}{The plotted intervals enclose the actual infinite quantities $\sqrt{A_mB_m}$, using finite sums plus the proved tails. The corresponding hard-prefix intervals enclose $\sqrt{N\sum_{n>N}n^{-2}}$ with $N=m$. These have different natural budget sequences. Their limits give the matched-budget asymptotic constants $\pi/4$ and one.}{fig:budget-product}
+
+\subsection{The same operator has an attainable datum}
+Change only the residual to $b_n=1/n^2$. Its minimum norm preimage is $a^\dagger_n=1/n\in\ell^2$. At $\alpha=m^{-2}$, the regularized correction is
+\[
+ c^{(m)}_n=\frac{m^2}{n(m^2+n^2)},\qquad
+ a^\dagger_n-c^{(m)}_n=\frac{n}{m^2+n^2}.
+\]
+The bias square is exactly the previously computed $B_m$. This links the two cases without conflating their existence hypotheses: the escaping residual of one problem is the regularization bias of an attainable problem.
+
+\begin{corollary}[An explicit noisy attainable repair]\label{WR12}
+For the attainable datum $b=(1/n^2)$, suppose $\norm{\widetilde b-b}\le\delta$ with $0<\delta\le1$. Choose
+\[
+ m=\lceil\delta^{-2/3}\rceil,\qquad\alpha=m^{-2}.
+\]
+Then the noisy regularized correction satisfies
+\[
+ \norm{a_\alpha(\widetilde b)-a^\dagger}
+ \le\sqrt{\frac2m}+\frac{\delta m}{2}
+ \le(\sqrt2+1)\delta^{1/3}.
+\]
+\end{corollary}
+\begin{proof}
+The exact-data bias has norm $\sqrt{B_m}\le\sqrt{2/m}$ by WR10. The noise bound in WR09 is $\delta m/2$. The triangle inequality gives the first estimate. The ceiling choice obeys
+$\delta^{-2/3}\le m\le\delta^{-2/3}+1\le2\delta^{-2/3}$, which gives the second.
+\end{proof}
+\written{WR12}
+
+This is a deterministic guarantee for the specified datum and Hilbert noise bound. It is not a statistical confidence statement. The identical parameter rule in the escaping problem cannot produce convergence to an exact protected Hilbert solution, because no such solution exists.
+
+\subsection{What the calculation permits a machine to certify}
+The finite program can check a normal equation, exact preservation, and a quadratic optimality identity. It can return a dual witness ruling out a smaller residual at a given budget. In the infinite diagonal example it can return partial sums together with rational tail enclosures. Those are distinct certificates with distinct conclusions.
+
+None of them alone establishes unrestricted semantic realizability. The bounded-budget theorem needs a genuinely uniform bound. The exactification theorem needs control of candidate movement. The regularization limit needs actual attainment of the projected datum. The repeated appearance of a small residual does not replace any of those hypotheses.
+
+The useful next diagnostic is therefore not just ``Did the residual decrease?'' It is ``What happened to the correction norm, what quantity was preserved, and what existence theorem applies to this datum?''

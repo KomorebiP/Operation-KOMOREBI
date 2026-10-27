@@ -1,0 +1,100 @@
+\chap{Coordinates, noise, and a justified stopping rule}\label{sec:stopping-rules}
+A certificate can be exact and still be interpreted incorrectly. Two common errors are to measure a coordinate covector with the wrong norm, or to keep a solver tolerance fixed while sending the regularization parameter to zero. Both change what a small reported number means.
+
+\subsection{The residual of the coordinate equation is a covector}
+In finite dimensions, let the columns of $B$ form a basis of $H=\ker p$. Write $a=Bc$, $S=dB$, and $G=B^{\mathsf T}B$. As before, $G$ is positive definite. For an inexact coefficient vector $c$, the residual of the coordinate normal equation is
+\[
+ q=(S^{\mathsf T}S+\alpha G)c-S^{\mathsf T}r.
+\]
+The vector $q$ stores pairings against basis vectors. It is not the coordinate vector of the Hilbert normal residual unless the basis is orthonormal.
+
+\begin{proposition}[The invariant norm of a coordinate certificate]\label{WR15}
+The actual normal residual is
+\begin{equation}\label{eq:covector-norm}
+ g=BG^{-1}q,\qquad \norm g^2=q^{\mathsf T}G^{-1}q.
+\end{equation}
+For any invertible change of basis $B'=BC$, the same proposed correction has
+\[
+ c'=C^{-1}c,\quad G'=C^{\mathsf T}GC,\quad q'=C^{\mathsf T}q,
+\]
+and
+\[
+ (q')^{\mathsf T}(G')^{-1}q'=q^{\mathsf T}G^{-1}q.
+\]
+\end{proposition}
+\begin{proof}
+The adjoint of the inclusion-coordinate map is $B^{\mathsf T}$. The orthogonal projection onto its range is $BG^{-1}B^{\mathsf T}$. Therefore
+\[
+ g=P_Hd^{\mathsf T}(dBc-r)+\alpha Bc
+   =BG^{-1}\bigl(S^{\mathsf T}(Sc-r)+\alpha Gc\bigr)=BG^{-1}q.
+\]
+Taking its norm square and using $B^{\mathsf T}B=G$ proves the second equation in \eqref{eq:covector-norm}. Substitution proves the basis-change formulas, and
+$(G')^{-1}=C^{-1}G^{-1}(C^{\mathsf T})^{-1}$ cancels the comparison matrices in the scalar expression.
+\end{proof}
+\written{WR15}
+
+In the previous example, $B=(1,1)^{\mathsf T}$, $G=2$, and the proposal $c=1/4$ gives $q=-1/4$. Thus $q^{\mathsf T}G^{-1}q=1/32$, as required. Replacing $B$ by $sB$ changes $q$ to $sq$ and $G$ to $s^2G$. The Euclidean norm of the coordinate covector can be made arbitrarily small or large by changing the nonzero scalar $s$. The actual correction, normal residual, and certified error do not change.
+
+\fixedplate{39_covector_metric}{Rescaling the basis of the same protected line rescales the raw coordinate covector. Its Euclidean norm is therefore not a representation-invariant stopping criterion. The Gram-corrected norm stays equal to $1/\sqrt{32}$ for every displayed scale. All systems represent the same proposed correction.}{fig:covector-metric}
+
+The finite verifier checks that a supplied basis spans the \emph{whole} protected kernel. A basis of a smaller subspace might give a correct certificate for that smaller optimization problem while missing an allowed direction that decreases the objective. The rank, kernel-membership, and independence checks therefore belong to the certificate contract.
+
+\subsection{Separate data error, numerical error, and regularization bias}
+Let $r$ be the intended datum and $\widetilde r$ the measured datum. Suppose
+\[
+ \norm{\widetilde r-r}\le\delta,
+ \qquad \norm{T^*(Ta-\widetilde r)+\alpha a}\le\varepsilon.
+\]
+The maps $T,p$ and their Hilbert metrics remain fixed. By WR13 and the fixed-parameter part of WR09,
+\begin{equation}\label{eq:combined-solver-data}
+ \norm{a-a_\alpha(r)}
+ \le \frac{\varepsilon}{\alpha}+\frac{\delta}{2\sqrt\alpha}.
+\end{equation}
+The first term is the solver's contribution. The second is the worst-case propagation of data error. They should not be collapsed into one unqualified residual tolerance.
+
+\begin{theorem}[A consistent inexact stopping rule]\label{WR16}
+Assume the projected intended datum belongs to the actual range of $T$, with minimum-norm preimage $a^\dagger$. Along a sequence of positive parameters and measured problems, suppose
+\[
+ \alpha_n\to0,\qquad
+ \frac{\delta_n}{\sqrt{\alpha_n}}\to0,\qquad
+ \frac{\varepsilon_n}{\alpha_n}\to0.
+\]
+If the proposed corrections $a_n\in H$ satisfy the displayed data and normal-residual bounds, then $a_n\to a^\dagger$ in norm. At every index,
+\[
+ \norm{a_n-a^\dagger}
+ \le\frac{\varepsilon_n}{\alpha_n}
+      +\frac{\delta_n}{2\sqrt{\alpha_n}}
+      +\norm{a_{\alpha_n}(r)-a^\dagger}.
+\]
+\end{theorem}
+\begin{proof}
+Insert the exact optimizer for the measured datum and then the exact optimizer for the intended datum. The triangle inequality, WR13, and WR09 give the displayed estimate. The final term tends to zero by the attainable case of WR08. Each of the other terms tends to zero by hypothesis. Protection is exact at every index because $a_n\in H$.
+\end{proof}
+\written{WR16}
+
+The current Lean addition proves the pointwise estimate \eqref{eq:combined-solver-data}. The limit conclusion here still uses the written WR08 limit theorem. This distinction is recorded in the catalogue rather than hidden by the fact that the last step is a triangle inequality.
+
+\subsection{Retaining the explicit diagonal rate with an inexact solver}
+For WR12's attainable datum and $0<\delta\le1$, take $m=\lceil\delta^{-2/3}\rceil$ and $\alpha=m^{-2}$ as before. If an inexact solver satisfies
+\[
+ \varepsilon\le\kappa\alpha\delta^{1/3}
+ \quad(\kappa\ge0),
+\]
+then the same argument gives
+\[
+ \norm{a-a^\dagger}\le(\sqrt2+1+\kappa)\delta^{1/3}.
+\]
+Thus the inner solve can retain the proven outer accuracy if its normal residual decreases on the scale $\alpha\delta^{1/3}$. Since $\alpha$ is on the scale $\delta^{4/3}$, the corresponding normal-residual scale is $\delta^{5/3}$, with the stated ceiling factors retained in the exact rule. This is a sufficient rule for this problem, not a universal optimal stopping law.
+
+\fixedplate{40_stopping_schedule}{For the attainable diagonal example, the three displayed terms are the proved bias bound, propagated data-noise bound, and a solver-error budget chosen to preserve the same $\delta^{1/3}$ rate. The ceiling in $m=\lceil\delta^{-2/3}\rceil$ is evaluated explicitly. The plot shows bounds, not measurements from a trained system.}{fig:stopping-schedule}
+
+For the escaping datum, the same rule does not create convergence to a nonexistent protected Hilbert answer. It only makes the numerical proposals track the regularized path accurately. Tracking an escaping path and converging to a realization are different conclusions.
+
+\subsection{The executable verification contract}
+The program takes $d,p,f,\alpha$ and a proposed ambient correction, with optional measured residuals, a full kernel basis, and an independent dual witness. It rejects a correction that changes the protected data and checks the basis's dimensions, rank, and kernel membership. It does not silently project a rejected proposal into another problem.
+
+The output records $f-a$, protection before and after, measured fit, actual model residual, the Gram-corrected normal certificate, objective values, and squared error bounds. Verification recomputes the record without calling an optimizer. Independent determinant-based tests compare the bounds with actual errors in small ambient constrained systems. A certificate establishes consistency with its included problem, not authentication that this is the externally intended task.
+
+\begin{insight}
+A certificate needs a declared target. Fit measures agreement with data. The normal residual bounds optimizer error at a specified parameter. The duality gap bounds objective error. A realization theorem is still needed to conclude convergence to an intended exact object.
+\end{insight}

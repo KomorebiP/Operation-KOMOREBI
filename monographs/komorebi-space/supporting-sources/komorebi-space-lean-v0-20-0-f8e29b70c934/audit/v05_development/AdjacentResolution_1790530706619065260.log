@@ -1,0 +1,28 @@
+KomorebiSpace/AdjacentResolution.lean:28:27: error(lean.invalidField): Invalid field `trans`: The environment does not contain `Nat.le.trans`, so it is not possible to project the field `trans` from an expression
+  hij
+of type `i.le j`
+KomorebiSpace/AdjacentResolution.lean:33:59: error(lean.invalidField): Invalid field `trans`: The environment does not contain `Nat.le.trans`, so it is not possible to project the field `trans` from an expression
+  hij
+of type `i.le j`
+KomorebiSpace/AdjacentResolution.lean:57:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  restrict V down ?h' ?x
+in the target expression
+  restrict V down ⋯ (↑x (n + 1)) = ↑x n
+
+V : ℕ → Type u
+down : (n : ℕ) → V (n + 1) → V n
+x : (resolution V down).Point
+n : ℕ
+h : restrict V down ⋯ (↑x (n + 1)) = ↑x n
+⊢ down n (↑x (n + 1)) = ↑x n
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    x
+  has type
+    (resolution V down).Point
+  but is expected to have type
+    { x // ∀ (i j : ℕ) (h : i ≤ j), (resolution V down).restrict h (x j) = x i }
+  in the application
+    ↑x
