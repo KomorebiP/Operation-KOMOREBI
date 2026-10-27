@@ -1,0 +1,10 @@
+theorem analyticTransferTangent_hasSum_all_orders {N : ℕ} (hN : 0 < N) {R : ℝ}
+    (hn : ∀ w ∈ Metric.ball (0 : ℂ) R, entireReducedDenominator N w ≠ 0)
+    {z : ℂ} (hz : z ^ N ∈ Metric.ball (0 : ℂ) R) :
+    HasSum (fun n => transferTangentCoeff (R := ℂ) N n /
+      ((N * n + N - 1).factorial : ℂ) * z ^ (N * n + N - 1))
+      (analyticTransferTangent N z) := by
+  by_cases h : N = 1
+  · subst N
+    exact analyticTransferTangent_one_hasSum z
+  · exact analyticTransferTangent_coefficient_hasSum (by omega) hn hz

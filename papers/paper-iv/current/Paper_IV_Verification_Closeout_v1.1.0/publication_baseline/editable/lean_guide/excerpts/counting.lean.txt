@@ -1,0 +1,21 @@
+theorem canonicalSignedDenominator_zero_counting {N : ℕ} (hN : 2 ≤ N) :
+    ∃ K : ℝ, 0 < K ∧ ∀ R : ℝ, 0 ≤ R →
+      |(analyticZeroCount (canonicalSignedDenominator N) R : ℝ) -
+        ((N : ℝ) * Real.sin (Real.pi / N) / Real.pi) * R| ≤ K := by
+  let e := canonicalZeroEnumeration hN
+  let W := finiteWeight (analyticOrderNatAt (canonicalSignedDenominator N)) e.exceptions
+  refine ⟨(W : ℝ) + N * ((e.shift : ℝ) + 2) + 1, by positivity, ?_⟩
+  intro R hR
+  have hw := e.weighted_count_bounds hN hR
+  have hl : (N : ℝ) * sequenceCounting e.root R ≤ analyticZeroCount (canonicalSignedDenominator N) R := by
+    exact_mod_cast hw.1
+  have hu : (analyticZeroCount (canonicalSignedDenominator N) R : ℝ) ≤
+      N * sequenceCounting e.root R + W := by exact_mod_cast hw.2
+  have hc := (lattice_window_counting (div_pos Real.pi_pos (signed_sine_pos hN))
+    e.shift e.root e.windows hR).2
+  rw [abs_le] at hc ⊢
+  have he : ((N : ℝ) * Real.sin (Real.pi / N) / Real.pi) * R =
+      N * (R / (Real.pi / Real.sin (Real.pi / N))) := by field_simp
+  rw [he]
+  have hn := Nat.cast_nonneg (α := ℝ) N
+  constructor <;> nlinarith

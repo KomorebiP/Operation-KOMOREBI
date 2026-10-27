@@ -1,0 +1,60 @@
+\section{Coefficient algebra and normalization}
+\subsection{The projector acts on coefficients}
+For a formal series $f(X)=\sum_n a_nX^n$, the cyclic projector retains exactly those coefficients for which $n\equiv j\pmod N$. The implementation uses the total natural-number remainder operation. Idempotence makes sense without a positive-order assumption. The finite resolution over $0\leq j<N$ requires $N>0$.
+\excerpt{CyclicFilters}{projector}
+\excerpt{CyclicFilters}{idempotent}
+The proof of idempotence is coefficientwise extensionality. After selecting an index, a case split determines whether the residue matches. This is a universal identity over the source's commutative-semiring context, not a computation on a bounded list of coefficients.
+\excerpt{CyclicFilters}{resolution}
+The positive-order hypothesis ensures that $n\bmod N$ lies in the finite index set. The sum has exactly one surviving term. This is also why the proof cannot simply discard the $N=0$ boundary.
+
+\subsection{Multiplication adds residue labels}
+A product of two pure packets has residue equal to the sum of their labels modulo $N$. The full product law first reconstructs each factor from its packet sum, distributes the product, and projects every pair. Nonmatching label pairs vanish. The displayed Lean proof records this route directly.
+\excerpt{CyclicFilters}{product}
+No analytic interchange occurs here. Every coefficient of a formal product is a finite convolution, and the outer packet decomposition is finite. The pointwise counterpart, including covariance on invariant domains, is supplied later by row 143.
+
+\subsection{Transfer and signed sections}
+The transfer and signed coefficient selectors are deliberately separated from their exponential-generating normalization.
+\excerpt{SectionCycles}{transfer_coeff}
+\excerpt{SectionCycles}{signed_coeff}
+The transfer selector contributes $\lambda^n$ in one residue class. The signed selector contributes $(-1)^{\lfloor n/N\rfloor}$. The surrounding \code{exponentialGeneratingSeries} construction divides the $n$th selected coefficient by $n!$. Thus the signed section is
+\[
+ D_{N,j}(z)=\sum_{q\geq0}\frac{(-1)^qz^{Nq+j}}{(Nq+j)!},\qquad 0\leq j<N.
+\]
+Differentiating shifts the residue label downward. At label zero, crossing the period contributes a minus sign.
+\excerpt{SectionCycles}{signed_wrap}
+For a full period, the signed family solves the corresponding negative cyclic differential equation. The formal derivative cycle is proved before the entire-function derivative cycle. The later analytic bridge ensures that the same normalization appears in both.
+
+\subsection{Reduced and original variables}
+The distinguished denominator is the signed section with residue label zero in the original variable. It is written in a reduced variable $w=z^N$ through
+\[
+ D_N(z)=\Delta_N(z^N),\qquad
+ \Delta_N(w)=\sum_{n\geq0}\frac{(-1)^nw^n}{(Nn)!}.
+\]
+\excerpt{ReciprocalCore}{denominator}
+The reciprocal family is generated formally by the negative logarithm of the unit series $\Delta_N$. Its constant coefficient is one, which is the algebraic condition needed to define the normalized logarithm and reciprocal family.
+\excerpt{ReciprocalCore}{reciprocal}
+Two normalizations coexist. Write
+\[
+ \Delta_N(w)^{-r}=\sum_{n\geq0}b_n(r)w^n
+ =\sum_{n\geq0}P_{N,n}(r)\frac{w^n}{(Nn)!}.
+\]
+Then $P_{N,n}(r)=(Nn)!b_n(r)$. The source's \code{reciprocalOrdCoeff} denotes the ordinary coefficient, while \code{reciprocalCoeff} uses \code{blockCoeff} and the $(Nn)!$ normalization.
+\excerpt{ReciprocalCore}{normalization}
+The parameter-addition law has binomial factors at the block indices, not ordinary $\binom nq$ factors.
+\excerpt{ReciprocalCore}{addition}
+Dividing this identity by $(Nn)!$ recovers the ordinary Cauchy convolution for the $b_n$. Multiplying by the wrong factorial changes the theorem. The source makes that conversion an explicit named construction.
+
+\subsection{Newton recurrence and its inputs}
+The logarithmic coefficients \code{kappaCoeff} encode the logarithmic derivative of the reduced denominator. The formal differential identity for the reciprocal series gives a recurrence for its ordinary coefficients.
+\excerpt{ReciprocalCore}{newton}
+The antidiagonal index contains pairs with sum $n$. Its second component is shifted by one to match the logarithmic derivative. This is the same recurrence later specialized to a literal Hessenberg determinant. It is not necessary to assume that any zero sum converges at this stage. Zero moments are subsequently proved equal to these algebraic coefficients.
+
+\subsection{Appell and theta families}
+The generic Appell polynomial is built from a formal exponential family and then differentiated as a polynomial.
+\excerpt{Appell}{appell}
+\excerpt{Appell}{appell_derivative}
+The derivative law holds because polynomial differentiation is finite. The residue-specialized Appell family also has parameter addition, covariance, a sparse coefficient formula, and an inverse differential-operator action. Row 146 proves that the ordinary-derivative and factorial/Hasse encodings agree. Both interpretations have an explicit bridge.
+
+The theta construction combines two rescalings of the reciprocal family.
+\excerpt{ThetaCore}{theta}
+The rescaling factors $-u^N$ and $-1$ are part of the definition. Theta reconstruction, parameter factors, polynomial degree, and Newton recurrence are covered by rows 22--23 and 43--45. A later analytic zero-data formula identifies their coefficients with the corresponding Bell expressions. The formal identities remain available without importing that analytic interpretation.

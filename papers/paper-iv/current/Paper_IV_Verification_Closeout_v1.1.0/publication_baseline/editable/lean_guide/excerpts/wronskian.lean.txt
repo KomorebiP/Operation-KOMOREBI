@@ -1,0 +1,10 @@
+theorem signedWronskian_eq_one {N : ℕ} (hN : 1 < N) {omega rho : ℂ}
+    (homega : IsPrimitiveRoot omega N) (hrho : rho ^ N = -1) (z : ℂ) :
+    analyticWronskian (fun j : Fin N => entireSigned N j.val omega rho) z = 1 := by
+  rw [signedWronskian_constant hN homega]
+  have hm : (fun k j : Fin N => deriv^[k.val]
+      (entireSigned N j.val omega rho) 0) = (1 : Matrix (Fin N) (Fin N) ℂ) := by
+    ext k j
+    rw [entireSigned_initial_data (by omega) j.isLt k.isLt homega hrho]
+    simp [Matrix.one_apply, Fin.ext_iff]
+  rw [analyticWronskian, hm, Matrix.det_one]

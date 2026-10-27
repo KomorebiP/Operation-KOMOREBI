@@ -1,0 +1,31 @@
+theorem cyclic_product_law \{N : ℕ\} (hN : 0 < N) (k : ℕ) (f g : R⟦X⟧) :
+    cyclicProjector N k (f * g) =
+      ∑ i ∈ Finset.range N, ∑ j ∈ Finset.range N,
+        if (i + j) % N = k % N then
+          cyclicProjector N i f * cyclicProjector N j g
+        else 0 := by
+  calc
+    cyclicProjector N k (f * g) =
+        cyclicProjector N k
+          ((∑ i ∈ Finset.range N, cyclicProjector N i f) *
+            (∑ j ∈ Finset.range N, cyclicProjector N j g)) := by
+      rw [sum_cyclicProjector hN, sum_cyclicProjector hN]
+    _ = ∑ i ∈ Finset.range N, ∑ j ∈ Finset.range N,
+          if (i + j) % N = k % N then
+            cyclicProjector N i f * cyclicProjector N j g
+          else 0 := by
+      rw [Finset.sum_mul]
+      simp_rw [Finset.mul_sum]
+      rw [cyclicProjector_sum]
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [cyclicProjector_sum]
+      apply Finset.sum_congr rfl
+      intro j hj
+      by_cases hlabel : (i + j) % N = k % N
+      · simp only [hlabel, ↓reduceIte]
+        rw [cyclicProjector_eq_of_mod_eq (i := k) (j := (i + j) % N)
+          (by simpa using hlabel.symm)]
+        exact cyclicProjector_product_packet N i j f g
+      · simp only [hlabel, ↓reduceIte]
+        exact cyclicProjector_product_other (R := R) (fun h => hlabel h.symm) f g

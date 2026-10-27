@@ -1,0 +1,12 @@
+theorem sum_cyclicProjector {N : ℕ} (hN : 0 < N) (f : R⟦X⟧) :
+    (∑ j ∈ Finset.range N, cyclicProjector N j f) = f := by
+  ext n
+  rw [map_sum]
+  rw [Finset.sum_eq_single (n % N)]
+  · simp [Nat.mod_eq_of_lt (Nat.mod_lt n hN)]
+  · intro j hj hne
+    have hjN : j < N := Finset.mem_range.mp hj
+    have hmod : j % N = j := Nat.mod_eq_of_lt hjN
+    have hres : n % N ≠ j % N := by simpa [hmod] using hne.symm
+    simp [hres]
+  · exact fun hmem => (hmem (Finset.mem_range.mpr (Nat.mod_lt n hN))).elim

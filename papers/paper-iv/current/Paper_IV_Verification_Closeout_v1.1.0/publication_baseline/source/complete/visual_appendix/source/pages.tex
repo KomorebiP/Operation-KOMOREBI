@@ -1,0 +1,484 @@
+\vpage{1}{A coefficient can become zero data}{READER'S GUIDE}{Main text: Sections 2, 7, 11--14; proofread manuscript, pp. 4, 12--15, 21--36.}
+This appendix follows a concrete analytic family through three descriptions: selected Taylor coefficients, a finite differential system, and the zeros of an entire function. The formulas are linked, but the evidence needed for each description is different.
+\vfig{three_views}
+\head{Keep three small models in view}
+For $N=2$, the signed denominator is $D_2(z)=\cos z$. Its reciprocal is the familiar secant series. For $N=3$, a third exponential perturbs the zeros of a dominant cosine. For $N=4$, an exact factorization gives a complete zero picture:
+\[
+D_4(z)=\cos(z/\sqrt2)\cosh(z/\sqrt2).
+\]
+The examples move between these orders deliberately. Order two makes the coefficient arithmetic transparent; order three shows a genuine displacement; order four makes orbit reduction completely explicit.
+\head{Three routes through the appendix}
+\par\noindent\begin{tabularx}{\linewidth}{@{}lY@{}}\toprule
+Route & Pages and question\\\midrule
+Algebra first & \pagerefV{3}--\pagerefV{16}: how do selection, signs, reciprocals, and finite differential operators work?\\
+Zeros first & \pagerefV{17}--\pagerefV{24}: where can cancellation happen, and how does it determine coefficients?\\
+One full calculation & \pagerefV{25}: derive the same number, $69$, from denominator coefficients and from zero moments.\\\bottomrule
+\end{tabularx}
+\takeaway{The pictures carry computable objects. They do not replace the global analytic arguments or extend the inherited Lean contract.}
+\captiontext{Exact identities and rational certificates are distinguished from sampled curves. All plates are reproducible vector drawings. The original proofread manuscript remains unchanged.}
+
+\vpage{2}{Two variables, several normalizations}{OBJECT ATLAS}{Main text: Section 2 and Definitions 5.7, 7.1, 9.1; pp. 4, 9, 12, 16.}
+The most important coordinate change is $w=z^N$. A term of degree $n$ in $w$ has degree $Nn$ in $z$. Its coefficient does not change, but an exponential-generating-function label does.
+\[
+\underbrace{b_{N,n}(r)\,w^n}_{\text{ordinary coefficient}}
+=\underbrace{P_{N,n}(r)\frac{z^{Nn}}{(Nn)!}}_{\text{block exponential coefficient}},
+\qquad P_{N,n}(r)=(Nn)!b_{N,n}(r).
+\]
+\par\noindent\begin{tabularx}{\linewidth}{@{}lY@{}}\toprule
+Object & Definition and role\\\midrule
+$E_{N,j}(z)$ & $\displaystyle\sum_{n\ge0}\frac{z^{Nn+j}}{(Nn+j)!}$ selects one residue class of the exponential.\\
+$D_{N,j}(z)$ & The same series with $(-1)^n$. One full derivative cycle contributes a minus sign.\\
+$D_N(z)$ & $D_{N,0}(z)$, the denominator whose zeros control the signed reciprocal family.\\
+$\Delta_N(w)$ & $\displaystyle\sum_{n\ge0}\frac{(-1)^nw^n}{(Nn)!}$; thus $D_N(z)=\Delta_N(z^N)$.\\
+$P_{N,n}(r)$ & Block-EGF coefficients of $D_N^{-r}$. They are polynomials in $r$.\\
+$\kappa_{N,m}$ & $\displaystyle-\log\Delta_N(w)=\sum_{m\ge1}\kappa_{N,m}w^m/m$.\\
+$T_N(z)$ & $-D_N'(z)/D_N(z)$, a function, not the coefficient $T_N(n)$.\\
+$\Phi_{N,j}(w)$ & $\displaystyle j!\sum_{n\ge0}\frac{w^n}{(Nn+j)!}$ removes the forced zero of $E_{N,j}$.\\
+$C_{N,j}(z)$ & $1/\Phi_{N,j}(z^N)$; this is generally not $1/D_N(z)$.\\
+$\Lambda_N$ & Zeros of $\Delta_N$, counted with multiplicity, one per rotational orbit of zeros of $D_N$.\\\bottomrule
+\end{tabularx}
+\head{A normalization test}
+The coefficient $5/24$ of $w^2$ in $\Delta_2(w)^{-1}$ is the same term as $5z^4/4!$. It is not $5w^2/2!$. Keeping the two factorials separate prevents errors in Bell formulas, convolution weights, and zero-moment reconstruction.
+\takeaway{Use $z$ for differentiation and rotational geometry. Use $w$ for reciprocal recurrences, canonical products, and orbit-zero sums.}
+
+\vpage{3}{A root filter is an exact vote}{CYCLIC PROJECTION}{Main text: Theorem 3.1 and Proposition 3.2; pp. 5--6.}
+For $N=4$, write $\omega=i$. To extract residue $j$, evaluate the function at four rotated arguments and attach the phase $i^{-j\ell}$:
+\[
+(\mathcal B_{4,j}F)(z)=\frac14\sum_{\ell=0}^{3}i^{-j\ell}F(i^\ell z).
+\]
+A monomial $a_mz^m$ is multiplied by the finite average of $i^{(m-j)\ell}$. Matching phases all vote $1$; nonmatching phases cancel exactly.
+\vfig{root_filter}
+\head{An example that can be checked coefficient by coefficient}
+Take $F(z)=\sum_{m=0}^{12}(m+1)z^m$. Then
+\[
+\mathcal B_{4,2}F=3z^2+7z^6+11z^{10}.
+\]
+Applying the same selector again changes nothing. Applying a different selector gives zero. Summing the four selected polynomials returns the original $F$.
+\head{Selection is also a symmetry condition}
+For the selected polynomial $F_2$, rotation gives $F_2(iz)=-F_2(z)$. More generally, a residue-$j$ section satisfies $F_j(\omega z)=\omega^jF_j(z)$. The phase label therefore describes both the coefficient addresses and the response to rotation.
+\takeaway{This is not an approximate Fourier fit. The finite root sum is exactly $0$ or $1$ on every coefficient.}
+\captiontext{The checker compares the actual complex average with independent coefficient selection for this polynomial. The drawing shows the four complex phases, not a numerical convergence argument.}
+
+\vpage{4}{Products mix the residue lanes}{CYCLIC CONVOLUTION}{Main text: Theorem 3.3; p. 6.}
+Selection separates a function additively. It does not make multiplication diagonal. A residue-$i$ term multiplied by a residue-$j$ term lands in residue $i+j\pmod N$.
+For $N=3$, use
+\[
+F=1+2z+3z^2+z^3,\qquad G=2+z+z^2.
+\]
+The table displays every product of their three selected sections.
+\vfig{cyclic_product}
+The shaded cells contribute to residue zero:
+\[
+2(1+z^3)+(2z)(z^2)+(3z^2)z=2+7z^3.
+\]
+Keeping only the product of the residue-zero inputs would give $2+2z^3$ and lose five units of the $z^3$ coefficient. The mixed cells are part of the exact result.
+\head{The general rule}
+\[
+\mathcal B_{N,k}(FG)=
+\sum_{i+j\equiv k\ (N)}(\mathcal B_{N,i}F)(\mathcal B_{N,j}G).
+\]
+Every pair belongs to exactly one output residue. No term is discarded and no coefficient is estimated. This finite cyclic convolution is the algebra behind the later addition formulas and block-coefficient recurrences.
+\takeaway{A packet label tells you where an interaction lands, not that interactions with other packets vanish.}
+\captiontext{All nine table entries and all three output sections are checked as exact polynomial identities. This is the scalar cyclic specialization used by the paper.}
+
+\vpage{5}{One signed edge determines the cycle}{DIFFERENTIAL SYSTEM}{Main text: Theorems 5.3, 6.4 and Corollaries 6.5--6.6; pp. 8, 10--11.}
+Let $J_3e_0=e_1$, $J_3e_1=e_2$, and $J_3e_2=-e_0$. A complete turn changes sign, so $J_3^3=-I$. The signed sections are the coordinates of $e^{zJ_3}e_0$.
+\vfig{signed_shift}
+Here $D_j$ inside the matrix means $D_{3,j}(z)$. For example,
+\[
+D_{3,0}=1-\frac{z^3}{3!}+\frac{z^6}{6!}-\cdots,
+\qquad D_{3,1}=z-\frac{z^4}{4!}+\cdots.
+\]
+Rows are output coordinates and columns are input coordinates. The upper-triangular minus signs record crossing the signed edge while moving from the column to the row. They are not arbitrary orientation choices.
+\head{Two checks connect the matrix and the scalar equation}
+The initial derivative matrix of the three sections is the identity. Therefore an arbitrary initial jet $(y(0),y'(0),y''(0))$ determines its unique linear combination. Also,
+\[
+\frac13\Tr(e^{zJ_3})=D_3(z),\qquad \det(XI-J_3)=X^3+1.
+\]
+The roots of $-1$ appearing later in the exponential sum are already the spectrum of this concrete matrix.
+\takeaway{The functions, their initial data, the addition law, and the exponent polygon come from one signed shift.}
+\captiontext{The exact tests check every matrix-entry Taylor coefficient through degree 14 for $N=1,\ldots,5$. The displayed determinant-one law is for $N\ge2$; $N=1$ is a separate boundary case.}
+
+\vpage{6}{Addition is quotient multiplication}{FINITE ALGEBRA}{Main text: Proposition 5.5 and Theorem 6.2; pp. 9--10.}
+Work in $\CC[\xi]/(\xi^3+1)$. Every element has coordinates in $1,\xi,\xi^2$. The entire exponential has the finite-coordinate form
+\[
+e^{z\xi}=D_{3,0}(z)+D_{3,1}(z)\xi+D_{3,2}(z)\xi^2.
+\]
+The multiplication table makes the carry sign unavoidable.
+\vfig{signed_addition}
+Multiply the coordinate forms of $e^{z\xi}$ and $e^{w\xi}$. Their product is $e^{(z+w)\xi}$. The coefficient of $1$ receives one contribution without a wrap and two contributions with a wrap. Reading that coefficient gives the displayed addition law.
+\head{Compare the unsigned model}
+In $\CC[\xi]/(\xi^3-1)$, the same table has no minus signs. Its exponential coordinates are the unsigned sections $E_{3,j}$. Thus the difference between the two differential systems is a single algebraic relation, not a change in how coefficients are grouped.
+For general $N$, the carry factor is
+\[
+(-1)^{\lfloor(i+j)/N\rfloor},\qquad 0\le i,j<N.
+\]
+Only zero or one wrap is possible in a product of two coordinate basis elements.
+\takeaway{The twisted addition law is the ordinary exponential group law expressed in a signed cyclic algebra.}
+\captiontext{Bivariate Taylor identities are checked through total degree ten in every section for $N=2,3,4$. Omitting the carry sign is one of the deliberately rejected controls.}
+
+\vpage{7}{Why a hypergeometric name appears}{FACTORIAL NORMALIZATION}{Main text: Theorem 4.5; p. 7.}
+The hypergeometric form is another way to organize the same coefficients. It does not introduce an extra function into the construction. Split a factorial into its residue classes and divide each factor by $N$:
+\[
+(Nn+j)!=j!N^{Nn}n!\prod_{a\in A_{N,j}}(a)_n.
+\]
+The parameter equal to $1$ is omitted from $A_{N,j}$ because the hypergeometric convention already supplies $(1)_n=n!$.
+\vfig{hypergeometric}
+\head{Check the displayed case}
+For $N=3,j=1,n=2$, the six factors after the initial $1!$ are $2,3,4,5,6,7$. Dividing by three and grouping them gives the three rows of the plate. The middle row supplies $2!$; the others supply $(2/3)_2$ and $(4/3)_2$. The right-hand side is exactly $5040$.
+Consequently,
+\[
+E_{3,1}(z)=z\left(1+\frac{z^3}{4!}+\frac{z^6}{7!}+\cdots\right).
+\]
+The prefactor $z$ retains the forced zero at the origin. The hypergeometric argument $z^3/27$ retains the scaling $N^N$.
+\takeaway{Parameters, the omitted unit parameter, the prefactor, and the argument scaling all come from factorial bookkeeping.}
+\captiontext{Five choices of $(N,j)$ are checked against the exact factorial identity for $n=0,\ldots,7$. These finite checks support the example; the general analytic identification belongs to the inherited manuscript.}
+
+\vpage{8}{Four zeros become one orbit zero}{THE REDUCED VARIABLE}{Main text: Definition 5.7, Example 11.12 and Corollary 11.13; pp. 9, 26.}
+For $N=4$ the factorization is exact:
+\[
+D_4(z)=\cos(z/\sqrt2)\cosh(z/\sqrt2),\qquad D_4(z)=\Delta_4(z^4).
+\]
+Set $A_4=\sqrt2\pi$. All the zeros are $A_4(m+1/2)i^k$, with $m\ge0$ and $0\le k<4$. Each zero is simple.
+\vfig{orbit_reduction}
+The drawing uses $u=z/A_4$ and $v=w/A_4^4$, so its marked coordinates are rational. The first four-point orbit has fourth power $1/16$; the second has fourth power $81/16$.
+\head{Multiplicity is not multiplied in the reduced function}
+At a nonzero point, $z\mapsto z^4$ has nonzero derivative. It preserves the local multiplicity of a zero. Four distinct simple zeros of $D_4$ therefore correspond to one simple zero of $\Delta_4$, not one zero of multiplicity four.
+The reduced zeros are
+\[
+\lambda_m=A_4^4(m+1/2)^4=4\pi^4(m+1/2)^4.
+\]
+This is why an orbit factor in the $z$ plane is $1-z^4/\lambda_m$. It is the product of the four corresponding linear factors, with their phases included.
+\takeaway{Orbit reduction removes repetition. It changes growth and counting exponents, while preserving each nonzero zero's local multiplicity.}
+\captiontext{The quartic factorization, its differential equation, and the displayed orbit powers are checked independently. Here the complete zero set is known exactly; a finite numerical root search is not being used to establish it.}
+
+\vpage{9}{A reciprocal is a triangular solve}{COEFFICIENT RECONSTRUCTION}{Main text: Section 7, especially Theorems 7.3 and 7.6; pp. 12--14.}
+Start in the reduced variable with
+\[
+\Delta_2(w)=1-\frac w2+\frac{w^2}{24}-\frac{w^3}{720}+\cdots.
+\]
+Write $1/\Delta_2(w)=\sum b_nw^n$. Matching the product with $1$ gives a unit lower-triangular system. At each row there is exactly one new unknown.
+\vfig{triangular_inverse}
+The first three equations are
+\[
+b_1-\tfrac12=0,\qquad b_2-\tfrac12b_1+\tfrac1{24}=0,
+\qquad b_3-\tfrac12b_2+\tfrac1{24}b_1-\tfrac1{720}=0.
+\]
+They yield $b_1=1/2$, $b_2=5/24$, and $b_3=61/720$. Multiplication by $(2n)!$ produces the secant coefficients $1,5,61$.
+\head{Why this is an exact finite calculation}
+To compute the coefficient of $w^n$, only denominator coefficients through $w^n$ are needed. Later terms of the entire series cannot affect it. A finite series inverse is therefore exact at its declared truncation order, even though evaluating that truncated series is only an approximation to the full analytic function away from the origin.
+\takeaway{A unit constant term makes coefficient recovery triangular. It does not by itself specify the radius of analytic convergence.}
+\captiontext{The checks compare an independent binomial-series expansion, the parameter recurrence, and the logarithmic Newton recurrence through block index six. The table uses ordinary coefficients, with factorial conversion shown separately.}
+
+\vpage{10}{The reciprocal order is a polynomial}{BELL PARTITIONS}{Main text: Theorem 7.2 and Corollary 7.7; pp. 12, 14.}
+Let $r$ vary instead of fixing the reciprocal power. Since
+\[
+\Delta_N(w)^{-r}=\exp\!\left(r\sum_{m\ge1}\kappa_{N,m}\frac{w^m}{m}\right),
+\]
+the coefficient of $w^n$ is a polynomial of degree $n$ in $r$. Bell polynomials collect the possible ways logarithmic terms contribute total degree $n$.
+\vfig{bell_partitions}
+For $N=2$, the first three logarithmic coefficients are
+\[
+\kappa_1=\frac12,\qquad\kappa_2=\frac16,\qquad\kappa_3=\frac1{15}.
+\]
+The third Bell polynomial is $B_3(x_1,x_2,x_3)=x_1^3+3x_1x_2+x_3$. Substituting $x_1=r\kappa_1$, $x_2=r\kappa_2$, $x_3=2r\kappa_3$ and multiplying by $6!/3!$ gives
+\[
+P_{2,3}(r)=15r^3+30r^2+16r.
+\]
+At $r=1$ this is $61$. At $r=2$ it is $272$. At $r=0$ it vanishes, as every positive-index reciprocal coefficient must.
+\head{The leading term has a simple source}
+Only $n$ copies of the linear logarithmic term can contribute $r^n w^n$. Therefore
+\[
+[r^n]P_{N,n}(r)=\frac{(Nn)!}{n!(N!)^n}.
+\]
+\takeaway{The polynomial parameter records how many logarithmic pieces are combined. It is not a numerical interpolation in the reciprocal order.}
+\captiontext{The partition plate is a finite combinatorial expansion. The exact tests verify the leading coefficient and parameter polynomial through block index six for five orders.}
+
+\vpage{11}{Two recurrences reach the same answer}{NEWTON AND ADDITION}{Main text: Theorems 7.3, 7.4 and 7.6; pp. 13--14.}
+One recurrence uses the denominator coefficients. Another uses its logarithm. With $b_n(r)=P_{N,n}(r)/(Nn)!$, the shorter logarithmic form is
+\[
+nb_n(r)=r\sum_{k=1}^{n}\kappa_{N,k}b_{n-k}(r),\qquad b_0=1.
+\]
+The negative superdiagonal in the Newton determinant is essential.
+\vfig{newton_addition}
+\head{The additive parameter law has block weights}
+Using the same logarithm, $D_N^{-r}D_N^{-s}=D_N^{-(r+s)}$. Thus
+\[
+P_{N,n}(r+s)=\sum_{q=0}^{n}\binom{Nn}{Nq}P_{N,q}(r)P_{N,n-q}(s).
+\]
+For $N=2,n=3,r=s=1$, the four weights are $1,15,15,1$. The two middle terms are $15\cdot1\cdot5$ and $15\cdot5\cdot1$. Together with the endpoints, they give $272$.
+Using $\binom nq$ instead would be incorrect for these coefficients. That ordinary binomial law belongs to the separately normalized sequence $n!P_{N,n}/(Nn)!$.
+\takeaway{Agreement of independent recurrences is a useful check precisely because their bookkeeping is different. Neither permits silently changing the factorial convention.}
+\captiontext{The checker compares both recurrence routes and the determinant, then checks the parameter-addition identity symbolically. A deliberately incorrect ordinary-binomial substitution is rejected.}
+
+\vpage{12}{Compress the ODE into a tangent}{LOGARITHMIC DIFFERENTIATION}{Main text: Propositions 8.2, Corollary 8.4 and Theorem 8.5; pp. 15--16.}
+The transfer tangent is $T_N=-D_N'/D_N$. It compresses the linear differential equation into a nonlinear scalar identity. This division is allowed only on the zero-free set of the denominator.
+\vfig{riccati}
+The coefficients retain the reduced logarithmic information:
+\[
+T_N(z)=N\sum_{m\ge1}\kappa_{N,m}z^{Nm-1},
+\qquad T_N(n)=N(Nn+N-1)!\kappa_{N,n+1}.
+\]
+For order four, $\kappa_{4,1}=1/24$ and $\kappa_{4,2}=17/10080$. These give $T_4(0)=1$ and $T_4(1)=34$, explaining the last line of the plate.
+\head{A nonlinear equation with a precise origin}
+If $D=e^g$ locally, then $g'=-T$. Differentiating $e^g$ three times gives $D'''/D=-T''+3TT'-T^3$. Setting $D'''/D=-1$ yields the cubic Riccati identity shown above. No additional nonlinear model has been assumed.
+The reciprocal family also satisfies $(D_N^{-r})'=rT_ND_N^{-r}$ on a fixed-log domain. At a zero of $D_N$, these meromorphic expressions have poles rather than finite values.
+\takeaway{The nonlinear tangent equation is exact where division is legal. It is not a global regular differential equation across the zeros.}
+\captiontext{The tests verify the tangent coefficient recurrence, the exact cubic ODE, and the symbolic Riccati reduction after clearing denominators. The order-one tangent is the separate constant function $T_1=1$.}
+
+\vpage{13}{A complex power needs a domain}{BRANCH BOOKKEEPING}{Main text: Section 2, Definition 7.1 and Corollary 8.4; pp. 4, 12, 16.}
+A formal unit series has a formal logarithm at the origin. To interpret that germ analytically, choose a simply connected zero-free region containing $0$ and normalize the logarithm to vanish there.
+\[
+D_N(z)^{-r}=\exp(-rL(z)),\qquad e^{L(z)}=D_N(z),\quad L(0)=0.
+\]
+\vfig{branch_domain}
+For $D_2=\cos z$, the open disk $|z|<\pi/2$ is an admissible domain. A small loop around the simple zero $\rho=\pi/2$ is not contained in that disk. Analytic continuation around the zero changes the local logarithm by $2\pi i$, and the power by $e^{-2\pi ir}$.
+\head{Three different kinds of statement}
+A \emph{formal} identity compares coefficients at the origin. A \emph{holomorphic} identity for complex powers uses a common specified logarithm. A positive \emph{integer} reciprocal power is globally meromorphic and needs no branch choice. These scopes cannot be exchanged without a further argument.
+For example, $D^{-r}D^{-s}=D^{-(r+s)}$ is immediate using one fixed logarithm. Combining values built from unrelated branches can introduce additional phase factors.
+\takeaway{The branch choice is mathematical data. It is not a plotting convention that can be removed by drawing a cleaner curve.}
+\captiontext{The domain picture is schematic. The phase change comes from the local simple-zero model and winding number, not from a sampled loop. Later nearest-pole asymptotics retain positive integral reciprocal order.}
+
+\vpage{14}{Three similar reciprocals differ}{NORMALIZED SECTIONS}{Main text: Definition 9.1, Theorem 9.2 and Example 9.11; pp. 16--19.}
+The signed denominator and the normalized unsigned sections produce different reciprocal families. In order two,
+\[
+D_2^{-1}=\sec z,\qquad C_{2,0}=\sech z,\qquad C_{2,1}=z/\sinh z.
+\]
+Their first block-EGF coefficients make the difference visible.
+\vfig{different_reciprocals}
+\head{Remove the forced zero before taking a reciprocal}
+The section $E_{N,j}$ begins with $z^j/j!$. Define
+\[
+E_{N,j}(z)=\frac{z^j}{j!}\Phi_{N,j}(z^N),\qquad\Phi_{N,j}(0)=1.
+\]
+Then $C_{N,j}(z)=1/\Phi_{N,j}(z^N)$ has value $1$ at the origin. For $j>0$, the notation $(z^j/j!)/E_{N,j}(z)$ means this removable continuation. It does not mean evaluating an undefined $0/0$ expression.
+For $N=2,j=1$, the first nontrivial coefficient is $-1/3$ in front of $z^2/2!$, equivalently $-z^2/6$. Dropping the numerator $z$ would instead produce the pole of $1/\sinh z$.
+\takeaway{A minus sign in the denominator series and removal of an initial zero are different operations. Their reciprocal coefficients should not be interchanged.}
+\captiontext{All entries in the table are exact rationals computed from independent triangular inverses. The table explicitly uses block-EGF columns; ordinary coefficients are obtained by dividing by the displayed factorials.}
+
+\vpage{15}{An infinite symbol acts finitely}{APPELL POLYNOMIALS}{Main text: Theorems 9.6, 9.8 and Proposition 9.9; pp. 18--19.}
+For $C_{2,0}(z)=\sech z$, define $E_m(x)$ by $\sech z\,e^{xz}=\sum E_m(x)z^m/m!$. The formal differential-operator formula is
+\[
+E_m(x)=\sech(\partial_x)x^m.
+\]
+Although the symbol is an infinite series, derivatives above degree $m$ vanish.
+\vfig{appell_operator}
+For $m=4$, only three terms survive:
+\[
+\left(1-\frac{\partial_x^2}{2!}+5\frac{\partial_x^4}{4!}\right)x^4
+=x^4-6x^2+5.
+\]
+The four real roots of this polynomial are $\pm1,\pm\sqrt5$; they are not the zeros of the original analytic denominator. The plot distinguishes the input polynomial and its transformed output.
+\head{An inverse operation, not a truncation error}
+Applying $\cosh(\partial_x)$ returns $x^4$ exactly. The general inverse uses the reciprocal formal symbol. The lowering and translation identities are
+\[
+E_m'=mE_{m-1},\qquad E_m(x+y)=\sum_{q=0}^m\binom mqE_q(x)y^{m-q}.
+\]
+Both follow from the generating function. No operator-series convergence assumption on an infinite-dimensional function space is needed for this polynomial calculation.
+\takeaway{Formal substitution into the derivative is safe here because every polynomial sees only finitely many derivatives. That is a domain statement.}
+\captiontext{The polynomial, its inverse image, and the Appell identities are checked symbolically through degree eight in four normalized-section families. The displayed curves are samples of exact polynomials.}
+
+\vpage{16}{Scale and order enter differently}{THETA COUPLING}{Main text: Theorems 10.2 and Propositions 10.3--10.4; p. 20.}
+Let $H_N(z)=E_{N,0}(z)$. The theta family uses the same parameter $u$ twice, but in two different roles:
+\[
+H_N(uz)^{-1}H_N(z)^{-u}
+=\sum_{n\ge0}\Theta_{N,n}(u)\frac{z^{Nn}}{(Nn)!}.
+\]
+Argument scaling contributes $u^{Nm}$ at logarithmic block $m$. Reciprocal order contributes $u$.
+\vfig{theta}
+Their combined logarithm has coefficient
+\[
+(-1)^m\kappa_{N,m}\frac{u^{Nm}+u}{m}.
+\]
+At the first block this gives $\Theta_{N,1}(u)=-(u^N+u)$. Every positive-index theta polynomial vanishes at $u=0$. For even $N$, $H_N(-z)=H_N(z)$, so the defining product is also $1$ at $u=-1$.
+\head{The odd-order boundary is visible}
+For $N=3$, $\Theta_{3,1}(-1)=2$, not zero. The factor $u+1$ is not a uniform law across orders. In contrast,
+\[
+\Theta_{2,2}(u)=u(u+1)(5u^2+u+2).
+\]
+The two guaranteed factors follow from the whole generating function, not from guessing the first few polynomial roots.
+\takeaway{A common parameter does not make argument scaling and reciprocal order interchangeable. Their powers must be tracked separately.}
+\captiontext{The exact checker compares theta convolution with its logarithmic Newton recurrence through block index four. The odd-order factor claim is explicitly rejected as an invalid control.}
+
+\vpage{17}{Growth comes from a polygon}{DOMINANT EXPONENTS}{Main text: Definition 11.3 and Theorem 11.4; pp. 21--22.}
+Write the signed denominator as a finite exponential sum:
+\[
+D_N(z)=\frac1N\sum_{\eta^N=-1}e^{\eta z}.
+\]
+For $z=re^{i\theta}$, the size of one exponential is $e^{r\Re(\eta e^{i\theta})}$. The maximal projection determines the directional exponential growth.
+\vfig{indicator}
+The indicator is
+\[
+h_N(\theta)=\max_{0\le k<N}\cos\left(\theta+\frac{(2k+1)\pi}{N}\right).
+\]
+Away from a tie direction, one exponential dominates all the others by a uniform positive projection gap on compact angular sets. For sufficiently large radius, smaller terms cannot cancel it. Those sectors are eventually zero-free.
+\head{Why zeros remain possible on a growing ray}
+At a tie, two adjacent exponents have the same real projection. Their complex phases can be opposite. Their sum can therefore vanish even though each term is exponentially large. The minima in the order-four indicator plot occur precisely at the tie directions $\theta=k\pi/2$.
+The indicator uses a limsup in radius. It does not assert that $r^{-1}\log|D_N(re^{i\theta})|$ has an ordinary limit through the zeros on a tie ray.
+\takeaway{The polygon predicts where large cancellation is possible. It does not, by itself, enumerate zeros or prove their simplicity.}
+\captiontext{The order-four polygon and support-function formula are explicit. The curve is a sampled display of that formula. Eventual localization and uniqueness require the separate zero-analysis arguments.}
+
+\vpage{18}{Two large terms nearly cancel}{THE CUBIC MODEL}{Main text: Lemma 11.5, Theorem 11.7 and Corollary 11.9; pp. 22--26.}
+For real $t$, order three has the exact formula
+\[
+D_3(t)=\frac{e^{-t}+2e^{t/2}\cos(\sqrt3t/2)}{3}.
+\]
+Divide by the nonzero factor $2e^{t/2}/3$. The resulting equation separates the dominant cosine from the small third exponential.
+\vfig{two_term}
+Ignoring the last term gives model zeros
+\[
+t_m=\frac{2\pi}{\sqrt3}(m+1/2).
+\]
+At $t_m$, the full normalized expression equals $\tfrac12e^{-3t_m/2}>0$, so $t_m$ is not an exact zero. Linearizing the cosine at that point predicts
+\[
+\delta_m^{(1)}=\frac{(-1)^m}{\sqrt3}e^{-3t_m/2}.
+\]
+The alternating slope explains why the true zero is to the right of the first model zero, then to the left of the second, and so on in the eventual regime.
+\head{Symmetry needs uniqueness}
+Real coefficients alone allow nonreal conjugate pairs. The manuscript first proves that a near-model disk contains exactly one zero. Conjugation preserves that disk, so the unique zero must equal its conjugate. This additional uniqueness step, not the symmetry alone, places it exactly on the ray.
+\takeaway{The correction is caused by a real, nonzero remainder. A good cosine approximation does not make its model zeros exact.}
+\captiontext{The curves are sampled analytic expressions. The next page independently certifies four narrow real-zero intervals rather than trusting the plotted crossing or the floating-point root finder.}
+
+\vpage{19}{A root estimate becomes a certificate}{EXACT RATIONAL BRACKETS}{Main text: Theorems 11.7--11.8 and Corollary 11.9; pp. 24--26.}
+The root finder is used only to suggest intervals. Each displayed interval is accepted by exact rational arithmetic: opposite endpoint signs prove existence, and an interval bound for $D_3'$ excludes zero throughout the interval, proving uniqueness inside it.
+\vfig{cubic_certificates}
+\head{How the certificate works}
+Evaluate the Taylor polynomial
+\[
+S_{90}(t)=\sum_{n=0}^{90}\frac{(-1)^nt^{3n}}{(3n)!}
+\]
+at the two rational endpoints. From the next term onward, magnitudes decrease, because their successive ratio is
+\[
+\frac{t^3}{(3n+1)(3n+2)(3n+3)}<1
+\]
+there. The alternating-series remainder is bounded by the first omitted term. A separate outward interval evaluation of the differentiated polynomial, plus its tail bound, certifies the derivative sign.
+The first bracket is
+\[
+1.84981279919014347629<\tau_0<1.84981279919014347630.
+\]
+Its displacement differs from the leading asymptotic prediction by about five percent. The later examples have much smaller relative discrepancies, as the plate records.
+\takeaway{A small residual is not a root certificate. Endpoint signs plus a derivative bound give a checkable local existence-and-uniqueness statement.}
+\captiontext{Four certified intervals do not establish that no other real or complex zeros exist. The displacement columns are high-precision diagnostics, not a finite verification of a global big-$O$ theorem. All rational enclosures are included in the checks file.}
+
+\vpage{20}{Counting changes under the power map}{EXACT FOURTH-ORDER STRINGS}{Main text: Example 11.12 and Theorem 11.14; pp. 26--27.}
+Order four gives a case with no asymptotic displacement at all. In normalized coordinates the positive radial locations are $u=m+1/2$, while the reduced-zero locations are $v=(m+1/2)^4$.
+\vfig{counting}
+The two rows describe the same zero orbits. The upper row counts four zeros each time a new radius is reached. The lower row counts one reduced zero each time its fourth-power location is reached. Both formulas include zeros on the boundary of the disk.
+\head{Separate radius conversion from orbit multiplicity}
+In unscaled variables the general relation is
+\[
+n_{D_N}(R^{1/N})=Nn_{\Delta_N}(R).
+\]
+There are two operations here: replace the radius by its $N$th root and divide the count by $N$. Forgetting either operation changes the leading constant.
+For this family the asymptotics are
+\[
+n_{D_N}(R)=\frac{N\sin(\pi/N)}\pi R+O(1),\qquad
+n_{\Delta_N}(R)=\frac{\sin(\pi/N)}\pi R^{1/N}+O(1).
+\]
+The different powers agree with the entire-function orders $1$ and $1/N$.
+\takeaway{The reduced function has fewer repeated zeros and a different radius scale. Its counting law is not obtained by dividing a same-radius count alone.}
+\captiontext{The exact order-four staircase formulas are tested at rational radii including jump points. The large-zero theorem for general $N$ permits finitely many exceptions; these exact order-four identities do not justify discarding that boundary elsewhere.}
+
+\vpage{21}{A product and an operator share zeros}{CANONICAL PRODUCT}{Main text: Theorems 12.1--12.2; pp. 27--28.}
+For $N\ge2$, the reduced entire function has order $1/N<1$. Its multiplicity-sensitive genus-zero product is
+\[
+\Delta_N(w)=\prod_{\lambda\in\Lambda_N}(1-w/\lambda).
+\]
+Putting $K_Ne_\lambda=\lambda^{-1}e_\lambda$ on $\ell^2(\Lambda_N)$ gives the corresponding diagonal Fredholm determinant. Repeated zeros require repeated diagonal entries.
+\vfig{product}
+\head{Finite compression is an approximation}
+For $N=2$, $\lambda_m=\pi^2(m+1/2)^2$. The finite determinant $P_L$ is exactly the displayed finite product, but it is not exactly $\Delta_2$. For $0\le w\le1$ and $L\ge1$, an elementary tail estimate gives
+\[
+0\le1-\frac{\Delta_2(w)}{P_L(w)}
+\le w\sum_{m\ge L}\lambda_m^{-1}
+\le\frac1{9(L-1/2)}.
+\]
+The last bound uses $\pi>3$ and integral comparison. Thus truncation has an explicit error mechanism.
+\takeaway{The infinite product is justified by the analytic theorem; finite determinants provide controlled approximations, not substitutes for that theorem.}
+\captiontext{The exact finite determinant test includes a repeated eigenvalue and rejects deduplication. The curves use known cosine zeros. Order one is excluded: $\Delta_1(w)=e^{-w}$ has no zeros, so its empty product would be $1$, not the function.}
+
+\vpage{22}{Finite coefficients give infinite moments}{ZERO POWER SUMS}{Main text: Theorem 12.6 and Corollaries 12.7--12.10; pp. 29--31.}
+Taking the logarithm of the canonical product identifies
+\[
+\kappa_{N,q}=\sigma_{N,q}:=\sum_{\lambda\in\Lambda_N}\lambda^{-q}
+=\Tr(K_N^q),\qquad q\ge1.
+\]
+The same exact numbers can be computed from finitely many denominator coefficients by Newton's recurrence. No numerical zero list is needed for that calculation.
+\vfig{moments}
+For order two,
+\[
+\sigma_{2,1}=\frac12,\quad\sigma_{2,2}=\frac16,\quad
+\sigma_{2,3}=\frac1{15},\quad\sigma_{2,4}=\frac{17}{630}.
+\]
+The plate shows how successive inverse powers emphasize the nearest zero. Its shaded pieces are contributions from the first five positive reduced zeros, followed by the remaining tail. The total in each row is the exact rational moment.
+\head{The tangent is a sum of poles}
+Logarithmic differentiation also gives
+\[
+T_N(z)=Nz^{N-1}\sum_{\lambda\in\Lambda_N}\frac1{\lambda-z^N}
+\]
+away from poles. Summability of $|\lambda|^{-1}$ permits the locally uniform partial-fraction expansion without added regularizing terms.
+\takeaway{A global analytic product theorem connects the infinite zero sum to a finite algebraic recurrence. The recurrence alone does not prove the product theorem.}
+\captiontext{Displayed moments are checked against formal logarithm coefficients and exact order-two/order-four zeta values. Bar widths are numerical shares. General power sums use $\lambda^{-q}$, not $|\lambda|^{-q}$ when exceptional nonpositive zeros are present.}
+
+\vpage{23}{Nearest poles set coefficient growth}{SINGULARITY ANALYSIS}{Main text: Theorem 13.1 and Corollaries 13.2--13.4; pp. 31--32.}
+For $1/\cos z$, the nearest poles are $\rho=\pm\pi/2$. They contribute equally to even-degree coefficients. Including both poles gives
+\[
+P_{2,n}(1)\sim2(2n)!\left(\frac2\pi\right)^{2n+1}.
+\]
+The factor two is orbit multiplicity, not an adjustable fitted constant.
+\vfig{pole_asymptotic}
+\head{A finite quantitative check}
+For $n=1,\ldots,8$, the exact integer coefficients and a rational enclosure for $\pi$ bound the ratio $R_n$ strictly between zero and one. In this tested range, $1-R_n<3^{-(2n+1)}$. The plot displays the logarithm of the enclosed error, not an independently asserted all-$n$ bound.
+\head{Higher reciprocal powers need more Laurent data}
+For positive integral order $r$, a simple denominator zero becomes a pole of order $r$. The highest Laurent term contributes a factor $\binom{m+r-1}{r-1}$, but lower Laurent terms still contribute on the same exponential scale. Subtracting \emph{all} principal parts is what leaves a holomorphic remainder controlled by the next zero radius.
+\takeaway{Nearest-zero geometry explains factorial-times-exponential growth. Multiplicity, reciprocal order, and lower principal parts determine its precise normalization.}
+\captiontext{The ratio certificates use a rational Machin-formula enclosure for $\pi$. The inherited general theorem retains simple nearest zeros, a gap to the next modulus, and positive integral reciprocal order. The plot does not remove those hypotheses.}
+
+\vpage{24}{Convergence is not continuation}{ZERO ZETA FUNCTIONS}{Main text: Theorems 14.2--14.3 and Corollary 14.4; pp. 33--35.}
+Reduced zeros grow like $m^N$. Their absolute zero-zeta series therefore has half-plane of absolute convergence $\Re s>1/N$. The absolute zero zeta in the original variable instead requires $\Re s>1$.
+\vfig{zeta_plane}
+For $N=2$ and $N=4$, the lattices are exact:
+\[
+\mathfrak Z_2^{\rm red}(s)=\pi^{-2s}\zeta(2s,1/2),\qquad
+\mathfrak Z_4^{\rm red}(s)=(\sqrt2\pi)^{-4s}\zeta(4s,1/2).
+\]
+Each identity first holds where its defining series converges. The right side supplies its meromorphic continuation. There is a single pole, at $1/2$ or $1/4$, with residue $1/(2\pi)$ or $1/(4\sqrt2\pi)$ respectively.
+\head{The factor $N$ matters twice}
+For every order in the paper,
+\[
+\mathfrak Z_N^{\rm abs}(s)=N\mathfrak Z_N^{\rm red}(s/N).
+\]
+For general $N$, exponentially accurate zero locations leave an entire correction to the Hurwitz model. A finite exceptional zero set also contributes entire terms. This reasoning establishes continuation, not a zeta functional equation.
+\takeaway{An analytic continuation can exist at points where the original infinite sum diverges. It must not be evaluated there by naively summing that series.}
+\captiontext{The shaded regions show convergence, and the open circles mark poles of the continued functions. They are not zeros of the zeta functions. Branch-dependent orbit zetas and derivative-weighted zetas retain their separately stated conventions.}
+
+\vpage{25}{One closed calculation: the number 69}{COEFFICIENT--ZERO WORKED MODEL}{Main text: Corollary 7.7, Example 11.12 and Theorem 12.6; pp. 14, 26, 29--31.}
+Use $N=4$ throughout this page. Its denominator, its exact zero lattice, and the reciprocal recurrences provide two routes to the same coefficient. All symbols in the plate refer to this one order.
+\vfig{worked_circuit}
+\head{Route one: invert the denominator}
+The $w^2$ coefficient of $\Delta_4^{-1}$ is
+\[
+\frac1{24^2}-\frac1{8!}=\frac{69}{8!}.
+\]
+Thus $P_{4,2}(1)=69$. Keeping $r$ variable gives $P_{4,2}(r)=35r^2+34r$.
+\head{Route two: use the zero moments}
+The exact reduced zeros are $4\pi^4(m+1/2)^4$. Their first two power sums are $\sigma_1=1/24$ and $\sigma_2=17/10080$. The Bell/Newton identity gives the same reciprocal coefficient $(\sigma_1^2+\sigma_2)/2$. The tangent independently reads off the second moment as $4\cdot7!\sigma_2=34$.
+This links coefficients, geometry, and derivatives without a fitted parameter or an inferred zero list.
+\takeaway{The content is the agreement of precisely normalized descriptions. A matching small example illustrates the general bridges; it is not a proof of all their analytic hypotheses.}
+\captiontext{Every rational value and polynomial identity on this page is checked exactly. The infinite zero-sum interpretation uses the inherited canonical-product theorem and the exact order-four zero formula.}
+
+\vpage{26}{What is evidence, and for what?}{FORMAL AND COMPUTATIONAL BOUNDARIES}{Main text: Sections 15--16 and the retained independent audit; pp. 36--38.}
+The selected reading source is the 39-page proofread draft accompanying the v1.0.0 formal release. Those are separate artifacts: the prose review did not rerun Lean. This appendix is another editorial addition, not a new formal release.
+\par\noindent\begin{tabularx}{\linewidth}{@{}lY@{}}\toprule
+Evidence layer & What is supplied here\\\midrule
+Inherited formal record & The v1.0.0 sources, theorem map, dependency pins, saved axiom reports, and original review remain unchanged. The release reports a 68-result scoped contract.\\
+New exact examples & 147 checks of finite identities, symbolic calculations, and rational enclosures. Five deliberately false controls must be rejected.\\
+Certified zero brackets & Four rational intervals of width $10^{-20}$, each with endpoint-sign and derivative certificates. They establish local existence and uniqueness only.\\
+Numerical visualization & Sampled analytic curves, finite products, moment shares, and displacement diagnostics. Their role and limits are stated on their pages.\\
+Editorial preservation & The combined edition appends these pages to the selected original PDF. Neither theorem wording nor Lean source is altered.\\\bottomrule
+\end{tabularx}
+\head{Boundaries that remain in force}
+The general family has eventual positivity and simplicity of its reduced zeros, not an assertion that every reduced zero is positive and simple. The paper leaves universal simplicity, positivity of every reduced zero, full displacement expansions, and a zeta functional equation open. The exact order-two and order-four models do not settle those questions for every order.
+Imported standard fact 11.1 stays outside the 68-result contract. Fixed logarithms, zero-free domains, multiplicities, and the hypotheses of nearest-pole asymptotics remain explicit. No historical priority is inferred from successful computation or formal verification.
+\takeaway{A proof, a finite exact test, a root enclosure, and a sampled curve answer different questions. Keeping them separate makes the pictures more useful, not less.}
+\captiontext{The source package includes the unchanged formal release, proofread review, independent audit, this appendix's LaTeX and Python, exact certificates, and rebuild instructions. The compiler, Mathlib cache, and TeX installation are external dependencies. No new Lean invocation was performed for this appendix.}

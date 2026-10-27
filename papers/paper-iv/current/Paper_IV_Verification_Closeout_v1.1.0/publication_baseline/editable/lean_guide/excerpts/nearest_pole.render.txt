@@ -1,0 +1,17 @@
+theorem reciprocalCoeff_nearest_pole_bound \{N : ℕ\} (hN : 0 < N)
+    \{S : Finset ℂ\} (hS : ∀ ρ ∈ S, ρ ≠ 0) (a : ℂ → ℕ → ℂ) (r : ℕ)
+    \{R R₂ : ℝ\} (hR : 0 < R) (hR₂ : R < R₂)
+    (hzeros : ∀ z : ℂ, ‖z‖ < R₂ → canonicalSignedDenominator N z = 0 → z ∈ S)
+    (hlocal : ∀ ρ ∈ S, ∃ C : ℝ, ∀ᶠ z in \CodeSymbol{1D4DD}[≠] ρ,
+      ‖(canonicalSignedDenominator N z ^ r)⁻¹ - polePrincipalPart a r ρ z‖ ≤ C) :
+    ∃ C : ℝ, ∀ n : ℕ,
+      ‖reciprocalCoeff N n (r : ℂ) - ((N*n).factorial : ℂ) *
+        ∑ ρ ∈ S, ∑ k ∈ Finset.range r, a ρ (k+1) * ((N*n+k).choose k : ℂ) * ρ⁻¹ ^ (N*n)‖ ≤
+      C * ((N*n).factorial : ℝ) * R⁻¹ ^ (N*n) := by
+  have hf : Differentiable ℂ (canonicalSignedDenominator N) := fun z => (analyticAt_entireSigned ..).differentiableAt
+  obtain ⟨C, hC⟩ := nearest_pole_taylor_bound hf (by rw [canonicalSignedDenominator_zero hN]; exact one_ne_zero)
+    hS a r hR hR₂ hzeros hlocal
+  refine ⟨C, fun n => ?_⟩
+  rw [reciprocalCoeff_analyticTaylor hN, ← mul_sub, norm_mul, Complex.norm_natCast]
+  have h := mul_le_mul_of_nonneg_left (hC (N*n)) (show (0 : ℝ) ≤ (N*n).factorial by positivity)
+  simpa only [div_eq_mul_inv, inv_pow, mul_assoc, mul_comm, mul_left_comm] using h

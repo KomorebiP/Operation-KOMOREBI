@@ -1,0 +1,1 @@
+Historical pre-monograph metadata and assembly records. These files describe earlier Paper IV or series publication snapshots. They are retained as evidence, not instructions to overwrite the current authored source. Current edition reports are in verification/MONOGRAPH_VERIFICATION.json.

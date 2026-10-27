@@ -1,0 +1,120 @@
+{
+  "schema": "komorebi.paper-i.freeze-integrity-controls/1",
+  "status": "PASS",
+  "checked_at_utc": "2026-10-20T19:14:12.174500+00:00",
+  "verifier_sha256": "6f1161cec4a84a302d8150f8b8c39712c5750833d915231db9c0c81239408369",
+  "verifier_source": "/workspace/scratch/fbc994080222/paper_i_freeze/release/Paper_I_Frozen_Release_2026-10-20/scripts/verify_integrity.py",
+  "helper_matches_delivered": true,
+  "final_root_modified": false,
+  "execution_platform": "linux",
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "case_count": 11,
+  "positive_cases": 1,
+  "negative_cases": 10,
+  "cases": [
+    {
+      "case": "positive_unchanged_and_changed_admin",
+      "expected": "accept",
+      "passed": true,
+      "exit_code": 0,
+      "expected_message": "Baseline preservation PASS",
+      "stdout": "Integrity PASS: 5 listed files, exact file set, all sizes and SHA-256 values match.\nBaseline preservation PASS: 2 original files retained with identical bytes.\nThis checks file identity and preservation, not mathematical correctness or a fresh Lean run.\n",
+      "stderr": ""
+    },
+    {
+      "case": "missing_file",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "File set mismatch",
+      "stdout": "",
+      "stderr": "Integrity FAILED: File set mismatch; missing=['source.txt']; extra=[]\n"
+    },
+    {
+      "case": "extra_file",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "File set mismatch",
+      "stdout": "",
+      "stderr": "Integrity FAILED: File set mismatch; missing=[]; extra=['extra.txt']\n"
+    },
+    {
+      "case": "same_size_corruption",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "File identity mismatch",
+      "stdout": "",
+      "stderr": "Integrity FAILED: File identity mismatch: source.txt\n"
+    },
+    {
+      "case": "duplicate_manifest_path",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "Duplicate path",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Duplicate path or inconsistent manifest count\n"
+    },
+    {
+      "case": "windows_colon_path",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "Invalid manifest path",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Invalid manifest path\n"
+    },
+    {
+      "case": "aliased_baseline_destinations",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "destinations are not unique",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Baseline preservation destinations are not unique\n"
+    },
+    {
+      "case": "invalid_baseline_mapping",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "Invalid baseline preservation mapping",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Invalid baseline preservation mapping: source.txt\n"
+    },
+    {
+      "case": "traversal_original_path",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "Noncanonical manifest path",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Noncanonical manifest path: ../source.txt\n"
+    },
+    {
+      "case": "baseline_same_size_corruption",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "Preserved baseline mismatch",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Preserved baseline mismatch: admin.txt\n"
+    },
+    {
+      "case": "symlink_rejected",
+      "expected": "reject",
+      "passed": true,
+      "exit_code": 1,
+      "expected_message": "Symlink not permitted",
+      "stdout": "",
+      "stderr": "Integrity FAILED: Symlink not permitted: source_link\n"
+    }
+  ],
+  "scope": "Independent small filesystem fixtures exercise the exact delivered verifier. Mutated preservation tables are rehashed into otherwise valid outer manifests so baseline checks are reached. No actual frozen-release file was modified.",
+  "limitations": [
+    "These controls run on Linux, including explicit Windows-colon syntax rejection; they are not execution on Windows.",
+    "The verifier authenticates identities relative to its manifest; it is not a digital signature or proof checker."
+  ]
+}

@@ -1,0 +1,11 @@
+theorem truncatedDifferentialOperator_egfAction (A : R⟦X⟧) (p : Polynomial R) :
+    truncatedDifferentialOperator p.natDegree A p =
+      egfConstantCoeffAction (fun q => (q.factorial : R) * PowerSeries.coeff q A) p := by
+  rw [truncatedDifferentialOperator_apply, egfConstantCoeffAction]
+  apply Finset.sum_congr rfl
+  intro q _
+  have h := congrFun (Polynomial.factorial_smul_hasseDeriv (R := R) q) p
+  change q.factorial • (Polynomial.hasseDeriv q p) = Polynomial.derivative^[q] p at h
+  rw [← h]
+  simp only [nsmul_eq_mul, map_mul, map_natCast]
+  ring
