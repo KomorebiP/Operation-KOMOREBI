@@ -12,14 +12,15 @@ The three canonical repositories are public:
 
 ## Browsable source files
 
-The current source-import receipts cover **28 primary components**, **0 supporting source collections**, and **69,553 distinct files**. These are ordinary repository files. The [component index](COMPONENT_INDEX.md) links their directories and exact receipts.
+The current source-import receipts cover **84 primary components**, **69 supporting source collections**, and **135,805 distinct files**. These are ordinary repository files. The [component index](COMPONENT_INDEX.md) links their directories and exact receipts.
 
 | Primary component category | Available components |
 |---|---|
-| Monographs and companion volumes | 9 |
-| Software packages | 2 |
+| Experimental laboratories | 5 |
+| Monographs and companion volumes | 17 |
+| Software packages | 4 |
 | Core papers | 12 |
-| Research programs | 5 |
+| Research programs | 46 |
 
 Earlier Papers I–IV, the Quadratic-Form Engine / K-COS, Research Preview 1, and AM-SPD source editions remain available. A newer source directory does not rewrite an older edition's evidence.
 
