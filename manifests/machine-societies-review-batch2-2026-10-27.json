@@ -1,0 +1,235 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-27",
+  "source_revision": "33537b585dd30e8d755ad987865ff3a55a810d65",
+  "scope": "Eight written statement/proof pairs: identifiability, memory, composition, simulation, symmetry, governance quotient/refinement, and institutional language transport.",
+  "provenance": "AI-assisted sequential self-review; not independent peer review.",
+  "new_lean_execution": false,
+  "new_computation": false,
+  "whole_collection_soundness_claim": false,
+  "reviewed_sources": [
+    {
+      "path": "monographs/machine-societies/MATHEMATICAL_REVIEW.md",
+      "sha": "bc9d43e8f2c1d706968fd214f6295e9c46a0064b",
+      "sha256": "4aa99d86245953c24fd19894976ad6e5a83d51cc27869e751a246d53b8d60bac"
+    },
+    {
+      "path": "monographs/machine-societies/RELEASE_LEDGER.json",
+      "sha": "011546e3e8b8f15cd76261447f943f26a0620260",
+      "sha256": "bf7424bab1139f49a013f789cfb697c2bdda76f2b52c5b2440b55a30230ac674"
+    },
+    {
+      "path": "monographs/machine-societies/verification/proof_review.json",
+      "sha": "f0a99f24f0f4b2ea75095dbf4264907094edd0c6",
+      "sha256": "5e802de10e04f1f04cf2f7b22569b2af773f8227f0f2f5579871e1872948c2ea"
+    },
+    {
+      "path": "monographs/machine-societies/publication/Machine_Societies_v1.0.0.tex",
+      "sha": "581c4979cac12ceae9ef94bafc75ef7932101847",
+      "sha256": "600a8100804c4c91d7cf79a4985e9312eacc19195395aee01debb240cb0a6be0"
+    }
+  ],
+  "cards": [
+    {
+      "label": "prop:identifiability",
+      "title": "Behavior alone does not identify implementation",
+      "hypotheses": "The two realizations have the same law of the complete transcript available under each permitted evaluation experiment. The decision uses that transcript and a common randomization rule. The accuracy bound uses equal priors.",
+      "decisive_argument": "A common decision kernel sends equal transcript laws to equal decision laws. If q is the probability of choosing the first realization, binary accuracy is (q + 1 - q)/2 = 1/2. Abstention cannot increase unconditional accuracy.",
+      "dependency_graph": "Equal transcript laws + common decision kernel → equal output laws → equal-prior accuracy bound. All leaves are explicit assumptions or the direct argument.",
+      "boundary_cases": "Identical deterministic transcripts, randomized decisions, and constant decisions. If tests are adaptive, their complete available transcript law must satisfy the premise; equality of isolated test marginals alone is insufficient. Unequal priors and extra implementation-dependent side information are outside the accuracy claim.",
+      "remaining_gap": null,
+      "next_check": "For an application, enumerate the evaluator’s available observations and show equality for its complete experiment.",
+      "source_line": 433,
+      "statement_and_proof_sha256": "6f37a748232ee419e2dafccd7b42d02ec593bee3bd95a52889b017cfa0cdf425",
+      "statement_and_proof": "\\begin{proposition}[Behavior alone does not identify implementation]\\label{prop:identifiability}\nIf two realizations induce the same distribution over every transcript available to an evaluator's permitted tests, then every decision rule based only on those transcripts has the same output distribution under the two realizations. With equal prior probability, no such rule can distinguish them with accuracy above $1/2$.\n\\end{proposition}\n\\begin{proof}\nThe evaluator's decision is a possibly randomized function of the transcript. Applying the same stochastic function to equal transcript laws gives equal decision laws. Under equal priors, any preference for one realization is offset by the identical preference when the other is present.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "prop:memory",
+      "title": "Exact finite-memory lower bound",
+      "hypotheses": "Histories are equivalent when they require identical output sequences for every permitted continuation. N counts their equivalence classes. The quotient construction additionally assumes prefix closure and a transition congruence on the admissible history domain.",
+      "decisive_argument": "Two inequivalent histories cannot receive the same exact deterministic summary: a distinguishing continuation would require different outputs from the same summary. Thus the summary has at least N states. For positive finite N, B fixed-length bits offer at most 2^B states, so B is at least ceil(log2 N). A transition congruence makes the next class independent of the representative.",
+      "dependency_graph": "Continuation distinguishability → no collision between inequivalent histories → state-count lower bound. Add 1 ≤ N < ∞ → ordinary numerical bit bound. Add transition congruence and the declared continuation closure → well-defined quotient updates.",
+      "boundary_cases": "N = 1 gives zero required bits; powers of two and their successors explain the ceiling. For an empty history family, N = 0 and the displayed ordinary logarithm is undefined. Infinite index admits no finite exact summary, rather than a finite numerical logarithm bound. The introduction’s finite-domain convention supports the intended finite reading, but the local history-family definition does not explicitly state positive finite index.",
+      "remaining_gap": "Make the positive finite-index restriction explicit in the source statement before counting this as an unqualified pass. This is a domain-clarity finding, not a counterexample to the intended finite-state argument.",
+      "next_check": "In a future source edition, specify a nonempty admissible history domain with 1 ≤ N < ∞ for the numerical bound, and state that allowed updates remain in the domain of the transition congruence. Keep the general no-collision statement separate.",
+      "verdict": "correct only after a stated restriction",
+      "source_line": 456,
+      "statement_and_proof_sha256": "81b58a1d4d88ede22cc7e0b5e3b28bccd57ffddd9e192c58558ee5108fa839c3",
+      "statement_and_proof": "\\begin{proposition}[Exact finite-memory lower bound]\\label{prop:memory}\nEvery deterministic summary that supports exact continuation on these histories requires at least $N$ distinct states, hence at least $\\lceil\\log_2N\\rceil$ fixed-length bits. If the permitted continuation family is closed under prefixing and the history equivalence is a transition congruence, the quotient classes themselves provide an exact state representation.\n\\end{proposition}\n\\begin{proof}\nIf a summary assigns the same state to two inequivalent histories, some permitted continuation requires different outputs from that common state, contradicting determinism and exactness. This proves the lower bound by the pigeonhole principle. Under the congruence assumption, appending an input determines the next equivalence class independently of the representative, giving a well-defined quotient update.\n\\end{proof}",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "qualification required",
+        "proof_implications": "passed for the stated finite restriction",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "prop:composition",
+      "title": "Compositional one-step closure",
+      "hypotheses": "Surjections X → Z → W and transition kernels use the same control family. The two per-state, per-control total-variation errors are uniformly bounded by epsilon_1 and epsilon_2 as defined immediately before the proposition.",
+      "decisive_argument": "Insert the pushforward of the intermediate kernel. The triangle inequality bounds the second discrepancy by epsilon_2. For the first, summing signed masses within each fibre and applying the triangle inequality shows that deterministic pushforward cannot increase half the l1 distance. This yields epsilon_1 + epsilon_2; induction adds the errors across L levels.",
+      "dependency_graph": "Finite probability laws → grouped-sum triangle inequality → pushforward nonexpansiveness; combine with the two uniform bounds → two-level estimate → finite induction.",
+      "boundary_cases": "Identity and constant maps, zero errors, L = 1, and sums exceeding one. A bound greater than one is loose but valid. The separate finite-horizon corollary also needs prop:time, which is not newly audited here. Causal intervention compatibility is not implied.",
+      "remaining_gap": null,
+      "next_check": "Audit prop:time and its control assumptions before extending this review to the adjacent finite-horizon corollary.",
+      "source_line": 532,
+      "statement_and_proof_sha256": "6246966fe53aedee26b53de1ab94982c5c135526aa89154f8aa3c1ac2b88dab2",
+      "statement_and_proof": "\\begin{proposition}[Compositional one-step closure]\\label{prop:composition}\nThe composite abstraction $\\psi\\pi$ satisfies\n\\[\n\\TV\\bigl((\\psi\\pi)_{\\#}K_u(x,\\cdot),\n\\widehat K_u(\\psi\\pi x,\\cdot)\\bigr)\n\\leq\\varepsilon_1+\\varepsilon_2.\n\\]\nFor $L$ levels, the one-step defect is at most $\\sum_{j=1}^L\\varepsilon_j$. In particular, exact abstractions compose exactly.\n\\end{proposition}\n\\begin{proof}\nInsert $\\psi_{\\#}\\overline K_u(\\pi x,\\cdot)$, use the triangle inequality, and use nonexpansiveness of total variation under deterministic pushforward. Induction gives the multilevel result.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "prop:flatten",
+      "title": "Simulation by an unrestricted controller",
+      "hypotheses": "The hierarchy is finite and effectively specified, its components are computable, and the controller stores component states, messages, and scheduling variables. It executes the same transitions in the same order, with the same input and random-tape consumption.",
+      "decisive_argument": "Initialize matching records. One scheduled local transition reads identical records and random choices and therefore produces identical successor records and external outputs. Induction preserves equality along every finite execution prefix.",
+      "dependency_graph": "Effective representation and matching initialization → identical scheduled update → record equality invariant → identical external transcript.",
+      "boundary_cases": "A single component, an empty transcript, inactive components, and randomized components coupled by the same tape. The scheduler and random-consumption convention belong to the simulated specification. No time, memory, communication, or decentralized-access bound is asserted.",
+      "remaining_gap": null,
+      "next_check": "Any claimed architectural advantage must specify the resource or information restrictions on the comparison controller.",
+      "source_line": 560,
+      "statement_and_proof_sha256": "33bf11c62e1aa82d9e83c8f237cbd19f445795b7a476d1e0609e3fcbad11a213",
+      "statement_and_proof": "\\begin{proposition}[Simulation by an unrestricted controller]\\label{prop:flatten}\nA finite, effectively specified hierarchy of computable components can be simulated by a controller that stores every component state, message, and scheduling variable and applies the same local transitions in the same order. With the same random tape, its externally visible transcript is identical.\n\\end{proposition}\n\\begin{proof}\nInitialize the controller's records to the component states. At each scheduled step, apply the corresponding component transition to its stored inputs and update the associated state and message records. Induction preserves equality of all records and therefore of the external outputs. A shared random tape couples randomized transitions identically.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "prop:symmetry",
+      "title": "Symmetry lock for identical deterministic agents",
+      "hypotheses": "The deterministic joint transition is equivariant for permutations of agent labels. The initial joint state and every supplied input are invariant under that action.",
+      "decisive_argument": "Writing the input explicitly, equivariance gives gF(X,u) = F(gX,gu). With gX = X and gu = u, the next state is fixed by every permutation. Induct from the invariant initial state.",
+      "dependency_graph": "Equivariance + invariant state and input → invariant successor → induction in time.",
+      "boundary_cases": "Zero updates, one agent, and invariant auxiliary state. Distinct addresses, unequal observations, or asymmetric scheduling can break the input/state hypothesis. The proposition concerns deterministic trajectories, not merely a symmetric distribution of random trajectories.",
+      "remaining_gap": null,
+      "next_check": "For a concrete architecture, include scheduler state, addresses, and observations when checking invariance.",
+      "source_line": 582,
+      "statement_and_proof_sha256": "89342b66334c6e8f85ff588a5bd379b3b079b615b64e517bbb3d2db268db1694",
+      "statement_and_proof": "\\begin{proposition}[Symmetry lock for identical deterministic agents]\\label{prop:symmetry}\nSuppose a deterministic joint update $F$ is equivariant under permutations of the agent labels and the initial joint state and all subsequent inputs are permutation-invariant. Then the joint state remains permutation-invariant at every time.\n\\end{proposition}\n\\begin{proof}\nIf $gX=X$ for every label permutation $g$, equivariance gives $gF(X)=F(gX)=F(X)$. Apply this at every step with invariant inputs.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "thm:govquot",
+      "title": "Exact governance quotient",
+      "hypotheses": "S is finite and nonempty; the action vocabulary is finite with fixed meanings; the state map is surjective. The preceding definition makes each partial transition defined exactly on its enabled action set.",
+      "decisive_argument": "Factorization forces equal labels, enabled sets, and successor fibres. Conversely these conditions define representative-independent quotient labels, enabled sets, and successors. Surjectivity supplies each quotient value and forces uniqueness on the declared enabled domain. Equal enabled sets and preserved successor fibres then give equal legal action and label sequences by induction.",
+      "dependency_graph": "Fibre conditions ↔ well-defined quotient data; surjectivity → uniqueness; enabled-set equality + successor compatibility → finite-trace induction.",
+      "boundary_cases": "Deadlocked states, an empty action vocabulary, a singleton state space, and the empty action sequence. Quotient transitions use the same partial-map convention: they are defined exactly for quotient-enabled actions. Treating them as arbitrary extensions outside that domain would not be the stated governance structure.",
+      "remaining_gap": null,
+      "next_check": "Verify the fibre conditions for a proposed concrete institutional summary; existence of a useful nontrivial quotient is not automatic.",
+      "source_line": 737,
+      "statement_and_proof_sha256": "a31cae0fa688c6ee09e056244651e95fe45cb73628dc771a102035dcaf367296",
+      "statement_and_proof": "\\begin{theorem}[Exact governance quotient]\\label{thm:govquot}\nLet $S$ be finite and nonempty and $\\mathcal A$ finite, and let $\\pi:S\\to Z$ be surjective. There exist functions $\\bar\\ell$, $\\bar D$, and partial transitions $\\bar F$ satisfying\n\\[\n\\ell=\\bar\\ell\\pi,\\qquad D=\\bar D\\pi,\\qquad\n\\pi F(s,a)=\\bar F(\\pi s,a)\\quad(a\\in D(s))\n\\]\nif and only if whenever $\\pi s=\\pi t$,\n\\[\n\\ell(s)=\\ell(t),\\qquad D(s)=D(t),\\qquad\n\\pi F(s,a)=\\pi F(t,a)\\quad\\text{for all }a\\in D(s).\n\\]\nThe quotient data are unique. From any two states in the same fibre, the legal finite action sequences and their corresponding label sequences are identical. This includes sequences mixing ordinary actions with amendments.\n\\end{theorem}\n\\begin{proof}\nNecessity follows by factoring each quantity through $\\pi$. For sufficiency define the quotient label, enabled set, and successor using any representative of a fibre. The three conditions make each definition independent of that representative. Surjectivity gives uniqueness. For trace preservation, induct on the length of an action sequence. Equal enabled sets admit the same first action, the successor condition keeps the resulting states in one fibre, and equal labels preserve the next observation. Repeating the argument proves the claim for every legal finite continuation.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "prop:govrefine",
+      "title": "Coarsest finite governance summary",
+      "hypotheses": "Start with blocks sharing the same institutional labels and enabled sets, then refine by the blocks of every enabled successor. The finite state/action model and transition convention are those of thm:govquot.",
+      "decisive_argument": "Each strict refinement increases the block count, which is at most |S|. At stabilization the quotient conditions hold. Any compatible partition refines the initial partition and, inductively, every refinement. It therefore refines the stable partition, which is itself compatible and has the least number of blocks.",
+      "dependency_graph": "Finite block count → termination bound; fixed point → thm:govquot (audited in this batch); induction over competing compatible partitions → coarseness → minimum size.",
+      "boundary_cases": "An initially discrete partition takes zero strict refinements; all-deadlock blocks need only distinguish labels. The bound counts strict refinements, not the final equality test or runtime. Equal enabled sets within a block make the successor comparisons well-typed.",
+      "remaining_gap": null,
+      "next_check": "If actions or protected labels change, recompute the initial partition and refinement; minimality is relative to the fixed contract.",
+      "source_line": 768,
+      "statement_and_proof_sha256": "784cad0f9f1f72610f2fe0ba33337f4efb29efed7945f1a8ec4719a0cc500ea5",
+      "statement_and_proof": "\\begin{proposition}[Coarsest finite governance summary]\\label{prop:govrefine}\nThe refinement stabilizes after at most $|S|-|\\mathcal B_0|$ strict refinements. Its limiting partition satisfies Theorem~\\ref{thm:govquot} and is coarser than every partition satisfying that theorem for the same labels, actions, and transitions. It therefore has the minimum number of states among those exact quotients, up to relabeling.\n\\end{proposition}\n\\begin{proof}\nEvery strict refinement increases the number of blocks, which cannot exceed $|S|$. At a fixed point, states in one block have the same labels and enabled sets and their enabled successors remain in one block, so the quotient conditions hold. Any compatible partition refines $\\mathcal B_0$. If it refines $\\mathcal B_k$, compatible successors show that it also refines $\\mathcal B_{k+1}$. Induction proves that it refines the stable partition. The latter is itself compatible, giving the minimum block count.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    },
+    {
+      "label": "prop:languagetrace",
+      "title": "Preservation of finite institutional conversations",
+      "hypotheses": "Definition def:language supplies equivalent admission/rejection, commuting admitted transitions, and common event records on a transition-closed declared domain. Message translation depends on the evolving source state. Composition uses matching intermediate institutions and domains.",
+      "decisive_argument": "Equivalent definedness gives the same first rejection point. For an admitted step, transition commutation preserves the state relation and event equality preserves the record. Induction handles every finite admitted prefix. For composition, compose state maps, substitute the two transition identities, and apply the two definedness equivalences and transitivity of event equality.",
+      "dependency_graph": "The three defining equalities/definedness conditions → one-step preservation → prefix induction. Well-typed composition of two such transports → the same three conditions for the composite.",
+      "boundary_cases": "Empty conversation, rejection of the first message, and rejection after a nonempty admitted prefix. No translation after an undefined source successor is needed. Composition is on the shared declared domain: if restricted domains are used, the first state translator must land in the second’s faithful domain, or the composite must be restricted accordingly. Surjectivity and preservation of unrelated target messages are not claimed.",
+      "remaining_gap": null,
+      "next_check": "For an implementation, exhibit the compatible domains and access to the state needed to compute the context-dependent message translation.",
+      "source_line": 804,
+      "statement_and_proof_sha256": "a7687e3b3b2c1e4671b87e709764e283493cbc30d1af740b869840103c5d7931",
+      "statement_and_proof": "\\begin{proposition}[Preservation of finite institutional conversations]\\label{prop:languagetrace}\nUnder Definition~\\ref{def:language}, every finite source conversation has an admitted prefix exactly when its stepwise translation has that admitted prefix from the translated initial state. Corresponding reached states are related by $T$, and corresponding event records agree. Two faithful transports compose faithfully using\n\\[\n\\tau_{AC}(s,m)=\\tau_{BC}(T_{AB}(s),\\tau_{AB}(s,m)).\n\\]\n\\end{proposition}\n\\begin{proof}\nThe initial states are related by definition. At each step, equivalence of definedness gives the same admission or rejection. For an admitted step, the transition equality gives the next related states, and the event equality gives the same semantic record. Induction proves the claim for every finite prefix. For composition, apply the two definedness equivalences successively and substitute one transition equality into the other. Equality of event records is transitive.\n\\end{proof}",
+      "verdict": "proved as written",
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed in declared context",
+        "proof_implications": "passed",
+        "boundary_cases": "checked",
+        "dependency_circularity": "none identified",
+        "external_theorem_or_computation": "none load-bearing",
+        "deployment_and_empirical_effectiveness": "out of scope"
+      }
+    }
+  ],
+  "prior_count": 18,
+  "additional_count": 8,
+  "combined_distinct_count": 26,
+  "proved_as_written_count": 25,
+  "qualified_count": 1,
+  "remaining_count": 36,
+  "report": {
+    "path": "docs/MACHINE_SOCIETIES_PROOF_REVIEW_BATCH2_2026-10-27.md",
+    "sha256": "725be155790c71289e1fbbda108d0e4d005e929953135da659807a017e1fadbd"
+  },
+  "decisions": [
+    {
+      "id": "monographs-machine-societies",
+      "placement": "retain_with_clarification",
+      "reason": "Seven additional implications pass targeted self-review; the finite-memory bit bound needs an explicit positive finite-index restriction. Combined coverage is 26 of 62, including one qualified verdict; 36 remain unreviewed."
+    }
+  ]
+}

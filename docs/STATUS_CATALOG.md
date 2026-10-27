@@ -212,11 +212,11 @@ Proofread reading volumes plus 68 named formal declarations in a finite core and
 
 **Reading edition complete** · Lean: **No Lean claim** · Confidence basis: **Recorded written review**
 
-Final 118-page edition. The earlier 15-claim self-review and a new three-claim review cover 18 distinct statement/proof pairs in the same source; 44 of 62 pairs remain outside these targeted reviews.
+Final 118-page edition. Bound self-review records cover 26 of 62 statement/proof pairs: 25 recorded as proved as written, one memory-domain qualification, and 36 unreviewed. Coverage is not whole-book certification.
 
-**Next gate:** Review the remaining 44 pairs in bounded batches; keep theoretical results separate from agent-deployment evidence and independent peer review.
+**Next gate:** Review the remaining 36 pairs in bounded batches and integrate the explicit positive finite-index condition for the memory bit bound into a revised source edition. Keep empirical and independent review separate.
 
-[Latest bounded written review](MACHINE_SOCIETIES_PROOF_REVIEW_2026-10-27.md)
+[Latest bounded written review](MACHINE_SOCIETIES_PROOF_REVIEW_BATCH2_2026-10-27.md)
 
 [Source directory](../monographs/machine-societies) · [README.md](../monographs/machine-societies/README.md)
 
