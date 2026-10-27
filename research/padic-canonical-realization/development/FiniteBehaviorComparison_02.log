@@ -1,0 +1,40 @@
+lean/KomorebiPadic/FiniteBehaviorComparison.lean:30:91: error: unsolved goals
+R : Type u_1
+V : Type u_2
+W : Type u_3
+A : Type u_4
+inst✝⁴ : CommRing R
+inst✝³ : AddCommGroup V
+inst✝² : Module R V
+inst✝¹ : AddCommGroup W
+inst✝ : Module R W
+M : LinearObservability.System R V A
+N : LinearObservability.System R W A
+u : List A
+x : V × W
+⊢ M.output
+        (LinearReachability.run
+            { initial := (M.dynamics.initial, N.dynamics.initial),
+              transition := fun d => (M.dynamics.transition d).prodMap (N.dynamics.transition d) }
+            u x).1 -
+      N.output
+        (LinearReachability.run
+            { initial := (M.dynamics.initial, N.dynamics.initial),
+              transition := fun d => (M.dynamics.transition d).prodMap (N.dynamics.transition d) }
+            u x).2 =
+    M.output (LinearReachability.run M.dynamics u x.1) - N.output (LinearReachability.run N.dynamics u x.2)
+lean/KomorebiPadic/FiniteBehaviorComparison.lean:32:4: error: This simp argument is unused:
+  differenceSystem_run
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [LinearObservability.observation, LinearMap.comp_apply, LinearObservability.wordMap_apply,
+    differenceSystem, LinearMap.sub_apply, LinearMap.fst_apply, LinearMap.snd_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+lean/KomorebiPadic/FiniteBehaviorComparison.lean:62:2: error: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
