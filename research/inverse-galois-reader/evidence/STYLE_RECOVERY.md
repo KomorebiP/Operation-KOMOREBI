@@ -1,0 +1,1 @@
+Inherited Palatino/Helvetica, teal/copper typography from the completed Series08 source bundle. The first import expected shared/visual_preamble.tex, which does not exist. Archive inspection located shared/guide_preamble.tex; the corrected import succeeded. No source mathematics was copied from the Catalan manuscript.

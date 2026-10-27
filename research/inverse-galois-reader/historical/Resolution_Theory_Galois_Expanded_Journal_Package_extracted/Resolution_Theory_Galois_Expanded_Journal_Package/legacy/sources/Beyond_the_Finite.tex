@@ -1,0 +1,1564 @@
+\documentclass[11pt]{article}
+\usepackage[margin=.88in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem}
+\usepackage{graphicx,float}
+\usepackage{xcolor,hyperref,listings}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black,
+  pdftitle={Beyond the Finite: A Companion to Resolution Theory},
+  pdfauthor={Komorebi P.}
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\emergencystretch=2em
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  showstringspaces=false,
+  frame=single,
+  columns=fullflexible,
+  tabsize=4
+}
+\title{Beyond the Finite\\
+\large Countable Resolutions, Unbounded Operators, and Categorical Completion\\[4pt]
+\normalsize A Companion to Resolution Theory}
+\author{Komorebi P.}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+Finite packet decompositions are easy to state because every sum ends, every corner is bounded, and every object projection belongs to one finite linking algebra.  None of those conveniences survives automatically in analysis.  Countable resolutions usually reconstruct strongly rather than in norm.  Unbounded generators carry domains and closed forms.  Countable linking algebras are typically nonunital, so their object projectors live in a multiplier algebra.  Normal representations must preserve increasing joins.  Measurable families require direct integrals rather than one global matrix.
+
+This companion develops the infinite side of Resolution Theory as a coherent mathematical subject rather than as an appendix to the finite case.  It proves strong and strong-star reconstruction, characterizes the norm-convergent compact case, treats Schatten and trace-class packets, constructs countable linking systems and their Karoubi completion, develops graph-, form-, resolvent-, and bounded-transform methods for unbounded operators, and makes normal and measurable completion explicit.  The presentation is organized around the questions that arise in practice: Which topology belongs to the object?  When is a finite window trustworthy?  What is actually preserved by a change of packet chart?  When does an unbounded corner exist?  Each theorem is paired with examples, counterexamples, numerical certificates, Python-generated figures, reference code, and automated tests.
+\end{abstract}
+\tableofcontents
+\clearpage
+
+
+\section*{Preface: where the finite picture stops being honest}
+\addcontentsline{toc}{section}{Preface: where the finite picture stops being honest}
+The finite theory is seductive because it makes every operation look harmless.  A complete family of projectors adds to the identity.  An operator is the sum of its corners.  Composition is matrix multiplication.  Refinement is a finite regrouping.  In that setting, there is almost no pressure to ask how a sum converges, where an operator is defined, or whether an object projection belongs to the algebra one is using.
+
+Infinity removes that protection.  The first hundred Fourier modes may approximate a vector extremely well while remaining a full unit away from the identity in operator norm.  A differential operator may be perfectly meaningful on its domain and meaningless on a generic vector.  A countable category may possess all of its local corners while having no global unit inside its linking algebra.  A measurable packet field may exist without a continuous choice of basis.  These are not technical annoyances.  They tell us what the infinite object actually is.
+
+The guiding principle of this companion is simple:
+\[
+\boxed{\text{the mode of convergence, the domain, and the completion are part of the resolution data.}}
+\]
+Once that principle is taken seriously, the finite calculus does not disappear.  It becomes the local language inside a larger theory.  Finite windows remain indispensable, but they must carry certificates.  Bounded transforms and resolvents bring unbounded problems back into the ordinary transfer algebra.  Countable packet objects become genuine categorical subobjects after idempotent completion.  Normality explains when increasing packet predicates survive representation.  Direct integrals let locally defined packet systems coexist without pretending that one fixed basis works everywhere.
+
+This book is meant to be read as a companion rather than a sequel.  The finite theory supplies the grammar.  The present work explains what that grammar means when the mathematics no longer fits inside one finite matrix.
+
+\section*{How to read the companion}
+\addcontentsline{toc}{section}{How to read the companion}
+There are three possible routes through the text.
+
+\begin{enumerate}[label=\arabic*.]
+\item A reader interested in operator theory can follow Parts I, II, and IV: convergence, compactness, domains, forms, resolvents, and affiliation.
+\item A reader interested in category theory can begin with Part III: countable linking systems, multiplier projections, additive and Karoubi completion, resolved functors, and normal joins.
+\item A reader interested in computation can begin with Part VI: the worked models, topology selector, tail certificates, and truncation planner, then return to the proofs when a particular certificate is needed.
+\end{enumerate}
+
+The diagrams are not substitutes for proofs.  They show which obstruction a theorem removes.  The numerical studies are not evidence for the abstract theorems; they are finite models of the estimates and counterexamples used in those proofs.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/companion/13_companion_architecture.png}
+\caption{The companion is built from six distinct steps.  Countable reconstruction, categorical completion, domain control, normality, measurable gluing, and certified truncation solve different problems; none can be omitted without changing the statement.}
+\end{figure}
+
+\section*{A finite-to-infinite dictionary}
+\addcontentsline{toc}{section}{A finite-to-infinite dictionary}
+The first useful habit is to stop asking whether an infinite formula ``still works'' and ask instead what replaces each finite statement.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.96\linewidth]{figures/companion/12_finite_infinite_dictionary.png}
+\caption{The finite formulas survive, but their natural topology or ambient algebra changes.}
+\end{figure}
+
+
+\part{When a finite resolution becomes countable}
+
+\section{The topology belongs to the object}
+The most common error in infinite block arguments is to use operator norm simply because it was available in the finite proof.  There is no single strongest topology that is always best.  A topology is useful when it records the kind of information the object naturally carries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\linewidth]{figures/companion/11_topology_selector.png}
+\caption{A practical topology selector.  The choice is governed by the object class and the intended certificate.}
+\end{figure}
+
+{\small\setlength{\tabcolsep}{4pt}\begin{longtable}{L{1.20in}L{1.35in}L{3.55in}}
+\toprule
+Object & Natural topology & What the certificate controls\\
+\midrule
+Bounded transfer & strong-star & action on each vector and its adjoint\\
+Compact transfer & operator norm & uniform error on the unit ball\\
+Hilbert--Schmidt transfer & $S_2$ norm & exact sum of packet energies\\
+Trace-class state & trace norm & probability and expectation error\\
+Self-adjoint generator & graph or strong-resolvent & domain and spectral evolution\\
+Semibounded form & form norm & energy rather than pointwise operator action\\
+Multiplier projection & strict topology & left and right multiplication on the algebra\\
+Normal packet join & strong or ultraweak & countable logical and probabilistic joins\\
+\bottomrule
+\end{longtable}}
+
+The rest of the companion is an extended justification of this table.
+
+\section{Why the finite theorem is not enough}
+The finite formulas do not fail; they become ambiguous until their topology is named.
+Suppose that
+\[
+\mathcal H=\bigoplus_{n\ge1}\mathcal H_n,
+\qquad
+P_n:\mathcal H\to\mathcal H_n
+\]
+are orthogonal projections.  The formal identity
+\[
+I=\sum_{n\ge1}P_n
+\]
+is harmless only after one specifies the topology of convergence.  In an infinite-dimensional Hilbert space, the partial sums
+\[
+P^{(N)}=\sum_{n=1}^NP_n
+\]
+usually satisfy
+\[
+P^{(N)}x\longrightarrow x
+\]
+for every $x\in\mathcal H$, while
+\[
+\|I-P^{(N)}\|=1
+\]
+for every finite $N$.  The convergence is strong, not norm convergence.
+
+This distinction propagates through the whole calculus.  If $T$ is bounded, the finite truncations
+\[
+P^{(N)}TP^{(N)}
+\]
+converge strongly to $T$, but they need not converge in operator norm.  If $T$ is compact, norm convergence returns.  If $T$ is Hilbert--Schmidt, the packet energies satisfy an exact Parseval identity.  If $D$ is unbounded, even strong convergence of $P^{(N)}$ says nothing about convergence in the graph norm of $D$ unless the packets respect the domain.
+
+The correct infinite theory therefore begins with a simple rule:
+\[
+\boxed{\text{the topology is part of the resolution data.}}
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_unbounded/01_strong_vs_norm.png}
+\caption{The coordinate projections converge on every fixed square-summable vector, yet their operator-norm defect remains one until the final finite coordinate is included.  This is the simplest reason an infinite resolution theorem cannot be written by replacing finite sums with infinite sums and leaving every other word unchanged.}
+\end{figure}
+
+
+\section{Finite sections and the exact compactness boundary}
+A compact operator is not merely one example for which finite packets work well.  It is exactly the class of bounded operators that can be recovered in norm from finite-rank windows of a fixed increasing resolution.
+
+\begin{theorem}[Finite-section characterization of compactness]
+Let $(P_N)$ and $(Q_N)$ be increasing finite-rank projections converging strongly to the identities on $\mathcal H$ and $\mathcal K$.  For a bounded operator $T:\mathcal H\to\mathcal K$, the following are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $T$ is compact;
+\item $\|T-Q_NTP_N\|\to0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+If $T$ is compact, strong convergence of $Q_N$ and $P_N$ is uniform on the compact images of the relevant unit balls, so the compact truncation theorem gives norm convergence.  Conversely, every $Q_NTP_N$ has finite rank.  If these finite-rank operators converge to $T$ in norm, then $T$ lies in the norm closure of the finite-rank operators and is compact.
+\end{proof}
+
+The theorem gives a useful negative test.  If the finite sections stay a fixed distance from $T$ in operator norm, the issue is not a poor cutoff.  The operator is not compact relative to any finite-rank norm approximation of this kind.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/01_compactness_characterization.png}
+\caption{The compact diagonal is recovered in operator norm.  The unilateral shift is not: every proper finite section remains one unit away.}
+\end{figure}
+
+\section{Countable orthogonal resolutions}
+
+\begin{definition}[Countable Hilbert resolution]
+A \emph{countable Hilbert resolution} of a Hilbert space $\mathcal H$ is a family of mutually orthogonal projections $(P_n)_{n\ge1}$ such that
+\[
+\sum_{n\ge1}P_n=I
+\]
+in the strong operator topology.  For a finite set $F\subset\mathbb N$, write
+\[
+P_F=\sum_{n\in F}P_n.
+\]
+The finite sets are directed by inclusion.
+\end{definition}
+
+\begin{lemma}[Strong convergence of orthogonal packet sums]
+Let $(P_n)$ be a countable Hilbert resolution.  Then
+\[
+P_Fx\longrightarrow x
+\]
+for every $x\in\mathcal H$.  Moreover,
+\[
+\|x\|^2=\sum_{n\ge1}\|P_nx\|^2.
+\]
+\end{lemma}
+
+\begin{proof}
+The ranges of the $P_n$ are orthogonal, so every finite sum satisfies
+\[
+\|P_Fx\|^2=\sum_{n\in F}\|P_nx\|^2\le\|x\|^2.
+\]
+The assumed strong completeness says that the orthogonal complement of the closed span of all packet ranges is zero.  The usual Hilbert-space orthogonal expansion therefore gives both the convergence and the square-sum identity.
+\end{proof}
+
+\begin{theorem}[Strong packet reconstruction]
+Let $(Q_i)_{i\ge1}$ resolve $\mathcal K$ and $(P_j)_{j\ge1}$ resolve $\mathcal H$.  For every bounded operator $T:\mathcal H\to\mathcal K$,
+\[
+T=\operatorname*{s\! -\! lim}_{F,G}
+Q_FTP_G.
+\]
+Equivalently, for every $x\in\mathcal H$,
+\[
+Tx=\sum_{i,j\ge1}Q_iTP_jx,
+\]
+where the rectangular finite sums converge in $\mathcal K$.  The same statement holds for $T^*$, so the convergence is strong-star.
+\end{theorem}
+
+\begin{proof}
+For finite $F,G$,
+\[
+T-Q_FTP_G
+=(I-Q_F)T+Q_FT(I-P_G).
+\]
+Applied to a fixed vector $x$,
+\[
+\|(T-Q_FTP_G)x\|
+\le
+\|(I-Q_F)Tx\|+\|T(I-P_G)x\|.
+\]
+The first term tends to zero because $Q_F\to I$ strongly on $\mathcal K$; the second tends to zero because $P_Gx\to x$.  Applying the same argument to $T^*$ proves strong-star convergence.
+\end{proof}
+
+The proof also gives a practical certificate:
+\[
+\boxed{
+\|(T-Q_FTP_G)x\|
+\le
+\|(I-Q_F)Tx\|+\|T(I-P_G)x\|.
+}
+\]
+The certificate is vector-dependent.  That is not a defect.  Strong convergence is itself a vectorwise notion.
+
+\section{When strong convergence improves to norm convergence}
+
+The finite theorem used operator norm throughout.  Infinite resolution recovers norm convergence for operators whose tails are uniformly small.
+
+\begin{theorem}[Compact truncation]
+Let $P_F\to I_{\mathcal H}$ and $Q_G\to I_{\mathcal K}$ strongly through finite-rank or arbitrary orthogonal packet sums.  If $T:\mathcal H\to\mathcal K$ is compact, then
+\[
+\|T-Q_GTP_F\|\longrightarrow0.
+\]
+\end{theorem}
+
+\begin{proof}
+A compact operator maps the unit ball of $\mathcal H$ to a relatively compact set $C$.  Strong convergence of $Q_G$ to the identity is uniform on compact sets, hence
+\[
+\sup_{y\in C}\|(I-Q_G)y\|\to0,
+\]
+which gives $\|(I-Q_G)T\|\to0$.  Applying the same argument to $T^*$ gives
+\[
+\|T(I-P_F)\|=\|(I-P_F)T^*\|\to0.
+\]
+Now use
+\[
+T-Q_GTP_F=(I-Q_G)T+Q_GT(I-P_F).
+\]
+\end{proof}
+
+\begin{corollary}[Operator ideals]
+If $T$ belongs to a Schatten ideal $S_p$, $1\le p<\infty$, then
+\[
+\|T-Q_GTP_F\|_{S_p}\to0.
+\]
+For $p=2$,
+\[
+\boxed{
+\|T\|_{\mathrm{HS}}^2
+=
+\sum_{i,j\ge1}\|Q_iTP_j\|_{\mathrm{HS}}^2.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Finite-rank operators are dense in every $S_p$.  The truncation maps are contractions on $S_p$, so approximation by finite-rank operators reduces the claim to a finite-dimensional statement.  For $p=2$, the corners are orthogonal in the Hilbert--Schmidt inner product, giving Parseval's identity.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.87\linewidth]{figures/countable_unbounded/02_ideal_truncation.png}
+\caption{Compactness and operator-ideal membership turn strong packet truncation into normed convergence.  The rate depends on the spectral tail, not on the number of packet labels alone.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.62\linewidth]{figures/countable_unbounded/09_hs_packet_energy.png}
+\caption{The Hilbert--Schmidt norm is exactly the sum of the squared packet-corner norms.  In this ideal, packet accounting is not an approximation or a heuristic heat map; it is an orthogonal identity.}
+\end{figure}
+
+
+\section{Normal states and packet probabilities}
+Countable packetization also has a probabilistic face.  Let $\rho\ge0$ be trace class with $\operatorname{Tr}\rho=1$, and let $(P_n)$ be a countable resolution.  Then
+\[
+p_n=\operatorname{Tr}(\rho P_n)
+\]
+is a probability distribution and
+\[
+\sum_np_n=1.
+\]
+The statement is not merely formal: normality of the trace is exactly what permits the countable join.
+
+\begin{theorem}[Trace-class packet truncation]
+Let $P^{(N)}=\sum_{n\le N}P_n$.  Then
+\[
+\|\rho-P^{(N)}\rho P^{(N)}\|_1\longrightarrow0.
+\]
+If $m_N=\operatorname{Tr}(P^{(N)}\rho)$ and $m_N>0$, the normalized finite state
+\[
+\rho_N=\frac{P^{(N)}\rho P^{(N)}}{m_N}
+\]
+also converges to $\rho$ in trace norm.
+\end{theorem}
+
+\begin{proof}
+Finite-rank operators are dense in the trace class, and left or right multiplication by a projection is contractive in trace norm.  This gives convergence of the unnormalized truncations.  Since $m_N\to1$,
+\[
+\|\rho_N-\rho\|_1
+\le
+\frac{\|P^{(N)}\rho P^{(N)}-\rho\|_1}{m_N}
++
+\left|\frac1{m_N}-1\right|\|\rho\|_1,
+\]
+and both terms tend to zero.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/05_trace_class_state.png}
+\caption{A trace-class state converges in the norm that controls every bounded expectation value.  Renormalization changes the finite approximation but not the limiting state.}
+\end{figure}
+
+
+\part{Countable packet operators}
+
+The finite corner formula remains exact, but a countable sum must be interpreted through a directed net of finite rectangles.  This part develops the bounded operator theory first.  The advantage of doing so is that every later construction - resolvents, bounded transforms, direct-integral fibers, and linking operators - returns to this bounded core.
+
+\section{Countable path sums and categorical composition}
+
+The finite composition law
+\[
+(ST)_{ik}=\sum_jS_{ij}T_{jk}
+\]
+continues to hold, but the infinite sum needs a convergence statement.
+
+\begin{theorem}[Countable packet-path composition]
+Let $T:\mathcal H\to\mathcal K$ and $S:\mathcal K\to\mathcal L$ be bounded.  Let $(P_k)$, $(Q_j)$, and $(R_i)$ be countable resolutions of the three spaces.  Then for every $i,k$ and every $x\in P_k\mathcal H$,
+\[
+R_iSTP_kx
+=
+\sum_{j\ge1}R_iSQ_jTP_kx,
+\]
+with convergence in $R_i\mathcal L$.
+\end{theorem}
+
+\begin{proof}
+Since $\sum_jQ_j=I$ strongly,
+\[
+\sum_{j\in F}Q_jTP_kx\longrightarrow TP_kx.
+\]
+The bounded operator $R_iS$ preserves norm convergence, giving the result.
+\end{proof}
+
+The theorem is deliberately vectorwise.  Absolute convergence of the operator norms
+\[
+\sum_j\|R_iSQ_jTP_k\|
+\]
+is a stronger hypothesis and is not automatic.  Weighted Wiener-type assumptions can supply it, but ordinary boundedness does not.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.80\linewidth]{figures/countable_unbounded/11_path_sum_convergence.png}
+\caption{A finite model of countable composition.  As the intermediate packets are included, the partial path sum approaches the complete operator product.  In the exact theorem the convergence is strong on each input vector.}
+\end{figure}
+
+\section{Countable resolved $C^*$-categories}
+
+A countable many-object system is most naturally represented on the Hilbert direct sum of its object spaces.
+
+\begin{definition}[Countably resolved $C^*$-category]
+A \emph{countably resolved $C^*$-category} consists of:
+\begin{enumerate}[label=\textup{(C\arabic*)}]
+\item a small $C^*$-category $\mathcal C$ with countable object set;
+\item for every object $x$, a countable orthogonal family of projections
+\[
+e_{x,1},e_{x,2},\ldots\in\mathcal C(x,x)
+\]
+whose supremum is $1_x$;
+\item a declared collection of finite or countable compatible refinements.
+\end{enumerate}
+In a concrete representation, the packet sum is required to converge strongly.  In a linking $C^*$-algebra, the corresponding sum is interpreted strictly in the multiplier algebra.
+\end{definition}
+
+A small $C^*$-category admits a faithful concrete representation by Hilbert spaces and bounded operators \cite{Mitchener2002}.  Starting from such a faithful functor
+\[
+F:\mathcal C\longrightarrow\mathrm{Hilb},
+\]
+form
+\[
+\mathcal H=\bigoplus_{x\in\operatorname{Ob}\mathcal C}F(x).
+\]
+Every morphism $a\in\mathcal C(x,y)$ acts as the corresponding corner from $F(x)$ to $F(y)$ and is zero on the other summands.
+
+\begin{definition}[Countable linking algebra]
+The \emph{countable linking algebra} $L(\mathcal C)$ is the operator-norm closure in $\mathcal B(\mathcal H)$ of finite-support matrices of represented morphisms.
+\end{definition}
+
+The coordinate projection onto $F(x)$ need not belong to $L(\mathcal C)$ when the object set is infinite.  It belongs to the multiplier algebra $M(L(\mathcal C))$.  This is the correct infinite analogue of the finite object idempotent.
+
+\begin{theorem}[Countable linking representation]
+Let $\mathcal C$ be a countable small $C^*$-category and let $F$ be a faithful nondegenerate $*$-functor to Hilbert spaces.  Then:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $L(\mathcal C)$ is a $\sigma$-unital $C^*$-algebra;
+\item every object projection $P_x$ belongs to $M(L(\mathcal C))$;
+\item
+\[
+P_yL(\mathcal C)P_x=F(\mathcal C(x,y));
+\]
+\item finite sums of object projections form an approximate identity;
+\item if $e_{x,n}$ is a countable packet resolution of $1_x$, then
+\[
+B_{x,n}=F(e_{x,n})
+\]
+are orthogonal projections with
+\[
+\sum_nB_{x,n}=P_x
+\]
+strongly.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Finite-support matrices form a $*$-algebra under matrix composition and adjoint.  Its norm closure is a $C^*$-algebra.  Enumerate the objects and let
+\[
+E_N=\sum_{x\in X_N}P_x
+\]
+for an increasing sequence of finite object sets $X_N$.  Multiplication by $E_N$ on either side eventually fixes every finite-support matrix, so $(E_N)$ is an approximate identity and the algebra is $\sigma$-unital.
+
+Each $P_x$ multiplies finite-support matrices into finite-support matrices from the left and right, hence defines a multiplier.  The corner equality follows because the image $F(\mathcal C(x,y))$ is closed: faithfulness of a $C^*$-functor is isometric on each hom-space.  Finally, normal Hilbert-space orthogonal summation of the represented packet projections gives the strong sum $P_x$.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\linewidth]{figures/countable_unbounded/07_countable_category_architecture.png}
+\caption{The countable theory has two levels of summation.  Objects assemble into a Hilbert direct sum and a multiplier linking algebra; packets assemble strongly inside each object.  Neither sum needs to converge in the operator norm.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.68\linewidth]{figures/countable_unbounded/08_linking_algebra_window.png}
+\caption{A finite-support window in a countable linking algebra.  The completed algebra contains norm limits of such finite windows; the coordinate object projections act as multipliers.}
+\end{figure}
+
+\section{The universal property in the countable setting}
+
+The finite linking algebra was universal for compatible families of corner maps.  Countability changes ``unital'' to ``nondegenerate.''  Infinite direct sums in $C^*$- and $W^*$-categories have their own universal formulation \cite{FritzWesterbaan2020}.
+
+\begin{theorem}[Nondegenerate factorization]
+Let $\mathcal C$ be countable and let $L(\mathcal C)$ be its linking algebra.  Nondegenerate $*$-representations
+\[
+\pi:L(\mathcal C)\to\mathcal B(K)
+\]
+are equivalent to nondegenerate $*$-functors from $\mathcal C$ to Hilbert spaces, up to unitary equivalence.  Under this correspondence, the multiplier extensions of the object projections recover the object Hilbert spaces.
+\end{theorem}
+
+\begin{proof}
+Given $\pi$, extend it uniquely to a strictly continuous unital representation
+\[
+\widetilde\pi:M(L(\mathcal C))\to\mathcal B(K).
+\]
+Set
+\[
+K_x=\widetilde\pi(P_x)K.
+\]
+For $a\in\mathcal C(x,y)$, define the functorial action by $\pi(F(a))$ restricted from $K_x$ to $K_y$.  Corner support, composition, and dagger follow from multiplication in the linking algebra.
+
+Conversely, a nondegenerate functor acts on the Hilbert direct sum of its object spaces.  Finite-support matrices act by finite operator matrices, and the $C^*$-norm completion gives a nondegenerate representation of $L(\mathcal C)$.  The constructions are inverse up to the evident unitary identification.
+\end{proof}
+
+This is the countable form of the finite universal extension theorem.  The linking algebra remains the single object through which every compatible concrete realization factors, but its unit now lives in the multiplier algebra.
+
+
+\part{Categories with countably many rooms}
+
+A countable resolved category is not one giant matrix with infinitely many decorative grid lines.  Its local morphism spaces, countable direct sums, multiplier projections, and idempotent splittings play different roles.  The linking algebra gathers the corners into one operator algebra, but it is generally nonunital.  The missing unit is not an error: it lives in the multiplier algebra and is approached strictly by finite object sums.
+
+\label{sec:categorical-completion}
+
+The countable representation theorem gives the analytic machinery.  A second question remains: what is the categorical object obtained after countable direct sums, packet splittings, normal joins, and unbounded generators are all admitted at once?
+
+The answer is not one ordinary category with every desired arrow.  Bounded transfers live comfortably in a $C^*$-category.  Countable orthogonal sums require an additive or $W^*$-categorical completion.  Packet projections are best treated through the Karoubi envelope.  Unbounded generators are safer as affiliated objects, quadratic forms, or bounded transforms.  Resolution Logic must preserve countable joins only under normality assumptions.  The completed structure is therefore layered, but the layers fit together without changing the underlying packet data.
+\section{The countable additive completion}
+
+Let $\mathcal C$ be a small $C^*$-category.  A countable family of objects
+\[
+X_1,X_2,\ldots
+\]
+should have a direct sum object when there are isometries
+\[
+\iota_n:X_n\to\bigoplus_{n\ge1}X_n
+\]
+satisfying
+\[
+\iota_m^*\iota_n=\delta_{mn}1_{X_n}
+\]
+and
+\[
+\sum_{n\ge1}\iota_n\iota_n^*=1
+\]
+in the appropriate strong or ultraweak sense.  This is not the ordinary finite biproduct axiom.  The infinite sum is an analytic universal construction.
+
+\begin{definition}[Countable additive resolution completion]
+The \emph{countable additive resolution completion} of a concrete resolved $C^*$-category is the full subcategory of Hilbert-space direct sums generated by:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the represented object spaces;
+\item countable $\ell^2$-direct sums of those spaces;
+\item the represented packet projections and their countable strong joins;
+\item bounded block operators between the resulting sums.
+\end{enumerate}
+\end{definition}
+
+The construction is canonical up to unitary equivalence once the faithful representation is fixed.  In a $W^*$-category, the direct sum is characterized intrinsically by the normal universal property of infinite orthogonal sums.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\linewidth]{figures/countable_completion/17_countable_functor.png}
+\caption{A countable resolved category is represented objectwise, then completed by $\ell^2$-direct sums.  The object projections and packet projections become genuine orthogonal projections in the direct-sum Hilbert space.}
+\end{figure}
+
+\section{Finite windows and the countable linking algebra}
+
+A countable linking algebra is not built by writing an infinite matrix and assuming every matrix operation converges.  It is the norm completion of the finite-support matrices.  Every finite window is familiar; the completion records which infinite tails are norm-admissible.
+
+\begin{proposition}[Finite-window density]
+Let $L(\mathcal C)$ be the countable linking algebra of a countable concrete $C^*$-category.  If $E_N$ is the sum of the first $N$ object projections, then
+\[
+E_NaE_N\longrightarrow a
+\]
+in norm for every $a\in L(\mathcal C)$.
+\end{proposition}
+
+\begin{proof}
+The claim is exact for every finite-support matrix once $N$ contains its row and column support.  Finite-support matrices are norm dense in $L(\mathcal C)$, while the compressions $a\mapsto E_NaE_N$ are contractions.  Approximation by a finite-support matrix proves the result.
+\end{proof}
+
+This statement differs from the strong reconstruction theorem for an arbitrary bounded operator on the Hilbert direct sum.  Elements of the linking algebra are, by definition, norm approximable by finite object windows.  An arbitrary multiplier need not be.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.68\linewidth]{figures/countable_completion/04_countable_linking_matrix.png}
+\caption{A finite window of a countable linking algebra.  The countable algebra is the norm closure of finite-support windows, not the set of all formally infinite matrices.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/countable_completion/03_banded_reconstruction.png}
+\caption{A decaying banded transfer is recovered in norm by enlarging the finite object window.  The decay assumption is what turns finite-window convergence into a practical approximation.}
+\end{figure}
+
+
+\section{Why strict convergence is the right multiplier statement}
+Let $L$ be a nonunital linking algebra and let
+\[
+e_F=\sum_{x\in F}p_x
+\]
+be a finite sum of object projections in $M(L)$.  The assertion
+\[
+e_F\longrightarrow1
+\]
+is strict when
+\[
+\|e_Fa-a\|+\|ae_F-a\|\longrightarrow0
+\qquad(a\in L).
+\]
+This is precisely the convergence needed for finite object windows to recover every element of the linking algebra from both sides.  Asking for norm convergence of $e_F$ to the multiplier unit would be the wrong demand; proper projections remain one unit away from the identity.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/10_strict_multiplier_proxy.png}
+\caption{A finite model of strict convergence.  The approximate identity is tested through its left and right action on an algebra element, not through the norm of $1-e_F$.}
+\end{figure}
+
+\section{Karoubi completion and packet objects}
+
+A packet projection $e\in\mathcal C(X,X)$ can be promoted from a label inside $X$ to an object in its own right.  This is the role of the Karoubi envelope.
+
+\begin{definition}[Resolved Karoubi object]
+A resolved Karoubi object is a pair $(X,e)$ with $e=e^*=e^2\in\mathcal C(X,X)$.  A morphism
+\[
+a:(X,e)\to(Y,f)
+\]
+is a morphism $a\in\mathcal C(X,Y)$ satisfying
+\[
+a=fae.
+\]
+\end{definition}
+
+\begin{proposition}[Packet splitting]
+If
+\[
+e=\sum_{r\ge1}e_r
+\]
+is a countable orthogonal packet decomposition with strong or ultraweak sum, then $(X,e)$ is the countable orthogonal direct sum of the packet objects $(X,e_r)$ in the completed category.
+\end{proposition}
+
+\begin{proof}
+The inclusion maps are the projections $e_r$ viewed as morphisms into $(X,e)$.  Orthogonality gives the isometry relations, and the packet sum gives completeness.  The direct-sum universal property follows by summing square-summable families of morphisms in the completed category.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.72\linewidth]{figures/countable_completion/07_karoubi_splitting.png}
+\caption{Karoubi completion turns packet projections into objects.  Transfer energy between the new objects is exactly the old packet-corner energy.}
+\end{figure}
+
+This step matters conceptually.  Refinement is no longer an informal redraw of one object.  It is an actual passage to a family of subobjects whose direct sum recovers the parent.
+
+\section{Resolved functors and naturality}
+
+A functor between resolved categories should preserve more than composition.  It should preserve the named packet structure and the topology of packet sums.
+
+\begin{definition}[Normal resolution functor]
+A \emph{normal resolution functor}
+\[
+F:\mathcal C\to\mathcal D
+\]
+between resolved $W^*$-categories is a normal $*$-functor such that:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item every named packet projection is sent to the corresponding named packet projection;
+\item countable orthogonal joins are preserved;
+\item declared refinements commute with $F$;
+\item the induced maps on hom-spaces are ultraweakly continuous.
+\end{enumerate}
+\end{definition}
+
+A natural transformation between such functors is objectwise bounded.  In a concrete realization, naturality is the family of intertwining identities
+\[
+\eta_YF(a)=G(a)\eta_X.
+\]
+The numerical implementation measures the defect
+\[
+\sup_{\|a\|\le1}\|\eta_YF(a)-G(a)\eta_X\|
+\]
+on selected finite windows.  A zero defect is exact naturality; a small defect is evidence for an approximate intertwiner, not proof of an exact one.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/countable_completion/06_naturality_defect.png}
+\caption{Perturbing an exact objectwise unitary creates a visible naturality defect.  The diagnostic distinguishes an exact categorical equivalence from a nearby numerical approximation.}
+\end{figure}
+
+\section{Normal joins and $\sigma$-Resolution Logic}
+
+Finite Resolution Logic used Boolean fibers over finite packet partitions.  Countable packet systems require countable joins.  In a concrete von Neumann algebra, a countable orthogonal join is the strong limit of the partial sums.
+
+\begin{definition}[$\sigma$-resolution predicate]
+A $\sigma$-resolution predicate is a projection in the von Neumann endomorphism algebra generated by countable joins, meets, and complements of packet projections.
+\end{definition}
+
+\begin{theorem}[Normal semantic preservation]
+Let $F$ be a faithful normal $*$-functor between resolved $W^*$-categories.  For every increasing sequence of packet predicates $p_n$,
+\[
+F\!\left(\bigvee_np_n\right)=\bigvee_nF(p_n).
+\]
+The same holds for decreasing meets.
+\end{theorem}
+
+\begin{proof}
+Normality is precisely ultraweak continuity on bounded increasing nets of positive operators.  Projections are positive and the partial joins are bounded by the identity.  The join is their ultraweak, equivalently strong, limit.  Apply normality.  Meets follow by complements.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_completion/13_sigma_resolution_logic.png}
+\caption{A finite approximation to countable logical joins.  The rank of the joined predicate grows monotonically as packet propositions are admitted.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_completion/14_normal_join_preservation.png}
+\caption{A normal concrete representation preserves packet joins to numerical precision in the finite audit.  The theorem is exact; the figure checks the implementation.}
+\end{figure}
+
+A complete $\sigma$-Resolution Logic would also need countable proof rules, measurable predicates, and control of failure probabilities under countable composition.  The present theorem supplies the semantic base but does not yet claim a complete infinitary proof system.
+
+
+\part{Unbounded generators, domains, and forms}
+
+An unbounded operator is not a bounded matrix with very large entries.  It is a rule together with a domain, and two formulas that agree on a small common domain need not define the same closed operator.  Resolution Theory must therefore track domains, graph norms, closed forms, resolvents, and bounded transforms as first-class data.
+
+\section{Unbounded transfers and the domain problem}
+
+An unbounded operator is not a bounded arrow defined everywhere.  It is a linear map
+\[
+D:\operatorname{Dom}(D)\subset\mathcal H\to\mathcal H
+\]
+with a specified dense domain.  Before writing $P_iDP_j$, one must know that
+\[
+P_j\operatorname{Dom}(D)\subseteq\operatorname{Dom}(D).
+\]
+Without domain invariance, the formal block may not be defined.
+
+\begin{definition}[Reducing packet for an unbounded operator]
+A projection $P$ \emph{reduces} a closed densely defined operator $D$ when
+\[
+P\operatorname{Dom}(D)\subseteq\operatorname{Dom}(D)
+\]
+and
+\[
+DPx=PDx
+\qquad
+(x\in\operatorname{Dom}(D)).
+\]
+A countable resolution reduces $D$ when every packet projection does.
+\end{definition}
+
+\begin{theorem}[Unbounded direct-sum decomposition]
+Let $D$ be self-adjoint and let $(P_n)$ be a countable resolution reducing $D$.  Put
+\[
+\mathcal H_n=P_n\mathcal H,
+\qquad
+D_n=D|_{\operatorname{Dom}(D)\cap\mathcal H_n}.
+\]
+Then each $D_n$ is self-adjoint on $\mathcal H_n$ and
+\[
+D=\bigoplus_{n\ge1}D_n.
+\]
+For every bounded Borel function $f$,
+\[
+f(D)=\operatorname*{s\! -\! sum}_{n\ge1}P_nf(D)P_n.
+\]
+\end{theorem}
+
+\begin{proof}
+Reduction implies that $P_n$ commutes with the resolvent of $D$, hence with the spectral measure of $D$.  Therefore each packet range is a reducing spectral subspace, the restriction is self-adjoint, and the spectral theorem decomposes $D$ as the orthogonal direct sum of its restrictions.  Bounded Borel functional calculus commutes with every reducing projection, yielding the last identity.
+\end{proof}
+
+\begin{theorem}[Graph-norm reconstruction]
+Under the same hypotheses, if
+\[
+P^{(N)}=\sum_{n=1}^NP_n,
+\]
+then for every $x\in\operatorname{Dom}(D)$,
+\[
+\|x-P^{(N)}x\|_D\longrightarrow0,
+\]
+where
+\[
+\|x\|_D^2=\|x\|^2+\|Dx\|^2.
+\]
+Moreover,
+\[
+\|x\|_D^2
+=
+\sum_{n\ge1}
+\left(
+\|P_nx\|^2+\|DP_nx\|^2
+\right).
+\]
+\end{theorem}
+
+\begin{proof}
+The vectors $P_nx$ are orthogonal.  Because the $P_n$ commute with $D$, the vectors $DP_nx=P_nDx$ are also orthogonal.  Apply Parseval once to $x$ and once to $Dx$.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/countable_unbounded/03_graph_and_form_convergence.png}
+\caption{The same truncation has different errors in Hilbert, graph, and form norms.  The appropriate topology is determined by the object one is trying to approximate, not by a preference for the strongest-looking norm.}
+\end{figure}
+
+
+\section{Finite packet cores in the graph norm}
+Let $D$ be self-adjoint and let $P_N$ be increasing reducing projections.  A vector $x$ belongs to the graph domain precisely when both $x$ and $Dx$ are square summable.  The finite packet vectors form a core when
+\[
+\|x-P_Nx\|_D^2
+=
+\|x-P_Nx\|^2+
+\|Dx-DP_Nx\|^2
+\longrightarrow0.
+\]
+
+\begin{theorem}[Reducing packet core]
+If $P_N\to I$ strongly and every $P_N$ commutes with the spectral measure of a self-adjoint operator $D$, then
+\[
+P_N\operatorname{Dom}(D)\subseteq\operatorname{Dom}(D),
+\qquad
+DP_N=P_ND,
+\]
+and the union $\bigcup_NP_N\operatorname{Dom}(D)$ is a core for $D$ whenever the graph tails above tend to zero for every $x\in\operatorname{Dom}(D)$.
+\end{theorem}
+
+\begin{proof}
+Commutation with the spectral measure implies domain preservation and $DP_N=P_ND$.  For $x\in\operatorname{Dom}(D)$, the graph error is exactly the norm of the omitted part in the Hilbert space $\operatorname{Dom}(D)$ equipped with its graph inner product.  Vanishing of this tail says that finite packet vectors are dense in that graph Hilbert space, which is the definition of a core.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/02_graph_and_form_cores.png}
+\caption{Graph and form tails answer different questions.  The graph norm controls the full operator action; the form norm controls the energy form and can admit a larger domain.}
+\end{figure}
+
+\section{Quadratic forms}
+
+Some operators are most naturally described by a closed semibounded quadratic form $q$ rather than by an explicit domain formula for $D$.  Let
+\[
+\|x\|_q^2=\|x\|^2+q[x]
+\]
+be the form norm.
+
+\begin{proposition}[Form-packet reconstruction]
+Let $q$ be a densely defined closed nonnegative quadratic form.  Suppose a countable resolution $(P_n)$ preserves $\operatorname{Dom}(q)$ and is orthogonal for the form inner product
+\[
+\langle x,y\rangle_q
+=
+\langle x,y\rangle+q(x,y).
+\]
+Then
+\[
+\|x\|_q^2=\sum_n\|P_nx\|_q^2
+\]
+and the partial packet sums converge in form norm.
+\end{proposition}
+
+\begin{proof}
+The form domain is a Hilbert space under $\langle\cdot,\cdot\rangle_q$.  The packet projections are orthogonal and complete in that Hilbert space, so the ordinary Hilbert-space proof applies there.
+\end{proof}
+
+The orthogonality assumption is substantial.  Coordinate orthogonality in $\mathcal H$ does not automatically imply orthogonality in the form norm.
+
+\section{Bounded surrogates for unbounded generators}
+
+Three bounded objects carry most of the useful information about a self-adjoint $D$:
+\[
+R_z(D)=(D-zI)^{-1},
+\qquad
+F_D=D(I+D^2)^{-1/2},
+\qquad
+U_D=(D-iI)(D+iI)^{-1}.
+\]
+The resolvent is bounded for $z\notin\mathbb R$, the bounded transform is a self-adjoint contraction, and the Cayley transform is unitary with the point $1$ encoding infinity.
+
+\begin{theorem}[Bounded-surrogate packetization]
+If a projection $P$ reduces a self-adjoint $D$, then $P$ commutes with every resolvent $R_z(D)$, with $F_D$, with $U_D$, and with every bounded Borel function of $D$.  Conversely, commutation with one nonreal resolvent implies reduction of $D$.
+\end{theorem}
+
+\begin{proof}
+Reduction implies commutation with the spectral measure and hence with the functional calculus.  Conversely, if $P$ commutes with $R_z(D)$, it commutes with
+\[
+D=zI+R_z(D)^{-1}
+\]
+on the range of the resolvent, which is $\operatorname{Dom}(D)$.  This gives domain invariance and commutation on the domain.
+\end{proof}
+
+The theorem suggests a practical rule: when domains are awkward, packetize a bounded surrogate first.  The unbounded operator can then be recovered from the surrogate together with its domain data.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/countable_unbounded/05_resolvent_and_bounded_transform.png}
+\caption{The resolvent suppresses high spectral values, while the bounded transform compresses the real line into the interval $(-1,1)$.  Both are bounded and therefore fit directly into the ordinary transfer algebra.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.58\linewidth]{figures/countable_unbounded/06_cayley_transform.png}
+\caption{The Cayley transform sends the real spectrum to the unit circle.  The missing point $1$ records the unbounded end of the real line.}
+\end{figure}
+
+
+\section{Strong-resolvent convergence and the flow it controls}
+Suppose again that $P_N$ reduces a self-adjoint $D$.  The bounded resolvent corners
+\[
+P_N(D-z)^{-1}P_N
+\]
+converge strongly to $(D-z)^{-1}$.  This is the safe way to compare unbounded finite sections.
+
+\begin{theorem}[Reducing finite windows converge in strong resolvent sense]
+Let $D$ be self-adjoint and $P_N\uparrow I$ strongly with $[P_N,D]=0$ in the spectral sense.  Define
+\[
+D_N=D|_{P_N\mathcal H}\oplus0|_{(I-P_N)\mathcal H}.
+\]
+Then $D_N\to D$ in the strong-resolvent topology.
+\end{theorem}
+
+\begin{proof}
+For $z\notin\mathbb R$,
+\[
+(D_N-z)^{-1}x
+=
+P_N(D-z)^{-1}P_Nx-z^{-1}(I-P_N)x.
+\]
+The first term converges to $(D-z)^{-1}x$ by strong convergence and boundedness of the resolvent; the second tends to zero.
+\end{proof}
+
+The unitary group is even simpler on reducing packets:
+\[
+\|e^{-itD}x-e^{-itD}P_Nx\|
+=
+\|(I-P_N)x\|.
+\]
+The error is independent of time because the omitted spectral tail evolves unitarily inside itself.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/03_strong_resolvent_convergence.png}
+\caption{Strong-resolvent convergence is a statement about the action of bounded resolvents on fixed vectors.  It does not assert operator-norm convergence of the unbounded generators.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/04_uniform_unitary_evolution.png}
+\caption{For an exact reducing spectral resolution, the finite-window evolution error is the norm of the omitted initial tail and is uniform in time.}
+\end{figure}
+
+\section{Approximate reduction and a resolvent certificate}
+
+Exact reduction is often too rigid for computation.  The resolvent provides a bounded way to measure failure.
+
+\begin{theorem}[Resolvent commutator identity]
+Let $D$ be self-adjoint, let $P$ preserve $\operatorname{Dom}(D)$, and suppose $[D,P]$ extends to a bounded operator.  For $z\notin\mathbb R$,
+\[
+\boxed{
+[P,R_z(D)]
+=
+R_z(D)[D,P]R_z(D).
+}
+\]
+Consequently,
+\[
+\boxed{
+\|[P,R_z(D)]\|
+\le
+\frac{\|[D,P]\|}{|\operatorname{Im}z|^2}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+For $A=D-zI$, the inverse-commutator identity gives
+\[
+[P,A^{-1}]
+=-A^{-1}[P,A]A^{-1}
+=A^{-1}[D,P]A^{-1}.
+\]
+The spectral theorem gives
+\[
+\|R_z(D)\|\le|\operatorname{Im}z|^{-1},
+\]
+which yields the norm bound.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/countable_unbounded/18_resolvent_commutator_certificate.png}
+\caption{The resolvent commutator is bounded by a simple expression involving the domain-level commutator.  Moving farther from the real spectrum improves the certificate quadratically.}
+\end{figure}
+
+\section{Unbounded arrows are only partially composable}
+
+Bounded morphisms compose everywhere.  Closed unbounded operators do not.  The product $ST$ is defined only on
+\[
+\{x\in\operatorname{Dom}(T):Tx\in\operatorname{Dom}(S)\},
+\]
+and it may fail to be closed or densely defined.
+
+Resolution Theory should therefore not force unbounded operators into an ordinary category of everywhere-composable arrows.  There are three honest alternatives:
+\begin{enumerate}[label=\arabic*.]
+\item work with bounded transforms or resolvents, which are ordinary morphisms;
+\item work with a partial category in which composition is defined only when the domain condition is verified;
+\item work with regular operators on Hilbert $C^*$-modules and use the established calculus of affiliated or regular operators \cite{Lance1995,KaadLesch2012}.
+\end{enumerate}
+
+The finite code uses the first option.  It stores an unbounded diagonal generator through its resolvent, bounded transform, or Cayley transform and checks packet reconstruction there.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.88\linewidth]{figures/countable_unbounded/14_packetized_bounded_transform.png}
+\caption{A bounded transform can be split into packets exactly even when the original spectral values grow without bound.  The packet labels remain ordinary bounded operator coordinates.}
+\end{figure}
+
+\section{Unbounded generators as affiliated structure}
+
+The safest categorical placement of an unbounded self-adjoint generator is not as an ordinary hom-space element.  It is an operator affiliated with the represented endomorphism algebra, or equivalently an object described through its resolvent and bounded transform.
+
+\begin{definition}[Resolved affiliated generator]
+A self-adjoint operator $D$ on the represented object space $H_X$ is \emph{resolved and affiliated} when:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item its spectral projections belong to the von Neumann algebra generated by the represented endomorphism algebra;
+\item its resolvent belongs to the multiplier or von Neumann completion;
+\item the declared packet projections preserve its domain or, at minimum, satisfy a stated bounded commutator condition.
+\end{enumerate}
+\end{definition}
+
+Exact reducing packets give a direct sum of affiliated generators.  Approximate packets give resolvent and dynamical leakage certificates.  The bounded transform
+\[
+F_D=D(1+D^2)^{-1/2}
+\]
+is an ordinary contraction and therefore participates in the bounded transfer category.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_completion/08_bounded_transform.png}
+\caption{The bounded transform retains the ordering of an unbounded spectrum while placing it in a bounded interval.  This is the most direct bridge from unbounded dynamics to the ordinary transfer algebra.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_completion/09_resolvent_truncation.png}
+\caption{A compact resolvent is recovered in operator norm from finite spectral windows.  The original unbounded operator is handled through the bounded object that actually converges.}
+\end{figure}
+
+\section{Approximate invariance and leakage}
+
+When $[D,P]\ne0$, the packet is not invariant.  For a bounded self-adjoint finite model, Duhamel's formula gives
+\[
+(I-P)e^{-itD}P
+=-i\int_0^t(I-P)e^{-i(t-s)D}[D,P]e^{-isD}P\,ds,
+\]
+so
+\[
+\boxed{
+\|(I-P)e^{-itD}P\|
+\le
+|t|\,\|[D,P]\|.
+}
+\]
+The same principle extends to suitable unbounded generators when the commutator is bounded on the domain.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_completion/11_leakage_bound.png}
+\caption{The commutator bound is deliberately conservative.  It supplies a rigorous envelope for packet leakage rather than an optimistic fit to one trajectory.}
+\end{figure}
+
+\section{Quadratic-form packet objects}
+
+A semibounded generator may be represented by a closed form $q$.  If packet projections are orthogonal in the form norm, the form decomposes exactly.  Cross-form corners
+\[
+q(P_ix,P_jy),\qquad i\ne j,
+\]
+measure the failure of form-level reduction.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.76\linewidth]{figures/countable_completion/12_quadratic_form_packets.png}
+\caption{A positive form with three reducing packet sectors.  The diagonal blocks carry the form energy and the cross-packet form residual vanishes.}
+\end{figure}
+
+This form language is often better than manipulating an unbounded matrix directly.  It keeps semiboundedness and closure visible and avoids pretending that every vector lies in the operator domain.
+
+
+\part{Measurable packet fields and local-to-global structure}
+
+A single packet basis may fail globally even when good packet systems exist locally.  The correct replacement is a measurable field of Hilbert spaces, operators, and projectors.  Direct integrals assemble the fibers without requiring one globally continuous frame.  The distinction matters near spectral crossings, where the invariant subspace may remain measurable while any preferred eigenvector becomes unstable or impossible to choose continuously.
+
+\section{Measurable packet atlases and direct integrals}
+
+Countability is not the only infinite direction.  A continuously varying resolution is naturally represented by a measurable field of Hilbert spaces
+\[
+\mathcal H=\int_X^{\oplus}\mathcal H_x\,d\mu(x)
+\]
+and measurable projection fields $P_n(x)$.
+
+\begin{theorem}[Decomposable packet reconstruction]
+Let $T=\int_X^{\oplus}T(x)\,d\mu(x)$ be a bounded decomposable operator and let $P_n=\int_X^{\oplus}P_n(x)\,d\mu(x)$ be countably many measurable orthogonal projection fields satisfying
+\[
+\sum_nP_n(x)=I_{\mathcal H_x}
+\]
+strongly for almost every $x$.  Then
+\[
+T=\operatorname*{s\! -\! sum}_{m,n}P_mTP_n,
+\]
+and each block is decomposable:
+\[
+P_mTP_n
+=
+\int_X^{\oplus}P_m(x)T(x)P_n(x)\,d\mu(x).
+\]
+Furthermore,
+\[
+\|T\|
+=
+\operatorname*{ess\,sup}_{x\in X}\|T(x)\|.
+\]
+\end{theorem}
+
+\begin{proof}
+All statements are fiberwise.  Measurability and essential boundedness make the block fields decomposable.  The fiberwise strong reconstruction theorem holds almost everywhere and is dominated by $\|T\|$, so the direct-integral action on every square-integrable section converges by dominated convergence.  The norm formula is the standard norm identity for decomposable operators.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/countable_unbounded/17_measurable_projection_field.png}
+\caption{A rank-one packet rotates measurably over the base parameter while a decomposable operator varies in the same fibers.  The mixed blocks reconstruct the field pointwise and therefore reconstruct the direct-integral operator.}
+\end{figure}
+
+This theorem gives a measurable packet atlas.  It does not provide a universal property for direct integrals in every abstract $C^*$-category.  That broader categorical problem remains separate.
+
+
+\section{Fiberwise reconstruction and measurable chart covariance}
+Let
+\[
+\mathcal H=\int_X^{\oplus}\mathcal H_x\,d\mu(x)
+\]
+and let $T=\int_X^{\oplus}T(x)\,d\mu(x)$ be decomposable.  Suppose $P_1(x),\ldots,P_r(x)$ are measurable orthogonal projector fields with
+\[
+\sum_jP_j(x)=I_{\mathcal H_x}
+\]
+for almost every $x$.
+
+\begin{theorem}[Direct-integral packet reconstruction]
+The operators
+\[
+P_j=\int_X^{\oplus}P_j(x)\,d\mu(x)
+\]
+form an orthogonal resolution of $\mathcal H$, and
+\[
+T=\sum_{i,j}P_iTP_j.
+\]
+Moreover,
+\[
+\|T\|=\operatorname*{ess\,sup}_{x\in X}\|T(x)\|.
+\]
+\end{theorem}
+
+\begin{proof}
+All identities hold fiberwise almost everywhere.  Measurability makes the fields decomposable, and the norm identity is the standard norm formula for decomposable operators.  Integrating the finite fiberwise reconstruction yields the global result.
+\end{proof}
+
+If a measurable unitary field $U(x)$ changes chart, then
+\[
+\widetilde P_j(x)=U(x)P_j(x)U(x)^*,
+\qquad
+\widetilde T(x)=U(x)T(x)U(x)^*,
+\]
+and every corner transforms covariantly:
+\[
+\widetilde P_i\widetilde T\widetilde P_j
+=
+U(P_iTP_j)U^*.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/companion/08_measurable_chart_equivalence.png}
+\caption{Two measurable charts for the same packet field.  The coordinates change, but the resolved corner relation is carried by conjugation.}
+\end{figure}
+
+
+\section{Spectral gaps and the stability of measurable packets}
+Spectral projectors are stable only while the cluster they select remains separated from the rest of the spectrum.  If a contour $\Gamma$ encloses one spectral cluster, the Riesz formula
+\[
+P(x)=\frac{1}{2\pi i}\int_\Gamma(z-H(x))^{-1}\,dz
+\]
+shows that the packet inherits the regularity of the resolvent as long as the contour remains in the resolvent set.
+
+The finite two-band example below makes the point visible.  As the gap narrows, the projector field turns more sharply.  At gap closure the selected spectral line can no longer be transported by the same isolated-cluster theorem.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/companion/07_gap_and_projector_variation.png}
+\caption{The gap does not merely label a phase.  It controls how stably a spectral packet may be transported across the base parameter.}
+\end{figure}
+
+
+\part{Worked models, certificates, and proof practice}
+
+The value of an infinite theory is tested by the quality of its finite statements.  This part collects models that force the distinctions made earlier: an operator that converges strongly but never in norm, a compact operator that does converge in norm, a local Jacobi problem, a trace-class state, a nonreducing graph window, and a measurable two-band field.  The final sections turn those examples into a reusable proof workflow.
+
+\section{Worked example: a spectral tower}
+
+Let
+\[
+De_n=ne_n
+\]
+on $\ell^2(\mathbb N)$.  The coordinate packets $P_n=|e_n\rangle\langle e_n|$ reduce $D$.  For
+\[
+x_n=n^{-2.2},
+\]
+we have
+\[
+\sum_nn^2|x_n|^2<\infty,
+\]
+so $x\in\operatorname{Dom}(D)$.  The graph-norm truncation error is
+\[
+\|x-P^{(N)}x\|_D^2
+=
+\sum_{n>N}(1+n^2)n^{-4.4}.
+\]
+The resolvent at $i$ is diagonal with entries
+\[
+(n-i)^{-1},
+\]
+and the norm of its omitted tail is
+\[
+\sup_{n>N}|n-i|^{-1}=|(N+1)-i|^{-1}.
+\]
+The unbounded operator itself does not converge in operator norm under truncation because it is not bounded; its resolvent does.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/countable_unbounded/04_domain_threshold.png}
+\caption{Domain membership is visible as a summability threshold.  Some power-law vectors are in the Hilbert space but not in the graph domain of the unbounded generator.}
+\end{figure}
+
+\section{Worked example: compactness versus the shift}
+
+Let
+\[
+Ke_n=n^{-3/2}e_n.
+\]
+Then $K$ is compact and
+\[
+\|K-P^{(N)}KP^{(N)}\|
+=(N+1)^{-3/2}\to0.
+\]
+By contrast, let $S$ be the unilateral shift.  For every finite $N$, there is a unit vector outside the retained range on which
+\[
+(S-P^{(N)}SP^{(N)})x=Sx,
+\]
+so
+\[
+\|S-P^{(N)}SP^{(N)}\|=1.
+\]
+Both operators reconstruct strongly.  Only the compact one reconstructs in norm.
+
+
+\section{A local Jacobi problem}
+A banded operator on a countable chain is not compact merely because it is local.  Nevertheless, a resolvent applied to a localized probe can often be approximated accurately by a sufficiently large finite window.  The certificate is not a global operator-norm claim; it is an error estimate for the chosen probe, spectral parameter, and window.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/06_jacobi_resolvent_window.png}
+\caption{A finite Jacobi window resolves a local resolvent probe.  The result is useful precisely because its scope is stated: one probe and one resolvent parameter, not uniform recovery of the whole infinite operator.}
+\end{figure}
+
+\section{Worked example: a countable linking window}
+
+Take countably many finite-dimensional object spaces $H_x$ and a finite-support morphism matrix.  Every finite window is an ordinary linking matrix.  Enlarging the window gives the countable algebra.  The code verifies exact corner recovery and exact path-sum composition on each finite window.  The theorem guarantees that these windows form a nondegenerate representation of the completed linking algebra.
+
+\section{Worked example: a measurable two-packet field}
+
+Let
+\[
+v(t)=\begin{pmatrix}\cos t\\ \sin t\end{pmatrix},
+\qquad
+P(t)=v(t)v(t)^*,
+\qquad
+Q(t)=I-P(t).
+\]
+For a measurable matrix field $T(t)$,
+\[
+T(t)=P(t)T(t)P(t)+P(t)T(t)Q(t)+Q(t)T(t)P(t)+Q(t)T(t)Q(t)
+\]
+pointwise.  The numerical example reconstructs the field to a maximum residual below
+\[
+6\times10^{-16}.
+\]
+This is the continuous-base analogue of a two-packet atlas.
+
+
+\section{A projection can be convenient and still be wrong}
+Coordinate windows are natural on a sequence space, but they need not reduce the generator.  For the path-graph Laplacian, cutting after the $N$th coordinate leaves one boundary edge crossing the packet boundary.  The defect
+\[
+\|(I-P_N)DP_N\|
+\]
+therefore remains visible.  In a diagonal spectral resolution, the same defect vanishes exactly.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/companion/09_domain_reduction_defect.png}
+\caption{The graph Laplacian exposes the boundary coupling of a coordinate cutoff.  A spectral packet is reducing; a coordinate packet is only local.}
+\end{figure}
+
+\section{Computational audit}
+
+The Python reference implementation checks the finite shadows of the infinite theorems.  It does not pretend to store an infinite Hilbert space.  Instead, it verifies identities that should remain stable as finite windows grow:
+\begin{enumerate}[label=\arabic*.]
+\item strong vector-tail decay while the norm defect remains one;
+\item norm convergence for compact and trace-class diagonal models;
+\item Hilbert--Schmidt packet Parseval;
+\item graph- and form-norm convergence;
+\item bounded-transform and Cayley recovery;
+\item exact resolvent reduction;
+\item leakage under nonreducing packets;
+\item finite-support linking assembly and corner recovery;
+\item direct-sum norm preservation;
+\item path-sum composition;
+\item measurable-field reconstruction;
+\item the resolvent commutator identity and its bound.
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{L{2.1in}L{1.2in}L{2.5in}}
+\toprule
+Object & Natural convergence & Stronger conclusion under extra structure\\
+\midrule
+Countable projection sum & strong / ultraweak & norm only in finite completion\\
+Bounded operator corners & strong-star & norm for compact operators\\
+Hilbert--Schmidt operator & Hilbert--Schmidt norm & exact packet Parseval\\
+Trace-class operator & trace norm & absolutely summable singular tail\\
+Self-adjoint unbounded operator & graph norm on domain & bounded functional calculus in operator norm where appropriate\\
+Closed semibounded form & form norm & direct-sum form decomposition under form orthogonality\\
+Multiplier object projections & strict in multiplier algebra & strong in every nondegenerate representation\\
+Normal $W^*$ packet joins & ultraweak / strong & preserved by normal representations\\
+\bottomrule
+\end{tabular}
+\caption{The infinite calculus does not have one universal topology.  Each row records the topology naturally attached to the mathematical object being represented.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\linewidth]{figures/countable_unbounded/15_topology_ladder.png}
+\caption{Norm, strong, strict, graph, form, and ultraweak convergence are not competing stylistic choices.  They solve different representation problems.}
+\end{figure}
+
+\section{Certified truncation as a categorical planner}
+
+A countable theory still needs finite calculations.  Let $\varepsilon_N$ be a certified tail bound for the first $N$ objects and let $c_N$ be the cost of the corresponding finite section.  The least-cost feasible truncation is
+\[
+N_*(\tau)
+=
+\arg\min\{c_N:\varepsilon_N\le\tau\}.
+\]
+
+\begin{proposition}[First-feasible rule]
+If $\varepsilon_N$ is nonincreasing and $c_N$ is nondecreasing, then the least-cost feasible truncation is the first $N$ for which
+\[
+\varepsilon_N\le\tau.
+\]
+\end{proposition}
+
+\begin{proof}
+Every smaller $N$ is infeasible.  Every larger $N$ has cost at least $c_N$.  Hence the first feasible index is optimal.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/countable_completion/15_truncation_planner.png}
+\caption{A resolution planner should stop at the first finite section that meets the stated certificate.  Refining farther is mathematically allowed, but not automatically useful.}
+\end{figure}
+
+
+\section{A proof workflow for infinite resolved systems}
+The practical order matters.  Starting with a cutoff and hoping the error becomes small is rarely enough.
+
+\begin{enumerate}[label=\arabic*.]
+\item Identify the object class: bounded, compact, trace class, unbounded self-adjoint, semibounded form, multiplier, or normal join.
+\item Choose a packet system adapted to the operator, not merely easy to index.
+\item Select the topology native to the object.
+\item Prove a tail estimate in that topology.
+\item State exactly what the finite computation reconstructs.
+\item Record the cost and stop at the first certified feasible resolution.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/companion/15_proof_workflow.png}
+\caption{A finite calculation becomes a theorem only after its topology, domain, tail, and reconstruction claim have been identified.}
+\end{figure}
+
+
+\section{Common failure modes}
+The same mistakes recur often enough to deserve a compact ledger.
+
+{\small\setlength{\tabcolsep}{4pt}\begin{longtable}{L{1.85in}L{4.25in}}
+\toprule
+Tempting shortcut & What actually has to be proved\\
+\midrule
+$\sum_nP_n=I$, therefore norm convergence & Usually only strong convergence; norm convergence needs compact or ideal tails.\\
+$P_NDP_N$ is a finite approximation to $D$ & First prove domain preservation or work with forms, resolvents, or bounded transforms.\\
+A countable linking algebra has the obvious unit & The object sum generally converges strictly in the multiplier algebra.\\
+A local eigenbasis can be chosen globally & A measurable projector field may exist even when a continuous eigenvector frame does not.\\
+More packets always improve the computation & Algebraic refinement is free only on paper; numerical gain requires smaller certified tails or reusable structure.\\
+A small commutator proves exact invariance & It proves a leakage bound, not exact reduction.\\
+A finite window converges for one probe, therefore in operator norm & Probe convergence and uniform operator convergence are different claims.\\
+\bottomrule
+\end{longtable}}
+
+\section{Categorical completion theorem}
+
+\begin{theorem}[Countable resolved categorical completion]
+Let $\mathcal C$ be a countable resolved $C^*$-category with countable orthogonal packet families.  Assume a faithful nondegenerate representation and close the represented system under countable $\ell^2$-direct sums and split packet idempotents.  Then:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the bounded part is a countably additive resolved $C^*$-category;
+\item the packet objects form its resolved Karoubi envelope;
+\item the countable linking algebra represents all finite-support transfers and their norm limits;
+\item object and packet projections act as multipliers and sum strongly;
+\item normal completion yields a resolved $W^*$-category in which countable packet joins are preserved;
+\item reduced unbounded self-adjoint generators define affiliated packet objects through their graph domains, resolvents, and bounded transforms;
+\item certified finite sections converge in the topology appropriate to the represented object.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The countable additive construction supplies (i).  Splitting all packet projections gives (ii).  The countable linking theorem gives (iii) and (iv).  Ultraweak closure and the normal representation theorem for $W^*$-categories give (v).  The unbounded direct-sum, graph-norm, form, and bounded-surrogate theorems give (vi).  The strong, compact, Schatten, resolvent, and planner results give (vii).
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/countable_completion/16_theorem_dependency.png}
+\caption{The categorical completion is a dependency chain rather than a single change of notation.  Countable sums, linking completion, Karoubi splitting, normality, domain control, and certified truncation each solve a different obstruction.}
+\end{figure}
+
+\section{Exact boundary of the result}
+
+The completion theorem does not prove that every abstract higher category, tensor category, or measurable stack has a faithful resolution-preserving fiber functor.  It does not make arbitrary unbounded operators composable.  It does not prove a universal direct-integral construction for every $C^*$-category.  It does not turn approximate naturality into exact equivalence.
+
+What it does establish is the correct second stage of the theory:
+\[
+\boxed{
+\text{finite projector corners}
+\longrightarrow
+\text{countable linking systems}
+\longrightarrow
+\text{normal and affiliated completion}.
+}
+\]
+
+The next open item is genuinely higher and measurable: a descent theorem for fields of resolved categories, with direct-integral or stack-like gluing, monoidal compatibility, and certificates that survive local-to-global passage.
+
+
+\part{What has been completed, and what comes next}
+
+\section{The completed second stage of Resolution Theory}
+The finite theory showed that resolved corners can represent and reconstruct a bounded algebraic system.  The present companion establishes the next stage:
+\[
+\boxed{
+\text{finite projector corners}
+\longrightarrow
+\text{countable linking systems}
+\longrightarrow
+\text{normal and affiliated completion}.
+}
+\]
+The chain is now supported by precise convergence topologies, graph and form domains, multiplier projections, normal joins, measurable packet fields, and certified finite windows.
+
+The central achievement is not that every infinite object has been made finite.  It is that the passage from infinite structure to finite computation has been typed.  A truncation now says what it converges to, in which topology, on which domain, and with which certificate.
+
+\section{The next theorem: measurable descent}
+The next unresolved step is local-to-global.  Suppose a base space is covered by measurable or continuous regions, each carrying a resolved category, and suppose the overlap functors satisfy cocycle laws.  One wants a theorem that constructs a global resolved object and proves that transfer blocks, packet predicates, nonlinear interactions, and quantitative certificates descend coherently.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\linewidth]{figures/companion/14_measurable_descent.png}
+\caption{The next frontier is not another finite-window estimate.  It is a descent theorem that glues locally valid resolved categories without demanding one universal global chart.}
+\end{figure}
+
+A satisfactory descent theorem would need to preserve at least:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item measurable or continuous packet fields;
+\item corner composition and dagger structure;
+\item monoidal products when present;
+\item countable joins in the normal setting;
+\item affiliated unbounded generators;
+\item error, cost, and failure certificates;
+\item the evidence history attached to a local construction.
+\end{enumerate}
+
+This is where Resolution Theory meets stacks, measurable fields of categories, direct integrals, and higher gluing.  The present work supplies the bounded, countable, normal, and unbounded pieces that such a theorem would have to assemble.
+
+\section{Closing perspective}
+The infinite theory changes the emotional texture of the subject.  In a finite matrix, every corner is visible at once.  In an infinite system, knowledge is necessarily partial: a finite window, a domain core, a resolvent parameter, a normal state, or a measurable chart.  The task is not to pretend that partial knowledge is complete.  It is to make the passage between the partial and the complete mathematically exact.
+
+Resolution Theory is useful here because it refuses to separate representation from validity.  The packet system, convergence topology, domain, and certificate are carried together.  Once those data are present, finite computation can be honest about the infinite object it represents.
+
+\appendix
+\part{Reference code and verification}
+\section{Reference implementation: countable and unbounded resolution}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{code/countable_unbounded.py}
+\clearpage
+\section{Reference implementation: categorical completion}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{code/categorical_completion.py}
+\clearpage
+\section{Companion examples and certificates}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{code/beyond_finite_examples.py}
+\clearpage
+\section{Automated tests: countable and unbounded resolution}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{tests/test_countable_unbounded.py}
+\clearpage
+\section{Automated tests: categorical completion}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{tests/test_categorical_completion.py}
+\clearpage
+\section{Automated tests: companion examples}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{tests/test_beyond_finite_examples.py}
+\clearpage
+\section{Experiment and visual-generation source}
+\lstinputlisting[language=Python,basicstyle=\ttfamily\tiny,breaklines=true]{beyond_finite_experiments.py}
+\clearpage
+\begin{thebibliography}{12}
+\bibitem{GLR1985}
+P.~Ghez, R.~Lima, and J.~E.~Roberts,
+``W$^*$-categories,''
+\emph{Pacific Journal of Mathematics} 120 (1985), 79--109.
+
+\bibitem{Mitchener2002}
+P.~D.~Mitchener,
+``$C^*$-categories,''
+\emph{Proceedings of the London Mathematical Society} 84 (2002), 375--404.
+
+\bibitem{FritzWesterbaan2020}
+T.~Fritz and B.~Westerbaan,
+``The universal property of infinite direct sums in $C^*$-categories and $W^*$-categories,''
+\emph{Applied Categorical Structures} 28 (2020), 355--365.
+
+\bibitem{Lance1995}
+E.~C.~Lance,
+\emph{Hilbert $C^*$-Modules: A Toolkit for Operator Algebraists},
+Cambridge University Press, 1995.
+
+\bibitem{KaadLesch2012}
+J.~Kaad and M.~Lesch,
+``A local global principle for regular operators in Hilbert $C^*$-modules,''
+\emph{Journal of Functional Analysis} 262 (2012), 4540--4569.
+
+\bibitem{Kato1995}
+T.~Kato,
+\emph{Perturbation Theory for Linear Operators},
+Springer, 1995.
+
+\bibitem{ReedSimon1980}
+M.~Reed and B.~Simon,
+\emph{Methods of Modern Mathematical Physics I: Functional Analysis},
+Academic Press, 1980.
+
+\bibitem{Takesaki2002}
+M.~Takesaki,
+\emph{Theory of Operator Algebras I},
+Springer, 2002.
+\end{thebibliography}
+\end{document}

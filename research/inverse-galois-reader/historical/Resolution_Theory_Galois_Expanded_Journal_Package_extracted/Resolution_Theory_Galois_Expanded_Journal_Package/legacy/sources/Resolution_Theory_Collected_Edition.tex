@@ -1,0 +1,2230 @@
+
+\documentclass[11pt,oneside]{book}
+\usepackage[letterpaper,margin=.86in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem}
+\usepackage{graphicx,float,subcaption}
+\usepackage{xcolor,hyperref,listings}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black,
+  pdftitle={Resolution Theory: Collected Edition - Representation, Transfer, Logic, Proof Paths, and Mathematical Practice},
+  pdfauthor={Komorebi P.},
+  pdfcreator={},pdfproducer={}
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setcounter{tocdepth}{2}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{conjecture}[definition]{Conjecture}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{example}[definition]{Example}
+\newcommand{\Path}{\Pi}
+\newcommand{\Dfield}{\mathcal D}
+\newcommand{\G}{\mathcal G}
+\newcommand{\Lset}{\mathcal L}
+\newcommand{\I}{\mathcal I}
+\newcommand{\Pspace}{\mathcal P}
+\newcommand{\Mspace}{\mathcal M}
+\newcommand{\Qspace}{\mathcal Q}
+\newcommand{\Nspace}{\mathcal N}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\DeclareMathOperator{\Comp}{Comp}
+\DeclareMathOperator{\Lost}{Lost}
+\DeclareMathOperator{\Bridge}{Bridge}
+\DeclareMathOperator{\Depth}{Depth}
+\DeclareMathOperator{\Cost}{Cost}
+\DeclareMathOperator{\Noise}{Noise}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\supp}{supp}
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  showstringspaces=false,
+  frame=single,
+  columns=fullflexible,
+  tabsize=4
+}
+\begin{document}
+\begin{titlepage}
+\centering
+\vspace*{.8in}
+{\Huge\bfseries Resolution Theory\par}
+\vspace{.10in}
+{\Large\scshape Collected Edition\par}
+\vspace{.22in}
+{\Large Representation, Transfer, Nonlinearity, Logic, Proof Paths,\par}
+{\Large and Mathematical Practice\par}
+\vspace{.35in}
+{\large A collected account of finite and infinite systems, nonlinear transfer,\par}
+{\large certified reasoning, proof paths, and mathematical memory\par}
+\vfill
+{\Large Komorebi P.\par}
+\vspace{.7in}
+\end{titlepage}
+
+\frontmatter
+\chapter*{Why this is the collected edition}
+\addcontentsline{toc}{chapter}{Why this is the collected edition}
+A shorter reading edition was useful for seeing the dependency chain, but it compressed the project too aggressively.  In particular, it made the proof-path theory look like a philosophical conclusion rather than a mathematical branch with its own objects, closure conditions, error models, evidence ledger, review model, and computational tests.
+
+This edition restores the full integrated theory and keeps the older methodology intact.  It then adds a formal proof-path graph model rather than replacing the human account with one.  The two layers serve different purposes.  The methodology explains why examples, failed routes, boundary cases, and interpretation histories matter.  The formal model states exactly when a compressed certificate remains verification complete, what kinds of value may be lost, and how future bridge value, review correlation, audit capacity, and reconstruction cost can be calculated under explicit assumptions.
+
+The result is still one paper.  The word ``collected'' means that the formal theory, the full methodology, the computational models, and the source listings remain together instead of being traded against one another.
+
+\chapter*{Opening question}
+\addcontentsline{toc}{chapter}{Opening question}
+\begin{center}
+\Large\itshape What do mathematics, computer science, statistics, or even technology mean to you?
+\end{center}
+
+For some people mathematics is proof.  For others it is structure, calculation, explanation, invention, or a language for patterns that would otherwise remain invisible.  Computer science may mean algorithms, machines, abstraction, or the discipline of making a thought executable.  Statistics may mean uncertainty, evidence, judgment, or the art of saying exactly how much a conclusion deserves to be trusted.  Technology may mean tools, institutions, hardware, power, or the point where an idea begins to alter the world.
+
+This paper begins from a simpler claim: none of these subjects is encountered without a representation.  We choose coordinates, packets, variables, bases, scales, covers, models, observables, proof formats, data summaries, and computational architectures.  Those choices are often described as secondary.  In practice they determine what can be seen, what can be proved, what can be computed, and what is forgotten.
+
+Resolution Theory keeps that choice inside the mathematics.  It studies an object together with the family of ways in which the object may be resolved; the transfers revealed by each resolution; the refinements, compressions, and reconstructions that relate them; the nonlinear interactions hidden inside coarse packets; the certificates that carry error and evidence; and the proof paths that explain how the object became knowable.
+
+This collected edition is written as one argument, but it does not compress the proof-path branch into a short afterword.  The formal theory, the full methodology, the computational models, and the source listings are kept together.  It begins with finite projector systems because every identity can be seen there without ambiguity.  It then proves a concrete representation theorem, crosses the boundary to countable and unbounded systems, develops the nonlinear operad, adds a logic of certified resolution, incorporates the complete proof-path methodology, and closes by returning to the opening question.
+
+\chapter*{How to read the paper}
+\addcontentsline{toc}{chapter}{How to read the paper}
+The dependency path is
+\[
+\boxed{\begin{minipage}{0.88\linewidth}
+\centering
+finite resolution $\to$ representation $\to$ infinite completion\\[2pt]
+$\to$ nonlinear interaction $\to$ Resolution Logic\\[2pt]
+$\to$ proof paths $\to$ mathematical practice
+\end{minipage}}
+\]
+A reader interested mainly in algebra can stop after Chapters 2 and 3.  A reader working with differential equations or spectral theory should continue through Chapter 4.  A reader interested in nonlinear systems should read Chapter 5.  A reader concerned with proof assistants, numerical certification, or evidence should read Chapter 6.  The methodology in Chapter 7 is not commentary added after the mathematics; it explains what happens when the same ideas are applied to proofs, research archives, collective interpretation, and mathematical memory.
+
+Throughout the paper four statuses remain separate:
+\[
+\boxed{
+\text{proved}
+\qquad
+\text{conditional}
+\qquad
+\text{computationally verified}
+\qquad
+\text{open}.
+}
+\]
+The Python code checks finite identities and produces the figures.  It is evidence about implementations, not a replacement for the proofs.
+
+\tableofcontents
+\mainmatter
+
+\chapter{The object together with its resolutions}
+
+\section{The primitive resolved object}
+The ordinary notation for a mathematical object suppresses how the object is being viewed.  Resolution Theory restores that information.  In the finite linear setting a resolved object is a Hilbert space together with a complete orthogonal projector family
+\[
+\mathcal H=\bigoplus_{i\in I}\mathcal H_i,
+\qquad
+P_iP_j=\delta_{ij}P_i,
+\qquad
+\sum_iP_i=I.
+\]
+The packet \(\mathcal H_i=P_i\mathcal H\) is not assumed to be physically fundamental.  It is a declared region of visibility.  Another problem may use another resolution of the same underlying space.
+
+For a second resolved space \((\mathcal K,\{Q_a\})\), a linear map \(T:\mathcal H\to\mathcal K\) has mixed transfers
+\[
+T_{ai}=Q_aTP_i.
+\]
+The collection \((T_{ai})\) is the transfer field of \(T\) in the chosen source and target resolutions.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.88\linewidth]{figures/13_unified_architecture.png}
+\caption{The full object of study includes the problem, its admissible resolutions, transfer fields, nonlinear interactions, certificates, and proof history.}
+\end{figure}
+
+\section{Exact reconstruction and composition}
+\begin{theorem}[Mixed block representation]
+For finite complete orthogonal resolutions,
+\[
+\boxed{T=\sum_{a,i}Q_aTP_i.}
+\]
+If \(S:\mathcal K\to\mathcal L\) and \(\{R_c\}\) resolves \(\mathcal L\), then
+\[
+\boxed{(ST)_{ci}=\sum_aS_{ca}T_{ai}.}
+\]
+Moreover,
+\[
+(T^*)_{ia}=(T_{ai})^*.
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the two resolutions of the identity on either side of \(T\):
+\[
+T=I_\mathcal KTI_\mathcal H
+=\left(\sum_aQ_a\right)T\left(\sum_iP_i\right).
+\]
+For composition, insert \(I_\mathcal K=\sum_aQ_a\) between \(S\) and \(T\).  The adjoint identity follows from \((Q_aTP_i)^*=P_iT^*Q_a\).
+\end{proof}
+
+This theorem is elementary.  Its role is foundational because every later construction is required to preserve it rather than merely resemble it.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.72\linewidth]{figures/01_transfer_energy.png}
+\caption{The squared Hilbert--Schmidt norm of every mixed corner gives an exact transfer-energy field.}
+\end{figure}
+
+\section{Hilbert--Schmidt orthogonality}
+\begin{theorem}[Packet Parseval identity]
+If \(T\) is Hilbert--Schmidt, then
+\[
+\boxed{\|T\|_{\mathrm{HS}}^2
+=\sum_{a,i}\|Q_aTP_i\|_{\mathrm{HS}}^2.}
+\]
+Distinct corners are mutually orthogonal in the Hilbert--Schmidt inner product.
+\end{theorem}
+
+\begin{proof}
+For two corners,
+\[
+\langle Q_aTP_i,Q_bTP_j\rangle_{\mathrm{HS}}
+=\operatorname{Tr}(P_iT^*Q_aQ_bTP_j).
+\]
+Orthogonality of the target projectors removes the term when \(a\ne b\); cyclicity of the trace and orthogonality of the source projectors remove it when \(i\ne j\).  Pythagoras applied to the exact reconstruction proves the identity.
+\end{proof}
+
+This identity turns compression into geometry.  Omitted blocks are an orthogonal residual, not an informal remainder.
+
+\section{Refinement and coarsening}
+Suppose a packet is opened into descendants,
+\[
+P_i=\sum_{\alpha\in C(i)}P_{i\alpha}.
+\]
+Then every coarse transfer is exactly the sum of its fine descendants.
+
+\begin{theorem}[Refinement coherence]
+If source, intermediate, and target resolutions are compatibly refined, then refining, composing at the fine level, and coarsening gives the same result as composing at the coarse level.
+\end{theorem}
+
+\begin{proof}
+Expand every coarse projector as the sum of its descendants.  Fine composition introduces a sum over all intermediate descendants.  Summing those descendants reconstructs the coarse intermediate projector, leaving the coarse block product.
+\end{proof}
+
+This is the first place where resolution becomes more than a fixed block matrix.  It gives a second direction of composition: horizontal arrows transform objects; vertical arrows change how the objects are resolved.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.77\linewidth]{figures/02_refinement_entropy.png}
+\caption{Refinement reveals transfer structure that one coarse block had merged into a single entry.}
+\end{figure}
+
+\section{Compression and exact residuals}
+For a selected edge set \(E\subseteq A\times I\), define
+\[
+C_E(T)=\sum_{(a,i)\in E}Q_aTP_i.
+\]
+
+\begin{theorem}[Selective-compression error]
+\[
+\boxed{\|T-C_E(T)\|_{\mathrm{HS}}^2
+=\sum_{(a,i)\notin E}\|Q_aTP_i\|_{\mathrm{HS}}^2.}
+\]
+Among all approximations retaining at most \(k\) blocks of one fixed resolution, the optimal approximation keeps the \(k\) blocks with largest squared Hilbert--Schmidt norms.
+\end{theorem}
+
+\begin{proof}
+The corner subspaces are orthogonal.  The first identity is Pythagoras.  The second reduces to retaining the \(k\) largest entries of a nonnegative list.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.75\linewidth]{figures/03_best_k_compression.png}
+\caption{For a fixed resolution the best-\(k\) residual is not estimated; it is computed exactly from the omitted block energies.}
+\end{figure}
+
+\section{Transfer entropy and resolution complexity}
+Normalize the block energies of a nonzero Hilbert--Schmidt operator:
+\[
+p_{ai}=\frac{\|Q_aTP_i\|_{\mathrm{HS}}^2}{\|T\|_{\mathrm{HS}}^2}.
+\]
+The transfer entropy is
+\[
+H_{\mathcal Q\leftarrow\mathcal P}(T)
+=-\sum_{a,i}p_{ai}\log p_{ai}.
+\]
+Compatible refinement obeys the ordinary entropy chain rule and therefore cannot decrease this resolved entropy.  Changing to a better adapted resolution, however, may reduce the entropy dramatically because representation and refinement are different operations.
+
+The hidden-block experiment gives
+\[
+H_{\mathrm{adapted}}=1.053506,
+\qquad
+H_{\mathrm{unadapted}}=2.149500.
+\]
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{.48\linewidth}
+\includegraphics[width=\linewidth]{figures/04_adapted_resolution.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{.48\linewidth}
+\includegraphics[width=\linewidth]{figures/05_unadapted_resolution.png}
+\end{minipage}
+\caption{The same operator in an adapted and an unrelated resolution.  Visibility depends on representation even though the operator itself has not changed.}
+\end{figure}
+
+\section{Common refinements, atlases, and commutants}
+Two resolutions admit a common orthogonal refinement exactly when all their projectors commute.  When they do not commute, products such as \(P_iQ_a\) are generally not projectors.  The correct response is a projector atlas: keep both valid resolutions and use the exact mixed corners \(Q_aTP_i\) as transitions between them.
+
+For an operator family \(\mathcal F=\{A_1,\ldots,A_r\}\), a nontrivial common reducing packet exists exactly when the commutant \(\mathcal F'\) contains a nontrivial projection.  Approximate common structure may be sought through the commutant Laplacian
+\[
+\mathcal L_\mathcal F(X)=\sum_k[A_k,[A_k,X]],
+\]
+which satisfies
+\[
+\boxed{\langle X,\mathcal L_\mathcal F(X)\rangle_{\mathrm{HS}}
+=\sum_k\|[A_k,X]\|_{\mathrm{HS}}^2.}
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.74\linewidth]{figures/06_commutant_spectrum.png}
+\caption{Exact common structure appears as a zero eigenspace.  Perturbation lifts that space into a cluster of small positive eigenvalues.}
+\end{figure}
+
+
+\chapter{The geometry of changing resolution}
+
+\section{Two directions of composition}
+The refinement theorem reveals two distinct operations.  A transformation carries one object to another.  A refinement changes the description of an object without changing the object itself.  These should not be written as though they were the same kind of arrow.
+
+A resolved transformation may be pictured as a square
+\[
+\begin{array}{ccc}
+(X,\mathcal R) & \xrightarrow{T} & (Y,\mathcal S)\\
+\downarrow r && \downarrow s\\
+(X,\mathcal R') & \xrightarrow{T'} & (Y,\mathcal S'),
+\end{array}
+\]
+where the vertical arrows record refinement and the square asserts compatibility of fine and coarse transfer fields.
+
+\begin{theorem}[Finite resolution double category]
+Finite resolved Hilbert spaces, bounded linear maps, compatible refinements, and refinement-coherent squares form a thin strict double category.  Horizontal composition is operator composition; vertical composition is composition of refinement maps; and the interchange law is the exact refinement-coarsening identity.
+\end{theorem}
+
+\begin{proof}
+Associativity and identity laws in the horizontal direction are inherited from bounded linear maps.  In the vertical direction they are inherited from the ancestry maps between packet labels.  A compatible square says that every coarse block is the finite sum of its fine descendants.  In a rectangular grid of such squares, either order of composition expands to the same finite sum of products.  This is the interchange law.
+\end{proof}
+
+The double-category language is useful because it prevents a basic confusion.  A change of resolution is not another time step, another physical operation, or another theorem.  It is a change in how the same object or transformation is being presented.
+
+\section{Tensor products and composite systems}
+If \(\{P_i\}\) resolves \(\mathcal H\) and \(\{Q_a\}\) resolves \(\mathcal K\), then
+\[
+P_i\otimes Q_a
+\]
+resolves \(\mathcal H\otimes\mathcal K\).  For product operators,
+\[
+(P_i\otimes Q_a)(S\otimes T)(P_j\otimes Q_b)
+=(P_iSP_j)\otimes(Q_aTQ_b).
+\]
+
+\begin{theorem}[Tensor additivity of transfer entropy]
+For nonzero Hilbert--Schmidt operators \(S\) and \(T\), the product resolution satisfies
+\[
+H(S\otimes T)=H(S)+H(T).
+\]
+\end{theorem}
+
+\begin{proof}
+The squared Hilbert--Schmidt norm of a tensor product is the product of the squared norms.  The normalized transfer-energy distribution is therefore the product of the two factor distributions, and Shannon entropy is additive on product distributions.
+\end{proof}
+
+Interaction destroys this simple factorization by creating transfers between product packets.  The departure from additivity is one way to quantify how strongly the chosen interaction spreads information across the composite resolution.
+
+\section{The finite lattice of commuting resolutions}
+Suppose every resolution is obtained by grouping one fixed atomic orthogonal family.  Then resolutions are ordinary partitions of the atomic labels.  Refinement is the partition order.  The meet is formed by nonempty intersections; the join is the equivalence relation generated by the two partitions.
+
+This finite lattice is a useful model of directed refinement.  It also shows where the model stops: noncommuting projector systems do not lie in one ordinary partition lattice.  They require atlases and transition data.
+
+\section{Local charts and gluing}
+A global resolution may fail even when good local resolutions exist.  Let \(\{U_\alpha\}\) cover a parameter space, and suppose each chart carries a local packet system.  On overlaps, unitary transitions \(g_{\alpha\beta}\) are required to satisfy
+\[
+g_{\alpha\alpha}=I,
+\qquad
+g_{\alpha\beta}=g_{\beta\alpha}^{-1},
+\qquad
+g_{\alpha\beta}g_{\beta\gamma}=g_{\alpha\gamma}.
+\]
+
+\begin{theorem}[Finite unitary gluing]
+Local Hermitian packet models with unitary transition maps satisfying the cocycle law glue to a global Hermitian vector bundle.  Compatible local transfer fields and local sections glue uniquely.
+\end{theorem}
+
+\begin{proof}
+Take the disjoint union of the local trivial bundles and identify \((x,v)_\beta\) with \((x,g_{\alpha\beta}(x)v)_\alpha\) on overlaps.  The cocycle law makes the relation transitive, and unitarity preserves the inner product.  Compatible local sections define one equivalence class at every point.  Uniqueness follows because a global section is determined by its local representatives.
+\end{proof}
+
+Failure of one global packetization is therefore not necessarily failure of the theory.  It may be evidence that the resolved object is globally twisted.
+
+\section{Metrics on the space of resolutions}
+For equal-rank projections one may measure separation by
+\[
+d(P,Q)=\|P-Q\|.
+\]
+For complete families, a matched distance may sum or maximize the corresponding projector distances.  If \(\|P-Q\|<1\), the two subspaces have the same dimension and are connected by a canonical polar-unitary transport.  A continuous path of projectors therefore describes a path through representation space.
+
+This geometry matters computationally.  A slowly moving adapted projector may be cheaper to transport than to rediscover from the beginning.  It matters topologically as well: a continuous spectral projector cannot change its bundle class without losing continuity or closing the separating spectral gap.
+
+\section*{From a useful description to a mathematical structure}
+The first two chapters showed that a chosen resolution can reveal exact algebra, compression, geometry, and obstruction.  That still leaves a basic question unanswered.  Have we merely found a convenient way to write matrices, or have we identified an abstract structure that every appropriate resolved system can carry?
+
+The next chapter answers that question in the finite $C^*$-algebraic setting.  Its purpose is not to make the theory look more abstract.  It is to show that the packet language has a faithful concrete realization, and that compatible corner maps extend uniquely to the whole algebra.
+
+\chapter{A concrete representation theorem}
+
+\section{Why abstraction needs a concrete model}
+The finite packet calculus can be described abstractly as a small dagger category of packet spaces and transfer morphisms.  The important question is whether that abstraction is merely suggestive or whether every appropriate abstract resolved system can be realized faithfully by concrete projector corners.
+
+\begin{definition}[Resolved unital \(C^*\)-system]
+A resolved unital \(C^*\)-system is a unital \(C^*\)-algebra \(A\) together with a complete finite orthogonal family of object projections \(p_x\), and for each object a complete finite orthogonal packet family \(e_{x,i}\le p_x\), with declared compatible refinements.
+\end{definition}
+
+\begin{theorem}[Concrete resolved representation]
+Every resolved unital \(C^*\)-system has a faithful unital representation
+\[
+\pi:A\to\mathcal B(\mathcal H)
+\]
+for which \(\pi(p_x)\) and \(\pi(e_{x,i})\) are genuine orthogonal projectors and
+\[
+\pi(e_{y,a}Ae_{x,i})
+=\pi(e_{y,a})\pi(A)\pi(e_{x,i}).
+\]
+All declared finite refinements remain exact after representation.
+\end{theorem}
+
+\begin{proof}
+The Gelfand--Naimark representation theorem supplies a faithful unital \(*\)-representation of \(A\) on a Hilbert space.  A \(*\)-homomorphism sends projections to projections, preserves orthogonality, finite sums, multiplication, and adjoints.  Applying it to the object and packet projections gives the required concrete system.  Because the representation is faithful, no nonzero transfer corner is collapsed.
+\end{proof}
+
+In finite dimension the representation can be written explicitly through the standard decomposition
+\[
+A\cong\bigoplus_rM_{n_r}(\mathbb C).
+\]
+The theorem does not say that every representation is computationally useful.  It says that the abstract calculus has a faithful concrete model.
+
+\section{Linking algebra and the universal extension property}
+The typed corners \(p_yAp_x\) form a small \(C^*\)-category.  Conversely, finite-support corner matrices reconstruct the linking algebra.  If compatible maps are given on every corner and preserve identities, composition, and adjoints, they extend uniquely to a \(*\)-homomorphism on the linking algebra by summing the corner maps.
+
+This universal property is the precise sense in which the total algebra is not an arbitrary container: it is the unique algebra through which every compatible concrete corner realization factors.
+
+\section{The monoidal boundary}
+Ordinary faithful representation does not automatically preserve a chosen tensor product by unitary coherent comparison maps.  A monoidal realization requires a faithful strong monoidal fiber functor.  Resolution Theory therefore separates two questions:
+\[
+\boxed{
+\text{Can the resolved system be represented faithfully?}
+}
+\]
+from
+\[
+\boxed{
+\text{Can it be represented faithfully while preserving a declared monoidal structure?}
+}
+\]
+The first is answered above in the unital \(C^*\)-setting.  The second remains a separate existence problem in each category.
+
+\section*{The point where finite intuition stops being safe}
+Finite sums hide several choices.  They do not force us to name a topology, distinguish norm convergence from strong convergence, or carry the domain of an unbounded operator through a truncation.  None of those choices can remain implicit once infinitely many packets are allowed.
+
+The next chapter keeps the finite algebra but changes the standard of care.  Every infinite statement names the topology in which it is true, every unbounded statement carries its domain or form, and every finite computation states what part of the infinite object it actually reconstructs.
+
+\chapter{Beyond finite sums}
+
+\section{The topology must be named}
+For countably many orthogonal projectors, the identity
+\[
+\sum_{n=1}^\infty P_n=I
+\]
+usually means strong convergence, not norm convergence.  This distinction controls what may be reconstructed.
+
+Let \(P^{(N)}=\sum_{n\le N}P_n\).  For a bounded operator \(T\),
+\[
+P^{(M)}TP^{(N)}\to T
+\]
+strongly, and strong-star when the same is required for adjoints.  If \(T\) is compact, the convergence is in operator norm.  If \(T\) is Hilbert--Schmidt, it is in Hilbert--Schmidt norm.  If \(T\) is trace class, it is in trace norm.
+
+\begin{theorem}[Finite-section characterization of compactness]
+Let \(P_N,Q_N\) be increasing finite-rank projections converging strongly to the identities on the source and target spaces.  Then
+\[
+\|T-Q_NTP_N\|\to0
+\]
+if and only if \(T\) is compact.
+\end{theorem}
+
+\begin{proof}
+If the convergence holds, \(T\) is a norm limit of finite-rank operators and is therefore compact.  Conversely, strong convergence is uniform on compact subsets.  The image under a compact operator of the unit ball has compact closure, so \(Q_N\) converges uniformly on that image, while \(TP_N\to T\) in norm by applying the same argument to \(T^*\).
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.75\linewidth]{figures/10_finite_section_boundary.png}
+\caption{The compact diagonal is recovered in operator norm.  The unilateral shift remains one unit away from every proper finite section even though the sections converge strongly.}
+\end{figure}
+
+\section{Countable linking systems}
+For a countable \(C^*\)-category, finite-support corner matrices form a \(*\)-algebra.  Its completion is generally nonunital.  Object projections live naturally in the multiplier algebra, and their finite sums converge strictly to the multiplier unit.  Every nondegenerate representation converts strict convergence into strong convergence on the Hilbert space.
+
+The correct infinite statement is therefore not that one has lost the identity.  The identity has moved to the multiplier algebra, where the countable decomposition belongs.
+
+\section{Normal states and trace-class packets}
+Let \(\rho\) be a positive trace-class operator with \(\operatorname{Tr}\rho=1\).  The packet populations
+\[
+p_n=\operatorname{Tr}(\rho P_n)
+\]
+form a probability distribution and satisfy \(\sum_np_n=1\).  The finite packet states converge in trace norm:
+\[
+\|\rho-P^{(N)}\rho P^{(N)}\|_1\to0.
+\]
+This is the appropriate statement when the purpose of truncation is to preserve probabilities, expectation values, or density operators.  Operator norm would be the wrong topology for that task.
+
+In a von Neumann algebra, normal representations preserve increasing joins of projections.  If
+\[
+e_1\le e_2\le\cdots,
+\qquad
+e=\bigvee_ne_n,
+\]
+then
+\[
+\pi(e)=\bigvee_n\pi(e_n).
+\]
+This gives the first countable version of Resolution Logic: monotone packet predicates may be joined without leaving the represented logic.
+
+\section{Packet objects and Karoubi completion}
+A projector can be promoted from an internal label to an object in its own right.  For an idempotent \(e=e^*=e^2\) on an object \(x\), define the packet object \((x,e)\).  Its morphisms are
+\[
+\operatorname{Hom}((x,e),(y,f))
+=f\,\operatorname{Hom}(x,y)\,e.
+\]
+Closing the resolved category under such objects is the Karoubi envelope.  It formalizes the intuitive statement that a stable packet may be treated as a subsystem rather than only as a corner of a larger object.
+
+\section{Unbounded generators}
+For a self-adjoint unbounded operator \(D\), the formal corner \(P_iDP_j\) is not automatically everywhere defined or bounded.  Four descriptions are useful.
+
+\begin{enumerate}[label=\arabic*.]
+\item If the packets reduce \(D\), then \(D=\bigoplus_iD_i\) on its domain.
+\item A closed semibounded quadratic form may be resolved as \(q_{ij}(u,v)=q(P_iu,P_jv)\).
+\item Bounded surrogates such as the resolvent \((D-z)^{-1}\), bounded transform, and Cayley transform return to the bounded packet calculus.
+\item A small commutator \([D,P]\) gives a bounded resolvent-leakage estimate.
+\end{enumerate}
+
+\begin{theorem}[Resolvent leakage]
+If \([D,P]\) extends boundedly, then
+\[
+[P,(D-z)^{-1}]
+=(D-z)^{-1}[D,P](D-z)^{-1}
+\]
+and
+\[
+\|[P,(D-z)^{-1}]\|
+\le
+\|(D-z)^{-1}\|^2\|[D,P]\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Expand the commutator of \(P\) with the identity \((D-z)(D-z)^{-1}=I\) and rearrange.  The norm estimate follows from submultiplicativity.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.75\linewidth]{figures/11_graph_norm_tail.png}
+\caption{Unbounded approximation must control the vector and its image under the generator.  Ordinary norm convergence of vectors is not enough.}
+\end{figure}
+
+\section{Graph cores and strong-resolvent convergence}
+If reducing finite packet sums satisfy
+\[
+\|x-P^{(N)}x\|_D^2
+=\|x-P^{(N)}x\|^2+\|Dx-DP^{(N)}x\|^2\to0,
+\]
+then finite packet vectors form a core for \(D\).  The corresponding finite-window operators converge to \(D\) in strong-resolvent topology.  When the packets reduce \(D\), unitary evolution preserves the omitted tail exactly:
+\[
+\|e^{-itD}x-e^{-itD}P^{(N)}x\|
+=\|(I-P^{(N)})x\|.
+\]
+
+\section{Measurable packet fields}
+A global continuous basis may not exist.  A measurable direct integral
+\[
+\mathcal H=\int_X^\oplus\mathcal H_x\,d\mu(x)
+\]
+allows packet projectors and decomposable operators to be defined fiberwise.  Measurable unitary changes of chart preserve every corner by conjugation.  This is the correct local-to-global model when one needs measurable structure but not one global eigenbasis.
+
+\section*{Why blocks are not enough}
+Linear transfer blocks answer one question: where can one packet move under a linear map?  They do not describe what happens when two or more packets must interact before an output packet is produced.  Quadratic dynamics, normalization, feedback, reaction networks, and nonlinear inverse problems all have this character.
+
+The correct replacement is not a larger block matrix.  It is a hierarchy of resolved derivatives.  First derivatives give edges, second derivatives give hyperedges, and higher derivatives give interaction trees.  The nonlinear theory begins there.
+
+\chapter{Nonlinear Resolution Theory}
+
+\section{Jets replace blocks}
+A nonlinear map cannot be reconstructed from first-order transfers alone.  At a point \(x\), its \(m\)-th packet interaction is
+\[
+F^{[m]}_{a;i_1,\ldots,i_m}(x)
+=Q_aD^mF(x)[P_{i_1}\cdot,\ldots,P_{i_m}\cdot].
+\]
+First-order blocks are ordinary edges.  Quadratic blocks are hyperedges \((i,j)\to a\).  Higher derivatives form interaction trees.
+
+\begin{theorem}[Multilinear packet reconstruction]
+Every continuous \(m\)-linear map \(A:X^m\to Y\) satisfies
+\[
+A
+=\sum_{a,i_1,\ldots,i_m}
+Q_aA(P_{i_1}\cdot,\ldots,P_{i_m}\cdot).
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the source resolution into every argument and the target resolution after evaluation.  Multilinearity expands the finite product of sums.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.76\linewidth]{figures/07_nonlinear_hypergraph.png}
+\caption{Quadratic interactions are not edges between single packets.  They are hyperedges from a pair of input packets to one output packet.}
+\end{figure}
+
+\section{Composition and the nonlinear operad}
+For \(G\circ F\), the higher derivatives are governed by the Fa\`a di Bruno formula.  After inserting packet projectors, composition becomes substitution of colored interaction trees.  Packet spaces are colors; multilinear transfer blocks are operations; symmetric permutations act on the input slots; substitution is nonlinear composition.  This is the resolved nonlinear operad.
+
+The second derivative already shows the structure:
+\[
+D^2(G\circ F)(x)[u,v]
+=DG(F(x))D^2F(x)[u,v]
++D^2G(F(x))[DF(x)u,DF(x)v].
+\]
+The first term sends one quadratic interaction through one linear edge.  The second joins two linear branches into one quadratic interaction of \(G\).
+
+\section{Analytic closure and local inversion}
+For an analytic map
+\[
+F(x)=\sum_{m\ge0}A_m[x,\ldots,x],
+\]
+associate the scalar majorant
+\[
+\mathfrak m_F(t)=\sum_{m\ge0}\|A_m\|t^m.
+\]
+Compatible packet norms give
+\[
+\mathfrak m_{G\circ F}(t)
+\le
+\mathfrak m_G(\mathfrak m_F(t)).
+\]
+
+If \(F=I+N\) and
+\[
+\sup_{\|x\|\le R}\|DN(x)\|\le\kappa<1,
+\]
+then \(F\) is injective on the ball and the fixed-point equation
+\[
+x=y-N(x)
+\]
+has a unique solution for targets inside the corresponding image.  The inverse derivative is the convergent Neumann series
+\[
+DH(y)=\left[I+DN(H(y))\right]^{-1}.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.75\linewidth]{figures/08_inverse_iterations.png}
+\caption{The reference fixed-point inverse remains accurate while the target stays inside the contraction region; iteration count grows as the boundary is approached.}
+\end{figure}
+
+\section{Nonlinear refinement and sparse interaction}
+Refinement acts on every input slot and on the output packet.  A coarse hyperedge is exactly the sum of its refined descendants.  As in the linear theory, refinement alone does not remove work.  It becomes useful when most refined hyperedges vanish, share structure, have low rank, or may be pruned with a certified residual.
+
+If an omitted quadratic tensor has norm \(\delta\), then on a ball of radius \(R\) the omitted nonlinear contribution is bounded by \(\delta R^2\).  The certificate should follow the approximation rather than remain in a separate note.
+
+\section{Dynamics, memory, and stochastic corrections}
+Semilinear evolution generates Duhamel trees; Lie brackets record the order dependence of flows; It\^o generators include both first- and second-order packet interactions; Volterra memory adds causal kernels to the transfer field.  These are not different metaphors for one equation.  They are different native laws represented by one resolution architecture.
+
+
+\section{Three concrete nonlinear examples}
+
+\subsection{Fourier triads in Burgers' equation}
+For periodic Burgers dynamics,
+\[
+\dot{\widehat u}_k
+=-\nu k^2\widehat u_k
+-\frac{ik}{2}\sum_{p+q=k}\widehat u_p\widehat u_q.
+\]
+The quadratic interaction is a triadic hyperedge \((p,q)\to k\).  Under residues modulo \(M\), the exact selection rule is
+\[
+(r,s)\longrightarrow r+s\pmod M.
+\]
+This is a nonlinear polyphase law: the grading removes impossible interactions before any floating-point work is done.
+
+\subsection{Reaction networks}
+For mass-action kinetics, every reaction consumes a multiset of species and produces another multiset.  The stoichiometric reaction is already a nonlinear hyperedge.  A resolution by molecular family, location, or timescale collects reactions into coarse hyperedges; refinement reveals which specific reaction channels carry the flux.  Pruning requires a concentration-dependent residual because a small coefficient may still matter at a large concentration.
+
+\subsection{Bayesian normalization}
+A Bayesian update has an unnormalized packet field
+\[
+\widetilde p_i=p_iL_i
+\]
+and a global normalization
+\[
+p_i'=\frac{\widetilde p_i}{\sum_j\widetilde p_j}.
+\]
+The denominator couples every packet.  Thus the update is sparse before normalization and globally nonlinear afterward.  Resolution reveals both facts instead of forcing the update into an entirely local or entirely global description.
+
+\section*{From an approximation to a justified conclusion}
+The preceding chapters tell us how resolved objects and maps behave.  A mathematical argument still needs another layer: it must say what has actually been established.  A numerical approximation, an exact computation, a conditional theorem, and a proof may concern the same object without carrying the same evidential force.
+
+Resolution Logic records the representation in which a statement is made, the error and cost attached to it, the probability of failure when one is present, and the type of evidence supporting the conclusion.  The aim is not to burden ordinary notation.  It is to prevent a change of resolution or a successful computation from silently changing the status of a claim.
+
+\chapter{Resolution Logic}
+
+\section{A judgment carries a resolution and a certificate}
+A conventional judgment records assumptions and a conclusion.  Resolution Logic records the resolution in which the conclusion is expressed and the certificate that supports it:
+\[
+\boxed{
+\Gamma\vdash_\mathcal R\varphi:(\varepsilon,c,\eta,\mathcal E).
+}
+\]
+Here \(\varepsilon\) is a deterministic error bound, \(c\) is cost, \(\eta\) is failure probability, and \(\mathcal E\) is a typed evidence ledger.
+
+The evidence types remain distinct:
+\[
+\text{proof},\quad
+\text{conditional theorem},\quad
+\text{exact computation},\quad
+\text{numerical evidence},\quad
+\text{conjecture}.
+\]
+Merging evidence does not promote one type into another.
+
+\section{Sound transport rules}
+If \(\widehat x\) approximates \(x\) within \(\varepsilon\), then a bounded linear map gives
+\[
+\|A\widehat x-Ax\|\le\|A\|\varepsilon.
+\]
+For a bounded bilinear map \(B\), approximations \(\widehat x,\widehat y\) with errors \(\varepsilon,\delta\) satisfy
+\[
+\|B(\widehat x,\widehat y)-B(x,y)\|
+\le
+\|B\|
+\left(
+\|\widehat x\|\delta
++\|\widehat y\|\varepsilon
++\varepsilon\delta
+\right).
+\]
+These elementary estimates are the semantic foundation of the implemented logic.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.91\linewidth]{figures/09_resolution_logic_flow.png}
+\caption{The calculation and its certificate move together.  Refinement changes cost; coarsening may add error; the evidence ledger remains typed.}
+\end{figure}
+
+\section{Refinement, coarsening, and modal reading}
+Exact refinement preserves semantic value and error while adding refinement cost.  Certified coarsening preserves the value represented at the coarse level but adds the declared compression residual.  One may read
+\[
+[\mathcal R]\varphi
+\]
+as ``\(\varphi\) is established at resolution \(\mathcal R\),'' while
+\[
+\langle\mathcal R\to\mathcal S\rangle\varphi
+\]
+records that refinement to \(\mathcal S\) reveals enough structure to establish \(\varphi\).
+
+In a finite commuting setting, predicates form Boolean fibers over resolutions.  Refinement pulls predicates back; existential and universal quantification along the refinement map give the adjunctions
+\[
+\exists_r\dashv r^*\dashv\forall_r.
+\]
+This supplies a finite indexed doctrine.  A complete infinite Resolution Logic remains open.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.73\linewidth]{figures/12_logic_cost_error.png}
+\caption{The evidence survives refinement and coarsening, while cost and deterministic error change in controlled ways.}
+\end{figure}
+
+\section{Atlas semantics}
+A proposition may be meaningful in one chart and not another.  When local charts overlap, transition maps transport the predicate and its certificate.  Global truth requires compatible local truth plus a gluing theorem.  This is the logical counterpart of the projector atlas: incompatibility is handled by typed transition data, not by pretending that one universal chart exists.
+
+
+\section{Probability and quantum predicates}
+Resolution Logic is compatible with probabilistic and quantum predicates, but the native rules differ.  A classical probability channel transports distributions and evidence by a Markov kernel.  A quantum channel transports density operators and effects by completely positive maps.  In both cases a packet system resolves the state and the channel; in neither case may normalization, positivity, or complete positivity be discarded merely because the transfer notation looks the same.
+
+The point of the shared language is not to identify probability with quantum mechanics.  It is to keep representation, transfer, refinement, and certification explicit while each theory retains its own admissibility conditions.
+
+\section{A practical resolution audit}
+Before accepting a resolved argument, one may ask:
+\begin{enumerate}[label=\arabic*.]
+\item Is the packet family complete in the topology being used?
+\item Are the operator domains preserved?
+\item Does refinement commute with the operation under study?
+\item Is a claimed compression exact, approximate, or heuristic?
+\item Where is the residual stored?
+\item Which evidence is proof, which is computation, and which is conjecture?
+\item Does the selected resolution reveal structure or merely rename dense work?
+\item Is a different chart needed rather than a finer version of the same chart?
+\end{enumerate}
+This checklist is the operational side of Resolution Logic.  It is deliberately short enough to use.
+
+\section*{When the resolved object is a proof}
+A proof is also encountered through representations.  The final certificate may be short, while the path that produced it contains examples, failed branches, intermediate lemmas, computational traces, and questions that no longer appear in the finished argument.  Compression may preserve validity while erasing future usefulness.
+
+The methodology chapter applies the same ideas of resolution, transfer, compression, residual, and reconstruction to proofs themselves.  It does not weaken the role of proof.  It asks what else must be retained when a proof is also part of a living research archive.
+
+\chapter{Proof Paths, Compression, and Mathematical Memory}
+
+\section{Introduction}
+
+A completed proof is normally presented as a clean implication
+\[
+        A\vdash B.
+\]
+That form is indispensable.  It is the certificate.  But it is not always the whole mathematical event.  The path by which a theorem was found may have been closer to
+\[
+        A\to S_1\to S_2\to S_3\to B,
+\]
+with side branches, failed analogies, examples, computational traces, boundary cases, and definitions that were later compressed away.  The final proof may be shorter and better for verification while being poorer as a map of future possibilities.
+
+The thesis of this paper is:
+\[
+\boxed{\begin{minipage}{0.86\linewidth}
+Proof compression can preserve verification value while erasing discovery value.  A mature account of proof should distinguish the final certificate from the larger discovery field that produced it.
+\end{minipage}}
+\]
+
+This distinction is not an argument against compression.  Mathematics needs compression.  Good notation compresses.  Good proofs compress.  The point is that compression has a cost.  It may remove steps that are no longer necessary for the theorem but remain valuable as bridges to future mathematics.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/methodology/fig_architecture.png}
+\caption{The proposed theory has five connected layers: proof-path objects, compression and loss, values and optimization, collective reading, and the growth of imagination, proof, and meaning.}
+\end{figure}
+
+\section{Basic objects}
+
+\begin{definition}[Expanded proof path]
+An expanded proof path is a finite or locally finite directed sequence
+\[
+        \pi_{\mathrm{exp}}=(S_0,S_1,\ldots,S_k),
+        \qquad S_0=A,
+        \qquad S_k=B.
+\]
+The states $S_i$ may include formal derivation steps, lemmas, examples, computational reductions, failed branches, boundary tests, diagrams, or temporary representations used during discovery.
+\end{definition}
+
+\begin{definition}[Compressed proof]
+A compressed proof is a shorter representation
+\[
+        \pi_{\mathrm{cmp}}=C(\pi_{\mathrm{exp}})
+\]
+that preserves the endpoint implication $A\vdash B$ while omitting some parts of the expanded path.
+\end{definition}
+
+\begin{definition}[Lost-step set]
+The lost-step set of a compression is
+\[
+        L_C(\pi)=\{S_i:S_i\in\pi_{\mathrm{exp}},\ S_i\notin C(\pi_{\mathrm{exp}})\}.
+\]
+It contains the steps, examples, failed moves, computations, and side branches removed from the final certificate.
+\end{definition}
+
+\begin{definition}[Latent bridge graph]
+The latent bridge graph is a graph
+\[
+        G_L(\pi)=(V_L,E_L)
+\]
+whose vertices include lost steps and whose edges represent possible transfers from those steps to other results, fields, examples, or conjectures.
+\end{definition}
+
+These definitions separate two questions.  The first is:
+\[
+        \text{Does the proof certify }A\vdash B?
+\]
+The second is:
+\[
+        \text{What did the path reveal while reaching }B?
+\]
+Both questions matter.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/methodology/fig_expanded_vs_compressed.png}
+\caption{The expanded path may contain examples, failures, and boundary tests that vanish from the compressed certificate but remain useful for future mathematics.}
+\end{figure}
+
+\section{A formal model of proof paths}
+\label{sec:formal-proof-path-model}
+
+The language introduced so far distinguishes an expanded discovery field from a compressed proof certificate.  That distinction is useful, but it is still too easy to leave it at the level of metaphor.  The aim of this section is to make the distinction computational and exact in a finite setting.
+
+The model is not meant to tell a historian what every mathematical discovery really looked like.  It is a deliberately modest formal object that can answer narrower questions:
+\begin{itemize}
+\item Does a compressed document still contain a dependency-closed verification path?
+\item Which omitted nodes carry teaching, discovery, or future-bridge value?
+\item How much work would it take to reconstruct omitted material if a later task needs it?
+\item How does correlated review differ from independent review?
+\item When does candidate generation outrun audit capacity?
+\item Why can no single proof representation be optimal for certification, teaching, discovery, and archival use at once?
+\end{itemize}
+
+These questions fit naturally inside Resolution Theory.  A proof graph is a resolved mathematical object.  Compression selects a packet subfield.  Verification completeness is a closure condition.  Lost examples and failed routes form a residual.  A later task may force refinement of that residual.  The evidence ledger records what kind of support each retained node actually has.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/proof_path_formal/14_formal_model_architecture.png}
+\caption{The formal model keeps the discovery graph, verification core, compression losses, representation portfolio, evidence ledger, review model, and refinement policy as distinct but connected objects.}
+\end{figure}
+
+\subsection{Discovery graphs and verification cores}
+
+\begin{definition}[Finite discovery graph]
+A finite discovery graph is a directed acyclic graph
+\[
+G=(V,E)
+\]
+with a designated premise set \(P\subseteq V\), a designated conclusion \(b\in V\), and a dependency set
+\[
+\operatorname{dep}(v)=\{u:(u,v)\in E\}
+\]
+for every node \(v\).  Each node may also carry a type, an evidence ledger, a recovery cost, and value coordinates for verification, discovery, meaning, and future bridges.
+\end{definition}
+
+The nodes need not all be formal propositions.  A node may be a lemma, a definition, a computational reduction, a worked example, a counterexample, a failed analogy, a boundary case, or an invocation of an external theorem.  The dependency edges say only that one item is used by another.  They do not claim that every historical influence was recorded.
+
+\begin{definition}[Verification-complete certificate]
+A retained node set \(K\subseteq V\) is verification complete when:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item \(P\cup\{b\}\subseteq K\);
+\item every retained derived node retains all of its declared dependencies;
+\item premises, axioms, and explicitly cited external results are allowed as leaves.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Dependency-closure criterion]
+Let \(G\) be a finite acyclic discovery graph.  A retained set \(K\) is a valid certificate for \(b\) if and only if it is verification complete.
+\end{theorem}
+
+\begin{proof}
+Suppose first that \(K\) is verification complete.  Choose a topological ordering of the induced graph on \(K\).  Premises, axioms, and external results are available at the beginning.  Every later retained node appears only after all of its declared dependencies, so the nodes may be checked one by one until the conclusion is reached.
+
+Conversely, if a retained derived node is missing one of its declared dependencies, then the retained graph does not contain the inference recorded for that node.  If the conclusion or a declared premise is absent, the retained object is not a certificate for the same judgment.  Therefore verification completeness is necessary.
+\end{proof}
+
+\begin{definition}[Verification core]
+The verification core of \(b\) is
+\[
+K_{\mathrm{ver}}
+=
+\{b\}\cup\operatorname{Anc}(b),
+\]
+where \(\operatorname{Anc}(b)\) is the transitive dependency ancestry of \(b\).
+\end{definition}
+
+\begin{theorem}[Minimal verification core]
+Assume every declared dependency is required by the recorded inference.  Then \(K_{\mathrm{ver}}\) is the unique smallest dependency-closed set containing the conclusion.
+\end{theorem}
+
+\begin{proof}
+The ancestor set is dependency closed by construction, so the verification core is a certificate.  Every dependency-closed set containing \(b\) must contain the direct dependencies of \(b\), the dependencies of those dependencies, and so on.  It must therefore contain every ancestor of \(b\).  Hence it contains \(K_{\mathrm{ver}}\).
+\end{proof}
+
+The theorem identifies the shortest object that can be extracted from this particular dependency graph without changing the recorded derivation.  It does not say that the resulting document is the shortest proof in mathematics.  A different proof may have a different graph and a smaller core.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\linewidth]{figures/proof_path_formal/01_discovery_graph_and_certificate.png}
+\caption{The solid subgraph is a dependency-closed certificate.  The dashed nodes are unnecessary for verification of the recorded conclusion, but they may carry meaning, discovery value, or future reach.}
+\end{figure}
+
+\subsection{Compression has several losses, not one}
+
+Once a certificate has been isolated, it is tempting to describe every omitted node simply as noise.  That description is too crude.  An omitted example and an omitted failed route may both be unnecessary for the theorem, yet they are useful in different ways.  Resolution Theory therefore records several loss coordinates separately.
+
+For a node weight \(w_X(v)\ge0\) attached to value type \(X\), define
+\[
+L_X(K)
+=
+\frac{\sum_{v\notin K}w_X(v)}
+{\sum_{v\in V}w_X(v)},
+\]
+with \(L_X(K)=0\) when the denominator vanishes.  Typical coordinates are
+\[
+X\in\{\mathrm{verification},\mathrm{discovery},\mathrm{meaning},\mathrm{bridge}\}.
+\]
+
+\begin{proposition}[Zero verification loss need not imply zero discovery loss]
+For every finite proof graph containing at least one node outside the verification core with positive discovery value, the verification core satisfies
+\[
+L_{\mathrm{verification}}(K_{\mathrm{ver}})=0,
+\qquad
+L_{\mathrm{discovery}}(K_{\mathrm{ver}})>0.
+\]
+The same statement holds for meaning or bridge value when a positively weighted optional node is omitted.
+\end{proposition}
+
+\begin{proof}
+Every node carrying verification weight for the recorded derivation lies in the dependency ancestry of the conclusion, so none is omitted by the verification core.  Any positive discovery weight assigned to a node outside that core appears in the numerator of the discovery-loss ratio.
+\end{proof}
+
+The proposition is elementary, but it captures the central philosophical claim in a testable finite model: preserving validity does not prove that every other mathematical value has been preserved.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.80\linewidth]{figures/proof_path_formal/02_compression_frontier.png}
+\caption{As optional nodes are restored, discovery, meaning, and bridge losses fall at different rates.  Verification was already complete at the left edge of the plot.}
+\end{figure}
+
+\subsection{Future bridges and optimal retention}
+
+A forgotten step matters only relative to some possible future use.  Let \(\mathcal T\) be a finite set of anticipated tasks, let \(p(t)\) be a probability distribution on those tasks, and let
+\[
+r(v,t)\ge0
+\]
+measure the relevance of node \(v\) to task \(t\).  Define the expected bridge score
+\[
+B(v)
+=
+\sum_{t\in\mathcal T}p(t)r(v,t).
+\]
+
+\begin{theorem}[Additive bridge-retention theorem]
+Assume every optional node has the same storage cost and future utility is additive across retained nodes.  Among all archives that contain the verification core and at most \(k\) optional nodes, expected future utility is maximized by retaining the \(k\) optional nodes with largest bridge scores \(B(v)\).
+\end{theorem}
+
+\begin{proof}
+Let \(R\) be any admissible set of \(k\) optional nodes.  If \(R\) omits a node \(u\) with larger bridge score than some retained node \(v\), replace \(v\) by \(u\).  The storage cost is unchanged and expected utility increases by \(B(u)-B(v)>0\).  Repeating the exchange produces the top-\(k\) set.
+\end{proof}
+
+The assumptions are intentionally visible.  Once nodes have unequal storage costs, dependency interactions, or complementary value, the problem becomes a knapsack or submodular optimization problem rather than a sorting rule.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.83\linewidth]{figures/proof_path_formal/03_bridge_task_heatmap.png}
+\caption{A node can be almost irrelevant to one future task and decisive for another.  Bridge value is therefore relative to a task distribution, not an intrinsic scalar detached from use.}
+\end{figure}
+
+\subsection{Compression debt}
+
+If an omitted node is needed later, the archive must reconstruct it from notes, recompute it, rediscover it, or abandon the new route.  That delayed burden is compression debt.
+
+Let \(c(v)\) be the recovery cost of node \(v\), let \(R_t\subseteq V\) be the nodes required by future task \(t\), and let \(O=V\setminus K\) be the omitted set.  Define
+\[
+D(K)
+=
+\sum_{t\in\mathcal T}p(t)
+\sum_{v\in O\cap R_t}c(v).
+\]
+
+\begin{proposition}[Expected recovery interpretation]
+Under additive recovery cost and task-independent reconstruction, \(D(K)\) is the expected amount of reconstruction work created by compression to \(K\).
+\end{proposition}
+
+\begin{proof}
+For one task \(t\), the reconstruction cost is the sum of the costs of omitted nodes that task requires.  Averaging that cost over the task distribution gives the displayed expression.
+\end{proof}
+
+Compression debt is not an argument for preserving everything.  It is a way to compare a smaller archive today with the expected cost of reopening it tomorrow.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.80\linewidth]{figures/proof_path_formal/04_compression_debt.png}
+\caption{The same compressed archive carries different expected debt under different mixtures of future teaching and extension tasks.}
+\end{figure}
+
+\subsection{Typed evidence rather than a single confidence score}
+
+A proof record can contain formal derivations, assumptions, exact computations, numerical experiments, conjectures, and imported theorems.  Summing all of them into one confidence number destroys the difference between evidence types.  The model therefore uses an ordered evidence ledger
+\[
+\mathcal E=(e_1,\ldots,e_m),
+\]
+where each entry records a type, a source, a weight, and an optional note.
+
+Ledger concatenation is associative and preserves provenance.  It is not treated as logical conjunction, and it does not allow numerical evidence to become proof merely by accumulation.
+
+\begin{theorem}[Type preservation]
+Let \(\mathcal E_1,\ldots,\mathcal E_n\) be evidence ledgers.  Repeated ledger merging preserves the type and source of every entry.  In particular, no sequence of merges changes a conjectural entry into a proof entry or an exact computation into an assumption.
+\end{theorem}
+
+\begin{proof}
+Merging is concatenation of typed records.  Concatenation does not alter any record field.
+\end{proof}
+
+The theorem is simple because the desired behavior is simple.  The point is to prevent a later presentation layer from silently flattening evidence categories that the research process kept distinct.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/proof_path_formal/10_evidence_ledger.png}
+\caption{The sample proof field contains several kinds of evidence.  They are reported together but not treated as interchangeable.}
+\end{figure}
+
+\subsection{Proof-path entropy}
+
+A discovery graph may distribute attention across many paths or concentrate most of its weight on one route.  Given nonnegative edge weights \(w_e\), normalize
+\[
+p_e=\frac{w_e}{\sum_fw_f}
+\]
+and define
+\[
+H_{\mathrm{path}}(G,w)
+=-\sum_ep_e\log p_e.
+\]
+
+This quantity does not measure proof difficulty.  It measures how dispersed the declared transfer weight is across the graph.  It is maximal when all active edges have equal weight and decreases as one route dominates.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.78\linewidth]{figures/proof_path_formal/13_proof_entropy.png}
+\caption{Path entropy falls as more of the transfer weight is concentrated on one edge.  The quantity describes distribution of attention, not validity or depth.}
+\end{figure}
+
+\subsection{No single representation is best for every goal}
+
+A proof can be represented as a formal certificate, a journal argument, a teaching path, a discovery archive, or a balanced paper.  Let a representation profile be
+\[
+r=(V,D,M,A,B,N,C),
+\]
+where the coordinates record verification, discovery, meaning, auditability, bridge preservation, noise, and cost.  For a declared goal vector \(\theta\), define
+\[
+U_\theta(r)
+=
+\theta_VV+
+\theta_DD+
+\theta_MM+
+\theta_AA+
+\theta_BB-
+\theta_NN-
+\theta_CC.
+\]
+
+\begin{proposition}[Goal-relative optimizer]
+For a finite representation portfolio, the utility-maximizing representation exists for every fixed goal vector.  Different goal vectors may select different representations.
+\end{proposition}
+
+\begin{proof}
+A real-valued function on a finite set attains its maximum.  The second statement follows whenever two profiles trade one valued coordinate against another; choosing goal weights concentrated on the corresponding coordinates reverses their ranking.
+\end{proof}
+
+This is why a formal library, a journal article, a lecture, and a research archive should not be expected to have the same shape.  They solve different optimization problems.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.80\linewidth]{figures/proof_path_formal/08_representation_portfolio.png}
+\caption{The portfolio retains proof forms that occupy different parts of the verification-discovery plane.  Bubble size records bridge preservation.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.93\linewidth]{figures/proof_path_formal/09_goal_dependent_selection.png}
+\caption{Certification, teaching, discovery, and archival goals assign different utilities to the same representation portfolio.}
+\end{figure}
+
+\subsection{Collective review and correlated error}
+
+Independent review is powerful.  Correlated review is less powerful than its headcount suggests.  Suppose \(n\) reviewers have equal error variance \(\sigma^2\) and common pairwise correlation \(\rho\).  The variance of their mean is
+\[
+\operatorname{Var}(\bar X)
+=
+\sigma^2\left(\frac{1-\rho}{n}+\rho\right).
+\]
+
+\begin{theorem}[Effective reviewer count]
+Under the equicorrelated model, the reviewer mean has the same variance as an average of
+\[
+\boxed{
+ n_{\mathrm{eff}}
+ =
+ \frac{n}{1+(n-1)\rho}
+}
+\]
+independent reviewers of variance \(\sigma^2\).
+\end{theorem}
+
+\begin{proof}
+Set \(\sigma^2/n_{\mathrm{eff}}\) equal to the displayed variance of the correlated mean and solve for \(n_{\mathrm{eff}}\).
+\end{proof}
+
+For fixed positive \(\rho\), the effective count approaches \(1/\rho\) as \(n\to\infty\).  More reviewers continue to help, but shared bias produces a floor that headcount alone cannot remove.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.81\linewidth]{figures/proof_path_formal/05_effective_reviewer_count.png}
+\caption{When review errors are correlated, nominal headcount grows much faster than the effective number of independent perspectives.}
+\end{figure}
+
+When the covariance matrix is known or estimated, a covariance-aware unbiased aggregate uses
+\[
+w
+=
+\frac{\Sigma^{-1}\mathbf 1}
+{\mathbf 1^\top\Sigma^{-1}\mathbf 1}.
+\]
+This does not remove shared bias that is absent from the covariance model.  It only gives the minimum-variance linear unbiased combination under the stated covariance assumptions.
+
+\subsection{Candidate generation and audit queues}
+
+A research system can generate claims faster than they can be checked.  Let \(A_t\) be candidate arrivals, \(S_t\) audit capacity, and \(B_t\) the unaudited backlog.  The finite queue evolves by
+\[
+B_{t+1}
+=
+\max\{0,B_t+A_t-S_t\}.
+\]
+
+\begin{proposition}[Constant-rate audit stability]
+If \(A_t\equiv\lambda\) and \(S_t\equiv\mu\), then:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item if \(\lambda<\mu\), every finite initial backlog eventually vanishes;
+\item if \(\lambda=\mu\), the backlog remains constant;
+\item if \(\lambda>\mu\), the backlog grows linearly at rate \(\lambda-\mu\).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The recurrence reduces to repeated addition of \(\lambda-\mu\), truncated below at zero.
+\end{proof}
+
+The model is intentionally elementary.  Real review systems have variable service times, priority queues, abandonment, rework, and dependencies.  The stable-rate boundary remains the first fact that any more detailed model must respect.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/proof_path_formal/06_audit_queue_trajectories.png}
+\caption{Below the stability boundary the audit backlog clears; above it, unresolved claims accumulate without bound in the simple constant-rate model.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.76\linewidth]{figures/proof_path_formal/07_audit_phase_diagram.png}
+\caption{The diagonal separates stable and unstable mean-rate regimes.  Faster candidate generation is useful only when audit capacity grows with it.}
+\end{figure}
+
+\subsection{Refinement and stopping rules}
+
+A proof path can always be expanded further.  A refinement should therefore be evaluated against a declared goal.  Let \(\Delta v_k\) be the gains in verification, discovery, meaning, auditability, and bridge preservation, and let \(\Delta c\) be the added cost.  For goal weights \(\theta_k\), define
+\[
+\Delta U
+=
+\sum_k\theta_k\Delta v_k-\Delta c.
+\]
+The refinement is retained when \(\Delta U\) exceeds the chosen threshold.  An archive may also impose a bridge override, retaining a low-utility refinement when its estimated future reach is unusually high.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.77\linewidth]{figures/proof_path_formal/11_refinement_decision.png}
+\caption{In the simplest goal model, refinement is justified above a value-cost boundary.  A bridge-retention rule may preserve selected points below that boundary.}
+\end{figure}
+
+Compression operators themselves form a preorder.  If representation \(R_1\) retains every item retained by \(R_2\), write
+\[
+R_1\succeq R_2.
+\]
+The relation is reflexive and transitive.  It need not be antisymmetric when two differently formatted representations retain the same mathematical content.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/proof_path_formal/12_compression_preorder.png}
+\caption{A proof portfolio may contain several incomparable intermediate forms.  All descend from a richer archive and may compress toward a minimal certificate.}
+\end{figure}
+
+\subsection{What the model proves, and what it does not}
+
+The finite model proves exact statements about a declared graph, declared values, declared future-task distribution, and declared review covariance.  It does not prove that those declarations are objectively correct.  In particular:
+\begin{itemize}
+\item bridge scores are forecasts, not intrinsic truths;
+\item value coordinates depend on the intended use and the evaluators;
+\item the review model does not capture every form of social dependence;
+\item a dependency graph records the proof as formalized, not every influence on discovery;
+\item additive retention is optimal only under additive utility and uniform optional cost;
+\item queue stability is not a model of mathematical truth, only of audit capacity.
+\end{itemize}
+
+The formalization is still useful because it forces hidden choices into the open.  A debate about whether a failed route should be archived can now identify the assumed future tasks, bridge values, storage cost, and recovery cost rather than pretending that one proof form is universally best.
+
+\subsection{Worked numerical record}
+
+The sample graph contains ten nodes.  Its verification core is
+\[
+\{A,\,\text{Definition},\,\text{External theorem},\,
+\text{Lemma 1},\,\text{Lemma 2},\,B\}.
+\]
+The four optional nodes are a worked example, a failed analogy, a boundary case, and an alternative proof.  Under the sample future-task model, their expected bridge scores are
+\[
+0.325,
+\quad
+0.420,
+\quad
+0.500,
+\quad
+0.260,
+\]
+respectively.  The model therefore retains the boundary case and failed analogy first when given a two-node archival budget, even though neither is needed for the certificate.
+
+For one hundred reviewers with common correlation \(\rho=0.1\), the nominal count of one hundred corresponds to
+\[
+n_{\mathrm{eff}}
+=
+\frac{100}{1+99(0.1)}
+\approx 9.17
+\]
+independent reviewers in the equicorrelated model.  This is not a criticism of review; it is a reminder that diversity of dependence structure matters alongside headcount.
+
+\subsection{The formal proof-path object}
+
+The complete finite proof-path record may now be written as
+\[
+\boxed{
+\mathfrak P
+=
+(G,P,b,\mathcal E,\mathbf v,\mathbf c,\Theta,\mathcal R)
+}
+\]
+where:
+\begin{itemize}
+\item \(G\) is the discovery graph;
+\item \(P\) and \(b\) are the premises and conclusion;
+\item \(\mathcal E\) is the typed evidence ledger;
+\item \(\mathbf v\) stores the value coordinates of nodes and representations;
+\item \(\mathbf c\) stores audit, storage, and recovery costs;
+\item \(\Theta\) is a family of anticipated goals or future tasks;
+\item \(\mathcal R\) is the portfolio of compressed and expanded representations.
+\end{itemize}
+
+A proof certificate is one projection of \(\mathfrak P\), not the whole object.  Its special role is that it is dependency closed and adequate for verification.  The rest of the record explains, teaches, preserves alternatives, supports later refinement, and records the evidence from which the certificate was built.
+
+
+\section{Values of proof representations}
+
+A proof representation can be evaluated along several axes:
+\[
+        V(\pi)=\text{verification value},
+\]
+\[
+        D(\pi)=\text{discovery value},
+\]
+\[
+        M(\pi)=\text{meaning or explanatory value},
+\]
+\[
+        A(\pi)=\text{auditability},
+\]
+\[
+        F(\pi)=\text{future-bridge value},
+\]
+\[
+        N(\pi)=\text{noise or interpretive instability},
+\]
+\[
+        C_0(\pi)=\text{cost, length, or cognitive load}.
+\]
+These values should not be collapsed too quickly.  A proof can be excellent as a certificate and weak as a teaching object.  A research archive can be rich in future bridges and noisy as a final paper.  A formally checked proof can be correct and still hard to interpret.
+
+\begin{proposition}[Compression can preserve validity while losing bridge value]
+There exist expanded paths $\pi$ and compression maps $C$ such that $C(\pi)$ proves the same endpoint theorem as $\pi$, but $L_C(\pi)$ contains a step with a bridge to another result that is not visible in $C(\pi)$.
+\end{proposition}
+
+\begin{proof}
+Let $\pi=(A,S,B)$, where $A\to S\to B$ is an expanded proof route.  Suppose a later compression produces a direct certificate $C(\pi)=(A,B)$.  If $S$ also has a bridge $S\to Y$ to a future result, then the compressed proof still verifies $A\vdash B$, but the visible node $S$ has been removed.  The verification value is preserved while the bridge to $Y$ is no longer present in the compressed object.
+\end{proof}
+
+This proposition is simple, but it marks the central distinction.  Verification value and discovery value are not the same property.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{figures/methodology/fig_value_frontier.png}
+\caption{Proof forms occupy different positions in the verification-discovery plane.  No single representation is best for every purpose.}
+\end{figure}
+
+
+\section{Axioms of proof-path theory}
+
+The previous definitions become useful only if they are governed by simple structural principles.  The following axioms are not meant to be final foundations.  They are a compact way to state what the theory is trying to preserve.
+
+\paragraph{Axiom 1: endpoint preservation.}
+A valid compression must preserve the endpoint implication:
+\[
+        \pi_{\mathrm{exp}}:A\leadsto B
+        \quad\Longrightarrow\quad
+        C(\pi_{\mathrm{exp}}):A\vdash B.
+\]
+Compression is not allowed to change the theorem.
+
+\paragraph{Axiom 2: path non-uniqueness.}
+The same implication may have many expanded paths:
+\[
+        \Pi(A,B)=\{\pi:A\leadsto B\}.
+\]
+There is no reason to expect one canonical discovery path.  Different paths can expose different bridges.
+
+\paragraph{Axiom 3: value non-collapse.}
+The values
+\[
+        V,D,M,A,F,N,C_0
+\]
+are not reducible to one another in general.  A path can improve one value while reducing another.
+
+\paragraph{Axiom 4: lost-step persistence.}
+A removed step is not automatically meaningless.  Formally, there may exist
+\[
+        S\in L_C(\pi)
+\]
+with positive future bridge value
+\[
+        b(S)>0.
+\]
+
+\paragraph{Axiom 5: audit plurality.}
+A mathematical candidate should be evaluated by at least three audits:
+\[
+        \text{formal audit},\qquad \text{meaning audit},\qquad \text{future-bridge audit}.
+\]
+No one audit exhausts the mathematical status of the object.
+
+\begin{proposition}[No universal best compression]
+If two goals assign different nonproportional weight vectors to the values of a proof representation, then there need not be a single presentation that is optimal for both goals.
+\end{proposition}
+
+\begin{proof}
+Let $\pi_1$ be high in verification and low in discovery, and let $\pi_2$ be lower in verification but higher in discovery.  A certification goal can weight verification and cost heavily, while a discovery goal can weight future-bridge value heavily.  The induced utilities may satisfy
+\[
+        U_{\mathrm{cert}}(\pi_1)>U_{\mathrm{cert}}(\pi_2)
+\]
+and
+\[
+        U_{\mathrm{disc}}(\pi_2)>U_{\mathrm{disc}}(\pi_1).
+\]
+Thus the same presentation need not optimize both goals.
+\end{proof}
+
+\section{Depth and the recursive proof cube}
+
+A proof step is rarely atomic.  A step may open into definitions, examples, sublemmas, computations, background theorems, or conventions.  This gives a recursive depth function.
+
+\begin{definition}[Expansion depth]
+Let $Q$ be a class of accepted primitives.  The depth of a proof state $S$ relative to $Q$ is
+\[
+        \Depth_Q(S)=
+        \min\{d:S\text{ can be expanded to primitives in }Q\text{ in }d\text{ refinement layers}\}.
+\]
+The depth of a path is
+\[
+        \Depth_Q(\pi)=\max_i\Depth_Q(S_i).
+\]
+\end{definition}
+
+Depth is not only a measure of difficulty.  It is a measure of how much scaffolding is hidden.  A proof can be short and deep.  Another proof can be long and shallow.  These are different objects.
+
+\begin{definition}[Recursive packet expansion]
+A recursive packet expansion of a proof step $S$ is a decomposition
+\[
+        S=\sum_j B_jS+R,
+\]
+where the $B_jS$ are substeps, examples, definitions, or computational packets, and $R$ is the unresolved residual of the step.
+\end{definition}
+
+The recursive cube metaphor is the informal version of this definition.  A visible block opens into another block field.  The process stops only when the purpose of the proof no longer requires deeper expansion.
+
+\begin{remark}
+The right depth depends on the goal.  A journal proof may stop earlier than a teaching proof.  A formal proof may expand some steps much deeper than a philosophical explanation.  A discovery archive may preserve shallow failed steps because their future bridge value is high.
+\end{remark}
+
+\section{Compression operators}
+
+Compression is not one operation.  It comes in several forms.
+
+\paragraph{Notation compression.}
+A repeated pattern is replaced by notation.  This reduces length but can hide the examples that suggested the pattern.
+
+\paragraph{Lemma compression.}
+A chain of local moves is replaced by a lemma.  This improves readability but may hide boundary cases.
+
+\paragraph{Reference compression.}
+A proof says that a statement follows from a known theorem.  This improves verification for experts but can reduce meaning for readers outside the subfield.
+
+\paragraph{Formal compression.}
+A machine-checkable derivation records every primitive step but can become opaque at the human level.  This is the reverse of ordinary compression: it expands formal detail while compressing human explanation.
+
+\paragraph{Conceptual compression.}
+A large family of arguments is replaced by one structural principle.  This is often the most valuable compression, but it can erase the path by which the principle was discovered.
+
+Let
+\[
+        C=C_{\mathrm{not}}C_{\mathrm{lem}}C_{\mathrm{ref}}C_{\mathrm{form}}C_{\mathrm{conc}}
+\]
+represent a composite compression.  Each factor has a different loss profile.  The lost-step set should therefore be indexed by compression type:
+\[
+        L_C(\pi)=L_{\mathrm{not}}(\pi)\cup L_{\mathrm{lem}}(\pi)\cup L_{\mathrm{ref}}(\pi)\cup L_{\mathrm{form}}(\pi)\cup L_{\mathrm{conc}}(\pi).
+\]
+
+\begin{proposition}[Different compressions lose different information]
+Two compression maps $C_1$ and $C_2$ may preserve the same endpoint theorem while producing different lost-step sets.
+\end{proposition}
+
+\begin{proof}
+A lemma compression and a reference compression may both prove $A\vdash B$.  The lemma compression can preserve the internal lemma statement while removing examples; the reference compression can remove both the lemma and the examples.  The endpoint is the same, but the removed material differs.
+\end{proof}
+
+\section{Mathematical meaning as a separate value}
+
+Meaning value is not the same as verification value.  A result can be verified and still not yet understood.  Conversely, a compelling explanation can precede a complete proof.  Let
+\[
+        M(\pi)=M_{\mathrm{concept}}(\pi)+M_{\mathrm{example}}(\pi)+M_{\mathrm{transfer}}(\pi)+M_{\mathrm{memory}}(\pi).
+\]
+Here:
+\begin{itemize}
+\item $M_{\mathrm{concept}}$ measures the clarity of the central idea;
+\item $M_{\mathrm{example}}$ measures the examples preserved;
+\item $M_{\mathrm{transfer}}$ measures how well the proof reveals connections to other objects;
+\item $M_{\mathrm{memory}}$ measures whether the path can be reconstructed later.
+\end{itemize}
+
+A formal certificate may have high $V$ and low $M$.  A teaching proof may have lower cost efficiency and higher $M$.  A philosophical account may have high $M$ and low $V$ unless paired with a formal argument.  These are not contradictions.  They are different coordinates of the same proof field.
+
+\section{Goal-dependent modeling choices}
+
+The formalism can be modeled in several ways.  The correct model depends on the question being asked.
+
+\subsection{Graph model}
+A proof field can be represented as a directed graph
+\[
+        G=(V,E).
+\]
+Vertices are statements, examples, computations, representations, or failures.  Edges are derivations, analogies, reductions, transfers, or attempted transfers.  Compression is graph contraction.  Lost steps are removed vertices.  Future-bridge value is reachability from the removed vertices.
+
+\subsection{Information model}
+A proof can be treated as a code.  The compressed proof minimizes description length.  The expanded proof preserves side information.  The question becomes:
+\[
+        \text{how much side information can be removed before future tasks suffer?}
+\]
+
+\subsection{Optimization model}
+A proof presentation is a point in a feasible set.  Different goals define different objectives.  The Pareto frontier of proof presentations is the set of forms that cannot improve one value without reducing another.
+
+\subsection{Social model}
+A community reading is a noisy measurement process.  Individual errors may cancel; shared bias may remain.  A dissenting reading is not automatically correct, but it may reveal a packet outside the current consensus lens.
+
+\subsection{Developmental model}
+Mathematical understanding changes over time.  The same proof can move from discovery object to teaching object to formal-library object.  Its best representation can change as the field matures.
+
+\section{Simulation interpretation}
+
+The simulations in this paper are not empirical claims about a historical community.  They are models of possible dynamics.  The aim is to show that the variables can move independently.
+
+The idea-growth simulation separates imagination, proof, meaning, bridge density, and question quality.  This separation is important because a tool or method can increase the number of candidate connections faster than it increases interpretation.  In such a regime, the limiting factor is no longer generation.  It is audit and meaning.
+
+The collective-noise simulation separates individual variance from shared bias.  It shows why consensus can become sharper without becoming unbiased.  The lesson is not anti-consensus.  The lesson is that consensus needs modeling.
+
+The bridge-preservation simulation shows how forgotten steps may increase future reach.  It is a formal version of a familiar research experience: old failed arguments can become useful after the field changes.
+
+\section{A storage model for expanded proofs}
+
+A practical implementation of proof-path theory would store at least the following data:
+\[
+        \mathcal A(\pi)=
+        (\pi_{\mathrm{exp}}, C(\pi), L_C(\pi), G_L(\pi), \mathcal E, \mathcal B, \mathcal R).
+\]
+Here $\mathcal E$ is the set of examples, $\mathcal B$ is the set of boundary cases, and $\mathcal R$ is the set of residual questions.  A proof repository could then allow searches such as:
+\begin{itemize}
+\item find all lost steps connected to a given concept;
+\item find failed proof attempts that later became boundary cases;
+\item find examples removed by compression;
+\item find proof paths with high discovery value but low verification value;
+\item find compressed proofs whose lost neighborhoods have high bridge potential.
+\end{itemize}
+
+This would turn the archive of mathematical work into a searchable discovery field, not only a library of final theorems.
+
+\section{Case studies in miniature}
+
+\subsection{A standard theorem}
+A textbook proof may state that a result follows from a standard compactness argument.  The compressed proof is efficient.  The expanded path might include the finite examples that explain why compactness is the right packet.  Removing those examples does not weaken the proof, but it can weaken the reader's ability to transfer the idea.
+
+\subsection{A computational proof}
+A computational proof may produce a certificate and a log.  The certificate verifies the result.  The log may contain failed branches that reveal how the search space was structured.  A proof-path archive would keep both.
+
+\subsection{A wrong proof}
+A wrong proof can have high discovery value if the failure identifies a boundary.  The formal audit rejects the proof.  The future-bridge audit may preserve the failed step because it points toward a correct generalization.
+
+\subsection{A mature theory}
+When a theory matures, many formerly difficult steps become standard.  The field benefits from compression, but future researchers may lose sight of the old intermediate objects.  Proof-path theory suggests preserving some of those objects as bridge metadata.
+
+\section{Open problems}
+
+\begin{enumerate}[label=(\arabic*)]
+\item Define a rigorous category of proof paths and compression maps.
+\item Develop invariants of lost-step sets.
+\item Measure bridge value in historical or formal proof corpora.
+\item Build proof archives that preserve compressed proofs and expanded discovery graphs.
+\item Develop proof compilers that output different representations for different goals.
+\item Model collective reading with separate individual-noise and shared-bias components.
+\item Study meaning-preserving compression.
+\item Formalize the relation between imagination reach, proof reach, and meaning reach.
+\end{enumerate}
+
+These are not merely philosophical questions.  They are design questions for future mathematical infrastructure.
+
+\section{Optimization of proof presentation}
+
+Let a goal be represented by weights
+\[
+        \theta=(\theta_V,\theta_D,\theta_M,\theta_A,\theta_F,\theta_N,\theta_C).
+\]
+Define
+\[
+\begin{aligned}
+        U_\theta(\pi)
+        ={}&\theta_VV(\pi)+\theta_DD(\pi)+\theta_MM(\pi)
+        +\theta_AA(\pi)+\theta_FF(\pi)\\
+        &-\theta_NN(\pi)-\theta_CC_0(\pi).
+\end{aligned}
+\]
+Then the goal-dependent representation is
+\[
+        \pi_\theta^*=
+        \operatorname*{arg\,max}_{\pi\in\Pi(A,B)}U_\theta(\pi).
+\]
+The formula does not decide whether the theorem is true.  Correctness remains necessary.  The formula decides which correct representation best serves a goal.
+
+\subsection{Goal-specific objectives}
+
+\paragraph{Certificate objective.}
+\[
+        \pi^*_{\mathrm{cert}}
+        =\operatorname*{arg\,max}_\pi
+        \left[V(\pi)+\alpha A(\pi)-\lambda C_0(\pi)-\mu N(\pi)\right].
+\]
+This objective favors short, auditable, low-noise proofs.
+
+\paragraph{Discovery objective.}
+\[
+        \pi^*_{\mathrm{disc}}
+        =\operatorname*{arg\,max}_\pi
+        \left[D(\pi)+\alpha F(\pi)+\beta\Bridge(L_C(\pi))-\lambda N(\pi)\right].
+\]
+This objective preserves intermediate steps that may become future bridges.
+
+\paragraph{Teaching objective.}
+\[
+        \pi^*_{\mathrm{teach}}
+        =\operatorname*{arg\,max}_\pi
+        \left[M(\pi)+\alpha D(\pi)-\lambda C_0(\pi)-\mu N(\pi)\right].
+\]
+This objective values recoverability of the path.
+
+\paragraph{Archive objective.}
+\[
+        \pi^*_{\mathrm{arch}}
+        =\operatorname*{arg\,max}_\pi
+        \left[D(\pi)+F(\pi)+M(\pi)-\lambda N(\pi)\right].
+\]
+This objective accepts length in order to preserve future use.
+
+\paragraph{Collective review objective.}
+\[
+        \pi^*_{\mathrm{collab}}
+        =\operatorname*{arg\,max}_\pi
+        \left[V(\pi)+M(\pi)+D(\pi)-\lambda N_{\mathrm{ind}}(\pi)-\kappa N_{\mathrm{coll}}(\pi)\right].
+\]
+This objective recognizes both individual noise and shared collective bias.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/methodology/fig_goal_weight_profiles.png}
+\caption{Different goals assign different weights to verification, discovery, meaning, auditability, future-bridge value, noise, and cost.}
+\end{figure}
+
+\section{Toy calculation: representation choice by goal}
+
+The next calculation is schematic.  It assigns normalized values to six proof presentations and evaluates them under six goals.  The point is not the particular numbers, but the dependence of the best proof form on the goal.
+
+\begin{table}[H]
+\centering
+\scriptsize
+\begin{tabular}{lrrrrrrr}
+\toprule
+representation & V & D & M & A & F & N & cost\\
+\midrule
+formal\_certificate & 0.96 & 0.22 & 0.44 & 0.95 & 0.18 & 0.08 & 0.141 \\
+journal\_proof & 0.94 & 0.54 & 0.7 & 0.82 & 0.42 & 0.11 & 0.318 \\
+teaching\_path & 0.88 & 0.66 & 0.92 & 0.76 & 0.58 & 0.13 & 0.482 \\
+discovery\_archive & 0.68 & 0.96 & 0.64 & 0.5 & 0.91 & 0.31 & 1 \\
+balanced\_paper & 0.93 & 0.78 & 0.84 & 0.86 & 0.7 & 0.12 & 0.424 \\
+candidate\_map & 0.56 & 0.9 & 0.47 & 0.38 & 0.86 & 0.48 & 0.659 \\
+\bottomrule
+\end{tabular}
+\caption{Normalized values assigned to six proof representations.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{llr}
+\toprule
+goal & best representation & utility\\
+\midrule
+certificate & formal\_certificate & 0.736 \\
+journal & balanced\_paper & 0.795 \\
+teaching & balanced\_paper & 0.752 \\
+discovery & balanced\_paper & 0.732 \\
+archive & balanced\_paper & 0.797 \\
+collective\_review & balanced\_paper & 0.762 \\
+\bottomrule
+\end{tabular}
+\caption{Goal-dependent winners in the toy optimization.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/methodology/fig_goal_score_heatmap.png}
+\caption{The same proof material is scored differently under different goals.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.96\linewidth]{figures/methodology/fig_representation_tradeoff.png}
+\caption{Different proof forms preserve different kinds of value.}
+\end{figure}
+
+The calculation supports a practical conclusion.  It is not enough to ask for the proof.  One should ask which proof presentation is being optimized: certificate, journal article, teaching path, discovery archive, formal library, or collaborative review.
+
+\section{Lost steps and future bridge value}
+
+For a lost step $S\in L_C(\pi)$, define a bridge value
+\[
+        b(S)=\sum_{Y\in\mathcal Y}w_Y\,\mathbf 1\{S\leadsto Y\},
+\]
+where $\mathcal Y$ is a set of possible future targets and $w_Y$ is the importance of target $Y$.  The total bridge value of the lost neighborhood is
+\[
+        B(L_C(\pi))=\sum_{S\in L_C(\pi)}b(S).
+\]
+A compression can therefore be measured by two losses:
+\[
+        \Delta_D(\pi)=D(\pi)-D(C(\pi)),
+\]
+\[
+        \Delta_B(\pi)=B(L_C(\pi)).
+\]
+If $\Delta_B$ is large, the compressed proof may be excellent for certification and poor for future discovery.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{figures/methodology/fig_forgotten_bridge_reach.png}
+\caption{A simulation in which preserving intermediate steps increases future bridge reach.}
+\end{figure}
+
+\section{Collective noise and interpretation}
+
+Every observer produces noise.  Let the reading of observer $i$ be
+\[
+        R_i=O+C+L_i+\eta_i,
+\]
+where $O$ is the object, $C$ is collective bias, $L_i$ is the observer's lens, and $\eta_i$ is individual mean-zero noise.  A simplified version is
+\[
+        R_i=O+C+\eta_i,
+\]
+with $\eta_i$ independent and $\operatorname{Var}(\eta_i)=\sigma^2$.  Then
+\[
+        \overline R_m=O+C+\frac1m\sum_{i=1}^m\eta_i,
+\]
+so
+\[
+        \mathbb E\,\overline R_m=O+C,
+\]
+\[
+        \operatorname{Var}(\overline R_m)=\frac{\sigma^2}{m}.
+\]
+Individual noise averages down.  Shared bias remains.
+
+\begin{proposition}[Consensus has a bias floor]
+In the model above, increasing the number of independent readers drives the individual-noise variance to zero, but it does not remove the collective bias term $C$.
+\end{proposition}
+
+\begin{proof}
+The expectation of the average reading is $O+C$.  The variance of the average of independent mean-zero errors is $\sigma^2/m$, which tends to zero.  The bias $C$ is not random individual noise, so it remains.
+\end{proof}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{rrrrr}
+\toprule
+readers & individual variance & shared bias & lens bias & total MSE\\
+\midrule
+1 & 1 & 0.38 & 0.24 & 1.2 \\
+2 & 0.5 & 0.38 & 0.24 & 0.702 \\
+5 & 0.2 & 0.38 & 0.24 & 0.402 \\
+10 & 0.1 & 0.38 & 0.24 & 0.302 \\
+20 & 0.05 & 0.38 & 0.24 & 0.252 \\
+40 & 0.025 & 0.38 & 0.24 & 0.227 \\
+80 & 0.0125 & 0.38 & 0.24 & 0.214 \\
+120 & 0.00833 & 0.38 & 0.24 & 0.21 \\
+\bottomrule
+\end{tabular}
+\caption{Collective-noise calculation.  More readers reduce individual variance, but shared bias and lens bias remain.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\linewidth]{figures/methodology/fig_collective_noise.png}
+\caption{Consensus reduces individual noise but can preserve a bias floor.}
+\end{figure}
+
+Thus consensus is evidence, not verdict.  It may be strong evidence.  It is still a reading packet, not the object itself.
+
+\section{Imagination, proof, meaning, and question quality}
+
+Let
+\[
+        I_t=\text{imagination reach at time }t,
+\]
+\[
+        P_t=\text{formal proof reach},
+\]
+\[
+        M_t=\text{meaning or interpretive reach},
+\]
+\[
+        B_t=\text{bridge density},
+\]
+\[
+        Q_t=\text{quality of questions available to the community}.
+\]
+These quantities need not grow together.  A system can produce many candidate ideas without enough audit.  Formal proof can grow faster than meaning.  Meaning can stabilize slowly.  Question quality may be the missing variable, because better questions can convert noise into search direction.
+
+A schematic update is
+\[
+        I_{t+1}=I_t+a_tI_t\left(1-\frac{I_t}{K_I}\right)+bB_t+\epsilon_t,
+\]
+\[
+        P_{t+1}=P_t+c_tI_t\left(1-\frac{P_t}{K_P}\right)+dB_t+\eta_t,
+\]
+\[
+        M_{t+1}=M_t+e_tP_t\left(1-\frac{M_t}{K_M}\right)+fQ_t+\zeta_t.
+\]
+The model is not meant as a law of history.  It is a way of expressing a possibility: tools may expand imagination, proof, and meaning at different rates.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+time & imagination & proof & meaning & bridges & question quality & noise\\
+\midrule
+0 & 7 & 5 & 4 & 2 & 3 & 1.5 \\
+20 & 27.7 & 6.88 & 5.2 & 4.82 & 6.89 & 1.17 \\
+46 & 96.3 & 15.1 & 7.08 & 13.8 & 11.2 & 2.15 \\
+60 & 202 & 27.7 & 9.57 & 29.9 & 17.4 & 3.85 \\
+85 & 231 & 63.6 & 18.1 & 59.1 & 40.6 & 4.17 \\
+109 & 235 & 96 & 33.1 & 81.2 & 81.7 & 3.71 \\
+\bottomrule
+\end{tabular}
+\caption{Selected states from the idea-growth simulation.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\linewidth]{figures/methodology/fig_growth_curves.png}
+\caption{Simulation of imagination reach, proof reach, meaning reach, bridge density, and question quality.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{figures/methodology/fig_meaning_lag.png}
+\caption{Meaning can lag behind imagination, proof, and bridge creation.}
+\end{figure}
+
+\section{Phase diagram for interpretation}
+
+The next simulation varies candidate-generation rate and audit/interpretation rate.  The stability index is high when interpretation can keep pace with new candidate structures and low when candidate production outruns audit.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{rrr}
+\toprule
+candidate rate & audit rate & stability\\
+\midrule
+0.04 & 0.02 & 0.446 \\
+0.0864 & 0.0606 & 0.306 \\
+0.133 & 0.101 & 0.21 \\
+0.179 & 0.142 & 0.144 \\
+0.2 & 0.16 & 0.122 \\
+\bottomrule
+\end{tabular}
+\caption{Sample values from the interpretation-stability phase diagram.}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\linewidth]{figures/methodology/fig_phase_diagram_meaning.png}
+\caption{A schematic phase diagram.  If candidate generation outruns audit and interpretation, stability drops.}
+\end{figure}
+
+The philosophical conclusion is not that candidate generation should be slowed.  It is that audit systems, archives, and meaning-preserving representations must scale with it.
+
+\section{Discovery graphs}
+
+The proof-path theory treats discovery as a graph.  Local clusters form first.  Weak long-range bridges often appear later.  These weak bridges may be more important than the strongest local edges, because they connect regions of the graph that otherwise remain separate.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{figures/methodology/fig_discovery_graph_evolution.png}
+\caption{A discovery graph grows through local clustering and weak long-range bridges.}
+\end{figure}
+
+A forgotten step may appear irrelevant inside the final proof and still be essential in the discovery graph.  The graph is larger than the certificate.
+
+\section{The three-audit model}
+
+Candidate mathematical connections should pass three audits:
+\[
+        \text{formal audit},
+        \qquad
+        \text{meaning audit},
+        \qquad
+        \text{future-bridge audit}.
+\]
+The formal audit asks whether the claim is derivable.  The meaning audit asks whether the claim can be interpreted.  The future-bridge audit asks what the claim opens.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\linewidth]{figures/methodology/fig_audit_model.png}
+\caption{A candidate bridge should be tested formally, interpretively, and by its future-bridge value.}
+\end{figure}
+
+This model prevents two opposite errors.  It prevents exploration from replacing proof, and it prevents formal proof from erasing the discovery field too early.
+
+\section{How the theory can be modeled in different ways}
+
+The same formal objects can be modeled differently depending on the goal.
+
+\subsection{As a graph theory problem}
+A discovery field can be modeled as a directed graph
+\[
+        G=(V,E),
+\]
+where vertices are statements, examples, computations, or representations, and edges are transfers.  Compression is graph contraction.  Lost steps are removed vertices.  Bridge value is future reachability.
+
+\subsection{As an information theory problem}
+A proof can be modeled as a code.  Compression reduces description length.  The cost is that side information may be removed.  Discovery value is then the value of side information for future tasks.
+
+\subsection{As an optimization problem}
+A proof presentation can be chosen by maximizing a utility function
+\[
+        U_\theta(\pi).
+\]
+Different goals yield different optimal presentations.
+
+\subsection{As a learning problem}
+The archive of proof paths can be treated as training data for future mathematical search.  Lost steps are not merely noise; they may be features for future theorem discovery.
+
+\subsection{As a social epistemology problem}
+Readers are noisy measurement systems.  Consensus reduces some noise and preserves other noise.  Dissent is not automatically correct, but it may contain a bridge that the consensus lens cannot see.
+
+\section{Examples}
+
+\subsection{Compressed proof versus teaching path}
+A short proof may say that a result follows by a standard theorem.  A teaching path may show the examples, failed special cases, and boundary behavior that make the theorem feel inevitable.  Both are valid representations.  They optimize different values.
+
+\subsection{Formal library versus research archive}
+A formal library wants minimal ambiguity and high auditability.  A research archive may preserve failed attempts and exploratory reductions.  The library certifies.  The archive remembers.
+
+\subsection{Collective review}
+A group of readers may agree that a proof is uninteresting because it does not match the current field lens.  That agreement may reflect truth, or it may reflect shared bias.  The proof-path theory treats the collective reading as data, not as final reality.
+
+\subsection{Candidate generation and meaning}
+A candidate-generation tool can expand imagination by producing bridges quickly.  Those bridges are not proofs.  They are entries in a candidate field.  The key question is whether formal audit and meaning audit can keep pace with the growth of the field.
+
+\section{Refinement program}
+
+The theory can be developed further in several directions.
+
+\paragraph{Proof archives with lost-step metadata.}
+Formal repositories could store not only final derivations but expanded discovery fields:
+\[
+        \pi_{\mathrm{exp}},\quad C(\pi),\quad L_C(\pi),\quad G_L(\pi).
+\]
+
+\paragraph{Proof compilers with multiple outputs.}
+A proof compiler could generate several versions:
+\[
+        \pi_{\mathrm{cert}},
+        \quad
+        \pi_{\mathrm{teach}},
+        \quad
+        \pi_{\mathrm{disc}},
+        \quad
+        \pi_{\mathrm{arch}}.
+\]
+
+\paragraph{Bridge-value estimation.}
+One can study which lost steps later become useful in other fields.  This would give empirical content to $F(\pi)$ and $B(L_C(\pi))$.
+
+\paragraph{Collective-noise models.}
+Review systems could distinguish independent disagreement from shared bias.  Consensus would remain important, but it would be modeled rather than absolutized.
+
+\paragraph{Meaning-preserving compression.}
+The most important practical problem is to compress proofs without destroying too much interpretive and future-bridge value.  This is not only a writing problem.  It is a mathematical-design problem.
+
+
+\section{Operational refinement}
+
+The theory should not end as a fixed philosophical vocabulary.  It should give a working protocol for choosing how much of a proof path to preserve.  The most practical object is not a single proof representation but a representation portfolio:
+\[
+        \mathcal R(\pi)=
+        \{\pi_{\mathrm{cert}},\pi_{\mathrm{teach}},\pi_{\mathrm{disc}},\pi_{\mathrm{arch}},\pi_{\mathrm{form}}\}.
+\]
+Here $\pi_{\mathrm{cert}}$ is optimized for verification, $\pi_{\mathrm{teach}}$ for meaning, $\pi_{\mathrm{disc}}$ for future bridge discovery, $\pi_{\mathrm{arch}}$ for preserving the search field, and $\pi_{\mathrm{form}}$ for formal audit.
+
+For a goal vector $\theta$, define
+\[
+        U_\theta(\pi)
+        =\theta_VV(\pi)+\theta_DD(\pi)+\theta_MM(\pi)+\theta_AA(\pi)+\theta_FF(\pi)
+        -\theta_NN(\pi)-\theta_CC_0(\pi).
+\]
+The selected representation is
+\[
+        \pi^*(\theta)=\arg\max_{\pi\in\mathcal R(\pi_{\mathrm{exp}})}U_\theta(\pi).
+\]
+This formula makes the main methodological point explicit: there is no reason to expect the same proof form to be best for every goal.
+
+\subsection{Refinement operator}
+
+Let $\mathcal T$ be a current representation of a proof field.  A refinement step opens one packet, records what is gained, and measures the new residual:
+\[
+        \mathcal T_{k+1}=\operatorname{Refine}(\mathcal T_k,B_j)
+        =\mathcal T_k\cup\{B_{j,1},\ldots,B_{j,m},R_j\}.
+\]
+The refinement is kept if it improves at least one required value without making the intended goal unusable:
+\[
+        \Delta U_\theta
+        =U_\theta(\mathcal T_{k+1})-U_\theta(\mathcal T_k)>0.
+\]
+For archival goals, one may keep a refinement even when $\Delta U_\theta<0$ for the final paper, provided the bridge value is positive:
+\[
+        F(B_{j,r})>0.
+\]
+This is the formal version of the forgotten-step principle.  A step may be bad for the final text and good for the future search.
+
+\subsection{Stopping rules}
+
+A proof path can always be expanded further.  The practical question is where to stop.  The stopping rule should depend on purpose.
+
+For certification, stop when the formal audit is stable:
+\[
+        V(\pi)\ge \tau_V
+        \quad\text{and}\quad
+        A(\pi)\ge \tau_A.
+\]
+For teaching, stop when meaning value no longer increases enough to justify the cost:
+\[
+        \Delta M < \lambda\Delta C_0.
+\]
+For discovery, stop later.  A high-cost expansion may be justified if it creates a high-value bridge:
+\[
+        \Delta F > \mu\Delta C_0.
+\]
+For archives, the stopping rule is weakest: preserve the object whenever its future value is uncertain but nontrivial.
+
+The deeper principle is that expansion depth is not an absolute virtue.  It is a goal-dependent variable.  Mathematics advances by compression, but it also advances by knowing when not to compress yet.
+
+\section{Final synthesis}
+
+The refined theory can be summarized as a sequence of separations:
+\[
+        \text{proof}\ne\text{discovery path},
+\]
+\[
+        \text{verification}\ne\text{meaning},
+\]
+\[
+        \text{consensus}\ne\text{truth},
+\]
+\[
+        \text{compression}\ne\text{losslessness},
+\]
+\[
+        \text{failed step}\ne\text{worthless step}.
+\]
+These separations are not meant to weaken proof.  They are meant to protect everything proof does not record.  The final certificate remains essential.  The discovery field around the certificate may also contain mathematics that the certificate no longer needs.
+
+A final proof is therefore best understood as one projection of a larger object.  The larger object is the proof path, its compression history, its lost-step set, its bridge graph, its interpretation history, and its future questions.  That larger object is what this paper calls a compressed discovery field.
+
+\section{Conclusion}
+
+The theory developed here does not replace proof.  It expands what counts as part of a proof's mathematical life.  A proof certifies an implication, but the discovery field around the proof may contain future mathematics.  Compression is necessary, but compression has losses.  Collective reading is necessary, but collective reading has noise.  Candidate generation is powerful, but it must be matched by audit and meaning.
+
+The final thesis is:
+\[
+\boxed{\begin{minipage}{0.88\linewidth}
+A mature philosophy of mathematical proof should study proofs as compressed discovery fields.  It should distinguish verification value from discovery value, track the lost neighborhoods created by compression, model collective noise, and design proof representations according to the goal they are meant to serve.
+\end{minipage}}
+\]
+
+
+\section{Reproducibility}
+
+All figures and tables in this paper were generated with the Python script
+\[
+        \texttt{Phil\_Methodology.py}.
+\]
+The generated CSV files are in the \texttt{tables} directory.  The figures are in the \texttt{figures} directory.
+
+
+\section*{Returning to the opening question}
+The paper began by asking what mathematics, computer science, statistics, and technology mean.  The answer developed indirectly.  Each discipline chooses representations, moves information through them, decides what may be compressed, and assigns different kinds of evidence to the conclusions that remain.
+
+The final chapter gathers those pieces into one resolved practice object.  It is not meant as compulsory notation for every theorem.  It is a description of what a complete mathematical record contains when representation, uncertainty, computation, and discovery history all matter.
+
+\chapter{One final view of mathematics and practice}
+
+\section{The resolved practice object}
+The preceding chapters suggest that the natural object of mathematical practice is not only a theorem or an operator.  It is a structured tuple
+\[
+\mathfrak P
+=(X,\mathcal R,\mathcal T,\mathcal J,\mathcal C,\mathcal E,\mathcal A),
+\]
+where \(X\) is the problem or object, \(\mathcal R\) is the family of admissible resolutions, \(\mathcal T\) is the linear transfer field, \(\mathcal J\) is the nonlinear interaction field, \(\mathcal C\) is the quantitative certificate, \(\mathcal E\) is the typed evidence ledger, and \(\mathcal A\) is the expanded archive of proof paths, examples, failures, computations, and unresolved questions.
+
+This tuple is not meant to burden every theorem with seven new symbols.  It states what a complete research record contains when representation, approximation, and discovery history matter.
+
+\section{A closure theorem for resolved practice}
+\begin{theorem}[Finite compositional closure]
+Consider a finite construction assembled from exact linear transfers, bounded multilinear interactions, compatible refinements, chart changes, certified compression, and sound Resolution-Logic rules.  Then the construction has:
+\begin{enumerate}[label=\arabic*.]
+\item a well-defined semantic value in the final resolution;
+\item a finite transfer and interaction tree;
+\item a composite deterministic error bound;
+\item a composite cost and failure bound;
+\item a typed evidence ledger preserving the status of every premise;
+\item a traceable refinement and compression history.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Proceed by structural induction on the construction tree.  Leaves carry their declared values, resolutions, certificates, and evidence.  Linear and multilinear nodes use the sound transport inequalities of Resolution Logic.  Refinement nodes preserve value and error while updating resolution and cost.  Compression nodes add their certified residual.  Chart changes are exact by mixed-corner reconstruction.  Evidence ledgers concatenate without changing evidence type.  Each rule therefore preserves the six stated fields, and a finite tree produces a finite composite certificate.
+\end{proof}
+
+\section{What the disciplines mean in this framework}
+The opening question now has a more precise answer.
+
+\begin{description}
+\item[Mathematics] studies structures, invariants, transformations, and proofs across admissible resolutions.
+\item[Computer science] makes representations executable and studies the cost of transfer, storage, refinement, search, and verification.
+\item[Statistics] studies what can be inferred from incomplete packets of evidence and how uncertainty changes with representation.
+\item[Technology] gives those representations a physical and institutional form: hardware, software, measurements, archives, and decisions.
+\end{description}
+
+None of these subjects is reduced to the others.  They meet because each must choose what to represent, what to omit, how to move information, and how to certify the result.
+
+\section{The deepest claim}
+The theory does not say that truth is relative to representation.  It says something more careful:
+\[
+\boxed{\begin{minipage}{0.84\linewidth}
+\centering
+Truth may be invariant while visibility, cost, explanation, and discoverability are resolution-dependent.
+\end{minipage}}
+\]
+A theorem may be equally true in two representations and still be transparent in one, computationally practical in another, and almost impossible to discover in a third.
+
+Proof compression makes the same point in temporal form.  The final certificate may preserve validity while deleting the neighborhood from which future mathematics would have grown.  A mature mathematical archive should preserve the certificate and enough of the expanded field to support audit, teaching, reuse, and new bridges.
+
+\section{What is complete and what remains open}
+The finite linear calculus, its concrete representation, the finite nonlinear reconstruction, the implemented certificate rules, and the finite proof-path models are complete within their stated hypotheses.  The following remain open programs:
+\begin{itemize}
+\item a universal monoidal representation theorem for all admissible resolved categories;
+\item measurable descent and stack-like gluing for fields of resolved categories;
+\item a sound-and-complete infinite Resolution Logic;
+\item general spectral invariance for weighted transfer algebras;
+\item robust learning theory for data-dependent projector fields;
+\item applications in which Resolution Theory yields a genuinely new theorem or decisive simplification unavailable in the customary language.
+\end{itemize}
+
+\section{Closing perspective}
+Resolution Theory begins with a commonplace observation: mathematics is always done in some representation.  Its ambition is to stop treating that fact as invisible.
+
+The practical question is not whether every object should be divided forever.  It is:
+\begin{quote}
+Which resolution makes the structure relevant to this problem visible, what does that resolution forget, and how can the forgotten part be reconstructed, bounded, or preserved for later work?
+\end{quote}
+
+That question belongs equally to a spectral theorem, a numerical algorithm, a statistical model, a proof archive, and a scientific instrument.  The answers differ.  The architecture connecting them is the subject of this paper.
+
+\appendix
+\chapter{Reference implementations}
+The code below is included because the finite theory should be executable as well as readable.  It favors transparent formulas over performance engineering.
+
+\section{Finite linear Resolution Theory}
+\lstinputlisting[language=Python]{code/resolution_core.py}
+
+\section{Nonlinear Resolution Theory}
+\lstinputlisting[language=Python]{code/nonlinear_resolution.py}
+
+\section{Resolution Logic}
+\lstinputlisting[language=Python]{code/resolution_logic.py}
+
+\section{Countable and unbounded examples}
+\lstinputlisting[language=Python]{code/infinite_resolution.py}
+
+\section{Proof-path methodology model}
+\lstinputlisting[language=Python]{code/proof_path_methodology.py}
+
+\section{Formal proof-path graph model}
+\lstinputlisting[language=Python]{code/proof_path_formal.py}
+
+\chapter{Automated tests}
+\section{Finite linear tests}
+\lstinputlisting[language=Python]{tests/test_resolution_core.py}
+\section{Nonlinear tests}
+\lstinputlisting[language=Python]{tests/test_nonlinear_resolution.py}
+\section{Resolution Logic tests}
+\lstinputlisting[language=Python]{tests/test_resolution_logic.py}
+\section{Infinite-system tests}
+\lstinputlisting[language=Python]{tests/test_infinite_resolution.py}
+
+\section{Formal proof-path tests}
+\lstinputlisting[language=Python]{tests/test_proof_path_formal.py}
+
+\chapter{Computational record}
+The collected reference suite contains the original twenty theory tests together with seventeen formal proof-path tests.  All thirty-seven passed.  Thirteen figures were generated for the finite, nonlinear, logical, and infinite theory; the original methodology contributes eighteen figures; and the formal proof-path model adds fourteen further figures.  The reference calculations are finite demonstrations of the formulas in the text.  They are not presented as empirical laws of mathematical history or as substitutes for infinite-dimensional proofs.
+
+
+
+The formal proof-path experiment records the verification core, compression losses, expected recovery debt, bridge scores, reviewer correlation, audit queues, representation portfolios, evidence types, and refinement decisions.  The numbers are examples generated from declared model inputs.  They illustrate the theorems; they are not presented as empirical laws of mathematical history.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\linewidth]{figures/13_unified_architecture.png}
+\caption{The final architecture places representation, transformation, interaction, certification, and mathematical memory in one traceable object.}
+\end{figure}
+
+\begin{thebibliography}{99}
+\bibitem{MacLane} S. Mac Lane, \emph{Categories for the Working Mathematician}, second edition, Springer, 1998.
+\bibitem{GelfandNaimark} I. Gelfand and M. Naimark, ``On the imbedding of normed rings into the ring of operators in Hilbert space,'' \emph{Matematicheskii Sbornik} 12 (1943), 197--213.
+\bibitem{Bratteli} O. Bratteli, ``Inductive limits of finite-dimensional $C^*$-algebras,'' \emph{Transactions of the American Mathematical Society} 171 (1972), 195--234.
+\bibitem{Kato} T. Kato, \emph{Perturbation Theory for Linear Operators}, Springer, 1995.
+\bibitem{ReedSimon} M. Reed and B. Simon, \emph{Methods of Modern Mathematical Physics I: Functional Analysis}, Academic Press, 1980.
+\bibitem{Jacobs} B. Jacobs, \emph{Categorical Logic and Type Theory}, Elsevier, 1999.
+\bibitem{Fritz} T. Fritz, ``A synthetic approach to Markov kernels, conditional independence and sufficient statistics,'' \emph{Advances in Mathematics} 370 (2020), 107239.
+\bibitem{Effectus} K. Cho, B. Jacobs, B. Westerbaan, and A. Westerbaan, ``An introduction to effectus theory,'' arXiv:1512.05813.
+\bibitem{Hairer} M. Hairer, ``A theory of regularity structures,'' \emph{Inventiones Mathematicae} 198 (2014), 269--504.
+\end{thebibliography}
+\end{document}

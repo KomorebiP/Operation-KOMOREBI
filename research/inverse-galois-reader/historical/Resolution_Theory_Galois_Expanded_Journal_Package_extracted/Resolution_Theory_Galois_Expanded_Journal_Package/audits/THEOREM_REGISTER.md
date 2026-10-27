@@ -1,0 +1,155 @@
+# Theorem and record register
+
+| # | Type | Title | Label |
+|---:|---|---|---|
+| 1 | definition | Finite resolved transfer system | `def:finite_resolved_system` |
+| 2 | theorem | Mixed block representation | `thm:mixed_blocks` |
+| 3 | corollary | Linking algebra realization | `cor:linking_algebra` |
+| 4 | theorem | Packet Parseval identity | `thm:packet_parseval` |
+| 5 | definition | Transfer energy distribution | `def:transfer_energy` |
+| 6 | proposition | Unitary invariance and tensor additivity | `prop:entropy_properties` |
+| 7 | theorem | Exact refinement law | `thm:exact_refinement` |
+| 8 | theorem | Resolution double category | `thm:double_category` |
+| 9 | theorem | Selective compression | `thm:selective_compression` |
+| 10 | corollary | Best diagonal approximation | `cor:best_diagonal` |
+| 11 | theorem | Common refinement criterion | `thm:common_refinement` |
+| 12 | remark | Projector atlases | `rem:projector_atlas` |
+| 13 | theorem | Common reducing projector criterion | `thm:commutant_projector` |
+| 14 | theorem | Commutant Laplacian identity | `thm:commutant_laplacian` |
+| 15 | theorem | Finite lattice of coordinate resolutions | `thm:partition_lattice` |
+| 16 | theorem | Finite unitary gluing | `thm:unitary_gluing` |
+| 17 | proposition | Chordal projector metric | `prop:chordal_metric` |
+| 18 | theorem | Permutation invariant resolution metric | `thm:resolution_metric` |
+| 19 | theorem | Lipschitz stability of mixed block fields | `thm:block_field_stability` |
+| 20 | corollary | Stability of transfer energy distributions | `cor:energy_distribution_stability` |
+| 21 | theorem | Canonical unitary transport of a moving resolution | `thm:kato_transport` |
+| 22 | proposition | Covariant derivative of a moving transfer | `prop:covariant_transfer_derivative` |
+| 23 | theorem | Commutant gap stability | `thm:commutant_gap_stability` |
+| 24 | proposition | Path accumulation under approximate gluing | `prop:path_accumulation` |
+| 25 | theorem | Budget tolerance duality | `thm:budget_tolerance` |
+| 26 | definition | Resolved linking system | `def:resolved_linking_system` |
+| 27 | proposition | Corner category | `prop:corner_category` |
+| 28 | theorem | Universal extension of compatible corner maps | `thm:universal_corner_extension` |
+| 29 | lemma | Faithful trace in finite dimension | `lem:faithful_trace` |
+| 30 | theorem | Faithful left regular representation | `thm:left_regular` |
+| 31 | theorem | Universal projector corner representation | `thm:universal_projector_representation` |
+| 32 | corollary | Resolved \(C^*\) categories | `cor:resolved_categories` |
+| 33 | theorem | Recognition theorem | `thm:recognition` |
+| 34 | proposition | Refinement naturality | `prop:refinement_naturality` |
+| 35 | theorem | Minimal faithful dimension in finite dimension | `thm:minimal_dimension` |
+| 36 | theorem | Universal GNS realization | `thm:universal_gns` |
+| 37 | proposition | Monoidal enhancement boundary | `prop:monoidal_boundary` |
+| 38 | definition | Admissible packet weight | `def:admissible_weight` |
+| 39 | theorem | Weighted block Schur algebra | `thm:weighted_schur_algebra` |
+| 40 | theorem | Local resolved Wiener theorem | `thm:resolved_neumann_inverse` |
+| 41 | theorem | Block diagonal inverse path expansion | `thm:block_inverse_paths` |
+| 42 | corollary | Off diagonal inverse decay | `cor:inverse_decay` |
+| 43 | proposition | Two packet Schur complement | `prop:schur_complement` |
+| 44 | remark | Global inverse closure boundary | `rem:global_weighted_boundary` |
+| 45 | definition | Countable Hilbert resolution | `def:countable_resolution` |
+| 46 | lemma | Strong convergence of packet sums | `lem:strong_packet_sum` |
+| 47 | theorem | Strong packet reconstruction | `thm:strong_reconstruction` |
+| 48 | theorem | Compact and Schatten truncation | `thm:compact_truncation` |
+| 49 | theorem | Countable packet path composition | `thm:countable_path` |
+| 50 | definition | Countably resolved \(C^*\) category | `def:countably_resolved_category` |
+| 51 | theorem | Countable linking representation | `thm:countable_linking` |
+| 52 | theorem | Nondegenerate factorization | `thm:nondegenerate_factorization` |
+| 53 | theorem | Normal preservation of countable packet joins | `thm:normal_joins` |
+| 54 | definition | Reducing packet for an unbounded operator | `def:unbounded_reduction` |
+| 55 | theorem | Unbounded direct sum decomposition | `thm:unbounded_direct_sum` |
+| 56 | theorem | Graph norm reconstruction | `thm:graph_norm` |
+| 57 | theorem | Bounded surrogate packetization | `thm:bounded_surrogate` |
+| 58 | theorem | Resolvent commutator identity | `thm:resolvent_commutator` |
+| 59 | theorem | Decomposable packet reconstruction | `thm:decomposable_reconstruction` |
+| 60 | theorem | Countable and unbounded completion | `thm:countable_completion` |
+| 61 | theorem | Trace class packet truncation | `thm:trace_state_truncation` |
+| 62 | theorem | Strict finite window reconstruction | `thm:strict_windows` |
+| 63 | definition | Resolved Karoubi object | `def:karoubi_object` |
+| 64 | theorem | Countable packet splitting | `thm:karoubi_packet_splitting` |
+| 65 | theorem | Expanded categorical completion | `thm:expanded_categorical_completion` |
+| 66 | theorem | Form packet reconstruction | `thm:form_packet_reconstruction` |
+| 67 | theorem | Reducing windows converge in strong resolvent sense | `thm:strong_resolvent_windows` |
+| 68 | proposition | Dynamical leakage from an approximate packet | `prop:dynamical_leakage` |
+| 69 | proposition | Measurable unitary covariance | `prop:measurable_covariance` |
+| 70 | definition | Resolved multilinear map | `def:resolved_multilinear` |
+| 71 | theorem | Exact multilinear reconstruction | `thm:multilinear_reconstruction` |
+| 72 | theorem | Weighted packet bound | `thm:weighted_packet_bound` |
+| 73 | theorem | Packet resolved Faà di Bruno formula | `thm:faa_di_bruno` |
+| 74 | proposition | Colored symmetric operad | `prop:colored_operad` |
+| 75 | theorem | Nonlinear refinement coherence | `thm:nonlinear_refinement` |
+| 76 | proposition | No free refinement | `prop:no_free_refinement` |
+| 77 | theorem | Analytic composition bound | `thm:analytic_composition` |
+| 78 | theorem | Near identity nonlinear inverse | `thm:near_identity_inverse` |
+| 79 | remark | Global inversion boundary | `rem:global_inverse_boundary` |
+| 80 | theorem | Certified nonlinear pruning | `thm:nonlinear_pruning` |
+| 81 | theorem | Countable multilinear reconstruction | `thm:countable_multilinear` |
+| 82 | theorem | Resolved Newton Kantorovich certificate | `thm:resolved_newton` |
+| 83 | theorem | Duhamel pruning certificate | `thm:duhamel_pruning` |
+| 84 | proposition | Hamiltonian packet compatibility | `prop:hamiltonian_packets` |
+| 85 | theorem | Packet form of the Itô generator | `thm:ito_packet_generator` |
+| 86 | definition | Existential and universal refinement maps | `def:logic_adjoints` |
+| 87 | theorem | Refinement Galois connections | `thm:logic_galois` |
+| 88 | theorem | Atomic completeness at finite resolution | `thm:logic_completeness` |
+| 89 | theorem | Finite Beck Chevalley identity | `thm:beck_chevalley` |
+| 90 | definition | Certified approximation | `def:certified_approximation` |
+| 91 | theorem | Linear and multilinear transport | `thm:error_transport` |
+| 92 | theorem | Finite indexed semantics | `thm:indexed_semantics` |
+| 93 | theorem | Countable atomic Boolean doctrine | `thm:countable_boolean_doctrine` |
+| 94 | theorem | Complete quantitative fiber adjoints | `thm:quantitative_fiber_adjoints` |
+| 95 | theorem | Countable packet error transport | `thm:countable_error_transport` |
+| 96 | theorem | Fourier realization | `thm:fourier_realization` |
+| 97 | remark |  | `rem:fourier_chart` |
+| 98 | theorem | Multiresolution realization | `thm:wavelet_realization` |
+| 99 | proposition | Quantum measurement realization | `prop:quantum_realization` |
+| 100 | theorem | Arithmetic polyphase realization | `thm:arithmetic_polyphase` |
+| 101 | corollary | Prime packet realization | `cor:prime_packet_realization` |
+| 102 | theorem | Arithmetic sieve line decomposition | `thm:arithmetic_sieve_line` |
+| 103 | theorem | Finite Gauss change of resolution | `thm:gauss_resolution_change` |
+| 104 | remark |  | `rem:arithmetic_scope` |
+| 105 | theorem | Resolved realization dictionary | `thm:realization_dictionary` |
+| 106 | definition | Semisimple Galois resolution datum | `def:galois_resolution_datum` |
+| 107 | theorem | Reynolds fixed point projector | `thm:reynolds_projector` |
+| 108 | theorem | Resolution form of the fundamental Galois correspondence | `thm:resolution_galois_correspondence` |
+| 109 | theorem | Lattice operations and compatible fixed resolutions | `thm:galois_lattice_operations` |
+| 110 | corollary | Common refinement and the Galois atlas boundary | `cor:galois_common_refinement` |
+| 111 | theorem | Normality, centrality, and quotient compression | `thm:normality_centrality` |
+| 112 | theorem | Finite group conditional expectation | `thm:fixed_point_expectation` |
+| 113 | corollary | GNS projector implementation | `cor:expectation_gns_projector` |
+| 114 | proposition | Trace and norm as packet transfers | `prop:galois_trace_norm` |
+| 115 | theorem | Abelian Fourier Galois chart | `thm:abelian_fourier_galois` |
+| 116 | theorem | Normal basis as a change of Galois resolution | `thm:normal_basis_resolution` |
+| 117 | theorem | Conjugate field atlas | `thm:galois_closure_atlas` |
+| 118 | theorem | Core and normal closure projectors | `thm:core_normal_closure` |
+| 119 | theorem | Mackey packet decomposition | `thm:mackey_packet_decomposition` |
+| 120 | corollary | Double cosets as atlas transition packets | `cor:double_coset_atlas` |
+| 121 | definition | Ramification resolution | `def:ramification_resolution` |
+| 122 | theorem | Orthogonal ramification details | `thm:ramification_details` |
+| 123 | theorem | Artin conductor as weighted unresolved resolution | `thm:artin_conductor_resolution` |
+| 124 | proposition | Upper numbering as a scale change | `prop:herbrand_scale_change` |
+| 125 | corollary | Unramified packet and Frobenius quotient | `cor:unramified_frobenius_packet` |
+| 126 | theorem | Haar fixed point projector | `thm:haar_projector` |
+| 127 | theorem | Shrinking subgroup reconstruction | `thm:shrinking_subgroup_reconstruction` |
+| 128 | corollary | Finite quotient factorization | `cor:finite_quotient_factorization` |
+| 129 | corollary | Absolute Galois resolution net | `cor:absolute_galois_resolution` |
+| 130 | definition | Semilinear Galois cocycle | `def:semilinear_galois_cocycle` |
+| 131 | theorem | Effective vector descent by Hilbert 90 | `thm:hilbert90_resolution` |
+| 132 | corollary | Line descent | `cor:line_hilbert90` |
+| 133 | theorem | Brauer obstruction to projective packet descent | `thm:brauer_obstruction` |
+| 134 | corollary | Resolution interpretation of the Brauer class | `cor:brauer_resolution_interpretation` |
+| 135 | theorem | Finite Galois category realization | `thm:galois_category_resolution` |
+| 136 | theorem | Tannakian Galois reconstruction | `thm:tannakian_resolution` |
+| 137 | corollary | The monoidal Galois boundary of Resolution Theory | `cor:monoidal_galois_boundary` |
+| 138 | theorem | Resolution Galois synthesis | `thm:resolution_galois_synthesis` |
+| 139 | theorem | Expanded Resolution Theory closure theorem | `thm:closure` |
+| 140 | corollary | Commuting representation and refinement diagram | `cor:commuting_diagram` |
+| 141 | corollary | Fourier analysis as a resolved specialization | `cor:fourier_specialization` |
+| 142 | problem | Monoidal fiber problem | `prob:monoidal` |
+| 143 | problem | Measurable resolution descent | `prob:measurable` |
+| 144 | problem | Modular and wild Galois resolution | `prob:modular_galois` |
+| 145 | problem | Hopf Galois resolution | `prob:hopf_galois` |
+| 146 | problem | Global resolved Wiener problem | `prob:wiener` |
+| 147 | problem | Learned resolution stability | `prob:learning` |
+| 148 | problem | Measurable Resolution Logic | `prob:infinite_logic` |
+| 149 | problem | Resolution discovery | `prob:discovery` |
+| 150 | problem | Arithmetic band estimates | `prob:arithmetic_estimates` |
+| 151 | remark | No universal optimal chart | `rem:no_universal_chart` |

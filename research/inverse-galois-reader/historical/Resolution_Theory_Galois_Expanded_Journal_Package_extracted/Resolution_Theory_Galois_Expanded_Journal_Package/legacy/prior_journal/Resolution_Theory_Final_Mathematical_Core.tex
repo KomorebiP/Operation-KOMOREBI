@@ -1,0 +1,1845 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools,bm,aliascnt,enumitem,graphicx,booktabs,array,longtable}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2600
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else\edef\@subjects{Primary:~\@primarysubjects}\fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty\edef\@subjects{Secondary:~\@secondarysubjects}\else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}\fi
+  \fi
+  \ifpdf\hypersetup{pdfsubject=\@subjects}\fi
+  \if@aom@oldkeywords\else\@footnotetext{AMS Classification:~\@subjects.}\fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}\newtheorem{proposition}[proposition]{Proposition}\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}\newtheorem{lemma}[lemma]{Lemma}\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}\newtheorem{corollary}[corollary]{Corollary}\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}\newtheorem{definition}[definition]{Definition}\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}\newtheorem{example}[example]{Example}\aliascntresetthe{example}
+\newaliascnt{problem}{theorem}\newtheorem{problem}[problem]{Problem}\aliascntresetthe{problem}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}\newtheorem{remark}[remark]{Remark}\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{problem}{problem}{problems}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\B}{\mathcal B}
+\newcommand{\K}{\mathcal K}
+\newcommand{\Hh}{\mathcal H}
+\newcommand{\Tcal}{\mathfrak T}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Ecal}{\mathcal E}
+\newcommand{\Fcal}{\mathcal F}
+\newcommand{\Lcal}{\mathcal L}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Qcal}{\mathcal Q}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Mcal}{\mathcal M}
+\newcommand{\Dcal}{\mathcal D}
+\newcommand{\Id}{\operatorname{Id}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\ran}{\operatorname{ran}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\Rcite}[1]{\textup{[#1]}}
+\graphicspath{{figures/}}
+
+\title[Resolution Theory]{Resolution Theory: Projector Corner Representations, Refinement Naturality, and Nonlinear Transfer}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{46L05}
+\subject{secondary}{msc2020}{47A05}
+\subject{secondary}{msc2020}{18M05}
+\subject{secondary}{msc2020}{46T20}
+\keyword{projector resolution}
+\keyword{linking algebra}
+\keyword{operator algebra}
+\keyword{refinement}
+\keyword{nonlinear operad}
+\keyword{unbounded operator}
+\copyrightnote{}
+\doinumber{}
+
+\hypersetup{
+ pdftitle={Resolution Theory: Projector Corner Representations, Refinement Naturality, and Nonlinear Transfer},
+ pdfauthor={Komorebi P.},
+ pdfsubject={Resolved operator systems, universal projector representations, countable and unbounded completion, nonlinear packet jets, and finite resolution logic}
+}
+
+\begin{document}
+\begin{abstract}
+Resolution Theory treats a chosen decomposition, its transfer blocks, and its refinement maps as part of the mathematical object. We develop a theorem driven version of the theory for Hilbert spaces, resolved \(C^*\) systems, countable packet families, unbounded generators, nonlinear maps, and finite resolution indexed logic. Finite operators admit exact mixed corner reconstruction, orthogonal Hilbert Schmidt accounting, coherent refinement, and a double categorical composition law. Every unital resolved \(C^*\) linking system has a faithful projector corner representation that preserves all named packets, corners, and refinement equations. A recognition theorem recovers the abstract system from any faithful realization. Countable packet sums reconstruct bounded maps in the strong star topology, compact and Schatten maps converge in their natural norms, and unbounded self adjoint generators are represented through graph norms, forms, resolvents, and bounded transforms. Smooth nonlinear maps admit exact packet resolved jets whose composition is governed by a colored symmetric operad and the Faà di Bruno formula. The resulting finite logic transports truth and quantitative certificates through refinement. Fourier, wavelet, polyphase, quantum, and arithmetic packet systems appear as concrete realizations. Exact boundaries for monoidal, measurable, and infinitary extensions are stated separately.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+Mathematical arguments rarely begin from an unrepresented object. They begin from a basis, a partition, a scale, a filtration, a cover, a family of observables, or a computational data structure. Those choices are usually suppressed after the calculation. Resolution Theory keeps them visible.
+
+A resolution divides an object into packets. A transfer field records how a map moves information between packets. Refinement replaces one packet by a family of descendants. Compression retains selected transfer blocks and keeps the omitted part as a named residual. Reconstruction returns the resolved description to the underlying object.
+
+The elementary source of the theory is the corner identity
+\[
+ T
+ =
+ \left(\sum_aQ_a\right)
+ T
+ \left(\sum_iP_i\right)
+ =
+ \sum_{a,i}Q_aTP_i.
+\]
+The subject begins when the projector families may vary, when different resolutions may fail to commute, when refinements are treated as morphisms in their own direction, and when the chosen hierarchy must survive an abstract representation theorem.
+
+The operator algebraic background is classical, with a broad modern reference supplied by \Rcite{R21}. Gelfand and Naimark established faithful Hilbert space representation of \(C^*\) algebras \Rcite{R1}. \(C^*\) and \(W^*\) categories, Hilbert category embeddings, and infinite direct sums are developed in \Rcite{R2}, \Rcite{R3}, \Rcite{R4}, and \Rcite{R5}. Unbounded operators and Hilbert \(C^*\) modules require additional domain and regularity control \Rcite{R6}, \Rcite{R7}, \Rcite{R10}. The nonlinear composition law belongs to the established theory of operads and Banach space differentiation \Rcite{R14}, while the numerical certificates used later are related to Newton and Kantorovich theory \Rcite{R15}.
+
+The contribution here is not a replacement for those theories. It is a resolved formulation that keeps a declared hierarchy of projections, transfer corners, refinements, residuals, and certificates intact through the full theorem chain.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.97\textwidth]{01_architecture.pdf}
+\caption{The basic resolved object. A representation is retained as mathematical structure rather than discarded after use.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Main results}
+
+The article proves six groups of results.
+
+\begin{enumerate}
+\item Finite resolved Hilbert systems admit exact block reconstruction, packet Parseval identities, coherent refinement, selective compression, and common refinement criteria.
+\item Resolved linking systems satisfy a universal extension law and admit faithful projector corner representations. Representation and refinement commute. A recognition theorem gives the converse construction.
+\item Countable packet sums reconstruct bounded maps strongly. Compact and Schatten maps converge in their natural norms. Countable \(C^*\) and \(W^*\) categorical completions preserve packet joins in the appropriate topology.
+\item Self adjoint unbounded generators are handled through reducing packets, graph norms, quadratic forms, resolvents, bounded transforms, and leakage bounds.
+\item Smooth maps admit exact multilinear packet reconstruction. Their jets compose through rooted packet trees and form a colored symmetric operad. Refinement commutes with nonlinear composition.
+\item Finite Resolution Logic organizes Boolean predicates and quantitative error certificates over the resolution poset. Its pullback, existential, universal, and transport rules are sound.
+\end{enumerate}
+
+\subsection{Status and scope}
+
+Several statements are immediate consequences of classical representation theory once the resolved structure has been defined. They are included because the preservation of named packets and refinements is the central issue. Other statements, such as the exact sieve of common refinements, commutant Laplacian certificate, nonlinear packet composition, and finite logic organization, are proved directly.
+
+No claim is made that every useful resolution can be found algorithmically, that refinement always lowers computational cost, or that every monoidal resolved category has a Hilbert space fiber functor. These boundaries are stated in \cref{sec:boundaries}.
+
+\section{Finite resolved transfer systems}\label{sec:finite}
+
+\subsection{Axioms and concrete realization}
+
+\begin{definition}[Finite resolved transfer system]\label{def:finite_resolved_system}
+A finite resolved transfer system consists of the following data.
+\begin{enumerate}[label=\textup{(R\arabic*)}]
+\item Every object \(X\) has a finite packet set \(I_X\) and packet spaces \(X_i\).
+\item Every transfer space has a finite decomposition
+\[
+ \Tcal(X,Y)
+ \cong
+ \bigoplus_{a\in I_Y,\,i\in I_X}
+ \Tcal_{ai}(X,Y).
+\]
+\item Reconstruction is faithful. A transfer is determined by its packet blocks.
+\item Composition is matrix composition
+\[
+ (S\circ T)_{ci}
+ =
+ \sum_{a\in I_Y}S_{ca}T_{ai}.
+\]
+\item Identity transfers are diagonal.
+\item A dagger interchanges source and target blocks.
+\item Tensor products distribute over packets.
+\item A refinement replaces a packet by finitely many orthogonal descendants, and coarse transfers are sums of descendant transfers.
+\item Transfer spaces are normed and composition is continuous.
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Mixed block representation]\label{thm:mixed_blocks}
+Let
+\[
+ \Hh=\bigoplus_{i\in I}\Hh_i,
+ \qquad
+ \K=\bigoplus_{a\in A}\K_a
+\]
+with orthogonal projectors \(P_i\) and \(Q_a\). The map
+\[
+ \Phi_{\Qcal\leftarrow\Pcal}:
+ \B(\Hh,\K)
+ \longrightarrow
+ \bigoplus_{a,i}\B(\Hh_i,\K_a),
+ \qquad
+ T\longmapsto(Q_aTP_i)_{a,i}
+\]
+is a linear bijection. Its inverse is
+\[
+ \Rcal((T_{ai}))=\sum_{a,i}T_{ai}.
+\]
+For a third resolved space \(\Lcal=\bigoplus_c\Lcal_c\),
+\[
+ \Phi_{\mathcal S\leftarrow\Pcal}(ST)_{ci}
+ =
+ \sum_a
+ \Phi_{\mathcal S\leftarrow\Qcal}(S)_{ca}
+ \Phi_{\Qcal\leftarrow\Pcal}(T)_{ai}.
+\]
+Moreover,
+\[
+ \Phi(T^*)_{ia}
+ =
+ \Phi(T)_{ai}^*.
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the two resolutions of the identity:
+\[
+ T
+ =
+ I_{\K}TI_{\Hh}
+ =
+ \left(\sum_aQ_a\right)
+ T
+ \left(\sum_iP_i\right)
+ =
+ \sum_{a,i}Q_aTP_i.
+\]
+This proves reconstruction and faithfulness. Conversely, a finite family of maps from \(\Hh_i\) to \(\K_a\) defines one map on the direct sums by the same sum.
+
+For composition, insert the intermediate identity:
+\[
+ R_cSTP_i
+ =
+ R_cS\left(\sum_aQ_a\right)TP_i
+ =
+ \sum_a(R_cSQ_a)(Q_aTP_i).
+\]
+The adjoint identity follows from
+\[
+ (Q_aTP_i)^*=P_iT^*Q_a.
+\]
+\end{proof}
+
+\begin{corollary}[Linking algebra realization]\label{cor:linking_algebra}
+For one resolved Hilbert space \(\Hh=\bigoplus_i\Hh_i\), the corner algebra
+\[
+ \bigoplus_{i,j}\B(\Hh_j,\Hh_i)
+\]
+with matrix composition and blockwise adjoint is canonically star isomorphic to \(\B(\Hh)\).
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:mixed_blocks} with equal source and target resolutions. The composition and adjoint formulas identify the algebraic operations.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.90\textwidth]{02_block_reconstruction.pdf}
+\caption{The transfer field of an operator. Reconstruction is the sum of all mixed corners.}
+\label{fig:block_reconstruction}
+\end{figure}
+
+\subsection{Orthogonal accounting}
+
+\begin{theorem}[Packet Parseval identity]\label{thm:packet_parseval}
+If \(T:\Hh\to\K\) is Hilbert Schmidt, then
+\[
+ \boxed{
+ \norm{T}_{\mathrm{HS}}^2
+ =
+ \sum_{a,i}\norm{Q_aTP_i}_{\mathrm{HS}}^2.
+ }
+\]
+Distinct packet blocks are orthogonal in the Hilbert Schmidt inner product.
+\end{theorem}
+
+\begin{proof}
+For two blocks,
+\[
+ \langle Q_aTP_i,Q_bTP_j\rangle_{\mathrm{HS}}
+ =
+ \Tr(P_iT^*Q_aQ_bTP_j).
+\]
+If \(a\ne b\), then \(Q_aQ_b=0\). If \(i\ne j\), cyclicity of the trace brings \(P_jP_i=0\) together. The reconstruction from \cref{thm:mixed_blocks} is therefore an orthogonal sum.
+\end{proof}
+
+\begin{definition}[Transfer energy distribution]\label{def:transfer_energy}
+For nonzero Hilbert Schmidt \(T\), define
+\[
+ p_{ai}(T)
+ =
+ \frac{\norm{Q_aTP_i}_{\mathrm{HS}}^2}
+ {\norm{T}_{\mathrm{HS}}^2}.
+\]
+The transfer entropy is
+\[
+ H_{\Qcal\leftarrow\Pcal}(T)
+ =
+ -\sum_{a,i}p_{ai}(T)\log p_{ai}(T),
+\]
+with the convention \(0\log0=0\).
+\end{definition}
+
+\begin{proposition}[Unitary invariance and tensor additivity]\label{prop:entropy_properties}
+Packetwise unitaries preserve the transfer energy distribution. If \(S\) and \(T\) are nonzero Hilbert Schmidt maps equipped with product packet resolutions, then
+\[
+ H(S\otimes T)=H(S)+H(T).
+\]
+\end{proposition}
+
+\begin{proof}
+Packetwise unitaries preserve each Hilbert Schmidt block norm. For tensor products,
+\[
+ p_{(b,a),(j,i)}(S\otimes T)
+ =
+ p_{bj}(S)p_{ai}(T).
+\]
+The entropy of a product probability distribution is the sum of the entropies.
+\end{proof}
+
+\subsection{Refinement and coarsening}
+
+Suppose
+\[
+ P_i=\sum_{\alpha\in C(i)}P_{i\alpha},
+ \qquad
+ Q_a=\sum_{\beta\in D(a)}Q_{a\beta}
+\]
+are finite orthogonal refinements.
+
+\begin{theorem}[Exact refinement law]\label{thm:exact_refinement}
+For every bounded operator \(T\),
+\[
+ \boxed{
+ Q_aTP_i
+ =
+ \sum_{\beta\in D(a)}
+ \sum_{\alpha\in C(i)}
+ Q_{a\beta}TP_{i\alpha}.
+ }
+\]
+If \(S\) and \(T\) are composable, coarsening the fine block product gives the coarse block product.
+\end{theorem}
+
+\begin{proof}
+Insert the two refinement identities on the left and right of \(T\). For composition, expand both maps at the fine level, multiply, and sum over descendant intermediate packets. The descendant projectors sum to the coarse intermediate projector.
+\end{proof}
+
+\begin{theorem}[Resolution double category]\label{thm:double_category}
+Finite resolved Hilbert spaces form a thin strict double category with resolved Hilbert spaces as objects, bounded maps as horizontal arrows, refinement maps on one underlying space as vertical arrows, and the block coarsening identity as the unique compatible square.
+\end{theorem}
+
+\begin{proof}
+Horizontal composition is operator composition. Vertical composition is ancestry of packets. A square states that a coarse block is the sum of its descendants. The interchange law is finite distributivity and is equivalent to \cref{thm:exact_refinement}. This is a strict resolved instance of the double categorical framework \Rcite{R13}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{05_refinement_naturality.pdf}
+\caption{Refinement is a second mathematical direction. It is not another physical evolution.}
+\label{fig:refinement_naturality_preview}
+\end{figure}
+
+\subsection{Compression and named residuals}
+
+Let \(E\subseteq A\times I\) be a selected set of packet edges. Define
+\[
+ C_E(T)=\sum_{(a,i)\in E}Q_aTP_i,
+ \qquad
+ R_E(T)=T-C_E(T).
+\]
+
+\begin{theorem}[Selective compression]\label{thm:selective_compression}
+On the Hilbert space of Hilbert Schmidt operators, \(C_E\) is the orthogonal projection onto the span of the selected block subspaces. Moreover,
+\[
+ \boxed{
+ \norm{T-C_E(T)}_{\mathrm{HS}}^2
+ =
+ \sum_{(a,i)\notin E}
+ \norm{Q_aTP_i}_{\mathrm{HS}}^2.
+ }
+\]
+Among all Hilbert Schmidt operators supported on \(E\), \(C_E(T)\) is the unique best approximation to \(T\).
+\end{theorem}
+
+\begin{proof}
+The block subspaces are orthogonal by \cref{thm:packet_parseval}. Projection onto their selected direct sum keeps exactly those blocks. The Pythagorean identity gives the residual norm and uniqueness.
+\end{proof}
+
+\begin{corollary}[Best diagonal approximation]\label{cor:best_diagonal}
+For one resolution \(\{P_i\}\), the map
+\[
+ \Ecal(T)=\sum_iP_iTP_i
+\]
+is the Hilbert Schmidt orthogonal projection onto the block diagonal algebra.
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:selective_compression} with \(E=\{(i,i)\}\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{13_compression_residual.pdf}
+\caption{Compression is a projection with an explicit complementary residual.}
+\label{fig:compression_residual}
+\end{figure}
+
+\subsection{Compatibility of resolutions}
+
+\begin{theorem}[Common refinement criterion]\label{thm:common_refinement}
+Two finite orthogonal resolutions \(\{P_i\}\) and \(\{Q_a\}\) on one Hilbert space admit a common orthogonal refinement if and only if
+\[
+ [P_i,Q_a]=0
+ \qquad
+ \text{for every }i,a.
+\]
+When they commute, the nonzero products \(P_iQ_a\) form a common refinement.
+\end{theorem}
+
+\begin{proof}
+If the projectors commute, every product \(P_iQ_a\) is a self adjoint idempotent. Distinct products are orthogonal, their sum is the identity, and the two original families are recovered by summation.
+
+Conversely, if \(\{R_\gamma\}\) refines both families, every \(P_i\) and \(Q_a\) is a sum of members of the same orthogonal family. Such sums commute.
+\end{proof}
+
+\begin{remark}[Projector atlases]\label{rem:projector_atlas}
+If the resolutions do not commute, the products \(P_iQ_a\) need not be projectors. The correct replacement is an atlas of valid charts connected by mixed corners \(Q_aTP_i\). The representation theorem does not erase this incompatibility.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{03_common_refinement_atlas.pdf}
+\caption{Commuting resolutions merge into one chart. Noncommuting resolutions remain an atlas.}
+\label{fig:common_refinement_atlas}
+\end{figure}
+
+\begin{theorem}[Common reducing projector criterion]\label{thm:commutant_projector}
+Let \(\Fcal=\{A_1,\ldots,A_r\}\) be a finite operator family. It admits a nontrivial exact two packet reducing resolution if and only if its commutant
+\[
+ \Fcal'
+ =
+ \{X:[X,A_k]=0\text{ for all }k\}
+\]
+contains a projection other than \(0\) and \(I\).
+\end{theorem}
+
+\begin{proof}
+A reducing projector commutes with every member of the family. Conversely, a nontrivial projection in the commutant yields the resolution \(\{P,I-P\}\), and every operator is block diagonal in it.
+\end{proof}
+
+For self adjoint \(A_k\), define the commutant Laplacian
+\[
+ \Lcal_{\Fcal}(X)
+ =
+ \sum_k[A_k,[A_k,X]].
+\]
+
+\begin{theorem}[Commutant Laplacian identity]\label{thm:commutant_laplacian}
+On Hilbert Schmidt space,
+\[
+ \boxed{
+ \langle X,\Lcal_{\Fcal}(X)\rangle_{\mathrm{HS}}
+ =
+ \sum_k\norm{[A_k,X]}_{\mathrm{HS}}^2.
+ }
+\]
+Consequently, \(\Lcal_{\Fcal}\) is positive semidefinite and
+\[
+ \ker\Lcal_{\Fcal}=\Fcal'.
+\]
+\end{theorem}
+
+\begin{proof}
+For one self adjoint \(A\), direct expansion and cyclicity of trace give
+\[
+ \langle X,[A,[A,X]]\rangle_{\mathrm{HS}}
+ =
+ \norm{[A,X]}_{\mathrm{HS}}^2.
+\]
+Sum over the family. The quadratic form vanishes exactly when all commutators vanish.
+\end{proof}
+
+\begin{theorem}[Finite lattice of coordinate resolutions]\label{thm:partition_lattice}
+If every resolution coarsens one fixed finite atomic commuting resolution, then the resolution poset is the partition lattice of the atom set. The meet consists of all nonempty block intersections. The join is the equivalence relation generated by the two block relations.
+\end{theorem}
+
+\begin{proof}
+The intersection partition is the greatest common refinement. The transitive closure of the two block relations is the least common coarsening.
+\end{proof}
+
+\begin{theorem}[Finite unitary gluing]\label{thm:unitary_gluing}
+Let \(\{U_a\}\) cover a parameter space. Suppose each \(U_a\) carries a local packet model and unitary transition maps \(g_{ab}\) satisfy
+\[
+ g_{aa}=I,
+ \qquad
+ g_{ab}=g_{ba}^{-1},
+ \qquad
+ g_{ab}g_{bc}=g_{ac}
+\]
+on triple overlaps. Then the local models glue to a Hermitian vector bundle. Compatible local sections glue uniquely.
+\end{theorem}
+
+\begin{proof}
+Take the disjoint union of the local trivial bundles and impose the transition equivalence relation. The cocycle law gives transitivity. Unitarity preserves the Hermitian structure. Compatible sections define one global equivalence class at every point.
+\end{proof}
+
+\section{Universal representation of resolved \texorpdfstring{\(C^*\)}{C star} systems}\label{sec:universal}
+
+The finite Hilbert space calculus suggests an abstract object in which the packet hierarchy is declared before any concrete Hilbert space is chosen. The relevant ambient structure is a linking algebra. Classical \(C^*\) category theory supplies the surrounding representation framework \Rcite{R2}, \Rcite{R3}, \Rcite{R4}.
+
+\begin{definition}[Resolved linking system]\label{def:resolved_linking_system}
+A resolved linking system is a tuple
+\[
+ \Acal
+ =
+ \left(
+ A,
+ \{p_x\}_{x\in X},
+ \{e_{x,i}\}_{i\in I_x},
+ \mathfrak F
+ \right)
+\]
+with the following properties.
+\begin{enumerate}[label=\textup{(L\arabic*)}]
+\item \(A\) is a unital complex \(C^*\) algebra.
+\item The object projections are mutually orthogonal and complete:
+\[
+ p_xp_y=\delta_{xy}p_x,
+ \qquad
+ \sum_{x\in X}p_x=1_A.
+\]
+\item For each object \(x\), the packet projections are mutually orthogonal and resolve \(p_x\):
+\[
+ e_{x,i}e_{x,j}=\delta_{ij}e_{x,i},
+ \qquad
+ \sum_{i\in I_x}e_{x,i}=p_x.
+\]
+\item Every declared refinement in \(\mathfrak F\) replaces one packet by a finite orthogonal family.
+\end{enumerate}
+The object transfer space is \(p_yAp_x\), and the packet transfer space is \(e_{y,a}Ae_{x,i}\).
+\end{definition}
+
+\begin{proposition}[Corner category]\label{prop:corner_category}
+A resolved linking system determines a finite \(C^*\) category whose objects are the projections \(p_x\) and whose morphism spaces are \(p_yAp_x\). Composition is multiplication in \(A\), and the dagger is the \(C^*\) adjoint.
+\end{proposition}
+
+\begin{proof}
+If \(a\in p_yAp_x\) and \(b\in p_zAp_y\), then
+\[
+ ba=p_zbp_y\,p_yap_x=p_z(ba)p_x\in p_zAp_x.
+\]
+Associativity, identities, the norm, and the \(C^*\) identity are inherited from \(A\). The adjoint reverses source and target.
+\end{proof}
+
+\begin{theorem}[Universal extension of compatible corner maps]\label{thm:universal_corner_extension}
+Let \(\Acal\) be a resolved linking system with finite object set. Let \(K\) be a Hilbert space with mutually orthogonal projections \(Q_x\) satisfying
+\[
+ \sum_xQ_x=I_K.
+\]
+Suppose that for every pair \(x,y\) there is a linear map
+\[
+ F_{yx}:p_yAp_x\longrightarrow Q_y\B(K)Q_x
+\]
+such that
+\[
+ F_{zy}(b)F_{yx}(a)=F_{zx}(ba),
+\]
+\[
+ F_{xy}(a^*)=F_{yx}(a)^*,
+\]
+and
+\[
+ F_{xx}(p_x)=Q_x.
+\]
+Then there is a unique unital star homomorphism
+\[
+ \widetilde F:A\longrightarrow\B(K)
+\]
+whose restriction to every corner is \(F_{yx}\).
+\end{theorem}
+
+\begin{proof}
+Every \(a\in A\) has the finite corner expansion
+\[
+ a=\sum_{x,y}p_yap_x.
+\]
+Define
+\[
+ \widetilde F(a)=\sum_{x,y}F_{yx}(p_yap_x).
+\]
+The proposed restriction is forced, so uniqueness is immediate. For multiplication,
+\[
+ p_zabp_x
+ =
+ \sum_y(p_zap_y)(p_ybp_x).
+\]
+Compatibility of the corner maps gives
+\[
+ \widetilde F(a)\widetilde F(b)
+ =
+ \widetilde F(ab).
+\]
+The adjoint law is checked corner by corner, and
+\[
+ \widetilde F(1_A)
+ =
+ \sum_xF_{xx}(p_x)
+ =
+ \sum_xQ_x
+ =
+ I_K.
+\]
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.90\textwidth]{04_linking_universal_property.pdf}
+\caption{The linking algebra is universal for compatible corner assignments.}
+\label{fig:linking_universal}
+\end{figure}
+
+\begin{lemma}[Faithful trace in finite dimension]\label{lem:faithful_trace}
+Every finite dimensional \(C^*\) algebra has a faithful tracial state.
+\end{lemma}
+
+\begin{proof}
+Write
+\[
+ A\cong\bigoplus_{r=1}^{m}M_{n_r}(\CC).
+\]
+Choose positive numbers \(c_r\) with sum one and define
+\[
+ \tau(a_1,\ldots,a_m)
+ =
+ \sum_{r=1}^{m}c_r\frac{\Tr(a_r)}{n_r}.
+\]
+This is tracial and positive. If \(a\ne0\), then some block of \(a^*a\) is nonzero positive, so \(\tau(a^*a)>0\).
+\end{proof}
+
+\begin{theorem}[Faithful left regular representation]\label{thm:left_regular}
+Let \(A\) be finite dimensional and let \(\tau\) be a faithful tracial state. Equip \(A\) with
+\[
+ \langle a,b\rangle_\tau=\tau(a^*b).
+\]
+Left multiplication
+\[
+ \lambda(x)a=xa
+\]
+defines a faithful unital star representation
+\[
+ \lambda:A\longrightarrow\B(L^2(A,\tau)).
+\]
+\end{theorem}
+
+\begin{proof}
+Associativity gives multiplicativity and \(\lambda(1)=I\). The trace property gives
+\[
+ \langle\lambda(x)a,b\rangle_\tau
+ =
+ \tau(a^*x^*b)
+ =
+ \langle a,\lambda(x^*)b\rangle_\tau.
+\]
+If \(\lambda(x)=0\), then \(x=\lambda(x)1=0\).
+\end{proof}
+
+\begin{theorem}[Universal projector corner representation]\label{thm:universal_projector_representation}
+Every unital resolved linking system admits a Hilbert space \(H\) and a faithful unital star representation
+\[
+ \pi:A\longrightarrow\B(H)
+\]
+such that
+\[
+ P_x=\pi(p_x)
+\]
+form a complete orthogonal family, the packet elements
+\[
+ B_{x,i}=\pi(e_{x,i})
+\]
+form orthogonal subprojectors resolving \(P_x\), and
+\[
+ \pi(p_yAp_x)=P_y\pi(A)P_x,
+\]
+\[
+ \pi(e_{y,a}Ae_{x,i})
+ =
+ B_{y,a}\pi(A)B_{x,i}.
+\]
+Every declared refinement is preserved exactly.
+\end{theorem}
+
+\begin{proof}
+The Gelfand Naimark theorem gives a faithful unital star representation of \(A\) \Rcite{R1}. Star homomorphisms carry projections to projections, preserve products, and preserve finite sums. The object and packet relations from \cref{def:resolved_linking_system} therefore become orthogonal projector relations. Faithfulness gives both corner equalities. If
+\[
+ e=\sum_\alpha e_\alpha
+\]
+is a declared refinement, then
+\[
+ \pi(e)=\sum_\alpha\pi(e_\alpha)
+\]
+with orthogonal summands.
+\end{proof}
+
+\begin{corollary}[Resolved \(C^*\) categories]\label{cor:resolved_categories}
+Every finite resolved \(C^*\) category whose standard linking algebra is formed from its hom spaces has a faithful concrete realization by Hilbert spaces and projector corners.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:universal_projector_representation} to the linking algebra. Object identities become object projectors and hom spaces become the corresponding corners.
+\end{proof}
+
+\begin{theorem}[Recognition theorem]\label{thm:recognition}
+Consider the following constructions.
+\begin{enumerate}
+\item Represent a resolved linking system faithfully and retain its concrete object and packet projectors.
+\item Start from a concrete projector corner system and forget the ambient coordinates while retaining the \(C^*\) algebra, its named projections, corners, and refinement relations.
+\end{enumerate}
+Every abstract resolved linking system is isomorphic to the system recovered from any faithful concrete realization. Conversely, every concrete projector corner system defines a resolved linking system.
+\end{theorem}
+
+\begin{proof}
+A concrete system plainly satisfies the axioms. For the other direction, a faithful representation identifies \(A\) with the concrete \(C^*\) algebra \(\pi(A)\). It sends every named projection and every refinement equation to its concrete counterpart. Forgetting coordinates therefore recovers an isomorphic resolved system.
+\end{proof}
+
+\begin{proposition}[Refinement naturality]\label{prop:refinement_naturality}
+Let
+\[
+ e=\sum_{\alpha=1}^{r}e_\alpha
+\]
+be a finite orthogonal refinement in a resolved linking system. Under every unital star representation,
+\[
+ \pi(e)=\sum_{\alpha=1}^{r}\pi(e_\alpha),
+ \qquad
+ \pi(e_\alpha)\pi(e_\beta)
+ =
+ \delta_{\alpha\beta}\pi(e_\alpha).
+\]
+\end{proposition}
+
+\begin{proof}
+A star homomorphism preserves sums, products, adjoints, and zero.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.83\textwidth]{05_refinement_naturality.pdf}
+\caption{The abstract and concrete refinement diagrams commute.}
+\label{fig:refinement_naturality}
+\end{figure}
+
+\begin{theorem}[Minimal faithful dimension in finite dimension]\label{thm:minimal_dimension}
+Let
+\[
+ A\cong\bigoplus_{r=1}^{m}M_{n_r}(\CC).
+\]
+The smallest Hilbert space dimension of a faithful star representation is
+\[
+ \boxed{
+ \sum_{r=1}^{m}n_r.
+ }
+\]
+The left regular representation acts on a space of dimension
+\[
+ \sum_{r=1}^{m}n_r^2.
+\]
+\end{theorem}
+
+\begin{proof}
+A faithful representation must contain a nonzero copy of the defining irreducible representation of every simple matrix block, which gives the lower bound. Their direct sum is faithful and attains it. The dimension of the algebra as a Hilbert space is the sum of the squared block sizes.
+\end{proof}
+
+\begin{theorem}[Universal GNS realization]\label{thm:universal_gns}
+Let \(A\) be a unital \(C^*\) algebra with a finite resolved projection family. The direct sum of the GNS representations over all states of \(A\) is faithful and satisfies the conclusions of \cref{thm:universal_projector_representation}.
+\end{theorem}
+
+\begin{proof}
+States separate the positive cone. If \(a\ne0\), then \(a^*a\ne0\), so there is a state \(\omega\) with \(\omega(a^*a)>0\). In the GNS representation,
+\[
+ \norm{\pi_\omega(a)[1]}^2
+ =
+ \omega(a^*a)>0.
+\]
+The direct sum over all states is therefore faithful. Projection and refinement preservation follow from the star representation laws.
+\end{proof}
+
+\begin{proposition}[Monoidal enhancement boundary]\label{prop:monoidal_boundary}
+Let \(\Ccal\) be a resolved monoidal \(C^*\) category. A concrete realization preserving the tensor product through coherent unitary isomorphisms is exactly a faithful unitary strong monoidal star functor
+\[
+ F:\Ccal\longrightarrow\mathrm{Hilb}.
+\]
+Ordinary corner representability does not by itself supply such a functor.
+\end{proposition}
+
+\begin{proof}
+A tensor preserving concrete realization assigns Hilbert spaces to objects, bounded maps to morphisms, and coherent unitaries
+\[
+ F(X)\otimes F(Y)\cong F(X\otimes Y)
+\]
+compatible with associativity, units, dagger, and composition. This is precisely a unitary strong monoidal star functor. The converse is immediate from the definition.
+\end{proof}
+
+\section{Countable, unbounded, and normal completion}\label{sec:countable}
+
+Finite resolutions sum in norm because every sum is finite. Countable resolutions require a declared topology. In Hilbert space, orthogonal packet sums naturally converge strongly. Norm convergence returns for compact and Schatten class operators. Unbounded generators require domains, graph norms, forms, or bounded surrogates. The categorical background for countable direct sums and \(W^*\) categories is developed in \Rcite{R2}, \Rcite{R5}, while Hilbert \(C^*\) module and unbounded operator techniques are treated in \Rcite{R6}, \Rcite{R7}, \Rcite{R10}, and \Rcite{R20}.
+
+\subsection{Countable orthogonal resolutions}
+
+\begin{definition}[Countable Hilbert resolution]\label{def:countable_resolution}
+A countable Hilbert resolution of \(\Hh\) is a family of mutually orthogonal projections \((P_n)_{n\ge1}\) such that
+\[
+ \sum_{n\ge1}P_n=I
+\]
+in the strong operator topology. For a finite set \(F\subset\NN\), put
+\[
+ P_F=\sum_{n\in F}P_n.
+\]
+\end{definition}
+
+\begin{lemma}[Strong convergence of packet sums]\label{lem:strong_packet_sum}
+For a countable Hilbert resolution,
+\[
+ P_Fx\longrightarrow x
+\]
+for every \(x\in\Hh\), and
+\[
+ \norm{x}^2
+ =
+ \sum_{n\ge1}\norm{P_nx}^2.
+\]
+\end{lemma}
+
+\begin{proof}
+The packet ranges are orthogonal. Their closed linear span is all of \(\Hh\) by strong completeness. The usual orthogonal expansion theorem gives both claims.
+\end{proof}
+
+\begin{theorem}[Strong packet reconstruction]\label{thm:strong_reconstruction}
+Let \((Q_i)\) resolve \(\K\) and \((P_j)\) resolve \(\Hh\). For every bounded \(T:\Hh\to\K\),
+\[
+ \boxed{
+ T
+ =
+ \operatorname*{s\!\!\lim}_{F,G}
+ Q_FTP_G.
+ }
+\]
+The same holds for \(T^*\), so the convergence is strong star.
+\end{theorem}
+
+\begin{proof}
+For finite \(F,G\),
+\[
+ T-Q_FTP_G
+ =
+ (I-Q_F)T+Q_FT(I-P_G).
+\]
+Applied to a fixed vector \(x\), the first term tends to zero because \(Q_F\to I\) strongly on \(\K\), and the second tends to zero because \(P_Gx\to x\). Apply the same argument to \(T^*\).
+\end{proof}
+
+\begin{theorem}[Compact and Schatten truncation]\label{thm:compact_truncation}
+If \(T:\Hh\to\K\) is compact, then
+\[
+ \norm{T-Q_GTP_F}\longrightarrow0.
+\]
+If \(T\) belongs to the Schatten ideal \(S_p\), \(1\le p<\infty\), then
+\[
+ \norm{T-Q_GTP_F}_{S_p}\longrightarrow0.
+\]
+For \(p=2\),
+\[
+ \boxed{
+ \norm{T}_{\mathrm{HS}}^2
+ =
+ \sum_{i,j\ge1}\norm{Q_iTP_j}_{\mathrm{HS}}^2.
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Strong convergence of bounded projections is uniform on compact subsets. Apply this to the compact image of the unit ball under \(T\) and to \(T^*\). This proves operator norm convergence. Finite rank operators are dense in every \(S_p\), and the truncation maps are contractions on \(S_p\). The Hilbert Schmidt identity follows from orthogonality of the corners \Rcite{R9}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.75\textwidth]{06_strong_vs_norm.pdf}
+\caption{Countable packet sums converge strongly even when the operator norm defect remains one.}
+\label{fig:strong_vs_norm}
+\end{figure}
+
+\begin{theorem}[Countable packet path composition]\label{thm:countable_path}
+Let \(T:\Hh\to\K\) and \(S:\K\to\Lcal\) be bounded. For countable resolutions \((P_k)\), \((Q_j)\), and \((R_i)\),
+\[
+ R_iSTP_kx
+ =
+ \sum_{j\ge1}R_iSQ_jTP_kx
+\]
+for every \(x\in P_k\Hh\), with convergence in \(R_i\Lcal\).
+\end{theorem}
+
+\begin{proof}
+The partial sums \(\sum_{j\in F}Q_jTP_kx\) converge to \(TP_kx\). The bounded map \(R_iS\) preserves norm convergence.
+\end{proof}
+
+\subsection{Countable resolved categories}
+
+\begin{definition}[Countably resolved \(C^*\) category]\label{def:countably_resolved_category}
+A countably resolved \(C^*\) category is a small \(C^*\) category with countable object set, together with a countable orthogonal family of packet projections in every endomorphism algebra whose supremum is the object identity, and a declared family of compatible refinements.
+\end{definition}
+
+\begin{theorem}[Countable linking representation]\label{thm:countable_linking}
+Let \(\Ccal\) be a countable small \(C^*\) category and let \(F\) be a faithful nondegenerate star functor to Hilbert spaces. Form the norm closure \(L(\Ccal)\) of finite support operator matrices on the Hilbert direct sum of the object spaces. Then
+\begin{enumerate}
+\item \(L(\Ccal)\) is sigma unital.
+\item Every object projection belongs to the multiplier algebra \(M(L(\Ccal))\).
+\item
+\[
+ P_yL(\Ccal)P_x
+ =
+ F(\Ccal(x,y)).
+\]
+\item Finite sums of object projections form an approximate identity.
+\item Countable packet projections sum strongly to the object projection.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Finite support matrices form a star algebra. Their norm closure is a \(C^*\) algebra. Enumerate the objects and let \(E_N\) be the sum of the first \(N\) object projections. Multiplication by \(E_N\) eventually fixes every finite support matrix, so \((E_N)\) is an approximate identity.
+
+Every object projection multiplies finite support matrices into finite support matrices on both sides, hence defines a multiplier. Faithfulness of a \(C^*\) functor is isometric on each hom space, so the represented hom space is closed and equals the corresponding corner. Strong orthogonal summation gives the packet conclusion.
+\end{proof}
+
+\begin{theorem}[Nondegenerate factorization]\label{thm:nondegenerate_factorization}
+Nondegenerate star representations of \(L(\Ccal)\) are equivalent, up to unitary equivalence, to nondegenerate star functors from \(\Ccal\) to Hilbert spaces. The multiplier extensions of the object projections recover the object Hilbert spaces.
+\end{theorem}
+
+\begin{proof}
+Given a nondegenerate representation, extend it strictly to the multiplier algebra and take the ranges of the object projections as object spaces. Corners act as the categorical morphisms. Conversely, a nondegenerate functor acts on the Hilbert direct sum of its object spaces, and finite operator matrices extend to the linking algebra. The two constructions are inverse up to the canonical unitary identification.
+\end{proof}
+
+\begin{theorem}[Normal preservation of countable packet joins]\label{thm:normal_joins}
+Let \(F\) be a faithful normal star functor between resolved \(W^*\) categories. For every increasing sequence of packet projections,
+\[
+ F\left(\bigvee_np_n\right)
+ =
+ \bigvee_nF(p_n).
+\]
+The analogous statement holds for decreasing meets.
+\end{theorem}
+
+\begin{proof}
+Normality is ultraweak continuity on bounded increasing nets of positive operators. The join of an increasing sequence of projections is its strong and ultraweak limit. Meets follow from complements \Rcite{R2}, \Rcite{R8}.
+\end{proof}
+
+\subsection{Unbounded generators}
+
+\begin{definition}[Reducing packet for an unbounded operator]\label{def:unbounded_reduction}
+Let \(D\) be a closed densely defined operator. A projection \(P\) reduces \(D\) if
+\[
+ P\operatorname{Dom}(D)\subseteq\operatorname{Dom}(D)
+\]
+and
+\[
+ DPx=PDx
+ \qquad
+ (x\in\operatorname{Dom}(D)),
+\]
+with the same property for \(I-P\).
+\end{definition}
+
+\begin{theorem}[Unbounded direct sum decomposition]\label{thm:unbounded_direct_sum}
+Let \(D\) be self adjoint and let \((P_n)\) be a countable resolution reducing \(D\). Put
+\[
+ \Hh_n=P_n\Hh,
+ \qquad
+ D_n=D|_{\operatorname{Dom}(D)\cap\Hh_n}.
+\]
+Then every \(D_n\) is self adjoint and
+\[
+ \boxed{
+ D=\bigoplus_{n\ge1}D_n.
+ }
+\]
+For every bounded Borel function \(f\),
+\[
+ f(D)
+ =
+ \operatorname*{s\!\!\sum}_{n\ge1}
+ P_nf(D)P_n.
+\]
+\end{theorem}
+
+\begin{proof}
+Reduction implies commutation with the resolvent and hence with the spectral measure. Every packet range is therefore a reducing spectral subspace. The spectral theorem gives the direct sum and functional calculus statements \Rcite{R10}, \Rcite{R20}.
+\end{proof}
+
+\begin{theorem}[Graph norm reconstruction]\label{thm:graph_norm}
+Under the hypotheses of \cref{thm:unbounded_direct_sum}, if
+\[
+ P^{(N)}=\sum_{n=1}^{N}P_n,
+\]
+then for every \(x\in\operatorname{Dom}(D)\),
+\[
+ \norm{x-P^{(N)}x}_D\longrightarrow0,
+\]
+where
+\[
+ \norm{x}_D^2=\norm{x}^2+\norm{Dx}^2.
+\]
+Moreover,
+\[
+ \norm{x}_D^2
+ =
+ \sum_{n\ge1}
+ \left(
+ \norm{P_nx}^2+\norm{DP_nx}^2
+ \right).
+\]
+\end{theorem}
+
+\begin{proof}
+The vectors \(P_nx\) are orthogonal. Since the projectors commute with \(D\) on its domain, the vectors \(DP_nx=P_nDx\) are also orthogonal. Apply Parseval to \(x\) and to \(Dx\).
+\end{proof}
+
+Define the resolvent and bounded transform
+\[
+ R_z(D)=(D-zI)^{-1},
+ \qquad
+ F_D=D(1+D^2)^{-1/2}.
+\]
+
+\begin{theorem}[Bounded surrogate packetization]\label{thm:bounded_surrogate}
+If a projection \(P\) reduces a self adjoint \(D\), then \(P\) commutes with every resolvent, with \(F_D\), and with every bounded Borel function of \(D\). Conversely, commutation with one nonreal resolvent implies reduction of \(D\).
+\end{theorem}
+
+\begin{proof}
+Reduction gives commutation with the spectral measure and hence with functional calculus. Conversely, if \(P\) commutes with \(R_z(D)\), then it preserves the range of the resolvent, which is \(\operatorname{Dom}(D)\), and commutes there with
+\[
+ D=zI+R_z(D)^{-1}.
+\]
+\end{proof}
+
+\begin{theorem}[Resolvent commutator identity]\label{thm:resolvent_commutator}
+Suppose \(P\) preserves \(\operatorname{Dom}(D)\) and \([D,P]\) extends to a bounded operator. For \(z\notin\RR\),
+\[
+ \boxed{
+ [P,R_z(D)]
+ =
+ R_z(D)[D,P]R_z(D).
+ }
+\]
+Consequently,
+\[
+ \boxed{
+ \norm{[P,R_z(D)]}
+ \le
+ \frac{\norm{[D,P]}}{\abs{\operatorname{Im}z}^2}.
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the inverse commutator identity to \(D-zI\). The spectral theorem gives
+\[
+ \norm{R_z(D)}\le\abs{\operatorname{Im}z}^{-1}.
+\]
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{07_unbounded_completion.pdf}
+\caption{Unbounded generators enter the bounded packet calculus through resolvents, bounded transforms, spectral projections, and graph data.}
+\label{fig:unbounded_completion}
+\end{figure}
+
+\subsection{Measurable packet fields}
+
+\begin{theorem}[Decomposable packet reconstruction]\label{thm:decomposable_reconstruction}
+Let
+\[
+ T=\int_X^{\oplus}T(x)\,d\mu(x)
+\]
+be a bounded decomposable operator. Let
+\[
+ P_n=\int_X^{\oplus}P_n(x)\,d\mu(x)
+\]
+be measurable orthogonal projection fields with strong sum equal to the identity almost everywhere. Then
+\[
+ \boxed{
+ T
+ =
+ \operatorname*{s\!\!\sum}_{m,n}P_mTP_n,
+ }
+\]
+and every block is decomposable:
+\[
+ P_mTP_n
+ =
+ \int_X^{\oplus}P_m(x)T(x)P_n(x)\,d\mu(x).
+\]
+Moreover,
+\[
+ \norm{T}
+ =
+ \operatorname*{ess\,sup}_{x\in X}\norm{T(x)}.
+\]
+\end{theorem}
+
+\begin{proof}
+The statements hold fiberwise. Measurability and essential boundedness make the block fields decomposable. Fiberwise strong reconstruction and dominated convergence give the global strong sum. The norm identity is the standard decomposable operator formula \Rcite{R8}.
+\end{proof}
+
+\begin{theorem}[Countable and unbounded completion]\label{thm:countable_completion}
+Let \(\Ccal\) be a countable resolved \(C^*\) category with countable orthogonal packet families. After faithful nondegenerate representation, closure under countable Hilbert direct sums, splitting of packet idempotents, and normal completion, the following hold.
+\begin{enumerate}
+\item The bounded part is a countably additive resolved \(C^*\) category.
+\item Packet objects form its resolved Karoubi envelope.
+\item The countable linking algebra represents finite support transfers and their norm limits.
+\item Object and packet projections act as multipliers and sum strongly.
+\item The normal completion is a resolved \(W^*\) category in which countable packet joins are preserved.
+\item Reduced self adjoint generators define affiliated packet objects through graph domains, resolvents, and bounded transforms.
+\item Certified finite sections converge in the topology appropriate to the represented object.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Countable direct sums supply the additive completion. Splitting projections gives the Karoubi envelope. \Cref{thm:countable_linking,thm:nondegenerate_factorization} give the linking representation and multiplier structure. \Cref{thm:normal_joins} gives normal completion. \Cref{thm:unbounded_direct_sum,thm:graph_norm,thm:bounded_surrogate} give the unbounded part. The convergence statements follow from \cref{thm:strong_reconstruction,thm:compact_truncation,thm:decomposable_reconstruction}.
+\end{proof}
+
+\section{Nonlinear resolution by packet jets}\label{sec:nonlinear}
+
+A linear transfer has one input packet. A nonlinear map creates interactions among several input packets. The correct combinatorial object is therefore a typed hypergraph, and the correct composition law is rooted tree substitution. The operadic background is standard \Rcite{R14}. Resolution Theory adds a declared packet hierarchy, weighted block norms, exact refinement, and named residuals.
+
+\subsection{Resolved multilinear maps}
+
+Let \(X\) and \(Y\) be Banach spaces with finite bounded resolutions
+\[
+ I_X=\sum_{j\in J}P_j,
+ \qquad
+ I_Y=\sum_{i\in I}Q_i.
+\]
+Choose positive packet weights \(a_j\) and \(b_i\), and define
+\[
+ \norm{x}_a
+ =
+ \max_j\frac{\norm{P_jx}}{a_j},
+ \qquad
+ \norm{y}_b
+ =
+ \max_i\frac{\norm{Q_iy}}{b_i}.
+\]
+
+\begin{definition}[Resolved multilinear map]\label{def:resolved_multilinear}
+For a bounded \(m\) linear map \(A:X^m\to Y\), define
+\[
+ A_{i\mid j_1,\ldots,j_m}
+ =
+ Q_iA(P_{j_1}\cdot,\ldots,P_{j_m}\cdot).
+\]
+The typed tuple
+\[
+ (j_1,\ldots,j_m)\longrightarrow i
+\]
+is its packet hyperedge.
+\end{definition}
+
+\begin{theorem}[Exact multilinear reconstruction]\label{thm:multilinear_reconstruction}
+Every bounded \(m\) linear map satisfies
+\[
+ \boxed{
+ A(x_1,\ldots,x_m)
+ =
+ \sum_{i,j_1,\ldots,j_m}
+ A_{i\mid j_1,\ldots,j_m}
+ (P_{j_1}x_1,\ldots,P_{j_m}x_m).
+ }
+\]
+For finite resolutions the sum is finite and exact.
+\end{theorem}
+
+\begin{proof}
+Insert the source identities in every input slot and the target identity after applying \(A\). Multilinearity expands the result.
+\end{proof}
+
+\begin{theorem}[Weighted packet bound]\label{thm:weighted_packet_bound}
+Define
+\[
+ \norm{A}^{(m)}_{a\to b}
+ =
+ \max_i\frac1{b_i}
+ \sum_{j_1,\ldots,j_m}
+ \norm{A_{i\mid j_1,\ldots,j_m}}
+ \prod_{r=1}^{m}a_{j_r}.
+\]
+Then
+\[
+ \boxed{
+ \norm{A(x_1,\ldots,x_m)}_b
+ \le
+ \norm{A}^{(m)}_{a\to b}
+ \prod_{r=1}^{m}\norm{x_r}_a.
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Apply the triangle inequality to the exact reconstruction. Use
+\[
+ \norm{P_jx_r}\le a_j\norm{x_r}_a
+\]
+and divide by the target weight.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{08_nonlinear_hypergraph.pdf}
+\caption{A derivative block with several input packets is a typed nonlinear hyperedge.}
+\label{fig:nonlinear_hypergraph}
+\end{figure}
+
+\subsection{Jets, composition, and refinement}
+
+For a smooth map \(F:X\to Y\), define the packet resolved derivative block
+\[
+ F^{[m]}_{i\mid j_1,\ldots,j_m}(x)
+ =
+ Q_iD^mF(x)
+ [P_{j_1}\cdot,\ldots,P_{j_m}\cdot].
+\]
+
+\begin{theorem}[Packet resolved Faà di Bruno formula]\label{thm:faa_di_bruno}
+Let \(X\xrightarrow{F}Y\xrightarrow{G}Z\) be smooth. Let \(\Pi_n\) be the set of partitions of \(\{1,\ldots,n\}\). Then
+\[
+\begin{aligned}
+ D^n(G\circ F)(x)[h_1,\ldots,h_n]
+ & =
+ \sum_{\pi\in\Pi_n}
+ D^{\abs{\pi}}G(F(x))\\
+ &\quad\left[
+ D^{\abs{A_1}}F(x)[h_r]_{r\in A_1},
+ \ldots,
+ D^{\abs{A_{\abs{\pi}}}}F(x)
+ [h_r]_{r\in A_{\abs{\pi}}}
+ \right].
+\end{aligned}
+\]
+After inserting source, intermediate, and target projectors, every summand becomes a rooted tree of packet hyperedges summed over intermediate packet labels.
+\end{theorem}
+
+\begin{proof}
+The Banach space Faà di Bruno formula gives the partition sum. Insert complete packet resolutions before and after every derivative. Multilinearity expands every identity. The blocks of the partition describe the inner vertices, and the outer derivative joins their outputs.
+\end{proof}
+
+\begin{proposition}[Colored symmetric operad]\label{prop:colored_operad}
+Take packet spaces as colors and continuous multilinear packet maps as operations. Permutations of inputs give the symmetric actions, identity maps give the units, and rooted tree substitution gives composition. These data satisfy the colored symmetric operad axioms.
+\end{proposition}
+
+\begin{proof}
+Associativity is associativity of substitution of multilinear maps. Identity maps are units. Permutation compatibility is inherited from the symmetric group action on input slots. Packet labels only type the allowed sources and targets \Rcite{R14}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{09_operad_composition.pdf}
+\caption{Nonlinear composition is rooted packet tree substitution.}
+\label{fig:operad_composition}
+\end{figure}
+
+\begin{theorem}[Nonlinear refinement coherence]\label{thm:nonlinear_refinement}
+Refining the packet jets of \(F\) and \(G\), composing at the refined level, and coarsening gives the same jet as composing first and resolving at the coarse level.
+\end{theorem}
+
+\begin{proof}
+Both procedures insert complete resolutions of the identity into the same Faà di Bruno formula. The refined calculation retains descendant labels until the final coarsening. The coarse calculation performs those sums immediately. Finite distributivity makes the results equal.
+\end{proof}
+
+\begin{proposition}[No free refinement]\label{prop:no_free_refinement}
+If every refined hyperedge is active and every contribution must be evaluated, refinement does not reduce the exact arithmetic count. Computational gain requires vanished blocks, low rank, repeated coefficients, selective outputs, transform structure, or reuse.
+\end{proposition}
+
+\begin{proof}
+Every scalar coefficient of the coarse tensor belongs to exactly one refined block. Summing the sizes of all refined blocks therefore reproduces the original coefficient count.
+\end{proof}
+
+\subsection{Analytic packet maps and inversion}
+
+Let
+\[
+ F(x)=\sum_{m\ge0}A_m[x,\ldots,x]
+\]
+be analytic on a packet ball, where \(A_m\) is symmetric and \(m\) linear. Define the scalar majorant
+\[
+ \mathfrak m_F(t)
+ =
+ \sum_{m\ge0}\norm{A_m}^{(m)}t^m.
+\]
+
+\begin{theorem}[Analytic composition bound]\label{thm:analytic_composition}
+If \(F(0)=0\) and \(\mathfrak m_F(t)\) lies in the convergence interval of \(\mathfrak m_G\), then
+\[
+ \boxed{
+ \mathfrak m_{G\circ F}(t)
+ \le
+ \mathfrak m_G(\mathfrak m_F(t)).
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:weighted_packet_bound} to every rooted tree in \cref{thm:faa_di_bruno}. After taking norms, all coefficients are nonnegative. Grouping by total degree gives the scalar majorant composition, with cancellation removed.
+\end{proof}
+
+\begin{theorem}[Near identity nonlinear inverse]\label{thm:near_identity_inverse}
+Let
+\[
+ F=I+N,
+ \qquad
+ N(0)=0.
+\]
+Assume that on the packet ball \(B_R\),
+\[
+ \kappa
+ =
+ \sup_{x\in B_R}\norm{DN(x)}<1.
+\]
+For every \(y\) with
+\[
+ \norm{y}\le(1-\kappa)R,
+\]
+there is a unique \(x\in B_R\) such that \(F(x)=y\). The inverse \(H=F^{-1}\) is analytic on the resulting neighborhood, and
+\[
+ DH(y)
+ =
+ [I+DN(H(y))]^{-1}
+ =
+ \sum_{q=0}^{\infty}[-DN(H(y))]^q.
+\]
+\end{theorem}
+
+\begin{proof}
+For fixed \(y\), define \(\Psi_y(x)=y-N(x)\). The derivative bound makes \(\Psi_y\) a contraction with constant \(\kappa\). Also,
+\[
+ \norm{\Psi_y(x)}
+ \le
+ (1-\kappa)R+\kappa R
+ =R.
+\]
+Banach's fixed point theorem gives a unique solution. The analytic inverse function theorem gives analyticity. Differentiating \(F(H(y))=y\) gives the inverse derivative formula, and the Neumann series converges by the norm bound.
+\end{proof}
+
+\begin{remark}[Global inversion boundary]\label{rem:global_inverse_boundary}
+The preceding theorem is local. Global injectivity requires additional hypotheses such as properness, coercivity, strong monotonicity, or a uniform derivative lower bound.
+\end{remark}
+
+\subsection{Certified pruning}
+
+Suppose an analytic packet map is split as
+\[
+ F=F_E+R_E,
+\]
+where \(F_E\) retains a selected hyperedge set and \(R_E\) contains the omitted blocks.
+
+\begin{theorem}[Certified nonlinear pruning]\label{thm:nonlinear_pruning}
+If
+\[
+ R_E(x)=\sum_{m\ge1}R_E^{[m]}[x,\ldots,x],
+\]
+then on every packet ball where the series converges,
+\[
+ \boxed{
+ \norm{F(x)-F_E(x)}_b
+ \le
+ \sum_{m\ge1}
+ \norm{R_E^{[m]}}^{(m)}_{a\to b}
+ \norm{x}_a^m.
+ }
+\]
+For a quadratic Hilbert space tensor with orthogonal coordinate blocks, the squared Hilbert Schmidt norm of the omitted tensor is the sum of the squared omitted block norms.
+\end{theorem}
+
+\begin{proof}
+The first inequality is the triangle inequality followed by \cref{thm:weighted_packet_bound}. The quadratic Hilbert Schmidt statement is \cref{thm:packet_parseval} applied to the corresponding multilinear coefficient operator.
+\end{proof}
+
+\section{Finite Resolution Logic}\label{sec:logic}
+
+A calculation may be exact in one resolution and undecided in another. Resolution Logic records a Boolean predicate together with the resolution in which it is visible and, separately, a quantitative certificate for approximation error. The categorical language is indexed over the finite refinement poset.
+
+Let \(r\preceq s\) mean that \(s\) refines \(r\). Let \(B_r\) be the Boolean algebra of predicates visible at resolution \(r\). Refinement gives a pullback
+\[
+ \rho_{sr}:B_r\longrightarrow B_s.
+\]
+
+\begin{definition}[Existential and universal refinement maps]\label{def:logic_adjoints}
+For \(b\in B_s\), define \(\exists_{sr}b\) as the least coarse predicate whose pullback contains \(b\), and define \(\forall_{sr}b\) as the greatest coarse predicate whose pullback is contained in \(b\), whenever these extrema exist.
+\end{definition}
+
+\begin{theorem}[Refinement Galois connections]\label{thm:logic_galois}
+For finite Boolean fibers,
+\[
+ \boxed{
+ \exists_{sr}b\le a
+ \iff
+ b\le\rho_{sr}(a),
+ }
+\]
+and
+\[
+ \boxed{
+ \rho_{sr}(a)\le b
+ \iff
+ a\le\forall_{sr}b.
+ }
+\]
+\end{theorem}
+
+\begin{proof}
+The existential map is defined as the least coarse upper approximation, so the first equivalence is its universal property. The universal map is the greatest coarse lower approximation, giving the second. Finite Boolean algebras guarantee existence by finite joins and meets.
+\end{proof}
+
+\begin{theorem}[Atomic completeness at finite resolution]\label{thm:logic_completeness}
+If \(B_r\) is the power set Boolean algebra of the finite atomic packet set at resolution \(r\), every predicate is a unique join of visible atoms. Consequently, finite Boolean reasoning at a fixed resolution is complete.
+\end{theorem}
+
+\begin{proof}
+Every subset is the union of its singleton atoms. Uniqueness is extensional equality of subsets.
+\end{proof}
+
+\begin{theorem}[Finite Beck Chevalley identity]\label{thm:beck_chevalley}
+Consider a pullback square of finite packet maps
+\[
+ \begin{array}{ccc}
+ r'&\longrightarrow&s'\\
+ \downarrow&&\downarrow\\
+ r&\longrightarrow&s.
+ \end{array}
+\]
+For the induced power set Boolean fibers, pullback commutes with existential quantification around the square.
+\end{theorem}
+
+\begin{proof}
+Both composites send a subset to the set of points whose image lies in it. Since the square is a pullback, the two conditions define the same subset.
+\end{proof}
+
+\begin{definition}[Certified approximation]\label{def:certified_approximation}
+Write
+\[
+ \widehat x\Vdash_r x[\varepsilon]
+\]
+when \(\widehat x\) is represented at resolution \(r\) and
+\[
+ \norm{x-\widehat x}\le\varepsilon.
+\]
+\end{definition}
+
+\begin{theorem}[Linear and multilinear transport]\label{thm:error_transport}
+If \(\widehat x\Vdash_r x[\varepsilon]\) and \(A\) is bounded, then
+\[
+ A\widehat x\Vdash_s Ax[\norm{A}\varepsilon]
+\]
+for every declared source and target resolution of \(A\).
+
+If \(B:X\times Y\to Z\) is bounded bilinear and
+\[
+ \widehat x\Vdash_r x[\varepsilon],
+ \qquad
+ \widehat y\Vdash_t y[\eta],
+\]
+then
+\[
+ B(\widehat x,\widehat y)
+ \Vdash_u
+ B(x,y)
+ \left[
+ \norm{B}
+ \left(
+ \norm{\widehat x}\eta
+ +
+ \norm{\widehat y}\varepsilon
+ +
+ \varepsilon\eta
+ \right)
+ \right].
+\]
+\end{theorem}
+
+\begin{proof}
+The linear rule is the operator norm bound. For the bilinear rule, write \(x=\widehat x+e\) and \(y=\widehat y+f\). Expand
+\[
+ B(x,y)-B(\widehat x,\widehat y)
+ =
+ B(e,\widehat y)
+ +B(\widehat x,f)
+ +B(e,f)
+\]
+and apply the bilinear norm bound.
+\end{proof}
+
+\begin{theorem}[Finite indexed semantics]\label{thm:indexed_semantics}
+A finite resolution poset together with its Boolean predicate fibers, quantitative certificate fibers, pullback maps, adjoints, and sound transport rules forms a finite indexed semantics. Refinement acts functorially, and every declared inference preserves truth and its quantitative bound.
+\end{theorem}
+
+\begin{proof}
+Functoriality of refinement follows from composition of packet maps. The Boolean rules are sound by \cref{thm:logic_galois,thm:logic_completeness,thm:beck_chevalley}. Quantitative transport is sound by \cref{thm:error_transport} and its multilinear iteration. The two fibers are kept distinct, so a valid Boolean implication does not erase its numerical certificate.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{10_resolution_logic.pdf}
+\caption{Resolution Logic carries predicates and quantitative certificates in parallel indexed fibers.}
+\label{fig:resolution_logic}
+\end{figure}
+
+\section{Concrete realizations and changes of resolution}\label{sec:realizations}
+
+The preceding theory is abstract enough to preserve a chosen packet hierarchy, but concrete enough to recover familiar decompositions exactly. This section records several realizations. The point is not that Fourier analysis, wavelets, quantum measurements, or arithmetic residue classes become identical. The point is that each carries the same resolved data of packets, corners, refinement, reconstruction, and residual.
+
+\subsection{Finite Fourier resolution}
+
+Let \(G\) be a finite abelian group and let \(\widehat G\) be its character group. On \(\ell^2(G)\), define
+\[
+ P_\chi f
+ =
+ \widehat f(\chi)\chi,
+ \qquad
+ \widehat f(\chi)
+ =
+ \frac1{|G|}\sum_{g\in G}f(g)\overline{\chi(g)}.
+\]
+
+\begin{theorem}[Fourier realization]\label{thm:fourier_realization}
+The family \((P_\chi)_{\chi\in\widehat G}\) is a complete orthogonal resolution. Fourier reconstruction and Parseval are the packet reconstruction and packet energy identities
+\[
+ \boxed{
+ f=\sum_{\chi\in\widehat G}P_\chi f,
+ }
+\]
+and
+\[
+ \boxed{
+ \norm{f}_2^2
+ =
+ \sum_{\chi\in\widehat G}\norm{P_\chi f}_2^2.
+ }
+\]
+Every convolution operator is diagonal in this resolution.
+\end{theorem}
+
+\begin{proof}
+Character orthogonality gives
+\[
+ P_\chi P_\eta
+ =
+ \delta_{\chi\eta}P_\chi
+\]
+and completeness of the character basis gives the reconstruction. Orthogonality gives Parseval. If \(C_hf=h*f\), then
+\[
+ P_\chi C_hf
+ =
+ \widehat h(\chi)P_\chi f,
+\]
+so each packet is invariant and the transfer field is diagonal.
+\end{proof}
+
+\begin{remark}\label{rem:fourier_chart}
+The group coordinate packets and the character packets are two resolutions of the same group algebra. The Fourier transform is a change of resolution. Resolution Theory does not declare one chart intrinsically superior. It records which transfer becomes sparse or diagonal in each chart.
+\end{remark}
+
+\subsection{Wavelet and polyphase resolution}
+
+Let
+\[
+ V_0\subset V_1\subset\cdots\subset V_J
+\]
+be a finite multiresolution chain with
+\[
+ V_{j+1}=V_j\oplus W_j.
+\]
+Let \(P_j\) and \(D_j\) be the orthogonal projectors onto \(V_j\) and \(W_j\). Classical wavelet analysis supplies such systems under its usual hypotheses \Rcite{R16}. Polyphase and perfect reconstruction filter banks organize the same refinements through channel decompositions \Rcite{R17}.
+
+\begin{theorem}[Multiresolution realization]\label{thm:wavelet_realization}
+A finite orthogonal multiresolution analysis is a resolved Hilbert system in which
+\[
+ P_{j+1}=P_j+D_j
+\]
+is the refinement equation. For every \(f\in V_J\),
+\[
+ \boxed{
+ f=P_0f+\sum_{j=0}^{J-1}D_jf
+ }
+\]
+and
+\[
+ \boxed{
+ \norm f^2
+ =
+ \norm{P_0f}^2
+ +
+ \sum_{j=0}^{J-1}\norm{D_jf}^2.
+ }
+\]
+Every perfect reconstruction filter bank is a finite transfer system whose analysis and synthesis maps compose to the identity.
+\end{theorem}
+
+\begin{proof}
+The refinement equation gives a telescoping orthogonal sum. Reconstruction and energy follow from repeated use of the Pythagorean theorem. A perfect reconstruction filter bank is precisely a pair of resolved transfers \(A\) and \(S\) with \(SA=I\). Its channel operators are the packet corners of \(A\) and \(S\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.91\textwidth]{11_realization_atlas.pdf}
+\caption{Fourier, wavelet, quantum, and arithmetic systems are concrete resolved charts with different native packet geometries.}
+\label{fig:realization_atlas}
+\end{figure}
+
+\subsection{Quantum projector charts}
+
+A finite projective measurement on a Hilbert space is a complete orthogonal projector family. A quantum channel is a linear transfer on operators and can be resolved by input and output measurement projectors. Standard quantum information supplies the ambient operator theory \Rcite{R19}.
+
+\begin{proposition}[Quantum measurement realization]\label{prop:quantum_realization}
+Let \((P_i)_i\) and \((Q_a)_a\) be projective measurements. Every operator \(T\) has the exact transition decomposition
+\[
+ \boxed{
+ T=\sum_{a,i}Q_aTP_i.
+ }
+\]
+Two projective measurements admit one common orthogonal refinement exactly when every \(P_i\) commutes with every \(Q_a\). Otherwise their exact relation is the projector atlas of mixed corners \(Q_aTP_i\).
+\end{proposition}
+
+\begin{proof}
+The decomposition is \cref{thm:mixed_blocks}. The refinement assertion is \cref{thm:common_refinement}.
+\end{proof}
+
+\subsection{Arithmetic residue resolution}
+
+Let \(a:\NN\to\CC\) be an arithmetic sequence. For a positive integer \(q\), define
+\[
+ a_{q,r}(m)=a(qm+r),
+ \qquad
+ 0\le r<q.
+\]
+If
+\[
+ A(z)=\sum_{n\ge0}a(n)z^n,
+\]
+put
+\[
+ A_{q,r}(u)=\sum_{m\ge0}a(qm+r)u^m.
+\]
+
+\begin{theorem}[Arithmetic polyphase realization]\label{thm:arithmetic_polyphase}
+The arithmetic sequence has the exact packet reconstruction
+\[
+ \boxed{
+ A(z)
+ =
+ \sum_{r=0}^{q-1}z^rA_{q,r}(z^q).
+ }
+\]
+If \(Q=mq\), then the refinement law is
+\[
+ \boxed{
+ A_{q,r}(u)
+ =
+ \sum_{b=0}^{m-1}
+ u^bA_{Q,r+qb}(u^m).
+ }
+\]
+Thus residue classes form a resolved system and divisibility of moduli is its refinement order.
+\end{theorem}
+
+\begin{proof}
+Write every integer uniquely as \(qn+r\). For the refinement, write the packet index uniquely as \(mn+b\).
+\end{proof}
+
+\begin{corollary}[Prime packet realization]\label{cor:prime_packet_realization}
+Taking \(a(n)=\Lambda(n)\) or \(a(n)=\mathbf 1_{\mathbb P}(n)\) gives an arithmetic realization of Resolution Theory. Refining a squarefree modulus by a new prime separates deterministic divisibility packets from the residual distribution among surviving packets. Additive Fourier and Dirichlet character coordinates are changes of resolution on the same finite residue field.
+\end{corollary}
+
+\begin{proof}
+The first statement is \cref{thm:arithmetic_polyphase}. The deterministic forbidden packets are the residues divisible by the newly introduced prime. Fourier and character coordinates are bases of the corresponding finite function space.
+\end{proof}
+
+\begin{remark}\label{rem:arithmetic_scope}
+The arithmetic realization does not itself prove a new prime number theorem. It identifies the native packet system in which sieve support, character energy, conductor refinement, and Mellin scale can be studied inside the general resolved calculus.
+\end{remark}
+
+\subsection{A realization dictionary}
+
+\begin{theorem}[Resolved realization dictionary]\label{thm:realization_dictionary}
+The systems in \cref{thm:fourier_realization,thm:wavelet_realization,prop:quantum_realization,thm:arithmetic_polyphase} are concrete realizations of the same finite resolved axioms. In each case:
+\begin{enumerate}
+\item a packet is the range of a named idempotent or coordinate selector
+\item a transfer block is a mixed corner between source and target packets
+\item refinement is an orthogonal or coordinate decomposition of one packet into descendants
+\item reconstruction is the sum of all packet components
+\item a change of chart is an invertible transfer between two resolved coordinate systems
+\item compression retains selected blocks and names the omitted residual.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For Fourier and quantum systems the packets are orthogonal projectors. For wavelets they are scale and detail projectors. For arithmetic residue packets they are coordinate idempotents in the finite residue function algebra. The remaining items follow from the reconstruction and refinement formulas already proved.
+\end{proof}
+
+\section{The closure theorem for Resolution Theory}\label{sec:closure}
+
+The individual parts now combine into one dependency chain. The statement below records exactly what has been closed and which hypotheses are required.
+
+\begin{theorem}[Resolution Theory closure theorem]\label{thm:closure}
+Let \(\Acal\) be a unital resolved linking system with a finite named packet hierarchy. Then the following conclusions hold.
+\begin{enumerate}
+\item \textbf{Concrete realization.} There is a faithful Hilbert space representation in which every named object and packet idempotent becomes an orthogonal projector and every abstract transfer space becomes the corresponding operator corner.
+\item \textbf{Recognition.} Forgetting the ambient Hilbert coordinates of any faithful realization recovers a resolved system isomorphic to \(\Acal\).
+\item \textbf{Refinement naturality.} Every finite orthogonal refinement equation survives every unital representation exactly.
+\item \textbf{Transfer calculus.} Mixed corners reconstruct transfers exactly, compose by intermediate packet summation, and satisfy adjoint and Hilbert Schmidt energy identities when defined.
+\item \textbf{Compression.} Every selected block family has a named residual. Orthogonal block truncation is the best approximation in Hilbert Schmidt norm for the declared retained support.
+\item \textbf{Countable completion.} For countable orthogonal packet families, bounded transfers reconstruct in the strong star topology. Compact, Hilbert Schmidt, and trace class transfers converge in their natural norms.
+\item \textbf{Unbounded completion.} A self adjoint generator compatible with reducing packet projectors decomposes through graph norms, forms, resolvents, and bounded transforms. Approximate reduction is measured by resolvent leakage.
+\item \textbf{Nonlinear completion.} Every sufficiently smooth map has an exact packet jet. Composition is governed by the colored symmetric operad and the packet Faà di Bruno formula. Weighted analytic packet classes are locally closed under composition and inversion under the declared majorant hypotheses.
+\item \textbf{Finite logic.} Every finite resolution poset carries sound indexed Boolean and quantitative certificate semantics with refinement pullback, adjoints, and error transport.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The first three items are \cref{thm:universal_projector_representation,thm:recognition,prop:refinement_naturality}. The transfer and compression assertions are \cref{thm:mixed_blocks,thm:packet_parseval,thm:selective_compression,cor:best_diagonal}. The countable and unbounded conclusions are \cref{thm:strong_reconstruction,thm:compact_truncation,thm:countable_linking,thm:unbounded_direct_sum,thm:graph_norm,thm:resolvent_commutator,thm:countable_completion}. The nonlinear conclusions are \cref{thm:multilinear_reconstruction,thm:faa_di_bruno,prop:colored_operad,thm:nonlinear_refinement,thm:analytic_composition,thm:near_identity_inverse}. The logical conclusion is \cref{thm:indexed_semantics}.
+\end{proof}
+
+\begin{corollary}[Commuting representation and refinement diagram]\label{cor:commuting_diagram}
+Let \(e=\sum_\alpha e_\alpha\) be a declared finite refinement and let \(T\) be any transfer. Under every faithful realization \(\pi\), the diagram
+\[
+ \begin{array}{ccc}
+ e\Acal e&\xrightarrow{\ T\ }&f\Acal f\\
+ \downarrow\pi&&\downarrow\pi\\
+ \pi(e)\pi(\Acal)\pi(e)&\xrightarrow{\ \pi(T)\ }&\pi(f)\pi(\Acal)\pi(f)
+ \end{array}
+\]
+commutes, while
+\[
+ \pi(e)=\sum_\alpha\pi(e_\alpha)
+\]
+preserves the refinement equation. The same naturality holds for every finite chain of refinements.
+\end{corollary}
+
+\begin{proof}
+Multiplicativity of \(\pi\) gives commutativity of the transfer square. Refinement naturality is \cref{prop:refinement_naturality}. Iteration gives the final assertion.
+\end{proof}
+
+\begin{corollary}[Fourier analysis as a resolved specialization]\label{cor:fourier_specialization}
+Finite Fourier analysis is a specialization of Resolution Theory obtained by choosing the character projectors of a finite abelian group. Fourier reconstruction, Parseval, and convolution diagonalization are consequences of the general packet reconstruction, packet energy, and invariant transfer principles.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:fourier_realization} inside \cref{thm:closure}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.95\textwidth]{12_boundary_map.pdf}
+\caption{The closed theorem chain and the boundaries that require additional hypotheses.}
+\label{fig:boundary_map}
+\end{figure}
+
+\section{Exact boundaries and open problems}\label{sec:boundaries}
+
+Resolution Theory is intended to preserve the representation used in an argument. It does not imply that every representation is useful, inexpensive, compatible with every other chart, or available under every categorical enhancement.
+
+\subsection{Monoidal realization}
+
+A faithful projector corner representation preserves addition, multiplication, adjoint, norm, projections, and refinement. It does not automatically preserve an independent tensor product.
+
+\begin{problem}[Monoidal fiber problem]\label{prob:monoidal}
+Characterize resolved monoidal \(C^*\) categories admitting a faithful unitary strong monoidal dagger functor into Hilbert spaces. Determine which packet refinements and transfer norms are preserved by such a functor.
+\end{problem}
+
+This is a fiber functor problem rather than a consequence of ordinary \(C^*\) representability \Rcite{R12}.
+
+\subsection{Countable and measurable descent}
+
+Countable orthogonal sums are controlled by strong convergence, while inductive limit constructions provide another standard route to infinite operator algebras \Rcite{R11}. General measurable packet fields require direct integral theory and measurable selection. Local packet atlases require descent data on overlaps.
+
+\begin{problem}[Measurable resolution and descent]\label{prob:measurable}
+Develop a complete representation theorem for measurable resolved fields with direct integral reconstruction, measurable transfer corners, and descent along compatible packet atlases. Identify hypotheses under which local resolved models form a stack.
+\end{problem}
+
+Direct integral and von Neumann algebra techniques provide the ambient tools \Rcite{R8}, but the packet hierarchy and atlas descent must be preserved explicitly.
+
+\subsection{Weighted inverse closure}
+
+The local nonlinear inverse theorem uses a contraction or majorant hypothesis. It does not imply that an arbitrary weighted transfer algebra is spectrally invariant.
+
+\begin{problem}[Resolved Wiener problem]\label{prob:wiener}
+Find geometric and weight conditions under which a weighted packet transfer algebra is inverse closed in its ambient operator algebra. Determine sharp decay of the inverse packet field.
+\end{problem}
+
+This is the resolved analogue of classical Wiener inverse theory \Rcite{R18}.
+
+\subsection{Learning and perturbation stability}
+
+Data dependent projectors introduce statistical error and may change discontinuously when spectral gaps close.
+
+\begin{problem}[Learned resolution stability]\label{prob:learning}
+Prove perturbation, generalization, and leakage bounds for projectors learned from finite data. Separate approximation error, estimation error, and chart instability in the final transfer certificate.
+\end{problem}
+
+\subsection{Infinitary Resolution Logic}
+
+The finite indexed logic is complete on atomic Boolean fibers. Infinite packet systems require sigma complete or measurable predicates, convergence of quantifiers, and compatibility with analytic certificates.
+
+\begin{problem}[Infinitary Resolution Logic]\label{prob:infinite_logic}
+Construct an infinitary indexed semantics for countable or measurable resolutions and prove soundness and completeness for a declared analytic certificate language.
+\end{problem}
+
+\subsection{Algorithmic resolution discovery}
+
+The theory evaluates a declared resolution. It does not solve the global search problem of choosing the best one.
+
+\begin{problem}[Resolution discovery]\label{prob:discovery}
+Given an operator family, a cost model, and an error tolerance, determine complexity bounds for finding a resolution that minimizes transfer density, leakage, or execution cost. Establish negative results where globally optimal discovery is intractable.
+\end{problem}
+
+\begin{remark}[No universal optimal chart]\label{rem:no_universal_chart}
+Different tasks can prefer incompatible resolutions. Noncommuting projector families may have no exact common refinement. Resolution Theory therefore supports atlases and task dependent planners rather than one universal basis.
+\end{remark}
+
+\section{Conclusion}\label{sec:conclusion}
+
+Resolution Theory begins with the exact corner identity
+\[
+ T=\sum_{a,i}Q_aTP_i
+\]
+and treats the chosen projectors, transfer blocks, refinements, residuals, and certificates as part of the object. The finite theory reconstructs transfers and energy exactly. The universal representation theorem shows that the abstract packet hierarchy has faithful projector corner realizations. Recognition and refinement naturality prove that the representation is reversible at the structural level and that representation commutes with refinement.
+
+The countable and unbounded theory identifies the topology or domain needed for infinite packet systems. The nonlinear theory replaces edges by multilinear hyperedges and composes them through packet trees. The finite logic tracks qualitative truth and quantitative error without collapsing one into the other. Fourier, wavelet, polyphase, quantum, and arithmetic systems are concrete charts of this general resolved structure.
+
+The theory does not promise a useful decomposition for every problem. Its contribution is to make representation choice mathematically visible, preserve it through exact theorem chains, name the information lost by compression, and state precisely where additional monoidal, measurable, analytic, or computational hypotheses are required.
+
+\end{document}
