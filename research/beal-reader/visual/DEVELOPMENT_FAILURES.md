@@ -1,0 +1,16 @@
+# Visual authoring development failures
+
+1. The initial q=11 root decoder assumed that every trace polynomial had degree two. A degree-one source entry raised `ValueError: not enough values to unpack`. The decoder now pads lower-degree polynomials with zero leading coefficients and reconstructs all fifteen trace residues. No output from the failed attempt was accepted.
+2. Native card containment assertions stopped preliminary exports at figures 02, 08, 09, 12, 14, 16, 17, 20, 21, and 23. Several text blocks were wider or taller than their declared cards. Card heights, font sizes, and deliberate line breaks were corrected. The final export reruns every native text and card check. These were presentation defects, not arithmetic counterexamples.
+3. A preliminary LaTeX build began while the figure export was incomplete. It stopped at the missing `08_depth_frame.pdf`. The complete figure export and guide build are rerun sequentially. The partial PDF was not released.
+4. Independent label review identified the draft spread14 subtitle “Norm-one ideal structure” as misleading for a generator of norm q. It now states the norm-q convention. The same review corrected the exponent-reduction figure title to prime-support preservation, clarified that beta is the opposite-endpoint class, and distinguished the global character added to p0 from its finite parameter vector z0 in spread22 and the corresponding figure.
+
+The original historical research failures and rejected sources are preserved separately. These authoring corrections neither discard those records nor turn a synthetic target into arithmetic input.
+
+5. Figure23 preflight reported a missing Unicode script-capital-O glyph in DejaVu Sans. The integral-ring symbol is now rendered through matplotlib mathtext instead. The final run must have no glyph warnings.
+
+6. Native full-size review clarified two captions after the first complete accepted export. Figure02 now explicitly says base prime support is preserved, rather than letting a pronoun refer to an exponent. Figure03 now requires each condition at its active primes, without suggesting all three valuation sectors must be nonempty. The superseded run, its exact input snapshot, figures, and manifest are preserved in `computations/superseded_atlas-v1.0.zip`. The active run is `computations/atlas-v1.0b/`.
+
+7. Full native review added an explicit0–6 residue color key to the Pattern C matrix and changed the group-word Q exponent from caret notation to typeset mathtext. No data or assertions changed. The b-run input snapshot and outputs are preserved in `computations/superseded_atlas-v1.0b.zip`. The final active record is `computations/atlas-final-v1.0/`.
+
+8. Independent review clarified the numerical scope wording in spread11 and the dataset conventions. The bound is on each rational beta-ramifying prime, not on the product of conductor primes. The support tables and matrix values are unchanged. The preceding final run with source snapshot is preserved in `computations/superseded_atlas-final-v1.0.zip`. Active provenance is `computations/atlas-final-v1.0b/`. The guide does not repeat the separate historical Block71 unit-domain metadata count2304, whose corrected value is2352.

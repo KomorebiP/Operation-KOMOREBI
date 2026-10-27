@@ -1,0 +1,22 @@
+import BealBlock47
+#print axioms KomorebiBeal.Block47.survivors_mono_tests
+#print axioms KomorebiBeal.Block47.survivors_union
+#print axioms KomorebiBeal.Block47.survivors_refinement
+#print axioms KomorebiBeal.Block47.exclusion_from_empty_survivors
+#print axioms KomorebiBeal.Block47.finite_certificate_empty
+#print axioms KomorebiBeal.Block47.refinement_preserves_cover
+#print axioms KomorebiBeal.Block47.fixed_witness_prevents_empty
+#print axioms KomorebiBeal.Block47.each_test_has_candidate
+#print axioms KomorebiBeal.Block47.no_candidate_passes_every_test
+#print axioms KomorebiBeal.Block47.correlated_tests_have_empty_intersection
+#print axioms KomorebiBeal.Block47.diagonal_coordinate_projections_are_full
+#print axioms KomorebiBeal.Block47.diagonal_marginals_lose_correlation
+#print axioms KomorebiBeal.Block47.frey_cube_expansion
+#print axioms KomorebiBeal.Block47.frey_cube_coeff_six
+#print axioms KomorebiBeal.Block47.frey_cube_coeff_five
+#print axioms KomorebiBeal.Block47.frey_cube_coeff_thirteen
+#print axioms KomorebiBeal.Block47.frey_cube_coeff_twelve
+#print axioms KomorebiBeal.Block47.frey_coeff_determinant
+#print axioms KomorebiBeal.Block47.coefficientMatrix_eq
+#print axioms KomorebiBeal.Block47.coefficientMatrix_det
+#print axioms KomorebiBeal.Block47.coefficientMatrix_square

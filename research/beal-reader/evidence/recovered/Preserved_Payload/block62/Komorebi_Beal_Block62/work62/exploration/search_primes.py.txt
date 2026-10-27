@@ -1,0 +1,86 @@
+import json,sys,math,itertools,importlib.util,time
+from pathlib import Path
+import numpy as np
+p=Path('/mnt/data/beal62_restore/Komorebi_Beal_Block61/work61/computations/twisted_frobenius_certificate.py')
+spec=importlib.util.spec_from_file_location('old',p);old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
+D=json.load(open('/mnt/data/beal62_explore/trace_survivors.json'));surv=D['survivors'];S=[197,883,1373,1667]
+log={};root={}
+for q in S:
+ a=1;l={}
+ for j in range(q-1):l[a]=j%7;a=a*2%q
+ assert len(l)==q-1
+ log[q]=l;root[q]=next(a for a in range(2,q) if pow(a,7,q)==1 and old.ev(old.GENERATORS[q],a,q)==0)
+add=lambda x,y:((x%7+y%7)%7)+7*((x//7+y//7)%7)
+mul=lambda x,y:((x%7*(y%7)+5*(x//7)*(y//7))%7)+7*((x%7*(y//7)+x//7*(y%7))%7)
+def dot(a,b):
+ r=0
+ for x,y in zip(a,b):r=add(r,mul(x,y))
+ return r
+def char(a,q):
+ t=pow(int(a)%q,(q-1)//2,q);return -1 if t==q-1 else t
+def countprime(q):
+ f=1 if q%5 in [1,4] else 2;Q=q**f;nu=(1 if Q%5==1 else -1)*char(-3,q)**f
+ seventh={pow(c,7,q) for c in range(1,q)}
+ eligible={(a,b) for a in range(q) for b in range(q) if (a**3+b**5)%q in seventh}
+ todo=set(eligible);reps=[]
+ powers=[(pow(u,5,q),pow(u,3,q)) for u in range(1,q)]
+ while todo:
+  a,b=min(todo);orbit={(a*x%q,b*y%q) for x,y in powers};pairs=sorted(todo&orbit);todo-=orbit;reps.append((a,b,pairs))
+ d=next(i for i in range(2,q) if char(i,q)==-1)
+ leg=np.array([char(i,q) for i in range(q)],dtype=np.int64)
+ x=np.repeat(np.arange(q,dtype=np.int64),q);y=np.tile(np.arange(q,dtype=np.int64),q)
+ x2=(x*x+d*y*y)%q;y2=2*x*y%q;x3=(x2*x+d*y2*y)%q;y3=(x2*y+y2*x)%q;x6=(x3*x3+d*y3*y3)%q;y6=(2*x3*y3)%q
+ base=np.arange(q,dtype=np.int64);b3=base**3%q;b6=b3*b3%q
+ good=set();records=[]
+ for a,b,pairs in reps:
+  n1=q+2+int(leg[(b6+10*b*b3+12*a*base+5*b*b)%q].sum());s1=q+1-n1
+  if f==1 and (nu*s1-2*(Q+1))%7:continue
+  aa=(x6+10*b*x3+12*a*x+5*b*b)%q;bb=(y6+10*b*y3+12*a*y)%q;n2=q*q+2+int(leg[(aa*aa-d*bb*bb)%q].sum());s2=(s1*s1-q*q-1+n2)//2
+  pq=[q*q,-q*s1,s2,-s1,1]
+  if f==2:s1,s2=s1*s1-2*s2,s2*s2-2*q*s1*s1+2*q*q
+  s1*=nu;P=[Q*Q,-Q*s1,s2,-s1,1];target=[Q*Q,-2*Q*(Q+1),(Q+1)**2+2*Q,-2*(Q+1),1]
+  if any((a-b)%7 for a,b in zip(P,target)):continue
+  disc=s1*s1-4*(s2-2*Q)
+  if not disc:v=0
+  else:
+   assert disc%5==0;v=math.isqrt(disc//5);assert 5*v*v==disc
+  if (s1-2*(Q+1))%7 or v%7:continue # actual scalar residual trace stronger
+  a0=(s1-2*(Q+1))//7*4%7;b0=(v//7*4)%7
+  for sign in [1,-1]:good.add(a0+7*(sign*b0%7))
+  records.append({'representative':[a,b],'pair_count':len(pairs),'N1':n1,'N2':n2,'Pq':pq,'twisted':P,'trace_corrections':sorted({a0+7*b0,a0+7*(-b0%7)})})
+ return {'q':q,'f':f,'Q':Q,'nu':nu,'good_pairs':len(eligible),'orbits':len(reps),'trace_set':sorted(good),'residual_rows':records}
+qs=[113,127,211,239,281,337,379]
+G={}
+for vec in itertools.product(range(-1,2),repeat=6):
+ if any(vec):
+  n=old.norm(vec)
+  if n in qs and n not in G:G[n]=vec
+for q in qs:
+ if q not in G:
+  for vec in itertools.product(range(-2,3),repeat=6):
+   if any(vec) and old.norm(vec)==q:G[q]=vec;break
+ assert q in G
+print('gens',G,flush=True)
+results=[]
+for q in qs:
+ start=time.monotonic();g=G[q];r=next(z for z in range(2,q) if pow(z,7,q)==1 and old.ev(g,z,q)==0)
+ R=[sum(b*log[t][old.ev(g,pow(root[t],b,t),t)] for b in range(1,7))%7 for t in S]
+ logr=lambda z:next(i for i in range(7) if pow(r,i,q)==pow(z,(q-1)//7,q))
+ proots=[a for a in range(q) if (a*a-a-1)%q==0]
+ K=[(logr(a),logr(3),logr((2*a-1)%q)) for a in proots] if proots else [(0,2*logr(3)%7,logr(5))]
+ res=countprime(q);surv2=[];details=[]
+ for alpha,s,oldtags in surv:
+  v=mul(6,dot(R,s))
+  if not proots:v=mul(2,v)
+  prod=[mul(dot(k,alpha),v) for k in K]
+  good=all(x in res['trace_set'] for x in prod)
+  bad=all(x==0 for x in prod) and (not v if any(k[0] for k in K) else True)
+  if good or bad:surv2.append((alpha,s,oldtags))
+  details.append({'alpha':alpha,'beta':s,'beta_frob':v,'products':prod,'good':good,'bad':bad,'accepted':good or bad})
+ res.update(generator=g,root=r,R=R,K=K,details=details,survivor_count=len(surv2),elapsed=time.monotonic()-start);results.append(res)
+ print(q,'trace_set',res['trace_set'],'R',R,'K',K,'survivors',len(surv2),'time',res['elapsed'],flush=True)
+ # filter sequentially for diagnostic
+ surv=surv2
+ if not surv:break
+Path('/mnt/data/beal62_explore/extra_primes.json').write_text(json.dumps(results,indent=2))
+print('FINAL',surv)

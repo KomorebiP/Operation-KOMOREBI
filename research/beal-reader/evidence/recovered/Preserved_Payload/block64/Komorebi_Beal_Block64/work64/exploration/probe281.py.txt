@@ -1,0 +1,38 @@
+import sys,json,itertools,math,time
+from pathlib import Path
+sys.dont_write_bytecode=True
+sys.path.insert(0,'/mnt/data/beal64_work/research62/Komorebi_Beal_Block62/work62/computations')
+import pointcounts as pc
+import trace_product_certificate as tr
+sys.path.insert(0,'/mnt/data/beal64_work/predecessor63/Komorebi_Beal_Block63/work63/computations')
+import conductor_sieve as cs
+q=281
+# search a generator of prime norm using finite explicit small coefficient set
+pi=None
+for a in itertools.product(range(-1,2),repeat=6):
+ if tr.norm(a)==q:pi=a;break
+if pi is None:
+ for a in itertools.product(range(-2,3),repeat=6):
+  if tr.norm(a)==q:pi=a;break
+print('GEN',q,pi,flush=True)
+roots=[x for x in range(2,q) if pow(x,7,q)==1 and tr.ev(pi,x,q)==0]
+assert len(roots)==1
+root=roots[0]
+def lg(x):
+ t=pow(x%q,(q-1)//7,q)
+ return next(i for i in range(7) if pow(root,i,q)==t)
+ph=[x for x in range(q) if (x*x-x-1)%q==0]
+K=[[lg(p),lg(3),lg(2*p-1)] for p in ph]
+beta=0;columns={}
+for ell,s in [(113,6),(617,5),(883,3)]:
+ g=cs.primitive(ell);z=pow(g,(ell-1)//7,ell);logs={pow(g,j,ell):j%7 for j in range(ell-1)}
+ vals=[tr.ev(pi,pow(z,b,ell),ell) for b in range(1,7)]
+ R=-sum(b*logs[x] for b,x in enumerate(vals,1))%7
+ beta=(beta+s*R)%7;columns[ell]=R
+products=[[tr.MUL[tr.dot(k,[u,4,1])][beta] for k in K] for u in (21,28)]
+print('K',K,'R',columns,'beta',beta,'products',products,flush=True)
+pc.PRIMES+=(q,)
+data=pc.run_prime(q)
+Path('/mnt/data/beal64_work/exploration/count281.json').write_text(json.dumps(data,sort_keys=True,indent=2))
+print('counts',{x:data[x] for x in ('q','f','nu','admissible_pairs','degree_one_counts','degree_two_counts','residual_pairs','trace_defect_set')},flush=True)
+print('passes',[[all(p in data['trace_defect_set'] for p in ps),all(p==0 for p in ps)] for ps in products])

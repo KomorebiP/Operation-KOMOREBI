@@ -1,0 +1,3 @@
+# Exploratory zero-product error
+The first draft set bad_allowed=(beta_value==0). That is too strong: at a prime where both natural values vanish, beta may be nonzero while both trace products are zero. The exact bad-reduction condition is BOTH PRODUCTS ZERO. The error was caught by inspecting the newly completed q2269 output before any independent acceptance or public mathematical claim. Its reported 6 survivors are NOT accepted.
+The exploratory scan was intentionally stopped, the wrong source and output were retained, both implementations were corrected, and every affected final result must be rebuilt from the corrected source. An interrupted scan is not an exclusion.

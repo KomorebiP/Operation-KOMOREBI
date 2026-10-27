@@ -1,0 +1,33 @@
+import sys,json,time
+from pathlib import Path
+sys.path.insert(0,'/mnt/data/beal52_work/Komorebi_Beal_Block51/work47/computations')
+from modular_independent_pointcounts import count_poly,char
+
+def nu(q):
+ f=1 if q%5 in (1,4) else 2
+ return (1 if pow(q,f,5)==1 else -1)*char(-3,q)**f
+
+def vp(x,p=7):
+ if x==0:return 999
+ s=0
+ while x%p==0:x//=p;s+=1
+ return s
+
+def run(q):
+ f=1 if q%5 in (1,4) else 2; Q=q**f
+ assert Q%7==1
+ pts={(A,B) for A in range(q) for B in range(q) if (A**3+B**5)%q}
+ total=len(pts); allowed7={pow(c,7,q) for c in range(1,q)}; rows=[]
+ while pts:
+  A,B=min(pts); orb={(A*pow(u,5,q)%q,B*pow(u,3,q)%q) for u in range(1,q)}
+  pts-=orb
+  P=count_poly(A,B,q); a=-P[3];b=P[2]
+  if f==2:a,b=a*a-2*b,b*b-2*q*a*a+2*q*q
+  nJ=Q*Q+1+b-nu(q)*(Q+1)*a
+  # full residual character polynomial for original at K: both copies nu,nuQ
+  residual_ok= all(x%7==y%7 for x,y in zip([Q*Q,-Q*a,b,-a,1],[Q*Q,-2*Q*(Q+1)*nu(q),(Q+1)**2+2*Q,-2*(Q+1)*nu(q),1]))
+  if (A**3+B**5)%q in allowed7:rows.append({'AB':[A,B],'orbit':len(orb),'P':P,'nJ_twist':nJ,'v7':vp(nJ),'residual':residual_ok})
+ out={'q':q,'Q':Q,'nu':nu(q),'all_smooth':total,'admissible_orbits':len(rows),'admissible_pairs':sum(r['orbit'] for r in rows),'residual_orbits':sum(r['residual'] for r in rows),'max_v7':max(r['v7'] for r in rows),'deep': [r for r in rows if r['residual'] and r['v7']>=4],'rows':rows}
+ Path(f'/mnt/data/explore52_{q}.json').write_text(json.dumps(out,indent=2))
+ print(json.dumps({k:v for k,v in out.items() if k!='rows'}),flush=True)
+for q in map(int,sys.argv[1:]):run(q)

@@ -1,0 +1,2080 @@
+\documentclass[10pt,openany,oneside]{book}
+\usepackage[margin=0.72in,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{graphicx,float,placeins,needspace}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem,fancyhdr,hyperref,listings}
+\usepackage{titlesec}
+\usepackage{seqsplit}
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{PaleBlue}{HTML}{EAF2F5}
+\definecolor{PaleTeal}{HTML}{E8F5F2}
+\definecolor{PaleOrange}{HTML}{FCF1E7}
+\color{Ink}
+\hypersetup{colorlinks=true,linkcolor=Blue,urlcolor=Blue,citecolor=Blue,pdftitle={From Factorial Lanes to p-adic Transfer},pdfauthor={Komorebi P.},pdfsubject={A complete hypergeometric and p-adic cancellation walkthrough}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.48em}
+\raggedbottom
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{checkpoint}[theorem]{Cancellation checkpoint}
+\newtheorem{boundary}[theorem]{Boundary}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\Zp}{\mathbb Z_5}
+\newcommand{\vp}{v_5}
+\newcommand{\BNJ}{\mathcal B_{10,4}}
+\newcommand{\SNJ}{\mathcal S_{10,4}}
+\newcommand{\CNJ}{\mathcal C_{10,4}}
+\newcommand{\stepfac}[3]{\left(#1\right)_{#2;#3}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small From Factorial Lanes to $5$-Adic Transfer}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\titleformat{\chapter}[display]{\bfseries\color{Blue}}{\Large Chapter \thechapter}{0.3em}{\Huge}
+\titlespacing*{\chapter}{0pt}{-12pt}{16pt}
+\lstset{language=Python,basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,frame=single,numbers=left,numberstyle=\tiny,showstringspaces=false,tabsize=4}
+\let\cleardoublepage\clearpage
+\begin{document}
+\frontmatter
+\begin{titlepage}
+\centering
+\vspace*{0.7in}
+{\Large\color{Blue}\bfseries PROJECTOR-RESOLVED SEED CALCULUS\par}
+\vspace{0.25in}
+{\fontsize{29}{34}\selectfont\bfseries From Factorial Lanes to $p$-Adic Transfer\par}
+\vspace{0.18in}
+{\Large One Complete Hypergeometric Cancellation at $p=5$, $N=10$, $j=4$\par}
+\vspace{0.25in}
+{\large Residue projection, step factorials, Pochhammer normalization, reciprocal inversion, polyphase refinement, and mixed Kummer differences\par}
+\vfill
+{\Large\bfseries Komorebi P.\par}
+\vspace{0.5in}
+\end{titlepage}
+\chapter*{Purpose}
+\addcontentsline{toc}{chapter}{Purpose}
+This book slows one early calculation down until every transformation is visible. The chosen block is the odd-prime standard-window case
+\[
+p=5,\qquad m=2,\qquad N=mp=10,\qquad j=4,\qquad h=\frac{p-1}{m}=2.
+\]
+It is large enough to display all ten factorial lanes, nine hypergeometric parameters, a nontrivial reciprocal block, exact polyphase refinement, and prime-power displacement. It is still small enough that every numerator and denominator can be written out exactly.
+
+The same coefficient object is rewritten repeatedly. First it is a residue section of the exponential. Next it is a product of step factorial lanes. Then it becomes a hypergeometric term. After the forced $t^4/4!$ factor is removed, the large factorial quotient collapses to four unit factors. Reciprocal inversion turns that unit structure into a triangular coefficient system. Weighted Mahler transfer then turns the coefficient control into $5$-adic finite-difference control.
+
+No rewrite changes the object. Each rewrite exposes a cancellation that was hidden in the previous coordinates.
+\tableofcontents
+\listoffigures
+\mainmatter
+
+\chapter{The one block followed through the whole calculus}
+\section{The fixed data}
+We work with the residue class $4$ modulo $10$ and the exponential series
+\[
+e^t=\sum_{r\ge0}\frac{t^r}{r!}.
+\]
+The transfer projector keeps exactly the terms whose degree is congruent to $4$ modulo $10$:
+\[
+\SNJ(t)=\BNJ e^t=\sum_{n\ge0}\frac{t^{10n+4}}{(10n+4)!}.
+\]
+The later reciprocal packet is
+\[
+\CNJ(t)=\frac{t^4/4!}{\SNJ(t)}
+=\sum_{n\ge0}C_n\frac{t^{10n}}{(10n)!}.
+\]
+The unnormalized congruential row used in the older coefficient tables is
+\[
+E_n=4!C_n=24C_n.
+\]
+
+\section{The dependency chain}
+The proof has six distinct layers.
+\begin{enumerate}[leftmargin=1.5em]
+\item The root-of-unity filter isolates one residue class.
+\item The factorial $(10n+4)!$ is split into ten step-$10$ factorial lanes.
+\item The lanes are rescaled into Pochhammer factors, and the unique parameter $1$ becomes the ordinary $n!$.
+\item Removing the forced $t^4/4!$ packet cancels $(10n)!$ and leaves a four-factor $5$-adic unit.
+\item Reciprocal inversion is solved by a lower-triangular recurrence whose diagonal is a $5$-adic unit.
+\item The resulting block enters the weighted Mahler transfer, where repeated differences collect powers of $5$.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/01_transformation_chain.pdf}
+\caption{The complete rewrite chain for the chosen block.}
+\label{fig:01_transformation_chain}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The same coefficients move through six coordinate systems. The useful cancellation at one stage becomes the input hypothesis for the next stage.
+\end{minipage}
+\end{figure}
+
+
+\chapter{Residue projection before any hypergeometric notation}
+\section{Root-of-unity projector}
+Let
+\[
+\omega=e^{2\pi i/10}.
+\]
+The projector is
+\[
+(\mathcal B_{10,4}F)(t)
+=\frac1{10}\sum_{\ell=0}^{9}\omega^{-4\ell}F(\omega^\ell t).
+\]
+Substituting $F(t)=e^t$ gives
+\[
+\frac1{10}\sum_{\ell=0}^{9}\omega^{-4\ell}e^{\omega^\ell t}
+=\sum_{r\ge0}\frac{t^r}{r!}
+\left(\frac1{10}\sum_{\ell=0}^{9}\omega^{(r-4)\ell}\right).
+\]
+The finite geometric average is one when $r\equiv4\pmod {10}$ and zero otherwise. Therefore
+\[
+\boxed{
+\SNJ(t)=\sum_{n\ge0}\frac{t^{10n+4}}{(10n+4)!}.
+}
+\]
+
+\begin{checkpoint}
+The first cancellation is spectral. Nine residue classes vanish before any factorial is rewritten.
+\end{checkpoint}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/02_residue_support.pdf}
+\caption{Support selected by the $(10,4)$ projector.}
+\label{fig:02_residue_support}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} Only degrees $4,14,24,\ldots$ survive. Hypergeometric compression later replaces these sparse degrees by the consecutive index $n$.
+\end{minipage}
+\end{figure}
+
+
+\chapter{Disassembling one factorial into ten lanes}
+\section{Step factorial notation}
+For an integer step $N$, define
+\[
+(a)_{n;N}=\prod_{k=0}^{n-1}(a+Nk),
+\qquad
+(a)_{0;N}=1.
+\]
+This is a generalized rising factorial. We call each fixed value of $a$ a factorial lane because it collects one residue class among consecutive factors.
+
+For the chosen block,
+\[
+\frac{(10n+4)!}{4!}
+=5\cdot6\cdots(10n+4).
+\]
+Group the consecutive factors by their residue inside each block of length ten. This gives
+\[
+\boxed{
+\frac{(10n+4)!}{4!}
+=
+\prod_{r=5}^{14}(r)_{n;10}.
+}
+\]
+The ten lanes are
+\[
+(5)_{n;10},(6)_{n;10},\ldots,(14)_{n;10}.
+\]
+Every integer from $5$ through $10n+4$ appears exactly once.
+
+\section{The full $n=3$ disassembly}
+When $n=3$, the target is $34!$. The ten lanes are displayed below.
+\begin{longtable}{rL{0.20\textwidth}L{0.16\textwidth}L{0.17\textwidth}L{0.25\textwidth}}
+\caption{All ten factorial lanes for $n=3$.}\\
+\toprule
+\textbf{lane start} & \textbf{step-$10$ factors} & \textbf{lane product} & \textbf{$(r/10)_n$} & \textbf{role} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{lane start} & \textbf{step-$10$ factors} & \textbf{lane product} & \textbf{$(r/10)_n$} & \textbf{role} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+5 & $5\cdot15\cdot25$ & 1875 & $\frac{15}{8}$ & hypergeometric parameter \\
+6 & $6\cdot16\cdot26$ & 2496 & $\frac{312}{125}$ & hypergeometric parameter \\
+7 & $7\cdot17\cdot27$ & 3213 & $\frac{3213}{1000}$ & hypergeometric parameter \\
+8 & $8\cdot18\cdot28$ & 4032 & $\frac{504}{125}$ & hypergeometric parameter \\
+9 & $9\cdot19\cdot29$ & 4959 & $\frac{4959}{1000}$ & hypergeometric parameter \\
+10 & $10\cdot20\cdot30$ & 6000 & $6$ & $n!$ lane, omitted from the parameter list \\
+11 & $11\cdot21\cdot31$ & 7161 & $\frac{7161}{1000}$ & hypergeometric parameter \\
+12 & $12\cdot22\cdot32$ & 8448 & $\frac{1056}{125}$ & hypergeometric parameter \\
+13 & $13\cdot23\cdot33$ & 9867 & $\frac{9867}{1000}$ & hypergeometric parameter \\
+14 & $14\cdot24\cdot34$ & 11424 & $\frac{1428}{125}$ & hypergeometric parameter \\
+\end{longtable}
+Multiplying the ten lane products and the initial $4!$ gives
+\[
+4!\prod_{r=5}^{14}(r)_{3;10}=34!.
+\]
+No denominator has appeared. This is still an integer factorization.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/04_step_factorial_lanes.pdf}
+\caption{The ten step-factorial lanes for $n=3$.}
+\label{fig:04_step_factorial_lanes}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} Each bar is one arithmetic progression. Together the lanes partition every factor between $5$ and $34$ exactly once.
+\end{minipage}
+\end{figure}
+
+
+\chapter{From step factorials to Pochhammer parameters}
+\section{Rescaling every lane}
+For every lane,
+\[
+(r)_{n;10}=10^n\left(\frac r{10}\right)_n.
+\]
+Substituting this into the ten-lane product gives
+\[
+(10n+4)!
+=
+4!\,10^{10n}
+\prod_{r=5}^{14}
+\left(\frac r{10}\right)_n.
+\]
+Exactly one candidate parameter is equal to one:
+\[
+\frac{10}{10}=1.
+\]
+Its factor is
+\[
+(1)_n=n!.
+\]
+Move that factor into the standard hypergeometric $n!$ and keep the other nine parameters. The parameter set is
+\[
+\mathcal A_{10,4}
+=
+\left\{\frac{1}{2},\ \frac{3}{5},\ \frac{7}{10},\ \frac{4}{5},\ \frac{9}{10},\ \frac{11}{10},\ \frac{6}{5},\ \frac{13}{10},\ \frac{7}{5}\right\}.
+\]
+Therefore
+\[
+\boxed{
+(10n+4)!
+=
+4!\,10^{10n}n!
+\prod_{\alpha\in\mathcal A_{10,4}}(\alpha)_n.
+}
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/03_parameter_lattice.pdf}
+\caption{The parameter lattice and the omitted $1$.}
+\label{fig:03_parameter_lattice}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The ten lanes become ten rational parameters. The $1$-parameter is not lost. It is exactly the standard hypergeometric $n!$ factor.
+\end{minipage}
+\end{figure}
+
+\section{The hypergeometric section}
+Substituting the denominator identity term by term gives
+\[
+\boxed{
+\SNJ(t)
+=
+\frac{t^4}{4!}
+{}_0F_9\!\left(
+\begin{matrix}-\\
+\frac12,\frac35,\frac7{10},\frac45,\frac9{10},
+\frac{11}{10},\frac65,\frac{13}{10},\frac75
+\end{matrix}
+\middle|
+\frac{t^{10}}{10^{10}}
+\right).
+}
+\]
+The sparse degree $10n+4$ has been compressed into the ordinary hypergeometric index $n$.
+
+\section{A second proof by consecutive ratios}
+Let
+\[
+a_n=\frac1{(10n+4)!}
+\]
+and let $b_n$ be the coefficient produced by the displayed hypergeometric term. Both begin with
+\[
+a_0=b_0=\frac1{4!}.
+\]
+The direct ratio is
+\[
+\frac{a_{n+1}}{a_n}
+=
+\frac1{(10n+5)(10n+6)\cdots(10n+14)}.
+\]
+The hypergeometric ratio is
+\[
+\frac{b_{n+1}}{b_n}
+=
+\frac1{10^{10}(n+1)
+\prod_{\alpha\in\mathcal A_{10,4}}(n+\alpha)}.
+\]
+The factor $10(n+1)$ supplies the omitted lane $10n+10$. The other nine factors supply the remaining integers from $10n+5$ through $10n+14$. Thus the ratios agree term by term.
+
+\begin{checkpoint}
+The second cancellation is combinatorial. Ten rational Pochhammer lanes and one global power of $10$ recombine into ten consecutive integers.
+\end{checkpoint}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/05_pochhammer_running_product.pdf}
+\caption{The Pochhammer reconstruction of $34!$.}
+\label{fig:05_pochhammer_running_product}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The running product reaches the exact factorial target. The apparent rational denominators are temporary coordinates, not arithmetic losses.
+\end{minipage}
+\end{figure}
+
+
+\chapter{The decisive normalization and four-factor collapse}
+\section{Remove the forced residue packet}
+The section always contains $t^4/4!$. Remove it:
+\[
+G(t)
+=
+\frac{4!}{t^4}\SNJ(t).
+\]
+Write the result in the factorial-normalized block basis
+\[
+G(t)=\sum_{n\ge0}g_n\frac{t^{10n}}{(10n)!}.
+\]
+Then
+\[
+\begin{aligned}
+g_n
+&=
+\frac{4!(10n)!}{(10n+4)!}
+\\[4pt]
+&=
+\frac{24}{(10n+1)(10n+2)(10n+3)(10n+4)}
+\\[4pt]
+&=
+\frac1{\binom{10n+4}{4}}.
+\end{aligned}
+\]
+The original denominator had $(10n+4)!$. After the residue packet and the base factorial are cancelled, only four consecutive factors remain.
+
+\section{Why this is the $5$-adic turning point}
+For $r=1,2,3,4$,
+\[
+10n+r\equiv r\pmod5.
+\]
+None of the four factors is divisible by $5$. Since $24=4!$ is also a $5$-adic unit,
+\[
+\boxed{v_5(g_n)=0\quad\text{for every }n\ge0.}
+\]
+Thus
+\[
+G(t)\in1+t^{10}\mathbb Z_5[[t^{10}]]
+\]
+in the factorial-normalized block basis.
+
+\begin{checkpoint}
+This is the central numerator-denominator cancellation. The factorial quotient has become a $5$-adic unit because the class $j=4$ ends just before the first forbidden residue $5$.
+\end{checkpoint}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/06_factorial_cancellation_waterfall.pdf}
+\caption{The factorial collapse from $(10n+4)!$ to four tail factors.}
+\label{fig:06_factorial_cancellation_waterfall}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The blue and teal curves are enormous, but their difference is only the four-factor tail. The $5$-adic theorem reads that tail modulo five rather than measuring its archimedean size.
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/17_unit_tail_residues.pdf}
+\caption{The normalized tail in $\mathbb Z_5^\times$.}
+\label{fig:17_unit_tail_residues}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} Every displayed residue is invertible modulo $5^5$. The numerical values move, but none enters the nonunit region.
+\end{minipage}
+\end{figure}
+
+
+\chapter{The standard-window theorem hidden in the example}
+\section{General form}
+Let $p$ be odd, let $m\mid p-1$, and put
+\[
+N=mp.
+\]
+For a residue class satisfying
+\[
+0\le j<p,
+\]
+define
+\[
+d_{N,j}(n)=\binom{Nn+j}{Nn}=\binom{Nn+j}{j}.
+\]
+Then
+\[
+d_{N,j}(n)
+=
+\prod_{r=1}^{j}\frac{Nn+r}{r}.
+\]
+Because $Nn\equiv0\pmod p$ and $1\le r\le j<p$,
+\[
+Nn+r\equiv r\not\equiv0\pmod p.
+\]
+Numerator and denominator have the same zero $p$-adic valuation term by term. Therefore
+\[
+\boxed{d_{N,j}(n)\in\mathbb Z_p^\times.}
+\]
+
+\section{Specialization to the worked block}
+For $N=10$ and $j=4$,
+\[
+d_n=\binom{10n+4}{4}
+=\frac{(10n+1)(10n+2)(10n+3)(10n+4)}{24}.
+\]
+Modulo five,
+\[
+d_n\equiv\frac{1\cdot2\cdot3\cdot4}{4!}\equiv1\pmod5.
+\]
+The recursive denominator is not merely integral. It is congruent to one.
+
+\section{Why the boundary matters}
+The condition $j<p$ is a clean uniform guarantee. Outside it, a recursive diagonal can acquire factors of $p$. For example,
+\[
+N=10,\qquad j=5,\qquad n=2
+\]
+gives
+\[
+\binom{25}{20}=\binom{25}{5}=53130,
+\qquad
+v_5(53130)=1.
+\]
+The general method therefore records the standard window rather than assuming every residue class behaves the same way.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/07_standard_window_heatmap.pdf}
+\caption{The standard window and its failure boundary.}
+\label{fig:07_standard_window_heatmap}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The rows $j=0,1,2,3,4$ remain at valuation zero. Outside the window, carry patterns create sporadic denominator loss.
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/15_generalization_map.pdf}
+\caption{How the worked cancellation becomes a family theorem.}
+\label{fig:15_generalization_map}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The key invariant is the unit diagonal. Once it is uniform in $n$, reciprocal inversion and weighted finite-difference transfer can be applied at the block level.
+\end{minipage}
+\end{figure}
+
+
+\chapter{Reciprocal inversion and the second cancellation}
+\section{The reciprocal block}
+Define
+\[
+\CNJ(t)=G(t)^{-1}
+=\sum_{n\ge0}C_n\frac{t^{10n}}{(10n)!}.
+\]
+Because $G(0)=1$, the inverse exists formally. Multiplying $G(t)\CNJ(t)=1$ and comparing the coefficient of $t^{10n}/(10n)!$ gives
+\[
+\sum_{q=0}^{n}
+\binom{10n}{10q}g_{n-q}C_q
+=\delta_{n0}.
+\]
+For $n\ge1$,
+\[
+\boxed{
+C_n
+=-\sum_{q=0}^{n-1}
+\binom{10n}{10q}g_{n-q}C_q.
+}
+\]
+Every kernel coefficient is in $\mathbb Z_5$ and the diagonal coefficient is one. Induction gives
+\[
+\boxed{C_n\in\mathbb Z_5\quad\text{for every }n.}
+\]
+Since $E_n=24C_n$ and $24$ is a unit,
+\[
+E_n\in\mathbb Z_5.
+\]
+
+\section{The same recurrence in the older triangular form}
+Multiplying the original section by the reciprocal gives
+\[
+\sum_{q=0}^{n}\binom{10n+4}{10q}C_q=\delta_{n0}.
+\]
+The diagonal term is
+\[
+d_n=\binom{10n+4}{10n}.
+\]
+The bridge between the two forms is the exact identity
+\[
+\boxed{
+\frac{\binom{10n+4}{10q}}{d_n}
+=
+\binom{10n}{10q}g_{n-q}.
+}
+\]
+Proof:
+\[
+\begin{aligned}
+\frac{\binom{10n+4}{10q}}{\binom{10n+4}{10n}}
+&=
+\frac{4!(10n)!}{(10q)!(10(n-q)+4)!}
+\\[4pt]
+&=
+\binom{10n}{10q}
+\frac{4!(10(n-q))!}{(10(n-q)+4)!}
+\\[4pt]
+&=
+\binom{10n}{10q}g_{n-q}.
+\end{aligned}
+\]
+The large diagonal denominator cancels uniformly from every numerator term.
+
+\begin{checkpoint}
+The third cancellation is triangular. Instead of dividing one large rational numerator at the end, divide the common diagonal from every term first. The resulting kernel is visibly $5$-adically integral.
+\end{checkpoint}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/08_triangular_recurrence.pdf}
+\caption{The lower-triangular reciprocal system.}
+\label{fig:08_triangular_recurrence}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} Each row uses only earlier coefficients. The apparent denominator is removed before the p-adic induction is applied.
+\end{minipage}
+\end{figure}
+
+
+\chapter{Five coefficients written out without skipping a line}
+This chapter repeats the same cancellation for the first five nontrivial coefficients. The repetition is intentional. It shows that the general identity is not hiding a different mechanism at later rows.
+
+\subsection{Coefficient $n=1$}
+The diagonal factor is
+\[
+d_1=\binom{14}{10}=\binom{14}{4}=1001.
+\]
+The original numerator is
+\[
+N_1=\sum_{q=0}^{0}\binom{14}{10q}C_q.
+\]
+\begin{longtable}{rL{0.16\textwidth}L{0.32\textwidth}L{0.38\textwidth}}
+\caption{Original triangular terms for $n=1$.}\\
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}} \\
+\end{longtable}
+After the common diagonal is divided out term by term,
+\[
+\frac{\binom{10n+4}{10q}}{d_n}
+=
+\binom{10n}{10q}g_{n-q},
+\qquad
+g_r=\frac{4!(10r)!}{(10r+4)!}.
+\]
+\begin{longtable}{rL{0.23\textwidth}L{0.25\textwidth}L{0.30\textwidth}r}
+\caption{Termwise diagonal cancellation for $n=1$.}\\
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1001}} & 0 \\
+\end{longtable}
+The new coefficient is
+\begin{center}
+\textbf{$C_1=$} \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}}.
+\end{center}
+The two ledgers encode the same row. The second ledger is the useful one $5$-adically because every cancelled kernel lies in $\mathbb Z_5$.
+
+
+\subsection{Coefficient $n=2$}
+The diagonal factor is
+\[
+d_2=\binom{24}{20}=\binom{24}{4}=10626.
+\]
+The original numerator is
+\[
+N_2=\sum_{q=0}^{1}\binom{24}{10q}C_q.
+\]
+\begin{longtable}{rL{0.16\textwidth}L{0.32\textwidth}L{0.38\textwidth}}
+\caption{Original triangular terms for $n=2$.}\\
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}} \\
+1 & 1961256 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-178296}}/\texttt{\seqsplit{91}} \\
+\end{longtable}
+After the common diagonal is divided out term by term,
+\[
+\frac{\binom{10n+4}{10q}}{d_n}
+=
+\binom{10n}{10q}g_{n-q},
+\qquad
+g_r=\frac{4!(10r)!}{(10r+4)!}.
+\]
+\begin{longtable}{rL{0.23\textwidth}L{0.25\textwidth}L{0.30\textwidth}r}
+\caption{Termwise diagonal cancellation for $n=2$.}\\
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{10626}} & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{10626}} & 0 \\
+1 & \texttt{\seqsplit{1292}}/\texttt{\seqsplit{7}} & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1292}}/\texttt{\seqsplit{7007}} & 0 \\
+\end{longtable}
+The new coefficient is
+\begin{center}
+\textbf{$C_2=$} \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}}.
+\end{center}
+The two ledgers encode the same row. The second ledger is the useful one $5$-adically because every cancelled kernel lies in $\mathbb Z_5$.
+
+
+\subsection{Coefficient $n=3$}
+The diagonal factor is
+\[
+d_3=\binom{34}{30}=\binom{34}{4}=46376.
+\]
+The original numerator is
+\[
+N_3=\sum_{q=0}^{2}\binom{34}{10q}C_q.
+\]
+\begin{longtable}{rL{0.16\textwidth}L{0.32\textwidth}L{0.38\textwidth}}
+\caption{Original triangular terms for $n=3$.}\\
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}} \\
+1 & 131128140 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-916980}}/\texttt{\seqsplit{7}} \\
+2 & 1391975640 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{163410420900}}/\texttt{\seqsplit{637}} \\
+\end{longtable}
+After the common diagonal is divided out term by term,
+\[
+\frac{\binom{10n+4}{10q}}{d_n}
+=
+\binom{10n}{10q}g_{n-q},
+\qquad
+g_r=\frac{4!(10r)!}{(10r+4)!}.
+\]
+\begin{longtable}{rL{0.23\textwidth}L{0.25\textwidth}L{0.30\textwidth}r}
+\caption{Termwise diagonal cancellation for $n=3$.}\\
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{46376}} & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{46376}} & 0 \\
+1 & \texttt{\seqsplit{5655}}/\texttt{\seqsplit{2}} & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-435}}/\texttt{\seqsplit{154}} & 1 \\
+2 & \texttt{\seqsplit{30015}} & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{77519175}}/\texttt{\seqsplit{14014}} & 1 \\
+\end{longtable}
+The new coefficient is
+\begin{center}
+\textbf{$C_3=$} \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}}.
+\end{center}
+The two ledgers encode the same row. The second ledger is the useful one $5$-adically because every cancelled kernel lies in $\mathbb Z_5$.
+
+
+\subsection{Coefficient $n=4$}
+The diagonal factor is
+\[
+d_4=\binom{44}{40}=\binom{44}{4}=135751.
+\]
+The original numerator is
+\[
+N_4=\sum_{q=0}^{3}\binom{44}{10q}C_q.
+\]
+\begin{longtable}{rL{0.16\textwidth}L{0.32\textwidth}L{0.38\textwidth}}
+\caption{Original triangular terms for $n=4$.}\\
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}} \\
+1 & 2481256778 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-2478778}} \\
+2 & 1761039350070 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{52252084145725}}/\texttt{\seqsplit{161}} \\
+3 & 114955808528 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-404851315800251746}}/\texttt{\seqsplit{637}} \\
+\end{longtable}
+After the common diagonal is divided out term by term,
+\[
+\frac{\binom{10n+4}{10q}}{d_n}
+=
+\binom{10n}{10q}g_{n-q},
+\qquad
+g_r=\frac{4!(10r)!}{(10r+4)!}.
+\]
+\begin{longtable}{rL{0.23\textwidth}L{0.25\textwidth}L{0.30\textwidth}r}
+\caption{Termwise diagonal cancellation for $n=4$.}\\
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{135751}} & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{135751}} & 0 \\
+1 & \texttt{\seqsplit{18278}} & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1406}}/\texttt{\seqsplit{77}} & 0 \\
+2 & \texttt{\seqsplit{12972570}} & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{29638164575}}/\texttt{\seqsplit{12397}} & 1 \\
+3 & \texttt{\seqsplit{5927696}}/\texttt{\seqsplit{7}} & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-229637728757942}}/\texttt{\seqsplit{49049}} & 0 \\
+\end{longtable}
+The new coefficient is
+\begin{center}
+\textbf{$C_4=$} \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}}.
+\end{center}
+The two ledgers encode the same row. The second ledger is the useful one $5$-adically because every cancelled kernel lies in $\mathbb Z_5$.
+
+
+\subsection{Coefficient $n=5$}
+The diagonal factor is
+\[
+d_5=\binom{54}{50}=\binom{54}{4}=316251.
+\]
+The original numerator is
+\[
+N_5=\sum_{q=0}^{4}\binom{54}{10q}C_q.
+\]
+\begin{longtable}{rL{0.16\textwidth}L{0.32\textwidth}L{0.38\textwidth}}
+\caption{Original triangular terms for $n=5$.}\\
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{raw binomial} & \textbf{$C_q$} & \textbf{raw contribution} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}} \\
+1 & 23930713170 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-262974870}}/\texttt{\seqsplit{11}} \\
+2 & 321387366339585 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{1303047246343725}}/\texttt{\seqsplit{22}} \\
+3 & 1402659561581460 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-1194258111700768933365}}/\texttt{\seqsplit{154}} \\
+4 & 3245372870670 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{106411356051122630430126900}}/\texttt{\seqsplit{7007}} \\
+\end{longtable}
+After the common diagonal is divided out term by term,
+\[
+\frac{\binom{10n+4}{10q}}{d_n}
+=
+\binom{10n}{10q}g_{n-q},
+\qquad
+g_r=\frac{4!(10r)!}{(10r+4)!}.
+\]
+\begin{longtable}{rL{0.23\textwidth}L{0.25\textwidth}L{0.30\textwidth}r}
+\caption{Termwise diagonal cancellation for $n=5$.}\\
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$} & \textbf{cancelled kernel} & \textbf{$C_q$} & \textbf{cancelled contribution} & \textbf{$v_5$ kernel} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{316251}} & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{316251}} & 0 \\
+1 & \texttt{\seqsplit{75670}} & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-10810}}/\texttt{\seqsplit{143}} & 1 \\
+2 & \texttt{\seqsplit{17276104195}}/\texttt{\seqsplit{17}} & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{2731755233425}}/\texttt{\seqsplit{14586}} & 1 \\
+3 & \texttt{\seqsplit{13305819380}}/\texttt{\seqsplit{3}} & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-2503685768764714745}}/\texttt{\seqsplit{102102}} & 1 \\
+4 & \texttt{\seqsplit{133406210}}/\texttt{\seqsplit{13}} & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{4374207919230592774700}}/\texttt{\seqsplit{91091}} & 1 \\
+\end{longtable}
+The new coefficient is
+\begin{center}
+\textbf{$C_5=$} \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}}.
+\end{center}
+The two ledgers encode the same row. The second ledger is the useful one $5$-adically because every cancelled kernel lies in $\mathbb Z_5$.
+\begin{longtable}{rL{0.44\textwidth}rrr}
+\caption{The first unnormalized reciprocal coefficients.}\\
+\toprule
+\textbf{$n$} & \textbf{$E_n$} & \textbf{$v_5$} & \textbf{num. digits} & \textbf{den. digits} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$E_n$} & \textbf{$v_5$} & \textbf{num. digits} & \textbf{den. digits} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{24}} & 0 & 2 & 1 \\
+1 & \texttt{\seqsplit{-24}}/\texttt{\seqsplit{1001}} & 0 & 2 & 4 \\
+2 & \texttt{\seqsplit{712820}}/\texttt{\seqsplit{161161}} & 1 & 6 & 6 \\
+3 & \texttt{\seqsplit{-489980929071}}/\texttt{\seqsplit{3692689}} & 0 & 12 & 7 \\
+4 & \texttt{\seqsplit{223363808641562184240}}/\texttt{\seqsplit{1988887901}} & 1 & 21 & 10 \\
+5 & \texttt{\seqsplit{-850856141776485007113200176}}/\texttt{\seqsplit{738656919}} & 0 & 27 & 9 \\
+6 & \texttt{\seqsplit{81764766266763986412352821172453276215}}/\texttt{\seqsplit{942913365394}} & 1 & 38 & 12 \\
+7 & \texttt{\seqsplit{-12600371644851211750611213622625670624522020764}}/\texttt{\seqsplit{366840855381}} & 0 & 47 & 12 \\
+8 & \texttt{\seqsplit{35396408464177064111094848406734060758760469710735874649360}}/\texttt{\seqsplit{626830025014557}} & 1 & 59 & 15 \\
+\end{longtable}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/09_coefficient_valuations.pdf}
+\caption{The first coefficient valuations.}
+\label{fig:09_coefficient_valuations}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The fractions can have large ordinary denominators, yet those denominators are never divisible by five. Archimedean denominator size and p-adic denominator loss are different questions.
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/14_numerator_denominator_growth.pdf}
+\caption{Ordinary numerator and denominator growth.}
+\label{fig:14_numerator_denominator_growth}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The block coefficients become large rational numbers while remaining inside $\mathbb Z_5$. This is why ordinary size alone does not reveal the divisibility law.
+\end{minipage}
+\end{figure}
+
+
+\chapter{Polyphase refinement without changing the parent block}
+\section{Refinement from modulus ten to modulus fifty}
+Every integer congruent to $4$ modulo $10$ has exactly one of the five residues
+\[
+4,14,24,34,44\pmod{50}.
+\]
+Therefore the projectors satisfy
+\[
+\boxed{
+\mathcal B_{10,4}
+=
+\mathcal B_{50,4}
++
+\mathcal B_{50,14}
++
+\mathcal B_{50,24}
++
+\mathcal B_{50,34}
++
+\mathcal B_{50,44}.
+}
+\]
+Applied to $e^t$,
+\[
+\SNJ(t)
+=
+\sum_{r\in\{4,14,24,34,44\}}
+\mathcal B_{50,r}e^t.
+\]
+Each child has its own hypergeometric presentation with forty-nine lower parameters. Their supports are disjoint. Their sum reconstructs the parent exactly.
+
+\section{What refinement does to the p-adic proof}
+The coarse class $j=4$ lies in the standard $5$-adic window. The children do not all lie in a standard window when written as classes modulo fifty. The safe arithmetic statement is therefore attached to the complete parent packet, while the child packets provide a finer analytic or computational atlas.
+
+The distinction matters. Exact refinement preserves the object. It does not guarantee that every child separately inherits the same simplest denominator proof. When the children are synthesized, the parent unit cancellation returns.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/12_polyphase_refinement.pdf}
+\caption{The five-child refinement tree.}
+\label{fig:12_polyphase_refinement}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The parent residue packet is not approximated. It is partitioned into five disjoint child packets and recovered by summing them.
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/13_polyphase_support.pdf}
+\caption{Coarse and fine residue support.}
+\label{fig:13_polyphase_support}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} Every surviving coarse degree appears in exactly one fine phase. No coefficient is duplicated or lost.
+\end{minipage}
+\end{figure}
+
+
+\chapter{From coefficients to finite differences}
+\section{The index step}
+For the odd prime $p=5$ and $m=2$,
+\[
+h=\frac{p-1}{m}=2.
+\]
+The relevant finite-difference operator is
+\[
+\Delta_2f(n)=f(n+2)-f(n).
+\]
+Repeated and mixed differences are formed by composition.
+
+\section{The weighted transfer statement}
+Under the weighted Amice--Mahler hypotheses for the congruential Euler block, the mixed difference bound is
+\[
+\boxed{
+ v_5\!\left(
+ \Delta_{2q_1}\cdots\Delta_{2q_s}E_n
+ \right)
+ \ge
+ \min\left
+ \{2n,
+ s+\sum_{\nu=1}^{s}v_5(q_\nu)
+ \right\}.
+}
+\]
+The two terms describe different saturation mechanisms.
+\begin{itemize}[leftmargin=1.5em]
+\item The factor $2n$ comes from the weighted depth already present in the block coefficient.
+\item Every ordinary difference contributes one factor of five.
+\item Replacing a unit displacement by a multiple of $5^r$ contributes $r$ additional factors.
+\end{itemize}
+
+\section{Why the earlier rewrites were necessary}
+The hypergeometric formula alone does not prove the finite-difference law. It supplies the exact factorial structure. The four-factor normalization proves that the recursive diagonal is a unit. Reciprocal inversion transfers that unit control to the coefficient row. The Mahler pullback then reorganizes the row into binomial coordinates where differences act by coefficient shift. The finite-difference estimate is the end of this chain, not an isolated congruence.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/10_difference_ladder.pdf}
+\caption{Repeated step-two differences.}
+\label{fig:10_difference_ladder}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The exact valuations stay on or above the theorem staircase. Extra cancellation appears as positive surplus.
+\end{minipage}
+\end{figure}
+\begin{longtable}{rL{0.57\textwidth}rrr}
+\caption{Exact values and valuations for $\Delta_2^1E_n$.}\\
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^1E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^1E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{-3155044}}/\texttt{\seqsplit{161161}} & 0 & 0 & 0 \\
+1 & \texttt{\seqsplit{-489980840535}}/\texttt{\seqsplit{3692689}} & 1 & 1 & 0 \\
+2 & \texttt{\seqsplit{223363808632765272620}}/\texttt{\seqsplit{1988887901}} & 1 & 1 & 0 \\
+3 & \texttt{\seqsplit{-26376540395067996848768036185}}/\texttt{\seqsplit{22898364489}} & 1 & 1 & 0 \\
+4 & \texttt{\seqsplit{144151282928304721352592757319247170121765}}/\texttt{\seqsplit{1662356263189622}} & 1 & 1 & 0 \\
+5 & \texttt{\seqsplit{-34058804556032824219715378269629043604344445463220}}/\texttt{\seqsplit{991570832094843}} & 1 & 1 & 0 \\
+6 & \texttt{\seqsplit{1472561384926694218888466708120631303184382802700033836117639805}}/\texttt{\seqsplit{26077382700655600314}} & 1 & 1 & 0 \\
+7 & \texttt{\seqsplit{-42939005016677702700781429792361640007350948605276246635397085821715510310}}/\texttt{\seqsplit{133123105083700570839}} & 1 & 1 & 0 \\
+8 & \texttt{\seqsplit{25048116635806321390817409084013148723263274934485814024842652848885666723037897163280}}/\texttt{\seqsplit{4492908884906014728519}} & 1 & 1 & 0 \\
+9 & \texttt{\seqsplit{-4798721420915318162225444564100658089564873517971769965438281516265812872294682061891950650430}}/\texttt{\seqsplit{18381587665747323017}} & 1 & 1 & 0 \\
+10 & \texttt{\seqsplit{52993065560629292433913055263282315590437661879733656124437470626744794827654821783413215402084107431931707235}}/\texttt{\seqsplit{1751536771096412547725478}} & 1 & 1 & 0 \\
+\end{longtable}\begin{longtable}{rL{0.57\textwidth}rrr}
+\caption{Exact values and valuations for $\Delta_2^2E_n$.}\\
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^2E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^2E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{223363808671701670624}}/\texttt{\seqsplit{1988887901}} & 0 & 0 & 0 \\
+1 & \texttt{\seqsplit{-26376540395064958477575878650}}/\texttt{\seqsplit{22898364489}} & 2 & 2 & 0 \\
+2 & \texttt{\seqsplit{144151282928304534660207498264111478328125}}/\texttt{\seqsplit{1662356263189622}} & 6 & 2 & 4 \\
+3 & \texttt{\seqsplit{-62107231837471618553140472331788622702294843454375}}/\texttt{\seqsplit{1808158576172949}} & 4 & 2 & 2 \\
+4 & \texttt{\seqsplit{736280692463347108313582766412157569663130109316501739208756125}}/\texttt{\seqsplit{13038691350327800157}} & 3 & 2 & 1 \\
+5 & \texttt{\seqsplit{-6827301797651754728697210827118514186732876967998638948324692710161022166750}}/\texttt{\seqsplit{21166573708308390763401}} & 3 & 2 & 1 \\
+6 & \texttt{\seqsplit{1042051748282814582490231023068901649613381124320083954050502348289060963585798782838589625}}/\texttt{\seqsplit{186913995429860024735847438}} & 3 & 2 & 1 \\
+7 & \texttt{\seqsplit{-6783210852164752918577386134857302327904149145561713704682186982705599659071255803372610678445500}}/\texttt{\seqsplit{25983209692245920508303}} & 3 & 2 & 1 \\
+8 & \texttt{\seqsplit{39585819973790081448125757919433910043979427923192049319862494166831590384412721343902936514807745493468477882625}}/\texttt{\seqsplit{1308397968009020173150932066}} & 3 & 2 & 1 \\
+9 & \texttt{\seqsplit{-81799344591000244647268759830879752344683371489466105599694718071776759027124354277343023737788260109433631339498873779250}}/\texttt{\seqsplit{10164117281362648009573167}} & 3 & 2 & 1 \\
+10 & \texttt{\seqsplit{3311231147235487581299720759617595273919738634185439828478763514930218950158246890897749866772281049350052838427450849370433422947322143732375}}/\texttt{\seqsplit{718309229460855584480271258929013}} & 3 & 2 & 1 \\
+\end{longtable}\begin{longtable}{rL{0.57\textwidth}rrr}
+\caption{Exact values and valuations for $\Delta_2^3E_n$.}\\
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^3E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^3E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{144151282928304347967822206665077734035197}}/\texttt{\seqsplit{1662356263189622}} & 0 & 0 & 0 \\
+1 & \texttt{\seqsplit{-351940980412339159998533110975463840172195188866775}}/\texttt{\seqsplit{10246231931646711}} & 2 & 2 & 0 \\
+2 & \texttt{\seqsplit{1472561384926694214365864357528001904111585193363886717884215375}}/\texttt{\seqsplit{26077382700655600314}} & 3 & 3 & 0 \\
+3 & \texttt{\seqsplit{-2275767265883918242656724772417175878892883393650781298155615543584144571625}}/\texttt{\seqsplit{7055524569436130254467}} & 3 & 3 & 0 \\
+4 & \texttt{\seqsplit{347350582760938194159892064474896095352590579542307231209584370228850799814220122687389625}}/\texttt{\seqsplit{62304665143286674911949146}} & 3 & 3 & 0 \\
+5 & \texttt{\seqsplit{-11863835780436152854577190132905863454101843943941613819530229545901800725893573284849980362009167250}}/\texttt{\seqsplit{45444633751738114969021947}} & 3 & 3 & 0 \\
+6 & \texttt{\seqsplit{6597636662298346908019743926199321723650332717671761168052533416493558299455727971244152181343774150331434625875}}/\texttt{\seqsplit{218066328001503362191822011}} & 3 & 3 & 0 \\
+7 & \texttt{\seqsplit{-22314000158692329895093696280612038602320699301106337994520675177177908134492187539275257221306346354946289405700844914020750}}/\texttt{\seqsplit{2772664203647505507032511819}} & 3 & 3 & 0 \\
+8 & \texttt{\seqsplit{4946979333969818446461750346398356396790986464752811247636199952208110462092350614539710654827434719129319773044477412583446817369069415221219875}}/\texttt{\seqsplit{1073153988814518243213525260839945422}} & 3 & 3 & 0 \\
+9 & \texttt{\seqsplit{-96773688750367408074438644322532767052698404473291410687211285409271013451831044312257658736332801155490054869565448067450452190360490167248728588734875}}/\texttt{\seqsplit{17976898163206705116555706265721}} & 3 & 3 & 0 \\
+10 & \texttt{\seqsplit{344240492737467917094275451251991427520251571650590411487327546128612455374870397520212893125987443053597584672249666049569224747344520486222267545112931366269755222688618375}}/\texttt{\seqsplit{28162780128459402256652543420222687709546}} & 3 & 3 & 0 \\
+\end{longtable}\begin{longtable}{rL{0.57\textwidth}rrr}
+\caption{Exact values and valuations for $\Delta_2^4E_n$.}\\
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^4E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$\Delta_2^4E_n$} & \textbf{exact $v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{736280692463347106052281591115845798770179118704406152037040018}}/\texttt{\seqsplit{13038691350327800157}} & 0 & 0 & 0 \\
+1 & \texttt{\seqsplit{-68962644420724795224678159670550920313193136031285146188017044033819694150}}/\texttt{\seqsplit{213803774831397886499}} & 2 & 2 & 0 \\
+2 & \texttt{\seqsplit{6766569794044250535513775089483603392976432511331117096134515176483048374176255634401875}}/\texttt{\seqsplit{1213727243051039121661347}} & 4 & 4 & 0 \\
+3 & \texttt{\seqsplit{-1078530525494195714051139265086027739700081089062043162699480043996663276686559360466704989711211875}}/\texttt{\seqsplit{4131330341067101360820177}} & 4 & 4 & 0 \\
+4 & \texttt{\seqsplit{1199570302236063074185186945301756079994686017353836187585236245357301858935726259263336582462622614527641593125}}/\texttt{\seqsplit{39648423273000611307604002}} & 4 & 4 & 0 \\
+5 & \texttt{\seqsplit{-52378084288585492317852268653542677519211449483052463303350963497035155390727680033279984524756859217207145765961047429352500}}/\texttt{\seqsplit{6508328328841580525831560377}} & 4 & 4 & 0 \\
+6 & \texttt{\seqsplit{449725393997256222405610716175275041304171219637767692042583610029024894426513526807753262368143177552649257132248211411719646095055144322999375}}/\texttt{\seqsplit{97559453528592567564865932803631402}} & 4 & 4 & 0 \\
+7 & \texttt{\seqsplit{-45598002617559479640892249424609503712940246791738966475031410258716990078245259183175813478473885977922095329296974908546626664875117871859478646223588125}}/\texttt{\seqsplit{8470387561809122965373475052293813}} & 4 & 4 & 0 \\
+8 & \texttt{\seqsplit{15647295124430359867921605519473307552286640052494366861602755688307030039402037536518979424024753925638200332119225064236358665300259840000069505350822870444595071464338125}}/\texttt{\seqsplit{1280126369475427375302388337282849441343}} & 4 & 4 & 0 \\
+9 & \texttt{\seqsplit{-127769123946787668926430223617816100470607694580557232698630131671912936043472330281570568638413031416879606025695728430756832974213008627019467045512043195798891516101201318446083750}}/\texttt{\seqsplit{2467929047593383628227068498079254487}} & 4 & 4 & 0 \\
+10 & \texttt{\seqsplit{21745636100821954530953590717444248711484512536534996641489890824370886703658694596991058112190412523865083698258076243447345492212170125594212822656588653236376775687476060078189385202741692963968701875}}/\texttt{\seqsplit{55145283744262460473276284793470588234173754}} & 4 & 4 & 0 \\
+\end{longtable}
+
+\chapter{Prime-power displacement and mixed cancellation}
+A displacement by $2q$ changes the mode factor from $u^2-1$ to $u^{2q}-1$. If $q$ carries powers of five, lifting the exponent contributes additional valuation. The exact tables below show the effect for
+\[
+q=1,5,25
+\]
+and for several mixed compositions.
+\begin{longtable}{L{0.11\textwidth}L{0.11\textwidth}rL{0.40\textwidth}rrr}
+\caption{Selected mixed and prime-power displacement calculations.}\\
+\toprule
+\textbf{$q$ parts} & \textbf{actual steps} & \textbf{$n$} & \textbf{difference} & \textbf{$v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$q$ parts} & \textbf{actual steps} & \textbf{$n$} & \textbf{difference} & \textbf{$v_5$} & \textbf{bound} & \textbf{surplus} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+(1,) & (2,) & 0 & \texttt{\seqsplit{-3155044}}/\texttt{\seqsplit{161161}} & 0 & 0 & 0 \\
+(1,) & (2,) & 1 & \texttt{\seqsplit{-489980840535}}/\texttt{\seqsplit{3692689}} & 1 & 1 & 0 \\
+(1,) & (2,) & 2 & \texttt{\seqsplit{223363808632765272620}}/\texttt{\seqsplit{1988887901}} & 1 & 1 & 0 \\
+(1,) & (2,) & 3 & \texttt{\seqsplit{-26376540395067996848768036185}}/\texttt{\seqsplit{22898364489}} & 1 & 1 & 0 \\
+(1,) & (2,) & 4 & \texttt{\seqsplit{144151282928304721352592757319247170121765}}/\texttt{\seqsplit{1662356263189622}} & 1 & 1 & 0 \\
+(1,) & (2,) & 5 & \texttt{\seqsplit{-34058804556032824219715378269629043604344445463220}}/\texttt{\seqsplit{991570832094843}} & 1 & 1 & 0 \\
+(1,) & (2,) & 6 & \texttt{\seqsplit{1472561384926694218888466708120631303184382802700033836117639805}}/\texttt{\seqsplit{26077382700655600314}} & 1 & 1 & 0 \\
+(5,) & (10,) & 0 & \texttt{\seqsplit{19019634321598226060658682187916233926326788578614525661670478564441919358078104}}/\texttt{\seqsplit{3411573224192679}} & 0 & 0 & 0 \\
+(5,) & (10,) & 1 & \texttt{\seqsplit{-3293563089166313083206158933126364342676551742701622509002000459916651250066927299216441100}}/\texttt{\seqsplit{12616051932565081}} & 2 & 2 & 0 \\
+(5,) & (10,) & 2 & \texttt{\seqsplit{32037846823714550431402419681249968540987006289829011935411691251672742980190206538412873321629121432775}}/\texttt{\seqsplit{1058920939651789214}} & 2 & 2 & 0 \\
+(5,) & (10,) & 3 & \texttt{\seqsplit{-416266823019028556984097598286557656657877918911324901491550007050094997952190777713661447700415302054741261497979325}}/\texttt{\seqsplit{51723945108126672381}} & 2 & 2 & 0 \\
+(5,) & (10,) & 4 & \texttt{\seqsplit{1058625246422541106494030767657784914283330528083911397925716464563831721155998678424403367753514764461059891020997799484981026242900}}/\texttt{\seqsplit{229648807719283157864659}} & 2 & 2 & 0 \\
+(5,) & (10,) & 5 & \texttt{\seqsplit{-984369878631646408021866347393739499929964012321794152739876040733790676083453152138277511637802229183453795212308270611892574213130121739775}}/\texttt{\seqsplit{182858763488253079227}} & 2 & 2 & 0 \\
+(5,) & (10,) & 6 & \texttt{\seqsplit{4074720032339991561909207579254318023642333226687965752646182156596278754743399485829319092873203404027328357037015500047274669103703720088439404748411179880975}}/\texttt{\seqsplit{333358354920022237327808286}} & 2 & 2 & 0 \\
+(25,) & (50,) & 0 & \texttt{\seqsplit{687501548031966538530004472923055905153077758171643628354975874361337654348205994123211377230394639110309284200296620120422862780197468891903048801167001769034975896358555932523292345090178767225353351949709464559275813250776433805177612665147601368275933737799251862642504270465411155167257740097595593918438421431394391585753026142344458325703663097073333547762384369282749524357392529069810643733852436515458915326620959365394071418857150475437970712961584536620234821770125648031273349634504465865210411214369098432510148876595016414124054137056266962939458128523743425219124072926594930918006039903934319116372975743170544634205337811617921935056771413606652888965152981805795032260281651163619070660391508303676}}/\texttt{\seqsplit{246251458012191870859901885614596615418718485058706421818201}} & 0 & 0 & 0 \\
+(25,) & (50,) & 1 & \texttt{\seqsplit{-237660756805334327553372743720194593141011844805041201517071410051656262760388029339149590720506920208883971786503175326487603637074900828674132637202785586409669388669164321335212740788328076923922569824588302927028574426499329317610517811391481673235771766028202901010600525024591521909081114182139891645018447509768313196038699711929514924608031191635529841560802456534798563689864943953154105974386427407677624638074972627678741164495163295411987376791162290658311018410212390464421924276187681534512446218209773293100083177570709535196024663395312183998235142068660876251448983388504377284389936426464317839660445998693970862470720935796243697049800880443429687387028915318216363160743042677901519886630321670519892969848175}}/\texttt{\seqsplit{284014199392890277385071995116301736407198552730540017}} & 2 & 2 & 0 \\
+(25,) & (50,) & 2 & \texttt{\seqsplit{8555225050361447027978212244193337309298519834302063511227962687322396527334763723162792762247216140041050146816093507295525518914818684457587338258824237703477473071941798190121721363578439995524956887350263143306525296017491909851483097915492026346107644508901240417068966909000553357089027908205237905869088105651213218149953276473202930166131958358753293068752075583428954677172902547815312944344094547591793732186325602334769096780262378331001187677387266705244274199214671663142862473427877069929176363599093141463868144340369452658847940349265281551933849170561901356377021273067847790582163901188291062221057796893576960152373845769306179127662783018622846092964461390645195937069227095492060328524473959748510529083509735391175163000954500}}/\texttt{\seqsplit{28042302680583793950334165048837847351088852055110288999}} & 3 & 3 & 0 \\
+(25,) & (50,) & 3 & \texttt{\seqsplit{-40373875540170437953399990059202128237463049075350138512425118038947391842959630475681444048607893255872307939874320644268078728661235646974778280195627176983258085090697006920919939975003471895128000397323692687799302670384990781540929924627862947577455528815751393154860707176504059321440199551497398879922884248564946593181941084446188609545371518569018671474292476319154054724563236920238960853925310302399672526430860722293948265714476742062705662099826175566581595904420966068207451720249418173431183560163960295481177268371286070628060895146679988736741023916461040012546650789771979860728245028758522842342216264931771946549118474941174635297770930788108089407282030304459897422640509880004299412000498252518171443763782934447642438443924491297306126625}}/\texttt{\seqsplit{299529279581241039162780290716056189170295138869361}} & 3 & 3 & 0 \\
+(25,) & (50,) & 4 & \texttt{\seqsplit{4632346423826288737114227298125952132708328986014582890295130211529211804480001213231642262345447960668706601754269316587716093533775246274161085913877832570201106901688150863136491896944198919324970585075675227942689103256348691677543476363280141528700437378437351472515219472062919564055870372961044592717736965639709398677723706937454640453548078663594578397798918899080960224686250501338367553698286990683228961856612606774688795865134207547605320903203528563428415792239763598618223210788875126305334956202357416904475663583330591710179408308848434308683388159371283731595777690663330969937287964663198884696420220420316671403735246668614669053931633463956404601465663932601964499731017397691385453418772254840002594383788051673825107478650074259125209310746429490982992150188366375}}/\texttt{\seqsplit{64420861968469024283920777912881597424483463284844970706194}} & 3 & 3 & 0 \\
+(25,) & (50,) & 5 & \texttt{\seqsplit{-491665309135243260118172986776259718283024265438247431563985010100239466022973886805712186866752123597212095641012972440650544272523094437107476844088041090765174238422973137771428350027276117645488288780672996447783724543286630785353887190957752479725089360306110362774525877644199999523271924635140039531984441706434130076293344052435911714405144721236790426795119878092601957221011549431781971437312293023211523034333791603885179572440384716250583224955051088593221481539376815833623676278083932323886830186834038285128954324781581656739093037599960568949936223054741412908215684583882168093840517097605948462444442245310206026885368474735170570505576568310995087364396476606162041777400355841365743918995461488150701274203129765381530582408599812155675500665486090950757017429981478712620275500}}/\texttt{\seqsplit{10651889686514234964712374596329278905941895742701013}} & 3 & 3 & 0 \\
+(25,) & (50,) & 6 & \texttt{\seqsplit{52590032676950157217940746357714153307210761142006737678653511661324644867523301876719880301790450304117572271345049222362283261980269161592030387597111555643540330530496787441631324243100492384777957302468839853360875794821806002389917747851390713861933118113854766047581564568986375019994669172452860736788926275610161373033045919676484099804741401240740441433176915375248733377741566406328163178191519510411245639202960665083171583059348092298429597147345272919739004175823950281388855572199316183115090485059435647314351818573103520311836633399270301659716135665967571308158372420781722328499273747266121717273855153256150678034761922514170593698950327979882193730102713325863161130505276606127072084489033564222862402120828234220794490961382417625170424628678987838503632121318828972494980596363329842594131017997501233125375}}/\texttt{\seqsplit{1480119890514501568628961617772276312738440684231674307553680287422}} & 3 & 3 & 0 \\
+(1, 1) & (2, 2) & 0 & \texttt{\seqsplit{223363808671701670624}}/\texttt{\seqsplit{1988887901}} & 0 & 0 & 0 \\
+(1, 1) & (2, 2) & 1 & \texttt{\seqsplit{-26376540395064958477575878650}}/\texttt{\seqsplit{22898364489}} & 2 & 2 & 0 \\
+(1, 1) & (2, 2) & 2 & \texttt{\seqsplit{144151282928304534660207498264111478328125}}/\texttt{\seqsplit{1662356263189622}} & 6 & 2 & 4 \\
+(1, 1) & (2, 2) & 3 & \texttt{\seqsplit{-62107231837471618553140472331788622702294843454375}}/\texttt{\seqsplit{1808158576172949}} & 4 & 2 & 2 \\
+(1, 1) & (2, 2) & 4 & \texttt{\seqsplit{736280692463347108313582766412157569663130109316501739208756125}}/\texttt{\seqsplit{13038691350327800157}} & 3 & 2 & 1 \\
+(1, 1) & (2, 2) & 5 & \texttt{\seqsplit{-6827301797651754728697210827118514186732876967998638948324692710161022166750}}/\texttt{\seqsplit{21166573708308390763401}} & 3 & 2 & 1 \\
+(1, 1) & (2, 2) & 6 & \texttt{\seqsplit{1042051748282814582490231023068901649613381124320083954050502348289060963585798782838589625}}/\texttt{\seqsplit{186913995429860024735847438}} & 3 & 2 & 1 \\
+(1, 5) & (2, 10) & 0 & \texttt{\seqsplit{52993065560629292433913055263282315590437661879733656124437470626744794827654821783447505184230080153807508347}}/\texttt{\seqsplit{1751536771096412547725478}} & 0 & 0 & 0 \\
+(1, 5) & (2, 10) & 1 & \texttt{\seqsplit{-1740411587042558396750455601886982316825031749175814247291191511875604149687202411500972860296449729407845314383048288725}}/\texttt{\seqsplit{216257814497077617224961}} & 2 & 2 & 0 \\
+(1, 5) & (2, 10) & 2 & \texttt{\seqsplit{4003720681970050464760398085693460888701387869128515495046593745111164993930748479622903720913611069993797028341783684986918881612164375}}/\texttt{\seqsplit{868531790794328903044140338}} & 4 & 3 & 1 \\
+(1, 5) & (2, 10) & 3 & \texttt{\seqsplit{-913672397422537569244621070195804340215875852681720958408451107700062538193841275103518736136540030278967407004403373351621050121834639470247500}}/\texttt{\seqsplit{169725840309414925330977}} & 4 & 3 & 1 \\
+(1, 5) & (2, 10) & 4 & \texttt{\seqsplit{624349095122176144933293391237195276145202223314710202884411346982359218710145698061107675724109916072451579695194136623493234310361917214505911731021285180765378211875}}/\texttt{\seqsplit{51078843600012699995198307128790294}} & 4 & 3 & 1 \\
+(1, 5) & (2, 10) & 5 & \texttt{\seqsplit{-52090215789743835726873348137743584165909799035786452168048278183467377296091255323445809400591848704960521284743426387115319905991350656263456513502473159362372914898008341385625}}/\texttt{\seqsplit{1006150411553701713799025846110791}} & 4 & 3 & 1 \\
+(1, 5) & (2, 10) & 6 & \texttt{\seqsplit{41852280627583562158182119568092159851114728616537622124394746300541551448407514629359675415479457661554109733288234721760684688697678156161798264370356668135142545832487272651582028627325939375}}/\texttt{\seqsplit{106134209174288399112152839788444351}} & 4 & 3 & 1 \\
+(1, 1, 5) & (2, 2, 10) & 0 & \texttt{\seqsplit{3311231147235487581299720759617595273919738634185439828478763514930218950158246890897749866772280968679701726259867835311993446979809456443063}}/\texttt{\seqsplit{718309229460855584480271258929013}} & 0 & 0 & 0 \\
+(1, 1, 5) & (2, 2, 10) & 1 & \texttt{\seqsplit{-2059014654263136342009335936127807859680087298842510201074185247106316640966420693300357611047462815878960778216274251147238018423594275624596004627825}}/\texttt{\seqsplit{382487194961844789713951197143}} & 2 & 2 & 0 \\
+(1, 1, 5) & (2, 2, 10) & 2 & \texttt{\seqsplit{312174547561088072466646577888063937371292626172019339564865531986699876945915040073609146728999518556775240839099307449575922471376086353625486717837111119515417959375}}/\texttt{\seqsplit{25539421800006349997599153564395147}} & 5 & 4 & 1 \\
+(1, 1, 5) & (2, 2, 10) & 3 & \texttt{\seqsplit{-1371587471959744938524301987197432790471524809294085697722481105221919087140486898263208495252286435909714348468164078078404715396129618495455277528806263781440806377493339811683074375}}/\texttt{\seqsplit{26492946486620519826042149553943237821}} & 4 & 4 & 0 \\
+(1, 1, 5) & (2, 2, 10) & 4 & \texttt{\seqsplit{144613580328510401777238612664996056393367763706940879027842295753301011446216412240202130901274948773947236985689204568055925066168518903995564025014114470334517582285576764612945933415126460661875}}/\texttt{\seqsplit{366729070766891181732192112415671380822}} & 4 & 4 & 0 \\
+(1, 1, 5) & (2, 2, 10) & 5 & \texttt{\seqsplit{-6188486249821950193876183106722232068953674375759525278093680424584717793922263721514850709349916744800186914549184586553538407109170132322654219152830552793938887171458557070116023497963177094991633416325419981875}}/\texttt{\seqsplit{1183644318007295343578759378876255994544929}} & 4 & 4 & 0 \\
+(1, 1, 5) & (2, 2, 10) & 6 & \texttt{\seqsplit{1269160186201790409718229287435631725312032388141573023659119635793205246092261259022474885373342092127466139895570247071619999994149333214633692223534571653830957909218366054074795033617839279437029891951531936569019396946895625}}/\texttt{\seqsplit{10828626089561309112164622758384525254991094}} & 4 & 4 & 0 \\
+\end{longtable}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/11_mixed_displacements.pdf}
+\caption{Mixed and prime-power displacement valuations.}
+\label{fig:11_mixed_displacements}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The shift $50=2\cdot25$ carries two more powers of five than the basic shift $2$. Repeated differences add their contributions until the coefficient-depth ceiling is reached.
+\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/16_surplus_heatmap.pdf}
+\caption{Valuation surplus beyond the guaranteed bound.}
+\label{fig:16_surplus_heatmap}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} Blue cells indicate rows where the exact cancellation is stronger than the general lower bound. The theorem records the uniform floor, not every accidental surplus.
+\end{minipage}
+\end{figure}
+
+
+\chapter{Two further primes using the same mechanism}
+The worked block is not isolated. This chapter repeats the standard-window construction at two other odd primes. The formulas become shorter for $p=3$ and longer for $p=7$, while the unit-tail proof is unchanged.
+
+\section{Comparison case $p=3$, $m=2$, $N=6$, $j=2$}
+Here
+\[
+h=\frac{p-1}m=1
+\]
+and the lower-parameter set is
+\[
+\left\{\frac{1}{2},\ \frac{2}{3},\ \frac{5}{6},\ \frac{7}{6},\ \frac{4}{3}\right\}.
+\]
+The normalized factorial tail is
+\[
+g_n=\frac{2!(6n)!}{(6n+2)!}
+=\binom{6n+2}{2}^{-1}.
+\]
+Because $j<p$, every diagonal remains a $p$-adic unit.
+\begin{longtable}{rL{0.16\textwidth}rrL{0.40\textwidth}}
+\caption{Reciprocal coefficients for the comparison case $p=3$.}\\
+\toprule
+\textbf{$n$} & \textbf{diagonal} & \textbf{$v_p(d_n)$} & \textbf{$v_p(C_n)$} & \textbf{$C_n$} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{diagonal} & \textbf{$v_p(d_n)$} & \textbf{$v_p(C_n)$} & \textbf{$C_n$} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & 0 & 0 & \texttt{\seqsplit{1}} \\
+1 & 28 & 0 & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{28}} \\
+2 & 91 & 0 & 0 & \texttt{\seqsplit{425}}/\texttt{\seqsplit{364}} \\
+3 & 190 & 0 & 0 & \texttt{\seqsplit{-2039759}}/\texttt{\seqsplit{2660}} \\
+4 & 325 & 0 & 0 & \texttt{\seqsplit{33228334457}}/\texttt{\seqsplit{9100}} \\
+5 & 496 & 0 & 0 & \texttt{\seqsplit{-66580433369179}}/\texttt{\seqsplit{868}} \\
+6 & 703 & 0 & 0 & \texttt{\seqsplit{193226168425325327393}}/\texttt{\seqsplit{36556}} \\
+7 & 946 & 0 & 0 & \texttt{\seqsplit{-64959821501330351287580101}}/\texttt{\seqsplit{66220}} \\
+8 & 1225 & 0 & 0 & \texttt{\seqsplit{3875546199919947736994577955913}}/\texttt{\seqsplit{9100}} \\
+\end{longtable}
+\section{Comparison case $p=7$, $m=2$, $N=14$, $j=6$}
+Here
+\[
+h=\frac{p-1}m=3
+\]
+and the lower-parameter set is
+\[
+\left\{\frac{1}{2},\ \frac{4}{7},\ \frac{9}{14},\ \frac{5}{7},\ \frac{11}{14},\ \frac{6}{7},\ \frac{13}{14},\ \frac{15}{14},\ \frac{8}{7},\ \frac{17}{14},\ \frac{9}{7},\ \frac{19}{14},\ \frac{10}{7}\right\}.
+\]
+The normalized factorial tail is
+\[
+g_n=\frac{6!(14n)!}{(14n+6)!}
+=\binom{14n+6}{6}^{-1}.
+\]
+Because $j<p$, every diagonal remains a $p$-adic unit.
+\begin{longtable}{rL{0.16\textwidth}rrL{0.40\textwidth}}
+\caption{Reciprocal coefficients for the comparison case $p=7$.}\\
+\toprule
+\textbf{$n$} & \textbf{diagonal} & \textbf{$v_p(d_n)$} & \textbf{$v_p(C_n)$} & \textbf{$C_n$} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{diagonal} & \textbf{$v_p(d_n)$} & \textbf{$v_p(C_n)$} & \textbf{$C_n$} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 1 & 0 & 0 & \texttt{\seqsplit{1}} \\
+1 & 38760 & 0 & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{38760}} \\
+2 & 1344904 & 0 & 0 & \texttt{\seqsplit{341161}}/\texttt{\seqsplit{12776588}} \\
+3 & 12271512 & 0 & 0 & \texttt{\seqsplit{-72168598289311}}/\texttt{\seqsplit{1981849188}} \\
+4 & 61474519 & 0 & 0 & \texttt{\seqsplit{9528933799694272431632531}}/\texttt{\seqsplit{1747351728056}} \\
+5 & 218618940 & 0 & 0 & \texttt{\seqsplit{-14079518155897674312391270278189787}}/\texttt{\seqsplit{517835395880}} \\
+6 & 622614630 & 0 & 0 & \texttt{\seqsplit{3135640748692485546644969917535046769589733304822619}}/\texttt{\seqsplit{1408495674522336510}} \\
+7 & 1517381580 & 0 & 0 & \texttt{\seqsplit{-143964673108020753700937976090070867109485017809766012913147}}/\texttt{\seqsplit{76825408740795}} \\
+8 & 3295144749 & 0 & 0 & \texttt{\seqsplit{7309429067096667750093707794191805420627334936576884503392286220034865485137973}}/\texttt{\seqsplit{629283620657091419448}} \\
+\end{longtable}
+
+\chapter{The complete cancellation chain}
+The worked example has five cancellations, each occurring in a different coordinate system.
+
+\section{Cancellation one: residue support}
+The root filter removes nine of ten Taylor residue classes.
+
+\section{Cancellation two: factorial lanes}
+The product
+\[
+(10n+4)!/4!
+\]
+is partitioned into ten step-$10$ factorials. Rescaling the lanes introduces rational Pochhammer parameters, but the common factor $10^{10n}$ clears every new denominator.
+
+\section{Cancellation three: the hidden $n!$}
+The candidate parameter $10/10=1$ gives $(1)_n=n!$. It is omitted from the displayed lower-parameter list because the hypergeometric definition already contains it.
+
+\section{Cancellation four: the standard-window tail}
+Removing $t^4/4!$ and cancelling $(10n)!$ reduces the factorial quotient to
+\[
+\frac{24}{(10n+1)(10n+2)(10n+3)(10n+4)}.
+\]
+Every denominator factor is a $5$-adic unit.
+
+\section{Cancellation five: the reciprocal diagonal}
+The factor
+\[
+\binom{10n+4}{4}
+\]
+is common to every term in the triangular numerator. Dividing it termwise converts the recurrence to one whose kernels are binomial integers times $5$-adic units.
+
+\section{Transfer into differences}
+The weighted Mahler coordinates convert those coefficient bounds into repeated difference bounds. Polyphase refinement provides finer child packets without changing the reconstructed parent.
+
+\begin{theorem}[General standard-window mechanism]
+Let $p$ be odd, let $m\mid p-1$, put $N=mp$, and take $0\le j<p$. Then the hypergeometric residue section admits the factorial-lane decomposition
+\[
+(Nn+j)!=j!N^{Nn}n!\prod_{\alpha\in\mathcal A_{N,j}}(\alpha)_n,
+\]
+the normalized tail
+\[
+\frac{j!(Nn)!}{(Nn+j)!}
+=
+\binom{Nn+j}{j}^{-1}
+\]
+is a $p$-adic unit, and reciprocal inversion can be performed without diagonal $p$-adic loss. Under the weighted Amice--Mahler hypotheses, the resulting block satisfies the mixed Kummer finite-difference bounds.
+\end{theorem}
+
+\begin{boundary}
+The factorial and reciprocal identities are exact algebraic statements. The mixed Kummer theorem additionally uses the weighted Amice--Mahler hypotheses. The finite ledgers verify the chosen example and display the surplus. They do not replace the general analytic hypothesis.
+\end{boundary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.94\textwidth,height=0.58\textheight,keepaspectratio]{figures/18_certificate_dashboard.pdf}
+\caption{The exact certificate dashboard.}
+\label{fig:18_certificate_dashboard}
+\vspace{2pt}
+\begin{minipage}{0.92\textwidth}
+\small\textbf{What to notice.} The worked example verifies the algebraic identities, p-adic unit conditions, reciprocal agreement, difference bounds, and polyphase reconstruction independently.
+\end{minipage}
+\end{figure}
+\appendix
+\chapter{Complete coefficient ledger}
+The following table records every coefficient computed by the closed Python implementation. The large ordinary numerators are retained so that the reader can audit the exact rational arithmetic.
+\begin{longtable}{rL{0.59\textwidth}rrr}
+\caption{Complete coefficient ledger through the computed depth.}\\
+\toprule
+\textbf{$n$} & \textbf{$E_n$} & \textbf{$v_5$} & \textbf{num. digits} & \textbf{den. digits} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$E_n$} & \textbf{$v_5$} & \textbf{num. digits} & \textbf{den. digits} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{24}} & 0 & 2 & 1 \\
+1 & \texttt{\seqsplit{-24}}/\texttt{\seqsplit{1001}} & 0 & 2 & 4 \\
+2 & \texttt{\seqsplit{712820}}/\texttt{\seqsplit{161161}} & 1 & 6 & 6 \\
+3 & \texttt{\seqsplit{-489980929071}}/\texttt{\seqsplit{3692689}} & 0 & 12 & 7 \\
+4 & \texttt{\seqsplit{223363808641562184240}}/\texttt{\seqsplit{1988887901}} & 1 & 21 & 10 \\
+5 & \texttt{\seqsplit{-850856141776485007113200176}}/\texttt{\seqsplit{738656919}} & 0 & 27 & 9 \\
+6 & \texttt{\seqsplit{81764766266763986412352821172453276215}}/\texttt{\seqsplit{942913365394}} & 1 & 38 & 12 \\
+7 & \texttt{\seqsplit{-12600371644851211750611213622625670624522020764}}/\texttt{\seqsplit{366840855381}} & 0 & 47 & 12 \\
+8 & \texttt{\seqsplit{35396408464177064111094848406734060758760469710735874649360}}/\texttt{\seqsplit{626830025014557}} & 1 & 59 & 15 \\
+9 & \texttt{\seqsplit{-6785082052043085906810567221383165559432284614893759595151603406382}}/\texttt{\seqsplit{21035680511573}} & 0 & 67 & 14 \\
+10 & \texttt{\seqsplit{19019634321598226060658682187916233926326788578614525661670478646319676738702400}}/\texttt{\seqsplit{3411573224192679}} & 2 & 80 & 16 \\
+11 & \texttt{\seqsplit{-3293563089166313083206158933126364342676551742701622509002000459916651250067229781980059044}}/\texttt{\seqsplit{12616051932565081}} & 0 & 91 & 17 \\
+12 & \texttt{\seqsplit{32037846823714550431402419681249968540987006289829011935411691251672742980190206538417556961121322327455}}/\texttt{\seqsplit{1058920939651789214}} & 1 & 104 & 19 \\
+13 & \texttt{\seqsplit{-13427962032871888934970890267308311505092836093913706499727419582261128966199702506892304764750920150849402144872064}}/\texttt{\seqsplit{1668514358326666851}} & 0 & 116 & 19 \\
+14 & \texttt{\seqsplit{600468092128497507937623804683939259377952653479246397008347399071940851478161473865231632304886438032882384832484850566323220620}}/\texttt{\seqsplit{130260242608782278993}} & 1 & 129 & 21 \\
+15 & \texttt{\seqsplit{-2953109635894939224065599042181218499789892036965382458219628122201372028250359456414832534913406687550993288613758501260945285849713565097549}}/\texttt{\seqsplit{548576290464759237681}} & 0 & 142 & 21 \\
+16 & \texttt{\seqsplit{18315769579529311621485068441915231729751365640850189792433922967249269918201425504785411046759507633121253982298083622972435424992698719909586132256436663360}}/\texttt{\seqsplit{1498437872459116349701941}} & 1 & 158 & 25 \\
+17 & \texttt{\seqsplit{-4954119056151029820221139620815946338372742861269769055156402738933452881717647050774544882888665811004231764556036371458485461597645319078534727688535692402235321208}}/\texttt{\seqsplit{95691462430336529757}} & 0 & 166 & 20 \\
+18 & \texttt{\seqsplit{129977252091715175650924873440526930001540812034332589647588111975572809894064442984513479200797172199183827396548707293132681726373160452798294026527224126893815832487281858027917030165}}/\texttt{\seqsplit{329612452524497010008778638}} & 1 & 186 & 27 \\
+19 & \texttt{\seqsplit{-1203538839346141950600972351541753824608014403257111850893884284914768753162472296269001206835715081577634953232899874331543312809139974472946529783567941248290524139169594573598684955220809524}}/\texttt{\seqsplit{230195535900906664361}} & 0 & 193 & 21 \\
+20 & \texttt{\seqsplit{50148323229941449073607347278326240805447256108774377072764113643607118453771345244529951623390426250833447401778714209813480026014592926611739404626234563270364716495233124940888556307976865562509246817206273651800}}/\texttt{\seqsplit{427871475310490926367607602739}} & 2 & 215 & 30 \\
+21 & \texttt{\seqsplit{-1448627458373725615967111029038516923421357999877936979924159778371192207781658518947828192465348298484478196242053696508027462217281426977502478910416800571365508791690056447878346259908177844080775860906717952294662916796130564}}/\texttt{\seqsplit{334763880168424147292793748261}} & 0 & 229 & 30 \\
+22 & \texttt{\seqsplit{344105265337608685261732496684788440022329726828170657034364466906124796801179720949640007342008674010850637414114655300065759262538689711137004417566310508089968441971244769817365198348223222686051073434006954103802181291866929759606327920}}/\texttt{\seqsplit{1339075943106790967151404331}} & 1 & 240 & 28 \\
+23 & \texttt{\seqsplit{-92909993102040698767606657353778830479268552864115361141711831398532189574902840677192081435369408981982169267542543969331637833866154719419545284113150905076880740742306434305901708684368408124070304753375952719765567819116387619500428949953183665484}}/\texttt{\seqsplit{3867961523118147213840081}} & 0 & 251 & 25 \\
+24 & \texttt{\seqsplit{41819332675737573605726770849011984208415152452066332968452465936547570383993890521475906792372086824069306455403148445048169849838959750568008880760648815841494004916251039466855411324347749011474707907311869955845092564844668624776175172250974622466686082732934627943234345}}/\texttt{\seqsplit{12067844306956100473696020371774538}} & 1 & 275 & 35 \\
+25 & \texttt{\seqsplit{-46860446761412134432429709634384560874780777308743974442676681774740336543129805407680699551559957124964900885685500438357418928918877273650495245169979061332979626395878149330379750128189887337304970302437831800596788496351632159965758086916869073400130998240173029700592080414552488}}/\texttt{\seqsplit{61838688741892548794629117797}} & 0 & 284 & 29 \\
+26 & \texttt{\seqsplit{2937206495412301135486136940966488839366997205494989720678929148003109506935465891264302921350424264118139477794824519895859361163473112113402352535786537660392381394326062619534165366250172588481255271836327920562980714719737024050868640139955432942003081801999771587788087597212704728086520822235660}}/\texttt{\seqsplit{11889748738190324627258064042611}} & 1 & 301 & 32 \\
+27 & \texttt{\seqsplit{-1745086807623559715220043794183585057255592277280920991711123167484785400927740141635898636128856830845980924247875919168392373406468750095222695201416519836260189322685061216003117774327220159704667768079456038002178344290235919600052425113574763603784657927972228217587192083894351791389632038917496553220538677649}}/\texttt{\seqsplit{14759888785476817961617701633571}} & 0 & 316 & 32 \\
+28 & \texttt{\seqsplit{94684842654234518756047178740470834932190061410111562790596089739990827280694920860995596409519124415574810404394704064949380563449175275629036538563515662115896945714640016709316416949870139368476542972400796938634987844631193170193530934077671920107681770787348145087509438051130483770916792521149153070598740496902828619664291039194960}}/\texttt{\seqsplit{1156073558484051213230467407761276777097}} & 1 & 338 & 40 \\
+29 & \texttt{\seqsplit{-5304016915976877172217119251611227181194111839850108421450401717458988471185242595931671898667236212385130406295585815962860258287090363008036947487451553604491728044415248754972541380723685189479851026282684376551825360814632465281115605199032345649078649443169460396473608571981464609665164946318233944833068396269937415814753157190311766591392}}/\texttt{\seqsplit{65446665122319579759037472258163}} & 0 & 346 & 32 \\
+30 & \texttt{\seqsplit{46944084679215034229125176204056054055968942323948793387218157447655368803751293667783210935793478000469081110537794754784600989557284746344844673806139889016801851974560642497421421205920066356738739378889453948133309408764923299618673919865806009285414514950141062791999818240894984062370387607535399651526123681755150112803915050877393684154188355037566237927525}}/\texttt{\seqsplit{414870695104291377281045108516499558}} & 2 & 365 & 36 \\
+31 & \texttt{\seqsplit{-12548062094214288935408263580957115772509384065803761060742970505494938267941960760905388253265486718518240003487049896160429589765633217465766753666276580796164573318780290701822550849213290264176554198125525744896089846940809525664340619214146411434519093238102465006009689455439832901501121236293129951725980435921057990316155236165861135296374998062159963033763330609201588}}/\texttt{\seqsplit{56938667283298145772048138649587}} & 0 & 377 & 32 \\
+32 & \texttt{\seqsplit{28829834159010755975787886715985679306479763500510628382461182756206009869939001990788721065353007054556351256750133577857064656014724487572498513004730188115153276453611212610213740966574302155683448954469688662717336401687201521498985278594024284485240360514343708188018546339334791298719460412140625211552741811753129655237704128423342862101764657895651690479843393281211363741145233643446749475520}}/\texttt{\seqsplit{48671874328729051399068945934598004314031}} & 1 & 401 & 41 \\
+33 & \texttt{\seqsplit{-723888091661601455426745721576285487009448169481221913862267719477059756126568343599485633867927620381577352062318913149335988948662356673789398305893248944094424829717204054634234143446348721256209846781366919967652545064519069796681600435627736212174772016927126445891872798796002168054936838872130531417506625291936569349021620483741977210761183113912331768886462148027468811912922701511951604311405080282709406334}}/\texttt{\seqsplit{332801644930363059897267603006325799129431}} & 0 & 417 & 42 \\
+34 & \texttt{\seqsplit{2970294872032134882177339528515756835100546701910719089523625544216001215305004299068106333247876510118208710748110346436284855035360777954338679006479313034584176259852388232311157099800158759483172299575173272147258995730154006015503906182563418832777633881539962691069966128273054473486535146513718136757459989096435957213886453793235910870367977473836202802660075358835279544233017591821497872963475807130762466164598560}}/\texttt{\seqsplit{274768191734067782006550014309589}} & 1 & 424 & 33 \\
+35 & \texttt{\seqsplit{-11430721283165813967721140082806801104083500213616129745155468426984710790955450774642968421474577754347608630445171771190172824993004320123537367482307518253364848152010128298856358059649912335729146626695287157604444686711208958103918268767339191154148987698070515182964891602380478949716355265839914844673725072565494438716023051243568464559772150317136786925903375275478234990390625785762771558578362923019984132532004835894174171218048286044}}/\texttt{\seqsplit{158609439688696682465325038590590103611}} & 0 & 446 & 39 \\
+36 & \texttt{\seqsplit{440544623806582575253178084284079521434197844863481285433954893759115794534499847292499578493876514186118304076580971572005841839532034816172470767865185042852175002644455448253788470867687651309774359419018737912875004796971286716122671329150573128352333639375301819710961654270768889187634868305513001856183656688681462210509047342945576288286921315108997165193280431641947995410025822025491448401204828773488138094030123446670864242432513905306017405162212657320245}}/\texttt{\seqsplit{689302649175466901715502244147813252191569082}} & 1 & 468 & 45 \\
+37 & \texttt{\seqsplit{-1860772243221048034129202554190155639982105531858877669192520327929144907915329949637766693010040159834617604475579488682675549360154960254617465019280151236664151763582169367479334350649229460979424813400086016559942394706563475488908436141472751244300704425743788822616067629532700574599402453589935224382948881613026918882821040669137990013298058714037632041550306567584895600209861720229582137911748994631677865563294593859302873736702427084564320992325115947866876302416}}/\texttt{\seqsplit{248766842483975494151741951773078989}} & 0 & 475 & 36 \\
+38 & \texttt{\seqsplit{12705158108541064330902412532409164427396796600012060635266334926674126482506485507673494821728651527297394456681393431064697252476556035443739327984157641035218886761921653050093220435462755408644171518121116135514235193846464161641137486154631716894539871761241748864563897586371050553810224261799642476349839495938051109731995533284203142499329701419205841264532526859529897454192980565255832315074268992351443349039863238539389271080134868889545415759321682823365910785194321922036335879939340}}/\texttt{\seqsplit{110796472266855785752092517896514256524653}} & 1 & 497 & 42 \\
+39 & \texttt{\seqsplit{-2664725606082113348844291343411165642090234141293227735766017126789499481723412038410322991635214442860051086764440073816839185467912150081490419215702918709512892400237813805587048554318829949944412405700002698467957255554660861894663676569943721502734100838460957803667964236984176035779625195942562630127422101617791026955740668962200940181394985926058351461892671719635575471319272776490541419332539997478860264850031115806771313158755895546988892150220734996241547024015691228111271574328100818365971734771}}/\texttt{\seqsplit{1165451005369102347912339868262771672619}} & 0 & 511 & 40 \\
+40 & \texttt{\seqsplit{4655666993605218505062218427424071055728428823118568308848840205693588880142029965658559257471896533731117665358103317225304488613711693640557372876243035981906349987644212753730672672783620411687491666266003589622672813867584007572082019639245017392352509496284802380549287845721530271045343470246140679015689013732609171121909145817394900281641854518293437906060772432005913434311212461379926055765068862938904003309339913703030374969354120658937636559206514154561590343596538692521014931621896685628043931689112713582936391100536800}}/\texttt{\seqsplit{79048207709488991825096080019174679150748993707}} & 2 & 535 & 47 \\
+41 & \texttt{\seqsplit{-588871693296581308493956380883548440701571093024254930179661522594594474861887911637453483356547361877413469110093654544987404104244480129780595360970262983971359155253064190022676928039450186717938586550810647076664313695223070619662049071197972661494500874743828059927404749067741521030927376406955417581439953489492110666072602265105583452686604607302250911201714682405886228434264364903152988682820558573328288403095752318904669736617342030775971255836469949680981906716144219276025822919879753905202283882950659435415273171969591913135676168}}/\texttt{\seqsplit{302377939434268044586967373129014803793157}} & 0 & 546 & 42 \\
+42 & \texttt{\seqsplit{42132968778480482069705209033424650453802476707524125090047337400294573322180544306829096066107275003141846867940143833057209100038515144614608668379836480350395072183669087972679066665015405574485846039951920776069499583101669189106748161104445707600854311353942130791624765965630451993452704799582474560957094761255919010344552612690639659610309980910789366749744732707196354029115506898767650621998732919006701620198520938973607829482096208387899030559804655369245394183090998280878490737789628016295607622748108560756111602297466652452165009585954536076160546209415485}}/\texttt{\seqsplit{512818772646007251693010155877816515434848545596718}} & 1 & 572 & 51 \\
+43 & \texttt{\seqsplit{-165418555341188963406631981400053108266068545698460432641898896075189623891148642002565949805808929246277515150088339556706106587613726910104945810883901559868688609586596335545781388968829274084729413861459727711048770177418803619801374423354919594235934021720950128097848505505665281267980439413806840301644232081395482900880054824915383074569599567407037696265524741881751545718155558984680320148375049925197386201379884921821993399471747799706952291589697666300360396142486116293313510994910806371782558995960171557467076261340295301510182723109574231563575736182135649068748}}/\texttt{\seqsplit{37622558161432422545786642048460214960107}} & 0 & 579 & 41 \\
+44 & \texttt{\seqsplit{9466484745504568260163730822804402392024642703938608435845772374307138914515835827672704298150718015008016190602553361495613825690715195157128517049895313704245649707361736413611380202343273207412604503540910494416753136667700696611336251878381511646096535953575273953389996945372066709443503731176789697749392990891591029984706389352578686213632533258818255192048354349334070224014475748774143958981565146399590520394355413886531703380873410506816919116203011656469950877851075453537096215357956707693817273747220533455235092994674459170198206555990956806991733878344348952238525652372130267610673160}}/\texttt{\seqsplit{31892211946655148657148272116616600410228144919}} & 1 & 601 & 47 \\
+45 & \texttt{\seqsplit{-674499109004484307443067178353743692161682116639162032215970301867143714524784607749789638867172861023518489184245916692829116393586618980203531484092054828361544517565510756228676017974868045038703282481320646216420117055550302139315512414371107490544427054821457421500067282040603528995073683414954529335196783783322259284267676456317517868837608514647043069610482922901445997212130061993695056040818572333338411358701285468684208960479450450231192342006119287682389731960451071861848063922526135452104948887039664489850124187959526602014872544324813580637214333066928506517793320094820070184213757942872573775956304}}/\texttt{\seqsplit{26823126804040376879815694551185301754517733251}} & 0 & 618 & 47 \\
+46 & \texttt{\seqsplit{51455230396133612523142213386888600333585961320046807166044133269238092756164121941332342185466662134782350982582895368718301075504410362859705363514267670633430249703410886670218848325623011415985746274973363626875191524382674303505281318374662293117540575347889025477791823678457257325053543164190953779291506199750630667007166097288856718034204966421368025109530246621460742357828479984057147911967867755021282911597278340916638330732912671143462985172109247161895216655924193541795924411033580216821089481957403645330011639174954296770974708464853168408072465183225345732270803643501181765157023001880902209006070945866335298717059920}}/\texttt{\seqsplit{19345458188495918090863502020460378975574097377567}} & 1 & 638 & 50 \\
+47 & \texttt{\seqsplit{-1994459468522069506518621192274389574060607535992044988949200579646153569371856603496550893803243041813852067238733066342920163259291237097472990824426585200647097408192691599125873743719732975959757727564898579329070726519460293294052915868247993595905172431167320383520257853021334289123254360785571639515144558055003249721764971365183245766086314728732361478272982173113828494073036505065864326908326489421721485157640379264038195390521591109604156094628236715855601911359511715621557445277452454746787189021236127672026081580080624096631431936256970548105338279894711057434163528515903652633644141386049307989705852741408648850016714804629431323788}}/\texttt{\seqsplit{5705312912131161737447396153269783293004298277}} & 0 & 652 & 46 \\
+48 & \texttt{\seqsplit{45159914637508227264641164029787158625506332642987073787146365359710313445461080848079942968828256107145441905374041767719318477332851283534583308616291689911284241108896176790935621390576175634930479804450732743119607821914992377630415014377177447704896668521255669751666573959005043040927647090039766620857742169475645593845630478630885910924328976237580997025235540880864518732335630624161253709076283122852370536484018363169144065860125400117574302778874271422985819803700008431136175956599032849782777680646014516527755536954396979567558623593285023470081236281338364625655738081053416081064636586751571730332256993807533381868898435150735758195598206978173652292124247145}}/\texttt{\seqsplit{794694716993548818694918567437980661362969208995568954}} & 1 & 677 & 54 \\
+49 & \texttt{\seqsplit{-133246918428895727028003566864926941247238721457889630341490333557006555423469598653471778344239112833886176297858827049182314252416922062495139195880668576525486540754170518147756053144253745840075653939757136044668928904185896714716093639763199715956258460507202167852656645560816213641498534210854658073171640237969040174544257948288662074697767365507071785078710912966482631236131900868742829480865093943355431660806833722978684220159806893197912073424702317717438973863231981925432219410791195589564004623424629108774195592824981729812292672620667919722654143076841223308758117265175347851185216518279652846127265246443571611879131667020928157344011082076726217518952635180777325423144}}/\texttt{\seqsplit{11714047674530932058720383532007925840575839036391}} & 0 & 690 & 50 \\
+50 & \texttt{\seqsplit{687501548031966538530004472923055905153077758171643628354975874361337654348205994123211377230394639110309284200296620120422862780197468891903048801167001769034975896358555932523292345090178767225353351949709464559275813250776433805177612665147601368275933737799251862642504270465411155167257740097595593918438421431394391585753026142344458325703663097073333547762384369282749524357392529069810643733852436515458915326620959365394071418857150475437970712961584536620234821770125648031273349634504465865210411214369098432510148876595016414124054137056266962939458128523743425219124072926594930918006039903934319116372975743170544634205337811617921935056771419516687881257757882443440287010600421212862712069345631940500}}/\texttt{\seqsplit{246251458012191870859901885614596615418718485058706421818201}} & 3 & 717 & 60 \\
+51 & \texttt{\seqsplit{-237660756805334327553372743720194593141011844805041201517071410051656262760388029339149590720506920208883971786503175326487603637074900828674132637202785586409669388669164321335212740788328076923922569824588302927028574426499329317610517811391481673235771766028202901010600525024591521909081114182139891645018447509768313196038699711929514924608031191635529841560802456534798563689864943953154105974386427407677624638074972627678741164495163295411987376791162290658311018410212390464421924276187681534512446218209773293100083177570709535196024663395312183998235142068660876251448983388504377284389936426464317839660445998693970862470720935796243697049800880443429687387028915325025894414918234143677471817490702963000177950400583}}/\texttt{\seqsplit{284014199392890277385071995116301736407198552730540017}} & 0 & 729 & 54 \\
+52 & \texttt{\seqsplit{777747731851040638907110204017576119027138166754733046475269335211126957030433065742072069295201467276459104256008500663229592628619880405235212568984021609407043006540163471829247396688949090502268807940933013027865936001590173622862099810499275122373422228081930947006269719000050305189911628018657991442644373241019383468177570588472993651466541668977572097159279598493541334288445686165028449485826777053799430198756872939524463343660216211909198879762478791385843109019515605740260224857079733629925123963553921951260740394579041150804358213569571050175804470051081941488820115733440708234742172835299187474641617899416087286579440524482379920696616638056622372087678308240472357915384292684001561047124953817627451876312203476101934411220080}}/\texttt{\seqsplit{2549300243689435813666742277167077031917168368646389909}} & 1 & 747 & 55 \\
+53 & \texttt{\seqsplit{-118398461994634715405865073487396270491093985558211549889809730319493817721289238931617137972457164973232574603737010687003163427159048818107854194122073832795478255397938436718240293181828363328821115534673585594719362669750706104225600951987867881458813867494872120688741076763941522936774778743394131612677079907815092648627393209519614690748890083780113406082969138765847667813968436716243286961657801473312822658155016780920669400922219184934620709970164737731910838429386997267470532903957238045252737713090792655370021314871806658733316408054780025620941419109856422324183726656222814840845293339467808921824681128832175796331725732965321511137158154803836039317542610863518760770206773841654836985455256986741944818073595639973736355072924575023642544}}/\texttt{\seqsplit{878384984109211258541877685384329000499399234221}} & 0 & 759 & 48 \\
+54 & \texttt{\seqsplit{10271278101610396312891856536864638875184764935730782461851729959044815530997785395192111446442234946050347232271107132123539010052716732315213050806824462461643252553632263554626367842448334632649602184203271015393989142475274260925817020761153307158981014142876610803803147388166118767307916569758413731081456686562548555826438374584156630717401504797327224828822436583328071451632484481903253999331013283111372420968098906374032806796306446890477429940584320539752584905187945894940627961837860590477461100226956578502163333887650979401728178068400076072468709887741205613294407296371022106291104134508201518173880754812232087369701212125531416971023577525402227497706571912642936806498929928362273732635858658181839976109687763852317955777164303298591954176714883391250233242616685}}/\texttt{\seqsplit{142840048710574333223771126192642122892424530565066453894}} & 1 & 785 & 57 \\
+55 & \texttt{\seqsplit{-16224955201463027583899708563616570703339800759462165241611505333307902378758138264588502166602820078707999156153428090541467960993262116424546735854905355995250749867958113546457135550900111882301113529762208882776862909928458815916678277301605831830927948890101641971559353962258599984267973512959621304555486576312326292517680353730385086575369775800814084084238955977055864588293381131248805057431305669765980260133015122928210925890532695636269246423516685923576308890799434922509581317176769766688265396165523263409255492717792194672390070240798698775347895360806466625971117591268111547096737064220996299260666594095236798887217159666260628826684026754262837883025083728003347378654211742765069549326850229108973142048703687163362633687640718041037712983039885873265062897946087368842825222716}}/\texttt{\seqsplit{351512359654969753835508361678866203896082559509133429}} & 0 & 800 & 54 \\
+56 & \texttt{\seqsplit{13905349729495017773120239650373916791964770264940967128147411861799218632343548883320962533524709229010463318705724278784316039656337694762567527127739702708498236523135057493821079916208485559169211343857440468894996244003650450129539330473662272306169518274419557389630239177415752252774899305249302151451328999368101896624285013134977287098027869180523649241982262129891256842343090006961439232731760843577801596827858451899305019317648887440092437109292774436736912791069262369484097189899343253071150313341997791463339983758091887972458126229315256916900088753560965443722467588784167723029950752846674171674736952209452849824104157195708776758051382332068269098387814205675082266130427447415936563852203480756970492364047655796085303889484865014281114439072097063045201564300817504602157754154413134019303900056099160560}}/\texttt{\seqsplit{391359040326415010213897836534181997022326992128946141605944021}} & 1 & 827 & 63 \\
+57 & \texttt{\seqsplit{-343060318777370595324251650910102062469391498453891630561374182816651285320852164180653480790830744732268490119014731080066550134007081859528763507138896340451637637999553086808042266537269239736276806375066257833254949226025866782068532659538236051605827466594204765380364320832989637946838178817792314187694063838950084515057097032177564107629117811891059868835316603648940013235885626060741371324162663998793751801627726469254779438694301492786810993074279618501892112935872081549018223853624884785169068109445896463528693877736332264738072874799685336237187179450935777864291188354601970754157325148779206615261177913890557698220482755107795721621466401425000332140104893708414416301119790205075379291109443977527402845612357970960954595400173737097475656881920023249255085752073777284333763814225443241021950262339642774148925719893586686}}/\texttt{\seqsplit{10493317330411565389480708495928694202713934514545272345402169}} & 0 & 843 & 62 \\
+58 & \texttt{\seqsplit{24122826324254255931910331133432843771141096528051607946478060088257365640704707385226221770202056893669434312871800844791963778961476141237802726909251354238127301733922089356993545683835290243388516522573340622851273353547521967729597407690131923488375635477020873357024670584580003908349751427764558778883278435480318223898099710402941025907830944605857544278792522958507089152536536833842945303140731183864969816934053738300200558717140158751523599255162115543094872219246027025737224907903005182486590095480939236830427476222556281450169358491933343815610675021141925303426461099559613273449042463192925152696928703659186855274913888096506702261198272784022460872797170591438893873003068851321955388786175695271733455679854989071670978352496949548483262908714653184619129230244079526996302754985662414567332118638534455486183417308988099749410835840}}/\texttt{\seqsplit{672961561026335388967263475697828046740844816719935383}} & 1 & 854 & 54 \\
+59 & \texttt{\seqsplit{-485648360027868492704648954551915933367403800257410714810036593107032319426500361256492039112397864034403427472973337485077939072872565362083963699573810358044360703054967876500578405649975271840656568038820795425017337758898223896221136701355477528120513078645960565055855907367595753037814985312924877813970600146074450492877773530018259865276186566335790912511423110312006344994911949535408338297671774153622595676614192468792318679474073880078079643247240917547314560044171132426105106091205377637357567772902331136597570029119531032889056765844985042656832701261927335270219450092302193830060470085967064499126274348585694619952169192683300392118866540282736654449537213649500023401281876750272102920217269505613855564665746366923214878255638429500798706738470615532150177079663865498233164517547063509960332595341636432355421215971478009976182939875849007174988108}}/\texttt{\seqsplit{10401265854044310079776035323216602905572974372467787}} & 0 & 870 & 53 \\
+60 & \texttt{\seqsplit{2751296006165714623055432924808870932010604438777313402459761590659274800637706657209136716091513186330651055397111644428602676722717818082539156193723043563780306173703544692912273614011907176262486759599245565574349066927545678151469257221956983050979569776736108620536126929259207375035805274800095966667494993905338600083614541046943161288306319566365269496408923979998282896481237703858169787939403394849463876070782863006658123177566549637535375031623653095533324678660163036422549008712822697086597516361239007898680278860785642669785687480648780692133574295214109161230663218126103720702858097690983348971604323527774328458338145313946487003387784284775518415044120360302477863568514292353257968958258371722248887910193799104929295702595766243158150858100069775846972936673350426697081715170369305294210965263029557928896131376737654251899201162790017425340256129736212106584024285850454516729325}}/\texttt{\seqsplit{38190327775528925654159144955827620506156699239127271897066139972442}} & 2 & 904 & 68 \\
+\end{longtable}
+\chapter{Standard-window and boundary ledger}
+Each row lists the valuations of the diagonal factor
+\[
+d_j(n)=\binom{10n+j}{10n}
+\]
+for the first twelve values of $n$.
+\begin{longtable}{rL{0.15\textwidth}L{0.64\textwidth}}
+\caption{Diagonal valuation boundary for $N=10$.}\\
+\toprule
+\textbf{$j$} & \textbf{standard window} & \textbf{$v_5(d_{j}(n))$ for $n=1,\ldots,12$} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$j$} & \textbf{standard window} & \textbf{$v_5(d_{j}(n))$ for $n=1,\ldots,12$} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & yes & 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \\
+1 & yes & 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \\
+2 & yes & 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \\
+3 & yes & 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \\
+4 & yes & 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 \\
+5 & no & 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2 \\
+6 & no & 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2 \\
+7 & no & 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2 \\
+8 & no & 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2 \\
+9 & no & 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2 \\
+10 & no & 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 2 \\
+11 & no & 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 2 \\
+12 & no & 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 2 \\
+13 & no & 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 2 \\
+14 & no & 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 2 \\
+15 & no & 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 2, 2 \\
+\end{longtable}
+\chapter{Full factorial-lane ledger}
+The lane decomposition is repeated through $n=6$. The running-product digit count shows how quickly the ordinary factorial grows while the residue organization remains fixed.
+\begin{longtable}{rrL{0.24\textwidth}L{0.28\textwidth}rr}
+\caption{All step-factorial lanes through $n=6$.}\\
+\toprule
+\textbf{$n$} & \textbf{lane} & \textbf{factors} & \textbf{lane product} & \textbf{$v_5$} & \textbf{running digits} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{lane} & \textbf{factors} & \textbf{lane product} & \textbf{$v_5$} & \textbf{running digits} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+1 & 5 & $5$ & \texttt{\seqsplit{5}} & 1 & 3 \\
+1 & 6 & $6$ & \texttt{\seqsplit{6}} & 0 & 3 \\
+1 & 7 & $7$ & \texttt{\seqsplit{7}} & 0 & 4 \\
+1 & 8 & $8$ & \texttt{\seqsplit{8}} & 0 & 5 \\
+1 & 9 & $9$ & \texttt{\seqsplit{9}} & 0 & 6 \\
+1 & 10 & $10$ & \texttt{\seqsplit{10}} & 1 & 7 \\
+1 & 11 & $11$ & \texttt{\seqsplit{11}} & 0 & 8 \\
+1 & 12 & $12$ & \texttt{\seqsplit{12}} & 0 & 9 \\
+1 & 13 & $13$ & \texttt{\seqsplit{13}} & 0 & 10 \\
+1 & 14 & $14$ & \texttt{\seqsplit{14}} & 0 & 11 \\
+2 & 5 & $5\cdot15$ & \texttt{\seqsplit{75}} & 2 & 4 \\
+2 & 6 & $6\cdot16$ & \texttt{\seqsplit{96}} & 0 & 6 \\
+2 & 7 & $7\cdot17$ & \texttt{\seqsplit{119}} & 0 & 8 \\
+2 & 8 & $8\cdot18$ & \texttt{\seqsplit{144}} & 0 & 10 \\
+2 & 9 & $9\cdot19$ & \texttt{\seqsplit{171}} & 0 & 12 \\
+2 & 10 & $10\cdot20$ & \texttt{\seqsplit{200}} & 2 & 15 \\
+2 & 11 & $11\cdot21$ & \texttt{\seqsplit{231}} & 0 & 17 \\
+2 & 12 & $12\cdot22$ & \texttt{\seqsplit{264}} & 0 & 19 \\
+2 & 13 & $13\cdot23$ & \texttt{\seqsplit{299}} & 0 & 22 \\
+2 & 14 & $14\cdot24$ & \texttt{\seqsplit{336}} & 0 & 24 \\
+3 & 5 & $5\cdot15\cdot25$ & \texttt{\seqsplit{1875}} & 4 & 5 \\
+3 & 6 & $6\cdot16\cdot26$ & \texttt{\seqsplit{2496}} & 0 & 9 \\
+3 & 7 & $7\cdot17\cdot27$ & \texttt{\seqsplit{3213}} & 0 & 12 \\
+3 & 8 & $8\cdot18\cdot28$ & \texttt{\seqsplit{4032}} & 0 & 16 \\
+3 & 9 & $9\cdot19\cdot29$ & \texttt{\seqsplit{4959}} & 0 & 19 \\
+3 & 10 & $10\cdot20\cdot30$ & \texttt{\seqsplit{6000}} & 3 & 23 \\
+3 & 11 & $11\cdot21\cdot31$ & \texttt{\seqsplit{7161}} & 0 & 27 \\
+3 & 12 & $12\cdot22\cdot32$ & \texttt{\seqsplit{8448}} & 0 & 31 \\
+3 & 13 & $13\cdot23\cdot33$ & \texttt{\seqsplit{9867}} & 0 & 35 \\
+3 & 14 & $14\cdot24\cdot34$ & \texttt{\seqsplit{11424}} & 0 & 39 \\
+4 & 5 & $5\cdot15\cdot25\cdot35$ & \texttt{\seqsplit{65625}} & 5 & 7 \\
+4 & 6 & $6\cdot16\cdot26\cdot36$ & \texttt{\seqsplit{89856}} & 0 & 12 \\
+4 & 7 & $7\cdot17\cdot27\cdot37$ & \texttt{\seqsplit{118881}} & 0 & 17 \\
+4 & 8 & $8\cdot18\cdot28\cdot38$ & \texttt{\seqsplit{153216}} & 0 & 22 \\
+4 & 9 & $9\cdot19\cdot29\cdot39$ & \texttt{\seqsplit{193401}} & 0 & 27 \\
+4 & 10 & $10\cdot20\cdot30\cdot40$ & \texttt{\seqsplit{240000}} & 4 & 33 \\
+4 & 11 & $11\cdot21\cdot31\cdot41$ & \texttt{\seqsplit{293601}} & 0 & 38 \\
+4 & 12 & $12\cdot22\cdot32\cdot42$ & \texttt{\seqsplit{354816}} & 0 & 44 \\
+4 & 13 & $13\cdot23\cdot33\cdot43$ & \texttt{\seqsplit{424281}} & 0 & 49 \\
+4 & 14 & $14\cdot24\cdot34\cdot44$ & \texttt{\seqsplit{502656}} & 0 & 55 \\
+5 & 5 & $5\cdot15\cdot25\cdot35\cdot45$ & \texttt{\seqsplit{2953125}} & 6 & 8 \\
+5 & 6 & $6\cdot16\cdot26\cdot36\cdot46$ & \texttt{\seqsplit{4133376}} & 0 & 15 \\
+5 & 7 & $7\cdot17\cdot27\cdot37\cdot47$ & \texttt{\seqsplit{5587407}} & 0 & 22 \\
+5 & 8 & $8\cdot18\cdot28\cdot38\cdot48$ & \texttt{\seqsplit{7354368}} & 0 & 29 \\
+5 & 9 & $9\cdot19\cdot29\cdot39\cdot49$ & \texttt{\seqsplit{9476649}} & 0 & 36 \\
+5 & 10 & $10\cdot20\cdot30\cdot40\cdot50$ & \texttt{\seqsplit{12000000}} & 6 & 43 \\
+5 & 11 & $11\cdot21\cdot31\cdot41\cdot51$ & \texttt{\seqsplit{14973651}} & 0 & 50 \\
+5 & 12 & $12\cdot22\cdot32\cdot42\cdot52$ & \texttt{\seqsplit{18450432}} & 0 & 57 \\
+5 & 13 & $13\cdot23\cdot33\cdot43\cdot53$ & \texttt{\seqsplit{22486893}} & 0 & 64 \\
+5 & 14 & $14\cdot24\cdot34\cdot44\cdot54$ & \texttt{\seqsplit{27143424}} & 0 & 72 \\
+6 & 5 & $5\cdot15\cdot25\cdot35\cdot45\cdot55$ & \texttt{\seqsplit{162421875}} & 7 & 10 \\
+6 & 6 & $6\cdot16\cdot26\cdot36\cdot46\cdot56$ & \texttt{\seqsplit{231469056}} & 0 & 18 \\
+6 & 7 & $7\cdot17\cdot27\cdot37\cdot47\cdot57$ & \texttt{\seqsplit{318482199}} & 0 & 27 \\
+6 & 8 & $8\cdot18\cdot28\cdot38\cdot48\cdot58$ & \texttt{\seqsplit{426553344}} & 0 & 36 \\
+6 & 9 & $9\cdot19\cdot29\cdot39\cdot49\cdot59$ & \texttt{\seqsplit{559122291}} & 0 & 44 \\
+6 & 10 & $10\cdot20\cdot30\cdot40\cdot50\cdot60$ & \texttt{\seqsplit{720000000}} & 7 & 53 \\
+6 & 11 & $11\cdot21\cdot31\cdot41\cdot51\cdot61$ & \texttt{\seqsplit{913392711}} & 0 & 62 \\
+6 & 12 & $12\cdot22\cdot32\cdot42\cdot52\cdot62$ & \texttt{\seqsplit{1143926784}} & 0 & 71 \\
+6 & 13 & $13\cdot23\cdot33\cdot43\cdot53\cdot63$ & \texttt{\seqsplit{1416674259}} & 0 & 80 \\
+6 & 14 & $14\cdot24\cdot34\cdot44\cdot54\cdot64$ & \texttt{\seqsplit{1737179136}} & 0 & 90 \\
+\end{longtable}
+\chapter{Full Pochhammer and coefficient checks}
+The first table checks the factorial identity. The second checks the direct coefficient and ratio formulas independently.
+\begin{longtable}{rrrrr}
+\caption{Factorial and Pochhammer normalization checks.}\\
+\toprule
+\textbf{$n$} & \textbf{factorial digits} & \textbf{$v_5((10n+4)!)$} & \textbf{hypergeom. $v_5$} & \textbf{identity} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{factorial digits} & \textbf{$v_5((10n+4)!)$} & \textbf{hypergeom. $v_5$} & \textbf{identity} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 2 & 0 & 0 & PASS \\
+1 & 11 & 2 & 2 & PASS \\
+2 & 24 & 4 & 4 & PASS \\
+3 & 39 & 7 & 7 & PASS \\
+4 & 55 & 9 & 9 & PASS \\
+5 & 72 & 12 & 12 & PASS \\
+6 & 90 & 14 & 14 & PASS \\
+7 & 108 & 16 & 16 & PASS \\
+8 & 127 & 19 & 19 & PASS \\
+9 & 147 & 21 & 21 & PASS \\
+10 & 167 & 24 & 24 & PASS \\
+11 & 187 & 26 & 26 & PASS \\
+12 & 208 & 28 & 28 & PASS \\
+13 & 229 & 32 & 32 & PASS \\
+14 & 250 & 34 & 34 & PASS \\
+15 & 272 & 37 & 37 & PASS \\
+\end{longtable}\begin{longtable}{rrrrr}
+\caption{Direct and hypergeometric coefficient checks.}\\
+\toprule
+\textbf{$n$} & \textbf{denominator digits} & \textbf{coefficient $v_5$} & \textbf{coefficient match} & \textbf{ratio match} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{denominator digits} & \textbf{coefficient $v_5$} & \textbf{coefficient match} & \textbf{ratio match} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & 2 & 0 & PASS & PASS \\
+1 & 11 & -2 & PASS & PASS \\
+2 & 24 & -4 & PASS & PASS \\
+3 & 39 & -7 & PASS & PASS \\
+4 & 55 & -9 & PASS & PASS \\
+5 & 72 & -12 & PASS & PASS \\
+6 & 90 & -14 & PASS & PASS \\
+7 & 108 & -16 & PASS & PASS \\
+8 & 127 & -19 & PASS & PASS \\
+9 & 147 & -21 & PASS & PASS \\
+10 & 167 & -24 & PASS & PASS \\
+11 & 187 & -26 & PASS & PASS \\
+12 & 208 & -28 & PASS & PASS \\
+13 & 229 & -32 & PASS & PASS \\
+14 & 250 & -34 & PASS & PASS \\
+\end{longtable}
+\chapter{Complete unit-tail ledger}
+Every row verifies $g_nd_n=1$, $d_n\equiv1\pmod5$, and $v_5(g_n)=0$.
+\begin{longtable}{rL{0.25\textwidth}L{0.17\textwidth}rrL{0.14\textwidth}}
+\caption{Complete standard-window unit-tail ledger.}\\
+\toprule
+\textbf{$n$} & \textbf{$g_n$} & \textbf{$d_n$} & \textbf{$d_n\bmod5$} & \textbf{$v_5(g_n)$} & \textbf{$g_n\bmod5^5$} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$g_n$} & \textbf{$d_n$} & \textbf{$d_n\bmod5$} & \textbf{$v_5(g_n)$} & \textbf{$g_n\bmod5^5$} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+0 & \texttt{\seqsplit{1}} & 1 & 1 & 0 & 1 \\
+1 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1001}} & 1001 & 1 & 0 & -999 \\
+2 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{10626}} & 10626 & 1 & 0 & -1249 \\
+3 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{46376}} & 46376 & 1 & 0 & 501 \\
+4 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{135751}} & 135751 & 1 & 0 & -1374 \\
+5 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{316251}} & 316251 & 1 & 0 & -624 \\
+6 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{635376}} & 635376 & 1 & 0 & -999 \\
+7 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1150626}} & 1150626 & 1 & 0 & -624 \\
+8 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1929501}} & 1929501 & 1 & 0 & -1374 \\
+9 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3049501}} & 3049501 & 1 & 0 & 501 \\
+10 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{4598126}} & 4598126 & 1 & 0 & -1249 \\
+11 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{6672876}} & 6672876 & 1 & 0 & -999 \\
+12 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{9381251}} & 9381251 & 1 & 0 & 1 \\
+13 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{12840751}} & 12840751 & 1 & 0 & -124 \\
+14 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{17178876}} & 17178876 & 1 & 0 & -749 \\
+15 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{22533126}} & 22533126 & 1 & 0 & 1251 \\
+16 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{29051001}} & 29051001 & 1 & 0 & -999 \\
+17 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{36890001}} & 36890001 & 1 & 0 & 626 \\
+18 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{46217626}} & 46217626 & 1 & 0 & 1126 \\
+19 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{57211376}} & 57211376 & 1 & 0 & 1126 \\
+20 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{70058751}} & 70058751 & 1 & 0 & 626 \\
+21 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{84957251}} & 84957251 & 1 & 0 & -999 \\
+22 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{102114376}} & 102114376 & 1 & 0 & 1251 \\
+23 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{121747626}} & 121747626 & 1 & 0 & -749 \\
+24 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{144084501}} & 144084501 & 1 & 0 & -124 \\
+25 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{169362501}} & 169362501 & 1 & 0 & 1 \\
+26 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{197829126}} & 197829126 & 1 & 0 & -999 \\
+27 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{229741876}} & 229741876 & 1 & 0 & -1249 \\
+28 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{265368251}} & 265368251 & 1 & 0 & 501 \\
+29 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{304985751}} & 304985751 & 1 & 0 & -1374 \\
+30 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{348881876}} & 348881876 & 1 & 0 & -624 \\
+31 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{397354126}} & 397354126 & 1 & 0 & -999 \\
+32 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{450710001}} & 450710001 & 1 & 0 & -624 \\
+33 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{509267001}} & 509267001 & 1 & 0 & -1374 \\
+34 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{573352626}} & 573352626 & 1 & 0 & 501 \\
+35 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{643304376}} & 643304376 & 1 & 0 & -1249 \\
+36 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{719469751}} & 719469751 & 1 & 0 & -999 \\
+37 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{802206251}} & 802206251 & 1 & 0 & 1 \\
+38 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{891881376}} & 891881376 & 1 & 0 & -124 \\
+39 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{988872626}} & 988872626 & 1 & 0 & -749 \\
+40 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1093567501}} & 1093567501 & 1 & 0 & 1251 \\
+41 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1206363501}} & 1206363501 & 1 & 0 & -999 \\
+42 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1327668126}} & 1327668126 & 1 & 0 & 626 \\
+43 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1457898876}} & 1457898876 & 1 & 0 & 1126 \\
+44 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1597483251}} & 1597483251 & 1 & 0 & 1126 \\
+45 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1746858751}} & 1746858751 & 1 & 0 & 626 \\
+46 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1906472876}} & 1906472876 & 1 & 0 & -999 \\
+47 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{2076783126}} & 2076783126 & 1 & 0 & 1251 \\
+48 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{2258257001}} & 2258257001 & 1 & 0 & -749 \\
+49 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{2451372001}} & 2451372001 & 1 & 0 & -124 \\
+50 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{2656615626}} & 2656615626 & 1 & 0 & 1 \\
+51 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{2874485376}} & 2874485376 & 1 & 0 & -999 \\
+52 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3105488751}} & 3105488751 & 1 & 0 & -1249 \\
+53 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3350143251}} & 3350143251 & 1 & 0 & 501 \\
+54 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3608976376}} & 3608976376 & 1 & 0 & -1374 \\
+55 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3882525626}} & 3882525626 & 1 & 0 & -624 \\
+56 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{4171338501}} & 4171338501 & 1 & 0 & -999 \\
+57 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{4475972501}} & 4475972501 & 1 & 0 & -624 \\
+58 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{4796995126}} & 4796995126 & 1 & 0 & -1374 \\
+59 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{5134983876}} & 5134983876 & 1 & 0 & 501 \\
+60 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{5490526251}} & 5490526251 & 1 & 0 & -1249 \\
+\end{longtable}
+\chapter{Complete recurrence cancellation ledger}
+Each row records the term after the common triangular diagonal has been cancelled. The exact fractions are line-breakable and the full CSV remains the canonical machine-readable copy.
+\begin{longtable}{rrL{0.20\textwidth}rL{0.20\textwidth}L{0.26\textwidth}}
+\caption{Complete termwise diagonal-cancellation ledger through row fourteen.}\\
+\toprule
+\textbf{$n$} & \textbf{$q$} & \textbf{cancelled kernel} & \textbf{$v_5$ kernel} & \textbf{$C_q$} & \textbf{contribution} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$n$} & \textbf{$q$} & \textbf{cancelled kernel} & \textbf{$v_5$ kernel} & \textbf{$C_q$} & \textbf{contribution} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+1 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1001}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1001}} \\
+2 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{10626}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{10626}} \\
+2 & 1 & \texttt{\seqsplit{1292}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1292}}/\texttt{\seqsplit{7007}} \\
+3 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{46376}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{46376}} \\
+3 & 1 & \texttt{\seqsplit{5655}}/\texttt{\seqsplit{2}} & 1 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-435}}/\texttt{\seqsplit{154}} \\
+3 & 2 & \texttt{\seqsplit{30015}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{77519175}}/\texttt{\seqsplit{14014}} \\
+4 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{135751}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{135751}} \\
+4 & 1 & \texttt{\seqsplit{18278}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1406}}/\texttt{\seqsplit{77}} \\
+4 & 2 & \texttt{\seqsplit{12972570}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{29638164575}}/\texttt{\seqsplit{12397}} \\
+4 & 3 & \texttt{\seqsplit{5927696}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-229637728757942}}/\texttt{\seqsplit{49049}} \\
+5 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{316251}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{316251}} \\
+5 & 1 & \texttt{\seqsplit{75670}} & 1 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-10810}}/\texttt{\seqsplit{143}} \\
+5 & 2 & \texttt{\seqsplit{17276104195}}/\texttt{\seqsplit{17}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{2731755233425}}/\texttt{\seqsplit{14586}} \\
+5 & 3 & \texttt{\seqsplit{13305819380}}/\texttt{\seqsplit{3}} & 1 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-2503685768764714745}}/\texttt{\seqsplit{102102}} \\
+5 & 4 & \texttt{\seqsplit{133406210}}/\texttt{\seqsplit{13}} & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{4374207919230592774700}}/\texttt{\seqsplit{91091}} \\
+6 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{635376}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{635376}} \\
+6 & 1 & \texttt{\seqsplit{715198}}/\texttt{\seqsplit{3}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-65018}}/\texttt{\seqsplit{273}} \\
+6 & 2 & \texttt{\seqsplit{30878921745}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{11392915630575}}/\texttt{\seqsplit{2002}} \\
+6 & 3 & \texttt{\seqsplit{2550124667174}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-29750296515923599428937}}/\texttt{\seqsplit{2110108}} \\
+6 & 4 & \texttt{\seqsplit{788978826615}}/\texttt{\seqsplit{2}} & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{297499722554690883441090075}}/\texttt{\seqsplit{161161}} \\
+6 & 5 & \texttt{\seqsplit{527230962}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-6915120578252937774060756130396}}/\texttt{\seqsplit{1912911}} \\
+7 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1150626}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1150626}} \\
+7 & 1 & \texttt{\seqsplit{3746171}}/\texttt{\seqsplit{6}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-26197}}/\texttt{\seqsplit{42}} \\
+7 & 2 & \texttt{\seqsplit{1535659368628}}/\texttt{\seqsplit{3}} & 0 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{77262049064470}}/\texttt{\seqsplit{819}} \\
+7 & 3 & \texttt{\seqsplit{407715155381128}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-2256400228494309913933}}/\texttt{\seqsplit{1001}} \\
+7 & 4 & \texttt{\seqsplit{1193456530493003}} & 0 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{5590259154395501795971196030}}/\texttt{\seqsplit{1001}} \\
+7 & 5 & \texttt{\seqsplit{15234764131626}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-46111843784363813534746085234356948}}/\texttt{\seqsplit{63063}} \\
+7 & 6 & \texttt{\seqsplit{396308216}} & 0 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{1826079779957729029875879672851456502135}}/\texttt{\seqsplit{1275274}} \\
+8 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1929501}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{1929501}} \\
+8 & 1 & \texttt{\seqsplit{4292860}}/\texttt{\seqsplit{3}} & 1 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-30020}}/\texttt{\seqsplit{21}} \\
+8 & 2 & \texttt{\seqsplit{16692396984835}}/\texttt{\seqsplit{3}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{904429493670575}}/\texttt{\seqsplit{882}} \\
+8 & 3 & \texttt{\seqsplit{757398833333941216}}/\texttt{\seqsplit{27}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-45345916915231671727001404}}/\texttt{\seqsplit{292383}} \\
+8 & 4 & \texttt{\seqsplit{791944138410296620}} & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{45779414851626379577459560257114200}}/\texttt{\seqsplit{12353341}} \\
+8 & 5 & \texttt{\seqsplit{191293180413154508}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-29528842059958221492643067983822641331784}}/\texttt{\seqsplit{3216213}} \\
+8 & 6 & \texttt{\seqsplit{998112970697960}}/\texttt{\seqsplit{3}} & 1 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{46108237488499364415463097231082227541339259525}}/\texttt{\seqsplit{38356318}} \\
+8 & 7 & \texttt{\seqsplit{11513930840}}/\texttt{\seqsplit{7}} & 1 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-94565789194608344188337158237805658037037765833820}}/\texttt{\seqsplit{40171131}} \\
+9 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3049501}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{3049501}} \\
+9 & 1 & \texttt{\seqsplit{20753821}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1886711}}/\texttt{\seqsplit{637}} \\
+9 & 2 & \texttt{\seqsplit{44306960104935}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{239264297742422475}}/\texttt{\seqsplit{29302}} \\
+9 & 3 & \texttt{\seqsplit{7415972308595321823}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-6477156865829491097678754753}}/\texttt{\seqsplit{1105832}} \\
+9 & 4 & \texttt{\seqsplit{2461088857934506626354}}/\texttt{\seqsplit{13}} & 0 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{1181092363038132225478376480565207780}}/\texttt{\seqsplit{1333241}} \\
+9 & 5 & \texttt{\seqsplit{3087243265455202531806}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-13497348078116138156796179130935500058361516}}/\texttt{\seqsplit{637637}} \\
+9 & 6 & \texttt{\seqsplit{14514683769764105814}} & 0 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{3242594879428292051961473966001811230234721582880408235}}/\texttt{\seqsplit{61830384616}} \\
+9 & 7 & \texttt{\seqsplit{772435458753044535}}/\texttt{\seqsplit{161}} & 1 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-1409808494383274857420007380251309052586103384075595173915}}/\texttt{\seqsplit{205319114}} \\
+9 & 8 & \texttt{\seqsplit{520058680173}}/\texttt{\seqsplit{91}} & 0 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} & \texttt{\seqsplit{11419766280755125308841975467222576352295096540426161558749770}}/\texttt{\seqsplit{849274517}} \\
+10 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{4598126}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{4598126}} \\
+10 & 1 & \texttt{\seqsplit{5676440}} & 1 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-73720}}/\texttt{\seqsplit{13}} \\
+10 & 2 & \texttt{\seqsplit{277783411567970}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{13975830846547175}}/\texttt{\seqsplit{273}} \\
+10 & 3 & \texttt{\seqsplit{25527269348694488760}} & 1 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-218333248710357957400540545}}/\texttt{\seqsplit{1547}} \\
+10 & 4 & \texttt{\seqsplit{43269604598860553440065}}/\texttt{\seqsplit{2}} & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{64488699963242241809936648768537025}}/\texttt{\seqsplit{637}} \\
+10 & 5 & \texttt{\seqsplit{319023005604928342787256}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-1028191983662679095082981469716983899779157991504}}/\texttt{\seqsplit{67150629}} \\
+10 & 6 & \texttt{\seqsplit{101260647404459720379720}} & 1 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{1133126125255904666867927811240227606401871479538239575}}/\texttt{\seqsplit{3097094}} \\
+10 & 7 & \texttt{\seqsplit{10766986738127179187670}}/\texttt{\seqsplit{17}} & 1 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-1403666914850271855454924819364926913150124841747265857007945}}/\texttt{\seqsplit{1548547}} \\
+10 & 8 & \texttt{\seqsplit{50440746320704845}} & 1 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} & \texttt{\seqsplit{8069720743464205523866637754035497466467568494809444934682731221650}}/\texttt{\seqsplit{67995291}} \\
+10 & 9 & \texttt{\seqsplit{17293016440}} & 1 & \texttt{\seqsplit{-1130847008673847651135094536897194259905380769148959932525267234397}}/\texttt{\seqsplit{84142722046292}} & \texttt{\seqsplit{-20841510369859012210419792315015290210056167575415331556440675129936710}}/\texttt{\seqsplit{89674949}} \\
+11 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{6672876}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{6672876}} \\
+11 & 1 & \texttt{\seqsplit{20398587}}/\texttt{\seqsplit{2}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1854417}}/\texttt{\seqsplit{182}} \\
+11 & 2 & \texttt{\seqsplit{1440882138809190}} & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{555784418931800225}}/\texttt{\seqsplit{2093}} \\
+11 & 3 & \texttt{\seqsplit{1300786719116407555714}}/\texttt{\seqsplit{3}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-18324440375937993512409577217}}/\texttt{\seqsplit{7644}} \\
+11 & 4 & \texttt{\seqsplit{104511739800982696667436105}}/\texttt{\seqsplit{74}} & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{3582561124427480788230602319364976501775}}/\texttt{\seqsplit{542087}} \\
+11 & 5 & \texttt{\seqsplit{2765636817521053517254247463}}/\texttt{\seqsplit{28}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-126831744411531880848029807687738306124609833639}}/\texttt{\seqsplit{26754}} \\
+11 & 6 & \texttt{\seqsplit{198443105834251105651945396}} & 0 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{65003502098409733615634855496989664249530343530063470620345}}/\texttt{\seqsplit{90660388}} \\
+11 & 7 & \texttt{\seqsplit{11970836621207062566625395}} & 1 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-808395986488970121410053042988316963687700568863592148836592222435}}/\texttt{\seqsplit{47185138}} \\
+11 & 8 & \texttt{\seqsplit{72160004465580688147827}}/\texttt{\seqsplit{4}} & 0 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} & \texttt{\seqsplit{5772229074308323276987309008126597138678882773728676314153266630748248695}}/\texttt{\seqsplit{135990582}} \\
+11 & 9 & \texttt{\seqsplit{413511342290679815}} & 1 & \texttt{\seqsplit{-1130847008673847651135094536897194259905380769148959932525267234397}}/\texttt{\seqsplit{84142722046292}} & \texttt{\seqsplit{-3526877178623264587018623212074797185553318925385872061993484154803933970103265}}/\texttt{\seqsplit{634622716}} \\
+11 & 10 & \texttt{\seqsplit{327955500867}}/\texttt{\seqsplit{7}} & 0 & \texttt{\seqsplit{2377454290199778257582335273489529240790848572326815707708809830789959592337800}}/\texttt{\seqsplit{10234719672578037}} & \texttt{\seqsplit{27728249386600013818182776294708379535343666899047651599007849056503298725435761400}}/\texttt{\seqsplit{2547823551}} \\
+12 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{9381251}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{9381251}} \\
+12 & 1 & \texttt{\seqsplit{17394026}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-1338002}}/\texttt{\seqsplit{77}} \\
+12 & 2 & \texttt{\seqsplit{6407442356120001}} & 0 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{2364054379031811135}}/\texttt{\seqsplit{2002}} \\
+12 & 3 & \texttt{\seqsplit{5566333233141228322096}} & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-954970983576093242652218668786}}/\texttt{\seqsplit{31031}} \\
+12 & 4 & \texttt{\seqsplit{59371230305123016646847971}} & 0 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{79814772766428421579386093585892634370770}}/\texttt{\seqsplit{287287}} \\
+12 & 5 & \texttt{\seqsplit{15958047585883640500231455006}} & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-5366782555316230274487626483223136017001141415132}}/\texttt{\seqsplit{7007}} \\
+12 & 6 & \texttt{\seqsplit{152059424404389405019851457281}} & 0 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{815338926820353288740907992498741358681859098897586111990987335}}/\texttt{\seqsplit{1484026544}} \\
+12 & 7 & \texttt{\seqsplit{58060668461301149195478648756}} & 0 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-158953908689897072313228627020972202194307546133016268690900669138646}}/\texttt{\seqsplit{1912911}} \\
+12 & 8 & \texttt{\seqsplit{9282622821891675370157183931}}/\texttt{\seqsplit{11}} & 0 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} & \texttt{\seqsplit{2232040171827988294685114571116441341167182464242046929214670060377517294874770}}/\texttt{\seqsplit{1124154031}} \\
+12 & 9 & \texttt{\seqsplit{4026218871156880671124306}}/\texttt{\seqsplit{11}} & 0 & \texttt{\seqsplit{-1130847008673847651135094536897194259905380769148959932525267234397}}/\texttt{\seqsplit{84142722046292}} & \texttt{\seqsplit{-3306024835073311483232434430259315800753407204941993830645864575726942585682192566353}}/\texttt{\seqsplit{672069398}} \\
+12 & 10 & \texttt{\seqsplit{30499200094385751261}}/\texttt{\seqsplit{11}} & 0 & \texttt{\seqsplit{2377454290199778257582335273489529240790848572326815707708809830789959592337800}}/\texttt{\seqsplit{10234719672578037}} & \texttt{\seqsplit{198359328082676039451009763134468682306572171802715093814958058724866139562461277405327400}}/\texttt{\seqsplit{307978671}} \\
+12 & 11 & \texttt{\seqsplit{1275474490536}}/\texttt{\seqsplit{11}} & 0 & \texttt{\seqsplit{-823390772291578270801539733281591085669137935675405627250500114979162812516807445495014761}}/\texttt{\seqsplit{75696311595390486}} & \texttt{\seqsplit{-5635286445563561685365737934579209390319580031762476112902422786917390288865030156967881024284}}/\texttt{\seqsplit{4467922459}} \\
+13 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{12840751}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{12840751}} \\
+13 & 1 & \texttt{\seqsplit{28397200}} & 2 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-2184400}}/\texttt{\seqsplit{77}} \\
+13 & 2 & \texttt{\seqsplit{476531310003977800}}/\texttt{\seqsplit{19}} & 2 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{12909738841480520500}}/\texttt{\seqsplit{2793}} \\
+13 & 3 & \texttt{\seqsplit{56813109355961188886480}} & 1 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-3401434519262730423120135673370}}/\texttt{\seqsplit{10829}} \\
+13 & 4 & \texttt{\seqsplit{1749377425160477874378940400}} & 2 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{119933924500069290793170670430232722804000}}/\texttt{\seqsplit{14651}} \\
+13 & 5 & \texttt{\seqsplit{10778134360054987435795220026520}}/\texttt{\seqsplit{7}} & 1 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-8897109095124444956903489444507035965854499267132080}}/\texttt{\seqsplit{120393}} \\
+13 & 6 & \texttt{\seqsplit{56387012812326248138023396945200}} & 2 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{355202884344262442569635955782111486340998390147445814883403875}}/\texttt{\seqsplit{1743469}} \\
+13 & 7 & \texttt{\seqsplit{714793352328967274701010368560150}}/\texttt{\seqsplit{7}} & 2 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-13684648524092037738781646166685647452823700316346425442247281799198675}}/\texttt{\seqsplit{93639}} \\
+13 & 8 & \texttt{\seqsplit{9394175162793594017931648702360}} & 1 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} & \texttt{\seqsplit{94683914684907844781270552558999971656002527976150139031288361213824450113811987600}}/\texttt{\seqsplit{4283703333}} \\
+13 & 9 & \texttt{\seqsplit{39297892519423815945344440400}} & 2 & \texttt{\seqsplit{-1130847008673847651135094536897194259905380769148959932525267234397}}/\texttt{\seqsplit{84142722046292}} & \texttt{\seqsplit{-3643211151822609396956140758352620129222851439073346544240897989780458636028441793959700}}/\texttt{\seqsplit{6898073}} \\
+13 & 10 & \texttt{\seqsplit{5632953149700025823913980}} & 1 & \texttt{\seqsplit{2377454290199778257582335273489529240790848572326815707708809830789959592337800}}/\texttt{\seqsplit{10234719672578037}} & \texttt{\seqsplit{1868402735820271808590588107248145530113484666321918927886923022551676871975622890215270911332000}}/\texttt{\seqsplit{1427901111}} \\
+13 & 11 & \texttt{\seqsplit{15750019028669021200}} & 2 & \texttt{\seqsplit{-823390772291578270801539733281591085669137935675405627250500114979162812516807445495014761}}/\texttt{\seqsplit{75696311595390486}} & \texttt{\seqsplit{-119298109870870410205720255142390259558918832495795523020851975205304991520000840028921355787581933632200}}/\texttt{\seqsplit{696339775131}} \\
+13 & 12 & \texttt{\seqsplit{1862945880400}}/\texttt{\seqsplit{7}} & 2 & \texttt{\seqsplit{10679282274571516810467473227083322846995668763276337311803897083890914326730068846139185653707107442485}}/\texttt{\seqsplit{8471367517214313712}} & \texttt{\seqsplit{33906721221764565873234227495989550039211248323402370964977373241353652987367968586491914450520066129889875}}/\texttt{\seqsplit{101063667523}} \\
+14 & 0 & \texttt{\seqsplit{1}}/\texttt{\seqsplit{17178876}} & 0 & \texttt{\seqsplit{1}} & \texttt{\seqsplit{1}}/\texttt{\seqsplit{17178876}} \\
+14 & 1 & \texttt{\seqsplit{44674878}} & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} & \texttt{\seqsplit{-44674878}}/\texttt{\seqsplit{1001}} \\
+14 & 2 & \texttt{\seqsplit{88172015579898600}} & 2 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} & \texttt{\seqsplit{16265728816165455500}}/\texttt{\seqsplit{1001}} \\
+14 & 3 & \texttt{\seqsplit{1436615239409406301492720}}/\texttt{\seqsplit{3}} & 1 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} & \texttt{\seqsplit{-5059470916877824686202093609790}}/\texttt{\seqsplit{1911}} \\
+14 & 4 & \texttt{\seqsplit{499831647161793061496115570990}}/\texttt{\seqsplit{13}} & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} & \texttt{\seqsplit{1489890810178508488702881740758859516766300}}/\texttt{\seqsplit{8281}} \\
+14 & 5 & \texttt{\seqsplit{4591646063018316967519962591139920}}/\texttt{\seqsplit{47}} & 1 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} & \texttt{\seqsplit{-16424638674128713522024909800886265342451085359742941280}}/\texttt{\seqsplit{3502863}} \\
+14 & 6 & \texttt{\seqsplit{35146627902706460459664589243309640}}/\texttt{\seqsplit{3}} & 1 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} & \texttt{\seqsplit{4907455784044730131223905585896116339380810849001228261804409425}}/\texttt{\seqsplit{115934}} \\
+14 & 7 & \texttt{\seqsplit{81539066297684948197577574798854100}} & 2 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} & \texttt{\seqsplit{-1297250680460849110455582824226025636962837947668192828930247206790054752028450}}/\texttt{\seqsplit{11116389557}} \\
+14 & 8 & \texttt{\seqsplit{71155193864105682476080603830965385}}/\texttt{\seqsplit{2}} & 1 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} & \texttt{\seqsplit{305700500778790376549600920709581704108046426638655273854742251524475604277968318975}}/\texttt{\seqsplit{3651921}} \\
+14 & 9 & \texttt{\seqsplit{8478322419727865329223874691964240}}/\texttt{\seqsplit{9}} & 1 & \texttt{\seqsplit{-1130847008673847651135094536897194259905380769148959932525267234397}}/\texttt{\seqsplit{84142722046292}} & \texttt{\seqsplit{-160082908350391944331119127928183521719449967955723352848955163473439934773090908614576514800340}}/\texttt{\seqsplit{12644167809}} \\
+14 & 10 & \texttt{\seqsplit{1302321553906936445678478019980}} & 1 & \texttt{\seqsplit{2377454290199778257582335273489529240790848572326815707708809830789959592337800}}/\texttt{\seqsplit{10234719672578037}} & \texttt{\seqsplit{4787380251391587622749064508855714658536289552072532812860444811740576430243289108730331569290292000}}/\texttt{\seqsplit{15824991}} \\
+14 & 11 & \texttt{\seqsplit{68903134899439950861649240}} & 1 & \texttt{\seqsplit{-823390772291578270801539733281591085669137935675405627250500114979162812516807445495014761}}/\texttt{\seqsplit{75696311595390486}} & \texttt{\seqsplit{-2217968310938869553895737263128361680208495259064229086725824327694825991435423261710697140490953624411638580}}/\texttt{\seqsplit{2959273317}} \\
+14 & 12 & \texttt{\seqsplit{77843385030203211100}} & 2 & \texttt{\seqsplit{10679282274571516810467473227083322846995668763276337311803897083890914326730068846139185653707107442485}}/\texttt{\seqsplit{8471367517214313712}} & \texttt{\seqsplit{5667183320668151685288942682947194245258834160596533201460784769260251756660060077781347629436763016696973092238625}}/\texttt{\seqsplit{57750667156}} \\
+14 & 13 & \texttt{\seqsplit{7450116679914}}/\texttt{\seqsplit{13}} & 0 & \texttt{\seqsplit{-1678495254108986116871361283413538938136604511739213312465927447782641120774962813361538095593865018856175268109008}}/\texttt{\seqsplit{5005543074980000553}} & \texttt{\seqsplit{-63927170247994845247162665840088043997870719434099678218577312776249669725835233709687539908787943108156291261199678688}}/\texttt{\seqsplit{332657135811}} \\
+\end{longtable}
+\chapter{Mixed-difference valuation ledger}
+The exact values are retained in the CSV. This printed table records every valuation, theorem bound, surplus, and exact numerator and denominator size through the selected depth.
+\begin{longtable}{L{0.14\textwidth}L{0.11\textwidth}rrrrrr}
+\caption{Complete valuation summary for repeated and mixed differences.}\\
+\toprule
+\textbf{family} & \textbf{steps} & \textbf{$n$} & \textbf{$v_5$} & \textbf{bound} & \textbf{surplus} & \textbf{num. digits} & \textbf{den. digits} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{family} & \textbf{steps} & \textbf{$n$} & \textbf{$v_5$} & \textbf{bound} & \textbf{surplus} & \textbf{num. digits} & \textbf{den. digits} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+Delta2 depth 1 & (2,) & 0 & 0 & 0 & 0 & 7 & 6 \\
+Delta2 depth 1 & (2,) & 1 & 1 & 1 & 0 & 12 & 7 \\
+Delta2 depth 1 & (2,) & 2 & 1 & 1 & 0 & 21 & 10 \\
+Delta2 depth 1 & (2,) & 3 & 1 & 1 & 0 & 29 & 11 \\
+Delta2 depth 1 & (2,) & 4 & 1 & 1 & 0 & 42 & 16 \\
+Delta2 depth 1 & (2,) & 5 & 1 & 1 & 0 & 50 & 15 \\
+Delta2 depth 1 & (2,) & 6 & 1 & 1 & 0 & 64 & 20 \\
+Delta2 depth 1 & (2,) & 7 & 1 & 1 & 0 & 74 & 21 \\
+Delta2 depth 1 & (2,) & 8 & 1 & 1 & 0 & 86 & 22 \\
+Delta2 depth 1 & (2,) & 9 & 1 & 1 & 0 & 94 & 20 \\
+Delta2 depth 1 & (2,) & 10 & 1 & 1 & 0 & 110 & 25 \\
+Delta2 depth 1 & (2,) & 11 & 1 & 1 & 0 & 119 & 22 \\
+Delta2 depth 1 & (2,) & 12 & 1 & 1 & 0 & 136 & 27 \\
+Delta2 depth 1 & (2,) & 13 & 1 & 1 & 0 & 146 & 25 \\
+Delta2 depth 1 & (2,) & 14 & 1 & 1 & 0 & 165 & 32 \\
+Delta2 depth 1 & (2,) & 15 & 1 & 1 & 0 & 174 & 29 \\
+Delta2 depth 1 & (2,) & 16 & 1 & 1 & 0 & 194 & 36 \\
+Delta2 depth 1 & (2,) & 17 & 1 & 1 & 0 & 201 & 29 \\
+Delta2 depth 1 & (2,) & 18 & 1 & 1 & 0 & 225 & 40 \\
+Delta2 depth 1 & (2,) & 19 & 1 & 1 & 0 & 235 & 37 \\
+Delta2 depth 1 & (2,) & 20 & 1 & 1 & 0 & 253 & 40 \\
+Delta2 depth 2 & (2, 2) & 0 & 0 & 0 & 0 & 21 & 10 \\
+Delta2 depth 2 & (2, 2) & 1 & 2 & 2 & 0 & 29 & 11 \\
+Delta2 depth 2 & (2, 2) & 2 & 6 & 2 & 4 & 42 & 16 \\
+Delta2 depth 2 & (2, 2) & 3 & 4 & 2 & 2 & 50 & 16 \\
+Delta2 depth 2 & (2, 2) & 4 & 3 & 2 & 1 & 63 & 20 \\
+Delta2 depth 2 & (2, 2) & 5 & 3 & 2 & 1 & 76 & 23 \\
+Delta2 depth 2 & (2, 2) & 6 & 3 & 2 & 1 & 91 & 27 \\
+Delta2 depth 2 & (2, 2) & 7 & 3 & 2 & 1 & 97 & 23 \\
+Delta2 depth 2 & (2, 2) & 8 & 3 & 2 & 1 & 113 & 28 \\
+Delta2 depth 2 & (2, 2) & 9 & 3 & 2 & 1 & 122 & 26 \\
+Delta2 depth 2 & (2, 2) & 10 & 3 & 2 & 1 & 142 & 33 \\
+Delta2 depth 2 & (2, 2) & 11 & 3 & 2 & 1 & 150 & 30 \\
+Delta2 depth 2 & (2, 2) & 12 & 5 & 2 & 3 & 168 & 35 \\
+Delta2 depth 2 & (2, 2) & 13 & 4 & 2 & 2 & 178 & 32 \\
+Delta2 depth 2 & (2, 2) & 14 & 3 & 2 & 1 & 198 & 40 \\
+Delta2 depth 2 & (2, 2) & 15 & 3 & 2 & 1 & 208 & 36 \\
+Delta2 depth 2 & (2, 2) & 16 & 3 & 2 & 1 & 229 & 44 \\
+Delta2 depth 2 & (2, 2) & 17 & 3 & 2 & 1 & 240 & 41 \\
+Delta2 depth 2 & (2, 2) & 18 & 3 & 2 & 1 & 259 & 47 \\
+Delta2 depth 2 & (2, 2) & 19 & 3 & 2 & 1 & 274 & 47 \\
+Delta2 depth 2 & (2, 2) & 20 & 3 & 2 & 1 & 290 & 50 \\
+Delta2 depth 3 & (2, 2, 2) & 0 & 0 & 0 & 0 & 42 & 16 \\
+Delta2 depth 3 & (2, 2, 2) & 1 & 2 & 2 & 0 & 51 & 17 \\
+Delta2 depth 3 & (2, 2, 2) & 2 & 3 & 3 & 0 & 64 & 20 \\
+Delta2 depth 3 & (2, 2, 2) & 3 & 3 & 3 & 0 & 76 & 22 \\
+Delta2 depth 3 & (2, 2, 2) & 4 & 3 & 3 & 0 & 90 & 26 \\
+Delta2 depth 3 & (2, 2, 2) & 5 & 3 & 3 & 0 & 101 & 26 \\
+Delta2 depth 3 & (2, 2, 2) & 6 & 3 & 3 & 0 & 112 & 27 \\
+Delta2 depth 3 & (2, 2, 2) & 7 & 3 & 3 & 0 & 125 & 28 \\
+Delta2 depth 3 & (2, 2, 2) & 8 & 3 & 3 & 0 & 145 & 37 \\
+Delta2 depth 3 & (2, 2, 2) & 9 & 3 & 3 & 0 & 152 & 32 \\
+Delta2 depth 3 & (2, 2, 2) & 10 & 3 & 3 & 0 & 174 & 41 \\
+Delta2 depth 3 & (2, 2, 2) & 11 & 3 & 3 & 0 & 181 & 35 \\
+Delta2 depth 3 & (2, 2, 2) & 12 & 3 & 3 & 0 & 197 & 39 \\
+Delta2 depth 3 & (2, 2, 2) & 13 & 3 & 3 & 0 & 212 & 40 \\
+Delta2 depth 3 & (2, 2, 2) & 14 & 3 & 3 & 0 & 233 & 48 \\
+Delta2 depth 3 & (2, 2, 2) & 15 & 3 & 3 & 0 & 243 & 44 \\
+Delta2 depth 3 & (2, 2, 2) & 16 & 3 & 3 & 0 & 264 & 51 \\
+Delta2 depth 3 & (2, 2, 2) & 17 & 3 & 3 & 0 & 277 & 51 \\
+Delta2 depth 3 & (2, 2, 2) & 18 & 3 & 3 & 0 & 293 & 52 \\
+Delta2 depth 3 & (2, 2, 2) & 19 & 3 & 3 & 0 & 305 & 50 \\
+Delta2 depth 3 & (2, 2, 2) & 20 & 3 & 3 & 0 & 323 & 53 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 0 & 0 & 0 & 0 & 63 & 20 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 1 & 2 & 2 & 0 & 74 & 21 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 2 & 4 & 4 & 0 & 88 & 25 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 3 & 4 & 4 & 0 & 100 & 25 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 4 & 4 & 4 & 0 & 112 & 26 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 5 & 4 & 4 & 0 & 125 & 28 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 6 & 4 & 4 & 0 & 144 & 35 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 7 & 4 & 4 & 0 & 155 & 34 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 8 & 4 & 4 & 0 & 173 & 40 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 9 & 4 & 4 & 0 & 183 & 37 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 10 & 4 & 4 & 0 & 203 & 44 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 11 & 4 & 4 & 0 & 214 & 43 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 12 & 4 & 4 & 0 & 232 & 47 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 13 & 4 & 4 & 0 & 246 & 47 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 14 & 4 & 4 & 0 & 266 & 54 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 15 & 4 & 4 & 0 & 277 & 50 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 16 & 4 & 4 & 0 & 295 & 54 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 17 & 4 & 4 & 0 & 308 & 53 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 18 & 4 & 4 & 0 & 326 & 57 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 19 & 4 & 4 & 0 & 344 & 59 \\
+Delta2 depth 4 & (2, 2, 2, 2) & 20 & 4 & 4 & 0 & 363 & 65 \\
+mixed (1,) & (2,) & 0 & 0 & 0 & 0 & 7 & 6 \\
+mixed (1,) & (2,) & 1 & 1 & 1 & 0 & 12 & 7 \\
+mixed (1,) & (2,) & 2 & 1 & 1 & 0 & 21 & 10 \\
+mixed (1,) & (2,) & 3 & 1 & 1 & 0 & 29 & 11 \\
+mixed (1,) & (2,) & 4 & 1 & 1 & 0 & 42 & 16 \\
+mixed (1,) & (2,) & 5 & 1 & 1 & 0 & 50 & 15 \\
+mixed (1,) & (2,) & 6 & 1 & 1 & 0 & 64 & 20 \\
+mixed (1,) & (2,) & 7 & 1 & 1 & 0 & 74 & 21 \\
+mixed (1,) & (2,) & 8 & 1 & 1 & 0 & 86 & 22 \\
+mixed (1,) & (2,) & 9 & 1 & 1 & 0 & 94 & 20 \\
+mixed (1,) & (2,) & 10 & 1 & 1 & 0 & 110 & 25 \\
+mixed (1,) & (2,) & 11 & 1 & 1 & 0 & 119 & 22 \\
+mixed (1,) & (2,) & 12 & 1 & 1 & 0 & 136 & 27 \\
+mixed (1,) & (2,) & 13 & 1 & 1 & 0 & 146 & 25 \\
+mixed (1,) & (2,) & 14 & 1 & 1 & 0 & 165 & 32 \\
+mixed (1,) & (2,) & 15 & 1 & 1 & 0 & 174 & 29 \\
+mixed (1,) & (2,) & 16 & 1 & 1 & 0 & 194 & 36 \\
+mixed (1,) & (2,) & 17 & 1 & 1 & 0 & 201 & 29 \\
+mixed (1,) & (2,) & 18 & 1 & 1 & 0 & 225 & 40 \\
+mixed (1,) & (2,) & 19 & 1 & 1 & 0 & 235 & 37 \\
+mixed (1,) & (2,) & 20 & 1 & 1 & 0 & 253 & 40 \\
+mixed (5,) & (10,) & 0 & 0 & 0 & 0 & 80 & 16 \\
+mixed (5,) & (10,) & 1 & 2 & 2 & 0 & 91 & 17 \\
+mixed (5,) & (10,) & 2 & 2 & 2 & 0 & 104 & 19 \\
+mixed (5,) & (10,) & 3 & 2 & 2 & 0 & 117 & 20 \\
+mixed (5,) & (10,) & 4 & 2 & 2 & 0 & 133 & 24 \\
+mixed (5,) & (10,) & 5 & 2 & 2 & 0 & 141 & 21 \\
+mixed (5,) & (10,) & 6 & 2 & 2 & 0 & 160 & 27 \\
+mixed (5,) & (10,) & 7 & 2 & 2 & 0 & 171 & 25 \\
+mixed (5,) & (10,) & 8 & 2 & 2 & 0 & 192 & 34 \\
+mixed (5,) & (10,) & 9 & 2 & 2 & 0 & 194 & 23 \\
+mixed (5,) & (10,) & 10 & 2 & 2 & 0 & 215 & 30 \\
+mixed (5,) & (10,) & 11 & 2 & 2 & 0 & 233 & 34 \\
+mixed (5,) & (10,) & 12 & 2 & 2 & 0 & 247 & 34 \\
+mixed (5,) & (10,) & 13 & 2 & 2 & 0 & 257 & 30 \\
+mixed (5,) & (10,) & 14 & 2 & 2 & 0 & 282 & 42 \\
+mixed (5,) & (10,) & 15 & 2 & 2 & 0 & 288 & 33 \\
+mixed (5,) & (10,) & 16 & 2 & 2 & 0 & 310 & 40 \\
+mixed (5,) & (10,) & 17 & 2 & 2 & 0 & 323 & 39 \\
+mixed (5,) & (10,) & 18 & 2 & 2 & 0 & 344 & 45 \\
+mixed (5,) & (10,) & 19 & 2 & 2 & 0 & 351 & 37 \\
+mixed (5,) & (10,) & 20 & 2 & 2 & 0 & 371 & 41 \\
+mixed (25,) & (50,) & 0 & 0 & 0 & 0 & 717 & 60 \\
+mixed (25,) & (50,) & 1 & 2 & 2 & 0 & 729 & 54 \\
+mixed (25,) & (50,) & 2 & 3 & 3 & 0 & 748 & 56 \\
+mixed (25,) & (50,) & 3 & 3 & 3 & 0 & 761 & 51 \\
+mixed (25,) & (50,) & 4 & 3 & 3 & 0 & 787 & 59 \\
+mixed (25,) & (50,) & 5 & 3 & 3 & 0 & 798 & 53 \\
+mixed (25,) & (50,) & 6 & 3 & 3 & 0 & 830 & 67 \\
+mixed (25,) & (50,) & 7 & 3 & 3 & 0 & 844 & 63 \\
+mixed (25,) & (50,) & 8 & 3 & 3 & 0 & 856 & 56 \\
+mixed (25,) & (50,) & 9 & 3 & 3 & 0 & 872 & 54 \\
+mixed (25,) & (50,) & 10 & 3 & 3 & 0 & 904 & 68 \\
+mixed (1, 1) & (2, 2) & 0 & 0 & 0 & 0 & 21 & 10 \\
+mixed (1, 1) & (2, 2) & 1 & 2 & 2 & 0 & 29 & 11 \\
+mixed (1, 1) & (2, 2) & 2 & 6 & 2 & 4 & 42 & 16 \\
+mixed (1, 1) & (2, 2) & 3 & 4 & 2 & 2 & 50 & 16 \\
+mixed (1, 1) & (2, 2) & 4 & 3 & 2 & 1 & 63 & 20 \\
+mixed (1, 1) & (2, 2) & 5 & 3 & 2 & 1 & 76 & 23 \\
+mixed (1, 1) & (2, 2) & 6 & 3 & 2 & 1 & 91 & 27 \\
+mixed (1, 1) & (2, 2) & 7 & 3 & 2 & 1 & 97 & 23 \\
+mixed (1, 1) & (2, 2) & 8 & 3 & 2 & 1 & 113 & 28 \\
+mixed (1, 1) & (2, 2) & 9 & 3 & 2 & 1 & 122 & 26 \\
+mixed (1, 1) & (2, 2) & 10 & 3 & 2 & 1 & 142 & 33 \\
+mixed (1, 1) & (2, 2) & 11 & 3 & 2 & 1 & 150 & 30 \\
+mixed (1, 1) & (2, 2) & 12 & 5 & 2 & 3 & 168 & 35 \\
+mixed (1, 1) & (2, 2) & 13 & 4 & 2 & 2 & 178 & 32 \\
+mixed (1, 1) & (2, 2) & 14 & 3 & 2 & 1 & 198 & 40 \\
+mixed (1, 1) & (2, 2) & 15 & 3 & 2 & 1 & 208 & 36 \\
+mixed (1, 1) & (2, 2) & 16 & 3 & 2 & 1 & 229 & 44 \\
+mixed (1, 1) & (2, 2) & 17 & 3 & 2 & 1 & 240 & 41 \\
+mixed (1, 1) & (2, 2) & 18 & 3 & 2 & 1 & 259 & 47 \\
+mixed (1, 1) & (2, 2) & 19 & 3 & 2 & 1 & 274 & 47 \\
+mixed (1, 1) & (2, 2) & 20 & 3 & 2 & 1 & 290 & 50 \\
+mixed (1, 5) & (2, 10) & 0 & 0 & 0 & 0 & 110 & 25 \\
+mixed (1, 5) & (2, 10) & 1 & 2 & 2 & 0 & 121 & 24 \\
+mixed (1, 5) & (2, 10) & 2 & 4 & 3 & 1 & 136 & 27 \\
+mixed (1, 5) & (2, 10) & 3 & 4 & 3 & 1 & 144 & 24 \\
+mixed (1, 5) & (2, 10) & 4 & 4 & 3 & 1 & 168 & 35 \\
+mixed (1, 5) & (2, 10) & 5 & 4 & 3 & 1 & 179 & 34 \\
+mixed (1, 5) & (2, 10) & 6 & 4 & 3 & 1 & 194 & 36 \\
+mixed (1, 5) & (2, 10) & 7 & 4 & 3 & 1 & 209 & 37 \\
+mixed (1, 5) & (2, 10) & 8 & 5 & 3 & 2 & 228 & 43 \\
+mixed (1, 5) & (2, 10) & 9 & 5 & 3 & 2 & 241 & 43 \\
+mixed (1, 5) & (2, 10) & 10 & 4 & 3 & 1 & 256 & 44 \\
+mixed (1, 5) & (2, 10) & 11 & 4 & 3 & 1 & 274 & 48 \\
+mixed (1, 5) & (2, 10) & 12 & 4 & 3 & 1 & 286 & 46 \\
+mixed (1, 5) & (2, 10) & 13 & 4 & 3 & 1 & 300 & 45 \\
+mixed (1, 5) & (2, 10) & 14 & 4 & 3 & 1 & 319 & 50 \\
+mixed (1, 5) & (2, 10) & 15 & 4 & 3 & 1 & 333 & 49 \\
+mixed (1, 5) & (2, 10) & 16 & 4 & 3 & 1 & 359 & 60 \\
+mixed (1, 5) & (2, 10) & 17 & 4 & 3 & 1 & 366 & 52 \\
+mixed (1, 5) & (2, 10) & 18 & 5 & 3 & 2 & 386 & 57 \\
+mixed (1, 5) & (2, 10) & 19 & 5 & 3 & 2 & 401 & 56 \\
+mixed (1, 5) & (2, 10) & 20 & 4 & 3 & 1 & 421 & 61 \\
+mixed (1, 1, 5) & (2, 2, 10) & 0 & 0 & 0 & 0 & 142 & 33 \\
+mixed (1, 1, 5) & (2, 2, 10) & 1 & 2 & 2 & 0 & 151 & 30 \\
+mixed (1, 1, 5) & (2, 2, 10) & 2 & 5 & 4 & 1 & 168 & 35 \\
+mixed (1, 1, 5) & (2, 2, 10) & 3 & 4 & 4 & 0 & 184 & 38 \\
+mixed (1, 1, 5) & (2, 2, 10) & 4 & 4 & 4 & 0 & 198 & 39 \\
+mixed (1, 1, 5) & (2, 2, 10) & 5 & 4 & 4 & 0 & 214 & 43 \\
+mixed (1, 1, 5) & (2, 2, 10) & 6 & 4 & 4 & 0 & 229 & 44 \\
+mixed (1, 1, 5) & (2, 2, 10) & 7 & 4 & 4 & 0 & 243 & 45 \\
+mixed (1, 1, 5) & (2, 2, 10) & 8 & 4 & 4 & 0 & 262 & 50 \\
+mixed (1, 1, 5) & (2, 2, 10) & 9 & 4 & 4 & 0 & 281 & 55 \\
+mixed (1, 1, 5) & (2, 2, 10) & 10 & 4 & 4 & 0 & 296 & 55 \\
+mixed (1, 1, 5) & (2, 2, 10) & 11 & 4 & 4 & 0 & 310 & 55 \\
+mixed (1, 1, 5) & (2, 2, 10) & 12 & 4 & 4 & 0 & 325 & 56 \\
+mixed (1, 1, 5) & (2, 2, 10) & 13 & 4 & 4 & 0 & 340 & 56 \\
+mixed (1, 1, 5) & (2, 2, 10) & 14 & 4 & 4 & 0 & 361 & 62 \\
+mixed (1, 1, 5) & (2, 2, 10) & 15 & 4 & 4 & 0 & 373 & 59 \\
+mixed (1, 1, 5) & (2, 2, 10) & 16 & 4 & 4 & 0 & 396 & 67 \\
+mixed (1, 1, 5) & (2, 2, 10) & 17 & 4 & 4 & 0 & 413 & 69 \\
+mixed (1, 1, 5) & (2, 2, 10) & 18 & 4 & 4 & 0 & 432 & 72 \\
+mixed (1, 1, 5) & (2, 2, 10) & 19 & 4 & 4 & 0 & 449 & 73 \\
+mixed (1, 1, 5) & (2, 2, 10) & 20 & 4 & 4 & 0 & 457 & 66 \\
+\end{longtable}
+\chapter{Polyphase support ledger}
+Every coarse degree is assigned to one and only one child phase.
+\begin{longtable}{rrrr}
+\caption{Every coarse support degree and its unique child phase.}\\
+\toprule
+\textbf{degree} & \textbf{coarse residue} & \textbf{fine residue} & \textbf{assigned child} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{degree} & \textbf{coarse residue} & \textbf{fine residue} & \textbf{assigned child} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+4 & 4 & 4 & PASS \\
+14 & 4 & 14 & PASS \\
+24 & 4 & 24 & PASS \\
+34 & 4 & 34 & PASS \\
+44 & 4 & 44 & PASS \\
+54 & 4 & 4 & PASS \\
+64 & 4 & 14 & PASS \\
+74 & 4 & 24 & PASS \\
+84 & 4 & 34 & PASS \\
+94 & 4 & 44 & PASS \\
+104 & 4 & 4 & PASS \\
+114 & 4 & 14 & PASS \\
+124 & 4 & 24 & PASS \\
+134 & 4 & 34 & PASS \\
+144 & 4 & 44 & PASS \\
+154 & 4 & 4 & PASS \\
+164 & 4 & 14 & PASS \\
+174 & 4 & 24 & PASS \\
+184 & 4 & 34 & PASS \\
+194 & 4 & 44 & PASS \\
+204 & 4 & 4 & PASS \\
+214 & 4 & 14 & PASS \\
+224 & 4 & 24 & PASS \\
+234 & 4 & 34 & PASS \\
+244 & 4 & 44 & PASS \\
+254 & 4 & 4 & PASS \\
+\end{longtable}
+\chapter{Negative controls outside the standard window}
+The row $j=4$ is compared with $j=5,6,9$. Once the diagonal acquires a factor of five, reciprocal coefficients can develop negative $5$-adic valuation.
+\begin{longtable}{rrrrL{0.43\textwidth}}
+\caption{Standard-window row compared with three outside-window rows.}\\
+\toprule
+\textbf{$j$} & \textbf{$n$} & \textbf{$v_5(d_n)$} & \textbf{$v_5(C_n)$} & \textbf{$C_n$} \\ \midrule
+\endfirsthead
+\toprule
+\textbf{$j$} & \textbf{$n$} & \textbf{$v_5(d_n)$} & \textbf{$v_5(C_n)$} & \textbf{$C_n$} \\ \midrule
+\endhead
+\midrule
+\endfoot
+\bottomrule
+\endlastfoot
+4 & 0 & 0 & 0 & \texttt{\seqsplit{1}} \\
+4 & 1 & 0 & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{1001}} \\
+4 & 2 & 0 & 1 & \texttt{\seqsplit{178205}}/\texttt{\seqsplit{966966}} \\
+4 & 3 & 0 & 0 & \texttt{\seqsplit{-163326976357}}/\texttt{\seqsplit{29541512}} \\
+4 & 4 & 0 & 1 & \texttt{\seqsplit{9306825360065091010}}/\texttt{\seqsplit{1988887901}} \\
+4 & 5 & 0 & 0 & \texttt{\seqsplit{-106357017722060625889150022}}/\texttt{\seqsplit{2215970757}} \\
+4 & 6 & 0 & 1 & \texttt{\seqsplit{27254922088921328804117607057484425405}}/\texttt{\seqsplit{7543306923152}} \\
+4 & 7 & 0 & 0 & \texttt{\seqsplit{-3150092911212802937652803405656417656130505191}}/\texttt{\seqsplit{2201045132286}} \\
+4 & 8 & 0 & 1 & \texttt{\seqsplit{4424551058022133013886856050841757594845058713841984331170}}/\texttt{\seqsplit{1880490075043671}} \\
+5 & 0 & 0 & 0 & \texttt{\seqsplit{1}} \\
+5 & 1 & 0 & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{3003}} \\
+5 & 2 & 1 & -1 & \texttt{\seqsplit{296887}}/\texttt{\seqsplit{14504490}} \\
+5 & 3 & 0 & 0 & \texttt{\seqsplit{-18132607321}}/\texttt{\seqsplit{88624536}} \\
+5 & 4 & 0 & -1 & \texttt{\seqsplit{1721372837762016302}}/\texttt{\seqsplit{29833318515}} \\
+5 & 5 & 0 & 1 & \texttt{\seqsplit{-145655893254010528046990}}/\texttt{\seqsplit{738656919}} \\
+5 & 6 & 0 & -1 & \texttt{\seqsplit{186551676438791592932068711001019973}}/\texttt{\seqsplit{37716534615760}} \\
+5 & 7 & 1 & 0 & \texttt{\seqsplit{-14513542136352717675480744808702740515331}}/\texttt{\seqsplit{22232779114}} \\
+5 & 8 & 0 & -1 & \texttt{\seqsplit{3362215199800706046135437664855843854602609910962103794}}/\texttt{\seqsplit{9402450375218355}} \\
+6 & 0 & 0 & 0 & \texttt{\seqsplit{1}} \\
+6 & 1 & 0 & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{8008}} \\
+6 & 2 & 1 & -1 & \texttt{\seqsplit{2853}}/\texttt{\seqsplit{991760}} \\
+6 & 3 & 0 & 0 & \texttt{\seqsplit{-15281334881}}/\texttt{\seqsplit{1417992576}} \\
+6 & 4 & 0 & -1 & \texttt{\seqsplit{724918705965137261}}/\texttt{\seqsplit{636444128320}} \\
+6 & 5 & 0 & 1 & \texttt{\seqsplit{-21220465329631410549955}}/\texttt{\seqsplit{14545859328}} \\
+6 & 6 & 0 & -1 & \texttt{\seqsplit{27085307539510918870149485023564913}}/\texttt{\seqsplit{1974974903516160}} \\
+6 & 7 & 1 & 0 & \texttt{\seqsplit{-1320440674678496762923551588798394306424407}}/\texttt{\seqsplit{1946524276988928}} \\
+6 & 8 & 0 & -1 & \texttt{\seqsplit{34380710601858895041778936178708048416201082930437009}}/\texttt{\seqsplit{246874594467271680}} \\
+9 & 0 & 0 & 0 & \texttt{\seqsplit{1}} \\
+9 & 1 & 0 & 0 & \texttt{\seqsplit{-1}}/\texttt{\seqsplit{92378}} \\
+9 & 2 & 1 & -1 & \texttt{\seqsplit{69712}}/\texttt{\seqsplit{3234846615}} \\
+9 & 3 & 0 & 0 & \texttt{\seqsplit{-43412311}}/\texttt{\seqsplit{6222598876}} \\
+9 & 4 & 0 & -1 & \texttt{\seqsplit{2340444379514085393}}/\texttt{\seqsplit{36729962178874510}} \\
+9 & 5 & 0 & 1 & \texttt{\seqsplit{-3642332166213523440390}}/\texttt{\seqsplit{516440330935009}} \\
+9 & 6 & 0 & -1 & \texttt{\seqsplit{28566518754418738247200613040001581}}/\texttt{\seqsplit{4985930178505566737720}} \\
+9 & 7 & 1 & 0 & \texttt{\seqsplit{-1164257267742087556846016886874708460428}}/\texttt{\seqsplit{47539640656958795657}} \\
+9 & 8 & 0 & -1 & \texttt{\seqsplit{20864836664697130198952636277180563261393203825501667696}}/\texttt{\seqsplit{48022801165180797253339577445}} \\
+\end{longtable}
+\chapter{Complete closed implementation}
+The program below generates every figure, table, result, and certificate used in the book.
+\lstinputlisting{hypergeometric_padic_walkthrough.py}
+\backmatter
+\chapter*{Final perspective}
+\addcontentsline{toc}{chapter}{Final perspective}
+The hypergeometric formula was not the end of the argument. It was a coordinate bridge. The factorial lanes exposed the parameter geometry. The omitted parameter exposed the hidden $n!$. The residue normalization exposed a short unit tail. The reciprocal recurrence exposed a common diagonal cancellation. The Mahler pullback exposed the difference operator. Polyphase refinement then showed how the same parent block could be resolved more finely without changing the reconstruction.
+
+The generalization came from preserving the whole chain. No single cancellation was enough. The method became reusable because each cancellation was assigned to a stable transfer block and transported into the next coordinate system.
+\end{document}

@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""Replay exact Block63 certificates; optionally replay the pinned predecessor chain."""
+from __future__ import annotations
+import argparse,hashlib,io,json,os,platform,shutil,subprocess,sys,tempfile,time,zipfile
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent
+
+def need(ok,msg):
+    if not ok:raise AssertionError(msg)
+def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def integrity(root):
+    manifest=json.loads((root/'MANIFEST.json').read_text())
+    found={p.relative_to(root).as_posix() for p in root.rglob('*') if p.is_file() and p.name!='MANIFEST.json'}
+    need(found==set(manifest['sha256']),'Payload member set mismatch')
+    for name,sha in manifest['sha256'].items():
+        need(digest(root/name)==sha,'Payload SHA256 mismatch: '+name)
+    rec=json.loads((root/'work63/source_records/INHERITED_INPUTS.json').read_text())
+    pred=next((root/'predecessor').glob('*.zip'))
+    need(digest(pred)==rec['predecessor_sha256'],'Predecessor bytes changed')
+    blobs={():pred.read_bytes()}
+    for row in rec['files']:
+        chain=tuple(row['archive_chain'])
+        for i in range(1,len(chain)+1):
+            key=chain[:i]
+            if key not in blobs:
+                with zipfile.ZipFile(io.BytesIO(blobs[key[:-1]])) as z:blobs[key]=z.read(key[-1])
+        with zipfile.ZipFile(io.BytesIO(blobs[chain])) as z:b=z.read(row['member'])
+        need(hashlib.sha256(b).hexdigest()==row['sha256'],'Inherited leaf SHA256 mismatch')
+        if row['requested']=='work62/verification/trace_product.json':
+            old=json.loads(b);fixture=json.loads((root/'work63/source_records/inherited_trace_sets.json').read_text())
+            need(fixture['source_sha256']==hashlib.sha256(b).hexdigest(),'Copied trace source hash mismatch')
+            need(all(fixture[k]==old[k] for k in ('good_trace_sets','kummer_rows')),'Copied trace sets changed')
+    need(not rec['missing'],'Unresolved named inherited source')
+    return {'payload_files':len(found),'inherited_leaf_files':len(rec['files']),
+            'nested_archives_opened':len(blobs),'predecessor_sha256':digest(pred)}
+
+def safe_extract(source,dest):
+    with zipfile.ZipFile(source) as z:
+        need(z.testzip() is None,'ZIP CRC failure')
+        for name in z.namelist():
+            target=(dest/name).resolve()
+            need(target.is_relative_to(dest.resolve()),'Unsafe ZIP path')
+        z.extractall(dest)
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--replay-predecessors',action='store_true');ap.add_argument('--integrity-only',action='store_true')
+    ap.add_argument('--report',type=Path);ap.add_argument('--job-timeout',type=int,default=1200)
+    a=ap.parse_args();t0=time.monotonic();jobs=[]
+    result={'schema':'beal.block63.verification.v1','status':'RUNNING','python':sys.version,
+            'platform':platform.platform(),'cpu_count_visible':os.cpu_count(),
+            'job_timeout_seconds':a.job_timeout,'replay_predecessors':a.replay_predecessors,
+            'limits':'Per-job wall-clock timeout; no inference from timeout. Python standard library only.',
+            'started_unix':time.time()}
+    try:
+        result['integrity']=integrity(ROOT)
+        if not a.integrity_only:
+            env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',PYTHONOPTIMIZE='0')
+            def run(argv,cwd,expected_failure=False,needle=None):
+                t=time.monotonic()
+                proc=subprocess.run([sys.executable,'-B']+list(map(str,argv)),cwd=cwd,env=env,
+                    text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=a.job_timeout)
+                record={'argv':list(map(str,argv)),'returncode':proc.returncode,'elapsed_seconds':time.monotonic()-t,
+                        'expected_failure':expected_failure,'output':proc.stdout}
+                jobs.append(record)
+                print(('NEGATIVE' if expected_failure else 'REPLAY'),argv[0],proc.returncode,flush=True)
+                if expected_failure:
+                    need(proc.returncode!=0,'Invalid certificate was accepted')
+                    if needle:need(needle in proc.stdout,'Wrong rejection reason')
+                else:need(proc.returncode==0,'Certificate job failed: '+str(argv[0]))
+                return proc
+            with tempfile.TemporaryDirectory(prefix='beal63_') as td:
+                tmp=Path(td);scratch=tmp/'package';shutil.copytree(ROOT,scratch)
+                C=scratch/'work63/computations';V=scratch/'work63/verification'
+                fixture=scratch/'work63/source_records/inherited_trace_sets.json'
+                outputs=['count83.json','jacobian83.json','independent83.json','conductor.json','independent_conductor.json']
+                for n in outputs:(V/n).unlink()
+                run([C/'count83.py','--output',V/'count83.json'],scratch)
+                run([C/'jacobian83.py','--output',V/'jacobian83.json'],scratch)
+                run([C/'independent83.py','--counts',V/'count83.json','--jacobian',V/'jacobian83.json','--output',V/'independent83.json'],scratch)
+                run([C/'conductor_sieve.py','--fixture',fixture,'--output',V/'conductor.json'],scratch)
+                run([C/'independent_conductor.py','--fixture',fixture,'--certificate',V/'conductor.json','--output',V/'independent_conductor.json'],scratch)
+                for n in outputs:
+                    need(json.loads((V/n).read_text())==json.loads((ROOT/'work63/verification'/n).read_text()),'Regenerated JSON differs: '+n)
+                result['complete_json_replays']=outputs
+                bad=tmp/'bad';bad.mkdir()
+                j=json.loads((V/'jacobian83.json').read_text());j['E7']=[[1],[0]]
+                (bad/'group.json').write_text(json.dumps(j))
+                run([C/'independent83.py','--counts',V/'count83.json','--jacobian',bad/'group.json','--output',bad/'out.json'],scratch,True,'Scalar ladder disagrees')
+                j=json.loads((V/'count83.json').read_text());j['rows'][0]['N1']+=1
+                (bad/'counts.json').write_text(json.dumps(j))
+                run([C/'independent83.py','--counts',bad/'counts.json','--jacobian',V/'jacobian83.json','--output',bad/'out.json'],scratch,True,'Independent direct pair count mismatch')
+                j=json.loads((V/'conductor.json').read_text());j['columns'][0]['rows']['29']=(j['columns'][0]['rows']['29']+1)%7
+                (bad/'column.json').write_text(json.dumps(j))
+                run([C/'independent_conductor.py','--fixture',fixture,'--certificate',bad/'column.json','--output',bad/'out.json'],scratch,True,'Changed twisted row or Kummer ratio')
+                j=json.loads((V/'conductor.json').read_text());j['strict']['count']=1
+                (bad/'claim.json').write_text(json.dumps(j))
+                run([C/'independent_conductor.py','--fixture',fixture,'--certificate',bad/'claim.json','--output',bad/'out.json'],scratch,True,'Changed finite sieve claim')
+                (scratch/'README.md').write_text((scratch/'README.md').read_text()+'\nINJECTED INVALID PAYLOAD\n')
+                run([scratch/'verify.py','--integrity-only','--report',bad/'integrity.json'],scratch,True,'Payload SHA256 mismatch')
+                result['negative_controls']=['false_identity_for_7E','altered_count','altered_twisted_column','invented_sieve_survivor','altered_payload']
+                if a.replay_predecessors:
+                    dest=tmp/'old';dest.mkdir();safe_extract(next((ROOT/'predecessor').glob('*.zip')),dest)
+                    old=dest/'Komorebi_Beal_Block62';rp=tmp/'predecessor_report.json'
+                    run([old/'verify.py','--replay-predecessors','--report',rp],old)
+                    prior=json.loads(rp.read_text());need(prior.get('status')=='PASS','Predecessor reported failure')
+                    result['predecessor_replay']=prior
+        result['status']='PASS'
+    except Exception as exc:
+        result['status']='FAIL';result['error']=str(exc);print(str(exc),file=sys.stderr)
+    result['jobs']=jobs;result['elapsed_seconds']=time.monotonic()-t0;result['finished_unix']=time.time()
+    if a.report:a.report.parent.mkdir(parents=True,exist_ok=True);a.report.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
+    print(result['status'],flush=True);return 0 if result['status']=='PASS' else 2
+if __name__=='__main__':sys.exit(main())

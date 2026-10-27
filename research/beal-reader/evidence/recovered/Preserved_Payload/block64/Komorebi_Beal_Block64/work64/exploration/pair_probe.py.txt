@@ -1,0 +1,18 @@
+exec(open('/mnt/data/beal64_work/exploration/enlarge.py').read().split('for extra in (')[0])
+pcs=json.load(open('/mnt/data/beal64_work/research62/Komorebi_Beal_Block62/work62/verification/pointcounts.json'))['primes']
+pcs+=[json.load(open('/mnt/data/beal64_work/exploration/count281.json'))]
+pairs={p['q']:{tuple(row['defect_roots']) for row in p['rows'] if row['residual_pass']} for p in pcs}
+old=c.allowed
+def joint(data,l,u,r,b):
+ if not old(data,l,u,r,b):return False
+ bf=c.MUL[2 if l==43 else 1][b]
+ ps=[c.MUL[c.dot(row,[u,r,1])][bf] for row in data['kummer_rows'][str(l)]]
+ good=any(all(v in e for v in ps) for e in pairs[l])
+ bad=all(v==0 for v in ps) and (not any(row[0] for row in data['kummer_rows'][str(l)]) or bf==0)
+ return good or bad
+c.allowed=joint
+for extra in ((),(673,),(743,),(953,),(967,),(673,743)):
+ qs=sorted(c.W+(617,)+extra);t=time.time();a=solve(qs)
+ Path('/mnt/data/beal64_work/exploration/joint'+('_'.join(map(str,extra)) or 'base')+'.json').write_text(json.dumps(a,indent=2))
+ print(extra,'seconds',time.time()-t,'survivors',a['count'],a['survivors'][:3],flush=True)
+print('PAIRS',pairs)

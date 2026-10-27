@@ -1,0 +1,83 @@
+from pathlib import Path
+import json,sys,math,itertools,importlib.util
+src=Path('/mnt/data/beal62_restore/Komorebi_Beal_Block61/work61/computations/twisted_frobenius_certificate.py')
+spec=importlib.util.spec_from_file_location('b61',src);old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
+S=[197,883,1373,1667]
+GEN=dict(old.GENERATORS)
+for q in [43]:
+ for v in itertools.product(range(-1,2),repeat=6):
+  if any(v) and old.norm(v)==q:GEN[q]=v;break
+ assert q in GEN
+print('generators',GEN)
+logs={}
+roots={}
+for q in list(GEN):
+ g=next(g for g in range(2,q) if all(pow(g,(q-1)//p,q)!=1 for p in old.factors(q-1)))
+ vals={};a=1
+ for j in range(q-1):vals[a]=j%7;a=a*g%q
+ logs[q]=vals
+ roots[q]=next(r for r in range(2,q) if pow(r,7,q)==1 and old.ev(GEN[q],r,q)==0)
+print('roots',roots)
+R={}
+for ell in [29,43,71,491]:
+ R[ell]=[sum(b*logs[q][old.ev(GEN[ell],pow(roots[q],b,q),q)] for b in range(1,7))%7 for q in S]
+print('R',R)
+# coefficient field k=F7[w]/(w^2-5), encoding a+7*b
+add=lambda x,y:((x%7+y%7)%7)+7*((x//7+y//7)%7)
+neg=lambda x:((-x%7)%7)+7*((-x//7)%7) # not used
+mul=lambda x,y:((x%7*(y%7)+5*(x//7)*(y//7))%7)+7*((x%7*(y//7)+x//7*(y%7))%7)
+def dot(a,b):
+ r=0
+ for x,y in zip(a,b):r=add(r,mul(x,y))
+ return r
+def kvals(q):
+ rootsphi=[a for a in range(q) if (a*a-a-1)%q==0]
+ if rootsphi:
+  def log(x):return next(i for i in range(7) if pow(roots[q],i,q)==pow(x,(q-1)//7,q))
+  return [(log(a),log(3),log((2*a-1)%q)) for a in rootsphi]
+ else:
+  def log(x):return next(i for i in range(7) if pow(roots[q],i,q)==pow(x,(q-1)//7,q))
+  return [(0,2*log(3)%7,log(5))]
+K={q:kvals(q) for q in [29,43,71,491]};print('K',K)
+D52=json.load(open('/mnt/data/beal62_ancestors/b52/Komorebi_Beal_Block52/work52/verification/finite_frobenius.json'))
+D56=json.load(open('/mnt/data/beal62_ancestors/b56/Komorebi_Beal_Block56/work56/verification/frobenius_certificate.json'))
+trace_sets={}
+for q in [29,43,491]:
+ d=D56 if q==491 else D52
+ ent=next(x for x in d['primes'] if x['q']==q);Q=ent['Q'];good=set()
+ for row in ent['rows']:
+  if not (row.get('residual_match',False) if q!=491 else row['matches']['7']):continue
+  P=row['twisted_polynomial'];s=-P[3];D=s*s-4*(P[2]-2*Q)
+  if D==0:v=0
+  else:
+   assert D%5==0;v=math.isqrt(D//5);assert 5*v*v==D
+  assert (s-2*(Q+1))%7==0 and v%7==0
+  a=((s-2*(Q+1))//7*4)%7;b=(v//7*4)%7
+  good.add(a+7*b);good.add(a+7*((-b)%7))
+ trace_sets[q]=good
+print('trace_sets',trace_sets)
+# r from common-alpha supported coordinates; s71=0 gives r6 line or r1 plane
+survivors=[];stats={'initial':0,'29':0,'43':0,'491':0}
+for r in range(1,7):
+ if r==6:betas=[(c,mul(4,c),0,0) for c in range(1,49)]
+ elif r==1:betas=[(0,a,b,a) for a in range(49) for b in range(49) if a or b]
+ else:betas=[]
+ for u in range(49):
+  alpha=(u,r,1)
+  for s in betas:
+   stats['initial']+=1;valid=True;tags={}
+   for q in [29,43,491]:
+    v=mul(6,dot(R[q],s))
+    if q==43:v=mul(2,v)
+    products=[mul(dot(row,alpha),v) for row in K[q]]
+    # Either good with all products in actual trace set, or bad with all products=0.
+    # At29/491 phi nonpower forces full beta zero on bad branch.
+    good=all(p in trace_sets[q] for p in products)
+    bad=all(p==0 for p in products) and (v==0 if q in [29,491] else True)
+    if not (good or bad):valid=False;break
+    stats[str(q)]+=1;tags[q]=('both' if good and bad else 'good' if good else 'bad')
+   if valid:survivors.append((alpha,s,tags))
+print('stats',stats,'survivors',len(survivors))
+from collections import Counter
+print('alpha counts',Counter(tuple(x[0]) for x in survivors));print('tags',Counter(tuple(x[2].items()) for x in survivors))
+Path('/mnt/data/beal62_explore/trace_survivors.json').write_text(json.dumps({'R':R,'K':K,'trace_sets':{str(k):sorted(v) for k,v in trace_sets.items()},'survivors':survivors,'stats':stats}))

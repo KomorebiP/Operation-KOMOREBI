@@ -1,0 +1,69 @@
+import sys,itertools,json
+sys.path.insert(0,'/mnt/data/beal67_predecessor/Komorebi_Beal_Block66/work66/computations')
+import filter66 as f
+import sympy as sp
+p=13
+mul=lambda x,y:((x[0]*y[0]+x[1]*y[1])%p,(x[0]*y[1]+x[1]*y[0]+x[1]*y[1])%p)
+def power(x,n):
+ y=(1,0)
+ while n:
+  if n%2:y=mul(y,x)
+  x=mul(x,x);n//=2
+ return y
+z=next((a,b) for a in range(p) for b in range(p) if (a,b)!=(1,0) and power((a,b),7)==(1,0))
+cols=[power(z,i) for i in range(6)]+[mul((0,1),power(z,i)) for i in range(6)]
+lat=[]
+for j in range(12):
+ row=[0]*12
+ if j in (0,6):row[j]=13
+ else:
+  row[j]=1;row[0]-=cols[j][0];row[6]-=cols[j][1]
+ lat.append(row)
+L=sp.Matrix(lat).lll()
+def zmul(a,b):
+ o=[0]*11
+ for i,x in enumerate(a):
+  for j,y in enumerate(b):o[i+j]+=x*y
+ for k in range(10,5,-1):
+  for j in range(k-6,k):o[j]-=o[k]
+  o[k]=0
+ return o[:6]
+def norm(c):
+ a=c[:6];b=c[6:];aa=zmul(a,a);ab=zmul(a,b);bb=zmul(b,b)
+ return f.norm([aa[i]+ab[i]-bb[i] for i in range(6)])
+cs=[list(map(int,L.row(i))) for i in range(12)]
+found=[]
+for c in cs:
+ nn=norm(c)
+ if nn==169:found.append(c)
+print('z13',z,'basisnorms',[(c,norm(c)) for c in cs]);
+if not found:
+ for i,j in itertools.combinations(range(12),2):
+  for t in (1,-1):
+   c=[x+t*y for x,y in zip(cs[i],cs[j])]
+   if norm(c)==169:found.append(c)
+pi=found[0];print('PI13',pi,norm(pi))
+# Check exactly two Frobenius-related roots of this generator at13.
+zeros=[]
+for pp in [(0,1),(1,12)]:
+ for b in range(1,7):
+  zz=power(z,b);val=(0,0)
+  for i in range(6):
+   tmp=mul(((pi[i])%13,0),power(zz,i));bp=mul(mul((pi[i+6]%13,0),pp),power(zz,i))
+   val=((val[0]+tmp[0]+bp[0])%13,(val[1]+tmp[1]+bp[1])%13)
+  if val==(0,0):zeros.append((pp,b))
+print('zeros',zeros)
+rows=[]
+for q in range(11,2001):
+ if not f.prime(q) or q%7!=1 or q%5 not in (1,4):continue
+ ph=[x for x in range(q) if (x*x-x-1)%q==0];g=f.primitive(q);zz=pow(g,(q-1)//7,q)
+ logs={pow(g,i,q):i%7 for i in range(q-1)}
+ ell=[logs[x] for x in ph]
+ row=0
+ for sign,pp in zip((1,-1),ph):
+  for b in range(1,7):
+   v=(f.ev(pi[:6],pow(zz,b,q),q)+pp*f.ev(pi[6:],pow(zz,b,q),q))%q
+   assert v
+   row-=sign*b*logs[v]
+ rows.append({'q':q,'phi_roots':ph,'phi_symbols':ell,'R13':row%7,'g':g,'root':zz})
+print(json.dumps(rows,indent=2));open('/mnt/data/beal67_work/minus_probe.json','w').write(json.dumps({'generator':pi,'norm':norm(pi),'z13':z,'zeros':zeros,'split_primes2000':rows},indent=2)+'\n')

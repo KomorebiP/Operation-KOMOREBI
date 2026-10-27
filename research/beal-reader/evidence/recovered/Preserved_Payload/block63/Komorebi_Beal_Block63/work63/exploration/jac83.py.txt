@@ -1,0 +1,115 @@
+# Exploratory exact Cantor arithmetic. Not yet independently audited.
+import json,math
+from pathlib import Path
+q=83
+# field in phi basis; phi^2=phi+1
+N=q*q
+A=[[((x%q+y%q)%q)+q*((x//q+y//q)%q) for y in range(N)] for x in []] # no table
+
+def add(x,y):return (x%q+y%q)%q+q*((x//q+y//q)%q)
+def neg(x):return (-x%q)%q+q*((-(x//q))%q)
+def sub(x,y):return add(x,neg(y))
+def mul(x,y):
+ a,b=x%q,x//q;c,d=y%q,y//q
+ return (a*c+b*d)%q+q*((a*d+b*c+b*d)%q)
+def pw(x,n):
+ y=1
+ while n:
+  if n&1:y=mul(y,x)
+  x=mul(x,x);n//=2
+ return y
+def inv(x):
+ if not x:raise ZeroDivisionError
+ return pw(x,N-2)
+def tr(a):
+ while len(a)>1 and a[-1]==0:a.pop()
+ return a
+
+def pa(a,b):return tr([add(a[i] if i<len(a) else 0,b[i] if i<len(b) else 0) for i in range(max(len(a),len(b)))])
+def pn(a):return [neg(x) for x in a]
+def ps(a,b):return pa(a,pn(b))
+def pm(a,b):
+ c=[0]*(len(a)+len(b)-1)
+ for i,x in enumerate(a):
+  for j,y in enumerate(b):c[i+j]=add(c[i+j],mul(x,y))
+ return tr(c)
+def scale(a,t):return tr([mul(x,t) for x in a])
+def divmodp(a,b):
+ if b==[0]:raise ZeroDivisionError
+ a=a[:];r=[0]*max(1,len(a)-len(b)+1);il=inv(b[-1])
+ while a!=[0] and len(a)>=len(b):
+  j=len(a)-len(b);v=mul(a[-1],il);r[j]=add(r[j],v)
+  for i,x in enumerate(b):a[i+j]=sub(a[i+j],mul(v,x))
+  tr(a)
+ return tr(r),a
+def quo(a,b):
+ x,r=divmodp(a,b);assert r==[0],(a,b,r);return x
+def mod(a,b):return divmodp(a,b)[1]
+def mon(a):return scale(a,inv(a[-1]))
+def gcdex(a,b):
+ r0,r1=a[:],b[:];s0,s1=[1],[0];t0,t1=[0],[1]
+ while r1!=[0]:
+  u,r2=divmodp(r0,r1);r0,r1=r1,r2;s0,s1=s1,ps(s0,pm(u,s1));t0,t1=t1,ps(t0,pm(u,t1))
+ c=inv(r0[-1]);return scale(r0,c),scale(s0,c),scale(t0,c)
+def ev(a,x):
+ y=0
+ for c in a[::-1]:y=add(mul(y,x),c)
+ return y
+# x=5+1/t, z=v/t^3 gives F(t)=delta*t^6*f(5+1/t)
+old=[5*30*30%q,12,0,10*30%q,0,0,1]
+f=[0]*7
+for i,a in enumerate(old):
+ for j in range(i+1):f[6-j]=add(f[6-j],a*math.comb(i,j)*pow(5,i-j,q)%q)
+delta=9+q*((-3)%q)
+f=scale(tr(f),delta)
+assert len(f)==6
+ID=([1],[0])
+def valid(D):
+ u,v=D;assert u[-1]==1 and len(v)<len(u) if u!=[1] else v==[0]
+ assert mod(ps(f,pm(v,v)),u)==[0]
+def red(u,v):
+ u=mon(u);v=mod(v,u)
+ while len(u)>3:
+  u=mon(quo(ps(f,pm(v,v)),u));v=mod(pn(v),u)
+ if u==[1]:v=[0]
+ D=(u,v);valid(D);return D
+def plus(D,E):
+ if D==ID:return E
+ if E==ID:return D
+ u1,v1=D;u2,v2=E
+ d1,e1,e2=gcdex(u1,u2)
+ d,c1,c2=gcdex(d1,pa(v1,v2))
+ s1,s2,s3=pm(c1,e1),pm(c1,e2),c2
+ u=quo(pm(u1,u2),pm(d,d))
+ v=quo(pa(pa(pm(pm(s1,u1),v2),pm(pm(s2,u2),v1)),pm(s3,pa(pm(v1,v2),f))),d)
+ return red(u,mod(v,u))
+def times(D,n):
+ E=ID
+ while n:
+  if n&1:E=plus(E,D)
+  D=plus(D,D);n//=2
+ return E
+if __name__=='__main__':
+ print('odd curve',f,'delta',delta,flush=True)
+ roots={mul(y,y):y for y in range(N)}
+ total=0
+ for x in range(N):
+  v=ev(f,x)
+  total+=int(v in roots)*(1 if v==0 else 2)
+ print('odd twisted points',total+1,flush=True)
+ group=6762**2;cof=group//(7**4);print('order',group,'cofactor',cof,flush=True)
+ points=[]
+ for x in range(N):
+  z=ev(f,x)
+  if z not in roots:continue
+  y=roots[z];D=([neg(x),1],[y]);valid(D)
+  assert plus(D,(D[0],pn(D[1])))==ID
+  T=times(D,7*cof)
+  print('point',x,y,'D*N/343',T,flush=True)
+  points.append({'x':x,'y':y,'multiple':T})
+  if T!=ID:
+   T49=times(D,49*cof);TN=times(D,group)
+   print('49cof',T49,'N',TN,flush=True)
+   Path('/mnt/data/beal63_work/jac83_result.json').write_text(json.dumps({'curve':f,'order':group,'cofactor':cof,'point':[x,y],'multiple_7cof':T,'multiple_49cof':T49,'multiple_N':TN,'points':points},indent=2))
+   break
+  if len(points)>=12:break

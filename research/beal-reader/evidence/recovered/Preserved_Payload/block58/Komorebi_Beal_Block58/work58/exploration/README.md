@@ -1,0 +1,1 @@
+Historical exploratory code and raw outputs. Original absolute working paths are preserved. Not required for production replay; not publication certificates. Only declared primary, independent, and discriminant programs carry released finite claims.

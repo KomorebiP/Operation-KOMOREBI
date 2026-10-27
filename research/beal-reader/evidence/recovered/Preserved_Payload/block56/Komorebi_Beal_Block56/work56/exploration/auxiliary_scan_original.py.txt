@@ -1,0 +1,32 @@
+import sys,json,time
+from pathlib import Path
+import numpy as np
+sys.path.insert(0,'/mnt/data/beal56_history/Komorebi_Beal_Block52/work52/computations')
+import finite_frobenius as old
+
+def vector_count(A,B,q):
+    d=next(d for d in range(2,q) if old.character(d,q)==-1)
+    leg=np.array([old.character(i,q) for i in range(q)],dtype=np.int64)
+    Ns=[]
+    for deg in (1,2):
+        x=np.repeat(np.arange(q,dtype=np.int64),q if deg==2 else 1)
+        y=np.tile(np.arange(q,dtype=np.int64),q) if deg==2 else np.zeros(q,dtype=np.int64)
+        a=np.zeros_like(x);b=np.zeros_like(x)
+        for c in (1,0,0,10*B,0,12*A,5*B*B):
+            a,b=(a*x+d*b*y+c)%q,(a*y+b*x)%q
+        chi=leg[(a*a-d*b*b)%q] if deg==2 else leg[a]
+        Ns.append(int(q**deg+2+chi.sum()))
+    s1=q+1-Ns[0];num=s1*s1-q*q-1+Ns[1]
+    assert num%2==0
+    return Ns[0],Ns[1],[q*q,-q*s1,num//2,-s1,1]
+old.count=vector_count
+for q in map(int,sys.argv[1:]):
+    t=time.monotonic();ans=old.run_prime(q)
+    Q=ans['Q'];target=[Q*Q,-2*Q*(Q+1),(Q+1)**2+2*Q,-2*(Q+1),1]
+    summaries={}
+    for n in (1,2,3,4):
+        z=[r for r in ans['rows'] if all((a-b)%7**n==0 for a,b in zip(r['twisted_polynomial'],target))]
+        summaries[n]={'orbits':len(z),'pairs':sum(len(r['admissible_pairs']) for r in z),'rows':[[r['representative'],r['Pq_ascending'],r['jacobian_order']] for r in z]}
+    ans['trace_depth_matches']=summaries
+    Path(f'/mnt/data/Komorebi_Beal_Block56/work56/exploration/q{q}.json').write_text(json.dumps(ans,indent=2))
+    print(q,'sec',time.monotonic()-t,'all',ans['admissible_pairs'],'orbits',ans['counted_orbits'],'matches',json.dumps(summaries),flush=True)

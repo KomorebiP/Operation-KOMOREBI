@@ -1,0 +1,19 @@
+import sys,json,time
+sys.path.insert(0,'/mnt/data/beal67_predecessor/Komorebi_Beal_Block66/work66/computations');import count66 as c
+q=1051;target=[9,44];sigma=lambda x:(x%7)+7*((-x//7)%7) # not used
+wantS=(2*(q+1)+7*sum(x%7 for x in target))%49
+t=time.time();tabs=c.tables(q)
+seventh={pow(x,7,q) for x in range(1,q)}
+eligible={(a,b) for a in range(q) for b in range(q) if (a**3+b**5)%q in seventh}
+todo=set(eligible);rows=[];nn2=0;surv=[];nu=c.character(-3,q)
+sc=[(pow(x,5,q),pow(x,3,q)) for x in range(1,q)]
+while todo:
+ a,b=min(todo);orb={(a*x%q,b*y%q) for x,y in sc};pairs=sorted(orb&eligible);todo-=orb
+ N1=c.counts(a,b,q,tabs,1);S=nu*(q+1-N1)
+ if (S-wantS)%49:continue
+ N2=c.counts(a,b,q,tabs,2);nn2+=1
+ pq,pv=c.local_polynomial(q,N1,N2,1,nu)
+ residual=all((x-y)%7==0 for x,y in zip(pv,[q*q,-2*q*(q+1),(q+1)**2+2*q,-2*(q+1),1]))
+ rr={'a':a,'b':b,'pairs':len(pairs),'N1':N1,'N2':N2,'P':pv,'residual':residual,'roots':c.defect_roots(pv,q) if residual else []};rows.append(rr)
+ if all(v in rr['roots'] for v in target):surv.append(rr)
+print(json.dumps({'q':q,'target':target,'S_mod49':wantS,'nu':nu,'pairs':len(eligible),'N2':nn2,'rows':rows,'survivors':surv,'elapsed':time.time()-t},indent=2),flush=True)

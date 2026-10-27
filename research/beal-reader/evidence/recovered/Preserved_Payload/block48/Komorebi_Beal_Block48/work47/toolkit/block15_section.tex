@@ -1,0 +1,1356 @@
+\clearpage
+\section{Universal lane transport at finite profile}
+\label{sec:block15-universal-lane-transport}
+
+The preceding parts of the manuscript establish packet coordinates in an
+additive idempotent-complete setting and verify them separately in several
+native strata.  This section isolates the common finite theorem.  The word
+``lane'' will mean a packet together with its address, its chosen splitting,
+and its position in a declared refinement system.  Thus a lane is more than a
+subsequence or a suggestive decomposition.  It carries the exact data needed
+for analysis, synthesis, transfer, refinement, and reconstruction.
+
+The theorem is universal only in a profiled sense.  Its algebraic core applies
+to every additive realization that preserves the finite sums, compositions,
+split idempotents, and refinement identities used in the proof.  Kernel,
+quotient, tensor, topological, metric, and nonlinear conclusions require the
+additional hypotheses stated where they occur.
+
+\subsection{Finite profiled lane systems}
+\label{subsec:block15-lane-systems}
+
+\begin{definition}[Finite resolution shape]
+\label{def:block15-resolution-diagram}
+A finite resolution shape is a finite partially ordered set
+\(\mathsf R\).  We write \(s\succeq r\) when \(s\) is finer than \(r\).
+The shape contains no address sets: object-specific addresses and their
+refinement maps are declared in the lane system below.
+\end{definition}
+
+\begin{definition}[Finite profiled lane system]
+\label{def:block15-finite-profiled-lane-system}
+Let \(\mathcal C\) be an additive idempotent-complete category, let
+\(X\in\mathcal C\), and let \(\mathsf R\) be a finite resolution shape.  A
+finite profiled lane system \(\mathcal L_X\) consists, for every
+\(r\in\mathsf R\), of a finite address set \(I_{X,r}\) and a family
+\[
+ \mathcal P_X^r=(p_{X,i}^r)_{i\in I_{X,r}}
+ \subseteq\End_{\mathcal C}(X)
+\]
+with
+\[
+ (p_{X,i}^r)^2=p_{X,i}^r,
+ \qquad
+ p_{X,i}^rp_{X,j}^r=0\quad(i\ne j),
+ \qquad
+ \sum_{i\in I_{X,r}}p_{X,i}^r=1_X,
+\]
+together with chosen splittings
+\[
+ X_i^r\xrightarrow{\iota_{X,i}^r}X
+ \xrightarrow{\pi_{X,i}^r}X_i^r,
+ \qquad
+ \iota_{X,i}^r\pi_{X,i}^r=p_{X,i}^r,
+ \qquad
+ \pi_{X,i}^r\iota_{X,i}^r=1_{X_i^r}.
+\]
+For \(s\succeq r\), the system also contains a surjection
+\[
+ \rho^X_{sr}:I_{X,s}\twoheadrightarrow I_{X,r}
+\]
+such that
+\[
+ p_{X,i}^r
+ =
+ \sum_{\rho^X_{sr}(j)=i}p_{X,j}^s,
+ \qquad
+ \rho^X_{tr}=\rho^X_{sr}\rho^X_{ts}.
+\]
+Here \(\rho^X_{rr}=1_{I_{X,r}}\).  The address sets and refinement maps are
+declared data; they are not inferred from their cardinalities.
+Its verified profile contains finite biproducts, addition of morphisms,
+composition, the displayed splittings, and these projector-sum refinement
+identities.  Any further constructor is included only after its preservation
+has been verified.
+\end{definition}
+
+At resolution \(r\), write
+\[
+ \Analysis_X^r
+ :=(\pi_{X,i}^r)_i:
+ X\longrightarrow\bigoplus_iX_i^r,
+ \qquad
+ \Synthesis_X^r
+ :=(\iota_{X,i}^r)_i:
+ \bigoplus_iX_i^r\longrightarrow X.
+\]
+For profiled lane systems on \(X\) and \(Y\), define the coordinate block of
+\(f:X\to Y\) at resolutions \(r,u\) by
+\[
+ [f]^{u,r}_{a i}
+ :=
+ \pi_{Y,a}^u f\iota_{X,i}^r:
+ X_i^r\longrightarrow Y_a^u.
+\]
+Its ambient corner is
+\[
+ p_{Y,a}^u f p_{X,i}^r
+ =
+ \iota_{Y,a}^u[f]^{u,r}_{a i}\pi_{X,i}^r.
+\]
+
+\subsection{The universal finite transport theorem}
+\label{subsec:block15-main-theorem}
+
+\begin{theorem}[Universal Lane Transport Theorem, finite profiled form]
+\label{thm:block15-universal-lane-transport}
+Let \(\mathcal C\) be an additive idempotent-complete category.  Give each of
+the objects \(X_0,\ldots,X_m\) a finite profiled lane system.  Then all of the
+following statements hold.
+
+\begin{enumerate}[label=\textup{(L\arabic*)}]
+\item \textbf{Exact analysis and synthesis.}  At every declared resolution,
+\[
+ \Synthesis_X^r\Analysis_X^r=1_X,
+ \qquad
+ \Analysis_X^r\Synthesis_X^r
+ =1_{\oplus_iX_i^r}.
+\]
+Hence \(X\cong\bigoplus_iX_i^r\).
+
+\item \textbf{Unique lane matrix.}  Every morphism \(f:X\to Y\) is recovered
+uniquely from its lane blocks:
+\[
+ f
+ =
+ \sum_{a,i}p_{Y,a}^u f p_{X,i}^r
+ =
+ \sum_{a,i}\iota_{Y,a}^u
+ [f]^{u,r}_{a i}\pi_{X,i}^r.
+\]
+Equivalently, the assignment
+\[
+ f\longmapsto
+ \bigl([f]^{u,r}_{a i}\bigr)_{a,i}
+\]
+is a bijection from \(\Hom_{\mathcal C}(X,Y)\) to the group of rectangular
+matrices with entries in
+\(\Hom_{\mathcal C}(X_i^r,Y_a^u)\).
+
+\item \textbf{Composition and path law.}  If \(f:X\to Y\) and \(g:Y\to Z\),
+with the same resolution \(u\) used on the intermediate object, then
+\[
+ [gf]^{v,r}_{c i}
+ =
+ \sum_{a\in I_{Y,u}}[g]^{v,u}_{c a}[f]^{u,r}_{a i}.
+\]
+More generally, a block of a composable string is the finite sum of the
+products along all compatible intermediate address paths.
+
+\item \textbf{Projector-sum refinement.}  If \(s\succeq r\) on \(X\) and
+\(v\succeq u\) on \(Y\), then
+\[
+ p_{Y,a}^u f p_{X,i}^r
+ =
+ \sum_{\rho^Y_{vu}(b)=a}
+ \sum_{\rho^X_{sr}(j)=i}
+ p_{Y,b}^v f p_{X,j}^s.
+\]
+Coarsening a fine composite gives the same ambient morphism as composing at
+the coarse level.
+
+\item \textbf{Selectors and named residuals.}  For
+\(E\subseteq I_{Y,u}\times I_{X,r}\), put
+\[
+ C_E^{u,r}(f)
+ :=\sum_{(a,i)\in E}p_{Y,a}^ufp_{X,i}^r,
+ \qquad
+ R_E^{u,r}(f):=f-C_E^{u,r}(f).
+\]
+As additive endomorphisms of \(\Hom_{\mathcal C}(X,Y)\),
+\[
+ C_E^2=C_E,
+ \qquad
+ C_EC_F=C_{E\cap F},
+ \qquad
+ R_E=1-C_E,
+ \qquad
+ f=C_E(f)+R_E(f).
+\]
+Thus deletion of a lane block is never silent.  Its complement is an exact,
+named residual.
+
+\item \textbf{Support transport.}  If \(f=C_E(f)\) and \(g=C_F(g)\), then
+\[
+ gf=C_{F\circ E}(gf),
+\]
+where \(F\circ E\) is relational composition through the intermediate
+addresses.  For arbitrary \(f,g\), writing
+\(f_E=C_E(f)\), \(r_f=R_E(f)\), \(g_F=C_F(g)\), and
+\(r_g=R_F(g)\), one has the exact identity
+\[
+ gf-g_Ff_E
+ =r_gf_E+g_Fr_f+r_gr_f.
+\]
+
+\item \textbf{Additive realization.}  Let
+\(F:\mathcal C\to\mathcal D\) be an additive functor to another additive
+idempotent-complete category.  If the verified profile of \(F\) contains the
+chosen splittings and refinement identities, then
+\[
+ F([f]^{u,r}_{a i})
+ =
+ [F(f)]^{u,r}_{a i}
+\]
+after the declared splitting comparisons.  The functor carries analysis,
+synthesis, matrix multiplication, projector-sum refinement, selectors, and
+named residuals to their corresponding constructions in \(\mathcal D\).
+
+\item \textbf{Exact fold loss.}  Let \(E\) be a finite set of retained lane
+positions and set
+\[
+ B_e:=\Hom_{\mathcal C}(X_i^r,Y_a^u)
+ \quad\text{for }e=(a,i)\in E.
+\]
+Let \(T\) be a finite set, let \(\kappa:E\to T\), let \(C_t\) be abelian
+groups, and let \(\tau_e:B_e\to C_{\kappa(e)}\) be homomorphisms.  With
+\(C=\bigoplus_{t\in T}C_t\) and coordinate inclusions
+\(j_t:C_t\to C\), the fold
+\[
+ \Phi_{\kappa,\tau}:
+ \bigoplus_{e\in E}B_e\longrightarrow C,
+ \qquad
+ (b_e)_e\longmapsto
+ \sum_{e\in E}j_{\kappa(e)}\tau_e(b_e)
+\]
+has exact information-loss group \(\ker\Phi_{\kappa,\tau}\).  In particular,
+two retained lane matrices have the same folded record exactly when their
+difference belongs to this kernel.
+
+Suppose, more strongly, that every \(\tau_e\) is injective and that there are
+globally typed selectors \(Q_e\in\End(C)\) satisfying, for every
+\(e,e'\in E\) and every \(b_{e'}\in B_{e'}\),
+\[
+ Q_ej_{\kappa(e')}\tau_{e'}(b_{e'})
+ =
+ \delta_{e,e'}j_{\kappa(e')}\tau_{e'}(b_{e'}).
+\]
+Then \(\Phi_{\kappa,\tau}\) is injective.  If there are also homomorphisms
+\[
+ r_e:C\longrightarrow B_e,
+ \qquad
+ r_ej_{\kappa(e)}\tau_e=1_{B_e},
+\]
+then
+\[
+ L:=\bigl(r_eQ_e\bigr)_{e\in E}:C\longrightarrow\bigoplus_{e\in E}B_e
+\]
+is a left inverse of \(\Phi_{\kappa,\tau}\), so the fold is split lossless.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For (L1), the first composite is
+\[
+ \sum_i\iota_{X,i}^r\pi_{X,i}^r
+ =\sum_i p_{X,i}^r=1_X.
+\]
+The \((i,j)\)-entry of the other composite is
+\(\pi_{X,i}^r\iota_{X,j}^r\).  It is the identity when \(i=j\), and it is
+zero otherwise because the corresponding idempotents annihilate one another.
+
+For (L2), insert the two reconstruction identities on the two sides of
+\(f\).  Applying \(\pi_{Y,a}^u\) on the left and
+\(\iota_{X,i}^r\) on the right proves uniqueness of every entry.  For (L3),
+insert
+\(1_Y=\sum_a\iota_{Y,a}^u\pi_{Y,a}^u\) between \(g\) and \(f\).
+Iteration gives the path formula.
+
+For (L4), substitute the two projector-sum refinement identities into the
+coarse ambient corner and distribute the finite sums.  The assertion about
+composition follows from the same substitution at the intermediate object.
+
+For (L5), each selector either fixes an ambient block or kills it.  Applying
+two selectors therefore retains precisely the intersection.  The residual
+identities follow by subtraction.  For (L6), expand each block of \(gf\)
+through the intermediate resolution.  A surviving summand supplies an
+intermediate address in the relational product.  The residual formula is the
+finite expansion of
+\((g_F+r_g)(f_E+r_f)-g_Ff_E\).
+
+For (L7), additivity preserves zero maps and finite sums, functoriality
+preserves identities and composition, and the splitting comparisons identify
+the image of every source lane object with the declared target lane object.
+The profile hypothesis is needed precisely for those identifications and for
+the refinement equations.
+
+For (L8), equality of two fold values is equivalent to the difference of the
+two input families lying in the kernel.  Under the selector hypothesis, if
+\(\Phi_{\kappa,\tau}((b_e)_e)=0\), applying \(Q_e\) gives
+\(j_{\kappa(e)}\tau_e(b_e)=0\).  Both \(j_{\kappa(e)}\) and \(\tau_e\) are
+injective, hence \(b_e=0\) for every \(e\).  The chosen retractions compose
+with the \(Q_e\) to give the displayed left inverse: its \(e\)-coordinate
+on the fold is \(r_eQ_ej_{\kappa(e)}\tau_e=1_{B_e}\), while strict
+separation kills every other coordinate.
+\end{proof}
+
+\begin{remark}[Why the fold selectors live in one group]
+\label{rem:block15-global-fold-typing}
+The endomorphisms \(Q_e\) in (L8) all act on the single group
+\(C=\bigoplus_tC_t\).  Writing separate selectors on unrelated codomains
+would make the Kronecker relation ill-typed and would not prove injectivity of
+the combined fold.
+\end{remark}
+
+\begin{proposition}[Exact visible-support loss ledger]
+\label{prop:block15-visible-support-ledger}
+Use the finite fold data of (L8) and fix an input family
+\(b=(b_e)_{e\in E}\).  Define
+\[
+ S_0:=\{e\in E:b_e\ne0\},
+ \qquad
+ A_0:=\{e\in S_0:\tau_e(b_e)=0\},
+ \qquad
+ S_1:=S_0\setminus A_0,
+\]
+and let
+\[
+ \Gamma:=\kappa(S_1)\subseteq T.
+\]
+For \(t\in T\), write the folded coordinate as
+\[
+ \overline b_t
+ :=
+ \sum_{\substack{e\in S_1\\\kappa(e)=t}}\tau_e(b_e)
+ \in C_t,
+\]
+and put
+\[
+ \operatorname{supp}(\overline b)
+ :=\{t\in T:\overline b_t\ne0\},
+ \qquad
+ K_0:=\{t\in\Gamma:\overline b_t=0\}.
+\]
+Then
+\[
+ \boxed{
+ |S_0|-|\operatorname{supp}(\overline b)|
+ =
+ |A_0|
+ +\bigl(|S_1|-|\Gamma|\bigr)
+ +|K_0|.}
+\]
+The three terms record, respectively, annihilation by the local maps
+\(\tau_e\), collision of surviving lane addresses under \(\kappa\), and
+cancellation among folded values at a common address.  If every \(\tau_e\) is
+injective, then \(A_0=\varnothing\).  If globally typed selectors satisfy the
+strict separation law of (L8), then \(K_0=\varnothing\).
+\end{proposition}
+
+\begin{proof}
+The first partition gives \(|S_0|=|A_0|+|S_1|\).  The definition of
+\(K_0\) gives the disjoint partition
+\[
+ \Gamma
+ =\operatorname{supp}(\overline b)\sqcup K_0,
+\]
+so \(|\Gamma|=|\operatorname{supp}(\overline b)|+|K_0|\).  Subtracting the
+second equality from the first proves the formula.
+
+Injectivity of \(\tau_e\) makes \(\tau_e(b_e)\ne0\) for every \(e\in S_0\),
+so there is no annihilation.  For strict selectors, suppose
+\(t\in K_0\) and choose \(e\in S_1\) with \(\kappa(e)=t\).  Applying \(Q_e\)
+to
+\[
+ j_t\overline b_t
+ =\sum_{\kappa(e')=t}j_t\tau_{e'}(b_{e'})=0
+\]
+leaves \(j_t\tau_e(b_e)=0\), contrary to \(e\in S_1\).  Hence
+\(K_0=\varnothing\).
+\end{proof}
+
+\subsection{Certified change of resolution and exact loss sequences}
+\label{subsec:block15-coarsening-loss}
+
+For resolutions \(s\succeq r\) on \(X\) and \(v\succeq u\) on \(Y\), let
+\[
+ \mathsf B^{v,s}(X,Y)
+ :=
+ \bigoplus_{b\in I_{Y,v}}
+ \bigoplus_{j\in I_{X,s}}
+ \Hom_{\mathcal C}(X_j^s,Y_b^v),
+\]
+and define \(\mathsf B^{u,r}(X,Y)\) similarly.  Analysis of a morphism gives
+an isomorphism
+\[
+ \mathfrak a^{v,s}_{X,Y}:
+ \Hom_{\mathcal C}(X,Y)\xrightarrow{\sim}
+ \mathsf B^{v,s}(X,Y),
+\]
+whose inverse is lane synthesis.
+
+\begin{proposition}[Certified coarsening is an exact coordinate change]
+\label{prop:block15-certified-coarsening}
+The change from fine to coarse block coordinates, canonical relative to the
+chosen splittings, is
+\[
+ \Gamma^{(u,r)}_{(v,s)}
+ :=
+ \mathfrak a^{u,r}_{X,Y}
+ \bigl(\mathfrak a^{v,s}_{X,Y}\bigr)^{-1}.
+\]
+For a fine matrix \(h=(h_{bj})\), its \((a,i)\)-entry is
+\[
+ \bigl(\Gamma^{(u,r)}_{(v,s)}h\bigr)_{a i}
+ =
+ \sum_{b,j}
+ \bigl(\pi_{Y,a}^u\iota_{Y,b}^v\bigr)
+ h_{bj}
+ \bigl(\pi_{X,j}^s\iota_{X,i}^r\bigr).
+\]
+Only descendants of \(a\) and \(i\) can contribute.  The inverse is the
+corresponding fine analysis after coarse synthesis.  Consequently, changing a
+complete lane resolution loses no information.  Loss occurs only after a
+subsequent selector, quotient, summary, or fold is applied.
+\end{proposition}
+
+\begin{proof}
+The displayed definition is a composite of two isomorphisms from
+\cref{thm:block15-universal-lane-transport}.  Expanding coarse analysis after
+fine synthesis gives the entry formula.  If \(b\) is not a descendant of
+\(a\), then
+\(p_{Y,a}^up_{Y,b}^v=0\), hence
+\(\pi_{Y,a}^u\iota_{Y,b}^v=0\).  The source factor vanishes by the same
+argument when \(j\) is not a descendant of \(i\).  Reversing analysis and
+synthesis produces the inverse.
+\end{proof}
+
+\begin{corollary}[Functorial coarsening]
+\label{cor:block15-functorial-coarsening}
+For \(t\succeq s\succeq r\) and compatible target resolutions,
+the certified coordinate changes compose strictly.  They also intertwine
+matrix multiplication.  Thus a finite refinement diagram gives a genuine
+diagram of equivalent matrix-coordinate categories, not merely a family of
+numerically similar arrays.
+\end{corollary}
+
+\begin{theorem}[Abelian fold-loss exact sequence]
+\label{thm:block15-abelian-fold-exact-sequence}
+Let \(\mathcal A\) be an abelian category.  Suppose a finite family of lane
+objects \((B_e)_{e\in E}\), target objects \((C_t)_{t\in T}\), and morphisms
+\(\tau_e:B_e\to C_{\kappa(e)}\) is given.  Let
+\(q_e:\bigoplus_{e'\in E}B_{e'}\to B_e\) be the coordinate projection and
+define
+\[
+ \Phi:=\sum_{e\in E}j_{\kappa(e)}\tau_eq_e:
+ \bigoplus_{e\in E}B_e\longrightarrow
+ \bigoplus_{t\in T}C_t.
+\]
+Then there are canonical short exact sequences
+\[
+ 0\longrightarrow\ker\Phi
+ \longrightarrow\bigoplus_eB_e
+ \longrightarrow\im\Phi
+ \longrightarrow0
+\]
+and
+\[
+ 0\longrightarrow\im\Phi
+ \longrightarrow\bigoplus_tC_t
+ \longrightarrow\coker\Phi
+ \longrightarrow0.
+\]
+The first sequence is the exact fold-loss certificate.  Suppose every
+\(\tau_e\) is monic and there are endomorphisms
+\(Q_e\in\End(\bigoplus_tC_t)\) satisfying
+\[
+ Q_ej_{\kappa(e')}\tau_{e'}
+ =\delta_{e,e'}j_{\kappa(e')}\tau_{e'}
+ \quad\text{as morphisms }B_{e'}\longrightarrow\bigoplus_tC_t.
+\]
+Then \(\Phi\) is monic.  If, in addition, there are morphisms
+\[
+ r_e:\bigoplus_tC_t\longrightarrow B_e,
+ \qquad r_ej_{\kappa(e)}\tau_e=1_{B_e},
+\]
+then \(L=(r_eQ_e)_e\) is a left inverse of \(\Phi\).  Thus the first exact
+sequence splits, \(\ker\Phi=0\), and the image inclusion in the second exact
+sequence also splits.
+\end{theorem}
+
+\begin{proof}
+The two sequences are the kernel--image and image--cokernel factorizations in
+an abelian category.  The selector argument in (L8), interpreted internally
+in \(\mathcal A\), makes \(\Phi\) monic.  The displayed morphism \(L\) is a
+left inverse by strict separation.  Hence the first sequence splits;
+moreover, \(\Phi L\) is an idempotent with image \(\im\Phi\), so the image
+inclusion in the second sequence splits as well.
+\end{proof}
+
+\begin{boundary}[Coordinate coarsening versus statistic coarsening]
+\label{bnd:block15-coordinate-vs-statistic-coarsening}
+The complete fine and coarse block matrices are isomorphic coordinate records.
+Replacing each coarse block by a dimension, norm, valuation, degree, support
+bit, or color is a different map.  Its kernel or fiber must be computed in the
+native doctrine.  The lane theorem does not make such a statistic complete.
+\end{boundary}
+
+\subsection{The matrix category carried by a lane system}
+\label{subsec:block15-matrix-category}
+
+\begin{definition}[Lane matrix category at a fixed resolution]
+\label{def:block15-lane-matrix-category}
+Let \(\mathcal L_{\mathsf R}\) be the category whose objects are objects of
+\(\mathcal C\) equipped with full finite profiled lane systems over
+\(\mathsf R\), with all underlying \(\mathcal C\)-morphisms allowed.  For
+\(r\in\mathsf R\), define
+\(\operatorname{Mat}_r(\mathcal L_{\mathsf R})\) to have the tagged finite
+families
+\([X;(X_i^r)_{i\in I_{X,r}}]\) as objects and rectangular matrices
+\[
+ (h_{a i}),
+ \qquad h_{a i}:X_i^r\to Y_a^r,
+\]
+as morphisms.  Composition is matrix contraction and identities are diagonal
+identity matrices.
+
+For \(s\succeq r\), define
+\[
+ \Gamma_{sr}:\operatorname{Mat}_s(\mathcal L_{\mathsf R})
+ \longrightarrow\operatorname{Mat}_r(\mathcal L_{\mathsf R})
+\]
+by replacing each object tag with its \(r\)-tag and sending a fine matrix to
+the certified source-and-target coordinate change of
+\cref{prop:block15-certified-coarsening}.
+\end{definition}
+
+\begin{theorem}[Fixed-resolution matrix-category equivalence]
+\label{thm:block15-matrix-category-equivalence}
+The functor
+\[
+ \mathfrak M_r:\mathcal L_{\mathsf R}\longrightarrow
+ \operatorname{Mat}_r(\mathcal L_{\mathsf R}),
+ \qquad
+ X\longmapsto[X;(X_i^r)_i],
+ \qquad
+ f\longmapsto([f]_{a i}^{r,r}),
+\]
+is an equivalence.  A quasi-inverse returns the lane-decorated object named by
+the tag and sends a matrix to
+\[
+ \sum_{a,i}\iota_{Y,a}^r h_{a i}\pi_{X,i}^r.
+\]
+For every \(s\succeq r\), the coordinate changes are functors and satisfy
+\[
+ \Gamma_{sr}\mathfrak M_s=\mathfrak M_r.
+\]
+For \(t\succeq s\succeq r\), they also satisfy
+\[
+ \Gamma_{tr}=\Gamma_{sr}\Gamma_{ts}.
+\]
+Thus the equivalences are compatible with every certified change of
+resolution.
+\end{theorem}
+
+\begin{proof}
+The unique lane matrix and composition clauses of
+\cref{thm:block15-universal-lane-transport} show that \(\mathfrak M_r\) is
+fully faithful.  Every object of the displayed matrix category is, by
+definition, the lane family of an object of \(\mathcal L_{\mathsf R}\), so it is
+essentially surjective.  Analysis and synthesis furnish the unit and counit
+isomorphisms.  Each \(\Gamma_{sr}\) is conjugation by exact analysis and
+synthesis, so it preserves identities and matrix composition.  The two
+displayed identities follow from cancellation of adjacent analysis--synthesis
+pairs, equivalently from functorial coarsening in
+\cref{cor:block15-functorial-coarsening}.
+\end{proof}
+
+\begin{remark}[No dimension claim]
+\label{rem:block15-address-count-not-dimension}
+The number \(|I_{X,r}|\) counts declared addresses.  A lane object can have
+arbitrary dimension, rank, length, measure, or entropy, including zero where
+the ambient doctrine permits it.  Matrix equivalence therefore does not
+identify address count with any of those invariants.
+\end{remark}
+
+\subsection{Multilinear and specified-polynomial transport}
+\label{subsec:block15-multilinear}
+
+The additive theorem does not automatically govern arbitrary nonlinear maps.
+There is, however, an exact extension in the category of modules when the
+multilinear pieces are supplied as data.
+
+\begin{theorem}[Module multilinear lane expansion]
+\label{thm:block15-multilinear-lane-expansion}
+Let \(\kk\) be a commutative ring.  Let
+\[
+ X^{(1)},\ldots,X^{(d)},Y
+\]
+be \(\kk\)-modules with finite split lane systems, and let
+\[
+ T:X^{(1)}\times\cdots\times X^{(d)}\longrightarrow Y
+\]
+be a specified \(\kk\)-multilinear map.  Define
+\[
+ T_{a;i_1,\ldots,i_d}
+ :=
+ \pi_{Y,a}T
+ (\iota_{1,i_1}-,\ldots,\iota_{d,i_d}-).
+\]
+Then
+\[
+ T(x_1,\ldots,x_d)
+ =
+ \sum_{a,i_1,\ldots,i_d}
+ \iota_{Y,a}
+ T_{a;i_1,\ldots,i_d}
+ (\pi_{1,i_1}x_1,\ldots,\pi_{d,i_d}x_d).
+\]
+Substitution of multilinear maps is governed by finite contraction over every
+intermediate lane address.
+
+Separately, let \(X,Y\) be \(\kk\)-modules with finite split lane systems and
+suppose a polynomial map is presented with specified data
+\[
+ P(x)=T_0+T_1(x)+T_2(x,x)+\cdots+T_D(x,\ldots,x),
+\]
+where
+\[
+ T_0\in Y,
+ \qquad
+ T_n:X^n\longrightarrow Y\quad(1\le n\le D)
+\]
+and every \(T_n\) is a supplied multilinear map.  Then
+\[
+ T_0=\sum_a\iota_{Y,a}\pi_{Y,a}(T_0),
+\]
+and adding this degree-zero decomposition to the displayed multilinear
+expansions gives an exact lane expansion of \(P\).
+\end{theorem}
+
+\begin{proof}
+Insert \(x_\ell=\sum_{i_\ell}p_{\ell,i_\ell}x_\ell\) in every input, use
+multilinearity to distribute the finite sums, and insert
+\(1_Y=\sum_a p_{Y,a}\) in the output.  The coordinate formula follows from
+the chosen splittings.  Repeating the calculation after substitution gives
+the contraction law.  The degree-zero identity is output synthesis applied
+to \(T_0\); the polynomial statement is then a finite sum of the specified
+homogeneous pieces.
+\end{proof}
+
+\begin{boundary}[The nonlinear doctrine must be specified]
+\label{bnd:block15-multilinear-boundary}
+Over a general commutative ring, a polynomial function need not determine a
+unique symmetric multilinear polarization.  Infinite analytic expansions also
+require a declared topology and convergence theorem.  Therefore
+\cref{thm:block15-multilinear-lane-expansion} is stated for supplied
+multilinear maps and supplied finite polynomial data.  It does not assert a
+canonical lane calculus for every nonlinear category.
+\end{boundary}
+
+\subsection{Factorial lanes and residue packets}
+\label{subsec:block15-factorial-realization}
+
+The factorial construction is an exact arithmetic realization of the abstract
+lane mechanism.  It is useful because the addresses, refinement maps, Fourier
+projectors, and hypergeometric coordinates can all be written explicitly.
+
+For integers \(N\ge1\) and \(n\ge0\), define the step factorial
+\[
+ (a)_{n;N}:=\prod_{k=0}^{n-1}(a+Nk),
+ \qquad (a)_{0;N}:=1.
+\]
+For a commutative ring \(A\) and a formal series
+\(F(z)=\sum_{m\ge0}a_mz^m\in A[[z]]\), define its residue lane
+\[
+ \mathcal P_{N,j}F(z)
+ :=
+ \sum_{\substack{m\ge0\\m\equiv j\ (\mathrm{mod}\ N)}}a_mz^m,
+ \qquad 0\le j<N.
+\]
+
+\begin{theorem}[Exact factorial--residue realization]
+\label{thm:block15-factorial-residue-realization}
+Let \(N,c,n\in\mathbb Z\) with \(N\ge1\), \(c\ge0\), and \(n\ge0\).
+Then
+\[
+ \boxed{
+ \frac{(Nn+c)!}{c!}
+ =
+ \prod_{r=c+1}^{c+N}(r)_{n;N}.}
+\]
+Each integer factor from \(c+1\) through \(c+Nn\) occurs in exactly one
+lane.  For every commutative ring \(A\), on the \(A\)-module \(A[[z]]\) the
+operators
+\((\mathcal P_{N,j})_{0\le j<N}\) satisfy
+\[
+ \mathcal P_{N,j}^2=\mathcal P_{N,j},
+ \qquad
+ \mathcal P_{N,j}\mathcal P_{N,k}=0\ (j\ne k),
+ \qquad
+ \sum_{j=0}^{N-1}\mathcal P_{N,j}=1.
+\]
+If \(M\in\mathbb Z\) and \(M\ge1\), their exact refinement law is
+\[
+ \mathcal P_{N,j}
+ =
+ \sum_{\ell=0}^{M-1}\mathcal P_{NM,j+\ell N}.
+\]
+
+Suppose further that \(K\) is a field, that \(N\) is invertible in \(K\),
+and that \(K\) contains a primitive \(N\)-th root of unity \(\omega\).  Then
+for every \(F\in K[[z]]\),
+\[
+ \mathcal P_{N,j}F(z)
+ =
+ \frac1N\sum_{\ell=0}^{N-1}
+ \omega^{-j\ell}F(\omega^\ell z).
+\]
+If, in addition, \(K\) has characteristic zero, the exponential and
+hypergeometric series below are defined in \(K[[z]]\).  Put
+\[
+ E_{N,j}(z)
+ :=\mathcal P_{N,j}e^z
+ =\sum_{n\ge0}\frac{z^{Nn+j}}{(Nn+j)!}.
+\]
+If
+\[
+ \mathbf b_{N,j}
+ :=
+ \left\{
+ \frac{j+r}{N}:1\le r\le N,
+ \ r\ne N-j
+ \right\},
+\]
+then
+\[
+ E_{N,j}(z)
+ =
+ \frac{z^j}{j!}
+ {}_0F_{N-1}
+ \left(
+ \begin{matrix}-\\ \mathbf b_{N,j}\end{matrix};
+ \frac{z^N}{N^N}
+ \right).
+\]
+Thus coefficient-residue, root-of-unity, and hypergeometric descriptions are
+exact additive coordinate realizations of one residue-address decomposition.
+The step-factorial identity is an exact multiplicative companion with the
+same address arithmetic; it is not asserted to be an additive idempotent
+decomposition of the factorial.
+\end{theorem}
+
+\begin{proof}
+Every integer \(m\) with \(c<m\le c+Nn\) has a unique representation
+\(m=r+Nk\) with \(c+1\le r\le c+N\) and \(0\le k<n\).  Multiplying these
+disjoint factors proves the factorial identity.
+
+The projector laws follow coefficient by coefficient.  The residue classes
+modulo \(NM\) lying over \(j\pmod N\) are precisely
+\(j,j+N,\ldots,j+(M-1)N\), which proves refinement.  Character
+orthogonality gives the Fourier formula.  Finally,
+\[
+ (Nn+j)!
+ =
+ j!\,N^{Nn}
+ \prod_{r=1}^{N}\left(\frac{j+r}{N}\right)_n.
+\]
+Exactly one factor in the product is \((1)_n=n!\).  Removing it leaves the
+parameter set \(\mathbf b_{N,j}\) and gives the hypergeometric series.
+\end{proof}
+
+\begin{corollary}[Factorial-lane genealogy]
+\label{cor:block15-factorial-genealogy}
+The step-factorial split supplies an exact multiplicative partition of the
+factor set, while the residue projectors supply an exact additive partition of
+the coefficient series.  The residue projectors instantiate
+\cref{thm:block15-universal-lane-transport} directly.  The step-factorial
+product is realized by the supplied finite multilinear pointwise
+multiplication map on the module of lane sequences, as in
+\cref{thm:block15-multilinear-lane-expansion}.  Their common address
+refinement is divisibility of the modulus.  Hence the additive transport law
+and the multiplicative companion share exact address-refinement
+combinatorics, without identifying a product factorization with an additive
+idempotent splitting.
+\end{corollary}
+
+\subsection{Typed native specializations}
+\label{subsec:block15-specializations}
+
+The next statements identify concrete realizations and record the hypotheses
+that make each use of the theorem legal.  They do not identify the surrounding
+strata with one another.
+
+\subsubsection{Fourier and polyphase lanes}
+
+\begin{proposition}[Typed polyphase realization]
+\label{prop:block15-polyphase-specialization}
+Let \(K\) be a field, let \(N\in\mathbb Z\) with \(N\ge1\) be invertible in \(K\), and suppose
+\(K\) contains a primitive \(N\)-th root of unity.  For
+\(F(z)=\sum_{n\ge0}a_nz^n\in K[[z]]\), set
+\[
+ F_j(w):=\sum_{n\ge0}a_{Nn+j}w^n.
+\]
+Then
+\[
+ F(z)=\sum_{j=0}^{N-1}z^jF_j(z^N)
+\]
+is exact analysis and synthesis.  The Fourier residue projectors and the
+polyphase components satisfy the explicit coordinate relation
+\[
+ \mathcal P_{N,j}F(z)=z^jF_j(z^N).
+\]
+For every integer \(M\ge1\), refinement from \(N\) to \(NM\) is the
+projector-sum law of
+\cref{thm:block15-factorial-residue-realization}.
+\end{proposition}
+
+\begin{proof}
+Every exponent has a unique quotient and remainder on division by \(N\).
+The Fourier formula in
+\cref{thm:block15-factorial-residue-realization} identifies the same
+coefficient sections with character projectors.
+\end{proof}
+
+\subsubsection{Cartier and fixed-radix lanes}
+
+\begin{proposition}[Typed Cartier realization]
+\label{prop:block15-cartier-specialization}
+Let \(K\) be a field and let \(k\ge2\).  Work with \(K\)-valued formal
+series and fix the least-significant-digit-first convention.  Define
+\[
+ \Lambda_d\left(\sum_{n\ge0}a_nz^n\right)
+ :=\sum_{n\ge0}a_{kn+d}z^n,
+ \qquad
+ S_d(G):=z^dG(z^k),
+ \quad 0\le d<k.
+\]
+Then
+\[
+ \Lambda_dS_e=\delta_{de}1,
+ \qquad
+ \sum_{d=0}^{k-1}S_d\Lambda_d=1.
+\]
+For a digit word \(w=d_0d_1\cdots d_{a-1}\), the iterated Cartier lane is
+\[
+ \Lambda_{d_{a-1}}\cdots\Lambda_{d_1}\Lambda_{d_0}F.
+\]
+It selects coefficients with index
+\[
+ k^an+[w]_k,
+ \qquad
+ [w]_k=d_0+kd_1+\cdots+k^{a-1}d_{a-1}.
+\]
+Concatenation gives strict radix refinement and the lane path law.
+\end{proposition}
+
+\begin{proof}
+The first identities follow by coefficient extraction and unique quotient and
+remainder.  Iterating in the stated reading convention gives the displayed
+address, and concatenation composes the affine index maps.
+\end{proof}
+
+\subsubsection{Holonomic lanes}
+
+\begin{proposition}[Typed holonomic realization]
+\label{prop:block15-holonomic-specialization}
+Let \(K\) be a characteristic-zero field and let the \(K\)-valued sequence
+\((u_n)\) satisfy a linear
+recurrence with polynomial coefficients.  Beyond a finite singular prefix,
+write the recurrence as a finite-dimensional rational nonautonomous state
+model
+\[
+ v_{n+1}=A(n)v_n,
+ \qquad A(n)\in\operatorname{Mat}_d(K(n)).
+\]
+For a fixed integer \(N\ge1\) and residue \(0\le j<N\), the lane state
+\(w_m=v_{Nm+j}\) evolves by the exact \(N\)-step rational transfer
+\[
+ w_{m+1}
+ =
+ A(Nm+j+N-1)\cdots A(Nm+j)w_m
+\]
+whenever the displayed factors are defined.  Equivalently, residue
+multisection of a D-finite generating series gives D-finite lanes.  The finite
+singular prefix and any exceptional denominators remain explicit data.
+\end{proposition}
+
+\begin{proof}
+Iterate the state equation \(N\) times.  Closure of D-finite series under
+scaling the variable, finite sums, and root-of-unity multisection gives the
+equivalent generating-series statement after a field extension containing the
+needed roots.  No autonomous finite-state claim is used.
+\end{proof}
+
+\subsubsection{Local Newton--Mahler lanes}
+
+\begin{proposition}[Typed local clopen realization]
+\label{prop:block15-local-specialization}
+Fix a prime \(p\) and an integer \(a\ge0\).  For
+\(f\in C(\mathbb Z_p,\mathbb Z_p)\), with \(q\in\mathbb Z_p\) the branch
+coordinate, define
+\[
+ \Analysis_{p^a}(f)
+ :=
+ \bigl(q\mapsto f(p^aq+s)\bigr)_{0\le s<p^a}.
+\]
+Piecewise synthesis on the disjoint clopen cosets
+\(s+p^a\mathbb Z_p\) is its inverse.  Refining from \(p^a\) to
+\(p^{a+b}\), for every integer \(b\ge0\), gives the exact child-address and
+mixed-radix composition law.
+Let
+\[
+ \mathcal M:=\mathcal M_p^{-1}:C(\mathbb Z_p,\mathbb Z_p)
+ \xrightarrow{\sim}c_0(\mathbb Z_p)
+\]
+be Mahler analysis from \cref{thm:block08-mahler-coordinate}, and write
+\(R_{p^a,s}f(q):=f(p^aq+s)\).  Conjugation gives the exact coefficient
+operator
+\[
+ \mathcal T_{p^a,s}
+ :=\mathcal M R_{p^a,s}\mathcal M^{-1}:
+ c_0(\mathbb Z_p)\longrightarrow c_0(\mathbb Z_p),
+\]
+whose affine kernel is computed in \cref{thm:block08-affine-transfer}.  Its
+mixed-radix composition is \cref{thm:block08-kernel-composition}.
+
+The assertion of complete clopen analysis is restricted to these
+prime-power packets.  More general affine coefficient kernels may still
+compose according to their declared mixed-radix law, but an arbitrary integer
+modulus does not automatically partition \(\mathbb Z_p\) into that many
+disjoint clopen branches.
+\end{proposition}
+
+\begin{proof}
+The \(p^a\) cosets are disjoint, clopen, and cover \(\mathbb Z_p\).  Restricting
+after piecewise synthesis and synthesizing after restriction are identities.
+Writing a child address as \(s+p^at\) proves refinement.  The cited Mahler
+isomorphism makes the displayed conjugation exact, and the two cited kernel
+theorems give its coefficient formula and composition law.
+\end{proof}
+
+\subsubsection{Nonlinear tree lanes}
+
+\begin{proposition}[Typed Fuss--Catalan realization]
+\label{prop:block15-tree-specialization}
+Let \(K\) be a characteristic-zero field, let \(q\in\mathbb Z\) with
+\(q\ge2\), and let
+\(\alpha\in K^\times\).  The uniquely marked formal solution of
+\[
+ U=z+\alpha U^q,
+ \qquad U(0)=0,
+\]
+has support
+\[
+ [z^{1+(q-1)n}]U
+ =\frac{1}{(q-1)n+1}\binom{qn}{n}\alpha^n
+ \ne0
+ \qquad(n\ge0),
+\]
+and every other coefficient is zero.  Thus its support is exactly the set of
+degrees congruent to \(1\pmod{q-1}\).
+For an integer packet width \(N\ge1\), set
+\(g=\gcd(N,q-1)\).  Exactly \(N/g\) residue addresses are active, namely
+the congruence class \(1\pmod g\).  Packetizing the specified multilinear
+map \((U_1,\ldots,U_q)\mapsto U_1\cdots U_q\) gives the exact finite
+carry-convolution system supplied by
+\cref{thm:block15-multilinear-lane-expansion}.  On a cyclic orbit of order
+\(q-1\), the power map used for packet synthesis has
+\[
+ \frac{q-1}{\gcd(N,q-1)}
+\]
+distinct images.  If a fixed embedding \(K\hookrightarrow\mathbb C\) sends
+\(\alpha\) to a positive real number and the marked branch is interpreted in
+the smooth implicit analytic schema, its critical points and values satisfy
+\[
+ q\alpha\tau^{q-1}=1,
+ \qquad
+ \rho=\tau-\alpha\tau^q=\frac{q-1}{q}\tau.
+\]
+The resulting orbit \(\rho\mu_{q-1}\) is precisely the dominant singularity
+orbit, and packetization leaves \((q-1)/g\) distinct images.
+\end{proposition}
+
+\begin{proof}
+Lagrange inversion gives the displayed coefficient formula and zero at every
+other degree.  Characteristic zero and \(\alpha\ne0\) make every displayed
+coefficient nonzero.  Their residues modulo \(N\) form the coset of the subgroup
+generated by \(q-1\), whose size is \(N/g\).  Multilinear lane expansion of
+the product gives the packet equation, including the power of the packet
+variable produced by the quotient in residue addition.  On the cyclic group
+of order \(q-1\), the kernel of multiplication by \(N\) has order \(g\), so
+the image has order \((q-1)/g\).  The critical equations give the displayed
+values, while \cref{thm:block11-dominant-orbit} identifies their full orbit as
+the dominant one under the stated analytic hypotheses.
+\end{proof}
+
+\subsubsection{Algebraic branch lanes}
+
+\begin{proposition}[Typed cyclic-radical realization]
+\label{prop:block15-algebraic-specialization}
+Let \(K\) be a characteristic-zero field containing \(\mu_d\) and a
+primitive \(N\)-th root of unity \(\omega\), let
+\(d,m,N\in\mathbb Z_{\ge1}\), and choose
+the formal branch
+\[
+ F(z)=(1-\alpha z^m)^{-1/d},
+ \qquad \alpha\in K^\times.
+\]
+With \(g=\gcd(N,m)\), its nonzero coefficients occupy exactly the subgroup of
+\(\mathbb Z/N\mathbb Z\) generated by \(m\), which has \(N/g\) addresses.
+The rotated radicands
+\[
+ 1-\alpha\omega^{jm}z^m,
+ \qquad 0\le j<N,
+\]
+also have exactly \(N/g\) distinct values.
+
+If, in addition, their distinct Kummer classes generate a subgroup isomorphic
+to \((\mathbb Z/d\mathbb Z)^{N/g}\) in the Kummer quotient
+\[
+ K(z)^\times/K(z)^{\times d},
+\]
+then the compositum of the corresponding radical branch fields has degree
+\[
+ d^{N/g}
+\]
+over \(K(z)\).  Without that independence hypothesis, the lane orbit count
+remains exact but the degree formula is only an upper bound.
+\end{proposition}
+
+\begin{proof}
+The binomial series is supported at exponents \(mn\).  The cyclic subgroup
+calculation gives both address and rotation counts.  The degree statement is
+the standard Kummer independence calculation for the explicitly listed
+classes.  A relation among the classes produces a field collision not detected
+by address count alone.
+\end{proof}
+
+\subsubsection{Finite Galois lanes}
+
+\begin{proposition}[Typed semisimple Galois realization]
+\label{prop:block15-galois-specialization}
+Let \(G\) be finite and let \(K\) be a characteristic-zero splitting field
+for \(G\).  The primitive central idempotents
+\[
+ e_\chi
+ =
+ \frac{\chi(1)}{|G|}
+ \sum_{g\in G}\chi(g^{-1})g
+ \in K[G]
+\]
+for \(\chi\in\operatorname{Irr}_K(G)\) form a complete
+pairwise-annihilating lane system on every finite-dimensional
+semisimple \(K[G]\)-module \(V\):
+\[
+ V=\bigoplus_{\chi\in\operatorname{Irr}_K(G)} e_\chi V.
+\]
+Every \(G\)-equivariant map is block diagonal in these isotypic lanes, while
+an arbitrary \(K\)-linear map has the full lane matrix of
+\cref{thm:block15-universal-lane-transport}.
+
+For a subgroup \(H\le G\), the Reynolds operator
+\[
+ e_H=\frac1{|H|}\sum_{h\in H}h
+\]
+is an idempotent projector onto \(V^H\); equivalently,
+\((e_H,1-e_H)\) is a two-lane system on the underlying \(K\)-vector space.
+It is not in general a Boolean
+selector formed from the isotypic projectors above.  Projectors belonging to unrelated
+subgroups need not annihilate one another, so they do not automatically form
+one lane system.  Transport through induction, restriction, or subgroup
+refinement requires the corresponding Mackey or double-coset data.
+\end{proposition}
+
+\begin{proof}
+Maschke semisimplicity and the character idempotent relations give the first
+decomposition.  An equivariant map commutes with the center of \(K[G]\), hence
+with every \(e_\chi\).  Averaging proves that \(e_H\) is idempotent with image
+\(V^H\).  Two subgroup averages generally fail the pairwise-annihilation
+axiom, which proves the stated boundary.
+\end{proof}
+
+\subsection{Descent of lane systems through a finite atlas}
+\label{subsec:block15-lane-descent}
+
+The local theorem becomes global only when the addresses and splittings glue
+without address holonomy.  The following statement makes those additional
+hypotheses explicit.
+
+\begin{theorem}[Finite atlas descent for lane transport]
+\label{thm:block15-lane-descent}
+Let \(\mathfrak R\) be a finite profiled atlas whose participating chart
+categories are additive and idempotent-complete, with additive transition
+functors \(F_{UV}:\mathfrak R(U)\to\mathfrak R(V)\) on its declared
+overlaps.  Let
+\[
+ X=(X_U,\theta^X_{UV}),
+ \qquad
+ Y=(Y_U,\theta^Y_{UV}),
+ \qquad
+ Z=(Z_U,\theta^Z_{UV})
+\]
+be three compatible descent objects.  Thus the transition isomorphisms satisfy
+the identity and cocycle equations.  Let
+\[
+ f=(f_U):X\longrightarrow Y,
+ \qquad
+ g=(g_U):Y\longrightarrow Z
+\]
+be compatible descended morphisms.
+
+Fix one finite resolution shape \(\mathsf R\).  Suppose every local object
+\(A_U\), for \(A\in\{X,Y,Z\}\), carries a finite profiled lane system over
+\(\mathsf R\).  For every overlap, every \(r\in\mathsf R\), and every such
+\(A\), suppose there is an address bijection
+\[
+ \lambda_{UV}^{A,r}:
+ I_{A_U,r}\xrightarrow{\sim}I_{A_V,r}
+\]
+such that
+\[
+ \lambda_{UU}^{A,r}=1,
+ \qquad
+ \lambda_{UT}^{A,r}
+ =\lambda_{VT}^{A,r}\lambda_{UV}^{A,r},
+\]
+on every triple overlap \((U,V,T)\), and, for \(s\succeq r\),
+\[
+ \rho_{sr}^{A_V}\lambda_{UV}^{A,s}
+ =
+ \lambda_{UV}^{A,r}\rho_{sr}^{A_U}.
+\]
+Require trivial address holonomy: for every \(A\) and \(r\), there is a
+global finite address set \(I_{A,r}\), a global refinement map
+\(\rho_{sr}^{A}:I_{A,s}\twoheadrightarrow I_{A,r}\), and bijections
+\[
+ \mu_U^{A,r}:I_{A_U,r}\xrightarrow{\sim}I_{A,r}
+\]
+such that
+\[
+ \mu_V^{A,r}\lambda_{UV}^{A,r}=\mu_U^{A,r},
+ \qquad
+ \mu_U^{A,r}\rho_{sr}^{A_U}
+ =\rho_{sr}^{A}\mu_U^{A,s}.
+\]
+Assume also that the transition isomorphisms intertwine the local projectors:
+\[
+ \theta^A_{UV}
+ F_{UV}(p_{A_U,i}^r)
+ =
+ p_{A_V,\lambda_{UV}^{A,r}(i)}^r
+ \theta^A_{UV},
+\]
+and that the verified transition profiles preserve the chosen splittings,
+finite sums, composition, and refinement equations, with coherent splitting
+comparisons on triple overlaps.
+
+Then:
+\begin{enumerate}[label=\textup{(D\arabic*)}]
+\item after relabeling by the \(\mu_U^{A,r}\), each local lane and its chosen
+splitting define a lane summand in \(\Desc(\mathfrak R)\), and the global
+addresses carry the declared projector-sum refinement;
+\item the local matrices \(([f_U]_{a i})\), \(([g_U]_{c a})\), and
+\(([g_Uf_U]_{c i})\) glue after the prescribed address relabelings and
+splitting comparisons;
+\item the descended matrices satisfy
+\[
+ [gf]_{c i}=\sum_a[g]_{c a}[f]_{a i};
+\]
+\item every compatible family of support selectors and named residuals
+descends, and every compatible refinement square remains a projector-sum
+refinement square in the descent category;
+\item every fold whose source objects, target objects, and structure maps are
+compatible descent data defines a fold in \(\Desc(\mathfrak R)\).  Compatible
+selectors and left inverses descend, so a split-losslessness certificate
+descends directly from its left-inverse identity.  Moreover, suppose the
+relevant local kernels \(K_U=\ker(\Phi_U)\) exist, every transition functor
+preserves them, and there are coherent comparison isomorphisms
+\[
+ \eta_{UV}:F_{UV}(K_U)\xrightarrow{\sim}K_V
+\]
+compatible with the kernel inclusions and satisfying the triple-overlap
+cocycle.  Then the global kernel exists and is computed chartwise:
+\[
+ \bigl(\ker_{\Desc(\mathfrak R)}\Phi\bigr)_U
+ \cong
+ \ker_{\mathfrak R(U)}(\Phi_U).
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For a global address \(i\in I_{A,r}\), use the local projector indexed by
+\((\mu_U^{A,r})^{-1}(i)\).  The trivialization identity makes these projectors
+correspond under the transition isomorphisms on every overlap; its refinement
+identity makes their local
+projector-sum laws agree.  The coherent splitting comparisons make the
+corresponding inclusions and projections descent morphisms.  Finite
+biproducts in the descent category are computed chartwise, so local analysis
+and synthesis glue and remain mutually inverse.
+
+Compatibility of \(f\) and \(g\), followed by the splitting comparisons,
+shows that their local coordinate blocks agree on overlaps after applying the
+specified address relabelings.  Hence the matrices descend.  Matrix
+multiplication is a finite sum of compositions, both computed chartwise, so
+the local path law glues to the displayed global law.  The same argument
+applies to projector sums, selectors, and residual differences.
+
+Finally, a compatible fold is a morphism in the relevant descent category.
+Compatible selectors and left inverses glue, and their identities can be
+checked chartwise.  Under the additional kernel hypotheses, the objects
+\((K_U,\eta_{UV})\) form a descent object; compatibility with the local kernel
+inclusions gives a global morphism into the fold source.  Its universal
+property is checked in each chart, which proves the displayed chartwise
+kernel identity.  The split case needs no kernel-preservation hypothesis:
+the compatible local left inverses glue directly.
+\end{proof}
+
+\begin{corollary}[Certified atlas lane transport]
+\label{cor:block15-certified-atlas-lane-transport}
+Let \(\mathfrak A_{\mathrm{cert}}\) be the certified finite atlas of this
+manuscript.  On every subatlas whose passports include additive split-lane
+systems, compatible refinement maps, coherent address relabelings with
+trivial address holonomy, and the required preservation profile, the
+Universal Lane Transport Theorem holds in the descent category.  Kernel
+claims additionally require the kernel-preservation and coherence data in
+\cref{thm:block15-lane-descent}.  In particular, any of the typed
+specializations above may be transported across a certified reversible
+overlap after its native hypotheses, address trivializations, and splitting
+cocycles have been checked.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:block15-lane-descent} to the verified subatlas.  The conclusion
+is deliberately restricted to the overlaps whose passports contain all of
+the listed data.
+\end{proof}
+
+\begin{boundary}[Descent is conditional on address coherence]
+\label{bnd:block15-descent-boundary}
+An equivalence of underlying semantic objects does not by itself identify two
+lane systems.  Without the bijections \(\lambda_{UV}^{A,r}\), their cocycle
+law, compatible global trivializations \(\mu_U^{A,r}\), refinement
+compatibility, and coherent splitting comparisons, the local matrices need
+not glue as ordinary globally addressed lanes.  Nontrivial address holonomy
+can permute lanes around a loop; then only invariant orbit sums, or lanes in a
+separately defined local-system-valued category, may descend.  The theorem
+above verifies ordinary descent under trivial holonomy.  It does not
+manufacture missing lane passports for an arbitrary heterogeneous atlas.
+\end{boundary}
+
+\subsection{Sharp boundaries and a finite counterexample}
+\label{subsec:block15-boundaries}
+
+\begin{proposition}[Endpoint selection does not implement refinement]
+\label{prop:block15-endpoint-counterexample}
+Let \(K\) be a field and let \(X=K^2\).  At the coarse resolution use the
+single projector \(p=1_X\).  At the fine resolution use
+\[
+ p_1=
+ \begin{pmatrix}1&0\\0&0\end{pmatrix},
+ \qquad
+ p_2=
+ \begin{pmatrix}0&0\\0&1\end{pmatrix},
+ \qquad p=p_1+p_2.
+\]
+For
+\[
+ f=p_2,
+\]
+the unique coarse block is \(pfp=f\ne0\), whereas selecting the single fine
+endpoint \((p_1,p_1)\) gives \(p_1fp_1=0\).  Therefore a coarse block is the
+sum over all compatible descendant source-target pairs.  It cannot in general
+be represented by choosing one fine endpoint.
+\end{proposition}
+
+\begin{proof}
+The displayed matrix multiplication gives the two values immediately.  The
+full refinement identity recovers
+\(f=\sum_{a,i\in\{1,2\}}p_afp_i\), whose only nonzero term here is
+\(p_2fp_2\).
+\end{proof}
+
+\begin{boundary}[Finite profiled meaning of ``universal'']
+\label{bnd:block15-universal-boundary}
+The theorem proves a common calculus for finite split lanes in additive
+categories and for the explicitly stated profile extensions.  It does not
+assert any of the following:
+\begin{enumerate}
+\item that every mathematical object has a canonical or minimal lane system;
+\item that countably infinite lane sums converge without a topology and a
+convergence theorem;
+\item that arbitrary nonlinear, probabilistic, operator-algebraic, or
+homotopical constructions preserve additive lane identities;
+\item that address count equals vector-space dimension, module rank,
+information, entropy, algebraic degree, or computational complexity;
+\item that a support pattern, heatmap, norm profile, valuation profile, or
+orbit count is a complete invariant;
+\item that native invariants in different strata are equal merely because
+their formulas contain the same gcd or residue operation;
+\item that the theorem supplies historical novelty evidence or external
+validation.
+\end{enumerate}
+Each stronger conclusion requires a native theorem and a preservation
+certificate.
+\end{boundary}
+
+\begin{remark}[Classical core and present synthesis]
+\label{rem:block15-classical-core}
+Finite biproduct coordinates, Peirce decompositions, block-matrix
+multiplication, residue filters, and polyphase identities have classical
+antecedents.  The theorem packages that core with explicit address refinement,
+profile-controlled realization, named residuals, exact fold kernels, and
+typed descent.  This manuscript treats the resulting assembly as an internal
+mathematical contribution.  It does not infer a priority claim without a
+separate literature study.
+\end{remark}
+
+\subsection{Exact finite validation and interpretation}
+\label{subsec:block15-validation}
+
+The accompanying verifier is an exact finite regression suite for selected
+implementation clauses.  It checks integer and rational block reconstruction,
+matrix composition, refinement aggregation, support and residual identities,
+fold collision kernels, factorial-lane partitions, residue-projector
+refinement, and explicit negative controls.  The proofs above do not depend on
+finite sampling.  Conversely, the symbolic proofs do not certify that a
+particular program implements the formulas correctly.  The two records serve
+different purposes.
+
+\IfFileExists{generated/block15_validation_table.tex}{%
+\input{generated/block15_validation_table.tex}%
+}{%
+\begin{table}[htbp]
+\centering
+\caption{Exact finite regression for selected Universal Lane Transport
+implementation clauses.  The generated validation table is inserted when the
+verifier has been run.}
+\label{tab:block15-lane-transport-validation-placeholder}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Record & Status\\
+\midrule
+Machine-readable validation & Run the Block 15 verifier\\
+\bottomrule
+\end{tabular}
+\end{table}%
+}
+
+\begin{resultbox}
+\textbf{Universal Lane Transport result.}
+Finite split lane systems admit exact analysis and synthesis, unique transfer
+matrices, path composition, strict projector-sum refinement, Boolean support
+selectors, named residuals, and exact fold-loss kernels.  Complete changes of
+resolution are coordinate equivalences.  In abelian targets, fold loss sits in
+a canonical short exact sequence.  In module targets, specified multilinear
+and finite polynomial operations expand lane by lane.  Residue/Fourier,
+polyphase, Cartier, holonomic, local Newton--Mahler, Fuss--Catalan, cyclic
+radical, and semisimple Galois systems realize these clauses under their
+printed hypotheses.  The step-factorial product is an exact multiplicative
+companion transported through a specified multilinear multiplication map,
+not an additive idempotent splitting.  Compatible address trivializations,
+refinement, and splitting data make the calculus descend through a finite
+certified atlas when address holonomy is trivial.  No claim is made beyond
+that finite profiled domain.
+\end{resultbox}

@@ -1,0 +1,93 @@
+\section{The canonical affine obstruction}\label{sec:affine}
+The completed linear operator acts on ordinary differences. It remains to supply the arithmetic origin on which those differences act.
+
+On the local space $k^{24}$, let $E$ have fifteen rows. Its first six rows select all fixed local character coordinates in \eqref{eq:localcoords}. Its remaining nine rows are
+\[
+z\longmapsto c_qz(F_q)-b_qz(I_q).
+\]
+Define
+\begin{equation}\label{eq:A}
+A=EJ:k^{10}\longrightarrow k^{15}.
+\end{equation}
+The self conductor values and inertia conversions in Section~\ref{sec:self-conductor} are part of this operator. Dropping them would reproduce a different matrix.
+
+\subsection{The homogeneous results}
+The complete exact matrices, row reductions, null bases, and rank minors give
+\begin{center}
+\begin{tabular}{crrrl}\toprule
+Pattern&$\operatorname{rank}A$&$\dim_k\ker A$&$\dim_k\coker A$&Remaining difference support\\\midrule
+A&7&3&8&$307,797,1483$\\
+B&7&3&8&$307,797,1483$\\
+C&8&2&7&$307,1483$\\
+D&7&3&8&$307,797,1483$\\\bottomrule
+\end{tabular}
+\end{center}
+\figplaceholder{19_affine_dimensions}{The kernel measures ambiguity after an affine solution exists. The cokernel measures possible first stage incompatibility. Neither dimension evaluates the actual target.}
+In the global parameter order $(a,x_{q_1},\ldots,x_{q_9})$, the kernel is exactly the span of the unit vectors at the listed minus congruence primes. After all toric rows are imposed, the plus congruence inertia differences vanish. This is a theorem about differences. It does not imply that the absolute inertia of a bare primitive vanishes at those plus primes.
+
+Pattern C improves the previous homogeneous dimension from four to two. Its two former plus directions, evaluated on the added toric rows at $197,337$, give
+\[
+\begin{pmatrix}3&1\\5&2\end{pmatrix},\qquad\det=1\quad\text{in }\F_7.
+\]
+Thus both directions are removed. Nonzero minors prove rank lower bounds, while full null bases prove the matching upper bounds. Exact arithmetic, not numerical singular value thresholds, determines the ranks.
+
+\subsection{The arithmetic target}
+Choose a bare global primitive $p_0$ from Theorem~\ref{thm:bareprimitive}. This is one continuous global cochain. Its values have not been computed. Define $t(p_0)\in k^{15}$ as follows. Its first six coordinates are the ordinary local character coordinates of $p_v^{\mathrm{fix}}-p_0|_v$. At each support prime, put
+\begin{equation}\label{eq:target}
+t_q(p_0)=-h_qc_q-c_qp_0(F_q)+b_qp_0(T_q),
+\qquad h_q=(q^2-1)/7\pmod7.
+\end{equation}
+At support, $\alpha$ is zero and $\chi$ trivial, so the restriction of $p_0$ is an ordinary character. At fixed places only its difference from the prescribed primitive is ordinary. The target therefore has the declared coordinates without mistyping either inhomogeneous cochain as an ordinary character.
+
+\begin{theorem}[Exact Stage P criterion]\label{thm:affine}
+Fix the same residual cocycles, full support, natural frame, and reference, together with the accepted inputs used above. Let $N$ be any full left null matrix of $A$, with independent rows and
+\[
+NA=0,\qquad\operatorname{rank}N=15-\operatorname{rank}A.
+\]
+There is a global restricted primitive meeting all fixed first trace and support toric conditions if and only if
+\begin{equation}\label{eq:obstruction}
+Nt(p_0)=0.
+\end{equation}
+The class $[t(p_0)]\in\coker A$ is independent of the chosen bare primitive.
+\end{theorem}
+\begin{proof}
+Two bare primitives have the same differential, so their difference is an ordinary global character. Conversely adding any such character preserves the differential. By Section~\ref{sec:localization}, every character has a unique parameter vector $z\in k^{10}$ with local vector $Jz$.
+
+A candidate $p=p_0+z_{\mathrm{char}}$ meets the fixed local condition precisely when the selected local character coordinates equal those of $p_v^{\mathrm{fix}}-p_0|_v$. At support, substitution in \eqref{eq:toricp} gives
+\[
+c_qz_{\mathrm{char}}(F_q)-b_qz_{\mathrm{char}}(T_q)=t_q(p_0).
+\]
+Together, these fifteen equations are exactly $Az=t(p_0)$. Thus Stage P is soluble if and only if $t(p_0)\in\im A$.
+
+Since $NA=0$, the image is contained in $\ker N$. Rank nullity gives
+\[
+\dim\ker N=15-\operatorname{rank}N=\operatorname{rank}A=\dim\im A.
+\]
+Hence $\ker N=\im A$, proving the equivalence with \eqref{eq:obstruction}. Merely having some left null rows would prove necessity, not sufficiency. Completeness of $N$ is part of the theorem.
+
+Now replace the origin by $p'_0=p_0+z_{0,\mathrm{char}}$, where its localization is $Jz_0$. At the fixed places, the target differences decrease by the selected coordinates of this character. At support, \eqref{eq:target} decreases by $c_qz_{0,\mathrm{char}}(F_q)-b_qz_{0,\mathrm{char}}(T_q)$. Therefore
+\begin{equation}\label{eq:originshift}
+t(p'_0)=t(p_0)-Az_0.
+\end{equation}
+The quotient class and $Nt$ are unchanged. The coordinate basis for $N$ itself is optional, but its vanishing criterion and the quotient class are canonical.
+\end{proof}
+The result concerns the stated first stage. It does not identify its solution set with actual representations, solve the upper equations with their prescribed geometry, or prove higher integral liftability.
+
+\begin{corollary}[Affine fibers]
+If Stage P has one solution with parameter $z_*$, its complete solution set for these linear conditions is $z_*+\ker A$. It has $49^3,49^3,49^2,49^3$ choices in patterns A through D, respectively. If the target is not in the image, the set is empty.
+\end{corollary}
+\begin{proof}
+$Az=t$ is equivalent to $A(z-z_*)=0$. The exact kernel dimensions give the counts over $k$.
+\end{proof}
+An additional common pointwise semilinear $j$, frame, and reference condition makes the relevant minus conductor coefficients lie in $w\F_7$. Under that extra hypothesis, and only after compatible nonemptiness is known, the corresponding first stage ambiguity bounds are $343,343,49,343$. They are neither representation counts nor integer solution counts. The bare theorem does not prove the semilinear affine fiber nonempty.
+
+\subsection{A small model of the mistake to avoid}
+Consider $A:k\to k^2$ given by $A(z)=(z,0)$. Its kernel is zero, its rank is one, and it has a full left null functional $N(u,v)=v$. For target $(a,b)$, a solution exists precisely when $b=0$. The map has a one dimensional image and a zero kernel, but this gives no information about the target's second coordinate. Substituting $(0,0)$ because it is convenient manufactures solvability of a different problem.
+
+The final Beal operator has the same logic with fifteen target coordinates. Synthetic image targets are useful tests of an evaluator. They cannot be substituted for the arithmetic values of $p_0$.
+
+\subsection{What the evaluator actually returns}
+The supplied program takes a pattern, a field basis, fifteen encoded values, a kind tag, and provenance. It returns the obstruction coordinates, a character correction when one exists, and a homogeneous kernel basis. Field values use the encoding $a+7b$ for $a+bw$, with $0\le a,b<7$. The program records arithmetic target authentication as false. It verifies linear arithmetic on supplied data. It neither constructs a defining extension for $p_0$ nor authenticates its values.
+
+No actual $t(p_0)$ or $Nt(p_0)$ has been supplied for any of the eight patterns. Some obstruction coordinates may vanish for further arithmetic reasons, but none has been evaluated here. The next arithmetic obligation is therefore concrete: construct a defining extension or a duality evaluation of this same canonical class. A nonzero result excludes the first stage branch under its inputs. A zero result supplies a first stage family for the prescribed upper and integral compatibility problem.
+\figplaceholder{24_research_boundary}{The canonical affine class is the immediate target. Passing it supplies a first stage family, after which upper geometry and integral lifting remain. Other conductors, depths, components, and signatures require their own coverage.}

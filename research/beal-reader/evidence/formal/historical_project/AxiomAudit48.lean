@@ -1,0 +1,9 @@
+import BealBlock48LocalAlgebra
+#print axioms KomorebiBeal.Block48.common_root_forces_trace_eq
+#print axioms KomorebiBeal.Block48.oddC_three_traces_excluded
+#print axioms KomorebiBeal.Block48.oddC_zero_trace_forces_zero_branch
+#print axioms KomorebiBeal.Block48.evenC_candidate_nonzero_at_neg_one
+#print axioms KomorebiBeal.Block48.evenC_candidate_nonzero_at_neg_four
+#print axioms KomorebiBeal.Block48.evenC_full_polynomial_excluded
+#print axioms KomorebiBeal.Block48.oddC_full_polynomial_excluded
+#print axioms KomorebiBeal.Block48.determinant_weight_uniqueness

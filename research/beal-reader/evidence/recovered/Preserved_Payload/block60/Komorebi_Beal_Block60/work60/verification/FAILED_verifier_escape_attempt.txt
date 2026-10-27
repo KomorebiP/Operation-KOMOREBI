@@ -1,0 +1,11 @@
+Historical failed packaging edit, not executable source.
+
+A redundant backslash-literal rewrite changed a valid path check into an
+unterminated Python string. Observed stderr:
+
+SyntaxError: unterminated string literal (detected at line 33)
+
+33:         need(not p.is_absolute() and '..' not in p.parts and '\' not in name,'Unsafe manifest path')
+60:             need(not p.is_absolute() and '..' not in p.parts and '\' not in i.filename,'Unsafe ZIP path')
+
+No scientific program or output was changed. The final checks use chr(92).

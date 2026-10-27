@@ -1,0 +1,24 @@
+import sys,itertools,json
+sys.path.insert(0,'/mnt/data/beal67_predecessor/Komorebi_Beal_Block66/work66/computations')
+import filter66 as f
+qs=(701,911,1009,1051,1091,1121,1177,1231)
+qs=tuple(q for q in qs if f.prime(q) and q%7==1 and q%5 in (1,4))
+gens={}
+for c in itertools.product(range(-2,3),repeat=6):
+ n=f.norm(c)
+ if n in qs and n not in gens:gens[n]=c
+ if len(gens)==len(qs):break
+ans=[]
+for ell,c in sorted(gens.items()):
+ r=next(x for x in range(2,ell) if pow(x,7,ell)==1 and f.ev(c,x,ell)==0)
+ ph=[x for x in range(ell) if (x*x-x-1)%ell==0]
+ def sym(x):return next(i for i in range(7) if pow(r,i,ell)==pow(x%ell,(ell-1)//7,ell))
+ ks=[[sym(x),sym(3),sym(2*x-1)] for x in ph]
+ vals=[]
+ for q,s in [(337,4),(547,6),(673,2),(1933,3)]:
+  g=f.primitive(q);z=pow(g,(q-1)//7,q);ls={pow(g,i,q):i%7 for i in range(q-1)}
+  vals.append((-sum(b*ls[f.ev(c,pow(z,b,q),q)] for b in range(1,7)))%7)
+ b=sum(s*t for s,t in zip((4,6,2,3),vals))%7
+ prod=[f.M[f.fdot(k,[7,6,1])][b] for k in ks]
+ ans.append({'ell':ell,'generator':c,'root':r,'kummer':ks,'beta_cols':vals,'beta':b,'products':prod})
+print(json.dumps(ans,indent=2));open('/mnt/data/beal67_work/generator_probe.json','w').write(json.dumps(ans,indent=2))

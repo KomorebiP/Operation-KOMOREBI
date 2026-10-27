@@ -1,0 +1,12 @@
+import sys,json,time
+sys.path.insert(0,'/mnt/data/beal67_predecessor/Komorebi_Beal_Block66/work66/computations')
+import count66 as c
+c.PRIMES=(701,911,1009)
+for q in c.PRIMES:
+ t=time.time();r=c.run_prime(q);open('/mnt/data/beal67_work/count_probe_'+str(q)+'.json','w').write(json.dumps(r,sort_keys=True,indent=2)+'\n')
+ print(q,len(r['rows']),r['degree_two_counts'],r['residual_pairs'],r['trace_defect_set'],time.time()-t,flush=True)
+ # proceed only if the frozen required products survive, do not count needless primes
+ targets={701:[39,18],911:[37,16],1009:[35,14]}
+ pairs=[row['defect_roots'] for row in r['rows'] if row['residual_pass']]
+ if not any(all(v in p for v in targets[q]) for p in pairs):
+  print('Exclusion at',q,flush=True);break

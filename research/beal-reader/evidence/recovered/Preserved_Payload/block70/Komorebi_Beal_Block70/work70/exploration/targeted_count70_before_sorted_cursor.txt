@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+"""Exact demand-driven pair-existence counts; all needed exclusions have complete coverage.
+Imports the unchanged, hash-pinned primary finite-field counting core. Every omitted
+N2 is justified either by its exact trace or by an already recorded positive witness.
+"""
+from __future__ import annotations
+import argparse,collections,hashlib,json,math,sys
+from pathlib import Path
+sys.dont_write_bytecode=True
+import count68 as core
+
+def ident(s):return hashlib.sha256(json.dumps(s,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+def skey(t,n):return f'{t},{n}'
+def targets(frozen,fixture,columns,q):
+ byq={c['q']:c for c in columns['columns']};rows=fixture['kummer_rows'][str(q)];out=[]
+ for s in frozen['survivors']:
+  assert q not in s['columns']
+  v=s['alpha'][0]//7;r=s['alpha'][1]
+  b=sum(byq[c]['rows'][str(q)]*t for c,t in zip(s['columns'],s['inertia']))%7
+  pp=[b*(y*r+z)%7+7*(b*x*v%7) for x,y,z in rows]
+  if b:
+   a=pp[0]%7;d=pp[0]//7
+   assert pp[1]==a+7*((-d)%7)
+   sig=[2*a%7,(a*a-5*d*d)%7];key=skey(*sig)
+  else:sig=None;key=None
+  out.append({'id':ident(s),'beta_value':b,'products':pp,'bad_allowed':b==0,'signature':sig,'signature_key':key})
+ return out
+
+def run(q,ts):
+ assert q>2000 and q%7==1 and q%5 in(1,4) and all(q%d for d in range(2,math.isqrt(q)+1))
+ active={t['signature_key'] for t in ts if t['signature_key'] is not None};wanted=sorted(active);witness={}
+ p=q;Q=q;f=1;nu=(1 if Q%5==1 else -1)*core.character(-3,p)
+ seventh={pow(c,7,p) for c in range(1,p)}
+ a3=[pow(a,3,p) for a in range(p)];b5=[pow(b,5,p) for b in range(p)]
+ eligible={(a,b) for a in range(p) for b in range(p) if (a3[a]+b5[b])%p in seventh}
+ todo=set(eligible);covered=set();scalings=[(pow(u,5,p),pow(u,3,p)) for u in range(1,p)]
+ tabs=core.tables(p);rows=[];n2s=0;skip=collections.Counter();target=[p*p,-2*p*(p+1),(p+1)**2+2*p,-2*(p+1),1]
+ while todo:
+  a,b=min(todo);orbit={(a*u5%p,b*u3%p) for u5,u3 in scalings};pairs=sorted(orbit&eligible)
+  assert not covered.intersection(pairs);todo.difference_update(orbit);covered.update(pairs)
+  n1=core.counts(a,b,p,tabs,1);S=nu*(p+1-n1);diff=S-2*(p+1)
+  trace=diff//7%7 if diff%7==0 else None
+  needed=trace is not None and any(int(k.split(',')[0])==trace for k in active)
+  row={'representative':[a,b],'admissible_pairs':[list(x) for x in pairs],'orbit_size':len(orbit),'N1':n1,'N2':None,'trace_correction':trace,'reason':None,'rational_polynomial':None,'twisted_polynomial':None,'residual_pass':None,'correction_pair':None,'signature':None,'witness_for':None}
+  if not needed:
+   row['reason']='trace_excludes_all_unwitnessed_targets' if active else 'all_targets_already_witnessed';skip[row['reason']]+=1
+  else:
+   row['reason']='second_count_required';n2=core.counts(a,b,p,tabs,2);n2s+=1;rp,P=core.local_polynomial(p,n1,n2,1,nu);res=all((x-y)%7==0 for x,y in zip(P,target))
+   row.update(N2=n2,rational_polynomial=rp,twisted_polynomial=P,residual_pass=res)
+   if res:
+    roots=core.defect_roots(P,p);a0=roots[0]%7;d0=roots[0]//7;sig=[2*a0%7,(a0*a0-5*d0*d0)%7];key=skey(*sig)
+    row['correction_pair']=roots;row['signature']=sig
+    if key in active:
+     active.remove(key);witness[key]=len(rows);row['witness_for']=key
+  rows.append(row)
+ assert covered==eligible
+ dig=hashlib.sha256()
+ for a,b in sorted(eligible):dig.update(f'{a},{b}\n'.encode())
+ cases=[]
+ for t in ts:
+  t=dict(t);k=t['signature_key'];t['good_witness_row']=witness.get(k);t['good_exists']=k in witness if k is not None else None;t['survives']=t['bad_allowed'] or bool(t['good_exists']);cases.append(t)
+ return {'q':q,'Q':Q,'f':f,'nu':nu,'admissible_pairs':len(eligible),'pair_set_sha256':dig.hexdigest(),'degree_one_counts':len(rows),'degree_two_counts':n2s,'skip_reasons':dict(skip),'targets':wanted,'unattained_targets':sorted(active),'witness_rows':witness,'rows':rows,'cases':cases,'survivors':[c['id'] for c in cases if c['survives']]}
+
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--q',type=int,required=True);ap.add_argument('--sieve',type=Path,required=True);ap.add_argument('--fixture',type=Path,required=True);ap.add_argument('--columns',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args()
+ frozen=json.loads(a.sieve.read_text());fixture=json.loads(a.fixture.read_text());cols=json.loads(a.columns.read_text())
+ assert frozen['survivor_count']==18 and len(frozen['survivors'])==18
+ ts=targets(frozen,fixture,cols,a.q);rec=run(a.q,ts)
+ out={'schema':'beal.block70.targeted_count.v1','status':'PASS_TARGETED_FINITE_COUNTS','input_count':18,'scope':'Complete target-specific good-pair existence/exclusion, not a complete residual Frobenius list. Bad reduction retained. Zero-product targets need no good witness.','record':rec}
+ a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(out,indent=2,sort_keys=True)+'\n')
+ print('PASS_TARGETED_COUNTS',a.q,'pairs',rec['admissible_pairs'],'N1',rec['degree_one_counts'],'N2',rec['degree_two_counts'],'remaining',len(rec['survivors']),'unattained',rec['unattained_targets'],flush=True)
+if __name__=='__main__':main()

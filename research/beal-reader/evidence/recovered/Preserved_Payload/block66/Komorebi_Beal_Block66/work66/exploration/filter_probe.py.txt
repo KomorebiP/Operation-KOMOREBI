@@ -1,0 +1,31 @@
+from pathlib import Path
+import sys,importlib.util,json
+sys.dont_write_bytecode=True
+old=Path('/mnt/data/beal66_work/predecessor65/Komorebi_Beal_Block65')
+spec=importlib.util.spec_from_file_location('primary65',old/'work65/computations/conductor65.py');c=importlib.util.module_from_spec(spec);spec.loader.exec_module(c)
+root=Path(__file__).resolve().parents[1]
+data=json.loads((root/'source_records/conductor65.json').read_text());points=json.loads((root/'verification/count66.json').read_text())
+c.GEN[421]=(-2,-2,-2,-2,1,1);c.GEN[449]=(-2,-2,-2,-1,2,1);c.GEN[631]=(-2,-2,0,-1,0,2);c.GEN[659]=(-2,-2,1,0,0,-1)
+for rec in points['primes']:
+ q=rec['q'];rt=next(x for x in range(2,q) if pow(x,7,q)==1 and c.ev(c.GEN[q],x,q)==0)
+ def lg(x):return next(k for k in range(7) if pow(rt,k,q)==pow(x%q,(q-1)//7,q))
+ ph=[x for x in range(q) if (x*x-x-1)%q==0]
+ data['kummer_rows'][str(q)]=[[lg(x),lg(3),lg(2*x-1)] for x in ph]
+ data['good_trace_sets'][str(q)]=rec['trace_defect_set']
+ data['paired_trace_sets'][str(q)]=sorted({tuple(r['defect_roots']) for r in rec['rows'] if r['residual_pass']})
+ print('PRIME',q,'K',data['kummer_rows'][str(q)],'pairs',data['paired_trace_sets'][str(q)],'residualpairs',rec['residual_pairs'],'N1N2',rec['degree_one_counts'],rec['degree_two_counts'])
+cols={q:c.column(q) for q in data['universe']}
+ss=data['cases']['complete25_boundary']['survivors']
+output=[]
+for q in (421,449,631,659):
+ rejected=[];keep=[]
+ for s in ss:
+  b=c.dot([cols[t]['rows'][str(q)] for t in s['columns']],s['inertia'])
+  pp=[c.MUL[c.dot(row,s['alpha'])][b] for row in data['kummer_rows'][str(q)]]
+  case={'candidate':s,'beta':b,'products':pp}
+  if c.allowed(data,q,s['alpha'][0],s['alpha'][1],b,True):keep.append(s)
+  else:rejected.append(case)
+ output.append({'q':q,'before':len(ss),'after':len(keep),'rejected':rejected})
+ print('STAGE',q,len(ss),len(keep));ss=keep
+for s in ss[:10]:print('SURVIVOR',s)
+(root/'exploration/filter_probe4.json').write_text(json.dumps({'stages':output,'survivors':ss},indent=2))

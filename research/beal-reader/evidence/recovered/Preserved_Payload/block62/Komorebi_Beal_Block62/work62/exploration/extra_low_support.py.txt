@@ -1,0 +1,36 @@
+import json,itertools,importlib.util,math
+from pathlib import Path
+p=Path('/mnt/data/Komorebi_Beal_Block62/work62/computations/trace_product_certificate.py')
+spec=importlib.util.spec_from_file_location('x',p);x=importlib.util.module_from_spec(spec);spec.loader.exec_module(x)
+GEN=dict(x.GEN)
+GEN[113]=(-1,-1,0,-1,1,1);GEN[127]=(-2,-2,-2,1,1,1)
+S=[197,883,1373,1667,43,113,127]
+root={};log={}
+for q in S:
+ root[q]=next(r for r in range(2,q) if pow(r,7,q)==1 and x.ev(GEN[q],r,q)==0)
+ g=next(g for g in range(2,q) if len({pow(g,i,q) for i in range(q-1)})==q-1)
+ log[q]={pow(g,i,q):i%7 for i in range(q-1)}
+ print('support',q,'root',root[q],'primitive',g)
+R={ell:[None if ell==q else -sum(b*log[q][x.ev(GEN[ell],pow(root[q],b,q),q)] for b in range(1,7))%7 for q in S] for ell in [29,43,71,491,211,239]}
+T=json.load(open('/mnt/data/Komorebi_Beal_Block62/work62/verification/trace_product.json'))
+K={int(q):rows for q,rows in T['kummer_rows'].items()};G={int(q):set(rows) for q,rows in T['good_trace_sets'].items()}
+print('R',R)
+allout=[]
+for q,ratio in [(43,5),(113,4),(127,2)]:
+ j=S.index(q);sbase=[0]*len(S);sbase[j]=1;sbase[1]=-R[71][j]*pow(R[71][1],-1,7)%7
+ survive=[];counts={};cur=[([u,ratio,1],[x.MUL[c][z] for z in sbase]) for u in range(49) for c in range(1,49)]
+ print('q',q,'sbase',sbase)
+ for ell in [29,43,491,211,239]:
+  if ell==q:continue
+  kept=[]
+  for a,s in cur:
+   row=[0 if v is None else v for v in R[ell]]
+   v=x.dot(row,s);v=x.MUL[2][v] if ell==43 else v
+   ps=[x.MUL[x.dot(k,a)][v] for k in K[ell]]
+   good=all(z in G[ell] for z in ps);bad=not any(ps)
+   if any(k[0] for k in K[ell]):bad=bad and v==0
+   if good or bad:kept.append((a,s))
+  cur=kept;counts[ell]=len(cur)
+ print('counts',counts,'survivors',cur[:20])
+ allout.append({'q':q,'ratio':ratio,'sbase':sbase,'counts':counts,'survivors':cur})
+Path('/mnt/data/beal62_explore/extra_low_support.json').write_text(json.dumps({'support':S,'roots':root,'rows':R,'results':allout},indent=2))
