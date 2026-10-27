@@ -8,6 +8,8 @@ Komorebi Space provides the ambient setting for those constructions. It brings r
 
 Start with the [reading guide](docs/START_HERE.md), the [twelve core papers](papers/README.md), or the [monographs](monographs/README.md).
 
+Browse by [completion stage, Lean coverage and confidence](docs/COMPLETION_STATUS.md), or follow the [cleanup and finalization queue](docs/FINALIZATION_QUEUE.md). Each label links to its exact scope and recorded evidence.
+
 ## Foundations
 
 | Work | Subject |
@@ -22,10 +24,11 @@ Start with the [reading guide](docs/START_HERE.md), the [twelve core papers](pap
 | Interest | Starting point |
 |---|---|
 | Arithmetic, special functions, and sequence constructions | [Special Functions](monographs/special-functions/) |
-| Signals, quadratic forms, and numerical probability | [Polyphase Signal Calculus](papers/paper-v/current/) |
-| Quantum models and circuit constructions | [Quantum Seed Calculus](papers/paper-vii/current/) |
+| Signals, quadratic forms, and numerical probability | [COS Method](monographs/cos-method/) and [Polyphase Signal Calculus](papers/paper-v/current/) |
+| Quantum models and circuit constructions | [Quantum and Circuits](monographs/quantum-and-circuits/) and [Quantum Seed Calculus](papers/paper-vii/current/) |
+| Discrete and continuous physical models | [Physics](monographs/physics/) |
 | Algebraic signal models | [Large Signal Model](monographs/large-signal-model/) |
-| Machine reasoning, abstraction, and interacting agents | [Machine Societies](monographs/machine-societies/) |
+| Machine reasoning, abstraction, and interacting agents | [Machine Native Reasoning](monographs/machine-native-reasoning/) and [Machine Societies](monographs/machine-societies/) |
 | Discovery, proof, and review | [Proof Path Theory](monographs/proof-path-theory/) and [Komorebi Methodology](monographs/komorebi-methodology/) |
 
 ## Software and experiments

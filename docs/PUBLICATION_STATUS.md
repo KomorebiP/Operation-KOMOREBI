@@ -2,6 +2,8 @@
 
 Recorded 2026-10-27.
 
+[Completion stages, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Public availability and scientific completion are separate statuses.
+
 The three canonical repositories are public:
 
 | Repository | Role |

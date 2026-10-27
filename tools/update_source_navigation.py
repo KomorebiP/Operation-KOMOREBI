@@ -15,6 +15,7 @@ import re
 import subprocess
 from pathlib import Path
 from import_source_collection import ImportFailure, receipt_matches, safe_relative
+from update_completion_status import status_cells
 
 REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
 CATEGORY_LABELS = {'papers':'Core papers','foundations':'Foundations and semantics',
@@ -145,6 +146,9 @@ class Renderer:
         self.available = [r for r in self.records if r['available']]
         self.primary = [r for r in self.available if r['role']=='primary']
         self.outputs = {}
+        status_path = root / 'manifests/project-status.json'
+        self.project_status = json.loads(status_path.read_text(encoding='utf-8')) if status_path.exists() else None
+        self.status_by_id = {r['id']:r for r in self.project_status['components']} if self.project_status else {}
 
     def put(self, path, content):
         self.outputs[path] = content.rstrip() + '\n'
@@ -181,6 +185,8 @@ Realization Calculus studies how mathematical structure behaves under decomposit
 Komorebi Space provides the ambient setting for those constructions. It brings realizations, projections, transfers, compatibility conditions, and obstructions into one framework. Together, the calculus and the space organize the foundations and applications collected here.
 
 Start with the [reading guide](docs/START_HERE.md), the [twelve core papers](papers/README.md), or the [monographs](monographs/README.md).
+
+Browse by [completion stage, Lean coverage and confidence](docs/COMPLETION_STATUS.md), or follow the [cleanup and finalization queue](docs/FINALIZATION_QUEUE.md). Each label links to its exact scope and recorded evidence.
 
 ## Foundations
 
@@ -347,6 +353,8 @@ This collection studies how a construction can be represented, transformed, and 
 
 ## Choose a reading route
 
+For project readiness and remaining work, use the [completion and confidence guide](COMPLETION_STATUS.md) and [finalization queue](FINALIZATION_QUEUE.md).
+
 '''+table(['Goal','Begin with'],[
             ('Understand the common language',w('realization-calculus-book','Realization Calculus')+' and '+w('komorebi-space','Komorebi Space')),
             ('Study the individual developments','[Papers I–XII](../papers/README.md)'),
@@ -405,10 +413,20 @@ All software is **beta and work in progress**. Cite **Komorebi P.**, the specifi
         totals=self.state['totals']; date=self.state['as_of']
         page='docs/COMPONENT_INDEX.md'
         text='# Component index\n\nRecorded '+date+'.\n\n'+str(totals['available_primary_components'])+' primary components and '+str(totals['available_supporting_components'])+' supporting source collections are present with verified file receipts. The receipts cover **'+format(totals['unique_source_files'],',')+' distinct source files**. Older source imports remain separately available.\n'
+        text+='\n[Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the exact scope in each linked record; file counts establish neither proof nor completion.\n'
         for group,label in GROUP_LABELS.items():
             rows=[r for r in self.primary if r['group']==group]
             if rows:
-                text+='\n## '+label+'\n\n'+table(['Component','Source files','Receipt'],[(link(r['title'],r['destination']+'/',page),f"{r['file_count']:,}",link('file record',r['receipt'],page)) for r in rows])
+                if self.project_status:
+                    rendered=[]
+                    for r in rows:
+                        status=self.status_by_id.get(r['id'])
+                        cells=status_cells(status,self.project_status['labels']) if status else ('Needs assessment','Not assessed','Unassessed')
+                        completion=f"[{cells[0]}](STATUS_CATALOG.md#{r['id']})" if status else cells[0]
+                        rendered.append((link(r['title'],r['destination']+'/',page),completion,cells[1],cells[2],f"{r['file_count']:,}",link('file record',r['receipt'],page)))
+                    text+='\n## '+label+'\n\n'+table(['Component','Completion','Lean','Confidence basis','Source files','Receipt'],rendered)
+                else:
+                    text+='\n## '+label+'\n\n'+table(['Component','Source files','Receipt'],[(link(r['title'],r['destination']+'/',page),f"{r['file_count']:,}",link('file record',r['receipt'],page)) for r in rows])
         groups=collections.defaultdict(list)
         for row in self.available:
             if row['role']=='supporting':
@@ -430,6 +448,8 @@ All software is **beta and work in progress**. Cite **Komorebi P.**, the specifi
         text=f'''# Publication status
 
 Recorded {date}.
+
+[Completion stages, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Public availability and scientific completion are separate statuses.
 
 The three canonical repositories are public:
 

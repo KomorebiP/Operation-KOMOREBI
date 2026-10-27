@@ -1,0 +1,266 @@
+#!/usr/bin/env python3
+"""Render the completion guide, evidence catalogue, queue and navigation labels.
+
+The editorial assessments live in manifests/project-status.json. This tool
+checks their identities and evidence bindings; it never infers proof status
+from file counts or runs imported scientific programs. Requires Python 3 and Git.
+"""
+from __future__ import annotations
+
+import argparse
+import collections
+import hashlib
+import json
+import posixpath
+import re
+import subprocess
+from pathlib import Path
+
+REPO_URL = 'https://github.com/KomorebiP/Operation-KOMOREBI'
+STAGES = ('scoped_release', 'reading_release', 'development', 'prototype',
+          'unassessed', 'earlier_checkpoint')
+
+
+def table(headers, rows):
+    def clean(cell):
+        return str(cell).replace('|', '\\|').replace('\n', ' ')
+    return '\n'.join(['| ' + ' | '.join(headers) + ' |',
+                      '|' + '|'.join('---' for _ in headers) + '|'] +
+                     ['| ' + ' | '.join(clean(c) for c in row) + ' |' for row in rows]) + '\n'
+
+
+def link(title, path, page):
+    relative = posixpath.relpath(path, posixpath.dirname(page))
+    return f'[{title}]({relative})'
+
+
+def status_cells(record, labels):
+    """Shared with the source-navigation renderer to prevent label drift."""
+    return tuple(labels[key][record[key]][0] for key in ('stage', 'lean', 'confidence'))
+
+
+def render(data):
+    rows = data['components']
+    primary = [r for r in rows if r['import_role'] == 'primary']
+    supporting = [r for r in rows if r['import_role'] == 'supporting']
+    labels = data['labels']
+    by_id = {r['id']: r for r in rows}
+    counts = collections.Counter(r['stage'] for r in primary)
+    page = 'docs/COMPLETION_STATUS.md'
+    text = f'''# Completion, Lean coverage and confidence
+
+Recorded {data['as_of']} · **Komorebi P.**
+
+Choose work by its completion stage below, then read its exact scope and evidence in the linked entry. **Publication completion, Lean coverage and confidence are separate fields.** A finished book may contain open research; a checked formal block may belong to an unfinished program.
+
+This is an editorial assessment of existing release/status records at [source revision `{data['source_revision'][:12]}`]({REPO_URL}/commit/{data['source_revision']}). It covers **{len(primary)} primary components** and separately accounts for **{len(supporting)} supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
+
+[Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
+
+## Completion stages
+
+'''
+    text += table(['Stage', 'Primary entries', 'Meaning'],
+                  [(labels['stage'][s][0], counts[s], labels['stage'][s][1]) for s in STAGES])
+    text += '''
+These are work categories, not percentages or a ranking of mathematical importance. “Scoped release” means its declared finish line is recorded as complete. It does not mean every surrounding sentence, implementation, or broader conjecture is proved. “Reading edition complete” describes the editorial deliverable, not journal acceptance or a closed research program.
+
+## Lean coverage
+
+'''
+    text += table(['Label', 'Meaning'], labels['lean'].values())
+    text += '''
+“Declared contract” counts only the registered claims in the cited map. Modules, declarations, named theorems, proof bodies and finite test cases are different units. Partial counts must not be converted into a whole-project completion percentage. A source map, integrity hash, Lean guide PDF or static inventory is not a compiler receipt. An inherited record is not automatically invalid; it simply does not certify a changed or wider edition.
+
+## Confidence basis
+
+'''
+    text += table(['Label', 'What supports confidence'], labels['confidence'].values())
+    text += '''
+Confidence labels identify the **strongest recorded evidence for the stated subset**, not a probability that the entire project is correct. A record can contain both checked results and open or refuted claims. Written review is only as broad as its recorded scope; it does not imply external peer review. Formal acceptance still requires correct hypotheses and a faithful prose-to-formal correspondence. Experimental tests address their actual populations, inputs and conditions.
+
+All executable software remains **beta / work in progress**, including implementations attached to completed mathematical releases. Current reuse terms are in [LICENSE.md](../LICENSE.md); older undecided notices remain historical.
+'''
+    for stage in STAGES:
+        selected = [r for r in primary if r['stage'] == stage]
+        text += '\n## ' + labels['stage'][stage][0] + f' ({len(selected)})\n\n'
+        text += table(['Project and exact scope', 'Lean', 'Confidence basis'],
+                      [(f"[{r['title']}](STATUS_CATALOG.md#{r['id']})",
+                        labels['lean'][r['lean']][0], labels['confidence'][r['confidence']][0]) for r in selected])
+    text += f'''
+## Supporting and earlier material
+
+The **{len(supporting)} supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts establish availability; this triage does not re-assess their individual mathematics. They inherit neither the coverage nor the completion label of a newer primary edition.
+
+'''
+    text += table(['Additional material', 'Status in this assessment'],
+                  [((f"[{r['title']}]({r['url']})" if 'url' in r else link(r['title'], r['destination']+'/', page)), r['status']) for r in data['additional_material']])
+    text += '''
+## Maintaining the distinctions
+
+Edit the assessments and cited evidence in `manifests/project-status.json`, then run `python tools/update_completion_status.py`. Use `--check` to validate IDs, evidence bindings and generated pages without writing them. The source-navigation generator reads the same labels for the component index. A changed source, expanded statement or new accepted execution requires a reviewed status update; a successful upload alone does not promote any label.
+
+To promote a formal status, supply the exact claim map, pinned source/environment, accepted compiler and axiom records, appropriate controls and any required semantic correspondence review. To finalize a reader, identify its editable source and matching PDF, complete the relevant build and page checks, and preserve its mathematical scope. Wider research and empirical goals remain separate queue items.
+'''
+
+    page = 'docs/STATUS_CATALOG.md'
+    catalogue = f'''# Project status and evidence catalogue
+
+Recorded {data['as_of']}. These are source-specific editorial assessments of existing records, not fresh proof or compiler results. The [status guide](COMPLETION_STATUS.md) defines every label; the [finalization queue](FINALIZATION_QUEUE.md) groups the remaining work. Evidence-file hashes and the assessed Git revision are recorded in [project-status.json](../manifests/project-status.json).
+
+'''
+    for row in primary:
+        stage, lean, confidence = status_cells(row, labels)
+        catalogue += f'''<a id="{row['id']}"></a>
+
+## {row['title']}
+
+**{stage}** · Lean: **{lean}** · Confidence basis: **{confidence}**
+
+{row['scope']}
+
+**Next gate:** {row['next_step']}
+
+'''
+        if 'current_counterpart' in row:
+            c = by_id[row['current_counterpart']]
+            catalogue += f"Current counterpart: [{c['title']}](#{c['id']}).\n\n"
+        evidence = ' · '.join(link(e['path'][len(row['destination'])+1:] if e['path'].startswith(row['destination']+'/') else 'import receipt (availability only)', e['path'], page) for e in row['evidence'])
+        catalogue += link('Source directory', row['destination']+'/', page) + ' · ' + evidence + '\n\n'
+    catalogue += '''## Supporting and historical collections
+
+Every entry below is **Supporting / historical**, with **Lean: Not assessed** and **Confidence: Unassessed** in this triage. Its own original records may contain narrower accepted results. An import receipt only identifies source files; it is not mathematical evidence. Consult the edition's own statements and execution records before reusing its results.
+
+'''
+    catalogue += table(['Collection', 'Availability record'],
+                       [(link(r['title'], r['destination']+'/', page), link('file receipt', r['evidence'][0]['path'], page)) for r in supporting])
+
+    queue = f'''# Cleanup and finalization queue
+
+Recorded {data['as_of']}. Status cleanup is separate from mathematical research, formalization and empirical qualification. The first two items are implemented by this status organization; the remaining gates are work to do. See the [completion guide](COMPLETION_STATUS.md) for the current labels and [evidence catalogue](STATUS_CATALOG.md) for each source record.
+
+Recommended order: resolve edition/source correspondence and missing verification first; take bounded review and formalization targets next; keep open conjectures and empirical campaigns on their own research tracks. All software remains beta / work in progress.
+'''
+    lanes = [('now', 'Completed status cleanup'), ('next', 'Next finishing work'),
+             ('review', 'Proof and submission review'), ('research', 'Formal, mathematical and empirical development')]
+    for lane, title in lanes:
+        queue += '\n## ' + title + '\n'
+        for task in data['finalization_queue']:
+            if task['lane'] != lane:
+                continue
+            queue += f"\n### {task['id']} — {task['title']}\n\n**Status: {task['status']}**\n\n{task['reason']}\n\n**Done when:** {task['done_when']}\n\n"
+            ids = task['components']
+            if len(ids) > 20:
+                queue += 'Coverage: all primary entries in the [status guide](COMPLETION_STATUS.md).\n'
+            else:
+                queue += 'Applies to: ' + ' · '.join(f"[{by_id[i]['title']}](STATUS_CATALOG.md#{i})" for i in ids) + '.\n'
+    queue += '''
+## Release discipline
+
+Keep accepted source packages and dated failures intact. New claims or corrected mathematics belong in a new edition with its own evidence. A failed control is positive evidence only when it fails for the intended mathematical reason. Missing imports, timeouts and unavailable runtimes are not proof rejections. Conditional results keep their premises after editorial completion.
+
+The collection's current reuse grant already addresses retained historical undecided notices. Updating navigation to explain that grant is cleanup; it does not require relabeling historical source bytes or changing third-party terms.
+'''
+    return {'docs/COMPLETION_STATUS.md': text, 'docs/STATUS_CATALOG.md': catalogue,
+            'docs/FINALIZATION_QUEUE.md': queue}
+
+
+def git_tree(root, git, revision):
+    raw = subprocess.check_output([git, 'ls-tree', '-rz', revision], cwd=root)
+    result = {}
+    for line in raw.split(b'\0'):
+        if line:
+            meta, path = line.split(b'\t', 1)
+            mode, kind, sha = meta.decode().split()
+            if kind == 'blob':
+                result[path.decode('utf-8')] = sha
+    return result
+
+
+def validate(root, data, git):
+    source = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
+    available = {r['id']: r for r in source['components']}
+    records = data['components']
+    assert len(records) == len({r['id'] for r in records}), 'Duplicate project status ID'
+    assert set(available) == {r['id'] for r in records}, 'Source/status component mismatch'
+    evidence = {}
+    for row in records:
+        c = available[row['id']]
+        assert row['destination'] == c['destination'] and row['import_role'] == c['role'], row['id']
+        for key in ('stage', 'lean', 'confidence'):
+            assert row[key] in data['labels'][key], (row['id'], key)
+        assert row['scope'] and row['next_step'] and row['evidence'], row['id']
+        if row['import_role'] == 'supporting':
+            assert (row['stage'], row['lean'], row['confidence']) == ('supporting', 'unassessed', 'unassessed')
+        if row['lean'] in ('source', 'none', 'unassessed'):
+            assert row['confidence'] not in ('formal', 'historical'), row['id']
+        for e in row['evidence']:
+            assert not e['path'].startswith('/') and '..' not in e['path'].split('/'), e['path']
+            assert e['path'] not in evidence or evidence[e['path']] == e, e['path']
+            evidence[e['path']] = e
+    for task in data['finalization_queue']:
+        assert task['status'] in ('done', 'open', 'ongoing')
+        assert set(task['components']) <= set(available), task['id']
+    assert not data['new_lean_execution'] and not data['new_mathematical_proof_audit']
+    pinned = git_tree(root, git, data['source_revision'])
+    current = git_tree(root, git, 'HEAD')
+    paths = sorted(evidence)
+    raw = subprocess.check_output([git, 'cat-file', '--batch'], cwd=root,
+                                  input=('\n'.join(evidence[p]['git_blob_sha1'] for p in paths)+'\n').encode())
+    offset = 0
+    for path in paths:
+        e = evidence[path]
+        assert pinned.get(path) == e['git_blob_sha1'], 'Evidence differs from assessed source: '+path
+        assert current.get(path) == e['git_blob_sha1'], 'Evidence changed; reassess status: '+path
+        end = raw.index(b'\n', offset)
+        size = int(raw[offset:end].split()[2]); offset = end+1
+        blob = raw[offset:offset+size]; offset += size+1
+        assert hashlib.sha256(blob).hexdigest() == e['sha256'], 'Evidence digest mismatch: '+path
+    # Detect working-tree edits to cited records without confusing CRLF checkout conversion.
+    changed = subprocess.check_output([git, 'diff', 'HEAD', '--name-only', '-z'], cwd=root)
+    assert not ({p.decode('utf-8') for p in changed.split(b'\0') if p} & set(evidence)), 'Cited evidence has local edits'
+    return current, len(evidence)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--git', default='git')
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    root = args.root.resolve()
+    data = json.loads((root/'manifests/project-status.json').read_text(encoding='utf-8'))
+    tree, evidence_count = validate(root, data, args.git)
+    outputs = {p: content.rstrip()+'\n' for p, content in render(data).items()}
+    # Keep the visible navigation labels synchronized with the detailed assessment.
+    # Import here because the navigation renderer shares status_cells from this module.
+    from update_source_navigation import Renderer
+    source_state = json.loads((root/'manifests/source-components.json').read_text(encoding='utf-8'))
+    navigation = Renderer(root, source_state)
+    navigation.reader_pages(); navigation.status_pages()
+    for path in ('README.md', 'docs/START_HERE.md', 'docs/COMPONENT_INDEX.md', 'docs/PUBLICATION_STATUS.md'):
+        outputs[path] = navigation.outputs[path]
+    known = set(tree) | set(outputs) | {'manifests/project-status.json'}
+    for path, content in outputs.items():
+        for target in re.findall(r'\]\(([^)]+)\)', content):
+            if '://' in target:
+                continue
+            relative, _, anchor = target.partition('#')
+            resolved = posixpath.normpath(posixpath.join(posixpath.dirname(path), relative)) if relative else path
+            resolved = resolved.rstrip('/')
+            assert resolved in known or any(p.startswith(resolved+'/') for p in known), (path, target)
+            if anchor and resolved in outputs:
+                target_text = outputs[resolved]
+                headings = [re.sub(r'[^\w\- ]', '', s.lower()).replace(' ', '-') for s in re.findall(r'^#+ (.+)$', target_text, re.M)]
+                assert f'id="{anchor}"' in target_text or anchor in headings, (path, target)
+        if args.check:
+            assert (root/path).read_text(encoding='utf-8') == content, 'Generated page is stale: '+path
+        else:
+            (root/path).write_text(content, encoding='utf-8')
+    print(json.dumps({'status': 'PASS', 'components': len(data['components']),
+                      'evidence_files': evidence_count, 'generated_pages': len(outputs),
+                      'new_lean_execution': False, 'new_proof_audit': False}))
+
+
+if __name__ == '__main__':
+    main()

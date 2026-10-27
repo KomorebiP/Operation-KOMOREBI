@@ -6,6 +6,8 @@ This collection studies how a construction can be represented, transformed, and 
 
 ## Choose a reading route
 
+For project readiness and remaining work, use the [completion and confidence guide](COMPLETION_STATUS.md) and [finalization queue](FINALIZATION_QUEUE.md).
+
 | Goal | Begin with |
 |---|---|
 | Understand the common language | [Realization Calculus](../monographs/realization-calculus/) and [Komorebi Space](../monographs/komorebi-space/) |
