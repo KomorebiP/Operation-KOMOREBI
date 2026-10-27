@@ -1,0 +1,147 @@
+\pageheading{EXACT LABORATORY\; /\; COEFFICIENTS}{Integer coordinates for the nonlinear family}
+Normalize the Taylor coefficients by
+\[
+A_n(q,r)=(2n+1)!c_n(q,r),\qquad A_0=1.
+\]
+The recurrence becomes
+\[
+\boxed{A_n=\sum_{i=0}^{n-1}\binom{2n}{2i+1}
+q^{2i+1}r^{2(n-1-i)+1}A_iA_{n-1-i},\quad n\ge1.}
+\]
+Therefore $A_n\in\mathbb Z[q,r]$ has nonnegative coefficients and is
+symmetric in its two variables. The first coordinates are
+\[
+\begin{aligned}
+A_1&=2qr,\\
+A_2&=8q^2r^2(q^2+r^2),\\
+A_3&=q^3r^3[48(q^2+r^2)(q^4+r^4)+80q^2r^2].
+\end{aligned}
+\]
+At $(q,r)=(1,1)$ these are the tangent numbers
+$1,2,16,272,7936,\ldots$, the known OEIS A000182 anchor.
+At $(1,2)$ the exact sequence begins
+$1,4,160,35200,38041600,\ldots$.
+\smallfig{17_tree_addresses}{Ordered trees retain left/right path information.
+The two displayed shapes contribute different monomials to the same
+factorial-normalized coefficient. Their labels are exact tree data.}
+At rational scales, an integer denominator clearing is available. If $D$
+clears every contraction denominator and $H$ clears every bank weight,
+\[
+H^nD^{n(n+1)}A_n\in\mathbb Z.
+\]
+The maximum root-path exponent sum over a full binary tree is $n(n+1)$.
+The clearing provides exact sequence exports without implying a new OEIS entry.
+
+\pageheading{EXACT LABORATORY\; /\; REGIMES}{A formal sequence is not always an analytic germ}
+\smallfig[0.68]{18_parameter_regimes}{The full nonnegative real parameter map separates
+finite-order entire functions, infinite-order entire edges, tangent, and
+zero-radius formal series. Zero scales give the linear function.}
+If $q>0$, $r>1$, the recurrence includes its $i=0$ term and gives
+\[
+c_n\ge\frac{q^nr^{n^2}}{3\cdot5\cdots(2n+1)}.
+\]
+The root test proves zero radius. By symmetry this covers either scale above
+one, provided the other is positive. The exported positive integer asymmetric
+rows belong to this formal regime.
+
+If $0<q<1$, $r=1$, the equation is linear in the uncontracted value:
+$T'=1+T(qz)T(z)$. A known coefficient on $|z|<R/q$ gives a linear ODE
+there, so disk bootstrapping proves entire extension. On the positive ray,
+$(\log T)'=T(qR)+1/T(R)\ge qR$, giving an exponential lower bound for
+$T$. Substitution back gives, for $R\ge2/q$,
+\[
+\log T(R)\ge\frac R2\exp(q^3R^2/8-q/2).
+\]
+Thus the entire order is infinite. The corner $(1,1)$ is tangent with poles.
+These exact boundaries protect the analytic interpretation of the catalog.
+
+\pageheading{EXACT LABORATORY\; /\; PROJECTORS}{Polyphase sections preserve the full sequence}
+For an ordinary generating function $G(z)=\sum_{m\ge0}a_mz^m$ and
+integer $b\ge1$, write
+\[
+G(z)=\sum_{j=0}^{b-1}z^jG_j(z^b),\qquad
+G_j(t)=\sum_{n\ge0}a_{bn+j}t^n.
+\]
+The root projector is
+\[
+P_{b,j}G(z)=\frac1b\sum_{k=0}^{b-1}\omega^{-jk}G(\omega^kz)
+=z^jG_j(z^b),\qquad\omega=e^{2\pi i/b}.
+\]
+The same projector works on an EGF, but the section retains its original
+factorials: $\sum_na_{bn+j}z^{bn+j}/(bn+j)!$.
+Removing those denominators changes the representation and requires an
+explicit transport. Root filtering does not do it automatically.
+
+For causal FIR taps $h_\ell$, $b_m=\sum_\ell h_\ell a_{m-\ell}$ with
+zero extension to negative indices, split $A(z)$ and $B(z)$ into $b$ phases.
+Then $B_i(t)=\sum_jH_{ij}(t)A_j(t)$, where
+\[
+\boxed{H_{ij}(t)=\sum_{\substack{\ell\ge0\\j+\ell\equiv i\pmod b}}
+h_\ell t^{(j+\ell-i)/b}.}
+\]
+The exponent is the nonnegative carry to the next phase block. This is an
+exact coefficient law, with no approximation or loss of terms.
+
+\pageheading{EXACT LABORATORY\; /\; TAPS}{The carry matrix is part of the filter}
+\smallfig{16_polyphase}{A three-phase filter with taps $[1,2,-1]$.
+The matrix carries terms across block boundaries. Interleaving its output
+reproduces the direct scalar FIR calculation exactly.}
+With these taps and $b=3$,
+\[
+H(t)=\begin{pmatrix}
+1&-t&2t\\2&1&-t\\-1&2&1
+\end{pmatrix}.
+\]
+The entries arise from the same congruence condition. For instance an input
+in phase two shifted by one lands in phase zero of the next block, contributing
+$2t$ to $H_{0,2}$.
+
+\claim{Three operations that must be kept distinct}
+For an EGF $E_a(z)=\sum_ma_mz^m/m!$, differentiation transports future
+coefficients: $E_a^{(k)}=\sum_ma_{m+k}z^m/m!$.
+Causal ordinary taps instead act by repeated zero-constant integration:
+\[
+E_b=\sum_\ell h_\ell I^\ell E_a.
+\]
+Multiplication of two EGFs gives Hurwitz convolution,
+$b_m=\sum_{k=0}^m\binom mk a_kh_{m-k}$.
+It is not ordinary sequence FIR convolution. Intrinsic nonlinear feedback
+taps alter the defining family and are a fourth operation with their own
+coefficient recurrence.
+
+\pageheading{EXACT LABORATORY\; /\; REUSABLE CODE}{A catalog with explicit provenance}
+The standard-library \texttt{family\_lab.py} exposes exact coefficient
+polynomials, normalized sequences, positive-bank coefficients, rational
+denominator clearing, root sections, Hurwitz products, ordinary FIR taps,
+and polyphase filter matrices. The catalog contains 18 rows through index 12.
+
+Every row records parameters, coefficient normalization, arithmetic regime,
+and whether its entries are integers or rationals. Eight positive integer
+asymmetric specializations are labeled zero-radius formal sequences. Entire
+interior examples and an infinite-order edge are labeled separately.
+
+\begin{tabular}{@{}p{0.27\linewidth}p{0.35\linewidth}p{0.30\linewidth}@{}}
+\toprule
+Example & First normalized coordinates & Interpretation\\\midrule
+$(1,1)$ & $1,2,16,272,7936$ & Known tangent anchor\\
+$(1,2)$ & $1,4,160,35200,38041600$ & Integer, formal radius zero\\
+$(1/2,1/2)$ & $1,1/2,1/4,1/8,1/16$ & Scaled sinh, entire order one\\
+$(1/3,2/3)$ & $1,4/9,160/729,18560/177147,\ldots$ & Asymmetric entire order one\\
+\bottomrule
+\end{tabular}
+
+\claim{Implementation boundaries are enforced}
+Phase residues and bases must be integers, and a phase bank cannot be empty.
+The independent review found that fractional residues and zero phases were
+previously accepted. Both domain-validation defects were fixed and covered
+by regression assertions before release.
+
+The 8,038 exact API checks compare separate constructions: Picard integration,
+sine/cosine tangent division, root filters in a cyclotomic quotient,
+direct and phase-matrix taps, and coefficient-level antiderivatives.
+They verify finite implementation ranges. The algebraic laws above have
+separate proofs in Appendix E.
+
+The catalog is ready for comparison with OEIS, with known anchors identified.
+It makes no claim that an unmatched prefix establishes a new sequence, and
+no sequence was submitted externally as part of this release.

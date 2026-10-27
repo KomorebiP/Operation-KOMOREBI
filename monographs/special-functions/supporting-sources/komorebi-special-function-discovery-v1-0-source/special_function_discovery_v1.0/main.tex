@@ -1,0 +1,621 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=0.78in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,graphicx,booktabs,array,xcolor,fancyhdr,longtable,calc}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\hypersetup{pdftitle={Special Function Discovery 1.0: Function Families and Their Structure},pdfauthor={Komorebi P.},pdfsubject={Visual monograph with complete structural proofs and exact sequence laboratory}}
+\setcounter{tocdepth}{1}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\definecolor{ink}{HTML}{123B50}
+\definecolor{accent}{HTML}{087F8C}
+\definecolor{warm}{HTML}{B74D36}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{2em}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{ink}SPECIAL FUNCTION DISCOVERY}
+\fancyhead[R]{\small Komorebi P.\;|\;v1.0}
+\fancyfoot[C]{\small\thepage}
+\setlength{\headheight}{14pt}
+\newcommand{\pageheading}[2]{\clearpage\phantomsection\addcontentsline{toc}{section}{#2}{\color{accent}\small\textbf{#1}}\par\vspace{3pt}{\color{ink}\LARGE\bfseries #2}\par\vspace{8pt}}
+\newcommand{\fig}[2]{\begin{center}\includegraphics[width=\linewidth]{figures/#1.pdf}\end{center}{\small\color{ink}#2}\par}
+\newcommand{\claim}[1]{\par\textbf{\color{accent}#1}\par}
+\newcommand{\smallfig}[3][0.78]{\begin{center}\includegraphics[width=#1\linewidth]{figures/#2.pdf}\end{center}{\small\color{ink}#3}\par}
+\newcommand{\dd}{\,d}
+\newcommand{\A}{A_{a,\beta,Q}}
+\newcommand{\Z}{Z_Q}
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Function Families and Their Structure}
+\renewcommand{\KomorebiSubtitle}{Asymmetric feedback, arithmetic depth, prime-sieve polynomials, and orbit spectra}
+\renewcommand{\KomorebiSeries}{Research library}
+\renewcommand{\KomorebiKind}{Traditional paper}
+\renewcommand{\KomorebiEdition}{Research release 1.0 / Standardized 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Function Families and Their Structure}
+\renewcommand{\KomorebiTitleSize}{31}
+\renewcommand{\KomorebiTitleLeading}{36}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{\textbf{Four worked families.} Definitions, first coefficients, growth laws,
+nonreduction results, and reproducible examples. Local proofs were independently
+reviewed. Historical novelty is unresolved for the candidate extensions.
+
+This 1.0 release develops four families with full structural proofs, computed
+visuals, a reusable exact sequence API, and explicit polyphase and tap laws.
+Historical priority is classified separately from mathematical correctness.}
+\begingroup\setlength{\parskip}{0pt}\tableofcontents\endgroup
+
+\pageheading{READING MAP}{What was actually developed}
+The useful question is whether a definition carries structure that survives a
+change of notation. These four routes provide different answers: a scale law,
+an obstruction to finite differential equations, a detectable positivity
+boundary, and a rotation-invariant spectral coordinate.
+
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}@{}}
+\toprule
+Family & Structure worked out & Status of the construction\\
+\midrule
+Asymmetric dilation & Entire solutions; exact growth balance;
+off-diagonal nonrescaling; intrinsic feedback banks & Candidate extension of a
+known one-dilation tangent analog\\
+Complex arithmetic depth & Exact exponential type; coupled shift calculus;
+strict positive kernel; exact parameter recovery; no polynomial-coefficient linear ODE & Candidate
+extension of the project's integer arithmetic energy\\
+Prime-sieve packets & Exact moment field; real Hankel singularities;
+positivity-margin collapse; multiple-prime geometry; arithmetic resolvent & Candidate arithmetic
+specialization of classical orthogonal-polynomial machinery\\
+Orbit spectral zeta & Global meromorphic continuation; rational integer values;
+regularized product; multiplicity-aware orbit quotient & Worked specialization of known
+Mittag--Leffler seeds and spectral-zeta methods\\
+\bottomrule
+\end{tabular}
+
+\claim{A prior-art check changed the first route}
+The equation $f_q'(z)=1+f_q(qz)^2$, $f_q(0)=0$, is already present in
+Miguel A. M\'endez's 2024 path-length paper, Example 2.4. It remains an
+important baseline, but its definition is not a discovery of this project.
+The asymmetric extension keeps two separate contractions and permits a
+proved distinction from every amplitude/argument rescaling of that baseline.
+
+\claim{How to read the evidence}
+Theorem statements below concern exact infinite objects under the displayed
+hypotheses. Plots and decimal roots illustrate them. Finite assertions check
+implementations within recorded ranges. None of these three forms of evidence
+establishes historical priority by itself.
+
+The raw route files contain longer proofs, source-by-source comparisons,
+negative controls, and unresolved questions. Their exact revisions are pinned
+in the independent review and the final computation manifest.
+
+\pageheading{FAMILY 1}{Two scales inside the function}
+For real $0<q,r<1$, define the normalized odd solution
+\[
+\boxed{T_{q,r}'(z)=1+T_{q,r}(qz)T_{q,r}(rz),\qquad T_{q,r}(0)=0.}
+\]
+The contractions are part of the defining feedback. The function is symmetric
+in $q,r$, but unequal scales retain left/right address information.
+\fig{01_asymmetric_functions}{Computed Taylor curves. Each entire curve uses
+terms through $z^{321}$; positive-coefficient Cauchy estimates bound the omitted
+tail on each displayed interval. The black dashed curve is ordinary tangent.}
+For $T_{q,r}(z)=\sum_{n\ge0}c_nz^{2n+1}$, $c_0=1$, coefficient matching gives
+\[
+c_n=\frac{1}{2n+1}\sum_{i=0}^{n-1}
+q^{2i+1}r^{2(n-1-i)+1}c_ic_{n-1-i},\qquad n\ge1.
+\]
+In particular,
+\[
+T_{q,r}(z)=z+\frac{qr}{3}z^3+
+\frac{q^2r^2(q^2+r^2)}{15}z^5+O(z^7).
+\]
+The coefficients are positive and bounded by tangent coefficients, giving a
+convergent germ. If the solution is known on $|z|<R$, its integral equation
+extends it to $|z|<R/\max(q,r)$. Repetition proves that it is entire.
+
+The parameters can be recovered, up to swapping, from $c_1,c_2$. Put
+$p=3c_1$ and $u=15c_2/p^2$. Then $q,r$ are the roots of
+$x^2-\sqrt{u+2p}\,x+p=0$.
+
+\pageheading{FAMILY 1\; /\; GROWTH}{A scale-balance atlas}
+\[
+\boxed{\rho(T_{q,r})=\rho\quad\text{where}\quad q^\rho+r^\rho=1.}
+\]
+Here $\rho(f)=\limsup_{R\to\infty}\log\log M_f(R)/\log R$ is entire-function
+order. Moreover $\log M_{T}(R)=O(R^\rho)$: the upper type is finite.
+\smallfig{02_order_atlas}{The displayed values numerically solve the proved
+characteristic equation. Colors saturate at order 7; the upper corner contains
+larger orders. The dashed diagonal is the previously known one-scale family.}
+\begin{tabular}{@{}lll@{}}\toprule
+Scales & Order & Interpretation\\\midrule
+$q=r=1/4$ & $1/2$ & Slow entire growth\\
+$q+r=1$ & $1$ & Many distinct functions at one order\\
+$q=r=1/\sqrt2$ & $2$ & Quadratic logarithmic growth scale\\
+$q=r=3/4$ & $\log2/\log(4/3)$ & Approximately $2.4094208397$\\
+\bottomrule\end{tabular}
+
+\claim{Why this equation appears}
+Nonnegative coefficients give $M(R)=T_{q,r}(R)$. The integral equation implies
+\[
+M(R)\le R[1+M(qR)M(rR)],
+\]
+\[
+M(R)\ge(1-\alpha)R M(\alpha qR)M(\alpha rR),\quad0<\alpha<1.
+\]
+Taking logarithms turns product feedback into a sum over contracted scales.
+Comparison with $CR^\rho$ proves the upper bound; comparison with
+$cR^{\rho_\alpha}$, where $(\alpha q)^{\rho_\alpha}+
+(\alpha r)^{\rho_\alpha}=1$, proves the lower bound. Letting $\alpha\uparrow1$
+gives the same order. A complete interval-induction proof is in the source route.
+
+\input{sections/dilation_growth.tex}
+
+\pageheading{FAMILY 1\; /\; SEPARATION}{More than a rescaled one-scale seed}
+\claim{Nonrescaling theorem}
+If $q\ne r$, then $T_{q,r}$ cannot equal $A f_s(Bz)$ for nonzero constants
+$A,B$ and any real $0<s<1$, where $f_s'=1+f_s(sz)^2$ is the known family.
+
+Suppose such an equality held. Normalization gives $AB=1$. Write $p=qr$,
+$u=q^2+r^2$, and let $\rho$ be the common order. The first two nontrivial
+coefficients and the growth law force
+\[
+B^2s^2=p,\qquad s^2=u/2,\qquad 2s^\rho=q^\rho+r^\rho=1.
+\]
+Consequently
+\[
+2\left(\frac{q^2+r^2}{2}\right)^{\rho/2}=q^\rho+r^\rho.
+\]
+For $\rho\ne2$, strict convexity or concavity of $x^{\rho/2}$ forces $q=r$.
+For the exceptional case $\rho=2$, we have $u=1$, $s^2=1/2$, $B^2=2p$.
+The two $z^7$ coefficients become
+\[
+\frac{p^3(3-p^2)}{315}\quad\text{and}\quad\frac{11p^3}{1260}.
+\]
+Their equality forces $p=1/2$ and again $(q-r)^2=u-2p=0$.
+This handles the exceptional order rather than assuming it away.
+
+\claim{A worked order-one member}
+\[
+T_{1/3,2/3}(z)=z+\frac{2}{27}z^3+
+\frac{4}{2187}z^5+\frac{232}{11160261}z^7+O(z^9).
+\]
+It has order one, and $T_{1/3,2/3}(1)\approx1.0759239897408249$.
+The diagonal point $q=r=1/2$ gives
+$f_{1/2}(z)=\sqrt2\sinh(z/\sqrt2)$. Every off-diagonal member is separated
+from all rescaled diagonal members by the theorem above.
+
+\claim{A combinatorial address formula}
+Sum over full ordered binary trees with $n$ internal vertices. A vertex with
+$i$ internal vertices in its left subtree and $j$ in its right contributes
+\[
+\frac{q^{2i+1}r^{2j+1}}{2(i+j+1)+1}.
+\]
+Multiply these factors over internal vertices, then sum over trees. Root
+splitting reproduces the coefficient recurrence exactly. Unequal contractions
+therefore record left and right path lengths separately.
+
+This is a precise separation result from one authenticated antecedent.
+It does not prove that no earlier author studied the asymmetric equation.
+
+\pageheading{FAMILY 1\; /\; TAPS}{Feedback banks and weak-channel sensitivity}
+Choose finitely many channels $j=1,\ldots,J$, with $h_j>0$, $\sum_jh_j=1$,
+and $0<q_j,r_j<1$. Define
+\[
+F_\Theta'(z)=1+\sum_jh_jF_\Theta(q_jz)F_\Theta(r_jz),\qquad F_\Theta(0)=0.
+\]
+These taps act inside the nonlinear definition. With
+$\mu_1=\sum_jh_jq_jr_j$ and
+$\mu_2=\sum_jh_jq_jr_j(q_j^2+r_j^2)$,
+\[
+F_\Theta(z)=z+\frac{\mu_1}{3}z^3+\frac{\mu_1\mu_2}{15}z^5+O(z^7).
+\]
+If $q_j^{\rho_j}+r_j^{\rho_j}=1$, then
+\[
+\boxed{\rho(F_\Theta)=\max_{j\text{ active}}\rho_j.}
+\]
+The positive weights alter local coefficients; the most expansive active
+channel determines the asymptotic order. A zero-weight channel is removed
+before taking the maximum.
+\fig{07_weak_tap}{A two-channel example: scales $(1/4,1/4)$ with weight
+$1-\varepsilon$, and $(3/4,3/4)$ with weight $\varepsilon$.
+The function varies continuously on every fixed compact set, while its growth
+order jumps when the second channel becomes active.}
+For $0<\varepsilon\le1$ the order is $\log2/\log(4/3)$; at $\varepsilon=0$
+it is $1/2$. Coefficients depend continuously on $\varepsilon$ and are
+dominated by those of the entire $f_{3/4}$. Dominated convergence of the Taylor
+series therefore proves uniform convergence on compact sets as
+$\varepsilon\downarrow0$.
+
+This gives a useful design distinction: finite-window similarity does not
+control entire growth order. For a bank with weights $1/4,3/4$ at these scales,
+\[
+F(z)=z+\frac7{48}z^3+\frac{427}{30720}z^5+
+\frac{176681}{188743680}z^7+O(z^9).
+\]
+
+\input{sections/dilation_parameters.tex}
+
+\pageheading{FAMILY 2}{Arithmetic energy at complex depth}
+For real $a>1/2$, $\beta>0$, and integer $Q\ge1$, define
+\[
+\boxed{\A(s)=\sum_{\substack{n\ge2\\(n,Q)=1}}
+\mu(n)^2n^{-2a}(1-n^{-\beta})^{2s},\qquad s\in\mathbb C.}
+\]
+The complex power uses the real logarithm of $1-n^{-\beta}>0$.
+The atom $n=1$ is excluded because it has no such logarithm. Thus positive
+integer depths match the inherited energy, while $A(0)=E(0)-1$.
+\fig{03_complex_depth}{Left: $a=\beta=2$ at real depths, using the exact
+zeta--Newton representation at 90-digit working precision. Right: initial
+squarefree frequencies and weights for $Q=1$. Only finitely many atoms are
+shown; the proof uses the infinite support.}
+Set $\lambda_n=-2\log(1-n^{-\beta})$. Then
+$A(s)=\sum w_ne^{-\lambda_ns}$, $w_n=\mu(n)^2n^{-2a}$.
+The weights are summable, and the distinct frequencies decrease to zero.
+If $p_*$ is the least prime not dividing $Q$, then
+\[
+\tau=-2\log(1-p_*^{-\beta}),\qquad M=\Z(2a)-1,
+\]
+\[
+|A(s)|\le M e^{\tau\max(-\Re s,0)}.
+\]
+This proves local uniform convergence and entire continuation. The first atom
+dominates $A(-t)$ as $t\to\infty$, so the entire function has exact order one
+and exponential type $\tau$.
+
+\pageheading{FAMILY 2\; /\; CALCULUS}{Closed shifts, infinite differential complexity}
+Write
+\[
+\Z(v)=\frac{\zeta(v)}{\zeta(2v)}\prod_{p\mid Q}(1+p^{-v})^{-1},\qquad v>1.
+\]
+Only $\operatorname{rad}(Q)$ matters. Expansion of the depth factor gives
+\[
+\boxed{\A(s+1)=\A(s)-2A_{a+\beta/2,\beta,Q}(s)
++A_{a+\beta,\beta,Q}(s).}
+\]
+The fractional transfer and Newton formulas are
+\[
+\A(s+t)=\sum_{j\ge0}(-1)^j\binom{2t}{j}A_{a+j\beta/2,\beta,Q}(s),
+\]
+\[
+\A(t)=\sum_{j\ge0}(-1)^j\binom{2t}{j}[\Z(2a+j\beta)-1].
+\]
+They converge absolutely and locally uniformly: binomial coefficients have
+at most polynomial growth on compact parameter sets, while the shifted sums
+decay geometrically. The subtraction of one is essential at noninteger depth.
+
+\claim{No polynomial-coefficient linear ODE}
+Suppose $\sum_{j=0}^{r}P_j(s)A^{(j)}(s)=0$ with polynomial $P_j$.
+At $s=-t$, divide by the exponential of the first support atom. The remaining
+tail is exponentially smaller, so the polynomial
+$\sum_jP_j(-t)(-\lambda_{p_*})^j$ tends to zero exponentially and must vanish
+identically. Remove that atom and repeat. Every support frequency therefore
+satisfies $\sum_jP_j(s)(-\lambda_n)^j=0$ for all $s$.
+For fixed $s$, this polynomial in $\lambda$ has infinitely many distinct
+roots. All its coefficients vanish. Thus all $P_j$ are zero, a contradiction.
+
+The function is \textbf{not D-finite in depth}. This excludes identification
+in the depth variable with fixed finite-parameter hypergeometric or Meijer
+G functions and ordinary finite D-finite combinations. It does not exclude
+nonalgebraic substitutions or representations by known non-D-finite functions.
+
+\claim{Strict positive complex kernel}
+For distinct complex points $s_i$, $K_{ij}=A(s_i+\overline{s_j})$ is strictly
+positive definite. A zero quadratic form would force a finite exponential
+sum to vanish at every $\lambda_n$. Their accumulation at zero invokes the
+identity theorem; derivatives at zero then give a nonsingular Vandermonde
+system. On the real axis, $(-1)^jA^{(j)}(s)>0$ for every $j\ge0$.
+
+\pageheading{FAMILY 2\; /\; ASYMPTOTICS}{An arithmetic sector law}
+The negative real direction is governed by the first admissible prime. The
+positive direction is governed by the density of infinitely many squarefree
+integers. These are different pieces of the same entire function.
+
+Let
+\[
+\alpha=\frac{2a-1}{\beta},\qquad
+\delta_Q=\frac1{\zeta(2)}\prod_{p\mid Q}\frac{p}{p+1}.
+\]
+As $|s|\to\infty$ in any closed sector
+$|\arg s|\le\pi/2-\epsilon$ with $\epsilon>0$,
+\[
+\boxed{\A(s)=\frac{\delta_Q}{\beta}B(\alpha,2s+1)
++O_{a,\beta,Q,\epsilon}\left(|s|^{-(2a-1/2)/\beta}\right).}
+\]
+In particular,
+\[
+\A(s)\sim\frac{\delta_Q\Gamma(\alpha)}{\beta}(2s)^{-\alpha}.
+\]
+The principal power is used in the right half-plane. The beta expression is
+an asymptotic continuous-density model, not an identity with the arithmetic sum.
+
+\claim{Proof mechanism}
+Squarefree inclusion--exclusion gives
+\[
+\sum_{\substack{n\le x\\(n,Q)=1}}\mu(n)^2
+=\delta_Q x+O_Q(\sqrt{x}).
+\]
+Integrate against $g_s(x)=x^{-2a}(1-x^{-\beta})^{2s}$ on $[1,\infty)$.
+The density term becomes the beta integral after $y=x^{-\beta}$. Partial
+integration bounds the error by
+$C_Q\int_1^\infty\sqrt{x}|g_s'(x)|\dd x$.
+The two derivative terms are beta integrals with decay exponent
+$(2a-1/2)/\beta$; $|s|/\Re s$ stays bounded in the stated sector.
+This gives the error term and then the leading asymptotic.
+
+\claim{One complex example}
+At $a=\beta=2$, $Q=1$,
+\[
+A(1/2+i/4)\approx
+0.06033183289343401791658
+-0.007412384053785436251981\,i.
+\]
+Direct finite sums and a zeta--Newton evaluation agree within the recorded
+omitted-tail envelope. This is an ordinary high-precision example, not an
+interval certificate.
+
+Mixed Dirichlet-character weights provide matrix-valued positive kernels.
+Individual off-diagonal entries may be signed or complex, so complete
+monotonicity is asserted only for the positive principal family.
+
+\input{sections/arithmetic_inverse.tex}
+
+\pageheading{FAMILY 3}{An infinite prime shelf changes the packets}
+For a prime $p$ and $\lambda\ge-1$, let
+\[
+x_n=(1-n^{-2})^2,\qquad
+\nu_{p,\lambda}=\sum_{n\ge1}\mu(n)^2n^{-4}
+(1+\lambda\mathbf1_{p\mid n})\delta_{x_n}.
+\]
+Define monic orthogonal polynomials $P_m^{(k;p,\lambda)}$ for the measure
+$x^k\dd\nu_{p,\lambda}$, $k\ge0$ integer. The zero atom has mass one at
+$k=0$ and is annihilated when $k\ge1$.
+\fig{04_prime_polynomials}{Left: degree-two packets for $p=2$, depth zero.
+Right: initial atom masses. Strength $-1$ deletes every even squarefree atom;
+strength $0$ is the original measure; strength $1$ doubles that shelf.}
+The exact moments are finite zeta stencils:
+\[
+M_j^{p,\lambda}=\sum_{r=0}^{2j}(-1)^r\binom{2j}{r}
+\frac{\zeta(4+2r)}{\zeta(8+4r)}
+\left(1+\frac{\lambda}{p^{4+2r}+1}\right).
+\]
+All polynomial coefficients belong to $\mathbb Q(\pi^{-2},\lambda)$.
+With $\Delta=M_0M_2-M_1^2$,
+\[
+P_1=x-\frac{M_1}{M_0},\qquad
+P_2=x^2-\frac{M_0M_3-M_1M_2}{\Delta}x+
+\frac{M_1M_3-M_2^2}{\Delta}.
+\]
+The infinitely many positive nodes make every Hankel matrix strictly positive
+definite throughout $\lambda\ge-1$. Hence all degrees exist, with positive
+norms, real simple zeros in $(0,1)$, and interlacing.
+
+\pageheading{FAMILY 3\; /\; BOUNDARY}{Finite positivity can conceal a signed defect}
+Split $\nu_{p,\lambda}=\nu_{\mathrm{non}p}+(1+\lambda)\nu_p$.
+Let $A_m,B_m$ be their order-$m$ Hankel matrices. Both are positive definite.
+Thus
+\[
+\tau_m(\lambda)=\det(A_m+(1+\lambda)B_m)
+=\det A_m\prod_{i=1}^{m}[1+(1+\lambda)\eta_i],
+\]
+where $\eta_i>0$ are the eigenvalues of $A_m^{-1/2}B_mA_m^{-1/2}$.
+Every determinant root is real and below $-1$; possible coefficient poles
+occur there, although numerator cancellation is possible.
+\fig{05_sieve_boundary}{The line is a proved bound for $p=2$; dots are
+ordinary high-precision pencil roots. A defect $\lambda=-1.001$ eventually
+violates positivity even though it can pass low-order checks.}
+The nearest root is $-1-\delta_m$, with
+\[
+\delta_m=\min_{0\ne f,\,\deg f<m}
+\frac{\int f^2\dd\nu_{\mathrm{non}p}}{\int f^2\dd\nu_p}>0,
+\qquad\delta_m\downarrow0.
+\]
+To prove the limit, approximate a continuous bump supported at the isolated
+node $x_p$ by polynomials on $[0,1]$. The numerator tends to zero while the
+denominator retains the $p^{-4}$ atom. Hence every $\lambda<-1$ eventually
+produces a negative finite-degree quadratic form.
+
+For $p=2$, test with $f(x)=x(1-x)^{m-2}$, $m\ge2$:
+\[
+\delta_m\le\frac{4096}{81}\left(\frac{16M_0}{17}-1\right)
+\left(\frac{272}{567}\right)^{2(m-2)},\qquad M_0=105\pi^{-4}.
+\]
+This follows from $x_2=9/16$ and $x_n\ge64/81$ at nonzero odd nodes.
+Exactly $\delta_1=p^4$; the limit is an infinite-resolution phenomenon.
+
+\pageheading{FAMILY 3\; /\; TRANSPORT}{Classical operations with arithmetic coordinates}
+The depth tilt $x^k$ is a Christoffel transformation. Suppressing $p,\lambda$,
+\[
+P_m^{(k+1)}(x)=\frac{P_{m+1}^{(k)}(x)
+-[P_{m+1}^{(k)}(0)/P_m^{(k)}(0)]P_m^{(k)}(x)}{x}.
+\]
+The numerator vanishes at zero; all roots are positive, so the displayed
+denominator coefficient is nonzero. For shifted Hankel determinants $\tau_m^{(k)}=\det[M_{k+i+j}]_{i,j<m}$,
+with $\tau_0^{(k)}=1$,
+\[
+\tau_m^{(k)}\tau_m^{(k+2)}-(\tau_m^{(k+1)})^2
+=\tau_{m+1}^{(k)}\tau_{m-1}^{(k+2)}>0,\qquad m\ge1.
+\]
+This is the Desnanot--Jacobi identity applied to exact arithmetic moments.
+The construction mechanism is classical.
+
+\claim{An endpoint mass is numerically delicate}
+For the undeformed depth-zero measure, set $\nu_\theta=\nu+\theta\delta_0$,
+$\theta\ge-1$. If $K_m(x,y)=\sum_{j=0}^{m}P_j(x)P_j(y)/h_j$, the Uvarov formula is
+\[
+P_m^{[\theta]}(x)=P_m(x)-
+\frac{\theta P_m(0)}{1+\theta K_{m-1}(0,0)}K_{m-1}(x,0),
+\]
+with $K_{-1}=0$ for degree zero. The mass at zero is recovered by
+\[
+1\le\frac1{K_m(0,0)}\le1+(M_0-1)(7/16)^{2m}.
+\]
+The lower bound comes from the mass-one zero atom. The test polynomial
+$(1-x)^m$ gives the upper bound since every other node is at least $9/16$.
+At finite degree $K_m(0,0)<1$, because no nonzero polynomial can vanish at
+all the other infinitely many nodes. Complete mass removal is valid, while
+$1-K_m(0,0)$ becomes very small. This explains the conditioning problem.
+
+\claim{The resolvent is non-D-finite}
+The Stieltjes function $S_{p,\lambda}(z)=\int(z-x)^{-1}\dd\nu_{p,\lambda}(x)$
+has infinitely many isolated poles at the positive-weight nodes $x_n\to1$.
+A solution of a finite rational-coefficient linear ODE has only finitely many
+possible finite singular points. The germ at $z=2$ therefore is not D-finite.
+This is a general infinite-atomic-resolvent mechanism, specialized here to
+arithmetic data; it is not a priority claim.
+
+The full packet sequence also cannot be an affine copy of a continuous Jacobi
+sequence: compact moment determinacy would equate a purely atomic measure with
+a continuous one. An inherited Laguerre scaling limit remains compatible with
+this separation of the complete families.
+
+\input{sections/multi_prime.tex}
+
+\pageheading{FAMILY 4}{One spectral address for each rotation orbit}
+For integer $N\ge2$, define the known Mittag--Leffler seed
+\[
+d_N(w)=\sum_{n\ge0}\frac{(-1)^nw^n}{(Nn)!}=E_{N,1}(-w),
+\qquad D_N(z)=d_N(z^N).
+\]
+Let $w_j$ be the nonzero zeros of $d_N$, counted with multiplicity. Each
+corresponds to one rotation orbit of $N$ zeros of $D_N$. Using
+$\operatorname{Arg}w\in(-\pi,\pi]$, define
+\[
+\boxed{\mathcal Z_N(s)=\sum_jw_j^{-s},\qquad\Re s>1/N.}
+\]
+\fig{06_orbit_zeros}{For $N=4$, the four real/imaginary zeros in each orbit
+share one positive coordinate $w=z^4$. The plot shows the first six orbits.
+Multiplicity is retained by the definition; simplicity is not assumed in general.}
+The bound $|d_N(w)|\le e^{|w|^{1/N}}$ and the finite-order zero-counting theorem
+give absolute local uniform convergence in the stated half-plane. Since the
+order is below one and $d_N(0)=1$, the Hadamard factorization has genus zero:
+\[
+d_N(w)=\prod_j(1-w/w_j).
+\]
+At positive integers, a log derivative gives
+\[
+-w\frac{d_N'(w)}{d_N(w)}=\sum_{k\ge1}\mathcal Z_N(k)w^k.
+\]
+If $a_n=(-1)^n/(Nn)!$ and $b_k=\mathcal Z_N(k)$, then
+\[
+b_k=-ka_k-\sum_{j=1}^{k-1}a_jb_{k-j}.
+\]
+Thus every positive integer value is rational without numerical zero finding.
+
+\pageheading{FAMILY 4\; /\; REDUCTIONS}{Classical anchors and the open spectral frontier}
+The first values are
+\[
+\begin{aligned}
+\mathcal Z_N(1)&=\frac1{N!},\\
+\mathcal Z_N(2)&=\frac1{(N!)^2}-\frac2{(2N)!},\\
+\mathcal Z_N(3)&=\frac1{(N!)^3}-\frac3{N!(2N)!}+\frac3{(3N)!}.
+\end{aligned}
+\]
+\begin{tabular}{@{}llll@{}}\toprule
+$N$ & $\mathcal Z_N(1)$ & $\mathcal Z_N(2)$ & $\mathcal Z_N(3)$\\\midrule
+2 & $1/2$ & $1/6$ & $1/15$\\
+3 & $1/6$ & $1/40$ & $53/13440$\\
+4 & $1/24$ & $17/10080$ & $691/9979200$\\
+5 & $1/120$ & $5/72576$ & $997/1743565824$\\
+\bottomrule\end{tabular}
+
+\claim{Two exact Hurwitz-zeta reductions}
+For $N=2$, $d_2(w)=\cos\sqrt w$, whose zeros are
+$w_j=\pi^2(j+1/2)^2$, $j\ge0$. Therefore
+\[
+\mathcal Z_2(s)=\pi^{-2s}\zeta(2s,1/2).
+\]
+For $N=4$,
+\[
+D_4(z)=\cos(z/\sqrt2)\cosh(z/\sqrt2),
+\]
+and the rotation quotient has one zero
+$w_j=(\sqrt2\pi)^4(j+1/2)^4$ per orbit. Hence
+\[
+\mathcal Z_4(s)=(\sqrt2\pi)^{-4s}\zeta(4s,1/2).
+\]
+These anchors are classical reductions. The general spectral-zeta mechanism
+also has substantial antecedents, including hypergeometric zero zeta functions.
+
+\claim{The continuation gap is closed in 1.0}
+The original half-plane definition now has a meromorphic extension to the
+whole complex plane. The next pages prove its sole pole, special values,
+and regularized product using a branch-safe Mellin representation.
+These are worked spectral results from established analytic mechanisms.
+Residue-weighted sums involving derivatives at zeros remain a separate
+question, especially when multiplicities occur.
+
+\input{sections/spectral_continuation.tex}
+\input{sections/sequence_polyphase.tex}
+
+\input{sections/release_status.tex}
+
+\pageheading{SOURCE MAP}{Primary references and bounded comparisons}
+\small
+\textbf{M\'endez, Miguel A.} \textit{Combinatorial differential operators in: Fa\`a di Bruno formula, enumeration of ballot paths, enriched rooted trees and increasing rooted trees},\;
+\textit{Australasian Journal of Combinatorics} 89 (2024), 350--384.
+Example 2.4, printed p.356, contains $f'=1+f(qz)^2$.
+\url{https://ajc.maths.uq.edu.au/pdf/89/ajc_v89_p350.pdf}
+
+\textbf{Dascaliuc, Pham, Thomann, Waymire.} Primary treatment of the
+$\alpha$-Riccati equation $u'=-u+u(\alpha t)^2$, an adjacent feedback model.
+Its equation is not asserted identical to the asymmetric model here.
+\url{https://arxiv.org/html/2411.00629v2}
+
+\textbf{Coffey, Mark W.} \textit{On the coefficients of the B\'aez-Duarte
+criterion for the Riemann hypothesis and their extensions} (2006).
+Signed M\"obius kernels and Newton methods are close antecedents. Their
+signed weight differs from the positive squarefree weight used here.
+\url{https://arxiv.org/pdf/math-ph/0608050}
+
+\textbf{NIST DLMF.} \S16.8, equation 16.8.3, and \S16.21, equation 16.21.1,
+give the differential equations used for the limited D-finite comparison.
+\url{https://dlmf.nist.gov/16.8}\quad
+\url{https://dlmf.nist.gov/16.21}
+
+\textbf{NIST DLMF.} \S18.2 gives general orthogonal-polynomial theory;
+\S10.46, equation 10.46.3, defines the Mittag--Leffler seed.
+\url{https://dlmf.nist.gov/18.2}\quad
+\url{https://dlmf.nist.gov/10.46}
+
+\textbf{Uvarov, V. B.} \textit{The connection between systems of polynomials
+that are orthogonal with respect to different distribution functions} (1969).
+Original metadata was verified; the mass-modification formula is also proved
+locally in the route file.
+\url{https://doi.org/10.1016/0041-5553(69)90124-4}
+
+\textbf{Elkies, Noam D.} Harvard Math 259 notes on finite-order entire
+functions and Hadamard products. The genus-zero theorem supports the orbit
+factorization, with multiplicities retained.
+\url{https://people.math.harvard.edu/~elkies/M259.02/prod.pdf}
+
+\textbf{Byrnes, Jiu, Moll, Vignat.} \textit{Recursion Rules for the
+Hypergeometric Zeta Function} (2013). Hypergeometric zero spectra and
+coefficient recursions provide adjacent prior machinery.
+\url{https://arxiv.org/pdf/1305.1892}
+
+\normalsize
+\textbf{Voros, Andr\'e.} \textit{Zeta functions for the Riemann zeros},
+Annales de l'Institut Fourier 53(3) (2003), 665--699. Sections 2.1--2.2
+describe canonical products, Mellin continuation, and regularization for
+general sequences. The present orbit proof verifies its own hypotheses.
+\url{https://www.numdam.org/article/AIF_2003__53_3_665_0.pdf}
+
+\textbf{OEIS.} A000182 records the tangent-number anchor. Candidate sequence
+exports retain parameter, normalization, and regime labels; no OEIS submission
+or unmatched-prefix novelty claim is made.
+\url{https://oeis.org/A000182}
+
+The literature checks were bounded and performed on 8 October 2026 UTC.
+Full query lists and source classifications are in the route files. An
+attempted EMIS retrieval of the original B\'aez-Duarte paper failed; no theorem
+here depends on that failed retrieval. Search absence is not a priority proof.
+
+The integer arithmetic seed and its real-depth Gamma--Laguerre comparisons
+are inherited project material. Their reuse is identified rather than counted
+again as a discovery.
+\input{sections/proof_map.tex}
+\end{document}
