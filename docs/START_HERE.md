@@ -1,49 +1,62 @@
 # Start here
 
-Operation Komorebi studies representation changes through transformations, compatibility, residuals, obstructions, and realization. The program combines written mathematics, formal statements, executable constructions, finite certificates, and controlled experiments. Each contribution retains the evidence appropriate to its claim.
+**Realization Calculus and Komorebi Space · Komorebi P.**
 
-## Read one complete development
+This collection studies how a construction can be represented, transformed, and checked while keeping track of the structure that makes it work. Realization Calculus develops operations on packets, coordinates, transfer blocks, and refinements. Komorebi Space supplies the ambient framework for comparing realizations, projections, compatibility, residuals, and obstructions.
 
-Begin with [Research Preview 1](../formal/research-preview-1/README.md), then its [mathematical note](../formal/research-preview-1/THEOREM_NOTE.md) and [claim map](../formal/research-preview-1/CLAIMS.md). This component gives a precise arithmetic example of the program: an integer polynomial mask determines a formal series at fixed prime-power precision, and a finite linear machine computes its coefficients from digit words.
+## Choose a reading route
 
-The result concerns finite linear realizations over the supplied coefficient ring and alphabet. Its minimum-cardinality theorem does not assert one finite machine for all precisions or a fastest implementation.
+| Goal | Begin with |
+|---|---|
+| Understand the common language | [Realization Calculus](../monographs/realization-calculus/) and [Komorebi Space](../monographs/komorebi-space/) |
+| Study the individual developments | [Papers I–XII](../papers/README.md) |
+| Understand limits of representation | [Realization Boundaries](../monographs/realization-boundaries/) |
+| Read a small formal example | [Research Preview 1](../formal/research-preview-1/README.md) |
+| Follow an application | [Monographs and companion volumes](../monographs/README.md) |
+| Explore an open mathematical program | [Research programs and their scope](../research/README.md) |
+| Work with executable mathematics | [Software guide](LIBRARIES.md) and [experimental laboratories](../experiments/README.md) |
+| Study method and review | [Proof Path Theory](../monographs/proof-path-theory/) and [Komorebi Methodology](../monographs/komorebi-methodology/) |
 
-Run its small Python example from the component directory:
+## Four questions to carry through the collection
+
+1. **What is the object?** State the space, coefficient system, and admissible inputs.
+2. **How is it resolved?** Identify the packets, coordinates, or other components used to represent it.
+3. **How does the operation transfer?** Determine the blocks or compatibility laws relating representations.
+4. **What is reconstructed?** State the recovered object and any residual or obstruction.
+
+For a finite projector decomposition, the starting identity is
+
+$$
+x=\sum_i P_i x.
+$$
+
+The useful content lies in the projector hypotheses, the maps acting between components, and the behavior under refinement. An example's finite identity retains its own scope in a larger argument.
+
+## A concrete arithmetic example
+
+[Research Preview 1](../formal/research-preview-1/README.md) studies prime-power Cartier systems. An integer polynomial mask determines a formal series at fixed prime-power precision. A finite linear machine computes coefficients from digit words. Its minimum-cardinality statement concerns the declared finite linear realization class, coefficient ring, and alphabet.
+
+From that component directory, run:
 
 ```bash
 python -B demo.py
 ```
 
-The [reproduction contract](../formal/research-preview-1/REPRODUCE.md) separates finite calculation, source-integrity checks, and a Lean proof replay.
-
-## Follow the paper sequence
-
-[Papers I–IV](../papers/README.md) establish the core language and early applications. Subsequent papers extend the calculus to signals, stochastic and quantum models, algorithms, arithmetic, residual systems, and local/global comparison. The paper index states which editions are actually imported.
-
-The selected final Paper XI edition presents the general realization endpoint as **Conjecture 66**. Its proved finite constructions and conditional comparisons remain substantive results. The existence input in a comparison interface is not a proof of its arithmetic realization.
-
-The recent Signal, Stratified Universality, K-COS, and OSL/Neuralese editions have separate source candidates. Their status and evidence are recorded individually in the [contribution ledger](../CONTRIBUTIONS.md). A final reader edition does not automatically provide a new proof or implementation replay.
-
-## Install the independent libraries
-
-[Komorebi Math and Polyphase Float](LIBRARIES.md) are separately staged source candidates. Each keeps its own build, dependency, version, license, and validation contracts. The central repository will identify their exact published commits once those commits exist.
+For proof reproduction, follow its [pinned Lean environment](../formal/research-preview-1/REPRODUCE.md).
 
 ## Interpret the evidence
 
-| Evidence | What it establishes |
+| Evidence | What to inspect |
 |---|---|
-| Written proof | The stated mathematical argument under its explicit assumptions. |
-| Accepted Lean declaration | The formal conclusion follows from its binders, imports, and foundational dependencies in the recorded environment. |
-| Exact finite certificate | The named finite property, or a universal result when a proved reduction supplies that bridge. |
-| Experiment | The recorded outcome under its protocol, tested range, controls, and model selection procedure. |
-| Software test | Behavior on the tested inputs, platforms, and configurations. |
-| Integrity check | Agreement of files or manifests with a selected source snapshot. |
+| Written theorem | Exact conclusion, assumptions, and argument. |
+| Lean declaration | Formal statement, imports, axioms, environment, and compilation record. |
+| Exact finite calculation | Inputs, arithmetic model, computed property, and the argument connecting it to a broader result. |
+| Numerical experiment | Precision, tested range, reference calculation, error criteria, and retained outcomes. |
+| Software test | Exercised behavior, platform, dependencies, and source revision. |
+| File-integrity record | The exact bytes and source snapshot it identifies. |
 
-A complete implication retains its theorem status while an application premise remains open. A parent program can remain unfinished while its completed components are publishable. Preserved failures and amendments help readers determine which guarantees survive.
+A proved implication remains a result when an application premise is open. Applying it requires that premise. Paper XI's Conjecture 66 and the remaining Physics and machine-model obligations retain that distinction.
 
-## Contribute a correction
+All software is **beta and work in progress**. Cite **Komorebi P.**, the specific work, and the revision you use.
 
-Identify the exact component and revision, the claim or function concerned, and the discrepancy. Include an input or proof dependency when relevant. The [contribution index](../CONTRIBUTIONS.md) tracks source recovery and release disposition without silently turning older reports into current validation.
-
-See [distribution status](DISTRIBUTION_STATUS.md) before treating this assembly as a published release.
-
+[Complete component index](COMPONENT_INDEX.md) · [Collection](../README.md)

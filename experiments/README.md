@@ -1,10 +1,11 @@
-# Experiments
+# Experiments and computational laboratories
 
-The selected studies include ARC agent lineages, RRCT, Neuralese, OSL, JSpace causal interventions, coupled-agent pilots, arithmetic and role-binding labs, and scientific numerical experiments. Their source packages and evidence are being reconciled individually.
+**Komorebi P.**
 
-The latest resolved OSL/Neuralese research edition is dated 7 October 2026. Its validation records current OSL/interface checks, branch engineering checks, retained scientific failures, and incomplete larger verifier attempts separately. No new neural training or whole-program scientific replication follows from that edition.
+Computational programs, protocols, and recorded outcomes accompany the [core papers](../papers/README.md), [monographs](../monographs/README.md), and [software packages](../packages/README.md). The laboratories listed here provide further executable models. Read each result with its tested range, arithmetic model, environment, and comparison criteria. A successful run establishes the recorded finite outcome.
 
-No experiment source is declared imported by this landing page. Import entries will name an actual directory and include the protocol, tested domain, controls, seeds, model/checkpoint selection, outputs, and failed or unexecuted gates where applicable.
+Related machine-reasoning, OSL/Neuralese, inference, and workspace programs are listed in the [research index](../research/README.md). Earlier and distinct experimental branches appear in the [component index](../docs/COMPONENT_INDEX.md).
 
-The [contribution ledger](../CONTRIBUTIONS.md) preserves the historical experiment entries and selected current source candidates.
+All executable software is **beta and work in progress**.
 
+[Reading guide](../docs/START_HERE.md) · [Complete component index](../docs/COMPONENT_INDEX.md) · [Collection](../README.md)

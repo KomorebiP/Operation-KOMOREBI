@@ -1,47 +1,40 @@
-# Papers and companion editions
+# The twelve core papers
 
-The [public release collection](https://github.com/KomorebiP/Operation-KOMOREBI/releases/tag/papers-2026-10-25) contains downloadable archives for all twelve core papers and the [collected Realization Calculus publication package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Realization_Calculus_Publication_Package.zip).
+**Realization Calculus · Komorebi P.**
 
-The named release assets contain the published editions. Papers I–IV also have earlier browsable source imports in this repository. Publishing a newer archive does not replace those source trees or replay its proofs.
+The core sequence develops a common language of typed operators, packets, transfer, refinement, and realization. The papers proceed from foundational constructions to signals, stochastic and quantum models, computation, and arithmetic.
 
-## Papers I–XII
+For a continuous reading route, begin with [Realization Calculus](../monographs/realization-calculus/) and read [Komorebi Space](../monographs/komorebi-space/) alongside it.
 
-| Paper | Reading title | Published archive |
-|---|---|---|
-| I | Typed Operator Systems, Seed Rank, and Exact Packet Coordinates | [Download Paper I](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_I_Frozen_Release_2026-10-20.zip) |
-| II | Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets | [Download Paper II](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_II_Frozen_Release_2026-10-20.zip) |
-| III | Typed Transfer, Nonlinear Packets, and Obstruction Theory | [Download Paper III](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_III_Frozen_Release_2026-10-20.zip) |
-| IV | Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data | [Download Paper IV](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_IV_Frozen_Release_2026-10-20.zip) |
-| V | Polyphase Signal Calculus | [Download Paper V](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_V_Frozen_Release_2026-10-20.zip) |
-| VI | Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations | [Download Paper VI](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_VI_Frozen_Release_2026-10-20.zip) |
-| VII | Quantum Seed Calculus | [Download Paper VII](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_VII_Frozen_Release_2026-10-20.zip) |
-| VIII | Packet Operator Algorithms, Exact Compilation, and GPU Realization | [Download Paper VIII](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_VIII_Frozen_Release_2026-10-21.zip) |
-| IX | Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation | [Download Paper IX](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_IX_Frozen_Release_2026-10-21.zip) |
-| X | Universal Residual Seeds and Conditional Occupied-System Completion | [Download Paper X](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_X_Frozen_Release_2026-10-21.zip) |
-| XI | Packets, Arithmetic Realization, and Conditional Comparison | [Download Paper XI](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_XI_Frozen_Release_2026-10-21.zip) |
-| XII | Patching Support, Hecke Packets, and Conditional Automorphic Completion | [Download Paper XII](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Paper_XII_Frozen_Release_2026-10-21.zip) |
-
-Earlier source imports: [Paper I](paper-i/README.md), [Paper II](paper-ii/README.md), [Paper III](paper-iii/README.md), and [Paper IV](paper-iv/README.md). Papers V–XII are currently supplied through the release archives.
-
-Each edition preserves its written argument, formal scope, computations, and evidence. Paper X's conditional statements retain their hypotheses. Paper XI retains open Conjecture 66 obligations. Paper XII's revised and original claim scopes remain distinct. Archive names containing “Frozen,” “Final,” or “Complete” identify editions and do not extend their stated mathematical coverage.
-
-## Further published editions
-
-| Edition | Download and scope |
+| Paper | Main subject |
 |---|---|
-| Realization Calculus | [Collected publication package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Realization_Calculus_Publication_Package.zip). |
-| Komorebi Space and Realization Boundaries | [Twin-volume package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Realization_Calculus_Twin_Volumes_GitHub_Ready.zip). |
-| Large Signal Model | [Research package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Large_Signal_Model_Final_GitHub_Release_1.0.0.zip). |
-| Special Functions | [Lean B01 package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Special_Functions_Lean_B01_COMPLETE.zip). Additional reader editions are being reconciled. |
-| Physics | [Published package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Komorebi_Physics_Open_Publication_Package.zip). This is the earlier attached edition. The newer package is pending. |
-| Proof Path Theory | [Monograph package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Proof_Path_Theory_Monograph_1.8.0.zip). |
-| Machine Societies | [Research package](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Machine_Societies_v1.0.0_complete.zip). |
-| Methodology | [Essay PDF](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Komorebi_Methodology_Reviewed_Professional.pdf) and [source](https://github.com/KomorebiP/Operation-KOMOREBI/releases/download/papers-2026-10-25/Komorebi_Methodology_Reviewed_Professional_Source.zip). |
-| Quadratic-Form Engine / K-COS | [Browsable earlier import](quadratic-form-kcos/README.md). The newer official release archive has not yet been located and checksum matched. |
+| [Paper I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates](paper-i/current/) | Typed systems, finite realization, seed rank, and packet coordinates. |
+| [Paper II: Refinement Towers, Weighted Transfer, and Integral Separation of Operator Packets](paper-ii/current/) | Refinement, weighted transfer, and integral structure. |
+| [Paper III: Typed Transfer, Nonlinear Packets, and Obstruction Theory](paper-iii/current/) | Nonlinear constructions, compatibility, and explicit obstructions. |
+| [Paper IV: Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data](paper-iv/current/) | Cyclic analytic families, reciprocal identities, and spectral information. |
+| [Paper V: Polyphase Signal Calculus](paper-v/current/) | Polyphase decomposition, refinement, and signal operations. |
+| [Paper VI: Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations](paper-vi/current/) | Semigroup constructions and probabilistic and analytic applications. |
+| [Paper VII: Quantum Seed Calculus](paper-vii/current/) | Finite quantum constructions and seed representations. |
+| [Paper VIII: Packet Operator Algorithms, Exact Compilation, and GPU Realization](paper-viii/current/) | Exact finite algorithms, compilation, and computational realization. |
+| [Paper IX: Arithmetic Packets, Dyadic Towers, and Local Polynomial Deformation](paper-ix/current/) | Arithmetic packets, refinement towers, and local deformation. |
+| [Paper X: Universal Residual Seeds and Conditional Occupied-System Completion](paper-x/current/) | Residual structures and completion under stated premises. |
+| [Paper XI: Packets, Arithmetic Realization, and Conditional Comparison](paper-xi/current/) | Arithmetic realization and comparison interfaces. |
+| [Paper XII: Patching Support, Hecke Packets, and Conditional Automorphic Completion](paper-xii/current/) | Patching, Hecke packets, and conditional automorphic constructions. |
 
-Newer Physics and Komorebi Space editions, Quantum and Circuits, Machine Native Reasoning, the standalone Realization Boundaries package, and additional reader PDFs remain in the upload queue. See [publication status](../docs/PUBLICATION_STATUS.md) for the current record.
+Each paper directory contains the manuscript and the source, formal, computational, and visual material supplied with that edition.
 
-Stratified Universality, Signal Reconstruction, and OSL/Neuralese remain listed in the [contribution ledger](../CONTRIBUTIONS.md) while their exact source and publication dispositions are reconciled. Historical records preserve their original evidence boundaries.
+## Reading routes
 
-[Return to the program](../README.md).
+**Foundations:** Papers I–III develop operators, coordinates, refinement, nonlinear transfer, and obstructions.
 
+**Analysis and signals:** Papers IV–VI connect cyclic analytic families, polyphase signals, and transfer semigroups.
+
+**Quantum and computation:** Papers VII–VIII develop finite quantum constructions, packet algorithms, and compilation.
+
+**Arithmetic and comparison:** Papers IX–XII develop arithmetic packets, residual seeds, comparison, and patching. Paper X's completion statements are conditional. Paper XI retains the open general endpoint designated Conjecture 66. Paper XII keeps its arithmetic and patching inputs explicit.
+
+The [monographs](../monographs/README.md) provide extended accounts and further applications. The [formalization guide](../formal/README.md) explains how to identify the exact finite formal contract.
+
+Earlier source editions remain available: [Paper I](paper-i/), [Paper II](paper-ii/), [Paper III](paper-iii/), [Paper IV](paper-iv/).
+
+[Reading guide](../docs/START_HERE.md) · [Collection](../README.md)
