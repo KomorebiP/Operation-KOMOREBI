@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "protocol_id": "komorebi-v0.2-dev-smoke-2026-09-02",
+  "analysis_status": "exploratory_noninferential",
+  "package_version": "0.2.0",
+  "expected_coordinate_split_digest": "3aceaac6852f88360de0851eefc43bf46331d3b4efe3a04d0f2b9dfeff455340",
+  "seeds": [100, 101],
+  "training": {
+    "steps": 600,
+    "batch_size": 128,
+    "train_max_length": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.000001,
+    "grad_clip": 1.0,
+    "composition_min_length": 2,
+    "composition_max_length": 4
+  },
+  "arms": {
+    "terminal": {
+      "model_name": "linear_hyper",
+      "regime": "terminal"
+    },
+    "relation_060": {
+      "model_name": "linear_hyper",
+      "regime": "relation",
+      "relation_weight": 0.6,
+      "relation_hidden_weight": 0.05
+    },
+    "fixed_metric_010": {
+      "model_name": "linear_hyper",
+      "regime": "metric",
+      "metric_isometry_weight": 0.1
+    },
+    "learned_metric_010": {
+      "model_name": "linear_hyper_metric",
+      "regime": "metric",
+      "metric_isometry_weight": 0.1
+    },
+    "composition_010": {
+      "model_name": "linear_hyper",
+      "regime": "metric",
+      "composition_weight": 0.1
+    },
+    "metric_composition_003": {
+      "model_name": "linear_hyper_metric",
+      "regime": "metric",
+      "metric_isometry_weight": 0.03,
+      "composition_weight": 0.03
+    },
+    "metric_composition_010": {
+      "model_name": "linear_hyper_metric",
+      "regime": "metric",
+      "metric_isometry_weight": 0.1,
+      "composition_weight": 0.1
+    },
+    "metric_composition_030": {
+      "model_name": "linear_hyper_metric",
+      "regime": "metric",
+      "metric_isometry_weight": 0.3,
+      "composition_weight": 0.3
+    },
+    "metric_composition_shuffle_010": {
+      "model_name": "linear_hyper_metric",
+      "regime": "metric",
+      "metric_isometry_weight": 0.1,
+      "composition_weight": 0.1,
+      "composition_shuffle_targets": true
+    }
+  },
+  "evaluation": {
+    "coordinate_split": "dev",
+    "seed_base": 500000,
+    "depths": [8, 32, 64],
+    "neighbor_offsets": [0],
+    "examples_per_depth": 128,
+    "c8_examples_per_depth": 128,
+    "random_depths": [8, 32],
+    "random_examples_per_depth": 64,
+    "batch_size": 128,
+    "geometry_examples": 128,
+    "composition_examples": 128,
+    "patch_examples": 128,
+    "composition_family": "random",
+    "patch_donor_family": "random",
+    "patch_recipient_family": "random",
+    "patch_prefix_length": 4,
+    "patch_suffix_length": 8
+  },
+  "selection_rule": {
+    "eligible_arms": [
+      "metric_composition_003",
+      "metric_composition_010",
+      "metric_composition_030"
+    ],
+    "hard_exclusions": {
+      "closure.deep_stability.by_depth.64.finite_trajectory_fraction": 1.0,
+      "closure.operator_geometry.metric.condition_number_maximum": 100.0
+    },
+    "score": "0.35*d4_depth64 + 0.25*c8_depth64 + 0.20*composition_true + 0.20/(1+isometry_defect_p95)",
+    "tie_break": "smallest auxiliary weight within 0.01 score"
+  },
+  "transport": {
+    "enabled": false,
+    "arms": []
+  },
+  "gates": []
+}

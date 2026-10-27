@@ -1,0 +1,1 @@
+$ErrorActionPreference="Stop"; $Root=Split-Path -Parent $MyInvocation.MyCommand.Path; Set-Location $Root; $Out=Join-Path .\local_runs ("development_"+(Get-Date -Format "yyyyMMdd_HHmmss")); python .\run_experiment.py --protocol .\protocols\V0_2_STRENGTH_CALIBRATION.json --output-dir $Out --device cpu --threads 4
