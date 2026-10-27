@@ -2,7 +2,7 @@
 
 Recorded 2026-10-27.
 
-84 primary components and 69 supporting source collections are present with verified file receipts. The receipts cover **135,805 distinct source files**. Older source imports remain separately available.
+91 primary components and 75 supporting source collections are present with verified file receipts. The receipts cover **139,002 distinct source files**. Older source imports remain separately available.
 
 [Browse by completion stage, Lean coverage and confidence](COMPLETION_STATUS.md) · [Cleanup and finalization queue](FINALIZATION_QUEUE.md). Status labels describe the exact scope in each linked record; file counts establish neither proof nor completion.
 
@@ -44,6 +44,8 @@ Recorded 2026-10-27.
 | [Self-Improving Intelligence](../monographs/self-improving-intelligence/) | [Reading edition complete](STATUS_CATALOG.md#monographs-self-improving-intelligence) | No Lean claim | Recorded written review | 326 | [file record](../manifests/source-imports/monographs-self-improving-intelligence.json) |
 | [Self-Improving Intelligence: visual guide](../monographs/self-improving-intelligence/visual-guide/) | [Reading edition complete](STATUS_CATALOG.md#monographs-self-improving-intelligence-visual-guide) | No Lean claim | Recorded written review | 70 | [file record](../manifests/source-imports/monographs-self-improving-intelligence-visual-guide.json) |
 | [Grounded Abstraction](../monographs/grounded-abstraction/) | [Reading edition complete](STATUS_CATALOG.md#monographs-grounded-abstraction) | No Lean claim | Recorded written review | 150 | [file record](../manifests/source-imports/monographs-grounded-abstraction.json) |
+| [Machine Theory Compendium](../monographs/machine-theory-compendium/) | [Needs assessment](STATUS_CATALOG.md#machine-theory-compendium) | Not assessed | Unassessed | 159 | [file record](../manifests/source-imports/machine-theory-compendium.json) |
+| [Realization Calculus: twin edition](../monographs/realization-calculus-twin-edition/) | [Needs assessment](STATUS_CATALOG.md#realization-calculus-twin-edition) | Not assessed | Unassessed | 261 | [file record](../manifests/source-imports/realization-calculus-twin-edition.json) |
 
 ## Software packages
 
@@ -53,6 +55,7 @@ Recorded 2026-10-27.
 | [Constructive Repair](components/CONSTRUCTIVE_REPAIR.md) | [Active development](STATUS_CATALOG.md#constructive-repair) | Selected results recorded | Recorded formal evidence | 2,254 | [file record](../manifests/source-imports/constructive-repair.json) |
 | [RRCT](../packages/rrct/) | [Experiment / prototype](STATUS_CATALOG.md#packages-rrct) | No Lean claim | Experimental evidence | 185 | [file record](../manifests/source-imports/packages-rrct.json) |
 | [Universal Generative Deformation Calculus](../packages/universal-generative-deformation/) | [Experiment / prototype](STATUS_CATALOG.md#universal-generative-deformation) | No Lean claim | Experimental evidence | 144 | [file record](../manifests/source-imports/universal-generative-deformation.json) |
+| [Large Signal Model software](../packages/large-signal-model/) | [Needs assessment](STATUS_CATALOG.md#large-signal-model) | Not assessed | Unassessed | 443 | [file record](../manifests/source-imports/large-signal-model.json) |
 
 ## Experimental laboratories
 
@@ -63,6 +66,7 @@ Recorded 2026-10-27.
 | [J-Space Causal Lab](../experiments/jspace-causal-lab/) | [Experiment / prototype](STATUS_CATALOG.md#experiments-jspace-causal-lab) | No Lean claim | Experimental evidence | 224 | [file record](../manifests/source-imports/experiments-jspace-causal-lab.json) |
 | [J-Space Collections](../experiments/jspace-collections/) | [Experiment / prototype](STATUS_CATALOG.md#experiments-jspace-collections) | No Lean claim | Experimental evidence | 53 | [file record](../manifests/source-imports/experiments-jspace-collections.json) |
 | [Workspace Incubator](../experiments/workspace-incubator/) | [Experiment / prototype](STATUS_CATALOG.md#experiments-workspace-incubator) | No Lean claim | Experimental evidence | 689 | [file record](../manifests/source-imports/experiments-workspace-incubator.json) |
+| [ARC-AGI-2 experiment](../experiments/arc-agi2/) | [Needs assessment](STATUS_CATALOG.md#arc-agi2) | Not assessed | Unassessed | 69 | [file record](../manifests/source-imports/arc-agi2.json) |
 
 ## Research programs
 
@@ -114,6 +118,9 @@ Recorded 2026-10-27.
 | [Stratified Universality](../research/stratified-universality/) | [Reading edition complete](STATUS_CATALOG.md#stratified-universality) | Source; no current pass | Recorded written review | 476 | [file record](../manifests/source-imports/stratified-universality.json) |
 | [Streaming Polyphase Factor Decomposition / SKAT](components/STREAMING_SKAT.md) | [Active development](STATUS_CATALOG.md#streaming-skat) | No Lean claim | Written / finite evidence | 109 | [file record](../manifests/source-imports/streaming-skat.json) |
 | [Strong Artin: source and evidence](../research/strong-artin-reader/) | [Reading edition complete](STATUS_CATALOG.md#strong-artin-reader) | Inherited / related evidence | Historical formal evidence | 1,088 | [file record](../manifests/source-imports/strong-artin-reader.json) |
+| [Physics: curvature states](../research/physics-curvature-states/) | [Needs assessment](STATUS_CATALOG.md#physics-curvature-states) | Not assessed | Unassessed | 6 | [file record](../manifests/source-imports/physics-curvature-states.json) |
+| [Physics: energy and backreaction](../research/physics-energy-backreaction/) | [Needs assessment](STATUS_CATALOG.md#physics-energy-backreaction) | Not assessed | Unassessed | 81 | [file record](../manifests/source-imports/physics-energy-backreaction.json) |
+| [Physics: origin locking](../research/physics-origin-locking/) | [Needs assessment](STATUS_CATALOG.md#physics-origin-locking) | Not assessed | Unassessed | 113 | [file record](../manifests/source-imports/physics-origin-locking.json) |
 
 ## Supporting and earlier scientific sources
 
@@ -121,6 +128,7 @@ These directories retain distinct manuscripts, formal projects, tools, and exper
 
 | Collection | Source components | File records |
 |---|---|---|
+| [experiments/arc-agi2/supporting-sources](../experiments/arc-agi2/supporting-sources/) | 4 | 590 |
 | [experiments/jspace-collections/supporting-sources](../experiments/jspace-collections/supporting-sources/) | 2 | 135 |
 | [experiments/rrct-lineage/komorebi-nested-cognition-limited-test](../experiments/rrct-lineage/komorebi-nested-cognition-limited-test/) | 1 | 13 |
 | [experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1](../experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1/) | 1 | 397 |
@@ -142,6 +150,8 @@ These directories retain distinct manuscripts, formal projects, tools, and exper
 | [monographs/realization-boundaries/supporting-sources](../monographs/realization-boundaries/supporting-sources/) | 1 | 68 |
 | [monographs/special-functions/supporting-sources](../monographs/special-functions/supporting-sources/) | 10 | 892 |
 | [monographs/sufficient-resolution/supporting-sources](../monographs/sufficient-resolution/supporting-sources/) | 1 | 62 |
+| [packages/certified-inference/supporting-sources](../packages/certified-inference/supporting-sources/) | 1 | 1,356 |
+| [packages/large-signal-model/supporting-sources](../packages/large-signal-model/supporting-sources/) | 1 | 119 |
 | [papers/paper-i/current/supporting-sources](../papers/paper-i/current/supporting-sources/) | 1 | 966 |
 | [papers/paper-iv/current/supporting-sources](../papers/paper-iv/current/supporting-sources/) | 1 | 3 |
 | [papers/paper-ix/current/supporting-sources](../papers/paper-ix/current/supporting-sources/) | 1 | 3,274 |

@@ -142,6 +142,18 @@ The three reproduced admission/provenance defects are repaired in the separate 0
 
 Applies to: [SRIC: external semantic admission](STATUS_CATALOG.md#research-sric-external-admission).
 
+### F16 — Assess the newly imported source collections
+
+**Status: open**
+
+Thirteen additional collections were imported before the availability and assessment indexes were synchronized. Importing source files does not establish soundness or completion.
+
+**Done when:** Map the seven primary works and six supporting collections to their exact editions and claims, inspect applicable written proofs or experimental records, and update readiness and confidence with explicit evidence.
+
+**Progress:** All 166 component receipts now reconcile with the committed paths, blob identities, modes, and aggregate record digests. The 13 new records remain scientifically unassessed.
+
+Applies to: [ARC-AGI-2 experiment](STATUS_CATALOG.md#arc-agi2) · [Offline handoff](STATUS_CATALOG.md#arc-agi2-offline-handoff) · [Original solver](STATUS_CATALOG.md#arc-agi2-original-solver) · [Public evaluation](STATUS_CATALOG.md#arc-agi2-public-evaluation) · [Training evidence](STATUS_CATALOG.md#arc-agi2-training-evidence) · [Recovery v14](STATUS_CATALOG.md#certified-inference-recovery-v14-supporting-sources) · [Large Signal Model software](STATUS_CATALOG.md#large-signal-model) · [Supporting sources](STATUS_CATALOG.md#large-signal-model-ancestry-supporting-sources) · [Machine Theory Compendium](STATUS_CATALOG.md#machine-theory-compendium) · [Physics: curvature states](STATUS_CATALOG.md#physics-curvature-states) · [Physics: energy and backreaction](STATUS_CATALOG.md#physics-energy-backreaction) · [Physics: origin locking](STATUS_CATALOG.md#physics-origin-locking) · [Realization Calculus: twin edition](STATUS_CATALOG.md#realization-calculus-twin-edition).
+
 ## Formal, mathematical and empirical development
 
 ### F11 — Extend selected formal cores only against explicit claim maps

@@ -12,6 +12,7 @@ Read Realization Calculus and Komorebi Space together. Realization Boundaries de
 | [Komorebi Space](komorebi-space/) | The ambient framework for realizations, projections, compatibility, residuals, and obstructions. |
 | [Realization Boundaries](realization-boundaries/) | Representability, finite descriptions, and explicit limits of realization. |
 | [Sufficient Resolution](sufficient-resolution/) | Resolution conditions and the information retained by a representation. |
+| [Realization Calculus: twin edition](realization-calculus-twin-edition/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
 
 ## Analysis, signals, and physical models
 
@@ -33,6 +34,7 @@ Read Realization Calculus and Komorebi Space together. Realization Boundaries de
 | [Self-Improving Intelligence](self-improving-intelligence/) | Theoretical models and conditions for recursive improvement. |
 | [Self-Improving Intelligence: visual guide](self-improving-intelligence/visual-guide/) | Visual companion to the self-improvement development. |
 | [Grounded Abstraction](grounded-abstraction/) | Abstraction, grounding, and their mathematical interfaces. |
+| [Machine Theory Compendium](machine-theory-compendium/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
 
 ## Method, interpretation, and reader guides
 

@@ -25,6 +25,9 @@ Incomplete implementation entries are listed separately in the [incubator](../do
 |---|---|
 | [Euler Signal Bridge](euler-signal-bridge/) | Written finite-difference and FIR identities with exact controls; broader Euler congruences require separate proofs. |
 | [Signal Reconstruction](signal-reconstruction/) | Known-edge packet infrastructure does not prove the new unknown-edge and self-calibration claims. |
+| [Physics: curvature states](physics-curvature-states/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
+| [Physics: energy and backreaction](physics-energy-backreaction/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
+| [Physics: origin locking](physics-origin-locking/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
 
 ## Arithmetic and open mathematical programs
 

@@ -1040,78 +1040,168 @@ Beta executable construction with 50 tests and 18 experiment checks; closure is 
 
 [Source directory](../packages/universal-generative-deformation) · [README.md](../packages/universal-generative-deformation/README.md) · [CHANGELOG.md](../packages/universal-generative-deformation/CHANGELOG.md) · [RELEASE_AUDIT.md](../packages/universal-generative-deformation/RELEASE_AUDIT.md)
 
+<a id="arc-agi2"></a>
+
+## ARC-AGI-2 experiment
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../experiments/arc-agi2) · [import receipt (availability only)](../manifests/source-imports/arc-agi2.json)
+
+<a id="large-signal-model"></a>
+
+## Large Signal Model software
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../packages/large-signal-model) · [import receipt (availability only)](../manifests/source-imports/large-signal-model.json)
+
+<a id="machine-theory-compendium"></a>
+
+## Machine Theory Compendium
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../monographs/machine-theory-compendium) · [import receipt (availability only)](../manifests/source-imports/machine-theory-compendium.json)
+
+<a id="physics-curvature-states"></a>
+
+## Physics: curvature states
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../research/physics-curvature-states) · [import receipt (availability only)](../manifests/source-imports/physics-curvature-states.json)
+
+<a id="physics-energy-backreaction"></a>
+
+## Physics: energy and backreaction
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../research/physics-energy-backreaction) · [import receipt (availability only)](../manifests/source-imports/physics-energy-backreaction.json)
+
+<a id="physics-origin-locking"></a>
+
+## Physics: origin locking
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../research/physics-origin-locking) · [import receipt (availability only)](../manifests/source-imports/physics-origin-locking.json)
+
+<a id="realization-calculus-twin-edition"></a>
+
+## Realization Calculus: twin edition
+
+**Needs assessment** · Lean: **Not assessed** · Confidence basis: **Unassessed**
+
+Source import identity and receipt verified. No new assessment of mathematical soundness, scientific completion, empirical validity, or Lean coverage.
+
+**Next gate:** Identify the exact claims and edition, inspect the written support and any reproducibility records, and assign readiness only after a bounded review (F16).
+
+[Source directory](../monographs/realization-calculus-twin-edition) · [import receipt (availability only)](../manifests/source-imports/realization-calculus-twin-edition.json)
+
 ## Supporting and historical collections
 
 Every entry below is **Supporting / historical**, with **Lean: Not assessed** and **Confidence: Unassessed** in this triage. Its own original records may contain narrower accepted results. An import receipt only identifies source files; it is not mathematical evidence. Consult the edition's own statements and execution records before reusing its results.
 
 | Collection | Availability record |
 |---|---|
-| [Komorebi jspace learned primitives v0 5](../experiments/jspace-collections/supporting-sources/komorebi-jspace-learned-primitives-v0-5) | [file receipt](../manifests/source-imports/support-experiments-jspace-collections-supporting-sources-komorebi-jspace-learned-primitives-v0-5.json) |
-| [Komorebi jspace machinery v0 6](../experiments/jspace-collections/supporting-sources/komorebi-jspace-machinery-v0-6) | [file receipt](../manifests/source-imports/support-experiments-jspace-collections-supporting-sources-komorebi-jspace-machinery-v0-6.json) |
-| [Komorebi nested cognition limited test](../experiments/rrct-lineage/komorebi-nested-cognition-limited-test) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-komorebi-nested-cognition-limited-test.json) |
-| [Rrct v0 41 1 temporal identity frozen exploratory compact 1](../experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1.json) |
-| [Rrct v0 46 0 dev1 neutral self indexed workspace compact](../experiments/rrct-lineage/rrct-v0-46-0-dev1-neutral-self-indexed-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-46-0-dev1-neutral-self-indexed-workspace-compact.json) |
-| [Rrct v0 47 0 dev1 distributed shared workspace compact](../experiments/rrct-lineage/rrct-v0-47-0-dev1-distributed-shared-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-47-0-dev1-distributed-shared-workspace-compact.json) |
-| [Rrct v0 48 0 dev1 distributed sparse jspace compact](../experiments/rrct-lineage/rrct-v0-48-0-dev1-distributed-sparse-jspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-48-0-dev1-distributed-sparse-jspace-compact.json) |
-| [Rrct v0 49 0 dev1 instrumented transformer dyad compact](../experiments/rrct-lineage/rrct-v0-49-0-dev1-instrumented-transformer-dyad-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-49-0-dev1-instrumented-transformer-dyad-compact.json) |
-| [Rrct v0 50 0 dev1 synergistic ephemeral workspace compact](../experiments/rrct-lineage/rrct-v0-50-0-dev1-synergistic-ephemeral-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-50-0-dev1-synergistic-ephemeral-workspace-compact.json) |
-| [Rrct v0 51 0 dev1 emergent synergistic workspace compact](../experiments/rrct-lineage/rrct-v0-51-0-dev1-emergent-synergistic-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-51-0-dev1-emergent-synergistic-workspace-compact.json) |
-| [Rrct v0 52 0 dev3 nested workspace limited pilot](../experiments/rrct-lineage/rrct-v0-52-0-dev3-nested-workspace-limited-pilot) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-52-0-dev3-nested-workspace-limited-pilot.json) |
-| [Rrct v0 53 0 dev1 terminally learned nested workspace](../experiments/rrct-lineage/rrct-v0-53-0-dev1-terminally-learned-nested-workspace) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-53-0-dev1-terminally-learned-nested-workspace.json) |
-| [Rrct v0 54 0 dev1 workspace emergence scaling compact](../experiments/rrct-lineage/rrct-v0-54-0-dev1-workspace-emergence-scaling-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-54-0-dev1-workspace-emergence-scaling-compact.json) |
-| [Rrct v0 55 0 dev1 workspace emergence edge compact](../experiments/rrct-lineage/rrct-v0-55-0-dev1-workspace-emergence-edge-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-55-0-dev1-workspace-emergence-edge-compact.json) |
-| [Rrct v0 56 0 dev2 cost regularized workspace formation compact](../experiments/rrct-lineage/rrct-v0-56-0-dev2-cost-regularized-workspace-formation-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-56-0-dev2-cost-regularized-workspace-formation-compact.json) |
-| [Rrct v0 57 0 dev3 fuzzy komorebi coalition formation compact](../experiments/rrct-lineage/rrct-v0-57-0-dev3-fuzzy-komorebi-coalition-formation-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-57-0-dev3-fuzzy-komorebi-coalition-formation-compact.json) |
-| [Sric real lrm pilot](../experiments/sric-real-lrm-pilot) | [file receipt](../manifests/source-imports/support-experiments-sric-real-lrm-pilot.json) |
-| [K cos query adaptive spectral packetization v0 1 source](../monographs/cos-method/supporting-sources/k-cos-query-adaptive-spectral-packetization-v0-1-source) | [file receipt](../manifests/source-imports/support-monographs-cos-method-supporting-sources-k-cos-query-adaptive-spectral-packetiz-db12ce93d3c3.json) |
-| [Komorebi quadratic form engine v1 9 verified matrix to tail source](../monographs/cos-method/supporting-sources/komorebi-quadratic-form-engine-v1-9-verified-matrix-to-tail-source) | [file receipt](../manifests/source-imports/support-monographs-cos-method-supporting-sources-komorebi-quadratic-form-engine-v1-9-ve-00755db44046.json) |
-| [Komorebi special function discovery v1 0 source](../monographs/special-functions/supporting-sources/komorebi-special-function-discovery-v1-0-source) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-komorebi-special-function-disco-c1cf15398448.json) |
-| [Projector generated special functions iii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-iii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-1423e4592dfe.json) |
-| [Projector generated special functions i release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-i-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-3f375948b9ff.json) |
-| [Projector generated special functions iv release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-iv-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-6740d009041a.json) |
-| [Projector generated special functions ii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-ii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-8d4b1399f06f.json) |
-| [Projector generated special functions vii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-vii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-8f92cc811aec.json) |
-| [Projector generated special functions v release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-v-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-9fef894534ef.json) |
-| [Projector generated special functions viii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-viii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-a5abcd80124a.json) |
-| [Projector generated special functions vi release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-vi-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-adcf48da51d5.json) |
-| [Projector special functions registry](../monographs/special-functions/supporting-sources/projector-special-functions-registry) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-special-functions-registry.json) |
-| [Avoc formal v0.41.0](../research/avoc/AVOC_Publication_1.0/source/AVOC_Formal_v0.41.0) | [file receipt](../manifests/source-imports/support-research-avoc-avoc-publication-1-0-source-avoc-formal-v0-41-0.json) |
-| [Fd certified inference core v1.0.0 checked](../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/source/FD_Certified_Inference_Core_v1.0.0_Checked) | [file receipt](../manifests/source-imports/support-research-certified-bayesian-inference-certified-bayesian-publication-1-0-source-4f952d56efbd.json) |
-| [Komorebi neuralese ambient packets v0 3 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-ambient-packets-v0-3-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-ambient-packets-v0-3-0.json) |
-| [Komorebi neuralese causal completion learned v0 2 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-causal-completion-learned-v0-2-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-causal-completion-4c4aedac866f.json) |
-| [Komorebi neuralese completion surface v0 3 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-completion-surface-v0-3-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-completion-surface-v0-3-0.json) |
-| [Komorebi neuralese entry cone holonomy v0 3 2](../research/osl-neuralese/supporting-sources/komorebi-neuralese-entry-cone-holonomy-v0-3-2) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-entry-cone-holonomy-v0-3-2.json) |
-| [Komorebi neuralese g1 v0 1 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-g1-v0-1-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-g1-v0-1-1.json) |
-| [Komorebi neuralese g1d v0 1 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-g1d-v0-1-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-g1d-v0-1-0.json) |
-| [Komorebi neuralese invariant observable kernel v0 6 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-invariant-observable-kernel-v0-6-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-invariant-observab-b8bade0d4778.json) |
-| [Komorebi neuralese learned checkpoint probe v0 1 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-learned-checkpoint-probe-v0-1-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-learned-checkpoint-probe-v0-1-0.json) |
-| [Komorebi neuralese operator workspace v0 1 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-operator-workspace-v0-1-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-1-1.json) |
-| [Komorebi neuralese operator workspace v0 2 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-operator-workspace-v0-2-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-2-0.json) |
-| [Komorebi neuralese operator workspace v0 3 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-operator-workspace-v0-3-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-3-0.json) |
-| [Komorebi neuralese packet closure v0 4 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-packet-closure-v0-4-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-packet-closure-v0-4-0.json) |
-| [Komorebi neuralese semantic retraction v0 3 0 armed unspent capacity gated](../research/osl-neuralese/supporting-sources/komorebi-neuralese-semantic-retraction-v0-3-0-armed-unspent-capacity-gated) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-semantic-retractio-6ff44ec71d82.json) |
-| [Komorebi neuralese semantic retraction v0 2 0 aborted primary with posthoc crosscheck](../research/osl-neuralese/supporting-sources/komorebi-neuralese-semantic-retraction-v0-2-0-aborted-primary-with-posthoc-crosscheck) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-semantic-retractio-909b682e50f8.json) |
-| [Komorebi neuralese stable quotient v0 2 0 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-stable-quotient-v0-2-0-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-stable-quotient-v0-2-0-1.json) |
-| [Komorebi recurrent depth lab v0 1 1](../research/osl-neuralese/supporting-sources/komorebi-recurrent-depth-lab-v0-1-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-recurrent-depth-lab-v0-1-1.json) |
-| [Osl complete lineage with core04 2026 09 01](../research/osl-neuralese/supporting-sources/osl-complete-lineage-with-core04-2026-09-01) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-osl-complete-lineage-with-core04-2026-09-01.json) |
-| [Supporting sources](../research/abc-global-rr8/supporting-sources) | [file receipt](../manifests/source-imports/abc-global-rr8-supporting-sources.json) |
-| [Supporting sources](../research/abc-reader/supporting-sources) | [file receipt](../manifests/source-imports/abc-reader-supporting-sources.json) |
-| [Supporting sources](../research/information-realization/supporting-sources) | [file receipt](../manifests/source-imports/information-realization-supporting-sources.json) |
-| [Supporting sources](../monographs/komorebi-space/supporting-sources) | [file receipt](../manifests/source-imports/komorebi-space-supporting-sources.json) |
-| [Supporting sources](../research/kzfc-multiverse/supporting-sources) | [file receipt](../manifests/source-imports/kzfc-multiverse-supporting-sources.json) |
-| [Supporting sources](../research/logical-resolution/supporting-sources) | [file receipt](../manifests/source-imports/logical-resolution-supporting-sources.json) |
-| [Supporting sources](../research/model-theory-normalization/supporting-sources) | [file receipt](../manifests/source-imports/model-theory-normalization-supporting-sources.json) |
-| [Supporting sources](../research/padic-canonical-realization/supporting-sources) | [file receipt](../manifests/source-imports/padic-canonical-realization-supporting-sources.json) |
-| [Supporting sources](../papers/paper-i/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-i-supporting-sources.json) |
-| [Supporting sources](../papers/paper-iv/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-iv-supporting-sources.json) |
-| [Supporting sources](../papers/paper-ix/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-ix-supporting-sources.json) |
-| [Supporting sources](../papers/paper-v/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-v-supporting-sources.json) |
-| [Supporting sources](../papers/paper-x/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-x-supporting-sources.json) |
-| [Supporting sources](../papers/paper-xi/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-xi-supporting-sources.json) |
-| [Supporting sources](../papers/paper-xii/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-xii-supporting-sources.json) |
-| [Supporting sources](../monographs/realization-boundaries/supporting-sources) | [file receipt](../manifests/source-imports/realization-boundaries-supporting-sources.json) |
-| [Supporting sources](../research/representation-calculus/supporting-sources) | [file receipt](../manifests/source-imports/representation-calculus-supporting-sources.json) |
-| [Supporting sources](../research/seeded-two-axis/supporting-sources) | [file receipt](../manifests/source-imports/seeded-two-axis-supporting-sources.json) |
-| [Supporting sources](../research/stratified-universality/supporting-sources) | [file receipt](../manifests/source-imports/stratified-universality-supporting-sources.json) |
-| [Supporting sources](../research/strong-artin-reader/supporting-sources) | [file receipt](../manifests/source-imports/strong-artin-reader-supporting-sources.json) |
-| [Supporting sources](../monographs/sufficient-resolution/supporting-sources) | [file receipt](../manifests/source-imports/sufficient-resolution-supporting-sources.json) |
+| <a id="support-experiments-jspace-collections-supporting-sources-komorebi-jspace-learned-primitives-v0-5"></a>[Komorebi jspace learned primitives v0 5](../experiments/jspace-collections/supporting-sources/komorebi-jspace-learned-primitives-v0-5) | [file receipt](../manifests/source-imports/support-experiments-jspace-collections-supporting-sources-komorebi-jspace-learned-primitives-v0-5.json) |
+| <a id="support-experiments-jspace-collections-supporting-sources-komorebi-jspace-machinery-v0-6"></a>[Komorebi jspace machinery v0 6](../experiments/jspace-collections/supporting-sources/komorebi-jspace-machinery-v0-6) | [file receipt](../manifests/source-imports/support-experiments-jspace-collections-supporting-sources-komorebi-jspace-machinery-v0-6.json) |
+| <a id="support-experiments-rrct-lineage-komorebi-nested-cognition-limited-test"></a>[Komorebi nested cognition limited test](../experiments/rrct-lineage/komorebi-nested-cognition-limited-test) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-komorebi-nested-cognition-limited-test.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1"></a>[Rrct v0 41 1 temporal identity frozen exploratory compact 1](../experiments/rrct-lineage/rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-41-1-temporal-identity-frozen-exploratory-compact-1.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-46-0-dev1-neutral-self-indexed-workspace-compact"></a>[Rrct v0 46 0 dev1 neutral self indexed workspace compact](../experiments/rrct-lineage/rrct-v0-46-0-dev1-neutral-self-indexed-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-46-0-dev1-neutral-self-indexed-workspace-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-47-0-dev1-distributed-shared-workspace-compact"></a>[Rrct v0 47 0 dev1 distributed shared workspace compact](../experiments/rrct-lineage/rrct-v0-47-0-dev1-distributed-shared-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-47-0-dev1-distributed-shared-workspace-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-48-0-dev1-distributed-sparse-jspace-compact"></a>[Rrct v0 48 0 dev1 distributed sparse jspace compact](../experiments/rrct-lineage/rrct-v0-48-0-dev1-distributed-sparse-jspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-48-0-dev1-distributed-sparse-jspace-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-49-0-dev1-instrumented-transformer-dyad-compact"></a>[Rrct v0 49 0 dev1 instrumented transformer dyad compact](../experiments/rrct-lineage/rrct-v0-49-0-dev1-instrumented-transformer-dyad-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-49-0-dev1-instrumented-transformer-dyad-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-50-0-dev1-synergistic-ephemeral-workspace-compact"></a>[Rrct v0 50 0 dev1 synergistic ephemeral workspace compact](../experiments/rrct-lineage/rrct-v0-50-0-dev1-synergistic-ephemeral-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-50-0-dev1-synergistic-ephemeral-workspace-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-51-0-dev1-emergent-synergistic-workspace-compact"></a>[Rrct v0 51 0 dev1 emergent synergistic workspace compact](../experiments/rrct-lineage/rrct-v0-51-0-dev1-emergent-synergistic-workspace-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-51-0-dev1-emergent-synergistic-workspace-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-52-0-dev3-nested-workspace-limited-pilot"></a>[Rrct v0 52 0 dev3 nested workspace limited pilot](../experiments/rrct-lineage/rrct-v0-52-0-dev3-nested-workspace-limited-pilot) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-52-0-dev3-nested-workspace-limited-pilot.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-53-0-dev1-terminally-learned-nested-workspace"></a>[Rrct v0 53 0 dev1 terminally learned nested workspace](../experiments/rrct-lineage/rrct-v0-53-0-dev1-terminally-learned-nested-workspace) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-53-0-dev1-terminally-learned-nested-workspace.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-54-0-dev1-workspace-emergence-scaling-compact"></a>[Rrct v0 54 0 dev1 workspace emergence scaling compact](../experiments/rrct-lineage/rrct-v0-54-0-dev1-workspace-emergence-scaling-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-54-0-dev1-workspace-emergence-scaling-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-55-0-dev1-workspace-emergence-edge-compact"></a>[Rrct v0 55 0 dev1 workspace emergence edge compact](../experiments/rrct-lineage/rrct-v0-55-0-dev1-workspace-emergence-edge-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-55-0-dev1-workspace-emergence-edge-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-56-0-dev2-cost-regularized-workspace-formation-compact"></a>[Rrct v0 56 0 dev2 cost regularized workspace formation compact](../experiments/rrct-lineage/rrct-v0-56-0-dev2-cost-regularized-workspace-formation-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-56-0-dev2-cost-regularized-workspace-formation-compact.json) |
+| <a id="support-experiments-rrct-lineage-rrct-v0-57-0-dev3-fuzzy-komorebi-coalition-formation-compact"></a>[Rrct v0 57 0 dev3 fuzzy komorebi coalition formation compact](../experiments/rrct-lineage/rrct-v0-57-0-dev3-fuzzy-komorebi-coalition-formation-compact) | [file receipt](../manifests/source-imports/support-experiments-rrct-lineage-rrct-v0-57-0-dev3-fuzzy-komorebi-coalition-formation-compact.json) |
+| <a id="support-experiments-sric-real-lrm-pilot"></a>[Sric real lrm pilot](../experiments/sric-real-lrm-pilot) | [file receipt](../manifests/source-imports/support-experiments-sric-real-lrm-pilot.json) |
+| <a id="support-monographs-cos-method-supporting-sources-k-cos-query-adaptive-spectral-packetiz-db12ce93d3c3"></a>[K cos query adaptive spectral packetization v0 1 source](../monographs/cos-method/supporting-sources/k-cos-query-adaptive-spectral-packetization-v0-1-source) | [file receipt](../manifests/source-imports/support-monographs-cos-method-supporting-sources-k-cos-query-adaptive-spectral-packetiz-db12ce93d3c3.json) |
+| <a id="support-monographs-cos-method-supporting-sources-komorebi-quadratic-form-engine-v1-9-ve-00755db44046"></a>[Komorebi quadratic form engine v1 9 verified matrix to tail source](../monographs/cos-method/supporting-sources/komorebi-quadratic-form-engine-v1-9-verified-matrix-to-tail-source) | [file receipt](../manifests/source-imports/support-monographs-cos-method-supporting-sources-komorebi-quadratic-form-engine-v1-9-ve-00755db44046.json) |
+| <a id="support-monographs-special-functions-supporting-sources-komorebi-special-function-disco-c1cf15398448"></a>[Komorebi special function discovery v1 0 source](../monographs/special-functions/supporting-sources/komorebi-special-function-discovery-v1-0-source) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-komorebi-special-function-disco-c1cf15398448.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-1423e4592dfe"></a>[Projector generated special functions iii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-iii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-1423e4592dfe.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-3f375948b9ff"></a>[Projector generated special functions i release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-i-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-3f375948b9ff.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-6740d009041a"></a>[Projector generated special functions iv release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-iv-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-6740d009041a.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-8d4b1399f06f"></a>[Projector generated special functions ii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-ii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-8d4b1399f06f.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-8f92cc811aec"></a>[Projector generated special functions vii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-vii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-8f92cc811aec.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-9fef894534ef"></a>[Projector generated special functions v release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-v-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-9fef894534ef.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-a5abcd80124a"></a>[Projector generated special functions viii release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-viii-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-a5abcd80124a.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-generated-special-fun-adcf48da51d5"></a>[Projector generated special functions vi release](../monographs/special-functions/supporting-sources/projector-generated-special-functions-vi-release) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-generated-special-fun-adcf48da51d5.json) |
+| <a id="support-monographs-special-functions-supporting-sources-projector-special-functions-registry"></a>[Projector special functions registry](../monographs/special-functions/supporting-sources/projector-special-functions-registry) | [file receipt](../manifests/source-imports/support-monographs-special-functions-supporting-sources-projector-special-functions-registry.json) |
+| <a id="support-research-avoc-avoc-publication-1-0-source-avoc-formal-v0-41-0"></a>[Avoc formal v0.41.0](../research/avoc/AVOC_Publication_1.0/source/AVOC_Formal_v0.41.0) | [file receipt](../manifests/source-imports/support-research-avoc-avoc-publication-1-0-source-avoc-formal-v0-41-0.json) |
+| <a id="support-research-certified-bayesian-inference-certified-bayesian-publication-1-0-source-4f952d56efbd"></a>[Fd certified inference core v1.0.0 checked](../research/certified-bayesian-inference/Certified_Bayesian_Publication_1.0/source/FD_Certified_Inference_Core_v1.0.0_Checked) | [file receipt](../manifests/source-imports/support-research-certified-bayesian-inference-certified-bayesian-publication-1-0-source-4f952d56efbd.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-ambient-packets-v0-3-0"></a>[Komorebi neuralese ambient packets v0 3 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-ambient-packets-v0-3-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-ambient-packets-v0-3-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-causal-completion-4c4aedac866f"></a>[Komorebi neuralese causal completion learned v0 2 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-causal-completion-learned-v0-2-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-causal-completion-4c4aedac866f.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-completion-surface-v0-3-0"></a>[Komorebi neuralese completion surface v0 3 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-completion-surface-v0-3-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-completion-surface-v0-3-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-entry-cone-holonomy-v0-3-2"></a>[Komorebi neuralese entry cone holonomy v0 3 2](../research/osl-neuralese/supporting-sources/komorebi-neuralese-entry-cone-holonomy-v0-3-2) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-entry-cone-holonomy-v0-3-2.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-g1-v0-1-1"></a>[Komorebi neuralese g1 v0 1 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-g1-v0-1-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-g1-v0-1-1.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-g1d-v0-1-0"></a>[Komorebi neuralese g1d v0 1 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-g1d-v0-1-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-g1d-v0-1-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-invariant-observab-b8bade0d4778"></a>[Komorebi neuralese invariant observable kernel v0 6 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-invariant-observable-kernel-v0-6-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-invariant-observab-b8bade0d4778.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-learned-checkpoint-probe-v0-1-0"></a>[Komorebi neuralese learned checkpoint probe v0 1 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-learned-checkpoint-probe-v0-1-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-learned-checkpoint-probe-v0-1-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-1-1"></a>[Komorebi neuralese operator workspace v0 1 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-operator-workspace-v0-1-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-1-1.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-2-0"></a>[Komorebi neuralese operator workspace v0 2 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-operator-workspace-v0-2-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-2-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-3-0"></a>[Komorebi neuralese operator workspace v0 3 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-operator-workspace-v0-3-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-operator-workspace-v0-3-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-packet-closure-v0-4-0"></a>[Komorebi neuralese packet closure v0 4 0](../research/osl-neuralese/supporting-sources/komorebi-neuralese-packet-closure-v0-4-0) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-packet-closure-v0-4-0.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-semantic-retractio-6ff44ec71d82"></a>[Komorebi neuralese semantic retraction v0 3 0 armed unspent capacity gated](../research/osl-neuralese/supporting-sources/komorebi-neuralese-semantic-retraction-v0-3-0-armed-unspent-capacity-gated) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-semantic-retractio-6ff44ec71d82.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-semantic-retractio-909b682e50f8"></a>[Komorebi neuralese semantic retraction v0 2 0 aborted primary with posthoc crosscheck](../research/osl-neuralese/supporting-sources/komorebi-neuralese-semantic-retraction-v0-2-0-aborted-primary-with-posthoc-crosscheck) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-semantic-retractio-909b682e50f8.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-neuralese-stable-quotient-v0-2-0-1"></a>[Komorebi neuralese stable quotient v0 2 0 1](../research/osl-neuralese/supporting-sources/komorebi-neuralese-stable-quotient-v0-2-0-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-neuralese-stable-quotient-v0-2-0-1.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-komorebi-recurrent-depth-lab-v0-1-1"></a>[Komorebi recurrent depth lab v0 1 1](../research/osl-neuralese/supporting-sources/komorebi-recurrent-depth-lab-v0-1-1) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-komorebi-recurrent-depth-lab-v0-1-1.json) |
+| <a id="support-research-osl-neuralese-supporting-sources-osl-complete-lineage-with-core04-2026-09-01"></a>[Osl complete lineage with core04 2026 09 01](../research/osl-neuralese/supporting-sources/osl-complete-lineage-with-core04-2026-09-01) | [file receipt](../manifests/source-imports/support-research-osl-neuralese-supporting-sources-osl-complete-lineage-with-core04-2026-09-01.json) |
+| <a id="abc-global-rr8-supporting-sources"></a>[Supporting sources](../research/abc-global-rr8/supporting-sources) | [file receipt](../manifests/source-imports/abc-global-rr8-supporting-sources.json) |
+| <a id="abc-reader-supporting-sources"></a>[Supporting sources](../research/abc-reader/supporting-sources) | [file receipt](../manifests/source-imports/abc-reader-supporting-sources.json) |
+| <a id="information-realization-supporting-sources"></a>[Supporting sources](../research/information-realization/supporting-sources) | [file receipt](../manifests/source-imports/information-realization-supporting-sources.json) |
+| <a id="komorebi-space-supporting-sources"></a>[Supporting sources](../monographs/komorebi-space/supporting-sources) | [file receipt](../manifests/source-imports/komorebi-space-supporting-sources.json) |
+| <a id="kzfc-multiverse-supporting-sources"></a>[Supporting sources](../research/kzfc-multiverse/supporting-sources) | [file receipt](../manifests/source-imports/kzfc-multiverse-supporting-sources.json) |
+| <a id="logical-resolution-supporting-sources"></a>[Supporting sources](../research/logical-resolution/supporting-sources) | [file receipt](../manifests/source-imports/logical-resolution-supporting-sources.json) |
+| <a id="model-theory-normalization-supporting-sources"></a>[Supporting sources](../research/model-theory-normalization/supporting-sources) | [file receipt](../manifests/source-imports/model-theory-normalization-supporting-sources.json) |
+| <a id="padic-canonical-realization-supporting-sources"></a>[Supporting sources](../research/padic-canonical-realization/supporting-sources) | [file receipt](../manifests/source-imports/padic-canonical-realization-supporting-sources.json) |
+| <a id="paper-i-supporting-sources"></a>[Supporting sources](../papers/paper-i/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-i-supporting-sources.json) |
+| <a id="paper-iv-supporting-sources"></a>[Supporting sources](../papers/paper-iv/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-iv-supporting-sources.json) |
+| <a id="paper-ix-supporting-sources"></a>[Supporting sources](../papers/paper-ix/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-ix-supporting-sources.json) |
+| <a id="paper-v-supporting-sources"></a>[Supporting sources](../papers/paper-v/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-v-supporting-sources.json) |
+| <a id="paper-x-supporting-sources"></a>[Supporting sources](../papers/paper-x/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-x-supporting-sources.json) |
+| <a id="paper-xi-supporting-sources"></a>[Supporting sources](../papers/paper-xi/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-xi-supporting-sources.json) |
+| <a id="paper-xii-supporting-sources"></a>[Supporting sources](../papers/paper-xii/current/supporting-sources) | [file receipt](../manifests/source-imports/paper-xii-supporting-sources.json) |
+| <a id="realization-boundaries-supporting-sources"></a>[Supporting sources](../monographs/realization-boundaries/supporting-sources) | [file receipt](../manifests/source-imports/realization-boundaries-supporting-sources.json) |
+| <a id="representation-calculus-supporting-sources"></a>[Supporting sources](../research/representation-calculus/supporting-sources) | [file receipt](../manifests/source-imports/representation-calculus-supporting-sources.json) |
+| <a id="seeded-two-axis-supporting-sources"></a>[Supporting sources](../research/seeded-two-axis/supporting-sources) | [file receipt](../manifests/source-imports/seeded-two-axis-supporting-sources.json) |
+| <a id="stratified-universality-supporting-sources"></a>[Supporting sources](../research/stratified-universality/supporting-sources) | [file receipt](../manifests/source-imports/stratified-universality-supporting-sources.json) |
+| <a id="strong-artin-reader-supporting-sources"></a>[Supporting sources](../research/strong-artin-reader/supporting-sources) | [file receipt](../manifests/source-imports/strong-artin-reader-supporting-sources.json) |
+| <a id="sufficient-resolution-supporting-sources"></a>[Supporting sources](../monographs/sufficient-resolution/supporting-sources) | [file receipt](../manifests/source-imports/sufficient-resolution-supporting-sources.json) |
+| <a id="arc-agi2-offline-handoff"></a>[Offline handoff](../experiments/arc-agi2/supporting-sources/offline-handoff) | [file receipt](../manifests/source-imports/arc-agi2-offline-handoff.json) |
+| <a id="arc-agi2-original-solver"></a>[Original solver](../experiments/arc-agi2/supporting-sources/original-solver) | [file receipt](../manifests/source-imports/arc-agi2-original-solver.json) |
+| <a id="arc-agi2-public-evaluation"></a>[Public evaluation](../experiments/arc-agi2/supporting-sources/public-evaluation) | [file receipt](../manifests/source-imports/arc-agi2-public-evaluation.json) |
+| <a id="arc-agi2-training-evidence"></a>[Training evidence](../experiments/arc-agi2/supporting-sources/training-evidence) | [file receipt](../manifests/source-imports/arc-agi2-training-evidence.json) |
+| <a id="certified-inference-recovery-v14-supporting-sources"></a>[Recovery v14](../packages/certified-inference/supporting-sources/recovery-v14) | [file receipt](../manifests/source-imports/certified-inference-recovery-v14-supporting-sources.json) |
+| <a id="large-signal-model-ancestry-supporting-sources"></a>[Supporting sources](../packages/large-signal-model/supporting-sources) | [file receipt](../manifests/source-imports/large-signal-model-ancestry-supporting-sources.json) |

@@ -21,6 +21,7 @@ The [corrected SRIC admission 0.3.3 source edition](sric-admission-v0.3.3/README
 | [Constructive Repair](../docs/components/CONSTRUCTIVE_REPAIR.md) | Constructive repairs, examples, and the accompanying reference implementation. |
 | [RRCT](rrct/) | The v0.60 persistent fuzzy J-Space bridge implementation. |
 | [Universal Generative Deformation Calculus](universal-generative-deformation/) | A reference Python package, examples, tests, and editable mathematical manuscript. |
+| [Large Signal Model software](large-signal-model/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
 
 Additional implementations accompany the [research programs](../research/README.md) and [experimental laboratories](../experiments/README.md). Their software has the same beta / work-in-progress status.
 

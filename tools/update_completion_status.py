@@ -150,7 +150,7 @@ Every entry below is **Supporting / historical**, with **Lean: Not assessed** an
 
 '''
     catalogue += table(['Collection', 'Availability record'],
-                       [(link(r['title'], r['destination']+'/', page), link('file receipt', r['evidence'][0]['path'], page)) for r in supporting])
+                       [(f'<a id="{r["id"]}"></a>'+link(r['title'], r['destination']+'/', page), link('file receipt', r['evidence'][0]['path'], page)) for r in supporting])
 
     queue = f'''# Cleanup and finalization queue
 

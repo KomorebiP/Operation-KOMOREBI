@@ -4,7 +4,7 @@ Recorded 2026-10-27 · **Komorebi P.**
 
 Choose work by its completion stage below, then read its exact scope and evidence in the linked entry. **Publication completion, Lean coverage and confidence are separate fields.** A finished book may contain open research; a checked formal block may belong to an unfinished program.
 
-This is an editorial assessment of existing release/status records at [source revision `ef52463dbe47`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/ef52463dbe476bcf0c027ed00c68c6d6fb2fdfb3). It covers **84 primary components** and separately accounts for **69 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
+This is an editorial assessment of existing release/status records at [source revision `080487d6401a`](https://github.com/KomorebiP/Operation-KOMOREBI/commit/080487d6401a7e9d90c415fd9ffbbf8d825e3842). It covers **91 primary components** and separately accounts for **75 supporting collections**. It is not a new mathematical proof audit or Lean execution. Recorded passes retain their original dates and source scope.
 
 [Finalization queue](FINALIZATION_QUEUE.md) · [Detailed evidence catalogue](STATUS_CATALOG.md) · [Component/file index](COMPONENT_INDEX.md) · [Machine-readable status](../manifests/project-status.json)
 
@@ -21,7 +21,7 @@ Lean is optional. A clear written proof, exact finite certificate, or appropriat
 | Active development | 20 | A candidate, working manuscript or bounded research milestone with identified unfinished work. |
 | Experiment / prototype | 12 | A research instrument, implementation or experiment whose tested scope does not establish a general scientific endpoint. |
 | Reader available; source qualification pending | 2 | The PDF edition and reading scope have been identified; matching editable sources, full page review, and reproducible build qualification remain pending. |
-| Needs assessment | 0 | Available material lacks a sufficient assessed source/status record for a stronger label. |
+| Needs assessment | 7 | Available material lacks a sufficient assessed source/status record for a stronger label. |
 | Earlier checkpoint | 1 | A retained earlier edition; later admission records do not retroactively change its evidence. |
 
 These are work categories, not percentages or a ranking of mathematical importance. “Scoped release” means its declared finish line is recorded as complete. It does not mean every surrounding sentence, implementation, or broader conjecture is proved. “Reading edition complete” describes the editorial deliverable, not journal acceptance or a closed research program.
@@ -164,10 +164,17 @@ All executable software remains **beta / work in progress**, including implement
 | [Gaussian Elimination: collected guide](STATUS_CATALOG.md#gaussian-elimination-guide) | Not assessed | Unassessed |
 | [The Possibility for a Machine Native Mathematics](STATUS_CATALOG.md#machine-native-mathematics-essay) | No Lean claim | Unassessed |
 
-## Needs assessment (0)
+## Needs assessment (7)
 
 | Project and exact scope | Lean | Confidence basis |
 |---|---|---|
+| [ARC-AGI-2 experiment](STATUS_CATALOG.md#arc-agi2) | Not assessed | Unassessed |
+| [Large Signal Model software](STATUS_CATALOG.md#large-signal-model) | Not assessed | Unassessed |
+| [Machine Theory Compendium](STATUS_CATALOG.md#machine-theory-compendium) | Not assessed | Unassessed |
+| [Physics: curvature states](STATUS_CATALOG.md#physics-curvature-states) | Not assessed | Unassessed |
+| [Physics: energy and backreaction](STATUS_CATALOG.md#physics-energy-backreaction) | Not assessed | Unassessed |
+| [Physics: origin locking](STATUS_CATALOG.md#physics-origin-locking) | Not assessed | Unassessed |
+| [Realization Calculus: twin edition](STATUS_CATALOG.md#realization-calculus-twin-edition) | Not assessed | Unassessed |
 
 ## Earlier checkpoint (1)
 
@@ -177,7 +184,7 @@ All executable software remains **beta / work in progress**, including implement
 
 ## Supporting and earlier material
 
-The **69 supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts establish availability; this triage does not re-assess their individual mathematics. They inherit neither the coverage nor the completion label of a newer primary edition.
+The **75 supporting collections** are listed separately in the [evidence catalogue](STATUS_CATALOG.md#supporting-and-historical-collections). Their import receipts establish availability; this triage does not re-assess their individual mathematics. They inherit neither the coverage nor the completion label of a newer primary edition.
 
 | Additional material | Status in this assessment |
 |---|---|

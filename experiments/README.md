@@ -13,6 +13,7 @@ Computational programs, protocols, and recorded outcomes accompany the [core pap
 | [J-Space Causal Lab](jspace-causal-lab/) | Causal interventions and tests in J-Space models. |
 | [J-Space Collections](jspace-collections/) | J-Space constructions, machinery, and worked experiments. |
 | [Workspace Incubator](workspace-incubator/) | Workspace construction and exploratory experiments. |
+| [ARC-AGI-2 experiment](arc-agi2/) | Imported source material; scientific scope, completion, and proof or experiment evidence still need assessment. |
 
 Related machine-reasoning, OSL/Neuralese, inference, and workspace programs are listed in the [research index](../research/README.md). Earlier and distinct experimental branches appear in the [component index](../docs/COMPONENT_INDEX.md).
 
