@@ -1,0 +1,162 @@
+{
+  "suite": "manifest integrity controls",
+  "cases": 17,
+  "passed": 17,
+  "failed": [],
+  "checks": [
+    {
+      "name": "complete_inventory_accepted",
+      "passed": true,
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "expected_diagnostic": "complete inventory of 2 files",
+      "output": "PASS: complete inventory of 2 files matches the delivered manifest.\nThis checks integrity relative to the manifest, not authenticity or mathematical correctness.",
+      "optimized_python": false
+    },
+    {
+      "name": "altered_payload_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "Digest mismatch",
+      "output": "Integrity check failed:\nDigest mismatch: payload/data.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "missing_payload_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "Missing inventory file",
+      "output": "Integrity check failed:\nManifest line 2: [Errno 2] No such file or directory: '<fixture>/payload/data.txt'\nMissing inventory file: payload/data.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "empty_manifest_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "no file records",
+      "output": "Integrity check failed:\nManifest contains no file records.\nUnlisted file: README.txt\nUnlisted file: payload/data.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "comments_only_manifest_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "no file records",
+      "output": "Integrity check failed:\nManifest contains no file records.\nUnlisted file: README.txt\nUnlisted file: payload/data.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "omitted_inventory_entry_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "Unlisted file",
+      "output": "Integrity check failed:\nUnlisted file: payload/data.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "unlisted_payload_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "Unlisted file",
+      "output": "Integrity check failed:\nUnlisted file: extra.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "duplicate_entry_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "duplicate inventory entry",
+      "output": "Integrity check failed:\nManifest line 3: duplicate inventory entry: README.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "invalid_digest_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "invalid SHA-256",
+      "output": "Integrity check failed:\nManifest line 1: invalid SHA-256 digest\nUnlisted file: README.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "parent_traversal_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "unsafe or noncanonical",
+      "output": "Integrity check failed:\nManifest line 3: unsafe or noncanonical relative path",
+      "optimized_python": false
+    },
+    {
+      "name": "absolute_path_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "unsafe or noncanonical",
+      "output": "Integrity check failed:\nManifest line 3: unsafe or noncanonical relative path",
+      "optimized_python": false
+    },
+    {
+      "name": "windows_path_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "unsafe or noncanonical",
+      "output": "Integrity check failed:\nManifest line 3: unsafe or noncanonical relative path",
+      "optimized_python": false
+    },
+    {
+      "name": "noncanonical_path_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "unsafe or noncanonical",
+      "output": "Integrity check failed:\nManifest line 2: unsafe or noncanonical relative path\nUnlisted file: payload/data.txt",
+      "optimized_python": false
+    },
+    {
+      "name": "self_listing_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "must not list itself",
+      "output": "Integrity check failed:\nManifest line 3: the manifest must not list itself",
+      "optimized_python": false
+    },
+    {
+      "name": "missing_manifest_diagnosed",
+      "passed": true,
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "expected_diagnostic": "Cannot read manifest",
+      "output": "Integrity check failed:\nCannot read manifest: [Errno 2] No such file or directory: '<fixture>/MANIFEST_SHA256.txt'",
+      "optimized_python": false
+    },
+    {
+      "name": "non_utf8_manifest_diagnosed",
+      "passed": true,
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "expected_diagnostic": "Cannot read manifest",
+      "output": "Integrity check failed:\nCannot read manifest: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte",
+      "optimized_python": false
+    },
+    {
+      "name": "optimized_python_empty_manifest_rejected",
+      "passed": true,
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "expected_diagnostic": "no file records",
+      "output": "Integrity check failed:\nManifest contains no file records.\nUnlisted file: README.txt\nUnlisted file: payload/data.txt",
+      "optimized_python": true
+    }
+  ],
+  "scope": "Actual CLI executions in isolated fixtures. Not a Lean audit or authentication test."
+}
