@@ -1,0 +1,23 @@
+Komorebi.MachineTheory.CommonQuotient.source_core24.{u_1, u_2, u_3, u_4, u_5} {K : Type u_1} {V : Type u_2}
+  {Y : Type u_3} {A : Type u_4} {Θ : Type u_5} [Field K] [AddCommGroup V] [Module K V] [AddCommGroup Y] [Module K Y]
+  [Fintype A] [Fintype Θ] [FiniteDimensional K V] (T : Θ → A → V →ₗ[K] V) (θ₀ : Θ) (Q : V →ₗ[K] Y) :
+  (ObservableAgreement T θ₀ Q ↔ discrepancy T θ₀ ≤ Q.ker) ∧
+    (discrepancy T θ₀ ≤ Q.ker ↔ Nonempty (CommonModel T Q)) ∧
+      stage T θ₀ (Module.finrank K V) = discrepancy T θ₀ ∧
+        (ObservableAgreement T θ₀ Q →
+          ∀ (w : List (Θ × A)) (v : V), Q ((switchedMap T w) v) = Q ((wordMap (T θ₀) (List.map Prod.snd w)) v))
+Komorebi.MachineTheory.CommonQuotient.canonicalModel.{uK, uV, uY, uA, uT} {K : Type uK} {V : Type uV} {Y : Type uY}
+  {A : Type uA} {Θ : Type uT} [Field K] [AddCommGroup V] [Module K V] [AddCommGroup Y] [Module K Y]
+  (T : Θ → A → V →ₗ[K] V) (θ₀ : Θ) (Q : V →ₗ[K] Y) (h : discrepancy T θ₀ ≤ Q.ker) : CommonModel T Q
+Komorebi.MachineTheory.CommonQuotient.comparisonMap_unique.{uK, uV, uY, uA, uT} {K : Type uK} {V : Type uV}
+  {Y : Type uY} {A : Type uA} {Θ : Type uT} [Field K] [AddCommGroup V] [Module K V] [AddCommGroup Y] [Module K Y]
+  (T : Θ → A → V →ₗ[K] V) (θ₀ : Θ) (Q : V →ₗ[K] Y) (M : CommonModel T Q) (f : V ⧸ discrepancy T θ₀ →ₗ[K] M.Carrier)
+  (hf : f ∘ₗ (discrepancy T θ₀).mkQ = M.projection) : f = comparisonMap T θ₀ Q M
+Komorebi.MachineTheory.CommonQuotient.discrepancy_reference_independent.{uK, uV, uA, uT} {K : Type uK} {V : Type uV}
+  {A : Type uA} {Θ : Type uT} [Field K] [AddCommGroup V] [Module K V] (T : Θ → A → V →ₗ[K] V) (θ₀ θ₁ : Θ) :
+  discrepancy T θ₀ = discrepancy T θ₁
+Komorebi.MachineTheory.CommonQuotient.Examples.no_agreement_from_immediate_invisibility :
+  ¬ObservableAgreement Examples.returnFamily false Examples.first2
+Komorebi.MachineTheory.CommonQuotient.Examples.one_initial_is_not_enough :
+  ¬ObservableAgreement Examples.initialFamily false Examples.third3
+Komorebi.MachineTheory.CommonQuotient.Examples.good_projection_not_injective : ¬Function.Injective ⇑Examples.keepTwo

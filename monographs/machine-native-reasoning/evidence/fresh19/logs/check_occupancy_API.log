@@ -1,0 +1,26 @@
+Komorebi.MachineTheory.PartitionCorrection.Examples.sensor_no_three_bit_memory :
+  ¬∃ r q step,
+      (∀ (V : Set SensorWorld), q (r V) = sensorTarget '' V) ∧
+        ∀ (e : (algebra sensorCell).Event) (V : Set SensorWorld), step e (r V) = r ((algebra sensorCell).filter e V)
+Komorebi.MachineTheory.PartitionCorrection.Examples.contradictory_filter.{u_1, u_2} {Ω : Type u_1} {I : Type u_2}
+  (c : Ω → I) (V : Set Ω) : (algebra c).filter (event c ∅) V = ∅
+Komorebi.MachineTheory.PartitionCorrection.Examples.contradictory_binary_readout.{u_1, u_2, u_3} {Ω : Type u_1}
+  {I : Type u_2} {Y : Type u_3} [Fintype Ω] (c : Ω → I) (t : Ω → Y) (V : Set Ω) :
+  readBits c t (updateBits c t (event c ∅) (encode c t V)) = ∅
+Komorebi.MachineTheory.PartitionCorrection.Examples.current_target_set_does_not_determine_correction :
+  ¬∀ (V W : Set SensorWorld),
+      sensorTarget '' V = sensorTarget '' W →
+        (algebra sensorCell).signature sensorTarget V = (algebra sensorCell).signature sensorTarget W
+Komorebi.MachineTheory.PartitionCorrection.Examples.constant_singletons_same_occupancy :
+  occupancy oneCell constantTarget {false} = occupancy oneCell constantTarget {true}
+Komorebi.MachineTheory.PartitionCorrection.Examples.splitting_cell_changes_signature :
+  splitAlgebra.signature constantTarget {false} ≠ splitAlgebra.signature constantTarget {true}
+Komorebi.MachineTheory.PartitionCorrection.Examples.singleton_event_not_old_admitted :
+  {false} ∉ (algebra oneCell).events
+Komorebi.MachineTheory.PartitionCorrection.Examples.separate_singletons_different_occupancy :
+  occupancy separateCells constantTarget {false} ≠ occupancy separateCells constantTarget {true}
+Komorebi.MachineTheory.PartitionCorrection.Examples.missing_cells_merges_signatures :
+  (algebra oneCell).signature constantTarget {false} = (algebra oneCell).signature constantTarget {true}
+Komorebi.MachineTheory.PartitionCorrection.Examples.multi_target_signature_count :
+  Fintype.card ((algebra multiCell).Memory multiTarget) = 16
+Komorebi.MachineTheory.PartitionCorrection.Examples.no_unattained_pair (d : Pair oneCell natTarget) : (↑d).2 ≠ 2

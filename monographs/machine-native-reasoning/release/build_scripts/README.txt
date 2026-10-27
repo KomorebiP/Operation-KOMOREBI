@@ -1,0 +1,1 @@
+These are session assembly and authoring helpers with recorded local paths. They preserve how this artifact was produced. The portable consumer entry points are tools/verify_package.py, tools/restore_runtime.py and scripts/supervise.py, not these session helpers. Their presence is not new proof evidence.

@@ -1,0 +1,23 @@
+Komorebi.MachineTheory.ApproximationExamples.sensor_all_history_error (g : Policy Unit Bool)
+  (p : PlanningSensor.World → ℝ) (hp : IsDist p) (H : ℕ) :
+  tv (push (project PlanningSensor.project H) (law (fun x => ApproximationExamples.calibrated37) g p H))
+      (law (fun x => PlanningSensor.sensorLaw) g (push PlanningSensor.project p) H) ≤
+    min 1 (↑H / 100)
+Komorebi.MachineTheory.ApproximationExamples.checked_selected_regret :
+  risk ApproximationExamples.truthLaw (ApproximationExamples.classificationLoss false) -
+      risk ApproximationExamples.truthLaw (ApproximationExamples.classificationLoss true) ≤
+    min 1 (2 * 1 * (1 / 4))
+Komorebi.MachineTheory.ApproximationExamples.unequal_mass_sharp :
+  tv (ApproximationExamples.rareP (1 / 10)) (ApproximationExamples.largerEventQ (1 / 10)) = 1 / 10 ∧
+    mass (restrict ApproximationExamples.rareEvent (ApproximationExamples.rareP (1 / 10))) = 1 / 10 ∧
+      mass (restrict ApproximationExamples.rareEvent (ApproximationExamples.largerEventQ (1 / 10))) = 1 / 5 ∧
+        tv (normalize (restrict ApproximationExamples.rareEvent (ApproximationExamples.rareP (1 / 10))))
+            (normalize (restrict ApproximationExamples.rareEvent (ApproximationExamples.largerEventQ (1 / 10)))) =
+          1 / 2
+Komorebi.MachineTheory.ApproximationExamples.reset_full_history_distance :
+  tv (law (fun x => ApproximationExamples.resetLaw) ApproximationExamples.unitPolicy (basis false) 1)
+      (law (fun x => ApproximationExamples.resetLaw) ApproximationExamples.unitPolicy (basis true) 1) =
+    1
+Komorebi.MachineTheory.ApproximationExamples.reset_final_states_agree :
+  push (last 1) (law (fun x => ApproximationExamples.resetLaw) ApproximationExamples.unitPolicy (basis false) 1) =
+    push (last 1) (law (fun x => ApproximationExamples.resetLaw) ApproximationExamples.unitPolicy (basis true) 1)

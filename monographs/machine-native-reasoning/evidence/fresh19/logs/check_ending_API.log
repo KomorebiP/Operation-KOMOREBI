@@ -1,0 +1,32 @@
+Komorebi.MachineTheory.SafeEnding.source_core83.{u, v} {Z : Type u} {A : Type v} [Fintype Z] (M : Model Z A) (x : Z) :
+  x ∈ runningRegion M ↔
+    ∃ P,
+      SwitchingGuarantee M P x ∧
+        ∀ (anchor : Config Z A),
+          Reach (runEdge M (before P)) (start x) anchor →
+            ∀ (p : ℕ → Config Z A),
+              p 0 = start anchor.2 →
+                ∀ (n : ℕ),
+                  (∀ k < n, endEdge M (after P anchor) (p k) (p (k + 1))) → n + endRank M (p n).2 ≤ endRank M anchor.2
+Komorebi.MachineTheory.SafeEnding.command_rank_bound.{u, v} {Z : Type u} {A : Type v} [Fintype Z] (M : Model Z A)
+  {x : Z} (hx : x ∈ runningRegion M) {anchor : Config Z A}
+  (hr : Reach (runEdge M (before (canonicalPolicy M))) (start x) anchor) (p : ℕ → Config Z A)
+  (h0 : p 0 = start anchor.2) (n : ℕ) (hp : ∀ k < n, endEdge M (after (canonicalPolicy M) anchor) (p k) (p (k + 1))) :
+  (p n).2 ∈ endingRegion M ∧ n + endRank M (p n).2 ≤ endRank M anchor.2
+Komorebi.MachineTheory.SafeEnding.command_rank_arrival.{u, v} {Z : Type u} {A : Type v} [Fintype Z] (M : Model Z A)
+  {x : Z} (hx : x ∈ runningRegion M) {anchor : Config Z A}
+  (hr : Reach (runEdge M (before (canonicalPolicy M))) (start x) anchor) (p : ℕ → Config Z A)
+  (h0 : p 0 = start anchor.2)
+  (hp : ∀ k < endRank M anchor.2, endEdge M (after (canonicalPolicy M) anchor) (p k) (p (k + 1))) :
+  (p (endRank M anchor.2)).2 ∈ M.goal
+Komorebi.MachineTheory.SafeEnding.running_has_infinite_path.{u, v} {Z : Type u} {A : Type v} (M : Model Z A)
+  {σ : Strategy Z A} {x : Z} (h : RunningGuarantee M σ x) :
+  ∃ p, p 0 = start x ∧ (∀ (n : ℕ), runEdge M σ (p n) (p (n + 1))) ∧ ∀ (n : ℕ), (p n).2 ∈ M.safe
+Komorebi.MachineTheory.SafeEnding.ending_prefix_extends.{u, v} {Z : Type u} {A : Type v} (M : Model Z A)
+  {σ : Strategy Z A} {x : Z} (h : EndingGuarantee M σ x) {c : Config Z A} (hr : Reach (endEdge M σ) (start x) c)
+  (hg : c.2 ∉ M.goal) : ∃ d, endEdge M σ c d
+Komorebi.MachineTheory.SafeEnding.Examples.winning_policy_need_not_take_minimal_time :
+  EndingGuarantee Examples.waitModel Examples.delayStrategy true ∧
+    endEdge Examples.waitModel Examples.delayStrategy (start true) Examples.delayFirst ∧
+      endEdge Examples.waitModel Examples.delayStrategy Examples.delayFirst Examples.delayLast ∧
+        2 > endRank Examples.waitModel true

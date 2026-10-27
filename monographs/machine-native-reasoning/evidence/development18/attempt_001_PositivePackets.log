@@ -1,0 +1,75 @@
+MachineTheory/PositivePackets.lean:2:0: warning: 
+'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by
+
+import Mathlib.Basic.Real.Basic
+MachineTheory/PositivePackets.lean:70:4: error: Try `simp at h` instead of `simpa using h`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+MachineTheory/PositivePackets.lean:100:79: error: unsolved goals
+V : Type uV
+I : Type uI
+inst✝¹ : AddCommGroup V
+inst✝ : Module ℝ V
+mass : V →ₗ[ℝ] ℝ
+P : I → V →ₗ[ℝ] V
+v : V
+i : PositiveIndex mass P v
+⊢ (mass ((P ↑i) v))⁻¹ * mass ((P ↑i) v) = 1
+MachineTheory/PositivePackets.lean:101:38: error: This simp argument is unused:
+  ne_of_gt i.property
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [normalized, weight, map_smul]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+MachineTheory/PositivePackets.lean:120:40: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  Finite (PositiveIndex mass P v)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+MachineTheory/PositivePackets.lean:133:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ x ∈ ?s, ?g (?f x)
+in the target expression
+  ∑ i, weight mass P v i = mass v
+
+V : Type uV
+I : Type uI
+inst✝² : AddCommGroup V
+inst✝¹ : Module ℝ V
+inst✝ : Fintype I
+mass : V →ₗ[ℝ] ℝ
+P : I → V →ₗ[ℝ] V
+hc : Complete P
+v : V
+⊢ ∑ i, weight mass P v i = mass v
+MachineTheory/PositivePackets.lean:149:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ a, ?f ↑a
+in the target expression
+  ∑ i, (P ↑i) v = v
+
+V : Type uV
+I : Type uI
+inst✝² : AddCommGroup V
+inst✝¹ : Module ℝ V
+inst✝ : Fintype I
+C : ConvexCone ℝ V
+mass : V →ₗ[ℝ] ℝ
+hm : StrictMass C mass
+P : I → V →ₗ[ℝ] V
+hp : ∀ (i : I), Preserves C (P i)
+hc : Complete P
+v : V
+hv : v ∈ C
+s : Finset I := {i | 0 < weight mass P v i}
+hs : ∀ (i : I), i ∈ s ↔ 0 < weight mass P v i
+⊢ ∑ i, (P ↑i) v = v
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    i
+  has type
+    PositiveIndex mass P v
+  but is expected to have type
+    { i // 0 < weight mass P v i }
+  in the application
+    ↑i

@@ -1,0 +1,64 @@
+checks/CheckPositivePacketsAPI.lean:22:2: error: Type mismatch
+  source_core25 C m hm P hp hc ⟨hv, hunit⟩
+has type
+  (∀ (i : I), 0 ≤ weight m P v i) ∧
+    ∑ i, weight m P v i = 1 ∧
+      (∀ (i : I), weight m P v i = 0 ↔ (P i) v = 0) ∧
+        (∀ (i : PositiveIndex m P v), IsState C m (normalized m P v i)) ∧
+          ∑ i ∈ @Finset.univ (PositiveIndex m P v) (positiveIndexFintype m P v), weight m P v ↑i • normalized m P v i =
+            v
+but is expected to have type
+  (∀ (i : I), 0 ≤ m ((P i) v)) ∧
+    ∑ i, m ((P i) v) = 1 ∧
+      (∀ (i : I), m ((P i) v) = 0 ↔ (P i) v = 0) ∧
+        (∀ (i : { i // 0 < m ((P i) v) }), (m ((P ↑i) v))⁻¹ • (P ↑i) v ∈ C ∧ m ((m ((P ↑i) v))⁻¹ • (P ↑i) v) = 1) ∧
+          ∑ i ∈ @Finset.univ { i // 0 < m ((P i) v) } (Subtype.fintype fun i => 0 < m ((P i) v)),
+              m ((P ↑i) v) • (m ((P ↑i) v))⁻¹ • (P ↑i) v =
+            v
+checks/CheckPositivePacketsAPI.lean:36:45: error: Application type mismatch: The argument
+  fun x => Examples.halfIdentity
+has type
+  Bool → Examples.V2 →ₗ[ℝ] Examples.V2
+but is expected to have type
+  Examples.V2 →ₗ[ℝ] Examples.V2
+in the application
+  Preserves Examples.quadrant fun x => Examples.halfIdentity
+Komorebi.MachineTheory.PositivePackets.source_core25.{uV, uI} {V : Type uV} {I : Type uI} [AddCommGroup V] [Module ℝ V]
+  [Fintype I] (C : ConvexCone ℝ V) (mass : V →ₗ[ℝ] ℝ) (hm : StrictMass C mass) (P : I → V →ₗ[ℝ] V)
+  (hp : ∀ (i : I), Preserves C (P i)) (hc : Complete P) {v : V} (hv : IsState C mass v) :
+  (∀ (i : I), 0 ≤ weight mass P v i) ∧
+    ∑ i, weight mass P v i = 1 ∧
+      (∀ (i : I), weight mass P v i = 0 ↔ (P i) v = 0) ∧
+        (∀ (i : PositiveIndex mass P v), IsState C mass (normalized mass P v i)) ∧
+          ∑ i, weight mass P v ↑i • normalized mass P v i = v
+Komorebi.MachineTheory.PositivePackets.sum_positive_weights_one.{uV, uI} {V : Type uV} {I : Type uI} [AddCommGroup V]
+  [Module ℝ V] [Fintype I] (C : ConvexCone ℝ V) (mass : V →ₗ[ℝ] ℝ) (hm : StrictMass C mass) (P : I → V →ₗ[ℝ] V)
+  (hp : ∀ (i : I), Preserves C (P i)) (hc : Complete P) {v : V} (hv : IsState C mass v) : ∑ i, weight mass P v ↑i = 1
+Komorebi.MachineTheory.PositivePackets.Coordinate.classification_iff.{uN, uI} {N : Type uN} {I : Type uI} [Fintype N]
+  [Fintype I] (P : I → (N → ℝ) →ₗ[ℝ] N → ℝ) :
+  ((∀ (i : I), Preserves (Coordinate.cone N) (P i)) ∧ Complete P ∧ ∀ (i : I), P i ∘ₗ P i = P i) ↔
+    ∃ owner, ∀ (i : I), P i = Coordinate.selector owner i
+Komorebi.MachineTheory.PositivePackets.Coordinate.source_core25_coordinate.{uN, uI} {N : Type uN} {I : Type uI}
+  [Fintype N] [Fintype I] (P : I → (N → ℝ) →ₗ[ℝ] N → ℝ) (hp : ∀ (i : I), Preserves (Coordinate.cone N) (P i))
+  (hc : Complete P) (hi : ∀ (i : I), P i ∘ₗ P i = P i) :
+  (∃ owner, ∀ (i : I), P i = Coordinate.selector owner i) ∧
+    (∀ (r : N), ∃! i, Coordinate.coefficient (P i) r r = 1) ∧ ∀ (i k : I), i ≠ k → P i ∘ₗ P k = 0
+Komorebi.MachineTheory.PositivePackets.Transport.source_coordinate_change.{uV, uW, uI} {V : Type uV} {W : Type uW}
+  {I : Type uI} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W] [Fintype I] (e : V ≃ₗ[ℝ] W)
+  (C : ConvexCone ℝ V) (m : V →ₗ[ℝ] ℝ) (hm : StrictMass C m) (P : I → V →ₗ[ℝ] V) (hp : ∀ (i : I), Preserves C (P i))
+  (hc : Complete P) {v : V} (hv : IsState C m v) :
+  StrictMass (Transport.cone e C) (Transport.mass e m) ∧
+    (∀ (i : I), Preserves (Transport.cone e C) (Transport.operator e (P i))) ∧
+      (Complete fun i => Transport.operator e (P i)) ∧
+        IsState (Transport.cone e C) (Transport.mass e m) (e v) ∧
+          ∀ (i : I), weight (Transport.mass e m) (fun j => Transport.operator e (P j)) (e v) i = weight m P v i
+Komorebi.MachineTheory.PositivePackets.Transport.normalized_eq.{uV, uW, uI} {V : Type uV} {W : Type uW} {I : Type uI}
+  [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W] (e : V ≃ₗ[ℝ] W) (m : V →ₗ[ℝ] ℝ) (P : I → V →ₗ[ℝ] V)
+  (v : V) (i : PositiveIndex m P v) :
+  normalized (Transport.mass e m) (fun j => Transport.operator e (P j)) (e v) (Transport.index e m P v i) =
+    e (normalized m P v i)
+Komorebi.MachineTheory.PositivePackets.Examples.haar_detail_zero_mass_nonzero :
+  Examples.mass2 (Examples.detail (3 / 4, 1 / 4)) = 0 ∧ Examples.detail (3 / 4, 1 / 4) ≠ 0
+Komorebi.MachineTheory.PositivePackets.Examples.transported_signed_state :
+  IsState (Transport.cone Examples.shear Examples.quadrant) (Transport.mass Examples.shear Examples.mass2) (-1, 1)
+Komorebi.MachineTheory.PositivePackets.Examples.empty_coordinate_family : Complete (Coordinate.selector fun x => x)

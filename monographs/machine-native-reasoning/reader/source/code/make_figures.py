@@ -1,0 +1,50 @@
+"""Reproducible analytical diagrams for the reviewed core. No empirical traces."""
+from pathlib import Path
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.patches import FancyBboxPatch
+ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'figures';OUT.mkdir(exist_ok=True)
+def save(fig,name):
+    for ext in ('pdf','svg','png'):
+        fig.savefig(OUT/(name+'.'+ext),bbox_inches='tight',pad_inches=.15,dpi=180)
+    plt.close(fig)
+def box(ax,x,y,w,h,text):
+    ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle='round,pad=0.04',fill=False,linewidth=1.2))
+    ax.text(x+w/2,y+h/2,text,ha='center',va='center',fontsize=11)
+def arrow(ax,a,b):ax.annotate('',b,a,arrowprops={'arrowstyle':'->','linewidth':1.3})
+def main():
+    fig,ax=plt.subplots(figsize=(9,3.9));ax.set(xlim=(0,9),ylim=(0,3.9));ax.axis('off')
+    box(ax,.1,2.30,2.3,1.05,'8 possible worlds\n(b, s, n)')
+    box(ax,3.3,2.30,2.3,1.05,'Display y = 1\n4 possible worlds')
+    box(ax,6.5,2.30,2.3,1.05,'Calibration s = 1\n2 possible worlds')
+    arrow(ax,(2.48,2.83),(3.22,2.83));arrow(ax,(5.68,2.83),(6.42,2.83))
+    ax.text(1.25,1.70,'No target bit identified',ha='center',fontsize=11)
+    ax.text(4.45,1.70,'Every future display flip\nis predictable',ha='center',va='center',fontsize=11)
+    ax.text(7.65,1.70,'Physical target b = 0\nNuisance n stays unknown',ha='center',va='center',fontsize=11)
+    box(ax,1.45,.25,6.1,.72,'Different questions require different retained distinctions.')
+    save(fig,'sensor_chain')
+    fig,ax=plt.subplots(figsize=(7.2,4.5))
+    ax.scatter([3,4],[7,5],s=85,marker='o',label='Attainable nondominated profiles')
+    ax.scatter([3],[5],s=105,marker='x',label='Infeasible combined budget')
+    ax.annotate('Equality-test tree\n(3, 7)',(3,7),xytext=(2.18,7.25),fontsize=11)
+    ax.annotate('Direct reveal\n(4, 5)',(4,5),xytext=(4.13,5.18),fontsize=11)
+    ax.annotate('No single tree\nrealizes (3, 5)',(3,5),xytext=(2.06,4.23),fontsize=11)
+    ax.set(xlim=(1.9,5.45),ylim=(3.8,8.3),xlabel='Worst-case online units',ylabel='Complete stored tree records')
+    ax.set_xticks([2,3,4,5]);ax.set_yticks([4,5,6,7,8]);ax.grid(alpha=.18)
+    ax.legend(loc='upper center',bbox_to_anchor=(.5,1.17),frameon=False,fontsize=10)
+    fig.subplots_adjust(top=.80)
+    save(fig,'joint_frontier')
+    fig,ax=plt.subplots(figsize=(9,4.5));ax.set(xlim=(0,9),ylim=(0,4.5));ax.axis('off')
+    box(ax,.2,3.2,2.6,.82,'Arithmetic semantics\nunchanged')
+    box(ax,3.25,3.2,2.5,.82,'Equation library\nstill applicable')
+    box(ax,6.25,3.2,2.5,.82,'Grammar quotient\nstill applicable')
+    arrow(ax,(2.87,3.61),(3.17,3.61));arrow(ax,(5.82,3.61),(6.17,3.61))
+    box(ax,.2,1.25,2.6,.95,'Repair language\nNEW universal repair')
+    box(ax,3.25,1.25,2.5,.95,'Old leaf bound\nrequires rechecking')
+    box(ax,6.25,1.25,2.5,.95,'Old cost comparison\nnot inherited')
+    arrow(ax,(2.87,1.73),(3.17,1.73));arrow(ax,(5.82,1.73),(6.17,1.73))
+    ax.text(4.5,.45,'The direct dependencies are declared. A missing dependency is not repaired by a hash.',ha='center',fontsize=10.5)
+    save(fig,'revision_scope')
+    print('Created three analytical figures from the reviewed finite examples.')
+if __name__=='__main__':main()
