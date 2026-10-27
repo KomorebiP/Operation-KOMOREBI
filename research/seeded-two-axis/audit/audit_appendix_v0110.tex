@@ -1,0 +1,36 @@
+\clearpage
+\section{Audit and verification record for v0.11.0}\label{app:audit-v0110}
+
+\subsection{Source authority and evidence status}
+The supplied v0.10.0 PDF, source, and full package are preserved unchanged in \texttt{previous/}. Their SHA-256 hashes are recorded in \texttt{audit/base\_sha256.json}. The new continuation adds K72--K82 and the proof fragment \texttt{proofs/profinite\_lifting.tex}. All inherited theorem, lemma, proposition, corollary, and proof blocks remain verbatim and in their original relative order. Current summary prose, the theorem ledger, and next-step statements are updated. Historical audit and version entries remain historical.
+
+The new results have written proofs and an authoring-session self-review. They have not received an independent mathematical review or Lean certification. Lean and Lake are not available on the runtime path. No claim of historical novelty is made for continuous cohomology, free pro-$p$ groups, or cyclic centralizers, nor is novelty inferred for their combination from a limited search.
+
+\subsection{Executed routes and mathematical boundaries}
+The continuous-obstruction route retains the actual profinite source and proves the finite-quotient inflation criterion, including an explicit carry cocycle killed by source refinement. It does not infer that all finite-quotient obstructions eventually vanish. The free-source route constructs lifts without source relations beyond those of a free pro-$p$ group. The abelian route retains commutativity, exposes its normalized residual, and gives a complete criterion on the cyclic normalized stratum, including every rank-two input. The example with $E_{12},E_{21}$ proves the uniform $2n-1$ horizon sharp for $n,r\geq2$.
+
+The self-review checked the following distinctions.
+\begin{enumerate}
+\item Continuous $H^2$ here has a finite discrete coefficient module. No statement about arbitrary topological coefficient theories is substituted for that definition.
+\item A continuous repair cochain may require a finer finite source quotient. It is not required to factor through the initial quotient.
+\item The cohomology-vanishing theorem gives a sufficient condition and the finitely branching tree gives a compactness criterion. Neither supplies a general numerical horizon for all profinite groups.
+\item In the cyclic test, the normalized generator must be cyclic modulo $p$. Rank two makes that condition automatic after minimal scalar-depth normalization. No such assertion is made for arbitrary higher rank.
+\item Cancellation of $p^{2a}$ takes place in torsion-free integral matrices for necessity, or is translated into the stated lower-modulus congruence for a finite witness. It is not division by a unit in $R_n$.
+\item The positive construction preserves the given reduction, but not extra determinant, ramification, or geometric conditions. The constructed matrices are units over $\mathbb Z_p$, not necessarily unimodular over $\mathbb Z$.
+\item The continuous-powers argument includes $p=2$. The explicit carry example retains its separate odd-prime hypothesis.
+\item Source inflation and coefficient reduction have opposite variance. A preliminary draft description treating both as unrestricted coarsenings was replaced by \cref{prop:mixed-source-variance}; reversing inflation would require descent through the smaller quotient.
+\end{enumerate}
+
+\subsection{Exact computations and usable certificates}
+All six regression suites passed with Python 3.13.5. The inherited five suites were rerun at their previously recorded bounds. The new standard-library suite uses exact integer and modular arithmetic with no random sampling or floating tolerance.
+
+The source-inflation checks cover 495 cocycle triples, all 3,107 refined-quotient pairs for $p=3,5,7$, and 83 repaired matrix values. The centralizer checks cover 1,017 cyclic matrices and 982,827 candidate centralizer pairs in the explicitly listed finite rings and companion-matrix family. Complete rank-two tables contain all 10, 33, 832, and 29,889 valid continuous two-generator actions over $\mathbb F_2$, $\mathbb F_3$, $\mathbb Z/4$, and $\mathbb Z/9$, respectively. Each positive case is checked against an exactly commuting integral polynomial certificate.
+
+An orthogonal enumeration of all 1,048,576 ordered pairs of admissible generator matrices modulo $8$ gives 59,392 commuting pairs. Their 664 distinct reductions modulo $4$ agree exactly with the positive set from the normalized criterion. All 4,096 rank-two tangent triples over $\mathbb F_2$ are also checked. The sharpness suite includes 24 prime/precision families and all 72,353 correction pairs in three stated finite fixtures. Higher-rank checks use 54 constructed three-generator fixtures, not an exhaustive higher-rank population, with 162 recovered polynomial certificates and 648 finite continuity checks. Exact ranges and nonclaims are in \texttt{checks/profinite\_results.json}.
+
+The included command-line tool \texttt{tools/lift\_abelian\_rank2.py} validates the matrix input and returns either exact integral generators or a nonzero normalized-commutator certificate. It applies only to the unconstrained rank-two $\mathbb Z_p^r$ problem. Its positive and negative examples are preserved in \texttt{examples/}. The universal lifting and convergence statements follow from the written proofs, not from these bounded computations.
+
+\subsection{Sources, build, and reproducibility}
+The direct-limit cohomology input was checked in Milne's \emph{Class Field Theory}, version 4.03, Chapter II, Section 4, Proposition 4.2, printed page 87. That PDF page was inspected visually. The continuous-cochain differential was checked on the official Stacks Project Tag 0DVG. Broad searches returning unrelated material were not treated as evidence. This is a dependency check, not an exhaustive novelty survey. No external full-text paper or font file is bundled.
+
+The source is regenerated from the exact preserved base and the new proof and audit fragments by \texttt{audit/integrate\_v0110.py}. The package includes the source diff, final LaTeX log, source-preservation checks, run manifests, visual-review record, and checksums. The runner removes stale result files before execution and records each script's before/after hash. A shell inspection command initially rejected a leading-hyphen \texttt{printf} argument; it was rerun without that argument and had not modified source. The companion audit records final build outcomes and the precise review scope.

@@ -1,0 +1,459 @@
+--- Komorebi_Seeded_Two_Axis_Calculus_v0.10.0.tex
++++ Komorebi_Seeded_Two_Axis_Calculus_v0.11.0.tex
+@@ -12,8 +12,8 @@
+ \usepackage[nameinlink,noabbrev]{cleveref}
+ \usepackage{xcolor}
+ \usepackage{needspace}
+-\hypersetup{pdftitle={Komorebi Seeded Two-Axis Calculus v0.10.0},
+- pdfauthor={Komorebi P.},pdfsubject={Complete finite-group lifting obstructions, convergent repair, and a finite resolution horizon}}
++\hypersetup{pdftitle={Komorebi Seeded Two-Axis Calculus v0.11.0},
++ pdfauthor={Komorebi P.},pdfsubject={Continuous source resolution, normalized commutators, and sharp rank-two lifting}}
+ \setlength{\emergencystretch}{2em}
+ \setcounter{tocdepth}{2}
+ 
+@@ -55,7 +55,7 @@
+ 
+ \title{\textbf{Komorebi Seeded Two-Axis Calculus}\\
+ \large Transformation, Resolution, Residual Generation, and Reconstruction\\[0.4em]
+-\normalsize Working Formalization v0.10.0}
++\normalsize Working Formalization v0.11.0}
+ \author{Komorebi P.}
+ \date{27 September 2026}
+ 
+@@ -63,13 +63,13 @@
+ \maketitle
+ 
+ \begin{abstract}
+-This manuscript develops a seed-generated calculus of transformation, resolution, and exchange residuals. Its categorical core uses indexed systems, coherent event diagrams, stable cofibers, and constructor-compatible quotients. Arithmetic models distinguish genuine reconstruction from information lost by forcing a residual to vanish. The running development preserves history-sensitive filtrations and explicitly records failures of stronger claims.
+-
+-Version 0.10.0 gives a sufficient lifting criterion for representations of a fixed finite group over $\mathbb Z_p$. The complete one-step obstruction is a normalized multiplicativity class in $H^2$ of the residual adjoint module. Linear cochain corrections provide positive witnesses and dual nonexistence certificates. A central sign action proves that vanishing of the derived-invariant comparison cone alone is not sufficient for a representation lift.
+-
+-An explicit averaging argument repairs sufficiently accurate approximate actions. If $e=v_p(|G|)$ and the defect depth is $m>2e$, correction converges with depths $m_j=2e+2^j(m-2e)$ while preserving level $m-e$. Consequently a representation modulo $p^n$ lifts integrally exactly when it extends to level $\max\{n+e,2e+1\}$. Controlled conjugacy gives a finite catalogue of integral isomorphism classes. A profinite example shows why fixing the finite source is an essential restriction.
+-
+-The cohomological mechanism and quantitative finite-group stability bound are classical or already established in the cited literature. This release supplies explicit proofs, a finite-certificate implementation, counterexamples, and their integration into the two-axis calculus. The new work is self-reviewed and computationally regression-tested, not independently reviewed or Lean-certified. No new foundational axiom, historical novelty, general profinite lifting criterion, automorphic existence, or Langlands reciprocity theorem is claimed.
++This manuscript develops a seed-generated calculus of transformations, resolution changes, and residuals of their exchange maps. Its categorical core uses indexed categories, coherent event diagrams, stable cofibers, and constructor-compatible quotients, while retaining history-sensitive filtrations. Arithmetic test beds include nonidentity coefficient towers, completion defects, lattice reconstruction, intrinsic derived exchanges, and a finite lifting horizon for a fixed finite group.
++
++Version 0.11.0 retains the actual profinite source. Continuous relation cohomology characterizes next-level lifts, and source inflation identifies when a finite-quotient obstruction disappears after that source resolution is refined. Compatible towers reconstruct continuously, and free pro-$p$ sources admit arbitrary coefficient lifts of their generator matrices.
++
++For continuous representations of $\mathbb Z_p^r$, removing a common scalar precision exposes normalized commutators. When one normalized generator is cyclic modulo $p$, their vanishing is necessary and sufficient for an integral lift, constructed by finite polynomial certificates. This condition covers every rank-two input. It yields a complete finite-matrix decision and a sharp uniform horizon $2n-1$ for lifting a representation modulo $p^n$. Explicit positive and negative examples distinguish genuine abelian relations from torsion relations introduced by fixing a finite quotient. A mixed-variance groupoid records coefficient reduction and source inflation without identifying their directions.
++
++Written proofs, self-review, exact regression tests, and a usable rank-two certificate tool accompany the construction. No Lean certification, independent review, historical novelty, universal profinite lifting theorem, prescribed geometric deformation condition, automorphic existence, or Langlands reciprocity theorem is claimed.
+ \end{abstract}
+ \newpage
+ 
+@@ -2921,6 +2921,311 @@
+ There are now three distinct tests. A chosen functor's exchange cone is a necessary diagnostic on its detectable inputs, but the central-sign example shows it is not a complete lifting invariant. The class $o_n(\rho_n)$ is a complete one-step obstruction because its vanishing is proved equivalent to solving the actual multiplicativity equations. Finally, the finite horizon plus convergent correction turns a finite witness into a full $\mathbb Z_p$-action for a fixed finite group. This gives a positive reconstruction theorem without killing the residual in a Verdier quotient.
+ 
+ In the two-axis vocabulary, the resolution fiber is the actual lift groupoid, the transformation direction includes changes of basis, the relation residual is a normalized cocycle, admissible repairs are cochains, and its class in $H^2$ is the obstruction. The averaging theorem then supplies a quantitative regime in which repeated repairs converge. These identifications recover and connect classical deformation and ultrametric-stability mathematics. They do not make the abstract obstruction formalism a proof of automorphic existence or Langlands reciprocity.
++
++
++\section{Continuous source resolution and abelian reconstruction}\label{sec:profinite-reconstruction}
++
++This section keeps the profinite source fixed while allowing its finite images to grow. It separates two independent resolution coordinates: coefficient precision and the finite quotient through which a particular observation factors. Its strongest constructive conclusion is a complete finite-matrix lifting criterion for continuous rank-two representations of $\mathbb Z_p^r$. In arbitrary rank the same criterion holds when a specified normalized generator is cyclic modulo $p$. No prescribed determinant, ramification type, Hodge condition, or automorphic realization is included in these statements.
++
++The continuous cohomology used below is the cohomology of continuous inhomogeneous cochains with a \emph{finite discrete} coefficient module. The finite-quotient description is classical \cite[Chapter II, Section 4, Proposition 4.2]{MilneCFT2020}; see also \cite{StacksContinuous}. The free pro-$p$ construction and cyclic-centralizer argument are given directly. The claims are written deductions under explicit hypotheses, not assertions of historical novelty.
++
++\subsection{The actual continuous obstruction}
++
++Fix a profinite group $\Gamma$, a prime $p$, $n,d\geq1$, and a continuous representation
++\[
++ \rho_n:\Gamma\longrightarrow\operatorname{GL}_d(R_n),
++ \qquad R_n=\mathbb Z/p^n.
++\]
++The target is finite and discrete. Give $V=M_d(\mathbb F_p)$ the adjoint action of $\bar\rho$. Choose a section of the reduction map on the finite set $\rho_n(\Gamma)$, taking the identity to the identity. Composing this section with $\rho_n$ gives a continuous matrix-valued lift $A_g$ to $R_{n+1}$, not necessarily multiplicative. Define
++\[
++ c_A(g,h)=\frac{A_gA_hA_{gh}^{-1}-I}{p^n}\pmod p.
++\]
++Here division is the identification of $p^nR_{n+1}$ with $\mathbb F_p$, as in \cref{thm:relation-H2}.
++
++\begin{theorem}[Complete continuous one-step obstruction]\label{thm:continuous-H2}
++The class
++\[
++ o_n^{\mathrm{cts}}(\rho_n)=[c_A]\in H^2_{\mathrm{cts}}(\Gamma,V)
++\]
++is independent of the continuous choices. It vanishes if and only if $\rho_n$ has a \emph{continuous} lift to $\operatorname{GL}_d(R_{n+1})$ with its specified reduction. More precisely, the repair equation is
++\[
++ \delta b=-c_A,\qquad b:\Gamma\to V\text{ continuous and normalized},
++\]
++and the repaired matrices are $(I+p^nb(g))A_g$. When lifts exist, their framed set is a torsor for $Z^1_{\mathrm{cts}}(\Gamma,V)$. Strict-conjugacy classes and stabilizers are governed by $H^1_{\mathrm{cts}}$ and $H^0_{\mathrm{cts}}$, respectively.
++\end{theorem}
++\begin{proof}
++The associativity and square-zero computations in \cref{thm:relation-H2} hold pointwise without a finiteness assumption on the source. All the resulting cochains are continuous because the targets are finite and the chosen lifts are continuous. Any other continuous lift differs uniquely by $(I+p^nb(g))$ with continuous $b$, and its residual is $c_A+\delta b$. Hence a zero class is equivalent to an actual continuous repair. Conversely an actual continuous homomorphism is such a repair. The difference of two repairs is a continuous $1$-cocycle. Conjugation by $I+p^nX$ changes it by a coboundary, with kernel the invariant elements of $V$, exactly as in the finite case.
++\end{proof}
++
++\begin{theorem}[Source refinement and inflation]\label{thm:source-inflation}
++Choose an open normal $U\subseteq\ker\rho_n$ and compute $c_A$ on $Q=\Gamma/U$. Then
++\[
++ o_n^{\mathrm{cts}}(\rho_n)=0
++ \quad\Longleftrightarrow\quad
++ \exists\, U'\triangleleft_{\mathrm{open}}\Gamma,\ U'\subseteq U:
++ \operatorname{Inf}_{\Gamma/U}^{\Gamma/U'}[c_A]=0.
++\]
++Thus a continuous next-level lift exists exactly when a repair exists at \emph{some finer source quotient}, not necessarily the quotient used initially. For every $j\geq0$,
++\[
++ H^j_{\mathrm{cts}}(\Gamma,V)
++ \cong\underset{U'\subseteq U}{\operatorname{colim}}
++ H^j(\Gamma/U',V).
++\]
++\end{theorem}
++\begin{proof}
++Every continuous map $\Gamma^j\to V$ is locally constant. Cover its compact domain by finitely many products of cosets on which the map is constant. Intersect the finitely many open normal subgroups defining these cosets and further intersect with $U$. The map then factors through $(\Gamma/U')^j$. This applies to cocycles, coboundaries, and cochains witnessing an equality. The finite-quotient cochain complexes therefore have the continuous complex as their filtered union, and the same observation about witnesses proves the asserted cohomology colimit. In particular a class vanishes in that colimit exactly when it vanishes at some subsequent stage. Apply \cref{thm:continuous-H2}. This is the finite-module specialization of the cited classical inflation theorem.
++\end{proof}
++
++\begin{example}[An explicit obstruction killed by refining the source]\label{ex:inflation-carry}
++Let $p$ be odd, $J\in M_d(\mathbb Z)$ nonzero modulo $p$, and $A=I+pJ$ modulo $p^3$. Then $A^p=I+p^2J$ and $A^{p^2}=I$ modulo $p^3$. The representation of $C_p$ modulo $p^2$ uses powers of $A$. For representatives $0\leq a,b<p$, choose $A_a=A^a$ at the next level. Its cocycle is
++\[
++ c(a,b)=\left\lfloor\frac{a+b}{p}\right\rfloor J\pmod p.
++\]
++The adjoint residual action is trivial. For any normalized cochain $u$ on $C_p$,
++\[
++ \sum_{t=0}^{p-1}(\delta u)(1,t)=0,
++ \qquad\sum_{t=0}^{p-1}c(1,t)=J\ne0.
++\]
++So the finite-quotient class is nonzero. On $C_{p^2}$ put
++\[
++ b(x)=\left\lfloor\frac{x}{p}\right\rfloor J\pmod p
++ \quad(0\leq x<p^2).
++\]
++Writing each $x$ as its low digit plus $p$ times its high digit shows
++$\delta b=-\operatorname{Inf}(c)$: the high-digit carry is the negative of the low-digit carry modulo $p$. The repaired map is exactly $x\mapsto A^x$. Thus inflation kills a genuine finite-quotient obstruction. This calculation does not declare every continuous obstruction removable.
++\end{example}
++
++\subsection{Reconstructing a continuous tower}
++
++\begin{theorem}[Continuous reconstruction from unobstructed stages]\label{thm:continuous-tower}
++If $H^2_{\mathrm{cts}}(\Gamma,\operatorname{Ad}\bar\rho)=0$, every given $\rho_n$ with that residual action extends to a continuous representation
++\[
++ \rho:\Gamma\longrightarrow\operatorname{GL}_d(\mathbb Z_p).
++\]
++Without the cohomology-vanishing hypothesis, a compatible sequence of continuous lifts still reconstructs uniquely as a framed representation. If $\Gamma$ is topologically finitely generated, existence of \emph{some} extension of the fixed $\rho_n$ to every coefficient level is enough to obtain a compatible sequence and hence an integral lift.
++\end{theorem}
++\begin{proof}
++The residual adjoint module is unchanged by each coefficient lift. Under the vanishing hypothesis, \cref{thm:continuous-H2} permits recursive choice of compatible lifts $\rho_m$ for all $m\geq n$. Take the inverse limit of their matrix entries. Multiplication is compatible with this limit, and determinants remain units because their reductions modulo $p$ are units. Each finite projection is continuous, so the map into the inverse-limit topology is continuous. The projections determine it uniquely.
++
++For the last assertion, choose $r$ topological generators. A continuous map into a finite group is determined by their images, since the equalizer of two such maps is closed and contains a dense subgroup when the images agree. Thus there are finitely many continuous representations at each level. Form the rooted tree of extensions of $\rho_n$, with edges given by one-step reduction. It is finitely branching. If every level is nonempty, the root has descendants at arbitrarily large depth. At least one child has the same property, since there are only finitely many children. Repeating gives an infinite compatible path. Apply the first limit argument. This compactness argument supplies no numerical stopping bound and no algorithm for computing $H^2_{\mathrm{cts}}$ of an arbitrary source.
++\end{proof}
++
++\begin{theorem}[Unrestricted coefficient lifting for a free pro-$p$ source]\label{thm:free-pro-p-lift}
++Let $F_r^{(p)}$ be the free pro-$p$ group on finitely many generators. Every continuous
++\[
++ F_r^{(p)}\longrightarrow\operatorname{GL}_d(R_n)
++\]
++has a continuous lift to $\operatorname{GL}_d(\mathbb Z_p)$. One may choose arbitrary integral lifts of its generator matrices.
++\end{theorem}
++\begin{proof}
++Construct $F_r^{(p)}$ as the inverse limit of the finite $p$-group quotients of the abstract free group on these generators. A map from the generators to a pro-$p$ group induces compatible maps to each of its finite $p$-group quotients, and hence a unique continuous map from this inverse limit. This proves the universal property needed here.
++
++The residual image $P\subseteq\operatorname{GL}_d(\mathbb F_p)$ is a $p$-group, being a finite quotient of a pro-$p$ group. Let $H$ be its inverse image in $\operatorname{GL}_d(\mathbb Z_p)$. Its quotient modulo $p^m$ is a finite $p$-group: its kernel over $P$ has the filtration by congruence subgroups with additive $M_d(\mathbb F_p)$ subquotients. Therefore $H$ is pro-$p$, including at $p=2$. Arbitrary integral lifts of the generator matrices lie in $H$. The just-proved universal property extends them to a continuous map. Reduction agrees with the input on the generators and therefore everywhere. This does not assert that the lift is faithful or has finite image.
++\end{proof}
++
++\subsection{Continuous powers and the cyclic-centralizer mechanism}
++
++\begin{lemma}[When an integral matrix has continuous procyclic powers]\label{lem:procyclic-powers}
++Let $A\in\operatorname{GL}_d(\mathbb Z_p)$. The map $m\mapsto A^m$ on $\mathbb Z$ extends uniquely to a continuous homomorphism $\mathbb Z_p\to\operatorname{GL}_d(\mathbb Z_p)$ if and only if the reduction of $A$ modulo $p$ has $p$-power order. In particular a commuting tuple of such matrices determines a continuous representation of $\mathbb Z_p^r$.
++\end{lemma}
++\begin{proof}
++Necessity follows because a continuous image of $\mathbb Z_p$ in a finite group is a cyclic $p$-group. Conversely suppose $A^{p^t}\in I+pM_d(\mathbb Z_p)$. For $B\in I+p^sM_d(\mathbb Z_p)$ with $s\geq1$, binomial expansion shows $B^p\in I+p^{s+1}M_d(\mathbb Z_p)$. For $p=2$ the quadratic term has depth $2s\geq s+1$, so this estimate remains valid. It follows that
++\[
++ A^{p^{t+j}}\in I+p^{j+1}M_d(\mathbb Z_p).
++\]
++Hence exponents congruent modulo $p^{t+j}$ give powers congruent modulo $p^{j+1}$, also for negative integer exponents by invertibility. Completeness extends the map continuously from the dense subgroup $\mathbb Z$ to $\mathbb Z_p$. The group law and uniqueness follow by continuity. For commuting matrices the product of these powers defines the final assertion.
++\end{proof}
++
++\begin{lemma}[Cyclic centralizers over a coefficient ring]\label{lem:cyclic-centralizer}
++Let $R$ be a commutative ring, $B\in M_d(R)$, and suppose a vector $v$ makes
++\[
++ Q=(v,Bv,\ldots,B^{d-1}v)\in\operatorname{GL}_d(R).
++\]
++Then every matrix commuting with $B$ is uniquely $f(B)$ for a polynomial $f\in R[t]$ of degree less than $d$. The coefficients of $f$ are the entries of $Q^{-1}Mv$. In particular, the centralizer is commutative.
++
++Over $R=\mathbb Z/p^s$, it is enough that $\bar B$ have a cyclic vector over $\mathbb F_p$. Every nonscalar $2\times2$ matrix over a field has such a vector.
++\end{lemma}
++\begin{proof}
++There is a unique polynomial of degree less than $d$ satisfying $f(B)v=Mv$, since the columns of $Q$ are a basis. If $MB=BM$, then $M-f(B)$ annihilates every $B^jv$, so it is zero. Conversely every polynomial in $B$ commutes with $B$. This also proves uniqueness and the coefficient formula. A lifted cyclic vector modulo $p$ makes $\det Q$ a unit modulo $p^s$.
++
++Finally, if a $2\times2$ matrix has no cyclic vector, it takes each vector into its own span. On a basis $e_1,e_2$ it is diagonal, and applying this condition to $e_1+e_2$ makes the two diagonal entries equal. Thus it is scalar. This argument includes the field $\mathbb F_2$.
++\end{proof}
++
++\subsection{A complete normalized-commutator obstruction}
++
++Here the source is $\Gamma=\mathbb Z_p^r$, where $r\geq1$ is finite. Write the generator matrices of the given continuous representation $\rho_n$ as $A_1,\ldots,A_r$. They commute in $M_d(R_n)$ and each has $p$-power order modulo $p$.
++
++Choose $0\leq a<n$ and integer scalars $\lambda_i$ such that
++\[
++ A_i\equiv\lambda_i I\pmod{p^a}\quad\text{for every }i.
++\]
++There is no restriction in this display when $a=0$. Define the \emph{normalized matrices}
++\[
++ B_i=\frac{A_i-\lambda_i I}{p^a}
++ \quad\in M_d(R_{n-a}).
++\]
++This is well-defined from the given finite data. It does not invert $p$ inside $R_n$. Assume that, for some distinguished index $*$, the matrix $B_*$ is cyclic modulo $p$. Define the finite obstruction record
++\[
++ \boxed{\Omega_{a,*}(\rho_n)=
++ \bigl([B_*,B_i]\bigr)_{i=1}^r\in M_d(R_{n-a})^r,}
++ \qquad [B,C]=BC-CB.
++\]
++
++\begin{theorem}[Normalized cyclic lifting criterion]\label{thm:normalized-cyclic-lift}
++Under the preceding hypotheses,
++\[
++ \boxed{\rho_n\text{ has a continuous integral lift}
++ \quad\Longleftrightarrow\quad\Omega_{a,*}(\rho_n)=0.}
++\]
++If the obstruction vanishes, an integral lift is constructed from finite polynomial certificates. Express $B_i=f_i(B_*)$ in $R_{n-a}$, with $\deg f_i<d$ and $f_*(t)=t$ when $d>1$. Choose an integral lift $\widehat B$ of $B_*$ and integer lifts $\widehat f_i$ of these polynomials, taking the distinguished generator itself to $\widehat B$. Then put
++\[
++ \widehat A_i=\lambda_i I+p^a\widehat f_i(\widehat B),
++ \qquad
++ \rho(x_1,\ldots,x_r)=\prod_i\widehat A_i^{x_i}.
++\]
++For $d=1$, use the scalar matrices directly. The construction preserves the prescribed reduction modulo $p^n$ and does not pass to an obstruction quotient.
++\end{theorem}
++\begin{proof}
++Suppose first that $\widehat A_i$ are any commuting integral lifts. Then
++$\widehat B_i=(\widehat A_i-\lambda_iI)/p^a$ are integral. The identities
++\[
++ 0=[\widehat A_*,\widehat A_i]
++   =p^{2a}[\widehat B_*,\widehat B_i]
++\]
++imply $[\widehat B_*,\widehat B_i]=0$, since matrices over $\mathbb Z_p$ have no $p$-torsion. Reducing modulo $p^{n-a}$ proves necessity. This argument permits arbitrary higher digits in all the integral lifts.
++
++Conversely, the cyclic-centralizer lemma supplies the unique polynomials $f_i$ from the vanishing commutators. Their integral polynomial evaluations commute exactly. Multiplication by $p^a$ shows that $\widehat A_i$ reduces to $A_i$ modulo $p^n$. Each is invertible because its reduction modulo $p$ is invertible. That reduction has $p$-power order by the input's continuity. The procyclic-powers lemma now supplies the continuous representation, whose reduction agrees on the topological generators and hence on all of $\mathbb Z_p^r$. In rank one the same argument is simply scalar lifting. Polynomial coefficients and a cyclic vector give a finite positive certificate; a nonzero entry of a displayed commutator gives a finite negative certificate under the verified cyclic hypothesis.
++\end{proof}
++
++\begin{remark}[What normalization reveals]
++The input relations only force
++\[
++ p^{2a}[B_i,B_j]\equiv0\pmod{p^n}.
++\]
++When $a>0$, this can conceal a nonzero commutator in $R_{n-a}$. The obstruction is therefore not just the original zero commutator re-labelled. It measures the additional commutativity required after removing a common scalar precision. Different permitted scalar choices change $B_i$ by scalar matrices and leave its commutators unchanged. Changing representatives changes them only by zero in $R_{n-a}$. No preferred normalized matrix is claimed independently of these data.
++\end{remark}
++
++\begin{corollary}[A source-fixed finite horizon in the cyclic stratum]\label{cor:abelian-cyclic-horizon}
++Under the hypotheses of \cref{thm:normalized-cyclic-lift}, the following are equivalent:
++\[
++ \rho_n\text{ lifts over }\mathbb Z_p,
++ \qquad \rho_n\text{ extends over }R_{n+a},
++ \qquad \Omega_{a,*}(\rho_n)=0.
++\]
++The extension remains a representation of the same $\mathbb Z_p^r$. When $a=0$, the current representation is already a sufficient certificate.
++\end{corollary}
++\begin{proof}
++An integral lift supplies the finite extension. Given a finite extension with commuting matrices $A_i'$ modulo $p^{n+a}$, subtract the same $\lambda_iI$ and divide by $p^a$. The resulting matrices $B_i'$ are defined modulo $p^n$ and reduce to $B_i$ modulo $p^{n-a}$. The equality
++$p^{2a}[B_*',B_i']=0$ modulo $p^{n+a}$ implies
++$[B_*',B_i']=0$ modulo $p^{n-a}$, so $\Omega_{a,*}=0$. The normalized criterion supplies an integral lift. This is a bound obtained from the source's actual commutativity relations, not from the orders of its growing finite images.
++\end{proof}
++
++\subsection{Rank two: a complete decision from the given precision}
++
++For $A\in M_2(R_n)$ define its scalar depth by
++\[
++ a(A)=\max\{0\leq t\leq n:A\text{ is scalar modulo }p^t\}.
++\]
++Writing entries in $R_n$, this is the minimum of the capped valuations of
++$A_{12},A_{21},A_{11}-A_{22}$. It is unchanged by invertible conjugation. For a tuple put $a=\min_i a(A_i)$.
++
++\begin{theorem}[Complete rank-two profinite lifting test]\label{thm:rank-two-profinite}
++Let $p$ be any prime and let $\rho_n:\mathbb Z_p^r\to\operatorname{GL}_2(R_n)$ be continuous, with finitely many topological generators as above.
++\begin{enumerate}
++\item If $a=n$, all the $A_i$ are scalar and $\rho_n$ has a continuous integral lift.
++\item If $a<n$, choose any generator $A_*$ with scalar depth $a$. Take $\lambda_i$ to be an integer representative of $(A_i)_{11}$ and form $B_i$ modulo $p^{n-a}$. Then
++\[
++ \boxed{\rho_n\text{ lifts over }\mathbb Z_p
++ \quad\Longleftrightarrow\quad
++ [B_*,B_i]=0\text{ in }M_2(R_{n-a})\ (1\leq i\leq r).}
++\]
++The test is finite matrix arithmetic on the \emph{existing input}. It does not require enumeration of deeper coefficient lifts. When it passes, the polynomial construction in \cref{thm:normalized-cyclic-lift} produces exact commuting integral generator matrices.
++\end{enumerate}
++\end{theorem}
++\begin{proof}
++If all generators are scalar, lift their scalar entries integrally. Their residues modulo $p$ have $p$-power order and therefore equal $1$, since $\mathbb F_p^\times$ has order prime to $p$. The scalar lifts are units and define continuous powers.
++
++Otherwise every $A_i$ is scalar modulo $p^a$, while $B_*$ is nonscalar modulo $p$ by the definition of $a$. It is cyclic by \cref{lem:cyclic-centralizer}. Thus every hypothesis of \cref{thm:normalized-cyclic-lift} holds. In rank two the polynomials have the form $u_i+v_it$ and can be recovered from a two-column cyclic basis by solving one invertible $2\times2$ linear system modulo $p^{n-a}$. The equivalence with liftability also shows independence of the distinguished generator and of basis choices, although the selected lift itself need not be canonical.
++\end{proof}
++
++\begin{corollary}[A sharp uniform rank-two horizon]\label{cor:rank-two-sharp-horizon}
++For every $p,n,r$ as above,
++\[
++ \boxed{\rho_n\text{ lifts continuously over }\mathbb Z_p
++ \quad\Longleftrightarrow\quad
++ \rho_n\text{ extends continuously to }R_{2n-1}.}
++\]
++For $n\geq2$ and $r\geq2$, $2n-1$ is optimal as a uniform coefficient level. For $n=1$, all continuous rank-two representations of $\mathbb Z_p^r$ over $\mathbb F_p$ lift.
++\end{corollary}
++\begin{proof}
++For a nonscalar tuple, $a\leq n-1$, so an extension to $2n-1$ restricts to one at $n+a$. Apply \cref{cor:abelian-cyclic-horizon}. Scalar tuples lift directly. This also proves the assertion at $n=1$.
++
++For sharpness fix $n\geq2$ and put
++\[
++ A=I+p^{n-1}E_{12},\qquad B=I+p^{n-1}E_{21}.
++\]
++These matrices commute modulo $p^{2n-2}$ and generate a finite abelian $p$-group there, so they give a continuous extension of their level-$n$ representation to level $2n-2$. However every pair of lifts preserving level $n$ has the form
++$\widetilde A=A+p^nP$, $\widetilde B=B+p^nQ$, and
++\[
++ \widetilde A\widetilde B-\widetilde B\widetilde A
++ \equiv p^{2n-2}
++ \begin{pmatrix}1&0\\0&-1\end{pmatrix}
++ \not\equiv0\pmod{p^{2n-1}}.
++\]
++Indeed every correction term has valuation at least $2n-1$. This proves nonextension at $2n-1$ for every prime, including $2$, and hence nonexistence of an integral lift. Add identity generators for $r>2$. No smaller uniform coefficient level can distinguish these inputs from extendable ones by mere existence of an extension.
++\end{proof}
++
++\begin{example}[The first hidden commutator]\label{ex:abelian-tangent}
++Suppose $n=2$ and all generator matrices are $A_i=I+pX_i$ modulo $p^2$. They always commute at that coefficient level. For rank two, \cref{thm:rank-two-profinite} gives
++\[
++ \rho_2\text{ lifts over }\mathbb Z_p
++ \quad\Longleftrightarrow\quad
++ [X_i,X_j]=0\text{ in }M_2(\mathbb F_p)\text{ for all }i,j.
++\]
++If some $X_i$ is nonscalar, its centralizer is commutative and the displayed test agrees with the distinguished-generator criterion; if all are scalar the lift is immediate. For $X_1=E_{12}$ and $X_2=E_{21}$ it fails. Each generator separately has a continuous integral procyclic lift, but the pair does not define an integral action of $\mathbb Z_p^2$. On the free pro-$p$ source the same pair \emph{does} lift, by \cref{thm:free-pro-p-lift}. The surviving obstruction is therefore an actual source relation, not finite-order torsion imposed by an incidental quotient.
++\end{example}
++
++\begin{example}[A positive repair that changes only unresolved digits]\label{ex:abelian-positive-repair}
++Work at $p=3$, $n=3$. Take
++\[
++ A_1=\begin{pmatrix}1&3\\9&1\end{pmatrix},\qquad
++ A_2=\begin{pmatrix}7&12\\9&7\end{pmatrix}\pmod{27}.
++\]
++They commute modulo $27$ and both are the identity modulo $3$. Choose $a=1$, $\lambda_1=\lambda_2=1$. Then
++\[
++ B_1=\begin{pmatrix}0&1\\3&0\end{pmatrix},\qquad
++ B_2=\begin{pmatrix}2&4\\3&2\end{pmatrix}\pmod9,
++ \qquad B_2=2I+4B_1\pmod9.
++\]
++The vector $e_2$ is cyclic for $B_1$ modulo $3$. The displayed integer representatives of $A_1,A_2$ do not commute exactly: their additive commutator is $\operatorname{diag}(-81,81)$. The criterion nevertheless passes. Retain $B_1$ integrally and replace $B_2$ by the exact polynomial $2I+4B_1$. This constructs
++\[
++ \widehat A_1=\begin{pmatrix}1&3\\9&1\end{pmatrix},\qquad
++ \widehat A_2=\begin{pmatrix}7&12\\36&7\end{pmatrix}.
++\]
++They commute exactly, remain units over $\mathbb Z_3$, and have the original reduction modulo $27$. Their continuous powers give the integral representation. This is an explicit non-destructive repair of a tuple, not a claim that its initial arbitrary integer representatives were already an exact action.
++\end{example}
++
++\subsection{The repaired scope of the two-axis calculus}
++
++There is a necessary variance distinction. Let $\mathcal Q_\Gamma$ have open normal subgroups as objects and an arrow $U\to U'$ when $U'\subseteq U$. Write $\mathscr P_d(n,U)$ for the groupoid of rank-$d$ representations of $\Gamma/U$ on $R_n^d$, with invertible intertwining matrices as arrows.
++
++\begin{proposition}[The source--coefficient diagram has mixed variance]\label{prop:mixed-source-variance}
++Reduction of coefficients and inflation of source define a functor
++\[
++ \mathscr P_d:\mathbb N_{\geq1}^{op}\times\mathcal Q_\Gamma
++ \longrightarrow\mathbf{Gpd}.
++\]
++Each source-inflation functor is fully faithful, and it commutes with coefficient reduction. An object at $(m,U')$ is a compatible refinement of $\rho_n$ at $(n,U)$ precisely when its reduction to level $n$ equals, or is supplied with an isomorphism to, the inflation of $\rho_n$. There is no total source-coarsening functor on arbitrary representations obtained simply by reversing inflation.
++\end{proposition}
++\begin{proof}
++Coefficient reduction acts on the matrix entries of representations and intertwiners. Source inflation precomposes them with the surjection $\Gamma/U'\to\Gamma/U$. The two operations commute directly on both objects and arrows. An intertwiner of inflated representations commutes with the same matrix image as before inflation, because the source map is onto. Thus inflation is fully faithful. Finally a representation of $\Gamma/U'$ descends through $\Gamma/U$ only if the subgroup $U/U'$ acts trivially. This fails for general representations, as the explicit repaired action in \cref{ex:inflation-carry} shows at its higher coefficient level.
++\end{proof}
++
++Coefficient refinement and source refinement do different jobs. The former improves arithmetic accuracy. The latter permits more of the source to act, and can kill an inflated finite-quotient obstruction without deleting coefficient information. Neither permits violating a relation of the fixed source itself. In particular these two resolution coordinates cannot both be inserted into the earlier coarsening-only convention without recording their opposite variance or restricting to descending objects.
++
++The constructive abelian theorems avoid an unbounded quotient search altogether on their stated strata. Scalar-depth normalization reveals the missing relation, the cyclic centralizer supplies a finite polynomial certificate, and continuous matrix powers reconstruct the action. In rank two this yields a complete test at every coefficient precision and every finite source rank. In larger rank it requires the stated cyclic normalized generator. Free pro-$p$ sources furnish a contrasting unrestricted coefficient-lifting case because they impose no additional relations on the generators.
++
++These results do not imply a universal scalar-depth test in higher rank, an unconstrained theorem for all profinite groups, or a lift preserving extra arithmetic deformation conditions. The constructions make choices of higher matrix coefficients and may change determinants or other invariants not included among the equations. Continuous Galois representations with local geometric conditions and automorphic existence remain separate targets. The next substantive extension is a specified noncommutative profinite relation system with controlled centralizers or a verified deformation complex, rather than an assumption that every vanishing selected diagnostic gives a global object.
+ 
+ 
+ \section{Local-to-global reconstruction}
+@@ -3685,16 +3990,27 @@
+ K69 & Finite integral action catalogue & Isomorphism classes, not an equivalence of groupoids, \cref{cor:finite-action-catalogue}.\\
+ K70 & Cyclic relation Jacobian & Affine next-level certificate with $d^2$ variables, \cref{prop:cyclic-jacobian}.\\
+ K71 & Fixed quotient versus profinite lifting & Explicit continuous lift with growing image, \cref{prop:profinite-quotient-boundary}.\\
++K72 & Continuous one-step obstruction & Finite discrete adjoint coefficients and continuous repair, \cref{thm:continuous-H2}.\\
++K73 & Source-inflation criterion & Continuous vanishing occurs on some finer quotient, \cref{thm:source-inflation}.\\
++K74 & Continuous tower reconstruction & Vanishing $H^2$ or a compatible tower; finite-generation compactness, \cref{thm:continuous-tower}.\\
++K75 & Free pro-$p$ coefficient lifting & Arbitrary integral generator lifts extend continuously, \cref{thm:free-pro-p-lift}.\\
++K76 & Procyclic matrix powers & Exact residual $p$-power-order criterion, including $p=2$, \cref{lem:procyclic-powers}.\\
++K77 & Cyclic-centralizer certificate & Finite polynomial description over a coefficient ring, \cref{lem:cyclic-centralizer}.\\
++K78 & Normalized cyclic lifting & Complete obstruction and explicit polynomial reconstruction, \cref{thm:normalized-cyclic-lift}.\\
++K79 & Cyclic-stratum horizon & Level $n+a$ suffices under the cyclic hypothesis, \cref{cor:abelian-cyclic-horizon}.\\
++K80 & Complete rank-two profinite test & All continuous $\mathbb Z_p^r$ inputs, no extra deformation conditions, \cref{thm:rank-two-profinite}.\\
++K81 & Sharp rank-two horizon & Level $2n-1$, optimal for $n,r\geq2$, \cref{cor:rank-two-sharp-horizon}.\\
++K82 & Mixed source--coefficient variance & Source inflation is not arbitrary source coarsening, \cref{prop:mixed-source-variance}.\\
+ \bottomrule
+ \end{longtable}
+ 
+ \section{Immediate next formal steps}
+ 
+-The general ordered-filtration independence target remains refuted. A sufficient finite-precision criterion now exists for the fixed-finite-group lifting problem, while the converse of the single derived-invariant exchange test is refuted. These results do not supply continuous lifting for arbitrary profinite sources, geometric local conditions, or automorphic globalization.
++The general ordered-filtration independence target and the converse of the single derived-invariant test remain refuted. Fixed-finite-group lifting, continuous free pro-$p$ lifting, and rank-two lifting for $\mathbb Z_p^r$ now have constructive solutions. Higher-rank abelian lifting is covered on the specified cyclic normalized stratum. Arbitrary profinite relations, geometric local conditions, and automorphic globalization remain separate obligations.
+ 
+ \begin{enumerate}
+ \item \textbf{Beyond strict pure exchange.} Extend K32 to a specified non-strict enhanced realization or a rewrite signature with additional critical overlaps. Identify the missing coherent cells explicitly rather than assume that homotopy-category diamonds supply them.
+-\item \textbf{Continuous and constrained lifting.} K62--K71 close the fixed-finite-group problem with an exact obstruction and finite horizon. Extend the repair only after specifying continuity, permitted growth of finite images, and any geometric local conditions. The constant $v_p(|G|)$ is not uniform over growing quotients. A failure for one fixed quotient is not automatically a failure for the profinite source.
++\item \textbf{Noncommutative and constrained lifting.} K72--K82 handle continuous source refinement and give complete rank-two $\mathbb Z_p^r$ reconstruction. Next specify a noncommutative profinite presentation or a noncyclic higher-rank centralizer. Construct its actual relation obstruction and a sufficient repair criterion. Prescribed determinants and geometric local conditions must be added as equations with their own compatibility checks. No uniform averaging bound over growing finite quotients is assumed.
+ \item \textbf{Arithmetic existence beyond lattices.} K51 closes a concrete lattice case of K15. For the intended K17 application, construct the generic arithmetic or automorphic data and the required identifications, rather than importing them as gluing hypotheses. A globally glued lattice with supplied operators is not an automorphic representation.
+ \item \textbf{Broader coefficient rings.} Determine which parts of the prime-support kernel and matrix criterion persist over a specified Dedekind ring or a higher-dimensional ring. A replacement for the integral Smith decomposition must be proved, not silently imported.
+ \item \textbf{Lean core.} Formalize the finite event-poset correspondence, strict naturality argument, closure statements, and integral certificate checks. This manuscript still has no Lean proof package.
+@@ -3824,6 +4140,8 @@
+ 
+ The sufficient-lifting layer now adds an explicit distinction between detection and construction. The adjoint relation cocycle is a complete next-level obstruction, whereas derived invariants can be blind to nonliftability. For a fixed finite group, quantitative averaging converts a finite high-precision witness into an integral representation and gives controlled uniqueness up to conjugacy. The stated threshold is known in ultrametric stability, and the direct proof here makes its relation to residual repair explicit. It does not justify substituting fixed finite-group existence for a continuous Galois or automorphic existence problem.
+ 
++The continuous-source layer now separates coefficient precision from source inflation. A finite-quotient obstruction can disappear when more of the source is allowed to act, but an actual commutativity relation cannot be discarded. Scalar-depth normalization exposes that relation, and a cyclic centralizer constructs compatible integral matrices from finite polynomial data. In rank two the cyclic condition is automatic after normalization, yielding a complete test and the sharp $2n-1$ horizon. This proves reconstruction without eliminating the coefficient category, while the mixed-variance diagram states exactly how the two resolution coordinates interact.
++
+ The results do not establish a new foundation or a reciprocity theorem. The remaining arithmetic content requires actual generic parameters, compatible actions, and the specific existence theorem demanded by the intended correspondence. Neither a torsor trivialization, a reconstructed event diagram, nor a glued integral lattice is an automorphic realization by definition.
+ 
+ 
+@@ -3911,6 +4229,13 @@
+ arXiv:2105.00516v5, version posted 22 July 2026, manuscript dated 23 July 2026.
+ Lemma 7.3, Proposition 7.4, and Example 7.5, printed pages 54--55. Exact version and displayed hypotheses checked 27 September 2026.
+ \url{https://arxiv.org/abs/2105.00516v5}.
++
++
++\bibitem{StacksContinuous}
++The Stacks Project Authors,
++\emph{Tate's continuous cohomology}, Section 59.58, Tag 0DVG.
++\url{https://stacks.math.columbia.edu/tag/0DVG}.
++Continuous inhomogeneous-cochain conventions checked on 27 September 2026. The new continuous obstruction results use finite discrete coefficient modules, not an identification of arbitrary topological cohomology theories.
+ 
+ \end{thebibliography}
+ 
+@@ -4176,10 +4501,50 @@
+ 
+ The sufficient existence question is closed here only for a fixed finite source group over $\mathbb Z_p$. Continuous lifting with growing finite images, geometric local conditions, and automorphic realization remain separate obligations. A useful continuation must address those actual hypotheses rather than merely rename the already-classical finite-group obstruction or averaging argument.
+ 
++\clearpage
++\section{Audit and verification record for v0.11.0}\label{app:audit-v0110}
++
++\subsection{Source authority and evidence status}
++The supplied v0.10.0 PDF, source, and full package are preserved unchanged in \texttt{previous/}. Their SHA-256 hashes are recorded in \texttt{audit/base\_sha256.json}. The new continuation adds K72--K82 and the proof fragment \texttt{proofs/profinite\_lifting.tex}. All inherited theorem, lemma, proposition, corollary, and proof blocks remain verbatim and in their original relative order. Current summary prose, the theorem ledger, and next-step statements are updated. Historical audit and version entries remain historical.
++
++The new results have written proofs and an authoring-session self-review. They have not received an independent mathematical review or Lean certification. Lean and Lake are not available on the runtime path. No claim of historical novelty is made for continuous cohomology, free pro-$p$ groups, or cyclic centralizers, nor is novelty inferred for their combination from a limited search.
++
++\subsection{Executed routes and mathematical boundaries}
++The continuous-obstruction route retains the actual profinite source and proves the finite-quotient inflation criterion, including an explicit carry cocycle killed by source refinement. It does not infer that all finite-quotient obstructions eventually vanish. The free-source route constructs lifts without source relations beyond those of a free pro-$p$ group. The abelian route retains commutativity, exposes its normalized residual, and gives a complete criterion on the cyclic normalized stratum, including every rank-two input. The example with $E_{12},E_{21}$ proves the uniform $2n-1$ horizon sharp for $n,r\geq2$.
++
++The self-review checked the following distinctions.
++\begin{enumerate}
++\item Continuous $H^2$ here has a finite discrete coefficient module. No statement about arbitrary topological coefficient theories is substituted for that definition.
++\item A continuous repair cochain may require a finer finite source quotient. It is not required to factor through the initial quotient.
++\item The cohomology-vanishing theorem gives a sufficient condition and the finitely branching tree gives a compactness criterion. Neither supplies a general numerical horizon for all profinite groups.
++\item In the cyclic test, the normalized generator must be cyclic modulo $p$. Rank two makes that condition automatic after minimal scalar-depth normalization. No such assertion is made for arbitrary higher rank.
++\item Cancellation of $p^{2a}$ takes place in torsion-free integral matrices for necessity, or is translated into the stated lower-modulus congruence for a finite witness. It is not division by a unit in $R_n$.
++\item The positive construction preserves the given reduction, but not extra determinant, ramification, or geometric conditions. The constructed matrices are units over $\mathbb Z_p$, not necessarily unimodular over $\mathbb Z$.
++\item The continuous-powers argument includes $p=2$. The explicit carry example retains its separate odd-prime hypothesis.
++\item Source inflation and coefficient reduction have opposite variance. A preliminary draft description treating both as unrestricted coarsenings was replaced by \cref{prop:mixed-source-variance}; reversing inflation would require descent through the smaller quotient.
++\end{enumerate}
++
++\subsection{Exact computations and usable certificates}
++All six regression suites passed with Python 3.13.5. The inherited five suites were rerun at their previously recorded bounds. The new standard-library suite uses exact integer and modular arithmetic with no random sampling or floating tolerance.
++
++The source-inflation checks cover 495 cocycle triples, all 3,107 refined-quotient pairs for $p=3,5,7$, and 83 repaired matrix values. The centralizer checks cover 1,017 cyclic matrices and 982,827 candidate centralizer pairs in the explicitly listed finite rings and companion-matrix family. Complete rank-two tables contain all 10, 33, 832, and 29,889 valid continuous two-generator actions over $\mathbb F_2$, $\mathbb F_3$, $\mathbb Z/4$, and $\mathbb Z/9$, respectively. Each positive case is checked against an exactly commuting integral polynomial certificate.
++
++An orthogonal enumeration of all 1,048,576 ordered pairs of admissible generator matrices modulo $8$ gives 59,392 commuting pairs. Their 664 distinct reductions modulo $4$ agree exactly with the positive set from the normalized criterion. All 4,096 rank-two tangent triples over $\mathbb F_2$ are also checked. The sharpness suite includes 24 prime/precision families and all 72,353 correction pairs in three stated finite fixtures. Higher-rank checks use 54 constructed three-generator fixtures, not an exhaustive higher-rank population, with 162 recovered polynomial certificates and 648 finite continuity checks. Exact ranges and nonclaims are in \texttt{checks/profinite\_results.json}.
++
++The included command-line tool \texttt{tools/lift\_abelian\_rank2.py} validates the matrix input and returns either exact integral generators or a nonzero normalized-commutator certificate. It applies only to the unconstrained rank-two $\mathbb Z_p^r$ problem. Its positive and negative examples are preserved in \texttt{examples/}. The universal lifting and convergence statements follow from the written proofs, not from these bounded computations.
++
++\subsection{Sources, build, and reproducibility}
++The direct-limit cohomology input was checked in Milne's \emph{Class Field Theory}, version 4.03, Chapter II, Section 4, Proposition 4.2, printed page 87. That PDF page was inspected visually. The continuous-cochain differential was checked on the official Stacks Project Tag 0DVG. Broad searches returning unrelated material were not treated as evidence. This is a dependency check, not an exhaustive novelty survey. No external full-text paper or font file is bundled.
++
++The source is regenerated from the exact preserved base and the new proof and audit fragments by \texttt{audit/integrate\_v0110.py}. The package includes the source diff, final LaTeX log, source-preservation checks, run manifests, visual-review record, and checksums. The runner removes stale result files before execution and records each script's before/after hash. A shell inspection command initially rejected a leading-hyphen \texttt{printf} argument; it was rerun without that argument and had not modified source. The companion audit records final build outcomes and the precise review scope.
++
++
++\clearpage
+ \section{Version ledger}
+ 
+ \begingroup\footnotesize\raggedright
+ \begin{description}[leftmargin=8em,style=nextline]
++\item[v0.11.0] Proves continuous one-step obstruction and source-inflation criteria, continuous tower reconstruction, and free pro-$p$ coefficient lifting. Gives a normalized cyclic-centralizer lifting criterion for $\mathbb Z_p^r$, a complete rank-two test, and the sharp uniform horizon $2n-1$. Correctly separates source inflation from coefficient reduction by mixed variance. Adds exact positive and negative examples, a certificate CLI, and a sixth regression suite. Preserves the entire v0.10.0 package. Written proofs and self-review only.
+ \item[v0.10.0] Adds a complete $H^2$ next-level obstruction, cochain repair certificates, and a central-sign counterexample to the sufficiency of derived-invariant exchange. Gives a direct averaging proof of known finite-group ultrametric stability, an exact finite lifting horizon, controlled conjugacy, a finite class catalogue, a cyclic Jacobian certificate, and an explicit profinite scope boundary. Five exact suites pass. Preserves every inherited theorem/proof block and the full v0.9.0 package. Written proofs and self-review only.
+ \item[v0.9.0] Adds intrinsic kernel and invariant comparisons, explicit cohomological residuals, sharp precision-window lifting, equivariant morphism correction, and norm-quotient examples. Proves perfect-base derived exchange and exhibits a non-scalar cyclic action with an unbounded canonical exchange defect over singular finite coefficients. Proves the one-step failure to lift that action and exact exchange for supplied coefficient-lifted inputs. Preserves the full v0.8.0 package. All four finite suites pass, including independent full-bar checks. Written proofs and self-review only.
+ \item[v0.8.0] Adds nonidentity derived arithmetic coarsenings, coherent weighted exchanges, the prime-power Koszul formula, and nilpotent excision collapse. Classifies finite prime-component quotients and their coherence. Proves uniform based-tower reconstruction, computes transient negative classes, and identifies the generic-fiber defect of completion versus repair. Proves arithmetic fracture reconstruction, effective lattice gluing, and compatible operator descent. Preserves the v0.7.0 package and adds exact finite tests. Written proofs and self-review only.
