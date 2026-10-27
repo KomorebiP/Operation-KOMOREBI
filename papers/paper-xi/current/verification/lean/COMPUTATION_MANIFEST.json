@@ -1,0 +1,2441 @@
+{
+  "schema_version": 2,
+  "claim_id": "PAPERXI-RELEASE-SELECTED-423-FRESH-COMPILE-AND-AXIOM-AUDIT",
+  "repository": {
+    "commit": null,
+    "dirty": null,
+    "note": "The source project was recovered from an archive, not an identified Git checkout; immutable source and catalogue hashes define the inputs."
+  },
+  "command": {
+    "initial_source_replay": [
+      "/workspace/scratch/604befec1954/paperxi_lean/scripts/replay.py",
+      "--jobs",
+      "3",
+      "--out",
+      "evidence/replay"
+    ],
+    "continued_source_replay": [
+      "scripts/replay.py",
+      "--jobs",
+      "1",
+      "--timeout",
+      "3600",
+      "--resume",
+      "evidence/replay",
+      "--out",
+      "evidence/replay_complete"
+    ],
+    "repaired_terminal_source_replay": [
+      "scripts/replay.py",
+      "--jobs",
+      "1",
+      "--timeout",
+      "3600",
+      "--resume",
+      "evidence/replay_complete",
+      "--terminal-revision",
+      "288c410b05d9a7c3c3d9364af47a5d7bf2ddaea7747308f005ea5e43fd875651",
+      "fe1c43800e7d9d4be586b1cf37f04fb18dfa7fe02547610698fcc15072d4937f",
+      "--out",
+      "evidence/replay_terminal_repaired"
+    ],
+    "synchronous_terminal_retry": [
+      "scripts/replay.py",
+      "--jobs",
+      "1",
+      "--timeout",
+      "3600",
+      "--resume",
+      "evidence/replay_terminal_repaired",
+      "--synchronous",
+      "--out",
+      "evidence/replay_terminal_synchronous"
+    ],
+    "factored_terminal_source_replay": [
+      "scripts/replay.py",
+      "--jobs",
+      "1",
+      "--timeout",
+      "3600",
+      "--resume",
+      "evidence/replay_terminal_synchronous",
+      "--terminal-revision",
+      "fe1c43800e7d9d4be586b1cf37f04fb18dfa7fe02547610698fcc15072d4937f",
+      "d7c4071e3711f70e48f916298b9d5703480f2c1b5ea55014998ae1b71e8ba434",
+      "--synchronous",
+      "--out",
+      "evidence/replay_terminal_factored"
+    ],
+    "selected_axiom_audit": [
+      "/workspace/scratch/604befec1954/paperxi_lean/.runtime/lean-4.34.0-rc2-linux/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "/workspace/scratch/604befec1954/paperxi_lean/evidence/axioms_selected_release/OwningModuleAudit.lean"
+    ],
+    "terminal_axiom_audit": [
+      "/workspace/scratch/604befec1954/paperxi_lean/.runtime/lean-4.34.0-rc2-linux/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "/workspace/scratch/604befec1954/paperxi_lean/evidence/axioms_terminal/OwningModuleAudit.lean"
+    ],
+    "interface_axiom_audit": [
+      "/workspace/scratch/604befec1954/paperxi_lean/.runtime/lean-4.34.0-rc2-linux/bin/lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "/workspace/scratch/604befec1954/paperxi_lean/evidence/axioms_interface_final/OwningModuleAudit.lean"
+    ],
+    "negative_controls": [
+      [
+        "/workspace/scratch/604befec1954/paperxi_lean/.runtime/lean-4.34.0-rc2-linux/bin/lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "/workspace/scratch/604befec1954/paperxi_lean/evidence/axiom_controls_final/uncatalogued_axiom.lean"
+      ],
+      [
+        "/workspace/scratch/604befec1954/paperxi_lean/.runtime/lean-4.34.0-rc2-linux/bin/lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "/workspace/scratch/604befec1954/paperxi_lean/evidence/axiom_controls_final/missing_catalogue_name.lean"
+      ]
+    ]
+  },
+  "environment": {
+    "software": {
+      "python": "3.12.14",
+      "lean": "Lean (version 4.34.0-rc2, x86_64-unknown-linux-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)",
+      "lean_binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+      "dependencies": {
+        "mathlib": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+        "plausible": "d9598f07b1bc701f1e3aae163d2681c1fd978793",
+        "LeanSearchClient": "ba67e212be1197b84c1f1f6299488a10a3002713",
+        "importGraph": "d8823026ac7ef130c253089d95685f9877b95323",
+        "proofwidgets": "a8acbfd87375ff4abe14ce09db5b7664d383bc7f",
+        "aesop": "18889deb9e83ea7420ef51c160d6f88552e744e3",
+        "Qq": "507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3",
+        "batteries": "4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb",
+        "Cli": "ab3a82db9fea14cf0fd7f5a2de650f4b534640af"
+      }
+    },
+    "hardware": {
+      "architecture": "x86_64",
+      "visible_logical_cpus": 9,
+      "cgroup_cpu_quota_cores": 8,
+      "cgroup_memory_limit_bytes": 8589934592
+    }
+  },
+  "mathematics": {
+    "assertion_tested": "All 423 catalogue-selected Lean source modules compile freshly under the stated pins; all 4342 catalogue names resolve to their owners; every logical declaration owned by those modules has transitive axiom dependencies within the three allowed standard axioms. The terminal and single-candidate interface satisfy the same compile and ownership/axiom checks as separately counted additions.",
+    "coefficient_domain": "Exactly the types and hypotheses of the immutable selected Lean sources and separately fingerprinted additions.",
+    "conventions": "Catalogue-based selection; generated/private logical declarations are included; compiler-only auxiliary names are listed separately; only current-session fresh objects may be resumed.",
+    "inputs": [
+      "catalogues/SOURCE_CATALOG.json",
+      "catalogues/DECLARATION_CATALOG.json"
+    ],
+    "bounds": {
+      "selected_modules": 423,
+      "catalogued_names": 4342,
+      "terminal_modules": 1,
+      "interface_modules": 1,
+      "selected_owned_logical_declarations": 7672
+    },
+    "non_claims": [
+      "The checks certify the formal declarations at their stated hypotheses; an informal-to-formal theorem correspondence requires manuscript review.",
+      "The single-candidate interface uses a supplied admissible candidate and a separating factor system; it supplies no arithmetic existence theorem.",
+      "The release checks do not establish actual automorphic realization, the original kappa normalization, Conjecture 66, or unrestricted local-global correspondence.",
+      "Pinned external mathlib and dependency cache objects are imported rather than rebuilt.",
+      "No fresh independent-checker claim is made."
+    ]
+  },
+  "randomness": {
+    "used": false
+  },
+  "run": {
+    "started_at": "2026-10-18T17:44:04.240652+00:00",
+    "completed_at": "2026-10-18T19:59:02.586811+00:00",
+    "runtime_seconds": 8098.346159,
+    "status": "PASS",
+    "exit_status": null,
+    "exit_status_note": "This manifest aggregates separately recorded process receipts, not one shell-command exit. The initial run was partial after an early resource-driven SIGTERM; the continuation completed all selected sources but diagnosed terminal errors and was finalized after a terminal-only diagnostic SIGTERM. The first repaired-terminal run was killed with a contemporaneous cgroup OOM event. The unchanged-source synchronous retry suffered a second recorded OOM kill. The factored terminal replay and three audits exited successfully; both axiom negative controls deliberately exited 1.",
+    "timeout_seconds": null,
+    "max_output_bytes": null,
+    "resource_limits": {
+      "initial_compile_wall_seconds_per_module": 1200,
+      "continued_compile_wall_seconds_per_module": 3600,
+      "axiom_audit_wall_seconds_per_scope": 1200,
+      "lean_threads_per_compilation": 1,
+      "initial_parallel_compilers": 3,
+      "continued_parallel_compilers": 1
+    },
+    "missing_results": [],
+    "invalid_results": []
+  },
+  "execution_artifacts": {
+    "evidence/replay/REPLAY_SCRIPT_EXECUTED.py": {
+      "sha256": "6e6731c064f7e897a0e74e956894406e4488f5a0c83a12b97ff1ef5718ae0e49"
+    },
+    "evidence/replay_complete/REPLAY_SCRIPT_EXECUTED.py": {
+      "sha256": "217a749fadb8fc89e48dfc9d0c3fa53b8807ffce5ef2d87c75c9452df4c8e377"
+    },
+    "evidence/replay_terminal_repaired/REPLAY_SCRIPT_EXECUTED.py": {
+      "sha256": "9222c46be1754bbad5ee76c0ee353481ebadba09f031fc1577c923ed6ee6e8c5"
+    },
+    "evidence/replay_terminal_synchronous/REPLAY_SCRIPT_EXECUTED.py": {
+      "sha256": "764b3d7a4d2ab2089344f2208fa23616a7e54953f8bcd83649061dade8a51c1a"
+    },
+    "evidence/replay_terminal_factored/REPLAY_SCRIPT_EXECUTED.py": {
+      "sha256": "764b3d7a4d2ab2089344f2208fa23616a7e54953f8bcd83649061dade8a51c1a"
+    },
+    "scripts/axiom_audit.py": {
+      "sha256": "c0f000749e8f25c59a9ff0867dd0fddca3ee0d6121fee0c8cd25540ccd756cd3"
+    },
+    "scripts/audit_controls.py": {
+      "sha256": "d3d9651047d2c0d3f60e6cd276395e46c1e1a2899697500b523538fb51cdce7d"
+    },
+    "evidence/GENERATE_RELEASE_REPORT.py": {
+      "sha256": "4bcc640106e450c41e9ef2bc9c6ced6cd13528c774b9c397a134878ee94dd6fe"
+    }
+  },
+  "input_artifacts": [
+    {
+      "path": "PaperXI/AbstractHeisenberg.lean",
+      "sha256": "d83045df228867234c49fb9dd9e838bbf810394614dd22dce2401c6744e3dacd",
+      "sha256_after": "d83045df228867234c49fb9dd9e838bbf810394614dd22dce2401c6744e3dacd"
+    },
+    {
+      "path": "PaperXI/AbstractHeisenbergExtension.lean",
+      "sha256": "64c993ffe68d2705763bdb7173dcdb8096ddb3540a82363620d5ac0e820f8d06",
+      "sha256_after": "64c993ffe68d2705763bdb7173dcdb8096ddb3540a82363620d5ac0e820f8d06"
+    },
+    {
+      "path": "PaperXI/ActualCartanCandidate106.lean",
+      "sha256": "e87ad679e0338ba7b5ffda904079152531d758cd29a472151aa21431bc543d06",
+      "sha256_after": "e87ad679e0338ba7b5ffda904079152531d758cd29a472151aa21431bc543d06"
+    },
+    {
+      "path": "PaperXI/ActualCharacterCandidate108.lean",
+      "sha256": "a311e3796f48d7d7a6c2cafd95e7ff962b8fb7543a0cdb7a81d04d9d12dbe4f2",
+      "sha256_after": "a311e3796f48d7d7a6c2cafd95e7ff962b8fb7543a0cdb7a81d04d9d12dbe4f2"
+    },
+    {
+      "path": "PaperXI/ActualCharacterData108.lean",
+      "sha256": "adcb8f31671a6ce4587678730fd689cdda4c87ebd3f1c8c67391cf42ee921bc4",
+      "sha256_after": "adcb8f31671a6ce4587678730fd689cdda4c87ebd3f1c8c67391cf42ee921bc4"
+    },
+    {
+      "path": "PaperXI/ActualCharacterIdentification61.lean",
+      "sha256": "8507c7ccc941069745d0352c942ee3b600e8fb68441dc2ecd4d458f31ce367fc",
+      "sha256_after": "8507c7ccc941069745d0352c942ee3b600e8fb68441dc2ecd4d458f31ce367fc"
+    },
+    {
+      "path": "PaperXI/ActualCharacterResidue61.lean",
+      "sha256": "401e10d5858bab78cc6a399bac1bd8c3d594a891773157e9ff975c2a7f0b805f",
+      "sha256_after": "401e10d5858bab78cc6a399bac1bd8c3d594a891773157e9ff975c2a7f0b805f"
+    },
+    {
+      "path": "PaperXI/ActualCharacterType61.lean",
+      "sha256": "31cbff49441e1406a497ce67cbba0965509582286af1f2fc8337525909e25c1f",
+      "sha256_after": "31cbff49441e1406a497ce67cbba0965509582286af1f2fc8337525909e25c1f"
+    },
+    {
+      "path": "PaperXI/ActualCompactTypeCompletion58.lean",
+      "sha256": "9c0e0c63cd7aa7f6c5ce5841cf9dbd3b97709ee0300314cb808dae8caef66b2a",
+      "sha256_after": "9c0e0c63cd7aa7f6c5ce5841cf9dbd3b97709ee0300314cb808dae8caef66b2a"
+    },
+    {
+      "path": "PaperXI/ActualCoordinateDeepIdeal111.lean",
+      "sha256": "1478145467bf2f189641de88b717440f1439dc649d84164ad972b32966afeb91",
+      "sha256_after": "1478145467bf2f189641de88b717440f1439dc649d84164ad972b32966afeb91"
+    },
+    {
+      "path": "PaperXI/ActualCuspidalCandidate105.lean",
+      "sha256": "b37fd23618fec1d17f60baca5392c3d0d4e8c255da68dfff131b5ca746840100",
+      "sha256_after": "b37fd23618fec1d17f60baca5392c3d0d4e8c255da68dfff131b5ca746840100"
+    },
+    {
+      "path": "PaperXI/ActualDepthZeroExtension.lean",
+      "sha256": "ff5750ec70106f6aa0ce85b66fc16095d1d17973b914f7b37b2e2c1efdcda17c",
+      "sha256_after": "ff5750ec70106f6aa0ce85b66fc16095d1d17973b914f7b37b2e2c1efdcda17c"
+    },
+    {
+      "path": "PaperXI/ActualELatticeFieldJoin59.lean",
+      "sha256": "cd8801f07f19c6130f8e0cb4b83972ac28c399481be71c0f8cee79f7e9bbd660",
+      "sha256_after": "cd8801f07f19c6130f8e0cb4b83972ac28c399481be71c0f8cee79f7e9bbd660"
+    },
+    {
+      "path": "PaperXI/ActualELatticeFreeness59.lean",
+      "sha256": "b9c837f72cdde593dc7a1bf64f366e0e5453e390448eedf225b0024251c84a47",
+      "sha256_after": "b9c837f72cdde593dc7a1bf64f366e0e5453e390448eedf225b0024251c84a47"
+    },
+    {
+      "path": "PaperXI/ActualELatticeNormalizer59.lean",
+      "sha256": "7328521c5eb95fe067aaae8fbb771a976d75965543e6cb1619720f6df9d68c17",
+      "sha256_after": "7328521c5eb95fe067aaae8fbb771a976d75965543e6cb1619720f6df9d68c17"
+    },
+    {
+      "path": "PaperXI/ActualELatticeQuotient59.lean",
+      "sha256": "a49f9630deecf93df96b4f831fb702cd48b0154c5563d3fe4f919ad2c9f47d24",
+      "sha256_after": "a49f9630deecf93df96b4f831fb702cd48b0154c5563d3fe4f919ad2c9f47d24"
+    },
+    {
+      "path": "PaperXI/ActualELatticeResidue59.lean",
+      "sha256": "7adc864addc36f19b3d94431dcbaa62f118e45633f9bc356692c1c8c0698d5a3",
+      "sha256_after": "7adc864addc36f19b3d94431dcbaa62f118e45633f9bc356692c1c8c0698d5a3"
+    },
+    {
+      "path": "PaperXI/ActualELatticeScalarPeriod60.lean",
+      "sha256": "10bfffe3207aaacbc9291830df80f34c502d7383c79a8a9e1b7b723e7e3021f0",
+      "sha256_after": "10bfffe3207aaacbc9291830df80f34c502d7383c79a8a9e1b7b723e7e3021f0"
+    },
+    {
+      "path": "PaperXI/ActualELatticeTopology60.lean",
+      "sha256": "4936918f1210fcc205c45cc2b2e787c6dfa51e1d1399c1c9e3988e6d9e791981",
+      "sha256_after": "4936918f1210fcc205c45cc2b2e787c6dfa51e1d1399c1c9e3988e6d9e791981"
+    },
+    {
+      "path": "PaperXI/ActualELatticeTypeGroup59.lean",
+      "sha256": "985e4b5cffb7f0083ef712004a55d0dd95409019eac2f83d57c77cd971ef0455",
+      "sha256_after": "985e4b5cffb7f0083ef712004a55d0dd95409019eac2f83d57c77cd971ef0455"
+    },
+    {
+      "path": "PaperXI/ActualEmbeddedUniformizer58.lean",
+      "sha256": "3f8d9f340d7a6f79785e6b82d82a800344788509d9b97b51c77aa96429018a33",
+      "sha256_after": "3f8d9f340d7a6f79785e6b82d82a800344788509d9b97b51c77aa96429018a33"
+    },
+    {
+      "path": "PaperXI/ActualFieldTypeQuotient69.lean",
+      "sha256": "fd2a01056fe19cf73010c917683c3bcdac14d241c1d9f3bc3accb3584b709bd6",
+      "sha256_after": "fd2a01056fe19cf73010c917683c3bcdac14d241c1d9f3bc3accb3584b709bd6"
+    },
+    {
+      "path": "PaperXI/ActualGroupIndex111.lean",
+      "sha256": "569cdbec7bc0fcd987fb8fc614db2c4369221abc0007eb98bfdff0896e0800c2",
+      "sha256_after": "569cdbec7bc0fcd987fb8fc614db2c4369221abc0007eb98bfdff0896e0800c2"
+    },
+    {
+      "path": "PaperXI/ActualHeisenbergCandidate107.lean",
+      "sha256": "7dd358423f2d83b2201f0e8b9eed0484c2e577f041d171fe447c59806e11d971",
+      "sha256_after": "7dd358423f2d83b2201f0e8b9eed0484c2e577f041d171fe447c59806e11d971"
+    },
+    {
+      "path": "PaperXI/ActualIntegerTower111.lean",
+      "sha256": "6effc42145758945edec994d27d6de01bfae48a6752ba7b8f53ac9f8c9ee0300",
+      "sha256_after": "6effc42145758945edec994d27d6de01bfae48a6752ba7b8f53ac9f8c9ee0300"
+    },
+    {
+      "path": "PaperXI/ActualIntegralGeneralLinear.lean",
+      "sha256": "37fadf54dfd99b1032584b0bd3b561824077296be369ecc43f74deffb3847996",
+      "sha256_after": "37fadf54dfd99b1032584b0bd3b561824077296be369ecc43f74deffb3847996"
+    },
+    {
+      "path": "PaperXI/ActualIntersection108.lean",
+      "sha256": "fede966a6ccc302109f79282ebd6c8a1b66b3c9dcbafc6b1cccd28b1160bd34b",
+      "sha256_after": "fede966a6ccc302109f79282ebd6c8a1b66b3c9dcbafc6b1cccd28b1160bd34b"
+    },
+    {
+      "path": "PaperXI/ActualLocalCartan106.lean",
+      "sha256": "ad8205ed61e0d305b7023ba61e8f17b266407a62ec64e846e7993a90d62882b2",
+      "sha256_after": "ad8205ed61e0d305b7023ba61e8f17b266407a62ec64e846e7993a90d62882b2"
+    },
+    {
+      "path": "PaperXI/ActualLocalUnitDecomposition.lean",
+      "sha256": "a8395974d47aefc05e157314ff5c0f41b5ec8a33c9bfb98579de8b62ab5e273d",
+      "sha256_after": "a8395974d47aefc05e157314ff5c0f41b5ec8a33c9bfb98579de8b62ab5e273d"
+    },
+    {
+      "path": "PaperXI/ActualLocalUnitTopology.lean",
+      "sha256": "2d87df54c86bef03b5bf3277d309f08733cde2c39d287c2226b9d04bcbe388ea",
+      "sha256_after": "2d87df54c86bef03b5bf3277d309f08733cde2c39d287c2226b9d04bcbe388ea"
+    },
+    {
+      "path": "PaperXI/ActualMonomialLocalGlobal.lean",
+      "sha256": "d7c4071e3711f70e48f916298b9d5703480f2c1b5ea55014998ae1b71e8ba434",
+      "sha256_after": "d7c4071e3711f70e48f916298b9d5703480f2c1b5ea55014998ae1b71e8ba434"
+    },
+    {
+      "path": "PaperXI/ActualNormalizerTypeExtension58.lean",
+      "sha256": "eed55102f4bdce2532e92a4655f4da687a9fa494d89917d61f2a8cef613b46f1",
+      "sha256_after": "eed55102f4bdce2532e92a4655f4da687a9fa494d89917d61f2a8cef613b46f1"
+    },
+    {
+      "path": "PaperXI/ActualOnePlusTopology111.lean",
+      "sha256": "cdef6d0ce5c93ad213cc8af1fef105ca1375f9566fdf088cdaad7677198cb9ac",
+      "sha256_after": "cdef6d0ce5c93ad213cc8af1fef105ca1375f9566fdf088cdaad7677198cb9ac"
+    },
+    {
+      "path": "PaperXI/ActualPacketTypeRealization70.lean",
+      "sha256": "079fe5114db1fe95bd51e370b7932a6394bce0b44bad32671fa820774e806037",
+      "sha256_after": "079fe5114db1fe95bd51e370b7932a6394bce0b44bad32671fa820774e806037"
+    },
+    {
+      "path": "PaperXI/ActualProfileCandidate110.lean",
+      "sha256": "dd434e182eec32397e64a3e6a43193cc56a3c965eff65c4e36e14f4bd0b2c27b",
+      "sha256_after": "dd434e182eec32397e64a3e6a43193cc56a3c965eff65c4e36e14f4bd0b2c27b"
+    },
+    {
+      "path": "PaperXI/ActualResidueGeneralLinear.lean",
+      "sha256": "33f125bdc926fb2a521cd18f1d46ba7c0d70d277e4d96bf0827d0fc610cd3459",
+      "sha256_after": "33f125bdc926fb2a521cd18f1d46ba7c0d70d277e4d96bf0827d0fc610cd3459"
+    },
+    {
+      "path": "PaperXI/ActualScalarLift113.lean",
+      "sha256": "9dca2abac60d683f19c4b2bd2bd257b8f18e5b5f459cf39df9948de4ccf41ce0",
+      "sha256_after": "9dca2abac60d683f19c4b2bd2bd257b8f18e5b5f459cf39df9948de4ccf41ce0"
+    },
+    {
+      "path": "PaperXI/ActualSourceCandidate111.lean",
+      "sha256": "c802c3b3d1be72ca3d961a4edaa42cca066eb81cbc902a0a0abe9eee58d60005",
+      "sha256_after": "c802c3b3d1be72ca3d961a4edaa42cca066eb81cbc902a0a0abe9eee58d60005"
+    },
+    {
+      "path": "PaperXI/ActualUnramifiedBaseChange.lean",
+      "sha256": "8f4e3c5117f404df075772a6e9b3782e2463b7e84973d380f248d9c9c5c4f87f",
+      "sha256_after": "8f4e3c5117f404df075772a6e9b3782e2463b7e84973d380f248d9c9c5c4f87f"
+    },
+    {
+      "path": "PaperXI/AlgebraActionModule.lean",
+      "sha256": "5ceb841756c4ca3a00e4fe21b5969470175a83df02d2c417316405eced836820",
+      "sha256_after": "5ceb841756c4ca3a00e4fe21b5969470175a83df02d2c417316405eced836820"
+    },
+    {
+      "path": "PaperXI/ArithmeticAttachment110.lean",
+      "sha256": "e67a6b640cb79d7ea347d00621361e950ea439519e53e1f472ef6758460a8693",
+      "sha256_after": "e67a6b640cb79d7ea347d00621361e950ea439519e53e1f472ef6758460a8693"
+    },
+    {
+      "path": "PaperXI/ArithmeticFieldInduction69.lean",
+      "sha256": "84d9fdbbdab35cebcb07e0b60f4363cd4e176ac7b0483a850db3af4ebe56588e",
+      "sha256_after": "84d9fdbbdab35cebcb07e0b60f4363cd4e176ac7b0483a850db3af4ebe56588e"
+    },
+    {
+      "path": "PaperXI/ArithmeticTypeCertificate69.lean",
+      "sha256": "a360d478cc7c93440aa4806bf37892a9cbc4c847d393a8be3079c7fc9da439ac",
+      "sha256_after": "a360d478cc7c93440aa4806bf37892a9cbc4c847d393a8be3079c7fc9da439ac"
+    },
+    {
+      "path": "PaperXI/AtomicMultiset.lean",
+      "sha256": "e9b0e86f94713a76638c5bde3c53ba97140aec5c543aad941c9bba61ede4d3f6",
+      "sha256_after": "e9b0e86f94713a76638c5bde3c53ba97140aec5c543aad941c9bba61ede4d3f6"
+    },
+    {
+      "path": "PaperXI/AtomicNaturality.lean",
+      "sha256": "ba747e172fb8b6398cc4ce4076c4f8dc2c3f5fcff98a6a24f1e3f1b4a4584873",
+      "sha256_after": "ba747e172fb8b6398cc4ce4076c4f8dc2c3f5fcff98a6a24f1e3f1b4a4584873"
+    },
+    {
+      "path": "PaperXI/AtomicReconstruction.lean",
+      "sha256": "e848f4ab5b8717eda8465737b7a726fbb877d3e6effc3728eaeab08698da52cb",
+      "sha256_after": "e848f4ab5b8717eda8465737b7a726fbb877d3e6effc3728eaeab08698da52cb"
+    },
+    {
+      "path": "PaperXI/BilinearHeisenberg.lean",
+      "sha256": "d4615e543af67b750697c7fdbf5f7d3b790aa0b4d6992aa2246a3aa00399e7d9",
+      "sha256_after": "d4615e543af67b750697c7fdbf5f7d3b790aa0b4d6992aa2246a3aa00399e7d9"
+    },
+    {
+      "path": "PaperXI/BoundaryExamples.lean",
+      "sha256": "d847590d5166021de5e552840a8b6bac45da991bbac45860b3cd96c3aaeabf89",
+      "sha256_after": "d847590d5166021de5e552840a8b6bac45da991bbac45860b3cd96c3aaeabf89"
+    },
+    {
+      "path": "PaperXI/BreakBridge.lean",
+      "sha256": "8867bca4f28ab57140255d385f80f0d940f50f9d7bfd3de435c9b4b6385937d9",
+      "sha256_after": "8867bca4f28ab57140255d385f80f0d940f50f9d7bfd3de435c9b4b6385937d9"
+    },
+    {
+      "path": "PaperXI/BreakBridgeAlong.lean",
+      "sha256": "cc313014e54d45de8e7391509928e831d857cc92c21b22d029f4c5541b823658",
+      "sha256_after": "cc313014e54d45de8e7391509928e831d857cc92c21b22d029f4c5541b823658"
+    },
+    {
+      "path": "PaperXI/BreakDyadicPhase.lean",
+      "sha256": "6b938157b4b523f51398fb5d57351690ba2200647a98c90f9d715a12030349df",
+      "sha256_after": "6b938157b4b523f51398fb5d57351690ba2200647a98c90f9d715a12030349df"
+    },
+    {
+      "path": "PaperXI/BreakHeisenbergSum.lean",
+      "sha256": "8f7d2102714c520e91a760b6fe970dd48fb99ed979d8d4cd14280b6ffc18e50c",
+      "sha256_after": "8f7d2102714c520e91a760b6fe970dd48fb99ed979d8d4cd14280b6ffc18e50c"
+    },
+    {
+      "path": "PaperXI/BreakMoving.lean",
+      "sha256": "e72bb01b58c7e900a66b0919ad0b78a71e7ae979c3ed55025b524b2d80519da9",
+      "sha256_after": "e72bb01b58c7e900a66b0919ad0b78a71e7ae979c3ed55025b524b2d80519da9"
+    },
+    {
+      "path": "PaperXI/BreakOddPhase.lean",
+      "sha256": "32575366712c4c41dec1087b72f1a84ef94ced9b0af536673412a053eec700cf",
+      "sha256_after": "32575366712c4c41dec1087b72f1a84ef94ced9b0af536673412a053eec700cf"
+    },
+    {
+      "path": "PaperXI/BreakQuadratic.lean",
+      "sha256": "37bf741c07a7c2c90e5139d5bd490d61a60eccc0d2573bcf0d51e59ce81f4f6a",
+      "sha256_after": "37bf741c07a7c2c90e5139d5bd490d61a60eccc0d2573bcf0d51e59ce81f4f6a"
+    },
+    {
+      "path": "PaperXI/BreakTensorFactorization.lean",
+      "sha256": "9201c286d4ce3d4c53eda5ba1a756940f87a36ce7ddfb768a007ec158398ec24",
+      "sha256_after": "9201c286d4ce3d4c53eda5ba1a756940f87a36ce7ddfb768a007ec158398ec24"
+    },
+    {
+      "path": "PaperXI/BreakTensorMap.lean",
+      "sha256": "52fc48e66b2d78e5a85d528b3d8eccdee4b0668c3dc10b4ba49f3c44482caebb",
+      "sha256_after": "52fc48e66b2d78e5a85d528b3d8eccdee4b0668c3dc10b4ba49f3c44482caebb"
+    },
+    {
+      "path": "PaperXI/CanonicalDVRValuation.lean",
+      "sha256": "d30233e7e4f5fffd0c9ee97fc3e54a765389da26cf8f917bd7c158e249eae6a1",
+      "sha256_after": "d30233e7e4f5fffd0c9ee97fc3e54a765389da26cf8f917bd7c158e249eae6a1"
+    },
+    {
+      "path": "PaperXI/CentralCharacterAction.lean",
+      "sha256": "7d5028051c4d9345e5ff3724fa65990af1cb4900a25053f54c82f6e7dafcf04f",
+      "sha256_after": "7d5028051c4d9345e5ff3724fa65990af1cb4900a25053f54c82f6e7dafcf04f"
+    },
+    {
+      "path": "PaperXI/CentralCharacterInduction.lean",
+      "sha256": "26563eced498d52375622ece6a9b1081ff7d338c5f94399babdd60a81e749349",
+      "sha256_after": "26563eced498d52375622ece6a9b1081ff7d338c5f94399babdd60a81e749349"
+    },
+    {
+      "path": "PaperXI/CentralCharacterIrreducible.lean",
+      "sha256": "bb4d95bc7100a200f2b5e915893df883a1e7768c06b5e5006432e5b6c4b3d367",
+      "sha256_after": "bb4d95bc7100a200f2b5e915893df883a1e7768c06b5e5006432e5b6c4b3d367"
+    },
+    {
+      "path": "PaperXI/CentralCharacterRepresentation.lean",
+      "sha256": "115c7bf9c958e23517b9990efc2179bb7595d5c416e839a96ee9705c1448d3fe",
+      "sha256_after": "115c7bf9c958e23517b9990efc2179bb7595d5c416e839a96ee9705c1448d3fe"
+    },
+    {
+      "path": "PaperXI/CentralExtension.lean",
+      "sha256": "738dea99a4dea853d5968a45499d8cd3804c8aae571749faa7ecd0f2beada19a",
+      "sha256_after": "738dea99a4dea853d5968a45499d8cd3804c8aae571749faa7ecd0f2beada19a"
+    },
+    {
+      "path": "PaperXI/CentralExtensionCocycle.lean",
+      "sha256": "20408e0fc0cb3e5f4edced01e3f8829ed5b80a905ed55a06d4545e27170151fa",
+      "sha256_after": "20408e0fc0cb3e5f4edced01e3f8829ed5b80a905ed55a06d4545e27170151fa"
+    },
+    {
+      "path": "PaperXI/CentralExtensionComparison.lean",
+      "sha256": "e36d9e9e7da551d6db27596259bc69841e32a06e82d7b1c79f3bb69942a35082",
+      "sha256_after": "e36d9e9e7da551d6db27596259bc69841e32a06e82d7b1c79f3bb69942a35082"
+    },
+    {
+      "path": "PaperXI/CentralExtensionExistence.lean",
+      "sha256": "c073b326ebaed1aafad9eeaf1e4cbb0707dfa8112ae901e0b421f9d114227a2a",
+      "sha256_after": "c073b326ebaed1aafad9eeaf1e4cbb0707dfa8112ae901e0b421f9d114227a2a"
+    },
+    {
+      "path": "PaperXI/CentralExtensionInducing.lean",
+      "sha256": "a435de848de5be66c076c64e660fe71344453fd66a68dc1d2f842854b984317f",
+      "sha256_after": "a435de848de5be66c076c64e660fe71344453fd66a68dc1d2f842854b984317f"
+    },
+    {
+      "path": "PaperXI/CentralExtensionInductionConsequences.lean",
+      "sha256": "6e51c61426161f53ded9cdde06049b7358cf387ee47e88de993af2d98a6838f1",
+      "sha256_after": "6e51c61426161f53ded9cdde06049b7358cf387ee47e88de993af2d98a6838f1"
+    },
+    {
+      "path": "PaperXI/CentralExtensionSectionChange.lean",
+      "sha256": "5360a7116c397b9588d620f7febc89b633f697bd8cec091dd4ecc76468e03f4f",
+      "sha256_after": "5360a7116c397b9588d620f7febc89b633f697bd8cec091dd4ecc76468e03f4f"
+    },
+    {
+      "path": "PaperXI/CentralExtensionStructure.lean",
+      "sha256": "601bab4de431a620e5b9f2c84ea154cd63b7336382468bdf4dd6cca2a0a1ee35",
+      "sha256_after": "601bab4de431a620e5b9f2c84ea154cd63b7336382468bdf4dd6cca2a0a1ee35"
+    },
+    {
+      "path": "PaperXI/CentralExtensionUniqueness.lean",
+      "sha256": "2e5ae550279047849c064e92382606a085429ff1dabb04de593c14006d39a9d2",
+      "sha256_after": "2e5ae550279047849c064e92382606a085429ff1dabb04de593c14006d39a9d2"
+    },
+    {
+      "path": "PaperXI/CentralProduct.lean",
+      "sha256": "9d1e6a4ece84a862ef75383b66b97af694c9ac2298fc2047a6c4844bc6aa34af",
+      "sha256_after": "9d1e6a4ece84a862ef75383b66b97af694c9ac2298fc2047a6c4844bc6aa34af"
+    },
+    {
+      "path": "PaperXI/CentralProductCommutator.lean",
+      "sha256": "00857ad77d53b9578db693336a58114a88ad7c58f683a74132a7730fff7c4dbe",
+      "sha256_after": "00857ad77d53b9578db693336a58114a88ad7c58f683a74132a7730fff7c4dbe"
+    },
+    {
+      "path": "PaperXI/CentralProductComparison.lean",
+      "sha256": "0c1567c5e43684d459663ec1d8c0995f0cdd4d26a9b3b84b56e719e76dcf1a67",
+      "sha256_after": "0c1567c5e43684d459663ec1d8c0995f0cdd4d26a9b3b84b56e719e76dcf1a67"
+    },
+    {
+      "path": "PaperXI/CentralProductFactors.lean",
+      "sha256": "2c019b264e9f537a7886668193c3e1777ac631b16c10cf02acbd25e8f30b3e82",
+      "sha256_after": "2c019b264e9f537a7886668193c3e1777ac631b16c10cf02acbd25e8f30b3e82"
+    },
+    {
+      "path": "PaperXI/CentralProductMap.lean",
+      "sha256": "a5dad822167784fc5033f5187a85a8e99a172466c1f65742380c20fa01d6e4d8",
+      "sha256_after": "a5dad822167784fc5033f5187a85a8e99a172466c1f65742380c20fa01d6e4d8"
+    },
+    {
+      "path": "PaperXI/ChainSharpness.lean",
+      "sha256": "9dc676cc958252b1a0d2ad618ee5f85bcded1dbd8813022e05f9a32c85129ece",
+      "sha256_after": "9dc676cc958252b1a0d2ad618ee5f85bcded1dbd8813022e05f9a32c85129ece"
+    },
+    {
+      "path": "PaperXI/CharacterAttachment108.lean",
+      "sha256": "3ab5684d139d5f725153a9bc2d64d616384a28734b3839f0bc3c1f89856219fe",
+      "sha256_after": "3ab5684d139d5f725153a9bc2d64d616384a28734b3839f0bc3c1f89856219fe"
+    },
+    {
+      "path": "PaperXI/CharacterGenerators.lean",
+      "sha256": "5f499da97dbae7d5948989b633f51e14f7adac1468a62e22af5ec653fbc2b1a6",
+      "sha256_after": "5f499da97dbae7d5948989b633f51e14f7adac1468a62e22af5ec653fbc2b1a6"
+    },
+    {
+      "path": "PaperXI/CharacterNormalizer61.lean",
+      "sha256": "4d1fb07d5d106c49247b3900dea666ce7859054359e7328de46b86d3cf3cdf1f",
+      "sha256_after": "4d1fb07d5d106c49247b3900dea666ce7859054359e7328de46b86d3cf3cdf1f"
+    },
+    {
+      "path": "PaperXI/CharacterPairing108.lean",
+      "sha256": "e86637f400e8ad723c2b13db11b5fc48fb9110e11a1d764d1925fed4a1e06dfb",
+      "sha256_after": "e86637f400e8ad723c2b13db11b5fc48fb9110e11a1d764d1925fed4a1e06dfb"
+    },
+    {
+      "path": "PaperXI/CharacterProjector.lean",
+      "sha256": "c3d3017695299f3ef67a28bee5c519bbe37aa9c0768e52c4fdbb8c9be912d7cc",
+      "sha256_after": "c3d3017695299f3ef67a28bee5c519bbe37aa9c0768e52c4fdbb8c9be912d7cc"
+    },
+    {
+      "path": "PaperXI/CharacterSupport108.lean",
+      "sha256": "4a1a02bf6685a09772dbbe49ad1f29037975b2bbc299e736b1eba53df4aa8960",
+      "sha256_after": "4a1a02bf6685a09772dbbe49ad1f29037975b2bbc299e736b1eba53df4aa8960"
+    },
+    {
+      "path": "PaperXI/CharacterTwist.lean",
+      "sha256": "2f04977b3efe71419a28d3985c9ca035ba1e9f43cccb4779638ea69098b5f58e",
+      "sha256_after": "2f04977b3efe71419a28d3985c9ca035ba1e9f43cccb4779638ea69098b5f58e"
+    },
+    {
+      "path": "PaperXI/CliffordAction.lean",
+      "sha256": "aff52bad200146645c61ebf8647615481ee1f908eb4fa8aa5ccdd39bf79393bf",
+      "sha256_after": "aff52bad200146645c61ebf8647615481ee1f908eb4fa8aa5ccdd39bf79393bf"
+    },
+    {
+      "path": "PaperXI/CliffordChoices.lean",
+      "sha256": "1e5599eae92df49fe01d3a846e8a21e070e97ca8aa79461ebafdfaf666c9a9e0",
+      "sha256_after": "1e5599eae92df49fe01d3a846e8a21e070e97ca8aa79461ebafdfaf666c9a9e0"
+    },
+    {
+      "path": "PaperXI/CliffordCocycle.lean",
+      "sha256": "915d42076be1fed3ce0abb96e2e74367ebbd9d51d78dd6220a3cd73f37a04354",
+      "sha256_after": "915d42076be1fed3ce0abb96e2e74367ebbd9d51d78dd6220a3cd73f37a04354"
+    },
+    {
+      "path": "PaperXI/CliffordCocycleChoices.lean",
+      "sha256": "b81243b34012e08c729b15becd2058df413240d7047d7975e8f6d119746f4bd8",
+      "sha256_after": "b81243b34012e08c729b15becd2058df413240d7047d7975e8f6d119746f4bd8"
+    },
+    {
+      "path": "PaperXI/CliffordCocycleClass.lean",
+      "sha256": "88207bfc7c10216386294ac5631533d2b07f6a592136a204d91b41553bd7711c",
+      "sha256_after": "88207bfc7c10216386294ac5631533d2b07f6a592136a204d91b41553bd7711c"
+    },
+    {
+      "path": "PaperXI/CliffordDatum.lean",
+      "sha256": "7321b347ed121e9981fdb5e48e5cdcc56ffa0b1ed4c556fb547dcc4a7eab8b5b",
+      "sha256_after": "7321b347ed121e9981fdb5e48e5cdcc56ffa0b1ed4c556fb547dcc4a7eab8b5b"
+    },
+    {
+      "path": "PaperXI/CliffordEnvelope.lean",
+      "sha256": "550b0e257a986100dd3ddf95022f7766f8366363760787b3b28b03c08cc04548",
+      "sha256_after": "550b0e257a986100dd3ddf95022f7766f8366363760787b3b28b03c08cc04548"
+    },
+    {
+      "path": "PaperXI/CliffordEvaluation.lean",
+      "sha256": "405e9bf8ba1bdf8eba00ab3d6063ec48594e3b24d4d919d5a5b862e76bd4effd",
+      "sha256_after": "405e9bf8ba1bdf8eba00ab3d6063ec48594e3b24d4d919d5a5b862e76bd4effd"
+    },
+    {
+      "path": "PaperXI/CliffordHeisenbergAttachment.lean",
+      "sha256": "bfc127d6190ce5ad509d5e37b1b9507b92996f620a90657c855d90516c6648e7",
+      "sha256_after": "bfc127d6190ce5ad509d5e37b1b9507b92996f620a90657c855d90516c6648e7"
+    },
+    {
+      "path": "PaperXI/CliffordIrreducible.lean",
+      "sha256": "39476ad63852c2ef28b547eed56fe8805910a7beabbdde97f4cdbef6b5b83b63",
+      "sha256_after": "39476ad63852c2ef28b547eed56fe8805910a7beabbdde97f4cdbef6b5b83b63"
+    },
+    {
+      "path": "PaperXI/CliffordMultiplicity.lean",
+      "sha256": "9ad23300239f1a6cb777e10ea3a8efb66596640c0644862baf2db01c0089b1df",
+      "sha256_after": "9ad23300239f1a6cb777e10ea3a8efb66596640c0644862baf2db01c0089b1df"
+    },
+    {
+      "path": "PaperXI/CliffordPacket.lean",
+      "sha256": "620bdf1b1eaca5bc5f86831a95fd342e72fe43e7fb697fd0590d56a03cc92533",
+      "sha256_after": "620bdf1b1eaca5bc5f86831a95fd342e72fe43e7fb697fd0590d56a03cc92533"
+    },
+    {
+      "path": "PaperXI/CliffordSource.lean",
+      "sha256": "f0b150418de3d56a1fcd7799169a9937e6b9746b2dc6a75c79de625bde828c88",
+      "sha256_after": "f0b150418de3d56a1fcd7799169a9937e6b9746b2dc6a75c79de625bde828c88"
+    },
+    {
+      "path": "PaperXI/CliffordStabilizer.lean",
+      "sha256": "6bc6cae8489f5025d88e5dfe8375db8a056c899365557a772e5188998ff689fc",
+      "sha256_after": "6bc6cae8489f5025d88e5dfe8375db8a056c899365557a772e5188998ff689fc"
+    },
+    {
+      "path": "PaperXI/CliffordTransport.lean",
+      "sha256": "3b10aa513a5ba4f75eee3ca0e288cb4683b0a0044f3c22cf1bfaf031a568a995",
+      "sha256_after": "3b10aa513a5ba4f75eee3ca0e288cb4683b0a0044f3c22cf1bfaf031a568a995"
+    },
+    {
+      "path": "PaperXI/CocycleBasis.lean",
+      "sha256": "5ba62f3c665922695e62725e35c969a9b223859a7dee0cad1163de238e51213e",
+      "sha256_after": "5ba62f3c665922695e62725e35c969a9b223859a7dee0cad1163de238e51213e"
+    },
+    {
+      "path": "PaperXI/CocycleClass.lean",
+      "sha256": "393677b19c265df8ad023c34ede0aa8a8cb38f60e1bb050ef0b4282876a302bd",
+      "sha256_after": "393677b19c265df8ad023c34ede0aa8a8cb38f60e1bb050ef0b4282876a302bd"
+    },
+    {
+      "path": "PaperXI/CocycleCommutator.lean",
+      "sha256": "0b8b7f046bf6d69122f05e183848102036057443192762a7e89fa4e374f6d4df",
+      "sha256_after": "0b8b7f046bf6d69122f05e183848102036057443192762a7e89fa4e374f6d4df"
+    },
+    {
+      "path": "PaperXI/CocycleQuotient.lean",
+      "sha256": "e4fd2024e7a2b19c99fe508d778300fc161a53761c5ed2db8f0e5c0091101b51",
+      "sha256_after": "e4fd2024e7a2b19c99fe508d778300fc161a53761c5ed2db8f0e5c0091101b51"
+    },
+    {
+      "path": "PaperXI/CommutatorEnvelope.lean",
+      "sha256": "bc6e6fc84b1c63fc1bb70568bc6eb1c3137c5f9f781783990c9c1bc51a6453b8",
+      "sha256_after": "bc6e6fc84b1c63fc1bb70568bc6eb1c3137c5f9f781783990c9c1bc51a6453b8"
+    },
+    {
+      "path": "PaperXI/CompactDegreeSeparation.lean",
+      "sha256": "c69f0838adb9db017a926ff1a66606634858bfb0aa89710e147b19b44a60d561",
+      "sha256_after": "c69f0838adb9db017a926ff1a66606634858bfb0aa89710e147b19b44a60d561"
+    },
+    {
+      "path": "PaperXI/CompactIntersection108.lean",
+      "sha256": "318e23f5dfa82f3cf42743e82c7783ac44508ce10be1a856aa6fc60407b2fa37",
+      "sha256_after": "318e23f5dfa82f3cf42743e82c7783ac44508ce10be1a856aa6fc60407b2fa37"
+    },
+    {
+      "path": "PaperXI/CompactModCenterInduction68.lean",
+      "sha256": "b1765821b4681b903bdbaabe6a76b05200fba99f81d94cc260e9ecc3484a4065",
+      "sha256_after": "b1765821b4681b903bdbaabe6a76b05200fba99f81d94cc260e9ecc3484a4065"
+    },
+    {
+      "path": "PaperXI/CompactQuotientPeriod69.lean",
+      "sha256": "db609bc27e26e3964e4eaa9f6739b066d277b23dd9c0b595f4b51fc80baa975a",
+      "sha256_after": "db609bc27e26e3964e4eaa9f6739b066d277b23dd9c0b595f4b51fc80baa975a"
+    },
+    {
+      "path": "PaperXI/CompactSmoothSemisimple.lean",
+      "sha256": "8f8329834876b5913b22197a22cc58d386a26429cb21fcb23d51947c33d93e74",
+      "sha256_after": "8f8329834876b5913b22197a22cc58d386a26429cb21fcb23d51947c33d93e74"
+    },
+    {
+      "path": "PaperXI/CompactTypeTensor58.lean",
+      "sha256": "885a6eef6b9a66f86ddf833e1077fdd3de5fe94a004487d6b539d70cba73bc6b",
+      "sha256_after": "885a6eef6b9a66f86ddf833e1077fdd3de5fe94a004487d6b539d70cba73bc6b"
+    },
+    {
+      "path": "PaperXI/CompactTypeTensorNormalizer58.lean",
+      "sha256": "1058ac054e5f073f587c3012d307d04d2924924594cd5ec137685c0bfb3e10b5",
+      "sha256_after": "1058ac054e5f073f587c3012d307d04d2924924594cd5ec137685c0bfb3e10b5"
+    },
+    {
+      "path": "PaperXI/ConditionalAtomicComparison.lean",
+      "sha256": "ce8d1ea0f8658d4d968aeb6665d5f1d3e4cc6bb1d472ebfbfbce6215f1103a58",
+      "sha256_after": "ce8d1ea0f8658d4d968aeb6665d5f1d3e4cc6bb1d472ebfbfbce6215f1103a58"
+    },
+    {
+      "path": "PaperXI/ConstructedFieldFrobenius.lean",
+      "sha256": "37abb8f28a5e22530d0f0296eaef1880e5fca49629014ef7cd762d606916b5bc",
+      "sha256_after": "37abb8f28a5e22530d0f0296eaef1880e5fca49629014ef7cd762d606916b5bc"
+    },
+    {
+      "path": "PaperXI/ContinuousHolonomyResidual.lean",
+      "sha256": "ef0ef5f7cdf0b952317f838c65b6f9e0229b32e424b9f384ab96634cd955f060",
+      "sha256_after": "ef0ef5f7cdf0b952317f838c65b6f9e0229b32e424b9f384ab96634cd955f060"
+    },
+    {
+      "path": "PaperXI/CoordinateDeepIdeal111.lean",
+      "sha256": "00a4e4aef33f78b2682431bc4370b2158cb1628f7d1c702f634861314e19cb09",
+      "sha256_after": "00a4e4aef33f78b2682431bc4370b2158cb1628f7d1c702f634861314e19cb09"
+    },
+    {
+      "path": "PaperXI/CuspidalAnnihilation.lean",
+      "sha256": "e56bdeb22b0d449550cd009852c029feed4d614bdc02a53d49648784b4a6abd2",
+      "sha256_after": "e56bdeb22b0d449550cd009852c029feed4d614bdc02a53d49648784b4a6abd2"
+    },
+    {
+      "path": "PaperXI/CuspidalCartan105.lean",
+      "sha256": "b2194352b6debd4ae75e3489078283c8f99b6c759d153356b9853900799a8087",
+      "sha256_after": "b2194352b6debd4ae75e3489078283c8f99b6c759d153356b9853900799a8087"
+    },
+    {
+      "path": "PaperXI/CuspidalContraction105.lean",
+      "sha256": "cf19708af1422fb89f6f41404483d37fb54258b7a6b1b18428ac52a31995dcbd",
+      "sha256_after": "cf19708af1422fb89f6f41404483d37fb54258b7a6b1b18428ac52a31995dcbd"
+    },
+    {
+      "path": "PaperXI/CycleCoordinates.lean",
+      "sha256": "0e63d65fbd8eecf42832697e5cbb2b1c5e6c7fda9b165030352c34bb3ec19004",
+      "sha256_after": "0e63d65fbd8eecf42832697e5cbb2b1c5e6c7fda9b165030352c34bb3ec19004"
+    },
+    {
+      "path": "PaperXI/CycleFixed.lean",
+      "sha256": "008caab8c32493eb96d7225cdc6ff9c2b44718f2cbf85360a0ebef91be48e3dd",
+      "sha256_after": "008caab8c32493eb96d7225cdc6ff9c2b44718f2cbf85360a0ebef91be48e3dd"
+    },
+    {
+      "path": "PaperXI/CycleSpan.lean",
+      "sha256": "a96cff77ae41d6de99c41763e94a925f42820c3e7646ee438e6fe3bbb67f8054",
+      "sha256_after": "a96cff77ae41d6de99c41763e94a925f42820c3e7646ee438e6fe3bbb67f8054"
+    },
+    {
+      "path": "PaperXI/CyclicAction.lean",
+      "sha256": "581f94955c014edf5c55919aa1a8a85b4fc7ec5ec07b9110e81dea08ad0648cf",
+      "sha256_after": "581f94955c014edf5c55919aa1a8a85b4fc7ec5ec07b9110e81dea08ad0648cf"
+    },
+    {
+      "path": "PaperXI/CyclicBridge.lean",
+      "sha256": "c24882a79bb6079e3ec2c68c8abfdd1db6c00634d6dd9045b2be41aa67cf601b",
+      "sha256_after": "c24882a79bb6079e3ec2c68c8abfdd1db6c00634d6dd9045b2be41aa67cf601b"
+    },
+    {
+      "path": "PaperXI/CyclicDefect113.lean",
+      "sha256": "b6fe373c44ebd8725be1683e7f851da03bcc708c896db2103e02a5a31fbb3a19",
+      "sha256_after": "b6fe373c44ebd8725be1683e7f851da03bcc708c896db2103e02a5a31fbb3a19"
+    },
+    {
+      "path": "PaperXI/CyclicFrobeniusCount.lean",
+      "sha256": "b97169de1bf48a86a58bf00236bad78341081a6db9ae46f6a8e49f95c87a4f82",
+      "sha256_after": "b97169de1bf48a86a58bf00236bad78341081a6db9ae46f6a8e49f95c87a4f82"
+    },
+    {
+      "path": "PaperXI/CyclicInducedBasis.lean",
+      "sha256": "a90ba613fe359b594d103fb19aa93529a4e4cb8584c38b335950bcb1ceaf0eb1",
+      "sha256_after": "a90ba613fe359b594d103fb19aa93529a4e4cb8584c38b335950bcb1ceaf0eb1"
+    },
+    {
+      "path": "PaperXI/CyclicInducedCharacter.lean",
+      "sha256": "15707518268a187bd5d4f486516c842c236f5385de68af3fb7ef63eb83fcd4f5",
+      "sha256_after": "15707518268a187bd5d4f486516c842c236f5385de68af3fb7ef63eb83fcd4f5"
+    },
+    {
+      "path": "PaperXI/CyclicInducedCoordinates.lean",
+      "sha256": "302c38129316e682653aa44bbff88450ec77341b005fbdbce392a31a475f2d90",
+      "sha256_after": "302c38129316e682653aa44bbff88450ec77341b005fbdbce392a31a475f2d90"
+    },
+    {
+      "path": "PaperXI/CyclicInducedDegree.lean",
+      "sha256": "e60c559b41a83de4e58e4a01b0633216f888976f7748d01b1b05f7aa42aaf085",
+      "sha256_after": "e60c559b41a83de4e58e4a01b0633216f888976f7748d01b1b05f7aa42aaf085"
+    },
+    {
+      "path": "PaperXI/CyclicInducedWrap.lean",
+      "sha256": "4dec20ab681bfc9225f0bf157b406ac02ea6272612eb84376cb4b647af558bb9",
+      "sha256_after": "4dec20ab681bfc9225f0bf157b406ac02ea6272612eb84376cb4b647af558bb9"
+    },
+    {
+      "path": "PaperXI/CyclicLinearization.lean",
+      "sha256": "77c69c57b811f5321306490bb3bb4aef92a7c262d5d875a613ef8d63e5170d0c",
+      "sha256_after": "77c69c57b811f5321306490bb3bb4aef92a7c262d5d875a613ef8d63e5170d0c"
+    },
+    {
+      "path": "PaperXI/CyclicNormalization113.lean",
+      "sha256": "607587d94a544d2c4e014d81b21e4c9241d852feddfaa826df57f9715d396ce7",
+      "sha256_after": "607587d94a544d2c4e014d81b21e4c9241d852feddfaa826df57f9715d396ce7"
+    },
+    {
+      "path": "PaperXI/CyclicPolynomial.lean",
+      "sha256": "0b7bf89b38ea2b0bc63675d4707494ec562ab9f04b8218c17fc092d9e82ea6ab",
+      "sha256_after": "0b7bf89b38ea2b0bc63675d4707494ec562ab9f04b8218c17fc092d9e82ea6ab"
+    },
+    {
+      "path": "PaperXI/DVRCartan106.lean",
+      "sha256": "450b28f31d92b480d5a52f75464a037a0aaf3ebd66ce7753b50f9e474951eeda",
+      "sha256_after": "450b28f31d92b480d5a52f75464a037a0aaf3ebd66ce7753b50f9e474951eeda"
+    },
+    {
+      "path": "PaperXI/DegreeIndex110.lean",
+      "sha256": "0f87f63a5f0f5c28adbb1a04732fbe110b63a5f45cdde03e98830271c7c6a6c5",
+      "sha256_after": "0f87f63a5f0f5c28adbb1a04732fbe110b63a5f45cdde03e98830271c7c6a6c5"
+    },
+    {
+      "path": "PaperXI/DerivedCentralCharacter69.lean",
+      "sha256": "861257cc1f0b38c19e73ec7fec5cb12d5ee9e3affca53ab38d5287c502d56d0a",
+      "sha256_after": "861257cc1f0b38c19e73ec7fec5cb12d5ee9e3affca53ab38d5287c502d56d0a"
+    },
+    {
+      "path": "PaperXI/DiscrepancyCharacter.lean",
+      "sha256": "cf201fbd9c03f12816213b45d8e418ea5649df147dd993af122f826106f798af",
+      "sha256_after": "cf201fbd9c03f12816213b45d8e418ea5649df147dd993af122f826106f798af"
+    },
+    {
+      "path": "PaperXI/DualCharacterSums.lean",
+      "sha256": "cd4cf6b9b43305d2e09f09566db4519b5821134b6fac03ac8e92c83fad7c0532",
+      "sha256_after": "cd4cf6b9b43305d2e09f09566db4519b5821134b6fac03ac8e92c83fad7c0532"
+    },
+    {
+      "path": "PaperXI/DualityLinear.lean",
+      "sha256": "0f856e352f57db7831276fa70666d08465b1a79f9ac97e0b4a31265892c47e12",
+      "sha256_after": "0f856e352f57db7831276fa70666d08465b1a79f9ac97e0b4a31265892c47e12"
+    },
+    {
+      "path": "PaperXI/DyadicAbstract.lean",
+      "sha256": "1e70f115444ed1310c3bdae48b5dd98530fa9d8f2eae45684430b7cec5e836d0",
+      "sha256_after": "1e70f115444ed1310c3bdae48b5dd98530fa9d8f2eae45684430b7cec5e836d0"
+    },
+    {
+      "path": "PaperXI/DyadicAbstractOrthogonal.lean",
+      "sha256": "84c944337500a19941c2a2a1b839131b3c7ffd8b54f89c118ebb29f3416b811f",
+      "sha256_after": "84c944337500a19941c2a2a1b839131b3c7ffd8b54f89c118ebb29f3416b811f"
+    },
+    {
+      "path": "PaperXI/DyadicAffine.lean",
+      "sha256": "06fd5b5a57b17060abd22a11fb29592fcd53b06aa09388b92314fe2fd23692e3",
+      "sha256_after": "06fd5b5a57b17060abd22a11fb29592fcd53b06aa09388b92314fe2fd23692e3"
+    },
+    {
+      "path": "PaperXI/DyadicBasis.lean",
+      "sha256": "18c632203cbd0c023aa7aaf6fcc10af54acb0271d09db3fa9a38d74308c5546f",
+      "sha256_after": "18c632203cbd0c023aa7aaf6fcc10af54acb0271d09db3fa9a38d74308c5546f"
+    },
+    {
+      "path": "PaperXI/DyadicBasisConsequences.lean",
+      "sha256": "d45fa0f60b8166b49c7962a6afc195f6e7cb92dccabb9ee3103ff488062a4031",
+      "sha256_after": "d45fa0f60b8166b49c7962a6afc195f6e7cb92dccabb9ee3103ff488062a4031"
+    },
+    {
+      "path": "PaperXI/DyadicBasisCounts.lean",
+      "sha256": "2b9d123b889d163bf29be6dfbab3e510195d98591db8098fb4d773a4a05b6093",
+      "sha256_after": "2b9d123b889d163bf29be6dfbab3e510195d98591db8098fb4d773a4a05b6093"
+    },
+    {
+      "path": "PaperXI/DyadicCoordinates.lean",
+      "sha256": "fc1a2a3a6569e264cfddcb51fd16e91c22ff91ed4a741634239798f18cd83004",
+      "sha256_after": "fc1a2a3a6569e264cfddcb51fd16e91c22ff91ed4a741634239798f18cd83004"
+    },
+    {
+      "path": "PaperXI/DyadicCounts.lean",
+      "sha256": "b1155d1f3103b197ed16cea0c4c297e29da3f6e917e6006f486e47727af34b5d",
+      "sha256_after": "b1155d1f3103b197ed16cea0c4c297e29da3f6e917e6006f486e47727af34b5d"
+    },
+    {
+      "path": "PaperXI/DyadicDimension.lean",
+      "sha256": "295c12f1fe30abb310b8e54856cc51fb1f11bee0bd9f7d4258386bd30271944a",
+      "sha256_after": "295c12f1fe30abb310b8e54856cc51fb1f11bee0bd9f7d4258386bd30271944a"
+    },
+    {
+      "path": "PaperXI/DyadicExtensionClass.lean",
+      "sha256": "af6825148cbf10fa7e036416c6b158a32f9be04ed3a83f3767394273839b2656",
+      "sha256_after": "af6825148cbf10fa7e036416c6b158a32f9be04ed3a83f3767394273839b2656"
+    },
+    {
+      "path": "PaperXI/DyadicGauss.lean",
+      "sha256": "634fe67a476f515f627455fa43a1ec870a4ccc66b87867cc5d40ee1227c91dea",
+      "sha256_after": "634fe67a476f515f627455fa43a1ec870a4ccc66b87867cc5d40ee1227c91dea"
+    },
+    {
+      "path": "PaperXI/DyadicHeisenbergLift.lean",
+      "sha256": "916986a499526e1343b2b63906fe133ac8db3cb95e6cbbbe31d6ada8e17229b1",
+      "sha256_after": "916986a499526e1343b2b63906fe133ac8db3cb95e6cbbbe31d6ada8e17229b1"
+    },
+    {
+      "path": "PaperXI/DyadicIsometry.lean",
+      "sha256": "48d9678ba58d442aa451540502f01d5e1fb8a3257e8bdf4d64fef974305c651f",
+      "sha256_after": "48d9678ba58d442aa451540502f01d5e1fb8a3257e8bdf4d64fef974305c651f"
+    },
+    {
+      "path": "PaperXI/DyadicOrthogonal.lean",
+      "sha256": "3ec83d3eeac7e69ef4986a573ba818eb9cfe33282530bb3e8f85d7ed4323d671",
+      "sha256_after": "3ec83d3eeac7e69ef4986a573ba818eb9cfe33282530bb3e8f85d7ed4323d671"
+    },
+    {
+      "path": "PaperXI/DyadicRefinement.lean",
+      "sha256": "4056c45a4a85c4fbaf44d651ce11f83f50656138b52fb6f18d95e9b8eafa01e5",
+      "sha256_after": "4056c45a4a85c4fbaf44d651ce11f83f50656138b52fb6f18d95e9b8eafa01e5"
+    },
+    {
+      "path": "PaperXI/DyadicRefinementCounts.lean",
+      "sha256": "5d9cdc46b7bde9d4f7ceed89b2a7a68ec38f36fee3142300f40b6a8d5301838b",
+      "sha256_after": "5d9cdc46b7bde9d4f7ceed89b2a7a68ec38f36fee3142300f40b6a8d5301838b"
+    },
+    {
+      "path": "PaperXI/DyadicTorsor.lean",
+      "sha256": "da8d7de85105943a07b9492568783dfc1df76d3789bb3444d344259b0ed8bb6b",
+      "sha256_after": "da8d7de85105943a07b9492568783dfc1df76d3789bb3444d344259b0ed8bb6b"
+    },
+    {
+      "path": "PaperXI/DyadicTranslation.lean",
+      "sha256": "098a6b0ee464537aaea2cef020e535b28ba9572b8079134076fdd5ee6fb54969",
+      "sha256_after": "098a6b0ee464537aaea2cef020e535b28ba9572b8079134076fdd5ee6fb54969"
+    },
+    {
+      "path": "PaperXI/ElementaryEnvelope.lean",
+      "sha256": "76c36ba11aabeef9351becc4f99f59db800649c73d1dc0f0ff57d59bc7e5d6c4",
+      "sha256_after": "76c36ba11aabeef9351becc4f99f59db800649c73d1dc0f0ff57d59bc7e5d6c4"
+    },
+    {
+      "path": "PaperXI/ElementaryEnvelopeForm.lean",
+      "sha256": "8bfa652c46358cbe6ee15446b6d435521aeac0f75cc96a605a5fb41b3bf5bc6f",
+      "sha256_after": "8bfa652c46358cbe6ee15446b6d435521aeac0f75cc96a605a5fb41b3bf5bc6f"
+    },
+    {
+      "path": "PaperXI/ElementaryEnvelopeTransport.lean",
+      "sha256": "56b022844ede8e64c96a72cadf7393135d60c5c9601cd457d49f95322e3fcf18",
+      "sha256_after": "56b022844ede8e64c96a72cadf7393135d60c5c9601cd457d49f95322e3fcf18"
+    },
+    {
+      "path": "PaperXI/EquivariantRepresentation113.lean",
+      "sha256": "f1cf8ff3343f2647c0994270f6de5bc3478925a25406ea3a221861807b08b6c9",
+      "sha256_after": "f1cf8ff3343f2647c0994270f6de5bc3478925a25406ea3a221861807b08b6c9"
+    },
+    {
+      "path": "PaperXI/EquivariantSplitting68.lean",
+      "sha256": "561e6ca7bb701f95ce183d25a1b39b3dbf2a5d389924851f78373fa3f52e4460",
+      "sha256_after": "561e6ca7bb701f95ce183d25a1b39b3dbf2a5d389924851f78373fa3f52e4460"
+    },
+    {
+      "path": "PaperXI/FiniteAverage.lean",
+      "sha256": "e960b8793c2a7e76fef815c456c4e61db736706716741679c3d423053722c977",
+      "sha256_after": "e960b8793c2a7e76fef815c456c4e61db736706716741679c3d423053722c977"
+    },
+    {
+      "path": "PaperXI/FiniteBreakAssembly.lean",
+      "sha256": "ecca3693f7733c7ceef597b6e821b111610c82d612fd66abfe754af0e5be434c",
+      "sha256_after": "ecca3693f7733c7ceef597b6e821b111610c82d612fd66abfe754af0e5be434c"
+    },
+    {
+      "path": "PaperXI/FiniteFieldAverage.lean",
+      "sha256": "da2bd3e2ade03fa988a3b50efe5b53ef4ed47f3636c86fc5f6841cc8b868f81d",
+      "sha256_after": "da2bd3e2ade03fa988a3b50efe5b53ef4ed47f3636c86fc5f6841cc8b868f81d"
+    },
+    {
+      "path": "PaperXI/FiniteFieldOrbitCount.lean",
+      "sha256": "624a4a0234ebd63e8062471cb1439ed52dc73ed82e5d8f6400549c16196dde42",
+      "sha256_after": "624a4a0234ebd63e8062471cb1439ed52dc73ed82e5d8f6400549c16196dde42"
+    },
+    {
+      "path": "PaperXI/FiniteFreeCompletion.lean",
+      "sha256": "218a5b9e952143a9e26b36d2bcf93529baca8ae45f986c76903854d7c18aeead",
+      "sha256_after": "218a5b9e952143a9e26b36d2bcf93529baca8ae45f986c76903854d7c18aeead"
+    },
+    {
+      "path": "PaperXI/FiniteFunctionAverage.lean",
+      "sha256": "a7d776b604ef43cade5a813a977a7ce80ebd96a2b7906759e3b9fc89c7420d01",
+      "sha256_after": "a7d776b604ef43cade5a813a977a7ce80ebd96a2b7906759e3b9fc89c7420d01"
+    },
+    {
+      "path": "PaperXI/FiniteIntersectionCriterion108.lean",
+      "sha256": "a428d271392d27755c20bb0b6dac61b71398d4cc6370fe0642c4e5ed41364f51",
+      "sha256_after": "a428d271392d27755c20bb0b6dac61b71398d4cc6370fe0642c4e5ed41364f51"
+    },
+    {
+      "path": "PaperXI/FiniteJointQuotient108.lean",
+      "sha256": "bd7174c5b31be9c6750454626e3e5627651dbea5f5465b49f2f3cbfbedc846df",
+      "sha256_after": "bd7174c5b31be9c6750454626e3e5627651dbea5f5465b49f2f3cbfbedc846df"
+    },
+    {
+      "path": "PaperXI/FiniteOrbitAverage68.lean",
+      "sha256": "41b8b3e87046ef73167fbebd34c7c4a62a6bf13714ff572356c87c64a17b3de6",
+      "sha256_after": "41b8b3e87046ef73167fbebd34c7c4a62a6bf13714ff572356c87c64a17b3de6"
+    },
+    {
+      "path": "PaperXI/FiniteProductDeterminant.lean",
+      "sha256": "07340f6176b2b67b41bba32f65bdb41e2805856a67877d7e70b73585b9c7b556",
+      "sha256_after": "07340f6176b2b67b41bba32f65bdb41e2805856a67877d7e70b73585b9c7b556"
+    },
+    {
+      "path": "PaperXI/FiniteProfileBridge109.lean",
+      "sha256": "d829f6afedc938f83bdb668850c4a684874773efe807983b4ae769844588cf0a",
+      "sha256_after": "d829f6afedc938f83bdb668850c4a684874773efe807983b4ae769844588cf0a"
+    },
+    {
+      "path": "PaperXI/FiniteRepresentation.lean",
+      "sha256": "b9ac153884bbf3b17a2701a8b50ee49c6f936899b7e807fa3a1cae5006e44d47",
+      "sha256_after": "b9ac153884bbf3b17a2701a8b50ee49c6f936899b7e807fa3a1cae5006e44d47"
+    },
+    {
+      "path": "PaperXI/FiniteResidueBaseChange.lean",
+      "sha256": "559f2e07321f7991ab4790ffc84edb044865ea96de4a2c240148b8fb39aea272",
+      "sha256_after": "559f2e07321f7991ab4790ffc84edb044865ea96de4a2c240148b8fb39aea272"
+    },
+    {
+      "path": "PaperXI/FiniteResidueSubgroup.lean",
+      "sha256": "2da76b0ad80ae46f7b05f39967fee2a9247b7c80f1a9e0ef61b0423a026f8a72",
+      "sha256_after": "2da76b0ad80ae46f7b05f39967fee2a9247b7c80f1a9e0ef61b0423a026f8a72"
+    },
+    {
+      "path": "PaperXI/FiniteTameComparison.lean",
+      "sha256": "1c4357da32eaade5be0c88670eaa605f47fbc4269253888bbf9f72509d0e428d",
+      "sha256_after": "1c4357da32eaade5be0c88670eaa605f47fbc4269253888bbf9f72509d0e428d"
+    },
+    {
+      "path": "PaperXI/FiniteTensor.lean",
+      "sha256": "8a628f3f2be9e4cbc308b13abbc71ef858a82cf897523b60554829ed81ac0782",
+      "sha256_after": "8a628f3f2be9e4cbc308b13abbc71ef858a82cf897523b60554829ed81ac0782"
+    },
+    {
+      "path": "PaperXI/FiniteUnramifiedWeil.lean",
+      "sha256": "73d632d598c02e6eced406cf8bd8f48422a3b79634bfb718dea82cc440d29f40",
+      "sha256_after": "73d632d598c02e6eced406cf8bd8f48422a3b79634bfb718dea82cc440d29f40"
+    },
+    {
+      "path": "PaperXI/FixedMoving.lean",
+      "sha256": "c5159f03721e3f1446641781dcf303a90ea160dafb3eed4edac5906238153c67",
+      "sha256_after": "c5159f03721e3f1446641781dcf303a90ea160dafb3eed4edac5906238153c67"
+    },
+    {
+      "path": "PaperXI/FixedMovingSource.lean",
+      "sha256": "2591738676c9f4830f6e41ce811376e7b6b2c17f1afe99cfbf94cffebdb7aa22",
+      "sha256_after": "2591738676c9f4830f6e41ce811376e7b6b2c17f1afe99cfbf94cffebdb7aa22"
+    },
+    {
+      "path": "PaperXI/FourierCovariance.lean",
+      "sha256": "83b273abc08207d3b23d39152863370e2345bc7a04f422578b880b39ffb6bb6c",
+      "sha256_after": "83b273abc08207d3b23d39152863370e2345bc7a04f422578b880b39ffb6bb6c"
+    },
+    {
+      "path": "PaperXI/FourierPackets.lean",
+      "sha256": "3521693ff5ede2869607d8308db0f63ce2cb6a736c5d728fd43d9b18c942cade",
+      "sha256_after": "3521693ff5ede2869607d8308db0f63ce2cb6a736c5d728fd43d9b18c942cade"
+    },
+    {
+      "path": "PaperXI/FourierProjectors.lean",
+      "sha256": "02af62a8c8e5753ef7a695629d44c71db407211d18a6bd6b6a48865ba731de52",
+      "sha256_after": "02af62a8c8e5753ef7a695629d44c71db407211d18a6bd6b6a48865ba731de52"
+    },
+    {
+      "path": "PaperXI/FractionMatrix106.lean",
+      "sha256": "37125ed47f602558238d6c6b2e9ef6abc4f83592ef58525b03697009a9ac54b6",
+      "sha256_after": "37125ed47f602558238d6c6b2e9ef6abc4f83592ef58525b03697009a9ac54b6"
+    },
+    {
+      "path": "PaperXI/FreeLatticeCard110.lean",
+      "sha256": "07d5f21b13996d68c3d71abd71dab1052fd72ae292beba461aee4f571f6bcd08",
+      "sha256_after": "07d5f21b13996d68c3d71abd71dab1052fd72ae292beba461aee4f571f6bcd08"
+    },
+    {
+      "path": "PaperXI/FrobeniusOrbit.lean",
+      "sha256": "7d1f7d09d4d67afe3a6e5721cf265b76d2ff69a13ef63bb6a753133817f2f7c3",
+      "sha256_after": "7d1f7d09d4d67afe3a6e5721cf265b76d2ff69a13ef63bb6a753133817f2f7c3"
+    },
+    {
+      "path": "PaperXI/FrobeniusPeriod.lean",
+      "sha256": "8e34bfa6b4636a8b392bdff1eb6f25eb5c9061f592ae1bff13c3179e48ec14fb",
+      "sha256_after": "8e34bfa6b4636a8b392bdff1eb6f25eb5c9061f592ae1bff13c3179e48ec14fb"
+    },
+    {
+      "path": "PaperXI/FrobeniusPeriodCount.lean",
+      "sha256": "53f45d0eb9fed4c2ad104695c3730de6b59560120f164630b865c30a3ccb0749",
+      "sha256_after": "53f45d0eb9fed4c2ad104695c3730de6b59560120f164630b865c30a3ccb0749"
+    },
+    {
+      "path": "PaperXI/FullBridgeTransport.lean",
+      "sha256": "af018ebd737c4d182525a72c4eddc2561a4ca9a2a228aabd0bac83dae1a9d816",
+      "sha256_after": "af018ebd737c4d182525a72c4eddc2561a4ca9a2a228aabd0bac83dae1a9d816"
+    },
+    {
+      "path": "PaperXI/FullIntertwiningLocus69.lean",
+      "sha256": "d1f43873562d510630801d569413b3ad3b4d659e2b4403e1d74714196488c12a",
+      "sha256_after": "d1f43873562d510630801d569413b3ad3b4d659e2b4403e1d74714196488c12a"
+    },
+    {
+      "path": "PaperXI/FullTypeIntertwining105.lean",
+      "sha256": "77dddac0fa33899fcac3fba052d3a5bf97fd3f7c3e9443409e6fd3be1e7f7be6",
+      "sha256_after": "77dddac0fa33899fcac3fba052d3a5bf97fd3f7c3e9443409e6fd3be1e7f7be6"
+    },
+    {
+      "path": "PaperXI/GallagherTensorIrreducibility58.lean",
+      "sha256": "8bf42d852c9fc0f54c67a1dbdfb96f9df652d86138597dd1db0006bcf90e552b",
+      "sha256_after": "8bf42d852c9fc0f54c67a1dbdfb96f9df652d86138597dd1db0006bcf90e552b"
+    },
+    {
+      "path": "PaperXI/GaussCharacters.lean",
+      "sha256": "f49f317f384804ecff8614197f0acd360d1575046498c320b2027bd7ba16d8ca",
+      "sha256_after": "f49f317f384804ecff8614197f0acd360d1575046498c320b2027bd7ba16d8ca"
+    },
+    {
+      "path": "PaperXI/GaussSums.lean",
+      "sha256": "ace300219a85a3337ec026bb367507f5088f887306c309e17af938fdfca02d02",
+      "sha256_after": "ace300219a85a3337ec026bb367507f5088f887306c309e17af938fdfca02d02"
+    },
+    {
+      "path": "PaperXI/GeneralChain.lean",
+      "sha256": "0e5a7f76765c2e3b753f9db36e3886906a9eac283a0583ebb7f07bcb404e33d7",
+      "sha256_after": "0e5a7f76765c2e3b753f9db36e3886906a9eac283a0583ebb7f07bcb404e33d7"
+    },
+    {
+      "path": "PaperXI/GeneratedIrreducibility.lean",
+      "sha256": "3aca9c09ed2ae98d3df1627466cdadb860be6807be1e7555d2743c1b534bd5b2",
+      "sha256_after": "3aca9c09ed2ae98d3df1627466cdadb860be6807be1e7555d2743c1b534bd5b2"
+    },
+    {
+      "path": "PaperXI/GlobalHeisenbergBridge112.lean",
+      "sha256": "b44f5fc5e576c356e04e33a27cfbcd1d0f70946a32dafba8389de23b83d83998",
+      "sha256_after": "b44f5fc5e576c356e04e33a27cfbcd1d0f70946a32dafba8389de23b83d83998"
+    },
+    {
+      "path": "PaperXI/GluedPacketSections.lean",
+      "sha256": "5bf8047d59226ed80f93c4668b031aedab1df38bd5ee39456a9335f2685372bf",
+      "sha256_after": "5bf8047d59226ed80f93c4668b031aedab1df38bd5ee39456a9335f2685372bf"
+    },
+    {
+      "path": "PaperXI/GraphChordCharacters.lean",
+      "sha256": "037a0bd69fdb62bbe05ce9760a8f4bcf242c6c01d167c45f6d9bf591cf5bcca0",
+      "sha256_after": "037a0bd69fdb62bbe05ce9760a8f4bcf242c6c01d167c45f6d9bf591cf5bcca0"
+    },
+    {
+      "path": "PaperXI/GraphGauge.lean",
+      "sha256": "1750d323d264d4760717c62ab3aa154cbebefcdd24e80cc76ef22d7d8f5a572b",
+      "sha256_after": "1750d323d264d4760717c62ab3aa154cbebefcdd24e80cc76ef22d7d8f5a572b"
+    },
+    {
+      "path": "PaperXI/GraphLoop.lean",
+      "sha256": "f38f6d71925623d713432f41101158265cdfa0733f6bd3242f335f62bf01d198",
+      "sha256_after": "f38f6d71925623d713432f41101158265cdfa0733f6bd3242f335f62bf01d198"
+    },
+    {
+      "path": "PaperXI/GraphLoopRepresentation.lean",
+      "sha256": "8e6bb58b55ba016228d5ae3cd85b19e40ccde0abd116f4a13101a8d8939a4e95",
+      "sha256_after": "8e6bb58b55ba016228d5ae3cd85b19e40ccde0abd116f4a13101a8d8939a4e95"
+    },
+    {
+      "path": "PaperXI/GraphResidual.lean",
+      "sha256": "ffc35ff3cd92cf45144e94c501a36af8567e4bb7531e9dc21eb81401385adbf8",
+      "sha256_after": "ffc35ff3cd92cf45144e94c501a36af8567e4bb7531e9dc21eb81401385adbf8"
+    },
+    {
+      "path": "PaperXI/GraphTransport.lean",
+      "sha256": "72c2feeee0c9f9e98eeed01a1ff511d439bdfdac6c3bdb2732290dcc1f8151fb",
+      "sha256_after": "72c2feeee0c9f9e98eeed01a1ff511d439bdfdac6c3bdb2732290dcc1f8151fb"
+    },
+    {
+      "path": "PaperXI/GraphTree.lean",
+      "sha256": "37a1cea3da4966b2d631d1f44a997095037c88ca15a4b3001a6b8efa607dd486",
+      "sha256_after": "37a1cea3da4966b2d631d1f44a997095037c88ca15a4b3001a6b8efa607dd486"
+    },
+    {
+      "path": "PaperXI/GraphTreePaths.lean",
+      "sha256": "732095eebf2b794f7d31d503a7928bfde9b7d40da777fd5c99b3d1cccd1e2e18",
+      "sha256_after": "732095eebf2b794f7d31d503a7928bfde9b7d40da777fd5c99b3d1cccd1e2e18"
+    },
+    {
+      "path": "PaperXI/GroupFixed.lean",
+      "sha256": "32a4e3c21abaf0e27169d70976a894f79172987de4954913d8fc607fd925e51b",
+      "sha256_after": "32a4e3c21abaf0e27169d70976a894f79172987de4954913d8fc607fd925e51b"
+    },
+    {
+      "path": "PaperXI/HeisenbergCardinality.lean",
+      "sha256": "3325cc5f2651ba031ec6ab41f813ec4f9e63afea875a3e4cac9827997fef3225",
+      "sha256_after": "3325cc5f2651ba031ec6ab41f813ec4f9e63afea875a3e4cac9827997fef3225"
+    },
+    {
+      "path": "PaperXI/HeisenbergCenter.lean",
+      "sha256": "f2e8ae8af020e8557e7b08bb957b7145733776c6b5c83c37218c1e0e184f4966",
+      "sha256_after": "f2e8ae8af020e8557e7b08bb957b7145733776c6b5c83c37218c1e0e184f4966"
+    },
+    {
+      "path": "PaperXI/HeisenbergCharacterProfile111.lean",
+      "sha256": "1b222ac6ed229dac1c3c2682d5340cc880a2699c3c0ca3c9cbc80ae11bcb712e",
+      "sha256_after": "1b222ac6ed229dac1c3c2682d5340cc880a2699c3c0ca3c9cbc80ae11bcb712e"
+    },
+    {
+      "path": "PaperXI/HeisenbergCochain.lean",
+      "sha256": "ba7c5f4ea39d1e68eadd6f852cf159e67a2b0c454eb6083d92f7d48ca9e92f8f",
+      "sha256_after": "ba7c5f4ea39d1e68eadd6f852cf159e67a2b0c454eb6083d92f7d48ca9e92f8f"
+    },
+    {
+      "path": "PaperXI/HeisenbergComparison.lean",
+      "sha256": "545124ccd81c40a4378e2d854940a0ddb3402c6081775d92751fa13fa0a7f96b",
+      "sha256_after": "545124ccd81c40a4378e2d854940a0ddb3402c6081775d92751fa13fa0a7f96b"
+    },
+    {
+      "path": "PaperXI/HeisenbergDimension.lean",
+      "sha256": "08109693bdd53c46678bff188224863dda5f276ce70dee638238a08c28317a02",
+      "sha256_after": "08109693bdd53c46678bff188224863dda5f276ce70dee638238a08c28317a02"
+    },
+    {
+      "path": "PaperXI/HeisenbergFinite.lean",
+      "sha256": "d3703379c8db33d8675a342dc898f778aa75b1599529098f11b2af1df156e553",
+      "sha256_after": "d3703379c8db33d8675a342dc898f778aa75b1599529098f11b2af1df156e553"
+    },
+    {
+      "path": "PaperXI/HeisenbergForm.lean",
+      "sha256": "b9d055bf58ee5326c45c49e9267dcd9b113d6b1d2b3f0f82d5e7cd909890230c",
+      "sha256_after": "b9d055bf58ee5326c45c49e9267dcd9b113d6b1d2b3f0f82d5e7cd909890230c"
+    },
+    {
+      "path": "PaperXI/HeisenbergFrequency.lean",
+      "sha256": "511658b8ac1ca7f93b8002ee2a626418b076f2cd34875bd57bbad47a4deb6b59",
+      "sha256_after": "511658b8ac1ca7f93b8002ee2a626418b076f2cd34875bd57bbad47a4deb6b59"
+    },
+    {
+      "path": "PaperXI/HeisenbergGeometry.lean",
+      "sha256": "df27cc30cbdcf1f4f8ac3ac85c90e2266dcc866bcd81ea3fbdc18d9ac3022c7c",
+      "sha256_after": "df27cc30cbdcf1f4f8ac3ac85c90e2266dcc866bcd81ea3fbdc18d9ac3022c7c"
+    },
+    {
+      "path": "PaperXI/HeisenbergGroup.lean",
+      "sha256": "1a146672c602d8cacb7184a8bf364365676d1766a0ffd7af7a1e1c56652776dd",
+      "sha256_after": "1a146672c602d8cacb7184a8bf364365676d1766a0ffd7af7a1e1c56652776dd"
+    },
+    {
+      "path": "PaperXI/HeisenbergNormalForm.lean",
+      "sha256": "61b84ce5c3a491de98e96f9f6edee89760c3d6516081c9372b8cc2d4cb98c1b2",
+      "sha256_after": "61b84ce5c3a491de98e96f9f6edee89760c3d6516081c9372b8cc2d4cb98c1b2"
+    },
+    {
+      "path": "PaperXI/HeisenbergPrime.lean",
+      "sha256": "5f481efb90ff5aa531e502311d9145cf59b1546638b05905f8dbce01b4be4dc9",
+      "sha256_after": "5f481efb90ff5aa531e502311d9145cf59b1546638b05905f8dbce01b4be4dc9"
+    },
+    {
+      "path": "PaperXI/HeisenbergProjector.lean",
+      "sha256": "8d41365d8376b7d75e5d8bd5fed0875e6d650020b0341126c480b93f5bfe0d6a",
+      "sha256_after": "8d41365d8376b7d75e5d8bd5fed0875e6d650020b0341126c480b93f5bfe0d6a"
+    },
+    {
+      "path": "PaperXI/HeisenbergReduction107.lean",
+      "sha256": "7bb3cef0f423eb861a688bbf662334632a9bfeaf015ddd1b429d554fc2c19934",
+      "sha256_after": "7bb3cef0f423eb861a688bbf662334632a9bfeaf015ddd1b429d554fc2c19934"
+    },
+    {
+      "path": "PaperXI/HeisenbergRepresentation.lean",
+      "sha256": "386317cf254a374627df755dc02465986fc602151303b4e2b3413f2b82b46492",
+      "sha256_after": "386317cf254a374627df755dc02465986fc602151303b4e2b3413f2b82b46492"
+    },
+    {
+      "path": "PaperXI/HeisenbergSelector.lean",
+      "sha256": "89d25c89f133dcf4a56a48864b73092bcf942c81c09adf27fcd7b8f8149c6643",
+      "sha256_after": "89d25c89f133dcf4a56a48864b73092bcf942c81c09adf27fcd7b8f8149c6643"
+    },
+    {
+      "path": "PaperXI/HeisenbergSource.lean",
+      "sha256": "ffb52975ff4f261a1791da759b032fd5c736abf36257053961a5b5b84c963686",
+      "sha256_after": "ffb52975ff4f261a1791da759b032fd5c736abf36257053961a5b5b84c963686"
+    },
+    {
+      "path": "PaperXI/HeisenbergSourceProjector.lean",
+      "sha256": "5e8ee76ad84809af2c219cb594f6ae86e0538557cd45997e05b8df888155396e",
+      "sha256_after": "5e8ee76ad84809af2c219cb594f6ae86e0538557cd45997e05b8df888155396e"
+    },
+    {
+      "path": "PaperXI/HeisenbergTensor.lean",
+      "sha256": "c869c46b15622f6c072689647c34c28046d5f9ff18bbc8191683f0588727d4e7",
+      "sha256_after": "c869c46b15622f6c072689647c34c28046d5f9ff18bbc8191683f0588727d4e7"
+    },
+    {
+      "path": "PaperXI/HeisenbergTensorComparison.lean",
+      "sha256": "cc8aa01b6a54bea28296549299ad41b7873e08c01703c5aca621d700c4469661",
+      "sha256_after": "cc8aa01b6a54bea28296549299ad41b7873e08c01703c5aca621d700c4469661"
+    },
+    {
+      "path": "PaperXI/HeisenbergTensorFactorization.lean",
+      "sha256": "03fec0d85721da724851da3e533aa76b616b5ba39ddfc3fe9a3ab5b513399b16",
+      "sha256_after": "03fec0d85721da724851da3e533aa76b616b5ba39ddfc3fe9a3ab5b513399b16"
+    },
+    {
+      "path": "PaperXI/HeisenbergTrace108.lean",
+      "sha256": "045edb4a7a7672920cc0a4fdfc44e0b7b64d78563fe3cf3c625335b1e09240c8",
+      "sha256_after": "045edb4a7a7672920cc0a4fdfc44e0b7b64d78563fe3cf3c625335b1e09240c8"
+    },
+    {
+      "path": "PaperXI/HeisenbergTransport.lean",
+      "sha256": "7be38801f777c48277b8229987482c3b7e8c656c351a2e5201c7a067740572e2",
+      "sha256_after": "7be38801f777c48277b8229987482c3b7e8c656c351a2e5201c7a067740572e2"
+    },
+    {
+      "path": "PaperXI/HenselianConductorTransport.lean",
+      "sha256": "4195ca7a0238b26ebca438814c59c9712c09d21fd211f8468e3738fadebcb48a",
+      "sha256_after": "4195ca7a0238b26ebca438814c59c9712c09d21fd211f8468e3738fadebcb48a"
+    },
+    {
+      "path": "PaperXI/HenselianFieldLift.lean",
+      "sha256": "af945609f76e7f115f367f158515f7c5053cb2b0290dbc8baf21c20ea5f12e09",
+      "sha256_after": "af945609f76e7f115f367f158515f7c5053cb2b0290dbc8baf21c20ea5f12e09"
+    },
+    {
+      "path": "PaperXI/HenselianGaloisResidue.lean",
+      "sha256": "4a35a55e8f7a231bdd6f1f2affbe1d44e00c6423dea5d53811260120032d96a0",
+      "sha256_after": "4a35a55e8f7a231bdd6f1f2affbe1d44e00c6423dea5d53811260120032d96a0"
+    },
+    {
+      "path": "PaperXI/HenselianLiftTower.lean",
+      "sha256": "3ba24216ac193a2da00a39d6d731e8e750f4d8932c2ea761c52b6de0657f9cc7",
+      "sha256_after": "3ba24216ac193a2da00a39d6d731e8e750f4d8932c2ea761c52b6de0657f9cc7"
+    },
+    {
+      "path": "PaperXI/HenselianResidueLift.lean",
+      "sha256": "52a3d30f9b5773234105b18f548446e88910a055cc08896c493da1c5bed39370",
+      "sha256_after": "52a3d30f9b5773234105b18f548446e88910a055cc08896c493da1c5bed39370"
+    },
+    {
+      "path": "PaperXI/HenselianWeilAttachment.lean",
+      "sha256": "af3f6d521f61881ee03e54dcc204f5911df3f47dc1b0201fa77efd687608ba2d",
+      "sha256_after": "af3f6d521f61881ee03e54dcc204f5911df3f47dc1b0201fa77efd687608ba2d"
+    },
+    {
+      "path": "PaperXI/HolonomyResidual.lean",
+      "sha256": "d3e383de6f107b77fc33648b64a84751caa375bf3e468908ec513f79b1e11d52",
+      "sha256_after": "d3e383de6f107b77fc33648b64a84751caa375bf3e468908ec513f79b1e11d52"
+    },
+    {
+      "path": "PaperXI/HyperbolicDeterminant.lean",
+      "sha256": "36feef061c87d2e39afe6bfc3e8a246b942f70904fff07a77ab5dd5cff6fd275",
+      "sha256_after": "36feef061c87d2e39afe6bfc3e8a246b942f70904fff07a77ab5dd5cff6fd275"
+    },
+    {
+      "path": "PaperXI/HyperbolicPhase.lean",
+      "sha256": "419bca65c3efe41e14cf7793f6d4defd5c05e15201eb00e4161a916f3cb975f6",
+      "sha256_after": "419bca65c3efe41e14cf7793f6d4defd5c05e15201eb00e4161a916f3cb975f6"
+    },
+    {
+      "path": "PaperXI/HyperbolicSpace.lean",
+      "sha256": "1532ea2542009051b6a09e99d9353d460de621615cf408b4dff48af6a072c501",
+      "sha256_after": "1532ea2542009051b6a09e99d9353d460de621615cf408b4dff48af6a072c501"
+    },
+    {
+      "path": "PaperXI/InducedClassification.lean",
+      "sha256": "5700629a23c61b9f8d38d3ca69ba94c5efdaf0c847404c0c162aa3c7e54321a0",
+      "sha256_after": "5700629a23c61b9f8d38d3ca69ba94c5efdaf0c847404c0c162aa3c7e54321a0"
+    },
+    {
+      "path": "PaperXI/InducedCycleInvariants.lean",
+      "sha256": "2faaeb89211dca9d88df443a27ad69ab7e310783d4e07a3ad54d85c3c5bcae1a",
+      "sha256_after": "2faaeb89211dca9d88df443a27ad69ab7e310783d4e07a3ad54d85c3c5bcae1a"
+    },
+    {
+      "path": "PaperXI/InducedDual.lean",
+      "sha256": "e915fa1d7389f923ae824272ca73b059424964f89c7e46b0aa503af596137995",
+      "sha256_after": "e915fa1d7389f923ae824272ca73b059424964f89c7e46b0aa503af596137995"
+    },
+    {
+      "path": "PaperXI/InducedTameProfile.lean",
+      "sha256": "76a61c7e77722f469f734ee21b80e55786a2aec4a1916c23c4dc48a92249d576",
+      "sha256_after": "76a61c7e77722f469f734ee21b80e55786a2aec4a1916c23c4dc48a92249d576"
+    },
+    {
+      "path": "PaperXI/InducedTwist.lean",
+      "sha256": "53e7034ad1f3dacf431f99ae0d0334e94296550244011390bb7f137f09a4ebec",
+      "sha256_after": "53e7034ad1f3dacf431f99ae0d0334e94296550244011390bb7f137f09a4ebec"
+    },
+    {
+      "path": "PaperXI/InducedTypeSpace68.lean",
+      "sha256": "fe12e8899453c20460a4e73b84995d88a3551bb34ad86ab9b31fc3b83a89b409",
+      "sha256_after": "fe12e8899453c20460a4e73b84995d88a3551bb34ad86ab9b31fc3b83a89b409"
+    },
+    {
+      "path": "PaperXI/InductionIrreducibility.lean",
+      "sha256": "b099fd6ad458401e85a83ae0289bec6be2de9575eb7b73c496fafb98d13088ed",
+      "sha256_after": "b099fd6ad458401e85a83ae0289bec6be2de9575eb7b73c496fafb98d13088ed"
+    },
+    {
+      "path": "PaperXI/InertiaFixed.lean",
+      "sha256": "ac85a017c6c2462073de65b7304984cdc44ecebf7b201d52cad8f4a5e916e967",
+      "sha256_after": "ac85a017c6c2462073de65b7304984cdc44ecebf7b201d52cad8f4a5e916e967"
+    },
+    {
+      "path": "PaperXI/InertiaQuotient.lean",
+      "sha256": "6864c2943a2417a4883fae946d64fcb26273f3e590700e9ae16b296e8d5361bf",
+      "sha256_after": "6864c2943a2417a4883fae946d64fcb26273f3e590700e9ae16b296e8d5361bf"
+    },
+    {
+      "path": "PaperXI/IntegerRingComparison.lean",
+      "sha256": "382149600512912093535bbc83e0f1dcd500caa3db84e5340ac368157c74b06d",
+      "sha256_after": "382149600512912093535bbc83e0f1dcd500caa3db84e5340ac368157c74b06d"
+    },
+    {
+      "path": "PaperXI/InteractionPolynomial.lean",
+      "sha256": "e9129207250ae783e05f622a71a16a8654e22680c10c252bdb028abccec69ec2",
+      "sha256_after": "e9129207250ae783e05f622a71a16a8654e22680c10c252bdb028abccec69ec2"
+    },
+    {
+      "path": "PaperXI/IntersectionModel108.lean",
+      "sha256": "8f2f518c8309162145d80c2ae8d403d2c1eed20ac545a995985c18af108d6343",
+      "sha256_after": "8f2f518c8309162145d80c2ae8d403d2c1eed20ac545a995985c18af108d6343"
+    },
+    {
+      "path": "PaperXI/IntertwiningAlong105.lean",
+      "sha256": "e1af42743d7ea4d6cbdbb96cb3d355e1f6502d69367e55041090370ccbea5478",
+      "sha256_after": "e1af42743d7ea4d6cbdbb96cb3d355e1f6502d69367e55041090370ccbea5478"
+    },
+    {
+      "path": "PaperXI/IntertwiningSpace107.lean",
+      "sha256": "2c3ea887cc1868b2c539bf9d466778b39567a4ea10aa245876ba0dfe9bef8aa7",
+      "sha256_after": "2c3ea887cc1868b2c539bf9d466778b39567a4ea10aa245876ba0dfe9bef8aa7"
+    },
+    {
+      "path": "PaperXI/InvariantAssembly.lean",
+      "sha256": "2fb39cacd47c40f2a53037ffb5b416bb5f6311285265e3f57aed422baa40e5b4",
+      "sha256_after": "2fb39cacd47c40f2a53037ffb5b416bb5f6311285265e3f57aed422baa40e5b4"
+    },
+    {
+      "path": "PaperXI/InvariantPolynomial.lean",
+      "sha256": "cd9db934f06df326729d69a24446a44a9b6d00c9e5dbf48c6ff8c666e2b36990",
+      "sha256_after": "cd9db934f06df326729d69a24446a44a9b6d00c9e5dbf48c6ff8c666e2b36990"
+    },
+    {
+      "path": "PaperXI/IsotypicEvaluation.lean",
+      "sha256": "9fa381127f5578659025a1972b5e641f6f3000ff3e6a0d17c4f402b6ec08beaa",
+      "sha256_after": "9fa381127f5578659025a1972b5e641f6f3000ff3e6a0d17c4f402b6ec08beaa"
+    },
+    {
+      "path": "PaperXI/LatticeCongruenceTopology60.lean",
+      "sha256": "2bdb8a0315e6b0015b8c69df7a1ef382ca5455f3976d5d040c507a94e2736fd0",
+      "sha256_after": "2bdb8a0315e6b0015b8c69df7a1ef382ca5455f3976d5d040c507a94e2736fd0"
+    },
+    {
+      "path": "PaperXI/LatticeMatrixTopology60.lean",
+      "sha256": "c924df503533e0221a502da1cdc8e886d4290c90602f3ee33287cdfb9ef98274",
+      "sha256_after": "c924df503533e0221a502da1cdc8e886d4290c90602f3ee33287cdfb9ef98274"
+    },
+    {
+      "path": "PaperXI/LiftedEtale.lean",
+      "sha256": "2fa34a8ba6c429ab131c13111dc85621648e62f7ef6edf662e0367ebbddce8bf",
+      "sha256_after": "2fa34a8ba6c429ab131c13111dc85621648e62f7ef6edf662e0367ebbddce8bf"
+    },
+    {
+      "path": "PaperXI/LiftedFullResidue.lean",
+      "sha256": "88447e2315204103283102ff48fb70a06eb201867cbbeceaaba3f94325b44618",
+      "sha256_after": "88447e2315204103283102ff48fb70a06eb201867cbbeceaaba3f94325b44618"
+    },
+    {
+      "path": "PaperXI/LiftedResidueDegree.lean",
+      "sha256": "d49acefdc58604537e7f2afe7c3ab0f46eba16fb8096a2dc28f1f8a655103bf7",
+      "sha256_after": "d49acefdc58604537e7f2afe7c3ab0f46eba16fb8096a2dc28f1f8a655103bf7"
+    },
+    {
+      "path": "PaperXI/LiftedResidueFrobenius.lean",
+      "sha256": "45e5ccfb6f245b6318a6d628168f8eba77834ea08b554b9f74ba407b49a9f45c",
+      "sha256_after": "45e5ccfb6f245b6318a6d628168f8eba77834ea08b554b9f74ba407b49a9f45c"
+    },
+    {
+      "path": "PaperXI/LiftedValuationFinite.lean",
+      "sha256": "b4d29f529bdede481493a48e735a4998dd0ff3f401796cc652dbc870a82c2b0e",
+      "sha256_after": "b4d29f529bdede481493a48e735a4998dd0ff3f401796cc652dbc870a82c2b0e"
+    },
+    {
+      "path": "PaperXI/LiftedValuationInertia.lean",
+      "sha256": "84e9166787ac68126346acfa087e68e5b5ad325b43fe0b761ac2b001f1ba310b",
+      "sha256_after": "84e9166787ac68126346acfa087e68e5b5ad325b43fe0b761ac2b001f1ba310b"
+    },
+    {
+      "path": "PaperXI/LineCharacter.lean",
+      "sha256": "fe421a06982cd72d4f80a09db6f3ee52a249a6be9ded4bcd4aa927800c4ed007",
+      "sha256_after": "fe421a06982cd72d4f80a09db6f3ee52a249a6be9ded4bcd4aa927800c4ed007"
+    },
+    {
+      "path": "PaperXI/LocalFactorIdentification.lean",
+      "sha256": "3e81e1ce1c7b50d2771432e73d46f02de2a2ce4910e0a3420aa67e6b02a514f3",
+      "sha256_after": "3e81e1ce1c7b50d2771432e73d46f02de2a2ce4910e0a3420aa67e6b02a514f3"
+    },
+    {
+      "path": "PaperXI/LocalFieldResidueExtension.lean",
+      "sha256": "e7438b3803d39699e4ac020c70f4f4d2377d99e32af405cdea45fa2eb1c9cb9e",
+      "sha256_after": "e7438b3803d39699e4ac020c70f4f4d2377d99e32af405cdea45fa2eb1c9cb9e"
+    },
+    {
+      "path": "PaperXI/LocalResidueRank.lean",
+      "sha256": "04aa1ea55d4707f48f22f293dff3a05669d750c0ecaf1dca52bce090c7553fd3",
+      "sha256_after": "04aa1ea55d4707f48f22f293dff3a05669d750c0ecaf1dca52bce090c7553fd3"
+    },
+    {
+      "path": "PaperXI/LocallyFiniteSemisimple.lean",
+      "sha256": "9d51826538fb9c038407e4a3d741ccbb3ad1c1266fc6642f1e29df6b81cefdd8",
+      "sha256_after": "9d51826538fb9c038407e4a3d741ccbb3ad1c1266fc6642f1e29df6b81cefdd8"
+    },
+    {
+      "path": "PaperXI/MonicResidueAlgebra.lean",
+      "sha256": "61e77b723a6fc1939e003a5cfd834cb152674a48112bee181e683903cdccdca5",
+      "sha256_after": "61e77b723a6fc1939e003a5cfd834cb152674a48112bee181e683903cdccdca5"
+    },
+    {
+      "path": "PaperXI/MonodromyAtom.lean",
+      "sha256": "f53d79ddc74c43995955bc45c8bce600d821bb6d118e9426d85e8478c0829bf2",
+      "sha256_after": "f53d79ddc74c43995955bc45c8bce600d821bb6d118e9426d85e8478c0829bf2"
+    },
+    {
+      "path": "PaperXI/MonodromyChain.lean",
+      "sha256": "3cf19949976f59a32001fee38e472b4bf8f9fda9d4d7c67e3819ff2e27ab101c",
+      "sha256_after": "3cf19949976f59a32001fee38e472b4bf8f9fda9d4d7c67e3819ff2e27ab101c"
+    },
+    {
+      "path": "PaperXI/MonomialAction.lean",
+      "sha256": "70169fa35998c99c6d9830b345ee188e42778dace1f244f1181413f956a8961b",
+      "sha256_after": "70169fa35998c99c6d9830b345ee188e42778dace1f244f1181413f956a8961b"
+    },
+    {
+      "path": "PaperXI/MonomialDual.lean",
+      "sha256": "1f8a72858be61f32ca3a9daa195e4e3045e31db32c4be366e1a73c604753e8b8",
+      "sha256_after": "1f8a72858be61f32ca3a9daa195e4e3045e31db32c4be366e1a73c604753e8b8"
+    },
+    {
+      "path": "PaperXI/MonomialInduction.lean",
+      "sha256": "9406f172392d78a75931d9a416f9e701e1dc43b326140a53ab238c582b35813b",
+      "sha256_after": "9406f172392d78a75931d9a416f9e701e1dc43b326140a53ab238c582b35813b"
+    },
+    {
+      "path": "PaperXI/MonomialInductionSubgroup.lean",
+      "sha256": "392f827d63ce2b3a4c1ede29d1d61d70de0f705e596b32f42c617d03a6a96910",
+      "sha256_after": "392f827d63ce2b3a4c1ede29d1d61d70de0f705e596b32f42c617d03a6a96910"
+    },
+    {
+      "path": "PaperXI/MonomialInductionTransitive.lean",
+      "sha256": "371cd6e7cd417a0f86606695b9bfa11c152a0a424eb0bf642fcdcb4a0ac04140",
+      "sha256_after": "371cd6e7cd417a0f86606695b9bfa11c152a0a424eb0bf642fcdcb4a0ac04140"
+    },
+    {
+      "path": "PaperXI/MonomialOrbit.lean",
+      "sha256": "7552a5e8d7825191e603a7e2b8ad25bcf97b785a4fc4d3dd7e48cb7cdc0c1734",
+      "sha256_after": "7552a5e8d7825191e603a7e2b8ad25bcf97b785a4fc4d3dd7e48cb7cdc0c1734"
+    },
+    {
+      "path": "PaperXI/MoritaActualCartan110.lean",
+      "sha256": "dd18d3a60333f0e737ef4ff22c34db295f49460de701a9fddf9fcd3dc22d293a",
+      "sha256_after": "dd18d3a60333f0e737ef4ff22c34db295f49460de701a9fddf9fcd3dc22d293a"
+    },
+    {
+      "path": "PaperXI/MoritaCartanTransport110.lean",
+      "sha256": "61b021d7f9fd0fecaebb1a9dc3c89a7cbe30760ebecf6120c0af691d1e0e0645",
+      "sha256_after": "61b021d7f9fd0fecaebb1a9dc3c89a7cbe30760ebecf6120c0af691d1e0e0645"
+    },
+    {
+      "path": "PaperXI/MoritaCornerRank110.lean",
+      "sha256": "8b3f281926d04dbaa4b40d47b74138cda2b422b7f8c4fd68785b65d37586aed2",
+      "sha256_after": "8b3f281926d04dbaa4b40d47b74138cda2b422b7f8c4fd68785b65d37586aed2"
+    },
+    {
+      "path": "PaperXI/MoritaEndomorphismCoordinates111.lean",
+      "sha256": "d0023761aee69e81f53222a6e334e6ac57122a15fd64ce9017ee0bc0e27663c0",
+      "sha256_after": "d0023761aee69e81f53222a6e334e6ac57122a15fd64ce9017ee0bc0e27663c0"
+    },
+    {
+      "path": "PaperXI/MoritaIndex110.lean",
+      "sha256": "30251babfb354b36cc6f28c150e892b0e244e9046f24d606dd8921245105a9d2",
+      "sha256_after": "30251babfb354b36cc6f28c150e892b0e244e9046f24d606dd8921245105a9d2"
+    },
+    {
+      "path": "PaperXI/MoritaLattice110.lean",
+      "sha256": "abdbc4e8506fb153a12c66728668a5c6ff97d94d2f2655dd1ebf49d43f4008d0",
+      "sha256_after": "abdbc4e8506fb153a12c66728668a5c6ff97d94d2f2655dd1ebf49d43f4008d0"
+    },
+    {
+      "path": "PaperXI/MoritaPairIndex110.lean",
+      "sha256": "1a7eeb3145c18b69770ec5d2b83acd8a4b2d23bb966e4cc47a44655a47472727",
+      "sha256_after": "1a7eeb3145c18b69770ec5d2b83acd8a4b2d23bb966e4cc47a44655a47472727"
+    },
+    {
+      "path": "PaperXI/MoritaQuotient110.lean",
+      "sha256": "33d3a455e6a8a202c2ce041e07c1c48e5d82d632a4f4dd114458be95809369e9",
+      "sha256_after": "33d3a455e6a8a202c2ce041e07c1c48e5d82d632a4f4dd114458be95809369e9"
+    },
+    {
+      "path": "PaperXI/MoritaRadicalDictionary110.lean",
+      "sha256": "caf45f046cafea555ed4871a05c2baece3d153318b1fced87d701d20622f781f",
+      "sha256_after": "caf45f046cafea555ed4871a05c2baece3d153318b1fced87d701d20622f781f"
+    },
+    {
+      "path": "PaperXI/MoritaScalarUpgrade110.lean",
+      "sha256": "0a05325327c85f7a0de2f900d68524b1a168fd2264a2b5d8565ba75c64356291",
+      "sha256_after": "0a05325327c85f7a0de2f900d68524b1a168fd2264a2b5d8565ba75c64356291"
+    },
+    {
+      "path": "PaperXI/MoritaUniformizer110.lean",
+      "sha256": "b8f0b8cf79c2e58d57e03edd7ec29f81f51c91f1a0a837045514ee4ccf1c126e",
+      "sha256_after": "b8f0b8cf79c2e58d57e03edd7ec29f81f51c91f1a0a837045514ee4ccf1c126e"
+    },
+    {
+      "path": "PaperXI/MovingPhase.lean",
+      "sha256": "c01ee25e1c3e1f60b027ae5a5f09f85341892753a59e2eae1257490b80f8ec52",
+      "sha256_after": "c01ee25e1c3e1f60b027ae5a5f09f85341892753a59e2eae1257490b80f8ec52"
+    },
+    {
+      "path": "PaperXI/NormalInertia.lean",
+      "sha256": "bc52e7a907e034f8583c73eb69d3de4b3f0575f0ce1174605d50cce3864ab80a",
+      "sha256_after": "bc52e7a907e034f8583c73eb69d3de4b3f0575f0ce1174605d50cce3864ab80a"
+    },
+    {
+      "path": "PaperXI/NormalizedFrobeniusQuotient.lean",
+      "sha256": "917cfa62d1b914d7d47a3c31f682a52d3338dc040a1606450f1cff71ca075b1f",
+      "sha256_after": "917cfa62d1b914d7d47a3c31f682a52d3338dc040a1606450f1cff71ca075b1f"
+    },
+    {
+      "path": "PaperXI/NormalizerDictionary110.lean",
+      "sha256": "19839adda13ba916ac5dbe60982bf13e65ce22a746ae2b2a63ca3cc54e4fe9e4",
+      "sha256_after": "19839adda13ba916ac5dbe60982bf13e65ce22a746ae2b2a63ca3cc54e4fe9e4"
+    },
+    {
+      "path": "PaperXI/NormalizerExtensionInducing58.lean",
+      "sha256": "e30d543d65b9008eaf4b66affdcd66e745a09db8651881df7678fda5e84c4b79",
+      "sha256_after": "e30d543d65b9008eaf4b66affdcd66e745a09db8651881df7678fda5e84c4b79"
+    },
+    {
+      "path": "PaperXI/NormalizerIntertwining60.lean",
+      "sha256": "5993f730521e96961b4fed40e9a77796d990e2a0cccd720874c20680873c2c7f",
+      "sha256_after": "5993f730521e96961b4fed40e9a77796d990e2a0cccd720874c20680873c2c7f"
+    },
+    {
+      "path": "PaperXI/OddEnvelopeHeisenberg.lean",
+      "sha256": "0ff24e111c1739d834a0e471bac34b82c9da25eb040e12f9cea2f9cf3b1d1465",
+      "sha256_after": "0ff24e111c1739d834a0e471bac34b82c9da25eb040e12f9cea2f9cf3b1d1465"
+    },
+    {
+      "path": "PaperXI/OddPhase.lean",
+      "sha256": "a78d2e7c2db5c75599339479441e4e0b95181ec11ced910642a239377291249c",
+      "sha256_after": "a78d2e7c2db5c75599339479441e4e0b95181ec11ced910642a239377291249c"
+    },
+    {
+      "path": "PaperXI/OddPhaseCertificate.lean",
+      "sha256": "783d84147c4f09cbca432ad799b1e57d9bd47da13f3841e92d4f071d49709f2e",
+      "sha256_after": "783d84147c4f09cbca432ad799b1e57d9bd47da13f3841e92d4f071d49709f2e"
+    },
+    {
+      "path": "PaperXI/OddPhaseSum.lean",
+      "sha256": "d97a3ea60f4bcb92aedcc1ccd4ba6b44c70ccfdf1ab43161b9c4194ad26867d1",
+      "sha256_after": "d97a3ea60f4bcb92aedcc1ccd4ba6b44c70ccfdf1ab43161b9c4194ad26867d1"
+    },
+    {
+      "path": "PaperXI/OddPhaseTransport.lean",
+      "sha256": "97c339e43d2c59d8b62995b29c986d88df5214c3df3ae472fd5249ad2ef9ba19",
+      "sha256_after": "97c339e43d2c59d8b62995b29c986d88df5214c3df3ae472fd5249ad2ef9ba19"
+    },
+    {
+      "path": "PaperXI/OddSymplectic.lean",
+      "sha256": "e1b15050070b85893ab0d094b3ffaf7aaed326673ec11418c39d52487354e063",
+      "sha256_after": "e1b15050070b85893ab0d094b3ffaf7aaed326673ec11418c39d52487354e063"
+    },
+    {
+      "path": "PaperXI/OnePlusIndex110.lean",
+      "sha256": "733e4888e34cb2eec83dd8b0d29ea395d269e9caa209f00d1fb751c61563ef49",
+      "sha256_after": "733e4888e34cb2eec83dd8b0d29ea395d269e9caa209f00d1fb751c61563ef49"
+    },
+    {
+      "path": "PaperXI/OnePlusIntersection110.lean",
+      "sha256": "512e3b7a894d7db7474f8586c4c652dddd45bfd98197f637f7be8e5a8fec3e7e",
+      "sha256_after": "512e3b7a894d7db7474f8586c4c652dddd45bfd98197f637f7be8e5a8fec3e7e"
+    },
+    {
+      "path": "PaperXI/OpenSubgroupSmoothInduction.lean",
+      "sha256": "eec2e1f81ea1ed3ed0161aa0df8518115a4605b351d08127ef4282943d5978f7",
+      "sha256_after": "eec2e1f81ea1ed3ed0161aa0df8518115a4605b351d08127ef4282943d5978f7"
+    },
+    {
+      "path": "PaperXI/OrbitSpan.lean",
+      "sha256": "1c23d6d51d10af04e9788052c0601a726639e8d6938f47b653949b20a8bdd0c3",
+      "sha256_after": "1c23d6d51d10af04e9788052c0601a726639e8d6938f47b653949b20a8bdd0c3"
+    },
+    {
+      "path": "PaperXI/OrthogonalPhase.lean",
+      "sha256": "f822d2a61741660dd23d656ef3748309c17ca6e982ee0b05bb69f6b06e8edeb0",
+      "sha256_after": "f822d2a61741660dd23d656ef3748309c17ca6e982ee0b05bb69f6b06e8edeb0"
+    },
+    {
+      "path": "PaperXI/OrthogonalSummands.lean",
+      "sha256": "fa9f0303b80e64cd56907157d0dc0c86d1f3e34d1ebd579bf0614a9c89116898",
+      "sha256_after": "fa9f0303b80e64cd56907157d0dc0c86d1f3e34d1ebd579bf0614a9c89116898"
+    },
+    {
+      "path": "PaperXI/PacketBasis.lean",
+      "sha256": "c5f5d83a01759c8aa3984c2b11462888159937d7a2fd4c3f407cc7495a5aee45",
+      "sha256_after": "c5f5d83a01759c8aa3984c2b11462888159937d7a2fd4c3f407cc7495a5aee45"
+    },
+    {
+      "path": "PaperXI/PacketCycle.lean",
+      "sha256": "55a96ecf51c156847ccfe2269e6caecfdfb45dbb4792983af8cb809e3a438bc8",
+      "sha256_after": "55a96ecf51c156847ccfe2269e6caecfdfb45dbb4792983af8cb809e3a438bc8"
+    },
+    {
+      "path": "PaperXI/PacketLines.lean",
+      "sha256": "a7c34f355ec41735f4fe274cde83c52d9d91c22db3eabb38d6d7de1c7222a4dd",
+      "sha256_after": "a7c34f355ec41735f4fe274cde83c52d9d91c22db3eabb38d6d7de1c7222a4dd"
+    },
+    {
+      "path": "PaperXI/PacketReturn.lean",
+      "sha256": "54669679788cd0095e0d26b16343de68a5196641db0e60dad21ec97090f52942",
+      "sha256_after": "54669679788cd0095e0d26b16343de68a5196641db0e60dad21ec97090f52942"
+    },
+    {
+      "path": "PaperXI/PacketSupport.lean",
+      "sha256": "3265ba26afef8a86567d0e4ecc83f6448bf3458790ff26d376ae84f7834b78f1",
+      "sha256_after": "3265ba26afef8a86567d0e4ecc83f6448bf3458790ff26d376ae84f7834b78f1"
+    },
+    {
+      "path": "PaperXI/PacketTransport.lean",
+      "sha256": "dc7282e77c935ca61b8807fe87f4fe2fa372d720a28d0a1c8982c6c749e1a910",
+      "sha256_after": "dc7282e77c935ca61b8807fe87f4fe2fa372d720a28d0a1c8982c6c749e1a910"
+    },
+    {
+      "path": "PaperXI/PacketTypeAttachment70.lean",
+      "sha256": "ed82a000e951e6dca19a854165a2e9f92be60a3bcc1ed876f0fae8a9978b8a79",
+      "sha256_after": "ed82a000e951e6dca19a854165a2e9f92be60a3bcc1ed876f0fae8a9978b8a79"
+    },
+    {
+      "path": "PaperXI/PairIndex110.lean",
+      "sha256": "453d18235bd27cd82e48a7cf367e7b3433288906412d7e7154e80b955025408b",
+      "sha256_after": "453d18235bd27cd82e48a7cf367e7b3433288906412d7e7154e80b955025408b"
+    },
+    {
+      "path": "PaperXI/PeriodicLatticeReduction60.lean",
+      "sha256": "f70d40f2ca38dfa0635a4232d830d16dbbdc2f58c4472d1c82c4a25950e93a02",
+      "sha256_after": "f70d40f2ca38dfa0635a4232d830d16dbbdc2f58c4472d1c82c4a25950e93a02"
+    },
+    {
+      "path": "PaperXI/PiPolynomial.lean",
+      "sha256": "3aaecfa5d206cd6d476431f7e9f3f823ec7b57ec488a1edb5d6170a3c973496e",
+      "sha256_after": "3aaecfa5d206cd6d476431f7e9f3f823ec7b57ec488a1edb5d6170a3c973496e"
+    },
+    {
+      "path": "PaperXI/PolynomialAssembly.lean",
+      "sha256": "538480496e4eb1bceb57fd376c890da010064e5ca4d64edc62ceb4394e77663f",
+      "sha256_after": "538480496e4eb1bceb57fd376c890da010064e5ca4d64edc62ceb4394e77663f"
+    },
+    {
+      "path": "PaperXI/PrescribedFieldType70.lean",
+      "sha256": "6cd430fa9358f4bcd875eaede181bed47500c5d2d71f94e4d937f10231a5d88f",
+      "sha256_after": "6cd430fa9358f4bcd875eaede181bed47500c5d2d71f94e4d937f10231a5d88f"
+    },
+    {
+      "path": "PaperXI/PrimitiveCharacterBlock.lean",
+      "sha256": "5950f0f65ec50d3dc6a4c36c40237c087ccc4a4c0eeb35b1fe536e897bcdf6e5",
+      "sha256_after": "5950f0f65ec50d3dc6a4c36c40237c087ccc4a4c0eeb35b1fe536e897bcdf6e5"
+    },
+    {
+      "path": "PaperXI/ProductNormalizerQuotient59.lean",
+      "sha256": "253347996905c91f7605f14539fa7abaf854e23c86fc22008272369cf3bd30bd",
+      "sha256_after": "253347996905c91f7605f14539fa7abaf854e23c86fc22008272369cf3bd30bd"
+    },
+    {
+      "path": "PaperXI/ProjectiveCocycle.lean",
+      "sha256": "d2eb7d728fef4b48932df07f3dc13a003f39995cc477c3728f0677302794dcf2",
+      "sha256_after": "d2eb7d728fef4b48932df07f3dc13a003f39995cc477c3728f0677302794dcf2"
+    },
+    {
+      "path": "PaperXI/ProjectiveHolonomy.lean",
+      "sha256": "dbc14aa36dc916019628345b811c2d1904c4652d23cddbe71792a93751a8db05",
+      "sha256_after": "dbc14aa36dc916019628345b811c2d1904c4652d23cddbe71792a93751a8db05"
+    },
+    {
+      "path": "PaperXI/ProjectorTransport.lean",
+      "sha256": "c88eba65d49511600eaef67165160b9de7d6f1dcb5c6f56476feb8a5259b3592",
+      "sha256_after": "c88eba65d49511600eaef67165160b9de7d6f1dcb5c6f56476feb8a5259b3592"
+    },
+    {
+      "path": "PaperXI/QuotientRepresentation.lean",
+      "sha256": "4439d25c13ba1ce6c73f18c0d67c0a8ce5f96caa0c1befb335168c02a01fffe5",
+      "sha256_after": "4439d25c13ba1ce6c73f18c0d67c0a8ce5f96caa0c1befb335168c02a01fffe5"
+    },
+    {
+      "path": "PaperXI/RadicalOnePlus111.lean",
+      "sha256": "3ebe8185adccd13a0c9d9102e437f22fb910637ef074bfb50331602f7eac41a7",
+      "sha256_after": "3ebe8185adccd13a0c9d9102e437f22fb910637ef074bfb50331602f7eac41a7"
+    },
+    {
+      "path": "PaperXI/RamificationPolyphase.lean",
+      "sha256": "2f34bd694def457221d6f00b874c8b54547dcc95ee249e3afcf34d71b5b64549",
+      "sha256_after": "2f34bd694def457221d6f00b874c8b54547dcc95ee249e3afcf34d71b5b64549"
+    },
+    {
+      "path": "PaperXI/RamificationPolyphaseBaseChange.lean",
+      "sha256": "eb07cacbdaafae8606ca94ef6790ab0e3c7df865ff062943f1757f3ca826daa2",
+      "sha256_after": "eb07cacbdaafae8606ca94ef6790ab0e3c7df865ff062943f1757f3ca826daa2"
+    },
+    {
+      "path": "PaperXI/RamificationPolyphaseDimensions.lean",
+      "sha256": "f38214cac70955d55434afad4ca9162cd9145d6a627a88311444bac1906e871d",
+      "sha256_after": "f38214cac70955d55434afad4ca9162cd9145d6a627a88311444bac1906e871d"
+    },
+    {
+      "path": "PaperXI/RamificationSeparation.lean",
+      "sha256": "f4b0880d3b76829d7b9274fe0f6817a408aa233aed0a8530687b2ec95f7c6094",
+      "sha256_after": "f4b0880d3b76829d7b9274fe0f6817a408aa233aed0a8530687b2ec95f7c6094"
+    },
+    {
+      "path": "PaperXI/RamifiedUnramifiedQuotient.lean",
+      "sha256": "755d457b0f11dfbac94eaee10326fa290bd5b6a331d8883bb8ce26811f00a747",
+      "sha256_after": "755d457b0f11dfbac94eaee10326fa290bd5b6a331d8883bb8ce26811f00a747"
+    },
+    {
+      "path": "PaperXI/RankOneEulerFactor.lean",
+      "sha256": "a512466f456be1c2a7b5c0f49b6b7cfad6bbda69ec1bc75283bb51b8140b95c3",
+      "sha256_after": "a512466f456be1c2a7b5c0f49b6b7cfad6bbda69ec1bc75283bb51b8140b95c3"
+    },
+    {
+      "path": "PaperXI/RankOneSourceCandidate110.lean",
+      "sha256": "7f57ede141636d625efea3d9b67e905b1f34bcd5dd6c475f31a7e2ec2a7b2928",
+      "sha256_after": "7f57ede141636d625efea3d9b67e905b1f34bcd5dd6c475f31a7e2ec2a7b2928"
+    },
+    {
+      "path": "PaperXI/RegularCyclic.lean",
+      "sha256": "2ed6fa5d0f002e4a087b67badeca9c39702efe1de6d6feade2a7eaf34fc5bccf",
+      "sha256_after": "2ed6fa5d0f002e4a087b67badeca9c39702efe1de6d6feade2a7eaf34fc5bccf"
+    },
+    {
+      "path": "PaperXI/RepresentationGraph.lean",
+      "sha256": "5919599a901246a3def38a1fc9ae5480fabe1dc0a2f1c09be274d25317788d6d",
+      "sha256_after": "5919599a901246a3def38a1fc9ae5480fabe1dc0a2f1c09be274d25317788d6d"
+    },
+    {
+      "path": "PaperXI/RepresentationStability.lean",
+      "sha256": "ea48bcbf4e471e1d436ca33befd6c1aa3dcec5b7e765b15b407087b7c26cd33c",
+      "sha256_after": "ea48bcbf4e471e1d436ca33befd6c1aa3dcec5b7e765b15b407087b7c26cd33c"
+    },
+    {
+      "path": "PaperXI/ResidueDegreeBaseChange.lean",
+      "sha256": "c581b1a747917d5c92d930d8b817fd79fb5bf2c3de951682b786377850705bee",
+      "sha256_after": "c581b1a747917d5c92d930d8b817fd79fb5bf2c3de951682b786377850705bee"
+    },
+    {
+      "path": "PaperXI/ResidueExtensionRealization.lean",
+      "sha256": "b24752381c6a6353645a53ffe2613d10e783ecf9086a2cdfb5876dba34bc9ccf",
+      "sha256_after": "b24752381c6a6353645a53ffe2613d10e783ecf9086a2cdfb5876dba34bc9ccf"
+    },
+    {
+      "path": "PaperXI/ResidueFrobeniusAttachment.lean",
+      "sha256": "f8bdcb103727ce29ab4fa9647716c21624920c75aff28d23c3a398cee0f59f7c",
+      "sha256_after": "f8bdcb103727ce29ab4fa9647716c21624920c75aff28d23c3a398cee0f59f7c"
+    },
+    {
+      "path": "PaperXI/ResidueRestriction107.lean",
+      "sha256": "d1008a38fcb166fa8167e9591321de444cc9d86d3ae176b13511e4639d0ab405",
+      "sha256_after": "d1008a38fcb166fa8167e9591321de444cc9d86d3ae176b13511e4639d0ab405"
+    },
+    {
+      "path": "PaperXI/ResidueWeil.lean",
+      "sha256": "1eee4bb854ff6f99731ba944d6c0540ef7595df6fb8fa862ae030132fcd38166",
+      "sha256_after": "1eee4bb854ff6f99731ba944d6c0540ef7595df6fb8fa862ae030132fcd38166"
+    },
+    {
+      "path": "PaperXI/RestrictedHeisenbergBridge.lean",
+      "sha256": "4385767418858294f763e1ef3b8a60700679a6399d58874349e83ce8533e5af6",
+      "sha256_after": "4385767418858294f763e1ef3b8a60700679a6399d58874349e83ce8533e5af6"
+    },
+    {
+      "path": "PaperXI/ScalarCocycle112.lean",
+      "sha256": "351ac3d1e21afeb0a8897f6eea1ba99f83bb63eaeee390eebefa44c1dfbb0f4e",
+      "sha256_after": "351ac3d1e21afeb0a8897f6eea1ba99f83bb63eaeee390eebefa44c1dfbb0f4e"
+    },
+    {
+      "path": "PaperXI/ScalarCovariance.lean",
+      "sha256": "4859f25f802820daa9b4d9f45b627eb9f51c9be6756a872134890a6a94da4e06",
+      "sha256_after": "4859f25f802820daa9b4d9f45b627eb9f51c9be6756a872134890a6a94da4e06"
+    },
+    {
+      "path": "PaperXI/ScalarGluing.lean",
+      "sha256": "f32ed302e2af8ac3b71237f1ac455195516c0932bb67a8d9f2c363d241b8321c",
+      "sha256_after": "f32ed302e2af8ac3b71237f1ac455195516c0932bb67a8d9f2c363d241b8321c"
+    },
+    {
+      "path": "PaperXI/ScalarHolonomy.lean",
+      "sha256": "f3309937e8a28dc3211c81306280c5e8a7c74c5c2cd944bfc884b0ad5e8cdb8a",
+      "sha256_after": "f3309937e8a28dc3211c81306280c5e8a7c74c5c2cd944bfc884b0ad5e8cdb8a"
+    },
+    {
+      "path": "PaperXI/ScalarRepresentation112.lean",
+      "sha256": "f8bad889bfb84cf03242cd2fd13dbd620d15080c126ade4b5f9bbfdb2ae7807c",
+      "sha256_after": "f8bad889bfb84cf03242cd2fd13dbd620d15080c126ade4b5f9bbfdb2ae7807c"
+    },
+    {
+      "path": "PaperXI/SchrodingerConsequences.lean",
+      "sha256": "f0f3bb3edc8a1eeb75ebeb2d70adc089b5e324fb2647841978788425a34c3c19",
+      "sha256_after": "f0f3bb3edc8a1eeb75ebeb2d70adc089b5e324fb2647841978788425a34c3c19"
+    },
+    {
+      "path": "PaperXI/SchrodingerFourier.lean",
+      "sha256": "1c9a3b9a2264e75afda601089ef6b0665e2e1f3533f7146575d747946f361125",
+      "sha256_after": "1c9a3b9a2264e75afda601089ef6b0665e2e1f3533f7146575d747946f361125"
+    },
+    {
+      "path": "PaperXI/SchrodingerIrreducible.lean",
+      "sha256": "b45be66566d924a65606b03dc54678b2bb795070e1099de79205c24a0bff555c",
+      "sha256_after": "b45be66566d924a65606b03dc54678b2bb795070e1099de79205c24a0bff555c"
+    },
+    {
+      "path": "PaperXI/SchrodingerOperator.lean",
+      "sha256": "2d1478c4d0de8e6ea366020e41530e8967ad47f25516f5cd4d8cbb544d08616d",
+      "sha256_after": "2d1478c4d0de8e6ea366020e41530e8967ad47f25516f5cd4d8cbb544d08616d"
+    },
+    {
+      "path": "PaperXI/SchrodingerSeparation.lean",
+      "sha256": "ea554103afc7f9badccc857e5421b5b4749f1bea3df4043f0aae400783cb8b8b",
+      "sha256_after": "ea554103afc7f9badccc857e5421b5b4749f1bea3df4043f0aae400783cb8b8b"
+    },
+    {
+      "path": "PaperXI/SchrodingerTrace.lean",
+      "sha256": "0c523e1824a16155d9072d81a47308e828eef34cdf178595eff2ccbd8dbe7498",
+      "sha256_after": "0c523e1824a16155d9072d81a47308e828eef34cdf178595eff2ccbd8dbe7498"
+    },
+    {
+      "path": "PaperXI/SchrodingerUnitary.lean",
+      "sha256": "90bc68223666d16ea0fd539caf1719dc4d7a73e4774eadd64d5136507b4e40cb",
+      "sha256_after": "90bc68223666d16ea0fd539caf1719dc4d7a73e4774eadd64d5136507b4e40cb"
+    },
+    {
+      "path": "PaperXI/SchrodingerUniversal.lean",
+      "sha256": "3a45fcb361ce2045666670d9fe67cd2b7406dc7840b50f9a9cbe11c00f77c608",
+      "sha256_after": "3a45fcb361ce2045666670d9fe67cd2b7406dc7840b50f9a9cbe11c00f77c608"
+    },
+    {
+      "path": "PaperXI/SchurHom.lean",
+      "sha256": "b86b71d721ec121989b4959337263985da723a313f102af82e8b05a8775c35bf",
+      "sha256_after": "b86b71d721ec121989b4959337263985da723a313f102af82e8b05a8775c35bf"
+    },
+    {
+      "path": "PaperXI/SchurScalar.lean",
+      "sha256": "ab78b7e45ea049accb02eacca96ad12dd74812d23ea41c9186645a9b5700ee92",
+      "sha256_after": "ab78b7e45ea049accb02eacca96ad12dd74812d23ea41c9186645a9b5700ee92"
+    },
+    {
+      "path": "PaperXI/SemisimpleDetection.lean",
+      "sha256": "b2713fc088d1ea21bffebfd8dd05a2b93962db392825add54d953db52b00c8c8",
+      "sha256_after": "b2713fc088d1ea21bffebfd8dd05a2b93962db392825add54d953db52b00c8c8"
+    },
+    {
+      "path": "PaperXI/SemisimpleProjection.lean",
+      "sha256": "dab8a3dd87a59b725c83dd9c32b853b2de9db98afc7461311017ed27ec4b21ea",
+      "sha256_after": "dab8a3dd87a59b725c83dd9c32b853b2de9db98afc7461311017ed27ec4b21ea"
+    },
+    {
+      "path": "PaperXI/SimpleModuleClassification.lean",
+      "sha256": "b28f26a821af96bffc99660b774cfedfbafa942365b515c8a346a771ce3b4bf3",
+      "sha256_after": "b28f26a821af96bffc99660b774cfedfbafa942365b515c8a346a771ce3b4bf3"
+    },
+    {
+      "path": "PaperXI/SingleCandidateComparison.lean",
+      "sha256": "ba3f33e260972d90fef34e25da6ec0986a59fd74b77e54a5e0a8cb58ab87d5e8",
+      "sha256_after": "ba3f33e260972d90fef34e25da6ec0986a59fd74b77e54a5e0a8cb58ab87d5e8"
+    },
+    {
+      "path": "PaperXI/SmithMatrix106.lean",
+      "sha256": "9104a6467adaf608eeb4b3700c5d827828b603184ed83c55516445df5f23a948",
+      "sha256_after": "9104a6467adaf608eeb4b3700c5d827828b603184ed83c55516445df5f23a948"
+    },
+    {
+      "path": "PaperXI/SmoothDegreeQuotient.lean",
+      "sha256": "77138b22ce63047224ba2ad5c14fc85e25acce77ad9ea79b7e3404e4fb684a3d",
+      "sha256_after": "77138b22ce63047224ba2ad5c14fc85e25acce77ad9ea79b7e3404e4fb684a3d"
+    },
+    {
+      "path": "PaperXI/SmoothHomOrbit68.lean",
+      "sha256": "87d24ea9fbb25f0394cace54953a216a8158ddded33b1f0e68f620c6a0e5c2d6",
+      "sha256_after": "87d24ea9fbb25f0394cace54953a216a8158ddded33b1f0e68f620c6a0e5c2d6"
+    },
+    {
+      "path": "PaperXI/SpectralGeometricFrobenius.lean",
+      "sha256": "e437a81f9af9b976a3c272dbb0dbb4824e47f138852a60adbb5dc5ac9236685e",
+      "sha256_after": "e437a81f9af9b976a3c272dbb0dbb4824e47f138852a60adbb5dc5ac9236685e"
+    },
+    {
+      "path": "PaperXI/SpectralLocalField.lean",
+      "sha256": "96cc4d62e4fc37f3550c6800e3715c60d191bf454547ea9a67d4aeae6376f9ab",
+      "sha256_after": "96cc4d62e4fc37f3550c6800e3715c60d191bf454547ea9a67d4aeae6376f9ab"
+    },
+    {
+      "path": "PaperXI/SplitRadical105.lean",
+      "sha256": "bbe4cd3ed2985df636cc326b7fceac83a5c48fec8b393ba3ae4a8da6e7fd5ca7",
+      "sha256_after": "bbe4cd3ed2985df636cc326b7fceac83a5c48fec8b393ba3ae4a8da6e7fd5ca7"
+    },
+    {
+      "path": "PaperXI/SymplecticAssembly.lean",
+      "sha256": "67819fec0a0969ee2375d7ee93287a9f1e91d60e5da87e7a12aee6013e3e0d94",
+      "sha256_after": "67819fec0a0969ee2375d7ee93287a9f1e91d60e5da87e7a12aee6013e3e0d94"
+    },
+    {
+      "path": "PaperXI/SymplecticCentralExtension.lean",
+      "sha256": "b54d1f3d499676466c42f50e7b1fff895c0dd532d855652a51347f5bff12c61d",
+      "sha256_after": "b54d1f3d499676466c42f50e7b1fff895c0dd532d855652a51347f5bff12c61d"
+    },
+    {
+      "path": "PaperXI/SymplecticCoordinates.lean",
+      "sha256": "b9b5ab88baf7b682acac5698d8cd558de3acf406eaec991f76a8b16e63500ecf",
+      "sha256_after": "b9b5ab88baf7b682acac5698d8cd558de3acf406eaec991f76a8b16e63500ecf"
+    },
+    {
+      "path": "PaperXI/SymplecticHeisenbergUniqueness.lean",
+      "sha256": "e54d8758376e52f844dd630abfdd19a6f940709729fabf3449bfa5f755195104",
+      "sha256_after": "e54d8758376e52f844dd630abfdd19a6f940709729fabf3449bfa5f755195104"
+    },
+    {
+      "path": "PaperXI/SymplecticSplit.lean",
+      "sha256": "66521ce6aa9e9ca4cbf9bc05aad9112ad95e36069f2d3d718f214beb6515bc05",
+      "sha256_after": "66521ce6aa9e9ca4cbf9bc05aad9112ad95e36069f2d3d718f214beb6515bc05"
+    },
+    {
+      "path": "PaperXI/TameConductor.lean",
+      "sha256": "808eb443d2a292fc79cd70ce323c369acd62c38e9393ec4c19269dc06d575dcf",
+      "sha256_after": "808eb443d2a292fc79cd70ce323c369acd62c38e9393ec4c19269dc06d575dcf"
+    },
+    {
+      "path": "PaperXI/TameDegree.lean",
+      "sha256": "868e2f79b22a754bc070c23805f852b2c90a71cb802703bea2eaad248f39ad92",
+      "sha256_after": "868e2f79b22a754bc070c23805f852b2c90a71cb802703bea2eaad248f39ad92"
+    },
+    {
+      "path": "PaperXI/TameExponent.lean",
+      "sha256": "738e3f3fe21ccb970422c7dc2b0de7f7780e588ba208153af7e04e70415b767e",
+      "sha256_after": "738e3f3fe21ccb970422c7dc2b0de7f7780e588ba208153af7e04e70415b767e"
+    },
+    {
+      "path": "PaperXI/TameGaussNaturality.lean",
+      "sha256": "85bd64090e77888f06f233d6ea04a3cee2a539e3341988dd95273b8cdf5c1f7b",
+      "sha256_after": "85bd64090e77888f06f233d6ea04a3cee2a539e3341988dd95273b8cdf5c1f7b"
+    },
+    {
+      "path": "PaperXI/TameHomCriterion.lean",
+      "sha256": "d125abe9165991cb809454306c36d0fa17a486c198612b7ddb05b4dd3cb35d35",
+      "sha256_after": "d125abe9165991cb809454306c36d0fa17a486c198612b7ddb05b4dd3cb35d35"
+    },
+    {
+      "path": "PaperXI/TameNorm.lean",
+      "sha256": "249939314ef4f5eff217c783fa013cb8fe51f659337e9f7db4ec9a22d2a11c05",
+      "sha256_after": "249939314ef4f5eff217c783fa013cb8fe51f659337e9f7db4ec9a22d2a11c05"
+    },
+    {
+      "path": "PaperXI/TameNormPacket.lean",
+      "sha256": "d19c32f222a6fd3f565bce086da6baf95a562f7266ec7a0105afefeb54a3a071",
+      "sha256_after": "d19c32f222a6fd3f565bce086da6baf95a562f7266ec7a0105afefeb54a3a071"
+    },
+    {
+      "path": "PaperXI/TameOrbitTransitivity.lean",
+      "sha256": "e2f06470f27d1f2d54ee8573c71fdb9e4dd3a4f5526cf551c225e087f94f7971",
+      "sha256_after": "e2f06470f27d1f2d54ee8573c71fdb9e4dd3a4f5526cf551c225e087f94f7971"
+    },
+    {
+      "path": "PaperXI/TameProjectors.lean",
+      "sha256": "d5881299706cbe60a5cbefc9dc60bb9bdffbc1365228529c181b9a5120b71d8e",
+      "sha256_after": "d5881299706cbe60a5cbefc9dc60bb9bdffbc1365228529c181b9a5120b71d8e"
+    },
+    {
+      "path": "PaperXI/TameTensorInduction.lean",
+      "sha256": "148b5e2d70afcc38a07c5b9fe8167fd690d2f687def771b465c1a8b81fbb799e",
+      "sha256_after": "148b5e2d70afcc38a07c5b9fe8167fd690d2f687def771b465c1a8b81fbb799e"
+    },
+    {
+      "path": "PaperXI/TameTensorOrbits.lean",
+      "sha256": "9485733d69ff7a1333197a690fb0ae38421460f342371510df530db8047753ec",
+      "sha256_after": "9485733d69ff7a1333197a690fb0ae38421460f342371510df530db8047753ec"
+    },
+    {
+      "path": "PaperXI/TameTensorPackets.lean",
+      "sha256": "507e433f56fdae07efb7824aa8823c182dd07364260ea7b9d594f003e2514334",
+      "sha256_after": "507e433f56fdae07efb7824aa8823c182dd07364260ea7b9d594f003e2514334"
+    },
+    {
+      "path": "PaperXI/TameTensorSource.lean",
+      "sha256": "b52fef0aac236edae7a22103dcf267e147fa13606783529fa64e3c4c4e954d3e",
+      "sha256_after": "b52fef0aac236edae7a22103dcf267e147fa13606783529fa64e3c4c4e954d3e"
+    },
+    {
+      "path": "PaperXI/TensorFixed.lean",
+      "sha256": "26c3d415523844b3389e5d7054e76b719d6d67574ac4fda6f67934a3be0c1f41",
+      "sha256_after": "26c3d415523844b3389e5d7054e76b719d6d67574ac4fda6f67934a3be0c1f41"
+    },
+    {
+      "path": "PaperXI/TensorIntertwining107.lean",
+      "sha256": "4bb9b42f6f58022b82ae78cc0fe2d83d0aa6a153c7fc03aed66dd2ba7ea6f095",
+      "sha256_after": "4bb9b42f6f58022b82ae78cc0fe2d83d0aa6a153c7fc03aed66dd2ba7ea6f095"
+    },
+    {
+      "path": "PaperXI/TensorIrreducible.lean",
+      "sha256": "f75b3acfdfeba7e36d31c8d0085caffec072b5c712c4b76f407d8a0b65d5f721",
+      "sha256_after": "f75b3acfdfeba7e36d31c8d0085caffec072b5c712c4b76f407d8a0b65d5f721"
+    },
+    {
+      "path": "PaperXI/TensorPolynomial.lean",
+      "sha256": "45345b4d384aa9e69de8e139f5f1cd75cc18a97728cf3ba6d5d6f53413956ca7",
+      "sha256_after": "45345b4d384aa9e69de8e139f5f1cd75cc18a97728cf3ba6d5d6f53413956ca7"
+    },
+    {
+      "path": "PaperXI/TensorSlices107.lean",
+      "sha256": "0176d323e1f5d380a8aac25c784710e8b877b7d4aca3fa718eb098f4f08b954b",
+      "sha256_after": "0176d323e1f5d380a8aac25c784710e8b877b7d4aca3fa718eb098f4f08b954b"
+    },
+    {
+      "path": "PaperXI/TensorSubspace.lean",
+      "sha256": "e65d7a7aea5e82ccccba7c606a3a314c89834d52f16441aa2d64c184362a5038",
+      "sha256_after": "e65d7a7aea5e82ccccba7c606a3a314c89834d52f16441aa2d64c184362a5038"
+    },
+    {
+      "path": "PaperXI/TensorTypeOperators70.lean",
+      "sha256": "e82f0e46bab6ff2d1096ab07053553ddb6218bf13ff00afc296a84e2af2b270c",
+      "sha256_after": "e82f0e46bab6ff2d1096ab07053553ddb6218bf13ff00afc296a84e2af2b270c"
+    },
+    {
+      "path": "PaperXI/TraceDiscrepancy.lean",
+      "sha256": "0bdba459861ec52105d2a28d2acdd6d4f0f5ac5d7a55cd93ddff6186ed822e15",
+      "sha256_after": "0bdba459861ec52105d2a28d2acdd6d4f0f5ac5d7a55cd93ddff6186ed822e15"
+    },
+    {
+      "path": "PaperXI/TranslationAverage.lean",
+      "sha256": "7b04c80800e59fc6ced892041eb4fe9306e01e08e18e61e79d27c07acefe9d1e",
+      "sha256_after": "7b04c80800e59fc6ced892041eb4fe9306e01e08e18e61e79d27c07acefe9d1e"
+    },
+    {
+      "path": "PaperXI/TwistedAction.lean",
+      "sha256": "97ed5ee03bec3fc432018d895c823299a7cc73ddf65cb1b712417d9948a5eb71",
+      "sha256_after": "97ed5ee03bec3fc432018d895c823299a7cc73ddf65cb1b712417d9948a5eb71"
+    },
+    {
+      "path": "PaperXI/TwistedActionEquivalence.lean",
+      "sha256": "6a14cac5426c7fb2c44d091685da2d07440c4b883f7409f7caff5c2c38919e74",
+      "sha256_after": "6a14cac5426c7fb2c44d091685da2d07440c4b883f7409f7caff5c2c38919e74"
+    },
+    {
+      "path": "PaperXI/TwistedAlgebra.lean",
+      "sha256": "578da8f15a3a094d50dbc2d501fc66ea1c8ad354c2a29fb8acb5fd3f4c7b2020",
+      "sha256_after": "578da8f15a3a094d50dbc2d501fc66ea1c8ad354c2a29fb8acb5fd3f4c7b2020"
+    },
+    {
+      "path": "PaperXI/TwistedMatrix.lean",
+      "sha256": "99153ad911c9dab5fd807658f17f2d4d1583b71edd10538aad5c08bfb601e959",
+      "sha256_after": "99153ad911c9dab5fd807658f17f2d4d1583b71edd10538aad5c08bfb601e959"
+    },
+    {
+      "path": "PaperXI/TwistedModules.lean",
+      "sha256": "75c7bf4253db1b19641a24e2fbeaa7317eac3362bc5c6427038f89481a072edb",
+      "sha256_after": "75c7bf4253db1b19641a24e2fbeaa7317eac3362bc5c6427038f89481a072edb"
+    },
+    {
+      "path": "PaperXI/TwistedRegular.lean",
+      "sha256": "542e57f3ada86dab99247efc614f2e360c4ed62aa6278ac5d318f7cad41242b0",
+      "sha256_after": "542e57f3ada86dab99247efc614f2e360c4ed62aa6278ac5d318f7cad41242b0"
+    },
+    {
+      "path": "PaperXI/TwistedRescaling.lean",
+      "sha256": "1bb12f819e8232e254d6147b5fac209667d032836c4aa02fe72c472015d40e0d",
+      "sha256_after": "1bb12f819e8232e254d6147b5fac209667d032836c4aa02fe72c472015d40e0d"
+    },
+    {
+      "path": "PaperXI/TwistedSimple.lean",
+      "sha256": "f420d05bd41765009035ee02338ae4721a2914e0946fb52c572fcee8ca333c60",
+      "sha256_after": "f420d05bd41765009035ee02338ae4721a2914e0946fb52c572fcee8ca333c60"
+    },
+    {
+      "path": "PaperXI/TypeNormalizerAction.lean",
+      "sha256": "623d5fefcb3b3c856476bbd194fd5a1101347efa5511dbdd0c6a68ffc6e7c2f2",
+      "sha256_after": "623d5fefcb3b3c856476bbd194fd5a1101347efa5511dbdd0c6a68ffc6e7c2f2"
+    },
+    {
+      "path": "PaperXI/TypeNormalizerForm.lean",
+      "sha256": "1f05cc7cd75bdb3f15a7b10c3d2153b865baf51da1f73e0a4fe87998c5d6969c",
+      "sha256_after": "1f05cc7cd75bdb3f15a7b10c3d2153b865baf51da1f73e0a4fe87998c5d6969c"
+    },
+    {
+      "path": "PaperXI/TypeNormalizerPairing.lean",
+      "sha256": "47cff0132a4d65fdb6193671065f95af0c45479300e676253cef05a50957f105",
+      "sha256_after": "47cff0132a4d65fdb6193671065f95af0c45479300e676253cef05a50957f105"
+    },
+    {
+      "path": "PaperXI/TypeProjectiveImplementation.lean",
+      "sha256": "3621d11e4ad48c3a7d4986dc55e21778d7bf926a4a008b6de91a38ccc21db617",
+      "sha256_after": "3621d11e4ad48c3a7d4986dc55e21778d7bf926a4a008b6de91a38ccc21db617"
+    },
+    {
+      "path": "PaperXI/TypeSideDescent.lean",
+      "sha256": "e066d77666e2671d02c454f4bd06e3650750cfcb143a6c4635339d8b6a0adb2f",
+      "sha256_after": "e066d77666e2671d02c454f4bd06e3650750cfcb143a6c4635339d8b6a0adb2f"
+    },
+    {
+      "path": "PaperXI/TypeSideExtension.lean",
+      "sha256": "f00297a9c260398048b04cca886e47dbd0ac912e029104cee4892063e5aab11c",
+      "sha256_after": "f00297a9c260398048b04cca886e47dbd0ac912e029104cee4892063e5aab11c"
+    },
+    {
+      "path": "PaperXI/TypeSideUniqueness.lean",
+      "sha256": "3a4c2a7589f7cccf49eec7161e463a3c6d21f217693a596505efa5d339330a63",
+      "sha256_after": "3a4c2a7589f7cccf49eec7161e463a3c6d21f217693a596505efa5d339330a63"
+    },
+    {
+      "path": "PaperXI/UnramifiedBaseChangeFactor.lean",
+      "sha256": "0f6e188bb24bf02711cdd8d676182d365a8d0fac73456675899fa0f4564a7340",
+      "sha256_after": "0f6e188bb24bf02711cdd8d676182d365a8d0fac73456675899fa0f4564a7340"
+    },
+    {
+      "path": "PaperXI/UnramifiedConductor.lean",
+      "sha256": "1a940bc977e7fb0565338370fce87b395fc254c3cbbc39c220d61eef0a6de682",
+      "sha256_after": "1a940bc977e7fb0565338370fce87b395fc254c3cbbc39c220d61eef0a6de682"
+    },
+    {
+      "path": "PaperXI/UnramifiedConductorZero.lean",
+      "sha256": "35a3f791e30467fdb145456cea233a2a85f3fc669b8cc9a5216db7b5a705f19d",
+      "sha256_after": "35a3f791e30467fdb145456cea233a2a85f3fc669b8cc9a5216db7b5a705f19d"
+    },
+    {
+      "path": "PaperXI/UnramifiedFieldTower.lean",
+      "sha256": "79699a103ad55a1254dbaa1ea632d59bd77ce2f4ac03367b50d40d1b35f287ee",
+      "sha256_after": "79699a103ad55a1254dbaa1ea632d59bd77ce2f4ac03367b50d40d1b35f287ee"
+    },
+    {
+      "path": "PaperXI/UnramifiedLocalFactor.lean",
+      "sha256": "ca0d3e6fba2b3caa2549ac65cd50e4fe66b15dc4cf96c9398531f826b265ebbd",
+      "sha256_after": "ca0d3e6fba2b3caa2549ac65cd50e4fe66b15dc4cf96c9398531f826b265ebbd"
+    },
+    {
+      "path": "PaperXI/UnramifiedPolynomial.lean",
+      "sha256": "2dfea600d7050f62c8adde4b0242ca02748ec7427f610c1876bc40b1d7a2f64b",
+      "sha256_after": "2dfea600d7050f62c8adde4b0242ca02748ec7427f610c1876bc40b1d7a2f64b"
+    },
+    {
+      "path": "PaperXI/UnramifiedValuation.lean",
+      "sha256": "001406e3abfac1991c15f4006373c9a8673cd0e8e16df3d80a9ef6c276a50054",
+      "sha256_after": "001406e3abfac1991c15f4006373c9a8673cd0e8e16df3d80a9ef6c276a50054"
+    },
+    {
+      "path": "PaperXI/ValuationConductor.lean",
+      "sha256": "3040c48c4558f4796813146cac1147f5d7bf87a20ff05cabecf53a37fce73cb0",
+      "sha256_after": "3040c48c4558f4796813146cac1147f5d7bf87a20ff05cabecf53a37fce73cb0"
+    },
+    {
+      "path": "PaperXI/ValuationFixingField.lean",
+      "sha256": "fdaeae5757fb111b416bf264d6b76e43cead77d0d338c4bc16110191bedaeb06",
+      "sha256_after": "fdaeae5757fb111b416bf264d6b76e43cead77d0d338c4bc16110191bedaeb06"
+    },
+    {
+      "path": "PaperXI/ValuationIntegralModel.lean",
+      "sha256": "c126174463d0f9039e8425c76709f0ab71b7babdb8e5ed6b19aa18a6169ffd3c",
+      "sha256_after": "c126174463d0f9039e8425c76709f0ab71b7babdb8e5ed6b19aa18a6169ffd3c"
+    },
+    {
+      "path": "PaperXI/ValuationRamification.lean",
+      "sha256": "92ddb509dc327389c2168f44ddfd5f7e16f4315af16835a54398077fe81146ca",
+      "sha256_after": "92ddb509dc327389c2168f44ddfd5f7e16f4315af16835a54398077fe81146ca"
+    },
+    {
+      "path": "PaperXI/ValuationResidueEmbedding.lean",
+      "sha256": "ee803ae38b207f0084f4fe3d41d3b6348f38ade5e33a9ca430804b2e35a4c98f",
+      "sha256_after": "ee803ae38b207f0084f4fe3d41d3b6348f38ade5e33a9ca430804b2e35a4c98f"
+    },
+    {
+      "path": "PaperXI/ValuationTameEndpoint.lean",
+      "sha256": "613a021b32c397cfc2425e8ee5c9cb796856bc8643069f24fde8b8f634df23d9",
+      "sha256_after": "613a021b32c397cfc2425e8ee5c9cb796856bc8643069f24fde8b8f634df23d9"
+    }
+  ],
+  "output_directory": "evidence",
+  "declared_results": [
+    "evidence/replay_terminal_factored/RESULT.json",
+    "evidence/axioms_selected_release/RESULT.json",
+    "evidence/axioms_terminal/RESULT.json",
+    "evidence/axioms_interface_final/RESULT.json",
+    "evidence/axiom_controls_final/RESULT.json",
+    "evidence/RELEASE_VERIFICATION.json",
+    "evidence/RELEASE_VERIFICATION.md"
+  ],
+  "outputs": [
+    {
+      "path": "evidence/replay_terminal_factored/RESULT.json",
+      "sha256": "922abc1e1df5d20cc8a061a2cb96258706267d2d391e2c672a663c617899e47d",
+      "kind": "result"
+    },
+    {
+      "path": "evidence/axioms_selected_release/RESULT.json",
+      "sha256": "b4c67b3c38ea2c72a83e7db38b3315505454eb41418bc1882c2ef20d0ce5df75",
+      "kind": "result"
+    },
+    {
+      "path": "evidence/axioms_terminal/RESULT.json",
+      "sha256": "8d6034b9d653748d889ad5414947ef286d0b8d160398add9a3e66894c3486c1e",
+      "kind": "result"
+    },
+    {
+      "path": "evidence/axioms_interface_final/RESULT.json",
+      "sha256": "f03849d888ac48d1a603f447e43f4132e6e9e0e0b8fd09e07113d8973c58e776",
+      "kind": "result"
+    },
+    {
+      "path": "evidence/axiom_controls_final/RESULT.json",
+      "sha256": "cfb9ad22dcc18aa0822957ce4b33681d94bc916b5d179e213f3d47ef0d2de5f0",
+      "kind": "result"
+    },
+    {
+      "path": "evidence/RELEASE_VERIFICATION.json",
+      "sha256": "8ecbeac331c617487d230cf7afd8431fa673b1372eb0193fb7a11f993714d0cf",
+      "kind": "result"
+    },
+    {
+      "path": "evidence/RELEASE_VERIFICATION.md",
+      "sha256": "b89f27b59e3c2df8fb12128df7c0bdb8df9dd4d337d1f94a3e818579bd10627d",
+      "kind": "report"
+    }
+  ],
+  "checks": [
+    {
+      "check": "423 selected modules compile and retain catalogue fingerprints",
+      "passed": true
+    },
+    {
+      "check": "All 4342 distinct catalogue names resolve to their recorded owners",
+      "passed": true
+    },
+    {
+      "check": "All owned logical declarations in each scope have only allowed transitive axioms",
+      "passed": true
+    },
+    {
+      "check": "Terminal and interface compile and audit separately",
+      "passed": true
+    },
+    {
+      "check": "All three aggregate imports compile",
+      "passed": true
+    },
+    {
+      "check": "Negative controls reject the hidden custom axiom and absent name",
+      "passed": true
+    },
+    {
+      "check": "Source and audited-object hashes are unchanged",
+      "passed": true
+    },
+    {
+      "check": "Resume uses authenticated current-session fresh objects, no inherited archive objects",
+      "passed": true
+    },
+    {
+      "check": "Terminal-revision resume passed 34 focused controls and a read-only actual-lineage preflight",
+      "passed": true
+    }
+  ],
+  "result": "PASS for the exact formal compilation, catalogue resolution and owning-module axiom assertions above. Mathematical interpretation remains limited to the stated source hypotheses.",
+  "residual_risks": [
+    "The checks certify the formal declarations at their stated hypotheses; an informal-to-formal theorem correspondence requires manuscript review.",
+    "The single-candidate interface uses a supplied admissible candidate and a separating factor system; it supplies no arithmetic existence theorem.",
+    "The release checks do not establish actual automorphic realization, the original kappa normalization, Conjecture 66, or unrestricted local-global correspondence.",
+    "Pinned external mathlib and dependency cache objects are imported rather than rebuilt.",
+    "No fresh independent-checker claim is made."
+  ],
+  "failure_history": [
+    "replay/RESULT.json",
+    "RESOURCE_RESTART.json",
+    "replay_complete/RESULT.json",
+    "replay_terminal_repaired/RESULT.json",
+    "TERMINAL_OOM_RETRY.json",
+    "replay_terminal_synchronous/RESULT.json",
+    "TERMINAL_SYNCHRONOUS_OOM.json",
+    "terminal_repair/",
+    "axiom_pilot/",
+    "axiom_pilot_corrected/",
+    "axioms_selected/",
+    "axioms_selected_final/",
+    "axioms_selected_resolved/",
+    "axioms_selected_complete/"
+  ],
+  "archive_path_mapping": {
+    "original_project_sources": "formalization/",
+    "original_project_evidence": "verification/lean/",
+    "compiled_objects": "omitted; fingerprints retained in source replay and audit receipts",
+    "downloaded_runtime_and_dependencies": "omitted; official pinned bootstrap provided"
+  }
+}

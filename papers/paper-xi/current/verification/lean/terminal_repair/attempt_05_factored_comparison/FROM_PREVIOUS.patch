@@ -1,0 +1,95 @@
+--- candidate04/ActualMonomialLocalGlobal.lean
++++ candidate05/ActualMonomialLocalGlobal.lean
+@@ -322,6 +322,54 @@
+     (fun r => lowerImage R D F (r + 1))
+     (fun r => lowerWeight R D (r + 1)) χ ψ
+ 
++/-- Positive lower images lie in the first lower image. -/
++private theorem lowerImage_succ_le_one (r : ℕ) :
++    lowerImage R D F (r + 1) ≤ lowerImage R D F 1 := by
++  intro g hg
++  obtain ⟨h, rfl⟩ := hg
++  let h1 : lower R D 1 :=
++    RamificationPolyphase.lowerInclusion (R := R) (D := D)
++      (Nat.le_add_left 1 r) h
++  refine ⟨h1, ?_⟩
++  exact (RamificationPolyphase.lift_lowerInclusion (R := R) (D := D)
++    (F := F) (Nat.le_add_left 1 r) h).symm
++
++include hφ hrel hξ htame in
++private theorem actualObserved_eq_coordinates {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ =
++      FiniteTameComparison.fromCoordinates n q j
++        (InducedCycleInvariants.returnScalar (actualDegree R D F) φ hφ n ξ) χ ψ := by
++  exact FiniteTameComparison.observations_eq_coordinates
++    (actualDegree R D F) ι φ hφ n ξ q j hrel hξ
++    (lowerImage R D F 1) (positive_lowerImage_trivial R D F (n := n) ξ htame 0) S
++    (fun r => lowerImage R D F (r + 1))
++    (fun r => lowerWeight R D (r + 1))
++    (fun r _ => lowerImage_succ_le_one R D F r) χ ψ
++
++include htame in
++private theorem actualObserved_swan_eq_standard {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    (((actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).finiteSwan : ℚ) : ℝ) =
++      swan R D F (actualParameter R D F (n := n) ξ) := by
++  change ((packetSwan R D F (n := n) ξ S : ℚ) : ℝ) = _
++  exact packetSwan_eq_standardSwan R D F (n := n) ξ htame S
++
++include hιrange hφ hrel hξ htame in
++private theorem actualObserved_artin_eq_standard {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    (((actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).finiteArtin : ℚ) : ℝ) =
++      artin R D F (actualParameter R D F (n := n) ξ) := by
++  change ((packetArtin R D F ι (n := n) ξ S : ℚ) : ℝ) = _
++  exact packetArtin_eq_standardArtin R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ htame S
++
++private theorem actualObserved_polynomial_eq_actual {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    (actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).localPolynomial =
++      actualLocalPolynomial R D F ι hιrange φ (n := n) ξ q hrel := by
++  exact packetLocalPolynomial_eq_actualLocalPolynomial
++    R D F ι hιrange φ (n := n) ξ q hrel
++
+ include hφ hrel hξ htame in
+ /-- One source-facing theorem: the actual lower filtration supplies the finite
+ packet coordinates, their local polynomial is Frobenius on the actual inertia
+@@ -337,33 +385,10 @@
+       artin R D F (actualParameter R D F (n := n) ξ) ∧
+     (actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).localPolynomial =
+       actualLocalPolynomial R D F ι hιrange φ (n := n) ξ q hrel := by
+-  have hP : ∀ g ∈ lowerImage R D F 1, ∀ v,
+-      actualParameter R D F (n := n) ξ g v = v := by
+-    intro g hg v
+-    obtain ⟨h, rfl⟩ := hg
+-    exact LinearMap.congr_fun (htame h) v
+-  have hJP : ∀ r ∈ S,
+-      lowerImage R D F (r + 1) ≤ lowerImage R D F 1 := by
+-    intro r hr g hg
+-    obtain ⟨h, rfl⟩ := hg
+-    let h1 : lower R D 1 :=
+-      RamificationPolyphase.lowerInclusion (R := R) (D := D)
+-        (Nat.le_add_left 1 r) h
+-    refine ⟨h1, ?_⟩
+-    exact (RamificationPolyphase.lift_lowerInclusion (R := R) (D := D)
+-      (F := F) (Nat.le_add_left 1 r) h).symm
+-  refine ⟨?_, ?_, ?_, ?_⟩
+-  · exact FiniteTameComparison.observations_eq_coordinates
+-      (actualDegree R D F) ι φ hφ n ξ q j hrel hξ
+-      (lowerImage R D F 1) hP S
+-      (fun r => lowerImage R D F (r + 1))
+-      (fun r => lowerWeight R D (r + 1)) hJP χ ψ
+-  · change ((packetSwan R D F (n := n) ξ S : ℚ) : ℝ) = _
+-    exact packetSwan_eq_standardSwan R D F (n := n) ξ htame S
+-  · change ((packetArtin R D F ι (n := n) ξ S : ℚ) : ℝ) = _
+-    exact packetArtin_eq_standardArtin R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ htame S
+-  · exact packetLocalPolynomial_eq_actualLocalPolynomial
+-      R D F ι hιrange φ (n := n) ξ q hrel
++  exact ⟨actualObserved_eq_coordinates R D F ι φ hφ (n := n) ξ q j hrel hξ htame S χ ψ,
++    actualObserved_swan_eq_standard R D F ι φ (n := n) ξ q hrel htame S χ ψ,
++    actualObserved_artin_eq_standard R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ htame S χ ψ,
++    actualObserved_polynomial_eq_actual R D F ι hιrange φ (n := n) ξ q hrel S χ ψ⟩
+ 
+ end ActualTameParameter
+ 

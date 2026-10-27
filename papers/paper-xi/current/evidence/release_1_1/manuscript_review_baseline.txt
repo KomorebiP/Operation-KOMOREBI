@@ -1,0 +1,99 @@
+PAPER XI — FINAL MANUSCRIPT PROOFREADING REVIEW
+Reviewer task: /root/manuscript_review
+Date: 2026-10-18
+Mode: review only under mathbox:proofread-math. No manuscript edits made by this reviewer.
+Baseline reviewed: /workspace/scratch/604befec1954/paperxi_work, reading release 1.0.0 / P11-PUB-B07.
+Line numbers below refer to the starting baseline. Stable labels identify the statements if subsequent edits move them.
+
+OVERALL RESULT
+
+The main realization conjecture, same-candidate conditional comparison, restricted odd/dyadic constructions, transported-marking result, stronger native-marking condition, and original versus enlarged dyadic carrier dimensions are consistently separated. No additional universal arithmetic closure is claimed in the current main statement or reader routes.
+
+One definite, previously missed Markdown-to-LaTeX corruption remains: an approximation superscript B^[j] became an actual footnote. Several local finite-theory formulations also need tightening before an unconditional final proofreading sign-off. These are listed independently from the open arithmetic conjecture. They do not amount to a refutation of the finite theory or require inventing a conjecture proof.
+
+I. MATHEMATICAL/MEANING RISK — RESOLVE OR EXPLICITLY RECORD
+
+1. Moving-phase notation is used outside its declared domain.
+   File: publication/source/traditional/Paper_XI_Traditional_Final.tex:1776–1788.
+   Label: cor:break_phase.
+   The hypothesis says the stabilizer preserves every break packet and is fixed point free on its moving part, but the displayed product uses Phi_p(g,V) and Phi_p(g,V_s). Definition def:odd_phase (around 1303) defines Phi_p only for an operator with no fixed vectors; def:moving_phase (around 1400) separately defines Phi_p^mov.
+   Resolution choices: state this as a product of moving phases, retaining the semisimplicity/direct-complement assumptions needed to form them; or require that the operator have no fixed vectors on every whole summand. The choice is a substantive hypothesis/notation decision, so it must not be silently treated as a uniquely forced typo. The existing proof via prop:odd_multiplicativity supports the fixed-point-free version. The supplied Lean catalog includes BreakOddPhase.product_of_moving_forms and related moving-space results.
+
+2. The type-side additive character is not defined, and its domain matters.
+   File: main manuscript:1144–1163.
+   Section: sec:typeside.
+   The quotient is called a vector space over the residue field, then psi_0(h_theta(x,y))=theta([x,y]) is used to define h_theta. psi_0 appears nowhere else in the main source. If psi_0 is on a nonprime residue field, a single character value does not uniquely determine a residue-field element.
+   Natural explicit convention: fix a nontrivial psi_0:F_p -> mu_p, regard the type quotient as an F_p-space, and define h_theta using that injective character. This aligns its coefficient field with the Galois-side F_p symplectic envelope. If a larger-residue-field form is intended, specify the additional bilinear normalization rather than asserting uniqueness from one character value.
+
+3. Arbitrary cocycles need not literally have a finite central extension with their original values.
+   File: main manuscript:976.
+   Label: thm:twisted_matrix, semisimplicity sentence in its proof.
+   Current sentence invokes Maschke averaging 'after passing to a finite central extension realizing the cocycle' although c:A x A -> C^times is arbitrary. A cocycle with non-root-of-unity values requires a cohomologous normalization before such a literal finite extension can be invoked.
+   The theorem is correct. A short direct proof avoids the unnecessary assertion: for a submodule choose a linear projection P onto it and average u_a P u_a^{-1} over a in A. Projective scalars cancel in conjugation, so the average commutes with all u_a and is an equivariant projection. This establishes semisimplicity. Changing the proof should be documented as a mathematical clarification, not a conversion repair.
+
+4. 'Complete finite invariants' can be read as an incorrect classification claim.
+   File: main manuscript:1809, opening paragraph of sec:boundary.
+   Current wording attributes 'complete finite invariants' to the local polynomial and conductor calculations. For all nontrivial irreducible tame atoms of a fixed rank n>1, these include local polynomial 1 and Artin conductor n, so this pair of invariants does not classify the atom.
+   Minimal wording: replace 'complete finite invariants' with 'explicit finite invariants'. Full packet coordinates separately retain the inertia orbit and closing scalar.
+
+5. The finite tame package proof omits two small edge cases.
+   File: main manuscript:1811–1830.
+   Label: prop:tame_package.
+   (a) The package permits a tame induced atom of any rank, but cites prop:tame_conductor, whose hypothesis is n>1. Add the rank-one case: Artin conductor 0 for trivial inertia and 1 otherwise.
+   (b) Item 6 speaks of a finite Gauss phase for each declared residue character, whereas def:gauss_phase defines a unit phase only for nontrivial multiplicative characters. The Lean guide's E09 discussion explicitly retains the trivial-character exception. Either qualify this item by 'nontrivial' or state separately that G(1,psi)=-1 and the q^{-1/2}-normalized sum has magnitude q^{-1/2}, so it is not the unit phase defined above.
+
+II. DEFINITE CONVERSION AND TYPOGRAPHICAL REPAIRS
+
+6. Approximation index converted to a footnote.
+   File: publication/source/traditional/appendices/odd_tower.tex:256.
+   Current: The field degrees and critical levels of B\footnote{j} are exactly
+   Required: The field degrees and critical levels of \(B^{[j]}\) are exactly
+   Source: evidence/block07/raw_sources/TRACE_ZERO_AS_TOWER166.md:193 literally has B^[j]. The defining equations in the same note and adjoining TeX use B^[j] for the jth approximation. This correction is uniquely forced and preserves the original mathematical token.
+   Cause: Pandoc parsed the inline ^[j] as a Note, not a Superscript. The prior B07 AST check considered Superscript, Link, and Emph nodes and missed this class.
+
+7. Broken compound spacing.
+   File: publication/source/traditional/appendices/dyadic_synthesis.tex:233.
+   Replace 'skipped- degree' with 'skipped-degree'. No mathematical change.
+
+III. OPTIONAL LOCAL CLARIFICATIONS
+
+8. The tensor interaction cycle need not be the minimal inertia-character orbit.
+   File: main manuscript:589–595, cor:gcd_lcm_count.
+   'Each packet has Frobenius orbit depth L' refers to the L labelled coset lines of the induced interaction carrier. The interaction character may have a shorter Frobenius orbit and the induced packet may split further. Prefer 'each induced interaction packet has an L-step coset cycle and dimension L', with a sentence that the minimal character orbit can be shorter. This matches the proof's actual dimension argument and avoids conflating the induced carrier with an irreducible tame atom.
+
+9. Transition indices stop before the final native rank.
+   Files: appendices/odd_character.tex:57–76 and appendices/dyadic_character.tex:152–164.
+   Native b_j is defined for 1<=j<=d. The subsequent gamma_j, b_(j+1), and q_(d-j) transition formulas require j<d. The intended range is evident from the induction, but explicitly prepend 'For 1<=j<d' at the transition definition/bullets to avoid q_0 and b_(d+1) at the boundary.
+
+10. The projective holonomy paragraph presupposes scalar holonomies.
+    File: main manuscript:1680–1686, prop:projective_holonomy.
+    It starts with edge maps defined up to scalar and then refers to 'the two scalar holonomies'. The preceding corollary assumes all based holonomies are scalar. A short reference to that scalar-holonomy setting would make the presupposition explicit. Merely projective edge data do not force loop holonomies to be scalar.
+
+IV. STYLE AND SYNCHRONIZATION
+
+11. The top-right cover motif is still drawn.
+    File: publication/source/traditional/komorebi-publication.sty:78–81, in KomorebiCover. Corresponding styles appear with the other original readers.
+    This is a decorative branch drawn by one Bezier stem plus a foreach leaf loop. The page headers themselves contain text, not a logo. Remove the cover drawing block if honoring the user's no-top-right-logo preference across the coordinated readers. Preserve the remaining typography and monograph profile.
+
+12. Anonymity.
+    The active main author metadata is the release pseudonym 'Komorebi P.'. No legal identity was found in the main text/reader-route source reviewed. Pseudonym metadata is consistent with the known release convention.
+
+13. Current claim synchronization is good at the main boundary.
+    Conjecture 66 asks for one realization witness for each admitted rho with supplied H1–H4. The separate comparison assumes H5 for that same pi and the applicable characterization theorem. The Lean guide explains its broader all-realizers formal binder and points to the pointwise comparison without imposing that stronger binder on the publication conjecture.
+    The odd/dyadic synthesis and main Section 19 retain the tame central-character condition, free-or-compatible noncompact completion, full-character pushout values, and transported versus native marking distinction. Dyadic d=1,2 original quotients remain of dimensions 0 and 2; the new actual inducing carriers are different pairs, with unchanged-candidate recovery. Numerical conductor matching is not promoted to H5, endo-class equality, or adequate capacity for arbitrary hosts.
+    Fresh Lean execution, terminal v0.45 receipt recovery, and missing Block02 editable-source recovery must be reflected in the next revision only if they actually occur. All current historical statements explicitly limit their evidence.
+
+VALIDATION / COVERAGE
+
+- Read README.md, RELEASE_SCOPE.md, CONTINUE_HERE.md, the complete PROGRESS_LEDGER.md, and the two source READMEs.
+- Read the full active traditional main source (starting baseline 2,248 lines), including all 19 sections, the abstract, all main displayed statements/proofs, and the appendix preface.
+- Read both traditional and Lean reader_route.tex files in full.
+- Read all 15 retained raw construction-note proofs that supply the appendices, and targeted corresponding active TeX sections, especially both synthesis notes, trace towers, full-character inductions, markings, rank-two/rank-four recovery, and numerical capacity boundaries.
+- Read the Lean guide's explanatory chapters through Verification lineage/reproducibility and the original-obligation crosswalk/status wording. The 423-module catalog and 40 literal teaching excerpts were not independently proved or compiled in this subtask.
+- Reviewed the B07 conversion/AST/source-map reports. Ran a fresh bounded parser-hazard check on all 15 raw notes with pandoc markdown+tex_math_single_backslash for Note/Subscript/Strikeout/Cite/Image/RawInline hazards. One new Note corruption was found (item 6). The sole extra RawInline hazard, a literal backslash-J set difference in the rank-two note, is already correctly rendered as textbackslash J in active TeX.
+- Scanned active traditional/visual sources for actual footnote commands. Only item 6 occurred. Macro 'footnotesize' in the Lean guide is unrelated.
+- No files under paperxi_work were changed by this reviewer. No fresh Lean/Lake compilation, external theorem audit, or PDF visual sign-off was performed in this subtask. Root owns source edits, mathematical resolution, builds, rendering, final evidence synchronization, and delivery.
+
+Routine edits: none applied (review only).
+Mathematical-token changes: none applied. Item 6 is the uniquely forced source-restoration candidate. Items 1–5 require explicit editorial/mathematical resolution as described.
+Unresolved issues: items 1–5 at the time of this report, pending root integration.

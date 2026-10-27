@@ -1,0 +1,52 @@
+PaperXI.EquivariantRepresentation113.scalarTransport_covariant.{u_1, u_2, u_3, u_4} {G : Type u_1} {P : Type u_2}
+  {A : Type u_3} {V : Type u_4} [Group G] [Group P] [CommGroup A] [AddCommGroup V] [Module ℂ V] (D : Subgroup G)
+  [D.Normal] (θ : ↥D →* ℂˣ) (hinv : PaperXI.TypeSideDescent.Invariant D θ) (q : G →* A) (hker : q.ker = D) (t : A → G)
+  (ht : ∀ (a : A), q (t a) = a) (ht1 : t 1 = 1) (H : Subgroup P) (χ : ↥H →* ℂˣ) (r : P →* A) (hkerP : r.ker = H)
+  (u : A → P) (hu : ∀ (a : A), r (u a) = a) (hu1 : u 1 = 1) (ρ : Representation ℂ P V)
+  (hρ : ∀ (h : ↥H), ρ ↑h = ↑(χ h) • LinearMap.id) (α : G ≃* G) (γ : P ≃* P) (β : A ≃* A)
+  (hq : ∀ (g : G), q (α g) = β (q g)) (hr : ∀ (p : P), r (γ p) = β (r p))
+  (hθ : ∀ (d : ↥D), θ ((PaperXI.ActualScalarLift113.subgroupMap D q hker α β hq) d) = θ d) (U : V ≃ₗ[ℂ] V)
+  (hU : ∀ (p : P) (v : V), U ((ρ p) v) = (ρ (γ p)) (U v)) (s : A → ℂˣ) (hs1 : s 1 = 1)
+  (hc :
+    ∀ (a b : A),
+      PaperXI.ScalarRepresentation112.sectionCocycle D θ q hker t ht a b =
+        s a * s b / s (a * b) * PaperXI.ScalarRepresentation112.sectionCocycle H χ r hkerP u hu a b)
+  (hcov :
+    ∀ (a : A),
+      PaperXI.ActualScalarLift113.actualPhase D θ q hker t ht α a * s (β a) =
+        s a * PaperXI.ActualScalarLift113.actualPhase H χ r hkerP u hu γ a)
+  (g : G) (v : V) :
+  U
+      (((PaperXI.ScalarRepresentation112.scalarTransport D θ hinv q hker t ht ht1 H χ r hkerP u hu hu1 ρ hρ s hs1 hc) g)
+        v) =
+    ((PaperXI.ScalarRepresentation112.scalarTransport D θ hinv q hker t ht ht1 H χ r hkerP u hu hu1 ρ hρ s hs1 hc)
+        (α g))
+      (U v)
+'PaperXI.EquivariantRepresentation113.scalarTransport_covariant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+PaperXI.EquivariantRepresentation113.exists_equivariant_actual_action.{u_1, u_2, u_3, u_4} {G : Type u_1} {P : Type u_2}
+  {A : Type u_3} {V : Type u_4} [Group G] [Group P] [CommGroup A] [AddCommGroup V] [Module ℂ V] (D : Subgroup G)
+  [D.Normal] (θ : ↥D →* ℂˣ) (hinv : PaperXI.TypeSideDescent.Invariant D θ) (q : G →* A) (hker : q.ker = D) (t : A → G)
+  (ht : ∀ (a : A), q (t a) = a) (ht1 : t 1 = 1) (H : Subgroup P) [H.Normal] (χ : ↥H →* ℂˣ)
+  (hχinv : PaperXI.TypeSideDescent.Invariant H χ) (r : P →* A) (hkerP : r.ker = H) (u : A → P)
+  (hu : ∀ (a : A), r (u a) = a) (hu1 : u 1 = 1) (ρ : Representation ℂ P V) [ρ.IsIrreducible]
+  (hρ : ∀ (h : ↥H), ρ ↑h = ↑(χ h) • LinearMap.id) (α : G ≃* G) (γ : P ≃* P) (β : A ≃* A)
+  (hq : ∀ (g : G), q (α g) = β (q g)) (hr : ∀ (p : P), r (γ p) = β (r p))
+  (hθ : ∀ (d : ↥D), θ ((PaperXI.ActualScalarLift113.subgroupMap D q hker α β hq) d) = θ d)
+  (hχ : ∀ (h : ↥H), χ ((PaperXI.ActualScalarLift113.subgroupMap H r hkerP γ β hr) h) = χ h) (U : V ≃ₗ[ℂ] V)
+  (hU : ∀ (p : P) (v : V), U ((ρ p) v) = (ρ (γ p)) (U v)) (n m : ℕ) (hα : α ^ n = 1) (hγ : γ ^ n = 1)
+  (hm : ∀ (a : A), a ^ m = 1) (hcop : n.Coprime m)
+  (hcomm :
+    ∀ (a b : A),
+      PaperXI.ScalarRepresentation112.sectionCocycle D θ q hker t ht a b /
+          PaperXI.ScalarRepresentation112.sectionCocycle D θ q hker t ht b a =
+        PaperXI.ScalarRepresentation112.sectionCocycle H χ r hkerP u hu a b /
+          PaperXI.ScalarRepresentation112.sectionCocycle H χ r hkerP u hu b a) :
+  ∃ Ξ,
+    Ξ.IsIrreducible ∧
+      PaperXI.TypeSideDescent.Contains D θ Ξ ∧
+        (∀ (d : ↥D), Ξ ↑d = ↑(θ d) • LinearMap.id) ∧ ∀ (g : G) (v : V), U ((Ξ g) v) = (Ξ (α g)) (U v)
+'PaperXI.EquivariantRepresentation113.exists_equivariant_actual_action' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

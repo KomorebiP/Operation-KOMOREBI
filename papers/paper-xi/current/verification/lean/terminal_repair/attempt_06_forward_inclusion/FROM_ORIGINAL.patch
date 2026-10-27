@@ -1,0 +1,510 @@
+--- original/ActualMonomialLocalGlobal.lean
++++ candidate06/ActualMonomialLocalGlobal.lean
+@@ -1,6 +1,7 @@
+ import PaperXI.FiniteTameComparison
+ import PaperXI.RamifiedUnramifiedQuotient
+ import PaperXI.ActualUnramifiedBaseChange
++import PaperXI.RamificationPolyphase
+ 
+ /-!
+ # Actual tame-monomial attachment to the local-field ramification calculus
+@@ -19,9 +20,11 @@
+ 
+ open scoped Classical BigOperators Polynomial
+ open Polynomial
++open ValuativeRel
+ open PaperXI.ResidueWeil
+ open PaperXI.CyclicInduced
+ open PaperXI.TameOrbitTransitivity
++open PaperXI.GeneratedIrreducibility
+ open PaperXI.ValuationConductor
+ open PaperXI.ValuationRamification
+ open PaperXI.RamificationPolyphase
+@@ -82,34 +85,35 @@
+     (DegreeIndSpace (actualDegree R D F) n ξ) :=
+   degreeInduced (actualDegree R D F) n ξ
+ 
++include hιrange in
+ /-- The finite cyclic inertia model is required to have exactly the same image
+ as the degree-zero inertia subgroup of the actual pullback. -/
+ theorem fixed_zero_eq_tame_invariants :
+-    fixed R D F (actualParameter R D F n ξ) 0 =
+-      (tameRestriction (actualParameter R D F n ξ) ι).invariants := by
++    fixed R D F (actualParameter R D F (n := n) ξ) 0 =
++      (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants := by
+   rw [fixed_zero]
+-  exact (invariants_eq_of_range_eq (actualParameter R D F n ξ) ι
++  exact (invariants_eq_of_range_eq (actualParameter R D F (n := n) ξ) ι
+     (actualDegree R D F).ker hιrange).symm
+ 
+ /-- The Block 43 projector is literally the projector onto the actual fixed
+ space of the constructed parameter. -/
+ theorem actual_depthProjector_range (i : ℕ) :
+     LinearMap.range (depthProjector (R := R) (D := D) (F := F)
+-      (ρ := actualParameter R D F n ξ) i) =
+-      fixed R D F (actualParameter R D F n ξ) i :=
++      (ρ := actualParameter R D F (n := n) ξ) i) =
++      fixed R D F (actualParameter R D F (n := n) ξ) i :=
+   depthProjector_range (R := R) (D := D) (F := F)
+-    (ρ := actualParameter R D F n ξ) i
++    (ρ := actualParameter R D F (n := n) ξ) i
+ 
+ /-- The actual ramification-detail channel is the newly fixed lower-depth
+ subspace with the preceding coarse component removed. -/
+ theorem actual_detailProjector_range (i : ℕ) :
+     LinearMap.range (detailProjector (R := R) (D := D) (F := F)
+-      (ρ := actualParameter R D F n ξ) i) =
+-      fixed R D F (actualParameter R D F n ξ) (i + 1) ⊓
++      (ρ := actualParameter R D F (n := n) ξ) i) =
++      fixed R D F (actualParameter R D F (n := n) ξ) (i + 1) ⊓
+         LinearMap.ker (depthProjector (R := R) (D := D) (F := F)
+-          (ρ := actualParameter R D F n ξ) i) :=
++          (ρ := actualParameter R D F (n := n) ξ) i) :=
+   detailProjector_range (R := R) (D := D) (F := F)
+-    (ρ := actualParameter R D F n ξ) i
++    (ρ := actualParameter R D F (n := n) ξ) i
+ 
+ /-- Image of an actual lower ramification group in the ramified Weil pullback. -/
+ def lowerImage (i : ℕ) : Subgroup (RamifiedWeil R D F) :=
+@@ -121,26 +125,26 @@
+ 
+ /-- Finite tame Swan expression formed from the actual lower-group images. -/
+ def packetSwan (S : Finset ℕ) : ℚ :=
+-  TameConductor.finiteSwan (actualParameter R D F n ξ) S
++  TameConductor.finiteSwan (actualParameter R D F (n := n) ξ) S
+     (fun r => lowerImage R D F (r + 1))
+     (fun r => lowerWeight R D (r + 1))
+ 
+ /-- Finite tame Artin expression formed from the actual inertia map and actual
+ lower-group images. -/
+ def packetArtin (S : Finset ℕ) : ℚ :=
+-  TameConductor.finiteArtin (actualParameter R D F n ξ) ι S
++  TameConductor.finiteArtin (actualParameter R D F (n := n) ξ) ι S
+     (fun r => lowerImage R D F (r + 1))
+     (fun r => lowerWeight R D (r + 1))
+ 
+-/-- The actual first lower group acts trivially in the declared tame class. -/
++/- The actual first lower group acts trivially in the declared tame class. -/
+ variable (htame : ∀ g : lower R D 1,
+-  actualParameter R D F n ξ (lift R D F 1 g) = 1)
++  actualParameter R D F (n := n) ξ (lift R D F 1 g) = 1)
+ 
+ include htame in
+ /-- Every positive lower-group image acts trivially. -/
+ theorem positive_lowerImage_trivial (r : ℕ) :
+     ∀ g ∈ lowerImage R D F (r + 1), ∀ v,
+-      actualParameter R D F n ξ g v = v := by
++      actualParameter R D F (n := n) ξ g v = v := by
+   intro g hg v
+   obtain ⟨h, rfl⟩ := hg
+   let h1 : lower R D 1 :=
+@@ -157,33 +161,33 @@
+ /-- The packet Swan expression vanishes because it uses the actual positive
+ lower-group images and those act trivially. -/
+ theorem packetSwan_eq_zero (S : Finset ℕ) :
+-    packetSwan R D F n ξ S = 0 := by
++    packetSwan R D F (n := n) ξ S = 0 := by
+   unfold packetSwan TameConductor.finiteSwan
+   apply Finset.sum_eq_zero
+   intro r hr
+   rw [TameConductor.fixedCodimension_zero_of_trivial_on
+-    (actualParameter R D F n ξ) (lowerImage R D F (r + 1))
+-    (positive_lowerImage_trivial R D F n ξ htame r)]
++    (actualParameter R D F (n := n) ξ) (lowerImage R D F (r + 1))
++    (positive_lowerImage_trivial R D F (n := n) ξ htame r)]
+   simp
+ 
+ include htame in
+ /-- The standard lower-numbering Swan conductor of the actual parameter
+ vanishes in the declared tame class. -/
+ theorem standardSwan_eq_zero :
+-    swan R D F (actualParameter R D F n ξ) = 0 :=
+-  tame_swan_zero R D F (actualParameter R D F n ξ) htame
++    swan R D F (actualParameter R D F (n := n) ξ) = 0 :=
++  tame_swan_zero R D F (actualParameter R D F (n := n) ξ) htame
+ 
+ variable [FiniteDimensional ℂ (DegreeIndSpace (actualDegree R D F) n ξ)]
+ 
+-include hφ hrel hξ htame in
++include hιrange hφ hrel hξ htame in
+ /-- The conventional Artin conductor of the actual lower filtration is the
+ packet codimension: zero in the unramified label and `n` otherwise. -/
+ theorem standardArtin_eq_coordinates :
+-    artin R D F (actualParameter R D F n ξ) =
++    artin R D F (actualParameter R D F (n := n) ξ) =
+       if j = 0 then 0 else (n : ℝ) := by
+   unfold artin codimension
+-  rw [standardSwan_eq_zero R D F n ξ htame, add_zero,
+-    fixed_zero_eq_tame_invariants R D F ι hιrange n ξ,
++  rw [standardSwan_eq_zero R D F (n := n) ξ htame, add_zero,
++    fixed_zero_eq_tame_invariants R D F ι hιrange (n := n) ξ,
+     InducedCycleInvariants.dimension (actualDegree R D F) φ hφ n ξ,
+     InducedTameProfile.invariant_dimension (actualDegree R D F) ι φ hφ n ξ
+       q j hrel hξ]
+@@ -193,99 +197,101 @@
+ /-- The finite packet Artin expression built from the actual lower-group images
+ has the same coordinate value. -/
+ theorem packetArtin_eq_coordinates (S : Finset ℕ) :
+-    packetArtin R D F ι n ξ S = if j = 0 then 0 else (n : ℚ) := by
+-  unfold packetArtin TameConductor.finiteArtin
+-  rw [packetSwan_eq_zero R D F n ξ htame S,
++    packetArtin R D F ι (n := n) ξ S = if j = 0 then 0 else (n : ℚ) := by
++  change (Module.finrank ℂ (DegreeIndSpace (actualDegree R D F) n ξ) : ℚ) -
++      (Module.finrank ℂ (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants : ℚ) +
++      packetSwan R D F (n := n) ξ S = _
++  rw [packetSwan_eq_zero R D F (n := n) ξ htame S,
+     InducedCycleInvariants.dimension (actualDegree R D F) φ hφ n ξ,
+     InducedTameProfile.invariant_dimension (actualDegree R D F) ι φ hφ n ξ
+       q j hrel hξ]
+   split_ifs <;> simp
+ 
+-include hφ hrel hξ htame in
++include hιrange hφ hrel hξ htame in
+ /-- In the tame monomial class the finite packet expression is literally the
+ standard lower-numbering Artin conductor after scalar extension to `ℝ`. -/
+ theorem packetArtin_eq_standardArtin (S : Finset ℕ) :
+-    ((packetArtin R D F ι n ξ S : ℚ) : ℝ) =
+-      artin R D F (actualParameter R D F n ξ) := by
+-  rw [packetArtin_eq_coordinates R D F ι φ hφ n ξ q j hrel hξ htame S,
+-    standardArtin_eq_coordinates R D F ι hιrange φ hφ n ξ q j hrel hξ htame]
++    ((packetArtin R D F ι (n := n) ξ S : ℚ) : ℝ) =
++      artin R D F (actualParameter R D F (n := n) ξ) := by
++  rw [packetArtin_eq_coordinates R D F ι φ hφ (n := n) ξ q j hrel hξ htame S,
++    standardArtin_eq_coordinates R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ htame]
+   split_ifs <;> simp
+ 
+ include htame in
+ /-- The finite packet Swan expression and the standard Swan conductor agree. -/
+ theorem packetSwan_eq_standardSwan (S : Finset ℕ) :
+-    ((packetSwan R D F n ξ S : ℚ) : ℝ) =
+-      swan R D F (actualParameter R D F n ξ) := by
+-  rw [packetSwan_eq_zero R D F n ξ htame S,
+-    standardSwan_eq_zero R D F n ξ htame]
++    ((packetSwan R D F (n := n) ξ S : ℚ) : ℝ) =
++      swan R D F (actualParameter R D F (n := n) ξ) := by
++  rw [packetSwan_eq_zero R D F (n := n) ξ htame S,
++    standardSwan_eq_zero R D F (n := n) ξ htame]
+   simp
+ 
+ /-- Equality of the finite cyclic invariant space with the actual zeroth lower
+ fixed space, packaged as a linear equivalence for Frobenius transport. -/
+ def tameInvariantsEquivFixedZero :
+-    (tameRestriction (actualParameter R D F n ξ) ι).invariants ≃ₗ[ℂ]
+-      fixed R D F (actualParameter R D F n ξ) 0 :=
++    (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants ≃ₗ[ℂ]
++      fixed R D F (actualParameter R D F (n := n) ξ) 0 :=
+   LinearEquiv.ofEq _ _
+-    (fixed_zero_eq_tame_invariants R D F ι hιrange n ξ).symm
++    (fixed_zero_eq_tame_invariants R D F ι hιrange (n := n) ξ).symm
+ 
+ /-- Frobenius on the actual inertia-fixed space, obtained by transporting the
+ literal induced Frobenius operator through the proved fixed-space equality. -/
+ def actualFixedFrobenius :
+-    Module.End ℂ (fixed R D F (actualParameter R D F n ξ) 0) :=
+-  (tameInvariantsEquivFixedZero R D F ι hιrange n ξ).conj
++    Module.End ℂ (fixed R D F (actualParameter R D F (n := n) ξ) 0) :=
++  (tameInvariantsEquivFixedZero R D F ι hιrange (n := n) ξ).conj
+     (InvariantPolynomial.fixedFrobenius
+-      (tameRestriction (actualParameter R D F n ξ) ι)
+-      (actionEquiv (actualParameter R D F n ξ) φ) q
+-      (geometric_relation (actualParameter R D F n ξ) ι φ q hrel)).toLinearMap
++      (tameRestriction (actualParameter R D F (n := n) ξ) ι)
++      (actionEquiv (actualParameter R D F (n := n) ξ) φ) q
++      (geometric_relation (actualParameter R D F (n := n) ξ) ι φ q hrel)).toLinearMap
+ 
+ /-- The standard local polynomial on the actual inertia-fixed space. -/
+ def actualLocalPolynomial : ℂ[X] :=
+   InvariantPolynomial.operatorPolynomial
+-    (actualFixedFrobenius R D F ι hιrange φ n ξ q hrel)
++    (actualFixedFrobenius R D F ι hιrange φ (n := n) ξ q hrel)
+ 
+ /-- The finite packet local polynomial is the polynomial of Frobenius on the
+ actual zeroth lower fixed space. -/
+ theorem packetLocalPolynomial_eq_actualLocalPolynomial :
+     InvariantPolynomial.localPolynomial
+-      (tameRestriction (actualParameter R D F n ξ) ι)
+-      (actionEquiv (actualParameter R D F n ξ) φ) q
+-      (geometric_relation (actualParameter R D F n ξ) ι φ q hrel) =
+-      actualLocalPolynomial R D F ι hιrange φ n ξ q hrel := by
++      (tameRestriction (actualParameter R D F (n := n) ξ) ι)
++      (actionEquiv (actualParameter R D F (n := n) ξ) φ) q
++      (geometric_relation (actualParameter R D F (n := n) ξ) ι φ q hrel) =
++      actualLocalPolynomial R D F ι hιrange φ (n := n) ξ q hrel := by
+   change InvariantPolynomial.operatorPolynomial
+       (InvariantPolynomial.fixedFrobenius
+-        (tameRestriction (actualParameter R D F n ξ) ι)
+-        (actionEquiv (actualParameter R D F n ξ) φ) q
+-        (geometric_relation (actualParameter R D F n ξ) ι φ q hrel)).toLinearMap =
++        (tameRestriction (actualParameter R D F (n := n) ξ) ι)
++        (actionEquiv (actualParameter R D F (n := n) ξ) φ) q
++        (geometric_relation (actualParameter R D F (n := n) ξ) ι φ q hrel)).toLinearMap =
+     InvariantPolynomial.operatorPolynomial
+-      ((tameInvariantsEquivFixedZero R D F ι hιrange n ξ).conj
++      ((tameInvariantsEquivFixedZero R D F ι hιrange (n := n) ξ).conj
+         (InvariantPolynomial.fixedFrobenius
+-          (tameRestriction (actualParameter R D F n ξ) ι)
+-          (actionEquiv (actualParameter R D F n ξ) φ) q
+-          (geometric_relation (actualParameter R D F n ξ) ι φ q hrel)).toLinearMap)
++          (tameRestriction (actualParameter R D F (n := n) ξ) ι)
++          (actionEquiv (actualParameter R D F (n := n) ξ) φ) q
++          (geometric_relation (actualParameter R D F (n := n) ξ) ι φ q hrel)).toLinearMap)
+   exact (InvariantPolynomial.operatorPolynomial_conj
+-    (tameInvariantsEquivFixedZero R D F ι hιrange n ξ)
++    (tameInvariantsEquivFixedZero R D F ι hιrange (n := n) ξ)
+     (InvariantPolynomial.fixedFrobenius
+-      (tameRestriction (actualParameter R D F n ξ) ι)
+-      (actionEquiv (actualParameter R D F n ξ) φ) q
+-      (geometric_relation (actualParameter R D F n ξ) ι φ q hrel)).toLinearMap).symm
+-
+-include hφ hrel hξ in
++      (tameRestriction (actualParameter R D F (n := n) ξ) ι)
++      (actionEquiv (actualParameter R D F (n := n) ξ) φ) q
++      (geometric_relation (actualParameter R D F (n := n) ξ) ι φ q hrel)).toLinearMap).symm
++
++include hιrange hφ hrel hξ in
+ /-- Triviality on the actual inertia kernel is equivalent to the zero inertia
+ label of the induced tame packet. -/
+ theorem inertia_le_kernel_iff_label_zero :
+-    (actualDegree R D F).ker ≤ (actualParameter R D F n ξ).ker ↔ j = 0 := by
++    (actualDegree R D F).ker ≤ (actualParameter R D F (n := n) ξ).ker ↔ j = 0 := by
+   constructor
+   · intro hI
+     have hkerTop : Representation.invariants
+-        ((actualParameter R D F n ξ).comp (actualDegree R D F).ker.subtype) = ⊤ :=
++        ((actualParameter R D F (n := n) ξ).comp (actualDegree R D F).ker.subtype) = ⊤ :=
+       (NormalInertia.fixed_top_iff_le_kernel
+-        (actualParameter R D F n ξ) (actualDegree R D F).ker).2 hI
++        (actualParameter R D F (n := n) ξ) (actualDegree R D F).ker).2 hI
+     have hfiniteTop :
+-        (tameRestriction (actualParameter R D F n ξ) ι).invariants = ⊤ :=
+-      (invariants_eq_of_range_eq (actualParameter R D F n ξ) ι
++        (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants = ⊤ :=
++      (invariants_eq_of_range_eq (actualParameter R D F (n := n) ξ) ι
+         (actualDegree R D F).ker hιrange).trans hkerTop
+     have htopdim : Module.finrank ℂ
+-        (tameRestriction (actualParameter R D F n ξ) ι).invariants =
++        (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants =
+         Module.finrank ℂ (DegreeIndSpace (actualDegree R D F) n ξ) :=
+       (LinearEquiv.ofTop _ hfiniteTop).finrank_eq
+     have hdim := InducedTameProfile.invariant_dimension
+@@ -293,19 +299,19 @@
+     rw [htopdim, InducedCycleInvariants.dimension (actualDegree R D F) φ hφ n ξ] at hdim
+     by_contra hj
+     rw [if_neg hj] at hdim
+-    exact (NeZero.ne n) hdim.symm
++    exact (NeZero.ne n) hdim
+   · intro hj
+     have hfiniteTop :
+-        (tameRestriction (actualParameter R D F n ξ) ι).invariants = ⊤ := by
++        (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants = ⊤ := by
+       simpa [hj] using InducedTameProfile.inertia_invariants
+         (actualDegree R D F) ι φ hφ n ξ q j hrel hξ
+     have hkerTop : Representation.invariants
+-        ((actualParameter R D F n ξ).comp (actualDegree R D F).ker.subtype) = ⊤ := by
+-      rw [← invariants_eq_of_range_eq (actualParameter R D F n ξ) ι
++        ((actualParameter R D F (n := n) ξ).comp (actualDegree R D F).ker.subtype) = ⊤ := by
++      rw [← invariants_eq_of_range_eq (actualParameter R D F (n := n) ξ) ι
+         (actualDegree R D F).ker hιrange]
+       exact hfiniteTop
+     exact (NormalInertia.fixed_top_iff_le_kernel
+-      (actualParameter R D F n ξ) (actualDegree R D F).ker).1 hkerTop
++      (actualParameter R D F (n := n) ξ) (actualDegree R D F).ker).1 hkerTop
+ 
+ /-- The actual finite packet record, using the literal lower-group images and
+ lower-numbering weights rather than a supplied abstract filtration. -/
+@@ -316,48 +322,73 @@
+     (fun r => lowerImage R D F (r + 1))
+     (fun r => lowerWeight R D (r + 1)) χ ψ
+ 
++/-- Positive lower images lie in the first lower image. -/
++private theorem lowerImage_succ_le_one (r : ℕ) :
++    lowerImage R D F (r + 1) ≤ lowerImage R D F 1 := by
++  intro g hg
++  obtain ⟨h, rfl⟩ := hg
++  let h1 : lower R D 1 :=
++    RamificationPolyphase.lowerInclusion (R := R) (D := D)
++      (Nat.le_add_left 1 r) h
++  refine ⟨h1, ?_⟩
++  exact (RamificationPolyphase.lift_lowerInclusion (R := R) (D := D)
++    (F := F) (Nat.le_add_left 1 r) h)
++
++include hφ hrel hξ htame in
++private theorem actualObserved_eq_coordinates {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ =
++      FiniteTameComparison.fromCoordinates n q j
++        (InducedCycleInvariants.returnScalar (actualDegree R D F) φ hφ n ξ) χ ψ := by
++  exact FiniteTameComparison.observations_eq_coordinates
++    (actualDegree R D F) ι φ hφ n ξ q j hrel hξ
++    (lowerImage R D F 1) (positive_lowerImage_trivial R D F (n := n) ξ htame 0) S
++    (fun r => lowerImage R D F (r + 1))
++    (fun r => lowerWeight R D (r + 1))
++    (fun r _ => lowerImage_succ_le_one R D F r) χ ψ
++
++include htame in
++private theorem actualObserved_swan_eq_standard {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    (((actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).finiteSwan : ℚ) : ℝ) =
++      swan R D F (actualParameter R D F (n := n) ξ) := by
++  change ((packetSwan R D F (n := n) ξ S : ℚ) : ℝ) = _
++  exact packetSwan_eq_standardSwan R D F (n := n) ξ htame S
++
++include hιrange hφ hrel hξ htame in
++private theorem actualObserved_artin_eq_standard {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    (((actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).finiteArtin : ℚ) : ℝ) =
++      artin R D F (actualParameter R D F (n := n) ξ) := by
++  change ((packetArtin R D F ι (n := n) ξ S : ℚ) : ℝ) = _
++  exact packetArtin_eq_standardArtin R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ htame S
++
++private theorem actualObserved_polynomial_eq_actual {k : Type*} [Field k] [Fintype k]
++    (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
++    (actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).localPolynomial =
++      actualLocalPolynomial R D F ι hιrange φ (n := n) ξ q hrel := by
++  exact packetLocalPolynomial_eq_actualLocalPolynomial
++    R D F ι hιrange φ (n := n) ξ q hrel
++
+ include hφ hrel hξ htame in
+ /-- One source-facing theorem: the actual lower filtration supplies the finite
+ packet coordinates, their local polynomial is Frobenius on the actual inertia
+ fixed space, and the packet conductors equal the standard lower-numbering sums. -/
+ theorem actual_comparison_package {k : Type*} [Field k] [Fintype k]
+     (S : Finset ℕ) (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) :
+-    actualObserved R D F ι φ n ξ q hrel S χ ψ =
++    actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ =
+       FiniteTameComparison.fromCoordinates n q j
+         (InducedCycleInvariants.returnScalar (actualDegree R D F) φ hφ n ξ) χ ψ ∧
+-    (((actualObserved R D F ι φ n ξ q hrel S χ ψ).finiteSwan : ℚ) : ℝ) =
+-      swan R D F (actualParameter R D F n ξ) ∧
+-    (((actualObserved R D F ι φ n ξ q hrel S χ ψ).finiteArtin : ℚ) : ℝ) =
+-      artin R D F (actualParameter R D F n ξ) ∧
+-    (actualObserved R D F ι φ n ξ q hrel S χ ψ).localPolynomial =
+-      actualLocalPolynomial R D F ι hιrange φ n ξ q hrel := by
+-  have hP : ∀ g ∈ lowerImage R D F 1, ∀ v,
+-      actualParameter R D F n ξ g v = v := by
+-    intro g hg v
+-    obtain ⟨h, rfl⟩ := hg
+-    exact LinearMap.congr_fun (htame h) v
+-  have hJP : ∀ r ∈ S,
+-      lowerImage R D F (r + 1) ≤ lowerImage R D F 1 := by
+-    intro r hr g hg
+-    obtain ⟨h, rfl⟩ := hg
+-    let h1 : lower R D 1 :=
+-      RamificationPolyphase.lowerInclusion (R := R) (D := D)
+-        (Nat.le_add_left 1 r) h
+-    refine ⟨h1, ?_⟩
+-    exact (RamificationPolyphase.lift_lowerInclusion (R := R) (D := D)
+-      (F := F) (Nat.le_add_left 1 r) h).symm
+-  refine ⟨?_, ?_, ?_, ?_⟩
+-  · exact FiniteTameComparison.observations_eq_coordinates
+-      (actualDegree R D F) ι φ hφ n ξ q j hrel hξ
+-      (lowerImage R D F 1) hP S
+-      (fun r => lowerImage R D F (r + 1))
+-      (fun r => lowerWeight R D (r + 1)) hJP χ ψ
+-  · change ((packetSwan R D F n ξ S : ℚ) : ℝ) = _
+-    exact packetSwan_eq_standardSwan R D F n ξ htame S
+-  · change ((packetArtin R D F ι n ξ S : ℚ) : ℝ) = _
+-    exact packetArtin_eq_standardArtin R D F ι hιrange φ hφ n ξ q j hrel hξ htame S
+-  · exact packetLocalPolynomial_eq_actualLocalPolynomial
+-      R D F ι hιrange φ n ξ q hrel
++    (((actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).finiteSwan : ℚ) : ℝ) =
++      swan R D F (actualParameter R D F (n := n) ξ) ∧
++    (((actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).finiteArtin : ℚ) : ℝ) =
++      artin R D F (actualParameter R D F (n := n) ξ) ∧
++    (actualObserved R D F ι φ (n := n) ξ q hrel S χ ψ).localPolynomial =
++      actualLocalPolynomial R D F ι hιrange φ (n := n) ξ q hrel := by
++  exact ⟨actualObserved_eq_coordinates R D F ι φ hφ (n := n) ξ q j hrel hξ htame S χ ψ,
++    actualObserved_swan_eq_standard R D F ι φ (n := n) ξ q hrel htame S χ ψ,
++    actualObserved_artin_eq_standard R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ htame S χ ψ,
++    actualObserved_polynomial_eq_actual R D F ι hιrange φ (n := n) ξ q hrel S χ ψ⟩
+ 
+ end ActualTameParameter
+ 
+@@ -396,19 +427,20 @@
+   RamifiedUnramifiedQuotient.descendRepresentation
+     (residue R D) F K s hF
+     (degreeInduced (degree (residue R D) F) n ξ)
+-    ((inertia_le_kernel_iff_label_zero R D F ι hιrange φ hφ n ξ q j hrel hξ).2 hj)
++    ((inertia_le_kernel_iff_label_zero R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ).2 hj)
+ 
+ /-- Pulling the descended parameter back recovers the constructed ramified
+ parameter literally. -/
+ theorem descendedParameter_comp_degreeModelMap (hj : j = 0) :
+-    (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj).comp
++    (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj).comp
+       (RamifiedUnramifiedQuotient.degreeModelMap (residue R D) F K s) =
+     degreeInduced (degree (residue R D) F) n ξ :=
+   RamifiedUnramifiedQuotient.descendRepresentation_comp_degreeModelMap
+     (residue R D) F K s hF
+     (degreeInduced (degree (residue R D) F) n ξ)
+-    ((inertia_le_kernel_iff_label_zero R D F ι hιrange φ hφ n ξ q j hrel hξ).2 hj)
+-
++    ((inertia_le_kernel_iff_label_zero R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ).2 hj)
++
++include hιrange hφ hrel hξ hF in
+ /-- The actual monomial parameter descends to the inertia-free model exactly in
+ the zero inertia-label case. -/
+ theorem exists_unramified_descent_iff :
+@@ -424,17 +456,23 @@
+     have hker : (degree (residue R D) F).ker ≤
+         (degreeInduced (degree (residue R D) F) n ξ).ker := by
+       simpa only [RamifiedUnramifiedQuotient.Inertia,
+-        RamifiedUnramifiedQuotient.pullbackDegreeRepresentation] using
++        RamifiedUnramifiedQuotient.pullbackDegreeRepresentation, hσ] using
+         (show RamifiedUnramifiedQuotient.Inertia (residue R D) F ≤
+           (σ.comp (RamifiedUnramifiedQuotient.degreeModelMap
+             (residue R D) F K s)).ker from hI)
+-    exact (inertia_le_kernel_iff_label_zero R D F ι hιrange φ hφ n ξ q j hrel hξ).1
+-      (by simpa [hσ] using hker)
++    exact (inertia_le_kernel_iff_label_zero R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ).1
++      hker
+   · intro hj
+-    exact ⟨descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj,
+-      descendedParameter_comp_degreeModelMap R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj⟩
++    exact ⟨descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj,
++      descendedParameter_comp_degreeModelMap R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj⟩
+ 
+ variable (t : Type*) [Field t] [Algebra s t] [FiniteDimensional s t]
++
++noncomputable local instance : Algebra 𝓀[UnramifiedFieldTower.LowerField K s] t :=
++  UnramifiedFieldTower.residueTowerAlgebra K s t
++
++noncomputable local instance : FiniteDimensional 𝓀[UnramifiedFieldTower.LowerField K s] t :=
++  UnramifiedFieldTower.residueTowerFinite K s t
+ 
+ /-- Actual unramified field-tower restriction of the descended monomial
+ parameter agrees with the Block 40 degree-dilation polynomial. -/
+@@ -442,13 +480,13 @@
+     FiniteUnramifiedWeil.frobeniusPolynomial
+       (UnramifiedFieldTower.LowerField K s) t
+       (UnramifiedFieldTower.restrictRepresentation K s t
+-        (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj)) =
++        (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj)) =
+     FiniteUnramifiedWeil.frobeniusPolynomial K s
+       (FiniteUnramifiedWeil.baseChangeRepresentation K s
+         (Module.finrank s t)
+-        (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj)) :=
++        (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj)) :=
+   ActualUnramifiedBaseChange.frobeniusPolynomial_eq_modelBaseChange K s t
+-    (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj)
++    (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj)
+ 
+ /-- The corresponding Euler factors agree under the actual unramified field
+ tower and the internal monomial degree dilation. -/
+@@ -456,13 +494,13 @@
+     FiniteUnramifiedWeil.unramifiedLocalFactor
+       (UnramifiedFieldTower.LowerField K s) t
+       (UnramifiedFieldTower.restrictRepresentation K s t
+-        (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj)) =
++        (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj)) =
+     FiniteUnramifiedWeil.unramifiedLocalFactor K s
+       (FiniteUnramifiedWeil.baseChangeRepresentation K s
+         (Module.finrank s t)
+-        (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj)) :=
++        (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj)) :=
+   ActualUnramifiedBaseChange.localFactor_eq_modelBaseChange K s t
+-    (descendedParameter R D F ι hιrange φ hφ n ξ q j hrel hξ K s hF hj)
++    (descendedParameter R D F ι hιrange φ hφ (n := n) ξ q j hrel hξ K s hF hj)
+ 
+ end DescentToCurrentLocalField
+ 

@@ -1,0 +1,17 @@
+structure Data where
+  source : ∀ i, CentralExtension.Datum Z (H i) (A i)
+  target : ∀ i, CentralExtension.Datum Z (H' i) (A' i)
+  lift : ∀ i, H i ≃* H' i
+  lift_center : ∀ i z, lift i ((source i).i z) = (target i).i z
+  centralCharacter : Z →* ℂˣ
+  nondegenerate : ∀ i, CocycleCommutator.radical
+    (CentralExtension.scalarCocycle (source i) centralCharacter) = ⊥
+  leftAction : ∀ i, Representation ℂ (H i) (V i)
+  rightAction : ∀ i, Representation ℂ (H' i) (W i)
+  leftIrreducible : ∀ i, Representation.IsIrreducible (leftAction i)
+  rightIrreducible : ∀ i, Representation.IsIrreducible (rightAction i)
+  leftCentral : ∀ i z, leftAction i ((source i).i z) =
+    (centralCharacter z : ℂ) • LinearMap.id
+  rightCentral : ∀ i z, rightAction i ((target i).i z) =
+    (centralCharacter z : ℂ) • LinearMap.id
+

@@ -1,0 +1,17 @@
+theorem source {Atom Test Value : Type*} {atomIso : Setoid Atom}
+    (sys : FactorSystem atomIso Test Value)
+    (allowed : Set (Diagram X ℂ (CentralProduct.Group d.source ⋊[α] C)
+      (PiTensorProduct ℂ Wb)))
+    (ha : targetDiagram a0 ∈ allowed)
+    (realization : Realization sys allowed)
+    (reference : Atom) (href : sys.admissible reference)
+    (expected : Test → Value)
+    (hfactors : ∀ b, realization.realizes ⟨targetDiagram a0, ha⟩ b →
+      sys.profile b = expected)
+    (hreference : sys.profile reference = expected) :
+    (∃ F : X → PiTensorProduct ℂ Vb ≃ₗ[ℂ] PiTensorProduct ℂ Wb,
+      F a0.root = FiniteBreakAssembly.tensorBridge d ∧
+      EdgeCompatible a0.sourceEdge a0.targetEdge F ∧
+      RepresentationGraph.Intertwines a0.left a0.right F) ∧
+    Nonempty (Representation.Equiv (leftSections a0) (rightSections a0)) ∧
+      candidate sys realization ⟨targetDiagram a0, ha⟩ = Quotient.mk atomIso reference :=

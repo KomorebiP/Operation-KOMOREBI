@@ -1,0 +1,275 @@
+# Paper XI, Block 166: direct trace-zero realization in arbitrary odd-prime length
+
+Date: 2026-10-05. Parent: `Paper_XI_Base_Realization165.zip`.
+
+This is a synthesis of the independently reviewed proofs in this continuation.
+The result is an ordinary mathematical proof, using the stated classical
+simple-type theorems. It is not a Lean certificate. Universal claim 66 remains
+open. Original H5 remains the original conditional premise about the same
+fixed candidate; no unconditional pair-factor comparison is asserted here.
+
+## 1. The arithmetic construction now proved
+
+Let \(p\) be odd, \(F=\mathbb F_p((t))\), and
+\[
+0<h_1<\cdots<h_d,\qquad p\nmid h_i,\qquad
+q_i=(p+1)h_i,\qquad N=p^d.
+\]
+For every such tuple there is an explicit matrix \(\beta\in M_N(F)\)
+whose field \(K=F[\beta]\) is totally ramified of degree \(N\), normalizes
+the complete lattice chain, and gives a maximal simple stratum. It has a
+literal defining sequence of degrees \(p,p^2,\ldots,p^d\), with leading
+level \(n_1\) and successive critical levels \(n_2,\ldots,n_d\) given by
+\[
+n_j=p^{d-j}q_{d-j+1}\quad(1\le j\le d).
+\]
+Every native parameter in the construction, every amplified approximation,
+and every consecutive correction has matrix trace zero over its base field.
+
+For this actual stratum there exists a full simple character \(\theta\)
+with \(\theta|_{U_F^1}=1\). Retaining its canonical beta extension, the
+residue character and noncompact extension can be selected so that the
+resulting irreducible admissible supercuspidal \(\pi\) has any prescribed
+smooth central quasicharacter \(\omega\) trivial on \(U_F^1\). These
+completion choices must be free or already compatible; incompatible
+immutably supplied choices are not replaced.
+
+The same candidate has
+\[
+\begin{aligned}
+\operatorname{rank}(\pi)&=N, &t(\pi)&=1,\\
+\operatorname{Sw}(\pi)&=p^{d-1}(p+1)h_d, &
+\dim_{\mathbb F_p}(J^1/H^1)&=N-1,\\
+\dim\eta&=p^{(N-1)/2},\\
+a(\pi^\vee\times\pi)
+ &=p^{2d}-1+\sum_{i=1}^d(p^{2i}-p^{2i-2})h_i.
+\end{aligned}
+\]
+These numerical identities do not identify a Weil representation, an
+endo-class, or the pair epsilon factors required by H5.
+
+### Construction and proof
+
+At a recursive base \((L,t_L)\), introduce
+\[
+E=L(\alpha),\qquad \alpha^p-\alpha=t_L^{-q_d}.
+\]
+This is a separable totally ramified extension of degree \(p\), with
+\(v_E(\alpha)=-q_d\) and \(\operatorname{Tr}_{E/L}\alpha=0\).
+Choose \(1\le b<p\) with \(q_db\equiv-1\pmod p\), set
+\(a=(q_db+1)/p\), and put \(z=t_L^a\alpha^b\). Then \(z\) is an
+explicit uniformizer. Write its Eisenstein polynomial as
+\(f(X)=X^p+\cdots+a_0\).
+
+Let \(P_0\) extract the constant coefficient in the basis
+\(1,z,\ldots,z^{p-1}\). The normalized corestriction
+\(s=\kappa\operatorname{pr}\), where
+\(\kappa=-f'(z)/z^{p-1}\), satisfies
+\[
+u_0=s(P_0)=a_0/z^p\in\mathcal O_E^\times,
+\qquad
+\operatorname{Lift}_E(C)=u_0^{-1}CP_0,
+\qquad s(\operatorname{Lift}_E(C))=C.
+\]
+The lift preserves the exact filtration valuation. Its crucial additional
+identity is
+\[
+\operatorname{tr}_L(\operatorname{Lift}_E(C))
+ =\operatorname{Tr}_{E/L}
+   \bigl(\kappa^{-1}\operatorname{tr}_E(C)\bigr).
+\]
+Define
+\[
+B(L,t_L;h_1,\ldots,h_d)
+ =\alpha I_{p^{d-1}}+
+   \operatorname{Lift}_E\bigl(B(E,z;h_1,\ldots,h_{d-1})\bigr),
+\]
+with the degree-\(p\) multiplication matrix as the base case. Induction
+proves trace zero at every native rank. This is stronger than the
+automatic zero trace obtained by multiplying any matrix multiplicity by
+\(p\) in characteristic \(p\).
+
+For the inductive field step \(d\ge2\), put \(n=p^{d-1}q_d\) and
+\(R=p^{d-2}q_{d-1}\). The derived matrix is the recursively constructed
+maximal-field parameter, with \(k_0=-q_1\). The inequalities
+\(n>pR>2R\) imply
+\(-2R>-n-q_1\). Bushnell–Kutzko Remark 2.2.7 therefore applies to the
+actual displayed matrix. It supplies its maximal field, normalization,
+and critical exponent. Valuation preservation and literal truncation of
+the recursion supply the whole defining sequence. The full details,
+quotient count, and conductor dependencies are in
+`tower/TRACE_ZERO_AS_TOWER166.md` and `tower/RECURSIVE_TOWER166.md`.
+
+The full-character argument uses a specific order of operations. First
+construct a full character at native rank \(p^j\), trivial on \(U_F^1\).
+Transfer its full beta-determinant unit character to multiplicity \(p\),
+using BK 3.6.13(ii) and 3.6.14. On a scalar \(u\in U_F^1\), this gives
+\(\theta_j(u^p)=1\). Next add the actual trace-zero correction, using
+BK 3.3.18. It remains trivial on the scalar intersection of its domain.
+Finally extend at the next **maximal native parameter field**: the forced
+deep character and the trivial character of \(U_F^1\) agree on their
+intersection, so they extend through a finite abelian unit quotient.
+BK 3.2.5 constructs the full simple character.
+
+This procedure never substitutes an unjustified extension through a
+nonmaximal centralizer. It proves full-character compatibility, including
+shallow units, rather than merely cancellation of a leading trace.
+The residue factor fixes \(\omega\) on \(\mathbb F_p^\times\); an
+\(N\)-th-root choice for the noncompact generator fixes \(\omega(t)\).
+Every choice is recorded before H5. See
+`central/TRACE_ZERO_CHARACTER_INDUCTION166.md` for the complete induction.
+
+## 2. The finite packet that this same candidate realizes
+
+Assume the one-vertex scalar-pushout contract: there are \(d\) labelled,
+actually supplied full character extensions with whole symplectic
+quotients \(V_i\) of dimension two over \(\mathbb F_p\). Their balanced
+\(\mathbb C^\times\)-central product has quotient
+\(V_{\mathrm{src}}=\bigoplus_iV_i\) and Heisenberg carrier dimension
+\(p^d=N\). Initially take the declared stabilizer \(C=\{1\}\).
+
+For \(p=3\), this applies directly to the retained cubic family with
+whole rank-three break-type quotients. For \(p>3\), it applies only when
+the supplied plane data genuinely satisfy the stated original bridge
+contract. A native minimal rank-\(p\) type quotient has dimension
+\(p-1\), so it must not automatically be called a plane.
+
+The actual candidate from Section 1 has a nondegenerate leading subspace
+\[
+S\subset J^1/H^1,\qquad
+\dim_{\mathbb F_p}S=(p-1)p^{d-1}\ge2d.
+\]
+Here \(S\) is the image of the concrete congruence subgroup at half the
+leading even level. BK's high-depth equality preserves this subgroup and
+its commutator pairing through every later approximation; see
+`capacity/LEADING_LAYER_CAPACITY166.md`, Section 1. This part of that
+note applies to the direct constructor and does not require its separate
+classical arithmetic-induction application.
+
+Choose a labelled symplectic embedding \(V_{\mathrm{src}}\to S\).
+For each original full character form
+\[
+\mathcal P_i=(\mathbb C^\times\times J_i^1)/
+ \{(\theta_i(h)^{-1},h):h\in H_i^1\}.
+\]
+The balanced product and the corresponding host restriction have the
+same alternating commutator. The center-fixing extension isomorphism,
+obtained with matched Darboux lifts and complex roots, therefore preserves
+every supplied value \(\theta_i(h)\), including the shallow values.
+
+Write \(W=V_{\mathrm{src}}\perp V_{\mathrm{src}}^\perp\). Finite
+Stone–von Neumann gives
+\(\eta_W\simeq\eta_{\mathrm{src}}\otimes\eta_\perp\).
+Choose an isotropic eigenspace giving a line in the complementary factor.
+Its actual Heisenberg image-algebra projector \(e\) has rank \(N\).
+The retained induction/idempotent theorem recovers the **same** inducing
+representation \(\Lambda\) from \(e\Lambda\), and then the same
+\(\pi\) by compact induction. No candidate is changed at recovery.
+
+This attachment preserves the full source characters as scalar-pushout
+data. It does not identify the old matrix groups with literal subgroups
+of the new type, retain the old lower summand conjugacy classes, or place
+each source label at its old numerical host depth. Those stronger
+requirements have not been proved.
+
+When the retained independent extraspecial tensor source has \(d\ge2\),
+its full determinant is trivial on wild inertia: each factor determinant
+has order dividing \(p\), and tensor determinants raise it to
+\(p^{d-1}\). Thus its central character belongs to the class in Section 1.
+For \(d=1\), wild triviality of the source determinant must be checked
+separately. Independence of the tensor factors is an input, not a
+consequence of distinct \(h_i\).
+
+## 3. A proved extension to genuine scalar inertia phases
+
+There is also a positive result beyond \(C=\{1\}\). Suppose the finite
+prime-to-\(p\) stabilizer acts trivially on the source scalar extension,
+and its prescribed honest operators on the **entire** rank-\(N\) Weil
+carrier are \(\chi(c)I_N\), each lying in the actual inertia image.
+Assume the candidate's central character is the determinant of that
+same source under the fixed rank-one reciprocity convention.
+
+Then a finite cover \(\widetilde C\twoheadrightarrow C\) acts by actual
+central matrices in the unchanged candidate. Its represented operators
+descend to exactly \(\chi\) on \(C\). Hence the attachment and recovery
+above are equivariant for that action. A direct matrix homomorphism from
+\(C\) itself is not asserted and can fail.
+
+Indeed, for residue cardinality \(q\), let
+\(B=\omega(\operatorname{Teich}(k^\times))\). The actual inertia
+hypothesis gives \(\chi(C)^N\subset B\). Since \(N\) is a power of
+\(p\) and \(\chi(C)\) has order prime to \(p\), this implies
+\(\chi(C)\subset B\). Choose \(k_0\) inverse to \(N\) modulo
+\(q-1\), and set
+\[
+\delta(u)=\omega(\operatorname{Teich}(u))^{k_0},\qquad
+\widetilde C=\{(c,u):\chi(c)=\delta(u)\}.
+\]
+The matrix \(\operatorname{Teich}(u^{k_0})I_N\) acts by \(\chi(c)\).
+The kernel acts trivially on the entire sector induction and ambient
+compact induction, because these matrices are central. This preserves
+the fixed \(\Lambda\), its canonical beta-extension factor, and all
+completion choices. It does not assert that the canonical beta extension
+alone has scalar character \(\chi\).
+
+The full theorem and the nonsplitting example are in
+`stabilizer/SCALAR_NATIVE_ATTACHMENT166.md`, with an independent review
+in `audit/SCALAR_NATIVE_REVIEW166.md`. An arbitrary abstract phase or a
+phase on a proper multiplicity space does not satisfy its hypotheses
+merely because it is scalar.
+
+## 4. What was repaired, and what remains
+
+The old fixed-field central argument genuinely failed. At \(p=3\),
+\((h_1,h_2)=(1,5)\), its naturally transferred full character takes the
+value \(\zeta_3\ne1\) on \(1+t^2\), although the desired wild center
+is trivial. A shallow character choice cannot repair a forced value.
+The two-stage changing-field repair is retained in
+`central/CENTRAL_REPAIR166.md`; the trace-zero tower above resolves this
+central issue uniformly in every length.
+
+The construction does not use an inverse established correspondence or
+the classical arithmetic-induction/descent candidate to select \(\pi\).
+It does use the named BK construction and type theorems, the retained
+type/formal-degree conductor formulas, and exact sector recovery.
+The capacity note separately retains an alternative consequence for a
+candidate supplied by the substantial classical arithmetic constructor;
+that is a different route and is not an input to Section 1.
+
+The unresolved universal obligations are precise:
+
+1. **Nontrivial prescribed symplectic stabilizer actions.** For this
+   totally ramified full-degree host, the stronger inner-normalizer
+   interpretation forces prime-to-\(p\) actions on the quotient to be
+   trivial. It therefore cannot implement a genuinely nontrivial supplied
+   symplectic action. The raw original contract does not automatically
+   require that stronger interpretation; it still needs an actual valid
+   arithmetic comparison, not relabelling of external operators.
+2. **Arbitrary admissible source packets and transport diagrams.** The
+   proved attachment has the whole-plane, one-vertex, finite scalar-pushout
+   hypotheses above. It does not establish all source classes, arbitrary
+   graphs, or prescribed numerical layer placement.
+3. **The dyadic construction with all markings.** A separate field-level
+   recursion and some capacity statements exist at \(p=2\). The odd-prime
+   trace-zero/full-character theorem here does not settle that case.
+
+Original H5 stays exactly where it was: if supplied for this fixed
+candidate and the stipulated tests, the retained conditional endpoint
+applies. No claim that the displayed profiles imply H5, or that one of
+the noncompact root choices must satisfy H5, is made. The unresolved
+construction issues above are not renamed epsilon-factor obligations.
+
+## 5. Evidence and reproducibility
+
+The arbitrary-length theorem is proved symbolically and independently
+reviewed. The exact \(p=3,d=2,(h_1,h_2)=(1,2)\) computation in
+`tower/as_rank9check/` verifies the displayed matrix, trace identities,
+corestriction, and levels; it is a finite check, not the universal proof.
+The separate rank-27 run in `tower/run_rank27/` checks the earlier
+non-trace-zero recursion and must not be described as an AS central
+completion example. No Lean build was run.
+
+`STATUS166.json` records the closed and open obligations. The component
+audits identify the exact reviewed files and hashes. The dependency file
+pins prior checkpoints and the authorized primary-source copy without
+redistributing that publication.

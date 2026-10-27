@@ -1,0 +1,32 @@
+theorem candidate_exists
+    (hF : Continuous (algebraMap F E)) (hDo : IsOpen (D : Set (GL n F)))
+    (hJ : J₁ ≤ matrixCongruence F E (Fin 1) n e)
+    (hJN : J₁ ≤ CharacterNormalizer61.normalizer D θ)
+    (hθcentralizer : ∀ g : GL n F,
+      NormalizerIntertwining60.IntertwinedAt D (MonomialInduction.scalarRepresentation θ) g →
+      ∃ a : J₁, ∃ b : (centralizerMap F E (Fin 1) n e).range,
+      ∃ c : J₁, (a : GL n F) * (b : GL n F) * (c : GL n F) = g)
+    (hfull : ∀ g : GL n F,
+      g ∈ CharacterNormalizer61.normalizer D θ ↔
+        ∃ a : Eˣ, ∃ j : compact F E (Fin 1) n e D θ,
+          unitsEmbedding F E n (scalarMatrixEmbedding F E (Fin 1) n e) a *
+            (j : GL n F) = g)
+    [IsIrreducible (κ.comp (firstSubgroup F E (Fin 1) n e D θ).subtype)]
+    (hκ : SmoothDegreeQuotient.IsSmooth κ)
+    (hβ : ∀ g : GL n F,
+      NormalizerIntertwining60.IntertwinedAt D (MonomialInduction.scalarRepresentation θ) g →
+      NormalizerIntertwining60.IntertwinedAt (compact F E (Fin 1) n e D θ) κ g)
+    (hc : ActualCharacterData108.Contains F E (Fin 1) n e D θ hDc κ) :
+    FiniteDimensional ℂ (W ⊗[ℂ] ℂ) ∧
+    ∃ Λ : Representation ℂ (extended F E (Fin 1) n e D θ) (W ⊗[ℂ] ℂ),
+      (∀ j : compact F E (Fin 1) n e D θ,
+        Λ (PrescribedFieldType70.compactInclusion F E n
+          (scalarMatrixEmbedding F E (Fin 1) n e)
+          (compact F E (Fin 1) n e D θ) j) =
+          (κ.tprod (Representation.trivial ℂ (compact F E (Fin 1) n e D θ) ℂ)) j) ∧
+      IsIrreducible Λ ∧ SmoothDegreeQuotient.IsSmooth Λ ∧
+      FullIntertwiningLocus69.locus (extended F E (Fin 1) n e D θ) Λ =
+        (extended F E (Fin 1) n e D θ : Set (GL n F)) ∧
+      Nontrivial (IndV (extended F E (Fin 1) n e D θ).subtype Λ) ∧
+      SmoothDegreeQuotient.IsSmooth (ind (extended F E (Fin 1) n e D θ).subtype Λ) ∧
+      IsIrreducible (ind (extended F E (Fin 1) n e D θ).subtype Λ) :=

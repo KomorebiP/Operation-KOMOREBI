@@ -1,0 +1,25 @@
+parts.append(r'\chapter{Navigation across the original 66 obligations}'+'\n')
+register=S/'original_package/PSC_Paper_XI_Strengthened_Annals_Edition_Package/THEOREM_REGISTER.md'
+regrows=[]
+for line in register.read_text().splitlines():
+ if not re.match(r'^\|\s*\d+\s*\|',line):continue
+ cols=[x.strip() for x in line.strip('|').split('|')]
+ if cols[6]!='proved internally':continue
+ regrows.append({'original_obligation':len(regrows)+1,'all_records_row':int(cols[0]),'kind':cols[1],'printed_number':cols[2],'title':cols[3],'label':cols[4].strip('`'),'historical_page':int(cols[5]),'historical_status':cols[6]})
+assert len(regrows)==66 and regrows[-1]['all_records_row']==95 and regrows[-1]['printed_number']=='16.2'
+section_entries={2:'AtomicReconstruction',3:'TameProjectors',4:'CharacterProjector',5:'TameTensorSource',6:'GaussCharacters',7:'HeisenbergRepresentation',8:'TwistedMatrix',9:'CliffordSource',10:'TypeNormalizerAction',11:'CyclicBridge',12:'OddPhaseCertificate',13:'DyadicAffine',14:'GraphGauge',15:'FiniteBreakAssembly',16:'FiniteTameComparison'}
+for r in regrows:
+ r['entry_module']='PaperXI.'+section_entries[int(r['printed_number'].split('.')[0])]
+ if r['original_obligation']==66:
+  r['entry_module']='PaperXI.ConditionalAtomicComparison'
+  r['current_publication_scope']='Conjectural realization plus conditional comparison; no proof of general realization.'
+ else:r['current_publication_scope']='Read corresponding formal and mathematical hypotheses; navigation link is not a per-claim compiler certificate.'
+ assert r['entry_module'] in M
+(G/'HISTORICAL_CLAIM_CROSSWALK.json').write_text(json.dumps({'register_path':str(register),'register_sha256':hashlib.sha256(register.read_bytes()).hexdigest(),'scope':'Original66 internally-claimed records; historical statuses not promoted; relevant source-family navigation, not theorem-equivalence certificate.','rows':regrows},ensure_ascii=False,indent=2)+'\n')
+para(r'''This navigation table extracts the original 66 proof-obligation records from the historical register and gives an entry point into each corresponding source family. Entry modules lead to the definitions and related results for the whole section. They are not assertions that one module alone proves every displayed claim. The full source hypotheses and relevant ordinary mathematical attachments remain decisive.
+
+The historical register contains 102 numbered records, including definitions, imported facts, examples and remarks. Original obligation 66 is printed Theorem 16.2, all-records row 95. Its historical ``proved internally'' flag is superseded in this final edition by the conjectural-realization and conditional-comparison split. The other historical record types are excluded from this 66-row table. Historical PDF page numbers are retained only in the JSON crosswalk, not reused as locators in the final paper.''')
+para(r'\begin{longtable}{@{}p{0.05\textwidth}p{0.06\textwidth}p{0.09\textwidth}p{0.34\textwidth}p{0.32\textwidth}@{}}\toprule Obl.&Row&Printed&Original title&Source family entry\\\midrule\endhead')
+for r in regrows:para(str(r['original_obligation'])+'&'+str(r['all_records_row'])+'&'+r['printed_number']+'&'+esc(r['title'])+'&'+r'\nolinkurl{'+r['entry_module']+r'}\\')
+para(r'\bottomrule\end{longtable}')
+

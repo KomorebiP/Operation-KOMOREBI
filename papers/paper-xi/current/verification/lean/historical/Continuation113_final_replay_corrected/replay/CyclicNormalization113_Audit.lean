@@ -1,0 +1,45 @@
+import PaperXI.CyclicNormalization113
+#check PaperXI.CyclicNormalization113.scale
+#print axioms PaperXI.CyclicNormalization113.scale
+#check PaperXI.CyclicNormalization113.scale_apply
+#print axioms PaperXI.CyclicNormalization113.scale_apply
+#check PaperXI.CyclicNormalization113.scale_pow_apply
+#print axioms PaperXI.CyclicNormalization113.scale_pow_apply
+#check PaperXI.CyclicNormalization113.scalar_correction_exists
+#print axioms PaperXI.CyclicNormalization113.scalar_correction_exists
+#check PaperXI.CyclicNormalization113.det_scale
+#print axioms PaperXI.CyclicNormalization113.det_scale
+#check PaperXI.CyclicNormalization113.normalize_honest
+#print axioms PaperXI.CyclicNormalization113.normalize_honest
+#check PaperXI.CyclicNormalization113.implements_pow
+#print axioms PaperXI.CyclicNormalization113.implements_pow
+#check PaperXI.CyclicNormalization113.scale_implements
+#print axioms PaperXI.CyclicNormalization113.scale_implements
+#check PaperXI.CyclicNormalization113.implementer_power_scalar
+#print axioms PaperXI.CyclicNormalization113.implementer_power_scalar
+#check PaperXI.CyclicNormalization113.unit_nth_root
+#print axioms PaperXI.CyclicNormalization113.unit_nth_root
+#check PaperXI.CyclicNormalization113.normalize_order
+#print axioms PaperXI.CyclicNormalization113.normalize_order
+#check PaperXI.CyclicNormalization113.normalized_generator_exists
+#print axioms PaperXI.CyclicNormalization113.normalized_generator_exists
+#check PaperXI.CyclicNormalization113.normalized_generator_unique
+#print axioms PaperXI.CyclicNormalization113.normalized_generator_unique
+#check PaperXI.CyclicNormalization113.normalized_generator_existsUnique
+#print axioms PaperXI.CyclicNormalization113.normalized_generator_existsUnique
+#check PaperXI.CyclicNormalization113.implementer_of_actual_profile
+#print axioms PaperXI.CyclicNormalization113.implementer_of_actual_profile
+#check PaperXI.CyclicNormalization113.canonical_generator_of_actual_profile
+#print axioms PaperXI.CyclicNormalization113.canonical_generator_of_actual_profile
+#check PaperXI.CyclicNormalization113.canonical_generator_of_actual_form
+#print axioms PaperXI.CyclicNormalization113.canonical_generator_of_actual_form
+#check PaperXI.CyclicNormalization113.cyclicAction
+#print axioms PaperXI.CyclicNormalization113.cyclicAction
+#check PaperXI.CyclicNormalization113.cyclicAction_generator
+#print axioms PaperXI.CyclicNormalization113.cyclicAction_generator
+#check PaperXI.CyclicNormalization113.canonical_action_of_implementer
+#print axioms PaperXI.CyclicNormalization113.canonical_action_of_implementer
+#check PaperXI.CyclicNormalization113.canonical_action_of_actual_profile
+#print axioms PaperXI.CyclicNormalization113.canonical_action_of_actual_profile
+#check PaperXI.CyclicNormalization113.canonical_equivariant_bridge_of_actual_profile
+#print axioms PaperXI.CyclicNormalization113.canonical_equivariant_bridge_of_actual_profile

@@ -1,0 +1,31 @@
+import PaperXI.ActualScalarLift113
+#check PaperXI.ActualScalarLift113.actualPushout
+#print axioms PaperXI.ActualScalarLift113.actualPushout
+#check PaperXI.ActualScalarLift113.actualPushout_section
+#print axioms PaperXI.ActualScalarLift113.actualPushout_section
+#check PaperXI.ActualScalarLift113.actualPushout_subgroup
+#print axioms PaperXI.ActualScalarLift113.actualPushout_subgroup
+#check PaperXI.ActualScalarLift113.quotient_action_power
+#print axioms PaperXI.ActualScalarLift113.quotient_action_power
+#check PaperXI.ActualScalarLift113.quotient_power_eq_one
+#print axioms PaperXI.ActualScalarLift113.quotient_power_eq_one
+#check PaperXI.ActualScalarLift113.subgroupMap
+#print axioms PaperXI.ActualScalarLift113.subgroupMap
+#check PaperXI.ActualScalarLift113.actualPhase
+#print axioms PaperXI.ActualScalarLift113.actualPhase
+#check PaperXI.ActualScalarLift113.actualPhase_one
+#print axioms PaperXI.ActualScalarLift113.actualPhase_one
+#check PaperXI.ActualScalarLift113.sectionScalar_action
+#print axioms PaperXI.ActualScalarLift113.sectionScalar_action
+#check PaperXI.ActualScalarLift113.actualPhase_mul
+#print axioms PaperXI.ActualScalarLift113.actualPhase_mul
+#check PaperXI.ActualScalarLift113.actualLift
+#print axioms PaperXI.ActualScalarLift113.actualLift
+#check PaperXI.ActualScalarLift113.actualLift_phase
+#print axioms PaperXI.ActualScalarLift113.actualLift_phase
+#check PaperXI.ActualScalarLift113.actualLift_intertwines
+#print axioms PaperXI.ActualScalarLift113.actualLift_intertwines
+#check PaperXI.ActualScalarLift113.actualLift_power_intertwines
+#print axioms PaperXI.ActualScalarLift113.actualLift_power_intertwines
+#check PaperXI.ActualScalarLift113.actualLift_power_eq_one
+#print axioms PaperXI.ActualScalarLift113.actualLift_power_eq_one

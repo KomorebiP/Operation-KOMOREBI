@@ -1,0 +1,13 @@
+--- attempt_01_compatibility/ActualMonomialLocalGlobal.lean
++++ attempt_02_definitional_swan/ActualMonomialLocalGlobal.lean
+@@ -196,7 +196,9 @@
+ has the same coordinate value. -/
+ theorem packetArtin_eq_coordinates (S : Finset ℕ) :
+     packetArtin R D F ι (n := n) ξ S = if j = 0 then 0 else (n : ℚ) := by
+-  unfold packetArtin TameConductor.finiteArtin
++  change (Module.finrank ℂ (DegreeIndSpace (actualDegree R D F) n ξ) : ℚ) -
++      (Module.finrank ℂ (tameRestriction (actualParameter R D F (n := n) ξ) ι).invariants : ℚ) +
++      packetSwan R D F (n := n) ξ S = _
+   rw [packetSwan_eq_zero R D F (n := n) ξ htame S,
+     InducedCycleInvariants.dimension (actualDegree R D F) φ hφ n ξ,
+     InducedTameProfile.invariant_dimension (actualDegree R D F) ι φ hφ n ξ

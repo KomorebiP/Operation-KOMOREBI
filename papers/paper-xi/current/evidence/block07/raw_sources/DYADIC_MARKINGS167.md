@@ -1,0 +1,294 @@
+# Dyadic markings: the exact finite attachment criterion
+
+Evidence: direct reading of the original dyadic contract and ordinary finite
+group proofs. This note does not prove a dyadic arithmetic field construction,
+its simple-character existence, nontrivial stabilizer attachment, H5, or a Lean
+closure. It identifies exactly what a supplied actual host and sector must
+preserve, and proves the marked finite attachment step for C={1}.
+
+## 1. The original datum includes more than the alternating form
+
+The original text `closure_attempt162/inputs/original_reading.txt` states in
+Definition11.1, starting line4911, that at p=2 a restricted bridge additionally
+supplies compatible quadratic refinements and an isomorphism of the resulting
+Heisenberg central extensions lifting the given symplectic isometry.
+Sections13.1--13.9 define the refinements and their Arf/Gauss signs.
+
+The retained visual appendix is particularly explicit, at lines6892--6947:
+with center {I,-I} fixed, squares of lifts carry the quadratic bit. Multiplying
+a lift by i changes the particular finite central-extension realization. The
+appendix says that allowing complex scalar rescaling **without recording this
+distinction** erases data that the bridge is required to retain.
+
+The finite record must therefore retain at least:
+
+* the labelled symplectic quotient and its pairing;
+* the supplied quadratic refinement q;
+* the specified finite central extension, its central embedding/character,
+  and any marked lifts or specified extension isomorphism;
+* the resulting normalized Gauss sign, and all declared phase operators;
+* the complete original character values retained by the scalar pushout.
+
+The last item alone does not retain the preceding finite-subgroup/lift marking
+unless that marking is explicitly carried along. The raw text does not require
+literal embeddings of the old arithmetic matrix groups into a new type. Nor
+does it define a unique quadratic refinement extracted automatically from an
+unmarked C× scalar extension of every arithmetic type.
+
+## 2. General finite central-extension criterion
+
+Let V be an elementary abelian 2-group with ordered basis v_1,...,v_m. Let
+E_s and E_t be central extensions of V by the same abelian group Z. Fix the
+identity on Z and a quotient isomorphism f. Choose lifts a_i of v_i in E_s
+and b_i of f(v_i) in E_t. Write
+
+    a_i²=s_i,  b_i²=t_i,  [a_i,a_j]=c_ij, [b_i,b_j]=d_ij.
+
+Every element has a unique normal form
+
+    z a_1^(epsilon_1) ... a_m^(epsilon_m), epsilon_i in {0,1},
+
+and analogously on the target. The multiplication is completely determined by
+the displayed squares and commutators.
+
+**Criterion.** A center-fixing isomorphism lifting f exists precisely when
+
+    c_ij=d_ij for every i,j,
+    s_i/t_i belongs to Z² for every i.                     (1)
+
+Indeed, every such isomorphism must take a_i to lambda_i b_i for some
+lambda_i in Z, forcing lambda_i²=s_i/t_i. Conversely these equations make
+the assignment a_i -> lambda_i b_i preserve all relations, and the normal
+forms prove it is bijective.
+
+If the **particular lifts** a_i and b_i must correspond exactly, the condition
+is s_i=t_i, with lambda_i=1. If a full chosen section is marked, rather than
+only generating lifts, its multiplication coefficients must also correspond:
+
+    a(v)a(w)=c_s(v,w)a(v+w),
+    b(fv)b(fw)=c_t(fv,fw)b(f(v+w)),
+
+and exact section preservation requires c_s(v,w)=c_t(fv,fw) for every pair.
+Transporting the complete section under an existing group isomorphism retains
+these identities automatically. Preserving just its squares need not retain
+an additional independently specified section.
+
+### 2.1. Fixed two-element center
+
+For Z={+1,-1}, Z²={1}. The lift square is independent of the lift within its
+fiber and defines
+
+    a(v)²=(-1)^(q_s(v)).
+
+The identity (ab)²=a²b²[b,a] gives the quadratic refinement law. Criterion(1)
+becomes the exact requirement
+
+    q_t(f(v))=q_s(v) for every v.                          (2)
+
+For an unspecified symplectic isomorphism between equal-dimensional
+nondegenerate spaces, such an f exists exactly when their Arf invariants agree.
+For a preassigned f, equality of Arf invariants alone is insufficient: (2)
+must hold for that f.
+
+### 2.2. Four-element and complex centers
+
+For Z=mu_4, multiplication of a lift by i changes its square by -1. The
+unmarked extension criterion preserves square classes modulo Z²=mu_2.
+In particular, squares +1 and -1 do not distinguish unmarked mu_4 extensions.
+A separately marked finite mu_2-central extension subgroup (such as the full
+D8 or Q8), or prescribed lifts, still distinguishes them.
+
+For Z=C× every square ratio has a square root. Thus matching commutators
+is sufficient for an unmarked center-fixing extension isomorphism. This fact
+does not delete a marked finite subgroup from the objects being compared.
+
+## 3. Exact D8/Q8 check
+
+In dimension two over C put
+
+    X=[[0,1],[1,0]],       Z=[[1,0],[0,-1]].
+
+Then X²=Z²=I, XZ=-ZX, and [X,Z]=-I. The group generated by X and Z has
+order8 and is D8. Its refinement on V=F2² is
+
+    q_D(x,y)=xy,       Arf(q_D)=0,
+
+with square table (+1,+1,+1,-1) at (0,e,f,e+f), and Gauss sum +2.
+
+The generators iX,iZ also anticommute, but each squares to -I and their
+product also squares to -I. They generate Q8, with
+
+    q_Q(x,y)=xy+x+y,   Arf(q_Q)=1,
+
+square table (+1,-1,-1,-1), and Gauss sum -2.
+
+Both C× pushouts identify with the same ambient matrix group
+
+    P={z X^a Z^b : z in C×, a,b in {0,1}}.
+
+Nevertheless the marked subgroups
+
+    H_D=<X,Z>,          H_Q=<iX,iZ>
+
+are different. No isomorphism fixing the two-element center can map H_D
+onto H_Q: it would preserve q and hence the Arf invariant, which differs.
+There is also no center-fixing automorphism of P carrying the marked H_D
+onto H_Q. Their unmarked pushouts are isomorphic, but the marked objects
+(P,H_D) and (P,H_Q) are not.
+
+Conversely a Q8 source embeds perfectly into the same P by sending its
+generators to iX and iZ. This preserves every source square and its negative
+Gauss sign. It does not identify those generators with the independently
+marked D8 lifts X,Z. This is the distinction needed for the arithmetic sector.
+
+## 4. Marked scalar-pushout attachment with C={1}
+
+Assume an actual type, its full character theta, and its Heisenberg quotient
+W have already been constructed. Let P_W be its actual C× scalar pushout,
+acting on its actual Heisenberg representation eta_W. Let V_src be a finite
+nondegenerate symplectic F2-space of dimension2s, with its complete supplied
+dyadic marked extension data. For several breaks use their labelled orthogonal
+sum, balanced central product, and supplied product refinement.
+
+Assume the following precise finite contract:
+
+1. The source full-character pushout P_src has quotient V_src and the same
+   represented scalar center as P_W.
+2. The supplied finite central extensions and their marked lifts are retained
+   as subgroups/elements of P_src, or as already specified maps into P_src.
+   Any central character kernel already factored out must be recorded; a
+   scalar pushout cannot recover invisible elements of that kernel.
+3. The host has enough symplectic capacity, dim W>=2s, and the new attachment
+   into this host has no independently fixed conflicting quadratic marking.
+4. The declared stabilizer is C={1}; the graph has one vertex.
+
+Then a complete marked attachment exists in the **same actual candidate**.
+
+**Proof.** Choose a symplectic embedding f:V_src -> W and let V be its image.
+The restriction P_V of P_W and P_src have the same commutator. Criterion(1)
+with center C× produces an isomorphism
+
+    F:P_src -> P_V
+
+fixing every scalar and lifting f. Carry every supplied finite subgroup H_src
+to the actual subgroup F(H_src) of P_V, and every marked lift a to F(a).
+This operation does not erase square data:
+
+    F(a)²=F(a²),        [F(a),F(b)]=F([a,b]).              (3)
+
+Since F fixes the scalar center, a²=(-1)^q(v) implies
+F(a)²=(-1)^q(v). The transported refinement is therefore exactly q, not a
+new choice with the same polar form. All marked section products, specified
+extension maps, and finite group relations are preserved by the same F.
+Consequently the Arf invariant and normalized Gauss sign are unchanged.
+
+Every original h in a full character domain still maps to theta_i(h), because
+F fixes the entire scalar center. Thus the dyadic marking is retained together
+with the full original character values.
+
+Write W=V perpendicular-sum U. Finite Stone--von Neumann gives
+
+    eta_W isomorphic to eta_src tensor eta_U.
+
+Choose a line in eta_U and its projector e. It lies in the actual Heisenberg
+image algebra, and the marked source subgroup acts on e eta_W by precisely
+its supplied irreducible Heisenberg representation. Its lift squares remain
+the operators in (3). The existing sector recovery theorem then recovers the
+unchanged inducing representation Lambda, and the same arithmetic candidate.
+There is no C-equivariance equation to solve because C={1}. QED.
+
+This realizes an actual finite marked subgroup in the scalar extension of
+the actual type, with actual represented operators that are complex scalars
+times type operators. It does not assert that every marked source element is
+the image of an unscaled element of the old or new arithmetic matrix group.
+That stronger literal-embedding requirement is absent from the present contract.
+
+It also does not assert that the newly marked subgroup equals a separately
+specified canonical native subgroup of the host. The marked subgroup is part
+of the result and must be retained in the artifact. Omitting it and recording
+only the unmarked P_W would reproduce the loss displayed by D8/Q8.
+
+## 5. If the host refinement is independently fixed
+
+Suppose instead that the actual host arrives with a particular nonsingular
+quadratic refinement q_W and its actual finite mu_2 central extension H_W.
+An attachment into that marked extension requires a quadratic isometric
+embedding, not merely a symplectic embedding. There is a sharp capacity test.
+
+**Theorem.** Let dim V_src=2s and dim W=2R. With embeddings otherwise free,
+a quadratic isometric embedding
+
+    (V_src,q_src) -> (W,q_W)
+
+exists if and only if R>=s and, in the equal-capacity case R=s,
+
+    Arf(q_src)=Arf(q_W).                                  (4)
+
+If R>s, either source Arf type embeds.
+
+**Proof.** Necessity of dimension is immediate. An equal-dimensional
+embedding is an isometry, forcing (4). If R>s, choose a nondegenerate
+quadratic space U of dimension2(R-s) with
+
+    Arf(q_U)=Arf(q_W)+Arf(q_src).
+
+Both Arf types exist in every positive even dimension, by original
+Proposition13.7. The orthogonal sum V_src perpendicular-sum U then has the
+same dimension and Arf invariant as W. Original Standard Fact13.4 gives an
+isometry to W; restriction to V_src gives the desired embedding. QED.
+
+After this embedding is chosen, the preimage of its image in H_W has exactly
+q_src. The fixed-two-element-center criterion of Section2 gives the extension
+isomorphism. Generating lifts with the specified squares can be matched.
+Additional fully prescribed section elements still require their exact product
+relations, as described in Section2.
+
+Thus **one spare symplectic plane absorbs the Arf mismatch**, without changing
+the host's own refinement. This conclusion remains conditional on the host's
+actual marked refinement/finite extension being supplied or constructed. It
+does not manufacture a canonical arithmetic quadratic datum from its dimension.
+
+For a preassigned embedding f, the missing equation is instead
+
+    q_W(f(v))=q_src(v) for all v.                          (5)
+
+Its discrepancy q_W composed with f minus q_src is a linear functional.
+Strict capacity allows a different quadratic embedding when it is free; it
+does not authorize replacing a fixed original map, fixed depth placement,
+or fixed transport marking.
+
+## 6. Exact outcome for the dyadic construction
+
+Under the retained one-vertex, C={1}, full scalar-pushout realization contract,
+an actual host with sufficient symplectic capacity does support every supplied
+finite dyadic marking, provided the transported finite subgroup, lifts,
+refinement, and phase are explicitly kept. The proof is Section4, rather than
+an assertion that commutators determine the dyadic sign.
+
+If a particular host-native quadratic extension is fixed in advance, use
+Section5. Strict capacity suffices for its quadratic embedding; equal capacity
+requires the Arf equation, and a preassigned embedding requires (5). If only
+the type quotient is known and a specifically canonical host quadratic datum
+is requested, constructing and comparing that datum remains an arithmetic
+obligation. The scalar-pushout proof must not silently claim to have done it.
+
+No part of this note handles nontrivial prescribed C actions. In that case
+quadratic embedding, full extension action, lift markings, and chosen honest
+phase operators must all be equivariant; dimension and Arf equality alone do
+not settle those equations.
+
+## Evidence and author self-review
+
+Read directly: original Definition11.1, Sections13 and15, and visual appendix
+pagesV--22/V--23 in the retained raw file; final Block166 PROOF166.md,
+Section2, and LEADING_LAYER_CAPACITY166.md, Sections2.1 and4. The extension
+criterion and D8/Q8 calculation are complete finite proofs. The quadratic
+embedding theorem uses the Arf classification already explicitly supplied by
+the original paper. The sector conclusion reuses the retained exact recovery
+theorem and does not assert new arithmetic existence.
+
+Self-review checked that complex lift rescaling is never treated as an
+automorphism changing squares within a fixed marked extension, that the marked
+subgroup remains in the output, that preassigned maps differ from freely chosen
+embeddings, and that fixed native refinements require their own actual input.
+No independent review of this note or new Lean execution is claimed here.

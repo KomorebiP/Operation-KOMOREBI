@@ -1,0 +1,773 @@
+--- v1.0.0/publication/source/lean_guide/Paper_XI_Lean_Guide_Final.tex
++++ v1.1.0/publication/source/lean_guide/Paper_XI_Lean_Guide_Final.tex
+@@ -18,7 +18,7 @@
+ \renewcommand{\KomorebiSubtitle}{For local Langlands}
+ \renewcommand{\KomorebiSeries}{Core series XI}
+ \renewcommand{\KomorebiKind}{Lean and evidence guide}
+-\renewcommand{\KomorebiEdition}{Reading edition 1.0.0 / 10 October 2026}
++\renewcommand{\KomorebiEdition}{Revised edition 1.1.0 / 18 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper XI}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+@@ -46,7 +46,9 @@
+ A structure may contain an existence field. A theorem that consumes that structure proves an implication using the field. It is still a substantive theorem when the comparison map, descent or uniqueness is constructed. It is not a proof of the structure's arithmetic existence. In particular, \texttt{Realization.exists\_atom} is an existence input in the formal comparison interface.
+ 
+ \section{Evidence available for this guide}
+-The guide's source catalog was generated for the inherited edition from retained production source bytes. This synchronized edition preserves that catalog and checks its source and excerpt hashes. It does not claim a new lexical census or a new compiler run. It includes their hashes, import edges and named lexical declarations. The guide was compiled as a PDF. Its authoring process does not invoke Lean, Lake, or \texttt{leanchecker}. The passing compiler and axiom records described below are retained historical records, with their original scopes.
++The source catalog was generated for the inherited edition from retained production source bytes. This edition preserves its selected modules, source hashes, import edges and named lexical records. A separately dated fresh execution replays the selected source in the pinned environment and audits its actual declaration dependencies. The current result is summarized below. Historical compiler and same-kernel records later in this guide retain their original dates and scopes. The preserved catalog's historical evidence flags describe the edition in which that catalog was generated; the dated current receipts determine this release's execution status. The PDF build and the formal execution are separate operations.
++
++\input{current_verification}
+ 
+ The recorded environment is Lean 4.34.0-rc2, commit \nolinkurl{6a10ac8c22beadecabdbb0919c2b50214762f91d}, and Mathlib revision \nolinkurl{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The reported allowed transitive axiom set is \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound}. Same-kernel replay is an additional invocation of Lean's kernel, not an independently implemented checker.
+ 
+@@ -54,6 +56,18 @@
+ The selected union contains 423 distinct module paths and 4,342 explicitly named lexical declaration commands. It starts with the 302-module v0.44 source tree, adds three checked normalized-Frobenius modules, then retains the arithmetic/type branch through authenticated base108 and checked continuations 110--113. Identical repeated module bytes are collapsed. Layer-specific provenance remains in the JSON catalog.
+ 
+ This is a source census, not a count of independent mathematical discoveries or kernel-generated declarations. Constructors, recursors and unnamed instances are outside this lexical count. The historical ``65/66'' number concerns original paper obligations, whereas the appendix includes many supporting definitions and lemmas. The conjecture receives no Lean theorem-count promotion.
++
++\clearpage
++\section{Supplement: the comparison of one supplied candidate}
++The publication comparison fixes one admissible candidate and one admissible reference. A separating factor system identifies their isomorphism classes if their declared factor profiles agree. The additional module \nolinkurl{PaperXI.SingleCandidateComparison} applies \nolinkurl{LocalFactorIdentification.class_eq_iff} to exactly these supplied objects.
++
++The expected factor profile is a parameter. H5 is assumed only for this candidate. The proof does not consume \texttt{Realization.exists\_atom}, does not quantify H5 over every realizer, and does not instantiate an arithmetic correspondence. The separating factor system and admissibility conditions remain explicit inputs. This is a formal presentation of the paper's conditional implication, not an additional arithmetic existence result.
++
++The complete supplementary module is printed below. It is counted separately from the unchanged 423-module catalog and the forty inherited teaching excerpts. Its own compiler and axiom receipt is included with the release.
++\VerbatimInput[fontsize=\small,breaklines=true,breakanywhere=true]{supplements/SingleCandidateComparison.lean}
++
++\section{The corrected moving-space phase domain}
++In odd residue characteristic, the monograph's breakwise formula now applies to \(M=\operatorname{im}(g-I)\) and its break summands, with \(g\) explicitly symplectic and fixed point free on \(M\). The selected theorem \nolinkurl{PaperXI.BreakOddPhase.source} already proves this product of moving phases. \nolinkurl{BreakMoving} supplies the complement and nondegeneracy facts. A zero moving space contributes one. This source alignment does not add an order-prime-to-\(p\) hypothesis and does not modify the retained Lean module.
+ 
+ \section{Reading literal excerpts}
+ A displayed declaration excerpt retains the exact source text through a top-level \texttt{:=}, omitting its subsequent proof or value. Named-argument assignments inside binders do not terminate the excerpt. Structures retain all their fields. The complete declaration is available in the source file. A proof excerpt is a contiguous source slice. Ambient assumptions are explained beside it and retained as raw setup lines in \texttt{EXCERPTS.json}; imported definitions remain necessary.
+--- v1.0.0/publication/source/lean_guide/README.md
++++ v1.1.0/publication/source/lean_guide/README.md
+@@ -1,17 +1,9 @@
+-# Paper XI — lean guide source, reading release 1.0.0
++# Paper XI — lean guide source
+ 
+-This directory belongs to Publication Block 07, 10 October 2026. Use the coordinated builder at the release root. The current readers are the 109-page monograph, 53-page core visual guide and 235-page Lean/evidence guide. They accompany the preserved 77-page research paper v0.4.0 and 36-page atlas v0.5.0.
++This is the active source for revised edition 1.1.0, 18 October 2026. Build it with the portable root `tools/build_readers.py`; the builder stages an independent copy and selects installed fonts without editing this directory. See root `BUILD.md`.
+ 
+-## Build
++The current source changes and their mathematical review are recorded in `evidence/release_1_1/` relative to the release root. The three original readers share the typography profile and have no top-right decorative motif. All mathematical figures and their retained generators use Python. Figure assets are preserved; this edition does not claim fresh figure regeneration.
+ 
+-From the release root run `python tools/build_readers.py --output ../paper_xi_build`. Output must be outside the package. The compatibility entry point `python build.py --output-dir /absolute/external/output` invokes the same coordinated builder. All three originals must be built before assembling cross-document links.
++The 423 selected Lean modules, original catalogue JSON, and forty literal teaching excerpts keep their inherited identities. The fresh compiler audit and the two separately counted formal targets are documented in root `formalization/` and `verification/lean/`. PDF compilation and arithmetic existence have separate evidentiary scopes.
+ 
+-XeLaTeX, pdfLaTeX, BibTeX (or bibtex.original), PyMuPDF, fontconfig and installed URW/DejaVu fonts are required. No font files are distributed. Pass `--font-dir` to select a local URW OTF directory. Shell escape remains disabled. The preserved research PDFs are copied, not regenerated from unavailable Block 02 sources.
+-
+-## Source and evidence boundaries
+-
+-The main proof/statement bodies and all selected Lean sources, excerpts and scientific figures are unchanged. Block 07 restores44 malformed superscript expressions in nine construction appendices against15 original Markdown notes. It also clarifies that one table column measures the source representation carrier, not its symplectic quotient. The earlier Appendix D field-degree factor correction is retained. See `evidence/block07` at the release root for exact patches and hashes.
+-
+-Older source catalogs, review logs and summaries remain historical records. Their dates, page counts and hashes identify their original checkpoints. Current receipts are in `verification/block07`. Immediate baseline sources are in `predecessor/block06/publication/source`; older originals remain deeper in that unchanged predecessor tree.
+-
+-Rebuilding these PDFs is not a Lean build. The missing full Block 02 editable archive, missing terminal v0.45 receipt and access-limited Henniart–Lemaire reread remain explicit. See the root ledger and RELEASE_SCOPE.md.
++The earlier complete source-and-evidence release is retained under root `historical/`. Paths, dates, source hashes and status text inside its records refer to their original checkpoints. The selected Henniart–Lemaire full-text review is new to this edition. The full Block 2 editable archive is still unavailable; its research-reader text is preserved. General realization and same-candidate H5 remain open.
+--- /dev/null
++++ v1.1.0/publication/source/lean_guide/current_verification.tex
+@@ -0,0 +1,90 @@
++\begin{quote}
++\textbf{Fresh verification, 18 October 2026: all required gates passed.}
++The 423 selected publication modules were compiled with their retained source
++hashes unchanged. All 4,342 catalogued names resolved to their recorded owners.
++Four source names---two private theorems and two named local instances---are
++matched uniquely to their kernel names using Lean's own private-name mapping;
++the source and kernel names are both recorded.
++The recovered terminal and the new comparison supplement were checked as
++separately counted targets.
++\end{quote}
++
++\begin{center}\small
++\begin{tabular}{@{}lrrr@{}}
++\toprule
++Population & Modules & Catalogued names & Logical declarations\\
++\midrule
++Selected sources & 423 & 4,342 & 7,672\\
++Recovered terminal & 1 & 0 & 51\\
++One-candidate supplement & 1 & 1 & 1\\
++\bottomrule
++\end{tabular}
++\end{center}
++
++The last column is the complete population of logical declarations owned by
++the named modules in the imported private kernel environment. It includes
++generated and private logical declarations. It is distinct from the retained
++lexical catalog, and is not a count of independent mathematical discoveries.
++The audit separately lists 1,636 compiler-only auxiliary names for
++the selected sources; these are absent from the kernel constant map.
++
++Every audited declaration's transitive axiom dependencies belong to
++\texttt{Classical.choice}, \texttt{Quot.sound}, and \texttt{propext}.
++No forbidden dependency was found. All three aggregate imports passed.
++Two isolated negative controls were rejected as intended: uncatalogued public
++and private custom axioms in a module with a safely catalogued theorem, and a
++deliberately unresolved catalog name. These fixtures are not Paper XI modules.
++The supplement's observed axioms were \texttt{Quot.sound} and \texttt{propext}.
++
++\textbf{Fresh-source lineage and unsuccessful attempts.}
++The first replay started from an empty Paper XI object directory and passed
++421 selected modules plus the supplement. Its unfinished tower compilation
++was manually stopped early after a longer historical duration was found.
++The first run remains recorded as \texttt{PARTIAL\_OR\_FAIL}; it was not a
++source rejection, timeout, or out-of-memory event.
++The first continuation authenticated every completed source/object hash and
++dependency closure, reused only those 422 successful objects from this
++session, and compiled the remaining modules with a 3,600-second per-module
++limit. The tower and its base-change dependent completed in
++1,066.8 and 827.6 seconds, respectively, completing
++all 423 selected modules. The terminal then emitted substantive elaboration
++errors, including a heartbeat-limit diagnostic. After inspection of its log,
++that known-failed process was deliberately terminated. This second run also
++remains \texttt{PARTIAL\_OR\_FAIL}; its stop was diagnostic-driven.
++
++The source-revision continuation authenticated the successful source/object
++closure and invalidated only the revised failed terminal. Its terminal process
++was then killed at the environment's 8\,GiB memory limit; the recorded
++out-of-memory counters increased. This third replay also remains failed.
++An unchanged-source continuation with synchronous elaboration,
++\texttt{Elab.async=false}, also reached the memory limit. That fourth full
++replay remains failed. Bounded diagnostics isolated an expensive conversion
++in the lower-inclusion witness. The final continuation authenticated the
++successful closure and compiled separately reviewed local proof repairs.
++No historical Paper XI object was used. Pinned official external Mathlib cache
++objects were imported; all Mathlib sources were not rebuilt.
++
++\textbf{Separate additions and audit history.}
++The terminal required more than the missing explicit
++\nolinkurl{PaperXI.RamificationPolyphase} import. Its repair also corrects
++implicit arguments, required standing-hypothesis bindings, declaration syntax
++and local proofs. Five private component lemmas factor the comparison proof;
++the lower-inclusion witness uses the retained equality in its forward direction.
++A separate review checks the intended conclusions and
++already-declared hypotheses. The original source, failed intermediate and
++exact diffs are retained; the absent historical receipt is not recreated.
++The supplement proves the supplied-candidate implication printed below.
++The exploratory axiom harness needed explicit counter types, a distinction
++between compiler auxiliaries and kernel declarations, a larger recursion
++bound for the catalogue literal, and private-name resolution. The failed
++pilot records remain alongside the successful final audits. No
++selected Lean theorem statement or proof body was changed.
++
++The complete results are in
++\nolinkurl{verification/lean/RELEASE_VERIFICATION.json} and its prose companion.
++The portable project supplies source, exact pins and replay scripts, with
++downloaded toolchains and generated objects omitted. This release ran fresh
++source compilation and complete ownership/axiom audits. It did not run a new
++additional full \texttt{leanchecker} pass or use an independently implemented
++kernel. These results establish the formal declarations at their stated
++hypotheses; the four open arithmetic tasks retain their separate statuses.
+--- v1.0.0/publication/source/lean_guide/komorebi-publication.sty
++++ v1.1.0/publication/source/lean_guide/komorebi-publication.sty
+@@ -75,11 +75,6 @@
+   \begin{tikzpicture}[remember picture,overlay]
+     \fill[KomorebiWarm] (current page.south west) rectangle (current page.north east);
+     \fill[KomorebiPine] (current page.north west) rectangle ([xshift=8pt]current page.south west);
+-    \draw[KomorebiPine!38,line width=.8pt] ([xshift=-.65in,yshift=-.65in]current page.north east) .. controls ++(-1.9in,-.1in) and ++(.4in,1.4in) .. ([xshift=-.8in,yshift=-3.15in]current page.north east);
+-    \foreach \t in {0,...,7}{
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(-.38in,.06in) and ++(-.55in,.18in) .. ++(-.7in,.28in);
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(.3in,-.08in) and ++(.4in,-.24in) .. ++(.52in,-.35in);
+-    }
+   \end{tikzpicture}
+   \color{KomorebiInk}\sffamily
+   \noindent{\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}OPERATION KOMOREBI}\par
+--- v1.0.0/publication/source/lean_guide/reader_route.tex
++++ v1.1.0/publication/source/lean_guide/reader_route.tex
+@@ -2,7 +2,7 @@
+ \section*{Navigation through the five readers}
+ \phantomsection
+ \addcontentsline{toc}{chapter}{Navigation through the five readers}
+-The formal core, the written arithmetic constructions and the research-progress record have different evidence types. This edition preserves the selected formal source and provides direct reading routes into the other four readers. It does not add an existence axiom, a replacement source module or a new theorem-count claim.
++The formal core, the written arithmetic constructions and the research-progress record have different evidence types. This edition preserves the selected formal source and provides direct reading routes into the other four readers. The selected sources remain unchanged. The terminal replay and a one-candidate supplementary lemma are counted separately; neither supplies an arithmetic-existence axiom or a new discovery count.
+ 
+ \begin{tabular}{@{}>{\raggedright\arraybackslash}p{.29\linewidth}>{\raggedright\arraybackslash}p{.66\linewidth}@{}}\toprule
+ Question & Reading route and formal boundary\\\midrule
+@@ -16,18 +16,18 @@
+ \subsection*{The original-obligation crosswalk}
+ The existing 66-row historical table now links its printed-number column to the actual current monograph statements. The final row points to Conjecture 66, while the separate comparison proposition has its own link. These links are navigational. They do not assert that every printed theorem is definitionally identical to its selected entry module.
+ 
+-All 423 selected module paths, the 4,342 named lexical declaration records, and the 40 teaching excerpts retain their inherited source identities. The current audit checks their correspondence and preservation, not a fresh kernel acceptance or a new census of independent results.
++All 423 selected module paths, the 4,342 named lexical declaration records, and the 40 teaching excerpts retain their inherited source identities. The current source audit checks their correspondence and preservation. Fresh compiler and axiom receipts identify the executed targets separately from that inherited census.
+ \clearpage
+ \section*{Evidence boundaries for this revision}
+ \phantomsection
+ \addcontentsline{toc}{chapter}{Evidence boundaries for this revision}
+-\textbf{Compilation and publication are separate.} This revision builds and reviews the PDF readers. No Lean, Lake or independently implemented proof checker is invoked. Historical compiler and same-kernel receipts remain attributable to their exact source revisions.
++\textbf{Compilation and publication are separate.} This revision builds and reviews the PDF readers and records a separate fresh Lean execution. The preceding execution summary gives the current result. Historical compiler and same-kernel receipts remain attributable to their exact source revisions. No independently implemented proof checker is claimed.
+ 
+-\textbf{The terminal v0.45 receipt is not available.} The recovered monomial source has matching copies, but the retained log stops before establishing successful completion of the terminal target. Absence of the receipt is not proof of compiler failure. No new successful status is assigned to that target.
++\textbf{The terminal has a separately dated repair and replay.} The original successful v0.45 receipt remains unavailable. Adding the missing explicit \nolinkurl{PaperXI.RamificationPolyphase} import exposed further elaboration errors. The repaired source also corrects implicit-argument calls, required standing-hypothesis bindings, declaration syntax and local proofs. The original, failed intermediate, exact diffs and hypothesis review are retained. Its compiler status is reported separately from the unchanged 423-module selection. This target is a restricted tame Weil-side attachment; it does not construct a general wild automorphic realizer.
+ 
+ \textbf{Block 2 is a preserved-reader baseline.} The 33-page first part of the research companion survives in its PDF and records. Its complete editable working archive has not been recovered. Later continuations are independently editable. This edition does not claim a unified rebuild of the missing source.
+ 
+-\textbf{Some classical input audits remain inherited.} The progress paper records the exact selected Bushnell--Kutzko, conductor and induction inputs. The failed full-text retrieval for the Henniart--Lemaire reread is still an access limitation. This reading release is not a new audit of that theorem.
++\textbf{The selected classical-source gap has been closed.} The Henniart--Lemaire induction interface has now been checked against the full official text, including direct visual inspection of the relevant normalization formulas. The bounded review preserves its characteristic, rank, genericity and orbit hypotheses. Other Bushnell--Kutzko, conductor, tower and descent inputs retain their own evidence. This source check is not H5 or corrected-character occurrence.
+ 
+ \subsection*{Four open obligations, not four missing formal lemmas}
+ General arithmetic realization requires an actual common host with the declared actions and transports. H5 requires the characterizing factors for that same realizer. The corrected-character branch still needs occurrence in its fixed candidate. Where the stronger native contract is prescribed, the actual square, section and honest-phase certificate must be computed on the chosen type. The \href{https://komorebi.invalid/b07/lean_native}{research certificate plate} deliberately leaves those arithmetic fields uncomputed.
+--- /dev/null
++++ v1.1.0/publication/source/lean_guide/supplements/SingleCandidateComparison.lean
+@@ -0,0 +1,27 @@
++import PaperXI.LocalFactorIdentification
++
++/-! The one-candidate local-factor comparison used in the manuscript.
++The candidate and its admissibility are supplied. Matching factors are required
++only for this candidate. No atom-realization existence field is consumed.
++The separating factor system remains an explicit classical input. -/
++set_option autoImplicit false
++noncomputable section
++
++namespace PaperXI.SingleCandidateComparison
++open LocalFactorIdentification
++
++variable {Atom Test Value : Type*} {s : Setoid Atom}
++
++/-- Equality of the declared factor profile identifies this supplied candidate
++with the reference in the declared isomorphism quotient. -/
++theorem source (S : FactorSystem s Test Value)
++    (candidate reference : Atom)
++    (hcandidate : S.admissible candidate) (hreference : S.admissible reference)
++    (expected : Test → Value)
++    (h5 : S.profile candidate = expected)
++    (href : S.profile reference = expected) :
++    Quotient.mk s candidate = Quotient.mk s reference := by
++  apply (class_eq_iff S hcandidate hreference).mpr
++  exact h5.trans href.symm
++
++end PaperXI.SingleCandidateComparison
+--- v1.0.0/publication/source/traditional/Paper_XI_Traditional_Final.bib
++++ v1.1.0/publication/source/traditional/Paper_XI_Traditional_Final.bib
+@@ -23,7 +23,7 @@
+ 
+ @book{HarrisTaylor2001,
+   author = {Harris, Michael and Taylor, Richard},
+-  title = {The geometry and cohomology of some simple Shimura varieties},
++  title = {The geometry and cohomology of some simple {Shimura} varieties},
+   series = {Annals of Mathematics Studies},
+   volume = {151},
+   year = {2001},
+@@ -33,7 +33,7 @@
+ 
+ @book{BushnellHenniart2006,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {The Local Langlands Conjecture for GL(2)},
++  title = {The Local {Langlands} Conjecture for {GL(2)}},
+   publisher = {Springer},
+   series = {Grundlehren der mathematischen Wissenschaften},
+   volume = {335},
+@@ -43,7 +43,7 @@
+ 
+ @article{BushnellHenniart2005ET1,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {The essentially tame local Langlands correspondence. I},
++  title = {The essentially tame local {Langlands} correspondence. {I}},
+   journal = {Journal of the American Mathematical Society},
+   volume = {18},
+   number = {3},
+@@ -53,7 +53,7 @@
+ 
+ @article{BushnellHenniart2005ET2,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {The essentially tame local Langlands correspondence. II. Totally ramified representations},
++  title = {The essentially tame local {Langlands} correspondence. {II}. Totally ramified representations},
+   journal = {Compositio Mathematica},
+   volume = {141},
+   number = {4},
+@@ -63,7 +63,7 @@
+ 
+ @article{BushnellHenniart2010ET3,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {The essentially tame local Langlands correspondence. III. The general case},
++  title = {The essentially tame local {Langlands} correspondence. {III}. The general case},
+   journal = {Proceedings of the London Mathematical Society},
+   series = {3},
+   volume = {101},
+@@ -75,7 +75,7 @@
+ 
+ @article{BushnellHenniart2017,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {Higher ramification and the local Langlands correspondence},
++  title = {Higher ramification and the local {Langlands} correspondence},
+   journal = {Annals of Mathematics},
+   series = {2},
+   volume = {185},
+@@ -87,7 +87,7 @@
+ 
+ @article{Henniart1993,
+   author = {Henniart, Guy},
+-  title = {Caract\'erisation de la correspondance de Langlands locale par les facteurs epsilon de paires},
++  title = {Caract\'erisation de la correspondance de {Langlands} locale par les facteurs {$\varepsilon$} de paires},
+   journal = {Inventiones Mathematicae},
+   volume = {113},
+   number = {2},
+@@ -97,7 +97,7 @@
+ 
+ @book{BushnellKutzko1993,
+   author = {Bushnell, Colin J. and Kutzko, Philip C.},
+-  title = {The Admissible Dual of GL(N) via Compact Open Subgroups},
++  title = {The Admissible Dual of {GL(N)} via Compact Open Subgroups},
+   publisher = {Princeton University Press},
+   series = {Annals of Mathematics Studies},
+   volume = {129},
+@@ -116,7 +116,7 @@
+ 
+ @article{Blondel2012,
+   author = {Blondel, Corinne},
+-  title = {Repr\'esentation de Weil et beta extensions},
++  title = {Repr\'esentation de {Weil} et beta extensions},
+   journal = {Annales de l'Institut Fourier},
+   volume = {62},
+   number = {4},
+@@ -127,7 +127,7 @@
+ 
+ @article{Gerardin1977,
+   author = {G\'erardin, Paul},
+-  title = {Weil representations associated to finite fields},
++  title = {{Weil} representations associated to finite fields},
+   journal = {Journal of Algebra},
+   volume = {46},
+   number = {1},
+@@ -148,7 +148,7 @@
+ 
+ @article{Prasad2009,
+   author = {Prasad, Amritanshu},
+-  title = {On character values and decomposition of the Weil representation associated to a finite abelian group},
++  title = {On character values and decomposition of the {Weil} representation associated to a finite abelian group},
+   journal = {The Journal of Analysis},
+   volume = {17},
+   year = {2009},
+@@ -167,7 +167,7 @@
+ 
+ @article{GurevichHadani2007,
+   author = {Gurevich, Shamgar and Hadani, Ronny},
+-  title = {The geometric Weil representation},
++  title = {The geometric {Weil} representation},
+   journal = {Selecta Mathematica. New Series},
+   volume = {13},
+   number = {3},
+@@ -186,7 +186,7 @@
+ }
+ 
+ @book{Serre1977,
+-  author = {Serre, Jean Pierre},
++  author = {Serre, Jean-Pierre},
+   title = {Linear Representations of Finite Groups},
+   publisher = {Springer},
+   series = {Graduate Texts in Mathematics},
+@@ -196,7 +196,7 @@
+ }
+ 
+ @incollection{Serre1967,
+-  author = {Serre, Jean Pierre},
++  author = {Serre, Jean-Pierre},
+   title = {Local Class Field Theory},
+   booktitle = {Algebraic Number Theory},
+   editor = {Cassels, J. W. S. and Fr\"ohlich, A.},
+@@ -209,7 +209,7 @@
+ @incollection{Tate1979,
+   author = {Tate, John},
+   title = {Number theoretic background},
+-  booktitle = {Automorphic Forms, Representations and L Functions},
++  booktitle = {Automorphic Forms, Representations and {L}-Functions, Part 2},
+   editor = {Borel, Armand and Casselman, William},
+   publisher = {American Mathematical Society},
+   series = {Proceedings of Symposia in Pure Mathematics},
+@@ -230,7 +230,7 @@
+ 
+ @book{BerndtEvansWilliams1998,
+   author = {Berndt, Bruce C. and Evans, Ronald J. and Williams, Kenneth S.},
+-  title = {Gauss and Jacobi Sums},
++  title = {{Gauss} and {Jacobi} Sums},
+   publisher = {Wiley},
+   series = {Canadian Mathematical Society Series of Monographs and Advanced Texts},
+   address = {New York},
+@@ -239,7 +239,7 @@
+ 
+ @article{Mackey1952,
+   author = {Mackey, George W.},
+-  title = {Induced representations of locally compact groups. I},
++  title = {Induced representations of locally compact groups. {I}},
+   journal = {Annals of Mathematics},
+   series = {2},
+   volume = {55},
+@@ -268,7 +268,7 @@
+ 
+ @article{BushnellHenniart1996,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {Local tame lifting for GL(N). I. Simple characters},
++  title = {Local tame lifting for {GL(N)}. {I}. Simple characters},
+   journal = {Publications Math\'ematiques de l'IH\'ES},
+   volume = {83},
+   year = {1996},
+@@ -278,9 +278,21 @@
+ 
+ @book{BushnellHenniart1999,
+   author = {Bushnell, Colin J. and Henniart, Guy},
+-  title = {Local tame lifting for GL(N). II. Wildly ramified supercuspidals},
++  title = {Local tame lifting for {GL(N)}. {II}. Wildly ramified supercuspidals},
+   publisher = {Soci\'et\'e Math\'ematique de France},
+   series = {Ast\'erisque},
+   volume = {254},
+   year = {1999}
+ }
++
++
++@book{HenniartLemaire2011,
++  author = {Henniart, Guy and Lemaire, Bertrand},
++  title = {Changement de base et induction automorphe pour {$\mathrm{GL}_n$} en caract{\'e}ristique non nulle},
++  series = {M{\'e}moires de la Soci{\'e}t{\'e} Math{\'e}matique de France},
++  number = {124},
++  publisher = {Soci{\'e}t{\'e} math{\'e}matique de France},
++  year = {2011},
++  doi = {10.24033/msmf.436},
++  url = {https://www.numdam.org/item/MSMF_2011_2_124__1_0/}
++}
+--- v1.0.0/publication/source/traditional/Paper_XI_Traditional_Final.tex
++++ v1.1.0/publication/source/traditional/Paper_XI_Traditional_Final.tex
+@@ -29,6 +29,7 @@
+ \usepackage{booktabs}
+ \usepackage{array}
+ \usepackage{longtable}
++\usepackage{needspace}
+ \usepackage[nameinlink,noabbrev]{cleveref}
+ 
+ \allowdisplaybreaks
+@@ -132,7 +133,7 @@
+ \subjclass[2020]{11F70, 20C33, 22E50, 11S37, 20C25}
+ \keywords{local Langlands correspondence, tame induction, Heisenberg representations,
+ wild inertia, quadratic refinements, holonomy, arithmetic packet realization}
+-\date{Reading edition 1.0.0, October 10, 2026}
++\date{Revised edition 1.1.0, October 18, 2026}
+ 
+ \pdfstringdefDisableCommands{\let\unskip\relax}
+ \hypersetup{
+@@ -148,7 +149,7 @@
+ \renewcommand{\KomorebiSubtitle}{For local Langlands}
+ \renewcommand{\KomorebiSeries}{Core series XI}
+ \renewcommand{\KomorebiKind}{Traditional paper}
+-\renewcommand{\KomorebiEdition}{Reading edition 1.0.0 / 10 October 2026}
++\renewcommand{\KomorebiEdition}{Revised edition 1.1.0 / 18 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper XI}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+@@ -209,8 +210,9 @@
+ conditional identification of one actual candidate. The endpoint formerly
+ listed as proof obligation 66 (historical Theorem 16.2, row 95 of the
+ all-records register) is now \cref{conj:arithmetic_realization}.
+-The finite theorems retain their original statements and proofs, apart from
+-the explicitly recorded geometric-Frobenius convention correction. The later
++The finite theorem statements and proofs include the geometric-Frobenius
++convention correction and the additional local corrections recorded in this
++edition's reading guide. The later
+ restricted constructions are developed in \cref{sec:arithmetic_progress} and
+ the detailed construction appendices. Their evidence is ordinary proof with
+ retained internal reviews, rather than new Lean certificates. These reviews
+@@ -586,8 +588,8 @@
+ are the orbits of simultaneous translation on \(\ZZ/n\ZZ\times\ZZ/m\ZZ\). There are \(d\) orbits, each of length \(L\). The stabilizer of a point in each orbit is \(W_{K_L}\). The second character is shifted by the chosen Frobenius representative. Summing the induced terms over the double cosets gives the decomposition.
+ \end{proof}
+ 
+-\begin{corollary}[Packet count and depth]\label{cor:gcd_lcm_count}
+-The tensor product has \(d\) interaction packets before any further isomorphism is combined, and each packet has Frobenius orbit depth \(L\). The total dimension is preserved because
++\begin{corollary}[Packet count and dimension]\label{cor:gcd_lcm_count}
++The tensor product has \(d\) induced interaction packets, each with carrier dimension and Frobenius coset-cycle length \(L\). The interaction character may have a shorter inertia orbit, in which case a packet may split further into irreducible atoms. The total dimension is preserved because
+ \[
+ dL=nm.
+ \]
+@@ -600,7 +602,7 @@
+ \begin{figure}[t]
+ \centering
+ \includegraphics[width=.82\textwidth]{06_gcd_lcm_refinement.pdf}
+-\caption{Tensor refinement separates into greatest common divisor many packets, each with least common multiple depth.}
++\caption{Tensor refinement separates into greatest common divisor many packets, each with least common multiple carrier dimension.}
+ \label{fig:gcdlcm}
+ \end{figure}
+ 
+@@ -973,7 +975,11 @@
+ \[
+ z_ab_c(x,a)=z_a
+ \]
+-for every \(x\). Nondegeneracy forces \(z_a=0\) for every nonzero \(a\). Thus the center is \(\CC\). Maschke averaging, applied after passing to a finite central extension realizing the cocycle, shows that the twisted algebra is semisimple. A finite dimensional central simple algebra over \(\CC\) is a full matrix algebra. Its dimension is \(\abs A\), so the matrix size is \(\sqrt{\abs A}\).
++for every \(x\). Nondegeneracy forces \(z_a=0\) for every nonzero \(a\). Thus the center is \(\CC\). To prove semisimplicity directly, choose a linear projection \(P\) onto a submodule of a finite dimensional \(\CC^c[A]\)-module and form
++\[
++\overline P=\frac{1}{\abs A}\sum_{a\in A}u_a P u_a^{-1}.
++\]
++Every summand maps into the submodule and is the identity there. Conjugation by any \(u_x\) permutes the summands: the cocycle scalars cancel between each operator and its inverse. Hence \(\overline P\) is an equivariant projection, and its kernel is an invariant complement. The algebra is therefore semisimple. Its center \(\CC\) permits only one simple factor. A finite dimensional central simple algebra over \(\CC\) is a full matrix algebra. Its dimension is \(\abs A\), so the matrix size is \(\sqrt{\abs A}\).
+ \end{proof}
+ 
+ \begin{corollary}[Radical free envelope]\label{cor:radical_free}
+@@ -1152,12 +1158,13 @@
+ \[
+ V_\theta=J_\theta^1/H_\theta^1
+ \]
+-is a finite vector space over the residue field. Its commutator pairing is defined by
++is regarded as a finite vector space over \(\FF_p\), where \(p\) is the residue characteristic. Fix a nontrivial additive character \(\psi_0:\FF_p\to\mu_p\subset\CC^\times\), where \(\mu_p\) is the group of \(p\)-th roots of unity. The simple-character commutator takes values in \(\mu_p\). Since \(\psi_0\) is injective, the equation
+ \[
+ \psi_0\bigl(h_\theta(\bar x,\bar y)\bigr)
+ =
+-\theta([x,y]).
+-\]
++\theta([x,y])
++\]
++uniquely defines the \(\FF_p\)-valued commutator pairing \(h_\theta\). We use the same identification of \(\mu_p\) with the additive group of \(\FF_p\) on the Galois side when comparing the two symplectic spaces.
+ 
+ \begin{standardfact}[Type side Heisenberg quotient]\label{fact:type_heisenberg}
+ The pairing \(h_\theta\) is nondegenerate and alternating. There is one irreducible representation \(\eta_\theta\) of \(J_\theta^1\) containing \(\theta\), and its dimension is
+@@ -1678,7 +1685,7 @@
+ \end{proof}
+ 
+ \begin{proposition}[Projective cocycle form]\label{prop:projective_holonomy}
+-Suppose the edge maps are defined only up to scalar. Choose representatives. The ratio of the two scalar holonomies on each loop is unchanged by vertex rescaling. It defines a character of the first homology group when the scalar transport is abelian.
++Suppose the edge maps are defined only up to scalar, in the setting where all based holonomies of both systems are scalar. Choose representatives. The ratio of the two scalar holonomies on each loop is unchanged by vertex rescaling. It defines a character of the first homology group when the scalar transport is abelian.
+ \end{proposition}
+ 
+ \begin{proof}
+@@ -1774,19 +1781,19 @@
+ \end{proof}
+ 
+ \begin{corollary}[Breakwise phase product]\label{cor:break_phase}
+-In odd residue characteristic, if the stabilizer preserves every break packet and is fixed point free on its moving part, then
+-\[
+-\boxed{
+-\Phi_p(g,V)
+-=
+-\prod_{s\in S}\Phi_p(g,V_s).
++In odd residue characteristic, let \(g\in\Sp(V)\) preserve every break packet and suppose its restriction to \(M=\im(g-I)\) is fixed point free. Put \(g_s=g|_{V_s}\) and \(M_s=\im(g_s-I)\). The moving restrictions are symplectic, and
++\[
++\boxed{
++\Phi_p(g|_M,M)
++=
++\prod_{s\in S}\Phi_p(g_s|_{M_s},M_s).
+ }
+ \]
+ In residue characteristic two, the analogous normalized Gauss sign is the product of the signs determined by the breakwise quadratic refinements.
+ \end{corollary}
+ 
+ \begin{proof}
+-Use \cref{prop:odd_multiplicativity} in odd characteristic and \cref{cor:arf_multiplicative} in characteristic two.
++The invariant orthogonal decomposition gives \(M=\mathop{\perp}\limits_{s\in S}M_s\). Symplectic invariance gives \(M^\perp=\ker(g-I)\). Fixed point freeness on \(M\) therefore makes the restricted form nondegenerate on \(M\) and on each \(M_s\). Each restriction of \(g_s-I\) to \(M_s\) is invertible, so \cref{prop:odd_multiplicativity} applies to the moving spaces. A zero moving space contributes one. In characteristic two, apply \cref{cor:arf_multiplicative}.
+ \end{proof}
+ 
+ \begin{theorem}[Breakwise restricted bridge]\label{thm:breakwise_bridge}
+@@ -1806,8 +1813,9 @@
+ 
+ \section{Local factor tests and the remaining bridge}\label{sec:boundary}
+ 
+-Local class field theory identifies one dimensional Weil characters with characters of \(K^{\times}\) \cite{Serre1967,Tate1979}. The tame induction theorem extends this explicit picture to higher dimensional tame atoms. The local polynomial and conductor calculations in \cref{prop:tame_local_polynomial,prop:tame_conductor} therefore give complete finite invariants for the declared tame packets. Finite Gauss sums give the residue field phase. The full local factor, however, also includes ramification depth, Haar measure normalization, the additive character conductor, and wild interaction data.
+-
++Local class field theory identifies one dimensional Weil characters with characters of \(K^{\times}\) \cite{Serre1967,Tate1979}. The tame induction theorem extends this explicit picture to higher dimensional tame atoms. The local polynomial and conductor calculations in \cref{prop:tame_local_polynomial,prop:tame_conductor} therefore give explicit finite invariants for the declared tame packets. Finite Gauss sums give the residue field phase. The full local factor, however, also includes ramification depth, Haar measure normalization, the additive character conductor, and wild interaction data.
++
++\Needspace{13\baselineskip}
+ \begin{proposition}[Finite tame comparison package]\label{prop:tame_package}
+ For a tame induced atom, the following data are determined by its packet coordinates:
+ 
+@@ -1817,12 +1825,12 @@
+ \item the Artin conductor
+ \item the local polynomial
+ \item the tensor refinement into interaction packets
+-\item the finite Gauss phase of each declared residue character.
++\item the finite Gauss sum of each declared residue character, with unit-modulus phase normalization when that character is nontrivial.
+ \end{enumerate}
+ \end{proposition}
+ 
+ \begin{proof}
+-The dimension and orbit follow from \cref{thm:tame_induction}. The cycle polynomial is \cref{prop:frobenius_cycle}. The conductor is \cref{prop:tame_conductor}. The local polynomial is \cref{prop:tame_local_polynomial}. Tensor refinement is \cref{thm:gcd_lcm}. The finite Gauss phase is \cref{def:gauss_phase}.
++The dimension and orbit follow from \cref{thm:tame_induction}. The cycle polynomial is \cref{prop:frobenius_cycle}. For rank greater than one, the conductor is \cref{prop:tame_conductor}. In rank one, the Swan conductor is zero, and the Artin conductor is zero for trivial inertia and one otherwise, by the formula \(\operatorname{Art}=\dim V-\dim V^{I_K}+\operatorname{Sw}\). The local polynomial is \cref{prop:tame_local_polynomial}. Tensor refinement is \cref{thm:gcd_lcm}. The Gauss sum is its defining finite sum; for a nontrivial multiplicative character its unit phase is \cref{def:gauss_phase}. For the trivial character and a nontrivial additive character \(\psi\), the sum is \(G(1,\psi)=-1\), because the sum of \(\psi\) over the whole field is zero.
+ \end{proof}
+ 
+ \subsection{Arithmetic realization and the conditional comparison}
+--- v1.0.0/publication/source/traditional/README.md
++++ v1.1.0/publication/source/traditional/README.md
+@@ -1,17 +1,9 @@
+-# Paper XI — traditional source, reading release 1.0.0
++# Paper XI — traditional source
+ 
+-This directory belongs to Publication Block 07, 10 October 2026. Use the coordinated builder at the release root. The current readers are the 109-page monograph, 53-page core visual guide and 235-page Lean/evidence guide. They accompany the preserved 77-page research paper v0.4.0 and 36-page atlas v0.5.0.
++This is the active source for revised edition 1.1.0, 18 October 2026. Build it with the portable root `tools/build_readers.py`; the builder stages an independent copy and selects installed fonts without editing this directory. See root `BUILD.md`.
+ 
+-## Build
++The current source changes and their mathematical review are recorded in `evidence/release_1_1/` relative to the release root. The three original readers share the typography profile and have no top-right decorative motif. All mathematical figures and their retained generators use Python. Figure assets are preserved; this edition does not claim fresh figure regeneration.
+ 
+-From the release root run `python tools/build_readers.py --output ../paper_xi_build`. Output must be outside the package. The compatibility entry point `python build.py --output-dir /absolute/external/output` invokes the same coordinated builder. All three originals must be built before assembling cross-document links.
++The 423 selected Lean modules, original catalogue JSON, and forty literal teaching excerpts keep their inherited identities. The fresh compiler audit and the two separately counted formal targets are documented in root `formalization/` and `verification/lean/`. PDF compilation and arithmetic existence have separate evidentiary scopes.
+ 
+-XeLaTeX, pdfLaTeX, BibTeX (or bibtex.original), PyMuPDF, fontconfig and installed URW/DejaVu fonts are required. No font files are distributed. Pass `--font-dir` to select a local URW OTF directory. Shell escape remains disabled. The preserved research PDFs are copied, not regenerated from unavailable Block 02 sources.
+-
+-## Source and evidence boundaries
+-
+-The main proof/statement bodies and all selected Lean sources, excerpts and scientific figures are unchanged. Block 07 restores44 malformed superscript expressions in nine construction appendices against15 original Markdown notes. It also clarifies that one table column measures the source representation carrier, not its symplectic quotient. The earlier Appendix D field-degree factor correction is retained. See `evidence/block07` at the release root for exact patches and hashes.
+-
+-Older source catalogs, review logs and summaries remain historical records. Their dates, page counts and hashes identify their original checkpoints. Current receipts are in `verification/block07`. Immediate baseline sources are in `predecessor/block06/publication/source`; older originals remain deeper in that unchanged predecessor tree.
+-
+-Rebuilding these PDFs is not a Lean build. The missing full Block 02 editable archive, missing terminal v0.45 receipt and access-limited Henniart–Lemaire reread remain explicit. See the root ledger and RELEASE_SCOPE.md.
++The earlier complete source-and-evidence release is retained under root `historical/`. Paths, dates, source hashes and status text inside its records refer to their original checkpoints. The selected Henniart–Lemaire full-text review is new to this edition. The full Block 2 editable archive is still unavailable; its research-reader text is preserved. General realization and same-candidate H5 remain open.
+--- v1.0.0/publication/source/traditional/appendices/dyadic_character.tex
++++ v1.1.0/publication/source/traditional/appendices/dyadic_character.tex
+@@ -154,7 +154,7 @@
+ 
+ They are the compatible native truncations of (5), because the outer
+ extension, uniformizer, and lift depend on the same retained largest h
+-at each stage. In rank 2\^{}(j+1), put
++at each stage. For \(1\le j<d\), in rank 2\^{}(j+1), put
+ 
+ \begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+ gamma_j=b_j tensor I_2,
+--- v1.0.0/publication/source/traditional/appendices/dyadic_synthesis.tex
++++ v1.1.0/publication/source/traditional/appendices/dyadic_synthesis.tex
+@@ -230,7 +230,7 @@
+ 
+ At rank eight, numerical profiles alone also fail to determine capacity.
+ \path{capacity/DYADIC_CAPACITY167.md}, Section 6, constructs an
+-actual skipped- degree \(8\to2\) host with the same Swan, torsion and
++actual skipped-degree \(8\to2\) host with the same Swan, torsion and
+ self-pair conductor but quotient dimension four rather than six. Our
+ successful result uses the explicit full tower, rather than inferring
+ its profile from invariants.
+--- v1.0.0/publication/source/traditional/appendices/odd_character.tex
++++ v1.1.0/publication/source/traditional/appendices/odd_character.tex
+@@ -68,12 +68,12 @@
+   K\_j=F{[}b\_j{]} is a totally ramified maximal field of degree p\^{}j,
+   normalizing the native complete period-p\^{}j chain A\_j.
+ \item
+-  In rank p\^{}(j+1), gamma\_j=b\_j tensor I\_p is a simple
++  For \(1\le j<d\), in rank p\^{}(j+1), gamma\_j=b\_j tensor I\_p is a simple
+   approximation to b\_(j+1), at the critical level
+   r\_j=q\_(d-j)\textgreater0 of b\_(j+1). They are equivalent as strata
+   at that level.
+ \item
+-  delta\_j=b\_(j+1)-gamma\_j has grade -r\_j and F-matrix trace zero.
++  For \(1\le j<d\), delta\_j=b\_(j+1)-gamma\_j has grade -r\_j and F-matrix trace zero.
+ \item
+   At native rank p, b\_1 is multiplication by alpha in the explicit
+   Artin--Schreier field
+--- v1.0.0/publication/source/traditional/appendices/odd_tower.tex
++++ v1.1.0/publication/source/traditional/appendices/odd_tower.tex
+@@ -253,7 +253,7 @@
+ B(F,t;h\_(d-j+1),\ldots,h\_d) has trace zero. This native assertion is
+ the one relevant when constructing characters before each transfer.
+ 
+-The field degrees and critical levels of B\footnote{j} are exactly
++The field degrees and critical levels of \(B^{[j]}\) are exactly
+ 
+ \begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+ degree p^j,  n_j=p^(d-j)q_(d-j+1).
+--- v1.0.0/publication/source/traditional/komorebi-publication.sty
++++ v1.1.0/publication/source/traditional/komorebi-publication.sty
+@@ -75,11 +75,6 @@
+   \begin{tikzpicture}[remember picture,overlay]
+     \fill[KomorebiWarm] (current page.south west) rectangle (current page.north east);
+     \fill[KomorebiPine] (current page.north west) rectangle ([xshift=8pt]current page.south west);
+-    \draw[KomorebiPine!38,line width=.8pt] ([xshift=-.65in,yshift=-.65in]current page.north east) .. controls ++(-1.9in,-.1in) and ++(.4in,1.4in) .. ([xshift=-.8in,yshift=-3.15in]current page.north east);
+-    \foreach \t in {0,...,7}{
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(-.38in,.06in) and ++(-.55in,.18in) .. ++(-.7in,.28in);
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(.3in,-.08in) and ++(.4in,-.24in) .. ++(.52in,-.35in);
+-    }
+   \end{tikzpicture}
+   \color{KomorebiInk}\sffamily
+   \noindent{\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}OPERATION KOMOREBI}\par
+--- v1.0.0/publication/source/traditional/reader_route.tex
++++ v1.1.0/publication/source/traditional/reader_route.tex
+@@ -9,7 +9,7 @@
+ Reader & Route and purpose\\\midrule
+ Core monograph & Finite tame and wild theory, restricted arithmetic constructions, and the exact realization/comparison boundary.\\[7pt]
+ Core visual guide & \href{https://komorebi.invalid/b07/core_visual}{Geometric route through the core paper}. The original arithmetic examples retain their stated scope.\\[7pt]
+-Lean and evidence guide & \href{https://komorebi.invalid/b07/core_lean}{Formal statements, literal excerpts and evidence lineage}. A source census is not a new kernel run.\\[7pt]
++Lean and evidence guide & \href{https://komorebi.invalid/b07/core_lean}{Formal statements, literal excerpts and evidence lineage}. The guide distinguishes the selected source census, compiler replay and arithmetic hypotheses.\\[7pt]
+ Progress paper & \href{https://komorebi.invalid/b07/research_start}{Toward Arithmetic Packet Realization}, 77 pages, v0.4.0. Connected proofs, failed routes, conductor conventions and native-marking conditions.\\[7pt]
+ Research visual atlas & \href{https://komorebi.invalid/b07/atlas_start}{Arithmetic Packet Realization}, 36 pages, v0.5.0. Thirty-two worked plates accompany the progress paper.\\\bottomrule
+ \end{tabular}
+@@ -35,10 +35,12 @@
+ \end{tabular}
+ 
+ \subsection*{What this revision checks}
+-This reading release retains the 68 explicit proof bodies in the main manuscript. Appendix D restores the dimension factor \([k:\mathbb F_p](n-n/p)\) lost in an earlier Markdown conversion. The final audit also restores 44 malformed superscript expressions across nine construction appendices, checked against the original notes. For example, \(J^1/H^1\) and \(s(P^r)=Q^r\) must retain their separate exponents. All 15 raw notes and the exact correction map accompany the source package. These repairs restore source notation. They add no theorem premise and supply no missing arithmetic witness.
++This revision preserves the paper's structure and detailed construction appendices while correcting several local formulations. The breakwise phase product now uses its actual moving spaces and states the symplectic action explicitly. The twisted-algebra proof uses direct averaging. The type-side pairing fixes its prime-field character, and the tame comparison includes the rank-one conductor and trivial-character Gauss-sum boundaries. Interaction carriers are distinguished from minimal character orbits.
+ 
+-Historical review dates and formal receipts retain their original scope. References to independent review in older construction records mean internal review, not external peer review. Rebuilding a PDF is not a Lean compilation. The versioned progress ledger records fresh checks separately from inherited evidence.
++Appendix B restores the approximation index \(B^{[j]}\) that was converted into a footnote. The earlier dimension-factor and 44 superscript repairs remain in place. All 15 original construction notes and the exact source diff accompany the release. These source restorations and local mathematical clarifications do not supply a general arithmetic witness.
+ 
+-The full Block 2 editable archive and the terminal v0.45 compilation receipt have not been recovered. The relevant Henniart--Lemaire primary-source reread retains the access limitation recorded in the progress paper. These documentary boundaries do not alter the proved finite statements.
++The selected Henniart--Lemaire induction inputs \cite{HenniartLemaire2011} have now been checked against the full official text, including their characteristic, rank and normalization hypotheses. The new source review is bounded to the cited application; it does not establish H5 or corrected-character occurrence.
++
++For the current compiler and axiom results, consult the Lean and evidence guide and the dated verification receipts. Historical evidence retains its original scope. Internal review is not external peer review. The complete Block 2 editable archive remains unrecovered, so its research-reader pages are preserved rather than claimed as a unified source rebuild.
+ 
+ \endgroup
+--- v1.0.0/publication/source/visual_guide/Paper_XI_Visual_Guide_Final.tex
++++ v1.1.0/publication/source/visual_guide/Paper_XI_Visual_Guide_Final.tex
+@@ -33,7 +33,7 @@
+ \renewcommand{\KomorebiSubtitle}{For local Langlands}
+ \renewcommand{\KomorebiSeries}{Core series XI}
+ \renewcommand{\KomorebiKind}{Visual guide}
+-\renewcommand{\KomorebiEdition}{Reading edition 1.0.0 / 10 October 2026}
++\renewcommand{\KomorebiEdition}{Revised edition 1.1.0 / 18 October 2026}
+ \renewcommand{\KomorebiShortTitle}{Paper XI}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+@@ -49,6 +49,7 @@
+ All mathematical artwork is deterministic Python/Matplotlib vector output. The complete editable source and its figure generator accompany this guide.}
+ 
+ \section*{How to use this companion}
++\phantomsection
+ \addcontentsline{toc}{section}{How to use this companion}
+ Read the first two parts as an atlas of finite mathematical objects. The third part explains where finite objects acquire an actual arithmetic carrier. The final part separates the remaining realization conjecture from the conditional comparison theorem.
+ 
+@@ -664,7 +665,7 @@
+ These finite outputs have contracts, scripts, input pins, results, and execution records in the release. The critical exponents, simplicity, full-character existence, and arbitrary-length statements use the separate ordinary mathematical arguments.
+ 
+ \textbf{Rebuilding the synchronized readers.} From the checkpoint root, run
+-\texttt{python tools/build\_readers.py --output PATH}, with PATH outside the
++\texttt{python tools/build\_readers.py -{}-output PATH}, with PATH outside the
+ checkpoint. The builder stages every style, include and figure dependency,
+ compiles the readers, and resolves the cross-document destinations. The
+ vector plates are preserved source assets. Their Python generator remains
+--- v1.0.0/publication/source/visual_guide/README.md
++++ v1.1.0/publication/source/visual_guide/README.md
+@@ -1,17 +1,9 @@
+-# Paper XI — visual guide source, reading release 1.0.0
++# Paper XI — visual guide source
+ 
+-This directory belongs to Publication Block 07, 10 October 2026. Use the coordinated builder at the release root. The current readers are the 109-page monograph, 53-page core visual guide and 235-page Lean/evidence guide. They accompany the preserved 77-page research paper v0.4.0 and 36-page atlas v0.5.0.
++This is the active source for revised edition 1.1.0, 18 October 2026. Build it with the portable root `tools/build_readers.py`; the builder stages an independent copy and selects installed fonts without editing this directory. See root `BUILD.md`.
+ 
+-## Build
++The current source changes and their mathematical review are recorded in `evidence/release_1_1/` relative to the release root. The three original readers share the typography profile and have no top-right decorative motif. All mathematical figures and their retained generators use Python. Figure assets are preserved; this edition does not claim fresh figure regeneration.
+ 
+-From the release root run `python tools/build_readers.py --output ../paper_xi_build`. Output must be outside the package. The compatibility entry point `python build.py --output-dir /absolute/external/output` invokes the same coordinated builder. All three originals must be built before assembling cross-document links.
++The 423 selected Lean modules, original catalogue JSON, and forty literal teaching excerpts keep their inherited identities. The fresh compiler audit and the two separately counted formal targets are documented in root `formalization/` and `verification/lean/`. PDF compilation and arithmetic existence have separate evidentiary scopes.
+ 
+-XeLaTeX, pdfLaTeX, BibTeX (or bibtex.original), PyMuPDF, fontconfig and installed URW/DejaVu fonts are required. No font files are distributed. Pass `--font-dir` to select a local URW OTF directory. Shell escape remains disabled. The preserved research PDFs are copied, not regenerated from unavailable Block 02 sources.
+-
+-## Source and evidence boundaries
+-
+-The main proof/statement bodies and all selected Lean sources, excerpts and scientific figures are unchanged. Block 07 restores44 malformed superscript expressions in nine construction appendices against15 original Markdown notes. It also clarifies that one table column measures the source representation carrier, not its symplectic quotient. The earlier Appendix D field-degree factor correction is retained. See `evidence/block07` at the release root for exact patches and hashes.
+-
+-Older source catalogs, review logs and summaries remain historical records. Their dates, page counts and hashes identify their original checkpoints. Current receipts are in `verification/block07`. Immediate baseline sources are in `predecessor/block06/publication/source`; older originals remain deeper in that unchanged predecessor tree.
+-
+-Rebuilding these PDFs is not a Lean build. The missing full Block 02 editable archive, missing terminal v0.45 receipt and access-limited Henniart–Lemaire reread remain explicit. See the root ledger and RELEASE_SCOPE.md.
++The earlier complete source-and-evidence release is retained under root `historical/`. Paths, dates, source hashes and status text inside its records refer to their original checkpoints. The selected Henniart–Lemaire full-text review is new to this edition. The full Block 2 editable archive is still unavailable; its research-reader text is preserved. General realization and same-candidate H5 remain open.
+--- v1.0.0/publication/source/visual_guide/komorebi-publication.sty
++++ v1.1.0/publication/source/visual_guide/komorebi-publication.sty
+@@ -75,11 +75,6 @@
+   \begin{tikzpicture}[remember picture,overlay]
+     \fill[KomorebiWarm] (current page.south west) rectangle (current page.north east);
+     \fill[KomorebiPine] (current page.north west) rectangle ([xshift=8pt]current page.south west);
+-    \draw[KomorebiPine!38,line width=.8pt] ([xshift=-.65in,yshift=-.65in]current page.north east) .. controls ++(-1.9in,-.1in) and ++(.4in,1.4in) .. ([xshift=-.8in,yshift=-3.15in]current page.north east);
+-    \foreach \t in {0,...,7}{
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(-.38in,.06in) and ++(-.55in,.18in) .. ++(-.7in,.28in);
+-      \draw[KomorebiPine!32,line width=.7pt] ([xshift=-.75in-\t*.13in,yshift=-.9in-\t*.24in]current page.north east) .. controls ++(.3in,-.08in) and ++(.4in,-.24in) .. ++(.52in,-.35in);
+-    }
+   \end{tikzpicture}
+   \color{KomorebiInk}\sffamily
+   \noindent{\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}OPERATION KOMOREBI}\par
+--- v1.0.0/publication/source/visual_guide/reader_route.tex
++++ v1.1.0/publication/source/visual_guide/reader_route.tex
+@@ -26,8 +26,8 @@
+ \textbf{A successful finite repair has inputs.} The transvection starts with an allowed symplectic map and an isotropic discrepancy vector. The odd-action correction starts with genuine supplied finite actions. Neither constructs the arithmetic normalizer or chooses every honest phase. See \href{https://komorebi.invalid/b07/visual_repairs}{plates V25--V29}.
+ 
+ \subsection*{Evidence and publication status}
+-This reading release rebuilds the core guide from its editable source and preserves its vector figures. The historical matrix calculations and ordinary construction arguments keep their original dates and scopes. The current PDF build does not rerun those arithmetic constructors or invoke Lean.
++This revision rebuilds the core guide from its editable source and preserves its Python-generated vector figures. The historical matrix calculations and ordinary construction arguments keep their dates and scopes. The Lean and evidence guide records the separate current compiler replay; the PDF build itself does not certify arithmetic constructors.
+ 
+-The versioned ledger distinguishes the publication task from the open arithmetic endpoints. The complete Block 2 editable package and the terminal v0.45 receipt remain documentary gaps. A complete reread of the named Henniart--Lemaire input was not performed in this revision. No external peer review is claimed.
++The versioned ledger distinguishes publication and formal verification from the open arithmetic endpoints. The selected Henniart--Lemaire source interface has now been checked against the full official text, including its normalization conventions. The complete Block 2 editable archive remains unavailable. Its research-reader pages are preserved. No external peer review is claimed.
+ 
+ For the final same-candidate comparison, read \href{https://komorebi.invalid/b07/visual_comparison}{the monograph comparison proposition} alongside \href{https://komorebi.invalid/b07/visual_v32}{research plate V32}. The conjecture itself does not assert the independent H5 step.

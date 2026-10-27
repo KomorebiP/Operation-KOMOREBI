@@ -1,0 +1,87 @@
+{
+  "recorded_at": "2026-10-18T18:32:09.324423+00:00",
+  "status": "PASS",
+  "check": "All six relocated portable script entry points load and render --help; this is a CLI/syntax/import check, not a replay of mathematical verification.",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "commands": [
+    {
+      "script": "scripts/audit_controls.py",
+      "sha256": "d3d9651047d2c0d3f60e6cd276395e46c1e1a2899697500b523538fb51cdce7d",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/604befec1954/paperxi_lean_portable/scripts/audit_controls.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.058898056000543875,
+      "stdout": "usage: audit_controls.py [-h] [--replay REPLAY] [--out OUT]\n                         [--lean-bin LEAN_BIN]\n\nExercise two negative controls for the owning-module axiom audit. The first\ncontrol places public and private nonstandard axioms outside a safe catalogue\nentry in the same module. The audit must detect both. The second requests an\nabsent catalogue name from a real selected module. Neither control modifies\nPaper XI.\n\noptions:\n  -h, --help           show this help message and exit\n  --replay REPLAY\n  --out OUT\n  --lean-bin LEAN_BIN\n",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/axiom_audit.py",
+      "sha256": "61374ed142fe15110eaa718482aa7ade70bffb2c802046b23ed1f413b93e1c9b",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/604befec1954/paperxi_lean_portable/scripts/axiom_audit.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.048342715001126635,
+      "stdout": "usage: axiom_audit.py [-h] [--replay REPLAY] --out OUT [--lean-bin LEAN_BIN]\n                      [--scope {selected,terminal,new_interface}]\n                      [--module MODULE]\n\nAudit catalogue names and every imported constant owned by selected modules.\nLean's module-ownership map defines the audited population. Catalogue names\nmust resolve to their stated owning modules, and all owned constants are\nchecked for transitive axiom dependencies. The output includes generated and\nprivate constants visible in the imported kernel environment.\n\noptions:\n  -h, --help            show this help message and exit\n  --replay REPLAY\n  --out OUT\n  --lean-bin LEAN_BIN\n  --scope {selected,terminal,new_interface}\n  --module MODULE\n",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/bootstrap.py",
+      "sha256": "3cad1de447c1a84c25213985bbf627511e415ecba373829edf2c7869a6ee16d2",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/604befec1954/paperxi_lean_portable/scripts/bootstrap.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05920512599914218,
+      "stdout": "usage: bootstrap.py [-h] [--offline]\n\nPrepare the pinned portable Lean runtime and official mathlib dependencies.\nThe bundled bootstrap targets Linux x86_64, including Ubuntu under WSL. It\nchanges only this project directory and downloads from the official Lean,\nleanprover-community and mathlib cache services. Use --offline to require an\nalready prepared runtime and dependency tree without downloading anything.\n\noptions:\n  -h, --help  show this help message and exit\n  --offline\n",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/kernel_replay.py",
+      "sha256": "d89e7bdfca815f22315cf2af9ca7aa9002a053c1f39b18488888316de67b47ed",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/604befec1954/paperxi_lean_portable/scripts/kernel_replay.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.044696619999740506,
+      "stdout": "usage: kernel_replay.py [-h] [--replay REPLAY] [--out OUT]\n                        [--lean-bin LEAN_BIN] [--jobs JOBS]\n                        [--timeout TIMEOUT]\n                        [--scope {all,selected,terminal,new_interface}]\n\nReplay each freshly built module's declarations through Lean's kernel. This\nuses the official leanchecker shipped with the pinned Lean release. It checks\nmodule declarations over their imported environments. It is not an independent\nimplementation of Lean's kernel and does not rebuild mathlib.\n\noptions:\n  -h, --help            show this help message and exit\n  --replay REPLAY\n  --out OUT\n  --lean-bin LEAN_BIN\n  --jobs JOBS\n  --timeout TIMEOUT\n  --scope {all,selected,terminal,new_interface}\n",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/replay.py",
+      "sha256": "217a749fadb8fc89e48dfc9d0c3fa53b8807ffce5ef2d87c75c9452df4c8e377",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/604befec1954/paperxi_lean_portable/scripts/replay.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.038995961998807616,
+      "stdout": "usage: replay.py [-h] [--out OUT] [--lean-bin LEAN_BIN] [--jobs JOBS]\n                 [--timeout TIMEOUT] [--resume RESUME] [--selected-only]\n\nFreshly compile immutable Paper XI sources with bounded parallel processes.\nRun from any directory after bootstrapping the pinned dependencies. Every run\nrequires a new output directory. Selected sources and additions are counted\nseparately, and a failed addition does not prevent independent selected\nsources from being checked. By default no Paper XI object is reused. An\nexplicit resume authenticates source and artifact hashes from an earlier\nreplay receipt.\n\noptions:\n  -h, --help           show this help message and exit\n  --out OUT\n  --lean-bin LEAN_BIN\n  --jobs JOBS\n  --timeout TIMEOUT\n  --resume RESUME      Earlier replay directory whose successful objects may\n                       be authenticated and reused\n  --selected-only\n",
+      "stderr": ""
+    },
+    {
+      "script": "scripts/verify_all.py",
+      "sha256": "792a272312dbcd935df0b88f3482933fe370f1e359831e7405491a8d553f4129",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/scratch/604befec1954/paperxi_lean_portable/scripts/verify_all.py",
+        "--help"
+      ],
+      "exit_code": 0,
+      "seconds": 0.044087873999160365,
+      "stdout": "usage: verify_all.py [-h] [--jobs JOBS] [--out OUT] [--lean-bin LEAN_BIN]\n                     [--kernel-replay]\n\nRun source compilation, owning-module axiom audits and negative controls.\nDependencies must be prepared first with bootstrap.py. This command performs\nno dependency downloads. Its child scripts preserve exact commands, source\nhashes, output hashes and separate selected/terminal/interface counts. The\nredundant same-kernel leanchecker pass is an explicit optional extra.\n\noptions:\n  -h, --help           show this help message and exit\n  --jobs JOBS\n  --out OUT\n  --lean-bin LEAN_BIN\n  --kernel-replay      Also run the official same-kernel checker after the\n                       required gates\n",
+      "stderr": ""
+    }
+  ],
+  "portable_dependency_directories_created": false
+}
