@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "inputs_before_and_after": {
+    "app/weights.bin": "5a3e9e80c8d7173295db73b058bc11bdc223533abf79041631f2f2546e58626b",
+    "app/weights.json": "c9f1ad6b9e944a46f11cd7c7c2a3e1358953a0888c34852a6ef005dff367d0f1",
+    "app/frames.json": "38866bdb36359bfbc935ad3eea911492b9bae613e8024a65cbce1a6b84770826",
+    "app/engine.js": "aa26aebab68fa2d8bf745dc32ab8bd429c0ff0e66aca290a09ecd4fb154705a7",
+    "app/causal_engine.js": "3150f21161e4633f914b125904b84ee42cfbb099a9b4dfb4e819e178b907f3e0",
+    "checks/causal_raw.npz": "82da5019b0eef6efa8e7637a7760c0ab86c72f62e50c3fde55bebbac444545bb"
+  },
+  "commands": [
+    {
+      "command": [
+        "node",
+        "checks/test_port.js"
+      ],
+      "started_at": "2026-09-27T15:15:04.671520+00:00",
+      "seconds": 0.48825538200003393,
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"runs\": 72,\n  \"decisions\": 4608,\n  \"decision_mismatches\": [],\n  \"max_state_abs_error\": 0.0000171661376953125,\n  \"max_logit_abs_error\": 0.0001010894775390625,\n  \"scalar_checks\": 55296,\n  \"seconds\": 0.445,\n  \"environment\": {\n    \"node\": \"v22.16.0\",\n    \"torch\": \"2.10.0+cpu\"\n  },\n  \"weight_sha256\": \"5a3e9e80c8d7173295db73b058bc11bdc223533abf79041631f2f2546e58626b\",\n  \"scope\": \"Float32 tensor outputs with JavaScript double-precision dot accumulation. Tested these sampled paths, not every input or device.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "checks/test_causal_port.js"
+      ],
+      "started_at": "2026-09-27T15:15:05.159803+00:00",
+      "seconds": 0.2762053989999913,
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"paths\": 168,\n  \"decisions\": 1344,\n  \"mismatches\": 0,\n  \"max_state_abs_error\": 0.0000024139881134033203,\n  \"max_edited_abs_error\": 0.000001430511474609375,\n  \"max_logit_abs_error\": 0.00001239776611328125,\n  \"contract_checks\": [\n    \"Zero strength is exactly baseline\",\n    \"Native is exactly donor\",\n    \"One-agent edit leaves other untouched\",\n    \"Native interpolation rejected\",\n    \"Nonfinite values rejected\",\n    \"Invalid programs rejected\",\n    \"Memory audit preserves live activations\",\n    \"Candidate and complement sum to donor delta\"\n  ],\n  \"scope\": \"Sampled numeric agreement with PyTorch. Does not certify natural support or every browser/input.\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "checks/audit_causal_results.py"
+      ],
+      "started_at": "2026-09-27T15:15:05.436038+00:00",
+      "seconds": 0.6955370570000241,
+      "returncode": 0,
+      "stdout": "{\n  \"status\": \"PASS\",\n  \"recomputed_metric_entries\": 680,\n  \"recorded_output_entries\": 266240,\n  \"scope\": \"Reuses histories across methods, suffixes, agents and consumers; not independent experiments.\",\n  \"candidate_hash_matches\": true\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "rebuild.py"
+      ],
+      "started_at": "2026-09-27T15:15:06.131604+00:00",
+      "seconds": 0.6398608210000702,
+      "returncode": 0,
+      "stdout": "Komorebi_JSpace_Causal_Lab.html 4322672 7df45e5f76d55c3873404109b788db3893b77392ece3666c0a4d8d4d06b5d6d1\n",
+      "stderr": ""
+    }
+  ],
+  "no_training_executed": true
+}

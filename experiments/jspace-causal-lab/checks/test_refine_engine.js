@@ -1,0 +1,37 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert'),crypto=require('crypto');
+const root=path.resolve(__dirname,'..'),E=require('../app/engine.js'),C=require('../app/causal_engine.js'),R=require('../app/refine_engine.js');
+const meta=JSON.parse(fs.readFileSync(root+'/app/weights.json')),raw=fs.readFileSync(root+'/app/weights.bin'),frameRaw=fs.readFileSync(root+'/app/frames.json'),frames=JSON.parse(frameRaw);
+const hash=crypto.createHash('sha256').update(frameRaw).digest('hex');
+const store=E.load(meta,raw.buffer.slice(raw.byteOffset,raw.byteOffset+raw.byteLength));
+const specs=JSON.parse(fs.readFileSync(__dirname+'/causal_specs.json'));
+let checks=[];
+function check(name,fn){fn();checks.push(name);}
+const d=new E.Dyad(store,meta,'A','calibrated'),s=specs[0];let v=s.cue.map(i=>s.world[i]);for(const op of s.ops)v=E.truthOp(v,op);
+const exp=C.prepare(d,C.initial(d,s),E.target(v),E.target(v)^1),frame=frames.lineages.A;
+const settings={method:'J',strength:1,agent:'both',offsets:[0,0,0],suffix:[]};
+check('Analysis never mutates original or donor states',()=>{const before=JSON.stringify(exp);R.point(d,exp,frame,settings,s.world,s.roles);assert.equal(JSON.stringify(exp),before);});
+const sweep=R.sweepAlphas('J').map(strength=>R.point(d,exp,frame,{...settings,strength},s.world,s.roles));
+check('Sweep covers 21 exact grid points and baseline at zero',()=>{assert.equal(sweep.length,21);assert.equal(sweep[0].editNorm[0],0);assert.deepStrictEqual(sweep[0].predictions,sweep[0].originalPredictions);});
+check('Native sweep contains only two realizable endpoint choices',()=>assert.deepStrictEqual(R.sweepAlphas('native'),[0,1]));
+check('No continuous minimum is invented from a grid',()=>{const x=R.summary(sweep);assert(x.gridOnly);assert.equal(x.independentConfirmation,false);if(x.firstPreserving!==null)assert(sweep.find(r=>r.settings.strength===x.firstPreserving).strictCasePass);});
+check('Sham is never labeled successful changed-content steering',()=>{const e=C.prepare(d,C.initial(d,s),E.target(v),E.target(v));assert.equal(R.summary([R.point(d,e,frame,settings,s.world,s.roles)]).firstSteering,null);});
+check('Recall loss compares individual bits, not net correct counts',()=>{const world=[0,0,0,0,0,0,0,0],before={bits:[[1,0,0,0,0,0,0,0],world.slice()],correct:[7,8]},after={bits:[[0,1,0,0,0,0,0,0],world.slice()],correct:[7,8]};const x=R.compareMemory(before,after,world);assert.deepStrictEqual(x.lost,[1,0]);assert.deepStrictEqual(x.recovered,[1,0]);assert.equal(x.noNewErrors,false);});
+let t=R.begin(d,exp,frame,settings,s.world,s.roles);
+check('Commit starts exactly at edited and original computed states',()=>{const o=C.evaluate(d,exp,frame,settings);assert.deepStrictEqual(t.states[0],o.baseline);assert.deepStrictEqual(t.states[1],o.post);});
+check('Live query selection and audits do not update activations',()=>{const old=JSON.stringify(t.states);for(let q=0;q<4;q++)R.liveRead(t,q,3);R.auditSession(t);assert.equal(JSON.stringify(t.states),old);});
+check('Working step uses committed state exactly once',()=>{const expected=t.states.map(h=>C.finish(d,h,[3]));R.step(t,{type:'work',ops:[3]});assert.deepStrictEqual(t.states,expected);assert.equal(t.actions.length,1);});
+check('Undo restores every bit of the previous paired state',()=>{R.undo(t);const o=C.evaluate(d,exp,frame,settings);assert.deepStrictEqual(t.states,[o.baseline,o.post]);assert.equal(t.history.length,1);});
+check('Reload is a native retrieval and resets semantic reference to factual world',()=>{const cue=[2,3],expected=t.states.map(h=>d.retrieve(C.clone(h),cue,0,'intact'));R.step(t,{type:'retrieve',cue});assert.deepStrictEqual(t.states,expected);assert.deepStrictEqual(t.references,[cue.map(i=>s.world[i]),cue.map(i=>s.world[i])]);});
+R.step(t,{type:'work',ops:[1,3,2]});R.step(t,{type:'silent',count:1});
+const payload=R.exportSession(t,meta,hash);
+check('Replay reproduces exact JS state and all action snapshots',()=>{const replay=R.replay(JSON.parse(JSON.stringify(payload)),store,meta,frames,hash);assert.deepStrictEqual(replay.states,t.states);assert.deepStrictEqual(replay.history,t.history);});
+check('Saved predictions cannot override replay output',()=>{const fake=structuredClone(payload);fake.snapshots.forEach(x=>x.outputs.forEach(a=>a.forEach(q=>q.forEach(o=>o.prediction=999))));const replay=R.replay(fake,store,meta,frames,hash);assert.deepStrictEqual(replay.history,t.history);});
+check('Checkpoint mismatch and invalid inputs are rejected',()=>{let x=structuredClone(payload);x.weights_sha256='bad';assert.throws(()=>R.replay(x,store,meta,frames,hash));x=structuredClone(payload);x.origin.baseline[0][0]=null;assert.throws(()=>R.replay(x,store,meta,frames,hash));x=structuredClone(payload);x.actions=[{type:'work',ops:[9]}];assert.throws(()=>R.replay(x,store,meta,frames,hash));x=structuredClone(payload);x.settings.method='native';x.settings.strength=.5;assert.throws(()=>R.replay(x,store,meta,frames,hash));});
+check('Invalid action does not partially mutate a live trajectory',()=>{const old=JSON.stringify(t.states),n=t.actions.length;assert.throws(()=>R.step(t,{type:'retrieve',cue:[1,1]}));assert.equal(JSON.stringify(t.states),old);assert.equal(t.actions.length,n);});
+check('Replay resource bounds are validated before execution',()=>{const x=structuredClone(payload);x.actions=Array.from({length:65},()=>({type:'work',ops:[0]}));assert.throws(()=>R.replay(x,store,meta,frames,hash));x.actions=Array.from({length:32},()=>({type:'work',ops:Array(12).fill(0)}));assert.throws(()=>R.replay(x,store,meta,frames,hash));});
+// Retain actual new diagnostic rows rather than only a PASS flag.
+fs.writeFileSync(__dirname+'/refine_smoke_sweep.json',JSON.stringify({lineage:'A',spec:s,rows:sweep,summary:R.summary(sweep)},null,2));
+fs.writeFileSync(__dirname+'/refine_replay_fixture.json',JSON.stringify(payload,null,2));
+const out={status:'PASS',checks:checks.length,contract_checks:checks,scope:'Finite software-contract tests. Not a new J-space or native-localization result.'};
+fs.writeFileSync(__dirname+'/refine_contracts.json',JSON.stringify(out,null,2));console.log(JSON.stringify(out,null,2));

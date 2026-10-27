@@ -1,0 +1,44 @@
+<section id="relay" role="tabpanel" hidden>
+  <div class="panel relay-lead">
+    <div class="eyebrow">CAUSAL PATH · ONE WRITER, FIVE MATCHED BRANCHES</div>
+    <h2>Does the edit reach the other agent?</h2>
+    <p>Change one hidden state. Watch the actual outgoing message, the receiving state, and the later answer. Then restore or replay <strong>only the first packet</strong> to isolate that connection.</p>
+    <p class="hint" id="mContext"></p>
+    <div class="actions"><button id="mDemo">Load guided case</button><button id="mEditor" class="ghost">Change candidate or donor</button></div>
+  </div>
+  <div class="relay-layout">
+    <div class="stack">
+      <section class="panel">
+        <h2><span class="step">01</span> Choose the write and continuation</h2>
+        <div class="mt"><label for="mWriter">Edit one agent only</label><select id="mWriter"><option value="0">Agent 1 → Agent 2</option><option value="1">Agent 2 → Agent 1</option></select></div>
+        <div class="mt"><label for="mKind">Communication schedule</label><select id="mKind"><option value="work">Native working operations + their messages</option><option value="exchange">Bare message exchanges · diagnostic only</option></select></div>
+        <div class="mt" id="mProgramBox"><label for="mProgram">I identity · L/R flip · S swap</label><input id="mProgram" value="ISLR" maxlength="40" spellcheck="false"><p class="hint">Up to 8 working operations. The preview suffix is not used here. The edit happens once before this program.</p></div>
+        <div class="mt" id="mCountBox" hidden><label for="mCount">Bare exchanges</label><select id="mCount"><option>1</option><option>2</option><option selected>4</option><option>8</option></select><p class="hint">Extra receiver updates without working inputs are an experimental schedule, not the normal native program.</p></div>
+        <div class="actions mt"><button id="mRun" class="primary">Trace the connection</button><button id="mCancel" disabled>Stop</button></div>
+        <p id="mNotice" class="hint" role="status" aria-live="polite">The original editor and any committed session stay unchanged.</p>
+      </section>
+      <section class="panel">
+        <h2>Read after formation</h2><label for="mQuery" class="mt">Late consumer · does not alter states</label><select id="mQuery"><option value="0">Exact working pair</option><option value="1">Parity</option><option value="2">XOR with [1, 1]</option><option value="3">Verify original branch’s proposed pair</option></select>
+        <p class="hint">The plot uses the network’s softmax probability for the intended donor pair, not a guarantee or a calibrated confidence estimate.</p>
+        <button id="mExport" class="widebutton" disabled>Export this trace</button>
+      </section>
+      <section class="panel"><h2>Challenge both directions</h2><p class="hint">Same settings, fresh generated histories, both writers. No per-case dose search. Includes every completed case and reference failure.</p><div class="fieldgrid"><div><label for="mSeed">Bank seed</label><input id="mSeed" type="number" min="0" max="4294967295" value="271450"></div><div><label for="mCases">Histories per direction</label><select id="mCases"><option value="8">8</option><option value="16">16</option><option value="32">32</option></select></div></div><button id="mBank" class="widebutton mt">Compare directions</button><button id="mExportBank" class="widebutton mt" disabled>Export all cases</button><div id="mBankSummary" class="hint"></div><div class="mt" id="mCaseBox" hidden><label for="mCase">Inspect a completed case</label><select id="mCase"></select></div></section>
+    </div>
+    <div class="stack" id="mResults">
+      <section class="panel">
+        <div class="panelhead"><h2><span class="step">02</span> Follow the recipient</h2><span id="mRunTag" class="tag">Not run</span></div>
+        <div class="relay-route" aria-label="Information travels from the edited writer to the recipient through eight learned message values"><div><small>Writer</small><strong id="mWriterName">Agent 1</strong><span>Hidden edit, applied once</span></div><div class="relay-arrow"><strong>8 message values →</strong><span>First packet restored or replayed</span></div><div><small>Recipient</small><strong id="mReceiverName">Agent 2</strong><span>No direct hidden edit</span></div></div>
+        <div id="mSummary" class="hint">Run a comparison to measure the path. A direct effect on the writer is not yet an effect on its partner.</div>
+        <div id="mChart" class="relay-chart"></div>
+        <p id="mMeta" class="hint"></p>
+        <label for="mCheckpoint">Inspect a checkpoint</label><select id="mCheckpoint" disabled></select>
+        <div class="actions mt"><button id="mPrev">Previous checkpoint</button><button id="mNext">Next checkpoint</button></div>
+        <div class="relay-table"><table class="causal-table"><thead><tr><th>Branch</th><th>Writer output</th><th>Recipient output</th><th>Donor-pair probability</th></tr></thead><tbody id="mRows"><tr><td colspan="4">No measurements yet.</td></tr></tbody></table></div>
+        <p id="mReference" class="hint"></p>
+      </section>
+      <section class="panel"><div class="panelhead"><h2><span class="step">03</span> Inspect the actual packet</h2><span class="tag">Not a learned semantic legend</span></div><p class="hint">The eight outgoing values below come from the frozen sender network. They are not eight named facts. Restoration sends the original packet; replay sends the edited packet to an otherwise unchanged recipient.</p><div id="mPackets" class="relay-packets">Choose a message checkpoint.</div><p id="mIdentity" class="hint"></p></section>
+      <section class="panel"><h2>Did other information survive?</h2><div id="mFacts" class="hint">At completion, every branch gets a separate all-eight-fact audit. Four independent recall branches, not sequential reset-free recall.</div></section>
+      <details class="panel"><summary><strong>What this comparison can and cannot establish</strong></summary><p>The recipient sees the partner only through the message interface. At the first exchange its state is identical in the original, edited, and replay branches. Equal incoming packets must therefore produce equal recipient updates. This equality checks the causal wiring and implementation. Whether the packet induces the intended answer and whether it stays effective are separate empirical questions.</p><p>Only the first packet is intervened upon. Later feedback is unrestricted, so restoration may cease to block the effect and a replayed effect may disappear. Reference errors remain visible. A whole donor replaces both states and is a competence reference, not proof of a native local edit.</p><p>Projected states remain artificial. No new training, natural-support certification, general reciprocity, or chat-assistant hidden-state access is claimed.</p></details>
+    </div>
+  </div>
+</section>
