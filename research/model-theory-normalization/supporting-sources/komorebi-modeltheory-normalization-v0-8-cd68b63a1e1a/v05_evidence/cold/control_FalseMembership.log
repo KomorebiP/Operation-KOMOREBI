@@ -1,0 +1,19 @@
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.5/v05_checks/controls/FalseMembership.lean:3:96: error: Tactic `decide` failed for proposition
+  checkMembership AA O [([], 0)] ![1] (Evidence.combination [2]) = some true
+because its `Decidable` instance
+  (checkMembership AA O [([], 0)] ![1] (Evidence.combination [2])).instDecidableEq (some true)
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match checkMembership AA O [([], 0)] ![1] (Evidence.combination [2]) with
+  | none =>
+    match some true with
+    | none => isTrue ⋯
+    | some val => isFalse ⋯
+  | some a =>
+    match some true with
+    | none => isFalse ⋯
+    | some b =>
+      match instDecidableEqBool a b with
+      | isTrue h => isTrue ⋯
+      | isFalse n => isFalse ⋯

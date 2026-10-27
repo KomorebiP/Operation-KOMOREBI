@@ -1,0 +1,139 @@
+module
+public import ObservationalFirstOrder
+
+@[expose] public section
+
+namespace Komorebi.ModelTheory
+open Komorebi.Representation
+
+/-- All outputs are identical, but only one state is a fixed point. -/
+def constantCollapse : System Bool Unit Unit Unit where
+  step := fun _ _ => false
+  observe := fun _ _ => ()
+
+theorem collapse_states_behaviorally_equal : ObsEq constantCollapse false true := by
+  intro w j
+  rfl
+
+theorem state_equality_distinguishes :
+    constantCollapse.step () false = false ∧
+    constantCollapse.step () true ≠ true := by decide
+
+theorem quotient_collapses_both_states :
+    (quotientTransport constantCollapse).encode false =
+      (quotientTransport constantCollapse).encode true :=
+  (quotient_exact constantCollapse _ _).mpr collapse_states_behaviorally_equal
+
+theorem no_state_fixedpoint_predicate_on_behavior_quotient :
+    ¬ ∃ (P : BehaviorQuotient constantCollapse → Prop),
+      ∀ x, P ((quotientTransport constantCollapse).encode x) ↔
+        constantCollapse.step () x = x := by
+  rintro ⟨P,hP⟩
+  have hf := (hP false).mpr state_equality_distinguishes.1
+  rw [quotient_collapses_both_states] at hf
+  exact state_equality_distinguishes.2 ((hP true).mp hf)
+
+/-- With state equality, cardinality itself need not survive a behavioral quotient. -/
+theorem two_state_inequality_sentence : ∃ x y : Bool, x ≠ y := ⟨false,true,by decide⟩
+
+theorem quotient_inequality_sentence_fails :
+    ¬ ∃ x y : BehaviorQuotient constantCollapse, x ≠ y := by
+  rintro ⟨x,y,hne⟩
+  apply hne
+  refine Quotient.inductionOn₂ x y ?_
+  intro a b
+  apply Quotient.sound
+  intro w j
+  rfl
+
+/-- A nonsurjective exact transport preserves all observations of its source,
+    but does not preserve unrestricted target state-quantifier witnesses. -/
+def oneObservedState : System Unit Unit Unit Bool where
+  step := fun _ x => x
+  observe := fun _ _ => false
+
+def twoObservedStates : System Bool Unit Unit Bool where
+  step := fun _ x => x
+  observe := fun _ x => x
+
+def nonsurjectiveTransport : Transport oneObservedState twoObservedStates where
+  encode := fun _ => false
+  step_ok := by intros; rfl
+  observe_ok := by intros; rfl
+
+def existsTrueObservation : ObsFO Unit Unit Bool 0 :=
+  .ex (.test (0,[]) () true)
+
+theorem source_has_no_true_witness :
+    ¬ existsTrueObservation.Sat oneObservedState (fun i => nomatch i) := by
+  rintro ⟨x,hx⟩
+  exact Bool.false_ne_true hx
+
+theorem target_has_true_witness :
+    existsTrueObservation.Sat twoObservedStates (fun i => nomatch i) := ⟨true,rfl⟩
+
+/-- Arbitrarily delayed distinctions even with one operation and one observation. -/
+def streamSystem : System (Nat → Bool) Unit Unit Bool where
+  step := fun _ f n => f (n+1)
+  observe := fun _ f => f 0
+
+def zeroStream : Nat → Bool := fun _ => false
+
+def impulseStream (k : Nat) : Nat → Bool := fun n => decide (n = k)
+
+theorem stream_run (w : List Unit) (f : Nat → Bool) (n : Nat) :
+    run streamSystem w f n = f (n+w.length) := by
+  induction w generalizing f n with
+  | nil => rfl
+  | cons a w ih =>
+    change run streamSystem w (fun k => f (k+1)) n = f (n+(a::w).length)
+    rw [ih]
+    congr 1
+
+theorem stream_behavior (f : Nat → Bool) (w : List Unit) (j : Unit) :
+    behavior streamSystem f w j = f w.length := by
+  change run streamSystem w f 0 = f w.length
+  rw [stream_run, Nat.zero_add]
+
+theorem delayed_states_agree (h : Nat) :
+    BoundedObsEq streamSystem h zeroStream (impulseStream (h+1)) := by
+  intro w hw j
+  rw [stream_behavior, stream_behavior]
+  have hn : w.length ≠ h+1 := by omega
+  simp [zeroStream, impulseStream, hn]
+
+theorem delayed_states_differ (h : Nat) :
+    ¬ ObsEq streamSystem zeroStream (impulseStream (h+1)) := by
+  intro he
+  have hh := he (List.replicate (h+1) ()) ()
+  rw [stream_behavior, stream_behavior] at hh
+  simp [zeroStream, impulseStream] at hh
+
+theorem no_uniform_finite_observation_horizon :
+    ∀ h, ∃ x y, BoundedObsEq streamSystem h x y ∧ ¬ ObsEq streamSystem x y :=
+  fun h => ⟨zeroStream,impulseStream (h+1),delayed_states_agree h,delayed_states_differ h⟩
+
+/-- A finite list of observation tests has a finite maximum path length. -/
+def maxTestLength : List (List Unit × Unit) → Nat
+  | [] => 0
+  | t::ts => max t.1.length (maxTestLength ts)
+
+theorem member_test_length {ts : List (List Unit × Unit)} {t : List Unit × Unit}
+    (h : t ∈ ts) : t.1.length ≤ maxTestLength ts := by
+  induction ts with
+  | nil => simp at h
+  | cons a ts ih =>
+    rcases List.mem_cons.mp h with hh | hh
+    · subst t
+      exact Nat.le_max_left _ _
+    · exact Nat.le_trans (ih hh) (Nat.le_max_right _ _)
+
+theorem no_complete_finite_test_list (ts : List (List Unit × Unit)) :
+    ∃ x y, (∀ t ∈ ts, behavior streamSystem x t.1 t.2 = behavior streamSystem y t.1 t.2)
+      ∧ ¬ ObsEq streamSystem x y := by
+  let h := maxTestLength ts
+  refine ⟨zeroStream, impulseStream (h+1), ?_, delayed_states_differ h⟩
+  intro t ht
+  exact delayed_states_agree h t.1 (member_test_length ht) t.2
+
+end Komorebi.ModelTheory

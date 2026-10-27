@@ -1,0 +1,15 @@
+module
+public import EchelonDiscovery
+@[expose] public section
+namespace Komorebi.EchelonRegression.Case101
+open Komorebi.Discovery Komorebi.Discovery.EchelonBackend
+open Komorebi.Representation Komorebi.Representation.Matrix
+set_option maxRecDepth 100000
+set_option maxHeartbeats 8000000
+abbrev R := ZMod (5^2)
+def A : Fin 3 → Mat R 6 6 := ![![![4, 6, 24, 15, 5, 20], ![1, 21, 10, 18, 8, 14], ![20, 23, 16, 16, 23, 5], ![7, 12, 4, 22, 23, 14], ![10, 12, 0, 8, 24, 1], ![6, 13, 7, 13, 22, 12]], ![![11, 21, 18, 18, 23, 11], ![4, 15, 14, 16, 14, 18], ![0, 16, 2, 7, 10, 17], ![7, 10, 15, 9, 1, 0], ![6, 18, 5, 2, 5, 21], ![19, 24, 2, 18, 2, 21]], ![![8, 2, 11, 10, 17, 24], ![10, 24, 16, 12, 19, 19], ![19, 10, 19, 19, 21, 13], ![14, 9, 19, 10, 15, 0], ![16, 11, 14, 13, 12, 15], ![9, 2, 14, 0, 15, 7]]]
+def O : Mat R 1 6 := ![![17, 11, 9, 11, 15, 20]]
+def result : List (Test 3 1) := [([], 0), ([0], 0), ([1], 0), ([2], 0), ([0,0], 0), ([1,0], 0)]
+theorem computed : fastPrimeDiscover 5 2 6
+    (fun a => rowRight (A a)) O = some result := by decide +kernel
+end Komorebi.EchelonRegression.Case101

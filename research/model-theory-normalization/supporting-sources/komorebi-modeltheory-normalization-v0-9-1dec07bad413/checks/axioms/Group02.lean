@@ -1,0 +1,105 @@
+module
+import MatrixCertificates
+import ObservationalNormalization
+import ObservationalFirstOrder
+import FiniteObservationCode
+import MatrixObservationCode
+import TaggedObservationalLanguage
+import ObservationalMathlibTranslation
+import StandardObservationConsequences
+#print axioms Komorebi.Representation.Matrix.checkCertificate
+#print axioms Komorebi.Representation.Matrix.checked_matrix_all_words
+#print axioms Komorebi.Representation.Matrix.checked_matrix_exact
+#print axioms Komorebi.ModelTheory.ObsFormula
+#print axioms Komorebi.ModelTheory.ObsFormula.Sat
+#print axioms Komorebi.ModelTheory.PathFormula
+#print axioms Komorebi.ModelTheory.PathFormula.Sat
+#print axioms Komorebi.ModelTheory.PathFormula.prefix
+#print axioms Komorebi.ModelTheory.prefix_nil
+#print axioms Komorebi.ModelTheory.prefix_comp
+#print axioms Komorebi.ModelTheory.prefix_sound
+#print axioms Komorebi.ModelTheory.normalize
+#print axioms Komorebi.ModelTheory.normalize_sound
+#print axioms Komorebi.ModelTheory.afterWord
+#print axioms Komorebi.ModelTheory.normalize_afterWord
+#print axioms Komorebi.ModelTheory.embed
+#print axioms Komorebi.ModelTheory.normalize_embed
+#print axioms Komorebi.ModelTheory.normalization_retraction
+#print axioms Komorebi.ModelTheory.PathFormula.horizon
+#print axioms Komorebi.ModelTheory.operationalDepth
+#print axioms Komorebi.ModelTheory.BoundedObsEq
+#print axioms Komorebi.ModelTheory.bounded_mono
+#print axioms Komorebi.ModelTheory.bounded_path_invariant
+#print axioms Komorebi.ModelTheory.bounded_observation_type_iff
+#print axioms Komorebi.ModelTheory.observation_type_iff
+#print axioms Komorebi.ModelTheory.original_observation_type_iff
+#print axioms Komorebi.ModelTheory.horizon_eq_bounded
+#print axioms Komorebi.ModelTheory.stable_logical_horizon
+#print axioms Komorebi.ModelTheory.path_transport
+#print axioms Komorebi.ModelTheory.StateTerm
+#print axioms Komorebi.ModelTheory.ObsFO
+#print axioms Komorebi.ModelTheory.extendEnv
+#print axioms Komorebi.ModelTheory.termObservation
+#print axioms Komorebi.ModelTheory.ObsFO.Sat
+#print axioms Komorebi.ModelTheory.ObsFO.quantifierRank
+#print axioms Komorebi.ModelTheory.ObsFO.termHorizon
+#print axioms Komorebi.ModelTheory.encode_extend
+#print axioms Komorebi.ModelTheory.term_transport
+#print axioms Komorebi.ModelTheory.observational_first_order_transport
+#print axioms Komorebi.ModelTheory.quotient_encoding_surjective
+#print axioms Komorebi.ModelTheory.quotient_preserves_observational_first_order
+#print axioms Komorebi.ModelTheory.first_order_tuple_invariance
+#print axioms Komorebi.ModelTheory.first_order_observation_type_iff
+#print axioms Komorebi.ModelTheory.quantified_terms_need_separate_horizon
+#print axioms Komorebi.ModelTheory.ObservationTest
+#print axioms Komorebi.ModelTheory.CodeEqual
+#print axioms Komorebi.ModelTheory.FiniteCodeCertificate
+#print axioms Komorebi.ModelTheory.codeRelationFormula
+#print axioms Komorebi.ModelTheory.codeRelationFormula_semantics
+#print axioms Komorebi.ModelTheory.codeRelationFormula_quantifier_free
+#print axioms Komorebi.ModelTheory.certified_code_exact
+#print axioms Komorebi.ModelTheory.finite_observational_definition
+#print axioms Komorebi.ModelTheory.observationCode
+#print axioms Komorebi.ModelTheory.observationCode_eq_iff
+#print axioms Komorebi.ModelTheory.certified_observationCode
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrixTests
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrixTests_length
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrixTests_mem
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrix_code_rows
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrix_code_encoding
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrixFiniteCodeCertificate
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrix_tests_behavior
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrixTestHorizon
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrix_code_reconstruct
+#print axioms Komorebi.ModelTheory.MatrixBridge.matrix_code_from_encoding
+#print axioms Komorebi.ModelTheory.Standard.ObsFunction
+#print axioms Komorebi.ModelTheory.Standard.ObsRelation
+#print axioms Komorebi.ModelTheory.Standard.observationLanguage
+#print axioms Komorebi.ModelTheory.Standard.TaggedCarrier
+#print axioms Komorebi.ModelTheory.Standard.StateTag
+#print axioms Komorebi.ModelTheory.Standard.functionInterpretation
+#print axioms Komorebi.ModelTheory.Standard.taggedStructure
+#print axioms Komorebi.ModelTheory.Standard.termRealize
+#print axioms Komorebi.ModelTheory.Standard.pathTerm
+#print axioms Komorebi.ModelTheory.Standard.pathTerm_realize
+#print axioms Komorebi.ModelTheory.Standard.observedTerm
+#print axioms Komorebi.ModelTheory.Standard.observedTerm_realize
+#print axioms Komorebi.ModelTheory.Standard.liftVariable
+#print axioms Komorebi.ModelTheory.Standard.extendVariables
+#print axioms Komorebi.ModelTheory.Standard.stateGuard
+#print axioms Komorebi.ModelTheory.Standard.translateAux
+#print axioms Komorebi.ModelTheory.Standard.toMathlib
+#print axioms Komorebi.ModelTheory.Standard.boundedRealize
+#print axioms Komorebi.ModelTheory.Standard.standardRealize
+#print axioms Komorebi.ModelTheory.Standard.liftVariable_realize
+#print axioms Komorebi.ModelTheory.Standard.extendVariables_realize
+#print axioms Komorebi.ModelTheory.Standard.stateGuard_new_realize
+#print axioms Komorebi.ModelTheory.Standard.translateAux_correct
+#print axioms Komorebi.ModelTheory.Standard.toMathlib_correct
+#print axioms Komorebi.ModelTheory.Standard.standard_observational_transport
+#print axioms Komorebi.ModelTheory.Standard.standard_quotient_preservation
+#print axioms Komorebi.ModelTheory.Standard.standard_fragment_type_iff
+#print axioms Komorebi.ModelTheory.Standard.translateAux_isQF
+#print axioms Komorebi.ModelTheory.Standard.toMathlib_isQF
+#print axioms Komorebi.ModelTheory.Standard.standard_finite_definition
+#print axioms Komorebi.ModelTheory.Standard.guardedCodeFormula

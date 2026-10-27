@@ -1,0 +1,96 @@
+module
+public import DiscoveryLogic
+
+@[expose] public section
+namespace Komorebi.Discovery
+open scoped BigOperators
+open Komorebi.Representation Komorebi.Representation.Matrix
+open Komorebi.ModelTheory Komorebi.ModelTheory.Standard
+
+universe u v
+variable {R : Type u} {M : Type v} [Semiring R] [AddCommMonoid M] [Module R M]
+variable {k o : ℕ}
+
+/-- A branch-by-branch certificate for a concrete completed queue run. This
+interface needs exact membership facts only at states actually visited. -/
+inductive QueueTrace (A : Fin k → M →ₗ[R] M) (O : Fin o → M) :
+    List (Test k o) → List (Test k o) → List (Test k o) → Prop
+  | done (ts) : QueueTrace A O ts [] ts
+  | skip {ts t pending result} (h : testValue A O t ∈ testSpan A O ts)
+      (rest : QueueTrace A O ts pending result) : QueueTrace A O ts (t::pending) result
+  | accept {ts t pending result} (h : testValue A O t ∉ testSpan A O ts)
+      (rest : QueueTrace A O (ts++[t]) (pending++children t) result) :
+      QueueTrace A O ts (t::pending) result
+
+theorem queueTrace_frontier (A : Fin k → M →ₗ[R] M) (O : Fin o → M)
+    {ts pending result : List (Test k o)} (tr : QueueTrace A O ts pending result)
+    (hf : Frontier A O ts pending) : Frontier A O result [] := by
+  induction tr with
+  | done => exact hf
+  | skip h rest ih => exact ih (frontier_skip A O hf h)
+  | accept h rest ih => exact ih (frontier_accept A O hf)
+
+theorem queueTrace_exact (A : Fin k → M →ₗ[R] M) (O : Fin o → M)
+    {result : List (Test k o)} (tr : QueueTrace A O [] (roots k o) result) :
+    testSpan A O result = observableSpan A O :=
+  empty_frontier_exact A O result (queueTrace_frontier A O tr (frontier_initial A O))
+
+/-- Exact oracle substitution: any two correct membership backends make the
+same decisions, not merely outputs with isomorphic spans. -/
+theorem worklist_oracle_independent (A : Fin k → M →ₗ[R] M) (O : Fin o → M)
+    (s t : SpanOracle A O) (fuel : ℕ) (ts pending : List (Test k o)) :
+    worklist A O s fuel ts pending = worklist A O t fuel ts pending := by
+  induction fuel generalizing ts pending with
+  | zero => rfl
+  | succ n ih =>
+    cases pending with
+    | nil => rfl
+    | cons v pending =>
+      have he : s.contains ts (testValue A O v) = t.contains ts (testValue A O v) := by
+        apply Bool.eq_iff_iff.mpr
+        exact (s.correct _ _).trans (t.correct _ _).symm
+      simp only [worklist,he]
+      split <;> apply ih
+
+/-- Scalar tuple witnesses establish true span membership, independently of
+how a proposed coefficient tuple was found. -/
+theorem span_member_from_coefficients (A : Fin k → M →ₗ[R] M) (O : Fin o → M)
+    (ts : List (Test k o)) (v : M) (c : Fin ts.length → R)
+    (h : ∑ i, c i • testValue A O ts[i] = v) : v ∈ testSpan A O ts := by
+  rw [testSpan_eq_fin_range]
+  exact (Submodule.mem_span_range_iff_exists_fun R).mpr ⟨c,h⟩
+
+/-- One linear separating functional rules out every possible coefficient tuple. -/
+theorem span_nonmember_from_functional (A : Fin k → M →ₗ[R] M) (O : Fin o → M)
+    (ts : List (Test k o)) (v : M) (f : M →ₗ[R] R)
+    (hzero : ∀ t ∈ ts, f (testValue A O t) = 0) (hne : f v ≠ 0) :
+    v ∉ testSpan A O ts := by
+  intro hv
+  apply hne
+  have hs : testSpan A O ts ≤ f.ker := by
+    apply Submodule.span_le.mpr
+    rintro _ ⟨t,ht,rfl⟩
+    simpa only [SetLike.mem_coe,LinearMap.mem_ker] using hzero t ht
+  exact hs hv
+
+variable {S : Type} [CommRing S] {d : ℕ}
+
+theorem queueTrace_code (A : Fin k → Mat S d d) (O : Mat S o d)
+    (result : List (Test k o))
+    (tr : QueueTrace (fun a => rowRight (A a)) O [] (roots k o) result) :
+    FiniteCodeCertificate (linearSystem A O) result := by
+  have he := spanning_tests_exact A O result (queueTrace_exact _ _ tr)
+  exact {
+    outputs := fun x y hc j => (he x y).mp hc [] j
+    steps := fun x y hc a => (he _ _).mpr (obsEq_step _ ((he x y).mp hc) a)
+  }
+
+theorem queueTrace_standard_definition (A : Fin k → Mat S d d) (O : Mat S o d)
+    (result : List (Test k o))
+    (tr : QueueTrace (fun a => rowRight (A a)) O [] (roots k o) result)
+    (e : Fin 2 → TaggedCarrier (Fin d → S) S) :
+    taggedRealize (linearSystem A O) (guardedCodeFormula result) e ↔
+      e ∈ taggedBehaviorSet (linearSystem A O) :=
+  guardedCodeFormula_semantics _ _ (queueTrace_code A O result tr) e
+
+end Komorebi.Discovery

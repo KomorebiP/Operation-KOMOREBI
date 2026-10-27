@@ -1,0 +1,129 @@
+ObservationalMathlibTranslation.lean:50:2: error: typeclass instance problem is stuck
+  (observationLanguage A O V).Structure (X ⊕ ?m.15)
+
+Note: Lean will not try to resolve this typeclass instance problem because the second type argument to `Structure` contains metavariables. This argument must be fully determined before Lean will try to resolve the typeclass.
+
+Hint: Adding type annotations and supplying implicit arguments to functions can give Lean more information for typeclass resolution. For example, if you have a variable `x` that you intend to be a `Nat`, but Lean reports it as having an unresolved type like `?m`, replacing `x` with `(x : Nat)` can get typeclass resolution un-stuck.
+ObservationalMathlibTranslation.lean:57:43: error: Application type mismatch: The argument
+  z
+has type
+  TaggedCarrier X V
+but is expected to have type
+  (i : Fin m) → ?m.47 i.castSucc
+in the application
+  Fin.snoc_castSucc ?m.48 z
+ObservationalMathlibTranslation.lean:67:31: error(lean.invalidDottedIdent): Invalid dotted identifier notation: The expected type of `.inl`
+  (i : Fin ?m.35) → ?m.36 i.castSucc
+is not of the form `C ...` or `... → C ...` where C is a constant
+ObservationalMathlibTranslation.lean:67:24: error: Application type mismatch: The argument
+  bound
+has type
+  Fin m → TaggedCarrier X V
+but is expected to have type
+  ?m.36 (Fin.last ?m.35)
+in the application
+  Fin.snoc_last bound
+ObservationalMathlibTranslation.lean:75:18: error: Application type mismatch: The argument
+  Fin.snoc ?m.26 ?m.27 (Fin.last m)
+has type
+  ?m.24 (Fin.last m)
+but is expected to have type
+  TaggedCarrier ?m.21 ?m.22
+in the application
+  StateTag (Fin.snoc ?m.26 ?m.27 (Fin.last m))
+ObservationalMathlibTranslation.lean:84:2: error: Try this: 
+  letI̵
+
+The goal is a proposition, so `let` is preferred over `letI`.
+The difference between `let` and `letI` is that `letI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`
+ObservationalMathlibTranslation.lean:101:62: error: Application type mismatch: The argument
+  free
+has type
+  α → TaggedCarrier X V
+of sort `Type (max (max u v) w)` but is expected to have type
+  Fin m → TaggedCarrier X V
+of sort `Type (max u v)` in the application
+  ih σ free
+ObservationalMathlibTranslation.lean:104:24: error: Application type mismatch: The argument
+  free
+has type
+  α → TaggedCarrier X V
+of sort `Type (max (max u v) w)` but is expected to have type
+  Fin m → TaggedCarrier X V
+of sort `Type (max u v)` in the application
+  ihf σ free
+ObservationalMathlibTranslation.lean:104:50: error: Application type mismatch: The argument
+  free
+has type
+  α → TaggedCarrier X V
+of sort `Type (max (max u v) w)` but is expected to have type
+  Fin m → TaggedCarrier X V
+of sort `Type (max u v)` in the application
+  ihg σ free
+ObservationalMathlibTranslation.lean:116:42: error: Application type mismatch: The argument
+  free
+has type
+  α → TaggedCarrier X V
+of sort `Type (max (max u v) w)` but is expected to have type
+  Fin (m + 1) → TaggedCarrier X V
+of sort `Type (max u v)` in the application
+  ih (extendVariables σ) free
+ObservationalMathlibTranslation.lean:116:57: error: Application type mismatch: The argument
+  bound
+has type
+  Fin m → TaggedCarrier X V
+of sort `Type (max u v)` but is expected to have type
+  Fin n → X
+of sort `Type v` in the application
+  Fin.snoc bound
+ObservationalMathlibTranslation.lean:116:64: error(lean.invalidDottedIdent): Invalid dotted identifier notation: The expected type of `.inl` could not be determined
+
+Hint: Using one of these would be unambiguous:
+  [apply] `AddMonoidHom.inl`
+  [apply] `MonoidHom.inl`
+  [apply] `Or.inl`
+  [apply] `PSum.inl`
+  [apply] `Sum.inl`
+  [apply] `Finset.Nonempty.inl`
+  [apply] `Function.Embedding.inl`
+  [apply] `Set.Nonempty.inl`
+  [apply] `Sum.Lex.inl`
+  [apply] `Sum.LiftRel.inl`
+ObservationalMathlibTranslation.lean:121:36: error: Application type mismatch: The argument
+  free
+has type
+  α → TaggedCarrier X V
+of sort `Type (max (max u v) w)` but is expected to have type
+  Fin (m + 1) → TaggedCarrier X V
+of sort `Type (max u v)` in the application
+  ih (extendVariables σ) free
+ObservationalMathlibTranslation.lean:121:51: error: Application type mismatch: The argument
+  bound
+has type
+  Fin m → TaggedCarrier X V
+of sort `Type (max u v)` but is expected to have type
+  Fin n → X
+of sort `Type v` in the application
+  Fin.snoc bound
+ObservationalMathlibTranslation.lean:121:58: error(lean.invalidDottedIdent): Invalid dotted identifier notation: The expected type of `.inl` could not be determined
+
+Hint: Using one of these would be unambiguous:
+  [apply] `AddMonoidHom.inl`
+  [apply] `MonoidHom.inl`
+  [apply] `Or.inl`
+  [apply] `PSum.inl`
+  [apply] `Sum.inl`
+  [apply] `Finset.Nonempty.inl`
+  [apply] `Function.Embedding.inl`
+  [apply] `Set.Nonempty.inl`
+  [apply] `Sum.Lex.inl`
+  [apply] `Sum.LiftRel.inl`
+ObservationalMathlibTranslation.lean:128:2: error: Type mismatch
+  translateAux_correct S f Sum.inl (fun i => Sum.inl (env i)) Fin.elim0 env fun x => rfl
+has type
+  boundedRealize S (translateAux f Sum.inl) (fun i => Sum.inl (env i)) Fin.elim0 ↔ ObsFO.Sat S f env
+but is expected to have type
+  standardRealize S (toMathlib f) env ↔ ObsFO.Sat S f env

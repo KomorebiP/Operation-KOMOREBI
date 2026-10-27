@@ -1,0 +1,130 @@
+module
+public import TaggedObservationalLanguage
+
+@[expose] public section
+namespace Komorebi.ModelTheory.Standard
+open Komorebi.Representation
+open FirstOrder.Language
+universe u v w
+variable {A O V : Type u} {X : Type v} {α : Type w}
+
+/-- Shift old bound levels but leave free variables unchanged. -/
+def liftVariable {m : Nat} : α ⊕ Fin m → α ⊕ Fin (m+1)
+  | .inl a => .inl a
+  | .inr i => .inr i.castSucc
+
+/-- Source variable zero is new; Mathlib's new bound level is `last m`. -/
+def extendVariables {n m : Nat} (σ : Fin n → α ⊕ Fin m) :
+    Fin (n+1) → α ⊕ Fin (m+1) :=
+  Fin.cases (.inr (Fin.last m)) (fun i => liftVariable (σ i))
+
+def stateGuard {m : Nat} (t : (observationLanguage A O V).Term (α ⊕ Fin m)) :
+    (observationLanguage A O V).BoundedFormula α m :=
+  .rel .state (fun _ => t)
+
+/-- Structural compilation, with a state-sort guard at every quantifier. -/
+def translateAux : {n : Nat} → ObsFO A O V n → {m : Nat} →
+    (Fin n → α ⊕ Fin m) → (observationLanguage A O V).BoundedFormula α m
+  | _, .truth, _, _ => ⊤
+  | _, .test t j c, _, σ =>
+    .equal (observedTerm t.2 j (.var (σ t.1))) (.func (.value c) Fin.elim0)
+  | _, .compare t j s k, _, σ =>
+    .equal (observedTerm t.2 j (.var (σ t.1))) (observedTerm s.2 k (.var (σ s.1)))
+  | _, .neg f, _, σ => (translateAux f σ).not
+  | _, .conj f g, _, σ => translateAux f σ ⊓ translateAux g σ
+  | _, .ex f, m, σ =>
+    (stateGuard (.var (.inr (Fin.last m))) ⊓ translateAux f (extendVariables σ)).ex
+
+def toMathlib {n : Nat} (f : ObsFO A O V n) :
+    (observationLanguage A O V).Formula (Fin n) := translateAux f Sum.inl
+
+def boundedRealize {m : Nat} (S : System X A O V)
+    (f : (observationLanguage A O V).BoundedFormula α m)
+    (free : α → TaggedCarrier X V) (bound : Fin m → TaggedCarrier X V) : Prop :=
+  letI := taggedStructure S
+  f.Realize free bound
+
+def standardRealize {n : Nat} (S : System X A O V)
+    (f : (observationLanguage A O V).Formula (Fin n)) (env : Fin n → X) : Prop :=
+  letI := taggedStructure S
+  FirstOrder.Language.Formula.Realize f (fun i => (Sum.inl (env i) : TaggedCarrier X V))
+
+theorem liftVariable_realize {m : Nat} (free : α → TaggedCarrier X V)
+    (bound : Fin m → TaggedCarrier X V) (z : TaggedCarrier X V) (i : α ⊕ Fin m) :
+    Sum.elim free (Fin.snoc bound z) (liftVariable i) = Sum.elim free bound i := by
+  cases i with
+  | inl a => rfl
+  | inr j => simp [liftVariable]
+
+theorem extendVariables_realize {n m : Nat} (σ : Fin n → α ⊕ Fin m)
+    (free : α → TaggedCarrier X V) (bound : Fin m → TaggedCarrier X V)
+    (env : Fin n → X) (x : X)
+    (h : ∀ i, Sum.elim free bound (σ i) = Sum.inl (env i)) :
+    ∀ i, Sum.elim free (Fin.snoc bound (.inl x)) (extendVariables σ i) =
+      Sum.inl (extendEnv x env i) := by
+  intro i
+  refine Fin.cases ?_ (fun j => ?_) i
+  · simp [extendVariables, extendEnv]
+  · exact (liftVariable_realize free bound (.inl x) (σ j)).trans (h j)
+
+theorem stateGuard_new_realize {m : Nat} (S : System X A O V)
+    (free : α → TaggedCarrier X V) (bound : Fin m → TaggedCarrier X V)
+    (z : TaggedCarrier X V) :
+    boundedRealize S (stateGuard (.var (.inr (Fin.last m)))) free (Fin.snoc bound z)
+      ↔ StateTag z := by
+  change StateTag ((Fin.snoc bound z : Fin (m+1) → TaggedCarrier X V) (Fin.last m)) ↔ StateTag z
+  rw [Fin.snoc_last]
+
+/-- The complete semantic compiler theorem, valid also with open bound variables. -/
+theorem translateAux_correct (S : System X A O V) {n : Nat} (f : ObsFO A O V n)
+    {m : Nat} (σ : Fin n → α ⊕ Fin m) (free : α → TaggedCarrier X V)
+    (bound : Fin m → TaggedCarrier X V) (env : Fin n → X)
+    (hσ : ∀ i, Sum.elim free bound (σ i) = Sum.inl (env i)) :
+    boundedRealize S (translateAux f σ) free bound ↔ f.Sat S env := by
+  let _ := taggedStructure S
+  induction f generalizing m with
+  | truth =>
+    exact BoundedFormula.realize_top
+  | test t j c =>
+    change termRealize S (observedTerm t.2 j (.var (σ t.1))) (Sum.elim free bound) =
+      Sum.inr c ↔ termObservation S env t j = c
+    rw [observedTerm_realize S t.2 j (.var (σ t.1)) (Sum.elim free bound) (env t.1) (hσ t.1)]
+    exact Sum.inr.inj_iff
+  | compare t j s k =>
+    change termRealize S (observedTerm t.2 j (.var (σ t.1))) (Sum.elim free bound) =
+      termRealize S (observedTerm s.2 k (.var (σ s.1))) (Sum.elim free bound) ↔
+      termObservation S env t j = termObservation S env s k
+    rw [observedTerm_realize S t.2 j (.var (σ t.1)) (Sum.elim free bound) (env t.1) (hσ t.1),
+      observedTerm_realize S s.2 k (.var (σ s.1)) (Sum.elim free bound) (env s.1) (hσ s.1)]
+    exact Sum.inr.inj_iff
+  | neg f ih =>
+    exact (BoundedFormula.realize_not).trans (not_congr (ih σ bound env hσ))
+  | conj f g ihf ihg =>
+    exact (BoundedFormula.realize_inf).trans
+      (and_congr (ihf σ bound env hσ) (ihg σ bound env hσ))
+  | @ex n f ih =>
+    change ((stateGuard (.var (.inr (Fin.last m))) ⊓
+      translateAux f (extendVariables σ)).ex).Realize free bound ↔
+        ∃ x, f.Sat S (extendEnv x env)
+    rw [BoundedFormula.realize_ex]
+    simp only [BoundedFormula.realize_inf]
+    constructor
+    · rintro ⟨z, hz, hf⟩
+      have tag := (stateGuard_new_realize S free bound z).mp hz
+      cases z with
+      | inl x =>
+        exact ⟨x, (ih (extendVariables σ) (Fin.snoc bound (.inl x))
+          (extendEnv x env) (extendVariables_realize σ free bound env x hσ)).mp hf⟩
+      | inr c => exact False.elim tag
+    · rintro ⟨x, hx⟩
+      refine ⟨Sum.inl x, (stateGuard_new_realize S free bound (.inl x)).mpr trivial, ?_⟩
+      exact (ih (extendVariables σ) (Fin.snoc bound (.inl x))
+        (extendEnv x env) (extendVariables_realize σ free bound env x hσ)).mpr hx
+
+/-- The result is standard Mathlib first-order satisfaction, not a second custom evaluator. -/
+theorem toMathlib_correct (S : System X A O V) {n : Nat}
+    (f : ObsFO A O V n) (env : Fin n → X) :
+    standardRealize S (toMathlib f) env ↔ f.Sat S env :=
+  translateAux_correct S f Sum.inl (fun i => (Sum.inl (env i) : TaggedCarrier X V)) default env (fun _ => rfl)
+
+end Komorebi.ModelTheory.Standard

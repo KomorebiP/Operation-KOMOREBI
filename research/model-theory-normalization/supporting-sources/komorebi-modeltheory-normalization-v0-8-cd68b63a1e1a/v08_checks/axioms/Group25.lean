@@ -1,0 +1,35 @@
+module
+import BoundedComputed16
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c197_result
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c197_computed
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c197_code
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c198_R
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c198_A
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c198_O
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c198_result
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c198_computed
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c198_code
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c199_R
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c199_A
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c199_O
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c199_result
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c199_computed
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c199_code
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c200_R
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c200_A
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c200_O
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c200_result
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c200_computed
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c200_code
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c201_R
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c201_A
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c201_O
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c201_result
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c201_computed
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c201_code
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c202_R
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c202_A
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c202_O
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c202_result
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c202_computed
+#print axioms Komorebi.BoundedRegression.BoundedComputed16.c202_code

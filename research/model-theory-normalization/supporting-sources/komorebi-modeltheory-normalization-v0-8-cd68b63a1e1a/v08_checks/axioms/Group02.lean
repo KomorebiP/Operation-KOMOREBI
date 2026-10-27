@@ -1,0 +1,70 @@
+module
+import DiscoveryWorklist
+import DiscoveryTermination
+import DiscoveryFinite
+import RepresentationCore
+import MatrixCore
+#print axioms Komorebi.Discovery.children
+#print axioms Komorebi.Discovery.roots
+#print axioms Komorebi.Discovery.testSpan
+#print axioms Komorebi.Discovery.observableSpan
+#print axioms Komorebi.Discovery.test_mem_span
+#print axioms Komorebi.Discovery.testSpan_mono
+#print axioms Komorebi.Discovery.testSpan_append
+#print axioms Komorebi.Discovery.testSpan_strict
+#print axioms Komorebi.Discovery.testSpan_le_observable
+#print axioms Komorebi.Discovery.SpanOracle
+#print axioms Komorebi.Discovery.worklist
+#print axioms Komorebi.Discovery.Frontier
+#print axioms Komorebi.Discovery.frontier_initial
+#print axioms Komorebi.Discovery.frontier_skip
+#print axioms Komorebi.Discovery.frontier_accept
+#print axioms Komorebi.Discovery.empty_frontier_closed
+#print axioms Komorebi.Discovery.empty_frontier_exact
+#print axioms Komorebi.Discovery.worklist_frontier
+#print axioms Komorebi.Discovery.worklist_exact
+#print axioms Komorebi.Discovery.queue_potential_decreases
+#print axioms Komorebi.Discovery.worklist_terminates
+#print axioms Komorebi.Discovery.discover
+#print axioms Komorebi.Discovery.discover_total
+#print axioms Komorebi.Discovery.worklist_size
+#print axioms Komorebi.Discovery.worklist_horizon
+#print axioms Komorebi.Discovery.prime_discover_total_exact
+#print axioms Komorebi.Discovery.testSpan_eq_fin_range
+#print axioms Komorebi.Discovery.enumerationOracle
+#print axioms Komorebi.Discovery.finitePrimeDiscover
+#print axioms Komorebi.Discovery.finitePrimeDiscover_total_correct
+#print axioms Komorebi.Representation.System
+#print axioms Komorebi.Representation.run
+#print axioms Komorebi.Representation.behavior
+#print axioms Komorebi.Representation.run_append
+#print axioms Komorebi.Representation.ObsEq
+#print axioms Komorebi.Representation.obsEq_refl
+#print axioms Komorebi.Representation.obsEq_symm
+#print axioms Komorebi.Representation.obsEq_trans
+#print axioms Komorebi.Representation.obsEq_step
+#print axioms Komorebi.Representation.invariant_relation_sound
+#print axioms Komorebi.Representation.Transport
+#print axioms Komorebi.Representation.transport_run
+#print axioms Komorebi.Representation.transport_behavior
+#print axioms Komorebi.Representation.Transport.comp
+#print axioms Komorebi.Representation.behaviorSetoid
+#print axioms Komorebi.Representation.BehaviorQuotient
+#print axioms Komorebi.Representation.quotientStep
+#print axioms Komorebi.Representation.quotientObserve
+#print axioms Komorebi.Representation.quotientSystem
+#print axioms Komorebi.Representation.quotientTransport
+#print axioms Komorebi.Representation.quotient_exact
+#print axioms Komorebi.Representation.transport_kernel_sound
+#print axioms Komorebi.Representation.sufficientFactor
+#print axioms Komorebi.Representation.sufficientFactor_encode
+#print axioms Komorebi.Representation.sufficientFactor_unique
+#print axioms Komorebi.Representation.sufficientFactorTransport
+#print axioms Komorebi.Representation.profile_restriction
+#print axioms Komorebi.Representation.separated_encoding_exact
+#print axioms Komorebi.Representation.distinguishing_word_excludes_merge
+#print axioms Komorebi.Representation.Matrix.Vec
+#print axioms Komorebi.Representation.Matrix.Mat
+#print axioms Komorebi.Representation.Matrix.fsum
+#print axioms Komorebi.Representation.Matrix.fsum_zero
+#print axioms Komorebi.Representation.Matrix.fsum_add

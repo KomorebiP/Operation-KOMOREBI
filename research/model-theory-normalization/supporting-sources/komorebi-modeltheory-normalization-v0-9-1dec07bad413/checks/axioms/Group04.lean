@@ -1,0 +1,105 @@
+module
+import CostedLattice
+import EchelonModular
+import EchelonDiscovery
+import NormalizedDiscovery
+import BoundedDiscovery
+import CostedDiscovery
+import CostedBounds
+import CostedExamples
+#print axioms Komorebi.Costed.updateEval_value
+#print axioms Komorebi.Costed.updateEval_units
+#print axioms Komorebi.Costed.updateEval_units_le
+#print axioms Komorebi.Echelon.diagonal
+#print axioms Komorebi.Echelon.synth_diagonal
+#print axioms Komorebi.Echelon.extend
+#print axioms Komorebi.Echelon.rowSpan
+#print axioms Komorebi.Echelon.rowSpan_cons
+#print axioms Komorebi.Echelon.lattice_extend
+#print axioms Komorebi.Echelon.reduce
+#print axioms Komorebi.Echelon.lift
+#print axioms Komorebi.Echelon.reduce_lift
+#print axioms Komorebi.Echelon.reduce_zero
+#print axioms Komorebi.Echelon.reduce_add
+#print axioms Komorebi.Echelon.reduce_sub
+#print axioms Komorebi.Echelon.reduce_smul
+#print axioms Komorebi.Echelon.diagonal_kernel
+#print axioms Komorebi.Echelon.build
+#print axioms Komorebi.Echelon.reduce_span
+#print axioms Komorebi.Echelon.lift_span
+#print axioms Komorebi.Echelon.build_correct
+#print axioms Komorebi.Echelon.insert_preimage
+#print axioms Komorebi.Echelon.member
+#print axioms Komorebi.Echelon.member_correct
+#print axioms Komorebi.Discovery.EchelonBackend.initial
+#print axioms Komorebi.Discovery.EchelonBackend.StateCorrect
+#print axioms Komorebi.Discovery.EchelonBackend.stateCorrect_initial
+#print axioms Komorebi.Discovery.EchelonBackend.testSpan_snoc
+#print axioms Komorebi.Discovery.EchelonBackend.stateCorrect_insert
+#print axioms Komorebi.Discovery.EchelonBackend.fastWorklist
+#print axioms Komorebi.Discovery.EchelonBackend.fastWorklist_matches
+#print axioms Komorebi.Discovery.EchelonBackend.fastPrimeDiscover
+#print axioms Komorebi.Discovery.EchelonBackend.fastPrimeDiscover_eq_reference
+#print axioms Komorebi.Discovery.EchelonBackend.fastPrimeDiscover_total_correct
+#print axioms Komorebi.Discovery.EchelonBackend.fastPrimeDiscover_defines_behavior
+#print axioms Komorebi.Discovery.EchelonBackend.fastPrimeDiscover_code
+#print axioms Komorebi.Discovery.EchelonBackend.fastPrimeDiscover_standard_formula
+#print axioms Komorebi.Discovery.NormalizedBackend.stateCorrect_normalize
+#print axioms Komorebi.Discovery.NormalizedBackend.stateCorrect_normalizedInsert
+#print axioms Komorebi.Discovery.NormalizedBackend.stateCorrect_containsModulus
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedRun
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedRun_matches
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedRun_invariant
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedRun_entry_bounds
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedPrimeDiscover
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedPrimeDiscover_eq_reference
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedPrimeDiscover_eq_fast
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedPrimeDiscover_total_correct
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedPrimeDiscover_defines_behavior
+#print axioms Komorebi.Discovery.NormalizedBackend.normalizedPrimeDiscover_code
+#print axioms Komorebi.Discovery.BoundedBackend.boundedRun
+#print axioms Komorebi.Discovery.BoundedBackend.boundedRun_eq
+#print axioms Komorebi.Discovery.BoundedBackend.boundedPrimeDiscover
+#print axioms Komorebi.Discovery.BoundedBackend.boundedPrimeDiscover_eq_normalized
+#print axioms Komorebi.Discovery.BoundedBackend.boundedPrimeDiscover_eq_reference
+#print axioms Komorebi.Discovery.BoundedBackend.boundedPrimeDiscover_total_correct
+#print axioms Komorebi.Discovery.BoundedBackend.boundedPrimeDiscover_defines_behavior
+#print axioms Komorebi.Discovery.BoundedBackend.runPeak
+#print axioms Komorebi.Discovery.BoundedBackend.lift_vectorPeak_le
+#print axioms Komorebi.Discovery.BoundedBackend.runPeak_bound
+#print axioms Komorebi.Discovery.BoundedBackend.coefficient_cap_power_two
+#print axioms Komorebi.Discovery.BoundedBackend.boundedPrimeDiscover_code
+#print axioms Komorebi.Discovery.BoundedBackend.discoveryPeak
+#print axioms Komorebi.Discovery.BoundedBackend.discoveryPeak_bound
+#print axioms Komorebi.Discovery.BoundedBackend.discoveryPeak_bit_budget
+#print axioms Komorebi.Costed.runEval
+#print axioms Komorebi.Costed.runEval_value
+#print axioms Komorebi.Costed.discoverEval
+#print axioms Komorebi.Costed.discoverEval_value
+#print axioms Komorebi.Costed.discoverEval_eq_reference
+#print axioms Komorebi.Costed.discoverEval_total_correct
+#print axioms Komorebi.Costed.discoverEval_defines_behavior
+#print axioms Komorebi.Costed.discoverEval_code
+#print axioms Komorebi.Costed.operandBits
+#print axioms Komorebi.Costed.updateUnitsBound
+#print axioms Komorebi.Costed.roundUnitsBound
+#print axioms Komorebi.Costed.updateEval_uniform_bound
+#print axioms Komorebi.Costed.roundUnitsBound_mono
+#print axioms Komorebi.Costed.runEval_units_bound
+#print axioms Komorebi.Costed.discoveryUnitsBound
+#print axioms Komorebi.Costed.discoverEval_units_bound
+#print axioms Komorebi.Costed.discoveryUnitsBound_expansion
+#print axioms Komorebi.CostedExamples.fourBasis
+#print axioms Komorebi.CostedExamples.signed_euclid
+#print axioms Komorebi.CostedExamples.failed_membership
+#print axioms Komorebi.CostedExamples.residue_units
+#print axioms Komorebi.CostedExamples.normalization_units
+#print axioms Komorebi.CostedExamples.insertion_units
+#print axioms Komorebi.CostedExamples.update_units
+#print axioms Komorebi.CostedExamples.update_value
+#print axioms Komorebi.CostedExamples.actions
+#print axioms Komorebi.CostedExamples.observation
+#print axioms Komorebi.CostedExamples.source_word_order
+#print axioms Komorebi.CostedExamples.reversed_word_different
+#print axioms Komorebi.CostedExamples.zero_dimension
+#print axioms Komorebi.CostedExamples.no_observations

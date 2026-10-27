@@ -1,0 +1,94 @@
+module
+public import Mathlib.ModelTheory.Semantics
+public import ObservationalFirstOrder
+
+@[expose] public section
+
+namespace Komorebi.ModelTheory.Standard
+open Komorebi.Representation
+open FirstOrder
+universe u v w
+
+/-- Symbols are shared across all systems with the same action/observation/value profile. -/
+inductive ObsFunction (A O V : Type u) : Nat → Type u where
+  | value : V → ObsFunction A O V 0
+  | action : A → ObsFunction A O V 1
+  | observe : O → ObsFunction A O V 1
+
+inductive ObsRelation : Nat → Type where
+  | state : ObsRelation 1
+
+/-- A single-sorted first-order language, interpreted on tagged states and values. -/
+def observationLanguage (A O V : Type u) : FirstOrder.Language where
+  Functions := ObsFunction A O V
+  Relations := ObsRelation
+
+abbrev TaggedCarrier (X : Type v) (V : Type u) := X ⊕ V
+
+def StateTag {X : Type v} {V : Type u} : TaggedCarrier X V → Prop
+  | .inl _ => True
+  | .inr _ => False
+
+/-- Wrong-sort functions are totalized as the identity on tagged values.
+    Translated state terms never use this branch; quantifiers are guarded. -/
+def functionInterpretation {A O V : Type u} {X : Type v}
+    (S : System X A O V) : {n : Nat} → ObsFunction A O V n →
+      (Fin n → TaggedCarrier X V) → TaggedCarrier X V
+  | _, .value c, _ => .inr c
+  | _, .action a, args => match args 0 with
+    | .inl x => .inl (S.step a x)
+    | .inr c => .inr c
+  | _, .observe j, args => match args 0 with
+    | .inl x => .inr (S.observe j x)
+    | .inr c => .inr c
+
+instance taggedStructure {A O V : Type u} {X : Type v} (S : System X A O V) :
+    (observationLanguage A O V).Structure (TaggedCarrier X V) where
+  funMap := functionInterpretation S
+  RelMap := fun rel args => match rel with
+    | .state => StateTag (args 0)
+
+variable {A O V : Type u} {X : Type v}
+
+/-- Interpret an expression using this particular source structure. -/
+def termRealize {ι : Type w} (S : System X A O V)
+    (t : (observationLanguage A O V).Term ι) (env : ι → TaggedCarrier X V) :
+    TaggedCarrier X V :=
+  @FirstOrder.Language.Term.realize _ _ (taggedStructure S) _ env t
+
+/-- Word order is the inherited left-to-right operational convention. -/
+def pathTerm {ι : Type w} : List A → (observationLanguage A O V).Term ι →
+    (observationLanguage A O V).Term ι
+  | [], t => t
+  | a :: rest, t => pathTerm rest (.func (.action a) (fun _ => t))
+
+theorem pathTerm_realize {ι : Type w} (S : System X A O V)
+    (word : List A) (t : (observationLanguage A O V).Term ι)
+    (env : ι → TaggedCarrier X V) (x : X)
+    (ht : termRealize S t env = .inl x) :
+    termRealize S (pathTerm word t) env = .inl (run S word x) := by
+  induction word generalizing t x with
+  | nil => exact ht
+  | cons a rest ih =>
+    apply ih
+    change (match termRealize S t env with
+      | .inl y => Sum.inl (S.step a y)
+      | .inr c => Sum.inr c) = Sum.inl (S.step a x)
+    rw [ht]
+
+def observedTerm {ι : Type w} (word : List A) (j : O)
+    (t : (observationLanguage A O V).Term ι) : (observationLanguage A O V).Term ι :=
+  .func (.observe j) (fun _ => pathTerm word t)
+
+theorem observedTerm_realize {ι : Type w} (S : System X A O V)
+    (word : List A) (j : O) (t : (observationLanguage A O V).Term ι)
+    (env : ι → TaggedCarrier X V) (x : X)
+    (ht : termRealize S t env = .inl x) :
+    termRealize S (observedTerm word j t) env = .inr (behavior S x word j) := by
+  change (match termRealize S (pathTerm word t) env with
+    | .inl y => Sum.inr (S.observe j y)
+    | .inr c => Sum.inr c) = Sum.inr (behavior S x word j)
+  rw [pathTerm_realize S word t env x ht]
+  rfl
+
+end Komorebi.ModelTheory.Standard

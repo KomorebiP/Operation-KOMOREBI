@@ -1,0 +1,19 @@
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.5/v05_checks/controls/IncompleteQueue.lean:3:62: error: Tactic `decide` failed for proposition
+  replaySource A O (List.take 3 valid) = some answer
+because its `Decidable` instance
+  (replaySource A O (List.take 3 valid)).instDecidableEq (some answer)
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match replaySource A O (List.take 3 valid) with
+  | none =>
+    match some answer with
+    | none => isTrue ⋯
+    | some val => isFalse ⋯
+  | some a =>
+    match some answer with
+    | none => isFalse ⋯
+    | some b =>
+      match (fun a b => instDecidableEqList a b) a b with
+      | isTrue h => isTrue ⋯
+      | isFalse n => isFalse ⋯

@@ -1,0 +1,63 @@
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.8/formalization/EchelonTemporaryBounds.lean:55:63: error: Tactic `assumption` failed
+
+n✝ : ℕ
+m : ℤ
+hm : 1 ≤ m
+n : ℕ
+q : ℤ
+hq : 0 < q
+b : Fin n → ℤ
+B : Basis n
+ih :
+  ∀ (C : ℤ),
+    m ≤ C →
+      Uniform m B →
+        ∀ (v : Fin n → ℤ),
+          vectorPeak v ≤ C → Uniform ((2 * m) ^ n * C) (boundedInsert B v) ∧ insertionPeak B v ≤ (2 * m) ^ n * C
+C : ℤ
+hC : m ≤ C
+hB : Uniform m (Basis.cons q hq b B)
+v : Fin (n + 1) → ℤ
+hv : vectorPeak v ≤ C
+a : ℤ := v 0
+g : ℤ := ↑(q.gcd a)
+s : ℤ := (smallBezout q a).1
+t : ℤ := (smallBezout q a).2
+Q : ℤ := q / g
+A : ℤ := a / g
+row : Fin n → ℤ := s • b + t • tailV v
+rem : Fin n → ℤ := -A • b + Q • tailV v
+C' : ℤ := 2 * m * C
+hC0 : 0 ≤ C
+hCm : C ≤ C'
+hmC : m ≤ C'
+hgpos : 0 < g
+hg : g ≤ m
+ha : |a| ≤ C
+hs : |s| ≤ C
+ht : |t| ≤ m
+⊢ q ≤ m
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.8/formalization/EchelonTemporaryBounds.lean:85:55: error(lean.unknownIdentifier): Unknown identifier `abs_add`
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.8/formalization/EchelonTemporaryBounds.lean:93:61: error(lean.unknownIdentifier): Unknown identifier `abs_add`
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.8/formalization/EchelonTemporaryBounds.lean:164:52: error: unsolved goals
+n : ℕ
+m : ℤ
+hm : 1 ≤ m
+B : Basis n
+hmod : ContainsModulus m B
+hred : Reduced B
+v : Fin n → ℤ
+hv : vectorPeak v ≤ m
+hu : Uniform m B
+hi : Uniform ((2 * m) ^ n * m) (boundedInsert B v) ∧ insertionPeak B v ≤ (2 * m) ^ n * m
+hc : m ≤ (2 * m) ^ n * m
+hmi : ContainsModulus m (boundedInsert B v)
+hn : normalizationPeak (boundedInsert B v) ≤ (m + 1) ^ n * ((2 * m) ^ n * m)
+hh : (2 * m) ^ n * m ≤ (m + 1) ^ n * ((2 * m) ^ n * m)
+⊢ m * m ^ n * (1 + m) ^ n * 2 ^ n = m * (m * 2 + m ^ 2 * 2) ^ n

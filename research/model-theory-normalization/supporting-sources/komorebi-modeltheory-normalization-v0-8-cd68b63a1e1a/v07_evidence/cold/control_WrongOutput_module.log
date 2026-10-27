@@ -1,0 +1,19 @@
+/mnt/data/Komorebi_ModelTheory_Normalization_v0.7/v07_checks/controls/WrongOutput_module.lean:4:98: error: Tactic `decide` failed for proposition
+  normalizedPrimeDiscover 2 2 2 (fun a => rowRight (shearA a)) shearO = some [([], 0)]
+because its `Decidable` instance
+  (normalizedPrimeDiscover 2 2 2 (fun a => rowRight (shearA a)) shearO).instDecidableEq (some [([], 0)])
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match normalizedPrimeDiscover 2 2 2 (fun a => rowRight (shearA a)) shearO with
+  | none =>
+    match some [([], 0)] with
+    | none => isTrue ⋯
+    | some val => isFalse ⋯
+  | some a =>
+    match some [([], 0)] with
+    | none => isFalse ⋯
+    | some b =>
+      match (fun a b => instDecidableEqList a b) a b with
+      | isTrue h => isTrue ⋯
+      | isFalse n => isFalse ⋯

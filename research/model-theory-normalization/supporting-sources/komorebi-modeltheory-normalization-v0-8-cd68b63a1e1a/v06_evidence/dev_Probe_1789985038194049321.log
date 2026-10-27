@@ -1,0 +1,27 @@
+Int.gcd_pos_of_ne_zero_left {a : ℤ} (b : ℤ) (ha : a ≠ 0) : 0 < a.gcd b
+Int.gcd_pos_iff {a b : ℤ} : 0 < a.gcd b ↔ a ≠ 0 ∨ b ≠ 0
+Int.gcd_eq_zero_iff {a b : ℤ} : a.gcd b = 0 ↔ a = 0 ∧ b = 0
+Int.gcd_dvd_left (a b : ℤ) : ↑(a.gcd b) ∣ a
+Int.gcd_dvd_right (a b : ℤ) : ↑(a.gcd b) ∣ b
+Int.ediv_mul_cancel {a b : ℤ} (H : b ∣ a) : a / b * b = a
+Int.mul_ediv_cancel (a : ℤ) {b : ℤ} (H : b ≠ 0) : a * b / b = a
+Int.ediv_mul_cancel {a b : ℤ} (H : b ∣ a) : a / b * b = a
+Int.gcd_eq_gcd_ab (x y : ℤ) : ↑(x.gcd y) = x * x.gcdA y + y * x.gcdB y
+Int.eq_of_mul_eq_mul_left {a b c : ℤ} (ha : a ≠ 0) (h : a * b = a * c) : b = c
+mul_left_cancel₀.{u_1} {M₀ : Type u_1} [Mul M₀] [Zero M₀] [IsLeftCancelMulZero M₀] {a b c : M₀} (ha : a ≠ 0)
+  (h : a * b = a * c) : b = c
+Submodule.add_mem.{u, v} {R : Type u} {M : Type v} [Semiring R] [AddCommMonoid M] {module_M : Module R M}
+  (p : Submodule R M) {x y : M} (h₁ : x ∈ p) (h₂ : y ∈ p) : x + y ∈ p
+Submodule.sub_mem.{u, v} {R : Type u} {M : Type v} [Ring R] [AddCommGroup M] {module_M : Module R M} (p : Submodule R M)
+  {x y : M} : x ∈ p → y ∈ p → x - y ∈ p
+Submodule.mem_span_singleton.{u_1, u_2} {R : Type u_1} {M : Type u_2} [Semiring R] [AddCommMonoid M] [Module R M]
+  {x y : M} : x ∈ R ∙ y ↔ ∃ a, a • y = x
+Submodule.mem_sup.{u_1, u_2} {R : Type u_1} {M : Type u_2} [Semiring R] [AddCommMonoid M] [Module R M] {x : M}
+  {p p' : Submodule R M} : x ∈ p ⊔ p' ↔ ∃ y ∈ p, ∃ z ∈ p', y + z = x
+Submodule.span_insert.{u_1, u_2} {R : Type u_1} {M : Type u_2} [Semiring R] [AddCommMonoid M] [Module R M] (x : M)
+  (s : Set M) : Submodule.span R (insert x s) = R ∙ x ⊔ Submodule.span R s
+Submodule.span_le.{u_1, u_2} {R : Type u_1} {M : Type u_2} [Semiring R] [AddCommMonoid M] [Module R M] {s : Set M}
+  {p : Submodule R M} : Submodule.span R s ≤ p ↔ s ⊆ ↑p
+Submodule.mem_span_range_iff_exists_fun.{u_1, u_2, u_3} {α : Type u_1} {M : Type u_2} (R : Type u_3) [Fintype α]
+  [Semiring R] [AddCommMonoid M] [Module R M] {v : α → M} {x : M} :
+  x ∈ Submodule.span R (Set.range v) ↔ ∃ c, ∑ i, c i • v i = x
