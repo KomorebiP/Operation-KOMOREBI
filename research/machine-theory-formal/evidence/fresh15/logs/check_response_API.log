@@ -1,0 +1,51 @@
+Komorebi.MachineTheory.DecisionHistory.history_conditioned_response_error.{u, u_2, u_3, u_4} {Y : Type u_2}
+  {I : Type u_3} {V : Type u_4} {S Z A O : Type u} [Fintype S] [Fintype Z] [Fintype A] [Fintype O] [DecidableEq S]
+  [DecidableEq Z] [DecidableEq A] [DecidableEq O] [Fintype Y] [DecidableEq Y] [PseudoMetricSpace V] (π : S → Z)
+  (K : ℕ → Law S A O) (L : ℕ → Law Z A O) (g : Policy A O) (p : S → ℝ) (q : Z → ℝ) (hp : IsDist p) (hq : IsDist q)
+  (δ : ℝ) (ε : ℕ → ℝ) (h0 : tv (push π p) q ≤ δ)
+  (hε :
+    ∀ (n : ℕ) (a : A) (x : S),
+      tv (push (ApproximateHistory.reportMap π) (ApproximateHistory.jointRow (K n) a x))
+          (ApproximateHistory.jointRow (L n) a (π x)) ≤
+        ε n)
+  (H : ℕ) (f : ApproximateHistory.Path Z A O H → Y) (E : Finset (ApproximateHistory.Path Z A O H))
+  (hEp : 0 < mass (restrict E (push (ApproximateHistory.project π H) (ApproximateHistory.law K g p H))))
+  (hEq : 0 < mass (restrict E (ApproximateHistory.law L g q H))) (r : Y → ℝ) (hr : IsDist r) (s : ℝ)
+  (hs : tv (recordAfter f E (ApproximateHistory.law L g q H)) r ≤ s) (v w : Y → V) (loss : I → V → ℝ) (i : I) (C d : ℝ)
+  (hC : 0 ≤ C) (hd : ∀ (y : Y), dist (v y) (w y) ≤ d)
+  (hlip : ∀ (y : Y), |loss i (v y) - loss i (w y)| ≤ C * dist (v y) (w y))
+  (hv : ∀ (y : Y), 0 ≤ loss i (v y) ∧ loss i (v y) ≤ 1) (hw : ∀ (y : Y), 0 ≤ loss i (w y) ∧ loss i (w y) ≤ 1) :
+  |responseRisk (recordAfter f E (push (ApproximateHistory.project π H) (ApproximateHistory.law K g p H))) v loss i -
+        responseRisk r w loss i| ≤
+    allowance
+      (recordAllowance E (push (ApproximateHistory.project π H) (ApproximateHistory.law K g p H))
+        (ApproximateHistory.law L g q H) (min 1 (δ + ∑ n ∈ Finset.range H, ε n)) s)
+      C d
+Komorebi.MachineTheory.DecisionHistory.history_response_error.{u, u_2, u_3, u_4} {Y : Type u_2} {I : Type u_3}
+  {V : Type u_4} {S Z A O : Type u} [Fintype S] [Fintype Z] [Fintype A] [Fintype O] [DecidableEq S] [DecidableEq Z]
+  [DecidableEq A] [DecidableEq O] [Fintype Y] [DecidableEq Y] [PseudoMetricSpace V] (π : S → Z) (K : ℕ → Law S A O)
+  (L : ℕ → Law Z A O) (g : Policy A O) (p : S → ℝ) (q : Z → ℝ) (hp : IsDist p) (hq : IsDist q) (δ : ℝ) (ε : ℕ → ℝ)
+  (h0 : tv (push π p) q ≤ δ)
+  (hε :
+    ∀ (n : ℕ) (a : A) (x : S),
+      tv (push (ApproximateHistory.reportMap π) (ApproximateHistory.jointRow (K n) a x))
+          (ApproximateHistory.jointRow (L n) a (π x)) ≤
+        ε n)
+  (H : ℕ) (f : ApproximateHistory.Path Z A O H → Y) (v w : Y → V) (loss : I → V → ℝ) (i : I) (C d : ℝ) (hC : 0 ≤ C)
+  (hd : ∀ (y : Y), dist (v y) (w y) ≤ d) (hlip : ∀ (y : Y), |loss i (v y) - loss i (w y)| ≤ C * dist (v y) (w y))
+  (hv : ∀ (y : Y), 0 ≤ loss i (v y) ∧ loss i (v y) ≤ 1) (hw : ∀ (y : Y), 0 ≤ loss i (w y) ∧ loss i (w y) ≤ 1) :
+  |responseRisk (push f (push (ApproximateHistory.project π H) (ApproximateHistory.law K g p H))) v loss i -
+        responseRisk (push f (ApproximateHistory.law L g q H)) w loss i| ≤
+    allowance (min 1 (δ + ∑ n ∈ Finset.range H, ε n)) C d
+Komorebi.MachineTheory.ResponseDecision.expected_response_error.{u_1, u_2, u_3} {X : Type u_1} {I : Type u_2}
+  {V : Type u_3} [Fintype X] [PseudoMetricSpace V] (p q : X → ℝ) (v w : X → V) (loss : I → V → ℝ) (i : I)
+  (hp : IsDist p) (hq : IsDist q) (e K d : ℝ) (hK : 0 ≤ K) (he : tv p q ≤ e) (hd : ∑ x, dist (v x) (w x) * p x ≤ d)
+  (hlip : ∀ (x : X), |loss i (v x) - loss i (w x)| ≤ K * dist (v x) (w x))
+  (hv : ∀ (x : X), 0 ≤ loss i (v x) ∧ loss i (v x) ≤ 1) (hw : ∀ (x : X), 0 ≤ loss i (w x) ∧ loss i (w x) ≤ 1) :
+  |responseRisk p v loss i - responseRisk q w loss i| ≤ allowance e K d
+Komorebi.MachineTheory.ResponseDecision.approximate_optimizer_regret.{u_1, u_2, u_3} {X : Type u_1} {I : Type u_2}
+  {V : Type u_3} [Fintype X] (p q : X → ℝ) (v w : X → V) (loss : I → V → ℝ) (S : Finset I) (hp : IsDist p) (ξ η : ℝ)
+  (hv : ∀ i ∈ S, ∀ (x : X), 0 ≤ loss i (v x) ∧ loss i (v x) ≤ 1)
+  (herr : ∀ i ∈ S, |responseRisk p v loss i - responseRisk q w loss i| ≤ ξ) (chosen best : I) (hc : chosen ∈ S)
+  (hb : best ∈ S) (hopt : ∀ i ∈ S, responseRisk q w loss chosen ≤ responseRisk q w loss i + η) :
+  responseRisk p v loss chosen - responseRisk p v loss best ≤ min 1 (2 * ξ + η)

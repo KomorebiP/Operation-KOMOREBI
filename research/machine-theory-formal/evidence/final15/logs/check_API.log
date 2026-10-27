@@ -1,0 +1,133 @@
+Komorebi.MachineTheory.decoder_exists_iff.{u, v, w} {X : Type u} {H : Type v} {Y : Type w} (r : X → H) (t : X → Y) :
+  (∃ d, ∀ (x : X), d (record r x) = t x) ↔ FiberConstant r t
+Komorebi.MachineTheory.evidence_initialized_predictor_iff.{u, v, w, z} {X : Type u} {A : Type v} {Y : Type w}
+  {H : Type z} (F : A → X → X) (q : X → Y) (r : X → H) :
+  Nonempty (Predictor F q r (BehavioralState F q)) ↔ ∀ (x y : X), r x = r y → SameBehavior F q x y
+Komorebi.MachineTheory.Predictor.minimal_initialized_card.{u, v, w, z, u_1} {X : Type u} {A : Type v} {Y : Type w}
+  {H : Type z} {Z : Type u_1} [Fintype X] {F : A → X → X} {q : X → Y} {r : X → H} (p : Predictor F q r Z) :
+  Fintype.card (BehavioralState F q) ≤ Fintype.card (Attained fun x => p.initState (record r x))
+Komorebi.MachineTheory.canonical_initialized_card.{u, v, w, z} {X : Type u} {A : Type v} {Y : Type w} {H : Type z}
+  [Fintype X] (F : A → X → X) (q : X → Y) (r : X → H) (h : ∀ (x y : X), r x = r y → SameBehavior F q x y) :
+  Fintype.card (Attained fun x => (canonicalPredictor F q r h).initState (record r x)) =
+    Fintype.card (BehavioralState F q)
+Komorebi.MachineTheory.split_encoding_comp.{u_1, u_2, u_3} {𝕜 : Type u_1} {V : Type u_2} {Z : Type u_3} [Field 𝕜]
+  [AddCommGroup V] [Module 𝕜 V] [AddCommGroup Z] [Module 𝕜 Z] (A : V →ₗ[𝕜] Z) (S : Z →ₗ[𝕜] V)
+  (hSA : S ∘ₗ A = LinearMap.id) (T U : V →ₗ[𝕜] V) : (A ∘ₗ T ∘ₗ S) ∘ₗ A ∘ₗ U ∘ₗ S = A ∘ₗ (T ∘ₗ U) ∘ₗ S
+Komorebi.MachineTheory.hidden_return_identity.{u_1, u_2, u_3} {𝕜 : Type u_1} {V : Type u_2} {Z : Type u_3} [Field 𝕜]
+  [AddCommGroup V] [Module 𝕜 V] [AddCommGroup Z] [Module 𝕜 Z] (C : V →ₗ[𝕜] Z) (R : Z →ₗ[𝕜] V) (T U : V →ₗ[𝕜] V) :
+  C ∘ₗ (T ∘ₗ U) ∘ₗ R - (C ∘ₗ T ∘ₗ R) ∘ₗ C ∘ₗ U ∘ₗ R = C ∘ₗ T ∘ₗ (LinearMap.id - R ∘ₗ C) ∘ₗ U ∘ₗ R
+Komorebi.MachineTheory.invariant_forward_output.{u_1, u_2, u_3, u_4, u_5} {X : Type u_1} {Y : Type u_2} {A : Type u_3}
+  {B : Type u_4} {O : Type u_5} (D : Set X) (F : A → X → X) (G : B → Y → Y) (T : X → Y) (τ : A → B) (q : X → O)
+  (qbar : Y → O) (hD : ∀ (a : A), ∀ x ∈ D, F a x ∈ D) (h : ∀ (a : A), ∀ x ∈ D, T (F a x) = G (τ a) (T x))
+  (hq : ∀ x ∈ D, q x = qbar (T x)) (word : List A) (x : X) (hx : x ∈ D) :
+  q (run F word x) = qbar (run G (List.map τ word) (T x))
+Komorebi.MachineTheory.EvidenceAlgebra.memory_minimal_card.{u_1, u_2, u_3} {Ω : Type u_1} {Y : Type u_2}
+  (E : EvidenceAlgebra Ω) [Fintype Ω] (t : Ω → Y) {M : Type u_3} (r : Set Ω → M) (readout : M → Set Y)
+  (step : E.Event → M → M) (hq : ∀ (V : Set Ω), readout (r V) = t '' V)
+  (hs : ∀ (e : E.Event) (V : Set Ω), step e (r V) = r (E.filter e V)) :
+  Fintype.card (E.Memory t) ≤ Fintype.card (Attained r)
+Komorebi.MachineTheory.Instrument.quotient_exists_iff.{u_1, u_2, u_3, u_4} {X : Type u_1} {Z : Type u_2} {A : Type u_3}
+  {O : Type u_4} [Fintype X] [Fintype Z] [DecidableEq Z] [Fintype O] (π : X → Z) (hπ : Function.Surjective π)
+  (K : Instrument.Law X A O) :
+  (∃ L, ∀ (a : A) (o : O), Instrument.Intertwines π (K.kernel a o) (L.kernel a o)) ↔
+    Instrument.FiberCriterion π K.kernel
+Komorebi.MachineTheory.Instrument.quotient_unique.{u_1, u_2, u_3, u_4} {X : Type u_1} {Z : Type u_2} {A : Type u_3}
+  {O : Type u_4} [Fintype X] [Fintype Z] [DecidableEq Z] [Fintype O] (π : X → Z) (hπ : Function.Surjective π)
+  (K : Instrument.Law X A O) (L M : Instrument.Law Z A O)
+  (hL : ∀ (a : A) (o : O), Instrument.Intertwines π (K.kernel a o) (L.kernel a o))
+  (hM : ∀ (a : A) (o : O), Instrument.Intertwines π (K.kernel a o) (M.kernel a o)) : L = M
+Komorebi.MachineTheory.Instrument.instrument_iff_reports_and_posteriors.{u_1, u_2, u_3, u_4} {X : Type u_1}
+  {Z : Type u_2} {A : Type u_3} {O : Type u_4} [Fintype X] [Fintype Z] [DecidableEq Z] [Fintype O] (π : X → Z)
+  (K : Instrument.Law X A O) (L : Instrument.Law Z A O) :
+  (∀ (a : A) (o : O), Instrument.Intertwines π (K.kernel a o) (L.kernel a o)) ↔
+    ∀ (a : A) (o : O) (p : X → ℝ),
+      Instrument.IsDist p →
+        Instrument.mass (Instrument.applyKernel (K.kernel a o) p) =
+            Instrument.mass (Instrument.applyKernel (L.kernel a o) (Instrument.push π p)) ∧
+          (0 < Instrument.mass (Instrument.applyKernel (K.kernel a o) p) →
+            Instrument.push π (Instrument.normalize (Instrument.applyKernel (K.kernel a o) p)) =
+              Instrument.normalize (Instrument.applyKernel (L.kernel a o) (Instrument.push π p)))
+Komorebi.MachineTheory.Instrument.quotient_feedback_law.{u_1, u_2, u_3, u_4} {X : Type u_1} {Z : Type u_2}
+  {A : Type u_3} {O : Type u_4} [Fintype X] [Fintype Z] [Fintype O] [Fintype A] [DecidableEq Z] (π : X → Z)
+  (hπ : Function.Surjective π) (K : Instrument.Law X A O) (hc : Instrument.FiberCriterion π K.kernel)
+  (g : Instrument.Policy A O) (p : X → ℝ) (events : Instrument.History A O) :
+  have L := Instrument.coarseLaw π hπ K;
+  Instrument.mass (Instrument.evolve K.kernel g.probability [] events p) =
+      Instrument.mass (Instrument.evolve L.kernel g.probability [] events (Instrument.push π p)) ∧
+    Option.map (Instrument.push π) (Instrument.posterior? (Instrument.evolve K.kernel g.probability [] events p)) =
+      Instrument.posterior? (Instrument.evolve L.kernel g.probability [] events (Instrument.push π p))
+Komorebi.MachineTheory.Instrument.stoppedAndSurvivingMass_eq.{u_1, u_3, u_4, u_5} {X : Type u_1} {A : Type u_3}
+  {O : Type u_4} [Fintype X] [Fintype O] [Fintype A] {D : Type u_5} [Fintype D] (K : Instrument.Law X A O)
+  (g : Instrument.StoppingPolicy A O D) (n : ℕ) (past : Instrument.History A O) (p : X → ℝ) :
+  Instrument.stoppedAndSurvivingMass K g n past p = Instrument.mass p
+Komorebi.MachineTheory.Bayes.ReportingModel.all_iff_exists_full_support.{u_1, u_2, u_3} {M : Type u_1} {O : Type u_2}
+  {Z : Type u_3} [Fintype M] [Fintype O] [Fintype Z] (E : Bayes.ReportingModel M O Z) [Nonempty M] [Nonempty O] :
+  E.PreservesAll ↔ ∃ p, Instrument.IsDist p ∧ (∀ (m : M), 0 < p m) ∧ E.PreservesAt p
+Komorebi.MachineTheory.Bayes.ReportingModel.reconstruction_factor.{u_1, u_2, u_3} {M : Type u_1} {O : Type u_2}
+  {Z : Type u_3} [Fintype M] [Fintype O] [Fintype Z] (E : Bayes.ReportingModel M O Z) [Nonempty O] (p : M → ℝ)
+  (hp : ∀ (m : M), 0 < p m) (hpres : E.PreservesAt p) (m : M) (o : O) (z : Z) :
+  E.joint o z m = E.report z m * E.reconstruction p z o
+Komorebi.MachineTheory.Refinement.admissible_iff.{u_1, u_2, u_3} {X : Type u_1} {A : Type u_2} {O : Type u_3}
+  [Fintype X] (K : Instrument.Law X A Unit) (l : O → X → ℝ) (P₀ P : Setoid X) (hl : ∀ (o : O) (x : X), 0 < l o x)
+  (hnt : ∃ x y, ¬P₀ x y) :
+  Refinement.Admissible K l P₀ P ↔ P ≤ Refinement.initial P₀ l ∧ Refinement.Stable (Refinement.transition K) P
+Komorebi.MachineTheory.Refinement.least_prediction_correction_refinement.{u_1, u_2, u_3} {X : Type u_1} {A : Type u_2}
+  {O : Type u_3} [Fintype X] (K : Instrument.Law X A Unit) (l : O → X → ℝ) (P₀ : Setoid X)
+  (hl : ∀ (o : O) (x : X), 0 < l o x) (hnt : ∃ x y, ¬P₀ x y) :
+  have I := Refinement.initial P₀ l;
+  have n := Refinement.stopIndex (Refinement.transition K) I;
+  have P := Refinement.sequence (Refinement.transition K) I n;
+  n ≤ Fintype.card X - Refinement.blockCount I ∧
+    Refinement.Admissible K l P₀ P ∧
+      (∀ (Q : Setoid X), Refinement.Admissible K l P₀ Q → Q ≤ P) ∧
+        ∀ (Q : Setoid X),
+          Refinement.Admissible K l P₀ Q → (∀ (R : Setoid X), Refinement.Admissible K l P₀ R → R ≤ Q) → Q = P
+Komorebi.MachineTheory.Block02Examples.discrete_is_only_admissible (P : Setoid Block02Examples.Four)
+  (hp : Refinement.Admissible Block02Examples.fourLaw (fun x x_1 => 1) Block02Examples.mandatory P) : P = ⊥
+Komorebi.MachineTheory.Block02Examples.one_block_still_corrects (p : Bool → ℝ) (hp : Instrument.IsDist p) :
+  Instrument.push (fun x => ()) (Bayes.update p Block02Examples.nonconstantLikelihood) =
+    Bayes.update (Instrument.push (fun x => ()) p) fun x => 1
+Komorebi.MachineTheory.Block02Examples.likelihood_split_cannot_be_omitted :
+  ¬∃ g,
+      (∀ (b : Bool), 0 < g b) ∧
+        ∀ (p : Block02Examples.Four → ℝ),
+          Instrument.IsDist p →
+            Instrument.push Prod.fst (Bayes.update p fun x => Block02Examples.nonconstantLikelihood x.2) =
+              Bayes.update (Instrument.push Prod.fst p) g
+Komorebi.MachineTheory.Planning.minimizing_tree_exists.{u_1, u_2, u_3, u_4} {S : Type u_1} {A : Type u_2} {O : Type u_3}
+  {D : Type u_4} [Fintype O] (M : Planning.Model S A O D) (h : ℕ) (s : S) :
+  ∃ P, Planning.Tree.Bounded h P ∧ Planning.Feasible M h s P ∧ Planning.evaluate M P s = Planning.value M h s
+Komorebi.MachineTheory.Planning.randomized_tree_lower_bound.{u_1, u_2, u_3, u_4, u_5} {S : Type u_1} {A : Type u_2}
+  {O : Type u_3} {D : Type u_4} [Fintype O] (M : Planning.Model S A O D) (h : ℕ) (s : S) {I : Type u_5} [Fintype I]
+  (w : I → ℝ) (hw : ∀ (i : I), 0 ≤ w i) (hsum : ∑ i, w i = 1) (P : I → Planning.Tree A O D)
+  (hP : ∀ (i : I), Planning.Feasible M h s (P i)) : Planning.value M h s ≤ ∑ i, w i * Planning.evaluate M (P i) s
+Komorebi.MachineTheory.BeliefPlanning.constructed_quotient_planning.{u_1, u_2, u_3, u_4, u_5} {X : Type u_1}
+  {Z : Type u_2} {A : Type u_3} {O : Type u_4} {D : Type u_5} [Fintype X] [Fintype Z] [Fintype O] [DecidableEq Z]
+  (K : Instrument.Law X A O) (π : X → Z) (hπ : Function.Surjective π) (hc : Instrument.FiberCriterion π K.kernel)
+  (C : BeliefPlanning.Contract Z A D) (h : ℕ) (p : BeliefPlanning.Belief X) :
+  Planning.value (BeliefPlanning.fineModel K π C) h p =
+    Planning.value (BeliefPlanning.coarseModel (Instrument.coarseLaw π hπ K) C) h (BeliefPlanning.aggregate π p)
+Komorebi.MachineTheory.PlanningSensor.countMap :
+  Planning.ExactMap PlanningSensor.countModel
+    (BeliefPlanning.coarseModel PlanningSensor.sensorLaw PlanningSensor.contract) PlanningSensor.countBelief
+Komorebi.MachineTheory.PlanningSensor.eight_world_adaptive_optimal (p : BeliefPlanning.Belief PlanningSensor.World)
+  (hp : BeliefPlanning.aggregate PlanningSensor.project p = PlanningSensor.countBelief (0, 0)) :
+  Planning.Feasible (BeliefPlanning.fineModel PlanningSensor.fineLaw PlanningSensor.project PlanningSensor.contract) 3 p
+      PlanningSensor.adaptiveThree ∧
+    Planning.evaluate (BeliefPlanning.fineModel PlanningSensor.fineLaw PlanningSensor.project PlanningSensor.contract)
+          PlanningSensor.adaptiveThree p =
+        11 / 40 ∧
+      ∀ (P : Planning.Tree Unit Bool Bool),
+        Planning.Feasible
+            (BeliefPlanning.fineModel PlanningSensor.fineLaw PlanningSensor.project PlanningSensor.contract) 3 p P →
+          11 / 40 ≤
+            Planning.evaluate
+              (BeliefPlanning.fineModel PlanningSensor.fineLaw PlanningSensor.project PlanningSensor.contract) P p
+Komorebi.MachineTheory.PlanningSensor.source_sensor_optimum :
+  Planning.value (BeliefPlanning.fineModel PlanningSensor.fineLaw PlanningSensor.project PlanningSensor.contract) 3
+      PlanningSensor.initialFine =
+    11 / 40
+Komorebi.MachineTheory.PlanningControls.no_common_permission_quotient (N : Planning.Model Unit Unit Unit Bool) :
+  ¬Planning.ExactMap PlanningControls.permissions N fun x => ()
+Komorebi.MachineTheory.PlanningControls.unchanged_filter_different_value :
+  Planning.value PlanningSensor.countModel 1 (0, 0) ≠ Planning.value PlanningControls.expensiveSensor 1 (0, 0)

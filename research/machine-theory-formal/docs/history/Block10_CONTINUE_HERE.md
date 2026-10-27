@@ -1,0 +1,3 @@
+# Continue the checked machine-theory companion
+
+Start from this exact Block10 v0.10.0 archive. Verify its frozen checksum inventory. Read PROGRESS_LEDGER.md, docs/THEOREM_MAP.md, REVIEW_NOTES.md and the terminated current-source receipts. Current source coverage is18/27. Next target: Core7.1, dependency-complete selective certificate reuse. The book is unchanged. Preserve all41 predecessor substantive modules and this block's five additions unless an explicit corrected successor is needed. Runtime pins and recheck commands are in README.md. There is no live background process on which continuation depends.

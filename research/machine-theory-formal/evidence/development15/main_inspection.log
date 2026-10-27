@@ -1,0 +1,11 @@
+'Komorebi.MachineTheory.LegalQuotient.finite_source_legal_quotient' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Komorebi.MachineTheory.LegalQuotient.quotient_unique' depends on axioms: [propext, Quot.sound]
+Komorebi.MachineTheory.LegalQuotient.finite_source_legal_quotient.{u, v, w, l} {X : Type u} {Z : Type w}
+  {Action : Type v} {Label : Type l} [Fintype X] [Fintype Action] (label : X → Label) (D : X → Set Action)
+  (F : (x : X) → (a : Action) → a ∈ D x → X) (π : X → Z) (hs : Function.Surjective π) :
+  (∃! Q, Komorebi.MachineTheory.LegalQuotient.Factors (Komorebi.MachineTheory.LegalQuotient.ofEnabled label D F) Q π) ↔
+    (∀ (x y : X), π x = π y → label x = label y) ∧
+      (∀ (x y : X), π x = π y → D x = D y) ∧
+        ∀ (x y : X) (a : Action), π x = π y → ∀ (hx : a ∈ D x) (hy : a ∈ D y), π (F x a hx) = π (F y a hy)
