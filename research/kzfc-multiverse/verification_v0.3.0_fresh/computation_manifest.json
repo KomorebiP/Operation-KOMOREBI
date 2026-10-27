@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "claim_id": "KZFC-v0.3.0-kernel-verification",
+  "repository": {
+    "commit": "Source archive, no project Git commit; predecessor SHA256 9dab41c5763fdd22fffb013cdd434cf0a0838df36b8e6355b8a3239cd2c93989",
+    "dirty": true
+  },
+  "command": "python3 scripts/verify.py --clean (with pinned Lean toolchain bin directory on PATH)",
+  "environment": {
+    "software": [
+      {
+        "name": "Lean",
+        "version": "Lean (version 4.34.0-rc2, x86_64-unknown-linux-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)"
+      },
+      {
+        "name": "Lake",
+        "version": "Lake version 5.0.0-src+6a10ac8 (Lean version 4.34.0-rc2)"
+      },
+      {
+        "name": "Mathlib",
+        "version": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+      }
+    ],
+    "hardware": "Linux-6.18.44-x86_64-with-glibc2.41; available logical CPUs=5"
+  },
+  "mathematics": {
+    "assertion_tested": "Fresh Lean elaboration of all active source files, axiom audit of 65 named theorems, rejected false-proof and placeholder controls, and predecessor preservation.",
+    "coefficient_domain": "Exact integers, arbitrary integer sequences indexed by natural numbers, additive quotient groups, cardinal-indexed filters in Lean type theory.",
+    "conventions": "delta_m(a)(n)=a(n)-m*a(n+1); prefix operator uses N equations and N+1 variables; supports are declared in the source.",
+    "inputs": [
+      "Komorebi.lean",
+      "Komorebi/Foundation/Audit.lean",
+      "Komorebi/Foundation/FineUltrafilterCompactness.lean",
+      "Komorebi/Foundation/FiniteSupportCounterexample.lean",
+      "Komorebi/Foundation/KappaResidualReflection.lean",
+      "Komorebi/Foundation/LogicalCompactness.lean",
+      "Komorebi/Foundation/MultiplierTower.lean",
+      "Komorebi/Foundation/ResidualAudit.lean",
+      "Komorebi/Foundation/ResidualReflection.lean",
+      "Komorebi/Foundation/TowerObstruction.lean",
+      "lakefile.toml",
+      "lake-manifest.json",
+      "lean-toolchain",
+      "scripts/verify.py"
+    ],
+    "bounds": {
+      "mathematical_scope": "Universal statements exactly as quantified in the 65 theorem declarations; not extrapolated from finite testing. Ultrafilter compactness theorem retains explicit existence, cardinal, and locality hypotheses.",
+      "compiler_timeout_seconds_per_command": 240,
+      "named_theorems_audited": 65
+    },
+    "non_claims": [
+      "No new axiom of ZFC is proved or assumed.",
+      "No strong-compactness equivalence or relative consistency is formalized.",
+      "The explicit cokernel has not been identified with Mathlib right-derived limits.",
+      "Ultrafilter existence is a theorem premise, not an established conclusion."
+    ]
+  },
+  "randomness": {
+    "used": false,
+    "generator": "Not applicable",
+    "seed": null
+  },
+  "run": {
+    "started_at": "2026-09-26T05:34:54.738200+00:00",
+    "runtime_seconds": 26.813591081000027,
+    "exit_status": 0
+  },
+  "outputs": [
+    {
+      "path": "verification/RESULTS.json",
+      "sha256": "fa8444a02eb9c8495e99acb0746fbcf5a311038b15dae5684b4e4ec8f858df80"
+    },
+    {
+      "path": "verification/clean_build.log",
+      "sha256": "4651ea9c1a87b49f3b944bb4ec40c764f07d022094655b790543ca2a89ff5528"
+    },
+    {
+      "path": "verification/axiom_audit.log",
+      "sha256": "d7c2392d2b5ca566fe56a95fa405b84d8c4926ea2412a7c7fed178f1c8305f39"
+    },
+    {
+      "path": "verification/audit_coverage.json",
+      "sha256": "6c48bce0c43aca579a81250b684f222db5d3b5dd543df997b920311becb06663"
+    },
+    {
+      "path": "verification/negative_false_proof.log",
+      "sha256": "e88f569376dcfca9ba260856b31c593cfbe30e7493d47adc62e41c6c8c91be3c"
+    },
+    {
+      "path": "verification/negative_placeholder.log",
+      "sha256": "733f64e13478e332d4bc802cb659704be66731ab9ccb6a8844a451868dd34bab"
+    }
+  ],
+  "checks": [
+    {
+      "name": "lean_version",
+      "argv": [
+        "lean",
+        "--version"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.042182042000035835,
+      "log": "verification/lean_version.log"
+    },
+    {
+      "name": "lake_version",
+      "argv": [
+        "lake",
+        "--version"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 0.03986265599996841,
+      "log": "verification/lake_version.log"
+    },
+    {
+      "name": "clean_build",
+      "argv": [
+        "lake",
+        "build",
+        "Komorebi"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 11.105866336999952,
+      "log": "verification/clean_build.log"
+    },
+    {
+      "name": "check_Komorebi",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.6423228319999907,
+      "log": "verification/check_Komorebi.log"
+    },
+    {
+      "name": "check_FineUltrafilterCompactness",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/FineUltrafilterCompactness.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.4046172759999536,
+      "log": "verification/check_FineUltrafilterCompactness.log"
+    },
+    {
+      "name": "check_FiniteSupportCounterexample",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/FiniteSupportCounterexample.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.5134767420000799,
+      "log": "verification/check_FiniteSupportCounterexample.log"
+    },
+    {
+      "name": "check_KappaResidualReflection",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/KappaResidualReflection.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.4316428149999183,
+      "log": "verification/check_KappaResidualReflection.log"
+    },
+    {
+      "name": "check_LogicalCompactness",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/LogicalCompactness.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.3387035209999567,
+      "log": "verification/check_LogicalCompactness.log"
+    },
+    {
+      "name": "check_MultiplierTower",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/MultiplierTower.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.46641405999992,
+      "log": "verification/check_MultiplierTower.log"
+    },
+    {
+      "name": "check_ResidualAudit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/ResidualAudit.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.3415549280000505,
+      "log": "verification/check_ResidualAudit.log"
+    },
+    {
+      "name": "check_ResidualReflection",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/ResidualReflection.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.3970847879999155,
+      "log": "verification/check_ResidualReflection.log"
+    },
+    {
+      "name": "check_TowerObstruction",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/TowerObstruction.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.4733294449999903,
+      "log": "verification/check_TowerObstruction.log"
+    },
+    {
+      "name": "axiom_audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "Komorebi/Foundation/Audit.lean"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 1.4066399340000544,
+      "log": "verification/axiom_audit.log"
+    },
+    {
+      "name": "axiom_allowlist",
+      "passed": true,
+      "observed": [
+        "Classical.choice",
+        "Quot.sound",
+        "propext"
+      ]
+    },
+    {
+      "name": "source_scan",
+      "passed": true,
+      "findings": {}
+    },
+    {
+      "name": "negative_false_proof",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "/tmp/kzfc_controls_ruatcg8l/FalseProof.lean"
+      ],
+      "exit_code": 1,
+      "passed": true,
+      "seconds": 0.6043020820000038,
+      "log": "verification/negative_false_proof.log"
+    },
+    {
+      "name": "negative_placeholder",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "/tmp/kzfc_controls_ruatcg8l/Placeholder.lean"
+      ],
+      "exit_code": 1,
+      "passed": true,
+      "seconds": 0.5938431399999899,
+      "log": "verification/negative_placeholder.log"
+    },
+    {
+      "name": "inputs_unchanged",
+      "passed": true
+    },
+    {
+      "name": "predecessor_theorem_sources_preserved",
+      "passed": true,
+      "files": 3
+    },
+    {
+      "name": "all_theorem_names_audited",
+      "passed": true
+    }
+  ],
+  "result": "PASS: all declared checks succeeded. The finite-prefix residual candidate is refuted by a checked counterexample; the fixed-domain compactness bridge is proved conditionally.",
+  "residual_risks": [
+    "Lean kernel, reported standard axioms, pinned dependency binaries and execution environment are trusted.",
+    "The explicit cokernel has not been identified with Mathlib right-derived inverse limit by a formal isomorphism.",
+    "No ZFC independence, relative consistency, or strongly-compact-cardinal equivalence is claimed.",
+    "The v1 record is accompanied by input hashes in RESULTS.json; the bundled project verifier was run, not the separate Mathbox manifest validator."
+  ],
+  "input_artifacts": [
+    {
+      "path": "Komorebi.lean",
+      "sha256": "854a1578fe3c80ddac905e82f8c39d4b2a9244e331fb496cea1cb17ef9c8886d",
+      "sha256_after": "854a1578fe3c80ddac905e82f8c39d4b2a9244e331fb496cea1cb17ef9c8886d"
+    },
+    {
+      "path": "Komorebi/Foundation/Audit.lean",
+      "sha256": "13215f9b6dd649bec5825db2230dd0c5b0e42eee591a48ba288b55b5e19d3fce",
+      "sha256_after": "13215f9b6dd649bec5825db2230dd0c5b0e42eee591a48ba288b55b5e19d3fce"
+    },
+    {
+      "path": "Komorebi/Foundation/FineUltrafilterCompactness.lean",
+      "sha256": "39fc1c301fc1257bf3b52ef2f6c9add3437852391fb0dc2624bf1741cea59151",
+      "sha256_after": "39fc1c301fc1257bf3b52ef2f6c9add3437852391fb0dc2624bf1741cea59151"
+    },
+    {
+      "path": "Komorebi/Foundation/FiniteSupportCounterexample.lean",
+      "sha256": "49c6f485d1383587bdac54525cef6972f1cb22ce6ddabfe88f13dc6ecf6c583c",
+      "sha256_after": "49c6f485d1383587bdac54525cef6972f1cb22ce6ddabfe88f13dc6ecf6c583c"
+    },
+    {
+      "path": "Komorebi/Foundation/KappaResidualReflection.lean",
+      "sha256": "6d63c3a7411763e946eda06c33ed0038e8faea2e01ecf13c5dbf059c90a0d34c",
+      "sha256_after": "6d63c3a7411763e946eda06c33ed0038e8faea2e01ecf13c5dbf059c90a0d34c"
+    },
+    {
+      "path": "Komorebi/Foundation/LogicalCompactness.lean",
+      "sha256": "1b4b2d2530937838424ec7cd9b7a8f42b63ef74b047cee3c086accc580d09a8c",
+      "sha256_after": "1b4b2d2530937838424ec7cd9b7a8f42b63ef74b047cee3c086accc580d09a8c"
+    },
+    {
+      "path": "Komorebi/Foundation/MultiplierTower.lean",
+      "sha256": "57c7b3d9afb8fb6eee5fc65a952064e51d7c996d32234879c2b654adf96594a7",
+      "sha256_after": "57c7b3d9afb8fb6eee5fc65a952064e51d7c996d32234879c2b654adf96594a7"
+    },
+    {
+      "path": "Komorebi/Foundation/ResidualAudit.lean",
+      "sha256": "8d9894d9c58d1a07bb6a69eb744ebafdd383f6b5c6017c48f467b64cc802d1f1",
+      "sha256_after": "8d9894d9c58d1a07bb6a69eb744ebafdd383f6b5c6017c48f467b64cc802d1f1"
+    },
+    {
+      "path": "Komorebi/Foundation/ResidualReflection.lean",
+      "sha256": "279c6ac88a07326272f9f6c51afe7422bbb7853ffaa28990b6d09a4af15d039e",
+      "sha256_after": "279c6ac88a07326272f9f6c51afe7422bbb7853ffaa28990b6d09a4af15d039e"
+    },
+    {
+      "path": "Komorebi/Foundation/TowerObstruction.lean",
+      "sha256": "a41600b598e130c8c0fc95eee2ae3d4dfe43dc8538841546116e27543bfee82c",
+      "sha256_after": "a41600b598e130c8c0fc95eee2ae3d4dfe43dc8538841546116e27543bfee82c"
+    },
+    {
+      "path": "lakefile.toml",
+      "sha256": "59dbd5d48eabdd8de02457a9acf8d44a2d8115eb9952796a88198700de2b179b",
+      "sha256_after": "59dbd5d48eabdd8de02457a9acf8d44a2d8115eb9952796a88198700de2b179b"
+    },
+    {
+      "path": "lake-manifest.json",
+      "sha256": "c32398e0e7e7282cd512daec582c6bae107ed5169a6f503fab43ce93a5238ed6",
+      "sha256_after": "c32398e0e7e7282cd512daec582c6bae107ed5169a6f503fab43ce93a5238ed6"
+    },
+    {
+      "path": "lean-toolchain",
+      "sha256": "8190e75a201741065fe508b28955dd64dd72d090babe5f70ce6848879d68ae88",
+      "sha256_after": "8190e75a201741065fe508b28955dd64dd72d090babe5f70ce6848879d68ae88"
+    },
+    {
+      "path": "scripts/verify.py",
+      "sha256": "f0888648d3b88460dc4a303b8042db5dbf2123f8237c614656d0670357dc71f3",
+      "sha256_after": "f0888648d3b88460dc4a303b8042db5dbf2123f8237c614656d0670357dc71f3"
+    }
+  ]
+}

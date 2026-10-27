@@ -1,0 +1,11 @@
+import Komorebi
+
+#print axioms Komorebi.Multiverse.WorldNetwork.simplex_downward
+#print axioms Komorebi.Multiverse.boundaryTriple_higherObstruction
+#print axioms Komorebi.Multiverse.unitBoundaryData_higherObstruction
+#print axioms Komorebi.Multiverse.TransportSystem.triangle_residual_cocycle
+#print axioms Komorebi.Multiverse.TransportSystem.packedFailureTheory_complete
+#print axioms Komorebi.Multiverse.unitBoundaryData_detected_at_degree_one
+#print axioms Komorebi.Multiverse.WorldMorphism.maps_joint
+#print axioms Komorebi.Multiverse.ZFCWorldNetwork.worlds_agree_on_zfc
+#print axioms Komorebi.Multiverse.ZFCWorldNetwork.zfc_subset_commonCore

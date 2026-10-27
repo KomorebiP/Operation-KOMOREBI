@@ -1,0 +1,1 @@
+Historical v0.3.0 results plus its fresh rerun before v0.4.0 changes. The inherited computation_manifest.json belongs to the predecessor release and may not hash the rerun outputs. It is not the v0.4.0 execution record. Consult verification/RESULTS.json and verification/computation_manifest.json at the project root for the active release.

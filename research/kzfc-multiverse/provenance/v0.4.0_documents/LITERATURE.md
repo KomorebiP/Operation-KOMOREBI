@@ -1,0 +1,37 @@
+# Literature and terminology check v0.4.0
+
+## Source question
+
+Does the independently defined all-set CompleteFilterExtension/FineUltrafilterPrinciple correspond to the standard strong-compactness formulation at regular uncountable kappa? This is a terminology and overlap check, not a global novelty search and not a formal proof imported from literature.
+
+## Authenticated primary source
+
+Yair Hayut, *Partial strong compactness and squares*, arXiv:1804.05758v2, version dated 16 September 2018.
+
+HTML: https://arxiv.org/html/1804.05758v2
+
+PDF: https://arxiv.org/pdf/1804.05758v2
+
+Checked on 26 September 2026. The HTML version metadata and PDF pages 1 and 5 were inspected. No licensed or private source was uploaded. Source content is not bundled or used as executable proof input.
+
+## Exact extraction and translation
+
+Definition 1 assumes a regular kappa. Its lambda-filter extension property extends every kappa-complete proper filter on lambda to a kappa-complete ultrafilter. Its lambda-strong compactness property requires a fine kappa-complete ultrafilter on P_kappa(lambda). The introduction distinguishes global equivalent formulations from local versions, which need not be equivalent at the same lambda.
+
+Our CompleteFilterExtension quantifies over all sets X in the selected universe, not one fixed lambda. Our FineUltrafilterPrinciple quantifies over all sets I and uses the actual P_kappa(I). Thus their all-sets, uncountable regular interpretation is the familiar global strong-compactness formulation. The Lean development proves its own implication cycle with these independent definitions.
+
+Theorem 3 treats a more refined local lambda-level equivalence with L_(kappa,kappa) compactness and assumes lambda^(<kappa)=lambda. That theorem is not claimed as formalized here. The reverse direction uses Boolean membership/complement/small-intersection requirements, an overlap with our semantic constraint construction. The literal introductory sentence of that reverse proof calls the starting F an ultrafilter, while the theorem and surrounding argument concern extending a filter. The project follows the independent proper-filter definition and does not assume ultrafilter maximality in its starting object.
+
+Classification of overlap: known after translation for the global filter/ultrafilter characterization; a direct checked implementation in the project's residual interface. No claim of mathematical priority, first formalization, or new consistency strength. No comprehensive novelty or forward-citation search was undertaken because this block makes none of those claims.
+
+## Formal API
+
+The current official Mathlib CardinalInterFilter documentation was checked:
+
+https://leanprover-community.github.io/mathlib4_docs/Mathlib/Order/Filter/CardinalInter.html
+
+Actual compilation uses the pinned Mathlib source at aeb72f1e9981b6d35b426b16dca7759be3e7ba06, not an assumed identity between today's documentation and that revision. The relevant interface means closure under intersections of fewer than kappa large sets, with strict cardinal inequality.
+
+## Retained older interpretation
+
+The predecessor recorded the Stacks Project product-difference-complex description of countable derived inverse limits, tag 07KV. That comparison was not re-proved or formalized in this block. The explicit integer cokernel and restriction maps remain checked, while their identification with Mathlib derived functors remains open.

@@ -1,0 +1,30 @@
+Komorebi/Foundation/SetCardinalGuard.lean:142:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (typein ?r).toRelEmbedding ((enum ?r) ⟨?o, ?h⟩)
+in the target expression
+  (typein fun x1 x2 => x1 < x2).toRelEmbedding ((enum fun x1 x2 => x1 < x2) ⟨o, ⋯⟩) ≤
+    (typein fun x1 x2 => x1 < x2).toRelEmbedding a
+
+κ : Cardinal.{u}
+hκ : ℵ₀ ≤ κ
+hb : SmallSubsetsBounded κ.ord.toZFSet
+s : Set κ.ord.ToType
+hs : IsCofinal s
+hn : ¬κ ≤ #↑s
+hsmall : #↑s < κ
+f : ↑s → ZFSet.{u} := fun a => ((typein fun x1 x2 => x1 < x2).toRelEmbedding ↑a).toZFSet
+S : ZFSet.{u} := ZFSet.range f
+hS : S ⊆ κ.ord.toZFSet
+hScard : S.card < κ
+o : Ordinal.{u}
+ho : o < κ.ord
+hbK : o.toZFSet ∈ κ.ord.toZFSet
+hbS : S ⊆ o.toZFSet
+t : κ.ord.ToType := (enum fun x1 x2 => x1 < x2) ⟨o, ⋯⟩
+a : κ.ord.ToType
+ha : a ∈ s
+hta : t ≤ a
+hlt : (typein fun x1 x2 => x1 < x2).toRelEmbedding a < o
+h :
+  (typein fun x1 x2 => x1 < x2).toRelEmbedding ((enum fun x1 x2 => x1 < x2) ⟨o, ⋯⟩) ≤
+    (typein fun x1 x2 => x1 < x2).toRelEmbedding a
+⊢ o ≤ (typein fun x1 x2 => x1 < x2).toRelEmbedding a
