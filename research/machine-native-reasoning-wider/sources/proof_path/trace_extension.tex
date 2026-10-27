@@ -1,0 +1,150 @@
+\subsection{Executable certificates for the declared closure}
+\label{sec:trace-checker}
+
+A mathematical characterization of closure is not yet a correctness theorem for the program that checks a certificate. The next construction closes that boundary for an explicit Lean checker. It uses the existing \path{Field} and seeded-closure definitions, rather than replacing their meaning by the output of an algorithm.
+
+\begin{definition}[Finite indexed problem and trace]
+\label{res:trace:problem}
+An indexed problem $P$ specifies a finite address space $V_n=\{0,\ldots,n-1\}$, admitted leaves $L$, a list of certified rules, positive observations $S$, and forbidden nodes $N$. A rule at address $j$ has a finite premise list $A_j$ and conclusion $b_j$. Two identical rows may have different rule addresses. Every listed node must belong to $V_n$. Node lists are individually duplicate free, but $L$, $S$, and $N$ need not be disjoint.
+
+A trace $\sigma=(j_1,\ldots,j_k)$ is a list of rule addresses. Replay begins with the list $K_0=L\mathbin{+\!+}S$. It rejects an unknown rule address or a step whose premises are not all known. Otherwise it adds the conclusion. Strict replay additionally requires the conclusion to be new. Causal replay permits a conclusion already known. Lists are compared by membership when they represent sets.
+\end{definition}
+
+Only rows declared certified enter this indexed rule list. The finite checker does not infer certification from a claim's label, its position in a document, or an author's confidence. An adapter that selects these rows must preserve the intended field and its assumptions.
+
+\begin{theorem}[Replay preserves derivability and composes]
+\label{res:trace:replay}
+Suppose every member of $K$ belongs to $\operatorname{cl}_F(S)$. If either replay mode accepts a trace starting from $K$ and returns $K'$, then
+\[
+ K\subseteq K'\subseteq\operatorname{cl}_F(S).
+\]
+For a fixed replay mode, replaying $\sigma\mathbin{+\!+}\tau$ is the same as replaying $\sigma$ and then replaying $\tau$ from the returned state. Failure at either stage propagates to the concatenated execution.
+\end{theorem}
+\begin{proof}
+Induct on the trace. The empty trace returns the initial state. For a nonempty trace, a successful first step identifies a certified rule whose premises are already derivable. Closure under that rule proves its conclusion derivable. Adding the conclusion preserves all previously known nodes, and the induction hypothesis applies to the remaining trace. The stricter novelty test can reject a step but cannot invalidate this argument for an accepted one. The composition identity follows by the same induction, with the lookup and enabling tests taking the same branch on both sides.
+\end{proof}
+
+The functions \path{replay}, \path{enabled}, and \path{lookup} are executable definitions. The formal theorems \path{replay_sound}, \path{replay_extensive}, and \path{replay_append} concern those definitions themselves. They are not specifications assumed of an otherwise unchecked replay routine.
+
+\begin{theorem}[Acceptance identifies the least seeded model]
+\label{res:trace:least}
+A complete-closure certificate consists of a strict trace $\sigma$ and a reported node list $K$. The checker accepts precisely when replay succeeds, its output has the same members as $K$, and $K$ contains the admitted leaves and satisfies every declared rule. Acceptance implies
+\[
+ \boxed{K=\operatorname{cl}_F(S).}
+\]
+Here equality means equality of the represented sets, not equality of list order.
+\end{theorem}
+\begin{proof}
+Theorem~\ref{res:trace:replay} gives $K\subseteq\operatorname{cl}_F(S)$ because every initial node is an admitted leaf or a positive observation. Extensivity of replay ensures that $K$ contains $S$. The final closedness test makes $K$ an $F$-model, so leastness of seeded closure gives the reverse inclusion. Both tests are needed: replay provides derivability, while the model test provides saturation under rules not used in the trace.
+\end{proof}
+
+The connection to the prior theory is exact. In Lean, \path{closed_iff_model} identifies the Boolean rule check with the existing \path{Field.Model} predicate, and \path{checkClosure_exact} proves the displayed equality with \path{Field.closure}. For a valid indexed problem, \path{valid_closure_bounded} proves that every member of that closure has an address below $n$. Thus totalizing rule lookup in the abstract \path{Field} cannot introduce a conclusion at an unnamed address: only successful lookups are certified.
+
+Logical meaning remains a separate, explicit hypothesis. If an interpretation $\mu:V_n\to\mathrm{Prop}$ satisfies the admitted leaves and rules, and every observation in $S$ is true under $\mu$, then every member of an accepted closure is true under $\mu$. This follows by applying the prior model-soundness theorem to the derived nodes. Acceptance does not establish the truth of arbitrarily attached sentence labels.
+
+\subsection{Finite witnesses for forbidden consequences}
+\label{sec:trace-obstruction}
+
+\begin{definition}[Checked forbidden-node witness]
+\label{res:trace:witness}
+A witness is a pair $(v,\tau)$, consisting of a target address and a causal trace. Its checker accepts when replay from $L\cup S$ succeeds, the returned state contains $v$, and $v\in N$.
+\end{definition}
+
+\begin{theorem}[Sound and complete obstruction witnesses]
+\label{res:trace:complete}
+For the finite-premise indexed rule field,
+\[
+ \boxed{
+ \text{an accepted forbidden-node witness exists}
+ \quad\Longleftrightarrow\quad
+ \operatorname{Ext}_F(S,N)=\varnothing.
+ }
+\]
+The statement does not require the dependency graph to be acyclic.
+\end{theorem}
+\begin{proof}
+An accepted witness derives a node in $N$. Every model containing $L\cup S$ contains that node, so no protected extension exists.
+
+Conversely, Theorem~\ref{res:new:extension} gives a forbidden node with an inductive derivation. Every such derivation has a finite causal trace. For an admitted leaf or observation, the empty trace suffices. For a rule application, obtain a trace for each of its finitely many premises by induction, concatenate those traces, and append the rule address. Previously derived nodes are never removed. A trace valid from one known set remains valid from a larger known set in causal mode, so the premise traces remain valid when concatenated. Repeated conclusions are allowed, including when an earlier premise trace already established one. The resulting trace derives the forbidden node and is accepted.
+\end{proof}
+
+This proof explains the two replay modes. A causal witness can be reused after stronger positive observations make one of its intermediate conclusions already known. Requiring novelty at that point would reject a sound explanation. A complete-closure trace instead records fresh insertions and uses a separate final saturation test. The two contracts should not be conflated.
+
+The Lean development proves trace weakening, strict-to-causal replay, finite premise-trace assembly, and \path{derivation_has_trace} before proving \path{witness_exists_iff_infeasible}. Witness existence is not a claim that a particular search procedure finds the shortest trace, nor is it a bound on the time taken by a Python producer.
+
+\clearpage
+\studyhead{06}{Why replay and closedness are both necessary}
+\label{study:trace}
+
+Take $V_4=\{0,1,2,3\}$, $L=\{0\}$, $S=\varnothing$, and the two rules $r_0:0\to1$ and $r_1:1\to2$. The least closure is $\{0,1,2\}$. Node $3$ has no derivation from these inputs.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{fig_24_trace_contract.pdf}
+\caption{Replay and the final model test establish opposite inclusions. Together they identify the least closure. The two rejected records fail different obligations. Changing only the forbidden set changes the correct feasibility verdict without changing the closure.}
+\label{fig:trace-contract}
+\end{figure}
+
+The trace $[0]$ derives exactly $\{0,1\}$ but leaves $r_1$ enabled with its conclusion absent. It is a valid partial derivation, not a complete closure. Conversely, $\{0,1,2,3\}$ is closed under both rules, but replay cannot establish its unsupported node $3$. A model need not be the least model.
+
+With $N=\{3\}$, the exact closure gives a positive result. With $N=\{2\}$, the same closure supports a negative result with witness $(2,[0,1])$. The second problem is not a different interpretation of the same request: its protected observations have changed. A checker must receive the fixed request separately from the proposed answer.
+
+\clearpage
+\begin{corollary}[Meaning of a complete result certificate]
+\label{res:trace:verdict}
+The complete result format contains a Boolean feasibility flag, a reported closure, a strict closure trace, and an optional forbidden-node witness. Both branches require the complete-closure check. A positive result additionally requires no obstruction witness and no forbidden node in the closure. A negative result requires an accepted obstruction witness. For every accepted result $C$,
+\[
+ C.K=\operatorname{cl}_F(S),\qquad
+ \bigl(C.\mathrm{feasible}=\mathrm{true}\bigr)
+ \Longleftrightarrow
+ \operatorname{Ext}_F(S,N)\ne\varnothing.
+\]
+\end{corollary}
+\begin{proof}
+The complete-closure check proves the first equality. In the positive branch, the closure is a model containing $S$ and avoiding $N$, hence is an extension. In the negative branch, the witness excludes every extension by Theorem~\ref{res:trace:complete}. Case analysis on the Boolean flag gives the equivalence.
+\end{proof}
+
+A bare negative witness has its own checker and does not need a saturated closure. The complete result format asks for both because it promises both an exact closure and a feasibility verdict. Failure of either check means that this certificate was not accepted. It is not itself a refutation of the protected problem.
+
+\subsection{Typed exchange and the boundary of serialization}
+\label{sec:trace-wire}
+
+A certificate is useful outside its producer only when the receiving system knows exactly which data it checked. The exchange format therefore uses versioned positional arrays, exact nonnegative integer tokens, literal Booleans, and explicit rule addresses. Problem and certificate are separate records. The node address book and the selected certified-rule order remain associated with the originating proof-field snapshot.
+
+At the JSON syntax-tree level, the problem has the shape
+\begin{lstlisting}[language={}]
+["proof-path/problem/1", node_count, leaves, rules, positive, negative]
+\end{lstlisting}
+where each rule is \texttt{[premises, conclusion]}. The certificate has the shape
+\begin{lstlisting}[language={}]
+["proof-path/certificate/1", feasible, closure, trace, obstruction]
+\end{lstlisting}
+where an obstruction is either \texttt{null} or \texttt{[target, trace]}. Array lengths and tags are exact. A Boolean is not an integer address, and the string \texttt{"false"} is not a Boolean verdict. Duplicate node entries are rejected by validity checks, while identical rule rows at different addresses remain distinguishable.
+
+\begin{theorem}[Lossless encoding at the typed syntax boundary]
+\label{res:trace:codec}
+Let $e_P,d_P$ and $e_C,d_C$ be the stated Lean encoders and partial decoders for problem and certificate records. For every typed problem $P$ and certificate $C$,
+\[
+ d_P(e_P(P))=\operatorname{some}(P),\qquad
+ d_C(e_C(C))=\operatorname{some}(C).
+\]
+Consequently both encoders are injective on their typed domains. These identities do not require the encoded record to pass the separate validity checks.
+\end{theorem}
+\begin{proof}
+The natural-number and Boolean constructors decode to their original values. Induction on a list proves the corresponding array round trip. The rule, witness, and optional-witness decoders then recover their components. Unfolding the exact-length record encoders and decoders gives the two identities. If two encoded records are equal, applying the decoder gives equal \texttt{some} values, hence equal original records.
+\end{proof}
+
+\begin{theorem}[Accepted JSON records certify their decoded answer]
+\label{res:trace:json}
+Suppose the JSON checker accepts the separately supplied problem and certificate syntax trees. Then both decode to typed records $P,C$, both pass their index and shape checks, and the decoded certificate satisfies the closure equality and feasibility equivalence of Corollary~\ref{res:trace:verdict} for that decoded problem.
+\end{theorem}
+\begin{proof}
+The executable checker rejects any failed decoding or validity check. In the remaining branch it calls the same complete result checker used in Corollary~\ref{res:trace:verdict}. Its acceptance therefore supplies that corollary's hypothesis. The round-trip identities additionally show that checking encoded typed records agrees with checking those records directly.
+\end{proof}
+
+The general proof ends at Lean's \path{Json} syntax-tree interface. It does not prove the correctness of the standard text parser, printer, file system, Python interpreter, or name-to-index adapter. The command-line reader is executed on actual canonical bytes and compared with an independent finite model oracle. That conformance test complements the formal theorem without extending its quantified scope.
+
+Canonical standalone files use compact ASCII JSON with an optional final newline. Decimal or exponent spellings, alternative internal whitespace, extra fields, and duplicate object-key constructions are outside this exchange contract. The format uses no objects. Resource limits are explicit operational rejections, not evidence that a protected realization is impossible. The encoder's injectivity is a statement about retained data, not a collision-freedom claim for a later cryptographic hash.
+
+The package supplies actual named-field exports, a separate indexed Python checker, the Lean text adapter, and generated Lean fixtures for six concrete exchanges. Their role is to test the entire executed route as well as its proved core. The original named proof fields remain finite and acyclic. Cyclic examples belong to the lower-level indexed checker and show that its soundness theorem does not depend on topological sorting. An unseeded cycle supplies no finite derivation merely by referring to itself.
+
+
