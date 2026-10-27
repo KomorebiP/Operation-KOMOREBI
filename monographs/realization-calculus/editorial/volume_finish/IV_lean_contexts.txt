@@ -1,0 +1,233 @@
+
+===== IV_lean PAGE 33 =====
+8 Reproduction, audit, and evidence handling
+8.1 The exact environment
+The cyclic analytic formalization’s toolchain file specifies leanprover/lean4:v4.34.0-rc2. The recorded
+compiler commit is 6a10ac8c22beadecabdbb0919c2b50214762f91d. Mathlib is pinned at aeb72f1e9981
+b6d35b426b16dca7759be3e7ba06. The complete revision table for the nine packages is printed in the
+dependency appendix and preserved in lake-manifest.json.
+The project has autoImplicit = false and relaxedAutoImplicit = false. The verified replay es-
+tablishes warning rejection through the explicit control in Section 9, which distinguishes the inherited
+setting from the corrected invocation. The aggregate import integrates the development, while the ex-
+plicit kernel audit checks the mapped declarations and the namespace. Build caches are excluded from
+the release source.
+8.2 What the saved kernel transcript establishes
+The saved transcript contains one axiom record for each of the 1,164 mapped targets and ends with
+the namespace audit’s pass line. The guide generator compares the target sets in four places: the theo-
+rem map, the declaration-kind contract, the audit source’s explicit directives, and the transcript. It also
+checks that every recorded axiom belongs to the permitted set of three axioms.
+This reconciliation proves consistency of the preserved evidence files with the preserved source
+identities. It does not repeat elaboration, type checking, or a live environment traversal. The names-
+pace totals of 2,234 declarations and 1,999 theorem declarations are inherited results, not counts newly
+obtained from a running Lean process. A lexical source parser cannot substitute for elaborated decla-
+ration types or compiler-generated declarations.
+8.3 Static reconciliation
+The generator validates every one of the 119 Lean source files against the canonical SHA-256 manifest. It
+resolves the 1,164 target names to source declarations and checks the theorem-versus-construction split
+against the explicit contract. It emits the complete row catalog, 68-result ledger, direct-import inventory,
+exact pins, and source-excerpt manifest.
+The source policy scan excludes comments and string literals before checking for forbidden proof
+placeholders and unsafe shortcuts. The kernel-audit file is treated separately because its exclusion logic
+necessarily names prohibited axioms. This is a source-hygiene check. It does not establish that elabora-
+tion succeeds.
+The 43 declarations in SemanticChecks.lean are supported by their source and preserved execution
+evidence. Static reconciliation does not relabel them as newly executed tests. The separate verification
+chapter records the production replay and compiler controls. The 119 mathematical source files re-
+mained unchanged.
+
+
+===== IV_lean PAGE 34 =====
+8.4 Replay the original release gate
+Use a disposable copy of the canonical PRSC_IV directory with the pinned Lean toolchain and depen-
+dencies available. The documented release gate requires Lean and checksums, including a full compiler
+replay.
+bash VERIFY.sh --release
+If the original release archive is available, its exact checks of archive entries can be included:
+bash VERIFY.sh --release --archive /path/to/PRSC_IV_v1.0.0.zip
+Use the exact formal source archive for checks of archive entries. The collected book is a different artifact
+and does not have that archive’s entry set.
+The gate also accepts a validated external dependency cache:
+bash VERIFY.sh --release --lean-packages-cache /path/to/packages
+The cache must match the pinned package revisions. The release checker requires a clean project with-
+out a preexisting local build cache. It creates and cleans its local attachment under its own rules. A
+fresh extracted copy is the clearest way to avoid mixing source verification with prior build state.
+For a focused manual inspection from formalization/lean, the relevant commands include:
+lake --wfail build
+lake env lean -E warning KomorebiPaperIV/KernelAudit.lean
+These commands describe the inherited manual gate. For the verified warning policy and full pro-
+duction replay, use the procedure in the next chapter. The full release gate additionally checks exact
+kinds and manuscript associations, source policy, document reconstruction, checksums, and archive
+properties when requested.
+8.5 Failure modes worth recognizing
+A dependency revision mismatch means the attempted replay is not the pinned release environment.
+A saved transcript whose target set differs from the contract is incomplete evidence even if its final line
+says pass. A declaration that is present lexically but fails to elaborate has not passed a new formal run.
+A PDF that builds successfully says nothing by itself about the Lean proofs.
+The inherited computational audit also reports that an older strengthened numerical suite accepted
+mutations to a projector identity and a zero-counting constant. Its reported pass totals therefore cannot
+certify theorems. The canonical formal contract and kernel evidence should not be replaced by those
+historical totals from finite tests. Finite checks can still detect selected regressions, but their sensitivity
+and scope must be stated.
+
+
+===== IV_lean PAGE 36 =====
+9 Pinned-source verification and its scope
+The 68-result formal core passed a replay using pinned sources, declaration-kind resolution, a transi-
+tive axiom audit, and compiler controls. All 119 Lean source files and their mathematical hypotheses
+remained unchanged. The 151-row reviewed map covers the full scoped statements of the 68 theorem-
+like manuscript records. This verification checks the exact inherited statement contract. It does not
+supply a new line-by-line mathematical proof of that correspondence.
+9.1 Production compilation and proof evidence
+The replay compiled all 118 production modules into an initially empty directory for project objects.
+Each module ran separately with one Lean worker. The cumulative receipt fingerprints every successful
+source and output object. The aggregate imports the completed production closure. The original audit
+source and a generated declaration-kind consumer were then executed.
+The compiler’s binary hash and commit were checked, and all nine external package Git revisions
+matched the dependency manifest. Cached external objects were reused. The record therefore does not
+claim a cold rebuild of Mathlib or an independently implemented proof kernel.
+Evidence
+Recorded scope
+Production compilation
+118 of 118 modules, with new project objects
+Source preservation
+All 119 Lean source files unchanged
+Reviewed targets
+1,164 targets: 953 theorems and 211 constructions
+Namespace audit
+2,234 declarations, including 1,999 theorem declarations
+Compiler controls
+Six accepted outcomes under explicit diagnostics
+Verifier tests
+42 verification tests and 10 integrity tests
+Supporting and generated declarations contribute to these totals. The totals are not counts of inde-
+pendent discoveries.
+The exact runtime is Lean 4.34.0-rc2, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, with
+Mathlib revision aeb72f1e9981b6d35b426b16dca7759be3e7ba06. The compiler’s SHA-256 fingerprint
+is e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550. The permitted transitive
+axioms are propext, Classical.choice, and Quot.sound.
+9.2 Controls and their diagnostics
+A valid projector-idempotence application is accepted. An explicit false theorem, an admitted proof,
+an omitted premise, an injected custom axiom, and a definition presented as a theorem must produce
+their intended rejection diagnostics. A timeout, signal kill, missing import, or unrelated API error does
+not count as successful rejection.
+The warning policy is material to this contract. The inherited -E warning setting accepted an isolated
+deliberately admitted proof with exit code 0. The verified replay instead uses -DwarningAsError=true,
+which rejected that fixture with exit code 1. The production mathematical sources were not weakened
+or edited.
+The verifier tests use the recovered typed source contract and adversarial mutations of rows, targets,
+evidence labels, axiom reports, and process outcomes. A descendant-process cleanup fixture waits for
+explicit child readiness before applying a separate bounded execution deadline. An earlier timeout
+
+
+===== IV_lean PAGE 37 =====
+before readiness did not establish that the descendant had started and is retained as a failed check. The
+final 42-test suite passes.
+The ten integrity tests cover changed bytes, missing files, unexpected files, duplicate records, unsafe
+paths, symlinks, prohibited font files, and positive and empty-manifest cases. The distribution mani-
+fest describes the actual 836-file preserved tree. It does not require the 73 excluded font files listed in
+an older manifest. The exact earlier unsaved fixture-control failure was not recovered, so the record
+makes no claim to reproduce that absent script. The replacement controls directly exercise the recov-
+ered checker’s actual typed records and have their own fingerprints and receipts.
+9.3 Finite computations and their limits
+The finite computations were executed separately from Lean. Their domains overlap, so the following
+rows are not added into one total. They support the implementations and worked examples. Universal
+statements rely on proof terms under their declared hypotheses.
+Suite
+Recorded result
+Exact algebra
+1,008 exact rational assertions
+Visual examples
+147 symbolic, finite, and enclosure checks
+Original tables
+981 of 981 rows checked
+Strengthened-paper suite
+1,246 of 1,246 checks passed
+Original-paper suite
+647 of 647 checks passed
+Rational subset and brackets
+818 rational table rows and four bracket
+records
+The previously documented weakness of the strengthened numerical suite remains relevant: its his-
+torical acceptance of mutations limits what its passing total can establish. It does not replace the formal
+contract or the targeted compiler controls.
+The recorded computation environment was Python 3.13.5, SymPy 1.14.0, mpmath 1.3.0, NumPy
+2.3.5, pandas 2.2.3, and Matplotlib 3.10.8. These versions were detected during execution. All 836 files
+in the preserved baseline remained byte-identical before and after the finite replay. Results and logs
+were written separately.
+9.4 Evidence files and reproduction
+The formal verification distribution retains compiler logs, generated consumers, fixtures, source hashes,
+and project output objects. The external runtime and dependency cache are separate requirements. The
+principal evidence records are:
+• verification/lean_primary/REPLAY.json and verification/lean_primary/AXIOM_REPORTS.json;
+• verification/SOURCE_MAP_CHECK.json and verification/SOURCE_CONTRACT.json;
+• verification/finite_primary/FINITE_REPLAY.json;
+• verification/VERIFIER_TESTS.json and verification/INTEGRITY_TESTS.json.
+The following commands belong to that formal verification distribution, not to the collected book’s
+typesetting directory:
+python3 -B scripts/verify_release.py
+python3 -B scripts/run_checks.py --mode finite --work /tmp/paper-iv-finite
+bash Run-Replay.sh /path/to/Komorebi_Portable_Lean_4.34.0-rc2 /tmp/paper-iv-full
+
+
+===== IV_lean PAGE 38 =====
+Use a new writable working directory outside the frozen source. The first command checks stored
+evidence and file integrity. It does not rerun the kernel. Finite mode reruns the examples and verifier
+controls. Full mode additionally compiles every production module and repeats the formal audits.
+These commands do not download or install dependencies.
+The complete replay targets Linux or WSL with Python 3.11 or newer, the pinned Lean runtime, and
+matching cached packages. The recorded run used a four-GiB container, one Lean worker, a 3,072-MiB
+Lean heap setting, and a 300-second deadline for each command. This is not a claim of reproducibility
+on native Windows or across platforms.
+9.5 Mathematical boundaries
+Imported standard fact 11.1 remains outside the 68-result contract. The core does not assert universal
+simplicity of all zeros, positivity of every reduced zero, a full displacement expansion, or a zeta func-
+tional equation. Eventual simplicity, branch choices, multiplicities, and nearest-pole asymptotics retain
+their stated hypotheses and ranges. The separately preserved visual reader includes a branch-sensitive
+clarification of reciprocal powers. No older editable source is substituted for that reader.
+
+
+===== IV_lean PAGE 123 =====
+12 Imports and dependency revisions
+12.1 Exact pinned packages
+The complete lockfile accompanies the source. These are its nine exact Git revisions. A newer, appar-
+ently compatible Mathlib revision is a different replay environment.
+Package
+Exact revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af
+12.2 Every source module and its direct imports
+This inventory includes mathematical modules, the aggregate import, semantic checks, and the kernel
+audit. It records direct imports rather than a transitive dependency claim.
+KomorebiPaperIV.AlgebraicCompletion
+Local: Appell.
+External: Mathlib.Data.Nat.Choose.Cast, Mathlib.Algebra.Polynomial.BigOperators, Mathlib.Algebra.Polyno
+mial.Degree.IsMonicOfDegree, Mathlib.Algebra.Polynomial.HasseDeriv, Mathlib.RingTheory.PowerSeries.Expand,
+Mathlib.Algebra.Polynomial.Div.
+KomorebiPaperIV.AlignedExponentialRadii
+Local: IndicatorGeometry.
+External: Mathlib.Topology.Order.LiminfLimsup.
+KomorebiPaperIV.AnalyticCycles
+Local: ODESolutions, CompanionCompletion.
+External: none.
+KomorebiPaperIV.AnalyticReciprocalLaws
+Local: CanonicalPartialFractions, AnalyticCycles.
+External: none.
+KomorebiPaperIV.AnalyticTaylorAlgebra
+Local: PoleCoefficientBounds.
+External: Mathlib.RingTheory.PowerSeries.Basic, Mathlib.Analysis.Analytic.IteratedFDeriv.

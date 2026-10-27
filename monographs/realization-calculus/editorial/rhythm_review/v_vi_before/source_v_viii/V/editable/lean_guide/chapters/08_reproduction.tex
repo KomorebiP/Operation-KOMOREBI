@@ -1,0 +1,79 @@
+\section{Trust boundaries and reproduction}
+\label{sec:reproduce}
+\subsection{What the inherited audit actually checks}
+The preserved compiler log records 225 explicit theorem targets and 827 namespace declarations. The audit driver first requires each target to be present as a theorem. It then traverses the \code{KomorebiPaperV} namespace, rejects unsafe declarations, rejects local axiom and opaque declarations, and collects transitive axiom dependencies.
+
+Only \code{propext}, \code{Classical.choice}, and \code{Quot.sound} are permitted. The audit checks the dependencies of the compiled declarations. It does not prove that English prose is a correct paraphrase of those declarations, that a Python implementation matches a Lean definition, or that an application has supplied a theorem's hypotheses.
+
+The current guide build reconciles each target name with its immutable source location and inherited axiom-output record. It verifies pinned source hashes and performs a lexical scan for proof placeholders and prohibited source constructs. These checks protect provenance and locate obvious source-policy violations. They do not replace elaboration, type checking, or a new kernel traversal.
+
+\subsection{The two dates of evidence}
+The release's raw kernel verification timestamp is 6 September 2026 at approximately 03:18 UTC. This monograph companion is dated 9 October 2026. The compiler transcript describes the preserved v1.1.0 sources and their pinned dependencies. Its date remains visible beside the current checks.
+
+The recorded computational review ran the twenty exact model tests, comprising 305,933 counted assertions, and all sixteen verifier control methods. It ran the 33 current companion pytest tests and the 27 overlapping historical tests with no skips. These are finite tests of implementations and models, with separate contracts for their tested scope.
+
+All 52 stored floating numerical metrics and eighteen discrete result leaves were reproduced exactly in the available environment. Eighteen companion PDF/PNG figure pairs were regenerated. The broader Annals companion separately passed 11,052 mixed exact and numerical checks across thirteen groups. Six bounded computational manifests were validated against their inputs. The symbolic visual suite passed 181 checks and rejected seven false controls. The extension examples separately passed 38 exact checks and rejected four false controls.
+
+These counts refer to the recorded tests and their declared ranges. Overlapping suites are retained as provenance and are not combined into a theorem denominator. In particular, floating computations and bounded models do not extend the twenty-result formal contract or close either edge recovery conjecture.
+
+No fresh Lean process ran because \code{lean}, \code{lake}, and \code{elan} were unavailable. Current static reconciliation checks the actual source bytes, 225 declaration locations, 225 audit directives, nine dependency revisions, and 225 saved axiom records. It does not run Lean's elaborator or kernel. The complete package's current computational review and per-run manifests record the fresh tests and their limits.
+
+The recovered October 5 edition lacks seventeen verification artifacts, including its \code{verify_available.py} runner and some report and figure files. The surviving formal sources, September compiler logs, and saved axiom audit are preserved. Current scoped replays have their own manifests and adapters. The October 5 available-checks gate was not rerun or authenticated from a complete historical inventory. The inventory appears in \code{provenance/HISTORICAL_RECOVERY_GAPS.json}. Missing historical evidence is not recreated by a current passing test.
+
+\subsection{Reproduce from a working copy}
+Use a writable copy of the original release to run its verification entry points, because they write status and log files beside the sources. Keep the packaged original snapshot unchanged as the provenance reference. The following commands start in that copied release root, which contains \code{VERIFY_PAPER.py}, \code{formalization}, \code{companion}, and \code{verification}.
+
+The retained commands below describe the September formal release entry points. They do not reproduce the missing October 5 available-checks runner. The original formal-release pipeline expects the pinned Lean toolchain, its pinned dependencies, the Python requirements in \code{companion/requirements.txt}, \code{pypdf}, pdfLaTeX, and Poppler tools. Once those prerequisites are available, obtain the mathlib cache in the Lean project:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+cd formalization/lean
+lake exe cache get
+cd ../..
+python3 VERIFY_PAPER.py
+\end{Verbatim}
+This full entry point checks the reviewed source hashes, calls the Lean verifier, runs the original companion tests, repeats the optimized static checks, replays numerical experiments, regenerates figure pairs, and rebuilds the selected 39-page source manuscript. It reproduces the original integrated formal-core release, not the later combined two-part traditional PDF.
+
+For the formal source and exact-model subset, use:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+python3 verification/verify.py
+\end{Verbatim}
+This command checks the actual toolchain version, builds the local Lean library, checks pinned dependency revisions and tracked-file cleanliness, and runs \code{KernelAudit.lean} with warnings treated as errors. If Lake is unavailable, the verifier reports \code{BLOCKED_NO_LAKE} and exits with code two. It does not turn passing Python tests into a successful Lean result.
+
+For a deliberately static and exact-model run with no Lean claim:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+python3 -O verification/verify.py --static-only
+\end{Verbatim}
+The \code{STATIC_AND_EXACT_ONLY} status and \code{lean_kernel_checked=false} are expected for that route. Python optimization is an intentional verifier control; the program's critical requirements are explicit checks rather than removable Python \code{assert} statements.
+
+\subsection{Manual inspection of the formal build}
+To inspect the principal operations separately, work inside \code{formalization/lean}:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+lake env lean --version
+lake build KomorebiPaperV
+lake env lean -DwarningAsError=true KernelAudit.lean
+\end{Verbatim}
+A successful build without the audit is incomplete evidence for the release's declared axiom policy. A successful audit of changed sources is a new result that should be recorded with new source hashes. Do not reuse an old transcript as though it described a modified source tree.
+
+The historical audit's final success line is:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+PAPER_V_CANDIDATE_TARGET_AUDIT_PASS: 225 theorem targets; 827 namespace declarations
+\end{Verbatim}
+The whole transcript, compiler version, source pins, and exit status matter. Searching for this line in a file is provenance reconciliation, not a substitute for executing the audit.
+
+\subsection{The historical runtime adapter}
+The original environment used a narrow executable self-location adapter. Its ordinary process-specific executable path returned a permission error, while \code{/proc/self/exe} was accessible. The source adapter redirected only the current process's own executable-link query. The bundled documentation records that the distributed compiler and kernel were unchanged.
+
+The retained positive control accepted a valid arithmetic theorem and the negative control rejected an invalid proof with exit code one. These are useful runtime controls, but the full source build and namespace audit remain the decisive historical evidence. The adapter is environment-specific and unnecessary on a normal installation. Toolchain binaries and compiled dependency caches are not included in this package.
+
+\subsection{Rebuild this guide}
+The guide itself needs XeLaTeX and the TeX packages named in \code{preamble.tex} and \code{komorebi-monograph.sty}. Its P052, Nimbus Sans, DejaVu Mono, and Latin Modern fonts must be installed externally. The builder resolves them with \code{kpsewhich}, verifies the staged bytes, and records their hashes. It never installs dependencies or bundles font binaries. From its editable directory:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+python3 build.py
+\end{Verbatim}
+This copies the complete authored guide tree to an isolated directory and compiles the supplied TeX and generated catalog files in four passes. It executes no Lean code and does not regenerate mathematics. The separate \code{build_guide_data.py} script can regenerate the catalogs when supplied the immutable release root and the traditional edition's final crosswalk. It verifies hashes and rejects mismatched contracts before writing the guide's data products.
+
+The raw excerpt files preserve source text. Their rendering files escape TeX-special characters and route rare mathematical glyphs to a suitable font. The PDF is a reading surface. The full source files retain the actual namespace and typeclass context needed for Lean compilation.
+
+\subsection{A theorem-use checklist}
+Before using a result, identify its ambient type and explicit hypotheses, locate the exact declaration, and check how the application supplies each hypothesis. For an FIR bank, confirm finite Laurent support and delay units. For a transform equality, supply weighted summability. For pruning synthesis, supply conservation. For selector stability, establish the strict gap and joint local-error bound. For a Smith chart, check denominator nonvanishing or use the projective action.
+
+This is the recurring pattern of the formal development: construct the object in the correct space, prove the bridge to the intended model, then use the identity whose hypotheses have actually been supplied.

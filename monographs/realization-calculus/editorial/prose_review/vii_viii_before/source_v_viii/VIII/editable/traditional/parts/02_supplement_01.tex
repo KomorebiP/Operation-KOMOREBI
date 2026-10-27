@@ -1,0 +1,185 @@
+\clearpage\FloatBarrier\section{Exact semantics, support, and low-rank identities}\label{supp1:section:001}
+This appendix develops exact packet semantics, support propagation, low-rank algebra and error models. Positive-budget conditions are isolated before the allocation theorem in Appendix B.\par
+
+\subsection{Exact packet semantics}\label{supp1:subsection:001}\textit{Source items 2.3, 2.5, and 2.6}\par
+Let $R$ be a ring, $I$ a finite index type, and $(P_a)_{a\in I}$ a family satisfying
+\[
+P_bP_a=\begin{cases}P_a&b=a,\\0&b\ne a,\end{cases}
+\qquad \sum_aP_a=1.
+\]
+Write $A_{ba}=P_bAP_a$ and let $E_A=\{(b,a):A_{ba}\ne0\}$. These are exact algebraic zeros, not values discarded by a floating-point threshold.
+
+\textbf{Reconstruction and action.} The checked finite sum is
+\[
+\boxed{A=\sum_{(b,a)\in E_A} A_{ba}.}
+\]
+The proof inserts the complete projector sum on both sides and removes only zero summands. Applying this identity to an arbitrary module gives exact action. A separate finite-matrix theorem establishes
+\[
+AZ=\sum_{(b,a)\in E_A}A_{ba}Z
+\]
+for every rectangular batch of right-hand sides $Z$.
+
+\textbf{Composition.} Inserting the projector identity between factors yields
+\[
+\boxed{(AB)_{ba}=\sum_c A_{bc}B_{ca}.}
+\]
+If the left side is nonzero, at least one intermediate $c$ has both $A_{bc}\ne0$ and $B_{ca}\ne0$. Consequently $\supp(AB)\subseteq\supp(A)\circ\supp(B)$. No equality of supports is asserted.
+
+\textbf{Adjoint and tensor products.} With an involution and self-adjoint projectors, the formalization proves
+\[
+(A_{ba})^*=(A^*)_{ab}.
+\]
+For actual finite matrices and actual Kronecker products, it proves
+\[
+(P_b\otimes Q_d)(A\otimes B)(P_a\otimes Q_c)
+=A_{ba}\otimes B_{dc}.
+\]
+The self-adjointness hypothesis is explicit in the adjoint theorem. The tensor theorem is not a statement about an uninterpreted tensor symbol.
+
+\textbf{Concrete coordinates.} Given any tag map from finite scalar coordinates to packet addresses, \code{coordinatePackets} constructs diagonal zero-one matrices. Their orthogonality and completeness are proved. The construction allows unequal packet sizes and unused packet addresses. Its action is checked entrywise: it retains exactly the coordinates carrying the selected tag.
+
+The underlying ring-valued projector calculus is imported from the unchanged, freshly recompiled Paper VII foundation. Reuse is recorded separately from the new Paper VIII declarations.
+
+
+
+\subsection{Support propagation and nilpotence}\label{supp1:subsection:002}\textit{Source items 6.1, 6.2, and 6.3}\par
+A path of length $n$ in the Lean predicate \code{TransferPath} is a directed walk: vertices may repeat. This is the notion required by matrix powers. At length zero the endpoints coincide. At length $n+1$, a nonzero last block is appended to a length-$n$ walk.
+
+Define the active contribution sum recursively by
+\begin{align*}
+F_0(b,a)&=\begin{cases}P_a&b=a,\\0&b\ne a,\end{cases}\\
+F_{n+1}(b,a)&=\sum_{c:\,A_{bc}\ne0}A_{bc}F_n(c,a).
+\end{align*}
+The checked identity is
+\[
+\boxed{P_bA^nP_a=F_n(b,a)\qquad(n\ge0).}
+\]
+Its proof is induction using the exact composition theorem, not an assumed support recurrence. When no active walk exists, the corresponding contribution sum is zero, and hence the actual block of $A^n$ vanishes.
+
+\textbf{Nilpotence certificate.} If no walk of length $h+1$ exists between any pair of packets, then
+\[
+\boxed{A^{h+1}=0.}
+\]
+Every block vanishes, and reconstruction forces the whole operator to vanish. A second theorem derives the required absence of walks from a supplied level map
+\[
+\ell:I\longrightarrow\{0,\ldots,h\},\qquad
+A_{bc}\ne0\ \Longrightarrow\ \ell(c)<\ell(b).
+\]
+It proves that a length-$n$ walk increases the level by at least $n$. This certifies the acyclic case with a bounded height. This block does not implement or verify an algorithm that constructs a topological ordering or computes the longest path.
+
+\textbf{Polynomial support.} For the actual finite sum
+\[
+p(A)=\sum_{j=0}^{d}c_jA^j,
+\]
+the checked support lies in the union of the support relations of the powers. The formalization treats the $j=0$ contribution explicitly, so the constant term is not accidentally omitted.
+
+\textbf{Cancellation control.} Lean verifies the rational example
+\[
+A=\begin{bmatrix}1&1\\-1&-1\end{bmatrix},\qquad A^2=0.
+\]
+The coordinate block $A_{00}$ is nonzero, and a length-two active walk from zero to zero exists. Nevertheless the corresponding block of $A^2$ is zero. This is an exact counterexample to replacing support inclusion by equality.
+
+
+
+\subsection{Low-rank algebra and inversion}\label{supp1:subsection:003}\textit{Source items 5.1, 5.3, and 5.4}\par
+Let $A=D_A+U_AV_A^*$ and $B=D_B+U_BV_B^*$ have rectangular factor widths $r_A$ and $r_B$. The formalization constructs
+\begin{align*}
+U_C&=\begin{bmatrix}D_AU_B+U_A(V_A^*U_B)&U_A\end{bmatrix},\\
+V_C&=\begin{bmatrix}V_B&D_B^*V_A\end{bmatrix}
+\end{align*}
+and proves
+\[
+\boxed{AB=D_AD_B+U_CV_C^*.}
+\]
+These are actual concatenated matrices with $r_B+r_A$ columns. Expanding the product and grouping the terms with common right factors proves the identity. The separate rank theorem establishes
+\[
+\rank(AB-D_AD_B)\le r_A+r_B.
+\]
+It bounds actual matrix rank, not just the number of stored columns. Packet diagonality of $D_AD_B$ follows from diagonality of both factors and the checked block-composition formula.
+
+\textbf{Woodbury.} For $D$ and
+\[
+S=I+V^*D^{-1}U
+\]
+both invertible, Lean checks the ordinary matrix inverse formula
+\[
+\boxed{(D+UV^*)^{-1}
+=D^{-1}-D^{-1}US^{-1}V^*D^{-1}.}
+\]
+The proof specializes Mathlib's classical Woodbury identity. A separate theorem derives invertibility of $D+UV^*$ from the two stated assumptions. A further theorem verifies that multiplying the proposed inverse by any batch $Z$ solves the updated system. Invertibility of the update is not inserted as an extra premise.
+
+\textbf{Norm bound.} Over the real or complex scalars, all matrix norms in the following theorem are Hilbert-space operator norms, including the rectangular factors:
+\[
+\boxed{
+\norm{(D+UV^*)^{-1}}
+\le\norm{D^{-1}}+
+\norm{D^{-1}U}\,\norm{S^{-1}}\,\norm{V^*D^{-1}}.
+}
+\]
+After the checked inverse identity, the proof uses the triangle inequality and two rectangular operator-norm product bounds.
+
+\textbf{Not covered here.} The arbitrary product-chain rank corollary, optimal small-core recompression, singular-value approximation theorem, chain perturbation bounds, and numerical stability of a particular solve implementation are not marked complete by these results. Algebraic representability is not a GPU execution-time guarantee.
+
+
+
+\subsection{Packet perturbation certificates}\label{supp1:subsection:004}\textit{Source item 8.1 and two uniform consequences}\par
+Let $X$ be a normed space over a nontrivially normed field. The formal objects are actual continuous linear maps $X\to X$, with their operator norm. Let $a(e)$ identify the source packet of edge $e$, and suppose
+\[
+\Delta_e=\Delta_e P_{a(e)}.
+\]
+Set
+\[
+A=\sum_e A_e,\qquad \widehat A=\sum_e(A_e+\Delta_e).
+\]
+The exact operator and vector identities are proved first:
+\[
+\widehat A-A=\sum_e\Delta_e P_{a(e)},\qquad
+(\widehat A-A)x=\sum_e\Delta_e(P_{a(e)}x).
+\]
+Applying the finite triangle inequality and the defining operator-norm estimate gives
+\[
+\boxed{
+\norm{(\widehat A-A)x}
+\le\sum_e\norm{\Delta_e}\,\norm{P_{a(e)}x}.
+}
+\]
+If $\norm{\Delta_e}\le\varepsilon_e\norm{A_e}$, then the formal relative certificate is
+\[
+\boxed{
+\norm{(\widehat A-A)x}
+\le\sum_e\varepsilon_e\norm{A_e}\,\norm{P_{a(e)}x}.
+}
+\]
+The source additionally assumes that each exact block is source supported. The proof of this bound does not need that assumption. The checked statement therefore uses weaker sufficient hypotheses without weakening the conclusion.
+
+\textbf{Uniform operator estimates.} Two additional checked consequences are
+\[
+\norm{\widehat A-A}
+\le\sum_e\norm{\Delta_e}\,\norm{P_{a(e)}}
+\]
+and, when $\norm{P_a}\le1$ for every packet,
+\[
+\boxed{\norm{\widehat A-A}\le\sum_e\norm{\Delta_e}.}
+\]
+These estimates are uniform in the input vector and can be used as inputs to later chain analyses. The chain results themselves are not included in this block's completed inventory.
+
+\textbf{Implementation boundary.} The maps $\Delta_e$ and their bounds must be supplied or justified for a numerical implementation. This formalization does not establish IEEE rounding behavior, prevent overflow or underflow, model a CUDA kernel, or certify the recorded device speedups. Those are distinct claims and require separate evidence.
+
+
+
+\subsection{Positive budget and feasibility}\label{supp1:subsection:005}\textit{Positive-budget condition for item 8.4}\par
+\textbf{Positive budget is necessary.} The source minimizes
+\[
+\sum_e c_e\log\frac1{\varepsilon_e},\qquad
+\varepsilon_e>0,\qquad \sum_e s_e\varepsilon_e=\tau,
+\]
+with positive sensitivities and costs. The positive-budget condition is essential. For a nonempty edge set, Lean proves
+\[
+s_e>0\ \text{and}\ \varepsilon_e>0\ \text{for all }e
+\quad\Longrightarrow\quad
+\sum_e s_e\varepsilon_e>0.
+\]
+It follows that every nonpositive budget is infeasible. A one-edge, unit-sensitivity, zero-budget instance is checked as an exact boundary example.
+
+The nonempty-index statement requires $\tau>0$. Nonemptiness also makes the sum of positive costs in the displayed optimizer's denominator positive. The empty edge set is treated separately. Existence, global optimality and uniqueness for the positive-budget problem are proved in Section~\ref{supp2:subsection:004}.
+

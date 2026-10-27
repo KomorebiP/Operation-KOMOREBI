@@ -1,0 +1,121 @@
+
+===== I_lean PAGE 24 =====
+The coefficient projectors are linear over the ground field, but not over the full coordinate algebra. The
+file contains explicit witnesses to that failure. This is an instructive type boundary: the acting algebra for
+generation may be larger than the scalar algebra over which packet maps are linear. These additional
+checked declarations are part of the namespace audit but are not counted as extra rows in the 35-row
+contract.
+10 Replaying the preserved verification
+The source pins Lean to leanprover/lean4:v4.34.0-rc2. The exact Mathlib revision is aeb72f1e99
+81b6d35b426b16dca7759be3e7ba06. Every transitive package pin is listed in Appendix B. A matching
+installed compiler and dependency cache are prerequisites. The source archive does not itself supply
+that compiler or the complete cache.
+The following commands are quoted from the component’s documented workflow, adapted to the
+source archive layout. They were not run as part of authoring this guide. Use a working copy for new
+output and keep the archived source intact.
+10.1 A normal provisioned Lake environment
+From the source archive root:
+cd source/traditional_v1.3.1/formalization/lean
+lake --wfail build
+lake env lean -DwarningAsError=true \
+KomorebiVerification/KernelAudit.lean
+The audit is standalone. It is not imported by the root library aggregator. Consequently a successful
+library build is not the same thing as a successful explicit audit. These two commands also do not
+perform every identity check and negative control of the full verifier.
+Avoid changing the manifest with lakeupdate when reproducing the historical dependency state. A
+newer compiler or newer Mathlib can be useful in a separate porting branch, but its success would be
+a different verification event with different inputs.
+10.2 The verifier for the portable kit
+For the matching Linux x86-64 kit used by the preserved workflow, begin in the source archive root.
+Set KIT to the separately provisioned portable kit and use a new empty output directory.
+KIT="/path/to/Komorebi_Portable_Lean_4.34.0-rc2"
+cd source/traditional_v1.3.1
+bash "$KIT/run.sh" lake -d "$KIT/workspace" env python3 \
+"$PWD/scripts/verify_lean.py" \
+--project "$PWD/formalization/lean" \
+--kit "$KIT" \
+--out "$PWD/verification/lean_recheck"
+The kit is external to the source archive. The verifier checks both manifest revisions and the actual
+Git HEAD of every cached dependency. It compares toolchain pins and checks the reported compiler
+version. These checks prevent a conveniently available but different cache from silently standing in for
+the documented one.
+
+
+===== I_lean PAGE 28 =====
+generated/theorem_map.json accompanying this guide preserves all thirty-five contract scopes and
+their exact declaration lists. Unmapped expanded statements remain unmapped until an explicit type-
+level comparison and accepted proof support a new mapping.
+13 How to extend the formal development
+A useful extension adds a theorem with a clear source statement, a type that exposes its genuine inputs,
+and evidence that can be replayed. The easiest way to lose that clarity is to hide the desired conclusion
+inside an unnamed certificate and then announce that the original unconditional theorem has been
+formalized.
+1. Identify the exact new statement and its relation to the current contract. Decide whether it is a new
+row, a stronger replacement, or a helper used by an existing row.
+2. Inspect the current types before designing another abstraction. For finite packets, reuse range sub-
+types and actual Hom blocks. For topology, use continuous linear maps and state completeness
+where it is needed.
+3. Separate supplied data from proved consequences. A new canonical-form constructor should have
+its own existence theorem, not only a theorem taking a canonical-form certificate as an argument.
+4. Prove or import the bridge from the new representation to the manuscript’s object. A result about a
+bespoke rank predicate needs a theorem relating it to canonical seed rank before it can replace the
+existing formula.
+5. Compile the changed modules in the pinned environment, update the normative map deliberately,
+and update the audit inventory to exactly the desired mapped surface.
+6. Run the explicit audit and the full verifier with a new output directory. Preserve prior records and
+record new hashes rather than overwriting the date of the old evidence.
+7. Review the new source-to-prose correspondence. Kernel acceptance proves the typed theorem. The
+review establishes that this is the intended theorem and that its public summary retains the hypothe-
+ses.
+13.1 Continuing the correspondence work
+The continuation has established the primary decomposition and quotient constructions, the geometric
+formula, scalar extension, the six-way cyclic criterion, module-top reduction, and the nonsplit semisim-
+ple formula. Further work is determined by the current coverage map in Section 2. These established
+results must not be treated as missing certificate constructors. For graph rank, an implementation re-
+finement would relate executable spectral or algebraic data to the exact certificates, with a separate
+proof of each algorithmic step. For the expanded packet theory, countable unconditional sums require
+a topology and convergence interface different from the finite Fintype API.
+These are different tasks from increasing a declaration count. Each closes a named input boundary
+or extends an exact scope. A completed extension should say which boundary has changed and exhibit
+the theorem that changed it.
+13.2 Troubleshooting a replay
+An unknown module or missing object indicates an environment or import-path problem, not a false
+mathematical theorem. A pin mismatch means the cached dependency state is different from the
+recorded source. A refusal of nonempty output means the verifier is protecting the local rebuild claim.
+
+
+===== I_lean PAGE 29 =====
+Choose a new output directory. A warning-as-error failure requires reading the diagnostic before
+deciding whether the source, compiler version, or style policy changed.
+A mapped-name failure after a rename is not solved by silently removing the map entry. Either
+preserve the public declaration name, or update the map and record the new correspondence. A new
+unexpected axiom requires tracing its transitive dependency before acceptance. A changed source hash
+is expected after a deliberate edit, but it ends byte-identity with the old accepted source and requires
+fresh evidence for the changed file.
+
+
+===== I_lean PAGE 43 =====
+B Pinned dependencies
+The compiler pin is leanprover/lean4:v4.34.0-rc2. The preserved accepted run reported compiler
+commit 6a10ac8c22beadecabdbb0919c2b50214762f91d. Package revisions below come from the pre-
+served Lake manifest, not from a live dependency update.
+Package
+Exact revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af

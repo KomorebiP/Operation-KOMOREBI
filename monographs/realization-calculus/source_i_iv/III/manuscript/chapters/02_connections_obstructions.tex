@@ -1,0 +1,1114 @@
+\section{A distinct noncanonical connection API}
+\label{sec:connection}
+
+\subsection{The minimal compiled API}
+
+The compiled Chapter III API assumes only normalization at each chart.  All
+chart transports act on one module $M$, so chart labels distinguish routes
+but not Lean types.
+
+\begin{definition}[Noncanonical connection normalized at each chart]
+\label{def:minimal-connection}
+A minimal connection is a family
+\[
+\Gamma_{b\leftarrow a}\in\operatorname{Aut}_R(M)
+\qquad(a,b\in B)
+\]
+with only
+\[
+\Gamma_{a\leftarrow a}=\id_M.
+\]
+Neither inversion on reversed edges nor the cocycle law is a field of the
+structure.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.Connection}
+
+At a triple $(a,b,c)$, the compiled cocycle predicate is
+\[
+\Gamma_{c\leftarrow b}\Gamma_{b\leftarrow a}
+=\Gamma_{c\leftarrow a}.
+\]
+Flatness means this equality holds for every triple.  The formal
+multiplicative relative defect and triangle holonomy are
+\[
+D^\times_{c,b,a}
+=
+\bigl(\Gamma_{c\leftarrow b}\Gamma_{b\leftarrow a}\bigr)
+\Gamma_{c\leftarrow a}^{-1},
+\qquad
+H_{c,b,a}
+=
+\Gamma_{a\leftarrow c}
+\Gamma_{c\leftarrow b}
+\Gamma_{b\leftarrow a}.
+\]
+The defect is based at the target $c$.  The holonomy is based at $a$.
+\statusleanthree{Komorebi.PaperIII.Transport.Connection.CocycleAt; Komorebi.PaperIII.Transport.Connection.Flat; Komorebi.PaperIII.Transport.Connection.cocycleDefect; Komorebi.PaperIII.Transport.Connection.triangleHolonomy}
+
+\begin{theorem}[Checked flatness consequences]
+\label{thm:minimal-flatness}
+For the minimal connection API, flatness implies
+\[
+D^\times_{c,b,a}=\id_M,
+\qquad
+H_{c,b,a}=\id_M
+\]
+for every $a,b,c$.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.Transport.Connection.cocycleDefect_eq_refl_of_flat; Komorebi.PaperIII.Transport.Connection.triangleHolonomy_eq_refl_of_flat}
+
+\begin{proof}
+Flatness replaces the two-edge route in $D^\times$ by the direct route,
+which cancels its inverse.  For $H$, flatness first collapses $a\to b\to c$
+to $a\to c$, then collapses $a\to c\to a$ to the normalized transport
+$a\to a$.
+\end{proof}
+
+\begin{proposition}[The minimal API admits nontrivial holonomy]
+\label{prop:twisted-loop}
+There is a connection on three points over $\mathbb Q$ for which transport
+$0\to1$ is multiplication by $2$, every other transport between distinct
+endpoints is the identity, and
+\[
+H_{2,1,0}(1)=2.
+\]
+In particular $H_{2,1,0}\ne\id$.
+\end{proposition}
+\statusleanthree{Komorebi.PaperIII.Transport.twistedThreePointConnection; Komorebi.PaperIII.Transport.twisted_triangleHolonomy_apply_one; Komorebi.PaperIII.Transport.twisted_triangleHolonomy_ne_refl}
+
+\begin{boundary}[Why the minimal defect and loop are distinct]
+Without reverse-edge inversion,
+$\Gamma_{a\leftarrow c}$ need not equal
+$\Gamma_{c\leftarrow a}^{-1}$.  Therefore the multiplicative relative defect
+$D^\times_{c,b,a}$ and triangle holonomy $H_{c,b,a}$ are different
+comparisons.  The formal module proves that global flatness trivializes both.
+It does not identify them for an arbitrary connection.
+\end{boundary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.96\linewidth]{transport_vs_connection.pdf}
+\caption{Exact coordinate transport and connection transport are distinct.
+The canonical loop telescopes to the identity.  A chosen connection may
+carry nontrivial holonomy, which transforms by conjugation under gauge.}
+\label{fig:transport-connection}
+\end{figure}
+
+\Cref{fig:transport-connection} records this separation visually: the exact
+coordinate route telescopes, whereas the chosen connection route may carry a
+nonidentity loop.
+
+\begin{keyidea}[title={Coordinate transport and connection choice}]
+Canonical transport compares exact coordinate descriptions of the same
+object.  Its loops telescope.  A connection supplies a separate family of
+comparison maps, so its loops can carry information about that choice.
+The distinction keeps coordinate identities separate from connection
+assumptions.
+\end{keyidea}
+
+\subsection{A stronger reversible pair API}
+
+Let $R$ be a commutative ring, let $B$ be a type of charts or refinement
+states, and let each $C_a$ be an $R$-module.  The chart type is not assumed
+finite.  The following definition is deliberately not derived from analysis
+and synthesis.
+
+\begin{definition}[Normalized reversible connection]
+\label{def:connection}
+A normalized reversible connection is a family of linear equivalences
+\[
+\Gamma_{b\leftarrow a}:C_a\xrightarrow{\;\sim\;}C_b
+\qquad(a,b\in B)
+\]
+such that
+\[
+\Gamma_{a\leftarrow a}=\id,
+\qquad
+\Gamma_{a\leftarrow b}=\Gamma_{b\leftarrow a}^{-1}.
+\]
+No cocycle equation is included in the structure.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection}
+
+This adds heterogeneous fibers and inversion on reversed edges to the
+homogeneous minimal connection.  The connection is still a separate choice
+of maps, rather than a definition of canonical coordinate transport.
+
+\begin{definition}[Calibration and flatness]
+\label{def:calibration-flatness}
+When the $C_a$ are exact packet coordinates of one ambient module, the
+connection is \emph{canonically calibrated} if
+\[
+\Gamma_{b\leftarrow a}=J_{b\leftarrow a}
+\quad\text{for every }a,b.
+\]
+It is \emph{flat} if
+\[
+\Gamma_{c\leftarrow b}\Gamma_{b\leftarrow a}
+=
+\Gamma_{c\leftarrow a}
+\quad\text{for every }a,b,c.
+\]
+The canonical connection is flat.  A general flat connection is proved in
+\cref{thm:flat-gauge-canonical} to be related to it by a gauge change.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.CocycleAt; Komorebi.PaperIII.Transport.ReversibleConnection.Flat; Komorebi.PaperIII.Transport.ReversibleConnection.canonicalConnection; Komorebi.PaperIII.Transport.ReversibleConnection.canonicalConnection_flat}
+
+The words \emph{calibrated} and \emph{flat} have only the algebraic meanings
+displayed above.
+
+\begin{remark}[A connection on a chart graph]
+One may specify $\Gamma_e$ only on the oriented edges of a chart graph,
+together with inverse maps on reversed edges.  Path transport and loop
+holonomy below still make sense.  A direct cocycle defect for $(a,b,c)$,
+however, requires a declared direct transport from $a$ to $c$.  The pairwise
+API in \cref{def:connection} keeps this comparison total.
+\end{remark}
+
+\subsection{Cocycle defect and triangle holonomy}
+
+The commutative ring hypothesis makes subtraction of linear maps available
+from this point through \cref{sec:obstruction-packets}.
+
+\begin{definition}[Cocycle defect]
+\label{def:cocycle-defect}
+For $a,b,c\in B$, define the additive cocycle defect
+\[
+\Delta_{c,b,a}
+=
+\Gamma_{c\leftarrow b}\Gamma_{b\leftarrow a}
+-\Gamma_{c\leftarrow a}
+\in\Hom_R(C_a,C_c).
+\]
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.cocycleDefect}
+
+The manuscript subscript order is target, intermediate, source.  The Lean
+arguments are supplied in traversal order \leanname{(a,b,c)}.
+
+\begin{definition}[Triangle holonomy]
+\label{def:triangle-holonomy}
+The triangle holonomy based at $a$ is
+\[
+H_{c,b,a}
+=
+\Gamma_{a\leftarrow c}
+\Gamma_{c\leftarrow b}
+\Gamma_{b\leftarrow a}
+\in\operatorname{Aut}_R(C_a).
+\]
+It traverses $a\to b\to c\to a$.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.triangleHolonomy; Komorebi.PaperIII.Transport.ReversibleConnection.triangleObstruction}
+
+Holonomy is attached to the chosen connection $\Gamma$, never to an
+unspecified coordinate change.
+
+\begin{theorem}[Identity between defect and holonomy]
+\label{thm:defect-holonomy}
+For every triple $(a,b,c)$,
+\[
+\boxed{
+H_{c,b,a}-\id_{C_a}
+=
+\Gamma_{a\leftarrow c}\Delta_{c,b,a}.
+}
+\]
+Consequently,
+\[
+\Delta_{c,b,a}=0
+\quad\Longleftrightarrow\quad
+H_{c,b,a}=\id_{C_a}.
+\]
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.triangleHolonomy_sub_id; Komorebi.PaperIII.Transport.ReversibleConnection.cocycleDefect_eq_zero_iff_triangleHolonomy_eq_refl}
+
+\begin{proof}
+Using reversibility,
+\[
+\begin{aligned}
+\Gamma_{a\leftarrow c}\Delta_{c,b,a}
+&=
+\Gamma_{a\leftarrow c}
+\Gamma_{c\leftarrow b}
+\Gamma_{b\leftarrow a}
+-
+\Gamma_{a\leftarrow c}\Gamma_{c\leftarrow a}\\
+&=H_{c,b,a}-\id_{C_a}.
+\end{aligned}
+\]
+Left composition by the equivalence $\Gamma_{a\leftarrow c}$ is injective,
+which gives the equivalence of the two vanishing statements.
+\end{proof}
+
+\begin{corollary}[Canonical transport has zero connection defect]
+\label{cor:canonical-zero-defect}
+If $\Gamma_{b\leftarrow a}=J_{b\leftarrow a}$, then
+\[
+\Delta_{c,b,a}=0,
+\qquad
+H_{c,b,a}=\id
+\]
+for all triples.
+\end{corollary}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.canonicalTransport_zero_connectionDefect; Komorebi.PaperIII.Transport.ReversibleConnection.canonicalTransport_triangleHolonomy_eq_refl}
+
+\begin{proof}
+The defect vanishes by the canonical cocycle in
+\cref{thm:J-cocycle}. Apply \cref{thm:defect-holonomy}.
+\end{proof}
+
+\subsection{Paths and endpoint independence}
+
+\begin{definition}[Connection transport along a path]
+\label{def:path-transport}
+For a vertex sequence
+$p=(a_0,a_1,\ldots,a_n)$, define
+\[
+\Gamma_p
+=
+\Gamma_{a_n\leftarrow a_{n-1}}\cdots
+\Gamma_{a_1\leftarrow a_0},
+\qquad
+\Gamma_{(a_0)}=\id_{C_{a_0}}.
+\]
+If $a_n=a_0$, then $\Gamma_p$ is the holonomy of the loop $p$.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.pathTransport; Komorebi.PaperIII.Transport.ReversibleConnection.VertexPath; Komorebi.PaperIII.Transport.ReversibleConnection.indexedPathTransport}
+
+Products follow path order: the first traversed edge acts on the right.
+
+\begin{proposition}[Flat pair transport collapses to endpoints]
+\label{prop:flat-endpoints}
+If $\Gamma$ is flat, then every path satisfies
+\[
+\Gamma_p=\Gamma_{a_n\leftarrow a_0}.
+\]
+In particular, every loop has identity holonomy.
+\end{proposition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.pathTransport_eq_direct_of_flat; Komorebi.PaperIII.Transport.ReversibleConnection.indexedPathTransport_eq_direct_of_flat; Komorebi.PaperIII.Transport.ReversibleConnection.indexedLoopTransport_eq_refl_of_flat}
+
+\begin{proof}
+Induct on the path length.  Appending $a_{n+1}$ left-multiplies the
+inductive expression by $\Gamma_{a_{n+1}\leftarrow a_n}$, and flatness
+replaces the two factors by
+$\Gamma_{a_{n+1}\leftarrow a_0}$.  For a loop, normalization gives
+$\Gamma_{a_0\leftarrow a_0}=\id$.
+\end{proof}
+
+\begin{remark}
+The converse \emph{trivial holonomy implies flatness} depends on which loops
+are present in an API defined on a chart graph.  In the complete pair API,
+triviality of every triangle holonomy is equivalent to flatness by
+\cref{thm:defect-holonomy}.  No theorem about topological simple connectivity is
+being invoked.
+\end{remark}
+
+\section{Gauge covariance and comparison with canonical transport}
+\label{sec:gauge}
+
+\begin{definition}[Gauge change]
+\label{def:gauge-change}
+A gauge is a family of automorphisms $G_a\in\operatorname{Aut}_R(C_a)$.
+It acts on a connection by
+\[
+\Gamma^G_{b\leftarrow a}
+=
+G_b\Gamma_{b\leftarrow a}G_a^{-1}.
+\]
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.Gauge; Komorebi.PaperIII.Transport.ReversibleConnection.gauge}
+
+A gauge changes coordinate representatives at each chart.  The chart graph
+stays the same.
+
+\begin{theorem}[Gauge covariance]
+\label{thm:gauge-covariance}
+The defect and triangle holonomy transform as
+\[
+\Delta^G_{c,b,a}
+=G_c\Delta_{c,b,a}G_a^{-1},
+\qquad
+H^G_{c,b,a}
+=G_aH_{c,b,a}G_a^{-1}.
+\]
+Thus flatness and triviality of triangle holonomy are gauge invariant.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.gauge_cocycleDefect; Komorebi.PaperIII.Transport.ReversibleConnection.gauge_triangleHolonomy; Komorebi.PaperIII.Transport.ReversibleConnection.gauge_flat_iff; Komorebi.PaperIII.Transport.ReversibleConnection.gauge_triangleHolonomy_eq_refl_iff}
+
+\begin{proof}
+Substitute the definition of $\Gamma^G$.  Adjacent factors
+$G_b^{-1}G_b$ and $G_c^{-1}G_c$ cancel.  In the defect, both the composite
+and direct terms acquire the same outer factors $G_c$ and $G_a^{-1}$.  In
+the loop, all inner factors cancel and only conjugation at the base remains.
+\end{proof}
+
+\begin{theorem}[Flat connections are gauges of the canonical pair transport]
+\label{thm:flat-gauge-canonical}
+Suppose the $C_a$ are exact packet coordinate modules for one ambient module,
+so the canonical $J_{b\leftarrow a}$ is available.  If $\Gamma$ is a flat
+normalized reversible pair connection, choose $o\in B$ and set
+\[
+G_a=\Gamma_{a\leftarrow o}J_{o\leftarrow a}.
+\]
+Then every pair transport satisfies
+\[
+\boxed{
+\Gamma_{b\leftarrow a}
+=G_bJ_{b\leftarrow a}G_a^{-1}.
+}
+\]
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.Transport.ReversibleConnection.flatGauge; Komorebi.PaperIII.Transport.ReversibleConnection.flat_isGaugeOfCanonical}
+
+\begin{proof}
+Reversibility gives
+$G_a^{-1}=J_{a\leftarrow o}\Gamma_{o\leftarrow a}$.  Therefore
+\[
+\begin{aligned}
+G_bJ_{b\leftarrow a}G_a^{-1}
+&=
+\Gamma_{b\leftarrow o}
+J_{o\leftarrow b}J_{b\leftarrow a}
+J_{a\leftarrow o}
+\Gamma_{o\leftarrow a}\\
+&=
+\Gamma_{b\leftarrow o}\Gamma_{o\leftarrow a}\\
+&=
+\Gamma_{b\leftarrow a}.
+\end{aligned}
+\]
+The first reduction uses the canonical cocycle twice. The second uses
+flatness of $\Gamma$.
+\end{proof}
+
+\begin{boundary}[Flat does not mean calibrated]
+The theorem produces a gauge relating $\Gamma$ to $J$.  It does not prove
+$\Gamma=J$ before that gauge is chosen.  Conversely, nontrivial triangle
+holonomy cannot be removed by a gauge, because conjugation cannot turn a
+nonidentity automorphism into the identity.
+\end{boundary}
+
+\section{Obstruction packets: local certificates and holonomy blocks}
+\label{sec:obstruction-packets}
+
+\subsection{The generic compiled certificate}
+
+Let $\mathsf{Candidate}$, $\mathsf{Packet}$, and $\mathsf{Residual}$ be
+arbitrary types, with a distinguished
+$0\in\mathsf{Residual}$, and let
+\[
+r:\mathsf{Candidate}\longrightarrow
+\mathsf{Packet}\longrightarrow\mathsf{Residual}
+\]
+be a residual function.
+
+\begin{definition}[Solution and obstruction packet for a candidate]
+\label{def:generic-obstruction}
+A candidate $x$ is a solution when
+\[
+\operatorname{IsSolution}_r(x)
+\quad\Longleftrightarrow\quad
+\forall p,\ r(x,p)=0.
+\]
+An obstruction packet for $x$ is a pair consisting of a named packet $p$
+and a certificate $r(x,p)\ne0$.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.NonlinearObstructions.IsSolution; Komorebi.PaperIII.NonlinearObstructions.ObstructionPacket}
+
+\begin{theorem}[Exact logical force of a local obstruction]
+\label{thm:generic-obstruction}
+Every obstruction packet for $x$ proves that $x$ is not a solution, and
+\[
+\neg\operatorname{IsSolution}_r(x)
+\quad\Longleftrightarrow\quad
+\text{there exists an obstruction packet for }x.
+\]
+The reverse implication from failure to a packet witness is classical and
+does not require the packet type to be finite.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.NonlinearObstructions.ObstructionPacket.not_isSolution; Komorebi.PaperIII.NonlinearObstructions.obstructionPacket_of_not_isSolution; Komorebi.PaperIII.NonlinearObstructions.not_isSolution_iff_nonempty_obstructionPacket}
+
+\begin{proof}
+A purported solution would make the residual vanish at the certified packet,
+contradicting its nonzero field.  Conversely, if no packet carries a nonzero
+residual, then every residual is zero and the candidate satisfies the
+definition of solution.
+\end{proof}
+
+\begin{interpretation}[title={What one obstruction certifies}]
+The certificate answers one question: does this specified candidate satisfy
+every declared packet condition?  One nonzero residual settles that question
+for this candidate.  A statement that no candidate can solve the problem
+would require an obstruction for every candidate.
+\end{interpretation}
+
+\begin{boundary}[Candidate-specific means candidate-specific]
+The theorem rules out the named $x$.  It neither constructs a solution nor
+shows that every candidate is obstructed.  It provides no minimality,
+stability, computability, or classification theorem for the packet witness.
+\end{boundary}
+
+\subsection{Specialization to holonomy blocks}
+
+For a reversible connection, specialize the generic residual at a fixed
+triangle by taking a packet label to be a pair $(\mu,\nu)$ and the residual
+to be the corresponding block of $H-\id$.  A nonzero block, together with its
+label and a proof of nonvanishing, gives an obstruction packet certificate
+in the sense of \cref{def:generic-obstruction}.  The reconstruction theorem
+below supplies the further step: vanishing of all these local residuals is
+equivalent to the cocycle equation at that triangle.
+
+Fix a triangle $(a,b,c)$ and resolve the base fiber $C_a$ by a finite complete
+family of idempotents $(\Pi^a_\mu)_{\mu\in I_a}$.  Orthogonality may also hold,
+as it does for the exact range coordinate projectors below, but the compiled
+reconstruction theorem does not require it.  In exact range coordinates,
+$\Pi^a_\mu$ is simply the projector that retains component $\mu$ and zeros
+the other components.
+
+\begin{definition}[Holonomy obstruction and packet residuals]
+\label{def:obstruction-packet}
+Define
+\[
+\Ob_{c,b,a}=H_{c,b,a}-\id_{C_a},
+\qquad
+\Ob^{\mu\nu}_{c,b,a}
+=
+\Pi^a_\mu\Ob_{c,b,a}\Pi^a_\nu.
+\]
+The map $\Ob^{\mu\nu}_{c,b,a}$ is the obstruction block, or packet residual,
+from input packet $\nu$ to output packet $\mu$.  If it is nonzero, then
+$(\mu,\nu)$ and that nonvanishing proof form an obstruction packet
+certificate.  Diagonal blocks detect holonomy within one packet.  Off-diagonal
+blocks detect packet mixing induced by holonomy.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.HolonomyBlocks.PacketResolution; Komorebi.PaperIII.HolonomyBlocks.PacketResolution.block}
+
+The certificate records a specified holonomy defect, the label of an input
+and output packet, and a proof that the corresponding block is nonzero.
+
+\begin{theorem}[Exact reconstruction and detection by obstruction blocks]
+\label{thm:obstruction-detection}
+The total obstruction has the exact finite resolution
+\[
+\boxed{
+\Ob_{c,b,a}
+=
+\sum_{\mu,\nu\in I_a}
+\Ob^{\mu\nu}_{c,b,a}.
+}
+\]
+Moreover, the following are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item $\Delta_{c,b,a}=0$;
+\item $H_{c,b,a}=\id$;
+\item $\Ob_{c,b,a}=0$;
+\item $\Ob^{\mu\nu}_{c,b,a}=0$ for every $\mu,\nu$.
+\end{enumerate}
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.HolonomyBlocks.obstruction_sum_blocks; Komorebi.PaperIII.HolonomyBlocks.obstructionBlocks_zero_iff; Komorebi.PaperIII.HolonomyBlocks.obstructionDetection_equivalences}
+
+\begin{proof}
+Insert completeness on both sides:
+\[
+\Ob
+=
+\left(\sum_\mu\Pi^a_\mu\right)
+\Ob
+\left(\sum_\nu\Pi^a_\nu\right)
+=
+\sum_{\mu,\nu}\Pi^a_\mu\Ob\Pi^a_\nu.
+\]
+Thus (iv) implies (iii), and (iii) implies (iv) by composition with the
+projectors.  Conditions (ii) and (iii) are equivalent by the definition of
+$\Ob$ and additive cancellation.
+Conditions (i) and (ii) are equivalent by
+\cref{thm:defect-holonomy}.
+\end{proof}
+
+\begin{keyidea}[title={Why both packet indices matter}]
+For the declared finite complete resolution, reconstruction uses both
+packet indices.  Inspecting only diagonal blocks can miss transport from one
+packet to another.  The full family records that mixing and reconstructs the
+total obstruction exactly.
+\end{keyidea}
+
+\Cref{fig:holonomy-obstruction-blocks} depicts the finite block resolution
+on both sides of the obstruction and the off-diagonal blocks that witness
+packet mixing.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.96\linewidth]{holonomy_obstruction_blocks.pdf}
+\caption{A finite complete packet resolution reconstructs the total holonomy
+obstruction from blocks indexed by input and output packets.  A nonzero
+off-diagonal block is an exact witness of packet mixing.}
+\label{fig:holonomy-obstruction-blocks}
+\end{figure}
+
+\begin{corollary}[Witness supported in one packet]
+\label{cor:packet-witness}
+If $\Ob^{\mu\nu}_{c,b,a}\ne0$, then there is a vector $x$ supported in packet
+$\nu$ such that
+\[
+\Pi^a_\mu\Ob_{c,b,a}x\ne0.
+\]
+Such an $x$ is an exact finite witness of nonflatness.
+\end{corollary}
+\statusleanthree{Komorebi.PaperIII.HolonomyBlocks.exists_packetWitness_of_obstructionBlock_ne_zero}
+
+\begin{proof}
+Classically choose $y$ on which the nonzero linear map
+$\Pi^a_\mu\Ob\Pi^a_\nu$ is nonzero and set $x=\Pi^a_\nu y$.
+Idempotence gives $\Pi^a_\nu x=x$, and the required output is the chosen
+nonzero value.
+\end{proof}
+
+\subsection{Gauge behavior of packet blocks}
+
+Vanishing or nonvanishing of the total triangle obstruction is gauge invariant
+by \cref{thm:gauge-covariance}, but a fixed packet pattern need not be.  A
+general $G_a$ can mix the projectors $\Pi^a_\mu$.
+
+\begin{proposition}[Gauge covariance when packet projectors are preserved]
+\label{prop:packet-gauge}
+If $G_a\Pi^a_\mu=\Pi^a_\mu G_a$ for every $\mu$, then
+\[
+\left(\Ob^G\right)^{\mu\nu}
+=
+G_a\Ob^{\mu\nu}G_a^{-1}.
+\]
+Consequently the zero/nonzero status of each obstruction block is preserved
+by gauges that preserve the packet projectors.
+\end{proposition}
+\statusleanthree{Komorebi.PaperIII.HolonomyBlocks.obstructionBlock_gauge_of_commutes; Komorebi.PaperIII.HolonomyBlocks.obstructionBlock_gauge_eq_zero_iff}
+
+\begin{proof}
+Use $\Ob^G=G_a\Ob G_a^{-1}$ and commute $G_a$ and $G_a^{-1}$ through the
+two packet projectors.  Composition by an equivalence is injective in both
+directions.
+\end{proof}
+
+\begin{boundary}[Packet patterns are not absolute]
+Without the commutation hypothesis in \cref{prop:packet-gauge}, only the
+vanishing of the total obstruction is gauge invariant.  The location of
+individual nonzero blocks may change under a gauge that mixes packets.
+\end{boundary}
+
+\section{Products supported in packets and holonomy walks}
+\label{sec:holonomy-walks}
+
+The passage from words to walks also applies to products of different matrices.
+Let $V$
+be one finite packet type, let $R$ be a semiring, and let
+$B_1,\ldots,B_m\in R^{V\times V}$ be a finite sequence of possibly different
+packet matrices.  Rows are targets and columns are sources as before.
+
+\begin{proposition}[Packet path expansion for different matrices]
+\label{prop:heterogeneous-path}
+For $i,j\in V$ and $m\geq1$, set $i_0=i$ and $i_m=j$.  Then
+\[
+\boxed{
+(B_m\cdots B_1)_{ji}
+=
+\sum_{(i_1,\ldots,i_{m-1})\in V^{m-1}}
+  B_m[i_m,i_{m-1}]\cdots B_1[i_1,i_0].
+}
+\]
+When $m=1$, the sum is over the unique empty tuple and its summand is
+$B_1[j,i]$.
+For $m=0$, the product is the identity and the entry is the Kronecker delta
+$\delta_{ji}$.  If every $B_r[q,p]$ vanishes outside a declared relation
+$\mathcal R_r(p,q)$, then the endpoint entry is zero whenever there is no
+packet path compatible with the successive relations.
+\end{proposition}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.heterogeneousProduct; Komorebi.PaperIII.EdgeOperators.heterogeneousPathSum; Komorebi.PaperIII.EdgeOperators.heterogeneousPacketPathExpansion; Komorebi.PaperIII.EdgeOperators.SupportedStep; Komorebi.PaperIII.EdgeOperators.SupportedPath; Komorebi.PaperIII.EdgeOperators.heterogeneousProduct_apply_eq_zero_of_no_supportedPath}
+
+\begin{proof}
+Expand each matrix product entry and distribute the finite sums.  Induction on
+the factor list yields the displayed path sum, with the empty list evaluated
+as the identity matrix.  If no supported intermediate packet exists, every
+summand contains an entry that is zero by its declared support relation.
+\end{proof}
+
+\begin{boundary}[Changing packet types along a chain]
+The compiled theorems
+\leanname{heterogeneousPacketPathExpansion_two} and
+\leanname{heterogeneousPacketPathExpansion_three} allow different packet
+types at the successive stages of two- and three-factor products.  The
+arbitrary-length theorem above permits different factors but uses one common
+finite packet type $V$.  A fully dependent arbitrary-length chain of changing
+modules and packet types remains outside the finite algebraic contract.
+\end{boundary}
+
+\begin{remark}[Checked specialization]
+When every $B_r$ is one repeated endomorphism $T$, the recursive
+specialization to packet powers is inherited from Chapter I.
+\end{remark}
+\statusleanprior{Komorebi.PacketNaturalityCompletion.Packets.transferBlock_pow_eq_packetPathSum}
+
+For a loop represented on one common finite scalar packet coordinate type,
+the proposition resolves its successive transport matrices into packet
+walks.  If $R$ is a ring, as in the reversible connection API, then
+$(H-I)_{ji}=H_{ji}-\delta_{ji}$.  In particular, off-diagonal entries are
+unchanged.  Thus a nonzero off-diagonal holonomy obstruction in this model
+with a common index type requires a transport word along the closed chart
+loop whose packet path runs from its input packet to its output packet.  This
+conclusion requires declared block supports for the connection matrices.
+An arbitrary connection need not respect the transfer graph from
+\cref{sec:edge-operators}.
+
+\section{A minimal exact example}
+\label{sec:example}
+
+\begin{example}[A scalar triangle]
+Let $B=\{0,1,2\}$ and $C_0=C_1=C_2=\bbk$ for a field $\bbk$.  Choose
+$u,v,w\in\bbk^\times$ and set
+\[
+\Gamma_{1\leftarrow0}(x)=ux,\qquad
+\Gamma_{2\leftarrow1}(x)=vx,\qquad
+\Gamma_{2\leftarrow0}(x)=wx,
+\]
+with reverse transports given by inverse scalars.  Then
+\[
+\Delta_{2,1,0}(x)=(vu-w)x,
+\]
+and the triangle holonomy based at $0$ is
+\[
+H_{2,1,0}(x)=w^{-1}vux.
+\]
+Therefore
+\[
+H_{2,1,0}-\id
+=w^{-1}\Delta_{2,1,0}.
+\]
+The connection is flat on this triangle exactly when $vu=w$.  If the three
+coordinate systems are literally the same and canonical transport is used,
+then $u=v=w=1$ and the obstruction vanishes.  Choosing arbitrary nonzero
+$u,v,w$ is a connection choice, not a consequence of changing exact packet
+coordinates.
+\end{example}
+
+\begin{example}[A transfer walk with two steps]
+Let a packet graph have edges $e:0\to1$ and $f:1\to2$, with no other edges.
+Then
+\[
+T=L_e+L_f,\qquad
+(T^2)_{20}=c(f)c(e).
+\]
+The products $L_eL_e$, $L_eL_f$, and $L_fL_f$ vanish by typed mismatch.
+Only $L_fL_e$, corresponding to the walk $0\to1\to2$, contributes to the
+$(2,0)$ entry.  This example also fixes the noncommutative coefficient order.
+\end{example}
+
+\section{Canonical coordinates for arbitrary maps}
+\label{sec:arbitrary-maps}
+
+The analysis and synthesis identities are identities of functions, not only
+of linear maps.  Consequently exact coordinate change does not become
+curved merely because the represented operation is nonlinear.
+
+\begin{proposition}[Exact naturality for arbitrary functions]
+\label{prop:set-naturality}
+Let $\cA^X_a:X\xrightarrow{\sim}X_a$ and
+$\cA^X_b:X\xrightarrow{\sim}X_b$ be exact coordinate equivalences for $X$,
+with inverses $\cS^X_a$ and $\cS^X_b$.  Likewise, let
+$\cA^Y_r:Y\xrightarrow{\sim}Y_r$ and
+$\cA^Y_s:Y\xrightarrow{\sim}Y_s$ be exact coordinate equivalences for $Y$,
+with inverses $\cS^Y_r$ and $\cS^Y_s$.  Let $F:X\to Y$ be any function, with
+no linearity or differentiability hypothesis.  Set
+\[
+J^X_{b\leftarrow a}=\cA^X_b\circ\cS^X_a,
+\qquad
+J^Y_{s\leftarrow r}=\cA^Y_s\circ\cS^Y_r,
+\]
+and define
+\[
+\widehat F_{r\leftarrow a}
+=
+\cA^Y_r\circ F\circ\cS^X_a.
+\]
+Then
+\[
+J^Y_{s\leftarrow r}\circ\widehat F_{r\leftarrow a}
+=
+\widehat F_{s\leftarrow b}\circ J^X_{b\leftarrow a}.
+\]
+If $\cA^Z_t:Z\xrightarrow{\sim}Z_t$ is another exact coordinate equivalence
+and $G:Y\to Z$ is any function, then exact coordinate representation also
+preserves composition:
+\[
+\widehat{G\circ F}_{t\leftarrow a}
+=
+\widehat G_{t\leftarrow r}\circ\widehat F_{r\leftarrow a}.
+\]
+\end{proposition}
+\statusleanthree{Komorebi.PaperIII.Transport.exactCoordinateMap; Komorebi.PaperIII.Transport.exactCoordinateMap_comp; Komorebi.PaperIII.Transport.exactCoordinateMap_naturality}
+
+\begin{proof}
+Both sides of the naturality equation reduce to
+$\cA^Y_s\circ F\circ\cS^X_a$ using
+$\cS\circ\cA=\id$ in $X$ and $Y$.  For composition, the middle
+$\cS^Y\circ\cA^Y$ cancels in the same way.
+\end{proof}
+
+\begin{boundary}[Where nonlinear defects can enter]
+A nonlinear \emph{coordinate} defect cannot be blamed on the exact canonical
+$J$ of \cref{def:canonical-J}. By \cref{prop:set-naturality}, that defect is
+identically zero.  Nonzero defects require extra structure such as a
+noncanonical connection, truncation, approximation, restricted domains, or
+failure of an operation to respect a declared packet model.
+\end{boundary}
+
+\clearpage\section{Nonlinear operation trees: locality and the formalization frontier}
+\label{sec:operation-trees}
+
+\subsection{The compiled foundation of unary and binary trees}
+
+\begin{definition}[Finite grammar for operation trees]
+\label{def:compiled-operation-tree}
+For types of input labels $I$, constants $K$, unary symbols $U$, and binary
+symbols $B$, the finite formal grammar has four constructors:
+\[
+\begin{aligned}
+t ::={}&\operatorname{input}(i)
+\mid\operatorname{constant}(k)
+\mid\operatorname{unary}(u,t)\\
+&\mid\operatorname{binary}(b,t_1,t_2).
+\end{aligned}
+\]
+Given an arbitrary value type $Y$, evaluation takes completely explicit maps
+\[
+I\to Y,\qquad K\to Y,\qquad U\to Y\to Y,\qquad
+B\to Y\to Y\to Y.
+\]
+No algebraic, continuity, or differentiability law is imposed on these
+semantics.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.NonlinearObstructions.OperationTree; Komorebi.PaperIII.NonlinearObstructions.OperationTree.eval}
+
+When $I$ has decidable equality, let $\operatorname{inputs}(t)$ be the finite
+set of input labels actually occurring in $t$.
+
+\begin{theorem}[Input locality for operation trees]
+\label{thm:tree-locality}
+Let $\eta_1,\eta_2:I\to Y$ be two input environments.  If
+\[
+\eta_1(i)=\eta_2(i)
+\qquad\text{for every }i\in\operatorname{inputs}(t),
+\]
+then the two evaluations of $t$ are equal under the same constant, unary, and
+binary semantics.  In particular, if
+$\operatorname{inputs}(t)=\varnothing$, evaluation is independent of the
+input environment.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.NonlinearObstructions.OperationTree.eval_congr_on_inputs; Komorebi.PaperIII.NonlinearObstructions.OperationTree.eval_eq_of_inputs_eq_empty}
+
+\begin{proof}
+Structural induction on $t$.  The input case is the agreement hypothesis.
+The constant case is reflexive. The unary case applies the induction
+hypothesis to its child. The binary case applies it independently to the
+left and right subtrees, whose input sets form a union.
+\end{proof}
+
+\begin{boundary}[Exact force of locality]
+The theorem says evaluation reads only syntactically named inputs.  It does
+not prove that the operations are linear or nonlinear in any analytic sense,
+that the tree is stable, that two different trees are equivalent, or that a
+solution to a tree equation exists.
+\end{boundary}
+
+\subsection{Typed colored extension beyond the finite contract}
+
+\begin{definition}[Finitary colored operation signature]
+\label{def:signature}
+A finitary colored signature consists of:
+\begin{itemize}
+\item a finite type $V$ of colors;
+\item a type $\Sigma$ of operation symbols;
+\item an arity $r(\sigma)\in\N$ for every $\sigma\in\Sigma$;
+\item input colors
+$\operatorname{in}_\sigma:\operatorname{Fin}(r(\sigma))\to V$;
+\item an output color $\operatorname{out}(\sigma)\in V$.
+\end{itemize}
+A realization assigns a space $X_v$ to each color and a map
+\[
+\Phi_\sigma:
+\prod_{q\in\operatorname{Fin}(r(\sigma))}X_{\operatorname{in}_\sigma(q)}
+\longrightarrow X_{\operatorname{out}(\sigma)}.
+\]
+\end{definition}
+\statusroadmap{The intended Lean target is a dependent inductive typed tree. No such declaration is part of the finite algebraic completion contract.}
+
+\begin{definition}[Typed operation tree and evaluation]
+\label{def:operation-tree}
+A typed operation tree is recursively either a leaf of declared color or a
+node labeled by $\sigma$, with one correctly colored child for each input
+slot of $\sigma$.  Evaluation is recursive:
+\[
+\ev(\operatorname{node}(\sigma;t_1,\ldots,t_{r(\sigma)}))
+=
+\Phi_\sigma(\ev(t_1),\ldots,\ev(t_{r(\sigma)})).
+\]
+\end{definition}
+\statusroadmap{Candidate API: \leanname{Komorebi.PaperIII.NonlinearObstructions.ColoredOperationTree} and \leanname{ColoredOperationTree.eval}.  This is stronger than the compiled uncolored unary--binary grammar.}
+
+\subsection{Packet labelings and the multilinear first target}
+
+Suppose every $X_v$ has a finite complete packet family
+$(P^v_i)_{i\in I_v}$.  A packet labeling assigns an admissible packet index
+to each edge or node of a typed tree.  For multilinear $\Phi_\sigma$, inserting
+\[
+\id_{X_v}=\sum_{i\in I_v}P^v_i
+\]
+at every input and output yields a finite sum over trees with packet labels.
+This is the branching analogue of inserting intermediate projectors in
+\cref{prop:heterogeneous-path}.
+
+\begin{roadmap}[Finite multilinear tree expansion]
+\label{roadmap:multilinear-tree}
+The first milestone for the nonlinear module is an exact theorem saying that the
+evaluation of a finite tree of multilinear nodes equals the finite sum of its
+packet-resolved labeled evaluations.  Required proof obligations include:
+\begin{enumerate}[label=(\alph*)]
+\item a dependent well-typed tree syntax;
+\item finite packet-label types at every color;
+\item an explicit convention for nullary and unary nodes;
+\item multilinearity in every input slot;
+\item preservation of the order of input slots without assuming commutativity of
+operations.
+\end{enumerate}
+\end{roadmap}
+\statusroadmap{Candidate target: \leanname{Komorebi.PaperIII.NonlinearObstructions.ColoredOperationTree.eval_eq_sum_packetLabellings}.}
+
+\subsection{Connection defects at nonlinear nodes}
+
+For coordinate models of the source and target colors, an additive target
+coordinate space, and a chosen noncanonical connection, a pointwise node
+defect can be defined by
+\[
+\mathfrak D^\Gamma_{b,a}(\Phi)
+=
+\Gamma^Y_{b\leftarrow a}\circ\widehat\Phi_a
+-
+\widehat\Phi_b\circ
+\left(\prod_q\Gamma^{X_q}_{b\leftarrow a}\right).
+\]
+This expression compares two \emph{chosen} routes.  With canonical exact
+transport in every slot it vanishes by \cref{prop:set-naturality}.
+
+\begin{roadmap}[Operation-tree defect propagation]
+\label{roadmap:tree-defect}
+For multilinear nodes, one expects an exact finite expansion obtained by
+replacing one or more nodes by their defects and transporting the remaining
+branches.  For smooth nonlinear nodes, the corresponding chain rule is
+indexed by rooted partitions and Fa\`a di Bruno trees.  A formal theorem will
+require a fixed differentiability category, base points, derivative
+conventions, symmetry factors, and remainder policy.
+\end{roadmap}
+\statusroadmap{Tree-level defect identities, higher chain rules, and nonlinear norm bounds are outside the finite Lean contract. Ordinary mathematical results in these directions appear in Part~II under their stated hypotheses.}
+
+\begin{boundary}[Analytic and geometric exclusions]
+The finite formal contract does not include convergence of an infinite tree series, existence
+of derivatives, a Banach-space Fa\`a di Bruno theorem, a Baker--Campbell--Hausdorff
+expansion, a continuum limit, or an identification of algebraic holonomy with
+curvature of a smooth bundle. Part~II supplies ordinary proofs for its explicit nonlinear and analytic statements. The theory does not derive a connection from
+data, optimization, physics, or probability.
+\end{boundary}
+
+\section{Finite algebraic formalization ledger}
+\label{sec:ledger}
+
+\small
+\begin{longtable}{L{0.17\textwidth}L{0.18\textwidth}L{0.25\textwidth}L{0.22\textwidth}}
+\toprule
+Topic & Status & Declaration or roadmap target & Exact boundary\\
+\midrule
+\endfirsthead
+\toprule
+Topic & Status & Declaration or roadmap target & Exact boundary\\
+\midrule
+\endhead
+Packet matrix and edge operator
+& Lean-backed III
+& \leanname{PacketGraph.packetMatrix}; \leanname{EdgeSystem.edgeOp}
+& Finite scalar matrices over a semiring, with one scalar coordinate per packet.\\
+\addlinespace
+Edge support and pair dichotomy
+& Lean-backed III
+& \leanname{edgeOp_eq_zero_off_support}; \leanname{edgeOp_mul_edgeOp_eq_zero}; \leanname{edgeOp_mul_edgeOp_of_composable}
+& Broken interfaces vanish. Matched pairs collapse to the endpoint block with coefficient in operator order.\\
+\addlinespace
+Typed word evaluation
+& Lean-backed III
+& \leanname{Composable}; \leanname{wordOp}; \leanname{wordOp_append}; \leanname{wordOp_eq_zero_of_not_composable}
+& List order is execution order. Concatenation reverses operator-product order. Nonwalks vanish.\\
+\addlinespace
+Finite word and walk expansions
+& Lean-backed III
+& \leanname{explicitWordExpansion}; \leanname{walkExpansion}; \leanname{wordExpansion_eq_explicitWordExpansion}; \leanname{transferOp_pow_eq_walkExpansion}
+& Actual finite tuple sum and zero-filtered composable-walk sum over finite graph and packet types.\\
+\addlinespace
+Endpoint coefficient walk sum
+& Lean-backed III
+& \leanname{reverseCoefficient}; \leanname{Connects}; \leanname{transferOp_pow_apply_eq_sum_walks}
+& Exact scalar endpoint entry, including the empty-walk case and noncommutative coefficient order.\\
+\addlinespace
+Fixed reachability and orbit support
+& Lean-backed III, with an inherited hull bridge
+& \leanname{transferOp_pow_apply_eq_zero_of_no_walk}; \leanname{transferOp_pow_mulVec_apply_eq_zero_of_unreachable_support}
+& Finite powers and supported seeds. The orbit-hull span conclusion uses the frozen Chapter I contract.\\
+\addlinespace
+Exact frame transport
+& Lean-backed III
+& \leanname{exactTransport_cocycle}; \leanname{exactPathTransport_eq_endpoint}; \leanname{exactPathTransport_loop}
+& One frame family on a single module. Arbitrary finite paths telescope and closed paths are trivial.\\
+\addlinespace
+Exact coordinate cocycle
+& Inherited Lean-backed II
+& \leanname{NestedRefinement.refineCoordinates_comp}; \leanname{NestedRefinement.coordinateRefinementEquiv_trans}
+& Complete finite projector coordinates, not reduction.\\
+\addlinespace
+Typed coordinate naturality
+& Inherited Lean-backed II
+& \leanname{NestedRefinement.coordinateOperator_comp}; \leanname{NestedRefinement.coordinateOperator_naturality}
+& Linear maps over semiring modules.\\
+\addlinespace
+Minimal connection API
+& Lean-backed III
+& \leanname{Transport.Connection}; \leanname{cocycleDefect}; \leanname{triangleHolonomy}; \leanname{triangleHolonomy_eq_refl_of_flat}
+& Only self-normalization is assumed. Reverse inversion and the cocycle are not structure fields.\\
+\addlinespace
+Twisted three-point loop
+& Lean-backed III
+& \leanname{twistedThreePointConnection}; \leanname{twisted_triangleHolonomy_ne_refl}
+& Concrete rational connection. The selected loop sends \(1\) to \(2\).\\
+\addlinespace
+Reversible additive defect
+& Lean-backed III
+& \leanname{ReversibleConnection}; \leanname{triangleHolonomy_sub_id}; \leanname{cocycleDefect_eq_zero_iff_triangleHolonomy_eq_refl}
+& Heterogeneous module fibers, reverse-edge inversion, and an additive defect over a commutative ring.\\
+\addlinespace
+Reversible finite paths
+& Lean-backed III
+& \leanname{pathTransport_eq_direct_of_flat}; \leanname{indexedPathTransport_eq_direct_of_flat}; \leanname{indexedLoopTransport_eq_refl_of_flat}
+& Finite pair-connection paths collapse to endpoints under algebraic flatness.\\
+\addlinespace
+Gauge covariance
+& Lean-backed III
+& \leanname{gauge_cocycleDefect}; \leanname{gauge_triangleHolonomy}; \leanname{gauge_flat_iff}
+& Fiberwise algebraic conjugation, without smooth gauge theory.\\
+\addlinespace
+Flat versus canonical transport
+& Lean-backed III
+& \leanname{flatGauge}; \leanname{flat_isGaugeOfCanonical}
+& A chosen base chart and ambient frames exhibit every flat pair connection as a gauge transform of canonical transport.\\
+\addlinespace
+Operation-tree locality
+& Lean-backed III
+& \leanname{OperationTree}; \leanname{OperationTree.eval}; \leanname{OperationTree.eval_congr_on_inputs}
+& Arbitrary unary and binary semantics. Only dependence on named inputs is proved.\\
+\addlinespace
+Generic obstruction packet
+& Lean-backed III
+& \leanname{ObstructionPacket.not_isSolution}; \leanname{not_isSolution_iff_nonempty_obstructionPacket}
+& Exact candidate-specific logical certificate, without global classification.\\
+\addlinespace
+Holonomy block obstruction
+& Lean-backed III
+& \leanname{obstruction_sum_blocks}; \leanname{obstructionBlocks_zero_iff}; \leanname{obstructionDetection_equivalences}
+& Finite complete idempotent packet family on the base fiber. Orthogonality is not required by the compiled reconstruction.\\
+\addlinespace
+Packet witness and block gauge
+& Lean-backed III
+& \leanname{exists_packetWitness_of_obstructionBlock_ne_zero}; \leanname{obstructionBlock_gauge_of_commutes}; \leanname{obstructionBlock_gauge_eq_zero_iff}
+& Witness extraction is classical. Blockwise covariance requires the gauge to commute with every packet projector.\\
+\addlinespace
+Heterogeneous matrix paths
+& Lean-backed III
+& \leanname{heterogeneousPacketPathExpansion}; \leanname{heterogeneousProduct_apply_eq_zero_of_no_supportedPath}
+& Arbitrarily many different matrices over one common finite packet type. Fully typed changing-index chains compile only at lengths two and three.\\
+\addlinespace
+Arbitrary-function coordinates
+& Lean-backed III
+& \leanname{exactCoordinateMap_comp}; \leanname{exactCoordinateMap_naturality}
+& Exact set-level equivalences and arbitrary functions, without a linearity or differentiability assumption.\\
+\addlinespace
+Colored and smooth trees
+& Roadmap only
+& roadmap \leanname{ColoredOperationTree.eval_eq_sum_packetLabellings}
+& Dependent colors, multilinear packet expansion, derivatives, and Fa\`a di Bruno identities remain outside the contract.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{Kernel-backed Chapter III surface}
+
+The authoritative declaration-level contract is
+\path{formalization/lean/LEAN_THEOREM_MAP_v1.0.1.md}.  It groups the compiled
+surface as follows.
+\begin{itemize}
+\item \textbf{EdgeOperators and EdgeExtensions:} scalar packet matrices,
+typed edge and word support, finite word/walk expansions, endpoint coefficient
+sums, fixed-length reachability, orbit support, and common-index
+heterogeneous products with declared supports.
+\item \textbf{Transport and ReversibleConnections:} exact frame transport,
+the minimal connection, heterogeneous reversible pair transport, additive
+defect and triangle holonomy, finite paths, canonical connections, and the
+fiberwise gauge action.
+\item \textbf{CoordinateNaturality and HolonomyBlocks:} composition and
+naturality for arbitrary functions between exact coordinate systems, finite
+two-sided block reconstruction, equivalent obstruction criteria,
+packet-supported witnesses, and packet-preserving block gauges.
+\item \textbf{NonlinearObstructions:} finite unary--binary operation trees,
+input locality, and candidate-specific obstruction certificates.
+\end{itemize}
+The formal companion records the checker-generated declaration
+and audit totals.  The parity gate requires every fully qualified Chapter III
+target printed beside a statement to occur in the theorem map, rejects stale
+or duplicate targets, and checks it against the compiled environment.
+\path{KernelAudit.lean} reports dependencies for the mapped and supporting
+theorems, and its fail-closed gate scans every compiled
+\leanname{Komorebi.PaperIII} declaration.  The four inherited statement
+contracts remain identified separately by their inherited declaration names.
+
+\begin{boundary}[No scope promotion by prose]
+The displayed endpoint coefficient formula, reachability results, reversible
+connection theorems, additive defect--holonomy identity, gauge covariance,
+holonomy-block reconstruction, packet witnesses, common-index heterogeneous
+path expansion, and arbitrary-function coordinate naturality are all part of
+the finite algebraic kernel-backed surface.  What remains outside is the
+dependent fiber-valued edge-system generalization, a fully dependent
+arbitrary-length chain whose module and packet type change at every stage,
+dependent colored operation trees, packet-labeled multilinear tree
+expansions, nonlinear tree-defect and Fa\`a di Bruno identities, and the
+analytic and geometric extensions listed above.
+\end{boundary}
+
+\section{The finite contract and the nonlinear transition}
+
+Typed packet support turns the expansion of a transfer power into a walk
+calculus.  Incompatible words vanish because their interfaces do not match.
+Canonical packet coordinate transport is the exact equivalence obtained
+from analysis and synthesis.  It satisfies the cocycle law, so every finite
+canonical loop telescopes to the identity.  Holonomy enters after a separate
+connection is supplied.  The compiled minimal API proves that flatness makes
+both the relative defect and holonomy trivial, and it exhibits a nontrivial
+rational loop.  Under the compiled reversible API, a nonzero additive triangle
+defect is equivalent to nonidentity holonomy, transforms covariantly under
+gauge, and is detected exactly by a finite family of packet blocks.  Finite
+flat paths collapse to their endpoints.  Every flat reversible pair connection
+is explicitly related to canonical transport by a gauge change through a
+chosen base chart.
+
+These facts define the boundary of the finite formal contract.  At that
+boundary, exact coordinates preserve composition and satisfy naturality for
+arbitrary functions in Chapter III, while the typed linear packet coordinate
+counterpart remains inherited from Chapter~II.  Nontrivial nonlinear defects
+must therefore be attached to additional modeling choices or to
+packet compatibility of the particular operation.  Colored operation trees,
+multilinear packet labelings, and Fa\`a di Bruno expansions remain
+outside this finite Lean contract. Part~II develops the corresponding ordinary mathematics, including packet jets, rooted tree expansions, and explicit nonlinear obstruction theorems.
+
+
+\clearpage

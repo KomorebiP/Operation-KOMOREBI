@@ -1,0 +1,38 @@
+\section{Exact packet compilation and cached refinement}
+\subsection{An independently defined feasible set}
+The tree label type \code{α} contains application-specific packet choices. Internal nodes have \code{arity + 1} children, so this constructor has at least one child. Costs live in a linearly ordered field with its compatible strict ring order; this permits exact rational execution as well as real-valued models.
+\excerpt{}{candidate_tree}
+\excerpt{}{cut}
+\walk{\code{Cut t} is indexed by the tree it prunes. Keeping a tree gives a legal cut; splitting an internal node requires one legal cut of every child. This type is defined before the optimization recurrence. Therefore correctness has an independent feasible set against which to compare the recurrence.}
+\excerpt{}{tree_recurrence}
+\walk{A leaf must be kept. At an internal node, compare the node's keep cost against the split overhead plus child optimal values. The proof \code{optimalValue_le_cut} proceeds by induction on the tree and cases on a legal cut. Keeping selects the left minimum bound; splitting combines the right minimum bound with all child bounds.}
+\excerpt{}{compile_attains}
+\walk{The actual \code{compile} returns a cut and chooses keep at ties. Induction proves its objective equals the recurrence. If the keep comparison holds, simplifying the conditional proves the keep case. Otherwise the induction hypotheses rewrite every compiled child cost and the right branch realizes the minimum.}
+\excerpt{}{tree_exact}
+\walk{The final conjunction pairs the universal lower bound with the constructed attaining cut. Optimality is thus stronger than a recurrence-value identity. Lagrangian compilation later specializes keep scores to cost plus multiplier times error. Weighted families combine their actual cut objectives before applying this same theorem.}
+
+\subsection{The Pareto statement has a boundary}
+The monotone-frontier theorem compares two genuinely optimal cuts at distinct nonnegative multipliers; adding the two optimality inequalities bounds their errors in opposite order to their costs. A positive-multiplier optimum is Pareto efficient. The source also includes \code{unsupported_pareto_example}: weighted sums need not select every efficient point of a discrete feasible set. The exact budget compiler therefore has a separate role.
+
+\subsection{An exact quantized table}
+\excerpt{}{budget_recurrence}
+\walk{Each keep option occupies its exact weight, while splitting convolves the child exact-weight tables and adds overhead. \code{BudgetDP.choose} compares two attainable options. The min-plus infrastructure proves that sums and finite choices preserve the independent \code{IsMinimum} predicate. Induction on the actual candidate tree therefore connects every table entry to legal cuts of exactly that weight.}
+\excerpt{}{budget_endpoint}
+\walk{The budget scan ranges over weights from zero through \(B\). The endpoint states that a finite answer is attained by a legal cut of weight at most \(B\), and no feasible cut costs less. This is an optimum over the original tree's cuts, rather than a continuous relaxation or a weighted-sum surrogate.}
+\excerpt{}{budget_none}
+\walk{The infeasibility branch is exactly the negation of the existence of a budget-feasible legal cut. Both directions follow from the same proved minimum semantics. This is why the option-valued model distinguishes \code{none} from an expensive but attainable value.}
+
+\subsection{The specification and stored implementation are separate}
+The functional recurrence above is a convenient specification. Evaluating it independently at many weights can recompute child tables. \code{StoredBudgetCompiler} adds vectors of \(B+1\) option-valued entries, bounded lookup, tabulation, cached child arrays, and stored min-plus merges.
+\excerpt{}{stored_tree}
+\walk{At a node, \code{Vector.ofFn} computes the child arrays before combining them. The final tabulation reads the merged array at each requested weight. Every array is finite and each child result is reused. The loop structure justifies the stored-table work model; it is not inferred from the earlier functional recurrence.}
+\excerpt{}{stored_correct}
+\walk{Induct on the tree. The leaf is bounded lookup of a tabulated singleton. At a node, unfold the two constructions, use correctness of stored child combination, and restrict convolution dependencies to indices no larger than the queried weight. Apply each child induction hypothesis within that bound. This yields entrywise equality with the specification. The stored optimizer's attained minimum is then derived from the already-proved specification semantics.}
+\excerpt{}{pseudo_polynomial}
+\walk{The source separately defines the tabulation work and number of merges. The bound \code{tabulation_work_bound} supplies per-node table and merge costs; \code{mergeCount_add_one} relates merges to the tree size. Algebra combines them into the displayed bound. The complexity is polynomial in the numeric budget \(B\), so pseudo-polynomial in a binary encoding. Costs are unit-cost table cells and candidate trials; arbitrary-precision bit complexity, compiler runtime, and device timing are excluded.}
+
+\subsection{Stability requires controlled branch gaps}
+\excerpt{}{compiler_stability}
+\walk{\code{GapControlled} recursively supplies bounds on perturbations of keep and split scores, including all child problems. \code{half_gap_order} proves the original and perturbed comparisons have the same truth value. The proof follows the two branches of \code{compile}; when both split, induction identifies every child cut. A near tie without this control is not covered by an unchanged-decision guarantee.}
+\excerpt{}{local_update}
+\walk{A \code{CachedContext} stores the ancestor context around a replaced subtree, including sibling data. \code{Valid} asserts those cached values match their subtree optima. \code{updateValue_correct} identifies the refreshed root value with the optimum of the filled tree. The exact compiler theorem then supplies its lower bound and attaining witness. Separate declarations prove sibling trees and sibling values unchanged. The displayed theorem is correctness of local recomputation; a hardware time-saving claim requires its own execution evidence.}

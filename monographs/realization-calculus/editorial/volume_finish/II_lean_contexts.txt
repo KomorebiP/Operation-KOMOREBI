@@ -1,0 +1,233 @@
+
+===== II_lean PAGE 11 =====
+3 Reading the inherited formal walkthrough
+The mathematical text develops the mathematical theory and its written proofs. The visual guide pro-
+vides finite models for its identities, precision statements, and boundaries. This guide explains how to
+read and use the preserved Lean component: the types accepted by each theorem, the objects actually
+constructed, the obligations supplied by a caller, and the evidence attached to the source. These three
+companions have complementary roles.
+This walkthrough describes the foundational 25-row formal contract. The chapter-wide correspon-
+dence and its boundaries are recorded in Section 1. The foundational source is preserved at source/c
+anonical_v1.2.1/formalization/lean/. The versioned path identifies that exact archived component.
+The mathematical text incorporates a broader written development. Its ordinary proofs of lattice gluing,
+necessary precision delay, convergence in an inverse limit, general DVR arithmetic, holomorphic and
+exponential defects, and multilevel identities are not converted into Lean proofs by appearing beside
+formally mapped results.
+The fixed formal contract contains 25 rows: 21 numbered canonical statements, one Smith phase
+identity, and three mathematical algorithm specifications. The appendix crosswalk identifies their lo-
+cations in the integrated traditional edition. Throughout this guide, “row” means a row of the canonical
+formal map, never a count of every theorem in the mathematical text.
+Quantity
+What is counted
+15 Lean source files
+Four shared foundation modules, eight substantive Chapter II mod-
+ules, two aggregate imports, and one audit module.
+5,603 source lines
+Physical lines in those files, including comments and blank lines.
+25 map rows
+Statement families, constructions, and specifications in the founda-
+tional contract.
+160 unique targets
+Distinct mapped declarations. Not all are theorem declarations.
+171 target occurrences
+Targets counted again when reused by another contract row.
+1,034 namespace entries
+Entries reported by the historical compiled namespace scan, includ-
+ing generated auxiliaries.
+A name count is not a measure of mathematical depth. A short wrapper can collect several substantial
+conclusions. A large structure can expose a difficult hypothesis without constructing its witness. The
+useful unit is a complete type together with its proof, its dependencies, and an accurate comparison
+with the prose statement.
+3.1 Three useful reading routes
+For a first reading, follow Sections 4–12: exact coordinates lead to weighted transfer, then arithmetic
+and typed defects. For a coverage review, use the crosswalk to the mathematical text in Appendix A,
+read the corresponding row in Section 15, and inspect its source type. For a reproduction attempt, read
+Section 13 before running any build command. The source checksum check and the compiler audit
+establish different things.
+The main walkthroughs use exact source excerpts, with explanatory equations outside the listings.
+Names are case sensitive. PowerSeries, Polynomial, LinearMap, and ContinuousLinearMap are different
+types. Similar notation is not a license to replace one with another in a theorem application.
+
+
+===== II_lean PAGE 33 =====
+excerpts are exact slices of those files. The Lean replay builds the project, resolves names in the compiled
+environment, and traverses axiom dependencies. Only the latter executes Lean.
+13.1 Start with the preserved pins
+Work in a writable copy of source/canonical_v1.2.1/formalization/lean/. Keep lean-toolchain,
+lakefile.toml, and lake-manifest.json together. The exact toolchain is leanprover/lean4:v4.34.0-rc2.
+The Mathlib revision is aeb72f1e9981b6d35b426b16dca7759be3e7ba06. Appendix B records every
+dependency revision in the delivered manifest.
+A working Lean/Elan installation, network access for dependencies or a suitable local cache, and
+sufficient disk space are prerequisites. The following commands are the preserved report’s replay pro-
+cedure, not commands executed while producing this guide.
+cd source/canonical_v1.2.1/formalization/lean
+lake exe cache get
+lake build
+python3 scripts/verify_theorem_map.py
+lake env lean -E warning KomorebiVerification/PaperII/KernelAudit.lean
+The cache command obtains compiled dependency artifacts. The build checks the aggregate library
+against the pinned environment. The Python map checker parses exactly one versioned theorem map,
+expands its namespace prefixes, requires rows 1 through 25, and writes a temporary Lean command
+that checks every mapped name in the compiled environment. The script removes that temporary file
+afterward. Its environment check is stronger than this guide’s lexical source lookup.
+The final command separately executes the audit that rejects violations. Warning escalation is part of
+the documented invocation. Preserve the exit status and full output of each command. A report written
+after the fact should not substitute for those transcripts in a new replay.
+13.2 The audit gate and its trust boundary
+The audit has two parts. #print axioms displays dependencies for a representative public sample. A
+subsequent command traverses every compiled declaration in the imported Komorebi namespace and
+rejects unsafe entries or dependencies outside the allowed basis.
+Source: KomorebiVerification/PaperII/KernelAudit.lean.
+run_cmd do
+let env ←getEnv
+let mut audited : Nat := 0
+for (name, info) in env.checked.get.constants.toList do
+if Name.isPrefixOf `Komorebi name then
+audited := audited + 1
+if info.isUnsafe then
+throwError "unsafe project declaration: {name}"
+let axioms ←Lean.collectAxioms name
+for axiomName in axioms do
+unless axiomName == ``propext || axiomName == ``Classical.choice ||
+axiomName == ``Quot.sound do
+throwError "unexpected axiom {axiomName} in project declaration {name}"
+if audited == 0 then
+
+
+===== II_lean PAGE 34 =====
+throwError "kernel audit found no Komorebi declarations"
+logInfo m!"FAIL-CLOSED KERNEL AUDIT PASS: {audited} Komorebi declarations; allowed axioms only:
+propext, Classical.choice, Quot.sound"
+↪
+The approved foundations are propext, Classical.choice, and Quot.sound. The gate rejects any
+other axiom dependency, including sorryAx, and explicitly fails if no project declaration was inspected.
+A successful audit is a property of the imported compiled environment at that run. It is not inferred
+solely from the absence of the word sorry in source text.
+The sample of printed axioms is not the complete traversal. Conversely, the namespace count in-
+cludes generated declarations and helper entries, so it is not a count of independent mathematical
+theorems. The map checker and namespace gate also do not decide whether a theorem’s type faith-
+fully represents a prose theorem. That requires scope comparison such as the canonical map and this
+guide.
+13.3 A minimal session for source inspection
+After a successful build, create a scratch Lean file beside the project’s aggregate import. The following
+inspection commands ask Lean to display two representative declarations and the axiom dependencies
+of the automatic rationality result.
+import KomorebiVerification.PaperII
+#check Komorebi.PaperII.NestedRefinement.coordinateRefinementEquiv
+#check Komorebi.PaperII.SmithDyadic.smithZMod_global_conditional_count
+#print axioms
+Komorebi.PaperII.TransferZeta.PositiveWeightedMultigraph.finite_graph_pathZeta_rationality
+↪
+Run it with lake env lean YourInspection.lean. These are suggested inspection commands, not
+a new executed transcript. Use #print or editor hover to inspect elaborated types, including inferred
+section parameters and typeclass assumptions. The printed source excerpt alone may omit surrounding
+binders. The full declaration type is decisive.
+When applying a theorem, first fix the intended scalar type and domain/codomain. Then assemble
+the structural object and prove its fields. For a weighted inverse, this means the filtration, map 𝑞, pre-
+cision certificate, diagonal inverse, and edge expansion. For a finite graph, it means finite vertex/edge
+types, endpoint maps, and positive weights. For a Smith system, it means a diagonal weight function
+and modular target. This preparation makes failures informative: a missing instance differs from a
+missing mathematical witness.
+13.4 Common failure modes
+Symptom
+What to check
+Toolchain mismatch
+Read lean-toolchain. Do not silently substitute a stable release for the
+pinned release candidate.
+Missing imported module
+Confirm dependencies and cache availability, then build from the Lean
+project root.
+Unknown mapped name
+Run the map checker only after a successful aggregate build. Verify
+source and manifest identity.
+Unsolved typeclass
+Inspect the theorem’s complete type and the scalar/module, finite-
+type, or normed-space assumptions.
+
+
+===== II_lean PAGE 50 =====
+Module
+Direct local imports
+ExactCoordinates
+ProjectorCore
+FibreRefinement
+ProjectorCore
+PaperII.KernelAudit
+PaperII.NestedRefinement, PaperII.ResidueFourierCRT, Pape
+rII.WeightedTransfer, PaperII.TransferZeta, PaperII.Result
+antSeparation, PaperII.SmithDyadic, PaperII.LinearDefects,
+PaperII.TypedLinearDefects
+PaperII.LinearDefects
+External imports only.
+PaperII.NestedRefinement
+ExactCoordinates
+PaperII.ResidueFourierCRT
+ResidueProjectors
+PaperII.ResultantSeparation
+External imports only.
+PaperII.SmithDyadic
+External imports only.
+PaperII.TransferZeta
+External imports only.
+PaperII.TypedLinearDefects
+External imports only.
+PaperII.WeightedTransfer
+External imports only.
+PaperII
+PaperII.NestedRefinement, PaperII.ResidueFourierCRT, Pape
+rII.WeightedTransfer, PaperII.TransferZeta, PaperII.Result
+antSeparation, PaperII.SmithDyadic, PaperII.LinearDefects,
+PaperII.TypedLinearDefects
+ProjectorCore
+External imports only.
+ResidueProjectors
+FibreRefinement
+KomorebiVerification
+PaperII
+The exact toolchain string is leanprover/lean4:v4.34.0-rc2. The Lake manifest pins the following
+source revisions. Its descriptive inputRev fields such as master and main do not replace these exact
+revisions.
+Package
+Exact revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af
+
+
+===== II_lean PAGE 51 =====
+C Source excerpts and reproduction inventory
+Every printed Lean listing comes from an exact UTF-8 excerpt in excerpts/*.lean.txt. The adjacent
+*.render.txt file escapes TeX control characters and substitutes a math font glyph where the code font
+lacks one. It preserves token order. Exact source text, not the display fallback, is the object to copy into
+an editor. Excerpts retain their surrounding source context only when that context is printed. They are
+not standalone Lean files. generated/excerpts.json records each source path, inclusive source line
+range, the SHA-256 digests of each full source file, exact excerpt, and display file. generated/theore
+m_map.json contains all 25 rows with fully qualified targets, classifications, scopes, boundaries, and
+lexical source locations. generated/mapped_source_index.json provides an alphabetical target index.
+generated/static_identity_audit.json records all manifest comparisons and the optional baseline
+comparison performed for this edition.
+build_guide_data.py uses only the Python standard library. It generates the map, import table,
+pins, excerpts, and current static audit without invoking Lean. build_guide.sh calls that generator and
+runs XeLaTeX four times. The monograph build uses system-installed P052, Nimbus Sans, DejaVu Sans
+Mono, and Latin Modern Math fonts with recorded dependency hashes. The required LaTeX packages
+are listed in the preamble. The independent PDF check script uses PyMuPDF and Pillow for page
+rendering and contact sheets.
+The foundational source remains preserved. The broader constructions live in formal/current/
+and are indexed by the chapter-wide correspondence. Editing this guide cannot by itself repair or
+strengthen a Lean theorem. A mathematical change to the formal component requires a separate source
+change, a new compile, an updated map when appropriate, and new execution evidence.

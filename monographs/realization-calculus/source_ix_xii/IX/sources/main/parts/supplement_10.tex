@@ -1,0 +1,236 @@
+\clearpage\subsection{All Residue Completion Supplement}\label{app:sup10}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical. The final core records their resolution.\par\medskip
+\subsubsection*{Scope and final statement}
+Let $p$ be a prime, let $m>0$ divide $p-1$, put $N=mp$ and $h=(p-1)/m$, and let $0\le j<N$. The original rational packet is defined by
+\[
+ \sum_{q=0}^{n}\binom{Nn+j}{Nq}C_{N,j}(q)=\delta_{n0},
+ \qquad E_j(n)=j!\,C_{N,j}(n).
+\]
+For every $n,k,u\in\N$, the new formal result establishes
+\[
+ \boxed{E_j(n)\in\Z_p,\qquad
+ \Delta_{uh}^{k}E_j(n)\in p^{\min(k,mn)}\Z_p.}
+\]
+Here $\Delta_h f(n)=f(n+h)-f(n)$. The corresponding rational valuation statement is zero-safe:
+\[
+ \Delta_{uh}^{k}E_j(n)=0\quad\text{or}\quad
+ v_p\bigl(\Delta_{uh}^{k}E_j(n)\bigr)\ge\min(k,mn).
+\]
+For the normalized coefficients, the exact correction is retained:
+\[
+ \boxed{\Delta_{uh}^{k}C_{N,j}(n)=0\quad\text{or}\quad
+ v_p\bigl(\Delta_{uh}^{k}C_{N,j}(n)\bigr)\ge\min(k,mn)-v_p(j!).}
+\]
+The manuscript's odd-prime, positive-$u$ theorem is a specialization. The formal statement also includes zero row, zero order, zero multiplier, and the $p=2,m=1$ subcase. This does not assert a different or broader external dyadic conjecture.
+
+\begin{center}\begin{tabular}{lrr}\toprule
+Inventory & Prior v0.9.0 & Current source corpus\\\midrule
+Named manuscript-proved items covered &23/24&24/24\\
+Active mathematical modules &57&70\\
+Explicit theorem declarations &630&753\\
+Explicit definitions audited separately &128&148\\\bottomrule
+\end{tabular}\end{center}
+The 123 added theorem declarations include supporting lemmas and examples. They are not 123 independent discoveries. Three classical inputs and two conjectures remain separately tracked. The original manuscript and all 57 upstream proof modules are preserved unchanged.
+
+\textbf{Principal declaration.} \path{KomorebiPaperIX.Theorem75.global_finite_difference} states the integrality and both precision bounds together, for the original coefficient functions. Its hypotheses are primality, $m>0$, $m\mid p-1$ and $j<mp$, not an assumed flatness or weightedness certificate.
+\par\medskip
+\subsubsection*{1. Stability of the weighted differential ring}
+The recovered checkpoint used the actual weighted subring
+\[
+ \Wp=\left\{F(T)=\sum_{d\ge0}a_dT^d:\
+ p^{\lfloor d/p\rfloor}a_d\in\Z_p\ \text{for every }d\right\}.
+\]
+Its coefficient condition is identified with the one in the previously checked singular-Amice development. The failed \mcode{ThetaWeighted} draft is retained separately. The repaired active source checks the complete formal-series statement below.
+
+Put
+\[
+ \Theta=(1+T)\frac{d}{dT},\qquad
+ B_\Theta=\frac{\Theta^{p^2}-\Theta^p}{p}.
+\]
+The coefficient formula
+\[
+ [T^d]\Theta F=(d+1)a_{d+1}+da_d
+\]
+proves $\Theta\Wp\subseteq\Wp$. If the floor weight increases between $d$ and $d+1$, then $p\mid d+1$, which compensates for that increase.
+
+\textbf{The normalized defect is not assumed to be a derivation.}
+Its proved product rule contains the two middle Leibniz sums:
+\[
+ B_\Theta(FG)=(B_\Theta F)G+F(B_\Theta G)+\mathcal B_p(F,G).
+\]
+The coefficients of $\mathcal B_p$ are the actual integral quotients
+$\binom{p^2}{a}/p$ and $\binom pa/p$. Derivative stability and this correction formula show that the elements $F\in\Wp$ satisfying $B_\Theta F\in\Wp$ are closed under the finite ring operations.
+
+The scalar input is proved for every natural $b$, including nonunits:
+\[
+ \boxed{p^2\mid b^{p^2}-b^p\quad\text{in }\Z.}
+\]
+Because $\Theta(1+T)^b=b(1+T)^b$, the binomial expansion of $T^p=((1+T)-1)^p$ then proves stability of the divided generator $T^p/p$. For $d=pq+r$, $0\le r<p$, every weighted monomial has the exact factorization
+\[
+ a_dT^d=(p^qa_d)\left(\frac{T^p}{p}\right)^qT^r.
+\]
+The scalar $p^qa_d$ is integral by the actual weight condition. Thus all weighted monomials, and all finite weighted polynomials, satisfy the defect condition.
+
+Finally, $[T^d]B_\Theta F$ depends only on coefficients through $d+p^2$. Replacing $F$ by this finite prefix proves the result for the entire formal series, without an analytic convergence assumption:
+\[
+ \boxed{B_\Theta\Wp\subseteq\Wp,\qquad B_\Theta^s\Wp\subseteq\Wp\ (s\ge0).}
+\]
+\textbf{Modules.} \mcode{WeightedAmiceRing}, \mcode{FrobeniusSquare}, \mcode{ThetaWeighted}.
+\par\medskip
+\subsubsection*{2. Actual substitution and singular higher differences}
+Let
+\[
+ \mathcal E(F)(t)=F(e^t-1),\qquad D=\frac{d}{dt},\qquad
+ B_D=\frac{D^{p^2}-D^p}{p}.
+\]
+All substitutions use Mathlib's actual formal exponential, logarithm and substitution maps. The chain rule gives
+\[
+ D\mathcal E(F)=\mathcal E(\Theta F),\qquad
+ B_D^s\mathcal E(F)=\mathcal E(B_\Theta^sF).
+\]
+The implementation also proves the inverse-substitution identity
+\[
+ \mathcal E\bigl(f(\log(1+T))\bigr)=f(t).
+\]
+
+The relevant integral subring is the \emph{Hurwitz} subring
+\[
+ \Hp=\{f\in\Q_p[[t]]:\ n![t^n]f\in\Z_p\ \text{for every }n\}.
+\]
+It is not coefficientwise integrality of ordinary power-series coefficients. The precise connection is
+\[
+ n![t^n]\mathcal E(F)=[T^0]\Theta^nF.
+\]
+Since every iterate of $\Theta$ preserves $\Wp$, the right side is integral. Therefore $\mathcal E(\Wp)\subseteq\Hp$. Applying the same statement to every $B_\Theta^sF$ proves
+\[
+ \boxed{f(\log(1+T))\in\Wp\quad\Longrightarrow\quad
+ B_D^sf\in\Hp\text{ for every }s.}
+\]
+This is the proved transfer that was missing in the earlier attempt. No weighted Mahler pairing is assumed. The formal differential route supplies an alternative bridge.
+
+\subsection*{Application to the actual singular ratios}
+The preceding v0.9.0 source independently constructs
+\[
+ H_{N,c}(t)=\sum_{n\ge0}\frac{t^{Nn+c}}{(Nn+c)!},\quad
+ A_c(t)=t^{-c}H_{N,c}(t),\quad R_c=\frac{A_{c-1}}{A_c}.
+\]
+The notation $t^{-c}H_{N,c}$ means removing its proved initial zero coefficients. For each $c=ap$, $1\le a<m$, that source proves
+$R_{ap}(\log(1+T))\in\Wp$. The new transfer consequently proves flatness of the \emph{same} rational ratio after scalar extension to $\Q_p$.
+
+The actual ratio is also proved to be an expansion in $t^N$, so its coefficients vanish outside multiples of $N$. Constructed $\Z_p$ lifts and the established coefficient criterion now give, for its literal Hurwitz coefficients $r_a(n)$,
+\[
+ \boxed{\Delta_{uh}^{k}r_a(n)\in p^{\min(k,mn)}\Z_p.}
+\]
+The separate rational precision theorem is obtained through the coefficient-lift equality. Divisibility in the field $\Q_p$ is never substituted for this assertion.
+
+\textbf{Modules.} \mcode{WeightedDworkTransfer}, \mcode{SeriesDifferenceBridge}, \mcode{RatioSeriesSupport}.
+\par\medskip
+\subsubsection*{3. Nonsingular propagation without an assumed limit}
+For consecutive original sections, the already defined ratios satisfy
+\[
+ R_cH_{N,c}=tH_{N,c-1},\qquad H_{N,c}'=H_{N,c-1}.
+\]
+Differentiating the first relation, using the relation for $R_{c-1}$, and cancelling a section whose leading coefficient is proved nonzero gives the actual Riccati equation
+\[
+ \boxed{tR_c'=R_c(1+R_{c-1}-R_c),\qquad 2\le c<N.}
+\]
+It is not an equation imposed on a replacement ratio. Write
+\[
+ q=R_{c-1}-(c-1),\qquad y=R_c-c.
+\]
+Both have zero constant coefficient. With $\Lambda_c=tD+c$, the equation becomes
+\[
+ \boxed{\Lambda_c y=cq+yq-y^2.}
+\]
+
+When $p\nmid c$, define the actual inverse coefficientwise:
+\[
+ [t^d]\Lambda_c^{-1}f=\frac{[t^d]f}{d+c}.
+\]
+On $p$-supported degrees, $d+c$ is a genuine $p$-adic unit. The proof establishes Hurwitz integrality of this solution, its support, both inverse identities, and preservation of full flatness using the earlier all-order Euler commutator theorem. The singular pivots $c=ap$ are never declared to be units.
+
+Now define explicit iterations
+\[
+ y_0=0,\qquad y_{r+1}=\Lambda_c^{-1}(cq+y_rq-y_r^2).
+\]
+If $q$ is flat and $p$-supported, every iterate has those properties. The crucial link to the actual ratio is an exact finite-prefix theorem:
+\[
+ \boxed{[t^d]y_r=[t^d]y\qquad(d\le r).}
+\]
+Indeed,
+\[
+ (cq+zq-z^2)-(cq+yq-y^2)=(z-y)(q-z-y).
+\]
+The second factor has zero constant term. Multiplication therefore raises the established agreement prefix by one. Coefficientwise division by $d+c$ preserves that prefix.
+
+For fixed $s,d$, the coefficient $d![t^d]B_D^sy$ depends only on the coefficients of $y$ through $d+p^2s$. Choosing the matching finite iterate proves its integrality. This establishes flatness of the actual $y$, and hence of $R_c$, without postulating flatness of the solution or invoking an unproved analytic fixed-point theorem.
+
+\textbf{Modules.} \mcode{EulerSeriesInverse}, \mcode{RiccatiFlatPropagation}, \mcode{RatioRiccati}.
+\par\medskip
+\subsubsection*{4. All-residue assembly and original coefficients}
+The standard-window source and inverse results supply $R_1$ and $F_{N,0}$. Induction over $1\le c<N$ now has two proved cases. At $p\mid c$, the singular weighted estimate and the new substitution theorem give flatness. At $p\nmid c$, the preceding Riccati propagation applies. Thus every actual ratio $R_c$ is flat.
+
+Let $K_j(t)$ be the normalized section kernel with constant coefficient one. The constructed unnormalized Euler series is
+\[
+ F_{N,j}(t)=j!\,K_j(t)^{-1}.
+\]
+The source/inverse identities and the factorial successor identity prove
+\[
+ F_{N,j+1}=F_{N,j}R_{j+1},\qquad
+ F_{N,j}=F_{N,0}\prod_{c=1}^{j}R_c.
+\]
+The product formula is not an assembly hypothesis. Proved flatness of all factors and the original product-closure theorem establish flatness of the full family.
+
+Coefficient extraction identifies, literally,
+\[
+ (Nn)![t^{Nn}]F_{N,j}=j!\,C_{N,j}(n).
+\]
+The support outside multiples of $N$ is proved separately. The constructed integral lift therefore represents the original rational coefficient function. The existing saturation criterion and the proved step-multiple argument give the ideal bound at every order, row and multiplier. Multiplication by $j!$ commutes with finite differences, giving precisely the displayed normalization loss.
+
+\subsection*{Exact examples outside the standard window}
+For $(p,m,j)=(3,2,3)$, the source derives
+\[
+ C_{6,3}(1)=-\frac1{84},\quad C_{6,3}(2)=\frac{703}{5460},\quad
+ C_{6,3}(3)=-\frac{223199}{7980}.
+\]
+Consequently,
+\[
+ \Delta_1^2\bigl(3!C_{6,3}\bigr)(1)=-\frac{1464768}{8645},\qquad
+ v_3\!\left(-\frac{1464768}{8645}\right)=2.
+\]
+This attains $\min(2,2\cdot1)=2$. At the regular address $j=4$ beyond the singular boundary, the source likewise proves
+\[
+ \Delta_1^2\bigl(4!C_{6,4}\bigr)(1)=-\frac{102745512}{2377375},
+\]
+and applies the universal exponent-two bound to this actual coefficient function.
+
+The earlier no-loss counterexample is retained: $v_3(C_{6,3}(2)-C_{6,3}(1))=0$. Proving the corrected theorem does not make that false normalized claim true.
+
+\textbf{Modules.} \mcode{AllRatiosDwork}, \mcode{AllResidueEuler}, \mcode{Theorem75}, \mcode{AllResidueExamples}.
+\par\medskip
+\subsubsection*{5. Verification record and claim boundary}
+Each local module is rebuilt in a fresh output directory, with warnings treated as errors. A live \mcode{\#print axioms} audit checks every registered declaration, permitting only \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}, or subsets.
+
+\begin{center}\begin{tabular}{lr}\toprule
+Required release check & Inventory\\\midrule
+Local proof modules &70\\
+Named theorem declarations &753\\
+Explicit definitions &148\\
+Expected axiom reports &901\\
+Pinned dependency revisions &9\\
+Deliberate invalid-proof controls &33\\
+Infrastructure and release tests &235\\\bottomrule
+\end{tabular}\end{center}
+The accompanying JSON verification record, not the existence of this table, determines whether the actual run passed. The final package also includes a fresh-extraction replay record, checksums, the declaration inventory and the updated manuscript coverage ledger.
+
+The negative controls preserve the earlier rejected false equalities, placeholders, invalid normalizations and unit pivots. Four new controls demand an extra power in the sharp singular example, remove the factorial loss, misuse a composite base, or center a ratio at the wrong constant. An infrastructure timeout or missing import is not an accepted negative result.
+
+\subsection*{Independent finite checks}
+The standard-library Python mirror checks 328 complete residue families for primes $2,3,5,7,11$, including 233 higher-residue families. It checks 4,264 integral unnormalized coefficients, 22,137 normalized and 22,137 unnormalized difference bounds, and 1,640 comparisons with a separately computed ordinary reciprocal. Further checks cover 108 weighted differential iterations, 205 integer Frobenius-square cases and 180 exact Picard agreement prefixes.
+
+These are finite exact-arithmetic checks, not extracted Lean code and not substitutes for the universal formal proofs. The old normalization counterexample and the new sharp exponent-two example remain visible.
+
+\subsection*{Preservation and limitations}
+All 57 earlier proof modules and the original 28-page status-corrected manuscript are retained unchanged. The new supplement and amendments give the current proof route. Historical failed drafts and interrupted recovery attempts are retained separately from accepted builds. Historical tests that assert an older unfinished status now read that frozen historical status. Current tests require the actual unconditional capstone theorem before accepting completion.
+
+The portable Lean and Mathlib versions are pinned. Mathlib's compiled dependency cache is reused, not independently rebuilt. The historical numerical experiment suite and Papers I--VIII are not rerun. The two native conjectures remain unproved. No independent historical-priority assessment is made. Manuscript-to-Lean correspondence remains mathematical review, not a theorem equating natural-language prose with formal types.

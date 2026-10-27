@@ -1,0 +1,194 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[a4paper,margin=23mm,includeheadfoot,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,aliascnt}
+\usepackage{booktabs,longtable,array,tabularx,enumitem,fancyhdr,graphicx}
+\usepackage[table]{xcolor}\usepackage{setspace,needspace,listings,caption,titlesec,etoolbox}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}\usepackage[nameinlink,noabbrev]{cleveref}\usepackage{bookmark}
+\definecolor{accent}{HTML}{137668}\definecolor{muted}{HTML}{536568}
+\frenchspacing\emergencystretch=3em\clubpenalty=10000\widowpenalty=10000\raggedbottom
+\titleformat{\section}{\sffamily\bfseries\large\color{accent}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize}{\thesubsection}{.7em}{}
+\titlespacing*{\section}{0pt}{1.4\baselineskip}{.55\baselineskip}
+\captionsetup{font=small,labelfont={sf,bf},labelsep=period}
+\pretocmd{\section}{\Needspace{7\baselineskip}}{}{}\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+\allowdisplaybreaks\setstretch{1.055}\setlength{\parskip}{.3em}\setlength{\parindent}{1.35em}
+\setlist[itemize]{topsep=.35em,itemsep=.15em,leftmargin=1.6em}\setlist[enumerate]{topsep=.35em,itemsep=.15em,leftmargin=1.8em}
+\graphicspath{{figures/}}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus II: Refinement, Weighted Transfer and Integral Separation},pdfauthor={Komorebi P.},colorlinks=true,linkcolor=accent,citecolor=accent,urlcolor=accent}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}KOMOREBI MATHEMATICS / PAPER II}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{muted}TRADITIONAL PAPER}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}Projector-resolved seed calculus}\fancyfoot[R]{\sffamily\small\color{accent}\thepage}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,frame=single,showstringspaces=false,columns=fullflexible,keepspaces=true}
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\bbk}{\Bbbk}
+\newcommand{\OO}{{\mathcal O}}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Bcal}{\mathcal B}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Qcal}{\mathcal Q}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Frac}{\operatorname{Frac}}
+\newcommand{\length}{\operatorname{length}}
+\newcommand{\val}{\operatorname{val}}
+\newcommand{\wt}{\operatorname{wt}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\lcmop}{\operatorname{lcm}}
+\newcommand{\expn}{\operatorname{exp}}
+
+\providecommand{\Seed}{\mathfrak S}
+\providecommand{\cX}{\mathcal X}
+\providecommand{\cA}{\mathcal A}
+\providecommand{\cB}{\mathcal B}
+\providecommand{\cC}{\mathcal C}
+\providecommand{\cD}{\mathcal D}
+\providecommand{\cF}{\mathcal F}
+\providecommand{\cG}{\mathcal G}
+\providecommand{\cO}{\mathcal O}
+\providecommand{\cP}{\mathcal P}
+\providecommand{\cR}{\mathcal R}
+\providecommand{\cS}{\mathcal S}
+\providecommand{\cT}{\mathcal T}
+\providecommand{\End}{\operatorname{End}}
+\providecommand{\Hom}{\operatorname{Hom}}
+\providecommand{\im}{\operatorname{im}}
+\providecommand{\Ker}{\operatorname{Ker}}
+\providecommand{\Spec}{\operatorname{Spec}}
+\providecommand{\Res}{\operatorname{Res}}
+\providecommand{\Hol}{\operatorname{Hol}}
+\providecommand{\Tr}{\operatorname{Tr}}
+\providecommand{\diag}{\operatorname{diag}}
+\providecommand{\id}{\mathrm{id}}
+\providecommand{\bbk}{\mathbb{k}}
+\providecommand{\N}{\mathbb N}
+\providecommand{\Z}{\mathbb Z}
+\providecommand{\C}{\mathbb C}
+\providecommand{\Q}{\mathbb Q}
+\providecommand{\F}{\mathbb F}
+\providecommand{\OO}{{\mathcal O}}
+\providecommand{\Frac}{\operatorname{Frac}}
+\providecommand{\val}{\operatorname{val}}
+\providecommand{\wt}{\operatorname{wt}}
+\providecommand{\lcm}{\operatorname{lcm}}
+\providecommand{\packet}[2]{#1_{#2}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+
+\theoremstyle{definition}\newtheorem{construction}[theorem]{Construction}\newtheorem{certificate}[theorem]{Numerical Certificate}
+\theoremstyle{remark}\newtheorem{boundary}[theorem]{Boundary}
+
+\usepackage{tikz,multicol}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiKind}{Mathematical text}
+\input{generated/current_edition.tex}
+\KomorebiSetup
+\input{atlas_macros.tex}
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
+\endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{\textbf{Reading route.} Exact packet coordinates and residue selectors lead to weighted inversion and rational walk series. Lattice gluing then gives separation weights and precision delays. Smith congruences and operator defects connect these formulas to finite computation.
+
+\medskip
+\textbf{Companions.} The worked plates illustrate the constructions of this chapter. The formal companion in the back matter distinguishes the chapter-wide correspondence from the foundational 25-row walkthrough, with explicit evidence and scope.}
+\begin{abstract}
+
+A complete family of idempotents gives exact coordinates, but a single family does not record scale or integral visibility.  We study towers in which every coarse idempotent is the sum of its fine descendants.  The coordinate changes are invertible and coherent, and every operator block is the sum of its refined blocks.  Residue selectors give a model over arbitrary rings.  When roots of unity are available they agree with character averages, and coprime moduli factor through the Chinese remainder theorem.  In a complete filtered algebra, a diagonal operator plus positive weight transfers has an inverse obtained by summing admissible weighted paths.  The formula truncates exactly at finite precision, while finite transfer graphs have rational path series.  For a rational spectral decomposition over a discrete valuation ring, resultants give denominator bounds.  The exact denominator is the largest Smith exponent of the lattice gluing module.  This yields a necessary and sufficient precision delay, monotonicity under refinement, and a full congruence solving formula.  We close with exact formulas for the propagation of a coarsening defect through powers, resolvents, holomorphic functions, exponentials, and multilevel towers.
+\end{abstract}
+\noindent The exposition distinguishes general written proofs, formal specifications, and finite computational examples. The worked plates supply concrete models; the formal companion identifies the exact declarations and hypotheses that support each mapped statement.
+\tableofcontents\listoffigures\listoftables\clearpage
+\pagenumbering{arabic}
+\input{chapters/01_orientation.tex}
+\input{chapters/02_coordinates.tex}
+\input{chapters/03_weighted.tex}
+\input{chapters/04_arithmetic.tex}
+\input{chapters/05_defects.tex}
+\input{chapters/06_models.tex}
+\input{chapters/07_scope.tex}
+\clearpage
+\section{Visual atlas}\label{app:visual-atlas}
+Twenty-four worked plates follow the main constructions through explicit vectors, matrices, weighted walks, and congruence fibers. Their labels Plate II.1 to Plate II.24 stay fixed across the integrated atlas and the standalone guide. Each plate names the corresponding statement and its printed page in this monograph.
+
+\begin{readerroadmap}[title={Three routes through the atlas}]
+\textbf{Exact coordinates.} Read Plate II.1 to Plate II.8, then the finite filter in Plate II.20.
+
+\textbf{Weights and arithmetic.} Read Plate II.9 to Plate II.19. The first group follows weighted operator words and graph walks. The second follows denominator clearing and Smith congruences.
+
+\textbf{Realizations and defects.} Read Plate II.20 to Plate II.24. These plates separate the Smith impedance chart from Smith normal form, trace error propagation, and connect the examples to the formal contract.
+\end{readerroadmap}
+The matrices and finite ranges shown here are explicit models. The general proofs remain in the preceding sections. A picture or finite computation does not extend the hypotheses of a theorem or the coverage of a Lean declaration.
+\clearpage
+\begingroup
+\setstretch{1.01}\fontsize{10}{12}\selectfont\setlength{\parskip}{3pt}\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\input{visual_atlas.tex}
+\endgroup
+\clearpage
+\bibliographystyle{plain}\bibliography{references}
+\end{document}

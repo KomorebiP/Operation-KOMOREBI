@@ -1,0 +1,8 @@
+theorem exp_pow_integrable (a : ℂ) (ha : a.re < 0) (k : ℕ) :
+    IntegrableOn (fun t : ℝ => Complex.exp (a*t)*(t:ℂ)^k) (Ioi 0) := by
+  have hi := integrableOn_rpow_mul_exp_neg_mul_rpow
+    (s := (k:ℝ)) (p := (1:ℝ)) (b := -a.re) (by linarith [Nat.cast_nonneg (α := ℝ) k]) zero_lt_one (by linarith)
+  simp only [Real.rpow_natCast,Real.rpow_one,neg_neg] at hi
+  apply hi.mono' (by fun_prop)
+  filter_upwards [ae_restrict_mem measurableSet_Ioi] with t ht
+  rw [norm_exp_pow a k t ht.le]

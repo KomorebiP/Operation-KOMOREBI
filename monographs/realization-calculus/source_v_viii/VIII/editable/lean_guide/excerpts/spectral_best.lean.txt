@@ -1,0 +1,6 @@
+theorem diagonal_spectral_best (σ : Fin d → ℝ) (hσ : ∀ i, 0≤σ i)
+    (hsort : Antitone σ) (k : ℕ) :
+    BestRank spectralNorm (diag σ) (diag (kept σ k)) k := by
+  refine ⟨rank_kept_le σ k,fun B hB => ?_⟩
+  rw [diagonal_residual,spectral_diagonal_tail σ hσ hsort]
+  exact diagonal_spectral_lower σ hσ hsort k B hB

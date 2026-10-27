@@ -1,0 +1,7 @@
+theorem candidate_eq_reference (d : D) (reference : Atom)
+    (hr : S.admissible reference) (expected : Test → Value)
+    (hreal : ∀ a, R.realizes d a → S.profile a = expected)
+    (href : S.profile reference = expected) :
+    candidate S R d = Quotient.mk s reference := by
+  apply (class_eq_iff S (R.admissible d _ (chosenAtom_realizes S R d)) hr).mpr
+  exact (hreal _ (chosenAtom_realizes S R d)).trans href.symm

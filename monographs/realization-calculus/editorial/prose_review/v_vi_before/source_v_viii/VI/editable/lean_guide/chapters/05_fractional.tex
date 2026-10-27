@@ -1,0 +1,42 @@
+\clearpage\section{Fractional calculus and refinement towers}
+\label{sec:fractional}
+\subsection{Two constructions with different starting data}
+\code{SpectralPackets} starts with a supplied finite spectral resolution. Its finite sums give multiplication, packet reduction, and the actual exponential. It does not silently prove a spectral decomposition for every operator. The additive-exponent law explicitly allows zero eigenvalues while requiring positive exponents:
+\excerpt{SpectralPackets}{fractional}
+The bounded Hilbert-space refinement result uses continuous functional calculus and a normalized Bochner resolvent integral. This is a different route and has a broader operator domain than a finite spectral list. The ledger records the exact setting for each result.
+
+\subsection{Poisson subordination includes the integral}
+The square-root transfer is recovered from the heat transfer using the normalized Poisson kernel. \code{ReciprocalGaussian} proves the scalar integral, \code{PoissonKernel} supplies integrability, and \code{PoissonSubordination} transports the scalar identities across a finite spectral sum. Its endpoint asserts both integrability and equality with the actual exponential:
+\excerpt{PoissonSubordination}{subordination}
+The integral formula is stated for $t>0$. The semigroup value at $t=0$ is obtained separately from the exponential definition. Nonnegative spectral values include zero. General stable-subordinator statements for arbitrary fractional exponents in Part II are not new endpoints of this square-root formal theorem.
+
+\subsection{The normalization constant is proved}
+For $0<\alpha<1$, the resolvent representation uses $\sin(\pi\alpha)/\pi$. \code{BetaNormalization} derives the scalar integrals and constants. In particular, the common-gap integral evaluates exactly to $\alpha m^{\alpha-1}$ when $m>0$:
+\excerpt{BetaNormalization}{normalizer}
+This identity supplies the sharp constant in the displayed common-gap certificate. It is not left as an unnamed positive normalization factor.
+
+\subsection{The rectangular resolvent defect}
+The spaces $E$ and $F$ in \code{RectangularFractional} are complete complex Hilbert spaces. $A$ and $B$ are bounded nonnegative self-adjoint operators in the operator order, and $C:E\to F$ is bounded. Put
+\[
+D=CA-BC,\qquad D_\alpha=CA^\alpha-B^\alpha C.
+\]
+The theorem records the actual inverse-valued integrand and its Bochner integrability:
+\excerpt{RectangularFractional}{fractional_integral}
+The sign matches the convention $D=CA-BC$. In this formula the resolvents are $(tI+B)^{-1}$ and $(tI+A)^{-1}$, and the order of the sandwich is fixed by the rectangular domain and codomain.
+
+\subsection{A gap-free estimate and a common-gap estimate}
+The gap-free estimate combines low- and high-parameter bounds on the same integrand. A split at the appropriate scale gives a H\"older estimate with the explicit constant defined in \code{FractionalNormBounds.holderConstant}. The source handles $C=0$ and $D=0$ before dividing by their norms.
+\excerpt{RectangularFractional}{fractional_holder}
+With a common lower spectral bound $mI\le A,B$ and $m>0$, the endpoint is linear in the original defect:
+\excerpt{RectangularFractional}{fractional_gap}
+Real finite-matrix applications use the ordinary complexification specialization disclosed in the inherited review. The project does not count that manual specialization as a separately formalized construction.
+
+\subsection{The sign in fractional evolution}
+Fractional evolution is $e^{-tA^\alpha}$. Its Duhamel formula has a minus sign relative to the $e^{tA}$ convention. Combining decay with the common-gap estimate yields the final generator-level bound:
+\excerpt{RectangularSemigroup}{semigroup_gap}
+The bound vanishes when the generator defect vanishes. It assumes nonnegative time and the same positive common gap as the fractional power estimate. It does not establish norm convergence for arbitrary unbounded generators.
+
+\subsection{What is summed across varying spaces}
+In \code{RectangularTowers}, $H_n$ may vary with $n$, and $C_n:H_{n+1}\to H_n$. The individual defects therefore lie in different operator spaces. The formal series is a series of \emph{real norms}. The endpoint says its partial sums converge uniformly on bounded nonnegative time intervals:
+\excerpt{RectangularTowers}{tower_norm}
+Two sufficient generator criteria precede this theorem: summability of the $\alpha$-powers of generator-defect norms with uniformly bounded $C_n$, or ordinary summability with a common positive spectral gap. An inherited fixed-space formulation also proves operator-series convergence. It must not be relabeled as an operator sum across unrelated Hom spaces. A coherent limiting evolution additionally needs the ambient completion and closure hypotheses discussed in the retained written extensions.

@@ -1,0 +1,14 @@
+theorem exists_weighted_root (p s r : ℕ) [Fact p.Prime]
+    (hr : 2 * s < r) (F : Fin d → MvPolynomial (Fin d) ℤ_[p])
+    (a : Fin d → ℤ_[p]) (hJ : IsUnit (rationalMatrix p (jacobian F a)))
+    (hbound : ∃ A : Matrix (Fin d) (Fin d) ℤ_[p],
+      rationalMatrix p A = (p : ℚ_[p]) ^ s • (rationalMatrix p (jacobian F a))⁻¹)
+    (hF : ∀ i, (p : ℤ_[p]) ^ r ∣ eval a (F i)) :
+    ∃ b : Fin d → ℤ_[p],
+      (∀ i, eval b (F i) = 0) ∧
+      (∀ i, (p : ℤ_[p]) ^ (r - s) ∣ b i - a i) ∧
+      (∀ i, (p : ℤ_[p]) ^ (s + 1) ∣ b i - a i) ∧
+      (∀ z : Fin d → ℤ_[p], (∀ i, eval z (F i) = 0) →
+        (∀ i, (p : ℤ_[p]) ^ (s + 1) ∣ z i - a i) → z = b) := by
+  obtain ⟨A, hAJ, hJA⟩ := (bounded_inverse_iff_certificate p s (jacobian F a)).mp ⟨hJ, hbound⟩
+  exact exists_weighted_root_certificate p s r hr F a A hAJ hJA hF

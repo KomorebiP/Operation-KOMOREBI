@@ -1,0 +1,552 @@
+% A visual appendix of worked examples to the preserved Chapter I v1.2.1 manuscript.
+% Every page starts explicitly, making overflow detectable by the build audit.
+
+\vpage{1}{What can one seed actually do?}{CHAPTER I / A VISUAL APPENDIX OF WORKED EXAMPLES}{Main text: \cref{def:seed-rank,prop:acting-algebra-monotonicity,thm:exact-packet-coordinates}}
+A seed does not carry a fixed amount of generative power by itself. The answer depends on the operators that are allowed to act on it. Chapter I makes that dependence part of the mathematical object rather than leaving it implicit.
+
+Use the same space of dimension six throughout the first comparison:
+\[
+X=\QQ^6,\qquad N=J_3(0)\oplus J_3(0),\qquad
+s=e_0+f_0.
+\]
+Here each $J_3(0)$ moves a basis vector forward along a chain of three basis vectors. The projectors $P_e,P_f$ select the two chains. Their formulas and the proofs of the minimum seed counts appear on \pagerefV{3} and \pagerefV{4}.
+
+\vfig[.92]{grammar_budget}
+\atlasCaption{A count of minimum generators, not a timing comparison. The ambient space is unchanged. Enlarging the acting algebra changes what one seed can separate.}
+
+\head{Three questions to keep apart}
+\begin{tabularx}{\linewidth}{@{}p{.18\linewidth}Y@{}}
+\textbf{Generation} & Can the fixed grammar reach every vector by finite linear combinations of operator words?\\[4pt]
+\textbf{Coordinates} & Can every vector be split into packets and then reconstructed exactly?\\[4pt]
+\textbf{Completion} & When finite words do not suffice, does their span become dense in the specified topology?
+\end{tabularx}
+
+A packet projector can be available as a way to \emph{inspect} a vector without belonging to the \emph{generation} grammar. Admitting it as a new primitive can lower seed rank. That distinction explains the second and third rows of the figure.
+
+\takeaway{The useful question is not ``How powerful is this seed?'' It is ``What does this seed generate under this particular, previously fixed algebra of operators?''}
+
+\vpage{2}{An atlas of the objects}{ORIENTATION / SYMBOLS WITH JOBS}{Main text: \cref{def:typed-grammar,def:seed-system,def:seed-rank,def:packet-system,def:transfer-block}}
+Most of the chapter can be read by tracking a small collection of objects. The table distinguishes their mathematical roles and names a concrete instance used in this appendix.
+
+{\small
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{.15\linewidth}Y>{\raggedright\arraybackslash}p{.28\linewidth}@{}}\toprule
+\textbf{Object} & \textbf{What it means} & \textbf{Instance here}\\\midrule
+$X$ & The ambient vector space or module. It specifies the objects that might be generated. & $\QQ^6$ with two chains of length three.\\
+$S\subseteq X$ & The selected seed family. A family can contain vectors with components in several packets. & $\{e_0+f_0\}$ or $\{e_0,f_0\}$.\\
+$\AA$ & The fixed unital algebra of admissible operators. It is not chosen anew for each target. & $\QQ[N]$ versus $\QQ\langle N,P_e,P_f\rangle$.\\
+$\Hull_{\AA}(S)$ & The smallest invariant linear subspace containing the seeds. & $\Span\{e_j+f_j:0\le j\le2\}$.\\
+$P_\alpha$ & A finite family of pairwise annihilating idempotents whose sum is $I$. & Chain projections, oblique projections, or residue masks.\\
+$X_\alpha$ & The packet subspace $P_\alpha X$. It can have dimension greater than one. & One chain of dimension three.\\
+$T_{\beta\alpha}$ & The block $P_\beta T P_\alpha$: input $\alpha$, output $\beta$. & A numerical entry when each coordinate packet has dimension one.\\
+$F/I_s$ & A module of operator words modulo relations that kill the seed. & A quotient of left modules. It need not be a quotient algebra.\\
+$U$ & An invertible change of realization coordinates. & A shear that makes orthogonal packets oblique.\\
+$\Phi$ & An intertwiner that need not be invertible. & Projection from two chains to the first chain.\\
+$\tau$ & The topology used when taking the closure of an algebraic hull. & The $\ell^2$ norm for a bilateral shift.\\\bottomrule
+\end{tabularx}}
+
+\head{Read products from right to left}
+In $P_\beta T P_\alpha x$, first select the input packet, then apply $T$, then select the output packet. In a matrix, this is why the output label belongs to the row and the input label to the column.
+
+\head{Where to begin}
+For seed rank, start with \pagerefV{3}. For exact reconstruction, start with \pagerefV{7}. For graphs, use \pagerefV{15} and \pagerefV{16}. For completion in infinite dimensions, use \pagerefV{18} and \pagerefV{19}. The scope of the formal proofs is collected on \pagerefV{22}.
+
+\vpage{3}{Two chains can stay linked}{MODEL A / AN OPERATOR IN SIX DIMENSIONS}{Main text: \cref{thm:single-operator}. Matrices over $\QQ$}
+Use the ordered basis $(e_0,e_1,e_2,f_0,f_1,f_2)$. Define
+\[
+Ne_0=e_1,\quad Ne_1=e_2,\quad Ne_2=0,
+\qquad Nf_0=f_1,\quad Nf_1=f_2,\quad Nf_2=0.
+\]
+Starting with $s=e_0+f_0$, the two chains advance together:
+\[
+s=e_0+f_0,\qquad Ns=e_1+f_1,\qquad N^2s=e_2+f_2,\qquad N^3s=0.
+\]
+
+\vfig[.94]{linked_chains}
+\atlasCaption{The vertical dotted pairings record equal coefficients, not an additional allowed operator. Every polynomial in $N$ uses the same coefficients on both chains.}
+
+Since $N^3=0$, every polynomial orbit vector has the form
+\[
+p(N)s=a(e_0+f_0)+b(e_1+f_1)+c(e_2+f_2).
+\]
+The generated hull therefore has dimension three, even though the seed has a nonzero component in each packet of dimension three. The Krylov ranks are $1,2,3,3,3,3$.
+
+\head{What changes when a projector becomes admissible?}
+Let $P_e$ keep the coordinates along the $e$ chain and $P_f$ those along the $f$ chain. If these are merely measurement maps, the preceding hull is unchanged. If they become allowed generators, then
+\[
+P_es=e_0,\qquad P_fs=f_0,
+\]
+and powers of $N$ now recover all six basis vectors. The same seed becomes cyclic for the larger algebra $\QQ\langle N,P_e,P_f\rangle$.
+
+\takeaway{Nonzero components in every packet are not enough. One must also be able to separate the independent directions inside and across those packets using the allowed operations.}
+
+\vpage{4}{A quotient proves two seeds are necessary}{MODEL A / A CERTIFICATE FOR THE LOWER BOUND}{Main text: \cref{prop:scalar-quotient,thm:single-operator}}
+The failure of the particular seed on \pagerefV{3} does not prove that \emph{every} single seed fails. A certificate for the lower bound does.
+
+Define a surjective linear map
+\[
+q:X\longrightarrow\QQ^2,\qquad
+q\Bigl(\sum a_je_j+\sum b_jf_j\Bigr)=(a_0,b_0).
+\]
+
+\vfig[.78]{quotient_heads}
+\atlasCaption{An actual $2\times6$ quotient matrix. It forgets the advanced positions in both chains and retains two independent head coordinates.}
+
+Because $qN=0$, one has, for every polynomial $p$,
+\[
+q\bigl(p(N)x\bigr)=p(0)q(x).
+\]
+Thus every operator acts as a \emph{scalar} on the quotient. The image of the orbit of one seed stays on one line in $\QQ^2$. It cannot span this quotient of dimension two.
+
+\head{Lower and upper bounds meet}
+If $r$ seeds generated $X$, their images would generate the quotient. Since scalar multiplication cannot create a new independent direction, $r\ge2$. Conversely, the two seeds $e_0,f_0$ generate their respective chains, so
+\[
+\boxed{\srank_{\QQ[N]}(X)=2.}
+\]
+This proof uses the displayed operator and quotient. It does not ask a computer to search every possible seed, and it does not need an existence theorem for Jordan form.
+
+\head{A general pattern worth recognizing}
+A surjective intertwiner $q:X\twoheadrightarrow Y$ turns any generating family of $X$ into a generating family of $Y$. Therefore a quotient on which the grammar loses mixing power can certify a lower bound in the original, much larger space.
+
+\takeaway{To rule out one seed, find a quotient in which its entire orbit is forced onto one line while the quotient still has at least two independent directions.}
+
+\vpage{5}{Relations identify words, not just outputs}{PRESENTATIONS / WHY A LEFT IDEAL APPEARS}{Main text: \cref{thm:free-presentation,cor:one-seed-presentation,prop:two-sided-annihilator}}
+Let $F=\kk\langle z_1,\ldots,z_r\rangle$ be the algebra of noncommuting operator words. Evaluation at a fixed seed is
+\[
+\Phi_s:F\to X,\qquad f\mapsto f(T_1,\ldots,T_r)s.
+\]
+Two words represent the same generated vector exactly when their difference lies in $I_s=\Ker\Phi_s$. Consequently
+\[
+F/I_s\cong\Hull_F(s)
+\]
+as \emph{left modules}. The relation $f(T)s=0$ implies $g(T)f(T)s=0$ for every word $g$, which explains closure under multiplication on the left.
+
+\head{The distinction is visible in two dimensions}
+Use $X=\QQ^2$, seed $e_1=(1,0)^\mathsf T$, and the full matrix algebra. Its seed annihilator is the set of matrices with zero first column:
+\[
+I_{e_1}=\left\{\mat{0&a\\0&b}:a,b\in\QQ\right\}.
+\]
+
+\vfig[.90]{left_ideal}
+\atlasCaption{The relation $Ce_1=0$ is destroyed by multiplying $C$ on the right by $B$. The product $CB$ sends the seed to itself.}
+
+For arbitrary $D$, $(DC)e_1=D(Ce_1)=0$. But $(CB)e_1=e_1\ne0$. Thus $I_{e_1}$ is a left ideal, but it is not stable under multiplication on the right. The quotient retains the action on generated vectors. Calling it a ring would lose the distinction that makes the presentation correct.
+
+\head{Several seeds give a module of relations}
+For $(s_1,\ldots,s_m)$, evaluation is $(f_1,\ldots,f_m)\mapsto\sum_j f_j(T)s_j$. Its kernel is a submodule of $F^m$ and can include relations \emph{between} seeds, not only relations annihilating each seed separately.
+
+\takeaway{A presentation says which operator expressions are identified in a particular realization. A seed annihilator is not automatically an algebra relation ideal.}
+
+\vpage{6}{A reached type can still hide a direction}{TYPED MODEL / $U=\QQ^2$ AND $V=\QQ^3$}{Main text: \cref{prop:typed-reachability,def:directed-seed-rank}}
+The chapter's typed model has a rotation $R:U\to U$, an inclusion $A:U\to V$, and a retraction $B:V\to U$:
+\[
+R=\mat{0&-1\\1&0},\qquad
+A=\mat{1&0\\0&1\\0&0},\qquad
+B=\mat{1&0&0\\0&1&0}.
+\]
+The typed relation is $BA=I_U$. In the opposite order,
+\[
+AB=\diag(1,1,0)\ne I_V.
+\]
+The missing direction is $\Ker B=\QQ v_3$, not an entirely missing vertex.
+
+\vfig[.96]{typed_spaces}
+\atlasCaption{Dark slots indicate independent directions in the generated hull. The same two vertex types are present in every row, but their generated subspaces differ.}
+
+\head{One seed supported at $U$}
+The vectors $u_1,Ru_1$ span $U$. Their images under $A$ span $\QQ v_1+\QQ v_2$. Every path from $U$ to $V$ ends with $A$, so it cannot supply $v_3$. The hull has dimension four. Adding the pure seed $v_3$ gives all five dimensions.
+
+\head{Why this does not prove an unrestricted minimum of two}
+The bound path algebra includes the vertex idempotents $P_U,P_V$. A mixed seed
+\[
+s=u_1+v_3\in U\oplus V
+\]
+satisfies $P_Us=u_1$ and $P_Vs=v_3$. It therefore generates the entire representation by itself. The chapter proves that no seed \emph{supported at $U$} is enough and that two displayed pure seeds suffice. It does not claim that two arbitrary mixed seeds are necessary.
+
+\takeaway{Keep three notions separate: reaching a vertex, filling its entire vector space, and minimizing seeds when each seed must lie in a single packet. They answer different questions.}
+
+\vpage{7}{Exact does not mean orthogonal}{PACKET COORDINATES / AN OBLIQUE SPLITTING}{Main text: \cref{thm:exact-packet-coordinates,cor:adjoint-reversal}}
+In $\RR^2$, take
+\[
+P=\mat{1&-1\\0&0},\qquad Q=\mat{0&1\\0&1}.
+\]
+These maps satisfy $P^2=P$, $Q^2=Q$, $PQ=QP=0$ and $P+Q=I$. Their images are the horizontal line and the diagonal line, respectively. They are not self-adjoint in the usual Euclidean inner product.
+
+\vfig[.68]{oblique_vectors}
+\atlasCaption{Actual Euclidean vector geometry for $x=(3,2)$. The parallelogram reconstructs $x$ from $Px=(1,0)$ and $Qx=(2,2)$. Neither component is an orthogonal projection of $x$.}
+
+Analysis records $(Px,Qx)$ and synthesis adds the two vectors. For a packet tuple $(u,v)\in\im P\times\im Q$,
+\[
+P(u+v)=u,\qquad Q(u+v)=v.
+\]
+Both inverse identities follow from annihilation and completeness, without any angle condition.
+
+\head{What the algebra does not preserve}
+For the displayed $x$,
+\[
+\norm{x}^2=13,\qquad \norm{Px}^2+\norm{Qx}^2=1+8=9.
+\]
+There is no Parseval identity here. The cross term is nonzero because the packet directions are not perpendicular. Likewise, the simple formula for reversing adjoints of packet blocks requires self-adjoint projectors. It is not justified for this oblique pair.
+
+\takeaway{Exact reconstruction is an algebraic inverse statement. Energy preservation and adjoint identities require additional geometric hypotheses.}
+
+\vpage{8}{A transfer block has an input and an output}{OPERATOR COORDINATES / MULTIPLICATION AS A SUM}{Main text: \cref{thm:operator-reconstruction,thm:block-multiplication,cor:block-powers}}
+Use the three coordinate packets of dimension one in $\QQ^3$. The block $T_{ij}=P_iTP_j$ sends input packet $j$ into output packet $i$. For this example, its nonzero scalar is the $(i,j)$ matrix entry.
+
+\vfig[.94]{block_square}
+\atlasCaption{All displayed entries are exact integers. The square is computed from the operator, not from a thresholded graph or a matrix of block norms.}
+
+\head{Reconstruction retains every block}
+The identity $P_1+P_2+P_3=I$ gives
+\[
+T=\sum_{i,j=1}^3 P_iTP_j.
+\]
+Selecting only the diagonal would change the operator. The entries $2,3,4$ carry transfers between different packets.
+
+\head{Composition sums over intermediate packets}
+The $(1,2)$ entry of the square has two contributing routes:
+\[
+(T^2)_{12}=T_{11}T_{12}+T_{12}T_{22}+T_{13}T_{32}
+=1\cdot2+2\cdot1+0=4.
+\]
+For input $3$ and output $1$, only the route through packet $2$ survives:
+\[
+(T^2)_{13}=T_{12}T_{23}=2\cdot3=6.
+\]
+For packets of higher dimension, the same law uses actual linear maps as entries. The order of their composition still matters.
+
+\takeaway{An edge says a block is nonzero. The block itself carries the coefficient, sign, rank and action. A transfer graph alone does not retain those data.}
+
+\vpage{9}{Two visible routes can cancel exactly}{REACHABILITY / NECESSARY IS NOT SUFFICIENT}{Main text: \cref{cor:block-powers,prop:reachability-obstruction}}
+Let a single operator $D$ on $\QQ^4$ act by
+\[
+De_1=e_2+e_3,\qquad De_2=e_4,\qquad De_3=-e_4,\qquad De_4=0.
+\]
+Every vertex of its transfer graph for the coordinate packets is reachable from vertex $1$. Nevertheless,
+\[
+D^2e_1=e_4-e_4=0,\qquad D^2=0.
+\]
+
+\vfig[.84]{cancelled_paths}
+\atlasCaption{The diamond is the actual weighted action of $D$. The two paths of length two exist, but their contributions to the same transfer block sum to zero.}
+
+\head{What the seed generates}
+With the fixed algebra $\QQ[D]$ and seed $e_1$,
+\[
+\Hull_{\QQ[D]}(e_1)=\Span\{e_1,e_2+e_3\}.
+\]
+It has dimension two, not four. Both the independent difference $e_2-e_3$ and the last coordinate $e_4$ are missing.
+
+\head{Why projecting in the middle changes the experiment}
+If $P_2$ becomes an admissible primitive, the word $DP_2D$ satisfies
+\[
+DP_2De_1=DP_2(e_2+e_3)=De_2=e_4.
+\]
+But $P_2$ was not an allowed generator of the original $\QQ[D]$ grammar. Using it to argue that the original seed already reached $e_4$ would silently enlarge the algebra.
+
+\takeaway{Unreachable nonzero packets obstruct generation. Reachability by itself does not prove generation: coefficients can cancel, blocks can have small images, and intermediate projectors may not be admissible.}
+
+\vpage{10}{Which zero patterns survive multiplication?}{SUPPORT ALGEBRAS / A UNIVERSAL TEST}{Main text: \cref{thm:support-pattern}. All packet spaces are nonzero}
+Suppose every matrix supported in a specified pattern is allowed. Then multiplication can create a new entry whenever two allowed edges compose. Let $E_{ij}$ denote the matrix that sends $e_j$ to $e_i$ and kills the other basis vectors.
+
+\vfig[.96]{support_closure}
+\atlasCaption{Here $1$ means ``allowed,'' not that every admissible operator has that numerical value. The middle matrix is an actual product that violates the original pattern.}
+
+The first pattern contains the diagonal and permits $1\to2$ and $2\to3$, but forbids $1\to3$. Yet
+\[
+E_{32}E_{21}=E_{31}\ne0.
+\]
+Both factors obey the pattern and their product does not. Thus the whole supported matrix space is not an algebra.
+
+\head{Reflexivity and transitivity have different jobs}
+The identity has a nonzero diagonal block on every nonzero packet, so including the identity requires every packet to be related to itself. Multiplicative closure requires every composite pair. Consequently, for arbitrary algebraic block maps on nonzero packet spaces,
+\[
+\boxed{\text{unital universal support algebra}
+\quad\Longleftrightarrow\quad
+\text{reflexive, transitive support relation}.}
+\]
+The transitive closure in the figure is the lower triangular pattern. It does define a unital algebra.
+
+\head{Why this does not contradict cancellation}
+On \pagerefV{9}, one particular operator has canceling paths. The support theorem asks whether multiplication works for \emph{every} assignment of allowed block maps. Choosing two suitable maps of rank one removes the possibility of hiding a failed composite behind special cancellation.
+
+\takeaway{A zero pattern is a structural rule only when it survives all permitted block assignments. A coincidence in one matrix is not a closure theorem.}
+
+\vpage{11}{Move the packets with the coordinates}{CONJUGACY / STRUCTURE VERSUS RAW SPARSITY}{Main text: \cref{thm:coordinate-transport,cor:isomorphism-invariance,thm:naturality}}
+Start with $T=\diag(1,2)$ and the two coordinate projections. Apply the invertible shear $U$. The transformed operator is $T^U=UTU^{-1}$, and the transformed projectors are $Q_i=UP_iU^{-1}$.
+
+\vfig[.76]{transported_packets}
+\atlasCaption{The transformed operator has a nonzero entry away from the diagonal in the standard basis. Relative to its transported, oblique packets, however, both blocks between distinct packets remain zero.}
+
+Indeed,
+\[
+Q_1T^UQ_2=Q_2T^UQ_1=0,
+\qquad
+Q_iT^UQ_j=U(P_iTP_j)U^{-1}.
+\]
+A change in raw matrix sparsity is therefore not necessarily a change in the packet transfer graph. Conjugacy preserves the exact block identities and their zero pattern. A nonunitary shear need not preserve their Euclidean norms.
+
+\head{When the map is not invertible}
+For an intertwiner $\Phi A=\varphi(A)\Phi$, the hull identity uses the \emph{image algebra}:
+\[
+\Phi\bigl(\Hull_{\AA}(S)\bigr)=\Hull_{\varphi(\AA)}(\Phi S).
+\]
+Replacing $\varphi(\AA)$ with a larger target algebra can enlarge the target hull. Seed rank need not be equal relative to that larger algebra. A surjective intertwiner gives the appropriate monotonicity inequality, not automatic equality.
+
+\takeaway{Transport the space, operators and packet maps together. The invariant is the collection of commuting algebraic relationships, rather than the appearance of the matrix.}
+
+\vpage{12}{Shared control and independent control differ}{DIRECT SUMS / ONE SEED CAN CARRY TWO COMPONENTS}{Main text: \cref{prop:shared-direct-sum,thm:independent-direct-sum}}
+Take $X=\kk\oplus\kk$ and $s=(1,1)$. With one shared scalar acting on both coordinates, every orbit vector is $(a,a)$. With independent scalars, the orbit contains every $(a,b)$.
+
+\vfig[.94]{shared_independent}
+\atlasCaption{The geometric picture uses $\kk=\RR$. On the right, shading shows a finite window of the whole plane. On the left, only the diagonal line is generated. The algebraic distinction holds over any field.}
+
+The corresponding minimum seed numbers are
+\[
+\srank_{\kk I}(\kk^2)=2,
+\qquad
+\srank_{\kk\times\kk}(\kk\oplus\kk)=1.
+\]
+In the independent case, the algebra contains $(1,0)$ and $(0,1)$, which recover the two coordinates of $s$ separately.
+
+\head{This is why the independent formula uses a maximum}
+For independent actions of $\AA$ on $X$ and $\BB$ on $Y$, a common list of seed positions can carry the seeds for both spaces. Pad the shorter list with zeros. Independent operators then select the two components, giving
+\[
+\srank_{\AA\times\BB}(X\oplus Y)
+=\max\{\srank_{\AA}(X),\srank_{\BB}(Y)\}.
+\]
+With a shared action, this selection need not be available. The general bound is the sum.
+
+\head{One operator can supply independent control}
+Over $\QQ$, $T=\diag(1,2)$ has polynomial projectors $2I-T$ and $T-I$. Thus $\QQ[T]$ already separates the two eigenspaces. If the eigenvalues coincide, these formulas no longer separate them. Distinct primary labels play the same role on \pagerefV{14}.
+
+\takeaway{Counting occupied components is not the same as counting seeds. One mixed seed may generate several components when the algebra can act on them independently.}
+
+\vpage{13}{How much row space can one seed supply?}{SPLIT SEMISIMPLE MODEL / A CONSTRUCTIVE FORMULA}{Main text: \cref{thm:semisimple-seed-rank,cor:algebraically-closed-formula}}
+Let $M_2(\QQ)$ act on $X=M_{2\times5}(\QQ)$ by left multiplication. Think of the five columns as five copies of the same natural module of dimension two. One seed is a $2\times5$ matrix $V$.
+
+Every row of $AV$ is a linear combination of the two rows of $V$. Hence one seed exposes at most two independent directions in the multiplicity space of dimension five. Two seeds expose at most four. At least three are necessary.
+
+\vfig[.98]{row_budget}
+\atlasCaption{The three fixed seeds cover multiplicity directions $1,2$, then $3,4$, then $5$. The exact dimensions of their cumulative matrix orbits are $4,8,10$.}
+
+\head{An explicit synthesis, not just dimension counting}
+For
+\[
+W=\mat{1&2&3&4&5\\6&7&8&9&10},
+\]
+choose $A_1$ from columns $1,2$ of $W$, $A_2$ from columns $3,4$, and $A_3$ with first column equal to column $5$ of $W$ and second column zero. Then
+\[
+A_1V_1+A_2V_2+A_3V_3=W.
+\]
+The same construction works for arbitrary entries of $W$, so the lower bound is attained:
+\[
+\boxed{\srank_{M_2(\QQ)}M_{2\times5}(\QQ)=\lceil5/2\rceil=3.}
+\]
+
+\head{Several split simple blocks}
+If the acting algebra and module are supplied in compatible product coordinates, the row budget is computed separately in each block and the formula for independent actions takes the maximum. For block data $(d,m)=(2,5)$ and $(3,4)$, the result is $\max(3,2)=3$, not $3+2$.
+
+\takeaway{The formula measures multiplicity directions per seed. The formal development constructs compatible semisimple decompositions. The split formula uses the displayed algebra and module equivalences.}
+
+\vpage{14}{Distinct labels let one polynomial separate chains}{PRIMARY DATA / AN ACTUAL EXTRACTION CERTIFICATE}{Main text: \cref{thm:single-operator,cor:invariant-factor-count}}
+Keep the model in six dimensions, but compare two different operators:
+\[
+N=J\oplus J,\qquad T=J\oplus(2I+J),\qquad J=J_3(0).
+\]
+For the same mixed seed $s=e_0+f_0$, the Krylov matrices are different:
+
+\vfig[.89]{primary_krylov}
+\atlasCaption{Exact rational calculations. Changing the primary label from $0$ to $2$ changes the operator, not merely its coordinates. The determinant on the right is $512\ne0$.}
+
+\head{The missing separating operation is now a polynomial}
+Define
+\[
+p_2(t)=\frac{3t^5-15t^4+20t^3}{16},\qquad p_0(t)=1-p_2(t).
+\]
+These polynomials satisfy
+\[
+p_2\equiv0\pmod{t^3},\qquad p_2\equiv1\pmod{(t-2)^3}.
+\]
+Consequently $p_0(T)=P_e$ and $p_2(T)=P_f$. Applying them to $s$ extracts both chain heads, after which polynomial powers generate all six directions. Unlike the model on \pagerefV{3}, the separating maps already belong to the polynomial grammar.
+
+\takeaway{Repeated labels can lock chains together. Distinct primary labels can admit polynomial extraction. Here the block data and extractor are explicit. No theorem asserting the existence of Jordan form is inferred from this example.}
+
+\vpage{15}{Walk counts make an endpoint cyclic}{GRAPH MODEL / THE PATH CERTIFICATE}{Main text: Worked graph model. Endpoint Krylov proof for every path size}
+Let $A$ be the adjacency matrix of the path with five vertices. The $(i,j)$ entry of
+\[
+K=[e_1,Ae_1,A^2e_1,A^3e_1,A^4e_1]
+\]
+counts walks of length $j-1$ from vertex $1$ to vertex $i$.
+
+\vfig[.65]{path_walks}
+\atlasCaption{The entries are walk counts. At each new power, a new furthest vertex appears with coefficient one. The dark graph vertex is the seed.}
+
+A walk cannot reach vertex $i$ in fewer than $i-1$ steps. Therefore entries below the diagonal vanish. There is exactly one walk of length $i-1$ from the first vertex to vertex $i$: the shortest path. The diagonal entries are all one, so $\det K=1$.
+
+\head{The same reason works at every size}
+For a path with any $n\ge1$, the endpoint Krylov matrix is upper triangular with unit diagonal. This is a combinatorial proof of cyclicity over \emph{every field}. It does not rely on numerical eigenvalues. The appendix checks the finite cases $1\le n\le12$ as implementation examples, separately from the chapter's proof for every path size.
+
+\takeaway{The endpoint distinguishes distances. Each extra operator power reveals one new coordinate before the finite space is exhausted.}
+
+\vpage{16}{Closing a path changes the seed obstruction}{GRAPH MODEL / A CYCLE WITH SIX VERTICES}{Main text: Worked graph model. Proof of the minimum seed count for complex cycles}
+For the adjacency matrix $A$ of $C_6$, the distinct eigenvalues are $2,1,-1,-2$, with multiplicities $1,2,2,1$. A single vertex seed spans only four directions. Two adjacent vertex seeds span all six.
+
+\vfig[.86]{cycle_multiplicity}
+\atlasCaption{The two dark vertices are the displayed generating pair. The bars show exact eigenspace dimensions, not estimated spectral peaks.}
+
+\head{A lower bound without a numerical eigensolver}
+The two rows of the following matrix are independent and obey $qA=q$:
+\[
+q=\mat{2&1&-1&-2&-1&1\\0&1&1&0&-1&-1}.
+\]
+Thus $q:\QQ^6\twoheadrightarrow\QQ^2$ is a scalar quotient for the eigenvalue $1$. Its extension over $\CC$ gives the same obstruction of dimension two. The orbit of any single seed projects to a line, so no single seed can generate the full module.
+
+\head{The matching construction}
+From adjacent vertex vectors $e_0,e_1$, the identity
+\[
+e_{j+1}=Ae_j-e_{j-1}
+\]
+recovers successive vertices around the cycle. The lower and upper bounds therefore give two seeds for this example. The chapter proves the corresponding minimum for every complex simple cycle of size at least three.
+
+\takeaway{Connectedness is not cyclicity for the adjacency grammar. If a directed cyclic shift were allowed instead, one vertex would generate the whole cycle. That would be a different operator algebra.}
+
+\vpage{17}{A relation becomes a packet product rule}{COORDINATE ALGEBRA / NORMAL FORM RATHER THAN A CURVE SKETCH}{Main text: Worked coordinate ring model. Normal form and exact multiplication}
+Work over $\QQ$ in
+\[
+A=\QQ[x,y]/(y^2-x^3+x).
+\]
+Because the relation is monic of degree two in $y$, each element has one unique form $a(x)+yb(x)$. The two packet coefficients are polynomials, not scalars.
+
+\vfig[.97]{normal_form}
+\atlasCaption{A finite window of the two infinite coefficient lanes. Higher powers of $y$ are rewritten using the relation rather than discarded. No geometric genus or smoothness claim is encoded by this picture.}
+
+\head{Multiplication by $y$ transfers between the lanes}
+In the ordered coefficient coordinates $(a,b)$,
+\[
+M_y=\mat{0&x^3-x\\1&0},\qquad M_y^2=(x^3-x)I.
+\]
+The entries denote multiplication maps on $\QQ[x]$. For $f=a_0+ya_1$ and $g=b_0+yb_1$,
+\[
+fg=\bigl(a_0b_0+(x^3-x)a_1b_1\bigr)
++y\bigl(a_0b_1+a_1b_0\bigr).
+\]
+In particular,
+\[
+(x^2+y)(x-y)=x+(x-x^2)y.
+\]
+
+\head{One module seed does not mean one algebra generator}
+Starting from $1$, the fixed multiplication operators $M_x,M_y$ generate every monomial in normal form. Thus the algebra is cyclic as a module over its multiplication algebra. This does not remove either address operator, and does not say that the algebra is generated by one algebra element.
+
+\takeaway{The relation controls an exact weighted transfer between coefficient lanes. Packet reconstruction is $a+yb$, while packet multiplication retains the weight $x^3-x$.}
+
+\vpage{18}{Density is not finite generation of each vector}{INFINITE MODEL / THE BILATERAL SHIFT}{Main text: \cref{prop:shift-seed,thm:completed-presentation}}
+On $\ell^2(\ZZ)$, declare every integer shift
+\[
+(S_mx)[n]=x[n-m].
+\]
+The seed $\delta_0$ generates $\delta_m=S_m\delta_0$. Finite linear combinations give precisely the sequences with finite support. Their norm closure is all of $\ell^2(\ZZ)$.
+
+\vfig[.93]{shift_tail}
+\atlasCaption{A finite window of the actual sequence $x[n]=2^{-|n|}$. Outside every finite window, coefficients remain nonzero. The shaded window illustrates the truncation $x^{(3)}$, not a periodic wraparound.}
+
+This $x$ cannot be a finite linear combination of shifted impulses: it has infinite support. But if $x^{(N)}$ agrees with $x$ on $|n|\le N$ and is zero elsewhere, then
+\[
+\norm{x-x^{(N)}}_2^2
+=2\sum_{n>N}4^{-n}
+=\frac{2}{3}\,4^{-N}\longrightarrow0.
+\]
+The exact squared errors for $N=1,3,5$ are $1/6$, $1/96$, and $1/1536$. These are identities from a geometric series, not floating residuals.
+
+\head{What the topology contributes}
+The statement is that \emph{one seed has dense hull}. It is not that every vector is a finite word expression. The completion theorem additionally specifies a normed presentation, a dense linear isometry into a Banach target, and the bounded intertwining needed to extend operators.
+
+\takeaway{Completion adds limits in a declared topology. A finite numerical window can illustrate the approximants, but cannot be substituted for the infinite object or its convergence proof.}
+
+\vpage{19}{Residue packets retain an address carry}{INFINITE MODEL / THREE EXACT SUBSEQUENCES}{Main text: \cref{thm:banach-packets}. Residue packets}
+For $j=0,1,2$, let $P_j$ keep the entries with $n\equiv j\pmod3$. These are bounded orthogonal projectors whose sum is the identity. The packet coordinates can be written as
+\[
+x_j[k]=x[3k+j],\qquad k\in\ZZ.
+\]
+
+\vfig[.98]{residue_carry}
+\atlasCaption{Each occupied tile represents one integer address in a displayed window. The three rows partition the addresses exactly. Negative indices use the same residue convention.}
+
+\head{What one shift does in these coordinates}
+Let $S=S_1$ and $z=Sx$. Substituting $3k+j$ into the shift definition gives
+\[
+z_1[k]=x_0[k],\qquad z_2[k]=x_1[k],\qquad z_0[k]=x_2[k-1].
+\]
+The passage from phase $2$ to phase $0$ carries a shift of the coarse address. If $Lh[k]=h[k-1]$, the exact packet matrix is
+\[
+S_{\mathrm{packets}}=\mat{0&0&L\\I&0&0\\0&I&0}.
+\]
+Replacing $L$ by a scalar $1$ would preserve the phase graph but would lose the operator's action on the infinite sequences.
+
+\head{Synthesis keeps the positions}
+To reconstruct $x$, place $x_j[k]$ at its original address $3k+j$. In the ambient space formulation, this is the finite sum $x=P_0x+P_1x+P_2x$. Boundedness makes the same formulas valid after taking the $\ell^2$ completion.
+
+\takeaway{A cyclic packet graph is only the routing pattern. The block at the phase boundary still carries an actual shift operator.}
+
+\vpage{20}{Stop when the subspace stops growing}{EXACT COMPUTATION / AN INVARIANCE CERTIFICATE}{Main text: \cref{con:orbit-hull-algorithm}}
+For a fixed finite operator family $(O_i)$, start from $W_0=\Span S$ and iterate
+\[
+W_{n+1}=W_n+\sum_i O_iW_n.
+\]
+This is an ascending chain. When two consecutive subspaces agree, every generator maps the stable subspace into itself. The stable value is therefore the entire hull of operator words, not just the span of the words tested so far.
+
+\vfig[.58]{hull_iteration}
+\atlasCaption{Exact dimensions for the same mixed seed in Model A. The dashed curve allows only $N$. The solid curve also admits the two chain projectors. Plateau values are repeated to show the certified stop.}
+
+\head{Why the process stops in finite dimensions}
+If an inclusion is strict, the dimension rises by at least one. It cannot rise beyond $\dim X$. At equality, invariance and containment of the seeds prove both inclusions between the stable space and the least invariant hull.
+
+\head{What the companion code actually does}
+The new checker retains exact column bases using rational row reduction. It then verifies that adjoining the images of those bases under every generator does not increase rank. These examples use neither a cutoff on singular values nor a numerical tolerance.
+
+The Lean statement is a mathematical termination and correctness specification. It is not a claim that this Python implementation for maintaining a basis was extracted from Lean or that a particular runtime bound was proved. The original numerical companion and its tolerances remain separate.
+
+\takeaway{``No new directions'' is a stopping certificate only after checking the full declared operator family. Stopping after a convenient selection of words is not the same test.}
+
+\vpage{21}{Tensor products require every cross term}{OPERATIONS ON SEED RANK / A RECTANGLE, NOT A DIAGONAL}{Main text: \cref{prop:tensor-bound}. Algebraic tensor products}
+If $(x_i)$ generates $X$ under $\AA$ and $(y_j)$ generates $Y$ under $\BB$, then the candidate tensor seeds are \emph{all} $x_i\otimes y_j$. For finite expansions,
+\[
+x=\sum_i A_ix_i,\qquad y=\sum_j B_jy_j,
+\]
+bilinearity gives the required double sum:
+\[
+x\otimes y=\sum_i\sum_j(A_i\otimes B_j)(x_i\otimes y_j).
+\]
+
+\vfig[.95]{tensor_rectangle}
+\atlasCaption{The exact expansion of $(2e_1+3e_2)\otimes(5f_1+7f_2)$. The terms away from the diagonal $14$ and $15$ cannot be omitted.}
+
+Keeping only the tensors with matching indices $e_1\otimes f_1$ and $e_2\otimes f_2$ spans a subspace of dimension two in a tensor product of dimension four. It misses both cross directions. Under scalar actions on $\QQ^2$ and $\QQ^2$, all four basis tensors are necessary and sufficient.
+
+\head{The resulting upper bound}
+Since simple tensors span the algebraic tensor product, the complete rectangular family proves
+\[
+\boxed{\srank_{\AA\otimes\BB}(X\otimes Y)
+\le\srank_{\AA}(X)\,\srank_{\BB}(Y).}
+\]
+This is not a universal equality claim. Changing the algebra changes the answer: the full independent matrix action can make a single nonzero pure tensor cyclic. Nor does the algebraic argument itself establish a theorem for completed topological tensor products.
+
+\takeaway{The generator construction is indexed by a Cartesian product. Its proof must retain the finite double sum and the hypotheses on scalar actions that make the tensor action well defined.}
+
+\vpage{22}{What the pictures certify}{PROOF BOUNDARY / RETURN TO THE MANUSCRIPT}{Main text: Reading the theorem hypotheses and companion evidence}
+The mathematical statements in the main text have explicit hypotheses and written proofs. The Lean guide separately identifies the checked declarations, hypotheses, and coverage. The computational companion identifies the 108 stable foundation records and the checks executed on their structured representations. These are distinct forms of evidence.
+
+{\small\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{.23\linewidth}Y>{\raggedright\arraybackslash}p{.25\linewidth}@{}}\toprule
+\textbf{Topic} & \textbf{Mathematical content} & \textbf{What must be retained}\\\midrule
+Presentations and hulls & Evaluation, module quotients, and generation under a fixed algebra. & The grammar must be fixed independently of the target.\\
+Finite packets & Idempotence, annihilation, completeness and exact finite synthesis. & Orthogonality requires an additional hypothesis.\\
+Semisimple formula & Multiplicities over division rings determine the minimal free cover. & The stated classical inputs and decomposition data.\\
+Primary and graph formulas & Primary components and scalar quotients give sharp generator counts. & The coefficient field and multiplicity conventions.\\
+Paths and cycles & Formulas for paths of every size and for complex cycles have separate proofs. & Finite tests illustrate rather than prove claims for every size.\\
+Coordinate algebra & Normal form, multiplication, packet identities and a unit seed. & Smooth projective geometry needs additional classical input.\\
+Completion & Density and bounded extraction in the stated topology. & Infinite sequences are distinct from periodic finite arrays.\\\bottomrule\end{tabularx}}
+
+\head{Evidence travels with the examples}
+The supporting material includes mathematical source, exact model definitions, deterministic graphics, Python checks, Lean source and theorem mapping, and the computational record archive. The visual models use integer, rational, symbolic, or explicitly analytic calculations. The verification record distinguishes the execution evidence for each component.
+
+\takeaway{The pictures make the hypotheses visible. Read the traditional proof, the formal contract, and the executable record at their respective stated scopes.}

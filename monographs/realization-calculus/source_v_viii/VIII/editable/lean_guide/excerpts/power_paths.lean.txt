@@ -1,0 +1,16 @@
+theorem power_path_expansion (A : R) (n : ℕ) (b a : I) :
+    P.block (A ^ n) b a = activePathSum P A n b a := by
+  classical
+  induction n generalizing b a with
+  | zero =>
+      by_cases h : b = a
+      · subst b
+        simp [activePathSum, PacketFamily.block, P.mul_proj]
+      · simp [activePathSum, PacketFamily.block, P.mul_proj, h]
+  | succ n ih =>
+      rw [pow_succ', P.compose_blocks]
+      simp only [activePathSum]
+      apply Finset.sum_congr rfl
+      intro c _
+      rw [ih]
+      by_cases h : P.block A b c = 0 <;> simp [h]

@@ -1,0 +1,48 @@
+\section{Known edges and measurable perturbations}
+\subsection{Exact retention separates the error algebraically}
+Write $f=s+j$, where $s$ is the background and $j$ is a known jump packet. If the reconstruction is $Qs+j$, the retained jump cancels:
+\[
+f-(Qs+j)=s-Qs.
+\]
+\excerpt{KnownEdge}{known_edge}
+The cancellation theorem needs only an additive commutative group and an arbitrary function $Q$. It does not require $Q$ to be linear. This is sufficient for cancellation because $Q$ is applied to $s$ before the same $j$ is restored. A separate claim that commutes $Q$ with addition, or estimates an operator commutator, would need the appropriate linearity hypotheses.
+
+Taking norms yields exact equality of the full reconstruction error with the background error. A finite sum of known packets cancels in the same way. None of these statements estimates an unknown edge or proves that a data driven algorithm finds the correct mask.
+
+\subsection{Estimated packets have two errors}
+For $j=a\mathbf1_S$ and $\widehat j=b\mathbf1_T$,
+\[
+j-\widehat j=(a-b)\mathbf1_S+b(\mathbf1_S-\mathbf1_T).
+\]
+The first term changes the amplitude on the original mask. The second changes the mask while holding the estimated amplitude fixed. The symmetric difference $S\triangle T$ contains exactly the points where the two masks disagree.
+
+For measurable sets and $1\le p<\infty$, the resulting bound is
+\[
+\|a\mathbf1_S-b\mathbf1_T\|_p
+\le |a-b|\mu(S)^{1/p}+|b|\mu(S\triangle T)^{1/p}.
+\]
+The formal theorem lives first in the extended nonnegative reals, so infinite measures are handled without silently converting infinity to an ordinary real number.
+\excerpt{MaskPerturbation}{mask_bound}
+The notation \code{ENNReal} permits $\infty$, and \code{eLpNorm} is an extended seminorm. The hypotheses \code{hp : 1 ≤ p} and \code{hpTop : p ≠ ∞} govern the triangle inequality and finite-exponent formula. A finite real valued corollary requires the displayed terms to be finite, for example through finite mask and symmetric-difference measures.
+
+\subsection{A concrete perturbation budget}
+\begin{microexample}[title={An amplitude and mask budget}]
+Suppose $p=2$, $\mu(S)=1$, $\mu(S\triangle T)=0.01$, $a=2$, and $b=1.9$. The bound is
+\[
+0.1\sqrt1+1.9\sqrt{0.01}=0.29.
+\]
+If the background approximation error is at most $0.04$, the full error is at most $0.33$ by the additional triangle inequality in \code{full_signal_perturbation}. The numbers illustrate a deterministic budget conditional on the amplitude, mask, and background estimates. A statistical procedure achieving those estimates requires additional work.
+
+\end{microexample}
+
+\subsection{Pointwise and essential supremum}
+The source first proves a bound at every point, then transfers it to the essential supremum seminorm.
+\excerpt{MaskPerturbation}{sup_bound}
+The displayed bound uses whether $S\triangle T$ is empty as an actual set. An essential-supremum argument may ignore a null set, but a pointwise supremum cannot. This particular theorem remains a valid, sometimes coarse, bound when the sets differ only on a null set. Its statement should not be silently replaced by an assertion that pointwise and almost-everywhere equality coincide.
+
+\subsection{The open obligations remain identifiable}
+The stable edge-packet recovery conjecture asks for specified signal classes, contrast and separation assumptions, and a noise model under which a multiscale estimator controls both mask error and amplitude error at rates separated from smooth approximation. The formal perturbation bound explains how such estimates would enter reconstruction. It does not construct that estimator or prove those rates.
+
+The edge-packet approximation-class conjecture asks for natural function spaces whose norms distinguish smooth approximation, boundary geometry, packet amplitude, and packet identification. The current declarations do not define and close that proposed theory. Infinite-tree consistency, minimax claims, and optimal Smith sampling also remain outside the twenty-result formal scope.
+
+These boundaries matter when reading Part II. Its broader deterministic and geometric theorems can develop the mathematics without turning every contextual statement into a Lean-certified target. The final traditional record and the separate Part II crosswalk identify that distinction explicitly.

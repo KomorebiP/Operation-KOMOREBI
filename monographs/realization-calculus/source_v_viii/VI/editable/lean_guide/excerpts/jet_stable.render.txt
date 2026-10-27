@@ -1,0 +1,10 @@
+theorem jet_stable (A : End ℂ V) (a : ℂ → ℕ → ℂ) (μ : ℂ) (x : V)
+    (hx : x ∈ A.maxGenEigenspace μ) (n : ℕ) (hn : finrank ℂ V ≤ n) :
+    jet A a μ n x=jet A a μ (finrank ℂ V) x := by
+  classical
+  unfold jet
+  simp only [LinearMap.sum_apply,LinearMap.smul_apply]
+  symm
+  apply Finset.sum_subset (Finset.range_mono hn)
+  intro k _ hk
+  rw [power_kills A μ x hx k (by simpa using hk),smul_zero]

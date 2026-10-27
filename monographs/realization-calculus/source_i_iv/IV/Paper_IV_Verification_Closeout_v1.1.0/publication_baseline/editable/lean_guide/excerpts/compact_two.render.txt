@@ -1,0 +1,11 @@
+theorem reciprocalCoeff_two_compact \{N : ℕ\} (hN : 0 < N) (r : K) :
+    reciprocalCoeff N 2 r =
+      r * (((2*N).choose N : K) / 2 * (r+1) - 1) := by
+  have h := (ordinary_low_equations N r).2.1
+  change 2 * PowerSeries.coeff 2 (reciprocalSeries N r) = _ at h
+  rw [reciprocalCoeff, blockCoeff, Nat.mul_comm N 2,
+    Nat.cast_choose K (show N ≤ 2*N by omega), show 2*N-N=N by omega]
+  have hf : ((2*N).factorial : K) ≠ 0 := by exact_mod_cast (2*N).factorial_ne_zero
+  have hg : (N.factorial : K) ≠ 0 := by exact_mod_cast N.factorial_ne_zero
+  field_simp at h ⊢
+  linear_combination h

@@ -1,0 +1,15 @@
+def lower (i : ℕ) : Subgroup D where
+  carrier := {g | ∀ x : R, g • x - x ∈ (IsLocalRing.maximalIdeal R) ^ (i + 1)}
+  one_mem' := by intro x; simp
+  mul_mem' := by
+    intro g h hg hh x
+    have ha := hg (h • x)
+    have hb := hh x
+    have hab := Ideal.add_mem ((IsLocalRing.maximalIdeal R) ^ (i+1)) ha hb
+    simpa only [sub_add_sub_cancel, mul_smul] using hab
+  inv_mem' := by
+    intro g hg x
+    have hh := hg (g⁻¹ • x)
+    have hh' := ((IsLocalRing.maximalIdeal R) ^ (i+1)).neg_mem hh
+    simpa using hh'
+

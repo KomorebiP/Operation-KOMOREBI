@@ -1,0 +1,15 @@
+theorem solve_unique (T : ℕ → ℕ → F) (b a : ℕ → F)
+    (hT : ∀ n, T n n ≠ 0)
+    (ha : ∀ n, (∑ k : Fin n, T n k * a k) + T n n * a n = b n) :
+    a = solve T b := by
+  funext n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    have hs : (∑ k : Fin n, T n k * a k) = ∑ k : Fin n, T n k * solve T b k := by
+      apply Finset.sum_congr rfl
+      intro k _
+      rw [ih k k.isLt]
+    have hr := ha n
+    rw [hs] at hr
+    have he := solve_row T b hT n
+    exact (mul_left_cancel₀ (hT n)) (add_left_cancel (hr.trans he.symm))

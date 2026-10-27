@@ -1,0 +1,31 @@
+\subsection{Verification, executable checks, and remaining work}\label{supp3:subsection:007}\textit{Release evidence and precise completion boundary}\par
+The fresh cumulative run used \textbf{Lean 4.34.0-rc2} and pinned Mathlib revision
+\begin{center}\code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+All 18 modules returned exit code zero with warnings treated as errors. Every one of the 197 theorem audits used only \code{propext}, \code{Classical.choice}, and \code{Quot.sound}, or subsets thereof. Twelve constructions were separately audited. The active proof files contain no admitted proofs or added axiom declarations. The deliberately false equality and admitted-proof control were both rejected.
+
+\textbf{Exact-rational executable suite.} Independent enumeration, rather than the DP recurrence, produces the candidate costs used for comparison.
+\begin{center}\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}p{.70\textwidth}r@{}}
+\toprule
+New test category & Count\\
+\midrule
+Tree instances with unary, binary, ternary, and mixed branching & 384\\
+Exact-weight table comparisons for trees & 4,992\\
+Budget-minimum comparisons for trees & 4,992\\
+Independently enumerated legal cuts & 19,152\\
+Additional functional-specification comparisons & 1,440\\
+Discrete precision instances & 288\\
+Exact-weight / budget comparisons for precision & 3,744 each\\
+Independently enumerated legal assignments & 1,453\\
+Explicit boundary regressions & 5\\
+\bottomrule
+\end{tabular}
+\end{center}
+All passed. The preceding block's 600 compiler cases, 85,320 enumerated pruning scores, and 600 cached-update comparisons were also rerun and passed. These counts describe executable tests, not additional theorem declarations.
+
+\textbf{Failures retained.} Eleven of 18 captured development compilation checks failed before correction. Their source snapshots and diagnostics are retained separately from the successful final run. They principally concern type elaboration, module visibility, finite indices, and simplification. An unsupported interactive runtime-recovery request failed before assembly started. The later noninteractive restoration succeeded.
+
+\textbf{Sixteen manuscript-proved items remain:} 4.1, 4.3--4.7, 5.6, 6.5--6.8, 7.4, 7.6, 8.5, 9.2, and 10.3. These concern structured spectral and tensor primitives, optimal recompression, graph scheduling and inverse support, preconditioning, clipped allocation, and block-discovery certificates. Four classical inputs are still separate.
+
+No GPU timings, original CPU numerical suite, full Papers I--VII rebuild, or independent recheck of imported Mathlib proofs was performed in this block. The JSON verification report, execution reports, preservation report, source ledger, logs, and scripts provide the auditable release record.

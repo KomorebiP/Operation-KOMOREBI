@@ -1,0 +1,119 @@
+\begingroup\small\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\section*{Three exact models before the general theory}
+\addcontentsline{toc}{section}{Three exact models before the general theory}
+These models use exact integers and rational numbers. Their costs and integer errors are declared illustrative quantities. The figures display the computed records. They do not report timings or identify actual hardware precision types.
+
+\subsection*{A low rank action and its inverse}
+Set
+\[
+D=\diag(2,3,4,5),\qquad
+u=(1,0,1,0)^T,\qquad v=(1,1,0,0)^T,
+\]
+and define $A=D+uv^T$. Its entries are shown in the figure. The same operator can be stored by its diagonal and two thin vectors rather than by every matrix entry.
+For $x=(1,2,3,4)^T$, first form $v^Tx=3$. Then
+\[
+Dx=(2,6,12,20)^T,\qquad u(v^Tx)=(3,0,3,0)^T,
+\]
+so $Ax=(5,6,15,20)^T$. Only the first and third output coordinates receive the correction.
+
+\begin{figure}[H]
+\centering\includegraphics[width=.90\linewidth]{monograph_figures/01_exact_bdlr_action.pdf}
+\caption{Exact finite action of a diagonal operator plus one thin correction. The bars display the same action as the explicit matrix.}
+\label{fig:monograph_bdlr_action}
+\end{figure}
+
+The inverse starts with the same representation. Write $y=Ax$. Since $D$ is invertible,
+\[
+D^{-1}u=(1/2,0,1/4,0)^T,\qquad
+1+v^TD^{-1}u=3/2\ne0.
+\]
+The scalar Woodbury core is therefore invertible. Its correction coefficient is
+\[
+\frac{v^TD^{-1}y}{1+v^TD^{-1}u}
+=\frac{9/2}{3/2}=3.
+\]
+Subtracting that correction recovers the original input:
+\[
+D^{-1}y-3D^{-1}u
+=(5/2,2,15/4,4)^T-(3/2,0,3/4,0)^T=x.
+\]
+
+\begin{interpretation}[title={What the output contract preserves}]
+The diagonal and thin vectors use twelve scalar slots, compared with sixteen for the explicit matrix. This small storage count assumes the full thin vectors are stored. It does not predict elapsed time. A compressed action returns $Ax$. Materializing all entries of $A$ produces another output and incurs its own work. The general formulas appear in \cref{thm:exact_evaluation,thm:woodbury}.
+\end{interpretation}
+
+\clearpage
+\subsection*{A budget can select a point that no Lagrangian selects}
+Consider a rooted candidate tree. The root $r$ has children $a,b$, and $a$ has children $a_1,a_2$. Split overheads are zero. Each retained node has the following declared cost and integer error:
+\begin{center}
+\begin{tabular}{lrrrrr}\toprule
+Node & $r$ & $a$ & $b$ & $a_1$ & $a_2$\\\midrule
+Cost & 1 & 2 & 1 & 3 & 1\\
+Error & 6 & 4 & 0 & 1 & 0\\\bottomrule
+\end{tabular}
+\end{center}
+Exactly three prunings are possible:
+\begin{center}
+\begin{tabular}{lrr}\toprule
+Selected nodes & Total cost & Total error\\\midrule
+$r$ & 1 & 6\\
+$a,b$ & 3 & 4\\
+$a_1,a_2,b$ & 5 & 1\\\bottomrule
+\end{tabular}
+\end{center}
+For a Lagrangian multiplier $\lambda\ge0$, their objectives are $1+6\lambda$, $3+4\lambda$, and $5+\lambda$. The middle pruning can be optimal only if
+\[
+3+4\lambda\le1+6\lambda\quad\text{and}\quad
+3+4\lambda\le5+\lambda.
+\]
+These inequalities require $\lambda\ge1$ and $\lambda\le2/3$ simultaneously. There is no such multiplier. The root and full split exchange optimality at $\lambda=4/5$, where both have objective $29/5$.
+
+\begin{figure}[H]
+\centering\includegraphics[width=.94\linewidth]{monograph_figures/02_exact_compiler_frontier.pdf}
+\caption{The finite candidate tree has three prunings. The middle point is optimal under error budget four, although no nonnegative Lagrangian multiplier selects it.}
+\label{fig:monograph_compiler_frontier}
+\end{figure}
+
+The budget problem still selects that middle pruning. Under the constraint $\err\le4$, the root is infeasible. The two feasible costs are three and five, so the minimum is three. Under budget one, only the full split is feasible. Under budget six, the root is cheapest. Thus the budget program adds something that changing $\lambda$ cannot recover.
+
+The dynamic recurrence gives the same Lagrangian choices without listing prunings. At $a$, it compares $2+4\lambda$ with $4+\lambda$. At $r$, it compares $1+6\lambda$ with $1+F_\lambda(a)$. Its exactness follows from the finite tree and additive model in \cref{thm:tree_compiler,thm:budget_compiler}. Overlapping decompositions or nonlocal execution costs need another argument.
+
+\clearpage
+\subsection*{Discrete precision follows the sensitive edge}
+Suppose three packet edges each admit a fast option F and an accurate option A. The names describe the supplied model, rather than any actual scalar type. Exactly one option is chosen on each edge:
+\begin{center}
+\begin{tabular}{lrrrr}\toprule
+& \multicolumn{2}{c}{F} & \multicolumn{2}{c}{A}\\
+Edge & Cost & Error & Cost & Error\\\midrule
+1 & 1 & 5 & 4 & 0\\
+2 & 1 & 2 & 3 & 0\\
+3 & 1 & 1 & 3 & 0\\\bottomrule
+\end{tabular}
+\end{center}
+The all-fast assignment FFF has cost three and error eight. It exceeds budget three. Changing only edge one to A gives AFF, with cost $4+1+1=6$ and error $0+2+1=3$. Changing only edges two and three gives FAA, with cost seven and error five. That choice still exceeds the budget.
+
+All eight assignments can be checked directly:
+\begin{center}
+\begin{tabular}{lrr@{\qquad}lrr}\toprule
+Assignment & Cost & Error & Assignment & Cost & Error\\\midrule
+FFF & 3 & 8 & AFF & 6 & 3\\
+FFA & 5 & 7 & AFA & 8 & 2\\
+FAF & 5 & 6 & AAF & 8 & 1\\
+FAA & 7 & 5 & AAA & 10 & 0\\\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering\includegraphics[width=.91\linewidth]{monograph_figures/03_exact_precision_budget.pdf}
+\caption{The shaded region satisfies the supplied error budget. AFF is the unique minimum-cost assignment in that region. The model protects the first edge before spending on less sensitive edges.}
+\label{fig:monograph_precision_budget}
+\end{figure}
+
+The exact recurrence reaches the same result. After edge one, only $(\err,\cost)=(5,1)$ and $(0,4)$ are reachable. After edge two, the reachable states are $(7,2)$, $(5,4)$, $(2,5)$, and $(0,7)$. Extending these with either option on edge three gives the final eight assignments. Among states of error at most three, the lowest cost is six.
+
+\begin{interpretation}[title={The certificate belongs to the model}]
+The integer error weights must be supplied by a stated certificate or quantization rule. The recurrence solves that finite model exactly. Kernel accumulation, overflow, underflow, scaling, and shape support require their own assumptions before an actual implementation can use the result. The precise recurrence is \cref{thm:discrete_precision}.
+\end{interpretation}
+The complete rational records, dynamic tables, and five rejected false controls are reproduced by \code{generate\_monograph\_examples.py}. Figure generation converts those records to plotting coordinates only after the exact checks pass.
+
+\endgroup

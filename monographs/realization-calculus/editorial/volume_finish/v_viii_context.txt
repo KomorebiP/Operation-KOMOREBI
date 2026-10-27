@@ -1,0 +1,3433 @@
+
+===== V_traditional PAGE 40 =====
+proved
+numerical/limited
+open boundary
+polyphase reconstruction
+FIR transfer
+Haar perfect reconstruction
+known-edge theorem
+mask perturbation bound
+finite adaptive packet-tree optimum
+positive-contrast estimator
+Smith Mobius action
+nonlinear packet product
+universal edge discovery
+infinite-tree/asymptotic selector
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+yes
+Claim boundary for Paper V after the finite adaptive-tree theorem
+Figure 20. Proof and claim boundary. Finite adaptive-tree selection is proved. The remaining open rows concern
+universal recovery and infinite-tree or asymptotic selection.
+16 Implementation and reproducibility
+The companion package is organized by mathematical layer:
+Table 2. Numerical companion modules.
+module
+implemented content
+polyphase.py
+residue projectors, analysis/synthesis, refinement, exact FIR transfer
+kernels, polyphase convolution
+filterbanks.py
+Haar analysis/synthesis, complete Haar packet trees, energy
+accounting, predict–update lifting
+adaptive.py
+complete-pruning enumeration, exact mixed-depth synthesis,
+dynamic-programming optimization, and stability certificates
+edges.py
+one- and two-dimensional Fourier truncation, known-packet
+reconstruction, narrow two-class estimators, harmonic filling, error
+metrics
+smith.py
+Cayley coordinates, cyclic Möbius action, Smith circles, sensitivity
+weight, coefficient projectors
+nonlinear.py
+coefficient packets, cyclic product convolution, nonlinear shifted
+packet reconstruction
+experiments.py
+all machine-readable numerical certificates and tabular summaries
+visuals.py
+the eighteen figure pairs used in the chapter
+The September 2026 release records recovery and rerunning of the original companion source: its
+33 tests passed, and all 18 figure pairs and numerical tables were regenerated. The Lean package con-
+tributes 20 independent exact-model tests and 16 tests of the verifier itself. These account for another
+
+
+===== V_traditional PAGE 47 =====
+D.5 Pinned environment and reproduction
+The Lean toolchain is leanprover/lean4:v4.34.0-rc2. The project pins mathlib to
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+The Lake manifest records the remaining dependency revisions. The numerical environment ver-
+sions are recorded in verification/numerical_environment.json. Source and artifact hashes appear in
+SHA256SUMS.txt. The original manuscript, source, numerical data, and figures remain available under
+provenance for comparison. The expanded PDF and its TeX are the manuscript of that September 2026
+release.
+From the preserved release root (source/complete/original_snapshot in the final package), the com-
+bined verification entry point is:
+python3 VERIFY_PAPER.py
+This runs the Lean verifier, companion tests, numerical regeneration/comparison, and manuscript
+consistency checks. Lean, Lake, the pinned dependencies, the Python requirements, and a TeX installa-
+tion must be available for the corresponding full checks. Missing prerequisites or failed checks return
+failure. Static checks alone never report kernel verification. The individual numerical generation com-
+mand is
+cd companion
+python3 run_all.py
+python3 -m pytest -q tests
+The TeX source resolves the eighteen vector figures from the manuscript’s figure directory. The checked
+build uses repeated pdfLaTeX passes, then text, cross-reference, and page-render inspection. Different
+pdfTeX versions can produce different binary PDF hashes even when the rendered document is un-
+changed.
+In the September 2026 release environment, a disclosed runtime adapter was needed for Lean
+executable-path discovery: it redirects a read of the current process’s numeric /proc executable link
+to /proc/self/exe. It does not modify the Lean binary, elaborator, kernel, axioms, or proof terms. The
+adapter source and invocation are retained with the verification evidence. Ordinary installations can
+run the pinned toolchain directly.
+D.6 What remains open
+The September 2026 finite theorem scope is complete in the stated sense: all twenty theorem-like state-
+ments have reviewed, accepted formal counterparts, and that release records a rerun of the numerical
+companion. The two edge-recovery conjectures remain open research directions. No universal segmen-
+tation theorem, infinite-tree consistency result, minimax rate, or optimal Smith sampling theorem is
+inferred from the finite results. Classical Smith-grid and transmission-line formulas provide applica-
+tion context. Those physical and historical assertions are not additional Lean-certified theorem rows.
+Historical cross-paper declaration counts are retained in the source records. The relevant formal de-
+nominator here is the twenty scoped Part I results. Supporting declarations, reused results and proofs
+in the broader written development have distinct roles.
+
+
+===== V_traditional PAGE 117 =====
+Plate V.26
+/
+EVIDENCE GUIDE / THE FORMAL CONTRACT IS UNCHANGED
+What the reader can now verify
+Chapter V: Section 21 (formal correspondence), Section E15.
+Three worked structures, three distinct kinds of conclusion
+Structure
+What is established in the original worked layer
+Finite signal
+Exact signed addressing, filter transfer, Haar reconstruction and energy, sparse co-
+efficient error, and full-tuple nonlinear evaluation.
+Finite packet tree
+All 26 complete prunings, actual projector sums, the unique cost-9 optimum, and
+a strict perturbation-margin certificate.
+Reflection orbit
+Exact rational-complex coordinates, a pole-safe projective action, CRT labels, and
+finite sensitivity calculations.
+What each evidence layer means
+Manuscript theorems. The Part I formal correspondence maps twenty theorem-like statements to 225 support-
+ing Lean targets in 23 proof modules. Its compiler and axiom records provide the retained execution evidence.
+The formal companion gives their scope and reproduction instructions. The additional Part II developments
+remain outside this twenty-result map.
+Recorded exact examples. The symbolic visual suite was rerun for the recorded monograph review. All 181 ra-
+tional, algebraic, symbolic, and exhaustive finite checks passed. Seven deliberately false assertions were rejected.
+Numerical samples draw the continuous Fourier and sensitivity curves. They are not promoted to interval en-
+closures or universal error bounds.
+Recorded executions. The checker for the source release passed 20 exact tests containing 305,933 assertions
+and passed 16 verifier tests, including positive and negative controls. The numerical audit of the expanded source
+passed 11,052 finite checks, mixing exact and numerical calculations. The new extension examples separately
+passed 38 grouped exact checks and four false controls. These counts measure different operations and are not
+combined as theorem counts.
+Reproducibility. The package preserves the original sources and their reports. Run python3 build.py here
+for an isolated PDF build. The extension finite checker is checks/verify_extension_examples.py. Its contract and
+raw execution manifest are included. The original visual checker requires the listed optional dependencies. PDF
+assembly does not run Lean or either mathematical checker.
+The remaining boundaries are not decorative disclaimers
+Known-edge synthesis requires the correct packet. A finite cost optimum depends on the supplied objective.
+An infinite packet tree, a universal segmentation procedure, minimax recovery rates, and optimal Smith sampling
+require additional theorems. The core’s broad edge-recovery problems are not resolved by these finite examples.
+Plate V.27 introduces the additional separated-jump recovery results and their explicit hypotheses. The 16-sample
+running signal is not the 1024-sample manuscript experiment. The 26-pruning example is not its 458,330-pruning
+benchmark. Their smaller sizes allow every relevant number to be inspected exactly.
+Read this as: Coordinates, approximation, identification, optimization, and physical interpretation are
+separate layers. The examples make their interfaces visible without erasing their hypotheses.
+
+
+===== V_visual PAGE 2 =====
+How to use this volume
+Forty worked pages and thirty-seven editable vector figures follow exact signal coordinates, a fully
+enumerated packet tree, and a reflection orbit, then extend the route to stable banks, singular trace
+packets, and conditional recovery of separated jumps.
+Part I / A route through the examples
+Plates V.1 through V.40 identify worked pages independently of PDF pagination. Each page names its
+corresponding statements in the monograph traditional edition. The Lean guide records the separate
+formal contract.
+Plate V.1 Three objects, three different questions
+Plate V.2 An atlas of the objects
+Plate V.3 Decimation is a permutation, not a loss
+Plate V.4 Refine packets on a common lattice
+Plate V.5 A filter becomes a matrix of actual delays
+Plate V.6 One sample is not one channel step
+Plate V.7 Perfect reconstruction is an operator identity
+Plate V.8 A jump can hide from the first Haar split
+Plate V.9 Lifting preserves information, not energy
+Plate V.10 The second level resolves the hidden
+change
+Plate V.11 Deleting coefficients is the approximation
+step
+Plate V.12 A mixed-depth basis must cover every
+branch
+Plate V.13 Solve every alternative without searching
+every alternative
+Plate V.14 How far can the costs move before the tree
+changes?
+Plate V.15 Retain the jump and approximate the other
+packet
+Plate V.16 Why a Fourier cutoff cannot reproduce this
+jump pointwise
+Plate V.17 Small location errors, different norms
+Plate V.18 Separate amplitude error from mask error
+Plate V.19 Geometry localizes error while data may
+leave it ambiguous
+Plate V.20 Two products, two packet laws
+Plate V.21 Nonlinear neighbors cross channel
+boundaries
+Plate V.22 One reflection circle, four very different
+impedances
+Plate V.23 A pole is a chart boundary, not a broken
+group action
+Plate V.24 Residue labels are not impedance averages
+Plate V.25 Sensitivity grows before the pole is reached
+Plate V.26 What the reader can now verify
+Three reading routes
+Signal coordinates: Plates V.3–V.11, then Plate V.20 and Plate V.21. Selection and error: Plates V.12–
+V.19. Nonlinear geometry: Plates V.22–V.25.
+One model per question
+The sixteen-sample signal gives exact rational values. The depth-three tree has twenty-six complete
+prunings. The reflection orbit has four exact quarter-turn points. These bounded examples expose the
+chapter’s mechanisms without replacing its general statements.
+Read the hypotheses with the picture
+Zero extension, periodic indexing, and infinite sequences describe different objects. Known jumps dif-
+fer from estimated jumps. A finite optimum depends on a specified cost, and a coordinate transforma-
+tion does not establish an optimal sampling rule. Plate V.26 records the evidence behind this guide.
+
+
+===== V_lean PAGE 2 =====
+How to use this volume
+A guide to the actual formal development. 20 scoped manuscript results. 225 theorem targets. 23
+proof modules. The eight tutorial chapters explain the route from literal samples to Hilbert oper-
+ators, finite filters, packet synthesis, adaptive trees, and projective actions. The complete ledgers
+then give exact declarations and manuscript locators.
+The full traditional edition also contains 63 broader prose proof records. Their separate inventory
+is a reading aid and adds no formal coverage. The two edge recovery conjectures remain open.
+This edition preserves 52 exact Lean excerpts and reconciles source bytes, declaration locations,
+dependency pins, and the saved axiom audit. Kernel execution evidence comes from the recorded
+formal-core build. Its toolchain, source identities and replay instructions appear in the reproduc-
+tion section. This reading guide does not claim a new kernel execution.
+
+
+===== V_lean PAGE 3 =====
+1 How to read the formal companion
+Chapter V places several kinds of mathematics in one signal processing language: coordinate parti-
+tions, bounded Hilbert space operators, finite filter banks, finite tree optimization, formal series, and
+projective actions. The formal development keeps their types and hypotheses distinct. Following those
+distinctions is the most useful way to read its proofs.
+A pointwise partition identity needs little structure. An energy theorem needs a normed space with
+the intended norm. A transform theorem needs convergence. An optimal finite pruning needs a finite
+family and an objective. A fractional linear expression needs a chart, while its projective action survives
+at the chart’s poles. Each transition has a named construction or theorem in the source.
+Follow the model before the theorem name
+Start with the ambient type, then locate the bridge to the intended signal model. A coordinate
+identity, a bounded operator theorem, and an analytic transform law have different inputs. The
+exact excerpt shows where those inputs enter the declaration.
+1.1 What the completed contract contains
+The selected release, 1.1.0-expanded-lean-checked, records twenty scoped theorem-like manuscript
+results with explicit proofs and 225 supporting theorem targets. The inherited namespace audit re-
+ports 827 declarations. These are different denominators: the 827 includes definitions and compiler-
+generated declarations, and the 225 includes supporting results rather than 225 independent new math-
+ematical claims.
+The formal core is the expanded manuscript preserved as Part I of the final traditional edition. Part II
+preserves the broader Annals development. Its additional proof records are prose mathematics. They
+do not enter the twenty-result formalization contract. Section 10 gives a separate crosswalk.
+The two edge recovery conjectures remain open. Known-edge cancellation is established,
+measurable-mask perturbation is established, and finite adaptive selection is established within
+its hypotheses. Those results do not provide an estimator with the full statistical and approximation
+guarantees requested by the conjectures.
+1.2 Evidence available in this edition
+Evidence
+Meaning
+Source reconciliation
+Current hashes, 225 declaration locations, 225 audit directives, and 225
+inherited axiom-output records agree.
+Historical Lean execution
+The September 6 UTC release records the pinned build and namespace
+audit passing. The raw logs are preserved.
+Manual correspondence
+Manuscript statements have a reviewed, explicit relationship to formal
+declarations. Lean does not parse or certify the English PDF
+automatically.
+Exact model tests
+Finite independent models exercise indexing, masks, trees, lifting, filters,
+and boundary cases. They are computational evidence on their tested
+ranges.
+
+
+===== V_lean PAGE 28 =====
+7.8 Dyadic and odd masks factor by CRT
+If 𝑁= 2𝑎𝑀with 𝑀odd, the two factors are coprime. An integer satisfies a residue condition modulo
+their product precisely when it satisfies both factor conditions. The source proves the corresponding
+equality of integer-residue masks.
+Source: KomorebiPaperV/CRT.lean.
+theorem dyadic_odd_packet_factorization (a d : ℕ) (hd : Odd d)
+(r : ZMod (2 ^ a * d)) (x : ℤ→V) :
+KomorebiPaperV.packet (fun i : ℤ=> (i : ZMod (2 ^ a * d))) r x =
+KomorebiPaperV.packet (fun i : ℤ=> (i : ZMod (2 ^ a)))
+(ZMod.chineseRemainder (dyadic_odd_coprime a d hd) r).1
+(KomorebiPaperV.packet (fun i : ℤ=> (i : ZMod d))
+(ZMod.chineseRemainder (dyadic_odd_coprime a d hd) r).2 x) :=
+residue_mask_factorization _ _ (dyadic_odd_coprime a d hd) r x
+This is an exact mask factorization. It does not prove that a particular nonuniform sample allocation
+is optimal, nor does it provide a minimax sampling theorem. It supplies the arithmetic structure on
+which more specialized sampling constructions can be built.
+8 Trust boundaries and reproduction
+8.1 What the inherited audit actually checks
+The preserved compiler log records 225 explicit theorem targets and 827 namespace declarations. The
+audit driver first requires each target to be present as a theorem. It then traverses the KomorebiPape
+rV namespace, rejects unsafe declarations, rejects local axiom and opaque declarations, and collects
+transitive axiom dependencies.
+Only propext, Classical.choice, and Quot.sound are permitted. The audit checks the dependencies
+of the compiled declarations. It does not prove that English prose is a correct paraphrase of those dec-
+larations, that a Python implementation matches a Lean definition, or that an application has supplied
+a theorem’s hypotheses.
+The current guide build reconciles each target name with its immutable source location and in-
+herited axiom-output record. It verifies pinned source hashes and performs a lexical scan for proof
+placeholders and prohibited source constructs. These checks protect provenance and locate obvious
+source-policy violations. They do not replace elaboration, type checking, or a new kernel traversal.
+8.2 The two dates of evidence
+The release’s raw kernel verification timestamp is 6 September 2026 at approximately 03:18 UTC. This
+monograph companion is dated 9 October 2026. The compiler transcript describes the preserved v1.1.0
+sources and their pinned dependencies. Its date remains visible beside the current checks.
+The recorded computational review ran the twenty exact model tests, comprising 305,933 counted
+assertions, and all sixteen verifier control methods. It ran the 33 current companion pytest tests and
+the 27 overlapping historical tests with no skips. These are finite tests of implementations and models,
+with separate contracts for their tested scope.
+
+
+===== V_lean PAGE 29 =====
+All 52 stored floating numerical metrics and eighteen discrete result leaves were reproduced ex-
+actly in the available environment. Eighteen companion PDF/PNG figure pairs were regenerated. The
+broader Annals companion separately passed 11,052 mixed exact and numerical checks across thirteen
+groups. Six bounded computational manifests were validated against their inputs. The symbolic visual
+suite passed 181 checks and rejected seven false controls. The extension examples separately passed 38
+exact checks and rejected four false controls.
+These counts refer to the recorded tests and their declared ranges. Overlapping suites are retained
+as provenance and are not combined into a theorem denominator. In particular, floating computations
+and bounded models do not extend the twenty-result formal contract or close either edge recovery
+conjecture.
+No fresh Lean process ran because lean, lake, and elan were unavailable. Current static reconcili-
+ation checks the actual source bytes, 225 declaration locations, 225 audit directives, nine dependency
+revisions, and 225 saved axiom records. It does not run Lean’s elaborator or kernel. The complete pack-
+age’s current computational review and per-run manifests record the fresh tests and their limits.
+The recovered October 5 edition lacks seventeen verification artifacts, including its verify_availab
+le.py runner and some report and figure files. The surviving formal sources, September compiler logs,
+and saved axiom audit are preserved. Current scoped replays have their own manifests and adapters.
+The October 5 available-checks gate was not rerun or authenticated from a complete historical inventory.
+The inventory appears in provenance/HISTORICAL_RECOVERY_GAPS.json. Missing historical evidence is
+not recreated by a current passing test.
+8.3 Reproduce from a working copy
+Use a writable copy of the original release to run its verification entry points, because they write status
+and log files beside the sources. Keep the packaged original snapshot unchanged as the provenance
+reference. The following commands start in that copied release root, which contains VERIFY_PAPER.py,
+formalization, companion, and verification.
+The retained commands below describe the September formal release entry points. They do not
+reproduce the missing October 5 available-checks runner. The original formal-release pipeline expects
+the pinned Lean toolchain, its pinned dependencies, the Python requirements in companion/requiremen
+ts.txt, pypdf, pdfLaTeX, and Poppler tools. Once those prerequisites are available, obtain the mathlib
+cache in the Lean project:
+cd formalization/lean
+lake exe cache get
+cd ../..
+python3 VERIFY_PAPER.py
+This full entry point checks the reviewed source hashes, calls the Lean verifier, runs the original com-
+panion tests, repeats the optimized static checks, replays numerical experiments, regenerates figure
+pairs, and rebuilds the selected 39-page source manuscript. It reproduces the original integrated formal-
+core release, not the later combined two-part traditional PDF.
+For the formal source and exact-model subset, use:
+python3 verification/verify.py
+This command checks the actual toolchain version, builds the local Lean library, checks pinned de-
+pendency revisions and tracked-file cleanliness, and runs KernelAudit.lean with warnings treated as
+
+
+===== V_lean PAGE 30 =====
+errors. If Lake is unavailable, the verifier reports BLOCKED_NO_LAKE and exits with code two. It does not
+turn passing Python tests into a successful Lean result.
+For a deliberately static and exact-model run with no Lean claim:
+python3 -O verification/verify.py --static-only
+The STATIC_AND_EXACT_ONLY status and lean_kernel_checked=false are expected for that route. Python
+optimization is an intentional verifier control. The program’s critical requirements are explicit checks
+rather than removable Python assert statements.
+8.4 Manual inspection of the formal build
+To inspect the principal operations separately, work inside formalization/lean:
+lake env lean --version
+lake build KomorebiPaperV
+lake env lean -DwarningAsError=true KernelAudit.lean
+A successful build without the audit is incomplete evidence for the release’s declared axiom policy. A
+successful audit of changed sources is a new result that should be recorded with new source hashes.
+Do not reuse an old transcript as though it described a modified source tree.
+The historical audit’s final success line is:
+PAPER_V_CANDIDATE_TARGET_AUDIT_PASS: 225 theorem targets; 827 namespace declarations
+The whole transcript, compiler version, source pins, and exit status matter. Searching for this line in a
+file is provenance reconciliation, not a substitute for executing the audit.
+8.5 The historical runtime adapter
+The original environment used a narrow executable self-location adapter. Its ordinary process-specific
+executable path returned a permission error, while /proc/self/exe was accessible. The source adapter
+redirected only the current process’s own executable-link query. The bundled documentation records
+that the distributed compiler and kernel were unchanged.
+The retained positive control accepted a valid arithmetic theorem and the negative control rejected
+an invalid proof with exit code one. These are useful runtime controls, but the full source build and
+namespace audit remain the decisive historical evidence. The adapter is environment-specific and un-
+necessary on a normal installation. Toolchain binaries and compiled dependency caches are not in-
+cluded in this package.
+8.6 Rebuild this guide
+The guide itself needs XeLaTeX and the TeX packages named in preamble.tex and komorebi-monog
+raph.sty. Its P052, Nimbus Sans, DejaVu Mono, and Latin Modern fonts must be installed externally.
+The builder resolves them with kpsewhich, verifies the staged bytes, and records their hashes. It never
+installs dependencies or bundles font binaries. From its editable directory:
+python3 build.py
+
+
+===== V_lean PAGE 31 =====
+This copies the complete authored guide tree to an isolated directory and compiles the supplied TeX
+and generated catalog files in four passes. It executes no Lean code and does not regenerate mathemat-
+ics. The separate build_guide_data.py script can regenerate the catalogs when supplied the immutable
+release root and the traditional edition’s final crosswalk. It verifies hashes and rejects mismatched con-
+tracts before writing the guide’s data products.
+The raw excerpt files preserve source text. Their rendering files escape TeX-special characters and
+route rare mathematical glyphs to a suitable font. The PDF is a reading surface. The full source files
+retain the actual namespace and typeclass context needed for Lean compilation.
+8.7 A checklist for using the theorems
+Before using a result, identify its ambient type and explicit hypotheses, locate the exact declaration, and
+check how the application supplies each hypothesis. For an FIR bank, confirm finite Laurent support
+and delay units. For a transform equality, supply weighted summability. For pruning synthesis, supply
+conservation. For selector stability, establish the strict gap and joint local-error bound. For a Smith chart,
+check denominator nonvanishing or use the projective action.
+This is the recurring pattern of the formal development: construct the object in the correct space,
+prove the bridge to the intended model, then use the identity whose hypotheses have actually been
+supplied.
+
+
+===== V_lean PAGE 38 =====
+10 The broader traditional developments
+The final traditional edition preserves two substantial source strands. Part I contains the twenty-result
+formal core. Part II contains sixty-three proof records from the broader Annals development. Together
+they produce 83 proof records, with overlap in mathematical content. The number 83 counts presented
+proofs. It does not replace the twenty-result Lean denominator or establish 83 independent new results.
+The table below connects groups of Part II developments to nearby formal-core concepts. “Nearby”
+is a reading aid. It does not assert a formal reduction or that the stated Part II result has been compiled
+in Lean.
+Part II topic
+Nearest formal core
+Additional boundary
+Operator partitions and
+refinement
+Results 1.1–2.3, HilbertPackets
+Broader operator settings or frames
+require their own assumptions and
+proofs.
+Polyphase symbols and banks
+Results 3.1–4.3, FilterBank,
+ZTransform
+Unit-circle and 𝐿2 boundary
+interpretations must be
+distinguished from off-circle
+weighted summability.
+Frame trees and adaptive
+objectives
+Results 11.2–11.5, PruningSums
+Local frame bounds are nonnegative.
+The dynamic-programming result
+applies to additive costs.
+Known edges, masks, and
+commutators
+Results 6.1–7.1, KnownEdge,
+MaskPerturbation
+A commutator using 𝑄as an
+operator requires bounded linearity.
+Cancellation alone does not.
+Boundary tubes and edge
+geometry
+Mask perturbation theorem 7.1
+Tube estimates use their local range
+𝛿< 𝛿0. Geometric constants and
+regularity are additional data.
+Continuous Haar edge
+models
+Discrete Haar results 4.2 and 5.1
+Half-line step functions need care:
+their wavelet coefficients can be
+used even when the steps
+themselves are not in 𝐿2(ℝ).
+Random or asymptotic
+selection
+Finite joint-event transfer 11.5
+Probability bounds tending to one
+establish convergence in probability.
+Almost sure claims need stronger
+evidence.
+Nonlinear cyclic products
+Result 12.1, CyclicSeries
+Analytic evaluation and stronger
+functional-analytic claims are
+additional to formal coefficient
+identities.
+Smith geometry and
+sampling
+Results 13.2–14.1, SmithCyclic,
+CRT
+The formal composition law alone is
+not a target proving exact-order
+converse or optimal sampling.
+The final traditional audit records the precise scope repairs applied to Part II. This guide preserves
+the resulting hypotheses in its discussion. It does not incorporate altered claims into unchanged Lean
+targets. The following inventory provides a locator for every Part II proof record and explicitly keeps
+its formal status separate.
+
+
+===== V_lean PAGE 42 =====
+11 All 225 theorem targets
+This catalog reproduces every qualified target from the frozen candidate_contract.json, grouped
+by its actual source module. Line numbers refer to the immutable bundled Lean sources. Every tar-
+get was reconciled with its declaration line, audit directive, and inherited axiom-output record. This
+reconciliation does not perform Lean elaboration.
+11.1 BinaryAdaptive: 6 targets
+Source: formalization/lean/KomorebiPaperV/BinaryAdaptive.lean.
+KomorebiPaperV.Binary.cutSum_eq_root
+Source line 36; theorem.
+KomorebiPaperV.Binary.value_le_cost
+Source line 59; theorem.
+KomorebiPaperV.Binary.best_cost
+Source line 69; theorem.
+KomorebiPaperV.Binary.best_is_global_minimum
+Source line 79; theorem.
+KomorebiPaperV.Binary.root_le_envelope
+Source line 88; theorem.
+KomorebiPaperV.Binary.cut_perturbation
+Source line 94; theorem.
+11.2 CRT: 4 targets
+Source: formalization/lean/KomorebiPaperV/CRT.lean.
+KomorebiPaperV.CRT.residue_pair_iff
+Source line 13; theorem.
+KomorebiPaperV.CRT.residue_mask_factorization
+Source line 20; theorem.
+KomorebiPaperV.CRT.dyadic_odd_coprime
+Source line 31; theorem.
+KomorebiPaperV.CRT.dyadic_odd_packet_factorization
+Source line 34; theorem.
+11.3 CompletePrunings: 15 targets
+Source: formalization/lean/KomorebiPaperV/CompletePrunings.lean.
+KomorebiPaperV.CompletePrunings.terminal_exists
+Source line 36; theorem.
+KomorebiPaperV.CompletePrunings.node_on_terminal
+Source line 43; theorem.
+KomorebiPaperV.CompletePrunings.selected_stop_iff
+
+
+===== V_lean PAGE 58 =====
+12.20
+KomorebiPaperV/PruningAlgorithm.lean
+KomorebiPaperV.PruningSums
+12.21
+KomorebiPaperV/PruningSums.lean
+KomorebiPaperV.CompletePrunings, KomorebiPaperV.HilbertPackets
+12.22
+KomorebiPaperV/SmithAction.lean
+Mathlib.Basic.Complex.Basic, Mathlib.Tactic
+12.23
+KomorebiPaperV/SmithCyclic.lean
+KomorebiPaperV.SmithAction, Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+12.24
+KomorebiPaperV/WaveletPackets.lean
+KomorebiPaperV.HaarChannels, Mathlib.Analysis.InnerProductSpace.Adjoint
+12.25
+KomorebiPaperV/ZTransform.lean
+KomorebiPaperV.FIRTransfer, Mathlib.Analysis.SpecialFunctions.Pow.Complex, Mathlib.LinearAlgebra.Matrix
+.ToLin
+12.26 Pinned external revisions
+The package uses Lean leanprover/lean4:v4.34.0-rc2. The following revisions are copied from lake
+-manifest.json. They specify the historical dependency state. This guide preserves those revisions.
+Package
+Exact revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af
+
+
+===== VI_traditional PAGE 2 =====
+How to use this volume
+Part I. The thirty-three-result formal core, including nonnormal memory and canonical finite holo-
+morphic naturality.
+Part II. The complete strengthened mathematical development: bounded refinement towers,
+Bayesian information, Hermite transfer, quantitative memory compression, and competing risks.
+Part III. Distinct retained results from the earlier human edition, exact examples, and the bounded-
+operator reciprocal calculus received from Chapter IV.
+Part IV. Forty-two visual pages work through exact finite models, analytical examples, and the
+boundaries of the formal contract.
+Reading this chapter
+This chapter studies transfer semigroups in three complementary settings. Part I establishes the finite
+formal core. Part II develops bounded refinement towers, probabilistic conditioning and analytical
+realizations. Part III gives additional results on product-topology limits, reversible coarse dynamics,
+filtering, perturbation and operator substitution. Their hypotheses distinguish the constructions even
+where the underlying identities overlap.
+The formal companion covers exactly the thirty-three scoped results of Part I. Its 341 supporting Lean
+theorem declarations lie in 47 proof modules. The wider namespace audit includes definitions and
+generated declarations. Formal coverage does not automatically extend to Parts II or III. The companion
+supplies the exact targets, assumptions and specialization boundaries.
+Part I includes three explicitly open conjectures. Part II supplies bounded or finite theorems for sev-
+eral related questions. It does not settle arbitrary continuum limits, unbounded-generator convergence,
+general statistical sufficiency, or globally optimal nonnormal model reduction. The reader should keep
+each result’s declared space, topology, positivity, and stability hypotheses. Part I’s mass-only Bayesian
+commutation criterion assumes at least two coarse blocks. Part II’s stronger sufficiency convention also
+preserves within-block conditionals, so its one-block case still requires a constant likelihood.
+The worked atlas follows the mathematical development through exact finite models and analytical
+examples. Calculations illustrate stated ranges and assumptions. Their computational records remain
+distinct from both the written proofs and the formal declarations.
+Read Part I for the common operator language and the exact formal contract. Read Part II for bounded
+Banach-space development and the broader probabilistic and analytical realizations. Read Part III
+for product-topology limits, reversible coarse dynamics, prior-restricted and coarse filtering, killed-
+transfer perturbations, rational realization, and the transferred operator reciprocal family. Section num-
+bers in Part II have prefix E. Those in Part III have prefix R. Original labels and statement locations are
+mapped in the editable sources.
+Contour winding, positive memory decay, finite moment closure and eventual absorption each re-
+quire the hypotheses stated with their results. When the spaces vary along a refinement system, summa-
+bility must be read in the specified ambient setting.
+
+
+===== VI_traditional PAGE 8 =====
+Part I
+The formal core
+Projector-Resolved Seed Calculus VI
+Transfer Semigroups: Stochastic, Bayesian, Fractional, and PDE Realizations
+Overview
+This chapter develops the transfer-semigroup realization of the projector-resolved seed calculus.
+A seed is propagated by a one-parameter semigroup, a Markov kernel, a normalized Bayesian trans-
+fer, a fractional spectral power, a Green operator, or a potential-weighted Feynman–Kac operator.
+Exact packet projectors resolve every transfer into input-output blocks, and the semigroup law be-
+comes block convolution over intermediate packets. Coarse and fine generators are compared by a
+refinement defect. A Duhamel identity proves that this generator-level defect is exactly the source
+of the corresponding semigroup defect and gives a quantitative stability bound. In the stochastic
+realization, point-mass seeds generate random walks and continuous-time Markov evolution. Ex-
+act lumpability is the vanishing of the same refinement defect. Conditional expectation is treated
+as a weighted orthogonal packet projector, with nested partitions producing martingale-difference
+packets. Bayesian conditioning is a normalized nonlinear operator. Its independent-data composi-
+tion law, packet-evidence decomposition, stability bound, conjugate updates, and continuous likeli-
+hood flow are proved explicitly. The Bayesian refinement conjecture is resolved in finite dimensions:
+for strictly positive likelihoods and at least two coarse packets, exact commutation for every prior
+is equivalent to blockwise-constant likelihoods up to global scale, and every failure factors through
+an explicit information-loss packet. Fractional powers are constructed packetwise through the spec-
+tral projectors of a positive operator, and the square-root semigroup is recovered by subordination.
+The fractional-naturality conjecture is also resolved for bounded nonnegative self-adjoint refinement
+systems: the fractional intertwining defect has an exact resolvent integral, a gap-free Hölder cer-
+tificate, a sharper common-gap estimate, and a Duhamel semigroup bound. Green kernels, finite-
+difference Poisson problems, and second-order low-mode convergence provide the PDE realization.
+A finite-state Feynman–Kac formula is proved by path enumeration. Exact Schur–Feshbach elim-
+ination shows that discarded latent packets return as a frequency-dependent self-energy and, in
+time coordinates, as a memory kernel. Survival and hazard functions are generated by transient
+semigroups. Nineteen code-generated figures, machine-readable results, the original thirty-seven
+automated tests, and seventeen added boundary-case checks accompany this reviewed edition. The
+inherited September 6 release records five checked Lean blocks covering all 33 scoped theorem-like
+results in Appendix A. Finite-dimensional theorems, classical infinite-dimensional extensions, nu-
+merical certificates, and open continuum claims are kept separate.
+
+
+===== VI_traditional PAGE 41 =====
+For clarity, the finite-dimensional holomorphic calculus used below has the following canonical def-
+inition. For 𝐴acting on ℂ𝑑, its generalized eigenspaces 𝐸𝜇= ker(𝐴−𝜇𝐼)𝑑form a direct-sum decom-
+position over the eigenvalues. Define the unique linear operator 𝐹(𝐴) by
+𝐹(𝐴)|𝐸𝜇=
+𝑑−1
+∑
+𝑘=0
+𝐹(𝑘)(𝜇)
+𝑘!
+(𝐴−𝜇𝐼)𝑘∣
+𝐸𝜇
+.
+The formula is independent of a basis and of increasing the truncation index: the extra nilpotent powers
+vanish. It depends only on the finite Taylor jets of 𝐹at the spectrum. If 𝐹is holomorphic on an open
+neighborhood 𝑈of the spectrum, each eigenvalue admits a radius 𝑟𝜇> 0 with 𝐷(𝜇, 𝑟𝜇) ⊂𝑈, and
+Cauchy’s formula gives
+𝐹(𝑘)(𝜇)
+𝑘!
+=
+1
+2𝜋𝑖∮
+|𝑧−𝜇|=𝑟𝜇
+𝐹(𝑧)
+(𝑧−𝜇)𝑘+1 𝑑𝑧.
+Consequently the same canonical operator is obtained from any such local Cauchy circles, even when
+𝑈is disconnected. This is the standard finite Taylor-jet definition of the holomorphic matrix function.
+Theorem 15.1 (Naturality under exact intertwining). For finite complex matrices, let 𝐹be holomorphic
+on a neighborhood of the union of the spectra of 𝐴𝑓and 𝐴𝑐. Real matrices are treated by complexification. If
+𝐶𝐴𝑓= 𝐴𝑐𝐶,
+then
+𝐶𝐹(𝐴𝑓) = 𝐹(𝐴𝑐)𝐶.
+In particular, exact generator refinement propagates simultaneously to semigroups, resolvents, integer pow-
+ers, and analytic transfer functions.
+Proof. The intertwining identity implies 𝐶(𝐴𝑓−𝜇𝐼)𝑘= (𝐴𝑐−𝜇𝐼)𝑘𝐶for every 𝑘≥0. It therefore sends
+the generalized 𝜇-eigenspace of 𝐴𝑓into that of 𝐴𝑐. Use a common truncation index at least as large as
+both dimensions in the canonical formula above. Multiplying its finite sum by 𝐶now gives the desired
+identity on every generalized eigenspace. The direct-sum decomposition gives it on the full space. The
+argument covers nilpotent Jordan parts and uses only local spectral Taylor jets. It does not require one
+Taylor series to converge on both spectra. The zero-dimensional case is immediate.
+Remark 15.2 (Where nonlinearity enters). Bayesian conditioning does not fit the preceding linear func-
+tional calculus because normalization depends on the current state. It nevertheless obeys an exact
+composition law and has a closed packet reconstruction. Chapter III supplies the general nonlinear
+coordinate theorem. The Bayesian map is a probabilistic realization.
+16 Numerical certificates
+The recorded calculations were run on CPU. No GPU timing or performance claim is made. Floating-
+point residuals are implementation checks and are not substitutes for the symbolic proofs.
+Numerical Certificate 16.1 (Test suite). The September 6 release records the following automated-test
+result:
+54/54 automated tests.
+
+
+===== VI_traditional PAGE 46 =====
+A Lean verification and scope
+Fifth checked block, 6 September 2026. The release contains 341 explicit Lean theorem declarations
+across 47 proof modules, including 31 additional declarations since the fourth checked block. The
+September 6 release records a successful full build and namespace audit with Lean 4.34.0-rc2 and
+pinned mathlib. The audit inspects 782 declarations, including definitions and generated auxiliaries.
+Only propext, Classical.choice and Quot.sound are allowed. These are different counting units from
+Part I’s 33 theorem-like results.
+The ledger has 33 complete, zero partial and zero pending results. The last two results, 13.2 and
+15.1, are complete. The three separately stated conjectures remain open and are excluded from this
+count.
+“Complete” means the stated scope follows from the named checked targets and the ordinary spe-
+cializations recorded in the ledger. Prose-to-Lean correspondence is manually reviewed. The fractional
+targets use complex Hilbert spaces. Complexification for real operators is an ordinary mathematical
+specialization, not a separately checked Lean construction. Completion of the theorem ledger does not
+certify every prose sentence, numerical figure or open conjecture.
+Result
+Manuscript statement
+Lean scope
+1.2
+Finite semigroup law
+Complete
+2.1
+Packet semigroup convolution
+Complete
+2.2
+Reducing packets
+Complete
+3.1
+Exact Duhamel refinement identity
+Complete
+3.2
+Norm bound
+Complete
+3.3
+Resolvent refinement identity
+Complete
+4.1
+Finite Markov semigroup
+Complete
+5.1
+Exact lumpability
+Complete
+5.2
+Finite-horizon defect formula
+Complete
+6.1
+Finite conditional-expectation projector
+Complete
+6.2
+Tower law and martingale packets
+Complete
+7.1
+Independent-likelihood composition
+Complete
+7.2
+Bayesian packet reconstruction
+Complete
+7.3
+Likelihood perturbation bound
+Complete
+8.1
+Exact effective-likelihood factorization
+Complete
+8.2
+Bayesian refinement criterion
+Complete
+8.4
+Bayesian information-loss packet
+Complete
+8.5
+Nested Bayesian packet tower
+Complete
+8.6
+Canonical coarsest likelihood-resolving partition
+Complete
+9.1
+Bayesian nonlinear semigroup
+Complete
+9.3
+Prediction-update reconstruction
+Complete
+10.1
+Fractional packet calculus
+Complete
+10.2
+Poisson subordination
+Complete
+10.3
+Fractional intertwining theorem
+Complete
+10.4
+Fractional semigroup refinement
+Complete
+10.5
+Fractional refinement towers
+Complete
+11.1
+Exact discrete Green reconstruction at grid nodes
+Complete
+11.2
+Second-order low-mode convergence
+Complete
+12.1
+Discrete Feynman–Kac path formula
+Complete
+13.1
+Schur–Feshbach projected resolvent
+Complete
+13.2
+Memory/self-energy correspondence
+Complete
+
+
+===== VI_traditional PAGE 47 =====
+Result
+Manuscript statement
+Lean scope
+14.1
+Semigroup survival identities
+Complete
+15.1
+Naturality under exact intertwining
+Complete
+General nonnormal memory (13.2).
+The actual damped exponential is decomposed into finitely
+many terms of the form 𝑡𝑘𝑒(𝜇−𝑧)𝑡. Integrability and convergence to zero follow from Re 𝜇< Re 𝑧. The
+formal proof uses generalized eigenspaces of left multiplication on the matrix algebra, so nilpotent
+Jordan parts are included. Both inverse identities follow by integrating the two exponential derivative
+formulas. A continuous linear sandwich map gives the literal rectangular matrix memory integral and
+the actual inverse. No normality or externally supplied growth bound is required.
+Canonical holomorphic naturality (15.1).
+The standard finite Taylor-jet calculus defined before the
+theorem is constructed using the direct sum of generalized eigenspaces. Uniqueness, cutoff stability
+and exact rectangular naturality are proved. Cauchy’s formula identifies the local coefficients with
+actual circle integrals. Admissible radii exist in every stated open holomorphic neighborhood, and
+changing them leaves the canonical operator unchanged. The argument permits disconnected neigh-
+borhoods and different matrix dimensions. It makes no assertion about general Banach-algebra contour
+deformation.
+Fractional results (10.3–10.5).
+The inherited fourth block proves the scalar beta normalization, the
+Lebesgue integral representation of actual positive fractional powers, the literal resolvent-defect for-
+mula, both printed norm constants and exact intertwining. The rectangular complex-Hilbert-space
+semigroup proof substitutes those constants into Duhamel’s identity. The varying-space tower proof
+gives summability of fractional-defect norms and uniform convergence of time-defect norm series
+on bounded time intervals. Here “summable” means summable in norm. Operators with unrelated
+codomains are not added together. A separate fixed-space theorem proves operator-series convergence
+when such a sum is defined.
+Verification and numerical evidence.
+The September 6 release records that the full pinned build,
+project-wide axiom audit, all 54 companion tests and six verifier controls passed. No fresh Lean build
+is asserted for this October edition. The 54 tests comprise the original 37 and 17 added boundary and
+validation cases. The 19 numerical figure pairs are unchanged. The earlier 79-field numerical compari-
+son remains historical evidence, not a rerun in that September 6 block. The September 12 visual release
+subsequently records a numerical replay. Current October checks are reported separately in the final
+package. Machine-readable source contracts, exact theorem targets, full logs and previous checked
+ledgers accompany the source archive. Numerical tests are finite regressions and are not substitutes
+for the Lean proofs.
+
+
+===== VI_traditional PAGE 109 =====
+Corollary R5.5 (One phase model). If 𝐴= (−𝜆) and 𝑝0 = 1, then
+𝑆(𝑡) = e−𝜆𝑡,
+𝑓(𝑡) = 𝜆e−𝜆𝑡,
+ℎ(𝑡) = 𝜆.
+Proof. Insert the scalar generator into theorem E16.2.
+R6 Earlier exact examples
+These five short examples are retained from the earlier human edition. Their numerical parameters are
+independent of the later visual guide’s worked models.
+Example R6.1 (One transfer between two packets). Let
+𝐴= (𝑎
+0
+𝑐
+𝑏)
+and let the two coordinate axes be the packet spaces. If 𝑎≠𝑏, then
+e𝑡𝐴= ⎛
+⎜
+⎝
+e𝑎𝑡
+0
+𝑐e𝑎𝑡−e𝑏𝑡
+𝑎−𝑏
+e𝑏𝑡
+⎞
+⎟
+⎠
+.
+The lower left block is produced by one transfer from the first packet to the second. Its expansion begins
+with 𝑐𝑡, in agreement with corollary R1.3. When 𝑎= 𝑏, the same block is 𝑐𝑡e𝑎𝑡.
+Example R6.2 (A four state lumpable chain). Partition four states into 𝐵1 = {1, 2} and 𝐵2 = {3, 4}. For
+positive rates 𝑎, 𝑏, 𝑢, 𝑣, set
+𝑄=
+⎛
+⎜
+⎜
+⎜
+⎜
+⎝
+−𝑢−𝑎
+𝑢
+𝑏/2
+𝑏/2
+𝑢
+−𝑢−𝑎
+𝑏/2
+𝑏/2
+𝑎/2
+𝑎/2
+−𝑣−𝑏
+𝑣
+𝑎/2
+𝑎/2
+𝑣
+−𝑣−𝑏
+⎞
+⎟
+⎟
+⎟
+⎟
+⎠
+.
+The rates 𝑢and 𝑣move inside the coarse blocks. Every state in 𝐵1 leaves for 𝐵2 at total rate 𝑎, and every
+state in 𝐵2 leaves for 𝐵1 at total rate 𝑏. Hence
+𝑄= (−𝑎
+𝑏
+𝑎
+−𝑏)
+and 𝐶𝑄= 𝑄𝐶. The internal rates disappear from the coarse generator even though they remain present
+in the fine evolution.
+Example R6.3 (A visible likelihood loss). Let 𝐵1 = {1, 2}, let 𝐵2 = {3}, and take
+𝑝= (3/10, 2/10, 5/10),
+𝐿= (1, 3, 2).
+The coarse prior is (1/2, 1/2). The exact block likelihoods are
+ℓ1(𝑝) = (3/10) + 3(2/10)
+1/2
+= 9
+5,
+ℓ2(𝑝) = 2.
+
+
+===== VI_traditional PAGE 138 =====
+Plate VI.27
+/
+REFINEMENT LIMITS / WHAT THE FINITE MODELS DO NOT PROVE
+Small at each level is not summable across levels
+Chapter VI, Part I: Corollary 10.5 and Section 17. Summability and uniform control are additional data.
+For each 𝑛≥1, compare the two scalar operators 𝐴𝑛= 0 and 𝐵𝑛= 1/𝑛2 through the identity. Their
+ordinary defects have sizes 1/𝑛2, while their square-root defects have sizes 1/𝑛:
+∑
+𝑛
+|𝐴𝑛−𝐵𝑛| < ∞,
+∑
+𝑛
+|𝐴1/2
+𝑛
+−𝐵1/2
+𝑛| = ∞.
+These are independent scalar comparisons, not a constructed inverse system. They isolate an error-scale
+obstruction without claiming a coherent refinement tower.
+0
+4
+8
+12
+16
+0
+1
+2
+3
+partial-sum cutoff 𝑁
+sum of defect norms
+solid: ∑𝑛≤𝑁𝑛−1
+dashed: ∑𝑛≤𝑁𝑛−2
+dotted: 1
+2 ∑𝑛≤𝑁𝑛−2
+The infinite-series conclusion
+uses the exact formulas.
+Partial sums through 𝑛= 16 illustrate the contrast. The convergence and divergence statements follow from the displayed
+series, not from the finite plot. A common positive gap gives the third, summable upper bound.
+A uniform hypothesis can change the conclusion
+Replace the pair by 𝐴𝑛= 1 and 𝐵𝑛= 1 + 1/𝑛2. Then
+∣𝐵1/2
+𝑛
+−𝐴1/2
+𝑛∣=
+1/𝑛2
+√1 + 1/𝑛2 + 1
+≤
+1
+2𝑛2 .
+This is the elementary form of the uniform-gap mechanism on Plate VI.16. Without such information, trans-
+ferring a summable generator-defect budget through a fractional function can fail.
+The formal release keeps three original research questions separate: realization of broader transfer semi-
+groups, uniform stochastic-refinement control, and latent packet closure. The exact finite examples here do
+not settle their existence, domain, topology, or uniformity requirements.
+Likewise, exact hidden-state elimination only yields the finite memory models that were supplied. It does
+not establish a finite latent realization for every memory law. A complete list of matrix identities can still
+leave an infinite-dimensional approximation problem untouched.
+Read this as: A finite example can expose a missing hypothesis. It cannot supply a projective-limit
+construction, a uniform constant, or a continuum realization merely by passing at several levels.
+
+
+===== VI_traditional PAGE 139 =====
+Plate VI.28
+/
+READER’S GUIDE / CALCULATION, DRAWING, AND FORMAL CONTRACT
+How to use the evidence
+Chapter VI formal companion: thirty-three-result correspondence and reproduction record.
+The first 28 pages retain the worked mathematical atlas from the September release. Traditional Part I
+carries the corresponding core manuscript, including its figures and formal-status appendix. Its theorem
+numbers are the references beneath these titles. The standalone guide uses internal visual-page links. The
+added pages beginning at Plate VI.29 address the strengthened branch in Traditional Part II.
+The chosen release records all 33 scoped results complete, with 341 supporting theorem declarations in
+47 proof modules and a saved audit of 782 namespace declarations. Those are inherited verification records,
+not a new Lean run and not counts of historically novel results. The three original conjectures retain their
+stated status.
+Read each kind of evidence at its actual strength
+Evidence
+What is checked here
+What it does not establish
+Exact matrices
+Stochasticity, intertwining, projector
+identities, inverse formulas, and specific
+defects.
+The same properties for arbitrary
+partitions or unbounded operators.
+Rational algebra
+Posterior/evidence identities,
+polynomial integrals, nodal errors, and
+complete finite path sums.
+An unstated observation model or a
+continuum convergence theorem.
+Symbolic formulas
+The displayed exponentials, Laplace
+transforms, derivatives, and finite
+spectral powers under stated conditions.
+A general-purpose formal proof of every
+analytic identity.
+Vector drawings
+Reproducible geometry and sampled
+curves from the explicit models.
+Numerical quadrature certificates or an
+exhaustive infinite-time experiment.
+Saved Lean
+records
+The original contract, source files,
+dependency pins, and earlier
+verification logs.
+Fresh kernel verification of this editorial
+addition.
+Reproduce a calculation before adapting it
+The visual-appendix tree contains the mathematical models, drawing generator, and exact-example ver-
+ifier. Its README records their paths and execution commands. The inherited September verifier records
+204 exact or symbolic assertions and 11 deliberately false controls rejected. The recorded monograph review
+reproduced that symbolic suite with the available SymPy and mpmath environment. Its recorded execution
+is identified on Plate VI.42. Its JSON record names every check and its finite scope.
+The finite families are explicit: three-step Feynman–Kac paths are fully enumerated, selected rational
+priors are checked exhaustively within their stated denominator bound, and Green inverses are checked on
+four named grids. No finite count is used as a substitute for a general theorem.
+To change a model, specify the state convention, partition, likelihood meaning, topology, and domain
+first. Then rerun the calculations and inspect the regenerated drawings. A preserved formula with changed
+assumptions is not automatically a preserved result.
+Read this as: Use the guide to see why a hypothesis matters and to compute a small case. Use the
+manuscript and its formal map for the scope of the general claim.
+
+
+===== VI_traditional PAGE 153 =====
+Plate VI.42
+/
+EVIDENCE MAP / FORMAL RECORDS AND FINITE EXAMPLES
+How to read the evidence
+Chapter VI formal companion: source, execution, and example records.
+inherited formal
+33 scoped results
+saved Lean logs
+fresh examples
+rational checks
+false controls
+fresh edition
+PDF build
+page review
+Separate claims, separate evidence records.
+No combined proof count.
+The three evidence tracks have distinct scopes. The formal contract, exact examples, and PDF assembly have separate verifi-
+cation records.
+Read the records without adding incompatible counts
+The September visual release records 204 exact or symbolic checks and 11 rejected false controls for
+its 28-page atlas. The scripts and saved report remain available. The recorded monograph review reran
+the original symbolic suite with SymPy and mpmath. Its recorded inputs, outputs, resource limits, and
+execution logs accompany the current result.
+The recorded monograph review also reran the separate standard-library exact checker for Plates VI.29–
+VI.41. It uses rational matrices, finite polynomial algebra, Gaussian moments, and rational coefficients of
+logarithms. It checks the stated finite examples and rejects deliberately false alternatives. Its report records
+120 assertions and 8 rejected false controls. A separate recorded verification reran 182 rational assertions
+and 4 rejected false controls for selected inherited models. That narrower check overlaps the full symbolic
+replay and remains separate from its count.
+The new checks do not numerically certify improper integrals, all time horizons, or every analytic theo-
+rem. For example, the integrated memory weights use the stated exponential-integral formula. The checker
+verifies its coefficients and finite selection problem. Gaussian polynomial checks do not prove Hermite com-
+pleteness. Rational entropy coefficient identities do not replace the general support-sensitive chain rule.
+The formal and editorial boundaries stay separate
+The inherited Lean record covers 33 scoped results with 341 supporting theorem declarations in 47 proof
+modules. This guide neither enlarges that denominator nor claims a fresh kernel build. Traditional Part II
+retains broader written proofs. Part III retains earlier complementary results and the operator-substitution
+material migrated from Chapter IV. The formal companion maps their relationship to the formal baseline.
+All 40 plates are editable vector sources: the 26 original plates plus 14 editorial plates. The portable build
+compiles the shipped geometry without needing symbolic regeneration. The supplied models and Python
+generators were used to regenerate all forty plates. Geometry samples remain drawing coordinates rather
+than additional analytic proofs.
+Read this as: A final edition can preserve strong earlier evidence while reporting exactly which checks
+were rerun. Treat each evidence count as a count of its own declared scope.
+
+
+===== VI_visual PAGE 2 =====
+How to use this volume
+The guide follows small models whose matrices, probability laws, and transfer formulas can be
+calculated explicitly. The traditional volume supplies the general arguments. The formal compan-
+ion records a separate formal contract.
+Routes through the guide
+Plates VI.1 through VI.42 identify worked pages independently of PDF pagination. The references on Plates
+VI.1–VI.28 use the theorem numbering of Traditional Part I. References from Plate VI.29 onward name the
+corresponding strengthened result in Traditional Part II. These references distinguish preserved manuscript
+branches rather than merging their result counts.
+Route
+Mathematical question
+Plates
+Complete transfer
+Which coordinates and modes reconstruct the same
+evolution?
+1–6, 29
+Probability and evidence
+What survives averaging, aggregation, or an observation?
+7–14, 26, 32, 34–36
+Spectral evolution
+How do rates, gaps, fractional clocks, and Gaussian modes
+interact?
+15–17, 25, 33, 41
+Green and path formulas
+How do grid units and weighting conventions enter?
+18–20
+Eliminating hidden states
+What memory returns, and how can it be compressed?
+21–24, 37–40
+Passing to limits
+What additional conditions give convergence and closure?
+27, 30–31
+Evidence
+Which calculations and formal records support which
+claims?
+28, 42
+Three distinctions to keep visible
+A coordinate decomposition retains the whole vector if all components are kept. An aggregation map usually
+loses information. Elimination recovers exact retained dynamics only after adding a memory term and any
+hidden-state initial forcing.
+An exact example checks its stated finite model. A theorem provides an argument under quantified assump-
+tions. A Lean record certifies its declared formal statement under the recorded environment. None of these
+automatically certifies the other two.
+Preservation and revision
+The first twenty-eight worked pages develop the finite models. Fourteen further pages connect them to the
+extended results. Forty editable vector figures illustrate these constructions. Their source files and retained
+generation records accompany the mathematical text and its formal correspondence.
+The inherited formal baseline records 33 scoped results, 341 supporting theorem declarations, and 47 proof
+modules. The strengthened traditional branch is a separate collection of written proofs. Its broader content
+is not added to the formal denominator.
+Traditional Part III retains complementary results with an R prefix: reversibility and Dirichlet forms (R2),
+prior disintegrations and filtering (R3), potential perturbation and coarse Feynman–Kac transfer (R4), and
+finite realizations (R5). Related models appear on Plates VI.5–VI.8, Plate VI.11, Plate VI.13, Plate VI.20, Plate
+VI.26, and Plates VI.39–VI.40. The bounded-operator reciprocal result migrated from Chapter IV is R7.2. Plate
+VI.25 and Plate VI.41 explain related finite matrix calculus. These models do not replace the supplementary
+hypotheses.
+Read this as: Choose a question, work through its small model, then check the hypotheses in the
+corresponding traditional proof and formal contract.
+
+
+===== VI_lean PAGE 2 =====
+How to use this volume
+A guide to the actual formal development. 33 scoped manuscript results. 341 supporting theo-
+rem targets. 47 proof modules. The eleven chapters explain the mathematical interfaces and how
+to reproduce their recorded evidence. The complete ledgers then give exact declarations, source
+locations, imports, and nine dependency pins.
+This edition preserves 48 exact Lean excerpts. The broader traditional development has 142
+theorem-like result records and 140 written proof bodies across overlapping branches. Its extra
+written results do not extend the 33-result formal contract. Three continuum conjectures remain
+open.
+Kernel execution evidence comes from the recorded thirty-three-result formal-core build. Source
+identities, declaration locations, axiom records and finite computations are tracked separately.
+This reading guide does not claim a new kernel execution.
+
+
+===== VI_lean PAGE 3 =====
+1 How to read the formal companion
+The Lean project formalizes the explicitly scoped mathematical core of Chapter VI. It turns an equation
+such as 𝐶𝑒𝑡𝐴= 𝑒𝑡𝐵𝐶into a statement with named spaces, scalar fields, operator types, and hypothe-
+ses. This guide follows those interfaces. It explains how the formal pieces fit together and where the
+traditional edition goes beyond them.
+The latest core is release 0.5.0-checked-fifth-block. Its preserved ledger records all 33 scoped
+results as complete. The source contract names 341 explicit theorem declarations across 47 production
+modules. The preserved September 6 compiler and namespace audit reports record that 782 declara-
+tions were inspected in the project namespace. These counts measure different things: manuscript end-
+points, named theorem declarations, files, and the wider namespace. None is a count of independent
+new mathematical discoveries.
+The traditional monograph preserves the larger written development in Parts I through III, followed
+by the worked atlas in Part IV. Part I is the latest reviewed core. Part II retains the strengthened exposi-
+tion. Part III retains earlier results not subsumed by that exposition and the bounded Banach operator
+material migrated from Chapter IV. The theorem-like result records across these parts include concep-
+tual overlap. Formal completion remains attached to the 33 specific Part I ledger entries.
+Read one endpoint through its whole interface
+Start with the statement and proof in the traditional volume. Locate its numbered row in the 33-
+result ledger. Read the surrounding variables in the original Lean module, then compare the dec-
+laration’s hypotheses and conclusion with the mathematical statement. Finally, identify whether
+the evidence is an inherited kernel record, a current source reconciliation, or a bounded compu-
+tation. These steps answer different questions.
+1.1 Three forms of evidence
+Evidence
+What it establishes here
+Inherited kernel evidence
+The saved September 6 build and axiom audit for the pinned source and de-
+pendencies. No new Lean compilation occurred in this edition.
+Recorded
+source
+and
+computational checks
+Source hashes, target inventories, verifier controls, and available finite exam-
+ples were rerun in the recorded monograph review. These are not kernel check-
+ing or universal proofs.
+Mathematical correspon-
+dence
+The relationship between prose, hypotheses, definitions, ordinary real/com-
+plex specializations, and theorem interfaces is a manual review responsibility.
+The source report explicitly records full_paper_formalized: false. That remains correct even
+though all_scoped_results_complete: true is recorded for the historical kernel run. Figures, explana-
+tory prose, broader extensions, and three open conjectures are not swallowed by the scoped denomi-
+nator.
+
+
+===== VI_lean PAGE 30 =====
+10 The retained extensions and the formal boundary
+The traditional edition preserves more mathematics than the 33-result kernel ledger. A nearby formal
+identity can explain an extension’s architecture without proving that extension. This section maps the
+regions by mathematical content. “Related core” is a navigation aid, not a certificate for the entire row.
+10.1 Part II: the strengthened branch
+The labels in this table use Part II’s 𝐸prefix. The 84 theorem-like result records in that branch retain
+their written proofs. The precise hypotheses and editorial corrections are recorded in the traditional
+edition. The table does not enlarge the formal denominator.
+Written region
+Related core
+Formal boundary
+E2: packet semigroups
+1.2, 2.1, 2.2
+Formal actual exponential and finite packet convolution.
+General 𝐶0 semigroups, Dyson expansions, and packet-
+path resolvent series require their retained written as-
+sumptions.
+E3: generator defects
+3.1–3.3, 15.1
+Rectangular Duhamel and matrix resolvent endpoints are
+formal. General Banach holomorphic defect formulas ex-
+ceed finite canonical-jet naturality.
+E4: limiting refinement
+10.5
+Formal varying-space norm summability does not con-
+struct every inverse-limit semigroup. Weighted comple-
+tion, range leakage, generator closure, and limiting state-
+space choices are separate written results.
+E5: Markov lumping
+4.1, 5.1, 5.2
+Exponential probability preservation and exact/approxi-
+mate iterates are formal. Quotient obstructions, complete
+descent characterizations, and stationary descent have
+separate written proofs.
+E6: conditional towers
+6.1, 6.2
+Finite weighted kernels and difference packets are formal.
+General conditional expectation and every expanded
+variance identity are not additional ledger endpoints.
+E7: Gaussian/Hermite
+None directly
+The Ornstein–Uhlenbeck semigroup, infinite Hermite re-
+construction, generator, Dirichlet form, spectral gap, and
+fractional Hermite transfer are outside this formal core.
+E8: Bayesian transfer
+7.1–7.3
+Composition, evidence packets, and likelihood perturba-
+tion are formal. Prior-stability statements require their
+own exact interface and are not counted by analogy.
+E9: finite sufficiency
+8.1, 8.2, 8.4–8.6
+Effective likelihoods, all-prior criteria, coarsest nontriv-
+ial partitions, and the loss matrix are formal within the
+ledger scope. Relative-entropy decomposition and data
+processing are separate written results.
+E10: Bayesian flows/HMM
+9.1, 9.3
+The normalized exponential flow and one-step simplex
+preservation are formal. Cumulants, concentration, and
+quantitative filtering bounds are retained written exten-
+sions.
+E11: fractional operators
+10.1–10.5
+Actual
+normalized
+integrals,
+rectangular
+bounded
+Hilbert-space defects, and square-root subordination are
+formal. General stable-subordinator exposition is not a
+new formal endpoint.
+
+
+===== VI_lean PAGE 31 =====
+Written region
+Related core
+Formal boundary
+E12: Green/PDE
+11.1, 11.2
+Exact finite Dirichlet inverse, grid-node identity, and
+scalar low-mode error are formal. Quadrature, forcing-
+error, and broader mode-transfer estimates retain their
+stated regularity assumptions.
+E13: Feynman–Kac
+12.1
+The exact discrete finite path law is formal. Continuous-
+time probabilistic representation and product slicing
+have separate written proofs.
+E14: Schur elimination
+13.1, 13.2
+Actual block inverse and finite-dimensional Laplace
+memory identity are formal. The full time-domain clo-
+sure criterion is not separately included in the ledger.
+E15: memory compression
+13.2
+The finite nonnormal exponential-polynomial mecha-
+nism is formal. Certified block selection, realizations,
+compression
+optimization,
+and
+Volterra
+trajectory
+bounds are written extensions.
+E16: survival/risks
+14.1
+Finite survival, hazard, and defective density mass are
+formal. Transform moments, residual-life descriptions,
+and competing-risk decompositions have separate writ-
+ten scope.
+10.2 Part III: earlier results retained in their own right
+The earlier Annals branch contains results whose scope or constants are not fully subsumed by the
+strengthened text. Their retained statements and proofs appear in Part III, with 𝑅-prefixed numbering.
+The accompanying navigation crosswalk lists every retained theorem-like record and its final tradi-
+tional location. Retention preserves the mathematics. It does not create new Lean declarations.
+These results include multilevel telescoping and coordinate-generator arguments, reversible descent
+and Dirichlet forms, prior-relative Bayesian sufficiency, quantitative normalization and information-
+loss estimates, covariance and hidden-Markov formulas, potential perturbation and coarse Feynman–
+Kac transfer, and finite rational memory or phase-type descriptions. Each has to be compared against
+a formal theorem by its exact hypotheses and conclusion. Shared vocabulary is insufficient.
+10.3 The operator substitution migrated from Chapter IV
+The migrated reciprocal-family proposition concerns bounded Banach operators and holomorphic
+functional calculus, together with an explicit classical functional-calculus input. It belongs with Chap-
+ter VI’s operator language and is retained with its written proof. The core 15.1 result instead constructs
+and proves naturality of canonical finite-dimensional jets. Their relationship is conceptual. The mi-
+grated proposition is outside the 33-result formal contract.
+10.4 The three original continuum conjectures
+The latest core retains three open conjectures: transfer-semigroup realization on completed state spaces;
+uniform refinement control for meaningful discretization families; and latent-packet closure for stable
+infinite packet systems. Finite or bounded special cases proved elsewhere in the edition do not settle
+these universal formulations. In particular, summable local defects alone do not guarantee a semigroup
+limit without the appropriate completion, compatibility, and closure conditions.
+
+
+===== VI_lean PAGE 32 =====
+10.5 Traditional chapter navigation
+Printed pages are the labels in the frozen traditional volume. PDF pages count every physical page,
+including its cover and Roman opening pages. These locations refer to the frozen 152-page monograph.
+Every physical location was resolved from the actual PDF page label and checked against the final
+source map.
+All 33 formal-core endpoints.
+Core
+Result
+Printed
+PDF
+1.2
+Finite semigroup law
+3
+10
+2.1
+Packet semigroup convolution
+4
+11
+2.2
+Reducing packets
+4
+11
+3.1
+Exact Duhamel refinement identity
+5
+12
+3.2
+Norm bound
+6
+13
+3.3
+Resolvent refinement identity
+6
+13
+4.1
+Finite Markov semigroup
+7
+14
+5.1
+Exact lumpability
+8
+15
+5.2
+Finite-horizon defect formula
+8
+15
+6.1
+Finite conditional-expectation projector
+9
+16
+6.2
+Tower law and martingale packets
+10
+17
+7.1
+Independent-likelihood composition
+11
+18
+7.2
+Bayesian packet reconstruction
+11
+18
+7.3
+Likelihood perturbation bound
+12
+19
+8.1
+Exact effective-likelihood factorization
+13
+20
+8.2
+Bayesian refinement criterion
+14
+21
+8.4
+Bayesian information-loss packet
+14
+21
+8.5
+Nested Bayesian packet tower
+15
+22
+8.6
+Canonical coarsest likelihood-resolving partition
+15
+22
+9.1
+Bayesian nonlinear semigroup
+18
+25
+9.3
+Prediction-update reconstruction
+19
+26
+10.1
+Fractional packet calculus
+20
+27
+10.2
+Poisson subordination
+21
+28
+10.3
+Fractional intertwining theorem
+22
+29
+10.4
+Fractional semigroup refinement
+23
+30
+10.5
+Fractional refinement towers
+23
+30
+11.1
+Exact discrete Green reconstruction at grid nodes
+25
+32
+11.2
+Second-order low-mode convergence
+25
+32
+12.1
+Discrete Feynman–Kac path formula
+27
+34
+13.1
+Schur–Feshbach projected resolvent
+28
+35
+13.2
+Memory/self-energy correspondence
+29
+36
+14.1
+Semigroup survival identities
+30
+37
+15.1
+Naturality under exact intertwining
+32
+39
+The 24 earlier results retained in Part III. These have written proofs. This list creates no additional
+Lean completion claim.
+Final
+Result
+Printed
+PDF
+R1.1
+Packet convolution
+90
+97
+R1.2
+Packet resolvent convolution
+90
+97
+R4.1
+Fractional low mode dispersion
+96
+103
+
+
+===== VI_lean PAGE 34 =====
+11 Reproduction and evidence review
+11.1 The producing environment is pinned
+The production source declares Lean leanprover/lean4:v4.34.0-rc2, project release 0.5.0, and Mathlib
+revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+The nine exact package revisions are listed in Section 14. The Lake configuration disables both auto-
+matic and relaxed automatic implicits and treats warnings as errors. The original verifier checks the
+expected file set, source hashes, imports, theorem inventory, and kernel-audit target coverage before
+attempting the compiler gates.
+The producing September environment used a small runtime self-location adapter because a partic-
+ular process-path lookup was restricted. The preserved verification/runtime/RUNTIME.md explains
+that adapter and its positive and negative controls. The compiler, kernel, and dependency sources were
+recorded as unmodified. The adapter is not required by a normal installation, and compiler binaries
+and dependency caches are not included in the source archive.
+11.2 The inherited kernel evidence
+The historical record has timestamp 2026-09-06T06:00:38.447662+00:00. It records a successful pro-
+duction build, 341 explicit theorem targets, and 782 inspected namespace declarations. The permitted
+axiom set is
+{propext, Classical.choice, Quot.sound}.
+These are standard foundational axioms used by the project. The source verifier rejects placeholder and
+unregistered unsafe mechanisms, and the namespace audit checks the resulting declarations. A source-
+token scan alone cannot establish these semantic properties. It is one gate preceding actual elaboration
+and kernel checking.
+The complete historical files remain under the preserved original snapshot: verification/verif
+ication_status.json, verification/lean_build.log, verification/lean_axiom_audit.log, and
+verification/source_contract.json. The guide’s provenance JSON records their hashes, so the
+documentation is tied to a specific evidence revision.
+11.3 Current checks for the monograph edition
+The 9 October 2026 checks preserve all 739 recovered source files byte for byte and reconcile the 534
+original snapshot pins. The current source contract matches all 33 scoped result records, 341 theorem
+targets, and 47 proof modules. These are source integrity and inventory checks. They do not execute
+the Lean kernel.
+The recorded available-gates dispatcher run executed the pytest suite: 54 cases passed with no fail-
+ures, errors, or skips. Its six verifier methods include one clean-input check and five deliberate corrup-
+tions that the verifier rejected. The original symbolic visual suite also ran with SymPy: 204 assertions
+passed and 11 false controls were rejected. Separately recorded rational witnesses passed 182 exact
+checks and four false controls. The rational witnesses revisit some of the same finite models, so these
+totals are not added into a count of independent results.
+
+
+===== VI_lean PAGE 35 =====
+The numerical companion reproduced all 79 stored numerical fields and two nonnumeric leaves,
+and regenerated 19 figure pairs. The three broader suites passed their own mixed comparison tallies:
+475,471 checks in 16 Annals groups, 149,349 in 14 strengthened-baseline groups, and 154,608 in 15
+expanded groups. These scopes overlap and include numerical or structural checks, so their tallies are
+reported separately. They do not establish universal theorems. The three new explanatory figures also
+passed 51 exact rational assertions within their recorded finite models.
+The visual guide has a separate extension-model gate: 120 exact rational assertions passed and eight
+false controls were rejected. Its 40 editable plate sources also regenerated byte for byte. Drawing regen-
+eration checks geometry and reproduction, rather than adding mathematical proof coverage. These
+records remain separate from the original symbolic visual suite.
+The current computation review is verification/monograph_checks/COMPUTATIONAL_REVIEW.json.
+Each execution has a bounded manifest recording the command, runtime, tested input range, resource
+cap, source hashes, raw outputs, and interpretation. The package preserves earlier run records as his-
+torical evidence. Current reruns have their own dates and provenance.
+Lean, Lake, and Elan were unavailable for that review, so no compiler build or namespace axiom au-
+dit was run. The inherited kernel evidence remains the September 6 record described above. A passing
+finite example or source check cannot supply a missing universal proof or settle the three continuum
+conjectures.
+The guide’s own reconciliation confirms all 53 source-contract hashes, all target declaration lines,
+the 33-row ledger, module imports, nine dependency pins, and all 341 saved axiom-output records.
+Every raw excerpt remains an exact copy of its recorded source span. PDF review checks page layout,
+target-name extraction, font rendering, and source navigation. These documentation checks introduce
+no new theorem and make no claim of current kernel execution.
+11.4 Commands on an already provisioned system
+Use a disposable copy of the original snapshot when reproducing the original verifier: it writes new
+reports beside its input. Do not overwrite the preserved historical evidence. On a system that already
+has the declared toolchain, pinned dependencies, and documented Python packages, run from that
+copy:
+python3 verification/verify.py
+This is the full original gate, including Python tests, verifier controls, the Lean build, dependency revi-
+sion and cleanliness checks, and the namespace axiom audit. The --static-only option still dispatches
+Python tests and controls. It is not a guarantee of a dependency-free run. The current edition’s portable
+verification scripts separately document the available subset used here.
+To inspect the production theorem namespace in an already provisioned Lean checkout, the original
+underlying commands are:
+lake build KomorebiPaperVI
+lake env lean -DwarningAsError=true KernelAudit.lean
+Running those commands successfully against a different toolchain or different dependency revision
+would create a new evidence revision. Preserve its logs and provenance rather than relabeling the in-
+herited record.
+
+
+===== VI_lean PAGE 47 =====
+13 All 341 supporting theorem declarations
+The inventory is generated from the preserved v0.5.0 source contract. “Support” means the declaration
+is included in the audited target inventory but is not named directly as an endpoint in the 33-row
+manuscript ledger. It can still support a ledger endpoint. This is not a proof-dependency computation.
+Source lines refer to the immutable production files, not the display excerpts in this guide.
+13.1 Algebra: 9 theorem declarations
+Source: KomorebiPaperVI/Algebra.lean.
+Declaration
+Line; ledger
+KomorebiPaperVI.Algebra.block_reconstruction
+12; 2.1
+KomorebiPaperVI.Algebra.block_multiplication
+16; support
+KomorebiPaperVI.Algebra.packet_semigroup_convolution
+28; support
+KomorebiPaperVI.Algebra.difference_idempotent
+35; support
+KomorebiPaperVI.Algebra.difference_annihilates_coarse
+39; support
+KomorebiPaperVI.Algebra.tower_telescope
+44; support
+KomorebiPaperVI.Algebra.intertwining_powers
+53; 5.1
+KomorebiPaperVI.Algebra.finite_horizon_defect
+64; 5.2
+KomorebiPaperVI.Algebra.rectangular_resolvent_identity
+85; 3.3
+13.2 BanachDefects: 3 theorem declarations
+Source: KomorebiPaperVI/BanachDefects.lean.
+Declaration
+Line; ledger
+KomorebiPaperVI.BanachDefects.duhamel_derivative
+8; support
+KomorebiPaperVI.BanachDefects.duhamel
+21; support
+KomorebiPaperVI.BanachDefects.contraction_bound
+29; support
+13.3 BayesianFlow: 8 theorem declarations
+Source: KomorebiPaperVI/BayesianFlow.lean.
+Declaration
+Line; ledger
+KomorebiPaperVI.BayesianFlow.positive_evidence
+13; 9.1
+KomorebiPaperVI.BayesianFlow.flow_probability
+25; 9.1
+KomorebiPaperVI.BayesianFlow.likelihood_add
+30; support
+KomorebiPaperVI.BayesianFlow.flow_add
+36; 9.1
+KomorebiPaperVI.BayesianFlow.flow_zero
+45; 9.1
+KomorebiPaperVI.BayesianFlow.likelihood_derivative
+52; support
+KomorebiPaperVI.BayesianFlow.evidence_derivative
+56; support
+KomorebiPaperVI.BayesianFlow.flow_derivative
+64; 9.1
+
+
+===== VI_lean PAGE 64 =====
+Module (targets)
+Local imports
+Semigroups (11)
+Algebra
+SpectralPackets (9)
+Semigroups
+Survival (11)
+MarkovSemigroup; Semigroups
+14.1 Nine pinned packages
+Dependency
+Locked revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af
+
+
+===== VII_traditional PAGE 39 =====
+I.13 Numerical certificates
+The numerical study reports CPU experiments and a suite of 22 tests. The values below come from the
+accompanying numerical record. They are separate from the 323 supporting declarations in the formal
+companion. A displayed floating-point residual of zero describes the reported computation and does
+not independently prove equality in exact arithmetic.
+Table 1. Reported finite numerical checks, retained from the original manuscript and not rerun for this edition.
+Certificate
+Value
+Bell-state residual
+0
+Three-qubit seed-orbit rank
+8/8
+Parity off-block norm
+0
+Circuit path reconstruction residual
+0
+Exact-symmetry maximum leakage
+0
+Maximum leakage-bound violation
+0
+Feshbach projected-resolvent residual
+3.2291 × 10−17
+Bare-truncation projected-resolvent residual
+1.3091 × 10−2
+Moving-frame residual with connection
+1.0645 × 10−10
+Moving-frame residual without connection
+7.0000 × 10−1
+Canonical packet-connection residual
+0
+Bloch-curvature residual
+2.0803 × 10−11
+Kraus completeness residual
+0
+Output trace residual
+0
+Knill–Laflamme residual
+0
+Bit-flip recovery residual
+1.0385 × 10−16
+Tensor parity-refinement residual
+0
+Circle low-mode convergence order
+1.99936
+One-dimensional spectral plateau
+1.00062
+Two-dimensional spectral plateau
+2.03781
+Minimum Euclidean-transfer eigenvalue
+0.0767054
+Transfer semigroup residual
+0
+Volume-packet reconstruction residual
+0
+The original reported count is
+22/22 historical numerical tests, not rerun here.
+The 19 original figures are retained from the recovered numerical companion. The separate visual guide
+supplies a reading route through these constructions and the later strengthened results.
+
+
+===== VII_traditional PAGE 87 =====
+Remark II.13.9. The theorems above produce bounded continuum Hamiltonians. A physically useful
+continuum Hamiltonian is often unbounded. Its construction generally requires strong resolvent con-
+vergence, convergence of closed quadratic forms, or another method that controls operator domains
+[13, 21]. None of those conclusions follows from finite matrix convergence without additional hypothe-
+ses.
+II.14 Continuum milestones and exact boundary
+The finite theorems establish exact identities and criteria for bounded limits. Passing from a finite trans-
+fer model to a continuum theory still requires several separate arguments. This section states those
+remaining mathematical tasks.
+Definition II.14.1 (Anomaly free continuum constraint system). A continuum constraint system
+consists of a Hilbert space, a common invariant dense domain 𝒟, and operators 𝐶𝑎on 𝒟. It is
+anomaly free for prescribed structure coefficients when
+[𝐶𝑎, 𝐶𝑏]𝜓= i ∑
+𝑐
+𝑓
+𝑐
+𝑎𝑏𝐶𝑐𝜓
+for every 𝜓∈𝒟, and when the associated gauge evolution is defined on the physical quotient or
+physical subspace.
+Norm closure of bounded finite constraints, as in theorem II.13.7, is one special case. It does not treat
+unbounded constraints, changing domains, structure functions, or renormalized operator products.
+Definition II.14.2 (Reflection positive Euclidean limit). A reflection positive Euclidean limit re-
+quires a limiting algebra of observables, Euclidean time translations, a reflection operation, and
+correlation functions whose reflected quadratic forms are nonnegative. A field theoretic recon-
+struction also requires the regularity and covariance assumptions needed to construct a Hilbert
+space, a vacuum, and a self adjoint time translation generator.
+Theorem II.13.6 shows that positivity of each fixed finite Gram matrix survives pointwise conver-
+gence. It does not prove existence, locality, clustering, or the remaining Osterwalder–Schrader axioms.
+Definition II.14.3 (Einstein infrared criterion). A quantum geometric tower meets an Einstein
+infrared criterion only if an effective action is controlled at long wavelengths and has an expansion
+whose leading geometric terms take the form
+Γeff[𝑔] = ∫√|𝑔| (Λ +
+1
+16𝜋𝐺𝑅+ controlled higher order terms) d𝑑𝑥.
+Here the volume coefficient includes the sign and normalization written explicitly in the cosmo-
+logical term in Part I. The expansion must respect the limiting gauge identities and must include
+an estimate for the omitted terms on the declared infrared regime.
+A spectral dimension close to four does not imply this criterion. A heat trace records eigenvalue
+growth. It does not determine the tensor structure, gauge identities, sign, or interaction coefficients of
+an effective action.
+
+
+===== VII_traditional PAGE 89 =====
+Milestone
+Finite result available here
+Missing continuum input
+Symmetry and constraints
+exact packets and quotient
+obstruction
+common unbounded domain and
+renormalized closure
+Effective dynamics
+exact Feshbach map and uniform
+gap bounds
+cutoff independent spectral
+separation and locality
+Euclidean transfer
+positive finite transfer and finite
+reflection positivity
+convergent Euclidean fields and
+reconstruction axioms
+Spectral dimension
+lattice heat trace convergence
+relation to a physical metric and
+interacting observables
+Lorentzian theory
+bounded unitary direct limits
+unbounded generator, causality,
+locality, and field algebra
+Einstein regime
+a definition of the required
+expansion
+derivation and error control for the
+effective action
+Spin two sector
+a precise spectral criterion
+positive physical pole and interaction
+consistency
+Table 3. What the finite results establish and what remains outside the article.
+The theorems for bounded towers show how exact compatibility and summable differences in opera-
+tor norm produce limiting quantum evolutions. Their hypotheses also mark the scope of the argument.
+Unbounded field Hamiltonians, continuum gauge constraints, reflection positive field measures, the
+Einstein infrared action, and a massless spin two sector each require additional theorems. The finite
+packet calculus gives a common framework in which those questions can be stated and studied, while
+leaving their physical resolution open.
+
+
+===== VII_traditional PAGE 94 =====
+Factoring the difference of squares gives
+0 ≤𝑥2 −sin2 𝑥= |𝑥−sin 𝑥| |𝑥+ sin 𝑥| ≤𝑥4
+3 .
+With 𝑥= 𝑘ℎ/2 and ℎ≠0,
+𝑘2 −𝜆𝑘,ℎ= 4
+ℎ2 (𝑥2 −sin2 𝑥) ,
+4
+ℎ2
+𝑥4
+3 = 𝑘4ℎ2
+12 .
+Every algebraic transformation and inequality in the active source was accepted by Lean.
+III.4.2 What this does not establish
+This is an exact deterministic error bound for the displayed dispersion relation. The original paper’s
+numerical convergence experiment and spectral dimension measurements provide a different kind of
+evidence and were not rerun during this prose revision. The bound alone does not select a physical
+spacetime geometry.
+III.5 A constraint diagnostic that vanishes automatically
+Section 12 defines the physical projector using the exact common kernel of the constraints. In finite
+dimensions this gives 𝐶𝑎𝑃= 0 for every 𝑎. Absorb the factor 𝑖and any structure coefficient into 𝑓𝑐,
+and write
+𝒜𝑎𝑏= 𝐶𝑎𝐶𝑏−𝐶𝑏𝐶𝑎−∑
+𝑐
+𝑓𝑐𝐶𝑐.
+Proposition III.5.1 (Exact common-kernel compression). If 𝐶𝑐𝑃= 0 for every 𝑐, then
+𝒜𝑎𝑏𝑃= 0,
+𝑃𝒜𝑎𝑏𝑃= 0.
+No idempotence or adjoint property of 𝑃is needed for this implication.
+Proof. Associativity gives
+𝒜𝑎𝑏𝑃= 𝐶𝑎(𝐶𝑏𝑃) −𝐶𝑏(𝐶𝑎𝑃) −∑
+𝑐
+𝑓𝑐(𝐶𝑐𝑃) = 0.
+Left multiplication by 𝑃gives the second identity.
+
+
+===== VII_traditional PAGE 105 =====
+III.14.3 Positivity, semigroup composition, and the interval
+Every eigenvalue of 𝑇𝑒(𝑡) is strictly positive, for arbitrary real 𝑒, 𝑡, since the real exponential is positive.
+For 𝑒= 𝐸0 and 𝑡≥0 it is also at most one. Therefore
+𝑇𝐸0(𝑡) > 0,
+Spec 𝑇𝐸0(𝑡) ⊆(0, 1].
+The two scalar multiples of 𝐻−𝑒𝐼commute, so the exponential defined by the power series obeys
+𝑇𝑒(𝑡+ 𝑠) = 𝑇𝑒(𝑡)𝑇𝑒(𝑠),
+𝑇𝑒(0) = 𝐼.
+The semigroup identity is proved for all real 𝑡, 𝑠. Nonnegative time is needed for the upper spectral
+bound, not for the composition identity or strict positivity.
+These results concern operators on a finite dimensional space. Continuum transfer limits, gravita-
+tional path integrals, and physical spacetime models require further structure. The numerical figures
+retain their earlier computation records and were not recomputed during this prose revision.
+III.15 Quantitative leakage from the actual exponential
+Let 𝐴be a unital complex C-star algebra, let 𝐻= 𝐻∗, and let 𝑃= 𝑃∗= 𝑃2. Put 𝑄= 1−𝑃. The checked
+statement is
+‖𝑄exp(−𝑖𝑡𝐻)𝑃‖ ≤|𝑡| ‖𝐻𝑃−𝑃𝐻‖
+(𝑡∈ℝ).
+The matrix specialization uses the operator norm on the Hilbert space, implemented by Matrix.Norms
+.L2Operator. It is not an entrywise norm or the row-sum operator norm. The theorem includes the zero
+projector and empty matrix index type. The theorem also applies at time zero.
+III.15.1 Deriving the estimate by differentiation
+For a skew-adjoint generator 𝐺, define the actual conjugation path
+𝑇𝑃(𝑡) = exp(𝑡𝐺)𝑃exp(−𝑡𝐺).
+The formalization derives its derivative from the exponential power series and the product rule:
+𝑇′
+𝑃(𝑡) = exp(𝑡𝐺)(𝐺𝑃−𝑃𝐺) exp(−𝑡𝐺).
+Both exponential factors are proved unitary. Left and right multiplication by a unitary preserve the
+C-star norm. Therefore
+‖𝑇′
+𝑃(𝑡)‖ = ‖𝐺𝑃−𝑃𝐺‖,
+‖𝑇𝑃(𝑡) −𝑇𝑃(𝑠)‖ ≤|𝑡−𝑠| ‖𝐺𝑃−𝑃𝐺‖.
+The second inequality follows from the mean value inequality in normed spaces and covers either
+ordering of 𝑠and 𝑡. It is not a finite-difference estimate or a numerical time discretization.
+Multiplication by exp(𝑡𝐺) gives
+(𝑇𝑃(𝑡) −𝑃) exp(𝑡𝐺) = exp(𝑡𝐺)𝑃−𝑃exp(𝑡𝐺).
+
+
+===== VII_traditional PAGE 159 =====
+Plate VII.40
+/
+REFLECTION GRAMS, TRACES, AND FINAL SCOPE
+Choose the topology that preserves the quantity
+Chapter VII: Theorem II.13.6, Theorem II.13.8, Section II.14.
+Let 𝑞𝑛= 1/2 + 2−(𝑛+2) and define the scalar reflected kernel 𝐶𝑛(𝑗, 𝑘) = 1 + 𝑞𝑗+𝑘
+𝑛
+on nonnegative inte-
+gers. Each finite Gram matrix is a sum of two positive rank-one matrices, and pointwise convergence gives
+𝐶(𝑗, 𝑘) = 1 + (1/2)𝑗+𝑘. For times (0, 1, 2) and coefficients (1, −2, 1),
+∑
+𝑗,𝑘
+𝑣𝑗𝐶𝑛(𝑗, 𝑘)𝑣𝑘= (1 −𝑞𝑛)4 ≥0.
+This exact check illustrates how finite quadratic forms pass positivity to the limit.
+𝐴𝑛= 𝑃𝑛/𝑛
+𝑛equal eigenvalues 1/𝑛
+‖𝐴𝑛‖ = 1/𝑛→0
+‖𝐴𝑛‖1 = Tr 𝐴𝑛= 1
+positive trace-class control: norm convergence alone does not preserve a trace
+Operator norm does not preserve trace in growing rank
+On ℓ2, let 𝑃𝑛select the first 𝑛coordinates and set 𝐴𝑛= 𝑃𝑛/𝑛. Then ‖𝐴𝑛‖ = 1/𝑛→0 while Tr 𝐴𝑛= 1 for
+every 𝑛. These positive trace-class operators show why the choice of topology matters. Their zero limit is
+not the heat operator of a finite Hamiltonian.
+For transfers on two states 𝑇𝑛= diag(1, 𝑞𝑛) = 𝑒−𝐻𝑛, with 𝐻𝑛= diag(0, −log 𝑞𝑛) at unit time, the error in
+trace norm is 2−(𝑛+2) and the heat traces converge to 3/2. The criterion for convergence of spectral dimension
+additionally assumes convergence of the first heat moments in trace norm and a nonzero limiting heat trace.
+Convergence of the heat trace alone does not determine that quotient.
+The retained evidence and the remaining open targets
+The extension includes retained exact checks over specified finite ranges in ℚ(i) using Fraction from
+Python’s standard library. The original appendix’s record of 180 checks, including symbolic derivatives, is
+also retained. The formal companion records the provenance of these checks. All model and vector sources
+remain supplied.
+The formal correspondence lists nineteen finite items with their stated hypotheses. Its five original tar-
+gets for continuum and physical reconstruction remain open. The strengthened edition supplies analytic
+proofs and criteria for bounded limits. These results and examples do not establish the unresolved physical
+existence claims.
+Read this as: Use pointwise convergence for finite positivity tests, operator norm for bounded dy-
+namics and constraints, and trace norm for heat traces. Every conclusion keeps its own hypotheses
+and evidence scope.
+
+
+===== VII_lean PAGE 2 =====
+How to use this volume
+A guide to the actual formal development. The formal development covers 19 finite items
+through 323 named theorem declarations in 25 proof modules. The teaching chapters explain the
+mathematical interfaces and their hypotheses. The complete registers then give exact declarations,
+source locations, imports, and nine dependency pins.
+This edition preserves 67 exact Lean excerpts. Six constructed objects have a separate inherited au-
+dit of their proof fields. Those six objects are recorded separately from the catalog of 323 theorems.
+Five continuum physics conjectures remain open.
+Kernel execution evidence comes from the recorded formal core build for nineteen results. The
+guide identifies the source files, declaration locations, saved axiom records and printed excerpts.
+Finite computations and their dates are documented in the reproduction section. This reading
+guide does not claim a new kernel execution.
+
+
+===== VII_lean PAGE 6 =====
+2 Navigation through the traditional paper
+The frozen traditional volume has 159 physical PDF pages. Printed pages are the labels in that volume.
+PDF pages count the cover and Roman opening pages as well. Every frozen-edition location below was
+resolved from the actual body page label and checked against the source map. A shared subject does
+not imply identical formal coverage.
+2.1 All 19 finite items in the traditional core
+Item
+Number
+Core statement
+Printed
+PDF
+2.1
+I.2.1
+Orbit dimension of one quantum seed
+5
+13
+2.2
+I.2.2
+Quantum seed-rank formula
+5
+13
+2.3
+I.2.3
+Local orbit and Schmidt rank
+6
+14
+2.4
+I.2.4
+One seed for the computational basis
+6
+14
+3.1
+I.3.1
+Cyclic quantum projectors
+7
+15
+3.2
+I.3.2
+Tensor/polyphase refinement
+8
+16
+4.1
+I.4.1
+Exact circuit path expansion
+9
+17
+4.2
+I.4.2
+Packetwise unitarity conservation
+9
+17
+5.1
+I.5.1
+Exact symmetry packets
+10
+18
+5.2
+I.5.2
+Commutator leakage bound
+11
+19
+6.1
+I.6.1
+Moving-frame Hamiltonian
+12
+20
+6.3
+I.6.3
+Canonical packet connection
+13
+21
+6.4
+I.6.4
+Projected connection
+14
+22
+7.1
+I.7.1
+Block-diagonal measurement invariance
+17
+25
+7.2
+I.7.2
+Finite Kraus channel
+17
+25
+8.1
+I.8.1
+Finite Knill–Laflamme criterion
+19
+27
+9.1
+I.9.1
+Exact Feshbach resolvent
+21
+29
+10.1
+I.10.1
+Finite Euclidean transfer
+24
+32
+11.1
+I.11.1
+Low-mode second-order bound
+26
+34
+2.2 Strengthened statements and their formal counterparts
+This index includes all 79 named statements with proofs in strengthened Part II. A relation identifies
+shared ingredients or a shared finite result. It does not claim that the whole stronger statement has a
+dedicated Lean theorem. Entries without a corresponding named endpoint remain written mathemat-
+ical statements. The formal ledger still contains 19 items, and the declaration inventory still contains
+323 entries.
+Number
+(page)
+Strengthened statement
+Relation to the current formal source
+PDF
+II.2.2 (36)
+Orbit dimension of one seed
+Item 2.1 gives the same orbit dimension result.
+44
+II.2.3 (36)
+Quantum seed rank
+Item 2.2 gives the same sharp minimum num-
+ber of seeds.
+44
+II.2.4 (36)
+Local orbit and Schmidt rank
+Item 2.3 relates the local orbit to reduced sup-
+port.
+44
+II.2.5 (37)
+Computational address orbit
+Item 2.4 constructs the basis by addressed local
+X gates.
+45
+
+
+===== VII_lean PAGE 45 =====
+Source: formalization/SchurFeshbach.lean.
+Exact lines 59 to 64. Excerpt feshbach_counterexample. Hash in Section 12.
+theorem eliminated_invertible_full_singular :
+IsUnit (1 : ℂ) ∧¬ IsUnit (!![0, 0; 0, 1] : Matrix (Fin 2) (Fin 2) ℂ) := by
+constructor
+· exact isUnit_one
+· rw [Matrix.isUnit_iff_isUnit_det]
+norm_num [Matrix.det_fin_two]
+The companion schur_invertible theorem says that, when the eliminated block is invertible, full
+invertibility is equivalent to invertibility of the Schur complement. This locates the remaining pole
+rather than assuming it absent. The corrected assumption is part of the checked interpretation of the
+traditional result. This source reuses the retained Chapter VI proof. The present edition does not rerun
+the earlier paper.
+7.2 Euclidean transfer is defined by the exponential series
+The transfer is
+𝑇𝑒(𝑡) = exp(−𝑡(𝐻−𝑒1)).
+The definition uses the actual matrix exponential. For Hermitian 𝐻, a theorem from continuous func-
+tional calculus identifies it with the scalar function 𝑥↦𝑒−𝑡(𝑥−𝑒) applied to 𝐻.
+Source: formalization/EuclideanTransfer.lean.
+Exact lines 39 to 47. Excerpt euclidean_cfc. Hash in Section 12.
+theorem transfer_cfc (H : Matrix n n ℂ) (hH : H.IsHermitian) (e t : ℝ) :
+transfer H e t = cfc (fun x : ℝ=> Real.exp ((-t)*(x-e))) H := by
+rw [cfc_comp' Real.exp (fun x : ℝ=> (-t)*(x-e)) H]
+have hlin : cfc (fun x : ℝ=> (-t)*(x-e)) H = (-t) • (H - e • (1 : Matrix n n ℂ)) := by
+rw [cfc_const_mul (-t) (fun x : ℝ=> x-e) H,
+cfc_sub (fun x : ℝ=> x) (fun _ : ℝ=> e) H, cfc_id' ℝH hH.isSelfAdjoint, cfc_const e H
+hH.isSelfAdjoint]
+↪
+simp only [Algebra.algebraMap_eq_smul_one]
+rw [hlin, CFC.real_exp_eq_normedSpace_exp (shifted_hermitian H hH e t).isSelfAdjoint]
+rfl
+Proof reading. The proof composes the functional calculus for the exponential with the affine scalar
+function −𝑡(𝑥−𝑒). It evaluates that affine function through the calculus as −𝑡(𝐻−𝑒1). A theorem
+relating real continuous functional calculus to the exponential in a normed space identifies the final
+object with the original power series. The spectral conclusions therefore apply to the actual transfer,
+not an independently postulated spectral surrogate.
+The shift 𝑒0 is the minimum of the actual Hermitian eigenvalues. It is defined only when the finite
+state index is nonempty, because an empty spectrum has no minimum element. The source proves both
+membership of 𝑒0 in the spectrum and the assertion that it is a lower bound. Positive definiteness of
+𝑇𝑒(𝑡) follows from strict positivity of the scalar exponential for every real 𝑡. Semigroup composition
+follows because the two scaled generators commute.
+
+
+===== VII_lean PAGE 47 =====
+Proof reading. The proof scales the sine inequality by the nonnegative quantity 4/ℎ2. A field calcu-
+lation identifies the scaled error with 𝑤2 −𝜆ℎ(𝑤). The final algebra simplifies its upper bound to the
+coefficient 1/12. The hypothesis that the spacing is nonzero justifies division. The conclusion holds for
+every real 𝑤, without a restriction to small frequencies.
+For a fixed frequency, the right-hand side tends to zero quadratically as ℎtends to zero through
+nonzero values. A growing frequency range needs control of 𝑤4ℎ2. The theorem by itself does not prove
+convergence of an entire spectrum, a plateau in spectral dimension, a dynamics limit or a spacetime
+reconstruction. Those applications require their own quantified range and analytic arguments.
+7.4 A compressed anomaly can vanish for purely algebraic reasons
+The constraint audit sits beside the 19 finite ledger items. If every constraint annihilates 𝑃on the right,
+then every product term in the proposed anomaly also annihilates 𝑃on the right, so 𝑃𝒜𝑃= 0 for
+arbitrary structure coefficients. The source needs no projector axioms for this observation.
+Source: formalization/ConstraintAudit.lean.
+Exact lines 31 to 34. Excerpt constraint_kernel. Hash in Section 12.
+theorem compressed_anomaly_zero (C : I →R) (f : I →R)
+(P : R) (hP : ∀c, C c * P = 0) (a b : I) :
+P * anomaly C f a b * P = 0 := by
+rw [mul_assoc, anomaly_annihilates_common_kernel C f P hP, mul_zero]
+It also constructs a nonzero physical projector and two rational 3 × 3 constraints that act on its com-
+plement. Their commutator is nonzero, yet its physical compression is zero.
+Source: formalization/ConstraintAudit.lean.
+Exact lines 56 to 60. Excerpt constraint_nonclosure. Hash in Section 12.
+theorem commutator_nonzero : constraintX * constraintZ - constraintZ * constraintX ≠0 := by
+intro h
+have h12 := congrArg (fun A : Matrix (Fin 3) (Fin 3) ℚ=> A 1 2) h
+norm_num [constraintX, constraintZ, Matrix.mul_apply, Fin.sum_univ_succ] at h12
+norm_num [Matrix.cons_val_two] at h12
+This supplies a concrete scope warning: exact compression to a common kernel cannot by itself cer-
+tify operator closure on the whole space. It does not prove that an intended continuum constraint
+algebra exists or that every refinement has the same behavior. The hypotheses of the finite audit must
+be checked before applying it to a proposed physical construction.
+7.5 The broader manuscript and the five open targets
+The preserved original paper and the strengthened traditional edition discuss memory, geometry, di-
+agnostics and physical interpretation beyond the named finite endpoints. A traditional proof can be
+more explanatory than a formal theorem statement, and a strengthened mathematical statement can
+go beyond the selected formal endpoint. Coverage is assigned by the full result map, not by similarity
+of wording or proximity on a page.
+The original manuscript names five continuum conjectures: refinement without anomalies, uniform
+Feshbach control, Lorentzian reconstruction, an Einstein infrared limit and a massless sector with spin
+
+
+===== VII_lean PAGE 49 =====
+8 Evidence and reproducible replay
+8.1 What the saved compiler record establishes
+The inherited run is verification/final_finite_release_run/SUMMARY.json in the unchanged v0.6.0
+snapshot. It began on 6 September 2026 at 15:30:24 UTC and was updated at 15:32:49.641452 UTC. It
+records successful compilation of all 25 current modules, all 323 named theorem axiom audits, and two
+deliberately invalid controls that were rejected. Current static reconciliation checks the source hashes
+and saved log hashes against those records.
+The allowed axiom set is propext, Classical.choice, and Quot.sound. Every reported theorem depen-
+dency set is a subset of it. One reported theorem has no axiom dependencies. These are foundational
+dependencies accepted in the recorded Lean environment. They do not remove manuscript hypothe-
+ses such as invertibility of the full resolvent or Kraus normalization. Axiom auditing and hypothesis
+reading answer different questions.
+The separate inherited CONSTRUCTED_OBJECTS_AUDIT.json, in the directory for the same release run,
+records six constructed objects: the fiber, projection to the fiber, local product homeomorphism, local
+continuous linear fiber equivalence, covariant derivative taking values in the fiber, and fiber curva-
+ture. Definitions can contain proofs of inverse, linearity or continuity fields, so an inventory of the-
+orem names alone would miss part of this evidence. The audit of six objects remains separate from
+the count of 323 theorems. The computation report dated 9 October 2026 records 12 correspondence
+checks among the inherited audit, source, inventory, runner, transcript and cumulative summary.
+Those checks added no theorem declarations and did not execute the Lean compiler.
+The source archive omits the compiled public and private interfaces, the portable compiler kit and the
+Mathlib cache. The saved success record is inherited compilation evidence. It is not a fresh compilation
+on this host or an independent recheck of all imported Mathlib proofs. The recorded release reused its
+pinned library environment and did not rebuild earlier papers.
+8.2 Source and document checks in this edition
+The guide resolves nested namespaces in active source and derives 323 distinct theorem declarations
+across 25 modules. That set matches the saved theorem inventory and every saved theorem axiom
+report. All 19 finite ledger entries resolve, including GlobalConnection.covariant among the geometric
+supporting endpoints. Where a ledger entry gives only a module, the guide adds explicitly identified
+source pointers. It preserves the original ledger.
+All 67 selected excerpts are exact contiguous source blocks and retain exactly the bytes of the re-
+trieved guide’s raw UTF-8 selections. Their line ranges, original module hashes and excerpt hashes
+accompany this document. Rendered code uses explicit font fallback for the mathematical script let-
+ters and small square symbol used for dot products absent from the monospaced font. The raw source
+is unchanged. The PDF checks cover every theorem name, excerpt, reference, missing glyph and text
+bound.
+The local static_check.py checks saved source and log identities, transitive local import hashes,
+declarations, dependency pins, inherited rejection records and the audit of six constructed objects. It
+also compares every delimited mathematical span in the six teaching chapters with the retrieved edi-
+tion. The prose is checked against a preserved baseline and an explicit record of the approved changes.
+That record covers each complete chapter, including its hypotheses and explanations of proofs. These
+
+
+===== VII_lean PAGE 50 =====
+checks establish editorial preservation and consistency with the source. They do not compile Lean or
+validate a new proof.
+8.3 The finite computations recorded on 9 October 2026
+The report verification/monograph_checks/COMPUTATIONAL_REVIEW.json records the finite com-
+putations performed on 9 October 2026. Its six records retain the commands, environment versions,
+limits, inputs, outputs and hashes of those executions. The original and corrected numerical checks
+used Python 3.12.14, NumPy 2.3.5 and SciPy 1.17.0. The symbolic checks used SymPy 1.14.0. State-
+ments about unavailable dependencies in the retained reports of 6 October describe the host used at
+that earlier date. The present proofreading pass preserves the October 9 evidence without repeating
+those numerical or symbolic executions.
+In that recorded run, the original companion passed 22 pytest cases. A second entry point called
+the same 22 functions directly, so the report contains 22 distinct tests. The verifier software passed 16
+regression methods, comprising nine positive methods and seven controls using malformed inputs or
+tampering. These Python controls differ from the two inherited deliberate Lean rejections. No fresh
+kernel run or compiler rejection test was possible during this proofreading pass because lean, lake
+and elan are absent.
+The report records an exact match for all 1,048 stored result leaves, including 1,045 numerical fields,
+against the original experiment replay. The recorded comparison bounds are absolute 10−10 and rela-
+tive 10−8, although equality made those allowances unnecessary in the recorded run. The unchanged
+strengthened suite passed 18,049 checks in 15 groups. Its separately corrected copy passed 17,699
+checks in the same 15 groups, with 87 exact mode-index assertions for 𝑁= 4, … , 32. The two lower
+endpoints were changed from -N//2 to -(N//2). For odd N, Python floor division otherwise adds a
+repeated residue representative. The difference of 350 checks reflects corrected bookkeeping. The raw
+source remains intact, and the two overlapping suite totals are not added.
+The independent exact rational witnesses contain 269 assertions in total, including three explicit
+negative controls and a separate singular-inverse rejection benchmark. The original checks of visual
+examples executed 180 SymPy assertions, including nine rejected controls and 171 positive assertions.
+The extended checks executed 373 positive exact assertions and 12 rejected controls over finite examples
+using rational and Gaussian rational numbers. All 38 vector plate sources regenerated with identical
+bytes, comprising 26 original plates and 12 extended plates. Regenerating the plates checks consistency
+of the presentation and does not add mathematical proof coverage.
+A separate audit, verification/monograph_checks/TRADITIONAL_EXACT_MODELS_REVIEW.json, records
+checks of the three traditional illustrations added in that edition. It passed 30 positive exact assertions
+and rejected six deliberately false assertions. The model JSON and three generated PDFs reproduced
+with identical bytes. These are fixed examples of seed support, block inversion and channel scaling.
+They add no formal targets or general recovery conclusion.
+The manifest records retain the actual finite ranges, conventions and tolerances. Original numeri-
+cal checks typically use bounds from 10−12 to 10−10, with a 10−6 certificate for moving frames. The
+strengthened base tolerance is 2 × 10−9, with individual bounds through 2 × 10−7. Exact arithmetic
+gates have no numerical tolerance. These executions overlap and use different count units. Their totals
+are neither summed as independent evidence nor interpreted as universal theorems. They do not settle
+any of the five physical continuum targets.
+
+
+===== VII_lean PAGE 51 =====
+Evidence
+Time or source
+Meaning
+25 module compiler exits
+Saved 6 September release
+Inherited compilation under the
+locked toolchain.
+323 theorem axiom records
+Saved release, currently recon-
+ciled
+Current source declarations agree
+with the stored audited set.
+Audits of six constructed objects
+Separate saved release record
+Proof fields in definitions are au-
+dited separately.
+Source,
+excerpt
+and
+document
+checks
+Proofreading on 18 October
+Exact source correspondence, re-
+viewed prose and readable naviga-
+tion.
+22 pytest cases, 16 verifier methods
+Recorded 9 October execution
+Software checks at the recorded in-
+puts and conditions.
+Numerical
+and
+exact
+witness
+checks
+Recorded 9 October executions
+Finite computations with explicit
+arithmetic and assumptions.
+38 vector source regenerations
+Recorded 9 October replay
+Deterministic plate sources, with no
+added theorem coverage.
+8.4 Rebuild only this guide
+The guide directory contains the authored TeX, frozen navigation, rendered code, raw excerpts, styles
+and font licenses. Font binaries are not included in this delivery. The styles use the matching bundled
+fonts when those are supplied and otherwise use the named installed fonts. The script build.py copies
+the complete source tree to an isolated temporary directory. It performs four XeLaTeX passes to re-
+solve the document structure, then runs xdvipdfmx once to produce the PDF. It compiles the authored
+document without regenerating prose, source data, figures or mathematical evidence, and it does not
+invoke Lean.
+python editable/lean_guide/build.py
+python editable/lean_guide/build.py --output-directory /path/to/pdf_rebuild
+python editable/lean_guide/build.py --check-only
+Run these commands from the package root, or supply an absolute path to the script. Python 3,
+XeLaTeX, xdvipdfmx and the TeX packages named in the preamble are required. Fonts resolve through
+the relative fonts/ directory when the matching binaries are present. Otherwise the styles use installed
+P052, Nimbus Sans, Latin Modern and DejaVu Sans Mono fonts. The optional --output-directory
+keeps delivered products unchanged, and --check-only writes no delivered products.
+Regenerating the source tables additionally requires FontTools and the preserved snapshot. The as-
+sembler uses the bundled DejaVu Sans Mono and Latin Modern Math files when present, or matching
+installed files otherwise. Run the following commands only when regenerating the tables as part of an
+edited release. Refresh the recorded checks and document hashes afterward.
+python editable/lean_guide/assemble.py
+python editable/lean_guide/static_check.py
+python editable/lean_guide/build.py
+python editable/lean_guide/verify_pdf.py
+Both source scripts accept --source PATH for a relocated snapshot. Assembly stops if counts, inven-
+tory, saved axiom sets or source identities disagree. A new source edition requires a deliberate revision
+
+
+===== VII_lean PAGE 52 =====
+of the expected counts and endpoint selection together with its own evidence. These scripts reconcile
+documentation. They are not proof checkers.
+8.5 Replay the formal development with the pinned kit
+With the separately supplied pinned portable kit, set the working directory to source/complete/Paper_
+VII_Complete_v0.6.0_With_Visual_Appendix/original_snapshot, relative to the package root. Choose
+a new output directory to preserve the inherited evidence.
+python scripts/verify.py --kit /path/to/kit \
+--out verification/my_run --timeout 240
+python scripts/audit_constructions.py --kit /path/to/kit \
+--run verification/my_run
+python scripts/test_verifier.py
+The verifier checks runtime version and Mathlib revision, then compiles local modules in depen-
+dency order with one worker and strict warnings. It compares emitted axiom audits with the exact
+inventory and checks both deliberate invalid controls. The construction audit uses the fresh run’s ac-
+tual build interfaces. It rejects stale source or interface identities.
+For short execution windows, the retained checkpoint mechanism can pause after a few checks:
+python scripts/verify.py --kit /path/to/kit \
+--out verification/my_run --timeout 240 \
+--max-checks 3 --resume
+Repeat until the verifier reports complete success. Exit code 2 means paused or incomplete. Resume
+checks the verifier, runner, inventory, source dependencies and both public and private interfaces be-
+fore trusting a cached module. An interrupted build remains incomplete even when earlier modules
+passed.
+The check_low_memory.py launcher uses ordinary Lean with one worker. Its name does not promise
+an enforced memory cap. The snapshot is not a delivered Lake project with a current lakefile. Its
+provenance manifest supplies the portable kit’s locked dependencies. A bare lake build would not
+reproduce the retained procedure.
+8.6 The wrapper in the retained complete bundle
+Set the working directory to source/complete/Paper_VII_Complete_v0.6.0_With_Visual_Appendix. Its
+wrapper provides three actions:
+python Run-PaperVII.py verify
+python Run-PaperVII.py examples --output-dir /path/to/example_replay
+python Run-PaperVII.py original --output-dir /path/to/original_replay
+The integrity action verifies the manifest and checksums. The example action runs the original exam-
+ple suite for the visual appendix with its declared dependencies. The original action runs the original
+workflow for numerical examples, figures, TeX and verifier software. Its own documentation identi-
+fies that action as a companion replay rather than Lean execution. The October 9 report records the
+individual checks that were actually executed. It does not claim that the original combined PowerShell
+
+
+===== VII_lean PAGE 53 =====
+procedure, the full figure generation procedure or the historical manuscript rebuild ran as a single
+workflow.
+All nine dependency revisions and the compiler commit appear in the dependency appendix. Source
+and transcript hashes bind this reading to its inherited artifacts. Document construction, finite compu-
+tation and kernel replay each have a distinct purpose. The release records their outcomes separately.
+
+
+===== VII_lean PAGE 54 =====
+9 Complete map of finite results
+The following map reproduces all 19 ledger scope statements verbatim and resolves their current formal
+endpoints. Their recorded completion is inherited from the source release under the stated hypotheses.
+It does not assert that every sentence in the traditional paper is separately formalized. Source pointers
+added where the ledger gives only a module are identified explicitly.
+9.1 2.1 / Orbit dimension of one quantum seed
+Preserved ledger scope. Actual matrix multiplication orbit, explicit equivalence with independently
+chosen rows, d times rank(C), and full-rank cyclicity when d is nonempty. No orbit-dimension hypoth-
+esis is assumed.
+Formal endpoints.
+• KomorebiPaperVII.SeedOrbit.span_orbit_dimension, SeedOrbit.lean, line 68.
+9.2 2.2 / Quantum seed-rank formula
+Preserved ledger scope. Actual sums of k matrix actions, full-column-rank seed construction, simulta-
+neous finite direct-sum generation, and an IsLeast proof for max_i ceil(m_i/d_i). Every d_i is positive.
+Empty block families use supremum 0.
+Formal endpoints.
+• KomorebiPaperVII.SeedOrbit.quantum_seed_rank, SeedOrbit.lean, line 239.
+9.3 2.3 / Local orbit and Schmidt rank
+Preserved ledger scope. Actual Kronecker local action in standard product coordinates. Schmidt rank
+is independently defined as minimum product-vector decomposition length, with its equality to matrix
+rank proved. Derives local orbit dimension and equivalence with full support of the actual B-reduced
+matrix; the full-orbit equivalence assumes a nonempty A index.
+Formal endpoints.
+• KomorebiPaperVII.SeedOrbit.local_orbit_reduced_support, SeedOrbit.lean, line 364.
+9.4 2.4 / One seed for the computational basis
+Preserved ledger scope. Explicit local Pauli X addressing for every n, including n=0. The constructed
+gate word sends the zero seed to the standard coordinate basis, with linear independence, span and
+cardinality 2^n.
+Formal endpoints.
+• KomorebiPaperVII.ComputationalSeed.circuit_seed_basis, ComputationalSeed.lean, line 80.
+
+
+===== VII_lean PAGE 70 =====
+11 Module dependencies, source identities, and pins
+11.1 Current local module graph
+The dependencies below are read from public imports and commands of the form import all. Dupli-
+cate imports count once. Importing all declarations matters in this Lean module edition because down-
+stream proofs can require private implementation details. A module with no local import still imports
+the pinned Mathlib files named in its source.
+Module
+Direct current local imports
+CanonicalConnection
+Mathlib only
+ComputationalSeed
+Mathlib only
+ConstraintAudit
+Mathlib only
+CyclicProjectors
+Mathlib only
+ErrorSpanRecovery
+KnillLaflammeNecessity, KnillLaflammeSufficiency, QuantumS
+tateBridge, SyndromeRecovery
+EuclideanTransfer
+Mathlib only
+GlobalProjectedConnection
+GlobalRangeBundle, LocalProjectedCurvature, ProjectedCurva
+ture
+GlobalRangeBundle
+Mathlib only
+KnillLaflammeExamples
+ErrorSpanRecovery, KnillLaflammeNecessity, KnillLaflammeSuf
+ficiency, QuantumStateBridge
+KnillLaflammeNecessity
+KnillLaflammeSufficiency
+KnillLaflammeSufficiency
+SyndromeRecovery
+KrausChannels
+Mathlib only
+LeakageBound
+Mathlib only
+LocalProjectedCurvature
+ProjectedCurvature
+LowModeConvergence
+Mathlib only
+ManifoldProjectedCurvature
+GlobalProjectedConnection, ProjectedCurvature
+MovingFrames
+Mathlib only
+ProjectedBundleCompletion
+ManifoldProjectedCurvature
+ProjectedCurvature
+Mathlib only
+QuantumPacketCore
+Mathlib only
+QuantumStateBridge
+KnillLaflammeNecessity, KnillLaflammeSufficiency
+SchurFeshbach
+Mathlib only
+SeedOrbit
+Mathlib only
+SyndromeRecovery
+Mathlib only
+TensorRefinement
+Mathlib only
+11.2 Current source SHA-256 identities
+CanonicalConnection
+f2b433bdd432e18c9cb7af45403a1adcdd0426f5e9115d098317744e4b0fc3ed
+ComputationalSeed
+6b92535db98ff199d4b5fd3307c2c3935d5fe6c769761eae9fe4af71bb64c6c4
+ConstraintAudit
+e00fe71eb73e8ed8a652839d4f927e282784001d6c454f8cb2fe66f866de0371
+
+
+===== VII_lean PAGE 72 =====
+SeedOrbit
+0b1da8c7e74ccc7bbca8e2b7c0c26bce01bc95d4089616ba95c1e4fe2f147773
+SyndromeRecovery
+23a176970c7adb9e995005d50722eebf953889147802f35ea9024b0081d6af84
+TensorRefinement
+b0587b32f55d50125790345695b777786d23e3f46141e7056049d3ef5a11e0f2
+11.3 Pinned compiler and dependency revisions
+Compiler: leanprover/lean4:v4.34.0-rc2. Saved runtime commit: 6a10ac8c22beadecabdbb0919c2b5021
+4762f91d. The following are the nine packages in the manifest. Replay should use the locked revisions,
+including inherited dependencies.
+Package
+Locked revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af
+
+
+===== VIII_traditional PAGE 12 =====
+packet
+coordinates
+operator
+representation
+cost and
+error model
+compiler
+decision
+device
+schedule
+declared
+output
+A packet computation is specified before it is scheduled
+Figure 4. The representation and the output contract are fixed before the device schedule is chosen.
+produce a clipped allocation. A finite set of data types gives a multiple choice budget problem that can
+be solved exactly after the errors are quantized.
+The central computational result concerns compilation. Suppose a finite rooted tree records candi-
+date refinements. Each node may be kept as one representation or split into its children. If cost and error
+are additive across the selected leaves, the optimal pruning is found exactly by dynamic programming.
+A quantized error budget has a second exact dynamic program. The decision is stable when the score
+gap exceeds the perturbation in the local models. A change inside one subtree requires recomputa-
+tion only along the ancestor chain. These results prove a restricted packet compiler. They do not solve
+unrestricted discovery or arbitrary device scheduling.
+The measured part uses a sanitized corpus collected on one recorded CPU and one NVIDIA GeForce
+RTX 3070 Ti Laptop GPU. The preserved corpus contains 154 recorded rows from sixteen suites. The
+timings are inherited observations. No GPU timing is rerun for this edition. Regular equal block opera-
+tors and block diagonal plus low rank operators show large gains. Recursive HODLR, Strassen multipli-
+cation, iterative refinement, a small Walsh–Hadamard transform, and an attempted two stream overlap
+provide negative controls. These rows are retained because structure does not guarantee speed.
+The article separates four sources of gain:
+representation,
+device,
+kernel,
+amortization.
+A single speedup number can mix all four. The benchmark protocol therefore requires case identity,
+output contract, timing scope, source precision, correctness reference, discovery time, compilation time,
+and reuse count. The archived rows do not satisfy every field of this ideal contract: source-value hashes
+and explicit correctness-reference fields are absent, while setup, discovery, and reuse metadata are
+sparse. Recorded ratios are consequently descriptive comparisons under their stated scopes, rather than
+fair matches with complete provenance.
+The mathematical statements are finite. The empirical statements apply only to the recorded envi-
+ronment and generated cases. The article does not claim a new generic matrix multiplication exponent.
+Fast matrix multiplication and its stability form a separate theory [26, 10]. It also does not claim that
+every structured matrix has a profitable GPU realization.
+
+
+===== VIII_lean PAGE 6 =====
+2 Navigation through the traditional volume
+The frozen traditional volume contains 124 physical PDF pages. Printed pages are its visible page labels.
+PDF pages count the cover and opening pages as well. The frozen-edition locations below are resolved
+from its source map and verified against the actual PDF labels and destinations. Original result num-
+bers remain the correspondence keys.
+2.1 All 56 registered finite results
+The page map locates each manuscript statement. The formal hypotheses in Section 12 describe its
+actual finite counterpart. These page locations do not expand the formal contract.
+Item
+Number
+Statement
+Printed
+PDF
+2.3
+2.3
+Exact evaluation
+7
+13
+2.5
+2.5
+Block composition
+8
+14
+2.6
+2.6
+Adjoint and tensor semantics
+9
+15
+2.9
+2.9
+Contract conversion
+9
+15
+3.1
+3.1
+Dense and packet application counts
+10
+16
+3.2
+3.2
+Equal diagonal packets
+10
+16
+3.4
+3.4
+BDLR application and storage
+11
+17
+3.6
+3.6
+Streaming byte count
+11
+17
+3.8
+3.8
+Roofline lower bound
+12
+18
+3.9
+3.9
+Capacity threshold
+12
+18
+3.10
+3.10
+Materialization cost
+13
+19
+4.1
+4.1
+Equal block banded count
+13
+19
+4.2
+4.2
+Sparse plus low rank application
+14
+20
+4.3
+4.3
+Circulant spectral representation
+14
+20
+4.4
+4.4
+Toeplitz circulant embedding
+15
+21
+4.5
+4.5
+Kronecker modewise application
+15
+21
+4.6
+4.6
+Equal tensor factors
+15
+21
+4.7
+4.7
+Walsh Hadamard recursion
+16
+22
+5.1
+5.1
+Exact BDLR product
+16
+22
+5.2
+5.2
+Rank growth in a product chain
+17
+23
+5.3
+5.3
+Woodbury inversion
+18
+24
+5.4
+5.4
+Inverse norm bound
+18
+24
+5.6
+5.6
+Small core recompression
+18
+24
+5.8
+5.8
+Product chain perturbation
+19
+25
+5.9
+5.9
+Certified repeated recompression
+20
+26
+6.1
+6.1
+Path support of powers
+21
+27
+6.2
+6.2
+Polynomial support
+21
+27
+6.3
+6.3
+Acyclic transfer nilpotence
+21
+27
+6.5
+6.5
+Level schedule for a triangular solve
+22
+28
+6.6
+6.6
+Sequential depth
+22
+28
+6.7
+6.7
+Inverse support lies in the transitive closure
+23
+29
+6.8
+6.8
+Schur support inclusion
+23
+29
+7.2
+7.2
+Invariant packet Krylov decomposition
+24
+30
+7.3
+7.3
+Approximate packet Krylov bound
+24
+30
+7.4
+7.4
+Block Jacobi condition bound
+25
+31
+7.6
+7.6
+Certified packet preconditioning
+25
+31
+8.1
+8.1
+Packet perturbation certificate
+26
+32
+8.3
+8.3
+Mixed precision product chain
+27
+33
+
+
+===== VIII_lean PAGE 41 =====
+11 Replay, provenance, and the four classical boundaries
+11.1 The accepted evidence is a cumulative source-bound run
+The preserved summary verification/sixth_final/SUMMARY.json records a newly created accepted
+output directory, all 40 modules, all 392 theorem declarations, 66 construction audits, the two invalid-
+proof controls, and completion at 2026-09-06T22:38:55.838919+00:00. The reported Lean version is
+4.34.0-rc2. The compiler commit and Mathlib revision are printed in Section 14.
+The saved summary retains source and local dependency hashes, generated-interface hashes, com-
+mands, exit codes, and log hashes. The source release excludes local compiled interfaces. A fresh veri-
+fication run regenerates them. The static checks in this guide do not recreate them or use their hashes
+as a substitute for compilation. The pinned Mathlib cache was reused in the inherited run, not inde-
+pendently rebuilt.
+11.2 Static source and documentation checks
+The guide assembler resolves active namespaces, reconciles all 458 audited names, matches all 40 active
+source hashes to the accepted report, parses the saved compiler logs back into axiom sets, and matches
+all log hashes. It also verifies both rejected-control source and log identities. Every excerpt is bound to
+exact source lines and both source and excerpt SHA-256 values. These are fresh static documentation
+checks.
+The documentation report records fresh_lean_kernel_run: false. Its source and documentation
+checks do not constitute a kernel replay. The accepted compiler record supplies the execution evidence.
+The procedure below explains how to reproduce it.
+11.3 An actual kernel replay on a suitable host
+Use the separately supplied portable Linux x86-64 / WSL kit for the exact recorded compiler and Math-
+lib versions. Python 3.10 or later is required. Tests and numerical mirrors also require NumPy. Run from
+the extracted original_snapshot root:
+python3 scripts/verify_integrity.py
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+python3 scripts/verify.py --kit /path/to/Komorebi_Portable_Lean_4.34.0-rc2 --out
+verification/recheck --timeout 240
+↪
+python3 scripts/run_sixth_regressions.py --out verification/recheck_numerical.json
+The verifier’s exit code zero means complete pass, one means failure, and two means paused or incom-
+plete. On a host with short command limits, use the same output directory with --max-checks 2 --res
+ume. Checkpoint source, dependency, interface, and log identities govern resumption. A partial check-
+point does not establish a cumulative pass. A different compiler or dependency revision is a different
+replay and should be reported as such.
+To rebuild only this guide, run python3 build.py from its directory. The deterministic isolated
+XeLaTeX builder needs only the shipped guide sources, generated tables, and exact excerpt files. To
+regenerate those tables from the edition’s preserved active snapshot, run python3 assemble.py --sou
+rce /absolute/path/to/original_snapshot, then rebuild. python3 verify_pdf.py --source /abso
+lute/path/to/original_snapshot checks exact excerpt bytes, extracted declaration names, references,
+glyphs, page geometry, and internal links. Neither script invokes Lean.
+
+
+===== VIII_lean PAGE 42 =====
+11.4 Classical inputs are not folded into the 56 count
+Item
+Classical input
+Precise present boundary
+5.5
+Eckart–Young–Mirsky
+Ordered diagonal spectral and Frobenius best-rank
+bounds and isometric transfer are checked as sup-
+port for 5.6. General SVD existence and the canonical
+singular-values API theorem are outside this release.
+7.5
+CG convergence
+The classical energy-error estimate is supplied. The for-
+mal block proves monotonicity and replacement by a
+certified condition bound, rather than proving the CG
+algorithm or its classical convergence theorem.
+8.2
+Floating-point product model
+Local error inequalities are supplied to exact normed-
+ring propagation. IEEE rounding semantics and a device
+implementation are not independently proved.
+9.1
+Simultaneous spectral decom-
+position
+Exact residual and off-diagonal certificates are proved
+for a supplied finite self-adjoint projector family. A gen-
+eral simultaneous-decomposition algorithm is not inde-
+pendently formalized.
+11.5 Historical counts, failures, and numerical mirrors
+The historical verification appendix records six successive proof blocks. Its earlier coverage and
+remaining-work lists describe those stages. The sixth ledger supplies the cumulative finite correspon-
+dence. These records preserve what each stage established. The active source is the 392-declaration
+sixth-block branch. The earlier 298-declaration branch was not merged into it.
+The sixth development record retains 31 captured checks, 21 of which failed before correction. Those
+diagnostics and source snapshots are separate from the accepted cumulative build. The invalid equality
+and admitted-proof controls were rejected in that accepted run. A failed development attempt is not a
+theorem. A corrected theorem is assessed through its active source and accepted evidence.
+The inherited sixth numerical mirror records 182 factor pairs, 638 truncation cases, 3,190 arbitrary
+rank-bounded competitors, nine invalid-input controls, and two assumption-removal controls. It uses
+NumPy complex128 and numerical rank thresholds. It is neither extracted nor compiled Lean and
+does not prove universal matrix optimality. Any present numerical rerun is reported separately in the
+edition’s verification records. The historical CPU/GPU benchmarks were not rerun here, and their
+recorded comparison fields do not automatically instantiate the complete formal fair-match signature.
+11.6 Reproducible limits
+The three companions share the original result keys and preserve the complete raw mathematical and
+formal sources. The paper-to-Lean map explains recorded hypotheses and scope. It is not an automat-
+ically checked semantic-equivalence theorem between prose, Lean, and prototype Python. No fresh
+CUDA correctness, device stability, timing advantage, full imported-library rebuild, or claims beyond
+the stated finite mathematics follow from the documentation checks.
+
+
+===== VIII_lean PAGE 49 =====
+12.23 5.5 — Eckart Young Mirsky theorem
+Traditional original item 5.5, current statement 5.5. Printed page 18, PDF page 24.
+Recorded status. external_input_with_checked_svd_data_specialization.
+Recorded hypotheses and scope. Ordered diagonal spectral/Frobenius best-rank inequalities and
+rectangular isometric transfer are now independently checked as supporting results for 5.6. General
+SVD existence and a theorem phrased in the canonical Mathlib singularValues API remain outside this
+release. This classical entry stays separately tracked, not added to the 56 manuscript-proved count.
+12.24 5.6 — Small core recompression
+Traditional original item 5.6, current statement 5.6. Printed page 18, PDF page 24.
+Recorded status. checked.
+Recorded hypotheses and scope. Actual compact orthonormal column-space factorizations with di-
+mensions equal to the input matrix ranks. For any supplied ordered thin SVD of the actual small core,
+constructs thin square-root factors with min(d,k) columns, proves rank <= k, global spectral and Frobe-
+nius optimality against every ambient competitor, and exact tail errors. No assumed optimality, tail
+formulas, norm invariance or rank identities. Includes zero and rank-deficient factors, k=0, k>=d and
+repeated singular values. SVD existence/computation, floating-point QR/SVD, and canonical Math-
+lib singularValues identification are not independently formalized. The supplied SVD equations are
+explicit hypotheses, as in the manuscript.
+• KomorebiPaperVIII.SmallCore.small_core_optimal_recompression; SmallCoreRecompression.lean,
+line 124.
+• KomorebiPaperVIII.SmallCore.recompression_optimality; SmallCoreRecompression.lean, line 91.
+• KomorebiPaperVIII.SmallCore.compact_product_reconstruction; SmallCoreTransfer.lean, line 61.
+• KomorebiPaperVIII.SmallCore.diagonal_spectral_best; SpectralOptimality.lean, line 120.
+• KomorebiPaperVIII.SmallCore.diagonal_frobenius_best; FrobeniusOptimality.lean, line 106.
+12.25 5.8 — Product chain perturbation
+Traditional original item 5.8, current statement 5.8. Printed page 19, PDF page 25.
+Recorded status. checked.
+Recorded hypotheses and scope. Actual ordered products in a normed ring with norm-one identity.
+Includes the empty chain. The displayed finite sum uses perturbed suffix norms and exact prefix norms.
+This covers operators on nonzero normed spaces, without a commutativity assumption.
+• KomorebiPaperVIII.product_chain_perturbation; ProductChainError.lean, line 148.
+• KomorebiPaperVIII.product_chain_error_bound; ProductChainError.lean, line 129.
+
+
+===== VIII_lean PAGE 60 =====
+13 All named theorem and construction audits
+The saved inventory contains 458 names: 392 theorems and 66 additional construction audits. The fol-
+lowing catalog resolves namespaces from active source and records every audited name, its declaration
+kind, and its line. Theorem names include supporting lemmas and scope controls. Construction audits
+inspect transitive axioms of definitions, abbreviations, or structures. They are counted separately. The
+full source and the individual saved axiom sets are preserved with the edition.
+13.1 BandedCount: 9 theorems; 4 construction audits
+Source: formalization/BandedCount.lean.
+Audited declaration
+Kind; line
+KomorebiPaperVIII.bandCount_card
+theorem; 24
+KomorebiPaperVIII.finite_prefix_count
+theorem; 27
+KomorebiPaperVIII.bandCount_succ
+theorem; 38
+KomorebiPaperVIII.bandCount_full
+theorem; 50
+KomorebiPaperVIII.bandCount_balance
+theorem; 58
+KomorebiPaperVIII.banded_block_count
+theorem; 73
+KomorebiPaperVIII.banded_storage_count
+theorem; 85
+KomorebiPaperVIII.banded_operation_count
+theorem; 90
+KomorebiPaperVIII.banded_diagonal_case
+theorem; 96
+KomorebiPaperVIII.BandedAddress
+abbrev; 17
+KomorebiPaperVIII.BandedStorage
+abbrev; 80
+KomorebiPaperVIII.BandedOperation
+abbrev; 83
+KomorebiPaperVIII.bandCount
+def; 20
+13.2 BlockJacobi: 12 theorems; 3 construction audits
+Source: formalization/BlockJacobi.lean.
+Audited declaration
+Kind; line
+KomorebiPaperVIII.inverse_near_one_bound
+theorem; 20
+KomorebiPaperVIII.near_one_condition_bound
+theorem; 37
+KomorebiPaperVIII.invSqrt_isUnit
+theorem; 59
+KomorebiPaperVIII.invSqrt_normalizes
+theorem; 65
+KomorebiPaperVIII.normalized_decomposition
+theorem; 80
+KomorebiPaperVIII.block_jacobi_condition
+theorem; 87
+KomorebiPaperVIII.matrix_condition_ge_one
+theorem; 97
+KomorebiPaperVIII.cgFactor_mono
+theorem; 106
+KomorebiPaperVIII.cgFactor_nonneg
+theorem; 114
+KomorebiPaperVIII.cgFactor_lt_one
+theorem; 119
+KomorebiPaperVIII.certified_packet_factor
+theorem; 126
+KomorebiPaperVIII.certified_energy_error
+theorem; 134
+KomorebiPaperVIII.invSqrt
+def; 55
+KomorebiPaperVIII.matrixCondition
+def; 57
+KomorebiPaperVIII.cgFactor
+def; 104
+
+
+===== VIII_lean PAGE 76 =====
+14 Dependencies and source identities
+Both public imports and import-all commands contribute to this graph. Import-all exposes implemen-
+tation details needed by downstream proofs in this module edition. Each identity below is checked
+against the corresponding saved compiler record and log. The runtime and imported Mathlib corpus
+are dependencies of the inherited evidence, rather than newly rechecked results.
+14.1 Direct local dependencies
+Module
+Direct local imports
+BandedCount
+Mathlib / Init only
+BlockJacobi
+Mathlib / Init only
+BoundaryChecks
+PacketIR; QuantumPacketCore; TransferSupport
+BudgetConvolution
+Mathlib / Init only
+CirculantFourier
+Mathlib / Init only
+ClippedPrecision
+ContinuousPrecision
+CompactRangeFactors
+SmallCoreNorms
+CompactTruncation
+DiagonalTruncation; SmallCoreNorms
+ContinuousPrecision
+Mathlib / Init only
+DiagonalTruncation
+SmallCoreNorms; SmallCoreTransfer
+DiscoveryCertificate
+PacketIR; QuantumPacketCore
+DiscretePrecision
+BudgetConvolution
+ExactTreeCompiler
+Mathlib / Init only
+FrobeniusOptimality
+DiagonalTruncation; KernelFrame; SmallCoreNorms; SmallCoreTra
+nsfer
+GraphSchedules
+Mathlib / Init only
+InverseSupport
+PacketIR; QuantumPacketCore; TransferSupport
+KernelFrame
+SmallCoreNorms
+KrylovPackets
+LowRankAlgebra; LowRankChains; ProductChainError; QuantumPacke
+tCore
+LowRankAlgebra
+PacketIR; QuantumPacketCore
+LowRankChains
+LowRankAlgebra; PacketIR; ProductChainError; QuantumPacketCore
+PacketCostModels
+Mathlib / Init only
+PacketIR
+QuantumPacketCore
+PacketPerturbation
+Mathlib / Init only
+ProductChainError
+PacketPerturbation
+QuantizedTreeCompiler
+BudgetConvolution; ExactTreeCompiler
+QuantumPacketCore
+Mathlib / Init only
+RecompressionEndpoints
+CompactTruncation; DiagonalTruncation; SmallCoreNorms; SmallC
+oreRecompression; SmallCoreTransfer
+SchedulingContracts
+Mathlib / Init only
+SchurSupport
+InverseSupport; PacketIR; QuantumPacketCore
+SmallCoreNorms
+Mathlib / Init only
+SmallCoreRecompression
+CompactRangeFactors; CompactTruncation; DiagonalTruncation;
+FrobeniusOptimality; KernelFrame; SmallCoreNorms; SmallCoreTra
+nsfer; SpectralOptimality
+SmallCoreTransfer
+CompactRangeFactors; SmallCoreNorms
+SpectralOptimality
+DiagonalTruncation; KernelFrame; SmallCoreNorms; SmallCoreTra
+nsfer
+
+
+===== VIII_lean PAGE 80 =====
+Source SHA-256: 0f5939c4982d65b5b74c10455503686adc32923d5211561a17a291eae1e33a0e.
+Log SHA-256: 55275e231567634b6c3001a7f24c0d567986691c74a9a3933d62fb39dadcd61a.
+WalshTransform
+Source SHA-256: fd74891c276e65c3bdade75cd37768243b5b1d3f61a6a4c3a8b03ed6236551e7.
+Log SHA-256: 841deef0ed05655c97bf09eb407dd2832ab396bf4fded35f4174aa102bc28af6.
+14.3 Pinned inherited run
+Lean version: 4.34.0-rc2; saved compiler commit: 6a10ac8c22beadecabdbb0919c2b50214762f91d;
+Mathlib revision: aeb72f1e9981b6d35b426b16dca7759be3e7ba06. The source archive does not include the
+separately supplied runtime kit. A new replay must obtain that kit and validate its actual revisions.
+Summary SHA-256: 768b48a902e571c8f5e7dacc8424aea447add7df03bbd9d79dd892fe27cae629.
+Inventory SHA-256: bee2888bbff71d8d4b120b1ca34de2d3b4a6a8023c5208844c6435a205c6811a.
+
+
+===== VIII_lean PAGE 92 =====
+16 Historical proof-development records
+The following records retain the successive verification narratives that accompanied the six mathemati-
+cal appendices. Their build counts, failures and remaining-work lists describe the indicated stage. They
+are not current open-problem lists. The final finite correspondence covers all 56 manuscript-proved
+items under its stated hypotheses. The four classical inputs and the three broader research targets
+retain their separately stated boundaries. No new compiler or numerical execution is asserted by re-
+producing these records.
+16.1 Exact semantics, support and low-rank identities
+Fresh Lean run. All six modules completed with exit code zero under Lean 4.34.0-rc2 and Mathlib
+revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+All 60 theorem-level audits and the separate coordinate-projector construction audit use only propext,
+Classical.choice, and Quot.sound. Warnings were treated as errors. The deliberately false equality and
+the deliberate admitted-proof placeholder were both rejected. All 17 verifier regression tests passed.
+Failures are retained. Nine of the 15 captured development checks failed before correction. Their
+snapshots and compiler logs remain separate from the active modules and the successful final run. The
+initial long runtime-extraction command was also interrupted by the host limit. A second extraction
+completed, and the final run verified the restored runtime and dependency pins.
+Reproducibility. The release includes exact sources, module-level commands, source and compiled-
+artifact hashes, axiom logs, the complete source-result coverage ledger, and a checkpointed verifier. The
+original CPU suite passed 37,392 checks. It does not reproduce GPU timings.
+Remaining scope. Forty-six manuscript-proved items remain not fully covered, plus four separately
+tracked classical inputs. Mathlib’s imported proofs were not independently rechecked, and earlier pa-
+pers were not rebuilt in full. The next work can build on these semantics to address the cost models,
+compiler, recompression, and numerical-analysis statements without treating empirical performance
+as a theorem.
+16.2 Finite compilers and continuous allocation
+Verification and remaining work
+Cumulative proof and artifact boundaries
+The final run used Lean 4.34.0-rc2 with Mathlib revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+All 11 modules returned exit code zero with warnings treated as errors. All 129 theorem-level audits
+and five construction audits were confined to the permitted standard axioms propext, Classical.ch
+oice, and Quot.sound, or subsets thereof. Active proof sources have no admitted proofs, new axioms,
+unsafe proofs, or native-decision bypasses. The false-equality and placeholder controls were both re-
+jected.
+Failures are retained. Eight of 13 captured development checks failed before correction. The source
+snapshots and diagnostics remain separate from the successful final run. The verifier’s 17 regression
+
+
+===== VIII_lean PAGE 93 =====
+tests passed. Archive recovery checked all seven supplied parts and their combined SHA-256 before
+successful extraction.
+Executable checks. An independent exhaustive enumerator in Lean generated 85,320 pruning scores
+for 600 exact-rational cases. The recurrence was no larger than every enumerated score, attained an
+enumerated value, and agreed with the returned cut. A further 600 cached updates matched full re-
+computation. These tests do not add 600 theorems to the inventory.
+Remaining items
+Work not yet fully formalized
+4.1, 4.3–4.7
+Banded counts, circulant/Toeplitz, tensor contractions, Walsh recursion
+5.2, 5.6, 5.8, 5.9
+Rank
+growth,
+optimal
+recompression,
+product
+and
+repeated-
+recompression errors
+6.5–6.8
+Level solves, depth, inverse support, Schur support
+7.2–7.4, 7.6
+Krylov decomposition/bounds, block-Jacobi and PCG certificates
+8.3, 8.5, 8.7
+Mixed-precision chains, clipped allocation, discrete precision program
+9.2, 9.8, 9.9
+Block discovery certificate, budget compiler, its complexity
+10.3
+Optimal acyclic schedule depth
+These are 25 proved manuscript items. The separate classical inputs are Eckart–Young–Mirsky, PCG
+convergence, the floating-point product model, and simultaneous spectral decomposition.
+The original CPU numerical suite and GPU benchmarks were not rerun in this block. Papers I–VII
+were not rebuilt in full, and all imported Mathlib proofs were not independently rechecked. The release
+verifies the statements and models recorded in its ledger, not the entire paper or a production GPU
+implementation.
+Exact commands, source and dependency hashes, axiom reports, scope ledger, tests, and failed at-
+tempts accompany the ZIP. The integrity manifest detects file changes. It is not an external authenticity
+signature.
+16.3 Product chains, Krylov spaces and integer budgets
+Verification, executable checks, and remaining work
+Release evidence and precise completion boundary
+The fresh cumulative run used Lean 4.34.0-rc2 and pinned Mathlib revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+All 18 modules returned exit code zero with warnings treated as errors. Every one of the 197 theorem
+audits used only propext, Classical.choice, and Quot.sound, or subsets thereof. Twelve constructions
+were separately audited. The active proof files contain no admitted proofs or added axiom declarations.
+The deliberately false equality and admitted-proof control were both rejected.
+Exact-rational executable suite. Independent enumeration, rather than the DP recurrence, produces
+the candidate costs used for comparison.
+
+
+===== VIII_lean PAGE 94 =====
+New test category
+Count
+Tree instances with unary, binary, ternary, and mixed branching
+384
+Exact-weight table comparisons for trees
+4,992
+Budget-minimum comparisons for trees
+4,992
+Independently enumerated legal cuts
+19,152
+Additional functional-specification comparisons
+1,440
+Discrete precision instances
+288
+Exact-weight / budget comparisons for precision
+3,744 each
+Independently enumerated legal assignments
+1,453
+Explicit boundary regressions
+5
+All passed. The preceding block’s 600 compiler cases, 85,320 enumerated pruning scores, and 600
+cached-update comparisons were also rerun and passed. These counts describe executable tests, not
+additional theorem declarations.
+Failures retained. Eleven of 18 captured development compilation checks failed before correction.
+Their source snapshots and diagnostics are retained separately from the successful final run. They prin-
+cipally concern type elaboration, module visibility, finite indices, and simplification. An unsupported
+interactive runtime-recovery request failed before assembly started. The later noninteractive restora-
+tion succeeded.
+Sixteen manuscript-proved items remain: 4.1, 4.3–4.7, 5.6, 6.5–6.8, 7.4, 7.6, 8.5, 9.2, and 10.3. These
+concern structured spectral and tensor primitives, optimal recompression, graph scheduling and in-
+verse support, preconditioning, clipped allocation, and block-discovery certificates. Four classical in-
+puts are still separate.
+No GPU timings, original CPU numerical suite, full Papers I–VII rebuild, or independent recheck of
+imported Mathlib proofs was performed in this block. The JSON verification report, execution reports,
+preservation report, source ledger, logs, and scripts provide the auditable release record.
+16.4 Structured transforms and clipped precision
+Verification, regressions, and remaining work
+Cumulative release evidence
+Lean verification. All 23 modules were rebuilt in a fresh output directory under Lean 4.34.0-rc2 and
+Mathlib revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+Every final module returned exit code zero, with warnings treated as errors. The 247 theorem audits
+and 22 construction audits used only propext, Classical.choice, and Quot.sound, or subsets thereof.
+Active proof sources contain no admitted proofs or added axioms. The false-equality and admitted-
+proof negative controls were rejected. All 17 verifier regression tests passed.
+Development failures. Of 20 captured development checks in this block, 12 failed and eight passed.
+Failures included incomplete development lemmas, import visibility, finite-index instance reduction,
+and warning diagnostics. Failed source snapshots and compiler logs are retained separately from the
+successful fresh cumulative run. The first request for interactive runtime recovery was unsupported.
+Noninteractive archive assembly and extraction succeeded, with every part hash and the combined
+hash verified.
+
+
+===== VIII_lean PAGE 95 =====
+Independent regressions. The Python mirrors passed 180 exact-rational Kronecker cases, 120 ten-
+sor cases, 96 Walsh cases, 240 Toeplitz cases, and 600 clipped-allocation cases. The latter include 60
+maximal-budget cases and 1,800 rejected infeasible budgets. These are finite checks, not additional
+universal theorems or executions of the Lean definitions.
+A separate complex128 Fourier regression covered 96 cases at lengths 1 through 24. Maximum ab-
+solute errors were approximately 3.34 × 10−14 for diagonalization, 2.98 × 10−15 for unitarity, and
+2.04 × 10−13 for application, all below the declared 10−10 threshold. These numerical checks are not
+substituted for the symbolic Lean proof.
+Ten manuscript-proved items remain:
+Item
+Remaining result
+4.1
+Equal block banded count
+5.6
+Small-core optimal recompression
+6.5, 6.6
+Triangular level solve and sequential depth
+6.7, 6.8
+Inverse and Schur support inclusion
+7.4, 7.6
+Block-Jacobi condition bound and certified preconditioning
+9.2
+Exact block-discovery certificate
+10.3
+Acyclic schedule depth
+Four classical inputs remain separately recorded. This release does not rerun the original numerical
+corpus or GPU benchmarks, rebuild Papers I–VII in full, or independently recheck every imported
+Mathlib proof.
+16.5 Graph support, schedules and preconditioning
+Verification record and remaining boundary
+Cumulative fifth-block evidence
+Fresh Lean checks. A separate baseline rebuild accepted the unchanged 23-module, 247-declaration
+fourth block. The final run rebuilt all 30 active modules into a new output directory under Lean 4.34.0-
+rc2 and Mathlib revision
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06.
+All modules returned exit code zero with warnings treated as errors. All 313 theorem and 36 construc-
+tion audit targets matched the inventory. Dependencies are contained in propext, Classical.choice
+and Quot.sound. Both deliberately invalid controls were rejected. Seventeen existing verifier tests and
+twelve new release-contract tests passed.
+Preservation and corrections. All 23 upstream proof files and the original manuscript assets are
+unchanged. The source-to-result ledger is updated, including the explicit conventions for empty graphs,
+reflexive reachability and nonempty condition-number spaces. Two stale fourth-ledger increment fields
+were corrected: they had retained older “new items” metadata even though its cumulative count was
+correct. The new regression tests check these fields against this block’s actual targets.
+Development failures. Seventeen captured fifth-block development checks contain ten failed drafts
+and seven accepted drafts, one per new module. Failures included declaration scoping, finite-type in-
+stances, rewrite direction, parser syntax and warnings. The source snapshots and logs are retained
+separately. They are not substituted for the successful fresh cumulative run. Every final active source
+has a matching successful audit.
+
+
+===== VIII_lean PAGE 96 =====
+Independent mirrors. Exact rational tests passed 820 band-address cases, 200 DAG/staged-solve
+cases, 60 inverse-support cases, 50 Schur-support cases and 72 non-coordinate projector cases. Of the
+DAG cases, 125 also exhausted all candidate schedules on at most four vertices. Eight cyclic graphs were
+rejected. The inverse and Schur tests checked 390 and 97 absent-route blocks respectively, and retained
+a cancellation control.
+Separate numerical tests passed 64 complex projector cases and 120 positive-matrix normalization
+and CG-factor cases. The largest squared-Frobenius identity residual was 1.42×10−13. The largest pos-
+itive condition-bound violation was 6.66×10−15, within the declared tolerance. These are independent
+Python mirrors, not Lean execution, new universal proofs or GPU measurements.
+Remaining item. Manuscript theorem 5.6, small-core optimal recompression, remains unformalized.
+Four external inputs remain separately tracked: Eckart–Young–Mirsky, CG convergence, the floating-
+point product model and simultaneous spectral decomposition. The register’s 55/56 therefore must
+not be read as verification of every assertion or all classical algorithms in the paper.
+Reproduction and limits. Run scripts/verify.py with the separately supplied portable kit. The
+current evidence is verification/fifth_final/SUMMARY.json. The original CPU/GPU corpus, earlier
+compiler execution suites and Papers I–VII in full were not rerun. The pinned Mathlib cache was reused,
+not independently rebuilt or rechecked from source. No manuscript-to-formal semantic-equivalence
+theorem is claimed.
+16.6 Global small-core recompression
+Source map and verification
+One completed manuscript item; 79 supporting declarations
+Module
+Main purpose
+Theorems
+SmallCoreNorms
+Isometric norms, compression, rank
+19
+CompactRangeFactors
+Actual compact column factors
+7
+SmallCoreTransfer
+Global best-rank transfer
+7
+KernelFrame
+Actual kernel and row weights
+8
+DiagonalTruncation
+Rank and exact diagonal errors
+9
+FrobeniusOptimality
+Weighted-tail lower bound
+5
+SpectralOptimality
+Prefix-kernel lower bound
+7
+CompactTruncation
+Thin square-root factors
+5
+SmallCoreRecompression
+Main theorem and Gram relation
+6
+RecompressionEndpoints
+Zero and full-retention cases
+6
+Total
+Theorem 5.6 and its support
+79
+Cumulative Lean run. All 40 local modules were compiled in a newly created output directory under
+Lean 4.34.0-rc2. Each exited with code zero and warnings were fatal. The 392 named theorem reports
+and 66 separately counted construction reports match the inventory exactly. Dependencies are confined
+to propext, Classical.choice and Quot.sound, or subsets thereof. False equality and admitted-proof
+controls were both rejected.
+Pinned dependency. The actual Mathlib Git revision and manifest revision both match
+
+
+===== VIII_lean PAGE 97 =====
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06. The supplied compiled Mathlib cache was reused. It
+was not independently rebuilt or rechecked. Recovery verified all seven offline archive parts and the
+combined archive hash.
+Infrastructure. Forty-three unit tests passed: 17 verifier tests, 12 fifth-block compatibility tests
+updated to the current totals, and 14 sixth-block tests. The original fifth-block fixed-count test file and
+metadata are preserved. Exact audit coverage, dependency order, no-bypass scans, classical-input
+boundaries and absence of optimality fields in the SVD structure are tested.
+Failures retained. Of 31 captured development checks, 21 failed before correction and ten accepted
+drafts supplied the new modules. Failures concerned proof elaboration, finite-index/cardinality APIs,
+dependent rewrites, norm scopes and warning diagnostics. Their inactive source snapshots and logs
+are retained separately from the successful fresh cumulative run. An initial interactive runtime launch
+was unsupported. Noninteractive assembly succeeded.
+Regressions, reproduction and claim boundary
+Exact mathematical guarantees versus numerical implementations
+Independent numerical checks. A deterministic NumPy complex128 mirror tested 182 input-factor
+pairs at 638 truncation cases. The cases include rectangular matrices, rank-deficient and zero factors,
+empty spaces, repeated singular values, rank zero and ranks beyond the core width. Comparison used
+both the small core and an independently computed ambient SVD reference. There were 3,190 arbitrary
+rank-bounded competitors, nine invalid-input rejection controls and two checks demonstrating failure
+when essential assumptions are removed.
+The largest relative tail/reconstruction discrepancy was below 3.7×10−15, against a declared 2×10−9
+tolerance. The mirror uses numerical rank thresholds and a numerical SVD to construct column bases.
+It is not compiled or extracted Lean code, a proof for all inputs, or a GPU benchmark. The formal result
+uses exact ranks and exact factorization equations.
+Reproduce from the extracted source root.
+python3 scripts/verify_integrity.py
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+python3 scripts/verify.py --kit /path/to/portable-kit \
+--out verification/recheck --timeout 240
+python3 scripts/run_sixth_regressions.py \
+--out verification/recheck_numerical.json
+The unit tests and numerical mirror require NumPy. The Lean verification path needs Python 3.10 or
+later and the separately supplied pinned Linux x86-64 kit. Local compiled interfaces are regenerated.
+The runner also supports bounded batches with --max-checks and hash-checked --resume. A partial
+checkpoint is not a pass.
+What is complete. The 56-item manuscript-proved register is covered under the recorded hypotheses.
+The original theorem says to take orthonormal factors and a core SVD. The new construction and proof
+discharge the recompression conclusion from those exact factorization equations. In particular, no best-
+approximation assertion or error formula is hidden in an input certificate.
+What is not claimed. General SVD existence or a numerical SVD implementation is not newly for-
+malized. The four classical entries remain separately tracked. The ordered-SVD-data optimality argu-
+ment now has checked support, while the CG algorithm theorem, floating-point product model and
+
+
+===== VIII_lean PAGE 98 =====
+simultaneous-decomposition input are not newly proved in full. No new generic matrix-multiplication
+exponent, floating-point stability theorem or hardware speedup follows from this release.
+The original manuscript, bibliography, source package and all five earlier supplements are preserved.
+Historical CPU/GPU measurements, earlier compiler execution suites and Papers I–VII in full were not
+rerun. Prose-to-formal correspondence is an explicit mathematical review, not an automated theorem
+equating a sentence with a Lean type.

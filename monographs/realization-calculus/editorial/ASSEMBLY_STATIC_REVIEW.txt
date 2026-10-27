@@ -1,0 +1,15 @@
+ASSEMBLY STATIC REVIEW
+
+Scope: independent reading of assemble_monograph.py and publisher-layout.tex while source builds were still in progress. This is publication geometry/navigation review, not a mathematical check or final-book certification.
+
+Observed risks reported for parent correction:
+1. Divider leaves and the assembler both drew Arabic folios, at horizontally shifted positions. render_outer.py now omits divider folios so the assembler owns their final placement.
+2. Numeric companion links that still refer to frozen-page numbers must not use the new component pagination merely because the filename matches. The parent is adding explicit current/frozen provenance and exact-reader attachment routing. Original reader embedding alone would not fix an incorrect current-book target.
+3. LINK_NAMED get_links records can expose destination coordinates in bottom-left PDF space. Empirical current compiled Paper I Lean record: section.1 resolves to page 4, (62.64,728.64), which is y=63.36 in top-left coordinates. The direct named-link branch must convert before applying the page transform. The explicit remote nameddest branch already performs that conversion. The remote string-to destination branch also needs coordinate handling, not merely the page number.
+
+Geometry assessment:
+The preserved-PDF frame (24,55,588,741) fits the entire page without cropping and leaves room for added running furniture. A letter source scales to approximately 0.866 of its original size; legibility still needs visual review, particularly code and dense tables. Retypeset pages use the same 612x792-point canvas and a 6-point mirrored horizontal shift. The shared source style removes inherited page furniture and places the normal text measure safely below/above the new header/footer.
+
+An interim scan of 24 already compiled PDFs found all pages letter size with rotation zero. No text span entered the y<50 header-risk region or y>752 footer-risk region. This scan does not certify all final components, images/drawings, overlap absence or the final assembled book. The full machine-readable results are in ASSEMBLY_STATIC_GEOMETRY_REVIEW.json.
+
+Reader conventions were amended to distinguish the current global folio and bookmarks from printed references explicitly labeled frozen. They now name the exact attached PDFs and the frozen_readers package folder, and state that attachment support varies by PDF viewer. The revised conventions sample rendered without clipping and was visually inspected.

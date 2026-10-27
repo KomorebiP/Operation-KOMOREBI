@@ -1,0 +1,38 @@
+\section{From packet coefficients to Nishibuchi's conjecture}\label{sec:arithmetic}
+\subsection{Rational precision includes zero}
+\contract{Fix a prime $p$. For a rational number $x$ and an integer $L$, \code{precision p L x} means $x=0$ or $v_p(x)\ge L$.}
+\excerpt{Rational precision predicate}{precision}
+The explicit zero alternative avoids relying on a finite-valued implementation of the valuation at zero. It also allows negative precision exponents: dividing an integral p-adic quantity by an integer normalization can reduce the bound below zero. The source's \code{precision} predicate is not divisibility inside $\mathbb Q$, where every nonzero scalar is a unit. Divisibility statements live in $\mathbb Z$, $\mathbb Z_p$, or a stated coefficient ring, and a separate bridge transports them to rational valuations.
+
+Let $N=mp$ with $m>0$, $m\mid p-1$, and $0\le j<N$. The unnormalized sequence is lifted to $\mathbb Z_p$ only after integrality is proved. Its higher differences use a packet step that is a multiple of $(p-1)/m$. The arithmetic core supplies a bound of the form
+\[
+ p^{\min(k,mn)}\mid\Delta_{u(p-1)/m}^{k}A_{N,j}(n).
+\]
+\contract{The prime hypothesis, divisor condition $m\mid p-1$, positive $m$, and address bound $j<mp$ are all required. The sequence in the theorem is the actual integral lift of the unnormalized generating-series coefficients.}
+\excerpt{All-order packet difference bound}{global_bound}
+\walk{The theorem invokes \code{packet_divisibility} with three distinct inputs: the actual unnormalized series, its all-residue flatness theorem, and its support theorem. The interface does not permit an arbitrary series to acquire this bound. The difficult recurrence/flatness propagation resides in its imported arithmetic modules, whose explicit declarations remain in the complete catalog. The short endpoint proof is a composition of those established inputs, not an independent numerical experiment.}
+
+The normalization transfer must retain its factorial loss. A bound on $A_{N,j}$ gives a bound on the normalized coefficient only after subtracting the valuation of the normalization factor. The retained normalization counterexample shows why a universal loss-free transfer is false. A theorem with a stronger hypothesis in a standard window must not be silently extended to every row without that transfer.
+
+\subsection{A Newton expansion converts differences into a period}
+\contract{$R$ is a commutative ring, $p$ is prime, $r>0$, and every order-$k$ difference at the chosen base point is divisible by $p^{\min(k,r)}$. The conclusion is one period displacement at that base point.}
+\excerpt{Prime-power displacement from higher differences}{period}
+\walk{The displacement expansion writes the change at $p^{r-1}$ steps as a finite sum of binomial coefficients times higher differences. For an order $k<r$, the difference contributes $p^k$ and the binomial coefficient contributes the missing digits. For $k\ge r$, the difference itself supplies the whole $p^r$. The proof explicitly splits these cases. It does not require division in $R$. Integer divisibility of binomial coefficients is cast into the ring.}
+
+When the packet bound supplies $\min(k,mn)$, a sufficient threshold $r\le mn$ gives the hypothesis above. The endpoint uses the simpler threshold $n\ge r$ valid across the allowed parameter families. This is a sufficient starting index. The proof makes no assertion that the threshold is the smallest possible one.
+
+\subsection{Packet address and degree address are different indices}
+The generalized Euler sequence is degree-indexed, while a residue packet sequence is indexed by its packet row $n$. The source proves its reciprocal generating identity before presenting the external conjecture: the unnormalized series multiplied by the original exponential section is $X^j$. Thus the degree sequence is connected to the defining source series, not just assigned a suggestive name.
+
+Set $q=\operatorname{lcm}(2,p-1)$. The allowed divisor branch has packet shift $p^{r-1}(q/m)$, which becomes degree shift $qp^r$ after multiplication by $mp$. The exceptional allowed family is $p=2,m=2$. For odd primes, the option $m=2$ already belongs to the divisor branch because $2\mid p-1$.
+
+\contract{The integral quotient $q/m$ is justified by $m\mid p-1$ or $m=2$. The degree identity also requires $r>0$ so that $p^r=p^{r-1}p$.}
+\excerpt{Exact degree-index translation}{degree_shift}
+\walk{The proof establishes $m(q/m)=q$ and rewrites the exponent successor using $r\ge1$. The remaining identity is ring arithmetic. Natural-number division is not an approximate operation here: its exact cancellation is justified by divisibility. Forgetting that hypothesis would change the intended displacement.}
+
+\subsection{The completion theorem exposes its full range}
+\contract{$p$ is prime, $m>0$, $j<mp$, and $m\mid p-1$ or $m=2$. Every degree-$mpn$ coefficient is p-integral. For each $r>0$, a positive starting index $n_0\le r$ exists, and all $n\ge n_0$ satisfy the stated degree displacement congruence.}
+\excerpt{Nishibuchi completion endpoint}{conjecture}
+\walk{The conjunction separates integrality from eventual periodicity. Integrality first rewrites the degree coefficient at $mpn$ into the packet coefficient, then invokes the proved integral lift. The period witness is exactly $n_0=r$. The degree-period theorem is supplied for every later $n$, so the existential threshold is constructive at the statement level even though the ambient development uses classical mathematics.}
+
+This endpoint proves the original range recorded in the retained external comparison. The prime, parameter, address, and displacement conventions all remain visible. It supplies an eventual period and integrality, while the later dyadic modules prove sharper exact periods in their own specified family. It does not extend the conjecture to arbitrary $m$, identify an optimal starting index, or establish a least period in every prime family.

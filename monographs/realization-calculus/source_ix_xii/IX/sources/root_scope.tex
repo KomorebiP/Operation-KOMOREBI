@@ -1,0 +1,525 @@
+\section{Exact classical Euler tails and the remaining simplicity problem}
+\label{app:root:scope}
+
+This appendix records the related classical Euler tail program at its
+stationary-separation checkpoint of 5 October 2026. Its purpose is to state
+the strongest proved reduction and its exact remaining obligation. The
+universal simplicity problem below is a separate question from
+Nishibuchi's Conjecture~3.9, which the congruence results of this chapter
+resolve. It is also separate from the presentation and gluing questions
+called Native~13.2 and Native~13.3 in the original Paper~IX.
+
+The tail results have mathematical proofs, supplemented in the indicated
+families by complete coefficient certificates and proved bounds for every
+omitted coefficient. Bounded sampled values support implementation checks.
+They do not supply the universal quantifiers. The latest continuation did
+not run Lean. Its mathematical claims must therefore be read with the
+formal-coverage distinctions in the Lean guide.
+
+\subsection{The ordinary Euler packet identity}
+\label{app:root:identity}
+
+To distinguish ordinary signed Euler numbers from the generalized numbers
+of the main text, write
+\[
+ \operatorname{sech}t=\sum_{n\ge0}\mathcal E_n\frac{t^n}{n!},
+ \qquad \frac{t}{e^t-1}=\sum_{n\ge0}B_n\frac{t^n}{n!},
+ \qquad B_1=-\frac12.
+\]
+Throughout this appendix, $v_2(2)=1$ and $v_2(0)=\infty$.
+Let $s_2(n)$ be the number of ones in the binary expansion of the
+nonnegative integer $n$. Define
+\[
+ A(N)=\frac{3^{2N+2}-1}{4(2N+1)(2N+2)},\qquad
+ \left(\frac z{\sinh z}\right)^2=\sum_{m\ge0}\beta_m z^{2m},
+ \qquad \kappa_m=2^{2m}(2m)!\beta_m.
+\]
+The initial values are $\beta_0=\kappa_0=1$. For $m\ge1$, differentiation
+of $z\coth z$ gives
+\begin{equation}
+ \beta_m=-\frac{2^{2m}(2m-1)B_{2m}}{(2m)!},\qquad
+ \kappa_m=-2^{4m}(2m-1)B_{2m}.
+ \label{eq:root:beta}
+\end{equation}
+The classical dyadic Bernoulli denominator law
+$v_2(B_{2m})=-1$ and Legendre's formula yield
+\begin{equation}
+ v_2(\beta_m)=s_2(m)-1,\qquad
+ v_2(\kappa_m)=4m-1.\label{eq:root:weights}
+\end{equation}
+The source identity
+\[
+ \sum_{N\ge0}A(N)\frac{t^{2N}}{(2N)!}
+ =\frac{\sinh(2t)\sinh t}{2t^2}
+\]
+implies, after multiplication by $4t^2/\sinh^2(2t)$,
+\begin{equation}
+ \mathcal E_{2N}=\sum_{m=0}^N
+    \kappa_m\binom{2N}{2m}A(N-m).
+ \label{eq:root:packet}
+\end{equation}
+For a retained depth $M\ge0$, put
+\[
+ \mathcal T_M(N)=\mathcal E_{2N}
+   -\sum_{m=0}^{\min(M,N)}\kappa_m\binom{2N}{2m}A(N-m).
+\]
+An empty tail, $N\le M$, is exactly zero.
+
+\begin{proposition}[Sharp uniform classical truncation bound]
+For every $M,N\ge0$,
+\[
+ v_2\bigl(\mathcal T_M(N)\bigr)\ge4M+3.
+\]
+For each fixed $M$, equality holds at $N=M+1$.
+\end{proposition}
+\begin{proof}
+The source $A(n)$ is a dyadic unit for every nonnegative integer $n$.
+Each nonempty summand has $m\ge M+1$, so
+\eqref{eq:root:weights} and integrality of the binomial coefficient give
+the asserted bound. At $N=M+1$, only the first omitted summand remains.
+Its binomial coefficient and $A(0)$ both equal one.
+\end{proof}
+
+Thus later row-dependent cancellation can improve a particular tail,
+but cannot increase the uniform exponent required to hold at every row.
+
+\subsection{A finite carry minimum and an exact all-row factorization}
+\label{app:root:factorization}
+
+Let $\mathbb Z_2\langle x\rangle$ denote the restricted power series:
+their integral coefficients tend to zero dyadically. Extend $A$ by
+\[
+ \mathscr A(x)=\frac{9^{x+1}-1}{8(x+1)(2x+1)},
+ \qquad \mathscr A(-1)=-\frac{\log9}{8}.
+\]
+The apparent singularity at $x=-1$ is removable. Since
+$v_2(\log9)=3$, its convergent expansion is
+\begin{equation}
+ \mathscr A(x)=\frac{\log9/8}{1+2x}
+   \sum_{h\ge0}\frac{(\log9)^h}{(h+1)!}(x+1)^h.
+ \label{eq:root:source}
+\end{equation}
+It follows coefficientwise that
+$\mathscr A\in\mathbb Z_2\langle x\rangle^\times$,
+$\mathscr A\equiv1\pmod2$, and $\mathscr A(N)=A(N)$.
+
+Set $r=M+1\ge1$ and define
+\[
+ P_q(x)=\prod_{i=0}^{q-1}(x-i)(2x-(2i+1)),\qquad P_0=1,
+\]
+\[
+ H_r(x)=\sum_{q\ge0}8^q\frac{\beta_{r+q}}{\beta_r}
+                    P_q(x)\mathscr A(x-q).
+\]
+The coefficient valuations tend to infinity. At any nonnegative integer
+$x$, terms with $q>x$ vanish. Cancelling the factorials in
+\eqref{eq:root:packet} therefore gives the exact identity
+\begin{equation}
+ \mathcal T_{r-1}(N)=\kappa_r\binom{2N}{2r}H_r(N-r)
+ \qquad(N\ge r).\label{eq:root:factor}
+\end{equation}
+This is a finite rational identity at every original Euler row.
+
+The scalar packet weights have exact valuations
+\[
+ \lambda_r(q)=3q+s_2(r+q)-s_2(r).
+\]
+Put
+\[
+ \mu_r=\min_{q\ge0}\lambda_r(q),\qquad
+ J_r=\{q:\lambda_r(q)=\mu_r\},\qquad G_r=2^{-\mu_r}H_r.
+\]
+Since $\lambda_r(0)=0$ and
+$\lambda_r(q)\ge3q+1-s_2(r)$, every minimizing address satisfies
+\begin{equation}
+ 0\le q\le\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor.
+ \label{eq:root:cutoff}
+\end{equation}
+In particular $\mu_r\le0$, and the minimum is found by a finite carry
+calculation. Reduction of the whole series gives
+\begin{equation}
+ \overline G_r(X)=\sum_{q\in J_r}X^{\underline q}
+       \quad\text{in }\mathbb F_2[X].
+ \label{eq:root:reduction}
+\end{equation}
+Its highest degree is $\max J_r$, with leading coefficient one.
+Thus the normalization is the actual Gauss normalization.
+
+\begin{theorem}[Exact classical tail valuation]
+For every $r\ge1$ and $N\ge r$,
+\begin{equation}
+ v_2\bigl(\mathcal T_{r-1}(N)\bigr)
+ =4r-1+v_2\binom Nr+\mu_r+v_2G_r(N-r).
+ \label{eq:root:exactvaluation}
+\end{equation}
+There are unique factors
+\[
+ G_r(X)=W_r(X)U_r(X),
+\]
+where $W_r\in\mathbb Z_2[X]$ is monic of degree $d_r=\max J_r$ and
+$U_r\in\mathbb Z_2\langle X\rangle^\times$ satisfies $U_r\equiv1\pmod2$.
+Consequently $v_2G_r(x)=v_2W_r(x)$ for every $x\in\mathbb Z_2$, and
+\[
+ \deg W_r\le\left\lfloor\frac{s_2(r)-1}{3}\right\rfloor.
+\]
+\label{thm:root:finitepreparation}
+\end{theorem}
+\begin{proof}
+Equation~\eqref{eq:root:factor}, the exact weight in
+\eqref{eq:root:weights}, and the digit-sum identity
+$v_2\binom{2N}{2r}=v_2\binom Nr$ prove
+\eqref{eq:root:exactvaluation}. The binomial coefficients themselves
+need not be equal.
+
+For preparation, start from the monic polynomial
+$g=\overline G_r$ and its zero-one lift $W_1$, with $U_1=1$.
+Suppose $G_r-W_kU_k$ is coefficientwise divisible by $2^k$.
+Its divided reduction is a finite polynomial because $G_r$ is restricted.
+Divide it by $g$ in $\mathbb F_2[X]$:
+\[
+ \overline{(G_r-W_kU_k)/2^k}=gq+s,\qquad\deg s<d_r.
+\]
+With zero-one coefficient lifts, set
+$W_{k+1}=W_k+2^ks$ and $U_{k+1}=U_k+2^kq$.
+The error is now divisible by $2^{k+1}$, the polynomial remains monic of
+degree $d_r$, and the unit reduces to one. The sequences converge in the
+Gauss norm. Uniqueness of quotient and remainder at successive binary
+digits proves uniqueness of the factors. For $d_r=0$, take $W_r=1$.
+The degree bound follows from \eqref{eq:root:cutoff}.
+\end{proof}
+
+This theorem reduces every depth to a finite polynomial without discarding
+the infinite analytic tail. It does not explicitly classify every
+$W_r$, decide every repeated root from a fixed precision, or prove that
+all its dyadic roots are simple.
+
+\subsection{Regular walls: exact root emergence}
+\label{app:root:regular}
+
+For a wall label $j\ge1$ and $0\le q<j$, define
+\[
+ e_j(q)=3q+s_2(j-1)-s_2(j-q-1),\qquad
+ E_j=\min_{q<j}e_j(q),
+\]
+\[
+ \Theta(j)=3j+1+s_2(j-1),\qquad L_j=\Theta(j)-E_j.
+\]
+Here $E_j$ is a carry minimum, not an Euler number. A wall label is
+\emph{regular} when $e_j(q)>0$ for $1\le q<j$.
+For $r=2^L-j$ with $L>L_j$, put $\delta=L-L_j$.
+The carry identities give
+\[
+ \mu_r=E_j-\delta,\qquad J_r=\{j\},\qquad
+ G_r(x)=P_j(x)U(x-j)+2^\delta V(x),
+\]
+where $U\equiv1\pmod2$. For a regular label, also
+$E_j=0$ and $V\equiv1\pmod2$.
+
+For $0\le i<j$, let
+\[
+ d_i=v_2(i!)+v_2((j-1-i)!),\qquad
+ k_i=1+\left\lfloor\log_2\max(i,j-1-i)\right\rfloor,
+\]
+\[
+ B_i=i+2^{k_i}\mathbb Z_2,\qquad t_i=d_i+k_i.
+\]
+At $j=1$ use $d_0=k_0=t_0=0$. The balls $B_i$ partition
+$\mathbb Z_2$. Indeed a residue represented twice among $0,\ldots,j-1$
+splits into its two children. Every other represented residue remains
+one ball. On each such ball,
+\[
+ P_j(i+2^{k_i}y)=2^{t_i}yQ_i(y),\qquad
+ Q_i\in\mathbb Z_2\langle y\rangle^\times,
+ \qquad Q_i\equiv1\pmod2.
+\]
+
+\begin{theorem}[Regular-wall root law]
+For every regular label $j$ and every integer $\delta\ge1$,
+\[
+ v_2G_r(x)=
+ \begin{cases}
+  \delta,&x\in B_i,\ \delta<t_i,\\
+  d_i+v_2(x-\alpha_i),&x\in B_i,\ \delta\ge t_i.
+ \end{cases}
+\]
+In the second case there is exactly one root $\alpha_i$ in $B_i$,
+it is simple, and $v_2(\alpha_i-i)=\delta-d_i$.
+Thus the number of dyadic roots is exactly
+\[
+ \#\{i:0\le i<j,\ t_i\le\delta\}.
+\]
+\label{thm:root:regular}
+\end{theorem}
+\begin{proof}
+If $\delta<t_i$, the unit perturbation has smaller valuation than
+the skeleton term throughout $B_i$, so the valuation is exactly
+$\delta$. Otherwise, after the ball substitution and division by
+$2^{t_i}$, the coefficientwise reduction is $y+c$ for a constant
+$c\in\mathbb F_2$. A restricted integral series with this reduction
+is a dyadic isometry: division of its difference by $y-z$ gives an
+odd linear coefficient plus even higher contributions. Binary lifting
+therefore gives its unique root and exact distance law. Evaluating at
+$x=i$ gives the stated displacement, since
+$G_r(i)=2^\delta V(i)$ has exact valuation $\delta$.
+The partition proves exhaustion of the roots.
+\end{proof}
+
+The largest emergence threshold is
+\[
+ \max_i t_i=v_2((j-1)!)+\lceil\log_2 j\rceil.
+\]
+For $j=2^a$, all thresholds equal $j-1$. There are no roots before
+that distance and exactly $j$ simple roots at and after it, within the
+positive-distance range. The equality and pre-wall cases are also
+resolved: regular labels $j\ge2$ have no roots there. $j=1$ has one
+simple odd root at equality.
+
+For example, $j=5$ has $(t_0,\ldots,t_4)=(6,3,4,3,6)$.
+The exact root counts at distances $1,2,3,4,5,\ge6$ are
+$0,0,2,3,3,5$. The older sufficient stages $3,5,7$ are not the
+sharp emergence stages, which are $3,4,6$.
+The first irregular label, $j=17$, has $V\equiv1+X\pmod2$.
+The regular-wall theorem does not apply. Complete coefficient
+certificates close distances $1$ through $19$, and the general separation
+theorem gives all seventeen simple roots for $\delta\ge20$.
+Those two kinds of evidence together resolve that family.
+
+\subsection{What the later simplicity reductions prove}
+\label{app:root:families}
+
+For a general depth $r$, call $j_r=\max J_r$ its \emph{true terminal}.
+This definition depends on the actual carry minimum. Rewriting the same
+integer as another wall expression does not change $j_r$.
+The universal simplicity target is
+\begin{equation}
+ \text{for every integer }r\ge1\text{ and }x\in\mathbb Z_2,
+ \qquad G_r(x)=0\ \Longrightarrow\ G_r'(x)\ne0.
+ \label{eq:root:simplicitytarget}
+\end{equation}
+The following are completed restricted results of the later continuations.
+Their family statements include a proof that the indicated label is the
+true terminal throughout the displayed ranges.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Depth $r$ & Odd multiplier range & Outer scales\\
+\midrule
+$B2^L-129$ & $0<B<2^{89}$ & $L\ge392$\\
+$B2^L-161$ & $0<B<2^{932}$ & $L\ge487$\\
+\bottomrule
+\end{tabular}
+\end{center}
+All dyadic roots are simple in both infinite integer families.
+For arbitrary larger admissible multipliers, a multiple root with true
+terminal $129$ can occur only at $L=515$ and in two necessary multiplier
+classes modulo $2^{90}$. With true terminal $161$, it can occur only at
+$L=640$ and in one necessary multiplier class modulo $2^{935}$.
+These classes are necessary conditions. The records do not assert
+existence of a singular ordinary Euler index in them.
+
+For terminal $161$, the neighboring phases are resolved uniformly:
+$L=639$ has exactly one simple root and $L=641$ exactly three simple
+roots, for every positive odd multiplier with that true terminal.
+The middle phase is reduced, before the deeper certificate is applied,
+to
+\[
+ B\equiv17659\pmod{2^{18}},\qquad
+ x\equiv10202\pmod{2^{15}}.
+\]
+The $935$-bit multiplier condition composes this whole-phase reduction
+with an inherited $917$-bit local parameter certificate. It is neither
+a new $935$-bit reconstruction nor an all-precision interpolation of
+the undepleted Euler family.
+
+The structural argument also extends beyond lower address one.
+For a certified true-terminal wall, let $a$ be its last lower minimizing
+address, $k=j_r-a$ the regular complement, and $t=v_2(k)$.
+Under the regular lower-address hypotheses of the source theorem,
+all roots above emerged complement balls are simple. Every root is
+simple at every wall distance in the band
+\[
+ \Theta(a)\le t<\Theta(a)+v_2(a!).
+\]
+Equality walls are simple even outside that band. This includes
+certified terminal-$258$ walls with $a=2$, $k=256$, and $L\ge777$.
+For $a=3$, $k=4096$, only $L=16385$ remains a possible critical scale.
+Outside the band, the theorem gives necessary local valuation conditions.
+It does not exclude the remaining unit cancellation. Irregular lower
+addresses need their own prefix analysis.
+
+\subsection{The actual stationary discriminant}
+\label{app:root:stationary}
+
+The current focused obstruction is the admitted ordinary-index family
+\begin{equation}
+ r=(17659+2^{18}T)2^{640}-161,
+ \qquad T\in\mathbb Z_{\ge0},\qquad j_r=161.
+ \label{eq:root:focusedfamily}
+\end{equation}
+On its surviving chart define the \emph{actual}, undepleted function
+\[
+ K_r(Z)=2^{-178}G_r(10202+2^{15}Z).
+\]
+The complete coefficient theorem gives
+\begin{equation}
+ K_r(Z)=a_r+2b_rZ+u_rZ^2+256Z^3R_r(Z),
+ \quad a_r,b_r\in\mathbb Z_2,\quad
+ u_r\in\mathbb Z_2^\times,\quad
+ R_r\in\mathbb Z_2\langle Z\rangle.
+ \label{eq:root:quadraticclass}
+\end{equation}
+Its half derivative is a dyadic isometry. It therefore has a unique
+critical point $c_r\in\mathbb Z_2$. Set
+$\Phi_r^{\mathrm{act}}=K_r(c_r)$.
+The earlier independent-undepletion notation for this same scalar is
+$\Phi_r(2^{2r-25})$.
+Excluding a multiple root on the surviving chart is exactly the assertion
+$\Phi_r^{\mathrm{act}}\ne0$.
+
+\begin{proposition}[Exact quadratic compression]
+There is a unique preparation
+\[
+ K_r(Z)=\mathcal U_r(Z)\mathcal W_r(Z),\qquad
+ \mathcal W_r(Z)=Z^2+2\beta_rZ+\alpha_r,\qquad
+ \mathcal U_r\equiv u_r\pmod{256}.
+\]
+With $\delta_r=\beta_r^2-\alpha_r$ and
+$\tau_r=\mathcal U_r'(c_r)/\mathcal U_r(c_r)$,
+\begin{equation}
+ \delta_r=-\frac{\Phi_r^{\mathrm{act}}}{\mathcal U_r(c_r)}
+  \left(1-\frac{\tau_r^2\Phi_r^{\mathrm{act}}}{4\mathcal U_r(c_r)}\right),
+ \qquad v_2(\delta_r)=v_2(\Phi_r^{\mathrm{act}}).
+ \label{eq:root:discriminant}
+\end{equation}
+The equality includes the zero case.
+\end{proposition}
+\begin{proof}
+The same successive monic polynomial division used in
+Theorem~\ref{thm:root:finitepreparation}, started at precision eight,
+preserves the quadratic and unit reductions of
+\eqref{eq:root:quadraticclass}. Write
+$W=Z^2+2\beta_rZ+\alpha_r$ and $w=W(c_r)$.
+Stationarity gives $W'(c_r)=-\tau_rw$, while
+$w=\Phi_r^{\mathrm{act}}/\mathcal U_r(c_r)$.
+The quadratic identity
+$\beta_r^2-\alpha_r=W'(c_r)^2/4-W(c_r)$ proves the formula.
+Since $\tau_r\in256\mathbb Z_2$, its bracket is a unit.
+\end{proof}
+
+This compression retains the unit-cofactor derivative. It does not
+assert that $c_r$, $\alpha_r$, or $\beta_r$ is rational or algebraic
+over $\mathbb Q$. The remaining arithmetic obligation is therefore
+\begin{equation}
+ \delta_r\ne0\quad\text{for every admitted ordinary index in
+ \eqref{eq:root:focusedfamily}.}
+ \label{eq:root:remaining}
+\end{equation}
+Even this assertion would still leave the terminal-$129$ and higher-address
+obligations in the universal target \eqref{eq:root:simplicitytarget}.
+
+\subsection{Approximation reaches every depth, but separation remains open}
+\label{app:root:approximation}
+
+The latest continuation retains the exact Bernoulli undepletion factor
+\[
+ e_{r,q}=\frac{1-2^{2r-1}}{1-2^{2r-1}4^q},\qquad q\ge0.
+\]
+It is a dyadic unit, including $e_{r,0}=1$. Multiplication by this
+factor preserves the all-$q$ error of the shifted Jacobi moment model.
+Consequently the actual model critical values satisfy, for every $m\ge25$,
+\begin{equation}
+ v_2\bigl(\Phi_{r,m}^{\mathrm{act}}-\Phi_r^{\mathrm{act}}\bigr)
+ \ge L_m=8m-4s_2(m)-178,
+ \qquad L_m\longrightarrow\infty.
+ \label{eq:root:actualapprox}
+\end{equation}
+The estimate includes every packet and controls motion of the critical
+point. There is no ceiling at the undepletion exponent $2r-25$.
+For each fixed admitted $r$ it implies the exact equivalence
+\begin{equation}
+ \Phi_r^{\mathrm{act}}\ne0
+ \quad\Longleftrightarrow\quad
+ \text{there exists }m\ge25\text{ such that }
+ v_2(\Phi_{r,m}^{\mathrm{act}})<L_m.
+ \label{eq:root:stricttest}
+\end{equation}
+Indeed a passing strict test has the same valuation as the limit. Conversely
+any finite limit valuation is eventually smaller than $L_m$.
+The existence of a passing depth for every ordinary index is unproved.
+Nonzero models at every depth are compatible with an exactly zero limit.
+
+The degree-two preparation also reduces the old representative-height
+cost to a linear cost, about $2P$ bits at precision $P$. This remains
+larger than the $P$ bits needed for a strict nonzero residue certificate.
+The fixed rational control $(Z-1/3)^2$ has zero critical value while
+its least-residue integer discriminant representatives are nonzero at
+every even $P\ge6$. Thus a nonzero integer representative alone cannot
+prove a nonzero dyadic discriminant.
+
+One sufficient new arithmetic input would be an odd-denominator
+projective quadratic
+\[
+ A Z^2+2BZ+C\equiv A\mathcal W_r(Z)\pmod{2^P},\qquad A\text{ odd},
+ \qquad 0<|B^2-AC|<2^P,
+\]
+at a proved precision for every admitted ordinary $r$.
+Then $(B^2-AC)/A^2\equiv\delta_r\pmod{2^P}$ cannot vanish
+modulo $2^P$. No depth-independent theorem supplying this inequality
+has been established. The tested recurrence and exterior-contact
+identities retain balancing terms and do not force a contradiction.
+Finite exponential models approximate the actual target at every depth,
+but their order grows with precision, their clearing polynomial has
+zeros on the actual chart, and their proved construction-specific height
+cost does not give the required discriminant bound.
+
+\subsection{Status and source map}
+\label{app:root:evidence}
+
+\begin{center}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.64\linewidth}>{\raggedright\arraybackslash}p{0.26\linewidth}}
+\toprule
+Claim & Status at this edition\\
+\midrule
+Nishibuchi Conjecture~3.9 in its stated parameter range
+ & Resolved in the main text\\
+Sharp uniform ordinary Euler tail exponent $4M+3$
+ & Proved, with earlier formal coverage\\
+Exact tail factorization and finite polynomial at every depth
+ & Proved in the later prose development\\
+Regular-wall emergence and indicated integer simplicity families
+ & Proved within their stated hypotheses\\
+Actual quadratic compression and unbounded stationary approximation
+ & Proved. No fresh Lean build\\
+Nonzero actual stationary discriminant for every admitted index
+ & Open\\
+Universal simplicity of every $G_r$
+ & Open\\
+Native~13.2 presentation invariance and Native~13.3 global/completed gluing
+ & Separate open general programs\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The tail factorization, regular-wall proofs, finite preparation, and
+coefficient cutoffs are recorded in the preserved
+\nolinkurl{sources/euler_v4.md} of the regular-address checkpoint.
+The two integer families and multiplier conditions are proved in its
+\nolinkurl{next/terminal129/PROOF.md} and
+\nolinkurl{next/critical_phases/PROOF.md}.
+\nolinkurl{local_parameter/RECENTER_PROOF.md} supplies the inherited
+local precision certificate. The higher-address extension is in
+\nolinkurl{next/higher_address/regular_address_transversality.md}.
+The stationary checkpoint records the exact discriminant identity in
+\nolinkurl{stationary_separation/ordinary/QUADRATIC_COMPRESSION_AND_HEIGHT.md}
+and actual convergence in
+\nolinkurl{stationary_separation/root/ACTUAL_LIMIT_AND_SEPARATION.md}.
+Its synthesis and proof reviews retain the failed
+implications and the precise remaining arithmetic input.
+
+The source archive's \nolinkurl{evidence/root_scope_inventory.md} gives
+the full checkpoint paths and content hashes used for this appendix.
+The 2026-10-05 complete-work archive preserves the original layouts and
+historical releases. Its stored hashes and verification receipts are
+evidence of integrity and recorded execution. They are not substitutes
+for a proof of the open assertions above.

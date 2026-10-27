@@ -1,0 +1,85 @@
+\section{Complete prunings, global selection, and stability}
+\subsection{A finite tree carries positive finite branching}
+The tree type permits a leaf or a branch with $n+1$ children. Thus every branch has at least one child, and unary branches are included.
+\excerpt{FiniteAdaptive}{tree}
+The tree itself is a finite inductive object. A cut is another typed inductive object: stop at the current root, or choose one cut in each child. The type prevents selecting an arbitrary collection that fails to cover a terminal path.
+\excerpt{FiniteAdaptive}{cut}
+A singleton leaf has only its stop cut. At a unary branch, stopping at the root and descending to its child are distinct cuts even if node labels happen to coincide. Formal nodes carry their positions in the tree, so equal labels do not collapse different nodes.
+
+\subsection{Conservation is an explicit hypothesis}
+For an additive quantity $p$ at each node, conservation says that the parent's value is the sum of the child-root values and that this continues recursively.
+\excerpt{FiniteAdaptive}{conserves}
+By induction on the cut, its sum equals the root value. The quantity may be a scalar, a vector, or an operator. The argument uses addition and the conservation identity. It does not derive conservation from an arbitrary tree topology.
+
+For projector valued packets, one supplies both conservation and a root equal to the identity operator. Every complete pruning then reconstructs the signal. This makes selection compatible with exact synthesis: changing the cut changes the representation while preserving the total operator.
+
+\subsection{From recursive cuts to covering antichains}
+The manuscript describes a complete pruning as a node set that meets each root to terminal path exactly once. The source builds a positional node type, terminal paths, and a membership predicate for the nodes selected by a recursive cut. It proves the equivalence with the set based covering-antichain description.
+\excerpt{CompletePrunings}{covering}
+The file also proves that every complete set comes from a cut and that the cut is determined by its selected nodes. Together these results give \code{pruningEquiv}. This is why later theorems apply to every complete covering antichain, not just a preselected list of recursive examples.
+
+\subsection{Literal sums over selected nodes}
+\code{PruningSums} connects the recursive cut sum with the actual finite sum over the selected node set. Its operator theorem provides both the operator equality and the applied-signal equality.
+\excerpt{PruningSums}{synthesis}
+The hypotheses \code{h : conserves p t} and \code{hr : p (label t) = ...id...} are inputs. There is no assertion that an arbitrary family of packet operators indexed by a tree automatically satisfies them.
+
+\subsection{Existence of a minimum allows nonadditive objectives}
+The manuscript's general criterion has the form
+\[
+J(S)=R(S)+\eta L(S)+\tau K(S),
+\]
+where $R$, $L$, and $K$ can depend on the complete pruning as a whole. Finiteness alone ensures a minimum is attained.
+\excerpt{PruningSums}{objective}
+No positivity or additivity of these functions is needed for the finite attainment theorem. Such assumptions can be useful in applications, but the logical reason for attainment here is a nonempty finite search space.
+
+The dynamic program below solves an additive criterion $\sum_{v\in S}c(v)$. The general nonadditive existence result does not imply that the same recurrence efficiently minimizes an arbitrary coupled objective. A user of the recurrence must verify the required additive decomposition.
+
+\subsection{Strict gaps require competitors}
+If $S_*$ is a strict minimizer and there is another pruning, the minimum positive objective difference is attained by a real competitor.
+\excerpt{PruningSums}{gap}
+The explicit \code{ho} hypothesis excludes the empty competitor family. For a singleton pruning space, the selected pruning is unchanged for every objective, so a separate singleton theorem is the natural statement. A tie between distinct prunings gives zero separation and does not satisfy a positive strict-gap hypothesis.
+
+\subsection{The bottom up evaluator}
+For an additive node cost, the optimal value obeys
+\[
+V(v)=\min\left(c(v),\sum_{u\text{ child of }v}V(u)\right).
+\]
+The selector stops at the node when the two alternatives tie. The formal evaluator returns the cut, its cost, and three operation counters together.
+\excerpt{PruningAlgorithm}{solve}
+The child results are introduced once as a family, and their stored costs are summed. The correctness theorem identifies both outputs with the specification: cost equals \code{value}, and cut equals \code{best}.
+\excerpt{PruningAlgorithm}{solve_correct}
+The proof uses tree induction. In a branch, the induction hypotheses identify all cached child values with their specification values. The same comparison then controls both the evaluator and the specification, including equality.
+
+\subsection{An explicit small tree}
+Consider a root $r$ with two leaf children $a$ and $b$. Its complete prunings are $\{r\}$ and $\{a,b\}$. Set $c(r)=7$, $c(a)=2$, and $c(b)=3$. The split costs $5$ and is selected. The gap to the other pruning is $2$.
+
+Changing $c(r)$ to $5$ creates a tie. The selector now stops at the root by convention. This deterministic choice is defined, but it is not protected by a positive separation margin. An arbitrarily small perturbation can change which pruning has smaller cost. Tie handling and strict stability address different questions.
+
+If $p(r)=p(a)+p(b)=I$, both prunings synthesize exactly. At a tie, two representations can exchange preference while both preserve the full signal through the same synthesis identity.
+
+\subsection{What the linear-work count charges}
+The source proves one visit per node, one comparison per internal node, and one addition per edge. The last identity is expressed as additions plus one equals the node count. Combining them yields
+\excerpt{PruningAlgorithm}{linear_work}
+Node costs are supplied inputs. Their estimation from data, the cost of exact real arithmetic, output serialization, and the runtime behavior of a particular compiler are not charged by this theorem. The claimed bound is precise for its stated unit operation model. It is not a wall clock performance certificate or a cost bound for a nonadditive objective.
+
+\subsection{The exact worst pruning error envelope}
+Suppose local perturbations obey $|d(v)-c(v)|\le e(v)$. The maximum possible sum of the error weights along a complete pruning has the recurrence
+\[
+E(v)=\max\left(e(v),\sum_{u\text{ child of }v}E(u)\right).
+\]
+\excerpt{FiniteAdaptive}{envelope}
+The source proves both that every cut weight is at most this envelope and that some cut attains it. It is therefore the exact maximum of the additive weights over complete prunings, rather than a loose sum over all nodes.
+
+For the two-leaf example, if $e(r)=0.3$ and $e(a)=e(b)=0.2$, then $E(r)=\max(0.3,0.4)=0.4$. Both candidate objective values are perturbed by at most $0.4$. The original gap is $2$, and $2E(r)=0.8<2$, so the selected split is protected.
+
+\subsection{Why the margin contains a factor of two}
+When comparing a competitor with the minimizer, the competitor can move down by the full error budget while the minimizer moves up by the same budget. Their separation can shrink by twice the budget. The antichain theorem preserves the selected pruning under the strict inequality.
+\excerpt{PruningSums}{stability}
+Equality at the boundary is insufficient in general. With an original gap $\gamma=2$ and budget $E=1$, the winner can move up by one and the competitor down by one, producing a tie. A deterministic tie rule can then change the selected object. The theorem's strict inequality is part of its content.
+
+\subsection{Probability is transferred from a joint event}
+The probabilistic statement assumes one event on which all required local inequalities hold simultaneously. Deterministic stability then makes that event a subset of the event that the selector is unchanged.
+\excerpt{PruningAlgorithm}{probability}
+Separate marginal statements for each node do not automatically give the same probability for their intersection. One needs a supplied joint event or an additional argument, such as a correctly budgeted union bound. No independence assumption or tail concentration theorem is inferred by the source.
+
+The theorem is written for a measure with an explicit lower bound \code{1-δ ≤ μ good}. Lean's measure notation also evaluates arbitrary sets through the associated outer measure, so the set-inclusion proof does not itself establish event measurability. For ordinary success probabilities, use a probability measure, measurable random node costs, and a measurable joint good event. The selector on a finite tree is then determined by finitely many measurable comparisons, making its success event measurable. Finite tree structure alone cannot make arbitrary random cost functions measurable. The final traditional edition makes these probability hypotheses explicit. In Part II, consistency statements based only on probabilities tending to one are interpreted as convergence in probability. Almost-sure conclusions need additional hypotheses and an argument such as summable failure probabilities.

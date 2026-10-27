@@ -1,0 +1,6 @@
+theorem exponential_packet_convolution {I : Type*} [Fintype I]
+    (P : I → R) (hP : ∑ i, P i=1) (hid : ∀ i, P i*P i=P i)
+    (A : R) (s t : ℝ) (b a : I) :
+    Algebra.block P (transfer A (s+t)) b a =
+      ∑ c, Algebra.block P (transfer A s) b c*Algebra.block P (transfer A t) c a :=
+  Algebra.packet_semigroup_convolution P hP hid (transfer A) (transfer_add A) s t b a

@@ -1,0 +1,6 @@
+theorem hasSum_entireTransfer {N j : ℕ} (hN : 0 < N) (hj : j < N)
+    {omega : ℂ} (homega : IsPrimitiveRoot omega N) (lambda z : ℂ) :
+    HasSum (fun n => PowerSeries.coeff n (transferSection N j lambda) * z ^ n)
+      (entireTransfer N j omega lambda z) := by
+  simpa only [finiteRootAverage_rescale_exp_eq_transferSection hN hj homega]
+    using hasSum_finiteRootAverage N j omega lambda z

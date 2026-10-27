@@ -1,0 +1,131 @@
+module
+
+public import EulerCoefficients
+public import Mathlib.RingTheory.PowerSeries.WellKnown
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.Zigzag
+
+open PowerSeries EulerCoefficients OddPower
+
+def secSeries : PowerSeries ℚ := (PowerSeries.cos ℚ)⁻¹
+
+def tanSeries : PowerSeries ℚ := PowerSeries.sin ℚ * secSeries
+
+/-- The manuscript's generating-function convention, defined through actual formal sine and cosine. -/
+def zigzag (n : ℕ) : ℚ := EGF.decode (secSeries + tanSeries) n
+
+@[simp] theorem cos_constant : constantCoeff (PowerSeries.cos ℚ) = 1 := by
+  rw [← coeff_zero_eq_constantCoeff_apply]; simp [PowerSeries.cos]
+
+@[simp] theorem sin_constant : constantCoeff (PowerSeries.sin ℚ) = 0 := by
+  rw [← coeff_zero_eq_constantCoeff_apply]; simp [PowerSeries.sin]
+
+@[simp] theorem sec_cos : secSeries * PowerSeries.cos ℚ = 1 :=
+  PowerSeries.inv_mul_cancel _ (by simp)
+
+theorem derivative_sin : derivative ℚ (PowerSeries.sin ℚ) = PowerSeries.cos ℚ := by
+  ext n
+  rw [coeff_derivative]
+  by_cases hn : Even n
+  · obtain ⟨m,rfl⟩ := even_iff_two_dvd.mp hn
+    simp [PowerSeries.sin, PowerSeries.cos, Nat.factorial_succ,
+      show (2*m+1)/2=m by omega]
+    field_simp
+  · obtain ⟨m,rfl⟩ := Nat.not_even_iff_odd.mp hn
+    simp [PowerSeries.sin, PowerSeries.cos, Nat.even_add_one]
+
+theorem derivative_cos : derivative ℚ (PowerSeries.cos ℚ) = -PowerSeries.sin ℚ := by
+  ext n
+  rw [coeff_derivative]
+  by_cases hn : Even n
+  · obtain ⟨m,rfl⟩ := even_iff_two_dvd.mp hn
+    simp [PowerSeries.sin, PowerSeries.cos]
+  · obtain ⟨m,rfl⟩ := Nat.not_even_iff_odd.mp hn
+    have hm : 2*m+1+1 = 2*(m+1) := by omega
+    simp only [map_neg, PowerSeries.cos, PowerSeries.sin, coeff_mk]
+    rw [hm]
+    simp only [even_two_mul, ite_true, Nat.mul_div_cancel_left _ (by decide : 0 < 2),
+      Nat.not_even_two_mul_add_one, ite_false, show (2*m+1)/2=m by omega,
+      Algebra.algebraMap_self_apply]
+    rw [pow_succ, show 2*(m+1) = (2*m+1)+1 by omega, Nat.factorial_succ]
+    push_cast
+    field_simp
+
+theorem sin_square_add_cos_square : (PowerSeries.sin ℚ)^2 + (PowerSeries.cos ℚ)^2 = 1 := by
+  apply PowerSeries.derivative.ext
+  · rw [map_add, derivative_pow, derivative_pow, derivative_sin, derivative_cos, derivative_one]
+    norm_num
+    ring
+  · simp
+
+theorem derivative_sec : derivative ℚ secSeries = secSeries^2 * PowerSeries.sin ℚ := by
+  unfold secSeries
+  rw [derivative_inv', derivative_cos]
+  ring
+
+theorem derivative_tan : derivative ℚ tanSeries = secSeries^2 := by
+  have hunit : secSeries^2 * (PowerSeries.cos ℚ)^2 = 1 := by rw [← mul_pow, sec_cos, one_pow]
+  unfold tanSeries
+  simp only [Derivation.leibniz, smul_eq_mul, derivative_sin, derivative_sec]
+  calc
+    _ = 1 + secSeries^2 * (PowerSeries.sin ℚ)^2 := by rw [sec_cos]; ring
+    _ = secSeries^2 * ((PowerSeries.sin ℚ)^2 + (PowerSeries.cos ℚ)^2) := by rw [mul_add, hunit]; ring
+    _ = _ := by rw [sin_square_add_cos_square, mul_one]
+
+/-- Sign substitution in the squared variable constructs the actual cosine series. -/
+theorem cosine_sign_expansion :
+    PowerSeries.cos ℚ = expand 2 (by decide) (rescale (-1) (Congruential.sectionKernel 2 0)) := by
+  ext n
+  simp only [PowerSeries.cos, coeff_mk, coeff_expand, coeff_rescale,
+    Congruential.sectionKernel, coeff_mk]
+  by_cases hn : Even n
+  · have hd := even_iff_two_dvd.mp hn
+    rw [ite_eq_left hn, ite_eq_left hd, Nat.mul_div_cancel' hd]
+    simp [div_eq_mul_inv]
+  · rw [ite_eq_right hn, ite_eq_right (fun h => hn (even_iff_two_dvd.mpr h))]
+
+theorem secant_sign_expansion :
+    secSeries = expand 2 (by decide) (rescale (-1) (Congruential.packetSeries 2 0)) := by
+  symm
+  apply (PowerSeries.eq_inv_iff_mul_eq_one (by simp)).mpr
+  rw [cosine_sign_expansion, ← map_mul, ← map_mul, Congruential.packet_times_kernel, map_one, map_one]
+
+theorem secant_odd_coeff (m : ℕ) : coeff (2*m+1) secSeries = 0 := by
+  rw [secant_sign_expansion]
+  apply coeff_expand_of_not_dvd
+  omega
+
+theorem sech_expansion : sech = expand 2 (by decide) (Congruential.packetSeries 2 0) := by
+  rw [← euler_egf, euler_series_expansion]
+  rfl
+
+theorem secant_square_even_coeff (m : ℕ) :
+    coeff (2*m) (secSeries^2) = (-1:ℚ)^m * (inverseEven m : ℚ) / (2*m).factorial := by
+  rw [secant_sign_expansion, ← map_pow, ← map_pow, coeff_expand_mul, coeff_rescale]
+  have h := sech_square_coeff m
+  rw [sech_expansion, ← map_pow, coeff_expand_mul] at h
+  rw [h]
+  ring
+
+/-- The required bridge to Z_(2m+1), not an assumed coefficient formula for sech squared. -/
+theorem odd_zigzag_coefficient (m : ℕ) :
+    zigzag (2*m+1) = (-1:ℚ)^m * (inverseEven m : ℚ) := by
+  have h := congrArg (coeff (2*m)) derivative_tan
+  rw [coeff_derivative, secant_square_even_coeff] at h
+  push_cast at h
+  unfold zigzag EGF.decode
+  rw [map_add, secant_odd_coeff, zero_add, Nat.factorial_succ, Nat.cast_mul]
+  calc
+    _ = (coeff (2*m+1) tanSeries * (2*m+1:ℚ)) * ((2*m).factorial : ℚ) := by push_cast; ring
+    _ = _ := by rw [h]; field_simp
+
+theorem inverse_is_signed_zigzag (m : ℕ) :
+    (inverseEven m : ℚ) = (-1:ℚ)^m * zigzag (2*m+1) := by
+  rw [odd_zigzag_coefficient, ← mul_assoc, ← pow_add]
+  simp [← two_mul]
+
+end KomorebiPaperIX.Zigzag

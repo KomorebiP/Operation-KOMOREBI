@@ -1,0 +1,8 @@
+theorem certified_energy_error \CodeChar{123}κ κmax e0 em : ℝ\CodeChar{125} (m : ℕ)
+    (hκ : 1 ≤ κ) (hbound : κ ≤ κmax) (he0 : 0 ≤ e0)
+    (hCG : em ≤ 2*(cgFactor κ)^m*e0) :
+    em ≤ 2*(cgFactor κmax)^m*e0 := by
+  have hp : (cgFactor κ)^m ≤ (cgFactor κmax)^m :=
+    pow_le_pow_left₀ (cgFactor_nonneg hκ) (cgFactor_mono hbound) m
+  exact hCG.trans (mul_le_mul_of_nonneg_right
+    (mul_le_mul_of_nonneg_left hp (by norm_num)) he0)

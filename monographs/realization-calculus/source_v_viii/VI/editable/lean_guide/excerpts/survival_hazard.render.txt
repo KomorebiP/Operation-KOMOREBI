@@ -1,0 +1,17 @@
+theorem survival_hazard (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
+    (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (hs : ∑ i,p i=1) (t : ℝ) (ht : 0 ≤ t) :
+    survival A p t=Real.exp (-∫ r in 0..t,hazard A p r) := by
+  have hd : ∀ r∈Icc 0 t, HasDerivAt (fun u => Real.log (survival A p u)) (-hazard A p r) r := by
+    intro r hr
+    simpa [hazard,neg_div] using (survival_derivative A p r).log
+      (survival_positive A hA p hp hs r hr.1).ne'
+  have hscont : Continuous (survival A p) :=
+    (show Differentiable ℝ (survival A p) from fun r => (survival_derivative A p r).differentiableAt).continuous
+  have hhcont : ContinuousOn (hazard A p) (Icc 0 t) :=
+    (density_continuous A p).continuousOn.div hscont.continuousOn
+      (fun r hr => (survival_positive A hA p hp hs r hr.1).ne')
+  have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt
+    (by simpa [uIcc_of_le ht] using hd)
+    (hhcont.neg.intervalIntegrable_of_Icc ht)
+  simp only [Pi.neg_apply,intervalIntegral.integral_neg,survival_zero,hs,Real.log_one,sub_zero] at hi
+  rw [hi,Real.exp_log (survival_positive A hA p hp hs t ht)]

@@ -1,0 +1,11 @@
+theorem decomposition_unique (L : ℕ) (a w v : (ZMod (p^(L+1)))ˣ)
+    (ha : w*v=a) (hw : w^(p-1)=1) (hv : residueUnits p L v=1) :
+    w=omega p L a ∧ v=principal p L a := by
+  have hr : residueUnits p L w=residueUnits p L a := by
+    rw [← ha, map_mul, hv, mul_one]
+  have he := omega_unique p L a w hw hr
+  refine ⟨he, ?_⟩
+  subst w
+  apply mul_left_cancel (a := omega p L a)
+  rw [ha]
+  exact (finite_unit_decomposition p L a).1.symm

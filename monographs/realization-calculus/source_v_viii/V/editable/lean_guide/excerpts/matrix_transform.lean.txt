@@ -1,0 +1,7 @@
+theorem fir_matrix_transform (N : ℕ) (hN : 0 < N) (h : ℤ →₀ ℂ) (x : ℤ → ℂ)
+    (z : ℂ) (hz : z ≠ 0)
+    (hx : ∀ s, Summable (fun n => analysis N x s n * z ^ (-n))) :
+    (fun k => transform (analysis N (fir h x) k) z) =
+      (transferMatrix N hN h z).mulVec (fun s => transform (analysis N x s) z) := by
+  funext k
+  exact (fir_channel_transform N hN h x z hz _ (fun s => (hx s).hasSum) k).tsum_eq

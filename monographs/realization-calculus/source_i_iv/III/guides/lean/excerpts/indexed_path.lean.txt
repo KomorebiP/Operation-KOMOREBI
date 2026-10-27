@@ -1,0 +1,10 @@
+theorem indexedPathTransport_eq_direct_of_flat (hflat : C.Flat) :
+    ∀ {a b : X} (path : VertexPath X a b),
+      indexedPathTransport C path = C.transport a b := by
+  intro a b path
+  induction path with
+  | nil a => exact (C.transport_self a).symm
+  | cons a b c rest ih =>
+      simp only [indexedPathTransport]
+      rw [ih]
+      exact hflat a b c

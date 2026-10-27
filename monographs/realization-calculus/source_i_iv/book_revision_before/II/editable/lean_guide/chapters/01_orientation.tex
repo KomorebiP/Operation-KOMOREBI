@@ -1,0 +1,83 @@
+\section{Reading the inherited formal walkthrough}\label{sec:orientation}
+
+The traditional paper develops the mathematical theory and its written proofs. The visual guide provides finite models for its identities, precision statements, and boundaries. This guide explains how to read and use the preserved Lean component: the types accepted by each theorem, the objects actually constructed, the obligations supplied by a caller, and the evidence attached to the source. These three companions have complementary roles.
+
+The component described in this walkthrough is the historical version 1.1.1, preserved within canonical manuscript release 1.2.1. Current additions and their boundaries are recorded in Section~\ref{sec:current-release}. In the delivered package it is located at \code{source/canonical_v1.2.1/formalization/lean/}. The final traditional edition incorporates a broader written development. Its ordinary proofs of lattice gluing, necessary precision delay, convergence in an inverse limit, general DVR arithmetic, holomorphic and exponential defects, and multilevel identities are not converted into Lean proofs by appearing beside formally mapped results.
+
+The fixed formal contract contains 25 rows: 21 numbered canonical statements, one Smith phase identity, and three mathematical algorithm specifications. The appendix crosswalk identifies their locations in the integrated traditional edition. Throughout this guide, ``row'' means a row of the canonical formal map, never a count of every theorem in the final traditional paper.
+
+\begin{tabular}{p{.24\textwidth}p{.67\textwidth}}
+\toprule Quantity & What is counted \\\midrule
+15 Lean source files & Four shared foundation modules, eight substantive Paper II modules, two aggregate imports, and one audit module. \\
+5,603 source lines & Physical lines in those files, including comments and blank lines. \\
+25 map rows & Statement families, constructions, and specifications in the frozen contract. \\
+160 unique targets & Distinct mapped declarations; not all are theorem declarations. \\
+171 target occurrences & Targets counted again when reused by another contract row. \\
+1,034 namespace entries & Entries reported by the historical compiled namespace scan, including generated auxiliaries. \\
+\bottomrule
+\end{tabular}
+
+A name count is not a measure of mathematical depth. A short wrapper can collect several substantial conclusions. A large structure can expose a difficult hypothesis without constructing its witness. The useful unit is a complete type together with its proof, its dependencies, and an accurate comparison with the prose statement.
+
+\subsection{Three useful reading routes}
+
+For a first reading, follow Sections~\ref{sec:types}--\ref{sec:defects}: exact coordinates lead to weighted transfer, then arithmetic and typed defects. For a coverage review, use the crosswalk to the final paper in Appendix~\ref{app:crosswalk}, read the corresponding row in Section~\ref{sec:map}, and inspect its source type. For a reproduction attempt, read Section~\ref{sec:replay} before running any build command. The source checksum check and the compiler audit establish different things.
+
+The main walkthroughs use exact source excerpts, with explanatory equations outside the listings. Names are case sensitive. \code{PowerSeries}, \code{Polynomial}, \code{LinearMap}, and \code{ContinuousLinearMap} are different types. Similar notation is not a license to replace one with another in a theorem application.
+
+\section{Lean types as mathematical bookkeeping}\label{sec:types}
+
+The basic theorem syntax places assumptions before a colon and a conclusion after it. A term after \code{:=} supplies the definition or proof. A \code{by} block is tactic syntax that elaborates a proof term. A successful elaboration still leaves a semantic question for the reader: does this exact type express the intended mathematical assertion?
+
+\begin{longtable}{p{.30\textwidth}p{.61\textwidth}}
+\toprule Expression & Reading in this component \\\midrule\endhead
+\code{[Semiring R]} & A typeclass instance supplying semiring operations and laws. Subtraction need not exist. \\
+\code{[Ring R]} & A ring, possibly noncommutative; multiplicative order remains significant. \\
+\code{[CommSemiring R]} & Commutative multiplication is available, as in the general Fourier certificate. \\
+\code{[Module R M]} & A scalar action with its laws; the scalar type is explicitly named. \\
+\code{M →ₗ[R] N} & An $R$-linear map from $M$ to $N$, including additive and scalar compatibility. \\
+\code{Module.End R M} & The endomorphism ring or semiring of a single module. \\
+\code{X →L[k] Y} & A continuous linear map with operator norm in the relevant normed setting. \\
+\code{M ≃ₗ[R] N} & A linear equivalence, including both inverse laws. \\
+\code{R →+* S} & A ring or semiring homomorphism; it preserves the operations used to transport an inverse. \\
+\code{[Fintype E]} & A finite enumeration of all elements of $E$. \\
+\code{Fin n} & Natural numbers strictly below $n$, bundled with their bound. \\
+\code{ZMod n} & Integers modulo $n$; the nonzero modulus hypotheses matter for finite cardinality. \\
+\code{AddSubgroup M} & An additive subgroup, without automatically being a valuation-ring lattice. \\
+\code{Nonempty A} & Existence of a term of type $A$; it does not by itself supply a computational search procedure. \\
+\code{Prop} & The sort of propositions, used for certificates whose fields are proof obligations. \\
+\bottomrule
+\end{longtable}
+
+Parenthesized arguments are normally supplied explicitly. Braced arguments can be inferred. Arguments in square brackets request typeclass synthesis. Section variables become parameters of later declarations when used. Therefore a source theorem must be read with its section context. In this project, \code{autoImplicit = false} and \code{relaxedAutoImplicit = false} prevent undeclared identifiers from silently becoming new implicit parameters.
+
+The common \code{constructor} tactic splits a structure or conjunction into its fields. \code{rcases} opens a supplied witness into its data and proofs. \code{rw} rewrites using proved equalities. \code{simp} applies simplification rules and produces a proof term. \code{ext} reduces equality of structured maps to pointwise equality. \code{exact} supplies a term of the required type. \code{rfl} uses definitional equality. None of these words is a substitute for a missing mathematical hypothesis.
+
+\subsection{Definitions, certificates, and algorithms}
+
+A structure such as \code{TwoSidedInverse x y} records equations about already supplied $x$ and $y$. A theorem that accepts this structure does not discover $y$. By contrast, the rationality branch for finite graphs defines a denominator and numerator from the graph and proves their properties without accepting rationality as an input.
+
+\code{noncomputable} does not mean unproved. It marks a definition that is not offered as executable code through Lean's ordinary computational evaluation. This component uses noncomputable choices from finite sets, instances for finite types, determinants, adjugates, and constructions of least exponents. Their mathematical properties can be proved even though a standalone executable implementation is not supplied.
+
+The three algorithm rows certify mathematical contracts relating inputs to outputs. They do not certify the companion Python package, its storage layout, its numerical residuals, or its performance. Even where a finite enumeration is executable in principle, the contract contains no general complexity estimate or extraction theorem.
+
+\section{Source architecture and entry points}\label{sec:architecture}
+
+In the historical snapshot, the main entry point is \code{import KomorebiVerification.PaperII}. It imports the eight substantive modules but not the audit command. The root module \code{KomorebiVerification.lean} imports the aggregate for Lake's default library target. The standalone audit imports the substantive modules explicitly and inspects the resulting environment.
+
+\begin{longtable}{p{.30\textwidth}p{.61\textwidth}}
+\toprule Module or layer & Responsibility \\\midrule\endhead
+Shared foundation & \code{ProjectorCore}, \code{ExactCoordinates}, \code{FibreRefinement}, and \code{ResidueProjectors}: complete finite projector families, range coordinates, masks, and refinement. \\
+\code{NestedRefinement} & Parent maps, absorption, child uniqueness, exact coordinate equivalences, cocycles, naturality, and block aggregation. \\
+\code{ResidueFourierCRT} & Division-free masks, finite Fourier certificates, primitive-root specialization, polyphase refinement, and CRT labels. \\
+\code{WeightedTransfer} & Ordered geometric inverses, normed Neumann inverses, multiplicative filtrations, and precise word pruning. \\
+\code{TransferZeta} & Finite weighted walks, exact enumeration, first-edge recurrence, determinant rationality, and coefficient recurrence. \\
+\code{ResultantSeparation} & Evaluated B\'ezout identities, numerator and kernel actions, denominator clearing, and certificate-based precision delay. \\
+\code{SmithDyadic} & Concrete modular fibres, abstract certified products, rational sign matrices, local denominator weights, and the Smith-phase formula. \\
+\code{TypedLinearDefects} & Fine-to-coarse maps between distinct spaces, power and resolvent defects, polynomial compatibility, and operator-norm estimates. \\
+\code{LinearDefects} & Ring-valued counterparts and auxiliary inverse identities. \\
+\code{KernelAudit} & Representative axiom reports and the fail-closed namespace gate. \\
+\bottomrule
+\end{longtable}
+
+The main mathematical dependencies are modular. Coordinate refinement does not require a valuation. Weighted pruning needs a filtration but not a graph incidence law. Transfer zeta counts graph walks but uses integer formal power series, not operator norms. Smith fibres work in finite modular arithmetic. The typed defect module is independent of a particular packet construction: a caller may use a coarsening map, but the theorem accepts any map of the stated type.

@@ -1,0 +1,51 @@
+\section{Reproduction, audit, and evidence handling}
+\subsection{The exact environment}
+The cyclic analytic formalization's toolchain file specifies \code{leanprover/lean4:v4.34.0-rc2}. The recorded compiler commit is \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Mathlib is pinned at \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The complete nine-package revision table is printed in the dependency appendix and preserved in \code{lake-manifest.json}.
+
+The project has \code{autoImplicit = false} and \code{relaxedAutoImplicit = false}. The verified replay establishes warning rejection through the explicit control in Section~\ref{sec:verification_scope}, which distinguishes the inherited setting from the corrected invocation. The aggregate import integrates the development, while the explicit kernel audit checks the mapped declarations and the namespace. Build caches are excluded from the release source.
+
+\subsection{What the saved kernel transcript establishes}
+The saved transcript contains one axiom record for each of the 1,164 mapped targets and ends with the namespace audit's pass line. The guide generator compares the target sets in four places: the theorem map, the declaration-kind contract, the audit source's explicit directives, and the transcript. It also checks that every recorded axiom belongs to the three-item permitted set.
+
+This reconciliation proves consistency of the preserved evidence files with the preserved source identities. It does not repeat elaboration, type checking, or a live environment traversal. The namespace totals of 2,234 declarations and 1,999 theorem declarations are inherited results, not counts newly obtained from a running Lean process. A lexical source parser cannot substitute for elaborated declaration types or compiler-generated declarations.
+
+\subsection{Static reconciliation}
+The generator validates every one of the 119 Lean source files against the canonical SHA-256 manifest. It resolves the 1,164 target names to source declarations and checks the theorem-versus-construction split against the explicit contract. It emits the complete row catalog, 68-result ledger, direct-import inventory, exact pins, and source-excerpt manifest.
+
+The source policy scan excludes comments and string literals before checking for forbidden proof placeholders and unsafe shortcuts. The kernel-audit file is treated separately because its exclusion logic necessarily names prohibited axioms. This is a source-hygiene check. It does not establish that elaboration succeeds.
+
+The 43 declarations in \code{SemanticChecks.lean} are supported by their source and preserved execution evidence. Static reconciliation does not relabel them as newly executed tests. The separate verification chapter records the production replay and compiler controls; the 119 mathematical source files remained unchanged.
+
+\subsection{Replay the original release gate}
+Use a disposable copy of the canonical \code{PRSC_IV} directory with the pinned Lean toolchain and dependencies available. The documented release gate requires Lean and checksums, including a full compiler replay.
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+bash VERIFY.sh --release
+\end{Verbatim}
+If the original release archive is available, its exact archive-entry checks can be included:
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+bash VERIFY.sh --release --archive /path/to/PRSC_IV_v1.0.0.zip
+\end{Verbatim}
+Use the exact formal source archive for archive-entry checks. The collected book is a different artifact and does not have that archive's entry set.
+
+The gate also accepts a validated external dependency cache:
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+bash VERIFY.sh --release --lean-packages-cache /path/to/packages
+\end{Verbatim}
+The cache must match the pinned package revisions. The release checker requires a clean project without a preexisting local build cache. It creates and cleans its local attachment under its own rules. A fresh extracted copy is the clearest way to avoid mixing source verification with prior build state.
+
+For a focused manual inspection from \code{formalization/lean}, the relevant commands include:
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+lake --wfail build
+lake env lean -E warning KomorebiPaperIV/KernelAudit.lean
+\end{Verbatim}
+These commands describe the inherited manual gate. For the verified warning policy and full production replay, use the procedure in the next chapter. The full release gate additionally checks exact kinds and manuscript associations, source policy, document reconstruction, checksums, and archive properties when requested.
+
+\subsection{Failure modes worth recognizing}
+A dependency revision mismatch means the attempted replay is not the pinned release environment. A saved transcript whose target set differs from the contract is incomplete evidence even if its final line says pass. A declaration that is present lexically but fails to elaborate has not passed a new formal run. A PDF that builds successfully says nothing by itself about the Lean proofs.
+
+The inherited computational audit also reports that an older strengthened numerical suite accepted mutations to a projector identity and a zero-counting constant. Its reported pass totals therefore cannot certify theorems. The canonical formal contract and kernel evidence should not be replaced by those historical finite-test totals. Finite checks can still detect selected regressions, but their sensitivity and scope must be stated.
+
+\subsection{How to inspect one result end to end}
+Choose a manuscript record in the coverage ledger. Read all of its map rows, including later rows that close analytic clauses. Follow each exact declaration name to its source location. Inspect the surrounding variables, typeclass instances, definitions, and imported lemmas. Check the target's kind in the contract and its axiom record in the saved transcript. If a new formal run is needed, use the pinned environment and retain its complete output separately from inherited evidence.
+
+For example, result 4.5 joins row 27's factorial/Pochhammer formal identity with row 150's literal parameter multiset, Gamma normalization, and actual convergent hypergeometric summation. Reviewing only row 27 would miss completed analytic coverage. Reviewing only the final identity would miss the coefficient normalization on which it depends. The contract is designed to make both routes visible.

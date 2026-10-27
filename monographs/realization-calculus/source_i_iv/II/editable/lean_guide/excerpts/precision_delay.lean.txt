@@ -1,0 +1,14 @@
+/-- Congruence modulo the scalar lattice `pi^n lattice`, expressed with an explicit witness. -/
+def CongruentModLattice (pi : K) (lattice : AddSubgroup M) (n : ℕ) (x y : M) : Prop :=
+  ∃ z : M, z ∈ lattice ∧ x - y = (pi ^ n) • z
+
+/-- An `s`-digit denominator certificate turns `m+s` input digits into `m` output digits. -/
+theorem projector_precision_delay {pi : K} {E : End (K := K) (M := M)}
+    {lattice : AddSubgroup M} {s m : ℕ}
+    (hweight : IsSeparationWeight pi E lattice s) {x y : M}
+    (hxy : CongruentModLattice pi lattice (m + s) x y) :
+    CongruentModLattice pi lattice m (E x) (E y) := by
+  rcases hxy with ⟨z, hz, hxy⟩
+  refine ⟨((pi ^ s) • E) z, hweight z hz, ?_⟩
+  rw [← map_sub, hxy, map_smul]
+  simp only [LinearMap.smul_apply, pow_add, smul_smul]

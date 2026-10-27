@@ -1,0 +1,8 @@
+theorem inverse_solved_zero (J : Matrix (Fin e) (Fin e) 𝕜)
+    (K : Matrix (Fin e) (Fin k) 𝕜) (hJ : IsUnit J) (v : Fin k → 𝕜) :
+    solvedPart ((upperEquiv J K hJ).symm (join (0 : Fin e → 𝕜) v)) =
+      matrixCLM (-(J⁻¹ * K)) v := by
+  rw [upperEquiv_symm_apply]
+  simp only [blockCertificate, upperBlock_mulVec_join, Matrix.mulVec_zero,
+    zero_add, solvedPart_join]
+  rfl

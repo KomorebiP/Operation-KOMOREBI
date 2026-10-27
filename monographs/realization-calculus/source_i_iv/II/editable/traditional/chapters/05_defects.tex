@@ -1,0 +1,294 @@
+\section{Linear refinement defects}\label{sec:defects}
+
+Exact coordinate refinement describes two representations of the same object. In an application, the coarse operator may instead be chosen to model coarse dynamics. An intertwining defect measures the mismatch between applying the operator before or after passing to coarse coordinates.
+
+Let $X_f$ and $X_c$ be vector spaces or Banach spaces over a common field, and let
+\[
+C:X_f\longrightarrow X_c
+\]
+be a linear map,
+and let
+\[
+T_f\in\End(X_f),
+\qquad
+T_c\in\End(X_c).
+\]
+Define
+\[
+\Delta=CT_f-T_cC.
+\]
+
+\begin{keyidea}
+There are two routes from a fine state to a coarse result. One applies the fine operator and then maps the result to the coarse space. The other maps the state first and then applies the coarse operator. The defect is the difference between these routes. Its vanishing says that the chosen operators are compatible with the comparison map. The norm estimates below combine the size of this defect with the norms of the surrounding operators.
+\end{keyidea}
+
+\begin{theorem}[Power defect identity]\label{thm:power_defect}\label{thm:power-defect}
+For every integer $n\geq1$,
+\[
+CT_f^n-T_c^nC
+=
+\sum_{k=0}^{n-1}T_c^{n-1-k}\Delta T_f^k.
+\]
+\end{theorem}
+
+\begin{proof}
+The statement is clear for $n=1$.  For the induction step, write
+\[
+CT_f^{n+1}-T_c^{n+1}C
+=
+(CT_f^n-T_c^nC)T_f+T_c^n(CT_f-T_cC)
+\]
+and apply the induction hypothesis.
+\end{proof}
+
+\begin{corollary}[Power norm bound]\label{cor:power_norm}
+For bounded operators between Banach spaces,
+\[
+\|CT_f^n-T_c^nC\|
+\leq
+\|\Delta\|
+\sum_{k=0}^{n-1}
+\|T_c\|^{n-1-k}\|T_f\|^k.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply the triangle inequality and submultiplicativity to \cref{thm:power_defect}.
+\end{proof}
+
+\Needspace{4\baselineskip}
+\begin{corollary}[Norm bound]\label{cor:defect-norm}
+For a submultiplicative operator norm,
+\[
+\|CT_f^n-T_c^nC\|
+\le
+\|\Delta\|
+\sum_{k=0}^{n-1}
+\|T_c\|^{n-1-k}\|T_f\|^k.
+\]
+If $\|T_f\|,\|T_c\|\le\rho$, then
+\[
+\boxed{
+\|CT_f^n-T_c^nC\|
+\le n\rho^{n-1}\|\Delta\|.
+}
+\]
+\end{corollary}
+
+\begin{corollary}[Polynomial defect]\label{cor:polynomial_defect}
+For
+\[
+p(z)=\sum_{n=0}^Na_nz^n,
+\]
+we have
+\[
+Cp(T_f)-p(T_c)C
+=
+\sum_{n=1}^Na_n
+\sum_{k=0}^{n-1}T_c^{n-1-k}\Delta T_f^k.
+\]
+\end{corollary}
+
+\begin{proof}
+The constant terms cancel because $CI=IC$.  Apply \cref{thm:power_defect} to every positive power and sum.
+\end{proof}
+
+\begin{theorem}[Resolvent defect identity]\label{thm:resolvent_defect}\label{thm:resolvent-defect}
+If $z-T_f$ and $z-T_c$ are invertible, then
+\[
+C(z-T_f)^{-1}-(z-T_c)^{-1}C
+=
+(z-T_c)^{-1}\Delta(z-T_f)^{-1}.
+\]
+\end{theorem}
+
+\begin{proof}
+Multiply the claimed identity on the left by $z-T_c$ and on the right by $z-T_f$.  The left side becomes
+\[
+(z-T_c)C-C(z-T_f)
+=
+CT_f-T_cC
+=
+\Delta.
+\]
+Multiplying back by the two resolvents proves the formula.
+\end{proof}
+
+\subsection{Inverse witnesses from one side and norm control}
+For continuous linear maps, the same identity gives the certified norm bound
+\[
+\boxed{
+\|C R_f-R_c C\|
+\le \|R_c\|\,\|\Delta\|\,\|R_f\|,
+}
+\]
+from a left inverse witness for the coarse scalar shift and a right inverse
+witness for the fine scalar shift. These witnesses suffice for the displayed
+identity. On their own, they need not define inverses on both sides and hence
+need not define resolvents. If $\Delta=0$, Lean also proves, for every finite
+polynomial $p$, the exact compatibility
+\[
+\boxed{C\,p(T_f)=p(T_c)\,C,}
+\]
+in both the algebraic setting and the setting of continuous linear maps. Thus
+all powers and polynomial actions intertwine with coarse reconstruction. The
+stated inverse witnesses also intertwine. In particular, genuine resolvents
+do so when the scalar shifts are invertible. This is the linear prototype
+of the more general theory of refinement defects reserved for Chapter III.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{09_refinement_defect_bound.pdf}
+\caption{A controlled defect for one step and its telescoping norm bound under repeated operator application.}
+\label{fig:defect-bound}
+\end{figure}
+
+
+\subsection{Analytic functional calculus}
+\begin{theorem}[Holomorphic functional calculus defect]\label{thm:holomorphic_defect}
+Let $X_f$ and $X_c$ be complex Banach spaces, and let $C:X_f\to X_c$, $T_f$, and $T_c$ be bounded complex-linear maps.  Let $h$ be holomorphic on an open set $U$ containing both spectra.  Let $\Gamma$ be an admissible finite rectifiable Cauchy cycle in $U$ and in both resolvent sets, with winding number one on the union of the spectra and zero outside $U$.  The length of a cycle counts multiplicities.  Then
+\[
+Ch(T_f)-h(T_c)C
+=
+\frac{1}{2\pi i}
+\int_\Gamma
+h(z)(z-T_c)^{-1}\Delta(z-T_f)^{-1}\,dz.
+\]
+Consequently,
+\begin{align*}
+\|Ch(T_f)-h(T_c)C\|
+&\leq
+\frac{\operatorname{length}(\Gamma)}{2\pi}
+\sup_{z\in\Gamma}|h(z)|\,\|\Delta\|\\
+&\quad\times
+\sup_{z\in\Gamma}\|(z-T_c)^{-1}\|
+\sup_{z\in\Gamma}\|(z-T_f)^{-1}\|.
+\end{align*}
+\end{theorem}
+
+\begin{proof}
+The assertion is immediate if either space is zero. Otherwise, use the rectifiable-cycle form of the holomorphic functional calculus in \cite[Chapter~VII, \S4, Theorem~4.1, formula~(4.5), and Proposition~4.6]{Conway1990}. For each operator $T$, compare $\Gamma$ with a positive simple system around its spectrum. Their difference has zero winding outside $U\setminus\sigma(T)$, so Theorem~4.1 applied to the resolvent-valued integrand identifies the two integrals. Consequently,
+\[
+h(T)
+=
+\frac{1}{2\pi i}
+\int_\Gamma h(z)(z-T)^{-1}\,dz.
+\]
+Subtract the two formulas after composing with $C$, then use \cref{thm:resolvent_defect} inside the integral.  The norm estimate follows from the standard contour bound.
+\end{proof}
+
+\begin{theorem}[Exponential defect identity]\label{thm:exponential_defect}
+Let $C:X_f\to X_c$, $T_f$, and $T_c$ be bounded linear maps between Banach spaces over a common field.  For real $t$, use real or complex spaces. For complex $t$, use complex spaces and complex-linear maps.  Then
+\[
+Ce^{tT_f}-e^{tT_c}C
+=
+\int_0^t e^{(t-s)T_c}\Delta e^{sT_f}\,ds,
+\]
+where the integral is taken along the straight segment from $0$ to $t$ when $t$ is complex.  For real $t\geq0$,
+\[
+\|Ce^{tT_f}-e^{tT_c}C\|
+\leq
+\|\Delta\|
+\int_0^t
+\|e^{(t-s)T_c}\|
+\|e^{sT_f}\|\,ds.
+\]
+\end{theorem}
+
+\begin{proof}
+For real $t$, differentiate
+\[
+F(s)=e^{(t-s)T_c}Ce^{sT_f}.
+\]
+We obtain
+\[
+F'(s)=e^{(t-s)T_c}\Delta e^{sT_f}.
+\]
+Integration from $0$ to $t$ gives the identity.  The complex statement follows by the same calculation along the straight segment.  The norm bound follows from the integral formula.
+\end{proof}
+
+\subsection{Several refinement levels}
+
+Let
+\[
+C_\ell:X_{\ell+1}\longrightarrow X_\ell
+\]
+be linear maps for $0\leq\ell<L$, and let $T_\ell\in\End(X_\ell)$.  Put
+\[
+\Delta_\ell=C_\ell T_{\ell+1}-T_\ell C_\ell.
+\]
+For $a<b$, write
+\[
+C_{a,b}=C_aC_{a+1}\cdots C_{b-1},
+\]
+with $C_{a,a}=I$.
+
+\begin{theorem}[Multilevel defect decomposition]\label{thm:multilevel_defect}
+The total defect from level $L$ to level zero is
+\[
+C_{0,L}T_L-T_0C_{0,L}
+=
+\sum_{\ell=0}^{L-1}
+C_{0,\ell}\Delta_\ell C_{\ell+1,L}.
+\]
+For bounded maps,
+\[
+\|C_{0,L}T_L-T_0C_{0,L}\|
+\leq
+\sum_{\ell=0}^{L-1}
+\|C_{0,\ell}\|
+\|\Delta_\ell\|
+\|C_{\ell+1,L}\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the intermediate terms
+\[
+C_{0,\ell}T_\ell C_{\ell,L}
+\]
+for $0\leq\ell\leq L$.  Consecutive differences telescope.  The difference between the terms indexed by $\ell+1$ and $\ell$ is
+\[
+C_{0,\ell}(C_\ell T_{\ell+1}-T_\ell C_\ell)C_{\ell+1,L}.
+\]
+Summing gives the identity.  The norm estimate follows from the triangle inequality.
+\end{proof}
+
+\begin{interpretation}
+The multilevel formula keeps track of where each mismatch enters. A defect at one level is composed with the comparison maps needed to reach the input and output levels. The norm estimate therefore depends on both the local defects and the maps that carry them through the hierarchy. Controlling local mismatches alone does not control the total error if those maps amplify them.
+\end{interpretation}
+
+\begin{example}[A visible one step defect]\label{ex:defect_example}
+Let $X_f=\bbk^2$, let $X_c=\bbk$, and let
+\[
+C(x_1,x_2)=x_1.
+\]
+Take
+\[
+T_f=
+\begin{pmatrix}
+a&b\\
+c&d
+\end{pmatrix},
+\qquad
+T_c=(a).
+\]
+Then
+\[
+\Delta=CT_f-T_cC=(0,b).
+\]
+The coarse operator is exactly compatible with the fine operator precisely when the discarded coordinate does not feed into the retained coordinate.  The entry $c$ does not appear in the one step defect because it moves information in the opposite direction.  It can still affect later powers through the terms in \cref{thm:power_defect}.
+\end{example}
+
+\begin{corollary}[Exact compatibility]\label{cor:exact_compatibility}
+If every one step defect $\Delta_\ell$ vanishes, then
+\[
+C_{0,L}p(T_L)=p(T_0)C_{0,L}
+\]
+for every polynomial $p$.  The analogous resolvent, holomorphic, and exponential identities also hold whenever the relevant expressions are defined.
+\end{corollary}
+
+\begin{proof}
+The total one step defect vanishes by \cref{thm:multilevel_defect}.  Apply \cref{cor:polynomial_defect,thm:resolvent_defect,thm:holomorphic_defect,thm:exponential_defect}.
+\end{proof}
+

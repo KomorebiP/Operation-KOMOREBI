@@ -1,0 +1,397 @@
+import PaperX.CarrierCompatibility
+import PaperX.WeilProfileClosure
+import PaperX.SemilinearTateComparison
+import PaperX.SemilinearPeriods
+
+/-!
+# Compatible-carrier summand completion
+
+This is the source-faithful closure theorem for Paper X Claim 9.2.  The
+constituent representations, their strict local Weil packets, and their genuine
+semilinear Tate comparisons are inputs.  The selected multiplicities are then
+used at every coefficient realization.  The theorem constructs the actual split
+summand and proves closure of all local data under those finite copies.
+
+It does not construct a compatible carrier or prove that an arbitrary p-adic
+representation is Hodge--Tate.  Those claims are not part of the conditional
+carrier theorem.
+-/
+set_option autoImplicit false
+noncomputable section
+
+namespace PaperX.StrictCompatibleCarrierCompletion
+
+open scoped BigOperators
+open Polynomial
+open PaperX.CarrierSummands
+open PaperX.CarrierCompatibility
+open PaperX.WeilData
+open PaperX.WeilCopies
+open PaperX.WeilSmooth
+open PaperX.WeilEuler
+open PaperX.WeilProfileClosure
+open PaperX.SemilinearTateComparison
+open PaperX.SemilinearPeriods
+
+universe u v w z uB
+
+
+/-- A semantic local condition on representations over `K`. -/
+def LocalCondition (K : Type u) (G : Type v) [CommRing K] [Monoid G] :=
+  ∀ (X : Type u), [AddCommGroup X] → [Module K X] → Representation K G X → Prop
+
+/-- A local condition is finite-copy closed when constituent instances imply
+its instance on every finite copy carrier.  This explicit hypothesis is
+necessary for conditions, such as fixed determinant, which are not automatically
+stable under direct sum. -/
+def FiniteCopyClosed
+    {K : Type u} {G : Type v} [CommRing K] [Monoid G]
+    (Q : LocalCondition K G) : Prop :=
+  ∀ {I : Type} [Fintype I] {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    (ρ : ∀ i, Representation K G (V i)) (m : I → ℕ),
+      (∀ i, Q (V i) (ρ i)) → Q (Copies V m) (copiesRep ρ m)
+
+/-- Every explicitly finite-copy-closed local condition is inherited by the
+selected compatible summand. -/
+theorem selected_local_condition
+    {K : Type u} {G : Type v} [CommRing K] [Monoid G]
+    {I : Type} [Fintype I] {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    (ρ : ∀ i, Representation K G (V i)) (m : I → ℕ)
+    (Q : LocalCondition K G) (hclosed : FiniteCopyClosed Q)
+    (hconst : ∀ i, Q (V i) (ρ i)) :
+    Q (Copies V m) (copiesRep ρ m) :=
+  hclosed ρ m hconst
+
+/-- At one coefficient realization, a multiplicity vector bounded by the
+carrier capacities produces an actual equivariant split summand, a continuous
+selected action, and the expected common Frobenius polynomial. -/
+theorem selected_global_carrier
+    {K : Type u} [Field K] [TopologicalSpace K]
+    {G : Type v} [Monoid G] [TopologicalSpace G]
+    {I : Type} [Fintype I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)] [∀ i, TopologicalSpace (V i)]
+    (ρ : ∀ i, Representation K G (V i))
+    (hρ : ∀ i, Continuous (fun gx : G × V i => ρ i gx.1 gx.2))
+    {W : Type z} [AddCommGroup W] [Module K W]
+    (carrier : Representation K G W)
+    (m c : I → ℕ) (hmc : ∀ i, m i ≤ c i)
+    (B : W ≃ₗ[K] Copies V c)
+    (hB : ∀ g x, B (carrier g x) = copiesRep ρ c g (B x))
+    {E : Type uB} [CommRing E] (σE : E →+* K)
+    (g : G) (P : I → E[X])
+    (hP : ∀ i, (ρ i g).charpoly = (P i).map σE) :
+    ∃ j : Representation.IntertwiningMap (copiesRep ρ m) carrier,
+      ∃ r : Representation.IntertwiningMap carrier (copiesRep ρ m),
+        (∀ x, r (j x) = x) ∧
+        Continuous (fun gx : G × Copies V m => copiesRep ρ m gx.1 gx.2) ∧
+        (copiesRep ρ m g).charpoly = (∏ i, P i ^ m i).map σE := by
+  let jlin : Copies V m →ₗ[K] W := transportedInclusion hmc B
+  let rlin : W →ₗ[K] Copies V m := transportedRetraction hmc B
+  let j : Representation.IntertwiningMap (copiesRep ρ m) carrier :=
+    jlin.intertwiningMap_of_isIntertwiningMap _ _ (by
+      intro h x
+      exact transported_inclusion_equivariant ρ carrier hmc B hB h x)
+  let r : Representation.IntertwiningMap carrier (copiesRep ρ m) :=
+    rlin.intertwiningMap_of_isIntertwiningMap _ _ (by
+      intro h x
+      exact transported_retraction_equivariant ρ carrier hmc B hB h x)
+  refine ⟨j, r, ?_, ?_, ?_⟩
+  · intro x
+    exact transported_split hmc B x
+  · exact continuous_copies_action ρ m hρ
+  · exact common_polynomial σE ρ m g P hP
+
+/-- Under an explicit nonsingular character sample, the coefficient-independent
+multiplicity vector used by the completion is unique.  This is the formal
+version of uniqueness in the semisimple carrier decomposition. -/
+theorem selected_multiplicities_unique
+    {K : Type u} [Field K] [CharZero K]
+    {G : Type v} [Monoid G]
+    {I : Type} [Fintype I] [DecidableEq I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)]
+    (ρ : ∀ i, Representation K G (V i))
+    (m : I → ℕ) (sample : I → G)
+    (hdet : Matrix.det (fun j i => LinearMap.trace K _ (ρ i (sample j))) ≠ 0) :
+    ∀ n : I → ℕ,
+      (∀ j, LinearMap.trace K _ (copiesRep ρ m (sample j)) =
+        LinearMap.trace K _ (copiesRep ρ n (sample j))) → n = m := by
+  intro n htrace
+  exact (multiplicities_unique_from_actual_traces ρ m n sample hdet htrace).symm
+
+/-- Supplied constituent Weil--monodromy packets are closed under the selected
+finite copies, including smooth inertia and the exact local polynomial,
+dimension, and trace formulas. -/
+theorem selected_weil_packets
+    {K : Type u} [Field K]
+    {GW : Type v} [Group GW] [TopologicalSpace GW]
+    {I : Type} [Fintype I]
+    {ν : GW →* Kˣ}
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)]
+    (H : Subgroup GW) [H.Normal]
+    (D : ∀ i, InertialDatum (ν := ν) H (V i))
+    (m : I → ℕ) (φ : GW) :
+    let S := copiesInertialDatum H D m
+    S.toDatum = copiesDatum (fun i => (D i).toDatum) m ∧
+    localCharpoly S.toDatum H φ =
+      ∏ i, localCharpoly (D i).toDatum H φ ^ m i ∧
+    eulerPolynomial S.toDatum H φ =
+      ∏ i, eulerPolynomial (D i).toDatum H φ ^ m i ∧
+    Module.finrank K (fixedKernel S.toDatum H) =
+      ∑ i, m i * Module.finrank K (fixedKernel (D i).toDatum H) ∧
+    LinearMap.trace K _ (fixedRep S.toDatum H φ) =
+      ∑ i, (m i : K) * LinearMap.trace K _ (fixedRep (D i).toDatum H φ) := by
+  exact copies_local_profile H D m φ
+
+/-- Genuine semilinear comparison data on every constituent produce the actual
+comparison on the selected finite copies.  The same construction gives the
+intrinsic period-space equivalence, so the result is not merely a census of
+formal weight labels. -/
+theorem selected_semilinear_period_packets
+    {R : Type u} {B : Type uB} {GP : Type v}
+    [Field R] [Field B] [Algebra R B] [Group GP]
+    (σB : GP →* (B ≃ₐ[R] B)) (tate : ℤ → GP →* Rˣ)
+    {I : Type} [Fintype I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module R (V i)]
+    (ρ : ∀ i, Representation R GP (V i))
+    (C : ∀ i, Comparison σB tate (ρ i))
+    (m : I → ℕ) :
+    ∃ Csel : Comparison σB tate (copiesRep ρ m),
+      (∀ z : ℤ,
+        weightMultiplicity σB tate Csel z =
+          ∑ i, m i * weightMultiplicity σB tate (C i) z) ∧
+      (∀ z : ℤ, Nonempty (
+        periodSpace σB tate (copiesRep ρ m) z ≃ₗ[R]
+          Copies (fun i => periodSpace σB tate (ρ i) z) m)) := by
+  refine ⟨copiesComparison σB tate ρ C m, ?_, ?_⟩
+  · intro z
+    exact copies_weightMultiplicity σB tate ρ C m z
+  · intro z
+    exact ⟨periodCopiesEquiv σB tate ρ m z⟩
+
+/-- One-place capstone.  It combines the actual global split summand with the
+constructed Weil packet and the genuine semilinear comparison.  Applying this
+pointwise at every coefficient place, with the same `m`, is exactly the
+compatible-carrier completion theorem. -/
+theorem one_place_completion
+    {K : Type u} [Field K] [TopologicalSpace K]
+    {GG : Type v} [Monoid GG] [TopologicalSpace GG]
+    {I : Type} [Fintype I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)] [∀ i, TopologicalSpace (V i)]
+    (ρ : ∀ i, Representation K GG (V i))
+    (hρ : ∀ i, Continuous (fun gx : GG × V i => ρ i gx.1 gx.2))
+    {W : Type z} [AddCommGroup W] [Module K W]
+    (carrier : Representation K GG W)
+    (m c : I → ℕ) (hmc : ∀ i, m i ≤ c i)
+    (Bcar : W ≃ₗ[K] Copies V c)
+    (hBcar : ∀ g x, Bcar (carrier g x) = copiesRep ρ c g (Bcar x))
+    {E : Type uB} [CommRing E] (σE : E →+* K)
+    (g : GG) (P : I → E[X])
+    (hP : ∀ i, (ρ i g).charpoly = (P i).map σE)
+    {GW : Type v} [Group GW] [TopologicalSpace GW]
+    {ν : GW →* Kˣ} (H : Subgroup GW) [H.Normal]
+    (D : ∀ i, InertialDatum (ν := ν) H (V i)) (φ : GW)
+    {Bper : Type uB} [Field Bper] [Algebra K Bper]
+    {GP : Type v} [Group GP]
+    (σB : GP →* (Bper ≃ₐ[K] Bper)) (tate : ℤ → GP →* Kˣ)
+    (ρp : ∀ i, Representation K GP (V i))
+    (C : ∀ i, Comparison σB tate (ρp i)) :
+    (∃ j : Representation.IntertwiningMap (copiesRep ρ m) carrier,
+      ∃ r : Representation.IntertwiningMap carrier (copiesRep ρ m),
+        (∀ x, r (j x) = x) ∧
+        Continuous (fun gx : GG × Copies V m => copiesRep ρ m gx.1 gx.2) ∧
+        (copiesRep ρ m g).charpoly = (∏ i, P i ^ m i).map σE) ∧
+    (let S := copiesInertialDatum H D m;
+      S.toDatum = copiesDatum (fun i => (D i).toDatum) m ∧
+      localCharpoly S.toDatum H φ =
+        ∏ i, localCharpoly (D i).toDatum H φ ^ m i ∧
+      eulerPolynomial S.toDatum H φ =
+        ∏ i, eulerPolynomial (D i).toDatum H φ ^ m i ∧
+      Module.finrank K (fixedKernel S.toDatum H) =
+        ∑ i, m i * Module.finrank K (fixedKernel (D i).toDatum H) ∧
+      LinearMap.trace K _ (fixedRep S.toDatum H φ) =
+        ∑ i, (m i : K) * LinearMap.trace K _ (fixedRep (D i).toDatum H φ)) ∧
+    (∃ Csel : Comparison σB tate (copiesRep ρp m),
+      (∀ z : ℤ,
+        weightMultiplicity σB tate Csel z =
+          ∑ i, m i * weightMultiplicity σB tate (C i) z) ∧
+      (∀ z : ℤ, Nonempty (
+        periodSpace σB tate (copiesRep ρp m) z ≃ₗ[K]
+          Copies (fun i => periodSpace σB tate (ρp i) z) m))) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact selected_global_carrier ρ hρ carrier m c hmc Bcar hBcar σE g P hP
+  · exact selected_weil_packets H D m φ
+  · exact selected_semilinear_period_packets σB tate ρp C m
+
+
+/-- The supplied initial semisimple summand is transported to the canonical
+selected-copy realization through its explicit equivariant decomposition.  This
+is the formal version of the source theorem's statement
+`U_{λ₀} ≃ ⨁ᵢ W_{i,λ₀}^{⊕ mᵢ}`. -/
+theorem initial_summand_transport
+    {K : Type u} [Field K]
+    {G : Type v} [Monoid G]
+    {I : Type} [Fintype I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    (ρ : ∀ i, Representation K G (V i))
+    {W : Type z} [AddCommGroup W] [Module K W]
+    (carrier : Representation K G W)
+    (m c : I → ℕ) (hmc : ∀ i, m i ≤ c i)
+    (Bcar : W ≃ₗ[K] Copies V c)
+    (hBcar : ∀ g x, Bcar (carrier g x) = copiesRep ρ c g (Bcar x))
+    {U₀ : Type z} [AddCommGroup U₀] [Module K U₀]
+    (ρU₀ : Representation K G U₀)
+    (e₀ : U₀ ≃ₗ[K] Copies V m)
+    (he₀ : ∀ g x, e₀ (ρU₀ g x) = copiesRep ρ m g (e₀ x)) :
+    ∃ j : Representation.IntertwiningMap ρU₀ carrier,
+      ∃ r : Representation.IntertwiningMap carrier ρU₀,
+        ∀ x, r (j x) = x := by
+  let jlin : U₀ →ₗ[K] W :=
+    (transportedInclusion hmc Bcar).comp e₀.toLinearMap
+  let rlin : W →ₗ[K] U₀ :=
+    e₀.symm.toLinearMap.comp (transportedRetraction hmc Bcar)
+  let j : Representation.IntertwiningMap ρU₀ carrier :=
+    jlin.intertwiningMap_of_isIntertwiningMap _ _ (by
+      intro g x
+      change transportedInclusion hmc Bcar (e₀ (ρU₀ g x)) =
+        carrier g (transportedInclusion hmc Bcar (e₀ x))
+      rw [he₀]
+      exact transported_inclusion_equivariant ρ carrier hmc Bcar hBcar g (e₀ x))
+  let r : Representation.IntertwiningMap carrier ρU₀ :=
+    rlin.intertwiningMap_of_isIntertwiningMap _ _ (by
+      intro g x
+      apply e₀.injective
+      simpa only [rlin, LinearMap.comp_apply, LinearEquiv.coe_coe,
+        e₀.apply_symm_apply, he₀] using
+        transported_retraction_equivariant ρ carrier hmc Bcar hBcar g x)
+  refine ⟨j, r, ?_⟩
+  intro x
+  change rlin (jlin x) = x
+  change e₀.symm (transportedRetraction hmc Bcar
+      (transportedInclusion hmc Bcar (e₀ x))) = x
+  rw [transported_split, e₀.symm_apply_apply]
+
+/-- Frobenius traces of the supplied initial summand determine the same unique
+multiplicity packet.  The trace comparison is proved from the explicit
+intertwining linear equivalence rather than assumed separately. -/
+theorem initial_summand_multiplicities_unique
+    {K : Type u} [Field K] [CharZero K]
+    {G : Type v} [Monoid G]
+    {I : Type} [Fintype I] [DecidableEq I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)]
+    (ρ : ∀ i, Representation K G (V i))
+    (m : I → ℕ)
+    {U₀ : Type z} [AddCommGroup U₀] [Module K U₀]
+    [FiniteDimensional K U₀]
+    (ρU₀ : Representation K G U₀)
+    (e₀ : U₀ ≃ₗ[K] Copies V m)
+    (he₀ : ∀ g x, e₀ (ρU₀ g x) = copiesRep ρ m g (e₀ x))
+    (sample : I → G)
+    (hdet : Matrix.det (fun j i => LinearMap.trace K _ (ρ i (sample j))) ≠ 0) :
+    ∀ n : I → ℕ,
+      (∀ j, LinearMap.trace K U₀ (ρU₀ (sample j)) =
+        LinearMap.trace K _ (copiesRep ρ n (sample j))) → n = m := by
+  intro n htrace
+  apply selected_multiplicities_unique ρ m sample hdet n
+  intro j
+  have hconj : e₀.conj (ρU₀ (sample j)) = copiesRep ρ m (sample j) := by
+    apply LinearMap.ext
+    intro x
+    change e₀ (ρU₀ (sample j) (e₀.symm x)) = copiesRep ρ m (sample j) x
+    rw [he₀, e₀.apply_symm_apply]
+  calc
+    LinearMap.trace K _ (copiesRep ρ m (sample j)) =
+        LinearMap.trace K _ (e₀.conj (ρU₀ (sample j))) := by rw [hconj]
+    _ = LinearMap.trace K U₀ (ρU₀ (sample j)) :=
+      LinearMap.trace_conj' (ρU₀ (sample j)) e₀
+    _ = LinearMap.trace K _ (copiesRep ρ n (sample j)) := htrace j
+
+
+/-- Source-level capstone for Paper X Claim 9.2.  The initial semisimple
+summand is supplied in the explicit constituent-copy form stated in the amended
+manuscript.  The theorem proves its split realization in the carrier, uniqueness
+of the multiplicity vector from the finite Frobenius separator, and preservation
+of the strict-compatible local packets at an arbitrary coefficient place.
+Applying the universally quantified local conclusion at every coefficient place
+with the same `m` constructs the compatible subsystem. -/
+theorem compatible_carrier_summand_completion
+    {K : Type u} [Field K] [CharZero K] [TopologicalSpace K]
+    {GG : Type v} [Monoid GG] [TopologicalSpace GG]
+    {I : Type} [Fintype I] [DecidableEq I]
+    {V : I → Type u}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)] [∀ i, TopologicalSpace (V i)]
+    (ρ : ∀ i, Representation K GG (V i))
+    (hρ : ∀ i, Continuous (fun gx : GG × V i => ρ i gx.1 gx.2))
+    {W : Type z} [AddCommGroup W] [Module K W]
+    (carrier : Representation K GG W)
+    (m c : I → ℕ) (hmc : ∀ i, m i ≤ c i)
+    (Bcar : W ≃ₗ[K] Copies V c)
+    (hBcar : ∀ g x, Bcar (carrier g x) = copiesRep ρ c g (Bcar x))
+    {U₀ : Type z} [AddCommGroup U₀] [Module K U₀]
+    [FiniteDimensional K U₀]
+    (ρU₀ : Representation K GG U₀)
+    (e₀ : U₀ ≃ₗ[K] Copies V m)
+    (he₀ : ∀ g x, e₀ (ρU₀ g x) = copiesRep ρ m g (e₀ x))
+    (sample : I → GG)
+    (hdet : Matrix.det (fun j i => LinearMap.trace K _ (ρ i (sample j))) ≠ 0)
+    {E : Type uB} [CommRing E] (σE : E →+* K)
+    (g : GG) (P : I → E[X])
+    (hP : ∀ i, (ρ i g).charpoly = (P i).map σE)
+    {GW : Type v} [Group GW] [TopologicalSpace GW]
+    {ν : GW →* Kˣ} (H : Subgroup GW) [H.Normal]
+    (D : ∀ i, InertialDatum (ν := ν) H (V i)) (φ : GW)
+    {Bper : Type uB} [Field Bper] [Algebra K Bper]
+    {GP : Type v} [Group GP]
+    (σB : GP →* (Bper ≃ₐ[K] Bper)) (tate : ℤ → GP →* Kˣ)
+    (ρp : ∀ i, Representation K GP (V i))
+    (C : ∀ i, Comparison σB tate (ρp i)) :
+    (∃ j : Representation.IntertwiningMap ρU₀ carrier,
+      ∃ r : Representation.IntertwiningMap carrier ρU₀,
+        ∀ x, r (j x) = x) ∧
+    (∀ n : I → ℕ,
+      (∀ j, LinearMap.trace K U₀ (ρU₀ (sample j)) =
+        LinearMap.trace K _ (copiesRep ρ n (sample j))) → n = m) ∧
+    (∃ j : Representation.IntertwiningMap (copiesRep ρ m) carrier,
+      ∃ r : Representation.IntertwiningMap carrier (copiesRep ρ m),
+        (∀ x, r (j x) = x) ∧
+        Continuous (fun gx : GG × Copies V m => copiesRep ρ m gx.1 gx.2) ∧
+        (copiesRep ρ m g).charpoly = (∏ i, P i ^ m i).map σE) ∧
+    (let S := copiesInertialDatum H D m;
+      S.toDatum = copiesDatum (fun i => (D i).toDatum) m ∧
+      localCharpoly S.toDatum H φ =
+        ∏ i, localCharpoly (D i).toDatum H φ ^ m i ∧
+      eulerPolynomial S.toDatum H φ =
+        ∏ i, eulerPolynomial (D i).toDatum H φ ^ m i ∧
+      Module.finrank K (fixedKernel S.toDatum H) =
+        ∑ i, m i * Module.finrank K (fixedKernel (D i).toDatum H) ∧
+      LinearMap.trace K _ (fixedRep S.toDatum H φ) =
+        ∑ i, (m i : K) * LinearMap.trace K _ (fixedRep (D i).toDatum H φ)) ∧
+    (∃ Csel : Comparison σB tate (copiesRep ρp m),
+      (∀ z : ℤ,
+        weightMultiplicity σB tate Csel z =
+          ∑ i, m i * weightMultiplicity σB tate (C i) z) ∧
+      (∀ z : ℤ, Nonempty (
+        periodSpace σB tate (copiesRep ρp m) z ≃ₗ[K]
+          Copies (fun i => periodSpace σB tate (ρp i) z) m))) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact initial_summand_transport ρ carrier m c hmc Bcar hBcar ρU₀ e₀ he₀
+  · exact initial_summand_multiplicities_unique ρ m ρU₀ e₀ he₀ sample hdet
+  · exact selected_global_carrier ρ hρ carrier m c hmc Bcar hBcar σE g P hP
+  · exact selected_weil_packets H D m φ
+  · exact selected_semilinear_period_packets σB tate ρp C m
+
+end PaperX.StrictCompatibleCarrierCompletion

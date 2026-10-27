@@ -1,0 +1,22 @@
+theorem finitePrecisionPrunedDiagonalTransferInverse_of_minWeight
+    \{R : Type u\} \{S : Type v\} [Ring R] [Ring S]
+    (filtration : MultiplicativeFiltration R)
+    (q : R →+* S) (L m N : ℕ) (certificate : PrecisionCertificate filtration q L)
+    (D Dinv K : R) (hD : TwoSidedInverse D Dinv)
+    \{E : Type w\} [Fintype E] (weight : E → ℕ) (edge : E → R)
+    (htransfer : Dinv * K = ∑ e : E, edge e)
+    (hmin : ∀ e, m ≤ weight e) (hcutoff : L ≤ m * N)
+    (hedge : ∀ e, filtration.Mem (weight e) (edge e)) :
+    TwoSidedInverse
+      (q (D + K))
+      (q (prunedDiagonalTransferInverse weight edge Dinv L N)) := by
+  have hpruned := prunedWordInverse_spec_of_minWeight
+    filtration q L m N certificate weight edge hmin hcutoff hedge
+  have htransferMapped : q Dinv * q K = ∑ e : E, q (edge e) := by
+    simpa only [map_mul, map_sum] using congrArg q htransfer
+  have hnormalized :
+      TwoSidedInverse (1 + q Dinv * q K) (q (prunedWordInverse weight edge L N)) := by
+    simpa only [map_add, map_one, map_sum, htransferMapped] using hpruned
+  have hdiagonal := diagonal_inverse_of_perturbation_inverse
+    (q D) (q Dinv) (q K) (q (prunedWordInverse weight edge L N)) (hD.map q) hnormalized
+  simpa only [prunedDiagonalTransferInverse, map_add, map_mul] using hdiagonal

@@ -1,0 +1,60 @@
+\section{Small-core optimal recompression from constructed ranges}
+\subsection{The shape of the proof}
+The sixth block completes item 5.6 with ten modules and 79 new theorem declarations. Start with arbitrary finite complex matrices \(L\) and \(R\) of equal column type, including rank-deficient and zero factors. Construct compact orthonormal bases of their actual column spaces. Express \(LR^*\) as an isometric lift of its small core. Supply an ordered thin SVD of that core by its exact equations. Prove diagonal low-rank lower bounds, then transfer them to every ambient rank-bounded competitor. Finally construct factors with exactly \(\min(d,k)\) columns.
+
+Every stage has its own declarations. A general transfer lemma may accept core optimality as a premise. The final theorem discharges that premise with independently proved diagonal lower bounds. The supplied SVD data contain no optimality conclusion or singular-tail formula.
+
+\subsection{Compact dimensions are the actual matrix ranks}
+\code{columnSpace A} is the range of the actual Euclidean linear map associated with \(A\). \code{compactDim A} is its finite dimension. \code{columnBasis A} chooses an orthonormal basis of that subspace. \code{compactQ A} represents its inclusion into the ambient space, and \code{compactR A} represents the range-restricted map in that basis.
+\excerpt{}{compact_factor}
+\walk{Convert the product of the two coordinate matrices to the matrix of a composition. The inclusion composed with the range restriction is the original linear map, by entrywise reflexivity. Converting that map back to the original matrix proves the reconstruction. Separate theorems prove \code{compactDim A = A.rank}, orthonormality of \code{compactQ}, and full row rank of \code{compactR}. These are derived facts about actual matrices. The construction uses classical choice of an orthonormal basis. It is not a numerical triangular QR procedure.}
+
+The actual factor core is \(\operatorname{compactR}(L)\operatorname{compactR}(R)^*\). Its row and column dimensions equal the two original input ranks. Its rank equals the rank of \(LR^*\). A numerical QR prototype can keep zero directions, so its reported intermediate size need not equal these compact dimensions. No numerical-to-formal correspondence is inferred from matching array shapes alone.
+
+\subsection{A best-rank conclusion quantifies over all competitors}
+\excerpt{}{best_rank}
+\walk{\code{BestRank N A B k} combines a rank bound on the constructed approximation with the inequality for every matrix \code{C} of rank at most \code{k}. Its norm functional \code{N} is explicit. It neither restricts competitors to a chosen factorization nor assumes they live in the input column spaces.}
+
+For isometric rectangular factors \(Q,V\), the source defines \code{lift} and \code{compress} by
+\[
+\operatorname{lift}(Q,V,G)=QGV^*,\qquad
+\operatorname{compress}(Q,V,B)=Q^*BV.
+\]
+The norm module proves that lifting preserves spectral and Frobenius norms, compression does not increase them, and compression does not increase rank. The spectral norm is the L2 operator norm, while the Frobenius norm is selected in its separate norm scope.
+\excerpt{}{ambient_transfer}
+\walk{Fix an arbitrary ambient competitor \code{B}. Its compressed matrix still has rank at most \(k\). Compare the core approximation with this compressed competitor using the core best-rank hypothesis. Re-express that error as compression of the ambient error and use contraction. Isometric lifting preserves the approximation error exactly. The lifted approximation also has the required rank. This proves global ambient optimality, once the core premise is independently discharged. The parallel Frobenius lemma follows the same chain with its own norm facts.}
+
+\subsection{The SVD input states equations, rather than desired conclusions}
+\excerpt{}{ordered_svd}
+\walk{The two column matrices are isometries. Values are real, nonnegative, and antitone in the finite index order. Reconstruction says the core equals the isometric lift of their diagonal. These fields supply the exact algebraic thin SVD data. They assume no rank-bound optimality, tail error, norm preservation, or lower bound. They are also not a theorem that such data exist for every input or that a floating-point routine returns exact equations.}
+
+The formal dimension \(d\) is the number of supplied thin SVD columns. Zero values are permitted. The output column type \code{KeptColumn d k} retains indices below \(k\). Its cardinality is proved to be \(\min(d,k)\). Square roots are taken only of nonnegative retained values. No zero singular value is inverted.
+
+\subsection{The spectral lower bound has an actual kernel witness}
+For a competitor of rank at most \(k<d\), restrict it to the first \(k+1\) coordinate directions. The restricted matrix has rank smaller than its domain dimension. Rank-nullity yields a nonzero kernel vector. The prefix embedding makes it an ambient vector supported in those coordinates.
+\excerpt{}{kernel_witness}
+\walk{\code{rank_lt_kernel_witness} constructs a nonzero vector in the restricted kernel. The prefix embedding's isometry proves its image remains nonzero. Associativity of matrix-vector multiplication proves the competitor kills that image. The prefix-support lemma proves all later coordinates vanish. Thus the lower-bound argument has a concrete witness. It does not posit the existence of a favorable test vector as an independent assumption.}
+
+The diagonal action on that vector has norm at least the first discarded value times its vector norm. The competitor contributes zero, so the operator-norm inequality and positivity of the witness norm give the lower bound. If \(k\ge d\), the first discarded value is defined to be zero and norm nonnegativity suffices.
+\excerpt{}{spectral_best}
+\walk{The retained diagonal has rank at most \(k\). Its residual norm is the proved first-discarded-value formula. The separate \code{diagonal_spectral_lower} applies to every competitor and supplies the final comparison. Both the attained error and the universal lower bound are proved within the diagonal development.}
+
+\subsection{The Frobenius lower bound uses kernel mass}
+Choose an orthonormal basis \(Q\) of the competitor's actual kernel. The row weights \(w_i\) of that basis are nonnegative, at most one, and sum to its dimension. Rank-nullity makes that total at least \(d-k\). Decreasing squared singular values therefore allocate their least weighted mass at the tail.
+\excerpt{}{weighted_tail}
+\walk{For \(k<d\), use the threshold value \(a_k\). In the prefix, ordering bounds \(a_k\) above by \(a_i\) and nonnegative weights preserve the inequality. In the tail, \(w_i\le1\) supplies the corresponding bound. Summing adds a nonnegative threshold times the excess total mass. The tail indicator sum is exactly \(d-k\). For \(k\ge d\), the tail sum is zero. This finite inequality is proved directly and invokes no Eckart--Young optimality theorem.}
+\excerpt{}{frobenius_lower}
+\walk{Construct the actual kernel frame and establish its row-weight mass from rank-nullity. Apply the finite weighted-tail inequality to \(\sigma_i^2\). The frame-energy identity converts its right side into the squared Frobenius norm of the diagonal action on the kernel frame. The competitor kills the frame, so the same action is the residual times that frame. Frobenius compression contraction bounds it by the full residual. Norm nonnegativity permits the final squared comparison.}
+
+\subsection{Combining both optimalities and the exact errors}
+\excerpt{}{recompression_optimal}
+\walk{Rewrite the core reconstruction as a lift through the composed isometries. Rewrite the factor product as the retained diagonal lift. Derive isometry of each composed factor. Apply the spectral and Frobenius transfer lemmas to their independently proved diagonal best-rank conclusions. For the three error formulas, use linearity of lift, norm preservation, and the diagonal tail identities. The square-root formula uses nonnegativity of the Frobenius norm. These are conclusions of the theorem, not fields of its SVD input.}
+\excerpt{}{small_core_endpoint}
+\walk{Instantiate the preceding theorem with the compact factors constructed from the original \(L\) and \(R\). Rewrite their lifted core as \(LR^*\). Pair its two global optimality conclusions and exact tail errors with the proved equalities between compact dimensions and original ranks, and with the retained-column cardinality. Thus the endpoint concerns the original rectangular factor product and every ambient rank-bounded competitor.}
+
+\subsection{Zero rank and full retention remain defined}
+\excerpt{}{full_retention}
+\walk{When \(d\le k\), retaining the entire value list gives the original diagonal. Rewrite the constructed product by that full-retention identity, then use the supplied SVD reconstruction under the outer lift. The separate rank-zero endpoint proves that keeping no columns gives the zero product. Empty index types avoid dummy inverse operations and support zero original factors. Repeated or zero singular values are permitted by the non-strict ordering.}
+
+\subsection{The boundary after the sixth block}
+The ordered-SVD-data theorem proves conditional exact optimality and exact tail errors. General SVD existence, identification with the canonical Mathlib \code{singularValues} API, a floating-point SVD or QR algorithm, and its numerical stability are outside this formal block. Classical item 5.5 remains separately tracked, with these checked supporting results. The formal construction does not establish GPU performance, a generic dense matrix exponent, or equivalence to the historical NumPy prototype.

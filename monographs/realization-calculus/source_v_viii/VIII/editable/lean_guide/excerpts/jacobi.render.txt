@@ -1,0 +1,9 @@
+theorem block_jacobi_condition (D K : Matrix X X ℂ)
+    (hD : D.PosDef) (hA : (D+K).PosDef) (η : ℝ)
+    (hE : ‖invSqrt D*K*invSqrt D‖ ≤ η) (hη : η < 1) :
+    matrixCondition (invSqrt D*(D+K)*invSqrt D) ≤ (1+η)/(1-η) := by
+  have hunit := ((invSqrt_isUnit D hD).mul hA.isUnit).mul (invSqrt_isUnit D hD)
+  have hdet := (Matrix.isUnit_iff_isUnit_det _).mp hunit
+  have hinv := Matrix.mul_nonsing_inv (invSqrt D*(D+K)*invSqrt D) hdet
+  rw [normalized_decomposition D K hD] at hinv ⊢
+  exact near_one_condition_bound _ _ hinv η hE hη

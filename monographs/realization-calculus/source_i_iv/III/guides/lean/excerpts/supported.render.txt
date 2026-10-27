@@ -1,0 +1,21 @@
+theorem heterogeneousPathSum_eq_zero_of_no_supportedPath
+    [Fintype V] [DecidableEq V] [Semiring R]
+    (steps : List (SupportedStep (V := V) (R := R))) (source target : V)
+    (h : ¬ SupportedPath steps source target) :
+    heterogeneousPathSum (steps.map SupportedStep.operator) source target = 0 := by
+  induction steps generalizing source target with
+  | nil =>
+      have hreverse : target ≠ source := fun h' => h h'.symm
+      simp [heterogeneousPathSum, hreverse]
+  | cons step rest ih =>
+      simp only [List.map_cons, heterogeneousPathSum]
+      apply Finset.sum_eq_zero
+      intro middle _
+      by_cases hedge : step.relation source middle
+      · have hrest : ¬ SupportedPath rest middle target := by
+          intro hpath
+          exact h ⟨middle, hedge, hpath⟩
+        rw [ih middle target hrest]
+        simp
+      · rw [step.supported source middle hedge]
+        simp

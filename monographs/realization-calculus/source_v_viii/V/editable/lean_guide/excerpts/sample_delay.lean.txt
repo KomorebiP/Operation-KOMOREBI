@@ -1,0 +1,10 @@
+theorem sample_delay (N : ℕ) (hN : 0 < N) (d : ℤ) (x : ℤ → V)
+    (r : Fin N) (q : ℤ) :
+    analysis N (delay d x) r q =
+      analysis N x (phase N hN ((r.val : ℤ) - d))
+        (q + quotient N ((r.val : ℤ) - d)) := by
+  dsimp [analysis, delay]
+  congr 1
+  have h := address_phase_quotient N hN ((r.val : ℤ) - d)
+  dsimp [address] at h ⊢
+  linear_combination -h

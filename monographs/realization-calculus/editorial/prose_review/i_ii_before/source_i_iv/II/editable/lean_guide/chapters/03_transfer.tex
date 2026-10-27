@@ -1,0 +1,114 @@
+\section{Weighted inversion: three separate branches}\label{sec:weighted}
+
+Rows 10--11 concern $D+H$ in a possibly noncommutative ring. A supplied inverse $D^{-1}$ that works on both sides permits the factorization
+\[
+D+H=D(1+A),\qquad A=D^{-1}H.
+\]
+Thus an inverse of $1+A$ is multiplied by $D^{-1}$ on the right. Reversing this order changes the formula in a noncommutative ring. The source parameter named \code{K} in these declarations means the perturbation $H$. It is not a fraction field.
+
+Three hypotheses lead to three different results. Nilpotence gives a finite ring identity. A homomorphism that kills a filtration level gives a finite identity after passing to precision. A strict norm bound in a complete normed ring gives an infinite Neumann sum. The formal component does not merge these into an unrestricted adic convergence theorem.
+
+\subsection{The finite geometric identity}
+
+For $A^N=0$, define $B=\sum_{n=0}^{N-1}(-A)^n$. The product formulas for finite geometric sums prove both $(1+A)B=1$ and $B(1+A)=1$.
+\excerpt{PaperII/WeightedTransfer}{finite_inverse}
+
+The source separately invokes the two ordered geometric sum lemmas. This is why \code{TwoSidedInverse} has two fields. An inverse from one side does not automatically supply the other in a general noncommutative ring. Once this result is available, the theorem for a diagonal part with transfers transports the candidate through the factorization of $D+H$.
+
+The cutoff $N$ and its nilpotence proof are inputs. The theorem is not a procedure for deciding whether an arbitrary ring element is nilpotent. Its finite sum is explicit, but a concrete matrix application must still identify the matrix ring, supply $D^{-1}$, and prove the required equations.
+
+\subsection{The filtration is deliberately minimal}
+
+A multiplicative filtration records additive closure, decreasing levels, and multiplicative addition of indices.
+\excerpt{PaperII/WeightedTransfer}{filtration}
+
+Write $F^n$ for the predicate \code{Mem n}. Multiplicativity is $F^mF^n\subseteq F^{m+n}$. Antitonicity sends membership at a larger index to membership at a smaller one. Completeness, separation, and a topology for an inverse limit are not fields of this structure. Thus the word ``filtration'' in its name does not imply any convergence statement.
+
+A precision certificate for a ring homomorphism $q:R\to S$ says $q(F^L)=0$. It does not claim that $S$ is a particular quotient or that $\ker q=F^L$. Killing the level is sufficient for the theorem. The proof below first puts a word into its cumulative filtration level and then uses antitonicity to reach $F^L$.
+\excerpt{PaperII/WeightedTransfer}{precision}
+
+The caller supplies the facts about edge membership $A_e\in F^{w(e)}$. Induction on a list gives $A_{e_1}\cdots A_{e_r}\in F^{w(e_1)+\cdots+w(e_r)}$. All words of weight at least $L$ therefore disappear after applying $q$.
+
+\subsection{Written products and chronological paths}
+
+The definition \code{wordProduct edge word} is \code{(word.map edge).prod}. For the list $[e_1,\ldots,e_r]$, it gives the written product $A_{e_1}\cdots A_{e_r}$. When these are operators, the rightmost factor acts first. This is the convention in the canonical formal branch for weighted words.
+
+The expanded traditional discussion of block paths writes a chronologically traversed path $e_1,\ldots,e_r$ as $A_{e_r}\cdots A_{e_1}$. To translate an indexed term, reverse the list. The full sums over all words of a fixed length agree under this bijection. The sums truncated by weight also agree because reversal preserves cumulative weight. Individual indexed products need not agree. An equation for one labelled path must therefore retain its order convention.
+
+The generic formal sum over weighted words ranges over edge lists without imposing graph adjacency. In a concrete block realization, incompatible products may vanish for structural reasons, but those incidence facts are not fields of \code{MultiplicativeFiltration}. They must be supplied when interpreting the sum as a sum over directed block paths.
+
+\subsection{What is actually retained}
+
+The pruned expression contains only words with total weight strictly below $L$. Its length cutoff $N$ is a separate parameter.
+\excerpt{PaperII/WeightedTransfer}{pruned_sum}
+
+If each edge weight is at least $m$, a word of length $N$ has weight at least $mN$. Hence $L\le mN$ makes the $N$th mapped power vanish. For $m>0$, the proved ceiling inequality allows $N=\lceil L/m\rceil$. With merely positive integral weights, $N=L$ is a valid coarse cutoff.
+
+The equality between the mapped full geometric sum and the mapped sum of retained words is proved by splitting the finite word sums into retained and killed terms. The inverse conclusion then follows from mapped nilpotence. This order of reasoning matters: pruning is justified by exact zero in the precision realization, not by a small numerical residual.
+
+The full theorem for a diagonal part with transfers exposes all remaining data. It accepts the inverse of $D$, the normalized edge expansion, the precision certificate, the lower bound on the weights, the cutoff inequality, and the proofs about edge membership.
+\excerpt{PaperII/WeightedTransfer}{diagonal_inverse}
+
+The proof first obtains the pruned inverse of $1+\sum_eA_e$. It maps the supplied equality for normalized transfers, rewrites the inverse target, and applies the diagonal factorization lemma. The final \code{simpa} only unfolds the candidate and the homomorphism's preservation of addition and multiplication. No inverse of $D$ or quotient construction is hidden in that final simplification.
+
+\subsection{The analytic branch and the algorithm contract}
+
+In a complete normed ring, $\|D^{-1}H\|<1$ supplies a separate inverse given by a Neumann series. The source defines the analytic candidate noncomputably and proves both inverse laws using the normed summability theory. This is neither the finite nilpotence premise nor completeness of an arbitrary filtered ring. An application using a valuation needs a bridge to one of the formal settings.
+
+Row 24 packages the bounded geometric/pruned expression as a mathematical algorithm specification. It proves that the chosen ceiling cutoff meets the required inequality and that the mapped result is an inverse on both sides. It does not construct a modular inverse routine in a chosen basis, decide symbolic zero, certify the Python implementation, or establish a runtime bound.
+
+\section{Transfer zeta: from independent walks to rationality}\label{sec:zeta}
+
+Rows 12--13 and 25 are among the component's strongest construction results. The input is a finite directed multigraph with positive natural edge weights. Parallel edges are distinct edge values and therefore contribute their multiplicities automatically. Repeated vertices and edges are allowed: the objects counted are walks.
+\excerpt{PaperII/TransferZeta}{graph}
+
+The recursion \code{IsWalk} says an empty edge list starts and ends at the same vertex. A nonempty list starts with an edge whose source is the current vertex, then continues from that edge's target. The total weight is the sum of edge weights.
+
+\subsection{Why a coefficient has a finite enumeration}
+
+Positivity implies that a walk of total weight $n$ has length at most $n$. The enumerator can therefore range over lengths $0,\ldots,n$ and all edge tuples of each length, then filter by endpoint validity and exact total weight.
+\excerpt{PaperII/TransferZeta}{enumerator}
+
+The module also defines an independent semantic type of finite edge lists having the requested endpoints and weight, without building the enumeration bound into that definition. The capture theorem uses positivity to connect the unrestricted semantic representation to the bounded tuple enumeration. The counting theorem and the trace wrapper identify the returned natural number with the cardinality of this semantic walk type.
+
+This avoids defining correctness merely as equality with the same algorithm under another name. The finite enumeration and the semantic list predicate are separate constructions connected by equivalences. The implementation remains a potentially large exhaustive enumeration. No efficiency theorem is claimed.
+
+\subsection{The recurrence from the first edge}
+
+Fix a target $t$ and let $a_{st}(n)$ count walks from $s$ to $t$ of weight $n$. The empty walk contributes $1$ exactly when $s=t$ and $n=0$. Every other walk has a unique first edge. Removing it gives
+\[
+a_{st}(n)=\mathbf 1_{s=t,\,n=0}
++\sum_{\substack{e:\,s\to u\\w(e)\le n}}a_{ut}(n-w(e)).
+\]
+The source constructs the corresponding equivalence from the first edge and obtains the recurrence by cardinality. Positivity ensures the recursive weight decreases. The bound $w(e)\le n$ is explicit, avoiding an incorrect use of truncated natural subtraction when the first edge is too heavy.
+
+Define $Z_{st}(X)=\sum_{n\ge0}a_{st}(n)X^n$. This is a formal power series over $\mathbb Z$. The weighted adjacency entry $A_{su}(X)$ sums $X^{w(e)}$ over all edges $s\to u$. The recurrence from the first edge becomes
+\[
+(I-A(X))Z(X)=I.
+\]
+The row/column orientation here follows traversal from the first edge. When comparing it with operator blocks with the output index first, read the definitions rather than transferring an index convention by analogy.
+
+\subsection{A second construction: determinant and adjugate}
+
+Finite vertex data define the polynomial matrix $B(X)=I-A(X)$ and
+\[
+Q(X)=\det B(X),\qquad P_{st}(X)=\operatorname{adj}(B(X))_{st}.
+\]
+Positive edge weights give $A(0)=0$, hence $B(0)=I$ and $Q(0)=1$. Thus $Q$ is a unit in $\mathbb Z[\![X]\!]$. The adjugate identity constructs a matrix $Z^{\mathrm{mat}}$ that is an inverse on both sides.
+
+The crucial proof is the identification of the independently enumerated series matrix with this rational matrix. It uses associativity and the two inverse equations.
+\excerpt{PaperII/TransferZeta}{identify_series}
+
+This is the familiar uniqueness calculation $Z=I Z=(Z^{\mathrm{mat}}B)Z=Z^{\mathrm{mat}}(BZ)=Z^{\mathrm{mat}}$. It makes the construction claim auditable: rationality was not an assumption about the enumerated coefficients. The final existential theorem simply packages the already constructed numerator and denominator.
+\excerpt{PaperII/TransferZeta}{rationality}
+
+The older \code{RationalCertificate} interface remains available for an externally supplied pair $P,Q$. Its theorem is explicit about its certificate. The canonical branch for finite graphs does not take that certificate. It derives its own data from the graph. The map preserves both interfaces so users can choose one without confusing their hypothesis burdens.
+
+\subsection{The recurrence is extracted from the proved identity}
+
+Write $Q(X)=\sum q_jX^j$. Taking coefficient $n$ in $QZ=P$ gives an antidiagonal convolution. Once $n>\deg P$, the coefficient on the right is zero.
+\excerpt{PaperII/TransferZeta}{recurrence}
+
+Because $q_0=1$, this can be read as an eventual recurrence with constant coefficients for $a_{st}(n)$. The source's antidiagonal form states the identity without needing to rearrange its leading term. It does not guess a recurrence from sampled coefficients.
+
+The determinant denominator may have canceling factors for a particular matrix entry, so this construction does not prove minimality of $Q$ or of the recurrence order. The determinant and adjugate definitions are noncomputable here. The result concerns formal power series and supplies no disk of analytic convergence, extracted symbolic determinant program, or rationality theorem for infinite graphs.

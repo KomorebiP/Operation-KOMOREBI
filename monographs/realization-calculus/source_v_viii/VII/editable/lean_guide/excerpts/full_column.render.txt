@@ -1,0 +1,14 @@
+theorem exists_full_column_rank (h : Fintype.card m ≤ Fintype.card d) :
+    ∃ C : Matrix d m ℂ, C.rank = Fintype.card m := by
+  classical
+  obtain ⟨f⟩ := Function.Embedding.nonempty_of_card_le h
+  let C : Matrix d m ℂ := fun i j => if i=f j then 1 else 0
+  have hC (x : m → ℂ) (j : m) : (C *ᵥ x) (f j) = x j := by
+    simp [C, Matrix.mulVec, dotProduct, f.injective.eq_iff]
+  have hi : Function.Injective C.mulVecLin := by
+    intro x y hxy
+    funext j
+    have h := congrFun hxy (f j)
+    simpa only [Matrix.mulVecLin_apply, hC] using h
+  refine ⟨C, ?_⟩
+  rw [Matrix.rank, LinearMap.finrank_range_of_inj hi, Module.finrank_pi]

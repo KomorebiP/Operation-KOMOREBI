@@ -1,0 +1,20 @@
+theorem gram_of_recovery (P : Matrix n n ℂ) (hP : IsStarProjection P)
+    (E : I → Matrix n n ℂ) (R : J → Matrix n n ℂ)
+    (hR : (∑ r, star (R r)*R r)=1)
+    (hcorrect : ∀ rho, P*rho*P=rho → noise R (noise E rho)=rho) :
+    ∃ C : Matrix I I ℂ, C.PosSemidef ∧
+      ∀ a b, P*star (E a)*E b*P=C a b • P := by
+  obtain ⟨z,hz⟩ := corrected_kraus_family P hP E R hcorrect
+  let Z : Matrix J I ℂ := fun r a => z (r,a)
+  refine ⟨Z.conjTranspose*Z, Matrix.posSemidef_conjTranspose_mul_self Z, ?_⟩
+  intro a b
+  have heq : P*star (E a)*E b*P = ∑ r, star (R r*E a*P)*(R r*E b*P) := by
+    calc
+      _ = P*star (E a)*(∑ r, star (R r)*R r)*E b*P := by rw [hR, mul_one]
+      _ = _ := by
+        simp only [Finset.mul_sum, Finset.sum_mul, star_mul,
+          hP.isSelfAdjoint.star_eq, mul_assoc]
+  rw [heq]
+  simp_rw [hz, star_smul, hP.isSelfAdjoint.star_eq, smul_mul_assoc,
+    mul_smul_comm, smul_smul, hP.isIdempotentElem.eq]
+  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, Finset.sum_smul, Z]

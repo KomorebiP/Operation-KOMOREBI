@@ -1,0 +1,205 @@
+\clearpage\subsection{Eighth Lean Block Supplement}\label{app:sup8}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical. The final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+The all-residue Theorem 7.5 remains pending. This release proves its \textbf{full saturated higher-power estimate throughout the standard window}, rather than only a period modulo $p$. For every prime $p$, positive $m\mid p-1$, $0\le j<p$, and natural $n,k,u$, put $h=(p-1)/m$. Then
+\[
+\boxed{\quad
+\Delta_{uh}^{k}C_{mp,j}(n)=0\quad\text{or}\quad
+v_p\!\left(\Delta_{uh}^{k}C_{mp,j}(n)\right)\ge\min\{k,mn\}.
+\quad}
+\]
+The unnormalized family $j!C_{mp,j}(n)$ satisfies the same bound. Both statements concern the original rational coefficient function, identified with its actual integral $p$-adic lift. They include $p=2$, $k=0$, $n=0$, and the additional harmless case $u=0$.
+
+\textbf{Coverage remains 23 of 24 named items proved in the manuscript.} Three classical inputs and two conjectures remain separate. The new result covers every permissible residue when $m=1$, but not the range $p\le j<mp$ when $m>1$.
+
+\begin{center}\begin{tabular}{@{}p{.58\textwidth}rr@{}}\toprule
+New module & Theorems & Definitions\\\midrule
+\mcode{DworkAlgebra} & 7 & 3\\
+\mcode{DworkClosure} & 20 & 2\\
+\mcode{HurwitzDworkClosure} & 15 & 2\\
+\mcode{ResidueZeroDwork} & 9 & 2\\
+\mcode{DifferenceStepMultiples} & 5 & 1\\
+\mcode{EulerDefect} & 4 & 2\\
+\mcode{StandardWindowDwork} & 14 & 1\\
+\mcode{StandardWindowPrecision} & 5 & 0\\
+\mcode{DworkWindowExamples} & 8 & 0\\\midrule
+Total added & 87 & 13\\\bottomrule
+\end{tabular}\end{center}
+The cumulative corpus has \textbf{526 explicit theorem declarations and 107 explicit definitions in 47 modules}. Counts include support lemmas and examples, not independent discoveries. All 38 upstream proof modules and seven earlier supplements are preserved.
+
+\par\medskip
+\pageheading{1. The characteristic-zero product rule}{The normalized defect is not an ordinary derivation}
+Let $A$ be a commutative algebra over a characteristic-zero field $K$, and let $U$ be an actual $K$-derivation. The source defines
+\[
+ B=\frac{U^{p^2}-U^p}{p},\qquad
+ M_q(f,g)=\sum_{a=1}^{q-1}\frac{1}{p}\binom qa
+          (U^a f)(U^{q-a}g),\quad q=p,p^2.
+\]
+The coefficients of each $M_q$ are proved integral: the middle entries of a prime-power binomial row are divisible by $p$. In Lean they are implemented as natural quotients, with exact division proved before the product identity is used. Induction on derivative order establishes the full Leibniz formula and hence
+\[
+\boxed{B(fg)=B(f)g+fB(g)+M_{p^2}(f,g)-M_p(f,g).}
+\]
+The middle terms are essential. At $p=3$, $f=t$ and $g=t^2$, the constant coefficient of $B(fg)$ is $-2$, whereas that of $B(f)g+fB(g)$ is zero. This inequality is itself Lean-checked.
+
+\subsection*{All orders, without a circular closure assumption}
+Let $I\subset A$ be a subring stable under $U$. Define
+\[
+ \operatorname{Bounded}_r(f)\iff B^s f\in I\ (0\le s\le r),
+ \qquad \operatorname{Flat}(f)\iff B^s f\in I\ (s\ge0).
+\]
+The definitions contain no product or inverse closure requirement. Since $B$ commutes with $U$, derivatives of a bounded element remain bounded. Induction on $r$ in the displayed product rule then proves closure under multiplication. The finite middle sums use the lower-order induction hypothesis, not the desired next-order conclusion.
+
+For an actual inverse $fg=1$, applying the product rule and multiplying by $g$ gives
+\[
+ B(g)=-g^2B(f)-gM_{p^2}(f,g)+gM_p(f,g).
+\]
+If $g\in I$, induction on $r$ proves boundedness of $g$ from boundedness of $f$. At each successor stage the preceding stage supplies boundedness of $g$ needed on the right. Passing to all finite orders proves reciprocal closure for an integral inverse.
+
+\textbf{Principal targets.}\par
+\target{DworkAlgebra.B_mul}\par
+\target{DworkClosure.bounded_mul, DworkClosure.bounded_inverse}\par
+\target{DworkClosure.flat_mul, DworkClosure.flat_inverse}
+
+\par\medskip
+\pageheading{2. The actual integral Hurwitz lattice}{Connecting differential expressions to coefficient divisibility}
+The specialization works inside $\Q_p[[t]]$ and uses factorial-scaled coefficients
+\[
+ a_f(d)=d![t^d]f,\qquad
+ I_p=\{f\in\Q_p[[t]]:a_f(d)\in\Z_p\text{ for every }d\}.
+\]
+The source constructs $I_p$ as a subring. Actual exponential-series multiplication gives
+\[
+ a_{fg}(d)=\sum_{r=0}^{d}\binom dr a_f(r)a_g(d-r),
+ \qquad a_{Uf}(d)=a_f(d+1).
+\]
+These identities prove multiplication and derivative stability of the lattice. Membership does not require ordinary power-series coefficients to lie in $\Z_p$.
+
+\subsection*{The reciprocal is integral}
+For $f\in I_p$ with constant coefficient one, the usual power-series reciprocal is used. Its inverse equation yields the exact coefficient recurrence
+\[
+ a_{f^{-1}}(d)=\delta_{d0}-\sum_{r=0}^{d-1}
+     \binom dr a_{f^{-1}}(r)a_f(d-r).
+\]
+Strong induction proves that all of these coefficients are integral. Combining this construction with the preceding all-order theorem proves flatness of the \emph{actual reciprocal}. No flatness or integrality of that reciprocal is assumed in the normalized-series specialization.
+
+\subsection*{The earlier coefficient criterion is recovered exactly}
+Define the literal coefficient defect
+\[
+ (\delta a)(d)=a(d+p^2)-a(d+p).
+\]
+The new source proves, for every $s,d$,
+\[
+ a_{B^s f}(d)=p^{-s}(\delta^s a_f)(d).
+\]
+For an integral coefficient $x$, it proves the bridge
+\[
+\boxed{p^{-s}x\in\Z_p\quad\Longleftrightarrow\quad p^s\mid x\text{ in }\Z_p.}
+\]
+Thus the differential definition is equivalent to the existing coefficient-level Dwork criterion. Division occurs in $\Q_p$, while the assertion after division is membership in $\Z_p$. It is not divisibility in the field. Zero coefficients satisfy every finite precision condition.
+
+\textbf{Principal targets.}\par
+\target{HurwitzDworkClosure.integral_inverse}\par
+\target{HurwitzDworkClosure.flat_product, HurwitzDworkClosure.flat_reciprocal}\par
+\target{HurwitzDworkClosure.decode_B_iterate}\par
+\target{HurwitzDworkClosure.normalized_mem_iff, HurwitzDworkClosure.flat_encode_iff}
+
+\par\medskip
+\pageheading{3. A nonsingular Euler-operator argument}{The standard interval without an analytic power-series-in-the-index premise}
+On Hurwitz coefficients, the actual Euler operator plus $c$ is
+\[
+ (\Lambda_c a)(d)=(d+c)a(d).
+\]
+Direct induction proves its commutator with every defect iterate:
+\[
+ \delta^s\Lambda_c a
+ =\Lambda_c\delta^s a
+  +sp\bigl(pU^{p^2}-U^p\bigr)\delta^{s-1}a,
+ \qquad s\ge1.
+\]
+Suppose $a$ is integral and supported at degrees divisible by $p$, and $p\nmid c$. Every supported pivot $d+c$ is proved to be a unit of $\Z_p$. The defect preserves this support. Induction in the commutator identity therefore proves
+\[
+ \operatorname{Flat}(\Lambda_c a)\Longrightarrow\operatorname{Flat}(a).
+\]
+This is a reflection theorem on the integral supported domain. It does not assume flatness of the proposed preimage, and does not assert invertibility at a singular pivot $p\mid c$.
+
+\subsection*{Apply it to the explicit normalized sections}
+Set $N=mp$ and, for $0\le j<p$, define integral Hurwitz coefficients
+\[
+ g_j(d)=
+ \begin{cases}
+ \displaystyle\binom{d+j}{d}^{-1},&N\mid d,\\[1mm]
+ 0,&N\nmid d.
+ \end{cases}
+\]
+The inverse binomial is constructed using the actual unit pivots already proved by Lucas reduction. Its image in $\Q_p$ is proved equal to the displayed reciprocal.
+
+For $j=0$, $g_0$ is the literal $N$-divisibility indicator. Because $N\mid p(p-1)$, the two shifts in $\delta g_0$ agree and $\delta g_0=0$. It is flat at every order. The actual binomial identity gives
+\[
+ \Lambda_{j+1}g_{j+1}=(j+1)g_j.
+\]
+As $1\le j+1<p$, the nonsingular reflection theorem inductively proves flatness of every $g_j$ in the standard window. There is no uniform-convergence assumption in this argument.
+
+\textbf{Principal targets.}\par
+\target{EulerDefect.iterated_commutator, EulerDefect.flat_of_euler_flat}\par
+\target{StandardWindowDwork.kernel_coe, StandardWindowDwork.kernel_euler_step}\par
+\target{StandardWindowDwork.kernel_flat}
+
+\par\medskip
+\pageheading{4. From these sections to the original Euler packets}{Actual reciprocal, actual rational sequence, every order and step multiple}
+The factorial-ratio identity is proved coefficient by coefficient:
+\[
+ \sum_{d\ge0}g_j(d)\frac{t^d}{d!}
+ =j!\sum_{r\ge0}\frac{t^{Nr}}{(Nr+j)!}.
+\]
+The right side is precisely the normalized source kernel from the first block, not a replacement family. The earlier rational identity for its reciprocal is transported to $\Q_p[[t]]$. A separate encoding theorem identifies the reciprocal's coefficients with the already constructed $\Z_p$ lifts of the original $C_{N,j}(r)$.
+
+All-order reciprocal closure therefore gives flatness of the actual packed Euler coefficient sequence. The earlier coefficient-extraction theorem now has a \emph{proved antecedent} for every $j<p$, and yields
+\[
+ p^{\min(k,mn)}\mid\Delta_h^k C_{mp,j}(n)\quad\text{in }\Z_p,
+ \qquad h=(p-1)/m.
+\]
+A new finite telescoping argument proves the extension to arbitrary natural multiples of $h$. Its first-step identity is
+\[
+ f(n+uh)-f(n)=\sum_{a=0}^{u-1}\Delta_h f(n+ah).
+\]
+Commutation of differences and induction on their order transfer any fixed ideal bound valid on a forward tail. The required precision $\min(k,mn)$ is nondecreasing as the starting row advances. Hence
+\[
+ \boxed{p^{\min(k,mn)}\mid\Delta_{uh}^{k}C_{mp,j}(n)\quad(0\le j<p).}
+\]
+
+The scalar-extension bridge identifies these differences with the original rational coefficient function. The rational theorem explicitly allows zero differences, avoiding the library's finite valuation convention at zero. Since $j!$ is a unit for $j<p$, both normalized and unnormalized versions have the same precision.
+
+\textbf{Scope.} The proof includes all primes, all rows and orders, and all natural step multipliers. For $m=1$, the standard window is the complete allowed residue range. For larger $m$, residues $p\le j<mp$ are not covered by this theorem. The earlier one-power period is not the source of the new higher-power estimate.
+
+\textbf{Principal targets.}\par
+\target{StandardWindowDwork.window_is_reciprocal, StandardWindowDwork.standard_window_flat}\par
+\target{StandardWindowDwork.standard_window_global_bound}\par
+\target{StandardWindowPrecision.normalized_window_precision}\par
+\target{StandardWindowPrecision.unnormalized_window_precision}\par
+\target{StandardWindowPrecision.modulus_p_complete_family}
+
+\par\medskip
+\pageheading{5. Examples, verification and the remaining gap}{The coverage count is unchanged; the unresolved theorem now has a stronger proved part}
+The original rational recurrence gives
+\[
+ C_{6,2}(1)=-\frac1{28},\quad C_{6,2}(2)=\frac{425}{364},\quad
+ C_{6,2}(3)=-\frac{2039759}{2660}.
+\]
+Consequently, the new source proves
+\[
+ \Delta_1^2 C_{6,2}(1)=-\frac{949959}{1235},\qquad
+ v_3\!\left(\Delta_1^2 C_{6,2}(1)\right)=2.
+\]
+This attains the bound $\min(2,2\cdot1)=2$. A claim of a third power is rejected. The separate cubic example proves that the normalized differential defect is not an ordinary derivation. Controls also reject an asserted unit pivot at $c=p$ and the prime-power binomial-divisibility formula at a composite base.
+
+\subsection*{Recorded checks}
+The cumulative verifier rebuilds all 47 modules and audits all 633 explicit declarations: 526 theorems and 107 definitions. Warnings are errors, unexpected axiom dependencies are rejected, and 27 deliberately invalid proof controls are tested. The allowed transitive axioms remain \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}. Exact results, compiler commands and source hashes are in the accompanying machine-readable reports.
+
+All 189 infrastructure and release tests passed. Independent exact-arithmetic mirrors checked 3,040 normalized and 3,040 unnormalized bounds in 95 standard-window families, 6,596 source defects and 6,596 reciprocal defects, 75 product identities, 360 inverse-closure cases, 720 Euler commutators and 150 telescoping identities. They are finite Python mirrors, not code extracted from Lean and not substitutes for the universal proofs.
+
+Failed development snapshots and diagnostics are preserved separately. Historical source files and earlier supplements remain unchanged. Mathlib's pinned compiled cache is reused, not independently rebuilt. The original historical numerical suite is not rerun. The manuscript-to-formal correspondence remains a mathematical review.
+
+\subsection*{What is still unproved}
+The all-residue Theorem 7.5 requires the additional range $p\le j<mp$. Its supporting prose proof treats singular ratios at $c=p,2p,\ldots,(m-1)p$ through weighted Amice estimates and a dual Mahler pairing, then propagates across the intervening indices. Those actual-family estimates and the full remaining propagation are not supplied by this release. A unit argument at $p\nmid c$ cannot be used at $p\mid c$.
+
+\textbf{Release boundary: 23/24 named items proved in the manuscript, with Theorem 7.5 still pending.} The two conjectures remain unproved. The proved standard-window result is an infinite family, but no numerical proportion of the remaining work is inferred from the width of that window.

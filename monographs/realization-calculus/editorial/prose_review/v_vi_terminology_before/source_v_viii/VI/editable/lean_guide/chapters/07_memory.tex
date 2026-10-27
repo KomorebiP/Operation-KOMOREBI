@@ -1,0 +1,36 @@
+\clearpage\section{Schur elimination and nonnormal memory}
+\label{sec:memory}
+\subsection{A projected resolvent needs two invertibility facts}
+For retained and hidden coordinates $P\oplus Q$, the Schur complement is
+\[
+S(z)=zI-A_{PP}-A_{PQ}(zI-A_{QQ})^{-1}A_{QP}.
+\]
+\code{SchurFeshbach} uses literal complex block matrices. The projected inverse formula assumes invertibility of both the full resolvent matrix and the hidden block:
+\excerpt{SchurFeshbach}{schur}
+The module also proves the invertibility equivalence between the full block matrix and its Schur complement when the hidden block is invertible. The retained block is an inverse Schur complement, not simply the resolvent of $A_{PP}$. The difference is the self-energy $A_{PQ}(zI-A_{QQ})^{-1}A_{QP}$.
+
+\subsection{The fifth checked block removes a normality shortcut}
+The earlier memory layer establishes Laplace inversion from a supplied exponential growth estimate and also treats normal elements. The latest core 13.2 goes further for arbitrary finite complex matrices: a strict spectral half-plane alone yields integrability and decay. Nonnormality can create polynomial factors in time, so the proof must account for nilpotent generalized eigenspace contributions.
+
+The scalar input is integrability of a complex exponential times a polynomial whenever the real part of the exponent is negative:
+\excerpt{ScalarDecay}{scalar_decay}
+There is also a separate zero-limit theorem. Neither a numerical quadrature nor an assertion about eigenvalue locations substitutes for these analytic steps.
+
+\subsection{From generalized eigenspaces to a finite sum}
+\code{NonnormalMemory} studies left multiplication by $A$ on a finite-dimensional complex $C^*$-algebra. A complex matrix algebra is a specialization. The source decomposes this vector space into generalized eigenspaces. On one component the exponential is a finite polynomial times $e^{\mu t}$:
+\excerpt{NonnormalMemory}{component}
+The cutoff is the complex dimension of the ambient algebra. For an $n\times n$ matrix algebra that can be $n^2$. It need not be a minimal Jordan-block length. The proof only needs a valid nilpotence cutoff. Terms beyond that cutoff vanish on the component.
+
+After damping by $e^{-zt}$, each coefficient has exponent $\mu-z$ with negative real part. The source combines the scalar integrability and limit results over finite sums and then over the generalized-eigenspace decomposition. Applying the resulting identity to the algebra unit gives the operator-valued decay:
+\excerpt{NonnormalMemory}{spectral_decay}
+The condition is strict: $\operatorname{Re}\mu<\operatorname{Re}z$ for every spectral value. The conclusion includes both Bochner integrability and the limit zero. It does not rely on a claimed universal bound $\|e^{tA}\|\le e^{t\max\operatorname{Re}\sigma(A)}$, which would fail for general nonnormal matrices.
+
+\subsection{Why both derivative identities appear}
+The improper-integral fundamental theorem is applied once to left multiplication and once to right multiplication. These establish both inverse equations. This is what connects the integral to the actual inverse, rather than just presenting a formal solution to one equation.
+\excerpt{NonnormalMemory}{laplace}
+The result supplies invertibility as part of the conclusion. The total operation \code{Ring.inverse} is therefore being used at an established unit. This is the formal endpoint connecting the strict spectral half-plane with a genuine resolvent formula.
+
+\subsection{Retained and hidden dimensions can differ}
+The final matrix theorem uses $A$ on hidden coordinates $J$, $U:J\to I$, and $V:I\to J$. It wraps $B\mapsto UBV$ as a continuous linear map and commutes that map with the Bochner integral. The result is the literal rectangular memory/self-energy identity:
+\excerpt{MatrixMemory}{rect_memory}
+The source imposes no equality of retained and hidden dimensions and no nonemptiness assumption on the finite index types. The theorem includes nilpotent Jordan parts and zero-dimensional cases. It proves a finite-dimensional Laplace identity. General infinite hidden systems, globally optimal model reduction, and arbitrary memory closure remain separate questions.

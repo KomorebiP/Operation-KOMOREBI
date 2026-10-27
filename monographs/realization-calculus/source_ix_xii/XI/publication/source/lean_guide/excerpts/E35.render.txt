@@ -1,0 +1,25 @@
+theorem exists_equivariant_actual_action
+    (D : Subgroup G) [D.Normal] (θ : D →* ℂˣ)
+    (hinv : TypeSideDescent.Invariant D θ)
+    (q : G →* A) (hker : q.ker = D)
+    (t : A → G) (ht : ∀ a, q (t a) = a) (ht1 : t 1 = 1)
+    (H : Subgroup P) [H.Normal] (χ : H →* ℂˣ)
+    (hχinv : TypeSideDescent.Invariant H χ)
+    (r : P →* A) (hkerP : r.ker = H)
+    (u : A → P) (hu : ∀ a, r (u a) = a) (hu1 : u 1 = 1)
+    (ρ : Representation ℂ P V) [IsIrreducible ρ]
+    (hρ : ∀ h : H, ρ h = (χ h : ℂ) • LinearMap.id)
+    (α : G ≃* G) (γ : P ≃* P) (β : A ≃* A)
+    (hq : ∀ g, q (α g) = β (q g)) (hr : ∀ p, r (γ p) = β (r p))
+    (hθ : ∀ d : D, θ (subgroupMap D q hker α β hq d) = θ d)
+    (hχ : ∀ h : H, χ (subgroupMap H r hkerP γ β hr h) = χ h)
+    (U : V ≃ₗ[ℂ] V) (hU : ∀ p v, U (ρ p v) = ρ (γ p) (U v))
+    (n m : ℕ) (hα : α ^ n = 1) (hγ : γ ^ n = 1)
+    (hm : ∀ a : A, a ^ m = 1) (hcop : n.Coprime m)
+    (hcomm : ∀ a b,
+      sectionCocycle D θ q hker t ht a b / sectionCocycle D θ q hker t ht b a =
+        sectionCocycle H χ r hkerP u hu a b / sectionCocycle H χ r hkerP u hu b a) :
+    ∃ Ξ : Representation ℂ G V,
+      IsIrreducible Ξ ∧ TypeSideDescent.Contains D θ Ξ ∧
+        (∀ d : D, Ξ d = (θ d : ℂ) • LinearMap.id) ∧
+        (∀ g v, U (Ξ g v) = Ξ (α g) (U v)) :=

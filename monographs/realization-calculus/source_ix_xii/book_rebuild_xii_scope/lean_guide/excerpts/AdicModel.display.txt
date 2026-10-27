@@ -1,0 +1,73 @@
+import PaperXII.CompletionQuotient
+import Mathlib.RingTheory.AdicCompletion.Topology
+
+/-! Actual uniform completion of a ring equipped with one ideal-adic topology. -/
+noncomputable section
+open Filter Topology UniformSpace
+open scoped Uniformity
+set_option autoImplicit false
+namespace PaperXII.AdicModel
+
+/-- A type synonym isolating the specified ideal-adic topology. -/
+def Carrier (R : Type*) [CommRing R] (_I : Ideal R) := R
+
+instance carrierCommRing (R : Type*) [CommRing R] (I : Ideal R) : CommRing (Carrier R I) :=
+  inferInstanceAs (CommRing R)
+
+/-- Forget the type synonym, without asserting continuity into an arbitrary topology. -/
+def rawEquiv (R : Type*) [CommRing R] (I : Ideal R) : Carrier R I ≃+* R := RingEquiv.refl R
+
+instance carrierWithIdeal (R : Type*) [CommRing R] (I : Ideal R) : WithIdeal (Carrier R I) :=
+  ⟨I⟩
+
+theorem carrier_isAdic (R : Type*) [CommRing R] (I : Ideal R) :
+    IsAdic (WithIdeal.i : Ideal (Carrier R I)) := rfl
+
+instance carrier_countablyGenerated (R : Type*) [CommRing R] (I : Ideal R) :
+    Filter.IsCountablyGenerated (uniformity (Carrier R I)) := by
+  have := (carrier_isAdic R I).hasBasis_nhds_zero.isCountablyGenerated
+  exact IsUniformAddGroup.uniformity_countably_generated
+
+/-- This is an actual completion, not a supplied completion-interface object. -/
+abbrev Completed (R : Type*) [CommRing R] (I : Ideal R) := Completion (Carrier R I)
+
+def embed (R : Type*) [CommRing R] (I : Ideal R) : R →+* Completed R I :=
+  Completion.coeRingHom.comp (rawEquiv R I).symm.toRingHom
+
+@[simp] theorem embed_apply (R : Type*) [CommRing R] (I : Ideal R) (x : R) :
+    embed R I x = ((rawEquiv R I).symm x : Completed R I) := rfl
+
+/-- A ring map carrying the defining ideal into the target ideal is uniformly continuous. -/
+theorem map_continuous {R S : Type*} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (f : R →+* S) (h : I.map f ≤ J) :
+    Continuous (((rawEquiv S J).symm.toRingHom.comp f).comp (rawEquiv R I).toRingHom) := by
+  exact (WithIdeal.uniformContinuous_of_map_le
+    (f := ((rawEquiv S J).symm.toRingHom.comp f).comp (rawEquiv R I).toRingHom) h).continuous
+
+/-- Uniform equivalence of the actual adic carriers under an ideal-preserving ring equivalence. -/
+def uniformEquiv {R S : Type*} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : I.map e.toRingHom = J) :
+    Carrier R I ≃ᵤ Carrier S J :=
+  WithIdeal.uniformEquiv ((rawEquiv R I).trans (e.trans (rawEquiv S J).symm)) h
+
+/-- Extend an ideal-preserving ring equivalence to the actual adic completions. -/
+def completedEquiv {R S : Type*} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : I.map e.toRingHom = J) :
+    Completed R I ≃+* Completed S J :=
+  Completion.mapRingEquiv ((rawEquiv R I).trans (e.trans (rawEquiv S J).symm))
+    (uniformEquiv I J e h).continuous (uniformEquiv I J e h).symm.continuous
+
+theorem completedEquiv_continuous {R S : Type*} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : I.map e.toRingHom = J) :
+    Continuous (completedEquiv I J e h) := Completion.continuous_extension
+
+theorem completedEquiv_symm_continuous {R S : Type*} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : I.map e.toRingHom = J) :
+    Continuous (completedEquiv I J e h).symm := Completion.continuous_extension
+
+@[simp] theorem completedEquiv_embed {R S : Type*} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : I.map e.toRingHom = J) (x : R) :
+    completedEquiv I J e h (embed R I x) = embed S J (e x) :=
+  Completion.mapRingHom_coe (uniformEquiv I J e h).continuous ((rawEquiv R I).symm x)
+
+end PaperXII.AdicModel

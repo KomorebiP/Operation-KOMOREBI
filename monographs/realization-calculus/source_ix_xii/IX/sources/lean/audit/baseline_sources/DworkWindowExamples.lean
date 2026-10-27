@@ -1,0 +1,77 @@
+module
+
+public import StandardWindowPrecision
+public import PeriodExamples
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.DworkWindowExamples
+
+open PowerSeries DworkAlgebra HurwitzDworkClosure StandardWindowPrecision
+
+/-- The normalized defect is not an ordinary derivation in characteristic zero. -/
+theorem defect_cubic_constant :
+    EGF.decode (B (derivative ℚ_[3]) 3 ((X:PowerSeries ℚ_[3]) * X^2)) 0 = -2 := by
+  rw [show (X:PowerSeries ℚ_[3])*X^2=X^3 by ring, decode_B]
+  norm_num [EGF.decode]
+
+theorem derivation_rhs_constant :
+    EGF.decode (B (derivative ℚ_[3]) 3 (X:PowerSeries ℚ_[3]) * X^2 +
+      X * B (derivative ℚ_[3]) 3 ((X:PowerSeries ℚ_[3])^2)) 0 = 0 := by
+  simp [EGF.decode, coeff_zero_eq_constantCoeff]
+
+/-- The middle correction is mathematically indispensable, not just proof-engineering overhead. -/
+theorem normalized_defect_not_derivation :
+    B (derivative ℚ_[3]) 3 ((X:PowerSeries ℚ_[3])*X^2) ≠
+      B (derivative ℚ_[3]) 3 (X:PowerSeries ℚ_[3])*X^2 +
+        X * B (derivative ℚ_[3]) 3 ((X:PowerSeries ℚ_[3])^2) := by
+  intro h
+  have hc := congrArg (fun f => EGF.decode f 0) h
+  rw [defect_cubic_constant, derivation_rhs_constant] at hc
+  norm_num at hc
+
+/-- Coefficients are derived from the existing full rational recurrence. -/
+theorem window_p3_j2_coefficients :
+    Congruential.coeff 6 2 1 = -(1/28:ℚ) ∧
+    Congruential.coeff 6 2 2 = (425/364:ℚ) ∧
+    Congruential.coeff 6 2 3 = -(2039759/2660:ℚ) := by
+  have h1 : Congruential.coeff 6 2 1 = -(1/28:ℚ) := by
+    rw [Congruential.coefficient_recurrence 6 2 (by omega : 0<1)]
+    norm_num [Finset.sum_range_succ, Nat.choose]
+  have h2 : Congruential.coeff 6 2 2 = (425/364:ℚ) := by
+    rw [Congruential.coefficient_recurrence 6 2 (by omega : 0<2)]
+    norm_num [Finset.sum_range_succ, Nat.choose, h1]
+  have h3 : Congruential.coeff 6 2 3 = -(2039759/2660:ℚ) := by
+    rw [Congruential.coefficient_recurrence 6 2 (by omega : 0<3)]
+    norm_num [Finset.sum_range_succ, Nat.choose, h1, h2]
+  exact ⟨h1,h2,h3⟩
+
+theorem window_second_difference :
+    Mahler.difference 1 2 (Congruential.coeff 6 2) 1 = -(949959/1235:ℚ) := by
+  obtain ⟨h1,h2,h3⟩ := window_p3_j2_coefficients
+  norm_num [Mahler.difference_succ, h1,h2,h3]
+
+/-- The all-order theorem gives a genuine p^2 bound, not the earlier single-power period. -/
+theorem window_second_difference_bound :
+    GlobalEulerBoundary.precision 3 2 (Mahler.difference 1 2 (Congruential.coeff 6 2) 1) := by
+  simpa using normalized_window_precision 3 2 2 1 2 1 (by decide) (by omega) (by omega)
+
+theorem window_second_difference_valuation :
+    padicValRat 3 (Mahler.difference 1 2 (Congruential.coeff 6 2) 1) = 2 := by
+  rw [window_second_difference]
+  norm_num [padicValRat_def, padicValInt]
+  rw [show (949959:ℕ)=3^2*105551 by decide,
+    padicValNat.mul (by decide : (3:ℕ)^2 ≠ 0) (by decide : (105551:ℕ) ≠ 0)]
+  norm_num [padicValNat.eq_zero_of_not_dvd]
+  rw [show (9:ℕ)=3^2 from rfl, padicValNat.pow]
+  norm_num
+
+/-- The modulus-p complete-family specialization covers every valid address and all orders. -/
+theorem modulus_three_all_addresses (j u k n : ℕ) (hj : j<3) :
+    GlobalEulerBoundary.precision 3 ((min k n:ℕ):ℤ)
+      (Mahler.difference (u*2) k (Congruential.unnormalized 3 j) n) := by
+  simpa using modulus_p_complete_family 3 j u k n hj
+
+end KomorebiPaperIX.DworkWindowExamples

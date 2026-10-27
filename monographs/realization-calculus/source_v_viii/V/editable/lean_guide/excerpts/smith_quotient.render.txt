@@ -1,0 +1,12 @@
+noncomputable def pointSetoid : Setoid Point where
+  r := same
+  iseqv := \{
+    refl := by intro p; exact ⟨1, one_ne_zero, by simp⟩
+    symm := by
+      rintro p q ⟨c, hc, hq⟩
+      refine ⟨c⁻¹, inv_ne_zero hc, ?_⟩
+      rw [hq]
+      simp [hc]
+    trans := by
+      rintro p q r ⟨c, hc, hq⟩ ⟨d, hd, hr⟩
+      exact ⟨d*c, mul_ne_zero hd hc, by rw [hr, hq]; simp [mul_assoc]⟩ \}

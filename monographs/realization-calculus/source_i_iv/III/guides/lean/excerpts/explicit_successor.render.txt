@@ -1,0 +1,14 @@
+theorem explicitWordExpansion_succ
+    [Fintype E] [Fintype V] [DecidableEq V] [Semiring R]
+    (n : ℕ) :
+    explicitWordExpansion G S (n + 1) =
+      transferOp G S * explicitWordExpansion G S n := by
+  unfold explicitWordExpansion
+  rw [← (Fin.snocEquiv (fun _ : Fin (n + 1) ↦ E)).sum_comp]
+  rw [Fintype.sum_prod_type]
+  change (∑ final : E, ∑ prior : Fin n → E,
+    tupleWordOp G S (n + 1) (Fin.snoc prior final)) = _
+  simp only [tupleWordOp_snoc]
+  unfold transferOp
+  rw [Finset.sum_mul]
+  simp_rw [Finset.mul_sum]

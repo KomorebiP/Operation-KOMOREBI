@@ -1,0 +1,15 @@
+theorem solve_correct (c : A → ℝ) (t : FiniteAdaptive.Tree A) :
+    (solve c t).cost = value c t ∧ (solve c t).cut = best c t := by
+  induction t with
+  | leaf a => exact ⟨rfl,rfl⟩
+  | branch a n ch ih =>
+    have hc : (∑ i, (solve c (ch i)).cost) = ∑ i, value c (ch i) :=
+      Finset.sum_congr rfl (fun i _ => (ih i).1)
+    constructor
+    · simp only [solve, value, hc]
+    · simp only [solve, best, hc]
+      split_ifs
+      · rfl
+      · congr 1
+        funext i
+        exact (ih i).2

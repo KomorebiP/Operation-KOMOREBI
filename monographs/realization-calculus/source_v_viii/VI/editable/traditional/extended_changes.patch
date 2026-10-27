@@ -1,0 +1,71 @@
+--- source/strengthened.tex
++++ extension_corrected.tex
+@@ -529,7 +529,7 @@
+ \end{proof}
+ 
+ \begin{theorem}[Holomorphic defect formula]\label{thm:holomorphic_defect}
+-Let \(\Gamma\) be a finite union of positively oriented rectifiable Jordan curves enclosing the spectra of \(A_f\) and \(A_c\). If \(g\) is holomorphic on a neighborhood of the enclosed region, then
++Let \(\Gamma\) be the positively oriented rectifiable boundary of a finite union of pairwise disjoint bounded Jordan domains. Assume that both spectra lie inside this union and that \(\Gamma\) lies in the common resolvent set. Thus its winding number is one about every spectral point. If \(g\) is holomorphic on a neighborhood of the closure of the union, then
+ \[
+ Cg(A_f)-g(A_c)C
+ =
+@@ -2689,7 +2689,7 @@
+ =
+ \Sigma_P(z).
+ \]
+-If
++If, for constants \(M\geq0\) and \(\gamma>0\),
+ \[
+ \norm{\e^{tA_{QQ}}}
+ \leq
+@@ -2711,11 +2711,15 @@
+ \end{theorem}
+ 
+ \begin{proof}
+-The Laplace transform of \(\e^{tA_{QQ}}\) is \((zI-A_{QQ})^{-1}\). Multiplication by the two coupling blocks gives the first identity. The remaining estimates follow directly from the assumed semigroup bound.
++If \(X_Q=\{0\}\), the memory kernel and self-energy are both zero, so the identity is immediate. Otherwise write \(B=A_{QQ}\), which is a bounded operator on the hidden Banach space, and put \(s(B)=\max\operatorname{Re}\Spec(B)\). Choose a real \(\beta\) with \(s(B)<\beta<\operatorname{Re}z\). Spectral mapping and the spectral-radius formula give \(r(\e^B)=\e^{s(B)}<\e^\beta\), hence \(\norm{\e^{nB}}\leq M_\beta\e^{\beta n}\) for every integer \(n\geq0\), after increasing \(M_\beta\) to cover the finitely many initial values. Write \(t=n+r\), where \(0\leq r<1\). Then
++\[
++\norm{\e^{tB}}\leq M_\beta\exp(\norm B+\max(0,-\beta))\e^{\beta t}.
++\]
++Thus \(\e^{-zt}\e^{tB}\) is Bochner integrable and tends to zero. Integrating its derivative gives both inverse identities for \(R=\int_0^\infty\e^{-zt}\e^{tB}\dd t\), so \(R=(zI-B)^{-1}\). This is the bounded-generator growth principle in \cite[Chapter IV, Corollary 3.12]{EngelNagel2000}. Multiplication by the coupling blocks gives the first identity. The remaining estimates follow directly from the assumed positive decay rate.
+ \end{proof}
+ 
+ \begin{theorem}[Criterion for exact local closure]\label{thm:local_closure}
+-Assume \(x_Q(0)=0\). The following conditions are equivalent.
++Assume \(x_Q(0)=0\) and \(d=\dim X_Q<\infty\). The following conditions are equivalent.
+ \begin{enumerate}
+ \item For every retained initial state,
+ \[
+@@ -2937,12 +2941,12 @@
+ \end{proof}
+ 
+ \begin{theorem}[Volterra stability under kernel compression]\label{thm:volterra_compression}
+-Let \(S(t)\) be a semigroup on a Banach space with
++Let \(S(t)\) be a strongly continuous semigroup on a Banach space \(X\), fix \(T>0\), and assume
+ \[
+ \norm{S(t)}\leq M_T
+ \quad(0\leq t\leq T).
+ \]
+-Let \(K,\widetilde K\in L^1((0,T),\mathcal B(X))\). Suppose \(x\) and \(\widetilde x\) solve the same mild equation with the same initial state and forcing, except that \(K\) is replaced by \(\widetilde K\):
++Let \(K,\widetilde K\in L^1((0,T),\mathcal B(X))\), let \(g\in L^1((0,T),X)\), and let \(x,\widetilde x\in C([0,T],X)\). Suppose these are mild solutions with the same initial state and forcing, except that \(K\) is replaced by \(\widetilde K\):
+ \[
+ \begin{aligned}
+ x(t)
+@@ -3054,7 +3058,7 @@
+ =
+ \one^TD_V\e^{tA}p_0.
+ \]
+-The matrix \(A=Q-D_V\) has nonnegative off diagonal entries and nonpositive column sums, so it is the subgenerator of the transient killed chain. Thus the potential in the finite Feynman Kac formula is exactly a state dependent killing rate in the forward transient semigroup.
++The matrix \(A=Q-D_V\) has nonnegative off diagonal entries and nonpositive column sums, so it is the subgenerator of the killed, possibly nontransient chain. Thus the potential in the finite Feynman Kac formula is a state dependent killing rate in the forward sub-Markov semigroup. Almost-sure absorption follows under the additional spectral stability hypothesis used below.
+ \end{theorem}
+ 
+ \begin{proof}
+@@ -3176,7 +3180,7 @@
+ \[
+ h(t)=\sum_{r=1}^qh_r(t).
+ \]
+-The eventual probability of cause \(r\) is
++If the spectrum of \(A\) lies in the open left half-plane, the eventual probability of cause \(r\) is
+ \[
+ \int_0^\infty f_r(t)\dd t
+ =

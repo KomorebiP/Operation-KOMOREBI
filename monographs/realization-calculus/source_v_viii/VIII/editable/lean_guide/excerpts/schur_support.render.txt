@@ -1,0 +1,17 @@
+theorem schur_support_inclusion (A : Matrix X X K) (B : Matrix X Y K)
+    (H : Matrix Y Y K) (C : Matrix Y X K) (hH : IsUnit H.det) (b a : I)
+    (h : P.block (A-B*H⁻¹*C) b a ≠ 0) :
+    P.block A b a ≠ 0 ∨
+      ∃ j k, P.proj b*B*Q.proj j ≠ 0 ∧ Reachable Q H j k ∧
+        Q.proj k*C*P.proj a ≠ 0 := by
+  by_cases ha : P.block A b a ≠ 0
+  · exact Or.inl ha
+  · right
+    apply schur_correction_support P Q B H C hH b a
+    intro hc
+    apply h
+    have hz : P.block A b a = 0 := not_ne_iff.mp ha
+    change P.proj b*(A-B*H⁻¹*C)*P.proj a = 0
+    rw [Matrix.mul_sub,Matrix.sub_mul]
+    change P.block A b a - P.block (B*H⁻¹*C) b a = 0
+    rw [hz,hc,sub_self]

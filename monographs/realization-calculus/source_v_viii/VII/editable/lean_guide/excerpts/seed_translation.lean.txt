@@ -1,0 +1,6 @@
+theorem circuit_eq_translation {n : ℕ} (a : Address n) :
+    addressCircuit a = translation a := by
+  unfold addressCircuit
+  simp_rw [controlledX_eq_translation]
+  simpa only [List.map_ofFn, Function.comp_def, List.sum_ofFn, sum_local_addresses] using
+    translation_list_product (List.ofFn (fun j : Fin n => Pi.single j (a j)))

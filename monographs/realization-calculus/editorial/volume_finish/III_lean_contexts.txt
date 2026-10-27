@@ -1,0 +1,219 @@
+
+===== III_lean PAGE 7 =====
+Reproduce the formal verification
+The archive supplies owned source, pins, receipts and scripts. Restore the pinned Lean distribution and
+the dependency revisions using formal/README.md. Build in a separate working copy so the recorded
+manifest and transcripts stay intact. From formal/, run the four phases with a fresh object directory
+and unique labels:
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase full --label
+local_full --objects build/local_objects
+↪
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase audit --label
+local_audit --objects build/local_objects
+↪
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase replay --label
+local_replay --objects build/local_objects
+↪
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase controls --label
+local_controls --objects build/local_objects
+↪
+The runner refuses a preexisting owned object directory for the full build. It records source hashes
+before and after compilation, the exact executable and command, output hashes, exit codes, and the
+expected diagnostics for adverse controls. Changing a dependency or toolchain creates a new verifica-
+tion event.
+The remaining formal boundary
+The manuscript’s integral Taylor remainder, its factorial estimate, and the Stirling count of decorated
+terms are supplied as ordinary proofs. The 59 later results and two classical standard facts in Sections
+18–27 were reviewed mathematically. Matching Lean formalizations for that expanded portion were not
+recovered. An earlier visual account claimed broader formal coverage, but no matching Lean sources
+were recovered. That account remains historical material.
+The statement register distinguishes fully mapped statements, partial formal correspondence, inher-
+ited references, and ordinary proofs.
+
+
+===== III_lean PAGE 32 =====
+7 The finite baseline: evidence, trust, and replay
+This chapter explains the finite algebraic core and its verification gates. For the combined core and
+analytic continuation, use the opening chapter and formal/README.md. The finite namespace counts in
+the excerpts apply only to that finite baseline.
+7.1 The pinned environment is part of the claim
+The formal project names Lean leanprover/lean4:v4.34.0-rc2, with reported Lean commit 6a10ac8c
+22beadecabdbb0919c2b50214762f91d. Its Lake manifest pins Mathlib at aeb72f1e9981b6d35b426b16dc
+a7759be3e7ba06. The project version is 1.0.1. The archived configuration records moreLeanArgs = ["-E
+", "warning"]. That setting alone does not establish warning rejection. The recorded compiler controls
+identify the behavior actually checked.
+The preserved release deliberately omits compiled outputs and dependency caches. A fresh environ-
+ment therefore needs the pinned toolchain and the dependencies named by the manifest. Rebuilding
+the PDF guide does not need Lean. Replaying the mathematical formalization does.
+Descriptive dependency branches such as master or main are not substitutes for exact manifest revi-
+sions. Updating a dependency and obtaining a successful build may be useful, but it is a new verifica-
+tion event. The original event remains tied to the recorded environment.
+7.2 A map gate and a namespace gate answer different questions
+The authoritative scripts/verify_theorem_map.py checks the map row sequence, uniqueness, compiled
+declaration kinds, manuscript status annotations, inherited references, and explicit audit coverage. In
+the pinned compiled environment, it distinguishes the 88 theorem targets from the 55 construction
+targets. A lexical scan can locate these declarations in source, but does not independently elaborate
+their types.
+The kernel audit file asks Lean to print transitive axioms for all mapped targets. It then inspects
+the compiled Komorebi.PaperIII namespace, including generated declarations and implementation
+auxiliaries. This second step protects the boundary beyond just the manually listed names.
+Source: KomorebiPaperIII/KernelAudit.lean.
+run_cmd do
+let env ←getEnv
+let mut audited : Nat := 0
+let mut theorems : Nat := 0
+for (name, info) in env.checked.get.constants.toList do
+if Name.isPrefixOf `Komorebi.PaperIII name then
+audited := audited + 1
+match info with
+| .thmInfo _ => theorems := theorems + 1
+| _ => pure ()
+if info.isUnsafe then
+throwError "unsafe Paper III declaration: {name}"
+match info with
+| .axiomInfo _ =>
+throwError "Paper III axiom declaration: {name}"
+| .opaqueInfo _ =>
+
+
+===== III_lean PAGE 33 =====
+throwError "opaque Paper III declaration: {name}"
+| _ => pure ()
+let axioms ←Lean.collectAxioms name
+for axiomName in axioms do
+unless axiomName == ``propext || axiomName == ``Classical.choice ||
+axiomName == ``Quot.sound do
+throwError "unexpected axiom {axiomName} in Paper III declaration {name}"
+if audited != 468 then
+throwError "Paper III namespace declaration count changed: expected 468, found {audited}"
+if theorems != 229 then
+throwError "Paper III namespace theorem count changed: expected 229, found {theorems}"
+logInfo m!"FAIL-CLOSED PAPER III v1.0.1 KERNEL AUDIT PASS: {audited} declarations ({theorems}
+theoremInfo); 143 explicit mapped targets; allowed axioms only: propext, Classical.choice,
+Quot.sound"
+↪
+↪
+The gate rejects unsafe declarations, project axioms, opaque declarations, and any collected axiom out-
+side propext, Classical.choice, and Quot.sound. It also checks the exact namespace and theorem-kind
+counts. These expected counts are version-specific: a legitimate addition requires revisiting them, not
+deleting the checks to make the build pass.
+The source policy check additionally rejects proof placeholders and specified shortcuts. Text scan-
+ning alone cannot establish a theorem’s correctness. It is one gate among the build, compiled map
+checks, axiom traversal, and checks of source integrity.
+7.3 Reading the inherited transcript
+The saved transcript has 143 named records. Some say that the target depends on no axioms. Others
+list a subset of the allowed standard basis. The final line records 468 audited namespace declarations,
+including 229 theoremInfo entries, and 143 explicit mapped targets.
+The difference between 88 and 229 is not a discrepancy. Eighty-eight counts the theorem declarations
+deliberately mapped to the chapter. The compiled namespace count includes generated theorems and
+other supporting theorem entries. Similarly, 143 and 468 refer to different denominators: the explicitly
+mapped targets versus every compiled entry under the audited namespace.
+This guide checked that the transcript’s named records agree with the map and the audit directives.
+It also checked the transcript hash against the inherited report. That establishes consistency and byte
+identity of the preserved materials. It does not authenticate an external compiler session by itself. A
+new execution is the direct way to regenerate compiler evidence from those sources.
+7.4 The inherited Chapters I–II references
+Chapter III records twelve unique declarations from the separately verified Papers I–II v1.2.1 bundle.
+They appear in fourteen manuscript references because two refinement declarations are used twice.
+The bundle is pinned by SHA-256:
+a20cf9353f0e882834d31e665dfd819a04e43fa606d402309be63e3b94447052
+The standalone Paper III project does not import or recompile those declarations. Its gate validates
+inherited annotations against INHERITED_DEPENDENCY_MANIFEST_v1.2.1.md. These references must there-
+fore be described as inherited evidence. They are not extra entries in the 143-target Paper III namespace
+audit. Appendix B prints the exact dependency names and roles.
+
+
+===== III_lean PAGE 34 =====
+7.5 Replay from a preserved source copy
+The source release offers an offline integrity mode. From its root, run:
+bash VERIFY.sh
+This mode checks release membership, checksums, map and audit consistency, manuscript status ref-
+erences, and the saved transcript. It does not run Lean. It is suitable for checking that a copied release
+still matches its own preserved manifest.
+For a new formal run, work in a copy of the preserved release. From formalization/lean, run the
+release’s documented commands in order:
+lake --wfail build
+python3 scripts/verify_theorem_map.py
+lake env lean -E warning KomorebiPaperIII/KernelAudit.lean
+Retain the exit code and the complete standard output and error stream for every command. The first
+command builds the project. The second checks the human map against the compiled environment
+and the original manuscript. The third regenerates the axiom reports and namespace result. A missing
+dependency, toolchain failure, timeout, or nonzero exit is not a passing proof run.
+The release also supplies bash VERIFY.sh --full. That path creates a temporary copy, regenerates
+figures, runs Lean and its gates, rebuilds the original finite manuscript, and verifies the original arti-
+fact hashes. It requires its documented TeX, graphics, Python, and Lean dependencies. It verifies the
+preserved finite release, not the newly expanded companion PDF.
+7.6 The formal verification boundary
+The finite portion of this guide supplies exact source excerpts, the complete 41-row map, the preserved
+transcript, and static reconciliation. The opening chapter separately reports compiler and kernel veri-
+fication. The package records separate computational checks and the chapter’s earlier bounded math-
+ematical review. These records concern different objects. They do not establish fresh Lean proofs of
+every ordinary theorem.
+The finite algebraic contract has explicit types and evidence. To expand it, add the required types
+and proofs, update the map, run the pinned or newly documented environment, and retain the new
+transcript.
+
+
+===== III_lean PAGE 50 =====
+C Imports and exact dependency revisions
+The import table lists direct local file dependencies, not a theorem-level dependency graph. The adja-
+cent JSON includes direct external imports as well. This appendix describes the preserved finite base-
+line. Its aggregate imports seven mathematical modules. The nonlinear and analytic continuation adds
+the packet calculus modules listed in the opening chapter.
+Module
+Direct local imports
+CoordinateNaturality
+External imports only.
+EdgeExtensions
+EdgeOperators
+EdgeOperators
+External imports only.
+HolonomyBlocks
+ReversibleConnections
+KernelAudit
+KomorebiPaperIII
+NonlinearObstructions
+External imports only.
+ReversibleConnections
+Transport
+Transport
+External imports only.
+KomorebiPaperIII
+EdgeOperators, EdgeExtensions, Transport, ReversibleConnec
+tions, CoordinateNaturality, HolonomyBlocks, NonlinearObs
+tructions
+The manifest’s exact pinned revisions follow. They accompany the toolchain string leanprover/lean4:
+v4.34.0-rc2.
+Package
+Exact revision
+mathlib
+aeb72f1e9981b6d35b426b16dca7759be3e7ba06
+plausible
+d9598f07b1bc701f1e3aae163d2681c1fd978793
+LeanSearchClient
+ba67e212be1197b84c1f1f6299488a10a3002713
+importGraph
+d8823026ac7ef130c253089d95685f9877b95323
+proofwidgets
+a8acbfd87375ff4abe14ce09db5b7664d383bc7f
+aesop
+18889deb9e83ea7420ef51c160d6f88552e744e3
+Qq
+507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3
+batteries
+4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb
+Cli
+ab3a82db9fea14cf0fd7f5a2de650f4b534640af
+
+
+===== III_lean PAGE 51 =====
+D Source and reproduction inventory
+The preserved finite baseline component has nine Lean files, totaling 1,948 source lines, and sixteen
+files including the map, manifest, gate, pins, and documentation. The guide stores 44 exact excerpts.
+For each, generated/excerpts.json records the source file, inclusive line range, full-source hash, exact-
+excerpt hash, and PDF-display-file hash.
+generated/theorem_map.json contains all 41 rows and complete source locations. generated/mapped
+_source_index.json provides an alphabetical index. generated/inherited_axiom_records.json records
+the 143 saved transcript reports. generated/static_audit.json separates current checks from inherited
+counts and records the checksums used. The original report and transcript remain in the preserved
+finite release. Verification sources and receipts are under formal/ in the formal source distribution.

@@ -1,0 +1,46 @@
+theorem exists_analytic_implicit
+    (F : Fin e → MvPolynomial (Fin (e + k)) \CodeSymbol{1D55C})
+    (a : Fin (e + k) → \CodeSymbol{1D55C}) (hF : evalSystem F a = 0)
+    (hJ : IsUnit (Komorebi.PolynomialJointSystem.solvedJacobian F a)) :
+    ∃ (ψ : (Fin k → \CodeSymbol{1D55C}) → (Fin e → \CodeSymbol{1D55C})) (U : Set (Fin k → \CodeSymbol{1D55C}))
+      (V : Set (Fin e → \CodeSymbol{1D55C})),
+      IsOpen U ∧ IsOpen V ∧ freePart a ∈ U ∧ solvedPart a ∈ V ∧
+      ψ (freePart a) = solvedPart a ∧ AnalyticOnNhd \CodeSymbol{1D55C} ψ U ∧
+      (∀ t ∈ U, ψ t ∈ V) ∧
+      (∀ t ∈ U, ∀ y ∈ V, evalSystem F (join y t) = 0 ↔ y = ψ t) ∧
+      HasStrictFDerivAt ψ
+        (matrixCLM (-((Komorebi.PolynomialJointSystem.solvedJacobian F a)⁻¹ *
+          Komorebi.PolynomialJointSystem.parameterJacobian F a))) (freePart a) := by
+  let J := Komorebi.PolynomialJointSystem.solvedJacobian F a
+  let K := Komorebi.PolynomialJointSystem.parameterJacobian F a
+  let A := upperEquiv J K hJ
+  have hshape : evalSystem (Komorebi.PolynomialJointSystem.augmented F 0) =
+      fun z => join (evalSystem F z) (freePart z) := by
+    funext z
+    change (fun i => MvPolynomial.eval z
+      (Komorebi.PolynomialJointSystem.augmented F 0 i)) =
+        join (fun i => MvPolynomial.eval z (F i)) (freePart z)
+    simpa only [sub_zero] using
+      Komorebi.PolynomialJointSystem.eval_augmented F (0 : Fin k → \CodeSymbol{1D55C}) z
+  have ha := analyticAt_evalSystem (Komorebi.PolynomialJointSystem.augmented F 0) a
+  have hd : HasStrictFDerivAt
+      (evalSystem (Komorebi.PolynomialJointSystem.augmented F 0))
+      (A : (Fin (e + k) → \CodeSymbol{1D55C}) →L[\CodeSymbol{1D55C}] (Fin (e + k) → \CodeSymbol{1D55C})) a := by
+    rw [show (A : (Fin (e + k) → \CodeSymbol{1D55C}) →L[\CodeSymbol{1D55C}] (Fin (e + k) → \CodeSymbol{1D55C})) =
+      matrixCLM (Komorebi.PolynomialBlockInverse.upperBlock J K 1) from
+      upperEquiv_toCLM J K hJ]
+    simpa only [Komorebi.PolynomialJointSystem.jacobian_augmented] using
+      hasStrictFDerivAt_evalSystem (Komorebi.PolynomialJointSystem.augmented F 0) a
+  rw [hshape] at ha hd
+  obtain ⟨ψ, U, V, hU, hV, ht, hy, hψa, hψan, hψV, hgraph, hder⟩ :=
+    exists_analytic_graph (evalSystem F) a hF A ha hd
+  refine ⟨ψ, U, V, hU, hV, ht, hy, hψa, hψan, hψV, hgraph, ?_⟩
+  have heq : (solvedPartCLM (\CodeSymbol{1D55C} := \CodeSymbol{1D55C}) (e := e) (k := k)).comp
+      ((A.symm : (Fin (e + k) → \CodeSymbol{1D55C}) →L[\CodeSymbol{1D55C}] (Fin (e + k) → \CodeSymbol{1D55C})).comp
+        (parameterInjectionCLM (e := e) (k := k))) = matrixCLM (-(J⁻¹ * K)) := by
+    apply ContinuousLinearMap.ext
+    intro v
+    simp only [ContinuousLinearMap.comp_apply, solvedPartCLM_apply,
+      parameterInjectionCLM_apply]
+    exact inverse_solved_zero J K hJ v
+  simpa only [heq] using hder

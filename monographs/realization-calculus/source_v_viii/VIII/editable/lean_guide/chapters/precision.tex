@@ -1,0 +1,32 @@
+\section{Error propagation and exact precision allocation}
+\subsection{Local block errors are actual operators}
+\contract{\code{PacketPerturbation} works over a nontrivially normed field and a normed vector space. \code{A e} and \code{Δ e} are continuous linear maps. The source-support hypothesis is \code{Δ e = (Δ e).comp (P (src e))}.}
+\excerpt{}{packet_error}
+\walk{Rewrite the total action error as a sum of source-supported error actions. The triangle inequality bounds the norm of that sum. Each map's operator-norm estimate supplies \(\|\Delta_e\|\|P_{\mathrm{src}(e)}x\|\). The exact support of the \(A_e\) terms is not required for this inequality. A later theorem assumes local relative budgets. Another adds contractive source projectors for a uniform certificate. Neither conclusion certifies IEEE arithmetic or a specific CUDA kernel.}
+
+\subsection{Products preserve multiplication order}
+\contract{\code{ProductChainError} uses a normed ring. The product-chain endpoint additionally assumes \code{NormOneClass R}, so the empty product has norm one. Products are built by left multiplication at each successor step.}
+\excerpt{}{chain_error}
+\walk{The discrepancy at a successor splits into the perturbed factor times the previous discrepancy, plus the new local error times the exact prefix. The generic norm recurrence propagates these two contributions. Its unrolled finite sum uses perturbed suffix norms and exact prefix norms in the displayed order. Submultiplicativity and the local error bound close each successor estimate. The empty chain has zero discrepancy. No commutativity is used.}
+\excerpt{}{recompression_error}
+\walk{Here each iterate has an additive residual \code{E j} after multiplication by \code{A j}. The successor error is \(A_j\) times the old error plus \(E_j\). The same recurrence yields the product of subsequent operator norms times each certified residual budget. This theorem uses actual residuals with verified bounds. It does not itself choose the recompression algorithm or infer its floating-point error.}
+
+\subsection{The continuous minimizer is global}
+The finite edge type is explicitly nonempty. Every sensitivity \(s_e\), cost \(c_e\), and budget is positive. \code{AllocationFeasible} requires positive tolerances and exact weighted budget equality. The objective is \(\sum_e c_e\log(1/\varepsilon_e)\), and the candidate is
+\[
+\varepsilon_e^*=\frac{\mathrm{budget}\,c_e}{s_e\sum_f c_f}.
+\]
+\excerpt{}{continuous_precision}
+\walk{First prove positivity of the candidate and an exact weighted-ratio balance. Compare each competitor ratio \(\varepsilon_e/\varepsilon_e^*\) with the inequality \(\log x\le x-1\). Multiply by nonnegative costs and sum. The balance makes the upper sum zero, and the objective-difference identity changes its sign to obtain the global lower bound. The strict logarithmic inequality at a differing edge gives strictness and then uniqueness in subsequent declarations. The proof uses no stationary-point optimality assumption.}
+
+\subsection{Caps separate the allocation from its multiplier}
+\code{clippedTolerance s c m t e} is \(\min(m_e,t c_e/s_e)\). The cap vector is positive. The budget is positive and no larger than the total weighted cap. A continuous monotone total-allocation function yields an attaining positive scale.
+\excerpt{}{clipped_precision}
+\walk{Obtain an attaining scale from \code{clipped_scale_exists}. Its positivity and budget identity establish feasibility. The minimum supplies the cap inequalities. A distinct feasible vector has strictly larger objective by the supporting logarithmic inequality. This rules out every competing minimizer and gives the equivalence with the constructed tolerance vector. At total-cap budget, the tolerance vector remains unique but the scale, and hence the reciprocal multiplier, need not be unique. The endpoint-nonuniqueness declaration records that distinction.}
+
+\subsection{Discrete choices guard natural subtraction}
+Each edge has a finite list of pairs: quantized error weight in \(\mathbb N\) and exact ordered-field cost. \code{Assignment edges} independently chooses one listed option per edge. An empty option list is infeasible, while an empty edge list has the empty assignment.
+\excerpt{}{discrete_recurrence}
+\walk{The recursive table records exact total weight. Its guard checks that the current option fits before using \code{b - o.1}. Natural subtraction truncates at zero, so an unguarded recurrence could accept an overweight option through a zero residual. The development proves exact-weight semantics by induction on the edge list, then scans weights up to the budget. Zero-error options are allowed.}
+\excerpt{}{discrete_endpoint}
+\walk{The returned \code{some v} is equivalent to an attained feasible assignment cost together with a lower bound for every feasible assignment. The helper's \code{IsMinimum} semantics guarantees both parts. The proof translates its value predicate back to an actual assignment. The companion \code{discreteBudget_none_iff} equates \code{none} with absence of a complete feasible assignment. Finite sentinel costs are never substituted for infeasibility.}

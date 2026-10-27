@@ -1,0 +1,9 @@
+theorem normalized_gap_integral (p m : ℝ) (hp : p∈Ioo 0 1) (hm : 0 < m) :
+    (Real.sin (Real.pi*p)/Real.pi)*(∫ t in Ioi 0,t^p/(t+m)^2)=p*m^(p-1) := by
+  rw [gap_integral p m hp hm]
+  have hs : Real.sin (Real.pi*p) ≠ 0 := by
+    intro hs
+    have h := sine_factor_positive p hp
+    rw [hs,zero_div] at h
+    exact (lt_irrefl 0) h
+  field_simp

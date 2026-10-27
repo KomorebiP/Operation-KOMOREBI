@@ -1,0 +1,9 @@
+theorem geometric_covariance (ρ : Action (K := ℂ) (V := V) (M := M))
+    (F : V ≃ₗ[ℂ] V) (q : (ZMod M)ˣ)
+    (h : F.symm.conj (operator ρ 1) = operator ρ (q : ZMod M)) (j : ZMod M) :
+    F.conj (projector ρ j) = projector ρ ((q : ZMod M) * j) := by
+  have hs := forward_generator_covariance ρ F.symm q h ((q : ZMod M) * j)
+  simp only [← mul_assoc, Units.inv_mul, one_mul] at hs
+  have hh := congrArg F.conj hs
+  simpa only [LinearEquiv.conj_conj_symm] using hh.symm
+

@@ -1,0 +1,249 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.93in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype,booktabs,array,longtable,graphicx}
+\usepackage[colorlinks=true,urlcolor=teal!65!black,linkcolor=black]{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr,enumitem}
+\definecolor{ink}{HTML}{172F36}
+\definecolor{teal}{HTML}{2F6B69}
+\definecolor{muted}{HTML}{5C7775}
+\hypersetup{pdftitle={Paper III: Analytic Packet Jets and Release Evidence},pdfauthor={Komorebi P.},pdfsubject={Mathematical supplement with explicitly bounded Lean coverage}}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\textcolor{teal}{REALIZATION CALCULUS / PAPER III}}\fancyhead[R]{\small\textcolor{muted}{Section 17}}\fancyfoot[C]{\thepage}\setlength{\headheight}{14pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\X}{\mathsf X}\newcommand{\Y}{\mathsf Y}\newcommand{\Z}{\mathsf Z}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\D}{\mathrm D}
+\newcommand{\op}{\operatorname}
+\setlist[itemize]{itemsep=3pt,topsep=4pt}
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
+\endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\begin{center}
+{\small\bfseries\textcolor{teal}{OPERATION KOMOREBI}}\\[5pt]
+{\Large\bfseries Projector Resolved Seed Calculus III}\\[7pt]
+{\LARGE\bfseries Analytic Packet Jets and Exact Composition}\\[8pt]
+{\large Mathematical and verification supplement}\\[8pt]
+{\normalsize Komorebi P. \quad 20 October 2026}\\[9pt]
+{\small Final mathematical edition \quad $\cdot$ \quad Version 1.0.0}
+\end{center}
+\vspace{6pt}
+\noindent\rule{\linewidth}{.8pt}
+\vspace{4pt}
+This supplement gives full ordinary mathematical arguments for the analytic packet claims of Section 17, identifies a stronger norm bound, and records how the calculation relates to the actual projector ranges. The release includes fresh Lean verification for multilinear reconstruction, continuous jets on the actual projector ranges, their norm bound, and the decorated composition and structural support laws. The ordinary Taylor and counting arguments retain their proof status as stated here. The companion Lean guide identifies the exact declarations and replay evidence.
+
+\section{Two distinct contracts}
+Let $\X,\Y,\Z$ be real Banach spaces. The same statements hold for complex Banach spaces with complex Fr\'echet derivatives; the integral below uses a real parameter. A \emph{bounded packet system} on $\X$ is a finite family $P_i\in\mathcal L(\X,\X)$ such that
+\begin{equation}\label{eq:proj}
+\sum_{i\in I}P_i=\id_{\X},\qquad P_i^2=P_i,\qquad P_iP_j=0\quad(i\ne j).
+\end{equation}
+Write $\X_i=\op{ran}P_i$ with the subspace norm. Analogously, let $(Q_\gamma)_{\gamma\in J}$ and $(R_\delta)_{\delta\in K}$ be bounded packet systems on $\Y$ and $\Z$. Zero projectors are allowed in this supplement. An empty family can satisfy \eqref{eq:proj} only on the zero space; its coordinate product is the zero vector space with norm zero. For a continuous $r$-linear map, the operator norm is the supremum over tuples whose individual norms are at most one. Derivative orders are nonnegative integers, and a packet jet has positive order unless a nullary convention is explicitly invoked.
+
+A weaker family of operators that only satisfies $\sum_iP_i=\id$ yields a useful algebraic expansion, but it need not produce independent coordinates. We keep these statements separate.
+
+\begin{lemma}[Closed ranges and bounded coordinates]\label{lem:closed}
+Each $\X_i$ is closed. The maps
+\[
+A_{\X}(x)=(P_i x)_{i\in I}:\X\longrightarrow\prod_{i\in I}\X_i,
+\qquad S_{\X}((z_i)_{i\in I})=\sum_{i\in I}z_i
+\]
+are inverse bounded linear maps when the finite product carries the maximum norm.
+\end{lemma}
+\begin{proof}
+The identity $\op{ran}P_i=\ker(\id-P_i)$ follows from idempotence. The kernel of a continuous linear map is closed, so each range is itself Banach. Both coordinate maps are bounded because the family is finite. The identity $\sum_iP_i=\id_{\X}$ gives $S_{\X}A_{\X}=\id$. If $z_i\in\op{ran}P_i$, then $P_i z_i=z_i$ and $P_j z_i=0$ for $j\ne i$. Thus $A_{\X}S_{\X}=\id$. Moreover,
+$\norm{A_{\X}}\le\max_i\norm{P_i}$ and
+$\norm{S_{\X}}\le |I|$ whenever $I$ is nonempty. The zero-space case follows from the identities directly.
+\end{proof}
+
+\section{Multilinear reconstruction and packet jets}
+\begin{theorem}[Completeness is enough for multilinear expansion]\label{thm:reconstruction}
+Let $I,J$ be finite and $r\ge0$. Suppose $\sum_iP_i=\id_{\X}$ and $\sum_\gamma Q_\gamma=\id_{\Y}$, without assuming idempotence or annihilation. Let $B:\X^r\to\Y$ be multilinear. Then, for all $h_1,\ldots,h_r\in\X$,
+\begin{equation}\label{eq:recon}
+B(h_1,\ldots,h_r)=\sum_{\gamma\in J}\sum_{\alpha\in I^r}
+Q_\gamma B(P_{\alpha_1}h_1,\ldots,P_{\alpha_r}h_r).
+\end{equation}
+The statement includes $r=0$ under the usual empty-product convention.
+\end{theorem}
+\begin{proof}
+For every input, $h_a=\sum_{i\in I}P_i h_a$. Additivity in each slot expands $B$ into the sum over all choices $\alpha\in I^r$. The finite output identity expresses each resulting value as its sum of $Q_\gamma$ components. All exchanges of sums are finite. No property beyond completeness and multilinearity enters the calculation. For $r=0$, the input-index sum has exactly one term, and output completeness still gives the identity.
+\end{proof}
+
+\begin{proposition}[Literal continuous range jet]\label{prop:rangejet}
+Under \eqref{eq:proj} for the input and output families, let $B:\X^r\to\Y$ be continuous multilinear, $r\ge1$. The formula
+\[
+J_{\gamma\mid\alpha}B(z_1,\ldots,z_r)
+=Q_\gamma B(z_1,\ldots,z_r),\qquad z_a\in\X_{\alpha_a},
+\]
+defines a continuous multilinear map $\prod_a\X_{\alpha_a}\to\Y_\gamma$ with the actual range as codomain. For $z_a=P_{\alpha_a}h_a$, its image in $\Y$ is the corresponding summand in \eqref{eq:recon}.
+\end{proposition}
+\begin{proof}
+The output lies in $\op{ran}Q_\gamma$ by construction. The subspace inclusions are continuous and isometric. The output projector $Q_\gamma$ and $B$ are continuous. Their composition therefore gives a continuous multilinear map into $\Y$. Since $\Y_\gamma$ carries the induced norm and is closed, viewing this value in $\Y_\gamma$ does not change its norm or continuity. On the projected arguments $P_{\alpha_a}h_a$, the defining expression is precisely the summand in \eqref{eq:recon}.
+\end{proof}
+
+\begin{proposition}[A stronger range norm bound]\label{prop:norm}
+The literal range jet satisfies
+\begin{equation}\label{eq:strong}
+\norm{J_{\gamma\mid\alpha}B}\le \norm{Q_\gamma}\,\norm{B}.
+\end{equation}
+Its ambient extension $\widetilde J=Q_\gamma\circ B\circ(P_{\alpha_1},\ldots,P_{\alpha_r})$ satisfies
+\begin{equation}\label{eq:ambient}
+\norm{\widetilde J}\le\norm{Q_\gamma}\,\norm{B}\prod_{a=1}^r\norm{P_{\alpha_a}}.
+\end{equation}
+In particular, the published bound for the range jet with the projector norm product on the right follows from \eqref{eq:strong}.
+\end{proposition}
+\begin{proof}
+For inputs $z_a\in\X_{\alpha_a}$, the induced norms yield
+$\norm{Q_\gamma B(z_1,\ldots,z_r)}\le\norm{Q_\gamma}\norm{B}\prod_a\norm{z_a}$, proving \eqref{eq:strong}. Apply additionally $\norm{P_{\alpha_a}h_a}\le\norm{P_{\alpha_a}}\norm{h_a}$ to obtain \eqref{eq:ambient}. If every selected input projector is nonzero, idempotence implies $\norm{P_{\alpha_a}}\ge1$ by evaluating at a unit vector in its range. Then \eqref{eq:strong} implies the weaker published inequality. If any selected input projector is zero, the corresponding input range is the zero space and the positive-order jet is zero. Both sides of the published inequality then vanish. This completes the comparison, including the degenerate case.
+\end{proof}
+
+\section{Derivatives, coordinates, and Taylor remainder}
+Let $U\subset\X$ be open and $F:U\to\Y$ be $C^m$. For $1\le r\le m$, the Fr\'echet derivative $\D^rF(x)$ is continuous multilinear. Apply Theorem~\ref{thm:reconstruction} to $B=\D^rF(x)$. Thus the actual packet jets recover the entire derivative, without presupposing a separate packet derivative object.
+
+\begin{corollary}[Conjugated derivatives in packet coordinates]\label{cor:conj}
+Let $\widehat F=A_{\Y}\circ F\circ S_{\X}$ on the open set $A_{\X}(U)$. Then $\widehat F$ is $C^m$ and, for $1\le r\le m$,
+\[
+\D^r\widehat F(u)[v_1,\ldots,v_r]
+=A_{\Y}\big(\D^rF(S_{\X}u)[S_{\X}v_1,\ldots,S_{\X}v_r]\big).
+\]
+If $v_a$ is supported only in packet slot $\alpha_a$, let $z_a\in\X_{\alpha_a}$ denote its possibly zero coordinate in that slot. Then output component $\gamma$ is
+\[
+J_{\gamma\mid\alpha}(\D^rF(S_{\X}u))[z_1,\ldots,z_r].
+\]
+\end{corollary}
+\begin{proof}
+Lemma~\ref{lem:closed} makes $A_{\X}$ a homeomorphism, so $A_{\X}(U)$ is open in the Banach coordinate product. The operators $A_{\Y}$ and $S_{\X}$ are bounded and linear. Applying the ordinary Fr\'echet chain rule repeatedly, their derivatives of order at least two vanish. Hence the stated formula. The last assertion follows because $S_{\X}$ includes a single supported slot into $\X$ and $A_{\Y}$ applies $Q_\gamma$ in the chosen output slot.
+\end{proof}
+
+\begin{theorem}[Packet Taylor identity with integral remainder]\label{thm:taylor}
+Let $F:U\to\Y$ be $C^{m+1}$ on an open set containing the closed segment $[x,x+h]$. For $m\ge0$,
+\[
+Q_\gamma F(x+h)=Q_\gamma F(x)
++\sum_{r=1}^{m}\frac{1}{r!}\sum_{\alpha\in I^r}
+J_{\gamma\mid\alpha}(\D^rF(x))
+[P_{\alpha_1}h,\ldots,P_{\alpha_r}h]
++Q_\gamma R_{m+1},
+\]
+where
+\[
+R_{m+1}=\frac1{m!}\int_0^1(1-t)^m\D^{m+1}F(x+th)[h^{m+1}]\,dt.
+\]
+If $\norm{\D^{m+1}F(x+th)}\le M$ on the segment, where $M\ge0$, then
+\[
+\norm{Q_\gamma R_{m+1}}\le\frac{\norm{Q_\gamma}\,M\norm{h}^{m+1}}{(m+1)!}.
+\]
+\end{theorem}
+\begin{proof}
+The preimage of $U$ under $t\mapsto x+th$ is an open neighborhood of $[0,1]$, and $g(t)=F(x+th)$ is $C^{m+1}$ there. Repeated chain differentiation gives $g^{(r)}(t)=\D^rF(x+th)[h^r]$. These derivatives are continuous on the compact interval, so the displayed Bochner integrals exist in the Banach codomain. To see the exact normalization, put
+\[
+T_j=\frac1{j!}\int_0^1(1-t)^j g^{(j+1)}(t)\,dt
+\qquad(0\le j\le m).
+\]
+The Banach-valued fundamental theorem of calculus gives $T_0=g(1)-g(0)$. Integration by parts gives
+$T_j=T_{j-1}-g^{(j)}(0)/j!$ for $1\le j\le m$. Iterating yields the Taylor identity with remainder $T_m=R_{m+1}$. Each $Q_\gamma$ is bounded, so it commutes with the Bochner integral. Expand each derivative by Theorem~\ref{thm:reconstruction} and use $Q_\gamma Q_\eta=0$ for $\eta\ne\gamma$ and $Q_\gamma^2=Q_\gamma$ to take its $\gamma$ component. The norm bound follows from the derivative norm and $\int_0^1(1-t)^m\,dt=1/(m+1)$. When $m=0$ the derivative sum is empty, and when $h=0$ every positive-order term and the remainder vanish.
+\end{proof}
+
+\section{The partition chain rule and packet decorations}
+Let $U\subseteq\X$ and $V\subseteq\Y$ be open, let $G:U\to\Y$ and $F:V\to\Z$ be $C^n$, and assume $G(U)\subseteq V$. Fix $x\in U$. Write $\Pi_n$ for set partitions of $\{1,\ldots,n\}$. Within each block the directions are listed by increasing index; blocks may be listed by increasing least element to make every displayed tuple unambiguous.
+\begin{theorem}[Fa\`a di Bruno in Banach spaces]\label{thm:faa}
+For $n\ge1$ and $h_1,\ldots,h_n\in\X$,
+\[
+\D^n(F\circ G)(x)[h_1,\ldots,h_n]
+=\sum_{\pi\in\Pi_n}\D^{|\pi|}F(Gx)
+\left[\D^{|B|}G(x)[h_i:i\in B]:B\in\pi\right].
+\]
+The order of blocks is immaterial because Fr\'echet higher derivatives are symmetric.
+\end{theorem}
+\begin{proof}
+For $n=1$ this is the chain rule. Suppose the identity holds at order $n$ and the maps are $C^{n+1}$. Differentiate a summand in direction $h_{n+1}$. Differentiating the outer $\D^{|\pi|}F(Gx)$ produces the same partition with the new singleton block $\{n+1\}$. Differentiating the argument $\D^{|B|}G(x)[h_i:i\in B]$ produces the partition obtained by adjoining $n+1$ to the existing block $B$. Every partition of $\{1,\ldots,n+1\}$ arises in exactly one of these ways, depending on whether $\{n+1\}$ is a singleton. The product and chain rules apply to the bounded multilinear evaluations, and all sums are finite. Induction completes the proof.
+\end{proof}
+
+\begin{corollary}[Decorated packet chain rule]\label{cor:decorated}
+Fix input labels $\alpha_i$, directions $h_i\in\X_{\alpha_i}$, and an output label $\delta$. For each partition $\pi$ and intermediate label function $\gamma:\pi\to J$, replace the $B$th argument of the outer derivative by $Q_{\gamma(B)}\D^{|B|}G(x)[h_i:i\in B]$. The sum over all such decorations, followed by $R_\delta$, equals the $\delta$ output packet of $\D^n(F\circ G)(x)[h_1,\ldots,h_n]$.
+\end{corollary}
+\begin{proof}
+In every outer argument of Theorem~\ref{thm:faa}, insert the identity on $\Y$ as $\sum_{\gamma\in J}Q_\gamma$. Expand by multilinearity. The output projection $R_\delta$ distributes over the finite sum. Because the directions are already in their actual packet ranges, this is precisely the literal packet-jet expression. No statement assumes that mixed input labels disappear.
+\end{proof}
+
+\begin{proposition}[Decorated term count and pruning]\label{prop:count}
+For $n\ge1$, if the intermediate family contains $M\ge0$ packet labels, the number of formal decorated terms before pruning is
+\[
+N_{n,M}=\sum_{k=1}^{n}S(n,k)M^k,
+\]
+where $S(n,k)$ is a Stirling number of the second kind. A decorated summand vanishes if any of its constituent packet jets is the zero multilinear map.
+
+More precisely, define the order-$n$ support at $x$ by
+\[
+\mathcal S_n(F\circ G;x)=
+\{(\delta,\alpha)\in K\times I^n:
+J_{\delta\mid\alpha}(\D^n(F\circ G)(x))\ne0\}.
+\]
+Let $\mathcal A_n(F,G;x)\subseteq K\times I^n$ consist of the profiles $(\delta,\alpha)$ for which there exist $\pi\in\Pi_n$ and $\gamma:\pi\to J$ such that all the following restricted multilinear maps are nonzero:
+\[
+\begin{gathered}
+J_{\delta\mid(\gamma(B))_{B\in\pi}}(\D^{|\pi|}F(Gx)),\\
+J_{\gamma(B)\mid(\alpha_i)_{i\in B}}(\D^{|B|}G(x))
+\qquad(B\in\pi).
+\end{gathered}
+\]
+Here the jet notation uses the relevant input and output packet families. Then
+\[
+\mathcal S_n(F\circ G;x)\subseteq\mathcal A_n(F,G;x).
+\]
+Thus the set of admissible decorated witnesses is projected to the same external packet profiles as the composed support. Equality need not hold.
+\end{proposition}
+\begin{proof}
+There are $S(n,k)$ partitions with $k$ blocks and $M^k$ functions assigning labels to those blocks. If a profile is outside $\mathcal A_n(F,G;x)$, every decorated summand has a zero constituent jet. A zero inner jet supplies a zero argument to a positive-order multilinear outer jet; a zero outer jet gives zero directly. Every summand therefore vanishes for every tuple of directions, so the composed restricted jet is zero. This proves the support inclusion. Nonzero constituent maps can still compose to zero, and distinct nonzero summands can cancel. For example, take $\X=\Z=\mathbb R$ with one packet, $\Y=\mathbb R^2$ with its two coordinate packets, $G(t)=(t,t)$, and $F(y_1,y_2)=y_1-y_2$. At order one both decorated terms are nonzero and their sum is zero. If $M=0$, then $\Y=0$; for $n\ge1$ the term count and every derivative of $F\circ G$ are zero. These counts concern formal summands before structural pruning.
+\end{proof}
+
+\begin{figure}[t]
+\centering\includegraphics[width=\linewidth]{decorated_partition_terms.pdf}
+\caption{The growth of labeled partition terms. At fourth order with two intermediate packet labels, the four block-count contributions are $2$, $28$, $48$, and $16$, totaling $94$. These are exact combinatorial counts, before structural pruning or cancellations.}
+\end{figure}
+
+\section{Verification and reproduction}
+\begin{longtable}{@{}p{.28\linewidth}p{.64\linewidth}@{}}
+\toprule
+\textbf{Layer}&\textbf{Verified scope}\\\midrule\endhead
+Algebraic reconstruction&The finite core and Section 16 source were freshly compiled in the pinned Lean environment. Multilinear reconstruction retains every input label and the actual output packet.\\
+Continuous packet jets&The accepted source uses literal projector ranges with inherited norms. Its reconstruction theorem specializes to mathlib's total \texttt{iteratedFDeriv}. Differentiability is asserted only when a theorem supplies the required hypotheses.\\
+Composition and support&The accepted source expands the composite derivative over finite ordered partitions and all intermediate labels. A nonzero composite jet has a witness with nonzero constituent jets. This is a one-way support inclusion.\\
+Taylor and counting&The integral remainder, its exact factorial normalization and bound, and the Stirling term count are proved mathematically in this supplement. They are not claimed as new Lean theorems in this release.\\
+Exact computation&Three suites passed 18,630 assertions on specified integer, rational, and polynomial examples. Repeated assertions and sampled norm inequalities are identified in the computation audit. These are finite checks.\\
+Later monograph&The ordinary review covers all 59 later results and both classical standard facts under their stated hypotheses. Matching expanded Lean proofs were not recovered for those sections.\\
+\bottomrule
+\end{longtable}
+
+The source package contains the exact toolchain and dependency pins, compiler transcripts, ownership and axiom audit, kernel replay, adverse controls, mathematical reviews, and statement register. Run \texttt{python VERIFY\_RELEASE.py} to check the extracted bytes. The separate Lean guide and \texttt{formal/README.md} give the formal replay commands.
+
+\noindent\textbf{Reading rule.} An ordinary proof, an exact computation, a Lean theorem under explicit hypotheses, and an open research construction are separate kinds of evidence. The statement register records the scope of each claim. Version 1.0.0 closes the technical manuscript release under these declared boundaries. No public reuse license is assigned by this supplement.
+\end{document}

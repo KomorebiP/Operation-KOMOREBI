@@ -1,0 +1,18 @@
+theorem small_core_optimal_recompression (L : Matrix m t ℂ) (R : Matrix n t ℂ)
+    (svd : OrderedThinSVD (factorCore L R) d) (k : ℕ) :
+    let Lk := recompressLeft (compactQ L) svd k
+    let Rk := recompressRight (compactQ R) svd k
+    BestRank spectralNorm (L*Rᴴ) (Lk*Rkᴴ) k ∧
+    BestRank frobeniusNorm (L*Rᴴ) (Lk*Rkᴴ) k ∧
+    spectralNorm (L*Rᴴ-Lk*Rkᴴ)=nextSingular svd.values k ∧
+    frobeniusNorm (L*Rᴴ-Lk*Rkᴴ)^2=tailEnergy svd.values k ∧
+    frobeniusNorm (L*Rᴴ-Lk*Rkᴴ)=Real.sqrt (tailEnergy svd.values k) ∧
+    compactDim L=L.rank ∧ compactDim R=R.rank ∧
+    Fintype.card (KeptColumn d k)=min d k := by
+  dsimp only
+  have h := recompression_optimality (compactQ L) (compactQ R)
+    (compactQ_isometry L) (compactQ_isometry R) svd k
+  dsimp only at h
+  rw [←compact_product_reconstruction L R] at h
+  exact ⟨h.1,h.2.1,h.2.2.1,h.2.2.2.1,h.2.2.2.2,
+    compactDim_eq_rank L,compactDim_eq_rank R,keptColumn_card k⟩

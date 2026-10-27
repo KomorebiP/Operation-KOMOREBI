@@ -1,0 +1,8 @@
+theorem fractional_add (P : I → R) (h : ∀ i j, P i*P j=if i=j then P i else 0)
+    (lam : I → ℝ) (hl : ∀ i, 0 ≤ lam i) (a b : ℝ) (ha : 0 < a) (hb : 0 < b) :
+    fractional P lam a*fractional P lam b=fractional P lam (a+b) := by
+  unfold fractional
+  rw [resolve_mul P h]
+  congr 1
+  funext i
+  exact (Real.rpow_add' (hl i) (add_pos ha hb).ne').symm

@@ -1,0 +1,922 @@
+\section{Finite obstructions, compatible lifts, and deformation}
+\label{sec:lifting}
+
+The arithmetic results above concern particular families. We now study the
+underlying correction problem, from finite polynomial lifts to continuous
+parameter charts and quantitative deformation. Throughout, we distinguish
+three objects: a residual obstruction, the set of correcting digits, and a
+root in a completion. A vanishing obstruction at one precision gives a lift
+to the next. Continuing indefinitely requires additional hypotheses.
+
+Unless a different coefficient ring is specified, a polynomial system is a
+finite list of integer polynomials. All divisibility conditions on vectors are
+coordinatewise. For a positive integer $q$, write $S_q=\Z/q\Z$ and use an
+overline for reduction modulo $q$. For a prime $p$, write
+$\F_p=S_p$, normalize $|p|_p=p^{-1}$, and put
+\[
+ B_L(x)=x+p^L\Zp^d.
+\]
+An integer center is included in this notation by its natural image in
+$\Zp^d$. All dimensions below are finite and may be zero. A statement over
+$S_q$ allows composite $q$ and $q=1$ when explicitly stated. A cardinality
+formula in terms of vector-space rank uses prime $p$.
+
+\subsection{The polynomial correction equation}
+
+For $F=(F_1,\ldots,F_e)\in\Z[X_1,\ldots,X_d]^e$, define its evaluated
+Jacobian by the formal partial derivatives:
+\[
+ DF(x)_{ij}=(\partial_jF_i)(x),\qquad
+ J_x=DF(x)\bmod q:S_q^d\longrightarrow S_q^e.
+\]
+The obstruction therefore uses the Jacobian of the given polynomials. The
+following algebraic Taylor identity relates this linear map to polynomial
+evaluation.
+
+\begin{lemma}[Polynomial Taylor remainder]\label{lem:polynomial-taylor}
+Let $R$ be a commutative ring, $P\in R[X_1,\ldots,X_d]$, $a\in R^d$, and
+$c\in R$. There is a polynomial $Q\in R[U_1,\ldots,U_d]$, with $Q(0)=0$,
+such that for every $u\in R^d$,
+\begin{equation}\label{eq:polynomial-taylor}
+ P(a+cu)=P(a)+c\sum_{j=1}^d(\partial_jP)(a)u_j+c^2Q(u).
+\end{equation}
+In particular, when $R=\Z$ and $a,u,c$ are integral, subtracting the first
+two terms on the right from $P(a+cu)$ gives a multiple of $c^2$.
+\end{lemma}
+
+\begin{proof}
+Apply polynomial induction using constants, addition, and multiplication by a
+variable. Constants have zero remainder, and remainders add. For the
+multiplication step, suppose the assertion is known for $P$ and write
+$D_P(U)=\sum_j(\partial_jP)(a)U_j$. Multiplication of its expansion by
+$a_i+cU_i$ gives constant term $P(a)a_i$, linear term
+$c(a_iD_P(U)+P(a)U_i)$, and remainder
+\[
+ c^2\bigl(Q(U)(a_i+cU_i)+D_P(U)U_i\bigr).
+\]
+The product rule identifies the linear term with the derivative of
+$PX_i$. The displayed remainder vanishes at $U=0$. This constructs the
+polynomial remainder before evaluation at $u$, even over rings where
+division by $c$ would be invalid.
+\end{proof}
+
+The general polynomial identity is formalized by
+\lean{Komorebi.PolynomialTaylorRing.exists_eval_scaled_remainder}.
+Its integer divisibility form is
+\lean{Komorebi.PolynomialTaylor.taylor_dvd}.
+
+\begin{theorem}[Finite polynomial obstruction]\label{thm:finite-polynomial-obstruction}
+Let $q\ge1$, $L\ge1$, $x\in\Z^d$, and suppose
+$F(x)\in q^L\Z^e$. Define the exact integer residual $r_x$ by
+$F(x)=q^Lr_x$, and put
+\[
+ \mathcal O_x=S_q^e/\im J_x,\qquad o_x=[\overline{r_x}].
+\]
+Then $\mathcal O_x$ is finite and
+\begin{equation}\label{eq:finite-obstruction}
+ o_x=0\quad\Longleftrightarrow\quad
+ \exists y\in\Z^d:\quad
+ y\equiv x\pmod{q^L},\qquad F(y)\equiv0\pmod{q^{L+1}}.
+\end{equation}
+No surjectivity or nonsingularity assumption is required.
+\end{theorem}
+
+\begin{proof}
+Every point in the lower residue class has the form $y=x+q^Lt$ with
+$t\in\Z^d$. By Lemma~\ref{lem:polynomial-taylor} and $2L\ge L+1$,
+\[
+ F(x+q^Lt)\equiv q^L\bigl(r_x+DF(x)t\bigr)\pmod{q^{L+1}}.
+\]
+The integer $q^L$ is nonzero. Cancelling it in the corresponding divisibility
+condition proves
+\begin{equation}\label{eq:digit-correction}
+ F(x+q^Lt)\equiv0\pmod{q^{L+1}}
+ \quad\Longleftrightarrow\quad
+ \overline{r_x}+J_x\overline t=0.
+\end{equation}
+Integer vectors reduce onto $S_q^d$. The equation on the right is solvable
+exactly when $\overline{r_x}$ belongs to $\im J_x$, since that image is
+closed under negation. This is precisely $o_x=0$. Finiteness follows because
+$\mathcal O_x$ is a quotient of the finite module $S_q^e$.
+\end{proof}
+
+The formal theorem
+\lean{Komorebi.PolynomialObstruction.finite_polynomial_obstruction}
+presents the image using the integer-domain map
+$\Z^d\xrightarrow{DF(x)}\Z^e\to S_q^e$. Reduction onto $S_q^d$ identifies
+that image with $\im J_x$. The class-preserving comparison is explicit in
+\lean{Komorebi.PolynomialLiftCounts.obstructionEquiv}. The change of
+presentation does not change the distinguished residual class.
+
+\begin{proposition}[Affine depth zero]\label{prop:affine-obstruction}
+Let $F(x)=Ax-b$ for an integer linear map $A:\Z^d\to\Z^e$. The criterion
+of Theorem~\ref{thm:finite-polynomial-obstruction} holds for every $L\ge0$,
+with $J=A\bmod q$.
+\end{proposition}
+
+\begin{proof}
+The affine identity
+$F(x+q^Lt)=F(x)+q^LAt$ has no quadratic remainder. The proof of
+\eqref{eq:digit-correction} therefore needs no inequality involving $2L$.
+The residual and the finite quotient are obtained as above.
+\end{proof}
+
+The affine statement is formalized by
+\lean{Komorebi.NativeAffine.finite_affine_obstruction}.
+Positive depth is essential in the nonlinear theorem: for $F(X)=X^2-1$,
+$q=2$, $L=0$, and $x=0$, the Jacobian is zero and the residual class is
+nonzero, yet $y=1$ is a root modulo two in the same residue modulo one.
+
+\begin{proposition}[Independence of the integer representative]
+\label{prop:representative-independence}
+Under the hypotheses of Theorem~\ref{thm:finite-polynomial-obstruction},
+let $x'=x+q^Ls$ and write $F(x')=q^Lr_{x'}$. Then
+\[
+ J_{x'}=J_x,\qquad
+ \overline{r_{x'}}=\overline{r_x}+J_x\overline s.
+\]
+Consequently the two residual classes coincide in the common quotient
+$S_q^e/\im J_x$.
+\end{proposition}
+
+\begin{proof}
+Polynomial evaluation respects coordinatewise congruence. Apply this first
+to every formal partial derivative: $x'\equiv x\pmod q$ gives
+$J_{x'}=J_x$. Next apply \eqref{eq:polynomial-taylor} to $F$ at scale $q^L$.
+Subtract the two exact residual identities and cancel $q^L$ to obtain the
+displayed relation modulo $q$. Its additional term belongs to the common
+Jacobian image, so it vanishes in the quotient.
+\end{proof}
+
+This comparison is formalized by
+\lean{Komorebi.PolynomialRepresentative.representative_independence}.
+This proves independence of the integer representative within a fixed
+polynomial presentation. It makes no identification of the raw cokernels
+of different equation lists. For example, adjoining a zero equation leaves
+the roots unchanged while adding an $S_q$ summand to the raw cokernel.
+
+\subsection{One correction shared by two systems}
+
+The next obstruction concerns compatibility between individually attainable
+corrections. Its algebraic form works over an arbitrary commutative ring.
+Let $U,V,W$ be $R$-modules and let $J:U\to V$, $K:U\to W$ be linear.
+Define
+\begin{equation}\label{eq:common-quotient}
+ C(J,K)=U/(\ker J+\ker K).
+\end{equation}
+An attainable value $Ju$ has label $[u]\in C(J,K)$. This is independent of
+the choice of its preimage because $\ker J$ is killed in the quotient.
+Similarly, $Kv$ has label $[v]$. Denote these maps by
+$\lambda_J:\im J\to C(J,K)$ and $\lambda_K:\im K\to C(J,K)$.
+
+\begin{theorem}[Common correction and fiber product]\label{thm:common-correction}
+For every $u,v\in U$,
+\begin{equation}\label{eq:common-correction}
+ [u]=[v]\text{ in }C(J,K)
+ \quad\Longleftrightarrow\quad
+ \exists w\in U:\ Jw=Ju,\quad Kw=Kv.
+\end{equation}
+Both label maps are surjective, and the image of the joint map is exactly
+the fiber product:
+\begin{equation}\label{eq:joint-fiber-product}
+ \im\bigl(U\to\im J\times\im K,\ u\mapsto(Ju,Ku)\bigr)
+ =\im J\mathbin{\times}_{C(J,K)}\im K.
+\end{equation}
+If either $V$ or $W$ is finite, then $C(J,K)$ is finite.
+\end{theorem}
+
+\begin{proof}
+If $[u]=[v]$, write $u-v=s+t$ with $s\in\ker J$ and $t\in\ker K$.
+Then $w=u-s=v+t$ satisfies both required equalities. Conversely, a common
+$w$ gives
+\[
+ u-v=(u-w)+(w-v)\in\ker J+\ker K.
+\]
+Every class $[u]$ is the label of $Ju$ and of $Ku$, proving surjectivity.
+For attainable $a=Ju$ and $b=Kv$, the first equivalence says exactly that
+equal labels are equivalent to a simultaneous preimage. This proves
+\eqref{eq:joint-fiber-product}. Finally, a finite target has finite image,
+and the associated surjective label map makes $C(J,K)$ finite.
+\end{proof}
+
+These statements are
+\lean{Komorebi.SharedCorrection.quotient_mk_eq_iff_common} and
+\lean{Komorebi.SharedCorrection.joint_range_eq_fiber}, together with the
+finite-target corollaries in the same module. The quotient also has the
+expected universal property: every linear map from $U$ annihilating both
+kernels factors uniquely through $C(J,K)$. Equivalently, compatible linear
+observations on $\im J$ and $\im K$ factor uniquely through their label
+maps. This is formalized by
+\lean{Komorebi.SharedCorrection.common_paired_universal}.
+
+\begin{corollary}[Simultaneous polynomial lifting]\label{cor:shared-polynomial}
+Let $F\in\Z[X_1,\ldots,X_d]^e$ and
+$G\in\Z[X_1,\ldots,X_d]^f$ have a common lower root $x$ modulo $q^L$,
+where $q\ge1$ and $L\ge1$. Use the integer-domain reduced Jacobians
+$J:\Z^d\to S_q^e$ and $K:\Z^d\to S_q^f$. Suppose $u,v\in\Z^d$ are
+separately valid corrections for $F$ and $G$, respectively. Then
+\[
+ [u]=[v]\text{ in }\Z^d/(\ker J+\ker K)
+\]
+if and only if a single $y\equiv x\pmod{q^L}$ solves both systems modulo
+$q^{L+1}$. Each separate label is independent of the chosen valid
+correction. The common quotient is finite.
+\end{corollary}
+
+\begin{proof}
+For each system, \eqref{eq:digit-correction} translates a valid next root
+into a linear correction equation. Once $u$ corrects $F$, another digit
+$w$ corrects $F$ precisely when $Jw=Ju$. The analogous condition for $G$
+is $Kw=Kv$. Theorem~\ref{thm:common-correction} now gives the criterion.
+Two valid corrections of one block differ by a vector in its Jacobian
+kernel, so they have equal labels. Finiteness follows from either finite
+residue target. An unconditional formulation quantifies over separately
+valid $u,v$ with equal labels, thereby including their existence in the
+criterion rather than assuming it.
+\end{proof}
+
+See \lean{Komorebi.PolynomialShared.joint_lift_iff_class_eq} and
+\lean{Komorebi.PolynomialShared.finite_polynomial_pair_compatibility}.
+
+For affine integer systems $F(X)=AX-b$ and $G(X)=BX-c$, where
+$A:\Z^d\to\Z^e$ and $B:\Z^d\to\Z^f$ are linear,
+Corollary~\ref{cor:shared-polynomial} holds for $q\ge1$ and every
+$L\ge0$, including depth zero. Here $x$ is a common root modulo $q^L$,
+and $J$ and $K$ are the reductions of $A$ and $B$ with domain $\Z^d$.
+Given separately valid corrections $u,v$, a simultaneous next lift exists
+if and only if their classes in $\Z^d/(\ker J+\ker K)$ agree. The quotient
+is finite, and each label is independent of the chosen valid correction.
+Indeed, Proposition~\ref{prop:affine-obstruction} supplies the correction
+equation without a positive-depth restriction, and the proof of
+Theorem~\ref{thm:common-correction} then applies unchanged. The formal
+statement is \lean{Komorebi.AffinePair.joint_lift_iff_class_eq}.
+Quantifying over separately valid corrections with equal labels also
+includes their existence in the criterion, as in
+\lean{Komorebi.AffinePair.finite_affine_pair_compatibility}.
+Separate liftability alone is insufficient. At $x=0$ modulo two,
+$F(X)=X$ and $G(X)=X-2$ both lift to modulus four, but their correcting
+digits are respectively $0$ and $1$ modulo two. No single residue solves
+both equations modulo four.
+
+\subsection{Correction torsors and exact residue counts}
+
+Integer representatives and residue classes at the next level must also be
+distinguished. For $q\ge1$ and $L\ge0$, the map
+\[
+ S_q^d\longrightarrow
+ \{y\in(\Z/q^{L+1}\Z)^d:y\equiv x\pmod{q^L}\},
+ \qquad t\longmapsto x+q^L\widetilde t
+\]
+is a bijection, where $\widetilde t$ is any integer representative.
+Independence of the representative and injectivity both follow by cancelling
+$q^L$ in integer divisibility. Surjectivity follows by expressing the lower
+congruence as a multiple of $q^L$. This is the equivalence
+\lean{Komorebi.ResidueLiftDigits.digitEquivResidue}.
+
+At positive polynomial depth, restrict it to the correction fiber
+\[
+ \mathcal T_x=\{t\in S_q^d:\overline{r_x}+J_xt=0\}
+\]
+and the lift set
+\[
+ \mathcal L_{x,L}=
+ \{y\in(\Z/q^{L+1}\Z)^d:y\equiv x\pmod{q^L},\ F(y)=0\}.
+\]
+The polynomial predicate in the second display is evaluation in the residue
+ring. Evaluation on canonical integer representatives gives the same
+predicate, because integer polynomial evaluation respects congruence.
+
+\begin{theorem}[Torsor and lift cardinalities]\label{thm:lift-torsor-count}
+Under the hypotheses of Theorem~\ref{thm:finite-polynomial-obstruction},
+there is an equivalence $\mathcal T_x\simeq\mathcal L_{x,L}$.
+Every nonempty fiber is a torsor for $\ker J_x$ under addition of
+correction digits. If $q=p$ is prime and
+$\rho_x=\rank_{\F_p}J_x$, then
+\begin{equation}\label{eq:lift-count}
+ \#\mathcal L_{x,L}=
+ \begin{cases}p^{d-\rho_x},&o_x=0,\\0,&o_x\ne0,\end{cases}
+ \qquad
+ \#\mathcal O_x=p^{e-\rho_x}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Equation~\eqref{eq:digit-correction} identifies exactly which points of the
+residue fiber satisfy the equations, proving the restricted equivalence.
+If $u,t\in\mathcal T_x$, subtraction gives $J_x(t-u)=0$. Conversely,
+adding any element of $\ker J_x$ preserves the correction equation. The
+unique kernel vector carrying $u$ to $t$ is $t-u$, so the action is free
+and transitive. Choosing one valid digit identifies the fiber with the
+kernel, without making that choice part of its translation action.
+
+For prime $p$, rank-nullity gives
+$\dim\ker J_x=d-\rho_x$ and
+$\dim(\F_p^e/\im J_x)=e-\rho_x$. The cardinality of an
+$n$-dimensional $\F_p$-space is $p^n$. Combine these identities with the
+obstruction criterion and the residue equivalence.
+\end{proof}
+
+The cardinality formula is formalized by
+\lean{Komorebi.PolynomialLiftCounts.finite_polynomial_lift_count}.
+The explicit torsor and chosen-point equivalence are developed in
+\lean{Komorebi.FiniteFiberCounts.translate_exists_unique} and
+\lean{Komorebi.PolynomialLiftCounts.liftEquivKernel}.
+For composite $q$, the torsor and kernel cardinality remain valid, while the
+vector-space rank formula is unavailable. Multiplication by two on
+$\Z/4\Z$ already has a kernel of size two.
+
+\subsection{Smooth compatible towers and exact roots}
+
+Surjectivity removes every residual obstruction and persists throughout a
+positive-depth residue ball. This supplies the additional hypothesis needed
+to iterate the finite theorem.
+
+\begin{theorem}[Compatible polynomial tower]\label{thm:smooth-tower}
+Let $q\ge1$, $L\ge1$, $F\in\Z[X_1,\ldots,X_d]^e$, and
+$x\in\Z^d$ satisfy $F(x)\in q^L\Z^e$. Suppose $J_x:S_q^d\to S_q^e$
+is surjective. There is a single sequence $z_n\in\Z^d$ such that
+\begin{align*}
+ z_0&=x,& F(z_n)&\in q^{L+n}\Z^e,\\
+ z_{n+1}-z_n&\in q^{L+n}\Z^d,& J_{z_n}&=J_x.
+\end{align*}
+For $a\le b$, it also satisfies $z_b-z_a\in q^{L+a}\Z^d$.
+\end{theorem}
+
+\begin{proof}
+At level $N=L+n$, divide the residual by $q^N$. Surjectivity supplies
+$t\in S_q^d$ with $J_{z_n}t=-\overline{F(z_n)/q^N}$. Choose an integer
+representative and apply \eqref{eq:digit-correction} to obtain $z_{n+1}$.
+The new point is congruent to $z_n$ modulo $q$. Evaluation of each formal
+partial derivative therefore gives $J_{z_{n+1}}=J_{z_n}$.
+
+Construct the sequence recursively, retaining the root condition and the
+fixed Jacobian at each step. Surjectivity at every later stage then follows
+from the single initial assumption. The cross-level congruence follows by
+induction, adding consecutive differences whose divisibilities all imply divisibility
+by $q^{L+a}$.
+\end{proof}
+
+The full tower statement is
+\lean{Komorebi.PolynomialIntegerTower.exists_compatible_tower_strong}.
+The proof constructs a compatible path using classical choice. It does not
+claim an optimized procedure for selecting its digits.
+
+\begin{theorem}[Completion and smooth branching]\label{thm:smooth-padic-root}
+In Theorem~\ref{thm:smooth-tower}, let $q=p$ be prime. The tower can be
+chosen with a limit $a\in\Zp^d$ such that
+\[
+ F(a)=0,\qquad z_n\longrightarrow a,\qquad
+ a-z_n\in p^{L+n}\Zp^d\quad(n\ge0).
+\]
+At each stage, the number of distinct next-level residue roots over $z_n$
+is exactly $p^{d-e}$, and the finite obstruction module has one element.
+If $d=e$, there is exactly one root of $F$ in $B_L(x)$.
+\end{theorem}
+
+\begin{proof}
+Cross-level compatibility bounds the supremum distance between later terms
+by $p^{-(L+n)}$. Completeness gives a limit, and closed norm bounds retain
+the congruence to every $z_n$. View the coefficients of the original integer
+polynomials in $\Zp$. Their evaluations satisfy
+both $F_i(z_n)\to F_i(a)$, by continuity, and $F_i(z_n)\to0$, by their
+growing divisibility. Uniqueness of limits gives exact vanishing.
+
+Surjectivity gives $\rank J_x=e\le d$. Theorem~\ref{thm:lift-torsor-count}
+then gives $p^{d-e}$ next residue roots and obstruction cardinality one at
+every stage.
+
+For square uniqueness, let $a,b\in B_L(x)$ be arbitrary exact roots.
+Their canonical integer truncations are genuine roots in the respective
+finite residue rings, since evaluation commutes with reduction. They agree
+at depth $L$. If they agree at depth $N\ge L$, both next residues belong
+to the same lift set, which has cardinality $p^{d-d}=1$. Induction gives
+agreement at every depth. The residue maps separate $p$-adic integers, so
+$a=b$. Existence was already supplied by the tower.
+\end{proof}
+
+The endpoint construction is
+\lean{Komorebi.PolynomialPadicLift.exists_padic_root_with_tower}, the
+branching statement is
+\lean{Komorebi.PolynomialSmoothCounts.exists_regular_tower}, and uniqueness
+for all roots in the ball is
+\lean{Komorebi.PolynomialPadicUnique.exists_unique_padic_root}.
+
+\begin{remark}\label{rem:singular-tower-boundary}
+The one-step singular criterion and the smooth infinite theorem have
+different hypotheses. The polynomial $X^2-5$ has odd roots modulo two and
+four but has no root modulo eight. Thus a previous zero obstruction does
+not force the next one to vanish. Also, rectangular surjectivity alone
+does not imply uniqueness: $F(X,Y)=X$ has the distinct dyadic roots
+$(0,0)$ and $(0,2)$ in the same residue ball modulo two. These examples show
+why the hypotheses of the tower theorem and its uniqueness clause are needed.
+\end{remark}
+
+\subsection{Coefficient stability and continuous root charts}
+
+\begin{proposition}[Smooth coefficient stability]\label{prop:smooth-coefficient-stability}
+Let $p$ be prime, $M\ge1$, $F,H\in\Z[X_1,\ldots,X_d]^e$, and
+$c\in p^M\Z$. Suppose $DF(x)\bmod p$ is surjective for an integer
+$x\in\Z^d$. If $a\in\Zp^d$ satisfies $F(a)=0$ and
+$a\equiv x\pmod p$, then there is a root $b$ of $G=F+cH$ with
+$b-a\in p^M\Zp^d$.
+
+If $d=e$ and $M\ge L\ge1$, every pair of roots $a,b\in B_L(x)$ of
+$F$ and $G$, respectively, satisfies $b-a\in p^M\Zp^d$. The perturbed
+root is unique in that ball whenever it exists.
+\end{proposition}
+
+\begin{proof}
+Since $p\mid c$, differentiation gives
+$DG(x)\equiv DF(x)\pmod p$. Truncate $a$ to an integer vector $y$ at
+depth $M$. Then $F(y)\equiv0\pmod{p^M}$, hence also
+$G(y)\equiv0\pmod{p^M}$. Congruence of $y$ and $x$ modulo $p$ preserves
+the reduced Jacobian. The smooth root theorem gives
+$b\equiv y\equiv a\pmod{p^M}$.
+
+In the square case this constructed root lies in $B_L(x)$ because $M\ge L$.
+Square uniqueness for $G$ identifies it with every competing root in that
+ball. The construction therefore gives the precision assertion for an
+arbitrary root there.
+\end{proof}
+
+See \lean{Komorebi.PolynomialRootStability.exists_nearby_perturbed_root}
+and \lean{Komorebi.PolynomialRootStability.perturbed_roots_congruent}.
+The scalar $c$ may be negative or zero. The weighted theorems below allow
+arbitrary integral $p$-adic coefficients and give an explicit first-order
+displacement.
+
+\begin{theorem}[Continuous charts with a selected Jacobian minor]
+\label{thm:continuous-parameter-chart}
+Let $p$ be prime, $L\ge1$,
+$F\in\Z[X_1,\ldots,X_{e+k}]^e$, and $x\in\Z^{e+k}$ satisfy
+$F(x)\in p^L\Z^e$. Suppose the full reduced Jacobian is surjective.
+There is a permutation $\sigma$ of the coordinates such that, writing
+$\sigma x=(y_0,t_0)$ with $e$ solved coordinates and $k$ parameter
+coordinates, the parameter ball
+$T=t_0+p^L\Zp^k$ is homeomorphic to the entire root locus
+\[
+ \mathcal R=\{z\in B_L(x):F(z)=0\}.
+\]
+The inverse homeomorphism is the actual free-coordinate projection
+$z\mapsto\operatorname{free}(\sigma z)$. If $h:T\to\mathcal R$ is the
+forward map, then for every $N\ge0$,
+\begin{equation}\label{eq:chart-congruence}
+ h(t)\equiv h(u)\pmod{p^N}
+ \quad\Longleftrightarrow\quad t\equiv u\pmod{p^N}.
+\end{equation}
+Equivalently, $\sigma h(t)=(\phi(t),t)$ for a continuous
+$\phi:T\to y_0+p^L\Zp^e$ whose graph is the entire reordered root locus.
+\end{theorem}
+
+\begin{proof}
+First consider a square integer polynomial map $P$ whose reduced Jacobian
+at $x$ is surjective. Its Jacobian is invertible over $\F_p$. A digit
+comparison using Taylor expansion shows that equal outputs modulo
+$p^{N+1}$ force equal inputs modulo $p^{N+1}$ whenever the inputs already
+agree modulo $p^N$ and belong to $B_1(x)$. Induction and integer truncation
+give, for arbitrary $a,b\in B_1(x)$,
+\[
+ P(a)\equiv P(b)\pmod{p^N}
+ \quad\Longleftrightarrow\quad a\equiv b\pmod{p^N}.
+\]
+
+More generally, for a rectangular map with surjective reduced Jacobian,
+\begin{equation}\label{eq:polynomial-ball-image}
+ P(B_L(x))=P(x)+p^L\Zp^e.
+\end{equation}
+One inclusion follows from polynomial congruence. For integer targets in
+the right-hand ball, subtract the target from the constant terms and use
+the smooth root theorem. For arbitrary $p$-adic targets, approximate by
+integer truncations. The input ball is compact, so its continuous image is
+closed. It contains all these approximants and hence their limit. This
+argument does not assume that independently chosen preimages form a
+compatible sequence.
+
+For square $P$, the resulting bijection between the two compact residue
+balls is continuous, and its target is Hausdorff. It is therefore a
+homeomorphism, with the same congruence preservation for its inverse.
+
+Now suppose a chosen set of $e$ columns of $DF(x)\bmod p$ is independent,
+and put those coordinates first. Apply the square result to the augmented
+polynomial map
+\[
+ \Psi(Y,T)=(F(Y,T),T).
+\]
+Its reduced Jacobian has upper blocks $(D_YF,D_TF)$ and lower blocks
+$(0,I_k)$, so it is invertible. For $t\in T$, the target $(0,t)$ belongs
+to $\Psi(x)+p^L\Zp^{e+k}$ because $F(x)\equiv0\pmod{p^L}$.
+The inverse of $\Psi$ at that target gives the unique root with parameters
+$t$. The inverse congruence property gives one direction of
+\eqref{eq:chart-congruence}. Projection onto the parameter coordinates
+gives the other.
+
+Finally, surjectivity of the original rectangular Jacobian guarantees a
+basis among its columns. Extend the corresponding injection of coordinate
+indices to a permutation $\sigma$. Renaming the variables by
+$\sigma^{-1}$ transports polynomial evaluation and every formal partial
+derivative. The fixed-coordinate construction therefore applies to the
+original system after undoing the permutation.
+\end{proof}
+
+The main theorem is
+\lean{Komorebi.PolynomialGeneralChart.exists_parameter_homeomorph}.
+The square local inverse and surjectivity for arbitrary targets are
+\lean{Komorebi.PolynomialLocalInverse.localHomeomorph} and
+\lean{Komorebi.PolynomialLocalSurjective.exists_padic_preimage}.
+The center $x$ is only an approximate root: the chart need not satisfy
+$\phi(t_0)=y_0$ unless $F(x)=0$ exactly. The assertion selects suitable
+coordinates. It does not permit an arbitrary prescribed solved block.
+
+\subsection{Prescribed parameters and their obstruction}
+
+Suppose now that the split into solved variables and parameter variables
+is fixed in advance. Let
+\[
+ F\in\Z[Y_1,\ldots,Y_m,T_1,\ldots,T_k]^e,\qquad x=(y_0,t_0),
+\]
+and assume $F(x)=q^Lr_x$ with $q\ge1$ and $L\ge1$. Write the reduced
+Jacobian as
+\[
+ DF(x)\bmod q=(J_x\ K_x),\qquad
+ J_x:S_q^m\to S_q^e,\quad K_x:S_q^k\to S_q^e.
+\]
+For a prescribed parameter digit $v\in S_q^k$, let $\mathcal L_{x,L,v}$
+be the set of next residue roots over $x$ whose parameter coordinates are
+$t_0+q^L\widetilde v$ modulo $q^{L+1}$.
+
+\begin{theorem}[Prescribed-parameter obstruction and count]
+\label{thm:prescribed-obstruction}
+Define
+\[
+ o_x(v)=[\overline{r_x}+K_xv]\in S_q^e/\im J_x.
+\]
+Then $\mathcal L_{x,L,v}$ is nonempty if and only if $o_x(v)=0$.
+When nonempty, it is a torsor for $\ker J_x$. If $q=p$ is prime and
+$\rho_x=\rank_{\F_p}J_x$, then
+\begin{equation}\label{eq:prescribed-count}
+ \#\mathcal L_{x,L,v}
+ =\begin{cases}p^{m-\rho_x},&o_x(v)=0,\\0,&o_x(v)\ne0,\end{cases}
+ \qquad \#(\F_p^e/\im J_x)=p^{e-\rho_x}.
+\end{equation}
+The criterion holds uniformly for every prescribed $v$ without a
+surjectivity hypothesis.
+\end{theorem}
+
+\begin{proof}
+A candidate for the next lift has the form
+$x+q^L(\widetilde u,\widetilde v)$, with solved digit $u\in S_q^m$.
+Its Taylor correction equation is
+\[
+ \overline{r_x}+J_xu+K_xv=0.
+\]
+Solvability is exactly vanishing of the displayed cokernel class. Restrict
+the residue-digit equivalence to the prescribed parameter coordinates.
+This identifies the lift fiber with the solved-digit fiber.
+Translation by $\ker J_x$ is free and transitive on any nonempty such
+fiber. The prime-field count follows from rank-nullity as before.
+\end{proof}
+
+The formal statements start from the lower root and construct its residual:
+\lean{Komorebi.PolynomialPrescribedObstruction.finite_prescribed_obstruction}
+and \lean{Komorebi.PolynomialPrescribedObstruction.finite_prescribed_lift_count}.
+For $F(Y,T)=T$ at the dyadic origin, the full Jacobian $(0\ 1)$ is
+surjective but $J_x=0$. Prescribing $v=1$ forces $T=2\pmod4$, so no root
+exists. Prescribing $v=0$ gives two choices of $Y$ modulo four over the
+initial zero residue. This example explains why the criterion depends on
+the solved block, rather than merely on the full Jacobian.
+
+\begin{theorem}[Every compatible integer parameter path]
+\label{thm:prescribed-integer-tower}
+In the preceding notation, assume $J_x$ is surjective. For every supplied
+integer path $t_n\in\Z^k$ satisfying
+\[
+ t_0=\operatorname{free}(x),\qquad
+ t_{n+1}-t_n\in q^{L+n}\Z^k,
+\]
+there is a compatible polynomial tower $z_n\in\Z^{m+k}$ with
+\[
+ z_0=x,\quad \operatorname{free}(z_n)=t_n,\quad
+ F(z_n)\in q^{L+n}\Z^e,\quad
+ z_{n+1}-z_n\in q^{L+n}\Z^{m+k}.
+\]
+The free-coordinate equality is exact in integers. Both reduced Jacobian
+blocks remain fixed, and $z_b-z_a\in q^{L+a}\Z^{m+k}$ whenever $a\le b$.
+\end{theorem}
+
+\begin{proof}
+At level $N=L+n$, write the supplied parameter increment exactly as
+$t_{n+1}-t_n=q^Nw$ with $w\in\Z^k$. Surjectivity of the solved block
+gives a digit $u$ satisfying
+$J_{z_n}u=-\overline{F(z_n)/q^N}-K_{z_n}\overline w$.
+Choose an integer representative $\widetilde u$ and set
+$z_{n+1}=z_n+q^N(\widetilde u,w)$. Its parameter coordinates equal the
+supplied target exactly. Taylor expansion proves the next root condition,
+while congruence modulo $q$ preserves the full reduced Jacobian.
+Construct the sequence recursively, preserving the exact parameter
+coordinates and the fixed solved Jacobian. The earlier cross-level
+argument proves all the stated integer congruences.
+\end{proof}
+
+This is
+\lean{Komorebi.PolynomialPrescribedIntegerTower.exists_prescribed_tower_strong}.
+In particular, no assumption about solvability at each later level has been
+added to the initial surjectivity condition.
+
+\begin{theorem}[Arbitrary $p$-adic parameter endpoints]
+\label{thm:prescribed-padic-tower}
+Let $q=p$ be prime in Theorem~\ref{thm:prescribed-integer-tower}.
+For every $\tau\in t_0+p^L\Zp^k$, there are an integer tower $z_n$ and
+$b\in\Zp^{m+k}$ such that
+\[
+ F(b)=0,\qquad\operatorname{free}(b)=\tau,\qquad
+ z_n\longrightarrow b,\qquad b-z_n\in p^{L+n}\Zp^{m+k}.
+\]
+The initial value is $z_0=x$. At every stage and for every proposed
+parameter digit $v\in\F_p^k$, the corresponding next residue fiber has
+exactly $p^{m-e}$ elements. If $m=e$, then for each $\tau$ there is exactly
+one such root in $B_L(x)$, independently of all choices of integer
+approximants and correcting digits.
+\end{theorem}
+
+\begin{proof}
+Set the first integer parameter approximation equal to the prescribed
+$t_0$. For $n\ge1$, use canonical representatives of
+$\tau\bmod p^{L+n}$. The initial congruence and truncation precision give
+\[
+ \tau-t_n\in p^{L+n}\Zp^k.
+\]
+Subtracting consecutive relations gives compatibility in $\Zp$.
+Faithfulness of integer divisibility under $\Z\hookrightarrow\Zp$
+gives compatibility in $\Z$, and the same norm bounds give $t_n\to\tau$.
+Theorem~\ref{thm:prescribed-integer-tower} and completion now produce $b$
+with exact polynomial vanishing and all retained precisions. Each free
+coordinate has both the corresponding coordinate of $b$ and that of
+$\tau$ as its limit, proving exact parameter equality.
+
+The solved Jacobian remains surjective, so every shifted obstruction
+$[\overline r+K_{z_n}v]$ vanishes. Formula~\eqref{eq:prescribed-count}
+therefore gives $p^{m-e}$ choices for every parameter digit at every stage.
+When $m=e$, the fixed-coordinate chart in the proof of
+Theorem~\ref{thm:continuous-parameter-chart} contains every root in the
+initial ball with the specified parameters. Its uniqueness proves the
+endpoint assertion. This is uniqueness of the actual endpoint, not of the
+integer representatives used to approach it.
+\end{proof}
+
+The endpoint theorems are
+\lean{Komorebi.PolynomialPrescribedPadicTower.exists_prescribed_padic_root_with_tower}
+and \lean{Komorebi.PolynomialPrescribedPadicTower.exists_unique_prescribed_padic_root}.
+The separate supplied-path theorem
+\lean{Komorebi.PolynomialPrescribedPadicTower.exists_root_with_prescribed_path}
+accepts any compatible integer parameter path with limit $\tau$.
+For $m>e$, endpoint uniqueness is false in general: the system
+$F(Y_1,Y_2,T)=Y_1$ has two distinct roots $(0,0,0)$ and $(0,2,0)$ in the
+same dyadic ball with identical parameter value.
+
+\subsection{Weighted lifting for a nonunit Jacobian}
+
+The remaining theorems in this section allow arbitrary coefficients and
+centers in $R=\Zp$. They concern square solved Jacobians invertible over
+$\Qp$, even when their reductions modulo $p$ are singular. The exponent
+controlling an integral inverse is retained explicitly.
+
+\begin{theorem}[Weighted nonlinear lifting]\label{thm:weighted-lifting}
+Let $p$ be prime, $d,s,r\in\N$, $F\in R[X_1,\ldots,X_d]^d$, and
+$a\in R^d$. Set $J=DF(a)$. Suppose
+\begin{equation}\label{eq:weighted-hypotheses}
+ J\in\operatorname{GL}_d(\Qp),\qquad
+ p^sJ^{-1}\in M_d(R),\qquad F(a)\in p^rR^d,\qquad r>2s.
+\end{equation}
+Then there is exactly one root $b$ of $F$ in $a+p^{s+1}R^d$, and it
+satisfies
+\begin{equation}\label{eq:weighted-displacement}
+ b-a\in p^{r-s}R^d.
+\end{equation}
+Uniqueness holds throughout the full ball of depth $s+1$.
+\end{theorem}
+
+\begin{proof}
+Let $A=p^sJ^{-1}\in M_d(R)$. Inclusion into $\Qp$ and its injectivity
+give the two integral identities
+\[
+ AJ=JA=p^sI_d.
+\]
+These identities are also an equivalent integral certificate for the
+first two hypotheses of \eqref{eq:weighted-hypotheses}. In particular,
+$A$ is injective: $Aw=0$ implies $p^sw=JAw=0$, hence $w=0$.
+
+Precondition the polynomial system by $A$ and set $c=p^{s+1}$.
+Its derivative at $a$ is $AJ=p^sI_d$. Lemma~\ref{lem:polynomial-taylor}
+gives a polynomial vector $Q$ with $Q(0)=0$ and
+\[
+ (AF)(a+cu)=(AF)(a)+p^{2s+1}u+p^{2s+2}Q(u).
+\]
+Since $A$ is integral, $(AF)(a)\in p^rR^d$. The strict integer inequality
+$r>2s$ permits $k=r-(2s+1)\ge0$ and a vector $C\in p^kR^d$ such that
+$(AF)(a)=p^{2s+1}C$. The normalized root equation is therefore
+\begin{equation}\label{eq:weighted-fixed-point}
+ u=-C-pQ(u).
+\end{equation}
+
+Integral polynomial evaluation is $1$-Lipschitz for the supremum
+$p$-adic metric: a common divisibility of input differences is preserved
+under addition and multiplication by integral elements. Consequently the
+right side of \eqref{eq:weighted-fixed-point} has contraction constant
+$|p|_p<1$ on the complete space $R^d$. It has a unique fixed point $u$.
+
+To obtain the sharper displacement, begin with $u\in R^d$. If
+$u\in p^nR^d$, then $Q(0)=0$ and polynomial congruence give
+$Q(u)\in p^nR^d$. For $n<k$, both $C$ and $pQ(u)$ are divisible by
+$p^{n+1}$. Equation~\eqref{eq:weighted-fixed-point} therefore improves
+the divisibility of $u$ by one digit. Induction gives $u\in p^kR^d$.
+Thus $b=a+p^{s+1}u$ satisfies \eqref{eq:weighted-displacement}, because
+$s+1+k=r-s$. Its normalized preconditioned value vanishes, and injectivity
+of $A$ gives $F(b)=0$.
+
+Every competing root $z\in a+p^{s+1}R^d$ can be written
+$z=a+p^{s+1}w$. Its root equation implies the same fixed-point
+equation after cancellation of the nonzero scalar $p^{2s+1}$.
+Contraction uniqueness gives $w=u$, proving uniqueness on the entire
+stated ball.
+\end{proof}
+
+The existence and uniqueness statements are
+\lean{Komorebi.PolynomialWeightedLift.exists_weighted_root} and
+\lean{Komorebi.PolynomialWeightedLift.exists_unique_weighted_root}.
+The inverse hypothesis in Lean specifies an integral matrix whose image
+is exactly $p^sJ^{-1}$. It does not substitute a potentially larger
+determinant valuation for $s$.
+
+\begin{example}[Strict threshold and displacement boundary]
+\label{ex:weighted-boundary}
+For $p=2$, $F(X)=X^2+3$, and $a=1$, one has $F(a)=4$ and $DF(a)=2$.
+Thus $s=1$ and $r=2$ satisfy every displayed hypothesis except the strict
+inequality. No root exists in $\Z_2$, since none exists modulo eight.
+Hence $r\ge2s$ cannot replace $r>2s$ uniformly. Also,
+$F(X)=p^sX+p^r$ has root $-p^{r-s}$, whose displacement is not divisible
+by $p^{r-s+1}$. The guaranteed displacement cannot uniformly gain a digit.
+\end{example}
+
+\subsection{First-order coefficient and parameter motion}
+
+\begin{theorem}[Weighted coefficient deformation]\label{thm:coefficient-motion}
+Let $F,H\in R[X_1,\ldots,X_d]^d$, $F(a)=0$, and $J=DF(a)$. Suppose
+$J\in\operatorname{GL}_d(\Qp)$, $p^sJ^{-1}\in M_d(R)$, and $M>2s$.
+For $G=F+p^MH$, there is exactly one root $b\in a+p^{s+1}R^d$.
+It satisfies $b-a\in p^{M-s}R^d$ and, in $\Qp^d$,
+\begin{equation}\label{eq:coefficient-first-order}
+ b-a=-p^MJ^{-1}H(a)+\varepsilon,
+ \qquad\varepsilon\in p^{2M-3s}R^d.
+\end{equation}
+Only the original Jacobian $DF(a)$ is subject to an inverse hypothesis.
+\end{theorem}
+
+\begin{proof}
+Retain the original certificate $A=p^sJ^{-1}$ and put $c=p^{s+1}$.
+Taylor expansion and a polynomial difference identity yield polynomial
+vectors $Q_F,Q_H$, both zero at the origin, such that
+\[
+ (AF)(a+cu)=p^{2s+1}u+p^{2s+2}Q_F(u),\qquad
+ (AH)(a+cu)=AH(a)+cQ_H(u).
+\]
+Consequently
+\[
+ (AG)(a+cu)=p^{2s+1}\bigl(C+u+pQ(u)\bigr),
+\]
+where
+\[
+ C=p^{M-(2s+1)}AH(a),\qquad
+ Q=Q_F+p^{M-s-1}Q_H,\qquad Q(0)=0.
+\]
+All exponents are nonnegative. The same contraction and divisibility
+argument as in Theorem~\ref{thm:weighted-lifting} gives the root,
+the displacement $p^{M-s}$, and full-ball uniqueness. This constructs the
+root without introducing an inverse hypothesis for $DG(a)$.
+
+For the error estimate, let $\delta=b-a$ and $D=M-s$. Taylor's theorem
+for the preconditioned polynomial gives
+\[
+ E_F=(AF)(b)-(AF)(a)-p^s\delta\in p^{2D}R^d.
+\]
+Polynomial congruence gives
+$E_H=(AH)(b)-(AH)(a)\in p^DR^d$.
+The equations $F(a)=0$ and $G(b)=0$ imply
+\[
+ p^s\delta+p^MAH(a)=-E_F-p^ME_H\in p^{2D}R^d,
+\]
+because $M+D\ge2D$. Cancel $p^s$ in the integral domain $R$ to obtain
+\[
+ \delta+p^{M-s}AH(a)\in p^{2M-3s}R^d.
+\]
+This integral vector is $\varepsilon$. After inclusion into $\Qp$,
+$p^{M-s}A=p^MJ^{-1}$ gives \eqref{eq:coefficient-first-order}.
+\end{proof}
+
+The complete theorem is
+\lean{Komorebi.PolynomialRootMotion.exists_unique_root_motion}.
+The error depth exceeds the displacement depth by $M-2s\ge1$. It is a
+guaranteed divisibility, not an assertion of exact valuation for every
+system.
+
+\begin{theorem}[Joint coefficient and parameter deformation]
+\label{thm:joint-deformation}\leavevmode\par
+Let $F,H\in R[Y_1,\ldots,Y_e,T_1,\ldots,T_k]^e$ and
+$a=(y_0,t_0)\in R^{e+k}$ satisfy $F(a)=0$. Define the actual blocks
+\[
+ J=D_YF(a)\in M_e(R),\qquad K=D_TF(a)\in M_{e\times k}(R).
+\]
+Suppose $J\in\operatorname{GL}_e(\Qp)$,
+$p^sJ^{-1}\in M_e(R)$, and $M>2s$. For every $v\in R^k$, set
+\[
+ \tau=t_0+p^Mv,\qquad G=F+p^MH.
+\]
+There is exactly one $y\in y_0+p^{s+1}R^e$ with $G(y,\tau)=0$.
+It satisfies
+\begin{equation}\label{eq:joint-first-order}
+ \begin{aligned}
+  y-y_0&\in p^{M-s}R^e,\\
+  y-y_0&=-p^MJ^{-1}\bigl(H(a)+Kv\bigr)+\varepsilon,
+  \qquad\varepsilon\in p^{2M-3s}R^e.
+ \end{aligned}
+\end{equation}
+The equality involving $J^{-1}$ is in $\Qp^e$, with an integral error
+vector. The parameter equality is exact.
+\end{theorem}
+
+\begin{proof}
+Use the augmented polynomial systems
+\[
+ \mathcal F(Y,T)=(F(Y,T),T-t_0),\qquad
+ \mathcal H(Y,T)=(H(Y,T),-v).
+\]
+Then $\mathcal F(a)=0$, and its derivative is
+\[
+ B=D\mathcal F(a)=\begin{pmatrix}J&K\\0&I_k\end{pmatrix}.
+\]
+For $A=p^sJ^{-1}\in M_e(R)$ and $c=p^s$, define
+\[
+ C=\begin{pmatrix}A&-AK\\0&cI_k\end{pmatrix}.
+\]
+The identities $AJ=JA=cI_e$ give $CB=BC=cI_{e+k}$. In the second
+product, the upper right block is $-JAK+cK=0$. In the first, it is
+$AK-AK=0$. Thus augmentation preserves the original inverse bound $s$.
+
+Theorem~\ref{thm:coefficient-motion} gives a unique root $b$ of
+$\mathcal F+p^M\mathcal H$ in $a+p^{s+1}R^{e+k}$, with displacement
+depth $M-s$. Its last equations say exactly
+$b_T=t_0+p^Mv=\tau$. Its first equations are $G(b)=0$.
+The integral first-order expression uses
+\[
+ C\binom{H(a)}{-v}
+ =\binom{A(H(a)+Kv)}{-p^sv}.
+\]
+Projection onto the solved coordinates gives
+\[
+ b_Y-y_0+p^{M-s}A(H(a)+Kv)\in p^{2M-3s}R^e.
+\]
+The same inclusion identity as before converts this to
+\eqref{eq:joint-first-order}.
+
+Finally, if $z\in y_0+p^{s+1}R^e$ is any competing solved root with
+parameters $\tau$, then $(z,\tau)$ belongs to the full augmented ball.
+Indeed, $M>2s$ implies $M\ge s+1$. Full-point uniqueness therefore gives
+$(z,\tau)=b$. This comparison proves uniqueness on exactly the solved
+ball stated in the theorem.
+\end{proof}
+
+The exact solved-coordinate statement is
+\lean{Komorebi.PolynomialJointDeformation.exists_joint_deformation},
+with its unique-existence interface
+\lean{Komorebi.PolynomialJointDeformation.exists_unique_joint_deformation}.
+The triangular inverse identities hold over arbitrary commutative rings,
+so they apply in particular over the $p$-adic integers.
+
+\begin{example}[First-order sign and error precision]\label{ex:motion-boundary}
+For $p=2$, $s=0$, $M=2$, $F(Y,T)=Y+T$, $H=1$, $a=0$, and $v=1$,
+the prescribed parameter is $\tau=4$ and the solved root is $y=-8$.
+Here $J=K=1$, and the forcing term is $H(a)+Kv=2$. Omitting the parameter
+term would predict $-4$, and reversing its sign would predict $0$.
+The corresponding errors $-4$ and $-8$ are both outside
+$2^{2M}\Z_2=16\Z_2$. Thus either change would violate the stated error
+bound.
+
+The error exponent cannot uniformly be increased. For
+$F(Y,T)=Y+Y^2+T$, $H=0$, $a=0$, $p=2$, $s=0$, $M=1$, and $v=1$,
+there is an even root $y$ of $y+y^2+2=0$. Its equation forces
+$y\equiv2\pmod4$ and $y+2=-y^2$, so
+\[
+ 4\mid y+2,\qquad 8\nmid y+2.
+\]
+Thus the error depth $2M-3s=2$ is attained even for parameter-only motion.
+The same quadratic with a constant coefficient perturbation gives the
+coefficient-only boundary. These examples refute a uniform extra error
+digit. They do not assert optimality for every individual choice of
+$p,s,M$.
+\end{example}
+
+The combined results establish finite singular obstructions, smooth
+compatible towers, full continuous root charts after a suitable coordinate
+choice, and quantitative deformation for a rationally invertible solved
+Jacobian. Rationally rank-deficient persistence remains a separate problem.
+The analytic solution-map theorem in the next section supplies the
+regularity conclusion for these same derivative blocks.

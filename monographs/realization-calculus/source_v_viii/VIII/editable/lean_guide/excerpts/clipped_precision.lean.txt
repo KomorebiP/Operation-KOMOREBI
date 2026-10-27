@@ -1,0 +1,24 @@
+theorem clipped_unique_minimizer [Nonempty E] (s c m : E → ℝ) (budget : ℝ)
+    (hs : ∀ e, 0 < s e) (hc : ∀ e, 0 < c e) (hm : ∀ e, 0 < m e)
+    (hb : 0 < budget) (hcap : budget ≤ ∑ e, s e * m e) :
+    ∃ t, 0 < t ∧ ClippedFeasible s m budget (clippedTolerance s c m t) ∧
+      ∀ eps, ClippedFeasible s m budget eps →
+        ((∀ other, ClippedFeasible s m budget other →
+            precisionObjective c eps ≤ precisionObjective c other) ↔
+          eps = clippedTolerance s c m t) := by
+  obtain ⟨t, ht, heq⟩ := clipped_scale_exists s c m budget hs hc hm hb hcap
+  have hf : ClippedFeasible s m budget (clippedTolerance s c m t) :=
+    ⟨⟨clipped_positive s c m t hs hc hm ht, heq⟩, fun _ => min_le_left _ _⟩
+  refine ⟨t, ht, hf, ?_⟩
+  intro eps heps
+  constructor
+  · intro hmin
+    by_contra hne
+    have hl := clipped_allocation_strict s c m budget t hs hc hm ht heq eps heps hne
+    have hu := hmin _ hf
+    linarith
+  · intro h
+    subst eps
+    exact fun other hother => clipped_allocation_optimal s c m budget t hs hc hm ht heq other hother
+
+/- The parameter is the reciprocal of the manuscript's multiplier. -/

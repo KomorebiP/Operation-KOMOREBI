@@ -1,0 +1,29 @@
+theorem diagonal_frobenius_lower (σ : Fin d → ℝ) (hσ : ∀ i, 0 ≤ σ i)
+    (hsort : Antitone σ) (k : ℕ) (B : Matrix (Fin d) (Fin d) ℂ) (hB : B.rank≤k) :
+    tailEnergy σ k ≤ frobeniusNorm (diag σ-B)^2 := by
+  let Q := kernelFrame B
+  have hQ : Qᴴ*Q=1 := kernelFrame_isometry B
+  have hw : (d-k : ℕ) ≤ ∑ i,rowWeight Q i := by
+    rw [rowWeight_sum Q hQ]
+    simp only [Fintype.card_fin]
+    have hn := kernel_rank_nullity B
+    simp only [Fintype.card_fin] at hn
+    exact_mod_cast (by omega : d-k ≤ kernelDim B)
+  have hsort2 : Antitone (fun i => σ i^2) := by
+    intro i j hij
+    have hle := hsort hij
+    nlinarith [hσ i,hσ j]
+  have hl := weighted_tail_lower (fun i => σ i^2) (rowWeight Q)
+    (fun i => sq_nonneg _) hsort2 (rowWeight_nonneg Q) (rowWeight_le_one Q hQ) k hw
+  have he : tailEnergy σ k = ∑ i, if i.val<k then (0:ℝ) else σ i^2 := by
+    unfold tailEnergy discarded
+    apply Finset.sum_congr rfl
+    intro i _
+    split_ifs <;> simp
+  rw [←he,←diagonal_frame_energy σ Q] at hl
+  have hc := frobenius_right_compress_le Q hQ (diag σ-B)
+  have hbq : (diag σ-B)*Q=diag σ*Q := by
+    rw [Matrix.sub_mul,mul_kernelFrame,sub_zero]
+  rw [hbq] at hc
+  unfold frobeniusNorm at hl ⊢
+  nlinarith [norm_nonneg (diag σ*Q),norm_nonneg (diag σ-B)]

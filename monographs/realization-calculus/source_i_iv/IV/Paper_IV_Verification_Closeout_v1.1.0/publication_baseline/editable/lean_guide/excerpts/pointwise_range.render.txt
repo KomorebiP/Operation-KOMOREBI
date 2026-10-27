@@ -1,0 +1,13 @@
+theorem pointwiseRootAverage_range_iff \{N : ℕ\} (hN : 0 < N) \{omega : ℂ\}
+    (ho : IsPrimitiveRoot omega N) \{s : Set ℂ\}
+    (hs : MapsTo (fun z => omega * z) s s) (j : ℕ) \{f : ℂ → ℂ\}
+    (hf : DifferentiableOn ℂ f s) :
+    (∃ g : ℂ → ℂ, DifferentiableOn ℂ g s ∧ EqOn (pointwiseRootAverage N j omega g) f s) ↔
+      ∀ z ∈ s, f (omega * z) = omega ^ j * f z := by
+  constructor
+  · rintro ⟨g, _, hg⟩ z hz
+    rw [← hg (hs hz), ← hg hz]
+    exact pointwiseRootAverage_covariant hN ho j g z
+  · intro hc
+    refine ⟨f, hf, fun z hz => ?_⟩
+    simpa using pointwiseRootAverage_of_covariant hN ho hs j j f hc hz

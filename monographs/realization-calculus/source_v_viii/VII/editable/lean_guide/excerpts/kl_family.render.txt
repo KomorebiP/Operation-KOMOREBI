@@ -1,0 +1,22 @@
+theorem error_family_correctable_iff_gram (P : Matrix n n ℂ) (hP : IsStarProjection P)
+    (E : I → Matrix n n ℂ) :
+    ErrorFamilyCorrectable P E ↔ ∃ C : Matrix I I ℂ, C.PosSemidef ∧
+      ∀ a b, P*star (E a)*E b*P=C a b • P := by
+  constructor
+  · rintro ⟨m,R,hR,t,ht,hcorrect⟩
+    exact gram_of_scaled_recovery P hP E R hR t ht hcorrect
+  · rintro ⟨C,hC,hgram⟩
+    let K : Data n I := ⟨P,hP,E,C,hC,hgram⟩
+    let e := Fintype.equivFin (Option K.diagonal.Active)
+    let R := K.diagonal.syndromes.recoveryKraus
+    refine ⟨Fintype.card (Option K.diagonal.Active), fun r => R (e.symm r), ?_,
+      (Matrix.trace C).re, (RCLike.nonneg_iff.mp hC.trace_nonneg).1, ?_⟩
+    · exact (e.symm.sum_comp (fun a => star (R a)*R a)).trans K.recovery_complete
+    · intro rho hrho
+      change (∑ r, R (e.symm r)*noise E rho*star (R (e.symm r))) = _
+      rw [e.symm.sum_comp (fun a => R a*noise E rho*star (R a))]
+      have hreal : ((Matrix.trace C).re : ℂ)=Matrix.trace C := by
+        exact Complex.ext rfl (by simpa using (RCLike.nonneg_iff.mp hC.trace_nonneg).2.symm)
+      rw [hreal]
+      exact (K.diagonal.syndromes.decoder_eq_kraus (noise E rho)).symm.trans
+        (K.recovery_noise_scaled rho hrho)

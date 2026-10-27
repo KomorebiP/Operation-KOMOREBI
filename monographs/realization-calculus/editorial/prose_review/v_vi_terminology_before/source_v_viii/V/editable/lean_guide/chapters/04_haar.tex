@@ -1,0 +1,52 @@
+\section{Haar, lifting, and finite depth packet synthesis}
+\subsection{Interleaving is part of the theorem}
+For a bilateral signal, write $e[n]=x[2n]$ and $o[n]=x[2n+1]$. The source first proves that the squared norms of these two channels sum to the original squared norm. It then forms the normalized Haar channels
+\[
+a[n]=\frac{e[n]+o[n]}{\sqrt2},\qquad d[n]=\frac{e[n]-o[n]}{\sqrt2}.
+\]
+The sample formula establishes that the abstract construction really acts on these literal interleaved samples.
+\excerpt{HaarChannels}{haar_samples}
+The energy identity combines the Hilbert space parallelogram law with the joint channel norm.
+\excerpt{HaarChannels}{haar_energy}
+This theorem holds for complex $\ell^2$ signals, not only finite real arrays. A finite numerical check can expose normalization mistakes but cannot replace the infinite-space proof.
+
+\subsection{Lifting is a different normalization}
+The lifting analysis sends $(e,o)$ to $(s,d)$ with
+\[
+d=o-e,\qquad s=e+\frac d2=\frac{e+o}{2}.
+\]
+The inverse is $e=s-d/2$, $o=d+e$. Its determinant is one. The theorem is stated over a characteristic zero field, which makes division by two meaningful in the required way.
+\excerpt{Lifting}{lifting}
+The lifting pair is invertible but is not the normalized Haar pair. For example, $(e,o)=(2,4)$ gives lifting coordinates $(s,d)=(3,2)$, whose squared Euclidean norm is $13$, whereas the input norm squared is $20$. Normalized Haar gives $(3\sqrt2,-\sqrt2)$ with squared norm $20$ under the source's high-channel sign convention. Invertibility and isometry are separate claims.
+
+\subsection{Flat finite signals have both inverse laws}
+The finite transform file builds a pairing equivalence between a flat vector of length $2N$ and $N$ pairs. It transports lifting through that equivalence. The result is a theorem about the actual flattened signal, not an unconnected pairwise calculation.
+\excerpt{FiniteTransforms}{flat_lifting}
+The companion direction, \code{lift_unlift_flat}, establishes reconstruction of arbitrary transformed coordinates as well. The finite Haar statements similarly include pair energy, finite energy, and a flat involution. These finite constructions are useful for matching array implementations, while the Hilbert files establish the infinite $\ell^2$ statements.
+
+\subsection{A packet is an ordered composition}
+At depth zero there is one empty word and its operator is the identity. A depth-$n+1$ word consists of a first branch and a remaining word. The first branch acts on the signal before the remaining packet.
+\excerpt{WaveletPackets}{packet_recursion}
+Here \code{Word n} is a recursively finite type. Each child map is a bounded continuous linear operator. The low and high norm bounds come from the two channel energy identity, so their adjoints are legitimate Hilbert adjoints.
+
+\subsection{Induction preserves total energy}
+The proof at depth $n+1$ first sums over the remaining word for each child. The induction hypothesis reduces that sum to the child's norm squared. Summing over the two children returns the parent's norm squared.
+\excerpt{WaveletPackets}{packet_energy}
+For depth two, this is the four-packet identity
+\[
+\|W_{00}x\|^2+\|W_{01}x\|^2+\|W_{10}x\|^2+\|W_{11}x\|^2=\|x\|^2.
+\]
+The theorem quantifies over every natural depth. Each individual depth has a finite packet family. It is not a theorem about convergence of an infinite depth packet expansion.
+
+\subsection{Energy gives an operator reconstruction identity}
+For finitely many bounded maps $W_i$ on the complex Hilbert space, an energy identity valid for every $x$ implies
+\[
+\sum_i W_i^*W_i=I.
+\]
+The formal proof uses inner product extensionality, the adjoint relation, and complex polarization through the library theorem it invokes.
+\excerpt{WaveletPackets}{adjoint_identity}
+This is a genuine adjoint identity. Writing a reconstruction map with a similar-looking formula would not suffice without showing that it is the adjoint of the analysis map.
+
+Applying the resulting operator equality to a signal gives the source level synthesis theorem.
+\excerpt{WaveletPackets}{packet_reconstruction}
+The proof does not need every $W_i$ to be invertible. It needs the collective energy identity. The family can divide information among its channels while the sum of adjoint synthesis terms recovers the original signal exactly.

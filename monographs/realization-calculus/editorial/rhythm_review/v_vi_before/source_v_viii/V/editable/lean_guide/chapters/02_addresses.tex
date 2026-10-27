@@ -1,0 +1,66 @@
+\section{Partitions, signed addresses, and the Hilbert bridge}
+\subsection{A packet first means a coordinate mask}
+Take an index set $I$, a label set $R$, and a phase map $\phi:I\to R$. The packet with label $r$ keeps coordinate $i$ exactly when $\phi(i)=r$:
+\[
+(P_r x)(i)=\begin{cases}x(i),&\phi(i)=r,\\0,&\phi(i)\ne r.\end{cases}
+\]
+The definition requires a zero in the value type and a decidable label equality. It does not require a Fourier transform, a measure, or an inner product.
+\excerpt{Packets}{packet}
+Applying the same mask twice changes nothing. Distinct labels cannot both be retained at the same coordinate. If the label type is finite and values can be added commutatively, the finite sum of packets returns the original value. At any one coordinate exactly one summand survives.
+\excerpt{Packets}{packet_complete}
+The proof uses \code{Finset.sum_eq_single} to isolate the surviving label. This simple mechanism is reused after stronger ambient structures are introduced.
+
+\subsection{Signed polyphase coordinates are an equivalence}
+For $N>0$, every integer has the unique decomposition
+\[
+n=Nq+r,\qquad 0\le r<N,\quad q\in\mathbb Z.
+\]
+The integer quotient is Euclidean: for $N=3$ and $n=-1$, the address is $(r,q)=(2,-1)$, not a negative residue. Lean represents the bounded residue by \code{Fin N}. Its stored value has a proof that it is smaller than $N$.
+\excerpt{IntegerPolyphase}{address}
+The two inverse laws are mathematical content. They ensure both that analyzing then synthesizing recovers a signal and that synthesizing then analyzing recovers an arbitrary channel family. Merely checking the first direction would not establish that all channel coordinates are reachable.
+
+Writing $x_r[q]=x[Nq+r]$, the pointwise maps are
+\[
+Ax(r,q)=x[Nq+r],\qquad Sc(n)=c(n\bmod N,\lfloor n/N\rfloor).
+\]
+These are meaningful for any value type. Energy is a later statement.
+
+\subsection{The two units of delay}
+A delay by $d$ original samples is $(D_dx)[n]=x[n-d]$. A delay by $d$ inside each channel is an original delay by $Nd$. For a general original delay, the residue changes and a signed carry enters the channel coordinate:
+\[
+(A D_d x)_r[q]
+=x_{(r-d)\bmod N}\!\left[q+\left\lfloor\frac{r-d}{N}\right\rfloor\right].
+\]
+\excerpt{IntegerPolyphase}{sample_delay}
+For $N=2$ and a one-sample delay, the new even channel is the old odd channel delayed once, while the new odd channel is the old even channel at the same channel index:
+\[
+(A D_1x)_0[q]=x_1[q-1],\qquad (A D_1x)_1[q]=x_0[q].
+\]
+For a two-sample delay both channels are delayed once. This is why a filter-bank identity with channel delay $d$ reconstructs $x[n-Nd]$.
+
+\subsection{Square summability is built into the type}
+\excerpt{HilbertPackets}{signal}
+The bounded projector is obtained by first proving that masking cannot increase the norm. The proof works coordinate by coordinate and invokes monotonicity of the $\ell^2$ norm.
+\excerpt{HilbertPackets}{projection_norm}
+The same mask is made into a linear map and then promoted to a continuous linear map with bound one.
+\excerpt{HilbertPackets}{projector}
+The notation \code{→L[ℂ]} records continuous complex linearity. Idempotence alone would not establish boundedness, symmetry, or orthogonality. The file proves those separately. With finitely many labels, the sum is the identity as a continuous linear operator, not just a formula on finite test vectors.
+
+\subsection{The channel norm is the joint norm}
+The Hilbert space analysis target is $\ell^2(\operatorname{Fin}N\times\mathbb Z)$:
+\[
+\|Ax\|^2=\sum_{r=0}^{N-1}\sum_{q\in\mathbb Z}|x[Nq+r]|^2=\|x\|^2.
+\]
+It is not an unqualified function space of channels carrying a supremum norm. The source packages the address equivalence into a complex linear isometric equivalence.
+\excerpt{HilbertPackets}{polyphase}
+Its inverse laws are inherited from that equivalence, and its energy law follows from norm preservation. The proof of reindexing uses summability over the bijective address map. This is the actual bridge from arbitrary pointwise coordinates to the Hilbert statement.
+
+\subsection{Impulse expansion means norm convergence}
+The impulse at $i$ with amplitude $x_i$ is represented by \code{lp.single 2 i (x i)}. The full theorem is a \code{HasSum} statement in the $\ell^2$ space.
+\excerpt{HilbertPackets}{impulse}
+Thus the series of impulses converges to $x$ in the ambient norm. The finite support version is an exact finite sum. The shift is an isometric equivalence with formula $S_dx[n]=x[n-d]$, and shifting the impulse at zero gives the impulse at $d$. Density of the impulse basis yields the dense shift-generated span.
+
+\subsection{Refinement uses divisibility}
+If $N\mid M$, reducing modulo $M$ and then modulo $N$ agrees with reducing directly modulo $N$. Consequently one coarse residue projector is the sum of the fine residue projectors lying above it.
+\excerpt{HilbertPackets}{refinement}
+For example, the even packet modulo $2$ is the sum of packets $0$, $2$, and $4$ modulo $6$. The theorem is an equality of bounded operators on the full complex $\ell^2$ space. The hypotheses $N>0$, $M>0$, and $N\mid M$ remain explicit. A relation between arbitrary unrelated moduli would require a different construction.

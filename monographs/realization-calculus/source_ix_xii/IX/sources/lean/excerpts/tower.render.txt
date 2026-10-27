@@ -1,0 +1,17 @@
+theorem exists_compatible_tower_strong (q L : ℕ) (hq : 0 < q) (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (hx : ∀ i, (q : ℤ)^L ∣ evalSystem F x i)
+    (hJ : Function.Surjective (digitJacobian q F x)) :
+    ∃ z : ℕ → Fin d → ℤ,
+      z 0 = x ∧
+      (∀ n i, (q : ℤ)^(L+n) ∣ evalSystem F (z n) i) ∧
+      (∀ n i, (q : ℤ)^(L+n) ∣ (z (n+1) - z n) i) ∧
+      (∀ m n, m ≤ n → ∀ i, (q : ℤ)^(L+m) ∣ (z n - z m) i) ∧
+      (∀ n, digitJacobian q F (z n) = digitJacobian q F x) ∧
+      (∀ n, Function.Surjective (digitJacobian q F (z n))) := by
+  obtain ⟨z, hz0, hroot, hstep, hsurj⟩ := exists_compatible_tower q L hq hL F x hx hJ
+  refine ⟨z, hz0, hroot, hstep, ?_, ?_, hsurj⟩
+  · exact fun m n hmn => tower_pairwise_congruent q L z hstep m n hmn
+  · intro n
+    rw [← hz0]
+    exact tower_digitJacobian_eq q L hL F z hstep n

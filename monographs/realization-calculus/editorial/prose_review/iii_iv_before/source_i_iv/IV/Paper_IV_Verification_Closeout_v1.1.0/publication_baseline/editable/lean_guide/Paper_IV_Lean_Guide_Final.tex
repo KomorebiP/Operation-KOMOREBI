@@ -1,0 +1,85 @@
+\input{preamble}
+
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiKind}{Formal companion}
+\renewcommand{\KomorebiSubtitle}{Cyclic analytic functions, reciprocal families,\\and spectral zero data}
+\renewcommand{\KomorebiShortTitle}{Paper IV / Lean guide}
+\renewcommand{\KomorebiCoverBlurb}{Read the exact source declarations, follow each realization bridge, and distinguish kernel verification from static reconciliation.}
+\KomorebiSetup
+\setlength{\cftsubsecnumwidth}{4.4em}
+\definecolor{teal}{HTML}{245D60}
+\setmonofont{DejaVuSansMono}[Path=\CoreDejaVuFonts,UprightFont=*.ttf,BoldFont=*-Bold.ttf,ItalicFont=*-Oblique.ttf,BoldItalicFont=*-BoldOblique.ttf,Scale=.80]
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+\endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{
+\textbf{A guide to the actual formal development.}
+119 Lean source files. 151 map rows. 1,164 mapped declarations.
+All 68 theorem-like manuscript results have full scoped coverage in the recorded formal contract. Read the eight tutorial chapters for the mathematical route, the coverage ledger for complete manuscript results, and the declaration catalog for exact source targets.
+
+This guide relates the source, contract, theorem map, and saved kernel transcript. The verification chapter records the pinned-source replay and its precise scope; static reconciliation remains a distinct form of evidence.}
+
+
+\begingroup\small
+\tableofcontents
+\endgroup
+\clearpage
+\pagenumbering{arabic}
+\input{chapters/01_orientation}
+\clearpage\input{chapters/02_algebra}
+\clearpage\input{chapters/03_analytic}
+\clearpage\input{chapters/04_zeros}
+\clearpage\input{chapters/05_products}
+\clearpage\input{chapters/06_poles_zeta}
+\clearpage\input{chapters/07_closures}
+\clearpage\input{chapters/08_replay}
+\clearpage\input{chapters/09_verification_scope}
+\clearpage
+\section{Complete manuscript coverage ledger}
+\label{sec:ledger}
+Each entry is a full scoped result in the formal contract. Its coverage is the union of the cited rows, with the original hypotheses retained. This ledger has 68 entries. Definitions and the explicitly imported standard fact 11.1 are not added to that count.
+\input{generated/completion}
+\clearpage
+\section{Complete declaration catalog}
+\label{sec:catalog}
+The following 151 entries reproduce the exact row scopes and all 1,164 fully qualified declaration names from the canonical theorem map. File names, lexical line locations, declaration kinds, and manuscript labels are reconciled with the source and the formal contract.
+
+\textbf{Read scope additively.} An earlier row may say that pointwise convergence, a branch law, or another clause is outside \emph{that row}. Such wording is preserved here because it precisely describes that contribution. It is not an unresolved gap in the completed result. Consult the 68-result ledger and rows 143--151 for the joined coverage. The present static reconciliation does not rerun Lean's elaborator or kernel.
+\input{generated/theorem_map}
+\clearpage
+\section{Imports and dependency revisions}
+\subsection{Exact pinned packages}
+The complete lockfile accompanies the source. These are its nine exact Git revisions. A newer compatible-looking Mathlib revision is a different replay environment.
+\input{generated/pins}
+\subsection{Every source module and its direct imports}
+This inventory includes mathematical modules, the aggregate import, semantic checks, and the kernel audit. It records direct imports rather than a transitive dependency claim.
+\input{generated/imports}
+\clearpage
+\section{Navigation in the mathematical text}
+The canonical manuscript record numbers remain visible in the ledger and row catalog. The following labels link the formal contract to statement and section numbers in the Chapter IV mathematical text. These locators are editorial navigation, not additional theorem evidence.
+\input{generated/traditional_crosswalk}
+\end{document}

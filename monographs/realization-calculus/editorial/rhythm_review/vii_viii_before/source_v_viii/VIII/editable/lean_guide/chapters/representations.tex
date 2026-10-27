@@ -1,0 +1,24 @@
+\section{Representation algebra and declared cost models}
+\subsection{Why a count theorem can have a short proof}
+\code{PacketCostModels} defines finite address and event types before counting them. The block widths are natural numbers; a diagonal block has a pair of within-block indices. A thin factor has one ambient and one rank index. An application event additionally has a right-hand-side index and a Boolean distinguishing multiplication from accumulation. The Boolean gives the declared two-scalar-operation convention.
+\excerpt{}{bdlr_count}
+\walk{The type \code{BDLROperation} is a sum of the diagonal-action, right-factor, and left-factor event types. \code{simp} evaluates cardinalities of finite products and sums; \code{ring} rearranges the resulting polynomial. The count includes the accumulation into the diagonal result through the declared third kernel. It does not establish how many GPU instructions run.}
+
+The storage count concerns stored scalar values; sparse index metadata and workspace are outside the corresponding models. The materialization theorem counts an explicit dense low-rank multiplication followed by one addition per output entry. Its quadratic remainder is exactly \(n^2\). This is a count for that declared construction, rather than a lower bound for every conceivable implementation.
+\excerpt{}{band_count}
+\walk{The banded-count development counts the actual subtype of pairs in \code{Fin p × Fin p} whose distance is at most \code{w}. The premise \code{w < p} controls the two triangular boundary losses. The preceding recurrence and finite-sum lemmas establish the cardinality; this endpoint presents the closed formula. Replacing \(p\) by \(n/b\) additionally requires positive block width and exact divisibility.}
+
+\subsection{Capacity inequalities are hypotheses}
+\excerpt{}{roofline}
+\walk{Positive peak arithmetic and bandwidth rates make division preserve order. The assumed inequalities \code{F ≤ P * T} and \code{B ≤ W * T} yield the two lower bounds on time, then \code{max_le} combines them. Lean does not measure a device rate or validate that an experimental execution satisfies these capacity assumptions.}
+
+\subsection{An exact low-rank product}
+\contract{\code{LowRankAlgebra} works with actual finite matrices over a field with an involution. The left and right factors have explicit possibly different width types.}
+\excerpt{}{bdlr_product}
+\walk{The constructors \code{bdlrProductLeft} and \code{bdlrProductRight} concatenate columns, so the new correction width is the sum of the two input widths. The proof expands the concatenated product, reverses conjugate-transposes of products, distributes multiplication, and normalizes additive terms. No rank identity is assumed in this algebraic equality. A separate theorem bounds the correction rank by its column count. Packet diagonality of the base product is also proved separately.}
+\excerpt{}{chain_factors}
+\walk{The empty chain is the identity and has an empty correction-column type. For the successor step, rewrite the current chain using the induction hypothesis and invoke the actual two-factor identity. The source thereby constructs factors for every length; the subsequent rank theorem bounds their width by the sum of input widths, including zero widths.}
+
+\subsection{Woodbury exposes both invertibility assumptions}
+\excerpt{}{woodbury}
+\walk{\code{hD} proves the base matrix is a unit. \code{hS} proves the small update matrix is a unit. The endpoint specializes Mathlib's Woodbury identity, with the middle rank-space matrix equal to one. The update's invertibility, batch solve formula, and L2 operator norm bound are independent declarations in the same module. A singular base or singular update matrix cannot be passed through the displayed theorem simply because an inverse notation exists.}

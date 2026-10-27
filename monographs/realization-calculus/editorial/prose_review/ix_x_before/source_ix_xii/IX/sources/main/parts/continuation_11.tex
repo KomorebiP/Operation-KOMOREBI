@@ -1,0 +1,172 @@
+\hypertarget{cont11:paper-ix-analytic-regularity-of-the-local-parameter-solution}{%
+\subsection{Paper IX: analytic regularity of the local parameter
+solution}\label{cont11:paper-ix-analytic-regularity-of-the-local-parameter-solution}}
+
+The argument establishes both analyticity and differentiability of the
+actual local polynomial solution map at a root with an invertible solved
+Jacobian. The statements apply to every prime, including \(p=2\). They
+also hold over any complete nontrivially normed field.
+
+Let \(\mathbb K\) be such a field, let \(e,k\in\mathbb N\), and let \[
+F\in\mathbb K[Y_1,\ldots,Y_e,T_1,\ldots,T_k]^e,
+\qquad a=(y_0,t_0)\in\mathbb K^e\times\mathbb K^k.
+\] Evaluation of \(F\) means coordinatewise evaluation of its actual
+polynomials. Define the actual derivative blocks \[
+J=D_YF(a)\in M_e(\mathbb K),
+\qquad K=D_TF(a)\in M_{e\times k}(\mathbb K),
+\] where each matrix entry is the corresponding formal partial
+derivative evaluated at \(a\). The hypotheses are exactly \[
+F(a)=0,
+\qquad J\in\operatorname{GL}_e(\mathbb K).
+\] Neither analyticity of a proposed solution nor a derivative formula
+is assumed.
+
+\textbf{Local analytic graph theorem.} There exist a map \[
+\psi:\mathbb K^k\longrightarrow\mathbb K^e
+\] and open sets \(U\subseteq\mathbb K^k\), \(V\subseteq\mathbb K^e\)
+such that \[
+t_0\in U,\qquad y_0\in V,\qquad \psi(t_0)=y_0,
+\qquad \psi(U)\subseteq V.
+\] The map is analytic at every point of \(U\), and its graph describes
+all roots in the product neighborhood: \[
+\forall t\in U\;\forall y\in V,
+\qquad F(y,t)=0\quad\Longleftrightarrow\quad y=\psi(t).
+\] At the base parameter it has the strict Fréchet derivative \[
+\boxed{D\psi(t_0)=-J^{-1}K.}
+\] Consequently it is differentiable on \(U\). The map is defined on the
+ambient parameter space, but its root, analyticity and uniqueness
+conclusions are restricted to the specified neighborhood. Uniqueness is
+among solved coordinates in \(V\).
+
+The main Lean theorem is
+\mcode{Komorebi.PolynomialAnalyticImplicit.exists_analytic_implicit}.
+The matrix in its \mcode{HasStrictFDerivAt} conclusion is the
+continuous linear map represented by the displayed matrix.
+\mcode{differentiableOn_of_analytic_graph} records the
+differentiability consequence.
+
+\textbf{Proof chain.} The scalar polynomial derivative bridge is proved
+by induction on actual multivariate polynomials: constants, sums, and
+multiplication by a variable. For a scalar polynomial \(P\), its strict
+derivative is \[
+v\longmapsto\sum_j \frac{\partial P}{\partial x_j}(a)v_j.
+\] Assembling the coordinates gives the strict derivative of the
+evaluated system as its actual Jacobian matrix. Polynomial analyticity
+is supplied by the pinned Mathlib theorem for multivariate polynomial
+evaluation, followed by finite coordinate assembly.
+
+Consider the actual augmented polynomial map \[
+\Phi(y,t)=(F(y,t),t).
+\] Its derivative and inverse derivative at \(a\) are \[
+D\Phi(a)=
+\begin{pmatrix}J&K\\0&I_k\end{pmatrix},
+\qquad
+D\Phi(a)^{-1}=
+\begin{pmatrix}J^{-1}&-J^{-1}K\\0&I_k\end{pmatrix}.
+\] The proof constructs the continuous linear equivalence from these
+explicit matrices and verifies both inverse identities. The strict
+inverse theorem gives a local inverse \(g\) of \(\Phi\), and the
+analytic inverse result shows that this same inverse is analytic near
+\(\Phi(a)=(0,t_0)\). Set \[
+\psi(t)=\pi_Y g(0,t).
+\] The two inverse identities and a sufficiently small product
+neighborhood give the exact local graph statement. Composing the
+derivative of \(g\) with parameter insertion and solved-coordinate
+projection yields \(-J^{-1}K\). The chosen parameter neighborhood is
+also restricted so that the inverse identities, analyticity and
+inclusion \(\psi(U)\subseteq V\) hold there simultaneously.
+
+\textbf{Transfer to a supplied continuous solution.} Suppose
+\(g:\mathbb K^k\to\mathbb K^e\) is continuous at \(t_0\),
+\(g(t_0)=y_0\), and \[
+F(g(t),t)=0
+\] for all \(t\) in some neighborhood of \(t_0\). Under the same
+invertibility hypothesis at \(a\), continuity places \(g(t)\) in the
+uniqueness neighborhood \(V\) for all sufficiently close parameters.
+Hence \(g\) and \(\psi\) agree on a neighborhood of \(t_0\). The theorem
+\mcode{continuous_selection_regularity} transfers both analyticity
+and the strict derivative formula to \(g\).
+
+There is also an explicit open-set version. Let \(U\) be open, let \(g\)
+be continuous on \(U\), and suppose for every \(t\in U\) that \[
+F(g(t),t)=0,
+\qquad
+J_t:=D_YF(g(t),t)\in\operatorname{GL}_e(\mathbb K).
+\] Writing \(K_t=D_TF(g(t),t)\), the theorem
+\mcode{continuous_selection_analyticOnNhd} proves \[
+g\text{ is analytic at every }t\in U,
+\qquad Dg(t)=-J_t^{-1}K_t\quad(t\in U),
+\] with a strict Fréchet derivative at each point. The per-point
+invertibility hypothesis is part of this theorem. This is a transfer
+statement for continuous local root selections satisfying its
+hypotheses; it does not assert equality of arbitrary global branch
+choices.
+
+\textbf{Integral p-adic specialization.} For any prime \(p\), let \[
+F\in\mathbb Z_p[Y,T]^e,
+\qquad a\in\mathbb Z_p^{e+k},
+\qquad F(a)=0.
+\] Let \(\iota:\mathbb Z_p\hookrightarrow\mathbb Q_p\) be the
+coefficient inclusion, applied entrywise to points and matrices. Assume
+only that \[
+\iota(D_YF(a))\in\operatorname{GL}_e(\mathbb Q_p).
+\] The theorem
+\mcode{PolynomialRegularityIntegral.exists_analytic_integral_implicit}
+constructs the preceding analytic graph in the ambient spaces
+\(\mathbb Q_p^k\) and \(\mathbb Q_p^e\). Its root equation evaluates the
+original integral polynomial coefficients using \(\iota\), and its base
+derivative is \[
+-\iota(D_YF(a))^{-1}\,\iota(D_TF(a)).
+\] The source proves that polynomial evaluation, formal partial
+differentiation and both Jacobian blocks commute with this inclusion. No
+invertibility modulo \(p\) or integral inverse is required. This permits
+a solved Jacobian that is singular modulo \(p\) while remaining
+invertible over \(\mathbb Q_p\). The new specialization is an
+ambient-field theorem; it does not treat \(\mathbb Z_p\) as a vector
+space over \(\mathbb Q_p\) or assert a new explicit integral radius.
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Source module
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Mathematical role
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\mcode{PolynomialAnalyticEvaluation.lean} & Actual polynomial
+analyticity and strict derivative equals the evaluated formal
+Jacobian. \\
+\mcode{PolynomialAnalyticInverse.lean} & Analyticity of the same local
+inverse supplied by an invertible strict derivative. \\
+\mcode{PolynomialAnalyticBlocks.lean} & Explicit augmented derivative
+equivalence and its solved-coordinate restriction. \\
+\mcode{PolynomialAnalyticImplicit.lean} & Open local root graph,
+analyticity, base strict derivative and differentiability. \\
+\mcode{PolynomialAnalyticSelection.lean} & Transfer to continuous root
+selections, including the per-point open-set theorem. \\
+\mcode{PolynomialRegularityIntegral.lean} & Integral coefficients and
+centers included in the ambient p-adic field, with actual Jacobian
+compatibility. \\
+\end{longtable}
+
+This block closes the local analytic regularity obligation stated in
+\mcode{TARGET_CONTRACT.json}. It supplies no new uniform numerical
+radius. The previous weighted lifting and joint deformation results
+retain their own explicit radii and error estimates. It does not
+establish a global analytic branch or a result at a point whose solved
+Jacobian is singular over the fraction field. The proof uses established
+analytic inverse machinery and makes no novelty claim for the general
+implicit-function theorem.
+
+The remaining Paper IX work includes general singular persistence with
+higher obstructions, native presentation invariance (13.2), global or
+completed compatibility and descent (13.3), the outstanding sharper
+arithmetic statements, and manuscript consolidation. None of those is
+closed by this local regularity theorem. Release-level checks and audit
+counts are recorded in the separate release verification and audit
+files.

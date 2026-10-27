@@ -1,0 +1,86 @@
+\section{Reproducing the historical formal project}\label{sec:replay}
+
+Reproduction has two separate layers. The lightweight guide checks confirm that the supplied source matches its checksum manifest, that all mapped names can be found lexically, and that the printed excerpts are exact slices of those files. The Lean replay builds the project, resolves names in the compiled environment, and traverses axiom dependencies. Only the latter executes Lean.
+
+\subsection{Start with the preserved pins}
+
+Work in a writable copy of \code{source/canonical_v1.2.1/formalization/lean/}. Keep \code{lean-toolchain}, \code{lakefile.toml}, and \code{lake-manifest.json} together. The exact toolchain is \code{leanprover/lean4:v4.34.0-rc2}. The Mathlib revision is \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. Appendix~\ref{app:imports} records every dependency revision in the delivered manifest.
+
+A working Lean/Elan installation, network access for dependencies or a suitable local cache, and sufficient disk space are prerequisites. The following commands are the preserved report's replay procedure, not commands executed while producing this guide.
+\begin{Verbatim}[fontsize=\small,frame=leftline,rulecolor=\color{teal},framesep=6pt,breaklines=true]
+cd source/canonical_v1.2.1/formalization/lean
+lake exe cache get
+lake build
+python3 scripts/verify_theorem_map.py
+lake env lean -E warning KomorebiVerification/PaperII/KernelAudit.lean
+\end{Verbatim}
+
+The cache command obtains compiled dependency artifacts. The build checks the aggregate library against the pinned environment. The Python map checker parses exactly one versioned theorem map, expands its namespace prefixes, requires rows 1 through 25, and writes a temporary Lean command that checks every mapped name in the compiled environment. The script removes that temporary file afterward. Its environment check is stronger than this guide's lexical source lookup.
+
+The final command separately executes the audit that rejects violations. Warning escalation is part of the documented invocation. Preserve the exit status and full output of each command. A report written after the fact should not substitute for those transcripts in a new replay.
+
+\subsection{The audit gate and its trust boundary}
+
+The audit has two parts. \texttt{\#print axioms} displays dependencies for a representative public sample. A subsequent command traverses every compiled declaration in the imported \code{Komorebi} namespace and rejects unsafe entries or dependencies outside the allowed basis.
+\excerpt{PaperII/KernelAudit}{audit_gate}
+
+The approved foundations are \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. The gate rejects any other axiom dependency, including \code{sorryAx}, and explicitly fails if no project declaration was inspected. A successful audit is a property of the imported compiled environment at that run. It is not inferred solely from the absence of the word \code{sorry} in source text.
+
+The sample of printed axioms is not the complete traversal. Conversely, the namespace count includes generated declarations and helper entries, so it is not a count of independent mathematical theorems. The map checker and namespace gate also do not decide whether a theorem's type faithfully represents a prose theorem. That requires scope comparison such as the canonical map and this guide.
+
+\subsection{A minimal session for source inspection}
+
+After a successful build, create a scratch Lean file beside the project's aggregate import. The following inspection commands ask Lean to display two representative declarations and the axiom dependencies of the automatic rationality result.
+\begin{Verbatim}[fontsize=\small,frame=leftline,rulecolor=\color{teal},framesep=6pt,breaklines=true,breakanywhere=true]
+import KomorebiVerification.PaperII
+#check Komorebi.PaperII.NestedRefinement.coordinateRefinementEquiv
+#check Komorebi.PaperII.SmithDyadic.smithZMod_global_conditional_count
+#print axioms Komorebi.PaperII.TransferZeta.PositiveWeightedMultigraph.finite_graph_pathZeta_rationality
+\end{Verbatim}
+
+Run it with \code{lake env lean YourInspection.lean}. These are suggested inspection commands, not a new executed transcript. Use \code{\#print} or editor hover to inspect elaborated types, including inferred section parameters and typeclass assumptions. The printed source excerpt alone may omit surrounding binders. The full declaration type is decisive.
+
+When applying a theorem, first fix the intended scalar type and domain/codomain. Then assemble the structural object and prove its fields. For a weighted inverse, this means the filtration, map $q$, precision certificate, diagonal inverse, and edge expansion. For a finite graph, it means finite vertex/edge types, endpoint maps, and positive weights. For a Smith system, it means a diagonal weight function and modular target. This preparation makes failures informative: a missing instance differs from a missing mathematical witness.
+
+\subsection{Common failure modes}
+
+\begin{longtable}{p{.28\textwidth}p{.63\textwidth}}
+\toprule Symptom & What to check \\\midrule\endhead
+Toolchain mismatch & Read \code{lean-toolchain}; do not silently substitute a stable release for the pinned release candidate. \\
+Missing imported module & Confirm dependencies and cache availability, then build from the Lean project root. \\
+Unknown mapped name & Run the map checker only after a successful aggregate build; verify source and manifest identity. \\
+Unsolved typeclass & Inspect the theorem's complete type and the scalar/module, finite-type, or normed-space assumptions. \\
+Missing inverse proof & Supply the actual equation required by the chosen theorem; naming a candidate does not prove it invertible. \\
+Unexpected axiom & Preserve the failing declaration and transcript; do not weaken the allowed-axiom gate to make the run pass. \\
+Different namespace count & Compare toolchain, dependencies, source hashes, and imports before treating the run as a replay of the recorded source. \\
+Successful Python tests & Interpret them as tests of the Python component; they are not Lean kernel evidence. \\
+\bottomrule
+\end{longtable}
+
+A new successful run should record the source hashes, dependency pins, commands, exit codes, output hashes, and environment. If any formal source changes, the old report no longer supplies execution evidence for that changed source, even if the filenames remain the same.
+
+\section{Evidence retained and evidence newly checked}\label{sec:evidence}
+
+The foundational \code{VERIFICATION_REPORT.md} reports successful aggregate build, theorem-map resolution of 160 unique declarations, and a successful scan of 1,034 compiled namespace entries with a gate that rejects violations. It records the approved axiom basis and states that no audited declaration reports \code{sorryAx}. These are the claims of that report.
+
+The inspected canonical component contains no raw transcript of those Lean commands and no log hash attestation for each command. Consequently the historical component alone does not establish a fresh compiler replay, a fresh environment scan, or an identity chain to missing transcripts. Execution evidence for the chapter-wide correspondence is reported separately in Section~\ref{sec:current-release}. The report itself is checksummed, so its preservation is verifiable. Checksumming a report does not independently establish its execution claims.
+
+The new lightweight check establishes the following facts directly from the delivered files:
+\begin{enumerate}
+\item All 22 files under the preserved formal component match their entries in the archived \code{SHA256SUMS.txt} manifest.
+\item The same 22 files match the separately preserved baseline copy in this editing workspace.
+\item The normative map has exactly rows 1--25 and 160 distinct expanded declaration names, with 171 occurrences across rows.
+\item Every mapped name has a lexical declaration location in the preserved source. This is navigation evidence, not compiled name resolution.
+\item The 15 Lean source files contain 5,603 physical lines. A scan that accounts for comments and strings finds no active token from the documented placeholder/unsafe source policy list.
+\item Every exact excerpt matches its recorded inclusive source slice. Each source and excerpt has a SHA-256 digest.
+\end{enumerate}
+
+The scan policy checks active occurrences of \code{sorry}, \code{admit}, \code{sorryAx}, \code{axiom}, \code{unsafe}, \code{native_decide}, and named shortcuts for dynamic declaration. It strips nested block comments, line comments, and strings while retaining line positions. This is a useful static check, not a replacement for Lean elaboration or the environment's transitive axiom inspection.
+
+The historical guide audit records PDF and static source checks, including \code{lean_compiler_run: false}. PDF checks and Lean replay are separate evidence records. A document build verifies rendering and navigation; formal coverage depends on the exact source types and their own compiler evidence.
+
+\subsection{A practical rule for reporting success}
+
+Report the strongest evidence actually obtained. After running only the data generator, say that static source identity and map reconciliation passed. After a new successful Lean replay, cite that replay's own logs and environment. When quoting the preserved count of 1,034 entries, attribute it to the historical report. When using an expanded traditional theorem, identify its ordinary written proof unless a precise Lean target with matching hypotheses has been supplied.
+
+This discipline makes the component usable: readers can trust an automatic construction where it exists, supply a certificate where it is required, and locate the written mathematics that remains beyond the formal contract.

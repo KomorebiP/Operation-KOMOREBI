@@ -1,0 +1,9 @@
+theorem egf_product (h a : ℕ → K) (n : ℕ) :
+    decode (encode h * encode a) n =
+      ∑ r ∈ Finset.range (n+1), (n.choose r : K) * h r * a (n-r) := by
+  simp only [decode, coeff_mul, Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk,
+    encode_coeff, Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro r hr
+  rw [Nat.cast_choose K (Finset.mem_range_succ_iff.mp hr)]
+  ring

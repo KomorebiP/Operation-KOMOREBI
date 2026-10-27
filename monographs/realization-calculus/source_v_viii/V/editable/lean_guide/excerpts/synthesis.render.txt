@@ -1,0 +1,10 @@
+theorem packet_projector_synthesis \{H : Type*\} [NormedAddCommGroup H] [NormedSpace ℂ H]
+    (p : A → H →L[ℂ] H) (t : FiniteAdaptive.Tree A)
+    (h : conserves p t) (hr : p (label t) = ContinuousLinearMap.id ℂ H)
+    (S : Pruning t) (x : H) :
+    nodeSum p S = ContinuousLinearMap.id ℂ H ∧
+      (∑ v ∈ S.val.toFinite.toFinset, p (nodeLabel v) x) = x := by
+  have hs := (antichain_synthesis p t h S).trans hr
+  refine ⟨hs, ?_⟩
+  have hx := congrArg (fun T : H →L[ℂ] H => T x) hs
+  simpa [nodeSum] using hx

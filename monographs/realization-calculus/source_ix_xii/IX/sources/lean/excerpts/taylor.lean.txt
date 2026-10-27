@@ -1,0 +1,13 @@
+theorem taylor_dvd {d : ℕ} (P : MvPolynomial (Fin d) ℤ)
+    (x t : Fin d → ℤ) (a : ℤ) :
+    a ^ 2 ∣ eval (fun i => x i + a * t i) P - eval x P - a * directional P x t := by
+  induction P using MvPolynomial.induction_on with
+  | C c => simp [directional]
+  | add P Q hP hQ =>
+    simp only [map_add, directional_add]
+    convert dvd_add hP hQ using 2 <;> first | rfl | ring
+  | mul_X P j hP =>
+    obtain ⟨r, hr⟩ := hP
+    refine ⟨r * (x j + a * t j) + directional P x t * t j, ?_⟩
+    simp only [map_mul, eval_X, directional_mul, directional_X]
+    linear_combination (x j + a * t j) * hr

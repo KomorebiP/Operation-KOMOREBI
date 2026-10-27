@@ -1,0 +1,12 @@
+theorem singleton_commutes (f : I → A) (l : I → ℝ) (k : A → ℝ)
+    (hl : ∀ i, 0 < l i) (hk : ∀ a, 0 < k a) [Subsingleton A] :
+    AllPriorCommutes f l k := by
+  intro p hp
+  funext a
+  have hs (v : A → ℝ) : mass v=v a :=
+    Finset.sum_eq_single a (fun b _ hb => False.elim (hb (Subsingleton.elim b a))) (by simp)
+  have h1 : mass (coarsen f (update p l))=1 :=
+    (coarsen_mass f _).trans (posterior_mass p l (positive_evidence p l hp hl).ne')
+  have h2 := posterior_mass (coarsen f p) k
+    (positive_evidence _ k (coarsen_probability f p hp) hk).ne'
+  exact (hs _).symm.trans (h1.trans (h2.symm.trans (hs _)))

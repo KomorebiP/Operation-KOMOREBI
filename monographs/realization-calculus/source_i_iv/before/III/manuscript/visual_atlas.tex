@@ -1,0 +1,554 @@
+\vpage{1}{Three objects, three different questions}{PAPER III / A WORKED VISUAL COMPANION}{Traditional paper: Section 1 (p. 1), Section 4 (p. 7), Section 5 (p. 9)}
+An edge operator moves data between named packets. An exact coordinate change describes the same data in another complete chart. A connection supplies an additional choice of transport. The three can use similar arrows while making different mathematical assertions.
+
+\vfig[.98]{three_structures}
+\platecaption{Three actual models used below: a single supported matrix entry, one ambient vector in three coordinate systems, and a shear obtained as chosen loop transport. The coordinates in the middle are not three different ambient vectors.}
+
+\head{One paper, three tests}
+For an edge word, ask whether the target of each step matches the source of the next. For exact coordinates, ask whether analysis and synthesis are inverses. For a connection, ask whether its transports through two steps agree with its declared direct transports. None of these tests can replace another.
+
+This guide follows explicit integer and rational matrices through these tests. Each example has an inspectable input, calculation, and conclusion. Vector drawings display those calculations rather than replace them. A graph with two paths can have zero net transfer. A loop with trace two and determinant one can still differ from the identity.
+
+\head{The edition used here}
+The worked models originate in the finite algebraic v1.0.1 release. The final traditional paper also develops rooted tree expansions, nonlinear defects, obstruction objects, filtered lifting, and analytic transport under their stated hypotheses. Those ordinary mathematical developments have a wider scope than the finite Lean contract. The present models explain the finite mechanisms and provide a route into the broader paper.
+
+\takeaway{Follow the object, not the arrow shape. A typed transfer can vanish, a complete coordinate loop must telescope, and an independently chosen connection can have genuine algebraic holonomy.}
+
+\vpage{2}{An atlas of the objects}{ORIENTATION / KEEP THE TYPES VISIBLE}{Traditional paper: Definition 2.1 (p. 2), Definition 5.5 (p. 11), Definition 7.4 (p. 16)}
+Rows are targets and columns are sources throughout. If $E_{ji}$ is a matrix unit, then $E_{ji}e_i=e_j$. The notation $e_i$ means a basis vector. A named graph edge is written $a,b,c,d$ or $e,f$ when its role is explicit.
+
+{\small
+\begin{tabularx}{\linewidth}{@{}p{.27\linewidth}Yp{.20\linewidth}@{}}\toprule
+\textbf{Object} & \textbf{What it records} & \textbf{First worked page}\\\midrule
+$\src,\tgt:E\to V$ & The ordered endpoints of each distinct edge, including parallel edges. & \pagerefV{3} to \pagerefV{4}\\
+$L_e=c(e)E_{\tgt(e),\src(e)}$ & One operator supported on a packet. & \pagerefV{3}\\
+$L_w=L_{e_n}\cdots L_{e_1}$ & Execute the written word from left to right. & \pagerefV{4} to \pagerefV{5}\\
+$T=\sum_eL_e$ & Add all edge operators before taking powers. & \pagerefV{4} to \pagerefV{7}\\
+$F_a$ & A synthesis frame from chart $a$ into the ambient space. & \pagerefV{9}\\
+$\mathcal A_a,\mathcal S_a$ & Inverse analysis and synthesis maps, which may be maps of sets. & \pagerefV{10}\\
+$J_{b\leftarrow a}$ & Canonical coordinate transport, forced by the exact charts. & \pagerefV{9} to \pagerefV{10}\\
+$\Gamma_{b\leftarrow a}$ & Additional connection data, with reversibility stated explicitly. & \pagerefV{11} to \pagerefV{12}\\
+$\Delta_{c,b,a}$ & The difference between transport through two steps and direct transport, a map from $C_a$ to $C_c$. & \pagerefV{12}\\
+$H_{c,b,a}$ & Loop transport based at $a$, an automorphism of $C_a$. & \pagerefV{13}\\
+$G_a$ & An invertible gauge change at each chart. & \pagerefV{14} to \pagerefV{15}\\
+$\Pi_\mu\Ob\Pi_\nu$ & Block from input to output of $\Ob=H-I$. & \pagerefV{16} to \pagerefV{18}\\
+$r(x,p)$ & A residual at packet $p$ for the named candidate $x$. & \pagerefV{19}\\
+$t,\operatorname{inputs}(t)$ & A finite operation tree and its syntactically used input labels. & \pagerefV{20}\\\bottomrule
+\end{tabularx}}
+
+\head{Reading routes}
+For transfer, read V3 to V8. For the finite geometry models, read V9 to V18. For candidate certificates and nonlinear scope, read V19 to V22. V23 puts the matrix mechanisms together. V24 gives the formal boundary and replay guide.
+
+\takeaway{A $C_a\to C_c$ defect and a $C_a\to C_a$ holonomy are not the same typed map. Returning the defect to the base fiber requires a specified inverse transport.}
+
+\vpage{3}{Read the product in execution order}{MODEL A / ONE EDGE IS ONE MATRIX ENTRY}{Traditional paper: Lemma 2.2 (p. 2), Theorem 2.3 (p. 2), Theorem 2.4 (p. 3)}
+Work over $\ZZ$ with packets $0,1,2$. Let $e:0\to1$ have coefficient $2$, and let $f:1\to2$ have coefficient $3$. The elementary operators are
+\[
+L_e=2E_{10},\qquad L_f=3E_{21}.
+\]
+The location of the nonzero entry records the type of the transfer, not an arbitrary matrix convention.
+
+\vfig[.94]{edge_orientation}
+\platecaption{Each grid is an actual $3\times3$ matrix. The rightmost matrix factor acts first. In $L_fL_e$, packet $1$ is the shared intermediate index. In $L_eL_f$ the interface is broken.}
+
+On a vector $(x_0,x_1,x_2)^\mathsf T$, the first step produces $(0,2x_0,0)^\mathsf T$, and the second produces $(0,0,6x_0)^\mathsf T$. Thus
+\[
+L_fL_e=6E_{20},\qquad L_eL_f=0.
+\]
+For general edges, a summand in the entrywise product can survive only when the same intermediate packet is both $\tgt(e)$ and $\src(f)$:
+\[
+(L_fL_e)_{yx}=\sum_z(L_f)_{yz}(L_e)_{zx}.
+\]
+This is why a broken interface annihilates the entire product, even if both edge coefficients are nonzero.
+
+\head{What the zero says}
+It says that this ordered composition does not pass data through the declared packet types. It does not say that either edge is individually zero. For a longer word, finding one broken adjacent interface is sufficient to prove that the whole word vanishes.
+
+\takeaway{Write the traversed edges first. Then reverse their order when writing the operator product: $e$ followed by $f$ is $L_fL_e$.}
+
+\vpage{4}{All sixteen words, only five walks}{MODEL A / PARALLEL EDGES REMAIN DISTINCT}{Traditional paper: Theorem 3.8 (p. 6), Corollary 3.9 (p. 6)}
+Add four edges on three packets: $a:0\to1$ with coefficient $2$, $b:0\to1$ with coefficient $-1$, $c:1\to2$ with coefficient $3$, and $d:2\to0$ with coefficient $1$. The parallel edges $a$ and $b$ are separate labels even though their source and target agree.
+
+\vfig[.93]{all_word_interfaces}
+\platecaption{The board tests all ordered pairs. Columns are the first executed edge and rows are the second. A shaded cell gives the ordered coefficient of a valid walk. A cross means the product is zero by type mismatch.}
+
+The surviving words are $ac,bc,cd,da,db$. Their coefficients are $6,-3,3,2,-1$, respectively. Their endpoints determine where these numbers enter the matrix:
+\[
+T=\mat{0&0&1\\1&0&0\\0&3&0},\qquad
+T^2=\mat{0&3&0\\0&0&1\\3&0&0}.
+\]
+At row $2$, column $0$, the two parallel choices give $6-3=3$. Deduplicating the edge labels before summing would alter the operator. On the other hand, adding the parallel coefficients in the already assembled matrix is legitimate: both act in the same supported matrix position.
+
+The same calculation extends from pairs to all finite words by distributivity. The included check enumerates every word through length six and independently accumulates the endpoint coefficients. The empty word is treated separately as the identity.
+
+\takeaway{The matrix power is a signed, ordered walk sum. It is not simply the number of paths, and a graph edge is not identified solely by its endpoints.}
+
+\vpage{5}{Coefficients need not commute}{MODEL A / A MATRIX RING AS THE COEFFICIENT SEMIRING}{Traditional paper: Lemma 3.7 (p. 5), Section 9 (p. 20)}
+The edge theorem allows a noncommutative coefficient semiring. Use $R=M_2(\QQ)$ and let the two coefficients themselves be matrices:
+\[
+A=\mat{1&1\\0&1},\qquad B=\mat{1&0\\1&1}.
+\]
+Attach $A$ to $0\to1$ and $B$ to $1\to2$. The single surviving endpoint coefficient is $BA$, not $AB$.
+
+\vfig[.96]{ordered_matrix_coefficients}
+\platecaption{All entries are exact integers. The two products differ on the diagonal and act differently on the same input vector. This example is within the scalar model with semiring coefficients by taking the scalar ring to be $M_2(\QQ)$.}
+
+The distinction is visible before any abstraction:
+\[
+BA\mat{1\\0}=\mat{1\\1},\qquad
+AB\mat{1\\0}=\mat{2\\1}.
+\]
+For a written walk $(e_1,\ldots,e_n)$, its coefficient must therefore be
+\[
+c^\leftarrow(w)=c(e_n)c(e_{n-1})\cdots c(e_1).
+\]
+A commutative example can hide an orientation mistake because reversing the coefficients changes nothing. This one cannot.
+
+\head{One ring is not a dependent family of fibers}
+The $3\times3$ matrix over $M_2(\QQ)$ can be displayed as an ordinary $6\times6$ matrix with $2\times2$ blocks. This is a concrete representation of the example over one ring. It does not establish an arbitrary family of differently typed edge fibers, which is outside the finite formal release's scalar interface for edge systems.
+
+\takeaway{The order rule carries mathematical information. It survives exact tests over a noncommutative ring and must not be inferred from pictures drawn over scalar real numbers alone.}
+
+\vpage{6}{A reachable packet can receive zero}{MODEL A / CANCELLATION IS NOT A BROKEN INTERFACE}{Traditional paper: Corollary 3.9 (p. 6), Corollary 3.10 (p. 6)}
+Consider a diamond: two routes of length two from packet $0$ to packet $3$. Three edge coefficients are $1$ and the lower final coefficient is $-1$. Both routes are correctly typed. Neither is annihilated by an interface mismatch.
+
+\vfig[.96]{walk_cancellation}
+\platecaption{The dashed edge carries the coefficient $-1$. It is an actual edge, not an uncertain or missing one. Both paths exist. The unsigned count is two, while their exact operator contributions sum to zero.}
+
+The endpoint identity gives
+\[
+(T^2)_{30}=(1)(1)+(-1)(1)=0.
+\]
+Thus the paper's reachability implication has a definite direction:
+\[
+\text{no compatible walk}\ \Longrightarrow\ (T^n)_{ji}=0.
+\]
+Its converse is false. A zero entry may come from absent paths, zero coefficients, zero divisors in the coefficient ring, or cancellation among nonzero terms. The diamond exhibits the last possibility over $\ZZ$, where no zero divisor is needed.
+
+\head{Three different support records}
+The declared graph records permitted routes. The support of an individual word records the endpoints of that word when its coefficient is nonzero. The support of the sum records what remains after all contributions have been added. Passing from either of the first two records to the last requires the coefficients, not just adjacency.
+
+A deliberately false test in the companion script asserts that reachability forces nonzero transfer. This diamond makes the test fail. That is a check against overreading the theorem, not a defect in the theorem.
+
+\takeaway{Do not interpret a visible route as an occupied output. Graph support is a useful upper bound. Signed operator support can be strictly smaller.}
+
+\vpage{7}{Reachability is only an upper bound}{MODEL A / AN ORBIT THAT STAYS IN TWO DIMENSIONS}{Traditional paper: Corollary 3.11 (p. 6)}
+Keep the diamond and add an isolated packet $4$. Start with the single seed $e_0\in\QQ^5$. Direct multiplication gives
+\[
+Te_0=e_1+e_2,\qquad T^2e_0=0.
+\]
+Every later orbit vector is zero. The orbit hull generated by $T$ is therefore exactly the span of the first two displayed columns.
+
+\vfig[.98]{orbit_support}
+\platecaption{The first matrix contains the actual orbit columns. The second supplies a basis of their span. The orbit hull lies inside the reachable subspace on four coordinates, but it has dimension two, not four.}
+
+A vector belongs to this hull precisely when it has the form
+\[
+(a,b,b,0,0)^\mathsf T,\qquad a,b\in\QQ.
+\]
+Packet $4$ is excluded because it is unreachable. Packet $3$ is also absent, but for a different reason: the two contributions cancel. Even the reachable packets $1$ and $2$ remain linked. Powers of the single total operator do not separate them.
+
+\head{The admissible operator grammar matters}
+Allowing each individual edge operator is a different generation problem. For instance, applying the edge $0\to1$ and then $1\to3$ individually produces $e_3$. It does not follow that $e_3$ belongs to the orbit of the summed operator $T$. The paper's theorem on orbit support concerns the explicitly stated operator action.
+
+\takeaway{Unreachable means impossible under the declared action. Reachable means only that graph geometry has not ruled it out. Linear dependence and cancellation still have to be checked.}
+
+\vpage{8}{Paths through changing packet lists}{MODEL B / RECTANGULAR PRODUCTS WITH TWO OR THREE STEPS}{Traditional paper: Proposition 8.1 (p. 19)}
+Here the packet lists have sizes $2,3,2,1$ in succession. Let the actual maps be
+\[
+\QQ^2\xrightarrow{A}\QQ^3\xrightarrow{B}\QQ^2\xrightarrow{C}\QQ.
+\]
+Unlike a power of one matrix, each step has its own entries and its own source and target list.
+
+\vfig[.98]{rectangular_paths}
+\platecaption{The lower board expands one final row into all six choices of intermediate indices for each input packet. The entries are $C_{0j}B_{jk}A_{ki}$, with $k\in\{0,1,2\}$ and $j\in\{0,1\}$. Zero terms remain visible.}
+
+The intermediate and total products are
+\[
+BA=\mat{-1&5\\2&4},\qquad CBA=\mat{-4&6}.
+\]
+For input packet $0$, the six contributions sum to $2-4+0+0-2+0=-4$. For input packet $1$, they sum to $0-2+12+0-1-3=6$. These are literal matrix entries, not probabilities or path counts.
+
+\head{The formal scope is deliberately precise}
+The finite formal release's forms with two and three steps allow changing packet types. Its heterogeneous product theorem for arbitrary lengths allows changing \emph{factors} over one common finite packet index. That formal statement does not assert a fully dependent chain of changing index types at arbitrary lengths. The finite rectangular illustration here uses exactly three factors.
+
+For a single factor, the list of intermediate indices is empty and contributes that matrix entry once. For zero factors, the result is the identity on the common space. These conventions must not be replaced by an empty sum equal to zero.
+
+\takeaway{Heterogeneous can mean different matrices or different spaces. State which one is allowed before using a path formula.}
+
+\vpage{9}{One vector, three exact frames}{MODEL C / CANONICAL TRANSPORT HAS NO HOLONOMY}{Traditional paper: Theorem 4.1 (p. 7), Theorem 4.2 (p. 7)}
+Let $F_a$ synthesize chart coordinates into one ambient $\QQ^2$. Choose
+\[
+F_0=I,\qquad F_1=\mat{1&1\\0&1},\qquad
+F_2=\mat{2&0\\1&1}.
+\]
+The same ambient vector $x=(3,2)^\mathsf T$ has chart coordinates $u_a=F_a^{-1}x$.
+
+\vfig[.98]{frame_coordinates}
+\platecaption{Each panel is a coordinate plane, not a different physical location. The numerical arrows differ because the frames differ. Multiplying each coordinate vector by its corresponding $F_a$ recovers the same $x$.}
+
+Transport from chart $a$ to chart $b$ is forced:
+\[
+J_{b\leftarrow a}=F_b^{-1}F_a.
+\]
+The route $0\to1\to2$ agrees with the direct route because the middle frame cancels:
+\[
+(F_2^{-1}F_1)(F_1^{-1}F_0)=F_2^{-1}F_0.
+\]
+Returning to chart $0$ cancels every remaining frame. The final coordinate vector is $(3,2)^\mathsf T$, not a sheared or rotated variant.
+
+\head{No metric is required}
+The frames need not be orthogonal. The second one is a shear, and the third has determinant two. Exact invertibility, rather than preservation of angles or lengths, gives the cocycle and loop identities. The same telescoping argument works for every finite chart path.
+
+\takeaway{A canonical coordinate loop is a sequence of changes in description of one object. Nonidentity holonomy requires additional transport data, not merely nonorthogonal charts.}
+
+\vpage{10}{Nonlinear charts still cancel exactly}{MODEL C / NATURALITY DOES NOT REQUIRE DERIVATIVES}{Traditional paper: Proposition 10.1 (p. 20)}
+Exact coordinate equivalences can be nonlinear. On $\QQ^2$, use
+\[
+\mathcal A(x,y)=(x,y+x^2),\qquad
+\mathcal S(u,v)=(u,v-u^2).
+\]
+Both composites are the identity by direct substitution. The real drawing below is a geometric view of these same polynomial formulas.
+
+\vfig[.94]{nonlinear_exact_chart}
+\platecaption{Horizontal segments become parabolas, but no information is discarded. The drawing samples the displayed polynomial boundaries for rendering. Inverse identities and route equality are checked symbolically, not inferred from the curves.}
+
+Now represent the nonlinear operation $F(x,y)=(x+y,xy)$ in the new chart. Set $w=u+v-u^2$. Its correct coordinate formula is
+\[
+\widehat F_b(u,v)=\mathcal A F\mathcal S(u,v)
+=\bigl(w,\ u(v-u^2)+w^2\bigr).
+\]
+For $(x,y)=(1,2)$, applying $F$ first gives $(3,2)$ and then $(3,11)$ in the new chart. Changing the input first gives $(u,v)=(1,3)$, and $\widehat F_b(1,3)=(3,11)$ as well.
+
+The equality holds as a polynomial identity for all inputs. It is the naturality theorem for maps of sets: only the inverse laws for the coordinate maps are needed. No Taylor expansion, derivative, or higher chain rule is involved.
+
+\takeaway{Nonlinearity alone does not create a coordinate defect. Reusing the old formula after changing coordinates would be an extra modeling choice, not exact conjugation.}
+
+\vpage{11}{Reversibility is a real hypothesis}{MODEL D / THE MINIMAL AND REVERSIBLE INTERFACES}{Traditional paper: Definition 5.1 (p. 9), Definition 5.5 (p. 11)}
+Choose the forward scalar transports $\Gamma_{1\leftarrow0}=2$, $\Gamma_{2\leftarrow1}=3$, and $\Gamma_{2\leftarrow0}=5$. Their multiplicative comparison between transport through two steps and direct transport is $D^\times=6/5$. A loop also needs a declared return map $\Gamma_{0\leftarrow2}$.
+
+\vfig[.98]{reverse_hypothesis}
+\platecaption{All transports are invertible rational scalars and transport from each chart to itself is one. The first row is permitted by the minimal interface. The second uses the inverse of the direct forward edge and therefore satisfies that part of reversibility.}
+
+In the first row, choose the return scalar $1/6$. Then
+\[
+H=(1/6)\cdot3\cdot2=1,
+\qquad \Gamma_{2\leftarrow1}\Gamma_{1\leftarrow0}-\Gamma_{2\leftarrow0}=1.
+\]
+This triangle loop is the identity even though its cocycle equation fails. The return is not the inverse of the direct transport: $(1/6)5\ne1$. Thus one cannot transfer the reversible equivalence between defect and holonomy to the minimal interface.
+
+In the reversible row, the return is $1/5$. Now the loop is $6/5$, and the additive defect of one is converted into the loop obstruction $1/5$ by that inverse return map.
+
+\head{Two safeguards}
+Global flatness in the minimal interface implies trivial loops by using its cocycle on the whole route, including the return. Separately, in the reversible interface, triviality of each triangle loop is equivalent to that triangle's cocycle. Neither assertion says that one isolated loop certifies all triangles.
+
+\takeaway{Self normalization means $\Gamma_{a\leftarrow a}=I$. Reversible additionally means $\Gamma_{a\leftarrow b}=\Gamma_{b\leftarrow a}^{-1}$. These are different assumptions.}
+
+\vpage{12}{Measure the mismatch at its base}{MODEL D / AN EXACT REVERSIBLE TRIANGLE}{Traditional paper: Theorem 5.10 (p. 13), Section 9 (p. 20)}
+Retain the reversible scalar model with forward values $2,3,5$ and all reverse values given by inverses. Two routes from chart $0$ to chart $2$ multiply the input by $6$ and $5$, respectively. The additive discrepancy equals the original input.
+
+\vfig[.91]{scalar_holonomy}
+\platecaption{The dashed direct edge is a specified comparison map, not a missing edge. The table shows the exact effect of traversing the same loop repeatedly. These are rational values of this example, not an analytic convergence claim.}
+
+The defect lives at the target of the forward routes:
+\[
+\Delta_{2,1,0}=3\cdot2-5=1.
+\]
+The holonomy lives back at chart $0$:
+\[
+H_{2,1,0}=5^{-1}\cdot3\cdot2=\frac65,
+\qquad H-I=\frac15=\Gamma_{0\leftarrow2}\Delta.
+\]
+For input $5$, the direct output and the output after two steps are $25$ and $30$. Returning by $1/5$ gives $5$ and $6$. The target discrepancy of $5$ has become a base discrepancy of $1$. The types and locations of these differences matter even in an example in one dimension.
+
+Because the return map is invertible, it cannot turn a nonzero defect into zero. This is the mechanism behind $\Delta=0\Longleftrightarrow H=I$ in the reversible interface.
+
+\takeaway{Holonomy compares paths after both have been returned to the same base fiber. It is the transported mismatch, not an untyped difference between outputs in different charts.}
+
+\vpage{13}{The identity can hide in the spectrum}{MODEL E / A SHEAR WITH NONTRIVIAL HOLONOMY}{Traditional paper: Definition 5.9 (p. 12), Definition 7.4 (p. 16)}
+Put $\Gamma_{1\leftarrow0}=H$, $\Gamma_{2\leftarrow1}=I$, and $\Gamma_{2\leftarrow0}=I$, with reverse maps given by inverses, where
+\[
+H=\mat{1&1\\0&1}.
+\]
+The loop $0\to1\to2\to0$ then has exactly this shear as its holonomy.
+
+\vfig[.94]{shear_holonomy}
+\platecaption{The dashed square is the original set. The solid parallelogram is its exact image. The second coordinate basis vector moves to $(1,1)^\mathsf T$. Its nonzero displacement is the first basis vector.}
+
+The usual scalar invariants can be misleading:
+\[
+\operatorname{tr}H=2,\qquad \det H=1,\qquad
+\chi_H(t)=(t-1)^2.
+\]
+These are also the invariants of the $2\times2$ identity matrix. Nevertheless,
+\[
+\Ob=H-I=\mat{0&1\\0&0}\ne0,
+\qquad \Ob e_1=e_0.
+\]
+A complete obstruction test must therefore retain the operator or a certificate strong enough to detect its nonzero action. Trace, determinant, and eigenvalue lists alone do not distinguish this loop from the identity.
+
+\head{What the picture certifies, and what it does not}
+The plotted corners are the images of the four corners of the unit square under the displayed matrix. The equation $\Ob e_1=e_0$ is the exact witness. No smooth connection, curvature tensor, or continuum limit is used in this model. Its holonomy is the finite algebraic loop product. The traditional paper treats smooth transport separately under additional hypotheses.
+
+\takeaway{Flatness is the equality $H=I$, not agreement of a short list of spectral summaries. A single explicit moved vector can disprove that equality.}
+
+\vpage{14}{Gauge changes the picture, not flatness}{MODEL E / CONJUGATION AND ITS LIMITS}{Traditional paper: Theorem 6.2 (p. 14)}
+At the base chart, change coordinates by $D=\operatorname{diag}(2,1)$. Transform every connection edge by the prescribed endpoint gauges. The loop transforms by conjugation, giving
+\[
+H^D=DHD^{-1}=\mat{1&2\\0&1}.
+\]
+The shear looks stronger in these fixed numerical axes, but the verdict on flatness is unchanged by gauge.
+
+\vfig[.95]{gauge_size}
+\platecaption{Both figures are exact images of a unit square under their displayed matrices. The Frobenius norms are computed in the indicated fixed coordinate bases. A nonorthogonal gauge need not preserve such a norm.}
+
+The rank of the obstruction is one on both sides. Trace, determinant, and characteristic polynomial are preserved under this conjugation. Most importantly,
+\[
+D(H-I)D^{-1}=0\quad\Longleftrightarrow\quad H-I=0.
+\]
+An invertible coordinate change cannot turn a nonidentity loop into the identity. The fact that a particular residual norm changes does not contradict the invariance of exact vanishing.
+
+\head{The base chart determines the outer gauge}
+In a triangle product, adjacent intermediate gauges cancel:
+\[
+(G_a\Gamma_{a\leftarrow c}G_c^{-1})
+(G_c\Gamma_{c\leftarrow b}G_b^{-1})
+(G_b\Gamma_{b\leftarrow a}G_a^{-1})
+=G_aHG_a^{-1}.
+\]
+Only the base gauge survives around the loop. For the additive defect, the surviving outer gauges instead belong to its different source and target fibers.
+
+\takeaway{Exact nonvanishing is gauge invariant. The numerical size of a matrix entry or a chosen norm generally is not.}
+
+\vpage{15}{Flat is not the same as calibrated}{MODEL D / A FLAT CONNECTION WITH NONIDENTITY EDGES}{Traditional paper: Theorem 6.3 (p. 14)}
+Make all three canonical charts literally identical, so $J_{b\leftarrow a}=1$ over $\QQ$. Choose scalar gauges $g_0=1$, $g_1=2$, and $g_2=3$, and define
+\[
+\Gamma_{b\leftarrow a}=g_b g_a^{-1}.
+\]
+The edge $0\to1$ is multiplication by two, although its canonical counterpart is the identity.
+
+\vfig[.97]{flat_not_calibrated}
+\platecaption{The rulers display the chosen gauge scales: the marks are $g_a n$ for integer $n$. They visualize the supplied scalar factors, not an intrinsic metric. Relative transport is the ratio of the target and source scales.}
+
+The route through two steps $0\to1\to2$ has multiplier $(3/2)2=3$, equal to the direct route $0\to2$. More generally,
+\[
+(g_cg_b^{-1})(g_bg_a^{-1})=g_cg_a^{-1}
+\]
+for every triple. Thus this connection is flat and reversible, but it is not calibrated to the original $J$, whose values are identities.
+
+\head{Recovering the gauge from one root}
+Choose a base chart $o$. The theorem constructs
+\[
+G_a=\Gamma_{a\leftarrow o}J_{o\leftarrow a},
+\qquad
+\Gamma_{b\leftarrow a}=G_bJ_{b\leftarrow a}G_a^{-1}.
+\]
+With $o=0$ and $J=1$, the recovered $G_a$ are exactly $1,2,3$. The statement concerns the complete pairwise interface and its cocycle. It is not a topological claim about an arbitrary graph with missing direct comparisons.
+
+\takeaway{Flatness makes the chosen transports independent of path. Calibration identifies them with one particular canonical transport before any gauge change.}
+
+\vpage{16}{Resolve the entire obstruction}{MODEL F / PACKET BLOCKS FROM INPUT TO OUTPUT}{Traditional paper: Theorem 7.5 (p. 17), Corollary 7.6 (p. 18)}
+Use three coordinate packets with projectors $P_0,P_1,P_2$, and set
+\[
+H=I+2E_{01}+3E_{12},\qquad \Ob=H-I.
+\]
+Here $H$ is invertible, so it can be the loop product of a reversible connection on three charts. Its entries outside the diagonal encode two effects that mix packets.
+
+\vfig[.95]{all_obstruction_blocks}
+\platecaption{The board on the right contains all nine actual embedded blocks $P_\mu\Ob P_\nu$. Row labels are output packets and column labels are input packets. Only the addresses $(0,1)$ and $(1,2)$ carry nonzero maps.}
+
+Completeness on both sides supplies the reconstruction:
+\[
+\Ob=(P_0+P_1+P_2)\Ob(P_0+P_1+P_2)
+=\sum_{\mu,\nu}P_\mu\Ob P_\nu.
+\]
+For $x=(4,5,6)^\mathsf T$, the input in packet $1$ contributes $10e_0$ and the input in packet $2$ contributes $18e_1$. Their sum is the full displacement $\Ob x$.
+
+\head{A block becomes a witness when it acts}
+The nonzero block $2E_{01}$ has the explicit source vector $e_1$, supported entirely in packet $1$, and $P_0\Ob e_1=2e_0\ne0$. Similarly, $P_1\Ob e_2=3e_1\ne0$. The general theorem supplies such a witness classically when a nonzero block is known. The example displays it concretely.
+
+\takeaway{An obstruction packet is not just a colored matrix cell. It consists of a specific label for a pair of packets and an exact nonvanishing statement about the corresponding map.}
+
+\vpage{17}{Why diagonal checks are insufficient}{MODEL E / COMPLETENESS, TWO SIDES, AND OBLIQUE PACKETS}{Traditional paper: Theorem 7.5 (p. 17)}
+Return to $\Ob=E_{01}$. With the two standard coordinate projectors, both diagonal blocks vanish:
+\[
+P_0\Ob P_0=P_1\Ob P_1=0.
+\]
+The obstruction nevertheless survives in the block outside the diagonal $P_0\Ob P_1=E_{01}$.
+
+\vfig[.96]{complete_not_just_diagonal}
+\platecaption{The test of diagonal blocks alone on the left misses the whole obstruction. On the right, the displayed oblique projectors still form a complete exact resolution. They need not be orthogonal projections for the Euclidean inner product.}
+
+There is a second failure mode. Supplying only $P_0$ gives a family of idempotents but not a complete one. The single tested block is zero, while the omitted packet carries the missing input. The implication ``all tested blocks vanish, therefore the operator vanishes'' requires the completeness hypothesis.
+
+\head{Exact reconstruction does not require right angles}
+For the displayed $Q_0,Q_1$,
+\[
+Q_0+Q_1=I,\qquad Q_i^2=Q_i,\qquad Q_0Q_1=Q_1Q_0=0,
+\]
+but $Q_0^\mathsf T\ne Q_0$. Expanding both copies of $I$ still proves
+\[
+\sum_{i,j}Q_i\Ob Q_j=\Ob.
+\]
+The block reconstruction identity itself uses the condition that the projectors sum to the identity. Idempotence is additionally used when constructing a witness that remains supported in one packet after projection. The release does not require pairwise annihilation for its general reconstruction statement.
+
+\takeaway{Test every block from input to output of a complete resolution. Testing only the diagonal, or only the packets supplied so far, answers a weaker question.}
+
+\vpage{18}{A gauge can move every packet label}{MODEL E / FIXED VERSUS TRANSPORTED PROJECTORS}{Traditional paper: Proposition 7.7 (p. 18)}
+The diagonal gauge on V14 commuted with each standard projector. Now use the gauge that mixes packets
+\[
+G=\mat{1&0\\1&1},\qquad \Ob=E_{01}.
+\]
+The total obstruction transforms by conjugation, but its pattern in the \emph{fixed} standard packets changes.
+
+\vfig[.97]{mixing_gauge_patterns}
+\platecaption{The first obstruction has one nonzero entry. Its conjugate has four. Both have rank one and are nonzero. The change in fixed block pattern is not a change in whether the connection is flat.}
+
+Direct multiplication gives
+\[
+G\Ob G^{-1}=\mat{-1&1\\-1&1}.
+\]
+For example, the original $(0,0)$ block vanishes, while the new $(0,0)$ block relative to the old coordinate projectors does not. This is why the theorem about preservation of each block's zero status requires $G P_i=P_iG$.
+
+\head{Transporting the packet frame as well}
+Define $Q_i=GP_iG^{-1}$. Then the identities cancel exactly:
+\[
+Q_i(G\Ob G^{-1})Q_j=G(P_i\Ob P_j)G^{-1}.
+\]
+Relative to these transported packets, the corresponding labeled blocks again have matching vanishing status. These are the same oblique projectors displayed on V17. One must distinguish moving the operator alone in a fixed resolution from moving the entire resolved description.
+
+\takeaway{The total obstruction is intrinsic under gauge. Its location in a fixed packet grid is not, unless the gauge preserves that grid.}
+
+\vpage{19}{An obstruction rejects one candidate}{MODEL G / THE QUANTIFIERS ARE THE CONTENT}{Traditional paper: Theorem 7.2 (p. 15)}
+Let the candidates be rational numbers and the packet labels be $0,1$. Define
+\[
+r(x,0)=x^2-1,\qquad r(x,1)=x-1.
+\]
+A candidate is a solution when both residuals vanish. The five candidate columns below are a display of this explicit residual function, not a search over an unspecified class.
+
+\vfig[.97]{candidate_residual_table}
+\platecaption{A shaded cell is a nonzero exact residual. At $x=-1$, the first equation passes but the second supplies an obstruction. At $x=1$, both pass. The rejected candidate does not obstruct the successful one.}
+
+The statement proved by the generic certificate has the form
+\[
+\neg\bigl(\forall p,\ r(x,p)=0\bigr)
+\quad\Longleftrightarrow\quad
+\exists p,\ r(x,p)\ne0.
+\]
+The same candidate $x$ appears on both sides. A certificate consists of the packet label and its nonvanishing proof. The general converse uses classical reasoning and does not itself provide an algorithm to find the label.
+
+\head{What would be required to rule out all solutions?}
+One would need the stronger assertion $\forall x\,\exists p,\ r(x,p)\ne0$. The value $x=1$ disproves that assertion in this example. A witness for $x=-1$ supplies no evidence for it. Likewise, finding an obstruction block for one triangle of one chosen connection does not classify every possible connection.
+
+The term \emph{obstruction} in this generic interface does not automatically mean a cokernel class, a cohomology group, a norm bound, or a minimal certificate. Those require additional constructions and theorems.
+
+\takeaway{Keep the candidate attached to the witness. The theorem's strength is its exact logical scope, not a universal existence or nonexistence claim.}
+
+\vpage{20}{A tree reads its named leaves}{MODEL H / ACTUAL SYNTAX, ARBITRARY SEMANTICS}{Traditional paper: Definition 11.1 (p. 22), Theorem 11.2 (p. 22)}
+Use the grammar's constant, input, unary, and binary constructors to build
+\[
+t=(x^2+3)-y.
+\]
+Here ``square,'' ``add,'' and ``subtract'' are explicitly supplied meanings of operation symbols. At $x=2,y=5$, every node value can be evaluated exactly.
+
+\vfig[.94]{tree_input_locality}
+\platecaption{The rooted tree records the order of input slots. Arrows indicate evaluation from children to parent, not chart transport. An environment may contain additional variables, but this tree does not read them.}
+
+The input set is $\operatorname{inputs}(t)=\{x,y\}$. If two environments agree at $x$ and $y$, structural induction proves that the two evaluations agree: input leaves agree, constants agree, and every parent applies the same supplied operation to equal child values.
+
+\head{Syntactic locality is not minimal dependence}
+The tree $x-x$ has input set $\{x\}$, although its value is always zero under ordinary subtraction. Locality provides a sufficient agreement condition. It does not compute the smallest set of semantically relevant variables. Nor does it prove that two different trees are equivalent.
+
+The semantics may act on arbitrary values. For example, a binary concatenation symbol applied to strings ``ab'' and ``cd'' gives ``abcd.'' No linearity or differentiability is required. Conversely, swapping the ordered inputs of the subtraction root above changes the value from $2$ to $-2$.
+
+\takeaway{The proved tree theorem controls which input labels are read. It does not supply a nonlinear chain rule, a stability estimate, or a solution of a tree equation.}
+
+\vpage{21}{Where a nonlinear defect can enter}{MODEL H / EXACT COORDINATES VERSUS A CHOSEN RULE}{Traditional paper: Proposition 10.1 (p. 20), Formalization target 11.7 (p. 24), Theorem 20.2 (p. 43)}
+Take the unary operation $f(x)=x^2$ over $\QQ$. Suppose both input and output transport are chosen as multiplication by two, while the same numerical formula $f$ is reused at the target. The two routes give
+\[
+2f(x)=2x^2,\qquad f(2x)=4x^2.
+\]
+Their difference is $-2x^2$, which is generally nonzero.
+
+\vfig[.96]{node_defect_not_coordinate_defect}
+\platecaption{Solid: $2x^2$. Dashed: $4x^2$. The curves are a real visualization of exact polynomial formulas. The table contains exact evaluations over the rationals. The mismatch is caused by the specified combination of transport and formula.}
+
+For a canonical coordinate change with input and output chart $v=2x$, the target formula is not still $v^2$. It is
+\[
+\widehat f_b(v)=2f(v/2)=\frac{v^2}{2}.
+\]
+Consequently $\widehat f_b(2x)=2x^2$, and the exact coordinate defect vanishes. This is the same distinction illustrated in the example in two dimensions on V10.
+
+\head{An example is not a general propagation theorem}
+The polynomial calculation here is exact and checked symbolically. It explains a chosen node defect, while the traditional paper develops composition identities, iterated defects, fixed point stability, and derivative defects under explicit hypotheses. Those broader ordinary proofs must be read on their own terms. This one example and the finite Lean locality theorem do not certify them.
+
+\takeaway{A nonzero nonlinear route difference must come from identifiable extra data: a changed transport, an approximation, a restricted model, or a reused formula that was not conjugated correctly.}
+
+\vpage{22}{Mixed terms are not optional}{FINITE EXAMPLES / WHY MULTILINEARITY MATTERS}{Traditional paper: Formalization target 11.6 (p. 23), Theorem 18.3 (p. 39)}
+A bilinear node distributes over two independently resolved inputs:
+\[
+(a+b)(c+d)=ac+ad+bc+bd.
+\]
+The four terms correspond to all ordered choices of one input packet from each slot. Keeping only matching packet labels loses the mixed terms.
+
+\vfig[.95]{bilinear_vs_nonlinear}
+\platecaption{The rectangle has width $2+3$ and height $5+7$, with differently scaled horizontal and vertical display units. Each cell is labeled by its actual product. The lighter diagonal pair contributes only $31$ of the total $60$.}
+
+For a unary square, inserting $a+b$ does not give $a^2+b^2$. The extra $2ab$ arises because the operation is nonlinear in its single argument. It can be analyzed by representing the square using a binary multiplication node with a repeated input, but that is an additional choice of syntax and semantics.
+
+\head{The broader tree theorem needs its hypotheses}
+General packet tree expansion needs correctly typed input slots, finite sets of packet labels at each node, and multilinearity in every slot used for distributive expansion. Empty inputs and unary nodes need explicit conventions. Slot order must survive even when values or operations do not commute. The traditional paper supplies rooted tree reconstruction and pruning results in its ordinary mathematical development.
+
+This page supplies elementary exact examples of the issue. The finite v1.0.1 Lean contract remains narrower: it contains syntactic input locality, not the general dependent tree expansion or the traditional paper's analytic convergence results.
+
+\takeaway{A branching picture does not justify throwing away mixed interactions. Exact packet expansion requires the appropriate multilinearity and typing, not merely a diagram that appears finite.}
+
+\vpage{23}{From loop data to a packet witness}{CAPSTONE / A COMPLETE FINITE DIAGNOSIS}{Traditional paper: Theorem 5.10 (p. 13), Theorem 6.2 (p. 14), Corollary 7.6 (p. 18)}
+Supply a reversible connection on three copies of $\QQ^2$ by choosing
+\[
+\Gamma_{1\leftarrow0}=A,\qquad\Gamma_{2\leftarrow1}=B,
+\qquad\Gamma_{2\leftarrow0}=C=I,
+\]
+and declaring every reverse edge to be the inverse. This time both nontrivial forward matrices are retained.
+
+\vfig[.97]{worked_holonomy_diagnosis}
+\platecaption{The vector row starts with the source witness $e_0$ and follows it through $A$, then $B$, then $C^{-1}$. Returning to the base produces $(1,1)^\mathsf T$, whose displacement from the input is $e_1$.}
+
+The calculation gives
+\[
+\Delta=BA-C=\mat{0&1\\1&1},\qquad H=C^{-1}BA=\mat{1&1\\1&2}.
+\]
+Choose the standard packet projectors. The $(1,0)$ block is nonzero, and the explicit candidate vector satisfies $P_1(H-I)e_0=e_1$. This proves nonflatness of the supplied connection at the supplied triangle.
+
+\head{Repairing data is not the same as changing gauge}
+Replacing the direct map $C=I$ by $C=BA$, and updating its reverse, makes the new loop equal to $I$. That changes the connection. It cannot be a gauge of the original nonflat connection, because gauge preserves whether holonomy is the identity. For this complete example on three charts all cocycles then hold. Changing one edge in a larger network would require checking the other affected loops as well.
+
+\takeaway{Declare the data, multiply in traversal order, form the defect, resolve all blocks, and exhibit an input on which one block acts nontrivially. Each step has a checkable mathematical object.}
+
+\vpage{24}{Read the evidence with the pictures}{EVIDENCE / EXAMPLES, PROOFS, AND FORMAL SCOPE}{Traditional paper: Section 12 (p. 24)}
+This guide preserves the 24 worked pages and 22 exact figures from the finite visual appendix. It updates their references to the final traditional paper and explains the relation to that paper's broader nonlinear and analytic material.
+
+\head{Read each evidence record in its scope}
+{\small
+\begin{tabularx}{\linewidth}{@{}p{.24\linewidth}Y@{}}\toprule
+\textbf{Evidence} & \textbf{What it supports}\\\midrule
+Finite Lean release & The finite declarations and the released Section 16 and 17 additions were compiled in the pinned environment. The Lean guide records the current source scope, axiom audit, and kernel replay.\\
+Ordinary mathematics & The traditional paper's expanded proofs, including nonlinear, obstruction, lifting, and smooth transport results. Inclusion in that paper does not add these results to the finite Lean contract.\\
+Exact model checks & Replay on 20 October 2026 passed all 124 exact checks and rejected all four deliberately false controls. The scope is the displayed finite matrices, paths, polynomials, candidate tables, and trees.\\
+Figure regeneration & All 22 editable TikZ figures are supplied with their exact model data and generators. The original figure sources and their earlier regeneration record remain preserved.\\\bottomrule
+\end{tabularx}}
+
+The release also records 18,630 exact assertions for the Section 16 and 17 examples. These finite calculations support the displayed mechanisms. General claims rest on their mathematical proofs and, where mapped, their Lean declarations.
+
+\head{Boundaries that remain in force}
+The formal edge system uses a single scalar coefficient semiring. The heterogeneous path theorem for arbitrary lengths uses a common packet index, with forms allowing changing types for two and three factors. General dependent tree expansion and analytic convergence lie outside this finite formal contract. The traditional paper states and proves its broader results with their own hypotheses.
+
+The generic obstruction theorem rejects its named candidate. A nonzero holonomy block rejects flatness for its named loop data. Neither conclusion supplies a universal classification, a new arithmetic realization, or an algorithmic search guarantee.
+
+\head{Replay the worked layer}
+From the editable visual guide directory, compile the PDF with \mbox{\texttt{python build.py}}.\par
+Check the exact examples with \mbox{\texttt{python checks/verify\_examples.py}}.\par
+Regenerate the figures with \mbox{\texttt{python source/generate\_graphics.py}}.\par
+Use a temporary copy to retain the delivered evidence unchanged. The full package preserves the finite release and its original formal sources separately.
+
+\takeaway{Use the figures to understand the mechanisms, the traditional paper to read the mathematical proofs, and the Lean guide to identify the exact formal contract. These are related records with distinct scopes.}

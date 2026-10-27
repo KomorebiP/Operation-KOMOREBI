@@ -1,0 +1,21 @@
+\section{Structured algorithms carry their coordinate conventions}
+\subsection{Vectorization and recursive tensor contraction}
+\excerpt{}{kronecker}
+\walk{The right factor in the matrix expression is \code{Aᵀ}, the ordinary transpose. It is not the conjugate transpose. The argument order reflects Mathlib's column-major \code{Matrix.vec} convention: \((A\otimes B)\operatorname{vec}(X)=\operatorname{vec}(BXA^T)\). The one-line proof invokes that exact library identity.}
+
+\code{TensorIndex d 0} is \code{Unit}, and the successor index is \code{Fin d × TensorIndex d k}. This makes the tensor dimension \(d^k\) visible without an implicit flattening convention. \code{tensorMatrix} builds iterated actual Kronecker matrices. \code{tensorApply} contracts trailing slices before the first mode.
+\excerpt{}{tensor_apply}
+\walk{The zero-mode case reduces to the one-coordinate identity. In the successor case, expand one contraction, rewrite trailing contractions using the induction hypothesis, and express the full matrix sum over a product type as two nested sums. Associativity and distribution align the two formulas. The event type counted later follows this recursive contraction, yielding \(2kd^{k+1}\) operations in the declared model and \(kd^2\) factor values. Cases \(k=0\) and \(d=0\) are represented by their actual index types.}
+
+\subsection{The Walsh butterfly proves an implemented recursion}
+\excerpt{}{walsh_apply}
+\walk{The recursively constructed \code{walshMatrix} matrix is paired with the actual sum/difference routine \code{walshApply}. The proof follows the same split of tensor coordinates and expands the two butterfly branches. Its equality states algorithm correctness. The separate operation theorem counts additions and subtractions, giving \(N\log_2N\) for \(N=2^k\), including \(N=1\). Orthogonality uses the ordinary transpose of these real-valued complex matrices.}
+
+\subsection{Toeplitz padding is concrete}
+\contract{The matrix and generator definitions assume \code{[NeZero n]}, so the length is positive. The zero-padding helper itself is meaningful without that instance.}
+\excerpt{}{toeplitz_apply}
+\walk{The preceding theorem identifies the actual top-left Toeplitz block of the length-\(n+n\) circulant. This application theorem expands the zero-padded vector with \code{Fin.addCases}. Terms in the right half vanish, leaving precisely the Toeplitz action. The generator reverses the row tail in its second half. Its first entry uses the column datum \code{c 0}, and \code{r 0} is irrelevant. No symmetry or Hermiticity is assumed.}
+
+\subsection{Fourier diagonalization is exact, with no FFT timing claim}
+\excerpt{}{fourier}
+\walk{For a positive length \(n\), the module defines the actual circulant and the unitary-normalized Fourier matrix on \code{ZMod n}. The proof rewrites the DFT diagonalization using the normalization identities and actual Fourier unitarity. Supporting declarations establish the complex exponential entry formula, eigenvalues, and both unitarity products. The final application formula uses two transforms. This establishes the represented algebraic action. An FFT algorithm, its execution cost, and hardware timing remain distinct tasks.}

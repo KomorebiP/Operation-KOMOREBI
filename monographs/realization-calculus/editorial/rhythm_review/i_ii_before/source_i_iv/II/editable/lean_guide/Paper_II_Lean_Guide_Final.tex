@@ -1,0 +1,111 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm,headheight=15pt]{geometry}
+\usepackage{fontspec}
+\newfontfamily\codemathfont{latinmodern-math.otf}[Path=fonts/]
+\newcommand{\CodeSymbol}[1]{\ifnum"#1="29F8\ensuremath{\big/}\else{\codemathfont\symbol{"#1}}\fi}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\usepackage{xcolor,booktabs,longtable,array,enumitem,microtype}
+\PassOptionsToPackage{obeyspaces}{url}
+\usepackage{listings,fvextra,xurl,hyperref,bookmark,fancyhdr,titlesec,needspace,caption}
+\definecolor{teal}{HTML}{164C51}
+\definecolor{muted}{HTML}{516466}
+\definecolor{pale}{HTML}{F2F6F6}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,pdftitle={Chapter II: Lean Guide},pdfauthor={Komorebi P.},bookmarksnumbered=true}
+\urlstyle{tt}
+\newcommand{\code}[1]{\nolinkurl{#1}}
+\newcommand{\source}[1]{\par\smallskip{\footnotesize\color{muted}Source: \code{#1}.}\par\smallskip}
+\newcommand{\excerpt}[2]{\Needspace{5\baselineskip}\source{KomorebiVerification/#1.lean}\VerbatimInput[fontsize=\small,frame=leftline,rulecolor=\color{teal},framesep=6pt,breaklines=true,breakanywhere=true,commandchars=\\\{\},xleftmargin=8pt]{excerpts/#2.render.txt}}
+\titleformat{\section}{\Large\sffamily\bfseries\color{teal}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\large\sffamily\bfseries\color{teal}}{\thesubsection}{.65em}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{teal}}{\thesubsubsection}{.65em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus .6ex}{1ex}
+\titlespacing*{\subsection}{0pt}{2ex plus .4ex}{.7ex}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{.55em}
+\setlength{\emergencystretch}{2em}
+\setlist{nosep,topsep=.4em,leftmargin=1.5em}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{muted}KOMOREBI \quad PAPER II}
+\fancyhead[R]{\small\sffamily\color{muted}LEAN GUIDE}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\lstset{basicstyle=\ttfamily\small,backgroundcolor=\color{pale},frame=single,rulecolor=\color{pale},framerule=0pt,xleftmargin=5pt,xrightmargin=5pt,aboveskip=7pt,belowskip=7pt,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,showstringspaces=false,tabsize=2,escapeinside={(*@}{@*)}}
+\makeatletter
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.5em}{3.5em}}
+\makeatother
+
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiKind}{Formal companion}
+\renewcommand{\KomorebiCoverBlurb}{Formal scope and evidence, followed by the foundational declaration-level walkthrough and exact source excerpts.}
+\setmonofont{DejaVuSansMono}[Path=fonts/,UprightFont=*.ttf,BoldFont=*-Bold.ttf,ItalicFont=*-Oblique.ttf,BoldItalicFont=*-BoldOblique.ttf,Scale=.80]
+\input{generated/current_edition.tex}
+\KomorebiSetup
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
+\endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{This formal companion separates the chapter-wide correspondence from the foundational 25-row contract. The overview records exact source scope and verification evidence. The tutorial explains the foundational source architecture, representative proofs, and evidence with their original boundaries.
+\medskip
+\input{generated/current_opening.tex}}
+
+
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+\input{generated/current_release.tex}
+\clearpage
+\input{chapters/07_analytic_closeout.tex}
+\clearpage
+\input{chapters/01_orientation.tex}
+\input{chapters/02_refinement.tex}
+\input{chapters/03_transfer.tex}
+\input{chapters/04_arithmetic.tex}
+\input{chapters/05_defects.tex}
+\input{chapters/06_replay.tex}
+\clearpage
+\section{The inherited contract of 25 rows}\label{sec:map}
+The following map preserves the foundational contract's classifications, checked scopes, and explicit boundaries. The targets use the namespace abbreviations below. These abbreviations are only typography: the companion JSON expands every name and records its source file and line. A declaration may occur in several rows. There are 171 occurrences and 160 distinct names. Definitions, structures, equivalences, and theorems all count as declaration targets.
+\input{generated/namespace_prefixes.tex}
+\input{generated/theorem_map.tex}
+\clearpage
+\appendix
+\section{Navigation in the mathematical text}\label{app:crosswalk}
+The locators below use statement and section numbers in the Chapter II mathematical text. A shared label is a navigation aid. It does not extend the formal scope to additional claims in the surrounding section. In particular, the Smith phase display has no equation number.
+\input{generated/current_traditional_crosswalk.tex}
+\section{Source imports and pinned dependencies}\label{app:imports}
+This table records direct local imports. It is a graph of file dependencies rather than a logical dependency analysis of the theorems. The JSON companion also retains every direct external import. Some modules import the broad \code{Mathlib} module, while others list focused imports.
+\input{generated/local_imports.tex}
+The exact toolchain string is \code{leanprover/lean4:v4.34.0-rc2}. The Lake manifest pins the following source revisions. Its descriptive \code{inputRev} fields such as \code{master} and \code{main} do not replace these exact revisions.
+\input{generated/dependency_pins.tex}
+\section{Source excerpts and reproduction inventory}\label{app:inventory}
+Every printed Lean listing comes from an exact UTF-8 excerpt in \code{excerpts/*.lean.txt}. The adjacent \code{*.render.txt} file escapes TeX control characters and substitutes a math font glyph where the code font lacks one. It preserves token order. Exact source text, not the display fallback, is the object to copy into an editor. Excerpts retain their surrounding source context only when that context is printed. They are not standalone Lean files.
+\code{generated/excerpts.json} records each source path, inclusive source line range, the SHA-256 digests of each full source file, exact excerpt, and display file. \code{generated/theorem_map.json} contains all 25 rows with fully qualified targets, classifications, scopes, boundaries, and lexical source locations. \code{generated/mapped_source_index.json} provides an alphabetical target index. \code{generated/static_identity_audit.json} records all manifest comparisons and the optional baseline comparison performed for this edition.
+
+\code{build_guide_data.py} uses only the Python standard library. It generates the map, import table, pins, excerpts, and current static audit without invoking Lean. \code{build_guide.sh} calls that generator and runs XeLaTeX four times. The monograph build uses system-installed P052, Nimbus Sans, DejaVu Sans Mono, and Latin Modern Math fonts with recorded dependency hashes. The required LaTeX packages are listed in the preamble. The independent PDF check script uses PyMuPDF and Pillow for page rendering and contact sheets.
+
+The foundational source remains preserved. The broader constructions live in \code{formal/current/} and are indexed by the chapter-wide correspondence. Editing this guide cannot by itself repair or strengthen a Lean theorem. A mathematical change to the formal component requires a separate source change, a new compile, an updated map when appropriate, and new execution evidence.
+\end{document}

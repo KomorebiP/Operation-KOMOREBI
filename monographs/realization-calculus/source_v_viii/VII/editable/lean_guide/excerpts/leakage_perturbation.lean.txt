@@ -1,0 +1,14 @@
+theorem perturbation_leakage_bound (H₀ V P : A)
+    (hH₀ : IsSelfAdjoint H₀) (hV : IsSelfAdjoint V)
+    (hP : IsStarProjection P) (hcomm : H₀*P=P*H₀) (t : ℝ) :
+    ‖(1-P)*exp ((-(t : ℂ)*Complex.I) • (H₀+V))*P‖ ≤ 2*|t| *‖V‖ := by
+  have hc : (H₀+V)*P-P*(H₀+V) = V*P-P*V := by
+    rw [add_mul, mul_add, hcomm]
+    noncomm_ring
+  have hh := commutator_leakage_bound (H₀+V) P (hH₀.add hV) hP t
+  rw [hc] at hh
+  calc
+    _ ≤ |t| *‖V*P-P*V‖ := hh
+    _ ≤ |t| *(2*‖V‖) := mul_le_mul_of_nonneg_left
+      (projection_commutator_norm_le V P hP) (abs_nonneg t)
+    _ = _ := by ring

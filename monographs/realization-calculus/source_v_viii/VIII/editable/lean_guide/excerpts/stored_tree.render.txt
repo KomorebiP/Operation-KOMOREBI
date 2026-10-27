@@ -1,0 +1,10 @@
+def storedTree (B : ℕ) (κ : α → R) (w : α → ℕ) (σ : α → R) :
+    CandidateTree α → BudgetDP.StoredTable R B
+  | .leaf a => BudgetDP.tabulate B (BudgetDP.singletonTable (w a) (κ a))
+  | .node a n ts =>
+    let cached := Vector.ofFn (fun i => storedTree B κ w σ (ts i))
+    let merged := BudgetDP.combineStored (fun i : Fin (n + 1) => cached.get i)
+    BudgetDP.tabulate B (fun b => BudgetDP.choose (BudgetDP.singletonTable (w a) (κ a) b)
+      (BudgetDP.add (some (σ a)) (BudgetDP.lookup merged b)))
+
+/- The implemented cached array agrees entrywise with the proved exact recurrence. -/

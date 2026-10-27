@@ -1,0 +1,63 @@
+\section{FIR transfer and faithful perfect reconstruction}
+\subsection{Finite support makes time domain transfer unconditional}
+An FIR filter is a finitely supported function $h:\mathbb Z\to K$. Negative tap addresses are allowed, so the formal theorem includes advances as well as delays. For an arbitrary bilateral sequence,
+\[
+(h*x)[n]=\sum_{t\in\operatorname{supp}h}h[t]x[n-t].
+\]
+No convergence hypothesis is needed because this sum is finite.
+\excerpt{FIRTransfer}{fir}
+Fix output phase $k$ and input phase $s$. The tap carrying an input channel delay $m$ is
+\[
+t=Nm+k-s,\qquad h_{k,s}[m]=h[Nm+k-s].
+\]
+The address identity is
+\[
+(Nn+k)-(Nm+k-s)=N(n-m)+s.
+\]
+It says exactly which original tap contributes to which channel and delay. The source's \code{tapEquiv} proves the relevant reindexing is bijective, then partitions the finite support by input phase. It does not enlarge the finite sum to an arbitrary infinite series.
+\excerpt{FIRTransfer}{fir_law}
+
+\subsection{A two channel calculation}
+\begin{microexample}[title={Three taps and their channel delays}]
+Take $h[0]=a$, $h[1]=b$, $h[2]=c$, with all other taps zero. For $N=2$ the four channel kernels are
+\[
+\begin{aligned}
+y_0[n]&=a x_0[n]+c x_0[n-1]+b x_1[n-1],\\
+y_1[n]&=b x_0[n]+a x_1[n]+c x_1[n-1].
+\end{aligned}
+\]
+The tap at one has different channel delays in the two off diagonal positions. In the transform convention used by the paper, the transfer matrix is
+\[
+H(z)=\begin{pmatrix}a+c z^{-1}&b z^{-1}\\b&a+c z^{-1}\end{pmatrix}.
+\]
+The time domain equations hold for every sequence. The transform equation $Y(z)=H(z)X(z)$ has the additional analytic hypotheses described next.
+
+\end{microexample}
+
+\subsection{A transform is a convergent weighted sum}
+The source defines a totalized \code{tsum} expression, but the meaningful convergence predicate is \code{HasTransform}.
+\excerpt{ZTransform}{has_transform}
+It states that the bilateral weighted series $\sum_n x[n]z^{-n}$ has the specified sum. The delay theorem requires both a nonzero transform parameter and this convergence input.
+\excerpt{ZTransform}{delay_transform}
+Finitely many delayed inputs can then be combined using finite sums of \code{HasSum} proofs. The matrix version assumes weighted summability separately for every input channel.
+\excerpt{ZTransform}{matrix_transform}
+An arbitrary $\ell^2$ signal need not have an absolutely convergent bilateral transform at a chosen complex $z$. An $L^2$ Fourier boundary-value interpretation on the unit circle is a separate analytic interpretation. Off the unit circle, the displayed weighted summability conditions must be supplied. Neither the definition of \code{tsum} nor an FIR input filter removes them.
+
+\subsection{Laurent polynomials act as finite filters}
+The type \code{AddMonoidAlgebra ℂ ℤ} represents finite Laurent coefficients indexed by integer delays. Its multiplication is finite convolution. A monomial at index $d$ acts by $x[n]\mapsto x[n-d]$, with transform symbol $z^{-d}$. The formal action is an algebra homomorphism into complex linear endomorphisms of all bilateral sequences.
+\excerpt{FilterBank}{act}
+The source proves \code{act_is_fir}, making the abstract algebra homomorphism coincide with the literal finite filter sum. It then defines a matrix bank by summing the action of each matrix entry over the input channels. The theorem \code{bank_mul} identifies matrix multiplication with composition of banks in the correct order.
+
+\subsection{Why the matrix criterion is an equivalence}
+The reverse direction of a perfect-reconstruction criterion needs faithfulness. If two matrix banks have the same action on every sequence, why must their Laurent coefficients agree? The source feeds a unit impulse into one channel at a time. Reading output channel $k$ at sample $n$ recovers exactly the $n$th Laurent coefficient of the $(k,s)$ entry.
+\excerpt{FilterBank}{faithful}
+This eliminates a possible gap between an operator statement and a formal matrix identity. It relies on equality on every input, rather than agreement on a bounded collection of numerical examples.
+
+\subsection{Gain and delay}
+The target matrix is diagonal, with each diagonal entry the monomial of amplitude $c$ at delay $d$. The theorem gives the equivalence between matrix equality and reconstruction of every channel sequence.
+\excerpt{FilterBank}{perfect}
+The formula allows any complex $c$. To interpret the result as invertible reconstruction up to gain, one additionally requires $c\ne0$. At $c=0$, the theorem remains a valid zero-output identity, but it is not an invertibility statement.
+
+Returning from channel coordinates to original coordinates yields the literal sample formula.
+\excerpt{FilterBank}{sample_reconstruction}
+This result is independent of numerical transform convergence. The transform representation of the bank is a further theorem with \code{HasTransform} hypotheses. The distinction is practical: an exact finite reconstruction identity can be checked algebraically even when a particular signal's off-circle transform does not exist.

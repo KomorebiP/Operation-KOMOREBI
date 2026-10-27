@@ -1,0 +1,32 @@
+\section{Reading a finite formal development}
+\subsection{The objects precede the theorem names}
+A packet representation starts with a finite projector family and an operator. A structured representation adds explicit factor matrices or tensor coordinates. A compiler starts with a finite candidate tree and an independently defined set of legal cuts. An error theorem starts with actual errors in a normed space and budgets that bound them. In each case, the theorem follows the object being modeled. Reading only the endpoint name misses the domain, norm, convention, and supplied data on which its conclusion depends.
+
+Use the traditional paper's original item numbers to find the corresponding subsection in Section~\ref{sec:scope}. Then locate its declaration in Section~\ref{sec:catalog} and its module in Section~\ref{sec:dependencies}. For a first reading, work through the chapters in order. The small-core chapter is longer because the final block proves optimality from several independent ingredients, rather than accepting an optimality certificate as input.
+
+\subsection{A short Lean vocabulary}
+\begin{longtable}{@{}p{.30\linewidth}p{.63\linewidth}@{}}
+\toprule Source form & Meaning in this guide\\\midrule\endhead
+\code{Matrix m n K} & A function with row type \code{m}, column type \code{n}, and coefficients in \code{K}. Finite index instances provide finite sums. Rectangular shapes are visible in the type.\\
+\code{[Fintype I]} & A finite enumeration of the index type. Empty index types are allowed unless a nonempty hypothesis is separately stated.\\
+\code{[DecidableEq I]} & Equality can be decided where the construction needs it. It is not a numerical tolerance test.\\
+\code{Fin k} & Natural indices smaller than \(k\). The type \code{Fin 0} is empty.\\
+\code{[Ring R]} & Addition and multiplication are available, but multiplication need not commute.\\
+\code{IsUnit D} & The matrix or algebra element has a two-sided multiplicative inverse. A displayed inverse expression alone does not establish invertibility.\\
+\code{X →L[K] X} & A continuous linear map over \code{K}, with its operator norm.\\
+\code{Option R} & Either \code{some v}, a finite candidate value, or \code{none}, an unreachable / infeasible state.\\
+\code{let A := ...} & A local definition in the statement. It abbreviates the constructed object. It adds no hypothesis.\\
+\code{noncomputable def} & A mathematically defined object using classical choice or other noncomputable ingredients. It does not advertise an executable numerical routine.\\
+\bottomrule\end{longtable}
+
+A theorem statement may inherit \code{variable} declarations from its section. An \code{omit ... in} command removes unused instances for that declaration. \code{autoImplicit false} means an undeclared symbol is rejected rather than silently turned into an implicit parameter. Names such as \code{SmallCore.spectralNorm} explicitly choose the intended norm. A bare matrix norm also depends on the open norm scope surrounding its declaration.
+
+\subsection{How to read a proof}
+\code{rw} rewrites by an equality. \code{simp} applies named simplification facts, while \code{simp only} restricts that collection. \code{funext} reduces equality of functions to equality at an arbitrary argument, while \code{ext} exposes entries of a structured object. \code{refine} supplies a proof expression with remaining holes. \code{have} names an intermediate proposition and its proof. \code{exact} closes a goal with a term of the required type.
+
+Induction is visible in the recursive structured algorithms and dynamic programs. A \code{calc} chain shows the successive equalities or inequalities used in a norm estimate. Arithmetic tactics have limited roles: \code{ring} normalizes polynomial identities, \code{omega} handles integer and natural-number constraints, and \code{linarith}/\code{nlinarith} combine supplied real inequalities. They do not supply unrecorded analytic or hardware assumptions.
+
+\subsection{Which evidence is current}
+The inherited sixth-block report records the compiler, source hashes, local dependency hashes, saved log hashes, axiom sets, and two rejected invalid-proof controls. The present guide replays the static identity checks on those retained bytes. It does not reconstruct compiled interfaces or simulate a Lean invocation. The exact distinction is preserved in \code{generated/documentation_reconciliation.json}.
+
+The allowed transitive axiom policy is \code{propext}, \code{Classical.choice}, and \code{Quot.sound}, or subsets of them. This is the policy accepted by the recorded run. A passing audit excludes an admitted-proof axiom under that policy. It does not independently rebuild all imported Mathlib proofs. Manuscript correspondence remains mathematical review.

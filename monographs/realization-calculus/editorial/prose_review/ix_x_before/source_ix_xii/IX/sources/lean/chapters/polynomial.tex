@@ -1,0 +1,37 @@
+\section{Actual polynomial Taylor expansion and lift counts}\label{sec:polynomial}
+\subsection{A quadratic remainder is proved algebraically}
+\contract{$P$ is an actual multivariate polynomial with integer coefficients, $x,t\in\mathbb Z^d$, and $a\in\mathbb Z$. The directional derivative uses the evaluated formal partial derivatives. Then $a^2$ divides $P(x+at)-P(x)-aDP(x)t$.}
+\excerpt{Polynomial Taylor divisibility}{taylor}
+\walk{The proof inducts on the multivariate polynomial syntax supplied by Mathlib: a constant, an addition, or multiplication by a variable. Constants have zero remainder; sums add remainders. In the multiplication case, the induction witness $r$ is combined with the linear term and the new variable displacement. \code{linear_combination} verifies the resulting polynomial identity. This is exact integer algebra and requires no differentiability or limiting argument.}
+
+The quadratic factor is what permits one-digit lifting. Put $a=q^L$. The remainder is divisible by $q^{2L}$. To neglect it modulo $q^{L+1}$, one needs $2L\ge L+1$, hence $L\ge1$. An affine map has no quadratic remainder and works at $L=0$; a general polynomial does not. The source does not assume that an arbitrary nonlinear map comes with the same exact expansion.
+
+\subsection{One nonlinear step becomes a finite digit equation}
+Write $F(x)=q^Lr$ coordinatewise. The actual Jacobian $J_F(x)$ is defined by formal partial derivatives evaluated at $x$, assembled as an integer linear map. The next-level equation is
+\[
+F(x+q^Lt)\equiv0\pmod{q^{L+1}}
+\quad\Longleftrightarrow\quad
+r+J_F(x)t\equiv0\pmod q.
+\]
+\contract{$q>0$, $L\ge1$, and the given residual identity is exact. No prime assumption is needed for this equivalence.}
+\excerpt{Polynomial next digit}{next_digit}
+\walk{The source rewrites reduced zero as coordinatewise divisibility. Taylor remainder divisibility replaces the actual polynomial value by its residual-plus-linear term. The remaining factor $q^L$ can be cancelled because $q>0$ implies $q^L\ne0$ in $\mathbb Z$. This cancellation gives the modulo-$q$ equation. Both directions are proved, so the linearization is an exact next-digit criterion rather than an approximation.}
+
+\contract{The finite polynomial obstruction theorem starts with an approximate root modulo $q^L$ and constructs its residual. The obstruction space uses the range of the actual Jacobian digit map.}
+\excerpt{Nonlinear obstruction endpoint}{poly_obstruction}
+\walk{Residual existence supplies $r$. The finite quotient construction is reused from the affine layer, while the polynomial same-residue theorem supplies the nonlinear lifting equivalence. Reusing the quotient algebra does not require treating the polynomial as affine; its application is justified precisely at this one-digit Taylor interface.}
+
+A nonzero obstruction means no same-residue next lift exists. A zero obstruction proves existence for that step. It does not by itself prove persistence at all later depths: the Jacobian and the residual may change, and singular digit maps can develop higher obstructions. The smooth tower theorem adds surjectivity and proves it persists along the constructed tower.
+
+\subsection{Digits correspond to residue lifts, not all integer representatives}
+The lift-counting development distinguishes an integer lift from its residue class modulo $p^{L+1}$. Without that quotient, a soluble congruence has infinitely many integer representatives. \code{ActualLifts} is a finite type of residue lifts, and \code{DigitSolutions} is the finite fiber of the digit equation.
+
+\contract{$q>0$, $L\ge1$, and $F(x)=q^Lr$. The residue digit equivalence takes a digit solution modulo $q$ to a residue lift modulo $q^{L+1}$.}
+\excerpt{Exact digit--lift equivalence}{digit_lifts}
+\walk{The source first has an equivalence between all digit addresses and all residue addresses above the initial class. \code{Equiv.subtypeEquiv} then restricts it to the subsets satisfying the equations. The previous next-digit theorem supplies the required equivalence of predicates. Thus cardinalities are preserved through a genuinely bijective map; a mere surjection would not establish the exact count.}
+
+\contract{Now $p$ is prime. If the digit Jacobian has rank $\rho$, the number of residue lifts is zero for nonzero obstruction and $p^{d-\rho}$ for zero obstruction. The obstruction space has $p^{e-\rho}$ elements.}
+\excerpt{Exact polynomial lift and obstruction counts}{lift_count}
+\walk{The endpoint reuses the digit--lift equivalence for the lift cardinality and the finite cokernel equivalence for the obstruction cardinality. Rank-nullity yields the two exponents in the input and output spaces respectively. The rank is bounded by both $d$ and $e$, so natural subtraction expresses the ordinary nonnegative dimension difference in these hypotheses. Rectangular equations can have many lifts even when every obstruction vanishes.}
+
+At a surjective digit Jacobian, $\rho=e$ and each step has $p^{d-e}$ residue lifts. When $d=e$, that number is one. This is the source of both smooth existence and square-case uniqueness. When $d>e$, existence is still valid but a claim of unique solved coordinates would discard the nontrivial kernel.

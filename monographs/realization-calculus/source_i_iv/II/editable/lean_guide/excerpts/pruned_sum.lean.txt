@@ -1,0 +1,13 @@
+def retainedFixedWordSum {E : Type u} {R : Type v} [Fintype E] [Ring R]
+    (weight : E → ℕ) (edge : E → R) (L n : ℕ) : R :=
+  ∑ word : Fin n → E with wordWeight weight (List.ofFn word) < L,
+    wordProduct edge (List.ofFn word)
+
+/-- The explicit signed, weight-pruned word candidate through word length `N - 1`.
+
+Unlike `finiteGeometricInverse`, this expression visibly contains only retained transfer words:
+every summand has cumulative weight strictly below `L`.  The independent length cutoff `N` permits
+the sharper cutoff obtained from a lower bound on all edge weights. -/
+def prunedWordInverse {E : Type u} {R : Type v} [Fintype E] [Ring R]
+    (weight : E → ℕ) (edge : E → R) (L N : ℕ) : R :=
+  ∑ n ∈ Finset.range N, (-1 : R) ^ n * retainedFixedWordSum weight edge L n

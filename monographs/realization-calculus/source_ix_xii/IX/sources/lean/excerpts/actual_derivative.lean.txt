@@ -1,0 +1,10 @@
+theorem hasStrictFDerivAt_evalSystem (F : Fin m → MvPolynomial (Fin n) 𝕜)
+    (a : Fin n → 𝕜) :
+    HasStrictFDerivAt (evalSystem F) (matrixCLM (PolynomialWeightedInverse.jacobian F a)) a := by
+  have h := hasStrictFDerivAt_pi.mpr (fun i => hasStrictFDerivAt_eval (F i) a)
+  have hder : ContinuousLinearMap.pi (fun i => polynomialDeriv (F i) a) =
+      matrixCLM (PolynomialWeightedInverse.jacobian F a) := by
+    ext v i
+    simp [PolynomialWeightedInverse.jacobian, Matrix.mulVec, dotProduct]
+  rw [← hder]
+  convert! h using 1

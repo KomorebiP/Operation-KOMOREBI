@@ -1,0 +1,369 @@
+{
+  "schema": "komorebi.core-monograph.rebuild-portability-review/1",
+  "reviewed_utc": "2026-10-21T13:56:07.489140+00:00",
+  "status": "PASS_STATIC_AFTER_REPAIR",
+  "scope": "Static inspection of both top-level rebuild routes, six requested primary scripts and their called helpers; only the repaired I-IV font-preparation setup was executed. No expensive document, scientific, Lean, or figure rebuild was run.",
+  "default_assembly": {
+    "status": "no_missing_package_input_found",
+    "components_package_relative_and_present": 41,
+    "frozen_readers_present": 41,
+    "findings": [
+      "All component_builds.json output paths are package-relative and point into retained source-group or frozen-reader trees.",
+      "prepare_book.py retains historical absolute source_path provenance but falls back to frozen_readers/<filename> when those original paths are unavailable. It does not require readers/, full_inputs/, or input ZIPs.",
+      "Assembler, outer renderer, audit, and preview derive their root from __file__; their runtime data is in retained book/, compiled/, frozen_readers/, editorial/, or output/."
+    ]
+  },
+  "from_sources": {
+    "status": "no_remaining_concrete_package_input_blocker_found",
+    "findings": [
+      "I-IV source metadata absolute paths are rebound through their source_i_iv suffix; a complete rebuild refreshes all twelve build-result PDF paths before inspection.",
+      "V-VIII restores omitted fonts using retained per-component MONOGRAPH_FONT_DEPENDENCIES.json and exact kpsewhich/SHA-256 checks.",
+      "IX-X uses retained publication/documents.json, editable sources, house style, preserved figures, and the imported atlas-assembly helper; no evidence generator is called.",
+      "XI-XII stages retained publication/source trees into a new package-relative build directory and uses retained READING_ROUTES.json/ROUTES.json. XII calls its historical driver only with --stage links, avoiding its figure-generation branches.",
+      "Root rebuild updates the six XI-XII component paths to the new staged build outputs before assembly."
+    ]
+  },
+  "repaired_blocker": {
+    "problem": "I-IV rebuild lacked restoration for omitted local fonts/ payloads. The active Paper II Lean preamble directly requires Latin Modern Math and DejaVu files from that directory.",
+    "repair": "Added exact installed-font preparation to build_components.py, automatically invoked before normal compilation; added --prepare-fonts-only and --font-output-root for bounded validation.",
+    "files": [
+      "source_i_iv/build_components.py",
+      "source_i_iv/MONOGRAPH_FONT_DEPENDENCIES.json",
+      "source_i_iv/FONT_DEPENDENCIES.txt"
+    ],
+    "font_placements": 60,
+    "unique_fonts": 27,
+    "validation": "source_i_iv/FONT_PREPARATION_VALIDATION.json",
+    "validation_outcome": "PASS: initially empty staging path; all hashes matched; deliberate digest mismatch rejected; 339 TeX/style/compiled-PDF files remained byte-identical.",
+    "packaging": "The dependency JSON and note are retained by package_publication.py; fonts/ directories and standalone font binaries remain excluded."
+  },
+  "remaining_environment_requirements": [
+    "Python packages in requirements.txt; Python supports Path.is_relative_to and hashlib.file_digest (Python 3.11+ is appropriate).",
+    "TeX engines/BibTeX/kpsewhich and installed URW Base35, Latin Modern, and DejaVu fonts. Recorded exact font hashes must match where enforced.",
+    "The outer renderer/assembler and some source styles require documented /usr/share font locations. This is an explicit platform dependency, not an original scratch-directory dependency."
+  ],
+  "limitations": [
+    "This is not an executed end-to-end rebuild of a relocated package.",
+    "Historical preparation/provenance-review scripts may refer to original archives or scratch paths; they are outside the documented primary rebuild route.",
+    "The frozen-reader fallback is used only when the historical source_path is absent; if that historical file exists but has changed, the digest assertion stops rather than ignoring it."
+  ],
+  "reviewed_scripts": [
+    {
+      "path": "rebuild_monograph.py",
+      "sha256": "5e49765fc44516a69b69a047c182527e4fc350c8363f168ee1414544b74a0988"
+    },
+    {
+      "path": "prepare_book.py",
+      "sha256": "218277cd9655a5b55276034bc74513ac45cd64ae7eab70e19aa186ca02bc1a11"
+    },
+    {
+      "path": "source_i_iv/rebuild_all.py",
+      "sha256": "5ae86ff627caa90a1eb22fe36aa778a18f022526a054ad430ba81b2d8d1fa7a5"
+    },
+    {
+      "path": "source_v_viii/build_all.py",
+      "sha256": "a81bffd3c5883451ed679f767a7875a68ee5f06480f462e8af3727eb09c8f1a7"
+    },
+    {
+      "path": "source_ix_xii/typeset_ix_x.py",
+      "sha256": "108d7c24070e5743f97b774a21c2c24caa585d3f27ece6e1cf3ab53d7f79ed60"
+    },
+    {
+      "path": "source_ix_xii/rebuild_xi_xii.py",
+      "sha256": "4d34be28b8dd6fecc8f7b9dea2e96373f60540ed1aa1cc817f4df714c2d2e366"
+    },
+    {
+      "path": "source_i_iv/build_components.py",
+      "sha256": "035a1efb76ff6fa66d3f17b1cf3cc114c11734ef7ad841ee98ee5a7840ed5245"
+    },
+    {
+      "path": "source_i_iv/sync_navigation.py",
+      "sha256": "fd4b6a90c203ac92b04677be53f189fea020ef6740caa8ec28b754c678099455"
+    },
+    {
+      "path": "source_i_iv/inspect_components.py",
+      "sha256": "406e0967670d17900bd4975e83651ce57af7fd638982810e422dcf57b82125f0"
+    },
+    {
+      "path": "source_ix_xii/XI/tools/build_readers.py",
+      "sha256": "7e6074bdff0a55a464c45bde3b516408f25c7ddd4e325338dbcfdd04ad1f8aea"
+    },
+    {
+      "path": "source_ix_xii/XII/tools/build_readers.py",
+      "sha256": "8eae4b007bb0642467625ccfa240808b1264a15cc33705ce9f35ef4716dd0e6b"
+    },
+    {
+      "path": "source_ix_xii/X/publication/build_publication.py",
+      "sha256": "c90fc3737b6ecddc04cd5cb660de197932cc37c7e2f64cbbcb74424ebee1aaff"
+    },
+    {
+      "path": "assemble_monograph.py",
+      "sha256": "57891dbf83795bac63e2fc115aec92a72538a76bca91ea6fc277e11dd294400f"
+    },
+    {
+      "path": "render_outer.py",
+      "sha256": "9e8fd119dc9789bdb6552ba9afd5b755ed591f2d7a6bf5b6711b25571a1bfcd6"
+    },
+    {
+      "path": "audit_monograph.py",
+      "sha256": "d02b1e9fc41b1a8e28179abc50973a2f7e52ff37df91cd6ecb49a86f935805a0"
+    },
+    {
+      "path": "make_preview.py",
+      "sha256": "58d4911f0abf770b2a6e0740492677e0fde4f611d5577e465650aedaa51fce07"
+    },
+    {
+      "path": "package_publication.py",
+      "sha256": "694aa8ac932105c67283ef246d5e003fc1beef56504dc7830a858596ff762acd"
+    }
+  ],
+  "component_path_checks": [
+    {
+      "baseline_filename": "Paper_I_Traditional_Final.pdf",
+      "path": "source_i_iv/compiled/I/traditional/Paper_I_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_III_Analytic_Supplement_v1.0.0.pdf",
+      "path": "source_i_iv/compiled/III/analytic/Paper_III_Section17_Analytic_Closeout.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_II_Traditional_Final.pdf",
+      "path": "source_i_iv/compiled/II/traditional/Paper_II_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_II_Visual_Guide_Final.pdf",
+      "path": "source_i_iv/compiled/II/visual/Paper_II_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_II_Lean_Guide_Final.pdf",
+      "path": "source_i_iv/compiled/II/lean/Paper_II_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_III_Final_v1.0.0.pdf",
+      "path": "source_i_iv/compiled/III/traditional/Paper_III_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_III_Visual_Guide_v1.0.0.pdf",
+      "path": "source_i_iv/compiled/III/visual/Paper_III_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_III_Lean_Guide_v1.0.0.pdf",
+      "path": "source_i_iv/compiled/III/lean/Paper_III_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IV_Traditional_Final.pdf",
+      "path": "source_i_iv/compiled/IV/traditional/Paper_IV_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IV_Lean_Guide_Final.pdf",
+      "path": "source_i_iv/compiled/IV/lean/Paper_IV_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_I_Lean_Guide_Final.pdf",
+      "path": "source_i_iv/compiled/I/lean/Paper_I_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_I_Machine_Native_Final.pdf",
+      "path": "source_i_iv/compiled/I/machine/Paper_I_Machine_Native_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_III_Release_Record_v1.0.0.pdf",
+      "path": "frozen_readers/Paper_III_Release_Record_v1.0.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IV_Visual_Guide_Final.pdf",
+      "path": "frozen_readers/Paper_IV_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IV_Verification_Closeout_v1.1.0.pdf",
+      "path": "frozen_readers/Paper_IV_Verification_Closeout_v1.1.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_V_Traditional_Final.pdf",
+      "path": "source_v_viii/compiled/V/traditional/Paper_V_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_V_Visual_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/V/visual_guide/Paper_V_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_V_Lean_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/V/lean_guide/Paper_V_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VI_Traditional_Final.pdf",
+      "path": "source_v_viii/compiled/VI/traditional/Paper_VI_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VI_Visual_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/VI/visual_guide/Paper_VI_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VI_Lean_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/VI/lean_guide/Paper_VI_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VII_Traditional_Final.pdf",
+      "path": "source_v_viii/compiled/VII/traditional/Paper_VII_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VII_Visual_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/VII/visual_guide/Paper_VII_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VII_Lean_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/VII/lean_guide/Paper_VII_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VIII_Traditional_Final.pdf",
+      "path": "source_v_viii/compiled/VIII/traditional/Paper_VIII_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VIII_Visual_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/VIII/visual_guide/Paper_VIII_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_VIII_Lean_Guide_Final.pdf",
+      "path": "source_v_viii/compiled/VIII/lean_guide/Paper_VIII_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IX_Euler_Main_Final.pdf",
+      "path": "source_ix_xii/IX/publication/pdfs/Paper_IX_Euler_Main_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IX_Euler_Visual_Guide_Final.pdf",
+      "path": "source_ix_xii/IX/publication/pdfs/Paper_IX_Euler_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_IX_Euler_Lean_Guide_Final.pdf",
+      "path": "source_ix_xii/IX/publication/pdfs/Paper_IX_Euler_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_X_Traditional_Final.pdf",
+      "path": "source_ix_xii/X/publication/pdfs/Paper_X_Traditional_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_X_Visual_Guide_Final.pdf",
+      "path": "source_ix_xii/X/publication/pdfs/Paper_X_Visual_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_X_Lean_Guide_Final.pdf",
+      "path": "source_ix_xii/X/publication/pdfs/Paper_X_Lean_Guide_Final.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XI_Traditional_v1.1.0.pdf",
+      "path": "source_ix_xii/XI_build/Paper_XI_Traditional_v1.1.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XI_Visual_Guide_v1.1.0.pdf",
+      "path": "source_ix_xii/XI_build/Paper_XI_Visual_Guide_v1.1.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XI_Lean_Guide_v1.1.0.pdf",
+      "path": "source_ix_xii/XI_build/Paper_XI_Lean_Guide_v1.1.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XI_Conjecture66_Progress_v0.4.0.pdf",
+      "path": "frozen_readers/Paper_XI_Conjecture66_Progress_v0.4.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XI_Conjecture66_Visual_Atlas_v0.5.0.pdf",
+      "path": "frozen_readers/Paper_XI_Conjecture66_Visual_Atlas_v0.5.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XII_Traditional_v1.0.0.pdf",
+      "path": "source_ix_xii/XII_build/Paper_XII_Traditional_v1.0.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XII_Visual_Guide_v1.0.0.pdf",
+      "path": "source_ix_xii/XII_build/Paper_XII_Visual_Guide_v1.0.0.pdf",
+      "relative": true,
+      "exists": true
+    },
+    {
+      "baseline_filename": "Paper_XII_Lean_Guide_v1.0.0.pdf",
+      "path": "source_ix_xii/XII_build/Paper_XII_Lean_Guide_v1.0.0.pdf",
+      "relative": true,
+      "exists": true
+    }
+  ],
+  "unresolved_blockers": []
+}

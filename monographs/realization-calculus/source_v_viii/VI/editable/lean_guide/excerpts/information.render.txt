@@ -1,0 +1,10 @@
+theorem information_loss_matrix (f : I → A) (p l : I → ℝ) (k : A → ℝ)
+    (hp : ∀ i, 0 ≤ p i) (hz : evidence p l ≠ 0)
+    (hk : evidence (coarsen f p) k ≠ 0) (a : A) :
+    coarsen f (update p l) a-update (coarsen f p) k a =
+      (lossMatrix (coarsen f p) (update (coarsen f p) k)).mulVec
+        (fun j => effective f p l j-k j) a/evidence p l := by
+  rw [effective_factorization f p l hp, lossMatrix_apply]
+  have he := posterior_difference (coarsen f p) (effective f p l) k
+    (by rwa [effective_evidence f p l hp]) hk a
+  simpa only [effective_evidence f p l hp] using he

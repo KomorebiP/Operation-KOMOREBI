@@ -1,0 +1,15 @@
+theorem finite_comparison_package (P : Subgroup G)
+    (hP : ∀ g ∈ P, ∀ v, degreeInduced δ n ξ g v = v)
+    (S : Finset ℕ) (J : ℕ → Subgroup G) (w : ℕ → ℚ)
+    (hJP : ∀ r ∈ S, J r ≤ P)
+    (m : ℕ) [NeZero m] (η : TameDegree.degreeSubgroup δ m →* ℂˣ)
+    (χ : kˣ →* ℂˣ) (ψ : AddChar k ℂ) (hψ : ψ ≠ 1) :
+    observed δ ι φ n ξ q hrel S J w χ ψ =
+      fromCoordinates n q j (InducedCycleInvariants.returnScalar δ φ hφ n ξ) χ ψ ∧
+    Nonempty (Representation.Equiv ((degreeInduced δ n ξ).tprod (degreeInduced δ m η))
+      (Representation.directSum (fun i : Fin (Nat.gcd n m) =>
+        degreeInduced δ (Nat.lcm n m) (TameTensorSource.interactionCharacter δ φ n m ξ η i)))) ∧
+    (∑ i : Fin (Nat.gcd n m), Module.finrank ℂ (DegreeIndSpace δ (Nat.lcm n m)
+      (TameTensorSource.interactionCharacter δ φ n m ξ η i))) = n*m ∧
+    ‖GaussCharacters.phase χ ψ‖ =
+      if χ = 1 then (Real.sqrt (Fintype.card k))⁻¹ else 1 :=

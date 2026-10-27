@@ -1,0 +1,76 @@
+\section{From original contours to canonical values}\label{sec:analytic-closeout}
+
+The analytic development follows the contours that occur in the mathematical text. A contour is a continuous complex path of bounded variation on the closed unit interval. A cycle is a finite family of closed contours. An occurrence in that family contributes once to every sum, so a repeated contour retains its multiplicity. The construction permits constant paths, retracing, and an empty family.
+
+The proof has three distinct tasks. It identifies the classical contour integral, controls the original geometric length, and proves that admissible contours give the same functional calculus value. Each task has an explicit endpoint in the current sources. The identity of a chosen integral is kept separate from independence of that choice.
+
+\subsection{The original tagged integral}
+
+For a path $\gamma$ and a continuous function $F$ on its trace with values in a complex Banach space, the tagged sums are
+\[
+ S(\gamma,F;P,\tau)
+ =\sum_{j=0}^{m-1}
+   \bigl(\gamma(t_{j+1})-\gamma(t_j)\bigr)F(\gamma(\tau_j)),
+ \qquad t_j\leq\tau_j\leq t_{j+1}.
+\]
+The factor on the left acts by complex scalar multiplication. The partition is monotone, begins at $0$, and ends at $1$. Repeated partition points are allowed. The definition of the integral quantifies over every such tagged partition with sufficiently small mesh. Arbitrarily fine partitions are constructed, and the value is proved unique. The definition therefore expresses an actual limit of the original path increments.
+
+For an absolutely continuous path, the difference between a tagged increment and its velocity integral is an integral of the oscillation of $F$ along that subinterval. Its norm is bounded by that oscillation times the integral of the speed. Summing over the partition and using uniform continuity on the compact trace proves convergence of all the tagged sums to the Bochner velocity integral.
+
+An arbitrary continuous rectifiable path need not be absolutely continuous in its original parameter. The project constructs its normalized arclength path and a continuous monotone map from the original parameter interval. Tagged partitions are transported through this map. Their increments and tagged function values agree exactly. Uniform continuity controls the transported mesh, including flat portions of the parameter map. The zero length case is handled separately. This proves equality between the original contour integral and the represented velocity integral without assuming a comparison certificate.
+
+The source \code{ReleaseRectifiableRSError.lean} contains the tagged definition, existence and uniqueness results, monotone transport, and the finite cycle comparison. In particular, the original winding expression obtained by integrating $(z-w)^{-1}$ agrees with the represented winding whenever $w$ avoids the trace.
+
+\subsection{The geometric length used in the estimate}
+
+Write $L(\gamma)$ for the total variation of the original path. The normalized arclength path is Lipschitz with constant $L(\gamma)$. Its coordinate velocity consequently satisfies
+\[
+ \int_0^1\|v_\gamma(t)\|\,dt\leq L(\gamma).
+\]
+For a cycle, these inequalities add over its occurrences. This is the inequality needed by the manuscript. The proof does not require an additional theorem asserting equality between integrated speed and variation.
+
+Combining this inequality with the actual cycle integral estimate gives
+\[
+ \left\|\int_\Gamma F(z)\,dz\right\|
+ \leq \operatorname{length}(\Gamma)
+       \sup_{z\in\Gamma}\|F(z)\|,
+\]
+where the length on the right is the original geometric length with multiplicities. Each supremum of norms is defined to be zero when its trace is empty. The separate supremum factors in Theorem~11.6 are retained by \code{ReleaseRectifiableDefect.lean}. They are not replaced by an unspecified product bound.
+
+\subsection{General Cauchy comparison}
+
+The represented cycle has integrable velocities. Its curves are absolutely continuous, and composition with a holomorphic scalar function on a neighborhood of the compact trace is absolutely continuous. The chain rule and the fundamental theorem of calculus therefore give
+\[
+ \int_\Gamma G'(z)\,dz=0
+\]
+for a supplied holomorphic primitive $G$. This scalar primitive result also proves local constancy of the actual normalized winding integral away from the trace. Applying it to an inverse kernel on an enclosing ball proves that winding vanishes sufficiently far from the trace.
+
+For a holomorphic function $F$ with values in a complex Banach space on an arbitrary open set $U$, define
+\[
+ H_{1,\Gamma}(w)=\int_\Gamma [w,z]F\,dz,
+ \qquad
+ H_{2,\Gamma}(w)=\int_\Gamma (z-w)^{-1}F(z)\,dz.
+\]
+The divided difference $[w,z]F$ takes the value $F'(w)$ on the diagonal. The first function is holomorphic on $U$. The second is holomorphic away from the trace. Compact trace bounds justify differentiation under the actual Banach integral in both cases.
+
+Suppose that two cycles $\Gamma$ and $\Lambda$ lie in $U$ and have equal winding outside $U$. Use $H_{1,\Gamma}-H_{1,\Lambda}$ on $U$ and $H_{2,\Gamma}-H_{2,\Lambda}$ outside $U$. At an exterior point, both traces are absent from a neighborhood. Local constancy of winding and the divided difference identity make the two expressions agree there. The resulting function is entire, even when $U$ is disconnected or unbounded. Far from the traces it tends to zero. Banach valued Liouville then makes it identically zero.
+
+To recover the integral of $F$, replace it by $(z-a)F(z)$ for any $a\in U$. Its divided difference at $a$ equals $F(z)$, including at $z=a$. Thus no point outside the traces has to be chosen. The empty domain case is handled directly by the zero bound on an empty trace. The resulting theorem is
+\[
+ \int_\Gamma F(z)\,dz=\int_\Lambda F(z)\,dz.
+\]
+Its only geometric inputs are the actual finite cycles and equality of winding outside the open domain. It assumes neither a general Cauchy conclusion nor contour independence.
+
+\subsection{The canonical defect and compatibility}
+
+For a bounded operator $T$, admissibility records an open holomorphy domain, a genuine cycle in that domain and the resolvent set, winding one on the spectrum, and winding zero outside the domain. These are input data. No functional calculus value or independence equation is a field of that record.
+
+Two admissible choices are compared on the union of their holomorphy domains intersected with the resolvent set. Outside this comparison domain, their windings are both zero or both one. General Cauchy comparison proves equality of their normalized Dunford integrals. A canonical value can therefore be selected from any nonempty family of admissible data and then represented by every admissible original contour.
+
+The original contour supplied in Theorem~11.6 provides this witness for both operators. After rewriting the two canonical values through that contour, the actual resolvent defect identity proves the manuscript's original tagged integral formula and its geometric length bound. No extra existence assumption is needed for this theorem.
+
+For compatibility, the two endpoint operators may use different admissible contours. When the operator defect is zero, their two intertwined resolvents agree on the overlap of their resolvent sets. They glue to one holomorphic map on the union. General Cauchy comparison again identifies the integrals. Applying this naturality result to the total map of a finite tower proves Corollary~11.10 whenever its endpoint expressions are defined. The formal witnesses express this definedness. They do not assert compatibility as a premise.
+
+The current coverage statement concerns the manuscript's enumerated proof scopes. It does not assert a separate theorem constructing an admissible contour for every possible operator and holomorphic germ, or an identification with a different software library's calculus API.
+
+The relevant final endpoints are in \code{ReleaseCanonicalHFC.lean}, \code{ReleaseCanonicalNaturality.lean}, and \code{ReleaseCanonicalDefect.lean}. Their exact source identity and execution receipts are recorded separately from this exposition.

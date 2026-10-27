@@ -1,0 +1,312 @@
+\vpage{29}{Acyclic paths stop after finitely many transfers}{DIRECTED TRANSFER / A FINITE DYSON EXAMPLE}{Chapter VI, Part II: Theorem E2.8 and Corollary E2.9. Acyclicity concerns the transfer graph.}
+Let three scalar packets form the directed chain $0\to1\to2$, with transfer coefficients $2$ and $3$. The generator and its powers are
+\[
+A=\mat{0&0&0\\2&0&0\\0&3&0},\qquad
+A^2=\mat{0&0&0\\0&0&0\\6&0&0},\qquad A^3=0.
+\]
+Therefore the exponential is the exact polynomial
+\[
+e^{tA}=I+tA+\frac{t^2}{2}A^2.
+\]
+\vfig{ext_paths}
+\captiontext{Only the empty path, one-edge paths, and the two-edge path exist. The coefficient $3t^2$ includes both the edge product $2\cdot3$ and the ordered-time simplex area $t^2/2$.}
+\head{Path length counts transfers, not elapsed time}
+Starting at $e_0$, the complete state is $(1,2t,3t^2)^{\mathsf T}$. No fourth packet or repeated cycle can contribute. Direct differentiation gives $x'(t)=Ax(t)$, including the relation $x_2'(t)=3x_1(t)$.
+
+If nonzero diagonal generators are added, a path acquires an integral of the within-packet evolutions between its transfer times. Acyclicity still bounds the number of transfers. It does not make the diagonal exponential factors polynomial in time.
+
+This is a linear transfer example. The columns of $A$ do not sum to zero; the total of the displayed state is $1+2t+3t^2$. It is consequently not a Markov probability model. Positivity of off-diagonal coefficients alone does not imply conservation of probability.
+\takeaway{An acyclic packet graph terminates the transfer expansion. Nilpotence makes this particular full exponential polynomial; the two statements have different hypotheses.}
+
+\vpage{30}{Convergence does not close the dynamics}{REFINEMENT / A PERSISTENT RANGE EXCURSION}{Chapter VI, Part II: Theorem E4.8 and Example E4.10. Summability and closure are different tests.}
+Let the coarse space be $\RR$ and every finer space be $\RR^2$. The first connecting maps are $C(x,y)=x$ and $Rx=(x,0)$; all later maps are identities. Let the coarse evolution be the identity and all fine evolutions be rotations:
+\[
+T(t)=\mat{\cos t&-\sin t\\\sin t&\cos t},\qquad
+U_n(t)=CT(t)R=\cos t\quad(n\ge1).
+\]
+The reconstructed sequence is already constant above its first level. Only one adjacent defect is nonzero, so its defect sum is finite on every bounded time interval.
+\vfig{ext_closure}
+\captiontext{The full state returns to the coarse line with negative sign after two quarter turns. Resetting the hidden coordinate after the first quarter turn loses the returning contribution.}
+\head{A limit can fail the semigroup identity}
+At $s=t=\pi/2$,
+\[
+U(s)U(t)=0,\qquad U(s+t)=-1.
+\]
+Write $P=RC=\diag(1,0)$. The exact algebraic difference is
+\[
+U(s)U(t)-U(s+t)=CT(s)(P-I)T(t)R.
+\]
+Its value is $1$ at these times, matching the missing hidden excursion. This is a failure of closure, not a failure of convergence.
+
+The strengthened closure theorem asks for the corresponding excursion norm to tend to zero with refinement, uniformly on bounded time intervals. Generator control of range leakage supplies a sufficient condition in its stated contractive setting. The present rotation example never meets that vanishing condition.
+\takeaway{A convergent sequence of reconstructed evolutions need not converge to a semigroup. The limit must also forget no excursion that can later return.}
+
+\vpage{31}{A tail bound states what refinement buys}{SUMMABLE DEFECTS / A SCALAR COMPLETION}{Chapter VI, Part II: Theorem E4.5 and Corollary E4.7. This example has identity connecting maps.}
+Take $X_n=\RR$, $C_n=R_n=1$, and
+\[
+a_n=1-2^{-n},\qquad A_n=-a_n,\qquad T_n(t)=e^{-a_nt}\quad(n\ge0).
+\]
+Each semigroup is contractive for $t\ge0$. The exact adjacent generator-defect magnitude is
+\[
+|A_{n+1}-A_n|=2^{-(n+1)},\qquad
+\sum_{j=n}^{\infty}|A_{j+1}-A_j|=2^{-n}.
+\]
+\vfig{ext_tails}
+\captiontext{The bars show the certified tail $2^{-n}$ at horizon $T=1$. They are bounds on a whole time interval, not errors sampled at the right endpoint.}
+\head{The estimate follows before any graph is drawn}
+For $0\le t\le T$, the derivative of $a\mapsto e^{-at}$ has absolute value at most $T$ when $a\ge0$. Thus
+\[
+\sup_{0\le t\le T}|T_n(t)-e^{-t}|\le T2^{-n}.
+\]
+The limit is $e^{-t}$, which does have the semigroup law. Here every reconstruction is the identity, so the hidden-range excursion is identically zero. That closure fact is additional to the tail estimate.
+
+In a general tower, the weighted estimate includes norms of composed connecting and reconstruction maps. Dropping those weights without contraction or another uniform bound can change a convergent error budget into an invalid one. Even a small defect at each individual level does not control the sum over all levels.
+\takeaway{A summable tail gives an explicit stopping rule for a fixed horizon. It does not remove weights, supply uniformity on all time, or prove closure without its own hypotheses.}
+
+\vpage{32}{The obstruction lives in the forgotten directions}{MARKOV DESCENT / TEST THE AGGREGATION KERNEL}{Chapter VI, Part II: Theorem E5.3 and Corollary E5.4. A quotient criterion with a concrete witness.}
+Return to the four-state model of Plate VI.4 and the perturbed stochastic matrix $K_\varepsilon$ of Plate VI.6. Let
+\[
+C=\mat{1&1&0&0\\0&0&1&1},\qquad w=e_0-e_1.
+\]
+The vector $w$ changes the fine distribution inside the first packet without changing its mass: $Cw=0$. Yet
+\[
+CK_\varepsilon w=\mat{-1/16\\1/16}\ne0.
+\]
+\vfig{ext_obstruction}
+\captiontext{The coarse input cannot see $w$. The next coarse output can. Therefore no linear coarse operator can reproduce this fine step for every input.}
+\head{Why one witness rules out every coarse matrix}
+If some $\bar K$ satisfied $CK_\varepsilon=\bar KC$, then $CK_\varepsilon w=\bar KCw=0$, contradicting the displayed vector. The failure is not repaired by fitting a different coarse transition matrix to selected priors.
+
+More generally, for a surjective aggregation map $C$, a linear map $M$ descends exactly if $CM$ vanishes on $\ker C$. The descended map is defined by $\bar M(Cx)=CMx$; the kernel condition makes this independent of the representative $x$.
+
+For a deterministic partition of a finite stochastic system, differences $e_i-e_j$ within the same source block span the forgotten directions. Testing them gives the familiar equality of aggregate columns. Nonnegativity and column sums of the descended stochastic matrix then follow from the fine stochastic matrix and the partition structure.
+\takeaway{The canonical obstruction is the action on information that aggregation discards. A nonzero witness in that kernel rules out exact descent at once.}
+
+\vpage{33}{Gaussian packets have separate clocks}{ORNSTEIN--UHLENBECK / HERMITE ENERGY}{Chapter VI, Part II: Theorem E7.1 and Corollaries E7.2, E7.4, and E7.5. Standard Gaussian measure.}
+In $L^2(\gamma)$ for the standard Gaussian law on $\RR$, use the probabilists' Hermite polynomials
+\[
+H_1(x)=x,\qquad H_2(x)=x^2-1,\qquad
+H_4(x)=x^4-6x^2+3.
+\]
+The Ornstein--Uhlenbeck generator is $\mathcal Lf=f''-xf'$. Direct polynomial differentiation gives $\mathcal LH_n=-nH_n$ for these three polynomials. Their squared norms are $n!$ and different Hermite degrees are orthogonal.
+\vfig{ext_hermite}
+\captiontext{For $f=H_1+H_2$, the two bars are its separate squared-energy contributions. At $t=\log2$, their sum is $3/8$, below the spectral-gap bound $3/4$.}
+\head{Reconstruction preserves the modes; time changes their weights}
+The semigroup sends $f=H_1+H_2$ to
+\[
+T(t)f=e^{-t}H_1+e^{-2t}H_2,\qquad
+\|T(t)f\|_2^2=e^{-2t}+2e^{-4t}.
+\]
+Its mean is zero. The Gaussian gap bounds this by $e^{-2t}\|f\|_2^2=3e^{-2t}$. It need not be an equality when multiple degrees are present.
+
+For the nonnegative operator $-\mathcal L$, a square-root evolution replaces rate $n$ by $\sqrt n$. On $g=H_1+H_4$, the coefficients at $t=\log2$ are $1/2$ and $1/4$, whereas ordinary OU evolution gives $1/2$ and $1/16$. The eigenfunctions agree; the rates differ.
+
+These calculations concern polynomial elements of Gaussian $L^2$. The general expansion and generator-domain statements belong to the traditional proof; a finite list of Hermite checks does not establish completeness of the basis.
+\takeaway{Orthogonal packets make the energy accounting exact. A fractional generator alters the spectral clock while keeping the same Gaussian modes.}
+
+\vpage{34}{Several observations determine one sufficient partition}{FIXED LIKELIHOODS / JOINT PROFILES}{Chapter VI, Part II: Theorem E9.3. A finite family of strictly positive likelihoods.}
+On four states, consider two likelihoods
+\[
+\lambda^{(1)}=(2,2,1,1),\qquad
+\lambda^{(2)}=(1,1,3,1).
+\]
+Two states may share a packet in the coarsest partition on which every listed likelihood is constant exactly when their entire likelihood profiles agree. The profiles are
+\[
+(2,1),\ (2,1),\ (1,3),\ (1,1),
+\]
+so the partition is $\{0,1\},\{2\},\{3\}$.
+\vfig{ext_profiles}
+\captiontext{The first observation alone allows the last two states to be merged. The second observation distinguishes them. The shared partition must respect both likelihoods.}
+\head{A complete two-stage calculation}
+Start from the uniform prior. The coarse prior is $(1/2,1/4,1/4)$. After the first likelihood, it becomes $(2/3,1/6,1/6)$; after the second, it is
+\[
+(1/2,3/8,1/8).
+\]
+The direct fine update multiplies the likelihoods componentwise, giving weights $(2,2,3,1)$ and posterior $(2,2,3,1)/8$. Its packet masses are precisely the displayed coarse posterior.
+
+The individual evidences are $Z_1=3/2$ and $Z_2=4/3$, and their product is $2$, the direct evidence of the product likelihood. These are relative likelihood weights, so evidence larger than one is allowed.
+
+This partition supplies fixed coarse likelihoods that work for every prior. A single-packet aggregation always gives posterior $(1)$; that mass-only commutation does not identify likelihood profiles. A prior-dependent conditional average can summarize one update on a coarser partition, but requires the within-packet information that a fixed sufficient rule avoids.
+\takeaway{Equal full likelihood profiles determine the coarsest partition on which every listed likelihood is constant. This partition admits fixed sufficient update rules.}
+
+\vpage{35}{Information loss has an exact location}{RELATIVE ENTROPY / COARSE AND CONDITIONAL TERMS}{Chapter VI, Part II: Theorem E9.8 and Corollary E9.9. Positive reference masses in this example.}
+Take
+\[
+p=(1/2,1/4,1/8,1/8),\qquad q=(1/4,1/4,1/4,1/4)
+\]
+and group the first two and last two states. Their coarse laws are $P=(3/4,1/4)$ and $Q=(1/2,1/2)$. Define $D(p\Vert q)=\sum_i p_i\log(p_i/q_i)$ with natural logarithms.
+\vfig{ext_information}
+\captiontext{The bar lengths use the displayed exact formulas evaluated for illustration. The split is an identity: coarse information plus posterior-weighted conditional information. It is not a fitted allocation.}
+\head{The chain rule identifies exactly what aggregation removes}
+Inside packet A, the conditional laws are $(2/3,1/3)$ and $(1/2,1/2)$; inside B they agree. Hence
+\[
+\begin{aligned}
+D(p\Vert q)&=\tfrac14\log2,\\
+D(P\Vert Q)&=\tfrac34\log3-\log2,\\
+\sum_aP_aD(p(\cdot\mid a)\Vert q(\cdot\mid a))
+&=\tfrac54\log2-\tfrac34\log3.
+\end{aligned}
+\]
+Adding the last two lines recovers the first. Every conditional term is nonnegative, so aggregation cannot increase relative entropy. Equality holds precisely when the occupied packets have the same conditional laws, under the stated support convention.
+
+The weighting is by the packet mass $P_a$ from the first argument of $D(p\Vert q)$. Replacing it by $Q_a$ generally breaks the identity. Likewise, forgetting zero-mass conventions or allowing a positive $p_i$ over a zero $q_i$ changes which expressions are finite.
+\takeaway{Coarse relative entropy measures distinguishability that survives aggregation. The conditional term records exactly the distinguishability removed inside the packets.}
+
+\vpage{36}{The score rises because it has variance}{BAYESIAN FLOW / EVIDENCE CUMULANTS}{Chapter VI, Part II: Theorems E10.1 and E10.2. Exponential tilting of a fixed finite prior.}
+Start with equal prior masses on scores $u=(0,1,2)$ and likelihood $e^{tu}$. Put $q=e^t$. The evidence and tilted distribution are
+\[
+Z(t)=\frac{1+q+q^2}{3},\qquad
+p(t)=\frac{(1,q,q^2)}{1+q+q^2}.
+\]
+At $t=\log2$, they are $Z=7/3$ and $p=(1,2,4)/7$.
+\vfig{ext_cumulants}
+\captiontext{The score values stay fixed. Their probabilities change. The rising mean score is a property of this tilted family, not an increase in the individual scores.}
+\head{Two derivatives have different statistical meanings}
+The first derivative of log evidence is the current mean score, and the second is its variance:
+\[
+\frac{d}{dt}\log Z(t)=\EE_{p(t)}u,
+\qquad
+\frac{d^2}{dt^2}\log Z(t)=\Var_{p(t)}(u)\ge0.
+\]
+At $q=2$ the exact values are
+\[
+\EE u=\frac{10}{7},\qquad
+\EE u^2=\frac{18}{7},\qquad
+\Var(u)=\frac{26}{49}.
+\]
+Thus the derivative of the mean is $26/49$ at this time. The flow equation $p_i'=(u_i-\EE u)p_i$ gives derivatives $(-10,-6,16)/49$, which sum to zero.
+
+As $t\to\infty$, mass concentrates on the largest score present in the initial support. A score with zero initial prior mass is never created by multiplication. If several occupied states tie for the maximum, their relative prior proportions remain unchanged within that maximal packet.
+\takeaway{Log evidence is a cumulant generator for the tilted law. Its curvature is variance, so the mean score is monotone even though the flow is nonlinear.}
+
+\vpage{37}{Keep blocks by their certified contribution}{MEMORY COMPRESSION / AN OPTIMIZATION WITH A DEFINED COST}{Chapter VI, Part II: Theorem E15.1 and Corollary E15.2. Stable primary blocks; block count is the budget.}
+Consider the scalar memory kernel
+\[
+\mathcal K(t)=\tfrac14e^{-t}+(3+2t)e^{-2t}+\tfrac13e^{-3t}.
+\]
+It has three primary blocks. The middle block carries a Jordan term and must be retained or omitted as a whole for this selection rule. Their certified integrated weights are
+\[
+w_1=\frac14,\qquad w_2=\frac32+\frac{2}{2^2}=2,
+\qquad w_3=\frac{1/3}{3}=\frac19.
+\]
+\vfig{ext_selection}
+\captiontext{With one primary block retained, choose the middle block and certify omitted weight $13/36$. With two retained, add the rate-one block and the remaining certificate is $1/9$.}
+\head{The slowest eigenvalue is not necessarily the largest effect}
+The rate-two block has the greatest weight because its couplings and nilpotent contribution dominate. Retaining the slowest rate alone would omit weight $2+1/9$, a much larger certificate.
+
+The descending order is $2,1/4,1/9$. A target tolerance $1/8$ needs two blocks according to this bound: one block leaves $13/36>1/8$, while two leave $1/9\le1/8$. Every term in this particular scalar kernel is nonnegative, so its omitted integral equals the certificate.
+
+In general matrix kernels, cancellations can make the true error smaller. The theorem optimizes the sum of omitted block weights, not every possible approximation error. Moreover, a Jordan block may cost several state dimensions. A fixed budget in total hidden dimension is a different optimization problem from a fixed number of primary blocks.
+\takeaway{The largest-weight rule is exact for its stated certificate and block-count budget. It is not a claim of globally optimal model reduction.}
+
+\vpage{38}{A kernel certificate becomes a trajectory certificate}{VOLTERRA STABILITY / SAME INITIAL DATA AND FORCING}{Chapter VI, Part II: Theorem E15.6. Norms and a finite time horizon are explicit.}
+Let $N=\mat{0&1\\0&0}$, so $N^2=0$ and $\|N\|_2=1$. On $[0,T]$, compare the memory kernels $K(t)=N$ and $\widetilde K(t)=0$, with identity free semigroup, no forcing, and initial state $x_0=e_1=(0,1)^{\mathsf T}$. The equations are
+\[
+x'(t)=\int_0^t N x(r)\,dr,\qquad
+\widetilde x'(t)=0.
+\]
+Their exact solutions are $x(t)=(t^2/2,1)^{\mathsf T}$ and $\widetilde x(t)=(0,1)^{\mathsf T}$.
+\vfig{ext_trajectory}
+\captiontext{The first-coordinate error is exactly $t^2/2$. The certificate bounds its maximum on the entire interval. The bound is deliberately shown separately from the trajectory.}
+\head{Track every constant before applying the estimate}
+Here $M_T=1$, $B=\sup\|\widetilde x\|=1$, and
+\[
+L=\|K\|_{L^1(0,T)}=T,\qquad
+\varepsilon=\|K-\widetilde K\|_{L^1(0,T)}=T.
+\]
+The theorem yields
+\[
+\sup_{0\le t\le T}\|x(t)-\widetilde x(t)\|
+=\frac{T^2}{2}\le T^2e^{T^2}.
+\]
+At $T=1/2$, the exact error is $1/8$ and the certificate is $e^{1/4}/4$. Nilpotence makes this example polynomial; it does not remove the time horizon from the general theorem.
+
+The two solutions share initial state, free semigroup, and forcing. If those are changed as well, their errors need additional terms. An integrated kernel error alone does not automatically control a trajectory on an infinite horizon.
+\takeaway{The compression estimate transports an $L^1$ kernel budget into a finite-horizon state bound, using an explicit bound on the comparison trajectory.}
+
+\vpage{39}{Two auxiliary states realize a repeated pole}{FINITE REALIZATION / AN EXACT DIFFERENTIAL MODEL}{Chapter VI, Part II: Corollaries E15.4 and E15.5. This is a supplied rational realization.}
+The kernel $K(t)=te^{-2t}$ from Plate VI.23 has transform $1/(z+2)^2$. It is realized by two auxiliary states:
+\[
+\begin{aligned}
+\dot y_1&=-2y_1+y_2,& y_1(0)&=0,\\
+\dot y_2&=-2y_2+x,& y_2(0)&=0,\\
+\dot x&=a x+y_1.&
+\end{aligned}
+\]
+With $D=\mat{-2&1\\0&-2}$, $B=(1,0)$, and $C=(0,1)^{\mathsf T}$, the feedback kernel is $Be^{tD}C=te^{-2t}$.
+\vfig{ext_auxiliary}
+\captiontext{An input first enters $y_2$, transfers to $y_1$, and then returns to $x$. The two equal decay rates produce a repeated pole through the intervening link.}
+\head{Elimination recovers the convolution, including its preparation}
+Variation of constants gives
+\[
+y(t)=e^{tD}y(0)+\int_0^t e^{(t-r)D}Cx(r)\,dr,
+\]
+so the retained equation is
+\[
+\dot x(t)=a x(t)+Be^{tD}y(0)
++\int_0^t (t-r)e^{-2(t-r)}x(r)\,dr.
+\]
+The convolution-only version is exact for $y(0)=0$. For a nonzero preparation, $Be^{tD}y(0)=e^{-2t}(y_1(0)+t y_2(0))$ is an additional forcing.
+
+The highest pole coefficient is nonzero in this example. A hidden Jordan block can become invisible to a transfer function if its entrance or exit coupling annihilates that coefficient. Pole order is therefore bounded by hidden Jordan depth, with equality requiring a visible highest term.
+\takeaway{A polynomial-exponential kernel has a concrete finite state realization when the matrices are supplied. This does not realize every possible memory law with finitely many states.}
+
+\vpage{40}{Survivors have a different mixture of causes}{COMPETING RISKS / RESIDUAL LIFE}{Chapter VI, Part II: Proposition E16.4 and Theorem E16.5. This example is stable and absorbs surely.}
+Two transient states have no internal transitions. Their exit rates are $1$ and $2$, their initial masses are both $1/2$, and the two states exit by distinct causes. Thus
+\[
+A=\diag(-1,-2),\qquad
+S(t)=\tfrac12e^{-t}+\tfrac12e^{-2t},
+\]
+with cause densities $f_1(t)=e^{-t}/2$ and $f_2(t)=e^{-2t}$.
+\vfig{ext_risks}
+\captiontext{At $t=\log2$, surviving mass is $3/8$. Cause 1 has accumulated probability $1/4$ and cause 2 has accumulated probability $3/8$; the three pieces sum to one.}
+\head{Condition on survival before restarting the clock}
+At this time the transient masses are $(1/4,1/8)$, so the conditional distribution of survivors is $(2/3,1/3)$. Consequently
+\[
+\frac{S(t+s)}{S(t)}=\frac23e^{-s}+\frac13e^{-2s},
+\qquad
+\EE[\tau-t\mid\tau>t]=\frac23+\frac16=\frac56.
+\]
+The original mean lifetime was $\tfrac12\cdot1+\tfrac12\cdot\tfrac12=3/4$. Surviving longer changes the mixture toward the slower state; it does not restart the original mixture.
+
+The cause densities at $t=\log2$ both equal $1/4$, so the cause-specific hazards are both $2/3$ and total hazard is $4/3$. Hazards are rates and need not lie in $[0,1]$. Each eventual cause probability is $1/2$, obtained by integrating its density. Stability of the subgenerator is part of that eventual-absorption statement.
+\takeaway{Residual life restarts the same transient semigroup from the conditional surviving distribution. Cause probabilities, densities, and hazards answer different questions.}
+
+\vpage{41}{An operator substitution transports the defect too}{FUNCTIONAL CALCULUS / AN EXACT RATIONAL TEST}{Chapter VI, Part II: Theorem E3.4; compare Chapter VI, Part I, Theorem 15.1, and Plate VI.25.}
+Use the operators from Plate VI.25, but perturb the rectangular comparison map:
+\[
+A=\mat{2&1&0\\0&2&0\\0&0&9},\quad
+B=\mat{2&1\\0&2},\quad
+C_\eta=\mat{1&0&\eta\\0&1&0}.
+\]
+The generator defect is $\Delta=C_\eta A-BC_\eta$, with only one nonzero entry, $\Delta_{13}=7\eta$ (matrix indices begin at one).
+\vfig{ext_substitution}
+\captiontext{The perturbation lets the discarded eigenvalue enter the comparison. Exact naturality holds at $\eta=0$; a nonzero defect is transformed, not erased, by the rational calculus.}
+\head{A resolvent identity supplies the sign and both inverse factors}
+For $F(z)=1/(1+z)$, all required inverses exist, and
+\[
+C_\eta F(A)-F(B)C_\eta
+=-(I+B)^{-1}\Delta(I+A)^{-1}
+=\mat{0&0&-7\eta/30\\0&0&0}.
+\]
+This follows by multiplying the difference by $I+B$ on the left and $I+A$ on the right. The middle numerator is $(I+B)C_\eta-C_\eta(I+A)=-\Delta$.
+
+The retained Jordan block still contributes $F'(2)=-1/9$, as on Plate VI.25. The new third-column discrepancy compares $F(9)=1/10$ with $F(2)=1/3$, multiplied by $\eta$.
+
+The general holomorphic defect formula integrates the corresponding resolvent defect under its contour and spectral assumptions. This rational example verifies an actual matrix inverse identity. It does not remove those analytic hypotheses or establish a calculus for arbitrary unbounded operators.
+\takeaway{Exact intertwining gives exact naturality. When intertwining fails, the functional calculus has a structured defect whose factors can be computed.}
+
+\vpage{42}{How to read the evidence}{EVIDENCE MAP / FORMAL RECORDS AND FINITE EXAMPLES}{Chapter VI formal companion: source, execution, and example records.}
+\vfig{ext_evidence}
+\captiontext{The three evidence tracks have distinct scopes. The formal contract is inherited; the new exact examples and the present PDF build are fresh editorial checks.}
+\head{Read the records without adding incompatible counts}
+The September visual release records 204 exact or symbolic checks and 11 rejected false controls for its 28-page atlas. The scripts and saved report remain available. The monograph reruns the original symbolic suite with SymPy and mpmath. Its recorded inputs, outputs, resource limits, and execution logs accompany the current result.
+
+The monograph also reruns the separate standard-library exact checker for Plate VI.29 through Plate VI.41. It uses rational matrices, finite polynomial algebra, Gaussian moments, and rational coefficients of logarithms. It checks the stated finite examples and rejects deliberately false alternatives. Its report records 120 assertions and 8 rejected false controls. A separate current verification also reruns 182 rational assertions and 4 rejected false controls for selected inherited models. That narrower check overlaps the full symbolic replay and remains separate from its count.
+
+The new checks do not numerically certify improper integrals, all time horizons, or every analytic theorem. For example, the integrated memory weights use the stated exponential-integral formula; the checker verifies its coefficients and finite selection problem. Gaussian polynomial checks do not prove Hermite completeness. Rational entropy coefficient identities do not replace the general support-sensitive chain rule.
+\head{The formal and editorial boundaries stay separate}
+The inherited Lean record covers 33 scoped results with 341 supporting theorem declarations in 47 proof modules. This guide neither enlarges that denominator nor claims a fresh kernel build. Traditional Part II retains broader written proofs; Part III retains earlier complementary results and the operator-substitution material migrated from Paper IV. The Lean companion maps their relationship to the formal baseline.
+
+All 40 plates are editable vector sources: the 26 original plates plus 14 editorial plates. The portable build compiles the shipped geometry without needing symbolic regeneration. The supplied models and Python generators were used to regenerate all forty plates. Geometry samples remain drawing coordinates rather than additional analytic proofs.
+\takeaway{A final edition can preserve strong earlier evidence while reporting exactly which checks were rerun. Treat each evidence count as a count of its own declared scope.}

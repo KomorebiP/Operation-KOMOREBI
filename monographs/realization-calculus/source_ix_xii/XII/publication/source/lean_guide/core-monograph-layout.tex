@@ -1,0 +1,84 @@
+% Shared publication layout. Mathematical definitions and proofs are unchanged.
+\RequirePackage{setspace,caption,needspace,etoolbox}
+\definecolor{pubNavy}{HTML}{3C263F}
+\definecolor{pubTeal}{HTML}{7B4165}
+\definecolor{pubCopper}{HTML}{A68A56}
+\definecolor{pubInk}{HTML}{22282C}
+\definecolor{pubMuted}{HTML}{615963}
+\definecolor{pubWash}{HTML}{F5F0F4}
+\newcommand{\CoreLayout}{%
+  \geometry{letterpaper,left=.87in,right=.87in,top=.88in,bottom=.86in,headheight=14pt,headsep=18pt,footskip=26pt,ignorehead,ignorefoot}%
+  \color{pubInk}\setstretch{1.06}%
+  \setlength{\parindent}{1.05em}\setlength{\parskip}{2.5pt plus .5pt minus .3pt}%
+  \setlength{\emergencystretch}{3em}\raggedbottom
+  \setlength{\abovedisplayskip}{9pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayskip}{9pt plus 2pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{5pt plus 2pt minus 1pt}%
+  \setlength{\belowdisplayshortskip}{6pt plus 2pt minus 1pt}%
+  \pagestyle{empty}\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}%
+  \titleformat{\section}{\normalfont\bfseries\fontsize{14}{18}\selectfont\color{pubNavy}\raggedright}{\textcolor{pubTeal}{\thesection}}{.65em}{}%
+  \titleformat{\subsection}{\normalfont\bfseries\fontsize{11.8}{15}\selectfont\color{pubNavy}\raggedright}{\thesubsection}{.65em}{}%
+  \titleformat{\subsubsection}{\normalfont\itshape\fontsize{11.3}{14}\selectfont\color{pubNavy}\raggedright}{\thesubsubsection}{.7em}{}%
+  \titleformat{\part}{\normalfont\bfseries\fontsize{18}{23}\selectfont\color{pubNavy}\raggedright}{\textcolor{pubTeal}{Part \thepart}}{.7em}{}%
+  \titlespacing*{\part}{0pt}{16pt}{18pt}%
+  \titlespacing*{\section}{0pt}{18pt plus 3pt minus 2pt}{8pt}%
+  \titlespacing*{\subsection}{0pt}{13pt plus 2pt minus 1pt}{6pt}%
+  \titlespacing*{\subsubsection}{0pt}{11pt}{4pt}%
+  \ifcsname chapter\endcsname
+    \titleformat{\chapter}[display]{\normalfont\color{pubNavy}}{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}\MakeUppercase{\chaptertitlename}\enspace\thechapter}{9pt}{\fontsize{24}{29}\selectfont\bfseries\raggedright}%
+    \titlespacing*{\chapter}{0pt}{6pt}{22pt}%
+  \fi
+  \captionsetup{format=hang,justification=raggedright,singlelinecheck=false,font={small,sf,stretch=1.06},labelfont={bf,sf,color=pubInk},textfont={color=pubMuted},labelsep=period,skip=8pt}%
+  \hypersetup{colorlinks=true,linkcolor=pubTeal,citecolor=pubTeal,urlcolor=pubTeal,breaklinks=true}%
+  \clubpenalty=10000\widowpenalty=10000\displaywidowpenalty=10000
+  \AtBeginEnvironment{longtable}{\ifdim\csname f@size\endcsname pt>10pt\relax\small\fi}
+  \frenchspacing
+}
+\newcommand{\CoreOpening}[3]{%
+  \thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+  {\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}\MakeUppercase{#1}\par}%
+  \vspace{18pt}%
+  {\fontsize{28}{34}\selectfont\color{pubNavy}\raggedright#2\par}%
+  \vspace{12pt}%
+  {\sffamily\fontsize{11}{15.5}\selectfont\color{pubMuted}\raggedright#3\par}%
+  \vspace{19pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par
+  \vspace{16pt}\endgroup\normalfont\color{pubInk}%
+}
+
+\newcommand{\CoreContext}[2]{%
+ \par\begingroup\small\sffamily\color{pubMuted}\setlength{\parindent}{0pt}%
+ \textbf{#1.}\enspace #2\par\endgroup\vspace{11pt}%
+}
+
+% Core-series presentation additions, applied after the inherited setup.
+\CoreLayout
+\renewcommand{\familydefault}{\rmdefault}
+\definecolor{KomorebiInk}{HTML}{3C263F}
+\definecolor{KomorebiPine}{HTML}{7B4165}
+\definecolor{KomorebiOchre}{HTML}{A68A56}
+\definecolor{KomorebiWarm}{HTML}{FFFFFF}
+\definecolor{KomorebiMuted}{HTML}{655D68}
+\colorlet{ink}{KomorebiInk}\colorlet{accent}{KomorebiPine}
+\colorlet{teal}{KomorebiPine}\colorlet{Teal}{KomorebiPine}
+\colorlet{Navy}{KomorebiInk}\colorlet{navy}{KomorebiInk}
+\fancypagestyle{fancy}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\renewcommand{\footrulewidth}{0pt}}
+\renewcommand{\KomorebiCover}{%
+ \clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup
+ \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}
+ \vspace*{22pt}
+ {\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}
+ \vspace{30pt}
+ {\rmfamily\fontsize{30}{36}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}
+ \vspace{18pt}
+ {\rmfamily\fontsize{19}{25}\selectfont\color{pubNavy}\raggedright\KomorebiSubtitle\par}
+ \vspace{24pt}\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par\vspace{18pt}
+ {\sffamily\fontsize{10}{14}\selectfont\color{pubMuted}\KomorebiKind\par}
+ \vfill
+ {\rmfamily\fontsize{13}{17}\selectfont Komorebi P.\par}\vspace{9pt}
+ {\sffamily\fontsize{8.5}{12}\selectfont\color{pubMuted}\KomorebiEdition\par}
+ \vspace{20pt}\endgroup\clearpage\setcounter{page}{1}\hypersetup{pageanchor=true}\color{pubInk}\normalfont
+}
+
+% Explicit installed OTF faces prevent synthetic/substituted bold.
+\setmainfont{P052-Roman.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf,SmallCapsFont=P052-Roman.otf]
+\setsansfont{NimbusSans-Regular.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]

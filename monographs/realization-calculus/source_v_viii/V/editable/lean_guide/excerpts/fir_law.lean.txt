@@ -1,0 +1,17 @@
+theorem fir_polyphase_transfer (N : ℕ) (hN : 0 < N) (h : ℤ →₀ K)
+    (x : ℤ → K) (k : Fin N) (n : ℤ) :
+    analysis N (fir h x) k n =
+      ∑ s : Fin N, ∑ m ∈ delays N hN h k s,
+        kernel N h k s m * analysis N x s (n - m) := by
+  change fir h x (address N k n) = _
+  rw [fir_reindex N hN h x k n]
+  calc
+    _ = ∑ s : Fin N, ∑ p ∈ (transferSupport N hN h k).filter (fun p => p.1 = s),
+        kernel N h k p.1 p.2 * analysis N x p.1 (n - p.2) :=
+      (Finset.sum_fiberwise (transferSupport N hN h k) Prod.fst
+        (fun p => kernel N h k p.1 p.2 * analysis N x p.1 (n - p.2))).symm
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro s _
+      exact sum_pair_fiber (transferSupport N hN h k) s
+        (fun r m => kernel N h k r m * analysis N x r (n - m))

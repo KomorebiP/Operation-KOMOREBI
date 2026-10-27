@@ -1,0 +1,11 @@
+theorem cauchyCoefficient_eq (f : ℂ → ℂ) (μ : ℂ) (r : ℝ) (hr : 0 < r)
+    (hf : DifferentiableOn ℂ f (Metric.closedBall μ r)) (k : ℕ) :
+    cauchyCoefficient f μ r k=iteratedDeriv k f μ/(k.factorial:ℂ) := by
+  have hh := hf.circleIntegral_one_div_sub_center_pow_smul hr k
+  simp only [smul_eq_mul,one_div] at hh
+  unfold cauchyCoefficient
+  have he : (fun z => f z/(z-μ)^(k+1))=(fun z => ((z-μ)^(k+1))⁻¹*f z) := by
+    ext z
+    simp [div_eq_mul_inv,mul_comm]
+  rw [he,hh]
+  field_simp

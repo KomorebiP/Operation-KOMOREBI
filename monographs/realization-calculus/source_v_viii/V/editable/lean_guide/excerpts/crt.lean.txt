@@ -1,0 +1,8 @@
+theorem dyadic_odd_packet_factorization (a d : ℕ) (hd : Odd d)
+    (r : ZMod (2 ^ a * d)) (x : ℤ → V) :
+    KomorebiPaperV.packet (fun i : ℤ => (i : ZMod (2 ^ a * d))) r x =
+      KomorebiPaperV.packet (fun i : ℤ => (i : ZMod (2 ^ a)))
+        (ZMod.chineseRemainder (dyadic_odd_coprime a d hd) r).1
+        (KomorebiPaperV.packet (fun i : ℤ => (i : ZMod d))
+          (ZMod.chineseRemainder (dyadic_odd_coprime a d hd) r).2 x) :=
+  residue_mask_factorization _ _ (dyadic_odd_coprime a d hd) r x

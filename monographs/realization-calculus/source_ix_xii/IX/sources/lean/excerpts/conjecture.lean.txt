@@ -1,0 +1,14 @@
+theorem conjecture_3_9 (m j:ℕ) (hmpos:0<m) (hj:j<m*p) (h:m∣p-1 ∨ m=2) :
+    (∀n, ((generalizedEuler (m*p) (Nat.mul_ne_zero hmpos.ne' (Fact.out:p.Prime).ne_zero)
+      j (m*p*n):ℚ):ℚ_[p]) ∈ PadicInt.subring p) ∧
+    ∀r:ℕ, 0<r → ∃n0:ℕ, 0<n0 ∧ n0≤r ∧ ∀n:ℕ, n0≤n →
+      precision p (r:ℤ)
+        (generalizedEuler (m*p) (Nat.mul_ne_zero hmpos.ne' (Fact.out:p.Prime).ne_zero) j
+          (m*p*n+displacementFactor p*p^r)-
+         generalizedEuler (m*p) (Nat.mul_ne_zero hmpos.ne' (Fact.out:p.Prime).ne_zero) j (m*p*n)) := by
+  constructor
+  · intro n
+    rw [generalizedEuler_at_packet]
+    exact full_integrality p m j n hmpos hj h
+  · intro r hr
+    exact ⟨r,hr,le_rfl,fun n hn => full_period_degree p m j r n hmpos hj h hr hn⟩

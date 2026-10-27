@@ -1,0 +1,20 @@
+theorem dyadic_reconstruction (n : ℕ) :
+    (eulerEven n : ℚ) = ∑ m ∈ Finset.range (n+1), summand n m := by
+  have hs := congrArg (fun f => EGF.decode f (2*n)) dyadic_reconstruction_series
+  have hp := EGF.egf_product (EGF.decode (rescale (2:ℚ) inverseSeries))
+    (EGF.decode DyadicSeries.sourceSeries) (2*n)
+  simp only [EGF.encode_decode] at hp
+  have he : EGF.decode OddPower.sech (2*n) = (eulerEven n : ℚ) := by
+    rw [← euler_egf, EGF.decode_encode, euler_even]
+  rw [hp,he] at hs
+  rw [OddEuler.sum_even_terms _ (fun m => by
+    simp [EGF.decode, coeff_rescale, inverse_odd_coefficient])] at hs
+  rw [← hs]
+  apply Finset.sum_congr rfl
+  intro m hm
+  simp only [EGF.decode, coeff_rescale, inverse_even_coefficient,
+    ← Nat.mul_sub_left_distrib, source_even_coefficient]
+  unfold summand
+  rw [Nat.descFactorial_eq_factorial_mul_choose]
+  push_cast
+  field_simp

@@ -1,0 +1,41 @@
+I-IV PUBLICATION REBUILD FONT DEPENDENCIES
+
+Font programs are external dependencies and are deliberately omitted from the
+publication package. Install URW Base35, Latin Modern (including Latin Modern
+Math), and DejaVu, together with TeX Live's kpsewhich and fontspec support.
+
+MONOGRAPH_FONT_DEPENDENCIES.json records the exact filenames, SHA-256 hashes,
+and component-relative destinations for the local fonts/ references retained
+in the I-II editable sources. There are 60 destinations and 27 distinct fonts.
+No scientific source or typography settings were changed by this repair.
+
+build_components.py resolves each filename through kpsewhich, verifies its
+recorded hash, and restores the matching local file before compiling. A missing
+font or mismatched font version stops the build; it never selects another
+font family or silently accepts a different font version. The package does not
+need the original frozen ZIPs, original scratch location, or previously copied
+font directories to perform this setup.
+
+The bounded preparation command is:
+
+  python3 build_components.py --prepare-fonts-only
+
+To validate the setup in an empty temporary directory without touching source
+font directories or running TeX:
+
+  python3 build_components.py --prepare-fonts-only --font-output-root /path/to/empty-directory
+
+rebuild_all.py invokes build_components.py, so the normal top-level
+rebuild_monograph.py --from-sources command performs this setup automatically.
+Font payloads created by a local rebuild remain excluded by package_publication.py.
+The dependency JSON and this note are retained in the publication package.
+
+Other I-IV components use installed fonts directly. Their editable style/font
+configuration files retain their documented system defaults, including URW OTF
+under /usr/share/fonts/opentype/urw-base35/. Paper IV's font-locations.tex has
+configurable default paths for URW, Latin Modern, and DejaVu. This package does
+not promise font-path or byte-identical builds across operating systems.
+
+FONT_PREPARATION_VALIDATION.json records the initially empty-directory test and
+an explicit rejected-hash test. Neither test compiled TeX or reran mathematical,
+formal, or figure-generation work.

@@ -1,0 +1,45 @@
+theorem candidate_exists_from_source_dictionary
+    (hF : Continuous (algebraMap F E))
+    (hDo : IsOpen (D : Set (GL n F)))
+    (hB : ∀ u : GL m [U+1D4AA][E],
+      (coordinateAut e).symm (integralMatrix F E m u) ∈ CharacterNormalizer61.normalizer D θ)
+    (hfull : ∀ g : GL n F,
+      g ∈ CharacterNormalizer61.normalizer D θ ↔
+        ∃ a : Eˣ, ∃ j : compact F E m n e D θ,
+          unitsEmbedding F E n (scalarMatrixEmbedding F E m n e) a * (j : GL n F) = g)
+    [IsIrreducible (κ.comp (firstSubgroup F E m n e D θ).subtype)] [IsIrreducible σ]
+    (hκ : SmoothDegreeQuotient.IsSmooth κ)
+    (hβ : ∀ g : GL n F,
+      NormalizerIntertwining60.IntertwinedAt D (MonomialInduction.scalarRepresentation θ) g →
+      NormalizerIntertwining60.IntertwinedAt (compact F E m n e D θ) κ g)
+    (hσc : CuspidalCartan105.Cuspidal σ)
+    (hc : ActualCharacterData108.Contains F E m n e D θ hDc κ)
+    (hθsupport : ∀ g : GL n F,
+      NormalizerIntertwining60.IntertwinedAt D (MonomialInduction.scalarRepresentation θ) g →
+      ∃ j₁ j₂ : compact F E m n e D θ, ∃ y : GL m E,
+        g = (j₁ : GL n F) * centralizerMap F E m n e y * (j₂ : GL n F))
+    (τ : ((firstSubgroup F E m n e D θ) [U+29F8]
+      actualScalarSubgroup F E m n e D θ) ≃* Multiplicative X)
+    (B : X →ₗ[k] X →ₗ[k] k) (ψ : AddChar k ℂˣ) (hψ : ψ ≠ 1)
+    (hnd : ∀ v : X, (∀ u : X, B u v = 0) → v = 0)
+    (hform : ∀ x y : firstSubgroup F E m n e D θ,
+      ψ (B (coordinate (actualScalarSubgroup F E m n e D θ) τ x)
+        (coordinate (actualScalarSubgroup F E m n e D θ) τ y)) =
+      characterCommutator (actualScalarSubgroup F E m n e D θ) τ
+        (actualScalarCharacter F E m n e D θ) x y)
+    (hθcentralizer : ∀ y : GL m E, NormalizerIntertwining60.IntertwinedAt D
+      (MonomialInduction.scalarRepresentation θ) (centralizerMap F E m n e y))
+    (data : ActualLatticeData F E m n e D θ) :
+    FiniteDimensional ℂ (W ⊗[ℂ] U) ∧
+    ∃ Λ : Representation ℂ (extended F E m n e D θ) (W ⊗[ℂ] U),
+      (∀ j : compact F E m n e D θ,
+        Λ (PrescribedFieldType70.compactInclusion F E n (scalarMatrixEmbedding F E m n e)
+          (compact F E m n e D θ) j) =
+          CompactTypeTensor58.action (reduction F E m n e D θ hmodel) κ σ j) ∧
+      IsIrreducible Λ ∧ SmoothDegreeQuotient.IsSmooth Λ ∧
+      FullIntertwiningLocus69.locus (extended F E m n e D θ) Λ =
+        (extended F E m n e D θ : Set (GL n F)) ∧
+      Function.Injective (TensorTypeOperators70.realize (extended F E m n e D θ) Λ) ∧
+      Nontrivial (IndV (extended F E m n e D θ).subtype Λ) ∧
+      SmoothDegreeQuotient.IsSmooth (ind (extended F E m n e D θ).subtype Λ) ∧
+      IsIrreducible (ind (extended F E m n e D θ).subtype Λ) :=

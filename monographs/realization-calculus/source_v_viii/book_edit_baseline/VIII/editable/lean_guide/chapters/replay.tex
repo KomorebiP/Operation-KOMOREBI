@@ -1,0 +1,41 @@
+\section{Replay, provenance, and the four classical boundaries}
+\subsection{The accepted evidence is a cumulative source-bound run}
+The preserved summary \code{verification/sixth_final/SUMMARY.json} records a newly created accepted output directory, all 40 modules, all 392 theorem declarations, 66 construction audits, the two invalid-proof controls, and completion at \code{2026-09-06T22:38:55.838919+00:00}. The reported Lean version is \code{4.34.0-rc2}; the compiler commit and Mathlib revision are printed in Section~\ref{sec:dependencies}.
+
+The saved summary retains source and local dependency hashes, generated-interface hashes, commands, exit codes, and log hashes. The source release excludes local compiled interfaces. A fresh verification run regenerates them; the static checks in this guide do not recreate them or use their hashes as a substitute for compilation. The pinned Mathlib cache was reused in the inherited run, not independently rebuilt.
+
+\subsection{The status of this edition}
+The guide assembler resolves active namespaces, reconciles all 458 audited names, matches all 40 active source hashes to the accepted report, parses the saved compiler logs back into axiom sets, and matches all log hashes. It also verifies both rejected-control source and log identities. Every excerpt is bound to exact source lines and both source and excerpt SHA-256 values. These are fresh static documentation checks.
+
+Lean and Lake are absent from the present host. The documentation report says \code{fresh_lean_kernel_run: false}. This edition makes no fresh compilation claim. The source and accepted evidence are unchanged. The original accepted build remains inherited evidence rather than a current run.
+
+\subsection{An actual kernel replay on a suitable host}
+Use the separately supplied portable Linux x86-64 / WSL kit for the exact recorded compiler and Mathlib versions. Python 3.10 or later is required; tests and numerical mirrors also require NumPy. Run from the extracted \code{original_snapshot} root:
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true,frame=leftline]
+python3 scripts/verify_integrity.py
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+python3 scripts/verify.py --kit /path/to/Komorebi_Portable_Lean_4.34.0-rc2 --out verification/recheck --timeout 240
+python3 scripts/run_sixth_regressions.py --out verification/recheck_numerical.json
+\end{Verbatim}
+The verifier's exit code zero means complete pass, one means failure, and two means paused or incomplete. On a host with short command limits, use the same output directory with \code{--max-checks 2 --resume}. Checkpoint source, dependency, interface, and log identities govern resumption. A partial checkpoint does not establish a cumulative pass. A different compiler or dependency revision is a different replay and should be reported as such.
+
+To rebuild only this guide, run \code{python3 build.py} from its directory. The deterministic isolated XeLaTeX builder needs only the shipped guide sources, generated tables, and exact excerpt files. To regenerate those tables from the edition's preserved active snapshot, run \code{python3 assemble.py --source /absolute/path/to/original_snapshot}, then rebuild. \code{python3 verify_pdf.py --source /absolute/path/to/original_snapshot} checks exact excerpt bytes, extracted declaration names, references, glyphs, page geometry, and internal links. Neither script invokes Lean.
+
+\subsection{Classical inputs are not folded into the 56 count}
+\begin{longtable}{@{}p{.16\linewidth}p{.27\linewidth}p{.50\linewidth}@{}}
+\toprule Item & Classical input & Precise present boundary\\\midrule\endhead
+5.5 & Eckart--Young--Mirsky & Ordered diagonal spectral and Frobenius best-rank bounds and isometric transfer are checked as support for 5.6. General SVD existence and the canonical singular-values API theorem are outside this release.\\
+7.5 & CG convergence & The classical energy-error estimate is supplied. The formal block proves monotonicity and replacement by a certified condition bound, rather than proving the CG algorithm or its classical convergence theorem.\\
+8.2 & Floating-point product model & Local error inequalities are supplied to exact normed-ring propagation. IEEE rounding semantics and a device implementation are not independently proved.\\
+9.1 & Simultaneous spectral decomposition & Exact residual and off-diagonal certificates are proved for a supplied finite self-adjoint projector family. A general simultaneous-decomposition algorithm is not independently formalized.\\
+\bottomrule\end{longtable}
+
+\subsection{Historical counts, failures, and numerical mirrors}
+The six retained supplements document successive proof blocks. Their earlier coverage and remaining-work lists are historical; the sixth ledger supersedes those live status statements. They remain preserved as evidence of what each release actually established. The active source is the 392-declaration sixth-block branch. The earlier 298-declaration branch was not merged into it.
+
+The sixth development record retains 31 captured checks, 21 of which failed before correction. Those diagnostics and source snapshots are separate from the accepted cumulative build. The invalid equality and admitted-proof controls were rejected in that accepted run. A failed development attempt is not a theorem; a corrected theorem is assessed through its active source and accepted evidence.
+
+The inherited sixth numerical mirror records 182 factor pairs, 638 truncation cases, 3,190 arbitrary rank-bounded competitors, nine invalid-input controls, and two assumption-removal controls. It uses NumPy complex128 and numerical rank thresholds; it is neither extracted nor compiled Lean and does not prove universal matrix optimality. Any present numerical rerun is reported separately in the edition's verification records. The historical CPU/GPU benchmarks were not rerun here, and their recorded comparison fields do not automatically instantiate the complete formal fair-match signature.
+
+\subsection{Reproducible limits}
+The three companions share the original result keys and preserve the complete raw mathematical and formal sources. The paper-to-Lean map explains recorded hypotheses and scope. It is not an automatically checked semantic-equivalence theorem between prose, Lean, and prototype Python. No fresh CUDA correctness, device stability, timing advantage, full imported-library rebuild, or claims beyond the stated finite mathematics follow from the documentation checks.

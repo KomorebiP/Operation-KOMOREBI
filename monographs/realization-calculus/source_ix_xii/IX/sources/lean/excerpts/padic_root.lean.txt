@@ -1,0 +1,21 @@
+theorem exists_padic_root_with_tower (p L : ℕ) [Fact (Nat.Prime p)] (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (hx : ∀ i, (p : ℤ)^L ∣ evalSystem F x i)
+    (hJ : Function.Surjective (digitJacobian p F x)) :
+    ∃ z : ℕ → Fin d → ℤ, ∃ a : Fin d → ℤ_[p],
+      z 0 = x ∧
+      (∀ n i, (p : ℤ)^(L+n) ∣ evalSystem F (z n) i) ∧
+      (∀ n i, (p : ℤ)^(L+n) ∣ (z (n+1) - z n) i) ∧
+      Tendsto (fun n i => (z n i : ℤ_[p])) atTop (𝓝 a) ∧
+      (∀ n i, (p : ℤ_[p])^(L+n) ∣ a i - (z n i : ℤ_[p])) ∧
+      (∀ i, padicEval p F a i = 0) ∧
+      (∀ n, digitJacobian p F (z n) = digitJacobian p F x) ∧
+      (∀ n, Nat.card (PolynomialLiftCounts.ActualLifts p (L+n) F (z n)) = p^(d-e)) := by
+  obtain ⟨z, hz0, hroot, hstep, _, hcount⟩ := exists_regular_tower p L hL F x hx hJ
+  obtain ⟨a, ha, hprecision⟩ :=
+    PadicTowerLimit.compatible_vector_tower_limit p L z hstep
+  refine ⟨z, a, hz0, hroot, hstep, ha, hprecision,
+    polynomial_tower_limit_root p L F z a hroot ha, ?_, hcount⟩
+  intro n
+  rw [← hz0]
+  exact tower_digitJacobian_eq p L hL F z hstep n

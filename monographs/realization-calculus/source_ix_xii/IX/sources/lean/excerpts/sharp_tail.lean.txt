@@ -1,0 +1,14 @@
+theorem dyadic_supercongruence_sharp (n M : ℕ) :
+    (2:ℤ_[2])^(4*M+3) ∣ (EulerCoefficients.eulerEven n:ℤ_[2]) - truncationPadic n M := by
+  rw [dyadic_reconstruction_padic, truncationPadic, ← OddEuler.filter_range_le]
+  classical
+  rw [← Finset.sum_filter_add_sum_filter_not (Finset.range (n+1)) (fun m => m ≤ M)
+    (summandPadic n), add_sub_cancel_left]
+  apply Finset.dvd_sum
+  intro m hm
+  obtain ⟨_, hm⟩ := Finset.mem_filter.mp hm
+  have hpos : 0 < m := by omega
+  have hpow : (2:ℤ_[2])^(4*M+3) ∣ (2:ℤ_[2])^(4*m-1) := pow_dvd_pow 2 (by omega)
+  rw [summandPadic_kappa]
+  exact dvd_mul_of_dvd_left (dvd_mul_of_dvd_left
+    (hpow.trans (kappaPadic_divisible m hpos)) _) _

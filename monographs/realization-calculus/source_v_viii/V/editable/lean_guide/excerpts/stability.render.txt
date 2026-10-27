@@ -1,0 +1,9 @@
+theorem antichain_selector_stable (c d e : A → ℝ) (h : ∀ a, |d a-c a| ≤ e a)
+    (t : FiniteAdaptive.Tree A) (γ : ℝ)
+    (hg : ∀ S : Pruning t, S ≠ selected c t → γ ≤ nodeSum c S-nodeSum c (selected c t))
+    (hm : 2*envelope e t < γ) : selected d t = selected c t := by
+  apply congrArg (pruningEquiv t)
+  apply best_unchanged_of_gap c d e h t γ _ hm
+  intro q hq
+  have hne : pruningEquiv t q ≠ selected c t := fun he => hq ((pruningEquiv t).injective he)
+  simpa only [selected, pruning_nodeSum] using hg (pruningEquiv t q) hne

@@ -1,0 +1,13 @@
+theorem approximate_packet_krylov_distance (P : PacketFamily (X →L[K] X) I)
+    (D E : X →L[K] X) (hD : PacketDiagonal P D) (v : X) (j : ℕ) (hj : 0 < j) :
+    Metric.infDist (((D + E) ^ j) v)
+      ((⨆ i, krylovSpace (P.block D i i) (P.proj i v) (j + 1) : Submodule K X) : Set X) ≤
+      (j : ℝ) * (max ‖D + E‖ ‖D‖) ^ (j - 1) * ‖E‖ * ‖v‖ := by
+  have hm : (D ^ j) v ∈ (⨆ i, krylovSpace (P.block D i i) (P.proj i v) (j + 1) : Submodule K X) :=
+    invariant_packet_krylov P D (packet_diagonal_commutes P D hD) v (j + 1)
+      (krylov_generator_mem D v (j + 1) j (Nat.lt_succ_self j))
+  calc
+    _ ≤ dist (((D + E) ^ j) v) ((D ^ j) v) := Metric.infDist_le_dist_of_mem hm
+    _ = ‖((D + E) ^ j - D ^ j) v‖ := by rw [dist_eq_norm]; rfl
+    _ ≤ ‖(D + E) ^ j - D ^ j‖ * ‖v‖ := ((D + E) ^ j - D ^ j).le_opNorm v
+    _ ≤ _ := mul_le_mul_of_nonneg_right (approximate_packet_power_bound D E j hj) (norm_nonneg _)

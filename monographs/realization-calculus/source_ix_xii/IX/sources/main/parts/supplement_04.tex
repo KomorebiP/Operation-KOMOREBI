@@ -1,0 +1,224 @@
+\clearpage\subsection{Fourth Lean Block Supplement}\label{app:sup4}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical. The final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+This release continues the unchanged 28-page status-corrected manuscript and the checked third block. It completes the recorded scopes of Theorem 7.2, Corollary 7.3 and Theorem 7.4. All 17 upstream proof files and the three earlier mathematical supplements remain unchanged.
+
+\textbf{Seventeen of 24 named items proved in the manuscript now have formal coverage. Seven remain pending.} Three classical inputs and two conjectures are tracked separately. The cumulative project contains \textbf{272 named theorem declarations and 60 explicit definitions across 21 modules}.
+
+\begin{center}
+\begin{tabular}{@{}p{.48\textwidth}>{\raggedright\arraybackslash}p{.18\textwidth}rr@{}}
+\toprule
+New module & Scope & Theorems & Defs.\\\midrule
+\mcode{FiniteMahler} & 7.2 & 19 & 3\\
+\mcode{PadicDifferenceBounds} & 7.3 & 12 & 2\\
+\mcode{UnitModeDifferences} & 7.4 & 9 & 0\\
+\mcode{MahlerExamples} & Exact controls & 13 & 2\\\midrule
+Total added & Three items & 53 & 7\\\bottomrule
+\end{tabular}
+\end{center}
+The 53 additions include supporting lemmas and examples, not 53 independent discoveries. The classical Gregory--Newton and binomial-difference results are reused from pinned Mathlib. The new modules connect those results to the actual Paper IX coefficient definitions, interpolation scopes, valuation bounds and unit modes.
+
+\subsubsection*{Two explicit specification boundaries}
+A finite sample through $N$ determines $\Delta^s f(n)$ only when $n+s\leq N$. For arbitrary orders, the finite-coefficient identity describes the constructed interpolant, not every unknown continuation of the sample. All three versions are separately checked.
+
+The additive valuation is extended to $\ord_p(0)=\infty$. This avoids incorrectly applying Mathlib's finite-valued default at zero to an inequality that must also cover cancellation and identically zero differences.
+
+\subsubsection*{Verification status}
+The fresh cumulative Lean run compiled all 21 modules with warnings as errors, matched all 332 explicit declaration axiom reports, and rejected 12 invalid-proof controls. All 74 infrastructure and release tests passed. Independent exact-rational mirrors are recorded separately from the universal proofs. The archive is also subjected to a fresh-extraction rebuild and integrity audit. Its separate report records that outcome.
+\par\medskip
+\pageheading{1. Reconstruction and finite-data scope}{Theorem 7.2; manuscript page 17}
+Let $R$ be any commutative ring. The implementation uses the actual forward-difference operator
+\[
+ \Delta_h f(n)=f(n+h)-f(n),\qquad c_r=\Delta_1^r f(0).
+\]
+For a full sequence $f:\N\to R$, pinned Mathlib's Gregory--Newton formula gives
+\[
+ \boxed{f(n)=\sum_{r=0}^{n}c_r\binom nr.}
+\]
+The source applies the theorem to these exact definitions. A separate explicit formula relates an $s$-th difference to its original sampled values, so the data dependence is inspectable:
+\[
+ \Delta_h^s f(n)=\sum_{j=0}^{s}(-1)^{s-j}\binom sj f(n+jh).
+\]
+Applying Newton reconstruction to $\Delta_1^s f$ and composing the iterated operators proves
+\[
+ \boxed{\Delta_1^s f(n)=\sum_{j=0}^{n}c_{s+j}\binom nj.}
+\]
+The apparently infinite coefficient sum is finite at each natural argument. Neither continuity nor convergence is needed for these identities.
+
+\subsection*{An independently defined interpolant}
+For a finite coefficient list, define
+\[
+ I_N(c)(n)=\sum_{r=0}^{N}c_r\binom nr.
+\]
+The source proves exact coefficient extraction:
+\[
+ \Delta_1^s I_N(c)(0)=
+ \begin{cases}c_s,&s\leq N,\\0,&s>N.\end{cases}
+\]
+It follows that $I_N(c)$ has the stated shifted-coefficient formula at every order, with zero coefficients beyond $N$. Every difference of order greater than $N$ vanishes. Its coefficients are uniquely determined by its values at $0,\ldots,N$.
+
+\subsection*{What the finite sample does and does not determine}
+For $c_r=\Delta_1^r f(0)$ with $r\leq N$, the source proves
+\[
+ I_N(c)(n)=f(n)\quad(n\leq N),\qquad
+ \Delta_1^s I_N(c)(n)=\Delta_1^s f(n)\quad(n+s\leq N).
+\]
+The condition is essential. The sequences $f(n)=n$ and $g(n)=0$ agree on the sample $\{0\}$, but $\Delta f(0)=1$ and $\Delta g(0)=0$. This is a checked counterexample to unrestricted inference outside the observed stencil.
+
+\textbf{Principal targets.}\par
+\target{Mahler.finite_mahler_reconstruction, Mahler.coefficient_interpolant}\par
+\target{Mahler.difference_from_coefficients, Mahler.finite_sample_difference}
+\par\medskip
+\pageheading{2. Weighted bounds in the actual ring $\Z_p$}{Corollary 7.3; manuscript page 18}
+Let $p$ be prime. For $x\in\Z_p$, define
+\[
+ \ord_p(x)=\begin{cases}\infty,&x=0,\\v_p(x),&x\neq0.\end{cases}
+\]
+The nonzero branch uses Mathlib's actual $p$-adic valuation. The implementation proves its connection to genuine integral divisibility:
+\[
+ \boxed{L\leq\ord_p(x)\quad\Longleftrightarrow\quad p^L\mid x
+ \ \text{in }\Z_p,\qquad L\in\N.}
+\]
+This is not divisibility in $\Q_p$, where a nonzero scalar can divide any field element. The zero case is proved separately, so zero does not spuriously violate a positive lower bound.
+
+The source also proves multiplicativity of this extended order, the nonarchimedean lower bound for addition, and its finite-sum consequence. The natural-number cast is connected to the actual integer binomial valuation.
+
+\subsection*{The binomial valuation is retained}
+Let $f:\N\to\Z_p$, let $c_r=\Delta_1^r f(0)$, and suppose
+\[
+ w(s+j)\leq\ord_p(c_{s+j})\quad(0\leq j\leq n),
+ \qquad w:\N\to\N\cup\{\infty\}.
+\]
+Set
+\[
+ B_p(w;n,s)=\min_{0\leq j\leq n}
+ \left\{w(s+j)+v_p\!\binom nj\right\}.
+\]
+Every binomial in this range is nonzero. The code proves
+\[
+ \boxed{B_p(w;n,s)\leq\ord_p(\Delta_1^s f(n)).}
+\]
+This is the manuscript minimum after the substitution $r=s+j$. Coefficients outside this range have zero binomial multiplier. Weights equal to infinity are allowed, and a completely vanishing difference has order infinity.
+
+For a uniform coefficient hypothesis, the simpler conclusion follows:
+\[
+ \boxed{\inf_{j\geq0} w(s+j)\leq\ord_p(\Delta_1^s f(n)).}
+\]
+For each finite $L\leq B_p(w;n,s)$, a separate theorem yields $p^L\mid\Delta_1^s f(n)$ inside $\Z_p$. Another specialization handles arbitrary finite interpolants with infinite weights beyond their degree.
+
+\textbf{Principal targets.}\par
+\target{PadicBounds.nat_le_order_iff, PadicBounds.weighted_difference_bound}\par
+\target{PadicBounds.weighted_difference_divisibility}\par
+\target{PadicBounds.coefficient_tail_bound, PadicBounds.interpolant_weighted_bound}
+\par\medskip
+\pageheading{3. Unit modes and residue-field reduction}{Theorem 7.4; manuscript page 18}
+For $u$ in any commutative ring, and every natural step $h$, iteration proves
+\[
+ \boxed{\Delta_h^s(u^n)=u^n(u^h-1)^s.}
+\]
+The proof unfolds the actual forward-difference operator and uses the power multiplication law. No valuation premise or geometric-difference identity is assumed. More generally, a proved divisibility $p^k\mid u^h-1$ implies
+\[
+ p^{ks}\mid\Delta_h^s(u^n).
+\]
+
+\subsection*{Why a $p$-adic unit supplies one factor of $p$}
+Now let $u\in\Z_p^\times$. The actual ring homomorphism
+\[
+ \pi:\Z_p\longrightarrow\mathbb F_p
+\]
+ sends $u$ to a nonzero unit. Fermat's finite-field theorem therefore gives
+\[
+ \pi(u)^{p-1}=1,\qquad \pi(u^{p-1}-1)=0.
+\]
+Using the proved kernel identity $\ker\pi=p\Z_p$, the source derives
+\[
+ \boxed{p\mid u^{p-1}-1\quad\text{inside }\Z_p.}
+\]
+The conclusion is not supplied as an abstract certificate. It follows from the unit hypothesis and the standard residue-field construction.
+
+Combining it with the geometric identity establishes
+\[
+ \boxed{p^s\mid\Delta_{p-1}^s(u^n),\qquad
+ s\leq\ord_p(\Delta_{p-1}^s(u^n)).}
+\]
+These statements hold for every prime, including $p=2$ with step one. Zero differences and order zero are included. Every multiple of the Fermat step satisfies the same lower bound.
+
+\subsection*{Finite integral linear combinations}
+For any finite index set $S$, coefficients $a_i\in\Z_p$ and units $u_i\in\Z_p^\times$, linearity of the actual iterated operator gives
+\[
+ \Delta_h^s\!\left(\sum_{i\in S}a_i u_i^n\right)
+ =\sum_{i\in S}a_i u_i^n(u_i^h-1)^s.
+\]
+At $h=p-1$, the result is divisible by $p^s$. The empty sum is permitted. This does not prove that the general congruential Euler packets of Theorem 7.5 admit such a representation.
+
+\textbf{Principal targets.}\par
+\target{UnitModes.geometric_difference, UnitModes.unit_fermat_divisibility}\par
+\target{UnitModes.unit_mode_valuation_gain}\par
+\target{UnitModes.finite_unit_modes_valuation_gain}
+\par\medskip
+\pageheading{4. Exact examples and adversarial checks}{The examples use the same definitions as the general results}
+\subsection*{A polynomial anchor}
+The actual difference table for $f(n)=n^2$ yields
+\[
+ (c_0,c_1,c_2,c_3)=(0,1,2,0).
+\]
+The finite interpolant therefore reconstructs $I_2(c)(7)=49$. This checks the sign and indexing conventions, not just the names of the defined objects.
+
+\subsection*{A sharp binomial-weight improvement}
+Let
+\[
+ F(n)=81\binom n1+3\binom n2+3\binom n3+81\binom n4.
+\]
+At $n=3$ and $s=1$, the four coefficient valuations are $(4,1,1,4)$, while the binomial valuations are $(0,1,1,0)$. Thus the refined bound is
+\[
+ B_3(w;3,1)=\min(4,2,2,4)=2,
+\]
+stronger than the coefficient-only lower bound one. The source checks both the minimum and the actual result:
+\[
+ \boxed{\Delta F(3)=180,\qquad\ord_3(180)=2.}
+\]
+The valuation equality is proved in the actual completed ring $\Z_3$, with an independent exact integer divisibility check as well.
+
+\subsection*{A sharp unit-mode gain}
+For $p=5$ and $u=2$,
+\[
+ \Delta_4^2(u^n)\big|_{n=0}=(2^4-1)^2=225.
+\]
+The source proves $5^2\mid225$ and $5^3\nmid225$. This example attains the guaranteed gain. No additional uniform power of $p$ is claimed.
+
+\subsection*{What fails when hypotheses or conventions are dropped}
+The nonunit $u=3$ at $p=3$ gives $\Delta_2(u^n)|_{n=0}=8$, with no factor of three. A constant unit has every positive-order difference zero, hence infinite extended valuation. The finite-sample counterexample on page 2 distinguishes a true interpolant identity from an unsupported claim about unknown continuation.
+
+The release verifier adds four negative Lean controls: an unrestricted finite-sample inference, zero assigned finite extended valuation, nonunit valuation gain, and an extra unit-mode precision claim. All are required to fail with substantive proof diagnostics. Import errors or timeouts do not qualify as successful rejection tests.
+
+\textbf{Source.} The module \mcode{MahlerExamples} contains these exact certificates. Principal target names are listed in the fourth-block ledger.
+\par\medskip
+\pageheading{5. Verification record and remaining work}{Evidence is retained separately from conclusions}
+\subsection*{Cumulative proof checks}
+Lean 4.34.0-rc2 rebuilt all 21 local modules into a fresh directory with warnings treated as errors. All 272 theorem declarations and 60 explicit definitions matched their expected transitive axiom reports. Only \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}, or subsets thereof, occurred. All nine dependency pins matched. Twelve invalid-proof controls were rejected.
+
+All 74 infrastructure and release tests passed. Historical version-specific tests use immutable metadata snapshots. Current source counts, preserved upstream hashes, exact newly covered manuscript items, remaining items and substantive mathematical boundary cases are checked by the active suite.
+
+Ten targeted development runs preceded the cumulative build. Six failed before repair, due to elaboration, coercions, finite-sum normalization, an inferred index type and tactic or linter diagnostics. Those drafts and compiler outputs remain in a separate inactive evidence directory. No failed draft is counted as a passing theorem.
+
+\subsection*{Independent exact-rational mirrors}
+The new standard-library Python program uses repeated difference tables and independently evaluated binomial sums. It passed 2,079 reconstructed values, 15,939 in-range sample differences, 2,600 arbitrary-interpolant differences, 900 weighted cases, 966 unit-mode cases and 350 finite-mode-sum cases. Among the weighted cases, 522 differences were zero. It also rejected 189 out-of-range stencils and 15 nonunit inputs.
+
+These are finite tests on rational examples, not executable extraction of Lean functions, a substitute for a universal proof, or a new run of the manuscript's historical experiments.
+
+\subsection*{Remaining named items proved in the manuscript}
+\begin{center}
+\begin{tabular}{@{}ll@{}}\toprule
+Item & Remaining formalization\\\midrule
+6.2 & Finite unit decomposition certificates\\
+7.5 & Global odd-prime Euler finite-difference theorem\\
+8.3 & Standard-window residue independence\\
+8.5 & Uniform standard-window period\\
+9.1 & Companion-matrix jump theorem\\
+9.2 & Fibonacci packet recurrence\\
+10.1 & Arithmetic CRT packet factorization\\\bottomrule
+\end{tabular}
+\end{center}
+The three classical inputs and two conjectures remain separate. Mathlib's pinned compiled cache was reused, not independently rebuilt. No infinite Mahler convergence theorem or prime-independent arithmetic spine is proved here. The original manuscript and three earlier supplements remain unchanged. The finite-data and zero-valuation clarifications accompany them in this release.
+
+\textbf{Reproduce.} Run \mcode{bash Run-Portable.sh /path/to/kit}. The report in \path{verification/fourth_release/} records the cumulative build. The separately distributed release audit records archive integrity and fresh-extraction replay.

@@ -1,0 +1,9 @@
+theorem feynman_kac_path_formula (K : Matrix I I ℝ) (V f : I → ℝ) (n : ℕ) :
+    (transfer K V ^ n).mulVec f=pathExpectation K V f n := by
+  induction n with
+  | zero => funext i; simp [path_expectation_zero]
+  | succ n ih =>
+    rw [pow_succ',← Matrix.mulVec_mulVec,ih]
+    funext i
+    rw [path_expectation_step]
+    simp only [Matrix.mulVec,dotProduct,transfer_entry,Finset.mul_sum,mul_assoc]

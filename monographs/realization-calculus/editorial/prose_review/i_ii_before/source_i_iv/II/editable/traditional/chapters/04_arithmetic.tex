@@ -1,0 +1,901 @@
+\section{Rational spectral projectors and resultant bounds}\label{sec:resultant}
+
+Let $\OO$ be a discrete valuation ring with fraction field $K$ and uniformizer $\pi$.  Let $\Lambda$ be a finite free $\OO$ module and put
+\[
+V=K\otimes_{\OO}\Lambda.
+\]
+Suppose $A\in\End_{\OO}(\Lambda)$.
+
+\begin{theorem}[Bézout spectral projector]\label{thm:bezout_projector}
+Assume that
+\[
+\chi_A(x)=f(x)g(x)
+\]
+with monic polynomials $f,g\in\OO[x]$ that are coprime in $K[x]$.  Choose $u,v\in\OO[x]$ and a nonzero $r\in\OO$ such that
+\[
+u(x)f(x)+v(x)g(x)=r.
+\]
+Then
+\[
+E_f=r^{-1}v(A)g(A)
+\]
+is the projector of $V$ onto $\Ker f(A)$ along $\Ker g(A)$.  In particular,
+\[
+E_f^2=E_f,
+\qquad
+rE_f\in\End_{\OO}(\Lambda).
+\]
+\end{theorem}
+
+\begin{proof}
+Cayley Hamilton gives
+\[
+f(A)g(A)=0.
+\]
+If $x\in\Ker f(A)$, then the Bézout identity gives
+\[
+v(A)g(A)x=rx,
+\]
+so $E_fx=x$.  If $x\in\Ker g(A)$, then $E_fx=0$.  The same identity gives the direct sum decomposition
+\[
+V=\Ker f(A)\oplus\Ker g(A).
+\]
+Indeed, every $x\in V$ is the sum of
+\[
+r^{-1}v(A)g(A)x\in\Ker f(A)
+\]
+and
+\[
+r^{-1}u(A)f(A)x\in\Ker g(A).
+\]
+Thus $E_f$ is the stated projector and is idempotent.  The formula for $rE_f$ has coefficients in $\OO$, so it preserves $\Lambda$.
+\end{proof}
+
+\begin{theorem}[Several coprime spectral packets]\label{thm:several_projectors}
+Assume
+\[
+\chi_A(x)=\prod_{i=1}^rf_i(x),
+\]
+where the monic factors $f_i\in\OO[x]$ are pairwise coprime in $K[x]$.  Put
+\[
+g_i=\prod_{j\ne i}f_j.
+\]
+There are complementary projectors $E_i$ with
+\[
+\im E_i=\Ker f_i(A),
+\qquad
+\sum_iE_i=I,
+\qquad
+E_iE_j=0
+\quad(i\ne j).
+\]
+One may choose $E_i$ so that
+\[
+\Res(f_i,g_i)E_i\in\End_{\OO}(\Lambda)
+\]
+up to multiplication of the resultant by a unit.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:bezout_projector} to the factorization $\chi_A=f_ig_i$.  The resulting projector is one on $\Ker f_i(A)$ and zero on every $\Ker f_j(A)$ with $j\ne i$.  The direct sum decomposition follows from the polynomial Chinese remainder theorem.  The orthogonality and sum identities follow by evaluating the corresponding idempotents in $K[x]/(\chi_A)$.  The Sylvester Bézout relation for $(f_i,g_i)$ gives the stated denominator bound.
+\end{proof}
+
+\begin{corollary}[Resultant denominator bound]\label{cor:resultant_bound}
+Under the hypotheses of \cref{thm:bezout_projector}, one may take
+\[
+r=\Res(f,g)
+\]
+up to multiplication by a unit.  Therefore
+\[
+\pi^{\val_\pi(\Res(f,g))}E_f\Lambda\subseteq\Lambda.
+\]
+\end{corollary}
+
+\begin{proof}
+The Sylvester matrix construction gives a Bézout relation with right side equal to the resultant.  Apply \cref{thm:bezout_projector}.  Standard facts about resultants may be found in \cite{Lang2002,GohbergLancasterRodman2009}.
+\end{proof}
+
+\begin{example}[A resultant bound that is not exact]\label{ex:loose_resultant}
+Let
+\[
+A=\diag(0,\pi^s)
+\]
+on the standard lattice $\Lambda=\OO^2$.  The factors $x$ and $x-\pi^s$ have resultant $-\pi^s$, up to the harmless choice of resultant order, but the two spectral projectors are the integral coordinate projectors.  Their exact separation weight is zero.  The resultant sees the closeness of the two eigenvalues.  It does not see that the chosen lattice already splits along their eigenspaces.
+\end{example}
+
+\begin{interpretation}
+A resultant bounds the denominator through the characteristic factors. The exact separation weight also depends on how the lattice sits inside the rational packet spaces. These are two stages of the calculation. First construct a rational projector with a known clearing denominator. Then measure the gluing of the chosen lattice to find the least denominator that actually works.
+\end{interpretation}
+
+\subsection{Evaluated certificates and explicit lattice action}
+
+\subsubsection{Minimal evaluated B\'ezout identities}
+
+Let $\OO$ be a DVR, $K=\Frac(\OO)$, and $A\in\End_\OO(\Lambda)$ for a finite free lattice $\Lambda$. Suppose the characteristic polynomial factors over $\OO$ as
+\[
+\chi_A(x)=f(x)g(x),
+\]
+where $f$ and $g$ are coprime over $K[x]$.
+
+\begin{theorem}[Evaluated B\'ezout spectral projector]\label{thm:bezout-projector}
+Let $F,G,U,V\in\End_K(\Lambda\otimes_\OO K)$ and let $r\in K^\times$.
+Suppose
+\[
+UF+VG=rI,
+\qquad FG=0,
+\qquad FG=GF,
+\qquad GU=UG.
+\]
+Put $N=VG$. Then
+\[
+\boxed{N^2=rN.}
+\]
+Consequently the operator
+\[
+\boxed{
+E=r^{-1}VG
+}
+\]
+is idempotent, acts as the identity on $\ker F$, and acts as zero on
+$\ker G$. If $V$ and $G$ preserve $\Lambda$, then
+\[
+rE=VG\in\End_\OO(\Lambda).
+\]
+\end{theorem}
+
+\begin{proof}
+The B\'ezout identity gives $N=rI-UF$. The two stated commutation relations
+and $FG=0$ give
+\[
+N(UF)=VGUF=VUGF=VUFG=0.
+\]
+Therefore
+\[
+N^2=N(rI-UF)=rN.
+\]
+Since $r\ne0$, $E^2=r^{-2}N^2=E$. If $Fx=0$, the evaluated B\'ezout
+identity gives $VGx=rx$, hence $Ex=x$. If $Gx=0$, then $Ex=0$.
+The lattice assertion follows directly from $rE=VG$.
+\end{proof}
+
+The equality $N^2=rN$ before division uses neither $r\ne0$ nor the other
+pairwise commutation relations that hold in the polynomial application.
+Normalizing to $E$ uses $r\ne0$. Its action on $\ker F$ uses only the B\'ezout
+identity and $r\ne0$, while vanishing on $\ker G$ follows immediately from $N=VG$.
+The bundled Lean certificate records all pairwise commutations as convenient
+evaluated polynomial data, but the minimal theorems expose only the hypotheses
+they consume.
+
+For the polynomial application, one supplies $F=f(A)$, $G=g(A)$,
+$U=u(A)$, and $V=v(A)$. A B\'ezout or resultant identity
+$uf+vg=r$ evaluates to the first certificate, while
+$(fg)(A)=0$ supplies the second. When $fg=\chi_A$, this last equality is
+Cayley Hamilton. Standard B\'ezout, resultant, and DVR facts are recalled
+from \cite{Lang2002,Serre1979}. The inherited certificate theorem begins with the evaluated
+certificate. It does not infer exact action merely from nilpotence of
+$f(A)$ or $g(A)$, which would be insufficient.
+
+\begin{definition}[Separation weight]\label{def:separation-weight}
+For a rational projector $E$ and a specified $\OO$ lattice $\Lambda$, provided
+at least one clearing exponent exists, define
+\[
+s_{\pi,\Lambda}(E)
+=
+\min\{s\ge0:\pi^sE(\Lambda)\subseteq\Lambda\}.
+\]
+If the evaluated certificate arises from integral $v,g$ and
+$r=u\pi^s$ with $u^{-1}$ preserving the lattice, then
+\cref{thm:bezout-projector} gives the upper bound
+\[
+s_{\pi,\Lambda}(E)\le s=\val_\pi(r).
+\]
+Indeed,
+\[
+\boxed{\pi^sE=u^{-1}VG}
+\]
+preserves $\Lambda$. The minimal Lean theorem needs only the lattice action of
+$u^{-1}$. The bundled wrapper for lattice units records both $u$ and $u^{-1}$.
+A nonzero scalar in the fraction field need not be an integral unit.
+Existence of a clearing exponent is an explicit hypothesis. Once one exists,
+the least one is obtained from the least element property of the natural numbers.
+Clearing exponents are upward closed provided multiplication by $\pi$
+preserves the lattice.
+\end{definition}
+
+\subsubsection{Certificate-level precision delay}
+
+\begin{theorem}[Projector precision delay]\label{thm:precision-delay}
+Let $E$ be a rational projector with $\pi^sE(\Lambda)\subseteq\Lambda$. If
+\[
+x\equiv y\pmod{\pi^{m+s}\Lambda},
+\]
+then
+\[
+Ex\equiv Ey\pmod{\pi^m\Lambda}.
+\]
+Thus $m+s$ input digits suffice to determine $m$ output digits of the projected packet.
+\end{theorem}
+
+\begin{proof}
+Write $x-y=\pi^{m+s}z$. Since $\pi^sE(z)\in\Lambda$,
+\[
+E(x-y)=\pi^m\bigl(\pi^sE(z)\bigr)\in\pi^m\Lambda.
+\]
+\end{proof}
+
+The theorem gives a precision budget for delayed separation. A packet with weight $s$ can be reconstructed at the requested output precision by retaining $s$ additional input digits.
+
+
+\section{Exact lattice separation}\label{sec:lattice}
+
+The exact denominator belongs to the pair consisting of the rational packet decomposition and the integral lattice.
+
+\Needspace{8\baselineskip}
+\begin{definition}[Lattice packet data]\label{def:lattice_packet}
+Let
+\[
+V=\bigoplus_{\alpha\in I}V_\alpha
+\]
+be a finite direct sum over $K$, with packet projectors $E_\alpha$.  Let $\Lambda\subseteq V$ be an $\OO$ lattice.  Put
+\[
+\Lambda_\alpha=\Lambda\cap V_\alpha,
+\qquad
+\Lambda_{\mathrm{split}}=\bigoplus_\alpha\Lambda_\alpha,
+\]
+and define the gluing module
+\[
+G_{\Lambda,\Pcal}
+=
+\Lambda/\Lambda_{\mathrm{split}}.
+\]
+The separation weight of $E_\alpha$ is
+\[
+s_\Lambda(E_\alpha)
+=
+\min\{s\geq0:\pi^sE_\alpha\Lambda\subseteq\Lambda\}.
+\]
+The global separation weight is
+\[
+s_\Lambda(\Pcal)=\max\bigl(\{0\}\cup\{s_\Lambda(E_\alpha):\alpha\in I\}\bigr).
+\]
+For a finitely generated torsion $\OO$ module $G$, write $\expn_\pi(G)$ for the least $s$ such that $\pi^sG=0$.
+\end{definition}
+
+The gluing module $G_{\Lambda,\Pcal}$ is a finitely generated torsion $\OO$ module, hence has finite length, because $\Lambda_{\mathrm{split}}$ and $\Lambda$ are full lattices in the same vector space. To see that the split lattice is full, clear denominators of bases of the rational summands. Each $\Lambda\cap V_\alpha$ then spans $V_\alpha$, so their direct sum spans $V$.
+
+\begin{theorem}[Gluing module and exact separation weight]\label{thm:gluing_weight}
+With the notation of \cref{def:lattice_packet}, the map
+\[
+\Phi:G_{\Lambda,\Pcal}
+\longrightarrow
+\bigoplus_{\alpha\in I}E_\alpha\Lambda/\Lambda_\alpha,
+\qquad
+[x]\longmapsto(E_\alpha x+\Lambda_\alpha)_\alpha
+\]
+is injective, and every coordinate projection of its image is surjective.  We also have
+\[
+\boxed{
+\expn_\pi(G_{\Lambda,\Pcal})
+=
+s_\Lambda(\Pcal).
+}
+\]
+If
+\[
+G_{\Lambda,\Pcal}
+\cong
+\bigoplus_{j=1}^r\OO/\pi^{a_j}\OO
+\]
+with $a_1\leq\cdots\leq a_r$, then
+\[
+s_\Lambda(\Pcal)=\max\bigl(\{0\}\cup\{a_j:1\leq j\leq r\}\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+If $x\in\Lambda$ maps to zero, then $E_\alpha x\in\Lambda_\alpha$ for every $\alpha$.  Since
+\[
+x=\sum_\alpha E_\alpha x,
+\]
+we have $x\in\Lambda_{\mathrm{split}}$.  Thus $\Phi$ is injective.  The coordinate map onto $E_\alpha\Lambda/\Lambda_\alpha$ is surjective by the definition of $E_\alpha\Lambda$.
+
+Let $s=s_\Lambda(\Pcal)$.  For every $x\in\Lambda$ and every $\alpha$,
+\[
+\pi^sE_\alpha x\in\Lambda_\alpha.
+\]
+Hence
+\[
+\pi^sx=\sum_\alpha\pi^sE_\alpha x\in\Lambda_{\mathrm{split}},
+\]
+so $\pi^sG_{\Lambda,\Pcal}=0$.  This proves
+\[
+\expn_\pi(G_{\Lambda,\Pcal})\leq s.
+\]
+If $d<s$, then for some $\alpha$ there is an $x\in\Lambda$ with
+\[
+\pi^dE_\alpha x\notin\Lambda_\alpha.
+\]
+The class $\pi^d[x]$ is therefore nonzero in the gluing module.  Thus $\pi^d$ does not annihilate the gluing module, and equality follows.  The final formula is the usual description of the exponent through Smith normal form.
+\end{proof}
+
+\begin{corollary}[Total gluing and worst precision]\label{cor:length_and_weight}
+If
+\[
+G_{\Lambda,\Pcal}
+\cong
+\bigoplus_{j=1}^r\OO/\pi^{a_j}\OO,
+\]
+then
+\[
+\length_{\OO}(G_{\Lambda,\Pcal})
+=
+\sum_{j=1}^ra_j,
+\qquad
+s_\Lambda(\Pcal)=\max\bigl(\{0\}\cup\{a_j:1\leq j\leq r\}\bigr).
+\]
+Thus the lattice index measures the total amount of gluing, while the separation weight measures the worst precision loss in one direction.
+\end{corollary}
+
+\begin{proof}
+The length and exponent of a finitely generated torsion module are read directly from its Smith decomposition.  Apply \cref{thm:gluing_weight}.
+\end{proof}
+
+\begin{corollary}[Two complementary packets]\label{cor:binary_gluing}
+Suppose
+\[
+V=V_1\oplus V_2
+\]
+with projector $E$ onto $V_1$ and complementary projector $I-E$.  Then
+\[
+\Lambda/(\Lambda_1\oplus\Lambda_2)
+\cong
+E\Lambda/\Lambda_1
+\cong
+(I-E)\Lambda/\Lambda_2.
+\]
+Consequently
+\[
+s_\Lambda(E)=s_\Lambda(I-E)
+=
+\expn_\pi\bigl(\Lambda/(\Lambda_1\oplus\Lambda_2)\bigr).
+\]
+\end{corollary}
+
+\begin{proof}
+Map $x\in\Lambda$ to $Ex+\Lambda_1$.  Its kernel consists of the $x$ for which $Ex\in\Lambda_1$.  In that case
+\[
+(I-E)x=x-Ex\in\Lambda\cap V_2=\Lambda_2,
+\]
+so the kernel is $\Lambda_1\oplus\Lambda_2$.  The map is surjective by definition.  The complementary map is handled in the same way.  The equality of weights follows from \cref{thm:gluing_weight}.
+\end{proof}
+
+\begin{corollary}[Integral splitting criterion]\label{cor:integral_split}
+Every packet projector preserves $\Lambda$ if and only if
+\[
+\Lambda=\bigoplus_\alpha(\Lambda\cap V_\alpha).
+\]
+Equivalently,
+\[
+s_\Lambda(\Pcal)=0
+\quad\Longleftrightarrow\quad
+G_{\Lambda,\Pcal}=0.
+\]
+\end{corollary}
+
+\begin{proof}
+If every projector preserves $\Lambda$, then
+\[
+x=\sum_\alpha E_\alpha x
+\]
+expresses every $x\in\Lambda$ as a sum of vectors in $\Lambda_\alpha$.  The converse is immediate because each projector is the identity on one direct summand and zero on the others.  The final equivalence follows from \cref{thm:gluing_weight}.
+\end{proof}
+
+\subsection{Refinement and separation weight}
+
+A finer rational packet system imposes more integral splitting conditions.
+
+\begin{theorem}[Gluing exact sequence under refinement]\label{thm:gluing_refinement}
+Let $\Qcal=(Q_\beta)$ refine $\Pcal=(P_\alpha)$ on $V$, and let $\Lambda$ be a lattice.  Define
+\[
+\Lambda_{\Pcal}
+=
+\bigoplus_\alpha(\Lambda\cap P_\alpha V),
+\qquad
+\Lambda_{\Qcal}
+=
+\bigoplus_\beta(\Lambda\cap Q_\beta V).
+\]
+Then
+\[
+\Lambda_{\Qcal}\subseteq\Lambda_{\Pcal}\subseteq\Lambda
+\]
+and there is a short exact sequence
+\[
+0
+\longrightarrow
+\Lambda_{\Pcal}/\Lambda_{\Qcal}
+\longrightarrow
+\Lambda/\Lambda_{\Qcal}
+\longrightarrow
+\Lambda/\Lambda_{\Pcal}
+\longrightarrow0.
+\]
+In particular,
+\[
+\boxed{
+s_\Lambda(\Pcal)\leq s_\Lambda(\Qcal).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Every fine packet space lies in its parent packet space, so every element of $\Lambda_{\Qcal}$ belongs to $\Lambda_{\Pcal}$.  The displayed exact sequence is the standard quotient sequence for nested submodules.  The exponent of a quotient cannot exceed the exponent of the module from which it is obtained.  Apply \cref{thm:gluing_weight} to the two gluing modules.
+\end{proof}
+
+\begin{example}[Strict growth under refinement]\label{ex:strict_weight_growth}
+Take the standard lattice $\mathbb Z_2^2$ and the involution from \cref{prop:sign_projectors}.  The one packet system $(I)$ has weight zero.  Refining it into the two rational sign packets produces weight one.  The coarse lattice is already split because there is only one summand.  The fine eigenspaces are glued together by one dyadic digit.
+\end{example}
+
+\begin{remark}[Strict growth can occur]\label{rem:strict_growth}
+A coarse packet family may preserve the lattice even though a fine spectral split does not.  Refinement can reveal rational directions that are glued together integrally.  The weight records the extra depth needed to separate them.
+\end{remark}
+
+\subsection{Exact precision delay}
+
+The separation weight has an operational meaning.  It is the exact number of extra input digits needed to recover a projected packet uniformly.
+
+% Keep the final proof marker with its displayed conclusion.
+\enlargethispage{\baselineskip}
+\Needspace{8\baselineskip}
+\begin{theorem}[Necessary and sufficient precision delay]\label{thm:precision_delay}
+Let $E$ be a rational projector on $V$, let $\Lambda$ be a lattice, and let
+\[
+s=s_\Lambda(E).
+\]
+For every $m\geq0$, the rule
+\[
+[x]_{m+s}\longmapsto[Ex]_m
+\]
+from $\Lambda/\pi^{m+s}\Lambda$ to $V/\pi^m\Lambda$ is well defined.  Here $m$ is an integer.  If $d$ is an integer with $0\leq d<s$, then for every integer $m\geq0$ there are $x,y\in\Lambda$ such that
+\[
+x\equiv y\pmod{\pi^{m+d}\Lambda}
+\]
+but
+\[
+Ex\not\equiv Ey\pmod{\pi^m\Lambda}.
+\]
+Thus $s$ extra digits are both sufficient and necessary for a uniform precision guarantee.
+\end{theorem}
+
+\begin{proof}
+If
+\[
+x-y=\pi^{m+s}z,
+\]
+then
+\[
+E(x-y)=\pi^m(\pi^sEz)\in\pi^m\Lambda.
+\]
+This proves that the rule is well defined.  Now take $d<s$.  By the minimality of $s$, there is a $z\in\Lambda$ with
+\[
+\pi^dEz\notin\Lambda.
+\]
+Set
+\[
+x=\pi^{m+d}z,
+\qquad
+y=0.
+\]
+Then $x\equiv y$ modulo $\pi^{m+d}\Lambda$, while
+\[
+E(x-y)=\pi^m(\pi^dEz)\notin\pi^m\Lambda.
+\]
+\end{proof}
+
+\begin{keyidea}
+The necessity statement is uniform over the lattice. A particular input may need fewer extra digits, but a smaller delay cannot recover every projected packet at the prescribed precision. This is why the least clearing exponent gives an exact precision guarantee rather than only a sufficient budget.
+\end{keyidea}
+
+\begin{example}[The same rational split with two lattices]\label{ex:lattice_dependence}
+Let
+\[
+V=Ke_1\oplus Ke_2
+\]
+and let $E$ project onto $Ke_1$.  On the split lattice
+\[
+\Lambda_0=\OO e_1\oplus\OO e_2,
+\]
+the weight is zero.  Fix $s\geq1$ and consider
+\[
+\Lambda_s
+=
+\OO e_1+
+\OO(\pi^{-s}e_1+e_2).
+\]
+Then
+\[
+\Lambda_s\cap Ke_1=\OO e_1,
+\qquad
+\Lambda_s\cap Ke_2=\pi^s\OO e_2.
+\]
+The gluing module is isomorphic to $\OO/\pi^s\OO$, so
+\[
+s_{\Lambda_s}(E)=s.
+\]
+The rational decomposition has not changed.  Only the lattice has changed.
+\end{example}
+
+The example can be realized by an integral operator.  Define
+\[
+Ae_1=0,
+\qquad
+Ae_2=\pi^se_2.
+\]
+In the basis
+\[
+e_1,
+\quad
+\pi^{-s}e_1+e_2,
+\]
+the matrix of $A$ is
+\[
+\begin{pmatrix}
+0&-1\\
+0&\pi^s
+\end{pmatrix}.
+\]
+Its eigenvalue factors have resultant equal to $\pi^s$ up to a unit, and the exact projector weight on $\Lambda_s$ is also $s$.
+
+\section{The dyadic sign split}\label{sec:dyadic}
+
+The smallest example already shows why coefficient selectors and spectral averages must be kept distinct.
+
+\begin{proposition}[Sign projectors over a lattice]\label{prop:sign_projectors}
+Let
+\[
+A=
+\begin{pmatrix}
+1&1\\
+0&-1
+\end{pmatrix}
+\]
+act on $\mathbb Z_p^2$.  Over $\mathbb Q_p$, the sign projectors are
+\[
+E_+=\frac{I+A}{2}
+=
+\begin{pmatrix}
+1&1/2\\
+0&0
+\end{pmatrix},
+\]
+\[
+E_-=\frac{I-A}{2}
+=
+\begin{pmatrix}
+0&-1/2\\
+0&1
+\end{pmatrix}.
+\]
+For every odd prime $p$, both projectors preserve $\mathbb Z_p^2$.  At $p=2$,
+\[
+s_2(E_+)=s_2(E_-)=1.
+\]
+The factors $x-1$ and $x+1$ have resultant $2$.
+\end{proposition}
+
+\begin{proof}
+The displayed matrices are complementary idempotents.  The scalar $2$ is a unit in $\mathbb Z_p$ for odd $p$, so both matrices are integral there.  Over $\mathbb Z_2$, multiplying by $2$ clears the denominators, while neither projector preserves the standard lattice.  Thus both weights are one.  The resultant of the two linear factors is their root difference, which is $2$.
+\end{proof}
+
+Modulo $2$, the two eigenvalues become equal.  The rational sign packets remain distinct over $\mathbb Q_2$, but the standard lattice does not split into their intersections until one more dyadic digit is retained.
+
+\Needspace{4\baselineskip}
+\begin{proposition}[Integral character averages away from the group order]\label{prop:character_integrality}
+Let $\OO$ be a discrete valuation ring, let $N$ be a unit in $\OO$, and suppose $\OO$ contains a primitive $N$th root of unity $\omega$.  If an integral operator $U$ satisfies $U^N=I$, then
+\[
+E_j=\frac1N\sum_{k=0}^{N-1}\omega^{-jk}U^k
+\]
+preserves every $U$ stable $\OO$ lattice.  At primes dividing $N$, this formula alone gives no integral projector.
+\end{proposition}
+
+\begin{proof}
+Every scalar coefficient in the displayed sum belongs to $\OO$ because $N$ is a unit and $\omega$ is integral.  Each power of $U$ preserves the lattice, so their $\OO$ linear combination does as well.  When $N$ is not a unit, division by $N$ is not an operation in $\OO$, so the same argument is unavailable.
+\end{proof}
+
+At a prime dividing $N$, the factor $1/N$ no longer guarantees that the character average preserves the lattice. Cancellation may still make a particular projector integral. Coefficient residue selectors remain exact because they never divide by the group order.
+
+\subsection{The concrete rational sign matrix}
+
+Consider the integral involution
+\[
+A=
+\begin{pmatrix}
+1&1\\
+0&-1
+\end{pmatrix},
+\qquad
+A^2=I.
+\]
+Over a field of characteristic different from two, its sign projectors are
+\[
+E_+=\frac{I+A}{2}
+=
+\begin{pmatrix}
+1&1/2\\
+0&0
+\end{pmatrix},
+\]
+\[
+E_-=\frac{I-A}{2}
+=
+\begin{pmatrix}
+0&-1/2\\
+0&1
+\end{pmatrix}.
+\]
+They are orthogonal idempotents and sum to $I$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{07_dyadic_delayed_separation.pdf}
+\caption{The rational sign projectors for an integral involution. Their denominator has $2$-adic weight one.}
+\label{fig:dyadic-projectors}
+\end{figure}
+
+\begin{proposition}[Odd-adic versus dyadic behavior]\label{prop:dyadic-sign}
+For every prime $p\ne2$, every entry of $E_+$ and $E_-$ is $p$-integral,
+and each projector has exact local denominator weight zero. At $p=2$, each
+projector has exact local denominator weight one. Multiplication by $2$ makes
+it integral, while the unscaled matrix is not integral:
+\[
+s_{2,\Z_2^2}(E_+)=s_{2,\Z_2^2}(E_-)=1.
+\]
+The characteristic factors $x-1$ and $x+1$ have resultant $2$. Its $2$-adic
+valuation is one, exactly the two local projector weights above, and its
+$p$-adic valuation is zero at every prime $p\ne2$.
+\end{proposition}
+
+\begin{proof}
+The reduced denominators of the displayed entries are $1$ or $2$, which proves
+the local integrality and minimality statements directly. The resultant is
+\[
+\Res(x-1,x+1)=2.
+\]
+Thus $v_2(2)=1$ and $v_p(2)=0$ for primes $p\ne2$.
+\end{proof}
+
+The two characteristic factors $x-1$ and $x+1$ have the same reduction in
+$\F_2[x]$. The rational matrices $E_+$ and $E_-$ themselves cannot be reduced
+modulo $2$, because their entries contain $1/2$. Consequently the integral
+special fibre does not inherit their separate idempotent splitting, even
+though the two projectors remain distinct over $\Q_2$. This is the simplest
+model of delayed dyadic separation.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{08_odd_prime_separation.pdf}
+\caption{The denominator weight of the sign projector is nonzero only at the prime two.}
+\label{fig:odd-dyadic}
+\end{figure}
+
+\Needspace{7\baselineskip}
+\subsubsection{Why coefficient packets remain available}
+
+The failure of the character formula
+\[
+\frac12(I\pm A)
+\]
+to be integral does not invalidate coefficient selectors such as even and odd residue extraction. It shows that two distinct constructions must be distinguished:
+\[
+\boxed{
+\text{integral address selector}
+\quad\neq\quad
+\text{character-average spectral projector}
+}
+\]
+when the group order is not a unit. The first can remain exact over $\Z_2$. The second can acquire a denominator weight.
+
+
+\section{Smith normal form and congruence lifting}\label{sec:smith}
+
+The gluing module gives the exact common denominator of packet projectors.  Smith normal form gives the corresponding coordinate by coordinate solvability and branching rule.
+
+\begin{standardfact}[Smith normal form over a discrete valuation ring]\label{fact:smith}
+Let $M\in M_{m,n}(\OO)$.  There are invertible matrices
+\[
+U\in\operatorname{GL}_m(\OO),
+\qquad
+V\in\operatorname{GL}_n(\OO)
+\]
+such that
+\[
+UMV
+=
+\diag(\pi^{s_1},\ldots,\pi^{s_r},0,\ldots,0),
+\]
+where
+\[
+0\leq s_1\leq\cdots\leq s_r
+\]
+and $r$ is the rank over $K$.  The exponents are uniquely determined.  See \cite{Newman1972}.
+\end{standardfact}
+
+\begin{proposition}[Computing a packet weight from an inclusion matrix]\label{prop:weight_from_inclusion}
+Choose an $\OO$ basis of $\Lambda$ and an $\OO$ basis of $\Lambda_{\mathrm{split}}$.  Let $B$ be the matrix of the inclusion
+\[
+\Lambda_{\mathrm{split}}\hookrightarrow\Lambda.
+\]
+If the Smith form of $B$ is
+\[
+\diag(\pi^{a_1},\ldots,\pi^{a_n}),
+\qquad
+0\leq a_1\leq\cdots\leq a_n,
+\]
+then
+\[
+G_{\Lambda,\Pcal}
+\cong
+\bigoplus_{j=1}^n\OO/\pi^{a_j}\OO,
+\qquad
+s_\Lambda(\Pcal)=\max\bigl(\{0\}\cup\{a_j:1\leq j\leq n\}\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+The gluing module is the cokernel of the inclusion matrix $B$.  Smith normal form gives its invariant factors.  The weight formula follows from \cref{thm:gluing_weight}.
+\end{proof}
+
+\begin{theorem}[Smith weighted congruence solve]\label{thm:smith_congruence}
+Let $M\in M_{m,n}(\OO)$ have Smith exponents $s_1,\ldots,s_r$.  Assume the residue field is finite of cardinality $q$, fix $L\geq1$, and consider
+\[
+Mx\equiv b\pmod{\pi^L}.
+\]
+Put
+\[
+\widetilde b=Ub
+\]
+for a Smith matrix $U$ as in \cref{fact:smith}.  The congruence is solvable if and only if
+\[
+\widetilde b_i\equiv0
+\pmod{\pi^{\min(s_i,L)}}
+\qquad(1\leq i\leq r)
+\]
+and
+\[
+\widetilde b_i\equiv0
+\pmod{\pi^L}
+\qquad(r<i\leq m).
+\]
+When it is solvable, the number of solutions in $(\OO/\pi^L\OO)^n$ is
+\[
+\boxed{
+q^{(n-r)L+\sum_{i=1}^r\min(s_i,L)}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Set $x=Vy$.  Multiplying the congruence by $U$ reduces it to independent equations
+\[
+\pi^{s_i}y_i\equiv\widetilde b_i\pmod{\pi^L}
+\qquad(1\leq i\leq r)
+\]
+and zero equations in the remaining rows.  Multiplication by $\pi^{s_i}$ on $\OO/\pi^L\OO$ has image equal to the elements divisible by $\pi^{\min(s_i,L)}$ and kernel of size
+\[
+q^{\min(s_i,L)}.
+\]
+Each of the $n-r$ unused variables is free and contributes $q^L$ choices.  Multiplying the independent counts gives the formula.
+\end{proof}
+
+\begin{corollary}[Obstruction and branching data]\label{cor:smith_obstruction}
+The transformed entries of $\widetilde b$ that fail the stated divisibility conditions are the complete finite congruence obstructions.  When all obstructions vanish, the Smith exponents determine the number of solution branches at depth $L$.
+\end{corollary}
+
+\begin{proof}
+This is exactly the solvability and counting statement of \cref{thm:smith_congruence} written in invariant coordinates.
+\end{proof}
+
+\begin{example}[Three weighted directions]\label{ex:smith_three}
+Take $p=2$, $L=6$, and the diagonal weights
+\[
+(0,1,3).
+\]
+The right side
+\[
+(1,2,8)
+\]
+is admissible.  The three coordinate kernels have sizes
+\[
+1,
+\quad2,
+\quad8,
+\]
+so there are $16$ solutions.  Replacing the final entry $8$ by $4$ violates the required divisibility by $2^3$ and makes the system unsolvable.
+\end{example}
+
+\subsection{Concrete diagonal fibres over integer quotients}
+
+Let $M$ be a matrix over a DVR. Smith normal form gives invertible matrices $U,V$ such that
+\[
+UMV
+=
+\diag(\pi^{s_1}u_1,\ldots,\pi^{s_r}u_r,0,\ldots,0),
+\]
+where each $u_i$ is a unit and
+\[
+0\le s_1\le\cdots\le s_r.
+\]
+The exponents $s_i$ are directional lifting weights.
+
+\begin{theorem}[Concrete Smith-weighted congruence solve]\label{thm:smith-solve}
+Let $p>1$ and consider the diagonal system over
+$(\Z/(p^L)\Z)^d$
+\[
+\diag(p^{s_1},\ldots,p^{s_d})x=b
+\pmod{p^L}.
+\]
+The system is solvable if and only if
+\[
+p^{\min(s_i,L)}\mid (b_i)_{\mathrm{val}}
+\]
+for every $i$, where $(b_i)_{\mathrm{val}}$ is the canonical natural
+representative. Conditional on this admissibility condition, the number of
+solutions is
+\[
+\boxed{
+p^{\sum_{i=1}^d\min(s_i,L)}.
+}
+\]
+If any coordinate is inadmissible, the solution set is empty and its
+cardinality is zero.
+\end{theorem}
+
+\begin{proof}
+Lean proves the one-coordinate arithmetic directly over
+$\mathbb Z/p^L\mathbb Z$ for every $p>1$:
+\[
+\bigl(\exists x\in\mathbb Z/p^L\mathbb Z:\quad p^s x=b\pmod{p^L}\bigr)
+\quad\Longleftrightarrow\quad
+p^{\min(s,L)}\mid b_{\mathrm{val}},
+\]
+where $b_{\mathrm{val}}$ is the canonical natural representative, and every
+admissible fibre has exactly $p^{\min(s,L)}$ elements. The coordinates are
+independent, so the product equivalence gives the displayed global count. If
+one coordinate fibre is empty, the global fibre is empty. Lean proves both the
+global solvability equivalence and the conditional count, including
+cardinality zero on the inadmissible branch.
+\end{proof}
+
+For an arbitrary DVR $\OO$ with residue field cardinality $q$, the analogous
+formula
+\[
+q^{\sum_i\min(s_i,L)}
+\]
+follows from the solvability and fibre count for each coordinate. The formal
+correspondence records direct proofs of this DVR coordinate arithmetic and
+the rectangular transport as separate targets.
+The inherited abstract product interface remains available when the coordinate
+facts are supplied as certificates. A Smith form and its changes of basis are
+inputs to the transport statement; it does not provide an extracted
+diagonalization routine. See \cite{Serre1979,Lang2002}.
+
+If a Smith form is rank deficient, a literal zero diagonal factor requires
+the corresponding target coordinate to vanish modulo $p^L$ and then
+contributes all $p^L$ possible coordinate values. In the concrete quotient it
+can equivalently be represented by any weight $s_i\ge L$, since
+$p^{s_i}=0$ in $\Z/(p^L)\Z$. The theorem then gives exactly that condition and
+factor. The numbered theorem takes the diagonal data as its input.
+
+\begin{example}
+At $p=2$, depth $L=6$, and weights $(0,1,3)$, the right side $(1,2,8)$ is admissible. The coordinate kernels have sizes
+\[
+1,2,8,
+\]
+so the system has $16$ solutions. Replacing $8$ by $4$ in the final coordinate violates the divisibility condition and makes the system unsolvable.
+\end{example}
+
+\begin{interpretation}
+The gluing calculation takes the largest Smith weight because every packet must be separated to the requested precision. The congruence calculation retains the individual directional weights. A coordinate with weight $s_i$ contributes a solvability threshold and $\min(s_i,L)$ to the branching exponent. The independent coordinate counts multiply, so these truncated weights add in the exponent.
+\end{interpretation}
+
+

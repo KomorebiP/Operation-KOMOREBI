@@ -1,0 +1,45 @@
+\section{Exact coordinates before arithmetic estimates}\label{sec:foundations}
+\subsection{Residue projectors are coefficient filters}
+\contract{For an additive commutative monoid $R$, a positive modulus $N$, and a sequence $a:\mathbb N\to R$, the residue packets sum to $a$. The coefficient-level idempotent and orthogonality laws need only a zero element.}
+\excerpt{Residue reconstruction}{packet}
+\walk{Function extensionality reduces the sequence identity to one coefficient $n$. The only nonzero summand is indexed by $n\bmod N$. \code{Finset.sum_eq_single} separates that summand from the rest. \code{Nat.mod_lt n hN} proves its address lies inside the chosen finite range. Positivity justifies the finite address set. There is no division by $N$ and no root-of-unity hypothesis.}
+
+A residue projector is a selector on the degree address. Applying it twice keeps the same coefficients. Projectors with distinct addresses cannot both retain the same degree. Refinement to a multiple modulus groups fine addresses according to their coarse remainder. These are exact identities before reduction modulo a prime. The power-series versions use coefficient extensionality, so the same proof mechanism acts on \code{PowerSeries R}.
+
+\subsection{Triangular reconstruction constructs the solution}
+The source does not assume that an infinite triangular system already has a solution. It defines forward substitution recursively, using only indices $k<n$ at row $n$. The \code{termination_by n} declaration verifies the recursion decreases. Over a field the formula is defined even when a diagonal vanishes, but the row equation and uniqueness theorem explicitly require nonzero diagonal entries.
+
+\contract{$F$ is a field, $T$ is an infinite coefficient array, every $T_{nn}$ is nonzero, and $a$ satisfies every finite row equation. Then $a$ equals the recursively constructed solution.}
+\excerpt{Triangular uniqueness}{triangular}
+\walk{Strong induction first replaces each earlier unknown $a_k$ by the recursive value. The two row equations then have identical earlier sums. Cancelling the sum leaves equality after multiplication by $T_{nn}$. Nonzero diagonal cancellation gives equality of the current entries. Function extensionality assembles all rows. The argument needs no convergence or boundedness of an infinite matrix. Each row is a finite calculation.}
+
+\contract{For integer coefficients and integer right-hand side, the product $D_n=\prod_{r=0}^{n}T_{rr}$ clears the rational solution's denominator at row $n$. Every diagonal remains nonzero.}
+\excerpt{Constructed denominator bound}{denominator}
+\walk{The induction separates row zero from a successor row. At a successor, $D_{n+1}=D_nT_{n+1,n+1}$ cancels the new denominator. Earlier denominators divide $D_n$, allowing \code{integral_promote} to place every earlier term under one common integer multiplier. The proof establishes an integral multiple of the actual recursive solution. It does not assert that the product is the smallest denominator. Negative diagonal entries are allowed, since only nonvanishing and divisibility are used.}
+
+\subsection{EGF multiplication is Hurwitz convolution}
+\contract{Over a characteristic-zero field in the source coordinates, encoding divides the $n$th sequence entry by $n!$, and decoding multiplies the power-series coefficient by $n!$. The two operations are inverse.}
+\excerpt{Product in exponential coordinates}{egf}
+The binomial coefficient in the displayed convolution records the factorial change of coordinates. Ordinary power-series multiplication uses an unweighted coefficient convolution. The exponential coordinate multiplication uses $\binom nk$. A raw formal coefficient must therefore be distinguished from its degree-indexed generalized Euler number. Replacing one by the other without restoring the factorial changes p-adic precision.
+
+\walk{The proof unfolds the product coefficient over finitely many pairs with sum $n$, substitutes the encoded entries, and proves the factorial identity behind the binomial coefficient. Nonzero factorial casts justify field cancellation. The resulting law transports exact inverse identities and reconstruction statements into sequence coordinates. The formal series need not converge analytically.}
+
+\subsection{Finite differences and the Mahler basis}
+\contract{$R$ is a commutative ring. The finite Mahler identity reconstructs any sequence value $f(n)$ from its first $n+1$ forward-difference coefficients. All sums are finite.}
+\excerpt{Finite Newton--Mahler reconstruction}{mahler}
+The change of basis is
+\[
+ f(n)=\sum_{k=0}^{n}\binom nk\Delta^k f(0).
+\]
+The inverse relation expresses $\Delta^kf(0)$ as a signed binomial sum of the first $k+1$ values. No infinite Mahler-series convergence theorem is required for this finite identity. Later p-adic bounds put valuations on these exact coefficients and turn a finite coordinate theorem into precision estimates.
+
+A weight condition on the $k$th coefficient controls higher differences by divisibility. The weighted difference modules formulate that condition explicitly and prove the translation by finite sums. A theorem about all orders therefore depends on the weight hypothesis for all the relevant coefficients. It cannot be inferred from a small computed prefix.
+
+\subsection{Finite units and Chinese remainders}
+\contract{For a prime $p$ and $L\in\mathbb N$, the finite-unit module decomposes a unit modulo $p^{L+1}$ into the source's torsion and principal components. Its uniqueness proof uses the uniquely lifted torsion representative and cancellation.}
+\excerpt{Uniqueness of finite-unit decomposition}{unit}
+The displayed source theorem applies to prime $p$, including $p=2$. It compares the reduced residue of $w$ with that of $a$, invokes the uniquely lifted torsion representative, and then cancels that factor to identify the principal component. For odd primes the familiar coprime torsion/principal orders explain this structure, but the Lean endpoint uses its proved lifted-root uniqueness. The dyadic development additionally supplies the finer sign/principal decomposition in its separate module.
+
+\contract{The displayed CRT equivalence identifies addresses modulo $2^aM$ with addresses modulo $2^a$ and $M$, where $M$ is odd. Oddness proves the coprimality needed by the ring equivalence.}
+\excerpt{CRT address equivalence}{crt}
+\walk{The equivalence carries both directions and their inverse laws. Packet factorization then compares the retained degree address through that equivalence. The algebra concerns residue addresses and coefficients, not an analytic tensor-product completion. This is why the finite arithmetic layer can be reused without adding convergence claims.}

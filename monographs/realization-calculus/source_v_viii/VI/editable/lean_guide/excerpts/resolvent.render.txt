@@ -1,0 +1,16 @@
+theorem rectangular_resolvent_identity (C : Matrix m n R)
+    (A : Matrix n n R) (B : Matrix m m R)
+    (Rf : Matrix n n R) (Rc : Matrix m m R) (z : R)
+    (hz : ∀ i j, z*C i j = C i j*z)
+    (hf : (Matrix.scalar n z-A)*Rf=1)
+    (hc : Rc*(Matrix.scalar m z-B)=1) :
+    C*Rf-Rc*C=Rc*(C*A-B*C)*Rf := by
+  have hzC : Matrix.scalar m z*C=C*Matrix.scalar n z := by
+    ext i j
+    simpa using hz i j
+  have hd : C*A-B*C=(Matrix.scalar m z-B)*C-C*(Matrix.scalar n z-A) := by
+    rw [Matrix.sub_mul, Matrix.mul_sub, hzC]
+    abel
+  rw [hd, Matrix.mul_sub, Matrix.sub_mul]
+  simp only [← Matrix.mul_assoc, hc, Matrix.one_mul]
+  rw [Matrix.mul_assoc (Rc*C), hf, Matrix.mul_one]

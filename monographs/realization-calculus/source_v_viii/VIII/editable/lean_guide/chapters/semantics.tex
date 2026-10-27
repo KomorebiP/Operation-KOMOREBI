@@ -1,0 +1,24 @@
+\section{Exact packet semantics}
+\subsection{The reused projector family}
+The unchanged \code{QuantumPacketCore} foundation uses a ring \code{R} and finite packet type \code{I}. The projectors multiply orthogonally and sum to one. Their block \(P_b A P_a\) uses the target index first. This algebraic model already covers noncommutative operator multiplication.
+\excerpt{}{packet_family}
+\walk{The structure fields are assumptions defining a packet family. Idempotence is derived by setting the two indices equal, and reconstruction follows by expanding the two sums of projectors. A finite projector family is supplied to later theorems, so discovery of an appropriate family is a separate mathematical or application task.}
+
+\subsection{Deleting exact zero blocks}
+\code{activeBlocks P A} filters the finite set of ordered packet pairs by the predicate that the actual block is unequal to zero. \code{evalActive} sums only those surviving blocks.
+\excerpt{}{active_evaluation}
+\walk{The local lemma \code{term} checks two cases: a block equals zero or it does not. In either case, replacing it by an if-expression preserves the value. The proof expands the filtered sum, rewrites every term by this lemma, and applies the foundation's reconstruction theorem. No thresholded support is used.}
+\excerpt{}{batch}
+\walk{A rectangular right-hand-side matrix \code{Z} may have any column type \code{C}. Distribution of matrix multiplication over the finite sum turns exact operator reconstruction into equality of the whole output batch. The result concerns actual matrix multiplication, rather than a Boolean sparsity specification.}
+
+\subsection{Support composition and cancellation}
+\excerpt{}{support_inclusion}
+\walk{The premise says the product block is nonzero. Assume no intermediate packet has both nonzero constituent blocks. For each intermediate index, either the first block is zero or the assumption forces the second to be zero. Every summand in the composition formula vanishes, contradicting the premise. This proves an inclusion of support relations. It supplies no converse: nonzero paths can cancel. The separate \code{BoundaryChecks.paths_can_cancel} declaration records a concrete control.}
+
+\subsection{An adjoint needs the right projector hypothesis}
+\excerpt{}{adjoint}
+\contract{The surrounding section has a star ring and an explicit \code{hstar : ∀ a, star (P.proj a) = P.proj a}.}
+\walk{The source calls the foundation's adjoint identity with that self-adjointness proof. Adjoint reversal swaps target and source. Orthogonal idempotence in an arbitrary ring alone does not establish self-adjointness. Tensor semantics are separately proved with actual Kronecker products. Their address types are pairs of packet indices.}
+
+\subsection{The Python prototype is a different object}
+The historical Python prototype's support accessor returns stored block keys, which may include explicitly stored zeros. The formal \code{activeBlocks} set instead tests exact nonzero matrix blocks. The two objects agree only when the stored representation has already removed all zero blocks and realizes the same matrices. No automatic equivalence between the prototype and the Lean representation is asserted here.

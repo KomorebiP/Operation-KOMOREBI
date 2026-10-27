@@ -1,0 +1,27 @@
+\subsection{Verification, regressions, and remaining work}\label{supp4:subsection:007}\textit{Cumulative release evidence}\par
+\textbf{Lean verification.} All 23 modules were rebuilt in a fresh output directory under Lean 4.34.0-rc2 and Mathlib revision
+\begin{center}\code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+Every final module returned exit code zero, with warnings treated as errors. The 247 theorem audits and 22 construction audits used only \code{propext}, \code{Classical.choice}, and \code{Quot.sound}, or subsets thereof. Active proof sources contain no admitted proofs or added axioms. The false-equality and admitted-proof negative controls were rejected. All 17 verifier regression tests passed.
+
+\textbf{Development failures.} Of 20 captured development checks in this block, 12 failed and eight passed. Failures included incomplete development lemmas, import visibility, finite-index instance reduction, and warning diagnostics. Failed source snapshots and compiler logs are retained separately from the successful fresh cumulative run. The first request for interactive runtime recovery was unsupported; noninteractive archive assembly and extraction succeeded, with every part hash and the combined hash verified.
+
+\textbf{Independent regressions.} The Python mirrors passed 180 exact-rational Kronecker cases, 120 tensor cases, 96 Walsh cases, 240 Toeplitz cases, and 600 clipped-allocation cases. The latter include 60 maximal-budget cases and 1,800 rejected infeasible budgets. These are finite checks, not additional universal theorems or executions of the Lean definitions.
+
+A separate complex128 Fourier regression covered 96 cases at lengths 1 through 24. Maximum absolute errors were approximately $3.34\times10^{-14}$ for diagonalization, $2.98\times10^{-15}$ for unitarity, and $2.04\times10^{-13}$ for application, all below the declared $10^{-10}$ threshold. These numerical checks are not substituted for the symbolic Lean proof.
+
+\textbf{Ten manuscript-proved items remain:}
+\begin{center}\small
+\begin{tabular}{@{}lp{.79\textwidth}@{}}
+\toprule
+Item & Remaining result\\\midrule
+4.1 & Equal block banded count\\
+5.6 & Small-core optimal recompression\\
+6.5, 6.6 & Triangular level solve and sequential depth\\
+6.7, 6.8 & Inverse and Schur support inclusion\\
+7.4, 7.6 & Block-Jacobi condition bound and certified preconditioning\\
+9.2 & Exact block-discovery certificate\\
+10.3 & Acyclic schedule depth\\\bottomrule
+\end{tabular}
+\end{center}
+Four classical inputs remain separately recorded. This release does not rerun the original numerical corpus or GPU benchmarks, rebuild Papers I--VII in full, or independently recheck every imported Mathlib proof.
+

@@ -1,0 +1,13 @@
+theorem spectral_decay (A : R) (z : ℂ) (hz : ∀ μ∈spectrum ℂ A,μ.re < z.re) :
+    IntegrableOn (damped A z) (Ioi 0) ∧ Tendsto (damped A z) atTop (\CodeSymbol{1D4DD} 0) := by
+  have h (x : R) : IntegrableOn (fun t => damped A z t*x) (Ioi 0) ∧
+      Tendsto (fun t => damped A z t*x) atTop (\CodeSymbol{1D4DD} 0) := by
+    apply Submodule.iSup_induction (Module.End.maxGenEigenspace (LinearMap.mulLeft ℂ A))
+      (x := x) (motive := fun x => IntegrableOn (fun t : ℝ => damped A z t*x) (Ioi 0) volume ∧
+        Tendsto (fun t => damped A z t*x) atTop (\CodeSymbol{1D4DD} 0))
+      (by rw [Module.End.iSup_maxGenEigenspace_eq_top]; trivial)
+    · exact component_decay A z hz
+    · simp
+    · intro x y hx hy
+      simpa only [Pi.add_def,mul_add,add_zero] using And.intro (hx.1.add hy.1) (hx.2.add hy.2)
+  simpa using h 1

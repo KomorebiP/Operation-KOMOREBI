@@ -1,0 +1,550 @@
+\part{Finite typed transfer and the formal contract}\label{part:finite}
+\noindent The finite algebraic core supplies the algebraic foundation and a contract for its individual declarations. Here, ``roadmap'' and ``outside the contract'' describe the scope of the finite Lean formalization. Ordinary mathematical results in Part~II may lie beyond that scope. The finite contract covers thirty result environments. The source contract has 41 mapping rows because it also includes definitions and other interfaces.
+
+\medskip\noindent The formal companion records the exact Lean and Mathlib dependencies \cite{lean,mathlib}, compilation, kernel replay, and axiom checks. References to declarations from Chapters I--II retain their explicitly inherited status. The companion distinguishes the finite algebraic contract from the additional packet-coordinate and analytic interfaces.
+\section{Purpose and formal status}
+\label{sec:purpose}
+
+Paper I fixed typed seeds, operator grammars, exact projector packets,
+generated hulls, and reconstruction \cite{paperI}.  Paper II added coherent
+refinement coordinates, weighted transfer, arithmetic separation, and linear
+defect identities \cite{paperII}.  The present paper begins the next layer:
+explicit edge words, optional connection data, and obstructions within
+individual packets.
+
+Canonical coordinate transport and a connection play different mathematical
+roles. Canonical transport compares two exact descriptions of the
+\emph{same} ambient object and is forced by analysis and synthesis. A
+connection chooses transports that may carry extra modeling, discretization,
+or gauge information. Canonical transport obeys a cocycle theorem. A
+connection may fail to obey a cocycle, and that failure is meaningful data.
+Keeping separate notation lets us distinguish the automatic coherence of
+exact coordinates from the possible holonomy of a chosen connection.
+
+\subsection{Statement labels}
+
+Every substantial theorem, lemma, corollary, proposition, definition, API,
+and roadmap item carries one or more of the three labels below. When separate
+clauses use a Paper III result and an inherited bridge, the statement carries
+both applicable labels. Illustrative examples do not require a label.
+\begin{enumerate}[label=\textbf{S\arabic*.},leftmargin=3.2em]
+\item \textbf{Lean-backed in Paper III}: the displayed scope is no stronger
+than the named compiled declaration in the identified Paper III module.
+\item \textbf{Inherited Lean-backed}: the displayed result is supplied by the
+frozen formal contract of Paper I or II.
+\item \textbf{Roadmap only}: the text states a future interface or theorem
+target and is excluded from the completion denominator.
+\end{enumerate}
+
+\begin{boundary}[Finite theorem denominator]
+The completion denominator of the finite algebraic contract consists of the
+thirty result environments in Part~I. Of these, 26 resolve to compiled
+Paper III declarations and four resolve to the frozen Papers I--II
+contracts. The authoritative theorem map names the exact declarations used
+by each statement. The kernel audit checks those targets and their supporting
+theorems. The namespace gate requires every declaration in the compiled
+\leanname{Komorebi.PaperIII} namespace to pass its checks. Roadmap items are
+excluded from the denominator and remain visibly marked.
+\end{boundary}
+
+\section{Finite typed packet graphs}
+\label{sec:edge-operators}
+
+\subsection{Orientation and matrix convention}
+
+Let $V$ be a finite packet type, $E$ a finite edge type, and $R$ a semiring.
+A directed multigraph is a pair of endpoint functions
+\[
+  \src,\tgt:E\longrightarrow V.
+\]
+Parallel edges remain distinct elements of $E$.  Rows are targets and columns
+are sources.  Thus an edge $e:i\to j$ is represented by a matrix supported at
+row $j$, column $i$.
+
+\begin{definition}[Packet graph and scalar edge system]
+\label{def:edge-system}
+For $a,b\in V$ and $r\in R$, define
+\[
+  \operatorname{packetMatrix}(a,b;r)_{yx}
+  =
+  \begin{cases}
+  r,&y=b\text{ and }x=a,\\
+  0,&\text{otherwise}.
+  \end{cases}
+\]
+An edge system is a coefficient function $c:E\to R$.  Its elementary edge
+operator and total transfer operator are
+\[
+  L_e=\operatorname{packetMatrix}(\src(e),\tgt(e);c(e)),
+  \qquad
+  T=\sum_{e\in E}L_e.
+\]
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph; Komorebi.PaperIII.EdgeOperators.PacketGraph.packetMatrix; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.edgeOp; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp}
+
+Words are written in execution order. In $L_fL_e$, the rightmost operator
+$L_e$ acts first. For a written word $(e_1,\ldots,e_n)$, $e_1$ acts first
+and the operator product is $L_{e_n}\cdots L_{e_1}$.
+
+\begin{keyidea}[title={Reading the execution order}]
+Read the edge list in the order of execution. The matrix product writes later
+actions farther to the left. The target packet of one edge must equal the
+source packet of the next before multiplication can contribute. Over a noncommutative
+semiring, this order also fixes the order of the scalar coefficients.
+\end{keyidea}
+
+\begin{lemma}[Declared support]
+\label{lem:edge-support}
+For every edge $e$, $(L_e)_{yx}=0$ unless
+$y=\tgt(e)$ and $x=\src(e)$.
+\end{lemma}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.edgeOp_eq_zero_off_support}
+
+\begin{theorem}[Typed interface annihilation]
+\label{thm:edge-annihilation}
+If $\tgt(e)\ne\src(f)$, then
+\[
+  L_fL_e=0.
+\]
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.edgeOp_mul_edgeOp_eq_zero}
+
+\begin{proof}
+For a matrix entry $(y,x)$,
+\[
+  (L_fL_e)_{yx}=\sum_{z\in V}(L_f)_{yz}(L_e)_{zx}.
+\]
+A potentially nonzero summand would require simultaneously
+$z=\src(f)$ and $z=\tgt(e)$, contrary to the hypothesis.
+\end{proof}
+
+\begin{theorem}[Collapse of a matched edge pair]
+\label{thm:edge-composable}
+If $\tgt(e)=\src(f)$, then
+\[
+L_fL_e
+=
+\operatorname{packetMatrix}
+\bigl(\src(e),\tgt(f);c(f)c(e)\bigr).
+\]
+Together with \cref{thm:edge-annihilation}, this gives both cases for
+the composition of two edge operators.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.edgeOp_mul_edgeOp_of_composable}
+
+\begin{proof}
+The matrix-product sum has exactly one potentially nonzero intermediate
+index, namely $\tgt(e)=\src(f)$.  At that index the coefficients occur in
+operator order as $c(f)c(e)$, and the outer source and target are
+$\src(e)$ and $\tgt(f)$.
+\end{proof}
+
+\begin{boundary}[Current fiber scope]
+The compiled Paper III model above has one scalar coordinate per packet.
+For a family of modules $(X_i)_{i\in V}$, an intrinsic edge map would instead
+have type $\ell_e:X_{\src(e)}\to X_{\tgt(e)}$, and its totalization on
+$\bigoplus_iX_i$ would be
+$\iota_{\tgt(e)}\ell_e\pi_{\src(e)}$.  The same support proof applies, but
+this generalization with dependent fibers is not attributed to the released
+Paper III modules for scalar edge systems.
+\end{boundary}
+
+\Cref{fig:typed-edge-walks} summarizes the support convention and shows
+how composable words differ from words with a broken interface. The next
+section uses this distinction.
+
+\begin{figure}[tbp]
+\centering
+\includegraphics[width=.96\linewidth]{typed_edge_walks.pdf}
+\caption{Rows record target packets and columns record source packets.
+This convention fixes execution order. Composable words collapse to endpoint
+blocks, while one broken packet interface annihilates the entire operator
+product.}
+\label{fig:typed-edge-walks}
+\end{figure}
+
+\section{Operator words and directed walks}
+\label{sec:words-walks}
+
+\subsection{Typed words}
+
+\begin{definition}[Composable word and execution operator]
+\label{def:word-op}
+A finite word $w=(e_1,\ldots,e_n)$ is composable when
+\[
+  \tgt(e_r)=\src(e_{r+1})
+  \qquad (1\le r<n).
+\]
+Set
+\[
+  L_w=L_{e_n}\cdots L_{e_1},
+  \qquad L_{\varnothing}=I.
+\]
+This definition records the written order of execution even though matrix
+composition is read right to left.
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.Composable; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.wordOp}
+
+\begin{theorem}[First broken interface]
+\label{thm:first-break}
+If a word begins $(e,f,\ldots)$ and $\tgt(e)\ne\src(f)$, then its word
+operator is zero.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.wordOp_eq_zero_of_first_break}
+
+\begin{theorem}[Noncomposable words vanish]
+\label{thm:nonwalk-vanish}
+If $w$ is not composable, then $L_w=0$.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.wordOp_eq_zero_of_not_composable}
+
+\begin{proof}
+Choose the first broken adjacent pair.  The corresponding consecutive factor
+is zero by \cref{thm:edge-annihilation}, and associativity absorbs that zero
+into the complete product.  The Lean proof implements the same argument by
+induction on the list.
+\end{proof}
+
+\subsection{The checked recursive expansion}
+
+\begin{definition}[Recursive word expansion]
+\label{def:recursive-word-expansion}
+Define
+\[
+  \cW_0=I,
+  \qquad
+  \cW_{n+1}=T\cW_n.
+\]
+\end{definition}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.wordExpansion}
+
+\begin{theorem}[Transfer power equals recursive word expansion]
+\label{thm:power-recursive-expansion}
+For every $n\in\N$,
+\[
+  T^n=\cW_n.
+\]
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp_pow_eq_wordExpansion}
+
+\begin{proof}
+The zero case is the identity matrix.  If $T^n=\cW_n$, then the
+left-successor power convention gives
+$T^{n+1}=TT^n=T\cW_n=\cW_{n+1}$.
+\end{proof}
+
+\begin{remark}
+The formal module also defines an explicit sum over tuples
+$w:\operatorname{Fin}(n)\to E$ and a second sum in which noncomposable tuples
+are replaced by zero.  It proves that the recursive matrix, the explicit tuple sum, and the sum
+filtered by composability agree. The separate declarations make the finite
+enumeration claim directly checkable.
+\end{remark}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.explicitWordExpansion; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.walkExpansion; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.wordExpansion_eq_explicitWordExpansion; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.explicitWordExpansion_eq_walkExpansion}
+
+\subsection{Exact expansion from words to walks}
+
+For a nonempty composable word $w=(e_1,\ldots,e_n)$, define its reverse
+coefficient product
+\[
+  c^\leftarrow(w)=c(e_n)c(e_{n-1})\cdots c(e_1).
+\]
+The reversal is essential over a noncommutative semiring.
+
+\begin{lemma}[One word is one endpoint block]
+\label{lem:word-endpoint}
+If $w=(e_1,\ldots,e_n)$ is nonempty and composable, then
+\[
+  L_w
+  =
+  \operatorname{packetMatrix}
+  \bigl(\src(e_1),\tgt(e_n);c^\leftarrow(w)\bigr).
+\]
+\end{lemma}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.reverseCoefficient; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.terminalTarget; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.wordOp_eq_packetMatrix_of_composable}
+
+\begin{proof}
+Induct on $n$.  The case $n=1$ is the definition of $L_e$.  Suppose the
+formula holds for the prefix $(e_1,\ldots,e_n)$ and append $f$.  Composability
+gives $\tgt(e_n)=\src(f)$.  Multiplying the two packet matrices leaves one
+intermediate index and changes the coefficient to
+$c(f)c(e_n)\cdots c(e_1)$, with source $\src(e_1)$ and target $\tgt(f)$.
+\end{proof}
+
+Write $\Walk_n(i,j)$ for the finite set of composable edge tuples of length $n$
+whose first source is $i$ and whose final target is $j$. For $n=0$, it has
+one empty walk when $i=j$ and is empty otherwise. Assign the empty walk the
+coefficient $1$.
+
+\begin{interpretation}[title={The empty walk}]
+The empty walk records doing nothing at a chosen packet. It contributes only
+to a diagonal entry. Thus the convention for length zero matches the identity
+matrix and lets the walk sum include every nonnegative power.
+\end{interpretation}
+
+\begin{theorem}[Finite operator expansion from words to walks]
+\label{thm:word-to-walk}
+For every $n\in\N$,
+\[
+  \boxed{
+  T^n
+  =
+  \sum_{w\in E^n}L_w
+  =
+  \sum_{w\in E^n}
+  \begin{cases}
+  L_w,&w\text{ composable},\\
+  0,&w\text{ not composable}.
+  \end{cases}
+  }
+\]
+Parallel edges occur as distinct summands.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp_pow_eq_explicitWordExpansion; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp_pow_eq_walkExpansion}
+
+\begin{proof}
+Induction and finite distributivity give
+\[
+\left(\sum_{e\in E}L_e\right)^n
+=
+\sum_{(e_1,\ldots,e_n)\in E^n}L_{e_n}\cdots L_{e_1}.
+\]
+Every noncomposable summand is zero by
+\cref{thm:nonwalk-vanish}, so inserting the composability filter does not
+change the sum.  In Lean, tuple concatenation and the successor sum are
+handled by \leanname{tupleWordOp_snoc} and
+\leanname{explicitWordExpansion_succ}; the two bridge equalities then yield
+the displayed theorem.
+\end{proof}
+
+\begin{corollary}[Endpoint coefficient walk sum]
+\label{cor:word-to-walk-entry}
+For all $n\in\N$ and $i,j\in V$,
+\[
+  \boxed{
+  (T^n)_{ji}
+  =
+  \sum_{w\in\Walk_n(i,j)}c^\leftarrow(w).
+  }
+\]
+\end{corollary}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.Connects; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.endpointWalkCoefficientSum; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp_pow_apply_eq_sum_walks}
+
+\begin{proof}
+Take the $(j,i)$ entry in \cref{thm:word-to-walk}.  By
+\cref{lem:word-endpoint}, a surviving word contributes
+$c^\leftarrow(w)$ exactly when its endpoints are $i$ and $j$, and contributes
+zero otherwise.  At $n=0$, the identity matrix gives the unique empty
+diagonal walk.
+\end{proof}
+
+\begin{corollary}[Reachability obstruction at fixed length]
+\label{cor:fixed-reachability}
+If $\Walk_n(i,j)=\varnothing$, then $(T^n)_{ji}=0$.
+\end{corollary}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp_pow_apply_eq_zero_of_no_walk}
+
+\begin{proof}
+This is immediate from the empty sum in the preceding corollary.
+\end{proof}
+
+\begin{corollary}[Orbit support obstruction]
+\label{cor:orbit-reachability}
+Let $S\subseteq V$, and let $x\in R^V$ be supported on $S$.  If $j$ is not
+reachable by a directed path from any vertex of $S$, then
+\[
+  (T^nx)_j=0\qquad\text{for every }n\in\N.
+\]
+Hence the orbit under $T$ of $x$ cannot generate a vector with a nonzero
+coordinate at $j$.
+\end{corollary}
+\statusleanthree{Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.Reachable; Komorebi.PaperIII.EdgeOperators.PacketGraph.EdgeSystem.transferOp_pow_mulVec_apply_eq_zero_of_unreachable_support}
+\statusleanprior{Komorebi.PacketNaturalityCompletion.Reachability.algebraicOrbitHull_le_reachable_support; Komorebi.PacketNaturalityCompletion.Reachability.unreachable_nonzero_packet_obstruction}
+
+\begin{proof}
+Expand $(T^nx)_j=\sum_i(T^n)_{ji}x_i$.  Terms with $i\notin S$ vanish by
+the support of $x$, and terms with $i\in S$ vanish by
+\cref{cor:fixed-reachability}.  The final claim follows because the
+$j$-coordinate also vanishes on every finite linear combination of orbit
+vectors.
+\end{proof}
+
+\section{Canonical exact coordinate transport}
+\label{sec:canonical-transport}
+
+\subsection{The Paper III frame model}
+
+Let every chart $a$ carry a linear frame equivalence
+$F_a:M\xrightarrow{\sim}M$.  The formal Paper III module defines transport
+from $a$ to $b$ by
+\[
+J_{b\leftarrow a}=F_b^{-1}F_a.
+\]
+This frame formula means \emph{synthesize in chart \(a\), then
+analyze in chart \(b\)}.
+
+\begin{theorem}[Exact frame transport is coherent]
+\label{thm:exact-frame-transport}
+For every $a,b,c$,
+\[
+J_{a\leftarrow a}=\id,\qquad
+J_{a\leftarrow b}J_{b\leftarrow a}=\id,\qquad
+J_{c\leftarrow b}J_{b\leftarrow a}=J_{c\leftarrow a},
+\]
+and therefore
+\[
+J_{a\leftarrow c}J_{c\leftarrow b}J_{b\leftarrow a}=\id.
+\]
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.Transport.exactTransport_self; Komorebi.PaperIII.Transport.exactTransport_roundTrip; Komorebi.PaperIII.Transport.exactTransport_cocycle; Komorebi.PaperIII.Transport.exactTransport_triangleLoop}
+
+\begin{proof}
+Every identity is cancellation of adjacent $F_rF_r^{-1}$ factors.  The Lean
+definitions use \leanname{LinearEquiv.trans}; the displayed formulas use the
+equivalent right-to-left function-composition notation fixed in this paper.
+\end{proof}
+
+\begin{theorem}[Every finite canonical path telescopes]
+\label{thm:exact-path-transport}
+Let $p=(a_0,a_1,\ldots,a_n)$ be any finite vertex list and put
+\[
+J_p
+=J_{a_n\leftarrow a_{n-1}}\cdots J_{a_1\leftarrow a_0},
+\qquad
+J_{(a_0)}=\id.
+\]
+Then
+\[
+J_p=J_{a_n\leftarrow a_0}.
+\]
+In particular, if $a_n=a_0$, then $J_p=\id$.
+\end{theorem}
+\statusleanthree{Komorebi.PaperIII.Transport.pathEndpoint; Komorebi.PaperIII.Transport.exactPathTransport; Komorebi.PaperIII.Transport.exactPathTransport_eq_endpoint; Komorebi.PaperIII.Transport.exactPathTransport_loop}
+
+\begin{proof}
+Induct on the list of successive vertices and apply the cocycle in
+\cref{thm:exact-frame-transport} at each step.  If the endpoint is the start,
+the endpoint transport is the identity.
+\end{proof}
+
+\subsection{Exact packet coordinates}
+
+The graph model above resolves a fixed scalar matrix.  Coordinate transport
+is a separate construction.  Let $X$ be an $R$-module, and let
+\[
+\cP^a=(P^a_i)_{i\in I_a}
+\]
+be a finite complete family of pairwise orthogonal linear idempotents:
+\[
+P^a_iP^a_j=\delta_{ij}P^a_i,
+\qquad
+\sum_{i\in I_a}P^a_i=I_X.
+\]
+Define the exact packet coordinate module
+\[
+\Coord(\cP^a)
+=
+\left\{(x_i)_{i\in I_a}:P^a_ix_i=x_i\right\}.
+\]
+Its analysis and synthesis maps are
+\[
+\cA_a(x)=(P^a_ix)_i,
+\qquad
+\cS_a((x_i)_i)=\sum_ix_i.
+\]
+Completeness and orthogonality give
+\[
+\cS_a\cA_a=\id_X,
+\qquad
+\cA_a\cS_a=\id_{\Coord(\cP^a)}.
+\]
+
+\begin{keyidea}[title={What a packet coordinate contains}]
+A packet coordinate is a whole vector fixed by its projector. Analysis splits
+an ambient vector into these components, and synthesis adds them back. The
+transport between exact systems keeps the ambient vector and changes its
+packet presentation.
+\end{keyidea}
+
+\begin{definition}[Canonical exact coordinate transport]
+\label{def:canonical-J}
+For two exact packet systems on the same ambient module, define
+\[
+  J^X_{b\leftarrow a}
+  =
+  \cA_b\cS_a:
+  \Coord(\cP^a)\longrightarrow\Coord(\cP^b).
+\]
+The arrow points from the source coordinate system $a$ to the target
+coordinate system $b$.
+\end{definition}
+\statusleanprior{Komorebi.PaperII.NestedRefinement.refineCoordinates; Komorebi.PaperII.NestedRefinement.coordinateRefinementEquiv}
+
+\begin{theorem}[Identity, inverse, and cocycle for canonical transport]
+\label{thm:J-cocycle}
+For any exact packet systems $a,b,c$ on $X$,
+\[
+J^X_{a\leftarrow a}=\id,
+\qquad
+\left(J^X_{b\leftarrow a}\right)^{-1}=J^X_{a\leftarrow b},
+\qquad
+J^X_{c\leftarrow b}J^X_{b\leftarrow a}=J^X_{c\leftarrow a}.
+\]
+\end{theorem}
+\statusleanprior{Komorebi.PaperII.NestedRefinement.refineCoordinates_self; Komorebi.PaperII.NestedRefinement.coarsenCoordinates_refineCoordinates; Komorebi.PaperII.NestedRefinement.refineCoordinates_coarsenCoordinates; Komorebi.PaperII.NestedRefinement.refineCoordinates_comp; Komorebi.PaperII.NestedRefinement.coordinateRefinementEquiv_trans}
+
+\begin{proof}
+Insert $\cS_b\cA_b=\id_X$:
+\[
+J^X_{c\leftarrow b}J^X_{b\leftarrow a}
+=\cA_c\cS_b\cA_b\cS_a
+=\cA_c\cS_a
+=J^X_{c\leftarrow a}.
+\]
+The identity statement is $\cA_a\cS_a=\id$.  Setting $c=a$ in the cocycle
+gives $J^X_{a\leftarrow b}J^X_{b\leftarrow a}=\id$; interchanging $a$ and $b$
+gives the other composition, so the two transports are inverses.
+\end{proof}
+
+If $F:X\to Y$ is linear and $\cP^a,\cP^b$ are source packet systems while
+$\cQ^r,\cQ^s$ are target packet systems, put
+\[
+\widehat F_{r\leftarrow a}
+=
+\cA^Y_rF\cS^X_a.
+\]
+
+\begin{theorem}[Canonical coordinate naturality]
+\label{thm:canonical-naturality}
+The exact coordinate representation preserves typed composition and satisfies
+\[
+J^Y_{s\leftarrow r}\widehat F_{r\leftarrow a}
+=
+\widehat F_{s\leftarrow b}J^X_{b\leftarrow a}.
+\]
+\end{theorem}
+\statusleanprior{Komorebi.PaperII.NestedRefinement.coordinateOperator_comp; Komorebi.PaperII.NestedRefinement.coordinateOperator_naturality}
+
+\begin{proof}
+Both sides reduce to $\cA^Y_sF\cS^X_a$ after inserting the appropriate
+synthesis--analysis identity.  The composition law is the same calculation
+with the middle ambient module inserted.
+\end{proof}
+
+\begin{corollary}[Canonical triangle holonomy is trivial]
+\label{cor:J-flat}
+For every triple $a,b,c$,
+\[
+J^X_{a\leftarrow c}J^X_{c\leftarrow b}J^X_{b\leftarrow a}=\id.
+\]
+\end{corollary}
+\statusleanprior{Komorebi.PaperII.NestedRefinement.refineCoordinates_comp; Komorebi.PaperII.NestedRefinement.refineCoordinates_self}
+
+\begin{boundary}[Refinement is not reduction]
+Although Paper II uses the name \emph{refineCoordinates}, $J$ is an
+equivalence between two complete coordinate presentations.  It neither
+truncates packets nor projects to a smaller state space.  Any lossy
+restriction, interpolation, or learned identification is extra data and
+cannot inherit \cref{thm:J-cocycle} without proof.
+\end{boundary}
+

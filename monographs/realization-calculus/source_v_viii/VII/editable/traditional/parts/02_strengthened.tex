@@ -1,0 +1,2620 @@
+\section{Introduction}\label{strong:section:001}\label{strong:sec:introduction}
+
+Quantum mechanics repeatedly uses the same operation. A Hilbert space is split into sectors, an operator is resolved between those sectors, and the pieces are propagated or recombined. Symmetry sectors, eigenspaces, syndrome spaces, adiabatic subspaces, and retained model spaces are familiar examples. This article treats them as instances of one finite packet calculus.
+
+The elementary coordinate object is a complete family of orthogonal projectors
+\[
+P_aP_b=\delta_{ab}P_a,
+\qquad
+\sum_{a\in I}P_a=I.
+\]
+Every vector has packet coordinates \(P_a\psi\). Every operator has transfer blocks
+\[
+A_{ba}=P_bAP_a.
+\]
+These identities are simple. Their value appears when the same coordinates are used across representation theory, circuits, channels, error correction, effective dynamics, and geometric limits.
+
+Quantum information and operator theory in finite dimensions provide the standard background \cite{NielsenChuang2010,Watrous2018,Bhatia1997}. Finite group projectors come from character theory \cite{Serre1977,FultonHarris1991}. Moving spectral subspaces and geometric phase originate in the work of Kato, Berry, Wilczek, and Zee \cite{Kato1950,Kato1995,Berry1984,WilczekZee1984}. Completely positive maps and quantum dynamical semigroups are treated in \cite{Stinespring1955,Choi1975,Kraus1983,Lindblad1976}. Exact error correction is governed by the Knill--Laflamme condition \cite{KnillLaflamme1997,SchumacherNielsen1996,BenyKempfKribs2007}. Projection methods and hidden state memory are linked by the Feshbach, Nakajima, and Zwanzig constructions \cite{Feshbach1958,Nakajima1958,Zwanzig1960,BravyiDiVincenzoLoss2011}.
+
+The first part begins with quantum seeds. A state is cyclic only relative to a declared observable algebra. For an algebra in multiplicity form, the local orbit dimension is controlled by the rank of a coefficient matrix. This recovers the relation between Schmidt rank and the dimension reached by local operations. The finite group section then constructs central isotypic projectors. Cyclic symmetry gives a sharper charge selection rule. An operator with charge \(q\) can move a state only from packet \(j\) to packet \(j+q\).
+
+A circuit is resolved by inserting the identity between successive gates. This produces a sum over packet paths. The target probability contains diagonal path terms and interference between distinct paths. Symmetry can remove entire path families before any matrix multiplication is performed. Unitarity gives exact row and column relations among the transfer blocks.
+
+The moving packet section treats time dependent projectors. The canonical generator
+\[
+K(t)=\sum_a\dot P_a(t)P_a(t)
+\]
+is skew adjoint and transports every packet. In the moving frame, the physical Hamiltonian acquires the geometric term \(-\ii W(t)^*\dot W(t)\). The leakage estimate must account for the motion of the packet itself. The physical coupling \(QHP\) is therefore replaced by
+\[
+Q(t)\bigl(H(t)-\ii K(t)\bigr)P(t).
+\]
+This is the exact finite distinction between following a moving subspace and remaining in a fixed one.
+
+Density matrices require separate packet labels for their output and input coordinates. The superoperators
+\[
+\Pcal_{ab}(X)=P_aXP_b
+\]
+form a complete orthogonal packet system on Hilbert--Schmidt operator space. Dephasing is the diagonal projection. Every channel has input and output superblocks, with the same composition law as ordinary matrix blocks. A covariant channel preserves the isotypic packets of the conjugation action. In the cyclic case these are coherence orders. The Choi matrix carries the equivalent symmetry under \(U\otimes\overline U\).
+
+Error correction is expressed through compression to a code. Let \(P\) be the code projector. The class of \(PAP\) modulo scalar multiples of \(P\) measures the obstruction to making \(A\) undetectable within the code. The Knill--Laflamme criterion says that this obstruction vanishes for every product \(E_a^*E_b\) from the error family. Diagonalizing the resulting positive coefficient matrix produces orthogonal syndrome packets and an explicit recovery on the error span.
+
+The effective dynamics section returns to ordinary Hilbert space packets. Schur complementation gives the exact retained resolvent and a frequency dependent self energy. The same hidden block gives a causal memory kernel in time. For a self adjoint hidden Hamiltonian, the self energy has a fixed sign in the upper half plane, and the time kernel is positive definite. Uniform spectral separation gives direct bounds that can be carried through a refinement tower.
+
+The geometric part develops two finite constructions. A strictly positive contraction gives a reflection positive Hankel kernel, and its logarithm reconstructs a nonnegative Hamiltonian. A finite Laplacian gives a heat trace from which the spectral dimension is defined at each diffusion scale. The article proves convergence from periodic lattices to the continuum torus at every fixed positive diffusion time. Poisson summation then determines the continuum dimension as diffusion time tends to zero.
+
+Constraint closure needs a different obstruction. If \(C_a\) are self adjoint constraints and \(P_{\phys}\) projects onto their common kernel, then
+\[
+P_{\phys}[C_a,C_b]P_{\phys}=0
+\]
+holds automatically. This compression cannot test closure. The correct finite obstruction is the class of \([C_a,C_b]\) in the quotient of \(\End(\Hcal)\) by the span of the constraints. Vanishing means that the constraint span is closed under commutators.
+
+The last part gives two theorems for towers of bounded Hamiltonians. Exactly compatible finite Hamiltonians with a uniform norm bound define a bounded self adjoint operator on the Hilbert direct limit. When successive bounded self adjoint Hamiltonians on a common Hilbert space have norm summable differences, they converge to a bounded self adjoint limit. Their unitary evolutions, and their Euclidean evolutions under the stated positivity assumption, converge uniformly on bounded time intervals. Reflection positivity and closure with fixed structure coefficients pass to the limit under the stated convergence assumptions.
+
+These results do not construct an interacting continuum quantum field theory. They do not prove anomaly freedom on an unbounded common domain, Osterwalder--Schrader reconstruction for a continuum measure, an Einstein infrared action, or a positive massless spin two sector. Each of those conclusions needs hypotheses absent from the finite calculations.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{01_quantum_architecture.pdf}
+\caption{The finite mathematical layers developed in the article and the separate limit criteria needed at the continuum boundary.}
+\label{strong:fig:architecture}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.20\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.39\textwidth}}
+\toprule
+Object & Packet coordinate & Exact structural condition \\
+\midrule
+State & \(P_a\psi\) & completeness of the projector family \\
+Operator & \(P_bAP_a\) & block multiplication \\
+Circuit & intermediate packet path & insertion of complete resolutions \\
+Density matrix & \(P_a\rho P_b\) & two sided operator packets \\
+Channel & superoperator block & complete positivity and covariance when declared \\
+Code & syndrome packet & scalar compression of error products \\
+Effective model & Feshbach map & invertibility of the hidden resolvent \\
+Euclidean model & positive transfer matrix & positivity and self adjointness \\
+Constraint system & quotient obstruction & commutator closure modulo the constraint span \\
+Continuum tower & direct or norm limit & compatibility plus explicit convergence \\
+\bottomrule
+\end{tabular}
+\caption{The packet coordinates used in the article.}
+\label{strong:tab:dictionary}
+\end{table}
+
+\section{Quantum seeds and observable algebras}\label{strong:section:002}\label{strong:sec:seeds}
+
+\begin{definition}[Finite quantum seed system]\label{strong:definition:001}\label{strong:def:quantum_seed}
+A finite quantum seed system is a triple
+\[
+(\Hcal,\Acal,S),
+\]
+where \(\Hcal\) is a finite dimensional Hilbert space, \(\Acal\subseteq\End(\Hcal)\) is a unital star subalgebra, and \(S\subseteq\Hcal\) is a finite set. Its generated hull is
+\[
+\Acal S
+=
+\operatorname{span}\{A\psi:A\in\Acal,\ \psi\in S\}.
+\]
+The seed set is cyclic when \(\Acal S=\Hcal\). The quantum seed rank is the least cardinality of a cyclic seed set.
+\end{definition}
+
+The algebra is part of the data. A vector may be cyclic for \(\End(\Hcal)\) and fail to be cyclic for a restricted observable or gate algebra.
+
+Let
+\[
+\Acal
+\cong
+\bigoplus_{r=1}^{s}
+\bigl(M_{d_r}(\CC)\otimes I_{m_r}\bigr)
+\]
+act on
+\[
+\Hcal
+\cong
+\bigoplus_{r=1}^{s}
+\bigl(\CC^{d_r}\otimes\CC^{m_r}\bigr).
+\]
+Assume \(d_r,m_r\ge1\) for each displayed block. For an empty block family, the seed rank and the displayed finite supremum are defined as zero. A vector in one block is identified with a \(d_r\) by \(m_r\) coefficient matrix.
+
+\begin{theorem}[Orbit dimension of one seed]\label{strong:theorem:001}\label{strong:thm:orbit_dimension}
+For integers \(d\ge1\), \(m\ge0\), and the action of \(M_d(\CC)\otimes I_m\) on \(\CC^d\otimes\CC^m\), let \(C_\psi\) be the coefficient matrix of \(\psi\). Then
+\[
+\dim\operatorname{span}\{(A\otimes I_m)\psi:A\in M_d(\CC)\}
+=
+ d\rank C_\psi.
+\]
+The vector is cyclic exactly when \(\rank C_\psi=m\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:001}
+Under the coefficient matrix identification, \((A\otimes I_m)\psi\) corresponds to \(AC_\psi\). Every row of \(AC_\psi\) lies in the row space of \(C_\psi\). Conversely, a matrix whose rows lie in that row space equals \(AC_\psi\) for a suitable \(A\). There are \(d\) independent row choices in a space of dimension \(\rank C_\psi\). The orbit dimension is therefore \(d\rank C_\psi\). It equals \(dm\) exactly when \(C_\psi\) has full column rank.
+\phantomsection\label{strong:proof:001:end}\end{proof}
+
+\begin{theorem}[Quantum seed rank]\label{strong:theorem:002}\label{strong:thm:quantum_seed_rank}
+For the displayed multiplicity decomposition,
+\[
+\operatorname{srank}_{\Acal}(\Hcal)
+=
+\max_{1\le r\le s}
+\left\lceil\frac{m_r}{d_r}\right\rceil.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:002}
+A single seed contributes a row space of dimension at most \(d_r\) to the \(r\)th multiplicity factor. Hence \(k\) seeds cover at most \(kd_r\) multiplicity directions, which gives the lower bound.
+
+Set
+\[
+k=\max_r\left\lceil\frac{m_r}{d_r}\right\rceil.
+\]
+For each \(r\), partition a basis of \(\CC^{m_r}\) into at most \(k\) groups of size at most \(d_r\). Choose the coefficient matrix of the \(j\)th seed so that its row space spans the \(j\)th group. The combined row spaces span every multiplicity factor. The preceding theorem then shows that the \(k\) seeds generate every summand.
+\phantomsection\label{strong:proof:002:end}\end{proof}
+
+\begin{corollary}[Local orbit and Schmidt rank]\label{strong:corollary:001}\label{strong:cor:schmidt_orbit}
+Let \(\psi\in\Hcal_A\otimes\Hcal_B\), let \(d_A=\dim\Hcal_A\ge1\), and let \(r\) be the Schmidt rank of \(\psi\). Then
+\[
+\dim\operatorname{span}\{(A\otimes I_B)\psi:A\in\End(\Hcal_A)\}
+=
+ d_A r.
+\]
+Local operators on \(A\) generate the whole bipartite Hilbert space exactly when the reduced state on \(B\) has full support.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:003}
+The Schmidt rank is the rank of the coefficient matrix in any product basis. Substituting that rank into \cref{strong:thm:orbit_dimension} gives the stated orbit dimension.
+\phantomsection\label{strong:proof:003:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.68\textwidth]{02_seed_rank.pdf}
+\caption{The dimension reached by all local operators is linear in Schmidt rank.}
+\label{strong:fig:seed_rank}
+\end{figure}
+
+\begin{proposition}[Computational address orbit]\label{strong:proposition:001}\label{strong:prop:computational_orbit}
+For \(n\) qubits, let
+\[
+\psi_0=\ket{0}^{\otimes n}
+\]
+and let \(X_j\) be the Pauli \(X\) operator on the \(j\)th qubit. Then
+\[
+\left\{
+X_1^{a_1}\cdots X_n^{a_n}\psi_0:
+(a_1,\ldots,a_n)\in\{0,1\}^n
+\right\}
+\]
+is the computational basis.
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:004}
+The addressed vector is \(\ket{a_1\cdots a_n}\). Distinct binary addresses produce the \(2^n\) distinct basis vectors.
+\phantomsection\label{strong:proof:004:end}\end{proof}
+
+\begin{remark}\label{strong:remark:001}\label{strong:rem:seed_scope}
+The seed rank records generation by a declared algebra. It does not measure circuit depth, locality cost, control complexity, or physical reachability under a restricted time dependent Hamiltonian.
+\end{remark}
+
+\section{Symmetry packets and selection rules}\label{strong:section:003}\label{strong:sec:symmetry}
+
+Let \(G\) be a finite group and let
+\[
+U:G\longrightarrow\Ucal(\Hcal)
+\]
+be a unitary representation. Write \(\widehat G\) for the set of irreducible unitary representations. For \(\lambda\in\widehat G\), let \(d_\lambda\) and \(\chi_\lambda\) denote its dimension and character.
+
+\begin{theorem}[Finite group isotypic projectors]\label{strong:theorem:003}\label{strong:thm:isotypic_projectors}
+The operators
+\[
+P_\lambda
+=
+\frac{d_\lambda}{\abs{G}}
+\sum_{g\in G}
+\overline{\chi_\lambda(g)}U(g)
+\]
+are orthogonal projectors. They satisfy
+\[
+P_\lambda P_\mu=\delta_{\lambda\mu}P_\lambda,
+\qquad
+\sum_{\lambda\in\widehat G}P_\lambda=I_{\Hcal}.
+\]
+The range of \(P_\lambda\) is the \(\lambda\) isotypic component of \(\Hcal\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:005}
+Complete reducibility gives a unitary decomposition
+\[
+\Hcal
+\cong
+\bigoplus_{\mu\in\widehat G}
+V_\mu\otimes M_\mu,
+\qquad
+U(g)
+\cong
+\bigoplus_\mu
+\pi_\mu(g)\otimes I_{M_\mu}.
+\]
+On the \(\mu\) summand, the displayed average is central in the irreducible representation \(\pi_\mu\), so it is a scalar by Schur's lemma. Taking its trace and applying character orthogonality shows that the scalar is one when \(\mu=\lambda\) and zero otherwise. The asserted identities follow on the direct sum.
+\phantomsection\label{strong:proof:005:end}\end{proof}
+
+The central projectors separate irreducible types but do not choose coordinates inside the representation factor. Matrix units provide that finer resolution.
+
+\begin{theorem}[Representation matrix units]\label{strong:theorem:004}\label{strong:thm:representation_matrix_units}
+Fix an irreducible unitary representation \(\pi_\lambda:G\to U(d_\lambda)\) and an orthonormal basis of its representation space. Define
+\[
+E_{ij}^{\lambda}
+=
+\frac{d_\lambda}{\abs{G}}
+\sum_{g\in G}
+\bigl[\pi_\lambda(g^{-1})\bigr]_{ji}U(g).
+\]
+Then
+\[
+E_{ij}^{\lambda}E_{k\ell}^{\mu}
+=
+\delta_{\lambda\mu}\delta_{jk}E_{i\ell}^{\lambda},
+\qquad
+\bigl(E_{ij}^{\lambda}\bigr)^*=E_{ji}^{\lambda},
+\]
+and
+\[
+P_\lambda=\sum_{i=1}^{d_\lambda}E_{ii}^{\lambda}.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:006}
+Apply the matrix coefficient form of Schur orthogonality to the two group averages. It gives the matrix unit multiplication law. Unitarity gives the adjoint relation after replacing \(g\) by \(g^{-1}\). Summing the diagonal coefficients gives the character average in \cref{strong:thm:isotypic_projectors}.
+\phantomsection\label{strong:proof:006:end}\end{proof}
+
+\subsection{Cyclic charge packets}\label{strong:subsec:cyclic_charge}
+
+Let \(N\ge1\) be an integer, \(S\) unitary with \(S^N=I\), and \(\omega=\e^{2\pi\ii/N}\).
+
+\begin{corollary}[Cyclic charge projectors]\label{strong:corollary:002}\label{strong:cor:cyclic_projectors}
+The operators
+\[
+P_j
+=
+\frac1N
+\sum_{r=0}^{N-1}
+\omega^{-jr}S^r,
+\qquad
+j\in\ZZ/N\ZZ,
+\]
+form a complete orthogonal packet system and satisfy
+\[
+SP_j=\omega^jP_j.
+\]
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:007}
+Apply \cref{strong:thm:isotypic_projectors} to the cyclic group. Its irreducible representations are the one dimensional characters \(r\mapsto\omega^{jr}\).
+\phantomsection\label{strong:proof:007:end}\end{proof}
+
+\begin{definition}[Operator charge]\label{strong:definition:002}\label{strong:def:operator_charge}
+An operator \(A\in\End(\Hcal)\) has cyclic charge \(q\in\ZZ/N\ZZ\) when
+\[
+SAS^*=\omega^qA.
+\]
+\end{definition}
+
+\begin{theorem}[Charge selection rule]\label{strong:theorem:005}\label{strong:thm:charge_selection}
+If \(A\) has charge \(q\), then
+\[
+P_kAP_j=0
+\]
+unless \(k=j+q\) in \(\ZZ/N\ZZ\). In fact,
+\[
+AP_j=P_{j+q}AP_j.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:008}
+For \(x\in P_j\Hcal\),
+\[
+S(Ax)
+=(SAS^*)Sx
+=\omega^{q+j}Ax.
+\]
+Thus \(Ax\in P_{j+q}\Hcal\). The block statement follows.
+\phantomsection\label{strong:proof:008:end}\end{proof}
+
+\begin{corollary}[Charge addition]\label{strong:corollary:003}\label{strong:cor:charge_addition}
+If \(A\) and \(B\) have charges \(q\) and \(r\), then \(AB\) has charge \(q+r\). The adjoint \(A^*\) has charge \(-q\).
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:009}
+Conjugation by \(S\) is a star automorphism. Applying it to \(AB\) adds the two charges, while applying it to \(A^*\) changes the sign of the charge.
+\phantomsection\label{strong:proof:009:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{03_symmetry_selection.pdf}
+\caption{An operator of charge one moves each cyclic packet to the next packet and has no other transfer blocks.}
+\label{strong:fig:symmetry_selection}
+\end{figure}
+
+\subsection{Tensor refinement}\label{strong:subsec:tensor_refinement}
+
+Suppose the \(a\)th tensor factor carries a cyclic packet family
+\[
+\bigl(P_j^{(a)}\bigr)_{j\in\ZZ/N\ZZ}.
+\]
+The fine tensor packets are
+\[
+P_{\bm j}^{\rm fine}
+=
+P_{j_1}^{(1)}\otimes\cdots\otimes P_{j_m}^{(m)}.
+\]
+
+\begin{theorem}[Tensor charge refinement]\label{strong:theorem:006}\label{strong:thm:tensor_refinement}
+For \(r\in\ZZ/N\ZZ\), define
+\[
+P_r^{\rm total}
+=
+\sum_{j_1+\cdots+j_m=r}
+P_{j_1}^{(1)}\otimes\cdots\otimes P_{j_m}^{(m)}.
+\]
+Then the \(P_r^{\rm total}\) form a complete orthogonal packet system. Every total charge packet is the exact sum of its fine tensor descendants.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:010}
+The fine tensor projectors are mutually orthogonal and sum to the identity. The total residue classes partition the fine address set. Summing the fine projectors over each class gives the result.
+\phantomsection\label{strong:proof:010:end}\end{proof}
+
+\begin{corollary}[Tensor selection rule]\label{strong:corollary:004}\label{strong:cor:tensor_selection}
+If \(A_a\) has local charge \(q_a\), then
+\[
+A_1\otimes\cdots\otimes A_m
+\]
+has total charge \(q_1+\cdots+q_m\).
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:011}
+Conjugate the tensor product by the total cyclic symmetry and multiply the local phase factors.
+\phantomsection\label{strong:proof:011:end}\end{proof}
+
+\begin{remark}\label{strong:remark:002}\label{strong:rem:nonabelian_fusion}
+For a nonabelian group, tensor products are refined by irreducible fusion multiplicities rather than residue addition. The central isotypic projectors remain exact, but a complete tensor refinement also requires a choice of Clebsch--Gordan intertwiners.
+\end{remark}
+
+\section{Quantum circuits as packet paths}\label{strong:section:004}\label{strong:sec:circuits}
+
+Let
+\[
+U=U_mU_{m-1}\cdots U_1
+\]
+be a finite circuit with \(m\ge1\), and let \((P_a)_{a\in I}\) be a complete orthogonal packet family. For the empty circuit, \(U=I\) and its transfer block is \(P_bP_a=\delta_{ba}P_a\), whose endpoint sum reconstructs \(I\).
+
+\begin{theorem}[Exact circuit path expansion]\label{strong:theorem:007}\label{strong:thm:circuit_path}
+For source packet \(a_0\) and target packet \(a_m\),
+\[
+P_{a_m}UP_{a_0}
+=
+\sum_{a_1,\ldots,a_{m-1}}
+P_{a_m}U_mP_{a_{m-1}}
+\cdots
+P_{a_1}U_1P_{a_0}.
+\]
+Summing over \(a_0\) and \(a_m\) reconstructs \(U\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:012}
+Insert \(I=\sum_aP_a\) between every adjacent pair of gates and distribute the finite sums. Completeness at the two endpoints gives the full operator.
+\phantomsection\label{strong:proof:012:end}\end{proof}
+
+For a packet path
+\[
+\gamma=(a_0,a_1,\ldots,a_m),
+\]
+write
+\[
+U_\gamma
+=
+P_{a_m}U_mP_{a_{m-1}}
+\cdots
+P_{a_1}U_1P_{a_0}.
+\]
+
+\begin{theorem}[Packet unitarity identities]\label{strong:theorem:008}\label{strong:thm:packet_unitarity}
+If \(U\) is unitary and \(U_{ba}=P_bUP_a\), then
+\[
+\sum_bU_{ba}^*U_{bc}=\delta_{ac}P_a
+\]
+and
+\[
+\sum_aU_{ba}U_{da}^*=\delta_{bd}P_b.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:013}
+Use completeness and unitarity:
+\[
+\sum_bU_{ba}^*U_{bc}
+=
+P_aU^*\left(\sum_bP_b\right)UP_c
+=P_aP_c.
+\]
+Summing instead over the source packets and using unitarity in the reverse order gives the second identity.
+\phantomsection\label{strong:proof:013:end}\end{proof}
+
+\begin{corollary}[Probability conservation from one packet]\label{strong:corollary:005}\label{strong:cor:packet_probability}
+If \(\psi\in P_a\Hcal\), then
+\[
+\sum_b\norm{P_bU\psi}^2=\norm{\psi}^2.
+\]
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:014}
+Take the inner product of the first identity in \cref{strong:thm:packet_unitarity} with \(\psi\) and set \(c=a\).
+\phantomsection\label{strong:proof:014:end}\end{proof}
+
+\begin{theorem}[Path interference formula]\label{strong:theorem:009}\label{strong:thm:path_interference}
+Fix a source vector \(\psi\in P_{a_0}\Hcal\) and a target packet \(b\). Let \(\Gamma_b\) be the set of packet paths from \(a_0\) to \(b\), and set
+\[
+\eta_\gamma=U_\gamma\psi.
+\]
+Choose any total order on this finite path set. Then
+\[
+\norm{P_bU\psi}^2
+=
+\sum_{\gamma\in\Gamma_b}\norm{\eta_\gamma}^2
++
+2\operatorname{Re}
+\sum_{\substack{\gamma,\gamma'\in\Gamma_b\\ \gamma<\gamma'}}
+\ip{\eta_\gamma}{\eta_{\gamma'}}.
+\]
+Consequently,
+\[
+\norm{P_bU\psi}
+\leq
+\sum_{\gamma\in\Gamma_b}\norm{\eta_\gamma}.
+\]
+If the path outputs are pairwise orthogonal, the target probability is the sum of the path probabilities.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:015}
+The path expansion gives
+\[
+P_bU\psi=\sum_{\gamma\in\Gamma_b}\eta_\gamma.
+\]
+Expanding the squared norm and grouping conjugate cross terms gives the interference formula. The triangle inequality gives the norm bound. When the path outputs are orthogonal, every cross term vanishes and only the individual path probabilities remain.
+\phantomsection\label{strong:proof:015:end}\end{proof}
+
+\begin{proposition}[Charge pruning of circuit paths]\label{strong:proposition:002}\label{strong:prop:charge_pruning}
+Suppose every gate has a finite charge decomposition
+\[
+U_r=\sum_qU_r^{(q)},
+\qquad
+SU_r^{(q)}S^*=\omega^qU_r^{(q)}.
+\]
+A term with gate charges \(q_1,\ldots,q_m\) can contribute from source charge \(a_0\) only to target charge
+\[
+a_m=a_0+q_1+\cdots+q_m.
+\]
+Every packet path violating one of the intermediate charge updates vanishes.
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:016}
+Apply \cref{strong:thm:charge_selection} after each gate component. The packet address is forced at every step.
+\phantomsection\label{strong:proof:016:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{04_circuit_paths.pdf}
+\caption{A circuit block is the coherent sum of its allowed packet paths. Selection rules remove forbidden paths before amplitudes are evaluated.}
+\label{strong:fig:circuit_paths}
+\end{figure}
+
+\begin{example}[Bell circuit]\label{strong:example:001}\label{strong:ex:bell_circuit}
+Starting from \(\ket{00}\), apply a Hadamard gate to the first qubit and then a controlled NOT gate. The final state is
+\[
+\frac{\ket{00}+\ket{11}}{\sqrt2}.
+\]
+It lies in the even parity packet. The intermediate state has one even and one odd computational contribution, so the final even amplitude is reconstructed by more than one packet path.
+\end{example}
+
+\section{Symmetry resolved dynamics and leakage}\label{strong:section:005}\label{strong:sec:dynamics}
+
+Let \(H=H^*\) and let \((P_a)_{a\in I}\) be a complete orthogonal packet system.
+
+\begin{theorem}[Exact invariant packets]\label{strong:theorem:010}\label{strong:thm:invariant_packets}
+The following conditions are equivalent:
+\begin{enumerate}
+\item The Hamiltonian commutes with each projector: \([H,P_a]=0\) for every \(a\).
+\item Transfer blocks between distinct packets vanish: \(P_bHP_a=0\) whenever \(a\neq b\).
+\item Every packet \(P_a\Hcal\) is invariant under \(\e^{-\ii tH}\) for every real \(t\).
+\end{enumerate}
+When they hold,
+\[
+H=\sum_aP_aHP_a
+\]
+and
+\[
+\e^{-\ii tH}=\sum_aP_a\e^{-\ii tH}P_a.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:017}
+Commutation is equivalent to vanishing of every off diagonal block. The same block decomposition passes to polynomials in \(H\), then to the exponential by norm convergence. Invariance of every packet implies invariance under both \(\e^{-\ii tH}\) and its adjoint. Differentiation at \(t=0\) gives commutation with \(H\).
+\phantomsection\label{strong:proof:017:end}\end{proof}
+
+Fix one packet projector \(P\) and set \(Q=I-P\).
+
+\begin{lemma}[Off diagonal norm]\label{strong:lemma:001}\label{strong:lem:off_diagonal_norm}
+For self adjoint \(H\),
+\[
+\norm{[H,P]}=\norm{QHP}=\norm{PHQ}.
+\]
+\end{lemma}
+
+\begin{proof}\phantomsection\label{strong:proof:018}
+Relative to \(P\Hcal\oplus Q\Hcal\),
+\[
+[H,P]
+=
+\begin{pmatrix}
+0&-PHQ\\
+QHP&0
+\end{pmatrix}.
+\]
+Its square has diagonal blocks \(-PHQHP\) and \(-QHPHQ\). The norm is therefore the largest singular value of \(QHP\).
+\phantomsection\label{strong:proof:018:end}\end{proof}
+
+\begin{theorem}[Fixed packet leakage]\label{strong:theorem:011}\label{strong:thm:fixed_leakage}
+For every real \(t\),
+\[
+\norm{Q\e^{-\ii tH}P}
+\leq
+\abs{t}\norm{QHP}
+=
+\abs{t}\norm{[H,P]}.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:019}
+Let
+\[
+H_{\rm d}=PHP+QHQ,
+\qquad
+H_{\rm o}=PHQ+QHP.
+\]
+The propagator generated by \(H_{\rm d}\) preserves \(P\Hcal\) and \(Q\Hcal\). Duhamel's formula relative to \(H_{\rm d}\) gives
+\[
+Q\e^{-\ii tH}P
+=
+-\ii
+\int_0^t
+Q\e^{-\ii(t-s)H}H_{\rm o}\e^{-\ii sH_{\rm d}}P
+\dd s.
+\]
+Since \(H_{\rm o}P=QHP\) and both propagators are unitary, the norm is at most \(\abs{t}\norm{QHP}\). Use \cref{strong:lem:off_diagonal_norm} for the last equality.
+\phantomsection\label{strong:proof:019:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{05_leakage_bound.pdf}
+\caption{Exact transition amplitude in a two packet model and the linear commutator bound.}
+\label{strong:fig:leakage}
+\end{figure}
+
+\begin{corollary}[Leakage probability]\label{strong:corollary:006}\label{strong:cor:leakage_probability}
+If \(\psi\in P\Hcal\) is a unit vector, then
+\[
+\norm{Q\e^{-\ii tH}\psi}^2
+\leq
+ t^2\norm{QHP}^2.
+\]
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:020}
+Apply \cref{strong:thm:fixed_leakage} to the unit vector, then square the resulting nonnegative bound.
+\phantomsection\label{strong:proof:020:end}\end{proof}
+
+\section{Moving packets and geometric transport}\label{strong:section:006}\label{strong:sec:moving_packets}
+
+Let \((P_a(t))_{a\in I}\) be a twice continuously differentiable family of complete orthogonal packet systems on a finite dimensional Hilbert space.
+
+\begin{theorem}[Canonical packet connection]\label{strong:theorem:012}\label{strong:thm:kato_connection}
+Define
+\[
+K(t)
+=
+\sum_a\dot P_a(t)P_a(t).
+\]
+Then
+\[
+K(t)^*=-K(t)
+\]
+and
+\[
+[K(t),P_a(t)]=\dot P_a(t)
+\]
+for every \(a\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:021}
+Differentiating \(P_a^2=P_a\) gives
+\[
+\dot P_aP_a+P_a\dot P_a=\dot P_a.
+\]
+Summing over \(a\) and using \(\sum_a\dot P_a=0\) yields
+\[
+\sum_aP_a\dot P_a=-\sum_a\dot P_aP_a.
+\]
+This proves skew adjointness. For fixed \(b\),
+\[
+KP_b=\dot P_bP_b.
+\]
+Differentiating \(P_bP_a=0\) for \(a\neq b\) gives
+\[
+P_b\dot P_a=-\dot P_bP_a.
+\]
+Hence
+\[
+P_bK=-\dot P_b(I-P_b).
+\]
+Subtracting gives \([K,P_b]=\dot P_b\).
+\phantomsection\label{strong:proof:021:end}\end{proof}
+
+\begin{theorem}[Exact Kato transport]\label{strong:theorem:013}\label{strong:thm:kato_transport}
+Let \(W(t)\) solve
+\[
+\dot W(t)=K(t)W(t),
+\qquad
+W(0)=I.
+\]
+Then \(W(t)\) is unitary and
+\[
+P_a(t)W(t)=W(t)P_a(0)
+\]
+for every packet \(a\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:022}
+Skew adjointness gives
+\[
+\frac{\dd}{\dd t}W(t)^*W(t)=0.
+\]
+Thus \(W(t)\) is unitary. Next,
+\[
+\frac{\dd}{\dd t}
+\left(W(t)^*P_a(t)W(t)\right)
+=
+W(t)^*
+\left(
+\dot P_a-[K,P_a]
+\right)
+W(t)=0.
+\]
+The expression equals \(P_a(0)\) at \(t=0\), which proves the intertwining identity.
+\phantomsection\label{strong:proof:022:end}\end{proof}
+
+\begin{theorem}[Moving frame Hamiltonian]\label{strong:theorem:014}\label{strong:thm:moving_frame}
+Let \(U(t)\) solve
+\[
+\ii\dot U(t)=H(t)U(t),
+\qquad
+U(0)=I,
+\]
+where \(H(t)=H(t)^*\) is continuous on the compact time interval under consideration. Set
+\[
+V(t)=W(t)^*U(t).
+\]
+Then
+\[
+\ii\dot V(t)=H_{\rm mov}(t)V(t),
+\]
+where
+\[
+H_{\rm mov}(t)
+=
+W(t)^*H(t)W(t)-\ii W(t)^*\dot W(t)
+=
+W(t)^*\bigl(H(t)-\ii K(t)\bigr)W(t).
+\]
+The moving frame Hamiltonian is self adjoint.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:023}
+Differentiate \(V=W^*U\). Since \(\dot W=KW\) and \(K^*=-K\),
+\[
+\dot W^*=-W^*K.
+\]
+Substitution gives the equation. The first term in \(H_{\rm mov}\) is self adjoint. The operator \(-\ii W^*\dot W\) is self adjoint because \(W^*\dot W\) is skew adjoint.
+\phantomsection\label{strong:proof:023:end}\end{proof}
+
+\begin{theorem}[Moving packet leakage]\label{strong:theorem:015}\label{strong:thm:moving_leakage}
+Fix a packet \(P(t)=P_a(t)\) and put \(Q(t)=I-P(t)\). For \(0\leq t\leq T\),
+\[
+\norm{Q(t)U(t)P(0)}
+\leq
+\int_0^t
+\norm{Q(s)\bigl(H(s)-\ii K(s)\bigr)P(s)}
+\dd s.
+\]
+In particular, the physical evolution follows the moving packet exactly on \([0,T]\) when the displayed off packet block vanishes for every time in that interval.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:024}
+In the Kato frame, \(P(0)\) is fixed and
+\[
+Q(t)U(t)P(0)
+=
+W(t)Q(0)V(t)P(0).
+\]
+Apply the time dependent version of the Duhamel argument in \cref{strong:thm:fixed_leakage} to \(H_{\rm mov}(t)\). The off diagonal block is
+\[
+Q(0)H_{\rm mov}(s)P(0)
+=
+W(s)^*Q(s)\bigl(H(s)-\ii K(s)\bigr)P(s)W(s).
+\]
+Unitary conjugation preserves the norm.
+\phantomsection\label{strong:proof:024:end}\end{proof}
+
+The exact coupling test therefore includes the geometric term. Even if the Hamiltonian is diagonal in the packet decomposition at every fixed time, its evolution can fail to follow a packet whose range rotates.
+
+\subsection{Discrete packet transport}\label{strong:subsec:discrete_transport}
+
+Let \((P_a)\) and \((Q_a)\) be two complete packet systems with the same index set. Define
+\[
+S(\Qcal,\Pcal)=\sum_aQ_aP_a.
+\]
+
+\begin{theorem}[Direct packet rotation]\label{strong:theorem:016}\label{strong:thm:direct_rotation}
+Assume
+\[
+\norm{S(\Qcal,\Pcal)-I}<1.
+\]
+Then \(S(\Qcal,\Pcal)\) is invertible. Its unitary polar factor
+\[
+\Ucal(\Qcal,\Pcal)
+=
+S(S^*S)^{-1/2}
+\]
+satisfies
+\[
+Q_a\Ucal(\Qcal,\Pcal)
+=
+\Ucal(\Qcal,\Pcal)P_a
+\]
+for every \(a\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:025}
+The norm condition gives invertibility by the Neumann series. The identity
+\[
+Q_aS=SP_a=Q_aP_a
+\]
+shows that \(S^*S\) commutes with every \(P_a\). Its inverse square root also commutes with every \(P_a\). Hence
+\[
+Q_a\Ucal
+=Q_aS(S^*S)^{-1/2}
+=SP_a(S^*S)^{-1/2}
+=\Ucal P_a.
+\]
+The polar factor is unitary because \(S\) is invertible.
+\phantomsection\label{strong:proof:025:end}\end{proof}
+
+\begin{theorem}[Convergence of short packet rotations]\label{strong:theorem:017}\label{strong:thm:short_rotation_convergence}
+Let \((P_a(t))\) be twice continuously differentiable on \([0,T]\). For a partition
+\[
+0=t_0<t_1<\cdots<t_n=T,
+\]
+let
+\[
+W_\pi
+=
+\Ucal\bigl(\Pcal(t_n),\Pcal(t_{n-1})\bigr)
+\cdots
+\Ucal\bigl(\Pcal(t_1),\Pcal(t_0)\bigr).
+\]
+For sufficiently fine partitions the factors are defined, and
+\[
+\norm{W_\pi-W(T)}
+\leq
+C_T\abs{\pi}
+\]
+for a constant depending on the packet path but not on the partition. Here the size of the partition is measured by its mesh, which is the length of its largest subinterval.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:026}
+Taylor expansion gives
+\[
+S\bigl(\Pcal(t+h),\Pcal(t)\bigr)
+=
+I+hK(t)+O(h^2)
+\]
+uniformly on \([0,T]\). Since \(K(t)^*=-K(t)\),
+\[
+S^*S=I+O(h^2),
+\]
+so the polar factor satisfies
+\[
+\Ucal\bigl(\Pcal(t+h),\Pcal(t)\bigr)
+=
+I+hK(t)+O(h^2).
+\]
+This gives a first order approximation to \(\dot W=KW\) over a single time step. A telescoping product estimate over the partition gives a total error bounded by a constant times \(\sum_j(t_{j+1}-t_j)^2\), which is at most \(T\abs{\pi}\).
+\phantomsection\label{strong:proof:026:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.58\textwidth]{06_kato_transport.pdf}
+\caption{A moving rank one packet on the Bloch sphere. The Kato evolution transports the range without choosing a phase convention for its eigenvector.}
+\label{strong:fig:kato_transport}
+\end{figure}
+\FloatBarrier
+
+\subsection{Local frames and curvature}\label{strong:subsec:curvature}
+
+Let \(P(x)\) be a smooth rank \(r\) orthogonal projector over a parameter manifold. Choose a local isometry
+\[
+V(x):\CC^r\longrightarrow\Hcal,
+\qquad
+V(x)V(x)^*=P(x).
+\]
+
+\begin{theorem}[Nonabelian packet connection]\label{strong:theorem:018}\label{strong:thm:nonabelian_connection}
+The one form with matrix values
+\[
+\Acal=V^*\dd V
+\]
+is skew adjoint. Under a frame change \(V'=VG\), where \(G(x)\in U(r)\),
+\[
+\Acal'
+=
+G^*\Acal G+G^*\dd G.
+\]
+Its curvature
+\[
+\Fcal=\dd\Acal+\Acal\wedge\Acal
+\]
+satisfies
+\[
+\Fcal=V^*(\dd P\wedge\dd P)V.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:027}
+Differentiate \(V^*V=I\) to obtain \(\Acal^*=-\Acal\). The gauge transformation law follows by differentiating \(VG\). Since \(P=VV^*\) and \((I-P)\dd V=\dd P\,V\), direct expansion gives
+\[
+\dd\Acal+\Acal\wedge\Acal
+=
+\dd V^*(I-P)\wedge\dd V
+=
+V^*(\dd P\wedge\dd P)V.
+\]
+\phantomsection\label{strong:proof:027:end}\end{proof}
+
+\begin{corollary}[Bloch sphere curvature]\label{strong:corollary:007}\label{strong:cor:bloch_curvature}
+Let
+\[
+P(\theta,\phi)
+=
+\frac12\left(I+\bm n(\theta,\phi)\cdot\bm\sigma\right),
+\]
+where
+\[
+\bm n=(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta).
+\]
+With the convention
+\[
+\Fcal_{\theta\phi}
+=-\ii\Tr\bigl(P[\partial_\theta P,\partial_\phi P]\bigr),
+\]
+one has
+\[
+\Fcal_{\theta\phi}=\frac12\sin\theta
+\]
+and
+\[
+\frac1{2\pi}
+\int_0^{2\pi}\int_0^\pi
+\Fcal_{\theta\phi}\dd\theta\dd\phi
+=1.
+\]
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:028}
+The Pauli identity
+\[
+(\bm a\cdot\bm\sigma)(\bm b\cdot\bm\sigma)
+=(\bm a\cdot\bm b)I
++\ii(\bm a\times\bm b)\cdot\bm\sigma
+\]
+gives
+\[
+-\ii\Tr\bigl(P[\partial_\theta P,\partial_\phi P]\bigr)
+=\frac12
+\bm n\cdot
+(\partial_\theta\bm n\times\partial_\phi\bm n)
+=\frac12\sin\theta.
+\]
+Integrating the displayed curvature over the sphere and applying the stated normalization gives one.
+\phantomsection\label{strong:proof:028:end}\end{proof}
+
+\section{Operator packets, measurements, and quantum channels}\label{strong:section:007}\label{strong:sec:channels}
+
+Density matrices and observables carry both an input packet and an output packet. Equip \(\End(\Hcal)\) with the Hilbert--Schmidt inner product
+\[
+\ip{X}{Y}_{\HS}=\Tr(X^*Y).
+\]
+
+\begin{definition}[Two sided operator packet]\label{strong:definition:003}\label{strong:def:operator_packet}
+For a complete orthogonal family \((P_a)\), define
+\[
+\Pcal_{ab}(X)=P_aXP_b.
+\]
+The range
+\[
+\Bcal_{ab}=P_a\End(\Hcal)P_b
+\]
+is the operator packet with output address \(a\) and input address \(b\).
+\end{definition}
+
+\begin{theorem}[Complete operator packet system]\label{strong:theorem:019}\label{strong:thm:operator_packets}
+The superoperators \((\Pcal_{ab})_{a,b\in I}\) are mutually orthogonal projections on Hilbert--Schmidt operator space. They satisfy
+\[
+X=\sum_{a,b}P_aXP_b
+\]
+and
+\[
+\norm{X}_{\HS}^2
+=
+\sum_{a,b}\norm{P_aXP_b}_{\HS}^2.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:029}
+Idempotence and completeness follow from the projector identities. For Hilbert--Schmidt orthogonality,
+\[
+\begin{aligned}
+\ip{P_aXP_b}{P_cYP_d}_{\HS}
+&=
+\Tr(P_bX^*P_aP_cYP_d)\\
+&=
+\delta_{ac}\delta_{bd}
+\Tr(P_bX^*P_aYP_b).
+\end{aligned}
+\]
+Since the packets are orthogonal and sum to the original operator, their squared norms add to its squared norm.
+\phantomsection\label{strong:proof:029:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.58\textwidth]{07_operator_packets.pdf}
+\caption{A density matrix or observable carries two packet addresses. Diagonal packets contain populations and internal observables. Off diagonal packets contain coherences.}
+\label{strong:fig:operator_packets}
+\end{figure}
+
+\begin{definition}[Packet dephasing]\label{strong:definition:004}\label{strong:def:dephasing}
+The packet dephasing map is
+\[
+\Dcal_{\Pcal}(X)=\sum_aP_aXP_a.
+\]
+\end{definition}
+
+\begin{theorem}[Dephasing as conditional expectation]\label{strong:theorem:020}\label{strong:thm:dephasing_expectation}
+The map \(\Dcal_{\Pcal}\) is completely positive, trace preserving, unital, and idempotent. It is the Hilbert--Schmidt orthogonal projection onto the block diagonal algebra
+\[
+\Acal_{\Pcal}
+=
+\{X:[X,P_a]=0\text{ for every }a\}.
+\]
+In particular,
+\[
+\norm{\Dcal_{\Pcal}(X)}_{\HS}
+\leq
+\norm{X}_{\HS}.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:030}
+The projectors \(P_a\) form a Kraus family because \(\sum_aP_a^*P_a=I\). Thus the map is completely positive and trace preserving. It is unital for the same reason. Orthogonality and idempotence follow from \cref{strong:thm:operator_packets}. Its range is the sum of the diagonal operator packets. This is exactly the commutant of the projector family.
+\phantomsection\label{strong:proof:030:end}\end{proof}
+
+\begin{corollary}[Block diagonal measurement invariance]\label{strong:corollary:008}\label{strong:cor:measurement_invariance}
+Let \((E_k)\) be a positive operator valued measurement, and suppose
+\[
+E_k=\Dcal_{\Pcal}(E_k)
+\]
+for every \(k\). Then every density matrix \(\rho\) satisfies
+\[
+\Tr(E_k\rho)
+=
+\Tr\bigl(E_k\Dcal_{\Pcal}(\rho)\bigr).
+\]
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:031}
+Since \(\Dcal_{\Pcal}\) is self adjoint for the Hilbert--Schmidt inner product,
+\[
+\Tr(E_k\rho)
+=
+\Tr\bigl(\Dcal_{\Pcal}(E_k)\rho\bigr)
+=
+\Tr\bigl(E_k\Dcal_{\Pcal}(\rho)\bigr).
+\]
+\phantomsection\label{strong:proof:031:end}\end{proof}
+
+\subsection{Channel superblocks}\label{strong:subsec:channel_blocks}
+
+Let \(\Phi:\End(\Hcal_X)\to\End(\Hcal_Y)\) be linear. Choose packet systems \((P_a)\) on \(\Hcal_X\) and \((Q_c)\) on \(\Hcal_Y\). Define
+\[
+\Phi_{cd,ab}
+=
+\Qcal_{cd}\Phi\Pcal_{ab}.
+\]
+
+\begin{theorem}[Exact channel block calculus]\label{strong:theorem:021}\label{strong:thm:channel_blocks}
+Every linear map has the exact reconstruction
+\[
+\Phi=\sum_{a,b,c,d}\Phi_{cd,ab}.
+\]
+If \(\Psi:\End(\Hcal_Y)\to\End(\Hcal_Z)\), then
+\[
+(\Psi\Phi)_{ef,ab}
+=
+\sum_{c,d}
+\Psi_{ef,cd}\Phi_{cd,ab}.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:032}
+Insert the complete operator packet resolutions before and after \(\Phi\). For composition, insert the middle resolution between \(\Psi\) and \(\Phi\) and collect the output and input packets.
+\phantomsection\label{strong:proof:032:end}\end{proof}
+
+\begin{standardfact}[Finite Kraus and Choi criteria]\label{strong:standardfact:001}\label{strong:fact:kraus_choi}
+A linear map \(\Phi:M_n(\CC)\to M_m(\CC)\) is completely positive exactly when it has a Kraus representation
+\[
+\Phi(X)=\sum_rK_rXK_r^*.
+\]
+It is trace preserving exactly when
+\[
+\sum_rK_r^*K_r=I.
+\]
+Equivalently, its Choi matrix
+\[
+J(\Phi)
+=
+\sum_{i,j}\Phi(\ket{i}\bra{j})\otimes\ket{i}\bra{j}
+\]
+is positive, and trace preservation is
+\[
+\Tr_{\rm out}J(\Phi)=I_{\rm in}.
+\]
+\end{standardfact}
+
+These finite criteria are classical \cite{Stinespring1955,Choi1975,Kraus1983,Watrous2018}.
+
+\subsection{Covariance and coherence order}\label{strong:subsec:channel_covariance}
+
+Let \(S\) be unitary and \(N\ge1\) an integer with \(S^N=I\), and define the conjugation action
+\[
+\Ad_S(X)=SXS^*.
+\]
+
+\begin{theorem}[Coherence order projectors]\label{strong:theorem:022}\label{strong:thm:coherence_projectors}
+For \(q\in\ZZ/N\ZZ\), define
+\[
+\Lcal_q(X)
+=
+\frac1N
+\sum_{r=0}^{N-1}
+\omega^{-qr}S^rXS^{-r}.
+\]
+Then the \(\Lcal_q\) form a complete orthogonal packet system on Hilbert--Schmidt operator space. Their ranges are the operators satisfying
+\[
+SXS^*=\omega^qX.
+\]
+If \(P_j\) are the state charge projectors, then
+\[
+\Ran\Lcal_q
+=
+\bigoplus_jP_{j+q}\End(\Hcal)P_j.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:033}
+Apply the cyclic character projector formula to the unitary representation \(\Ad_S\) on operator space. The last identity follows from \cref{strong:thm:charge_selection} applied to each operator packet.
+\phantomsection\label{strong:proof:033:end}\end{proof}
+
+\begin{theorem}[Covariant channels preserve coherence order]\label{strong:theorem:023}\label{strong:thm:covariant_channel}
+Suppose
+\[
+\Phi(SXS^*)=S\Phi(X)S^*
+\]
+for every \(X\). Then
+\[
+\Phi\Lcal_q=\Lcal_q\Phi
+\]
+for every \(q\). Thus \(\Phi\) cannot mix distinct coherence orders.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:034}
+The covariance identity says that \(\Phi\) commutes with every power of \(\Ad_S\). It therefore commutes with each finite character average \(\Lcal_q\).
+\phantomsection\label{strong:proof:034:end}\end{proof}
+
+\begin{theorem}[Choi symmetry criterion]\label{strong:theorem:024}\label{strong:thm:choi_covariance}
+Let \(U:G\to\Ucal(\Hcal)\) be a finite group representation. A channel \(\Phi\) is covariant,
+\[
+\Phi\bigl(U(g)XU(g)^*\bigr)
+=
+U(g)\Phi(X)U(g)^*,
+\]
+if and only if
+\[
+\bigl(U(g)\otimes\overline{U(g)}\bigr)
+J(\Phi)
+\bigl(U(g)^*\otimes U(g)^{\mathsf T}\bigr)
+=
+J(\Phi)
+\]
+for every \(g\in G\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:035}
+Let
+\[
+\Omega=\sum_i\ket{i}\otimes\ket{i}.
+\]
+Then
+\[
+J(\Phi)=(\Phi\otimes\id)(\ket{\Omega}\bra{\Omega}).
+\]
+The vector \(\Omega\) is invariant under \(U\otimes\overline U\). Covariance therefore implies the displayed Choi invariance. Conversely, the displayed transformation is the Choi matrix of
+\[
+\Ad_{U(g)}\circ\Phi\circ\Ad_{U(g)^*}.
+\]
+The Choi correspondence is injective, so invariance implies that this map equals \(\Phi\), which is covariance.
+\phantomsection\label{strong:proof:035:end}\end{proof}
+
+\begin{corollary}[Choi packet decomposition]\label{strong:corollary:009}\label{strong:cor:choi_packets}
+The Choi matrix of a covariant channel is block diagonal with respect to the isotypic decomposition of \(U\otimes\overline U\).
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:036}
+Apply \cref{strong:thm:isotypic_projectors} to the representation \(U\otimes\overline U\) and use \cref{strong:thm:choi_covariance}.
+\phantomsection\label{strong:proof:036:end}\end{proof}
+
+\begin{example}[Amplitude damping]\label{strong:example:002}\label{strong:ex:amplitude_damping}
+For \(0\leq\gamma\leq1\), let
+\[
+K_0=
+\begin{pmatrix}
+1&0\\
+0&\sqrt{1-\gamma}
+\end{pmatrix},
+\qquad
+K_1=
+\begin{pmatrix}
+0&\sqrt\gamma\\
+0&0
+\end{pmatrix}.
+\]
+The channel
+\[
+\Phi_\gamma(\rho)=K_0\rho K_0^*+K_1\rho K_1^*
+\]
+is trace preserving. It sends the off diagonal packet \(\ket0\bra1\) to \(\sqrt{1-\gamma}\ket0\bra1\), while the excited population transfers partly into the ground population.
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{08_channel_coherence.pdf}
+\caption{Amplitude damping transfers population and contracts the coherence packet.}
+\label{strong:fig:channel_coherence}
+\end{figure}
+
+
+\subsection{Quantum dynamical semigroups}\label{strong:subsec:lindblad}
+
+\begin{standardfact}[Finite Lindblad generator]\label{strong:standardfact:002}\label{strong:fact:lindblad}
+A norm continuous semigroup of completely positive trace preserving maps on a finite matrix algebra, in the Schr\"odinger picture, has a generator of the form
+\[
+\Gcal(X)
+=
+-\ii[H,X]
++
+\sum_r
+\left(
+L_rXL_r^*
+-
+\frac12L_r^*L_rX
+-
+\frac12XL_r^*L_r
+\right),
+\]
+where \(H=H^*\). Conversely, every operator of this form generates a completely positive trace preserving semigroup \cite{Lindblad1976}.
+\end{standardfact}
+
+\begin{theorem}[Charge preservation by a Lindblad generator]\label{strong:theorem:025}\label{strong:thm:lindblad_charge}
+Let \(S\) be unitary and \(N\ge1\) an integer with \(S^N=I\). Assume
+\[
+SHS^*=H
+\]
+and, for every jump operator, there is a charge \(q_r\) such that
+\[
+SL_rS^*=\omega^{q_r}L_r.
+\]
+Then the Lindblad generator \(\Gcal\) preserves every coherence order:
+\[
+\Gcal\Lcal_p=\Lcal_p\Gcal.
+\]
+The quantum dynamical semigroup \(\e^{t\Gcal}\) has the same property.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:037}
+Let \(X\) have coherence order \(p\). The Hamiltonian commutator has order \(p\) because \(H\) has charge zero. The jump term \(L_rXL_r^*\) has charge
+\[
+q_r+p-q_r=p.
+\]
+Also \(L_r^*L_r\) has charge zero, so both anticommutator terms have charge \(p\). Thus \(\Gcal\) preserves \(\Ran\Lcal_p\). The exponential series then shows that \(\e^{t\Gcal}\) preserves the same packets.
+\phantomsection\label{strong:proof:037:end}\end{proof}
+
+\begin{corollary}[Independent coherence evolution]\label{strong:corollary:010}\label{strong:cor:no_coherence_mixing}
+Under the hypotheses of \cref{strong:thm:lindblad_charge}, each coherence component of an initial operator evolves within its own order. In particular, a density matrix in the zero order sector remains in that sector.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:038}
+Decompose the initial operator by \cref{strong:thm:coherence_projectors} and apply the invariant packet statement to each component.
+\phantomsection\label{strong:proof:038:end}\end{proof}
+
+Preservation of coherence order does not by itself give a closed classical Markov chain for the packet populations. Such scalar population equations require additional isotropy within each packet.
+
+\section{Quantum error correction as a compression obstruction}\label{strong:section:008}\label{strong:sec:qec}
+
+Let \(P\) be the orthogonal projector onto a code space
+\[
+\Ccal=P\Hcal,
+\qquad
+k=\dim\Ccal\ge1.
+\]
+The compression of \(A\in\End(\Hcal)\) to the code is \(PAP\in\End(\Ccal)\). The zero code has only the zero supported operator and no normalized code state. Part III treats that branch in the mathematical completion.
+
+\begin{definition}[Code compression obstruction]\label{strong:definition:005}\label{strong:def:code_obstruction}
+Let
+\[
+q_P:\End(\Ccal)\longrightarrow\End(\Ccal)/(\CC I_{\Ccal})
+\]
+be the quotient map. Define
+\[
+\Ob_P(A)=q_P(PAP).
+\]
+Equivalently, one may use the traceless representative
+\[
+\ob_P(A)
+=
+PAP-
+\frac{\Tr(PAP)}{k}P.
+\]
+\end{definition}
+
+The class vanishes exactly when \(A\) acts as a scalar after compression to the code. Such an operator cannot distinguish normalized code vectors by expectation value.
+
+Exact correction of an error span means that one completely positive trace preserving recovery $\Rcal$ satisfies $\Rcal(F\rho F^*)=q_F\rho$ for every $F$ in that span and every code-supported matrix $\rho$, with a nonnegative scalar $q_F$ depending on $F$ but not on the logical input. For every normalized channel with Kraus operators in the same span, the same recovery restores the code input with total scalar one. Individual unnormalized errors are not required to have unit recovery weight.
+
+\begin{theorem}[Knill--Laflamme as obstruction vanishing]\label{strong:theorem:026}\label{strong:thm:kl_obstruction}
+Let \(E_1,\ldots,E_r\) be an error family. The code \(\Ccal\) corrects their linear span exactly if and only if
+\[
+\Ob_P(E_a^*E_b)=0
+\]
+for all \(a,b\). Equivalently, there is a matrix \(c=(c_{ab})\) such that
+\[
+PE_a^*E_bP=c_{ab}P
+\]
+for all \(a,b\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:039}
+The equivalence between the quotient statement and the scalar compression identity is immediate from the definition. The latter identity is the finite Knill--Laflamme criterion \cite{KnillLaflamme1997,SchumacherNielsen1996}.
+\phantomsection\label{strong:proof:039:end}\end{proof}
+
+The next result turns the scalar compression identities into a family of orthogonal syndrome packets. Those packets provide the coordinates used by the recovery map.
+
+\begin{theorem}[Orthogonal syndrome construction]\label{strong:theorem:027}\label{strong:thm:syndrome_construction}
+Assume the Knill--Laflamme identities. Then the coefficient matrix \(c\) is positive semidefinite. Choose a unitary matrix \(W\) such that
+\[
+WcW^*=\diag(\lambda_1,\ldots,\lambda_r),
+\qquad
+\lambda_j\geq0,
+\]
+and define
+\[
+F_j=\sum_a\overline{W_{ja}}E_a.
+\]
+For every \(j\) with \(\lambda_j>0\), the operator
+\[
+V_j=\lambda_j^{-1/2}F_jP
+\]
+is an isometry from the code into \(\Hcal\). Its range projector
+\[
+Q_j=V_jV_j^*
+\]
+is a syndrome packet, and the nonzero \(Q_j\) are pairwise orthogonal.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:040}
+For \(z\in\CC^r\), let \(F_z=\sum_az_aE_a\). Then
+\[
+PF_z^*F_zP=(z^*cz)P\geq0,
+\]
+so \(c\geq0\). The unitary change of error coordinates gives
+\[
+PF_j^*F_\ell P
+=
+\lambda_j\delta_{j\ell}P.
+\]
+Thus
+\[
+V_j^*V_\ell=\delta_{j\ell}P.
+\]
+Each \(V_j\) is an isometry on \(P\Hcal\), and distinct ranges are orthogonal. Their range projectors are therefore pairwise orthogonal.
+\phantomsection\label{strong:proof:040:end}\end{proof}
+
+\begin{theorem}[Exact recovery on the error span]\label{strong:theorem:028}\label{strong:thm:exact_recovery}
+Under the hypotheses of \cref{strong:thm:syndrome_construction}, define on the syndrome support
+\[
+Q=\sum_{\lambda_j>0}Q_j
+\]
+the completely positive map
+\[
+\Rcal_0(X)
+=
+\sum_{\lambda_j>0}
+V_j^*Q_jXQ_jV_j.
+\]
+It extends to a quantum channel \(\Rcal\) on \(\End(\Hcal)\). If
+\[
+\Phi(X)=\sum_aE_aXE_a^*
+\]
+is trace preserving on code states, then
+\[
+\Rcal\Phi(\rho)=\rho
+\]
+for every density matrix \(\rho=P\rho P\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:041}
+The map \(\Rcal_0\) is completely positive. It is trace preserving on operators supported in \(Q\Hcal\) because
+\[
+\Tr\bigl(V_j^*Q_jXQ_jV_j\bigr)
+=
+\Tr(Q_jXQ_j).
+\]
+Fix a code state \(\rho_0\) and write \(Q^\perp=I-Q\). Then
+\[
+\Rcal(X)
+=
+\Rcal_0(QXQ)
++
+\Tr(Q^\perp X)\rho_0
+\]
+is completely positive and trace preserving. It extends \(\Rcal_0\) on operators supported in \(Q\Hcal\).
+
+Unitary mixing of a Kraus family does not change the channel, so
+\[
+\Phi(\rho)
+=
+\sum_jF_j\rho F_j^*
+=
+\sum_{\lambda_j>0}
+\lambda_jV_j\rho V_j^*.
+\]
+Recovery gives
+\[
+\Rcal\Phi(\rho)
+=
+\left(\sum_j\lambda_j\right)\rho.
+\]
+Trace preservation on a code state implies \(\sum_j\lambda_j=1\).
+\phantomsection\label{strong:proof:041:end}\end{proof}
+
+\begin{corollary}[Syndrome measurement preserves logical information]\label{strong:corollary:011}\label{strong:cor:syndrome_preserves_logic}
+For a channel trace preserving on code states as in the preceding theorem, the completed projective measurement consisting of \((Q_j)_{\lambda_j>0}\) and \(I-\sum_{\lambda_j>0}Q_j\) identifies the orthogonal error syndrome without resolving the encoded state inside the code. The complement outcome has probability zero on the corrupted code state.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:042}
+On syndrome \(j\), the encoded state is carried by the isometry \(V_j\). The outcome probability is \(\lambda_j\), independent of the normalized code state, while the postmeasurement state is \(V_j\rho V_j^*\).
+\phantomsection\label{strong:proof:042:end}\end{proof}
+
+\begin{definition}[Approximate Knill--Laflamme defect]\label{strong:definition:006}\label{strong:def:approximate_kl}
+For a finite error family, define the following defect. When the family is empty, assign the maximum the value zero.
+\[
+\varepsilon_{\rm KL}
+=
+\max_{a,b}
+\inf_{c\in\CC}
+\norm{PE_a^*E_bP-cP}.
+\]
+\end{definition}
+
+\begin{proposition}[Meaning of the approximate defect]\label{strong:proposition:003}\label{strong:prop:approximate_kl_meaning}
+For each pair \((a,b)\), choose a minimizing scalar \(c_{ab}\). For unit code vectors \(\psi,\phi\),
+\[
+\abs{
+\ip{E_a\psi}{E_b\phi}
+-c_{ab}\ip{\psi}{\phi}
+}
+\leq
+\varepsilon_{\rm KL}.
+\]
+Thus \(\varepsilon_{\rm KL}\) controls the deviation of error overlaps from their scalar code form.
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:043}
+The left side is
+\[
+\abs{
+\ip{\psi}{(PE_a^*E_bP-c_{ab}P)\phi}
+},
+\]
+which is bounded by the operator norm.
+\phantomsection\label{strong:proof:043:end}\end{proof}
+
+No recovery fidelity estimate is inferred from this norm alone. Approximate error correction requires a separate continuity theorem and a declared channel metric.
+
+\begin{example}[Three qubit repetition code]\label{strong:example:003}\label{strong:ex:bit_flip_code}
+Let
+\[
+\ket{0_L}=\ket{000},
+\qquad
+\ket{1_L}=\ket{111},
+\]
+and take the errors
+\[
+I,
+\quad
+X\otimes I\otimes I,
+\quad
+I\otimes X\otimes I,
+\quad
+I\otimes I\otimes X.
+\]
+Their images of the code are four pairwise orthogonal two dimensional syndrome packets whose sum is the full eight dimensional Hilbert space.
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.68\textwidth]{09_qec_syndromes.pdf}
+\caption{The syndrome packets of the three qubit repetition code. Each packet has dimension two and carries the full logical state.}
+\label{strong:fig:qec_syndromes}
+\end{figure}
+
+\begin{standardfact}[Correctable observable algebras]\label{strong:standardfact:003}\label{strong:fact:operator_qec}
+Let \(\Phi\) be a finite completely positive trace preserving channel with Kraus operators \((E_a)\). A finite dimensional unital star subalgebra \(\Mcal\subseteq P\End(\Hcal)P\) is correctable when a completely positive trace preserving recovery \(\Rcal\) satisfies \(P(\Phi^*\circ\Rcal^*)(X)P=X\) for every \(X\in\Mcal\), where stars on maps denote Heisenberg adjoints. This holds exactly when every compressed product \(PE_a^*E_bP\) belongs to the commutant \(\Mcal'\) on the code. The scalar code criterion is the special case \(\Mcal=P\End(\Hcal)P\) \cite{BenyKempfKribs2007}.
+\end{standardfact}
+
+\section{Feshbach effective dynamics and hidden packet memory}\label{strong:section:009}\label{strong:sec:feshbach}
+
+Let \(P\) be an orthogonal projector, put \(Q=I-P\), and write a self adjoint Hamiltonian as
+\[
+H=
+\begin{pmatrix}
+A&B\\
+B^*&D
+\end{pmatrix}
+\]
+relative to \(P\Hcal\oplus Q\Hcal\).
+
+\begin{definition}[Feshbach map and self energy]\label{strong:definition:007}\label{strong:def:feshbach_map}
+For \(z\notin\Spec D\), define
+\[
+\Sigma(z)=B(z-D)^{-1}B^*
+\]
+and
+\[
+F_P(z)=z-A-\Sigma(z).
+\]
+\end{definition}
+
+\begin{theorem}[Exact projected resolvent]\label{strong:theorem:029}\label{strong:thm:feshbach_resolvent}
+If \(z\notin\Spec D\) and \(F_P(z)\) is invertible, then
+\[
+P(z-H)^{-1}P=F_P(z)^{-1}
+\]
+as an operator on \(P\Hcal\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:044}
+The lower right block of \(z-H\) is \(z-D\). Block Gaussian elimination gives
+\[
+\begin{pmatrix}
+I&B(z-D)^{-1}\\
+0&I
+\end{pmatrix}
+(z-H)
+\begin{pmatrix}
+I&0\\
+(z-D)^{-1}B^*&I
+\end{pmatrix}
+=
+\begin{pmatrix}
+F_P(z)&0\\
+0&z-D
+\end{pmatrix}.
+\]
+Invert the factors. The retained resolvent is the block in the upper left corner of the resulting inverse.
+\phantomsection\label{strong:proof:044:end}\end{proof}
+
+\begin{theorem}[Spectral equivalence]\label{strong:theorem:030}\label{strong:thm:feshbach_spectrum}
+Let \(z\notin\Spec D\). Then
+\[
+z\in\Spec H
+\quad\Longleftrightarrow\quad
+0\in\Spec F_P(z).
+\]
+The map
+\[
+x\longmapsto
+\begin{pmatrix}
+x\\
+(z-D)^{-1}B^*x
+\end{pmatrix}
+\]
+is an isomorphism from \(\Ker F_P(z)\) onto \(\Ker(z-H)\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:045}
+The equation \((z-H)(x,y)^{\mathsf T}=0\) is
+\[
+(z-A)x-By=0,
+\qquad
+-B^*x+(z-D)y=0.
+\]
+The second equation gives \(y=(z-D)^{-1}B^*x\). Substitution into the first gives \(F_P(z)x=0\). The construction is reversible.
+\phantomsection\label{strong:proof:045:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.78\textwidth]{10_feshbach_spectrum.pdf}
+\caption{The zeros of the Feshbach determinant recover the eigenvalues of the full finite Hamiltonian away from the hidden spectrum.}
+\label{strong:fig:feshbach_spectrum}
+\end{figure}
+
+\begin{theorem}[Upper half plane sign]\label{strong:theorem:031}\label{strong:thm:self_energy_sign}
+If \(\operatorname{Im}z>0\), then
+\[
+\operatorname{Im}\Sigma(z)
+=
+-(\operatorname{Im}z)
+B(z-D)^{-1}(\overline z-D)^{-1}B^*
+\leq0.
+\]
+Thus \(-\Sigma\) is an operator valued Herglotz function.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:046}
+For \(R(z)=(z-D)^{-1}\), the resolvent identity gives
+\[
+R(z)-R(z)^*
+=(\overline z-z)R(z)R(z)^*.
+\]
+Divide by \(2\ii\), then multiply the result on the left by \(B\) and on the right by \(B^*\).
+\phantomsection\label{strong:proof:046:end}\end{proof}
+
+\begin{proposition}[Uniform self energy bounds]\label{strong:proposition:004}\label{strong:prop:self_energy_bounds}
+Let
+\[
+\delta=\dist(z,\Spec D)>0,
+\qquad
+g=\norm B.
+\]
+Then
+\[
+\norm{\Sigma(z)}\leq\frac{g^2}{\delta}
+\]
+and
+\[
+\norm{\Sigma'(z)}\leq\frac{g^2}{\delta^2}.
+\]
+For real \(E,E'\) in an interval at distance at least \(\delta\) from \(\Spec D\),
+\[
+\norm{\Sigma(E)-\Sigma(E')}
+\leq
+\frac{g^2}{\delta^2}\abs{E-E'}.
+\]
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:047}
+The self adjoint resolvent satisfies
+\[
+\norm{(z-D)^{-1}}=\frac1{\dist(z,\Spec D)}.
+\]
+Differentiate the resolvent to obtain
+\[
+\Sigma'(z)=-B(z-D)^{-2}B^*.
+\]
+Taking operator norms gives the first two estimates. Applying the derivative bound along the real interval gives the final mean value estimate.
+\phantomsection\label{strong:proof:047:end}\end{proof}
+
+\begin{proposition}[Low energy expansion]\label{strong:proposition:005}\label{strong:prop:low_energy_expansion}
+Assume \(D\) is invertible and \(\abs z\norm{D^{-1}}<1\). Then
+\[
+\Sigma(z)
+=-
+\sum_{n=0}^{\infty}
+z^nBD^{-n-1}B^*
+\]
+with norm convergence. In particular,
+\[
+F_P(z)
+=
+ z-A+BD^{-1}B^*+O\bigl(\abs z\norm B^2\norm{D^{-1}}^2\bigr).
+\]
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:048}
+Write
+\[
+(z-D)^{-1}
+=-D^{-1}(I-zD^{-1})^{-1}
+=-\sum_{n=0}^{\infty}z^nD^{-n-1}
+\]
+and multiply on the left by \(B\) and on the right by \(B^*\).
+\phantomsection\label{strong:proof:048:end}\end{proof}
+
+\begin{proposition}[Bare truncation error identity]\label{strong:proposition:006}\label{strong:prop:bare_truncation}
+If both \(F_P(z)\) and \(z-A\) are invertible, then
+\[
+P(z-H)^{-1}P-(z-A)^{-1}
+=
+F_P(z)^{-1}\Sigma(z)(z-A)^{-1}.
+\]
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:049}
+Use the inverse difference identity
+\[
+X^{-1}-Y^{-1}=X^{-1}(Y-X)Y^{-1}
+\]
+with \(X=F_P(z)\) and \(Y=z-A\).
+\phantomsection\label{strong:proof:049:end}\end{proof}
+
+\subsection{Time memory}\label{strong:subsec:time_memory}
+
+Write a Schrödinger state as \(\psi=x+y\), where \(x=P\psi\) and \(y=Q\psi\).
+
+\begin{theorem}[Exact retained memory equation]\label{strong:theorem:032}\label{strong:thm:memory_equation}
+The retained coordinate satisfies
+\[
+\begin{aligned}
+\ii\dot x(t)
+={}&Ax(t)+B\e^{-\ii tD}y(0)\\
+&-\ii\int_0^tK(t-s)x(s)\dd s,
+\end{aligned}
+\]
+where
+\[
+K(t)=B\e^{-\ii tD}B^*.
+\]
+For \(\operatorname{Re}s>0\),
+\[
+\int_0^\infty\e^{-st}K(t)\dd t
+=
+B(s+\ii D)^{-1}B^*.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:050}
+The hidden equation is
+\[
+\ii\dot y=B^*x+Dy.
+\]
+Variation of constants gives
+\[
+y(t)=\e^{-\ii tD}y(0)
+-\ii\int_0^t\e^{-\ii(t-s)D}B^*x(s)\dd s.
+\]
+Substitute into \(\ii\dot x=Ax+By\). The Laplace formula follows by diagonalizing \(D\) or integrating the norm convergent finite dimensional exponential.
+\phantomsection\label{strong:proof:050:end}\end{proof}
+
+\begin{theorem}[Positive definite quantum memory]\label{strong:theorem:033}\label{strong:thm:positive_memory}
+The kernel \(K(t-s)\) is positive definite. For times \(t_1,\ldots,t_m\) and retained vectors \(v_1,\ldots,v_m\),
+\[
+\sum_{j,k=1}^{m}
+\ip{v_j}{K(t_j-t_k)v_k}
+\geq0.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:051}
+Set
+\[
+w=\sum_{k=1}^{m}\e^{\ii t_kD}B^*v_k.
+\]
+Then
+\[
+\norm w^2
+=
+\sum_{j,k}
+\ip{B^*v_j}{\e^{-\ii(t_j-t_k)D}B^*v_k}
+=
+\sum_{j,k}
+\ip{v_j}{K(t_j-t_k)v_k}.
+\]
+\phantomsection\label{strong:proof:051:end}\end{proof}
+
+\begin{corollary}[Finite oscillatory memory expansion]\label{strong:corollary:012}\label{strong:cor:oscillatory_memory}
+If
+\[
+D=\sum_{r}E_rQ_r
+\]
+is the spectral decomposition of the hidden Hamiltonian, then
+\[
+K(t)=\sum_r\e^{-\ii tE_r}BQ_rB^*.
+\]
+Every coefficient \(BQ_rB^*\) is positive semidefinite.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:052}
+Inserting the spectral decomposition into the exponential gives the stated sum. The spectral projectors are positive semidefinite, so multiplication by the coupling and its adjoint preserves positivity of each coefficient.
+\phantomsection\label{strong:proof:052:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.76\textwidth]{11_memory_kernel.pdf}
+\caption{A finite hidden spectrum produces an oscillatory memory kernel. The retained dynamics therefore depend on the history of the retained state.}
+\label{strong:fig:memory_kernel}
+\end{figure}
+
+\begin{theorem}[Exact local closure criterion]\label{strong:theorem:034}\label{strong:thm:local_closure}
+Assume \(y(0)=0\). The retained equation is local and equal to
+\[
+\ii\dot x=Ax
+\]
+for every retained initial state exactly when \(B=0\). Equivalently, exact local closure holds exactly when the retained and hidden packets reduce \(H\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:053}
+If \(B=0\), the retained and hidden equations decouple. Conversely, suppose that every solution with \(y(0)=0\) satisfies \(x(t)=\e^{-\ii tA}x(0)\). The full block equation gives
+\[
+\ddot x(0)
+=
+-\bigl(A^2+BB^*\bigr)x(0),
+\]
+while the declared local equation gives
+\[
+\ddot x(0)=-A^2x(0).
+\]
+Since this holds for every retained initial vector, \(BB^*=0\). Hence \(B=0\).
+\phantomsection\label{strong:proof:053:end}\end{proof}
+
+\subsection{Stability across models}\label{strong:subsec:feshbach_stability}
+
+\begin{theorem}[Stability of the self energy]\label{strong:theorem:035}\label{strong:thm:self_energy_stability}
+Let \(D=D^*\) and \(\widetilde D=\widetilde D^*\) act on one fixed hidden Hilbert space, and let \(B,\widetilde B\) map that hidden space to one fixed retained Hilbert space. Define
+\[
+\Sigma(z)=B(z-D)^{-1}B^*,
+\qquad
+\widetilde\Sigma(z)=\widetilde B(z-\widetilde D)^{-1}\widetilde B^*.
+\]
+Assume
+\[
+\norm B,\norm{\widetilde B}\leq g
+\]
+and
+\[
+\dist(z,\Spec D),
+\dist(z,\Spec\widetilde D)
+\geq\delta>0.
+\]
+Then
+\[
+\norm{\Sigma(z)-\widetilde\Sigma(z)}
+\leq
+\frac{2g}{\delta}\norm{B-\widetilde B}
++
+\frac{g^2}{\delta^2}\norm{D-\widetilde D}.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:054}
+Add and subtract \(\widetilde B(z-D)^{-1}B^*\) and \(\widetilde B(z-D)^{-1}\widetilde B^*\). The first two differences give the coupling term. For the last, use
+\[
+(z-D)^{-1}-(z-\widetilde D)^{-1}
+=(z-D)^{-1}(D-\widetilde D)(z-\widetilde D)^{-1}.
+\]
+Apply the resolvent bounds.
+\phantomsection\label{strong:proof:054:end}\end{proof}
+
+\begin{corollary}[Uniform Feshbach control]\label{strong:corollary:013}\label{strong:cor:uniform_feshbach}
+For a family represented on fixed retained and hidden Hilbert spaces, with self adjoint hidden Hamiltonians, a common hidden spectral separation \(\delta\), and a common coupling bound \(g\), the self energies are uniformly bounded and uniformly Lipschitz on the declared spectral region. If the couplings and hidden Hamiltonians converge in norm, then the self energies converge uniformly there.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:055}
+The common gap and coupling bounds allow \cref{strong:prop:self_energy_bounds,strong:thm:self_energy_stability} to be applied uniformly across the family.
+\phantomsection\label{strong:proof:055:end}\end{proof}
+
+This result identifies hypotheses that make Feshbach control uniform in the cutoff. Whether a chosen geometric refinement tower satisfies those hypotheses remains a separate question.
+
+\section{Euclidean transfer and finite reflection positivity}\label{strong:section:010}\label{strong:sec:euclidean}
+
+Let \(H=H^*\) on a nonzero finite dimensional Hilbert space and let
+\[
+E_0=\min\Spec H.
+\]
+For a lattice time step \(a>0\), define
+\[
+T=\e^{-a(H-E_0I)}.
+\]
+
+\begin{theorem}[Finite Euclidean transfer]\label{strong:theorem:036}\label{strong:thm:euclidean_transfer}
+The operator \(T\) is positive definite, self adjoint, and contractive. Its spectrum lies in \((0,1]\), and
+\[
+T^n=\e^{-na(H-E_0I)}
+\]
+for every \(n\in\NN\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:056}
+Diagonalize \(H\). Each eigenvalue of \(T\) is
+\[
+\e^{-a(E_j-E_0)}
+\]
+and therefore lies in \((0,1]\). The power law follows from the functional calculus.
+\phantomsection\label{strong:proof:056:end}\end{proof}
+
+\begin{theorem}[Hamiltonian reconstruction from transfer]\label{strong:theorem:037}\label{strong:thm:transfer_logarithm}
+Let \(T\) be positive definite, self adjoint, and contractive. Then
+\[
+H_T=-a^{-1}\log T
+\]
+is a nonnegative self adjoint operator and
+\[
+T^n=\e^{-naH_T}.
+\]
+It is the unique nonnegative self adjoint operator with \(T=\e^{-aH_T}\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:057}
+Apply the real logarithm to the positive spectrum of \(T\). The spectral calculus gives existence and the power identity. Injectivity of the scalar exponential on \([0,\infty)\) gives uniqueness.
+\phantomsection\label{strong:proof:057:end}\end{proof}
+
+\begin{theorem}[Finite reflection positivity]\label{strong:theorem:038}\label{strong:thm:finite_reflection_positivity}
+For vectors \(v_1,\ldots,v_m\in\Hcal\) and nonnegative integers \(n_1,\ldots,n_m\), the matrix
+\[
+G_{jk}=\ip{v_j}{T^{n_j+n_k}v_k}
+\]
+is positive semidefinite. Equivalently,
+\[
+\sum_{j,k}\overline{c_j}c_k
+\ip{v_j}{T^{n_j+n_k}v_k}
+\geq0
+\]
+for every \(c\in\CC^m\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:058}
+Since \(T\) is positive and self adjoint,
+\[
+\ip{v_j}{T^{n_j+n_k}v_k}
+=
+\ip{T^{n_j}v_j}{T^{n_k}v_k}.
+\]
+The quadratic form is the squared norm of
+\[
+\sum_kc_kT^{n_k}v_k.
+\]
+\phantomsection\label{strong:proof:058:end}\end{proof}
+
+\begin{corollary}[Reflection positive correlators]\label{strong:corollary:014}\label{strong:cor:reflection_correlators}
+Fix a vector \(\Omega\) and operators \(A_1,\ldots,A_m\). The matrix
+\[
+C_{jk}
+=
+\ip{A_j\Omega}{T^{n_j+n_k}A_k\Omega}
+\]
+is positive semidefinite.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:059}
+Apply \cref{strong:thm:finite_reflection_positivity} with \(v_j=A_j\Omega\).
+\phantomsection\label{strong:proof:059:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.68\textwidth]{12_reflection_positivity.pdf}
+\caption{Eigenvalues of a finite reflection positive Gram matrix. Small numerical negative values would signal either roundoff or failure of the transfer assumptions.}
+\label{strong:fig:reflection_positivity}
+\end{figure}
+
+\begin{proposition}[Ground packet convergence]\label{strong:proposition:007}\label{strong:prop:ground_packet}
+Let \(P_0\) be the spectral projector of \(H\) at \(E_0\), and let
+\[
+\Delta=\min\{E_j-E_0:E_j>E_0\}.
+\]
+If an excited eigenvalue exists, then
+\[
+\norm{T^n-P_0}=\e^{-na\Delta}.
+\]
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:060}
+In the spectral decomposition, \(T^n-P_0\) has eigenvalues zero on the ground space and \(\e^{-na(E_j-E_0)}\) on the excited eigenspaces. The largest is \(\e^{-na\Delta}\).
+\phantomsection\label{strong:proof:060:end}\end{proof}
+
+\begin{proposition}[Symmetry resolved transfer]\label{strong:proposition:008}\label{strong:prop:symmetry_transfer}
+If \([H,P_a]=0\) for a complete packet family, then
+\[
+T=\sum_aP_aTP_a
+\]
+and each reflection positive Gram matrix decomposes as the sum of its packet Gram matrices.
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:061}
+The functional calculus preserves commutation. Decompose every vector into packet components and use orthogonality.
+\phantomsection\label{strong:proof:061:end}\end{proof}
+
+Finite reflection positivity is a necessary structural property of transfer data. It is not by itself the continuum Osterwalder--Schrader theorem, which also requires a suitable algebra of Euclidean fields, covariance, regularity, clustering, and a controlled continuum limit \cite{OsterwalderSchrader1973,OsterwalderSchrader1975,GlimmJaffe1987}.
+
+\section{Finite spectral geometry and diffusion dimension}\label{strong:section:011}\label{strong:sec:spectral_geometry}
+
+A finite spectral datum consists of a finite dimensional Hilbert space, a nonnegative self adjoint operator \(L\), and any declared packet family. One may take \(L=D^2\) for a finite Dirac type operator or a graph Laplacian. Related geometric viewpoints appear in \cite{Connes1994,Vassilevich2003}.
+
+\begin{definition}[Heat trace and spectral dimension]\label{strong:definition:008}\label{strong:def:spectral_dimension}
+Let the eigenvalues of \(L\) be \(\lambda_1,\ldots,\lambda_N\), with at least one zero eigenvalue. Define
+\[
+Z_L(t)=\Tr(\e^{-tL})
+\]
+and
+\[
+d_L(t)
+=-2\frac{\dd\log Z_L(t)}{\dd\log t}
+=
+2t
+\frac{\Tr(L\e^{-tL})}{\Tr(\e^{-tL})}.
+\]
+\end{definition}
+
+\begin{proposition}[Finite scale limits]\label{strong:proposition:009}\label{strong:prop:finite_spectral_limits}
+For every finite nonnegative \(L\) with nontrivial kernel,
+\[
+\lim_{t\downarrow0}d_L(t)=0
+\]
+and
+\[
+\lim_{t\to\infty}d_L(t)=0.
+\]
+For every \(t>0\),
+\[
+0\leq d_L(t)\leq2t\norm L.
+\]
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:062}
+The formula in \cref{strong:def:spectral_dimension} is twice \(t\) times a weighted average of the eigenvalues. This gives the bound and the limit at zero. At large time, the denominator converges to \(\dim\Ker L\), while every positive eigenvalue contribution in the numerator decays exponentially.
+\phantomsection\label{strong:proof:062:end}\end{proof}
+
+Thus a finite system cannot have a nonzero spectral dimension at the extreme ultraviolet or infrared ends. A geometric dimension can appear only in a refinement window.
+
+\begin{proposition}[Heat packet decomposition]\label{strong:proposition:010}\label{strong:prop:heat_packets}
+If \([L,P_a]=0\) for every packet, then
+\[
+Z_L(t)=\sum_aZ_{L,a}(t),
+\qquad
+Z_{L,a}(t)=\Tr(P_a\e^{-tL}).
+\]
+The global spectral dimension is the average of the packet dimensions weighted by their heat traces:
+\[
+d_L(t)
+=
+\sum_{a:Z_{L,a}(t)>0}
+\frac{Z_{L,a}(t)}{Z_L(t)}
+ d_{L,a}(t),
+\]
+where
+\[
+d_{L,a}(t)
+=2t
+\frac{\Tr(P_aL\e^{-tL})}{Z_{L,a}(t)}
+\]
+for nonempty packet heat traces.
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:063}
+Commutation gives a block diagonal heat operator. Add the traces and the corresponding first spectral moments, then divide by the total heat trace.
+\phantomsection\label{strong:proof:063:end}\end{proof}
+
+\subsection{Periodic lattices}\label{strong:subsec:periodic_lattices}
+
+Let \(N\geq2\) and let \(\Lambda_N=(\ZZ/N\ZZ)^d\) be the unit flat torus grid with spacing \(1/N\). The standard periodic difference Laplacian has eigenvalues
+\[
+\lambda_N(k)
+=
+4N^2
+\sum_{j=1}^{d}
+\sin^2\left(\frac{\pi k_j}{N}\right),
+\]
+where \(k\) runs through centered residue representatives. This is the standard periodic finite difference Laplacian \cite{Strikwerda2004}.
+
+\begin{theorem}[Low mode dispersion in dimension \(d\)]\label{strong:theorem:039}\label{strong:thm:dispersion_bound}
+For every centered mode \(k\),
+\[
+0
+\leq
+4\pi^2\abs{k}^2-\lambda_N(k)
+\leq
+\frac{4\pi^4}{3N^2}
+\sum_{j=1}^{d}k_j^4.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:064}
+For \(x\in[0,\pi/2]\),
+\[
+\sin x\leq x
+\]
+and
+\[
+\sin x\geq x-\frac{x^3}{6}.
+\]
+Thus
+\[
+0\leq x^2-\sin^2x\leq\frac{x^4}{3}.
+\]
+Apply this with \(x=\pi\abs{k_j}/N\), multiply by \(4N^2\), and sum over \(j\).
+\phantomsection\label{strong:proof:064:end}\end{proof}
+
+\begin{theorem}[Fixed time heat trace convergence]\label{strong:theorem:040}\label{strong:thm:heat_trace_convergence}
+For every \(t>0\),
+\[
+\sum_{k\in\Lambda_N^*}
+\e^{-t\lambda_N(k)}
+\longrightarrow
+\sum_{k\in\ZZ^d}
+\e^{-4\pi^2t\abs{k}^2}
+\]
+as \(N\to\infty\). The first spectral moments also converge:
+\[
+\sum_{k\in\Lambda_N^*}
+\lambda_N(k)\e^{-t\lambda_N(k)}
+\longrightarrow
+\sum_{k\in\ZZ^d}
+4\pi^2\abs{k}^2\e^{-4\pi^2t\abs{k}^2}.
+\]
+Consequently, the discrete spectral dimensions converge to the continuum torus spectral dimension at every fixed positive time.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:065}
+For a fixed integer mode, \cref{strong:thm:dispersion_bound} gives
+\[
+\lambda_N(k)\longrightarrow4\pi^2\abs{k}^2.
+\]
+For centered modes, the inequality
+\[
+\sin x\geq\frac{2x}{\pi},
+\qquad
+0\leq x\leq\frac\pi2,
+\]
+gives
+\[
+\lambda_N(k)\geq16\abs{k}^2.
+\]
+Also \(\lambda_N(k)\leq4\pi^2\abs{k}^2\). Extend the discrete summands by zero outside the centered residue box. The heat trace terms are dominated by
+\[
+\e^{-16t\abs{k}^2},
+\]
+and the moment terms by
+\[
+4\pi^2\abs{k}^2\e^{-16t\abs{k}^2}.
+\]
+Both dominating sequences are summable on \(\ZZ^d\). Dominated convergence proves the two limits. Their quotient gives spectral dimension convergence.
+\phantomsection\label{strong:proof:065:end}\end{proof}
+
+\begin{standardfact}[Theta transformation]\label{strong:standardfact:004}\label{strong:fact:theta_transform}
+The continuum flat torus heat trace satisfies
+\[
+Z_d(t)
+=
+\sum_{k\in\ZZ^d}\e^{-4\pi^2t\abs{k}^2}
+=
+(4\pi t)^{-d/2}
+\sum_{n\in\ZZ^d}\e^{-\abs{n}^2/(4t)}.
+\]
+This is the Poisson summation formula for a Gaussian.
+\end{standardfact}
+
+\begin{theorem}[Continuum torus small time dimension]\label{strong:theorem:041}\label{strong:thm:continuum_dimension}
+Let
+\[
+d_{\rm torus}(t)
+=-2\frac{\dd\log Z_d(t)}{\dd\log t}.
+\]
+Then
+\[
+d_{\rm torus}(t)
+=
+ d+O\left(t^{-1}\e^{-1/(4t)}\right)
+\]
+as \(t\downarrow0\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:066}
+By \cref{strong:fact:theta_transform},
+\[
+Z_d(t)
+=(4\pi t)^{-d/2}(1+R(t)),
+\]
+where
+\[
+R(t)=\sum_{n\neq0}\e^{-\abs{n}^2/(4t)}
+=O\bigl(\e^{-1/(4t)}\bigr).
+\]
+Differentiation gives
+\[
+tR'(t)=O\left(t^{-1}\e^{-1/(4t)}\right).
+\]
+Substituting this estimate into the logarithmic derivative gives the stated small time expansion.
+\phantomsection\label{strong:proof:066:end}\end{proof}
+
+\begin{corollary}[Rigorous intermediate dimension window]\label{strong:corollary:015}\label{strong:cor:dimension_window}
+For every \(\varepsilon>0\), there is a diffusion time \(t_\varepsilon>0\) and an integer \(N_\varepsilon\) such that
+\[
+\abs{d_{L_N}(t_\varepsilon)-d}<\varepsilon
+\]
+for every \(N\geq N_\varepsilon\).
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:067}
+Choose \(t_\varepsilon\) so that \cref{strong:thm:continuum_dimension} is within \(\varepsilon/2\) of \(d\). Then apply \cref{strong:thm:heat_trace_convergence} to choose \(N_\varepsilon\) so that the discrete spectral dimension is within \(\varepsilon/2\) of the continuum value.
+\phantomsection\label{strong:proof:067:end}\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.78\textwidth]{13_spectral_dimension.pdf}
+\caption{Finite periodic lattices show an intermediate dimension window. The ultraviolet and infrared limits return to zero because the state space is finite.}
+\label{strong:fig:spectral_dimension}
+\end{figure}
+
+The order of limits matters. Taking \(t\downarrow0\) at fixed \(N\) gives zero. Taking \(N\to\infty\) at fixed positive \(t\), then taking \(t\downarrow0\), gives the continuum dimension.
+
+\section{Constraint closure and anomaly packets}\label{strong:section:012}\label{strong:sec:constraints}
+
+Let \(C_1,\ldots,C_m\) be self adjoint constraint operators on a finite dimensional Hilbert space. The distinction between constraint action and constraint closure is standard in constrained Hamiltonian theory \cite{Dirac1964,HenneauxTeitelboim1992}. Write
+\[
+\mathfrak c=\operatorname{span}_{\CC}\{C_1,\ldots,C_m\}
+\subseteq\End(\Hcal).
+\]
+
+\begin{definition}[Universal closure obstruction]\label{strong:definition:009}\label{strong:def:closure_obstruction}
+Let
+\[
+q_{\mathfrak c}:\End(\Hcal)\longrightarrow\End(\Hcal)/\mathfrak c
+\]
+be the quotient map. Define
+\[
+\Ob_{ab}^{\rm cl}
+=
+q_{\mathfrak c}([C_a,C_b]).
+\]
+\end{definition}
+
+\begin{theorem}[Finite constraint closure criterion]\label{strong:theorem:042}\label{strong:thm:constraint_closure}
+The constraint span \(\mathfrak c\) is closed under commutators exactly when
+\[
+\Ob_{ab}^{\rm cl}=0
+\]
+for all \(a,b\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:068}
+The quotient class vanishes exactly when \([C_a,C_b]\in\mathfrak c\). This holds for every pair exactly when \(\mathfrak c\) is a Lie algebra under the commutator.
+\phantomsection\label{strong:proof:068:end}\end{proof}
+
+If structure coefficients \(f_{ab}^{\phantom{ab}c}\) are prescribed, define the fixed structure anomaly
+\[
+\mathfrak A_{ab}
+=
+[C_a,C_b]
+-\ii\sum_cf_{ab}^{\phantom{ab}c}C_c.
+\]
+Exact realization of the prescribed algebra is the stronger condition \(\mathfrak A_{ab}=0\).
+
+\begin{proposition}[Physical compression is not a closure test]\label{strong:proposition:011}\label{strong:prop:physical_compression_trivial}
+Let
+\[
+\Hcal_{\phys}=\bigcap_a\Ker C_a
+\]
+and let \(P_{\phys}\) be its orthogonal projector. Then
+\[
+P_{\phys}[C_a,C_b]P_{\phys}=0
+\]
+for every pair \(a,b\), whether or not the constraint span closes.
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:069}
+Self adjointness and \(C_aP_{\phys}=0\) give \(P_{\phys}C_a=0\). Both terms in the compressed commutator therefore vanish.
+\phantomsection\label{strong:proof:069:end}\end{proof}
+
+The quotient in \cref{strong:def:closure_obstruction} is needed because closure concerns the operator algebra. Compression to physical states tests only the action on the common kernel, where the constraints already vanish.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{15_constraint_obstruction.pdf}
+\caption{The closure obstruction lives in a quotient by the constraint span. Physical compression is automatic for self adjoint constraints and cannot replace this quotient.}
+\label{strong:fig:constraint_obstruction}
+\end{figure}
+
+\begin{theorem}[Invariance of the physical space]\label{strong:theorem:043}\label{strong:thm:physical_invariance}
+Let \(H=H^*\). Suppose
+\[
+[H,C_a]
+=
+\sum_cb_a^{\phantom a c}C_c
+\]
+for every \(a\). Then \(H\) preserves \(\Hcal_{\phys}\), and so does \(\e^{-\ii tH}\) for every real \(t\).
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:070}
+For \(\psi\in\Hcal_{\phys}\),
+\[
+C_aH\psi
+=HC_a\psi-[H,C_a]\psi
+=0.
+\]
+Thus \(H\psi\in\Hcal_{\phys}\). The exponential preserves every invariant finite dimensional subspace.
+\phantomsection\label{strong:proof:070:end}\end{proof}
+
+\subsection{Constraint refinement}\label{strong:subsec:constraint_refinement}
+
+Let \((\Hcal_\ell,C_{\ell,a})\) and \((\Hcal_{\ell+1},C_{\ell+1,a})\) be two levels, and let
+\[
+R_\ell:\Hcal_\ell\longrightarrow\Hcal_{\ell+1}
+\]
+be an isometry.
+
+\begin{theorem}[Exact constraint transport]\label{strong:theorem:044}\label{strong:thm:constraint_transport}
+Assume
+\[
+C_{\ell+1,a}R_\ell=R_\ell C_{\ell,a}
+\]
+for every \(a\). Then
+\[
+[C_{\ell+1,a},C_{\ell+1,b}]R_\ell
+=
+R_\ell[C_{\ell,a},C_{\ell,b}].
+\]
+If the same structure coefficients are used at both levels, then
+\[
+\mathfrak A_{\ell+1,ab}R_\ell
+=
+R_\ell\mathfrak A_{\ell,ab}.
+\]
+The isometry maps coarse physical states into fine physical states.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:071}
+Apply the intertwining identity twice to each product in the commutator. The anomaly identity follows by subtracting the same linear combination of constraints. If \(C_{\ell,a}\psi=0\), then
+\[
+C_{\ell+1,a}R_\ell\psi=R_\ell C_{\ell,a}\psi=0.
+\]
+\phantomsection\label{strong:proof:071:end}\end{proof}
+
+\begin{proposition}[Approximate constraint transport]\label{strong:proposition:012}\label{strong:prop:approx_constraint_transport}
+Assume
+\[
+\norm{C_{\ell+1,a}R_\ell-R_\ell C_{\ell,a}}
+\leq\varepsilon_a
+\]
+and
+\[
+\norm{C_{\ell,a}},\norm{C_{\ell+1,a}}\leq M.
+\]
+Then a coarse physical unit vector \(\psi\) satisfies
+\[
+\norm{C_{\ell+1,a}R_\ell\psi}\leq\varepsilon_a.
+\]
+Also,
+\[
+\begin{aligned}
+&\norm{
+[C_{\ell+1,a},C_{\ell+1,b}]R_\ell
+-R_\ell[C_{\ell,a},C_{\ell,b}]
+}\\
+&\hspace{4em}\leq
+2M(\varepsilon_a+\varepsilon_b).
+\end{aligned}
+\]
+\end{proposition}
+
+\begin{proof}\phantomsection\label{strong:proof:072}
+The first claim follows by applying the intertwining defect to \(\psi\). Write
+\[
+E_a=C_{\ell+1,a}R_\ell-R_\ell C_{\ell,a}.
+\]
+Expanding the two commutators gives four error terms:
+\[
+E_aC_{\ell,b},
+\quad
+C_{\ell+1,a}E_b,
+\quad
+-E_bC_{\ell,a},
+\quad
+-C_{\ell+1,b}E_a.
+\]
+The triangle inequality and the stated bounds on the constraints and defects give the claimed estimate.
+\phantomsection\label{strong:proof:072:end}\end{proof}
+
+Approximate transport controls finite violations. It does not turn a nonzero anomaly into an exact continuum algebra without a limit theorem and a common operator domain.
+
+\section{Quantum refinement towers}\label{strong:section:013}\label{strong:sec:towers}
+
+\begin{definition}[Finite quantum refinement tower]\label{strong:definition:010}\label{strong:def:quantum_tower}
+A finite quantum refinement tower consists of Hilbert spaces \(\Hcal_\ell\), isometries
+\[
+R_\ell:\Hcal_\ell\longrightarrow\Hcal_{\ell+1},
+\]
+self adjoint Hamiltonians \(H_\ell\), packet projectors \(P_{\ell,a}\), constraints \(C_{\ell,r}\), and positive transfer operators \(T_\ell\). Exact compatibility means that every declared object intertwines with \(R_\ell\). Approximate compatibility is recorded by the corresponding operator norm defects.
+\end{definition}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{14_continuum_tower.pdf}
+\caption{A refinement tower carries Hamiltonians, packets, constraints, and transfer data. Each family has its own compatibility defect.}
+\label{strong:fig:continuum_tower}
+\end{figure}
+
+\subsection{Exact bounded direct limits}\label{strong:subsec:exact_direct_limit}
+
+Let \(\Hcal_\infty\) be the Hilbert direct limit of the isometric system, and let
+\[
+\iota_\ell:\Hcal_\ell\longrightarrow\Hcal_\infty
+\]
+be the canonical isometries.
+
+\begin{theorem}[Bounded Hamiltonian direct limit]\label{strong:theorem:045}\label{strong:thm:bounded_direct_limit}
+Assume
+\[
+H_{\ell+1}R_\ell=R_\ell H_\ell
+\]
+and
+\[
+\sup_\ell\norm{H_\ell}<\infty.
+\]
+Then there is a unique bounded self adjoint operator \(H_\infty\) on \(\Hcal_\infty\) such that
+\[
+H_\infty\iota_\ell=\iota_\ell H_\ell
+\]
+for every \(\ell\). It satisfies
+\[
+\e^{-\ii tH_\infty}\iota_\ell
+=
+\iota_\ell\e^{-\ii tH_\ell}
+\]
+and
+\[
+\e^{-tH_\infty}\iota_\ell
+=
+\iota_\ell\e^{-tH_\ell}
+\]
+when the Hamiltonians are nonnegative.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:073}
+Define \(H_\infty\) on the algebraic union of the embedded levels by
+\[
+H_\infty\iota_\ell x=\iota_\ell H_\ell x.
+\]
+Compatibility makes the definition independent of the chosen level. The uniform norm bound makes the operator bounded on the dense union, so it extends uniquely to the completion. It is symmetric because every \(H_\ell\) is self adjoint. A bounded symmetric operator defined on the whole Hilbert space is self adjoint. The functional calculus intertwining follows first for polynomials and then for exponentials by uniform convergence.
+\phantomsection\label{strong:proof:073:end}\end{proof}
+
+\begin{theorem}[Exact packet direct limit]\label{strong:theorem:046}\label{strong:thm:packet_direct_limit}
+Assume the packet families have one fixed finite address set at every level and each packet address \(a\) is compatible in the sense
+\[
+P_{\ell+1,a}R_\ell=R_\ell P_{\ell,a}.
+\]
+Then there is an orthogonal projector \(P_{\infty,a}\) on \(\Hcal_\infty\) satisfying
+\[
+P_{\infty,a}\iota_\ell=\iota_\ell P_{\ell,a}.
+\]
+Finite completeness and orthogonality pass to the direct limit.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:074}
+Use the same construction as in \cref{strong:thm:bounded_direct_limit}. Every projector has norm at most one, so no additional boundedness assumption is needed. The projector identities hold on the dense algebraic union and hence on the completion.
+\phantomsection\label{strong:proof:074:end}\end{proof}
+
+\subsection{Norm summable approximation}\label{strong:subsec:norm_summable}
+
+The next theorem places all approximating Hamiltonians on a common Hilbert space. It applies to bounded effective Hamiltonians. An unbounded field Hamiltonian requires a different convergence argument.
+
+\begin{theorem}[Norm summable Hamiltonian tower]\label{strong:theorem:047}\label{strong:thm:norm_summable_tower}
+Let \((H_n)\) be bounded self adjoint operators on one Hilbert space and assume
+\[
+\sum_{n=0}^{\infty}\norm{H_{n+1}-H_n}<\infty.
+\]
+Then \(H_n\) converges in norm to a bounded self adjoint operator \(H\). For every \(T>0\),
+\[
+\sup_{\abs t\leq T}
+\norm{\e^{-\ii tH_n}-\e^{-\ii tH}}
+\leq
+T\norm{H_n-H}.
+\]
+If every \(H_n\geq0\), then
+\[
+\sup_{0\leq t\leq T}
+\norm{\e^{-tH_n}-\e^{-tH}}
+\leq
+T\norm{H_n-H}.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:075}
+The summability condition makes \((H_n)\) Cauchy in operator norm. The limit is self adjoint. Duhamel's identity gives
+\[
+\e^{-\ii tH_n}-\e^{-\ii tH}
+=-\ii\int_0^t
+\e^{-\ii(t-s)H_n}(H_n-H)\e^{-\ii sH}\dd s.
+\]
+Both unitary factors have norm one, which gives the first estimate. The same argument gives the Euclidean estimate because the semigroups generated by nonnegative Hamiltonians are contractions.
+\phantomsection\label{strong:proof:075:end}\end{proof}
+
+\begin{corollary}[Limit of packet leakage]\label{strong:corollary:016}\label{strong:cor:limit_leakage}
+Let \(P_n\) be orthogonal projectors and \(H_n\) bounded self adjoint operators on one Hilbert space, with \(P_n\to P\) and \(H_n\to H\) in norm. Then for every bounded time interval,
+\[
+(I-P_n)\e^{-\ii tH_n}P_n
+\longrightarrow
+(I-P)\e^{-\ii tH}P
+\]
+uniformly in time.
+\end{corollary}
+
+\begin{proof}\phantomsection\label{strong:proof:076}
+Add and subtract terms so that one factor changes at a time. The projector terms converge uniformly because \(P_n\to P\) in norm. Duhamel's identity gives
+\[
+\sup_{\abs t\leq T}
+\norm{\e^{-\ii tH_n}-\e^{-\ii tH}}
+\leq
+T\norm{H_n-H},
+\]
+which proves uniform convergence of the middle factor.
+\phantomsection\label{strong:proof:076:end}\end{proof}
+
+\begin{theorem}[Reflection positivity is closed under limits]\label{strong:theorem:048}\label{strong:thm:reflection_limit}
+Suppose \(C_n(j,k)\) are reflection positive kernels on \(\NN\), meaning every finite matrix
+\[
+\bigl(C_n(j_r,j_s)\bigr)_{r,s}
+\]
+is positive semidefinite. If
+\[
+C_n(j,k)\longrightarrow C(j,k)
+\]
+for every pair, then \(C\) is reflection positive.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:077}
+For a fixed finite set of times and coefficients, the corresponding quadratic forms are nonnegative and converge to the quadratic form of \(C\). The limit is nonnegative.
+\phantomsection\label{strong:proof:077:end}\end{proof}
+
+\begin{theorem}[Constraint closure under norm convergence]\label{strong:theorem:049}\label{strong:thm:constraint_limit}
+Let \(C_{n,a}\to C_a\) in norm for every \(a\), and fix structure coefficients \(f_{ab}^{\phantom{ab}c}\). If
+\[
+\norm{
+[C_{n,a},C_{n,b}]
+-\ii\sum_cf_{ab}^{\phantom{ab}c}C_{n,c}
+}
+\longrightarrow0,
+\]
+then
+\[
+[C_a,C_b]
+=\ii\sum_cf_{ab}^{\phantom{ab}c}C_c.
+\]
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:078}
+Operator multiplication and the commutator are continuous in operator norm. Pass to the limit in the anomaly identity.
+\phantomsection\label{strong:proof:078:end}\end{proof}
+
+\begin{theorem}[Heat trace convergence from trace norm]\label{strong:theorem:050}\label{strong:thm:trace_norm_heat}
+Let \(L_n,L\) be nonnegative self adjoint operators on one Hilbert space. For a fixed \(t>0\), assume their heat operators are trace class and that
+\[
+\e^{-tL_n}\longrightarrow\e^{-tL}
+\]
+in trace norm. Then
+\[
+\Tr(\e^{-tL_n})\longrightarrow\Tr(\e^{-tL}).
+\]
+If also the heat moment operators are trace class and
+\[
+L_n\e^{-tL_n}\longrightarrow L\e^{-tL}
+\]
+in trace norm and the limiting heat trace is nonzero, then the spectral dimensions defined by the heat moment ratio converge at that time.
+\end{theorem}
+
+\begin{proof}\phantomsection\label{strong:proof:079}
+The trace is continuous in trace norm. Apply this to the heat operators and to the first heat moments, then take the quotient in \cref{strong:def:spectral_dimension}.
+\phantomsection\label{strong:proof:079:end}\end{proof}
+
+\begin{remark}\label{strong:remark:003}\label{strong:rem:unbounded_limit}
+The theorems above produce bounded continuum Hamiltonians. A physically useful continuum Hamiltonian is often unbounded. Its construction generally requires strong resolvent convergence, convergence of closed quadratic forms, or another method that controls operator domains \cite{Kato1995,ReedSimon1972}. None of those conclusions follows from finite matrix convergence without additional hypotheses.
+\end{remark}
+
+\section{Continuum milestones and exact boundary}\label{strong:section:014}\label{strong:sec:boundary}
+
+The finite theorems establish exact identities and criteria for bounded limits. Passing from a finite transfer model to a continuum theory still requires several separate arguments. This section states those remaining mathematical tasks.
+
+\begin{definition}[Anomaly free continuum constraint system]\label{strong:definition:011}\label{strong:def:anomaly_free_continuum}
+A continuum constraint system consists of a Hilbert space, a common invariant dense domain \(\Dcal\), and operators \(C_a\) on \(\Dcal\). It is anomaly free for prescribed structure coefficients when
+\[
+[C_a,C_b]\psi
+=
+\ii\sum_cf_{ab}^{\phantom{ab}c}C_c\psi
+\]
+for every \(\psi\in\Dcal\), and when the associated gauge evolution is defined on the physical quotient or physical subspace.
+\end{definition}
+
+Norm closure of bounded finite constraints, as in \cref{strong:thm:constraint_limit}, is one special case. It does not treat unbounded constraints, changing domains, structure functions, or renormalized operator products.
+
+\begin{definition}[Reflection positive Euclidean limit]\label{strong:definition:012}\label{strong:def:reflection_positive_limit}
+A reflection positive Euclidean limit requires a limiting algebra of observables, Euclidean time translations, a reflection operation, and correlation functions whose reflected quadratic forms are nonnegative. A field theoretic reconstruction also requires the regularity and covariance assumptions needed to construct a Hilbert space, a vacuum, and a self adjoint time translation generator.
+\end{definition}
+
+\Cref{strong:thm:reflection_limit} shows that positivity of each fixed finite Gram matrix survives pointwise convergence. It does not prove existence, locality, clustering, or the remaining Osterwalder--Schrader axioms.
+
+\begin{definition}[Einstein infrared criterion]\label{strong:definition:013}\label{strong:def:einstein_criterion}
+A quantum geometric tower meets an Einstein infrared criterion only if an effective action is controlled at long wavelengths and has an expansion whose leading geometric terms take the form
+\[
+\Gamma_{\rm eff}[g]
+=
+\int
+\sqrt{\abs g}
+\left(
+\Lambda
++
+\frac{1}{16\pi G}R
++
+\text{controlled higher order terms}
+\right)
+\dd^dx.
+\]
+Here the volume coefficient includes the sign and normalization written explicitly in the cosmological term in Part I. The expansion must respect the limiting gauge identities and must include an estimate for the omitted terms on the declared infrared regime.
+\end{definition}
+
+A spectral dimension close to four does not imply this criterion. A heat trace records eigenvalue growth. It does not determine the tensor structure, gauge identities, sign, or interaction coefficients of an effective action.
+
+\begin{definition}[Massless spin two criterion]\label{strong:definition:014}\label{strong:def:spin_two_criterion}
+A positive massless spin two sector requires a physical two point function or resolvent with a massless pole in the transverse traceless sector, positive residue on physical states, absence of negative norm modes, and compatibility with the limiting gauge constraints. Interactions must preserve the constraint structure.
+\end{definition}
+
+A low energy eigenvalue, a spectral dimension plateau, or a finite rank two tensor packet does not establish a massless spin two particle.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.96\textwidth]{16_continuum_boundary.pdf}
+\caption{The finite identities occupy the first step. Every later step needs a separate convergence or reconstruction theorem.}
+\label{strong:fig:continuum_boundary}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{>{\raggedright\arraybackslash}p{.25\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.34\textwidth}}
+\toprule
+Milestone & Finite result available here & Missing continuum input \\
+\midrule
+Symmetry and constraints & exact packets and quotient obstruction & common unbounded domain and renormalized closure \\
+Effective dynamics & exact Feshbach map and uniform gap bounds & cutoff independent spectral separation and locality \\
+Euclidean transfer & positive finite transfer and finite reflection positivity & convergent Euclidean fields and reconstruction axioms \\
+Spectral dimension & lattice heat trace convergence & relation to a physical metric and interacting observables \\
+Lorentzian theory & bounded unitary direct limits & unbounded generator, causality, locality, and field algebra \\
+Einstein regime & a definition of the required expansion & derivation and error control for the effective action \\
+Spin two sector & a precise spectral criterion & positive physical pole and interaction consistency \\
+\bottomrule
+\end{tabular}
+\caption{What the finite results establish and what remains outside the article.}
+\label{strong:tab:continuum_milestones}
+\end{table}
+
+\section{Conclusion}\label{strong:section:015}\label{strong:sec:conclusion}
+
+A complete packet family gives one coordinate language for finite quantum structure. Group characters produce symmetry packets. Charged operators obey exact selection rules. Circuits become coherent sums over packet paths. The canonical moving connection separates geometric transport from physical mixing. Density matrices and channels use two sided packets, while channel covariance becomes block preservation on operator space and symmetry of the Choi matrix.
+
+Compression to a code gives a natural error correction obstruction. Its vanishing is the Knill--Laflamme condition. Diagonalizing the resulting coefficient matrix produces orthogonal syndrome packets and an exact recovery on the error span. Schur--Feshbach elimination gives an equally exact description of hidden Hamiltonian packets. Their frequency response is the self energy, and their time response is a positive definite memory kernel.
+
+Positive Euclidean transfer gives finite reflection positivity. Periodic lattice heat traces converge to the continuum torus at every fixed positive diffusion time, and the continuum small time spectral dimension is recovered after the refinement limit. Constraint closure is measured by a quotient of operator space, not by compression to the physical kernel.
+
+The theorems for bounded towers show how exact compatibility and summable differences in operator norm produce limiting quantum evolutions. Their hypotheses also mark the scope of the argument. Unbounded field Hamiltonians, continuum gauge constraints, reflection positive field measures, the Einstein infrared action, and a massless spin two sector each require additional theorems. The finite packet calculus gives a common framework in which those questions can be stated and studied, while leaving their physical resolution open.
+
+

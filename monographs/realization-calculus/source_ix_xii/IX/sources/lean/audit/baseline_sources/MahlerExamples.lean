@@ -1,0 +1,101 @@
+module
+
+public import UnitModeDifferences
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+
+namespace KomorebiPaperIX.MahlerExamples
+
+open Mahler PadicBounds UnitModes
+
+/-- A small polynomial anchors the actual forward-difference convention. -/
+theorem square_coefficients :
+    coefficient (fun n : ℕ => (n:ℤ)^2) 0 = 0 ∧
+    coefficient (fun n : ℕ => (n:ℤ)^2) 1 = 1 ∧
+    coefficient (fun n : ℕ => (n:ℤ)^2) 2 = 2 ∧
+    coefficient (fun n : ℕ => (n:ℤ)^2) 3 = 0 := by
+  norm_num [coefficient, difference_explicit, Finset.sum_range_succ, Nat.choose]
+
+theorem square_reconstructed : interpolant 2 (coefficient (fun n : ℕ => (n:ℤ)^2)) 7 = 49 := by
+  obtain ⟨h0,h1,h2,_⟩ := square_coefficients
+  norm_num [interpolant, Finset.sum_range_succ, h0,h1,h2, Nat.choose]
+
+/-- Agreement at the only supplied sample does not determine the next difference. -/
+theorem finite_sample_boundary :
+    (∀ n : ℕ, n ≤ 0 → (n:ℤ) = 0) ∧
+    difference 1 1 (fun n : ℕ => (n:ℤ)) 0 ≠ difference 1 1 (fun _ : ℕ => (0:ℤ)) 0 := by
+  constructor
+  · intro n hn
+    have hn0 : n = 0 := by omega
+    simp [hn0]
+  · norm_num
+
+/-- The degree-zero interpolant is not an arbitrary continuation of the sampled function. -/
+theorem unrestricted_interpolant_difference_false :
+    difference 1 1 (fun n : ℕ => (n:ℤ)) 0 ≠
+      difference 1 1 (interpolant 0 (coefficient (fun n : ℕ => (n:ℤ)))) 0 := by
+  norm_num [interpolant, coefficient]
+
+/-- Positive differences of a constant have infinite extended valuation. -/
+theorem constant_mode_zero (p : ℕ) [Fact p.Prime] (s n : ℕ) (hs : 0 < s) :
+    difference (p-1) s (fun _ : ℕ => (1:ℤ_[p])) n = 0 := by
+  have h := geometric_difference (1:ℤ_[p]) (p-1) s n
+  simpa [Nat.ne_of_gt hs] using h
+
+theorem constant_mode_infinite_valuation (p : ℕ) [Fact p.Prime] (s n : ℕ) (hs : 0 < s) :
+    order p (difference (p-1) s (fun _ : ℕ => (1:ℤ_[p])) n) = ⊤ := by
+  rw [constant_mode_zero p s n hs, order_zero]
+
+/-- Nonunits cannot be admitted to the unit-mode gain theorem. -/
+theorem nonunit_mode_counterexample : ¬ (3:ℤ) ∣ difference 2 1 (fun n : ℕ => (3:ℤ)^n) 0 := by
+  norm_num
+
+/-- Fermat-step multipliers can attain exactly one gain per difference. -/
+theorem unit_mode_sharp_integer_example :
+    difference 4 2 (fun n : ℕ => (2:ℤ)^n) 0 = 225 ∧
+    (5:ℤ)^2 ∣ difference 4 2 (fun n : ℕ => (2:ℤ)^n) 0 ∧
+    ¬ (5:ℤ)^3 ∣ difference 4 2 (fun n : ℕ => (2:ℤ)^n) 0 := by
+  rw [geometric_difference]
+  norm_num
+
+/-- A finite coefficient family in which the binomial valuations improve the minimum. -/
+def weightedCoefficients (r : ℕ) : ℤ :=
+  if r=2 ∨ r=3 then 3 else if r=1 ∨ r=4 then 81 else 0
+
+def exampleWeight (r : ℕ) : WithTop ℕ :=
+  if r=2 ∨ r=3 then 1 else if r=1 ∨ r=4 then 4 else ⊤
+
+theorem weighted_example_difference :
+    difference 1 1 (interpolant 4 weightedCoefficients) 3 = 180 := by
+  norm_num [interpolant, weightedCoefficients, Finset.sum_range_succ, Nat.choose]
+
+theorem weighted_example_sharp :
+    (3:ℤ)^2 ∣ difference 1 1 (interpolant 4 weightedCoefficients) 3 ∧
+    ¬ (3:ℤ)^3 ∣ difference 1 1 (interpolant 4 weightedCoefficients) 3 := by
+  rw [weighted_example_difference]
+  norm_num
+
+theorem weighted_example_padic_difference :
+    difference 1 1 (interpolant 4 (fun r => (weightedCoefficients r : ℤ_[3]))) 3 = 180 := by
+  norm_num [interpolant, weightedCoefficients, Finset.sum_range_succ, Nat.choose]
+
+theorem weighted_example_padic_valuation :
+    order 3 (difference 1 1 (interpolant 4 (fun r => (weightedCoefficients r : ℤ_[3]))) 3) = 2 := by
+  rw [weighted_example_padic_difference]
+  change order 3 ((180:ℕ):ℤ_[3]) = 2
+  rw [order_natCast 3 180 (by decide)]
+  have h180 : padicValNat 3 180 = 2 := by
+    rw [show (180:ℕ)=3^2*20 by decide,
+      padicValNat.mul (by decide : (3^2:ℕ) ≠ 0) (by decide : (20:ℕ) ≠ 0),
+      padicValNat.prime_pow]
+    norm_num [padicValNat.eq_zero_of_not_dvd]
+  rw [h180]
+  rfl
+
+theorem weighted_example_bound : weightedBound 3 exampleWeight 3 1 = 2 := by
+  norm_num [weightedBound, exampleWeight, Finset.range_add_one, Finset.inf_insert,
+    Finset.inf_singleton, Finset.inf_empty, Nat.choose]
+
+end KomorebiPaperIX.MahlerExamples

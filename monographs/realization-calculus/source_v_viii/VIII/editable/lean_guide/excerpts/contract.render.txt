@@ -1,0 +1,7 @@
+theorem contract_conversion \CodeChar{123}X C Y : Type*\CodeChar{125} (compressed : X → C) (explicit : X → Y)
+    (decode : C → Y) (runTime : X → ℝ) (decodeTime : C → ℝ)
+    (hdecode : ∀ x, decode (compressed x) = explicit x) (x : X) :
+    (decodedRun compressed decode runTime decodeTime x).1 = explicit x ∧
+    (decodedRun compressed decode runTime decodeTime x).2 =
+      runTime x + decodeTime (compressed x) := by
+  exact ⟨hdecode x, rfl⟩

@@ -1,0 +1,28 @@
+theorem holder_estimate (p : ℝ≥0) (hp : (p:ℝ)∈Ioo 0 1)
+    (A : E →L[ℂ] E) (B : F →L[ℂ] F) (C : E →L[ℂ] F) (hA : 0 ≤ A) (hB : 0 ≤ B) :
+    ‖fractionalDefect A B C p‖ ≤
+      FractionalNormBounds.holderConstant p*‖C‖^(1-(p:ℝ))*‖defect A B C‖^(p:ℝ) := by
+  by_cases hc : C=0
+  · subst C
+    simp [fractionalDefect,defect,Real.zero_rpow hp.1.ne']
+  by_cases hd : defect A B C=0
+  · have he := exact_fractional_intertwining p hp A B C hA hB hd
+    rw [he,norm_zero,hd]
+    simp [Real.zero_rpow hp.1.ne']
+  have hcn : 0 < ‖C‖ := norm_pos_iff.mpr hc
+  have hdn : 0 < ‖defect A B C‖ := norm_pos_iff.mpr hd
+  have hf := normalized_integral p hp A B C hA hB
+  have hk : 0 < coefficient p := BetaNormalization.sine_factor_positive p hp
+  have hbound := FractionalScalarBounds.split_norm_bound (integrand A B C p) p (2*‖C‖) ‖defect A B C‖
+    (‖defect A B C‖/(2*‖C‖)) hp (by positivity) hf.1
+    (fun t ht => low_bound p t hp ht A B C hA hB)
+    (fun t ht => high_bound p t ht hp A B C hA hB)
+  rw [FractionalScalarBounds.optimize_split p (2*‖C‖) ‖defect A B C‖ hp (by positivity) hdn] at hbound
+  rw [hf.2,norm_smul,Real.norm_of_nonneg hk.le]
+  calc
+    _ ≤ coefficient p*((2*‖C‖)^(1-(p:ℝ))*‖defect A B C‖^(p:ℝ)/((p:ℝ)*(1-(p:ℝ)))) :=
+      mul_le_mul_of_nonneg_left hbound hk.le
+    _ = _ := by
+      rw [Real.mul_rpow (by norm_num : (0:ℝ) ≤ 2) (norm_nonneg C)]
+      unfold FractionalNormBounds.holderConstant
+      ring

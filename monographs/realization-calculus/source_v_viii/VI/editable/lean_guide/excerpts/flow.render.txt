@@ -1,0 +1,10 @@
+theorem flow_derivative (p g : I → ℝ) (hp : IsProbability p) (t : ℝ) (i : I) :
+    HasDerivAt (fun u => flow p g u i)
+      ((g i-(∑ j, g j*flow p g t j))*flow p g t i) t := by
+  have hz := (positive_evidence p g hp t).ne'
+  have hd := ((likelihood_derivative g t i).mul_const (p i)).div
+    (evidence_derivative p g t) hz
+  convert! hd using 1
+  simp only [flow, update]
+  simp only [← mul_div_assoc, ← Finset.sum_div]
+  field_simp

@@ -1,0 +1,26 @@
+\section{Transfer paths, inverses, and acyclic solves}
+\subsection{A path expansion covers length zero}
+\contract{\code{TransferSupport} uses a finite packet family in a ring. \code{TransferPath P A n b a} records a path of exactly \(n\) active edges, from source \(a\) to target \(b\).}
+\excerpt{}{power_paths}
+\walk{Induct on the exponent. At length zero, the identity block is a projector on the diagonal and zero off the diagonal. At a successor, use block composition and the induction hypothesis for each intermediate packet. A zero first edge contributes nothing, while a nonzero first edge extends a path. The result is an exact sum of path products, so cancellation still allows its support inclusion to be strict.}
+\excerpt{}{nilpotent}
+\walk{If no pair has a path of the stated length, every block of that power is zero. Reconstruction then forces the whole power to be zero. The level-based version derives a path bound from a supplied strict level function. It does not assume that nonzero paths always survive in the operator.}
+
+\subsection{Inverse support uses finite dimensionality}
+\contract{The inverse-support module has a field \code{K}, a \code{K}-algebra \code{R}, and \code{FiniteDimensional K R}. It defines the subspace of elements with zero components at every packet unreachable from the starting packet. Reachability includes zero-length paths.}
+\excerpt{}{inverse_support}
+\walk{The source first proves that the forward multiplication by \code{A} preserves the reachable subspace. A left inverse makes that restricted map injective, and finite dimensionality makes it surjective. The helper \code{invariant_space_inverse} therefore shows that multiplication by \code{B} preserves the same subspace. Apply it to the seed projector and read its unreachable component. The matrix specialization supplies the relevant inverse hypothesis from matrix invertibility. No inverse sparsity pattern is assumed.}
+
+\subsection{Schur fill follows routes through eliminated packets}
+\excerpt{}{schur_support}
+\walk{The premise is a nonzero block of the actual Schur complement \(A-BH^{-1}C\). If the original \(A\)-block is nonzero, the first alternative applies. Otherwise, the correction block must be nonzero. Expand it through the eliminated packet family and use inverse support: a surviving term has an incoming block, a route through \(H\), and an outgoing block. The determinant-unit premise establishes invertibility of \(H\). The conclusion allows fill. It does not say every route creates a nonzero fill block.}
+
+\subsection{The graph level is constructed}
+\code{DAG.Graph} contains a finite edge relation and the hypothesis that no vertex lies on a nonempty directed cycle. The source proves that the ancestor set strictly grows along an edge. Its finite cardinality gives a well-founded recursion. The resulting level is one plus the maximum predecessor level. Sources start at level one. The empty graph's maximum and depth are zero.
+\excerpt{}{schedule_depth}
+\walk{The earlier \code{level_minimal} theorem proves by well-founded induction that the constructed level is no later than any positive valid schedule at each vertex. Taking the finite maximum yields the displayed lower bound. Separate declarations prove the level schedule valid and its maximum attained by a path, so the construction is optimal in the unit-duration, unrestricted-parallelism model. Device resources, variable task durations, and launch overhead are outside that model.}
+
+\subsection{Actual forward substitution in dependent block spaces}
+For each vertex \(v\), \code{X v} is its block space. Unequal block dimensions are allowed. \code{D v : X v ≃ₗ[K] X v} is an invertible linear map, and \code{T b a} is a linear transfer from the source space to the target space. The action sums only graph edges.
+\excerpt{}{solve_correct}
+\walk{The constructed \code{solve} uses well-founded forward substitution, applying \code{(D v).symm} to the right-hand side minus previously solved transfers. Function extensionality chooses one vertex. Rewrite the solve equation, cancel the inverse linear equivalence, then add back the transfer sum. Uniqueness is a separate well-founded induction over the same graph. The staged solver is separately proved correct through each level. The theorem begins with no assumed solution or solve equation.}

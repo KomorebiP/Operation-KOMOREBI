@@ -1,0 +1,30 @@
+\section{Compatible integer towers and p-adic endpoints}\label{sec:towers}
+\subsection{The tower is constructed, not supplied}
+\contract{$q>0$, $L\ge1$, $F$ has integer coefficients, the starting point is a root modulo $q^L$, and its digit Jacobian over \code{ZMod q} is surjective. The theorem constructs a whole sequence $z_n$ of integer points.}
+\excerpt{Strong compatible tower}{tower}
+The theorem returns six pieces of information together. It fixes $z_0=x$; $F(z_n)$ vanishes modulo $q^{L+n}$; successive points differ by multiples of $q^{L+n}$; every later point agrees with an earlier point to that earlier depth; the digit Jacobian stays equal to the starting one; and surjectivity holds at every level. These statements keep existence, compatibility and smoothness separate.
+
+\walk{The basic tower theorem chooses a correcting digit at each step using digit-map surjectivity. The stronger endpoint adds pairwise congruence by summing compatible increments and identifies every digit Jacobian with the initial map. Polynomial partial derivatives have integer coefficients, so same residue modulo $q$ gives the same reduced derivative. Since $L\ge1$, all constructed points stay in that initial residue class.}
+
+The construction is allowed to use classical choice. It proves an actual infinite sequence in the mathematical model, but it is not presented as extracted executable code. A finite loop that finds digits for a few depths is useful bounded evidence; it does not replace the compatible-tower theorem.
+
+\subsection{Completeness changes the coefficient domain}
+For a prime $p$, cast $z_n$ coordinatewise into $\mathbb Z_p$. Pairwise congruence at depths tending to infinity makes the sequence Cauchy in each coordinate. Finite products of complete spaces are complete, so the vector sequence converges to a p-adic point $b$.
+
+\contract{$p$ is prime, $L\ge1$, and the same initial root and surjectivity hypotheses hold. The theorem returns the integer tower, its p-adic limit, an exact polynomial root, and the retained congruence of the limit to every tower stage.}
+\excerpt{Root together with its constructed tower}{padic_root}
+\walk{The source combines the integer tower theorem with the general p-adic tower-limit theorem. Polynomial evaluation is continuous, so $F(z_n)$ converges to $F(b)$. Its divisibility by arbitrarily large powers of $p$ forces its limit to zero. A fixed-depth congruence ball is closed, yielding the stronger precision statement $p^{L+n}\mid b-z_n$ for each fixed $n$.}
+
+This proof separates two limiting operations. Compatibility controls the input limit; increasing residual depth controls the output limit. Neither alone suffices: a convergent sequence of approximate points whose residual depth does not increase need not converge to an exact root.
+
+\subsection{Uniqueness requires a square solved system}
+\contract{The p-adic unique-root endpoint uses $d$ equations in $d$ unknowns and a surjective digit Jacobian, hence a bijective digit map over $\mathbb F_p$. It asserts uniqueness only in the initial depth-$L$ residue ball.}
+\excerpt{Unique root in the initial ball}{unique_root}
+\walk{Existence supplies one root. The uniqueness theorem compares any second root with that root by finite residues. At each successive depth, the digit equation has exactly one solution, so equal residues at the current depth imply equal residues at the next. Equality at all depths forces equality in $\mathbb Z_p$. The excerpt packages that comparison into \code{∃!}.}
+
+The uniqueness proof uses actual finite reductions of arbitrary p-adic roots, not an assumption that every candidate arose from the chosen integer tower. That distinction matters: uniqueness must quantify over every root in the specified ball. For a rectangular surjective system, the kernel has positive dimension and the same conclusion is generally false. The retained rectangular-uniqueness negative control guards this boundary.
+
+\subsection{Coefficient stability retains the promised precision}
+The deformation modules also compare a polynomial system with a coefficientwise congruent perturbation in the smooth, unit-Jacobian setting. Because evaluation preserves coefficient congruence at integral points, the original approximate root is an approximate root of the perturbed system. Its reduced Jacobian is unchanged when the coefficient perturbation has positive depth. The same smooth root theorem gives a nearby root, and the uniqueness comparison fixes the promised residue precision.
+
+This reasoning supplies a bound at the declared perturbation depth. It does not imply an additional free digit. A linear equation with its constant term shifted by exactly $p^M$ has its root shifted by exactly that precision. The retained \code{InvalidPerturbationExtraPrecision} control is based on that obstruction to strengthening the bound.

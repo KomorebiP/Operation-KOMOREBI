@@ -1,0 +1,203 @@
+\clearpage\FloatBarrier\section{Global small-core recompression from ordered thin SVD data}\label{supp6:section:001}
+This appendix derives global small-core recompression from actual compact ranges and supplied ordered thin-SVD equations. Optimality is proved against arbitrary ambient competitors.\par
+
+\subsection{Compact factors from actual column spaces}\label{supp6:subsection:001}\textit{Modules CompactRangeFactors and SmallCoreTransfer}\par
+Let
+\[
+L\in\C^{m\times t},\qquad R\in\C^{n\times t},\qquad A=LR^*.
+\]
+Use the ordinary Euclidean inner products on the coordinate spaces. Define
+\[
+S_L=\operatorname{range}(L),\quad r_L=\dim S_L,
+\qquad S_R=\operatorname{range}(R),\quad r_R=\dim S_R.
+\]
+The implementation constructs an orthonormal basis of each actual range subspace. Let $Q_L$ and $Q_R$ be the matrices of the corresponding isometric inclusions. Express the range-restricted input maps in these bases to obtain $R_L,R_R$.
+
+The checked identities are
+\[
+\boxed{Q_L^*Q_L=I,\quad L=Q_LR_L,\quad R_L=Q_L^*L,}
+\]
+with the analogous identities on the right. The dimension theorem is not an input:
+\[
+\boxed{r_L=\rank L,\qquad r_R=\rank R.}
+\]
+The coordinate factors have full row rank. The construction therefore handles rank-deficient input factors without retaining artificial column directions.
+
+Define the small core by actual multiplication,
+\[
+G=R_LR_R^*\in\C^{r_L\times r_R}.
+\]
+Finite matrix associativity and adjoint identities give
+\[
+\boxed{A=Q_LGQ_R^*,\qquad \rank G=\rank A.}
+\]
+The rank identity follows from both multiplication inequalities and the left inverse obtained by compression. It is not inferred from agreeing dimensions.
+
+\textbf{Zero factors and empty spaces.} No positive-rank or nonempty-coordinate hypothesis is imposed. If a range is zero, its orthonormal basis has an empty index type. The factorization uses the resulting rectangular empty matrices. A separate theorem proves that the compact dimension is zero exactly when the original factor is zero.
+
+\textbf{Relation to QR.} The argument only needs orthonormal columns and exact reconstruction. A compact QR factorization supplies these properties, but triangularity of its coordinate factor is irrelevant to the recompression theorem. The formal construction uses an exact orthonormal range basis; it does not claim Householder steps, pivot selection or floating-point stability. A supplied noncompact orthonormal factorization is also covered by the general transfer theorem, including extra zero singular directions.
+
+
+
+\subsection{Why a small-core optimum is a global optimum}\label{supp6:subsection:002}\textit{Module SmallCoreNorms; arbitrary ambient competitors}\par
+For rectangular isometries $Q,V$ define
+\[
+\mathcal L(G)=QGV^*,\qquad \mathcal C(B)=Q^*BV,
+\qquad Q^*Q=I,\quad V^*V=I.
+\]
+The following statements are proved for the actual matrix rank and actual matrix norms:
+\[
+\mathcal C(\mathcal L(G))=G,
+\qquad \rank\mathcal L(G)=\rank G,
+\qquad \rank\mathcal C(B)\leq\rank B,
+\]
+\[
+\boxed{\norm{\mathcal L(G)}_\nu=\norm{G}_\nu,
+\qquad \norm{\mathcal C(B)}_\nu\leq\norm B_\nu,
+\quad \nu\in\{2,\mathrm F\}.}
+\]
+For the spectral norm, the proof uses the Gram matrix identity
+\[
+(QG)^*(QG)=G^*G
+\]
+and the $C^*$-norm square identity, together with right-side adjoint symmetry. Compression follows from submultiplicativity and the isometry norm bound, including empty spaces.
+
+For the Frobenius norm, trace cyclicity proves left and right isometric invariance. The proof also establishes the projection identity
+\[
+\norm{B-QQ^*B}_{\mathrm F}^{2}
+=\norm B_{\mathrm F}^{2}-\norm{Q^*B}_{\mathrm F}^{2}.
+\]
+Nonnegativity of the left side gives left compression contractivity; the right version follows by adjoints. No norm-preservation or contractivity hypothesis is inserted.
+
+Suppose $G_k$ is a best rank-at-most-$k$ approximation to $G$ in either norm. Take an \emph{arbitrary} ambient matrix $B$ with $\rank B\leq k$. Compression is an admissible small-core competitor and
+\[
+\begin{aligned}
+\norm{\mathcal L(G)-\mathcal L(G_k)}_\nu
+&=\norm{G-G_k}_\nu\\
+&\leq\norm{G-\mathcal C(B)}_\nu\\
+&=\norm{\mathcal C(\mathcal L(G)-B)}_\nu\\
+&\leq\norm{\mathcal L(G)-B}_\nu.
+\end{aligned}
+\]
+This is the key global bridge: $B$ is not required to lie in the supplied row and column spaces. The next two pages discharge the intermediate small-core optimality obligation, rather than leaving it as a hypothesis in the final theorem.
+
+
+
+\subsection{Spectral optimality from a kernel witness}\label{supp6:subsection:003}\textit{Modules DiagonalTruncation and SpectralOptimality}\par
+Let $\sigma_1\geq\cdots\geq\sigma_d\geq0$ and
+\[
+D=\diag(\sigma_1,\ldots,\sigma_d),\qquad
+D_k=\diag(\sigma_1,\ldots,\sigma_{\min(k,d)},0,\ldots,0).
+\]
+Lean uses indices beginning at zero; the formulas on this page use the conventional one-based notation. The rank of $D_k$ is proved to be at most $k$, even when retained singular values are zero.
+
+For $k<d$, take any $d\times d$ matrix $B$ of rank at most $k$. Restrict its domain to the first $k+1$ coordinates using the actual coordinate inclusion $J$. Since
+\[
+\rank(BJ)\leq\rank B\leq k<k+1,
+\]
+rank-nullity supplies a nonzero vector $z$ with $BJz=0$. The vector $y=Jz$ is nonzero, satisfies $By=0$ and is supported in the first $k+1$ coordinates. The injection and the support property are checked separately.
+
+Monotonicity of the diagonal entries gives
+\[
+\norm{Dy}^{2}
+=\sum_{i=1}^{k+1}\sigma_i^{2}|y_i|^{2}
+\geq\sigma_{k+1}^{2}\norm y^{2}.
+\]
+Because $(D-B)y=Dy$, the operator-norm inequality implies
+\[
+\sigma_{k+1}\norm y
+\leq\norm{(D-B)y}
+\leq\norm{D-B}_2\norm y.
+\]
+Cancellation of the strictly positive norm of $y$ proves
+\[
+\boxed{\sigma_{k+1}\leq\norm{D-B}_2.}
+\]
+The norm of the actual diagonal residual $D-D_k$ equals $\sigma_{k+1}$, so $D_k$ attains the lower bound. If $k\geq d$, the residual is zero and optimality follows from norm nonnegativity.
+
+\textbf{No optimality oracle.} The nonzero kernel vector, its coordinate support and the diagonal norm bound are all derived. No Eckart--Young inequality, best-rank property or singular-tail formula is assumed. The final rectangular SVD result follows by the isometric transfer proved on the preceding page.
+
+
+
+\subsection{Frobenius optimality from kernel weights}\label{supp6:subsection:004}\textit{Modules KernelFrame and FrobeniusOptimality}\par
+For an arbitrary competitor $B$ with $\rank B\leq k$, construct an orthonormal matrix $Q$ spanning its actual kernel. Then
+\[
+BQ=0,\qquad Q^*Q=I,\qquad q=\dim\ker B=d-\rank B.
+\]
+Define the row weights
+\[
+w_i=\sum_{j=1}^{q}|Q_{ij}|^2.
+\]
+The proof derives
+\[
+\boxed{0\leq w_i\leq1,\qquad \sum_iw_i=q\geq\max(d-k,0).}
+\]
+The upper bound uses contraction of $Q^*$ on a coordinate vector. The weight sum follows from the trace of $Q^*Q$ and rank-nullity.
+
+For any nonnegative decreasing sequence $a_i$, weights with these properties satisfy
+\[
+\sum_i a_iw_i\geq\sum_{i>k}a_i.
+\]
+This finite weighted inequality is itself proved. For $k<d$, use $\mu=a_{k+1}$ and compare the summands to tail weights $v_i=0$ for $i\leq k$ and $v_i=1$ otherwise:
+\[
+a_iv_i+\mu(w_i-v_i)\leq a_iw_i.
+\]
+For a retained coordinate the inequality uses $a_i\geq\mu$ and $w_i\geq0$. For a tail coordinate it uses $a_i\leq\mu$ and $w_i\leq1$. Summation and $\sum w_i\geq\sum v_i$ give the result.
+
+Set $a_i=\sigma_i^2$. Right compression cannot increase the Frobenius norm, and $BQ=0$, hence
+\[
+\begin{aligned}
+\norm{D-B}_{\mathrm F}^{2}
+&\geq\norm{(D-B)Q}_{\mathrm F}^{2}\\
+&=\norm{DQ}_{\mathrm F}^{2}
+=\sum_i\sigma_i^2w_i
+\geq\sum_{i>k}\sigma_i^2.
+\end{aligned}
+\]
+Direct calculation of $D-D_k$ attains equality. Thus the best-rank Frobenius assertion is proved from kernel geometry and finite sums, independently of the spectral lower-bound proof. Repeated and zero singular values require no uniqueness claim.
+
+
+
+\subsection{Thin output factors and the final theorem}\label{supp6:subsection:005}\textit{Modules CompactTruncation and SmallCoreRecompression}\par
+For the actual core $G=R_LR_R^*$, supply ordered thin SVD data
+\[
+G=W\diag(\sigma)Z^*,\qquad W^*W=I,
+\qquad Z^*Z=I,\qquad \sigma_1\geq\cdots\geq\sigma_d\geq0.
+\]
+These are precisely the fields of the formal SVD structure. It contains no rank-optimality or tail-error field. A derived theorem checks the Gram eigenvector equation
+\[
+G^*GZ=Z\diag(\sigma_1^2,\ldots,\sigma_d^2).
+\]
+Let $h=\min(d,k)$ and retain exactly the first $h$ column indices. The rectangular square-root mask has entries
+\[
+M_{ij}=\begin{cases}\sqrt{\sigma_j},&i=j,\\0,&i\ne j,\end{cases}
+\qquad 1\leq i\leq d,\quad 1\leq j\leq h.
+\]
+Lean proves its index cardinality and $MM^*=D_k$. Define
+\[
+\boxed{L_k=Q_LWM,\qquad R_k=Q_RZM.}
+\]
+The product equals $Q_LWD_kZ^*Q_R^*$ and has rank at most $k$. The principal theorem proves, for every ambient $B$ with $\rank B\leq k$,
+\[
+\boxed{\norm{LR^*-L_kR_k^*}_\nu\leq\norm{LR^*-B}_\nu,
+\quad\nu\in\{2,\mathrm F\}.}
+\]
+It also gives the exact errors
+\[
+\norm{LR^*-L_kR_k^*}_2=
+\begin{cases}\sigma_{k+1},&k<d,\\0,&k\geq d,\end{cases}
+\qquad
+\norm{LR^*-L_kR_k^*}_{\mathrm F}
+=\left(\sum_{i>k}\sigma_i^2\right)^{1/2}.
+\]
+Both the squared and square-root Frobenius formulas are checked. All these statements are combined in\par
+\path{KomorebiPaperVIII.SmallCore.small_core_optimal_recompression}.
+
+\textbf{Endpoints.} Rank zero produces the zero output; $k\geq d$ reconstructs the original product. An empty SVD certificate is constructed for a zero core, and diagonal SVD certificates are constructed explicitly. Zero singular values are never inverted. At repeated singular values the result asserts optimality, not uniqueness of the minimizer.
+
+
+
+\subsection{Place in the finite development}\label{supp6:subsection:006}
+The 56-item manuscript-proved register is covered under its stated hypotheses. General SVD existence, a numerical SVD algorithm, floating-point CG convergence and hardware speedups do not follow merely from this formal scope. The formal companion identifies the exact declaration map and recorded verification evidence.
+
+The historical compiler, regression and development records appear in the formal companion under ``Historical proof-development records.

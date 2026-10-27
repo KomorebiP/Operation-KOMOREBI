@@ -1,0 +1,676 @@
+--- before/source_ix_xii/IX/sources/edition_summary.tex
++++ source_ix_xii/IX/sources/edition_summary.tex
+@@ -5,7 +5,7 @@
+  E_{mpn+qp^r}^{(mp,j)}\equiv E_{mpn}^{(mp,j)}\pmod{p^r}
+  \qquad (r\ge1,\ n\ge r).
+ \]
+-The paper states the generating function and the conversion between ordinary degree and packet row before using this formula. The normalized coefficient is $C_{N,j}(n)$ and the original coefficient is $E_{Nn}^{(N,j)}=j!C_{N,j}(n)$. The constant coefficient of the original series is $j!$.
++The chapter states the generating function and the conversion between ordinary degree and packet row before using this formula. The normalized coefficient is $C_{N,j}(n)$ and the original coefficient is $E_{Nn}^{(N,j)}=j!C_{N,j}(n)$. The constant coefficient of the original series is $j!$.
+ 
+ The strongest common-step conclusion in width four is particularly compact. For $n\ge0$ and $k,H\ge1$,
+ \begin{equation*}
+--- before/source_ix_xii/IX/sources/lean/Paper_IX_Lean_Guide_Final.tex
++++ source_ix_xii/IX/sources/lean/Paper_IX_Lean_Guide_Final.tex
+@@ -7,7 +7,7 @@
+ \renewcommand{\KomorebiSeries}{Chapter IX}
+ \renewcommand{\KomorebiKind}{Formal companion}
+ \renewcommand{\KomorebiEdition}{}
+-\renewcommand{\KomorebiShortTitle}{Paper IX}
++\renewcommand{\KomorebiShortTitle}{Chapter IX}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+ \renewcommand{\KomorebiProfile}{classical}
+@@ -15,9 +15,9 @@
+ \KomorebiSetup
+ \begin{document}
+ \KomorebiCover
+-\KomorebiOpeningNote{This guide records the formal coverage of the final Euler paper and teaches the retained arithmetic, finite obstruction, polynomial tower, quantitative deformation, and analytic regularity proofs. The opening chapter maps the strengthened congruences to their existing Lean endpoints and identifies the new proofs that remain to be formalized. The complete original teaching chapters, exact source excerpts, and named-source catalog follow.
++\KomorebiOpeningNote{This guide records the formal coverage of the Euler chapter and teaches the retained arithmetic, finite obstruction, polynomial tower, quantitative deformation, and analytic regularity proofs. The opening chapter maps the strengthened congruences to their existing Lean endpoints and identifies the new proofs that remain to be formalized. The complete original teaching chapters, exact source excerpts, and named-source catalog follow.
+ 
+-The Lean compilation evidence is inherited. Fresh work in this edition reconciles source hashes, retained logs, declaration inventories, source syntax, and strict axiom records. Lean and Lake are unavailable in the present environment; no new compiler run is claimed. The new factorial and mixed-difference theorems are proved in the main paper, with their proof and computation evidence supplied separately, but have no compiled Lean endpoint in this release.}
++The Lean compilation evidence is inherited. Fresh work in this edition reconciles source hashes, retained logs, declaration inventories, source syntax, and strict axiom records. Lean and Lake are unavailable in the present environment; no new compiler run is claimed. The new factorial and mixed-difference theorems are proved in the main text, with their proof and computation evidence supplied separately, but have no compiled Lean endpoint in this release.}
+ 
+ 
+ \tableofcontents
+--- before/source_ix_xii/IX/sources/lean/chapters/new_strengthening.tex
++++ source_ix_xii/IX/sources/lean/chapters/new_strengthening.tex
+@@ -1,10 +1,10 @@
+-\section{The strengthened Euler paper and its exact formal coverage}\label{sec:new-coverage}
++\section{The strengthened Euler chapter and its exact formal coverage}\label{sec:new-coverage}
+ 
+-The final paper brings together the completed external conjecture, the retained all-row four-packet theory, and stronger congruences proved during the present continuation. Those layers have different verification evidence. The original Nishibuchi capstone, the four-packet step-sensitive bound, the exact first-difference periods, and the isometry construction have preserved Lean sources and successful historical compilation records. The new general prime-power closure, mixed factorial estimates, exact higher-order laws, and Taylor-radius results have mathematical proofs and recorded audits, but no compiled Lean endpoint in this edition.
++The chapter brings together the completed external conjecture, the retained all-row four-packet theory, and stronger congruences proved during the present continuation. Those layers have different verification evidence. The original Nishibuchi capstone, the four-packet step-sensitive bound, the exact first-difference periods, and the isometry construction have preserved Lean sources and successful historical compilation records. The new general prime-power closure, mixed factorial estimates, exact higher-order laws, and Taylor-radius results have mathematical proofs and recorded audits, but no compiled Lean endpoint in this edition.
+ 
+ The distinction is attached to claims, rather than to whole documents. A new proof may include a previously formalized special case. Conversely, an inherited endpoint about a polynomial analytic graph does not certify the new Euler interpolation radius merely because both use p-adic analysis. The tables and contracts below identify the actual overlap and the remaining work.
+ 
+-\subsection{One normalization for the paper and the guide}
++\subsection{One normalization for the chapter and the guide}
+ For a positive modulus $N$ and an address $0\le j<N$, define
+ \[
+  G_{N,j}(t)=j!\sum_{n\ge0}\frac{t^{Nn}}{(Nn+j)!},\qquad
+@@ -22,7 +22,7 @@
+ 
+ \subsection{Current claim map}
+ \begin{longtable}{p{.32\linewidth}p{.30\linewidth}p{.29\linewidth}}
+-\toprule Main-paper topic & Retained Lean coverage & Present status\\\midrule\endhead
++\toprule Topic in the main text & Retained Lean coverage & Present status\\\midrule\endhead
+ Nishibuchi Conjecture 3.9, all permitted primes and addresses & \code{NishibuchiCompletion.conjecture_3_9}; original integrality and degree-shift bridges & Historically compiled. Source and evidence reconciled anew.\\
+ Four-packet all-row Kummer divisibility & \code{DyadicFourAllRows.normalized_precision} & Historically compiled; includes row zero and every difference order.\\
+ Four-packet common-step precision, including the address factorial & \code{DyadicFourFinalStrengthening.normalized_step_precision} and \code{unnormalized_step_precision} & Historically compiled; exponent $k(1+v_2H)$, with $v_2(j!)$ for the original numbers.\\
+@@ -33,7 +33,7 @@
+ Address-two stronger growth and exact power-of-two orders & No matched endpoint & Proved in the new continuation; not Lean formalized here.\\
+ Small-rank metric results beyond $N=4$; all-rank lower-half metric theorem & No matched endpoint & Proved in the new continuation; not Lean formalized here.\\
+ Exact Euler Taylor radii at addresses zero, one, and two & No matched endpoint & Proved in the new continuation; not implied by the retained polynomial regularity modules.\\
+-General exact higher-order law at addresses two and three; unrestricted upper-half metric law & No completed endpoint & The stated unrestricted laws remain open or are refuted in the main paper.\\
++General exact higher-order law at addresses two and three; unrestricted upper-half metric law & No completed endpoint & The stated unrestricted laws remain open or are refuted in the main text.\\
+ \bottomrule\end{longtable}
+ 
+ The chapter titles in this table identify the mathematical topics. The crosswalk at the end of this guide now resolves the inherited statement index against the current monograph, with physical PDF pages and current theorem numbers. The historical crosswalk and its older paper identity remain in the source archive. Separate routes identify the strengthening statements and the eight exact worked examples.
+@@ -68,7 +68,7 @@
+  v_2\bigl(\Delta_H^k C_{4,j}(n)\bigr)\ge k(1+v_2H)
+  \qquad(j<4,\ n,k\in\mathbb N,\ H\ge1),
+ \]
+-with its zero-safe precision interpretation. The original-number endpoint adds $v_2(j!)$. For positive $H$, this is exactly the four-packet homogeneous specialization of the general mixed-step estimate in the new paper. The source also includes zero step using its finite natural valuation \code{padicValNat 2 0 = 0}: every positive-order zero-step difference vanishes. At order zero, the statement is just the appropriate integrality assertion. Thus the source never forms the undefined paper expression $0\cdot v_2(0)$.
++with its zero-safe precision interpretation. The original-number endpoint adds $v_2(j!)$. For positive $H$, this is exactly the four-packet homogeneous specialization of the general mixed-step estimate in the new chapter. The source also includes zero step using its finite natural valuation \code{padicValNat 2 0 = 0}: every positive-order zero-step difference vanishes. At order zero, the statement is just the appropriate integrality assertion. Thus the source never forms the undefined paper expression $0\cdot v_2(0)$.
+ 
+ For these four packets, the conjectured dyadic period already starts at row zero in the retained Lean source. The literal degree endpoint is \code{all_rows_period_degree}. The exact-period development goes further and proves
+ \[
+@@ -84,7 +84,7 @@
+ The new edition preserves these achievements and their formal evidence. The new work extends the modulus range and operator patterns, improves higher-order exponents by factorial and address gains, and derives exact higher-order and analytic consequences. It is not necessary to relabel an already formalized four-packet statement as an unformalized new theorem in order to explain that extension.
+ 
+ \subsection{The strongest homogeneous congruence to formalize next}
+-For $j\in\{0,1,2,3\}$, $n\ge0$, and $k,H\ge1$, the final main-paper congruence is
++For $j\in\{0,1,2,3\}$, $n\ge0$, and $k,H\ge1$, the final congruence in the main text is
+ \[
+  \sum_{i=0}^k(-1)^{k-i}\binom{k}{i}
+  E_{4(n+iH)}^{(4,j)}\equiv0
+@@ -96,11 +96,11 @@
+  A_2(k)=\max\{k+4,\,2k+\lfloor k/2\rfloor+1\},\qquad
+  A_3(k)=k+2.
+ \]
+-This displayed exponent includes the address factorial. Using it directly for the normalized $C_{4,j}$ would introduce an extra digit at addresses two and three. The lower bound holds at every base row, including zero. Equality holds for every positive order and positive homogeneous step at addresses zero and one. At address two, the exact laws proved in the paper cover orders that are powers of two, including one and two, with the explicit small-order exceptions stated there. This is not a theorem asserting equality at every address-two order.
++This displayed exponent includes the address factorial. Using it directly for the normalized $C_{4,j}$ would introduce an extra digit at addresses two and three. The lower bound holds at every base row, including zero. Equality holds for every positive order and positive homogeneous step at addresses zero and one. At address two, the exact laws proved in the chapter cover orders that are powers of two, including one and two, with the explicit small-order exceptions stated there. This is not a theorem asserting equality at every address-two order.
+ 
+-A direct formal target should use \code{Mahler.difference H k (Congruential.unnormalized 4 j) n}, the natural exponent \code{padicValNat 2 k.factorial + k * padicValNat 2 H + A j k}, and \code{GlobalEulerBoundary.precision}. Its hypotheses are $j<4$, $0<k$, and $0<H$. That target reuses the original definitions and preserves the paper's quantifiers. It should not replace the rational sequence by a separately named experimental recurrence without a coefficient-identity bridge.
++A direct formal target should use \code{Mahler.difference H k (Congruential.unnormalized 4 j) n}, the natural exponent \code{padicValNat 2 k.factorial + k * padicValNat 2 H + A j k}, and \code{GlobalEulerBoundary.precision}. Its hypotheses are $j<4$, $0<k$, and $0<H$. That target reuses the original definitions and preserves the chapter's quantifiers. It should not replace the rational sequence by a separately named experimental recurrence without a coefficient-identity bridge.
+ 
+-The proof of the new factorial term is a divided-power argument. At addresses zero and one, its external arithmetic input is the exact classical Frobenius congruence for ordinary Euler numbers, in the form checked in the main paper's source record. The Bernoulli central-factorial argument at address two proves its divided-power integrality internally. A Lean completion will need the exact ordinary-Euler input formalized or imported as a proved theorem with a matched statement. A custom axiom standing in for that input would change the formal coverage and must not be hidden under an unchanged completion label.
++The proof of the new factorial term is a divided-power argument. At addresses zero and one, its external arithmetic input is the exact classical Frobenius congruence for ordinary Euler numbers, in the form checked in the main text's source record. The Bernoulli central-factorial argument at address two proves its divided-power integrality internally. A Lean completion will need the exact ordinary-Euler input formalized or imported as a proved theorem with a matched statement. A custom axiom standing in for that input would change the formal coverage and must not be hidden under an unchanged completion label.
+ 
+ \subsection{General prime-power closure: a reusable target}
+ For $N=p^a$, $a\ge1$, and $j<N$, put $C(n)=C_{N,j}(n)$. The general theorem is most naturally phrased for the sign-adjusted sequence
+@@ -150,7 +150,7 @@
+ \[
+  V=k+v_2(k!)+\sum_{i=1}^k v_2H_i.
+ \]
+-The new paper proves exact valuation $V$ if $k$ is odd or the number of even steps is even. If $k$ is even and the number of even steps is odd, the leading digit cancels and the valuation is at least $V+1$. That last case does not carry a uniform formula for the deeper valuation.
++The new chapter proves exact valuation $V$ if $k$ is odd or the number of even steps is even. If $k$ is even and the number of even steps is odd, the leading digit cancels and the valuation is at least $V+1$. That last case does not carry a uniform formula for the deeper valuation.
+ 
+ For a homogeneous step, the number of even steps is either zero or $k$. The criterion therefore always gives exactness at addresses zero and one. This explains why a true homogeneous equality can fail when a single step is changed. For example,
+ \[
+@@ -194,4 +194,4 @@
+ \subsection{A clean completion criterion for the new formal layer}
+ The next formal release can legitimately mark a new theorem compiled only after its exact statement is bound to a source hash, its dependencies are identified, the intended positive examples compile, the relevant false strengthenings fail for the expected reason, and its axiom closure is recorded. The important controls include unsigned raw differences at odd primes, an unconditional mixed equality, a homogeneous exactness statement at zero step, the missing address factorial, and a universal upper-half metric pattern refuted by the recorded higher-rank examples.
+ 
+-The proof files should contain no placeholder proofs, custom axioms for the desired conclusion, or precomputed arrays replacing the actual coefficient sequence. For imported classical arithmetic, the release must identify the exact theorem used and prove or explicitly bound its bridge to the paper's convention. The endpoint register must distinguish common-step estimates from mixed-step estimates and finite coefficient checks from universal statements. The inherited capstone remains complete while this stronger formal layer is developed; its scope does not expand automatically with the new manuscript.
++The proof files should contain no placeholder proofs, custom axioms for the desired conclusion, or precomputed arrays replacing the actual coefficient sequence. For imported classical arithmetic, the release must identify the exact theorem used and prove or explicitly bound its bridge to the chapter's convention. The endpoint register must distinguish common-step estimates from mixed-step estimates and finite coefficient checks from universal statements. The inherited capstone remains complete while this stronger formal layer is developed; its scope does not expand automatically with the new manuscript.
+--- before/source_ix_xii/IX/sources/lean/chapters/replay.tex
++++ source_ix_xii/IX/sources/lean/chapters/replay.tex
+@@ -32,7 +32,7 @@
+ The supplied guide PDF has its own isolated deterministic XeLaTeX builder. It uses the copied instructional chapters, generated catalogs, and exact excerpt assets. It does not invoke Lean. The source-dependent preparation and audit scripts accept the consolidated archive root as an explicit argument, while the PDF builder needs only the companion's editable directory. Keeping these operations distinct makes the provenance reviewable.
+ 
+ \subsection{Unclosed obligations and recovered history}
+-Paper IX closes the recorded arithmetic, smooth finite lifting, prescribed towers, quantitative deformation, and local analytic regularity results under their stated hypotheses. It retains open unrestricted native presentation invariance, completed/global compatibility and descent, general singular persistence with higher obstructions, and other specified arithmetic extensions. The analytic inverse theorem does not close those programs.
++Chapter IX closes the recorded arithmetic, smooth finite lifting, prescribed towers, quantitative deformation, and local analytic regularity results under their stated hypotheses. It retains open unrestricted native presentation invariance, completed/global compatibility and descent, general singular persistence with higher obstructions, and other specified arithmetic extensions. The analytic inverse theorem does not close those programs.
+ 
+ The preserved original 28-page manuscript is available, but its original editable TeX, figure-generation sources, and complete historical experiment package have not been recovered. The reconstruction and all later continuation sources retain their own provenance. No formal blanket certificate is assigned to every historical text merely because it is preserved in the package. The Bernoulli boundary restoration has its classical derivation and an explicit unmatched Lean bridge.
+ 
+--- before/source_ix_xii/IX/sources/main/Paper_IX_Traditional_Final.tex
++++ source_ix_xii/IX/sources/main/Paper_IX_Traditional_Final.tex
+@@ -36,7 +36,7 @@
+ \allowdisplaybreaks[1]
+ \pagestyle{fancy}
+ \fancyhf{}
+-\fancyhead[L]{\small\scshape Euler congruences / Paper IX}
++\fancyhead[L]{\small\scshape Euler congruences / Chapter IX}
+ \fancyhead[R]{\small\scshape Final strengthened edition}
+ \fancyfoot[L]{\small Komorebi P.}
+ \fancyfoot[R]{\thepage}
+@@ -87,7 +87,7 @@
+ \renewcommand{\KomorebiSeries}{Chapter IX}
+ \renewcommand{\KomorebiKind}{Mathematical text}
+ \renewcommand{\KomorebiEdition}{}
+-\renewcommand{\KomorebiShortTitle}{Paper IX}
++\renewcommand{\KomorebiShortTitle}{Chapter IX}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+ \renewcommand{\KomorebiProfile}{classical}
+--- before/source_ix_xii/IX/sources/main/parts/10_foundations.tex
++++ source_ix_xii/IX/sources/main/parts/10_foundations.tex
+@@ -236,7 +236,7 @@
+ \lean{Filtered.padic_filtered_reconstruction}.
+ For weights $2r$, retaining $r\leq M$ gives the bound $p^{2M+2}$ through
+ \lean{Filtered.even_weight_tail}. A sharper kernel weight can improve this
+-bound, as in the classical dyadic reconstruction later in the paper. Each
++bound, as in the classical dyadic reconstruction later in the chapter. Each
+ coefficient row is finite, so no hypothesis $w(r)\to\infty$ is needed here.
+ \par\endgroup
+ 
+--- before/source_ix_xii/IX/sources/main/parts/20_arithmetic.tex
++++ source_ix_xii/IX/sources/main/parts/20_arithmetic.tex
+@@ -741,7 +741,7 @@
+ Minimality here concerns packet shifts.  Shifts of the full degree-indexed
+ sequence, including its zero coefficients off the packet support, require
+ a separate analysis.  The new strengthening chapters determine all repeated-step higher differences in addresses zero and one and a power-of-two-order family in address two. The full exact classification of arbitrary higher-order differences
+-are also a separate question from the first-displacement law.
++is also a separate question from the first-displacement law.
+ 
+ \subsection{Classical odd-length coordinates and their congruence ladder}
+ 
+--- before/source_ix_xii/IX/sources/main/parts/50_open_questions.tex
++++ source_ix_xii/IX/sources/main/parts/50_open_questions.tex
+@@ -49,7 +49,7 @@
+ The original conjecture asks for a canonical finite obstruction packet whose
+ vanishing is necessary and sufficient for a one-level lift in a finitely
+ presented arithmetic seed system. For a fixed finite polynomial presentation,
+-the paper now supplies the precise obstruction
++the chapter supplies the precise obstruction
+ \[
+ o_{F,\bar x}=[r]\in
+ \coker\!\left(J_{F,\bar x}:\F_p^d\longrightarrow\F_p^e\right),
+--- before/source_ix_xii/IX/sources/main/parts/60_verification.tex
++++ source_ix_xii/IX/sources/main/parts/60_verification.tex
+@@ -35,7 +35,7 @@
+ closure} is the recorded axiom dependency set of an explicitly named
+ declaration; definitions and abbreviations contribute to this count as well
+ as theorems. None of these columns is a count of distinct mathematical results
+-across the paper.
++across the chapter.
+ 
+ \begin{table}[htbp]
+ \centering
+--- before/source_ix_xii/IX/sources/main/parts/72_recovered.tex
++++ source_ix_xii/IX/sources/main/parts/72_recovered.tex
+@@ -23,7 +23,7 @@
+ finite data. The 22 historical references now have recovered bibliographic
+ entries and checked identities. Superseded claims about the divisor-branch
+ finite-difference problem have local notices directing the reader to the
+-current theorem. The remaining higher kernel-valuation and unrestricted
++current theorem. The higher kernel-valuation and unrestricted
+ local-to-global questions remain open in their stated scopes.
+ 
+ \subsection{Introduction}\label{hist:sec:introduction}
+@@ -58,7 +58,7 @@
+ \]
+ The result first follows from subgroup symmetry in the finite Hurwitz algebra. A second proof shows that the standard window operator preserves the finite space of sequences that are \(h\) periodic after their constant term. The two arguments expose different parts of the same finite character structure.
+ 
+-The central change in this edition is the treatment of the odd and dyadic Euler formulas. They are no longer presented as unrelated reconstruction devices. For each prime \(p\) we define an even source series \(H_p\) and an inverse kernel \(K_p\) satisfying
++The odd and dyadic Euler formulas share a common reconstruction framework. For each prime \(p\) we define an even source series \(H_p\) and an inverse kernel \(K_p\) satisfying
+ \[
+ K_p(t)H_p(t)=\operatorname{sech}t.
+ \]
+@@ -95,7 +95,7 @@
+ \[
+ 2^{4M+3},
+ \]
+-and this exponent is optimal. The rowwise estimate records the additional binary carries in the binomial coefficient. Classical congruence theory for Euler families is extensive \cite{CarlitzLevine1960,Young1999,Young2001,Sun2008,Chen2004}. The formulas here are stated as exact coordinate identities. Historical priority requires a separate theorem by theorem comparison.
++and this exponent is optimal. The rowwise estimate records the additional binary carries in the binomial coefficient. Classical congruence theory for Euler families is extensive \cite{CarlitzLevine1960,Young1999,Young2001,Sun2008,Chen2004}. The formulas here are stated as exact coordinate identities. Historical priority requires a separate comparison of the individual theorems.
+ 
+ The second expansion concerns local interpolation. The exponent of the finite unit group moves every unit mode into a principal unit neighborhood. Binomial expansion then gives a Mahler series whose depth \(r\) coefficient gains at least \(Lr\) digits when the chosen jump is the identity modulo \(p^L\). The same argument applies to polynomial exponential modes and to invertible matrix state systems. Mahler interpolation and the Amice transform are classical \cite{Mahler1958,Amice1964,Robert2000}. The local unit structure and valuation tools used here are standard \cite{Koblitz1984,Serre1979,Washington1997,Gouvea1997}.
+ 
+@@ -103,7 +103,7 @@
+ \[
+ x=Mq+s.
+ \]
+-The induced Mahler coefficient transform is finite and explicit. Its kernels compose exactly. At prime power radix they become sparse modulo the residue prime. Every monotone valuation ladder survives the refinement.
++The induced Mahler coefficient transform is finite and explicit. Its kernels compose exactly. At a prime power radix, they become sparse modulo the residue prime. Every monotone valuation ladder survives the refinement.
+ 
+ The remaining sections treat arithmetic lift obstructions, recurrence packets, and Chinese remainder reconstruction. The lifting obstruction is the residual defect modulo the image of the declared correction map. A recurrence packet is governed by a jump matrix \(C^N\). If one integral recurrence is fixed, all of its local realizations have one common source. These statements do not prove that arbitrary unrelated local objects have a global origin.
+ 
+@@ -465,7 +465,7 @@
+ 
+ \subsection{Unit triangular coefficient transport}\label{hist:sec:triangular_transport}
+ 
+-The examples later in the paper use different kernels, but their coefficient algebra has one common form. This section records that form once. Let \(R\) be a commutative algebra over \(\QQ\), and take all coefficients in \(R\).
++The examples later in the chapter use different kernels, but their coefficient algebra has one common form. This section records that form once. Let \(R\) be a commutative algebra over \(\QQ\), and take all coefficients in \(R\).
+ 
+ Let
+ \[
+@@ -2319,7 +2319,7 @@
+ \begin{figure}[t]
+ \centering
+ \includegraphics[width=.95\linewidth,height=3.15in,keepaspectratio]{../../figures/reconstructed/mahler_polyphase_kernel.pdf}
+-\caption{New reconstruction. The affine Mahler kernel has finite triangular support. At prime power radix its reduction is confined to a short Frobenius window.}
++\caption{New reconstruction. The affine Mahler kernel has finite triangular support. At a prime power radix, its reduction is confined to a short Frobenius window.}
+ \label{hist:fig:mahler_polyphase_kernel}
+ \end{figure}
+ 
+--- before/source_ix_xii/IX/sources/main/parts/continuation_01.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_01.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont1:paper-ix-finite-polynomial-lifting-and-shared-corrections}{%
+-\subsection{Paper IX: finite polynomial lifting and shared
++\subsection{Chapter IX: finite polynomial lifting and shared
+ corrections}\label{cont1:paper-ix-finite-polynomial-lifting-and-shared-corrections}}
+ 
+ The nonlinear Taylor argument supplies the correction formula used in
+--- before/source_ix_xii/IX/sources/main/parts/continuation_02.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_02.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont2:paper-ix-correction-torsors-and-exact-polynomial-lift-counts}{%
+-\subsection{Paper IX: correction torsors and exact polynomial lift
++\subsection{Chapter IX: correction torsors and exact polynomial lift
+ counts}\label{cont2:paper-ix-correction-torsors-and-exact-polynomial-lift-counts}}
+ 
+ The correction-digit torsor gives exact prime-field lift counts. The counts apply to distinct next-level
+--- before/source_ix_xii/IX/sources/main/parts/continuation_03.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_03.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont3:paper-ix-compatible-polynomial-towers-and-p-adic-roots}{%
+-\subsection{Paper IX: compatible polynomial towers and p-adic
++\subsection{Chapter IX: compatible polynomial towers and p-adic
+ roots}\label{cont3:paper-ix-compatible-polynomial-towers-and-p-adic-roots}}
+ 
+ The nonsingular construction passes from one-step
+--- before/source_ix_xii/IX/sources/main/parts/continuation_04.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_04.tex
+@@ -2,7 +2,7 @@
+ \subsection{Polynomial roots under coefficient
+ perturbation}\label{cont4:polynomial-roots-under-coefficient-perturbation}}
+ 
+-The argument proves square root uniqueness and nearby-root stability
++The argument proves uniqueness of roots for square systems and nearby-root stability
+ for finite systems of integer polynomials. The polynomials and their
+ partial derivatives are evaluated directly. No root-uniqueness or
+ perturbation-stability premise is assumed.
+@@ -78,8 +78,8 @@
+ \(y\).
+ 
+ \hypertarget{cont4:full-precision-for-the-unique-square-root}{%
+-\subsubsection{4. Full precision for the unique square
+-root}\label{cont4:full-precision-for-the-unique-square-root}}
++\subsubsection{4. Full precision for the unique root of a square
++system}\label{cont4:full-precision-for-the-unique-square-root}}
+ 
+ Suppose \(d=e\), \(M\ge L\ge1\), \(p^M\mid c\), and \(A_x\) is
+ surjective. If \[
+--- before/source_ix_xii/IX/sources/main/parts/continuation_05.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_05.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont5:paper-ix-continuous-p-adic-parameter-charts}{%
+-\subsection{Paper IX: continuous p-adic parameter
++\subsection{Chapter IX: continuous p-adic parameter
+ charts}\label{cont5:paper-ix-continuous-p-adic-parameter-charts}}
+ 
+ \hypertarget{cont5:main-statement}{%
+--- before/source_ix_xii/IX/sources/main/parts/continuation_06.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_06.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont6:paper-ix-weighted-nonlinear-lifting}{%
+-\subsection{Paper IX: weighted nonlinear
++\subsection{Chapter IX: weighted nonlinear
+ lifting}\label{cont6:paper-ix-weighted-nonlinear-lifting}}
+ 
+ \hypertarget{cont6:the-theorem}{%
+--- before/source_ix_xii/IX/sources/main/parts/continuation_07.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_07.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont7:paper-ix-weighted-first-order-root-motion}{%
+-\subsection{Paper IX: weighted first-order root
++\subsection{Chapter IX: weighted first-order root
+ motion}\label{cont7:paper-ix-weighted-first-order-root-motion}}
+ 
+ \hypertarget{cont7:the-theorem}{%
+--- before/source_ix_xii/IX/sources/main/parts/continuation_08.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_08.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont8:paper-ix-prescribed-parameter-polynomial-lifting}{%
+-\subsection{Paper IX: prescribed-parameter polynomial
++\subsection{Chapter IX: prescribed-parameter polynomial
+ lifting}\label{cont8:paper-ix-prescribed-parameter-polynomial-lifting}}
+ 
+ \hypertarget{cont8:setup-and-exact-lift-set}{%
+--- before/source_ix_xii/IX/sources/main/parts/continuation_09.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_09.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont9:paper-ix-compatible-towers-with-prescribed-parameters}{%
+-\subsection{Paper IX: compatible towers with prescribed
++\subsection{Chapter IX: compatible towers with prescribed
+ parameters}\label{cont9:paper-ix-compatible-towers-with-prescribed-parameters}}
+ 
+ The construction gives actual compatible polynomial towers from initial
+--- before/source_ix_xii/IX/sources/main/parts/continuation_10.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_10.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont10:paper-ix-simultaneous-coefficient-and-parameter-deformation}{%
+-\subsection{Paper IX: simultaneous coefficient and parameter
++\subsection{Chapter IX: simultaneous coefficient and parameter
+ deformation}\label{cont10:paper-ix-simultaneous-coefficient-and-parameter-deformation}}
+ 
+ The construction combines coefficient perturbation with prescribed parameter
+--- before/source_ix_xii/IX/sources/main/parts/continuation_11.tex
++++ source_ix_xii/IX/sources/main/parts/continuation_11.tex
+@@ -1,5 +1,5 @@
+ \hypertarget{cont11:paper-ix-analytic-regularity-of-the-local-parameter-solution}{%
+-\subsection{Paper IX: analytic regularity of the local parameter
++\subsection{Chapter IX: analytic regularity of the local parameter
+ solution}\label{cont11:paper-ix-analytic-regularity-of-the-local-parameter-solution}}
+ 
+ The argument establishes both analyticity and differentiability of the
+@@ -163,7 +163,7 @@
+ analytic inverse machinery and makes no novelty claim for the general
+ implicit-function theorem.
+ 
+-The remaining Paper IX work includes general singular persistence with
++The remaining Chapter IX work includes general singular persistence with
+ higher obstructions, native presentation invariance (13.2), global or
+ completed compatibility and descent (13.3), the outstanding sharper
+ arithmetic statements, and manuscript consolidation. None of those is
+--- before/source_ix_xii/IX/sources/main/parts/supplement_02.tex
++++ source_ix_xii/IX/sources/main/parts/supplement_02.tex
+@@ -92,8 +92,8 @@
+ \]
+ Odd coefficients vanish by parity. In particular, every $b_m$ is an integer; this is the integrality required by the later congruence.
+ 
+-\subsection*{Connecting to the paper's $Z_n$ convention}
+-The paper defines $Z_n$ through $\sec t+\tan t$. The Lean construction uses Mathlib's actual formal sine and cosine series and defines
++\subsection*{Connecting to the chapter's $Z_n$ convention}
++The chapter defines $Z_n$ through $\sec t+\tan t$. The Lean construction uses Mathlib's actual formal sine and cosine series and defines
+ \[
+  \sec t=(\cos t)^{-1},\quad \tan t=(\sin t)\sec t,
+  \quad Z_n=n![t^n](\sec t+\tan t).
+--- before/source_ix_xii/IX/sources/main/parts/supplement_03.tex
++++ source_ix_xii/IX/sources/main/parts/supplement_03.tex
+@@ -18,7 +18,7 @@
+ \end{center}
+ 
+ \subsubsection*{The completed mathematical chain}
+-The inverse coefficients are defined from a genuine unit power series and connected to $z^2/\sinh^2z$. The source is the paper's explicit rational formula, not an abstract integral input. Its valuation calculation proves the stronger statement that \emph{every even source coefficient is a $2$-adic unit}. Formal-series multiplication and coefficient extraction then yield the Euler identity with the correct falling factorial. The omitted-tail theorem gives divisibility in the actual completed integer ring $\Z_2$.
++The inverse coefficients are defined from a genuine unit power series and connected to $z^2/\sinh^2z$. The source is the chapter's explicit rational formula, not an abstract integral input. Its valuation calculation proves the stronger statement that \emph{every even source coefficient is a $2$-adic unit}. Formal-series multiplication and coefficient extraction then yield the Euler identity with the correct falling factorial. The omitted-tail theorem gives divisibility in the actual completed integer ring $\Z_2$.
+ 
+ The clean cumulative run compiled all 17 modules, matched all 272 expected transitive axiom reports and rejected eight invalid-proof controls. All 49 infrastructure and release tests passed. Exact-rational regression checks are recorded separately from the universal proofs.
+ 
+--- before/source_ix_xii/IX/sources/root_scope.tex
++++ source_ix_xii/IX/sources/root_scope.tex
+@@ -5,7 +5,7 @@
+ stationary-separation checkpoint of 5 October 2026. Its purpose is to state
+ the strongest proved reduction and its exact remaining obligation. The
+ universal simplicity problem below is a separate question from
+-Nishibuchi's Conjecture~3.9, which the congruence results of this paper
++Nishibuchi's Conjecture~3.9, which the congruence results of this chapter
+ resolve. It is also separate from the presentation and gluing questions
+ called Native~13.2 and Native~13.3 in the original Paper~IX.
+ 
+@@ -482,7 +482,7 @@
+ Claim & Status at this edition\\
+ \midrule
+ Nishibuchi Conjecture~3.9 in its stated parameter range
+- & Resolved in the main paper\\
++ & Resolved in the main text\\
+ Sharp uniform ordinary Euler tail exponent $4M+3$
+  & Proved, with earlier formal coverage\\
+ Exact tail factorization and finite polynomial at every depth
+--- before/source_ix_xii/IX/sources/visual.tex
++++ source_ix_xii/IX/sources/visual.tex
+@@ -13,7 +13,7 @@
+ \setlist{itemsep=2pt,topsep=4pt}
+ \allowdisplaybreaks[1]
+ \pagestyle{fancy}\fancyhf{}
+-\fancyhead[L]{\small\scshape\color{muted}Euler congruences / Paper IX}
++\fancyhead[L]{\small\scshape\color{muted}Euler congruences / Chapter IX}
+ \fancyhead[R]{\small\scshape\color{muted}Visual guide}
+ \fancyfoot[L]{\small Komorebi P.}\fancyfoot[R]{\thepage}
+ \renewcommand{\headrulewidth}{.4pt}
+@@ -25,7 +25,7 @@
+ \renewcommand{\KomorebiSeries}{Chapter IX}
+ \renewcommand{\KomorebiKind}{Visual studies}
+ \renewcommand{\KomorebiEdition}{}
+-\renewcommand{\KomorebiShortTitle}{Paper IX}
++\renewcommand{\KomorebiShortTitle}{Chapter IX}
+ \renewcommand{\KomorebiTitleSize}{38}
+ \renewcommand{\KomorebiTitleLeading}{43}
+ \renewcommand{\KomorebiProfile}{atlas}
+@@ -34,7 +34,7 @@
+ \begin{document}
+ \KomorebiCover
+ \KomorebiOpeningNote{{\color{teal}\hrule height .7pt}\medskip
+-This guide explains the indexing, valuation gains, exact periods, and remaining boundaries through exact arithmetic and theorem-derived figures. The main paper supplies the proofs; the Lean companion supplies the formal source and evidence map.}
++This guide explains the indexing, valuation gains, exact periods, and remaining boundaries through exact arithmetic and theorem-derived figures. The main text supplies the proofs; the formal companion supplies the formal source and evidence map.}
+ 
+ \hypersetup{pageanchor=false}
+ 
+--- before/source_ix_xii/IX/sources/visual_body.tex
++++ source_ix_xii/IX/sources/visual_body.tex
+@@ -2,7 +2,7 @@
+ 
+ The visual guide accompanies \emph{Euler Congruences: Completion, Factorial Strengthening,
+ and Sharp Dyadic Geometry}. It makes the indexing,
+-precision gains, and boundaries of the results visible. The main paper contains
++precision gains, and boundaries of the results visible. The main text contains
+ the proofs. The separate Lean guide records which statements are already
+ formalized and which belong to the new mathematical extension.
+ 
+@@ -497,7 +497,7 @@
+ \midrule
+ Lean theorem & The precise formal statement follows from its recorded
+ dependencies and the accepted foundational axioms. & The completed Nishibuchi
+-conjecture, earlier Paper IX theory, and the inherited rank-four ordinary-step,
++conjecture, earlier Chapter IX theory, and the inherited rank-four ordinary-step,
+ sharp-period, and isometry results; see the Lean guide for build provenance. \\
+ \addlinespace
+ Algebraic proof and audit & A universal mathematical result, subject to the
+@@ -580,6 +580,6 @@
+ \end{center}
+ 
+ The remaining questions do not weaken the completed conjecture. They specify
+-the next boundary of the stronger theory. The main paper gives the proofs and
++the next boundary of the stronger theory. The main text gives the proofs and
+ precise dependency statements, while the Lean guide supplies the formal
+ coverage map and a reproducible route to its recorded checks.
+--- before/source_ix_xii/X/lean_guide/Paper_X_Lean_Guide.tex
++++ source_ix_xii/X/lean_guide/Paper_X_Lean_Guide.tex
+@@ -5,7 +5,7 @@
+ \renewcommand{\KomorebiSubtitle}{Deformation forests, transport categories, and conditional system completion}
+ \renewcommand{\KomorebiSeries}{Chapter X}
+ \renewcommand{\KomorebiKind}{Formal companion}
+-\renewcommand{\KomorebiShortTitle}{Paper X}
++\renewcommand{\KomorebiShortTitle}{Chapter X}
+ \renewcommand{\KomorebiTitleSize}{36}
+ \renewcommand{\KomorebiTitleLeading}{41}
+ \renewcommand{\KomorebiEdition}{}
+@@ -17,7 +17,7 @@
+ \begin{document}
+ \KomorebiCover
+ \begin{abstract}
+-This guide explains the source contracts behind Paper X rather than treating its
++This guide explains the source contracts behind Chapter X rather than treating its
+ terminal signature as a stand-in for the mathematics. It provides a concordance
+ of the twenty source records, follows the two independent construction branches,
+ and distinguishes arithmetic occurrence, finite trace recovery, carrier
+--- before/source_ix_xii/X/lean_guide/teaching.tex
++++ source_ix_xii/X/lean_guide/teaching.tex
+@@ -1,6 +1,6 @@
+ \section{How to read the formal evidence}
+ \label{sec:evidence-reading}
+-Paper X has a finite and formal core, a substantial arithmetic development, and a
++Chapter X has a finite and formal core, a substantial arithmetic development, and a
+ terminal conditional assembly. These are not three names for one assertion.
+ The source register below gives the twenty numbered proof records in the main
+ manuscript. The checked endpoint concerns their recorded amended scope. Later
+@@ -85,7 +85,7 @@
+ obtained from nodes with descendants at arbitrarily large depths. Finiteness
+ prevents indefinitely moving the root to a new unrelated component.
+ 
+-Atlas V9 displays the infinite-level countermodel $X_m=\{n\ge m\}$ with inclusion
++Plate X.9 displays the infinite-level countermodel $X_m=\{n\ge m\}$ with inclusion
+ maps. Each level is nonempty, but a compatible family would have to be one integer
+ $n$ lying in every $X_m$. No such integer exists. Its infinite levels violate the
+ compactness hypotheses. This is a countermodel to dropping finiteness, not to the
+@@ -157,7 +157,7 @@
+ problem is an additional identification. The packet theorem itself is a theorem
+ about a complex with supplied chain projectors.
+ 
+-Atlas V10 and V11 use a complex over $\mathbb F_5$ with dimensions $(2,4,2)$.
++Plates X.10 and X.11 use a complex over $\mathbb F_5$ with dimensions $(2,4,2)$.
+ The valid packet family gives cohomology dimensions $(1,2,1)$. A modified
+ idempotent deletes the image of a retained source vector and fails the chain-map
+ identity. All its individual matrices remain idempotent. The missing condition
+@@ -276,7 +276,7 @@
+ $\delta m=(4,4,0)$ is nonzero but $C\delta m=(8,0,8)$ vanishes. The denominator
+ valuation consumes one binary digit. Traces modulo sixteen distinguish this
+ particular ambiguity. The example separates invertibility over a field from
+-invertibility over a residue ring. Atlas V17 gives the complete small model.
++invertibility over a residue ring. Plate X.17 gives the complete small model.
+ 
+ \clearpage
+ \section{Carrier recovery is a construction inside supplied data}
+@@ -331,7 +331,7 @@
+ 
+ For commuting split semisimple operators, products of their exact spectral
+ projectors detect joint eigenspaces. Pairwise occupancy need not imply joint
+-occupancy. Atlas V18 uses six binary labels for which each pair of the target
++occupancy. Plate X.18 uses six binary labels for which each pair of the target
+ conditions $(0,1,1)$ is witnessed, while the complete triple is absent.
+ The product projector is zero although all pairwise tests pass.
+ 
+--- before/source_ix_xii/X/manuscript/Paper_X_Block27_Amended.tex
++++ source_ix_xii/X/manuscript/Paper_X_Block27_Amended.tex
+@@ -114,7 +114,7 @@
+ \renewcommand{\KomorebiSubtitle}{Deformation forests, transport categories, and conditional system completion}
+ \renewcommand{\KomorebiSeries}{Chapter X}
+ \renewcommand{\KomorebiKind}{Mathematical text}
+-\renewcommand{\KomorebiShortTitle}{Paper X}
++\renewcommand{\KomorebiShortTitle}{Chapter X}
+ \renewcommand{\KomorebiTitleSize}{36}
+ \renewcommand{\KomorebiTitleLeading}{41}
+ \renewcommand{\KomorebiEdition}{}
+@@ -126,7 +126,7 @@
+ 
+ 
+ \begin{abstract}
+-A residual representation is a genuine zeroth-order coordinate.  All positive-depth perturbations above it may fill its formal deformation neighborhood, but they cannot move into a different residual class.  This paper develops the corresponding universal object: a residual forest whose roots are residual representations, whose finite levels are lifts modulo powers of a uniformizer, and whose infinite branches are complete characteristic-zero objects.  We prove the residual partition, no-crossing, inverse-limit reconstruction, finite-branch compactness, exact smooth and singular branch counts, packet decomposition of tangent and obstruction cohomology, a directed minimum-seed theorem, rational seed-zeta formulas, and finite companion-forest completion.  The coefficient prime two is represented by a weighted forest in which characteristic-zero packets may merge modulo two and become visible only at later depth.  We then define a prime-independent system seed through a common Frobenius spine, prove a compatible-carrier summand theorem under finite Frobenius separation, and reduce finite occupancy in a fixed semisimple carrier to the nonnegative integer trace of an exact joint projector.  The paper does not prove that every admissible residual companion exists or that every finite Hecke packet is occupied.  Those two existence statements remain the exact horizontal boundary beyond vertical deformation theory.
++A residual representation is a genuine zeroth-order coordinate.  All positive-depth perturbations above it may fill its formal deformation neighborhood, but they cannot move into a different residual class.  This chapter develops the corresponding universal object: a residual forest whose roots are residual representations, whose finite levels are lifts modulo powers of a uniformizer, and whose infinite branches are complete characteristic-zero objects.  We prove the residual partition, no-crossing, inverse-limit reconstruction, finite-branch compactness, exact smooth and singular branch counts, packet decomposition of tangent and obstruction cohomology, a directed minimum-seed theorem, rational seed-zeta formulas, and finite companion-forest completion.  The coefficient prime two is represented by a weighted forest in which characteristic-zero packets may merge modulo two and become visible only at later depth.  We then define a prime-independent system seed through a common Frobenius spine, prove a compatible-carrier summand theorem under finite Frobenius separation, and reduce finite occupancy in a fixed semisimple carrier to the nonnegative integer trace of an exact joint projector.  The chapter does not prove that every admissible residual companion exists or that every finite Hecke packet is occupied.  Those two existence statements remain the exact horizontal boundary beyond vertical deformation theory.
+ \end{abstract}
+ 
+ \input{reading_contract.tex}
+@@ -136,7 +136,7 @@
+ 
+ \section{The universal seed at residual depth}
+ 
+-The earlier papers treat a seed as a primitive object together with an operator grammar, a packet system, a topology, and an exact reconstruction law.  In arithmetic deformation problems, the primitive coordinate has two layers:
++The earlier chapters treat a seed as a primitive object together with an operator grammar, a packet system, a topology, and an exact reconstruction law.  In arithmetic deformation problems, the primitive coordinate has two layers:
+ 
+ \[
+ \boxed{
+@@ -180,7 +180,7 @@
+ \caption{The universal residual seed is not one point.  It is the special fiber together with one complete formal neighborhood above each admissible root.}
+ \end{figure}
+ 
+-\subsection{What the paper is designed to separate}
++\subsection{What the chapter is designed to separate}
+ 
+ Three statements are often compressed into one sentence even though they have different logical content.
+ 
+@@ -1882,7 +1882,7 @@
+ \begin{figure}[H]
+ \centering
+ \includegraphics[width=0.84\linewidth]{16_proof_status.pdf}
+-\caption{The finite and formal statements proved in this paper are separated from the two remaining universal existence assertions.}
++\caption{The finite and formal statements proved in this chapter are separated from the two remaining universal existence assertions.}
+ \label{fig:proof-status}
+ \end{figure}
+ 
+@@ -1938,7 +1938,7 @@
+ Universal residual companions & not proved & requires nonempty root at every coefficient prime\\
+ Universal compatible-system completion & not proved & algebraic spine and companion occupancy remain necessary\\
+ Universal automorphic occupancy & not proved & requires positive global packet traces\\
+-Unrestricted reciprocity & not claimed & belongs to later local and global papers\\
++Unrestricted reciprocity & not claimed & belongs to later local and global chapters\\
+ \bottomrule
+ \end{longtable}
+ 
+@@ -1957,7 +1957,7 @@
+ 
+ Projectors add three useful structures to this forest.  They split tangent and obstruction complexes into exact subproblems, they measure delayed dyadic visibility through weights, and they turn finite carrier occupancy into an integer trace.  Directed transport adds a fourth: it converts the informal question ``how many seeds are needed?'' into the source-component count of a condensation graph.
+ 
+-The system-level boundary is now narrow enough to state without ambiguity.  One must construct a common algebraic spine, populate every residual companion forest, lift those companions through all depths, and prove positive occupancy of the required global packets.  The present paper proves the formal reconstruction, counting, transport, compactness, carrier, and finite-projector theorems used in that reduction.  It does not assert the missing universal existence statements.
++The system-level boundary is now narrow enough to state without ambiguity.  One must construct a common algebraic spine, populate every residual companion forest, lift those companions through all depths, and prove positive occupancy of the required global packets.  The present chapter proves the formal reconstruction, counting, transport, compactness, carrier, and finite-projector theorems used in that reduction.  It does not assert the missing universal existence statements.
+ 
+ \appendix
+ 
+@@ -2547,8 +2547,8 @@
+ The \hyperref[book:x-construction-22]{quadratic local-condition construction} finishes this actual local admissibility and completion step for
+ the fixed quadratic packet. It does not identify all packets in the
+ manuscript's common arithmetic spine, attach Weil--Deligne objects, or
+-prove coefficient and Hodge--Tate/period comparisons. The decomposition
+-and full local Galois group identification remains a separate inertia
++prove coefficient and Hodge--Tate/period comparisons. Identifying the decomposition group
++with the full local Galois group remains a separate inertia
+ obligation, and ramification at two is not claimed. Universal occupancy and natural finite seed rank remain conjectures.
+ 
+ \input{residue_continuation_body.tex}
+--- before/source_ix_xii/X/visual_appendix/appendix.tex
++++ source_ix_xii/X/visual_appendix/appendix.tex
+@@ -17,7 +17,7 @@
+ \setlength{\abovedisplayskip}{7pt}
+ \setlength{\belowdisplayskip}{7pt}
+ \pagestyle{fancy}\fancyhf{}
+-\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont PAPER X\quad /\quad VISUAL APPENDIX}
++\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont CHAPTER X\quad /\quad VISUAL APPENDIX}
+ \fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont KOMOREBI P.}
+ \fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont Residual seeds and finite occupancy}
+ \fancyfoot[R]{\sffamily\small Plate~X.\thepage}
+@@ -86,7 +86,7 @@
+ \renewcommand{\KomorebiSubtitle}{Deformation forests, transport categories, and conditional system completion}
+ \renewcommand{\KomorebiSeries}{Chapter X}
+ \renewcommand{\KomorebiKind}{Visual studies}
+-\renewcommand{\KomorebiShortTitle}{Paper X}
++\renewcommand{\KomorebiShortTitle}{Chapter X}
+ \renewcommand{\KomorebiTitleSize}{36}
+ \renewcommand{\KomorebiTitleLeading}{41}
+ \renewcommand{\KomorebiEdition}{}
+--- before/source_ix_xii/X/visual_appendix/source/pages.tex
++++ source_ix_xii/X/visual_appendix/source/pages.tex
+@@ -1,5 +1,5 @@
+ \vpage{1}{One root is not the whole problem}{READER'S GUIDE}{Main text: §§1--3, 8--11. Current contract: Appendix D. Earlier scalar/Mellin checkpoints are historical.}
+-Paper X separates three questions that can look deceptively similar. Does a residual object exist? Does it extend coherently through every precision? Does the resulting object occur in the required carrier? A successful answer to one question does not supply the next.
++Chapter X separates three questions that can look deceptively similar. Does a residual object exist? Does it extend coherently through every precision? Does the resulting object occur in the required carrier? A successful answer to one question does not supply the next.
+ \vfig{01_three_questions}
+ \head{Three models to keep in view}
+ The scalar equation $x^2+1=0$ has the root $1$ modulo two, but no root modulo four. Over powers of five, the residues $2,7,57,182$ form the beginning of a compatible branch. Neither fact constructs an automorphic carrier. In a supplied finite carrier, an idempotent such as $\diag(1,0)$ detects an occupied subspace; it does not explain where that carrier came from.
+@@ -117,7 +117,7 @@
+ 
+ At five, one branch begins $2,7,57,182$; the other is its negative modulo each power of five. Arbitrarily many digits in either branch cannot supply the absent scalar root over $\ZZ_3$. Nor can one root modulo two satisfy the hypothesis that every finite level is nonempty.
+ 
+-The paper's system-completion theorem uses a supplied common algebraic spine, finite nonempty levels at every coefficient place, coherent reductions, and closed local conditions. The scalar example isolates why these are substantive requirements. It is not a disproof of a companion theorem whose coefficients may be enlarged or whose objects are higher-dimensional representations.
++The chapter's system-completion theorem uses a supplied common algebraic spine, finite nonempty levels at every coefficient place, coherent reductions, and closed local conditions. The scalar example isolates why these are substantive requirements. It is not a disproof of a companion theorem whose coefficients may be enlarged or whose objects are higher-dimensional representations.
+ \takeaway{A residual root, roots at all depths, and roots at every required coefficient place are three distinct tests.}
+ 
+ \vpage{9}{Why finiteness enters compactness}{AN INFINITE-LEVEL COUNTERMODEL}{Main text: Theorem 3.3 and its finite-branching hypotheses.}
+@@ -128,7 +128,7 @@
+ 
+ There is no contradiction with finite-branch compactness: these levels are infinite. Attaching a common artificial root would give that root infinitely many children. The finitely branching rooted-tree argument therefore does not apply.
+ 
+-In the paper, finite nonempty levels and actual total reduction maps provide compactness even when some vertices die and some transition maps are not onto. One can retain only vertices with descendants at arbitrarily large depths. Finiteness makes that surviving part nonempty and permits compatible choices.
++In the chapter, finite nonempty levels and actual total reduction maps provide compactness even when some vertices die and some transition maps are not onto. One can retain only vertices with descendants at arbitrarily large depths. Finiteness makes that surviving part nonempty and permits compatible choices.
+ \[
+ X_m\ne\varnothing\ \text{for all }m
+ \quad\not\Longrightarrow\quad
+@@ -210,7 +210,7 @@
+ \head{Agreement means descent from supplied data}
+ Modulo five the polynomial is $T^2+1$; modulo seven it is $T^2+2T+6$. The roots $2$ and $3$ are the reductions of the same integer roots in both places. The coefficient lists are not required to be equal as raw residues in different rings.
+ 
+-The paper's common spine is larger: it includes characteristic polynomials at the permitted arithmetic places and the specified determinant, weight, and local labels. Requiring every finite member to match those reductions is a compatibility condition on existing objects. It is not a construction of the objects.
++The chapter's common spine is larger: it includes characteristic polynomials at the permitted arithmetic places and the specified determinant, weight, and local labels. Requiring every finite member to match those reductions is a compatibility condition on existing objects. It is not a construction of the objects.
+ 
+ Finite agreement also leaves ambiguity. Adding $35$ to an integer coefficient changes neither its residue modulo five nor its residue modulo seven. Thus two finite coefficient observations do not determine a unique global polynomial without a height bound or further exact information. Conversely, one arbitrarily chosen family of local objects need not descend to an algebraic spine.
+ \takeaway{The common spine is input shared across coefficient places. It is not created by comparing unrelated residue labels after the fact.}
+@@ -285,7 +285,7 @@
+ \head{An eigenvalue label need not select ordinary eigenvectors}
+ For the nilpotent matrix $N=\left(\begin{smallmatrix}0&1\\0&0\end{smallmatrix}\right)$, the only eigenvalue is zero. A Lagrange selector that multiplies over all other eigenvalues is an empty product, hence $I$. Its image has dimension two, while $\ker N$ has dimension one. The selector does not project onto the ordinary eigenspace.
+ 
+-The whole two-dimensional space is the generalized zero-eigenvalue packet. Paper XII's Artin-packet treatment is designed to retain such nilpotent structure. That is a different target from Paper X's split semisimple joint-eigenspace formula.
++The whole two-dimensional space is the generalized zero-eigenvalue packet. Chapter XII's Artin-packet treatment is designed to retain such nilpotent structure. That is a different target from Chapter X's split semisimple joint-eigenspace formula.
+ \takeaway{A correct theorem in one coefficient category is not a theorem in all categories. Changing from ordinary eigenspaces to generalized packets also changes the object being detected.}
+ 
+ \vpage{20}{A condition must survive the limit}{CLOSEDNESS IS NOT DECORATION}{Main text: Theorems 8.2 and 11.1; the inverse-limit closure hypotheses.}

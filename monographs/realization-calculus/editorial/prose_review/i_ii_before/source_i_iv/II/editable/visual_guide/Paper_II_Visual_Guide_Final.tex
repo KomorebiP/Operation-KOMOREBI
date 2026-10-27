@@ -1,0 +1,150 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[left=20mm,right=20mm,top=18mm,bottom=17mm,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage{microtype,amsmath,amssymb,mathtools}
+\usepackage{graphicx,array,booktabs,tabularx,multicol}
+\usepackage[table]{xcolor}
+\usepackage{tikz,fancyhdr}
+\usepackage[most]{tcolorbox}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\usepackage[hidelinks,pdfauthor={Komorebi P.},pdftitle={Chapter II: Worked Visual Studies},pdfsubject={Worked models for refinement, weighted inversion, dyadic separation, Smith fibres and linear defects}]{hyperref}
+\usepackage{bookmark,titlesec,caption}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,bookmarksopen=true}
+\definecolor{accent}{HTML}{137668}\definecolor{muted}{HTML}{536568}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.2}
+\linespread{1.01}
+\setlength{\abovedisplayskip}{7pt}
+\setlength{\belowdisplayskip}{7pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont PAPER II\quad /\quad VISUAL GUIDE}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont KOMOREBI P.}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont Worked visual studies}
+\fancyfoot[R]{\sffamily\small\color{accent}\thepage}
+\renewcommand{\headrulewidth}{.35pt}\renewcommand{\footrulewidth}{0pt}
+\newcommand{\OO}{{\mathcal O}}
+\newcommand{\FF}{\mathbb F}\newcommand{\QQ}{\mathbb Q}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\Supp}{\operatorname{Supp}}\newcommand{\Fitt}{\operatorname{Fitt}}
+\newcommand{\Ann}{\operatorname{Ann}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}\newcommand{\Tr}{\operatorname{Tr}}\newcommand{\id}{\operatorname{id}}
+\newcommand{\whot}{\mathbin{\widehat\otimes}}\newcommand{\m}{\mathfrak m}\newcommand{\p}{\mathfrak p}
+\newcommand{\head}[1]{\par\vspace{2pt}{\sffamily\bfseries\fontsize{10}{12}\selectfont #1}\par\vspace{1pt}}
+\newcommand{\platecaption}[1]{\par\noindent{\footnotesize\color{black!70}#1\par}}
+\newtcolorbox{insight}{colback=accent!3,colframe=accent,boxrule=0pt,leftrule=1.1pt,arc=0pt,left=10pt,right=10pt,top=5pt,bottom=5pt,before skip=6pt,after skip=5pt,fontupper=\fontsize{10}{12}\selectfont}
+\newcommand{\takeaway}[1]{\begin{insight}\textbf{Read this as:}\ #1\end{insight}}
+\newcommand{\vfig}[2][.92]{\par\begingroup\centering\resizebox{#1\linewidth}{!}{\input{graphics/#2.tex}}\par\endgroup\vspace{2pt}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newif\ifstarted\startedfalse
+\newcommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+\pdfbookmark[1]{Plate II.#1. #2}{plate#1}\hypertarget{vpage#1}{}\phantomsection\label{visual:#1}
+{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}Plate II.#1\quad /\quad #3\par}\vspace{5pt}
+{\sffamily\bfseries\fontsize{19}{22}\selectfont #2\par}\vspace{5pt}
+{\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+\newcommand{\pagerefV}[1]{\hyperlink{vpage#1}{V\,--\,#1}}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\kk}{\mathbb k}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\BB}{\mathcal B}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Ker}{\operatorname{ker}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiKind}{Visual guide}
+\renewcommand{\KomorebiCoverBlurb}{Twenty-four worked plates follow exact coordinates, weighted paths, integral separation, and operator defects through explicit finite models.}
+\input{generated/current_edition.tex}
+\KomorebiSetup
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
+\endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{Twenty-four worked pages and twenty-two exact model figures accompany the
+traditional paper and its Lean guide. Integer, rational, modular and symbolic
+calculations determine the figures. The preserved Python model sources and
+their explicit finite verification ranges are included in the source package.}
+
+
+\pdfbookmark[0]{Guide contents}{guidecontents}
+{\sffamily\bfseries\Large\color{accent}A route through the examples}\par\medskip
+The labels Plate II.1 through Plate II.24 identify worked pages independently of PDF
+pagination. Each page names its corresponding statement in the final
+mathematical text. The formal companion distinguishes chapter-wide coverage from the foundational contract.
+\medskip
+\begin{multicols}{2}
+{\small\noindent\hyperlink{vpage1}{\textbf{Plate II.1} Three kinds of resolution}\par\smallskip}
+{\small\noindent\hyperlink{vpage2}{\textbf{Plate II.2} An atlas of the refinement layer}\par\smallskip}
+{\small\noindent\hyperlink{vpage3}{\textbf{Plate II.3} Follow one coefficient through the tower}\par\smallskip}
+{\small\noindent\hyperlink{vpage4}{\textbf{Plate II.4} Regrouping is not averaging}\par\smallskip}
+{\small\noindent\hyperlink{vpage5}{\textbf{Plate II.5} The operator changes coordinates too}\par\smallskip}
+{\small\noindent\hyperlink{vpage6}{\textbf{Plate II.6} Selectors survive without division}\par\smallskip}
+{\small\noindent\hyperlink{vpage7}{\textbf{Plate II.7} A Fourier certificate you can inspect}\par\smallskip}
+{\small\noindent\hyperlink{vpage8}{\textbf{Plate II.8} One address, two independent residues}\par\smallskip}
+{\small\noindent\hyperlink{vpage9}{\textbf{Plate II.9} Which words can survive precision five?}\par\smallskip}
+{\small\noindent\hyperlink{vpage10}{\textbf{Plate II.10} An inverse computed in both orders}\par\smallskip}
+{\small\noindent\hyperlink{vpage11}{\textbf{Plate II.11} The residual tells you when to stop}\par\smallskip}
+{\small\noindent\hyperlink{vpage12}{\textbf{Plate II.12} Walks are not simple paths}\par\smallskip}
+{\small\noindent\hyperlink{vpage13}{\textbf{Plate II.13} A finite graph produces its denominator}\par\smallskip}
+{\small\noindent\hyperlink{vpage14}{\textbf{Plate II.14} Separate before dividing}\par\smallskip}
+{\small\noindent\hyperlink{vpage15}{\textbf{Plate II.15} Where the dyadic digit is lost}\par\smallskip}
+{\small\noindent\hyperlink{vpage16}{\textbf{Plate II.16} One extra digit is genuinely necessary}\par\smallskip}
+{\small\noindent\hyperlink{vpage17}{\textbf{Plate II.17} See every Smith fiber modulo eight}\par\smallskip}
+{\small\noindent\hyperlink{vpage18}{\textbf{Plate II.18} Transport the whole solution fiber}\par\smallskip}
+{\small\noindent\hyperlink{vpage19}{\textbf{Plate II.19} Precision exposes directional freedom}\par\smallskip}
+{\small\noindent\hyperlink{vpage20}{\textbf{Plate II.20} Filter first or split first: same output}\par\smallskip}
+{\small\noindent\hyperlink{vpage21}{\textbf{Plate II.21} Two Smith constructions, different roles}\par\smallskip}
+{\small\noindent\hyperlink{vpage22}{\textbf{Plate II.22} A small defect can grow under powers}\par\smallskip}
+{\small\noindent\hyperlink{vpage23}{\textbf{Plate II.23} Resolvents amplify errors near poles}\par\smallskip}
+{\small\noindent\hyperlink{vpage24}{\textbf{Plate II.24} Read the certificates with the pictures}\par\smallskip}
+
+\end{multicols}
+\medskip
+\head{Three reading routes}
+\textbf{Exact coordinates:} Plate II.3 to Plate II.8, followed by the finite filter in Plate II.20.
+\textbf{Precision and arithmetic:} Plate II.9 to Plate II.19.
+\textbf{Realizations and defects:} Plate II.20 to Plate II.24.
+\head{How to read an ordered product}
+In a written matrix word $ab$, the rightmost map $b$ acts first. Directed
+walks may instead be listed in chronological edge order, as in the traditional
+paper's block-path formula. Follow the convention stated with the example.
+\head{What the figures establish}
+The models expose the mechanisms and their boundaries. Exact finite checks
+validate the displayed instances. Universal statements keep the hypotheses
+and proofs given in the traditional paper. Lean coverage is recorded by the
+chapter-wide correspondence and the foundational theorem map. Each compiler claim belongs to the source and logs identified by its verification record.
+\clearpage
+\pdfbookmark[0]{Worked visual guide}{workedguide}
+\pagenumbering{arabic}
+\setstretch{1.01}\fontsize{10}{12}\selectfont\setlength{\parskip}{3pt}\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\input{source/pages_final.tex}
+\end{document}

@@ -1,0 +1,6 @@
+theorem signedAlgebra_pointwise_exponential {N : ℕ} [NeZero N]
+    {omega rho : ℂ} (ho : IsPrimitiveRoot omega N) (hr : rho^N = -1) (z : ℂ) :
+    finiteAlgebraExponential (signedCyclicGenerator ℂ N) z =
+      ∑ j : Fin N, entireSigned N j.val omega rho z • (signedCyclicGenerator ℂ N)^j.val := by
+  exact (hasSum_signedAlgebra_exponential (Nat.pos_of_ne_zero (NeZero.ne N)) ho hr
+    (signedCyclicGenerator ℂ N) (signedCyclicGenerator_pow ℂ N) z).tsum_eq

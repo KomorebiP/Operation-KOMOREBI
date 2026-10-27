@@ -1,0 +1,181 @@
+import Mathlib.Topology.Algebra.UniformRing
+import Mathlib.Topology.Algebra.Ring.Ideal
+import Mathlib.Topology.Algebra.IsUniformGroup.Basic
+import Mathlib.RingTheory.Ideal.Maps
+
+/-!
+# Completion and closed ideal quotients
+
+The completion is Mathlib's actual Hausdorff uniform completion. The quotient has
+its quotient topology and the associated additive-group uniformity. The
+countable-uniformity hypothesis is used only to prove completeness of its quotient.
+No completeness, surjectivity, or inverse for the comparison is postulated.
+-/
+
+noncomputable section
+open Filter Topology UniformSpace
+open scoped Uniformity
+set_option autoImplicit false
+namespace PaperXII.CompletionQuotient
+
+variable {R : Type*} [CommRing R] [UniformSpace R] [IsUniformAddGroup R]
+  [IsTopologicalRing R]
+
+/-- Countable uniform bases survive actual Hausdorff completion. -/
+theorem completion_countablyGenerated {α : Type*} [UniformSpace α]
+    [Filter.IsCountablyGenerated (uniformity α)] :
+    Filter.IsCountablyGenerated (uniformity (Completion α)) := by
+  have : Filter.IsCountablyGenerated (uniformity (CauchyFilter α)) := by
+    obtain ⟨s, hs⟩ := Filter.isCountablyGenerated_iff_exists_antitone_basis.mp
+      (inferInstance : Filter.IsCountablyGenerated (uniformity α))
+    exact (CauchyFilter.basis_uniformity hs.toHasBasis).isCountablyGenerated
+  change Filter.IsCountablyGenerated (uniformity (SeparationQuotient (CauchyFilter α)))
+  rw [SeparationQuotient.uniformity_eq]
+  infer_instance
+
+/-- The uniformity associated with the actual quotient topology. -/
+@[instance_reducible] def quotientUniformSpace {S : Type*} [CommRing S] [TopologicalSpace S]
+    [IsTopologicalRing S] (I : Ideal S) : UniformSpace (S / I) :=
+  IsTopologicalAddGroup.rightUniformSpace (S / I)
+
+attribute [local instance] quotientUniformSpace
+
+instance quotientUniformAddGroup {S : Type*} [CommRing S] [TopologicalSpace S]
+    [IsTopologicalRing S] (I : Ideal S) : IsUniformAddGroup (S / I) :=
+  isUniformAddGroup_of_addCommGroup
+
+/-- Close the extended ideal in the actual completion. -/
+def closedExtension (I : Ideal R) : Ideal (Completion R) :=
+  (I.map (Completion.coeRingHom : R →+* Completion R)).closure
+
+instance closedExtension_isClosed (I : Ideal R) :
+    IsClosed (closedExtension I : Set (Completion R)) := isClosed_closure
+
+/-- The quotient of the completion is complete; no finite-generation assumption. -/
+theorem quotient_complete (I : Ideal R) [Filter.IsCountablyGenerated (uniformity R)] :
+    CompleteSpace (Completion R / closedExtension I) := by
+  have := completion_countablyGenerated (α := R)
+  exact QuotientAddGroup.completeSpace_right (Completion R) (closedExtension I).toAddSubgroup
+
+/-- The completion of the quotient receives the canonical completed quotient map. -/
+def forwardMap (I : Ideal R) : Completion R →+* Completion (R / I) :=
+  Completion.mapRingHom (Ideal.Quotient.mk I)
+    (QuotientRing.isOpenQuotientMap_mk I).continuous
+
+theorem forwardMap_continuous (I : Ideal R) : Continuous (forwardMap I) :=
+  Completion.continuous_extension
+
+@[simp] theorem forwardMap_coe (I : Ideal R) (r : R) :
+    forwardMap I (r : Completion R) = (Ideal.Quotient.mk I r : Completion (R / I)) :=
+  Completion.mapRingHom_coe _ r
+
+/-- The canonical completed map kills the closed extended ideal, by continuity. -/
+theorem closedExtension_le_ker (I : Ideal R) :
+    closedExtension I ≤ RingHom.ker (forwardMap I) := by
+  apply closure_minimal
+  · change I.map (Completion.coeRingHom : R →+* Completion R) ≤ RingHom.ker (forwardMap I)
+    rw [Ideal.map_le_iff_le_comap]
+    intro r hr
+    change forwardMap I (r : Completion R) = 0
+    rw [forwardMap_coe, Ideal.Quotient.eq_zero_iff_mem.mpr hr]
+    exact map_zero Completion.coeRingHom
+  · exact isClosed_eq (forwardMap_continuous I) continuous_const
+
+/-- One direction of the comparison, factored through the actual ideal quotient. -/
+def forward (I : Ideal R) :
+    (Completion R / closedExtension I) →+* Completion (R / I) :=
+  Ideal.Quotient.lift _ (forwardMap I) (closedExtension_le_ker I)
+
+theorem forward_continuous (I : Ideal R) : Continuous (forward I) := by
+  apply (QuotientRing.isOpenQuotientMap_mk (closedExtension I)).isQuotientMap.continuous_iff.mpr
+  exact forwardMap_continuous I
+
+@[simp] theorem forward_mk (I : Ideal R) (x : Completion R) :
+    forward I (Ideal.Quotient.mk (closedExtension I) x) = forwardMap I x := rfl
+
+/-- The dense, uncompleted quotient maps to the quotient of the completion. -/
+def baseMap (I : Ideal R) : R →+* (Completion R / closedExtension I) :=
+  (Ideal.Quotient.mk (closedExtension I)).comp Completion.coeRingHom
+
+theorem baseMap_continuous (I : Ideal R) : Continuous (baseMap I) :=
+  (QuotientRing.isOpenQuotientMap_mk _).continuous.comp Completion.continuous_coeRingHom
+
+theorem ideal_le_ker_baseMap (I : Ideal R) : I ≤ RingHom.ker (baseMap I) := by
+  intro r hr
+  apply Ideal.Quotient.eq_zero_iff_mem.mpr
+  exact subset_closure (Ideal.mem_map_of_mem _ hr)
+
+def quotientBaseMap (I : Ideal R) : (R / I) →+* (Completion R / closedExtension I) :=
+  Ideal.Quotient.lift I (baseMap I) (ideal_le_ker_baseMap I)
+
+theorem quotientBaseMap_continuous (I : Ideal R) : Continuous (quotientBaseMap I) := by
+  apply (QuotientRing.isOpenQuotientMap_mk I).isQuotientMap.continuous_iff.mpr
+  exact baseMap_continuous I
+
+@[simp] theorem quotientBaseMap_mk (I : Ideal R) (r : R) :
+    quotientBaseMap I (Ideal.Quotient.mk I r) =
+      Ideal.Quotient.mk (closedExtension I) (r : Completion R) := rfl
+
+section Countable
+variable [Filter.IsCountablyGenerated (uniformity R)]
+attribute [local instance] quotient_complete
+
+/-- The reverse comparison extends the quotient map to its actual completion. -/
+def backward (I : Ideal R) :
+    Completion (R / I) →+* (Completion R / closedExtension I) :=
+  Completion.extensionHom (quotientBaseMap I) (quotientBaseMap_continuous I)
+
+theorem backward_continuous (I : Ideal R) : Continuous (backward I) :=
+  Completion.continuous_extension
+
+@[simp] theorem backward_coe (I : Ideal R) (x : R / I) :
+    backward I (x : Completion (R / I)) = quotientBaseMap I x :=
+  Completion.extensionHom_coe _ _ x
+
+/-- First inverse law, established on dense representatives then by continuity. -/
+theorem forward_backward (I : Ideal R) (x : Completion (R / I)) :
+    forward I (backward I x) = x := by
+  refine Completion.induction_on x
+    (isClosed_eq ((forward_continuous I).comp (backward_continuous I)) continuous_id) ?_
+  intro x
+  obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
+  simp
+
+/-- Second inverse law; the dense representative argument precedes quotient induction. -/
+theorem backward_forwardMap (I : Ideal R) (x : Completion R) :
+    backward I (forwardMap I x) = Ideal.Quotient.mk (closedExtension I) x := by
+  refine Completion.induction_on x
+    (isClosed_eq ((backward_continuous I).comp (forwardMap_continuous I))
+      (QuotientRing.isOpenQuotientMap_mk _).continuous) ?_
+  intro r
+  simp
+
+theorem backward_forward (I : Ideal R) (x : Completion R / closedExtension I) :
+    backward I (forward I x) = x := by
+  obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x
+  exact backward_forwardMap I x
+
+/-- Completion commutes with quotient by the closed extended ideal. -/
+def equiv (I : Ideal R) :
+    (Completion R / closedExtension I) ≃+* Completion (R / I) :=
+  RingEquiv.ofRingHom (forward I) (backward I)
+    (RingHom.ext (forward_backward I)) (RingHom.ext (backward_forward I))
+
+theorem equiv_continuous (I : Ideal R) : Continuous (equiv I) := forward_continuous I
+
+theorem equiv_symm_continuous (I : Ideal R) : Continuous (equiv I).symm :=
+  backward_continuous I
+
+@[simp] theorem equiv_mk_coe (I : Ideal R) (r : R) :
+    equiv I (Ideal.Quotient.mk (closedExtension I) (r : Completion R)) =
+      (Ideal.Quotient.mk I r : Completion (R / I)) := forwardMap_coe I r
+
+/-- A bundled homeomorphism accompanying the ring equivalence. -/
+def homeomorph (I : Ideal R) :
+    (Completion R / closedExtension I) ≃ₜ Completion (R / I) where
+  toEquiv := (equiv I).toEquiv
+  continuous_toFun := equiv_continuous I
+  continuous_invFun := equiv_symm_continuous I
+
+end Countable
+end PaperXII.CompletionQuotient

@@ -1,0 +1,2310 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools}
+\usepackage{bm}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2400
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else
+    \edef\@subjects{Primary:~\@primarysubjects}%
+  \fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty
+      \edef\@subjects{Secondary:~\@secondarysubjects}%
+    \else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}%
+    \fi
+  \fi
+  \ifpdf
+    \hypersetup{pdfsubject=\@subjects}%
+  \fi
+  \if@aom@oldkeywords\else
+    \@footnotetext{AMS Classification:~\@subjects.}%
+  \fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\RR}{\mathbb R}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\TT}{\mathbb T}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Ecal}{\mathcal E}
+\newcommand{\Fcal}{\mathcal F}
+\newcommand{\Hcal}{\mathcal H}
+\newcommand{\Kcal}{\mathcal K}
+\newcommand{\Lcal}{\mathcal L}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Qcal}{\mathcal Q}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\Wcal}{\mathcal W}
+\newcommand{\BV}{\operatorname{BV}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Per}{\operatorname{Per}}
+\newcommand{\RMSE}{\operatorname{RMSE}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\esssup}{\operatorname*{ess\,sup}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\reach}{\operatorname{reach}}
+\newcommand{\jump}[1]{\left[#1\right]}
+
+\graphicspath{{figures/}}
+
+\title[Multiresolution signal calculus]{Multiresolution Signal Calculus, Singular Packets, and Stable Reconstruction}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{42C40}
+\subject{secondary}{msc2020}{94A12}
+\subject{secondary}{msc2020}{65T60}
+\subject{secondary}{msc2020}{41A25}
+\subject{secondary}{msc2020}{28A75}
+\keyword{polyphase decomposition}
+\keyword{filter bank}
+\keyword{wavelet packet}
+\keyword{jump recovery}
+\keyword{Gibbs phenomenon}
+\keyword{piecewise smooth signal}
+\copyrightnote{}
+\doinumber{}
+
+\pdfstringdefDisableCommands{\let\unskip\relax}
+\hypersetup{
+  pdftitle={Multiresolution Signal Calculus, Singular Packets, and Stable Reconstruction},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Polyphase coordinates, filter banks, packet trees, singularity recovery, and geometric packet error}
+}
+
+\begin{document}
+\begin{abstract}
+Signals on a lattice admit exact coordinates indexed by the residue classes of every finite index sublattice. Convolution becomes a matrix of packet transfers, while filter banks and packet trees become exact changes of coordinates. We develop this structure on sequence spaces, prove quantitative stability for imperfect and perturbed banks, and give an exact dynamic recursion for adaptive packet trees. A singular signal is written as a smooth component plus step or truncated power packets that record jumps in the signal and its derivatives. Retaining the correct packets leaves only the smooth approximation error. Estimated packets are governed by exact formulas involving value error, region overlap, boundary displacement, and the norm of the smooth approximation operator. The main recovery result treats separated jumps sampled on a uniform grid. An explicit contrast gap gives exact recovery of every jump cell, grid scale location accuracy, amplitude control, and finite norm consistency. Probability bounds cover sub Gaussian noise and repeated measurements. Haar coefficients, two shifted grids, and annihilating differences give complementary localization results. The final sections treat Gibbs oscillation, nonlinear residue interactions, numerical illustrations, and cyclic Cayley coordinates.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+Polyphase decompositions, filter banks, lifting schemes, and wavelet packets are standard parts of multirate signal processing and harmonic analysis. Their classical development is described in \cite{CrochiereRabiner1983,Vaidyanathan1993,VetterliKovacevic1995,StrangNguyen1996,Daubechies1992,Mallat2009}. These theories are often introduced through several parallel languages. Residue classes appear in polyphase analysis. Matrix symbols appear in filter banks. Trees appear in wavelet packets. Singularities are handled through a different approximation or detection method. The first aim of this article is to place these constructions in one exact coordinate system.
+
+The second aim is to separate representation from recovery. If a signal has already been written as
+\[
+f=s+j
+\]
+with a smooth part \(s\) and a singular packet \(j\), then
+\[
+\widetilde f=Qs+j
+\]
+satisfies
+\[
+f-\widetilde f=s-Qs.
+\]
+This identity is exact, but it does not discover \(j\). A useful signal theory must therefore distinguish three errors. The first is the approximation error of the smooth component. The second is the error in the estimated singular packet. The third is the amplification caused by applying a reconstruction operator to that packet error. The middle sections of the paper isolate all three terms.
+
+The singular packets considered here range from indicator functions of regions to truncated powers
+\[
+\frac{(t-\tau)_+^m}{m!}.
+\]
+The latter encode jumps in derivatives of order \(m\). They permit a piecewise smooth function to be reduced to a globally Sobolev remainder under explicit trace assumptions. This gives a precise version of the informal statement that a discontinuity should be represented directly rather than approximated by a global smooth basis.
+
+The recovery theory begins with one dimensional separated jumps. For bounded deterministic noise, thresholding adjacent sample contrasts recovers the exact grid cells containing the jumps whenever the jump size exceeds the combined smooth variation and noise by an explicit margin. The same proof gives location and amplitude bounds. A sub Gaussian version follows from a union bound. Averaging repeated measurements reduces the required threshold in the expected way. Haar coefficients provide a second detection mechanism. Two grids shifted by half a cell guarantee that every jump is well placed in at least one grid, which removes the most elementary dyadic alignment failure.
+
+The literature on singularity detection is much broader than the results proved here. Wavelet modulus maxima are developed in \cite{MallatHwang1992}. Best basis selection in packet libraries was introduced in \cite{CoifmanWickerhauser1992}. Nonlinear approximation is surveyed in \cite{DeVore1998}. Geometric image models, wedgelets, and curvelets appear in \cite{Donoho1999,CandesDonoho2004}. The present article does not replace those theories. Its narrower purpose is to give a common exact calculus in which coordinate reconstruction, adaptive basis selection, singular packet estimation, and smooth approximation remain logically separate.
+
+The article is organized as follows. \Cref{sec:signal_seeds,sec:polyphase} develop lattice addresses and exact residue coordinates in any dimension. \Cref{sec:convolution,sec:filter_banks} express convolution and filter banks in those coordinates, including stability under imperfect reconstruction and filter perturbation. \Cref{sec:packet_trees} treats arbitrary pruned packet trees and stability of the best basis decision. \Cref{sec:singular_packets,sec:packet_error} introduce step and higher order singular packets, exact reconstruction identities, and error formulas. \Cref{sec:jump_recovery,sec:localization} prove deterministic and probabilistic recovery results. \Cref{sec:gibbs,sec:nonlinear} treat Gibbs oscillation and nonlinear interactions. The final sections record finite numerical illustrations and a secondary cyclic Cayley realization.
+
+Several conclusions are deliberately excluded. The paper does not prove a universal image segmentation theorem. Exact recovery of separated jumps in one dimension does not imply stable recovery of arbitrary boundaries in higher dimensions. Retaining a correct singular packet does not remove noise or model error. An adaptive tree selected by an additive objective need not remain optimal when global hardware costs or cross packet interactions are introduced. The Cayley coordinate section is a secondary conformal realization and is not used in the recovery theorems.
+
+\subsection{Main results}
+
+The first result is an exact coordinate theorem. Let \(L\) be a finite index sublattice of \(\ZZ^d\), and let \(R\) contain one representative from every coset. The analysis map
+\[
+x\longmapsto (x_r)_{r\in R},
+\qquad
+x_r(\ell)=x(r+\ell),
+\]
+is an isometric isomorphism on every \(\ell^p\) space. This statement includes the usual one dimensional polyphase decomposition, but it also applies to arbitrary finite index lattice packets in several dimensions. If \(L'\leq L\), the coarse packets split exactly into their fine descendants. A convolution operator becomes a matrix of convolution operators on \(L\), with entries
+\[
+h_{rs}(m)=h(r-s+m).
+\]
+The matrix is therefore a coordinate representation of the original operator, not a reduced model.
+
+The filter bank results distinguish exact reconstruction from quantitative near reconstruction. Exact recovery with delay \(d\) is the pointwise matrix identity
+\[
+R(z)E(z)=z^{-d}I.
+\]
+When this identity fails, the reconstruction error is controlled by the essential supremum of the delay compensated multiplier defect. If the filters themselves are perturbed, \cref{thm:filter_perturbation} separates the analysis error, the synthesis error, and their product. The frame bound in \cref{thm:frame_perturbation} shows that a lower singular value gap survives every sufficiently small perturbation. This makes the distinction between algebraic invertibility and stable numerical reconstruction explicit.
+
+The packet tree results treat every admissible pruning, not only complete trees of a fixed depth. Unitary local splits give a unitary global transform. Local frame bounds propagate recursively in the nonunitary case. If the cost of a pruning is additive over retained nodes, then
+\[
+F(v)
+=
+\min\left\{
+c(v),
+\sum_{w\in\operatorname{child}(v)}F(w)
+\right\}
+\]
+gives the exact optimal tree. The cost and the selected basis are stable when the node costs change by less than the gap separating the optimal pruning from its competitors.
+
+The singular packet results begin with trace data. If a piecewise smooth function has a jump in its derivative of order \(m\) at \(\tau_q\), then the packet
+\[
+\jump{f^{(m)}}_{\tau_q}
+\frac{(t-\tau_q)_+^m}{m!}
+\]
+removes exactly that trace jump. Subtracting all packets through order \(r-1\) leaves a global \(W^{r,p}\) remainder. The packet coefficients are uniquely determined by the one sided trace jumps. This gives a finite and explicit singular part for the class covered by \cref{thm:higher_order_packet_decomposition}.
+
+The reconstruction formula with an estimated packet is
+\[
+f-\widehat f_m
+=
+(I-Q_m)s+(I-Q_m)(j-\widehat j).
+\]
+This identity identifies the two terms that must be controlled. The exact packet formulas in \cref{sec:packet_error} then evaluate or bound \(\|j-\widehat j\|\) from amplitude error, region overlap, boundary displacement, and the order of a derivative jump. A value jump has location modulus \(|\tau-\widehat\tau|^{1/p}\) in finite \(L^p\), while every positive order truncated power packet is Lipschitz in its location.
+
+The principal recovery theorem uses adjacent sample contrasts. Let
+\[
+b_h=Mh+2\varepsilon
+\]
+be the largest contrast that can be produced by a Lipschitz background and bounded noise in one grid cell. If
+\[
+a_{\min}>2b_h,
+\]
+then every threshold between \(b_h\) and \(a_{\min}-b_h\) detects exactly the cells containing jumps. The jump locations are recovered within \(h/2\), and each amplitude error is at most \(b_h\). The probability theorem replaces the deterministic noise term by
+\[
+2\sigma\sqrt{\log(2n/\delta)}.
+\]
+Two half shifted Haar grids provide a second recovery mechanism. Every point is at least one quarter of a cell away from the boundary of one of the grids, so the Haar coefficient gap can be made independent of dyadic alignment.
+
+\subsection{Notation}
+
+The following symbols recur throughout the article.
+\begin{center}
+\begin{tabular}{p{0.22\textwidth}p{0.66\textwidth}}
+\toprule
+symbol & meaning\\
+\midrule
+\(L\leq\ZZ^d\) & a finite index sublattice\\
+\(R\) & a set of representatives for \(\ZZ^d/L\)\\
+\(P_r\) & the coordinate projector onto the coset \(r+L\)\\
+\(\Acal_L,\Scal_L\) & lattice analysis and interleaving synthesis\\
+\(E,R\) & filter bank analysis and synthesis symbols\\
+\(Q_m\) & a bounded linear approximation operator acting on the smooth part\\
+\(j,\widehat j\) & the true and estimated singular packets\\
+\(H_\tau\) & the step packet \(\one_{[\tau,1]}\)\\
+\(\phi_{m,\tau}\) & the truncated power packet \((t-\tau)_+^m/m!\)\\
+\(h\) & the grid spacing in the recovery theorems\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Signal seeds and lattice addresses}\label{sec:signal_seeds}
+
+Let \(1\leq p\leq\infty\). For a countable set \(G\), write \(\ell^p(G)\) for the usual complex sequence space. For an integer \(d\geq1\), when \(G=\ZZ^d\), translation by \(a\in\ZZ^d\) is
+\[
+(T_ax)(n)=x(n-a).
+\]
+Let \(\delta_0\) be the impulse at the origin.
+
+\begin{theorem}[Impulse generation]\label{thm:impulse_generation}
+For \(1\leq p<\infty\),
+\[
+\overline{\Span\{T_a\delta_0:a\in\ZZ^d\}}^{\ell^p}
+=
+\ell^p(\ZZ^d).
+\]
+The same statement holds in \(c_0(\ZZ^d)\) with the supremum norm. In \(\ell^\infty(\ZZ^d)\), the closed span of the translation orbit is exactly \(c_0(\ZZ^d)\).
+\end{theorem}
+
+\begin{proof}
+The translation orbit is the standard coordinate family \((\delta_a)_{a\in\ZZ^d}\). Its finite span is the space of finitely supported sequences. Finitely supported sequences are dense in \(\ell^p\) for finite \(p\) and in \(c_0\). Their closure in the supremum norm is \(c_0\), which is a proper closed subspace of \(\ell^\infty\).
+\end{proof}
+
+\begin{remark}\label{rem:infinity_boundary}
+The distinction at \(p=\infty\) is structural. The impulse generates every finitely supported signal algebraically, but it is not a topological cyclic seed for all bounded signals.
+\end{remark}
+
+\begin{proposition}[Finite periodic signals]\label{prop:finite_periodic}
+Let \(G=\ZZ^d/L\), where \(L\leq\ZZ^d\) has finite index. The translation orbit of the impulse at the identity is a basis of \(\CC^G\). In particular, one impulse generates every signal on the finite periodic lattice.
+\end{proposition}
+
+\begin{proof}
+Translation sends the impulse at the identity to the impulse at each element of \(G\). These impulses form the standard basis of \(\CC^G\).
+\end{proof}
+
+\section{Polyphase coordinates on finite index sublattices}\label{sec:polyphase}
+
+Let \(L\leq\ZZ^d\) be a sublattice of finite index \(q\). Choose a set \(R\subset\ZZ^d\) containing one representative from every coset in \(\ZZ^d/L\). Thus
+\[
+\ZZ^d=\bigsqcup_{r\in R}(r+L).
+\]
+For \(x:\ZZ^d\to\CC\), its channel at \(r\) is the sequence on \(L\)
+\[
+x_r(\ell)=x(r+\ell).
+\]
+
+\begin{definition}[Lattice packet]\label{def:lattice_packet}
+For \(r\in R\), define the coordinate projector
+\[
+(P_rx)(n)=\one_{r+L}(n)x(n).
+\]
+The family \((P_r)_{r\in R}\) is called the packet system associated with \(L\) and \(R\).
+\end{definition}
+
+For finite \(p\), equip \(\bigoplus_{r\in R}\ell^p(L)\) with
+\[
+\|(u_r)\|^p=\sum_{r\in R}\|u_r\|_p^p.
+\]
+For \(p=\infty\), use the maximum norm.
+
+\begin{theorem}[Exact lattice polyphase decomposition]\label{thm:lattice_polyphase}
+For every \(1\leq p\leq\infty\), the analysis map
+\[
+\Acal_L:\ell^p(\ZZ^d)\longrightarrow\bigoplus_{r\in R}\ell^p(L),
+\qquad
+\Acal_Lx=(x_r)_{r\in R},
+\]
+is an isometric isomorphism. Its inverse is the interleaving map
+\[
+\Scal_L(u)(r+\ell)=u_r(\ell).
+\]
+The projectors satisfy
+\[
+P_rP_s=\delta_{rs}P_r,
+\qquad
+\sum_{r\in R}P_r=I.
+\]
+\end{theorem}
+
+\begin{proof}
+Every address has a unique representation \(r+\ell\). For finite \(p\),
+\[
+\|x\|_p^p
+=
+\sum_{r\in R}\sum_{\ell\in L}|x(r+\ell)|^p
+=
+\sum_{r\in R}\|x_r\|_p^p.
+\]
+The corresponding supremum identity is immediate when \(p=\infty\). Unique address representation proves that analysis and interleaving are inverse maps. The projector identities follow from the disjoint coset partition.
+\end{proof}
+
+\begin{corollary}[One dimensional residue coordinates]\label{cor:one_dimensional_polyphase}
+For \(L=N\ZZ\) and \(R=\{0,\ldots,N-1\}\),
+\[
+x_r(k)=x(Nk+r)
+\]
+and
+\[
+\ell^p(\ZZ)\cong\bigoplus_{r=0}^{N-1}\ell^p(\ZZ)
+\]
+isometrically.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:lattice_polyphase} to the standard residue representatives.
+\end{proof}
+
+\begin{proposition}[Translation covariance]\label{prop:translation_covariance}
+Fix \(a\in\ZZ^d\). For every \(r\in R\), write uniquely
+\[
+r-a=r_a+\lambda_{a,r},
+\qquad
+r_a\in R,
+\quad
+\lambda_{a,r}\in L.
+\]
+Then
+\[
+(\Acal_LT_ax)_r(\ell)
+=
+x_{r_a}(\ell+\lambda_{a,r}).
+\]
+Thus a fine translation permutes the lattice packets and applies an internal translation on \(L\).
+\end{proposition}
+
+\begin{proof}
+Evaluate at \(r+\ell\):
+\[
+(T_ax)(r+\ell)
+=x(r+\ell-a)
+=x(r_a+\ell+\lambda_{a,r}).
+\]
+This is the stated channel formula.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.82\textwidth]{01_polyphase_coordinates.pdf}
+\caption{A signal and its four exact residue channels. Interleaving the channels returns the original samples without approximation.}
+\label{fig:polyphase_coordinates}
+\end{figure}
+
+\subsection{Refinement of sublattices}
+
+Let \(L'\leq L\leq\ZZ^d\), with both indices finite. Choose representative systems \(R\) for \(\ZZ^d/L\) and \(R'\) for \(\ZZ^d/L'\). For \(r\in R\), define
+\[
+\operatorname{Child}(r)
+=
+\{s\in R':s+L'\subset r+L\}.
+\]
+
+\begin{theorem}[Exact lattice refinement]\label{thm:lattice_refinement}
+For every coarse packet,
+\[
+P_r^{L}
+=
+\sum_{s\in\operatorname{Child}(r)}P_s^{L'}.
+\]
+The fine packets in the sum are pairwise disjoint. Refinement through several nested sublattices is transitive.
+\end{theorem}
+
+\begin{proof}
+The coset \(r+L\) is the disjoint union of the \(L'\) cosets contained in it. Multiplying by the corresponding indicator functions gives the projector identity. A nested partition of a coset is independent of whether the intermediate level is inserted, which proves transitivity.
+\end{proof}
+
+\begin{example}[Rectangular image phases]\label{ex:image_phases}
+For
+\[
+L=M\ZZ\times N\ZZ\subset\ZZ^2,
+\]
+one may take
+\[
+R=\{0,\ldots,M-1\}\times\{0,\ldots,N-1\}.
+\]
+The analysis map separates an image into \(MN\) exact phases. Refining \((M,N)\) to \((M',N')\), where \(M\mid M'\) and \(N\mid N'\), splits every coarse phase into
+\[
+\frac{M'}M\frac{N'}N
+\]
+fine phases.
+\end{example}
+
+\section{Convolution as a packet transfer matrix}\label{sec:convolution}
+
+Let \(h\in\ell^1(\ZZ^d)\) and \(x\in\ell^p(\ZZ^d)\), with \(1\leq p\leq\infty\), and define
+\[
+(Hx)(n)
+=(h*x)(n)
+=\sum_{q\in\ZZ^d}h(q)x(n-q).
+\]
+Young's inequality gives
+\[
+\|Hx\|_p\leq\|h\|_1\|x\|_p
+\]
+for every \(1\leq p\leq\infty\).
+
+\begin{definition}[Packet transfer kernel]\label{def:packet_transfer_kernel}
+For output residue \(r\in R\) and input residue \(s\in R\), define a kernel on \(L\) by
+\[
+h_{rs}(m)=h(r-s+m),
+\qquad
+m\in L.
+\]
+\end{definition}
+
+\begin{theorem}[Exact convolution transfer law]\label{thm:convolution_transfer}
+Let \(y=h*x\). Then
+\[
+y_r(\ell)
+=
+\sum_{s\in R}\sum_{m\in L}h_{rs}(m)x_s(\ell-m).
+\]
+Equivalently,
+\[
+\Acal_LH\Acal_L^{-1}
+=
+(H_{rs})_{r,s\in R},
+\]
+where \(H_{rs}\) is convolution on \(L\) by \(h_{rs}\).
+\end{theorem}
+
+\begin{proof}
+Evaluate the output at \(r+\ell\). Write every input address as \(s+\ell'\). The convolution offset is
+\[
+(r+\ell)-(s+\ell')
+=(r-s)+(\ell-\ell').
+\]
+Setting \(m=\ell-\ell'\) gives the formula.
+\end{proof}
+
+\begin{proposition}[Transfer norm control]\label{prop:transfer_norm_control}
+For every output residue \(r\),
+\[
+\sum_{s\in R}\|h_{rs}\|_{\ell^1(L)}
+=
+\|h\|_{\ell^1(\ZZ^d)}.
+\]
+The packet transfer matrix acts on the polyphase direct sum with norm at most \(\|h\|_1\) on every \(\ell^p\) space.
+\end{proposition}
+
+\begin{proof}
+For fixed \(r\), every \(q\in\ZZ^d\) has a unique representation \(q=r-s+m\) with \(s\in R\) and \(m\in L\). This proves the equality of the absolute sums. The operator norm bound also follows by conjugating Young's inequality through the isometric analysis map.
+\end{proof}
+
+\begin{proposition}[Composition of transfer matrices]\label{prop:transfer_composition}
+If \(G\) and \(H\) are convolution operators with packet matrices \((G_{rs})\) and \((H_{rs})\), then the packet matrix of \(GH\) is
+\[
+(GH)_{rt}
+=
+\sum_{s\in R}G_{rs}H_{st}.
+\]
+In one dimensional transform notation, the corresponding matrix symbols multiply pointwise.
+\end{proposition}
+
+\begin{proof}
+Conjugation by \(\Acal_L\) preserves composition:
+\[
+\Acal_LGH\Acal_L^{-1}
+=
+(\Acal_LG\Acal_L^{-1})(\Acal_LH\Acal_L^{-1}).
+\]
+Reading the \((r,t)\) block gives the formula.
+\end{proof}
+
+\subsection{The one dimensional symbol}
+
+For \(L=N\ZZ\) with \(N\geq1\), first take \(|z|=1\). The assumption \(h\in\ell^1(\ZZ)\) makes the following symbol series absolutely convergent. Define
+\[
+H_{ks}(z)=\sum_{m\in\ZZ}h(Nm+k-s)z^{-m}.
+\]
+For \(x\in\ell^1(\ZZ)\), the channel transforms converge absolutely on the unit circle and satisfy
+\[
+\bm Y(z)=\bm H_N(z)\bm X(z).
+\]
+For \(x\in\ell^2(\ZZ)\), the same identity holds almost everywhere in the \(L^2\) Fourier sense. For finite impulse-response kernels it also holds at nonzero \(z\) wherever the input channel transforms are weighted absolutely summable. This is the classical polyphase matrix. It is the exact block matrix of the original convolution operator.
+
+\begin{corollary}[Finite impulse response closure]\label{cor:fir_closure}
+If \(h\) has finite support, every packet kernel \(h_{ks}\) has finite support. Matrix multiplication of polyphase symbols agrees with composition of the original finite impulse response operators.
+\end{corollary}
+
+\begin{proof}
+Finite support is preserved by taking residue subsequences. The composition statement is \cref{prop:transfer_composition}.
+\end{proof}
+
+\begin{example}[A four phase finite impulse response operator]\label{ex:four_phase_fir}
+Let
+\[
+h(0)=1,
+\quad h(1)=2,
+\quad h(2)=3,
+\quad h(3)=4,
+\quad h(4)=5,
+\]
+with all other taps zero. For four residue channels, the transfer symbol is
+\[
+\bm H_4(z)
+=
+\begin{pmatrix}
+1+5z^{-1}&4z^{-1}&3z^{-1}&2z^{-1}\\
+2&1+5z^{-1}&4z^{-1}&3z^{-1}\\
+3&2&1+5z^{-1}&4z^{-1}\\
+4&3&2&1+5z^{-1}
+\end{pmatrix}.
+\]
+The delay term records the tap that crosses a coarse cell boundary. No approximation is introduced by the matrix representation.
+\end{example}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.62\textwidth]{02_transfer_blocks.pdf}
+\caption{Absolute tap weight in the transfer blocks of the four phase operator in \cref{ex:four_phase_fir}.}
+\label{fig:transfer_blocks}
+\end{figure}
+
+\section{Filter banks, frame bounds, and lifting}\label{sec:filter_banks}
+
+Throughout this section the banks act boundedly on the relevant polyphase \(\ell^2\) spaces. A finite channel analysis bank acts in Fourier coordinates by a matrix \(E(z)\). A synthesis bank acts by a matrix \(R(z)\). The matrices may be square or rectangular. Their entries are Laurent polynomials for finite filters and bounded measurable functions for general stable filters.
+
+\begin{theorem}[Perfect reconstruction criterion]\label{thm:perfect_reconstruction}
+Let \(E(z)\) be an \(M\) by \(N\) analysis matrix and let \(R(z)\) be an \(N\) by \(M\) synthesis matrix. The bank reconstructs every input with a delay of \(d\) coarse channel samples, equivalent to \(Nd\) original samples in the one dimensional \(N\)-phase convention, exactly if and only if
+\[
+R(z)E(z)=z^{-d}I_N
+\]
+for almost every point on the unit circle. A nonzero scalar factor gives exact reconstruction up to gain and delay.
+\end{theorem}
+
+\begin{proof}
+The channel Fourier transform turns analysis followed by synthesis into multiplication by \(R(z)E(z)\). If the matrix identity holds, inverse transformation gives the delayed input. Conversely, if every input is reconstructed with that delay, the difference matrix annihilates every vector valued Fourier datum and must vanish almost everywhere.
+\end{proof}
+
+\begin{theorem}[Quantitative imperfect reconstruction]\label{thm:imperfect_reconstruction}
+Define the delay compensated defect
+\[
+D(\e^{\ii\omega})
+=
+\e^{\ii d\omega}R(\e^{\ii\omega})E(\e^{\ii\omega})-I_N.
+\]
+If
+\[
+\varepsilon_{\mathrm{rec}}
+=
+\esssup_{\omega}\|D(\e^{\ii\omega})\|_{\mathrm{op}}<\infty,
+\]
+then the delay compensated reconstruction \(\widetilde x\) satisfies
+\[
+\|\widetilde x-x\|_2
+\leq
+\varepsilon_{\mathrm{rec}}\|x\|_2.
+\]
+The constant is sharp as an operator norm.
+\end{theorem}
+
+\begin{proof}
+In polyphase Fourier coordinates, the error is \(D(\e^{\ii\omega})\bm X(\e^{\ii\omega})\). Pointwise multiplication and Plancherel's theorem give the upper bound. The operator norm of a measurable matrix multiplier is its essential supremum, which proves sharpness.
+\end{proof}
+
+\begin{example}[A reconstruction certificate]\label{ex:reconstruction_certificate}
+Suppose a two channel bank has delay compensated defect
+\[
+D(\e^{\ii\omega})
+=
+\begin{pmatrix}
+0.01\cos\omega&0\\
+0&0.02\sin\omega
+\end{pmatrix}.
+\]
+Then
+\[
+\esssup_\omega\|D(\e^{\ii\omega})\|_{\mathrm{op}}
+=0.02.
+\]
+Every input therefore has relative reconstruction error at most two percent in \(\ell^2\). The estimate is independent of the input length.
+\end{example}
+
+\begin{theorem}[Stability under filter perturbation]\label{thm:filter_perturbation}
+Assume \(RE=z^{-d}I_N\). Let
+\[
+\widetilde E=E+\Delta E,
+\qquad
+\widetilde R=R+\Delta R.
+\]
+Set
+\[
+\begin{aligned}
+e_0&=\esssup\|E\|_{\mathrm{op}},
+& r_0&=\esssup\|R\|_{\mathrm{op}},\\
+\delta_E&=\esssup\|\Delta E\|_{\mathrm{op}},
+& \delta_R&=\esssup\|\Delta R\|_{\mathrm{op}}.
+\end{aligned}
+\]
+Then the delay compensated reconstruction defect obeys
+\[
+\varepsilon_{\mathrm{rec}}
+\leq
+r_0\delta_E+e_0\delta_R+\delta_R\delta_E.
+\]
+\end{theorem}
+
+\begin{proof}
+Expand
+\[
+\widetilde R\widetilde E-RE
+=
+R\Delta E+\Delta R E+\Delta R\Delta E.
+\]
+Take pointwise operator norms, then the essential supremum. Multiplication by the delay factor has unit modulus.
+\end{proof}
+
+\begin{theorem}[Frame bounds from the polyphase symbol]\label{thm:frame_bounds}
+Assume that
+\[
+A I_N
+\leq
+E(\e^{\ii\omega})^*E(\e^{\ii\omega})
+\leq
+B I_N
+\]
+for almost every \(\omega\), where \(0<A\leq B<\infty\). Then the analysis bank satisfies
+\[
+A\|x\|_2^2
+\leq
+\|\Acal_E x\|_2^2
+\leq
+B\|x\|_2^2.
+\]
+The pointwise matrix
+\[
+R_{\rm can}(\e^{\ii\omega})
+=
+(E^*E)^{-1}E^*
+\]
+is a bounded left inverse and gives the canonical dual synthesis bank.
+\end{theorem}
+
+\begin{proof}
+Apply the matrix inequality to the polyphase Fourier vector at every frequency and integrate. Plancherel's theorem gives the frame inequalities. The lower bound makes \(E^*E\) invertible almost everywhere, and direct multiplication gives \(R_{\rm can}E=I_N\). The same spectral bounds show that the canonical dual is bounded.
+\end{proof}
+
+\begin{corollary}[Coefficient noise under canonical synthesis]\label{cor:canonical_noise}
+Under the hypotheses of \cref{thm:frame_bounds}, suppose the observed coefficient vector is
+\[
+c=\Acal_Ex+\nu.
+\]
+Canonical synthesis gives
+\[
+\widehat x=R_{\mathrm{can}}c
+\]
+and
+\[
+\|\widehat x-x\|_2
+\leq
+\frac1{\sqrt A}\|\nu\|_2.
+\]
+\end{corollary}
+
+\begin{proof}
+The smallest singular value of \(E\) is at least \(\sqrt A\), so the pointwise norm of its pseudoinverse is at most \(1/\sqrt A\). Apply Plancherel's theorem to \(R_{\mathrm{can}}\nu\).
+\end{proof}
+
+\begin{theorem}[Perturbation of frame bounds]\label{thm:frame_perturbation}
+Under the hypotheses of \cref{thm:frame_bounds}, let \(\widetilde E=E+\Delta E\) and suppose
+\[
+\delta=\esssup_\omega\|\Delta E(\e^{\ii\omega})\|_{\mathrm{op}}<\sqrt A.
+\]
+Then \(\widetilde E\) is a frame analysis bank with bounds
+\[
+(\sqrt A-\delta)^2
+\quad\text{and}\quad
+(\sqrt B+\delta)^2.
+\]
+\end{theorem}
+
+\begin{proof}
+For every vector \(v\),
+\[
+\|\widetilde Ev\|
+\geq
+\|Ev\|-\|\Delta Ev\|
+\geq
+(\sqrt A-\delta)\|v\|.
+\]
+The upper bound follows from
+\[
+\|\widetilde Ev\|
+\leq
+(\sqrt B+\delta)\|v\|.
+\]
+Square the inequalities and integrate in frequency.
+\end{proof}
+
+\begin{remark}\label{rem:canonical_dual_support}
+Even when \(E\) is a Laurent polynomial matrix, the canonical dual need not have finite impulse response. Finite support of both analysis and synthesis is an additional algebraic condition.
+\end{remark}
+
+\begin{corollary}[Paraunitary bank]\label{cor:paraunitary}
+If \(E(z)^*E(z)=I_N\) on the unit circle, then analysis is an isometry and synthesis may be chosen as \(R(z)=E(z)^*\).
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:frame_bounds} with \(A=B=1\), then multiply the matrices.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.72\textwidth]{03_frame_stability.pdf}
+\caption{Pointwise singular value bounds govern both the original frame and its perturbed analysis bank.}
+\label{fig:frame_stability}
+\end{figure}
+
+\subsection{Haar analysis}
+
+The Haar matrix is
+\[
+E_H
+=
+\frac1{\sqrt2}
+\begin{pmatrix}
+1&1\\
+1&-1
+\end{pmatrix}.
+\]
+For even and odd samples \(e(n)=x(2n)\) and \(o(n)=x(2n+1)\), the low and high coordinates are
+\[
+a(n)=\frac{e(n)+o(n)}{\sqrt2},
+\qquad
+d(n)=\frac{e(n)-o(n)}{\sqrt2}.
+\]
+
+\begin{corollary}[Haar reconstruction and energy]\label{cor:haar_reconstruction}
+The Haar bank reconstructs exactly and
+\[
+\|x\|_2^2=\|a\|_2^2+\|d\|_2^2.
+\]
+\end{corollary}
+
+\begin{proof}
+The matrix \(E_H\) is unitary.
+\end{proof}
+
+\subsection{Lifting steps}
+
+Let \(P(z)\) and \(Q(z)\) be Laurent polynomials. Define
+\[
+L_P(z)
+=
+\begin{pmatrix}
+1&0\\
+P(z)&1
+\end{pmatrix},
+\qquad
+U_Q(z)
+=
+\begin{pmatrix}
+1&Q(z)\\
+0&1
+\end{pmatrix}.
+\]
+
+\begin{theorem}[Exact lifting update]\label{thm:lifting_update}
+The lifting matrices are invertible with
+\[
+L_P^{-1}=L_{-P},
+\qquad
+U_Q^{-1}=U_{-Q}.
+\]
+If \(R_0E_0=I\), then every finite product \(V\) of lifting matrices gives another exact bank by
+\[
+E=VE_0,
+\qquad
+R=R_0V^{-1}.
+\]
+Every lifting step has determinant one.
+\end{theorem}
+
+\begin{proof}
+Direct multiplication proves the inverse formulas and the determinant statement. The reconstructed product is
+\[
+RE
+=R_0V^{-1}VE_0
+=R_0E_0
+=I.
+\]
+\end{proof}
+
+\begin{example}[A two neighbor predict and update transform]\label{ex:predict_update}
+Split a sequence into even and odd samples. Define
+\[
+d(n)
+=o(n)-\frac{e(n)+e(n+1)}2
+\]
+and
+\[
+s(n)
+=e(n)+\frac{d(n-1)+d(n)}4.
+\]
+The inverse is obtained in reverse order:
+\[
+e(n)
+=s(n)-\frac{d(n-1)+d(n)}4,
+\]
+then
+\[
+o(n)
+=d(n)+\frac{e(n)+e(n+1)}2.
+\]
+Thus reconstruction is exact over every coefficient field in which two is invertible. This is a standard compactly supported biorthogonal lifting pattern \cite{CohenDaubechiesFeauveau1992,Sweldens1996,DaubechiesSweldens1998}.
+\end{example}
+
+\section{Wavelet packet trees and admissible bases}\label{sec:packet_trees}
+
+A packet transform is built by deciding at each node whether to retain the current coordinate space or to split it into children. The proof of reconstruction is local and does not depend on a particular wavelet family.
+
+\begin{definition}[Unitary packet tree]\label{def:unitary_packet_tree}
+A finite unitary packet tree consists of Hilbert spaces \(\Hcal_v\) at its vertices and, at every internal vertex \(v\), a unitary map
+\[
+U_v:\Hcal_v\longrightarrow\bigoplus_{w\in\operatorname{child}(v)}\Hcal_w.
+\]
+An admissible pruning is a set of vertices that meets every root to terminal path exactly once.
+\end{definition}
+
+\begin{theorem}[Reconstruction on a pruned packet tree]\label{thm:pruned_packet_tree}
+Every admissible pruning \(\Lcal\) defines a unitary analysis map
+\[
+\Acal_{\Lcal}:\Hcal_{\rm root}
+\longrightarrow
+\bigoplus_{v\in\Lcal}\Hcal_v.
+\]
+Its inverse is obtained by applying the adjoints of the local splits from the leaves toward the root. In particular,
+\[
+\|x\|^2
+=
+\sum_{v\in\Lcal}\|x_v\|^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Proceed by induction on the depth of the retained subtree. If the root is retained, the statement is immediate. If the root is split, apply the unitary map \(U_{\rm root}\), then apply the induction hypothesis independently in each child subtree. A direct sum of unitary maps is unitary. Reversing the maps with adjoints gives synthesis.
+\end{proof}
+
+\begin{corollary}[Coefficient perturbations in a unitary tree]\label{cor:unitary_tree_noise}
+Let \(c=\Acal_{\Lcal}x\) be the leaf coefficients of an admissible unitary pruning, and let \(\widehat c=c+e\). If \(\widehat x\) is synthesized from \(\widehat c\), then
+\[
+\|\widehat x-x\|=\|e\|.
+\]
+Thus coefficient quantization and coefficient noise are neither amplified nor attenuated by exact unitary synthesis.
+\end{corollary}
+
+\begin{proof}
+The synthesis map is unitary by \cref{thm:pruned_packet_tree}. Hence
+\[
+\widehat x-x
+=\Acal_{\Lcal}^{-1}e
+\]
+has the same norm as \(e\).
+\end{proof}
+
+\begin{proposition}[Bounds for nonunitary local splits]\label{prop:nonunitary_tree_bounds}
+Suppose every internal node has an analysis map \(U_v\) and constants \(0\leq A_v\leq B_v<\infty\) satisfying
+\[
+A_v\|x\|^2
+\leq
+\sum_{w\in\operatorname{child}(v)}\|(U_vx)_w\|^2
+\leq
+B_v\|x\|^2.
+\]
+Define recursively
+\[
+a(v)=
+\begin{cases}
+1,&v\text{ retained},\\
+A_v\min_w a(w),&v\text{ split},
+\end{cases}
+\]
+and
+\[
+b(v)=
+\begin{cases}
+1,&v\text{ retained},\\
+B_v\max_w b(w),&v\text{ split}.
+\end{cases}
+\]
+Then the leaf analysis of the pruned tree has bounds \(a({\rm root})\) and \(b({\rm root})\).
+\end{proposition}
+
+\begin{proof}
+Assume the child subtree bounds have been proved. Then
+\[
+\sum_{w}\sum_{\ell\in\Lcal_w}\|x_\ell\|^2
+\geq
+\min_w a(w)
+\sum_w\|(U_vx)_w\|^2
+\geq
+A_v\min_w a(w)\|x\|^2.
+\]
+The upper bound follows in the same way with the maximum and \(B_v\). Induction completes the proof.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.72\textwidth]{04_packet_tree.pdf}
+\caption{A complete packet tree and one admissible pruning. Retained nodes may occur at different depths.}
+\label{fig:packet_tree}
+\end{figure}
+
+\subsection{Best basis recursion}
+
+Assign a real cost \(c(v)\) to retaining each node. For an admissible pruning \(\Lcal\), let
+\[
+C(\Lcal)=\sum_{v\in\Lcal}c(v).
+\]
+The cost may measure entropy, coefficient count, an approximation penalty, or any other additive local objective.
+
+\begin{theorem}[Exact additive best basis recursion]\label{thm:best_basis}
+For each vertex define
+\[
+F(v)
+=
+\min\left\{
+ c(v),
+ \sum_{w\in\operatorname{child}(v)}F(w)
+\right\},
+\]
+with \(F(v)=c(v)\) at terminal vertices. Then \(F(v)\) is the minimum cost of every admissible pruning of the subtree rooted at \(v\). A minimizing pruning is recovered by retaining \(v\) when the first term is no larger than the second and splitting it otherwise.
+\end{theorem}
+
+\begin{proof}
+Every admissible pruning of the subtree has exactly two forms. It either retains \(v\), with cost \(c(v)\), or splits \(v\) and independently chooses an admissible pruning in every child subtree. The minimum in the second case is the sum of the child minima. This gives the recursion and the reconstruction rule. In an equality case both choices minimize, and the stated rule retains the node.
+\end{proof}
+
+\begin{theorem}[Stability of the optimal cost]\label{thm:best_basis_cost_stability}
+Let \(c\) and \(\widetilde c\) be two node cost functions. For an admissible pruning \(\Lcal\), set
+\[
+\varepsilon(\Lcal)
+=
+\sum_{v\in\Lcal}|c(v)-\widetilde c(v)|
+\]
+and let
+\[
+\varepsilon_*
+=
+\max_{\Lcal}\varepsilon(\Lcal).
+\]
+If \(F_*\) and \(\widetilde F_*\) are the two optimal root costs, then
+\[
+|F_*-\widetilde F_*|
+\leq
+\varepsilon_*.
+\]
+\end{theorem}
+
+\begin{proof}
+For every admissible pruning,
+\[
+|C(\Lcal)-\widetilde C(\Lcal)|
+\leq
+\varepsilon_*.
+\]
+Evaluate \(\widetilde C\) on a minimizer for \(C\) to obtain \(\widetilde F_*\leq F_*+\varepsilon_*\). Reverse the roles to obtain \(F_*\leq\widetilde F_*+\varepsilon_*\).
+\end{proof}
+
+\begin{corollary}[Stability of the selected basis]\label{cor:best_basis_selection_stability}
+Assume the optimal pruning \(\Lcal_*\) for \(c\) is unique and at least one competing pruning exists. Define \(g=\min_{\Lcal\ne\Lcal_*}(C(\Lcal)-C(\Lcal_*))>0\). If
+\[
+2\varepsilon_*<g,
+\]
+then the optimal pruning for \(\widetilde c\) is the same. If only one admissible pruning exists, it remains selected under every cost change without a gap condition.
+\end{corollary}
+
+\begin{proof}
+The cost of the original minimizer can increase by at most \(\varepsilon_*\), while the cost of every competitor can decrease by at most \(\varepsilon_*\). The original gap therefore remains positive.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.72\textwidth]{05_best_basis.pdf}
+\caption{An additive best basis recursion compares the cost of retaining a packet with the total cost of splitting it.}
+\label{fig:best_basis}
+\end{figure}
+
+\section{Singular packets and exact reconstruction}\label{sec:singular_packets}
+
+A packet decomposition becomes useful for approximation when it separates a component that should be retained from a component that should be compressed. The simplest singular packets are steps. Higher order packets record jumps in derivatives.
+
+For \(m\geq0\) and \(0<\tau<1\), define
+\[
+\phi_{m,\tau}(t)
+=
+\frac{(t-\tau)_+^m}{m!}.
+\]
+Thus \(\phi_{0,\tau}=\one_{[\tau,1]}\). On each side of \(\tau\), the packet is a polynomial. Its derivative of order \(m\) has a unit jump at \(\tau\).
+
+\begin{definition}[Sobolev step packet class]\label{def:step_packet_class}
+Fix \(r\geq1\), \(1\leq p\leq\infty\), and an integer \(Q\geq0\). The class \(\Fcal_{r,p}(Q)\) consists of functions
+\[
+f=s+\sum_{q=1}^{Q}a_q\phi_{0,\tau_q}
+\]
+with \(s\in W^{r,p}(0,1)\) and
+\[
+0<\tau_1<\cdots<\tau_Q<1.
+\]
+No lower bound on the jump amplitudes is required for representation. Recovery results later impose such a bound.
+\end{definition}
+
+\begin{theorem}[Higher order singular packet decomposition]\label{thm:higher_order_packet_decomposition}
+Let
+\[
+0=\tau_0<\tau_1<\cdots<\tau_Q<\tau_{Q+1}=1.
+\]
+Suppose the restriction of \(f\) to every interval \((\tau_q,\tau_{q+1})\) belongs to \(W^{r,p}\), and choose the one dimensional Sobolev representatives whose derivatives through order \(r-1\) have one sided traces at the endpoints. Define
+\[
+a_{q,m}
+=
+\jump{f^{(m)}}_{\tau_q}
+=
+f^{(m)}(\tau_q+)-f^{(m)}(\tau_q-)
+\]
+and
+\[
+j_f(t)
+=
+\sum_{q=1}^{Q}\sum_{m=0}^{r-1}a_{q,m}\phi_{m,\tau_q}(t).
+\]
+Then
+\[
+s_f=f-j_f
+\]
+has matching one sided derivatives through order \(r-1\) at every breakpoint and belongs to \(W^{r,p}(0,1)\). Its weak derivative of order \(r\) equals the piecewise classical derivative \(f^{(r)}\) almost everywhere.
+\end{theorem}
+
+\begin{proof}
+For \(0\leq \ell\leq m\), the classical derivative of \(\phi_{m,\tau}\) on the two open sides is
+\[
+\phi_{m,\tau}^{(\ell)}(t)
+=
+\frac{(t-\tau)_+^{m-\ell}}{(m-\ell)!}.
+\]
+This derivative has zero jump when \(\ell<m\) and a unit jump when \(\ell=m\). Derivatives of order larger than \(m\) vanish on both open sides. It follows that subtracting the term \(a_{q,m}\phi_{m,\tau_q}\) removes exactly the jump in the derivative of order \(m\) without changing the other classical trace jumps. Hence \(s_f\) has matching traces through order \(r-1\).
+
+On each partition interval, \(j_f\) is a polynomial of degree at most \(r-1\), so its weak derivative of order \(r\) is zero there. A piecewise \(W^{r,p}\) function whose traces through order \(r-1\) match across every breakpoint belongs to \(W^{r,p}(0,1)\). Repeated integration by parts on the partition intervals shows that all boundary terms cancel. Thus the weak derivative of order \(r\) is the piecewise weak derivative of \(f\).
+\end{proof}
+
+\begin{corollary}[Uniqueness of the trace packet]\label{cor:trace_packet_uniqueness}
+Fix the breakpoints \(\tau_q\). If
+\[
+f=s+\sum_{q=1}^{Q}\sum_{m=0}^{r-1}b_{q,m}\phi_{m,\tau_q}
+\]
+with \(s\in W^{r,p}(0,1)\), then
+\[
+b_{q,m}=\jump{f^{(m)}}_{\tau_q}.
+\]
+The finite truncated power packet is therefore the unique packet supported at the declared breakpoints that removes all trace jumps through order \(r-1\).
+\end{corollary}
+
+\begin{proof}
+Every representative in \(W^{r,p}(0,1)\) has derivatives through order \(r-1\) that admit absolutely continuous representatives on compact subintervals, with matching one sided traces at each interior point. Taking the jump of the derivative of order \(m\) therefore removes the contribution of \(s\). The packet \(\phi_{m,\tau_q}\) has unit jump in its derivative of order \(m\), while all other declared packets have zero jump at that derivative order and breakpoint. Hence the remaining jump is exactly \(b_{q,m}\).
+\end{proof}
+
+\begin{remark}\label{rem:higher_order_scope}
+The theorem isolates only finitely many trace jumps. More general free discontinuity models may contain jump sets, Cantor parts, or singular derivatives that are not represented by a finite truncated power sum. The natural ambient theory is related to bounded variation and free discontinuity spaces \cite{AmbrosioFuscoPallara2000}.
+\end{remark}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.72\textwidth]{06_higher_order_packets.pdf}
+\caption{Truncated power packets encode jumps in a function and in its successive derivatives.}
+\label{fig:higher_order_packets}
+\end{figure}
+
+Let \(X\) be a normed linear space and let \(Q:X\to X\) be bounded and linear. The next identity is elementary, but it is the central separation principle.
+
+\begin{theorem}[Exact retained packet identity]\label{thm:retained_packet_identity}
+Let \(f=s+j\) in \(X\). Define
+\[
+\widetilde f=Qs+j.
+\]
+Then
+\[
+\boxed{
+f-\widetilde f=(I-Q)s.
+}
+\]
+Consequently,
+\[
+\|f-\widetilde f\|=\|s-Qs\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Subtract:
+\[
+f-\widetilde f
+=s+j-Qs-j
+=(I-Q)s.
+\]
+\end{proof}
+
+\begin{remark}\label{rem:retained_packet_boundary}
+The theorem assumes that the packet \(j\) is known. It does not supply a detector. It also does not say that every representation of \(f\) as \(s+j\) is useful. The point is that once a meaningful packet has been identified, its approximation error can be removed from the smooth approximation problem exactly.
+\end{remark}
+
+\begin{corollary}[Sobolev rate after packet separation]\label{cor:sobolev_rate}
+Suppose \(Q_m\) satisfies
+\[
+\|s-Q_ms\|_{L^p}
+\leq
+C2^{-mr}\|s\|_{W^{r,p}}
+\]
+for every \(s\in W^{r,p}(0,1)\). If \(f=s+j\) and \(j\) is retained, then
+\[
+\|f-(Q_ms+j)\|_{L^p}
+\leq
+C2^{-mr}\|s\|_{W^{r,p}}.
+\]
+The same conclusion applies to the higher order decomposition in \cref{thm:higher_order_packet_decomposition}.
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:retained_packet_identity} and the assumed approximation estimate.
+\end{proof}
+
+\begin{theorem}[Reconstruction with an estimated packet]\label{thm:estimated_packet_reconstruction}
+Let \(Q_m:X\to X\) be linear, let \(f=s+j\), let \(\widehat j\) be an estimated packet, and define
+\[
+\widehat f_m
+=
+Q_m(f-\widehat j)+\widehat j.
+\]
+Then
+\[
+\boxed{
+f-\widehat f_m
+=
+(I-Q_m)s+(I-Q_m)(j-\widehat j).
+}
+\]
+If \(Q_m\) is bounded, then
+\[
+\|f-\widehat f_m\|
+\leq
+\|s-Q_ms\|
++
+(1+\|Q_m\|)\|j-\widehat j\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Since \(f-\widehat j=s+(j-\widehat j)\),
+\[
+\widehat f_m
+=
+Q_ms+Q_m(j-\widehat j)+\widehat j.
+\]
+Subtract this expression from \(s+j\). The norm bound follows from
+\[
+\|(I-Q_m)u\|
+\leq
+(1+\|Q_m\|)\|u\|.
+\]
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.84\textwidth]{07_known_packet_reconstruction.pdf}
+\caption{A global Fourier approximation must represent the jumps. A retained packet approximation applies the Fourier truncation only to the smooth component.}
+\label{fig:known_packet_reconstruction}
+\end{figure}
+
+\section{Exact error formulas for estimated packets}\label{sec:packet_error}
+
+The error of an estimated packet is often described by a segmentation score. For approximation, an exact norm formula is more useful because it separates value errors from geometric disagreement.
+
+\begin{theorem}[Exact scalar region formula]\label{thm:scalar_region_formula}
+Let \(E,F\) be measurable subsets of a measure space, let \(a,b\in\CC\), and let \(1\leq p<\infty\). Then
+\[
+\begin{aligned}
+\|a\one_E-b\one_F\|_p^p
+={}&
+|a-b|^p\mu(E\cap F)
++|a|^p\mu(E\setminus F)\\
+&+|b|^p\mu(F\setminus E).
+\end{aligned}
+\]
+For equal amplitudes,
+\[
+\|a\one_E-a\one_F\|_p
+=
+|a|\mu(E\mathbin\triangle F)^{1/p}.
+\]
+\end{theorem}
+
+\begin{proof}
+The sets \(E\cap F\), \(E\setminus F\), and \(F\setminus E\) are disjoint. The difference takes the values \(a-b\), \(a\), and \(-b\) on these three sets and is zero elsewhere. Integrating its \(p\)th power gives the formula.
+\end{proof}
+
+\begin{corollary}[Location error for one step]\label{cor:step_location_error}
+Let \(0\leq\tau,\widehat\tau\leq1\) and \(H_\tau=\one_{[\tau,1]}\). For \(1\leq p<\infty\),
+\[
+\|aH_\tau-aH_{\widehat\tau}\|_p
+=
+|a||\tau-\widehat\tau|^{1/p}.
+\]
+In the supremum norm, the error equals \(|a|\) whenever \(\tau\neq\widehat\tau\).
+\end{corollary}
+
+\begin{proof}
+The symmetric difference of the two intervals has length \(|\tau-\widehat\tau|\). The supremum statement follows because the two steps differ by \(a\) on a nonempty interval.
+\end{proof}
+
+\begin{theorem}[Location stability for higher order packets]\label{thm:higher_order_location}
+Let \(m\geq1\), \(1\leq p<\infty\), and \(0\leq\tau,\widehat\tau\leq1\). Then
+\[
+\|\phi_{m,\tau}-\phi_{m,\widehat\tau}\|_{L^p(0,1)}
+\leq
+\frac{|\tau-\widehat\tau|}
+{(m-1)!((m-1)p+1)^{1/p}}.
+\]
+For \(p=\infty\),
+\[
+\|\phi_{m,\tau}-\phi_{m,\widehat\tau}\|_\infty
+\leq
+\frac{|\tau-\widehat\tau|}{(m-1)!}.
+\]
+Thus location error is Lipschitz for every derivative jump packet of positive order, while a value jump has only the finite \(L^p\) modulus in \cref{cor:step_location_error}.
+\end{theorem}
+
+\begin{proof}
+Assume \(\tau<\widehat\tau\). Differentiation with respect to the location parameter gives
+\[
+\frac{\partial}{\partial u}\phi_{m,u}(t)
+=-\phi_{m-1,u}(t)
+\]
+for almost every \(t\). Hence
+\[
+\phi_{m,\tau}-\phi_{m,\widehat\tau}
+=
+\int_\tau^{\widehat\tau}\phi_{m-1,u}\dd u.
+\]
+Minkowski's inequality gives
+\[
+\|\phi_{m,\tau}-\phi_{m,\widehat\tau}\|_p
+\leq
+|\tau-\widehat\tau|
+\sup_u\|\phi_{m-1,u}\|_p.
+\]
+The supremum is bounded by the norm of \(t^{m-1}/(m-1)!\) on \([0,1]\), which is the stated constant. The supremum norm argument is identical.
+\end{proof}
+
+\subsection{Several regions}
+
+Let \((E_i)_{i=0}^{I}\) and \((F_j)_{j=0}^{J}\) be measurable partitions of the same domain, up to null sets. Let \(a_i\) and \(b_j\) be the corresponding values. The index zero may be used for a background region.
+
+\begin{theorem}[Overlap matrix formula]\label{thm:overlap_matrix}
+Define
+\[
+M_{ij}=\mu(E_i\cap F_j).
+\]
+For \(1\leq p<\infty\),
+\[
+\left\|
+\sum_{i=0}^{I}a_i\one_{E_i}
+-
+\sum_{j=0}^{J}b_j\one_{F_j}
+\right\|_p^p
+=
+\sum_{i=0}^{I}\sum_{j=0}^{J}|a_i-b_j|^pM_{ij}.
+\]
+The row sums of \(M\) are \(\mu(E_i)\), and the column sums are \(\mu(F_j)\).
+\end{theorem}
+
+\begin{proof}
+The intersections \(E_i\cap F_j\) form a measurable partition. On such an intersection, the two piecewise constant functions have values \(a_i\) and \(b_j\). Integrate the constant error over every intersection. The marginal identities follow by summing the partition pieces in a fixed row or column.
+\end{proof}
+
+\begin{corollary}[Background and packet error]\label{cor:background_packet_error}
+Suppose the true and estimated packets use the same amplitude list \((a_i)_{i=0}^{I}\), but possibly different regions. Then
+\[
+\|j-\widehat j\|_p^p
+=
+\sum_{i,k}|a_i-a_k|^p\mu(E_i\cap F_k).
+\]
+Only off diagonal overlaps contribute.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:overlap_matrix} with \(b_k=a_k\). The diagonal terms vanish.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.60\textwidth]{08_overlap_matrix.pdf}
+\caption{An overlap matrix records both correct regions and every type of misclassification. The exact packet norm weights each entry by the corresponding value difference.}
+\label{fig:overlap_matrix}
+\end{figure}
+
+\subsection{Boundary tube control}
+
+For a closed set \(\Gamma\), write
+\[
+N_\delta(\Gamma)
+=
+\{x:\dist(x,\Gamma)<\delta\}.
+\]
+
+\begin{definition}[Linear tube bound]\label{def:linear_tube_bound}
+A boundary \(\Gamma\) has a linear tube bound if there are constants \(C_\Gamma\) and \(\delta_0>0\) such that
+\[
+\mu(N_\delta(\Gamma))
+\leq
+C_\Gamma\delta
+\]
+for \(0<\delta<\delta_0\).
+\end{definition}
+
+Bounded Lipschitz domains and many finite perimeter sets have estimates of this form, with constants controlled by geometric size. The next theorem only requires the displayed bound.
+
+\begin{theorem}[Geometric packet bound]\label{thm:geometric_packet_bound}
+Let \(E\) be a region with boundary \(\Gamma\), and suppose
+\[
+E\mathbin\triangle F
+\subseteq
+N_\delta(\Gamma).
+\]
+If \(\Gamma\) has a linear tube bound and \(0<\delta<\delta_0\) lies in its stated range, then for \(1\leq p<\infty\),
+\[
+\|a\one_E-a\one_F\|_p
+\leq
+|a|(C_\Gamma\delta)^{1/p}.
+\]
+If amplitudes \(a\) and \(b\) differ, then
+\[
+\|a\one_E-b\one_F\|_p
+\leq
+|a-b|\mu(E\cap F)^{1/p}
++
+(|a|+|b|)(C_\Gamma\delta)^{1/p}.
+\]
+\end{theorem}
+
+\begin{proof}
+The equal amplitude case follows from \cref{thm:scalar_region_formula} and the tube inclusion. For unequal amplitudes, split the error into its value mismatch on \(E\cap F\) and the two disagreement pieces. Apply the triangle inequality and the same tube estimate.
+\end{proof}
+
+\begin{example}[A perturbed disk]\label{ex:perturbed_disk}
+Let \(E\) and \(F\) be concentric disks of radii \(r\) and \(r+\delta\) in \(\RR^2\), with \(\delta>0\). Then
+\[
+\mu(E\mathbin\triangle F)
+=
+\pi\bigl((r+\delta)^2-r^2\bigr)
+=
+2\pi r\delta+\pi\delta^2.
+\]
+For equal amplitude \(a\), the exact \(L^2\) packet error is
+\[
+|a|\sqrt{2\pi r\delta+\pi\delta^2}.
+\]
+This gives the expected square root dependence on boundary displacement.
+\end{example}
+
+\section{Stable recovery of separated jumps}\label{sec:jump_recovery}
+
+The previous sections describe the error after a packet has been estimated. We now give a direct recovery theorem for one dimensional separated jumps. The detector is intentionally simple because the aim is to expose the exact contrast gap.
+
+Let
+\[
+t_k=kh,
+\qquad
+k=0,\ldots,n,
+\qquad
+h=\frac1n.
+\]
+Assume
+\[
+f(t)
+=
+s(t)+\sum_{q=1}^{Q}a_qH_{\tau_q}(t),
+\qquad
+H_\tau(t)=\one_{[\tau,1]}(t),
+\]
+where \(s\) is Lipschitz with constant \(M\), and \(Q\geq1\) is finite with nonzero jump amplitudes. The zero-jump case requires no minimum-amplitude condition. Suppose no jump lies at a sample point and no grid cell contains more than one jump. Observe
+\[
+y_k=f(t_k)+\eta_k.
+\]
+Define the adjacent contrast
+\[
+D_k=y_{k+1}-y_k.
+\]
+
+\begin{lemma}[Contrast gap]\label{lem:contrast_gap}
+Assume \(|\eta_k|\leq\varepsilon\) and set
+\[
+b_h=Mh+2\varepsilon.
+\]
+If the cell \((t_k,t_{k+1})\) contains no jump, then
+\[
+|D_k|\leq b_h.
+\]
+If it contains one jump of amplitude \(a_q\), then
+\[
+|D_k-a_q|\leq b_h
+\]
+and therefore
+\[
+|D_k|\geq |a_q|-b_h.
+\]
+\end{lemma}
+
+\begin{proof}
+In a cell without a jump,
+\[
+D_k=s(t_{k+1})-s(t_k)+\eta_{k+1}-\eta_k.
+\]
+The Lipschitz and noise bounds give \(|D_k|\leq Mh+2\varepsilon\). In a cell with one jump, the same formula has the additional term \(a_q\), which proves the second estimate.
+\end{proof}
+
+\begin{theorem}[Deterministic jump cell recovery]\label{thm:deterministic_jump_recovery}
+Let
+\[
+a_{\min}=\min_q|a_q|
+\]
+and assume
+\[
+a_{\min}>2b_h.
+\]
+Choose a threshold \(\theta\) satisfying
+\[
+b_h<\theta<a_{\min}-b_h.
+\]
+Then
+\[
+\widehat\Kcal
+=
+\{k:|D_k|>\theta\}
+\]
+is exactly the set of grid cells containing jumps. If \(\widehat\tau_q\) is the midpoint of the detected cell and \(\widehat a_q=D_k\), then after matching by order,
+\[
+|\widehat\tau_q-\tau_q|
+\leq
+\frac h2
+\]
+and
+\[
+|\widehat a_q-a_q|
+\leq
+b_h.
+\]
+\end{theorem}
+
+\begin{proof}
+By \cref{lem:contrast_gap}, every cell without a jump has contrast at most \(b_h<\theta\). Every cell with a jump has contrast at least \(a_{\min}-b_h>\theta\). Hence the detected set is exact. The midpoint of a cell is within \(h/2\) of every point in that cell. The amplitude estimate is the second inequality in \cref{lem:contrast_gap}.
+\end{proof}
+
+\begin{corollary}[Jump count and sign recovery]\label{cor:jump_count_sign}
+Under the hypotheses of \cref{thm:deterministic_jump_recovery}, the number of detected cells equals \(Q\), and
+\[
+\sgn(\widehat a_q)=\sgn(a_q)
+\]
+for every real valued jump.
+\end{corollary}
+
+\begin{proof}
+Exact cell recovery gives the jump count. Since
+\[
+|\widehat a_q-a_q|\leq b_h<|a_q|,
+\]
+the amplitude estimate cannot cross zero.
+\end{proof}
+
+\begin{corollary}[Packet reconstruction after detection]\label{cor:reconstruction_after_detection}
+Let
+\[
+j=\sum_{q=1}^{Q}a_qH_{\tau_q},
+\qquad
+\widehat j=\sum_{q=1}^{Q}\widehat a_qH_{\widehat\tau_q}.
+\]
+Under the hypotheses of \cref{thm:deterministic_jump_recovery}, for \(1\leq p<\infty\),
+\[
+\|j-\widehat j\|_p
+\leq
+Qb_h
++
+\left(
+\frac h2\sum_{q=1}^{Q}|a_q|^p
+\right)^{1/p}.
+\]
+If \(Q_m\) is bounded and linear and
+\[
+\widehat f_m=Q_m(f-\widehat j)+\widehat j,
+\]
+then
+\[
+\begin{aligned}
+\|f-\widehat f_m\|_p
+\leq{}&
+\|s-Q_ms\|_p\\
+&+(1+\|Q_m\|)
+\left[
+Qb_h+
+\left(
+\frac h2\sum_q|a_q|^p
+\right)^{1/p}
+\right].
+\end{aligned}
+\]
+\end{corollary}
+
+\begin{proof}
+Write
+\[
+j-\widehat j
+=
+\sum_q(a_q-\widehat a_q)H_{\widehat\tau_q}
++
+\sum_q a_q(H_{\tau_q}-H_{\widehat\tau_q}).
+\]
+The first sum has norm at most \(\sum_q|a_q-\widehat a_q|\leq Qb_h\). The location error interval for the \(q\)th jump is contained in its detected grid cell and has length at most \(h/2\). Distinct detected cells are disjoint, so the location errors have disjoint supports. Their \(p\)th powers therefore add exactly, which gives the displayed location term. The reconstruction estimate follows from \cref{thm:estimated_packet_reconstruction}.
+\end{proof}
+
+\begin{remark}[Why finite \(L^p\) matters]\label{rem:finite_p_recovery}
+A shifted step does not converge in the supremum norm until the location is exact. The finite \(L^p\) error does converge because the disagreement is confined to an interval whose length tends to zero.
+\end{remark}
+
+\begin{corollary}[Deterministic consistency]\label{cor:deterministic_consistency}
+Assume \(h\to0\) along grids satisfying the preceding sampling assumptions, \(\varepsilon_h\to0\), the number of jumps is fixed, and the nonzero jump amplitudes and positive minimum separation remain fixed. Then the detected packet converges to the true packet in every finite \(L^p\) norm. If \(Q_m\) has a vanishing smooth approximation error and uniformly bounded norm, the complete reconstruction also converges in \(L^p\).
+\end{corollary}
+
+\begin{proof}
+The gap condition holds for sufficiently small \(h\). Then \(b_h\to0\), and the bound in \cref{cor:reconstruction_after_detection} tends to zero.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.83\textwidth]{09_jump_detection.pdf}
+\caption{Separated jumps create isolated adjacent sample contrasts above the smooth and noise background.}
+\label{fig:jump_detection}
+\end{figure}
+
+\begin{example}[A numerical threshold certificate]\label{ex:jump_threshold_certificate}
+Take \(h=1/256\), \(M=0.5\), and \(\varepsilon=0.002\). Then
+\[
+b_h
+=\frac{0.5}{256}+0.004
+<0.00596.
+\]
+If every jump has magnitude at least \(0.08\), then \(0.08>2b_h\). Any threshold between \(0.00596\) and \(0.07404\) recovers the exact jump cells. The location error is at most
+\[
+\frac1{512}
+\]
+and every amplitude error is less than \(0.00596\).
+\end{example}
+
+\subsection{Sub Gaussian noise}
+
+Assume the noise variables are independent, centered, and \(\sigma\) sub Gaussian:
+\[
+\mathbb E\e^{\lambda\eta_k}
+\leq
+\e^{\sigma^2\lambda^2/2}.
+\]
+
+\begin{theorem}[Probability recovery bound]\label{thm:probability_recovery}
+Fix \(0<\delta<1\) and define
+\[
+t_{n,\delta}
+=
+2\sigma
+\sqrt{\log\left(\frac{2n}{\delta}\right)}
+\]
+and
+\[
+b_{h,\delta}=Mh+t_{n,\delta}.
+\]
+With probability at least \(1-\delta\), every contrast satisfies the conclusions of \cref{lem:contrast_gap} with \(b_h\) replaced by \(b_{h,\delta}\).
+
+If
+\[
+a_{\min}>2b_{h,\delta},
+\]
+then thresholding between \(b_{h,\delta}\) and \(a_{\min}-b_{h,\delta}\) recovers every jump cell with probability at least \(1-\delta\). The same location and amplitude bounds hold with \(b_{h,\delta}\).
+\end{theorem}
+
+\begin{proof}
+If \(\sigma=0\), every centered zero-sub-Gaussian noise variable vanishes almost surely, and the noise-free deterministic conclusion applies. For \(\sigma>0\), the difference \(\eta_{k+1}-\eta_k\) is sub Gaussian with variance proxy \(2\sigma^2\), so
+\[
+\mathbb P\bigl(|\eta_{k+1}-\eta_k|>t\bigr)
+\leq
+2\exp\left(-\frac{t^2}{4\sigma^2}\right).
+\]
+A union bound over the \(n\) cells gives
+\[
+\mathbb P\left(
+\max_k|\eta_{k+1}-\eta_k|>t_{n,\delta}
+\right)
+\leq
+\delta.
+\]
+On the complementary event, repeat the deterministic proof.
+\end{proof}
+
+\begin{corollary}[Repeated measurements]\label{cor:repeated_measurements}
+Suppose \(R\) observations are averaged at every sample location, with all noise variables independent across sites and repetitions and each centered and \(\sigma\) sub Gaussian. Then \cref{thm:probability_recovery} holds with \(\sigma\) replaced by \(\sigma/\sqrt R\). In particular, a sufficient recovery condition is
+\[
+a_{\min}
+>
+2Mh+
+\frac{4\sigma}{\sqrt R}
+\sqrt{\log\left(\frac{2n}{\delta}\right)}.
+\]
+\end{corollary}
+
+\begin{proof}
+The average of \(R\) independent \(\sigma\) sub Gaussian variables is \(\sigma/\sqrt R\) sub Gaussian. Substitute this parameter in \cref{thm:probability_recovery}.
+\end{proof}
+
+\begin{remark}\label{rem:noise_scaling}
+The displayed uniform noise certificate scales as \(\sigma\sqrt{\log n}\). At fixed positive \(\sigma\), it does not imply consistency of this detector. Decreasing the noise scale or averaging repeated measurements gives sufficient regimes; other averaging schemes require their own analysis.
+\end{remark}
+
+\begin{corollary}[Probability consistency]\label{cor:probability_consistency}
+Let \(\sigma_n\sqrt{\log n}\to0\) and \(h=1/n\). For every fixed \(0<\delta<1\), along grids satisfying the preceding sampling assumptions, all jump cells are recovered with probability at least \(1-\delta\) for sufficiently large \(n\). For the fixed finite jump model above, along grids satisfying the preceding sampling assumptions, the packet error converges to zero in probability in every finite \(L^p\) norm.
+\end{corollary}
+
+\begin{proof}
+For each fixed \(\delta>0\), \(b_{h,\delta}\to0\). Apply \cref{thm:probability_recovery,cor:reconstruction_after_detection}. For any error tolerance \(\epsilon>0\), the high-probability bound is eventually smaller than \(\epsilon\), so the limit superior of the probability that the packet error exceeds \(\epsilon\) is at most \(\delta\). Since \(\delta\) is arbitrary, convergence is in probability.
+\end{proof}
+
+\subsection{Signals with values in a normed space}
+
+The recovery proof does not depend on an ordering of the signal values.
+
+\begin{proposition}[Vector jump recovery]\label{prop:vector_jump_recovery}
+Let the values lie in a normed space \(V\). Assume
+\[
+\|s(t)-s(u)\|_V\leq M|t-u|,
+\qquad
+\|\eta_k\|_V\leq\varepsilon,
+\]
+and let the jump vectors satisfy \(\|a_q\|_V\geq a_{\min}\). Thresholding \(\|D_k\|_V\) gives the same recovery theorem under the condition
+\[
+a_{\min}>2(Mh+2\varepsilon).
+\]
+\end{proposition}
+
+\begin{proof}
+Only the triangle inequality was used in \cref{lem:contrast_gap,thm:deterministic_jump_recovery}.
+\end{proof}
+
+\section{Haar localization and annihilating differences}\label{sec:localization}
+
+The adjacent difference detector is local in the sample domain. Wavelet coefficients and higher differences give related multiscale packets. In the Haar subsections the signal is defined on \(\RR\). Here the step convention is \(H_\tau(t)=\one_{[\tau,\infty)}(t)\), whose restriction to \((0,1)\) agrees with the preceding interval step. A chosen extension beyond the observation interval must use this half-line step convention, and the smooth extension must satisfy the stated Lipschitz hypothesis on every displayed wavelet support.
+
+\subsection{Haar coefficient separation}
+
+Let
+\[
+I_{j,k}
+=
+[k2^{-j},(k+1)2^{-j})
+\]
+and let \(\psi_{j,k}\) be the normalized Haar wavelet supported on \(I_{j,k}\), positive on the left half and negative on the right half.
+
+\begin{theorem}[Smooth Haar coefficient bound]\label{thm:smooth_haar_bound}
+If \(s\) is Lipschitz with constant \(M\), then
+\[
+|\langle s,\psi_{j,k}\rangle|
+\leq
+\frac M4\,2^{-3j/2}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(L=2^{-j}\) and let \(a\) be the left endpoint of the support. Pair every point \(t\in[a,a+L/2]\) with \(t+L/2\). Then
+\[
+\langle s,\psi_{j,k}\rangle
+=
+L^{-1/2}
+\int_a^{a+L/2}
+\overline{s(t)-s(t+L/2)}\,\dd t.
+\]
+The integrand has magnitude at most \(ML/2\), and the integration interval has length \(L/2\). The result is \(ML^{3/2}/4\).
+\end{proof}
+
+\begin{theorem}[Exact Haar coefficient of a step]\label{thm:haar_step_coefficient}
+Let \(\tau\in I_{j,k}\), let \(L=2^{-j}\), and write
+\[
+u=\frac{\tau-kL}{L}\in[0,1].
+\]
+Then
+\[
+\left|
+\left\langle
+ aH_\tau,\psi_{j,k}
+\right\rangle
+\right|
+=
+|a|L^{1/2}\min\{u,1-u\}.
+\]
+Every Haar coefficient whose support does not cross \(\tau\) is zero.
+\end{theorem}
+
+\begin{proof}
+Away from the jump, the step is constant on the support and the Haar wavelet has zero mean. When the jump lies in the support, integrate the positive and negative halves directly. If \(u\leq1/2\), the magnitude is \(|a|uL^{1/2}\). If \(u\geq1/2\), it is \(|a|(1-u)L^{1/2}\).
+\end{proof}
+
+\begin{corollary}[Scale separation]\label{cor:haar_scale_separation}
+Suppose \(f=s+aH_\tau+\eta\), where \(s\) is \(M\) Lipschitz and \(\|\eta\|_\infty\leq\varepsilon\). If the jump lies at relative distance at least \(\rho\) from both ends of \(I_{j,k}\), then
+\[
+|\langle f,\psi_{j,k}\rangle|
+\geq
+\left(
+|a|\rho
+-\varepsilon
+-\frac M4L
+\right)L^{1/2}.
+\]
+A wavelet support without a jump satisfies
+\[
+|\langle f,\psi_{j,k}\rangle|
+\leq
+\left(
+\varepsilon+\frac M4L
+\right)L^{1/2}.
+\]
+Thus a threshold gap exists whenever
+\[
+|a|\rho
+>
+2\varepsilon+\frac M2L.
+\]
+\end{corollary}
+
+\begin{proof}
+Combine \cref{thm:smooth_haar_bound,thm:haar_step_coefficient}. The noise coefficient is at most
+\[
+\|\eta\|_\infty\|\psi_{j,k}\|_1
+=
+\varepsilon L^{1/2}.
+\]
+The final inequality makes the lower bound on a jump support larger than the upper bound on a smooth support.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.68\textwidth]{10_haar_scale_separation.pdf}
+\caption{The smooth contribution decays like \(L^{3/2}\), while a separated jump contribution decays like \(L^{1/2}\).}
+\label{fig:haar_scale_separation}
+\end{figure}
+
+\subsection{Two shifted grids}
+
+A jump on a dyadic boundary can be invisible to a wavelet at that scale. One additional grid removes this exact alignment.
+
+\begin{theorem}[Half cell shift guarantee]\label{thm:half_shift_guarantee}
+Fix a cell length \(L>0\). Consider the grid with boundaries \(kL\) and the grid with boundaries \((k+1/2)L\). Every point \(\tau\in\RR\) lies in a cell of at least one grid at distance at least \(L/4\) from both cell boundaries.
+\end{theorem}
+
+\begin{proof}
+Reduce \(\tau\) modulo \(L\) and write its representative as \(x\in[0,L)\). If
+\[
+L/4\leq x\leq 3L/4,
+\]
+then the distance from \(x\) to both boundaries of its cell in the original grid is at least \(L/4\). If \(x<L/4\) or \(x>3L/4\), then \(x\) lies in the cell of the shifted grid bounded by \(-L/2\) and \(L/2\), or in its translate, at distance at least \(L/4\) from both shifted boundaries. One of the two grids therefore has the required property.
+\end{proof}
+
+\begin{corollary}[Alignment free two grid Haar detection]\label{cor:two_grid_haar_detection}
+Assume the support length \(L\) is smaller than the minimum jump separation. Analyze the signal with Haar wavelets on the original grid and on the half shifted grid. Every jump appears in a support with \(\rho\geq1/4\) in one of the two systems. Therefore a threshold gap exists independently of alignment whenever
+\[
+\frac{|a|}{4}
+>
+2\varepsilon+\frac M2L.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:half_shift_guarantee} and then \cref{cor:haar_scale_separation} with \(\rho=1/4\). The separation assumption prevents a selected support from containing two jumps.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.78\textwidth]{11_shifted_grids.pdf}
+\caption{The boundaries of the two grids interlace. Every jump is well inside a cell in at least one grid.}
+\label{fig:shifted_grids}
+\end{figure}
+
+\subsection{Higher differences}
+
+Let
+\[
+(\Delta x)(n)=x(n+1)-x(n).
+\]
+Then
+\[
+\Delta^m x(n)
+=
+\sum_{r=0}^{m}
+(-1)^{m-r}\binom mr x(n+r).
+\]
+
+\begin{theorem}[Polynomial annihilation and boundary support]\label{thm:polynomial_annihilation}
+Let \(x\) be a sequence that agrees with a polynomial of degree at most \(d\) on each interval of a finite partition of \(\ZZ\). Then
+\[
+\Delta^{d+1}x(n)=0
+\]
+whenever the complete stencil
+\[
+\{n,n+1,\ldots,n+d+1\}
+\]
+lies inside one polynomial piece. Hence \(\Delta^{d+1}x\) is supported in a band of at most \(d+1\) addresses before each breakpoint.
+\end{theorem}
+
+\begin{proof}
+The \((d+1)\)st forward difference of a polynomial of degree at most \(d\) is zero. The only stencils for which this argument does not apply are those crossing a breakpoint.
+\end{proof}
+
+\begin{proposition}[Noise amplification by differences]\label{prop:difference_noise}
+If \(\|\eta\|_\infty\leq\varepsilon\), then
+\[
+\|\Delta^m\eta\|_\infty
+\leq
+2^m\varepsilon.
+\]
+Therefore no false response above \(2^{d+1}\varepsilon\) can occur on a stencil lying inside one polynomial piece.
+\end{proposition}
+
+\begin{proof}
+The absolute values of the binomial coefficients in \(\Delta^m\) sum to \(2^m\).
+\end{proof}
+
+\begin{corollary}[Robust breakpoint bands]\label{cor:robust_breakpoint_bands}
+Assume every true breakpoint produces at least one response of magnitude \(\rho\) in its \((d+1)\)st difference band. If
+\[
+\rho>2^{d+2}\varepsilon,
+\]
+then thresholding at any level between \(2^{d+1}\varepsilon\) and \(\rho-2^{d+1}\varepsilon\) detects a nonempty cluster near every breakpoint and creates no cluster away from the breakpoint bands.
+\end{corollary}
+
+\begin{proof}
+Use \cref{thm:polynomial_annihilation,prop:difference_noise}. Noise cannot cross the threshold away from a breakpoint. At a response of magnitude \(\rho\), the perturbed magnitude remains at least \(\rho-2^{d+1}\varepsilon\), which is above the threshold.
+\end{proof}
+
+\section{Packet separation and the Gibbs phenomenon}\label{sec:gibbs}
+
+A Fourier partial sum is global. When the target has a jump, the partial sum must approximate that jump using continuous trigonometric polynomials. This creates the classical Gibbs oscillation. Standard accounts and recovery methods appear in \cite{Zygmund2002,GottliebShu1997}.
+
+\begin{standardfact}[Classical square-wave Gibbs behavior]\label{sf:gibbs_behavior}
+Let \(q(x)=\tfrac12\operatorname{sign}(\sin x)\), whose jump at zero has size one. For \(n\geq1\), its partial sum through the first \(n\) positive odd frequencies is
+\[
+Q_n(x)=\frac{2}{\pi}\sum_{k=0}^{n-1}\frac{\sin((2k+1)x)}{2k+1}.
+\]
+At \(x_n=\pi/(2n)\),
+\[
+x_n\longrightarrow0,\qquad Q_n(x_n)\longrightarrow\frac{\operatorname{Si}(\pi)}{\pi}
+=\frac12+G,\qquad G\approx0.089489872236,
+\]
+where \(\operatorname{Si}(z)=\int_0^z\sin(t)/t\,dt\) and \(G=\operatorname{Si}(\pi)/\pi-1/2>0\).
+Thus a nonzero overshoot persists along points approaching the jump. Scaling by a real amplitude \(a\) gives an overshoot or undershoot of magnitude \(|a|G\).
+
+For the limit, put \(u_k=(k+\tfrac12)/n\). The identity
+\[
+Q_n(x_n)=\frac{1}{\pi n}\sum_{k=0}^{n-1}\frac{\sin(\pi u_k)}{u_k}
+\longrightarrow\frac1\pi\int_0^1\frac{\sin(\pi u)}u\,du
+=\frac{\operatorname{Si}(\pi)}{\pi}
+\]
+is a midpoint Riemann sum, since the integrand has continuous value \(\pi\) at zero. This is the normalized classical example in \cite[Section~6.16(i), equations~6.16.1--6.16.4]{DLMFGibbs}.
+\end{standardfact}
+
+The square-wave example supplies a classical comparison. The following retained-packet identities do not require a general overshoot theorem. They change the approximation problem because the discontinuity is no longer represented by the Fourier partial sum.
+
+\begin{theorem}[Uniform convergence with exact jump packets]\label{thm:uniform_packet_convergence}
+Let \(f=s+j\) on a compact domain, where \(j\) is any bounded singular packet. Suppose \(Q_ms\to s\) uniformly. Then
+\[
+\widetilde f_m=Q_ms+j
+\]
+converges uniformly to \(f\), even when \(f\) is discontinuous:
+\[
+\|f-\widetilde f_m\|_\infty
+=
+\|s-Q_ms\|_\infty
+\longrightarrow0.
+\]
+There is no error proportional to the jump size because the jump is shared exactly by \(f\) and \(\widetilde f_m\).
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:retained_packet_identity} in the supremum norm.
+\end{proof}
+
+\Needspace{20\baselineskip}
+\begin{theorem}[Estimated packet Gibbs bound]\label{thm:estimated_packet_gibbs}
+Let \(Q_m\) be linear and uniformly bounded on \(L^p\), with
+\[
+\sup_m\|Q_m\|\leq C_Q.
+\]
+For \(f=s+j\) and an estimated packet \(\widehat j_m\), define
+\[
+\widehat f_m
+=Q_m(f-\widehat j_m)+\widehat j_m.
+\]
+Then
+\[
+\|f-\widehat f_m\|_p
+\leq
+\|s-Q_ms\|_p
++(1+C_Q)\|j-\widehat j_m\|_p.
+\]
+Consequently, smooth approximation and packet recovery may be improved independently. No claim of Gibbs removal is justified unless both terms are controlled in the norm under consideration.
+\end{theorem}
+
+\begin{proof}
+This is \cref{thm:estimated_packet_reconstruction} with the uniform operator bound.
+\end{proof}
+
+\begin{corollary}[Boundary band error]\label{cor:boundary_band_error}
+Let \(\Gamma\) be the singular boundary and assume
+\[
+\mu(N_\delta(\Gamma))\leq C_\Gamma\delta
+\]
+for small \(\delta\). For finite \(p\),
+\[
+\|f-\widetilde f_m\|_{L^p(N_\delta(\Gamma))}
+\leq
+(C_\Gamma\delta)^{1/p}
+\|s-Q_ms\|_\infty.
+\]
+\end{corollary}
+
+\begin{proof}
+The error equals \(s-Q_ms\). Bound it by its supremum and multiply by the measure of the boundary tube.
+\end{proof}
+
+\begin{example}[Square wave Fourier tail]\label{ex:square_wave_tail}
+Let
+\[
+j(t)=\one_{[-a,a]}(t)
+\]
+on the circle and let \(s\) be smooth. If \(Q_m\) is a Fourier partial sum, then \(Q_m(s+j)\) has the ordinary oscillatory boundary layer. In contrast,
+\[
+Q_ms+j
+\]
+has error exactly \(s-Q_ms\). The visual comparison in \cref{fig:gibbs_comparison} illustrates this change in approximation target. It is not a new Fourier summability theorem.
+\end{example}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.82\textwidth]{12_gibbs_comparison.pdf}
+\caption{Global Fourier truncation represents the jump and exhibits an oscillatory boundary layer. Packet separation retains the jump and approximates only the smooth component.}
+\label{fig:gibbs_comparison}
+\end{figure}
+
+\FloatBarrier
+\section{Nonlinear interactions in residue coordinates}\label{sec:nonlinear}
+
+Linear transfer matrices do not directly describe nonlinear products. Residue coordinates still obey exact conservation laws because integer addresses add modulo the packet modulus.
+
+\begin{theorem}[Residue law for Cauchy products]\label{thm:cauchy_residue_law}
+Let
+\[
+F(z)=\sum_{n\geq0}f_nz^n,
+\qquad
+G(z)=\sum_{n\geq0}g_nz^n
+\]
+be formal power series. The same statement holds for power series that converge on a common disk. Decompose both series into residue packets modulo \(N\):
+\[
+F=\sum_{r=0}^{N-1}F_r,
+\qquad
+G=\sum_{s=0}^{N-1}G_s.
+\]
+If \(H=FG\), then its residue packet \(H_t\) is
+\[
+\boxed{
+H_t
+=
+\sum_{r+s\equiv t\!\!\pmod N}F_rG_s.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Every monomial in \(F_rG_s\) has degree congruent to \(r+s\) modulo \(N\). Conversely, every coefficient of degree congruent to \(t\) is formed from pairs whose residues sum to \(t\). Grouping the Cauchy product by this residue gives the formula.
+\end{proof}
+
+\begin{theorem}[Shifted pointwise monomial law]\label{thm:shifted_monomial_law}
+Let
+\[
+y(n)=\prod_{j=1}^{m}x(n-a_j)
+\]
+and write
+\[
+a_j=Nc_j+b_j,
+\qquad
+0\leq b_j<N.
+\]
+For output residue \(r\), define
+\[
+r_j\equiv r-b_j\pmod N,
+\qquad
+0\leq r_j<N,
+\]
+and let
+\[
+\kappa_{r,b_j}
+=
+\begin{cases}
+1,&r<b_j,\\
+0,&r\geq b_j.
+\end{cases}
+\]
+Then the output channel is
+\[
+\boxed{
+y_r(q)
+=
+\prod_{j=1}^{m}
+x_{r_j}
+\bigl(q-c_j-\kappa_{r,b_j}\bigr).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+For \(n=Nq+r\),
+\[
+n-a_j
+=N(q-c_j)+r-b_j.
+\]
+If \(r\geq b_j\), this address has residue \(r-b_j\) and coarse index \(q-c_j\). If \(r<b_j\), add \(N\) to the residue and subtract one from the coarse index. Multiplying the resulting channel values gives the formula.
+\end{proof}
+
+\begin{corollary}[Polynomial shift filters]\label{cor:polynomial_shift_filters}
+Every finite polynomial in shifted samples has an exact finite expression in residue coordinates. Each monomial selects a deterministic list of input residues and coarse shifts, and the complete output is their finite sum.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:shifted_monomial_law} to each monomial and add the results.
+\end{proof}
+
+\begin{example}[Quadratic nearest neighbor interaction]\label{ex:quadratic_neighbor}
+For
+\[
+y(n)=x(n)x(n-1)
+\]
+and modulus \(N\),
+\[
+y_r(q)
+=
+\begin{cases}
+x_r(q)x_{r-1}(q),&r\geq1,\\
+x_0(q)x_{N-1}(q-1),&r=0.
+\end{cases}
+\]
+The carry at residue zero is the nonlinear analogue of a transfer crossing a coarse cell boundary.
+\end{example}
+
+\section{Finite numerical illustrations}\label{sec:numerical}
+
+The figures and tables in this section are finite checks and examples. They are not substitutes for the preceding proofs. Their purpose is to show the scale and shape of the terms appearing in the exact estimates.
+
+A fixed depth Haar packet transform and a Fourier basis were applied to the same piecewise smooth test signal. The largest coefficients were retained in each representation.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.70\textwidth]{13_sparse_comparison.pdf}
+\caption{One finite sparse approximation comparison. Fourier coordinates are better at the smallest budget, while the fixed Haar packet basis becomes better after localized edge coordinates are resolved.}
+\label{fig:sparse_comparison}
+\end{figure}
+
+\begin{table}
+\centering
+\caption{Finite sparse approximation record for one test signal.}
+\label{tab:sparse_record}
+\begin{tabular}{rrr}
+\toprule
+retained & Haar packet RMSE & Fourier RMSE\\
+\midrule
+16 & \(1.7999\times10^{-1}\) & \(6.6522\times10^{-2}\)\\
+32 & \(3.8414\times10^{-2}\) & \(4.9153\times10^{-2}\)\\
+64 & \(1.6267\times10^{-2}\) & \(3.8056\times10^{-2}\)\\
+128 & \(1.7387\times10^{-3}\) & \(2.5631\times10^{-2}\)\\
+256 & \(1.5870\times10^{-4}\) & \(1.7424\times10^{-2}\)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The table does not prove that Haar packets dominate Fourier coordinates for every signal. Smooth periodic oscillations may favor Fourier coordinates. Curved edges in two dimensions may favor directional systems. The geometric approximation results in \cite{Donoho1999,CandesDonoho2004} give much deeper statements for specific image classes.
+
+\begin{table}
+\centering
+\caption{Finite edge reconstruction record from the original computational study.}
+\label{tab:edge_record}
+\small
+\begin{tabular}{lccc}
+\toprule
+case & global & exact packet & estimated packet\\
+\midrule
+one dimensional step & \(5.4023\times10^{-2}\) & \(1.3692\times10^{-4}\) & \(2.4029\times10^{-2}\)\\
+two dimensional disk & \(3.7643\times10^{-2}\) & \(6.4752\times10^{-5}\) & \(3.4043\times10^{-3}\)\\
+multiple regions & \(3.3740\times10^{-2}\) & \(5.2118\times10^{-7}\) & not evaluated\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The estimated packet rows used a narrow positive contrast synthetic model. They are not evidence for a general segmentation theorem. The exact packet rows verify \cref{thm:retained_packet_identity} numerically after the packet is supplied.
+
+\section{Cyclic Cayley coordinates}\label{sec:cayley}
+
+This section records a secondary realization from the original signal manuscript. It is logically independent of the recovery theorems. The classical Smith chart uses the Cayley transform between normalized impedance and a reflection coordinate \cite{Smith1969}.
+
+Let
+\[
+\mathbb H
+=
+\{z\in\CC:\Re z>0\}
+\]
+and define
+\[
+C(z)=\frac{z-1}{z+1}.
+\]
+It maps \(\mathbb H\) conformally onto the unit disk \(\mathbb D\), with inverse
+\[
+C^{-1}(w)=\frac{1+w}{1-w}.
+\]
+For \(\theta\in\RR\), let
+\[
+R_\theta(w)=\e^{\ii\theta}w.
+\]
+
+\begin{theorem}[Cyclic Mobius action]\label{thm:cyclic_mobius}
+The pullback
+\[
+\Phi_\theta
+=C^{-1}R_\theta C
+\]
+is the fractional linear map
+\[
+\boxed{
+\Phi_\theta(z)
+=
+\frac{(1+\e^{\ii\theta})z+(1-\e^{\ii\theta})}
+{(1-\e^{\ii\theta})z+(1+\e^{\ii\theta})}.
+}
+\]
+It preserves \(\mathbb H\) and satisfies
+\[
+\Phi_\theta\Phi_\varphi
+=
+\Phi_{\theta+\varphi}.
+\]
+For an integer \(N\geq1\) and \(\theta=2\pi/N\), the map has order \(N\).
+\end{theorem}
+
+\begin{proof}
+Substitute \(\e^{\ii\theta}(z-1)/(z+1)\) into \(C^{-1}\) and simplify. Preservation of \(\mathbb H\) follows because \(C\) maps it to \(\mathbb D\), rotation preserves \(\mathbb D\), and \(C^{-1}\) maps back. The group law follows by conjugating the rotation group law. When \(\theta=2\pi/N\), the \(N\)th power is the identity. Conversely, if its \(k\)th power is the identity, conjugation by \(C\) and evaluation at \(w=1/2\) give \(\e^{2\pi\ii k/N}=1\), so \(N\) divides \(k\). Hence the order is exactly \(N\).
+\end{proof}
+
+\begin{corollary}[Impedance and admittance]\label{cor:impedance_admittance}
+For \(N=2\), \(\theta=\pi\) and
+\[
+\Phi_\pi(z)=\frac1z.
+\]
+Thus the two phase action is normalized impedance and admittance inversion.
+\end{corollary}
+
+\begin{proof}
+Insert \(\e^{\ii\pi}=-1\) in the formula of \cref{thm:cyclic_mobius}.
+\end{proof}
+
+\begin{proposition}[Radial and phase coordinates]\label{prop:radial_phase}
+Write
+\[
+C(z)=\rho\e^{\ii\varphi},
+\qquad
+0\leq\rho<1.
+\]
+Then
+\[
+C(\Phi_\theta(z))
+=
+\rho\e^{\ii(\varphi+\theta)}.
+\]
+The radial mismatch \(\rho\) is invariant and the phase coordinate advances by \(\theta\).
+\end{proposition}
+
+\begin{proof}
+This is the defining conjugacy \(C\Phi_\theta=R_\theta C\).
+\end{proof}
+
+\begin{proposition}[Coprime phase factorization]\label{prop:phase_factorization}
+Let \(M\) and \(N\) be coprime. The cyclic phase labels modulo \(MN\) are equivalent to pairs of labels modulo \(M\) and modulo \(N\):
+\[
+\ZZ/(MN)\ZZ
+\cong
+\ZZ/M\ZZ\times\ZZ/N\ZZ.
+\]
+Under this identification, the rotation by \(2\pi/(MN)\) is determined by its two projected cyclic actions.
+\end{proposition}
+
+\begin{proof}
+This is the Chinese remainder theorem applied to the additive phase label. A label modulo \(MN\) is uniquely determined by its two residues, and addition of labels is preserved.
+\end{proof}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.61\textwidth]{14_smith_coordinates.pdf}
+\caption{The cyclic action is an ordinary phase rotation in the reflection disk and a fractional linear action in the impedance half plane.}
+\label{fig:smith_coordinates}
+\end{figure}
+
+\section{Limits and further directions}\label{sec:further_questions}
+
+The one dimensional recovery theorem identifies the exact threshold needed by an adjacent contrast detector. More general recovery requires a broader observation model. A multiscale average can reduce fixed sample noise, but its bias depends on the smoothness class and the separation of nearby jumps. A useful next theorem should select the averaging scale from the data while retaining a finite probability certificate.
+
+Higher dimensional recovery requires geometry. The overlap and tube formulas in \cref{sec:packet_error} become quantitative once a boundary estimate is known. What remains is a stable method that recovers topology, orientation, curvature, and region values under a declared noise model. Wedgelets and curvelets show why directional geometry is essential for broad image classes \cite{Donoho1999,CandesDonoho2004}.
+
+The best basis recursion is exact for additive objectives. Cross packet leakage, shared computation, and global hardware constraints introduce couplings between subtrees. Those problems require a larger compiler or an approximation theorem. The cost stability results in \cref{thm:best_basis_cost_stability,cor:best_basis_selection_stability} identify one condition under which the additive decision survives perturbation.
+
+The higher order singular packet theorem removes finitely many trace jumps. A more complete approximation theory should connect packet norms to geometric measure quantities in \(\BV\), piecewise Sobolev spaces, and free discontinuity models. It should also determine when a redundant packet dictionary can identify the derivative order of a singularity rather than merely its location.
+
+Finally, the two shifted Haar grids remove one exact alignment failure, but they are redundant. A complete redundant theory should provide stable synthesis, noise aware coefficient aggregation, and a best basis rule that does not count the same singularity several times.
+
+\section{Conclusion}\label{sec:conclusion}
+
+Finite index sublattices give exact coordinates for lattice signals. In those coordinates, convolution is a matrix of transfer kernels. Perfect reconstruction is a matrix inverse identity. Approximate reconstruction is controlled by a multiplier norm. Frame bounds are pointwise singular value bounds. Lifting steps are exact triangular coordinate changes. Every admissible packet tree gives a complete coordinate system, and every additive tree objective has an exact dynamic recursion.
+
+The singular packet theory separates representation from recovery. A finite family of truncated powers records jumps in a function and its derivatives, leaving a globally Sobolev remainder under explicit trace assumptions. If the packet is known and retained, the error is exactly the smooth approximation error. If the packet is estimated, exact region overlap and location formulas quantify the remaining defect, while the reconstruction operator contributes a transparent stability factor.
+
+For separated one dimensional jumps, a deterministic contrast gap gives exact cell recovery, midpoint location accuracy, and amplitude control. A sub Gaussian version follows from one union bound, and repeated measurements reduce the effective noise scale. Haar coefficients provide a second separation law because smooth coefficients decay one full power of scale faster than jump coefficients. Two shifted grids remove boundary alignment at a fixed scale. Higher differences annihilate piecewise polynomial interiors and confine their response to breakpoint bands.
+
+The resulting chain is
+\[
+\begin{gathered}
+\text{lattice coordinates}
+\longrightarrow
+\text{transfer blocks}
+\longrightarrow
+\text{stable filter banks}
+\longrightarrow
+\text{packet trees}
+\\
+\longrightarrow
+\text{singular packet model}
+\longrightarrow
+\text{local recovery}
+\longrightarrow
+\text{smooth approximation rate}.
+\end{gathered}
+\]
+Every arrow is exact or quantitatively controlled under the hypotheses stated in the corresponding result.
+
+
+\bibliographystyle{aomalpha}
+\bibliography{PSC_Paper_V_Annals_Human_Edition}
+
+\end{document}

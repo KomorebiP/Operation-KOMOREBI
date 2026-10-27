@@ -1,0 +1,1659 @@
+--- before/III/docs/Paper_III_Section17_Analytic_Closeout.tex
++++ III/docs/Paper_III_Section17_Analytic_Closeout.tex
+@@ -11,5 +11,5 @@
+ \definecolor{teal}{HTML}{2F6B69}
+ \definecolor{muted}{HTML}{5C7775}
+-\hypersetup{pdftitle={Paper III: Analytic Packet Jets and Release Evidence},pdfauthor={Komorebi P.},pdfsubject={Mathematical supplement with explicitly bounded Lean coverage}}
++\hypersetup{pdftitle={Paper III: Analytic Packet Jets and Exact Composition},pdfauthor={Komorebi P.},pdfsubject={Mathematical supplement with explicitly bounded Lean coverage}}
+ \pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\textcolor{teal}{REALIZATION CALCULUS / PAPER III}}\fancyhead[R]{\small\textcolor{muted}{Section 17}}\fancyfoot[C]{\thepage}\setlength{\headheight}{14pt}
+ \newtheorem{theorem}{Theorem}[section]
+@@ -45,5 +45,5 @@
+ \vfill%
+ {\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+-\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
++\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+ \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+ \makeatother
+@@ -51,16 +51,16 @@
+ \begin{document}
+ \begin{center}
+-{\small\bfseries\textcolor{teal}{OPERATION KOMOREBI}}\\[5pt]
++{\small\bfseries\textcolor{teal}{REALIZATION CALCULUS}}\\[5pt]
+ {\Large\bfseries Projector Resolved Seed Calculus III}\\[7pt]
+ {\LARGE\bfseries Analytic Packet Jets and Exact Composition}\\[8pt]
+ {\large Mathematical and verification supplement}\\[8pt]
+-{\normalsize Komorebi P. \quad 20 October 2026}\\[9pt]
+-{\small Final mathematical edition \quad $\cdot$ \quad Version 1.0.0}
++{\normalsize Komorebi P.}
+ \end{center}
+ \vspace{6pt}
+ \noindent\rule{\linewidth}{.8pt}
+ \vspace{4pt}
+-This supplement gives full ordinary mathematical arguments for the analytic packet claims of Section 17, identifies a stronger norm bound, and records how the calculation relates to the actual projector ranges. The release includes fresh Lean verification for multilinear reconstruction, continuous jets on the actual projector ranges, their norm bound, and the decorated composition and structural support laws. The ordinary Taylor and counting arguments retain their proof status as stated here. The companion Lean guide identifies the exact declarations and replay evidence.
+-
++This supplement gives full ordinary mathematical arguments for the analytic packet claims of Section 17, identifies a stronger norm bound, and records how the calculation relates to the actual projector ranges. The accompanying formal development verifies multilinear reconstruction, continuous jets on the actual projector ranges, their norm bound, and the decorated composition and structural support laws. The ordinary Taylor and counting arguments retain their proof status as stated here. The companion Lean guide identifies the exact declarations and replay evidence.
++
++\Needspace{6\baselineskip}
+ \section{Two distinct contracts}
+ Let $\X,\Y,\Z$ be real Banach spaces. The same statements hold for complex Banach spaces with complex Fr\'echet derivatives; the integral below uses a real parameter. A \emph{bounded packet system} on $\X$ is a finite family $P_i\in\mathcal L(\X,\X)$ such that
+@@ -86,4 +86,5 @@
+ \end{proof}
+ 
++\Needspace{6\baselineskip}
+ \section{Multilinear reconstruction and packet jets}
+ \begin{theorem}[Completeness is enough for multilinear expansion]\label{thm:reconstruction}
+@@ -127,4 +128,5 @@
+ \end{proof}
+ 
++\Needspace{6\baselineskip}
+ \section{Derivatives, coordinates, and Taylor remainder}
+ Let $U\subset\X$ be open and $F:U\to\Y$ be $C^m$. For $1\le r\le m$, the Fr\'echet derivative $\D^rF(x)$ is continuous multilinear. Apply Theorem~\ref{thm:reconstruction} to $B=\D^rF(x)$. Thus the actual packet jets recover the entire derivative, without presupposing a separate packet derivative object.
+@@ -173,4 +175,5 @@
+ \end{proof}
+ 
++\Needspace{6\baselineskip}
+ \section{The partition chain rule and packet decorations}
+ Let $U\subseteq\X$ and $V\subseteq\Y$ be open, let $G:U\to\Y$ and $F:V\to\Z$ be $C^n$, and assume $G(U)\subseteq V$. Fix $x\in U$. Write $\Pi_n$ for set partitions of $\{1,\ldots,n\}$. Within each block the directions are listed by increasing index; blocks may be listed by increasing least element to make every displayed tuple unambiguous.
+@@ -231,4 +234,5 @@
+ \end{figure}
+ 
++\Needspace{6\baselineskip}
+ \section{Verification and reproduction}
+ \begin{longtable}{@{}p{.28\linewidth}p{.64\linewidth}@{}}
+@@ -238,5 +242,5 @@
+ Continuous packet jets&The accepted source uses literal projector ranges with inherited norms. Its reconstruction theorem specializes to mathlib's total \texttt{iteratedFDeriv}. Differentiability is asserted only when a theorem supplies the required hypotheses.\\
+ Composition and support&The accepted source expands the composite derivative over finite ordered partitions and all intermediate labels. A nonzero composite jet has a witness with nonzero constituent jets. This is a one-way support inclusion.\\
+-Taylor and counting&The integral remainder, its exact factorial normalization and bound, and the Stirling term count are proved mathematically in this supplement. They are not claimed as new Lean theorems in this release.\\
++Taylor and counting&The integral remainder, its exact factorial normalization and bound, and the Stirling term count are proved mathematically in this supplement. They are not included in the accompanying Lean formalization.\\
+ Exact computation&Three suites passed 18,630 assertions on specified integer, rational, and polynomial examples. Repeated assertions and sampled norm inequalities are identified in the computation audit. These are finite checks.\\
+ Later monograph&The ordinary review covers all 59 later results and both classical standard facts under their stated hypotheses. Matching expanded Lean proofs were not recovered for those sections.\\
+@@ -246,4 +250,4 @@
+ The source package contains the exact toolchain and dependency pins, compiler transcripts, ownership and axiom audit, kernel replay, adverse controls, mathematical reviews, and statement register. Run \texttt{python VERIFY\_RELEASE.py} to check the extracted bytes. The separate Lean guide and \texttt{formal/README.md} give the formal replay commands.
+ 
+-\noindent\textbf{Reading rule.} An ordinary proof, an exact computation, a Lean theorem under explicit hypotheses, and an open research construction are separate kinds of evidence. The statement register records the scope of each claim. Version 1.0.0 closes the technical manuscript release under these declared boundaries. No public reuse license is assigned by this supplement.
++\noindent\textbf{Reading rule.} An ordinary proof, an exact computation, a Lean theorem under explicit hypotheses, and an open research construction are separate kinds of evidence. The statement register records the scope of each claim.
+ \end{document}
+--- before/III/guides/lean/Paper_III_Lean_Guide_Final.tex
++++ III/guides/lean/Paper_III_Lean_Guide_Final.tex
+@@ -2,7 +2,7 @@
+ 
+ \usepackage{komorebi-monograph}
+-\renewcommand{\KomorebiKind}{Lean and evidence guide}
++\renewcommand{\KomorebiKind}{Formal companion}
+ \renewcommand{\KomorebiShortTitle}{Paper III / Lean guide}
+-\renewcommand{\KomorebiCoverBlurb}{Read the exact source declarations, follow the map directions, and follow the current kernel verification and the preserved finite theorem map.}
++\renewcommand{\KomorebiCoverBlurb}{Read exact source declarations, follow map directions, and relate the finite theorem map to the kernel-verification evidence.}
+ \KomorebiSetup
+ \setmonofont{DejaVu Sans Mono}[Scale=.80]
+@@ -28,5 +28,5 @@
+ \vfill%
+ {\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+-\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
++\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+ \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+ \makeatother
+@@ -34,8 +34,8 @@
+ \begin{document}
+ \KomorebiCover
+-\KomorebiOpeningNote{A practical guide to the current release and the complete 41-row finite algebraic contract. Read source-exact proof excerpts, follow the direction of each map, distinguish exact coordinate transport from independent connection data, and locate every formal target.
++\KomorebiOpeningNote{A guide to the finite algebraic core, its analytic continuation, and the complete 41-row finite contract. Read source-exact proof excerpts, follow the direction of each map, distinguish exact coordinate transport from independent connection data, and locate every formal target.
+ \medskip
+ 
+-\textbf{Evidence at this edition.} The release includes a fresh pinned compilation, a compiled ownership and axiom audit, upstream-only kernel replay, and adverse controls. The opening release chapter gives their exact scope. The preserved finite map still has 143 targets and its historical namespace audit has 468 entries. Those older counts describe the finite baseline, not the larger current closure.}
++\textbf{Formal evidence.} The verification record includes a pinned compilation, a compiled ownership and axiom audit, upstream-only kernel replay, and adverse controls. The opening chapter gives their exact scope. The preserved finite map still has 143 targets and its historical namespace audit has 468 entries. Those counts describe the finite baseline, not the enlarged ownership closure.}
+ 
+ 
+@@ -54,5 +54,5 @@
+ \clearpage
+ \section{The complete 41-row formal contract}\label{sec:map}
+-This index preserves every row, target, status, and boundary of the authoritative v1.0.1 map. Fully qualified declaration names are printed in full. File and line locations are a current lexical navigation aid, not a second compiled type audit. Each target appears in exactly one row. The 143 names comprise 88 theorem declarations and 55 constructions.
++This index preserves every row, target, status, and boundary of the authoritative finite algebraic map. Fully qualified declaration names are printed in full. File and line locations are a current lexical navigation aid, not a second compiled type audit. Each target appears in exactly one row. The 143 names comprise 88 theorem declarations and 55 constructions.
+ 
+ The finite limits are part of the statements: edge sums use finite packet and edge types, arbitrary-length heterogeneous products keep one common finite packet type, and packet reconstruction uses a finite complete idempotent family. Rows 38--41 have the separate grammar and candidate-specific scopes explained in Section~6.
+@@ -68,5 +68,5 @@
+ \clearpage
+ \section{Imports and exact dependency revisions}
+-The import table lists direct local file dependencies, not a theorem-level dependency graph. The adjacent JSON includes direct external imports as well. This appendix describes the preserved finite baseline. Its aggregate imports seven mathematical modules. The current release adds the continuation and packet calculus modules listed in the opening chapter.
++The import table lists direct local file dependencies, not a theorem-level dependency graph. The adjacent JSON includes direct external imports as well. This appendix describes the preserved finite baseline. Its aggregate imports seven mathematical modules. The nonlinear and analytic continuation adds the packet calculus modules listed in the opening chapter.
+ \input{generated/imports.tex}
+ The manifest's exact pinned revisions follow. They accompany the toolchain string \code{leanprover/lean4:v4.34.0-rc2}.
+@@ -76,8 +76,5 @@
+ The preserved finite baseline component has nine Lean files, totaling 1,948 source lines, and sixteen files including the map, manifest, gate, pins, and documentation. The guide stores 44 exact excerpts. For each, \code{generated/excerpts.json} records the source file, inclusive line range, full-source hash, exact-excerpt hash, and PDF-display-file hash.
+ 
+-\code{generated/theorem_map.json} contains all 41 rows and complete source locations. \code{generated/mapped_source_index.json} provides an alphabetical index. \code{generated/inherited_axiom_records.json} records the 143 saved transcript reports. \code{generated/static_audit.json} separates current checks from inherited counts and records the checksums used. The original report and transcript remain in the preserved finite release. Current verification sources and receipts are under \code{formal/} in the release root.
++\code{generated/theorem_map.json} contains all 41 rows and complete source locations. \code{generated/mapped_source_index.json} provides an alphabetical index. \code{generated/inherited_axiom_records.json} records the 143 saved transcript reports. \code{generated/static_audit.json} separates current checks from inherited counts and records the checksums used. The original report and transcript remain in the preserved finite release. Verification sources and receipts are under \code{formal/} in the formal source distribution.
+ 
+-\code{build.py} is a compile-only XeLaTeX builder. \code{build_guide_data.py} regenerates static data from an explicitly supplied preserved release. \code{verify_pdf.py} renders the PDF, prepares contact sheets, and records page-level layout checks. \code{BUILD_NOTES.txt} records authoring failures and their repairs, rather than silently treating failed attempts as successful verification.
+-
+-The guide uses P052 for body text, Nimbus Sans for headings, DejaVu Sans Mono for code, and Latin Modern Math for mathematical symbols. Code displays use \code{fvextra}, preserving token order. Display fallbacks are documented separately from the exact UTF-8 source excerpts.
+ \end{document}
+--- before/III/guides/lean/chapters/00_current_release.tex
++++ III/guides/lean/chapters/00_current_release.tex
+@@ -1,6 +1,6 @@
+-\section*{The verified release}
++\section*{The formal core and analytic continuation}
+ \phantomsection\label{sec:current_release}
+-\addcontentsline{toc}{section}{The verified release}
+-Version 1.0.0 combines the finite algebraic development, exact nonlinear packet coordinates, and a new analytic packet interface. The original mathematical sources were restored in the exact pinned environment. The release then compiled the added packet modules, audited the compiled ownership boundary and transitive axioms, replayed the owned logical declarations into an environment initially containing only upstream dependencies, and exercised the rejection controls.
++\addcontentsline{toc}{section}{The formal core and analytic continuation}
++The formal development combines finite algebraic constructions, exact nonlinear packet coordinates, and an analytic packet interface. Its verification record includes compilation in the pinned environment, an audit of the compiled ownership boundary and transitive axioms, replay of the owned logical declarations into an environment initially containing only upstream dependencies, and rejection controls.
+ 
+ \subsection*{The mathematical objects are the actual ranges}
+@@ -12,5 +12,5 @@
+ 
+ \begin{longtable}{@{}p{.34\linewidth}p{.59\linewidth}@{}}
+-\toprule \textbf{Current source} & \textbf{Formal content}\\\midrule\endhead
++\toprule \textbf{Source module} & \textbf{Formal content}\\\midrule\endhead
+ \code{PacketCoordinates.lean}\newline \code{PacketDirectSum.lean} & Analysis and synthesis for a finite complete pairwise annihilating idempotent family, with range-valued coordinates and the direct-sum comparison.\\
+ \code{NonlinearPacketCoordinates.lean} & Exact coordinate representation of arbitrary functions, composition and coordinate changes.\\
+@@ -29,5 +29,5 @@
+ The support theorem says that a nonzero composite jet has at least one decorated partition with a nonzero outer jet and all inner jets nonzero. It gives no converse. Constituent maps can compose to zero, and distinct terms can cancel. The formal composition identity also covers order zero through the unique empty partition. The positive-order manuscript formula requires no new nullary convention.
+ 
+-\subsection*{The final evidence record}
++\subsection*{Compilation and kernel evidence}
+ \input{generated/current_receipts.tex}
+ The full command transcripts and exact source snapshots accompany every phase. The owned audit examines compiled declarations by module ownership, including names outside the main namespace. It rejects project axioms, unreviewed opaque or partial declarations, unsafe declarations, and transitive axioms outside the standard basis \code{propext}, \code{Classical.choice}, and \code{Quot.sound}.
+@@ -35,8 +35,16 @@
+ Generated runtime helpers are inventoried separately from the logical declarations replayed by the kernel. A helper count is not a theorem count. The rejection controls include foreign owned axioms, opaque, unsafe and partial declarations, false arithmetic, a proof placeholder, and a deliberately corrupted replay declaration. A harmless foreign namespace is a positive control. The negative controls pass when the designated defect is rejected for the recorded reason.
+ 
+-The original 41-row map below remains the finite baseline map. Its 143 targets comprise 88 theorem declarations and 55 constructions. The historical count of 468 namespace entries includes 229 theorem entries. These denominators are different from the current ownership closure and from the manuscript's 98 result environments plus two classical standard facts.
++The original 41-row map below remains the finite baseline map. Its 143 targets comprise 88 theorem declarations and 55 constructions. The historical count of 468 namespace entries includes 229 theorem entries. These denominators are different from the enlarged ownership closure and from the manuscript's 98 result environments plus two classical standard facts.
+ 
+-\subsection*{Reproduce the current result}
+-The archive supplies owned source, pins, receipts and scripts. Restore the pinned Lean distribution and the dependency revisions using \code{formal/README.md}. Build in a separate working copy so the delivered manifest and historical transcripts stay intact. From \code{formal/}, run the four phases with a fresh object directory and unique labels:
++
++\subsection*{Mathematical and finite evidence}
++The main text contains 98 result environments and two classical standard facts. Its finite and nonlinear coordinate arguments, the Section~17 analytic arguments, and the 59 later results plus two classical inputs have ordinary mathematical reviews under their stated hypotheses. The statement register identifies their status individually; these review counts do not assert complete Lean coverage.
++
++The accompanying finite evidence records 18,630 exact assertions across three coordinate and calculus suites, 124 visual-model checks, and four rejected false controls. The computation audit specifies the tested ranges and repeated cases. These finite calculations support the examples and implementations; they do not replace the ordinary proofs or extend the formal contract.
++
++The mathematical reading route is the main text, the analytic packet supplement, the 24 worked visual plates with 22 exact model figures, and this declaration-level guide. The supplement supplies the range-space, norm, Taylor, composition, and support arguments, including degenerate cases and the relation to the formal interface. The formal source distribution includes its exact sources, dependency pins, verification transcripts, mathematical reviews, computation scripts, statement register, and SHA-256 manifest.
++
++\subsection*{Reproduce the formal verification}
++The archive supplies owned source, pins, receipts and scripts. Restore the pinned Lean distribution and the dependency revisions using \code{formal/README.md}. Build in a separate working copy so the recorded manifest and transcripts stay intact. From \code{formal/}, run the four phases with a fresh object directory and unique labels:
+ \begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true,breakanywhere=true]
+ python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase full --label local_full --objects build/local_objects
+@@ -48,5 +56,5 @@
+ 
+ \subsection*{The remaining formal boundary}
+-The manuscript's integral Taylor remainder, its factorial estimate, and the Stirling count of decorated terms are supplied as ordinary proofs. The 59 later results and two classical standard facts in Sections 18--27 were reviewed mathematically. Matching Lean formalizations for that expanded portion were not recovered. The source package preserves an October 16 visual claim of a larger closure as historical material, with its lack of matched source explicitly recorded.
++The manuscript's integral Taylor remainder, its factorial estimate, and the Stirling count of decorated terms are supplied as ordinary proofs. The 59 later results and two classical standard facts in Sections 18--27 were reviewed mathematically. Matching Lean formalizations for that expanded portion were not recovered. An earlier visual account claimed broader formal coverage, but no matching Lean sources were recovered; that account remains historical material.
+ 
+-These boundaries leave a complete mathematical reading edition with a precisely identified formal core and continuation. The statement register distinguishes fully mapped statements, partial formal correspondence, inherited references, and ordinary proofs. Public reuse terms remain an author decision, recorded separately from technical verification.
++These boundaries leave a complete mathematical reading edition with a precisely identified formal core and continuation. The statement register distinguishes fully mapped statements, partial formal correspondence, inherited references, and ordinary proofs.
+--- before/III/guides/lean/chapters/01_orientation.tex
++++ III/guides/lean/chapters/01_orientation.tex
+@@ -1,13 +1,13 @@
+ \section{Reading the formal paper}
+-Paper III turns three kinds of data into precise finite statements: directed packet operators, coordinate and connection transport, and local obstruction certificates. The preserved finite predecessor is small enough to read as a connected development. Its seven mathematical modules contain the authors' constructions and proofs. An aggregate import exposes them together. A separate audit module checks the compiled namespace. The opening release chapter records the enlarged current development.
++Paper III turns three kinds of data into precise finite statements: directed packet operators, coordinate and connection transport, and local obstruction certificates. The preserved finite predecessor is small enough to read as a connected development. Its seven mathematical modules contain the authors' constructions and proofs. An aggregate import exposes them together. A separate audit module checks the compiled namespace. The opening chapter describes the finite core and its analytic continuation.
+ 
+ This guide follows the definitions before using their theorem names. A declaration name is a precise destination, but its type determines what has actually been proved. The preserved finite map has 41 rows and 143 distinct targets. Of these, 88 are theorem declarations and 55 are constructions. A construction can be a structure, inductive type, definition, or abbreviation. The count does not mean 143 independent mathematical theorems.
+ 
+ \subsection{Three levels of evidence}
+-The preserved report, dated 3 September 2026, records a successful aggregate build of 3,076 jobs, the gate that checks parity with the theorem map, and a namespace audit of 468 declarations including 229 entries of kind \code{theoremInfo}. Paper III also preserves the kernel audit transcript. That transcript contains one axiom report for each of the 143 mapped targets and the final namespace PASS line.
++The finite algebraic verification report records a successful aggregate build of 3,076 jobs, the gate that checks parity with the theorem map, and a namespace audit of 468 declarations including 229 entries of kind \code{theoremInfo}. Paper III also preserves the kernel audit transcript. That transcript contains one axiom report for each of the 143 mapped targets and the final namespace PASS line.
+ 
+-For this edition, a Python reader reconciled all 41 map rows with their lexical source locations, all 143 explicit \texttt{\#print axioms} directives, and all 143 transcript records. It checked the 16 files in the preserved formal component against the original checksum manifest. The theorem map and transcript hashes also match the values printed in the inherited verification report. These are fresh static checks of the preserved evidence. They do not replace a Lean execution; the opening release chapter separately records the current compiler and replay runs.
++A static reconciliation matches all 41 map rows with their lexical source locations, all 143 explicit \texttt{\#print axioms} directives, and all 143 transcript records. It checked the 16 files in the preserved formal component against the original checksum manifest. The theorem map and transcript hashes also match the values printed in the inherited verification report. These are static checks of the preserved evidence. They do not replace a Lean execution; the opening chapter separately records the compiler and replay runs.
+ 
+-The expanded traditional companion includes additional ordinary mathematical proofs. The finite v1.0.1 formal contract stays fixed. A section of the final paper may combine a formally covered finite result with a stronger ordinary theorem. The presence of a related Lean name does not make every statement in that section part of the contract.
++The expanded traditional companion includes additional ordinary mathematical proofs. The finite algebraic formal contract stays fixed. A section of the main text may combine a formally covered finite result with a stronger ordinary theorem. The presence of a related Lean name does not make every statement in that section part of the contract.
+ 
+ \subsection{A route through the source}
+--- before/III/guides/lean/chapters/07_replay.tex
++++ III/guides/lean/chapters/07_replay.tex
+@@ -1,5 +1,5 @@
+ \clearpage
+ \section{The finite baseline: evidence, trust, and replay}
+-This chapter explains the preserved finite release and its historical gates. For the current combined build and replay, use the opening release chapter and \code{formal/README.md}. The old namespace counts in the excerpts apply only to that finite baseline.
++This chapter explains the finite algebraic core and its verification gates. For the combined core and analytic continuation, use the opening chapter and \code{formal/README.md}. The finite namespace counts in the excerpts apply only to that finite baseline.
+ \subsection{The pinned environment is part of the claim}
+ The formal project names Lean \code{leanprover/lean4:v4.34.0-rc2}, with reported Lean commit \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Its Lake manifest pins Mathlib at \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The project version is 1.0.1. Warnings are promoted to errors through \code{moreLeanArgs = ["-E", "warning"]}.
+@@ -49,13 +49,6 @@
+ The release also supplies \code{bash VERIFY.sh --full}. That path creates a temporary copy, regenerates figures, runs Lean and its gates, rebuilds the original finite manuscript, and verifies the original artifact hashes. It requires its documented TeX, graphics, Python, and Lean dependencies. It verifies the preserved finite release, not the newly expanded companion PDF.
+ 
+-\subsection{Rebuilding this guide}
+-In the editable guide directory, \code{python3 build.py} runs XeLaTeX four times on the supplied source and generated data. It does not invoke Lean and does not regenerate data. This separation allows a typesetting replay without changing the preserved provenance tables.
++\subsection{The formal verification boundary}
++The finite portion of this guide supplies exact source excerpts, the complete 41-row map, the preserved transcript, and static reconciliation. The opening chapter separately reports compiler and kernel verification. The package records separate computational checks and the paper's earlier bounded mathematical review. These records concern different objects. They do not establish fresh Lean proofs of every ordinary theorem.
+ 
+-To regenerate the guide's static data, run \code{build_guide_data.py --source PATH}, where \code{PATH} is the preserved finite release root containing \code{formalization/lean}, \code{kernel_audit_output.txt}, and \code{SHA256SUMS.txt}. In this package, supply \code{--source ../../checkpoint_v0.3.0/baseline/source/finite} and \code{--traditional ../../manuscript} from the guide directory. The old generator default names the historical layout. The generator uses only Python's standard library and never edits the source release.
+-
+-The data generator writes the complete map, lexical source locations, import list, pins, exact excerpts, and static audit. The locator table for the traditional paper provides editorial navigation supplied by the adjacent traditional source directory or the explicit \code{--traditional} argument. Changing a locator does not alter the theorem map or extend the formal contract.
+-
+-\subsection{The edition's verification boundary}
+-The finite portion of this guide supplies exact source excerpts, the complete 41-row map, the preserved transcript, and static reconciliation. The current release chapter separately reports fresh compiler and kernel verification. Its PDF is newly compiled and inspected. The package records separate computational checks and the paper's earlier bounded mathematical review. These records concern different objects. They do not establish fresh Lean proofs of every ordinary theorem.
+-
+-The finite v1.0.1 contract has explicit types and evidence. To expand it, add the required types and proofs, update the map, run the pinned or newly documented environment, and retain the new transcript.
++The finite algebraic contract has explicit types and evidence. To expand it, add the required types and proofs, update the map, run the pinned or newly documented environment, and retain the new transcript.
+--- before/III/guides/lean/generated/current_receipts.tex
++++ III/guides/lean/generated/current_receipts.tex
+@@ -1,3 +1,3 @@
+-The final release compiled \textbf{16 production modules} from an initially empty owned object directory. The compiled ownership audit recorded \textbf{608 owned declarations}. The clean kernel replay accepted \textbf{594 logical declarations}, with \textbf{14 generated runtime helpers} separately inventoried. The full build, ownership audit, kernel replay, and control suite all passed.
++The verification run compiled \textbf{16 production modules} from an initially empty owned object directory. The compiled ownership audit recorded \textbf{608 owned declarations}. The clean kernel replay accepted \textbf{594 logical declarations}, with \textbf{14 generated runtime helpers} separately inventoried. The full build, ownership audit, kernel replay, and control suite all passed.
+ 
+ The exact compiler is Lean \code{4.34.0-rc2}, commit \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Mathlib is pinned at \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The machine-readable summary is \code{formal/verification/FINAL_VERIFICATION_SUMMARY.json}.
+--- before/III/guides/lean/generated/traditional_crosswalk.tex
++++ III/guides/lean/generated/traditional_crosswalk.tex
+@@ -1,4 +1,4 @@
+ \begin{longtable}{p{.54\textwidth}p{.36\textwidth}}
+-\toprule Canonical label & Final printed locator \\ \midrule\endhead
++\toprule Canonical label & Traditional-paper locator \\ \midrule\endhead
+ \code{sec:purpose} & Section 1, p.~1 \\ \addlinespace
+ \code{sec:edge-operators} & Section 2, p.~2 \\ \addlinespace
+--- before/III/guides/lean/komorebi-monograph.sty
++++ III/guides/lean/komorebi-monograph.sty
+@@ -13,7 +13,7 @@
+ \providecommand{\KomorebiTitle}{Projector Resolved Seed Calculus III}
+ \providecommand{\KomorebiSubtitle}{Typed transfer, nonlinear packets, and obstruction theory}
+-\providecommand{\KomorebiSeries}{Paper III}
+-\providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{Release 1.0.0 / 20 October 2026}
++\providecommand{\KomorebiSeries}{Chapter III}
++\providecommand{\KomorebiKind}{Mathematical text}
++\providecommand{\KomorebiEdition}{}
+ \providecommand{\KomorebiShortTitle}{Paper III}
+ \providecommand{\KomorebiCoverTitle}{Projector Resolved\\Seed Calculus III}
+@@ -73,5 +73,5 @@
+   \vfill
+   {\sffamily\fontsize{11}{14}\selectfont Komorebi P.}\par
+-  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind\quad\textbullet\quad\KomorebiEdition}\par
++  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind}\par
+   \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{ink}\normalfont
+ }
+--- before/III/guides/visual/Paper_III_Visual_Guide_Final.tex
++++ III/guides/visual/Paper_III_Visual_Guide_Final.tex
+@@ -6,5 +6,5 @@
+ \usepackage{hyperref,bookmark}
+ \usepackage{komorebi-monograph}
+-\renewcommand{\KomorebiKind}{Visual guide}
++\renewcommand{\KomorebiKind}{Visual companion}
+ \renewcommand{\KomorebiShortTitle}{Paper III / Visual guide}
+ \renewcommand{\KomorebiCoverBlurb}{Twenty-four worked plates make the direction of each map, the role of every hypothesis, and the limits of finite evidence visible.}
+@@ -33,5 +33,5 @@
+ \vfill%
+ {\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+-\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
++\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+ \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+ \makeatother
+@@ -42,39 +42,39 @@
+ \pdfbookmark[0]{Guide contents}{guidecontents}
+ {\sffamily\bfseries\Large\color{accent}A route through the examples}\par\medskip
+-The labels V1 through V24 identify worked pages independently of PDF
+-pagination. Each page names its corresponding statement in the monograph edition. The Lean guide provides the separate formal contract.
++The labels Plate III.1 through Plate III.24 identify worked pages independently of PDF
++pagination. Each page names its corresponding statement in the main text. The Lean guide provides the separate formal contract.
+ \medskip
+ \begin{multicols}{2}
+-{\small\noindent\hyperlink{vpage1}{\textbf{V1} Three objects, three different questions}\par\smallskip}
+-{\small\noindent\hyperlink{vpage2}{\textbf{V2} An atlas of the objects}\par\smallskip}
+-{\small\noindent\hyperlink{vpage3}{\textbf{V3} Read the product in execution order}\par\smallskip}
+-{\small\noindent\hyperlink{vpage4}{\textbf{V4} All sixteen words, only five walks}\par\smallskip}
+-{\small\noindent\hyperlink{vpage5}{\textbf{V5} Coefficients need not commute}\par\smallskip}
+-{\small\noindent\hyperlink{vpage6}{\textbf{V6} A reachable packet can receive zero}\par\smallskip}
+-{\small\noindent\hyperlink{vpage7}{\textbf{V7} Reachability is only an upper bound}\par\smallskip}
+-{\small\noindent\hyperlink{vpage8}{\textbf{V8} Paths through changing packet lists}\par\smallskip}
+-{\small\noindent\hyperlink{vpage9}{\textbf{V9} One vector, three exact frames}\par\smallskip}
+-{\small\noindent\hyperlink{vpage10}{\textbf{V10} Nonlinear charts still cancel exactly}\par\smallskip}
+-{\small\noindent\hyperlink{vpage11}{\textbf{V11} Reversibility is a real hypothesis}\par\smallskip}
+-{\small\noindent\hyperlink{vpage12}{\textbf{V12} Measure the mismatch at its base}\par\smallskip}
+-{\small\noindent\hyperlink{vpage13}{\textbf{V13} The identity can hide in the spectrum}\par\smallskip}
+-{\small\noindent\hyperlink{vpage14}{\textbf{V14} Gauge changes the picture, not flatness}\par\smallskip}
+-{\small\noindent\hyperlink{vpage15}{\textbf{V15} Flat is not the same as calibrated}\par\smallskip}
+-{\small\noindent\hyperlink{vpage16}{\textbf{V16} Resolve the entire obstruction}\par\smallskip}
+-{\small\noindent\hyperlink{vpage17}{\textbf{V17} Why diagonal checks are insufficient}\par\smallskip}
+-{\small\noindent\hyperlink{vpage18}{\textbf{V18} A gauge can move every packet label}\par\smallskip}
+-{\small\noindent\hyperlink{vpage19}{\textbf{V19} An obstruction rejects one candidate}\par\smallskip}
+-{\small\noindent\hyperlink{vpage20}{\textbf{V20} A tree reads its named leaves}\par\smallskip}
+-{\small\noindent\hyperlink{vpage21}{\textbf{V21} Where a nonlinear defect can enter}\par\smallskip}
+-{\small\noindent\hyperlink{vpage22}{\textbf{V22} Mixed terms are not optional}\par\smallskip}
+-{\small\noindent\hyperlink{vpage23}{\textbf{V23} From loop data to a packet witness}\par\smallskip}
+-{\small\noindent\hyperlink{vpage24}{\textbf{V24} Read the evidence with the pictures}\par\smallskip}
++{\small\noindent\hyperlink{vpage1}{\textbf{Plate III.1} Three objects, three different questions}\par\smallskip}
++{\small\noindent\hyperlink{vpage2}{\textbf{Plate III.2} An atlas of the objects}\par\smallskip}
++{\small\noindent\hyperlink{vpage3}{\textbf{Plate III.3} Read the product in execution order}\par\smallskip}
++{\small\noindent\hyperlink{vpage4}{\textbf{Plate III.4} All sixteen words, only five walks}\par\smallskip}
++{\small\noindent\hyperlink{vpage5}{\textbf{Plate III.5} Coefficients need not commute}\par\smallskip}
++{\small\noindent\hyperlink{vpage6}{\textbf{Plate III.6} A reachable packet can receive zero}\par\smallskip}
++{\small\noindent\hyperlink{vpage7}{\textbf{Plate III.7} Reachability is only an upper bound}\par\smallskip}
++{\small\noindent\hyperlink{vpage8}{\textbf{Plate III.8} Paths through changing packet lists}\par\smallskip}
++{\small\noindent\hyperlink{vpage9}{\textbf{Plate III.9} One vector, three exact frames}\par\smallskip}
++{\small\noindent\hyperlink{vpage10}{\textbf{Plate III.10} Nonlinear charts still cancel exactly}\par\smallskip}
++{\small\noindent\hyperlink{vpage11}{\textbf{Plate III.11} Reversibility is a real hypothesis}\par\smallskip}
++{\small\noindent\hyperlink{vpage12}{\textbf{Plate III.12} Measure the mismatch at its base}\par\smallskip}
++{\small\noindent\hyperlink{vpage13}{\textbf{Plate III.13} The identity can hide in the spectrum}\par\smallskip}
++{\small\noindent\hyperlink{vpage14}{\textbf{Plate III.14} Gauge changes the picture, not flatness}\par\smallskip}
++{\small\noindent\hyperlink{vpage15}{\textbf{Plate III.15} Flat is not the same as calibrated}\par\smallskip}
++{\small\noindent\hyperlink{vpage16}{\textbf{Plate III.16} Resolve the entire obstruction}\par\smallskip}
++{\small\noindent\hyperlink{vpage17}{\textbf{Plate III.17} Why diagonal checks are insufficient}\par\smallskip}
++{\small\noindent\hyperlink{vpage18}{\textbf{Plate III.18} A gauge can move every packet label}\par\smallskip}
++{\small\noindent\hyperlink{vpage19}{\textbf{Plate III.19} An obstruction rejects one candidate}\par\smallskip}
++{\small\noindent\hyperlink{vpage20}{\textbf{Plate III.20} A tree reads its named leaves}\par\smallskip}
++{\small\noindent\hyperlink{vpage21}{\textbf{Plate III.21} Where a nonlinear defect can enter}\par\smallskip}
++{\small\noindent\hyperlink{vpage22}{\textbf{Plate III.22} Mixed terms are not optional}\par\smallskip}
++{\small\noindent\hyperlink{vpage23}{\textbf{Plate III.23} From loop data to a packet witness}\par\smallskip}
++{\small\noindent\hyperlink{vpage24}{\textbf{Plate III.24} Read the evidence with the pictures}\par\smallskip}
+ 
+ \end{multicols}
+ \medskip
+ \head{Three reading routes}
+-\textbf{Typed transfer:} V3 to V8.
+-\textbf{Coordinates, connection, and gauge:} V9 to V18, then V23.
+-\textbf{Candidate witnesses and trees:} V19 to V22, then V24.
++\textbf{Typed transfer:} Plate III.3 to Plate III.8.
++\textbf{Coordinates, connection, and gauge:} Plate III.9 to Plate III.18, then Plate III.23.
++\textbf{Candidate witnesses and trees:} Plate III.19 to Plate III.22, then Plate III.24.
+ \head{From the finite models to the broader paper}
+ The monograph continues with rooted tree expansions, nonlinear
+--- before/III/guides/visual/atlas-definitions.tex
++++ III/guides/visual/atlas-definitions.tex
+@@ -13,9 +13,9 @@
+ \newif\ifstarted\startedfalse
+ \providecommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+-\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
+-{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}V#1\quad /\quad #3\par}\vspace{5pt}
++\pdfbookmark[1]{Plate III.#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
++{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}Plate III.#1\quad /\quad #3\par}\vspace{5pt}
+ {\sffamily\bfseries\fontsize{19}{22}\selectfont #2\par}\vspace{5pt}
+ {\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+-\providecommand{\pagerefV}[1]{\hyperlink{vpage#1}{V\,--\,#1}}
++\providecommand{\pagerefV}[1]{\hyperlink{vpage#1}{Plate III.#1}}
+ 
+ \providecommand{\CC}{\mathbb C}
+--- before/III/guides/visual/komorebi-monograph.sty
++++ III/guides/visual/komorebi-monograph.sty
+@@ -13,7 +13,7 @@
+ \providecommand{\KomorebiTitle}{Projector Resolved Seed Calculus III}
+ \providecommand{\KomorebiSubtitle}{Typed transfer, nonlinear packets, and obstruction theory}
+-\providecommand{\KomorebiSeries}{Paper III}
+-\providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{Release 1.0.0 / 20 October 2026}
++\providecommand{\KomorebiSeries}{Chapter III}
++\providecommand{\KomorebiKind}{Mathematical text}
++\providecommand{\KomorebiEdition}{}
+ \providecommand{\KomorebiShortTitle}{Paper III}
+ \providecommand{\KomorebiCoverTitle}{Projector Resolved\\Seed Calculus III}
+@@ -73,5 +73,5 @@
+   \vfill
+   {\sffamily\fontsize{11}{14}\selectfont Komorebi P.}\par
+-  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind\quad\textbullet\quad\KomorebiEdition}\par
++  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind}\par
+   \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{ink}\normalfont
+ }
+--- before/III/guides/visual/source/pages_final.tex
++++ III/guides/visual/source/pages_final.tex
+@@ -1,3 +1,3 @@
+-\vpage{1}{Three objects, three different questions}{PAPER III / A WORKED VISUAL COMPANION}{Traditional paper: Section 1 (p. 1), Section 4 (p. 7), Section 5 (p. 10)}
++\vpage{1}{Three objects, three different questions}{CHAPTER III / A WORKED VISUAL COMPANION}{Traditional paper: Section 1, Section 4, Section 5}
+ An edge operator moves data between named packets. An exact coordinate change describes the same data in another complete chart. A connection supplies an additional choice of transport. The three can use similar arrows while making different mathematical assertions.
+ 
+@@ -10,10 +10,10 @@
+ This guide follows explicit integer and rational matrices through these tests. Each example has an inspectable input, calculation, and conclusion. Vector drawings display those calculations rather than replace them. A graph with two paths can have zero net transfer. A loop with trace two and determinant one can still differ from the identity.
+ 
+-\head{The edition used here}
+-The worked models originate in the finite algebraic v1.0.1 release. The final traditional paper also develops rooted tree expansions, nonlinear defects, obstruction objects, filtered lifting, and analytic transport under their stated hypotheses. Those ordinary mathematical developments have a wider scope than the finite Lean contract. The present models explain the finite mechanisms and provide a route into the broader paper.
++\head{Scope of the worked models}
++The worked models illustrate the finite algebraic core. The main text also develops rooted tree expansions, nonlinear defects, obstruction objects, filtered lifting, and analytic transport under their stated hypotheses. Those ordinary mathematical developments have a wider scope than the finite Lean contract. The present models explain the finite mechanisms and provide a route into the broader paper.
+ 
+ \takeaway{Follow the object, not the arrow shape. A typed transfer can vanish, a complete coordinate loop must telescope, and an independently chosen connection can have genuine algebraic holonomy.}
+ 
+-\vpage{2}{An atlas of the objects}{ORIENTATION / KEEP THE TYPES VISIBLE}{Traditional paper: Definition 2.1 (p. 2), Definition 5.5 (p. 12), Definition 7.4 (p. 16)}
++\vpage{2}{An atlas of the objects}{ORIENTATION / KEEP THE TYPES VISIBLE}{Traditional paper: Definition 2.1, Definition 5.5, Definition 7.4}
+ Rows are targets and columns are sources throughout. If $E_{ji}$ is a matrix unit, then $E_{ji}e_i=e_j$. The notation $e_i$ means a basis vector. A named graph edge is written $a,b,c,d$ or $e,f$ when its role is explicit.
+ 
+@@ -38,9 +38,9 @@
+ 
+ \head{Reading routes}
+-For transfer, read V3 to V8. For the finite geometry models, read V9 to V18. For candidate certificates and nonlinear scope, read V19 to V22. V23 puts the matrix mechanisms together. V24 gives the formal boundary and replay guide.
++For transfer, read Plate III.3 to Plate III.8. For the finite geometry models, read Plate III.9 to Plate III.18. For candidate certificates and nonlinear scope, read Plate III.19 to Plate III.22. Plate III.23 puts the matrix mechanisms together. Plate III.24 gives the formal boundary and replay guide.
+ 
+ \takeaway{A $C_a\to C_c$ defect and a $C_a\to C_a$ holonomy are not the same typed map. Returning the defect to the base fiber requires a specified inverse transport.}
+ 
+-\vpage{3}{Read the product in execution order}{MODEL A / ONE EDGE IS ONE MATRIX ENTRY}{Traditional paper: Lemma 2.2 (p. 2), Theorem 2.3 (p. 2), Theorem 2.4 (p. 3)}
++\vpage{3}{Read the product in execution order}{MODEL A / ONE EDGE IS ONE MATRIX ENTRY}{Traditional paper: Lemma 2.2, Theorem 2.3, Theorem 2.4}
+ Work over $\ZZ$ with packets $0,1,2$. Let $e:0\to1$ have coefficient $2$, and let $f:1\to2$ have coefficient $3$. The elementary operators are
+ \[
+@@ -67,5 +67,5 @@
+ \takeaway{Write the traversed edges first. Then reverse their order when writing the operator product: $e$ followed by $f$ is $L_fL_e$.}
+ 
+-\vpage{4}{All sixteen words, only five walks}{MODEL A / PARALLEL EDGES REMAIN DISTINCT}{Traditional paper: Theorem 3.8 (p. 6), Corollary 3.9 (p. 6)}
++\vpage{4}{All sixteen words, only five walks}{MODEL A / PARALLEL EDGES REMAIN DISTINCT}{Traditional paper: Theorem 3.8, Corollary 3.9}
+ Add four edges on three packets: $a:0\to1$ with coefficient $2$, $b:0\to1$ with coefficient $-1$, $c:1\to2$ with coefficient $3$, and $d:2\to0$ with coefficient $1$. The parallel edges $a$ and $b$ are separate labels even though their source and target agree.
+ 
+@@ -84,5 +84,5 @@
+ \takeaway{The matrix power is a signed, ordered walk sum. It is not simply the number of paths, and a graph edge is not identified solely by its endpoints.}
+ 
+-\vpage{5}{Coefficients need not commute}{MODEL A / A MATRIX RING AS THE COEFFICIENT SEMIRING}{Traditional paper: Lemma 3.7 (p. 5), Section 9 (p. 20)}
++\vpage{5}{Coefficients need not commute}{MODEL A / A MATRIX RING AS THE COEFFICIENT SEMIRING}{Traditional paper: Lemma 3.7, Section 9}
+ The edge theorem allows a noncommutative coefficient semiring. Use $R=M_2(\QQ)$ and let the two coefficients themselves be matrices:
+ \[
+@@ -106,9 +106,9 @@
+ 
+ \head{One ring is not a dependent family of fibers}
+-The $3\times3$ matrix over $M_2(\QQ)$ can be displayed as an ordinary $6\times6$ matrix with $2\times2$ blocks. This is a concrete representation of the example over one ring. It does not establish an arbitrary family of differently typed edge fibers, which is outside the finite formal release's scalar interface for edge systems.
++The $3\times3$ matrix over $M_2(\QQ)$ can be displayed as an ordinary $6\times6$ matrix with $2\times2$ blocks. This is a concrete representation of the example over one ring. It does not establish an arbitrary family of differently typed edge fibers, which is outside the finite formal contract's scalar interface for edge systems.
+ 
+ \takeaway{The order rule carries mathematical information. It survives exact tests over a noncommutative ring and must not be inferred from pictures drawn over scalar real numbers alone.}
+ 
+-\vpage{6}{A reachable packet can receive zero}{MODEL A / CANCELLATION IS NOT A BROKEN INTERFACE}{Traditional paper: Corollary 3.9 (p. 6), Corollary 3.10 (p. 6)}
++\vpage{6}{A reachable packet can receive zero}{MODEL A / CANCELLATION IS NOT A BROKEN INTERFACE}{Traditional paper: Corollary 3.9, Corollary 3.10}
+ Consider a diamond: two routes of length two from packet $0$ to packet $3$. Three edge coefficients are $1$ and the lower final coefficient is $-1$. Both routes are correctly typed. Neither is annihilated by an interface mismatch.
+ 
+@@ -133,5 +133,5 @@
+ \takeaway{Do not interpret a visible route as an occupied output. Graph support is a useful upper bound. Signed operator support can be strictly smaller.}
+ 
+-\vpage{7}{Reachability is only an upper bound}{MODEL A / AN ORBIT THAT STAYS IN TWO DIMENSIONS}{Traditional paper: Corollary 3.11 (p. 7)}
++\vpage{7}{Reachability is only an upper bound}{MODEL A / AN ORBIT THAT STAYS IN TWO DIMENSIONS}{Traditional paper: Corollary 3.11}
+ Keep the diamond and add an isolated packet $4$. Start with the single seed $e_0\in\QQ^5$. Direct multiplication gives
+ \[
+@@ -154,5 +154,5 @@
+ \takeaway{Unreachable means impossible under the declared action. Reachable means only that graph geometry has not ruled it out. Linear dependence and cancellation still have to be checked.}
+ 
+-\vpage{8}{Paths through changing packet lists}{MODEL B / RECTANGULAR PRODUCTS WITH TWO OR THREE STEPS}{Traditional paper: Proposition 8.1 (p. 19)}
++\vpage{8}{Paths through changing packet lists}{MODEL B / RECTANGULAR PRODUCTS WITH TWO OR THREE STEPS}{Traditional paper: Proposition 8.1}
+ Here the packet lists have sizes $2,3,2,1$ in succession. Let the actual maps be
+ \[
+@@ -171,5 +171,5 @@
+ 
+ \head{The formal scope is deliberately precise}
+-The finite formal release's forms with two and three steps allow changing packet types. Its heterogeneous product theorem for arbitrary lengths allows changing \emph{factors} over one common finite packet index. That formal statement does not assert a fully dependent chain of changing index types at arbitrary lengths. The finite rectangular illustration here uses exactly three factors.
++The finite formal contract's forms with two and three steps allow changing packet types. Its heterogeneous product theorem for arbitrary lengths allows changing \emph{factors} over one common finite packet index. That formal statement does not assert a fully dependent chain of changing index types at arbitrary lengths. The finite rectangular illustration here uses exactly three factors.
+ 
+ For a single factor, the list of intermediate indices is empty and contributes that matrix entry once. For zero factors, the result is the identity on the common space. These conventions must not be replaced by an empty sum equal to zero.
+@@ -177,5 +177,5 @@
+ \takeaway{Heterogeneous can mean different matrices or different spaces. State which one is allowed before using a path formula.}
+ 
+-\vpage{9}{One vector, three exact frames}{MODEL C / CANONICAL TRANSPORT HAS NO HOLONOMY}{Traditional paper: Theorem 4.1 (p. 7), Theorem 4.2 (p. 7)}
++\vpage{9}{One vector, three exact frames}{MODEL C / CANONICAL TRANSPORT HAS NO HOLONOMY}{Traditional paper: Theorem 4.1, Theorem 4.2}
+ Let $F_a$ synthesize chart coordinates into one ambient $\QQ^2$. Choose
+ \[
+@@ -203,5 +203,5 @@
+ \takeaway{A canonical coordinate loop is a sequence of changes in description of one object. Nonidentity holonomy requires additional transport data, not merely nonorthogonal charts.}
+ 
+-\vpage{10}{Nonlinear charts still cancel exactly}{MODEL C / NATURALITY DOES NOT REQUIRE DERIVATIVES}{Traditional paper: Proposition 10.1 (p. 20)}
++\vpage{10}{Nonlinear charts still cancel exactly}{MODEL C / NATURALITY DOES NOT REQUIRE DERIVATIVES}{Traditional paper: Proposition 10.1}
+ Exact coordinate equivalences can be nonlinear. On $\QQ^2$, use
+ \[
+@@ -225,5 +225,5 @@
+ \takeaway{Nonlinearity alone does not create a coordinate defect. Reusing the old formula after changing coordinates would be an extra modeling choice, not exact conjugation.}
+ 
+-\vpage{11}{Reversibility is a real hypothesis}{MODEL D / THE MINIMAL AND REVERSIBLE INTERFACES}{Traditional paper: Definition 5.1 (p. 10), Definition 5.5 (p. 12)}
++\vpage{11}{Reversibility is a real hypothesis}{MODEL D / THE MINIMAL AND REVERSIBLE INTERFACES}{Traditional paper: Definition 5.1, Definition 5.5}
+ Choose the forward scalar transports $\Gamma_{1\leftarrow0}=2$, $\Gamma_{2\leftarrow1}=3$, and $\Gamma_{2\leftarrow0}=5$. Their multiplicative comparison between transport through two steps and direct transport is $D^\times=6/5$. A loop also needs a declared return map $\Gamma_{0\leftarrow2}$.
+ 
+@@ -245,5 +245,5 @@
+ \takeaway{Self normalization means $\Gamma_{a\leftarrow a}=I$. Reversible additionally means $\Gamma_{a\leftarrow b}=\Gamma_{b\leftarrow a}^{-1}$. These are different assumptions.}
+ 
+-\vpage{12}{Measure the mismatch at its base}{MODEL D / AN EXACT REVERSIBLE TRIANGLE}{Traditional paper: Theorem 5.10 (p. 13), Section 9 (p. 20)}
++\vpage{12}{Measure the mismatch at its base}{MODEL D / AN EXACT REVERSIBLE TRIANGLE}{Traditional paper: Theorem 5.10, Section 9}
+ Retain the reversible scalar model with forward values $2,3,5$ and all reverse values given by inverses. Two routes from chart $0$ to chart $2$ multiply the input by $6$ and $5$, respectively. The additive discrepancy equals the original input.
+ 
+@@ -266,5 +266,5 @@
+ \takeaway{Holonomy compares paths after both have been returned to the same base fiber. It is the transported mismatch, not an untyped difference between outputs in different charts.}
+ 
+-\vpage{13}{The identity can hide in the spectrum}{MODEL E / A SHEAR WITH NONTRIVIAL HOLONOMY}{Traditional paper: Definition 5.9 (p. 13), Definition 7.4 (p. 16)}
++\vpage{13}{The identity can hide in the spectrum}{MODEL E / A SHEAR WITH NONTRIVIAL HOLONOMY}{Traditional paper: Definition 5.9, Definition 7.4}
+ Put $\Gamma_{1\leftarrow0}=H$, $\Gamma_{2\leftarrow1}=I$, and $\Gamma_{2\leftarrow0}=I$, with reverse maps given by inverses, where
+ \[
+@@ -293,5 +293,5 @@
+ \takeaway{Flatness is the equality $H=I$, not agreement of a short list of spectral summaries. A single explicit moved vector can disprove that equality.}
+ 
+-\vpage{14}{Gauge changes the picture, not flatness}{MODEL E / CONJUGATION AND ITS LIMITS}{Traditional paper: Theorem 6.2 (p. 14)}
++\vpage{14}{Gauge changes the picture, not flatness}{MODEL E / CONJUGATION AND ITS LIMITS}{Traditional paper: Theorem 6.2}
+ At the base chart, change coordinates by $D=\operatorname{diag}(2,1)$. Transform every connection edge by the prescribed endpoint gauges. The loop transforms by conjugation, giving
+ \[
+@@ -321,5 +321,5 @@
+ \takeaway{Exact nonvanishing is gauge invariant. The numerical size of a matrix entry or a chosen norm generally is not.}
+ 
+-\vpage{15}{Flat is not the same as calibrated}{MODEL D / A FLAT CONNECTION WITH NONIDENTITY EDGES}{Traditional paper: Theorem 6.3 (p. 15)}
++\vpage{15}{Flat is not the same as calibrated}{MODEL D / A FLAT CONNECTION WITH NONIDENTITY EDGES}{Traditional paper: Theorem 6.3}
+ Make all three canonical charts literally identical, so $J_{b\leftarrow a}=1$ over $\QQ$. Choose scalar gauges $g_0=1$, $g_1=2$, and $g_2=3$, and define
+ \[
+@@ -348,5 +348,5 @@
+ \takeaway{Flatness makes the chosen transports independent of path. Calibration identifies them with one particular canonical transport before any gauge change.}
+ 
+-\vpage{16}{Resolve the entire obstruction}{MODEL F / PACKET BLOCKS FROM INPUT TO OUTPUT}{Traditional paper: Theorem 7.5 (p. 17), Corollary 7.6 (p. 18)}
++\vpage{16}{Resolve the entire obstruction}{MODEL F / PACKET BLOCKS FROM INPUT TO OUTPUT}{Traditional paper: Theorem 7.5, Corollary 7.6}
+ Use three coordinate packets with projectors $P_0,P_1,P_2$, and set
+ \[
+@@ -370,5 +370,5 @@
+ \takeaway{An obstruction packet is not just a colored matrix cell. It consists of a specific label for a pair of packets and an exact nonvanishing statement about the corresponding map.}
+ 
+-\vpage{17}{Why diagonal checks are insufficient}{MODEL E / COMPLETENESS, TWO SIDES, AND OBLIQUE PACKETS}{Traditional paper: Theorem 7.5 (p. 17)}
++\vpage{17}{Why diagonal checks are insufficient}{MODEL E / COMPLETENESS, TWO SIDES, AND OBLIQUE PACKETS}{Traditional paper: Theorem 7.5}
+ Return to $\Ob=E_{01}$. With the two standard coordinate projectors, both diagonal blocks vanish:
+ \[
+@@ -391,10 +391,10 @@
+ \sum_{i,j}Q_i\Ob Q_j=\Ob.
+ \]
+-The block reconstruction identity itself uses the condition that the projectors sum to the identity. Idempotence is additionally used when constructing a witness that remains supported in one packet after projection. The release does not require pairwise annihilation for its general reconstruction statement.
++The block reconstruction identity itself uses the condition that the projectors sum to the identity. Idempotence is additionally used when constructing a witness that remains supported in one packet after projection. The general formal reconstruction statement does not require pairwise annihilation for its general reconstruction statement.
+ 
+ \takeaway{Test every block from input to output of a complete resolution. Testing only the diagonal, or only the packets supplied so far, answers a weaker question.}
+ 
+-\vpage{18}{A gauge can move every packet label}{MODEL E / FIXED VERSUS TRANSPORTED PROJECTORS}{Traditional paper: Proposition 7.7 (p. 18)}
+-The diagonal gauge on V14 commuted with each standard projector. Now use the gauge that mixes packets
++\vpage{18}{A gauge can move every packet label}{MODEL E / FIXED VERSUS TRANSPORTED PROJECTORS}{Traditional paper: Proposition 7.7}
++The diagonal gauge on Plate III.14 commuted with each standard projector. Now use the gauge that mixes packets
+ \[
+ G=\mat{1&0\\1&1},\qquad \Ob=E_{01}.
+@@ -416,9 +416,9 @@
+ Q_i(G\Ob G^{-1})Q_j=G(P_i\Ob P_j)G^{-1}.
+ \]
+-Relative to these transported packets, the corresponding labeled blocks again have matching vanishing status. These are the same oblique projectors displayed on V17. One must distinguish moving the operator alone in a fixed resolution from moving the entire resolved description.
++Relative to these transported packets, the corresponding labeled blocks again have matching vanishing status. These are the same oblique projectors displayed on Plate III.17. One must distinguish moving the operator alone in a fixed resolution from moving the entire resolved description.
+ 
+ \takeaway{The total obstruction is intrinsic under gauge. Its location in a fixed packet grid is not, unless the gauge preserves that grid.}
+ 
+-\vpage{19}{An obstruction rejects one candidate}{MODEL G / THE QUANTIFIERS ARE THE CONTENT}{Traditional paper: Theorem 7.2 (p. 16)}
++\vpage{19}{An obstruction rejects one candidate}{MODEL G / THE QUANTIFIERS ARE THE CONTENT}{Traditional paper: Theorem 7.2}
+ Let the candidates be rational numbers and the packet labels be $0,1$. Define
+ \[
+@@ -445,5 +445,5 @@
+ \takeaway{Keep the candidate attached to the witness. The theorem's strength is its exact logical scope, not a universal existence or nonexistence claim.}
+ 
+-\vpage{20}{A tree reads its named leaves}{MODEL H / ACTUAL SYNTAX, ARBITRARY SEMANTICS}{Traditional paper: Definition 11.1 (p. 22), Theorem 11.2 (p. 22)}
++\vpage{20}{A tree reads its named leaves}{MODEL H / ACTUAL SYNTAX, ARBITRARY SEMANTICS}{Traditional paper: Definition 11.1, Theorem 11.2}
+ Use the grammar's constant, input, unary, and binary constructors to build
+ \[
+@@ -464,5 +464,5 @@
+ \takeaway{The proved tree theorem controls which input labels are read. It does not supply a nonlinear chain rule, a stability estimate, or a solution of a tree equation.}
+ 
+-\vpage{21}{Where a nonlinear defect can enter}{MODEL H / EXACT COORDINATES VERSUS A CHOSEN RULE}{Traditional paper: Proposition 10.1 (p. 20), Formalization target 11.7 (p. 24), Theorem 20.2 (p. 43)}
++\vpage{21}{Where a nonlinear defect can enter}{MODEL H / EXACT COORDINATES VERSUS A CHOSEN RULE}{Traditional paper: Proposition 10.1, Formalization target 11.7, Theorem 20.2}
+ Take the unary operation $f(x)=x^2$ over $\QQ$. Suppose both input and output transport are chosen as multiplication by two, while the same numerical formula $f$ is reused at the target. The two routes give
+ \[
+@@ -478,5 +478,5 @@
+ \widehat f_b(v)=2f(v/2)=\frac{v^2}{2}.
+ \]
+-Consequently $\widehat f_b(2x)=2x^2$, and the exact coordinate defect vanishes. This is the same distinction illustrated in the example in two dimensions on V10.
++Consequently $\widehat f_b(2x)=2x^2$, and the exact coordinate defect vanishes. This is the same distinction illustrated in the example in two dimensions on Plate III.10.
+ 
+ \head{An example is not a general propagation theorem}
+@@ -485,5 +485,5 @@
+ \takeaway{A nonzero nonlinear route difference must come from identifiable extra data: a changed transport, an approximation, a restricted model, or a reused formula that was not conjugated correctly.}
+ 
+-\vpage{22}{Mixed terms are not optional}{FINITE EXAMPLES / WHY MULTILINEARITY MATTERS}{Traditional paper: Formalization target 11.6 (p. 23), Theorem 18.3 (p. 39)}
++\vpage{22}{Mixed terms are not optional}{FINITE EXAMPLES / WHY MULTILINEARITY MATTERS}{Traditional paper: Formalization target 11.6, Theorem 18.3}
+ A bilinear node distributes over two independently resolved inputs:
+ \[
+@@ -500,9 +500,9 @@
+ General packet tree expansion needs correctly typed input slots, finite sets of packet labels at each node, and multilinearity in every slot used for distributive expansion. Empty inputs and unary nodes need explicit conventions. Slot order must survive even when values or operations do not commute. The traditional paper supplies rooted tree reconstruction and pruning results in its ordinary mathematical development.
+ 
+-This page supplies elementary exact examples of the issue. The finite v1.0.1 Lean contract remains narrower: it contains syntactic input locality, not the general dependent tree expansion or the traditional paper's analytic convergence results.
++This page supplies elementary exact examples of the issue. The finite algebraic Lean contract remains narrower: it contains syntactic input locality, not the general dependent tree expansion or the traditional paper's analytic convergence results.
+ 
+ \takeaway{A branching picture does not justify throwing away mixed interactions. Exact packet expansion requires the appropriate multilinearity and typing, not merely a diagram that appears finite.}
+ 
+-\vpage{23}{From loop data to a packet witness}{CAPSTONE / A COMPLETE FINITE DIAGNOSIS}{Traditional paper: Theorem 5.10 (p. 13), Theorem 6.2 (p. 14), Corollary 7.6 (p. 18)}
++\vpage{23}{From loop data to a packet witness}{CAPSTONE / A COMPLETE FINITE DIAGNOSIS}{Traditional paper: Theorem 5.10, Theorem 6.2, Corollary 7.6}
+ Supply a reversible connection on three copies of $\QQ^2$ by choosing
+ \[
+@@ -526,6 +526,6 @@
+ \takeaway{Declare the data, multiply in traversal order, form the defect, resolve all blocks, and exhibit an input on which one block acts nontrivially. Each step has a checkable mathematical object.}
+ 
+-\vpage{24}{Read the evidence with the pictures}{EVIDENCE / EXAMPLES, PROOFS, AND FORMAL SCOPE}{Traditional paper: Section 12 (p. 24)}
+-This guide preserves the 24 worked pages and 22 exact figures from the finite visual appendix. It updates their references to the final traditional paper and explains the relation to that paper's broader nonlinear and analytic material.
++\vpage{24}{Read the evidence with the pictures}{EVIDENCE / EXAMPLES, PROOFS, AND FORMAL SCOPE}{Traditional paper: Section 12}
++The 24 worked plates and 22 exact figures connect finite models with the main text's broader nonlinear and analytic theory.
+ 
+ \head{Read each evidence record in its scope}
+@@ -533,11 +533,11 @@
+ \begin{tabularx}{\linewidth}{@{}p{.24\linewidth}Y@{}}\toprule
+ \textbf{Evidence} & \textbf{What it supports}\\\midrule
+-Finite Lean release & The finite declarations and the released Section 16 and 17 additions were compiled in the pinned environment. The Lean guide records the current source scope, axiom audit, and kernel replay.\\
++Formal development & The finite declarations and the Section 16 and 17 additions were compiled in the pinned environment. The Lean guide records the source scope, axiom audit, and kernel replay.\\
+ Ordinary mathematics & The traditional paper's expanded proofs, including nonlinear, obstruction, lifting, and smooth transport results. Inclusion in that paper does not add these results to the finite Lean contract.\\
+-Exact model checks & Replay on 20 October 2026 passed all 124 exact checks and rejected all four deliberately false controls. The scope is the displayed finite matrices, paths, polynomials, candidate tables, and trees.\\
++Exact model checks & The recorded run passed all 124 exact checks and rejected all four deliberately false controls. The scope is the displayed finite matrices, paths, polynomials, candidate tables, and trees.\\
+ Figure regeneration & All 22 editable TikZ figures are supplied with their exact model data and generators. The original figure sources and their earlier regeneration record remain preserved.\\\bottomrule
+ \end{tabularx}}
+ 
+-The release also records 18,630 exact assertions for the Section 16 and 17 examples. These finite calculations support the displayed mechanisms. General claims rest on their mathematical proofs and, where mapped, their Lean declarations.
++The computation record also contains 18,630 exact assertions for the Section 16 and 17 examples. These finite calculations support the displayed mechanisms. General claims rest on their mathematical proofs and, where mapped, their Lean declarations.
+ 
+ \head{Boundaries that remain in force}
+@@ -547,8 +547,7 @@
+ 
+ \head{Replay the worked layer}
+-From the editable visual guide directory, compile the PDF with \mbox{\texttt{python build.py}}.\par
+ Check the exact examples with \mbox{\texttt{python checks/verify\_examples.py}}.\par
+ Regenerate the figures with \mbox{\texttt{python source/generate\_graphics.py}}.\par
+-Use a temporary copy to retain the delivered evidence unchanged. The full package preserves the finite release and its original formal sources separately.
++Use a temporary copy to preserve the recorded evidence. The finite algebraic source distribution supplies the formal sources separately.
+ 
+ \takeaway{Use the figures to understand the mechanisms, the traditional paper to read the mathematical proofs, and the Lean guide to identify the exact formal contract. These are related records with distinct scopes.}
+--- before/III/manuscript/Paper_III_Traditional_Final.tex
++++ III/manuscript/Paper_III_Traditional_Final.tex
+@@ -123,5 +123,5 @@
+ \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+ \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+-\newcommand{\statusleanthree}[1]{\par\smallskip\noindent\begin{minipage}{\linewidth}{\color{leanblue}\textbf{Formal contract: Paper III v1.0.1.}}\par\begingroup\small\raggedright\leanname{#1}\par\endgroup\end{minipage}\par\smallskip}
++\newcommand{\statusleanthree}[1]{\par\smallskip\noindent\begin{minipage}{\linewidth}{\color{leanblue}\textbf{Formal contract: finite algebraic core.}}\par\begingroup\small\raggedright\leanname{#1}\par\endgroup\end{minipage}\par\smallskip}
+ \newcommand{\statusleanprior}[1]{\par\smallskip\noindent\begin{minipage}{\linewidth}{\color{leanblue}\textbf{Inherited formal contract: Papers I--II.}}\par\begingroup\small\raggedright\leanname{#1}\par\endgroup\end{minipage}\par\smallskip}
+ \newcommand{\statusroadmap}[1]{\par\smallskip\noindent{\color{roadmapgray}\textbf{Outside the finite formal contract.}}\ #1\par\smallskip}
+@@ -155,5 +155,5 @@
+ \vfill%
+ {\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+-\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
++\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+ \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+ \makeatother
+@@ -163,9 +163,9 @@
+ \KomorebiOpeningNote{Begin with typed edge words and exact coordinate transport. A chosen connection introduces defects, holonomy, and packet obstruction witnesses. Part II develops nonlinear packet jets, tree expansions, correction complexes, filtered lifting, elimination, and smooth transport.
+ 
+-Part I retains the finite v1.0.1 formal contract. Part II gives the strengthened nonlinear and analytic development with ordinary proofs. The release also verifies exact nonlinear coordinates, continuous packet jets on actual projector ranges, and the decorated composition and structural support laws in Lean. The integral Taylor remainder and the later analytic and obstruction results retain their ordinary proof status. Formal coverage stays attached to the released declarations. The visual atlas at the end of this volume provides twenty-four worked plates. The separate Lean guide explains the formal contract and its evidence.}
++Part I develops the finite algebraic core under its declaration-level formal contract. Part II gives the nonlinear and analytic development with ordinary proofs. The accompanying formal development verifies exact nonlinear coordinates, continuous packet jets on actual projector ranges, and the decorated composition and structural support laws in Lean. The integral Taylor remainder and the later analytic and obstruction results retain their ordinary proof status. Formal coverage stays attached to the identified declarations. The visual atlas at the end of this volume provides twenty-four worked plates. The separate Lean guide explains the formal contract and its evidence.}
+ \begin{abstract}
+ Finite projector packets turn linear transfer into typed walks and arbitrary maps into exact coordinate representations. Canonical coordinate transport satisfies an exact cocycle law. A chosen connection can fail to compose, producing holonomy and packet obstruction witnesses. Nonlinear packet jets lead to higher composition, convergent rooted tree expansions, graded operations, and nonlinear refinement defects. A specified correction map produces a canonical cokernel obstruction. Relative exact sequences, mapping cones, Hilbert splitting, nonlinear correction, and filtered lifting describe how these obstructions behave. Exact elimination produces Schur formulas, and finite transport reduces gluing to fundamental cycle holonomy. For smooth orthogonal packet families, direct packet rotations converge in operator norm to canonical unitary transport. The finite formal contract and the broader ordinary proof development retain their separate scopes throughout.
+ \end{abstract}
+-This release presents the mathematical development together with worked examples, a visual atlas, and a separate guide to the formal proof evidence. The packet norm estimate distinguishes the actual range jet from its ambient extension. The support statements keep external packet profiles and intermediate composition witnesses explicitly typed. The accompanying release record gives the exact source and scope of each formal verification.
++The paper presents the mathematical development together with worked examples, a visual atlas, and a separate guide to the formal proof evidence. The packet norm estimate distinguishes the actual range jet from its ambient extension. The support statements keep external packet profiles and intermediate composition witnesses explicitly typed. The companion Lean and evidence guide gives the exact source and scope of each formal verification.
+ \tableofcontents
+ \listoffigures
+@@ -178,7 +178,7 @@
+ \appendix
+ \section{Visual atlas}\label{app:visual-atlas}
+-The plates give exact finite models for the algebraic constructions in this volume. Their stable labels run from V1 to V24. Each plate names the related statements in the paper. These models make the hypotheses and map directions visible. They do not extend the finite Lean contract to the analytic results of Part II.
++The plates give exact finite models for the algebraic constructions in this volume. Their stable labels run from Plate III.1 to Plate III.24. Each plate names the related statements in the paper. These models make the hypotheses and map directions visible. They do not extend the finite Lean contract to the analytic results of Part II.
+ \begin{readerroadmap}[title={Three routes through the atlas}]
+-For typed transfer, read V3 to V8. For coordinates, connections, and gauge, read V9 to V18, followed by V23. For candidate witnesses and trees, read V19 to V22, followed by V24. V1 and V2 introduce the objects and the questions they answer.
++For typed transfer, read Plate III.3 to Plate III.8. For coordinates, connections, and gauge, read Plate III.9 to Plate III.18, followed by Plate III.23. For candidate witnesses and trees, read Plate III.19 to Plate III.22, followed by Plate III.24. Plate III.1 and Plate III.2 introduce the objects and the questions they answer.
+ \end{readerroadmap}
+ Products act in traversal order. The first edge traversed is the rightmost operator. Rows represent targets and columns represent sources.
+--- before/III/manuscript/atlas-definitions.tex
++++ III/manuscript/atlas-definitions.tex
+@@ -13,9 +13,9 @@
+ \newif\ifstarted\startedfalse
+ \providecommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+-\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
+-{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}V#1\quad /\quad #3\par}\vspace{5pt}
++\pdfbookmark[1]{Plate III.#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
++{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}Plate III.#1\quad /\quad #3\par}\vspace{5pt}
+ {\sffamily\bfseries\fontsize{19}{22}\selectfont #2\par}\vspace{5pt}
+ {\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+-\providecommand{\pagerefV}[1]{\hyperlink{vpage#1}{V\,--\,#1}}
++\providecommand{\pagerefV}[1]{\hyperlink{vpage#1}{Plate III.#1}}
+ 
+ \providecommand{\CC}{\mathbb C}
+--- before/III/manuscript/chapters/01_finite_coordinates.tex
++++ III/manuscript/chapters/01_finite_coordinates.tex
+@@ -1,6 +1,6 @@
+ \part{Finite typed transfer and the formal contract}\label{part:finite}
+-\noindent The finite release supplies the algebraic foundation and a contract for its individual declarations. Here, ``roadmap'' and ``outside the contract'' describe the scope of the finite Lean formalization. Ordinary mathematical results in Part~II may lie beyond that scope. The thirty original result environments and their proof bodies are retained. The source contract has 41 mapping rows because it also includes definitions and other interfaces.
+-
+-\medskip\noindent The preserved v1.0.1 release records Lean v4.34.0-rc2 against Mathlib revision \leanname{aeb72f1e9981b6d35b426b16dca7759be3e7ba06} \cite{lean,mathlib}. The current release rebuilds the Paper III source at these exact pins and records fresh kernel replay and axiom checks. References to declarations from Papers I--II retain their explicitly inherited status. The companion Lean guide distinguishes the original finite map from the additional packet-coordinate and analytic interfaces.
++\noindent The finite algebraic core supplies the algebraic foundation and a contract for its individual declarations. Here, ``roadmap'' and ``outside the contract'' describe the scope of the finite Lean formalization. Ordinary mathematical results in Part~II may lie beyond that scope. The finite contract covers thirty result environments. The source contract has 41 mapping rows because it also includes definitions and other interfaces.
++
++\medskip\noindent The finite algebraic formalization uses Lean v4.34.0-rc2 against Mathlib revision \leanname{aeb72f1e9981b6d35b426b16dca7759be3e7ba06} \cite{lean,mathlib}. The accompanying verification record includes compilation at these exact pins, kernel replay, and axiom checks. References to declarations from Papers I--II retain their explicitly inherited status. The companion Lean guide distinguishes the original finite map from the additional packet-coordinate and analytic interfaces.
+ \section{Purpose and formal status}
+ \label{sec:purpose}
+@@ -30,5 +30,5 @@
+ \begin{enumerate}[label=\textbf{S\arabic*.},leftmargin=3.2em]
+ \item \textbf{Lean-backed in Paper III}: the displayed scope is no stronger
+-than the named compiled declaration in the released Paper III module.
++than the named compiled declaration in the identified Paper III module.
+ \item \textbf{Inherited Lean-backed}: the displayed result is supplied by the
+ frozen formal contract of Paper I or II.
+@@ -37,6 +37,6 @@
+ \end{enumerate}
+ 
+-\begin{boundary}[Final theorem denominator]
+-The completion denominator of the finite v1.0.1 contract consists of the
++\begin{boundary}[Finite theorem denominator]
++The completion denominator of the finite algebraic contract consists of the
+ thirty result environments in Part~I. Of these, 26 resolve to compiled
+ Paper III declarations and four resolve to the frozen Papers I--II
+--- before/III/manuscript/chapters/02_connections_obstructions.tex
++++ III/manuscript/chapters/02_connections_obstructions.tex
+@@ -639,5 +639,5 @@
+ arbitrary-length theorem above permits different factors but uses one common
+ finite packet type $V$.  A fully dependent arbitrary-length chain of changing
+-modules and packet types remains outside the version 1.0.1 contract.
++modules and packet types remains outside the finite algebraic contract.
+ \end{boundary}
+ 
+@@ -769,5 +769,5 @@
+ \label{def:compiled-operation-tree}
+ For types of input labels $I$, constants $K$, unary symbols $U$, and binary
+-symbols $B$, the released formal grammar has four constructors:
++symbols $B$, the finite formal grammar has four constructors:
+ \[
+ \begin{aligned}
+@@ -839,5 +839,5 @@
+ \]
+ \end{definition}
+-\statusroadmap{The intended Lean target is a dependent inductive typed tree; no such declaration is part of the version 1.0.1 completion contract.}
++\statusroadmap{The intended Lean target is a dependent inductive typed tree; no such declaration is part of the finite algebraic completion contract.}
+ 
+ \begin{definition}[Typed operation tree and evaluation]
+@@ -913,9 +913,9 @@
+ of derivatives, a Banach-space Fa\`a di Bruno theorem, a Baker--Campbell--Hausdorff
+ expansion, a continuum limit, or an identification of algebraic holonomy with
+-curvature of a smooth bundle. Part~II supplies ordinary proofs for its explicit nonlinear and analytic statements. This edition does not derive a connection from
++curvature of a smooth bundle. Part~II supplies ordinary proofs for its explicit nonlinear and analytic statements. The theory does not derive a connection from
+ data, optimization, physics, or probability.
+ \end{boundary}
+ 
+-\section{Formalization ledger for version 1.0.1}
++\section{Finite algebraic formalization ledger}
+ \label{sec:ledger}
+ 
+@@ -1064,5 +1064,5 @@
+ input locality, and candidate-specific obstruction certificates.
+ \end{itemize}
+-The release verification report records the checker-generated declaration
++The Lean and evidence guide records the checker-generated declaration
+ and audit totals.  The parity gate requires every fully qualified Paper III
+ target printed beside a statement to occur in the theorem map, rejects stale
+@@ -1078,5 +1078,5 @@
+ holonomy-block reconstruction, packet witnesses, common-index heterogeneous
+ path expansion, and arbitrary-function coordinate naturality are all part of
+-the version 1.0.1 kernel-backed surface.  What remains outside is the
++the finite algebraic kernel-backed surface.  What remains outside is the
+ dependent fiber-valued edge-system generalization, a fully dependent
+ arbitrary-length chain whose module and packet type change at every stage,
+--- before/III/manuscript/chapters/03_nonlinear_coordinates.tex
++++ III/manuscript/chapters/03_nonlinear_coordinates.tex
+@@ -18,5 +18,5 @@
+ The first stage of Part~II treats the local nonlinear calculus.  Packet analysis and synthesis conjugate arbitrary maps.  Fr\'echet derivatives split into multilinear packet jets.  The higher chain rule then becomes a Fa\`a di Bruno formula whose terms carry intermediate packet labels.  Standard background on Fr\'echet calculus and the higher chain rule may be found in \cite{AbrahamMarsdenRatiu1988,ConstantineSavits1996,Deimling1985}.
+ 
+-The next stage studies nonlinear iteration.  Repeated substitution is indexed by rooted trees rather than operator words.  A scalar majorant gives an absolute convergence theorem for polynomial fixed point equations.  The quadratic case recovers the Catalan series.  Rooted tree combinatorics are discussed in \cite{Stanley2012,LodayVallette2012,HairerLubichWanner2006}.
++The next stage studies nonlinear iteration.  Repeated substitution is indexed by rooted trees rather than operator words.  A scalar majorant gives an absolute convergence theorem for polynomial fixed-point equations.  The quadratic case recovers the Catalan series.  Rooted tree combinatorics are discussed in \cite{Stanley2012,LodayVallette2012,HairerLubichWanner2006}.
+ 
+ A linear correction map
+@@ -24,11 +24,11 @@
+ D:U\longrightarrow V
+ \]
+-places the obstruction to solving $Du=-r$ in the canonical quotient $\coker D$.  This quotient has a universal property and behaves naturally under commuting squares.  Mapping cones extend the same construction to cochain complexes.  In a Hilbert space with closed range, the quotient is represented by the orthogonal projection onto $\Ker D^*$.  The Moore Penrose inverse then gives the least norm correction.  Relevant background appears in \cite{Weibel1994,Penrose1955}.
+-
+-A vanishing linear obstruction is only the first step.  We give a contraction theorem for nonlinear correction, followed by a local Lyapunov Schmidt reduction.  In a complete filtered problem, every lifting step has its own cokernel class.  Vanishing at all depths and compatible choices of corrections produce an exact inverse limit solution.  A filtered correction complex carries a spectral sequence.  Its first page records graded obstruction candidates, while later differentials record interactions that can cancel them.  We use the standard spectral sequence of a filtered complex from \cite{Weibel1994,McCleary2001}.
++places the obstruction to solving $Du=-r$ in the canonical quotient $\coker D$.  This quotient has a universal property and behaves naturally under commuting squares.  Mapping cones extend the same construction to cochain complexes.  In a Hilbert space with closed range, the quotient is represented by the orthogonal projection onto $\Ker D^*$.  The Moore--Penrose inverse then gives the least norm correction.  Relevant background appears in \cite{Weibel1994,Penrose1955}.
++
++A vanishing linear obstruction is only the first step.  We give a contraction theorem for nonlinear correction, followed by a local Lyapunov--Schmidt reduction.  In a complete filtered problem, every lifting step has its own cokernel class.  Vanishing at all depths and compatible choices of corrections produce an exact inverse limit solution.  A filtered correction complex carries a spectral sequence.  Its first page records graded obstruction candidates, while later differentials record interactions that can cancel them.  We use the standard spectral sequence of a filtered complex from \cite{Weibel1994,McCleary2001}.
+ 
+ The final stage studies elimination and gluing.  The implicit function theorem gives an exact Schur derivative after hidden variables are removed.  Finite transport systems reduce, after a spanning tree gauge, to one holonomy element for each fundamental cycle.  The same idea extends to smooth projector families through Kato transport.  We use standard material from \cite{Deimling1985,GrossTucker1987,Kato1950,Kato1995,KobayashiNomizu1963}.
+ 
+-The article does not claim that every nonlinear problem has a finite obstruction space.  The cokernel is canonical only after a correction map has been specified.  It may be infinite dimensional.  A first order obstruction may vanish while a higher order obstruction remains.  The purpose of the calculus is to identify the exact object in which each failure lives and to show how those objects change under packets, refinement, filtration, and transport.
++The article does not claim that every nonlinear problem has a finite obstruction space.  The cokernel is canonical only after a correction map has been specified.  It may be infinite dimensional.  A first-order obstruction may vanish while a higher-order obstruction remains.  The purpose of the calculus is to identify the exact object in which each failure lives and to show how those objects change under packets, refinement, filtration, and transport.
+ 
+ 
+@@ -45,5 +45,5 @@
+ [r]\in\coker D
+ \]
+-is the part that no allowed first order correction can remove.  This quotient class is the obstruction.  Its vanishing must be supplemented by a nonlinear theorem.
++is the part that no allowed first-order correction can remove.  This quotient class is the obstruction.  Its vanishing must be supplemented by a nonlinear theorem.
+ 
+ The fourth question is gluing.  Local coordinate changes can solve every edge problem and still fail around a loop.  The remaining cycle product is holonomy.  It measures the failure of a global frame even when each local equation has been solved.
+@@ -69,5 +69,5 @@
+ 
+ \subsection*{Standing conventions}
+-All packet systems are finite unless a statement says otherwise.  In a normed setting every packet projector and every coarsening operator is bounded.  Differentiability of operator valued maps is taken in operator norm.  A Banach space isomorphism is a bounded linear bijection with bounded inverse.  For a decreasing filtration $(F^mX)$, completeness means that the canonical map
++All packet systems are finite unless a statement says otherwise.  In a normed setting every packet projector and every coarsening operator is bounded.  Differentiability of operator-valued maps is taken in operator norm.  A Banach space isomorphism is a bounded linear bijection with bounded inverse.  For a decreasing filtration $(F^mX)$, completeness means that the canonical map
+ \[
+ X\longrightarrow\varprojlim_m X/F^mX
+@@ -397,5 +397,5 @@
+ 
+ 
+-\begin{example}[The second order composition law]\label{ex:second_order_composition}
++\begin{example}[The second-order composition law]\label{ex:second_order_composition}
+ At order two, the partition formula has two shapes.  For packet directions $h_1$ and $h_2$,
+ \[
+@@ -412,5 +412,5 @@
+ \end{aligned}
+ \]
+-The first line records two first order changes entering a quadratic interaction of $F$.  The second records a genuine second order interaction created inside $G$ before $F$ is applied.
++The first line records two first-order changes entering a quadratic interaction of $F$.  The second records a genuine second-order interaction created inside $G$ before $F$ is applied.
+ \end{example}
+ 
+@@ -834,5 +834,5 @@
+ 
+ \begin{proof}
+-Using the fixed point equations,
++Using the fixed-point equations,
+ \[
+ \begin{aligned}
+--- before/III/manuscript/chapters/04_correction_transport.tex
++++ III/manuscript/chapters/04_correction_transport.tex
+@@ -4,5 +4,5 @@
+ 
+ \begin{theorem}[Orthogonal obstruction projector]\label{thm:orthogonal_obstruction}
+-Let $D:H_1\to H_2$ be a bounded operator between Hilbert spaces with closed range.  Let $D^\dagger$ be its Moore Penrose inverse.  Then
++Let $D:H_1\to H_2$ be a bounded operator between Hilbert spaces with closed range.  Let $D^\dagger$ be its Moore--Penrose inverse.  Then
+ \[
+ P_{\mathrm{ob}}=I_{H_2}-DD^\dagger
+@@ -29,5 +29,5 @@
+ H_2=\im D\oplus\Ker D^*.
+ \]
+-The Moore Penrose identities show that $DD^\dagger$ is the orthogonal projector onto $\im D$.  The stated equivalences and distance formula follow from this decomposition.  The least norm property is the standard characterization of $D^\dagger r$.
++The Moore--Penrose identities show that $DD^\dagger$ is the orthogonal projector onto $\im D$.  The stated equivalences and distance formula follow from this decomposition.  The least norm property is the standard characterization of $D^\dagger r$.
+ \end{proof}
+ 
+@@ -102,5 +102,5 @@
+ 
+ \begin{proof}
+-Subtract the two fixed point equations and use the Lipschitz bound for $N$:
++Subtract the two fixed-point equations and use the Lipschitz bound for $N$:
+ \[
+ \|x-x'\|
+@@ -110,7 +110,7 @@
+ \end{proof}
+ 
+-Lyapunov Schmidt reduction separates the equation into two parts. The implicit function theorem solves the range component, leaving an equation in the obstruction space. Standard accounts of this reduction appear in \cite{Kielhoefer2012,Zeidler1986}.
+-
+-\begin{theorem}[Local Lyapunov Schmidt reduction]\label{thm:lyapunov_schmidt}
++Lyapunov--Schmidt reduction separates the equation into two parts. The implicit function theorem solves the range component, leaving an equation in the obstruction space. Standard accounts of this reduction appear in \cite{Kielhoefer2012,Zeidler1986}.
++
++\begin{theorem}[Local Lyapunov--Schmidt reduction]\label{thm:lyapunov_schmidt}
+ Let $\mathcal U\subseteq X$ be an open neighborhood of zero and let $F:\mathcal U\to Y$ be a $C^r$ map between Banach spaces with $r\ge1$, $F(0)=0$, and $L=DF(0)$.  Assume there are closed decompositions
+ \[
+@@ -191,5 +191,5 @@
+ 
+ \begin{remark}\label{rem:higher_obstruction}
+-The reduced map $\kappa$ begins at quadratic order.  This is why vanishing of the first order cokernel class need not settle a nonlinear problem.  Higher terms can produce a genuine obstruction on the kernel directions.
++The reduced map $\kappa$ begins at quadratic order.  This is why vanishing of the first-order cokernel class need not settle a nonlinear problem.  Higher terms can produce a genuine obstruction on the kernel directions.
+ \end{remark}
+ 
+@@ -214,5 +214,5 @@
+ \Phi(x_m)\in F^mY.
+ \]
+-Assume that corrections $h\in F^mX$ obey a first order congruence
++Assume that corrections $h\in F^mX$ obey a first-order congruence
+ \[
+ \Phi(x_m+h)
+@@ -303,5 +303,5 @@
+ \Phi(x')-\Phi(x)\in F^mY.
+ \]
+-Thus one defect lies in $F^mY$ exactly when the other does.  If $h-h'\in F^{m+1}X$, then $x_m+h$ and $x_m+h'$ define the same depth $m+1$ class.  Conversely, two depth $m+1$ classes reducing to $[x_m]_m$ differ from $x_m$ by elements of $F^mX$, and they are equal precisely when those elements agree modulo $F^{m+1}X$.  The first order congruence shows that such a child has defect in $F^{m+1}Y$ exactly when its correction class solves the associated graded equation.  Replacing $x_m$ by another representative translates the correction coordinate by an element of $F^mX/F^{m+1}X$ and leaves the child classes themselves unchanged.
++Thus one defect lies in $F^mY$ exactly when the other does.  If $h-h'\in F^{m+1}X$, then $x_m+h$ and $x_m+h'$ define the same depth $m+1$ class.  Conversely, two depth $m+1$ classes reducing to $[x_m]_m$ differ from $x_m$ by elements of $F^mX$, and they are equal precisely when those elements agree modulo $F^{m+1}X$.  The first-order congruence shows that such a child has defect in $F^{m+1}Y$ exactly when its correction class solves the associated graded equation.  Replacing $x_m$ by another representative translates the correction coordinate by an element of $F^mX/F^{m+1}X$ and leaves the child classes themselves unchanged.
+ \end{proof}
+ 
+@@ -628,5 +628,5 @@
+ 
+ \begin{remark}\label{rem:elimination_vs_obstruction}
+-Elimination and obstruction reduction address different situations.  The Schur formula assumes that the hidden derivative is invertible.  Lyapunov Schmidt reduction allows a nontrivial kernel and cokernel, then leaves a reduced obstruction equation on the kernel directions.
++Elimination and obstruction reduction address different situations.  The Schur formula assumes that the hidden derivative is invertible.  Lyapunov--Schmidt reduction allows a nontrivial kernel and cokernel, then leaves a reduced obstruction equation on the kernel directions.
+ \end{remark}
+ 
+@@ -1039,5 +1039,5 @@
+ C_2T|\pi|.
+ \]
+-This proves norm convergence and the stated first order global bound.
++This proves norm convergence and the stated first-order global bound.
+ \end{proof}
+ 
+--- before/III/manuscript/komorebi-monograph.sty
++++ III/manuscript/komorebi-monograph.sty
+@@ -13,7 +13,7 @@
+ \providecommand{\KomorebiTitle}{Projector Resolved Seed Calculus III}
+ \providecommand{\KomorebiSubtitle}{Typed transfer, nonlinear packets, and obstruction theory}
+-\providecommand{\KomorebiSeries}{Paper III}
+-\providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{Release 1.0.0 / 20 October 2026}
++\providecommand{\KomorebiSeries}{Chapter III}
++\providecommand{\KomorebiKind}{Mathematical text}
++\providecommand{\KomorebiEdition}{}
+ \providecommand{\KomorebiShortTitle}{Paper III}
+ \providecommand{\KomorebiCoverTitle}{Projector Resolved\\Seed Calculus III}
+@@ -73,5 +73,5 @@
+   \vfill
+   {\sffamily\fontsize{11}{14}\selectfont Komorebi P.}\par
+-  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind\quad\textbullet\quad\KomorebiEdition}\par
++  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind}\par
+   \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{ink}\normalfont
+ }
+--- before/III/manuscript/visual_atlas.tex
++++ III/manuscript/visual_atlas.tex
+@@ -1,3 +1,3 @@
+-\vpage{1}{Three objects, three different questions}{PAPER III / A WORKED VISUAL COMPANION}{Traditional paper: Section 1 (p. 1), Section 4 (p. 7), Section 5 (p. 10)}
++\vpage{1}{Three objects, three different questions}{CHAPTER III / A WORKED VISUAL COMPANION}{Traditional paper: Section 1, Section 4, Section 5}
+ An edge operator moves data between named packets. An exact coordinate change describes the same data in another complete chart. A connection supplies an additional choice of transport. The three can use similar arrows while making different mathematical assertions.
+ 
+@@ -10,10 +10,10 @@
+ This guide follows explicit integer and rational matrices through these tests. Each example has an inspectable input, calculation, and conclusion. Vector drawings display those calculations rather than replace them. A graph with two paths can have zero net transfer. A loop with trace two and determinant one can still differ from the identity.
+ 
+-\head{The edition used here}
+-The worked models originate in the finite algebraic v1.0.1 release. The final traditional paper also develops rooted tree expansions, nonlinear defects, obstruction objects, filtered lifting, and analytic transport under their stated hypotheses. Those ordinary mathematical developments have a wider scope than the finite Lean contract. The present models explain the finite mechanisms and provide a route into the broader paper.
++\head{Scope of the worked models}
++The worked models illustrate the finite algebraic core. The main text also develops rooted tree expansions, nonlinear defects, obstruction objects, filtered lifting, and analytic transport under their stated hypotheses. Those ordinary mathematical developments have a wider scope than the finite Lean contract. The present models explain the finite mechanisms and provide a route into the broader paper.
+ 
+ \takeaway{Follow the object, not the arrow shape. A typed transfer can vanish, a complete coordinate loop must telescope, and an independently chosen connection can have genuine algebraic holonomy.}
+ 
+-\vpage{2}{An atlas of the objects}{ORIENTATION / KEEP THE TYPES VISIBLE}{Traditional paper: Definition 2.1 (p. 2), Definition 5.5 (p. 12), Definition 7.4 (p. 16)}
++\vpage{2}{An atlas of the objects}{ORIENTATION / KEEP THE TYPES VISIBLE}{Traditional paper: Definition 2.1, Definition 5.5, Definition 7.4}
+ Rows are targets and columns are sources throughout. If $E_{ji}$ is a matrix unit, then $E_{ji}e_i=e_j$. The notation $e_i$ means a basis vector. A named graph edge is written $a,b,c,d$ or $e,f$ when its role is explicit.
+ 
+@@ -38,9 +38,9 @@
+ 
+ \head{Reading routes}
+-For transfer, read V3 to V8. For the finite geometry models, read V9 to V18. For candidate certificates and nonlinear scope, read V19 to V22. V23 puts the matrix mechanisms together. V24 gives the formal boundary and replay guide.
++For transfer, read Plate III.3 to Plate III.8. For the finite geometry models, read Plate III.9 to Plate III.18. For candidate certificates and nonlinear scope, read Plate III.19 to Plate III.22. Plate III.23 puts the matrix mechanisms together. Plate III.24 gives the formal boundary and replay guide.
+ 
+ \takeaway{A $C_a\to C_c$ defect and a $C_a\to C_a$ holonomy are not the same typed map. Returning the defect to the base fiber requires a specified inverse transport.}
+ 
+-\vpage{3}{Read the product in execution order}{MODEL A / ONE EDGE IS ONE MATRIX ENTRY}{Traditional paper: Lemma 2.2 (p. 2), Theorem 2.3 (p. 2), Theorem 2.4 (p. 3)}
++\vpage{3}{Read the product in execution order}{MODEL A / ONE EDGE IS ONE MATRIX ENTRY}{Traditional paper: Lemma 2.2, Theorem 2.3, Theorem 2.4}
+ Work over $\ZZ$ with packets $0,1,2$. Let $e:0\to1$ have coefficient $2$, and let $f:1\to2$ have coefficient $3$. The elementary operators are
+ \[
+@@ -67,5 +67,5 @@
+ \takeaway{Write the traversed edges first. Then reverse their order when writing the operator product: $e$ followed by $f$ is $L_fL_e$.}
+ 
+-\vpage{4}{All sixteen words, only five walks}{MODEL A / PARALLEL EDGES REMAIN DISTINCT}{Traditional paper: Theorem 3.8 (p. 6), Corollary 3.9 (p. 6)}
++\vpage{4}{All sixteen words, only five walks}{MODEL A / PARALLEL EDGES REMAIN DISTINCT}{Traditional paper: Theorem 3.8, Corollary 3.9}
+ Add four edges on three packets: $a:0\to1$ with coefficient $2$, $b:0\to1$ with coefficient $-1$, $c:1\to2$ with coefficient $3$, and $d:2\to0$ with coefficient $1$. The parallel edges $a$ and $b$ are separate labels even though their source and target agree.
+ 
+@@ -84,5 +84,5 @@
+ \takeaway{The matrix power is a signed, ordered walk sum. It is not simply the number of paths, and a graph edge is not identified solely by its endpoints.}
+ 
+-\vpage{5}{Coefficients need not commute}{MODEL A / A MATRIX RING AS THE COEFFICIENT SEMIRING}{Traditional paper: Lemma 3.7 (p. 5), Section 9 (p. 20)}
++\vpage{5}{Coefficients need not commute}{MODEL A / A MATRIX RING AS THE COEFFICIENT SEMIRING}{Traditional paper: Lemma 3.7, Section 9}
+ The edge theorem allows a noncommutative coefficient semiring. Use $R=M_2(\QQ)$ and let the two coefficients themselves be matrices:
+ \[
+@@ -106,9 +106,9 @@
+ 
+ \head{One ring is not a dependent family of fibers}
+-The $3\times3$ matrix over $M_2(\QQ)$ can be displayed as an ordinary $6\times6$ matrix with $2\times2$ blocks. This is a concrete representation of the example over one ring. It does not establish an arbitrary family of differently typed edge fibers, which is outside the finite formal release's scalar interface for edge systems.
++The $3\times3$ matrix over $M_2(\QQ)$ can be displayed as an ordinary $6\times6$ matrix with $2\times2$ blocks. This is a concrete representation of the example over one ring. It does not establish an arbitrary family of differently typed edge fibers, which is outside the finite formal contract's scalar interface for edge systems.
+ 
+ \takeaway{The order rule carries mathematical information. It survives exact tests over a noncommutative ring and must not be inferred from pictures drawn over scalar real numbers alone.}
+ 
+-\vpage{6}{A reachable packet can receive zero}{MODEL A / CANCELLATION IS NOT A BROKEN INTERFACE}{Traditional paper: Corollary 3.9 (p. 6), Corollary 3.10 (p. 6)}
++\vpage{6}{A reachable packet can receive zero}{MODEL A / CANCELLATION IS NOT A BROKEN INTERFACE}{Traditional paper: Corollary 3.9, Corollary 3.10}
+ Consider a diamond: two routes of length two from packet $0$ to packet $3$. Three edge coefficients are $1$ and the lower final coefficient is $-1$. Both routes are correctly typed. Neither is annihilated by an interface mismatch.
+ 
+@@ -133,5 +133,5 @@
+ \takeaway{Do not interpret a visible route as an occupied output. Graph support is a useful upper bound. Signed operator support can be strictly smaller.}
+ 
+-\vpage{7}{Reachability is only an upper bound}{MODEL A / AN ORBIT THAT STAYS IN TWO DIMENSIONS}{Traditional paper: Corollary 3.11 (p. 7)}
++\vpage{7}{Reachability is only an upper bound}{MODEL A / AN ORBIT THAT STAYS IN TWO DIMENSIONS}{Traditional paper: Corollary 3.11}
+ Keep the diamond and add an isolated packet $4$. Start with the single seed $e_0\in\QQ^5$. Direct multiplication gives
+ \[
+@@ -154,5 +154,5 @@
+ \takeaway{Unreachable means impossible under the declared action. Reachable means only that graph geometry has not ruled it out. Linear dependence and cancellation still have to be checked.}
+ 
+-\vpage{8}{Paths through changing packet lists}{MODEL B / RECTANGULAR PRODUCTS WITH TWO OR THREE STEPS}{Traditional paper: Proposition 8.1 (p. 19)}
++\vpage{8}{Paths through changing packet lists}{MODEL B / RECTANGULAR PRODUCTS WITH TWO OR THREE STEPS}{Traditional paper: Proposition 8.1}
+ Here the packet lists have sizes $2,3,2,1$ in succession. Let the actual maps be
+ \[
+@@ -171,5 +171,5 @@
+ 
+ \head{The formal scope is deliberately precise}
+-The finite formal release's forms with two and three steps allow changing packet types. Its heterogeneous product theorem for arbitrary lengths allows changing \emph{factors} over one common finite packet index. That formal statement does not assert a fully dependent chain of changing index types at arbitrary lengths. The finite rectangular illustration here uses exactly three factors.
++The finite formal contract's forms with two and three steps allow changing packet types. Its heterogeneous product theorem for arbitrary lengths allows changing \emph{factors} over one common finite packet index. That formal statement does not assert a fully dependent chain of changing index types at arbitrary lengths. The finite rectangular illustration here uses exactly three factors.
+ 
+ For a single factor, the list of intermediate indices is empty and contributes that matrix entry once. For zero factors, the result is the identity on the common space. These conventions must not be replaced by an empty sum equal to zero.
+@@ -177,5 +177,5 @@
+ \takeaway{Heterogeneous can mean different matrices or different spaces. State which one is allowed before using a path formula.}
+ 
+-\vpage{9}{One vector, three exact frames}{MODEL C / CANONICAL TRANSPORT HAS NO HOLONOMY}{Traditional paper: Theorem 4.1 (p. 7), Theorem 4.2 (p. 7)}
++\vpage{9}{One vector, three exact frames}{MODEL C / CANONICAL TRANSPORT HAS NO HOLONOMY}{Traditional paper: Theorem 4.1, Theorem 4.2}
+ Let $F_a$ synthesize chart coordinates into one ambient $\QQ^2$. Choose
+ \[
+@@ -203,5 +203,5 @@
+ \takeaway{A canonical coordinate loop is a sequence of changes in description of one object. Nonidentity holonomy requires additional transport data, not merely nonorthogonal charts.}
+ 
+-\vpage{10}{Nonlinear charts still cancel exactly}{MODEL C / NATURALITY DOES NOT REQUIRE DERIVATIVES}{Traditional paper: Proposition 10.1 (p. 20)}
++\vpage{10}{Nonlinear charts still cancel exactly}{MODEL C / NATURALITY DOES NOT REQUIRE DERIVATIVES}{Traditional paper: Proposition 10.1}
+ Exact coordinate equivalences can be nonlinear. On $\QQ^2$, use
+ \[
+@@ -225,5 +225,5 @@
+ \takeaway{Nonlinearity alone does not create a coordinate defect. Reusing the old formula after changing coordinates would be an extra modeling choice, not exact conjugation.}
+ 
+-\vpage{11}{Reversibility is a real hypothesis}{MODEL D / THE MINIMAL AND REVERSIBLE INTERFACES}{Traditional paper: Definition 5.1 (p. 10), Definition 5.5 (p. 12)}
++\vpage{11}{Reversibility is a real hypothesis}{MODEL D / THE MINIMAL AND REVERSIBLE INTERFACES}{Traditional paper: Definition 5.1, Definition 5.5}
+ Choose the forward scalar transports $\Gamma_{1\leftarrow0}=2$, $\Gamma_{2\leftarrow1}=3$, and $\Gamma_{2\leftarrow0}=5$. Their multiplicative comparison between transport through two steps and direct transport is $D^\times=6/5$. A loop also needs a declared return map $\Gamma_{0\leftarrow2}$.
+ 
+@@ -245,5 +245,5 @@
+ \takeaway{Self normalization means $\Gamma_{a\leftarrow a}=I$. Reversible additionally means $\Gamma_{a\leftarrow b}=\Gamma_{b\leftarrow a}^{-1}$. These are different assumptions.}
+ 
+-\vpage{12}{Measure the mismatch at its base}{MODEL D / AN EXACT REVERSIBLE TRIANGLE}{Traditional paper: Theorem 5.10 (p. 13), Section 9 (p. 20)}
++\vpage{12}{Measure the mismatch at its base}{MODEL D / AN EXACT REVERSIBLE TRIANGLE}{Traditional paper: Theorem 5.10, Section 9}
+ Retain the reversible scalar model with forward values $2,3,5$ and all reverse values given by inverses. Two routes from chart $0$ to chart $2$ multiply the input by $6$ and $5$, respectively. The additive discrepancy equals the original input.
+ 
+@@ -266,5 +266,5 @@
+ \takeaway{Holonomy compares paths after both have been returned to the same base fiber. It is the transported mismatch, not an untyped difference between outputs in different charts.}
+ 
+-\vpage{13}{The identity can hide in the spectrum}{MODEL E / A SHEAR WITH NONTRIVIAL HOLONOMY}{Traditional paper: Definition 5.9 (p. 13), Definition 7.4 (p. 16)}
++\vpage{13}{The identity can hide in the spectrum}{MODEL E / A SHEAR WITH NONTRIVIAL HOLONOMY}{Traditional paper: Definition 5.9, Definition 7.4}
+ Put $\Gamma_{1\leftarrow0}=H$, $\Gamma_{2\leftarrow1}=I$, and $\Gamma_{2\leftarrow0}=I$, with reverse maps given by inverses, where
+ \[
+@@ -293,5 +293,5 @@
+ \takeaway{Flatness is the equality $H=I$, not agreement of a short list of spectral summaries. A single explicit moved vector can disprove that equality.}
+ 
+-\vpage{14}{Gauge changes the picture, not flatness}{MODEL E / CONJUGATION AND ITS LIMITS}{Traditional paper: Theorem 6.2 (p. 14)}
++\vpage{14}{Gauge changes the picture, not flatness}{MODEL E / CONJUGATION AND ITS LIMITS}{Traditional paper: Theorem 6.2}
+ At the base chart, change coordinates by $D=\operatorname{diag}(2,1)$. Transform every connection edge by the prescribed endpoint gauges. The loop transforms by conjugation, giving
+ \[
+@@ -321,5 +321,5 @@
+ \takeaway{Exact nonvanishing is gauge invariant. The numerical size of a matrix entry or a chosen norm generally is not.}
+ 
+-\vpage{15}{Flat is not the same as calibrated}{MODEL D / A FLAT CONNECTION WITH NONIDENTITY EDGES}{Traditional paper: Theorem 6.3 (p. 15)}
++\vpage{15}{Flat is not the same as calibrated}{MODEL D / A FLAT CONNECTION WITH NONIDENTITY EDGES}{Traditional paper: Theorem 6.3}
+ Make all three canonical charts literally identical, so $J_{b\leftarrow a}=1$ over $\QQ$. Choose scalar gauges $g_0=1$, $g_1=2$, and $g_2=3$, and define
+ \[
+@@ -348,5 +348,5 @@
+ \takeaway{Flatness makes the chosen transports independent of path. Calibration identifies them with one particular canonical transport before any gauge change.}
+ 
+-\vpage{16}{Resolve the entire obstruction}{MODEL F / PACKET BLOCKS FROM INPUT TO OUTPUT}{Traditional paper: Theorem 7.5 (p. 17), Corollary 7.6 (p. 18)}
++\vpage{16}{Resolve the entire obstruction}{MODEL F / PACKET BLOCKS FROM INPUT TO OUTPUT}{Traditional paper: Theorem 7.5, Corollary 7.6}
+ Use three coordinate packets with projectors $P_0,P_1,P_2$, and set
+ \[
+@@ -370,5 +370,5 @@
+ \takeaway{An obstruction packet is not just a colored matrix cell. It consists of a specific label for a pair of packets and an exact nonvanishing statement about the corresponding map.}
+ 
+-\vpage{17}{Why diagonal checks are insufficient}{MODEL E / COMPLETENESS, TWO SIDES, AND OBLIQUE PACKETS}{Traditional paper: Theorem 7.5 (p. 17)}
++\vpage{17}{Why diagonal checks are insufficient}{MODEL E / COMPLETENESS, TWO SIDES, AND OBLIQUE PACKETS}{Traditional paper: Theorem 7.5}
+ Return to $\Ob=E_{01}$. With the two standard coordinate projectors, both diagonal blocks vanish:
+ \[
+@@ -391,10 +391,10 @@
+ \sum_{i,j}Q_i\Ob Q_j=\Ob.
+ \]
+-The block reconstruction identity itself uses the condition that the projectors sum to the identity. Idempotence is additionally used when constructing a witness that remains supported in one packet after projection. The release does not require pairwise annihilation for its general reconstruction statement.
++The block reconstruction identity itself uses the condition that the projectors sum to the identity. Idempotence is additionally used when constructing a witness that remains supported in one packet after projection. The general formal reconstruction statement does not require pairwise annihilation for its general reconstruction statement.
+ 
+ \takeaway{Test every block from input to output of a complete resolution. Testing only the diagonal, or only the packets supplied so far, answers a weaker question.}
+ 
+-\vpage{18}{A gauge can move every packet label}{MODEL E / FIXED VERSUS TRANSPORTED PROJECTORS}{Traditional paper: Proposition 7.7 (p. 18)}
+-The diagonal gauge on V14 commuted with each standard projector. Now use the gauge that mixes packets
++\vpage{18}{A gauge can move every packet label}{MODEL E / FIXED VERSUS TRANSPORTED PROJECTORS}{Traditional paper: Proposition 7.7}
++The diagonal gauge on Plate III.14 commuted with each standard projector. Now use the gauge that mixes packets
+ \[
+ G=\mat{1&0\\1&1},\qquad \Ob=E_{01}.
+@@ -416,9 +416,9 @@
+ Q_i(G\Ob G^{-1})Q_j=G(P_i\Ob P_j)G^{-1}.
+ \]
+-Relative to these transported packets, the corresponding labeled blocks again have matching vanishing status. These are the same oblique projectors displayed on V17. One must distinguish moving the operator alone in a fixed resolution from moving the entire resolved description.
++Relative to these transported packets, the corresponding labeled blocks again have matching vanishing status. These are the same oblique projectors displayed on Plate III.17. One must distinguish moving the operator alone in a fixed resolution from moving the entire resolved description.
+ 
+ \takeaway{The total obstruction is intrinsic under gauge. Its location in a fixed packet grid is not, unless the gauge preserves that grid.}
+ 
+-\vpage{19}{An obstruction rejects one candidate}{MODEL G / THE QUANTIFIERS ARE THE CONTENT}{Traditional paper: Theorem 7.2 (p. 16)}
++\vpage{19}{An obstruction rejects one candidate}{MODEL G / THE QUANTIFIERS ARE THE CONTENT}{Traditional paper: Theorem 7.2}
+ Let the candidates be rational numbers and the packet labels be $0,1$. Define
+ \[
+@@ -445,5 +445,5 @@
+ \takeaway{Keep the candidate attached to the witness. The theorem's strength is its exact logical scope, not a universal existence or nonexistence claim.}
+ 
+-\vpage{20}{A tree reads its named leaves}{MODEL H / ACTUAL SYNTAX, ARBITRARY SEMANTICS}{Traditional paper: Definition 11.1 (p. 22), Theorem 11.2 (p. 22)}
++\vpage{20}{A tree reads its named leaves}{MODEL H / ACTUAL SYNTAX, ARBITRARY SEMANTICS}{Traditional paper: Definition 11.1, Theorem 11.2}
+ Use the grammar's constant, input, unary, and binary constructors to build
+ \[
+@@ -464,5 +464,5 @@
+ \takeaway{The proved tree theorem controls which input labels are read. It does not supply a nonlinear chain rule, a stability estimate, or a solution of a tree equation.}
+ 
+-\vpage{21}{Where a nonlinear defect can enter}{MODEL H / EXACT COORDINATES VERSUS A CHOSEN RULE}{Traditional paper: Proposition 10.1 (p. 20), Formalization target 11.7 (p. 24), Theorem 20.2 (p. 43)}
++\vpage{21}{Where a nonlinear defect can enter}{MODEL H / EXACT COORDINATES VERSUS A CHOSEN RULE}{Traditional paper: Proposition 10.1, Formalization target 11.7, Theorem 20.2}
+ Take the unary operation $f(x)=x^2$ over $\QQ$. Suppose both input and output transport are chosen as multiplication by two, while the same numerical formula $f$ is reused at the target. The two routes give
+ \[
+@@ -478,5 +478,5 @@
+ \widehat f_b(v)=2f(v/2)=\frac{v^2}{2}.
+ \]
+-Consequently $\widehat f_b(2x)=2x^2$, and the exact coordinate defect vanishes. This is the same distinction illustrated in the example in two dimensions on V10.
++Consequently $\widehat f_b(2x)=2x^2$, and the exact coordinate defect vanishes. This is the same distinction illustrated in the example in two dimensions on Plate III.10.
+ 
+ \head{An example is not a general propagation theorem}
+@@ -485,5 +485,5 @@
+ \takeaway{A nonzero nonlinear route difference must come from identifiable extra data: a changed transport, an approximation, a restricted model, or a reused formula that was not conjugated correctly.}
+ 
+-\vpage{22}{Mixed terms are not optional}{FINITE EXAMPLES / WHY MULTILINEARITY MATTERS}{Traditional paper: Formalization target 11.6 (p. 23), Theorem 18.3 (p. 39)}
++\vpage{22}{Mixed terms are not optional}{FINITE EXAMPLES / WHY MULTILINEARITY MATTERS}{Traditional paper: Formalization target 11.6, Theorem 18.3}
+ A bilinear node distributes over two independently resolved inputs:
+ \[
+@@ -500,9 +500,9 @@
+ General packet tree expansion needs correctly typed input slots, finite sets of packet labels at each node, and multilinearity in every slot used for distributive expansion. Empty inputs and unary nodes need explicit conventions. Slot order must survive even when values or operations do not commute. The traditional paper supplies rooted tree reconstruction and pruning results in its ordinary mathematical development.
+ 
+-This page supplies elementary exact examples of the issue. The finite v1.0.1 Lean contract remains narrower: it contains syntactic input locality, not the general dependent tree expansion or the traditional paper's analytic convergence results.
++This page supplies elementary exact examples of the issue. The finite algebraic Lean contract remains narrower: it contains syntactic input locality, not the general dependent tree expansion or the traditional paper's analytic convergence results.
+ 
+ \takeaway{A branching picture does not justify throwing away mixed interactions. Exact packet expansion requires the appropriate multilinearity and typing, not merely a diagram that appears finite.}
+ 
+-\vpage{23}{From loop data to a packet witness}{CAPSTONE / A COMPLETE FINITE DIAGNOSIS}{Traditional paper: Theorem 5.10 (p. 13), Theorem 6.2 (p. 14), Corollary 7.6 (p. 18)}
++\vpage{23}{From loop data to a packet witness}{CAPSTONE / A COMPLETE FINITE DIAGNOSIS}{Traditional paper: Theorem 5.10, Theorem 6.2, Corollary 7.6}
+ Supply a reversible connection on three copies of $\QQ^2$ by choosing
+ \[
+@@ -526,6 +526,6 @@
+ \takeaway{Declare the data, multiply in traversal order, form the defect, resolve all blocks, and exhibit an input on which one block acts nontrivially. Each step has a checkable mathematical object.}
+ 
+-\vpage{24}{Read the evidence with the pictures}{EVIDENCE / EXAMPLES, PROOFS, AND FORMAL SCOPE}{Traditional paper: Section 12 (p. 24)}
+-This guide preserves the 24 worked pages and 22 exact figures from the finite visual appendix. It updates their references to the final traditional paper and explains the relation to that paper's broader nonlinear and analytic material.
++\vpage{24}{Read the evidence with the pictures}{EVIDENCE / EXAMPLES, PROOFS, AND FORMAL SCOPE}{Traditional paper: Section 12}
++The 24 worked plates and 22 exact figures connect finite models with the main text's broader nonlinear and analytic theory.
+ 
+ \head{Read each evidence record in its scope}
+@@ -533,11 +533,11 @@
+ \begin{tabularx}{\linewidth}{@{}p{.24\linewidth}Y@{}}\toprule
+ \textbf{Evidence} & \textbf{What it supports}\\\midrule
+-Finite Lean release & The finite declarations and the released Section 16 and 17 additions were compiled in the pinned environment. The Lean guide records the current source scope, axiom audit, and kernel replay.\\
++Formal development & The finite declarations and the Section 16 and 17 additions were compiled in the pinned environment. The Lean guide records the source scope, axiom audit, and kernel replay.\\
+ Ordinary mathematics & The traditional paper's expanded proofs, including nonlinear, obstruction, lifting, and smooth transport results. Inclusion in that paper does not add these results to the finite Lean contract.\\
+-Exact model checks & Replay on 20 October 2026 passed all 124 exact checks and rejected all four deliberately false controls. The scope is the displayed finite matrices, paths, polynomials, candidate tables, and trees.\\
++Exact model checks & The recorded run passed all 124 exact checks and rejected all four deliberately false controls. The scope is the displayed finite matrices, paths, polynomials, candidate tables, and trees.\\
+ Figure regeneration & All 22 editable TikZ figures are supplied with their exact model data and generators. The original figure sources and their earlier regeneration record remain preserved.\\\bottomrule
+ \end{tabularx}}
+ 
+-The release also records 18,630 exact assertions for the Section 16 and 17 examples. These finite calculations support the displayed mechanisms. General claims rest on their mathematical proofs and, where mapped, their Lean declarations.
++The computation record also contains 18,630 exact assertions for the Section 16 and 17 examples. These finite calculations support the displayed mechanisms. General claims rest on their mathematical proofs and, where mapped, their Lean declarations.
+ 
+ \head{Boundaries that remain in force}
+@@ -547,8 +547,7 @@
+ 
+ \head{Replay the worked layer}
+-From the editable visual guide directory, compile the PDF with \mbox{\texttt{python build.py}}.\par
+ Check the exact examples with \mbox{\texttt{python checks/verify\_examples.py}}.\par
+ Regenerate the figures with \mbox{\texttt{python source/generate\_graphics.py}}.\par
+-Use a temporary copy to retain the delivered evidence unchanged. The full package preserves the finite release and its original formal sources separately.
++Use a temporary copy to preserve the recorded evidence. The finite algebraic source distribution supplies the formal sources separately.
+ 
+ \takeaway{Use the figures to understand the mechanisms, the traditional paper to read the mathematical proofs, and the Lean guide to identify the exact formal contract. These are related records with distinct scopes.}
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/Paper_IV_Lean_Guide_Final.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/Paper_IV_Lean_Guide_Final.tex
+@@ -2,8 +2,8 @@
+ 
+ \usepackage{komorebi-monograph}
+-\renewcommand{\KomorebiKind}{Lean and evidence guide}
++\renewcommand{\KomorebiKind}{Formal companion}
+ \renewcommand{\KomorebiSubtitle}{Cyclic analytic functions, reciprocal families,\\and spectral zero data}
+ \renewcommand{\KomorebiShortTitle}{Paper IV / Lean guide}
+-\renewcommand{\KomorebiCoverBlurb}{Read the exact source declarations, follow each realization bridge, and distinguish preserved kernel evidence from current static checks.}
++\renewcommand{\KomorebiCoverBlurb}{Read the exact source declarations, follow each realization bridge, and distinguish kernel verification from static reconciliation.}
+ \KomorebiSetup
+ \setlength{\cftsubsecnumwidth}{4.4em}
+@@ -31,5 +31,5 @@
+ \vfill%
+ {\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+-\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
++\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+ \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+ \makeatother
+@@ -40,7 +40,7 @@
+ \textbf{A guide to the actual formal development.}
+ 119 Lean source files. 151 map rows. 1,164 mapped declarations.
+-All 68 theorem-like manuscript results have full scoped coverage in the inherited v1.0.0 formal release. Read the eight tutorial chapters for the mathematical route, the coverage ledger for complete manuscript results, and the declaration catalog for exact source targets.
++All 68 theorem-like manuscript results have full scoped coverage in the recorded formal contract. Read the eight tutorial chapters for the mathematical route, the coverage ledger for complete manuscript results, and the declaration catalog for exact source targets.
+ 
+-This edition explains that release and reconciles its source, contract, theorem map, and saved kernel transcript. The formal execution evidence is dated 5 September 2026. No new Lean build was run for this companion edition.}
++This guide relates the source, contract, theorem map, and saved kernel transcript. The verification chapter records the pinned-source replay and its precise scope; static reconciliation remains a distinct form of evidence.}
+ 
+ 
+@@ -58,13 +58,14 @@
+ \clearpage\input{chapters/07_closures}
+ \clearpage\input{chapters/08_replay}
++\clearpage\input{chapters/09_verification_scope}
+ \clearpage
+ \section{Complete manuscript coverage ledger}
+ \label{sec:ledger}
+-Each entry is a full scoped result in v1.0.0. Its coverage is the union of the cited rows, with the original hypotheses retained. This ledger has 68 entries. Definitions and the explicitly imported standard fact 11.1 are not added to that count.
++Each entry is a full scoped result in the formal contract. Its coverage is the union of the cited rows, with the original hypotheses retained. This ledger has 68 entries. Definitions and the explicitly imported standard fact 11.1 are not added to that count.
+ \input{generated/completion}
+ \clearpage
+ \section{Complete declaration catalog}
+ \label{sec:catalog}
+-The following 151 entries reproduce the exact row scopes and all 1,164 fully qualified declaration names from the canonical theorem map. File names, lexical line locations, declaration kinds, and manuscript labels are reconciled with the source and the release contract.
++The following 151 entries reproduce the exact row scopes and all 1,164 fully qualified declaration names from the canonical theorem map. File names, lexical line locations, declaration kinds, and manuscript labels are reconciled with the source and the formal contract.
+ 
+ \textbf{Read scope additively.} An earlier row may say that pointwise convergence, a branch law, or another clause is outside \emph{that row}. Such wording is preserved here because it precisely describes that contribution. It is not an unresolved gap in the completed result. Consult the 68-result ledger and rows 143--151 for the joined coverage. The present static reconciliation does not rerun Lean's elaborator or kernel.
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/chapters/01_orientation.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/chapters/01_orientation.tex
+@@ -3,14 +3,14 @@
+ Paper IV studies one scalar cyclic family through several realizations. A residue-class projector selects coefficients. Its exponential sections become entire functions. Signed sections produce a distinguished denominator, whose reciprocal coefficients form parameterized polynomial families. The denominator's zeros then control canonical products, a diagonal determinant, coefficient asymptotics, and zeta functions.
+ 
+-The Lean release follows these transitions explicitly. It does not identify a formal series with an analytic function by notation alone. It proves summation bridges, matches ordinary and factorial-normalized coefficients, and carries zero multiplicities and logarithm choices into the analytic statements.
++The formal development follows these transitions explicitly. It does not identify a formal series with an analytic function by notation alone. It proves summation bridges, matches ordinary and factorial-normalized coefficients, and carries zero multiplicities and logarithm choices into the analytic statements.
+ 
+ The completed formal contract has \textbf{68 full scoped manuscript results, zero partial, and zero unmapped}. The 151 map rows name 1,164 distinct declarations: 953 theorems and 211 constructions. The saved fail-closed namespace audit reports 2,234 declarations, including 1,999 theorem declarations. These are different counts. The namespace includes supporting material beyond the explicit map, while the map includes definitions as well as theorems. Neither is a count of independent mathematical discoveries.
+ 
+-\subsection{Three levels of evidence}
++\subsection{Formal verification and source reconciliation}
+ \begin{longtable}{p{.23\textwidth}p{.67\textwidth}}
+-\toprule Evidence & Meaning in this edition \\ \midrule\endhead
+-Inherited formal execution & The 5 September 2026 release reports a warning-fatal build of 3,521 jobs, 43 semantic checks, exact target-kind resolution, and the saved kernel audit. \\
+-Current static reconciliation & This guide checks source checksums, exact map and contract parity, lexical source locations, target sets in the audit source and saved transcript, dependency pins, and excerpt identity. \\
+-Current document build & XeLaTeX compiles the supplied guide sources. Layout and extracted text are checked. This step does not compile Lean. \\
++\toprule Evidence & Verified scope \\ \midrule\endhead
++Formal execution & The source contract is supported by the preserved aggregate build, 43 semantic checks, exact target-kind resolution, and kernel audit. The verification chapter records the separate pinned-source replay of all 118 production modules. \\
++Static reconciliation & This guide checks source checksums, exact map and contract parity, lexical source locations, target sets in the audit source and saved transcript, dependency pins, and excerpt identity. \\
++
+ \bottomrule
+ \end{longtable}
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/chapters/08_replay.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/chapters/08_replay.tex
+@@ -1,5 +1,5 @@
+ \section{Reproduction, audit, and evidence handling}
+ \subsection{The exact environment}
+-The canonical release is v1.0.0, dated 5 September 2026. Its toolchain file specifies \code{leanprover/lean4:v4.34.0-rc2}. The recorded compiler commit is \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Mathlib is pinned at \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The complete nine-package revision table is printed in the dependency appendix and preserved in \code{lake-manifest.json}.
++The cyclic analytic formalization's toolchain file specifies \code{leanprover/lean4:v4.34.0-rc2}. The recorded compiler commit is \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Mathlib is pinned at \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The complete nine-package revision table is printed in the dependency appendix and preserved in \code{lake-manifest.json}.
+ 
+ The project has \code{autoImplicit = false} and \code{relaxedAutoImplicit = false}. Warnings are fatal in the release build. The aggregate import integrates the development, while the explicit kernel audit checks the mapped declarations and the namespace. Build caches are excluded from the release source.
+@@ -10,10 +10,10 @@
+ This reconciliation proves consistency of the preserved evidence files with the preserved source identities. It does not repeat elaboration, type checking, or a live environment traversal. The namespace totals of 2,234 declarations and 1,999 theorem declarations are inherited results, not counts newly obtained from a running Lean process. A lexical source parser cannot substitute for elaborated declaration types or compiler-generated declarations.
+ 
+-\subsection{Current checks for this guide}
++\subsection{Static reconciliation}
+ The generator validates every one of the 119 Lean source files against the canonical SHA-256 manifest. It resolves the 1,164 target names to source declarations and checks the theorem-versus-construction split against the explicit contract. It emits the complete row catalog, 68-result ledger, direct-import inventory, exact pins, and source-excerpt manifest.
+ 
+ The source policy scan excludes comments and string literals before checking for forbidden proof placeholders and unsafe shortcuts. The kernel-audit file is treated separately because its exclusion logic necessarily names prohibited axioms. This is a source-hygiene check. It does not establish that elaboration succeeds.
+ 
+-No new Lean build was available for this companion edition. The 43 declarations in \code{SemanticChecks.lean} remain source-level and inherited execution evidence here. They are not relabeled as 43 newly executed tests. The companion edition changes explanatory material and navigation, not the canonical Lean files.
++The 43 declarations in \code{SemanticChecks.lean} are supported by their source and preserved execution evidence. Static reconciliation does not relabel them as newly executed tests. The separate verification chapter records the production replay and compiler controls; the 119 mathematical source files remained unchanged.
+ 
+ \subsection{Replay the original release gate}
+@@ -26,5 +26,5 @@
+ bash VERIFY.sh --release --archive /path/to/PRSC_IV_v1.0.0.zip
+ \end{Verbatim}
+-The new three-companion edition archive is not the original canonical release ZIP. Do not pass it to a gate that expects the original release's exact entry set.
++Use the exact formal source archive for archive-entry checks. The collected book is a different artifact and does not have that archive's entry set.
+ 
+ The gate also accepts a validated external dependency cache:
+@@ -39,19 +39,5 @@
+ lake env lean -E warning KomorebiPaperIV/KernelAudit.lean
+ \end{Verbatim}
+-These are replay instructions, not commands claimed to have run in this companion edition. The full release gate additionally checks exact kinds and manuscript associations, source policy, document reconstruction, checksums, and archive properties when requested.
+-
+-\subsection{Rebuild this guide without running Lean}
+-The supplied \code{build.py} compiles the existing guide with four XeLaTeX passes. It does not regenerate its data, install packages, invoke Lean, or modify the canonical source. Run it from the guide directory:
+-\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+-python3 build.py
+-\end{Verbatim}
+-The optional static-data generator is separate. Its defaults fit the edition's packaged folder layout, and its paths can be overridden:
+-\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+-python3 build_guide_data.py \
+-  --source /path/to/PRSC_IV \
+-  --traditional /path/to/editable/traditional
+-python3 build.py
+-\end{Verbatim}
+-It writes generated navigation and provenance inside the guide directory. The code excerpts have both untouched UTF-8 text and display-escaped copies. Display escaping preserves the source characters while allowing the chosen fonts and verbatim environment to render Lean notation. The raw excerpts are the authoritative source intervals.
++These commands describe the inherited manual gate. For the verified warning policy and full production replay, use the procedure in the next chapter. The full release gate additionally checks exact kinds and manuscript associations, source policy, document reconstruction, checksums, and archive properties when requested.
+ 
+ \subsection{Failure modes worth recognizing}
+@@ -61,5 +47,5 @@
+ 
+ \subsection{How to inspect one result end to end}
+-Choose a manuscript record in the next ledger. Read all of its map rows, including later rows that close analytic clauses. Follow each exact declaration name to its source location. Inspect the surrounding variables, typeclass instances, definitions, and imported lemmas. Check the target's kind in the contract and its axiom record in the saved transcript. If a new formal run is needed, use the pinned environment and retain its complete output separately from inherited evidence.
++Choose a manuscript record in the coverage ledger. Read all of its map rows, including later rows that close analytic clauses. Follow each exact declaration name to its source location. Inspect the surrounding variables, typeclass instances, definitions, and imported lemmas. Check the target's kind in the contract and its axiom record in the saved transcript. If a new formal run is needed, use the pinned environment and retain its complete output separately from inherited evidence.
+ 
+ For example, result 4.5 joins row 27's factorial/Pochhammer formal identity with row 150's literal parameter multiset, Gamma normalization, and actual convergent hypergeometric summation. Reviewing only row 27 would miss completed analytic coverage. Reviewing only the final identity would miss the coefficient normalization on which it depends. The contract is designed to make both routes visible.
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/generated/traditional_crosswalk.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/generated/traditional_crosswalk.tex
+@@ -1,4 +1,4 @@
+ \begin{longtable}{p{.57\textwidth}p{.33\textwidth}}
+-\toprule Source label & Final traditional locator \\ \midrule\endhead
++\toprule Source label & Traditional-paper locator \\ \midrule\endhead
+ \code{thm:root_filter} & Theorem 3.1, p.~4 \\ \addlinespace
+ \code{prop:covariance} & Proposition 3.2, p.~5 \\ \addlinespace
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/komorebi-monograph.sty
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/lean_guide/komorebi-monograph.sty
+@@ -14,7 +14,7 @@
+ \providecommand{\KomorebiTitle}{Projector Resolved Seed Calculus IV}
+ \providecommand{\KomorebiSubtitle}{Cyclic analytic functions, reciprocal families, and spectral zero data}
+-\providecommand{\KomorebiSeries}{Paper IV}
+-\providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{8 October 2026}
++\providecommand{\KomorebiSeries}{Chapter IV}
++\providecommand{\KomorebiKind}{Mathematical text}
++\providecommand{\KomorebiEdition}{}
+ \providecommand{\KomorebiShortTitle}{Paper IV}
+ \providecommand{\KomorebiCoverTitle}{Projector Resolved\\Seed Calculus IV}
+@@ -74,5 +74,5 @@
+   \vfill
+   {\sffamily\fontsize{11}{14}\selectfont Komorebi P.}\par
+-  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind\quad\textbullet\quad\KomorebiEdition}\par
++  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind}\par
+   \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{ink}\normalfont
+ }
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/Paper_IV_Traditional_Final.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/Paper_IV_Traditional_Final.tex
+@@ -119,5 +119,5 @@
+ \newcommand{\statusleanfour}[1]{%
+   \par\smallskip\noindent
+-  {\color{leanblue}\textbf{Released formal contract: Paper IV v1.0.0.}}\par
++  {\color{leanblue}\textbf{Formal contract: cyclic analytic theory.}}\par
+   \begingroup\small\raggedright\leanname{#1}\par\endgroup\smallskip}
+ \newcommand{\statusleanprior}[1]{%
+@@ -129,5 +129,5 @@
+ \large Cyclic Analytic Functions, Reciprocal Families, and Spectral Zero Data}
+ \author{Komorebi P.}
+-\date{Modern Monograph, 8 October 2026}
++\date{}
+ 
+ \hypersetup{
+@@ -153,7 +153,7 @@
+ \renewcommand{\KomorebiTitle}{Projector Resolved Seed Calculus IV}
+ \renewcommand{\KomorebiSubtitle}{Cyclic analytic functions, reciprocal families,\\and spectral zero data}
+-\renewcommand{\KomorebiSeries}{Paper IV}
+-\renewcommand{\KomorebiKind}{Modern Monograph}
+-\renewcommand{\KomorebiEdition}{8 October 2026}
++\renewcommand{\KomorebiSeries}{Chapter IV}
++\renewcommand{\KomorebiKind}{Mathematical text}
++\renewcommand{\KomorebiEdition}{}
+ \renewcommand{\KomorebiShortTitle}{Paper IV}
+ \renewcommand{\KomorebiTitleSize}{31}
+@@ -189,5 +189,5 @@
+ \vfill%
+ {\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+-\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
++\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par}%
+ \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+ \makeatother
+@@ -197,5 +197,5 @@
+ \KomorebiOpeningNote{Begin with cyclic projection and the signed differential cycle. The reciprocal chapters then build parameter polynomials, Appell systems, and theta polynomials from a unit series. The second half follows the same denominator through large zero geometry, canonical products, and zero zeta functions.
+ 
+-The visual atlas at the end of this volume supplies twenty-six worked plates. The separate Lean guide follows the released declarations and their hypotheses. All sixty-eight proof bodies and ninety-five numbered records of the selected manuscript are retained.}
++The visual atlas at the end of this volume supplies twenty-six worked plates. The companion Lean guide follows the formal declarations and their hypotheses. The main text contains sixty-eight theorem-like results and ninety-five numbered records.}
+ 
+ \begin{abstract}
+@@ -212,10 +212,10 @@
+ gives their leading displacement and derivative sign. The classical perimeter
+ law yields zero-counting asymptotics with explicit leading constants and
+-bounded error. These results give genus zero products, the standard diagonal
++bounded error. These results give genus-zero products, the standard diagonal
+ Fredholm representation, zero-power-sum formulas for reciprocal and
+ logarithmic coefficients, nearest-zero coefficient asymptotics, and
+ meromorphic continuation of the symmetry-orbit zero zeta by comparison with
+ the Hurwitz zeta function. Complex powers are interpreted either formally or
+-through a fixed logarithm on a zero free domain. The paper treats only this
++through a fixed logarithm on a zero-free domain. The paper treats only this
+ cyclic analytic family. Arithmetic interpolation, general nonlinear trees,
+ general resolvent theory, and abstract completion are reserved for Papers IX,
+@@ -224,7 +224,7 @@
+ 
+ \begin{readerroadmap}[title={Formal scope and evidence}]
+-The preserved Paper IV v1.0.0 release records full scoped Lean coverage of the sixty-eight theorem like manuscript results under their original hypotheses. This volume changes presentation and adds worked explanations. It does not create a new formal release.
+-
+-Imported standard fact 11.1 is used in the ordinary manuscript growth argument. The Lean growth-order proofs establish that step separately. Open questions, branch choices, multiplicities, and the hypotheses of coefficient asymptotics remain explicit. Current finite computations support the worked models. The compiler and kernel evidence remains the preserved September release evidence.
++The recorded formal contract covers all sixty-eight theorem-like manuscript results under their stated hypotheses. The formalization ledger identifies the corresponding declarations.
++
++Imported standard fact 11.1 is used in the ordinary manuscript growth argument. The Lean growth-order proofs establish that step separately. Open questions, branch choices, multiplicities, and the hypotheses of coefficient asymptotics remain explicit. Finite computations support the worked models. The companion Lean guide records the pinned-source replay, declaration-kind checks, axiom audit, and their limits.
+ \end{readerroadmap}
+ 
+@@ -345,5 +345,5 @@
+ The main statements fall into five groups.  The finite algebra model in \cref{sec:finite_algebra} explains the derivative cycles and addition laws through one exponential identity.  The coefficient theory in \cref{sec:reciprocal_powers} gives two complementary recurrences, one from the original denominator and one from its logarithm.  The Appell theory in \cref{sec:residue_section} supplies both formal differential-operator formulas and a convolution law in the space and order parameters.  The zero analysis in \cref{sec:zero_geometry} specializes classical two term exponential-sum theory, uses symmetry to place the uniquely localized large zeros on the rays, and computes a leading correction.  The product theory in \cref{sec:hadamard} gives the standard diagonal Fredholm encoding of the genus zero product.
+ 
+-The volume keeps formal and analytic statements separate.  A formal identity needs only the unit constant term of the relevant series.  A holomorphic complex power also needs a zero free domain and a chosen logarithm.  A meromorphic coefficient asymptotic is stated only for positive integral reciprocal order unless an additional branch domain is specified.
++The volume keeps formal and analytic statements separate.  A formal identity needs only the unit constant term of the relevant series.  A holomorphic complex power also needs a zero-free domain and a chosen logarithm.  A meromorphic coefficient asymptotic is stated only for positive integral reciprocal order unless an additional branch domain is specified.
+ 
+ \clearpage\part{Cyclic resolution and differential transport}
+@@ -2997,13 +2997,13 @@
+ results proved here.
+ 
+-\section{Formalization ledger for version 1.0.0}\label{sec:formalization_ledger}
+-
+-The preserved v1.0.0 release was built with Lean 4 v4.34.0-rc2 and Mathlib revision
++\section{Formalization ledger}\label{sec:formalization_ledger}
++
++The recorded formal verification used Lean 4 v4.34.0-rc2 and Mathlib revision
+ \leanname{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}
+ \cite{deMouraUllrich2021,mathlib2020}. Its 151 theorem-map rows resolve to
+ 1164 unique declarations in the namespace \leanname{Komorebi.PaperIV}:
+ 953 theorem declarations and 211 constructions. The recorded namespace audit scanned
+-2234 declarations, including 1999 theorem declarations. The historical warning fatal
+-build and supplied kernel audit allowed only
++2234 declarations, including 1999 theorem declarations. The recorded build with warnings treated as errors
++and supplied kernel audit allowed only
+ \leanname{propext}, \leanname{Classical.choice}, and
+ \leanname{Quot.sound} as standard transitive axioms.
+@@ -3102,7 +3102,7 @@
+ \endgroup
+ 
+-The declaration-level theorem map is authoritative for the preserved
+-v1.0.0 contract. Its release records full scoped coverage of all 68
+-theorem like records: 68 full, zero partial, and zero unmapped. Rows 143--151 close the final fifteen partial records
++The declaration-level theorem map is authoritative for the formal
++contract. It records full scoped coverage of all 68
++theorem-like records: 68 full, zero partial, and zero unmapped. Rows 143--151 close the final fifteen partial records
+ without altering their statements or assumptions. Imported standard fact
+ 11.1 remains imported. Formal identities, normalized analytic germs, and
+@@ -3135,7 +3135,7 @@
+ \appendix
+ \section{Visual atlas}\label{app:visual-atlas}
+-The twenty-six plates retain the worked models of the separate visual guide. Each stable label V1 through V26 names a mathematical mechanism and points back to the relevant statements. The plates distinguish exact identities, rational certificates, sampled curves, and inherited formal evidence.
++The twenty-six plates retain the worked models of the separate visual guide. Each stable label Plate IV.1 through Plate IV.26 names a mathematical mechanism and points back to the relevant statements. The plates distinguish exact identities, rational certificates, sampled curves, and inherited formal evidence.
+ \begin{readerroadmap}[title={Three routes through the atlas}]
+-For algebra, read V3 through V16. For zero geometry and its consequences, read V17 through V24. V25 follows one coefficient through the complete calculation. V26 explains the evidence attached to the models.
++For algebra, read Plate IV.3 through Plate IV.16. For zero geometry and its consequences, read Plate IV.17 through Plate IV.24. Plate IV.25 follows one coefficient through the complete calculation. Plate IV.26 explains the evidence attached to the models.
+ \end{readerroadmap}
+ \clearpage
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/atlas-definitions.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/atlas-definitions.tex
+@@ -13,9 +13,9 @@
+ \newif\ifstarted\startedfalse
+ \providecommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+-\pdfbookmark[1]{V#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
+-{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}V#1\quad /\quad #3\par}\vspace{5pt}
++\pdfbookmark[1]{Plate IV.#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
++{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}Plate IV.#1\quad /\quad #3\par}\vspace{5pt}
+ {\sffamily\bfseries\fontsize{19}{22}\selectfont #2\par}\vspace{5pt}
+ {\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+-\providecommand{\pagerefV}[1]{\hyperlink{vpage#1}{V\,--\,#1}}
++\providecommand{\pagerefV}[1]{\hyperlink{vpage#1}{Plate IV.#1}}
+ 
+ \providecommand{\CC}{\mathbb C}
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/atlas-pages.tex
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/atlas-pages.tex
+@@ -1,3 +1,3 @@
+-\vpage{1}{A coefficient can become zero data}{READER'S GUIDE}{Traditional monograph: Section 2 (p. 2), Section 7 (p. 13), Section 11 (p. 25), Section 12 (p. 34).}
++\vpage{1}{A coefficient can become zero data}{READER'S GUIDE}{Traditional monograph: Section 2, Section 7, Section 11, Section 12.}
+ This guide follows a concrete analytic family through three descriptions: selected Taylor coefficients, a finite differential system, and the zeros of an entire function. The formulas are linked, but the evidence needed for each description is different.
+ \vfig{three_views}
+@@ -18,5 +18,5 @@
+ \platecaption{Exact identities and rational certificates are distinguished from sampled curves. All plates are reproducible vector drawings. The source package preserves the original proofread manuscript.}
+ 
+-\vpage{2}{Two variables, several normalizations}{OBJECT ATLAS}{Traditional monograph: Section 2 (p. 2), Definition 5.7 (p. 9), Definition 7.1 (p. 13), Definition 9.1 (p. 19).}
++\vpage{2}{Two variables, several normalizations}{OBJECT ATLAS}{Traditional monograph: Section 2, Definition 5.7, Definition 7.1, Definition 9.1.}
+ The most important coordinate change is $w=z^N$. A term of degree $n$ in $w$ has degree $Nn$ in $z$. Its coefficient does not change, but an exponential-generating-function label does.
+ \[
+@@ -42,5 +42,5 @@
+ \takeaway{Use $z$ for differentiation and rotational geometry. Use $w$ for reciprocal recurrences, canonical products, and orbit-zero sums.}
+ 
+-\vpage{3}{A root filter is an exact vote}{CYCLIC PROJECTION}{Traditional monograph: Theorem 3.1 (p. 4), Proposition 3.2 (p. 5).}
++\vpage{3}{A root filter is an exact vote}{CYCLIC PROJECTION}{Traditional monograph: Theorem 3.1, Proposition 3.2.}
+ For $N=4$, write $\omega=i$. To extract residue $j$, evaluate the function at four rotated arguments and attach the phase $i^{-j\ell}$:
+ \[
+@@ -60,5 +60,5 @@
+ \platecaption{The checker compares the actual complex average with independent coefficient selection for this polynomial. The drawing shows the four complex phases, not a numerical convergence argument.}
+ 
+-\vpage{4}{Products mix the residue lanes}{CYCLIC CONVOLUTION}{Traditional monograph: Theorem 3.3 (p. 5).}
++\vpage{4}{Products mix the residue lanes}{CYCLIC CONVOLUTION}{Traditional monograph: Theorem 3.3.}
+ Selection separates a function additively. It does not make multiplication diagonal. A residue-$i$ term multiplied by a residue-$j$ term lands in residue $i+j\pmod N$.
+ For $N=3$, use
+@@ -82,5 +82,5 @@
+ \platecaption{All nine table entries and all three output sections are checked as exact polynomial identities. This is the scalar cyclic specialization used by the paper.}
+ 
+-\vpage{5}{One signed edge determines the cycle}{DIFFERENTIAL SYSTEM}{Traditional monograph: Theorem 5.3 (p. 8), Theorem 6.4 (p. 11), Corollary 6.5 (p. 12), Corollary 6.6 (p. 12).}
++\vpage{5}{One signed edge determines the cycle}{DIFFERENTIAL SYSTEM}{Traditional monograph: Theorem 5.3, Theorem 6.4, Corollary 6.5, Corollary 6.6.}
+ Let $J_3e_0=e_1$, $J_3e_1=e_2$, and $J_3e_2=-e_0$. A complete turn changes sign, so $J_3^3=-I$. The signed sections are the coordinates of $e^{zJ_3}e_0$.
+ \vfig{signed_shift}
+@@ -100,5 +100,5 @@
+ \platecaption{The exact tests check every matrix-entry Taylor coefficient through degree 14 for $N=1,\ldots,5$. The displayed determinant-one law is for $N\ge2$. $N=1$ is a separate boundary case.}
+ 
+-\vpage{6}{Addition is quotient multiplication}{FINITE ALGEBRA}{Traditional monograph: Proposition 5.5 (p. 8), Theorem 6.2 (p. 10).}
++\vpage{6}{Addition is quotient multiplication}{FINITE ALGEBRA}{Traditional monograph: Proposition 5.5, Theorem 6.2.}
+ Work in $\CC[\xi]/(\xi^3+1)$. Every element has coordinates in $1,\xi,\xi^2$. The entire exponential has the finite-coordinate form
+ \[
+@@ -118,5 +118,5 @@
+ \platecaption{Bivariate Taylor identities are checked through total degree ten in every section for $N=2,3,4$. Omitting the carry sign is one of the deliberately rejected controls.}
+ 
+-\vpage{7}{Why a hypergeometric name appears}{FACTORIAL NORMALIZATION}{Traditional monograph: Theorem 4.5 (p. 7).}
++\vpage{7}{Why a hypergeometric name appears}{FACTORIAL NORMALIZATION}{Traditional monograph: Theorem 4.5.}
+ The hypergeometric form is another way to organize the same coefficients. It does not introduce an extra function into the construction. Split a factorial into its residue classes and divide each factor by $N$:
+ \[
+@@ -135,5 +135,5 @@
+ \platecaption{Five choices of $(N,j)$ are checked against the exact factorial identity for $n=0,\ldots,7$. These finite checks support the example. The general analytic identification belongs to the inherited manuscript.}
+ 
+-\vpage{8}{Four zeros become one orbit zero}{THE REDUCED VARIABLE}{Traditional monograph: Definition 5.7 (p. 9), Example 11.12 (p. 31), Corollary 11.13 (p. 32).}
++\vpage{8}{Four zeros become one orbit zero}{THE REDUCED VARIABLE}{Traditional monograph: Definition 5.7, Example 11.12, Corollary 11.13.}
+ For $N=4$ the factorization is exact:
+ \[
+@@ -153,5 +153,5 @@
+ \platecaption{The quartic factorization, its differential equation, and the displayed orbit powers are checked independently. Here the complete zero set is known exactly. A finite numerical root search is not being used to establish it.}
+ 
+-\vpage{9}{A reciprocal is a triangular solve}{COEFFICIENT RECONSTRUCTION}{Traditional monograph: Theorem 7.3 (p. 14), Theorem 7.6 (p. 15).}
++\vpage{9}{A reciprocal is a triangular solve}{COEFFICIENT RECONSTRUCTION}{Traditional monograph: Theorem 7.3, Theorem 7.6.}
+ Start in the reduced variable with
+ \[
+@@ -171,5 +171,5 @@
+ \platecaption{The checks compare an independent binomial-series expansion, the parameter recurrence, and the logarithmic Newton recurrence through block index six. The table uses ordinary coefficients, with factorial conversion shown separately.}
+ 
+-\vpage{10}{The reciprocal order is a polynomial}{BELL PARTITIONS}{Traditional monograph: Theorem 7.2 (p. 14), Corollary 7.7 (p. 16).}
++\vpage{10}{The reciprocal order is a polynomial}{BELL PARTITIONS}{Traditional monograph: Theorem 7.2, Corollary 7.7.}
+ Let $r$ vary instead of fixing the reciprocal power. Since
+ \[
+@@ -195,5 +195,5 @@
+ \platecaption{The partition plate is a finite combinatorial expansion. The exact tests verify the leading coefficient and parameter polynomial through block index six for five orders.}
+ 
+-\vpage{11}{Two recurrences reach the same answer}{NEWTON AND ADDITION}{Traditional monograph: Theorem 7.3 (p. 14), Theorem 7.4 (p. 15), Theorem 7.6 (p. 15).}
++\vpage{11}{Two recurrences reach the same answer}{NEWTON AND ADDITION}{Traditional monograph: Theorem 7.3, Theorem 7.4, Theorem 7.6.}
+ One recurrence uses the denominator coefficients. Another uses its logarithm. With $b_n(r)=P_{N,n}(r)/(Nn)!$, the shorter logarithmic form is
+ \[
+@@ -212,5 +212,5 @@
+ \platecaption{The checker compares both recurrence routes and the determinant, then checks the parameter-addition identity symbolically. A deliberately incorrect ordinary-binomial substitution is rejected.}
+ 
+-\vpage{12}{Compress the ODE into a tangent}{LOGARITHMIC DIFFERENTIATION}{Traditional monograph: Proposition 8.2 (p. 18), Corollary 8.4 (p. 18), Theorem 8.5 (p. 19).}
++\vpage{12}{Compress the ODE into a tangent}{LOGARITHMIC DIFFERENTIATION}{Traditional monograph: Proposition 8.2, Corollary 8.4, Theorem 8.5.}
+ The transfer tangent is $T_N=-D_N'/D_N$. It compresses the linear differential equation into a nonlinear scalar identity. This division is allowed only on the zero-free set of the denominator.
+ \vfig{riccati}
+@@ -227,5 +227,5 @@
+ \platecaption{The tests verify the tangent coefficient recurrence, the exact cubic ODE, and the symbolic Riccati reduction after clearing denominators. The order-one tangent is the separate constant function $T_1=1$.}
+ 
+-\vpage{13}{A complex power needs a domain}{BRANCH BOOKKEEPING}{Traditional monograph: Section 2 (p. 2), Definition 7.1 (p. 13), Corollary 8.4 (p. 18).}
++\vpage{13}{A complex power needs a domain}{BRANCH BOOKKEEPING}{Traditional monograph: Section 2, Definition 7.1, Corollary 8.4.}
+ A formal unit series has a formal logarithm at the origin. To interpret that germ analytically, choose a simply connected zero-free region containing $0$ and normalize the logarithm to vanish there.
+ \[
+@@ -240,5 +240,5 @@
+ \platecaption{The domain picture is schematic. The phase change comes from the local simple-zero model and winding number, not from a sampled loop. Later nearest-pole asymptotics retain positive integral reciprocal order.}
+ 
+-\vpage{14}{Three similar reciprocals differ}{NORMALIZED SECTIONS}{Traditional monograph: Definition 9.1 (p. 19), Theorem 9.2 (p. 20), Example 9.11 (p. 22).}
++\vpage{14}{Three similar reciprocals differ}{NORMALIZED SECTIONS}{Traditional monograph: Definition 9.1, Theorem 9.2, Example 9.11.}
+ The signed denominator and the normalized unsigned sections produce different reciprocal families. In order two,
+ \[
+@@ -257,5 +257,5 @@
+ \platecaption{All entries in the table are exact rationals computed from independent triangular inverses. The table explicitly uses block-EGF columns. Ordinary coefficients are obtained by dividing by the displayed factorials.}
+ 
+-\vpage{15}{An infinite symbol acts finitely}{APPELL POLYNOMIALS}{Traditional monograph: Theorem 9.6 (p. 21), Theorem 9.8 (p. 21), Proposition 9.9 (p. 21).}
++\vpage{15}{An infinite symbol acts finitely}{APPELL POLYNOMIALS}{Traditional monograph: Theorem 9.6, Theorem 9.8, Proposition 9.9.}
+ For $C_{2,0}(z)=\sech z$, define $E_m(x)$ by $\sech z\,e^{xz}=\sum E_m(x)z^m/m!$. The formal differential-operator formula is
+ \[
+@@ -279,5 +279,5 @@
+ \platecaption{The polynomial, its inverse image, and the Appell identities are checked symbolically through degree eight in four normalized-section families. The displayed curves are samples of exact polynomials.}
+ 
+-\vpage{16}{Scale and order enter differently}{THETA COUPLING}{Traditional monograph: Theorem 10.2 (p. 23), Proposition 10.3 (p. 23), Proposition 10.4 (p. 23).}
++\vpage{16}{Scale and order enter differently}{THETA COUPLING}{Traditional monograph: Theorem 10.2, Proposition 10.3, Proposition 10.4.}
+ Let $H_N(z)=E_{N,0}(z)$. The theta family uses the same parameter $u$ twice, but in two different roles:
+ \[
+@@ -301,5 +301,5 @@
+ \platecaption{The exact checker compares theta convolution with its logarithmic Newton recurrence through block index four. The odd-order factor claim is explicitly rejected as an invalid control.}
+ 
+-\vpage{17}{Growth comes from a polygon}{DOMINANT EXPONENTS}{Traditional monograph: Definition 11.3 (p. 26), Theorem 11.4 (p. 26).}
++\vpage{17}{Growth comes from a polygon}{DOMINANT EXPONENTS}{Traditional monograph: Definition 11.3, Theorem 11.4.}
+ Write the signed denominator as a finite exponential sum:
+ \[
+@@ -319,5 +319,5 @@
+ \platecaption{The order-four polygon and support-function formula are explicit. The curve is a sampled display of that formula. Eventual localization and uniqueness require the separate zero-analysis arguments.}
+ 
+-\vpage{18}{Two large terms nearly cancel}{THE CUBIC MODEL}{Traditional monograph: Lemma 11.5 (p. 27), Theorem 11.7 (p. 29), Corollary 11.9 (p. 31).}
++\vpage{18}{Two large terms nearly cancel}{THE CUBIC MODEL}{Traditional monograph: Lemma 11.5, Theorem 11.7, Corollary 11.9.}
+ For real $t$, order three has the exact formula
+ \[
+@@ -340,5 +340,5 @@
+ \platecaption{The curves are sampled analytic expressions. The next page independently certifies four narrow real-zero intervals rather than trusting the plotted crossing or the floating-point root finder.}
+ 
+-\vpage{19}{A root estimate becomes a certificate}{EXACT RATIONAL BRACKETS}{Traditional monograph: Theorem 11.7 (p. 29), Theorem 11.8 (p. 30), Corollary 11.9 (p. 31).}
++\vpage{19}{A root estimate becomes a certificate}{EXACT RATIONAL BRACKETS}{Traditional monograph: Theorem 11.7, Theorem 11.8, Corollary 11.9.}
+ The root finder is used only to suggest intervals. Each displayed interval is accepted by exact rational arithmetic: opposite endpoint signs prove existence, and an interval bound for $D_3'$ excludes zero throughout the interval, proving uniqueness inside it.
+ \vfig{cubic_certificates}
+@@ -361,5 +361,5 @@
+ \platecaption{Four certified intervals do not establish that no other real or complex zeros exist. The displacement columns are high-precision diagnostics, not a finite verification of a global big-$O$ theorem. All rational enclosures are included in the checks file.}
+ 
+-\vpage{20}{Counting changes under the power map}{EXACT FOURTH-ORDER STRINGS}{Traditional monograph: Example 11.12 (p. 31), Theorem 11.14 (p. 32).}
++\vpage{20}{Counting changes under the power map}{EXACT FOURTH-ORDER STRINGS}{Traditional monograph: Example 11.12, Theorem 11.14.}
+ Order four gives a case with no asymptotic displacement at all. In normalized coordinates the positive radial locations are $u=m+1/2$, while the reduced-zero locations are $v=(m+1/2)^4$.
+ \vfig{counting}
+@@ -380,5 +380,5 @@
+ \platecaption{The exact order-four staircase formulas are tested at rational radii including jump points. The large-zero theorem for general $N$ permits finitely many exceptions. These exact order-four identities do not justify discarding that boundary elsewhere.}
+ 
+-\vpage{21}{A product and an operator share zeros}{CANONICAL PRODUCT}{Traditional monograph: Theorem 12.1 (p. 34), Theorem 12.2 (p. 35).}
++\vpage{21}{A product and an operator share zeros}{CANONICAL PRODUCT}{Traditional monograph: Theorem 12.1, Theorem 12.2.}
+ For $N\ge2$, the reduced entire function has order $1/N<1$. Its multiplicity-sensitive genus-zero product is
+ \[
+@@ -398,5 +398,5 @@
+ \platecaption{The exact finite determinant test includes a repeated eigenvalue and rejects deduplication. The curves use known cosine zeros. Order one is excluded: $\Delta_1(w)=e^{-w}$ has no zeros, so its empty product would be $1$, not the function.}
+ 
+-\vpage{22}{Finite coefficients give infinite moments}{ZERO POWER SUMS}{Traditional monograph: Theorem 12.6 (p. 36), Corollary 12.7 (p. 37), Corollary 12.9 (p. 38), Corollary 12.10 (p. 38).}
++\vpage{22}{Finite coefficients give infinite moments}{ZERO POWER SUMS}{Traditional monograph: Theorem 12.6, Corollary 12.7, Corollary 12.9, Corollary 12.10.}
+ Taking the logarithm of the canonical product identifies
+ \[
+@@ -421,5 +421,5 @@
+ \platecaption{Displayed moments are checked against formal logarithm coefficients and exact order-two/order-four zeta values. Bar widths are numerical shares. General power sums use $\lambda^{-q}$, not $|\lambda|^{-q}$ when exceptional nonpositive zeros are present.}
+ 
+-\vpage{23}{Nearest poles set coefficient growth}{SINGULARITY ANALYSIS}{Traditional monograph: Theorem 13.1 (p. 39), Corollary 13.2 (p. 39), Corollary 13.3 (p. 39), Corollary 13.4 (p. 40).}
++\vpage{23}{Nearest poles set coefficient growth}{SINGULARITY ANALYSIS}{Traditional monograph: Theorem 13.1, Corollary 13.2, Corollary 13.3, Corollary 13.4.}
+ For $1/\cos z$, the nearest poles are $\rho=\pm\pi/2$. They contribute equally to even-degree coefficients. Including both poles gives
+ \[
+@@ -435,5 +435,5 @@
+ \platecaption{The ratio certificates use a rational Machin-formula enclosure for $\pi$. The inherited general theorem retains simple nearest zeros, a gap to the next modulus, and positive integral reciprocal order. The plot does not remove those hypotheses.}
+ 
+-\vpage{24}{Convergence is not continuation}{ZERO ZETA FUNCTIONS}{Traditional monograph: Theorem 14.2 (p. 40), Theorem 14.3 (p. 41), Corollary 14.4 (p. 42).}
++\vpage{24}{Convergence is not continuation}{ZERO ZETA FUNCTIONS}{Traditional monograph: Theorem 14.2, Theorem 14.3, Corollary 14.4.}
+ Reduced zeros grow like $m^N$. Their absolute zero-zeta series therefore has half-plane of absolute convergence $\Re s>1/N$. The absolute zero zeta in the original variable instead requires $\Re s>1$.
+ \vfig{zeta_plane}
+@@ -453,5 +453,5 @@
+ \platecaption{The shaded regions show convergence, and the open circles mark poles of the continued functions. They are not zeros of the zeta functions. Branch-dependent orbit zetas and derivative-weighted zetas retain their separately stated conventions.}
+ 
+-\vpage{25}{One closed calculation: the number 69}{COEFFICIENT AND ZERO WORKED MODEL}{Traditional monograph: Corollary 7.7 (p. 16), Example 11.12 (p. 31), Theorem 12.6 (p. 36).}
++\vpage{25}{One closed calculation: the number 69}{COEFFICIENT AND ZERO WORKED MODEL}{Traditional monograph: Corollary 7.7, Example 11.12, Theorem 12.6.}
+ Use $N=4$ throughout this page. Its denominator, its exact zero lattice, and the reciprocal recurrences provide two routes to the same coefficient. All symbols in the plate refer to this one order.
+ \vfig{worked_circuit}
+@@ -468,16 +468,16 @@
+ \platecaption{Every rational value and polynomial identity on this page is checked exactly. The infinite zero-sum interpretation uses the inherited canonical-product theorem and the exact order-four zero formula.}
+ 
+-\vpage{26}{What is evidence, and for what?}{FORMAL AND COMPUTATIONAL BOUNDARIES}{Traditional monograph: Section 15 (p. 45), Section 16 (p. 45).}
+-This guide accompanies the final traditional edition and the Lean guide. Its twenty-six worked pages preserve the mathematical models of the original visual appendix. Final references and evidence descriptions connect those models to the present edition.
++\vpage{26}{What is evidence, and for what?}{FORMAL AND COMPUTATIONAL BOUNDARIES}{Traditional monograph: Section 15, Section 16.}
++These twenty-six worked plates connect explicit mathematical models with the main text and its Lean guide. Each evidence record states the scope of the model, computation, or formal result.
+ 
+ {\small
+ \begin{tabularx}{\linewidth}{@{}p{.24\linewidth}Y@{}}\toprule
+ \textbf{Evidence layer} & \textbf{What it supports}\\\midrule
+-Inherited formal record & The v1.0.0 sources, theorem map, dependency pins, saved axiom reports, and original review retain their own scope. The release reports a 68-result contract. No fresh Lean compilation is claimed here.\\
+-Exact and symbolic suite & Fresh isolated execution passed all 147 finite, symbolic, and enclosure checks and rejected five deliberately false controls. The unchanged checker and models were run with SymPy 1.14.0 and mpmath 1.3.0.\\
+-Certified zero brackets & Four rational intervals of width $10^{-20}$ establish local existence and uniqueness only. The fresh full suite reproduced all four rational brackets, opposite endpoint signs, and derivative exclusion throughout each interval. These are local certificates, not a global zero census.\\
++Formal record & The sources, theorem map, dependency pins, saved axiom reports, and mathematical review retain their own scope. The 68-result contract and its pinned-source replay are described in the Lean guide.\\
++Exact and symbolic suite & The recorded isolated execution passed all 147 finite, symbolic, and enclosure checks and rejected five deliberately false controls. The unchanged checker and models were run with SymPy 1.14.0 and mpmath 1.3.0.\\
++Certified zero brackets & Four rational intervals of width $10^{-20}$ establish local existence and uniqueness only. The full suite reproduced all four rational brackets, opposite endpoint signs, and derivative exclusion throughout each interval. These are local certificates, not a global zero census.\\
+ Numerical visualization & Sampled analytic curves, finite products, moment shares, and displacement diagnostics have the roles stated on their pages. They are not exact global zero censuses.\\
+-Figure provenance & Fresh isolated model-driven regeneration reproduced all twenty-four editable TikZ files. Twenty-three remain identical to the original release. On V13, one label was moved down to clear the loop arrow. The mathematical labels and objects are unchanged.\\
+-Editorial preservation & The original worked formulas, model code, checker, and vector figure sources are preserved. Updated locators refer to the final traditional edition.\\\bottomrule
++Figure provenance & Model-driven regeneration reproduced all twenty-four editable TikZ files. The mathematical labels and objects are preserved.\\
++Editorial preservation & The original worked formulas, model code, checker, and vector figure sources are preserved. Locators refer to the main text.\\\bottomrule
+ \end{tabularx}}
+ 
+@@ -487,6 +487,6 @@
+ 
+ \head{Replay the worked layer}
+-Run \texttt{python build.py} in this editable guide folder to compile the PDF in an isolated temporary directory. The separate model checker is \texttt{checks/verify\_examples.py}. The plate generator is \texttt{source/generate\_graphics.py}. They require the listed Python dependencies. Run those mathematical tools in a temporary copy to preserve the delivered evidence.
++The model checker is \texttt{checks/verify\_examples.py}. The plate generator is \texttt{source/generate\_graphics.py}. They require the listed Python dependencies. Run those mathematical tools in a temporary copy to preserve the delivered evidence.
+ 
+ \takeaway{A proof, a finite exact test, a root enclosure, and a sampled curve answer different questions. Keeping their scopes explicit makes the pictures useful mathematical evidence.}
+-\platecaption{The source package preserves the formal release, proofread review, independent audit, exact certificates, and rebuild instructions. PDF assembly is a separate operation from mathematical verification.}
++\platecaption{Exact certificates and formal verification records accompany the source. Each retains its stated mathematical scope.}
+--- before/IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/komorebi-monograph.sty
++++ IV/Paper_IV_Verification_Closeout_v1.1.0/publication_baseline/editable/traditional/komorebi-monograph.sty
+@@ -14,7 +14,7 @@
+ \providecommand{\KomorebiTitle}{Projector Resolved Seed Calculus IV}
+ \providecommand{\KomorebiSubtitle}{Typed transfer, nonlinear packets, and obstruction theory}
+-\providecommand{\KomorebiSeries}{Paper IV}
+-\providecommand{\KomorebiKind}{Modern Monograph}
+-\providecommand{\KomorebiEdition}{8 October 2026}
++\providecommand{\KomorebiSeries}{Chapter IV}
++\providecommand{\KomorebiKind}{Mathematical text}
++\providecommand{\KomorebiEdition}{}
+ \providecommand{\KomorebiShortTitle}{Paper IV}
+ \providecommand{\KomorebiCoverTitle}{Projector Resolved\\Seed Calculus IV}
+@@ -74,5 +74,5 @@
+   \vfill
+   {\sffamily\fontsize{11}{14}\selectfont Komorebi P.}\par
+-  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind\quad\textbullet\quad\KomorebiEdition}\par
++  \vspace{7pt}{\sffamily\fontsize{9}{12}\selectfont\color{muted}\KomorebiKind}\par
+   \endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{ink}\normalfont
+ }

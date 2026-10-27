@@ -1,0 +1,8 @@
+theorem transported_derivative (G P : A) (t : ℝ) :
+    HasDerivAt (transported G P)
+      (exp (t • G) * (G * P - P * G) * exp (t • (-G))) t := by
+  have hd := ((hasDerivAt_exp_smul_const G t).mul_const P).mul
+    (hasDerivAt_exp_smul_const' (-G) t)
+  convert hd using 1
+  · rfl
+  · noncomm_ring

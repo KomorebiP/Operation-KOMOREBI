@@ -1,0 +1,56 @@
+\subsection{Source map and verification}\label{supp6:subsection:006}\textit{One completed manuscript item; 79 supporting declarations}\par
+\begin{center}\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabular}{@{}p{.36\textwidth}p{.43\textwidth}r@{}}
+\toprule
+Module & Main purpose & Theorems\\
+\midrule
+SmallCoreNorms & Isometric norms, compression, rank & 19\\
+CompactRangeFactors & Actual compact column factors & 7\\
+SmallCoreTransfer & Global best-rank transfer & 7\\
+KernelFrame & Actual kernel and row weights & 8\\
+DiagonalTruncation & Rank and exact diagonal errors & 9\\
+FrobeniusOptimality & Weighted-tail lower bound & 5\\
+SpectralOptimality & Prefix-kernel lower bound & 7\\
+CompactTruncation & Thin square-root factors & 5\\
+SmallCoreRecompression & Main theorem and Gram relation & 6\\
+RecompressionEndpoints & Zero and full-retention cases & 6\\
+\midrule
+Total & Theorem 5.6 and its support & 79\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Cumulative Lean run.} All 40 local modules were compiled in a newly created output directory under Lean 4.34.0-rc2. Each exited with code zero and warnings were fatal. The 392 named theorem reports and 66 separately counted construction reports match the inventory exactly. Dependencies are confined to \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}, or subsets thereof. False equality and admitted-proof controls were both rejected.
+
+\textbf{Pinned dependency.} The actual Mathlib Git revision and manifest revision both match\par
+\path{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.
+The supplied compiled Mathlib cache was reused. It was not independently rebuilt or rechecked. Recovery verified all seven offline archive parts and the combined archive hash.
+
+\textbf{Infrastructure.} Forty-three unit tests passed: 17 verifier tests, 12 fifth-block compatibility tests updated to the current totals, and 14 sixth-block tests. The original fifth-block fixed-count test file and metadata are preserved. Exact audit coverage, dependency order, no-bypass scans, classical-input boundaries and absence of optimality fields in the SVD structure are tested.
+
+\textbf{Failures retained.} Of 31 captured development checks, 21 failed before correction and ten accepted drafts supplied the new modules. Failures concerned proof elaboration, finite-index/cardinality APIs, dependent rewrites, norm scopes and warning diagnostics. Their inactive source snapshots and logs are retained separately from the successful fresh cumulative run. An initial interactive runtime launch was unsupported; noninteractive assembly succeeded.
+
+
+
+\subsection{Regressions, reproduction and claim boundary}\label{supp6:subsection:007}\textit{Exact mathematical guarantees versus numerical implementations}\par
+\textbf{Independent numerical checks.} A deterministic NumPy complex128 mirror tested 182 input-factor pairs at 638 truncation cases. The cases include rectangular matrices, rank-deficient and zero factors, empty spaces, repeated singular values, rank zero and ranks beyond the core width. Comparison used both the small core and an independently computed ambient SVD reference. There were 3,190 arbitrary rank-bounded competitors, nine invalid-input rejection controls and two checks demonstrating failure when essential assumptions are removed.
+
+The largest relative tail/reconstruction discrepancy was below $3.7\times10^{-15}$, against a declared $2\times10^{-9}$ tolerance. The mirror uses numerical rank thresholds and a numerical SVD to construct column bases. It is not compiled or extracted Lean code, a proof for all inputs, or a GPU benchmark. The formal result uses exact ranks and exact factorization equations.
+
+\textbf{Reproduce from the extracted source root.}
+\begin{verbatim}
+python3 scripts/verify_integrity.py
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+python3 scripts/verify.py --kit /path/to/portable-kit \
+    --out verification/recheck --timeout 240
+python3 scripts/run_sixth_regressions.py \
+    --out verification/recheck_numerical.json
+\end{verbatim}
+The unit tests and numerical mirror require NumPy. The Lean verification path needs Python 3.10 or later and the separately supplied pinned Linux x86-64 kit. Local compiled interfaces are regenerated. The runner also supports bounded batches with \texttt{--max-checks} and hash-checked \texttt{--resume}. A partial checkpoint is not a pass.
+
+\textbf{What is complete.} The 56-item manuscript-proved register is covered under the recorded hypotheses. The original theorem says to take orthonormal factors and a core SVD. The new construction and proof discharge the recompression conclusion from those exact factorization equations. In particular, no best-approximation assertion or error formula is hidden in an input certificate.
+
+\textbf{What is not claimed.} General SVD existence or a numerical SVD implementation is not newly formalized. The four classical entries remain separately tracked; the ordered-SVD-data optimality argument now has checked support, while the CG algorithm theorem, floating-point product model and simultaneous-decomposition input are not newly proved in full. No new generic matrix-multiplication exponent, floating-point stability theorem or hardware speedup follows from this release.
+
+The original manuscript, bibliography, source package and all five earlier supplements are preserved. Historical CPU/GPU measurements, earlier compiler execution suites and Papers I--VII in full were not rerun. Prose-to-formal correspondence is an explicit mathematical review, not an automated theorem equating a sentence with a Lean type.

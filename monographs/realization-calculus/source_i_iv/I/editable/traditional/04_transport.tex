@@ -1,0 +1,539 @@
+\section{Coordinate transport, morphisms, invariant exact sequences, and completion}
+\begin{readerroadmap}
+This section follows packet data through changes of coordinates, maps between systems, and passage to a quotient.  It then explains the additional assumptions needed when density, topology, or completion enters the argument.
+\end{readerroadmap}
+\subsection{Coordinate changes and packet compatible morphisms}
+
+\begin{theorem}[Coordinate transport]
+\label{thm:coordinate-transport}
+Let $U:X\to Y$ be a vector space isomorphism and let $\Pcal=(P_\alpha)$ be a packet system on $X$.  Define
+\[
+Q_\alpha:=UP_\alpha U^{-1}.
+\]
+Then $\Qcal=(Q_\alpha)$ is a packet system on $Y$.  For $\widetilde T=UTU^{-1}$,
+\[
+\boxed{
+Q_\beta\widetilde TQ_\alpha
+=
+U(P_\beta TP_\alpha)U^{-1}.
+}
+\]
+Hence packet dimensions, zero patterns, and support preorders are invariant under coordinate transport.  If a declared algebra generating family $\mathcal G$ is transported to $U\mathcal G U^{-1}$, then its transfer graph and reachability relation are also preserved.
+\end{theorem}
+\RecordID{PSC-I-T-COORDINATE-TRANSPORT}
+\Depends{PSC-I-D-PACKET-SYSTEM and PSC-I-D-TRANSFER-BLOCK.}
+
+\begin{proof}
+Conjugation preserves products and sums, so
+\[
+Q_\alpha Q_\beta
+=UP_\alpha P_\beta U^{-1}
+=\delta_{\alpha\beta}Q_\alpha,
+\qquad
+\sum_\alpha Q_\alpha=I_Y.
+\]
+The block identity is direct multiplication:
+\[
+Q_\beta\widetilde TQ_\alpha
+=UP_\beta TP_\alpha U^{-1}.
+\]
+All listed invariants are determined by these transported blocks.
+\end{proof}
+
+\begin{interpretation}
+An isomorphism changes the coordinates of each packet while preserving the direct sum structure.  Conjugating the projectors and the operator together preserves every block identity.  This is the linear prototype for the gauge changes used later in the series.
+\end{interpretation}
+
+
+\begin{definition}[Packet compatible operator morphism]
+\label{def:packet-morphism}
+Let $(X,\A,\Pcal)$ and $(Y,\B,\Qcal)$ be packet resolved operator modules with packet index sets $I$ and $J$.  A packet compatible operator morphism is a triple
+\[
+(\Phi,\varphi,\sigma)
+\]
+consisting of a unital algebra homomorphism $\varphi:\A\to\B$, a linear map $\Phi:X\to Y$ satisfying
+\[
+\Phi(Ax)=\varphi(A)\Phi(x),
+\]
+and a map $\sigma:I\to J$ satisfying
+\[
+Q_j\Phi
+=
+\Phi P_{\sigma^{-1}(j)},
+\qquad
+P_{\sigma^{-1}(j)}:=
+\sum_{\sigma(\alpha)=j}P_\alpha.
+\]
+An empty fiber is interpreted as the zero projector.
+\end{definition}
+\RecordID{PSC-I-D-PACKET-MORPHISM}
+
+The packet index map records which source packets are grouped into each target packet.  Its compatibility equation says that projecting after transport gives the same result as first collecting those source packets.  The intertwining equation separately ensures that the declared operator actions agree with the transport.  Both conditions matter when comparing transfer blocks.
+
+\begin{definition}[Morphism of seeded systems]
+\label{def:seed-morphism}
+A morphism
+\[
+(X,\A,S,\Pcal)\longrightarrow(Y,\B,S',\Qcal)
+\]
+is a packet compatible operator morphism satisfying the seed condition
+\[
+\Phi(S)\subseteq\Hull_{\B}(S').
+\]
+In the topological category all maps and actions are required to be continuous and the seed condition uses the topological hull when declared.
+\end{definition}
+\RecordID{PSC-I-D-SEED-MORPHISM}
+
+\begin{theorem}[Naturality of generated hulls and transfer blocks]
+\label{thm:naturality}
+Let $(\Phi,\varphi,\sigma)$ be a packet compatible operator morphism.  For every subset $S\subseteq X$,
+\[
+\boxed{
+\Phi(\Hull_{\A}(S))
+=
+\Hull_{\varphi(\A)}(\Phi(S))
+\subseteq
+\Hull_{\B}(\Phi(S)).
+}
+\]
+For $T\in\A$ and $i,j\in J$,
+\[
+\boxed{
+Q_j\varphi(T)Q_i\Phi
+=
+\sum_{\substack{\sigma(\beta)=j\\\sigma(\alpha)=i}}
+\Phi P_\beta TP_\alpha.
+}
+\]
+If $\Phi$ is surjective and $S$ generates $X$, then $\Phi(S)$ generates $Y$ under $\varphi(\A)$ and hence under $\B$.  If, in addition, the morphism is seeded, then $S'$ generates $Y$.
+\end{theorem}
+\RecordID{PSC-I-T-NATURALITY}
+\Depends{PSC-I-D-PACKET-MORPHISM and PSC-I-T-BLOCK-MULTIPLICATION.}
+\Exports{The canonical naturality theorem for every later realization.}
+
+\begin{proof}
+Every element of $\Phi(\Hull_{\A}(S))$ is a finite sum of vectors
+\[
+\Phi(As)=\varphi(A)\Phi(s),
+\]
+so it belongs to $\Hull_{\varphi(\A)}(\Phi(S))$.  Conversely, every generator $\varphi(A)\Phi(s)$ equals $\Phi(As)$, giving equality.
+
+For the block formula, use intertwining and packet compatibility twice:
+\begin{align*}
+Q_j\varphi(T)Q_i\Phi
+&=Q_j\varphi(T)\Phi P_{\sigma^{-1}(i)}\\
+&=Q_j\Phi TP_{\sigma^{-1}(i)}\\
+&=\Phi P_{\sigma^{-1}(j)}TP_{\sigma^{-1}(i)}\\
+&=\sum_{\substack{\sigma(\beta)=j\\\sigma(\alpha)=i}}
+\Phi P_\beta TP_\alpha.
+\end{align*}
+If $\Phi$ is surjective and $\Hull_{\A}(S)=X$, the hull equality gives $Y=\Hull_{\varphi(\A)}(\Phi(S))$.  If $\Phi(S)\subseteq\Hull_{\B}(S')$, then $\Hull_{\B}(\Phi(S))\subseteq\Hull_{\B}(S')$, so $S'$ generates $Y$.
+\end{proof}
+
+\begin{keyidea}
+Naturality gives two ways to compute the same transported block.  One may apply the target operator between target projectors, or sum the source blocks whose packet indices map to those target indices and then apply the morphism.  The theorem also identifies the image of the generated hull.  These equalities make the comparison between the two systems precise.
+\end{keyidea}
+
+
+\begin{proposition}[Category of seeded packet systems]
+\label{prop:seed-category}
+Packet compatible operator morphisms compose, seeded morphisms compose, and identity morphisms satisfy both definitions.  Thus packet resolved operator modules form a category $\mathbf{PktMod}$ and seeded packet systems form a category $\mathbf{SeedSys}$.
+\end{proposition}
+\RecordID{PSC-I-P-SEED-SYSTEM-CATEGORY}
+\Depends{\nolinkurl{PSC-I-D-PACKET-MORPHISM},
+\nolinkurl{PSC-I-D-SEED-MORPHISM}, and
+\nolinkurl{PSC-I-T-NATURALITY}.}
+
+\begin{proof}
+Let $(\Phi,\varphi,\sigma):(X,\A,\Pcal)\to(Y,\B,\Qcal)$ and $(\Psi,\psi,\tau):(Y,\B,\Qcal)\to(Z,\Ccal,\Rcal)$ be morphisms.  Intertwining is preserved because
+\[
+\Psi\Phi(Ax)
+=
+\Psi(\varphi(A)\Phi x)
+=
+(\psi\circ\varphi)(A)\Psi\Phi x.
+\]
+For $k$ in the target packet set,
+\begin{align*}
+R_k\Psi\Phi
+&=\Psi Q_{\tau^{-1}(k)}\Phi\\
+&=\Psi\Phi
+\sum_{\tau(\sigma(\alpha))=k}P_\alpha.
+\end{align*}
+Thus the composite packet map is $\tau\circ\sigma$.  If the morphisms are seeded, then
+\[
+\Phi(S)\subseteq\Hull_{\B}(S'),
+\qquad
+\Psi(S')\subseteq\Hull_{\Ccal}(S'').
+\]
+By \cref{thm:naturality},
+\[
+\Psi\Phi(S)
+\subseteq
+\Psi(\Hull_{\B}(S'))
+\subseteq
+\Hull_{\Ccal}(\Psi(S'))
+\subseteq
+\Hull_{\Ccal}(S'').
+\]
+Identity maps satisfy the definitions with identity algebra and packet maps.
+\end{proof}
+
+\subsection{Invariant subspaces and quotient packets}
+Passage to a quotient uses two separate invariance assumptions.  The packet projectors must preserve the subspace for packet coordinates to descend.  An operator must also preserve that subspace for its action, and hence its transfer blocks, to descend.  The first condition is enough for the packet exact sequence.  The second enters the corollary about transfer blocks.
+
+\begin{theorem}[Packet exact sequence for an invariant subspace]
+\label{thm:packet-exact-sequence}
+Let $K\leq X$ satisfy $P_\alpha K\subseteq K$ for every $\alpha$.  Define
+\[
+K_\alpha:=P_\alpha K=K\cap X_\alpha
+\]
+and
+\[
+\overline P_\alpha(x+K):=P_\alpha x+K.
+\]
+Then:
+\begin{enumerate}[label=(\roman*)]
+\item The nonzero restrictions $P_\alpha|_K$ form a packet system on $K$.
+\item The nonzero $\overline P_\alpha$ form a packet system on $X/K$.
+\item For every $\alpha$ there is a short exact sequence
+\[
+0\longrightarrow K_\alpha
+\longrightarrow X_\alpha
+\longrightarrow \overline P_\alpha(X/K)
+\longrightarrow0,
+\]
+and
+\[
+\overline P_\alpha(X/K)
+\cong
+X_\alpha/(X_\alpha\cap K)
+\cong
+(X_\alpha+K)/K.
+\]
+\item The full exact sequence decomposes packetwise as the direct sum of these short exact sequences.
+\end{enumerate}
+\end{theorem}
+\RecordID{PSC-I-T-PACKET-EXACT-SEQUENCE}
+\Depends{PSC-I-T-EXACT-PACKET-COORDINATES.}
+\Exports{Packetwise subobject and quotient constructions.}
+
+\begin{proof}
+Restriction preserves idempotency, pairwise annihilation, and the identity sum on $K$.  If $x\in K\cap X_\alpha$, then $x=P_\alpha x\in P_\alpha K$, proving $K_\alpha=K\cap X_\alpha$.
+
+The quotient operator is well defined because replacing $x$ by $x+k$ changes $P_\alpha x$ by $P_\alpha k\in K$.  The idempotent and annihilation identities descend, and the sum is the identity on $X/K$.  The map $X_\alpha\to X/K$ has image $(X_\alpha+K)/K$ and kernel $X_\alpha\cap K$, giving the short exact sequence and the quotient isomorphisms.  Exact packet coordinates identify the original sequence with the direct sum over $\alpha$.
+\end{proof}
+
+\begin{microexample}[title={Packet descent to a quotient}]
+Let \(X=X_1\oplus X_2\) and let \(K\subseteq X_1\) be a subspace.  The quotient has packets \(X_1/K\) and \(X_2\).  Any operator preserving \(K\) descends with the same organization by source and target packets, with blocks entering or leaving the first packet replaced by their induced quotient maps.  An induced block can become zero even when its original block is nonzero, so the pattern of nonzero blocks can shrink.  Any resulting zero packet is removed from the quotient packet system.
+\end{microexample}
+
+
+\begin{theorem}[Packet descent through an invariant quotient]
+\label{thm:quotient-packet-descent}
+Under the hypotheses of \cref{thm:packet-exact-sequence}, the operators
+\[
+\overline P_\alpha(x+K)=P_\alpha x+K
+\]
+are well defined pairwise annihilating idempotents with sum $I_{X/K}$, and the quotient map satisfies
+\[
+\boxed{\pi P_\alpha=\overline P_\alpha\pi.}
+\]
+After zero packets are removed, they form the canonical quotient packet system.
+\end{theorem}
+\RecordID{PSC-I-T-QUOTIENT-PACKET-DESCENT}
+\Depends{PSC-I-T-PACKET-EXACT-SEQUENCE.}
+
+\begin{proof}
+All assertions are the quotient part of \cref{thm:packet-exact-sequence}.  The intertwining identity follows directly from the definition:
+\[
+\overline P_\alpha\pi(x)=P_\alpha x+K=\pi P_\alpha(x).
+\]
+\end{proof}
+
+\begin{corollary}[Restriction and quotient of transfer blocks]
+\label{cor:block-descent}
+Under the hypotheses of \cref{thm:packet-exact-sequence}, let $T\in\End(X)$ preserve $K$.  Then every block $T_{\beta\alpha}$ maps $K_\alpha$ into $K_\beta$, and the induced quotient operator $\overline T$ satisfies
+\[
+\boxed{
+\overline T_{\beta\alpha}\,\pi
+=
+\pi T_{\beta\alpha},
+}
+\]
+where $\pi:X\twoheadrightarrow X/K$.
+\end{corollary}
+\RecordID{PSC-I-C-QUOTIENT-PACKET-DESCENT}
+\Depends{PSC-I-T-PACKET-EXACT-SEQUENCE.}
+
+\begin{proof}
+If $x\in K_\alpha$, then $Tx\in K$, so
+\[
+T_{\beta\alpha}x=P_\beta Tx\in K\cap X_\beta=K_\beta.
+\]
+On the quotient,
+\[
+\overline T_{\beta\alpha}\pi
+=
+\overline P_\beta\overline T\overline P_\alpha\pi
+=
+\pi P_\beta TP_\alpha.
+\]
+\end{proof}
+
+\begin{corollary}[Topological packet exact sequence]
+\label{cor:topological-packet-exact-sequence}
+If $X$ is Banach, the $P_\alpha$ are bounded, and $K$ is closed and packet invariant, then every packet sequence in \cref{thm:packet-exact-sequence} is a short exact sequence of Banach spaces with bounded maps, and the quotient projectors are bounded.
+\end{corollary}
+\RecordID{PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE}
+\Depends{\nolinkurl{PSC-I-T-PACKET-EXACT-SEQUENCE} and
+\nolinkurl{PSC-I-T-BANACH-PACKET-ISOMORPHISM}.}
+
+\begin{proof}
+Closedness of $K$ makes $X/K$ Banach.  The restricted projectors are bounded, and the quotient projectors are bounded because
+\[
+\|\overline P_\alpha(x+K)\|_{X/K}
+\leq
+\|P_\alpha\|\,\|x+K\|_{X/K}.
+\]
+The packet spaces are closed ranges of bounded idempotents.
+\end{proof}
+
+\subsection{Dense images, quotient topology, and completion}
+Algebraic generation uses finite linear combinations of operator images.  Topological generation allows limits of those combinations in the declared topology.  A continuous surjection carries this approximation property to the target, but identifying the target with a topological quotient requires a further assumption.
+
+\begin{theorem}[Dense realization theorem]
+\label{thm:dense-realization}
+Let $X$ and $Y$ be Hausdorff topological vector spaces, let $\Phi:X\to Y$ be continuous, surjective, and intertwining with respect to $\varphi$, and let $S$ topologically generate $X$.  Then $\Phi(S)$ topologically generates $Y$.  If finite continuous packet systems satisfy
+\[
+Q_j\Phi=\Phi P_{\sigma^{-1}(j)},
+\]
+then
+\[
+\boxed{
+Q_jY=\Phi(P_{\sigma^{-1}(j)}X)
+}
+\]
+for every $j$.
+\end{theorem}
+\RecordID{PSC-I-T-DENSE-REALIZATION}
+\Depends{PSC-I-T-NATURALITY.}
+
+\begin{proof}
+Given $y=\Phi(x)$, choose a net $x_\lambda\in\Hull_{\A}(S)$ converging to $x$.  Then
+\[
+\Phi(x_\lambda)\to y,
+\]
+and naturality places every $\Phi(x_\lambda)$ in $\Hull_{\B}(\Phi(S))$.  Hence the latter hull is dense.  For packets, one inclusion follows from compatibility.  Conversely, if $y=Q_jy$, choose $x$ with $\Phi(x)=y$.  Then
+\[
+y=Q_j\Phi(x)=\Phi P_{\sigma^{-1}(j)}x.
+\]
+\end{proof}
+
+\begin{theorem}[Quotient topology and completed realization]
+\label{thm:quotient-topology}
+Let $\Phi:X\twoheadrightarrow Y$ be a continuous linear quotient map between Hausdorff topological vector spaces, and put $K=\Ker\Phi$.  Then the induced map
+\[
+\widetilde\Phi:X/K\longrightarrow Y
+\]
+is a topological isomorphism.  If $D\subseteq X$ is a linear subspace whose image $\Phi(D)$ is dense in a complete space $Y$, then the completion of
+\[
+D/(D\cap K)
+\]
+in the topology transported from $Y$ is canonically isomorphic to $Y$.
+\end{theorem}
+\RecordID{PSC-I-T-QUOTIENT-TOPOLOGY-COMPLETION}
+\Depends{PSC-I-T-COMPLETED-PRESENTATION, the definition of quotient topology, and uniqueness of completion.}
+
+\begin{proof}
+The algebraic first isomorphism theorem gives a bijection $\widetilde\Phi$.  By definition of the quotient topology, a set $U\subseteq X/K$ is open exactly when its preimage in $X$ is open.  Because $\Phi$ is a quotient map, this is equivalent to $\widetilde\Phi(U)$ being open in $Y$.  Thus $\widetilde\Phi$ is a homeomorphism.  The second statement applies the dense completion argument of \cref{thm:completed-presentation} to the injective map $D/(D\cap K)\to Y$.
+\end{proof}
+
+\begin{boundary}[Continuous surjections and quotient topology]
+\label{bnd:topological-quotient}
+Continuity and surjectivity transport density as in \cref{thm:dense-realization}.  They do not by themselves identify the given topology on $Y$ with the quotient topology from $X$.  The stronger conclusion in \cref{thm:quotient-topology} requires the quotient map hypothesis or an equivalent open mapping condition.
+\end{boundary}
+\RecordID{PSC-I-B-TOPOLOGICAL-QUOTIENT}
+
+\begin{warningbox}
+A continuous surjective linear map need not be a quotient map in arbitrary topological vector spaces.  The algebraic first isomorphism theorem gives a bijection on the quotient.  A topological isomorphism requires the quotient topology to agree with the target topology.  An applicable open mapping theorem can supply this agreement, as it does for continuous linear surjections between Banach spaces.
+\end{warningbox}
+
+The completion statement uses the topology transported from the target space.  This choice ensures that approximation in the quotient means approximation in the target.  A topology inherited from the original subspace need not give the same completion unless the two topologies agree.  The theorem therefore names the topology as part of its conclusion.
+
+\begin{sectionrecap}
+Packet systems transport by conjugation, form a category under packet compatible seeded morphisms, restrict to invariant subspaces, descend to invariant quotients, and survive completion under explicit boundedness and quotient topology hypotheses.
+\end{sectionrecap}
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{09_coordinate_transport.pdf}
+\caption{Numerical certificate for a nonorthogonal transported packet system. The diagonal products retain idempotent size while off diagonal products remain at roundoff level.}
+\label{fig:coordinate-transport}
+\end{figure}
+
+\section{Realization functors and semantic theorem transport}
+\begin{readerroadmap}
+A later domain is a genuine realization only when the relevant structures and identities are preserved.  The purpose of this section is to replace informal analogy by a precise preservation profile.
+\end{readerroadmap}
+\subsection{Preservation profiles}
+
+\begin{definition}[Realization functor and preservation profile]
+\label{def:realization-functor}
+Let $\mathbf{SeedSys}_{\mathrm{abs}}$ be an abstract category of seed systems and let $\mathbf C_D$ be a domain category.  A realization functor is a functor
+\[
+\mathsf{Ev}_D:\mathbf{SeedSys}_{\mathrm{abs}}\longrightarrow\mathbf C_D
+\]
+with a declared preservation profile specifying which of the following structures are preserved:
+\[
+\begin{gathered}
+0,\ I,\ \text{finite sums},\ \text{composition},\ \text{biproducts},\\
+\text{kernels},\ \text{cokernels},\ \text{quotients},\ \text{tensor products},\\
+\text{packet idempotents},\ \text{transfer blocks},\ \text{topological completions}.
+\end{gathered}
+\]
+Preservation of a structure means preservation of its defining identity or universal property, not merely a similarity of notation.
+\end{definition}
+\RecordID{PSC-I-D-REALIZATION-FUNCTOR}
+
+\begin{theorem}[Equational realization principle]
+\label{thm:realization-export}
+Let $F:\mathbf C\to\mathbf D$ be an additive functor between preadditive categories.  Any equality of morphisms constructed from declared generating morphisms by finite sums, additive inverses, identities, zero maps, and composition is preserved by $F$.  Scalar multiplication by a coefficient ring is also preserved when the categories are enriched over that ring and $F$ is linear for the declared enrichment.  If a proof additionally uses a chosen biproduct, kernel, cokernel, quotient, tensor product, or completion and $F$ preserves that construction in its declared profile, then the corresponding proof diagram is transported to $\mathbf D$.
+\end{theorem}
+\RecordID{PSC-I-T-REALIZATION-EXPORT}
+\Depends{PSC-I-D-REALIZATION-FUNCTOR.}
+\Exports{The formal criterion for semantic transfer across domains.}
+
+\begin{proof}
+Functoriality gives
+\[
+F(I)=I,
+\qquad
+F(g\circ f)=F(g)\circ F(f),
+\]
+and additivity gives
+\[
+F(0)=0,
+\qquad
+F(f+g)=F(f)+F(g),
+\qquad
+F(-f)=-F(f).
+\]
+If the declared enrichment is present, linearity additionally gives $F(af)=aF(f)$ for every coefficient $a$.  A structural induction on the construction of a morphism expression therefore carries every permitted equational proof to its image under $F$.  If a step invokes a universal construction, preservation means that the image diagram satisfies the same universal property.  The uniquely induced morphism in the source proof is therefore carried to the uniquely induced morphism in the target proof.  Repeating this argument through the finite proof diagram transports the conclusion.
+\end{proof}
+
+\begin{interpretation}
+The equational principle covers identities built from operations the functor preserves.  Additive identities require additivity.  Identities with scalar coefficients require linear enrichment.  Quotients, tensor products, completions, kernels, or limits require their own preservation assumptions.  The preservation profile records the assumptions needed to carry each step of the proof into the target category.
+\end{interpretation}
+
+
+\subsection{From equation transport to semantic realization}
+\begin{proposition}[Realization export principle]
+\label{prop:realization-export}
+Every canonical Chapter I identity whose proof uses only the operations listed in a realization functor's verified preservation profile remains valid after applying that functor.  If the proof uses a domain specific hypothesis not encoded by the functor, that hypothesis must be verified separately before the transported statement is promoted to a theorem.
+\end{proposition}
+\RecordID{PSC-I-P-REALIZATION-EXPORT}
+\Depends{PSC-I-T-REALIZATION-EXPORT.}
+
+\begin{proof}
+The first assertion is \cref{thm:realization-export}.  The second is a logical boundary: a functor transports established identities and preserved universal constructions, but it does not create an unverified analytic, topological, positivity, finiteness, or integrality hypothesis.
+\end{proof}
+
+\begin{definition}[Semantic realization criterion]
+\label{def:semantic-realization}
+A domain theorem is a semantic realization of a canonical seed calculus theorem only when:
+\begin{enumerate}[label=(\roman*)]
+\item An explicit realization functor or intertwining construction is given.
+\item The preservation profile covers every construction used in the canonical proof.
+\item Every additional analytic, finiteness, convergence, positivity, or integrality hypothesis is verified in the domain.
+\item The resulting conclusion is stated in the domain's native objects.
+\end{enumerate}
+Reuse of the words ``seed'', ``packet'', or ``transfer'' without these data is only syntactic reuse.
+\end{definition}
+\RecordID{PSC-I-D-SEMANTIC-REALIZATION}
+
+\begin{warningbox}
+A change of nouns is not a realization theorem.  Calling a frequency band, a ramification sector, and a symmetry sector a ``packet'' is only terminology until one exhibits the idempotents, proves reconstruction, identifies the transfer blocks, and checks that the relevant morphisms or limits preserve those structures.
+\end{warningbox}
+
+\begin{sectionrecap}
+The preservation profile determines which equations and proof constructions pass to a new domain.  Checking it gives later chapters a concrete test for transporting a theorem: identify the realization, check each operation used in the proof, and verify the additional domain hypotheses.
+\end{sectionrecap}
+
+
+\section{Canonical export interface and claim boundary}
+\begin{readerroadmap}
+The export interface lets later chapters use the foundational proofs directly.  Each chapter can cite the stable record ID, state its domain hypotheses, and prove the new step specific to its realization.
+\end{readerroadmap}
+
+\begin{definition}[Worked realization interface]
+\label{def:reserved-example-slots}
+The foundational calculus is illustrated by four canonical algebraic realizations:
+\begin{enumerate}[label=(\roman*)]
+\item A typed quiver reachability model.
+\item An algebraic coordinate ring presentation.
+\item A companion and repeated primary single operator model.
+\item Path and cycle adjacency models.
+\end{enumerate}
+The worked model sections below instantiate these four interfaces. A bilateral shift example records the analytic completion mechanism also used in Chapter V. Computational specifications connect the proofs with the verification companion and are not premises of the foundational theorems.
+\end{definition}
+\RecordID{PSC-I-ALG-EXAMPLE-SLOTS}
+
+\begin{definition}[Chapter I export object]
+\label{def:paper-one-export}
+The canonical Chapter I export is
+\[
+\boxed{
+\mathsf{PSC}_I=
+\left(
+\begin{array}{c}
+\text{typed grammars and realized operator algebras},\\
+\text{seed systems, free presentations, and seed rank},\\
+\text{module-top, semisimple, and single-operator formulas},\\
+\text{finite and unconditional packet coordinates},\\
+\text{transfer blocks and support algebras},\\
+\text{reachability and packet-pure source generation},\\
+\text{morphisms, invariant exact sequences, quotients, completions},\\
+\text{realization functors and equational theorem transport}
+\end{array}
+\right).
+}
+\]
+\end{definition}
+\RecordID{PSC-I-EXPORT}
+
+
+
+\subsection{Use across chapters}
+\begin{center}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.26\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.49\textwidth}@{}}
+\toprule
+\textbf{Chapter I export} & \textbf{Primary users} & \textbf{Later role}\\
+\midrule
+\endhead
+Typed grammar and module equivalence & II to XII & Gives each domain a legal operator syntax and a concrete module realization.\\
+Free seed presentation & IV, IX, X & Converts generated families into quotient presentations and relation modules.\\
+Jacobson top seed rank & VII, X, XII & Computes minimal generators from semisimple multiplicity data.\\
+Single operator formula & IV, VI, IX & Resolves recurrence, companion, and spectral chain generator counts.\\
+Exact packet coordinates & II to XII & Supplies analysis, synthesis, and packetwise equality.\\
+Tensor and dual packet systems & V, VII, VIII, XI & Controls product systems, observables, and paired representations.\\
+Transfer block multiplication & II to XII & Converts operator composition into sums over packet paths.\\
+Block intertwining equations & III, VII, XI & Expresses global equivalence or gluing as local packet equations.\\
+Support preorder algebra & II, VIII, X & Produces triangular transfer structure and nilpotent strict transfer ideals.\\
+Source component seed rank & VIII, X & Identifies the packet pure source requirements under propagation hypotheses.\\
+Packet exact sequences and quotient descent & III, VI, X, XII & Carries packets through constraints, reductions, and deformation quotients.\\
+Semantic realization criterion & IV to XII & Specifies when a domain theorem is a true realization of the common calculus.\\
+\bottomrule
+\end{longtable}
+\end{center}
+
+
+\begin{boundary}[Exact limits of Chapter I]
+\label{bnd:final-claim-boundary}
+The existence of an exact packet decomposition does not imply that the decomposition is computationally discoverable, numerically well conditioned, statistically identifiable, dynamically invariant, or mathematically useful.  The condition number in \cref{def:packet-condition-number} quantifies only coordinate stability once the packets are supplied.  Refinement towers, filtered transfer, nonlinear obstruction objects, automatic packet recovery, continuum limits, arithmetic lifts, and automorphic occupancy require additional theorems in later chapters.
+\end{boundary}
+\RecordID{PSC-I-B-FINAL-CLAIM-BOUNDARY}
+
+
+

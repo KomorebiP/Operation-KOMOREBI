@@ -1,0 +1,7 @@
+theorem odd_euler_supercongruence (p n M : ℕ) (hp : Odd p) :
+    (p:ℤ)^(2*M+2) ∣ eulerEven n - truncation p n M := by
+  rw [odd_euler_reconstruction p n hp]
+  have h := Filtered.even_weight_tail (p:ℤ)
+    (fun m => ((2*n).choose (2*m):ℤ)*inverseEven m*source p (2*(n-m))) n M
+  rw [filter_range_le] at h
+  simpa only [truncation, mul_assoc, mul_left_comm, mul_comm] using h

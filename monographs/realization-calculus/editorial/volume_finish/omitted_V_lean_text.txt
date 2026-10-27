@@ -1,0 +1,80 @@
+=== PAGE 29 ===
+All 52 stored floating numerical metrics and eighteen discrete result leaves were reproduced ex-
+actly in the available environment. Eighteen companion PDF/PNG figure pairs were regenerated. The
+broader Annals companion separately passed 11,052 mixed exact and numerical checks across thirteen
+groups. Six bounded computational manifests were validated against their inputs. The symbolic visual
+suite passed 181 checks and rejected seven false controls. The extension examples separately passed 38
+exact checks and rejected four false controls.
+These counts refer to the recorded tests and their declared ranges. Overlapping suites are retained
+as provenance and are not combined into a theorem denominator. In particular, floating computations
+and bounded models do not extend the twenty-result formal contract or close either edge recovery
+conjecture.
+No fresh Lean process ran because lean, lake, and elan were unavailable. Current static reconcili-
+ation checks the actual source bytes, 225 declaration locations, 225 audit directives, nine dependency
+revisions, and 225 saved axiom records. It does not run Lean’s elaborator or kernel. The complete pack-
+age’s current computational review and per-run manifests record the fresh tests and their limits.
+The recovered October 5 edition lacks seventeen verification artifacts, including its verify_availab
+le.py runner and some report and figure files. The surviving formal sources, September compiler logs,
+and saved axiom audit are preserved. Current scoped replays have their own manifests and adapters.
+The October 5 available-checks gate was not rerun or authenticated from a complete historical inventory.
+The inventory appears in provenance/HISTORICAL_RECOVERY_GAPS.json. Missing historical evidence is
+not recreated by a current passing test.
+8.3 Reproduce from a working copy
+Use a writable copy of the original release to run its verification entry points, because they write status
+and log files beside the sources. Keep the packaged original snapshot unchanged as the provenance
+reference. The following commands start in that copied release root, which contains VERIFY_PAPER.py,
+formalization, companion, and verification.
+The retained commands below describe the September formal release entry points. They do not
+reproduce the missing October 5 available-checks runner. The original formal-release pipeline expects
+the pinned Lean toolchain, its pinned dependencies, the Python requirements in companion/requiremen
+ts.txt, pypdf, pdfLaTeX, and Poppler tools. Once those prerequisites are available, obtain the mathlib
+cache in the Lean project:
+cd formalization/lean
+lake exe cache get
+cd ../..
+python3 VERIFY_PAPER.py
+This full entry point checks the reviewed source hashes, calls the Lean verifier, runs the original com-
+panion tests, repeats the optimized static checks, replays numerical experiments, regenerates figure
+pairs, and rebuilds the selected 39-page source manuscript. It reproduces the original integrated formal-
+core release, not the later combined two-part traditional PDF.
+For the formal source and exact-model subset, use:
+python3 verification/verify.py
+This command checks the actual toolchain version, builds the local Lean library, checks pinned de-
+pendency revisions and tracked-file cleanliness, and runs KernelAudit.lean with warnings treated as
+
+=== PAGE 30 ===
+errors. If Lake is unavailable, the verifier reports BLOCKED_NO_LAKE and exits with code two. It does not
+turn passing Python tests into a successful Lean result.
+For a deliberately static and exact-model run with no Lean claim:
+python3 -O verification/verify.py --static-only
+The STATIC_AND_EXACT_ONLY status and lean_kernel_checked=false are expected for that route. Python
+optimization is an intentional verifier control. The program’s critical requirements are explicit checks
+rather than removable Python assert statements.
+8.4 Manual inspection of the formal build
+To inspect the principal operations separately, work inside formalization/lean:
+lake env lean --version
+lake build KomorebiPaperV
+lake env lean -DwarningAsError=true KernelAudit.lean
+A successful build without the audit is incomplete evidence for the release’s declared axiom policy. A
+successful audit of changed sources is a new result that should be recorded with new source hashes.
+Do not reuse an old transcript as though it described a modified source tree.
+The historical audit’s final success line is:
+PAPER_V_CANDIDATE_TARGET_AUDIT_PASS: 225 theorem targets; 827 namespace declarations
+The whole transcript, compiler version, source pins, and exit status matter. Searching for this line in a
+file is provenance reconciliation, not a substitute for executing the audit.
+8.5 The historical runtime adapter
+The original environment used a narrow executable self-location adapter. Its ordinary process-specific
+executable path returned a permission error, while /proc/self/exe was accessible. The source adapter
+redirected only the current process’s own executable-link query. The bundled documentation records
+that the distributed compiler and kernel were unchanged.
+The retained positive control accepted a valid arithmetic theorem and the negative control rejected
+an invalid proof with exit code one. These are useful runtime controls, but the full source build and
+namespace audit remain the decisive historical evidence. The adapter is environment-specific and un-
+necessary on a normal installation. Toolchain binaries and compiled dependency caches are not in-
+cluded in this package.
+8.6 Rebuild this guide
+The guide itself needs XeLaTeX and the TeX packages named in preamble.tex and komorebi-monog
+raph.sty. Its P052, Nimbus Sans, DejaVu Mono, and Latin Modern fonts must be installed externally.
+The builder resolves them with kpsewhich, verifies the staged bytes, and records their hashes. It never
+installs dependencies or bundles font binaries. From its editable directory:
+python3 build.py

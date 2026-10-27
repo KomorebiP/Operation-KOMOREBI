@@ -1,0 +1,99 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{komorebi-publication}[2026/10/08 Operation Komorebi publication standard 1.0]
+\RequirePackage{iftex}
+\RequirePackage{geometry}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\RequirePackage{fancyhdr}
+\RequirePackage{titlesec}
+\RequirePackage{microtype}
+\RequirePackage{etoolbox}
+\RequirePackage{xurl}
+\definecolor{KomorebiInk}{HTML}{213B34}
+\definecolor{KomorebiPine}{HTML}{2F6452}
+\definecolor{KomorebiWarm}{HTML}{F4F2E9}
+\definecolor{KomorebiSoft}{HTML}{E8EEE8}
+\definecolor{KomorebiMuted}{HTML}{56675F}
+\definecolor{KomorebiOchre}{HTML}{92703E}
+\ifPDFTeX
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage{amssymb}\RequirePackage{mathpazo}
+  \RequirePackage[scaled=.95]{helvet}
+  \renewcommand{\ttdefault}{lmtt}
+
+\else
+  \RequirePackage{fontspec}
+  \@ifpackageloaded{unicode-math}{}{\RequirePackage{amssymb}\RequirePackage{mathpazo}}
+  \input{komorebi-font-paths.tex}
+\setmainfont{P052-Roman.otf}[Path=\KomorebiFontDirectory,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf,SmallCapsFont=P052-Roman.otf]
+  \setsansfont{NimbusSans-Regular.otf}[Path=\KomorebiFontDirectory,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
+  \setmonofont{DejaVu Sans Mono}[Scale=.80]
+  \@ifpackageloaded{unicode-math}{\setmathfont{Latin Modern Math}}{}
+
+\fi
+\providecommand{\KomorebiTitle}{Operation Komorebi}
+\providecommand{\KomorebiSubtitle}{}
+\providecommand{\KomorebiSeries}{Research paper}
+\providecommand{\KomorebiKind}{Traditional paper}
+\providecommand{\KomorebiEdition}{Publication standard 1.0 / 8 October 2026}
+\providecommand{\KomorebiShortTitle}{Operation Komorebi}
+\providecommand{\KomorebiTitleSize}{34}
+\providecommand{\KomorebiTitleLeading}{39}
+\providecommand{\KomorebiProfile}{classical}
+\providecommand{\KomorebiOrientation}{portrait}
+\newcommand{\KomorebiSetup}{%
+  \ifdefstring{\KomorebiOrientation}{landscape}{\geometry{letterpaper,landscape,left=.72in,right=.72in,top=.72in,bottom=.72in,headheight=16pt,headsep=17pt,footskip=25pt}}{\geometry{letterpaper,left=.82in,right=.82in,top=.86in,bottom=.86in,headheight=16pt,headsep=17pt,footskip=25pt}}%
+  \ifdefstring{\KomorebiProfile}{atlas}{\renewcommand{\familydefault}{\sfdefault}}{}%
+  \colorlet{accent}{KomorebiPine}\colorlet{teal}{KomorebiPine}\colorlet{Teal}{KomorebiPine}%
+  \colorlet{navy}{KomorebiInk}\colorlet{Navy}{KomorebiInk}\colorlet{ink}{KomorebiInk}%
+  \colorlet{muted}{KomorebiMuted}\colorlet{Muted}{KomorebiMuted}\colorlet{Accent}{KomorebiPine}%
+  \colorlet{KomorebiBlue}{KomorebiPine}\colorlet{KomorebiNavy}{KomorebiInk}%
+  \setlength{\parindent}{0pt}\setlength{\parskip}{.42em}%
+  \linespread{1.06}\setlength{\emergencystretch}{2em}%
+  \setlength{\abovedisplayskip}{9pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayskip}{9pt plus 2pt minus 2pt}%
+  \pagestyle{fancy}\fancyhf{}%
+  \fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}\KomorebiShortTitle}%
+  \fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}\KomorebiKind}%
+  \fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}OPERATION KOMOREBI}%
+  \fancyfoot[R]{\sffamily\fontsize{9}{11}\selectfont\color{KomorebiPine}\thepage}%
+  \renewcommand{\headrulewidth}{.35pt}\renewcommand{\footrulewidth}{0pt}%
+  \fancypagestyle{plain}{\fancyhf{}\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{KomorebiMuted}OPERATION KOMOREBI}\fancyfoot[R]{\sffamily\small\color{KomorebiPine}\thepage}\renewcommand{\headrulewidth}{0pt}}%
+  \titleformat{\section}{\sffamily\Large\bfseries\color{KomorebiPine}}{\thesection}{.65em}{}%
+  \titleformat{\subsection}{\sffamily\large\bfseries\color{KomorebiInk}}{\thesubsection}{.65em}{}%
+  \titleformat{\subsubsection}{\sffamily\normalsize\bfseries\color{KomorebiInk}}{\thesubsubsection}{.65em}{}%
+  \titlespacing*{\section}{0pt}{2.1ex plus 1ex minus .2ex}{1ex}%
+  \titlespacing*{\subsection}{0pt}{1.8ex plus .8ex minus .2ex}{.7ex}%
+  \@ifundefined{chapter}{}{\titleformat{\chapter}[display]{\sffamily\bfseries\color{KomorebiPine}}{\small\MakeUppercase{\chaptertitlename}\ \thechapter}{8pt}{\Huge}\titlespacing*{\chapter}{0pt}{12pt}{24pt}}%
+  \@ifpackageloaded{caption}{\captionsetup{font=small,labelfont={bf,sf},skip=7pt}}{}%
+  \@ifpackageloaded{hyperref}{\hypersetup{colorlinks=true,linkcolor=KomorebiPine,citecolor=KomorebiPine,urlcolor=KomorebiPine,pdfauthor={Komorebi P.},pdftitle={\KomorebiTitle},pdfsubject={Operation Komorebi / \KomorebiKind}}}{}%
+}
+\newcommand{\KomorebiCover}{%
+  \clearpage\@ifpackageloaded{hyperref}{\hypersetup{pageanchor=false}}{}\thispagestyle{empty}\begingroup
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[KomorebiWarm] (current page.south west) rectangle (current page.north east);
+    \fill[KomorebiPine] (current page.north west) rectangle ([xshift=8pt]current page.south west);
+  \end{tikzpicture}
+  \color{KomorebiInk}\sffamily
+  \noindent{\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}OPERATION KOMOREBI}\par
+  \vspace{5pt}{\fontsize{9}{12}\selectfont\color{KomorebiMuted}REALIZATION CALCULUS}\par
+  \vspace*{.68in}
+  {\fontsize{10}{13}\selectfont\bfseries\color{KomorebiPine}\MakeUppercase{\KomorebiSeries}}\par
+  \vspace{14pt}
+  \begin{minipage}{.87\linewidth}\raggedright
+  {\fontsize{\KomorebiTitleSize}{\KomorebiTitleLeading}\selectfont\bfseries\KomorebiTitle\par}
+  \vspace{16pt}
+  {\fontsize{17}{22}\selectfont\KomorebiSubtitle\par}
+  \end{minipage}\par
+  \vspace{24pt}\noindent{\color{KomorebiPine}\rule{.28\linewidth}{.8pt}}\par
+  \vspace{10pt}{\large\KomorebiKind}\par
+  \vfill
+  {\large\bfseries Komorebi P.}\par
+  \vspace{7pt}{\fontsize{9}{12}\selectfont\color{KomorebiMuted}\KomorebiEdition}\par
+  \vspace{6pt}{\fontsize{8}{11}\selectfont\color{KomorebiMuted}REALIZATION CALCULUS}\par
+  \endgroup\clearpage\setcounter{page}{1}\@ifpackageloaded{hyperref}{\hypersetup{pageanchor=true}}{}\color{KomorebiInk}\normalfont
+}
+\newcommand{\KomorebiOpeningNote}[1]{\section*{Reading scope}#1\par\medskip}
+\endinput

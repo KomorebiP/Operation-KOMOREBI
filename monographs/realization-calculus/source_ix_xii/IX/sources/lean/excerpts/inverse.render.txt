@@ -1,0 +1,14 @@
+theorem bounded_inverse_iff_certificate (p s : ℕ) [Fact (Nat.Prime p)]
+    (J : Matrix (Fin d) (Fin d) ℤ_[p]) :
+    (IsUnit (rationalMatrix p J) ∧
+      ∃ A : Matrix (Fin d) (Fin d) ℤ_[p],
+        rationalMatrix p A = (p : ℚ_[p])^s • (rationalMatrix p J)⁻¹) ↔
+    (∃ A : Matrix (Fin d) (Fin d) ℤ_[p],
+      A * J = (p : ℤ_[p])^s • (1 : Matrix (Fin d) (Fin d) ℤ_[p]) ∧
+      J * A = (p : ℤ_[p])^s • (1 : Matrix (Fin d) (Fin d) ℤ_[p])) := by
+  constructor
+  · rintro ⟨hJ, hA⟩
+    exact (integral_inverse_iff_certificate p s J hJ).mp hA
+  · rintro ⟨A, hAJ, hJA⟩
+    have hJ := rationalMatrix_isUnit_of_certificate p s J A hAJ
+    exact ⟨hJ, (integral_inverse_iff_certificate p s J hJ).mpr ⟨A, hAJ, hJA⟩⟩

@@ -1,0 +1,234 @@
+\clearpage\FloatBarrier\section{Product chains, Krylov spaces, and integer budgets}\label{supp3:section:001}
+This appendix develops product-chain bounds, packet Krylov identities and exact integer-budget programs. Cost, error and candidate-set assumptions remain explicit.\par
+
+\subsection{Low-rank factors through a product chain}\label{supp3:subsection:001}\textit{Source item 5.2}\par
+Let
+\[
+A_j=D_j+U_jV_j^*,\qquad U_j,V_j\in\mathbb C^{n\times r_j},
+\]
+with all $D_j$ diagonal in one packet layout. Set
+\[
+P_m=A_m\cdots A_1,\qquad D^{(m)}=D_m\cdots D_1.
+\]
+The formalization constructs thin matrices $L_m,R_m$ such that
+\[
+\boxed{P_m=D^{(m)}+L_mR_m^*.}
+\]
+Their column index type is a recursively constructed disjoint sum. Its cardinality is proved to equal $\sum_{j=1}^m r_j$.
+
+\textbf{Construction.} Suppose $P_{m-1}=D^{(m-1)}+L_{m-1}R_{m-1}^*$. The new factors are
+\begin{align*}
+L_m&=\bigl[D_mL_{m-1}+U_m(V_m^*L_{m-1})\quad U_m\bigr],\\
+R_m&=\bigl[R_{m-1}\quad (D^{(m-1)})^*V_m\bigr].
+\end{align*}
+Substitution into the already checked two-factor product identity proves exactness. This is not a rank-only existence argument. The recursively defined factors are themselves audited.
+
+Applying the ordinary matrix-rank inequality gives
+\[
+\boxed{\operatorname{rank}(P_m-D^{(m)})\leq\sum_{j=1}^m r_j.}
+\]
+The bound concerns the actual correction matrix, not just the number of allocated columns. The proof also shows that $D^{(m)}$ stays packet diagonal. The empty chain has identity base, empty column type, and zero correction. Individual $r_j=0$ are permitted.
+
+\textbf{What is not completed here.} This is an unrecompressed representation. Optimal small-core singular-value recompression, item 5.6, remains separate. The construction can accumulate redundant columns and is not a claim of minimal factor width.
+
+\subsubsection{Actual noncommutative products}
+The error module defines the left-accumulated product recursively, with $P_0=I$ and $P_{j+1}=A_{j+1}P_j$. For a perturbed sequence $\widehat A_j$, it derives the discrepancy recursion
+\[
+\widehat P_{j+1}-P_{j+1}
+=\widehat A_{j+1}(\widehat P_j-P_j)
+ +(\widehat A_{j+1}-A_{j+1})P_j.
+\]
+The identity follows from the actual products. It is not supplied as an assumption to a norm estimate, and it does not commute the operators. Lean uses zero-based indices internally, so index $j$ in source code corresponds to manuscript factor $j+1$.
+
+
+
+\subsection{Error propagation and recompression}\label{supp3:subsection:002}\textit{Source items 5.8, 5.9, and 8.3}\par
+For $\widehat A_j=A_j+E_j$, the checked product-chain bound is
+\[
+\boxed{
+\norm{\widehat A_m\cdots\widehat A_1-A_m\cdots A_1}
+\leq\sum_{j=1}^m
+ \left(\prod_{i=j+1}^m\norm{\widehat A_i}\right)
+ \norm{E_j}
+ \left(\prod_{i=1}^{j-1}\norm{A_i}\right).}
+\]
+Empty products are one. The proof first solves a scalar gain recurrence as a finite sum, then bounds the actual discrepancy recursion by it. A version with certified upper bounds $\delta_j\geq\norm{E_j}$ is included. The product-norm argument uses a norm-one identity, as in operators on a nonzero normed space.
+
+\textbf{Post-product recompression is different.} Define the implemented iterates by
+\[
+\widetilde P_0=I,\qquad
+\widetilde P_j=A_j\widetilde P_{j-1}+E_j.
+\]
+Here $E_j$ is a residual introduced after multiplication. Lean derives
+\[
+\widetilde P_j-P_j=A_j(\widetilde P_{j-1}-P_{j-1})+E_j
+\]
+and proves
+\[
+\boxed{\norm{\widetilde P_m-P_m}
+\leq\sum_{j=1}^m\left(\prod_{i=j+1}^m\norm{A_i}\right)\delta_j,
+\quad \norm{E_j}\leq\delta_j.}
+\]
+This theorem works in a normed ring without the extra norm-one condition. It includes the empty iteration. There is no exact-prefix factor in the local residual term, because the residual is already measured at the post-product output.
+
+\textbf{Packetwise mixed precision.} At each stage let
+\[
+A_j=\sum_e A_{j,e},\qquad
+\widehat A_j=\sum_e(A_{j,e}+\Delta_{j,e}),\qquad
+\Delta_{j,e}=\Delta_{j,e}P_{j,a(e)}.
+\]
+The previous packet certificate supplies the uniform operator bound
+\[
+\norm{\widehat A_j-A_j}\leq
+\delta_j:=\sum_e\norm{\Delta_{j,e}}\norm{P_{j,a(e)}}.
+\]
+The new theorem substitutes these $\delta_j$ into the actual product-chain estimate. The resulting vector error is at most the operator certificate times $\norm{x}$. A vector-specific packet bound is not silently reused as an operator norm.
+
+These are deterministic implications from stated residual bounds. They do not establish the rounding behavior of a floating-point kernel. The floating-point matrix-product model remains one of the separately tracked classical inputs.
+
+
+
+\subsection{Exact and approximate packet Krylov spaces}\label{supp3:subsection:003}\textit{Source items 7.2 and 7.3}\par
+Write
+\[
+\mathcal K_m(A,v)=\operatorname{span}\{v,Av,\ldots,A^{m-1}v\}.
+\]
+For a complete finite projector family $P_i$, suppose $A$ commutes with every $P_i$. Let $A_i=P_iAP_i$. Lean proves the actual orbit identity
+\[
+A^jv=\sum_i A_i^jP_iv
+\]
+and therefore
+\[
+\boxed{\mathcal K_m(A,v)\subseteq
+\bigoplus_i\mathcal K_m(A_i,P_iv).}
+\]
+The case $j=0$ uses $\sum_iP_i=I$. The zeroth local power is the ambient identity, applied to $P_iv$, rather than an incorrectly substituted local projector power.
+
+\textbf{The direct sum is justified.} Each local space is proved to lie in the actual range of $P_i$. Projecting a finite sum of local vectors selects its $i$th summand. Consequently a zero sum of local vectors has every summand zero. The proof does not assert equality between the global Krylov space and the full sum of local Krylov spaces.
+
+For approximate invariance let $A=D+K$, where $D$ is packet diagonal, and set
+\[
+M=\max\{\norm{A},\norm{D}\}.
+\]
+For every positive integer $j$, the operator estimate is
+\[
+\boxed{\norm{A^j-D^j}\leq jM^{j-1}\norm{K}.}
+\]
+The proof is noncommutative and uses actual powers. Its positive-index version works even in a trivial normed ring. No division by $M$ is used, so $M=0$ causes no exception.
+
+Define the comparison space
+\[
+\mathcal L_{j+1}=\bigoplus_i\mathcal K_{j+1}(P_iDP_i,P_iv).
+\]
+Packet diagonality is first shown to imply commutation. The exact theorem then proves $D^jv\in\mathcal L_{j+1}$. Using that vector as a witness in the infimum distance gives
+\[
+\boxed{\operatorname{dist}(A^jv,\mathcal L_{j+1})
+\leq jM^{j-1}\norm{K}\norm{v}.}
+\]
+This statement uses Lean's actual metric infimum distance to the subspace. It does not assume that the comparison vector lies there. The block-Jacobi condition bound and the preconditioned conjugate-gradient corollary are not completed by these Krylov results.
+
+
+
+\subsection{Integer error budgets and discrete precision}\label{supp3:subsection:004}\textit{Source item 8.7 and common minimum machinery}\par
+The finite budget programs use integer weights and exact ordered-field costs. They apply to rational costs for execution and to real costs for mathematical statements. Unreachable states are represented by \code{none}, not by a large finite sentinel.
+
+For a predicate $S$ on costs, the common minimum specification means:
+\[
+\begin{array}{ll}
+\code{none}: & \text{no cost satisfies }S,\\
+\code{some}(v): & S(v)\text{ and }v\leq z\text{ whenever }S(z).
+\end{array}
+\]
+Both attainment and minimality are included. Optional minimum and optional addition are proved to implement union and independent sum of feasible sets.
+
+For exact-weight tables $F,G$, min-plus convolution is
+\[
+(F\star G)(b)=\min_{0\leq k\leq b}\{F(k)+G(b-k)\},
+\]
+with an infeasible sum whenever either operand is infeasible. Its correctness theorem identifies every finite answer with an actual feasible pair of component weights and costs. Repeated convolution handles arbitrary finite lists of components.
+
+\textbf{Independent precision assignments.} For every edge, a finite list contains its permitted pairs $(w,c)$ of quantized error and cost. The legal assignment type chooses exactly one listed pair per edge. It is defined independently of the dynamic program. Costs and weights are then summed over that assignment.
+
+If $D$ is the already solved tail table, the next edge has exact-weight recurrence
+\[
+F(b)=\min_{(w,c)\text{ allowed},\;w\leq b}\{D(b-w)+c\}.
+\]
+The final answer is $\min_{0\leq b\leq B}F(b)$. Lean proves that this is the exact minimum over legal assignments with total error at most $B$, or \code{none} exactly when no such assignment exists.
+
+\textbf{The subtraction guard matters.} Natural subtraction truncates at zero. Without the condition $w\leq b$, an option of weight one could be accepted at budget zero. The implemented program checks the condition before subtraction. Dedicated regressions also cover a zero-weight option, an empty option set, and the empty collection of edges. The last case has cost and error zero.
+
+This result does not prove that an unquantized physical error model is accurately represented by integer weights. The formal optimum concerns the declared quantized model. Clipped continuous allocation, item 8.5, remains separate.
+
+
+
+\subsection{The quantized packet-tree compiler}\label{supp3:subsection:005}\textit{Source item 9.8}\par
+The new program uses the previous block's actual finite \code{CandidateTree} and independent legal \code{Cut} type. An internal node has any nonempty finite family of children. A cut either keeps its node or chooses a legal cut in every child. A terminal node can only be kept.
+
+Keeping node $v$ costs $\kappa_v$ and incurs integer error $w_v$. Splitting costs overhead $\sigma_v$ in addition to the selected child cuts. The exact-weight recurrence is
+\[
+F_v(b)=\min\left\{
+\begin{array}{l}
+\kappa_v\quad\text{if }b=w_v,\\[2pt]
+\displaystyle\sigma_v+
+\min_{\sum_i b_i=b}\sum_iF_{v_i}(b_i)\quad\text{if }v\text{ is internal}.
+\end{array}\right.
+\]
+Nonexistent alternatives are infeasible. The child sum is implemented by the proved finite min-plus convolution, not by assuming an optimal allocation.
+
+\textbf{Exact semantics.} For every tree and every integer weight $b$, Lean proves that $F_v(b)$ is a minimum of costs of independent legal cuts of exact weight $b$. Thus each finite answer has an attaining cut and is a lower bound for every other legal cut at that weight. Infeasibility is equivalent to the absence of such a cut.
+
+The root scan
+\[
+\boxed{\min_{0\leq b\leq B}F_{\mathrm{root}}(b)}
+\]
+is therefore the exact budget-constrained optimum. Increasing the budget cannot increase a finite optimum. The theorem retains feasibility hypotheses where necessary rather than treating \code{none} as an ordinary real cost.
+
+\textbf{Why the budget program adds something.} Consider the three admissible cost/error pairs
+\[
+(0,4),\qquad(3,2),\qquad(4,0).
+\]
+At budget two the answer is cost three. The middle pair cannot minimize cost plus $\lambda$ times error: comparison with the first pair would require $\lambda\geq3/2$, while comparison with the third would require $\lambda\leq1/2$. The executable suite checks the budget answer on an actual unary candidate tree with these cuts. It is not obtained merely by varying the previous Lagrangian compiler's multiplier.
+
+\textbf{Output boundary.} This budget implementation returns the minimum cost or \code{none}. Attainment is proved, but executable backtracking metadata for a selected cut is not yet returned. Universal packet discovery, overlapping decompositions, nonadditive cache costs, and arbitrary device scheduling remain outside the theorem.
+
+
+
+\subsection{Cached arrays and a work certificate}\label{supp3:subsection:006}\textit{Source item 9.9 and implemented forms of 8.7 and 9.8}\par
+A recursive value equation alone need not be an efficient program. Repeated calls can recompute the same subtree table. The new implementation therefore stores each table as an array-backed \code{Vector} with exactly $B+1$ optional entries.
+
+Each child table is evaluated and cached before the parent merges it. A merge reads two existing tables and tabulates their convolution. The discrete precision program likewise computes its tail table once before filling the next edge's table. The final scan reads the stored root or final-edge table.
+
+\textbf{Entrywise implementation theorem.} For every $b\leq B$, Lean proves
+\[
+\operatorname{lookup}(\operatorname{storedTree}(B,t),b)=F_t(b).
+\]
+There is a parallel theorem for stored discrete precision. The proof establishes first that an output entry at $b$ depends only on input entries at most $b$, then proceeds through cached convolution and the tree recursion. Consequently the optimality, attainment, and infeasibility specification applies to the actual stored result.
+
+\textbf{Counted candidates.} One full convolution table examines indices
+\[
+(b,k),\qquad 0\leq b\leq B,\quad0\leq k\leq b.
+\]
+These form a concrete finite dependent-sum type. Its cardinality is proved to be
+\[
+\sum_{b=0}^B(b+1)\leq(B+1)^2.
+\]
+For a nonempty finite tree, the number of child merges plus one equals the node count $N$. This identity is proved for arbitrary finite branching.
+
+Let $W_B(t)$ be the declared unit-cost count of table-cell constructions and tested min-plus candidates. The model charges the empty child-combination table as well as the output cells and merge candidates. Lean proves
+\[
+W_B(t)\leq2(B+1)N+\bigl((B+1)+(B+1)^2\bigr)(N-1)
+\]
+and hence
+\[
+\boxed{W_B(t)\leq N\bigl(3(B+1)+(B+1)^2\bigr).}
+\]
+The root minimum scan adds a linear pass. Thus the declared tabulation model is pseudo-polynomial in $N$ and the numeric budget $B$.
+
+\textbf{Scope of this certificate.} These are table and candidate counts, not a measured execution trace or a theorem about every instruction emitted by the compiler. Rational bit complexity, allocation overhead, memory traffic, and hardware timing are not included. The certificate is not polynomial in the binary input length of $B$.
+
+
+
+\subsection{Place in the finite development}\label{supp3:subsection:007}
+The structured primitives and clipped-allocation theorem follow in Appendix D. Graph schedules and preconditioning certificates are developed in Appendix E. Appendix F gives the small-core optimality argument.
+
+The historical compiler, regression and development records appear in the formal companion under ``Historical proof-development records.''

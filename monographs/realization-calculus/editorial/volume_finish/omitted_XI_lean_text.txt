@@ -1,0 +1,47 @@
+=== PAGE 35 ===
+CHAPTER 14
+Verification lineage and reproducibility
+The retained verification reports certify specific source revisions and specific dependency closures. A full scan
+of the project source, a focused compiler run, a transitive axiom audit, and a kernel replay are distinct checks.
+The evidence remains attributable to its original layer rather than collapsed into one global PASS flag.
+14.1 Recorded scopes
+The v0.44 record checks the new ramified/unramified quotient module, its 28 public declarations, focused im-
+ports and same-kernel replay. Its source-only reconstruction freshly builds the 20-module required project clo-
+sure, reusing pinned Lean and Mathlib objects. The cumulative source scan covers 302 production modules.
+The normalized-Frobenius record checks three new modules and 50 public declarations in two source states.
+Its clean project closure has 29 modules and agrees byte-for-byte with the primary object closure. It explicitly
+records that the full Block45 arithmetic/automorphic contract is not established.
+Continuation110 records 20 modules in the source set and 223 audited public exports. Continuation111 records
+nine new modules and 78 audited exports. Continuation112 records three new modules and 60 exports. Contin-
+uation113 records four modules and 76 exports, with a separately recorded internal compile/kernel audit. In
+each continuation, inherited modules and Mathlib are authenticated or reused at the documented scope rather
+than rebuilt in full.
+14.2 Failures remain part of the evidence
+Continuation110 retains an out-of-memory full-baseline attempt under an 8 GiB virtual-address-space cap and
+an interrupted larger attempt. The passing bounded new-module replay is not a claim that those failed full-
+baseline attempts succeeded.
+Continuation113 retains the rejected theta0 arithmetic attachment, a corrected sign convention, failed har-
+ness/parser attempts and an overwritten early arithmetic receipt disclosed as unavailable. Its final corrected
+replay is a new accepted run, not a reconstruction of that missing receipt. The finite formal results and the failed
+arithmetic candidate are different claims.
+14.3 Portable runtime
+The preserved README for the portable runtime describes an offline Linux x86_64 kit for Lean 4.34.0-rc2 and
+the pinned Mathlib revision. Its full executable distribution is an external dependency where the source handoff
+does not include it. Native Windows launchers and the Linux/WSL path have different prerequisites. The release
+documentation gives the exact retained resources and availability.
+A reader should first authenticate the runtime, Mathlib revision and branch archive hashes, then replay in a
+fresh output directory. Do not overwrite original receipts. The documented Continuation113 verifier checks the
+baseline110–112 archives and inherited objects, compiles only its four new modules, audits named exports and
+runs leanchecker. It does not claim to rebuild every historical Paper XI module or all of Mathlib.
+python scripts/verify_new113.py \
+--kit /absolute/path/to/Komorebi_Portable_Lean_4.34.0-rc2 \
+
+=== PAGE 36 ===
+--archives /absolute/path/to/baseline_archives \
+--out evidence/replay_on_new_machine
+14.4 Rebuilding this guide
+The editable folder contains the LaTeX source, displayed and raw excerpts, complete selected Lean source copies,
+source catalog and this PDF builder. From the checkpoint root, run the following command with a new output di-
+rectory outside the checkpoint. XeLaTeX and the declared fonts/packages must already be installed. The builder
+installs nothing, uses no network and fixes the source date epoch for reproducibility.
+python3 tools/build_readers.py --output /absolute/path/new-output

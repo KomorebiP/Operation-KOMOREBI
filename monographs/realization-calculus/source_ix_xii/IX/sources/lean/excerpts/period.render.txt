@@ -1,0 +1,22 @@
+theorem prime_power_period (f : ℕ → R) (h n r : ℕ) (hr : 0<r)
+    (H : ∀ k, (p:R)^(min k r) ∣ difference h k f n) :
+    (p:R)^r ∣ f (n+p^(r-1)*h)-f n := by
+  rw [displacement_expansion]
+  apply Finset.dvd_sum
+  intro k hk
+  have hkr : k+1 ≤ p^(r-1) := by have := Finset.mem_range.mp hk; omega
+  by_cases hsmall : k+1 < r
+  · have hd := H (k+1)
+    rw [min_eq_left (by omega : k+1≤r)] at hd
+    obtain ⟨a,ha⟩ := hd
+    rw [ha, ←mul_assoc]
+    have hb := binomial_precision p (r-1) (k+1) (by omega) hkr
+    rw [Nat.sub_add_cancel (by omega : 1≤r)] at hb
+    have hcast : (p:R)^r ∣ (((p^(r-1)).choose (k+1):ℕ):R)*(p:R)^(k+1) := by
+      obtain ⟨b,hb⟩ := hb
+      refine ⟨(b:R), ?_⟩
+      simpa only [Nat.cast_mul, Nat.cast_pow] using congrArg (fun a:ℕ => (a:R)) hb
+    exact dvd_mul_of_dvd_left hcast a
+  · have hd := H (k+1)
+    rw [min_eq_right (by omega : r≤k+1)] at hd
+    exact dvd_mul_of_dvd_right hd _

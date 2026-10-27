@@ -1,0 +1,21 @@
+theorem exists_unique_root_motion (p s M : ℕ) [Fact p.Prime]
+    (hM : 2 * s < M) (F H : Fin d → MvPolynomial (Fin d) ℤ_[p])
+    (a : Fin d → ℤ_[p]) (hFa : ∀ i, eval a (F i) = 0)
+    (hJ : IsUnit (rationalMatrix p (jacobian F a)))
+    (hbound : ∃ A : Matrix (Fin d) (Fin d) ℤ_[p],
+      rationalMatrix p A = (p : ℚ_[p]) ^ s • (rationalMatrix p (jacobian F a))⁻¹) :
+    (∃! b : Fin d → ℤ_[p], (∀ i, eval b (perturbSystem p M F H i) = 0) ∧
+      (∀ i, (p : ℤ_[p]) ^ (s + 1) ∣ b i - a i)) ∧
+    (∀ b : Fin d → ℤ_[p], (∀ i, eval b (perturbSystem p M F H i) = 0) →
+      (∀ i, (p : ℤ_[p]) ^ (s + 1) ∣ b i - a i) →
+      (∀ i, (p : ℤ_[p]) ^ (M - s) ∣ b i - a i) ∧
+      (∃ ε : Fin d → ℤ_[p], (∀ i, (p : ℤ_[p]) ^ (2 * M - 3 * s) ∣ ε i) ∧
+        ∀ i, (b i : ℚ_[p]) - (a i : ℚ_[p]) =
+          -(p : ℚ_[p]) ^ M * ((rationalMatrix p (jacobian F a))⁻¹).mulVec
+            (fun j => (eval a (H j) : ℚ_[p])) i + (ε i : ℚ_[p]))) := by
+  obtain ⟨b, hb, hdepth, hball, huniq, herror⟩ := exists_root_motion p s M hM F H a hFa hJ hbound
+  constructor
+  · exact ⟨b, ⟨hb, hball⟩, fun z hz => huniq z hz.1 hz.2⟩
+  · intro z hz hzb
+    rw [huniq z hz hzb]
+    exact ⟨hdepth, herror⟩

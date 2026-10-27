@@ -1,0 +1,11 @@
+noncomputable def solve (c : A → ℝ) : (t : FiniteAdaptive.Tree A) → Result t
+  | .leaf a => ⟨.stop _, c a, 0, 0, 1⟩
+  | .branch a n ch =>
+      let child := fun i => solve c (ch i)
+      let total := ∑ i, (child i).cost
+      let stop := c a ≤ total
+      ⟨if stop then .stop _ else .split (fun i => (child i).cut),
+       min (c a) total,
+       1 + ∑ i, (child i).comparisons,
+       (n+1) + ∑ i, (child i).additions,
+       1 + ∑ i, (child i).visits⟩

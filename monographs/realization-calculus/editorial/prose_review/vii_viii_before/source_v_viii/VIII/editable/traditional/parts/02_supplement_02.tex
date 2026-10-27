@@ -1,0 +1,231 @@
+\clearpage\FloatBarrier\section{Exact compilation, continuous precision, and explicit costs}\label{supp2:section:001}
+This appendix gives finite compiler constructions, continuous allocation and explicit storage and operation models. All optimization statements retain their independent admissibility conditions.\par
+
+\subsection{Exact finite-tree compilation}\label{supp2:subsection:001}\textit{Source items 9.4 and 9.5}\par
+A candidate tree is either a terminal node or an internal node with a nonempty finite family of children. Arbitrary finite branching is supported. Every node carries a label from which keep cost $\kappa_v$, keep error $\epsilon_v$, and split overhead $\sigma_v$ are read.
+
+\textbf{Independent admissible objects.} A legal cut is defined independently of the optimizer. It either keeps the root of its subtree or, at an internal node, chooses one legal cut in every child. A terminal node can only be kept. This is the recursive form of selecting one node on each root-to-terminal path.
+
+The cost and error of a cut $L$ are computed recursively. With multiplier $\lambda$, its objective is
+\[
+J_\lambda(L)=\cost(L)+\lambda\err(L).
+\]
+Lean proves that this objective equals the recursively accumulated local keep score $\kappa_v+\lambda\epsilon_v$, with $\sigma_v$ charged at every split.
+
+\textbf{Recurrence.} For terminal nodes,
+\[
+F_\lambda(v)=\kappa_v+\lambda\epsilon_v.
+\]
+For internal nodes,
+\[
+\boxed{F_\lambda(v)=\min\left\{\kappa_v+\lambda\epsilon_v,
+\;\sigma_v+\sum_{w\in\mathrm{child}(v)}F_\lambda(w)\right\}.}
+\]
+The checked result has two parts. First, $F_\lambda(v)\leq J_\lambda(L)$ for every legal cut of the subtree. Second, the constructed function \code{compile} returns a legal cut with objective exactly $F_\lambda(v)$. Thus the minimum is attained, not merely bounded below.
+
+The proof proceeds by induction on the actual tree and case analysis on the independently defined cut. In the split case, it sums the child lower bounds. The returned cut chooses the lower root alternative and recursively uses attaining child cuts. Ties are resolved in favor of keeping.
+
+\textbf{Shared operator families.} For reuse weights $r_j$, the local keep model can aggregate setup and per-operator costs:
+\[
+\kappa_v=\kappa_v^{\mathrm{setup}}+\sum_jr_j\kappa_v^{(j)},
+\qquad \epsilon_v=\sum_jr_j\epsilon_v^{(j)}.
+\]
+Lean proves the aggregation identity at the cut level, including split overhead, before applying the compiler theorem. The proof is valid over an ordered field, including $\Q$ and $\R$. The intended nonnegative model is a specialization.
+
+No running-time theorem is asserted for the returned-cut wrapper. It can recompute subtree scores when constructing the cut. The minimum-value recurrence and the separately checked cached-update algorithm have distinct implementations and claims.
+
+
+
+\subsection{Frontiers and decision stability}\label{supp2:subsection:002}\textit{Source items 9.6, 9.7, and 9.11}\par
+Let $L_1,L_2$ be actual optima at $0\leq\lambda_1<\lambda_2$. Their optimality inequalities are
+\begin{align*}
+\cost(L_1)+\lambda_1\err(L_1)&\leq\cost(L_2)+\lambda_1\err(L_2),\\
+\cost(L_2)+\lambda_2\err(L_2)&\leq\cost(L_1)+\lambda_2\err(L_1).
+\end{align*}
+Adding them and using the strict multiplier ordering gives
+\[
+\boxed{\err(L_2)\leq\err(L_1),\qquad \cost(L_2)\geq\cost(L_1).}
+\]
+These conclusions hold for any choices among tied optima. For the cuts returned by the compiler, the required optimality premises are supplied by its constructive correctness theorem.
+
+\textbf{Supported Pareto points.} For $\lambda>0$, a scalarized optimum cannot be dominated in both cost and error with one strict improvement. Lean proves this directly from the two inequalities and positivity of $\lambda$.
+
+The converse is not asserted. For the three cost/error points
+\[
+(0,2),\qquad (3/2,1),\qquad (2,0),
+\]
+the middle point is undominated, but it is not selected by scalarization. A checked rational inequality gives, for every $\lambda\in\Q$,
+\[
+\min\{2\lambda,2\}<3/2+\lambda.
+\]
+The quantized-budget compiler can recover unsupported points. Its construction is given in Section~\ref{supp3:subsection:005}.
+
+\textbf{Strict half-gap stability.} At a solved internal node write
+\[
+K=\kappa_v+\lambda\epsilon_v,\qquad
+S=\sigma_v+\sum_wF_\lambda(w),\qquad g=|K-S|.
+\]
+If the updated scores satisfy
+\[
+|K'-K|<g/2,\qquad |S'-S|<g/2,
+\]
+Lean proves
+\[
+K'\leq S'\quad\Longleftrightarrow\quad K\leq S.
+\]
+Applying this condition recursively at every internal node proves equality of the entire returned cuts before and after perturbation, not only equality of one numerical minimum.
+
+The hypotheses concern \emph{solved} split scores, including changes propagated from descendants. A bound on raw local costs alone is not substituted for this condition. At an exact tie $g=0$, the strict inequalities cannot hold. No robustness at ties is claimed.
+
+
+
+\subsection{Cached local recompilation}\label{supp2:subsection:003}\textit{Source item 9.12}\par
+The implementation represents an edit using an explicit one-hole context. Each ancestor frame stores its parent label, the untouched sibling subtrees, the child slot containing the edit, and cached sibling optimum values. The context terminates at the root.
+
+Let $v$ be the new optimum of the edited subtree, and let $j$ be the edited child slot at one frame. The update performed at that frame is
+\[
+\boxed{
+\operatorname{step}(v)=
+\min\left\{K,\;\sigma+
+\sum_i\begin{cases}
+v,&i=j,\\
+\widehat F_i,&i\ne j.
+\end{cases}\right\}.
+}
+\]
+This result is passed to the next ancestor. The update function does not recursively evaluate sibling subtrees. It reads their stored values $\widehat F_i$.
+
+\textbf{Cache validity.} A context is valid when each untouched sibling cache equals the optimum for its unchanged subtree. The function \code{refresh} constructs such a context from the original tree model, and Lean proves its validity. This assumption concerns old, unchanged sibling computations. It is not an assumption about the desired new root optimum.
+
+\textbf{Correctness of the actual update.} For any edited subtree $T'$ and valid context $C$, Lean proves
+\[
+\operatorname{updateValue}\bigl(C,F(T')\bigr)=F\bigl(\operatorname{fill}(C,T')\bigr).
+\]
+The proof inducts through the context. At each frame, the updated child contributes the new value, and each other child contributes its unchanged cached optimum. The frame recurrence is therefore exactly the full-tree recurrence.
+
+The result is connected back to legal cuts: the updated value is no larger than the objective of any cut of the edited whole tree, and some cut attains it. The latter witness follows from the independently proved compiler theorem.
+
+\textbf{Unchanged context.} Separate theorems show that a nonedited sibling subtree is unchanged by the child replacement, and its minimum value is consequently unchanged. A localized change of keep/error/overhead data can be represented by replacing just the corresponding subtree while leaving the surrounding model fixed.
+
+This formalizes the dependency-local claim: recompute the edited subtree, then update the ancestor frames using old sibling caches. It does not assert that a real compiler has no nonlocal cache, rank, allocation, or device-scheduling interactions. Those interactions are outside the additive tree model.
+
+
+
+\subsection{The continuous allocation theorem}\label{supp2:subsection:004}\textit{Source item 8.4, with an explicit positive budget}\par
+Let $E$ be a finite nonempty edge set. Assume
+\[
+s_e>0,\qquad c_e>0,\qquad \tau>0,
+\]
+and define $C=\sum_ec_e$. The optimization problem is
+\[
+\min_{\varepsilon_e>0}\sum_ec_e\log\frac1{\varepsilon_e}
+\qquad\text{subject to}\qquad
+\sum_es_e\varepsilon_e=\tau.
+\]
+Lean constructs the displayed candidate
+\[
+\boxed{\varepsilon_e^*=\frac{\tau c_e}{s_eC}}
+\]
+and proves strict positivity and the exact budget equality. It then proves global optimality and uniqueness for the actual logarithmic objective.
+
+\textbf{Global comparison.} For any other feasible $\varepsilon$, set
+$r_e=\varepsilon_e/\varepsilon_e^*>0$. The budget identities give
+\[
+\sum_ec_er_e=C.
+\]
+Using the standard analytic inequality $\log r\leq r-1$ yields
+\[
+\sum_ec_e\log r_e\leq\sum_ec_e(r_e-1)=0.
+\]
+Lean separately proves the exact objective-difference identity
+\[
+J(\varepsilon)-J(\varepsilon^*)=-\sum_ec_e\log r_e.
+\]
+Therefore $J(\varepsilon)\geq J(\varepsilon^*)$.
+
+If the feasible vectors differ, at least one $r_e\ne1$. At that coordinate the logarithm inequality is strict. Since $c_e>0$, the finite weighted sum is strict, giving
+\[
+\varepsilon\ne\varepsilon^*\quad\Longrightarrow\quad
+J(\varepsilon)>J(\varepsilon^*).
+\]
+The final theorem characterizes every feasible global minimizer as exactly the constructed formula. No unproved stationary-point, convexity, or KKT optimality assertion is supplied as a hypothesis.
+
+\textbf{Why the hypothesis matters.} Section~\ref{supp1:subsection:005} shows that positive sensitivities and positive tolerances on a nonempty edge set force a positive budget. The theorem above states that condition explicitly and proves the unique global optimum.
+
+This is a real-valued mathematical optimizer. It is not an executable floating-point implementation. Clipped allocation is treated in Sections~\ref{supp4:subsection:005}--\ref{supp4:subsection:006}. The discrete precision program is treated in Section~\ref{supp3:subsection:004}.
+
+
+
+\subsection{Explicit storage and operation models}\label{supp2:subsection:005}\textit{Source items 3.1, 3.2, 3.4, 3.6, 3.8--3.10, and 4.2}\par
+For a finite collection of rectangular blocks, the scalar addresses are actual elements of
+\[
+\coprod_{e\in E}\bigl(\operatorname{Fin}(m_e)\times\operatorname{Fin}(n_e)\bigr).
+\]
+The corresponding operation addresses include a right-hand-side index and one of two scalar-operation tags. Lean proves their cardinalities rather than merely defining a formula named ``cost.''
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Representation & Scalar storage & Modeled work for $q$ right sides\\
+\midrule
+Dense & $n^2$ & $2qn^2$\\
+Packet blocks & $\sum_em_en_e$ & $2q\sum_em_en_e$\\
+Equal diagonal blocks & $nb$ & $2qnb$\\
+BDLR & $\sum_i n_i^2+2nr$ & $2q(\sum_i n_i^2+2nr)$\\
+Equal-block BDLR & $n(b+2r)$ & $2qn(b+2r)$\\
+Sparse plus low rank & $z+2nr$ & $2q(z+2nr)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+For equal blocks, the layout condition is $n=|I|b$. Under nonzero denominator conditions, the dense-to-block reduction is $n/b$ and the BDLR reduction is $n/(b+2r)$. The BDLR output thin product accumulates into the diagonal result under the declared two-operations-per-coefficient model.
+
+\textbf{Streaming.} The explicit event type counts one block read, one source read, and a target read plus write for every edge. With scalar size $s$, its byte count is
+\[
+B_{\mathrm{stream}}=s\sum_e(m_en_e+n_eq+2m_eq).
+\]
+No cross-edge cache reuse is assumed. Sparse index metadata and temporary workspace remain separate.
+
+\textbf{Capacity and roofline.} Positive physical capacities and the inequalities $F\leq PT$, $B\leq WT$ give
+\[
+T\geq\max\{F/P,B/W\}.
+\]
+For positive bytes and elapsed time, the rate form is $F/T\leq\min\{P,WF/B\}$. The dense memory bound is the exact equivalence $n^2s\leq M\iff n\leq\sqrt{M/s}$ for nonnegative $n,M$ and positive $s$.
+
+\textbf{Materialization.} The declared dense product followed by one addition at each output entry has exactly $2n^2r+n^2$ modeled events and $n^2$ output entries. The remainder is bounded by $n^2$ for every $n,r$, giving a concrete quadratic certificate for the manuscript's $O(n^2)$ term.
+
+These theorems count a mathematical model. They do not verify CUDA instructions, wall time, memory-system behavior, or a lower bound for every implementation.
+
+
+
+\subsection{Contracts, grouping, and amortization}\label{supp2:subsection:006}\textit{Source items 2.9, 10.2, 10.4--10.6, and 11.3}\par
+\textbf{Output conversion.} A decoded run returns the actual pair
+\[
+\bigl(\operatorname{decode}(\operatorname{compressed}(x)),
+\;t_{\mathrm{run}}(x)+t_{\mathrm{decode}}(\operatorname{compressed}(x))\bigr).
+\]
+Under the declared output equality, Lean proves that this returns the same explicit result and charges the conversion time. It also proves the downstream composition identity when compressed output is consumed directly. Omitting a positive decode cost strictly understates the modeled explicit-output time. This formalizes the protocol; it cannot certify the truth of measured times.
+
+\textbf{Shape grouping.} Active shape classes are the image of the complete shape-signature map. Their count is at most the number of active blocks. The fiberwise sum over classes equals the original block sum, both for additive outputs and for modeled work. Thus grouping neither loses nor duplicates contributions. The ability to process one class in one batched launch remains a backend capability premise.
+
+\textbf{Exact profitability.} With setup $s$, baseline time $t_b$, candidate time $t_c$, and $t_c<t_b$, Lean proves
+\[
+\boxed{s+Rt_c<Rt_b\quad\Longleftrightarrow\quad
+R>\frac{s}{t_b-t_c}.}
+\]
+For $s\geq0$ and natural-number reuse counts, the smallest profitable count is
+\[
+\boxed{R_{\min}=\left\lfloor\frac{s}{t_b-t_c}\right\rfloor+1.}
+\]
+It is proved both profitable and minimal. At equality there is only break-even. A checked example gives setup $6$, baseline $5$, candidate $3$: three uses break even, and four are the first profitable count. Zero setup gives a first profitable count of one when there is a per-use advantage.
+
+When the candidate is no faster per use, nonnegative setup and reuse cannot give strict profitability. Graph capture/replay is a direct specialization. For materialization, with nonnegative conversion cost and reuse, Lean proves the full equivalence: profitability requires both a lower explicit per-use time and reuse above the conversion threshold.
+
+\textbf{Fair matching.} The benchmark signature has separate case, output-contract, correctness-reference, and timing-scope fields. Equality of all four fields is proved equivalent to signature equality, hence reflexive, symmetric, and transitive. Measured time is deliberately not a field in this equivalence. Matching metadata is not proof of measurement accuracy.
+
+
+
+\subsection{Place in the finite development}\label{supp2:subsection:007}
+The integer-budget compiler and discrete precision program follow in Appendix C. Structured transforms and clipped allocation are developed in Appendix D, graph support and schedules in Appendix E, and optimal small-core recompression in Appendix F.
+
+The historical compiler, regression and development records appear in the formal companion under ``Historical proof-development records.

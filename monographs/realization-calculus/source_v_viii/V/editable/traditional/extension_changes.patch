@@ -1,0 +1,293 @@
+--- source/annals_extension.tex
++++ extension_corrected.tex
+@@ -249,7 +249,7 @@
+ \(P_r\) & the coordinate projector onto the coset \(r+L\)\\
+ \(\Acal_L,\Scal_L\) & lattice analysis and interleaving synthesis\\
+ \(E,R\) & filter bank analysis and synthesis symbols\\
+-\(Q_m\) & a bounded approximation operator acting on the smooth part\\
++\(Q_m\) & a bounded linear approximation operator acting on the smooth part\\
+ \(j,\widehat j\) & the true and estimated singular packets\\
+ \(H_\tau\) & the step packet \(\one_{[\tau,1]}\)\\
+ \(\phi_{m,\tau}\) & the truncated power packet \((t-\tau)_+^m/m!\)\\
+@@ -260,7 +260,7 @@
+ 
+ \section{Signal seeds and lattice addresses}\label{sec:signal_seeds}
+ 
+-Let \(1\leq p\leq\infty\). For a countable set \(G\), write \(\ell^p(G)\) for the usual complex sequence space. When \(G=\ZZ^d\), translation by \(a\in\ZZ^d\) is
++Let \(1\leq p\leq\infty\). For a countable set \(G\), write \(\ell^p(G)\) for the usual complex sequence space. For an integer \(d\geq1\), when \(G=\ZZ^d\), translation by \(a\in\ZZ^d\) is
+ \[
+ (T_ax)(n)=x(n-a).
+ \]
+@@ -440,7 +440,7 @@
+ 
+ \section{Convolution as a packet transfer matrix}\label{sec:convolution}
+ 
+-Let \(h\in\ell^1(\ZZ^d)\) and define
++Let \(h\in\ell^1(\ZZ^d)\) and \(x\in\ell^p(\ZZ^d)\), with \(1\leq p\leq\infty\), and define
+ \[
+ (Hx)(n)
+ =(h*x)(n)
+@@ -522,15 +522,15 @@
+ 
+ \subsection{The one dimensional symbol}
+ 
+-For \(L=N\ZZ\), define
++For \(L=N\ZZ\) with \(N\geq1\), first take \(|z|=1\). The assumption \(h\in\ell^1(\ZZ)\) makes the following symbol series absolutely convergent. Define
+ \[
+ H_{ks}(z)=\sum_{m\in\ZZ}h(Nm+k-s)z^{-m}.
+ \]
+-If \(\bm X(z)\) and \(\bm Y(z)\) are the channel transforms, then
++For \(x\in\ell^1(\ZZ)\), the channel transforms converge absolutely on the unit circle and satisfy
+ \[
+ \bm Y(z)=\bm H_N(z)\bm X(z).
+ \]
+-This is the classical polyphase matrix. It is the exact block matrix of the original convolution operator.
++For \(x\in\ell^2(\ZZ)\), the same identity holds almost everywhere in the \(L^2\) Fourier sense. For finite impulse-response kernels it also holds at nonzero \(z\) wherever the input channel transforms are weighted absolutely summable. This is the classical polyphase matrix. It is the exact block matrix of the original convolution operator.
+ 
+ \begin{corollary}[Finite impulse response closure]\label{cor:fir_closure}
+ If \(h\) has finite support, every packet kernel \(h_{ks}\) has finite support. Matrix multiplication of polyphase symbols agrees with composition of the original finite impulse response operators.
+@@ -575,7 +575,7 @@
+ Throughout this section the banks act boundedly on the relevant polyphase \(\ell^2\) spaces. A finite channel analysis bank acts in Fourier coordinates by a matrix \(E(z)\). A synthesis bank acts by a matrix \(R(z)\). The matrices may be square or rectangular. Their entries are Laurent polynomials for finite filters and bounded measurable functions for general stable filters.
+ 
+ \begin{theorem}[Perfect reconstruction criterion]\label{thm:perfect_reconstruction}
+-Let \(E(z)\) be an \(M\) by \(N\) analysis matrix and let \(R(z)\) be an \(N\) by \(M\) synthesis matrix. The bank reconstructs every input with delay \(d\) exactly if and only if
++Let \(E(z)\) be an \(M\) by \(N\) analysis matrix and let \(R(z)\) be an \(N\) by \(M\) synthesis matrix. The bank reconstructs every input with a delay of \(d\) coarse channel samples, equivalent to \(Nd\) original samples in the one dimensional \(N\)-phase convention, exactly if and only if
+ \[
+ R(z)E(z)=z^{-d}I_N
+ \]
+@@ -913,7 +913,7 @@
+ \end{proof}
+ 
+ \begin{proposition}[Bounds for nonunitary local splits]\label{prop:nonunitary_tree_bounds}
+-Suppose every internal node has an analysis map \(U_v\) satisfying
++Suppose every internal node has an analysis map \(U_v\) and constants \(0\leq A_v\leq B_v<\infty\) satisfying
+ \[
+ A_v\|x\|^2
+ \leq
+@@ -978,11 +978,11 @@
+  \sum_{w\in\operatorname{child}(v)}F(w)
+ \right\},
+ \]
+-with \(F(v)=c(v)\) at terminal vertices. Then \(F(v)\) is the minimum cost of every admissible pruning of the subtree rooted at \(v\). A minimizing pruning is recovered by retaining \(v\) when the first term is smaller and splitting it when the second term is smaller.
+-\end{theorem}
+-
+-\begin{proof}
+-Every admissible pruning of the subtree has exactly two forms. It either retains \(v\), with cost \(c(v)\), or splits \(v\) and independently chooses an admissible pruning in every child subtree. The minimum in the second case is the sum of the child minima. This gives the recursion and the reconstruction rule.
++with \(F(v)=c(v)\) at terminal vertices. Then \(F(v)\) is the minimum cost of every admissible pruning of the subtree rooted at \(v\). A minimizing pruning is recovered by retaining \(v\) when the first term is no larger than the second and splitting it otherwise.
++\end{theorem}
++
++\begin{proof}
++Every admissible pruning of the subtree has exactly two forms. It either retains \(v\), with cost \(c(v)\), or splits \(v\) and independently chooses an admissible pruning in every child subtree. The minimum in the second case is the sum of the child minima. This gives the recursion and the reconstruction rule. In an equality case both choices minimize, and the stated rule retains the node.
+ \end{proof}
+ 
+ \begin{theorem}[Stability of the optimal cost]\label{thm:best_basis_cost_stability}
+@@ -1017,11 +1017,11 @@
+ \end{proof}
+ 
+ \begin{corollary}[Stability of the selected basis]\label{cor:best_basis_selection_stability}
+-Assume the optimal pruning for \(c\) is unique. Let \(g>0\) be the difference between its cost and the second smallest admissible cost. If
++Assume the optimal pruning \(\Lcal_*\) for \(c\) is unique and at least one competing pruning exists. Define \(g=\min_{\Lcal\ne\Lcal_*}(C(\Lcal)-C(\Lcal_*))>0\). If
+ \[
+ 2\varepsilon_*<g,
+ \]
+-then the optimal pruning for \(\widetilde c\) is the same.
++then the optimal pruning for \(\widetilde c\) is the same. If only one admissible pruning exists, it remains selected under every cost change without a gap condition.
+ \end{corollary}
+ 
+ \begin{proof}
+@@ -1048,7 +1048,7 @@
+ Thus \(\phi_{0,\tau}=\one_{[\tau,1]}\). On each side of \(\tau\), the packet is a polynomial. Its derivative of order \(m\) has a unit jump at \(\tau\).
+ 
+ \begin{definition}[Sobolev step packet class]\label{def:step_packet_class}
+-Fix \(r\geq1\), \(1\leq p\leq\infty\), and an integer \(Q\). The class \(\Fcal_{r,p}(Q)\) consists of functions
++Fix \(r\geq1\), \(1\leq p\leq\infty\), and an integer \(Q\geq0\). The class \(\Fcal_{r,p}(Q)\) consists of functions
+ \[
+ f=s+\sum_{q=1}^{Q}a_q\phi_{0,\tau_q}
+ \]
+@@ -1124,7 +1124,7 @@
+ \label{fig:higher_order_packets}
+ \end{figure}
+ 
+-Let \(X\) be a normed linear space and let \(Q:X\to X\) be bounded. The next identity is elementary, but it is the central separation principle.
++Let \(X\) be a normed linear space and let \(Q:X\to X\) be bounded and linear. The next identity is elementary, but it is the central separation principle.
+ 
+ \begin{theorem}[Exact retained packet identity]\label{thm:retained_packet_identity}
+ Let \(f=s+j\) in \(X\). Define
+@@ -1177,7 +1177,7 @@
+ \end{proof}
+ 
+ \begin{theorem}[Reconstruction with an estimated packet]\label{thm:estimated_packet_reconstruction}
+-Let \(f=s+j\), let \(\widehat j\) be an estimated packet, and define
++Let \(Q_m:X\to X\) be linear, let \(f=s+j\), let \(\widehat j\) be an estimated packet, and define
+ \[
+ \widehat f_m
+ =
+@@ -1251,7 +1251,7 @@
+ \end{proof}
+ 
+ \begin{corollary}[Location error for one step]\label{cor:step_location_error}
+-Let \(H_\tau=\one_{[\tau,1]}\). For \(1\leq p<\infty\),
++Let \(0\leq\tau,\widehat\tau\leq1\) and \(H_\tau=\one_{[\tau,1]}\). For \(1\leq p<\infty\),
+ \[
+ \|aH_\tau-aH_{\widehat\tau}\|_p
+ =
+@@ -1378,7 +1378,7 @@
+ \subseteq
+ N_\delta(\Gamma).
+ \]
+-If \(\Gamma\) has a linear tube bound, then for \(1\leq p<\infty\),
++If \(\Gamma\) has a linear tube bound and \(0<\delta<\delta_0\) lies in its stated range, then for \(1\leq p<\infty\),
+ \[
+ \|a\one_E-a\one_F\|_p
+ \leq
+@@ -1434,7 +1434,7 @@
+ \qquad
+ H_\tau(t)=\one_{[\tau,1]}(t),
+ \]
+-where \(s\) is Lipschitz with constant \(M\). Suppose no jump lies at a sample point and no grid cell contains more than one jump. Observe
++where \(s\) is Lipschitz with constant \(M\), and \(Q\geq1\) is finite with nonzero jump amplitudes. The zero-jump case requires no minimum-amplitude condition. Suppose no jump lies at a sample point and no grid cell contains more than one jump. Observe
+ \[
+ y_k=f(t_k)+\eta_k.
+ \]
+@@ -1540,7 +1540,7 @@
+ \frac h2\sum_{q=1}^{Q}|a_q|^p
+ \right)^{1/p}.
+ \]
+-If \(Q_m\) is bounded and
++If \(Q_m\) is bounded and linear and
+ \[
+ \widehat f_m=Q_m(f-\widehat j)+\widehat j,
+ \]
+@@ -1578,7 +1578,7 @@
+ \end{remark}
+ 
+ \begin{corollary}[Deterministic consistency]\label{cor:deterministic_consistency}
+-Assume \(h\to0\), \(\varepsilon_h\to0\), the number of jumps is fixed, and the jump amplitudes and minimum separation remain fixed. Then the detected packet converges to the true packet in every finite \(L^p\) norm. If \(Q_m\) has a vanishing smooth approximation error and uniformly bounded norm, the complete reconstruction also converges in \(L^p\).
++Assume \(h\to0\) along grids satisfying the preceding sampling assumptions, \(\varepsilon_h\to0\), the number of jumps is fixed, and the nonzero jump amplitudes and positive minimum separation remain fixed. Then the detected packet converges to the true packet in every finite \(L^p\) norm. If \(Q_m\) has a vanishing smooth approximation error and uniformly bounded norm, the complete reconstruction also converges in \(L^p\).
+ \end{corollary}
+ 
+ \begin{proof}
+@@ -1637,7 +1637,7 @@
+ \end{theorem}
+ 
+ \begin{proof}
+-The difference \(\eta_{k+1}-\eta_k\) is sub Gaussian with variance proxy \(2\sigma^2\), so
++If \(\sigma=0\), every centered zero-sub-Gaussian noise variable vanishes almost surely, and the noise-free deterministic conclusion applies. For \(\sigma>0\), the difference \(\eta_{k+1}-\eta_k\) is sub Gaussian with variance proxy \(2\sigma^2\), so
+ \[
+ \mathbb P\bigl(|\eta_{k+1}-\eta_k|>t\bigr)
+ \leq
+@@ -1655,7 +1655,7 @@
+ \end{proof}
+ 
+ \begin{corollary}[Repeated measurements]\label{cor:repeated_measurements}
+-Suppose \(R\) independent observations are averaged at every sample location, with each individual noise variable centered and \(\sigma\) sub Gaussian. Then \cref{thm:probability_recovery} holds with \(\sigma\) replaced by \(\sigma/\sqrt R\). In particular, a sufficient recovery condition is
++Suppose \(R\) observations are averaged at every sample location, with all noise variables independent across sites and repetitions and each centered and \(\sigma\) sub Gaussian. Then \cref{thm:probability_recovery} holds with \(\sigma\) replaced by \(\sigma/\sqrt R\). In particular, a sufficient recovery condition is
+ \[
+ a_{\min}
+ >
+@@ -1670,15 +1670,15 @@
+ \end{proof}
+ 
+ \begin{remark}\label{rem:noise_scaling}
+-With one observation at each grid point and fixed noise scale, the maximum noise contrast grows slowly with \(n\). Consistency therefore requires decreasing noise, repeated measurements, or a multiscale averaging rule. The theorem states this limitation explicitly.
++The displayed uniform noise certificate scales as \(\sigma\sqrt{\log n}\). At fixed positive \(\sigma\), it does not imply consistency of this detector. Decreasing the noise scale or averaging repeated measurements gives sufficient regimes; other averaging schemes require their own analysis.
+ \end{remark}
+ 
+ \begin{corollary}[Probability consistency]\label{cor:probability_consistency}
+-Let \(\sigma_n\sqrt{\log n}\to0\) and \(h=1/n\). For every fixed \(0<\delta<1\), all jump cells are recovered with probability at least \(1-\delta\) for sufficiently large \(n\). The finite \(L^p\) packet error converges to zero.
++Let \(\sigma_n\sqrt{\log n}\to0\) and \(h=1/n\). For every fixed \(0<\delta<1\), along grids satisfying the preceding sampling assumptions, all jump cells are recovered with probability at least \(1-\delta\) for sufficiently large \(n\). For the fixed finite jump model above, along grids satisfying the preceding sampling assumptions, the packet error converges to zero in probability in every finite \(L^p\) norm.
+ \end{corollary}
+ 
+ \begin{proof}
+-Then \(b_{h,\delta}\to0\). Apply \cref{thm:probability_recovery,cor:reconstruction_after_detection}.
++For each fixed \(\delta>0\), \(b_{h,\delta}\to0\). Apply \cref{thm:probability_recovery,cor:reconstruction_after_detection}. For any error tolerance \(\epsilon>0\), the high-probability bound is eventually smaller than \(\epsilon\), so the limit superior of the probability that the packet error exceeds \(\epsilon\) is at most \(\delta\). Since \(\delta\) is arbitrary, convergence is in probability.
+ \end{proof}
+ 
+ \subsection{Signals with values in a normed space}
+@@ -1704,7 +1704,7 @@
+ 
+ \section{Haar localization and annihilating differences}\label{sec:localization}
+ 
+-The adjacent difference detector is local in the sample domain. Wavelet coefficients and higher differences give related multiscale packets. In the Haar subsections the signal is defined on \(\RR\), or a fixed extension beyond the endpoints of a finite observation interval has been chosen, so every displayed wavelet support is available.
++The adjacent difference detector is local in the sample domain. Wavelet coefficients and higher differences give related multiscale packets. In the Haar subsections the signal is defined on \(\RR\). Here the step convention is \(H_\tau(t)=\one_{[\tau,\infty)}(t)\), whose restriction to \((0,1)\) agrees with the preceding interval step. A chosen extension beyond the observation interval must use this half-line step convention, and the smooth extension must satisfy the stated Lipschitz hypothesis on every displayed wavelet support.
+ 
+ \subsection{Haar coefficient separation}
+ 
+@@ -1732,7 +1732,7 @@
+ =
+ L^{-1/2}
+ \int_a^{a+L/2}
+-\bigl(s(t)-s(t+L/2)\bigr)\dd t.
++\overline{s(t)-s(t+L/2)}\,\dd t.
+ \]
+ The integrand has magnitude at most \(ML/2\), and the integration interval has length \(L/2\). The result is \(ML^{3/2}/4\).
+ \end{proof}
+@@ -1899,11 +1899,29 @@
+ 
+ A Fourier partial sum is global. When the target has a jump, the partial sum must approximate that jump using continuous trigonometric polynomials. This creates the classical Gibbs oscillation. Standard accounts and recovery methods appear in \cite{Zygmund2002,GottliebShu1997}.
+ 
+-\begin{standardfact}[Classical Gibbs behavior]\label{sf:gibbs_behavior}
+-At an isolated jump of size \(a\), ordinary Fourier partial sums have an overshoot that approaches a fixed nonzero multiple of \(|a|\). The width of the oscillatory region shrinks, but the maximum overshoot does not tend to zero.
++\begin{standardfact}[Classical square-wave Gibbs behavior]\label{sf:gibbs_behavior}
++Let \(q(x)=\tfrac12\operatorname{sign}(\sin x)\), whose jump at zero has size one. For \(n\geq1\), its partial sum through the first \(n\) positive odd frequencies is
++\[
++Q_n(x)=\frac{2}{\pi}\sum_{k=0}^{n-1}\frac{\sin((2k+1)x)}{2k+1}.
++\]
++At \(x_n=\pi/(2n)\),
++\[
++x_n\longrightarrow0,\qquad Q_n(x_n)\longrightarrow\frac{\operatorname{Si}(\pi)}{\pi}
++=\frac12+G,\qquad G\approx0.089489872236,
++\]
++where \(\operatorname{Si}(z)=\int_0^z\sin(t)/t\,dt\) and \(G=\operatorname{Si}(\pi)/\pi-1/2>0\).
++Thus a nonzero overshoot persists along points approaching the jump. Scaling by a real amplitude \(a\) gives an overshoot or undershoot of magnitude \(|a|G\).
++
++For the limit, put \(u_k=(k+\tfrac12)/n\). The identity
++\[
++Q_n(x_n)=\frac{1}{\pi n}\sum_{k=0}^{n-1}\frac{\sin(\pi u_k)}{u_k}
++\longrightarrow\frac1\pi\int_0^1\frac{\sin(\pi u)}u\,du
++=\frac{\operatorname{Si}(\pi)}{\pi}
++\]
++is a midpoint Riemann sum, since the integrand has continuous value \(\pi\) at zero. This is the normalized classical example in \cite[Section~6.16(i), equations~6.16.1--6.16.4]{DLMFGibbs}.
+ \end{standardfact}
+ 
+-The retained packet identity changes the approximation problem because the discontinuity is no longer represented by the Fourier partial sum.
++The square-wave example supplies a classical comparison. The following retained-packet identities do not require a general overshoot theorem. They change the approximation problem because the discontinuity is no longer represented by the Fourier partial sum.
+ 
+ \begin{theorem}[Uniform convergence with exact jump packets]\label{thm:uniform_packet_convergence}
+ Let \(f=s+j\) on a compact domain, where \(j\) is any bounded singular packet. Suppose \(Q_ms\to s\) uniformly. Then
+@@ -1924,8 +1942,9 @@
+ Apply \cref{thm:retained_packet_identity} in the supremum norm.
+ \end{proof}
+ 
++\Needspace{20\baselineskip}
+ \begin{theorem}[Estimated packet Gibbs bound]\label{thm:estimated_packet_gibbs}
+-Let \(Q_m\) be uniformly bounded on \(L^p\), with
++Let \(Q_m\) be linear and uniformly bounded on \(L^p\), with
+ \[
+ \sup_m\|Q_m\|\leq C_Q.
+ \]
+@@ -1985,6 +2004,7 @@
+ \label{fig:gibbs_comparison}
+ \end{figure}
+ 
++\FloatBarrier
+ \section{Nonlinear interactions in residue coordinates}\label{sec:nonlinear}
+ 
+ Linear transfer matrices do not directly describe nonlinear products. Residue coordinates still obey exact conservation laws because integer addresses add modulo the packet modulus.
+@@ -2182,11 +2202,11 @@
+ =
+ \Phi_{\theta+\varphi}.
+ \]
+-For \(\theta=2\pi/N\), the map has order \(N\).
+-\end{theorem}
+-
+-\begin{proof}
+-Substitute \(\e^{\ii\theta}(z-1)/(z+1)\) into \(C^{-1}\) and simplify. Preservation of \(\mathbb H\) follows because \(C\) maps it to \(\mathbb D\), rotation preserves \(\mathbb D\), and \(C^{-1}\) maps back. The group law follows by conjugating the rotation group law. When \(\theta=2\pi/N\), the \(N\)th power is the identity.
++For an integer \(N\geq1\) and \(\theta=2\pi/N\), the map has order \(N\).
++\end{theorem}
++
++\begin{proof}
++Substitute \(\e^{\ii\theta}(z-1)/(z+1)\) into \(C^{-1}\) and simplify. Preservation of \(\mathbb H\) follows because \(C\) maps it to \(\mathbb D\), rotation preserves \(\mathbb D\), and \(C^{-1}\) maps back. The group law follows by conjugating the rotation group law. When \(\theta=2\pi/N\), the \(N\)th power is the identity. Conversely, if its \(k\)th power is the identity, conjugation by \(C\) and evaluation at \(w=1/2\) give \(\e^{2\pi\ii k/N}=1\), so \(N\) divides \(k\). Hence the order is exactly \(N\).
+ \end{proof}
+ 
+ \begin{corollary}[Impedance and admittance]\label{cor:impedance_admittance}

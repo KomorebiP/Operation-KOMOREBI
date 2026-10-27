@@ -1,0 +1,170 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage{geometry,amsmath,amssymb}
+\usepackage[nopatch={footnote}]{microtype}
+\usepackage{graphicx,array,booktabs,tabularx,multicol,tikz,fancyhdr,titlesec}
+\usepackage[table]{xcolor}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\usepackage{hyperref,bookmark}
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiTitle}{Multiresolution Signal Calculus}
+\renewcommand{\KomorebiCoverTitle}{Multiresolution\\Signal Calculus}
+\renewcommand{\KomorebiSubtitle}{Exact coordinates, singular packets,\\and stable reconstruction}
+\renewcommand{\KomorebiSeries}{Paper V}
+\renewcommand{\KomorebiKind}{Visual guide}
+\renewcommand{\KomorebiEdition}{20 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper V / Visual guide}
+\renewcommand{\KomorebiCoverBlurb}{Forty worked pages trace exact signal coordinates through stable filter banks, finite packet trees, singular trace packets, and conditional recovery.}
+\KomorebiSetup
+\newcommand{\OO}{\mathcal O}
+\newcommand{\FF}{\mathbb F}\newcommand{\QQ}{\mathbb Q}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\Supp}{\operatorname{Supp}}\newcommand{\Fitt}{\operatorname{Fitt}}
+\newcommand{\Ann}{\operatorname{Ann}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}\newcommand{\Tr}{\operatorname{Tr}}\newcommand{\id}{\operatorname{id}}
+\newcommand{\whot}{\mathbin{\widehat\otimes}}\newcommand{\m}{\mathfrak m}\newcommand{\p}{\mathfrak p}
+\newcommand{\head}[1]{\par\vspace{2pt}{\sffamily\bfseries\normalsize #1}\par\vspace{1pt}}
+\newcommand{\captiontext}[1]{\par\noindent{\footnotesize\color{black!70}#1\par}}
+\newtcolorbox{insight}{colback=accent!3,colframe=accent,boxrule=0pt,leftrule=1.1pt,arc=0pt,left=10pt,right=10pt,top=5pt,bottom=5pt,before skip=6pt,after skip=5pt}
+\newcommand{\takeaway}[1]{\begin{insight}\textbf{Read this as:}\ #1\end{insight}}
+\newcommand{\vfig}[2][.92]{\par\begingroup\centering\resizebox{#1\linewidth}{!}{\input{graphics/#2.tex}}\par\endgroup\vspace{2pt}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newif\ifstarted\startedfalse
+\newcommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
+\pdfbookmark[1]{Plate V.#1. #2}{plate#1}\hypertarget{vpage#1}{}\label{visual:#1}
+{\sffamily\fontsize{9}{11}\selectfont\bfseries\color{accent}Plate V.#1\quad /\quad #3\par}\vspace{5pt}
+{\raggedright\hyphenpenalty=10000\sffamily\bfseries\fontsize{21}{24}\selectfont #2\par}\vspace{5pt}
+{\sffamily\fontsize{8.7}{11}\selectfont\color{muted} #4\par}\vspace{6pt}}
+\newcommand{\pagerefV}[1]{\hyperlink{vpage#1}{Plate V.#1}}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\kk}{\mathbb k}
+\renewcommand{\AA}{\mathcal A}
+\newcommand{\BB}{\mathcal B}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Ker}{\operatorname{ker}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\src}{\operatorname{src}}\newcommand{\tgt}{\operatorname{tgt}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\Dfun}{\mathsf D}
+\newcommand{\Efun}{\mathsf E}
+\newcommand{\Tfun}{\mathsf T}
+\newcommand{\Sfun}{\mathsf S}
+\newcommand{\Cfun}{\mathsf C}
+\newcommand{\Thetafun}{\symup{\Theta}}
+
+\input{component-layout.tex}
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{Forty worked pages and thirty-seven editable vector figures follow
+exact signal coordinates, a fully enumerated packet tree, and a reflection orbit,
+then extend the route to stable banks, singular trace packets,
+and conditional recovery of separated jumps.}
+
+
+\pdfbookmark[0]{Guide contents}{guidecontents}
+{\sffamily\bfseries\Large\color{accent}Part I / A route through the examples}\par\medskip
+Plates V.1 through V.40 identify worked pages independently of PDF
+pagination. Each page names its corresponding statements in the monograph
+traditional edition. The Lean guide records the separate formal contract.
+\medskip
+\begin{multicols}{2}\raggedright
+{\small\noindent\hyperlink{vpage1}{\textbf{Plate V.1} Three objects, three different questions}\par\smallskip}
+{\small\noindent\hyperlink{vpage2}{\textbf{Plate V.2} An atlas of the objects}\par\smallskip}
+{\small\noindent\hyperlink{vpage3}{\textbf{Plate V.3} Decimation is a permutation, not a loss}\par\smallskip}
+{\small\noindent\hyperlink{vpage4}{\textbf{Plate V.4} Refine packets on a common lattice}\par\smallskip}
+{\small\noindent\hyperlink{vpage5}{\textbf{Plate V.5} A filter becomes a matrix of actual delays}\par\smallskip}
+{\small\noindent\hyperlink{vpage6}{\textbf{Plate V.6} One sample is not one channel step}\par\smallskip}
+{\small\noindent\hyperlink{vpage7}{\textbf{Plate V.7} Perfect reconstruction is an operator identity}\par\smallskip}
+{\small\noindent\hyperlink{vpage8}{\textbf{Plate V.8} A jump can hide from the first Haar split}\par\smallskip}
+{\small\noindent\hyperlink{vpage9}{\textbf{Plate V.9} Lifting preserves information, not energy}\par\smallskip}
+{\small\noindent\hyperlink{vpage10}{\textbf{Plate V.10} The second level resolves the hidden change}\par\smallskip}
+{\small\noindent\hyperlink{vpage11}{\textbf{Plate V.11} Deleting coefficients is the approximation step}\par\smallskip}
+{\small\noindent\hyperlink{vpage12}{\textbf{Plate V.12} A mixed-depth basis must cover every branch}\par\smallskip}
+{\small\noindent\hyperlink{vpage13}{\textbf{Plate V.13} Solve every alternative without searching every alternative}\par\smallskip}
+{\small\noindent\hyperlink{vpage14}{\textbf{Plate V.14} How far can the costs move before the tree changes?}\par\smallskip}
+{\small\noindent\hyperlink{vpage15}{\textbf{Plate V.15} Retain the jump and approximate the other packet}\par\smallskip}
+{\small\noindent\hyperlink{vpage16}{\textbf{Plate V.16} Why a Fourier cutoff cannot reproduce this jump pointwise}\par\smallskip}
+{\small\noindent\hyperlink{vpage17}{\textbf{Plate V.17} Small location errors, different norms}\par\smallskip}
+{\small\noindent\hyperlink{vpage18}{\textbf{Plate V.18} Separate amplitude error from mask error}\par\smallskip}
+{\small\noindent\hyperlink{vpage19}{\textbf{Plate V.19} Geometry localizes error while data may leave it ambiguous}\par\smallskip}
+{\small\noindent\hyperlink{vpage20}{\textbf{Plate V.20} Two products, two packet laws}\par\smallskip}
+{\small\noindent\hyperlink{vpage21}{\textbf{Plate V.21} Nonlinear neighbors cross channel boundaries}\par\smallskip}
+{\small\noindent\hyperlink{vpage22}{\textbf{Plate V.22} One reflection circle, four very different impedances}\par\smallskip}
+{\small\noindent\hyperlink{vpage23}{\textbf{Plate V.23} A pole is a chart boundary, not a broken group action}\par\smallskip}
+{\small\noindent\hyperlink{vpage24}{\textbf{Plate V.24} Residue labels are not impedance averages}\par\smallskip}
+{\small\noindent\hyperlink{vpage25}{\textbf{Plate V.25} Sensitivity grows before the pole is reached}\par\smallskip}
+{\small\noindent\hyperlink{vpage26}{\textbf{Plate V.26} What the reader can now verify}\par\smallskip}
+\end{multicols}
+\medskip
+\head{Three reading routes}
+\textbf{Signal coordinates:} Plates V.3--V.11, then Plate V.20 and Plate V.21.
+\textbf{Selection and error:} Plates V.12--V.19.
+\textbf{Nonlinear geometry:} Plates V.22--V.25.
+\head{One model per question}
+The sixteen-sample signal gives exact rational values. The depth-three tree
+has twenty-six complete prunings. The reflection orbit has four exact
+quarter-turn points. These bounded examples expose the paper's mechanisms
+without replacing its general statements.
+\head{Read the hypotheses with the picture}
+Zero extension, periodic indexing, and infinite sequences describe different
+objects. Known jumps differ from estimated jumps. A finite optimum depends
+on a specified cost, and a coordinate transformation does not establish an
+optimal sampling rule. Plate V.26 records the evidence behind this guide.
+\clearpage
+\pdfbookmark[0]{Extended developments contents}{extensioncontents}
+{\sffamily\bfseries\Large\color{accent}Part II / From coordinates to recovery}\par\medskip
+The expanded traditional development supplies additional theorems beyond the
+inherited twenty-result formal contract. These fourteen new worked pages
+follow its hypotheses through exact examples and quantitative bounds.
+\medskip
+\begin{multicols}{2}\raggedright
+{\small\noindent\hyperlink{vpage27}{\textbf{Plate V.27} What the extended developments add}\par\medskip}
+{\small\noindent\hyperlink{vpage28}{\textbf{Plate V.28} Six image phases are six exact address classes}\par\medskip}
+{\small\noindent\hyperlink{vpage29}{\textbf{Plate V.29} A positive singular-value gap survives perturbation}\par\medskip}
+{\small\noindent\hyperlink{vpage30}{\textbf{Plate V.30} Nonunitary tree bounds propagate along branches}\par\medskip}
+{\small\noindent\hyperlink{vpage31}{\textbf{Plate V.31} Derivative jumps have their own packets}\par\medskip}
+{\small\noindent\hyperlink{vpage32}{\textbf{Plate V.32} The approximation operator also acts on packet error}\par\medskip}
+{\small\noindent\hyperlink{vpage33}{\textbf{Plate V.33} An overlap matrix is an exact error ledger}\par\medskip}
+{\small\noindent\hyperlink{vpage34}{\textbf{Plate V.34} A shifted step and a shifted ramp have different moduli}\par\medskip}
+{\small\noindent\hyperlink{vpage35}{\textbf{Plate V.35} A strict contrast gap locates every separated jump cell}\par\medskip}
+{\small\noindent\hyperlink{vpage36}{\textbf{Plate V.36} Repeated observations shrink the noise side of the gap}\par\medskip}
+{\small\noindent\hyperlink{vpage37}{\textbf{Plate V.37} Haar sees a jump only through its position in the support}\par\medskip}
+{\small\noindent\hyperlink{vpage38}{\textbf{Plate V.38} Two half-shifted grids remove exact alignment failure}\par\medskip}
+{\small\noindent\hyperlink{vpage39}{\textbf{Plate V.39} Higher differences annihilate polynomial interiors}\par\medskip}
+{\small\noindent\hyperlink{vpage40}{\textbf{Plate V.40} Conditional Gibbs control closes the reconstruction estimate}\par\medskip}
+\end{multicols}
+\head{A connected route}
+The lattice example extends exact addressing. Frame bounds then quantify the
+stability of analysis and synthesis. Trace packets remove specified singularities,
+while overlap and location formulas measure errors in their estimates. Three
+local detectors address separated jumps under contrast hypotheses. The final
+page combines the recovered packet with a chosen approximation operator.
+\head{Keep the evidence attached to its claim}
+The twenty-result core carries its preserved Lean map. Part II carries
+traditional proofs and the recorded mathematical review, with a separate exact
+worked-example checker. The symbolic visual suite, arithmetic
+runs, saved compiler transcripts, and rendered figures each have a stated
+scope. Neither a figure nor a finite check expands the formal theorem map.
+\head{What the example numbers mean}
+The additional checker uses exact rational arithmetic. Its logarithmic sampling
+budget is enclosed using a positive Taylor partial sum. Curve coordinates are
+converted to decimal positions for drawing. Displayed formulas retain exact
+values. All source-drawn plates are editable TikZ, and the final comparison
+figure is preserved from the expanded manuscript's vector source.
+
+\clearpage
+\pdfbookmark[0]{Worked visual guide}{workedguide}
+\pagenumbering{arabic}
+\begingroup
+\setstretch{1.01}\fontsize{10}{12}\selectfont
+\setlength{\parskip}{3pt}\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\input{source/pages_final.tex}
+\endgroup
+\end{document}

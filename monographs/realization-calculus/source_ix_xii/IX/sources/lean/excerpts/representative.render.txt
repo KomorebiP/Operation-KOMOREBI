@@ -1,0 +1,10 @@
+theorem obstruction_representative_independent (p : ℕ)
+    (A : (Fin d → ℤ) →ₗ[ℤ] (Fin e → ℤ)) (r : Fin e → ℤ) (s : Fin d → ℤ) :
+    obstruction p A (r + A s) = obstruction p A r := by
+  change Submodule.Quotient.mk (reduction p e (r + A s)) = _
+  rw [map_add, Submodule.Quotient.mk_add]
+  have hs : (Submodule.Quotient.mk (reduction p e (A s)) : Obstruction p A) = 0 := by
+    rw [Submodule.Quotient.mk_eq_zero]
+    exact ⟨s, rfl⟩
+  rw [hs, add_zero]
+  rfl

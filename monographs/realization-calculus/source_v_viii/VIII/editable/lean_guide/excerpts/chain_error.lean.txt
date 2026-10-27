@@ -1,0 +1,17 @@
+theorem product_chain_error_bound [NormOneClass R] (A B : ℕ → R) (δ : ℕ → ℝ)
+    (hδ : ∀ j, ‖B j - A j‖ ≤ δ j) (n : ℕ) :
+    ‖chainProduct B n - chainProduct A n‖ ≤
+      ∑ j ∈ Finset.range n,
+        (∏ i ∈ Finset.Ico (j + 1) n, ‖B i‖) *
+          (δ j * ∏ i ∈ Finset.range j, ‖A i‖) := by
+  rw [← propagatedError_eq_sum]
+  apply norm_recurrence_bound (fun k => chainProduct B k - chainProduct A k)
+    (fun k => ‖B k‖) (fun k => δ k * ∏ i ∈ Finset.range k, ‖A i‖)
+    (by simp [chainProduct]) (fun k => norm_nonneg _)
+  intro k
+  rw [product_discrepancy_step]
+  apply (norm_add_le _ _).trans
+  apply add_le_add (norm_mul_le _ _)
+  apply (norm_mul_le _ _).trans
+  exact mul_le_mul (hδ k) (chainProduct_norm_bound A k) (norm_nonneg _)
+    ((norm_nonneg _).trans (hδ k))

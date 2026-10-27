@@ -1,0 +1,27 @@
+theorem common_gap_estimate (p : ℝ≥0) (hp : (p:ℝ)∈Ioo 0 1) (m : ℝ) (hm : 0 < m)
+    (A : E →L[ℂ] E) (B : F →L[ℂ] F) (C : E →L[ℂ] F) (hA : 0 ≤ A) (hB : 0 ≤ B)
+    (hgA : algebraMap ℝ (E →L[ℂ] E) m ≤ A) (hgB : algebraMap ℝ (F →L[ℂ] F) m ≤ B) :
+    ‖fractionalDefect A B C p‖ ≤ (p:ℝ)*m^((p:ℝ)-1)*‖defect A B C‖ := by
+  have hd := normalized_integral p hp A B C hA hB
+  have hk : 0 < coefficient p := BetaNormalization.sine_factor_positive p hp
+  have hs : 0 < Real.sin (Real.pi*(p:ℝ)) := by
+    apply Real.sin_pos_of_pos_of_lt_pi
+    · exact mul_pos Real.pi_pos hp.1
+    · nlinarith [Real.pi_pos,hp.2]
+  have hg : IntegrableOn (fun t : ℝ => t^(p:ℝ)/(t+m)^2) (Ioi 0) := by
+    by_contra hn
+    have hz := integral_undef hn
+    rw [BetaNormalization.gap_integral p m hp hm] at hz
+    exact (mul_pos (Real.rpow_pos_of_pos hm _) (div_pos (mul_pos hp.1 Real.pi_pos) hs)).ne' hz
+  rw [hd.2,norm_smul,Real.norm_of_nonneg hk.le]
+  calc
+    _ ≤ coefficient p*(∫ t in Ioi 0,‖integrand A B C p t‖) := by
+      apply mul_le_mul_of_nonneg_left (norm_integral_le_integral_norm _) hk.le
+    _ ≤ coefficient p*(∫ t in Ioi 0,‖defect A B C‖*(t^(p:ℝ)/(t+m)^2)) := by
+      apply mul_le_mul_of_nonneg_left _ hk.le
+      apply setIntegral_mono_on hd.1.norm (hg.const_mul _) measurableSet_Ioi
+      intro t ht
+      exact gap_bound p t m ht hm.le hp A B C hA hB hgA hgB
+    _ = _ := by
+      rw [integral_const_mul,mul_left_comm,coefficient,BetaNormalization.normalized_gap_integral p m hp hm]
+      ring

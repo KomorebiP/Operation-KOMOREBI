@@ -1,0 +1,229 @@
+\clearpage\subsection{Singular Amice Supplement}\label{app:sup9}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical. The final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+Let $p$ be prime, let $m\mid p-1$, and put $N=mp$. For $1\le a<m$, put $c=ap$ and define the original exponential section and ratio by
+\[
+ H_{N,c}(t)=\sum_{n\ge0}\frac{t^{Nn+c}}{(Nn+c)!},\qquad
+ R_c(t)=\frac{tH_{N,c-1}(t)}{H_{N,c}(t)}.
+\]
+The quotient is interpreted after removing its forced zero. This block proves, for the actual rational coefficients $\alpha_d$,
+\[
+ R_{ap}(\log(1+T))=\sum_{d\ge0}\alpha_dT^d,
+ \qquad
+ \boxed{\alpha_d=0\ \text{or}\ v_p(\alpha_d)\ge-\left\lfloor d/p\right\rfloor.}
+\]
+Equivalently, every $p^{\lfloor d/p\rfloor}\alpha_d$ belongs to the actual completed ring $\Z_p$. The zero-safe alternative is explicit in the formal rational statement.
+
+This is the weighted estimate of Proposition 4.7 in the supporting argument. It is \textbf{not yet the singular higher finite-difference theorem}. The full all-residue Paper IX Theorem 7.5 remains pending, and full manuscript coverage stays at \textbf{23 of 24}.
+
+\begin{center}\begin{tabular}{lrr}\toprule
+Inventory & v0.8.0 & This release\\\midrule
+Proof modules &47&57\\
+Explicit theorem declarations &526&630\\
+Explicit definitions audited separately &107&128\\
+Fully covered manuscript items &23/24&23/24\\\bottomrule
+\end{tabular}\end{center}
+The 104 added declarations include 30 declarations in four previously compiled research modules, now included in the cumulative audit, and 74 declarations in six new modules. They include supporting lemmas and examples, not independent discoveries. All 47 earlier checked proof modules are preserved byte for byte.
+
+\textbf{No hidden estimate.} The final weighted-ratio theorem assumes primality, the modulus divisibility and the specified residue bounds. It does not assume weighted section membership, reciprocal closure, the ratio identity, a Mahler pairing or the desired higher-difference bound. Pages 2--5 describe the constructed objects and proved bridges.
+\par\medskip
+\subsubsection*{1. Integral cyclic coefficients}
+Work first in an arbitrary commutative ring $R$. If $z^p=1$, set
+\[
+ I=(p,z-1),\qquad P=(p).
+\]
+Expanding $((z-1)+1)^p=1$ and using divisibility of every interior binomial coefficient in prime row $p$ gives
+\[
+ (z-1)^p\in PI.
+\]
+Every other degree-$p$ product of the two generators of $I$ also belongs to $PI$. The formal ideal proof therefore establishes
+\[
+ \boxed{I^p\subseteq PI.}
+\]
+For $q=p\lfloor q/p\rfloor+(q\bmod p)$, strong induction and the factorial valuation identity give
+\[
+ \boxed{I^q\subseteq P^{v_p(q!)}}.
+\]
+In detail, write $b=\lfloor q/p\rfloor$. Then
+\[
+ I^q\subseteq P^b I^b\subseteq P^{b+v_p(b!)}=P^{v_p(q!)}.
+\]
+No integral-domain hypothesis or division in a field is used here.
+
+Now take the integral cyclic group ring
+\[
+ R_N=\Z[\Z/N\Z],\qquad x=[1],\qquad x^N=1,
+\]
+and assume $N\mid p(p-1)$. Thus $(x^{p-1})^p=1$. Each genuine consecutive block
+\[
+ \prod_{i=0}^{p-1}\bigl(x-(pb+i)\bigr)
+\]
+belongs to $(p,x^{p-1}-1)$. This follows from the actual polynomial identity
+\[
+ \prod_{i\in\F_p}(X-i)=X^p-X
+\]
+modulo $p$, not from a hypothesized valuation of the product.
+
+For the falling factorial $(x)_d=\prod_{i=0}^{d-1}(x-i)$, grouping into consecutive blocks gives
+\[
+ (x)_d\in I^{\lfloor d/p\rfloor}
+ \subseteq\bigl(p^{v_p(\lfloor d/p\rfloor!)}\bigr).
+\]
+Every integral residue coordinate therefore satisfies
+\[
+ \boxed{p^{v_p(\lfloor d/p\rfloor!)}\mid [(r)](x)_d\quad\text{in }\Z.}
+\]
+Dividing a coordinate by $d!$ is done only afterward, using
+$v_p(d!)=\lfloor d/p\rfloor+v_p(\lfloor d/p\rfloor!)$. This establishes the weighted denominator estimate before any field-valued divisibility could make it vacuous.
+
+\textbf{Modules.} \mcode{CyclotomicFiltration}, \mcode{PrimeBlockPolynomial}, and \mcode{CyclicAmiceCoefficients}.
+\par\medskip
+\subsubsection*{2. Connection to the actual section}
+An integral coordinate estimate becomes relevant only after connecting it to the manuscript's generating functions. For a residue $r\in\Z/N\Z$, define
+\[
+ H_r(t)=\sum_{d\ge0}\mathbf1_{d\equiv r\ (N)}\frac{t^d}{d!},
+ \qquad F_r(T)=H_r(\log(1+T)).
+\]
+The implementation uses the actual formal logarithm and substitution in $\Q[[T]]$. It proves
+\[
+ H_r'=H_{r-1},\qquad (1+T)F_r'=F_{r-1},
+\]
+and hence the coefficient recurrence
+\[
+ (d+1)\coef{T}{d+1}F_r
+ =\coef{T}{d}F_{r-1}-d\coef{T}{d}F_r.
+\]
+The initial values are $F_r(0)=\mathbf1_{r=0}$.
+
+Independently, let $b_{d,r}$ be the residue-$r$ coordinate of $(x)_d$ in $R_N$. Actual group-ring multiplication gives
+\[
+ b_{0,r}=\mathbf1_{r=0},\qquad
+ b_{d+1,r}=b_{d,r-1}-d\,b_{d,r}.
+\]
+Induction comparing these two recurrences proves
+\[
+ \boxed{d!\coef{T}{d}H_r(\log(1+T))=b_{d,r}.}
+\]
+Thus the cyclic coefficient is not an unrelated stand-in for a section coefficient. For the canonical label $0\le c<N$, the formal section is also proved equal to the original \mcode{ExponentialSection.}\allowbreak\mcode{originalSection} used in the existing Euler project.
+
+\subsection*{Weighted membership}
+The class used in the formalization is
+\[
+ \Wp=\left\{F\in\Q_p[[T]]:
+ p^{\lfloor d/p\rfloor}\coef{T}{d}F\in\Z_p\ \text{for every }d\right\}.
+\]
+The integral-coordinate estimate from page 2 now proves
+\[
+ \boxed{H_r(\log(1+T))\in\Wp}
+\]
+for every residue $r$, including the singular ones. Rational coefficients are mapped into $\Q_p$ by the actual coefficient ring homomorphism.
+
+The same source package retains the earlier independent formal identity
+\[
+ d!\coef{T}{d}\exp(x\log(1+T))=(x)_d
+\]
+over a commutative $\Q$-algebra. The section bridge above does not rely on selecting or averaging roots in a cyclotomic extension.
+
+\textbf{Principal targets.}\par \mcode{factorial_coeff_section}; \mcode{section_weighted_integral};\par \mcode{weighted_section}.
+\par\medskip
+\subsubsection*{3. Weighted closure and the normalized denominator}
+Let $w(d)=\lfloor d/p\rfloor$. Since $w(i)+w(d-i)\le w(d)$, the coefficient formula for a product proves closure of $\Wp$ under multiplication. Additive closure is immediate. For $U\in\Wp$ with $U(0)=1$, strong induction in the actual reciprocal coefficient recurrence proves
+\[
+ \boxed{U^{-1}\in\Wp.}
+\]
+This inverse property is a theorem, not an additional field in a structure encoding weighted series.
+
+\subsection*{Differentiation and the Euler field}
+The derivative coefficient is $(d+1)a_{d+1}$. If $p\nmid d+1$, the adjacent weights agree. If $p\mid d+1$, the integer factor $d+1$ compensates for the one-unit weight increase. Therefore ordinary differentiation preserves $\Wp$.
+
+For the actual logarithm, its coefficient denominator is $d$, and the proved inequality
+\[
+ v_p(d)\le\lfloor d/p\rfloor\qquad(d>0)
+\]
+implies $\log(1+T)\in\Wp$. Consequently
+\[
+ L_TF=\log(1+T)(1+T)F'
+\]
+also preserves $\Wp$.
+
+\subsection*{Removing a singular forced zero}
+Put $c=ap<N$ and define the actual normalized kernel
+\[
+ K_c(t)=c!\sum_{n\ge0}\frac{t^{Nn}}{(Nn+c)!},\qquad K_c(0)=1.
+\]
+Let $\ell(T)=\log(1+T)/T$, defined by shifting logarithm coefficients, not by inverting $T$. Set
+\[
+ U(T)=\ell(T)^cK_c(\log(1+T)).
+\]
+The formal proof establishes $U(0)=1$ and the exact factorization
+\[
+ H_{N,c}(\log(1+T))=\frac{T^c}{c!}U(T).
+\]
+It follows coefficientwise that
+\[
+ \coef{T}{d}U=c!\coef{T}{d+c}H_{N,c}(\log(1+T)).
+\]
+Because $p^a\mid(ap)!$ and $\lfloor(d+ap)/p\rfloor=a+\lfloor d/p\rfloor$, the already proved section estimate gives $U\in\Wp$. Thus $U^{-1}\in\Wp$ as well. The factorial divisibility is derived from the pinned Legendre valuation theorem.
+
+\textbf{Boundary.} The original positive-address section has zero constant coefficient. It is not the series to which unit inverse closure is applied.
+\par\medskip
+\subsubsection*{4. The singular ratio estimate}
+For a positive address $c$, the rational ratio is independently constructed from the original kernels:
+\[
+ R_c(t)=c\,K_{c-1}(t)K_c(t)^{-1}.
+\]
+The scalar factor $c$ is necessary. The source proves the cleared identity
+\[
+ \boxed{R_c(t)H_{N,c}(t)=tH_{N,c-1}(t).}
+\]
+This connects the constructed object to the original unnormalized ratio $A_{c-1}/A_c$. It does not assign the desired transformed formula as its definition.
+
+After actual logarithmic substitution and the chain rule,
+\[
+ R_c(\log(1+T))H_{N,c}(\log(1+T))
+ =L_TH_{N,c}(\log(1+T)).
+\]
+Insert the proved factorization $H_{N,c}(\log(1+T))=T^cU/c!$. Leibniz differentiation and cancellation of that nonzero section give
+\[
+ \boxed{R_c(\log(1+T))
+ =c(1+T)\ell(T)+(L_TU)U^{-1}.}
+\]
+All differentiation, substitution, nonzeroness and cancellation obligations are proved in the source.
+
+For $c=ap$, the second summand belongs to $\Wp$ by the closure results on page 4. The first does too: shifting the logarithm coefficient loses at most one unit of the floor weight, so $p\ell(T)\in\Wp$, and the integer $a$ supplies the remaining factor. Therefore
+\[
+ \boxed{R_{ap}(\log(1+T))\in\Wp.}
+\]
+The final rational coefficient theorem states the bound with an explicit zero alternative. No finite-valued default valuation at zero is used as the meaning of unlimited precision.
+
+\subsection*{Checks that prevent a normalization mistake}
+The source proves that the actual ratio has constant coefficient $c$, not one. In the concrete case $N=6,c=3$, the universal theorem gives weighted membership and the constant coefficient is proved to be $3$.
+
+It also derives $\coef{T}{3}H_{3,0}(\log(1+T))=1/6$ from the actual differential recurrence and checks its valuation $v_3(1/6)=-1$. Thus weighted membership does not mean ordinary coefficient integrality. This value attains the allowed floor weight at degree three.
+
+\textbf{Principal target.} \mcode{SingularRatioAmice.paper_singular_amice_estimate}. The theorem's assumptions contain only the declared arithmetic parameter conditions.
+\par\medskip
+\subsubsection*{5. Verification and the remaining theorem}
+The cumulative inventory consists of 57 modules, 630 explicit theorem declarations and 128 explicit definitions. The release verifier compiles every module in dependency order into a new directory, treats warnings as errors, and requests a transitive axiom report for all 758 listed declarations. The allowed axioms remain \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}.
+
+The verifier retains the previous 27 invalid-proof controls and adds two: incorrectly promoting a weighted coefficient to an integral one, and incorrectly normalizing the singular ratio constant to one. Missing imports, panics and timeouts do not qualify as successful negative controls. The preserved source checker rejects proof placeholders, added axioms and selected kernel-bypass constructs.
+
+The Python infrastructure suite now contains 209 tests. Four old cumulative-count assertions initially failed against the extended inventory. Their original files and failed test output are preserved. The historical tests now inspect the frozen eighth-block inventory where appropriate, while current-corpus tests enforce the new counts.
+
+\subsection*{Independent finite regressions}
+The new exact-rational regression program is a separate implementation, not Lean extraction. Its checked scope is:
+\begin{center}\begin{tabular}{lr}\toprule
+Finite check & Count\\\midrule
+Integral cyclic-coordinate numerator tests &17,775\\
+Corresponding section-weight tests &17,775\\
+Direct logarithmic composition comparisons &24\\
+Singular ratio families &13\\
+Singular ratio coefficient comparisons &597\\
+Weighted product, inverse and derivative cases &120\\\bottomrule
+\end{tabular}\end{center}
+For $p=3,N=6,c=3$, this independent computation obtains the degree-six ratio coefficient $1/10080$, with valuation $-2$, attaining the allowed weight. This particular coefficient calculation is recorded as a finite regression, not as a new Lean theorem. A violating modulus $p=3,N=4$ yields a section coefficient of valuation $-4$ at degree nine, showing that the modulus divisibility hypothesis cannot simply be discarded.
+
+\subsection*{What has not been proved by this block}
+To obtain the singular higher-difference theorem, the weighted coefficient estimate must still be connected to the dual Mahler polynomial filtration and its integral pairing. The argument must then establish the required ratio flatness, propagate between singular indices, and assemble the original all-residue Euler family. None of these obligations is replaced by the finite regression tests.
+
+The full manuscript register remains 23/24. Neither conjecture is resolved. The original manuscript is unchanged. Mathlib's pinned compiled cache is reused, not independently rebuilt. Frozen compiler logs, source hashes, failed drafts and fresh-extraction results accompany the release. Its machine-readable audit is authoritative about the runs actually performed.

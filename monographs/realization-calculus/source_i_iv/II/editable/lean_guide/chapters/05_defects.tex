@@ -1,0 +1,72 @@
+\section{Typed defects: domain and codomain stay visible}\label{sec:defects}
+
+Rows 19--21 keep the domain and codomain explicit. Let $X_f$ and $X_c$ be fine and coarse modules, $C:X_f\to X_c$, and let $T_f$ and $T_c$ act on their respective spaces. The defect for one step is
+\[
+\Delta=CT_f-T_cC:X_f\longrightarrow X_c.
+\]
+The source does not assume that the two spaces coincide.
+\excerpt{PaperII/TypedLinearDefects}{typed_defect}
+
+Notice that the scalar type is a semiring while the spaces have additive group structures, allowing subtraction of maps. Scalar subtraction is not needed for the basic power identity. This is one example of why the complete type is more informative than a loose description such as ``linear algebra over a ring.''
+
+\subsection{The telescoping mechanism}
+
+Define $E_n=CT_f^n-T_c^nC$. The induction uses
+\[
+E_{n+1}=T_cE_n+\Delta T_f^n.
+\]
+Expanding $E_n$ gives
+\[
+CT_f^n-T_c^nC
+=\sum_{k=0}^{n-1}T_c^{n-1-k}\Delta T_f^k.
+\]
+Every summand is a map $X_f\to X_c$: the right power acts in $X_f$, the defect crosses to $X_c$, and the left power acts there. Treating $C$ as an endomorphism would hide this type constraint.
+
+The theorem for all powers includes $n=0$. The left side is $C-C=0$ and the finite sum is empty. The theorem for positive powers is a wrapper around this stronger statement. In the successor proof, \code{Finset.sum_range_succ} separates the new last term. Arithmetic of natural numbers verifies the shifted exponents. The exponent $n-1-k$ occurs only at $k<n$, where it has the intended value.
+
+If the defect for one step is zero, every term in the sum vanishes.
+\excerpt{PaperII/TypedLinearDefects}{zero_defect}
+
+This extends to finite polynomial functional calculus by summing the corresponding power identities with scalar coefficients. The definition of polynomial action explicitly carries the commutative scalar assumptions needed for those coefficients to act centrally. The result does not establish holomorphic, exponential, or other infinite functional calculus without further analytic work.
+
+\subsection{The operator norm estimate}
+
+In the branch for continuous linear maps, the same finite identity yields
+\[
+\|CT_f^n-T_c^nC\|
+\le \|\Delta\|\sum_{k=0}^{n-1}
+\|T_c\|^{n-1-k}\|T_f\|^k.
+\]
+The triangle inequality bounds the norm of the sum. Submultiplicativity bounds each composition, and the endomorphism power estimate bounds each power. Completeness of the spaces is unnecessary because this is a finite sum.
+
+If both operator norms are at most $\rho$, the component derives the following majorant
+\[
+\|CT_f^n-T_c^nC\|\le n\rho^{n-1}\|\Delta\|.
+\]
+The source states the endpoint for natural exponents carefully, so the theorem for all $n$ also includes zero. The hypotheses supply $\rho$ and the two norm bounds. A bound on the spectral radius is not interchangeable with an operator norm bound here, and the majorant is not asserted to be sharp.
+
+For example, exact intertwining $\Delta=0$ forces every defect for finite powers to vanish. A small nonzero defect may still be amplified by large powers. The theorem gives an upper bound with the stated norm data. It does not identify the actual error for a particular trajectory or nonlinear dynamics.
+
+\subsection{Resolvents from the inverse equations actually used}
+
+Let $R_f$ and $R_c$ be supplied inverse candidates for the scalar shifts. The continuous theorem needs only
+\[
+(zI-T_f)R_f=I,\qquad R_c(zI-T_c)=I.
+\]
+The fine witness is a right inverse. The coarse witness is a left inverse. They are sufficient for the ordered sandwich calculation
+\[
+CR_f-R_cC=R_c\Delta R_f.
+\]
+\excerpt{PaperII/TypedLinearDefects}{resolvent}
+
+The source first applies a general sandwich identity for inverse candidates. The difference of shifted compositions simplifies to $CT_f-T_cC$ because the two scalar terms cancel. The sign is therefore positive on the right for this convention of $\Delta$. Reversing the defect definition would change that sign.
+
+Applying the operator norm gives
+\[
+\|CR_f-R_cC\|\le\|R_c\|\,\|\Delta\|\,\|R_f\|.
+\]
+No theorem here constructs the inverse candidates or proves that $z$ lies in a resolvent set. The algebraic typed branch uses explicit structures certifying inverse equations on both sides. The continuous branch needs only the two inverse equations displayed above. A user should choose the theorem matching the available data rather than infer inverse existence from the word ``resolvent.''
+
+\subsection{What remains in the written companion}
+
+The mathematical text also proves holomorphic functional calculus, exponential, and multilevel defect identities with their own analytic or compositional hypotheses. The preserved Lean map records finite polynomial compatibility, the power estimates, and the resolvent identities with inverse witnesses. Those additional results are outside this inherited map. The chapter-wide correspondence and the analytic constructions are recorded in Section~\ref{sec:current-release}.

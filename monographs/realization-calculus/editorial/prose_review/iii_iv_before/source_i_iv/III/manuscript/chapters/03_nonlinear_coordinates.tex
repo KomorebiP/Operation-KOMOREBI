@@ -1,0 +1,1185 @@
+\part{Nonlinear packet calculus, obstruction complexes, and holonomy}\label{part:nonlinear}
+\noindent This part moves from exact coordinates for arbitrary functions to differentiable interactions, specified correction problems, and finite or smooth transport. Each ordinary proof retains its stated hypotheses. These results are not asserted to belong to the finite Lean contract of Part~I.
+
+\medskip\noindent The notational change from \(\cA,\cS\) to \(\Acal,\Scal\) is typographical: both denote analysis and synthesis for the declared packet system. A connection remains additional data. Smooth canonical transport is constructed from a moving projector family, whereas the algebraic exact coordinate transport in Part~I compares fixed exact descriptions of one ambient object.
+\section{Introduction}\label{sec:introduction}
+
+A finite family of pairwise annihilating idempotents gives exact coordinates.  If
+\[
+P_\alpha P_\beta=0
+\quad\text{for }\alpha\ne\beta,
+\qquad
+\sum_\alpha P_\alpha=I,
+\]
+then every vector is the sum of its packet components.  Linear operators become block matrices in these coordinates.  A nonlinear map cannot be reconstructed from its diagonal restrictions, since mixed interactions between packet components are usually present.  It can still be represented exactly if its input is the complete packet tuple.
+
+This part develops nonlinear packet representation and the obstruction theory that follows from it.  Exact coordinates preserve a nonlinear problem, but they do not solve it.  Once the equation is written in packet coordinates, its derivatives, compositions, correction maps, refinement failures, and gluing defects can be separated without discarding mixed terms.
+
+The first stage of Part~II treats the local nonlinear calculus.  Packet analysis and synthesis conjugate arbitrary maps.  Fr\'echet derivatives split into multilinear packet jets.  The higher chain rule then becomes a Fa\`a di Bruno formula whose terms carry intermediate packet labels.  Standard background on Fr\'echet calculus and the higher chain rule may be found in \cite{AbrahamMarsdenRatiu1988,ConstantineSavits1996,Deimling1985}.
+
+The next stage studies nonlinear iteration.  Repeated substitution is indexed by rooted trees rather than operator words.  A scalar majorant gives an absolute convergence theorem for polynomial fixed-point equations.  The quadratic case recovers the Catalan series.  Rooted tree combinatorics are discussed in \cite{Stanley2012,LodayVallette2012,HairerLubichWanner2006}.
+
+A linear correction map
+\[
+D:U\longrightarrow V
+\]
+places the obstruction to solving $Du=-r$ in the canonical quotient $\coker D$.  This quotient has a universal property and behaves naturally under commuting squares.  Mapping cones extend the same construction to cochain complexes.  In a Hilbert space with closed range, the quotient is represented by the orthogonal projection onto $\Ker D^*$.  The Moore--Penrose inverse then gives the least norm correction.  Relevant background appears in \cite{Weibel1994,Penrose1955}.
+
+A vanishing linear obstruction is only the first step.  We give a contraction theorem for nonlinear correction, followed by a local Lyapunov--Schmidt reduction.  In a complete filtered problem, every lifting step has its own cokernel class.  Vanishing at all depths and compatible choices of corrections produce an exact inverse limit solution.  A filtered correction complex carries a spectral sequence.  Its first page records graded obstruction candidates, while later differentials record interactions that can cancel them.  We use the standard spectral sequence of a filtered complex from \cite{Weibel1994,McCleary2001}.
+
+The final stage studies elimination and gluing.  The implicit function theorem gives an exact Schur derivative after hidden variables are removed.  Finite transport systems reduce, after a spanning tree gauge, to one holonomy element for each fundamental cycle.  The same idea extends to smooth projector families through Kato transport.  We use standard material from \cite{Deimling1985,GrossTucker1987,Kato1950,Kato1995,KobayashiNomizu1963}.
+
+The article does not claim that every nonlinear problem has a finite obstruction space.  The cokernel is canonical only after a correction map has been specified.  It may be infinite dimensional.  A first-order obstruction may vanish while a higher-order obstruction remains.  The purpose of the calculus is to identify the exact object in which each failure lives and to show how those objects change under packets, refinement, filtration, and transport.
+
+
+\section{A map of the nonlinear calculus}\label{sec:map}
+
+Four questions organize the nonlinear calculus: representation, interaction, correction, and gluing.
+
+The first question is representation.  Given a nonlinear map $F$, can its packet form be written without approximation?  The answer is yes.  Analysis and synthesis are inverse coordinate maps, so conjugation preserves the full equation.
+
+The second question is interaction.  Which input packets influence a given output packet, and at what derivative order?  Packet jets answer this question.  They form a directed hypergraph rather than an ordinary block matrix because one nonlinear interaction can have several inputs.
+
+The third question is correction.  Suppose an approximate solution leaves a defect $r$.  A declared linearized correction map $D$ removes the part of $r$ lying in $\im D$.  The quotient class
+\[
+[r]\in\coker D
+\]
+is the part that no allowed first-order correction can remove.  This quotient class is the obstruction.  Its vanishing must be supplemented by a nonlinear theorem.
+
+The fourth question is gluing.  Local coordinate changes can solve every edge problem and still fail around a loop.  The remaining cycle product is holonomy.  It measures the failure of a global frame even when each local equation has been solved.
+
+These four layers fit into the sequence
+\[
+\begin{gathered}
+\text{exact coordinates}
+\longrightarrow
+\text{packet interactions}
+\longrightarrow
+\text{correction classes}
+\\
+\longrightarrow
+\text{global gluing}.
+\end{gathered}
+\]
+Each arrow needs hypotheses.  Exact coordinates need a complete packet system.  Differential interactions need regularity.  A cokernel obstruction needs a specified correction map.  Holonomy needs invertible local transports.
+
+A second distinction concerns scale.  A refinement defect compares a fine nonlinear model with a coarse one.  It is a point in the coarse output space.  An obstruction class is the image of such a defect, or of another residual, in a quotient by allowed corrections.  The correction map must be declared before the defect determines an obstruction class.  A small defect can have a nonzero obstruction, and a large defect can have zero obstruction if it lies entirely in the correction range.
+
+The paper uses finite packet systems in the coordinate and graph sections.  Banach space hypotheses enter only where norms, contractions, or Fr\'echet derivatives are used.  Module and complex language is used for cokernels, filtered lifting, and cohomological obstructions.  This separation keeps each result at the level of generality supported by its proof.
+
+\subsection*{Standing conventions}
+All packet systems are finite unless a statement says otherwise.  In a normed setting every packet projector and every coarsening operator is bounded.  Differentiability of operator-valued maps is taken in operator norm.  A Banach space isomorphism is a bounded linear bijection with bounded inverse.  For a decreasing filtration $(F^mX)$, completeness means that the canonical map
+\[
+X\longrightarrow\varprojlim_m X/F^mX
+\]
+is an isomorphism and separatedness means $\bigcap_mF^mX=0$.  Statements about congruence classes in a filtered nonlinear problem also assume that the nonlinear map preserves filtration congruences at the stated depth.  These assumptions are repeated where they are essential to a proof.
+
+\section{Exact nonlinear packet coordinates}\label{sec:nonlinear_coordinates}
+
+Let $X$ be a module over a unital ring.  A finite packet system on $X$ is a family
+\[
+\Pcal=(P_\alpha)_{\alpha\in I}\subseteq\End(X)
+\]
+of nonzero idempotents such that
+\[
+P_\alpha P_\beta=0
+\quad\text{when }\alpha\ne\beta,
+\qquad
+\sum_{\alpha\in I}P_\alpha=I_X.
+\]
+Write
+\[
+X_\alpha=P_\alpha X,
+\qquad
+X^{\Pcal}=\bigoplus_{\alpha\in I}X_\alpha.
+\]
+The analysis and synthesis maps are
+\[
+\Acal_{\Pcal}x=(P_\alpha x)_\alpha,
+\qquad
+\Scal_{\Pcal}(x_\alpha)_\alpha=\sum_\alpha x_\alpha.
+\]
+They are inverse isomorphisms.
+
+\begin{definition}[Nonlinear packet coordinate map]\label{def:nonlinear_packet_map}
+Let $\Pcal$ be a packet system on $X$ and let $\Qcal$ be a packet system on $Y$.  For any map $F:X\to Y$, define
+\[
+F_{\Qcal\leftarrow\Pcal}
+=
+\Acal_{\Qcal}F\Scal_{\Pcal}.
+\]
+Thus
+\[
+F_{\Qcal\leftarrow\Pcal}((x_\alpha)_\alpha)
+=
+\left(
+Q_\gamma F\left(\sum_\alpha x_\alpha\right)
+\right)_\gamma.
+\]
+\end{definition}
+
+\begin{theorem}[Exact nonlinear coordinate theorem]\label{thm:exact_nonlinear_coordinates}
+For every map $F:X\to Y$,
+\[
+\Scal_{\Qcal}F_{\Qcal\leftarrow\Pcal}\Acal_{\Pcal}=F.
+\]
+If $G:Y\to Z$ and $\Rcal$ is a packet system on $Z$, then
+\[
+(G\circ F)_{\Rcal\leftarrow\Pcal}
+=
+G_{\Rcal\leftarrow\Qcal}
+\circ
+F_{\Qcal\leftarrow\Pcal}.
+\]
+No linearity, continuity, or differentiability assumption is needed.
+\end{theorem}
+
+\begin{proof}
+The identities $\Scal_{\Pcal}\Acal_{\Pcal}=I_X$ and $\Scal_{\Qcal}\Acal_{\Qcal}=I_Y$ give
+\[
+\Scal_{\Qcal}F_{\Qcal\leftarrow\Pcal}\Acal_{\Pcal}
+=
+\Scal_{\Qcal}\Acal_{\Qcal}F\Scal_{\Pcal}\Acal_{\Pcal}
+=F.
+\]
+For composition,
+\[
+G_{\Rcal\leftarrow\Qcal}F_{\Qcal\leftarrow\Pcal}
+=
+\Acal_{\Rcal}G\Scal_{\Qcal}\Acal_{\Qcal}F\Scal_{\Pcal}
+=
+\Acal_{\Rcal}(G\circ F)\Scal_{\Pcal}.
+\]
+\end{proof}
+
+\begin{corollary}[Dynamical equivalence]\label{cor:dynamical_equivalence}
+Suppose $X=Y$ and the same packet system is used on both sides.  Packet coordinates preserve fixed points, periodic points, injectivity, surjectivity, and invertibility.  In particular,
+\[
+F(x)=x
+\quad\Longleftrightarrow\quad
+F_{\Pcal\leftarrow\Pcal}(\Acal_{\Pcal}x)=\Acal_{\Pcal}x.
+\]
+\end{corollary}
+
+\begin{proof}
+The packet map is conjugate to $F$ through the isomorphism $\Acal_{\Pcal}$.  Every listed property is invariant under conjugacy.
+\end{proof}
+
+\begin{proposition}[Change of packet coordinates]\label{prop:change_packet_coordinates}
+Let $\Pcal$ and $\Pcal'$ be packet systems on $X$.  Let $\Qcal$ and $\Qcal'$ be packet systems on $Y$.  For any two packet systems $\Ucal$ and $\Vcal$ on the same space, write
+\[
+J_{\Ucal\leftarrow\Vcal}
+=
+\Acal_{\Ucal}\Scal_{\Vcal}.
+\]
+Then
+\[
+F_{\Qcal'\leftarrow\Pcal'}
+=
+J_{\Qcal'\leftarrow\Qcal}
+F_{\Qcal\leftarrow\Pcal}
+J_{\Pcal\leftarrow\Pcal'}.
+\]
+\end{proposition}
+
+\begin{proof}
+Insert $\Scal_{\Qcal}\Acal_{\Qcal}=I_Y$ and $\Scal_{\Pcal}\Acal_{\Pcal}=I_X$ into the definition of $F_{\Qcal'\leftarrow\Pcal'}$.
+\end{proof}
+
+\begin{keyidea}[title={Exactness by cancellation}]
+Analysis and synthesis undo each other on the complete packet tuple. In a composition of packet descriptions, the intermediate synthesis and analysis maps cancel. This compares exact descriptions of the same ambient object. A connection adds data for transport along parameters or paths, with its own hypotheses.
+\end{keyidea}
+
+\begin{example}[A mixed quadratic map]\label{ex:mixed_quadratic}
+Let $X=Y=\bbk^2$ with coordinate packets.  For
+\[
+F(x_1,x_2)=(x_1x_2,x_1^2+x_2),
+\]
+the first output packet depends on both input packets.  The second output packet contains a quadratic contribution from the first input packet and a linear contribution from the second.  Packet coordinates record these interactions exactly.  Replacing $F$ by the two diagonal restrictions would lose the product $x_1x_2$.
+\end{example}
+
+\begin{remark}\label{rem:coordinates_not_independence}
+Exact packet coordinates do not imply packet independence.  They retain the complete input tuple.  Every output packet may depend on every input packet.
+\end{remark}
+
+\section{Packet jets and higher composition}\label{sec:packet_jets}
+
+Let $X$ and $Y$ be Banach spaces over the same field $\mathbb R$ or $\mathbb C$ and let the packet projectors on both spaces be bounded. In the complex case, derivatives are complex Fr\'echet derivatives and the Taylor integral below has a real parameter. Assume that $F:X\to Y$ is $m$ times continuously Fr\'echet differentiable. The same local statements hold on open domains containing the points and segments in question. For $1\le r\le m$, the derivative
+\[
+D^rF(x):X^r\longrightarrow Y
+\]
+is a continuous symmetric multilinear map.
+
+The range $X_\alpha$ is closed because
+$X_\alpha=\ker(I-P_\alpha)$. It is therefore Banach with its inherited norm. The same holds for every $Y_\gamma$. Give the finite product of ranges the maximum norm. Packet analysis and synthesis are bounded, since they are formed from finitely many bounded projectors and a finite sum. Their algebraic inverse identities from \cref{sec:nonlinear_coordinates} make them bounded linear isomorphisms. For a nonempty input family,
+$\|\Acal_{\Pcal}\|\le\max_\alpha\|P_\alpha\|$ and
+$\|\Scal_{\Pcal}\|\le |I|$. An empty complete family can occur only on the zero space. Its coordinate product is the zero vector space with norm zero, and the coordinate identities hold directly.
+
+\begin{definition}[Packet jet]\label{def:packet_jet}
+For $1\le r\le m$, define
+\[
+J^{r}_{\gamma\mid\alpha_1,\ldots,\alpha_r}F(x)
+=
+Q_\gamma D^rF(x)
+\big|_{X_{\alpha_1}\times\cdots\times X_{\alpha_r}}.
+\]
+This is a continuous multilinear map
+\[
+X_{\alpha_1}\times\cdots\times X_{\alpha_r}
+\longrightarrow
+Y_\gamma.
+\]
+\end{definition}
+
+\begin{theorem}[Exact reconstruction of derivatives]\label{thm:jet_reconstruction}
+For $h_1,\ldots,h_r\in X$,
+\[
+D^rF(x)[h_1,\ldots,h_r]
+=
+\sum_{\gamma}
+\sum_{\alpha_1,\ldots,\alpha_r}
+J^{r}_{\gamma\mid\alpha_1,\ldots,\alpha_r}F(x)
+[P_{\alpha_1}h_1,\ldots,P_{\alpha_r}h_r].
+\]
+\end{theorem}
+
+\begin{proof}
+Insert $I_Y=\sum_\gamma Q_\gamma$ on the output and $I_X=\sum_\alpha P_\alpha$ in every input slot.  Multilinearity expands the finite sums.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.96\linewidth]{packet_jet_worked_example.pdf}
+\caption{Second packet jets for $F(x,y)=(x+xy,y+x^2)$ at the origin. Coordinate axis projectors give $DF(0)=I$. The first output has mixed second derivatives equal to one, while the second has a repeated first input derivative equal to two. Each grid records the ordered pair of input packets. The mixed entries retain an interaction that diagonal restrictions would lose.}
+\label{fig:packet-jet-example}
+\end{figure}
+\clearpage
+
+\begin{proposition}[Jet norm bound]\label{prop:jet_norm_bound}
+Give every packet range its inherited subspace norm. The restricted jet satisfies the sharper estimate
+\[
+\left\|J^r_{\gamma\mid\alpha_1,\ldots,\alpha_r}F(x)\right\|
+\le \|Q_\gamma\|\,\|D^rF(x)\|.
+\]
+Its ambient extension inserts $P_{\alpha_j}$ in the $j$th slot and has norm at most
+$\|Q_\gamma\|\,\|D^rF(x)\|\prod_j\|P_{\alpha_j}\|$.
+Consequently the operator norm of the restricted packet jet also satisfies
+\[
+\left\|J^{r}_{\gamma\mid\alpha_1,\ldots,\alpha_r}F(x)\right\|
+\le
+\|Q_\gamma\|\,\|D^rF(x)\|
+\prod_{j=1}^r\|P_{\alpha_j}\|.
+\]
+When all packets are orthogonal projections on Hilbert spaces, every nonzero projector has norm one and the bound reduces to the norm of the full derivative.
+\end{proposition}
+
+\begin{proof}
+For $h_j\in X_{\alpha_j}$, the inherited norm gives
+\[
+\|Q_\gamma D^rF(x)[h_1,\ldots,h_r]\|
+\le \|Q_\gamma\|\,\|D^rF(x)\|\prod_j\|h_j\|.
+\]
+Taking the multilinear operator norm proves the sharper restricted estimate. For ambient inputs, replace $h_j$ by $P_{\alpha_j}h_j$ and apply the operator norm bound to each projector. Every nonzero idempotent has norm at least one, since it fixes a nonzero vector in its range. The displayed product bound therefore also follows for the restricted jet. If a zero packet is retained as a redundant index, multilinearity makes any jet with that input or output packet zero, so both estimates remain valid.
+\end{proof}
+
+\begin{corollary}[Packet Taylor formula]\label{cor:packet_taylor}
+Assume $F$ is $m+1$ times continuously Fr\'echet differentiable on an open set containing the segment $x+th$ for $0\le t\le1$.  Then
+\[
+\begin{aligned}
+Q_\gamma F(x+h)
+={}&Q_\gamma F(x)
++
+\sum_{r=1}^{m}\frac1{r!}
+\sum_{\alpha_1,\ldots,\alpha_r}
+J^{r}_{\gamma\mid\alpha_1,\ldots,\alpha_r}F(x)
+[P_{\alpha_1}h,\ldots,P_{\alpha_r}h]\\
+&+Q_\gamma R_{m+1}(x,h),
+\end{aligned}
+\]
+where the Bochner integral remainder is
+\[
+R_{m+1}(x,h)
+=
+\frac1{m!}
+\int_0^1(1-t)^m
+D^{m+1}F(x+th)[h,\ldots,h]\,dt.
+\]
+\end{corollary}
+
+\begin{proof}
+Set $g(t)=F(x+th)$ on the open preimage of the domain under $t\mapsto x+th$. It contains $[0,1]$, and repeated differentiation gives
+$g^{(r)}(t)=D^rF(x+th)[h,\ldots,h]$. The derivatives are continuous on the compact interval, so their Bochner integrals exist in the Banach codomain. Put
+\[
+T_j=\frac1{j!}\int_0^1(1-t)^j g^{(j+1)}(t)\,dt
+\qquad(0\le j\le m).
+\]
+The fundamental theorem of calculus gives $T_0=g(1)-g(0)$. For $j\ge1$, integration by parts gives
+$T_j=T_{j-1}-g^{(j)}(0)/j!$. Iterating this relation proves the Taylor identity with remainder $T_m=R_{m+1}(x,h)$ and its exact factorial normalization.
+
+Apply $Q_\gamma$ to the identity and use \cref{thm:jet_reconstruction}. Pairwise annihilation and idempotence retain exactly the output packet $\gamma$. Boundedness of $Q_\gamma$ allows it to pass through the Bochner integral. In particular, if
+$\|D^{m+1}F(x+th)\|\le M$ along the segment, then
+\[
+\|Q_\gamma R_{m+1}(x,h)\|
+\le \frac{\|Q_\gamma\|M\|h\|^{m+1}}{(m+1)!}.
+\]
+For $m=0$ the Taylor sum is empty. For $h=0$, multilinearity makes every positive-order term and the remainder zero.
+\end{proof}
+
+The relation to derivatives of the complete coordinate representation is also literal. For an open domain $U\subseteq X$, put
+$\widehat F=\Acal_{\Qcal}\circ F\circ\Scal_{\Pcal}$ on the open coordinate set $\Acal_{\Pcal}(U)$. Boundedness and linearity of analysis and synthesis imply, for $1\le r\le m$,
+\[
+D^r\widehat F(u)[v_1,\ldots,v_r]
+=\Acal_{\Qcal}\bigl(D^rF(\Scal_{\Pcal}u)
+[\Scal_{\Pcal}v_1,\ldots,\Scal_{\Pcal}v_r]\bigr).
+\]
+Indeed, the first derivative follows from the chain rule. Repeating it adds no higher derivatives of the fixed linear coordinate maps. If each $v_j$ is supported in one coordinate slot $\alpha_j$, synthesis includes that slot into $X$. Its $\gamma$ output component is exactly the range jet defined above, including when a chosen direction is zero.
+
+At a fixed base point, the nonzero packet jets form a directed hypergraph.  An order $r$ interaction has $r$ input packet labels and one output packet label.  The support therefore records interactions relative to the chosen packet system.
+
+For a block $B=\{i_1<\cdots<i_s\}$ and an intermediate packet $\gamma$, write
+\[
+G_{\gamma,B}(x\mid h)
+=
+J^s_{\gamma\mid\alpha_{i_1},\ldots,\alpha_{i_s}}G(x)
+[h_{i_1},\ldots,h_{i_s}].
+\]
+
+\begin{interpretation}[title={Arity of packet jets}]
+A packet jet has one output slot and as many input slots as its derivative order. In the composition formula, each partition block collects inputs for one derivative of the inner map. The number of blocks determines the arity of the derivative of the outer map. Intermediate packet labels record the outputs passed between them.
+\end{interpretation}
+
+\begin{theorem}[Packet Fa\`a di Bruno formula]\label{thm:packet_faa}
+Let $n\ge1$, let $X,Y,Z$ be Banach spaces over the same real or complex field, and let $G:X\to Y$ and $F:Y\to Z$ be $n$ times continuously Fr\'echet differentiable. Let $\Pcal$, $\Qcal$, and $\Rcal$ be packet systems on $X$, $Y$, and $Z$.  Fix input packets $\alpha_1,\ldots,\alpha_n$, an output packet $\delta$, and directions $h_i\in X_{\alpha_i}$.  Then
+\[
+\begin{aligned}
+&J^{n}_{\delta\mid\alpha_1,\ldots,\alpha_n}(F\circ G)(x)
+[h_1,\ldots,h_n]\\
+&=
+\sum_{\pi=\{B_1,\ldots,B_k\}}
+\sum_{\gamma_1,\ldots,\gamma_k}
+J^{k}_{\delta\mid\gamma_1,\ldots,\gamma_k}F(Gx)
+\big[
+G_{\gamma_1,B_1}(x\mid h),\ldots,
+G_{\gamma_k,B_k}(x\mid h)
+\big].
+\end{aligned}
+\]
+The first sum runs over all set partitions of $\{1,\ldots,n\}$.
+\end{theorem}
+
+\begin{proof}
+First derive the unprojected partition formula. At order one it is the ordinary chain rule. Suppose it holds at order $n$ and the maps are $C^{n+1}$. Differentiating a summand in direction $h_{n+1}$ has two kinds of contribution. A derivative of the outer map creates the new singleton block $\{n+1\}$. A derivative of an inner block jet adjoins $n+1$ to that block. Every partition of $\{1,\ldots,n+1\}$ arises exactly once: if $\{n+1\}$ is a block, remove that block. Otherwise remove $n+1$ from the unique block that contains it. The chain and product rules for bounded multilinear evaluation justify the differentiation. This proves the unprojected formula by induction.
+
+Insert $I_Y=\sum_\gamma Q_\gamma$ in each argument of the outer derivative and expand the finite sums by multilinearity. Apply $R_\delta$ to the output. The directions already lie in the declared input ranges, and each intermediate projection lands in its literal output range. The resulting summands are exactly the displayed packet jets. List directions within a block in increasing index order and blocks in increasing least-element order. Symmetry of the higher derivative makes the final value independent of the block ordering.
+\end{proof}
+
+\begin{proposition}[Number of labeled composition terms]\label{prop:faa_term_count}
+For $n\ge1$, if $Y$ has $M$ packets, then the number of packet labeled terms at order $n$ before zero jets are removed is
+\[
+N_{n,M}
+=
+\sum_{k=1}^{n}S(n,k)M^k,
+\]
+where $S(n,k)$ is a Stirling number of the second kind.  Thus $N_{n,M}$ is the $n$th Touchard polynomial evaluated at $M$.
+\end{proposition}
+
+\begin{proof}
+A set partition with $k$ blocks receives one independent intermediate packet label on each block.  It therefore gives $M^k$ labeled terms.  There are $S(n,k)$ such partitions.
+\end{proof}
+
+\begin{corollary}[Structural pruning]\label{cor:structural_pruning}
+For a map $H$ with fixed input and output packet systems, let $\supp_r H(x)$ be the set of external profiles $(\delta;\alpha_1,\ldots,\alpha_r)$ for which the restricted jet $J^r_{\delta\mid\alpha_1,\ldots,\alpha_r}H(x)$ is nonzero. A profile belongs to the admissible composition set if it admits a partition $\pi=\{B_1,\ldots,B_k\}$ and intermediate labels $\gamma_1,\ldots,\gamma_k$ such that the outer jet of $F$ and every inner block jet of $G$ in \cref{thm:packet_faa} are nonzero. Then $\supp_n(F\circ G)(x)$ is contained in this admissible set. In particular, a summand vanishes whenever one of its constituent packet jets vanishes.
+\end{corollary}
+
+\begin{proof}
+If a profile has no admissible decorated partition, every summand in \cref{thm:packet_faa} has a zero constituent and therefore vanishes. The composed jet is then the zero multilinear map. This proves the support inclusion by contraposition. The inclusion can be strict. Nonzero constituent maps may compose to zero, and nonzero summands may cancel. Thus the admissible set is a structural upper bound rather than a claim of equality.
+\end{proof}
+
+
+\begin{example}[The second-order composition law]\label{ex:second_order_composition}
+At order two, the partition formula has two shapes.  For packet directions $h_1$ and $h_2$,
+\[
+\begin{aligned}
+R_\delta D^2(F\circ G)(x)[h_1,h_2]
+={}&
+\sum_{\gamma_1,\gamma_2}
+J^2_{\delta\mid\gamma_1,\gamma_2}F(Gx)
+[J^1_{\gamma_1\mid\alpha_1}G(x)h_1,J^1_{\gamma_2\mid\alpha_2}G(x)h_2]\\
+&+
+\sum_\gamma
+J^1_{\delta\mid\gamma}F(Gx)
+[J^2_{\gamma\mid\alpha_1,\alpha_2}G(x)[h_1,h_2]].
+\end{aligned}
+\]
+The first line records two first-order changes entering a quadratic interaction of $F$.  The second records a genuine second-order interaction created inside $G$ before $F$ is applied.
+\end{example}
+
+\begin{remark}\label{rem:jet_coordinate_dependence}
+Jet sparsity is not invariant under an arbitrary change of coordinates.  A useful packet system normally comes from symmetry, scale, support, grading, valuation, or another structure that is already present in the problem.  Every sparsity claim should therefore name the packet system with respect to which it is made.
+\end{remark}
+
+\section{Rooted tree expansions}\label{sec:trees}
+
+Repeated nonlinear substitution is indexed by rooted trees.  We begin with a polynomial fixed point equation on a Banach space.
+
+Let $X$ be a Banach space.  Fix $s\in X$ and continuous multilinear maps
+\[
+B_r:X^r\longrightarrow X,
+\qquad
+2\le r\le d.
+\]
+Set
+\[
+a=\|s\|,
+\qquad
+b_r=\|B_r\|,
+\qquad
+\phi(t)=a+\sum_{r=2}^{d}b_rt^r.
+\]
+An ordered rooted tree has leaves labeled by $s$ and every internal vertex of arity $r$ labeled by $B_r$.  Its value is obtained by evaluating from the leaves toward the root.
+
+\begin{theorem}[Polynomial tree expansion]\label{thm:polynomial_tree_expansion}
+Suppose there is $R>0$ such that
+\[
+\phi(R)\le R
+\]
+and
+\[
+q=
+\sum_{r=2}^{d}r b_rR^{r-1}<1.
+\]
+Then the map
+\[
+\Phi(x)=s+\sum_{r=2}^{d}B_r(x,\ldots,x)
+\]
+has a unique fixed point in the closed ball $\overline B_R(0)$.  The sum of the values of all finite ordered rooted trees converges absolutely to that fixed point.
+\end{theorem}
+
+\begin{proof}
+For $x,y\in\overline B_R(0)$, multilinearity and telescoping in the $r$ input positions give
+\[
+\|B_r(x,\ldots,x)-B_r(y,\ldots,y)\|
+\le
+r b_rR^{r-1}\|x-y\|.
+\]
+Hence $\Phi$ is $q$ Lipschitz on the ball.  The inequality $\phi(R)\le R$ shows that $\Phi$ preserves the ball.  The contraction mapping theorem gives a unique fixed point $u$ in that ball.
+
+Let $\mathfrak T_m$ be the finite set of ordered rooted trees of height less than $m$.  A leaf has value $s$.  If the root of $\tau$ has arity $r$ and ordered subtrees $\tau_1,\ldots,\tau_r$, define
+\[
+B_\tau(s)=B_r(B_{\tau_1}(s),\ldots,B_{\tau_r}(s)).
+\]
+Induction on $m$ shows that the Picard iterate $u_0=0$ and $u_{m+1}=\Phi(u_m)$ satisfies
+\[
+u_m=\sum_{\tau\in\mathfrak T_m}B_\tau(s).
+\]
+Define a nonnegative scalar weight by assigning weight $a$ to a leaf and applying the scalar map $(t_1,\ldots,t_r)\mapsto b_rt_1\cdots t_r$ at a vertex of arity $r$.  A second induction gives
+\[
+\sum_{\tau\in\mathfrak T_m}\|B_\tau(s)\|
+\le
+\sum_{\tau\in\mathfrak T_m}w(\tau)
+=t_m,
+\]
+where $t_0=0$ and $t_{m+1}=\phi(t_m)$.  The sequence $(t_m)$ is increasing because $\phi$ has nonnegative coefficients.  It is bounded by $R$ because $t_0\le R$ and $\phi(R)\le R$.  The sum of the norms of all tree values is therefore finite.  The tree series converges absolutely.  Its partial sums are the Picard iterates, so its sum is $u$.
+\end{proof}
+
+\begin{corollary}[Quadratic Catalan expansion]\label{cor:quadratic_tree_expansion}
+Let $B:X\times X\to X$ be bounded and consider
+\[
+u=s+B(u,u).
+\]
+Put $a=\|s\|$ and $b=\|B\|$.  If $4ab<1$, then
+\[
+u=
+\sum_{n\ge1}
+\sum_{\substack{\tau\text{ full ordered binary tree}\\\text{with }n\text{ leaves}}}
+B_\tau(s)
+\]
+converges absolutely.  It also satisfies
+\[
+\|u\|
+\le
+\frac{1-\sqrt{1-4ab}}{2b}
+\]
+when $b>0$.
+\end{corollary}
+
+\begin{proof}
+If $b=0$, the equation is $u=s$ and the tree series contains only its one leaf.  If $a=0$, every tree value is zero.  Choose any $R$ with $0<R<1/(2b)$ and apply \cref{thm:polynomial_tree_expansion} to obtain uniqueness of the zero fixed point in that ball.
+
+Assume now that $a>0$ and $b>0$.  Take
+\[
+R=
+\frac{1-\sqrt{1-4ab}}{2b}.
+\]
+Then $a+bR^2=R$ and $2bR<1$.  Apply \cref{thm:polynomial_tree_expansion}.  The number of full ordered binary trees with $n$ leaves is the Catalan number $C_{n-1}$, which gives the displayed majorant.
+\end{proof}
+
+\begin{theorem}[Packet labeled tree reconstruction]\label{thm:packet_tree_reconstruction}
+Let $X$ carry a packet system $\Pcal$.  At each internal vertex of a tree, insert the output identity and one input identity for every child.  Summing over all internal packet labels reconstructs the original tree value exactly.
+\end{theorem}
+
+\begin{proof}
+At a vertex labeled by an $r$ multilinear map $B_r$, insert
+\[
+I_X=\sum_\beta P_\beta
+\]
+on the output and in every input slot.  Multilinearity gives an exact finite sum of packet blocks at that vertex.  Apply this identity successively from the leaves toward the root.  Since the tree and the packet set are finite, all sums are finite and their total reconstructs the original tree value.
+\end{proof}
+
+For an infinite tree expansion, the finite sum of packet decorations for each underlying tree is kept together. The unlabelled tree majorant does not imply absolute convergence when all decorations are summed separately for arbitrary oblique projectors. Finite tree reconstruction and the grouped interpretation remain exact.
+
+\begin{interpretation}[title={Arity in a tree}]
+At each internal vertex, the number of children is the number of input slots of its multilinear map. Their order is retained because symmetry is not assumed. Packet labels resolve each finite tree into a finite sum. In an infinite expansion these sums stay grouped by tree, as required by the convergence statement above.
+\end{interpretation}
+
+\begin{corollary}[Tree pruning]\label{cor:tree_pruning}
+A packet labeled tree vanishes if one internal vertex carries a zero packet block of the corresponding multilinear map.  Removing all such zero terms leaves every finite tree sum unchanged and therefore leaves the grouped infinite series unchanged.
+\end{corollary}
+
+\begin{proof}
+A zero vertex map makes the value of the full tree zero.
+\end{proof}
+
+
+The tree theorem separates combinatorial growth from analytic convergence.  The number of trees may grow rapidly, while multilinear bounds control their values. The scalar map $\phi$ controls the total weight of the expansion.  Packet pruning changes the combinatorics but not the proof.  It removes trees whose values are already zero before any norm estimate is used.
+
+\begin{example}[Catalan parity packets]\label{ex:catalan_parity}
+Over a field of characteristic zero, the formal equation
+\[
+u=z+u^2
+\]
+has the branch
+\[
+u(z)=\frac{1-\sqrt{1-4z}}2.
+\]
+Write $u=u_0+u_1$, where $u_0$ contains the even powers of $z$ and $u_1$ contains the odd powers.  Exact packet projection gives
+\[
+u_0=u_0^2+u_1^2,
+\qquad
+u_1=z+2u_0u_1.
+\]
+The two equations remain coupled.  Their sum is the original fixed point equation.
+\end{example}
+
+\section{Graded nonlinear operations}\label{sec:graded_operations}
+
+Let $G$ be a finite abelian group and let
+\[
+A=\bigoplus_{g\in G}A_g
+\]
+be a $G$ graded module.
+
+\begin{definition}[Grade respecting operation]\label{def:grade_respecting}
+An $r$ multilinear map $\mu:A^r\to A$ respects the grading when
+\[
+\mu(A_{g_1},\ldots,A_{g_r})
+\subseteq
+A_{g_1+\cdots+g_r}.
+\]
+\end{definition}
+
+\begin{theorem}[Graded packet convolution]\label{thm:graded_convolution}
+If $a_j=\sum_{g\in G}a_{j,g}$ and $\mu$ respects the grading, then
+\[
+P_k\mu(a_1,\ldots,a_r)
+=
+\sum_{g_1+\cdots+g_r=k}
+\mu(a_{1,g_1},\ldots,a_{r,g_r}).
+\]
+\end{theorem}
+
+\begin{proof}
+Expand every input into its homogeneous components.  Each term lands in the component whose label is the sum of its input labels.  Projection onto $A_k$ retains exactly the displayed terms.
+\end{proof}
+
+\begin{corollary}[Cyclic product formula]\label{cor:cyclic_product}
+For a cyclically graded algebra
+\[
+A=\bigoplus_{j\in\mathbb Z/N\mathbb Z}A_j,
+\qquad
+A_iA_j\subseteq A_{i+j},
+\]
+one has
+\[
+P_k(ab)=
+\sum_{i+j=k}a_ib_j.
+\]
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:graded_convolution} to multiplication.
+\end{proof}
+
+\begin{theorem}[Packet Maurer Cartan equations]\label{thm:packet_mc}
+Let
+\[
+\Lcal=\bigoplus_{g\in G}\Lcal_g
+\]
+be a differential graded Lie algebra over a ring in which two is invertible.  Assume
+\[
+d\Lcal_g\subseteq\Lcal_g,
+\qquad
+[\Lcal_g,\Lcal_h]\subseteq\Lcal_{g+h}.
+\]
+For a degree one element $\eta=\sum_g\eta_g$, the Maurer Cartan equation
+\[
+d\eta+\frac12[\eta,\eta]=0
+\]
+is equivalent to
+\[
+d\eta_k
++
+\frac12
+\sum_{g+h=k}[\eta_g,\eta_h]
+=0
+\]
+for every $k\in G$.
+\end{theorem}
+
+\begin{proof}
+The differential preserves the group label and the bracket adds labels.  Apply the projector onto $\Lcal_k$ and use exact reconstruction.
+\end{proof}
+
+The same argument applies to higher brackets.
+
+\begin{proposition}[Packet equations for $L_\infty$ operations]\label{prop:packet_l_infinity}
+Let $\Lcal$ be complete and carry operations $\ell_r$ that respect a finite abelian group grading. Assume the packet projectors are continuous for the topology in which the series below converges.  Assume the Maurer Cartan series
+\[
+\sum_{r\ge1}\frac1{r!}\ell_r(\eta,\ldots,\eta)
+\]
+converges and the required factorials are invertible.  Then its packet of label $k$ is
+\[
+\sum_{r\ge1}\frac1{r!}
+\sum_{g_1+\cdots+g_r=k}
+\ell_r(\eta_{g_1},\ldots,\eta_{g_r}).
+\]
+The full Maurer Cartan equation holds if and only if every packet equation vanishes.
+\end{proposition}
+
+\begin{proof}
+Apply \cref{thm:graded_convolution} to each operation $\ell_r$.  Continuity of the packet projectors permits the convergent sums to be projected term by term.
+\end{proof}
+
+\begin{definition}[Divided square]\label{def:divided_square}
+A divided square on degree one elements is a map $q$ satisfying
+\[
+q(x+y)=q(x)+q(y)+[x,y],
+\qquad
+q(ax)=a^2q(x),
+\]
+whenever the expressions are defined.
+\end{definition}
+
+\begin{proposition}[Divided square packet equations]\label{prop:divided_square_packets}
+Assume $q(\Lcal_g)\subseteq\Lcal_{2g}$.  Choose an ordering of the finite label set.  The equation
+\[
+d\eta+q(\eta)=0
+\]
+is equivalent to
+\[
+d\eta_k
++
+\sum_{2g=k}q(\eta_g)
++
+\sum_{\substack{g<h\\g+h=k}}[\eta_g,\eta_h]
+=0
+\]
+for every $k$.
+\end{proposition}
+
+\begin{proof}
+Repeated use of the polarization identity for $q$ gives
+\[
+q\left(\sum_g\eta_g\right)
+=
+\sum_gq(\eta_g)
++
+\sum_{g<h}[\eta_g,\eta_h].
+\]
+Project onto the component of label $k$.
+\end{proof}
+
+
+\begin{example}[Matrix difference grading]\label{ex:matrix_difference_grading}
+Let $A=M_N(\bbk)$ and assign the matrix unit $E_{rs}$ the label $r-s$ modulo $N$.  Since
+\[
+E_{rs}E_{uv}=\delta_{su}E_{rv},
+\]
+the output label is
+\[
+(r-s)+(u-v)=r-v
+\]
+whenever the product is nonzero.  Matrix multiplication therefore obeys the cyclic convolution law exactly.  The same grading resolves commutators and polynomial matrix equations.
+\end{example}
+
+\begin{remark}\label{rem:graded_boundary}
+These results begin with a graded differential or higher algebra.  They do not assert that every deformation problem has such a controlling object.  Differential graded and infinity algebra methods are developed in \cite{LodayVallette2012}.
+\end{remark}
+
+\section{Nonlinear refinement defects}\label{sec:nonlinear_defects}
+
+Let
+\[
+F_f:X_f\longrightarrow Y_f,
+\qquad
+F_c:X_c\longrightarrow Y_c
+\]
+be fine and coarse maps.  Let
+\[
+C_X:X_f\longrightarrow X_c,
+\qquad
+C_Y:Y_f\longrightarrow Y_c
+\]
+be linear coarsening maps.  Whenever a norm, a Lipschitz constant, or a Fr\'echet derivative is used, the spaces are Banach spaces and the coarsening maps are bounded.
+
+\begin{definition}[Nonlinear refinement defect]\label{def:nonlinear_defect}
+The pointwise defect of $F$ is
+\[
+\Delta_F(x)
+=
+C_YF_f(x)-F_c(C_Xx).
+\]
+The two models are exactly compatible when $\Delta_F$ vanishes everywhere.
+\end{definition}
+
+
+The defect is a vector in $Y_c$.  It determines an obstruction class after a correction map into $Y_c$ has been chosen and the defect has been passed to the corresponding cokernel.  Norm estimates measure the size of the defect.  The quotient determines whether an allowed linear correction can remove it.
+
+\begin{theorem}[Exact defect under composition]\label{thm:defect_composition_identity}
+Let $G_f:Y_f\to Z_f$ and $G_c:Y_c\to Z_c$, with coarsening $C_Z:Z_f\to Z_c$.  Then
+\[
+\Delta_{G\circ F}(x)
+=
+\Delta_G(F_f(x))
++
+G_c\big(F_c(C_Xx)+\Delta_F(x)\big)
+-
+G_c\big(F_c(C_Xx)\big).
+\]
+If $G_c$ is $L$ Lipschitz on the relevant set, then
+\[
+\|\Delta_{G\circ F}(x)\|
+\le
+\|\Delta_G(F_f(x))\|
++
+L\|\Delta_F(x)\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Add and subtract $G_c(C_YF_f(x))$.  Use
+\[
+C_YF_f(x)=F_c(C_Xx)+\Delta_F(x).
+\]
+The norm estimate follows from the Lipschitz bound.
+\end{proof}
+
+\begin{corollary}[Linear product rule]\label{cor:linear_defect_product}
+If all maps in \cref{thm:defect_composition_identity} are linear, then
+\[
+\Delta_{GF}
+=
+\Delta_G F_f+G_c\Delta_F.
+\]
+\end{corollary}
+
+\begin{proof}
+Linearity turns the last difference in \cref{thm:defect_composition_identity} into $G_c\Delta_F(x)$.
+\end{proof}
+
+\begin{theorem}[Iterated orbit defect]\label{thm:iterated_orbit_defect}
+Let $F_f:X_f\to X_f$ and $F_c:X_c\to X_c$, with coarsening $C:X_f\to X_c$.  Suppose $F_c$ is $q$ Lipschitz.  For a fine orbit starting at $x$, assume
+\[
+\|\Delta_F(F_f^j x)\|\le\varepsilon_j.
+\]
+Then
+\[
+\left\|CF_f^n(x)-F_c^n(Cx)\right\|
+\le
+\sum_{j=0}^{n-1}q^{n-1-j}\varepsilon_j.
+\]
+If $0\le q<1$ and every $\varepsilon_j\le\varepsilon$, then
+\[
+\left\|CF_f^n(x)-F_c^n(Cx)\right\|
+\le
+\varepsilon\frac{1-q^n}{1-q}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+e_n=\left\|CF_f^n(x)-F_c^n(Cx)\right\|.
+\]
+The definition of the defect and the Lipschitz property give
+\[
+e_{n+1}\le\varepsilon_n+qe_n.
+\]
+Iterating this recurrence proves the first estimate.  The second is the geometric sum.
+\end{proof}
+
+\begin{theorem}[Fixed point stability]\label{thm:fixed_point_stability}
+Assume $F_c$ is a contraction with constant $q<1$.  Let $x_f$ and $x_c$ be fixed points of $F_f$ and $F_c$.  If
+\[
+\|\Delta_F(x_f)\|\le\varepsilon,
+\]
+then
+\[
+\|Cx_f-x_c\|
+\le
+\frac{\varepsilon}{1-q}.
+\]
+When the defect at $x_f$ is zero, the fixed points are compatible.
+\end{theorem}
+
+\begin{proof}
+Using the fixed-point equations,
+\[
+\begin{aligned}
+\|Cx_f-x_c\|
+&\le
+\|CF_f(x_f)-F_c(Cx_f)\|
++
+\|F_c(Cx_f)-F_c(x_c)\|\\
+&\le
+\varepsilon+q\|Cx_f-x_c\|.
+\end{aligned}
+\]
+Rearrange.
+\end{proof}
+
+\begin{corollary}[Several refinement levels]\label{cor:multilevel_fixed_points}
+Let $C_\ell:X_{\ell+1}\to X_\ell$ for $0\le\ell<m$.  Suppose $x_\ell$ is a fixed point at level $\ell$, the coarse map at level $\ell$ has contraction constant $q_\ell<1$, and the adjacent defect at $x_{\ell+1}$ is at most $\varepsilon_\ell$.  Write
+\[
+C_{a,b}=C_aC_{a+1}\cdots C_{b-1}
+\quad\text{for }a<b,
+\qquad
+C_{a,a}=I.
+\]
+Then
+\[
+\|C_{0,m}x_m-x_0\|
+\le
+\sum_{\ell=0}^{m-1}
+\|C_{0,\ell}\|
+\frac{\varepsilon_\ell}{1-q_\ell}.
+\]
+\end{corollary}
+
+\begin{proof}
+Insert the intermediate vectors $C_{0,\ell}x_\ell$ and telescope.  Apply \cref{thm:fixed_point_stability} to every adjacent pair.
+\end{proof}
+
+\begin{proposition}[Derivative defects]\label{prop:derivative_defects}
+Assume $F_f$ and $F_c$ are $r$ times Fr\'echet differentiable and the coarsening maps are bounded and linear.  Then
+\[
+D\Delta_F(x)
+=
+C_YDF_f(x)-DF_c(C_Xx)C_X.
+\]
+For $r\ge2$,
+\[
+D^r\Delta_F(x)[h_1,\ldots,h_r]
+=
+C_YD^rF_f(x)[h_1,\ldots,h_r]
+-
+D^rF_c(C_Xx)[C_Xh_1,\ldots,C_Xh_r].
+\]
+\end{proposition}
+
+\begin{proof}
+Differentiate the defining identity for $\Delta_F$.  The coarsening maps are linear, so their higher derivatives vanish.
+\end{proof}
+
+\begin{example}[Sharp affine bound]\label{ex:sharp_affine_bound}
+Let $F_c(y)=qy+b$ with $0<q<1$.  Choose a fine fixed point whose coarsening has constant defect $\varepsilon$ in the direction of the scalar state.  The fixed point mismatch is exactly $\varepsilon/(1-q)$.  Thus the constant in \cref{thm:fixed_point_stability} cannot be improved without more information.
+\end{example}
+
+\section{Canonical obstruction objects}\label{sec:obstruction_objects}
+
+We begin by isolating the part of a defect that cannot be removed by an allowed linear correction.
+
+\begin{definition}[Linear correction datum]\label{def:linear_correction_datum}
+A linear correction datum consists of a homomorphism
+\[
+D:U\longrightarrow V
+\]
+and a defect $r\in V$.  A correction is an element $u\in U$ satisfying
+\[
+Du=-r.
+\]
+The obstruction class is
+\[
+\Ob_D(r)=[r]\in\coker D=V/\im D.
+\]
+\end{definition}
+
+\begin{theorem}[Cokernel obstruction criterion]\label{thm:cokernel_obstruction}
+A linear correction exists if and only if
+\[
+\Ob_D(r)=0.
+\]
+The quotient map
+\[
+q_D:V\longrightarrow\coker D
+\]
+has the following universal property.  If $\varphi:V\to W$ is linear and $\varphi D=0$, then there is a unique linear map
+\[
+\overline\varphi:\coker D\longrightarrow W
+\]
+with $\varphi=\overline\varphi q_D$.
+\end{theorem}
+
+\begin{proof}
+The class of $r$ is zero exactly when $r\in\im D$, which is equivalent to solvability of $Du=-r$.  If $\varphi D=0$, then $\varphi$ vanishes on $\im D$.  It therefore descends uniquely to the quotient.
+\end{proof}
+
+The universal property explains why the cokernel is the canonical obstruction object relative to $D$.  Any linear obstruction test that vanishes on correctable defects factors through it.
+
+\begin{keyidea}[title={Canonical obstruction data}]
+The residual, the correction map, and the obstruction class are distinct data. The residual is a vector. The correction map specifies which changes are allowed, and its cokernel records the remaining class. Canonicality is relative to that declared correction map. A scalar or orthogonal representative of the class may require further choices or hypotheses.
+\end{keyidea}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.96\linewidth]{correction_cokernel_plane.pdf}
+\caption{A specified correction range in $\mathbb R^2$. For $L(a,b)=(a,0)$, the image is the horizontal axis. The defect $(2,3)$ splits into $(2,0)$ in that image and the remaining representative $(0,3)$. Subtracting the image component leaves the same cokernel class. The functional $(x,y)\mapsto y$ vanishes on the correction range and detects the value three. The correction equation $Lu=-(2,3)$ therefore has no solution.}
+\label{fig:correction-cokernel-example}
+\end{figure}
+\clearpage
+
+\begin{theorem}[Naturality of obstruction classes]\label{thm:obstruction_naturality}
+Suppose
+\[
+\begin{array}{ccc}
+U & \xrightarrow{D} & V\\
+\mathllap{a}\downarrow & & \downarrow\mathrlap{b}\\
+U' & \xrightarrow{D'} & V'
+\end{array}
+\]
+is a commuting square.  Then there is a unique induced map
+\[
+\overline b:\coker D\longrightarrow\coker D'
+\]
+satisfying
+\[
+\overline b\,\Ob_D(r)=\Ob_{D'}(br).
+\]
+\end{theorem}
+
+\begin{proof}
+The relation $bD=D'a$ shows that the quotient map $q_{D'}b$ vanishes on $\im D$.  Apply the universal property in \cref{thm:cokernel_obstruction}.
+\end{proof}
+
+\begin{theorem}[Packet decomposition of an obstruction]\label{thm:packet_obstruction_decomposition}
+Suppose
+\[
+U=\bigoplus_{\alpha\in I}U_\alpha,
+\qquad
+V=\bigoplus_{\alpha\in I}V_\alpha,
+\]
+and $D(U_\alpha)\subseteq V_\alpha$ for every $\alpha$.  Let
+\[
+D_\alpha:U_\alpha\longrightarrow V_\alpha
+\]
+be the restriction.  Then
+\[
+\coker D
+\cong
+\bigoplus_{\alpha\in I}\coker D_\alpha.
+\]
+Under this isomorphism, the obstruction class of $r=\sum_\alpha r_\alpha$ is the tuple
+\[
+\big([r_\alpha]\big)_\alpha.
+\]
+Hence $r$ is correctable if and only if every packet obstruction vanishes.
+\end{theorem}
+
+\begin{proof}
+The grading assumption gives
+\[
+\im D=\bigoplus_\alpha\im D_\alpha.
+\]
+Taking the quotient of the direct sum by this direct sum of images gives the displayed isomorphism.
+\end{proof}
+
+\begin{remark}\label{rem:block_diagonal_needed}
+The conclusion of \cref{thm:packet_obstruction_decomposition} requires the correction map to preserve the packets.  Off diagonal correction blocks can couple packet defects.  In that case the full cokernel remains canonical, but it need not split into the separate packet cokernels.
+\end{remark}
+
+\begin{proposition}[Projectors on the obstruction quotient]\label{prop:obstruction_quotient_projectors}
+Let $(Q_\alpha)_{\alpha\in I}$ be a complete family of pairwise annihilating idempotents on $V$.  Assume
+\[
+Q_\alpha(\im D)\subseteq\im D
+\]
+for every $\alpha$.  Then each $Q_\alpha$ induces an idempotent $\overline Q_\alpha$ on $\coker D$, and
+\[
+\coker D
+=
+\bigoplus_{\alpha\in I}\overline Q_\alpha(\coker D).
+\]
+For every defect $r\in V$,
+\[
+\overline Q_\alpha\Ob_D(r)
+=
+[Q_\alpha r].
+\]
+No packet decomposition of the correction space $U$ is required.
+\end{proposition}
+
+\begin{proof}
+If $v-v'\in\im D$, then
+\[
+Q_\alpha(v-v')\in\im D.
+\]
+Hence $[v]\mapsto[Q_\alpha v]$ is well defined on the quotient.  The idempotent, annihilation, and reconstruction identities descend from $V$ to $V/\im D$.  The formula for an obstruction class follows from the definition.
+\end{proof}
+
+\subsection{Relative obstruction under coarsening}
+
+Coarsening can erase an obstruction that remains present in the fine problem.  The next exact sequence identifies the part removed by coarsening.
+
+\begin{theorem}[Relative obstruction exact sequence]\label{thm:relative_obstruction_sequence}
+Suppose the following diagram of modules commutes and has exact rows:
+\[
+\begin{array}{ccccccccc}
+0&\longrightarrow&U_0&\xrightarrow{i_U}&U_f&\xrightarrow{p_U}&U_c&\longrightarrow&0\\[4pt]
+&&\mathllap{D_0}\downarrow&&\mathllap{D_f}\downarrow&&\mathllap{D_c}\downarrow&&\\[4pt]
+0&\longrightarrow&V_0&\xrightarrow{i_V}&V_f&\xrightarrow{p_V}&V_c&\longrightarrow&0.
+\end{array}
+\]
+There is a natural exact sequence
+\[
+\begin{aligned}
+0&\longrightarrow\Ker D_0
+\longrightarrow\Ker D_f
+\longrightarrow\Ker D_c
+\xrightarrow{\delta}\coker D_0\\
+&\longrightarrow\coker D_f
+\longrightarrow\coker D_c
+\longrightarrow0.
+\end{aligned}
+\]
+For $u_c\in\Ker D_c$, choose $u_f\in U_f$ with $p_Uu_f=u_c$.  There is a unique $v_0\in V_0$ such that
+\[
+D_fu_f=i_Vv_0,
+\]
+and the connecting map is
+\[
+\delta(u_c)=[v_0].
+\]
+\end{theorem}
+
+\begin{proof}
+Since $D_cu_c=0$, commutativity gives
+\[
+p_VD_fu_f=D_cp_Uu_f=0.
+\]
+Exactness of the lower row gives a unique $v_0$ with $D_fu_f=i_Vv_0$.  A different lift has the form $u_f+i_Uu_0$.  The corresponding element of $V_0$ changes by $D_0u_0$, so $[v_0]$ is independent of the lift.
+
+The map $\Ker D_0\to\Ker D_f$ is injective because $i_U$ is injective.  If $u_f\in\Ker D_f$ maps to zero in $U_c$, then $u_f=i_Uu_0$ for a unique $u_0$.  The identity
+\[
+i_VD_0u_0=D_fi_Uu_0=0
+\]
+and injectivity of $i_V$ show that $u_0\in\Ker D_0$.  This proves exactness at $\Ker D_f$.
+
+If $u_c$ comes from an element of $\Ker D_f$, one may choose that element as its lift and obtain $\delta(u_c)=0$.  Conversely, if $\delta(u_c)=0$, then $v_0=D_0u_0$ for some $u_0$.  Replacing $u_f$ by $u_f-i_Uu_0$ gives an element of $\Ker D_f$ that maps to $u_c$.  This proves exactness at $\Ker D_c$.
+
+The class $[v_0]\in\coker D_0$ maps to zero in $\coker D_f$ whenever it equals $\delta(u_c)$, since the chosen lift satisfies $i_Vv_0=D_fu_f$.  Conversely, if $i_Vv_0=D_fu_f$, then $u_c=p_Uu_f$ lies in $\Ker D_c$ and $\delta(u_c)=[v_0]$.  This proves exactness at $\coker D_0$.
+
+If a class in $\coker D_f$ comes from $\coker D_0$, its image in $\coker D_c$ is zero.  Conversely, suppose $[v_f]$ maps to zero in $\coker D_c$.  Choose $u_c$ with $D_cu_c=p_Vv_f$ and lift it to $u_f\in U_f$.  Then
+\[
+p_V(v_f-D_fu_f)=0,
+\]
+so $v_f-D_fu_f=i_Vv_0$ for some $v_0\in V_0$.  Thus $[v_f]$ comes from $[v_0]$.  Surjectivity at the last term follows from surjectivity of $p_V$.
+\end{proof}
+
+\begin{corollary}[Coarse vanishing and fine vanishing]\label{cor:coarse_fine_obstruction}
+Let $[r_f]\in\coker D_f$.  If its image in $\coker D_c$ is zero, then $[r_f]$ comes from $\coker D_0$.  Coarse vanishing therefore means that the fine obstruction is supported in information removed by coarsening.  It does not imply $[r_f]=0$.
+\end{corollary}
+
+\begin{proof}
+This is exactness of the sequence in \cref{thm:relative_obstruction_sequence} at $\coker D_f$.
+\end{proof}
+
+\begin{example}[A fine obstruction erased by coarsening]\label{ex:coarse_cancellation}
+Take all three correction spaces to be zero.  Let
+\[
+V_f=\bbk^2,
+\qquad
+V_c=\bbk,
+\qquad
+p_V(x,y)=x+y,
+\]
+and let
+\[
+V_0=\Ker p_V=\Span\{(1,-1)\}.
+\]
+The fine defect $(1,-1)$ is a nonzero class in $\coker D_f=V_f$, while its coarse image is zero.  The class comes from $\coker D_0=V_0$, exactly as \cref{cor:coarse_fine_obstruction} predicts.
+\end{example}
+
+The same construction has a cohomological form.
+
+\begin{definition}[Mapping cone]\label{def:mapping_cone}
+Let $D:C^\bullet\to E^\bullet$ be a cochain map.  Its mapping cone is
+\[
+\Cone(D)^n=E^n\oplus C^{n+1}
+\]
+with differential
+\[
+d_{\Cone}(e,c)=(d_Ee+Dc,-d_Cc).
+\]
+\end{definition}
+
+\begin{theorem}[Cohomological obstruction through the cone]\label{thm:cone_obstruction}
+Let $e\in E^n$ satisfy $d_Ee=0$.  The class of $(e,0)$ in
+\[
+H^n(\Cone(D))
+\]
+vanishes if and only if the class $[e]\in H^n(E)$ lies in the image of
+\[
+H^n(D):H^n(C)\longrightarrow H^n(E).
+\]
+When $C$ and $E$ are concentrated in degree zero,
+\[
+H^0(\Cone(D))\cong\coker D.
+\]
+\end{theorem}
+
+\begin{proof}
+The class of $(e,0)$ vanishes exactly when there are $e'\in E^{n-1}$ and $c\in C^n$ with
+\[
+(e,0)=d_{\Cone}(e',c).
+\]
+This means
+\[
+e=d_Ee'+Dc,
+\qquad
+d_Cc=0.
+\]
+Equivalently, $[e]=H^n(D)[c]$.  The degree zero statement follows directly from the definition of the cone differential.
+\end{proof}
+
+\begin{corollary}[Packet obstruction complexes]\label{cor:packet_obstruction_complexes}
+If $C^\bullet$ and $E^\bullet$ split into finite packet subcomplexes and $D$ preserves those packets, then $\Cone(D)$ splits into packet subcomplexes and
+\[
+H^n(\Cone(D))
+\cong
+\bigoplus_\alpha H^n(\Cone(D_\alpha)).
+\]
+\end{corollary}
+
+\begin{proof}
+Both the cone and its cohomology commute with finite direct sums.
+\end{proof}
+
+\begin{example}[A two component obstruction]\label{ex:two_component_obstruction}
+Let
+\[
+D:\bbk\longrightarrow\bbk^2,
+\qquad
+D(t)=(t,t).
+\]
+The cokernel is one dimensional.  The defect $(a,b)$ is correctable exactly when $a=b$.  The obstruction can be represented by $a-b$, but this scalar representative depends on a choice of isomorphism from the cokernel to $\bbk$.  The quotient class itself is canonical.
+\end{example}
+

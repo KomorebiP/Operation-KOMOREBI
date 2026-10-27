@@ -1,0 +1,12 @@
+theorem smooth_range_bundle_atlas (P : M → F →L[ℝ] F) (hPP : ∀ x, P x*P x=P x)
+    (hP : ContMDiff I \CodeSymbol{1D4D8}(ℝ, F →L[ℝ] F) ∞ P) :
+    (∀ a, IsOpen (domain P a) ∧ a ∈ domain P a) ∧
+    (∀ a, Nonempty (LocalTotal P a ≃ₜ (domain P a × fiber (P a)))) ∧
+    (∀ a b, ContMDiffOn I \CodeSymbol{1D4D8}(ℝ, fiber (P a) →L[ℝ] fiber (P b)) ∞
+      (transition P hPP a b) (domain P a ∩ domain P b)) ∧
+    (∀ a x, x ∈ domain P a → transition P hPP a a x=1) ∧
+    (∀ a b c x, x ∈ domain P a ∩ domain P b ∩ domain P c →
+      (transition P hPP b c x).comp (transition P hPP a b x)=transition P hPP a c x) := by
+  exact ⟨fun a => ⟨isOpen_domain P hP.continuous a,mem_domain P hPP a⟩,
+    fun a => ⟨localProduct P hPP hP a⟩,smooth_transition P hPP hP,
+    transition_self P hPP,fun a b c x hx => transition_cocycle P hPP a b c x hx.1.2⟩

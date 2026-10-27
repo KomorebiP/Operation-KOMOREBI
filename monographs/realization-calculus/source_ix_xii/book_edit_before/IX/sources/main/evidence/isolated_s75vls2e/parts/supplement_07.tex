@@ -1,0 +1,213 @@
+\clearpage\subsection{Seventh Lean Block Supplement}\label{app:sup7}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical; the final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+This block completes Corollary 8.5 of the unchanged status-corrected manuscript by an independent finite-field argument. It does \textbf{not} assume the still-pending global finite-difference theorem, item 7.5.
+
+\textbf{Twenty-three of 24 named manuscript-proved items now have formal coverage.} The cumulative corpus contains \textbf{439 named theorem declarations and 94 explicit definitions across 38 modules}. Three classical inputs and two conjectures remain separately tracked. All 31 upstream proof modules and the six earlier supplements remain unchanged.
+
+\begin{center}
+\begin{tabular}{@{}p{.54\textwidth}rr@{}}
+\toprule
+New module & Theorems & Definitions\\\midrule
+\mcode{HurwitzConvolution} & 13 & 3\\
+\mcode{HurwitzInverse} & 6 & 1\\
+\mcode{StandardWindowPeriod} & 8 & 1\\
+\mcode{DifferenceFiltration} & 4 & 0\\
+\mcode{GlobalEulerBoundary} & 7 & 1\\
+\mcode{DworkCriterion} & 7 & 4\\
+\mcode{PeriodExamples} & 12 & 0\\\midrule
+Total added & 57 & 10\\\bottomrule
+\end{tabular}
+\end{center}
+The counts include supporting lemmas, conditional implications and exact examples. They are not counts of independent discoveries. The conditional implications do not promote their antecedents to proved facts.
+
+\subsubsection*{The independent route}
+In characteristic $p$, both the first and $p$th coefficient shifts obey a Leibniz rule for Hurwitz convolution. A section supported at multiples of $m$, with $m\mid p-1$, has equal first and $p$th shifts. Its constructed reciprocal inherits this equality. Identifying that reciprocal with the existing reduced Euler sequence gives its period on the positive-index tail.
+
+\subsubsection*{What remains}
+Theorem 7.5 asks for powers as high as $p^{\min(k,mn)}$ and covers nonstandard residue classes. A period modulo $p$ does not establish that stronger result. This release proves a genuine standard-window mod-$p$ fragment and precise conditional interfaces for the remaining argument, while keeping item 7.5 pending.
+
+\par\medskip
+\pageheading{1. Coefficient products and reciprocal differentiation}{A characteristic-$p$ argument without factorial division}
+For sequences $f,g:\N\to K$, where $K$ is a field, define
+\[
+ (f\star g)(d)=\sum_{i=0}^{d}\binom di f(i)g(d-i),
+ \qquad (U^a f)(d)=f(d+a).
+\]
+These are Hurwitz coefficients. The notation does not divide by $d!$ in $\F_p$. In particular, the implementation is not ordinary power-series multiplication with undefined inverse factorials in positive characteristic.
+
+The identity sequence is $\mathbf1(d)=\delta_{d0}$. The new source proves the actual higher product rule
+\[
+ U^a(f\star g)=\sum_{i=0}^{a}\binom ai
+       (U^i f)\star(U^{a-i}g).
+\]
+The argument starts with Pascal's identity for the first shift, then inducts on $a$. All sums are finite at each coefficient.
+
+\subsection*{The prime-shift cancellation}
+For prime $p$ and characteristic $p$, every interior binomial coefficient in row $p$ vanishes. Hence
+\[
+ U^p(f\star g)=(U^pf)\star g+f\star(U^pg).
+\]
+The first-shift rule has exactly the same form. Both are checked for the literal coefficient product.
+
+Suppose $g(0)=1$. The source constructs $f$ by the full triangular recurrence
+\[
+ f(d)=\delta_{d0}-\sum_{i<d}\binom di f(i)g(d-i)
+\]
+and proves $f\star g=\mathbf1$. It also proves cancellation: if $a\star g=0$, then $a=0$, by induction on the first nonzero coefficient.
+
+If $U^pg=Ug$, differentiate the inverse equation with both operators and subtract. The terms involving $f\star(Ug)$ cancel, leaving
+\[
+ (U^pf-Uf)\star g=0.
+\]
+The proved cancellation law yields
+\[
+ \boxed{U^pf=Uf.}
+\]
+The section identity is an explicit premise of this general reciprocal lemma; the next page proves that premise for the specific section used by the Euler sequence.
+
+\textbf{Principal targets.}\par
+\target{Hurwitz.shift_convolution, Hurwitz.prime_shift_convolution}\par
+\target{Hurwitz.convolution_left_eq_zero}\par
+\target{HurwitzInverse.inverse_convolution}\par
+\target{HurwitzInverse.inverse_prime_difference}
+
+\par\medskip
+\pageheading{2. Identification with the reduced Euler sequence}{Corollary 8.5; manuscript page 21}
+Work over $\F_p=\Z/p\Z$. For positive $m\mid p-1$, take the literal section
+\[
+ g_m(d)=\begin{cases}1,&m\mid d,\\0,&m\nmid d.\end{cases}
+\]
+It satisfies $g_m(0)=1$. Since $p\equiv1\pmod m$, the conditions $m\mid d+p$ and $m\mid d+1$ are equivalent. The source therefore proves $U^pg_m=Ug_m$.
+
+Let $f_m$ be the reciprocal constructed on the previous page. A separate strong-induction proof establishes its actual support:
+\[
+ m\nmid d\quad\Longrightarrow\quad f_m(d)=0.
+\]
+This support is not included as an assumption of the construction.
+
+\subsection*{The same residual sequence, not a renamed substitute}
+Evaluate $f_m\star g_m=\mathbf1$ at $d=mn$. Reindex the surviving summation indices by $i=mq$ using the proved support. The result is
+\[
+ \sum_{q=0}^{n}\binom{mn}{mq}f_m(mq)=\delta_{n0}.
+\]
+The fifth block independently constructed the unique sequence $e_n^{(m,p)}$ satisfying this triangular system. Applying that uniqueness theorem gives
+\[
+ \boxed{f_m(mn)=e_n^{(m,p)}.}
+\]
+Thus the reciprocal really is connected to the manuscript's Lucas-reduced inverse.
+
+\subsection*{The positive-tail period}
+Write $h=(p-1)/m$. For $n\ge1$, evaluate $U^pf_m=Uf_m$ at the nonnegative degree $mn-1$:
+\[
+ f_m(mn+p-1)=f_m(mn).
+\]
+Since $mn+p-1=m(n+h)$, the identified sequence satisfies
+\[
+ \boxed{e_{n+h}^{(m,p)}=e_n^{(m,p)}\quad(n\ge1).}
+\]
+Induction gives $e_{n+uh}^{(m,p)}=e_n^{(m,p)}$ for every $u\ge0$. This proves a period, not necessarily the least positive period. The proof also includes $p=2$, where $m=1$ and $h=1$.
+
+\textbf{Principal targets.}\par
+\target{WindowPeriod.section_prime_shift}\par
+\target{WindowPeriod.inverse_off_support, WindowPeriod.inverse_on_support}\par
+\target{WindowPeriod.uniform_standard_window_period}\par
+\target{WindowPeriod.multiple_period}
+
+\par\medskip
+\pageheading{3. Actual packet congruences and sharp boundaries}{Consequences for the standard window; not the full Theorem 7.5}
+The fifth block constructed integral lifts $\widehat C_{mp,j}(n)\in\Z_p$ of the original rational coefficients when $0\le j<p$, and proved that their residues equal $e_n^{(m,p)}$.
+
+Applying the actual residue map and its kernel ideal to the new period gives
+\[
+ \boxed{p\mid\widehat C_{mp,j}(n+uh)-\widehat C_{mp,j}(n)
+       \quad\hbox{in }\Z_p}
+\]
+for $n\ge1$ and $u\ge0$. Every higher positive difference is a difference of terms already divisible by $p$. Consequently,
+\[
+ p\mid\Delta_{uh}^{k}\widehat C_{mp,j}(n)\qquad(k\ge1,\ n\ge1).
+\]
+A ring-homomorphism lemma identifies the image of these differences in $\Q_p$ with the differences of the original rational coefficient function. This is not vacuous field divisibility. The valuation version uses order infinity at zero.
+
+\subsection*{Three checked boundaries}
+\textbf{The initial row.} For $(p,m)=(3,2)$, the same reduced recurrence gives $e_0=1$ and $e_1=-1=2$ in $\F_3$. Its proposed period is one, so the positive-tail result cannot in general include row zero.
+
+\textbf{The divisor hypothesis.} At $(p,m)=(5,3)$, where $3\nmid4$, the independently computed reduced row is
+\[
+ (e_0,e_1,e_2,e_3)=(1,4,4,2).
+\]
+Replacing $h$ by the integer quotient $\lfloor4/3\rfloor=1$ does not give a period: $e_3\ne e_2$.
+
+\textbf{No automatic extra power.} The original rational triangular coefficients satisfy
+\[
+ C_{6,0}(1)=-1,\quad C_{6,0}(2)=923,\quad
+ v_3\bigl(C_{6,0}(2)-C_{6,0}(1)\bigr)=v_3(924)=1.
+\]
+A period modulo $3$ therefore cannot simply be reported as a period modulo $9$. This is consistent with the global theorem's proposed first-difference bound; it is not a counterexample to Theorem 7.5.
+
+\textbf{Principal targets.}\par
+\target{WindowPeriod.standard_window_period_divisibility}\par
+\target{GlobalEulerBoundary.standard_window_all_orders_mod_p}\par
+\target{GlobalEulerBoundary.lifted_difference_coe}\par
+\target{PeriodExamples.period_can_fail_at_zero}\par
+\target{PeriodExamples.first_difference_precision_is_one}
+
+\par\medskip
+\pageheading{4. Exact interfaces for the remaining global argument}{Conditional results are not counted as completion of item 7.5}
+Let $p$ be prime and $m$ a positive divisor of $p-1$. For a sequence $e$ in a commutative coefficient ring, define its actual packed Hurwitz sequence
+\[
+ X(d)=\begin{cases}e(d/N),&N\mid d,\\0,&N\nmid d,\end{cases}
+ \qquad N=mp.
+\]
+Let $L=p(p-1)$ and $\delta=U^{p+L}-U^p=U^{p^2}-U^p$. The source proves the operator dictionary
+\[
+ (\delta^sX)(d)=\Delta_L^s X(d+ps).
+\]
+At the valid nonnegative coefficient degree $d=mpn-ps$, with $s\le mn$, this becomes
+\[
+ (\delta^sX)(mpn-ps)=\Delta_h^s e(n),\qquad h=(p-1)/m.
+\]
+The packed sequence and difference operations are definitions. Their coefficient correspondence is proved before any divisibility assumption is introduced.
+
+\subsection*{A sufficient condition, explicitly conditional}
+Define flatness by the actual coefficientwise divisibility assertion
+\[
+ \delta^sX(d)\in p^sR\qquad(s,d\ge0).
+\]
+The new theorem proves that this hypothesis implies
+\[
+ \boxed{p^{\min(k,mn)}\mid\Delta_h^k e(n).}
+\]
+First, coefficient extraction proves the triangular region $k\le mn$. A separate induction on difference order proves that this region is equivalent to the complete saturated estimate. This implication is useful over $\Z_p$; interpreting it over a field would not supply the intended integral content.
+
+\subsection*{Normalization is also an explicit implication}
+Using the existing definition $E^{(N,j)}_{Nn}=j!C_{N,j}(n)$, the source proves that multiplication by $j!$ commutes with every iterated difference. If the unnormalized difference has precision $A$, the normalized difference has precision $A-v_p(j!)$. Precision is defined as
+\[
+ x=0\quad\hbox{or}\quad v_p(x)\ge A,
+\]
+so zero and negative factorial-loss thresholds are handled correctly. For $j<p$, the loss is zero.
+
+\textbf{Not established here.} The general unnormalized Euler family has not been proved to possess the required flat integral lift, especially across singular residue intervals. The retrieved 18-page supporting prose proof uses weighted Amice/Mahler bounds, singular ratios and nonsingular propagation. Those obligations remain, and the full arbitrary-multiple global estimate is not promoted by these interfaces.
+
+\par\medskip
+\pageheading{5. Verification record and reproducibility boundary}{Evidence accompanies the source, not only the summary}
+The release verifier compiles the cumulative 38-module project into an initially empty output directory, with warnings treated as errors. It checks all \textbf{439 theorem declarations and 94 explicit definitions}, requiring all \textbf{533 expected axiom reports} and allowing only \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}, or subsets thereof.
+
+The pinned runtime is Lean 4.34.0-rc2. The Mathlib revision is
+\begin{center}\footnotesize\mcode{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+Nine dependency heads are compared with their recorded manifest pins. The compiled Mathlib cache is reused, not independently rebuilt. The source checker rejects admitted proofs and selected trust-bypass constructs; the transitive axiom audit is a separate check.
+
+\subsection*{Negative controls and infrastructure}
+The verifier retains its earlier 20 invalid-proof controls and adds three: a false row-zero period, a false nondivisor period, and an unjustified extra power of the modulus. Missing imports, timeouts and compiler panics do not count as successful rejections.
+
+The infrastructure suite contains \textbf{162 tests}. New tests verify the one-item coverage transition, preservation of the 31 upstream sources, the explicit conditional flatness premise, resolution of partial targets, and continued pending status of 7.5. Historical census tests use their frozen release snapshots. Current census assertions use the new inventory.
+
+\subsection*{Independent exact finite checks}
+The new rational and finite-field mirrors passed 4,848 reciprocal coefficient rows, 2,592 higher-Leibniz cases, 4,520 reciprocal prime-shift cases, 3,720 period comparisons, and 1,476 standard-window rational rows. They also checked 1,104 rational period differences, 620 higher differences modulo $p$, and 586 Dwork extraction interfaces. Eleven invalid input configurations were rejected.
+
+A further 4,096 finite tests of the remaining global bound passed. \textbf{These do not prove that bound and do not change the coverage count.} All mirrors are independent Python implementations, not execution extracted from Lean. The original historical numerical suite was not rerun.
+
+\subsection*{Scope, preservation and failures}
+The original manuscript and all six earlier supplements remain unchanged. The new amendment replaces the period's dependence on the still-pending global theorem with the direct proof. Development failures, source snapshots and logs are kept separately from the release run. A second clean build from a freshly extracted archive is recorded in the companion release audit.
+
+Run \mcode{bash Run-Portable.sh /path/to/kit} to repeat the current unit tests, cumulative finite mirrors and Lean verification. Run \mcode{python scripts/check_manifest.py} to check the delivered file snapshot. The manifest does not claim that every prose sentence is equivalent to its Lean type; that correspondence remains a mathematical review.

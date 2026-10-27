@@ -1,0 +1,988 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=23mm,headheight=15pt]{geometry}
+\usepackage{microtype,amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,tabularx,enumitem,fancyhdr,xcolor,listings,needspace}
+\usepackage{titlesec}
+\usepackage{xurl}
+\usepackage[unicode,breaklinks]{hyperref}
+\definecolor{teal}{HTML}{174C53}
+\definecolor{pale}{HTML}{F1F5F5}
+\hypersetup{pdftitle={Chapter I: Machine-Native Final Companion},pdfauthor={Komorebi P.},colorlinks=true,linkcolor=teal,urlcolor=teal}
+\titleformat{\section}{\Large\bfseries\color{teal}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{teal}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{teal}}{\thesubsubsection}{0.7em}{}
+\setcounter{tocdepth}{2}
+\setlength{\parindent}{0pt}\setlength{\parskip}{0.45em}
+\setlist{itemsep=0.18em,topsep=0.4em}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small PSC I \enspace Machine-native companion}\fancyhead[R]{\small Komorebi P.}\fancyfoot[C]{\thepage}
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,breakatwhitespace=false,columns=fullflexible,keepspaces=true,showstringspaces=false,backgroundcolor=\color{pale},frame=single,rulecolor=\color{teal!25},framerule=0.3pt,xleftmargin=1mm,xrightmargin=1mm,aboveskip=0.6em,belowskip=0.6em}
+\allowdisplaybreaks\emergencystretch=3em\sloppy
+\newcommand{\bbk}{\Bbbk}\newcommand{\A}{\mathcal A}\newcommand{\B}{\mathcal B}\newcommand{\Ccal}{\mathcal C}\newcommand{\Pcal}{\mathcal P}\newcommand{\Qcal}{\mathcal Q}\newcommand{\Rcal}{\mathcal R}\newcommand{\Scal}{\mathcal S}
+\newcommand{\Hull}{\operatorname{Hull}}\newcommand{\srank}{\operatorname{srank}}\newcommand{\psrank}{\operatorname{psrank}}\newcommand{\End}{\operatorname{End}}\newcommand{\Hom}{\operatorname{Hom}}\newcommand{\im}{\operatorname{im}}\newcommand{\Ker}{\operatorname{Ker}}\newcommand{\Jac}{\operatorname{Jac}}\newcommand{\Irr}{\operatorname{Irr}}\newcommand{\Span}{\operatorname{span}}\newcommand{\alg}{\operatorname{alg}}\newcommand{\Reach}{\operatorname{Reach}}\newcommand{\Supp}{\operatorname{Supp}}\newcommand{\id}{\mathrm{id}}\newcommand{\cl}[1]{\overline{#1}}
+\newcommand{\field}[2]{\par\smallskip\noindent\textbf{#1.} #2\par}
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Projector-Resolved Seed Calculus I}
+\renewcommand{\KomorebiSubtitle}{Typed operator systems, seed rank, and exact packet coordinates}
+\renewcommand{\KomorebiSeries}{Chapter I}
+\renewcommand{\KomorebiKind}{Computational companion}
+\renewcommand{\KomorebiEdition}{}
+\renewcommand{\KomorebiShortTitle}{Chapter I}
+\renewcommand{\KomorebiTitleSize}{31}
+\renewcommand{\KomorebiTitleLeading}{36}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
+\endgroup\clearpage\pagenumbering{arabic}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\KomorebiCover
+
+
+\section*{Computational records and interfaces}\phantomsection\addcontentsline{toc}{section}{Computational records and interfaces}
+This computational companion represents Chapter I as a collection of mathematical records that can be inspected and queried, with a finite subset supported by executable interfaces. The statement inventory is \nolinkurl{formal/coverage/COVERAGE_108.json}. The executable runtime has its own entrypoint under \nolinkurl{source/machine_v1.0.1/}; that path identifies the exact archived payload. The catalogue and runtime have the distinct scopes explained below.
+
+The catalogue contains 108 mathematical records, including 69 theorem, proposition, corollary, and lemma records with source proofs. The formal correspondence is reported alongside each record. The preserved runtime interface has twenty typed signatures, and its attached historical Lean tranche has eight mappings; those inherited interfaces and receipts retain their original scope.
+
+The mathematical source supplies the statements and proofs, including the split-semisimple hypotheses and explicit map qualifications. The supplementary worked models remain in the mathematical text. Stable identifiers connect the mathematical, formal, and computational material; statement hashes and source locators distinguish the catalogue from the archived runtime payloads.
+
+The verification record distinguishes evidence for the mathematical correspondence from the runtime receipts. Its source inventory and formal correspondence map are available under \nolinkurl{formal/coverage/}; compiler and replay receipts are under \nolinkurl{formal/evidence/}. The Lean guide explains the formal sources, their hypotheses, and how to interpret those checks.
+
+\textbf{How to use this volume.} Read Sections 1--3 for mathematical and evidence semantics. Sections 4--6 give the executable contracts and an exact worked example. Section 7 describes reproduction. Appendix A reproduces every canonical source statement and every attached proof body, with source locators and machine metadata. Later appendices give signatures, action coverage, operation vocabulary, and the historical Lean map.
+\clearpage\tableofcontents\clearpage
+\section{The mathematical object behind the interface}
+\subsection{Operator systems, generated hulls, and seed rank}
+A seed problem consists of an acting algebra, a module, and a family of seed vectors. The algebra must be fixed before the generation question is asked. For a unital algebra $A$ acting on a module $M$ and a finite seed family $S=\{s_1,\ldots,s_r\}$, the algebraic generated hull is
+\[
+\Hull_A(S)=\sum_{j=1}^{r}As_j.
+\]
+A one-seed system is cyclic. Seed rank measures the minimum cardinality of a generating family, under the regime declared in the source. Enlarging the acting algebra changes the question. Replacing algebraic span by a closure changes it again. The machine record therefore keeps the acting regime and hypotheses beside the statement.
+
+Chapter I begins with typed operator grammars and their realizations, then passes through free presentations, generator number, packet coordinates, block algebras, transfer graphs, and realization. The resulting record graph covers the whole expanded foundation. It is not limited to the finite matrix examples that the runtime executes.
+
+For finite families of nonnegative integers, the ambient convention is $\max\varnothing=0$. The height of an empty finite poset is zero. A nonempty poset with no strict comparable pair also has height zero, so height counts strict steps. These conventions clarify the empty cases without adding stable records.
+
+The source separates algebraic, linear, and topological claims. A finite-dimensional matrix computation can exercise a linear identity. It cannot establish the countable Banach-space result or a generator formula over every division ring. Those claims retain their own source proofs and dependencies.
+\subsection{Exact packet coordinates}
+For a finite index set $I$, a packet system on $X$ consists of linear maps $P_\alpha$ satisfying
+\[
+P_\alpha^2=P_\alpha,\qquad
+P_\beta P_\alpha=0\quad(\beta\ne\alpha),\qquad
+\sum_{\alpha\in I}P_\alpha=I_X.
+\]
+The packet spaces are the ranges $X_\alpha=P_\alpha X$. Analysis and synthesis are
+\[
+\mathcal A_Px=(P_\alpha x)_{\alpha\in I},\qquad
+\mathcal S_P((x_\alpha)_\alpha)=\sum_\alpha x_\alpha.
+\]
+Their inverse laws are exact. No inner-product orthogonality assumption is needed. This distinction is visible in the oblique two-dimensional example later in this companion.
+
+Machine execution represents each packet as an ambient vector. It does not construct a basis of every range or replace the ambient representation by smaller coordinate arrays. This choice makes exact identities easy to compare with the source formulas while retaining the packet index structure.
+\subsection{Transfer blocks and composition}
+For an endomorphism $T$, the transfer block from packet $\alpha$ to packet $\beta$ is
+\[
+T_{\beta\alpha}=P_\beta TP_\alpha.
+\]
+Its source is $X_\alpha$ and its target is $X_\beta$. In the finite runtime it is stored as a full ambient matrix. Completeness gives
+\[
+T=\sum_{\alpha,\beta}T_{\beta\alpha},\qquad
+(ST)_{\gamma\alpha}=\sum_\beta S_{\gamma\beta}T_{\beta\alpha}.
+\]
+The order matters: the rightmost factor acts first. The runtime uses the same convention. Its nested block array is indexed first by target and then by source.
+
+The graph records source dependencies for these identities. It does not infer every implicit mathematical dependency. The packet-system hypotheses remain required even when a compact source statement inherits them from the surrounding section.
+\subsection{Intertwining and reconstruction}
+For packet systems $P$ on $X$ and $Q$ on $Y$, an intertwiner $U:X\to Y$ satisfies $UT=SU$. Resolving both sides yields
+\[
+\sum_\beta U_{\gamma\beta}T_{\beta\alpha}
+=
+\sum_\delta S_{\gamma\delta}U_{\delta\alpha},
+\qquad U_{\gamma\alpha}=Q_\gamma UP_\alpha.
+\]
+All local equations together are equivalent to the global equation under the packet hypotheses. The runtime returns the global Boolean, every local residual, and the conjunction of the local Booleans. It provides the data needed to inspect agreement or failure in a concrete exact case.
+\subsection{The boundary of finite execution}
+Countable packet sums require a topology and a convergence condition. Quotient descent requires invariance. Coordinate transport requires a suitable invertible map. Packet-pure seed counts differ from unrestricted seed counts because one mixed-support seed can contribute to several source components. These are mathematical hypotheses, not formatting conventions.
+
+The source records seven explicit boundaries. Their presence is part of the interface. Runtime action names do not imply that every associated theorem has an implementation, and metadata listing a boundary does not itself execute that boundary check.
+
+\section{Canonical machine representation}
+\subsection{Entrypoint and package identity}
+The mathematical records are located at \nolinkurl{formal/coverage/COVERAGE_108.json}; Appendix A is generated directly from those records. Each includes the statement, source proof where present, source location, hashes, formal status, and declaration correspondence. The archived mathematical source identified by those hashes is the statement authority.
+
+The preserved executable payload is located at \nolinkurl{source/machine_v1.0.1/}. Runtime commands in this volume assume that working directory. Its entrypoint, \nolinkurl{PSC_I.machine.json}, points to the preserved record collection, statement AST, dependency graph, action registry, and evidence index. A runtime result therefore retains the exact interface scope explained below; it is not a certificate for every current manuscript statement.
+
+The preserved runtime source digest is:
+\begin{lstlisting}
+37bf8f03dbbf66ce41f8b07a8e7be8fa5fca44176bdd56dd25b483f72736ff77
+\end{lstlisting}
+That digest identifies the archived runtime source, including explicit nonzero-packet assumptions for two corollaries and the empty-family and poset-height conventions. The mathematical inventory has its own statement and proof hashes, printed in Appendix A. Runtime receipts remain attached to their original bytes; they do not transfer automatically to the mathematical inventory.
+\subsection{Record identity and source provenance}
+Each current record has a stable ID, kind, title, statement text, optional proof text, source locator, hashes, formal status, declaration targets, and a scope note. These fields identify the actual current statement and the proof text that accompanies it. The preserved executable payload additionally supplies its own dependency annotations, semantic profiles, evidence coordinates, and fingerprints for its versioned source.
+
+There are 28 definitions, 28 theorems, 22 corollaries, 16 propositions, three lemmas, three classical inputs, seven boundaries, and one remark. The 69 theorem/proposition/corollary/lemma records have attached proof bodies. Definitions and boundary statements are not counted as proved theorems merely because they occupy records.
+
+A fingerprint in the preserved runtime provides a content identity under that payload's generating convention. It is not a proof certificate. The release gate checks the source digest, ID count, graph, AST coverage, selected API behavior, and exact fixtures. It does not establish all mathematical content through independent formal reconstruction.
+\subsection{Statement AST and typed signatures}
+The preserved runtime statement AST has one entry per stable ID in its versioned source. The statuses are 20 \nolinkurl{TYPED_CORE}, 81 \nolinkurl{STRUCTURED_SYMBOLIC}, and seven \nolinkurl{TEXTUAL_SEMANTIC}. A typed-core record points to a signature declaring parameters, requirements where supplied, and a return description.
+
+The AST segments statements into prose and mathematical surfaces. Some expressions are recognized as relations or direct-sum expressions. Others retain \nolinkurl{latex_expr} leaves. Even a typed-core record can contain these leaves. Consequently, ``typed core'' refers to the attached interface signature, not to a complete formal elaboration or a proof term.
+
+The signature for block intertwining describes a logical equivalence between the global and local equations. Its source proof remains attached separately. The runtime can evaluate a finite instance. These are three different representations with three different evidentiary roles.
+\subsection{Dependencies and closure}
+The preserved runtime dependency graph contains 108 nodes and 97 internal edges. The release gate confirms that the recorded internal dependencies resolve and that the graph is acyclic. Direct dependencies are stored on each record. The API can also return a transitive closure.
+
+Closure queries return sorted identifiers. They do not produce a proof order, carry out the proof, or resolve external classical inputs. A consumer can use the graph to inspect a prerequisite set and then obtain source statements and evidence for each record.
+\subsection{Operation profiles and actions}
+Each preserved runtime record carries source-derived operation metadata, with a transitive profile alongside the direct profile. The ontology distinguishes structural operations from hypothesis classes. These annotations support planning and inspection. They should not be interpreted as a verified extraction of every semantic operation used by an arbitrary proof.
+
+The action registry contains 37 action names associated with 75 records. Eight names are implemented in the runtime. Other entries are marked planner-only or fixture-only. The source has broader mathematical scope than the executable subset.
+
+\section{Evidence semantics and certification scope}
+\subsection{Independent evidence coordinates}
+The preserved runtime evidence object separates source, KIR, Python, and Lean. Its source coordinate identifies that payload's source; its KIR coordinate records validation of that version. Python evidence reports exact finite fixtures for 26 records. Its Lean coordinate points to eight historical source mappings.
+
+The catalogue uses the formal correspondence map instead. Each of the 108 records carries a status and scope note, and each proof-level statement has its own correspondence assessment. The verification index distinguishes the execution evidence attached to each component.
+
+No coordinate upgrades another automatically. Exact arithmetic removes floating-point ambiguity from a finite computation. It does not quantify over arbitrary fields, modules, dimensions, or topological spaces. A mapped Lean declaration proves its own formal statement under its dependencies. Its relation to the source statement must still be read from the mapping.
+\input{generated/release_verification.tex}
+
+\subsection{Historical Lean linkage}
+The attached seven-module formalization records Lean 4.34.0-rc2 and a pinned Mathlib manifest. Its eight mappings include definitions, generalized theorems, one-directional correspondence, and a related sufficient direction. The support-pattern algebra mapping is explicitly partial. It must not be counted as a full formal certificate for every direction of the source criterion.
+
+A separate predecessor report records 35 of 35 obligations for its identified source. That lineage is not the canonical correspondence for the expanded mathematical inventory. The predecessor count, the eight attached runtime mappings, and the expanded correspondence map describe different scopes.
+\subsection{Recorded runtime checks}
+The documented verifier and exact fixture suite were run from the archived runtime payload. Both passed. The verification log is attached in the companion's \nolinkurl{build/} directory. All 65 files extracted from the original machine archive retain their original bytes.
+
+An initial invocation used an interpreter without SymPy and failed when the blockification action imported that dependency. The successful replay used an existing environment containing SymPy. No runtime action implementation was changed to resolve that environment failure. The two audited statement corrections were applied separately and have their own provenance record.
+
+Typesetting this companion does not execute Lean. Lean checks are reported in the verification index and explained in the formal companion. The historical runtime status file is retained with its original source identity.
+\subsection{What PASS means}
+A release-gate pass means the named package checks succeeded. A fixture pass means a concrete exact computation satisfied its assertion. A transport-gate pass means all operation flags that this runtime checked were accepted. None of these strings, taken alone, means that the entire 108-record foundation has been formally proved by the runtime.
+
+The full source proof catalog is included so that a reader can inspect mathematical arguments beyond the runtime. Editorial reproduction of those arguments is not an adversarial proof audit or a new formal verification claim.
+
+\section{Executable action contracts}
+\subsection{Input and output conventions}
+The API is a Python command that emits JSON on successful calls. Exact arithmetic actions use SymPy matrices. Integers and rational strings such as \nolinkurl{"3/7"} preserve rational values. JSON floating-point numbers should be avoided when the intended claim is an exact rational identity. Returned scalar entries are strings.
+
+Payload shapes are conventional rather than comprehensively validated at the API boundary. Supply nonempty compatible square projector matrices and compatible operators or vectors. Malformed inputs can raise Python exceptions. The command parser does not present a universal structured-error contract.
+
+Most computational actions do not call packet validation automatically. Validate the packet family before interpreting block or analysis output through the theorems. With invalid projectors, a matrix expression may still be computable while its theorem interpretation fails.
+\subsection{The six exact finite actions}
+\begin{longtable}{@{}p{0.29\textwidth}p{0.28\textwidth}p{0.36\textwidth}@{}}
+\toprule Action & Payload & Returned information\\\midrule\endhead
+\nolinkurl{VALIDATE_PACKET_SYSTEM} & \nolinkurl{projectors} & Idempotence, annihilation, completeness, and their conjunction.\\
+\nolinkurl{ANALYZE_PACKETS} & \nolinkurl{projectors}, \nolinkurl{vector} & Ambient packet vectors and a reconstruction Boolean.\\
+\nolinkurl{BLOCKIFY_OPERATOR} & \nolinkurl{projectors}, \nolinkurl{operator} & Target/source array of ambient transfer matrices.\\
+\nolinkurl{RECONSTRUCT_OPERATOR} & \nolinkurl{blocks} & Sum of every supplied block. Compatibility with a packet family is not independently checked.\\
+\nolinkurl{COMPOSE_TRANSFER_BLOCKS} & \nolinkurl{projectors}, \nolinkurl{S}, \nolinkurl{T} & Block-product array and equality with directly resolved $ST$.\\
+\nolinkurl{LOWER_INTERTWINER} & \nolinkurl{P}, \nolinkurl{Q}, \nolinkurl{T}, \nolinkurl{S}, \nolinkurl{U} & Global equation, local equations, residuals, and local conjunction.\\\bottomrule
+\end{longtable}
+\subsection{The two semantic gate actions}
+\nolinkurl{CHECK_REALIZATION_PROFILE} and \nolinkurl{TRANSPORT_THEOREM} share the same runtime gate. Their payload contains a record ID and a profile. The gate reads that record's direct \nolinkurl{action_required_operations} and checks the corresponding profile flags.
+
+The accepted flags are true, \nolinkurl{VERIFIED}, or \nolinkurl{PRESERVED}. False and \nolinkurl{NOT_PRESERVED} produce a negative list. Other or missing values are unknown. Any negative or unknown required operation blocks the gate.
+
+This archived implementation does not evaluate the profile's \nolinkurl{verified_hypotheses}, does not use the transitive operation closure as its required set, and does not execute the returned boundary guards. It also does not construct a target theorem, a proof object, or an independently verified realization functor. The preservation flags are caller-supplied declarations.
+
+Thus the action named \nolinkurl{TRANSPORT_THEOREM} is an operation-profile gate. A consumer must separately justify target hypotheses, source-to-target interpretation, and any constructions used by the proof. Unknown flags fail closed only within the operation list actually inspected by the function.
+\subsection{Planner-only and fixture-only actions}
+The full registry in Appendix C makes execution status explicit. A planner-only action can identify a mathematically meaningful next step without implementing it. A fixture-only association records that a finite check exercises related mathematics. Calling an unimplemented action through \nolinkurl{execute} exits with an unsupported-action error.
+
+\section{An exact worked execution}
+\subsection{Oblique packets and reconstruction}
+Use
+\[
+P_0=\begin{pmatrix}1&-1\\0&0\end{pmatrix},\qquad
+P_1=\begin{pmatrix}0&1\\0&1\end{pmatrix},\qquad
+x=\begin{pmatrix}3\\5\end{pmatrix}.
+\]
+These are complementary idempotents but are not self-adjoint under the usual Euclidean inner product. The example therefore exercises the algebraic packet hypotheses without adding orthogonality.
+\begin{lstlisting}
+python runtime/machine_api.py execute VALIDATE_PACKET_SYSTEM tests/packet_input.json
+python runtime/machine_api.py execute ANALYZE_PACKETS tests/analyze_input.json
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "complete": true,
+  "idempotent": true,
+  "pairwise_annihilating": true,
+  "valid": true
+}
+\end{lstlisting}
+The analysis output is exact:
+
+\begin{lstlisting}
+{
+  "packets": [
+    [
+      [
+        "-2"
+      ],
+      [
+        "0"
+      ]
+    ],
+    [
+      [
+        "5"
+      ],
+      [
+        "5"
+      ]
+    ]
+  ],
+  "reconstructs": true
+}
+\end{lstlisting}
+
+The two vectors $(-2,0)^t$ and $(5,5)^t$ sum to $x$. Each belongs to its own projector range. The runtime's zero-based packet indexing corresponds to the displayed $P_0,P_1$.
+\subsection{Resolving and rebuilding an operator}
+Take
+\[
+T=\begin{pmatrix}2&3\\5&7\end{pmatrix}.
+\]
+The command \nolinkurl{BLOCKIFY_OPERATOR} returns four ambient $2\times2$ matrices. In target/source order, they are
+\[
+T_{00}=\begin{pmatrix}-3&3\\0&0\end{pmatrix},\quad
+T_{01}=\begin{pmatrix}0&-7\\0&0\end{pmatrix},\quad
+T_{10}=\begin{pmatrix}5&-5\\5&-5\end{pmatrix},\quad
+T_{11}=\begin{pmatrix}0&12\\0&12\end{pmatrix}.
+\]
+Their sum is $T$. The exact reconstruction API returns:
+
+\begin{lstlisting}
+{
+  "operator": [
+    [
+      "2",
+      "3"
+    ],
+    [
+      "5",
+      "7"
+    ]
+  ]
+}
+\end{lstlisting}
+
+The input and output JSON files for this reconstruction are supplied in \nolinkurl{examples/}. The reconstruction action performs the block sum. Its interpretation as recovery of the original operator uses the validated packet system and the way those blocks were formed.
+\subsection{Composing resolved operators}
+Now set
+\[
+S=\begin{pmatrix}11&13\\17&19\end{pmatrix},\qquad
+ST=\begin{pmatrix}87&124\\129&184\end{pmatrix}.
+\]
+The runtime forms the blocks of $S$ and $T$, then sums over the middle packet index. It compares the resulting array with the directly resolved product. The supplied worked output has \nolinkurl{equals_direct: true}. The full block arrays are retained in \nolinkurl{examples/composition.json}.
+
+The comparison checks a concrete instance of the multiplication identity. The general identity follows from inserting the complete family between the factors, as in the source proof reproduced in Appendix A.
+\subsection{An intertwining computation}
+Let
+\[
+U=\begin{pmatrix}1&1\\0&1\end{pmatrix},\qquad
+Q_i=UP_iU^{-1},\qquad
+S'=UTU^{-1}=\begin{pmatrix}7&3\\5&2\end{pmatrix}.
+\]
+The target packets are $Q_0=\left(\begin{smallmatrix}1&-2\\0&0\end{smallmatrix}\right)$ and $Q_1=\left(\begin{smallmatrix}0&2\\0&1\end{smallmatrix}\right)$. The global identity is $UT=S'U$.
+
+The recorded execution of \nolinkurl{LOWER_INTERTWINER} returns true for both the global identity and the conjunction of the four local equations. Each local residual is the zero matrix. One complete local result is:
+
+\begin{lstlisting}
+{
+  "holds": true,
+  "lhs": [
+    [
+      "-3",
+      "3"
+    ],
+    [
+      "0",
+      "0"
+    ]
+  ],
+  "residual": [
+    [
+      "0",
+      "0"
+    ],
+    [
+      "0",
+      "0"
+    ]
+  ],
+  "rhs": [
+    [
+      "-3",
+      "3"
+    ],
+    [
+      "0",
+      "0"
+    ]
+  ],
+  "source": 0,
+  "target": 0
+}
+\end{lstlisting}
+
+This example deliberately changes packet coordinates as well as the operator. The complete input and four outputs are retained in \nolinkurl{examples/intertwining_input.json} and \nolinkurl{examples/intertwining.json}.
+\subsection{Inspecting the dependency set}
+The API exposes the dependencies used by the source-linked intertwining record:
+\begin{lstlisting}
+python runtime/machine_api.py deps PSC-I-T-BLOCK-INTERTWINING --transitive
+\end{lstlisting}
+
+\begin{lstlisting}
+{
+  "dependencies": [
+    "PSC-I-D-ANALYSIS-SYNTHESIS",
+    "PSC-I-D-PACKET-SYSTEM",
+    "PSC-I-D-TRANSFER-BLOCK",
+    "PSC-I-T-BLOCK-MULTIPLICATION",
+    "PSC-I-T-EXACT-PACKET-COORDINATES",
+    "PSC-I-T-OPERATOR-RECONSTRUCTION"
+  ],
+  "record": "PSC-I-T-BLOCK-INTERTWINING"
+}
+\end{lstlisting}
+
+This is a dependency closure, not a newly generated proof. Reading each named record supplies its exact source statement, proof, and evidence coordinates.
+
+\section{Transport profiles in use}
+\subsection{Finite packet multiplication}
+The packet-linear profile declares preservation of the direct operations required by packet multiplication. The command
+\begin{lstlisting}
+python runtime/machine_api.py transport PSC-I-T-BLOCK-MULTIPLICATION profiles/packet_linear.json
+\end{lstlisting}
+returns:
+
+\begin{lstlisting}
+{
+  "boundary_guards": [],
+  "not_preserved": [],
+  "record": "PSC-I-T-BLOCK-MULTIPLICATION",
+  "required_operations": [
+    "composition",
+    "finite_sum",
+    "packet_idempotents",
+    "transfer_blocks"
+  ],
+  "status": "PASS",
+  "unknown": []
+}
+\end{lstlisting}
+
+The pass is exactly a pass for the listed operation flags. In particular, it does not construct the target packet system or independently check a concrete functor's preservation laws.
+\subsection{A countable result is blocked}
+Using the same profile for the countable unconditional packet theorem returns:
+
+\begin{lstlisting}
+{
+  "boundary_guards": [],
+  "not_preserved": [
+    "completion",
+    "topology"
+  ],
+  "record": "PSC-I-T-COUNTABLE-UNCONDITIONAL-PACKETS",
+  "required_operations": [
+    "completion",
+    "packet_idempotents",
+    "topology"
+  ],
+  "status": "BLOCKED",
+  "unknown": []
+}
+\end{lstlisting}
+
+The profile does not preserve the topological and completion operations required by this gate. A finite linear profile therefore cannot be used to pass this countable request.
+
+The source theorem additionally requires a real or complex Banach space, unconditional reconstruction, and a uniform multiplier bound. These hypotheses remain visible in its statement. Supplying permissive operation flags would not prove those hypotheses. The richer source contract and the narrower executable gate must be kept distinct.
+\subsection{Changing a profile without changing evidence}
+A profile file is a declaration supplied to the runtime. Editing its flags changes the gate's output. It does not create mathematical preservation evidence. A downstream system that wants a transport certificate must retain the arguments or formal certificates justifying those flags and the target hypotheses.
+
+The correct use is sequential: identify the exact record, inspect its source and dependency context, establish a target realization, justify the relevant preservation properties and hypotheses, then use the gate as an explicit consistency check. Its output can be attached to the resulting evidence record as one component.
+
+\section{Reproducing the computational material}
+\subsection{Documented payload checks}
+From \nolinkurl{source/machine_v1.0.1/}, use an interpreter containing SymPy:
+\begin{lstlisting}
+python runtime/verify_release.py
+python runtime/exact_fixture_suite.py
+python runtime/nonzero_packet_regression.py
+\end{lstlisting}
+The first script checks entrypoint identity, record IDs, graph acyclicity and resolution, AST coverage, action-registry consistency, source hash, selected API queries and actions, structured transport response, and fixture replay. The second emits the detailed fixture results. The latter does not replace a theorem prover.
+\subsection{Companion build}
+Within the original source archive, \nolinkurl{build_companion.py} regenerates the catalogue from the mathematical inventory and builds the standalone PDF. The archived runtime builder, \nolinkurl{build_historical_companion.py}, reproduces the runtime checks and examples separately from that inventory. These archive workflows are distinct from the collected monograph build. A TeX installation with the packages declared in the preamble is required for either PDF build.
+
+The original standalone source package includes the machine archive as provenance. The build accepts \nolinkurl{PSC_MACHINE_ARCHIVE} when that archive is stored elsewhere. The document source itself remains readable independently of the builder.
+\subsection{A source change is a new evidence task}
+If a source statement changes, its source and statement identity change. The KIR, AST, dependency annotations, operation profile, formal map, and tests must be reviewed for impact. A historical pass cannot be assigned to a new statement solely because the stable ID stayed the same.
+
+The catalogue is generated from the archived mathematical source and records each statement and proof hash. The archived runtime payloads retain their own evidence. The additional traditional models and visual appendix are outside the 108-record inventory; they are not silently counted as extra machine records.
+\subsection{Runtime interfaces and mathematical statements}
+The source archive retains the earlier computational PDFs as provenance. This companion supplies the statement catalogue and the archived runtime's exact transport-gate specification. Planner metadata remains distinct from executed proof machinery.
+
+\input{generated/release_catalog.tex}
+\clearpage\section{Typed core signatures}
+These twenty signatures are reproduced from \nolinkurl{kir/core_typed_signatures.json}. Unicode mathematical characters are represented with standard JSON escapes in the listings. Their meanings are unchanged. The schema does not make these strings into independently checked proof terms.
+\Needspace{7\baselineskip}\subsection*{Linear seed system}
+\hyperref[rec:PSC-I-D-SEED-SYSTEM]{\nolinkurl{PSC-I-D-SEED-SYSTEM}}
+\begin{lstlisting}
+{
+  "params": [
+    "A:OperatorAlgebra",
+    "M:Module(A)",
+    "S:FiniteFamily(M)"
+  ],
+  "returns": "SeedSystem(A,M,S)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Generated hull}
+\hyperref[rec:PSC-I-D-GENERATED-HULL]{\nolinkurl{PSC-I-D-GENERATED-HULL}}
+\begin{lstlisting}
+{
+  "params": [
+    "A:OperatorAlgebra",
+    "M:Module(A)",
+    "S:Family(M)"
+  ],
+  "returns": "Submodule(M)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Seed rank}
+\hyperref[rec:PSC-I-D-SEED-RANK]{\nolinkurl{PSC-I-D-SEED-RANK}}
+\begin{lstlisting}
+{
+  "params": [
+    "A:OperatorAlgebra",
+    "M:Module(A)"
+  ],
+  "returns": "Cardinal"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Finite packet system}
+\hyperref[rec:PSC-I-D-PACKET-SYSTEM]{\nolinkurl{PSC-I-D-PACKET-SYSTEM}}
+\begin{lstlisting}
+{
+  "params": [
+    "K:Field",
+    "X:VectorSpace(K)",
+    "I:FiniteIndexSet",
+    "P:I\u2192End(X)"
+  ],
+  "requires": [
+    "idempotent(P)",
+    "pairwise_annihilating(P)",
+    "sum(P)=id_X"
+  ],
+  "returns": "PacketSystem(X,I)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Packet analysis and synthesis}
+\hyperref[rec:PSC-I-D-ANALYSIS-SYNTHESIS]{\nolinkurl{PSC-I-D-ANALYSIS-SYNTHESIS}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)"
+  ],
+  "returns": [
+    "Analyze_P:X\u2192DirectSum(I,PacketSpace(P,i))",
+    "Synthesize_P:DirectSum(I,PacketSpace(P,i))\u2192X"
+  ]
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Exact packet-coordinate isomorphism}
+\hyperref[rec:PSC-I-T-EXACT-PACKET-COORDINATES]{\nolinkurl{PSC-I-T-EXACT-PACKET-COORDINATES}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)"
+  ],
+  "returns": "Equivalence(X,DirectSum(I,PacketSpace(P,i)))",
+  "certificate": "exact_inverse"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Transfer block}
+\hyperref[rec:PSC-I-D-TRANSFER-BLOCK]{\nolinkurl{PSC-I-D-TRANSFER-BLOCK}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "T:End(X)",
+    "alpha:I",
+    "beta:I"
+  ],
+  "returns": "LinearMap(PacketSpace(P,alpha),PacketSpace(P,beta))"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Exact operator reconstruction}
+\hyperref[rec:PSC-I-T-OPERATOR-RECONSTRUCTION]{\nolinkurl{PSC-I-T-OPERATOR-RECONSTRUCTION}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "T:End(X)"
+  ],
+  "returns": "Equality(T,Sum(alpha,beta,TransferBlock(P,T,beta,alpha)))"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Packet matrix multiplication}
+\hyperref[rec:PSC-I-T-BLOCK-MULTIPLICATION]{\nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "S:End(X)",
+    "T:End(X)",
+    "alpha:I",
+    "gamma:I"
+  ],
+  "returns": "Equality(Block(S\u2218T,gamma,alpha),Sum(beta,Block(S,gamma,beta)\u2218Block(T,beta,alpha)))"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Packet powers and paths}
+\hyperref[rec:PSC-I-C-BLOCK-POWERS]{\nolinkurl{PSC-I-C-BLOCK-POWERS}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "T:End(X)",
+    "m:Nat"
+  ],
+  "returns": "PacketPathExpansion(T,m)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Blockwise intertwining equations}
+\hyperref[rec:PSC-I-T-BLOCK-INTERTWINING]{\nolinkurl{PSC-I-T-BLOCK-INTERTWINING}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "Q:PacketSystem(Y,J)",
+    "T:End(X)",
+    "S:End(Y)",
+    "U:LinearMap(X,Y)"
+  ],
+  "returns": "Iff(U\u2218T=S\u2218U,LocalBlockIntertwining(P,Q,T,S,U))"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Full block-algebra representation}
+\hyperref[rec:PSC-I-T-BLOCK-ALGEBRA]{\nolinkurl{PSC-I-T-BLOCK-ALGEBRA}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)"
+  ],
+  "returns": "AlgebraEquiv(End(X),DependentBlockAlgebra(P))"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Support relation and support space}
+\hyperref[rec:PSC-I-D-SUPPORT-RELATION]{\nolinkurl{PSC-I-D-SUPPORT-RELATION}}
+\begin{lstlisting}
+{
+  "params": [
+    "I:FiniteIndexSet",
+    "R:Relation(I)"
+  ],
+  "returns": "SupportSpace(R)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Coordinate transport}
+\hyperref[rec:PSC-I-T-COORDINATE-TRANSPORT]{\nolinkurl{PSC-I-T-COORDINATE-TRANSPORT}}
+\begin{lstlisting}
+{
+  "params": [
+    "U:LinearEquiv(X,Y)",
+    "P:PacketSystem(X,I)",
+    "T:End(X)"
+  ],
+  "returns": "TransportedPacketOperator(U,P,T)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Packet exact sequence for an invariant subspace}
+\hyperref[rec:PSC-I-T-PACKET-EXACT-SEQUENCE]{\nolinkurl{PSC-I-T-PACKET-EXACT-SEQUENCE}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "K:InvariantSubspace(P)"
+  ],
+  "returns": "PacketwiseShortExactSequence(K,X,X/K)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Packet descent through an invariant quotient}
+\hyperref[rec:PSC-I-T-QUOTIENT-PACKET-DESCENT]{\nolinkurl{PSC-I-T-QUOTIENT-PACKET-DESCENT}}
+\begin{lstlisting}
+{
+  "params": [
+    "P:PacketSystem(X,I)",
+    "K:InvariantSubspace(P)"
+  ],
+  "returns": "PacketSystem(X/K,I)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Naturality of generated hulls and transfer blocks}
+\hyperref[rec:PSC-I-T-NATURALITY]{\nolinkurl{PSC-I-T-NATURALITY}}
+\begin{lstlisting}
+{
+  "params": [
+    "Phi:PacketCompatibleOperatorMorphism",
+    "S:SeedSet"
+  ],
+  "returns": "NaturalityCertificate(Phi,S)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Realization functor and preservation profile}
+\hyperref[rec:PSC-I-D-REALIZATION-FUNCTOR]{\nolinkurl{PSC-I-D-REALIZATION-FUNCTOR}}
+\begin{lstlisting}
+{
+  "params": [
+    "F:AdditiveFunctor(C,D)",
+    "profile:PreservationProfile"
+  ],
+  "returns": "RealizationFunctor(C,D,profile)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Equational realization principle}
+\hyperref[rec:PSC-I-T-REALIZATION-EXPORT]{\nolinkurl{PSC-I-T-REALIZATION-EXPORT}}
+\begin{lstlisting}
+{
+  "params": [
+    "Theta:TheoremRecord",
+    "F:RealizationFunctor"
+  ],
+  "requires": [
+    "operations_used(Theta)\u2286verified_preservation(F)",
+    "target_hypotheses_verified"
+  ],
+  "returns": "TransportCertificate(Theta,F)"
+}
+\end{lstlisting}
+\Needspace{7\baselineskip}\subsection*{Semantic realization criterion}
+\hyperref[rec:PSC-I-D-SEMANTIC-REALIZATION]{\nolinkurl{PSC-I-D-SEMANTIC-REALIZATION}}
+\begin{lstlisting}
+{
+  "params": [
+    "Theta:TheoremRecord",
+    "F:RealizationFunctor"
+  ],
+  "returns": "SemanticRealizationCriterion(Theta,F)"
+}
+\end{lstlisting}
+\clearpage\section{Complete action registry}
+The registry below contains all 37 action names. ``Implemented'' describes the frozen runtime dispatcher. It does not assert that all hypotheses of every linked source record are automatically validated. Record associations are links for inspection.
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{AGGREGATE_PACKETS}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-L-PACKET-AGGREGATION]{\nolinkurl{PSC-I-L-PACKET-AGGREGATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{ANALYZE_PACKETS}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_EXACT_FINITE}}
+\field{Records}{\hyperref[rec:PSC-I-C-PACKET-UNIVERSAL-PROPERTY]{\nolinkurl{PSC-I-C-PACKET-UNIVERSAL-PROPERTY}}; \hyperref[rec:PSC-I-C-PACKETWISE-EQUALITY]{\nolinkurl{PSC-I-C-PACKETWISE-EQUALITY}}; \hyperref[rec:PSC-I-D-ANALYSIS-SYNTHESIS]{\nolinkurl{PSC-I-D-ANALYSIS-SYNTHESIS}}; \hyperref[rec:PSC-I-T-EXACT-PACKET-COORDINATES]{\nolinkurl{PSC-I-T-EXACT-PACKET-COORDINATES}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{ASSEMBLE_BLOCK_ALGEBRA}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-DIMENSION-COUNT]{\nolinkurl{PSC-I-C-DIMENSION-COUNT}}; \hyperref[rec:PSC-I-T-BLOCK-ALGEBRA]{\nolinkurl{PSC-I-T-BLOCK-ALGEBRA}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{BLOCKIFY_OPERATOR}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_EXACT_FINITE}}
+\field{Records}{\hyperref[rec:PSC-I-D-TRANSFER-BLOCK]{\nolinkurl{PSC-I-D-TRANSFER-BLOCK}}; \hyperref[rec:PSC-I-T-OPERATOR-RECONSTRUCTION]{\nolinkurl{PSC-I-T-OPERATOR-RECONSTRUCTION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{BUILD_SEED_HULL}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-D-GENERATED-HULL]{\nolinkurl{PSC-I-D-GENERATED-HULL}}; \hyperref[rec:PSC-I-D-SEED-EVALUATION]{\nolinkurl{PSC-I-D-SEED-EVALUATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{BUILD_SUPPORT_ALGEBRA}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-SUPPORT-PATTERN-STAR]{\nolinkurl{PSC-I-C-SUPPORT-PATTERN-STAR}}; \hyperref[rec:PSC-I-T-PREORDER-ALGEBRA-DECOMPOSITION]{\nolinkurl{PSC-I-T-PREORDER-ALGEBRA-DECOMPOSITION}}; \hyperref[rec:PSC-I-T-SUPPORT-PATTERN-ALGEBRA]{\nolinkurl{PSC-I-T-SUPPORT-PATTERN-ALGEBRA}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{BUILD_TRANSFER_GRAPH}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-D-TRANSFER-GRAPH]{\nolinkurl{PSC-I-D-TRANSFER-GRAPH}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{CHANGE_PACKET_COORDINATES}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-T-COORDINATE-TRANSPORT]{\nolinkurl{PSC-I-T-COORDINATE-TRANSPORT}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{CHECK_REALIZATION_PROFILE}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_SEMANTIC_GATE}}
+\field{Records}{\hyperref[rec:PSC-I-D-REALIZATION-FUNCTOR]{\nolinkurl{PSC-I-D-REALIZATION-FUNCTOR}}; \hyperref[rec:PSC-I-D-SEMANTIC-REALIZATION]{\nolinkurl{PSC-I-D-SEMANTIC-REALIZATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMBINE_SEED_SYSTEMS}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-P-SHARED-DIRECT-SUM]{\nolinkurl{PSC-I-P-SHARED-DIRECT-SUM}}; \hyperref[rec:PSC-I-P-TENSOR-BOUND]{\nolinkurl{PSC-I-P-TENSOR-BOUND}}; \hyperref[rec:PSC-I-T-EXACT-SEQUENCE-BOUNDS]{\nolinkurl{PSC-I-T-EXACT-SEQUENCE-BOUNDS}}; \hyperref[rec:PSC-I-T-INDEPENDENT-DIRECT-SUM]{\nolinkurl{PSC-I-T-INDEPENDENT-DIRECT-SUM}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMPLETE_PACKET_SPLIT}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-COMPLETION-PACKET-SPLIT]{\nolinkurl{PSC-I-C-COMPLETION-PACKET-SPLIT}}; \hyperref[rec:PSC-I-T-COUNTABLE-UNCONDITIONAL-PACKETS]{\nolinkurl{PSC-I-T-COUNTABLE-UNCONDITIONAL-PACKETS}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMPLETE_TOPOLOGICAL_REALIZATION}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE]{\nolinkurl{PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE}}; \hyperref[rec:PSC-I-T-DENSE-REALIZATION]{\nolinkurl{PSC-I-T-DENSE-REALIZATION}}; \hyperref[rec:PSC-I-T-QUOTIENT-TOPOLOGY-COMPLETION]{\nolinkurl{PSC-I-T-QUOTIENT-TOPOLOGY-COMPLETION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMPOSE_TRANSFER_BLOCKS}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_EXACT_FINITE}}
+\field{Records}{\hyperref[rec:PSC-I-C-TENSOR-TRANSFER-BLOCKS]{\nolinkurl{PSC-I-C-TENSOR-TRANSFER-BLOCKS}}; \hyperref[rec:PSC-I-T-BLOCK-MULTIPLICATION]{\nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMPUTE_PACKET_PURE_RANK}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-SOURCE-COMPONENT-COUNT]{\nolinkurl{PSC-I-C-SOURCE-COMPONENT-COUNT}}; \hyperref[rec:PSC-I-D-DIRECTED-SEED-RANK]{\nolinkurl{PSC-I-D-DIRECTED-SEED-RANK}}; \hyperref[rec:PSC-I-P-PACKET-PURE-RANK-BOUNDS]{\nolinkurl{PSC-I-P-PACKET-PURE-RANK-BOUNDS}}; \hyperref[rec:PSC-I-T-SOURCE-COMPONENT-SEED-RANK]{\nolinkurl{PSC-I-T-SOURCE-COMPONENT-SEED-RANK}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMPUTE_REACHABILITY}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-P-REACHABILITY-OBSTRUCTION]{\nolinkurl{PSC-I-P-REACHABILITY-OBSTRUCTION}}; \hyperref[rec:PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT]{\nolinkurl{PSC-I-T-ALGEBRA-REACHABILITY-SUPPORT}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{COMPUTE_SEED_RANK}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-ALGEBRAICALLY-CLOSED-SINGLE-OPERATOR]{\nolinkurl{PSC-I-C-ALGEBRAICALLY-CLOSED-SINGLE-OPERATOR}}; \hyperref[rec:PSC-I-C-INVARIANT-FACTOR-COUNT]{\nolinkurl{PSC-I-C-INVARIANT-FACTOR-COUNT}}; \hyperref[rec:PSC-I-D-DIRECTED-SEED-RANK]{\nolinkurl{PSC-I-D-DIRECTED-SEED-RANK}}; \hyperref[rec:PSC-I-D-SEED-RANK]{\nolinkurl{PSC-I-D-SEED-RANK}}; \hyperref[rec:PSC-I-P-CYCLIC-CHARACTERIZATION]{\nolinkurl{PSC-I-P-CYCLIC-CHARACTERIZATION}}; \hyperref[rec:PSC-I-T-MODULE-TOP]{\nolinkurl{PSC-I-T-MODULE-TOP}}; \hyperref[rec:PSC-I-T-SEMISIMPLE-SEED-RANK]{\nolinkurl{PSC-I-T-SEMISIMPLE-SEED-RANK}}; \hyperref[rec:PSC-I-T-SINGLE-OPERATOR]{\nolinkurl{PSC-I-T-SINGLE-OPERATOR}}; \hyperref[rec:PSC-I-T-SOURCE-COMPONENT-SEED-RANK]{\nolinkurl{PSC-I-T-SOURCE-COMPONENT-SEED-RANK}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{DECOMPOSE_PRIMARY}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-ALGEBRAICALLY-CLOSED-SINGLE-OPERATOR]{\nolinkurl{PSC-I-C-ALGEBRAICALLY-CLOSED-SINGLE-OPERATOR}}; \hyperref[rec:PSC-I-C-CYCLIC-MATRIX]{\nolinkurl{PSC-I-C-CYCLIC-MATRIX}}; \hyperref[rec:PSC-I-C-INVARIANT-FACTOR-COUNT]{\nolinkurl{PSC-I-C-INVARIANT-FACTOR-COUNT}}; \hyperref[rec:PSC-I-T-SINGLE-OPERATOR]{\nolinkurl{PSC-I-T-SINGLE-OPERATOR}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{DESCEND_PACKET_QUOTIENT}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-QUOTIENT-PACKET-DESCENT]{\nolinkurl{PSC-I-C-QUOTIENT-PACKET-DESCENT}}; \hyperref[rec:PSC-I-T-QUOTIENT-PACKET-DESCENT]{\nolinkurl{PSC-I-T-QUOTIENT-PACKET-DESCENT}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{DUALIZE_PACKETS}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-P-DUAL-PACKET-SYSTEM]{\nolinkurl{PSC-I-P-DUAL-PACKET-SYSTEM}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{EVALUATE_PACKET_CONDITIONING}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-D-PACKET-CONDITION-NUMBER]{\nolinkurl{PSC-I-D-PACKET-CONDITION-NUMBER}}; \hyperref[rec:PSC-I-P-CONDITIONED-COORDINATES]{\nolinkurl{PSC-I-P-CONDITIONED-COORDINATES}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{EXPAND_OPERATOR_PATHS}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-BLOCK-POWERS]{\nolinkurl{PSC-I-C-BLOCK-POWERS}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{EXPORT_PSCI_INTERFACE}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-EXPORT]{\nolinkurl{PSC-I-EXPORT}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{EXTRACT_PACKET_COMMUTANT}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-P-BLOCK-DIAGONAL-COMMUTANT]{\nolinkurl{PSC-I-P-BLOCK-DIAGONAL-COMMUTANT}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{FACTOR_ACTION}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-P-ACTION-FACTORIZATION]{\nolinkurl{PSC-I-P-ACTION-FACTORIZATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{LOWER_INTERTWINER}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_EXACT_FINITE}}
+\field{Records}{\hyperref[rec:PSC-I-T-BLOCK-INTERTWINING]{\nolinkurl{PSC-I-T-BLOCK-INTERTWINING}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{PRESENT_AS_FREE_QUOTIENT}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-MINIMAL-FREE-COVER]{\nolinkurl{PSC-I-C-MINIMAL-FREE-COVER}}; \hyperref[rec:PSC-I-C-ONE-SEED-PRESENTATION]{\nolinkurl{PSC-I-C-ONE-SEED-PRESENTATION}}; \hyperref[rec:PSC-I-T-FREE-PRESENTATION]{\nolinkurl{PSC-I-T-FREE-PRESENTATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{PROPAGATE_PACKET_SUPPORT}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-PACKET-SUPPORT-PROPAGATION]{\nolinkurl{PSC-I-C-PACKET-SUPPORT-PROPAGATION}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{PUSH_GENERATORS_THROUGH_QUOTIENT}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-P-SCALAR-QUOTIENT-WITNESS]{\nolinkurl{PSC-I-P-SCALAR-QUOTIENT-WITNESS}}; \hyperref[rec:PSC-I-T-QUOTIENT-MONOTONICITY]{\nolinkurl{PSC-I-T-QUOTIENT-MONOTONICITY}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{REALIZE_GRAMMAR}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-D-COLLAPSED-REALIZATION]{\nolinkurl{PSC-I-D-COLLAPSED-REALIZATION}}; \hyperref[rec:PSC-I-T-TYPED-MODULE-EQUIVALENCE]{\nolinkurl{PSC-I-T-TYPED-MODULE-EQUIVALENCE}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{REDUCE_TO_SEMISIMPLE_TOP}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-LOCAL-ALGEBRA-FORMULA]{\nolinkurl{PSC-I-C-LOCAL-ALGEBRA-FORMULA}}; \hyperref[rec:PSC-I-T-MODULE-TOP]{\nolinkurl{PSC-I-T-MODULE-TOP}}; \hyperref[rec:PSC-I-T-SEMISIMPLE-SEED-RANK]{\nolinkurl{PSC-I-T-SEMISIMPLE-SEED-RANK}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{RESOLVE_PACKET_EXACT_SEQUENCE}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE]{\nolinkurl{PSC-I-C-TOPOLOGICAL-PACKET-EXACT-SEQUENCE}}; \hyperref[rec:PSC-I-T-PACKET-EXACT-SEQUENCE]{\nolinkurl{PSC-I-T-PACKET-EXACT-SEQUENCE}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{TENSOR_PACKETS}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-T-TENSOR-PACKET-SYSTEM]{\nolinkurl{PSC-I-T-TENSOR-PACKET-SYSTEM}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{TRANSPORT_MORPHISM}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{EXACT_FIXTURE_ONLY}, \nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-D-PACKET-MORPHISM]{\nolinkurl{PSC-I-D-PACKET-MORPHISM}}; \hyperref[rec:PSC-I-D-SEED-MORPHISM]{\nolinkurl{PSC-I-D-SEED-MORPHISM}}; \hyperref[rec:PSC-I-P-SEED-SYSTEM-CATEGORY]{\nolinkurl{PSC-I-P-SEED-SYSTEM-CATEGORY}}; \hyperref[rec:PSC-I-T-NATURALITY]{\nolinkurl{PSC-I-T-NATURALITY}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{TRANSPORT_SEED_RANK}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-C-ISOMORPHISM-INVARIANCE]{\nolinkurl{PSC-I-C-ISOMORPHISM-INVARIANCE}}; \hyperref[rec:PSC-I-P-SCALAR-EXTENSION-MONOTONICITY]{\nolinkurl{PSC-I-P-SCALAR-EXTENSION-MONOTONICITY}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{TRANSPORT_THEOREM}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_SEMANTIC_GATE}}
+\field{Records}{\hyperref[rec:PSC-I-P-REALIZATION-EXPORT]{\nolinkurl{PSC-I-P-REALIZATION-EXPORT}}; \hyperref[rec:PSC-I-T-REALIZATION-EXPORT]{\nolinkurl{PSC-I-T-REALIZATION-EXPORT}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{VALIDATE_PACKET_SYSTEM}}
+\field{Runtime implemented}{Yes}
+\field{Modes}{\nolinkurl{RUNTIME_EXECUTABLE_EXACT_FINITE}}
+\field{Records}{\hyperref[rec:PSC-I-D-PACKET-SYSTEM]{\nolinkurl{PSC-I-D-PACKET-SYSTEM}}}
+\Needspace{6\baselineskip}\subsection*{\nolinkurl{VERIFY_PROPAGATION_HYPOTHESES}}
+\field{Runtime implemented}{No}
+\field{Modes}{\nolinkurl{PLANNER_ONLY}}
+\field{Records}{\hyperref[rec:PSC-I-D-EDGE-SURJECTIVE]{\nolinkurl{PSC-I-D-EDGE-SURJECTIVE}}; \hyperref[rec:PSC-I-D-PACKET-PROPAGATING]{\nolinkurl{PSC-I-D-PACKET-PROPAGATING}}}
+\clearpage\section{Operation and hypothesis vocabulary}
+The frozen ontology separates structural operations from hypothesis classes. These names form a controlled vocabulary for profiles and source-derived annotations. They are not a complete formal semantics for every mathematical construction named.
+\begin{longtable}{@{}p{0.60\textwidth}p{0.31\textwidth}@{}}\toprule Name & Class\\\midrule\endhead
+\nolinkurl{identity} & structural\\
+\nolinkurl{zero} & structural\\
+\nolinkurl{finite_sum} & structural\\
+\nolinkurl{additive_inverse} & structural\\
+\nolinkurl{composition} & structural\\
+\nolinkurl{scalar_action} & structural\\
+\nolinkurl{direct_sum} & structural\\
+\nolinkurl{finite_product} & structural\\
+\nolinkurl{biproduct} & structural\\
+\nolinkurl{kernel} & structural\\
+\nolinkurl{cokernel} & structural\\
+\nolinkurl{image} & structural\\
+\nolinkurl{quotient} & structural\\
+\nolinkurl{tensor_product} & structural\\
+\nolinkurl{dual} & structural\\
+\nolinkurl{packet_idempotents} & structural\\
+\nolinkurl{transfer_blocks} & structural\\
+\nolinkurl{support_relation} & structural\\
+\nolinkurl{path_composition} & structural\\
+\nolinkurl{polynomial_action} & structural\\
+\nolinkurl{jacobson_radical} & structural\\
+\nolinkurl{semisimple_decomposition} & structural\\
+\nolinkurl{primary_decomposition} & structural\\
+\nolinkurl{universal_property} & structural\\
+\nolinkurl{functoriality} & structural\\
+\nolinkurl{exact_sequence} & structural\\
+\nolinkurl{closure} & structural\\
+\nolinkurl{completion} & structural\\
+\nolinkurl{topology} & structural\\
+\nolinkurl{norm} & structural\\
+\nolinkurl{adjoint} & structural\\
+\nolinkurl{dimension} & structural\\
+\nolinkurl{finite_indexing} & hypothesis\\
+\nolinkurl{surjectivity} & hypothesis\\
+\nolinkurl{injectivity} & hypothesis\\
+\nolinkurl{isomorphism} & hypothesis\\
+\nolinkurl{continuity} & hypothesis\\
+\nolinkurl{boundedness} & hypothesis\\
+\nolinkurl{closedness} & hypothesis\\
+\nolinkurl{density} & hypothesis\\
+\nolinkurl{orthogonality} & hypothesis\\
+\nolinkurl{self_adjointness} & hypothesis\\
+\nolinkurl{positivity} & hypothesis\\
+\nolinkurl{integrality} & hypothesis\\
+\nolinkurl{unconditional_convergence} & hypothesis\\
+\nolinkurl{hausdorff} & hypothesis\\
+\nolinkurl{complete_field} & hypothesis\\
+\nolinkurl{invariant_subspace} & hypothesis\\
+\nolinkurl{commutation} & hypothesis\\
+\nolinkurl{transitivity} & hypothesis\\
+\nolinkurl{edge_surjectivity} & hypothesis\\
+\nolinkurl{packet_propagation} & hypothesis\\
+\nolinkurl{nonzero_packet_spaces} & hypothesis\\
+\bottomrule\end{longtable}\clearpage\section{Historical Lean record map}
+This is the eight-entry mapping attached to the archived runtime. The evidence descriptions and source-match categories are reproduced from that map. A fresh build performed elsewhere must be documented separately.
+\Needspace{7\baselineskip}\subsection*{Finite packet system}
+\hyperref[rec:PSC-I-D-PACKET-SYSTEM]{\nolinkurl{PSC-I-D-PACKET-SYSTEM}}
+\field{Source match}{\nolinkurl{structural_exact}}
+\field{Stored certificate status}{\nolinkurl{compiled_in_verified_tranche}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.LinearProjectorFamily}}
+ProjectorCore.lean is part of the v0.2.0 kernel-accepted project; structure axioms encode idempotence, pairwise annihilation, and completeness.
+\Needspace{7\baselineskip}\subsection*{Packet analysis and synthesis}
+\hyperref[rec:PSC-I-D-ANALYSIS-SYNTHESIS]{\nolinkurl{PSC-I-D-ANALYSIS-SYNTHESIS}}
+\field{Source match}{\nolinkurl{stronger_typed_realization}}
+\field{Stored certificate status}{\nolinkurl{kernel_accepted}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.LinearProjectorFamily.PacketSpace}; \nolinkurl{Komorebi.Foundation.LinearProjectorFamily.rangeAnalysis}; \nolinkurl{Komorebi.Foundation.LinearProjectorFamily.rangeSynthesis}}
+ExactCoordinates.lean defines the packet space as the product of projector ranges, so both transforms carry range certificates.
+\Needspace{7\baselineskip}\subsection*{Exact packet-coordinate isomorphism}
+\hyperref[rec:PSC-I-T-EXACT-PACKET-COORDINATES]{\nolinkurl{PSC-I-T-EXACT-PACKET-COORDINATES}}
+\field{Source match}{\nolinkurl{stronger_typed_realization}}
+\field{Stored certificate status}{\nolinkurl{kernel_accepted}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.LinearProjectorFamily.exactPacketCoordinates}}
+Explicitly listed as Kernel accepted in VERIFICATION\_REPORT.md; proves both inverse laws for range-restricted packet coordinates.
+\Needspace{7\baselineskip}\subsection*{Packetwise equality}
+\hyperref[rec:PSC-I-C-PACKETWISE-EQUALITY]{\nolinkurl{PSC-I-C-PACKETWISE-EQUALITY}}
+\field{Source match}{\nolinkurl{one_direction_plus_trivial_reverse}}
+\field{Stored certificate status}{\nolinkurl{compiled_in_verified_tranche}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.LinearProjectorFamily.eq_of_projectors_eq}}
+The nontrivial direction is proved in ProjectorCore.lean; the reverse direction follows by congruence from equality.
+\Needspace{7\baselineskip}\subsection*{Transfer block}
+\hyperref[rec:PSC-I-D-TRANSFER-BLOCK]{\nolinkurl{PSC-I-D-TRANSFER-BLOCK}}
+\field{Source match}{\nolinkurl{generalized_domain_codomain}}
+\field{Stored certificate status}{\nolinkurl{compiled_in_verified_tranche}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.transferBlock}}
+Definition allows distinct source and target packet systems; the PSC-I endomorphism case is a specialization.
+\Needspace{7\baselineskip}\subsection*{Exact operator reconstruction}
+\hyperref[rec:PSC-I-T-OPERATOR-RECONSTRUCTION]{\nolinkurl{PSC-I-T-OPERATOR-RECONSTRUCTION}}
+\field{Source match}{\nolinkurl{generalized_domain_codomain}}
+\field{Stored certificate status}{\nolinkurl{kernel_accepted}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.transferBlock_reconstruction}}
+Explicitly listed as Kernel accepted; reconstructs any linear map from all source-target blocks using completeness of both packet families.
+\Needspace{7\baselineskip}\subsection*{Packet matrix multiplication}
+\hyperref[rec:PSC-I-T-BLOCK-MULTIPLICATION]{\nolinkurl{PSC-I-T-BLOCK-MULTIPLICATION}}
+\field{Source match}{\nolinkurl{generalized_composition_form}}
+\field{Stored certificate status}{\nolinkurl{kernel_accepted}}
+\field{Declarations}{\nolinkurl{Komorebi.Foundation.transferBlock_comp}}
+Explicitly listed as Kernel accepted; inserts the complete middle packet family and yields the local composition sum.
+\Needspace{7\baselineskip}\subsection*{Support-pattern algebra criterion}
+\hyperref[rec:PSC-I-T-SUPPORT-PATTERN-ALGEBRA]{\nolinkurl{PSC-I-T-SUPPORT-PATTERN-ALGEBRA}}
+\field{Source match}{\nolinkurl{partial_sufficient_direction}}
+\field{Stored certificate status}{\nolinkurl{kernel_accepted_related}}
+\field{Declarations}{\nolinkurl{Komorebi.Algebra.MatrixSupported.mul}}
+Verified tranche proves multiplicative closure for transitive support relations; it is related evidence, not a source-equivalent certificate for every direction of the PSC-I criterion.
+\clearpage\section{Preserved verification receipt}
+The following is the recorded successful runtime verification run. The detailed exact-fixture output, command lines, interpreter versions, earlier missing-dependency explanation, and frozen-byte audit are retained in the build results.
+
+\begin{lstlisting}
+ENTRYPOINT_VERSION=PASS
+RECORD_COUNT=PASS
+DEPENDENCY_ACYCLIC=PASS
+DEPENDENCIES_RESOLVE=PASS
+AST_COVERAGE=PASS
+ACTION_REGISTRY=PASS
+SOURCE_HASH=PASS
+API_STATUS=PASS
+API_RECORD=PASS
+API_DEPS=PASS
+API_AST=PASS
+EXECUTE_BLOCKIFY=PASS
+EXECUTE_PACKET_VALIDATE=PASS
+TRANSPORT_GATE_STRUCTURED=PASS
+EXACT_FIXTURE_REPLAY=PASS
+PSC_I_MACHINE_V1_RELEASE_GATE=PASS
+
+\end{lstlisting}
+\subsection*{Interpreter provenance}
+
+\begin{lstlisting}
+3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]
+SymPy=1.14.0
+
+\end{lstlisting}
+\subsection*{Source and package preservation}
+The companion's integrity audit compared each of the 65 original archived files with the copied payload. Every comparison passed. Generated Python bytecode caches, if any, are not part of the archived source and are excluded from the delivered package.
+
+\textbf{Catalogue provenance.} The 108 source statements and 69 proof bodies are generated from the archived mathematical inventory. Their printed hashes identify that source wording. The catalogue removes outer statement environments and translates cross-references into stable-record links. Formal acceptance is documented separately in the verification index.
+\end{document}

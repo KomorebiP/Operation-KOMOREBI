@@ -1,0 +1,92 @@
+import PaperXII.FiniteCarrier
+
+/-! Paper XII, Definition 8.9 and Lemma 8.10. All ranges are ranges of actual linear maps. -/
+namespace PaperXII.StableCores
+
+/-- A countable inverse system, with the ordinary identity and composition laws. -/
+structure LinearSystem (K : Type*) [Field K] (V : ℕ → Type*)
+    [∀ n, AddCommGroup (V n)] [∀ n, Module K (V n)] where
+  map : ∀ n m, m ≤ n → V n →ₗ[K] V m
+  map_self : ∀ n, map n n le_rfl = LinearMap.id
+  map_comp : ∀ (a b c) (hcb : c ≤ b) (hba : b ≤ a),
+    (map b c hcb).comp (map a b hba) = map a c (hcb.trans hba)
+
+variable {K : Type*} [Field K] {V : ℕ → Type*}
+    [∀ n, AddCommGroup (V n)] [∀ n, Module K (V n)]
+
+/-- Padded image family: indices before the target level contribute the whole space. -/
+def imageAt (D : LinearSystem K V) (m n : ℕ) : Submodule K (V m) :=
+  ⨅ h : m ≤ n, LinearMap.range (D.map n m h)
+
+/-- The actual intersection of the images from every later level. -/
+def stableCore (D : LinearSystem K V) (m : ℕ) : Submodule K (V m) :=
+  ⨅ n, imageAt D m n
+
+/-- Membership is precisely membership in every later transition image. -/
+theorem mem_stableCore_iff (D : LinearSystem K V) (m : ℕ) (v : V m) :
+    v ∈ stableCore D m ↔ ∀ n (h : m ≤ n), ∃ w, D.map n m h w = v := by
+  simp only [stableCore, imageAt, Submodule.mem_iInf, LinearMap.mem_range]
+
+/-- A valid later index has its literal transition range as padded image. -/
+theorem imageAt_eq_range (D : LinearSystem K V) {m n : ℕ} (h : m ≤ n) :
+    imageAt D m n = LinearMap.range (D.map n m h) := by
+  simp [imageAt, h]
+
+/-- Composition makes the transition images descend. -/
+theorem imageAt_antitone (D : LinearSystem K V) (m : ℕ) : Antitone (imageAt D m) := by
+  intro a b hab
+  apply le_iInf
+  intro hma
+  rw [imageAt_eq_range D (hma.trans hab)]
+  rintro y ⟨v, rfl⟩
+  refine ⟨D.map b a hab v, ?_⟩
+  exact LinearMap.congr_fun (D.map_comp b a m hma hab) v
+
+/-- Finite dimensionality makes each stable core equal an eventual transition image. -/
+theorem stableCore_eq_eventual_image (D : LinearSystem K V) [∀ n, FiniteDimensional K (V n)]
+    (m : ℕ) : ∃ (N : ℕ) (hN : m ≤ N), ∀ (n : ℕ) (hn : N ≤ n),
+      stableCore D m = LinearMap.range (D.map n m (hN.trans hn)) := by
+  obtain ⟨N, hN, hstable⟩ := FiniteCarrier.exists_iInf_eq (imageAt D m) (imageAt_antitone D m)
+  refine ⟨max m N, le_max_left _ _, ?_⟩
+  intro n hn
+  have hmn : m ≤ n := (le_max_left m N).trans hn
+  change (⨅ j, imageAt D m j) = _
+  rw [hN, ← hstable n ((le_max_right m N).trans hn), imageAt_eq_range D hmn]
+
+/-- Every transition carries a stable-core element into the earlier stable core. -/
+theorem map_mem_stableCore (D : LinearSystem K V) {a b : ℕ} (hab : b ≤ a)
+    {v : V a} (hv : v ∈ stableCore D a) : D.map a b hab v ∈ stableCore D b := by
+  rw [mem_stableCore_iff] at hv ⊢
+  intro n hbn
+  let k := max n a
+  obtain ⟨w, hw⟩ := hv k (le_max_right n a)
+  refine ⟨D.map k n (le_max_left n a) w, ?_⟩
+  calc
+    D.map n b hbn (D.map k n (le_max_left n a) w) =
+        D.map k b (hbn.trans (le_max_left n a)) w :=
+      LinearMap.congr_fun (D.map_comp k n b hbn (le_max_left n a)) w
+    _ = D.map a b hab (D.map k a (le_max_right n a) w) :=
+      (LinearMap.congr_fun (D.map_comp k a b hab (le_max_right n a)) w).symm
+    _ = D.map a b hab v := by rw [hw]
+
+/-- The restriction of the actual transition map to actual stable cores. -/
+def coreMap (D : LinearSystem K V) (m : ℕ) :
+    stableCore D (m + 1) →ₗ[K] stableCore D m :=
+  (D.map (m + 1) m (Nat.le_succ m)).restrict
+    (fun _ h ↦ map_mem_stableCore D (Nat.le_succ m) h)
+
+/-- Lemma 8.10: transition maps on stable cores are surjective. -/
+theorem coreMap_surjective (D : LinearSystem K V) [∀ n, FiniteDimensional K (V n)]
+    (m : ℕ) : Function.Surjective (coreMap D m) := by
+  intro y
+  obtain ⟨N, hN, hstable⟩ := stableCore_eq_eventual_image D (m + 1)
+  obtain ⟨w, hw⟩ := (mem_stableCore_iff D m y).mp y.property N ((Nat.le_succ m).trans hN)
+  have hz : D.map N (m + 1) hN w ∈ stableCore D (m + 1) := by
+    rw [hstable N le_rfl]
+    exact ⟨w, rfl⟩
+  refine ⟨⟨_, hz⟩, Subtype.ext ?_⟩
+  change D.map (m + 1) m (Nat.le_succ m) (D.map N (m + 1) hN w) = y
+  rw [← LinearMap.comp_apply, D.map_comp]
+  exact hw
+
+end PaperXII.StableCores

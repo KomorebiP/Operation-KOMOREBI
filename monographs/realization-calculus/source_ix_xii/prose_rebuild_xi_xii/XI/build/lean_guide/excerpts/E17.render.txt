@@ -1,0 +1,9 @@
+theorem gauss_sum (a : ι → F2 × F2) :
+    (∑ x, sign (quadratic a x)) = sign (arf a) * 2 ^ Fintype.card ι := by
+  classical
+  simp only [quadratic, sign_sum]
+  rw [← Fintype.prod_sum (fun (i : ι) (x : F2 × F2) => sign (plane (a i) x))]
+  simp_rw [plane_gauss]
+  rw [Finset.prod_mul_distrib, ← sign_sum]
+  simp [arf]
+

@@ -1,0 +1,37 @@
+\clearpage\section{Bayesian normalization, sufficiency, and flow}
+\label{sec:bayes}
+\subsection{An equation is not a probability claim}
+Lean defines the posterior by a total real division. This makes the expression meaningful as a term even when evidence is zero. Theorems asserting unit mass or probability preservation require nonzero or positive evidence explicitly. The basic definition is:
+\excerpt{FiniteBayes}{update}
+Core 7.1 proves composition of two likelihood updates with both the first evidence and the combined evidence nonzero. The proof rewrites sequential evidence and then performs field algebra.
+\excerpt{FiniteBayes}{composition}
+An application with nonnegative priors and likelihoods must establish positive evidence before using probability interpretations. Normalization does not manufacture an observation with positive probability.
+
+\subsection{Perturbation has a denominator}
+The weighted $\ell^1$ likelihood error is divided by the minimum of the two positive evidences. This gives a usable stability estimate while exposing its sensitivity to nearly impossible observations.
+\excerpt{FiniteBayes}{perturbation}
+The finite numerical examples can check this inequality for chosen data. They do not replace the universally quantified source theorem or supply an evidence lower bound for a different model.
+
+\subsection{Effective likelihood and fixed coarse likelihood}
+Given a prior $p$, the effective coarse likelihood averages the fine likelihood within each fiber using that prior. The factorization theorem includes zero-prior-mass fibers. The proof separates these cases rather than silently dividing by their mass.
+\excerpt{Coarsening}{effective}
+The effective likelihood depends on the prior. A single prescribed coarse likelihood that works for every prior is a stronger requirement. The necessary-and-sufficient theorem derives that requirement using actual two-point priors. With at least two coarse states, surjectivity, and strict positivity, fine likelihoods must agree with the pulled-back coarse likelihood up to one positive global scale:
+\excerpt{BayesianNecessity}{necessity}
+The nontriviality assumption is part of the mathematics. If all mass is sent to one packet, every valid posterior aggregates to the unique unit probability, so commutation no longer forces likelihood constancy:
+\excerpt{BayesianTowers}{singleton}
+The adjacent tower criterion includes this singleton alternative. Composition then gives exact commutation over a finite span of varying state spaces.
+
+\subsection{The coarsest meaningful partition}
+\code{BayesianPartitions} forms a quotient by equality of the whole likelihood profile. Its canonical coarse likelihood recovers each fine likelihood. Under strict positivity, every nontrivial all-prior-closed partition refines the profile partition: the canonical profile map factors uniquely through the given partition map:
+\excerpt{BayesianPartitions}{partition}
+The qualifier ``nontrivial'' excludes the automatic one-packet case. The theorem does not claim that every family has a nontrivial canonical quotient: a separate declaration supplies nontriviality when two profiles differ. A broader statistical sufficiency statement requires its own statistical model and hypotheses.
+
+\subsection{Information loss is a specific matrix}
+The formal information-loss matrix is $\operatorname{diag}(P)-bP^\top$, where $P$ is coarse prior mass and $b$ is the coarse posterior. It acts on the mismatch between the effective and prescribed coarse likelihoods. The exact factorization is:
+\excerpt{InformationLoss}{information}
+The scale direction is in its nullspace because multiplying a likelihood by a nonzero scalar does not change its normalized posterior. The norm estimate then combines this factorization with the likelihood perturbation bound. This is the matrix-valued defect used in core 8.4. Relative-entropy chain rules in Part II are different claims and are not implied by the shared word ``information.''
+
+\subsection{A normalized exponential flow}
+For a score function $g$, $p_i(t)$ is proportional to $p_i(0)e^{tg_i}$. The source establishes positive evidence, simplex preservation, the additive-time law, and the centered multiplicative derivative:
+\excerpt{BayesianFlow}{flow}
+The derivative contains the posterior mean score. It is therefore nonlinear in the probability vector even though unnormalized multiplication is linear. The additional covariance, cumulant, concentration, and filter stability results retained in the traditional edition have separate scope rows in Section~\ref{sec:extensions}.

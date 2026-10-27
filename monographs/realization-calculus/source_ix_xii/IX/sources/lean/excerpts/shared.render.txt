@@ -1,0 +1,16 @@
+theorem joint_lift_iff_class_eq (p L : ℕ) (hp : 0 < p)
+    (A : (Fin d → ℤ) →ₗ[ℤ] (Fin e → ℤ))
+    (B : (Fin d → ℤ) →ₗ[ℤ] (Fin f → ℤ))
+    (b r : Fin e → ℤ) (c s : Fin f → ℤ) (x u v : Fin d → ℤ)
+    (hr : A x - b = (p : ℤ)^L • r)
+    (hs : B x - c = (p : ℤ)^L • s)
+    (hu : reduction p e (r + A u) = 0)
+    (hv : reduction p f (s + B v) = 0) :
+    HasJointLift p L A B b c x ↔
+    (Submodule.Quotient.mk u : SharedObstruction p A B) =
+      Submodule.Quotient.mk v := by
+  rw [joint_lift_iff_digit_correction p L hp A B b r c s x hr hs,
+    quotient_mk_eq_iff_common]
+  exact exists_congr fun t => and_congr
+    (digit_correction_iff_same_image p A r u t hu)
+    (digit_correction_iff_same_image p B s v t hv)

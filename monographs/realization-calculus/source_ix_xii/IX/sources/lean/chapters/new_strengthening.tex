@@ -1,0 +1,197 @@
+\section{The strengthened Euler chapter and its exact formal coverage}\label{sec:new-coverage}
+
+The chapter brings together the completed external conjecture, the retained all-row four-packet theory, and stronger congruences proved during the present continuation. Those layers have different verification evidence. The original Nishibuchi capstone, the four-packet step-sensitive bound, the exact first-difference periods, and the isometry construction have preserved Lean sources and successful historical compilation records. The new general prime-power closure, mixed factorial estimates, exact higher-order laws, and Taylor-radius results have mathematical proofs and recorded audits, but no compiled Lean endpoint in this edition.
+
+The distinction is attached to claims, rather than to whole documents. A new proof may include a previously formalized special case. Conversely, an inherited endpoint about a polynomial analytic graph does not certify the new Euler interpolation radius merely because both use p-adic analysis. The tables and contracts below identify the actual overlap and the remaining work.
+
+\subsection{One normalization for the chapter and the guide}
+For a positive modulus $N$ and an address $0\le j<N$, define
+\[
+ G_{N,j}(t)=j!\sum_{n\ge0}\frac{t^{Nn}}{(Nn+j)!},\qquad
+ G_{N,j}(t)^{-1}=\sum_{n\ge0}C_{N,j}(n)\frac{t^{Nn}}{(Nn)!}.
+\]
+The constant coefficient of both normalized series is one. The original generalized Euler number at degree $Nn$ is
+\[
+ E_{Nn}^{(N,j)}=j!\,C_{N,j}(n).
+\]
+Thus \code{Congruential.coeff N j n} corresponds to $C_{N,j}(n)$ and \code{Congruential.unnormalized N j n} corresponds to $E_{Nn}^{(N,j)}$. The source \code{NishibuchiCompletion.generalizedEuler N hN j d} instead uses the literal Euler degree $d$. Its theorem \code{generalizedEuler_at_packet} is the bridge between these indices.
+
+Write $\Delta_H f(n)=f(n+H)-f(n)$. The source \code{Mahler.difference H k f n} is the homogeneous difference $\Delta_H^k f(n)$. A mixed difference applies several possibly unequal steps. Existing homogeneous endpoints cannot be substituted for a mixed endpoint without a proof relating those operators.
+
+The notation $v_p(0)=+\infty$ makes lower bounds zero safe on paper. In the sources, \code{GlobalEulerBoundary.precision p r x} supplies the corresponding zero-safe rational predicate. Actual integral lifts express the same congruence as divisibility by $(p:\mathbb Z_p)^r$. Lean's rational valuation of zero is not itself an infinite-valued function. Exact valuation endpoints therefore include a separate nonzero conclusion or require a nonzero hypothesis. That distinction is essential when translating a lower bound into a typed target.
+
+\subsection{Current claim map}
+\begin{longtable}{p{.32\linewidth}p{.30\linewidth}p{.29\linewidth}}
+\toprule Topic in the main text & Retained Lean coverage & Present status\\\midrule\endhead
+Nishibuchi Conjecture 3.9, all permitted primes and addresses & \code{NishibuchiCompletion.conjecture_3_9}, with the original integrality and degree-shift bridges & Historically compiled. Source and evidence reconciled anew.\\
+Four-packet all-row Kummer divisibility & \code{DyadicFourAllRows.normalized_precision} & Historically compiled, including row zero and every difference order.\\
+Four-packet common-step precision, including the address factorial & \code{DyadicFourFinalStrengthening.normalized_step_precision} and \code{unnormalized_step_precision} & Historically compiled with exponent $k(1+v_2H)$, with $v_2(j!)$ for the original numbers.\\
+Four-packet sharp first differences, least periods, and isometry & \code{DyadicFourLeastPeriods} and \code{DyadicFourIsometry} & Historically compiled under the stated address and positive-step hypotheses.\\
+All prime-power moduli and all mixed steps & No matched general endpoint & Proved in the new continuation. Not formalized in Lean here.\\
+Four-packet factorial gain and address surpluses & No matched higher-order endpoint & Proved in the new continuation. Not formalized in Lean here.\\
+Exact higher differences at addresses zero and one and the mixed leading-digit criterion & No matched endpoint & Proved in the new continuation. Not formalized in Lean here.\\
+Address-two stronger growth and exact power-of-two orders & No matched endpoint & Proved in the new continuation. Not formalized in Lean here.\\
+Small-rank metric results beyond $N=4$ and the all-rank lower-half metric theorem & No matched endpoint & Proved in the new continuation. Not formalized in Lean here.\\
+Exact Euler Taylor radii at addresses zero, one, and two & No matched endpoint & Proved in the new continuation. Not implied by the retained polynomial regularity modules.\\
+General exact higher-order law at addresses two and three and the unrestricted upper-half metric law & No completed endpoint & The stated unrestricted laws remain open or are refuted in the main text.\\
+\bottomrule\end{longtable}
+
+The chapter titles in this table identify the mathematical topics. The crosswalk at the end of this guide now resolves the inherited statement index against the current monograph, with physical PDF pages and current theorem numbers. The historical crosswalk and its older paper identity remain in the source archive. Separate routes identify the strengthening statements and the eight exact worked examples.
+
+\subsection{What the Nishibuchi capstone actually proves}
+Let $p$ be prime, let $m>0$ satisfy $m\mid p-1$ or $m=2$, put $q=\operatorname{lcm}(2,p-1)$, and let $0\le j<mp$. The capstone proves p-integrality of every original packet coefficient and, for every $r\ge1$, the degree-indexed congruence
+\[
+ E_{mpn+qp^r}^{(mp,j)}\equiv E_{mpn}^{(mp,j)}\pmod{p^r}
+ \qquad(n\ge r).
+\]
+Its existential formulation supplies the positive threshold $n_0=r$, so it also supplies $n_0\le r$. It does not assert the smallest possible threshold. The source has no premise asking the caller to assume source flatness, a weighted certificate, or the desired congruence.
+
+The divisor branch supplies the stronger sufficient row condition $r\le mn$. The arithmetic parameter reduction isolates the exceptional case $p=2$, $m=2$. At $p=2$, $q=2$. Replacing $q$ by $p-1=1$ would change the conjecture. The degree-shift theorem proves that the packet step
+\[
+ p^{r-1}\frac{q}{m}
+\]
+produces exactly the Euler-degree increment $qp^r$.
+
+The 0.11.0 completion checkpoint contains 79 active proof modules, 836 theorem commands, 162 definitions, and two abbreviations, giving 1,000 named axiom reports. Its recorded nine new modules account for 83 theorem commands, 14 definitions, and one abbreviation. These are source-command counts within that checkpoint, not counts of distinct mathematical discoveries. The broader retained final source collection has 1,876 declaration/source-version rows under 199 canonical source files. It includes subsequent strengthening and lifting frontiers, with overlaps and retained revisions. The two sets must not be added.
+
+The completion record retains successful source compilation, axiom checks, 37 negative controls, and 25 extension infrastructure tests. Its capstone axiom report contains only \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. These historical outcomes remain historical in the present edition. The separate source and log reconciliation executed now does not rerun the Lean kernel.
+
+\subsection{The four-packet theorem already passed the row threshold}
+The earlier completion extracted a bound with exponent $\min(k,n)$. The retained strengthening subsequently replaced that cap by $k$ using the unshifted operator
+\[
+ B=\frac{D^4-1}{2}.
+\]
+Its charged reciprocal theorem proves that the source's flatness survives inversion, with the charge shift made explicit. The module \code{DyadicFourAllRows} then extracts the difference directly at degree $4n$. It has no $k\le n$ assumption and no artificial extraction at a negative degree.
+
+The endpoint \code{DyadicFourFinalStrengthening.normalized_step_precision} states
+\[
+ v_2\bigl(\Delta_H^k C_{4,j}(n)\bigr)\ge k(1+v_2H)
+ \qquad(j<4,\ n,k\in\mathbb N,\ H\ge1),
+\]
+with its zero-safe precision interpretation. The original-number endpoint adds $v_2(j!)$. For positive $H$, this is exactly the four-packet homogeneous specialization of the general mixed-step estimate in the new chapter. The source also includes zero step using its finite natural valuation \code{padicValNat 2 0 = 0}: every positive-order zero-step difference vanishes. At order zero, the statement is just the appropriate integrality assertion. Thus the source never forms the undefined paper expression $0\cdot v_2(0)$.
+
+For these four packets, the conjectured dyadic period already starts at row zero in the retained Lean source. The literal degree endpoint is \code{all_rows_period_degree}. The exact-period development goes further and proves
+\[
+ v_2\bigl(E_{4(n+H)}^{(4,j)}-E_{4n}^{(4,j)}\bigr)
+   =v_2H+B_j,\qquad (B_0,B_1,B_2,B_3)=(1,1,5,3),
+\]
+for positive $H$. It follows that the least positive row period modulo $2^r$ is
+\[
+ 2^{\max(0,r-B_j)}.
+\]
+The normalized bonuses are $(1,1,4,2)$. The isometry endpoint uses a translated and rescaled packet, not the raw original sequence. Undoing its normalization gives the original image ball $j!+2^{B_j}\mathbb Z_2$.
+
+The new edition preserves these achievements and their formal evidence. The new work extends the modulus range and operator patterns, improves higher-order exponents by factorial and address gains, and derives exact higher-order and analytic consequences. Explaining this extension does not require relabeling an already formalized four-packet statement as an unformalized new theorem.
+
+\subsection{The strongest homogeneous congruence to formalize next}
+For $j\in\{0,1,2,3\}$, $n\ge0$, and $k,H\ge1$, the final congruence in the main text is
+\[
+ \sum_{i=0}^k(-1)^{k-i}\binom{k}{i}
+ E_{4(n+iH)}^{(4,j)}\equiv0
+ \pmod{2^{\,v_2(k!)+k v_2H+A_j(k)}},
+\]
+where
+\[
+ A_0(k)=A_1(k)=k,\qquad
+ A_2(k)=\max\{k+4,\,2k+\lfloor k/2\rfloor+1\},\qquad
+ A_3(k)=k+2.
+\]
+This displayed exponent includes the address factorial. Using it directly for the normalized $C_{4,j}$ would introduce an extra digit at addresses two and three. The lower bound holds at every base row, including zero. Equality holds for every positive order and positive homogeneous step at addresses zero and one. At address two, the exact laws proved in the chapter cover orders that are powers of two, including one and two, with the explicit small-order exceptions stated there. This is not a theorem asserting equality at every address-two order.
+
+A direct formal target should use \code{Mahler.difference H k (Congruential.unnormalized 4 j) n}, the natural exponent \code{padicValNat 2 k.factorial + k * padicValNat 2 H + A j k}, and \code{GlobalEulerBoundary.precision}. Its hypotheses are $j<4$, $0<k$, and $0<H$. That target reuses the original definitions and preserves the chapter's quantifiers. It should not replace the rational sequence by a separately named experimental recurrence without a coefficient-identity bridge.
+
+The proof of the new factorial term is a divided-power argument. At addresses zero and one, its external arithmetic input is the exact classical Frobenius congruence for ordinary Euler numbers, in the form checked in the main text's source record. The Bernoulli central-factorial argument at address two proves its divided-power integrality internally. A Lean completion will need the exact ordinary-Euler input formalized or imported as a proved theorem with a matched statement. A custom axiom standing in for that input would change the formal coverage and must not be hidden under an unchanged completion label.
+
+\subsection{General prime-power closure: a reusable target}
+For $N=p^a$, $a\ge1$, and $j<N$, put $C(n)=C_{N,j}(n)$. The general theorem is most naturally phrased for the sign-adjusted sequence
+\[
+ A(n)=(-1)^n C(n).
+\]
+For positive steps $H_1,\ldots,H_k$, it proves
+\[
+ v_p\bigl(\Delta_{H_1}\cdots\Delta_{H_k}A(n)\bigr)
+ \ge k+\sum_{i=1}^k v_pH_i.
+\]
+For the raw sequence, define $T_H f(n)=f(n+H)-(-1)^Hf(n)$. The equivalent original-number statement is
+\[
+ v_p\bigl(T_{H_1}\cdots T_{H_k}E^{(N,j)}(n)\bigr)
+ \ge v_p(j!)+k+\sum_{i=1}^k v_pH_i,
+ \qquad E^{(N,j)}(n)=E_{Nn}^{(N,j)}.
+\]
+At $p=2$, the sign adjustment and an integral charge shift give the ordinary mixed-difference theorem for $C_{N,j}$ itself. The degenerate dyadic modulus $N=1$ has $C(n)=(-1)^n$ and is handled directly. At an odd prime, ordinary unsigned differences of the raw sequence need not satisfy the same estimate: $C_{N,0}(0)=1$ and $C_{N,0}(1)=-1$, so the first unit-step difference is $-2$.
+
+A useful formalization order is:
+\begin{enumerate}
+\item Prove integral Hurwitz coordinates are closed under products, derivatives, and inversion of a unit constant coefficient. Retained \code{HurwitzConvolution}, \code{HurwitzInverse}, and \code{DworkAlgebra} provide reusable constructions. Their exact coefficient domains must be matched before reuse.
+\item Prove interior binomial divisibility $p\mid\binom{p^a}{r}$ for $0<r<p^a$, and record the integral coefficients in the charged operator product formula.
+\item Generalize the charged reciprocal closure from $D^4$ to $D^N$, keeping the source and inverse charges visible. The critical induction isolates the unique term containing the highest inverse order. No hypothesis $k\le n$ is permitted.
+\item Prove flatness of the actual source $g_{N,j}(n)=\prod_{i=1}^j(1+(N/i)n)^{-1}$. Every slope $N/i$ belongs to $p\mathbb Z_p$ because $1\le i<N=p^a$. Prove the reciprocal affine-factor finite-difference identity before taking products.
+\item Decode the reciprocal coefficient at a nonnegative packed degree, then transfer to rational precision and to the original factorial normalization.
+\item Prove mixed-step amplification, with independent step valuations added, and specialize to homogeneous steps only after the general target is established.
+\end{enumerate}
+
+This sequence isolates the new universal arithmetic infrastructure. The retained $N=4$ charged closure proves a special case, but its source signature does not quantify over every prime-power modulus. A future generalized file should remain a new endpoint until its statement and axiom closure have been checked.
+
+\subsection{Divided powers, factorial gains, and equality}
+For four-packet normalized coefficients, the factorial theorem states
+\[
+ v_2\bigl(\Delta_{H_1}\cdots\Delta_{H_k}C_{4,j}(n)\bigr)
+ \ge k+v_2(k!)+\sum_{i=1}^k v_2H_i+\beta_j,
+ \qquad (\beta_0,\beta_1,\beta_2,\beta_3)=(0,0,3,1),
+\]
+for $k\ge1$. Multiplication by $j!$ changes the address surpluses to $(0,0,4,2)$ for the original numbers. At address two, the additional bound
+\[
+ v_2\bigl(\Delta_{H_1}\cdots\Delta_{H_k}C_{4,2}(n)\bigr)
+ \ge2k+v_2(k!)+\lfloor k/2\rfloor+\sum_{i=1}^k v_2H_i
+\]
+combines with the first bound by taking their maximum.
+
+The formal proof must distinguish a valuation lower bound from the evaluation of its leading unit. Divided-power integrality proves the lower bound. Exactness additionally requires a parity calculation after dividing by the claimed power of two. That calculation is where unequal steps can cancel. At addresses zero and one, let
+\[
+ V=k+v_2(k!)+\sum_{i=1}^k v_2H_i.
+\]
+The new chapter proves exact valuation $V$ if $k$ is odd or the number of even steps is even. If $k$ is even and the number of even steps is odd, the leading digit cancels and the valuation is at least $V+1$. That last case does not carry a uniform formula for the deeper valuation.
+
+For a homogeneous step, the number of even steps is either zero or $k$. The criterion therefore always gives exactness at addresses zero and one. This explains why a true homogeneous equality can fail when a single step is changed. For example,
+\[
+ \Delta_1\Delta_2 C_{4,0}(0)=-33728,
+\]
+has valuation $6$, whereas the mixed baseline is $4$. The same pattern at address one has value $-150208/585$ and valuation $6$. These examples should become exact rational negative controls for a proposed unconditional mixed equality. They should not be used as a substitute for the general parity proof.
+
+At address two, the exact mixed-step exponent is $4+\sum v_2H_i$ at order one, $6+\sum v_2H_i$ at order two, and
+\[
+ 2k+v_2(k!)+k/2+\sum v_2H_i
+\]
+at powers of two $k\ge4$. The split between these three targets is deliberate. A theorem with the final expression at order one would not state the correct sharp exponent. General exact higher-order laws at addresses two and three remain outside the completed formal and mathematical register.
+
+The proof route uses two Gaussian-scaled Euler or Bernoulli umbrae over $\mathbb Q_2(i)$ and a descent back to rational coefficients. Lean obligations include the base change, the Gaussian scalar identities, the divided-power product and composition laws, and the rational descent. Treating the symbolic complex expression as though it were already a rational integral element would omit a substantive bridge. The unbounded exactness subsequence at address two also needs its parity proof. A computed prefix through order 512 does not supply that bridge.
+
+\subsection{Analytic consequences require their own bridge}
+The factorial Newton estimates are converted into Taylor coefficients using the Stirling change of basis, with convergence and uniformity justified. They imply an exact Taylor radius $2$ at every integral center for addresses zero and one. The address-two bounds, together with the sharp power-of-two coefficient subsequence, give exact radius $2^{5/2}$. The address-three result gives a radius of at least $2$. Its exact radius is not claimed.
+
+A formal endpoint should specify the coefficient field, the absolute value normalization $|2|_2=1/2$, the chosen center, and the meaning of radius. If the radius is viewed through an extension containing points outside $\mathbb Q_2$, the relevant convergence statement needs that ambient extension specified. The root-test coefficient rate itself can be stated independently. A generic Kummer bound alone does not establish these analytic radii. The retained \code{PolynomialAnalyticEvaluation}, \code{PolynomialAnalyticBlocks}, and local implicit-graph modules concern different objects and do not close this argument.
+
+A future Lean proof should separately verify Newton interpolation equals the original rational packet on natural inputs, the Newton-to-Taylor coefficient identity, the coefficient lower bounds, the exact subsequence supplying the upper radius bound, and convergence on the asserted disk. No result about finitely many numerical coefficients can be promoted to the exact radius without that unbounded subsequence argument.
+
+\subsection{Fresh review, inherited compilation, and reproducible replay}
+The present static review reran the retained source and evidence reconciler. It matched all 15 inherited frontiers, 644 source-hash comparisons, and 713 recorded log-hash comparisons. It reproduced the 1,876-row declaration/source-version catalog byte for byte, resolved all 202 links in the retained 62-statement index, and matched the preserved manuscript source hashes. At the latest polynomial frontier it freshly inspected 55 proof modules, eight support modules, and 13 contract modules, and matched all 515 strict axiom records to the exact expected names. Twelve retained negative-control logs have matching source and log hashes, recorded nonzero exits, and the expected diagnostics. The unchanged Python parser regression was also rerun successfully.
+
+These results are recorded in \code{audit/current_reconciliation/PROVENANCE_AUDIT.json}. No Lean or Lake executable was found, and no compiler was executed. No fresh rejection of a Lean negative control, fresh project build, or fresh Mathlib compilation is claimed. Four older affine logs lack a historical digest. Their current matching fingerprints retain that provenance limit. Two stale inventory scalars are recorded separately while their archival files remain unchanged.
+
+All source locators in the retained catalog are relative to the root \code{preserved/PRSC_IX_Consolidated_Manuscript}. A locator containing \code{!} denotes an exact member of the specified ZIP. For example, the completion endpoint is inside \code{baseline/PRSC_IX_v0.11.0_Nishibuchi_Completion.zip}, while later four-packet endpoints are plain files under \code{strengthening/formalization}. The complete root is preserved with this package so that the following fresh static check can be repeated from the guide source directory:
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python3 audit_sources.py \
+  --source ../../preserved/PRSC_IX_Consolidated_Manuscript \
+  --output audit/a_new_static_run
+\end{Verbatim}
+
+The PDF build is separate:
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+python3 build.py
+\end{Verbatim}
+It uses XeLaTeX, not Lean, and needs only this guide's editable sources, generated tables, and excerpts. The historical compiler replay drivers and portable-runtime instructions are preserved in the source root and described in the replay chapter. A new kernel run requires the pinned Lean 4.34.0-rc2 and Mathlib revision \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. Retain its new output directory and all compilation, axiom, contract, and control results. Do not overwrite the inherited logs.
+
+\subsection{A clean completion criterion for the new formal layer}
+The next formal release can legitimately mark a new theorem compiled only after its exact statement is bound to a source hash, its dependencies are identified, the intended positive examples compile, the relevant false strengthenings fail for the expected reason, and its axiom closure is recorded. The controls include unsigned raw differences at odd primes, an unconditional mixed equality, a homogeneous exactness statement at zero step, the missing address factorial, and a universal upper-half metric pattern refuted by the recorded higher-rank examples.
+
+The proof files should contain no placeholder proofs, custom axioms for the desired conclusion, or precomputed arrays replacing the actual coefficient sequence. For imported classical arithmetic, the release must identify the exact theorem used and prove or explicitly bound its bridge to the chapter's convention. The endpoint register must distinguish common-step estimates from mixed-step estimates and finite coefficient checks from universal statements. The inherited capstone remains complete while this stronger formal layer is developed. Its scope does not expand automatically with the new manuscript.

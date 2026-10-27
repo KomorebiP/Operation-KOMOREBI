@@ -1,0 +1,5 @@
+def discreteTable : List (List (ℕ × R)) → ℕ → Option R
+  | [], b => singletonTable 0 0 b
+  | opts :: edges, b =>
+    bestOver (fun o => if o.1 ≤ b then
+      add (discreteTable edges (b - o.1)) (some o.2) else none) opts

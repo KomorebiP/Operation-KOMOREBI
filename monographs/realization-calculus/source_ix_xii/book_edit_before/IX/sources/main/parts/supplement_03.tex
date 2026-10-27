@@ -1,0 +1,234 @@
+\clearpage\subsection{Third Lean Block Supplement}\label{app:sup3}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical; the final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+This release continues the unchanged 28-page \emph{status-corrected} Paper IX manuscript and the checked second block. It completes the recorded scopes of Lemmas 5.1 and 5.2, Theorem 5.3 and Corollary 5.4. All 13 upstream proof modules and both earlier mathematical supplements remain byte-identical.
+
+\textbf{Fourteen of 24 named manuscript-proved items now have formal coverage; ten remain pending.} Three classical inputs and two conjectures are tracked separately. The cumulative corpus has \textbf{219 named theorem declarations and 53 explicit definitions in 17 modules}. The 56 added theorems include supporting identities and exact examples, not 56 independent discoveries.
+
+\begin{center}
+\begin{tabular}{@{}p{.48\textwidth}>{\raggedright\arraybackslash}p{.18\textwidth}rr@{}}
+\toprule
+New module & Scope & Theorems & Defs.\\\midrule
+\mcode{DyadicIntegrality} & 5.1, 5.2 & 21 & 8\\
+\mcode{DyadicSeries} & 5.1, 5.3 & 11 & 4\\
+\mcode{DyadicReconstruction} & 5.3, 5.4 & 10 & 4\\
+\mcode{DyadicExamples} & Exact controls & 14 & 0\\\midrule
+Total added & Four named items & 56 & 16\\\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{The completed mathematical chain}
+The inverse coefficients are defined from a genuine unit power series and connected to $z^2/\sinh^2z$. The source is the paper's explicit rational formula, not an abstract integral input. Its valuation calculation proves the stronger statement that \emph{every even source coefficient is a $2$-adic unit}. Formal-series multiplication and coefficient extraction then yield the Euler identity with the correct falling factorial. The omitted-tail theorem gives divisibility in the actual completed integer ring $\Z_2$.
+
+The clean cumulative run compiled all 17 modules, matched all 272 expected transitive axiom reports and rejected eight invalid-proof controls. All 49 infrastructure and release tests passed. Exact-rational regression checks are recorded separately from the universal proofs.
+
+\subsubsection*{Completion boundary}
+This is a formalization companion, not a revised primary manuscript. The unnumbered Bernoulli closed form for the inverse coefficients is not universally formalized here. Formal-series identities do not establish analytic convergence. The corrected global odd-prime finite-difference theorem remains pending. Historical numerical evidence is not presented as a fresh reproduction.
+\par\medskip
+\pageheading{1. Integral coefficients and an exact unit source}{Lemmas 5.1 and 5.2; manuscript page 14}
+Define the rational subring
+\[
+ \mathcal O_2=\{q\in\Q:|q|_2\leq1\}.
+\]
+Its ring laws follow from the actual nonarchimedean norm. For every $q\in\mathcal O_2$, the code constructs its element in Mathlib's completed ring $\Z_2$, and proves that the underlying value in $\Q_2$ is the rational cast of $q$. No integrality claim is hidden in a coercion.
+
+\subsection*{The unit kernel and its reciprocal}
+Use a squared formal variable $u$ and define
+\[
+ k_m=\frac{2^{2m+1}}{(2m+2)!},\qquad
+ K(u)=\sum_{m\geq0}k_mu^m,\qquad
+ \beta_m=[u^m]K(u)^{-1}.
+\]
+The constant term is proved to be one. The factorial valuation bound gives
+\[
+ v_2(k_m)=2m+1-v_2((2m+2)!)\geq0.
+\]
+Thus every $k_m$ belongs to $\mathcal O_2$. A general coefficientwise subring theorem is proved by strong induction using the actual unit-inverse coefficient formula. Applied to $K$, it establishes
+\[
+ \boxed{\beta_m\in\mathcal O_2\quad\text{for every }m\geq0.}
+\]
+The reciprocal's coefficients are therefore proved integral; the proof does not assume them integral in order to obtain the final congruence. Their connection to the intended hyperbolic function is proved on the next page.
+
+\subsection*{The source has valuation exactly zero}
+At even degree $2r$, define the literal rational source
+\[
+ R_{2r}=\frac{3^{2r+2}-1}{4(2r+1)(2r+2)}.
+\]
+Both numerator and denominator are nonzero. The pinned Mathlib lifting-the-exponent theorem gives
+\[
+ v_2(3^{2r+2}-1)=2+v_2(2r+2).
+\]
+Because $2r+1$ is odd, the denominator has the same valuation. Consequently,
+\[
+ \boxed{v_2(R_{2r})=0,\qquad |R_{2r}|_2=1.}
+\]
+The code proves actual \mcode{IsUnit} status for the constructed $\Z_2$ element. This strengthens the manuscript's integrality conclusion without changing its source. The argument applies at $r=0$, where $R_0=1$, as well as at every later row.
+
+\textbf{Principal targets.}\par
+\target{Dyadic.kernel_coefficient_integral, Dyadic.beta_integral}\par
+\target{Dyadic.source_valuation, Dyadic.sourcePadic_isUnit}
+\par\medskip
+\pageheading{2. Connecting the definitions to actual formal series}{Generating-function foundations for Theorem 5.3}
+Work in $\Q[[t]]$. The formal exponential and rescaling homomorphism are the same checked objects used in the second block. Define
+\[
+ \sinh_a(t)=\frac{e^{at}-e^{-at}}2,\qquad
+ \cosh_a(t)=\frac{e^{at}+e^{-at}}2.
+\]
+Let $B(t)=K(t^2)^{-1}=\sum_{m\geq0}\beta_mt^{2m}$ and let
+\[
+ F(t)=\sum_{r\geq0}R_{2r}\frac{t^{2r}}{(2r)!}.
+\]
+These series are constructed independently from the definitions on the preceding page.
+
+\subsection*{No inverse of a zero-constant series is assumed}
+Coefficient extraction proves the cleared identity
+\[
+ t^2K(t^2)=\frac{\cosh(2t)-1}{2}.
+\]
+A separate identity from the formal exponential gives
+\[
+ \sinh^2t=\frac{\cosh(2t)-1}{2}.
+\]
+Since $K(t^2)$ has constant term one, its reciprocal exists as a unit. Multiplication then proves
+\[
+ \boxed{B(t)\sinh^2t=t^2.}
+\]
+This is the precise formal meaning of $B(t)=t^2/\sinh^2t$. The forced quadratic zero is removed first; the proof does not claim that $\sinh t$ itself is an invertible formal power series.
+
+\subsection*{The explicit rational source supplies its own identity}
+From the formula for $R_{2r}$, coefficient arithmetic proves
+\[
+ \boxed{t^2 F(t)=\frac{\cosh(3t)-\cosh t}{4}.}
+\]
+The product relation for the formal hyperbolic cosines yields
+\[
+ F(t)\cosh t=K(4t^2).
+\]
+This equality is proved after multiplication by $t^2$ and cancellation of that monomial in the formal-series ring. It is not an assumed source-transform relation.
+
+Rescale the reciprocal by $t\mapsto2t$. The unit inverse law and the preceding identity now give
+\[
+ \boxed{B(2t)F(t)=\sech t.}
+\]
+The right side is connected to the same integral signed Euler sequence constructed in the previous release. These are equalities of full formal series, not fixed-degree polynomial experiments.
+
+\textbf{Principal targets.}\par
+\target{DyadicSeries.beta_original_generating_function}\par
+\target{DyadicSeries.source_shift_identity, DyadicSeries.source_times_cosh}\par
+\target{DyadicSeries.dyadic_reconstruction_series}
+\par\medskip
+\pageheading{3. Exact reconstruction and genuine dyadic congruence}{Theorem 5.3 and Corollary 5.4; manuscript pages 14--15}
+The reciprocal coefficients $\beta_m$ use an \emph{ordinary} power expansion. In contrast, the source and Euler series use exponential coefficients. Extracting degree $2r$ from $B(2t)F(t)=\sech t$ therefore gives
+\[
+ \boxed{E_{2r}=\sum_{m=0}^{r}\beta_m2^{2m}\fall{2r}{2m}R_{2(r-m)},}
+ \qquad
+ \fall{2r}{2m}=\frac{(2r)!}{(2r-2m)!}.
+\]
+The formal proof uses the actual natural-number descending factorial and proves its factorial-quotient identity for $2m\leq2r$. The odd coefficient terms vanish by a proved parity argument. The binomial EGF product then supplies the falling factorial, rather than treating it as an extra assumed factor.
+
+Both row indexing by $r$ and the literal even-degree version with hypothesis $\operatorname{Even}(n)$ are checked. All rows include degree zero. The exact identity is a rational equality with the Euler coefficient's integer-to-rational cast made explicit.
+
+\subsection*{The finite truncation}
+For $M\geq0$, define
+\[
+ T_M(2r)=\sum_{m=0}^{\min(M,r)}\beta_m2^{2m}\fall{2r}{2m}R_{2(r-m)}.
+\]
+The integral rational factors are embedded into $\Z_2$ using their proved witnesses. The cast of this $\Z_2$ truncation into $\Q_2$ is proved to equal the cast of the literal rational truncation.
+
+Each omitted term has $m\geq M+1$. Its remaining factors lie in $\Z_2$, so the checked weighted-tail theorem proves
+\[
+ \boxed{2^{2M+2}\mid E_{2r}-T_M(2r)\quad\text{in }\Z_2.}
+\]
+This is not divisibility in $\Q$ or $\Q_2$, where division by any nonzero scalar would make the claim vacuous. A second theorem supplies the equivalent rational statement
+\[
+ \boxed{\frac{E_{2r}-T_M(2r)}{2^{2M+2}}\in\mathcal O_2.}
+\]
+It follows from actual $\Z_2$ divisibility and the proved rational/completed-field bridge. No precision assertion is passed in as a hypothesis.
+
+\subsection*{Endpoints and scope}
+When $M\geq r$, the sum retains every term and $T_M(2r)=E_{2r}$ exactly, in both rational and dyadic coordinates. The zero-error case is included; no finite valuation of zero is used. This is a separate dyadic construction, not substitution of $p=2$ into the odd-length theorem.
+
+\textbf{Principal targets.}\par
+\target{DyadicReconstruction.dyadic_reconstruction}\par
+\target{DyadicReconstruction.dyadic_supercongruence}\par
+\target{DyadicReconstruction.normalized_error_integral}
+\par\medskip
+\pageheading{4. Exact examples and adversarial checks}{Example 5.5 and controls against incorrect normalizations}
+The actual reciprocal recurrence gives
+\[
+ (\beta_0,\beta_1,\beta_2,\beta_3,\beta_4)
+ =\left(1,-\frac13,\frac1{15},-\frac2{189},\frac1{675}\right).
+\]
+These values are obtained from the general formal-series definition. They are not substituted as independent input data for the reconstruction theorem. The source formula gives
+\[
+ (R_0,R_2,R_4,R_6,R_8)
+ =\left(1,\frac53,\frac{91}{15},\frac{205}{7},\frac{7381}{45}\right).
+\]
+Using the retained Euler anchor $E_8=1385$, Lean checks the literal decomposition
+\[
+ E_8=\frac{7381}{45}-\frac{6560}{3}+\frac{163072}{15}
+       -\frac{204800}{9}+\frac{229376}{15}=1385.
+\]
+
+\subsection*{Truncations and actual valuations}
+\begin{center}
+\begin{tabular}{@{}crr@{}}
+\toprule
+Depth $M$ & $T_M(8)$ & Guaranteed exponent $2M+2$\\\midrule
+0 & $7381/45$ & 2\\[3pt]
+1 & $-91019/45$ & 4\\[3pt]
+2 & $398197/45$ & 6\\[3pt]
+3 & $-208601/15$ & 8\\[3pt]
+4 & $1385$ & 10\\\bottomrule
+\end{tabular}
+\end{center}
+The checked nonzero error valuations are
+\[
+ E_8-T_0(8)=\frac{54944}{45},\qquad v_2(E_8-T_0(8))=5,
+\]
+\[
+ E_8-T_3(8)=\frac{229376}{15},\qquad v_2(E_8-T_3(8))=15.
+\]
+They exceed the uniform guarantees; these two examples do not establish a universally stronger exponent.
+
+\subsection*{What the negative controls rule out}
+Omitting the rescaling $2^{2m}$ already breaks the degree-two identity: the altered sum is $1$, whereas $E_2=-1$. Confusing ordinary beta coefficients with EGF coefficients would replace $\beta_1=-1/3$ by $-2/3$; a checked inequality excludes that normalization. A deliberately false claim that the depth-zero degree-eight error has valuation at least six is rejected.
+
+These three negative proof files are separate from the active mathematical modules. The verifier also retains the five earlier invalid controls, including the normalized all-residue counterexample. Rejection of an attempted proof is an engineering control; the actual counterexample theorems establish the mathematical failures.
+
+\textbf{Principal targets.}\par
+\target{DyadicExamples.beta_one, DyadicExamples.source_anchor_values}\par
+\target{DyadicExamples.manuscript_error_zero_valuation}\par
+\target{DyadicExamples.manuscript_error_three_valuation}
+\par\medskip
+\pageheading{5. Verification, provenance and remaining work}{Actual results for the v0.3.0 source snapshot}
+\begin{center}
+\begin{tabular}{@{}p{.67\textwidth}r@{}}
+\toprule
+Check & Recorded result\\\midrule
+Fresh local Lean modules & 17 / 17\\
+Explicit theorem declarations & 219 / 219\\
+Explicit definitions & 53 / 53\\
+Matched transitive axiom reports & 272 / 272\\
+Exact dependency revisions & 9 / 9\\
+Invalid-proof controls rejected & 8 / 8\\
+Infrastructure and release tests & 49 / 49\\
+Independent exact reconstruction rows & 49\\
+Independent truncation-depth cases & 2,548\\\bottomrule
+\end{tabular}
+\end{center}
+The clean cumulative run used \textbf{Lean 4.34.0-rc2}, with compiler warnings treated as errors. Mathlib is pinned to
+\begin{center}
+\mcode{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.
+\end{center}
+Every expected axiom report uses only \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}, or a subset. No additional project axiom or admitted proof is permitted. The verifier audits the explicit declaration inventory, not every generated declaration or all imported Mathlib proofs.
+
+\textbf{Independent regressions.} Exact Python integers and rational fractions check even degrees through 96. The 2,548 truncation cases include 1,176 nonzero errors and 1,372 exact zeros. Zero is handled separately. Kernel and reciprocal integrality and source unit status are checked in 49 cases each. Ninety-seven series coefficients agree. Forty-eight finite comparisons with the Bernoulli closed form pass, but do not prove that unnumbered formula universally. Both older independent Python suites were also rerun. None of these mirrors is Lean-extracted code or a reproduction of the original historical experiments.
+
+\textbf{Development failures.} Eight of 15 captured development checks failed before repair. Their exact inactive source snapshots and diagnostics are retained separately. The seven successful development checks do not substitute for the clean cumulative release run. All 13 upstream proof files, the original corrected PDF and both earlier supplements remain unchanged. Previous metadata and original test copies are preserved under \mcode{provenance/second_block/}.
+
+\textbf{Ten pending named items.} These are 6.2 (finite units), 7.2--7.5 (Mahler and finite differences), 8.3 and 8.5 (residue independence and period), 9.1 and 9.2 (recurrence jumps), and 10.1 (CRT factorization). Three classical inputs and both conjectures remain separate. The corrected global finite-difference claim is not promoted by the dyadic proof.
+
+\textbf{Trust and reproduction.} The pinned compiled Mathlib cache was reused, not independently rebuilt. The integral-source proof invokes the pinned library's LTE theorem; this project does not reprove LTE. Papers I--VIII and the historical numerical suite were not rerun. The source hashes, commands, axiom output and raw logs accompany the release. The external release audit separately records archive integrity and post-packaging replay. Manuscript correspondence remains a mathematical review, not an automated semantic-equivalence theorem.
+
+Run \mcode{bash Run-Portable.sh /path/to/extracted/kit}. The runtime is separate from this ZIP. The full source-level scope and target names are in \mcode{coverage.json} and the third-block ledger.

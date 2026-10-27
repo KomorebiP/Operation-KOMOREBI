@@ -1,0 +1,31 @@
+\section{Output contracts, batching, and Krylov certificates}
+\subsection{The decoding map is part of the contract}
+The signature for a fair timing comparison contains a case key, output contract, reference, and timing scope. Equality of those four fields defines \code{FairMatch}; the source proves that it is an equivalence relation. This theorem does not establish that historical benchmark metadata contain every field needed to instantiate the relation.
+\excerpt{}{contract}
+\walk{The hypothesis \code{hdecode} says the actual decoding function converts the compressed result to the requested explicit object. The modeled decoded run returns that object and adds the declared conversion time. The two conclusion components follow from the decoding identity and the definition. The times are input models, so the theorem does not independently verify their measurement. A separate declaration shows that omitting a positive decoding time understates the modeled total.}
+
+\subsection{Grouping preserves all contributions}
+\excerpt{}{grouping}
+\walk{The complete kernel key maps every active event to one shape class. Summing over the image classes and their fibers reindexes the original finite sum; the library's fiberwise sum theorem proves equality. The companion work theorem repeats this identity for natural-valued work. The launch-count theorem bounds the number of classes by the number of events. The model requires that the key really include the fields needed for a common kernel; it does not verify an arbitrary runtime grouping implementation.}
+
+\subsection{Strict profitability uses floor plus one}
+\excerpt{}{amortization}
+\walk{With nonnegative setup and a strictly smaller per-use candidate time, solve the strict total-cost inequality by division through the positive saving. The natural floor lemma converts a strict real threshold into the minimum integer reuse. Equality at break-even is not a profitable use, which accounts for the added one. The minimum-attainment theorem checks that threshold and all smaller reuse counts. Capture/replay and materialization have separate specializations with their own premises.}
+
+\subsection{Invariant packet Krylov spaces}
+\contract{The Krylov development uses bounded linear maps on a normed space over a nontrivially normed field, with a finite packet family. The exact theorem assumes the operator commutes with every packet projector.}
+\excerpt{}{krylov}
+\walk{To prove inclusion of a span, it suffices to prove membership for each generator \(A^jv\). The preceding exact power-expansion theorem writes that generator as the sum of local packet powers acting on projected seeds. Each term belongs to its local Krylov subspace, hence to the supremum of those spaces; the finite sum remains inside. This endpoint is an inclusion. \code{local_krylov_direct} separately proves directness using the mutually annihilating packet projectors. It does not assert equality of the global seed Krylov space with the full independent sum of all local spaces.}
+\excerpt{}{approx_krylov}
+\walk{Packet diagonality of \code{D} gives commutation, so \(D^jv\) lies in the local Krylov sum of length \(j+1\). The distance to that subspace is no larger than the distance to this particular vector. Bound the difference action by its operator norm, then apply the power-perturbation estimate. The displayed premise \code{0 < j} permits the exponent \(j-1\); a zero-power identity is handled separately in the power development.}
+
+\subsection{The Jacobi normalization uses the L2 operator norm}
+\code{invSqrt D} is the actual inverse of the positive matrix square root \code{CFC.sqrt D}. \code{matrixCondition A} is the product of the Euclidean operator norms of \(A\) and its inverse. The matrix index type is finite and nonempty at the condition-bound endpoint; positivity and invertibility assumptions are explicit.
+\excerpt{}{jacobi}
+\walk{Positive definiteness of \(D\) proves its inverse square root is a unit; positive definiteness of \(D+K\) proves the normalized matrix is a unit. Its inverse identity is therefore justified. The normalization theorem writes the matrix as \(I+E\), and the near-one condition estimate uses \(\|E\|\le\eta<1\). The theorem requires that supplied norm bound; it does not compute an empirical estimator of \(\eta\).}
+\excerpt{}{cg_bound}
+\walk{The classical CG energy-error estimate is the hypothesis \code{hCG}. The proved monotonicity of its convergence factor replaces the actual condition number by a certified upper bound. Nonnegativity permits raising the factor and multiplying the initial error. This is a formal comparison of factors and bounds. It does not independently prove CG iteration correctness or the classical convergence theorem. Item 7.5 stays a separate classical input.}
+
+\subsection{Discovery residuals are orthogonal in Frobenius geometry}
+\excerpt{}{discovery}
+\walk{Self-adjoint packet projectors make distinct block terms trace-orthogonal. The source first expresses the compression residual as its off-diagonal block sum. The finite Pythagorean identity for those terms gives the squared Frobenius norm as the sum of squared block norms, with diagonal terms zeroed. An operator-norm certificate is then derived from the Frobenius bound. This is exact geometry of a supplied packet family; simultaneous spectral decomposition is a separately tracked classical input rather than an algorithm proved here.}

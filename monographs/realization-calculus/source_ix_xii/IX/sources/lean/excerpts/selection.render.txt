@@ -1,0 +1,18 @@
+theorem continuous_selection_regularity
+    (F : Fin e → MvPolynomial (Fin (e + k)) \CodeSymbol{1D55C})
+    (a : Fin (e + k) → \CodeSymbol{1D55C})
+    (hJ : IsUnit (PolynomialJointSystem.solvedJacobian F a))
+    (g : (Fin k → \CodeSymbol{1D55C}) → (Fin e → \CodeSymbol{1D55C}))
+    (hg : ContinuousAt g (freePart a)) (hg₀ : g (freePart a) = solvedPart a)
+    (hroot : ∀ᶠ t in \CodeSymbol{1D4DD} (freePart a), evalSystem F (join (g t) t) = 0) :
+    AnalyticAt \CodeSymbol{1D55C} g (freePart a) ∧
+      HasStrictFDerivAt g
+        (matrixCLM (-((PolynomialJointSystem.solvedJacobian F a)⁻¹ *
+          PolynomialJointSystem.parameterJacobian F a))) (freePart a) := by
+  have hF : evalSystem F a = 0 := by
+    simpa only [hg₀, join_parts] using hroot.self_of_nhds
+  obtain ⟨ψ, U, V, hU, hV, ht, hy, _hψ₀, hψ, _hψV, hgraph, hdψ⟩ :=
+    exists_analytic_implicit F a hF hJ
+  have heq := continuous_selection_eventually_eq (evalSystem F) g ψ
+    (freePart a) (solvedPart a) U V hU hV ht hy hgraph hg hg₀ hroot
+  exact ⟨(hψ (freePart a) ht).congr heq.symm, hdψ.congr_of_eventuallyEq heq.symm⟩

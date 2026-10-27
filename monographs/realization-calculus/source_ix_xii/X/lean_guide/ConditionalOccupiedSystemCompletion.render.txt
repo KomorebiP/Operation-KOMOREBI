@@ -1,0 +1,291 @@
+import PaperX.HorizontalTransportCompletion
+import PaperX.Claim91ConstructedClosure
+import PaperX.StrictCompatibleCarrierCompletion
+
+/-!
+# Conditional occupied-system completion
+
+This is the final assembly theorem for Paper X.  It keeps the two conclusions
+of the manuscript separate:
+
+* vertical/horizontal completion constructs a simultaneous target family with
+  the declared inverse-limit-closed profile;
+* arithmetic Frobenius separation and compatible-carrier closure recover the
+  declared constituent packet in the known carrier.
+
+No residual companion, carrier, or local comparison is manufactured by this
+assembly theorem.  Those are exactly the explicit hypotheses of the conditional
+source statement.
+-/
+set_option autoImplicit false
+noncomputable section
+
+namespace PaperX.ConditionalOccupiedSystemCompletion
+
+open scoped BigOperators
+open Polynomial
+open PaperX.RepresentationLimits
+open PaperX.RepresentationClasses
+open PaperX.ClassCompletion
+open PaperX.InverseLimitLocalConditions
+open PaperX.HorizontalTransportCompletion
+open PaperX.AbsoluteFrobeniusWitnesses
+open PaperX.AbsoluteIntegralFrobenius
+open PaperX.CompatibleSystemRigidity
+open PaperX.FiniteSeparation
+open PaperX.TraceRecovery
+open PaperX.CarrierSummands
+open PaperX.WeilData
+open PaperX.WeilCopies
+open PaperX.WeilSmooth
+open PaperX.WeilEuler
+open PaperX.WeilProfileClosure
+open PaperX.SemilinearTateComparison
+open PaperX.SemilinearPeriods
+
+universe u z uB
+
+/-- The exact local carrier conclusion proved by Claim 9.2 at one arbitrary
+coefficient realization.  Since the coefficient place is arbitrary and the
+same `m` is used, this is the pointwise form of the compatible subsystem. -/
+def CarrierRecoveryAt
+    \{K : Type u\} [Field K] [CharZero K] [TopologicalSpace K]
+    \{GG : Type\} [Monoid GG] [TopologicalSpace GG]
+    \{CIdx : Type\} [Fintype CIdx] [DecidableEq CIdx]
+    \{V : CIdx → Type u\}
+    [∀ i, AddCommGroup (V i)] [∀ i, Module K (V i)]
+    [∀ i, FiniteDimensional K (V i)] [∀ i, TopologicalSpace (V i)]
+    (ρ : ∀ i, Representation K GG (V i))
+    \{W : Type z\} [AddCommGroup W] [Module K W]
+    (carrier : Representation K GG W)
+    (m : CIdx → ℕ)
+    \{U₀ : Type z\} [AddCommGroup U₀] [Module K U₀]
+    [FiniteDimensional K U₀]
+    (ρU₀ : Representation K GG U₀)
+    (sample : CIdx → GG)
+    \{E : Type uB\} [CommRing E] (σE : E →+* K)
+    (g : GG) (P : CIdx → E[X])
+    \{GW : Type\} [Group GW] [TopologicalSpace GW]
+    \{ν : GW →* Kˣ\} (H : Subgroup GW) [H.Normal]
+    (Dwd : ∀ i, InertialDatum (ν := ν) H (V i)) (φ : GW)
+    \{Bper : Type uB\} [Field Bper] [Algebra K Bper]
+    \{GP : Type\} [Group GP]
+    (σB : GP →* (Bper ≃ₐ[K] Bper)) (tate : ℤ → GP →* Kˣ)
+    (ρp : ∀ i, Representation K GP (V i))
+    (Cper : ∀ i, Comparison σB tate (ρp i)) : Prop :=
+  (∃ j : Representation.IntertwiningMap ρU₀ carrier,
+    ∃ r : Representation.IntertwiningMap carrier ρU₀,
+      ∀ x, r (j x) = x) ∧
+  (∀ n : CIdx → ℕ,
+    (∀ j, LinearMap.trace K U₀ (ρU₀ (sample j)) =
+      LinearMap.trace K _ (copiesRep ρ n (sample j))) → n = m) ∧
+  (∃ j : Representation.IntertwiningMap (copiesRep ρ m) carrier,
+    ∃ r : Representation.IntertwiningMap carrier (copiesRep ρ m),
+      (∀ x, r (j x) = x) ∧
+      Continuous (fun gx : GG × Copies V m => copiesRep ρ m gx.1 gx.2) ∧
+      (copiesRep ρ m g).charpoly = (∏ i, P i ^ m i).map σE) ∧
+  (let S := copiesInertialDatum H Dwd m;
+    S.toDatum = copiesDatum (fun i => (Dwd i).toDatum) m ∧
+    localCharpoly S.toDatum H φ =
+      ∏ i, localCharpoly (Dwd i).toDatum H φ ^ m i ∧
+    eulerPolynomial S.toDatum H φ =
+      ∏ i, eulerPolynomial (Dwd i).toDatum H φ ^ m i ∧
+    Module.finrank K (fixedKernel S.toDatum H) =
+      ∑ i, m i * Module.finrank K (fixedKernel (Dwd i).toDatum H) ∧
+    LinearMap.trace K _ (fixedRep S.toDatum H φ) =
+      ∑ i, (m i : K) * LinearMap.trace K _ (fixedRep (Dwd i).toDatum H φ)) ∧
+  (∃ Csel : Comparison σB tate (copiesRep ρp m),
+    (∀ q : ℤ,
+      weightMultiplicity σB tate Csel q =
+        ∑ i, m i * weightMultiplicity σB tate (Cper i) q) ∧
+    (∀ q : ℤ, Nonempty (
+      periodSpace σB tate (copiesRep ρp m) q ≃ₗ[K]
+        Copies (fun i => periodSpace σB tate (ρp i) q) m)))
+
+/-- Claim 9.1's constructed arithmetic separator gives the literal nonsingular
+trace sample required by Claim 9.2 at any selected coefficient place. -/
+theorem finite_trace_separator_at
+    \{Λ CIdx : Type\} \{E : Type uB\} [Field E]
+    [Fintype CIdx] [DecidableEq CIdx]
+    \{K : Λ → Type u\} [∀ l, Field (K l)] [∀ l, CharZero (K l)]
+    [∀ l, TopologicalSpace (K l)] [∀ l, IsTopologicalRing (K l)]
+    [∀ l, T2Space (K l)]
+    \{V : Λ → CIdx → Type u\}
+    [∀ l i, AddCommGroup (V l i)] [∀ l i, Module (K l) (V l i)]
+    [∀ l i, FiniteDimensional (K l) (V l i)]
+    (ρ : (l : Λ) → (i : CIdx) → Representation (K l) GQ (V l i))
+    [∀ l i, (ρ l i).IsIrreducible]
+    (hc : ∀ l i, Continuous (ρ l i).character)
+    (emb : (l : Λ) → E →+* K l)
+    (t : CIdx → RationalPrime → E)
+    (good : Λ → RationalPrime → Prop)
+    (hgood : ∀ l, Set.Finite \{p | ¬ good l p\})
+    (compat : ∀ l i p, good l p →
+      (ρ l i).character (chosenWitness p).element = emb l (t i p))
+    (hne : ∀ i j, MemberwiseEquiv ρ i j → i = j)
+    (l₀ : Λ) (bad : Finset RationalPrime) :
+    ∃ v : CIdx → RationalPrime,
+      Function.Injective v ∧
+      (∀ i, good l₀ (v i)) ∧
+      (∀ i, v i ∉ bad) ∧
+      Matrix.det (fun j i =>
+        LinearMap.trace (K l₀) (V l₀ i)
+          (ρ l₀ i (chosenWitness (v j)).element)) ≠ 0 := by
+  obtain ⟨v, hv, hvgood, hvbad, _, hmapdet, hentries⟩ :=
+    PaperX.Claim91ConstructedClosure.finite_arithmetic_system_separator
+      ρ hc emb t good hgood compat hne l₀ bad
+  refine ⟨v, hv, hvgood, hvbad, ?_⟩
+  have hmatrix :
+      (emb l₀).mapMatrix (sampleMatrix t v) =
+        (fun j i => LinearMap.trace (K l₀) (V l₀ i)
+          (ρ l₀ i (chosenWitness (v j)).element)) := by
+    ext j i
+    simpa [Representation.character] using hentries l₀ j i (hvgood j)
+  rw [← hmatrix]
+  exact hmapdet l₀
+
+/-- Claims 9.1 and 9.2 compose: arithmetic occurrence constructs the finite
+separator, and the compatible-carrier theorem then recovers the declared packet
+and all supplied strict-compatible local data. -/
+theorem carrier_recovery_from_arithmetic_separator
+    \{Λ CIdx : Type\} \{E : Type uB\} [Field E]
+    [Fintype CIdx] [DecidableEq CIdx]
+    \{K : Λ → Type u\} [∀ l, Field (K l)] [∀ l, CharZero (K l)]
+    [∀ l, TopologicalSpace (K l)] [∀ l, IsTopologicalRing (K l)]
+    [∀ l, T2Space (K l)]
+    \{V : Λ → CIdx → Type u\}
+    [∀ l i, AddCommGroup (V l i)] [∀ l i, Module (K l) (V l i)]
+    [∀ l i, FiniteDimensional (K l) (V l i)]
+    [∀ l i, TopologicalSpace (V l i)]
+    (ρ : (l : Λ) → (i : CIdx) → Representation (K l) GQ (V l i))
+    [∀ l i, (ρ l i).IsIrreducible]
+    (hc : ∀ l i, Continuous (ρ l i).character)
+    (emb : (l : Λ) → E →+* K l)
+    (t : CIdx → RationalPrime → E)
+    (good : Λ → RationalPrime → Prop)
+    (hgood : ∀ l, Set.Finite \{p | ¬ good l p\})
+    (compat : ∀ l i p, good l p →
+      (ρ l i).character (chosenWitness p).element = emb l (t i p))
+    (hne : ∀ i j, MemberwiseEquiv ρ i j → i = j)
+    (l₀ : Λ) (bad : Finset RationalPrime)
+    (hρ : ∀ i, Continuous (fun gx : GQ × V l₀ i => ρ l₀ i gx.1 gx.2))
+    \{W : Type z\} [AddCommGroup W] [Module (K l₀) W]
+    (carrier : Representation (K l₀) GQ W)
+    (m c : CIdx → ℕ) (hmc : ∀ i, m i ≤ c i)
+    (Bcar : W ≃ₗ[K l₀] Copies (V l₀) c)
+    (hBcar : ∀ g x, Bcar (carrier g x) = copiesRep (ρ l₀) c g (Bcar x))
+    \{U₀ : Type z\} [AddCommGroup U₀] [Module (K l₀) U₀]
+    [FiniteDimensional (K l₀) U₀]
+    (ρU₀ : Representation (K l₀) GQ U₀)
+    (e₀ : U₀ ≃ₗ[K l₀] Copies (V l₀) m)
+    (he₀ : ∀ g x, e₀ (ρU₀ g x) = copiesRep (ρ l₀) m g (e₀ x))
+    (g : GQ) (P : CIdx → E[X])
+    (hP : ∀ i, (ρ l₀ i g).charpoly = (P i).map (emb l₀))
+    \{GW : Type\} [Group GW] [TopologicalSpace GW]
+    \{ν : GW →* (K l₀)ˣ\} (H : Subgroup GW) [H.Normal]
+    (Dwd : ∀ i, InertialDatum (ν := ν) H (V l₀ i)) (φ : GW)
+    \{Bper : Type uB\} [Field Bper] [Algebra (K l₀) Bper]
+    \{GP : Type\} [Group GP]
+    (σB : GP →* (Bper ≃ₐ[K l₀] Bper))
+    (tate : ℤ → GP →* (K l₀)ˣ)
+    (ρp : ∀ i, Representation (K l₀) GP (V l₀ i))
+    (Cper : ∀ i, Comparison σB tate (ρp i)) :
+    ∃ v : CIdx → RationalPrime,
+      Function.Injective v ∧
+      (∀ i, good l₀ (v i)) ∧
+      (∀ i, v i ∉ bad) ∧
+      CarrierRecoveryAt (K := K l₀) (GG := GQ) (CIdx := CIdx) (V := V l₀)
+        (W := W) (U₀ := U₀) (E := E) (GW := GW) (ν := ν)
+        (Bper := Bper) (GP := GP)
+        (ρ l₀) carrier m ρU₀ (fun j => (chosenWitness (v j)).element)
+        (emb l₀) g P H Dwd φ σB tate ρp Cper := by
+  obtain ⟨v, hv, hvgood, hvbad, hdet⟩ :=
+    finite_trace_separator_at ρ hc emb t good hgood compat hne l₀ bad
+  refine ⟨v, hv, hvgood, hvbad, ?_⟩
+  simpa [CarrierRecoveryAt] using
+    (PaperX.StrictCompatibleCarrierCompletion.compatible_carrier_summand_completion
+      (ρ l₀) hρ carrier m c hmc Bcar hBcar ρU₀ e₀ he₀
+      (fun j => (chosenWitness (v j)).element) hdet
+      (emb l₀) g P hP H Dwd φ σB tate ρp Cper)
+
+/-- Final Paper X assembly at an arbitrary coefficient place.  The first output
+is the simultaneous family supplied by vertical/horizontal completion and
+inverse-limit-closed local conditions.  The second, logically independent,
+output is the compatible carrier summand recovered by finite Frobenius traces.
+This matches the two-clause conclusion of the manuscript's conditional
+occupied-system completion theorem. -/
+theorem conditional_occupied_system_completion
+    \{Λ CIdx : Type\} \{E : Type uB\} [Field E]
+    \{ι : Type\} [Fintype ι] [DecidableEq ι]
+    (O : Λ → Type) [∀ l, CommRing (O l)]
+    (J : (l : Λ) → Ideal (O l)) [∀ l, IsAdicComplete (J l) (O l)]
+    (Csrc Ctgt : (l : Λ) → ClassConditions (G := GQ) (ι := ι) (J l))
+    (finiteO : ∀ l k, Finite (O l \CodeSlash{} (J l) ^ k))
+    (T : ∀ l, AdmissibleClassTransport (J l) (Csrc l) (Ctgt l))
+    (TargetProfile : (l : Λ) → MatrixRep (O l) GQ ι → Prop)
+    (closed : ∀ l, InverseLimitClosed (J l) (Ctgt l) (TargetProfile l))
+    (ρsrc : (l : Λ) → MatrixRep (O l) GQ ι)
+    (hρsrc : ∀ l k,
+      (Csrc l).allowed k (classOf (reduce (J l) (ρsrc l) k)))
+    [Fintype CIdx] [DecidableEq CIdx]
+    \{K : Λ → Type u\} [∀ l, Field (K l)] [∀ l, CharZero (K l)]
+    [∀ l, TopologicalSpace (K l)] [∀ l, IsTopologicalRing (K l)]
+    [∀ l, T2Space (K l)]
+    \{V : Λ → CIdx → Type u\}
+    [∀ l i, AddCommGroup (V l i)] [∀ l i, Module (K l) (V l i)]
+    [∀ l i, FiniteDimensional (K l) (V l i)]
+    [∀ l i, TopologicalSpace (V l i)]
+    (ρ : (l : Λ) → (i : CIdx) → Representation (K l) GQ (V l i))
+    [∀ l i, (ρ l i).IsIrreducible]
+    (hc : ∀ l i, Continuous (ρ l i).character)
+    (emb : (l : Λ) → E →+* K l)
+    (t : CIdx → RationalPrime → E)
+    (good : Λ → RationalPrime → Prop)
+    (hgood : ∀ l, Set.Finite \{p | ¬ good l p\})
+    (compat : ∀ l i p, good l p →
+      (ρ l i).character (chosenWitness p).element = emb l (t i p))
+    (hne : ∀ i j, MemberwiseEquiv ρ i j → i = j)
+    (l₀ : Λ) (bad : Finset RationalPrime)
+    (hρ : ∀ i, Continuous (fun gx : GQ × V l₀ i => ρ l₀ i gx.1 gx.2))
+    \{W : Type z\} [AddCommGroup W] [Module (K l₀) W]
+    (carrier : Representation (K l₀) GQ W)
+    (m c : CIdx → ℕ) (hmc : ∀ i, m i ≤ c i)
+    (Bcar : W ≃ₗ[K l₀] Copies (V l₀) c)
+    (hBcar : ∀ g x, Bcar (carrier g x) = copiesRep (ρ l₀) c g (Bcar x))
+    \{U₀ : Type z\} [AddCommGroup U₀] [Module (K l₀) U₀]
+    [FiniteDimensional (K l₀) U₀]
+    (ρU₀ : Representation (K l₀) GQ U₀)
+    (e₀ : U₀ ≃ₗ[K l₀] Copies (V l₀) m)
+    (he₀ : ∀ g x, e₀ (ρU₀ g x) = copiesRep (ρ l₀) m g (e₀ x))
+    (g : GQ) (P : CIdx → E[X])
+    (hP : ∀ i, (ρ l₀ i g).charpoly = (P i).map (emb l₀))
+    \{GW : Type\} [Group GW] [TopologicalSpace GW]
+    \{ν : GW →* (K l₀)ˣ\} (H : Subgroup GW) [H.Normal]
+    (Dwd : ∀ i, InertialDatum (ν := ν) H (V l₀ i)) (φ : GW)
+    \{Bper : Type uB\} [Field Bper] [Algebra (K l₀) Bper]
+    \{GP : Type\} [Group GP]
+    (σB : GP →* (Bper ≃ₐ[K l₀] Bper))
+    (tate : ℤ → GP →* (K l₀)ˣ)
+    (ρp : ∀ i, Representation (K l₀) GP (V l₀ i))
+    (Cper : ∀ i, Comparison σB tate (ρp i)) :
+    (∃ σ : (l : Λ) → MatrixRep (O l) GQ ι,
+      (∀ l k, (Ctgt l).allowed k (classOf (reduce (J l) (σ l) k))) ∧
+      (∀ l, TransportedAlong (J l) (T l) (ρsrc l) (σ l)) ∧
+      ∀ l, TargetProfile l (σ l)) ∧
+    (∃ v : CIdx → RationalPrime,
+      Function.Injective v ∧
+      (∀ i, good l₀ (v i)) ∧
+      (∀ i, v i ∉ bad) ∧
+      CarrierRecoveryAt (K := K l₀) (GG := GQ) (CIdx := CIdx) (V := V l₀)
+        (W := W) (U₀ := U₀) (E := E) (GW := GW) (ν := ν)
+        (Bper := Bper) (GP := GP)
+        (ρ l₀) carrier m ρU₀ (fun j => (chosenWitness (v j)).element)
+        (emb l₀) g P H Dwd φ σB tate ρp Cper) := by
+  constructor
+  · exact exists_transported_system_of_inverseLimitClosed O J Csrc Ctgt finiteO T
+      TargetProfile closed ρsrc hρsrc
+  · exact carrier_recovery_from_arithmetic_separator ρ hc emb t good hgood compat hne
+      l₀ bad hρ carrier m c hmc Bcar hBcar ρU₀ e₀ he₀ g P hP
+      H Dwd φ σB tate ρp Cper
+
+end PaperX.ConditionalOccupiedSystemCompletion

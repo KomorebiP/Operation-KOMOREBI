@@ -1,0 +1,17 @@
+theorem reciprocalOrdCoeff_newton_determinant (N n : ℕ) (r : K) :
+    reciprocalOrdCoeff N n r = (n.factorial : K)⁻¹ *
+      (newtonHessenberg (fun k => r*kappaCoeff N k) n).det := by
+  have hb0 : reciprocalOrdCoeff N 0 r = 1 := by simp [reciprocalOrdCoeff]
+  have hb (i : ℕ) : ∑ j ∈ range (i+1), reciprocalOrdCoeff N j r *
+      (r*kappaCoeff N (i+1-j)) = (i+1 : K)*reciprocalOrdCoeff N (i+1) r := by
+    have h := reciprocalOrdCoeff_newton N r i
+    rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk] at h
+    rw [h, mul_sum]
+    apply sum_congr rfl
+    intro j hj
+    have he : i-j+1=i+1-j := by have := mem_range.mp hj; omega
+    rw [he]
+    ring
+  rw [newtonHessenberg_det _ _ hb0 hb]
+  have hf : (n.factorial : K) ≠ 0 := by exact_mod_cast n.factorial_ne_zero
+  field_simp

@@ -1,0 +1,13 @@
+theorem unitarity_columns (U : R) (hU : star U * U = 1) (a c : I) :
+    (∑ b, star (P.block U b a) * P.block U b c) =
+      if a = c then P.proj a else 0 := by
+  have term (b : I) : star (P.block U b a) * P.block U b c =
+      P.proj a * star U * P.proj b * U * P.proj c := by
+    rw [P.adjoint_block hstar]
+    unfold block
+    calc
+      _ = P.proj a * star U * (P.proj b * P.proj b) * U * P.proj c := by noncomm_ring
+      _ = _ := by rw [P.idempotent]
+  simp_rw [term]
+  rw [← Finset.sum_mul, ← Finset.sum_mul, ← Finset.mul_sum, P.sum_proj, mul_one]
+  rw [mul_assoc (P.proj a), hU, mul_one, P.mul_proj]

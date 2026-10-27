@@ -1,0 +1,420 @@
+--- editorial/rhythm_review/i_ii_companions_before/source_i_iv/I/editable/lean_guide/Paper_I_Lean_Guide_Final.tex
++++ source_i_iv/I/editable/lean_guide/Paper_I_Lean_Guide_Final.tex
+@@ -90,9 +90,9 @@
+ 
+ The mathematical text develops the language and its examples. The computational companion gives stable records, typed dependencies, semantic profiles, and executable validation interfaces. This guide makes the Lean development usable: where the definitions live, what each theorem actually accepts, how its proof works, and what evidence connects the delivered source to an accepted kernel run.
+ 
+-The foundational formalization taught in Sections~\ref{sec:types}--\ref{sec:map} is the 20-file project preserved at \code{source/traditional_v1.3.1/formalization/lean/} in the source archive. The path identifies that exact archived component. The mathematical text contains an expanded core with 108 stable records; those records form a different inventory from the 35 Lean contract rows.
+-
+-An exact scoped result should remain exact when republished. The guide therefore retains both the scope and the exclusions of every contract row. For example, historical row 10 proves a split-semisimple formula after algebra and module equivalences are supplied. The later continuation constructs compatible decompositions and establishes the general division-ring formula. The new result is documented through its own declarations and evidence; it does not change the inputs of historical row 10.
++The foundational formalization taught in Sections~\ref{sec:types}--\ref{sec:map} is the 20-file project preserved at \code{source/traditional_v1.3.1/formalization/lean/} in the source archive. The path identifies that exact archived component. The mathematical text contains an expanded core with 108 stable records. Those records form a different inventory from the 35 Lean contract rows.
++
++The guide retains both the scope and the exclusions of every contract row. For example, historical row 10 proves a split-semisimple formula after algebra and module equivalences are supplied. The later continuation constructs compatible decompositions and establishes the general division-ring formula. The new result is documented through its own declarations and evidence. It does not change the inputs of historical row 10.
+ 
+ \subsection{What the numbers count}
+ 
+@@ -101,7 +101,7 @@
+ 20 source files & Local Lean files, including the import aggregator, focused Mathlib import file, and standalone audit. \\
+ 35 contract rows & Mathematical statement families and specifications in the foundational contract map. \\
+ 84 mapped targets & Distinct Lean declaration names used by those rows. They include definitions and equivalences as well as theorems. \\
+-1,126 entries & Project-namespace entries inspected by the historical audit, including generated helpers. \\
++1,126 entries & Entries in the project namespace inspected by the historical audit, including generated helpers. \\
+ 108 stable records & The expanded manuscript inventory. The current correspondence map and the machine payload's historical eight-record map have different evidence scopes. \\
+ \bottomrule
+ \end{tabular}
+@@ -138,21 +138,21 @@
+ \bottomrule
+ \end{longtable}
+ 
+-Curly-braced arguments are implicit parameters inferred from use. Round-bracketed arguments are explicit inputs. A section's \code{variable} declarations can supply parameters to all later declarations that use them. Therefore a theorem copied without its section context can look less constrained than its actual elaborated type. The preserved \code{mapped_declarations.log} prints every mapped type with universe information and is the right companion when checking the complete signature.
+-
+-The package disables automatic implicit-variable invention with \code{autoImplicit = false} and \code{relaxedAutoImplicit = false}. This makes a misspelled or undeclared variable an error instead of silently introducing a new parameter. It does not remove explicit hypotheses, nor prove that a chosen formal statement is the intended prose statement.
++Arguments in braces are implicit parameters inferred from use. Arguments in parentheses are explicit inputs. A section's \code{variable} declarations can supply parameters to all later declarations that use them. Therefore a theorem copied without its section context can look less constrained than its actual elaborated type. The preserved \code{mapped_declarations.log} prints every mapped type with universe information and is the right companion when checking the complete signature.
++
++The package disables automatic invention of implicit variables with \code{autoImplicit = false} and \code{relaxedAutoImplicit = false}. This makes a misspelled or undeclared variable an error instead of silently introducing a new parameter. It does not remove explicit hypotheses, nor prove that a chosen formal statement is the intended prose statement.
+ 
+ \subsection{Proof terms and the tactics used here}
+ 
+ \code{exact h} closes the current goal with an existing proof of its type. \code{rfl} proves a definitional equality after reduction. \code{rw} substitutes proved equalities. \code{simp} applies a collection of simplification lemmas and produces a proof term. \code{funext} reduces equality of functions to equality at each input. \code{Subtype.ext} reduces equality of range elements to equality of their underlying vectors.
+ 
+-The command \code{classical} makes classical instances available during elaboration. It is not a placeholder. Some resulting declarations depend on \code{Classical.choice}; the audit records this explicitly. A \code{noncomputable def} can define a mathematically precise object through choice or noncomputable library constructions. It does not by itself provide executable numerical code.
+-
+-These distinctions matter particularly for graph rank. A formula defined using a finite exact spectrum may be mathematically well-defined and formally verified while still not being an extracted eigensolver.
++The command \code{classical} makes classical instances available during elaboration. It is not a placeholder. Some resulting declarations depend on \code{Classical.choice}. The audit records this explicitly. A \code{noncomputable def} can define a mathematically precise object through choice or noncomputable library constructions. It does not by itself provide executable numerical code.
++
++These distinctions matter particularly for graph rank. A formula defined using a finite exact spectrum may be mathematically well defined and formally verified while still not being an extracted eigensolver.
+ 
+ \section{The source architecture}
+ 
+-The project is organized around a finite algebraic core, seed generation, concrete matrix models, operator and packet completion, and a separate analytic component. \code{MathlibImports.lean} centralizes the focused external imports. This replaced earlier blanket imports without changing the mathematics of the pre-existing nineteen source files.
++The project is organized around a finite algebraic core, seed generation, concrete matrix models, operator and packet completion, and a separate analytic component. \code{MathlibImports.lean} centralizes the focused external imports. This replaced earlier blanket imports without changing the mathematics of the nineteen existing source files.
+ 
+ \begin{longtable}{p{.30\textwidth}p{.61\textwidth}}
+ \toprule Layer & Main responsibility \\\midrule\endhead
+@@ -168,7 +168,7 @@
+ \bottomrule
+ \end{longtable}
+ 
+-The historical direct-import table is generated from the preserved twenty files in Appendix~\ref{app:imports}. It is an import graph, not a claim that every imported theorem is a logical dependency of every declaration in the importing module. A declaration's transitive axiom set is obtained separately from the Lean environment.
++The historical table of direct imports is generated from the preserved twenty files in Appendix~\ref{app:imports}. It is an import graph, not a claim that every imported theorem is a logical dependency of every declaration in the importing module. A declaration's transitive axiom set is obtained separately from the Lean environment.
+ 
+ \section{Exact packet coordinates, from assumptions to inverse laws}\label{sec:packets}
+ 
+@@ -186,7 +186,7 @@
+ The type of the packet space is crucial. It is the product of independently defined ranges. It is not defined as the image of analysis, and synthesis is the ordinary sum. Thus the reverse inverse law must be proved.
+ \excerpt{ExactCoordinates}{packet_space}
+ 
+-The term \code{⟨P.proj i x, ⟨x, rfl⟩⟩} has two layers. The outer pair contains the vector and its range-membership proof. The inner pair gives the preimage $x$ and the equality showing that projecting it gives the required vector. The coercion \code{(packets i : M)} later forgets this proof component and returns the underlying vector for summation.
++The term \code{⟨P.proj i x, ⟨x, rfl⟩⟩} has two layers. The outer pair contains the vector and its proof of range membership. The inner pair gives the preimage $x$ and the equality showing that projecting it gives the required vector. The coercion \code{(packets i : M)} later forgets this proof component and returns the underlying vector for summation.
+ 
+ \subsection{Why the two directions use different hypotheses}
+ 
+@@ -246,34 +246,34 @@
+ \]
+ The earlier core proves pointwise identities. \code{PaperIBlockCompletion} promotes them to equality of linear maps using extensionality. Contract rows 19 and 20 are classified as stronger than the single-space manuscript instances because the compiled maps may have different source, middle, and target modules.
+ 
+-The block-algebra development then restricts each map to the actual source packet and gives it codomain the actual target packet. This yields a dependent family
++The block algebra development then restricts each map to the actual source packet and gives it codomain the actual target packet. This yields a dependent family
+ \[
+ B_{ji}:\operatorname{range}(P_i)\longrightarrow_R\operatorname{range}(P_j),
+ \]
+-which is genuinely the full packet-to-packet Hom space. Its multiplication is the finite sum of composable maps. The equivalence with ambient endomorphisms is not a definition of the block space as the image of ambient operators. Both restriction and synthesis are separately constructed and proved inverse.
++which is the full packet-to-packet Hom space. Its multiplication is the finite sum of composable maps. The equivalence with ambient endomorphisms is not a definition of the block space as the image of ambient operators. Both restriction and synthesis are separately constructed and proved inverse.
+ 
+ \subsection{Why nonzero packets appear in converse statements}
+ 
+ If a support relation is transitive, supported blocks are closed under multiplication. Conversely, to detect a missing compositional edge from universal multiplication closure, one needs blocks whose composite is nonzero. Contract row 25 works over a field, with every packet range nontrivial and arbitrary packet-Hom blocks available. Those hypotheses provide the witnesses used by the converse.
+ 
+-A zero packet can make a relation edge mathematically invisible. The mathematical text therefore explicitly includes the necessary nonzero-packet assumptions in its $*$-support and source-component-count corollaries. Row 25 has its own nontriviality scope; the twenty-file foundational formalization retains that scope.
+-
+-\subsection{A reachability obstruction is a lower-bound certificate}
++A zero packet can make a relation edge mathematically invisible. The mathematical text therefore explicitly includes the necessary nonzero-packet assumptions in its $*$-support and source-component-count corollaries. Row 25 has its own nontriviality scope. The twenty-file foundational formalization retains that scope.
++
++\subsection{A reachability obstruction is a certificate for a lower bound}
+ 
+ The reachability module first shows that word orbits of packet-supported seeds remain in the support reachable from those seeds. If a nonzero packet is unreachable, the generated algebraic hull is proper. The conclusion depends on the seed support as well as the graph. It is not a general rule saying that the number of graph sources equals unrestricted seed rank.
+ 
+-The typed-quiver model makes the distinction concrete. It uses $U=k^2$, $V=k^3$, the embedding
++The typed quiver model makes the distinction concrete. It uses $U=k^2$, $V=k^3$, the embedding
+ $A(u_1,u_2)=(u_1,u_2,0)$, and the projection $B(v_1,v_2,v_3)=(v_1,v_2)$. Although $BA=1_U$, the vector $(0,0,1)$ in $V$ is outside $\operatorname{range}(A)$. No family supported solely at $U$ generates the whole representation. A source seed and the missing $V$-direction give the displayed generating pair. Contract row 30 is the certificate for this model, not a classification of arbitrary quivers.
+ 
+ \subsection{Coordinate transport and strict naturality}
+ 
+ A linear equivalence $C:M\simeq N$ transports projectors by $P_i\mapsto CP_iC^{-1}$ and operators by $T\mapsto CTC^{-1}$. Blocks and their zero/nonzero pattern then transport exactly. The inverse matters: a noninjective realization can kill a nonzero block.
+ 
+-The strict-naturality module also handles semilinear realized actions, with explicit algebra maps and packet-label maps. Its generated-hull statement uses the exact image algebra. Surjectivity gives the appropriate rank inequality; equality and complete edge correspondence require the stronger bijectivity hypotheses recorded in row 28. The injective label map excludes packet merging from that particular strict interface.
++The strict naturality module also handles semilinear realized actions, with explicit algebra maps and maps of packet labels. Its statement about the generated hull uses the exact image algebra. Surjectivity gives the appropriate rank inequality. Equality and complete edge correspondence require the stronger bijectivity hypotheses recorded in row 28. The injective label map excludes packet merging from that particular strict interface.
+ 
+ \section{Generation and seed rank}
+ 
+-Seed rank depends on an acting algebra. It is not simply vector-space dimension. One vector generates the natural module of a full matrix algebra, whereas a scalar action on $k^n$ needs $n$ independent generators.
++Seed rank depends on an acting algebra. It is not simply vector space dimension. One vector generates the natural module of a full matrix algebra, whereas a scalar action on $k^n$ needs $n$ independent generators.
+ 
+ The foundational definitions use the existing span-rank API for the top submodule.
+ \excerpt{SeedRankBasics}{seed_definitions}
+@@ -307,11 +307,11 @@
+ Suppose $x\ne0$ in $k^n$. Choose a coordinate $j$ with $x_j\ne0$. For any target vector $y$, make a matrix with only column $j$ nonzero and entries $a_{ij}=y_i/x_j$. Then $Ax=y$. The source is short enough to read in full.
+ \excerpt{FullMatrixCyclicity}{full_matrix}
+ 
+-The initial contradiction argument finds the nonzero coordinate. The matrix is then explicitly defined and supplied as the witness to the existential goal. Function extensionality reduces $Ax=y$ to its coordinates; simplification evaluates the finite sum and cancels the nonzero denominator. Later declarations connect this concrete cyclicity predicate to \code{Generates} and canonical seed rank. Row 11 records the result for $n>0$.
++The initial contradiction argument finds the nonzero coordinate. The matrix is then explicitly defined and supplied as the witness to the existential goal. Function extensionality reduces $Ax=y$ to its coordinates. Simplification evaluates the finite sum and cancels the nonzero denominator. Later declarations connect this concrete cyclicity predicate to \code{Generates} and canonical seed rank. Row 11 records the result for $n>0$.
+ 
+ \section{Certificate inputs and what their proofs establish}\label{sec:certificates}
+ 
+-Several important statements are deliberately certificate-explicit. Their hypotheses encode mathematical data that a separate construction or classical theorem would supply. The Lean proof checks the implication from those data. The certificate is not a project axiom, and it is not a proof of its own existence from bare input.
++Several statements require explicit certificates. Their hypotheses encode mathematical data that a separate construction or classical theorem would supply. The Lean proof checks the implication from those data. The certificate is not a project axiom, and it is not a proof of its own existence from bare input.
+ 
+ \subsection{The split-semisimple formula}
+ 
+@@ -321,20 +321,20 @@
+ \]
+ For a finite product of blocks, independent actions combine by the maximum. \code{SemisimpleCompletion} connects these row-space arguments to \code{seedRank}. The abstract theorem consumes an algebra equivalence to the product of full matrix algebras and a compatible semilinear module equivalence to the product of matrix modules.
+ 
+-The output is a genuine rank formula for the supplied realization. This preserved 20-file component does not derive a Wedderburn decomposition from an arbitrary semisimple algebra, nor the nonsplit division-algebra form. The later continuation supplies that existence integration and the nonsplit formula, as described in Section~\ref{sec:release-current}. A reader applying historical row 10 should still identify its supplied equivalences before quoting its conclusion.
++The output is a rank formula for the supplied realization. This preserved 20-file component does not derive a Wedderburn decomposition from an arbitrary semisimple algebra, nor the nonsplit division-algebra form. The later continuation supplies that existence integration and the nonsplit formula, as described in Section~\ref{sec:release-current}. A reader applying historical row 10 should still identify its supplied equivalences before quoting its conclusion.
+ 
+ \subsection{Single-operator seed number: the upper and lower halves}
+ 
+-For an operator $T$, the formalization first works with polynomial orbits $p(T)v$. It then proves a bridge to the genuine image algebra $k[T]=\operatorname{Algebra.adjoin}_k\{T\}$. This prevents an informal change of acting algebra from being hidden in the seed-number notation.
+-
+-The primary-decomposition theorem uses an attained bound $R$ on block multiplicities. For each seed index $a<R$, it adds the $a$th block generator from each primary packet, inserting zero when that packet has fewer blocks. Polynomial extraction certificates recover the individual block generators from these padded sums. Thus $R$ seeds suffice. A surjective quotient on which $T$ acts as a scalar gives the opposite bound.
++For an operator $T$, the formalization first works with polynomial orbits $p(T)v$. It then proves a bridge to the genuine image algebra $k[T]=\operatorname{Algebra.adjoin}_k\{T\}$. This prevents an informal change of acting algebra from being hidden in the notation for the seed number.
++
++The primary decomposition theorem uses an attained bound $R$ on block multiplicities. For each seed index $a<R$, it adds the $a$th block generator from each primary packet, inserting zero when that packet has fewer blocks. Polynomial extraction certificates recover the individual block generators from these padded sums. Thus $R$ seeds suffice. A surjective quotient on which $T$ acts as a scalar gives the opposite bound.
+ \excerpt{SingleOperatorGraph}{primary_certificate}
+ 
+-The signature has three groups of data. First, \code{hbound} and \code{hmax} make $R$ an attained maximum. Second, \code{hblocks} and \code{hextract} supply the orbit-generation and extraction information for the upper bound. Third, \code{q}, \code{hq}, and \code{hqT} supply the scalar quotient and polynomial intertwining law for the lower bound.
+-
+-The proof constructs an \code{IsLeast} pair. Its first component is the padded generating family. Its second component takes an arbitrary generating family and uses the quotient at \code{maxEigen} to force its cardinality to be at least $R$. The hard distinction is visible in the type: the existence of these quotient and extraction certificates is an input. The file does not independently construct general Jordan form or Chinese-remainder primary projectors from a bare matrix.
+-
+-\subsection{The cyclic-matrix bridge}
++The signature has three groups of data. First, \code{hbound} and \code{hmax} make $R$ an attained maximum. Second, \code{hblocks} and \code{hextract} supply the information about orbit generation and extraction for the upper bound. Third, \code{q}, \code{hq}, and \code{hqT} supply the scalar quotient and polynomial intertwining law for the lower bound.
++
++The proof constructs an \code{IsLeast} pair. Its first component is the padded generating family. Its second component takes an arbitrary generating family and uses the quotient at \code{maxEigen} to force its cardinality to be at least $R$. The existence of these quotient and extraction certificates is an input. The file does not independently construct general Jordan form or Chinese-remainder primary projectors from a bare matrix.
++
++\subsection{The cyclic matrix bridge}
+ 
+ Row 14 derives the four-way cyclicity statement after two canonical-form bridges have been supplied: geometric multiplicity agrees with block multiplicity, and equality of minimal and characteristic polynomials is equivalent to one block per eigenvalue. Lean verifies their use in the equivalence chain. It does not reconstruct those bridges from arbitrary matrix data in this component.
+ 
+@@ -352,14 +352,14 @@
+ 
+ \subsection{Bounded packets and closed-hull obstructions}
+ 
+-The analytic structure replaces linear maps by continuous linear maps. Bounded idempotents have closed ranges. Finite analysis and synthesis become continuous linear maps and then a continuous linear equivalence. The algebraic inverse-law pattern remains visible, while continuity is carried in the types.
++The analytic structure replaces linear maps by continuous linear maps. Bounded idempotents have closed ranges. Finite analysis and synthesis become continuous linear maps and then a continuous linear equivalence. The algebraic pattern of inverse laws remains visible, while continuity is carried in the types.
+ 
+ For a dense submodule $M\subseteq X$ and a bounded idempotent $P$, the closure of $P(M)$ is the full range of $P$. The theorem does not require that $M$ be invariant under $P$. This is why the source map records the exact scope rather than summarizing the statement only as ``completion preserves packets.''
+ 
+ The topological obstruction is especially transparent:
+ \excerpt{TopologicalCompletion}{topological_obstruction}
+ 
+-The kernel of a continuous linear map is closed. If an algebraic hull lies in that kernel, so does its closure. If the map is nonzero, the closure cannot be the whole space. This analytic theorem consumes the kernel inclusion; it does not independently derive graph reachability. The algebraic and analytic arguments join at that explicit inclusion.
++The kernel of a continuous linear map is closed. If an algebraic hull lies in that kernel, so does its closure. If the map is nonzero, the closure cannot be the whole space. This analytic theorem uses the kernel inclusion. It does not independently derive graph reachability. The algebraic and analytic arguments join at that explicit inclusion.
+ 
+ \subsection{Dense realizations and completed presentations}
+ 
+@@ -367,7 +367,7 @@
+ 
+ For completed free presentations, the supplied map is a continuous linear isometry with dense range into a complete target. Its completion extension is an isometry with closed and dense range, hence surjective. This gives a continuous linear equivalence. Further theorems prove intertwining of supplied bounded operators and uniqueness of the continuous extension.
+ 
+-The bilateral-shift result uses an actual reindexing representation on $\ell^2(\mathbb Z)$, not an assumed abstract shift action. Its translates of $\delta_0$ recover all delta vectors, whose linear span is dense. The final statement says that one is the least finite seed cardinality for dense generation by this representation. It does not establish an unrestricted cardinal-valued Laurent-algebra rank.
++The bilateral shift result uses an actual reindexing representation on $\ell^2(\mathbb Z)$, not an assumed abstract shift action. Its translates of $\delta_0$ recover all delta vectors, whose linear span is dense. The final statement says that one is the least finite seed cardinality for dense generation by this representation. It does not establish an unrestricted cardinal-valued Laurent-algebra rank.
+ 
+ \subsection{Orbit closure: why termination is not code extraction}
+ 
+@@ -411,11 +411,11 @@
+   KomorebiVerification/KernelAudit.lean
+ \end{lstlisting}
+ 
+-The audit is standalone; it is not imported by the root library aggregator. Consequently a successful library build is not the same thing as a successful explicit audit. These two commands also do not perform every identity check and negative control of the full verifier.
++The audit is standalone. It is not imported by the root library aggregator. Consequently a successful library build is not the same thing as a successful explicit audit. These two commands also do not perform every identity check and negative control of the full verifier.
+ 
+ Avoid changing the manifest with \code{lake update} when reproducing the historical dependency state. A newer compiler or newer Mathlib can be useful in a separate porting branch, but its success would be a different verification event with different inputs.
+ 
+-\subsection{The portable-kit verifier}
++\subsection{The verifier for the portable kit}
+ 
+ For the matching Linux x86-64 kit used by the preserved workflow, begin in the source archive root. Set \code{KIT} to the separately provisioned portable kit and use a new empty output directory.
+ \begin{lstlisting}
+@@ -469,7 +469,7 @@
+ The audit enumerates imported declarations owned by the two project namespaces. It rejects unsafe declarations, custom axiom declarations, and opaque project declarations. For every enumerated declaration it collects transitive axioms and accepts only \code{propext}, \code{Classical.choice}, and \code{Quot.sound}.
+ \excerpt{KernelAudit}{audit_gate}
+ 
+-The zero-entry check matters: an audit that accidentally imports nothing must fail. The final count is an environment-inventory count, not a count of handwritten mathematical theorems. The separate mapped-target pass resolves each of the eighty-four names, prints its type, and checks its axiom report.
++The zero-entry check matters: an audit that accidentally imports nothing must fail. The final count is a count of entries in the environment, not a count of handwritten mathematical theorems. The separate mapped-target pass resolves each of the eighty-four names, prints its type, and checks its axiom report.
+ 
+ The source-policy scanner also rejects a specified list of forbidden constructs after removing nested comments and string contents. This catches prohibited source forms early. Its role is complementary to the environment audit. Neither a string scan nor a metadata label alone replaces kernel acceptance.
+ 
+@@ -491,26 +491,26 @@
+ 
+ \section{The expanded chapter and computational crosswalk}
+ 
+-The computational companion carries a separate seven-source-file formalization and an explicit eight-record map. That tranche shares some finite-projector material with the larger twenty-file formal component, but it is a separate packaged evidence scope.
++The computational companion carries a separate seven-source-file formalization and an explicit eight-record map. That tranche shares some material on finite projectors with the larger twenty-file formal component, but it is a separate packaged evidence scope.
+ 
+ The computational source and its 108 stable statement records include the two explicit nonzero-packet hypotheses required by the corresponding corollaries. These source hypotheses do not enlarge the attached eight-record Lean map. The following eight mappings describe the attached machine tranche's own evidence allocation.
+ 
+ \begin{longtable}{p{.51\textwidth}p{.40\textwidth}}
+ \toprule Stable machine record & Attached Lean subject \\\midrule\endhead
+-\code{PSC-I-D-PACKET-SYSTEM} & Finite linear-projector structure. \\
++\code{PSC-I-D-PACKET-SYSTEM} & Finite linear projector structure. \\
+ \code{PSC-I-D-ANALYSIS-SYNTHESIS} & Range packet space and the two coordinate maps. \\
+ \code{PSC-I-T-EXACT-PACKET-COORDINATES} & Range-restricted linear equivalence. \\
+ \code{PSC-I-C-PACKETWISE-EQUALITY} & Equality detected by the finite complete family. \\
+ \code{PSC-I-D-TRANSFER-BLOCK} & Definition of the typed block. \\
+ \code{PSC-I-T-OPERATOR-RECONSTRUCTION} & Pointwise finite reconstruction. \\
+ \code{PSC-I-T-BLOCK-MULTIPLICATION} & Pointwise finite composition identity. \\
+-\code{PSC-I-T-SUPPORT-PATTERN-ALGEBRA} & Transitive ordinary-matrix support is multiplicatively closed; not the whole expanded iff criterion. \\
++\code{PSC-I-T-SUPPORT-PATTERN-ALGEBRA} & Transitive ordinary-matrix support is multiplicatively closed. This is not the whole expanded iff criterion. \\
+ \bottomrule
+ \end{longtable}
+ 
+ The larger component can inform a broader semantic crosswalk. Rows 1--2 concern free presentations, rows 3--9 concern seed-rank operations, rows 10--14 concern split-semisimple and operator formulas, rows 15--29 concern packets, blocks, support, and transport. Rows 30--35 concern the supplementary worked models and algorithm specifications. This is a navigation aid. Where the expanded statement adds a division-ring generalization, an infinite family, an existence theorem, or a different categorical interface, the old scoped result must not be silently relabeled as a proof of the expanded statement.
+ 
+-The source archive's \code{COMPANION_CROSSWALK.json} is the series-level navigation record, and \code{formal/coverage/COVERAGE_108.json} is the current formal correspondence map. The machine-readable \code{generated/theorem_map.json} accompanying this guide preserves all thirty-five contract scopes and their exact declaration lists. Unmapped expanded statements remain unmapped until an explicit type-level comparison and accepted proof support a new mapping.
++The source archive's \code{COMPANION_CROSSWALK.json} is the navigation record for the series, and \code{formal/coverage/COVERAGE_108.json} is the current formal correspondence map. The machine-readable \code{generated/theorem_map.json} accompanying this guide preserves all thirty-five contract scopes and their exact declaration lists. Unmapped expanded statements remain unmapped until an explicit type-level comparison and accepted proof support a new mapping.
+ 
+ \section{How to extend the formal development}
+ 
+@@ -528,20 +528,20 @@
+ 
+ \subsection{Continuing the correspondence work}
+ 
+-The continuation has established the primary decomposition and quotient constructions, the geometric formula, scalar extension, the six-way cyclic criterion, module-top reduction, and the nonsplit semisimple formula. Further work is determined by the current coverage map in Section~\ref{sec:release-current}; these established results must not be treated as missing certificate constructors. For graph rank, an implementation refinement would relate executable spectral or algebraic data to the exact certificates, with a separate proof of each algorithmic step. For the expanded packet theory, countable unconditional sums require a topology and convergence interface different from the finite \code{Fintype} API.
++The continuation has established the primary decomposition and quotient constructions, the geometric formula, scalar extension, the six-way cyclic criterion, module-top reduction, and the nonsplit semisimple formula. Further work is determined by the current coverage map in Section~\ref{sec:release-current}. These established results must not be treated as missing certificate constructors. For graph rank, an implementation refinement would relate executable spectral or algebraic data to the exact certificates, with a separate proof of each algorithmic step. For the expanded packet theory, countable unconditional sums require a topology and convergence interface different from the finite \code{Fintype} API.
+ 
+ These are different tasks from increasing a declaration count. Each closes a named input boundary or extends an exact scope. A completed extension should say which boundary has changed and exhibit the theorem that changed it.
+ 
+ \subsection{Troubleshooting a replay}
+ 
+-An unknown module or missing object indicates an environment or import-path problem, not a false mathematical theorem. A pin mismatch means the cached dependency state is different from the recorded source. A refusal of nonempty output means the verifier is protecting the local rebuild claim; choose a new output directory. A warning-as-error failure requires reading the diagnostic before deciding whether the source, compiler version, or style policy changed.
++An unknown module or missing object indicates an environment or import-path problem, not a false mathematical theorem. A pin mismatch means the cached dependency state is different from the recorded source. A refusal of nonempty output means the verifier is protecting the local rebuild claim. Choose a new output directory. A warning-as-error failure requires reading the diagnostic before deciding whether the source, compiler version, or style policy changed.
+ 
+ A mapped-name failure after a rename is not solved by silently removing the map entry. Either preserve the public declaration name, or update the map and record the new correspondence. A new unexpected axiom requires tracing its transitive dependency before acceptance. A changed source hash is expected after a deliberate edit, but it ends byte-identity with the old accepted source and requires fresh evidence for the changed file.
+ 
+ \clearpage
+ \section{The complete 35-row contract}\label{sec:map}
+ 
+-This section reproduces the normative map's statement titles, declaration names, exact scopes, and exclusions. The numbering belongs to the corrected journal formalization contract. It is not the numbering of the expanded mathematical text or the stable machine-record inventory.
++This section reproduces the normative map's statement titles, declaration names, exact scopes, and exclusions. The numbering belongs to the corrected journal formalization contract. It is not the numbering of the expanded mathematical text or the stable inventory of machine records.
+ 
+ ``Exact'' means exact at the scope printed in the row. ``Stronger'' means the mapped declaration removes a specified hypothesis, treats a more general typed setting, or includes an additional endpoint. Rows 10, 13, 14, 32, and 35 are certificate-explicit. The precise certificate boundaries appear both here and in Section~\ref{sec:certificates}.
+ 
+@@ -582,7 +582,7 @@
+ \end{lstlisting}
+ Pass \code{--metadata} with the companion evidence JSON to reproduce the recorded verification summaries. This step preserves every coverage classification and never executes Lean. It also regenerates the current machine catalog from the same statements and proofs.
+ 
+-The PDF uses P052, Nimbus Sans, DejaVu Sans Mono, and Latin Modern Math fonts with XeLaTeX. A TeX installation must provide the packages listed in the preamble. Rendering the resulting PDF is a separate presentation check; it is not a Lean verification step.
++The PDF uses P052, Nimbus Sans, DejaVu Sans Mono, and Latin Modern Math fonts with XeLaTeX. A TeX installation must provide the packages listed in the preamble. Rendering the resulting PDF is a separate presentation check. It is not a Lean verification step.
+ 
+ \begin{longtable}{p{.42\textwidth}p{.49\textwidth}}
+ \toprule Companion file & Purpose \\\midrule\endhead
+--- editorial/rhythm_review/i_ii_companions_before/source_i_iv/I/editable/machine/Paper_I_Machine_Native_Final.tex
++++ source_i_iv/I/editable/machine/Paper_I_Machine_Native_Final.tex
+@@ -66,13 +66,13 @@
+ 
+ 
+ \section*{Computational records and interfaces}\phantomsection\addcontentsline{toc}{section}{Computational records and interfaces}
+-This computational companion represents Chapter I as a collection of mathematical records that can be inspected and queried, with a finite subset supported by executable interfaces. The statement inventory is \nolinkurl{formal/coverage/COVERAGE_108.json}. The executable runtime has its own entrypoint under \nolinkurl{source/machine_v1.0.1/}; that path identifies the exact archived payload. The catalogue and runtime have the distinct scopes explained below.
+-
+-The catalogue contains 108 mathematical records, including 69 theorem, proposition, corollary, and lemma records with source proofs. The formal correspondence is reported alongside each record. The preserved runtime interface has twenty typed signatures, and its attached historical Lean tranche has eight mappings; those inherited interfaces and receipts retain their original scope.
+-
+-The mathematical source supplies the statements and proofs, including the split-semisimple hypotheses and explicit map qualifications. The supplementary worked models remain in the mathematical text. Stable identifiers connect the mathematical, formal, and computational material; statement hashes and source locators distinguish the catalogue from the archived runtime payloads.
+-
+-The verification record distinguishes evidence for the mathematical correspondence from the runtime receipts. Its source inventory and formal correspondence map are available under \nolinkurl{formal/coverage/}; compiler and replay receipts are under \nolinkurl{formal/evidence/}. The Lean guide explains the formal sources, their hypotheses, and how to interpret those checks.
++This computational companion represents Chapter I as a collection of mathematical records that can be inspected and queried, with a finite subset supported by executable interfaces. The statement inventory is \nolinkurl{formal/coverage/COVERAGE_108.json}. The executable runtime has its own entrypoint under \nolinkurl{source/machine_v1.0.1/}. That path identifies the exact archived payload. The catalogue and runtime have the distinct scopes explained below.
++
++The catalogue contains 108 mathematical records, including 69 theorem, proposition, corollary, and lemma records with source proofs. The formal correspondence is reported alongside each record. The preserved runtime interface has twenty typed signatures, and its attached historical Lean tranche has eight mappings. Those inherited interfaces and receipts retain their original scope.
++
++The mathematical source supplies the statements and proofs, including the split-semisimple hypotheses and explicit map qualifications. The supplementary worked models remain in the mathematical text. Stable identifiers connect the mathematical, formal, and computational material. Statement hashes and source locators distinguish the catalogue from the archived runtime payloads.
++
++The verification record distinguishes evidence for the mathematical correspondence from the runtime receipts. Its source inventory and formal correspondence map are available under \nolinkurl{formal/coverage/}, and compiler and replay receipts are under \nolinkurl{formal/evidence/}. The Lean guide explains the formal sources, their hypotheses, and how to interpret those checks.
+ 
+ \textbf{How to use this volume.} Read Sections 1--3 for mathematical and evidence semantics. Sections 4--6 give the executable contracts and an exact worked example. Section 7 describes reproduction. Appendix A reproduces every canonical source statement and every attached proof body, with source locators and machine metadata. Later appendices give signatures, action coverage, operation vocabulary, and the historical Lean map.
+ \clearpage\tableofcontents\clearpage
+@@ -88,7 +88,7 @@
+ 
+ For finite families of nonnegative integers, the ambient convention is $\max\varnothing=0$. The height of an empty finite poset is zero. A nonempty poset with no strict comparable pair also has height zero, so height counts strict steps. These conventions clarify the empty cases without adding stable records.
+ 
+-The source separates algebraic, linear, and topological claims. A finite-dimensional matrix computation can exercise a linear identity. It cannot establish the countable Banach-space result or a generator formula over every division ring. Those claims retain their own source proofs and dependencies.
++The source separates algebraic, linear, and topological claims. A finite-dimensional matrix computation can exercise a linear identity. It cannot establish the Banach space result in the countable setting or a generator formula over every division ring. Those claims retain their own source proofs and dependencies.
+ \subsection{Exact packet coordinates}
+ For a finite index set $I$, a packet system on $X$ consists of linear maps $P_\alpha$ satisfying
+ \[
+@@ -101,7 +101,7 @@
+ \mathcal A_Px=(P_\alpha x)_{\alpha\in I},\qquad
+ \mathcal S_P((x_\alpha)_\alpha)=\sum_\alpha x_\alpha.
+ \]
+-Their inverse laws are exact. No inner-product orthogonality assumption is needed. This distinction is visible in the oblique two-dimensional example later in this companion.
++Their inverse laws are exact. No assumption of inner product orthogonality is needed. This distinction is visible in the oblique two-dimensional example later in this companion.
+ 
+ Machine execution represents each packet as an ambient vector. It does not construct a basis of every range or replace the ambient representation by smaller coordinate arrays. This choice makes exact identities easy to compare with the source formulas while retaining the packet index structure.
+ \subsection{Transfer blocks and composition}
+@@ -133,15 +133,15 @@
+ 
+ \section{Canonical machine representation}
+ \subsection{Entrypoint and package identity}
+-The mathematical records are located at \nolinkurl{formal/coverage/COVERAGE_108.json}; Appendix A is generated directly from those records. Each includes the statement, source proof where present, source location, hashes, formal status, and declaration correspondence. The archived mathematical source identified by those hashes is the statement authority.
+-
+-The preserved executable payload is located at \nolinkurl{source/machine_v1.0.1/}. Runtime commands in this volume assume that working directory. Its entrypoint, \nolinkurl{PSC_I.machine.json}, points to the preserved record collection, statement AST, dependency graph, action registry, and evidence index. A runtime result therefore retains the exact interface scope explained below; it is not a certificate for every current manuscript statement.
++The mathematical records are located at \nolinkurl{formal/coverage/COVERAGE_108.json}. Appendix A is generated directly from those records. Each includes the statement, source proof where present, source location, hashes, formal status, and declaration correspondence. The archived mathematical source identified by those hashes is the statement authority.
++
++The preserved executable payload is located at \nolinkurl{source/machine_v1.0.1/}. Runtime commands in this volume assume that working directory. Its entrypoint, \nolinkurl{PSC_I.machine.json}, points to the preserved record collection, statement AST, dependency graph, action registry, and evidence index. A runtime result therefore retains the exact interface scope explained below. It is not a certificate for every current manuscript statement.
+ 
+ The preserved runtime source digest is:
+ \begin{lstlisting}
+ 37bf8f03dbbf66ce41f8b07a8e7be8fa5fca44176bdd56dd25b483f72736ff77
+ \end{lstlisting}
+-That digest identifies the archived runtime source, including explicit nonzero-packet assumptions for two corollaries and the empty-family and poset-height conventions. The mathematical inventory has its own statement and proof hashes, printed in Appendix A. Runtime receipts remain attached to their original bytes; they do not transfer automatically to the mathematical inventory.
++That digest identifies the archived runtime source, including explicit nonzero-packet assumptions for two corollaries and the empty-family and poset-height conventions. The mathematical inventory has its own statement and proof hashes, printed in Appendix A. Runtime receipts remain attached to their original bytes. They do not transfer automatically to the mathematical inventory.
+ \subsection{Record identity and source provenance}
+ Each current record has a stable ID, kind, title, statement text, optional proof text, source locator, hashes, formal status, declaration targets, and a scope note. These fields identify the actual current statement and the proof text that accompanies it. The preserved executable payload additionally supplies its own dependency annotations, semantic profiles, evidence coordinates, and fingerprints for its versioned source.
+ 
+@@ -165,7 +165,7 @@
+ 
+ \section{Evidence semantics and certification scope}
+ \subsection{Independent evidence coordinates}
+-The preserved runtime evidence object separates source, KIR, Python, and Lean. Its source coordinate identifies that payload's source; its KIR coordinate records validation of that version. Python evidence reports exact finite fixtures for 26 records. Its Lean coordinate points to eight historical source mappings.
++The preserved runtime evidence object separates source, KIR, Python, and Lean. Its source coordinate identifies that payload's source, and its KIR coordinate records validation of that version. Python evidence reports exact finite fixtures for 26 records. Its Lean coordinate points to eight historical source mappings.
+ 
+ The catalogue uses the formal correspondence map instead. Each of the 108 records carries a status and scope note, and each proof-level statement has its own correspondence assessment. The verification index distinguishes the execution evidence attached to each component.
+ 
+@@ -191,7 +191,7 @@
+ \subsection{Input and output conventions}
+ The API is a Python command that emits JSON on successful calls. Exact arithmetic actions use SymPy matrices. Integers and rational strings such as \nolinkurl{"3/7"} preserve rational values. JSON floating-point numbers should be avoided when the intended claim is an exact rational identity. Returned scalar entries are strings.
+ 
+-Payload shapes are conventional rather than comprehensively validated at the API boundary. Supply nonempty compatible square projector matrices and compatible operators or vectors. Malformed inputs can raise Python exceptions. The command parser does not present a universal structured-error contract.
++Payload shapes are conventional rather than comprehensively validated at the API boundary. Supply nonempty compatible square projector matrices and compatible operators or vectors. Malformed inputs can raise Python exceptions. The command parser does not present a universal contract for structured errors.
+ 
+ Most computational actions do not call packet validation automatically. Validate the packet family before interpreting block or analysis output through the theorems. With invalid projectors, a matrix expression may still be computable while its theorem interpretation fails.
+ \subsection{The six exact finite actions}
+@@ -201,7 +201,7 @@
+ \nolinkurl{ANALYZE_PACKETS} & \nolinkurl{projectors}, \nolinkurl{vector} & Ambient packet vectors and a reconstruction Boolean.\\
+ \nolinkurl{BLOCKIFY_OPERATOR} & \nolinkurl{projectors}, \nolinkurl{operator} & Target/source array of ambient transfer matrices.\\
+ \nolinkurl{RECONSTRUCT_OPERATOR} & \nolinkurl{blocks} & Sum of every supplied block. Compatibility with a packet family is not independently checked.\\
+-\nolinkurl{COMPOSE_TRANSFER_BLOCKS} & \nolinkurl{projectors}, \nolinkurl{S}, \nolinkurl{T} & Block-product array and equality with directly resolved $ST$.\\
++\nolinkurl{COMPOSE_TRANSFER_BLOCKS} & \nolinkurl{projectors}, \nolinkurl{S}, \nolinkurl{T} & Array of block products and equality with directly resolved $ST$.\\
+ \nolinkurl{LOWER_INTERTWINER} & \nolinkurl{P}, \nolinkurl{Q}, \nolinkurl{T}, \nolinkurl{S}, \nolinkurl{U} & Global equation, local equations, residuals, and local conjunction.\\\bottomrule
+ \end{longtable}
+ \subsection{The two semantic gate actions}
+@@ -209,7 +209,7 @@
+ 
+ The accepted flags are true, \nolinkurl{VERIFIED}, or \nolinkurl{PRESERVED}. False and \nolinkurl{NOT_PRESERVED} produce a negative list. Other or missing values are unknown. Any negative or unknown required operation blocks the gate.
+ 
+-This archived implementation does not evaluate the profile's \nolinkurl{verified_hypotheses}, does not use the transitive operation closure as its required set, and does not execute the returned boundary guards. It also does not construct a target theorem, a proof object, or an independently verified realization functor. The preservation flags are caller-supplied declarations.
++This archived implementation does not evaluate the profile's \nolinkurl{verified_hypotheses}, does not use the transitive operation closure as its required set, and does not execute the returned boundary guards. It also does not construct a target theorem, a proof object, or an independently verified realization functor. The preservation flags are declarations supplied by the caller.
+ 
+ Thus the action named \nolinkurl{TRANSPORT_THEOREM} is an operation-profile gate. A consumer must separately justify target hypotheses, source-to-target interpretation, and any constructions used by the proof. Unknown flags fail closed only within the operation list actually inspected by the function.
+ \subsection{Planner-only and fixture-only actions}
+@@ -354,7 +354,7 @@
+ 
+ This example deliberately changes packet coordinates as well as the operator. The complete input and four outputs are retained in \nolinkurl{examples/intertwining_input.json} and \nolinkurl{examples/intertwining.json}.
+ \subsection{Inspecting the dependency set}
+-The API exposes the dependencies used by the source-linked intertwining record:
++The API exposes the dependencies used by the intertwining record linked to the source:
+ \begin{lstlisting}
+ python runtime/machine_api.py deps PSC-I-T-BLOCK-INTERTWINING --transitive
+ \end{lstlisting}
+@@ -399,7 +399,7 @@
+ }
+ \end{lstlisting}
+ 
+-The pass is exactly a pass for the listed operation flags. In particular, it does not construct the target packet system or independently check a concrete functor's preservation laws.
++The pass applies to the listed operation flags. It does not construct the target packet system or independently check a concrete functor's preservation laws.
+ \subsection{A countable result is blocked}
+ Using the same profile for the countable unconditional packet theorem returns:
+ 
+@@ -427,7 +427,7 @@
+ \subsection{Changing a profile without changing evidence}
+ A profile file is a declaration supplied to the runtime. Editing its flags changes the gate's output. It does not create mathematical preservation evidence. A downstream system that wants a transport certificate must retain the arguments or formal certificates justifying those flags and the target hypotheses.
+ 
+-The correct use is sequential: identify the exact record, inspect its source and dependency context, establish a target realization, justify the relevant preservation properties and hypotheses, then use the gate as an explicit consistency check. Its output can be attached to the resulting evidence record as one component.
++To use the gate, identify the exact record, inspect its source and dependency context, establish a target realization, justify the relevant preservation properties and hypotheses, then use the gate as an explicit consistency check. Its output can be attached to the resulting evidence record as one component.
+ 
+ \section{Reproducing the computational material}
+ \subsection{Documented payload checks}
+@@ -437,7 +437,7 @@
+ python runtime/exact_fixture_suite.py
+ python runtime/nonzero_packet_regression.py
+ \end{lstlisting}
+-The first script checks entrypoint identity, record IDs, graph acyclicity and resolution, AST coverage, action-registry consistency, source hash, selected API queries and actions, structured transport response, and fixture replay. The second emits the detailed fixture results. The latter does not replace a theorem prover.
++The first script checks entrypoint identity, record IDs, graph acyclicity and resolution, AST coverage, consistency of the action registry, source hash, selected API queries and actions, structured transport response, and fixture replay. The second emits the detailed fixture results. The latter does not replace a theorem prover.
+ \subsection{Companion build}
+ Within the original source archive, \nolinkurl{build_companion.py} regenerates the catalogue from the mathematical inventory and builds the standalone PDF. The archived runtime builder, \nolinkurl{build_historical_companion.py}, reproduces the runtime checks and examples separately from that inventory. These archive workflows are distinct from the collected monograph build. A TeX installation with the packages declared in the preamble is required for either PDF build.
+ 
+@@ -445,7 +445,7 @@
+ \subsection{A source change is a new evidence task}
+ If a source statement changes, its source and statement identity change. The KIR, AST, dependency annotations, operation profile, formal map, and tests must be reviewed for impact. A historical pass cannot be assigned to a new statement solely because the stable ID stayed the same.
+ 
+-The catalogue is generated from the archived mathematical source and records each statement and proof hash. The archived runtime payloads retain their own evidence. The additional traditional models and visual appendix are outside the 108-record inventory; they are not silently counted as extra machine records.
++The catalogue is generated from the archived mathematical source and records each statement and proof hash. The archived runtime payloads retain their own evidence. The additional traditional models and visual appendix are outside the 108-record inventory. They are not silently counted as extra machine records.
+ \subsection{Runtime interfaces and mathematical statements}
+ The source archive retains the earlier computational PDFs as provenance. This companion supplies the statement catalogue and the archived runtime's exact transport-gate specification. Planner metadata remains distinct from executed proof machinery.
+ 
+@@ -984,5 +984,5 @@
+ \subsection*{Source and package preservation}
+ The companion's integrity audit compared each of the 65 original archived files with the copied payload. Every comparison passed. Generated Python bytecode caches, if any, are not part of the archived source and are excluded from the delivered package.
+ 
+-\textbf{Catalogue provenance.} The 108 source statements and 69 proof bodies are generated from the archived mathematical inventory. Their printed hashes identify that source wording. The catalogue removes outer statement environments and translates cross-references into stable-record links. Formal acceptance is documented separately in the verification index.
++\textbf{Catalogue provenance.} The 108 source statements and 69 proof bodies are generated from the archived mathematical inventory. Their printed hashes identify that source wording. The catalogue removes outer statement environments and translates cross-references into links to stable records. Formal acceptance is documented separately in the verification index.
+ \end{document}

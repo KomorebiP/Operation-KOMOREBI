@@ -1,0 +1,16 @@
+theorem wordOp_eq_zero_of_not_composable
+    [Fintype V] [DecidableEq V] [Semiring R]
+    (word : List E) (h : ¬ Composable G word) :
+    wordOp G S word = 0 := by
+  induction word with
+  | nil => simp [Composable] at h
+  | cons e rest ih =>
+      cases rest with
+      | nil => simp [Composable] at h
+      | cons f tail =>
+          simp only [Composable, not_and_or] at h
+          rcases h with hbreak | htail
+          · exact wordOp_eq_zero_of_first_break G S e f tail hbreak
+          · change wordOp G S (f :: tail) * edgeOp G S e = 0
+            rw [ih htail]
+            simp

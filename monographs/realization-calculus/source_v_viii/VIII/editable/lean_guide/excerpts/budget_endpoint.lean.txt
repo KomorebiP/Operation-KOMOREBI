@@ -1,0 +1,13 @@
+theorem compileBudget_some_iff (κ : α → R) (w : α → ℕ) (σ : α → R)
+    (t : CandidateTree α) (B : ℕ) (v : R) :
+    compileBudget κ w σ t B = some v ↔
+      (∃ c : Cut t, cutWeight w c ≤ B ∧ cutValue κ σ c = v) ∧
+      ∀ c : Cut t, cutWeight w c ≤ B → v ≤ cutValue κ σ c := by
+  rw [BudgetDP.minimum_some_iff _ _ (quantized_budget_compiler κ w σ t B)]
+  constructor
+  · intro h
+    exact ⟨h.1, fun c hc => h.2 _ ⟨c, hc, rfl⟩⟩
+  · intro h
+    refine ⟨h.1, ?_⟩
+    rintro z ⟨c, hc, rfl⟩
+    exact h.2 c hc

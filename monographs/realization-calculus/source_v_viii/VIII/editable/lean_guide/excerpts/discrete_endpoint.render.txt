@@ -1,0 +1,12 @@
+theorem discreteBudget_some_iff (edges : List (List (ℕ × R))) (B : ℕ) (v : R) :
+    discreteBudget edges B = some v ↔
+      (∃ a : Assignment edges, a.weight ≤ B ∧ a.cost = v) ∧
+        ∀ a : Assignment edges, a.weight ≤ B → v ≤ a.cost := by
+  rw [minimum_some_iff _ _ (discrete_precision_program edges B)]
+  constructor
+  · intro h
+    exact ⟨h.1, fun a ha => h.2 _ ⟨a, ha, rfl⟩⟩
+  · intro h
+    refine ⟨h.1, ?_⟩
+    rintro z ⟨a, ha, rfl⟩
+    exact h.2 a ha

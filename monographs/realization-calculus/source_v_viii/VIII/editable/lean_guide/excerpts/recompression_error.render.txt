@@ -1,0 +1,12 @@
+theorem repeated_recompression_bound (A E : ℕ → R) (δ : ℕ → ℝ)
+    (hδ : ∀ j, ‖E j‖ ≤ δ j) (n : ℕ) :
+    ‖recompressedProduct A E n - chainProduct A n‖ ≤
+      ∑ j ∈ Finset.range n, (∏ i ∈ Finset.Ico (j + 1) n, ‖A i‖) * δ j := by
+  rw [← propagatedError_eq_sum]
+  apply norm_recurrence_bound
+      (fun k => recompressedProduct A E k - chainProduct A k)
+      (fun k => ‖A k‖) δ (by simp [chainProduct, recompressedProduct])
+      (fun k => norm_nonneg _)
+  intro k
+  rw [recompression_discrepancy_step]
+  exact (norm_add_le _ _).trans (add_le_add (norm_mul_le _ _) (hδ k))

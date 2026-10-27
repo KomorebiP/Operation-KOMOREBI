@@ -1,0 +1,52 @@
+\section{Weighted inverse bounds and quantitative root motion}\label{sec:weighted}
+\subsection{A fraction-field bound has an integral certificate}
+Let $J$ be the actual square Jacobian at an integral p-adic center. It may be singular modulo $p$ while remaining invertible over $\mathbb Q_p$. The relevant size condition is that $p^sJ^{-1}$ is an integral matrix. This condition records the chosen exponent $s$ directly. The proof does not replace it by a possibly larger determinant valuation.
+
+\contract{$p$ is prime and $s$ is natural. Fraction-field invertibility together with an integral matrix representing $p^sJ^{-1}$ is equivalent to an integral two-sided certificate $AJ=JA=p^sI$.}
+\excerpt{Bounded inverse and two-sided certificate}{inverse}
+\walk{The embedding of integral matrices into rational p-adic matrices preserves multiplication and scalar action. An integral representation of the inverse therefore gives the two identities after injectivity of the embedding. Conversely, the two-sided identities establish invertibility in the fraction field because $p^s\ne0$. Both products matter: they support normalization and root equivalence in different directions. A single entrywise valuation statement without an actual matrix inverse is not this certificate.}
+
+\subsection{Polynomial maps become contractions after scaling}
+Integral polynomial evaluation is Lipschitz for the p-adic sup metric. Multiplying it by $p$ yields a strict contraction. The contraction map has the form $u\mapsto c+pH(u)$, so the fixed point theorem acts on the complete space of integral p-adic vectors.
+
+\contract{$H$ is an arbitrary vector of actual multivariate polynomials with $\mathbb Z_p$ coefficients and $c\in\mathbb Z_p^d$. The source establishes a unique fixed point of its specified contraction map.}
+\excerpt{Fixed point in the integral vector space}{contraction}
+\walk{The source first proves the Lipschitz estimate for polynomial evaluation and the contraction constant after multiplication by $p$. \code{contracting_contractionMap} packages that estimate into the complete-space fixed point machinery. The final three fields are the fixed point, its fixed-point equation, and uniqueness against every other fixed point. The source's separate divisible-fixed-point theorem controls precision when $c$ has a specified p-power factor and $H(0)=0$.}
+
+The condition $H(0)=0$ is required for that additional precision argument for divisible fixed points. It is not a requirement of the bare fixed-point existence theorem displayed above. Keeping these two contracts separate prevents an accidental strengthening.
+
+\subsection{The threshold and the uniqueness ball are explicit}
+For $F(a)$ divisible by $p^r$ and a certificate exponent $s$, the source imposes $r>2s$. Write $b=a+p^{s+1}u$. Actual polynomial Taylor expansion and preconditioning put the equation into the normalized form
+\[
+ p^{2s+1}\bigl(C+u+pQ(u)\bigr)=0,
+ \qquad Q(0)=0,
+ \qquad p^{r-(2s+1)}\mid C.
+\]
+The contraction solves for $u$, and its precision transfers back to $b$.
+
+\contract{$F$ is square with integral p-adic coefficients; $J_F(a)$ is invertible over $\mathbb Q_p$; $p^sJ_F(a)^{-1}$ is integral; $F(a)$ is divisible by $p^r$; and $r>2s$. The root is unique in the entire depth-$s+1$ ball and is congruent to $a$ to depth $r-s$.}
+\excerpt{Weighted lifting with the actual inverse bound}{weighted_root}
+\walk{The source converts the fraction-field bound to the integral two-sided certificate. Its normalization theorem builds $C,Q$ from the actual polynomials, so no Taylor expansion or contraction hypothesis is supplied by the caller. The normalized-root theorem obtains the fixed point and transfers its root equation, precision, and uniqueness back to the original coordinates. The root-equivalence step uses injectivity of the preconditioner in the fraction field.}
+
+At the least permitted depth $r=2s+1$, the precision $r-s=s+1$ is exactly the uniqueness-ball depth. Larger $r$ improves the retained root precision. The boundary $r=2s$ is excluded. The retained weighted-boundary counterexample supplies an integral polynomial with that residual depth and no integral root. A linear example also shows the loss of $s$ in the displacement is sharp. Thus neither replacing $>$ by $\ge$ nor adding a free precision digit follows from this theorem.
+
+\subsection{Coefficient perturbation has a first-order formula}
+Suppose $F(a)=0$ and perturb the actual coefficient system to $F+p^MH$, with $M>2s$. The same original inverse certificate supports the nearby root. The derivative of the perturbation is handled in the proof, rather than assumed to have exactly the old inverse.
+
+\contract{The perturbed root is unique in the depth-$s+1$ ball, has displacement divisible by $p^{M-s}$, and its rational p-adic first-order term is $-p^MJ_F(a)^{-1}H(a)$. The integral error has depth $2M-3s$.}
+\excerpt{Unique coefficient-motion endpoint}{motion}
+\walk{The existence theorem constructs a root using the original preconditioner. Its error estimate combines the quadratic Taylor remainder with the perturbation's change under the root displacement, then applies the inverse bound, costing the stated $s$ digits. The unique-existence endpoint transports both the depth and the error formula to every root in the uniqueness ball. It does not assign a fixed linear map to a nonlinear finite displacement. It estimates that displacement by a linear leading term plus a rigorously bounded remainder.}
+
+\subsection{Parameter and coefficient motion share one forcing term}
+Now $F(y,t)$ has a square solved block $J$ and parameter block $K$. Perturb the coefficients by $p^MH$ and prescribe $t'=t+p^Mv$. The solved-coordinate leading displacement is
+\[
+ y'-y=-p^M J^{-1}\bigl(H(a)+Kv\bigr)+\varepsilon,
+ \qquad p^{2M-3s}\mid\varepsilon.
+\]
+The extra $Kv$ term is required even when $H=0$. The source uses the actual evaluated partial derivatives in both blocks.
+
+\contract{The theorem requires the same inverse bound on the solved block, $M>2s$, an exact initial root, and the stated parameter displacement. Uniqueness is among roots with that exact new parameter in the depth-$s+1$ ball.}
+\excerpt{Joint root-motion endpoint}{joint_motion}
+\walk{The source converts the solved inverse bound into a certificate, constructs the augmented root, and obtains an integral error equation. \code{exists_rational_error} then divides the certificate relation in the fraction field and identifies the first-order term. The coordinate split ensures the final error concerns solved coordinates. Free coordinates already have their exact prescribed displacement.}
+
+The retained controls reject omitting the parameter forcing term, reversing its sign, and demanding an extra uniform error digit. They use explicit boundary systems, so those exclusions are mathematical constraints rather than stylistic choices. The resulting theorem is local quantitative deformation, not a global branch-selection theorem.

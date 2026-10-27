@@ -1,0 +1,20 @@
+theorem finite_horizon_defect (C : Matrix m n R) (A : Matrix n n R) (B : Matrix m m R)
+    (k : ℕ) :
+    C*A^k-B^k*C = ∑ j ∈ Finset.range k, B^(k-1-j)*(C*A-B*C)*A^j := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    rw [Finset.sum_range_succ]
+    have hs : (∑ j ∈ Finset.range k, B^(k+1-1-j)*(C*A-B*C)*A^j) =
+        B*(∑ j ∈ Finset.range k, B^(k-1-j)*(C*A-B*C)*A^j) := by
+      rw [Matrix.mul_sum]
+      apply Finset.sum_congr rfl
+      intro j hj
+      have hjk := Finset.mem_range.mp hj
+      have he : k+1-1-j = (k-1-j)+1 := by omega
+      rw [he, pow_succ']
+      simp only [Matrix.mul_assoc]
+    rw [hs, ← ih]
+    simp only [Nat.add_sub_cancel, Nat.sub_self, pow_zero, Matrix.one_mul]
+    simp only [pow_succ', Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_assoc]
+    abel

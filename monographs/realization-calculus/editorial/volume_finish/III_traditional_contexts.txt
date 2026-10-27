@@ -1,0 +1,231 @@
+
+===== III_traditional PAGE 5 =====
+Part I Finite typed transfer and the formal contract
+The finite algebraic core supplies the algebraic foundation and a contract for its individual declarations.
+Here, “roadmap” and “outside the contract” describe the scope of the finite Lean formalization. Ordi-
+nary mathematical results in Part II may lie beyond that scope. The finite contract covers thirty result
+environments. The source contract has 41 mapping rows because it also includes definitions and other
+interfaces.
+The formal companion records the exact Lean and Mathlib dependencies [3, 17], compilation, kernel
+replay, and axiom checks. References to declarations from Chapters I–II retain their explicitly inherited
+status. The companion distinguishes the finite algebraic contract from the additional packet-coordinate
+and analytic interfaces.
+1 Purpose and formal status
+Chapter I fixed typed seeds, operator grammars, exact projector packets, generated hulls, and recon-
+struction [13]. Chapter II added coherent refinement coordinates, weighted transfer, arithmetic sepa-
+ration, and linear defect identities [14]. The present chapter begins the next layer: explicit edge words,
+optional connection data, and obstructions within individual packets.
+Canonical coordinate transport and a connection play different mathematical roles. Canonical trans-
+port compares two exact descriptions of the same ambient object and is forced by analysis and synthesis.
+A connection chooses transports that may carry extra modeling, discretization, or gauge information.
+Canonical transport obeys a cocycle theorem. A connection may fail to obey a cocycle, and that fail-
+ure is meaningful data. Keeping separate notation lets us distinguish the automatic coherence of exact
+coordinates from the possible holonomy of a chosen connection.
+1.1 Statement labels
+Every substantial theorem, lemma, corollary, proposition, definition, API, and roadmap item carries
+one or more of the three labels below. When separate clauses use a Chapter III result and an inherited
+bridge, the statement carries both applicable labels. Illustrative examples do not require a label.
+S1. Lean-backed in Chapter III: the displayed scope is no stronger than the named compiled dec-
+laration in the identified Chapter III module.
+S2. Inherited Lean-backed: the displayed result is supplied by the frozen formal contract of Chap-
+ter I or Chapter II.
+S3. Roadmap only: the text states a future interface or theorem target and is excluded from the
+completion denominator.
+Boundary 1.1 (Finite theorem denominator). The completion denominator of the finite algebraic con-
+tract consists of the thirty result environments in Part I. Of these, 26 resolve to compiled Chapter III dec-
+larations and four resolve to the frozen Chapters I–II contracts. The authoritative theorem map names
+the exact declarations used by each statement. The kernel audit checks those targets and their sup-
+porting theorems. The namespace gate requires every declaration in the compiled Komorebi.PaperIII
+
+
+===== III_traditional PAGE 27 =====
+• input colors in𝜎∶Fin(𝑟(𝜎)) →𝑉;
+• an output color out(𝜎) ∈𝑉.
+A realization assigns a space 𝑋𝑣to each color and a map
+Φ𝜎∶
+∏
+𝑞∈Fin(𝑟(𝜎))
+𝑋in𝜎(𝑞) ⟶𝑋out(𝜎).
+Outside the finite formal contract. The intended Lean target is a dependent inductive typed tree. No
+such declaration is part of the finite algebraic completion contract.
+Definition 11.5 (Typed operation tree and evaluation). A typed operation tree is recursively either
+a leaf of declared color or a node labeled by 𝜎, with one correctly colored child for each input slot
+of 𝜎. Evaluation is recursive:
+ev(node(𝜎; 𝑡1, … , 𝑡𝑟(𝜎))) = Φ𝜎(ev(𝑡1), … , ev(𝑡𝑟(𝜎))).
+Outside the finite formal contract. Candidate API: Komorebi.PaperIII.NonlinearObstructions.Co
+loredOperationTree and ColoredOperationTree.eval. This is stronger than the compiled uncolored
+unary–binary grammar.
+11.3 Packet labelings and the multilinear first target
+Suppose every 𝑋𝑣has a finite complete packet family (𝑃𝑣
+𝑖)𝑖∈𝐼𝑣. A packet labeling assigns an admissible
+packet index to each edge or node of a typed tree. For multilinear Φ𝜎, inserting
+id𝑋𝑣= ∑
+𝑖∈𝐼𝑣
+𝑃𝑣
+𝑖
+at every input and output yields a finite sum over trees with packet labels. This is the branching ana-
+logue of inserting intermediate projectors in proposition 8.1.
+Formalization target 11.6 (Finite multilinear tree expansion). The first milestone for the nonlinear module
+is an exact theorem saying that the evaluation of a finite tree of multilinear nodes equals the finite sum
+of its packet-resolved labeled evaluations. Required proof obligations include:
+(a) a dependent well-typed tree syntax;
+(b) finite packet-label types at every color;
+(c) an explicit convention for nullary and unary nodes;
+(d) multilinearity in every input slot;
+(e) preservation of the order of input slots without assuming commutativity of operations.
+Outside the finite formal contract. Candidate target: Komorebi.PaperIII.NonlinearObstructions.Colo
+redOperationTree.eval_eq_sum_packetLabellings.
+
+
+===== III_traditional PAGE 29 =====
+Topic
+Status
+Declaration or roadmap
+target
+Exact boundary
+Finite word and
+walk expansions
+Lean-backed III
+explicitWordExpansion;
+walkExpansion; wordExpansio
+n_eq_explicitWordExpansion;
+transferOp_pow_eq_walkExpa
+nsion
+Actual finite tuple sum
+and zero-filtered
+composable-walk sum
+over finite graph and
+packet types.
+Endpoint
+coefficient walk
+sum
+Lean-backed III
+reverseCoefficient;
+Connects; transferOp_pow_a
+pply_eq_sum_walks
+Exact scalar endpoint
+entry, including the
+empty-walk case and
+noncommutative
+coefficient order.
+Fixed reachability
+and orbit support
+Lean-backed III,
+with an inherited
+hull bridge
+transferOp_pow_apply_eq_ze
+ro_of_no_walk; transferOp_p
+ow_mulVec_apply_eq_zero_of
+_unreachable_support
+Finite powers and
+supported seeds. The
+orbit-hull span
+conclusion uses the
+frozen Chapter I
+contract.
+Exact frame
+transport
+Lean-backed III
+exactTransport_cocycle;
+exactPathTransport_eq_endp
+oint;
+exactPathTransport_loop
+One frame family on a
+single module.
+Arbitrary finite paths
+telescope and closed
+paths are trivial.
+Exact coordinate
+cocycle
+Inherited
+Lean-backed II
+NestedRefinement.refineCoo
+rdinates_comp;
+NestedRefinement.coordinat
+eRefinementEquiv_trans
+Complete finite
+projector coordinates,
+not reduction.
+Typed coordinate
+naturality
+Inherited
+Lean-backed II
+NestedRefinement.coordinat
+eOperator_comp;
+NestedRefinement.coordinat
+eOperator_naturality
+Linear maps over
+semiring modules.
+Minimal
+connection API
+Lean-backed III
+Transport.Connection;
+cocycleDefect;
+triangleHolonomy; triangle
+Holonomy_eq_refl_of_flat
+Only self-normalization
+is assumed. Reverse
+inversion and the
+cocycle are not structure
+fields.
+Twisted
+three-point loop
+Lean-backed III
+twistedThreePointConnectio
+n; twisted_triangleHolonomy
+_ne_refl
+Concrete rational
+connection. The selected
+loop sends 1 to 2.
+Reversible
+additive defect
+Lean-backed III
+ReversibleConnection;
+triangleHolonomy_sub_id;
+cocycleDefect_eq_zero_iff_
+triangleHolonomy_eq_refl
+Heterogeneous module
+fibers, reverse-edge
+inversion, and an
+additive defect over a
+commutative ring.
+
+
+===== III_traditional PAGE 99 =====
+References
+[1] Ralph Abraham, Jerrold E. Marsden, and Tudor Ratiu. Manifolds, Tensor Analysis, and Applications, volume 75
+of Applied Mathematical Sciences. Springer, New York, second edition, 1988.
+[2] Gregory M. Constantine and Thomas H. Savits. A multivariate Faà di Bruno formula with applications.
+Transactions of the American Mathematical Society, 348(2):503–520, 1996.
+[3] Leonardo de Moura and Sebastian Ullrich. The Lean 4 theorem prover and programming language. In
+Automated Deduction – CADE 28, volume 12699 of Lecture Notes in Computer Science, pages 625–635. Springer,
+2021.
+[4] Klaus Deimling. Nonlinear Functional Analysis. Springer, Berlin, 1985.
+[5] Jonathan L. Gross and Thomas W. Tucker. Topological Graph Theory. John Wiley and Sons, New York, 1987.
+[6] Ernst Hairer, Christian Lubich, and Gerhard Wanner. Geometric Numerical Integration: Structure Preserving
+Algorithms for Ordinary Differential Equations. Springer, Berlin, second edition, 2006.
+[7] Tosio Kato. On the adiabatic theorem of quantum mechanics. Journal of the Physical Society of Japan, 5:435–439,
+1950.
+[8] Tosio Kato. Perturbation Theory for Linear Operators. Springer, Berlin, 1995.
+[9] Hansjörg Kielhöfer.
+Bifurcation Theory: An Introduction with Applications to Partial Differential Equations.
+Springer, New York, second edition, 2012.
+[10] Shoshichi Kobayashi and Katsumi Nomizu. Foundations of Differential Geometry. Volume I. John Wiley and
+Sons, New York, 1963.
+[11] Jean Louis Loday and Bruno Vallette. Algebraic Operads. Springer, Berlin, 2012.
+[12] John McCleary. A User’s Guide to Spectral Sequences. Cambridge University Press, Cambridge, second edition,
+2001.
+[13] Komorebi P. Projector-resolved seed calculus i: Typed seeds, operator grammars, and exact reconstruction,
+2026. Version 1.2.1.
+[14] Komorebi P. Projector-resolved seed calculus ii: Polyphase refinement, weighted transfer, and dyadic–odd
+resolution, 2026. Version 1.2.1.
+[15] Roger Penrose. A generalized inverse for matrices. Proceedings of the Cambridge Philosophical Society, 51:406–
+413, 1955.
+[16] Richard P. Stanley. Enumerative Combinatorics. Volume 1, volume 49 of Cambridge Studies in Advanced Mathe-
+matics. Cambridge University Press, Cambridge, second edition, 2012.
+[17] The mathlib Community. The Lean mathematical library. In Proceedings of the 9th ACM SIGPLAN Inter-
+national Conference on Certified Programs and Proofs, pages 367–381. Association for Computing Machinery,
+2020.
+[18] Charles A. Weibel. An Introduction to Homological Algebra. Cambridge University Press, Cambridge, 1994.
+[19] Eberhard Zeidler. Nonlinear Functional Analysis and Its Applications. I: Fixed Point Theorems. Springer, New
+York, 1986.

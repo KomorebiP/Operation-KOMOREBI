@@ -1,0 +1,15 @@
+theorem residue_projector_refinement (N M : ℕ) (hN : 0 < N) (hM : 0 < M)
+    (hNM : N ∣ M) (r : Fin N) :
+    projector (IntegerPolyphase.phase N hN) r =
+      ∑ s : Fin M, if IntegerPolyphase.phase N hN (s.val : ℤ) = r
+        then projector (IntegerPolyphase.phase M hM) s else 0 := by
+  have hc : (fun j : ℤ => IntegerPolyphase.phase N hN
+      ((IntegerPolyphase.phase M hM j).val : ℤ)) = IntegerPolyphase.phase N hN := by
+    funext j
+    apply Fin.ext
+    change (((IntegerPolyphase.phase M hM j).val : ℤ) % (N : ℤ)).toNat =
+      (j % (N : ℤ)).toNat
+    rw [IntegerPolyphase.phase_val, IntegerPolyphase.emod_coarsen N M hNM]
+  have h := projector_refinement (IntegerPolyphase.phase M hM)
+    (fun s : Fin M => IntegerPolyphase.phase N hN (s.val : ℤ)) r
+  simpa only [Function.comp_def, hc] using h

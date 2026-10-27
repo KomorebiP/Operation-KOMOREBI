@@ -1,0 +1,11 @@
+theorem projector_complete (ρ : Action (K := K) (V := V) (M := M))
+    (ψ : AddChar (ZMod M) K) (hψ : ψ.IsPrimitive) (hM : (M : K) ≠ 0) :
+    (∑ j : ZMod M, projector ρ ψ j) = 1 := by
+  have hs (a : ZMod M) : (∑ j : ZMod M, ψ (-j * a)) =
+      if a = 0 then (M : K) else 0 := by
+    simpa [mul_comm, neg_mul, mul_neg] using character_sum ψ hψ (-a)
+  simp only [projector_formula, ← Finset.smul_sum]
+  rw [Finset.sum_comm]
+  simp_rw [← Finset.sum_smul, hs]
+  simp [hM, smul_smul]
+

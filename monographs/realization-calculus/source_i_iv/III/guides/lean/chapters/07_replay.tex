@@ -1,0 +1,54 @@
+\clearpage
+\section{The finite baseline: evidence, trust, and replay}
+This chapter explains the finite algebraic core and its verification gates. For the combined core and analytic continuation, use the opening chapter and \code{formal/README.md}. The finite namespace counts in the excerpts apply only to that finite baseline.
+\subsection{The pinned environment is part of the claim}
+The formal project names Lean \code{leanprover/lean4:v4.34.0-rc2}, with reported Lean commit \code{6a10ac8c22beadecabdbb0919c2b50214762f91d}. Its Lake manifest pins Mathlib at \code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The project version is 1.0.1. The archived configuration records \code{moreLeanArgs = ["-E", "warning"]}. That setting alone does not establish warning rejection. The recorded compiler controls identify the behavior actually checked.
+
+The preserved release deliberately omits compiled outputs and dependency caches. A fresh environment therefore needs the pinned toolchain and the dependencies named by the manifest. Rebuilding the PDF guide does not need Lean. Replaying the mathematical formalization does.
+
+Descriptive dependency branches such as \code{master} or \code{main} are not substitutes for exact manifest revisions. Updating a dependency and obtaining a successful build may be useful, but it is a new verification event. The original event remains tied to the recorded environment.
+
+\subsection{A map gate and a namespace gate answer different questions}
+The authoritative \code{scripts/verify_theorem_map.py} checks the map row sequence, uniqueness, compiled declaration kinds, manuscript status annotations, inherited references, and explicit audit coverage. In the pinned compiled environment, it distinguishes the 88 theorem targets from the 55 construction targets. A lexical scan can locate these declarations in source, but does not independently elaborate their types.
+
+The kernel audit file asks Lean to print transitive axioms for all mapped targets. It then inspects the compiled \code{Komorebi.PaperIII} namespace, including generated declarations and implementation auxiliaries. This second step protects the boundary beyond just the manually listed names.
+\excerpt{KernelAudit}{kernel_gate}
+The gate rejects unsafe declarations, project axioms, opaque declarations, and any collected axiom outside \code{propext}, \code{Classical.choice}, and \code{Quot.sound}. It also checks the exact namespace and theorem-kind counts. These expected counts are version-specific: a legitimate addition requires revisiting them, not deleting the checks to make the build pass.
+
+The source policy check additionally rejects proof placeholders and specified shortcuts. Text scanning alone cannot establish a theorem's correctness. It is one gate among the build, compiled map checks, axiom traversal, and checks of source integrity.
+
+\subsection{Reading the inherited transcript}
+The saved transcript has 143 named records. Some say that the target depends on no axioms. Others list a subset of the allowed standard basis. The final line records 468 audited namespace declarations, including 229 \code{theoremInfo} entries, and 143 explicit mapped targets.
+
+The difference between 88 and 229 is not a discrepancy. Eighty-eight counts the theorem declarations deliberately mapped to the chapter. The compiled namespace count includes generated theorems and other supporting theorem entries. Similarly, 143 and 468 refer to different denominators: the explicitly mapped targets versus every compiled entry under the audited namespace.
+
+This guide checked that the transcript's named records agree with the map and the audit directives. It also checked the transcript hash against the inherited report. That establishes consistency and byte identity of the preserved materials. It does not authenticate an external compiler session by itself. A new execution is the direct way to regenerate compiler evidence from those sources.
+
+\subsection{The inherited Chapters I--II references}
+Chapter III records twelve unique declarations from the separately verified Papers I--II v1.2.1 bundle. They appear in fourteen manuscript references because two refinement declarations are used twice. The bundle is pinned by SHA-256:
+
+{\small\code{a20cf9353f0e882834d31e665dfd819a04e43fa606d402309be63e3b94447052}}
+
+The standalone Paper III project does not import or recompile those declarations. Its gate validates inherited annotations against \code{INHERITED_DEPENDENCY_MANIFEST_v1.2.1.md}. These references must therefore be described as inherited evidence. They are not extra entries in the 143-target Paper III namespace audit. Appendix~\ref{app:inherited} prints the exact dependency names and roles.
+
+\subsection{Replay from a preserved source copy}
+The source release offers an offline integrity mode. From its root, run:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+bash VERIFY.sh
+\end{Verbatim}
+This mode checks release membership, checksums, map and audit consistency, manuscript status references, and the saved transcript. It does not run Lean. It is suitable for checking that a copied release still matches its own preserved manifest.
+
+For a new formal run, work in a copy of the preserved release. From \code{formalization/lean}, run the release's documented commands in order:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true]
+lake --wfail build
+python3 scripts/verify_theorem_map.py
+lake env lean -E warning KomorebiPaperIII/KernelAudit.lean
+\end{Verbatim}
+Retain the exit code and the complete standard output and error stream for every command. The first command builds the project. The second checks the human map against the compiled environment and the original manuscript. The third regenerates the axiom reports and namespace result. A missing dependency, toolchain failure, timeout, or nonzero exit is not a passing proof run.
+
+The release also supplies \code{bash VERIFY.sh --full}. That path creates a temporary copy, regenerates figures, runs Lean and its gates, rebuilds the original finite manuscript, and verifies the original artifact hashes. It requires its documented TeX, graphics, Python, and Lean dependencies. It verifies the preserved finite release, not the newly expanded companion PDF.
+
+\subsection{The formal verification boundary}
+The finite portion of this guide supplies exact source excerpts, the complete 41-row map, the preserved transcript, and static reconciliation. The opening chapter separately reports compiler and kernel verification. The package records separate computational checks and the chapter's earlier bounded mathematical review. These records concern different objects. They do not establish fresh Lean proofs of every ordinary theorem.
+
+The finite algebraic contract has explicit types and evidence. To expand it, add the required types and proofs, update the map, run the pinned or newly documented environment, and retain the new transcript.

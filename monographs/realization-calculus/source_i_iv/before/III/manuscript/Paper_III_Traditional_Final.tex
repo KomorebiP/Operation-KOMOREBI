@@ -1,0 +1,171 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[a4paper,margin=23mm,includeheadfoot,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,amscd,aliascnt}
+\usepackage{booktabs,longtable,array,tabularx,enumitem,fancyhdr,graphicx}
+\usepackage[table]{xcolor}\usepackage{setspace,needspace,listings,caption,titlesec,etoolbox,bm,float}
+\usepackage{xurl}\usepackage{hyperref}\usepackage[nameinlink,noabbrev]{cleveref}\usepackage{bookmark}
+\definecolor{accent}{HTML}{137668}\definecolor{muted}{HTML}{536568}
+\definecolor{leanblue}{RGB}{20,72,135}\definecolor{roadmapgray}{RGB}{86,86,86}
+\frenchspacing\emergencystretch=3em\clubpenalty=10000\widowpenalty=10000\raggedbottom
+\titleformat{\section}{\sffamily\bfseries\large\color{accent}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize}{\thesubsection}{.7em}{}
+\titlespacing*{\section}{0pt}{1.4\baselineskip}{.55\baselineskip}
+\captionsetup{font=small,labelfont={sf,bf},labelsep=period}
+\pretocmd{\section}{\Needspace{7\baselineskip}}{}{}\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+\allowdisplaybreaks\setstretch{1.055}\setlength{\parskip}{.3em}\setlength{\parindent}{1.35em}
+\setlist[itemize]{topsep=.35em,itemsep=.15em,leftmargin=1.6em}\setlist[enumerate]{topsep=.35em,itemsep=.15em,leftmargin=1.8em}
+\graphicspath{{figures/}}
+\hypersetup{pdftitle={Projector-Resolved Seed Calculus III: Typed Transfer, Nonlinear Packets and Obstruction Theory},pdfauthor={Komorebi P.},colorlinks=true,linkcolor=accent,citecolor=accent,urlcolor=accent}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}KOMOREBI MATHEMATICS / PAPER III}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{muted}TRADITIONAL PAPER}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}Projector-resolved seed calculus}\fancyfoot[R]{\sffamily\small\color{accent}\thepage}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,frame=single,showstringspaces=false,columns=fullflexible,keepspaces=true}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{plain}
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\crefname{proposition}{proposition}{propositions}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\crefname{lemma}{lemma}{lemmas}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\crefname{corollary}{corollary}{corollaries}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\crefname{definition}{definition}{definitions}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\crefname{example}{example}{examples}
+\newaliascnt{construction}{theorem}
+\newtheorem{construction}[construction]{Construction}
+\aliascntresetthe{construction}
+\crefname{construction}{construction}{constructions}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\crefname{standardfact}{standard fact}{standard facts}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+\crefname{remark}{remark}{remarks}
+\newaliascnt{boundary}{theorem}
+\newtheorem{boundary}[boundary]{Boundary}
+\aliascntresetthe{boundary}
+\crefname{boundary}{boundary}{boundaries}
+\newaliascnt{roadmap}{theorem}
+\newtheorem{roadmap}[roadmap]{Formalization target}
+\aliascntresetthe{roadmap}
+\crefname{roadmap}{formalization target}{formalization targets}
+\crefname{theorem}{theorem}{theorems}
+\newcommand{\bbk}{\Bbbk}
+\newcommand{\N}{\mathbb N}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\cE}{\mathcal E}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cO}{\mathcal O}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cQ}{\mathcal Q}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cT}{\mathcal T}
+\newcommand{\cW}{\mathcal W}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Hol}{\operatorname{Hol}}
+\newcommand{\Coord}{\operatorname{Coord}}
+\newcommand{\ev}{\operatorname{ev}}
+\newcommand{\src}{\operatorname{src}}
+\newcommand{\tgt}{\operatorname{tgt}}
+\newcommand{\Walk}{\operatorname{Walk}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\leanname}[1]{\nolinkurl{#1}}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Fcal}{\mathcal F}
+\newcommand{\Hcal}{\mathcal H}
+\newcommand{\Kcal}{\mathcal K}
+\newcommand{\Lcal}{\mathcal L}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Qcal}{\mathcal Q}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\Ucal}{\mathcal U}
+\newcommand{\Vcal}{\mathcal V}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Cone}{\operatorname{Cone}}
+\newcommand{\Lip}{\operatorname{Lip}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\MC}{\operatorname{MC}}
+\newcommand{\gr}{\operatorname{gr}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\Ad}{\operatorname{Ad}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\statusleanthree}[1]{\par\smallskip\noindent\begin{minipage}{\linewidth}{\color{leanblue}\textbf{Formal contract: Paper III v1.0.1.}}\par\begingroup\small\raggedright\leanname{#1}\par\endgroup\end{minipage}\par\smallskip}
+\newcommand{\statusleanprior}[1]{\par\smallskip\noindent\begin{minipage}{\linewidth}{\color{leanblue}\textbf{Inherited formal contract: Papers I--II.}}\par\begingroup\small\raggedright\leanname{#1}\par\endgroup\end{minipage}\par\smallskip}
+\newcommand{\statusroadmap}[1]{\par\smallskip\noindent{\color{roadmapgray}\textbf{Outside the finite formal contract.}}\ #1\par\smallskip}
+
+
+\usepackage{tikz,multicol}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiKind}{Modern Monograph}
+\KomorebiSetup
+\input{atlas-definitions.tex}
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{Begin with typed edge words and exact coordinate transport. A chosen connection introduces defects, holonomy, and packet obstruction witnesses. Part II develops nonlinear packet jets, tree expansions, correction complexes, filtered lifting, elimination, and smooth transport.
+
+Part I retains the finite v1.0.1 formal contract. Part II gives the strengthened nonlinear and analytic development with ordinary proofs. The release also verifies exact nonlinear coordinates, continuous packet jets on actual projector ranges, and the decorated composition and structural support laws in Lean. The integral Taylor remainder and the later analytic and obstruction results retain their ordinary proof status. Formal coverage stays attached to the released declarations. The visual atlas at the end of this volume provides twenty-four worked plates. The separate Lean guide explains the formal contract and its evidence.}
+\begin{abstract}
+Finite projector packets turn linear transfer into typed walks and arbitrary maps into exact coordinate representations. Canonical coordinate transport satisfies an exact cocycle law. A chosen connection can fail to compose, producing holonomy and packet obstruction witnesses. Nonlinear packet jets lead to higher composition, convergent rooted tree expansions, graded operations, and nonlinear refinement defects. A specified correction map produces a canonical cokernel obstruction. Relative exact sequences, mapping cones, Hilbert splitting, nonlinear correction, and filtered lifting describe how these obstructions behave. Exact elimination produces Schur formulas, and finite transport reduces gluing to fundamental cycle holonomy. For smooth orthogonal packet families, direct packet rotations converge in operator norm to canonical unitary transport. The finite formal contract and the broader ordinary proof development retain their separate scopes throughout.
+\end{abstract}
+This release presents the mathematical development together with worked examples, a visual atlas, and a separate guide to the formal proof evidence. The packet norm estimate distinguishes the actual range jet from its ambient extension. The support statements keep external packet profiles and intermediate composition witnesses explicitly typed. The accompanying release record gives the exact source and scope of each formal verification.
+\tableofcontents
+\listoffigures
+\clearpage\pagenumbering{arabic}
+\input{chapters/01_finite_coordinates.tex}
+\input{chapters/02_connections_obstructions.tex}
+\input{chapters/03_nonlinear_coordinates.tex}
+\input{chapters/04_correction_transport.tex}
+\clearpage
+\appendix
+\section{Visual atlas}\label{app:visual-atlas}
+The plates give exact finite models for the algebraic constructions in this volume. Their stable labels run from V1 to V24. Each plate names the related statements in the paper. These models make the hypotheses and map directions visible. They do not extend the finite Lean contract to the analytic results of Part II.
+\begin{readerroadmap}[title={Three routes through the atlas}]
+For typed transfer, read V3 to V8. For coordinates, connections, and gauge, read V9 to V18, followed by V23. For candidate witnesses and trees, read V19 to V22, followed by V24. V1 and V2 introduce the objects and the questions they answer.
+\end{readerroadmap}
+Products act in traversal order. The first edge traversed is the rightmost operator. Rows represent targets and columns represent sources.
+\clearpage
+\begingroup
+\setstretch{1.01}\fontsize{10}{12}\selectfont
+\setlength{\parskip}{3pt}\setlength{\abovedisplayskip}{6pt}\setlength{\belowdisplayskip}{6pt}
+\input{visual_atlas.tex}
+\endgroup
+\clearpage
+\begingroup\small\setstretch{1}
+\bibliographystyle{plain}
+\bibliography{references}
+\endgroup
+\end{document}

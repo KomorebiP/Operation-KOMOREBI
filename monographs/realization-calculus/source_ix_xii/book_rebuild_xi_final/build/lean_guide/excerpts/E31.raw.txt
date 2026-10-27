@@ -1,0 +1,16 @@
+theorem relIndex_of_actual_cartan [Nonempty m]
+    (L : Submodule 𝒪[E] (Matrix m m (Module.End F E)))
+    (hL : IsMatrixBimodule (coefficientMap F E) L.toAddSubgroup)
+    (hfg : L.FG)
+    (hfull : Submodule.span F (L : Set (Matrix m m (Module.End F E))) = ⊤)
+    (hcomm : RadicalCommutes F E m L.toAddSubgroup)
+    (y : GL m E) (c : Eˣ) (l r : GL m 𝒪[E]) (a : m → ℕ)
+    (hy : y = GeneralLinearGroup.scalar m c *
+      (ActualIntegralGeneralLinear.embedding E m l *
+        PaperXI.SplitRadical105.cartan (ActualLocalUnitDecomposition.uniformizer E : E)
+          (ActualLocalUnitDecomposition.uniformizer_ne_zero E) a *
+            ActualIntegralGeneralLinear.embedding E m r)) :
+    (L.toAddSubgroup ⊓ L.toAddSubgroup.map
+      (unitConjugation (centralizerEmbedding F E m y)).toAddMonoidHom).relIndex
+        L.toAddSubgroup =
+      Nat.card 𝓀[E] ^ (Module.finrank F E * ∑ i, ∑ j, ((a i : ℤ) - (a j : ℤ)).toNat) :=

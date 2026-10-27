@@ -1,0 +1,15 @@
+theorem product_support_inclusion (A B : R) (b a : I)
+    (h : P.block (A * B) b a ≠ 0) :
+    ∃ c, P.block A b c ≠ 0 ∧ P.block B c a ≠ 0 := by
+  classical
+  by_contra no
+  apply h
+  rw [P.compose_blocks]
+  apply Finset.sum_eq_zero
+  intro c _
+  by_cases hc : P.block A b c = 0
+  · simp [hc]
+  · have hd : P.block B c a = 0 := by
+      by_contra hd
+      exact no ⟨c, hc, hd⟩
+    simp [hd]

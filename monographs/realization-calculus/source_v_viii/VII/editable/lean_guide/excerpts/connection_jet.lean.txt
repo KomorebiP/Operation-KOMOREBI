@@ -1,0 +1,18 @@
+theorem differentiated_orthogonality
+    (hd : ∀ a, HasDerivAt (P a) (D a) t)
+    (hmul : ∀ s a b, P a s * P b s = if a = b then P a s else 0)
+    (a b : I) : D a * P b t + P a t * D b = if a = b then D a else 0 := by
+  have h := (hd a).mul (hd b)
+  change HasDerivAt (fun s => P a s * P b s) (D a * P b t + P a t * D b) t at h
+  by_cases hab : a = b
+  · subst b
+    have heq : (fun s => P a s * P a s) = P a := by
+      funext s
+      simpa only [ite_true] using hmul s a a
+    rw [heq] at h
+    simpa only [ite_true] using h.unique (hd a)
+  · have heq : (fun s => P a s * P b s) = fun _ => (0 : R) := by
+      funext s
+      simpa only [hab, ite_false] using hmul s a b
+    rw [heq] at h
+    simpa only [hab, ite_false] using h.unique (hasDerivAt_const t (0 : R))

@@ -1,0 +1,14 @@
+theorem exists_unique_prescribed_padic_root (p L : ℕ) [Fact (Nat.Prime p)]
+    (hL : 1 ≤ L) (F : Fin e → MvPolynomial (Fin (e+k)) ℤ)
+    (x : Fin (e+k) → ℤ) (hx : ∀ i, (p : ℤ)^L ∣ evalSystem F x i)
+    (hJ : Function.Surjective (solvedJacobian p F x))
+    (τ : Fin k → ℤ_[p])
+    (hτ : ∀ j, (p : ℤ_[p])^L ∣ τ j - ((freePart x j : ℤ) : ℤ_[p])) :
+    ∃! b : Fin (e+k) → ℤ_[p],
+      (∀ i, padicEval p F b i = 0) ∧ freePart b = τ ∧
+      (∀ i, (p : ℤ_[p])^L ∣ b i - (x i : ℤ_[p])) := by
+  obtain ⟨b, hb, hbτ, hbx⟩ := exists_prescribed_padic_root p L hL F x hx hJ τ hτ
+  refine ⟨b, ⟨hb, hbτ, hbx⟩, ?_⟩
+  intro c hc
+  exact PolynomialPrescribedTowerUnique.prescribed_root_unique p L hL F x hx hJ
+    c b hc.1 hb hc.2.2 hbx (hc.2.1.trans hbτ.symm)

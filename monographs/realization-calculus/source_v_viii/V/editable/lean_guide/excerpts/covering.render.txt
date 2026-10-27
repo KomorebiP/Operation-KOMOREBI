@@ -1,0 +1,19 @@
+theorem complete_iff_covering_antichain \{t : FiniteAdaptive.Tree A\} (S : Set (Node t)) :
+    Complete S ↔ CoveringAntichain S := by
+  constructor
+  · intro h
+    constructor
+    · intro p
+      obtain ⟨v, hv, _⟩ := h p
+      exact ⟨v, hv.2, hv.1⟩
+    · intro u hu v hv huv
+      obtain ⟨p, hp⟩ := node_on_terminal v
+      obtain ⟨w, _, hw⟩ := h p
+      exact (hw u ⟨ancestor_onPath huv hp, hu⟩).trans (hw v ⟨hp, hv⟩).symm
+  · rintro ⟨hcover, hanti⟩ p
+    obtain ⟨v, hv, hp⟩ := hcover p
+    refine ⟨v, ⟨hp, hv⟩, ?_⟩
+    intro u hu
+    rcases path_nodes_comparable hu.1 hp with h | h
+    · exact hanti u hu.2 v hv h
+    · exact (hanti v hv u hu.2 h).symm

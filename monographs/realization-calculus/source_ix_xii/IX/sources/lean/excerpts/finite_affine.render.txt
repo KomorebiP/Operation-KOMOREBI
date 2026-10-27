@@ -1,0 +1,20 @@
+theorem finite_affine_obstruction (p L : ℕ) (hp : 0 < p)
+    (A : (Fin d → ℤ) →ₗ[ℤ] (Fin e → ℤ)) (b : Fin e → ℤ) (x : Fin d → ℤ)
+    (hx : ∀ i, (p : ℤ)^L ∣ (A x - b) i) :
+    ∃ r : Fin e → ℤ,
+      A x - b = (p : ℤ)^L • r ∧
+      Finite (Obstruction p A) ∧
+      ((∃ y : Fin d → ℤ,
+        (∀ i, (p : ℤ)^L ∣ (y - x) i) ∧
+        (∀ i, (p : ℤ)^(L+1) ∣ (A y - b) i)) ↔ obstruction p A r = 0) := by
+  obtain ⟨r, hr⟩ := residual_exists p L A b x hx
+  let : NeZero p := ⟨Nat.ne_of_gt hp⟩
+  refine ⟨r, hr, obstruction_finite p A, ?_⟩
+  rw [← affine_lift_iff_obstruction_zero p L hp A b r x hr]
+  constructor
+  · rintro ⟨y, hy, hAy⟩
+    obtain ⟨t, rfl⟩ := (same_residue_iff ((p : ℤ)^L) x y).mp hy
+    exact ⟨t, hAy⟩
+  · rintro ⟨t, ht⟩
+    exact ⟨x + (p : ℤ)^L • t,
+      (same_residue_iff ((p : ℤ)^L) x _).mpr ⟨t, rfl⟩, ht⟩

@@ -1,0 +1,12 @@
+theorem next_level_iff_digit (q L : ℕ) (hq : 0 < q) (hL : 1 ≤ L)
+    (F : Fin e → MvPolynomial (Fin d) ℤ) (x : Fin d → ℤ)
+    (r : Fin e → ℤ) (hr : evalSystem F x = (q : ℤ)^L • r)
+    (t : Fin d → ℤ) :
+    (∀ i, (q : ℤ)^(L+1) ∣ evalSystem F (x + (q : ℤ)^L • t) i) ↔
+      reduction q e (r + jacobian F x t) = 0 := by
+  rw [reduction_zero_iff]
+  apply forall_congr'
+  intro i
+  rw [dvd_iff_of_dvd_sub _ _ _ (taylor_residual_dvd q L hL F x r hr t i)]
+  have hqL : (q : ℤ)^L ≠ 0 := pow_ne_zero _ (Int.natCast_ne_zero.mpr (Nat.ne_of_gt hq))
+  rw [pow_succ, mul_dvd_mul_iff_left hqL]

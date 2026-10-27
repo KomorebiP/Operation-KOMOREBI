@@ -1,0 +1,15 @@
+theorem compiler_stability (keep overhead keep' overhead' : α → R)
+    (t : CandidateTree α) (hg : GapControlled keep overhead keep' overhead' t) :
+    compile keep' overhead' t = compile keep overhead t := by
+  induction t with
+  | leaf a => rfl
+  | node a n ts ih =>
+    rcases hg with ⟨hk, hs, hc⟩
+    have ho := half_gap_order _ _ _ _ hk hs
+    simp only [compile]
+    by_cases h : keep a ≤ overhead a + ∑ i, optimalValue keep overhead (ts i)
+    · rw [ite_eq_left h, ite_eq_left (ho.mpr h)]
+    · rw [ite_eq_right h, ite_eq_right (fun hp => h (ho.mp hp))]
+      congr 1
+      funext i
+      exact ih i (hc i)

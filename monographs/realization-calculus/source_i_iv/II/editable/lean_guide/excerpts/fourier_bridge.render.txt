@@ -1,0 +1,13 @@
+theorem FiniteRingFourierOrthogonalityCertificate.toRingCertificate
+    \{R : Type u\} [CommSemiring R]
+    (N : Nat) (hN : 0 < N) (omega omegaDual eta : R)
+    (certificate :
+      FiniteRingFourierOrthogonalityCertificate R N omega omegaDual eta) :
+    RingFourierOrthogonalityCertificate R N omega omegaDual eta := by
+  refine ⟨?_⟩
+  intro j n
+  rw [ringFourierKernel_eq_residueKernel N hN omega omegaDual
+    certificate.omega_pow_order j n]
+  rw [certificate.weighted_residue_sum_eq]
+  congr 1
+  simp only [Fin.ext_iff]

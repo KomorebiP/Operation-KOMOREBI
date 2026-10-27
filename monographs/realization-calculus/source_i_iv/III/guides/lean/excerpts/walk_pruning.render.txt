@@ -1,0 +1,13 @@
+theorem explicitWordExpansion_eq_walkExpansion
+    [Fintype E] [Fintype V] [DecidableEq V] [Semiring R]
+    (n : ℕ) :
+    explicitWordExpansion G S n = walkExpansion G S n := by
+  classical
+  unfold explicitWordExpansion walkExpansion
+  apply Finset.sum_congr rfl
+  intro word _
+  by_cases hwalk : Composable G (List.ofFn word)
+  · simp [hwalk]
+  · have hzero : tupleWordOp G S n word = 0 :=
+      wordOp_eq_zero_of_not_composable G S (List.ofFn word) hwalk
+    simp [hwalk, hzero]

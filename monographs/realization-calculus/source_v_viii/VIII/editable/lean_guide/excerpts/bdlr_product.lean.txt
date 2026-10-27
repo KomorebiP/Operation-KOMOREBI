@@ -1,0 +1,9 @@
+theorem bdlr_product (DA DB : Matrix X X K) (UA VA : Matrix X RA K)
+    (UB VB : Matrix X RB K) :
+    (DA + UA * VA.conjTranspose) * (DB + UB * VB.conjTranspose) =
+      DA * DB + bdlrProductLeft DA UA VA UB * (bdlrProductRight DB VA VB).conjTranspose := by
+  simp only [bdlrProductLeft, bdlrProductRight,
+    Matrix.conjTranspose_fromCols_eq_fromRows_conjTranspose,
+    Matrix.fromCols_mul_fromRows, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
+    Matrix.add_mul, Matrix.mul_add, Matrix.mul_assoc]
+  abel

@@ -1,0 +1,20 @@
+/-- Completeness proves that synthesizing analyzed coordinates returns the input. -/
+@[simp] theorem rangeSynthesis_rangeAnalysis
+    (P : LinearProjectorFamily R M ι) (x : M) :
+    P.rangeSynthesis (P.rangeAnalysis x) = x := by
+  change (∑ i, P.proj i x) = x
+  exact P.complete x
+
+/-- Idempotence and orthogonality prove that analysis recovers every range packet. -/
+@[simp] theorem rangeAnalysis_rangeSynthesis
+    (P : LinearProjectorFamily R M ι) (packets : PacketSpace P) :
+    P.rangeAnalysis (P.rangeSynthesis packets) = packets := by
+  classical
+  funext i
+  apply Subtype.ext
+  change P.proj i (∑ j, (packets j : M)) = (packets i : M)
+  rw [map_sum, Finset.sum_eq_single i]
+  · exact P.proj_packet_self packets i
+  · intro j _ hji
+    exact P.proj_packet_eq_zero packets hji.symm
+  · simp

@@ -1,0 +1,11 @@
+theorem invariant_packet_krylov (P : PacketFamily (X →L[K] X) I)
+    (A : X →L[K] X) (hA : ∀ i, Commute A (P.proj i)) (v : X) (m : ℕ) :
+    krylovSpace A v m ≤ ⨆ i, krylovSpace (P.block A i i) (P.proj i v) m := by
+  apply Submodule.span_le.mpr
+  rintro x ⟨j, rfl⟩
+  change (A ^ j.val) v ∈ (⨆ i, krylovSpace (P.block A i i) (P.proj i v) m : Submodule K X)
+  rw [invariant_packet_power_expansion P A hA v j.val]
+  apply Submodule.sum_mem
+  intro i _
+  exact Submodule.mem_iSup_of_mem i
+    (krylov_generator_mem (P.block A i i) (P.proj i v) m j.val j.isLt)

@@ -1,0 +1,13 @@
+theorem defective_density_mass (A : Matrix I I ℝ) (hA : ∀ i j, i≠j → 0 ≤ A i j)
+    (hc : ∀ j,∑ i,A i j ≤ 0) (p : I → ℝ) (hp : ∀ i,0 ≤ p i) (hs : ∑ i,p i=1) :
+    ∃ l,0 ≤ l ∧ Tendsto (survival A p) atTop (𝓝 l) ∧
+      IntegrableOn (density A p) (Ioi 0) ∧ (∫ t in Ioi 0,density A p t)=1-l := by
+  obtain ⟨l,hl,ht⟩ := survival_has_limit A hA hc p hp
+  have hd := fun t (_ : t∈Ici (0:ℝ)) => survival_derivative A p t
+  have hn := fun t (ht : t∈Ioi (0:ℝ)) =>
+    neg_nonpos.mpr (density_nonnegative A hA hc p hp t ht.le)
+  have hi := integrableOn_Ioi_deriv_of_nonpos' hd hn ht
+  have he := integral_Ioi_of_hasDerivAt_of_nonpos' hd hn ht
+  refine ⟨l,hl,ht,integrable_neg_iff.mp hi,?_⟩
+  simp only [integral_neg,survival_zero,hs] at he
+  linarith

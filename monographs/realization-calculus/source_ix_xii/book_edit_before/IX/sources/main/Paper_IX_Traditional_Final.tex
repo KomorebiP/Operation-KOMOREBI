@@ -1,0 +1,174 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype,bm,graphicx}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{booktabs,array,longtable,tabularx,enumitem}
+\usepackage{xcolor,fancyhdr,xurl,hyperref}
+\definecolor{paperink}{HTML}{185B58}
+\hypersetup{colorlinks=true,linkcolor=paperink,citecolor=paperink,urlcolor=paperink,
+  pdftitle={Euler Congruences: Completion, Factorial Strengthening and Sharp Dyadic Geometry},
+  pdfauthor={Komorebi P.},pdfsubject={Generalized Euler congruences, factorial precision, sharp dyadic periods, formal coverage and remaining tail simplicity}}
+\newcommand{\N}{\mathbb N}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\F}{\mathbb F}
+\newcommand{\Zp}{\mathbb Z_p}
+\newcommand{\Qp}{\mathbb Q_p}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\rank}{rank}
+\newcommand{\lean}[1]{{\footnotesize\nolinkurl{#1}}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+\setlength{\parskip}{3pt}
+\setlength{\emergencystretch}{2em}
+\setlist{itemsep=2pt,topsep=5pt}
+\allowdisplaybreaks[1]
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\scshape Euler congruences / Paper IX}
+\fancyhead[R]{\small\scshape Final strengthened edition}
+\fancyfoot[L]{\small Komorebi P.}
+\fancyfoot[R]{\thepage}
+
+\title{\textbf{Euler Congruences}\\[5pt]
+  \Large Completion, Factorial Strengthening,\\ and Sharp Dyadic Geometry\\[7pt]
+  \large Projector-Resolved Seed Calculus IX}
+\author{Komorebi P.}
+\date{Final strengthened edition\quad 6 October 2026}
+
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\passthrough}[1]{#1}
+\newcommand{\mcode}[1]{\ifmmode\text{\nolinkurl{#1}}\else\nolinkurl{#1}\fi}
+\definecolor{ink}{HTML}{185B58}
+\newcommand{\ZZ}{\mathbb Z}\newcommand{\QQ}{\mathbb Q}\newcommand{\FF}{\mathbb F}\newcommand{\NN}{\mathbb N}
+\newcommand{\Wp}{\mathcal W_p}\newcommand{\Hp}{\mathcal H(\Z_p)}
+\newcommand{\ordp}{\operatorname{ord}_p}\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\coef}[2]{[#1^{#2}]}\newcommand{\target}[1]{{\footnotesize\nolinkurl{#1}}}
+\newcommand{\pageheading}[2]{{\large\bfseries\color{ink}#1}\par{\small #2}\par\medskip}
+\newcommand{\sech}{\operatorname{sech}}\newcommand{\fall}[2]{(#1)_{#2}}
+\newcommand{\EE}{\mathcal E}\newcommand{\PP}{\mathcal P}\newcommand{\code}[1]{{\small\nolinkurl{#1}}}
+\newcommand{\Hcal}{\mathcal H}\newcommand{\Ecal}{\mathcal E}\newcommand{\Ccal}{\mathcal C}\newcommand{\Pcal}{\mathcal P}\newcommand{\Scal}{\mathcal S}\newcommand{\Ocal}{\mathcal O}\newcommand{\Rcal}{\mathcal R}\newcommand{\Vcal}{\mathcal V}\newcommand{\Wcal}{\mathcal W}
+\newcommand{\End}{\operatorname{End}}\newcommand{\Ker}{\operatorname{Ker}}\newcommand{\Res}{\operatorname{Res}}\newcommand{\vp}{v_p}\newcommand{\vTwo}{v_2}\newcommand{\sTwo}{s_2}\newcommand{\DeltaH}{\Delta_h}\newcommand{\abs}[1]{\left\lvert#1\right\rvert}\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\one}{\bm 1}\newcommand{\starh}{\mathbin{\star}}\newcommand{\e}{\mathrm e}
+\newtheorem{histtheorem}[theorem]{Historical theorem}
+\crefname{histtheorem}{historical theorem}{historical theorems}
+\newtheorem{histproposition}[theorem]{Historical proposition}
+\crefname{histproposition}{historical proposition}{historical propositions}
+\newtheorem{histlemma}[theorem]{Historical lemma}
+\crefname{histlemma}{historical lemma}{historical lemmas}
+\newtheorem{histcorollary}[theorem]{Historical corollary}
+\crefname{histcorollary}{historical corollary}{historical corollaries}
+\newtheorem{histdefinition}[theorem]{Historical definition}
+\crefname{histdefinition}{historical definition}{historical definitions}
+\newtheorem{histexample}[theorem]{Historical example}
+\crefname{histexample}{historical example}{historical examples}
+\newtheorem{histremark}[theorem]{Historical remark}
+\crefname{histremark}{historical remark}{historical remarks}
+\newtheorem{histstandardfact}[theorem]{Historical standard fact}
+\crefname{histstandardfact}{historical standardfact}{historical standardfacts}
+
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Euler Congruences}
+\renewcommand{\KomorebiSubtitle}{Completion, factorial strengthening, and sharp dyadic geometry}
+\renewcommand{\KomorebiSeries}{Core series IX}
+\renewcommand{\KomorebiKind}{Traditional paper}
+\renewcommand{\KomorebiEdition}{Monograph reading edition / 10 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper IX}
+\renewcommand{\KomorebiTitleSize}{38}
+\renewcommand{\KomorebiTitleLeading}{43}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+
+\relax
+\begin{abstract}
+We prove Nishibuchi's generalized Euler congruence conjecture in its full stated parameter range and develop sharper arithmetic consequences. For every prime-power packet width, a charged Hurwitz differential operator transfers integral difference estimates through the reciprocal generating series. In the dyadic case this gives mixed finite-difference bounds at every row, without a starting threshold. For the four addresses of width four, a divided-power argument adds the factorial gain $v_2(k!)$, determines every repeated-step valuation in addresses zero and one, and gives a stronger address-two estimate with exact values at all power-of-two orders. The corresponding first differences yield least periods and bijective isometric continuations onto explicit dyadic residue classes. We also determine exact Taylor radii for three addresses. The manuscript retains the complete earlier arithmetic, lifting, deformation, and analytic-regularity development, with dated historical appendices. A separate appendix states the precise remaining simplicity problem for ordinary Euler tails. Formal coverage is explicit: the external conjecture and several four-address results have inherited Lean verification; the new factorial, mixed-step, all-rank, and radius arguments are written proofs with recorded audits and exact computational checks, and await dedicated Lean formalization.
+\end{abstract}
+\input{../edition_summary.tex}
+
+
+\input{parts/00_scope}
+\clearpage
+{\small\setlength{\parskip}{0pt}\tableofcontents}
+\clearpage
+\input{parts/10_foundations}
+\input{parts/20_arithmetic}
+\clearpage
+\input{../strengthening.tex}
+\clearpage
+\input{parts/30_lifting}
+\input{parts/40_regularity}
+\input{parts/50_open_questions}
+\input{parts/60_verification}
+
+\clearpage
+\appendix
+\input{../root_scope.tex}
+\input{parts/70_continuation}
+\input{parts/71_native}
+\input{parts/72_recovered}
+\input{parts/73_supplements}
+\clearpage\def\IXMainAtlas{1}\def\AtlasFigDir{../../figures/worked}\input{../worked_atlas.tex}\clearpage
+\begin{thebibliography}{99}
+\bibitem{Nishibuchi}
+Yuta Nishibuchi,
+\emph{$p$-adic Congruences of Generalized Euler Numbers and Relations to Even
+Zeta Values}, arXiv:2605.10677v2, 1 June 2026.
+\url{https://arxiv.org/abs/2605.10677v2}.
+The comparison to Conjecture 3.9 uses the source review and fixed-version
+record preserved with this edition.
+
+\bibitem{gessel}
+Ira M. Gessel, \emph{Applications of the classical umbral calculus},
+arXiv:math/0108121v3, 22 November 2001, Section 9, in particular the Frobenius Euler congruence and the derivation following Theorem 9.2.
+\url{https://arxiv.org/abs/math/0108121}.
+The normalization and quantifiers of the ordinary Euler input were checked against the primary PDF in the strengthening checkpoint.
+
+\bibitem{DLMF24}
+NIST Digital Library of Mathematical Functions, \S24.10(i),
+Eq.\ 24.10.1 (Bernoulli denominator theorem).
+\url{https://dlmf.nist.gov/24.10.E1}. The official primary entry was inspected
+for the positive even-index denominator specialization in this edition.
+
+\bibitem{Mathlib}
+The Mathlib Community,
+\emph{Mathlib}, source revision
+\nolinkurl{aeb72f1e9981b6d35b426b16dca7759be3e7ba06},
+used with Lean 4.34.0-rc2.
+In particular, the polynomial, strict inverse-function and analytic
+inverse-function developments cited in Section~\ref{sec:regularity}.
+The exact local source paths and dependency records accompany the release.
+
+\bibitem{PaperIXArchive}
+Komorebi P.,
+\emph{Projector-Resolved Seed Calculus IX: original manuscript, formal
+supplements and cumulative continuation sources}, preserved source collection,
+consolidated 8 September 2026.
+The original 28-page status-corrected manuscript and all subsequent release
+records remain in the accompanying archive.
+
+\medskip\noindent\textbf{Recovered historical references.}
+The bibliography underlying Appendix~\ref{app:recovered} has been recovered
+from the original source package. Its 22 citation keys are retained below,
+with bibliographic identities checked against publisher and author records.
+This repairs the source attributions; it does not enlarge the historical
+chapter's stated proof or formalization scope.
+\input{historical_references.tex}
+\end{thebibliography}
+\end{document}

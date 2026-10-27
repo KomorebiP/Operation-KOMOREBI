@@ -1,0 +1,35 @@
+\section{Finite obstructions and a common correction}\label{sec:affine}
+\subsection{Residuals become quotient classes}
+Let $A:\mathbb Z^d\to\mathbb Z^e$ be linear and suppose $Ax-b=p^Lr$. A same-residue correction has the form $y=x+p^Lt$. Its next residual is $p^L(r+At)$. Thus the next level exists precisely when $\bar r+\bar A\bar t=0$ modulo $p$. The obstruction is the class of $\bar r$ in the cokernel of the digit map. Zero class means the residual can be cancelled by some digit.
+
+\contract{The affine theorem requires $p>0$, but neither primality nor $L\ge1$. It supplies an integer residual, a finite obstruction space, and an equivalence between same-residue next-level lifts and zero obstruction.}
+\excerpt{Finite affine obstruction}{finite_affine}
+\walk{Residual existence is coordinatewise integer divisibility. The source installs \code{NeZero p} to make the residue ring finite. It then rewrites arbitrary same-residue $y$ as $x+p^Lt$ using \code{same_residue_iff}. That rewriting supplies both directions: a successful lift gives a digit, and a successful digit constructs a lift. At $L=0$, $p^L=1$ and all integer points are in the same initial residue class. The affine calculation still works.}
+
+The finite quotient should not be confused with a rank formula. Finiteness over \code{ZMod p} works for any nonzero modulus. A dimension argument and the count $p^{d-\rho}$ need $p$ prime so that the residue ring is a field.
+
+\contract{Adding an image vector $As$ to the residual does not change its obstruction class. No rank or surjectivity assumption is required.}
+\excerpt{Representative independence}{representative}
+\walk{The reduction map preserves addition. The quotient map then sends the reduced image vector to zero because it belongs to the digit-map range. Adding zero leaves the class unchanged. This is an exact statement about replacing a representative by a known image term. It does not establish the separate open problem of presentation invariance under every possible native equivalence.}
+
+\subsection{Two solvable equations need one shared digit}
+For two maps $A$ and $B$ with separately soluble digit equations, choose individual correcting digits $u$ and $v$. The first allows the coset $u+\ker\bar A$ and the second allows $v+\ker\bar B$. A common digit exists exactly when these cosets meet, equivalently when
+\[
+u-v\in\ker\bar A+\ker\bar B.
+\]
+The shared obstruction is the quotient of the common digit space by that sum. It is generally not the product of the two separate cokernels: those cokernels already vanish for the individually soluble pair, while the common-correction obstruction can still be nonzero.
+
+\contract{Both chosen correcting digits must solve their own reduced residual equations. The theorem then identifies a joint next lift with equality of their classes in the shared quotient. Positivity of the modulus is retained. $L=0$ is allowed.}
+\excerpt{Shared-correction criterion}{shared}
+\walk{The first rewrite translates joint lifting into a simultaneous digit equation. The second identifies class equality with a common representative. The final \code{exists_congr} compares the two individual conditions by their image fibers. This separates the existence of separate corrections from their compatibility. A claim that separate solvability automatically gives a joint lift would drop the equality of quotient classes and is false.}
+
+Changing $u$ by a digit in $\ker\bar A$ or changing $v$ by one in $\ker\bar B$ leaves the shared class unchanged. The quotient has the expected universal property for maps annihilating both kernels, and its finite image/range formulations are proved in separate modules. Those endpoint statements retain their own exact coefficient conventions.
+
+\subsection{A nonempty fiber is a kernel torsor}
+\contract{$A:U\to V$ is linear over a ring, and a base point $u$ has been supplied in the fiber over $b$. The fiber is equivalent to $\ker A$ by subtraction from $u$ and translation back. The ambient $U,V$ are modules and additive commutative groups.}
+\excerpt{Fiber--kernel equivalence}{fiber}
+\walk{The forward map sends $t$ to $t-u$ and uses linearity to prove it lies in the kernel. The inverse sends a kernel vector $v$ to $u+v$ and proves its image is $b$. The two inverse identities are cancellation in the additive group. The chosen $u$ is an origin for a torsor, not a distinguished zero of the original fiber. An empty fiber admits no such choice.}
+
+\contract{For a linear digit map $A:(\mathbb F_p)^d\to(\mathbb F_p)^e$ with rank $\rho$, the fiber over $b$ has $p^{d-\rho}$ elements when nonempty and zero elements otherwise.}
+\excerpt{Exact fiber cardinality}{fiber_card}
+\walk{The nonempty branch transports cardinality through the fiber--kernel equivalence and uses rank-nullity plus the finite-field cardinality theorem. The empty branch has cardinality zero. The \code{if Nonempty} guard cannot be discarded for a general right-hand side. In a surjective case every right-hand side enters the nonempty branch. In an injective square case the nonempty fiber has exactly one element.}

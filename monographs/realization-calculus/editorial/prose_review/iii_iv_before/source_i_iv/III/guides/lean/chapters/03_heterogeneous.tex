@@ -1,0 +1,58 @@
+\clearpage
+\section{Heterogeneous products and exact coordinates}
+\subsection{What varies in a heterogeneous path}
+There are two different kinds of heterogeneity. The matrix factor may change at every step while the packet index type stays fixed. Alternatively, the source, intermediate, and target packet types themselves may differ. The formal component includes a theorem for arbitrary finite length of the first kind and separate theorems for two and three steps of the second kind.
+
+The statement for two steps displays all three packet types:
+\excerpt{EdgeExtensions}{heterogeneous_two}
+Only the intermediate type \code{I1} needs a finite enumeration. The source and target types are not enumerated in this entrywise identity. The coefficient hypothesis is \code{NonUnitalNonAssocSemiring R}. No multiplicative unit or associativity is needed for a single entry sum with two factors.
+
+The statement for three steps introduces two finite intermediate types and a semiring:
+\excerpt{EdgeExtensions}{heterogeneous_three}
+The parentheses on the coefficient product match \code{(third * second) * first}. The proof expands matrix multiplication twice, distributes multiplication across a finite sum, and exchanges the two finite sums. The packet index types remain separate throughout the calculation.
+
+\subsection{Arbitrary finite length on one packet type}
+\code{heterogeneousProduct} evaluates a list of square matrices in execution order. The head acts first and appears on the right. \code{heterogeneousPathSum} independently sums the intermediate packet at each recursive step. Its empty case is the identity coefficient, equal to one when source and target agree and zero otherwise.
+\excerpt{EdgeExtensions}{heterogeneous}
+The induction is on the list of factors. The base case is the matrix identity. The successor case is exactly the entry formula for matrix multiplication, with the induction hypothesis substituted into the remaining product. The theorem quantifies over every finite list, but all factors are \code{Matrix V V R}.
+
+The traditional companion may treat a fully dependent chain with a new packet index type at every stage. That theorem lies outside the fixed Lean contract of 41 rows. Rows 13 and 14 make the distinction explicit: differing types at lengths two and three, varying factors on one common type at arbitrary finite length.
+
+\subsection{Declared support is a certificate}
+A \code{SupportedStep} stores an operator, a relation on source and target packets, and a proof that an entry is zero whenever the relation does not hold. The relation need not be the exact nonzero support. It can be a conservative relation of allowed packet transitions. \code{SupportedPath} says each successive step respects the corresponding relation.
+\excerpt{EdgeExtensions}{supported}
+The proof splits at every candidate intermediate packet. If the first relation fails, the first matrix entry is zero by the stored certificate. If it holds, absence of an entire supported path forces absence of a supported tail, and the induction hypothesis makes the tail sum zero. This is useful even when exact nonzero support would be expensive to decide.
+
+\subsection{Exact frames point from coordinates to ambient space}
+In \code{Transport.lean}, a frame synthesizes an ambient vector from its coordinate representation. The homogeneous model uses an automorphism of one module, so source and target types look alike, but the direction still matters:
+\excerpt{Transport}{exact_transport}
+If $\Psi_a$ is the frame, this is $\Psi_b^{-1}\Psi_a$. It first synthesizes through frame $a$, then analyzes through frame $b$. Cancellation of the intervening frame proves the cocycle law:
+\excerpt{Transport}{exact_cocycle}
+The proof applies extensionality and simplifies an equivalence followed by its inverse. The results for self transport, return trips, triangles, and finite paths follow from the same cancellation. Exact transport obtained from one frame family cannot acquire a nontrivial loop merely by changing the path.
+
+\subsection{Exact coordinate systems point the other way}
+\code{CoordinateNaturality.lean} uses an equivalence \code{X ≃ Source} from an ambient type to a coordinate type. This is an analysis map, inverse in direction to the frame convention above.
+\excerpt{CoordinateNaturality}{coordinate_transport}
+For analysis equivalences $\Phi_a:X\to A$ and $\Phi_b:X\to B$, the transport is $\Phi_b\Phi_a^{-1}$. Both conventions express the same operation of synthesizing and then analyzing. Check the direction of the supplied equivalence before comparing the formulas. This avoids an apparent inverse error.
+
+\begin{keyidea}[title={Two directions for exact coordinates}]
+A frame takes coordinates to ambient space. An analysis equivalence takes
+ambient data to coordinates. In both conventions, transport first returns
+to the ambient object and then enters the destination coordinates. The
+different written formulas reflect the different directions of the supplied
+equivalences.
+\end{keyidea}
+
+An arbitrary function $f:X\to Y$ has coordinate representative
+\[
+ f_{a,r}=\Phi_r f\Phi_a^{-1}.
+\]
+The type is an ordinary function \code{Source → Target}. It need not be linear, invertible, continuous, or differentiable. Composition is preserved exactly:
+\excerpt{CoordinateNaturality}{coordinate_composition}
+The middle coordinate analysis and synthesis cancel. The source proves equality of functions with \code{funext}, then simplifies at one value. No approximation is involved.
+
+\subsection{The naturality square is a typed equality}
+\excerpt{CoordinateNaturality}{naturality}
+On the left, represent the map in the first coordinate systems and then change target coordinates. On the right, change source coordinates first and then use the second representative. Both sides map \code{XA} to \code{YS}. Expanding them gives the same function.
+
+This exact statement about sets already applies to a nonlinear function. It does not imply differentiability, a chain rule for jets, or convergence of a formal series. Those stronger properties require further structure and separate theorems. The formal contribution here is exact representation and naturality for arbitrary functions under exact equivalences.

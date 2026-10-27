@@ -1,0 +1,30 @@
+theorem recompression_optimality (Q : Matrix m r ℂ) (V : Matrix n s ℂ)
+    (hQ : Qᴴ*Q=1) (hV : Vᴴ*V=1) {G : Matrix r s ℂ}
+    (svd : OrderedThinSVD G d) (k : ℕ) :
+    let A := lift Q V G
+    let B := recompressLeft Q svd k * (recompressRight V svd k)ᴴ
+    BestRank spectralNorm A B k ∧ BestRank frobeniusNorm A B k ∧
+    spectralNorm (A-B)=nextSingular svd.values k ∧
+    frobeniusNorm (A-B)^2=tailEnergy svd.values k ∧
+    frobeniusNorm (A-B)=Real.sqrt (tailEnergy svd.values k) := by
+  dsimp only
+  have hG : lift Q V G=lift (Q*svd.left) (V*svd.right) (diag svd.values) :=
+    (congrArg (lift Q V) svd.reconstruction).trans (lift_comp Q V _ _ _)
+  rw [recompressed_product,hG]
+  have hU := isometry_comp Q svd.left hQ svd.left_isometry
+  have hZ := isometry_comp V svd.right hV svd.right_isometry
+  have hs := spectral_best_lift (Q*svd.left) (V*svd.right) hU hZ _ _ k
+    (diagonal_spectral_best svd.values svd.nonnegative svd.sorted k)
+  have hf := frobenius_best_lift (Q*svd.left) (V*svd.right) hU hZ _ _ k
+    (diagonal_frobenius_best svd.values svd.nonnegative svd.sorted k)
+  refine ⟨hs,hf,?_,?_,?_⟩
+  · rw [←lift_sub,spectral_lift _ _ hU hZ,diagonal_residual]
+    exact spectral_diagonal_tail _ svd.nonnegative svd.sorted k
+  · rw [←lift_sub,frobenius_lift _ _ hU hZ,diagonal_residual]
+    exact frobenius_diagonal_tail _ k
+  · rw [←lift_sub,frobenius_lift _ _ hU hZ,diagonal_residual]
+    rw [←frobenius_diagonal_tail svd.values k,Real.sqrt_sq_eq_abs]
+    have hn : 0 ≤ frobeniusNorm (diag (discarded svd.values k)) := by
+      unfold frobeniusNorm
+      exact norm_nonneg (diag (discarded svd.values k))
+    exact (abs_of_nonneg hn).symm

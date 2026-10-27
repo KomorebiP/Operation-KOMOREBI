@@ -1,0 +1,38 @@
+--- before/komorebi-publication.sty
++++ publication/house_style/komorebi-publication.sty
+@@ -100,4 +100,35 @@
+   \endgroup\clearpage\setcounter{page}{1}\@ifpackageloaded{hyperref}{\hypersetup{pageanchor=true}}{}\color{KomorebiInk}\normalfont
+ }
+ \newcommand{\KomorebiOpeningNote}[1]{\section*{Reading scope}#1\par\medskip}
++
++% Collected core monograph: Physics-derived typography, no mathematical edits.
++\ifcsname captiontext\endcsname
++ \let\CoreSavedCaptionText\captiontext\let\captiontext\relax
++\fi
++\input{publisher-layout.tex}
++\ifcsname CoreSavedCaptionText\endcsname\let\captiontext\CoreSavedCaptionText\fi
++\apptocmd{\KomorebiSetup}{%
++  \renewcommand{\familydefault}{\rmdefault}%
++  \CoreLayout
++  \colorlet{KomorebiInk}{pubNavy}\colorlet{KomorebiPine}{pubTeal}%
++  \colorlet{KomorebiMuted}{pubMuted}\colorlet{KomorebiOchre}{pubCopper}%
++  \colorlet{KomorebiWarm}{white}\colorlet{KomorebiSoft}{pubWash}%
++  \colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{Teal}{pubTeal}%
++  \colorlet{navy}{pubNavy}\colorlet{Navy}{pubNavy}\colorlet{ink}{pubInk}%
++  \colorlet{muted}{pubMuted}\colorlet{Muted}{pubMuted}\colorlet{Accent}{pubTeal}%
++  \colorlet{KomorebiBlue}{pubTeal}\colorlet{KomorebiNavy}{pubNavy}%
++}{}{}
++\BeforeBeginEnvironment{tabularx}{\noindent}
++\renewcommand{\KomorebiCover}{%
++ \clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
++ {\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
++ \vspace*{42pt}%
++ \CoreOpening{\KomorebiSeries}{\KomorebiTitle}{\KomorebiSubtitle}%
++ \vspace{9pt}{\sffamily\fontsize{11}{15}\selectfont\color{pubMuted}\KomorebiKind\par}%
++ \vfill
++ {\normalfont\fontsize{14}{19}\selectfont Komorebi P.\par}%
++ \vspace{8pt}{\sffamily\fontsize{8.5}{12}\selectfont\color{pubMuted}\KomorebiEdition\par}%
++ \endgroup\clearpage\setcounter{page}{1}\hypersetup{pageanchor=true}\normalfont\color{pubInk}%
++}
++
+ \endinput

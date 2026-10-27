@@ -1,0 +1,60 @@
+\section*{The formal core and analytic continuation}
+\phantomsection\label{sec:current_release}
+\addcontentsline{toc}{section}{The formal core and analytic continuation}
+The formal development combines finite algebraic constructions, exact nonlinear packet coordinates, and an analytic packet interface. Its verification record includes compilation in the pinned environment, an audit of the compiled ownership boundary and transitive axioms, replay of the owned logical declarations into an environment initially containing only upstream dependencies, and rejection controls.
+
+\subsection*{The mathematical objects are the actual ranges}
+The input space for a jet is the dependent finite product of the submodules \(\operatorname{ran}P_{\alpha_i}\). The output is \(\operatorname{ran}Q_\gamma\). These submodules carry their inherited norms. The continuous jet uses the actual inclusions and output restriction. Its underlying multilinear map is the previously defined algebraic range jet.
+\[
+ \|J_{\gamma\mid\alpha}B\|\leq \|Q_\gamma\|\,\|B\|.
+\]
+The product of input-projector norms belongs to the estimate for the ambient extension. It is unnecessary in the sharper bound for the literal restricted jet. Closed ranges and the continuous coordinate equivalence are proved for continuous projectors.
+
+\begin{longtable}{@{}p{.34\linewidth}p{.59\linewidth}@{}}
+\toprule \textbf{Source module} & \textbf{Formal content}\\\midrule\endhead
+\code{PacketCoordinates.lean}\newline \code{PacketDirectSum.lean} & Analysis and synthesis for a finite complete pairwise annihilating idempotent family, with range-valued coordinates and the direct-sum comparison.\\
+\code{NonlinearPacketCoordinates.lean} & Exact coordinate representation of arbitrary functions, composition and coordinate changes.\\
+\code{MultilinearPacketJets.lean} & Complete finite multilinear expansion, literal range jets, and reconstruction. Mixed input labels are retained.\\
+\code{BoundedPacketJetNorm.lean} & The ambient continuous multilinear extension and its product norm bound.\\
+\code{ContinuousPacketJets.lean} & Closed ranges, continuous packet coordinates, literal continuous range jets, the sharper norm bound, and specialization to \code{iteratedFDeriv}.\\
+\code{PacketJetComposition.lean} & Composition over all finite ordered partitions and intermediate labels, structural vanishing, and one-way support inclusion.\\
+\bottomrule
+\end{longtable}
+
+All paths in this table are relative to \code{formal/KomorebiPaperIII/}. The formal sources state their own field, norm, finiteness and regularity assumptions. The composition theorem assumes \code{ContDiffAt K n f x} and \code{ContDiffAt K n g (f x)}. The intermediate and output projectors are continuous. Input range inclusions are continuous without an additional continuity hypothesis on the input family.
+
+\subsection*{What the derivative notation commits to}
+Mathlib defines \code{iteratedFDeriv} as a total function. Reconstructing its chosen value is unconditional. That identity alone does not assert differentiability of an arbitrary map. The composition theorem supplies local differentiability hypotheses explicitly. Its \code{OrderedFinpartition n} uses the canonical order of the blocks by their greatest elements. Each original slot is selected by the partition embedding, and every intermediate label assignment is summed. In the real or complex smooth setting, symmetry identifies this formula with the manuscript's unordered-partition notation.
+
+The support theorem says that a nonzero composite jet has at least one decorated partition with a nonzero outer jet and all inner jets nonzero. It gives no converse. Constituent maps can compose to zero, and distinct terms can cancel. The formal composition identity also covers order zero through the unique empty partition. The positive-order manuscript formula requires no new nullary convention.
+
+\subsection*{Compilation and kernel evidence}
+\input{generated/current_receipts.tex}
+The full command transcripts and exact source snapshots accompany every phase. The owned audit examines compiled declarations by module ownership, including names outside the main namespace. It rejects project axioms, unreviewed opaque or partial declarations, unsafe declarations, and transitive axioms outside the standard basis \code{propext}, \code{Classical.choice}, and \code{Quot.sound}.
+
+Generated runtime helpers are inventoried separately from the logical declarations replayed by the kernel. A helper count is not a theorem count. The rejection controls include foreign owned axioms, opaque, unsafe and partial declarations, false arithmetic, a proof placeholder, and a deliberately corrupted replay declaration. A harmless foreign namespace is a positive control. The negative controls pass when the designated defect is rejected for the recorded reason.
+
+The original 41-row map below remains the finite baseline map. Its 143 targets comprise 88 theorem declarations and 55 constructions. The historical count of 468 namespace entries includes 229 theorem entries. These denominators are different from the enlarged ownership closure and from the manuscript's 98 result environments plus two classical standard facts.
+
+
+\subsection*{Mathematical and finite evidence}
+The main text contains 98 result environments and two classical standard facts. Its finite and nonlinear coordinate arguments, the Section~17 analytic arguments, and the 59 later results plus two classical inputs have ordinary mathematical reviews under their stated hypotheses. The statement register identifies their status individually; these review counts do not assert complete Lean coverage.
+
+The accompanying finite evidence records 18,630 exact assertions across three coordinate and calculus suites, 124 visual-model checks, and four rejected false controls. The computation audit specifies the tested ranges and repeated cases. These finite calculations support the examples and implementations; they do not replace the ordinary proofs or extend the formal contract.
+
+The mathematical reading route is the main text, the analytic packet supplement, the 24 worked visual plates with 22 exact model figures, and this declaration-level guide. The supplement supplies the range-space, norm, Taylor, composition, and support arguments, including degenerate cases and the relation to the formal interface. The formal source distribution includes its exact sources, dependency pins, verification transcripts, mathematical reviews, computation scripts, statement register, and SHA-256 manifest.
+
+\subsection*{Reproduce the formal verification}
+The archive supplies owned source, pins, receipts and scripts. Restore the pinned Lean distribution and the dependency revisions using \code{formal/README.md}. Build in a separate working copy so the recorded manifest and transcripts stay intact. From \code{formal/}, run the four phases with a fresh object directory and unique labels:
+\begin{Verbatim}[fontsize=\small,frame=leftline,breaklines=true,breakanywhere=true]
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase full --label local_full --objects build/local_objects
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase audit --label local_audit --objects build/local_objects
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase replay --label local_replay --objects build/local_objects
+python3 scripts/run_release_verification.py --lean /absolute/path/to/lean --phase controls --label local_controls --objects build/local_objects
+\end{Verbatim}
+The runner refuses a preexisting owned object directory for the full build. It records source hashes before and after compilation, the exact executable and command, output hashes, exit codes, and the expected diagnostics for adverse controls. Changing a dependency or toolchain creates a new verification event.
+
+\subsection*{The remaining formal boundary}
+The manuscript's integral Taylor remainder, its factorial estimate, and the Stirling count of decorated terms are supplied as ordinary proofs. The 59 later results and two classical standard facts in Sections 18--27 were reviewed mathematically. Matching Lean formalizations for that expanded portion were not recovered. An earlier visual account claimed broader formal coverage, but no matching Lean sources were recovered; that account remains historical material.
+
+These boundaries leave a complete mathematical reading edition with a precisely identified formal core and continuation. The statement register distinguishes fully mapped statements, partial formal correspondence, inherited references, and ordinary proofs.

@@ -1,0 +1,37 @@
+[
+  {
+    "stage": "group_result_normalization",
+    "failure": "Initial adapter assumed every group report was an object with components; V-VIII report was a direct list. Dependent setup commands also stopped due to missing output.",
+    "resolution": "Normalize list and object report shapes explicitly; require successful setup before assembly. No source or scientific payload changed."
+  },
+  {
+    "stage": "first_full_PDF_save",
+    "failure": "Duplicate-object merging (PyMuPDF garbage=3) spent several minutes before emitting output. The incomplete zero-byte PDF was deliberately interrupted with the running-session control. A cross-namespace PID kill attempt found no process; a first whitespace-mismatched source patch did not apply.",
+    "resolution": "Use garbage=2 (remove unused objects and compact cross-references) with compression, avoiding quadratic duplicate-object merging. All vector content and links retained; final audit is required."
+  },
+  {
+    "stage": "independent_static_review",
+    "failure": "Duplicate part-opening folios and named PDF destinations with a different coordinate convention were detected before the completed book.",
+    "resolution": "Remove outer duplicate part folios; transform bottom-left named PDF destinations to top-left page coordinates before global mapping. Frozen numeric routes target the exact original attached editions."
+  },
+  {
+    "stage": "final_navigation_bounds",
+    "failure": "The first all-page audit found 83 otherwise valid internal links whose page-origin destination moved to x=-6 after mirrored gutter translation.",
+    "resolution": "Clamp transformed navigation destination points to the physical book page. Reassemble the complete book and rerun the independent audit. Content geometry is unchanged."
+  },
+  {
+    "stage": "first_audit_predicates",
+    "failure": "The first audit did not accept valid compact GoToE arrays such as [5/Fit], and treated empty-path sentinel bounding boxes as visible graphics.",
+    "resolution": "Retain the initial failed report and audit code; correct these two representation predicates without weakening destination range, text survival, full-page frame, attachment identity or visible geometry checks. Audit the new PDF hash."
+  },
+  {
+    "stage": "packaged_source_rebuild_portability",
+    "failure": "I-IV source builds depended on a local fonts/ folder intentionally excluded from the deliverable.",
+    "resolution": "Restore 60 font placements from 27 explicitly selected installed fonts with exact SHA-256 checks. A fresh empty-directory preparation test passed and an intentionally incorrect hash was rejected; 339 TeX/style/compiled-PDF files remained byte-identical. See source_i_iv/FONT_PREPARATION_VALIDATION.json and editorial/REBUILD_PORTABILITY_REVIEW.json."
+  },
+  {
+    "stage": "package_verifier_invocation",
+    "failure": "The initial packaging invocation supplied a positional root argument that the unchanged strict verifier does not accept; it exited before checking the stage.",
+    "resolution": "Call the verifier at its staged path with --strict. It derives the package root from its own location. Correct the README command as well; preserve verifier bytes and inherited control provenance."
+  }
+]

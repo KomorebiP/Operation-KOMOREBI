@@ -1,0 +1,8 @@
+theorem compile_attains (keep overhead : α → R) (t : CandidateTree α) :
+    cutValue keep overhead (compile keep overhead t) = optimalValue keep overhead t := by
+  induction t with
+  | leaf a => rfl
+  | node a n ts ih =>
+    by_cases h : keep a ≤ overhead a + ∑ i, optimalValue keep overhead (ts i)
+    · simp [compile, h, cutValue, root, optimalValue]
+    · simp [compile, h, cutValue, ih, optimalValue, min_eq_right (le_of_not_ge h)]

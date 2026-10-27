@@ -1,0 +1,132 @@
+\section{Finite channels and the full Knill--Laflamme criterion}
+\label{sec:recovery}
+
+\subsection{Complete positivity has an actual amplification map}
+The Kraus channel is the finite complex-matrix map
+\[
+\Phi(\rho)=\sum_aK_a\rho K_a^*.
+\]
+Its additivity and complex homogeneity construct an actual linear map. Each summand preserves positive semidefiniteness by a matrix congruence, so the finite sum is positive. Trace preservation is a separate theorem under $\sum_aK_a^*K_a=1$, proved by cyclic trace rotation and completeness of that Kraus sum.
+
+To prove complete positivity the source does not merely restate positivity. It defines blockwise amplification on matrices indexed by $J\times n$ and identifies it entrywise with the actual Kraus family $1_J\otimes K_a$.
+
+\excerpt{KrausChannels}{kraus_amplify}
+\excerpt{KrausChannels}{kraus_cp}
+
+\contract{The system and Kraus index types are finite. The reference type \code{J} is arbitrary finite with decidable equality. Complete positivity itself does not require Kraus normalization; normalization is needed for trace preservation and preservation of density matrices. Every finite reference dimension is quantified in the theorem, rather than sampled in an example. Infinite reference systems are not encoded by these finite matrix declarations.}
+
+\walk{The amplification identity expands entries of a Kronecker product, uses the identity matrix to force equality of the reference indices, and collapses the corresponding sums. Once amplification is literally a Kraus map, the earlier positivity theorem applies without a new positivity hypothesis about the amplified channel.}
+
+\subsection{Orthogonal syndromes are the recovery stage}
+The recovery construction begins with a code projection $P$ and an orthogonal normalized family $E_a$ satisfying
+\[
+E_aP=E_a,\qquad E_a^*E_b=\delta_{ab}P.
+\]
+Their output packets $Q_a=E_aE_a^*$ are orthogonal star projections. Their sum $Q$ is a star projection and $Q^\perp=1-Q$ is its complement.
+
+\excerpt{SyndromeRecovery}{syndrome_structure}
+
+The decoder is
+\[
+\mathcal R(\sigma)=\sum_aE_a^*\sigma E_a+Q^\perp\sigma Q^\perp.
+\]
+The complement term is important. Without it the decoder would generally lose trace on input outside the sum of syndrome output spaces. The implementation uses \code{Option I} as the total recovery-Kraus index: \code{some a} denotes $E_a^*$, and \code{none} denotes $Q^\perp$. Thus the extra branch is encoded in the actual finite family.
+
+\excerpt{SyndromeRecovery}{syndrome_complete}
+
+\walk{The sum over \code{Option I} splits into the complement branch and the syndrome branches. Self-adjointness and idempotence turn the complement contribution into $Q^\perp$; the syndrome contribution is $Q$. Their sum is the identity. This proves trace preservation on the entire ambient matrix space, not merely on noisy code states.}
+
+For an arbitrary code-supported operator $P\rho P=\rho$, the decoder of a cross error is
+\[
+\mathcal R(E_a\rho E_b^*)=\delta_{ab}\rho.
+\]
+The orthogonal Gram law kills every nonmatching syndrome contribution, and the complement annihilates each error output.
+
+\excerpt{SyndromeRecovery}{syndrome_cross}
+
+At the abstract star-ring level, this is an algebraic correction identity. The concrete complex-matrix layer additionally proves positivity, trace preservation, complete positivity at every finite reference dimension and preservation of density matrices. A weighted normalized mixture and a coherent error superposition are then handled by linearity and the cross-error formula.
+
+This file alone would prove recovery for supplied orthogonal syndrome data. It would not prove that arbitrary Knill--Laflamme Gram data can be put into that form, and it would not prove necessity of the Gram condition. The current source has separate modules for those obligations.
+
+\subsection{General Gram data are not assumed diagonal}
+The finite Knill--Laflamme data consist of a star projection $P$, errors $E_a$, and a positive semidefinite coefficient matrix $C$ with
+\[
+PE_a^*E_bP=C_{ab}P.
+\]
+No invertibility of $C$ is required. The matrix can be singular and can have off-diagonal coefficients.
+
+\excerpt{KnillLaflammeSufficiency}{kl_data}
+
+First restrict each error to the code by replacing $E_a$ with $E_aP$. This changes neither the noisy output of a supported operator nor its compressed Gram data. The source's \code{mix E U r} uses the columns of $U$ as the new error coordinates. It proves that mixing transforms the Gram matrix to $U^*CU$ and that unitary mixing leaves the Kraus noise map unchanged.
+
+The actual Hermitian spectral theorem supplies \code{eigenvectorUnitary} and real eigenvalues. Positive semidefiniteness proves those eigenvalues are nonnegative. The declaration below constructs the diagonal error data directly from that spectral information.
+
+\excerpt{KnillLaflammeSufficiency}{kl_diagonal}
+
+\walk{The \code{error} field mixes the code-restricted errors by the spectral unitary. The \code{weight} field uses the actual eigenvalues. The \code{gram} field applies the proved diagonalization identity. The \code{restricted} field uses idempotence of the code projector, and the \code{nonnegative} field comes from positivity of the input Gram matrix. The result is built, not supplied as a new input.}
+
+\subsection{Singular directions are eliminated without division by zero}
+If a diagonal weight is zero, the corresponding restricted error satisfies $E^*E=0$. For finite complex matrices this forces $E=0$. Therefore the construction does not normalize a zero spectral direction.
+
+\excerpt{KnillLaflammeSufficiency}{kl_null}
+
+The active index is the subtype \texttt{\{a : I // 0 < D.weight a\}}. For an active error define $F_a=\lambda_a^{-1/2}E_a$. The source proves the square root is nonzero and its square equals the weight before using its inverse. The normalized errors satisfy $F_a^*F_b=\delta_{ab}P$, so the preceding syndrome construction applies.
+
+For an unnormalized original error family, the decoder corrects the noise to the exact scale
+\[
+\mathcal R\!\left(\sum_aE_a\rho E_a^*\right)=\operatorname{tr}(C)\rho.
+\]
+Unitary mixing preserves the noise, the restricted noise agrees on the code, and the spectral eigenvalue sum is the trace of $C$. If the original errors form a normalized channel and $P\ne0$, compressing the Kraus completeness relation gives $\operatorname{tr}(C)P=P$, so the scale is one. If $P=0$, every supported operator is zero and the correction assertion follows directly.
+
+\excerpt{KnillLaflammeSufficiency}{kl_corrects}
+
+\contract{This sufficiency statement assumes finite complex matrices, a star code projection, a positive Gram matrix and its compressed Gram relation, together with global Kraus normalization for exact unit-scale channel correction. The correction conclusion covers all code-supported operators, not only positive ones. The decoder is an actual finite CPTP extension on the whole space. Its spectral construction is mathematical and noncomputable; no numerical eigenvalue routine or executable decoder-performance claim is supplied.}
+
+\subsection{Necessity starts from actual recovery}
+The reverse implication takes a finite recovery family $R_r$ with $\sum_rR_r^*R_r=1$, and assumes its actual composite Kraus map fixes every code-supported operator. It must derive the Gram condition rather than take it as a premise.
+
+The key rigidity lemma says that if $A^*A$ is the rank-one Gram matrix of a vector $p$, then every row of $A$ is a scalar multiple of $p$. If $p=0$, positivity gives $A=0$. Otherwise choose a nonzero coordinate $p_t$. A vector supported in two coordinates and orthogonal to $p$ is in the kernel of $A^*A$, hence of $A$. The resulting two-coordinate equation yields the row proportionality.
+
+\excerpt{KnillLaflammeNecessity}{kl_rigidity}
+
+To apply this to Kraus operators, flatten each operator's entries into a row indexed by a pair of matrix coordinates. Evaluate the asserted map equality on matrix units. This yields the rank-one Gram equality for the flattened matrix. Each composite recovery operator $R_rE_aP$ must therefore be $z_{ra}P$.
+
+Now insert the recovery completeness relation into $PE_a^*E_bP$. It becomes the sum of adjoint products of those composite operators. Their scalar form gives a positive Gram matrix $C=Z^*Z$ with the required coefficients.
+
+\excerpt{KnillLaflammeNecessity}{kl_necessity}
+
+\walk{The witness $Z^*Z$ is positive by an existing matrix theorem. The intermediate \code{heq} is obtained by inserting $\sum_rR_r^*R_r=1$ without reordering the error factors. After rewriting every $R_rE_aP$ as a scalar times $P$, self-adjointness and idempotence reduce the sum to the entries of $Z^*Z$ times $P$. Thus positivity is proved from the recovery, not imposed on an unknown matrix.}
+
+\subsection{The state formulation is bridged to all code operators}
+A physical criterion is usually stated for density matrices: positive semidefinite, trace one and supported on the code. The necessity argument above uses all code-supported operators. The source supplies the missing bridge.
+
+First, a nonzero positive matrix has positive nonzero trace. Scaling by the inverse real trace produces a density matrix; linearity then removes that normalization. Zero positive matrices are handled separately. Next, the complex polarization identity expresses an arbitrary outer product $xy^*$ as a linear combination of pure positive matrices. Finally, matrix units span all matrices. Agreement of two complex-linear maps on pure states therefore forces agreement on every operator.
+
+\excerpt{QuantumStateBridge}{density_bridge}
+
+The predicate \code{StateCorrectable P E} existentially quantifies a natural number and a recovery family on \code{Fin m}. Its recovery is normalized and fixes all normalized code density matrices. The final endpoint combines the density bridge with the already proved operator-space equivalence.
+
+\excerpt{QuantumStateBridge}{kl_criterion}
+
+\contract{The code is a star projection. The error family is finite and normalized by $\sum_aE_a^*E_a=1$. The existential Gram matrix must be positive semidefinite and satisfy every compressed cross relation. The theorem permits the zero code; then no nonzero normalized code density matrix exists, and the operator bridge remains valid because the supported operator space is zero.}
+
+\subsection{Reference systems and error spans}
+The finite-reference theorem identifies each reference block of $1\otimes\mathcal R$ and $1\otimes\mathcal E$ with the corresponding system noise map. The supported reference matrix condition implies each system block is code-supported, so the operator correction theorem applies block by block.
+
+\excerpt{QuantumStateBridge}{kl_reference}
+
+It follows that the same correction identity holds for entangled states with any finite reference system. Positivity and trace-one are not required for the displayed algebraic identity; they can be supplied to interpret the matrix as a density state. This is stronger than checking only product states and does not rely on assuming separability.
+
+The error-span module keeps track of cross coefficients. With the source's Gram orientation,
+\[
+\mathcal R(E_a\rho E_b^*)=C_{ba}\rho.
+\]
+The reversed indices are deliberate. Expanding a coherent combination produces the scalar $\sum_{a,b}c_a\overline{c_b}C_{ba}$. Summing such expressions over a new Kraus family $F_j$ in the old error span gives a common scalar multiplier. If the new family is normalized, trace preservation forces that multiplier to one on a nonzero code. The zero-code case again has only the zero supported operator.
+
+\excerpt{ErrorSpanRecovery}{kl_span}
+
+This is one fixed recovery correcting every normalized channel in the error span, with the coefficients explicitly witnessing span membership. It does not claim unit-scale correction for an arbitrary unnormalized linear combination. For unnormalized error families, the separate criterion requires a nonnegative scale $t$ independent of the supported input operator and proves equivalence with the Gram relation.
+
+\excerpt{ErrorSpanRecovery}{kl_family}
+
+The example module checks illustrative finite cases, including singular and non-diagonal Gram behavior. Those examples help expose conventions, but the general theorem rests on spectral reduction, normalized syndrome recovery, rank-one necessity and the density-operator bridge. The current scope is the full finite complex-matrix criterion under its stated hypotheses; the earlier orthogonal-syndrome block alone was only a stage of that proof.

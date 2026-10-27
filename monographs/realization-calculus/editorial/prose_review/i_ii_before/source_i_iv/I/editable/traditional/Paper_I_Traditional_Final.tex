@@ -1,0 +1,243 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=23mm,includeheadfoot,headheight=15pt,headsep=15pt,footskip=22pt]{geometry}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{aliascnt}
+\usepackage{booktabs,longtable,array,tabularx}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[table]{xcolor}
+\usepackage{setspace}
+\usepackage[most]{tcolorbox}
+\usepackage{needspace}
+\usepackage{multicol}
+\usepackage{makecell}
+\usepackage{graphicx,tikz,titlesec,bookmark,caption,etoolbox,tocloft}
+\setlength{\cftbeforesecskip}{4pt}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+\graphicspath{{figures/}}
+\definecolor{accent}{HTML}{137668}\definecolor{muted}{HTML}{536568}
+\frenchspacing\emergencystretch=2em\clubpenalty=10000\widowpenalty=10000\raggedbottom
+\titleformat{\section}{\sffamily\bfseries\large\color{accent}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize}{\thesubsection}{.7em}{}
+\titlespacing*{\section}{0pt}{1.4\baselineskip}{.55\baselineskip}
+\captionsetup{font=small,labelfont={sf,bf},labelsep=period}
+\pretocmd{\section}{\Needspace{7\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{5\baselineskip}}{}{}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\cA}{\mathcal A}\newcommand{\cB}{\mathcal B}\newcommand{\cP}{\mathcal P}
+\newcommand{\R}{\mathbb R}\newcommand{\C}{\mathbb C}\newcommand{\Z}{\mathbb Z}\newcommand{\N}{\mathbb N}
+\newcommand{\Spec}{\operatorname{Spec}}\newcommand{\rank}{\operatorname{rank}}\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\closure}[1]{\overline{#1}}
+
+
+\allowdisplaybreaks
+\setstretch{1.055}
+\setlength{\parskip}{0.30em}
+\setlength{\parindent}{1.35em}
+\setlist[itemize]{topsep=0.35em,itemsep=0.15em,leftmargin=1.6em}
+\setlist[enumerate]{topsep=0.35em,itemsep=0.15em,leftmargin=1.8em}
+\definecolor{PSCBlue}{RGB}{44,83,118}
+\definecolor{PSCLightBlue}{RGB}{242,247,251}
+\definecolor{PSCGreen}{RGB}{49,105,83}
+\definecolor{PSCLightGreen}{RGB}{243,249,246}
+\definecolor{PSCAmber}{RGB}{132,91,21}
+\definecolor{PSCLightAmber}{RGB}{252,248,238}
+\definecolor{PSCGray}{RGB}{90,96,102}
+\definecolor{PSCLightGray}{RGB}{247,247,247}
+
+\newtcolorbox{readerroadmap}[1][]{
+  enhanced,breakable,colback=PSCLightBlue,colframe=PSCBlue,
+  boxrule=0.65pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Reader roadmap},#1}
+\newtcolorbox{keyidea}[1][]{
+  enhanced,breakable,colback=PSCLightGreen,colframe=PSCGreen,
+  boxrule=0.65pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Key idea},#1}
+\newtcolorbox{interpretation}[1][]{
+  enhanced,breakable,colback=PSCLightGray,colframe=PSCGray,
+  boxrule=0.55pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Interpretation},#1}
+\newtcolorbox{microexample}[1][]{
+  enhanced,breakable,colback=PSCLightAmber,colframe=PSCAmber,
+  boxrule=0.55pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Running example},#1}
+\newtcolorbox{hypothesisguide}[1][]{
+  enhanced,breakable,colback=white,colframe=black!45,
+  boxrule=0.5pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Why the hypotheses matter},#1}
+\newtcolorbox{sectionrecap}[1][]{
+  enhanced,breakable,colback=white,colframe=PSCBlue,
+  borderline west={2pt}{0pt}{PSCBlue},boxrule=0pt,arc=0mm,
+  left=2mm,right=1mm,top=0.8mm,bottom=0.8mm,
+  fonttitle=\bfseries,title={Section recap},#1}
+\newtcolorbox{warningbox}[1][]{
+  enhanced,breakable,colback=PSCLightAmber,colframe=PSCAmber,
+  boxrule=0.65pt,arc=1.2mm,left=1.4mm,right=1.4mm,top=1mm,bottom=1mm,
+  fonttitle=\bfseries,title={Do not conflate},#1}
+\newcommand{\ProofMap}[1]{\begin{interpretation}[title={Proof map}]#1\end{interpretation}}
+\newcommand{\ConceptChain}[1]{\begin{center}\fbox{\begin{minipage}{0.92\textwidth}\centering #1\end{minipage}}\end{center}}
+
+\hypersetup{
+  pdftitle={Projector Resolved Seed Calculus I: Typed Operator Systems, Seed Rank, and Exact Packet Coordinates},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Expanded symbolic and expository foundation},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}KOMOREBI MATHEMATICS / PAPER I}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{muted}TRADITIONAL PAPER}
+\fancyfoot[L]{\sffamily\fontsize{8}{10}\selectfont\color{muted}Projector-resolved seed calculus}\fancyfoot[R]{\sffamily\small\color{accent}\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{classicalinput}{theorem}
+\newtheorem{classicalinput}[classicalinput]{Classical Input}
+\aliascntresetthe{classicalinput}
+\theoremstyle{remark}
+\newaliascnt{boundary}{theorem}
+\newtheorem{boundary}[boundary]{Boundary}
+\aliascntresetthe{boundary}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\theoremstyle{definition}\newtheorem{example}[theorem]{Example}
+\newtheorem{construction}[theorem]{Construction}
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{classicalinput}{classical input}{classical inputs}
+\crefname{boundary}{boundary}{boundaries}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\bbk}{\Bbbk}
+\newcommand{\A}{\mathcal A}
+\newcommand{\B}{\mathcal B}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Qcal}{\mathcal Q}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Hull}{\operatorname{Hull}}
+\newcommand{\srank}{\operatorname{srank}}
+\newcommand{\psrank}{\operatorname{psrank}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\Jac}{\operatorname{Jac}}
+\newcommand{\Irr}{\operatorname{Irr}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\alg}{\operatorname{alg}}
+\newcommand{\Reach}{\operatorname{Reach}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\cl}[1]{\overline{#1}}
+\newcommand{\RecordID}[1]{\label{record:#1}}
+\newcommand{\Depends}[1]{}
+\newcommand{\Exports}[1]{}
+\newcommand{\BoundaryNote}[1]{\par\noindent\begingroup\footnotesize\color{PSCGray}\raggedright\textbf{Boundary.} #1\par\endgroup}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+
+\newcommand{\OO}{\mathcal O}\newcommand{\FF}{\mathbb F}\newcommand{\QQ}{\mathbb Q}\newcommand{\ZZ}{\mathbb Z}\newcommand{\RR}{\mathbb R}\newcommand{\CC}{\mathbb C}\newcommand{\kk}{\Bbbk}
+\renewcommand{\AA}{\mathcal A}\newcommand{\BB}{\mathcal B}
+\newcommand{\Fitt}{\operatorname{Fitt}}\newcommand{\Ann}{\operatorname{Ann}}\newcommand{\coker}{\operatorname{coker}}\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\whot}{\mathbin{\widehat\otimes}}\newcommand{\m}{\mathfrak m}\newcommand{\p}{\mathfrak p}
+\newcommand{\head}[1]{\par\vspace{2pt}{\sffamily\bfseries\normalsize #1}\par\vspace{1pt}}
+\newcommand{\atlasCaption}[1]{\par\noindent{\footnotesize\color{black!70}#1\par}}
+\newtcolorbox{insight}{colback=black!3,colframe=accent,boxrule=0pt,leftrule=1.1pt,arc=0pt,left=10pt,right=10pt,top=3pt,bottom=3pt,before skip=4pt,after skip=4pt,fontupper=\fontsize{9.7}{11.2}\selectfont}
+\newcommand{\takeaway}[1]{\begin{insight}\textbf{Read this as:}\ #1\end{insight}}
+\newcommand{\vfig}[2][.92]{\par\begingroup\centering\setlength{\dimen0}{#1\linewidth}\resizebox{.90\dimen0}{!}{\input{visual_graphics/#2.tex}}\par\endgroup\vspace{2pt}}
+\newcommand{\vpage}[4]{\clearpage\hypertarget{visual:#1}{}\pdfbookmark[2]{Plate I.#1. #2}{PIA.visual#1}{\sffamily\small\bfseries\color{accent}Plate I.#1 / #3\par}\vspace{5pt}{\sffamily\bfseries\fontsize{22}{25}\selectfont #2\par}\vspace{5pt}{\sffamily\fontsize{8.7}{11}\selectfont\color{black!65}#4\par}\vspace{6pt}}
+\newcommand{\pagerefV}[1]{\hyperlink{visual:#1}{Plate~#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}\newcommand{\mat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-monograph}
+\renewcommand{\KomorebiTitle}{Projector Resolved Seed Calculus I}
+\renewcommand{\KomorebiSubtitle}{Typed operator systems, seed rank, and exact packet coordinates}
+\renewcommand{\KomorebiSeries}{Chapter I}
+\renewcommand{\KomorebiKind}{Mathematical text}
+\renewcommand{\KomorebiEdition}{}
+\renewcommand{\KomorebiShortTitle}{Chapter I}
+\renewcommand{\KomorebiTitleSize}{33}
+\renewcommand{\KomorebiTitleLeading}{39}
+\renewcommand{\KomorebiProfile}{monograph}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\usepackage{titlesec}
+\input{core-layout.tex}
+
+% Publication-design overrides. Mathematical bodies retain their source text.
+\CoreLayout
+\colorlet{accent}{pubTeal}\colorlet{teal}{pubTeal}\colorlet{ink}{pubInk}\colorlet{muted}{pubMuted}\colorlet{pale}{pubWash}\colorlet{light}{pubWash}
+\makeatletter
+\@ifundefined{KomorebiCover}{}{\renewcommand{\KomorebiCover}{%
+\clearpage\hypersetup{pageanchor=false}\thispagestyle{empty}\begingroup\setlength{\parindent}{0pt}%
+{\sffamily\fontsize{8.5}{11}\selectfont\color{pubTeal}REALIZATION CALCULUS\par}%
+\vspace{27pt}%
+{\sffamily\fontsize{9}{12}\selectfont\color{pubTeal}\MakeUppercase{\KomorebiSeries}\par}%
+\vspace{22pt}%
+{\normalfont\fontsize{29}{35}\selectfont\color{pubNavy}\raggedright\KomorebiTitle\par}%
+\vspace{17pt}%
+{\normalfont\fontsize{17}{23}\selectfont\color{pubMuted}\raggedright\KomorebiSubtitle\par}%
+\vspace{22pt}\noindent\textcolor{pubCopper}{\rule{42pt}{.8pt}}\par%
+\vspace{20pt}%
+\@ifundefined{KomorebiCoverBlurb}{}{\normalfont\fontsize{11.4}{16.2}\selectfont\color{pubMuted}\raggedright\KomorebiCoverBlurb\par}%
+\vfill%
+{\normalfont\fontsize{14}{18}\selectfont\color{pubInk}Komorebi P.\par}%
+\vspace{9pt}{\sffamily\fontsize{9}{13}\selectfont\color{pubMuted}\KomorebiKind\par\KomorebiEdition\par}%
+\endgroup\clearpage\pagenumbering{roman}\hypersetup{pageanchor=true}\color{pubInk}\normalfont\pagestyle{empty}}}
+\makeatother
+
+\begin{document}
+\KomorebiCover
+\begin{abstract}
+This paper begins with a practical mathematical question. Once a family of operators has been fixed, what can we generate from a few starting vectors, and how can we keep track of the resulting object? The answer has two parts. Seed rank measures how many starting vectors are needed. Packet coordinates describe the components of vectors and the transfers between them.
+
+The construction starts with a typed operator grammar and a concrete realization of that grammar. From there we study generated hulls, presentations by seeds and relations, and the number of generators required by a module. The generator results include reduction modulo the Jacobson radical, the semisimple multiplicity formula over division rings, and the formula for a single operator over an arbitrary field.
+
+We then resolve vectors and operators using complete families of idempotents. Finite packet reconstruction is exact. Countable reconstruction requires the stated convergence assumptions. Transfer blocks record the action from each input packet to each output packet, and their multiplication exposes both admissible paths and cancellation. Later sections develop quotient descent, coordinate changes, completion, and transport through realization functors.
+
+Worked quiver, coordinate ring, matrix, graph, and shift models show how the same language is used in different settings. The visual atlas follows these models through complete calculations. Stable statement identifiers connect this text to the existing machine companion, while the separate Lean guide specifies the scope of the formal certificates. The written proofs and the imported classical results retain their stated hypotheses.
+\end{abstract}
+
+\clearpage
+\begingroup\small\setstretch{1.0}\tableofcontents\endgroup
+\clearpage
+
+\input{01_orientation.tex}
+\clearpage\pagenumbering{arabic}
+\input{02_foundations.tex}
+\input{03_packets_and_graphs.tex}
+\input{04_transport.tex}
+\input{05_worked_models.tex}
+\input{06_reference.tex}
+\end{document}

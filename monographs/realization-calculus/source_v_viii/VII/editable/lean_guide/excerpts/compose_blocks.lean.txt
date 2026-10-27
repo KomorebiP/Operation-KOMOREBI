@@ -1,0 +1,10 @@
+theorem compose_blocks (U V : R) (b a : I) :
+    P.block (U * V) b a = ∑ c, P.block U b c * P.block V c a := by
+  have term (c : I) : P.block U b c * P.block V c a =
+      P.proj b * U * P.proj c * V * P.proj a := by
+    unfold block
+    calc
+      _ = P.proj b * U * (P.proj c * P.proj c) * V * P.proj a := by noncomm_ring
+      _ = _ := by rw [P.idempotent]
+  simp_rw [term]
+  simp only [← Finset.sum_mul, ← Finset.mul_sum, P.sum_proj, block, mul_assoc, one_mul]

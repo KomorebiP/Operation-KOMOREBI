@@ -1,0 +1,237 @@
+\clearpage\subsection{First Lean Block Supplement}\label{app:sup1}
+\noindent\textbf{Checkpoint scope.} This complete source body retains the status of its dated original supplement. Earlier pending or partial-coverage labels are historical; the final core records their resolution.\par\medskip
+\subsubsection*{Scope and result}
+This block uses the 28-page \emph{status-corrected} Paper IX manuscript. That PDF is preserved unchanged. The release supplies a first formalization companion, not a completed or rewritten arithmetic paper.
+
+\textbf{Seven of 24 named manuscript-proved items now have Lean coverage in the stated scopes. Seventeen remain pending.} Three classical inputs and two conjectures are registered separately. The development contains \textbf{89 explicit theorem declarations and 22 definitions across eight modules}. Supporting lemmas and concrete instances are included; these are not 89 independent discoveries.
+
+\begin{center}
+\begin{tabular}{@{}p{.15\textwidth}p{.73\textwidth}@{}}
+\toprule
+Item & Covered mathematical content\\\midrule
+1.2 & Residue reconstruction and divisor refinement\\
+2.1 & Actual unit-EGF coordinate equivalence and transported projectors\\
+2.2 & Filtered finite coefficient reconstruction, including $\Z_p$\\
+3.2 & Constructed unique triangular inverse and original section identity\\
+3.3 & Universal denominator clearing\\
+8.2 & Lucas standard-window reduction and the diagonal unit\\
+13.1 & Exact normalization counterexample and sharp factorial loss\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection*{The correction is preserved}
+The normalized packet is not the same object as the packet multiplied by $j!$. The checked recurrence gives
+\[
+ C_{6,3}(1)=-\frac1{84},\qquad C_{6,3}(2)=\frac{703}{5460},
+\]
+\[
+ C_{6,3}(2)-C_{6,3}(1)=\frac{64}{455},\qquad
+ v_3\!\left(\frac{64}{455}\right)=0.
+\]
+Thus the unrestricted normalized no-loss claim fails already at a valid one-step parameter instance. Multiplication by $3!$ restores one factor of three in this instance. The general corrected finite-difference theorem is \textbf{not} inferred from this calculation and is not yet formalized here.
+
+\subsubsection*{Verification standard}
+All eight modules passed a fresh cumulative build with compiler warnings treated as errors. The audit resolved all 89 explicit theorems and all 22 explicit definitions. Their transitive axiom dependencies are confined to \mcode{propext}, \mcode{Classical.choice} and \mcode{Quot.sound}, or subsets. Three invalid-proof controls were rejected. The proof, scope, and numerical-regression records remain distinct.
+\par\medskip
+\pageheading{1. Residue packets and actual EGF coordinates}{Source items 1.2 and 2.1}
+For a sequence $a:\N\to R$, define the actual selector
+\[
+ (P_{N,j}a)(n)=\begin{cases}a(n),&n\bmod N=j,\\0,&\text{otherwise.}\end{cases}
+\]
+The source proves idempotence for every selector, orthogonality for distinct standard residue labels, and, when $N>0$,
+\[
+ \sum_{j=0}^{N-1}P_{N,j}a=a.
+\]
+If $N\mid M$ and $M>0$, it also proves
+\[
+ P_{N,j}a=\sum_{\substack{0\le r<M\\r\bmod N=j}}P_{M,r}a.
+\]
+The formal power-series versions are proved coefficientwise for actual \mcode{PowerSeries} objects. There is no finite truncation of the sequence domain in these theorems.
+
+\subsection*{A constructed inverse, not an inverse hypothesis}
+Let $K$ be a characteristic-zero field. Define
+\[
+ \mathcal E(a)=\sum_{n\ge0}\frac{a_n}{n!}t^n,\qquad
+ \mathcal D(A)_n=n![t^n]A.
+\]
+Both inverse laws $\mathcal D\mathcal E=I$ and $\mathcal E\mathcal D=I$ are proved. The ordinary power-series product then yields the genuine binomial convolution
+\[
+ \mathcal D\bigl(\mathcal E(h)\mathcal E(a)\bigr)_n
+ =\sum_{r=0}^{n}\binom nr h_r a_{n-r}.
+\]
+For $h_0=1$, the formal inverse of $H=\mathcal E(h)$ is used to construct a sequence equivalence
+\[
+ U_H a=\mathcal D(H\mathcal E(a)),\qquad
+ U_H^{-1}a=\mathcal D(H^{-1}\mathcal E(a)).
+\]
+The equivalence has proved left and right inverse laws. The inverse's constant coefficient is proved to be one. The associated lower-triangular entries have diagonal one and vanish above the diagonal.
+
+For the actual conjugated selectors
+\[
+ \widehat P_{N,j}=U_HP_{N,j}U_H^{-1},
+\]
+idempotence, orthogonality, and finite reconstruction are proved from the constructed maps. No projector identity for the conjugates is inserted as an assumption.
+
+\textbf{Formal boundary.} These are formal series and coefficient identities. They do not establish convergence for an analytic EGF. The characteristic-zero field assumption is explicit; unrestricted factorial division in an arbitrary ring is not asserted.
+
+\textbf{Principal targets.}\par
+\target{ResiduePackets.packet_reconstruction}\par
+\target{ResiduePackets.packet_refinement}\par
+\target{EGF.coordinateEquiv, EGF.coordinate_forward, EGF.coordinate_inverse}\par
+\target{EGF.transported_reconstruction}
+\par\medskip
+\pageheading{2. Triangular inversion and denominator control}{Source items 3.2 and 3.3}
+For a general lower-triangular coefficient array $T$ over a field with nonzero diagonal, the code defines forward substitution by well-founded recursion:
+\[
+ a_n=\frac{b_n-\sum_{q<n}T_{nq}a_q}{T_{nn}}.
+\]
+It proves that this constructed sequence solves every row and that every sequence solving those rows equals it. No existence or uniqueness premise is used.
+
+\subsection*{The congruential coefficients}
+Over $\Q$, specialize to
+\[
+ T_{nq}=\binom{Nn+j}{Nq},\qquad b_n=\delta_{n0}.
+\]
+The diagonal is positive as an integer, hence nonzero. The resulting sequence $C_{N,j}(n)$ satisfies
+\[
+ C_{N,j}(0)=1,\qquad
+ \sum_{q=0}^{n}\binom{Nn+j}{Nq}C_{N,j}(q)=\delta_{n0}.
+\]
+The displayed recurrence in the manuscript and the unique-solution theorem are consequences of this definition.
+
+The formalization does not stop at a recurrence. In the variable $z=t^N$, construct
+\[
+ K_{N,j}(z)=\sum_{n\ge0}\frac{j!}{(Nn+j)!}z^n,\qquad
+ F_{N,j}(z)=\sum_{n\ge0}\frac{C_{N,j}(n)}{(Nn)!}z^n.
+\]
+It proves the factorial coefficient identity, then $F_{N,j}K_{N,j}=1$ and therefore $F_{N,j}=K_{N,j}^{-1}$.
+
+For $N>0$ and $0\le j<N$, the independently defined original exponential section is
+\[
+ E_{N,j}(t)=\sum_{d\equiv j\ ({\rm mod}\ N)}\frac{t^d}{d!}.
+\]
+Using the actual power-series expansion homomorphism $z\mapsto t^N$, the code proves
+\[
+ E_{N,j}(t)=\frac{t^j}{j!}K_{N,j}(t^N),\qquad
+ \boxed{F_{N,j}(t^N)E_{N,j}(t)=\frac{t^j}{j!}.}
+\]
+Thus the recurrence is connected back to the original normalized EGF definition. The section vanishes at zero when $j>0$; no inverse of that nonunit section is assumed.
+
+\subsection*{Universal clearing}
+Define
+\[
+ D_{N,j}(n)=\prod_{r=1}^{n}\binom{Nr+j}{Nr},\qquad D_{N,j}(0)=1.
+\]
+For every $n$, the code proves $D_{N,j}(n)C_{N,j}(n)\in\Z$. The general proof promotes each earlier clearing denominator to the common product, then cancels the new nonzero diagonal. This is a denominator bound, not a claim that every normalized coefficient is integral.
+\par\medskip
+\pageheading{3. Filtered tails and the standard window}{Source items 2.2 and 8.2}
+\subsection*{Filtration at a finite coefficient row}
+Let $R$ be any commutative ring. For $w\in\N\cup\{\infty\}$ define
+\[
+ p^{[w]}=\begin{cases}p^w,&w<\infty,\\0,&w=\infty.\end{cases}
+\]
+The infinity convention expresses a vanishing coefficient, not an infinite exponent operation. For any finite index set, every term with weight at least $L$ is divisible by $p^L$. A finite-sum proof yields
+\[
+ \boxed{p^L\ \bigm|\ 
+ \sum_{r=0}^{n}\binom nr c_rp^{[w(r)]}S_{n-r}
+ -\sum_{\substack{0\le r\le n\\w(r)<L}}
+     \binom nr c_rp^{[w(r)]}S_{n-r}.}
+\]
+The result is specialized to actual $p$-adic integers $R=\Z_p$ for prime $p$. Divisibility there is precisely the asserted membership in $p^L\Z_p$.
+
+For an individual row the sum is finite, so the proof does not require $w(r)\to\infty$. This is a stronger coefficient-row scope, not a theorem about an infinite limiting process. A supporting lemma also proves a $p^{2M+2}$ tail bound for a sum with visible factors $p^{2m}$. It is not counted as either Euler supercongruence theorem: their generating-function reconstruction identities remain pending.
+
+\subsection*{Actual Lucas reduction}
+For prime $p$, all $m,n,q\in\N$, and $0\le j<p$, the checked binomial congruence is
+\[
+ \boxed{\binom{mpn+j}{mpq}\equiv\binom{mn}{mq}\pmod p.}
+\]
+The proof applies Mathlib's Lucas low-digit reduction to the actual natural binomial coefficients. It does not assume a pre-reduced row. The statement also permits $q>n$. If $m>0$, both binomial coefficients then vanish.
+
+Taking $q=n$ gives
+\[
+ \binom{mpn+j}{mpn}\equiv1\pmod p.
+\]
+Nondivisibility by $p$ and invertibility of that diagonal in $\Z/p\Z$ are proved. The separate supporting lemma $p\nmid j!$ for $j<p$ establishes the standard-window factorial-unit condition.
+
+\textbf{Dependency boundary.} Lucas' theorem is a named classical input in the manuscript and is reused from the pinned Mathlib library. This block does not independently reconstruct Lucas' full digit theorem. The residue-independence result (8.3), uniform standard-window period (8.5), and the global finite-difference theorem (7.5) remain pending.
+
+\textbf{Principal targets.}\par
+\target{Filtered.padic_filtered_reconstruction}\par
+\target{StandardWindow.lucas_row_reduction}\par
+\target{StandardWindow.standard_diagonal_unit}\par
+\target{StandardWindow.factorial_valuation_zero}
+\par\medskip
+\pageheading{4. Sharp normalization boundary}{Source item 13.1}
+The construction fixes the two coefficient conventions:
+\[
+ C_{N,j}(n),\qquad \widetilde C_{N,j}(n)=j!\,C_{N,j}(n).
+\]
+The witness uses $p=3$, $m=2$, $N=mp=6$, $j=3$, $n=1$ and difference step $h=(p-1)/m=1$. The parameter conditions are checked explicitly, including odd primality, $m\mid p-1$ and $j<N$.
+
+The first row gives $84C_{6,3}(1)+1=0$. The second row, evaluated by the same recursive definition, gives $C_{6,3}(2)=703/5460$. Therefore
+\[
+ \Delta_1 C_{6,3}(1)=\frac{64}{455}\ne0.
+\]
+Neither numerator nor denominator is divisible by three, so its actual rational 3-adic valuation is zero. A further theorem negates the universal one-step no-loss statement by applying it to this valid tuple and deriving $1\le0$.
+
+For the unnormalized convention,
+\[
+ \Delta_1\widetilde C_{6,3}(1)=3!\,\frac{64}{455}=\frac{384}{455},
+ \qquad v_3\!\left(\frac{384}{455}\right)=1.
+\]
+The factorial's valuation is also proved:
+\[
+ v_3(3!)=1,\qquad
+ v_3\bigl(\Delta_1C_{6,3}(1)\bigr)
+ =1-v_3(3!)=0.
+\]
+This proves sharpness at the displayed normalization boundary. It does not establish the corrected global inequality for all parameters, and does not assert that every nonunit-factorial parameter tuple must violate every no-loss specialization. All valuation calculations here concern nonzero rationals.
+
+\subsubsection*{Work remaining in the named proved register}
+\begin{center}\small
+\begin{tabular}{@{}p{.19\textwidth}p{.69\textwidth}@{}}
+\toprule
+Items & Pending mathematical content\\\midrule
+4.1--4.3 & Odd-power generating function, Euler reconstruction, odd-prime ladder\\
+5.1--5.4 & Dyadic inverse and source integrality, reconstruction, weighted ladder\\
+6.2 & Finite unit-decomposition certificates\\
+7.2--7.5 & Finite Mahler reconstruction, weighted differences, unit modes, global odd-prime differences\\
+8.3, 8.5 & Standard-window residue independence and uniform period\\
+9.1, 9.2 & Companion jumps and Fibonacci packet recurrence\\
+10.1 & Arithmetic CRT packet factorization\\\bottomrule
+\end{tabular}\end{center}
+The two conjectures, 13.2 and 13.3, remain unproved and outside the 24-item register. The 17 pending entries are manuscript proof claims awaiting this project's Lean verification, not conjectures newly created by the formalization process.
+\par\medskip
+\pageheading{5. Verification and reproducibility}{Exact source pins, observed checks and retained failures}
+\begin{center}\small
+\begin{tabular}{@{}lrr@{}}\toprule
+Module & Theorems & Definitions\\\midrule
+ResiduePackets & 8 & 2\\
+Triangular & 14 & 3\\
+EGFCoordinates & 21 & 6\\
+FilteredReconstruction & 7 & 1\\
+CongruentialEuler & 16 & 7\\
+ExponentialSection & 5 & 3\\
+StandardWindow & 6 & 0\\
+NormalizationBoundary & 12 & 0\\\midrule
+Total & 89 & 22\\\bottomrule
+\end{tabular}\end{center}
+
+\textbf{Lean run.} All eight modules were compiled into a new empty output directory under Lean 4.34.0-rc2. All nine dependency revisions matched the pinned manifest. Mathlib's revision is\par
+{\footnotesize\mcode{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.}
+
+The 111 explicit-declaration axiom reports matched the inventory. A false natural equality, an admitted placeholder, and the false normalized bound were all rejected. The placeholder control exercises the warnings-as-errors policy; \mcode{sorryAx} is also excluded by the separate axiom whitelist. The 21 infrastructure and release tests passed.
+
+\textbf{Independent exact regressions.} Python integer and rational mirrors passed 120 triangular systems, 45 congruential parameter pairs (495 rows), 120 EGF-coordinate cases, 45 residue-refinement cases, 240 filtered tails, 10,824 Lucas rows, the normalization witness and eight invalid-input controls. These are not executions extracted from Lean or reruns of the original historical numerical package.
+
+\textbf{Failures retained.} Of 29 captured development checks, 15 passed and 14 failed before repair. A malformed generic-field draft triggered a release-candidate compiler panic after proof errors. The repaired sources passed the final clean run. Development products were not reused in that run. An earlier cumulative invocation was interrupted before completion and is retained separately. One initial Python scanner-test assertion had the wrong expected whitespace count and was repaired; its failure log is retained.
+
+\textbf{Trust and source boundary.} Mathlib's precompiled dependency cache was reused, not rebuilt from source. No earlier paper was rebuilt. Only the status-corrected primary PDF was recovered for this manuscript baseline, not its original TeX, experiment package, or complete global finite-difference supplement. Formal-to-prose correspondence is a reviewed crosswalk, not an automated semantic-equivalence theorem. Native Windows was not tested.
+
+\textbf{Reproduce.} With Python 3.10+ and the separate extracted Linux portable kit:
+\begin{verbatim}
+bash Run-Portable.sh /path/to/Komorebi_Portable_Lean_4.34.0-rc2
+\end{verbatim}
+The ZIP includes sources, inventories, the unchanged manuscript, this supplement, exact-regression scripts, tests, and successful and failed logs. The large runtime and local build products are not included.

@@ -1,0 +1,300 @@
+{
+  "scope": "Verifier implementation fixtures and negative controls only; not a final release PASS",
+  "tool_sha256": "396094769f274ce9e7884d5bdbebd44fe7e24adca7df185b0194d7df112cb4d6",
+  "results": [
+    {
+      "test": "valid manifest plus prefixed ZIP",
+      "expected_pass": true,
+      "observed_pass": true
+    },
+    {
+      "test": "check_manifest",
+      "check": "manifest",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "manifest",
+          "message": "File SHA-256 mismatch",
+          "path": "payload.txt"
+        }
+      ]
+    },
+    {
+      "test": "check_manifest",
+      "check": "manifest",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "manifest",
+          "message": "Release file set differs from manifest",
+          "missing": [],
+          "extra": [
+            "extra.txt"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "unsafe archive path",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "zip",
+          "message": "ValueError: Unsafe or noncanonical relative path: '../escape.txt'"
+        }
+      ]
+    },
+    {
+      "test": "duplicate archive member",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "zip",
+          "message": "Duplicate ZIP member names"
+        }
+      ]
+    },
+    {
+      "test": "extra archive member",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "zip",
+          "message": "Archive file member set differs from release manifest",
+          "missing": [],
+          "extra": [
+            "release/extra.txt"
+          ]
+        }
+      ]
+    },
+    {
+      "test": "member hash corruption",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "zip",
+          "message": "Archive member hash mismatch",
+          "member": "release/payload.txt"
+        }
+      ]
+    },
+    {
+      "test": "ZIP CRC corruption",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "zip",
+          "message": "BadZipFile: Bad CRC-32 for file 'release/payload.txt'"
+        }
+      ]
+    },
+    {
+      "test": "check_pdfs",
+      "check": "pdfs",
+      "expected_pass": true,
+      "observed_pass": true,
+      "errors": []
+    },
+    {
+      "test": "unresolved named destination",
+      "check": "pdfs",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "pdfs",
+          "message": "Unresolved named PDF destination",
+          "file": "a.pdf",
+          "location": "page:1,xref:8",
+          "name": "missing.name"
+        },
+        {
+          "check": "pdfs",
+          "message": "Unresolved named PDF destination",
+          "file": "a.pdf",
+          "location": "xref:8/A",
+          "name": "missing.name"
+        }
+      ]
+    },
+    {
+      "test": "local page out of bounds",
+      "check": "pdfs",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "pdfs",
+          "message": "PDF destination page is out of bounds",
+          "file": "a.pdf",
+          "location": "xref:8/A",
+          "page": 999,
+          "pages": 2
+        }
+      ]
+    },
+    {
+      "test": "remote page out of bounds",
+      "check": "pdfs",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "pdfs",
+          "message": "PDF destination page is out of bounds",
+          "file": "b.pdf",
+          "location": "page:1,xref:8",
+          "page": 999,
+          "pages": 2
+        },
+        {
+          "check": "pdfs",
+          "message": "PDF destination page is out of bounds",
+          "file": "b.pdf",
+          "location": "xref:8/A",
+          "page": 999,
+          "pages": 2
+        }
+      ]
+    },
+    {
+      "test": "placeholder URI",
+      "check": "pdfs",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "pdfs",
+          "message": "Unresolved placeholder URI",
+          "file": "a.pdf",
+          "location": "page:1,xref:8",
+          "uri": "https://komorebi.invalid/b07/x"
+        },
+        {
+          "check": "pdfs",
+          "message": "Unresolved placeholder URI",
+          "file": "a.pdf",
+          "location": "xref:8/A",
+          "uri": "https://komorebi.invalid/b07/x"
+        }
+      ]
+    },
+    {
+      "test": "check_build",
+      "check": "build",
+      "expected_pass": true,
+      "observed_pass": true,
+      "errors": []
+    },
+    {
+      "test": "forbidden compile diagnostic: LaTeX Warning: Citation `fixture' on page 1 undefined",
+      "check": "build",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "build",
+          "message": "Disallowed final compile diagnostic",
+          "kind": "traditional",
+          "diagnostic": "LaTeX Warning: Citation `fixture' on page 1 undefined"
+        }
+      ]
+    },
+    {
+      "test": "forbidden compile diagnostic: Missing character: There is no X",
+      "check": "build",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "build",
+          "message": "Disallowed final compile diagnostic",
+          "kind": "traditional",
+          "diagnostic": "Missing character: There is no X"
+        }
+      ]
+    },
+    {
+      "test": "forbidden compile diagnostic: Overfull \\hbox (2.0pt too wide) at lines 1--2",
+      "check": "build",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "build",
+          "message": "Disallowed final compile diagnostic",
+          "kind": "traditional",
+          "diagnostic": "Overfull \\hbox (2.0pt too wide) at lines 1--2"
+        }
+      ]
+    },
+    {
+      "test": "underfull without matching visual signoff",
+      "check": "build",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "build",
+          "message": "Underfull diagnostic requires an hbox and matching passed visual review",
+          "kind": "traditional",
+          "diagnostic": "Underfull \\hbox (badness 10000) at lines 1--2"
+        }
+      ]
+    },
+    {
+      "test": "underfull with matching current-PDF visual record",
+      "expected_pass": true,
+      "observed_pass": true
+    },
+    {
+      "test": "stale visual signoff rejected",
+      "check": "visual_review",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        {
+          "check": "visual_review",
+          "message": "Visual review refers to different PDF bytes",
+          "file": "a.pdf"
+        }
+      ]
+    },
+    {
+      "test": "nested comment exclusion plus conservative noncomment tokens",
+      "expected_tokens": [
+        "axiom",
+        "sorry",
+        "admit"
+      ],
+      "observed_tokens": [
+        "axiom",
+        "sorry",
+        "admit"
+      ]
+    },
+    {
+      "test": "fingerprints agree with actual builder function",
+      "matches": {
+        "traditional": true,
+        "visual_guide": true,
+        "lean_guide": true
+      }
+    },
+    {
+      "test": "CLI refuses report output inside release",
+      "expected_exit_code": 2,
+      "observed_exit_code": 2,
+      "file_created": false
+    }
+  ],
+  "all_expected_outcomes_observed": true
+}

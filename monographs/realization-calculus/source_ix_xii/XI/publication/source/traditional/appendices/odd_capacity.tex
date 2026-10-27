@@ -1,0 +1,426 @@
+\clearpage
+\section{The surviving leading symplectic layer}\label{app:odd_capacity}
+
+Status: ordinary proof from the retained Bushnell--Kutzko theorems and,
+for the source-defined candidate, the substantial published
+Bushnell--Henniart arithmetic induction/descent constructor. No Lean
+build or bounded computation is used. The accompanying audit files identify the scope of the internal review.
+
+\hypertarget{odd_capacity-the-useful-simplification}{%
+\subsection{The useful simplification}\label{odd_capacity-the-useful-simplification}}
+
+Full critical-profile rigidity is unnecessary for the trivial-stabilizer
+finite attachment contract. An even leading level produces a symplectic
+subspace that survives every later simple approximation. For the
+independent rank-p Heisenberg tensor sources, this single subspace
+already has enough dimension to hold every source plane, however many
+there are.
+
+The argument below concerns the actual type in the source-defined
+arithmetic candidate. It does not identify that type with a separately
+guessed binder parameter.
+
+\hypertarget{odd_capacity-leading-layer-theorem}{%
+\subsection{1. Leading-layer theorem}\label{odd_capacity-leading-layer-theorem}}
+
+Let F have residue field k of cardinality q and residue characteristic
+p.~Let pi be an actual irreducible supercuspidal representation of
+GL\_n(F) with torsion number one, where n=p\^{}r. Suppose
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+a(pi)=n+N,     N>0 even,     v_p(N)=r−1.
+\end{Verbatim}
+
+Then an actual maximal simple type in pi, with Heisenberg quotient
+\(W=J^1/H^1\), contains a nondegenerate symplectic
+F\_p-subspace S of dimension
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+[k:F_p] (p−1)p^(r−1).
+\end{Verbatim}
+
+For k=F\_p this is exactly (p−1)p\^{}(r−1). The subspace is the image of
+the concrete congruence group U\^{}(N/2)(A) in \(J^1/H^1\).
+It is present regardless of the later critical exponents, their
+parities, or the number of intermediate approximation fields.
+
+\hypertarget{odd_capacity-actual-parameter-field-and-leading-level}{%
+\subsubsection{1.1. Actual parameter field and leading
+level}\label{odd_capacity-actual-parameter-field-and-leading-level}}
+
+By BK maximal-type existence, pi contains a maximal simple type. Its
+positive level follows from a(pi)\textgreater n.~Write its stratum as
+{[}A,N\_A,0,beta{]}, with parameter field K=F{[}beta{]}. BK 6.2.5 gives
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+t(pi)=n/e(K/F).
+\end{Verbatim}
+
+Thus e(K/F)=n.~Since {[}K:F{]} divides n, K/F is totally ramified of
+degree n and has residue degree one. The principal-order assertion after
+BK 6.2.5 gives e(A)=n.~Accordingly A is the complete principal
+hereditary order. The established conductor formula
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+a(pi)=n+n N_A/e(A)
+\end{Verbatim}
+
+now implies N\_A=N. This is the same source-checked formula used in
+Block165, originating in BH1999 Section 6.1 Lemma 2 and retained in
+\path{PRINCIPAL_ORDER_CONDUCTOR161.md}.
+
+Put P=rad(A), \(U^a(A)=1+P^a\) for a\textgreater=1, and
+m=N/2.
+
+\hypertarget{odd_capacity-the-terminal-minimal-approximation-has-degree-p}{%
+\subsubsection{1.2. The terminal minimal approximation has degree
+p}\label{odd_capacity-the-terminal-minimal-approximation-has-degree-p}}
+
+Apply the defining-sequence construction BK 2.4.1--2 to beta. Write
+gamma for its terminal minimal approximation. Every transition has a
+critical level c\textless N, and gamma has the same A-level N as beta.
+All approximation residue degrees divide f(K/F)=1, and all approximation
+ramification degrees divide n.~Therefore E=F{[}gamma{]} is totally
+ramified of degree d dividing n.
+
+The scalar case is impossible: a scalar of F has A-valuation divisible
+by n, whereas v\_p(N)=r−1. Thus gamma is noncentral and minimal in the
+ordinary field sense. Its field valuation is
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+−v_E(gamma)=Nd/n.
+\end{Verbatim}
+
+Minimality, by BK 1.4.14--15, requires gcd(Nd/n,d)=1. Since d is a
+p-power and v\_p(N)=r−1, integrality first gives p\textbar d, while
+coprimality forces d=p.~Hence E/F is totally ramified of degree p.
+
+Set B=End\_E(F\^{}n), B\_order=A∩B, and Q=rad(B\_order). The same
+complete lattice chain has period n/p over E. Each P-grade has
+k-dimension n and each Q-grade has k-dimension n/p.~In particular,
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+dim_k P^m/(Q^m+P^(m+1))=n−n/p.
+\end{Verbatim}
+
+No assertion that E is literally a subfield of the final field K is
+needed. It is the actual minimal approximation field in the defining
+sequence.
+
+\hypertarget{odd_capacity-the-high-subgroup-survives-every-approximation}{%
+\subsubsection{1.3. The high subgroup survives every
+approximation}\label{odd_capacity-the-high-subgroup-survives-every-approximation}}
+
+The minimal definitions BK 3.1.7--8 give
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+J_order(gamma)=B_order+P^m,
+H_order(gamma)=B_order+P^(m+1).
+\end{Verbatim}
+
+At a nonminimal transition beta\_i→beta\_(i+1), with critical level
+c\_i\textless N, the recursive J-order definition uses the threshold
+ceil(c\_i/2). Since ceil(c\_i/2)\textless=m, the inclusion
+P\^{}m⊂J\_order(beta\_(i+1)) implies P\^{}m⊂J\_order(beta\_i). Starting
+at gamma, induction proves
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+U^m(A)⊂J^1(beta).
+\end{Verbatim}
+
+For H, BK 3.1.9(ii) states that
+\(H^a(\beta_i)=H^a(\beta_{i+1})\) as soon as
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+a>=floor(c_i/2)+1.
+\end{Verbatim}
+
+Every c\_i is at most 2m−1, so this threshold is at most m. Consequently
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+H^m(beta)=H^m(gamma).
+\end{Verbatim}
+
+Here H\^{}m means \(H^1\cap U^m(A)\). Therefore the image S of
+U\^{}m(A) in W is canonically
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+S = U^m(A)/H^m(beta)
+  = U^m(A)/H^m(gamma)
+  ≅ P^m/(Q^m+P^(m+1)).
+\end{Verbatim}
+
+The last group identification uses m\textgreater=1, so multiplication is
+additive modulo P\^{}(m+1). Thus \textbar S\textbar=q\^{}(n−n/p).
+
+\hypertarget{odd_capacity-its-actual-commutator-form-is-nondegenerate}{%
+\subsubsection{1.4. Its actual commutator form is
+nondegenerate}\label{odd_capacity-its-actual-commutator-form-is-nondegenerate}}
+
+Choose the actual simple character theta contained in the type of pi. By
+the standard deep-restriction property of simple characters, theta
+restricts to psi\_beta on U\^{}(m+1)(A). This follows directly from BK
+3.2.1--4 by induction along the defining sequence.
+
+For u,v in U\^{}m(A), their group commutator is in
+\(U^{2m}(A)=U^N(A)\), which lies in U\^{}(m+1)(A). The
+terminal approximation satisfies
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+beta−gamma∈P^(1−N),
+\end{Verbatim}
+
+because every critical level in the sequence is less than N. Hence
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+(beta−gamma)([u,v]−1)∈P.
+\end{Verbatim}
+
+With the standard level-one additive character psi\_A=psi\_F∘tr\_A/F,
+psi\_A is trivial on P. We therefore have the exact equality
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+theta([u,v]) = psi_beta([u,v]) = psi_gamma([u,v]).
+\end{Verbatim}
+
+The right side is the Heisenberg commutator pairing for the minimal
+simple stratum of gamma. Its quotient
+\(J^1(\gamma)/H^1(\gamma)\) is precisely
+\(U^m(A)/H^m(\gamma)\), because
+\(J^1(\gamma)=U^1(B_{\mathrm{order}})U^m(A)\), with
+\(U^1(B_{\mathrm{order}})\subset H^1(\gamma)\). BK's nondegeneracy theorem for
+simple-character commutators therefore says that the form on S is
+nondegenerate.
+
+For general k, this is a nondegenerate alternating F\_p-form of
+dimension \([k:\FF_p](n-n/p)\). For \(k=\FF_p\), it has dimension \(n-n/p\). This
+proves the theorem.
+
+The argument uses no self-pair conductor and no determination of the
+later critical levels. Those invariants remain useful for finer
+arithmetic identification, but they are not needed for this
+finite-sector capacity claim.
+
+\hypertarget{odd_capacity-arbitrary-length-odd-prime-source-family}{%
+\subsection{2. Arbitrary-length odd-prime source
+family}\label{odd_capacity-arbitrary-length-odd-prime-source-family}}
+
+Fix an odd prime p and F=F\_p((t)). Let the complete marked Weil source
+rho be an independent tensor product of r rank-p wild Heisenberg factors
+at distinct positive levels
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+0<h_1<...<h_r,     p does not divide h_i.
+\end{Verbatim}
+
+Here independence means the stipulated balanced-central-product
+description of the wild image is valid, and rho\textbar P\_F is
+irreducible. We do not infer independence from the inequalities alone.
+Suppose the retained Tsushima source calculation supplies the usual
+highest slope
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+slope(rho)=(p+1)h_r/p.
+\end{Verbatim}
+
+Then rank(rho)=n=p\^{}r and
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+Swan(rho)=N=(p+1)p^(r−1)h_r.
+\end{Verbatim}
+
+Let Pi\_BH(rho) be the published source-defined arithmetic
+induction/descent candidate, with its full prescribed central character,
+as audited in Block165. The construction is applied to the complete
+actual rho, including its scalar normalization. Its codomain is the
+torsion-one supercuspidal class, and its standard epsilon-function
+property gives a(Pi\_BH(rho))=n+N. These are uses of the substantial
+classical constructor, not consequences of finite Heisenberg algebra
+alone and not a selection of an inverse LLC image.
+
+For odd p, N is even and v\_p(N)=r−1. The leading-layer theorem
+therefore puts a symplectic space of dimension
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+D=(p−1)p^(r−1)
+\end{Verbatim}
+
+inside the actual Heisenberg quotient of a type in this same
+Pi\_BH(rho).
+
+The source packet is the orthogonal sum of r planes, so its symplectic
+dimension is 2r. The elementary inequality
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+(p−1)p^(r−1)>=2r
+\end{Verbatim}
+
+holds for every odd p and r\textgreater=1: it suffices that
+3\^{}(r−1)\textgreater=r, which follows by induction. Thus the actual
+candidate's leading symplectic layer alone can receive the entire source
+packet.
+
+\hypertarget{odd_capacity-full-characters-and-recovery-for-declared-c1}{%
+\subsubsection{2.1. Full characters and recovery for declared
+C=\{1\}}\label{odd_capacity-full-characters-and-recovery-for-declared-c1}}
+
+Work under the same finite scalar-pushout contract as
+\path{SAME_CANDIDATE_ATTACHMENT165.md}: declared stabilizer C=\{1\}, one
+vertex, and full source character extensions retained, with no
+requirement of literal old matrix-group inclusion or equality of old
+numerical depths with host depths.
+
+Let P\_src be the balanced C×-central product of the r supplied full
+source character extensions. Its quotient V\_src has dimension 2r over
+F\_p and its central-character-one Heisenberg representation has
+dimension p\^{}r=n.~Choose a symplectic embedding V\_src→S⊂W.
+
+The C×-pushout of the actual type character, restricted to this
+subspace, has the same alternating commutator as P\_src. The retained
+extension theorem supplies a center-fixing isomorphism from P\_src to
+that restriction. Consequently every source h∈H\_i\^{}1 is carried to
+the scalar theta\_i(h), preserving the full character value. No shallow
+source values are discarded.
+
+Let V be the image and write W=V⊥V\_perp. Stone--von Neumann gives
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+eta_W ≅ eta_src⊗eta_perp.
+\end{Verbatim}
+
+Choose a line in eta\_perp and the corresponding rank-n projector e in
+the actual finite Heisenberg image algebra. Then e eta\_W≅eta\_src.
+Applying the retained Block159 induction/idempotent theorem to the
+unchanged actual extended type Lambda in Pi\_BH(rho) recovers Lambda and
+then this exact Pi\_BH(rho). All source normalization and the actual
+noncompact scalar remain fixed.
+
+This proves same-candidate finite attachment for arbitrary r in this
+C=\{1\} odd-prime family. Original H5, when supplied for this same
+candidate, remains exactly the original conditional comparison premise.
+We do not prove it here.
+
+\hypertarget{odd_capacity-first-new-rank-gl_27}{%
+\subsubsection{2.2. First new rank: GL\_27}\label{odd_capacity-first-new-rank-gl_27}}
+
+For p=3,r=3, the source has rank~27 and V\_src has dimension 6. Put h=h\_3
+with 3∤h. The actual candidate has
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+N=36h,       m=18h,
+dim_F3 S=27−9=18.
+\end{Verbatim}
+
+Thus its high layer contains the entire three-plane source packet. At
+least a 3\^{}9-dimensional Heisenberg contribution is present, while the
+required source sector has dimension 27=3\^{}3. The six surplus
+symplectic pairs can be projected onto a line in their representation,
+together with any additional lower layers. This proves the required
+capacity and sector realization for the new rank~27 family without
+solving its two possible lower critical levels.
+
+In particular, for (h\_1,h\_2,h\_3)=(1,2,4), N=144 and the same high
+subspace has dimension 18. These numbers are a specialization of the
+universal proof, not a numerical experiment.
+
+\hypertarget{odd_capacity-why-trying-to-force-every-critical-level-was-unnecessary}{%
+\subsection{3. Why trying to force every critical level was
+unnecessary}\label{odd_capacity-why-trying-to-force-every-critical-level-was-unnecessary}}
+
+At rank~27, a hypothetical complete degree pattern 27→9→3 has leading
+level N=36h\_3 and lower critical levels a\textless b\textless N. The
+standard full-profile conductor count would give
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+Swan(End rho)=18N+6b+2a.
+\end{Verbatim}
+
+Comparing with the stipulated source formula 8(h\_1+9h\_2+81h\_3) only
+gives
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+a+3b=4h_1+36h_2.
+\end{Verbatim}
+
+That single linear relation does not determine both a and b, and by
+itself does not force each parity. Nor does it establish that all three
+degrees occur rather than skipping degree~9. This observation is only a
+warning about the insufficient equations. It is not presented as an
+arithmetic counterexample or as existence of every numerical profile
+satisfying the equation.
+
+The leading-layer theorem bypasses these unresolved profile choices. It
+supplies a fixed nondegenerate high subspace in every actual candidate
+with the two required invariants.
+
+\hypertarget{odd_capacity-dyadic-capacity-boundary}{%
+\subsection{4. Dyadic capacity
+boundary}\label{odd_capacity-dyadic-capacity-boundary}}
+
+The leading-layer theorem itself is valid at p=2. If an actual
+torsion-one candidate of rank~2\^{}r has
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+N=3·2^(r−1)h,     h odd,     r>=2,
+\end{Verbatim}
+
+then its high subspace has dimension 2\^{}(r−1) over F\_2. This alone is
+at least 2r for r\textgreater=4, with equality at r=4. It does not
+supply enough capacity by itself for r=2 or 3. For r=1, N is odd and this
+theorem does not apply.
+
+This is a capacity statement only. Applying it to a dyadic source
+requires the actual source family, its arithmetic candidate and whatever
+quadratic/phase markings the original contract requires. No universal
+dyadic attachment theorem is claimed from dimension alone.
+
+\hypertarget{odd_capacity-boundaries-that-remain}{%
+\subsection{5. Boundaries that remain}\label{odd_capacity-boundaries-that-remain}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The full character attachment here is through center-fixing
+  scalar-pushout maps. Literal embeddings of prescribed old arithmetic
+  matrix groups are not proved.
+\item
+  No nontrivial prescribed stabilizer action is attached. Capacity does
+  not imply equivariant placement.
+\item
+  All planes may be placed in the leading host layer. Preservation of
+  supplied numerical ramification depths, or a specified map into
+  individual host depth layers, would be an additional requirement and
+  is not claimed.
+\item
+  General packet transport graphs are not handled here. The statement is
+  for C=\{1\} and one vertex.
+\item
+  The arithmetic induction/descent theorem is an explicit major external
+  input. This is a new capacity/attachment consequence for its actual
+  output, not a new elementary reconstruction of that classical
+  constructor.
+\item
+  H5 remains conditional and refers to that unchanged actual candidate.
+  No additional pair-factor premise is introduced.
+\item
+  No Lean verification is claimed.
+\end{enumerate}
+
+\hypertarget{odd_capacity-primary-locators-and-retained-dependencies}{%
+\subsection{6. Primary locators and retained
+dependencies}\label{odd_capacity-primary-locators-and-retained-dependencies}}
+
+The authorized primary BK text was read at these exact results:
+1.4.14--15 (minimality), 2.4.1--2 (defining sequence and degree
+divisibility), 3.1.7--9 (recursive orders and high-depth equality),
+3.2.1--4 (deep restriction of simple characters), 3.4.1 (nondegenerate
+Heisenberg commutator), and 6.2.5 with the following paragraph (torsion
+number and principal period).
+
+The standard conductor and published arithmetic-constructor properties
+are reused from the source-pinned Block165 audit and Block161 conductor
+proof. The finite scalar-pushout and sector-recovery arguments are
+exactly those retained and restated in
+\path{SAME_CANDIDATE_ATTACHMENT165.md}. No entire copyrighted source is
+copied into this continuation.
