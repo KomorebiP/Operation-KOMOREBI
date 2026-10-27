@@ -1,0 +1,33 @@
+/mnt/data/Strong_Artin_Lean_v0.29.0_Continuous_Local_Gauge_Obstruction/development/stage/LocalGaugeInvariance.lean:21:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  E.correctedLift (-a) h
+in the target expression
+  E.kernelUnit x * E.correctedLift (-a) ((MonoidHom.id H) h) * (E.kernelUnit x)⁻¹ = t' h
+
+G H A B : Type
+inst✝³ : Group G
+inst✝² : Group H
+inst✝¹ : Ring A
+inst✝ : Ring B
+D : Datum G A B
+loc : H →* G
+t t' : H →* Aˣ
+ht : ∀ (h : H), D.q ↑(t h) = D.rho (loc h)
+ht' : ∀ (h : H), D.q ↑(t' h) = D.rho (loc h)
+x : ↥D.Kernel
+hc : ∀ (h : H), D.kernelUnit x * t h * (D.kernelUnit x)⁻¹ = t' h
+h : H
+E : Datum H A B := D.pullbackDatum loc
+a : H → ↥D.Kernel := D.localCorrection loc t ht
+he : E.correctedLift (-a) h = t h
+⊢ E.kernelUnit x * E.correctedLift (-a) ((MonoidHom.id H) h) * (E.kernelUnit x)⁻¹ = t' h
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    x
+  has type
+    ↥D.Kernel
+  but is expected to have type
+    ↥E.Kernel
+  in the application
+    E.kernelUnit x

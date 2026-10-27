@@ -1,0 +1,37 @@
+MatrixCore.lean:83:4: error: unsolved goals
+case succ.refine_1
+R : Type u
+inst✝ : Semiring R
+n : Nat
+ih : ∀ (x : Vec R n) (i : Fin n), (fsum n fun j => if i = j then x j else 0) = x i
+x : Vec R (n + 1)
+i : Fin (n + 1)
+⊢ (x 0 + fsum n fun i => if 0 = i.succ then x i.succ else 0) = x 0
+MatrixCore.lean:84:19: error(lean.unknownIdentifier): Unknown constant `Lean.Grind.Semiring.zero_add`
+MatrixCore.lean:84:6: error: Type mismatch: After simplification, term
+  ih (fun j => x j.succ) i
+ has type
+  (fsum n fun j => if i = j then x j.succ else 0) = x i.succ
+but is expected to have type
+  ((if i.succ = 0 then x 0 else 0) + fsum n fun i_1 => if i = i_1 then x i_1.succ else 0) = x i.succ
+MatrixCore.lean:83:18: error: This simp argument is unused:
+  fsum_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [fsum, Semiring.add_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+MatrixCore.lean:83:29: error: This simp argument is unused:
+  Semiring.add_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [fsum, fsum_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+MatrixCore.lean:88:23: error(lean.unknownIdentifier): Unknown identifier `ite_mul`
+MatrixCore.lean:88:2: error: Type mismatch: After simplification, term
+  fsum_indicator n x i
+ has type
+  (fsum n fun j => if i = j then x j else 0) = x i
+but is expected to have type
+  (fsum n fun j => (if i = j then 1 else 0) * x j) = x i

@@ -1,0 +1,58 @@
+/mnt/data/Strong_Artin_Lean_v0.35.0_Compatible_Frobenius_Tower/src/PadicMatrixTowerLimit.lean:118:17: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (padicCoefficient ?p ?r).mapMatrix (matrixLimit ?p ?n ?M ?hM)
+in the target expression
+  (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)) ⋯) *
+      (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)⁻¹) ⋯) =
+    (padicCoefficient p r).mapMatrix 1
+
+p : ℕ
+inst✝² : Fact (Nat.Prime p)
+n : Type
+inst✝¹ : Fintype n
+inst✝ : DecidableEq n
+F : (r : ℕ) → MatrixUnits p n r
+hF : Compatible p n F
+r : ℕ
+⊢ (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)) ⋯) *
+      (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)⁻¹) ⋯) =
+    (padicCoefficient p r).mapMatrix 1
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun r => congrArg Units.val (hF r)
+  has type
+    ∀ (r : ℕ), @Eq (Matrix n n (Coeff p r)) ↑((down p n r) (F (r + 1))) ↑(F r)
+  but is expected to have type
+    ∀ (r : ℕ), @Eq (Matrix n n (Coeff p r)) ((coefficientDown p r).mapMatrix ↑(F (r + 1))) ↑(F r)
+  in the application
+    matrixLimit p n (fun r => ↑(F r)) ⋯
+/mnt/data/Strong_Artin_Lean_v0.35.0_Compatible_Frobenius_Tower/src/PadicMatrixTowerLimit.lean:123:17: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (padicCoefficient ?p ?r).mapMatrix (matrixLimit ?p ?n ?M ?hM)
+in the target expression
+  (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)⁻¹) ⋯) *
+      (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)) ⋯) =
+    (padicCoefficient p r).mapMatrix 1
+
+p : ℕ
+inst✝² : Fact (Nat.Prime p)
+n : Type
+inst✝¹ : Fintype n
+inst✝ : DecidableEq n
+F : (r : ℕ) → MatrixUnits p n r
+hF : Compatible p n F
+r : ℕ
+⊢ (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)⁻¹) ⋯) *
+      (padicCoefficient p r).mapMatrix (matrixLimit p n (fun r => ↑(F r)) ⋯) =
+    (padicCoefficient p r).mapMatrix 1
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    congrArg Inv.inv (hF r)
+  has type
+    @Eq (MatrixUnits p n r) ((down p n r) (F (r + 1)))⁻¹ (F r)⁻¹
+  but is expected to have type
+    @Eq (MatrixUnits p n r) ((down p n r) (F (r + 1))⁻¹) (F r)⁻¹
+  in the application
+    Eq.trans (Eq.symm (map_inv (down p n r) (F (r + 1)))) (congrArg Inv.inv (hF r))

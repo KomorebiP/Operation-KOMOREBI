@@ -1,0 +1,222 @@
+\section{Completion defects and arithmetic reconstruction}\label{sec:completion-reconstruction}
+
+\subsection{A controlled reconstruction of a resolution tower}
+
+Write
+\[
+ \widehat B=\varprojlim_n B_n\cong\prod_{p\in\mathcal P}\mathbb Z_p.
+\]
+The isomorphism follows by taking inverse limits of the compatible Chinese remainder decompositions. Here $\mathbb Z_p$ is the ring of compatible residue sequences modulo $p^n$, and $\mathbb Q_p=\mathbb Z_p[1/p]$.
+
+\begin{theorem}[Uniform based-complex tower reconstruction]\label{thm:based-tower-reconstruction}
+Suppose $M_n$ are based finite free cochain complexes over $B_n$, concentrated in a common finite interval with fixed ranks in each degree. Suppose their differential matrices reduce exactly from level $m$ to level $n$ for $m\geq n$. Then there is a unique based complex $\widehat M$ with those ranks over $\widehat B$ whose matrices reduce to the supplied ones.
+
+Compatible chain maps and specified compatible chain homotopies reconstruct coefficientwise. Moreover, as complexes of abelian groups,
+\[
+ \widehat M\simeq R\varprojlim_n M_n.
+\]
+Finite tensor products, finite direct sums, shifts, and cones of compatible based maps commute with this reconstruction. In particular this holds for the scalar residual and interaction complexes with fixed integral labels.
+\end{theorem}
+\begin{proof}
+Every matrix entry is a compatible residue sequence and therefore determines a unique element of $\widehat B$. The equation $d^{i+1}d^i=0$ holds because it holds modulo every $D^n$ and the inverse-limit ring is separated. The same argument proves the equations for a reconstructed chain map or homotopy.
+
+Degreewise transition maps of the finite free modules are surjective. In the product model of the homotopy inverse limit, the map
+\[
+ 1-\mathrm{shift}:\prod_n M_n^i\longrightarrow\prod_n M_n^i
+\]
+is surjective in each degree: choose an initial entry and successively lift the required difference across the surjective transition map. Its kernel is the ordinary inverse limit. Thus the homotopy fiber is represented by that kernel complex. This is the degreewise Mittag--Leffler case of derived inverse limits \cite{StacksRlim}.
+
+All the listed finite constructions have matrices formed by finite sums and products, or by fixed block arrangements of entries. These operations commute with the coefficient inverse limit. This proves the final assertions.
+\end{proof}
+
+This theorem does not assert that arbitrary objects chosen independently at every level have a compatible system of bases, bounded ranks, or a coherent lift. It also does not claim an equivalence between all categories of perfect complexes and an inverse limit of categories. Those stronger effectivity statements require additional work. The precise input here is a compatible, uniformly finite, based tower.
+
+\begin{proposition}[Transient negative cohomology in the resolution direction]\label{prop:transient-koszul}
+Fix $p$ and an integer $a\geq1$. For $n\geq a$ put $R_n=\mathbb Z/p^n$. Then
+\[
+ H^0C_{R_n}(p^a)\cong\mathbb Z/p^a,
+ \qquad H^{-1}C_{R_n}(p^a)\cong\mathbb Z/p^a.
+\]
+Under reduction from $m$ to $n$ with $m\geq n\geq a$, the map on $H^0$ is the identity in these coordinates. On $H^{-1}$ it is multiplication by $p^{m-n}$. The negative-cohomology system is therefore pro-zero, although every one of its terms is nonzero. The completed complex is
+\[
+ C_{\mathbb Z_p}(p^a),\qquad
+ H^{-1}=0,\quad H^0=\mathbb Z/p^a.
+\]
+\end{proposition}
+\begin{proof}
+Represent $H^{-1}$ by the annihilator $p^{n-a}R_n$ and identify $\mathbb Z/p^a$ with it by $x\mapsto p^{n-a}x$. Reduction of $p^{m-a}x$ gives $p^{n-a}p^{m-n}x$. Thus for each target level $n$, every source level $m\geq n+a$ maps to zero. This is exactly the pro-zero assertion. The cokernel coordinates reduce identically. The preceding theorem reconstructs the complex coefficientwise. Multiplication by $p^a$ on $\mathbb Z_p$ is injective, so its completed kernel vanishes.
+\end{proof}
+
+This calculation concerns the actual transition maps on homology, not merely the group appearing at each level. A list of isomorphism types $(\mathbb Z/p^a,\mathbb Z/p^a,\ldots)$ cannot distinguish the identity system from the pro-zero system. The two-axis data must retain those maps.
+
+\subsection{Completion and excisive repair do not generally commute}
+
+Let $S\subseteq\mathcal P$ be the interaction-prime set in \cref{thm:finite-prime-quotient}, and set $T=\prod_{p\in S}p$, with $T=1$ if $S$ is empty. Localizing the finite rings and then completing gives
+\[
+ \varprojlim_n B_n[1/T]\cong\prod_{p\in\mathcal P\setminus S}\mathbb Z_p.
+\]
+Completing and then localizing instead gives
+\[
+ \widehat B[1/T]\cong
+ \prod_{p\in S}\mathbb Q_p\times
+ \prod_{p\in\mathcal P\setminus S}\mathbb Z_p.
+\]
+The latter is also an exact realization that annihilates the specified scalar interactions, because each selected prime becomes invertible. There is a canonical comparison map between these rings induced by the reductions. Localization is the usual algebraic operation \cite{StacksLocalization}, not an additional choice of quotient semantics.
+
+\begin{theorem}[Explicit completion--repair defect]\label{thm:completion-repair-defect}
+The canonical map
+\[
+ \chi:\widehat B[1/T]\longrightarrow\varprojlim_n B_n[1/T]
+\]
+is the projection that forgets the factors $\mathbb Q_p$ for $p\in S$. As $\widehat B$-modules it fits into the split exact sequence
+\[
+ 0\longrightarrow\prod_{p\in S}\mathbb Q_p
+ \longrightarrow\widehat B[1/T]
+ \xrightarrow{\chi}\prod_{p\in\mathcal P\setminus S}\mathbb Z_p
+ \longrightarrow0.
+\]
+The splitting is a module splitting, not a claimed unital ring section.
+
+For every perfect $\widehat B$-complex $M$, the natural comparison
+\[
+ \chi_M:M\otimes^{\mathbf L}_{\widehat B}\widehat B[1/T]
+ \longrightarrow R\varprojlim_n
+ \bigl(M\otimes^{\mathbf L}_{\widehat B}B_n[1/T]\bigr)
+\]
+has fiber
+\[
+ \boxed{\operatorname{Fib}(\chi_M)\simeq
+ \bigoplus_{p\in S}M\otimes^{\mathbf L}_{\widehat B}\mathbb Q_p.}
+\]
+Thus $\chi_M$ is an equivalence exactly when every displayed generic fiber is zero. Its cofiber is the shift by $[1]$ of that fiber. These statements take place in $D(\widehat B)$; the field summands need not be perfect over $\widehat B$.
+\end{theorem}
+\begin{proof}
+In the $p$-primary factor of $B_n$, inverting $T$ gives zero if $p\in S$ and does nothing otherwise. In the $p$-primary factor of $\widehat B$, it gives $\mathbb Q_p$ if $p\in S$ and leaves $\mathbb Z_p$ otherwise. This proves both ring formulas. The induced map is zero on the first set of factors and the identity on the others, proving the split sequence.
+
+For $M=\widehat B$, the derived inverse limit on the right is the ordinary one, since the retained residue-module tower is degreewise surjective. The asserted comparison and fiber are therefore exactly the split sequence. For a general perfect $M$, all functors in the claimed identity are exact and preserve finite sums and retracts. Homotopy inverse limits are exact in a stable derived category. The natural comparison identifies its right side with the retained summand of $M$: this holds on the unit by the just-computed inverse limit and hence on its thick closure, which is $\operatorname{Perf}(\widehat B)$. Tensoring the split sequence now identifies the fiber with the indicated finite sum. A morphism in a stable category is an equivalence precisely when its fiber is zero.
+\end{proof}
+
+\begin{example}[A nonzero generic fiber is lost at every finite repair]\label{ex:repair-before-completion}
+For $\mathcal P=\{p\}$ and two independent labels divisible by $p$, every finite excisive quotient is zero, whereas
+\[
+ \bigl(\varprojlim_n\mathbb Z/p^n\bigr)[1/p]=\mathbb Q_p\ne0.
+\]
+For a nonzero finite-level quotient, take $D=30$ and labels $6,10$. Only the prime $2$ is shared, so the finite repair is
+\[
+ B_n[1/2]\cong\mathbb Z/15^n.
+\]
+The two completed outputs are $\mathbb Q_2\times\mathbb Z_3\times\mathbb Z_5$ and $\mathbb Z_3\times\mathbb Z_5$, with fiber $\mathbb Q_2$. This is an explicit failure of an unconditional bi-completion principle, even though the finite quotient commutes with every finite coarsening.
+\end{example}
+
+The generic-fiber criterion also gives a positive case. For $M=C_{\widehat B}(u)$ with a nonzero integer $u$, its selected generic fibers vanish, because $u$ becomes invertible in each $\mathbb Q_p$. Thus this comparison is an equivalence on that torsion residual even though it is not an equivalence on the unit. Commutation depends on the object, not only on the existence of coherent finite-level squares. The distinction is consistent with the standard derived-completion fact that a complex on which a defining element is invertible has zero completion \cite{StacksDerivedCompletion}.
+
+\subsection{Reconstruction that retains the overlap instead of deleting it}
+
+There is a different operation from killing an interaction: retain the localized and completed descriptions together with their common generic information. In the present arithmetic setting this yields an actual pullback theorem.
+
+Put
+\[
+ A=\mathbb Z[1/D],\qquad B=\prod_{p\in\mathcal P}\mathbb Z_p,
+ \qquad G=\prod_{p\in\mathcal P}\mathbb Q_p.
+\]
+
+\begin{theorem}[Arithmetic fracture reconstruction]\label{thm:arithmetic-fracture}
+The diagonal maps and their difference give an exact sequence of abelian groups
+\[
+ 0\longrightarrow\mathbb Z
+ \longrightarrow A\oplus B
+ \xrightarrow{(a,b)\mapsto a-b}G
+ \longrightarrow0.
+\]
+Consequently, for every perfect integral complex $M$ there is a natural homotopy pullback square in $D(\mathbb Z)$,
+\[
+ \begin{tikzcd}
+ M\arrow[r]\arrow[d]&M\otimes^{\mathbf L}_{\mathbb Z}A\arrow[d]\\
+ M\otimes^{\mathbf L}_{\mathbb Z}B\arrow[r]&M\otimes^{\mathbf L}_{\mathbb Z}G.
+ \end{tikzcd}
+\]
+Its bottom-left term is $R\varprojlim_n(M\otimes^{\mathbf L}_{\mathbb Z}B_n)$. In particular $M$ is zero if and only if its localized and completed terms are both zero.
+\end{theorem}
+\begin{proof}
+An element of $A$ integral at every $p\in\mathcal P$ is an integer: its possible denominator primes all lie in $\mathcal P$, and integrality removes each of them. This identifies the kernel with the diagonal copy of $\mathbb Z$.
+
+For surjectivity take $(y_p)\in G$. Choose $N$ large enough that $D^Ny_p\in\mathbb Z_p$ for every $p$. For each $p$, choose the residue of $D^Ny_p$ modulo $p^N$. The ordinary Chinese remainder theorem provides $z\in\mathbb Z$ with all these residues. Set $a=z/D^N\in A$. Then $a-y_p\in\mathbb Z_p$ for every $p$, so $(a,(a-y_p)_p)$ maps to $(y_p)_p$. This proves exactness.
+
+The exact sequence gives a cofiber sequence in the derived category. Derived tensor with $M$ is exact, so it gives the displayed homotopy pullback. For a bounded finite free representative of $M$, the tower of reductions has uniform ranks and compatible matrices. The based-tower theorem identifies its derived limit with $M\otimes B$. Finally if the localized and completed terms are zero, so is their generic base change, and the pullback is zero. The converse is immediate.
+\end{proof}
+
+This is the classical arithmetic-square mechanism, proved directly here using the Chinese remainder theorem and derived tensor. It is not claimed as a new local--global correspondence. It does show exactly which overlap data must accompany these arithmetic representations to reconstruct a supplied perfect complex.
+
+\begin{corollary}[Residuals reconstruct through the same arithmetic square]\label{cor:residual-fracture}
+Let $X$ be a finite coherent event diagram in $\operatorname{Perf}(\mathbb Z)$. Every edge residual, square interaction, and initial-to-terminal residual of $X$ satisfies \cref{thm:arithmetic-fracture}. Its terms are the corresponding residuals of the diagrams obtained by base change to $A,B,G$. Each such integral residual vanishes if and only if both its localized and completed versions vanish.
+\end{corollary}
+\begin{proof}
+Derived base change is exact and therefore preserves all the finite cofibers defining those residuals. Apply the arithmetic fracture theorem to the resulting perfect integral complex. Naturality gives the maps on the whole residual diagram, not merely equality of its cohomology dimensions.
+\end{proof}
+
+\subsection{Effective gluing of lattices from independent local input}
+
+The previous theorem starts with a global complex. The following finite-rank theorem instead constructs a global object from supplied local and localized data.
+
+\begin{theorem}[Effective arithmetic lattice gluing]\label{thm:lattice-gluing}
+Let $V$ be a finite free $A=\mathbb Z[1/D]$-module of rank $r$. For each $p\in\mathcal P$ let $L_p$ be a finite free $\mathbb Z_p$-module, with an isomorphism
+\[
+ \theta_p:V\otimes_A\mathbb Q_p\xrightarrow{\sim}
+ L_p\otimes_{\mathbb Z_p}\mathbb Q_p.
+\]
+Then
+\[
+ \Lambda=\{v\in V:\theta_p(v)\in L_p\text{ for every }p\in\mathcal P\}
+\]
+is a finite free $\mathbb Z$-module of rank $r$, and the natural maps identify
+\[
+ \Lambda[1/D]\cong V,\qquad
+ \Lambda\otimes_{\mathbb Z}\mathbb Z_p\cong L_p.
+\]
+It is the unique lattice inside $V$ with these properties and these specified embeddings. Compatible maps of gluing data restrict uniquely to maps of lattices. Hence finite free integral modules are equivalent to this category of localized free modules, local lattices, and specified generic identifications.
+\end{theorem}
+\begin{proof}
+Choose a basis $V=A^r$, and let $E_p=\theta_p^{-1}(L_p)$ be the corresponding lattice in $\mathbb Q_p^r$. Bounds on the entries of $\theta_p$ and its inverse give a common $N\geq1$ such that, with $b=D^N$,
+\[
+ b\mathbb Z_p^r\subseteq E_p\subseteq b^{-1}\mathbb Z_p^r
+ \quad\text{for all }p.
+\]
+The intersection defining $\Lambda$ therefore satisfies
+\[
+ b\mathbb Z^r\subseteq\Lambda\subseteq b^{-1}\mathbb Z^r.
+\]
+The right inclusion uses the same integrality-of-denominators argument as the arithmetic fracture theorem, coordinatewise. Consequently $\Lambda$ is a finite-rank free abelian lattice of rank $r$, and localizing the bounds at $D$ gives $\Lambda[1/D]=A^r$.
+
+Here is also an explicit finite construction proving the local identifications. Put $F_p=bE_p$, so
+\[
+ b^2\mathbb Z_p^r\subseteq F_p\subseteq\mathbb Z_p^r.
+\]
+The Chinese remainder isomorphism identifies
+\[
+ \mathbb Z^r/b^2\mathbb Z^r\cong
+ \prod_{p\in\mathcal P}\mathbb Z_p^r/b^2\mathbb Z_p^r.
+\]
+Let $H\subseteq\mathbb Z^r$ be the inverse image of the product of the subgroups $F_p/b^2\mathbb Z_p^r$. Directly from the definitions, $H=b\Lambda$. The quotient $\mathbb Z^r/H$ is the product of the corresponding finite $p$-primary quotients. Tensoring with $\mathbb Z_p$ retains exactly the $p$ component. Thus $H\otimes\mathbb Z_p$ is the inverse image of $F_p/b^2\mathbb Z_p^r$, namely $F_p$. Dividing by $b$ gives $\Lambda\otimes\mathbb Z_p=E_p$, and $\theta_p$ identifies it with $L_p$.
+
+For completeness, tensoring the displayed subgroup inclusion is exact: $\mathbb Z_p$ is torsion-free over $\mathbb Z$, so it is flat; alternatively the assertion follows from a Smith diagonal presentation of the finite-index subgroup $H$. The latter proves the same statement using only integer bases.
+
+Any other lattice with the specified generic and local identifications has analogous bounds by powers of $D$. After a common scaling, its finite quotient is determined by the same primary subgroups in the Chinese remainder decomposition. It therefore equals $\Lambda$. A compatible $A$-linear map $V\to V'$ sends every $\theta_p$-integral element to a $\theta'_p$-integral element and hence restricts to $\Lambda\to\Lambda'$. Conversely a lattice map induces the compatible generic and local maps. Uniqueness follows from the embedding in $V$. These constructions are inverse on objects up to the specified identifications and on morphisms, proving the equivalence. The zero-rank case gives the zero module throughout.
+\end{proof}
+
+This is an effective local--global existence theorem for lattices, not for Galois representations or automorphic representations. The generic identifications are essential input. The construction does not derive them from matching coarse invariants. Nor does it assert gluing of arbitrary nonlinear structures, group actions, filtrations, or analytic conditions. Those would have to descend through the lattice construction with their own compatibility proofs.
+
+\paragraph{Consequences for the calculus.}
+The new example separates three operations that a universal slogan would conflate. Exact finite-level excision can erase an entire prime component. Completion can retain a generic fiber that all those finite repairs erased. Effective reconstruction instead retains the localized object, the completed objects, and their overlap identifications. The lattice theorem shows that this latter pattern can genuinely construct a global arithmetic object from local input, in a precisely specified class.
+
+\begin{corollary}[Compatible operators glue with the lattice]\label{cor:lattice-operators}
+In \cref{thm:lattice-gluing}, suppose $f_1,\ldots,f_s\in\operatorname{End}_A(V)$ and $g_{p,1},\ldots,g_{p,s}\in\operatorname{End}_{\mathbb Z_p}(L_p)$ satisfy the exact intertwining equations
+\[
+ \theta_p(f_i\otimes1)=(g_{p,i}\otimes1)\theta_p.
+\]
+Then they induce unique integral endomorphisms of $\Lambda$. Every specified noncommutative polynomial relation with integer coefficients holding on $V$ holds on $\Lambda$. If the operators and their inverses are supplied compatibly, they glue as automorphisms.
+\end{corollary}
+\begin{proof}
+For $v\in\Lambda$, the displayed identity puts $\theta_p(f_i v)=g_{p,i}\theta_p(v)$ in $L_p$ for every $p$. Hence $f_i v\in\Lambda$. Restriction is unique because $\Lambda$ spans $V$ after localization. The polynomial relations hold by restriction from $V$, and applying the argument to the supplied inverses gives automorphisms.
+\end{proof}
+
+This corollary glues an already compatible operator action. It does not construct a generic action, a continuous Galois action, or an automorphic realization from scalar or Frobenius invariants alone.

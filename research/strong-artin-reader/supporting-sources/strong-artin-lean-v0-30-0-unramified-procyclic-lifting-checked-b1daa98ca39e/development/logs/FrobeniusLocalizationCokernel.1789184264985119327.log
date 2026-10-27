@@ -1,0 +1,26 @@
+/mnt/data/Strong_Artin_Lean_v0.30.0_Unramified_Procyclic_Lifting/src/FrobeniusLocalizationCokernel.lean:92:75: error: Invalid field notation: Identifier or numeral expected
+/mnt/data/Strong_Artin_Lean_v0.30.0_Unramified_Procyclic_Lifting/src/FrobeniusLocalizationCokernel.lean:90:50: error: unsolved goals
+A B I : Type
+inst✝⁶ : Ring A
+inst✝⁵ : Ring B
+inst✝⁴ : Finite A
+inst✝³ : TopologicalSpace A
+inst✝² : DiscreteTopology A
+inst✝¹ : TopologicalSpace B
+inst✝ : DiscreteTopology B
+q : A →+* B
+hq : Function.Surjective ⇑q
+hsq : ∀ (a b : A), q a = 0 → q b = 0 → a * b = 0
+rho : ↑Zhat.toProfinite.toTop →ₜ* Bˣ
+degree : I → ℕ
+t : I → ↑Zhat.toProfinite.toTop →ₜ* Aˣ
+ht : ∀ (i : I) (z : ↑Zhat.toProfinite.toTop), q ↑((t i) z) = ↑(rho ((degreeMap (degree i)) z))
+F : Aˣ
+hF : q ↑F = ↑(rho frobenius)
+hV : ∀ (i : I), q ↑((t i) frobenius) = q (↑F ^ degree i)
+⊢ (∃ F,
+      q ↑F = ↑(rho frobenius) ∧
+        ∃ u, (∀ (i : I), q ↑(u i) = 1) ∧ ∀ (i : I), u i * F ^ degree i * (u i)⁻¹ = (t i) frobenius) ↔
+    (SquareZeroH2.continuousSectionDatum q hq hsq rho.toMonoidHom).frobeniusMatchingClass F degree
+        (fun i => (t i) frobenius) hV =
+      0

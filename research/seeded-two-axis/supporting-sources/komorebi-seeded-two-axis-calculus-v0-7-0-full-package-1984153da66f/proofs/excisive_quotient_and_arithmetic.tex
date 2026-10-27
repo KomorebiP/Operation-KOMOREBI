@@ -1,0 +1,270 @@
+\section{Universal excisive localization}\label{sec:excisive-localization}
+
+The constructor-invariant quotient can now be attached to a precise target property: making the event diagram excisive. This is different from declaring every residual removable.
+
+Let $\mathcal Z$ be a small stable category, let $\mathscr M$ be a coherently acting monoid of exact endofunctors, and let $\mathscr X$ be a small family of finite coherent event diagrams in $\mathcal Z$. Denote by $\mathscr H$ the family of interaction residuals of all their elementary independent-event squares. Put
+\[
+ \mathcal J_{\square}
+ =\operatorname{Thick}\{T(H):T\in\mathscr M,\ H\in\mathscr H\}.
+\]
+This notation does not assert that $H$ was operationally killable before localization.
+
+\begin{theorem}[Universal constructor-compatible excisive quotient]\label{thm:excisive-quotient}
+The stable Verdier quotient
+\[
+ q_{\square}:\mathcal Z\longrightarrow\mathcal Q_{\square}
+ :=\mathcal Z/\mathcal J_{\square}
+\]
+has the following properties.
+\begin{enumerate}
+\item The constructors descend, with their supplied coherent action data.
+\item Every diagram $q_{\square}X$, for $X\in\mathscr X$, has context-independent event residuals and satisfies principal-ideal reconstruction.
+\item Every exact equivariant functor $E:\mathcal Z\to\mathcal D$ for which all the diagrams $EX$ are excisive factors through $q_{\square}$, with the enhanced universal uniqueness of Verdier localization.
+\item The kernel is the least constructor-invariant thick subcategory forcing those squares to be excisive.
+\end{enumerate}
+The quotient is not automatically nonzero. If such an $E$ has $E(Y)\not\simeq0$, then $q_{\square}(Y)\not\simeq0$.
+\end{theorem}
+
+\begin{proof}
+The proof of \cref{thm:invariant-quotient} applies to any designated family of objects, not only killable objects. A constructor sends a generator $T(H)$ to another generator. Exactness then preserves its thick closure. The Verdier universal property therefore descends constructors and their already specified coherence.
+
+Since $q_{\square}(H)\simeq0$ and exact functors preserve interaction residuals, every prescribed elementary square in $q_{\square}X$ is a pushout. Apply \cref{thm:event-context-invariance,thm:principal-reconstruction} to obtain (2).
+
+If $EX$ is excisive, then $E(H)\simeq0$. Equivariance implies $E(T(H))\simeq T'(E(H))\simeq0$. Exactness annihilates the thick closure, so $E$ factors through the quotient. Conversely, the kernel of any exact equivariant localization making the diagrams excisive must contain $\mathscr H$ and its invariant thick closure. This proves the universal and minimality assertions. Finally a factorization $E\simeq\bar E q_{\square}$ would send $Y$ to zero if $q_{\square}(Y)$ were zero.
+\end{proof}
+
+The external input is stable Verdier localization, as in \cite{Drew2015,StacksVerdier}. The new use here is the explicitly chosen family of square interaction residuals. It does not supply an arithmetic interpretation for a quotient unless that interpretation is proved separately.
+
+\section{An integral seed model and prime-overlap calculus}\label{sec:integral-model}
+
+We now give a completely specified arithmetic instance. It uses perfect complexes over $\mathbb Z$, not Galois representations or automorphic representations. Its purpose is to make the coherence, residual, excision, noncollapse, and finite-generator obligations explicit in one model.
+
+\subsection{Tensor cubes and iterated residuals}
+
+\begin{theorem}[Tensor-cube residual formula]\label{thm:tensor-cube}
+Let $\mathcal S$ be a symmetric monoidal stable category whose tensor product is exact separately in each variable. For $m\ge1$ and arrows $f_i:A_i\to B_i$, form the coherent $m$-cube
+\[
+ Y(S)=\bigotimes_{i=1}^m Z_i(S),\qquad
+ Z_i(S)=\begin{cases}B_i&i\in S,\\A_i&i\notin S.\end{cases}
+\]
+Its total cofiber, obtained by taking the cofiber in every coordinate, satisfies
+\[
+ \operatorname{tcofib}(Y)\simeq
+ \bigotimes_{i=1}^m\Cofib(f_i).
+\]
+Equivalently it is the cofiber of the canonical map from the colimit of the punctured cube to its terminal vertex. The equivalences are natural in the arrows, with the coherent symmetries of the monoidal structure, rather than literal equality of chain matrices for different coordinate orders.
+\end{theorem}
+
+\begin{proof}
+For $m=1$ this is the definition. Taking cofibers in the last coordinate replaces its factor $A_m\to B_m$ by $\Cofib(f_m)$ because tensoring by the other factors is exact. Repeat for the remaining coordinates. Interchanging finite colimits shows that this iterated construction is the cofiber of the punctured-cube colimit map. The universal properties give naturality and coherent interchange. In a complex model, these interchange maps incorporate the tensor differential's graded signs.
+\end{proof}
+
+For a commutative ring $R$ and $a\in R$, set
+\[
+ C_R(a)=\bigl[R\xrightarrow{a}R\bigr],
+\]
+with the source in cohomological degree $-1$ and the target in degree $0$. The tensor product $\bigotimes_i C_R(a_i)$ is the Koszul complex in this cohomological convention. Its tensor, cone, and change-of-basis properties are classical; see \cite{StacksKoszul}. We use them with an explicit sign convention and direct proofs below.
+
+\subsection{Scalar exchange diagrams}
+
+Fix a finite poset $P$ and assign a positive integer $n_e$ to every event $e\in P$. For $M\in\operatorname{Perf}(\mathbb Z)$ define
+\[
+ X_M(I)=M,\qquad
+ X_M(I\subseteq J)=\left(\prod_{e\in J\setminus I}n_e\right)\id_M.
+\]
+Empty products are $1$. For nested ideals these products multiply exactly, so $X_M$ is a strict chain-level diagram followed by the stable realization. When $P=P_W$, take identity transformation and coarsening functors and let the exchange cell for event $e$ be multiplication by $n_e$. This realizes the diagram inside the typed two-axis grammar of \cref{thm:strict-event-realization}. The object at every vertex is the same, but its comparison maps retain nontrivial arithmetic.
+
+For an enabled event $e$,
+\[
+ E_e(I)\simeq M\otimes^{\mathbf L}_{\mathbb Z}C_{\mathbb Z}(n_e).
+\]
+The comparison after an unrelated event $f$ is multiplication by $n_f$ on that complex. Consequently
+\[
+ \boxed{\Theta_{e,f}(I)\simeq
+ M\otimes^{\mathbf L}_{\mathbb Z}
+ C_{\mathbb Z}(n_e)\otimes^{\mathbf L}_{\mathbb Z}C_{\mathbb Z}(n_f).}
+\]
+The complexes $C_{\mathbb Z}(n)$ are bounded and free, so ordinary tensor complexes compute these derived tensors. The total normalization residual is instead
+\[
+ \mathcal F_{X_M}(P)\simeq
+ M\otimes^{\mathbf L}_{\mathbb Z}C_{\mathbb Z}(N),
+ \qquad N=\prod_{e\in P}n_e.
+\]
+This is not the total cofiber of the entire event cube. The normalization residual compares the initial and final vertices, whereas a cube's total cofiber measures their higher interaction. These are different constructions.
+
+\begin{theorem}[Integral interaction is supported at the gcd]\label{thm:integral-gcd}
+For positive integers $a_1,\ldots,a_m$, $m\ge1$, put $g=\gcd(a_1,\ldots,a_m)$. Then
+\[
+ K(a_1,\ldots,a_m):=
+ \bigotimes_{i=1}^m C_{\mathbb Z}(a_i)
+ \simeq\bigoplus_{j=0}^{m-1}
+ C_{\mathbb Z}(g)[j]^{\oplus\binom{m-1}{j}}.
+\]
+The displayed splitting depends on a unimodular change of basis and is not claimed canonical. Therefore
+\[
+ H^{-j}K(a_1,\ldots,a_m)\cong
+ (\mathbb Z/g)^{\oplus\binom{m-1}{j}}
+ \quad(0\le j\le m-1),
+\]
+and every other cohomology group vanishes. In particular the interaction vanishes exactly when $g=1$.
+\end{theorem}
+
+\begin{proof}
+The Euclidean algorithm produces a unimodular matrix $U\in\operatorname{GL}_m(\mathbb Z)$ with
+\[
+ (a_1,\ldots,a_m)U=(g,0,\ldots,0).
+\]
+The Koszul complex is the exterior algebra on a free module in degree $-1$, with differential the derivation determined by this row vector. Hence the maps $\bigwedge^jU$ give an isomorphism of complexes from $K(g,0,\ldots,0)$ to $K(a_1,\ldots,a_m)$.
+
+Each zero entry contributes $C_{\mathbb Z}(0)\cong\mathbb Z\oplus\mathbb Z[1]$ with zero differential. Distributing these $m-1$ factors gives the stated shifted copies, with the standard shift isomorphisms. Since $g>0$, the map $g:\mathbb Z\to\mathbb Z$ is injective. Thus $C_{\mathbb Z}(g)$ has only $H^0=\mathbb Z/g$, proving the cohomology formula and the vanishing criterion.
+\end{proof}
+
+For two events the entire calculation is visible:
+\[
+ K(a,b)=\left[
+ \mathbb Z\xrightarrow{\binom{-b}{a}}
+ \mathbb Z^2\xrightarrow{(a\ \ b)}\mathbb Z
+ \right],
+ \qquad\text{degrees }-2,-1,0.
+\]
+The product of the two differentials is zero. The kernel of $(a\ b)$ is generated by $(-b/g,a/g)$, and the incoming image is $g$ times that generator. Both $H^{-1}$ and $H^0$ are $\mathbb Z/g$. Equivalently, if $au+bv=g$, then
+\[
+ U=\begin{pmatrix}u&-b/g\\v&a/g\end{pmatrix},
+ \qquad\det U=1,
+ \qquad(a\ b)U=(g\ 0).
+\]
+
+Thus a strictly commuting scalar exchange square is a homotopy pushout on the seed $\mathbb Z$ exactly when the two exchange integers are coprime. Its commutativity alone says nothing about this condition.
+
+\begin{example}[Higher vanishing does not remove lower interactions]\label{ex:higher-not-lower}
+For $(6,10,15)$, all pair interactions are nonzero: their gcds are $2,3,5$. But the threefold interaction is zero because the joint gcd is $1$. Hence vanishing of a higher total cofiber does not imply vanishing of the lower square interactions. It cannot replace the square-by-square excision condition in \cref{thm:event-context-invariance}.
+\end{example}
+
+\subsection{A nontrivial universal quotient with an exact detector}
+
+Let $\mathscr M$ consist of tensoring by perfect complexes, closed under composition with its coherent tensor action. This is a constructor system, not the repair monoid defining operational killability in the earlier sections. We now kill only the designated interaction residuals.
+
+For the fixed labelled poset define the finite prime set
+\[
+ S_P=\bigcup_{e\parallel f}
+ \{p\text{ prime}:p\mid\gcd(n_e,n_f)\},
+\]
+where $e\parallel f$ means incomparable. Let $\mathcal J_P$ be the invariant thick closure of the square interaction residuals for the unit seed $\mathbb Z$.
+
+\begin{theorem}[Prime-overlap classification of the excisive kernel]\label{thm:prime-overlap-quotient}
+In $\operatorname{Perf}(\mathbb Z)$,
+\[
+ \boxed{\mathcal J_P=
+ \operatorname{Thick}\{\mathbb Z/p:p\in S_P\}.}
+\]
+Equivalently, $\mathcal J_P$ consists exactly of perfect complexes whose cohomology groups are finite abelian groups with prime divisors in $S_P$. For the stable Verdier quotient $q_P$, and every perfect complex $M$,
+\[
+ q_P(M)\simeq0
+ \quad\Longleftrightarrow\quad
+ M\otimes^{\mathbf L}_{\mathbb Z}\mathbb Z[S_P^{-1}]\simeq0.
+\]
+The quotient is nonzero. Its constructor action is defined, every $q_PX_M$ is excisive, and its reduced residual diagram is reconstructed from principal ideals.
+\end{theorem}
+
+\begin{proof}
+First, every pair of incomparable events occurs in an elementary square. Take the ideal $D_e\cup D_f$. It contains neither $e$ nor $f$, contains their predecessors, and enables both. The square residual at the unit is $K(n_e,n_f)$.
+
+By \cref{thm:integral-gcd}, this complex has the same thick closure as $C_{\mathbb Z}(g)$ for $g=\gcd(n_e,n_f)$: it is a direct sum of that complex and its shift, and contains it as a retract. The thick closure of any family in $\operatorname{Perf}(\mathbb Z)$ is already a tensor ideal. Indeed $\operatorname{Perf}(\mathbb Z)=\operatorname{Thick}(\mathbb Z)$, so tensoring a fixed generator by a perfect complex builds its image using finite cones, shifts, and retracts from that same generator.
+
+For $p\mid g$, tensor $C_{\mathbb Z}(g)$ by $C_{\mathbb Z}(p)$. The gcd theorem identifies the result with $C_{\mathbb Z}(p)\oplus C_{\mathbb Z}(p)[1]$. Hence $\mathbb Z/p\simeq C_{\mathbb Z}(p)$ belongs to the thick closure. Conversely, the Chinese remainder decomposition of $\mathbb Z/g$ and the short exact sequences building $\mathbb Z/p^j$ from copies of $\mathbb Z/p$ put $C_{\mathbb Z}(g)\simeq\mathbb Z/g$ in the thick subcategory generated by its prime divisors. This proves the boxed equality.
+
+Having finite $S_P$-primary cohomology is preserved by finite triangles and retracts, by the long exact sequence in cohomology. Conversely, each such finite abelian cohomology group is built by finite extensions from the indicated $\mathbb Z/p$. A perfect complex is bounded, and its finite truncation triangles then build it from these groups. These truncations are perfect over $\mathbb Z$: every finitely generated abelian group has a finite free resolution of length at most one. This proves the cohomological characterization.
+
+Localization of abelian groups is exact. Thus tensoring with $\mathbb Z[S_P^{-1}]$ has cohomology obtained by localizing each cohomology group. A finitely generated abelian group localizes to zero exactly when it is finite with all prime divisors in $S_P$. The localization kernel is therefore $\mathcal J_P$, as is the kernel of the Verdier quotient by this thick subcategory. This proves the equivalence of vanishing tests on every source object.
+
+Finally $\mathbb Z[S_P^{-1}]$ is a nonzero ring, so localization detects that $q_P(\mathbb Z)\not\simeq0$. It is exact and intertwines tensor constructors with their localized counterparts. The universal excisive-quotient theorem supplies the remaining assertions. For general $M$, each square residual is its unit-seed counterpart tensored with $M$, so it lies in the same invariant kernel.
+\end{proof}
+
+The positivity hypothesis excludes a real collapse case. If two independent labels are both zero, then $K(0,0)\simeq\mathbb Z\oplus\mathbb Z[1]^{\oplus2}\oplus\mathbb Z[2]$ contains the unit as a retract. Killing that interaction forces the whole perfect category to vanish. Thus noncollapse is proved for the specified positive-label model, not for arbitrary scalar labels.
+
+No equivalence of the entire quotient category with a category of localized perfect complexes is needed for this theorem. The proved statement is equality of kernels, a nonzero exact detector, and the universal excisive property. This avoids inserting an unproved full-faithfulness or idempotent-completion claim.
+
+\begin{example}[Remove shared torsion without deleting the primary residuals]\label{ex:six-ten}
+Take two independent events labelled $6$ and $10$. Their interaction is
+\[
+ K(6,10)\simeq\mathbb Z/2\oplus(\mathbb Z/2)[1].
+\]
+Here $S_P=\{2\}$. Inverting $2$ kills this interaction while retaining
+\[
+ C_{\mathbb Z}(6)\otimes\mathbb Z[1/2]\simeq\mathbb Z/3,
+ \qquad
+ C_{\mathbb Z}(10)\otimes\mathbb Z[1/2]\simeq\mathbb Z/5.
+\]
+The total normalization residual is $C_{\mathbb Z}(60)$. After localization it is $\mathbb Z/15$, and principal-ideal reconstruction gives
+\[
+ \mathbb Z/15\simeq\mathbb Z/3\oplus\mathbb Z/5.
+\]
+This is a classical Chinese-remainder instance of the calculus. Before localization the two paths have first residuals $\mathbb Z/6$ and $\mathbb Z/10$. After localization those first stages remain different, so the original ordered-filtration independence claim is still not being restored.
+\end{example}
+
+\subsection{A finite certificate for an infinite scalar grammar}
+
+\begin{corollary}[Finite-signature arithmetic certification]\label{cor:finite-signature}
+Fix finitely many positive integer exchange labels $n_1,\ldots,n_t$ and a specified symmetric relation $\mathcal I$ of label pairs allowed to occur on incomparable events. The relation may contain a diagonal pair. Put
+\[
+ S_{\mathcal I}=\bigcup_{(i,j)\in\mathcal I}
+ \{p:p\mid\gcd(n_i,n_j)\}.
+\]
+Killing the finitely many unit-seed interactions $K(n_i,n_j)$ for $(i,j)\in\mathcal I$, with invariant thick closure, makes every scalar event diagram on every finite labelled poset satisfying this independence restriction excisive, for every perfect input $M$. The quotient is nonzero and its kernel is the finite-prime torsion class supported on $S_{\mathcal I}$.
+\end{corollary}
+
+\begin{proof}
+There are only finitely many prescribed pair types. Every elementary square in every admitted diagram has one of these types, and its residual is the corresponding unit-seed Koszul complex tensored with $M$. All such residuals lie in the same invariant thick kernel. Apply \cref{thm:excisive-quotient,thm:prime-overlap-quotient}. The latter proof depends only on the finite family of gcds, so it applies unchanged to the signature-wide family.
+\end{proof}
+
+This is a genuine finite reduction of an unbounded word-length obligation, but only in the scalar integral regime with the stated independence relation. If a label can occur independently of itself, its primes belong to $S_{\mathcal I}$ and its primary torsion is erased. Declaring independence therefore changes the quotient's information content. Dependent events can share a prime without forcing its removal, as the $p$-then-$p$ chain in \cref{cor:independent-splitting} demonstrates.
+
+The construction resolves a concrete semantic and obstruction problem in arithmetic. It does not identify these scalar kernels with automorphic occupancy, a ramification obstruction, or a global Langlands parameter.
+
+\subsection{Beyond scalar exchanges: an integral matrix criterion}
+
+The noncollapse test extends to tensor cubes of finite integer matrices. This is a different concrete realization from identity functors with scalar exchange cells: its independent directions are tensor factors of actual two-term complexes.
+
+\begin{theorem}[Finite integral matrix collapse criterion]\label{thm:matrix-collapse}
+Let $f_i:\mathbb Z^{a_i}\to\mathbb Z^{b_i}$ be finitely many integer matrices. Specify which pairs of directions may occur independently. For each matrix fix a Smith normal form, with rank $r_i$ and positive nonzero diagonal entries $d_{i,1},\ldots,d_{i,r_i}$. Put
+\[
+ \epsilon_i=\begin{cases}
+ 1&a_i+b_i-2r_i>0,\\
+ 0&a_i+b_i-2r_i=0,
+ \end{cases}
+ \qquad
+ P_i=\{p:p\mid d_{i,k}\text{ for some }k\}.
+\]
+Let $\mathcal J$ be the tensor-invariant thick subcategory generated by $\Cofib(f_i)\otimes^{\mathbf L}\Cofib(f_j)$ over the allowed independent pairs.
+\begin{enumerate}
+\item If an allowed pair has $\epsilon_i=\epsilon_j=1$, then $\mathcal J=\operatorname{Perf}(\mathbb Z)$ and its quotient is zero.
+\item Otherwise the quotient is nonzero and
+\[
+ \mathcal J=\operatorname{Thick}\{\mathbb Z/p:p\in S\},
+\]
+where $S$ is the union over allowed pairs of
+\[
+ S_{ij}=\begin{cases}
+ P_i\cap P_j&\epsilon_i=\epsilon_j=0,\\
+ P_j&\epsilon_i=1,\ \epsilon_j=0,\\
+ P_i&\epsilon_i=0,\ \epsilon_j=1.
+ \end{cases}
+\]
+Localization at $S$ is an exact nonzero detector with that kernel. It makes the prescribed tensor-cube squares excisive.
+\end{enumerate}
+A supplied Smith form is a finite certificate: its row and column changes must be unimodular and their matrix product must give the claimed diagonal form. The existence of Smith forms over $\mathbb Z$ follows from the Euclidean algorithm; the argument below needs only such a verified form.
+\end{theorem}
+
+\begin{proof}
+Changing bases in the source and target yields a chain isomorphism
+\[
+ \Cofib(f_i)\simeq
+ \mathbb Z^{b_i-r_i}\oplus\mathbb Z^{a_i-r_i}[1]
+ \oplus\bigoplus_{k=1}^{r_i}C_{\mathbb Z}(d_{i,k}).
+\]
+Unit diagonal entries contribute contractible complexes. Thus $\epsilon_i=1$ means that a shift of the unit occurs as a direct summand. If two independent cones each have such a summand, their tensor product contains a shift of the unit. A thick subcategory containing it is all of $\operatorname{Perf}(\mathbb Z)$.
+
+If no allowed pair has two free summands, every generating tensor is torsion. A free summand tensored with a torsion cone preserves that torsion's prime support. Two torsion summands have tensor product $K(d_{i,k},d_{j,l})$, whose thick support is the prime intersection by \cref{thm:integral-gcd}. Taking finite direct sums gives exactly the listed sets $S_{ij}$. The argument of \cref{thm:prime-overlap-quotient} identifies the generated thick subcategory with finite $S$-primary cohomology and identifies its kernel with localization at $S$. The localized unit is nonzero. The tensor-cube formula and the excisive-quotient theorem finish the proof.
+\end{proof}
+
+This criterion shows why noncollapse cannot be inferred from commutativity. Two commuting tensor directions with free cofiber components can force total collapse when their interaction is declared zero. Pure torsion interactions, in contrast, admit the precise finite-prime localization just proved.

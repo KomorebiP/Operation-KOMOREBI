@@ -1,0 +1,2362 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{mathrsfs}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\usepackage{tikz-cd}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{xcolor}
+\usepackage{needspace}
+\hypersetup{pdftitle={Komorebi Seeded Two-Axis Calculus v0.6.0},
+ pdfauthor={Komorebi P.},pdfsubject={Audited formalization, residual histories, and invariant obstruction quotients}}
+\setlength{\emergencystretch}{2em}
+\setcounter{tocdepth}{2}
+
+\setlist[itemize]{leftmargin=2em,itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=2.2em,itemsep=2pt,topsep=4pt}
+\allowdisplaybreaks
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{construction}[theorem]{Construction}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{problem}[theorem]{Open Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\K}{\mathbf K}
+\newcommand{\Rcat}{\mathbf R}
+\newcommand{\Tcat}{\mathbf T}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Ob}{\operatorname{Ob}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Lift}{\operatorname{Lift}}
+\newcommand{\Cofib}{\operatorname{Cofib}}
+\newcommand{\Recon}{\operatorname{Recon}}
+\newcommand{\Obs}{\operatorname{Obs}}
+\newcommand{\Zoo}{\mathcal Z}
+\newcommand{\Seeds}{\Sigma}
+\newcommand{\Res}{\mathsf{Res}}
+\newcommand{\Trans}{\mathsf{Trans}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\colim}{\operatorname*{colim}}
+\newcommand{\status}[1]{\textbf{Status: #1.}}
+
+\title{\textbf{Komorebi Seeded Two-Axis Calculus}\\
+\large Transformation, Resolution, Residual Generation, and Reconstruction\\[0.4em]
+\normalsize Working Formalization v0.6.0}
+\author{Komorebi P.}
+\date{26 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This manuscript organizes a seed-generated calculus around transformations within a resolution and coarsening between resolutions. Its ordinary categorical layer is an indexed category and its Grothendieck construction. Its stable layer uses exact functors, coherent exchange maps, and their cofibers. The construction supplies least seed closures, universal stable envelopes, residual filtrations along chosen normalization paths, and Verdier obstruction quotients.
+
+Version 0.6.0 audits the preceding development and separates three different notions: a normal-form object, the comparison map to that object, and an ordered filtration of its cofiber. A coherent commuting diamond already provides a counterexample to order-independent filtered residuals. The replacement is a residual diagram indexed by order ideals of exchange events. For the pure adjacent transformation/coarsening grammar, reachable words are proved to correspond to these ideals, and normalization histories to linear extensions. Compatible comparison maps give a history-independent total residual without erasing the order dependence of its filtrations.
+
+The obstruction layer is also strengthened. The thick closure of killable objects need not be preserved by the admitted constructors. A constructor-invariant thick saturation gives the corresponding universal quotient, but can collapse the whole category. A directed common-postcomposition hypothesis prevents this extra collapse and identifies vanishing with operational killability. Exact residual functors can then be tested on orbit generators. All results remain within their stated categorical hypotheses. Arithmetic globalization, unrestricted reciprocity, and historical novelty are not established. The proofs are written mathematical arguments with finite exact regression tests, not Lean certificates.
+\end{abstract}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Purpose and status}
+
+The goal is to formalize the idea that a mathematical theory may contain two distinct ambient directions:
+\[
+\boxed{\text{transformation: change of representation}}
+\qquad\text{and}\qquad
+\boxed{\text{resolution: change of distinguishability}.}
+\]
+The distinction is operational rather than rhetorical. A Fourier transform, a duality, or a change of coordinates may alter representation while preserving the level of information being resolved. Coarsening a filtration, passing from modulus $p^{n+1}$ to modulus $p^n$, truncating a spectral expansion, or forgetting fine ramification data changes the level at which distinctions are visible.
+
+The central hypothesis of this note is that a large class of mathematical constructions can be organized by a two-axis calculus in which:
+\begin{enumerate}
+    \item objects occur at resolutions;
+    \item each resolution has its own transformation category;
+    \item resolution changes induce functors between those categories;
+    \item mixed transformation-resolution squares can commute exactly, commute up to equivalence, or leave a structured residual;
+    \item residuals can themselves be promoted to new seeds;
+    \item compatible local or resolved data can sometimes be reconstructed into global objects.
+\end{enumerate}
+
+\paragraph{Status convention.}
+Results tagged ``proved here'' have written proofs under the stated hypotheses. They are not asserted to be Lean-checked. Results tagged ``standard machinery'' are direct applications of established category, order, or rewriting theory. Statements tagged ``program theorem'' are precise targets whose Komorebi-specific hypotheses remain to be supplied in applications. No claim of mathematical novelty is made merely because standard machinery is expressed in Komorebi language.
+
+\paragraph{Categorical regimes and size.}
+The initial indexed construction uses small ordinary categories and a strict contravariant functor. Every section involving functorial cofibers, higher coherence, stable envelopes, or stable Verdier quotients uses small stable $\infty$-categories, or a specified enhancement presenting them. All subcategories in closure constructions are full and replete. ``Stable'' means closed under finite limits and colimits, while ``thick'' additionally means closed under retracts. A stable seed zoo is not automatically idempotent-complete. Thick results are applied to a separately designated thick zoo or to its idempotent completion. Homotopy categories support the corresponding triangulated statements, not arbitrary canonical choices of cones. A fixed small presentation or larger ambient universe is understood whenever object collections are used as sets.
+
+\paragraph{What the two axes do not assert.}
+An admissible transformation need not be invertible or information-preserving. A coarsening functor need not have an inverse. A factorization in a constructed fibration does not establish a canonical resolution system for every mathematical theory. These are separate semantic requirements, not consequences of the notation.
+
+\section{Resolution systems}
+
+\subsection{The resolution base}
+
+\begin{definition}[Resolution category]
+A \emph{resolution category} is a small poset $(R,\le)$ regarded as a thin category $\Rcat$. An arrow $r\to s$ exists exactly when $r\le s$. We interpret $s$ as at least as fine as $r$.
+\end{definition}
+
+The poset assumption is intentionally restrictive for the first formalization. A later version may replace $\Rcat$ by a general category, a site, a filtered category, or a multi-parameter resolution geometry.
+
+\begin{definition}[Indexed transformation system]
+An \emph{indexed transformation system} over $\Rcat$ is a strict functor
+\[
+F:\Rcat^{op}\longrightarrow\Cat.
+\]
+For $r\in R$, write
+\[
+\Tcat_r:=F(r).
+\]
+For $r\le s$, write
+\[
+C_{s\to r}:=F(r\le s):\Tcat_s\longrightarrow\Tcat_r.
+\]
+We call $C_{s\to r}$ the \emph{coarsening functor}.
+\end{definition}
+
+Strictness gives
+\[
+C_{r\to r}=\id_{\Tcat_r}
+\]
+and, for $r\le s\le t$,
+\[
+C_{t\to r}=C_{s\to r}\circ C_{t\to s}.
+\]
+A pseudofunctor version is more natural in some applications. The strict version isolates the main structure without coherence bookkeeping.
+
+\begin{definition}[Resolved object]
+A \emph{resolved object} is a pair $(r,X)$ with $X\in\Ob(\Tcat_r)$.
+\end{definition}
+
+\subsection{Resolution equivalence}
+
+Let $X,Y\in\Tcat_t$ and let $r\le t$.
+
+\begin{definition}[Indistinguishability at resolution $r$]
+We write
+\[
+X\sim_r Y
+\]
+when
+\[
+C_{t\to r}(X)\cong C_{t\to r}(Y)
+\]
+in $\Tcat_r$.
+\end{definition}
+
+For a fixed ambient fine level $t$, each $\sim_r$ is an equivalence relation on isomorphism classes of objects of $\Tcat_t$.
+
+\begin{theorem}[Resolution monotonicity]\label{thm:resolution-monotonicity}
+Let $r\le s\le t$ and $X,Y\in\Tcat_t$. If
+\[
+X\sim_sY,
+\]
+then
+\[
+X\sim_rY.
+\]
+\end{theorem}
+
+\begin{proof}
+An isomorphism
+\[
+C_{t\to s}(X)\cong C_{t\to s}(Y)
+\]
+is carried by the functor $C_{s\to r}$ to an isomorphism
+\[
+C_{s\to r}C_{t\to s}(X)
+\cong
+C_{s\to r}C_{t\to s}(Y).
+\]
+By functorial coherence this is
+\[
+C_{t\to r}(X)\cong C_{t\to r}(Y).
+\]
+Hence $X\sim_rY$.
+\end{proof}
+
+\begin{corollary}[Nested distinguishability]\label{cor:nested}
+For $r\le s\le t$, the equivalence relation $\sim_s$ refines $\sim_r$.
+\end{corollary}
+
+This is the first exact form of the statement that coarsening may erase distinctions but cannot create distinctions that were absent at finer resolution.
+
+\subsection{Refinement as a fiber rather than a function}
+
+\begin{definition}[Lift set]
+For $r\le s$ and $X\in\Tcat_r$, define the set of isomorphism classes of lifts
+\[
+\Lift_{r\to s}(X)
+:=
+\left\{
+Y\in\Ob(\Tcat_s):C_{s\to r}(Y)\cong X
+\right\}/\cong.
+\]
+\end{definition}
+
+Three basic cases occur:
+\[
+|\Lift_{r\to s}(X)|=0,
+\qquad
+|\Lift_{r\to s}(X)|=1,
+\qquad
+|\Lift_{r\to s}(X)|>1.
+\]
+They correspond respectively to obstruction to refinement, uniqueness of the fine object's isomorphism class, and hidden fine-scale multiplicity. The middle case does not imply a contractible space of refinements. It forgets the identification $C_{s\to r}Y\cong X$ and all automorphisms. When these matter, use the groupoid of pairs $(Y,\theta)$ with $\theta:C_{s\to r}Y\xrightarrow{\sim}X$, and isomorphisms commuting with $\theta$. In the enhanced setting this is the homotopy fiber of the functor on cores.
+
+\begin{definition}[Resolution branching number]
+When $\Lift_{r\to s}(X)$ is finite, define
+\[
+b_{r\to s}(X):=|\Lift_{r\to s}(X)|.
+\]
+When $b_{r\to s}(X)>0$, its logarithm
+\[
+H_{r\to s}(X):=\log b_{r\to s}(X)
+\]
+may be regarded as a crude \emph{resolution information} measuring how much ambiguity is hidden by coarsening.
+\end{definition}
+
+The empty lift set is recorded as an obstruction, not as an ordinary finite entropy. This quantity is only a first model. In probabilistic, measurable, or derived settings one would replace cardinality by entropy, measure, dimension, rank, or a homotopical invariant.
+
+\section{The total two-axis category}
+
+\subsection{Grothendieck construction}
+
+\begin{construction}[Total Komorebi category]\label{cons:groth}
+Given $F:\Rcat^{op}\to\Cat$, define the category
+\[
+\K:=\int_{\Rcat}F
+\]
+as follows.
+
+Its objects are pairs $(r,X)$ with $X\in\Tcat_r$.
+
+For $r\le s$, a morphism
+\[
+(r,X)\longrightarrow(s,Y)
+\]
+is a morphism
+\[
+\alpha:X\longrightarrow C_{s\to r}(Y)
+\]
+in $\Tcat_r$. If $r\nleq s$, there is no such morphism in this directed version.
+\end{construction}
+
+Given
+\[
+(r,X)\xrightarrow{\alpha}(s,Y)
+\quad\text{and}\quad
+(s,Y)\xrightarrow{\beta}(t,Z),
+\]
+define
+\[
+\beta\circ_{\K}\alpha
+:=
+C_{s\to r}(\beta)\circ\alpha:
+X\to C_{t\to r}(Z).
+\]
+
+\begin{theorem}[Total category]\label{thm:total-category}
+The construction above defines a category $\K$.
+\end{theorem}
+
+\begin{proof}
+Identity at $(r,X)$ is $\id_X:X\to C_{r\to r}(X)=X$. For associativity, let
+\[
+(r,X)\xrightarrow{\alpha}(s,Y)
+\xrightarrow{\beta}(t,Z)
+\xrightarrow{\gamma}(u,W).
+\]
+One composite gives
+\[
+C_{t\to r}(\gamma)\circ C_{s\to r}(\beta)\circ\alpha.
+\]
+The other gives the same expression by functoriality and
+\[
+C_{t\to r}=C_{s\to r}C_{t\to s}.
+\]
+Thus composition is associative.
+\end{proof}
+
+Define
+\[
+\pi:\K\to\Rcat,
+\qquad
+\pi(r,X)=r.
+\]
+The fiber over $r$ is canonically equivalent to $\Tcat_r$.
+
+\subsection{Canonical factorization}
+
+For $r\le s$ and $Y\in\Tcat_s$, define the canonical morphism
+\[
+\kappa_{r,s,Y}:
+(r,C_{s\to r}Y)\longrightarrow(s,Y)
+\]
+represented by the identity map
+\[
+\id_{C_{s\to r}Y}.
+\]
+
+\begin{theorem}[Two-axis factorization]\label{thm:factorization}
+Every morphism
+\[
+f:(r,X)\longrightarrow(s,Y)
+\]
+in $\K$ factors uniquely as
+\[
+(r,X)
+\xrightarrow{f_v}
+(r,C_{s\to r}Y)
+\xrightarrow{\kappa_{r,s,Y}}
+(s,Y),
+\]
+where $f_v$ lies entirely in the fiber $\Tcat_r$.
+\end{theorem}
+
+\begin{proof}
+By definition, $f$ is exactly a morphism
+\[
+\alpha:X\to C_{s\to r}Y
+\]
+in $\Tcat_r$. Take $f_v=\alpha$. Composition with $\kappa_{r,s,Y}$ is represented by
+\[
+\id_{C_{s\to r}Y}\circ\alpha=\alpha,
+\]
+so the composite is $f$. Any factorization through the fixed cartesian target $(r,C_{s\to r}Y)$ must use the same fiber morphism $\alpha$, hence is unique.
+\end{proof}
+
+\begin{remark}
+This is the formal version of the two-axis statement
+\[
+\boxed{
+\text{mixed movement}
+=
+\text{within-resolution transformation}
++
+\text{resolution movement}.
+}
+\]
+Categorically, $\pi:\K\to\Rcat$ is the Grothendieck fibration associated with $F$. Indeed, a map $(u,Z)\to(s,Y)$ above $u\le r\le s$ is exactly a map $Z\to C_{s\to u}Y=C_{r\to u}C_{s\to r}Y$. This uniquely factors through $\kappa_{r,s,Y}$ as a morphism to $(r,C_{s\to r}Y)$ above $u\le r$, which is the cartesian lifting property. Notice the direction: the lift starts from an already specified fine object $Y$. It is not a procedure that selects a refinement of an arbitrary coarse object.
+\end{remark}
+
+\section{Resolution geometry}
+
+The nested equivalence relations from \cref{cor:nested} induce a genuine geometry when the resolution set is linearly ordered.
+
+\begin{definition}[Separation depth]
+Let $S$ be a set of states, with equivalence relations $\sim_n$ for every $n\in\mathbb N=\{0,1,\ldots\}$. Assume
+\[
+\sim_{n+1}\ \subseteq\ \sim_n,
+\qquad \sim_0=S\times S.
+\]
+Define
+\[
+\nu(X,Y):=\sup\{n\in\mathbb N:X\sim_nY\}\in\mathbb N\cup\{\infty\}.
+\]
+The universal zeroth level makes this set nonempty. Assume separation, meaning that $X\sim_nY$ for every $n$ implies $X=Y$. The states can, for example, be coherent towers equipped with the chosen levelwise equivalence relations. No finiteness of the individual resolutions is required.
+\end{definition}
+
+\begin{theorem}[Resolution ultrametric]\label{thm:ultrametric}
+Define
+\[
+d_R(X,Y):=
+\begin{cases}
+0,&X=Y,\\
+2^{-\nu(X,Y)},&X\ne Y.
+\end{cases}
+\]
+Then $d_R$ is an ultrametric:
+\[
+d_R(X,Z)\le\max\{d_R(X,Y),d_R(Y,Z)\}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+m=\min\{\nu(X,Y),\nu(Y,Z)\}.
+\]
+For every $n\le m$, we have $X\sim_nY$ and $Y\sim_nZ$. Since $\sim_n$ is an equivalence relation, $X\sim_nZ$. Hence
+\[
+\nu(X,Z)\ge m.
+\]
+Therefore
+\[
+2^{-\nu(X,Z)}
+\le
+2^{-m}
+=
+\max\{2^{-\nu(X,Y)},2^{-\nu(Y,Z)}\}.
+\]
+The identity and symmetry axioms are immediate, and separation gives positivity for distinct states. Without separation the same formula, with $2^{-\infty}=0$, is an ultrapseudometric.
+\end{proof}
+
+Thus the resolution axis can carry an intrinsic non-Archimedean geometry. Two objects are close when many levels of resolution are required before they can be distinguished.
+
+\begin{definition}[First distinguishing scale]
+When finite, define
+\[
+\delta(X,Y):=\nu(X,Y)+1.
+\]
+This is the first resolution at which $X$ and $Y$ become distinguishable.
+\end{definition}
+
+This quantity may be useful in $p$-adic, dyadic, symbolic, filtration, and machine-representation settings.
+
+\section{Seeds and generated zoos}
+
+\subsection{Seed signatures}
+
+Let $U$ be a set of isomorphism classes of resolved objects under consideration. Smallness is imposed only to use ordinary powerset fixed-point arguments.
+
+\begin{definition}[Seed signature]
+A \emph{seed signature} on $U$ is data
+\[
+\mathfrak S=(\Seeds_0,\mathscr T,\mathscr C,\mathscr L,\mathscr D),
+\]
+where:
+\begin{itemize}
+    \item $\Seeds_0\subseteq U$ is the initial seed set;
+    \item $\mathscr T$ is a collection of partial unary transformation constructors on $U$;
+    \item $\mathscr C$ is the collection of allowed coarsening constructors;
+    \item $\mathscr L$ assigns to an object its admissible refinement classes;
+    \item $\mathscr D$ is a collection of partial residual constructors.
+\end{itemize}
+\end{definition}
+
+The use of partial constructors is intentional. An operation need not be defined on every object or every resolution.
+
+\begin{definition}[One-step zoo operator]
+For $A\subseteq U$, define
+\[
+\Phi(A):=
+A
+\cup \mathscr T[A]
+\cup \mathscr C[A]
+\cup \mathscr L[A]
+\cup \mathscr D[A],
+\]
+where each term denotes all defined outputs of the corresponding constructors applied to inputs from $A$.
+\end{definition}
+
+\begin{lemma}[Monotonicity]\label{lem:phi-monotone}
+If $A\subseteq B$, then
+\[
+\Phi(A)\subseteq\Phi(B).
+\]
+\end{lemma}
+
+\begin{proof}
+Every constructor output available from inputs in $A$ is also available from the same inputs viewed as elements of $B$.
+\end{proof}
+
+\begin{theorem}[Seed zoo existence]\label{thm:zoo-existence}
+There exists a least $\Phi$-closed set containing $\Seeds_0$. Equivalently, there is a least fixed point of the closure process above $\Seeds_0$.
+\end{theorem}
+
+\begin{proof}
+The powerset $\mathcal P(U)$ is a complete lattice. The map
+\[
+\Psi(A):=\Seeds_0\cup\Phi(A)
+\]
+is monotone by \cref{lem:phi-monotone}. By the Knaster--Tarski fixed-point theorem, $\Psi$ has a least fixed point. This is exactly the least constructor-closed set containing $\Seeds_0$.
+\end{proof}
+
+\begin{definition}[Generated zoo]
+The least fixed point in \cref{thm:zoo-existence} is denoted
+\[
+\Zoo(\Seeds_0).
+\]
+\end{definition}
+
+\begin{proposition}[Finitary iteration]\label{prop:finitary}
+Assume each constructor is given by a fixed input/output relation with finitely many inputs, independent of the stage $A$. Then $\Phi$ preserves increasing unions of $\omega$-chains. Then
+\[
+\Zoo(\Seeds_0)
+=
+\bigcup_{n<\omega}\Psi^n(\varnothing).
+\]
+\end{proposition}
+
+\begin{proof}
+For a constructor output from $\bigcup_n A_n$, its finitely many inputs all belong to a common $A_N$. The output therefore already belongs to $\Phi(A_N)$. This proves preservation of increasing unions. The union on the right is a fixed point because $\Psi$ preserves that union. It contains $\Seeds_0$ and is contained in every fixed point by induction on $n$, hence is least.
+\end{proof}
+
+This turns the seed calculus into an explicit generative process:
+\[
+\Seeds_0
+\subseteq
+\Seeds_1
+\subseteq
+\Seeds_2
+\subseteq\cdots,
+\qquad
+\Seeds_{n+1}=\Psi(\Seeds_n).
+\]
+
+\subsection{Zoo growth}
+
+\begin{definition}[Growth function]
+When each finite stage contains finitely many isomorphism classes, define
+\[
+g_{\Seeds_0}(n):=|\Psi^n(\varnothing)|.
+\]
+\end{definition}
+
+The asymptotic class of $g(n)$ may distinguish finite, polynomial, exponential, and faster-growing presentations. It depends on the chosen generator signature and cost convention, not merely on the generated category. This is a proposed invariant of a generated mathematical grammar rather than a theorem of the present note.
+
+\section{Transformation-resolution exchange}
+
+\subsection{Resolution-indexed transformations}
+
+\begin{definition}[Lax resolution-compatible transformation]\label{def:laxtrans}
+A \emph{lax resolution-compatible transformation} consists of endofunctors
+\[
+A_r:\Tcat_r\to\Tcat_r
+\]
+for every $r\in R$, together with natural transformations
+\[
+\eta^A_{s,r}:
+A_rC_{s\to r}
+\Longrightarrow
+C_{s\to r}A_s
+\qquad(r\le s),
+\]
+satisfying identity and composition coherence:
+\[
+\eta^A_{r,r}=\id
+\]
+and, for $r\le s\le t$,
+\[
+\eta^A_{t,r}
+=
+\bigl(C_{s\to r}\eta^A_{t,s}\bigr)
+\circ
+\bigl(\eta^A_{s,r}C_{t\to s}\bigr).
+\]
+If every $\eta^A_{s,r}$ is a natural isomorphism, $A$ is called \emph{invertibly resolution-compatible}. This is distinct from exactness of a functor between stable categories.
+\end{definition}
+
+The square is
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+A_rC_{s\to r}(X) \arrow[r,"\eta^A_{s,r,X}"] & C_{s\to r}A_s(X).
+\end{tikzcd}
+\]
+It compares transforming after coarsening with coarsening after transforming.
+
+\begin{theorem}[Lift to the total category]\label{thm:lift-total}
+Every lax resolution-compatible transformation $A$ induces an endofunctor
+\[
+\widehat A:\K\to\K
+\]
+defined on objects by
+\[
+\widehat A(r,X)=(r,A_rX).
+\]
+\end{theorem}
+
+\begin{proof}
+A morphism $(r,X)\to(s,Y)$ in $\K$ is represented by
+\[
+\alpha:X\to C_{s\to r}Y.
+\]
+Define $\widehat A(\alpha)$ to be
+\[
+A_rX
+\xrightarrow{A_r(\alpha)}
+A_rC_{s\to r}Y
+\xrightarrow{\eta^A_{s,r,Y}}
+C_{s\to r}A_sY.
+\]
+Identity preservation follows from $\eta^A_{r,r}=\id$. Composition preservation is exactly the coherence condition in \cref{def:laxtrans}, together with naturality of $\eta^A$.
+\end{proof}
+
+Thus coherent exchange data suffice to assemble the family into a functor of the total system. A converse requires the functor to lie over the resolution base and to have the specified fiberwise restrictions.
+
+\subsection{Mixed residuals}
+
+\begin{definition}[Stable mixed residual]
+Assume each $\Tcat_r$ is a small stable $\infty$-category and the coarsening and transformation functors are exact, with homotopy-coherent exchange data. For $r\le s$ and $X\in\Tcat_s$, define
+\[
+\Delta^A_{s,r}(X)
+:=
+\Cofib\bigl(\eta^A_{s,r,X}\bigr)
+\in\Tcat_r.
+\]
+\end{definition}
+
+Then there is a cofiber sequence
+\[
+A_rC_{s\to r}X
+\longrightarrow
+C_{s\to r}A_sX
+\longrightarrow
+\Delta^A_{s,r}(X).
+\]
+
+\begin{proposition}[Residual vanishing criterion]\label{prop:residual-vanish}
+In a stable fiber,
+\[
+\Delta^A_{s,r}(X)\simeq0
+\]
+if and only if
+\[
+\eta^A_{s,r,X}
+\]
+is an equivalence.
+\end{proposition}
+
+\begin{proof}
+In a stable category a morphism is an equivalence exactly when its cofiber is a zero object.
+\end{proof}
+
+In an abelian fiber one may instead record
+\[
+\Delta^-_{s,r}(X)=\ker\eta^A_{s,r,X},
+\qquad
+\Delta^+_{s,r}(X)=\operatorname{coker}\eta^A_{s,r,X}.
+\]
+These vanish simultaneously exactly when the comparison is an isomorphism.
+
+\begin{definition}[Residual promotion]
+If $X$ is a seed-generated object and $\Delta^A_{s,r}(X)$ is nonzero, the operation
+\[
+X\longmapsto\Delta^A_{s,r}(X)
+\]
+is called \emph{residual promotion} when the residual is added to the active seed set.
+\end{definition}
+
+This creates the recursive pattern
+\[
+\text{seed}
+\to
+\text{mixed square}
+\to
+\text{residual}
+\to
+\text{new seed}
+\to
+\text{expanded zoo}.
+\]
+
+\section{Normal forms for mixed words}
+
+To make the two-axis calculus computational, mixed transformation-resolution expressions should admit controlled rewriting.
+
+\subsection{Typed word system}
+
+Consider a typed alphabet containing transformation symbols $T$ and resolution symbols $C$. A mixed word is a composable expression such as
+\[
+W=T_1C_1T_2T_3C_2T_4.
+\]
+Assume every well-typed adjacent transformation/coarsening inversion admits at least one length-preserving exchange rule of the form
+\[
+TC\;\Rightarrow\;C\,T',
+\]
+where $T'$ is the correctly reindexed transformation at the new resolution.
+
+\begin{definition}[Inversion number]
+For a word $W$, let $\iota(W)$ be the number of ordered pairs $(T,C)$ in which a transformation symbol occurs to the left of a resolution symbol when the chosen normal form requires all resolution symbols first.
+\end{definition}
+
+\begin{lemma}[Exchange termination]\label{lem:termination}
+Every exchange rewrite
+\[
+TC\Rightarrow CT'
+\]
+reduces $\iota$ by one. Therefore every sequence of such rewrites terminates.
+\end{lemma}
+
+\begin{proof}
+The rewritten adjacent pair contributes one inversion before the rewrite and none afterward. The relative order of every other transformation-resolution pair is unchanged.
+\end{proof}
+
+\begin{theorem}[Exact two-axis normal form]\label{thm:normal-form}
+Assume the exchange rewriting system is locally confluent. Then every well-typed mixed word has a unique normal form up to the equality notion of the rewriting system. The normal form has all resolution operations grouped before all within-resolution transformations.
+\end{theorem}
+
+\begin{proof}
+Induct on the inversion number. Every rewrite lowers it, so normal forms are reached. If two paths start with different rewrites, local confluence gives joining paths from their first successors to a common word. Normalize that word. The induction hypothesis at each first successor identifies its normal form with the common descendant's normal form. Thus the two original paths have the same normal form. Since every adjacent inversion has a rule, a normal word has no inversion and therefore has all coarsening symbols to the left of all transformation symbols. This is the finite-height form of Newman's argument.
+\end{proof}
+
+\status{proved here from standard rewriting theory under local confluence}
+
+The nontrivial application problem is to prove local confluence for the concrete labelled signature. This theorem concerns word syntax, not equality of the semantic comparison maps along different paths. The pure two-sort grammar is treated more explicitly in \cref{thm:event-ideals}.
+
+\subsection{Split residual expansion}
+
+Exact exchange is too restrictive for many applications. A first rigorous residual model can be obtained in an additive setting.
+
+\begin{definition}[Split residual exchange]
+A chosen exchange morphism $\eta:TC\Rightarrow CT'$ is \emph{split residual} if it is naturally identified with the projection in a decomposition
+\[
+TC(X)\cong CT'(X)\oplus E_{T,C}(X).
+\]
+Here $E_{T,C}$ is the split \emph{source-side remainder}. It is not denoted by $\Delta$, because in the stable convention of this paper
+\[
+\Cofib(\eta_X)\simeq E_{T,C}(X)[1],
+\qquad E_{T,C}(X)\simeq\Delta_{T,C}(X)[-1].
+\]
+\end{definition}
+
+\begin{theorem}[Finite split residual expansion]\label{thm:split-expansion}
+Fix a finite principal normalization path for a well-typed mixed word. Assume every step has a chosen split residual exchange and every surrounding operator preserves finite direct sums. Then
+\[
+W(s)\cong W_{\mathrm{nf}}(s)\oplus\bigoplus_{i=1}^m E_i(s),
+\]
+where $E_i(s)$ is the surrounding context applied to the source-side remainder of step $i$. In the stable case, $E_i(s)\simeq D_i[-1]$ for the step cofibers $D_i$ defined below.
+\end{theorem}
+
+\begin{proof}
+At step $i$, the split exchange and additivity of the surrounding context give
+$X_{i-1}\cong X_i\oplus E_i(s)$. Substituting these decompositions successively yields
+$X_0\cong X_m\oplus E_m(s)\oplus\cdots\oplus E_1(s)$.
+The direct sum is finite because the chosen principal path is finite. The identification with shifted cofibers follows from the cofiber of a split projection.
+\end{proof}
+
+This proof does not recursively normalize the residual branches. Such a recursive residual forest needs its own well-founded measure. Termination of the principal word alone does not prove termination of every newly generated residual word.
+
+\begin{definition}[Normalization path]
+Let $\mathcal S$ be a stable $\infty$-category, or a stable enhancement with functorial cofibers. A \emph{normalization path} for a mixed word $W$ evaluated on $s$ is a finite chain
+\[
+X_0=W(s)\xrightarrow{f_1}X_1\xrightarrow{f_2}\cdots\xrightarrow{f_m}X_m=W_{\mathrm{nf}}(s),
+\]
+where every $f_i$ is obtained by applying an exact surrounding context to one elementary exchange morphism. Write
+\[
+D_i:=\Cofib(f_i),
+\qquad
+D_{\mathrm{tot}}:=\Cofib(X_0\to X_m).
+\]
+\end{definition}
+
+\begin{theorem}[Stable residual filtration along a normalization path]\label{thm:stable-filtration}
+For every finite normalization path in a stable enhancement there is a canonical finite filtration
+\[
+0=F_0\longrightarrow F_1\longrightarrow\cdots\longrightarrow F_m=D_{\mathrm{tot}}
+\]
+with cofiber sequences
+\[
+F_{i-1}\longrightarrow F_i\longrightarrow D_i.
+\]
+Consequently the associated graded pieces of the total normalization defect are precisely the transported elementary exchange residuals $D_i$.
+\end{theorem}
+
+\begin{proof}
+Define
+\[
+F_i:=\Cofib(X_0\longrightarrow X_i).
+\]
+Then $F_0\simeq0$ and $F_m=D_{\mathrm{tot}}$. For the composable maps
+\[
+X_0\longrightarrow X_{i-1}\xrightarrow{f_i}X_i,
+\]
+the octahedral cofiber sequence gives
+\[
+\Cofib(X_0\to X_{i-1})
+\longrightarrow
+\Cofib(X_0\to X_i)
+\longrightarrow
+\Cofib(f_i).
+\]
+Thus
+\[
+F_{i-1}\longrightarrow F_i\longrightarrow D_i
+\]
+is a cofiber sequence. Since $f_i$ is obtained by placing an elementary exchange morphism inside an exact context, exactness identifies $D_i$ with the same context applied to the elementary exchange cofiber. Iterating gives the stated filtration.
+\end{proof}
+
+\status{proved for a chosen normalization path in a stable enhancement}
+
+\begin{corollary}[Source-to-normal-form residual control]\label{cor:source-normal-control}
+There is a cofiber sequence
+\[
+D_{\mathrm{tot}}[-1]\longrightarrow W(s)\longrightarrow W_{\mathrm{nf}}(s),
+\]
+and $D_{\mathrm{tot}}[-1]$ carries the shifted filtration with successive pieces $D_i[-1]$. Hence the failure of the original word to equal its normal form is an iterated extension of shifted elementary exchange residuals.
+\end{corollary}
+
+The theorem is path-relative. If two normalization paths are related by coherent higher exchange cells, their total comparison maps may agree up to homotopy, but path-independence of the induced filtration is a separate problem. In an ordinary triangulated category without an enhancement, the octahedral axiom gives existence of such filtrations but not a canonical functorial choice.
+
+\begin{problem}[Order-independent residual filtration]\label{prob:path-independent}
+Identify an intrinsic replacement for the family of path-relative filtrations. Mere higher coherence cannot force their ordered stages to be equivalent: \cref{prop:filtration-no-go} gives a counterexample. The residual diagram of \cref{thm:ideal-residual} is a replacement when a coherent event diagram is supplied. Additional hypotheses for equivalence of selected ordered filtrations must constrain the intermediate objects, not only the comparison maps.
+\end{problem}
+
+\section{Normalization histories and intrinsic residual diagrams}\label{sec:histories}
+
+There are three different invariance questions. A word may have a unique normal-form \emph{object}, the normalization paths may induce the same \emph{comparison map}, and the cofiber of that map may carry several different \emph{ordered filtrations}. None of these statements should be silently substituted for the next.
+
+\subsection{A no-go theorem for ordered filtration independence}
+
+\begin{proposition}[Coherent diamonds do not determine one ordered filtration]\label{prop:filtration-no-go}
+Even a strictly commuting bicartesian square of objects in a stable category can yield two normalization paths with the same total comparison map and inequivalent ordered residual filtrations.
+\end{proposition}
+
+\begin{proof}
+Work in the stable category of perfect complexes over a field $k$. Put $M=k[0]$ and $N=k^2[0]$, and consider the square
+\[
+\begin{tikzcd}[column sep=large,row sep=large]
+0 \arrow[r] \arrow[d] & M \arrow[d,hook] \\
+N \arrow[r,hook] & M\oplus N.
+\end{tikzcd}
+\]
+The maps into $M\oplus N$ are the summand inclusions. This square is a pushout, hence also a pullback. Both composites are the unique map $0\to M\oplus N$.
+
+The residual filtrations of its two boundary paths are
+\[
+0\longrightarrow M\longrightarrow M\oplus N,
+\qquad
+0\longrightarrow N\longrightarrow M\oplus N.
+\]
+An equivalence of these objects of $\operatorname{Fun}([2],\operatorname{Perf}(k))$ would induce an equivalence $M\simeq N$ at the middle index. That is impossible because their degree-zero cohomology dimensions are $1$ and $2$. Nevertheless both total residuals are $M\oplus N$.
+\end{proof}
+
+\begin{example}[The counterexample occurs inside the two-axis grammar]\label{ex:typed-diamond}
+The preceding square is not merely an unrelated diagram. Let the resolution base be $0<1<2$, put
+\[
+\Tcat_0=\Tcat_1=\Tcat_2=\operatorname{Perf}(k)\times\operatorname{Perf}(k),
+\]
+and take every coarsening functor to be the identity between labelled copies. Define the exact coordinate projections
+\[
+P_1(x,y)=(x,0),\qquad P_2(x,y)=(0,y).
+\]
+Use transformation families
+\[
+A_0=P_2,\quad A_1=A_2=\id,
+\qquad
+B_0=B_1=P_1,\quad B_2=\id.
+\]
+For $A$, the comparison across $1\to0$ is the inclusion $P_2\Rightarrow\id$, and across $2\to1$ it is the identity. For $B$, these choices are respectively the identity and $P_1\Rightarrow\id$. The long comparisons are their composites. Units and transitivity therefore hold.
+
+On the seed $x=(k[0],k^2[0])$, the word
+\[
+W=A_0C_{1\to0}B_1C_{2\to1}
+\]
+evaluates to zero. Exchanging its left inversion first yields $P_1x$. Exchanging its right inversion first yields $P_2x$. The second exchange in either path yields $x$. Both paths then perform the same identity exchange to reach the normal word
+\[
+C_{1\to0}C_{2\to1}A_2B_2.
+\]
+Thus the complete paths have residual filtrations
+\[
+0\to P_1x\to x\xrightarrow{\id}x,
+\qquad
+0\to P_2x\to x\xrightarrow{\id}x.
+\]
+Their first nonzero stages are not equivalent. The transformations, contexts, and coarsenings are exact, and all comparison data are coherent. Consequently extra coherence alone cannot repair the general claim of ordered filtration independence.
+\end{example}
+
+\status{general ordered-filtration independence refuted; the path-relative theorem remains valid}
+
+The correction is not to discard the filtration. It is to retain the collection of compatible intermediate stages in a diagram richer than a single linear order.
+
+\subsection{What suffices for independence of the total residual}
+
+The normal-form endpoint alone does not determine a residual. For example, the maps $\id_k$ and $0:k\to k$ have the same source and target, but cofibers $0$ and $k\oplus k[1]$. Comparison maps therefore belong to the data.
+
+\begin{theorem}[Semantic diamond criterion]\label{thm:semantic-diamond}
+Let a rewrite graph have a height $h$ in $\mathbb N$ that decreases on every edge, and suppose every vertex $x$ has a unique reachable normal vertex $n(x)$. Assign an object $X_x$ in a stable $\infty$-category to each vertex and a morphism to each edge. Assume every elementary peak
+\[
+x\xrightarrow{e}y,\qquad x\xrightarrow{f}z
+\]
+has joining paths $a:y\leadsto u$ and $b:z\leadsto u$ whose semantic composites satisfy
+\[
+[a]\,[e]=[b]\,[f]\quad\text{in the homotopy category}.
+\]
+Then every normalization path from $x$ to $n(x)$ induces the same homotopy class of comparison map. In particular, the total residuals of any two such paths are equivalent.
+\end{theorem}
+
+\begin{proof}
+Induct on $h(x)$. A normal vertex has only the empty normalization path. Otherwise take two normalization paths with initial edges $e$ and $f$. Choose the joining paths in the hypothesis and any normalization path $t:u\leadsto n(x)$. Such a path exists, and its terminal vertex is $n(x)$ by uniqueness of normal forms.
+
+Since $h(y),h(z)<h(x)$, the induction hypothesis replaces the two original suffixes by $ta$ and $tb$ respectively without changing their homotopy classes. The full comparison classes are therefore
+\[
+[t][a][e]=[t][b][f].
+\]
+This proves equality for all normalization paths from $x$. Equality in the homotopy category gives a homotopy between the corresponding maps with fixed endpoints. A homotopy identifies the two arrows up to equivalence, and the cofiber functor preserves that equivalence.
+\end{proof}
+
+\begin{remark}[Equivalence is not a chosen canonical identification]
+The theorem asserts existence of equivalent total cofibers. A specified equivalence requires a specified homotopy between comparison maps. Independence of all such choices requires higher coherence. Neither conclusion identifies the intermediate ordered filtrations in \cref{prop:filtration-no-go}.
+\end{remark}
+
+\subsection{The event poset of pure exchange}
+
+The pure exchange grammar has enough combinatorial structure to index all normalization histories without choosing their order. This subsection concerns only adjacent swaps $TC\Rightarrow CT$ that retain the identity of each symbol. More elaborate rules that duplicate, delete, or replace generators are not included.
+
+\begin{definition}[Exchange event poset]\label{def:event-poset}
+Fix a finite word $W$ in two types of labelled symbols. Number its transformation symbols $T_1,\ldots,T_a$ and its coarsening symbols $C_1,\ldots,C_b$ in their original left-to-right order. An \emph{exchange event} is a pair
+\[
+(i,j)\in E(W)
+\quad\Longleftrightarrow\quad
+T_i\text{ occurs to the left of }C_j\text{ in }W.
+\]
+The event swaps the relative order of this pair exactly once. Define $P_W$ as the partial order generated by
+\begin{align*}
+(i,k)&\prec(i,j) &&\text{when }k<j\text{ and both events exist},\\
+(h,j)&\prec(i,j) &&\text{when }h>i\text{ and both events exist}.
+\end{align*}
+These relations are acyclic: along a generating relation the transformation index decreases or the coarsening index increases, with at least one strict change. Let $J(P_W)$ be the poset of order ideals, ordered by inclusion.
+\end{definition}
+
+The first relation says that one transformation crosses the coarsenings from left to right. The second says that one coarsening crosses the transformations from right to left.
+
+\begin{theorem}[Normalization states are order ideals]\label{thm:event-ideals}
+For the pure adjacent-swap grammar, the following correspondences are bijective:
+\begin{enumerate}
+\item words reachable from $W$ and ideals $I\in J(P_W)$;
+\item enabled elementary swaps at a reachable word and minimal elements of $P_W\setminus I$;
+\item complete normalization histories and linear extensions of $P_W$.
+\end{enumerate}
+The ideal attached to a reachable word is the set of events already performed. The original word corresponds to $\varnothing$, and the normal word to $P_W$.
+\end{theorem}
+
+\begin{proof}
+Every swap changes the order of exactly one transformation/coarsening pair, never to be reversed. The relative orders of the transformations among themselves and of the coarsenings among themselves remain fixed.
+
+Before event $(i,j)$ can occur, every initially intervening $C_k$ with $k<j$ must already have crossed $T_i$, and every initially intervening $T_h$ with $h>i$ must already have crossed $C_j$. Thus all predecessors of a performed event have already occurred. The performed events form an ideal.
+
+That ideal determines the reachable word uniquely. It specifies whether each originally inverted pair has crossed, while pairs originally of the form $C_jT_i$ never change order. Together with the fixed orders inside each type, this determines every pairwise order of labelled symbols.
+
+Conversely, suppose an ideal $I$ has been performed and $(i,j)$ is a minimal event outside it. In the current word $T_i$ still precedes $C_j$. If another symbol lies between them, it is either some $C_k$ with $k<j$ or some $T_h$ with $h>i$. In the first case $(i,k)$ is an unperformed predecessor. In the second case $(h,j)$ is an unperformed predecessor. The relevant pair was already inverted in the original word, since swaps never turn an original $CT$ pair into $TC$. Both cases contradict minimality. Hence $T_i$ and $C_j$ are adjacent and the event is enabled.
+
+Any ideal can now be constructed by adding its events in an order compatible with $P_W$. This proves surjectivity and the statement about edges. A complete path adds each event exactly once, so it is exactly a linear extension. Conversely each linear extension prescribes enabled swaps and therefore a complete path.
+\end{proof}
+
+\begin{lemma}[All histories are related by independent interchanges]\label{lem:linear-extension-swaps}
+Any two linear extensions of a finite poset are connected by swaps of adjacent incomparable elements. Consequently any two pure normalization histories are related by commuting independent-event diamonds.
+\end{lemma}
+
+\begin{proof}
+Let $e$ be the first element of the second linear extension. It is minimal in the poset. In the first extension, every element appearing before $e$ is incomparable with it: it cannot precede $e$ in the poset by minimality, and it cannot follow $e$ in the poset while occurring before it in a linear extension. Move $e$ left across these incomparable elements. The two extensions now begin with the same element. Delete it and apply induction to the remaining finite poset.
+
+In the exchange poset, incomparable events share neither a transformation symbol nor a coarsening symbol. When both are enabled their adjacent swaps are disjoint. Performing them in either order gives the same word, namely the diamond for adjoining both events to the current ideal.
+\end{proof}
+
+It follows that the category of rewrite paths modulo these diamond relations is the thin category $J(P_W)$. The conclusion concerns the pure syntax. In a typed application, labels after crossing must be defined by the specified reindexing rules, and their semantic exchange cells must satisfy the corresponding comparisons.
+
+\subsection{A diagram that retains the residual histories}
+
+\begin{definition}[Coherent exchange-event diagram]
+For a finite event poset $P$, a coherent exchange-event diagram is a functor
+\[
+X:NJ(P)\longrightarrow\mathcal S
+\]
+into a stable $\infty$-category. Here $N$ denotes the nerve. Its value $X_I$ is the semantic state after the ideal $I$ of events has been completed. Values on cover arrows realize the elementary exchanges, and its higher simplices supply the compatibility data.
+\end{definition}
+
+Strictly commuting exchange diagrams in a concrete enhanced model, such as complexes, supply examples. Merely checking squares in the homotopy category does not automatically supply all the higher data in this definition.
+
+\begin{theorem}[Ideal-indexed residual diagram]\label{thm:ideal-residual}
+A coherent exchange-event diagram determines a functor
+\[
+\mathcal F_X:NJ(P)\longrightarrow\mathcal S,
+\qquad
+\mathcal F_X(I)=\Cofib(X_{\varnothing}\longrightarrow X_I),
+\]
+with the following properties:
+\begin{enumerate}
+\item $\mathcal F_X(\varnothing)\simeq0$;
+\item along every maximal chain of ideals it restricts to the residual filtration of \cref{thm:stable-filtration};
+\item for every cover $I\subset I\cup\{e\}$ there is a cofiber sequence
+\[
+\mathcal F_X(I)\longrightarrow\mathcal F_X(I\cup\{e\})
+\longrightarrow\Cofib(X_I\to X_{I\cup\{e\}});
+\]
+\item its terminal object is the total residual $\Cofib(X_{\varnothing}\to X_P)$, independent of the linear extension used to reach it;
+\item exact functors preserve the entire diagram, naturally in the specified coherent input.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The arrows from the initial ideal $\varnothing$ induce a natural transformation from the constant diagram at $X_{\varnothing}$ to $X$. Take its cofiber pointwise in the stable functor category. This constructs $\mathcal F_X$ together with its coherence, not just an assignment of objects.
+
+At $\varnothing$ the map is the identity, so its cofiber is zero. Restriction to a maximal chain gives exactly the pointwise formula defining the earlier path-relative filtration. For an inclusion of ideals, apply the cofiber sequence for the composable maps
+\[
+X_{\varnothing}\longrightarrow X_I\longrightarrow X_{I\cup\{e\}}.
+\]
+This gives the displayed cover cofiber sequence. At the terminal ideal the same formula gives the total residual. Finally an exact functor preserves these finite colimits pointwise and hence preserves the diagram and all its structure maps.
+\end{proof}
+
+\status{proved relative to a specified coherent exchange-event diagram}
+
+This is the appropriate replacement for a single path-independent ordered filtration. In \cref{prop:filtration-no-go}, $P$ has two incomparable events, so $J(P)$ is the four-object diamond. Its two chains remember different intermediate residuals without disagreeing about the total residual. The richer diagram preserves information that the proposed identification of ordered filtrations would have erased.
+
+\begin{corollary}[History-independent total obstruction]\label{cor:history-obstruction}
+Let $q:\mathcal S\to\mathcal O$ be exact. For a fixed coherent exchange-event diagram, the object
+\[
+q\mathcal F_X(P)
+\]
+is independent of the normalization history. Along every maximal chain it has the filtration of \cref{thm:obstruction-localization}. Therefore its nonvanishing forces a nonzero elementary quotient residual on \emph{each} normalization history. The particular event witnessing nonvanishing may depend on the history.
+\end{corollary}
+
+\begin{proof}
+The terminal object is fixed by \cref{thm:ideal-residual}. Apply \cref{thm:obstruction-localization} separately to the finite filtration supplied by each maximal chain.
+\end{proof}
+
+The converse is not asserted. Nonzero elementary residuals can participate in extensions whose total residual vanishes. Nor does the corollary exhibit one event that must witness the obstruction in every history.
+
+
+\section{Obstruction theory}
+
+Residual and obstruction should not be identified. A residual is a structured discrepancy. An obstruction is a discrepancy that cannot be removed by the admissible calculus.
+
+\begin{definition}[Killable residual]
+Let $\delta\in\Zoo(\Seeds_0)$. Call $\delta$ \emph{killable} if there exists an admissible finite constructor word $W$ such that
+\[
+W(\delta)\simeq0.
+\]
+\end{definition}
+
+\begin{definition}[Persistent obstruction]
+A residual seed $\delta$ is a \emph{persistent obstruction} relative to a constructor zoo if it is not killable by any admissible finite word.
+\end{definition}
+
+This definition is intentionally operational. More refined applications should replace it by an obstruction class in a quotient, derived functor, cohomology group, or localization.
+
+A first taxonomy is:
+\[
+\boxed{
+\Omega=(\Omega_R,\Omega_T,\Omega_{TR},\Omega_G)
+}
+\]
+with:
+\begin{itemize}
+    \item $\Omega_R$: no admissible refinement exists;
+    \item $\Omega_T$: a required within-resolution transformation does not exist;
+    \item $\Omega_{TR}$: exchange cannot be made coherent or its residual persists;
+    \item $\Omega_G$: locally compatible data fail to reconstruct globally.
+\end{itemize}
+
+\subsection{Universal obstruction quotient in the stable calculus}
+
+Let $\mathcal Z$ be a small idempotent-complete stable $\infty$-category representing a thick seed zoo, and let $\mathscr M$ be a collection of exact constructor endofunctors of $\mathcal Z$ containing the identity and closed under composition.
+
+\begin{definition}[Operationally killable subcategory]
+Define
+\[
+\mathcal K_{\mathscr M}
+:=
+\{X\in\mathcal Z:\exists W\in\mathscr M,\;W(X)\simeq0\}.
+\]
+Let
+\[
+\mathcal N_{\mathscr M}
+:=
+\operatorname{Thick}(\mathcal K_{\mathscr M})
+\]
+be the smallest thick stable subcategory containing all operationally killable objects.
+\end{definition}
+
+The thick closure is necessary in general: two objects may be killed by unrelated constructor words with no single constructor word killing an extension of them.
+
+\begin{definition}[Stable obstruction category and obstruction class]\label{def:obstruction-quotient}
+The \emph{stable obstruction category} is the Verdier quotient
+\[
+\mathcal O_{\mathscr M}
+:=
+\mathcal Z/\mathcal N_{\mathscr M},
+\]
+with quotient functor
+\[
+q:\mathcal Z\longrightarrow\mathcal O_{\mathscr M}.
+\]
+For $X\in\mathcal Z$, define its \emph{obstruction class}
+\[
+\Obs_{\mathscr M}(X):=q(X).
+\]
+\end{definition}
+
+\begin{theorem}[Universal stable obstruction quotient]\label{thm:obstruction-quotient}
+The quotient $q$ is exact and satisfies:
+\begin{enumerate}
+    \item every operationally killable object maps to zero;
+    \item $q(X)\simeq0$ if and only if $X\in\mathcal N_{\mathscr M}$;
+    \item for every exact functor $E:\mathcal Z\to\mathcal D$ into a stable $\infty$-category such that $E(K)\simeq0$ for every $K\in\mathcal K_{\mathscr M}$, there is an exact factorization, unique up to contractible choice together with its comparison to $E$,
+    \[
+    \mathcal Z\xrightarrow{q}\mathcal O_{\mathscr M}\xrightarrow{\bar E}\mathcal D.
+    \]
+\end{enumerate}
+Thus $\mathcal O_{\mathscr M}$ is universal among exact targets in which all operationally killable residuals vanish.
+\end{theorem}
+
+\begin{proof}
+The Verdier quotient by the thick subcategory $\mathcal N_{\mathscr M}$ exists and the quotient functor is exact. Its kernel is exactly $\mathcal N_{\mathscr M}$. This gives (1)--(2). For (3), the kernel of an exact functor is thick. Since $E$ kills $\mathcal K_{\mathscr M}$, it kills the thick subcategory generated by that class, namely $\mathcal N_{\mathscr M}$. The universal property of the stable Verdier quotient gives the factorization. More precisely, precomposition with $q$ identifies the category of exact functors out of $\mathcal O_{\mathscr M}$ with the full subcategory of exact functors out of $\mathcal Z$ annihilating $\mathcal N_{\mathscr M}$. This also specifies the sense of uniqueness. See Drew~\cite{Drew2015} for the stable localization and \cite{StacksVerdier} for the kernel calculation in the triangulated homotopy category.
+\end{proof}
+
+\status{proved in the stable regime using the standard Verdier quotient}
+
+A zero obstruction here means membership in the chosen thick kernel. It need not mean that one constructor word kills the object. Nor is $q(X)$ a chosen irreducible representative back inside $\mathcal Z$. A section or reflective localization would be extra data. The quotient also need not inherit the constructors automatically, as \cref{ex:quotient-collapse} will show.
+
+\begin{example}[Why thick closure is genuinely necessary]\label{ex:killable-not-thick}
+Let $\mathcal C$ be any nonzero stable category and set
+\[
+\mathcal Z=\mathcal C^3.
+\]
+Define exact idempotent endofunctors
+\[
+U(X_1,X_2,X_3)=(0,0,X_2\oplus X_3),
+\qquad
+V(X_1,X_2,X_3)=(0,0,X_1\oplus X_3).
+\]
+They satisfy
+\[
+U^2\simeq U,
+\qquad
+V^2\simeq V,
+\qquad
+U\circ V\simeq V,
+\qquad
+V\circ U\simeq U,
+\]
+so $\mathscr M=\{\id,U,V\}$ is closed under composition. Choose $0\not\simeq A\in\mathcal C$ and set
+\[
+X=(A,0,0),
+\qquad
+Y=(0,A,0).
+\]
+Then $U(X)\simeq0$ and $V(Y)\simeq0$, so both $X$ and $Y$ are operationally killable. However
+\[
+X\oplus Y=(A,A,0),
+\]
+and both $U$ and $V$ send this object to $(0,0,A)$, which is fixed by $U$ and $V$. Hence no constructor word kills $X\oplus Y$. Thus $\mathcal K_{\mathscr M}$ need not be additive, much less thick.
+\end{example}
+
+This example shows that replacing $\mathcal K_{\mathscr M}$ by its thick closure in \cref{def:obstruction-quotient} is forced if the quotient is required to be universal for exact functors.
+
+\begin{definition}[Directed annihilator property]
+The constructor system $\mathscr M$ has the \emph{directed annihilator property} if for every $U,V\in\mathscr M$ there exist $P,Q,W\in\mathscr M$ and natural equivalences
+\[
+W\simeq P\circ U\simeq Q\circ V.
+\]
+Thus any two constructor words admit a common postcomposition. With multiplication written as composition, $P\circ U=Q\circ V$ is a common left multiple. The displayed equation, rather than a left/right name, fixes the convention.
+\end{definition}
+
+\begin{theorem}[When operational killability is already thick]\label{thm:killable-thick}
+If $\mathscr M$ consists of exact endofunctors and has the directed annihilator property, then $\mathcal K_{\mathscr M}$ is a thick stable subcategory. Hence
+\[
+\mathcal N_{\mathscr M}=\mathcal K_{\mathscr M}
+\]
+and
+\[
+\boxed{
+\Obs_{\mathscr M}(X)\simeq0
+\iff
+X\text{ is operationally killable}.}
+\]
+\end{theorem}
+
+\begin{proof}
+The zero object is killed by every exact constructor. If $U(X)\simeq0$, exactness gives $U(X[n])\simeq U(X)[n]\simeq0$ for every integer $n$, so the class is closed under both suspensions and desuspensions. It is closed under retracts because exact functors preserve retract diagrams.
+
+For cofibers, suppose $X$ is killed by $U$ and $Y$ is killed by $V$. Choose a common postcomposition
+\[
+W\simeq P\circ U\simeq Q\circ V.
+\]
+Then $W(X)\simeq0\simeq W(Y)$. For any morphism $f:X\to Y$, exactness gives
+\[
+W(\Cofib(f))\simeq\Cofib(Wf)\simeq\Cofib(0\to0)\simeq0.
+\]
+Thus the killable objects form a stable subcategory closed under retracts, hence a thick subcategory.
+\end{proof}
+
+\begin{example}[Idempotent projection model]
+Let $\mathcal Z=\mathcal A\times\mathcal B$ for stable categories $\mathcal A,\mathcal B$, and let
+\[
+L(a,b)=(a,0).
+\]
+With constructor monoid generated by the idempotent exact functor $L$, an object is operationally killable exactly when it lies in $0\times\mathcal B$. The obstruction quotient is equivalent to $\mathcal A$, and
+\[
+\Obs(a,b)\simeq a.
+\]
+Thus the quotient literally retains the component that cannot be annihilated by the admissible constructor.
+\end{example}
+
+\begin{theorem}[Functorial transport of obstruction]\label{thm:obstruction-transport}
+Let $(\mathcal Z_A,\mathscr M_A)$ and $(\mathcal Z_B,\mathscr M_B)$ be stable obstruction systems, and let
+\[
+\Lambda:\mathcal Z_A\longrightarrow\mathcal Z_B
+\]
+be exact. If
+\[
+\Lambda(\mathcal K_{\mathscr M_A})\subseteq\mathcal N_{\mathscr M_B},
+\]
+then $\Lambda$ induces an exact functor
+\[
+\bar\Lambda:\mathcal O_{\mathscr M_A}\longrightarrow\mathcal O_{\mathscr M_B}.
+\]
+If $\Lambda$ is an equivalence and carries $\mathcal N_{\mathscr M_A}$ onto $\mathcal N_{\mathscr M_B}$, then $\bar\Lambda$ is an equivalence. In that case obstruction vanishing is preserved and reflected.
+\end{theorem}
+
+\begin{proof}
+The hypothesis and exactness imply
+\[
+\Lambda(\mathcal N_{\mathscr M_A})\subseteq\mathcal N_{\mathscr M_B},
+\]
+because exact functors preserve the operations used to generate a thick subcategory. Therefore $q_B\Lambda$ kills $\mathcal N_{\mathscr M_A}$, so the universal property in \cref{thm:obstruction-quotient} gives $\bar\Lambda$. If $\Lambda$ is an equivalence identifying the two thick kernels, a quasi-inverse descends in the same way and yields a quasi-inverse to $\bar\Lambda$.
+\end{proof}
+
+This theorem gives a precise version of the intended local-global principle: a correspondence need not merely preserve local invariants; it can transport the quotient in which removable residual structure has been annihilated.
+
+\begin{theorem}[Obstruction localization along normalization]\label{thm:obstruction-localization}
+Let
+\[
+X_0\xrightarrow{f_1}X_1\xrightarrow{}\cdots\xrightarrow{f_m}X_m
+\]
+be a normalization path as in \cref{thm:stable-filtration}, with elementary transported residuals $D_i=\Cofib(f_i)$ and total residual
+\[
+D_{\mathrm{tot}}=\Cofib(X_0\to X_m).
+\]
+Let
+\[
+q:\mathcal Z\to\mathcal O_{\mathscr M}
+\]
+be the stable obstruction quotient. Then:
+\begin{enumerate}
+    \item $q(D_{\mathrm{tot}})$ inherits a finite filtration whose successive cofibers are $q(D_i)$;
+    \item if $q(D_i)\simeq0$ for every $i$, then
+    \[
+    q(D_{\mathrm{tot}})\simeq0;
+    \]
+    \item equivalently,
+    \[
+    q(D_{\mathrm{tot}})\not\simeq0
+    \Longrightarrow
+    \exists i,\;q(D_i)\not\simeq0.
+    \]
+\end{enumerate}
+If the directed annihilator property of \cref{thm:killable-thick} holds, the phrase ``$q(D)\simeq0$'' can be replaced throughout by ``$D$ is operationally killable.''
+\end{theorem}
+
+\begin{proof}
+The residual filtration in \cref{thm:stable-filtration} consists of cofiber sequences
+\[
+F_{i-1}\longrightarrow F_i\longrightarrow D_i,
+\qquad
+F_0\simeq0,
+\qquad
+F_m\simeq D_{\mathrm{tot}}.
+\]
+Because the Verdier quotient functor $q$ is exact, applying $q$ gives cofiber sequences
+\[
+q(F_{i-1})\longrightarrow q(F_i)\longrightarrow q(D_i).
+\]
+This proves (1). If every $q(D_i)$ vanishes, then $q(F_{i-1})\to q(F_i)$ is an equivalence for every $i$. Starting from $q(F_0)\simeq0$ yields $q(F_m)\simeq0$, proving (2). Statement (3) is its contrapositive. Under the directed annihilator hypothesis, \cref{thm:killable-thick} identifies quotient-vanishing with operational killability.
+\end{proof}
+
+\status{proved from the stable residual filtration and exactness of the obstruction quotient}
+
+This result gives the calculus a precise diagnostic property: a persistent obstruction in a composite transformation-resolution word cannot appear from nowhere. Relative to a chosen normalization path, it must be visible in at least one elementary exchange residual after passage to the obstruction quotient.
+
+\subsection{When the obstruction quotient must retain the constructors}
+
+The universal property of $\mathcal Z/\mathcal N_{\mathscr M}$ concerns exact functors that kill a prescribed class. It does not automatically preserve the full transformation grammar. To make the quotient a new environment for that grammar, the kernel must be invariant under the constructors.
+
+\begin{example}[A constructor can fail to descend, and invariant closure can collapse]\label{ex:quotient-collapse}
+Return to \cref{ex:killable-not-thick}, with $\mathcal Z=\mathcal C^3$ and $\mathscr M=\{\id,U,V\}$. An object is killed by $U$ precisely when its second and third components vanish, and killed by $V$ precisely when its first and third components vanish. Indeed, a summand of a zero direct sum is zero. Consequently
+\[
+\mathcal N_{\mathscr M}=\mathcal C\times\mathcal C\times0,
+\qquad
+\mathcal Z/\mathcal N_{\mathscr M}\simeq\mathcal C.
+\]
+Nevertheless
+\[
+U(0,A,0)=(0,0,A)
+\]
+for every $A\in\mathcal C$. The input lies in $\mathcal N_{\mathscr M}$ and the output generally does not. If $U$ descended to an exact $\bar U$ on the quotient, then
+$qU(0,A,0)\simeq\bar Uq(0,A,0)\simeq0$, a contradiction for $A\not\simeq0$.
+
+Moreover, any constructor-invariant thick subcategory containing all killable objects contains both the first and second coordinate subcategories. Applying $U$ to the second coordinate forces it to contain the third. Closure under direct sums then gives all of $\mathcal Z$. Thus the constructor-compatible quotient in this example is the zero category.
+\end{example}
+
+\begin{definition}[Constructor-invariant thick saturation]\label{def:invariant-saturation}
+For a small stable constructor system $(\mathcal Z,\mathscr M)$ as above, put
+\[
+\mathcal J_{\mathscr M}
+:=\operatorname{Thick}\{W(K):W\in\mathscr M,
+\ K\in\mathcal K_{\mathscr M}\}.
+\]
+Its quotient is denoted
+\[
+q^{\mathrm{inv}}:\mathcal Z\longrightarrow
+\mathcal O^{\mathrm{inv}}_{\mathscr M}
+:=\mathcal Z/\mathcal J_{\mathscr M}.
+\]
+The identity constructor ensures $\mathcal N_{\mathscr M}\subseteq\mathcal J_{\mathscr M}$.
+\end{definition}
+
+\begin{theorem}[Universal constructor-compatible obstruction quotient]\label{thm:invariant-quotient}
+The subcategory $\mathcal J_{\mathscr M}$ is the least thick subcategory that contains $\mathcal K_{\mathscr M}$ and is preserved by every constructor. Each $T\in\mathscr M$ descends to an exact endofunctor of $\mathcal O^{\mathrm{inv}}_{\mathscr M}$. If the constructor action is supplied with coherent unit and composition data, those data descend as well.
+
+The quotient is universal among exact functors that annihilate every object $W(K)$ in the displayed generating family. In particular, every exact realization that annihilates killable objects and intertwines the given constructors with exact constructors of its target factors through $q^{\mathrm{inv}}$.
+\end{theorem}
+
+\begin{proof}
+Fix $T\in\mathscr M$. It takes a generator $W(K)$ to $(T\circ W)(K)$, again a generator because $\mathscr M$ is closed under composition. Exactness and preservation of retracts imply
+\[
+T(\mathcal J_{\mathscr M})\subseteq\mathcal J_{\mathscr M}.
+\]
+Conversely any invariant thick subcategory containing $\mathcal K_{\mathscr M}$ contains every $W(K)$ and therefore their thick closure. This proves minimality.
+
+Now $q^{\mathrm{inv}}T$ annihilates $\mathcal J_{\mathscr M}$, so the quotient universal property gives $\bar T$ with
+\[
+\bar T q^{\mathrm{inv}}\simeq q^{\mathrm{inv}}T.
+\]
+The full faithfulness of precomposition in the functor-category universal property descends any supplied unit, composition, and higher coherence data. It does not create action data absent from the original system.
+
+The last universal property follows directly from thick closure and Verdier localization. If $E$ is equivariant and kills $K$, then
+$E(WK)\simeq W'E(K)\simeq W'(0)\simeq0$. Thus it kills all the generators and factors through the quotient.
+\end{proof}
+
+\status{proved for small stable exact constructor systems}
+
+There is no general nontriviality conclusion. The zero category is a legitimate universal quotient. A useful application must show that the chosen admissible repairs do not annihilate everything after invariant thick closure.
+
+\begin{theorem}[Directed annihilators also give constructor invariance]\label{thm:directed-invariant}
+Under the directed annihilator hypothesis of \cref{thm:killable-thick},
+\[
+\mathcal J_{\mathscr M}=\mathcal N_{\mathscr M}
+=\mathcal K_{\mathscr M}.
+\]
+In particular the same quotient both supports the admitted constructors and detects operational killability exactly.
+\end{theorem}
+
+\begin{proof}
+The earlier theorem shows that $\mathcal K_{\mathscr M}$ is thick. It remains to prove invariance. Suppose $U(X)\simeq0$ and fix a constructor $T$. Directedness supplies constructors $P,Q,W$ with
+\[
+W\simeq P\circ U\simeq Q\circ T.
+\]
+Therefore
+\[
+Q(TX)\simeq P(UX)\simeq P(0)\simeq0.
+\]
+Thus $TX$ is killable. The killable subcategory is invariant and thick, so minimality of $\mathcal J_{\mathscr M}$ gives the asserted equalities.
+\end{proof}
+
+\begin{proposition}[A noncollapse certificate]\label{prop:noncollapse}
+Suppose $E:\mathcal Z\to\mathcal D$ is an exact equivariant realization into a stable constructor system, $E$ kills every operationally killable object, and $E(X)\not\simeq0$ for some $X$. Then
+\[
+q^{\mathrm{inv}}(X)\not\simeq0,
+\qquad
+\mathcal O^{\mathrm{inv}}_{\mathscr M}\not\simeq0.
+\]
+\end{proposition}
+
+\begin{proof}
+By \cref{thm:invariant-quotient}, write $E\simeq\bar E q^{\mathrm{inv}}$. Exactness of $\bar E$ would imply $E(X)\simeq0$ if $q^{\mathrm{inv}}(X)\simeq0$, a contradiction.
+\end{proof}
+
+For the projection example $\mathcal Z=\mathcal A\times\mathcal B$ and $L(a,b)=(a,0)$, projection to $\mathcal A$ is such a detector whenever $\mathcal A$ is nonzero. This gives a nontrivial model, in contrast with \cref{ex:quotient-collapse}. Admissibility matters: allowing the zero functor as a repair makes every object killable and necessarily collapses the quotient.
+
+The refined distinction is therefore
+\[
+\begin{aligned}
+\mathcal K_{\mathscr M}&:\ \text{objects killed by a single admitted word},\\
+\mathcal N_{\mathscr M}&:\ \text{their thick closure},\\
+\mathcal J_{\mathscr M}&:\ \text{their constructor-invariant thick closure}.
+\end{aligned}
+\]
+Only under additional hypotheses can these three classes be identified.
+
+
+\begin{problem}[Nonstable intrinsic obstruction]
+Construct an analogue of \cref{def:obstruction-quotient} before stable/additive completion, or prove that the stable quotient is the correct universal recipient for the applications of interest.
+\end{problem}
+
+\section{Local-to-global reconstruction}
+
+\subsection{A \v{C}ech torsor residual as a nonstable obstruction test bed}
+
+The stable Verdier quotient is not the only setting in which the residual/repair/obstruction pattern appears. A classical torsor gives a minimal nonstable model.
+
+\begin{theorem}[Torsor residual obstruction]\label{thm:torsor-obstruction}
+Let $\mathcal A$ be a sheaf of abelian groups on a space or a site with the fiber products used below, let $P$ be an $\mathcal A$-torsor, and let $\{U_i\to U\}$ be a cover on which $P$ admits local sections $s_i\in P(U_i)$. On overlaps there are unique elements
+\[
+a_{ij}\in\mathcal A(U_{ij})
+\]
+such that
+\[
+s_j=s_i+a_{ij}.
+\]
+Then:
+\begin{enumerate}
+    \item $a=(a_{ij})$ is a \v{C}ech $1$-cocycle;
+    \item changing the local sections by a $0$-cochain $b=(b_i)$,
+    \[
+    s_i'=s_i+b_i,
+    \]
+    changes the residual by the \v{C}ech coboundary
+    \[
+    a'_{ij}=a_{ij}+b_j-b_i;
+    \]
+    \item the class
+    \[
+    \Omega(P;\{U_i\})=[a]\in\check H^1(\{U_i\},\mathcal A)
+    \]
+    is independent of the chosen local sections;
+    \item $\Omega(P;\{U_i\})=0$ if and only if the local sections can be modified by admissible local repairs so that they glue to a global section of $P$ over $U$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+On a triple overlap,
+\[
+s_k=s_j+a_{jk}=s_i+a_{ij}+a_{jk},
+\]
+while also $s_k=s_i+a_{ik}$. Freeness of the torsor action gives
+\[
+a_{ij}+a_{jk}=a_{ik},
+\]
+which is the \v{C}ech cocycle identity.
+
+If $s_i'=s_i+b_i$, then
+\[
+s_j'=s_j+b_j=s_i+a_{ij}+b_j
+=s_i'+(a_{ij}+b_j-b_i),
+\]
+so the residual changes by the coboundary $\delta b$. Hence its cohomology class is independent of the chosen local sections.
+
+If $[a]=0$, choose $b$ so that $a+\delta b=0$. The repaired sections $s_i'=s_i+b_i$ then agree on every overlap, hence glue by the sheaf property to a global section of $P$. Conversely, if a global section exists, its restrictions have zero transition residual. Comparing those restrictions with the original $s_i$ shows that $a$ differs from zero by a coboundary, so $[a]=0$.
+\end{proof}
+
+\status{proved directly from torsor descent and \v{C}ech cohomology}
+
+For the standard torsor interpretation see \cite{StacksTorsors}.
+
+In Komorebi language,
+\[
+\boxed{
+\text{overlap residual}
+\;/\;
+\text{local repair}
+\;=\;
+\text{global obstruction class}.}
+\]
+Here the residual is $a_{ij}$, admissible repair is the change $s_i\mapsto s_i+b_i$, repairable residual cocycles are coboundaries, and the obstruction is the cohomology class $[a]$. This local repair relation is not being identified with the monoid of exact endofunctors in the stable quotient construction. This example is important because it realizes the proposed obstruction pattern before stabilization and shows that the abstract vocabulary recovers an established local-to-global obstruction mechanism rather than manufacturing one artificially.
+It is specifically an obstruction to reconstructing a global \emph{section} (equivalently, to trivializing the torsor), not an obstruction to the existence of the torsor itself.
+
+\subsection{Descent data}
+
+Let $(\mathcal C,J)$ be a site and let $\mathscr K$ assign a Komorebi category to each object of the site, with restriction functors on overlaps.
+
+Given a cover $\{U_i\to U\}$, local objects $X_i\in\mathscr K(U_i)$ carry descent isomorphisms
+\[
+\phi_{ij}:X_i|_{U_{ij}}\xrightarrow{\sim}X_j|_{U_{ij}}
+\]
+satisfying the cocycle condition on triple overlaps.
+
+\begin{definition}[Effective descent]
+Fix a cover and its complete \v{C}ech diagram, including all iterated overlaps. Effective descent means that the natural functor from the global category to the category of descent data is an equivalence. Essential surjectivity supplies global objects. Full faithfulness supplies descent of morphisms. Uniqueness of object classes alone is insufficient.
+\end{definition}
+
+\begin{theorem}[Descent transfer lemma]\label{thm:descent-transfer}
+Let $A^\bullet,B^\bullet:\Delta\to\Cat_\infty$ be small \v{C}ech descent diagrams for a fixed cover. Suppose $\Lambda^\bullet:A^\bullet\to B^\bullet$ is a natural transformation that is an equivalence at every degree, including every overlap level. Then
+\[
+\lim_{[n]\in\Delta} A^n\simeq\lim_{[n]\in\Delta} B^n.
+\]
+For ordinary category-valued descent, use the corresponding coherent pseudolimits rather than strict equalizers of object sets.
+\end{theorem}
+
+\begin{proof}
+Equivalences in a functor category are detected objectwise. Hence $\Lambda^\bullet$ is an equivalence of diagrams. Applying the limit functor preserves this equivalence. The ordinary category formulation is the same argument with coherent descent categories and their quasi-inverses.
+\end{proof}
+
+\begin{corollary}[Global reconstruction transfer]\label{cor:global-transfer}
+If the maps from the two global categories to these descent categories are equivalences, then the induced equivalence of descent categories yields an equivalence of global categories.
+\end{corollary}
+
+This is the abstract form of the principle:
+\[
+\boxed{
+\text{local equivalence}
++
+\text{restriction compatibility}
++
+\text{effective descent}
+\Longrightarrow
+\text{global equivalence}.
+}
+\]
+
+\section{Seeded local-global reciprocity blueprint}
+
+The previous section suggests a precise architecture for Langlands-facing work without claiming that the arithmetic hypotheses have been discharged.
+
+Let
+\[
+\mathbb K_{\mathrm{arith}}
+\qquad\text{and}\qquad
+\mathbb K_{\mathrm{aut}}
+\]
+be arithmetic and automorphic seeded two-axis calculi.
+
+A strong correspondence should include:
+\begin{align*}
+\Lambda(TX)&\simeq T'\Lambda(X),\\
+\Lambda(CX)&\simeq C'\Lambda(X),\\
+\Lambda(\Delta_{T,C}X)&\simeq\Delta_{T',C'}\Lambda(X),\\
+\bar\Lambda(\Obs X)&\simeq\Obs'\Lambda(X).
+\end{align*}
+
+Here $\bar\Lambda$ is the induced functor on the designated obstruction quotients. The last two requirements are stronger than matching ordinary local invariants. They demand that the correspondence preserve the structure of failed exchange and failed reconstruction.
+
+\begin{conjecture}[Seeded reciprocity principle]\label{conj:seeded-reciprocity}
+Suppose arithmetic and automorphic Komorebi systems satisfy:
+\begin{enumerate}
+    \item local equivalence at every required place and resolution;
+    \item compatibility with resolution restriction;
+    \item preservation of the relevant local invariants;
+    \item transport of mixed residual and obstruction data;
+    \item effective descent on both sides;
+    \item a global separation principle ensuring uniqueness from sufficiently rich local data.
+\end{enumerate}
+Then the induced local equivalence extends to an equivalence of the corresponding admissible global categories.
+\end{conjecture}
+
+Under categorical formulations strong enough to make items (1)--(5) an equivalence of descent systems, the conclusion follows from \cref{cor:global-transfer}. The research content lies in proving that the arithmetic and automorphic systems really instantiate those hypotheses.
+
+\paragraph{Interpretation.}
+This reframes a possible route to local-global reciprocity as:
+\[
+\boxed{
+\text{identify the globalization obstruction}
+\quad\text{and prove that local correspondence transports it.}
+}
+\]
+If
+\[
+\Lambda_*(\Omega_{\mathrm{arith}})=\Omega_{\mathrm{aut}},
+\]
+and $\Lambda_*$ preserves and reflects the zero object, then vanishing of one obstruction is equivalent to vanishing of the other. An equivalence, or a conservative exact functor, suffices for this extra detection condition. A general exact functor only preserves vanishing. Effective reconstruction then gives the stated global conclusion. Neither a sheaf/stack model for arbitrary local Langlands data nor automorphic existence follows from the abstract categorical lemmas. Places of a number field are not automatically a covering family for an effective descent problem. Those arithmetic identifications remain obligations.
+
+\section{Toy models}
+
+\subsection{\texorpdfstring{$p$}{p}-adic congruence resolution}
+
+Let the resolution level be $n\ge1$ and take
+\[
+X_n=\mathbb Z/p^n\mathbb Z.
+\]
+For $m\le n$, coarsening is reduction
+\[
+C_{n\to m}:\mathbb Z/p^n\mathbb Z\to\mathbb Z/p^m\mathbb Z.
+\]
+For any polynomial $f\in\mathbb Z[x]$, the induced transformation satisfies
+\[
+C_{n\to m}(f(x))
+=
+f(C_{n\to m}(x)).
+\]
+Thus the transformation-resolution square commutes exactly. This is a set-level equality, not a cofiber calculation. Regarding the sets as discrete categories gives an identity comparison, while a stable residual requires a separately specified stable realization.
+This is a simple instance where arithmetic transformation is resolution-natural.
+
+By contrast, operations involving division by $p$ need not descend uniformly. Their domain of definition and lift multiplicity depend on valuation. This gives a natural source of nontrivial resolution obstruction.
+
+\subsection{Dyadic averaging}
+
+Let a fine state be
+\[
+x=(x_1,x_2)\in\mathbb R^2
+\]
+and let coarse resolution record only the average
+\[
+C(x)=\frac{x_1+x_2}{2}.
+\]
+Let the fine transformation be
+\[
+A_1(x_1,x_2)=(ax_1,bx_2)
+\]
+and the coarse transformation be multiplication by $c$:
+\[
+A_0(y)=cy.
+\]
+Then
+\[
+C(A_1x)-A_0(Cx)
+=
+\frac{(a-c)x_1+(b-c)x_2}{2}.
+\]
+Choosing
+\[
+c=\frac{a+b}{2}
+\]
+gives
+\[
+C(A_1x)-A_0(Cx)
+=
+\frac{a-b}{4}(x_1-x_2).
+\]
+The defect depends only on the antisymmetric fine mode $x_1-x_2$, precisely the information erased by averaging. This is a concrete model of a mixed residual exposing structure invisible at coarse resolution.
+
+\subsection{Exact symmetry under coarsening}
+
+For dyadic vectors, pairwise averaging commutes with reversal up to reversal of the coarse vector. This gives an exact exchange law and hence a zero mixed residual. The contrast with the previous example illustrates that residuals depend jointly on the transformation and the resolution operator.
+
+\section{Derived invariants for the zoo}
+
+The two-axis formalization suggests new quantities that can be defined without changing the underlying category theory.
+
+\subsection{Commutation depth}
+
+Fix $X\in\Tcat_s$. First record the exact commutation profile
+\[
+\mathcal E_A(X;s)=\{r\le s:\Delta^A_{s,r}(X)\simeq0\}.
+\]
+No interval or monotonicity property is assumed. For $R=\mathbb N$ and finite $s$, a well-defined consecutive coarsening depth is
+\[
+\kappa_A(X;s):=\max\{k\in\{0,\ldots,s\}:\Delta^A_{s,r}(X)\simeq0
+\text{ for all }s-k\le r\le s\}.
+\]
+The set is nonempty because $\Delta^A_{s,s}(X)\simeq0$. A larger value means that more consecutive coarsenings preserve this exchange. The preceding version's supremum over exact target levels was uninformative on a fixed finite tower because the identity level $r=s$ is always exact.
+
+\subsection{Residual complexity}
+
+When a numerical size function $\|\cdot\|$ is available on the fiber, define
+\[
+\mathcal E_A(s,r;X):=\|\Delta^A_{s,r}(X)\|.
+\]
+Possible choices include dimension, rank, norm, entropy, categorical amplitude, support size, or proof-complexity measures.
+
+\subsection{Resolution branching profile}
+
+For a chain $r_0<r_1<\cdots<r_n$ and chosen lifts $X_i\in\Tcat_{r_i}$ with $C_{r_{i+1}\to r_i}X_{i+1}\cong X_i$, record
+\[
+B_X=(b_{r_0\to r_1}(X_0),\ldots,b_{r_{n-1}\to r_n}(X_{n-1})).
+\]
+This profile measures how hidden multiplicity emerges under refinement.
+
+\subsection{Zoo growth spectrum}
+
+Instead of a single growth function, separate growth by generator type:
+\[
+g_T(n),\qquad g_R(n),\qquad g_\Delta(n).
+\]
+This may distinguish theories in which most complexity comes from representation changes, resolution branching, or residual generation.
+
+\section{Candidate axioms for a foundational version}
+
+The present note derives its first results from ordinary category and order theory. A stronger foundational program would isolate Komorebi-specific axioms.
+
+\begin{axiom}[Two-axis presentation]
+Every admissible structured state is represented in a system
+\[
+\pi:\K\to\Rcat
+\]
+whose fibers encode transformations and whose base encodes resolution.
+\end{axiom}
+
+\begin{axiom}[Resolution compositionality]
+Coarsening is functorial:
+\[
+C_{t\to r}=C_{s\to r}C_{t\to s}.
+\]
+\end{axiom}
+
+\begin{axiom}[Exchange data]
+Every designated transformation family carries a coherent comparison
+\[
+A_rC_{s\to r}\Longrightarrow C_{s\to r}A_s.
+\]
+\end{axiom}
+
+\begin{axiom}[Residual closure]
+Every noninvertible exchange comparison generates an admissible residual object that may enter the seed zoo.
+\end{axiom}
+
+\begin{axiom}[Effective reconstruction, domain-specific]
+For a specified class of local systems, vanishing global obstruction is equivalent to effective global reconstruction.
+\end{axiom}
+
+These are axioms for a class of structures, not proposed additional axioms of ZFC. Two-axis existence alone imposes no substantive restriction: every category $\mathcal C$ has the degenerate presentation over the one-object resolution category with fiber $\mathcal C$. A foundational claim needs nontrivial, semantically specified resolutions and a theorem relating them to the intended mathematics.
+
+The last axiom should not be imposed universally without justification. In serious applications it should be a theorem of a sheaf, stack, patching, or descent theory.
+
+\section{Machine-native semantics}
+
+The seed calculus can be interpreted as a search grammar. A machine state may contain
+\[
+\mathsf S=
+(\Seeds,\mathscr T,\mathscr R,\Delta,\Omega,\mathsf{Cert}).
+\]
+For a target problem $P$, search can occur jointly over transformation and resolution:
+\[
+(T^\ast,R^\ast)
+\in
+\operatorname*{arg\,min}_{T,R}
+\mathcal C\bigl(\Omega(T,R;P)\bigr),
+\]
+where $\mathcal C$ is a problem-dependent residual or obstruction cost. This expression describes a search objective. It does not assert that a minimizer exists or that the search is decidable.
+
+This changes the computational question from
+\[
+\text{``Which operation solves the problem?''}
+\]
+to
+\[
+\boxed{
+\text{``At which resolution and in which representation does the obstruction become simplest?''}
+}
+\]
+
+A generic discovery loop is:
+\[
+\boxed{
+\text{seed}
+\to
+\text{generate}
+\to
+\text{normalize}
+\to
+\text{measure residual}
+\to
+\text{promote residual}
+\to
+\text{expand zoo}
+\to
+\text{certify}.
+}
+\]
+
+Formal proof assistants can serve as the certificate layer without requiring the generative search process itself to be trusted.
+
+
+\section{Universal constructions: syntax and stable residual completion}\label{sec:universal}
+
+This section addresses the first foundational novelty test. The result is deliberately split into a syntactic theorem, which is standard double-category machinery, and a residual-completion theorem, which is a formal consequence of the free stable envelope of an additive category. The combination gives a rigorous universal construction for the additive/stable version of the seeded two-axis calculus. It does \emph{not} by itself establish that the construction is absent from the literature under another name.
+
+\subsection{Free seeded two-axis double syntax}
+
+\begin{definition}[Seeded two-axis double computad]\label{def:twoaxis-computad}
+A \emph{seeded two-axis double computad} $\mathbb S$ consists of a small double computad together with:
+\begin{enumerate}
+    \item a distinguished set $\Seeds\subseteq \mathbb S_0$ of seed objects;
+    \item a designated class of horizontal generating $1$-cells, interpreted as transformation generators;
+    \item a designated class of vertical generating $1$-cells, interpreted as resolution generators;
+    \item designated generating $2$-cells, interpreted as exchange or compatibility cells.
+\end{enumerate}
+Generator boundaries may be well-typed words, but no composition of the generators is identified with another generator at the signature level. An unlabelled realization of $\mathbb S$ in a strict double category $\mathbb D$ is a map of the underlying double computads. A label-preserving realization additionally requires matching distinguished subsets in the target and preservation of those designations.
+\end{definition}
+
+The label data are algebraically passive: they distinguish generators but impose no new equations. Hence the ordinary free-double-category construction applies unchanged.
+
+\begin{theorem}[Free seeded two-axis double category]\label{thm:free-double}
+For every small seeded two-axis double computad $\mathbb S$, there exists a strict double category $\mathbb D_{\mathbb S}$ and a canonical map of seeded double computads
+\[
+\iota_{\mathbb S}:\mathbb S\longrightarrow U\mathbb D_{\mathbb S}
+\]
+such that for every strict double category $\mathbb D$, restriction along $\iota_{\mathbb S}$ induces a natural bijection
+\[
+\operatorname{DblCat}(\mathbb D_{\mathbb S},\mathbb D)
+\cong
+\operatorname{DblCptd}(\mathbb S,U\mathbb D),
+\]
+for the underlying computadic data. If the target carries distinguished subsets for the same labels, restriction gives the analogous bijection with label-preservation imposed on both sides.
+\end{theorem}
+
+\begin{proof}
+Form horizontal and vertical words in the generating arrows. Form square terms from the generating squares and identity squares by every well-typed horizontal and vertical composition. Quotient the terms by the congruence generated by units, associativity, and interchange. These relations give a strict double category. Every interpretation of the generating data extends by evaluation of terms, and evaluation respects the congruence because the target satisfies the same axioms. Its values on generators force uniqueness. Labels merely restrict the allowed generator assignments when corresponding target labels have been specified.
+\end{proof}
+
+\status{proved by translation to standard free double-category machinery}
+
+This establishes a genuine universal property for the \emph{two-axis syntax}. It is not a novelty claim: free double categories and double computads are established constructions; see Fairbanks--Shulman~\cite{FairbanksShulman2026}.
+
+\subsection{Additive indexed systems}
+
+The residual layer becomes canonical after passing to stable categories. Let $\mathbf{Cat}^{\mathrm{add}}$ denote the $\infty$-category of small additive $\infty$-categories and additive functors, and let $\mathbf{Cat}^{\mathrm{st}}$ denote small stable $\infty$-categories and exact functors. Ordinary additive categories are included by their nerves. The forgetful functor retains the underlying additive $\infty$-category, not merely its homotopy category.
+
+\begin{definition}[Additive two-axis system]
+An \emph{additive two-axis system} over a small resolution category $\Rcat$ is a functor
+\[
+F:\Rcat^{op}\longrightarrow \mathbf{Cat}^{\mathrm{add}}.
+\]
+Thus every fiber $F(r)$ is additive and every coarsening functor $C_{s\to r}$ is additive.
+\end{definition}
+
+For a small additive category $\mathcal A$, write $\operatorname{St}^{\mathrm{add}}(\mathcal A)$ for its free stable envelope. We use the established adjunction
+\[
+\operatorname{St}^{\mathrm{add}}:
+\mathbf{Cat}^{\mathrm{add}}
+\rightleftarrows
+\mathbf{Cat}^{\mathrm{st}}:U,
+\]
+characterized by
+\[
+\operatorname{Fun}^{\mathrm{ex}}
+\bigl(\operatorname{St}^{\mathrm{add}}(\mathcal A),\mathcal C\bigr)
+\simeq
+\operatorname{Fun}^{\oplus}(\mathcal A,U\mathcal C)
+\]
+for every stable $\mathcal C$; see Saunier--Winges~\cite{SaunierWinges2026}.
+
+\begin{theorem}[Pointwise stable completion]\label{thm:pointwise-stable}
+Let $\Rcat$ be small. Postcomposition with $\operatorname{St}^{\mathrm{add}}$ defines a functor
+\[
+\operatorname{St}^{\mathrm{add}}_{\Rcat}:
+\operatorname{Fun}(\Rcat^{op},\mathbf{Cat}^{\mathrm{add}})
+\longrightarrow
+\operatorname{Fun}(\Rcat^{op},\mathbf{Cat}^{\mathrm{st}}),
+\qquad
+F\longmapsto \operatorname{St}^{\mathrm{add}}\circ F.
+\]
+It is left adjoint to pointwise forgetting
+\[
+U_{\Rcat}:
+\operatorname{Fun}(\Rcat^{op},\mathbf{Cat}^{\mathrm{st}})
+\longrightarrow
+\operatorname{Fun}(\Rcat^{op},\mathbf{Cat}^{\mathrm{add}}).
+\]
+Equivalently, for every additive two-axis system $F$ and stable two-axis system $G$ there is a natural equivalence
+\[
+\operatorname{Map}
+\bigl(\operatorname{St}^{\mathrm{add}}_{\Rcat}F,G\bigr)
+\simeq
+\operatorname{Map}
+\bigl(F,U_{\Rcat}G\bigr).
+\]
+\end{theorem}
+
+\begin{proof}
+Any adjunction $L\dashv U$ induces an adjunction on functor categories by postcomposition. Concretely, a natural transformation
+\[
+\alpha:L\circ F\Rightarrow G
+\]
+has pointwise adjoint mates
+\[
+\alpha_r^{\flat}:F(r)\longrightarrow U(G(r)).
+\]
+Naturality of the unit and counit implies that the family $\{\alpha_r^{\flat}\}_r$ is natural in $r$. The mate construction is invertible and respects higher coherence. Applying this to $L=\operatorname{St}^{\mathrm{add}}$ gives the result.
+\end{proof}
+
+\status{proved}
+
+This is the precise sense in which the stable version of the two-axis system has a \emph{free residual-complete envelope}: no extra choices are required to create finite cofibers in the fibers, and every additive map into a stable two-axis system extends essentially uniquely to an exact one.
+
+\subsection{Exchange data and canonical residuals}
+
+\begin{definition}[Coherent additive transformation family]
+Let $F:\Rcat^{op}\to\mathbf{Cat}^{\mathrm{add}}$. A coherent additive transformation family $A$ consists of additive endofunctors
+\[
+A_r:F(r)\to F(r)
+\]
+and, for each $r\le s$, a natural transformation
+\[
+\eta^A_{s,r}:A_rC_{s\to r}\Longrightarrow C_{s\to r}A_s,
+\]
+satisfying the identity and transitivity coherences for chains $r\le s\le t$.
+\end{definition}
+
+The universal property above is an equivalence of functor $\infty$-categories, not only of their cores. This distinction is essential for noninvertible exchange maps. To extend $\eta:f\Rightarrow g$ between additive functors $\mathcal A\to\mathcal B$, compose it with $j_{\mathcal B}:\mathcal B\to\operatorname{St}^{\mathrm{add}}(\mathcal B)$ and lift the resulting morphism through
+\[
+\operatorname{Fun}^{\mathrm{ex}}(\operatorname{St}^{\mathrm{add}}(\mathcal A),\operatorname{St}^{\mathrm{add}}(\mathcal B))
+\simeq\operatorname{Fun}^{\oplus}(\mathcal A,\operatorname{St}^{\mathrm{add}}(\mathcal B)).
+\]
+Full faithfulness transports the supplied composition coherences as well. Accordingly $A_r$, $C_{s\to r}$, and their coherently supplied exchange cells extend, essentially uniquely relative to the input, to exact functors and natural transformations
+\[
+\widehat A_r,
+\qquad
+\widehat C_{s\to r},
+\qquad
+\widehat\eta^A_{s,r}:
+\widehat A_r\widehat C_{s\to r}
+\Longrightarrow
+\widehat C_{s\to r}\widehat A_s.
+\]
+
+\begin{definition}[Universal stable mixed residual]\label{def:universal-residual}
+For $X\in\operatorname{St}^{\mathrm{add}}(F(s))$, define
+\[
+\Delta^A_{s,r}(X)
+:=
+\Cofib\!\left(
+\widehat\eta^A_{s,r,X}
+\right)
+\in
+\operatorname{St}^{\mathrm{add}}(F(r)).
+\]
+\end{definition}
+
+\begin{theorem}[Universal residual preservation]\label{thm:residual-preservation}
+Let $G:\Rcat^{op}\to\mathbf{Cat}^{\mathrm{st}}$ be a stable two-axis system and let
+\[
+\Phi:\operatorname{St}^{\mathrm{add}}_{\Rcat}F\longrightarrow G
+\]
+be an exact natural transformation which intertwines the chosen transformation families and exchange cells. Then for every $r\le s$ and every $X$ there is a canonical equivalence
+\[
+\Phi_r\bigl(\Delta^A_{s,r}(X)\bigr)
+\simeq
+\Cofib\!\left(
+\Phi_r(\widehat\eta^A_{s,r,X})
+\right).
+\]
+In particular, if the exchange data in $G$ are denoted by $\eta^B$, then
+\[
+\Phi_r\bigl(\Delta^A_{s,r}(X)\bigr)
+\simeq
+\Delta^B_{s,r}(\Phi_sX).
+\]
+\end{theorem}
+
+\begin{proof}
+Each $\Phi_r$ is exact, hence preserves finite colimits and therefore cofiber sequences. Apply $\Phi_r$ to the defining cofiber sequence
+\[
+\widehat A_r\widehat C_{s\to r}X
+\xrightarrow{\widehat\eta^A_{s,r,X}}
+\widehat C_{s\to r}\widehat A_sX
+\longrightarrow
+\Delta^A_{s,r}(X).
+\]
+The result is a cofiber sequence in $G(r)$. Compatibility of $\Phi$ with the transformation and exchange data identifies its first morphism with the target exchange morphism, giving the stated equivalence.
+\end{proof}
+
+\status{proved}
+
+Thus residual formation is not merely available in the stable completion: it is \emph{universal under exact realization}.
+
+\subsection{Residual promotion is forced by stable closure}
+
+\begin{definition}[Stable seeded zoo]
+Fix seed sets $\Seeds_r\subseteq\Ob(F(r))$. A \emph{stable seeded sub-zoo} of $\operatorname{St}^{\mathrm{add}}_{\Rcat}F$ is a family of full stable subcategories
+\[
+\mathcal Z_r\subseteq\operatorname{St}^{\mathrm{add}}(F(r))
+\]
+such that:
+\begin{enumerate}
+    \item $\mathcal Z_r$ contains the images of all seeds in $\Seeds_r$;
+    \item $\widehat A_r(\mathcal Z_r)\subseteq\mathcal Z_r$ for every designated transformation generator;
+    \item $\widehat C_{s\to r}(\mathcal Z_s)\subseteq\mathcal Z_r$ for every $r\le s$.
+\end{enumerate}
+The \emph{minimal stable zoo} is the intersection of all such families.
+\end{definition}
+
+\begin{proposition}[Existence of the minimal stable zoo]\label{prop:min-stable-zoo}
+The minimal stable zoo exists.
+\end{proposition}
+
+\begin{proof}
+The family of entire fibers $\operatorname{St}^{\mathrm{add}}(F(r))$ is a stable seeded sub-zoo, so the defining class is nonempty. Arbitrary intersections of full stable subcategories are again full stable subcategories, and invariance under the designated exact functors is preserved under intersection. Hence the intersection is the least stable seeded sub-zoo.
+\end{proof}
+
+\begin{theorem}[Automatic residual promotion]\label{thm:auto-promotion}
+Let $\mathcal Z$ be the minimal stable zoo. If $X\in\mathcal Z_s$, then every mixed residual
+\[
+\Delta^A_{s,r}(X)
+\]
+belongs to $\mathcal Z_r$.
+\end{theorem}
+
+\begin{proof}
+By invariance,
+\[
+\widehat A_r\widehat C_{s\to r}X
+\quad\text{and}\quad
+\widehat C_{s\to r}\widehat A_sX
+\]
+are objects of $\mathcal Z_r$. Since $\mathcal Z_r$ is stable, it is closed under cofibers. Therefore the cofiber of the exchange morphism between these two objects, namely $\Delta^A_{s,r}(X)$, also lies in $\mathcal Z_r$.
+\end{proof}
+
+\status{proved}
+
+\begin{corollary}[Redundancy of residual promotion in the stable calculus]\label{cor:promotion-redundant}
+In the additive/stable two-axis calculus, ``promote every residual to a seed'' need not be imposed as an independent closure axiom. Once the zoo is stable and closed under transformation and coarsening, mixed residuals are already forced to lie in it.
+\end{corollary}
+
+This is a substantive simplification of the initial axiomatization. Residual promotion remains meaningful operationally for search and provenance, but mathematically it is redundant in the stable closure.
+
+\subsection{What has and has not been proved}
+
+Combining \cref{thm:free-double,thm:pointwise-stable,thm:residual-preservation,thm:auto-promotion} gives the following restricted universal construction.
+
+\begin{theorem}[Additive/stable seeded two-axis completion]\label{thm:additive-stable-completion}
+For a small additive indexed two-axis system with coherent additive transformation/exchange data and designated seeds, there is a canonical stable completion with the following properties:
+\begin{enumerate}
+    \item the resolution diagram extends universally from additive fibers to stable fibers;
+    \item all coarsening and transformation functors become exact;
+    \item every exchange morphism has a canonical mixed residual given by a cofiber;
+    \item exact realizations preserve these residuals;
+    \item the least stable seed zoo exists and is automatically closed under mixed residual formation.
+\end{enumerate}
+The stable completion has the adjunction universal property for stable resolution systems receiving the original additive resolution diagram; with compatible exchange data, residual preservation is automatic for exact realizations.
+\end{theorem}
+
+\begin{proof}
+Items (1)--(2) are \cref{thm:pointwise-stable}; item (3) is \cref{def:universal-residual}; item (4) is \cref{thm:residual-preservation}; item (5) is \cref{prop:min-stable-zoo,thm:auto-promotion}. Initiality is the adjunction of \cref{thm:pointwise-stable}.
+\end{proof}
+
+\status{proved under the explicit additive/stable hypotheses}
+
+The stronger nonadditive claim remains open. In particular, this theorem does not construct a free \emph{arbitrary} residual-complete double category in which residuals satisfy a universal cofiber property without assuming an additive/stable target. It does, however, close the universal-construction problem for the regime in which the present mixed residual is actually defined as a cofiber.
+
+
+\subsection{Testing residual vanishing on orbit generators}
+
+The universal completion makes residuals available, but an application still needs a way to prove they vanish. Exactness gives a reduction to generators, with an important qualification: operation-orbit generators, rather than the original seed list alone, generally control the invariant zoo.
+
+\begin{lemma}[Residual formation is exact in its input]\label{lem:exact-residual-functor}
+Let $P,Q:\mathcal C\to\mathcal D$ be exact functors between small stable $\infty$-categories, and let $\eta:P\Rightarrow Q$ be a natural transformation. Then
+\[
+\Delta_\eta(X):=\Cofib(\eta_X)
+\]
+is an exact functor $\mathcal C\to\mathcal D$. If $q:\mathcal D\to\mathcal O$ is exact, the subcategory
+\[
+\{X:q\Delta_\eta(X)\simeq0\}
+\]
+is thick.
+\end{lemma}
+
+\begin{proof}
+Cofibers in the functor category are computed pointwise. The full subcategory of exact functors is closed under these finite colimits: a finite colimit of finite-colimit-preserving functors preserves finite colimits, and its value at zero is zero. Hence $\Delta_\eta$ is exact. The composite $q\Delta_\eta$ is exact as well. Its kernel is closed under shifts, cofibers, and retracts, which proves the last assertion.
+\end{proof}
+
+\begin{definition}[Operation orbit of the seeds]
+In a stable indexed system, let $\mathscr P$ be the designated exact transformations and coarsenings. For each $r$, let $\mathcal G_r$ contain every image at level $r$ of a seed under a finite well-typed word in $\mathscr P$, including the empty word. Define
+\[
+\mathcal Z_r^{\mathrm{thick}}:=\operatorname{Thick}(\mathcal G_r).
+\]
+Refinement is included here only when an actual exact refinement functor has been separately specified. A multivalued lift relation is not silently treated as an exact functor.
+\end{definition}
+
+\begin{proposition}[Orbit generation of the invariant thick zoo]\label{prop:orbit-zoo}
+The family $\{\mathcal Z_r^{\mathrm{thick}}\}_r$ is the least family of thick subcategories containing the seeds and preserved by all operations in $\mathscr P$.
+\end{proposition}
+
+\begin{proof}
+Every operation sends an orbit generator to an orbit generator at the target level. Exactness and preservation of retracts therefore imply that it sends the thick closure of the source orbit into the thick closure of the target orbit. Thus the displayed family is invariant. Any invariant thick family containing the seeds contains all finite operation words applied to them, hence contains all $\mathcal G_r$ and their thick closures. This proves minimality.
+\end{proof}
+
+\begin{theorem}[Orbit-generator test for an exchange obstruction]\label{thm:generator-test}
+Fix an exchange $\eta^A_{s,r}$ between exact functors, and an exact quotient $q_r$ of the target fiber. If
+\[
+q_r\Delta^A_{s,r}(g)\simeq0
+\quad\text{for every }g\in\mathcal G_s,
+\]
+then
+\[
+q_r\Delta^A_{s,r}(X)\simeq0
+\quad\text{for every }X\in\mathcal Z_s^{\mathrm{thick}}.
+\]
+The same assertion holds for $q_r=\id$, in which case the exchange is an equivalence on the entire generated thick zoo.
+\end{theorem}
+
+\begin{proof}
+By \cref{lem:exact-residual-functor}, the objects on which $q_r\Delta^A_{s,r}$ vanishes form a thick subcategory. By hypothesis it contains $\mathcal G_s$, hence it contains $\operatorname{Thick}(\mathcal G_s)$. Vanishing of the unquotiented cofiber is equivalent to invertibility of the exchange map.
+\end{proof}
+
+\status{proved by exactness and thick generation}
+
+This reduces a universal statement on a thick zoo to a statement on its operation orbit. It is not automatically a finite algorithm. The orbit may be infinite, and checking only the initial seeds does not suffice unless a separate argument propagates vanishing along every operation. In particular, this theorem does not turn finitely many numerical checks into proof of a universal arithmetic comparison.
+
+
+\section{Research program and theorem ledger}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.09\textwidth} >{\raggedright\arraybackslash}p{0.47\textwidth} >{\raggedright\arraybackslash}p{0.32\textwidth}}
+\toprule
+ID & Target & Current status\\
+\midrule
+\endhead
+K1 & Resolution monotonicity and nested equivalence relations & Proved in \cref{thm:resolution-monotonicity}\\
+K2 & Grothendieck total category & Proved in \cref{thm:total-category}\\
+K3 & Two-axis factorization & Proved in \cref{thm:factorization}\\
+K4 & Resolution ultrametric & Proved with a common state set, universal zeroth relation, nesting, and separation.\\
+K5 & Least seed zoo / closure existence & Proved in \cref{thm:zoo-existence}\\
+K6 & Finitary iterative zoo generation & Proved under continuity hypothesis in \cref{prop:finitary}\\
+K7 & Lifting coherent transformation families to the total category & Proved in \cref{thm:lift-total}\\
+K8 & Mixed residual vanishing criterion & Proved in stable fibers in \cref{prop:residual-vanish}\\
+K9 & Exact two-axis normal form & Proved under local confluence in \cref{thm:normal-form}\\
+K10 & Split residual expansion & Corrected source remainder shift and finite principal-path scope in \cref{thm:split-expansion}.\\
+K11 & Stable residual filtration without splitness & Proved for a chosen path. General ordered independence is refuted by K24.\\
+K12 & Stable obstruction quotient & Proved for the thick kernel. Constructor descent needs K28 or the directed hypothesis K29.\\
+K13 & Free seeded two-axis double syntax & Term-construction proof with typed labels in \cref{thm:free-double}.\\
+K14 & Universal residual-complete two-axis construction & Proved with additive/stable infinity-category and coherent exchange data. Nonadditive form open.\\
+K15 & Effective reconstruction theorem for a nontrivial arithmetic instance & Open domain theorem\\
+K16 & Descent transfer across a correspondence & Abstract lemma proved in \cref{thm:descent-transfer}\\
+K17 & Seeded local-global reciprocity instantiation & Program theorem, arithmetic hypotheses open\\
+K18 & Lean formalization of K1--K10 & Not yet implemented in this note\\
+K19 & Pointwise stable completion universal property & Proved in \cref{thm:pointwise-stable}\\
+K20 & Automatic residual promotion in stable zoos & Proved in \cref{thm:auto-promotion}\\
+K21 & Functorial transport of obstruction quotients & Proved in \cref{thm:obstruction-transport}\\
+K22 & Nonstable residual/repair obstruction test bed & Proved for abelian torsors in \cref{thm:torsor-obstruction}\\
+K23 & Localization of total obstruction & Proved pathwise in \cref{thm:obstruction-localization}.\\
+K24 & Ordered filtration independence & General claim refuted in \cref{prop:filtration-no-go,ex:typed-diamond}.\\
+K25 & Semantic diamond criterion & Proved in \cref{thm:semantic-diamond}; total cofibers equivalent, not uniquely identified without more data.\\
+K26 & Pure exchange event poset & States are ideals and histories are linear extensions, \cref{thm:event-ideals}.\\
+K27 & Ideal-indexed residual diagram & Proved for a coherent event diagram in \cref{thm:ideal-residual}.\\
+K28 & Constructor-invariant obstruction quotient & Proved in \cref{thm:invariant-quotient}; can be zero, \cref{ex:quotient-collapse}.\\
+K29 & Directed operational quotient & Killability is thick and constructor-invariant, \cref{thm:directed-invariant}.\\
+K30 & Orbit-generator test for residual vanishing & Proved in \cref{thm:generator-test}; orbit need not be finite.\\
+K31 & Noncollapse certificate & Exact equivariant detector criterion, \cref{prop:noncollapse}.\\
+\bottomrule
+\end{longtable}
+
+\section{Immediate next formal steps}
+
+The general ordered path-independence target has been refuted, not merely postponed. The next tasks must use the corrected history-sensitive formulation.
+
+\begin{enumerate}
+\item \textbf{Semantic event diagrams.} For a concrete labelled two-axis system, construct the coherent diagram over $J(P_W)$ rather than assume it. Pure syntactic confluence is now settled, but arbitrary reindexing, nontrivial exchange relations, and higher coherence remain separate semantic obligations.
+\item \textbf{Nontrivial admissible repair.} Identify constructor systems whose invariant thick saturation is proper. A directed system or a nonzero exact equivariant detector provides a sufficient route. An indiscriminate repair grammar may destroy the entire intended obstruction category.
+\item \textbf{Orbit reduction.} Find instances in which the operation orbit is finitely generated, or in which a structural induction proves the exchange test on every orbit generator. This is the missing step between K30 and a practical finite certificate.
+\item \textbf{Lean core.} Formalize the finite word/event correspondence, nested equivalence construction, and closure statements. No Lean source or kernel verification for this note is claimed in this release.
+\item \textbf{Arithmetic instance.} Specify the actual categories, exchange maps, constructor admissibility, and globalization obstruction in an arithmetic test bed. Prove the link between quotient vanishing and the desired arithmetic existence statement, rather than insert it as an axiom.
+\item \textbf{Beyond the stable layer.} Extend the nonstable torsor model to another precisely typed obstruction problem. A common universal formulation must not silently identify a nonabelian pointed set with a stable quotient object.
+\end{enumerate}
+
+\section{Brainstorm: stronger directions}
+
+The formalism above suggests several deeper lines of investigation.
+
+\subsection{Resolution completion}
+A resolution tower may admit an inverse limit
+\[
+X_\infty\simeq\varprojlim_r X_r.
+\]
+One can ask whether the seed zoo commutes with completion:
+\[
+\Zoo(X_\infty)
+\stackrel{?}{\simeq}
+\varprojlim_r\Zoo(X_r).
+\]
+This is only a proposed comparison. A common category and an actual comparison map must first be constructed before a residual is defined.
+
+\subsection{Transformation completion}
+Repeated transformations may generate an orbit category. Completing this orbit under limits, colimits, idempotent splitting, or derived closure may produce a canonical transformation hull.
+
+\subsection{Bi-completion}
+There are then two completion operations:
+\[
+\widehat{(-)}_T,
+\qquad
+\widehat{(-)}_R.
+\]
+After both completions and the comparison have been defined in a common category, the mixed question is whether
+\[
+\widehat{\widehat X_T}_R
+\simeq
+\widehat{\widehat X_R}_T.
+\]
+Given the specified comparison, its defect is a candidate completion-level mixed residual in a setting where such defects are defined.
+
+\subsection{Resolution spectrum}
+For a fixed $X\in\Tcat_s$ and a specified detection predicate $P_r$ at each level $r\le s$, define:
+\[
+\operatorname{Spec}_R(P;X)
+=
+\{r\le s:P_r(C_{s\to r}X)\}.
+\]
+This could behave like a support or spectrum for distinguishability.
+
+\subsection{Residual genealogy}
+Residual promotion creates a directed graph
+\[
+s\to\Delta_1\to\Delta_2\to\cdots.
+\]
+Classify whether genealogies terminate, become periodic, stabilize, or grow indefinitely. A terminating genealogy would correspond to finite obstruction resolution. Periodic genealogy may encode a persistent but structured defect.
+
+\subsection{Seed minimality}
+Given a generated zoo $\Zoo$, ask for the smallest seed set $\Seeds$ with
+\[
+\Zoo(\Seeds)=\Zoo.
+\]
+This is a mathematical compression problem. Nonuniqueness of minimal seeds could itself be meaningful.
+
+\subsection{Dual zoos}
+If the calculus carries a duality $D$, study
+\[
+D\Zoo(\Seeds)
+\quad\text{versus}\quad
+\Zoo(D\Seeds).
+\]
+The residual of dualization against zoo generation measures whether the generative grammar is duality-complete.
+
+\subsection{Proof-resolution}
+A theorem itself may have resolutions. At coarse resolution one stores only a proposition and certificate. At finer resolution one exposes lemmas, dependencies, computational witnesses, and failed branches. This creates a resolution geometry on proofs and may be useful for machine reasoning and proof compression.
+
+\subsection{World-resolution}
+A foundational extension can assign resolution to models or ``worlds'' themselves. Morphisms between worlds then have two axes: change of world and change of resolution within a world. This may connect the current calculus to the earlier compatibility/residual/obstruction maps between models of a foundational theory.
+
+\section{Provisional philosophical interpretation}
+
+The mathematics does not require the following interpretation, but the two-axis formalism sharpens it.
+
+A structure may be characterized simultaneously by:
+\begin{itemize}
+    \item what transformations it admits;
+    \item what resolutions distinguish its internal states;
+    \item what survives both kinds of movement;
+    \item what residuals appear when the two directions fail to commute;
+    \item what obstructions prevent refinement, transformation, or global reconstruction.
+\end{itemize}
+
+This suggests the strengthened ontological phrase:
+\[
+\boxed{
+\text{to remain identifiable is to remain coherent under both transformation and resolution.}
+}
+\]
+The mathematical content of the project is not this sentence itself. The mathematical content is the attempt to make ``coherent,'' ``transformation,'' ``resolution,'' ``residual,'' and ``reconstruction'' precise enough that such a sentence can be tested rather than merely asserted.
+
+\section{Conclusion}
+
+The first formalization supports a concrete picture:
+\[
+\boxed{
+\begin{array}{c}
+\text{seeds generate states},\\
+\text{transformations generate representations},\\
+\text{resolutions generate distinguishability},\\
+\text{exchange maps relate the axes},\\
+\text{residuals measure failed exchange},\\
+\text{residuals become new seeds},\\
+\text{obstructions classify persistent failure},\\
+\text{descent reconstructs compatible local structure}.
+\end{array}
+}
+\]
+The retained categorical core supplies explicit constructions under fixed hypotheses. Stable completion provides functorial cofibers, exact realizations preserve residuals, and the invariant stable zoo contains them automatically. Each normalization path carries a residual filtration, but the filtration is genuinely history-sensitive. The corrected intrinsic object is an ideal-indexed residual diagram for a specified coherent exchange system, whose terminal residual is independent of schedule.
+
+Likewise, a thick obstruction quotient is not automatically a new environment for the original constructors. Their action on the quotient requires an invariant kernel. The invariant saturation gives the universal repair, but its possible collapse is a substantive constraint on admissibility. Directed common postcomposition makes operational killability itself invariant and thick, while exact equivariant detectors certify noncollapse. Finally, thick orbit generation reduces exchange vanishing to a well-defined generator test without promising that the test is finite.
+
+These results sharpen the proposed calculus rather than establish a new foundation or a reciprocity theorem. The arithmetic content still depends on constructing appropriate semantic diagrams, nontrivial repair systems, and effective reconstruction theorems. The abelian torsor example remains a verified classical test case, not a substitute for those arithmetic obligations.
+
+
+\begin{thebibliography}{99}
+\addcontentsline{toc}{section}{References}
+\bibitem{FairbanksShulman2026}
+A.~D. Fairbanks and M.~Shulman,
+\emph{Doubly Weak Double Categories},
+arXiv:2506.23651. Background reference for double computads.
+The paper is background for double computads. The present free strict syntax result is proved directly by terms and relations in \cref{thm:free-double}; no unchecked theorem-number identification is needed.
+
+\bibitem{SaunierWinges2026}
+V.~Saunier and C.~Winges,
+\emph{On exact categories and their stable envelopes},
+arXiv:2502.03408v2, 28 November 2025.
+Definition 3.1 and the following universal property give the free stable envelope $\operatorname{St}^{\mathrm{add}}$ and its adjunction with the forgetful functor from stable to additive categories.
+\url{https://arxiv.org/abs/2502.03408v2}.
+
+\bibitem{StacksVerdier}
+The Stacks Project Authors,
+\emph{Quotients of triangulated categories}, Section 13.6, Tag 05RA, especially Lemmas 13.6.2, 13.6.8, and 13.6.9, accessed 26 September 2026.
+The quotient construction, kernel description, and exact universal property are used in \cref{thm:obstruction-quotient,thm:obstruction-transport}; Section 13.3, Tag 05QK, records the octahedral axiom TR4 underlying the homotopy-category form of \cref{thm:stable-filtration}. Functorial cofibers require the stable enhancement fixed in the text.
+\bibitem{Drew2015}
+B.~Drew,
+\emph{Verdier quotients of stable quasi-categories are localizations},
+arXiv:1511.08287v1, 26 November 2015, Definition 1.1 and Theorem 1.3.
+\url{https://arxiv.org/abs/1511.08287v1}.
+
+\bibitem{StacksTorsors}
+The Stacks Project Authors,
+\emph{First cohomology and torsors}, Section 21.4, Tag 03AG, accessed 26 September 2026.
+
+\end{thebibliography}
+
+\appendix
+\section{Compact definition sheet}
+
+\begin{align*}
+\text{Resolution system:}\quad
+&F:\Rcat^{op}\to\Cat.\\[0.4em]
+\text{Fiber:}\quad
+&\Tcat_r=F(r).\\[0.4em]
+\text{Coarsening:}\quad
+&C_{s\to r}:\Tcat_s\to\Tcat_r.\\[0.4em]
+\text{Total category:}\quad
+&\K=\int_{\Rcat}F.\\[0.4em]
+\text{Resolution equivalence:}\quad
+&X\sim_rY\iff C_{t\to r}X\cong C_{t\to r}Y.\\[0.4em]
+\text{Lift set:}\quad
+&\Lift_{r\to s}(X)=\{Y:C_{s\to r}Y\cong X\}/\cong.\\[0.4em]
+\text{Exchange map:}\quad
+&\eta^A_{s,r}:A_rC_{s\to r}\Rightarrow C_{s\to r}A_s.\\[0.4em]
+\text{Stable residual:}\quad
+&\Delta^A_{s,r}(X)=\Cofib(\eta^A_{s,r,X}).\\[0.4em]
+\text{Stable obstruction quotient:}\quad
+&\mathcal O_{\mathscr M}=\mathcal Z/\operatorname{Thick}(\mathcal K_{\mathscr M}).\\[0.4em]
+\text{Invariant obstruction quotient:}\quad
+&\mathcal O^{\mathrm{inv}}_{\mathscr M}=\mathcal Z/\mathcal J_{\mathscr M}.\\[0.4em]
+\text{Event residual diagram:}\quad
+&\mathcal F_X(I)=\Cofib(X_{\varnothing}\to X_I).\\[0.4em]
+\text{Obstruction class:}\quad
+&\Obs_{\mathscr M}(X)=q(X).\\[0.4em]
+\text{Seed zoo:}\quad
+&\Zoo(\Seeds_0)=\mu A.\bigl(\Seeds_0\cup\Phi(A)\bigr).\\[0.4em]
+\text{Resolution ultrametric:}\quad
+&d_R(X,Y)=2^{-\nu(X,Y)},\qquad 2^{-\infty}=0.\\[0.4em]
+\text{Reconstruction target:}\quad
+&\Omega_G=0\iff\text{the specified descent datum is effective}.
+\end{align*}
+
+
+\section{Audit and verification record for v0.6.0}\label{app:audit}
+
+\subsection{Coverage and evidence}
+The v0.5.0 LaTeX source was read in full. This release preserves the running manuscript and revises its statements and proofs rather than replacing it with a shortened summary. The review is an authoring-session self-review, not an independent referee report. The exact source snapshot, change inventory, executable tests, and output are included in the companion package.
+
+The primary audit verdict for the former package is \emph{correct only after stated restrictions and corrections}. In particular, the ordered-filtration ambition fails in general, whereas the retained path-relative theorem survives. Stable quotient existence survives, but it alone does not prove constructor descent or noncollapse. No Lean verification is claimed.
+
+\subsection{Mathematical corrections}
+\begin{enumerate}
+\item \textbf{Resolution:} fixed a common state set and a universal zeroth equivalence relation in the ultrametric construction. Distinguished isomorphism classes of lifts from framed lift groupoids. Excluded $\log 0$ from ordinary branching information.
+\item \textbf{Exchange:} distinguished invertible comparison maps from exact functors. Required complete local exchange rules for the syntactic normal-form statement. Replaced the split cofiber identification by the correct shift $\Delta\simeq E[1]$. Removed an unsupported recursive termination claim for residual branches.
+\item \textbf{Coherence:} separated a normal object, its comparison map, and a filtration. Noninvertible exchange cells are extended using the full functor-category stable-envelope universal property, not just a mapping-space adjunction.
+\item \textbf{Quotients:} distinguished killability, thick killability, and constructor-invariant thick killability. Stated universal uniqueness in the enhanced categorical sense. Corrected the postcomposition orientation in the directed condition.
+\item \textbf{Descent and scope:} included all overlap degrees and descent of morphisms. Required reflection as well as preservation of obstruction vanishing. Corrected the quotient functor's type. Kept arithmetic globalization and unrestricted reciprocity outside the proved scope.
+\item \textbf{Derived quantities:} replaced an identity-dominated commutation-depth formula and typed the branching profile along an actual lift chain. Marked zoo growth and search costs as presentation-dependent. No minimum or decision procedure is asserted by an optimization display.
+\end{enumerate}
+
+\subsection{Exact finite regression}
+The companion script \texttt{checks/check\_models.py} uses integer matrices, rational Gaussian elimination, and finite labelled words. It contains no floating-point tests. The recorded run uses Python 3.13.5 and checks every two-sort word of length $0$ through $10$, including the empty word and words containing only one sort.
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Quantity & Checked count\\
+\midrule
+Initial words & 2,047\\
+Reachable word states, summed over initial words & 82,499\\
+Elementary rewrite edges, summed over initial words & 168,454\\
+Largest event poset & 25 events\\
+Products in the three-constructor example & 9\\
+Binary supports in the three-coordinate example & 8\\
+Exact rank checks for cone models & 6\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The word test constructs reachable labelled words and order ideals independently, then compares their states and edges. The constructor test confirms the non-thick killability and invariant-collapse examples, together with a nonzero directed projection model. The cone tests compare the ordered dimensions $(0,1,3)$ and $(0,2,3)$, verify the split projection's shifted cofiber, and distinguish the identity and zero maps with equal endpoints.
+
+All these finite checks passed. They test the stated finite models and implementation paths. The universal statements rest on their written proofs, not on extrapolation from the finite enumeration. The package's result record stores the exact script hash and bounds. Build and visual-review results are recorded separately from the mathematical test status.
+
+\subsection{Source verification boundary}
+The stable-envelope input was checked in Saunier--Winges, arXiv:2502.03408v2, Definition 3.1 and the subsequent functor-category universal property. The stable localization input was checked in Drew, arXiv:1511.08287v1, Definition 1.1 and Theorem 1.3. The quotient kernel and triangulated formulations were checked in the cited Stacks sections. The free strict syntax theorem now has its own term-construction proof. This was an exact-dependency check, not a comprehensive novelty search.
+
+The manuscript does not certify a new axiom of set theory, a classification of all mathematical structures, a physical law, or a Langlands reciprocity theorem. Its new claims concern the explicitly defined exchange grammar and stable constructor systems.
+
+\clearpage
+\section{Version ledger}
+
+\begin{description}[leftmargin=8em,style=nextline]
+\item[v0.6.0] Audits size, variance, categorical regimes, lift multiplicity, cofiber shifts, exactness, descent, and quotient interpretation. Refutes general ordered filtration independence, including inside the typed two-axis grammar. Proves the semantic diamond criterion and the order-ideal description of pure exchange histories. Constructs the coherent ideal-indexed residual diagram. Proves constructor-invariant quotient and directed invariance theorems, records a quotient-collapse counterexample, and adds exact orbit-generator tests and a noncollapse certificate. Includes finite exact regression checks. Written proofs only, not Lean verification.
+\item[v0.5.0] Combines the stable residual filtration with the Verdier obstruction quotient to prove obstruction localization along any chosen normalization path: if all elementary exchange residuals vanish in the obstruction quotient, so does the total normalization residual; contrapositively, a persistent total obstruction forces at least one persistent elementary exchange obstruction. Under directed annihilators the statement upgrades from quotient-vanishing to operational killability.
+\item[v0.4.0] Adds a direct nonstable obstruction test bed: local sections of an abelian torsor produce overlap residuals, local changes of trivialization act as repairs, and the resulting \v{C}ech $H^1$ class vanishes exactly when the local sections can be repaired to reconstruct a global section. This closes the first descent test-bed obligation and shows that the residual/repair/obstruction pattern recovers a classical cohomological mechanism.
+\item[v0.3.0] Proves the stable residual filtration along a chosen normalization path by iterated octahedral cofiber sequences. Constructs the universal stable obstruction quotient by the thick closure of operationally killable residuals, proves exact detection under a directed common-annihilator hypothesis, and proves functorial transport of obstruction quotients under exact correspondences. K11 and K12 are closed in these stable forms; path-independent filtration and nonstable obstruction remain open.
+\item[v0.2.0] Adds the free seeded two-axis double-computad universal property and proves the pointwise free stable completion theorem for additive indexed systems. Mixed residuals become canonical cofibers, exact realizations preserve them, and residual promotion is shown to be automatic in the minimal stable zoo. K13 is closed at the strict syntactic level and K14 is closed under additive/stable hypotheses; the nonadditive residual universal construction remains open.
+\item[v0.1.0] Initial continuous formalization. Introduces indexed resolution categories, total Grothendieck category, factorization, resolution ultrametric, seed zoo closure, exchange transformations, stable residuals, exact normal forms, split residual expansion, obstruction taxonomy, descent transfer, and a seeded local-global reciprocity blueprint.
+\end{description}
+
+\end{document}

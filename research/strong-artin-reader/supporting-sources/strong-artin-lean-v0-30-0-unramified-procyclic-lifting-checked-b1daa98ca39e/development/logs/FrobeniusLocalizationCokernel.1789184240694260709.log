@@ -1,0 +1,48 @@
+/mnt/data/Strong_Artin_Lean_v0.30.0_Unramified_Procyclic_Lifting/src/FrobeniusLocalizationCokernel.lean:92:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  SquareZeroH2.Datum.frobeniusMatchingClass ?D ?F ?degree ?V ?hV = 0
+in the target expression
+  (∃ F,
+      q ↑F = ↑(rho frobenius) ∧
+        ∃ u, (∀ (i : I), q ↑(u i) = 1) ∧ ∀ (i : I), u i * F ^ degree i * (u i)⁻¹ = (t i) frobenius) ↔
+    (SquareZeroH2.continuousSectionDatum q hq hsq rho.toMonoidHom).frobeniusMatchingClass F degree
+        (fun i => (t i) frobenius) hV =
+      0
+
+A B I : Type
+inst✝⁶ : Ring A
+inst✝⁵ : Ring B
+inst✝⁴ : Finite A
+inst✝³ : TopologicalSpace A
+inst✝² : DiscreteTopology A
+inst✝¹ : TopologicalSpace B
+inst✝ : DiscreteTopology B
+q : A →+* B
+hq : Function.Surjective ⇑q
+hsq : ∀ (a b : A), q a = 0 → q b = 0 → a * b = 0
+rho : ↑Zhat.toProfinite.toTop →ₜ* Bˣ
+degree : I → ℕ
+t : I → ↑Zhat.toProfinite.toTop →ₜ* Aˣ
+ht : ∀ (i : I) (z : ↑Zhat.toProfinite.toTop), q ↑((t i) z) = ↑(rho ((degreeMap (degree i)) z))
+F : Aˣ
+hF : q ↑F = ↑(rho frobenius)
+hV : ∀ (i : I), q ↑((t i) frobenius) = q (↑F ^ degree i)
+⊢ (∃ F,
+      q ↑F = ↑(rho frobenius) ∧
+        ∃ u, (∀ (i : I), q ↑(u i) = 1) ∧ ∀ (i : I), u i * F ^ degree i * (u i)⁻¹ = (t i) frobenius) ↔
+    (SquareZeroH2.continuousSectionDatum q hq hsq rho.toMonoidHom).frobeniusMatchingClass F degree
+        (fun i => (t i) frobenius) hV =
+      0
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    hV
+  has type
+    ∀ (i : I), @Eq B (q ↑((t i) frobenius)) (q (↑F ^ degree i))
+  but is expected to have type
+    ∀ (i : I),
+      @Eq B ((SquareZeroH2.continuousSectionDatum q hq hsq rho.toMonoidHom).q ↑((t i) frobenius))
+        ((SquareZeroH2.continuousSectionDatum q hq hsq rho.toMonoidHom).q (↑F ^ degree i))
+  in the application
+    (SquareZeroH2.continuousSectionDatum q hq hsq rho.toMonoidHom).frobeniusMatchingClass F degree
+      (fun i => (t i) frobenius) hV

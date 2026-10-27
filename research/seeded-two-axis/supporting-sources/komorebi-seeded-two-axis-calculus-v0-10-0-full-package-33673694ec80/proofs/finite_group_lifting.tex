@@ -1,0 +1,311 @@
+\section{Sufficient lifting for a fixed finite group}\label{sec:finite-lifting}
+
+This section closes a specified version of the sufficient-lifting question left by K61. The source group $G$ is fixed and finite, the rank $d$ is fixed, the coefficient ring is $\mathbb Z_p$, and every lift must satisfy the same group multiplication table. We first exhibit a zero-exchange-defect representation that nevertheless does not lift. We then give a complete one-step obstruction and an explicit finite horizon after which convergent correction constructs an integral action. None of these assertions concerns arbitrary continuous representations of a changing system of finite Galois quotients.
+
+\paragraph{Attribution.}
+The one-step obstruction is the classical group-extension class in $H^2$, with the standard inhomogeneous conventions of \cite[Chapter II, 1.17--1.19]{MilneCFT2020}. Finite-group ultrametric stability and the quantitative bound used below are known: \cite[Lemma 7.3, Proposition 7.4, Example 7.5]{FournierFacio2026} supply the same valuation threshold, in a broader setting. We provide a direct matrix-averaging proof, translate it into an exact finite lifting criterion, and connect it to the present residual calculus. Historical novelty is not claimed for that bound or the deformation-theoretic mechanism.
+
+\subsection{The relation residual and its repair class}
+
+Put $R_n=\mathbb Z/p^n$, $k=\mathbb F_p$, and fix
+\[
+ \rho_n:G\longrightarrow\operatorname{GL}_d(R_n),\qquad n\geq1.
+\]
+Let $V=\operatorname{End}_k(k^d)$ with action
+\[
+ g\cdot X=\bar\rho(g)X\bar\rho(g)^{-1},
+ \qquad \bar\rho=\rho_n\bmod p.
+\]
+Choose matrices $A_g\in\operatorname{GL}_d(R_{n+1})$ lifting $\rho_n(g)$, with $A_1=I$. They need not constitute a representation. Define the normalized relation residual
+\[
+ c_A(g,h)=\frac{A_gA_hA_{gh}^{-1}-I}{p^n}\pmod p\quad\in V.
+\]
+Division here identifies the square-zero ideal $p^nR_{n+1}$ with $k$. It is not inversion of $p$ in $R_{n+1}$. The square-zero assertion uses $2n\geq n+1$.
+
+For a normalized $1$-cochain $b:G\to V$, set
+\[
+ (\delta b)(g,h)=b(g)+g\cdot b(h)-b(gh).
+\]
+For a normalized $2$-cochain set
+\[
+ (\delta c)(g,h,t)=g\cdot c(h,t)-c(gh,t)+c(g,ht)-c(g,h).
+\]
+A cochain is normalized when it vanishes whenever an argument is the identity.
+
+\begin{theorem}[Complete one-step relation obstruction]\label{thm:relation-H2}
+The residual $c_A$ is a $2$-cocycle. Its cohomology class
+\[
+ o_n(\rho_n)=[c_A]\in H^2(G,V)
+\]
+is independent of the chosen matrix lifts. Moreover,
+\[
+ \boxed{o_n(\rho_n)=0
+ \quad\Longleftrightarrow\quad
+ \rho_n\text{ lifts to }\operatorname{GL}_d(R_{n+1}).}
+\]
+More precisely, all lifts with the fixed reduction have the form
+\[
+ A_g^b=(I+p^n b(g))A_g,
+\]
+where representatives of $b(g)$ may be chosen arbitrarily, and the necessary and sufficient equation is
+\[
+ \boxed{\delta b=-c_A.}
+\]
+\end{theorem}
+\begin{proof}
+Associativity of the threefold product gives the exact identity
+\[
+ (I+p^nc_A(g,h))(I+p^nc_A(gh,t))
+ = (I+p^n g\cdot c_A(h,t))(I+p^nc_A(g,ht))
+\]
+in $R_{n+1}$, where the conjugation can be reduced modulo $p$. All products of two $p^n$ terms vanish. Dividing the resulting linear identity by $p^n$ gives $\delta c_A=0$.
+
+Any alternative matrix lift is uniquely of the form $(I+p^nb(g))A_g$, for a normalized cochain $b$. Expanding its multiplicativity residual and discarding square-zero terms gives
+\[
+ c_{A^b}=c_A+\delta b.
+\]
+Thus the class is unchanged and the new matrices satisfy every group relation exactly if and only if $\delta b=-c_A$. Such a cochain exists precisely when $[c_A]=0$. Invertibility is automatic because $I+p^nb(g)$ has inverse $I-p^nb(g)$ at this level.
+\end{proof}
+
+\begin{proposition}[Repair ambiguity, conjugacy, and finite certificates]\label{prop:repair-H1}
+If the one-step lift set is nonempty, its framed lifts form a torsor for $Z^1(G,V)$. Conjugation by matrices $I+p^nX$, $X\in V$, quotients this torsor by coboundaries. Hence the strict-conjugacy classes form a torsor for $H^1(G,V)$, and the stabilizer of a lift under this conjugation is $H^0(G,V)$ as an additive group.
+
+For a fixed multiplication table and residual action, deciding existence is a finite linear problem over $k$. A solution $b$ is a positive certificate. A linear functional $\lambda$ on normalized $2$-cochains with
+\[
+ \lambda\circ\delta=0,\qquad \lambda(c_A)\ne0
+\]
+is a negative certificate.
+\end{proposition}
+\begin{proof}
+If $b_0$ is one solution, every other solution is $b_0+z$ with $\delta z=0$. Conjugating the matrices by $I+p^nX$ replaces $b(g)$ by $b(g)+X-g\cdot X$. These are exactly the negatives of the usual $0$-coboundaries and yield the same quotient subgroup. Conjugation fixes the action precisely when $X$ is invariant. The cochain spaces have dimensions $(|G|-1)d^2$ and $(|G|-1)^2d^2$. Gaussian elimination decides whether $-c_A$ is in the image of $\delta$. If it is not, elementary linear algebra supplies a functional annihilating that image but not $c_A$.
+\end{proof}
+
+This is an actual obstruction to realizing the finer group action, not merely failure of a selected invariant to commute with coefficient change. The repair changes matrices within their prescribed residue classes and keeps the coefficient unit. It does not take a quotient of the coefficient theory.
+
+\subsection{A vanishing exchange cone can miss nonliftability}
+
+\begin{theorem}[A central sign hides the obstruction from derived invariants]\label{thm:blind-exchange}
+Let $p$ be odd, $R=\mathbb Z/p^2$, and let $J\in M_d(\mathbb Z)$ be invertible modulo $p$. On $M=R^d$ let
+\[
+ G=C_p\times C_2=\langle\sigma,\tau\rangle,
+ \qquad \sigma\mapsto I+pJ,\quad \tau\mapsto-I.
+\]
+For the canonical comparison of \cref{thm:lifted-input-exchange},
+\[
+ \Gamma_R(M)\simeq0,
+ \qquad \Gamma_k(M\otimes_R^{\mathbf L}k)\simeq0,
+ \qquad \Cofib(\beta_{R,k,M})\simeq0.
+\]
+Nevertheless this representation does not lift to $\mathbb Z/p^3$, and hence does not lift as a finite free $\mathbb Z_p$-representation of this fixed group.
+\end{theorem}
+\begin{proof}
+The two displayed matrices commute and satisfy the defining relations. Since $2$ is invertible in $R$, the central orthogonal idempotents
+\[
+ e_+=(1+\tau)/2,\qquad e_-=(1-\tau)/2
+\]
+split $R[G]$ into a product of rings. The trivial module $R$ is in the plus factor and $M$ in the minus factor. Every derived Hom between the two factors is zero, as is seen by resolving within either direct factor. The same decomposition persists after reduction to $k$. Since $M$ is free over $R$, its derived reduction is its ordinary reduction. Both endpoints of $\beta$ therefore vanish.
+
+Any lift of this $G$-action would restrict to a lift of its $C_p$-action. By \cref{thm:one-step-group-lift}, each lift of $I+pJ$ has $p$th power $I+p^2J\ne I$ modulo $p^3$. This is impossible.
+\end{proof}
+
+The example refutes sufficiency of the single $\Gamma$-comparison test in the finite-group class. It does not merely leave the converse unproved. The loss is a loss of detection: a functor can see none of an input while the input still has inconsistent lifting relations. In contrast, conjugation by $-I$ is trivial on $\operatorname{End}_k(k^d)$, so the adjoint relation obstruction is not hidden by this sign. Twisting by the integral sign character also restores the earlier nonzero exchange example. Neither observation asserts that a finite family of such probe comparisons classifies all lifting obstructions.
+
+\subsection{Quadratic correction of an approximate action}
+
+Let $N=|G|$ and write $e=v_p(N)$. For a matrix $X$ over $\mathbb Q_p$, the assertion $v_p(X)\geq a$ means every entry lies in $p^a\mathbb Z_p$. Invertible integral matrices and their inverses preserve this divisibility under multiplication. Let $A:G\to\operatorname{GL}_d(\mathbb Z_p)$ be a normalized map, not necessarily a homomorphism. Define
+\[
+ E(g,h)=A_gA_hA_{gh}^{-1}-I,
+ \qquad \alpha_g(X)=A_gXA_g^{-1}.
+\]
+Suppose $E(g,h)\in p^mM_d(\mathbb Z_p)$ for every pair. The operators $\alpha_g$ are not assumed to give a group action. This distinction is essential before the repair has succeeded.
+
+\begin{lemma}[Averaged correction with controlled precision loss]\label{lem:quadratic-repair}
+If $m>e$, define in $M_d(\mathbb Q_p)$
+\[
+ b(g)=\frac1N\sum_{t\in G}E(g,t),\qquad
+ A'_g=(I-b(g))A_g.
+\]
+Then $b(g)\in p^{m-e}M_d(\mathbb Z_p)$, $b(1)=0$, and $A'$ is a normalized map into $\operatorname{GL}_d(\mathbb Z_p)$. Its defect satisfies
+\[
+ \boxed{A'_gA'_h(A'_{gh})^{-1}-I\in
+ p^{2m-2e}M_d(\mathbb Z_p).}
+\]
+Also $A'_g-A_g\in p^{m-e}M_d(\mathbb Z_p)$.
+\end{lemma}
+\begin{proof}
+Division by $N=p^eu$, $u\in\mathbb Z_p^\times$, loses at most $e$ digits, proving the bound on $b$. Normalization gives $b(1)=0$. Because $m-e\geq1$, each $I-b(g)$ is invertible.
+
+Associativity gives an identity without assuming an exact adjoint action:
+\[
+ (I+E(g,h))(I+E(gh,t))
+ = (I+\alpha_g E(h,t))(I+E(g,ht)).
+\]
+Consequently
+\[
+ E(g,h)+E(gh,t)-\alpha_g E(h,t)-E(g,ht)
+ \in p^{2m}M_d(\mathbb Z_p).
+\]
+Sum over $t$ and divide by $N$. The permutation $t\mapsto ht$ identifies the last average with $b(g)$, giving
+\[
+ E(g,h)-b(g)-\alpha_g b(h)+b(gh)
+ \in p^{2m-e}M_d(\mathbb Z_p).
+\]
+Put $a=m-e>0$. The repaired multiplicativity product is exactly
+\[
+ (I-b(g))(I-\alpha_g b(h))(I+E(g,h))(I-b(gh))^{-1}.
+\]
+Modulo $p^{2a}$ its difference from $I$ is the linear expression just displayed: products of two corrections vanish at that precision, and $(I-b)^{-1}\equiv I+b\pmod{p^{2a}}$. That expression is divisible by $p^{2m-e}$, which is contained in $p^{2a}$. This proves the new defect bound. The change in $A_g$ is $-b(g)A_g$ and has the asserted precision.
+\end{proof}
+
+This proof exhibits the residual as input to a repair operator. The correction is admissible because its denominators are absorbed by the defect's valuation. It requires no prior integral action and does not delete any module or coefficient information.
+
+\begin{theorem}[Convergent finite-group action repair]\label{thm:convergent-action-repair}
+If the initial defect depth satisfies $m>2e$, the preceding averaging operation iterates to a representation
+\[
+ \rho:G\longrightarrow\operatorname{GL}_d(\mathbb Z_p)
+ \quad\text{with}\quad
+ \rho(g)\equiv A_g\pmod{p^{m-e}}.
+\]
+After $j$ iterations the certified defect depth is
+\[
+ m_j=2e+2^j(m-2e),
+\]
+and the next change has depth at least $m_j-e$. In particular, the sequence converges uniformly on $G$ and all prescribed multiplication relations hold exactly in the limit.
+\end{theorem}
+\begin{proof}
+Set $m_0=m$ and $m_{j+1}=2m_j-2e$. Induction gives the displayed formula, so $m_j>2e$ at every stage and $m_j\to\infty$. The correction lemma applies repeatedly. Differences of consecutive matrices have entry valuations tending to infinity, hence their telescoping sums converge in the complete ring $M_d(\mathbb Z_p)$. Every correction preserves reduction modulo $p$, so the limits remain invertible. Their reduction modulo $p^{m-e}$ is the original one.
+
+Matrix multiplication and inversion on $\operatorname{GL}_d(\mathbb Z_p)$ are continuous. The defects converge to zero because their depths are at least $m_j$. Passing to the limit gives $\rho(g)\rho(h)=\rho(gh)$ and $\rho(1)=I$.
+\end{proof}
+
+The recurrence is a quantitative certificate of convergence, not a claim that arbitrary small residuals can always be removed. At $m=2e$ this estimate does not improve the defect depth. We do not assert that the threshold is optimal for every group, rank, or representation.
+
+\subsection{A finite necessary-and-sufficient lifting horizon}
+
+\begin{theorem}[Finite horizon for fixed finite-group representations]\label{thm:finite-action-horizon}
+Let $G$ be a finite group, $d,n\geq1$, and $e=v_p(|G|)$. Set
+\[
+ \boxed{h_G(n)=\max\{n+e,\,2e+1\}.}
+\]
+For every $\rho_n:G\to\operatorname{GL}_d(\mathbb Z/p^n)$, the following are equivalent:
+\begin{enumerate}
+\item There is a representation $\rho:G\to\operatorname{GL}_d(\mathbb Z_p)$ with reduction $\rho_n$.
+\item There is a representation $\rho_h:G\to\operatorname{GL}_d(\mathbb Z/p^{h_G(n)})$ with reduction $\rho_n$.
+\end{enumerate}
+The implication from (2) to (1) is constructive to arbitrary requested precision by \cref{thm:convergent-action-repair}. It preserves the original level $n$, not necessarily every digit of the chosen level-$h$ witness.
+\end{theorem}
+\begin{proof}
+Reduction proves (1) implies (2). Conversely, lift every matrix of $\rho_h$ arbitrarily to an invertible integral matrix, keeping the identity equal to $I$. Its multiplicativity defects are divisible by $p^h$. Since $h>2e$, convergent repair applies and returns an action agreeing with these matrices modulo $p^{h-e}$. Because $h-e\geq n$, it returns precisely the specified $\rho_n$ on reduction.
+\end{proof}
+
+Thus a supplied high-precision action is a finite certificate for existence of an entire integral action. A level-$h$ witness may itself have an obstruction at its next level: the repair is allowed to alter the top $e$ digits while keeping the requested lower data. There is no claim that a positive certificate yields an exact lift of that witness at every digit.
+
+A terminating decision method follows. Begin with $\rho_n$ and use \cref{thm:relation-H2,prop:repair-H1} to enumerate all one-step solutions, retaining their actual framed matrices, until level $h_G(n)$. A surviving branch is a positive witness. If all branches die before that finite level, no integral lift exists. Every layer is finite, and Gaussian elimination provides checkable obstruction certificates at dead nodes. Choosing a single convenient branch is not sufficient for a negative verdict. Quotienting branches by conjugacy is optional and requires preserving their lifting data.
+
+For $p\nmid|G|$, one has $e=0$ and $h_G(n)=n$. Every finite-level representation in this fixed finite-group problem then lifts. When $e>0$, the test is still finite, but its number of branches may be enormous. No polynomial-time or uniformly practical algorithm is claimed.
+
+\begin{example}[A positive witness need not lift itself]\label{ex:horizon-witness}
+Take $p=2$, $G=C_2$, and rank one. The level-two representation with generator $3\pmod4$ has the level-three witness $3\pmod8$, since $3^2\equiv1\pmod8$. Here $e=1$ and $h_G(2)=3$. Nevertheless neither lift of $3\pmod8$ to $\mathbb Z/16$ has square one: both $3^2$ and $11^2$ are $9\pmod{16}$.
+
+Starting with the integer matrix $a_0=3$, the averaged repair becomes
+\[
+ a_{j+1}=\frac{3-a_j^2}{2}\,a_j.
+\]
+The first values are $3,-9,351$, whose relation defects have valuations $3,4,6$. The convergence theorem gives an exact $2$-adic involution congruent to $3\pmod4$. In the integral domain $\mathbb Z_2$, the equation $a^2=1$ has only the solutions $1,-1$. Thus the repaired limit is $-1$, which is $7\pmod8$, not the selected witness $3\pmod8$. This is exactly the distinction between preserving the requested seed and preserving every exploratory refinement.
+\end{example}
+
+\subsection{Controlled uniqueness and a finite catalogue}
+
+\begin{theorem}[Close integral actions are conjugate]\label{thm:close-action-conjugacy}
+Let $\rho,\sigma:G\to\operatorname{GL}_d(\mathbb Z_p)$ be representations satisfying
+\[
+ \sigma(g)\equiv\rho(g)\pmod{p^s}\quad(g\in G),\qquad s>e.
+\]
+Then
+\[
+ T=\frac1{|G|}\sum_{g\in G}\sigma(g)\rho(g)^{-1}
+ \in I+p^{s-e}M_d(\mathbb Z_p)
+\]
+is invertible and satisfies
+\[
+ \sigma(g)T=T\rho(g),\qquad
+ \sigma(g)=T\rho(g)T^{-1}.
+\]
+\end{theorem}
+\begin{proof}
+Every summand is congruent to $I$ modulo $p^s$. Its average is therefore $I$ modulo $p^{s-e}$, so it is integral and invertible. For $h\in G$,
+\[
+ \sigma(h)T\rho(h)^{-1}
+ =\frac1{|G|}\sum_g\sigma(hg)\rho(hg)^{-1}=T,
+\]
+by reindexing the finite sum. This is the required intertwining identity.
+\end{proof}
+
+This is the averaging mechanism underlying finite-precision rigidity of integral finite-group representations, closely related to the classical rigidity of integral finite-group lattices. The proof above is independent of any such external rigidity theorem. The strict inequality matters: for $p=2$, $G=C_2$, and rank one, the trivial and sign representations agree modulo $2$ but are not conjugate. Here $s=e=1$.
+
+\begin{corollary}[A finite catalogue of integral action classes]\label{cor:finite-action-catalogue}
+Let $s=e+1$ and $h=2e+1$. Denote by $\mathscr L_s$ the image of
+\[
+ \operatorname{Hom}(G,\operatorname{GL}_d(\mathbb Z/p^h))
+ \longrightarrow
+ \operatorname{Hom}(G,\operatorname{GL}_d(\mathbb Z/p^s)).
+\]
+Reduction gives a bijection
+\[
+ \boxed{
+ \frac{\operatorname{Hom}(G,\operatorname{GL}_d(\mathbb Z_p))}
+ {\operatorname{GL}_d(\mathbb Z_p)}
+ \ \longleftrightarrow\
+ \frac{\mathscr L_s}{\operatorname{GL}_d(\mathbb Z/p^s)}.}
+\]
+Consequently this class set is finite and can be determined from a finite multiplication table and finite matrix data.
+\end{corollary}
+\begin{proof}
+The finite-horizon theorem gives exactly $h_G(s)=2e+1$, so every element of $\mathscr L_s$ lifts and every integral action reduces into it. If two reductions are conjugate, lift their conjugating matrix to $\operatorname{GL}_d(\mathbb Z_p)$ and first conjugate one action by that lift. Their reductions now agree modulo $p^s$. Since $s>e$, \cref{thm:close-action-conjugacy} makes the integral actions conjugate. The target is finite because it is a quotient of a finite set.
+\end{proof}
+
+This is a classification of isomorphism classes, not an equivalence with a finite groupoid. Integral automorphism groups and noninvertible morphisms need not be determined by finite reduction. Likewise the averaging construction is not asserted to be a canonical framed lift. Two outputs agreeing modulo $p^{m-e}$ are conjugate by a matrix congruent to $I$ modulo $p^{m-2e}$ when $m>2e$, but need not be literally the same matrices.
+
+\subsection{A smaller certificate for cyclic groups}
+
+\begin{proposition}[Cyclic relation Jacobian]\label{prop:cyclic-jacobian}
+Let $G=C_q$ for an integer $q\geq1$, and let $A\in\operatorname{GL}_d(\mathbb Z/p^n)$ satisfy $A^q=I$. Choose a lift $\widetilde A$ modulo $p^{n+1}$ and set
+\[
+ c=\frac{\widetilde A^q-I}{p^n}\pmod p,
+ \qquad L_{\bar A}(B)=\sum_{i=0}^{q-1}\bar A^iB\bar A^{q-1-i}.
+\]
+Then the lifts of the cyclic action to level $n+1$ are exactly the matrices
+\[
+ \widetilde A+p^nB\quad\text{such that}\quad L_{\bar A}(B)=-c.
+\]
+If the affine solution set is nonempty, it has $p^{\dim_k\ker L_{\bar A}}$ elements. This criterion uses $d^2$ variables instead of all group-table cochains.
+\end{proposition}
+\begin{proof}
+Expand the noncommutative product $(\widetilde A+p^nB)^q$. Terms with two or more factors $p^nB$ vanish modulo $p^{n+1}$. The terms with one such factor give exactly $p^nL_{\bar A}(B)$. Therefore the cyclic relation is equivalent to the stated linear equation. All candidate matrices remain invertible because their mod-$p$ reductions are fixed. A nonempty fiber of a linear map over $k$ is a translate of its kernel and has the claimed cardinality.
+\end{proof}
+
+For $A=I+pJ$ modulo $p^2$ and $q=p$, the residual is $c=J$ while $L_I(B)=pB=0$ in $k$. This recovers the one-step obstruction without exhaustive testing. At other inputs the Jacobian may have nonzero rank, so some nonzero initial relation residuals are removable rather than persistent.
+
+\subsection{Why a fixed finite quotient is a real restriction}
+
+\begin{proposition}[A profinite lift need not preserve the finite quotient]\label{prop:profinite-quotient-boundary}
+Let $p$ be odd and $J\in M_d(\mathbb Z_p)$ be invertible modulo $p$. The action $C_p\to\operatorname{GL}_d(\mathbb Z/p^2)$ given by $I+pJ$ has no integral lift as an action of $C_p$. Its pullback along $\mathbb Z_p\twoheadrightarrow C_p$, however, has a continuous integral lift
+\[
+ \rho(x)=(I+pJ)^x
+ =\sum_{j\geq0}\binom{x}{j}p^jJ^j,
+ \qquad x\in\mathbb Z_p.
+\]
+\end{proposition}
+\begin{proof}
+For each $j$, the polynomial $\binom{x}{j}$ is continuous on $\mathbb Z_p$ and takes values there: approximate $x$ by nonnegative integers, where the binomial coefficient is integral, and use closedness of $\mathbb Z_p$ in $\mathbb Q_p$. Thus the series converges uniformly because its $j$th term is divisible by $p^j$. For nonnegative integer arguments it is the usual matrix power. The nonnegative integers are dense in $\mathbb Z_p$, so continuity extends the identity $\rho(x+y)=\rho(x)\rho(y)$ to all pairs. Each value is $I$ modulo $p$ and hence invertible.
+
+Modulo $p^2$ the series is $I+pxJ$, which depends only on $x\bmod p$ and gives the specified finite-level action. But $\rho(p)\equiv I+p^2J\ne I\pmod{p^3}$, so the integral lift does not factor through $C_p$. Nonexistence of an integral $C_p$-lift is \cref{thm:one-step-group-lift}.
+\end{proof}
+
+The same warning applies to finite quotients used in a Galois problem. A relation imposed by fixing one finite quotient may be absent from the full profinite source. Failure to lift through that fixed quotient therefore does not by itself obstruct a continuous lift with growing image. Conversely, the finite-group horizon depends on $v_p(|G|)$ and gives no uniform bound for arbitrary growing finite quotients.
+
+\subsection{What the new block establishes}
+
+There are now three distinct tests. A chosen functor's exchange cone is a necessary diagnostic on its detectable inputs, but the central-sign example shows it is not a complete lifting invariant. The class $o_n(\rho_n)$ is a complete one-step obstruction because its vanishing is proved equivalent to solving the actual multiplicativity equations. Finally, the finite horizon plus convergent correction turns a finite witness into a full $\mathbb Z_p$-action for a fixed finite group. This gives a positive reconstruction theorem without killing the residual in a Verdier quotient.
+
+In the two-axis vocabulary, the resolution fiber is the actual lift groupoid, the transformation direction includes changes of basis, the relation residual is a normalized cocycle, admissible repairs are cochains, and its class in $H^2$ is the obstruction. The averaging theorem then supplies a quantitative regime in which repeated repairs converge. These identifications recover and connect classical deformation and ultrametric-stability mathematics. They do not make the abstract obstruction formalism a proof of automorphic existence or Langlands reciprocity.

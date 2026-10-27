@@ -1,0 +1,77 @@
+\chapter{Exact computation and reproduction}
+\label{app:implementation}
+\input{verification_counts}
+\chapterintro{The computational companion evaluates the finite arithmetic of the construction. It does not stand in for the infinite proofs. This appendix states its contracts, its checks, and its limits.}
+
+\section{A finite representation of each named element}
+An element is stored as a reduced rational and a normalized finite-support tuple of prime residues. The tuple is ordered by prime label, has no repeated labels, and omits zero residues. Use the constructor \texttt{Element.make} to obtain this canonical form. Direct construction enforces the same normalization. Rational inputs must be integers or \texttt{Fraction} values. Residues, prime labels, and multipliers must be integers. Floating-point values are rejected rather than rounded or silently truncated.
+
+The selector is supplied as a callable taking a nonnegative integer $n$ to the Boolean value of $\one_A(n)$. Integer bits zero and one are also accepted. Other return values are rejected. The group object converts a prime label to its index, determines which pair it belongs to, and queries the corresponding selector bit. This is an oracle interface. A finite Python function implements only those selectors for which it can return the correct value. No program in the package claims to compute a noncomputable selector.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}p{0.35\textwidth}X@{}}
+\toprule
+Interface&Contract\\\midrule
+\texttt{Element.make(r, d)}&Normalize a rational and finite torsion data.\\
+\texttt{section\_value(r, p)}&Evaluate one coordinate of the specified section.\\
+\texttt{cocycle(r, t)}&Return the exact finite correction for rational addition.\\
+\texttt{add(x, y)}&Apply the cocycle group law.\\
+\texttt{scale(m, x)}&Integer multiplication by repeated doubling.\\
+\texttt{root(x, m)}&For $m\ge1$, return a root or an obstructing prime.\\
+\texttt{finite\_change\_transport}&Change normal forms when a complete finite difference set is supplied.\\\bottomrule
+\end{tabularx}
+\end{center}
+
+The finite-change transport routine has a global precondition: the selectors differ only at the supplied indices. No finite examination of arbitrary oracle callables can verify that precondition. The executable tests use selectors constructed to satisfy it exactly.
+
+\section{Root construction as an algorithm}
+The proof of Theorem~\ref{thm:rootcertificate} gives the following procedure.
+\begin{enumerate}
+\item Factor the positive integer $m$ and inspect the target coordinates at its prime divisors. If any is nonzero, return that prime as the obstruction.
+\item Divide the rational coordinate by $m$ to obtain a candidate section lift.
+\item Compute the finite residual between the target and $m$ times that lift. Its support is confined to the input torsion support and the denominator primes stated in the proof.
+\item At primes not dividing $m$, divide the residual coordinate by $m$ in the finite field. At primes dividing $m$, the residual is zero. Add this finite correction to the candidate lift.
+\end{enumerate}
+The procedure returns a complete normal-form element. Its certificate is checked by the independently implemented integer multiplication routine. The negative certificate is checked by verifying both $p\mid m$ and a nonzero target coordinate.
+
+Nonpositive or noninteger root multipliers are rejected. The routine does not enumerate all elements of the group. Its finite support bound comes from the theorem. This distinguishes a certified construction from an unbounded search that might fail to terminate when no root exists.
+
+\section{What the tests cover}
+The core suite checks cocycle symmetry, support, and coordinate formulas over a specified finite rational set. It checks the cocycle identity on all triples from that set for eight periodic selector masks. It also tests group identities on reproducibly generated exact elements, root witnesses and obstructions, quotient representatives, marked bit decoding, tail signatures outside explicit exceptions, and finite-change transport.
+
+The supplemental suite checks the monograph's additional calculations. It enumerates entire finite root fibers and verifies their cardinalities. It checks explicit diagonal endomorphisms against coordinate multiplication and addition, and reproduces the worked sixth-root, torsion-root, and coordinate-change examples.
+
+The verification run passed \BaseAssertions{} core assertions, \ExtraAssertions{} supplemental assertions, and \ReleaseAssertions{} release-regression assertions, for a total of \AllAssertions{} exact finite assertions. Seven named mathematical negative controls reject the false simplifications below. The release suite additionally checks malformed-input rejection, normal-form normalization, and diagonal automorphism inversion. Run reports record the executed source hashes and parameters.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}p{0.39\textwidth}X@{}}
+\toprule
+False simplification rejected&Reason for rejection\\\midrule
+Omit the cocycle&Twice the half-lift can differ from $u_A$ at prime $2$.\\
+Every rational division lifts&A nonzero divisor-prime coordinate obstructs a root.\\
+Reuse coordinates after a selector change&The same pair may represent a different ambient element.\\
+Discard torsion correction in a root&A pure torsion target may need a nonzero finite correction.\\
+Use $C_m$ for every integer quotient&Prime powers collapse to $C_{\rad(m)}$.\\
+Allow a zero root multiplier&The root contract requires a positive integer.\\
+Treat rational diagonal representatives as a ring embedding&Exceptional denominator coordinates can destroy multiplicativity of a chosen section.\\\bottomrule
+\end{tabularx}
+\end{center}
+
+These checks exercise intended failure mechanisms. They are not a random test of historical originality or an attempt to compute a halting oracle. The universal results about all selectors, isomorphism classes, and Turing degrees are supported by the printed proofs.
+
+\section{Reproduction commands}
+Python 3.10 or later is sufficient for the exact arithmetic. From the package root, run
+\begin{lstlisting}
+python src/dense_lift_groups.py
+python src/exact_checks.py --output verification/local_core.json
+python src/supplemental_checks.py --output verification/local_extra.json
+python src/release_checks.py --output verification/local_release.json
+\end{lstlisting}
+The tests use only the standard library. Matplotlib is needed only to regenerate the vector figures:
+\begin{lstlisting}
+python src/make_figures.py
+\end{lstlisting}
+Rebuild the monograph with \texttt{python build.py}. The README lists the required TeX packages. Once dependencies are installed, the build uses no network access. The package retains the editable manuscript, figures, tests, theorem map, and original research archives.
+
+\section{Verification boundary}
+No Lean compilation was performed. Appendix B is a formalization plan, not a certificate. The infinite classification, noncomputability, and grammar-escape results rest on the printed proofs. Finite arithmetic tests and typesetting checks support the implementation and publication, not those universal conclusions. The verification records distinguish these forms of evidence.

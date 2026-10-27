@@ -1,0 +1,199 @@
+\section{Constructing semantic exchange diagrams}\label{sec:strict-semantics}
+
+The coherent diagram in \cref{thm:ideal-residual} was an input. We now construct it for a concrete enhanced realization of the typed pure grammar. This does not strictify arbitrary higher-categorical exchange data.
+
+\begin{definition}[Strict chain-natural realization]\label{def:strict-chain-realization}
+Fix a finite resolution chain $r_0\le\cdots\le r_b$. At each level choose a category $\mathcal E_j$ of complexes and a functor $L_j:\mathcal E_j\to\mathcal S_j$ into a stable $\infty$-category. A model example is bounded complexes of finitely generated projective modules mapping to their derived category. Specify chain-level functors
+\[
+ C_j:\mathcal E_j\to\mathcal E_{j-1},\qquad
+ T_{i,j}:\mathcal E_j\to\mathcal E_j,
+\]
+which induce exact functors in the chosen stable realizations, and strict natural transformations
+\[
+ \chi_{i,j}:T_{i,j-1}C_j\Longrightarrow C_jT_{i,j}
+ \qquad(1\le j\le b).
+\]
+The components of $\chi$ are actual chain maps and their naturality squares commute as chain maps. Functor composition and whiskering are taken in the ordinary strict 2-category of these models.
+\end{definition}
+
+Coarsening symbols occur in their fixed order $C_1,\ldots,C_b$. A transformation symbol with exactly $j$ coarsening symbols to its left is interpreted as $T_{i,j}$. Hence every reachable word represents a functor from $\mathcal E_b$ to $\mathcal E_0$. Moving $T_i$ across $C_j$ reindexes its level rather than creating a new untyped symbol. No rule in this subsection contracts coarsenings or introduces a new exchange relation.
+
+\begin{theorem}[Strict semantic realization of the event diagram]\label{thm:strict-event-realization}
+For a typed pure word $W$ in a strict chain-natural realization and a seed $s\in\mathcal E_b$, evaluation gives a functor
+\[
+ X_W:NJ(P_W)\longrightarrow\mathcal S_0.
+\]
+Its vertices evaluate the reachable words and its cover arrows evaluate the whiskered exchange maps. Thus the residual diagram in \cref{thm:ideal-residual} is constructed, rather than assumed, for this class of realizations.
+\end{theorem}
+
+\begin{proof}
+First work in the ordinary category of functors $\mathcal E_b\to\mathcal E_0$ and natural transformations. Assign to a rewrite edge its exchange transformation, whiskered by the surrounding word. Two simultaneously enabled swaps are disjoint. The two composites around their diamond are equal by the interchange law for natural transformations. This equality uses strict naturality, not invertibility of $\chi$.
+
+For ideals $I\subseteq J$, two paths adding the events in $J\setminus I$ are linear extensions of that interval's induced event order. The argument of \cref{lem:linear-extension-swaps} connects them by adjacent interchanges of incomparable events. Each interchange is one of the commuting diamonds just checked. Hence all such paths induce the same natural transformation. Evaluation therefore factors through the thin category $J(P_W)$.
+
+Evaluate this ordinary functor on $s$, take its nerve, and compose with $L_0$. An ordinary functor gives all simplices of its nerve, so the output is a coherent diagram, not merely a diagram in a homotopy category. The prescribed vertices and edges are unchanged by this construction.
+\end{proof}
+
+\begin{remark}[Scope of coherence]
+Strict models are sufficient, not necessary. This theorem does not infer strict naturality from a collection of commuting squares in a homotopy category. Arbitrary weak exchange cells, additional rewrite relations, and higher reindexing coherence still need their own realization theorem. For the fixed pure grammar, however, no independent braid relation is needed: the only changes of history exchange disjoint events.
+\end{remark}
+
+\section{Interaction residuals and event reconstruction}\label{sec:interaction-reconstruction}
+
+An exchange square can commute coherently while changing the residual of one event after another event is performed. The appropriate measurement is a second cofiber. It measures failure of excision, not failure of commutativity.
+
+\subsection{The interaction of two exchanges}
+
+Let a specified coherent square in a stable $\infty$-category $\mathcal S$ be
+\[
+\begin{tikzcd}
+ A \arrow[r,"u"] \arrow[d,"v"'] & B \arrow[d,"v'"]\\
+ C \arrow[r,"u'"'] & D.
+\end{tikzcd}
+\]
+Write $E=\Cofib(u)$ and $E'=\Cofib(u')$. The square induces $E\to E'$.
+
+\begin{definition}[Interaction residual]\label{def:interaction-residual}
+The interaction residual of this specified square is
+\[
+ \Theta=\Cofib\bigl(\Cofib(A\to B)\longrightarrow
+                         \Cofib(C\to D)\bigr).
+\]
+The specified square, including its coherent homotopy, is part of the input.
+\end{definition}
+
+\begin{theorem}[Interaction is the total cofiber]\label{thm:interaction-cofiber}
+There are natural equivalences
+\[
+ \Theta\simeq\Cofib\bigl(B\amalg_A C\longrightarrow D\bigr)
+ \simeq\Cofib\bigl(\Cofib(A\to C)\longrightarrow
+                         \Cofib(B\to D)\bigr).
+\]
+Consequently $\Theta\simeq0$ if and only if the square is a homotopy pushout, equivalently a homotopy pullback. An exact functor preserves these equivalences.
+\end{theorem}
+
+\begin{proof}
+Cofibers are pushouts along maps to zero. Interchanging the finite colimits in the two successive pushout constructions identifies the first expression with the cofiber of the map from the punctured-square colimit $B\amalg_A C$ to $D$. Performing the same construction in the other coordinate gives the second expression. These identifications arise from the universal properties of the same finite diagrams and are natural in the given square.
+
+A map in a stable category has zero cofiber exactly when it is an equivalence. Thus vanishing says precisely that the punctured-square colimit maps equivalently to $D$. Stability identifies pushout squares with pullback squares. Exact functors preserve zero objects and these finite colimits.
+\end{proof}
+
+In a chain model, interchanging coordinates includes the usual graded signs. The theorem is a natural equivalence, not an assertion that differently ordered cone matrices are literally identical. The cone conventions are recorded in \cite{StacksCones}; the finite-colimit argument supplies the enhanced statement used here.
+
+\subsection{An event's residual before and after unrelated events}
+
+Fix a finite poset $P$ and a coherent diagram $X:NJ(P)\to\mathcal S$. For $e\in P$, put
+\[
+ D_e=\{p\in P:p<e\},\qquad
+ \downarrow e=D_e\cup\{e\}.
+\]
+The eligible contexts for $e$ form the interval of ideals
+\[
+ \mathcal A_e=\{I\in J(P):D_e\subseteq I,\ e\notin I\}.
+\]
+Its initial object is $D_e$. Define the residual functor on this interval by
+\[
+ E_e(I)=\Cofib(X_I\to X_{I\cup\{e\}}).
+\]
+For incomparable events $e,f$ enabled at $I$, write $\Theta_{e,f}(I)$ for the interaction residual of their elementary square.
+
+\begin{theorem}[Criterion for context-independent event residuals]\label{thm:event-context-invariance}
+The following conditions are equivalent.
+\begin{enumerate}
+\item Every elementary independent-event square of $X$ is a homotopy pushout.
+\item Every $\Theta_{e,f}(I)$ vanishes.
+\item For each event $e$, the natural comparison
+\[
+ \operatorname{const}_{\mathcal A_e}E_e(D_e)\longrightarrow E_e
+\]
+is an equivalence of diagrams.
+\end{enumerate}
+In this regime the successive cofibers of every normalization history are the event-labelled objects
+\[
+ d_e:=\Cofib(X_{D_e}\to X_{\downarrow e}),
+\]
+listed in the order in which that history performs the events. Their labels and equivalence classes are independent of context, but their ordering and extension data need not disappear.
+\end{theorem}
+
+\begin{proof}
+The equivalence of (1) and (2) is \cref{thm:interaction-cofiber}. A cover in $\mathcal A_e$ adds an event $f$ incomparable with $e$. Indeed, predecessors of $e$ already lie in $I$, while a successor of $e$ cannot belong to an ideal omitting $e$. On this cover the map of event residuals has cofiber $\Theta_{e,f}(I)$. Condition (2) therefore makes every cover map an equivalence. Any inclusion in the finite interval factors into covers. The comparisons from its initial object consequently give the objectwise, hence diagrammatic, equivalence in (3).
+
+Conversely, (3) makes every cover comparison of event residuals an equivalence, so its cofiber vanishes. The final statement follows by restricting the residual diagram to a maximal chain and applying the same comparison to each enabled event.
+\end{proof}
+
+\subsection{Reconstructing the full diagram from principal ideals}
+
+The preceding criterion gives more than a common list of residuals. It makes the diagram recoverable from its values on the individual events together with their predecessors.
+
+\begin{lemma}[Elementary excision implies ideal excision]\label{lem:ideal-excision}
+If every elementary independent-event square of $X:NJ(P)\to\mathcal S$ is a homotopy pushout, then for all ideals $I,J$ the square
+\[
+\begin{tikzcd}
+ X_{I\cap J}\arrow[r]\arrow[d] &X_I\arrow[d]\\
+ X_J\arrow[r]&X_{I\cup J}
+\end{tikzcd}
+\]
+is a homotopy pushout.
+\end{lemma}
+
+\begin{proof}
+Elements of $I\setminus J$ and $J\setminus I$ are pairwise incomparable across the two sets. If $p\in I\setminus J$ satisfied $p\le q\in J\setminus I$, downward closure of $J$ would imply $p\in J$, a contradiction. The reverse comparison is excluded similarly.
+
+Choose linear extensions for both exclusive sets, beginning from $I\cap J$. Adjoining their successive initial segments gives a rectangular grid of ideals. Each cell adjoins one enabled event from each side and is an elementary independent-event square. It is a pushout by hypothesis. Repeated pasting of pushout squares gives the outer square displayed above. Empty exclusive sets give identity squares and cause no exception.
+\end{proof}
+
+\begin{theorem}[Principal-ideal reconstruction]\label{thm:principal-reconstruction}
+Let $P$ be finite and $\mathcal S$ stable. Write $\operatorname{Exc}_0(J(P),\mathcal S)$ for the full subcategory of coherent diagrams $F:NJ(P)\to\mathcal S$ such that $F(\varnothing)\simeq0$ and every elementary independent-event square is a homotopy pushout. Restriction along
+\[
+ j:P\longrightarrow J(P),\qquad e\longmapsto\downarrow e
+\]
+induces an equivalence
+\[
+ \operatorname{Exc}_0(J(P),\mathcal S)
+ \simeq\operatorname{Fun}(NP,\mathcal S).
+\]
+Its inverse sends $G:NP\to\mathcal S$ to
+\[
+ (j_!G)(I)=\colim_{e\in I}G(e),
+ \qquad (j_!G)(\varnothing)=0.
+\]
+All colimits are finite. In particular, for an excisive event diagram $X$ its reduced residual diagram satisfies
+\[
+ \boxed{\mathcal F_X(I)\simeq
+ \colim_{e\in I}\mathcal F_X(\downarrow e).}
+\]
+\end{theorem}
+
+\begin{proof}
+The displayed formula is the pointwise left Kan extension along $j$. It follows directly from the colimit universal property: maps from $j_!G$ to $F$ are the same as compatible maps $G(e)\to F(\downarrow e)$. For a principal ideal $\downarrow e$, its indexing poset has terminal object $e$, so $(j_!G)(\downarrow e)\simeq G(e)$.
+
+For arbitrary ideals $I,J$, every chain in $I\cup J$ lies wholly in $I$ or wholly in $J$. Its maximal element lies in one ideal and all its predecessors lie there too. Hence the nerve of their union is the union of their nerves along the intersection. Cocones on $G|_{I\cup J}$ are precisely compatible cocones on $G|_I$ and $G|_J$. The resulting colimit is the pushout of the two colimits over the colimit on $I\cap J$. Thus $j_!G$ is reduced and excisive.
+
+Now let $F$ be reduced and excisive. We prove the counit $j_!j^*F\to F$ is an equivalence on an ideal $I$ by induction on $|I|$. The empty ideal is the zero object on both sides. Choose a maximal element $e\in I$. Put $I'=I\setminus\{e\}$. Then
+\[
+ I=I'\cup\downarrow e,\qquad I'\cap\downarrow e=D_e.
+\]
+The ideal-excision lemma expresses $F(I)$ as the pushout of $F(I')$ and $F(\downarrow e)$ over $F(D_e)$. The same holds for $j_!j^*F$. Induction handles $I'$ and $D_e$, and the terminal-object observation handles $\downarrow e$. Therefore the counit is an equivalence at $I$. The unit and counit prove the asserted equivalence of functor categories, including natural transformations.
+
+Finally, the total-cofiber construction is exact on square diagrams. Applied to the cofiber sequence of diagrams $\operatorname{const}X_{\varnothing}\to X\to\mathcal F_X$, it shows that the elementary total cofibers of $X$ and $\mathcal F_X$ agree, since a constant square has zero total cofiber. Thus $\mathcal F_X$ is reduced and excisive, and the first part applies.
+\end{proof}
+
+This is finite-poset reconstruction by left Kan extension and excision. It is a theorem about the specified event diagram, not the missing arithmetic globalization theorem K15. Its general categorical ingredients are standard, and no historical novelty claim is made.
+
+\begin{corollary}[Independent events split, dependencies retain extensions]\label{cor:independent-splitting}
+Under \cref{thm:principal-reconstruction}, if $P$ is an antichain then
+\[
+ \mathcal F_X(P)\simeq\bigoplus_{e\in P}d_e.
+\]
+For a general event poset, a direct-sum formula does not follow.
+\end{corollary}
+
+\begin{proof}
+For an antichain, each principal ideal is a singleton, $D_e=\varnothing$, and a finite colimit over the discrete poset is a finite direct sum. For the negative statement, take $P$ to be a two-element chain and a reduced diagram in $\operatorname{Perf}(\mathbb Z)$
+\[
+ 0\longrightarrow\mathbb Z/p\xrightarrow{\,p\,}\mathbb Z/p^2
+\]
+for a prime $p$, where the second map sends the class of $x$ to the class of $px$. Both successive cofibers are $\mathbb Z/p$ in degree zero, but the terminal object is not $\mathbb Z/p\oplus\mathbb Z/p$: the latter is annihilated by $p$ and the former is not. There are no independent-event squares in a chain, so excision holds without imposing a split extension. This diagram is also the residual diagram of $\mathbb Z\xrightarrow{p}\mathbb Z\xrightarrow{p}\mathbb Z$.
+\end{proof}
+
+The replacement for ordered-filtration independence is therefore now explicit: the event poset controls which attachments depend on earlier events, excision controls independence from unrelated events, and the principal-ideal diagram retains the extension data needed for reconstruction.

@@ -1,0 +1,86 @@
+\chapter{Theorem map and formalization interfaces}
+\label{app:formal}
+\chapterintro{The logical dependencies are explicit enough to support a modular formalization. The interfaces below record what each stage must actually prove and what it may not silently assume.}
+
+\section{The proof dependencies}
+\begin{figure}[htbp]
+\centering\includegraphics[width=\textwidth]{\figfile{08_proof_dependencies.pdf}}
+\caption{Principal dependencies of the proof development. The finite arithmetic checks are not nodes from which the infinite theorems are inferred. Effective results require their own oracle and presentation semantics after the algebraic construction has been established.}
+\end{figure}
+
+The early direct-sum family can be formalized independently of the common-completion construction. Its key ingredients are coordinate projections, prime-order torsion, and the Chinese remainder theorem. The main family then needs a quotient model for $P/D$, a proof of unique divisibility, and a rational-line preimage.
+
+A concrete normal-form model and an ambient preimage model should both be retained. The former supports executable arithmetic. The latter makes the completion and purity arguments transparent. Their equivalence is Theorem~\ref{thm:normalform} together with the cocycle law.
+
+\section{Statement registry}
+\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.16\textwidth}>{\raggedright\arraybackslash}p{0.45\textwidth}>{\raggedright\arraybackslash}p{0.31\textwidth}@{}}
+\toprule
+Statement&Conclusion&Key dependency\\\midrule
+\endfirsthead
+\toprule Statement&Conclusion&Key dependency\\\midrule\endhead
+\ref{thm:reach}&An inaccessible packet obstructs generation.&Typed block-support condition.\\
+\ref{thm:torP}&$\Tor(P)=D$, and $D$ is dense.&Distinct prime coordinates.\\
+\ref{thm:endD}&All endomorphisms of $D$ are diagonal.&Prime annihilators.\\
+\ref{thm:rankD}&$D$ has infinite endomorphism-seed rank.&Finite support.\\
+\ref{thm:procyclic}&$P$ is topologically cyclic.&Chinese remainder theorem.\\
+\ref{thm:Dcompletion}&$\widehat D=P$.&Cofinal finite coordinate kernels.\\
+\ref{thm:Vrational}&$P/D$ is a rational vector space.&Unique integer division modulo $D$.\\
+\ref{thm:subD}&$\Sub(D)\cong\mathcal P(\N)$.&Coordinate isolation by CRT.\\
+\ref{thm:spectrumce}&Computable copies of $D_B$ correspond to enumerable selectors.&Prime-order witness searches.\\
+\ref{thm:unary}&Unary selector groups correspond to ultimately periodic sets.&Finite-state orbit.\\
+\ref{thm:purecorrespondence}&Pure intermediate groups are rational preimages.&Finite adjustment at divisor primes.\\
+\ref{thm:generalquotients}&All preimages $H_W$ have completion $P$.&Purity and finite-target exponent.\\
+\ref{thm:finitehom}&Restriction preserves all maps to finite targets.&Finite coordinate factorization.\\
+\ref{thm:normalform}&$G_A$ has unique $(r,d)$ names.&Nonzero rational line.\\
+\ref{thm:cocyclesupport}&Each cocycle value has controlled finite support.&Reduction outside denominator primes.\\
+\ref{thm:cocyclelaw}&The normal forms form the actual group $G_A$.&Cocycle identity.\\
+\ref{thm:cocyclebit}&A cocycle value reads one selector coordinate.&The chosen section at one prime.\\
+\ref{thm:rootcertificate}&A root or a prime obstruction is constructible.&Finite residual correction.\\
+\ref{thm:rootfiber}&A nonempty root fiber has $\rad(m)$ elements.&The prime-coordinate kernel.\\
+\ref{thm:quotientformula}&$G_A/mG_A=C_{\rad(m)}$.&Root kernel and finite surjectivity.\\
+\ref{thm:tailsignature}&Every nontorsion element has the same tail signature.&Finite numerator, denominator, and support exceptions.\\
+\ref{thm:isoclass}&$G_A\cong G_B$ iff $A\eqfin B$.&Intrinsic divisibility and finite transport.\\
+\ref{thm:allhom}&Every homomorphism is a diagonal multiplier.&The quotients $G_A/pG_A$.\\
+\ref{thm:homobstruction}&Different eventual classes admit only torsion-image maps.&One selected prime per pair.\\
+\ref{thm:endGA}&Exact endomorphism-ring description.&Diagonal action on the rational line.\\
+\ref{thm:rankGA}&Every $G_A$ has infinite seed rank.&Infinitely many omitted unselected coordinates.\\
+\ref{thm:degree}&An oracle computes a copy iff it computes $A$.&Cocycle evaluation and complementary root searches.\\
+\ref{thm:nodecoder}&No recovery from the unmarked quotient system.&Two nonisomorphic common-completion groups.\\
+\ref{thm:faithful}&Completion is faithful but not full on the paired family.&Finite separation and the torsion-image obstruction.\\
+\ref{thm:rankonereflection}&Completion reflects isomorphisms between paired-prime groups.&Diagonal units and the exact source category.\\
+\ref{thm:escape}&Continuum many groups escape a fixed countable grammar.&Repeated diagonal disagreement.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{A staged formalization plan}
+\subsection{The algebraic ambient layer}
+Represent prime-indexed factors using finite additive groups. Construct the direct sum, the direct product, the canonical inclusion, and the quotient. Prove that a product vector is torsion exactly when it has finite support. The proof that multiplication by a positive integer is bijective on the quotient must retain the finite exceptional set of prime divisors.
+
+Only after unique divisibility is proved should the rational module structure be installed. A declaration that merely assumes a rational vector space equivalent to the quotient would bypass the first structural theorem.
+
+\subsection{The section and cocycle layer}
+Define reduced rational section coordinates with an explicit branch for denominator primes. Establish the finite support bound before treating the cocycle as an element of the direct sum. Prove the normalized cocycle identity and the equivalence between normal forms and the rational-line preimage.
+
+A finite-vector implementation alone does not prove that its values coincide with the intended infinite-coordinate section. The coordinate identity is the essential bridge.
+
+\subsection{Root, quotient, and completion layer}
+Formalize both directions of the integer-root criterion. The constructive direction should expose the finite correction, so the certificate theorem can be reused. The quotient theorem requires surjectivity of the coordinate map, not only a kernel calculation.
+
+For profinite completion, prove cofinality among all finite-index normal subgroups using the finite-target exponent. A proof about a selected inverse system is not yet a proof that it is the full profinite completion.
+
+\subsection{Classification and morphism layer}
+Define the tail signature with a finite exceptional prime set. The isomorphism theorem must return eventual equality, not literal equality. The converse should include the actual finite-change normal-form map.
+
+The homomorphism theorem should derive diagonal action from $G_A/pG_A\cong C_p$ rather than assume diagonal operators at the start. This distinction is what makes the full-endomorphism seed obstruction stronger than a restricted-grammar example. The completion interfaces must also distinguish the subcategory consisting only of the groups $G_A$ from the larger category that includes $D$. Reflection of isomorphisms holds in the former and fails in the latter.
+
+\subsection{Effective layer}
+The oracle theorem requires a formal notion of a computable group copy, enumeration of candidate roots, and dovetailing of the two searches. The unmarked implication must explicitly quantify over the chosen name of a nontorsion element and a finite exception bound. It must not assert a uniform procedure for obtaining those constants.
+
+Algebraic formalization does not automatically verify this effective semantics. Conversely, a program that computes normal-form addition for several masks does not establish the universal oracle criterion.
+
+\section{Negative statement tests}
+A future formal development should reject the following strengthened statements under the current hypotheses: finite endomorphism-seed generation of $D$, universal root existence in $G_A$, replacement of $C_{\rad(m)}$ by $C_m$, literal unmarked selector recovery, splitting of the rational extension, and recovery of the original group from the unmarked finite-quotient system alone.
+
+These tests should fail for the intended mathematical reason. An unrelated missing import is not a successful negative control. None of these proposed formal controls is represented as already executed in Lean.

@@ -1,0 +1,364 @@
+\section{Intrinsic arithmetic exchange and certified lifting}\label{sec:intrinsic-exchange}
+
+The weighted comparisons of \cref{thm:weighted-adic-exchange} leave a concrete question open: can a nonzero defect arise from the arithmetic functors themselves? This section gives two answers and keeps their categorical regimes separate. Ordinary invariants against reduction have a first-cohomology defect. Fully derived invariants against a perfect coefficient change commute. Against a specified nonperfect coefficient change they can fail even as exact functors, with a non-scalar representation and no weight inserted into the comparison.
+
+Throughout the lattice part, fix a prime $p$, write $O=\mathbb Z_p$ and $O_n=O/p^nO$, and take $n\geq1$. A lattice means a finite free $O$-module. The exponent in $Q[p^n]$ denotes annihilation by $p^n$, not a quotient. We distinguish a residual module, a selected element of that module obstructing a particular lift, and a cone in a specified derived category.
+
+\subsection{A natural kernel--reduction comparison}
+
+For a map $d:V\to W$ of lattices, put
+\[
+ K=\ker d,\qquad Q=\operatorname{coker}d,\qquad
+ K_n=\ker(d\otimes_O O_n).
+\]
+The module $K$ is saturated in $V$: if $p^n v\in K$, then $p^n d(v)=0$ in the torsion-free module $W$, so $v\in K$. It is therefore a finite free direct summand as an $O$-module, although a splitting is not canonical. Reduction supplies a natural injection $\alpha_n:K/p^nK\to K_n$.
+
+\begin{theorem}[Intrinsic kernel exchange and its boundary]\label{thm:kernel-bockstein}
+There is a natural short exact sequence
+\[
+ \boxed{0\longrightarrow K/p^nK\xrightarrow{\alpha_n}K_n
+ \xrightarrow{\delta_n}Q[p^n]\longrightarrow0.}
+\]
+For $\bar v\in K_n$, choose a lift $v\in V$. Since $d(v)\in p^nW$, set
+\[
+ \delta_n(\bar v)=\left[\frac{d(v)}{p^n}\right]\in Q.
+\]
+This formula is independent of the lift. For $m\geq n$, ordinary reduction $r_{m,n}:K_m\to K_n$ satisfies
+\[
+ \boxed{\delta_n r_{m,n}=p^{m-n}\delta_m.}
+\]
+Consequently the cokernel of the natural comparison $\alpha_n$ is $Q[p^n]$, with these specified transition maps. Its cone, viewing both modules in degree zero in $D(O_n)$, is canonically equivalent to that cokernel in degree zero.
+\end{theorem}
+\begin{proof}
+If $v$ is replaced by $v+p^n u$, the displayed quotient changes by $d(u)$, which is zero in $Q$. Moreover $p^n[d(v)/p^n]=[d(v)]=0$. If the class vanishes, write $d(v)/p^n=d(u)$ and replace $v$ by $v-p^n u\in K$. This proves exactness at $K_n$. Conversely, if $[w]\in Q[p^n]$, there is $v\in V$ with $p^n w=d(v)$, so $\bar v\in K_n$ maps to $[w]$. Saturation proves injectivity of $\alpha_n$.
+
+For the transition formula, use the same lift $v$ to represent an element first at level $m$ and then at level $n$. The quotients obey $d(v)/p^n=p^{m-n}d(v)/p^m$. Functoriality for a commuting square between two maps $d$ follows from this same formula. Finally the cone of an injection between degree-zero modules has just its cokernel in degree zero.
+\end{proof}
+
+This is a direct coefficient-boundary argument, not a new general homological-algebra principle. The modules on the two sides need not be perfect over $O_n$. The operation of taking a kernel is not an exact functor on arbitrary short exact sequences. Thus this theorem by itself does not instantiate the earlier exact-endofunctor assertions.
+
+\subsection{The exact amount of additional resolution needed}
+
+Choose Smith data for $d$ over the discrete valuation ring $O$. After invertible row and column operations its nonzero entries are $p^{a_1},\ldots,p^{a_r}$, with $a_i\geq0$. Units have been absorbed into the basis changes. Let
+\[
+ h=\max\{a_1,\ldots,a_r,0\}.
+\]
+Equivalently, $h$ is the least integer with $p^h Q_{\mathrm{tors}}=0$. If $Q_{\mathrm{tors}}=0$, set $h=0$.
+
+\begin{theorem}[Residual profile and sharp finite-resolution lifting]\label{thm:precision-window}
+Let $v=\operatorname{rank}_O V$. Then
+\[
+ Q[p^n]\cong\bigoplus_{i=1}^r O/p^{\min(a_i,n)}O,
+ \qquad
+ \ell_O(K_n)=n(v-r)+\sum_{i=1}^r\min(a_i,n).
+\]
+The splittings require chosen Smith bases and are not canonical. For every $n\geq1$,
+\[
+ \boxed{\operatorname{im}(K_{n+h}\longrightarrow K_n)
+       =\operatorname{im}(K/p^nK\longrightarrow K_n).}
+\]
+Thus a particular solution at precision $n$ is the reduction of an exact $p$-adic solution if and only if it lifts, for the same fixed map $d$, to precision $n+h$. No smaller nonnegative delay works uniformly for all $n$ when $h>0$.
+
+The residual system $(Q[p^n],p^{m-n})$ is pro-zero, and
+\[
+ K\xrightarrow{\sim}\varprojlim_n K_n.
+\]
+Here pro-zero means that for each target level some later transition is the zero map. It does not mean that the individual residual modules vanish.
+\end{theorem}
+\begin{proof}
+In Smith coordinates a nonzero diagonal entry imposes $p^{a_i}x_i=0$ modulo $p^n$, giving $\min(a_i,n)$ units of $O$-length. Each of the $v-r$ zero columns contributes a free $O_n$ coordinate. This proves the formulas.
+
+By \cref{thm:kernel-bockstein}, the image of an element of $K_{n+h}$ has boundary $p^h\delta_{n+h}=0$, so lies in the image of $K/p^nK$. The reverse inclusion follows by reducing any exact lift at level $n+h$.
+
+If $c<h$, choose an element of exact order $p^h$ in $Q_{\mathrm{tors}}$ and take $n\geq h$. Surjectivity of $\delta_{n+c}$ supplies a preimage. Its reduction to level $n$ has nonzero boundary after multiplication by $p^c$, so it is not the reduction of an exact solution. This proves sharpness. Multiplication by $p^h$ also makes every transition with gap at least $h$ zero on residuals.
+
+Finally a compatible family of vectors modulo $p^n$ has a unique lift to $V$, since $V$ is finite free and complete. If every reduction solves the equation, its image under $d$ lies in $\bigcap_n p^nW=0$. This proves the inverse-limit assertion directly, without interchanging an arbitrary kernel and an unspecified completion.
+\end{proof}
+
+\begin{remark}[What a finite certificate must contain]
+For integer input matrices, a verified integer Smith decomposition gives the $p$-adic data by taking the valuations of its nonzero diagonal entries. Verification requires the two change-of-basis matrices to be unimodular and their product with $d$ to equal the displayed diagonal matrix. For arbitrary $p$-adic entries, a finite truncation alone does not certify a claimed zero diagonal entry or an exact rank. Such a claim requires an exact input presentation or a separate rank certificate. The theorem does not supply a universal numerical decision procedure from unbounded-precision oracles.
+\end{remark}
+
+\subsection{Symmetry provides the comparison without imposed weights}
+
+Let $G$ be a finite group acting $O$-linearly on a lattice $M$. The natural comparison is
+\[
+ \alpha_{G,n}:M^G/p^nM^G\longrightarrow(M/p^nM)^G.
+\]
+The first path takes invariant vectors and then reduces. The second reduces the representation and then takes invariant vectors. Its direction is fixed by reduction of an invariant vector; no arbitrary scalar enters this map.
+
+\begin{theorem}[Cohomological identification of the symmetry residual]\label{thm:invariant-bockstein}
+There is a natural exact sequence
+\[
+ \boxed{0\longrightarrow M^G/p^nM^G\longrightarrow(M/p^nM)^G
+ \xrightarrow{\partial_n}H^1(G,M)[p^n]\longrightarrow0.}
+\]
+For a fixed residue class $\bar m$ and a lift $m\in M$, the obstruction is represented by the crossed homomorphism
+\[
+ c_{\bar m}(g)=\frac{gm-m}{p^n}.
+\]
+It vanishes exactly when $\bar m$ has a $G$-invariant lift in $M$. The group $H^1(G,M)$ is finite and killed by $|G|$. In particular it is killed by $p^e$, where $e=v_p(|G|)$, and the delay $e$ is a valid uniform lifting bound.
+
+More precisely, for
+\[
+ d_G:M\longrightarrow\prod_{g\in G}M,\qquad
+ d_G(m)=(gm-m)_g,
+\]
+the torsion subgroup of $\operatorname{coker}d_G$ is canonically $H^1(G,M)$. Therefore the sharp bound is computed by \cref{thm:precision-window}, and can be strictly smaller than $e$.
+\end{theorem}
+\begin{proof}
+The formula for $c$ satisfies $c(gh)=g c(h)+c(g)$, because this identity holds before division by $p^n$ in the torsion-free module $M$. Changing $m$ by $p^n b$ changes $c$ by $g b-b$. Hence it defines a cohomology class. The usual long exact coefficient sequence gives the displayed short sequence, but it can also be proved directly. If $p^n[c]=0$, there is $m\in M$ with $p^n c(g)=gm-m$. Its reduction is invariant and maps to $[c]$. If $[c]=0$, write $c(g)=g b-b$ and observe that $m-p^n b$ is the required invariant lift. Saturation gives injectivity on the left.
+
+For completeness, let $c:G\to M$ be a cocycle and $b=\sum_{g\in G}c(g)$. For $u\in G$,
+\[
+ ub=b-|G|c(u),\qquad |G|c(u)=u(-b)-(-b).
+\]
+Thus $|G|[c]=0$. The cocycle and coboundary modules are subquotients of finite free $O$-modules, so $H^1$ is finitely generated and hence finite when annihilated by this nonzero integer.
+
+Write $d^1(c)(g,u)=g c(u)-c(gu)+c(g)$. If a class $[c]$ in $\operatorname{coker}d_G$ is torsion, then $p^a c=d_G(m)$ for some $a$. Applying $d^1$ gives $p^a d^1(c)=0$, whence $d^1(c)=0$ since the target is torsion-free. Thus its class lies in $H^1$. Conversely the preceding annihilation argument shows that every $H^1$ class is torsion. This proves the canonical identification and the sharp-bound assertion.
+\end{proof}
+
+The long exact sequence, explicit boundary, and cyclic-group cohomology used here are classical. Our conventions agree with \cite[Chapter II, 1.9, 1.18--1.21]{MilneCFT2020}. The proof above is included to fix naturality, the coefficient regime, and the transition maps. If $p$ does not divide $|G|$, all these residuals vanish. Divisibility of the group order alone does not imply a nonzero residual: the trivial action on a lattice has $H^1(G,M)=0$.
+
+\subsection{Lifting transformations, not just invariant vectors}
+
+\begin{theorem}[Certified lifting of equivariant maps]\label{thm:intertwiner-lifting}
+Let $L$ and $M$ be $G$-lattices and put
+\[
+ V=\operatorname{Hom}_O(L,M),\qquad
+ (g\cdot f)=\rho_M(g)f\rho_L(g)^{-1}.
+\]
+Then
+\[
+ \begin{split}
+ 0\longrightarrow&\operatorname{Hom}_{O[G]}(L,M)/p^n
+ \longrightarrow\operatorname{Hom}_{O_n[G]}(L/p^nL,M/p^nM)\\
+ \longrightarrow&H^1(G,V)[p^n]\longrightarrow0
+ \end{split}
+\]
+is exact and natural. A modular equivariant map lifts to an integral equivariant map if and only if its boundary class vanishes. If $p^h$ annihilates the $p$-primary cohomology as in \cref{thm:precision-window}, this is equivalent to lifting the same map equivariantly to precision $n+h$.
+
+If $L$ and $M$ have the same rank and the given modular map is invertible, every integral lift supplied in this way is an isomorphism. Thus existence of a $G$-equivariant isomorphism at precision $n+h$ implies existence of an integral one whose reduction at precision $n$ is the specified map. The coarser bound $v_p(|G|)$ is always valid.
+\end{theorem}
+\begin{proof}
+Finite freeness identifies $V/p^nV$ with the full module of linear maps between the reduced lattices. Its $G$-invariants are exactly the equivariant maps. Apply \cref{thm:invariant-bockstein,thm:precision-window}. Explicitly, for a lift $\widetilde f$ the boundary cocycle is
+\[
+ g\longmapsto\frac{\rho_M(g)\widetilde f\rho_L(g)^{-1}-\widetilde f}{p^n}.
+\]
+If this is $g\cdot b-b$, then $\widetilde f-p^n b$ is an integral equivariant lift. In the equal-rank case its determinant is a unit because it is a unit modulo $p$. Its inverse is integral and equivariant. No chosen modular intertwiner is replaced silently by another at the target precision.
+\end{proof}
+
+The theorem concerns two already supplied lattices with an actual action of the same finite group. It does not construct a Galois representation, provide a finite quotient for an arbitrary profinite action, or produce an automorphic representation. It addresses a concrete transformation-lifting obligation once those inputs exist.
+
+\subsection{A non-scalar family with a sharp obstruction lifespan}
+
+Let $m\geq2$, and put
+\[
+ N_m(t)=1+t+\cdots+t^{m-1},\qquad
+ M_m=O[t]/(N_m(t)).
+\]
+This is free of rank $m-1$. Let a generator $\sigma$ of $C_m$ act by multiplication by $t$. Since $(t-1)N_m(t)=t^m-1$, this is a genuine cyclic-group action.
+
+\begin{theorem}[Norm-quotient lattice and transient invariants]\label{thm:norm-quotient}
+For this action,
+\[
+ M_m^{C_m}=0,\qquad
+ H^1(C_m,M_m)\cong O/mO.
+\]
+Consequently, with $a=v_p(m)$,
+\[
+ (M_m/p^nM_m)^{C_m}\cong O/p^{\min(a,n)}O.
+\]
+Under the boundary identification with $(O/mO)[p^n]$, reduction from level $s$ to level $n$ is multiplication by $p^{s-n}$. For $a>0$ the sharp uniform delay is $a$. Every nonzero finite invariant fails to lift integrally, although the action itself is defined over $O$.
+\end{theorem}
+\begin{proof}
+The operator $\sigma-1$ is multiplication by $t-1$. Its cokernel is $O/(N_m(1))=O/mO$. Over $\mathbb Q_p$, the element $t-1$ is invertible modulo $N_m(t)$ because $N_m(1)=m\ne0$. Hence its kernel over $O$ is zero. The norm operator is multiplication by $N_m(t)$ and therefore zero on $M_m$.
+
+For a cyclic group, a crossed homomorphism is determined by $c(\sigma)=x$ with norm zero, and a coboundary has $x=(\sigma-1)y$. This gives $H^1=\ker N/(\sigma-1)M_m=O/mO$ directly, agreeing with \cite[Chapter II, 1.20]{MilneCFT2020}. The remaining assertions follow from the preceding theorems.
+\end{proof}
+
+For $p=m=3$, in the basis $1,t$,
+\[
+ A=\begin{pmatrix}0&-1\\1&-1\end{pmatrix},\qquad
+ A^3=I,\qquad \det(A-I)=3.
+\]
+The fixed vectors modulo $3^n$ are exactly
+\[
+ \left\{b\,3^{n-1}\binom{1}{-1}:b\in\{0,1,2\}\right\}.
+\]
+The three vectors at level $n+1$ all reduce to zero at level $n$. Thus a nonzero residual appears at every level, while its inverse system has zero limit. This is not persistent nonexistence of the lattice; it is the failure of a particular finite-level vector to be the reduction of an invariant integral vector.
+
+\section{Fully derived exchange: a positive theorem and an exact counterexample}\label{sec:derived-invariant-exchange}
+
+\subsection{The comparison and its direction}
+
+For a commutative ring $R$, a finite group $G$, and $M\in D(R[G])$, define
+\[
+ \Gamma_R(M)=\mathbf R\operatorname{Hom}_{R[G]}(R,M)\in D(R).
+\]
+This is the derived invariant functor. Derived categories in this section are the enhanced unbounded derived categories. They are stable. Their exact functors preserve finite cofiber sequences but are not asserted to preserve every infinite limit or colimit.
+
+For a ring map $R\to S$ there is a canonical comparison
+\[
+ \boxed{\beta_{R,S,M}:\Gamma_R(M)\otimes_R^{\mathbf L}S
+ \longrightarrow\Gamma_S(M\otimes_R^{\mathbf L}S).}
+\]
+It is adjoint to base change of the evaluation map from the object of homotopy invariants, regarded as carrying the trivial group action, to $M$. Its construction is natural in $M$ and uses the actual coefficient map. No exchange weight is selected.
+
+This direction is reduction-after-invariants to invariants-after-reduction. It is the reverse of the optional $A_rC\to CA_s$ convention used for some earlier signatures. We use the direction supplied by the arithmetic comparison, not an unproved inverse. No earlier orientation-dependent normalization theorem is applied without changing its signature explicitly.
+
+A two-fiber exact model can be written entirely with endofunctors: set
+\[
+ \mathcal K_R=D(R[G])\times D(R),\qquad
+ A_R(M,N)=(0,\Gamma_R(M)),
+\]
+and let $C_{R,S}$ apply derived coefficient change in both components. The second component of $C_{R,S}A_R\to A_SC_{R,S}$ is precisely $\beta$. This places the example in a genuine two-axis exact system, rather than identifying differently typed functors by notation. A fixed ambient universe is understood. A small stable subdiagram can instead be generated by the stated inputs and their images, without making a claim that all outputs are perfect.
+
+\begin{theorem}[Perfect coefficient changes have zero derived exchange defect]\label{thm:perfect-invariant-exchange}
+If $S$ is perfect as an $R$-module, then $\beta_{R,S,M}$ is an equivalence for every $M\in D(R[G])$. In particular, reduction $\mathbb Z_p\to\mathbb Z/p^n$ commutes with fully derived invariants.
+\end{theorem}
+\begin{proof}
+For a complex $P\in D(R)$ with trivial $G$-action, evaluation defines a natural comparison
+\[
+ \Gamma_R(M)\otimes_R^{\mathbf L}P
+ \longrightarrow\Gamma_R(M\otimes_R^{\mathbf L}P).
+\]
+Both sides are exact functors of $P$. The right side is exact because homotopy invariants preserve finite limits, and finite limits agree with finite colimits in stable categories. The comparison is the identity for $P=R$. The class of $P$ on which it is an equivalence is closed under finite cofibers, shifts, and retracts, hence contains $\operatorname{Perf}(R)=\operatorname{Thick}(R)$. For $P=S$, the right side has its natural $S$-module structure and is the stated derived invariant object over $S$.
+
+Finally $\mathbb Z/p^n$ has the two-term finite free resolution $[\mathbb Z_p\xrightarrow{p^n}\mathbb Z_p]$. It is perfect over $\mathbb Z_p$. This uses the ordinary derived tensor construction, not termwise tensor of an arbitrary unbounded non-K-flat complex \cite{StacksDerivedTensor}.
+\end{proof}
+
+For a lattice the earlier nonzero $H^1[p^n]$ therefore records the effect of extracting degree-zero invariants, not a failure of this fully derived comparison over $\mathbb Z_p$. This positive theorem rules out a tempting but incorrect source of a new exact residual. It also gives an information-preserving way to handle that particular truncation defect: retain derived invariant data rather than require degree-zero invariants to commute with reduction.
+
+\subsection{A natural non-scalar defect at finite arithmetic resolution}
+
+The perfectness hypothesis cannot be removed. Fix an odd prime $p$, let
+\[
+ R=\mathbb Z/p^2,\qquad k=\mathbb F_p,\qquad G=C_p,
+\]
+and choose a matrix $J\in M_d(\mathbb Z)$ whose reduction modulo $p$ is invertible. Put $M=R^d$ and let the chosen generator act by
+\[
+ A=I+pJ\pmod{p^2}.
+\]
+For $d=2$, the choice $J=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$ makes this action non-scalar. It mixes the two coordinates. The group action is input, but the exchange map remains the canonical $\beta$, not a scalar multiple of another comparison.
+
+\begin{theorem}[Unbounded intrinsic derived exchange defect]\label{thm:nonflat-invariant-exchange}
+For the preceding data, $A^p=I$ and the norm is $N=I+A+\cdots+A^{p-1}=pI$. Moreover,
+\[
+ \Gamma_R(M)\simeq pM[0]\cong k^d[0].
+\]
+Let $U=\Gamma_R(M)\otimes_R^{\mathbf L}k$ and $V=\Gamma_k(M\otimes_R^{\mathbf L}k)$. Their cohomology is
+\[
+ H^i(U)\cong\begin{cases}k^d&i\leq0,\\0&i>0,\end{cases}
+ \qquad
+ H^i(V)\cong\begin{cases}0&i<0,\\k^d&i\geq0.\end{cases}
+\]
+The natural comparison $\beta:U\to V$ is zero on $H^0$. Its functor-intrinsic cofiber satisfies
+\[
+ \boxed{H^i\Cofib(\beta)\cong k^d\quad\text{for every }i\in\mathbb Z.}
+\]
+Both composites defining $\beta$ are exact. The nonzero residual is therefore a genuine defect between fully derived exact functors, not solely a degree-zero truncation effect.
+\end{theorem}
+\begin{proof}
+The binomial expansion gives $(I+pJ)^p=I$ modulo $p^2$. Also $A^i=I+ipJ$ modulo $p^2$, so
+\[
+ N=pI+p\frac{p(p-1)}2J=pI\pmod{p^2},
+\]
+using that $p$ is odd. The standard cyclic free resolution of the trivial $R[G]$-module gives the cochain complex
+\[
+ M\xrightarrow{pJ}M\xrightarrow{pI}M
+ \xrightarrow{pJ}M\xrightarrow{pI}\cdots
+\]
+in nonnegative degrees. The cyclic resolution is obtained from the integral one, whose exact sequences split as abelian groups, so it remains a free resolution after coefficient change. Its alternating difference and norm maps agree with \cite[Chapter II, 1.20 and 3.4]{MilneCFT2020}.
+
+Since $J$ is invertible over $R$, each displayed differential has image and kernel $pM$. All positive cohomology vanishes and $H^0=pM$. Inclusion of that kernel in degree zero is a quasi-isomorphism $pM[0]\to\Gamma_R(M)$.
+
+The $R$-module $k$ has an infinite free resolution, in nonpositive cochain degrees, with each differential multiplication by $p$. It is exact because $\ker(p:R\to R)=pR=\operatorname{im}(p)$. Tensoring this bounded-above free resolution with $k$ gives zero differentials. Since $pM\cong k^d$, this computes $H^i(U)$ as claimed.
+
+On the other side $M$ is free over $R$, so $M\otimes_R^{\mathbf L}k=k^d[0]$. Its action is trivial. In the cyclic cochain resolution over $k$, both $A-I$ and the norm are zero. This gives the displayed cohomology of $V$.
+
+The evaluation map on degree-zero invariants is the inclusion $pM\hookrightarrow M$. On tensoring with $k$ its degree-zero map is zero. Evaluation on $H^0(V)=(k^d)^G=k^d$ is an isomorphism. Naturality of evaluation defining $\beta$ therefore proves $H^0(\beta)=0$. The long exact cohomology sequence of its cofiber now gives $k^d$ in every degree: the groups in negative degrees come from $H^{i+1}(U)$, those in positive degrees from $H^i(V)$, and the two middle groups use the zero degree-zero comparison.
+
+Exactness of derived coefficient change and derived invariants proves exactness of both composites. Their canonical natural transformation has a functorial cofiber in the stable enhancement. No illicit termwise tensor of the nonnegative invariant complex is used in computing $U$.
+\end{proof}
+
+\begin{example}[The two-dimensional $\mathbb Z/9$ instance]\label{ex:nine-invariants}
+Take
+\[
+ R=\mathbb Z/9,\qquad
+ A=\begin{pmatrix}1&3\\3&1\end{pmatrix},\qquad G=C_3.
+\]
+Then $A^3=I$ over $R$, $I+A+A^2=3I$, and $M^G=3M$. The invariant cochain complex is quasi-isomorphic to $(\mathbb F_3)^2$ in degree zero. Derived reduction of that invariant object has cohomology in every nonpositive degree, whereas taking derived invariants after reduction has cohomology in every nonnegative degree. The comparison cone has $(\mathbb F_3)^2$ in every degree. Ordinary tensor of the original nonnegative complex would incorrectly reproduce only the right-hand answer.
+\end{example}
+
+\begin{corollary}[Erasing this residual loses the coefficient unit]\label{cor:intrinsic-unit-loss}
+Let $\Delta=\Cofib(\beta)$ in \cref{thm:nonflat-invariant-exchange}. Any exact functor out of $D(k)$ that annihilates $\Delta$ annihilates every perfect $k$-complex. If that functor also preserves all coproducts, it annihilates every object of $D(k)$.
+\end{corollary}
+\begin{proof}
+Every complex of vector spaces admits a generally noncanonical splitting into its cohomology and contractible pieces, obtained by choosing complements to boundaries inside cycles and to cycles inside each degree. Since $H^0(\Delta)=k^d\ne0$, the unit $k[0]$ is a retract of $\Delta$ in $D(k)$. Exact functors preserve retracts, finite sums, shifts, and cofibers, so annihilating $\Delta$ annihilates $\operatorname{Thick}(k)=\operatorname{Perf}(k)$. If coproducts are preserved, every split complex is a coproduct of shifts of vector spaces and every vector space is a coproduct of copies of $k$. This proves the stronger conclusion.
+\end{proof}
+
+Thus exactness alone does not make the comparison invertible, and existence of its cofiber does not make a quotient repair harmless. The arithmetic coefficient module $k$ is not perfect over $R$. Also $\Gamma_R(M)\simeq k^d$ is not perfect over $R$, and the resulting residual is unbounded over $k$. These facts explain exactly why neither the preceding perfect-base-change theorem nor a blanket perfect-fiber model applies.
+
+\subsection{Finite-level validity does not provide a finer action}
+
+\begin{theorem}[A one-step representation-lifting obstruction]\label{thm:one-step-group-lift}
+In \cref{thm:nonflat-invariant-exchange}, the representation of $C_p$ on $(\mathbb Z/p^2)^d$ has no lift to a representation on $(\mathbb Z/p^3)^d$ with that reduction. More explicitly, every matrix lift $\widetilde A$ obeys
+\[
+ \boxed{\widetilde A^p-I\equiv p^2J\not\equiv0\pmod{p^3}.}
+\]
+This obstruction is unchanged by the choice of the lift. There is also no finite free $\mathbb Z_p$-representation with this reduction, even up to isomorphism of the reduced representation.
+\end{theorem}
+\begin{proof}
+Every lift has the form $I+pJ+p^2B$ modulo $p^3$. Put $X=pJ+p^2B$ and use the binomial identity for $I+X$. The linear term is $pX=p^2J$ modulo $p^3$. For $2\leq j<p$, the coefficient $\binom pj$ is divisible by $p$ and $X^j$ by $p^j$, so those terms vanish modulo $p^3$. The last term $X^p$ also vanishes because $p\geq3$. Since $J$ is invertible modulo $p$, the surviving term is nonzero. Hence the relation $\sigma^p=1$ cannot hold at the next precision.
+
+A $\mathbb Z_p$-lift would reduce to such a level-three lift, which is impossible. Finally an invertible change of basis modulo $p^2$ lifts to an invertible matrix modulo $p^3$. Conjugating by that lift reduces an alleged representation lifting only up to isomorphism to the already refuted matrix-lifting problem.
+\end{proof}
+
+This is a concrete relation obstruction for a prescribed deformation problem. It is not asserted to classify arbitrary deformation obstructions or to identify the entire unbounded exchange cone with an $H^2$ obstruction group. In contrast, the norm-quotient actions in \cref{thm:norm-quotient} genuinely exist over $\mathbb Z_p$ at all precisions, even though some of their finite-level invariant vectors do not lift. These are different failures.
+
+
+\subsection{Exact preservation on coefficient-lifted inputs}
+
+The preceding negative result has a complementary positive theorem. A coefficient quotient may be nonperfect over an intermediate ring, yet the canonical exchange can be exact on inputs that genuinely come from an earlier coefficient level.
+
+\begin{theorem}[Lifted-input exchange and a necessary obstruction to lifting]\label{thm:lifted-input-exchange}
+Let $O\to R\to S$ be maps of commutative rings. Assume $R$ and $S$ are perfect as $O$-modules. For every $N\in D(O[G])$, put $M=N\otimes_O^{\mathbf L}R$. Then
+\[
+ \boxed{\beta_{R,S,M}:\Gamma_R(M)\otimes_R^{\mathbf L}S
+ \xrightarrow{\sim}\Gamma_S(M\otimes_R^{\mathbf L}S).}
+\]
+No perfectness of $S$ over $R$ is required. Consequently, if $\Cofib(\beta_{R,S,M})$ is nonzero, there is no $N\in D(O[G])$ together with an equivalence $N\otimes_O^{\mathbf L}R\simeq M$.
+
+For $O=\mathbb Z_p$, $R=\mathbb Z/p^m$, and $S=\mathbb Z/p^n$ with $m\geq n\geq1$, this applies at every pair of levels. It applies in particular to reductions of a supplied integral $G$-lattice.
+\end{theorem}
+\begin{proof}
+The canonical base-change comparisons obey transitivity. After the tensor associativities, the composite
+\[
+ \begin{split}
+ \Gamma_O(N)\otimes_O^{\mathbf L}S
+ &\xrightarrow{\beta_{O,R,N}\otimes_R S}
+ \Gamma_R(N\otimes_O^{\mathbf L}R)\otimes_R^{\mathbf L}S\\
+ &\xrightarrow{\beta_{R,S,M}}
+ \Gamma_S(N\otimes_O^{\mathbf L}S)
+ \end{split}
+\]
+is $\beta_{O,S,N}$. To check this equality with its natural coherence, take the adjoints defining the comparisons: both are base change of the same evaluation map from homotopy invariants to $N$. The coefficient extension adjunctions compose by derived tensor associativity. Their mates therefore agree. No arbitrary homotopy-category cone is chosen in this argument.
+
+By \cref{thm:perfect-invariant-exchange}, $\beta_{O,R,N}$ and $\beta_{O,S,N}$ are equivalences. Tensoring preserves an equivalence, so the two-out-of-three property proves that $\beta_{R,S,M}$ is an equivalence. Naturality makes the conclusion invariant under a specified equivalence between $M$ and a lifted object. The obstruction assertion is the contrapositive. For the arithmetic specialization, both quotients have two-term finite free resolutions over $\mathbb Z_p$.
+\end{proof}
+
+The cofiber of $\beta_{R,S,-}$ is an exact functor. Its vanishing class is therefore thick and contains every coefficient-lifted input, as well as the thick closure of those inputs. The example in \cref{thm:nonflat-invariant-exchange} lies outside that class. This is a functor-intrinsic necessary lifting obstruction, not merely a failed scalar equality.
+
+The converse is not claimed. Vanishing of this one obstruction does not prove that an integral representation exists, nor does it discharge all group relations or higher deformation obstructions. The positive theorem preserves information on the class with supplied lifts; it is not a procedure that manufactures missing lifts or repairs arbitrary nonliftable objects.
+
+\subsection{The resulting boundary of the arithmetic calculus}
+
+There are now four precisely separated regimes.
+\begin{enumerate}
+\item For a supplied integral lattice, ordinary invariants and reduction can differ. The residual is $H^1[p^n]$, and a finite amount of additional precision detects and repairs liftability of a specified vector or intertwiner without taking a destructive quotient.
+\item For a perfect coefficient change, fully derived invariants and reduction agree. Passing to derived data resolves the degree-zero truncation problem in this regime.
+\item A supplied coefficient lift over a common ring makes the intermediate comparison exact when the two coefficient quotients are perfect over that common ring. Nonvanishing of the comparison cone is therefore a necessary obstruction to such a lift.
+\item For the exhibited nonperfect change $\mathbb Z/p^2\to\mathbb F_p$, the fully derived canonical exchange itself has a nonzero, unbounded cofiber. Killing that cofiber destroys the target's perfect coefficient theory. Its input representation also fails to extend one coefficient level further.
+\end{enumerate}
+These statements close the next intrinsic-exchange test bed in specified arithmetic settings. They do not establish that every such defect has a non-destructive repair. They also do not close unrestricted resolution-tower existence or the Langlands-facing globalization condition. A useful next problem is to prove a sufficient intrinsic criterion for assembling a compatible tower of representations from finite-level inputs, accounting explicitly for the remaining relation and deformation obstructions. Vanishing of the comparison cone alone has not been shown sufficient. Any repair must retain both the coefficient unit and the relevant representation data.
