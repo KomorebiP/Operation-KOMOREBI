@@ -1,0 +1,55 @@
+\subsection{A complete factorization test on attained representations}
+\label{sec:attained-recovery}
+
+The collision obstruction of Theorem~\ref{res:7:3} has a converse. It gives a complete test for exact task recovery at the level of sets. Write $\operatorname{im}C=C(\mathscr A)$ for the attained output set. A decoder is required on this set and nowhere else.
+
+\begin{theorem}[Attained factorization and unique decoding]
+\label{res:new:factorization}
+For $C:\mathscr A\to\mathcal R$ and $q:\mathscr A\to Y$, the following are equivalent:
+\[
+\begin{aligned}
+ &\exists d:\operatorname{im}C\to Y\quad
+       \forall a\in\mathscr A,\quad q(a)=d(C(a)),\\
+ &\forall a,b\in\mathscr A,\quad C(a)=C(b)\Longrightarrow q(a)=q(b).
+\end{aligned}
+\]
+When a decoder exists it is unique on $\operatorname{im}C$. Otherwise there are two archives with the same encoding and different task answers.
+\end{theorem}
+\begin{proof}
+A decoder applied to equal encodings gives equal answers. Conversely, for an attained value $r$, choose $a$ with $C(a)=r$ and define $d(r)=q(a)$. Constancy on each fiber makes the value independent of the choice. At $r=C(a)$ it gives the required answer. Any other decoder must give that same answer at every attained value, proving uniqueness. Negating fiber constancy supplies the pair in the last statement. The construction is set theoretic and uses classical choice in the Lean implementation. It does not provide an efficient decoder for arbitrary infinite archive classes.
+\end{proof}
+
+\begin{example}[The empty-domain boundary]
+\label{res:new:empty-decoder}
+Take $\mathscr A=\varnothing$, $\mathcal R=\{*\}$, and $Y=\varnothing$. There is one encoding and one task on the empty archive class. The attained set is empty, so its empty decoder exists. There is no total decoder $\{*\}\to\varnothing$. Thus attained decoding and decoding on the entire output type are not equivalent without an additional hypothesis.
+\end{example}
+
+The earlier formal definition \path{ProofPath.Sufficient} asks for a total decoder. It is retained for compatibility and was not false, but it was stronger than the manuscript's stated domain convention. The new namespace \path{ProofPath.Recovery} matches the manuscript exactly. It proves that total decoding implies attained decoding, and that the two are equivalent whenever the answer type is nonempty. In the latter case choose one default answer for unattained outputs. The empty-domain example is also kernel checked.
+
+The finite Python interface \path{factor_task} takes an explicitly declared table of archive encodings and a task table on the identical domain. It returns either a decoder table or two archive identifiers witnessing a collision. Its verifier checks the proposed result directly, including the empty domain, missing outputs, extra unattained entries, and contradictory records. The table strings are exact identifiers and answers, not a semantic equality procedure for arbitrary mathematical expressions. The existing retention-based \path{task_sufficient} function remains a different, narrower task model.
+
+\subsection{The least information for a family of tasks}
+\label{sec:joint-recovery}
+
+Suppose tasks $q_i:\mathscr A\to Y_i$ are indexed by $i\in I$. Their joint representation is
+\[
+ Q(a)=(q_i(a))_{i\in I}.
+\]
+It records every distinction asked for by the task family and makes no demand to recover the entire source archive.
+
+\begin{theorem}[Joint task representation and compositional recovery]
+\label{res:new:joint}
+An encoding $C$ is sufficient for every $q_i$ if and only if it is sufficient for $Q$. In particular every sufficient encoding recovers the joint representation on attained values, while $Q$ itself recovers each task by projection.
+
+If a representation $R$ is recoverable from $C$, then every task recoverable from $R$ is recoverable from $C$. Recovery of representations is reflexive and transitive.
+\end{theorem}
+\begin{proof}
+If $Q$ factors through $C$, each coordinate factors by projection. Conversely, equal values of $C$ give equal values of every $q_i$. Function extensionality gives equal joint vectors, and Theorem~\ref{res:new:factorization} supplies the joint decoder. This argument allows a different answer type for each task and also covers an empty task family.
+
+For the second assertion, write $R=\pi\circ C$ and $q=d\circ R$ on their attained sets. Then $q=(d\circ\pi)\circ C$. The identity decoder proves reflexivity, and composition of two recovery maps proves transitivity. All maps are applied only to outputs in their declared domains.
+\end{proof}
+
+The word least concerns retained distinctions, not bytes, running time, or the cognitive cost of reading an archive. Two archives are identified by $Q$ precisely when every declared task gives the same answer on them. Any sufficient representation may retain more, but it cannot identify archives that $Q$ distinguishes. For a finite archive family, the reference implementation labels these joint-answer classes and checks that every task is constant within a class. Costs remain a separate optimization problem.
+
+This result also completes the formal justification of the recovery condition in Section~\ref{sec:old20}. A refinement that reconstructs only the final theorem need not preserve the joint tasks of audit and discovery. A refinement with a checked recovery map for the preceding representation does preserve them. The distinction is between a longer proof and a genuinely more informative archive, not between short and long documents in general.
+

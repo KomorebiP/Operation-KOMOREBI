@@ -1,0 +1,246 @@
+--- 1.5.0/docs/Proof_Path_Theory.tex
++++ 1.6.0/docs/Proof_Path_Theory.tex
+@@ -12,6 +12,7 @@
+ \usepackage{xcolor,tikz,titlesec,fancyhdr,listings,setspace,needspace,placeins}
+ \usepackage[most]{tcolorbox}
+ \usepackage{etoolbox}
++\usepackage{upquote}
+ \usepackage{xurl}
+ \usepackage{hyperref}
+ \definecolor{KomorebiTeal}{HTML}{285A50}
+@@ -28,7 +29,7 @@
+ \definecolor{KomorebiLine}{HTML}{7A867F}
+ \hypersetup{colorlinks=true,linkcolor=KomorebiTeal,citecolor=KomorebiTeal,urlcolor=KomorebiTeal,
+  pdftitle={Proof Path Theory: Certificates, Compression, Discovery Fields, and Mathematical Memory},
+- pdfauthor={Komorebi P.},pdfsubject={Monograph edition 1.5.0},
++ pdfauthor={Komorebi P.},pdfsubject={Monograph edition 1.6.0},
+  pdfkeywords={proof fields, realization, compression, certificates, mathematical memory}}
+ \graphicspath{{figures/}}
+ \setstretch{1.055}
+@@ -112,7 +113,7 @@
+ \lstset{language=Python,basicstyle=\ttfamily\fontsize{9.5}{11.4}\selectfont,breaklines=true,
+  frame=single,rulecolor=\color{KomorebiPale},backgroundcolor=\color{KomorebiPale!35},
+  framerule=0.4pt,xleftmargin=5pt,xrightmargin=5pt,framexleftmargin=4pt,framexrightmargin=4pt,
+- showstringspaces=false,columns=fullflexible,keepspaces=true,aboveskip=9pt,belowskip=9pt}
++ showstringspaces=false,columns=fullflexible,keepspaces=true,upquote=true,aboveskip=9pt,belowskip=9pt}
+ \newcommand{\openingfigure}[3]{%
+ \begin{figure}[H]\centering
+ \includegraphics[width=\linewidth]{#1}
+@@ -178,7 +179,7 @@
+ \vfill
+ {\sffamily\bfseries\fontsize{11}{14}\selectfont\color{KomorebiInk}Komorebi P.\par}
+ \vspace{6pt}
+-{\sffamily\fontsize{9}{12}\selectfont\color{KomorebiMuted}Monograph edition 1.5.0\quad /\quad 19 October 2026\par}
++{\sffamily\fontsize{9}{12}\selectfont\color{KomorebiMuted}Monograph edition 1.6.0\quad /\quad 19 October 2026\par}
+ \vspace*{3mm}
+ \end{titlepage}
+ \pagenumbering{roman}
+@@ -216,7 +217,7 @@
+ \end{minipage}\hfill
+ \begin{minipage}[t]{0.47\linewidth}
+ {\sffamily\bfseries\color{KomorebiTeal}Evidence in this edition}\par\smallskip
+-The 33 result groups and prior formal sources are retained. This visual edition adds rechecked finite diagrams and a new publication audit. It is not a fresh Lean compilation.
++The 33 result groups and prior formal sources are retained. This edition tightens recovery and provenance claims, corrects the digest helper, and reruns finite checks. It is not a fresh Lean compilation.
+ \end{minipage}
+ 
+ \clearpage
+@@ -327,6 +328,8 @@
+ A node is an admissible leaf when it is a required premise, a declared axiom, or an explicitly admitted external result. Write $L$ for this set, so $A\subseteq L$. A certified justification with no premises can also derive a node, but it remains a justification and need not make that node a member of $L$. The distinction matters when extracting the smallest certificate.
+ \end{definition}
+ 
++Required premises are not necessarily the entire assumption context. Admitted axioms and external results remain visible in the supporting ledger. The notation $A\vdash B$ is relative to that declared background and does not erase those dependencies. A comparison between certificates must retain the assumptions under which each certificate is valid.
++
+ \begin{definition}[Certified subfield]
+ \label{res:3:3}
+ The certified subfield $\Pcal^{\mathrm{cert}}$ contains every node of $\Pcal$ and only those justifications accepted by the declared certification policy. Evidence and scope are part of that policy. A certification flag records acceptance: it is not itself a proof that the rule is sound under an intended mathematical interpretation. That separate soundness contract is made explicit in Section~\ref{sec:old24}.
+@@ -675,6 +678,8 @@
+ 
+ Let $\operatorname{Der}_F$ be the inductively generated set obtained from the leaves by certified rules. For a finite field, repeated forward closure computes this set. It is not necessary to enumerate all valuations to perform that computation.
+ 
++Every declared field of this positive-implication form has a model: the full set $V$. It contains every leaf and every rule conclusion. Nonexistence in the following extension problems therefore concerns prescribed local values or additional preservation requirements, not this unrestricted model space. This does not make every node derivable. Derivability is membership in the least model, not membership in some model.
++
+ \begin{theorem}[Soundness and relative completeness]
+ \label{res:24:1}
+ \label{thm:relative-completeness}
+@@ -732,7 +737,7 @@
+ 
+ 
+ \studyhead{01}{The bridge is a restriction map}
+-For one certified rule $\{a,b\}\to c$ and no required leaves, there are seven global Boolean rule models. Only $(1,1,0)$ violates the implication. On either two-node patch below, the complete support is absent, so all four local valuations are admissible.
++For one certified rule $\{a,b\}\to c$ and no admissible leaves ($L=\varnothing$), there are seven global Boolean rule models. Only $(1,1,0)$ violates the implication. On either two-node patch below, the complete support is absent, so all four local valuations are admissible.
+ 
+ \begin{figure}[H]\centering
+ \includegraphics[width=\linewidth]{fig_16_restriction_bridge.pdf}
+@@ -771,7 +776,7 @@
+ 
+ \begin{example}[Pairwise dependencies do not suffice]
+ \label{res:24:4}
+-Take nodes $a,b,c$, no required leaves, and one certified rule
++Take nodes $a,b,c$, no admissible leaves ($L=\varnothing$), and one certified rule
+ \[
+ \{a,b\}\longrightarrow c.
+ \]
+@@ -1065,7 +1070,7 @@
+ 
+ \begin{definition}[Endpoint equivalence]
+ \label{res:8:1}
+-Two representations are endpoint equivalent when they certify the same declared premises and targets.
++Fix a background theory, an interpretation of claim labels, and an admissible inference policy. Within that context, two representations are endpoint equivalent when they certify the same judgment from the same complete assumption context and requested targets. Required premises and any additional admitted assumptions are accounted for in that context. A comparison across different contexts requires an explicitly specified transport of assumptions and judgments, not merely identical displayed labels.
+ \end{definition}
+ 
+ \begin{definition}[Audit equivalence]
+@@ -1355,17 +1360,17 @@
+ Rearranging gives the first bound. The inequality $(1-1/k)^k\le e^{-1}$ gives the second.
+ \end{proof}
+ 
+-\begin{figure}[htbp]
++\begin{warning}[Arbitrary costs]
++\label{res:14:3}
++For $k=0$, both gains are zero without using the displayed division by $k$. For a budget at least $|C|$, retaining all candidates is optimal. The displayed theorem is the cardinality form of the standard submodular greedy bound \cite{nemhauser}. A gain-per-cost rule for unequal costs is a different algorithm and does not inherit this guarantee. Zero-cost candidates also need an explicit convention.
++\end{warning}
++
++\begin{figure}[p]
+ \centering
+ \includegraphics[width=\linewidth]{fig_08_submodular_greedy.pdf}
+ \caption{Greedy and exact retention coincide on the committed finite instance. The square and circle marks are deliberately overlaid. The general cardinality guarantee is $1-1/e$, not equality with the optimum on every graph.}
+ \label{fig:greedy}
+ \end{figure}
+-
+-\begin{warning}[Arbitrary costs]
+-\label{res:14:3}
+-For $k=0$, both gains are zero without using the displayed division by $k$. For a budget at least $|C|$, retaining all candidates is optimal. The displayed theorem is the cardinality form of the standard submodular greedy bound \cite{nemhauser}. A gain-per-cost rule for unequal costs is a different algorithm and does not inherit this guarantee. Zero-cost candidates also need an explicit convention.
+-\end{warning}
+ 
+ 
+ \monographpart{Revision, review, and inquiry}{Revision and inquiry}{A mathematical archive has a continuing life. Revisions, shared error, and finite checking capacity change its use without changing the standard of proof.}
+@@ -1429,9 +1434,11 @@
+ The theorem is intentionally syntactic. A descendant can survive after rechecking. The affected set says where review is required, not where falsehood is guaranteed.
+ 
+ 
++\FloatBarrier
+ \section{Evidence ledgers and provenance}
+ \label{sec:old16}
+ 
++\Needspace{9\baselineskip}
+ A claim ledger should answer five questions without reconstructing the entire research history.
+ 
+ \begin{enumerate}
+@@ -1456,13 +1463,17 @@
+ 
+ \begin{proposition}[Digest stability]
+ \label{res:16:3}
+-A deterministic canonical serialization gives the same provenance digest for identical records and, except for hash collisions, a different digest after any serialized field changes.
++Fix a deterministic serialization $s$ and a deterministic hash function $h$. Identical serialized byte sequences have identical digests under $h$. Distinct serialized byte sequences have distinct digests unless they form a collision under $h$. Detecting a record change additionally requires that the change alter its serialized bytes.
+ \end{proposition}
+ 
+ \begin{proof}
+-Identical canonical byte sequences have identical images under the deterministic hash function. If two distinct byte sequences have the same hash, they form a collision by definition. Thus the first assertion is unconditional, while the change-detection assertion explicitly excludes that case. No injectivity of a fixed-length hash on arbitrary records is asserted.
+-\end{proof}
+-
++If $s(r)=s(r')$, applying the function $h$ gives equal digests. If $s(r)\ne s(r')$ but $h(s(r))=h(s(r'))$, the two serialized strings form a hash collision by definition. Thus change detection at the record level requires both preservation of the audited distinction by $s$ and exclusion of a collision for the resulting bytes. No injectivity of a fixed-length hash on arbitrary byte strings is asserted.
++\end{proof}
++
++
++The serialization contract must state which fields, types, and distinctions it preserves and which differences it intentionally normalizes. Loss during serialization and a collision during hashing are separate mechanisms.
++
++For example, joining string parts with a separator is ambiguous if the same separator may occur inside a part. The tuples $(\texttt{a|b},\texttt{c})$ and $(\texttt{a},\texttt{b|c})$ both become \texttt{a|b|c}. No hash function can recover the lost tuple boundary. The earlier \path{provenance_digest} helper had this defect with a control-character separator. Python release 1.4.0 replaces that encoding with a versioned, domain-separated JSON array of strings. Historical digests must retain their earlier format and version. The snapshot digest has its own unchanged serialization contract.
+ 
+ \section{Correlated review}
+ \label{sec:old17}
+@@ -1642,7 +1653,20 @@
+ A proof packet is a node presented at one resolution. A refinement replaces that node by a finite subfield whose certified target reconstructs the original node on the declared scope.
+ \end{definition}
+ 
+-Repeated refinement gives $R_0\preceq R_1\preceq\cdots\preceq R_d$ for the chosen recoverability tasks. More records need not give a strict gain for every task. Let $r_d\geq0$ be a declared unresolved-work score and $c_d\geq0$ the cumulative cost. These are model inputs. A small $r_d$ is not, without another theorem, a certificate of a nearly valid proof. The word cube names the layered presentation, not a cubical complex supplied with additional geometric axioms.
++A refinement preserves the certified target on its declared scope. Preservation of other tasks requires a separate recovery condition. Let $R_d:\mathscr A\to\mathcal R_d$ be the representation scheme at depth $d$. A sufficient condition is a map
++\[
++\pi_d:R_{d+1}(\mathscr A)\longrightarrow R_d(\mathscr A)
++\qquad\text{with}\qquad R_d=\pi_d\circ R_{d+1}.
++\]
++If a task factors as $q=d_q\circ R_d$, then
++\[
++q=(d_q\circ\pi_d)\circ R_{d+1}.
++\]
++Hence $R_d\preceq_{\Qcal}R_{d+1}$. Repeated refinements satisfying this condition give the recoverability chain. For a restricted task family, preserving its supported tasks directly can suffice without recovering the entire preceding representation.
++
++A longer derivation is not automatically a richer archive. It may reconstruct the same conclusion while omitting an example, a failed approach, or a provenance record. Those losses must be assessed against the declared task family.
++
++Let $r_d\geq0$ be a declared unresolved-work score and $c_d\geq0$ the cumulative cost. These are model inputs. A small $r_d$ is not, without another theorem, a certificate of a nearly valid proof. The word cube names the layered presentation, not a cubical complex supplied with additional geometric axioms.
+ 
+ \begin{definition}[Goal-relative depth objective]
+ \label{res:19:2}
+@@ -1938,7 +1962,9 @@
+ 
+ A final proof is indispensable, but it is not always the whole mathematical object. The theory distinguishes the certificate from the declared field in which it is recorded. It gives that field typed nodes, alternative justifications, evidence records, task-relative compressions, bridge graphs, version histories, and explicit audit models.
+ 
+-The main mathematical boundary is now clear. Verification is a closure property of the certified subfield. Discovery value belongs to a larger graph. Compression can preserve the first while reducing the second. Once that separation is formal, several consequences follow. Least certificate pairs can be extracted in fixed AND-DAGs. Alternative derivations create a genuine combinatorial optimization problem. Future-reach retention becomes submodular coverage. Version changes propagate through descendants. Correlated review has an effective sample size. Candidate generation is constrained by audit capacity. Expansion depth depends on purpose.
++The central distinction is between derivability within a declared inference system and the wider information retained by its archive. Certified closure records which claims follow from admitted leaves and accepted rules. Its interpretation as mathematical validity depends on the soundness of those leaves and rules. Discovery information serves different tasks: explaining a definition, locating a failed method, preserving a comparison, or opening a route to another problem.
++
++Compression can preserve the present derivation while losing those other capabilities. Proof Path Theory makes that difference explicit through task families, recovery maps, extension problems, and versioned evidence. The certificate and the surrounding field should therefore be maintained together, with their logical roles kept distinct.
+ 
+ The final thesis is therefore:
+ \[
+@@ -1982,6 +2008,8 @@
+ The unique-core theorem uses backward expansion that stops at admissible leaves and proves a least \emph{pair} of record sets. The compression results quantify over a whole archive class with one decoder for each task. Weighted domination counts only targets reachable before deletion. The greedy ratio requires a positive cardinality budget, with zero and saturated budgets handled separately.
+ 
+ Whole-support gluing is sufficient when the patches cover all nodes and every complete certified rule support. Merely covering pairwise dependencies is not sufficient in general. The linear alternative requires a field. General algebraic functionals need not be bounded under an added topology. The information formula requires a finite field, a finite-dimensional feasible affine fiber, and a uniform distribution.
++
++Endpoint equivalence fixes the complete assumption context. A refinement chain preserves the chosen tasks only when the corresponding recovery condition holds. The unrestricted positive-rule model always contains the full node set as a model. Nonempty global model spaces can still have empty prescribed extension fibers. Provenance change detection distinguishes information lost during serialization from collisions of different serialized bytes.
+ 
+ The review mean is unbiased only when its error means vanish. Its effective count requires positive marginal variance and positive variance of the mean. A minimum-variance aggregate allows real weights and assumes a known positive definite covariance matrix. No probability of mathematical correctness follows from these assumptions alone.
+ 
+@@ -2045,19 +2073,26 @@
+ \section{Reproduction and verification records}
+ \label{app:reproduction}
+ 
+-The package separates the present editorial and finite-computation checks from the inherited Lean run. The formal source files and dependency pins can be compared byte for byte with the preceding release. The recorded compiler evidence remains in \path{evidence/lean/}. A new compiler replay requires the separate pinned runtime and is not implied by a successful manuscript build.
+-
+-From the extracted package directory, the finite and publication checks are:
++The package separates the present editorial, software, and finite-computation checks from the inherited Lean run. The two changed mathematical statements concern fixed-context endpoint equivalence and serialized-byte digest stability. The gluing example now states its empty admissible-leaf set. The refinement recovery condition is proved in the text, not added to the inherited Lean development. The formal source files and dependency pins can be compared byte for byte with the preceding release. The recorded compiler evidence remains in \path{evidence/lean/}. A new compiler replay requires the separate pinned runtime and is not implied by a successful manuscript build.
++
++Before modifying the extracted package, check the delivered files:
+ \begin{lstlisting}[language=bash]
+-python -m pip install -e . --no-build-isolation
++python scripts/check_manifest.py
++\end{lstlisting}
++Then run the finite and publication checks:
++\begin{lstlisting}[language=bash]
++python -m pip install -e ".[release]" --no-build-isolation
+ python -m pytest -o addopts='' -q
+ python scripts/deep_validation.py
+ python scripts/verify_bridge.py
+-python scripts/verify_visual_edition.py
+-python scripts/check_manifest.py
++python scripts/verify_publication_edition.py
+ \end{lstlisting}
+ 
+-To regenerate this edition's exact figure suite before rebuilding the manuscript, run \path{python scripts/design_figures.py}. The publication edition is 1.5.0. The unchanged Python distribution remains 1.3.0, and the inherited formal evidence remains that of technical release 1.2.0. These numbers identify different artifacts rather than implying an unperformed new technical release.
++Regenerate the exact figures with:
++\begin{lstlisting}[language=bash]
++python scripts/design_figures.py
++\end{lstlisting}
++The publication edition is 1.6.0, the Python distribution is 1.4.0, and the inherited formal evidence remains that of technical release 1.2.0. The Python change repairs tuple serialization in \path{provenance_digest}. It does not change the certificate, realization, or review algorithms. The digest migration is documented in \path{docs/PROVENANCE_FORMAT.md}.
+ 
+ The manuscript can be rebuilt independently from \path{docs/}:
+ \begin{lstlisting}[language=bash]
+@@ -2074,14 +2109,15 @@
+ 
+ For PowerShell, extraction precedes installation:
+ \begin{lstlisting}[language={},basicstyle=\ttfamily\fontsize{9.5}{11.4}\selectfont]
+-Expand-Archive -LiteralPath .\Proof_Path_Theory_Monograph_1.5.0.zip `
+-  -DestinationPath .\proof-path-release
+-Set-Location .\proof-path-release\Proof_Path_Theory_Monograph_v1.5.0
+-python -m pip install -e . --no-build-isolation
++$zip = '.\Proof_Path_Theory_Monograph_1.6.0.zip'
++Expand-Archive -LiteralPath $zip -DestinationPath '.\proof-path-release'
++Set-Location '.\proof-path-release\Proof_Path_Theory_Monograph_v1.6.0'
++python scripts/check_manifest.py
++python -m pip install -e ".[release]" --no-build-isolation
+ python -m pytest -o addopts='' -q
+ \end{lstlisting}
+ 
+-The dated editorial report records which commands ran in this environment. Independent peer review, a formal verification of every Python routine, and empirical studies of social interpretation are not supplied by those checks. The author's redistribution-license decision is unchanged by this edition.
++The dated report identifies the commands actually run. These checks do not supply independent peer review, universal software verification, or empirical validation of the social models. The redistribution-license decision remains open.
+ 
+ \clearpage
+ \section{A complete minimal proof-field record}

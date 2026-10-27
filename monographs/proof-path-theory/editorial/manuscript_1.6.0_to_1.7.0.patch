@@ -1,0 +1,586 @@
+--- 1.6.0/docs/Proof_Path_Theory.tex
++++ 1.7.0/docs/Proof_Path_Theory.tex
+@@ -29,7 +29,7 @@
+ \definecolor{KomorebiLine}{HTML}{7A867F}
+ \hypersetup{colorlinks=true,linkcolor=KomorebiTeal,citecolor=KomorebiTeal,urlcolor=KomorebiTeal,
+  pdftitle={Proof Path Theory: Certificates, Compression, Discovery Fields, and Mathematical Memory},
+- pdfauthor={Komorebi P.},pdfsubject={Monograph edition 1.6.0},
++ pdfauthor={Komorebi P.},pdfsubject={Monograph edition 1.7.0},
+  pdfkeywords={proof fields, realization, compression, certificates, mathematical memory}}
+ \graphicspath{{figures/}}
+ \setstretch{1.055}
+@@ -179,7 +179,7 @@
+ \vfill
+ {\sffamily\bfseries\fontsize{11}{14}\selectfont\color{KomorebiInk}Komorebi P.\par}
+ \vspace{6pt}
+-{\sffamily\fontsize{9}{12}\selectfont\color{KomorebiMuted}Monograph edition 1.6.0\quad /\quad 19 October 2026\par}
++{\sffamily\fontsize{9}{12}\selectfont\color{KomorebiMuted}Monograph edition 1.7.0\quad /\quad 19 October 2026\par}
+ \vspace*{3mm}
+ \end{titlepage}
+ \pagenumbering{roman}
+@@ -217,7 +217,7 @@
+ \end{minipage}\hfill
+ \begin{minipage}[t]{0.47\linewidth}
+ {\sffamily\bfseries\color{KomorebiTeal}Evidence in this edition}\par\smallskip
+-The 33 result groups and prior formal sources are retained. This edition tightens recovery and provenance claims, corrects the digest helper, and reruns finite checks. It is not a fresh Lean compilation.
++The 33 prior result groups are retained and eight new groups extend realization and recovery. Thirteen Lean modules were freshly built, replayed with Lean's kernel, and axiom audited. Exact finite checks remain separate from the formal proofs.
+ \end{minipage}
+ 
+ \clearpage
+@@ -783,7 +783,7 @@
+ Use patches $U_0=\{a,c\}$ and $U_1=\{b,c\}$. The local valuations $X_0=\{a\}$ and $X_1=\{b\}$ agree on their overlap: both assign false to $c$. Both are local models, since neither patch contains the full rule support. They cover every node and both pairwise premise-to-conclusion dependencies. Nevertheless, a global model realizing them would contain $a,b$ and omit $c$, contradicting the rule. Thus replacing a conjunctive hyperedge by unrelated pairwise checks can lose precisely the constraint that matters.
+ \end{example}
+ 
+-The example is kernel checked in \path{ProofPath.Examples}. It does not contradict the earlier arrow-cover theorem. That theorem applies to a problem already specified by binary restriction equations. A conjunctive proof rule is a different constraint until a correct representation of its whole support has been supplied. The full support may be redundant in particular fields, so the theorem gives a sufficient cover condition rather than a necessary one for every individual diagram.
++The example is kernel checked in \path{ProofPath.Examples}. It does not contradict the earlier arrow-cover theorem. That theorem applies to a problem already specified by binary restriction equations. A conjunctive proof rule is a different constraint until a correct representation of its whole support has been supplied. The full support may be redundant in particular fields, so the theorem gives a sufficient cover condition rather than a necessary one for every individual diagram. Section~\ref{sec:semantic-cover} gives an exact entailment criterion for those redundancies.
+ 
+ The Python class \path{ProofFieldViews} implements these definitions. It freezes the rule and leaf contents at construction, restricts local valuations by literal intersection, checks support coverage before gluing, and can form a finite intersection-closed diagram for \path{FiniteViewSystem}. Local enumeration has explicit size limits. Forward closure and declared-field countermodels do not require that enumeration.
+ 
+@@ -916,12 +916,186 @@
+ 
+ \subsection{Verification scope and reproducibility}
+ 
+-The formal source contains eight production Lean modules. The recorded verification of technical release 1.2.0 rebuilt each module in a fresh object directory and replayed it through Lean's own kernel against the pinned imported environment. Selected named declarations also received an axiom audit. The formal sources in this monograph edition are unchanged from that record. This edition does not claim a new compiler run. The earlier replay was not an independent implementation of Lean, and it did not rebuild or replay the entire cached Mathlib library.
+-
+-Four deliberate invalid files test rejection of a false equality, an invalid row witness, the invalid conjunction model, and a proof placeholder. A fifth file introduces an explicit false axiom. Lean correctly accepts a consequence relative to that axiom, while the release's separate axiom policy rejects the dependency. A missing import or a timeout does not count as a successful mathematical rejection.
+-
+-The monograph review reruns the finite software tests and comparisons and rebuilds the manuscript. Its new records are separate from the inherited compiler evidence. Written proofs, general Lean declarations, concrete checked examples, and implementation tests remain distinct verification categories. A corrected paragraph is not automatically a newly checked Lean theorem.
+-
++The present release freshly builds thirteen production Lean modules in a new object directory. Each module is replayed through Lean's own kernel against the pinned imported environment. The nine dependency revisions and the compiler hash are checked before building. All explicit named source declarations receive an axiom audit against the declared whitelist. The eight earlier mathematical modules are unchanged. Five modules add attained recovery, seeded extension, explicit rule transport, semantic-cover gluing, and checked counterexamples.
++
++Six deliberate invalid files test rejection of a false equality, a false row witness, a missing conjunction support, a proof placeholder, an invalid decoder output, and incompatible merged observations. A seventh file introduces an explicit false axiom. Lean correctly accepts a consequence relative to that axiom, while the release's separate axiom policy rejects the dependency. A missing import, unavailable decision procedure, or timeout does not count as a mathematical rejection.
++
++The fresh record is in \path{evidence/formal_1.7.0/}. The older record remains separately identified. Kernel replay here is not an independent implementation of Lean and does not rebuild or replay the entire cached Mathlib library. Written proofs, general Lean statements, generated concrete examples, and Python tests remain different evidence categories. In particular, a sound mathematical algorithm does not make its Python implementation universally verified.
++
++\subsection{Protected extensions of the actual rule field}
++\label{sec:protected-rule-extension}
++
++The linear model is not the only setting in which an obstruction can be returned explicitly. The original rule field has its own constructive extension problem. A partial Boolean description records which nodes must belong to a model and which must remain absent. These are observations about the declared model, not assertions that the sentences attached to the nodes are true or false in an intended mathematical universe.
++
++Fix the field $F$, including its admitted leaves and certified rules. For a positive observation set $S\subseteq V$, let
++\[
++  \operatorname{cl}_F(S)=\operatorname{Der}_{F[S]},
++\]
++where $F[S]$ is obtained by admitting $L\cup S$ as leaves and changing nothing else. For a negative observation set $N\subseteq V$, define
++\[
++ \operatorname{Ext}_F(S,N)=
++ \{X\subseteq V:X\text{ is an }F\text{-model},\ S\subseteq X,\ X\cap N=\varnothing\}.
++\]
++Positive and negative observations are both part of the preservation contract. Dropping the negative observations can turn an impossible request into a different, feasible problem.
++
++\begin{theorem}[Least protected extension and a complete obstruction]
++\label{res:new:extension}
++The extension fiber is nonempty exactly when
++\[
++ \operatorname{cl}_F(S)\cap N=\varnothing.
++\]
++When this condition holds, $\operatorname{cl}_F(S)$ is its least member. More generally,
++\[
++ X\in\operatorname{Ext}_F(S,N)
++ \quad\Longleftrightarrow\quad
++ X\text{ is an }F\text{-model and }
++ \operatorname{cl}_F(S)\subseteq X\subseteq V\setminus N.
++\]
++If no extension exists, some $n\in N$ has a derivation from $L\cup S$ using only the declared certified rules.
++\end{theorem}
++\begin{proof}
++Induction on a derivation shows that every model containing $S$ contains $\operatorname{cl}_F(S)$. The inductive closure is itself a model and contains $S$. If it avoids $N$, it is therefore a permitted extension, and the preceding inclusion proves leastness. If it meets $N$, every model containing $S$ contains a forbidden node, so no extension is possible. The displayed classification follows from the same inclusions. A point of the nonempty intersection is exactly the conclusion of the stated forbidden-node derivation.
++\end{proof}
++
++This describes an interval \emph{inside the family of rule models}, not an arbitrary interval of the power set. Closure under the rules remains essential. Nor is the fiber generally an affine space. For the rule $\{a,b\}\to c$, with no leaves, $S=\varnothing$ and $N=\{c\}$, the allowed models are precisely $\varnothing$, $\{a\}$, and $\{b\}$. There are three, not a power of two. The rank and entropy formulas for vector spaces cannot be imported into this model without additional structure.
++
++\begin{corollary}[Exact extension of a partial valuation]
++\label{res:new:partial}
++Let $S\subseteq U\subseteq V$. A global model whose true nodes on $U$ are exactly $S$ exists if and only if
++\[
++ \operatorname{cl}_F(S)\cap U=S.
++\]
++\end{corollary}
++\begin{proof}
++Set $N=U\setminus S$. Closure always contains $S$, so avoiding $N$ is equivalent to the displayed equality. Apply Theorem~\ref{res:new:extension}.
++\end{proof}
++
++In particular, the test works for partial data that already violate a local rule. It need not assume local consistency and then hide that failure in a precondition. A contradictory observation can be exposed as a specific forbidden consequence.
++
++\begin{proposition}[Staged closure and persistent obstructions]
++\label{res:new:stages}
++For positive sets $S,T$,
++\[
++ \operatorname{cl}_F\bigl(\operatorname{cl}_F(S)\cup T\bigr)
++   =\operatorname{cl}_F(S\cup T).
++\]
++If $S\subseteq S'$ and $N\subseteq N'$, then
++$\operatorname{Ext}_F(S',N')\subseteq\operatorname{Ext}_F(S,N)$.
++Consequently an infeasible request stays infeasible under those additions, while the field and the meaning of its rules remain fixed.
++\end{proposition}
++\begin{proof}
++Closure is extensive, monotone, and idempotent because it is the least model containing its seed. The model $\operatorname{cl}_F(S\cup T)$ contains $\operatorname{cl}_F(S)$ and $T$, giving one inclusion in the first equation. Extensivity gives $S\cup T\subseteq\operatorname{cl}_F(S)\cup T$, and monotonicity gives the other. A model satisfying the larger positive and negative prescriptions also satisfies the smaller ones. The last conclusion follows by inclusion of the extension fibers.
++\end{proof}
++
++The module \path{ProofPath.Extension} checks these statements on the existing \path{Field} type. The Python module \path{extension.py} uses the same \path{ProofFieldViews} snapshot as the local-model construction. It computes closure by forward rule scans and records each newly derived node. At most $|V|$ successful insertions occur. If a forbidden node is reached, a causal subtrace is extracted. It need not be the shortest or cheapest refutation.
++
++The independent result checker replays that trace and checks that the recorded closure is closed under every rule. Derivability of every recorded node and closure of the recorded set together establish leastness. A negative witness only needs a valid derivation of one forbidden node. Its replay permits a previously derived node to have become an admitted observation, so the same witness can remain valid after positive data are strengthened. The checker does not call the producer, and a timeout is never returned as an obstruction.
++
++
++\begin{figure}[htbp]\centering
++\includegraphics[width=\linewidth]{fig_23_protected_closure.pdf}
++\caption{Two protected requests for the same rule field. With only $a$ prescribed true and $c$ prescribed false, the least model is $\{a\}$. Adding $b$ to the positive data derives the forbidden node $c$. The obstruction is the certified rule application, not the act of abandoning a search.}
++\label{fig:protected-closure}
++\end{figure}
++
++\subsection{Semantic covers rather than only syntactic covers}
++\label{sec:semantic-cover}
++
++Whole-support coverage is easy to inspect and is sufficient for gluing. It can nevertheless be unnecessarily strong. Suppose $F$ contains $a\to b$, $b\to c$, and $a\to c$, with patches $\{a,b\}$ and $\{b,c\}$. The last support $\{a,c\}$ is absent from both patches. Yet the first two visible rules already imply the last rule. Requiring another patch would duplicate information rather than restore a missing constraint.
++
++Let $\mathcal U=(U_i)_i$ cover every node. Define $F_{\mathcal U}$ to have the same nodes and leaves as $F$ but only those certified rules whose entire support lies in some $U_i$. The distinction between the two fields is explicit. We call the cover \emph{semantically sufficient for the declared rules} when
++\[
++ \forall j\text{ certified in }F,\qquad
++ c_j\in\operatorname{cl}_{F_{\mathcal U}}(A_j).
++ \tag{SC}\label{eq:semantic-cover}
++\]
++The word semantic here refers to the Boolean rule-model semantics of Section~\ref{sec:old24}, not to an automatic interpretation of node labels as arbitrary mathematical truths.
++
++\begin{theorem}[Exact criterion for universal gluing]
++\label{res:new:semantic-cover}
++Under node coverage, the following conditions are equivalent:
++\begin{enumerate}[label=(\roman*)]
++\item Every matching family of local $F$-models on the patches has a unique global $F$-model extending it.
++\item Every model of $F_{\mathcal U}$ is a model of $F$.
++\item Condition~\eqref{eq:semantic-cover} holds.
++\item For every positive seed $S$, $\operatorname{cl}_{F_{\mathcal U}}(S)=\operatorname{cl}_F(S)$.
++\end{enumerate}
++Whole-support coverage implies these conditions, but the converse need not hold.
++\end{theorem}
++\begin{proof}
++A matching family assembles uniquely to a subset $X\subseteq V$ because the patches cover all nodes and agree on their common coordinates. Its local rule conditions say exactly that $X$ is a model of $F_{\mathcal U}$. Conversely, a model of $F_{\mathcal U}$ restricts to an $F$-model on every patch: every original rule supported in that patch is among the retained rules. Those restrictions match. Thus (i) and (ii) are equivalent, and uniqueness follows from node coverage.
++
++Assume (ii) and fix a certified rule $j$. The set $\operatorname{cl}_{F_{\mathcal U}}(A_j)$ is a model of $F_{\mathcal U}$ containing all of $A_j$. By (ii) it obeys the original rule and contains $c_j$, proving (iii). Conversely, if $X$ is a model of $F_{\mathcal U}$ containing $A_j$, leastness gives $\operatorname{cl}_{F_{\mathcal U}}(A_j)\subseteq X$. Condition (iii) therefore forces $c_j\in X$. Every original rule is satisfied, which proves (ii).
++
++Under (ii) the two fields have exactly the same models, since every $F$-model already obeys the retained rules. Their least models containing any seed are equal, giving (iv). If (iv) holds, apply it to $A_j$. The conclusion $c_j$ lies in $\operatorname{cl}_F(A_j)$ by the original rule, so it lies in the retained closure as required by (iii). Finally, whole-support coverage retains every certified rule. The three-rule example above proves that this condition is not necessary.
++\end{proof}
++
++There is a constructive negative result as well. If (SC) fails for $j$, let
++\[
++ X=\operatorname{cl}_{F_{\mathcal U}}(A_j).
++\]
++Then $A_j\subseteq X$ and $c_j\notin X$. The restrictions $X\cap U_i$ are matching local $F$-models, but their only assembled subset violates the original rule. They are a checkable obstruction to \emph{universal gluing for this cover}. They do not show that every matching family on the cover fails.
++
++The module \path{ProofPath.SemanticCover} proves the criterion, including its connection to the actual \path{Local}, \path{Matching}, and \path{gluedValue} constructions. It is not a replacement field chosen only to have a convenient name. The Python producer returns a derivation of each original conclusion from its premises using only visible rules, or the countermodel just described. The verifier replays the positive derivations or checks the negative valuation directly. A new \path{glue_semantic} operation requires the positive certificate. The older \path{glue} method retains its simpler whole-support contract.
++
++\studyhead{05}{A missing support can be redundant}
++The patches $U_0=\{a,b\}$ and $U_1=\{b,c\}$ do not contain the support of $a\to c$. Their visible rules $a\to b$ and $b\to c$ nevertheless provide a certified derivation of that implication. Compare this with the missing conjunctive support in Figure~\ref{fig:whole-support-example}: neither visible patch there provides a substitute for $\{a,b\}\to c$.
++
++\begin{figure}[H]\centering
++\includegraphics[width=\linewidth]{fig_22_semantic_cover.pdf}
++\caption{The exact semantic-cover check for a redundant rule. The two solid rules are visible in the displayed patches. The dashed original rule has no covered whole support, but its conclusion is derived by the solid path. Dashed here means omitted from the visible subsystem, not uncertified in the original field.}
++\label{fig:semantic-cover}
++\end{figure}
++
++\calloutbox{Preserve the constraint, not necessarily its original presentation}{The cover is sufficient because its visible rules impose the same models as the full field. The criterion checks every original rule, not just the target of one successful example.}
++
++For a finite field, one closure computation per original rule is enough to produce the positive certificates or expose a failed entailment. This avoids enumerating all local valuations or all matching families. The implementation uses repeated rule scans, so the release does not claim the indexed linear-time bound for its code. Its output certificates can be verified without trusting that search procedure.
++\clearpage
++
++\subsection{Typed transport of derivations and obstructions}
++\label{sec:rule-transports}
++
++A change of proof-field representation needs more than a map of node names. Let $F$ and $G$ be declared fields. A rule transport consists of a node map $f:V_F\to V_G$ and a rule map $h:J_F\to J_G$ satisfying
++\[
++\begin{aligned}
++ f(L_F)&\subseteq L_G,\\
++ j\text{ certified in }F&\Longrightarrow h(j)\text{ certified in }G,\\
++ A^G_{h(j)}&\subseteq f(A^F_j),\\
++ c^G_{h(j)}&=f(c^F_j).
++\end{aligned}
++\]
++The premise inclusion points in the direction needed for executing the translated step. The mapped target rule may need fewer premises, but it must not introduce a new premise unsupported by the source step. This is a sufficient, deliberately concrete transport interface. A more general translation could map one rule to an entire derivation.
++
++\begin{theorem}[Compositional rule transport]
++\label{res:new:transport}
++Rule transports admit identities and associative composition. A transport $(f,h):F\to G$ sends every derivation of $v$ in $F$ to a derivation of $f(v)$ in $G$. Every $G$-model pulls back along $f$ to an $F$-model. In particular,
++\[
++ Y\in\operatorname{Ext}_G(f(S),f(N))
++   \Longrightarrow f^{-1}(Y)\in\operatorname{Ext}_F(S,N).
++\]
++An obstruction in the source extension problem therefore implies an obstruction in the target extension problem with the mapped observations.
++\end{theorem}
++\begin{proof}
++Identity maps meet each displayed condition. For two composable transports, compose the node and rule maps. Applying the second map to the first premise inclusion and then using the second inclusion proves the composite premise condition. The conclusion and leaf conditions also compose. Function composition gives the identity and associativity laws.
++
++Proceed by induction on a source derivation. A source leaf maps to a target leaf. For a rule step, every premise of the target rule is the image of a source premise, so the induction hypotheses supply all the required target premises. Certification and the conclusion equation then give the translated conclusion.
++
++If $Y$ is a target model, $f^{-1}(Y)$ contains all source leaves. When it contains every premise of a source rule, $Y$ contains every premise of the mapped rule and hence its conclusion. This proves the model pullback. Positive and negative observations pull back by their image definitions. If a target extension existed while the source problem were infeasible, its pullback would contradict that infeasibility.
++\end{proof}
++
++Positive seeds can be added before transport. The same rule transport sends $F[S]$ to $G[f(S)]$, and hence
++\[
++ f\bigl(\operatorname{cl}_F(S)\bigr)
++      \subseteq\operatorname{cl}_G(f(S)).
++\]
++A forbidden source consequence $n\in N\cap\operatorname{cl}_F(S)$ maps to the explicit forbidden consequence $f(n)\in f(N)\cap\operatorname{cl}_G(f(S))$. The formal development checks this witness map, not only the existence statement obtained by contraposition.
++
++\begin{example}[Why transport is not an equivalence]
++\label{res:new:collapse}
++Let the source have nodes $a,b$, no leaves, and no rules. The request $a$ true and $b$ false is feasible. Map both nodes to one target node $u$, again with no leaves or rules. This is a rule transport, but the image request requires $u$ both true and false and is infeasible. Thus source feasibility need not imply target feasibility, and target infeasibility need not imply source infeasibility.
++\end{example}
++
++\path{ProofPath.RuleTransport} checks these laws for actual derivations, and \path{ProofPath.ExtensionExamples} checks the collapse. The transported conclusion is true under an intended interpretation only if the target leaves and rules are sound. Renaming alone does not provide that contract.
+ 
+ 
+ \monographpart{Compression, representation, and memory}{Compression and memory}{Compression changes which questions can still be answered. A certificate may preserve every required deduction while erasing distinctions that later inquiry needs.}
+@@ -1060,7 +1234,63 @@
+ If $C$ is injective, define the decoder of $q$ at $b$ by the predicate $\exists a\ (C(a)=b\ \text{and}\ q(a))$. At $b=C(a_0)$, injectivity makes this equivalent to $q(a_0)$. Conversely, if $C(a)=C(a')$, use the predicate $q(z)\equiv(z=a)$. Its decoded values at the equal encodings must agree, giving $a'=a$. This is the general collision criterion specialized to all predicates.
+ \end{proof}
+ 
+-The formal result \path{ProofPath.all_predicates_sufficient_iff_injective} records the corrected distinction between information loss and lossless recoding. It makes no assertion about how cheaply a decoder can be computed.
++The formal result \path{ProofPath.all_predicates_sufficient_iff_injective} records the distinction between information loss and lossless recoding. It makes no assertion about how cheaply a decoder can be computed.
++
++
++\subsection{A complete factorization test on attained representations}
++\label{sec:attained-recovery}
++
++The collision obstruction of Theorem~\ref{res:7:3} has a converse. It gives a complete test for exact task recovery at the level of sets. Write $\operatorname{im}C=C(\mathscr A)$ for the attained output set. A decoder is required on this set and nowhere else.
++
++\begin{theorem}[Attained factorization and unique decoding]
++\label{res:new:factorization}
++For $C:\mathscr A\to\mathcal R$ and $q:\mathscr A\to Y$, the following are equivalent:
++\[
++\begin{aligned}
++ &\exists d:\operatorname{im}C\to Y\quad
++       \forall a\in\mathscr A,\quad q(a)=d(C(a)),\\
++ &\forall a,b\in\mathscr A,\quad C(a)=C(b)\Longrightarrow q(a)=q(b).
++\end{aligned}
++\]
++When a decoder exists it is unique on $\operatorname{im}C$. Otherwise there are two archives with the same encoding and different task answers.
++\end{theorem}
++\begin{proof}
++A decoder applied to equal encodings gives equal answers. Conversely, for an attained value $r$, choose $a$ with $C(a)=r$ and define $d(r)=q(a)$. Constancy on each fiber makes the value independent of the choice. At $r=C(a)$ it gives the required answer. Any other decoder must give that same answer at every attained value, proving uniqueness. Negating fiber constancy supplies the pair in the last statement. The construction is set theoretic and uses classical choice in the Lean implementation. It does not provide an efficient decoder for arbitrary infinite archive classes.
++\end{proof}
++
++\begin{example}[The empty-domain boundary]
++\label{res:new:empty-decoder}
++Take $\mathscr A=\varnothing$, $\mathcal R=\{*\}$, and $Y=\varnothing$. There is one encoding and one task on the empty archive class. The attained set is empty, so its empty decoder exists. There is no total decoder $\{*\}\to\varnothing$. Thus attained decoding and decoding on the entire output type are not equivalent without an additional hypothesis.
++\end{example}
++
++The earlier formal definition \path{ProofPath.Sufficient} asks for a total decoder. It is retained for compatibility and was not false, but it was stronger than the manuscript's stated domain convention. The new namespace \path{ProofPath.Recovery} matches the manuscript exactly. It proves that total decoding implies attained decoding, and that the two are equivalent whenever the answer type is nonempty. In the latter case choose one default answer for unattained outputs. The empty-domain example is also kernel checked.
++
++The finite Python interface \path{factor_task} takes an explicitly declared table of archive encodings and a task table on the identical domain. It returns either a decoder table or two archive identifiers witnessing a collision. Its verifier checks the proposed result directly, including the empty domain, missing outputs, extra unattained entries, and contradictory records. The table strings are exact identifiers and answers, not a semantic equality procedure for arbitrary mathematical expressions. The existing retention-based \path{task_sufficient} function remains a different, narrower task model.
++
++\subsection{The least information for a family of tasks}
++\label{sec:joint-recovery}
++
++Suppose tasks $q_i:\mathscr A\to Y_i$ are indexed by $i\in I$. Their joint representation is
++\[
++ Q(a)=(q_i(a))_{i\in I}.
++\]
++It records every distinction asked for by the task family and makes no demand to recover the entire source archive.
++
++\begin{theorem}[Joint task representation and compositional recovery]
++\label{res:new:joint}
++An encoding $C$ is sufficient for every $q_i$ if and only if it is sufficient for $Q$. In particular every sufficient encoding recovers the joint representation on attained values, while $Q$ itself recovers each task by projection.
++
++If a representation $R$ is recoverable from $C$, then every task recoverable from $R$ is recoverable from $C$. Recovery of representations is reflexive and transitive.
++\end{theorem}
++\begin{proof}
++If $Q$ factors through $C$, each coordinate factors by projection. Conversely, equal values of $C$ give equal values of every $q_i$. Function extensionality gives equal joint vectors, and Theorem~\ref{res:new:factorization} supplies the joint decoder. This argument allows a different answer type for each task and also covers an empty task family.
++
++For the second assertion, write $R=\pi\circ C$ and $q=d\circ R$ on their attained sets. Then $q=(d\circ\pi)\circ C$. The identity decoder proves reflexivity, and composition of two recovery maps proves transitivity. All maps are applied only to outputs in their declared domains.
++\end{proof}
++
++The word least concerns retained distinctions, not bytes, running time, or the cognitive cost of reading an archive. Two archives are identified by $Q$ precisely when every declared task gives the same answer on them. Any sufficient representation may retain more, but it cannot identify archives that $Q$ distinguishes. For a finite archive family, the reference implementation labels these joint-answer classes and checks that every task is constant within a class. Costs remain a separate optimization problem.
++
++This result also completes the formal justification of the recovery condition in Section~\ref{sec:old19}. A refinement that reconstructs only the final theorem need not preserve the joint tasks of audit and discovery. A refinement with a checked recovery map for the preceding representation does preserve them. The distinction is between a longer proof and a genuinely more informative archive, not between short and long documents in general.
+ 
+ 
+ \section{Endpoint, audit, and discovery equivalence}
+@@ -1229,7 +1459,7 @@
+ The stable identifier determines every occurrence of the claim across the compiled outputs. Updating the canonical record changes the source value associated with that identifier. Recompilation reads the updated record in every view. A stale status can persist only in an output detached from the canonical ledger or not recompiled.
+ \end{proof}
+ 
+-This proposition is simple, but it is operationally important. A monograph, a formal library, and a teaching site should not maintain independent truth labels for the same claim.
++This proposition is operationally important. A monograph, a formal library, and a teaching site should not maintain independent truth labels for the same claim.
+ 
+ 
+ \section{Latent bridge graphs}
+@@ -1365,7 +1595,7 @@
+ For $k=0$, both gains are zero without using the displayed division by $k$. For a budget at least $|C|$, retaining all candidates is optimal. The displayed theorem is the cardinality form of the standard submodular greedy bound \cite{nemhauser}. A gain-per-cost rule for unequal costs is a different algorithm and does not inherit this guarantee. Zero-cost candidates also need an explicit convention.
+ \end{warning}
+ 
+-\begin{figure}[p]
++\begin{figure}[H]
+ \centering
+ \includegraphics[width=\linewidth]{fig_08_submodular_greedy.pdf}
+ \caption{Greedy and exact retention coincide on the committed finite instance. The square and circle marks are deliberately overlaid. The general cardinality guarantee is $1-1/e$, not equality with the optimum on every graph.}
+@@ -1474,6 +1704,16 @@
+ The serialization contract must state which fields, types, and distinctions it preserves and which differences it intentionally normalizes. Loss during serialization and a collision during hashing are separate mechanisms.
+ 
+ For example, joining string parts with a separator is ambiguous if the same separator may occur inside a part. The tuples $(\texttt{a|b},\texttt{c})$ and $(\texttt{a},\texttt{b|c})$ both become \texttt{a|b|c}. No hash function can recover the lost tuple boundary. The earlier \path{provenance_digest} helper had this defect with a control-character separator. Python release 1.4.0 replaces that encoding with a versioned, domain-separated JSON array of strings. Historical digests must retain their earlier format and version. The snapshot digest has its own unchanged serialization contract.
++
++\begin{proposition}[Hashing cannot add recoverable tasks]
++\label{res:new:hash}
++Let $s:\mathscr A\to B$ be serialization and $h:B\to D$ be any deterministic map. Every task recoverable from $h\circ s$ is recoverable from $s$. If $h$ is injective on the attained set $s(\mathscr A)$, the two encodings support exactly the same tasks.
++\end{proposition}
++\begin{proof}
++If $s(a)=s(b)$, then $h(s(a))=h(s(b))$. Any task constant on the digest fibers is therefore constant on the serialization fibers, and Theorem~\ref{res:new:factorization} supplies its decoder. If $h$ is injective on attained serializations, equality of digests conversely implies equality of serializations, so the two fiber partitions coincide and the same criterion applies in both directions.
++\end{proof}
++
++The module \path{ProofPath.Recovery} checks both implications. The injectivity condition is a conditional mathematical hypothesis, not a claim that a fixed-length cryptographic hash is injective on arbitrary inputs. A hash cannot repair an ambiguity introduced before hashing. It may introduce additional collisions, which must be kept separate from the serializer's preservation contract.
+ 
+ \section{Correlated review}
+ \label{sec:old17}
+@@ -1643,6 +1883,7 @@
+ Here $p_{\mathrm{err}}(x)\in[0,1]$, the consequence and dependency factors are nonnegative, and $c_{\mathrm{audit}}(x)>0$. Zero-cost checks can be handled separately. This is a declared priority heuristic, not a probability of truth or a proved optimal scheduling rule.
+ 
+ 
++\FloatBarrier
+ \section{Recursive proof cubes and expansion depth}
+ \label{sec:old19}
+ 
+@@ -1781,11 +2022,26 @@
+ \label{fig:refinement}
+ \end{figure}
+ 
++\Needspace{12\baselineskip}
++\subsection{An independently checkable decoder}
++
++Take two archives with the same certificate output but different retained side answers. The following code executes the collision alternative. It then checks the result without running the producer again.
++\begin{lstlisting}[language=Python]
++from proof_path_theory import factor_task, verify_factorization
++encoding = {"archive0": "certificate", "archive1": "certificate"}
++task = {"archive0": "0", "archive1": "1"}
++result = factor_task(encoding, task)
++assert not result.sufficient
++assert verify_factorization(encoding, task, result)
++\end{lstlisting}
++The witness names both archives. It is evidence that this declared task cannot be recovered from this encoding on this domain. It says nothing about whether the shared proof certificate is valid. The package's new worked script also prints the positive decoder, the protected-rule obstruction, and the semantic-cover derivations.
++
+ \section{Reference implementation}
+ \label{sec:old21}
+ 
+ The repository implements the finite theory as the Python package \texttt{proof\_path\_theory}. The public modules are organized by mathematical responsibility.
+ 
++\begingroup\small
+ \begin{longtable}{@{}p{0.24\linewidth}p{0.68\linewidth}@{}}
+ \toprule
+ Module & Responsibility\\
+@@ -1802,10 +2058,14 @@
+ \texttt{ambient.py} & Finite declared view fibers, restriction checks, and arrow-cover gluing.\\
+ \texttt{realization.py} & Exact binary elimination, protected fibers, obstruction witnesses, and observation gain.\\
+ \texttt{views.py} & Local field models, whole-support gluing, declared countermodels, and intersection diagrams.\\
++\texttt{extension.py} & Least models preserving true and false observations, with replayable forbidden-node derivations.\\
++\path{semantic_cover.py} & Entailment certificates for redundant supports, countermodels to universal gluing, and checked semantic gluing.\\
++\texttt{recovery.py} & Factorization on explicit archive families, collision witnesses, joint task schemes, and decoder composition.\\
+ \texttt{io.py} & Stable JSON import and export for proof fields and certificates.\\
+ \texttt{cli.py} & Command-line validation, core extraction, minimum certificate search, and certificate audit.\\
+ \bottomrule
+ \end{longtable}
++\endgroup
+ 
+ \subsection{Command-line interface}
+ 
+@@ -1838,6 +2098,8 @@
+ The regression suite covers graph validation, derivability, certificate extraction, alternative proofs, schema boundaries, and input validation. It also exercises loss vectors, task sufficiency, bridge coverage, retention, review covariance, audit queues, refinement, version propagation, JSON round trips, and the command line. The dated verification record gives the executed count for each edition.
+ 
+ A separate deterministic cross-check compares the exact certificate solver with brute-force enumeration over eighteen cost profiles, tests the greedy cardinality guarantee on one hundred generated coverage instances, verifies 1,024 retention-algebra identities, and compares the effective-reviewer formula with direct covariance calculations in 114 parameter settings.
++
++The extension cross-check exhausts all forward rule subsets on three ordered nodes, every admitted-leaf set, every positive and negative observation set, and every node-covering patch family. An independent truth-table calculation checks feasibility and universal gluing. A separate enumeration compares encodings, task fibers, joint task partitions, and decoder composition on archive domains of at most four elements. These are bounded finite comparisons, not empirical models of mathematical practice.
+ 
+ The tests and cross-checks verify the implementation of finite definitions and examples. They do not replace the proofs in this monograph. Conversely, the proofs do not guarantee that a software implementation is free of defects. The release keeps both forms of verification.
+ 
+@@ -1868,6 +2130,9 @@
+ 
+ These results turn the original methodological insight into a finite mathematical branch with explicit objects, algorithms, complexity, and failure boundaries.
+ 
++The extension results add three further capabilities. A protected rule-model request returns its least feasible model or a derivation of a forbidden node. A cover has universal gluing exactly when its visible rules entail every original rule. A representation admits a task decoder exactly when equal encodings have equal task answers. These outputs are respectively model witnesses, rule derivations, and decoding or collision witnesses. None can replace the others merely because it is called a certificate.
++
++
+ \noindent The realization theory gives the proof field a contravariant diagram of local models and an explicit equivalence with its coherent sections. Whole-support gluing proves extension from suitably covering patches. The protected linear alternative classifies feasible fibers and supplies normalized witnesses for infeasibility. Exact finite-field counts yield an information formula only after a uniform distribution is chosen. The native exporter supplies syntactic dependencies from compiled declarations, not the complete history of discovery.
+ 
+ 
+@@ -1891,6 +2156,9 @@
+ 
+ \section{Open theorem program}
+ \label{sec:old28}
++
++The finite protected-extension, semantic-cover, and attained-decoder problems developed in this edition are closed under their stated hypotheses. The questions below concern stronger interfaces. In particular, the rule transport sends one source rule to one target rule and is not asserted to be a general equivalence of proof fields. A transport into a derived target proof, executable correctness of the producers, and richer semantic objects remain distinct next steps.
++
+ 
+ \begin{problem}[Proof-path view functors and comparison]
+ \label{res:28:1}
+@@ -1956,7 +2224,7 @@
+ \section{Conclusion}
+ \label{sec:old29}
+ 
+-A proof certificate and its surrounding proof field answer different mathematical questions. The field need not consist only of viable derivations. It can retain failed strategies and genuine local refutations without allowing either to masquerade as global unprovability. A checked contravariant system of local field models gives an explicit bridge to Komorebi Space. The need to cover whole justifications identifies a constraint that a pairwise dependency graph can miss. In the linear finite case, protected observations admit exact success or failure certificates and a measurable information gain. A separate review model distinguishes proof correctness from correlated social interpretation.
++A proof certificate and its surrounding proof field answer different mathematical questions. The field need not consist only of viable derivations. It can retain failed strategies and genuine local refutations without allowing either to masquerade as global unprovability. A checked contravariant system of local field models gives an explicit bridge to Komorebi Space. Whole-support coverage identifies a constraint that pairwise dependencies can miss. The semantic-cover criterion now determines exactly when visible rules recover a missing constraint. In the linear finite case, protected observations admit exact success or failure certificates and a measurable information gain. A separate review model distinguishes proof correctness from correlated social interpretation.
+ 
+ 
+ 
+@@ -1983,6 +2251,7 @@
+ 
+ Letters are local to a section. In particular, $A$ denotes required premises in a proof field, but a matrix in the binary examples. The type declarations, not the letter alone, determine the object.
+ 
++\begingroup\small
+ \begin{longtable}{@{}L{0.24\linewidth}L{0.71\linewidth}@{}}
+ \toprule
+ Symbol & Meaning \\
+@@ -1995,6 +2264,10 @@
+ $\Anc_L(T_0)$ & Backward ancestry expanded only outside the admissible leaves. \\
+ $\mathcal M_F(U)$ & Local models on patch $U$ satisfying all certified rules supported entirely in $U$. \\
+ $\Gamma(\mathcal M_F)$ & Coherent families of those local models under restriction. \\
++$\operatorname{cl}_F(S)$ & The least declared rule model containing the positive observations $S$ and all admitted leaves. \\
++$\operatorname{Ext}_F(S,N)$ & Rule models containing $S$ and avoiding the negative observations $N$. \\
++$F_{\mathcal U}$ & The same field with only rules whose entire supports appear in a covering patch. \\
++$Q(a)=(q_i(a))_i$ & The joint task representation, least in retained distinctions for its task family. \\
+ $\mathscr A$, $C$, $q$ & A class of possible archives, an encoding scheme, and a task on that class. \\
+ $P_K(S)=S\cap K$ & Pure retention of records selected by a fixed mask. \\
+ $D:E\to R$, $p:E\to S$ & A linear defect and a protected observable. The repair condition is $Dy=0$, $p(y)=p(x)$. \\
+@@ -2003,11 +2276,12 @@
+ $n_{\mathrm{eff}}$ & A real, variance-equivalent review count in the specified covariance model. \\
+ \bottomrule
+ \end{longtable}
++\endgroup
+ 
+ \subsection*{Assumptions that change the conclusions}
+ The unique-core theorem uses backward expansion that stops at admissible leaves and proves a least \emph{pair} of record sets. The compression results quantify over a whole archive class with one decoder for each task. Weighted domination counts only targets reachable before deletion. The greedy ratio requires a positive cardinality budget, with zero and saturated budgets handled separately.
+ 
+-Whole-support gluing is sufficient when the patches cover all nodes and every complete certified rule support. Merely covering pairwise dependencies is not sufficient in general. The linear alternative requires a field. General algebraic functionals need not be bounded under an added topology. The information formula requires a finite field, a finite-dimensional feasible affine fiber, and a uniform distribution.
++Whole-support gluing is sufficient when the patches cover all nodes and every complete certified rule support. More generally, node coverage and entailment of every original rule by the visible rules are necessary and sufficient for universal gluing. Merely covering pairwise dependencies is not sufficient in general. The linear alternative requires a field. General algebraic functionals need not be bounded under an added topology. The information formula requires a finite field, a finite-dimensional feasible affine fiber, and a uniform distribution.
+ 
+ Endpoint equivalence fixes the complete assumption context. A refinement chain preserves the chosen tasks only when the corresponding recovery condition holds. The unrestricted positive-rule model always contains the full node set as a model. Nonempty global model spaces can still have empty prescribed extension fibers. Provenance change detection distinguishes information lost during serialization from collisions of different serialized bytes.
+ 
+@@ -2019,9 +2293,10 @@
+ \section{Theorem ledger}
+ \label{app:ledger}
+ 
+-\emph{Written} denotes a written proof. \emph{Lean} denotes the specified interface with inherited compiler evidence, not a formalization of the entire monograph. \emph{Mixed} distinguishes checked counts from their written probabilistic interpretation. The separate Lean concordance lists every source declaration and its scope.
+-
+-\renewcommand{\arraystretch}{1.12}
++\emph{Written} denotes a written proof. \emph{Lean} denotes the specified interface with fresh compiler and kernel-replay evidence in this edition, not a formalization of the entire monograph. \emph{Mixed} distinguishes checked counts from their written probabilistic interpretation. The separate Lean concordance lists every source declaration and its scope.
++
++\begingroup\small
++\renewcommand{\arraystretch}{1.04}
+ \begin{longtable}{@{}L{0.115\linewidth}L{0.70\linewidth}L{0.105\linewidth}@{}}
+ \toprule
+ {\sffamily\small ID} & {\sffamily\small RESULT AND IMPLEMENTATION SUPPORT} & {\sffamily\small EVIDENCE}\\
+@@ -2033,47 +2308,56 @@
+ \endhead
+ \bottomrule
+ \endfoot
+-PPT-001 & Finite derivability is unique and computable in topological order.\newline{\footnotesize\color{KomorebiMuted}\path{ProofField.derive}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-002 & An AND-DAG has a least certificate pair, stopping at admissible leaves.\newline{\footnotesize\color{KomorebiMuted}\path{unique_and_dag_certificate}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-003 & AND-DAG core extraction is linear with indexed adjacency.\newline{\footnotesize\color{KomorebiMuted}graph algorithm, not a runtime certificate} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-004 & Minimum Certificate Decision is NP-complete.\newline{\footnotesize\color{KomorebiMuted}Set Cover example} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-005 & Certified paths transport functorially.\newline{\footnotesize\color{KomorebiMuted}structural theorem} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-006 & Local auditable certificates compose under a certificate functor.\newline{\footnotesize\color{KomorebiMuted}structural theorem} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-007 & Task information loss follows from compression collisions.\newline{\footnotesize\color{KomorebiMuted}task API} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
+-PPT-008 & Recoverability is a preorder.\newline{\footnotesize\color{KomorebiMuted}\path{recoverability_preorder}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-009 & The quotient by mutual recoverability is a partial order.\newline{\footnotesize\color{KomorebiMuted}equivalence API} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-010 & Least sufficient retention masks depend on the task family.\newline{\footnotesize\color{KomorebiMuted}finite countermodel} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-011 & Zero verification loss can coexist with positive discovery loss.\newline{\footnotesize\color{KomorebiMuted}AND-DAG example} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-012 & Compression debt is monotone under retention.\newline{\footnotesize\color{KomorebiMuted}\path{compression_debt}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-013 & Bridge criticality equals target domination.\newline{\footnotesize\color{KomorebiMuted}\path{dominated_targets}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-014 & Weighted future reach is monotone and submodular.\newline{\footnotesize\color{KomorebiMuted}exhaustive finite checker} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-015 & Greedy cardinality retention achieves at least $1-1/e$ for positive feasible cardinality budgets.\newline{\footnotesize\color{KomorebiMuted}greedy and exact solvers} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-016 & Append-only certified updates preserve derivability.\newline{\footnotesize\color{KomorebiMuted}versioning check} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-017 & Forward dependency closure is the minimal closed syntactic review set.\newline{\footnotesize\color{KomorebiMuted}\path{affected_descendants}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-018 & Equicorrelated review has the stated effective count.\newline{\footnotesize\color{KomorebiMuted}covariance implementation} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-019 & GLS weights minimize unbiased linear review variance.\newline{\footnotesize\color{KomorebiMuted}\path{generalized_least_squares_weights}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-020 & Constant-rate audit queues have exact stable, critical, and unstable regimes.\newline{\footnotesize\color{KomorebiMuted}queue simulation} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-021 & Optimal expansion depth depends on the goal.\newline{\footnotesize\color{KomorebiMuted}refinement implementation} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-022 & Pure retention projections commute and are idempotent.\newline{\footnotesize\color{KomorebiMuted}\path{retention_projection}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-023 & Retention masks form a Boolean lattice.\newline{\footnotesize\color{KomorebiMuted}\path{retention_meet}, \path{retention_join}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-024 & A locally refuted route can coexist with another certified route.\newline{\footnotesize\color{KomorebiMuted}Alternative justification field} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-025 & A checked local refutation persists under unchanged interpretation.\newline{\footnotesize\color{KomorebiMuted}Scoped witness principle} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-026 & Finite arrow-covered matching views glue uniquely.\newline{\footnotesize\color{KomorebiMuted}\path{FiniteViewSystem.glue}} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
+-PPT-027 & Protected realizations admit exact solutions or obstruction witnesses, with classified fibers.\newline{\footnotesize\color{KomorebiMuted}\path{analyze_affine_realizations}} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
+-PPT-028 & Finite affine fibers have exact observation counts. Uniform entropy is a written corollary.\newline{\footnotesize\color{KomorebiMuted}Lean counts and binary tests} & {\sffamily\small\color{KomorebiTeal}Mixed}\\[5pt]
+-PPT-029 & Common offset and correlated error have the displayed reviewer MSE.\newline{\footnotesize\color{KomorebiMuted}\path{shared_bias_mse}} & {\sffamily\small\color{KomorebiTeal}Written}\\[5pt]
+-PPT-030 & Declared derivability equals membership in every declared field model.\newline{\footnotesize\color{KomorebiMuted}Closure and countermodels} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
+-PPT-031 & Local models form a contravariant diagram with an explicit realization equivalence.\newline{\footnotesize\color{KomorebiMuted}\path{Field.modelEquivSections}} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
+-PPT-032 & Whole-support matching local models glue. Pairwise coverage can fail.\newline{\footnotesize\color{KomorebiMuted}Proof-field views and counterexample} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
+-PPT-033 & All predicate tasks are sufficient exactly for injective encodings.\newline{\footnotesize\color{KomorebiMuted}Compression collision theorem} & {\sffamily\small\color{KomorebiTeal}Lean}\\[5pt]
++PPT-001 & Finite derivability is unique and computable in topological order.\newline{\footnotesize\color{KomorebiMuted}\path{ProofField.derive}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-002 & An AND-DAG has a least certificate pair, stopping at admissible leaves.\newline{\footnotesize\color{KomorebiMuted}\path{unique_and_dag_certificate}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-003 & AND-DAG core extraction is linear with indexed adjacency.\newline{\footnotesize\color{KomorebiMuted}graph algorithm, not a runtime certificate} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-004 & Minimum Certificate Decision is NP-complete.\newline{\footnotesize\color{KomorebiMuted}Set Cover example} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-005 & Certified paths transport functorially.\newline{\footnotesize\color{KomorebiMuted}structural theorem} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-006 & Local auditable certificates compose under a certificate functor.\newline{\footnotesize\color{KomorebiMuted}structural theorem} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-007 & Task information loss follows from compression collisions.\newline{\footnotesize\color{KomorebiMuted}task API} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-008 & Recoverability is a preorder.\newline{\footnotesize\color{KomorebiMuted}\path{recoverability_preorder}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-009 & The quotient by mutual recoverability is a partial order.\newline{\footnotesize\color{KomorebiMuted}equivalence API} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-010 & Least sufficient retention masks depend on the task family.\newline{\footnotesize\color{KomorebiMuted}finite countermodel} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-011 & Zero verification loss can coexist with positive discovery loss.\newline{\footnotesize\color{KomorebiMuted}AND-DAG example} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-012 & Compression debt is monotone under retention.\newline{\footnotesize\color{KomorebiMuted}\path{compression_debt}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-013 & Bridge criticality equals target domination.\newline{\footnotesize\color{KomorebiMuted}\path{dominated_targets}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-014 & Weighted future reach is monotone and submodular.\newline{\footnotesize\color{KomorebiMuted}exhaustive finite checker} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-015 & Greedy cardinality retention achieves at least $1-1/e$ for positive feasible cardinality budgets.\newline{\footnotesize\color{KomorebiMuted}greedy and exact solvers} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-016 & Append-only certified updates preserve derivability.\newline{\footnotesize\color{KomorebiMuted}versioning check} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-017 & Forward dependency closure is the minimal closed syntactic review set.\newline{\footnotesize\color{KomorebiMuted}\path{affected_descendants}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-018 & Equicorrelated review has the stated effective count.\newline{\footnotesize\color{KomorebiMuted}covariance implementation} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-019 & GLS weights minimize unbiased linear review variance.\newline{\footnotesize\color{KomorebiMuted}\path{generalized_least_squares_weights}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-020 & Constant-rate audit queues have exact stable, critical, and unstable regimes.\newline{\footnotesize\color{KomorebiMuted}queue simulation} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-021 & Optimal expansion depth depends on the goal.\newline{\footnotesize\color{KomorebiMuted}refinement implementation} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-022 & Pure retention projections commute and are idempotent.\newline{\footnotesize\color{KomorebiMuted}\path{retention_projection}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-023 & Retention masks form a Boolean lattice.\newline{\footnotesize\color{KomorebiMuted}\path{retention_meet}, \path{retention_join}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-024 & A locally refuted route can coexist with another certified route.\newline{\footnotesize\color{KomorebiMuted}Alternative justification field} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-025 & A checked local refutation persists under unchanged interpretation.\newline{\footnotesize\color{KomorebiMuted}Scoped witness principle} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-026 & Finite arrow-covered matching views glue uniquely.\newline{\footnotesize\color{KomorebiMuted}\path{FiniteViewSystem.glue}} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-027 & Protected realizations admit exact solutions or obstruction witnesses, with classified fibers.\newline{\footnotesize\color{KomorebiMuted}\path{analyze_affine_realizations}} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-028 & Finite affine fibers have exact observation counts. Uniform entropy is a written corollary.\newline{\footnotesize\color{KomorebiMuted}Lean counts and binary tests} & {\sffamily\small\color{KomorebiTeal}Mixed}\\[2pt]
++PPT-029 & Common offset and correlated error have the displayed reviewer MSE.\newline{\footnotesize\color{KomorebiMuted}\path{shared_bias_mse}} & {\sffamily\small\color{KomorebiTeal}Written}\\[2pt]
++PPT-030 & Declared derivability equals membership in every declared field model.\newline{\footnotesize\color{KomorebiMuted}Closure and countermodels} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-031 & Local models form a contravariant diagram with an explicit realization equivalence.\newline{\footnotesize\color{KomorebiMuted}\path{Field.modelEquivSections}} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-032 & Whole-support matching local models glue. Pairwise coverage can fail.\newline{\footnotesize\color{KomorebiMuted}Proof-field views and counterexample} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-033 & All predicate tasks are sufficient exactly for injective encodings.\newline{\footnotesize\color{KomorebiMuted}Compression collision theorem} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-034 & Attained decoding is equivalent to fiber constancy. The decoder is unique on attained values.\newline{\footnotesize\color{KomorebiMuted}Recovery and finite decoder checks} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-035 & Joint tasks are sufficient exactly when each coordinate task is. Recovery maps compose.\newline{\footnotesize\color{KomorebiMuted}Recovery and joint partitions} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-036 & Protected rule data have an extension exactly when their least closure avoids the forbidden nodes.\newline{\footnotesize\color{KomorebiMuted}Extension and independent trace replay} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-037 & Closing earlier data before later data preserves the closure. Adding observations preserves obstructions.\newline{\footnotesize\color{KomorebiMuted}Extension} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-038 & A cover has universal gluing exactly when its visible rules entail every original rule.\newline{\footnotesize\color{KomorebiMuted}SemanticCover and finite cover certificates} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-039 & Typed rule transports preserve derivations, pull models back, and transport obstruction witnesses.\newline{\footnotesize\color{KomorebiMuted}RuleTransport} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-040 & A valid rule transport can collapse compatible source observations into an impossible target request.\newline{\footnotesize\color{KomorebiMuted}ExtensionExamples} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
++PPT-041 & Hashing cannot add recoverable tasks. Restricted injectivity prevents further task loss.\newline{\footnotesize\color{KomorebiMuted}Recovery} & {\sffamily\small\color{KomorebiTeal}Lean}\\[2pt]
+ \end{longtable}
+ \renewcommand{\arraystretch}{1.0}
++\endgroup
+ 
+ \clearpage
+ \section{Reproduction and verification records}
+ \label{app:reproduction}
+ 
+-The package separates the present editorial, software, and finite-computation checks from the inherited Lean run. The two changed mathematical statements concern fixed-context endpoint equivalence and serialized-byte digest stability. The gluing example now states its empty admissible-leaf set. The refinement recovery condition is proved in the text, not added to the inherited Lean development. The formal source files and dependency pins can be compared byte for byte with the preceding release. The recorded compiler evidence remains in \path{evidence/lean/}. A new compiler replay requires the separate pinned runtime and is not implied by a successful manuscript build.
++The package includes written proofs, exact finite producers and independent result checkers, and a fresh pinned Lean run. All thirteen modules were rebuilt and replayed. The mathematical imports remain cached and are not represented as freshly rebuilt dependencies. The current compiler record is \path{evidence/formal_1.7.0/}, while older evidence retains its original version. Source changes and the new mathematical environments are listed in the current progress ledger and publication report.
+ 
+ Before modifying the extracted package, check the delivered files:
+ \begin{lstlisting}[language=bash]
+@@ -2085,6 +2369,7 @@
+ python -m pytest -o addopts='' -q
+ python scripts/deep_validation.py
+ python scripts/verify_bridge.py
++python scripts/check_recovery_extension.py
+ python scripts/verify_publication_edition.py
+ \end{lstlisting}
+ 
+@@ -2092,7 +2377,7 @@
+ \begin{lstlisting}[language=bash]
+ python scripts/design_figures.py
+ \end{lstlisting}
+-The publication edition is 1.6.0, the Python distribution is 1.4.0, and the inherited formal evidence remains that of technical release 1.2.0. The Python change repairs tuple serialization in \path{provenance_digest}. It does not change the certificate, realization, or review algorithms. The digest migration is documented in \path{docs/PROVENANCE_FORMAT.md}.
++The publication edition is 1.7.0 and the Python distribution is 1.5.0. This distribution adds explicit finite recovery, protected extension, and semantic-cover APIs without changing the preceding provenance byte format. Its historical migration remains documented in \path{docs/PROVENANCE_FORMAT.md}. Installation may obtain build and numerical dependencies unless they are already supplied locally.
+ 
+ The manuscript can be rebuilt independently from \path{docs/}:
+ \begin{lstlisting}[language=bash]
+@@ -2109,9 +2394,9 @@
+ 
+ For PowerShell, extraction precedes installation:
+ \begin{lstlisting}[language={},basicstyle=\ttfamily\fontsize{9.5}{11.4}\selectfont]
+-$zip = '.\Proof_Path_Theory_Monograph_1.6.0.zip'
++$zip = '.\Proof_Path_Theory_Monograph_1.7.0.zip'
+ Expand-Archive -LiteralPath $zip -DestinationPath '.\proof-path-release'
+-Set-Location '.\proof-path-release\Proof_Path_Theory_Monograph_v1.6.0'
++Set-Location '.\proof-path-release\Proof_Path_Theory_Monograph_v1.7.0'
+ python scripts/check_manifest.py
+ python -m pip install -e ".[release]" --no-build-isolation
+ python -m pytest -o addopts='' -q

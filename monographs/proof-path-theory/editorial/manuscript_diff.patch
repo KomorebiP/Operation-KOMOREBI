@@ -1,0 +1,2174 @@
+--- v1.2.0/docs/Proof_Path_Theory.tex
++++ v1.3.0/docs/Proof_Path_Theory.tex
+@@ -1,58 +1,71 @@
+ \documentclass[11pt,oneside]{article}
+-
+-\usepackage[margin=0.88in]{geometry}
++\usepackage[a4paper,inner=24mm,outer=23mm,top=25mm,bottom=25mm,headsep=7mm,footskip=12mm]{geometry}
+ \usepackage[T1]{fontenc}
+ \usepackage[utf8]{inputenc}
+-\usepackage{lmodern}
++\usepackage{amsmath,amssymb,amsthm,mathtools}
++\usepackage{newtxtext,newtxmath}
++\usepackage[scaled=0.92]{sourcesanspro}
+ \usepackage[nopatch=footnote]{microtype}
+-\usepackage{amsmath,amssymb,amsthm,mathtools}
+-\usepackage{booktabs,longtable,array,enumitem}
++\usepackage{booktabs,longtable,array,enumitem,tabularx}
+ \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+ \usepackage{graphicx,float,caption}
+-\usepackage{xcolor,hyperref,url}
+-\usepackage{fancyhdr}
+-\usepackage{listings}
+-\usepackage{setspace}
+-
+-\hypersetup{
+-  colorlinks=true,
+-  linkcolor=blue!45!black,
+-  citecolor=blue!45!black,
+-  urlcolor=blue!45!black,
+-  pdftitle={Proof Path Theory},
+-  pdfauthor={Komorebi P.},
+-  pdfsubject={Certificates, compression, discovery fields, and mathematical memory},
+-  pdfkeywords={proof paths, proof compression, proof graphs, mathematical memory, provenance}
+-}
+-
++\usepackage{xcolor,tikz,titlesec,fancyhdr,listings,setspace,needspace,placeins}
++\usepackage{xurl}
++\usepackage{hyperref}
++\definecolor{KomorebiTeal}{HTML}{285A50}
++\definecolor{KomorebiInk}{HTML}{1E3430}
++\definecolor{KomorebiMuted}{HTML}{65706D}
++\definecolor{KomorebiPaper}{HTML}{F5F2E9}
++\definecolor{KomorebiPale}{HTML}{EAF0ED}
++\hypersetup{colorlinks=true,linkcolor=KomorebiTeal,citecolor=KomorebiTeal,urlcolor=KomorebiTeal,
++ pdftitle={Proof Path Theory: Certificates, Compression, Discovery Fields, and Mathematical Memory},
++ pdfauthor={Komorebi P.},pdfsubject={Monograph edition 1.3.0},
++ pdfkeywords={proof fields, realization, compression, certificates, mathematical memory}}
+ \graphicspath{{figures/}}
+-\setstretch{1.035}
++\setstretch{1.055}
+ \setlength{\parindent}{0pt}
+-\setlength{\parskip}{5.5pt}
+-\setlist[itemize]{leftmargin=1.55em,itemsep=2pt,topsep=3pt}
+-\setlist[enumerate]{leftmargin=1.8em,itemsep=2pt,topsep=3pt}
+-\setcounter{secnumdepth}{3}
+-\setcounter{tocdepth}{2}
+-
++\setlength{\parskip}{5.4pt plus 0.5pt}
++\setlength{\emergencystretch}{2em}
++\setlength{\headheight}{14pt}
++\setcounter{secnumdepth}{2}
++\setcounter{tocdepth}{1}
++\setlist[itemize]{leftmargin=1.45em,itemsep=2pt,topsep=4pt}
++\setlist[enumerate]{leftmargin=1.8em,itemsep=2pt,topsep=4pt}
++\captionsetup{font=small,labelfont={bf,color=KomorebiTeal},labelsep=period,skip=6pt}
++\setlength{\textfloatsep}{15pt plus 2pt minus 2pt}
++\setlength{\intextsep}{14pt plus 2pt minus 2pt}
++\renewcommand{\topfraction}{0.9}
++\renewcommand{\bottomfraction}{0.85}
++\renewcommand{\textfraction}{0.08}
++\renewcommand{\floatpagefraction}{0.72}
+ \pagestyle{fancy}
+ \fancyhf{}
+-\fancyhead[L]{\small Proof Path Theory}
+-\fancyhead[R]{\small Komorebi P.}
+-\fancyfoot[C]{\thepage}
+-\setlength{\headheight}{14pt}
+-
++\fancyhead[L]{\sffamily\small\color{KomorebiMuted}Proof Path Theory}
++\fancyhead[R]{\sffamily\small\color{KomorebiMuted}\nouppercase{\leftmark}}
++\fancyfoot[L]{\sffamily\fontsize{7.7}{9}\selectfont\color{KomorebiTeal}OPERATION KOMOREBI}
++\fancyfoot[R]{\sffamily\small\color{KomorebiInk}\thepage}
++\renewcommand{\headrulewidth}{0.3pt}
++\renewcommand{\footrulewidth}{0pt}
++\renewcommand{\sectionmark}[1]{}
++\titleformat{\section}{\Large\sffamily\bfseries\color{KomorebiTeal}}{\thesection}{0.65em}{}
++\titlespacing*{\section}{0pt}{19pt plus 3pt}{8pt}
++\titleformat{\subsection}{\large\sffamily\bfseries\color{KomorebiInk}}{\thesubsection}{0.65em}{}
++\titlespacing*{\subsection}{0pt}{13pt plus 2pt}{5pt}
++\newtheoremstyle{komorebiplain}{7pt}{7pt}{\itshape}{}{\bfseries\color{KomorebiInk}}{.}{0.6em}{}
++\newtheoremstyle{komorebidefinition}{7pt}{7pt}{}{}{\bfseries\color{KomorebiInk}}{.}{0.6em}{}
++\newtheoremstyle{komorebiremark}{6pt}{6pt}{}{}{\itshape\color{KomorebiInk}}{.}{0.6em}{}
++\theoremstyle{komorebiplain}
+ \newtheorem{theorem}{Theorem}[section]
+ \newtheorem{proposition}[theorem]{Proposition}
+ \newtheorem{lemma}[theorem]{Lemma}
+ \newtheorem{corollary}[theorem]{Corollary}
+-\theoremstyle{definition}
++\theoremstyle{komorebidefinition}
+ \newtheorem{definition}[theorem]{Definition}
+ \newtheorem{example}[theorem]{Example}
+ \newtheorem{problem}[theorem]{Problem}
+-\theoremstyle{remark}
++\theoremstyle{komorebiremark}
+ \newtheorem{remark}[theorem]{Remark}
+ \newtheorem{warning}[theorem]{Warning}
+-
+ \newcommand{\Pcal}{\mathcal P}
+ \newcommand{\Jcal}{\mathcal J}
+ \newcommand{\Qcal}{\mathcal Q}
+@@ -64,6 +77,7 @@
+ \newcommand{\Tcal}{\mathcal T}
+ \newcommand{\Fcal}{\mathcal F}
+ \newcommand{\Anc}{\operatorname{Anc}}
++\newcommand{\AncL}{\operatorname{Anc}_L}
+ \newcommand{\Desc}{\operatorname{Desc}}
+ \newcommand{\Reach}{\operatorname{Reach}}
+ \newcommand{\Cost}{\operatorname{Cost}}
+@@ -71,43 +85,94 @@
+ \newcommand{\Debt}{\operatorname{Debt}}
+ \newcommand{\argmin}{\operatorname*{arg\,min}}
+ \newcommand{\argmax}{\operatorname*{arg\,max}}
+-
+-\lstset{
+-  language=Python,
+-  basicstyle=\ttfamily\scriptsize,
+-  breaklines=true,
+-  frame=single,
+-  showstringspaces=false,
+-  columns=fullflexible,
+-  keepspaces=true
+-}
+-
+-\title{\textbf{Proof Path Theory}\\
+-\large Certificates, Compression, Discovery Fields, and Mathematical Memory}
+-\author{Komorebi P.}
+-\date{Version 1.2.0 / 18 October 2026}
+-
++\lstset{language=Python,basicstyle=\ttfamily\small,breaklines=true,
++ frame=single,rulecolor=\color{KomorebiPale},backgroundcolor=\color{KomorebiPale!35},
++ framerule=0.4pt,xleftmargin=5pt,xrightmargin=5pt,framexleftmargin=4pt,framexrightmargin=4pt,
++ showstringspaces=false,columns=fullflexible,keepspaces=true,aboveskip=9pt,belowskip=9pt}
++\newcommand{\monographpart}[3]{%
++ \FloatBarrier\clearpage\refstepcounter{part}\markboth{#2}{#2}%
++ \addcontentsline{toc}{part}{\protect\numberline{\thepart}#1}%
++ {\sffamily\bfseries\small\color{KomorebiTeal}PART \thepart\par}%
++ \vspace{5pt}{\fontsize{23}{27}\selectfont\bfseries\color{KomorebiInk}#1\par}%
++ \vspace{7pt}{\color{KomorebiMuted}#3\par}\vspace{5pt}%
++ {\color{KomorebiTeal}\hrule height 0.5pt}\vspace{5pt}}
+ \begin{document}
+-\maketitle
+-
+-\begin{abstract}
+-A finished proof is a certificate of implication and a compressed projection of a larger mathematical object. The larger object may contain alternative derivations, examples, failed routes, exact computations, boundary cases, provenance, and bridges to later questions. This paper develops a finite Proof Path Theory that keeps these layers distinct. A proof field is a typed acyclic justification hypergraph. Certificates are selected certified subfields that derive declared targets from admissible leaves. In the fixed AND-DAG case, dependency ancestry gives a unique minimal certificate. With alternative justifications, minimum certificate selection is NP-complete by reduction from Set Cover.
+-
+-Compression is defined relative to task families, producing endpoint, audit, and discovery equivalence, a recoverability preorder, vector-valued loss, and expected recovery debt. A latent bridge graph models declared future reach. Its weighted coverage utility is monotone and submodular, yielding a greedy cardinality guarantee. The framework also treats versioned proof objects, evidence ledgers, correlated review, audit queues, and goal-dependent refinement. The accompanying Python package implements the finite theory, validates proof fields, extracts certificates, computes retention policies, and reproduces the examples. The theory preserves deductive standards while formalizing what compression retains, discards, and makes costly to reconstruct. Version 1.2 adds a Lean-checked bridge from declared proof fields to coherent realization spaces, with whole-support gluing, scoped countermodels, linear obstruction alternatives, exact finite-field observation counts, and a native declaration export.
+-\end{abstract}
+-
+-\begin{center}
+-\fbox{\begin{minipage}{0.92\linewidth}
+-\textbf{Status of the work.} The mathematical theorems below concern finite declared proof fields, task families, bridge graphs, covariance matrices, and queue models. Their proofs are given in the text. The computational results are exact finite checks or deterministic numerical examples generated from stated inputs. No simulation is presented as an empirical law of mathematical discovery. Version 1.2 kernel-checks the stated realization bridge and selected general linear and compression results. This is not a formalization of every result in the paper or empirical proof of social distortion. Historical priority and comparison with neighboring literatures remain separate questions.
+-\end{minipage}}
+-\end{center}
+-
++\begin{titlepage}
++\thispagestyle{empty}
++\begin{tikzpicture}[remember picture,overlay]
++ \fill[KomorebiPaper] (current page.south west) rectangle (current page.north east);
++ \fill[KomorebiTeal] (current page.south west) rectangle ([xshift=3.2mm]current page.north west);
++\end{tikzpicture}
++\vspace*{2mm}
++{\sffamily\bfseries\fontsize{9}{12}\selectfont\color{KomorebiTeal}OPERATION KOMOREBI\par}
++\vspace{4pt}
++{\sffamily\fontsize{8}{11}\selectfont\color{KomorebiMuted}REALIZATION CALCULUS\par}
++\vspace{24mm}
++{\sffamily\bfseries\fontsize{8.7}{12}\selectfont\color{KomorebiTeal}MATHEMATICAL REASONING AND REALIZATION\par}
++\vspace{8pt}
++{\sffamily\bfseries\fontsize{34}{39}\selectfont\color{KomorebiInk}Proof Path Theory\par}
++\vspace{10pt}
++{\sffamily\fontsize{15}{20}\selectfont\color{KomorebiInk}Certificates, compression, discovery fields,\\and mathematical memory\par}
++\vspace{12pt}
++{\color{KomorebiTeal}\rule{45mm}{0.5pt}\par}
++\vspace{6pt}
++{\sffamily\fontsize{10}{13}\selectfont\color{KomorebiInk}Monograph\par}
++\vfill
++{\sffamily\bfseries\fontsize{11}{14}\selectfont\color{KomorebiInk}Komorebi P.\par}
++\vspace{6pt}
++{\sffamily\fontsize{9}{12}\selectfont\color{KomorebiMuted}Publication edition 1.3.0 / 19 October 2026\par}
++\vspace{6pt}
++{\sffamily\fontsize{8}{11}\selectfont\color{KomorebiMuted}CERTIFICATES\quad REALIZATION\quad MATHEMATICAL MEMORY\par}
++\vspace*{5mm}
++\end{titlepage}
++\pagenumbering{roman}
++\markboth{Monograph}{Monograph}
++\section*{Preface}
++\addcontentsline{toc}{section}{Preface}
++A proof establishes an implication. The work surrounding that proof may answer other questions: why a definition was chosen, which hypothesis prevented an argument from failing, or how a change of representation opened a route that had not previously been visible. Publishing a certificate and preserving this larger mathematical record are related tasks, but they are not the same task.
++
++Proof Path Theory studies that distinction through explicit finite objects. A proof field contains typed claims, justifications, evidence, and targets. Each justification requires all of its listed premises, while alternative justifications supply different routes to a conclusion. A certified derivation lies inside this field without converting its conjectures, examples, and unsuccessful attempts into additional proof steps.
++
++The theory has two complementary directions. One selects or compresses a record while asking what remains recoverable. The other assembles local descriptions into coherent realizations. The first leads to certificate complexity, task sufficiency, information loss, and retention. The second gives a precise connection with Komorebi Space through local rule models, restriction maps, and gluing. A separate linear model yields positive realization certificates, negative obstruction witnesses, and exact observation counts.
++
++Failed approaches remain part of the ambient record for a reason. They may isolate a missing hypothesis or reveal a limitation of one method. Their value does not turn a failed search into a proof of impossibility. A refutation must identify the assertion it refutes, the assumptions under which it applies, and the witness that establishes the failure. That scope is as important as the witness itself.
++
++The later chapters examine how an archive changes and how its claims are evaluated. Their review and queue models are deliberately conditional. A covariance formula describes a specified dependence model, not an empirical diagnosis of a community. A record of social reception does not determine whether a proof is valid. Keeping those distinctions explicit allows the theory to study the transmission of mathematics without replacing mathematical standards with social judgments.
++
++The mathematical ingredients come from proof theory, graph theory, category theory, linear algebra, information theory, and optimization. Their role here is to form one account of certified reasoning and the surrounding information that later inquiry may need. Familiar ingredients are not concealed, and a new notation is not presented as evidence of new mathematical truth.
++
++This monograph preserves written proofs, finite examples, and the connection to the accompanying implementation. Its formal concordance identifies the selected Lean interfaces. The aim is a record that a reader can inspect at several levels: the statement, its argument, the hypotheses that make it valid, and the computational evidence supplied for its implementation.
++
++\clearpage
++\section*{Reading guide}
++\addcontentsline{toc}{section}{Reading guide}
++Part I defines the proof field and its certificate relation. It distinguishes a failed route from a refuted goal, proves the least-core result for an AND-DAG, and identifies the combinatorial difficulty introduced by alternatives.
++
++Part II constructs coherent local models and their restriction maps. The whole-support gluing theorem is the central bridge to Komorebi Space. The binary examples show how a prescribed observable can obstruct a realization or leave a precisely countable ambiguity.
++
++Part III studies what a representation preserves. Tasks are maps on a declared family of possible archives, and one decoder must work throughout that family. Recovery order, loss, debt, and bridge retention are then developed from this definition.
++
++Part IV treats revision, provenance, correlated review, audit capacity, and expansion depth. The conclusions are mathematical consequences of their displayed models. Testing those models against human or machine research remains a different investigation.
++
++Part V presents executable examples, implementation boundaries, and open questions. The appendices collect notation, the stable theorem ledger, reproduction commands, and a complete minimal JSON record.
++
++A short technical route is Sections~\ref{sec:old3}, \ref{sec:old4}, \ref{sec:old24}, and \ref{sec:old7}. For information and retention, add Sections~\ref{sec:old23}, \ref{sec:old13}, and \ref{sec:old14}. For the social interpretation question, read Sections~\ref{sec:old17} and \ref{sec:old25} together rather than treating agreement as a proof certificate.
++
++\subsection*{Proofs and evidence}
++The supplied written arguments cover the stated mathematical results. Selected realization, linear-algebraic, and compression interfaces have accompanying Lean sources and recorded verification from technical release 1.2.0. Those formal sources are unchanged here. The present edition supplies a new editorial review and finite implementation checks, not a new cumulative Lean compilation.
++
++The 33 stable result identifiers do not count individual discoveries or formal declarations. Exact finite tests are not proofs of an implementation for arbitrary inputs. The entropy interpretation assumes a uniform distribution and remains separate from the checked cardinality identities. No empirical claim about reviewers, historical priority claim, or independent peer review is inferred from these records.
++
++\clearpage
+ \tableofcontents
+-\newpage
++\clearpage
++\pagenumbering{arabic}
++\monographpart{Proof fields and certificates}{Fields and certificates}{A proof certificate records a derivation. A proof field also retains the alternatives, evidence, and failed approaches surrounding it. We begin by separating these roles, then identify the least certificate in a fixed dependency structure and the selection problem created by alternative derivations.}
+ 
+ \section{Introduction}
+-
+-Mathematics usually publishes a proof after the proof has been compressed. Definitions have stabilized. Failed attempts have disappeared. A long calculation has become a lemma. A representation change that made the argument visible is replaced by a direct sentence. This is often an improvement. The final certificate is easier to verify and easier to reuse.
++\label{sec:old1}
++
++A published proof often presents an argument after its exploratory work has been compressed. Definitions have stabilized, unsuccessful approaches have been set aside, and a long calculation may now appear as a lemma. The change of representation that first made the argument visible can disappear into a single sentence. Such compression is often useful: it leaves a certificate that is easier to check and reuse.
+ 
+ Compression can also remove mathematical information that is not needed for the present theorem. An example may explain why a definition was chosen. A failed route may isolate the exact boundary of a method. An alternative proof may carry a bridge to another field. A computation may reveal a stronger statement than the one originally sought. None of these objects is automatically part of the final implication
+ \[
+@@ -125,33 +190,31 @@
+ \]
+ The certificate answers whether the conclusion follows. The discovery field records how the conclusion became reachable, what alternatives were considered, what was lost during compression, and which omitted structures may matter later.
+ 
+-The finite theory developed here has six connected layers.
+-
+-\begin{enumerate}
+-\item A typed proof field records claims, admissible leaves, justifications, evidence, and targets.
+-\item A certified subfield separates proved or otherwise certified transitions from candidates and interpretations.
+-\item A certificate is a selected subfield that derives the target.
+-\item Compression is evaluated relative to declared tasks rather than by length alone.
+-\item A bridge graph represents possible future reach and makes archival retention an optimization problem.
+-\item Versioning, review, audit, and refinement describe the life of the proof after the first certificate exists.
+-\end{enumerate}
+-
+-\begin{figure}[H]
++The construction begins with a typed field of claims, justifications, evidence, and targets. Its certified rules determine which targets are derivable. A certificate selects enough of those records to support a declared conclusion, while the ambient field can retain unresolved or refuted alternatives.
++
++A second layer asks what survives when the field is compressed. The answer depends on the questions that a representation must support. An archive intended for future discovery may preserve examples and failed approaches that a verification certificate can omit. A bridge graph makes one such retention problem precise.
++
++The final layer concerns the continuing life of the archive. Revisions change the set of claims that need review. Shared errors affect the information supplied by multiple reviewers. Audit capacity limits how quickly new candidates can be checked. These models are connected by their declared proof objects, without treating social judgments as substitutes for deduction.
++
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.96\linewidth]{fig_01_architecture.pdf}
+ \caption{The formal architecture. The certificate is one verified projection of a larger versioned proof field.}
+ \label{fig:architecture}
+ \end{figure}
+ 
+-The ambient development treats the proof field as an ambient field of candidate and certified paths. It connects coherent local proof views to the strict Komorebi realization construction, and adds an exact finite information measure for informative observations. The mathematical validity of a proof remains distinct from how communities discover, interpret, or review it.
+-
+-The theory is intentionally finite at its foundation. Finite objects make every closure condition and algorithm explicit. Infinite, probabilistic, and higher categorical extensions are listed later as open programs rather than silently assumed.
++Komorebi Space enters when local descriptions of a proof field must agree. The construction of local rule models supplies actual restriction maps, not merely a visual analogy between two graphs. A gluing theorem identifies a sufficient condition for assembling those models, and a counterexample explains why pairwise dependency checks can miss a conjunctive rule. In a separate linear setting, the size of a realization fiber measures exactly what a new observation distinguishes.
++
++The implemented proof fields are finite and acyclic. Some structural statements, including rule soundness and the linear separation alternative, are given in greater generality where their hypotheses allow it. Extensions to infinite search, probabilistic inference, and higher categorical proof objects require their own assumptions. Background on formal proof systems may be found in \cite{buss,troelstra}.
++
+ 
+ \section{Claim types and logical boundaries}
++\label{sec:old2}
+ 
+ A useful theory of proof paths must not turn every recorded object into a proof step. A notebook may contain a theorem, a conjecture, a failed analogy, a numerical experiment, and a historical interpretation on the same page. Their coexistence does not give them the same logical status.
+ 
+ \begin{definition}[Evidence kind]
++\label{res:2:1}
+ An evidence kind is a declared type attached to a record supporting a claim or justification. The core finite vocabulary used here is
+ \[
+ \begin{aligned}
+@@ -166,16 +229,20 @@
+ The word ``certifies'' is deliberately separate from the evidence label. An exact computation may certify a finite identity while providing only numerical evidence for a general statement. An external result may certify a step only on the domain covered by its hypotheses. The scope field is therefore part of the mathematical object.
+ 
+ \begin{warning}[Evidence types are not one ranking]
++\label{res:2:2}
+ The evidence kinds do not form a universal total order. A formal proof of a weak statement and an exact computation of a stronger finite instance cannot be compared by one scalar without specifying the task. The ledger retains type and scope instead of replacing them with a single confidence number.
+ \end{warning}
+ 
+ This separation will be used throughout. Candidate edges may remain in the discovery field, but only certified edges enter a proof certificate.
+ 
++
+ \section{Typed proof fields}
++\label{sec:old3}
+ 
+ The first formal object is a directed hypergraph. A justification may require several premises at once, and a claim may admit several alternative justifications.
+ 
+ \begin{definition}[Typed proof field]
++\label{res:3:1}
+ A finite typed proof field is a tuple
+ \[
+ \Pcal=(V,\Jcal,A,T,\tau,\Ecal,\mathbf v,\mathbf c),
+@@ -198,23 +265,27 @@
+ A single justification is conjunctive in its premise set. All listed premises must be available. Multiple justifications with the same conclusion are alternatives. This gives the familiar AND/OR structure of proof search without forcing it into an ordinary graph.
+ 
+ \begin{definition}[Admissible leaf]
+-A node is an admissible leaf when it is a required premise, a declared axiom, or an explicitly cited external result. A zero-premise certified justification may also introduce a leaf when the proof system permits it.
++\label{res:3:2}
++A node is an admissible leaf when it is a required premise, a declared axiom, or an explicitly admitted external result. Write $L$ for this set, so $A\subseteq L$. A certified justification with no premises can also derive a node, but it remains a justification and need not make that node a member of $L$. The distinction matters when extracting the smallest certificate.
+ \end{definition}
+ 
+ \begin{definition}[Certified subfield]
+-The certified subfield $\Pcal^{\mathrm{cert}}$ contains every node of $\Pcal$ and only those justifications whose evidence and scope have been declared sufficient to certify the recorded transition.
++\label{res:3:3}
++The certified subfield $\Pcal^{\mathrm{cert}}$ contains every node of $\Pcal$ and only those justifications accepted by the declared certification policy. Evidence and scope are part of that policy. A certification flag records acceptance: it is not itself a proof that the rule is sound under an intended mathematical interpretation. That separate soundness contract is made explicit in Section~\ref{sec:old24}.
+ \end{definition}
+ 
+ \begin{definition}[Derivability]
++\label{res:3:4}
+ Let $K\subseteq V$ be a selected node set and let $H\subseteq\Jcal$ be a selected justification set. The derivable set $D(K,H)$ is the least subset of $K$ satisfying:
+ \begin{enumerate}[label=\textup{(\roman*)}]
+-\item every selected admissible leaf belongs to $D(K,H)$;
++\item every selected admissible leaf belongs to $D(K,H)$.
+ \item if $j\in H$, $\operatorname{prem}(j)\subseteq D(K,H)$, and $\operatorname{con}(j)\in K$, then $\operatorname{con}(j)\in D(K,H)$.
+ \end{enumerate}
+ When only certified justifications are allowed, write $D_{\mathrm{cert}}(K,H)$.
+ \end{definition}
+ 
+ \begin{proposition}[Finite derivability]
++\label{res:3:5}
+ For a finite acyclic proof field, $D(K,H)$ is uniquely determined and can be computed in one topological pass through the dependency graph.
+ \end{proposition}
+ 
+@@ -222,17 +293,68 @@
+ Acyclicity gives a topological ordering of the nodes. Begin with the selected admissible leaves. At each later node, test whether one selected incoming justification has all of its premises already derived. Add the node exactly when such a justification exists. No later step can change the status of an earlier node because all dependencies point forward. The resulting set satisfies the closure rules. Any set satisfying the rules must contain every node added by this pass, so the result is the least such set and is unique.
+ \end{proof}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.86\linewidth]{fig_03_alternative_hypergraph.pdf}
+ \caption{A proof field with alternative certified justifications. Squares represent justification records.}
+ \label{fig:andor}
+ \end{figure}
+ 
++
++\section{The ambient proof field and the meaning of failure}
++\label{sec:old22}
++\label{sec:ambient}
++
++A finished proof is rarely the only route the researcher could have explored. An archive often contains sketches that were never completed, arguments that failed because of a specific hypothesis, conjectured bridges that remain untested, and genuinely refuted local constructions. It is tempting to call this whole archive a proof, but doing so would erase the distinction between a certified result and a record of exploration. The \emph{ambient proof field} provides a more precise language: it is the declared field of reachable or recorded mathematical states and typed candidate transitions in which certified proof paths form a distinguished subfield.
++
++The finite hypergraph model permits \path{failed_route}, \path{boundary_case}, and \path{counterexample} nodes. Their presence is useful, but none is a logically justified global nonexistence claim by itself. A failed search is not necessarily a proof of impossibility. A counterexample to one proposed lemma is not necessarily a counterexample to the goal. An exact obstruction must have a declared scope and a checkable witness.
++
++\begin{definition}[Scoped branch assessment]
++\label{res:22:1}
++Let $\Pcal$ be a finite typed proof field with declared premises $A$ and target $t$. An exploratory branch is a finite sequence of candidate justifications whose certification and outstanding obligations are explicitly recorded. Its assessment is one of the following, relative to stated premises and rules:
++\begin{enumerate}[label=\textup{(\roman*)}]
++\item \emph{Open}: obligations remain unresolved.
++\item \emph{Abandoned}: exploration stopped without a certificate of impossibility.
++\item \emph{Locally refuted}: a checked counterexample or obstruction excludes a stated intermediate step under specified hypotheses.
++\item \emph{Certified}: the selected justifications meet the declared proof certificate conditions.
++\end{enumerate}
++An assessment is a record of the branch, not a truth value assigned to every possible proof of $t$.
++\end{definition}
++
++\begin{proposition}[Local failure does not imply global failure]
++\label{res:22:2}
++A finite proof field may contain a locally refuted branch to target $t$ while also containing a certified derivation of $t$ from its declared premises.
++\end{proposition}
++\begin{proof}
++Take a premise $A$ and two alternative candidate derivations of $t$. Let the first use a proposed intermediate lemma $L$ that has a checked counterexample, so the corresponding justification is not certified. Let the second use a distinct certified justification from $A$ to $t$. The certified closure reaches $t$ by the second route. The failed first route remains a valid record of unsuccessful exploration, but cannot negate the existence of the second certificate. The same example can be represented by the alternative justification hypergraph developed earlier.
++\end{proof}
++
++\begin{figure}[htbp]
++\centering
++\includegraphics[width=0.92\linewidth]{fig_14_ambient_field.pdf}
++\caption{A certified derivation and a locally blocked candidate route coexist in the same declared proof field. The blocked branch is not a certificate that the goal itself is impossible. The figure records declared branch statuses, not an exhaustive space of all possible proofs.}
++\label{fig:ambient}
++\end{figure}
++
++The logical lesson is substantive for machine reasoning. A search timeout, budget exhaustion, invalid intermediate conjecture, or failure to find a proof all have different meanings. Only a certificate whose conclusion explicitly concerns nonexistence under a declared model and scope licenses a nonexistence claim. This is especially important when a failed branch is used to prune an automated search. Pruning the refuted step may be safe, while pruning its entire goal may discard a genuine proof.
++
++\begin{proposition}[Scoped refutation survives unchanged context]
++\label{res:22:3}
++Suppose a witness $w$ is verified by a sound checker to refute the predicate $L$ under assumptions $A$. In any later archive revision that retains the same interpretation of $L$, the same assumptions, and the checker's verification rules, $w$ remains a refutation of $L$. No conclusion follows about different predicates, altered assumptions, or alternative branches to a different goal.
++\end{proposition}
++\begin{proof}
++The verification of $w$ depends only on the declared predicate, assumptions, and checking rules. An append-only collection of unrelated exploratory records does not alter those inputs. Therefore the same verification remains valid. When any of those inputs changes, the earlier check no longer certifies the revised claim without an explicit comparison theorem.
++\end{proof}
++
++This is a qualified stability principle, not a general theorem that proof search is decidable. The append-only derivability result of Section~\ref{sec:versioned} concerns certified edges. The present proposition concerns the narrower persistence of a checked counterexample under a fixed interpretation. Both retain scope as part of the mathematical data.
++
++
+ \section{Certificates and verification closure}
++\label{sec:old4}
+ 
+ \begin{definition}[Certificate]
+-A certificate for a requested target set $T_0\subseteq V$ is a pair
++\label{res:4:1}
++A certificate for a nonempty requested target set $T_0\subseteq V$ is a pair
+ \[
+ \Ccal=(K,H),
+ \qquad K\subseteq V,
+@@ -244,43 +366,48 @@
+ \qquad\text{and}\qquad
+ T_0\subseteq D_{\mathrm{cert}}(K,H).
+ \]
+-The certificate is node-minimal, justification-minimal, or cost-minimal according to the declared objective.
+-\end{definition}
+-
+-The canonical target request is usually a subset of the declared set $T$, although the same object can certify an intermediate node selected for local analysis. This definition preserves the requested endpoint judgment and requires every target to be reconstructed from certified transitions. Extra nodes may remain in a certificate, but they do not help minimality under nonnegative costs.
++Order certificates componentwise: $(K,H)\leq(K^{\prime},H^{\prime})$ means $K\subseteq K^{\prime}$ and $H\subseteq H^{\prime}$. A least certificate is contained in every certificate for the same request. Minimizing only the node set, only the justification set, or a numerical cost is a different objective.
++\end{definition}
++
++The usual target request is a subset of $T$, but an intermediate node may be requested for local analysis. Only a justification whose premises have been derived and whose conclusion is selected can contribute to the derivation. A record may retain other, inactive justifications without using them as proof steps. Extra records cannot lower a nonnegative additive cost, although zero costs can allow several minimizing records.
+ 
+ \subsection{The fixed AND-DAG case}
+ 
+-The simplest case occurs when every relevant derived node has exactly one certified incoming justification. Then every recorded dependency is mandatory.
++The simplest case occurs when each relevant node that is not an admissible leaf has one certified incoming justification. Backward expansion stops at admissible leaves. A proof of a statement that has already been admitted as a leaf is not required to use that statement.
+ 
+ \begin{definition}[AND-DAG]
+-A certified proof field is an AND-DAG relative to target set $T_0$ when every nonleaf node in the certified ancestry of $T_0$ has exactly one certified incoming justification.
+-\end{definition}
+-
+-Let $\Anc(T_0)$ denote the node ancestry obtained by following the unique certified justifications backward from $T_0$.
++\label{res:4:2}
++Starting at $T_0$, expand backward only at nodes outside $L$. The field is an AND-DAG relative to $T_0$ when every node reached outside $L$ has exactly one certified incoming justification. Every premise of that justification is then expanded in the same manner. The process may terminate at an admissible leaf or at a certified justification with no premises.
++\end{definition}
++
++Let $\Anc_L(T_0)$ denote the premise nodes reached by this backward expansion, stopping at $L$. Let $H_{\mathrm{core}}$ contain exactly the justifications selected at expanded nodes outside $L$.
+ 
+ \begin{theorem}[Unique verification core]
++\label{res:4:3}
+ \label{thm:and-core}
+-Let $\Pcal$ be an AND-DAG relative to $T_0$. The selected nodes
+-\[
+-K_{\mathrm{core}}=A\cup T_0\cup\Anc(T_0)
+-\]
+-together with the unique incoming justification of every selected nonleaf node form a certificate. This certificate is the unique node-minimal and justification-minimal certificate for the recorded derivation.
+-\end{theorem}
+-
+-\begin{proof}
+-Backward traversal from each target selects the unique justification that can derive it and every premise required by that justification. Repeating the process terminates because the dependency graph is finite and acyclic. The selected leaves are admissible, and a forward topological pass derives every selected node, so the construction is a certificate.
+-
+-Let $(K,H)$ be any certificate for the same target set. Each target must be derived. Since it has one certified incoming justification, that justification must lie in $H$, and all of its premises must lie in $K$. Applying the same argument recursively forces every node and justification in the backward ancestry into $(K,H)$. Therefore every certificate contains the constructed core. Uniqueness and minimality follow.
++Let $\Pcal$ be a finite acyclic AND-DAG relative to $T_0$. Put
++\[
++K_{\mathrm{core}}=A\cup T_0\cup\Anc_L(T_0).
++\]
++Then $(K_{\mathrm{core}},H_{\mathrm{core}})$ is a certificate and is the least certificate under componentwise inclusion. In particular it is the unique inclusion-minimal certificate pair for this recorded inference problem.
++\end{theorem}
++
++\begin{proof}
++Backward expansion terminates because the dependency graph is finite and acyclic. Every terminal node is either an admissible leaf or the conclusion of the selected justification with no premises. A forward topological pass therefore derives every expanded node. The required premises in $A$ are admissible and are retained even if the target does not use them. Thus the constructed pair is a certificate.
++
++Now let $(K,H)$ be any certificate for the same request. It contains $A\cup T_0$. If a requested or required predecessor node is outside $L$, its derivation must use its unique certified incoming justification. That justification belongs to $H$, and every one of its premises belongs to $K$. Repeating the argument forces all of $\Anc_L(T_0)$ and $H_{\mathrm{core}}$. At nodes in $L$ the argument stops. Hence $K_{\mathrm{core}}\subseteq K$ and $H_{\mathrm{core}}\subseteq H$, which proves the least-pair assertion.
++
++Minimizing one coordinate alone does not make the whole record unique. One may add an irrelevant node without changing the least justification set, or retain an unused rule without changing the least node set. The componentwise statement avoids this ambiguity.
+ \end{proof}
+ 
+ \begin{corollary}[Linear extraction]
+-The unique core of an AND-DAG can be extracted in time linear in the size of the relevant certified ancestry, assuming indexed adjacency and constant-time membership bookkeeping.
++\label{res:4:4}
++With indexed certified adjacency and constant-time membership bookkeeping, the core can be extracted in time linear in $|A|$ plus the number of visited nodes, selected justifications, and premise incidences.
+ \end{corollary}
+ 
+ This bound concerns the indexed graph algorithm. It is not a verified running-time bound for every scanning routine in the reference Python package.
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.90\linewidth]{fig_02_and_dag_core.pdf}
+ \caption{The unique verification core and optional discovery material in a fixed AND-DAG.}
+@@ -288,18 +415,23 @@
+ \end{figure}
+ 
+ \begin{remark}
++\label{res:4:5}
+ The theorem identifies the minimum certificate for the recorded derivation. It does not claim that the derivation is globally shortest among all possible proofs of the theorem. A different proof field may have a smaller core.
+ \end{remark}
+ 
++
+ \section{Alternative derivations and certificate complexity}
++\label{sec:old5}
+ 
+ When a claim admits several certified justifications, certificate extraction is no longer a backward closure problem. A local choice may be reused by several later obligations, which couples decisions across the field.
+ 
+ \begin{problem}[Minimum Certificate Decision]
++\label{res:5:1}
+ Given a finite acyclic certified proof field, a target set, nonnegative integer node and justification costs, and a budget $B$, determine whether a certificate of total cost at most $B$ exists.
+ \end{problem}
+ 
+ \begin{theorem}[Minimum certificate selection is NP-complete]
++\label{res:5:2}
+ \label{thm:minimum-certificate}
+ Minimum Certificate Decision is NP-complete, even when every nonzero cost is a unit node cost and all justification costs are zero.
+ \end{theorem}
+@@ -318,7 +450,7 @@
+ The dependency graph is acyclic. A certificate for $t$ must derive every $e_j$. Deriving $e_j$ requires at least one selected source node $s_i$ with $u_j\in S_i$. One selected $s_i$ may discharge several obligations, and its cost is paid once. Therefore a certificate of cost at most $k$ exists exactly when the original Set Cover instance has a cover of size at most $k$. The reduction is polynomial.
+ \end{proof}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.86\linewidth]{fig_04_certificate_complexity.pdf}
+ \caption{The Set Cover encoding used in the complexity proof.}
+@@ -326,20 +458,25 @@
+ \end{figure}
+ 
+ \begin{remark}[Algorithmic consequence]
+-Exact minimum certificate search is practical for small fields or fields with few alternatives. Large formal libraries require branch and bound, dynamic programming on restricted structures, integer programming, approximation, or proof-system-specific methods. The reference package includes an exact finite search with an explicit state limit. It does not hide the exponential worst case.
++\label{res:5:3}
++Exhaustive certificate selection is useful for small fields or fields with few alternatives. The reference implementation uses branch and bound with an explicit search-state limit. Its result is optimal for the stored finite cost data when the search completes. It does not remove the exponential worst case. The decision theorem concerns integer costs, while the Python interface accepts finite floating-point costs and compares their exact stored binary values as rationals. Printed cost totals remain floating-point summaries. The input conversion does not recover an intended real or decimal value that was never represented. See \cite{garey-johnson} for the background complexity language.
+ \end{remark}
+ 
++
+ \section{Certified paths as a category}
+-
+-The hypergraph model records local justifications. A complementary view treats complete certified transformations as morphisms.
++\label{sec:old6}
++
++The hypergraph model records local justifications. A complementary construction treats complete certified transformations as morphisms. It uses the usual category of paths \cite{maclane}.
+ 
+ \begin{definition}[Certified proof category]
+-A certified proof category $\mathsf{Cert}$ has mathematical states as objects and certified transformations as morphisms. Identity morphisms retain a state unchanged. Composition is sequential use of compatible certified transformations.
++\label{res:6:1}
++Fix a directed graph of typed mathematical states and certified primitive transformations. Its path category $\mathsf{Cert}$ has these states as objects and finite composable paths as morphisms. The empty path is an identity, and composition is concatenation. One may further identify paths by a declared congruence compatible with concatenation. Associativity and the identity laws then hold by construction.
+ \end{definition}
+ 
+ A state may be a proposition, a diagram, an exact finite computation, a coordinate representation, or a structured collection of claims. Candidate analogies may live in a larger discovery graph, but they do not enter $\mathsf{Cert}$ until their logical force and domain have been certified.
+ 
+ \begin{proposition}[Functorial transport]
++\label{res:6:2}
+ Let $F:\mathsf{Cert}_1\to\mathsf{Cert}_2$ be a functor. If
+ \[
+ A\xrightarrow{f_1}S_1\xrightarrow{f_2}\cdots\xrightarrow{f_r}B
+@@ -355,9 +492,10 @@
+ A functor maps objects to objects and morphisms to morphisms. It preserves identities and composition. The image of the composite path is therefore the composite of the image morphisms, which is certified in the target category.
+ \end{proof}
+ 
+-The proposition is elementary, but its interpretation is central. A proof may be transported into another language without changing validity. What changes is visibility. A spectral representation may expose a symmetry hidden in physical coordinates. A finite exact computation may expose the correct statement before a general derivation is known. A formal proof assistant may expand dependencies that a journal proof compresses.
++The proposition transports certification inside the two declared categories. To interpret that transport as preservation of a mathematical judgment, the target category and functor must also have sound interpretations of their objects and rules. These requirements cannot be inferred merely from the word functor. Under that contract, different representations can preserve a judgment while exposing different features of its argument. The category language is standard \cite{maclane}.
+ 
+ \begin{definition}[Compositional certificate map]
++\label{res:6:3}
+ A compositional certificate map is a functor
+ \[
+ \Ccal:\mathsf{Expanded}\longrightarrow\mathsf{Certificate}
+@@ -366,6 +504,7 @@
+ \end{definition}
+ 
+ \begin{proposition}[Local audit composes]
++\label{res:6:4}
+ If every primitive morphism in a finite path has an auditable certificate and the certificate map is compositional, then the composite path is auditable from the primitive certificates and the declared composition rules.
+ \end{proposition}
+ 
+@@ -373,34 +512,311 @@
+ Proceed by induction on path length. The length-zero case is an identity. Assume the first $r$ morphisms have an auditable composite certificate and append one certified morphism. Functoriality identifies the new certificate with the composition of the earlier certificate and the primitive certificate of the appended morphism. The declared composition rule completes the audit.
+ \end{proof}
+ 
++
++\monographpart{Coherent realization and information}{Coherent realization}{Local descriptions of a proof field need not assemble into one global model. This part constructs the comparison with Komorebi Space through explicit restriction maps. Whole-support gluing handles conjunctive rules. A separate linear realization problem supplies exact obstruction witnesses and counts the distinctions made by an additional observation.}
++
++\section{Komorebi Space, realization fibers, and informative questions}
++\label{sec:old23}
++\label{sec:komorebi-bridge}
++
++Komorebi Space supplies a natural setting for studying the proof field's coherent realizations. Here the connection is \emph{relative} to an explicitly chosen system of views. Nothing in a finite proof hypergraph canonically supplies one universal category of all proofs, and a formal proof term is not automatically equivalent to an intended semantic object. The view system must be stated, together with its restrictions and the observations that are required to survive.
++
++\begin{definition}[Coherent views of a proof field]
++\label{res:23:1}
++Choose a finite collection of views $V$, fibers $F_v$ of local proof states or annotations, and for each declared directed edge $e:v\to w$ a restriction map $e^*:F_w\to F_v$. The \emph{strict realization set} is
++\[
++\Gamma(F)=\big\{(x_v)\in\prod_{v\in V}F_v : e^*(x_w)=x_v\text{ for every declared edge }e\big\}.
++\]
++The \emph{extension fiber} of prescribed information $s$ on $U\subseteq V$ consists of those global coherent families whose restrictions equal $s$. If the edges form a category, the usual functorial composition equations are additional explicit obligations.
++\end{definition}
++
++The finite implementation \path{ambient.py} realizes this edge-defined model exactly. The gluing condition should not be weakened to covering the objects alone: a compatibility equation is attached to an edge and must appear in at least one patch.
++
++\begin{theorem}[Finite arrow-cover gluing]
++\label{res:23:2}
++Suppose patches $U_i\subseteq V$ cover every view and every declared edge has both endpoints in some $U_i$. Let $s_i$ be coherent assignments on $U_i$ that agree on all overlaps. There is a unique global coherent assignment $s\in\Gamma(F)$ restricting to every $s_i$.
++\end{theorem}
++\begin{proof}
++For each view $v$, choose any patch containing it and define $s(v)$ to be the value supplied by that patch. Agreement on overlaps makes this independent of the choice. For a declared edge $e:v\to w$, choose a patch containing both endpoints. The local assignment on that patch obeys $e^*s(w)=s(v)$, so the global assignment is coherent. It is the only possible glue because every coordinate was prescribed by at least one patch.
++\end{proof}
++
++\begin{example}[Object coverage cannot replace arrow coverage]
++\label{res:23:3}
++Let $V=\{v,w\}$ with an edge $v\to w$, both fibers $\{0,1\}$, and identity restriction. Singleton patches prescribe $s(v)=0$ and $s(w)=1$. These assignments cover all views and agree on their empty overlap. There is no global coherent assignment with those coordinates. The missing ingredient is the edge condition, not the availability of the two individual values.
++\end{example}
++
++The theorem is a finite instance of the strict gluing construction in \emph{Komorebi Space} \cite{komorebi-space}. It does not claim a general stack theorem for nonabelian proof objects. Gluing up to isomorphism requires the identifications and their coherence witnesses, which are retained in the corresponding groupoid setting.
++
++\subsection{Exact finite realization and obstruction certificates}
++
++A second connection is quantitative. Work over $\mathbb F_2$ with $E=\mathbb F_2^n$. Let $A:E\to\mathbb F_2^m$ impose coherence, $P:E\to\mathbb F_2^p$ retain prescribed information, and $x\in E$ be a raw candidate. Define
++\[
++\mathfrak K_P(x)=\{y\in E:Ay=0,\ Py=Px\},\qquad
++M=\begin{bmatrix}A\\P\end{bmatrix},\quad
++b=\begin{bmatrix}0\\Px\end{bmatrix}.
++\]
++This is a finite linear realization fiber. The equation $My=b$ does not by itself produce a solution. Compatibility of the prescribed information must first be established.
++
++\begin{theorem}[Finite realization alternative and ambiguity]
++\label{res:23:4}
++Exactly one of the following holds:
++\begin{enumerate}[label=\textup{(\roman*)}]
++\item $My=b$ has a solution $y_0$. Its complete solution set is $y_0+H$, where $H=\ker A\cap\ker P$, and
++\[
++|\mathfrak K_P(x)|=2^{n-\operatorname{rank}(M)}.
++\]
++\item A row vector $\lambda$ exists with $\lambda M=0$ and $\lambda b=1$. It is a directly checkable certificate that $\mathfrak K_P(x)=\varnothing$.
++\end{enumerate}
++\end{theorem}
++\begin{proof}
++If $My_0=b$, any other solution differs from $y_0$ by an element of $\ker M=H$, and every such difference gives another solution. Rank nullity gives $\dim H=n-\operatorname{rank}(M)$. If $b$ is not in the column space of $M$, linear algebra supplies a linear functional that vanishes on that column space and takes value $1$ on $b$. Expressing it as a row vector gives $\lambda$. Conversely such a witness contradicts any proposed equation $My=b$, since it would imply $0=\lambda My=\lambda b=1$. These cases are mutually exclusive and exhaustive over a field.
++\end{proof}
++
++This negative certificate is a concrete instance of the protected obstruction principle from Komorebi Space. Its scope is exactly the finite linear system $My=b$. It is not a certificate that some broad mathematical conjecture is unprovable.
++
++\subsection{The information gained by a new observation}
++
++Suppose the realization fiber is nonempty and a new linear observation $Q:E\to\mathbb F_2^q$ becomes available. The right question is not how many bits appear in the output of $Q$ but how many remaining degrees of freedom in the fiber it distinguishes.
++
++\begin{theorem}[Exact observation gain]
++\label{res:23:5}
++Give the nonempty finite affine fiber $y_0+H$ the uniform distribution. Then the Shannon entropy of the observed value $Qy$ is
++\[
++H(Qy)=\operatorname{rank}(Q|_H)\quad\text{bits}.
++\]
++For every observation value that actually occurs, the corresponding conditional fiber contains
++\[
++2^{\dim H-\operatorname{rank}(Q|_H)}
++\]
++realizations. Thus the uncertainty reduction is exactly $\operatorname{rank}(Q|_H)$ bits.
++\end{theorem}
++\begin{proof}
++The image $Q(H)$ is a vector subspace of dimension $r=\operatorname{rank}(Q|_H)$, so the observed values form the affine set $Qy_0+Q(H)$ of size $2^r$. Every such value has a preimage that is a coset of $H\cap\ker Q$, whose dimension is $\dim H-r$ by rank nullity. Equal fiber cardinalities make the induced output distribution uniform on $2^r$ values. Its entropy is $\log_2(2^r)=r$, and each conditional fiber has cardinality $2^{\dim H-r}$.
++\end{proof}
++
++\begin{example}[One informative question]
++\label{res:23:6}
++Let $y=(a,b,c)\in\mathbb F_2^3$ with $a+b+c=0$ and protected value $a=0$. The realization fiber is $\{(0,0,0),(0,1,1)\}$. It has one bit of ambiguity. Observing $b$ resolves that bit exactly. Observing $a$ supplies no new information, despite being a perfectly valid measurement. This difference is measured by the rank of the observation restricted to $H$, rather than by the output width of the observation.
++\end{example}
++
++The module \path{realization.py} computes these quantities through exact binary row reduction, and returns an explicit linear witness when the protected realization is impossible. The program does not enumerate all solutions, although the tests compare its results with exhaustive enumeration on small cases. The entropy statement uses Shannon entropy \cite{cover-thomas} and assumes uniform sampling of the compatible realizations. It does not assert a universal prior over mathematical discoveries, or that the most informative observation is automatically the most valuable research question once costs and task priorities are included.
++
++
++\section{A checked realization bridge for proof fields}
++\label{sec:old24}
++\label{sec:checked-bridge}
++
++The ambient interpretation can be made into a mathematical construction rather than left as an analogy. The important step is to specify what a local realization means. A node label may describe an arbitrary mathematical sentence, but a Boolean value attached to that node does not automatically evaluate that sentence. In this section it records membership in a set closed under the declared certified rules. This restricted interpretation has an exact soundness and completeness theorem. An interpretation in actual mathematical propositions is a separate contract.
++
++\subsection{The declared rule system and its models}
++
++Fix a node set $V$, a set $L\subseteq V$ of admissible leaves, and a set $J$ of justifications. A justification $j$ has a premise set $A_j$, a conclusion $c_j$, and a certification predicate. Define its support by
++\[
++S_j=A_j\cup\{c_j\}.
++\]
++A set $X\subseteq V$ is a \emph{model of the declared field} when $L\subseteq X$ and, for every certified $j$,
++\[
++A_j\subseteq X\quad\Longrightarrow\quad c_j\in X.
++\]
++Each justification is one implication with conjunctive premises. Alternative justifications remain separate implications. Uncertified attempts and failed-route annotations do not contribute a deduction rule merely by appearing in the archive.
++
++Let $\operatorname{Der}_F$ be the inductively generated set obtained from the leaves by certified rules. For a finite field, repeated forward closure computes this set. It is not necessary to enumerate all valuations to perform that computation.
++
++\begin{theorem}[Soundness and relative completeness]
++\label{res:24:1}
++\label{thm:relative-completeness}
++For every node $v$,
++\[
++v\in\operatorname{Der}_F
++\quad\Longleftrightarrow\quad
++\text{$v\in X$ for every model $X$ of the declared field}.
++\]
++If $v$ is not derivable, $\operatorname{Der}_F$ itself is a model omitting $v$.
++\end{theorem}
++\begin{proof}
++Every model contains the leaves. Induction on a derivation shows that it contains the conclusion of every certified application whose premises have already been derived. Thus every model contains $\operatorname{Der}_F$. Conversely, the inductive constructors show that $\operatorname{Der}_F$ contains the leaves and is closed under every certified rule. It is therefore a model. Applying the universal condition to this particular model proves the reverse implication, and the same model gives the stated countermodel.
++\end{proof}
++
++This is relative completeness for the declared rule system, not completeness of arbitrary mathematical proof search. A missing theorem may simply require a rule or a lemma absent from the field. A failed search can therefore produce a useful countermodel to a proposed finite inference architecture without disproving the mathematical target.
++
++For an intended interpretation $\mu:V\to\mathrm{Prop}$, the transfer to mathematical truth has explicit hypotheses: every leaf must satisfy $\mu$, and every certified rule must preserve $\mu$ from all its premises to its conclusion. Under those hypotheses, induction gives $v\in\operatorname{Der}_F\Rightarrow\mu(v)$. Lean checks this statement as \path{ProofPath.Field.semantic_soundness}. It does not infer those hypotheses from a JSON certification flag.
++
++\subsection{From patches to a contravariant view system}
++
++For a patch $U\subseteq V$, let $\mathcal M_F(U)$ consist of subsets $X_U\subseteq U$ which contain $L\cap U$ and obey every certified rule whose entire support lies in $U$. If $U\subseteq W$, define
++\[
++\rho_{U,W}:\mathcal M_F(W)\longrightarrow\mathcal M_F(U),
++\qquad \rho_{U,W}(X_W)=X_W\cap U.
++\]
++This map is well defined. A rule supported in $U$ is also supported in $W$, and its conclusion remains in $U$. The restriction therefore preserves both the local leaves and the local implication conditions.
++
++\begin{proposition}[The proof-field view laws]
++\label{res:24:2}
++The restriction maps satisfy
++\[
++\rho_{U,U}=\mathrm{id},\qquad
++\rho_{U,W}\rho_{W,Z}=\rho_{U,Z}\quad(U\subseteq W\subseteq Z).
++\]
++Consequently $U\mapsto\mathcal M_F(U)$ is a contravariant set-valued view system on the inclusion order of patches.
++\end{proposition}
++\begin{proof}
++Both laws are the corresponding intersection identities. For the second, $(X\cap W)\cap U=X\cap U$ because $U\subseteq W$. The values outside a patch are absent, or equivalently normalized to false in the Lean representation. There are no additional hidden coordinates.
++\end{proof}
++
++The strict Komorebi realization is now an actual set of coherent local models,
++\[
++\Gamma(\mathcal M_F)=
++\left\{(X_U)_U:\rho_{U,W}(X_W)=X_U\text{ whenever }U\subseteq W\right\}.
++\]
++There is an explicit bijection
++\[
++\operatorname{Models}(F)\simeq\Gamma(\mathcal M_F),
++\qquad X\longmapsto(X\cap U)_U.
++\]
++Its inverse evaluates a coherent family at the full patch $V$. Coherence shows that every other component is precisely the restriction of that value. The Lean declaration \path{ProofPath.Field.modelEquivSections} constructs this equivalence, using \path{ViewDiagram} and the actual local restriction maps.
++
++The full-patch equivalence identifies the ambient construction. It does not prove that arbitrary prescribed proper-patch data extend: the full patch already contains the global problem. Extension from smaller views is the distinct content of the following theorem.
++
++\subsection{The correct coverage condition is a whole support}
++
++Let $(U_i)_{i\in I}$ cover the nodes. A family $X_i\in\mathcal M_F(U_i)$ is matching when
++\[
++X_i\cap U_j=X_j\cap U_i\qquad\text{for every }i,j.
++\]
++This equality includes agreement about false values, not merely common true values.
++
++\begin{theorem}[Whole-support gluing]
++\label{res:24:3}
++\label{thm:support-gluing}
++Suppose every certified justification has its whole support in some patch:
++\[
++\forall j\text{ certified},\quad\exists i\quad S_j\subseteq U_i.
++\]
++Then every matching family $(X_i)$ has a unique global field model $X$ satisfying $X\cap U_i=X_i$ for all $i$.
++\end{theorem}
++\begin{proof}
++Set $X=\bigcup_iX_i$. Matching and node coverage imply $X\cap U_i=X_i$. A leaf belongs to some patch and hence to its local model, so $L\subseteq X$. Consider a certified rule whose premises belong to $X$. Choose a patch containing its entire support. Matching implies that every premise is true in that patch's local model, whose rule condition forces the conclusion. Hence $X$ obeys all certified rules. Any other global model with the specified restrictions agrees with $X$ at every node because the patches cover the nodes. This proves uniqueness.
++\end{proof}
++
++\begin{example}[Pairwise dependencies do not suffice]
++\label{res:24:4}
++Take nodes $a,b,c$, no required leaves, and one certified rule
++\[
++\{a,b\}\longrightarrow c.
++\]
++Use patches $U_0=\{a,c\}$ and $U_1=\{b,c\}$. The local valuations $X_0=\{a\}$ and $X_1=\{b\}$ agree on their overlap: both assign false to $c$. Both are local models, since neither patch contains the full rule support. They cover every node and both pairwise premise-to-conclusion dependencies. Nevertheless, a global model realizing them would contain $a,b$ and omit $c$, contradicting the rule. Thus replacing a conjunctive hyperedge by unrelated pairwise checks can lose precisely the constraint that matters.
++\end{example}
++
++The example is kernel checked in \path{ProofPath.Examples}. It does not contradict the earlier arrow-cover theorem. That theorem applies to a problem already specified by binary restriction equations. A conjunctive proof rule is a different constraint until a correct representation of its whole support has been supplied. The full support may be redundant in particular fields, so the theorem gives a sufficient cover condition rather than a necessary one for every individual diagram.
++
++The Python class \path{ProofFieldViews} implements these definitions. It freezes the rule and leaf contents at construction, restricts local valuations by literal intersection, checks support coverage before gluing, and can form a finite intersection-closed diagram for \path{FiniteViewSystem}. Local enumeration has explicit size limits. Forward closure and declared-field countermodels do not require that enumeration.
++
++\subsection{Protected realization over a field}
++
++The exact binary model admits a general algebraic formulation. Let $K$ be a field, let $E,R,S$ be $K$-vector spaces, and let $D:E\to R$ and $p:E\to S$ be linear. The prescribed problem is to repair $x$ while retaining $p(x)$:
++\[
++Dy=0,\qquad p(y)=p(x).
++\]
++The admissible correction image is $B=D(\ker p)$. The elementary correction equivalence gives feasibility exactly when $Dx\in B$.
++
++\begin{theorem}[A linear certificate alternative]
++\label{res:24:5}
++\label{thm:linear-alternative}
++The protected problem is infeasible if and only if there is a linear functional $\lambda:R\to K$ satisfying
++\[
++\lambda(Dh)=0\quad\text{whenever }p(h)=0,
++\qquad \lambda(Dx)=1.
++\]
++For a finite matrix $M$ and right side $b$, the corresponding alternative is
++\[
++\nexists y\ (My=b)
++\quad\Longleftrightarrow\quad
++\exists\ell\ (\ell M=0\ \text{and}\ \ell b=1).
++\]
++\end{theorem}
++\begin{proof}
++If $Dx\notin B$, linear separation of a vector from a subspace gives a functional vanishing on $B$ and nonzero at $Dx$. One construction extends a basis of $B$ by $Dx$ and then to a basis of $R$. Assign value zero to the basis of $B$ and value one to $Dx$, and extend linearly. Equivalently, normalize any separating functional by its nonzero value. Conversely, if $y$ were feasible, then $h=x-y$ would satisfy $p(h)=0$ and $Dh=Dx$, contradicting the displayed functional equations. For a matrix, take $B$ to be its column image. In finite coordinates the separating functional is a row vector, giving the stated alternative.
++\end{proof}
++
++The general existence proof is classical. It does not claim an efficient procedure for arbitrary infinite spaces. In the implemented binary case, Gaussian elimination constructs a row witness, and the witness is checked against the original matrix and right side. A positive solution and a normalized negative witness cannot both verify.
++
++\subsection{Counting what remains after an observation}
++
++Let $T:E\to R$ and $Q:E\to W$ be linear, and fix a known point $x_0$. Put
++\[
++\mathcal A=\{y:Ty=Tx_0\},\quad H=\ker T,\quad
++Q_H=Q|_H.
++\]
++Translation $h\mapsto x_0+h$ identifies $H$ with $\mathcal A$. The observation image is the translate $Qx_0+Q(H)$, and the fiber above the attained value $Qx_0$ is a translate of $\ker Q_H$.
++
++\begin{theorem}[Exact observation counts]
++\label{res:24:6}
++\label{thm:checked-counts}
++Suppose $K$ is a finite field of cardinality $q$ and $E$ is a finite-dimensional $K$-vector space. Set
++$k=\dim_K H$ and $r=\dim_K Q(H)$. Then
++\[
++|\mathcal A|=q^k,\qquad
++|Q(\mathcal A)|=q^r,\qquad
++|\{y\in\mathcal A:Qy=Qx_0\}|=q^{k-r}.
++\]
++In particular the exact count identity is
++\[
++|\mathcal A|=
++|\{y\in\mathcal A:Qy=Qx_0\}|\,q^r.
++\]
++Every attained observation fiber has the same size. For the uniform distribution on $\mathcal A$, the observation removes exactly $r\log_2q$ bits of uncertainty.
++\end{theorem}
++\begin{proof}
++The two translation equivalences reduce the counts to finite vector spaces. Such a space of dimension $d$ has $q^d$ elements. Rank-nullity for $Q_H$ gives $\dim\ker Q_H+r=k$, proving the product identity and all the counts. An attained value can be treated by choosing a point attaining it as the base point. Equal fiber sizes imply a uniform observation distribution and a uniform conditional distribution on each fiber. The entropy difference is therefore $\log_2(q^k)-\log_2(q^{k-r})=r\log_2q$.
++\end{proof}
++
++Lean checks the translation equivalences, rank-nullity specialization, fiber cardinalities, and product identity in \path{ProofPath.Protected}, with the binary specialization in \path{ProofPath.Binary}. The logarithmic entropy interpretation is the written corollary above, not a newly compiled theorem about a Lean probability distribution. Uniformity is substantive. With a nonuniform prior, dimension alone does not determine Shannon information.
++
++For the protected problem, set $T=(D,p)$ and choose an actual feasible $y_0$, so $Ty_0=(0,px)$. This reduces its solution fiber to the theorem without changing the protected values. A concrete binary example has $a+b+c=0$ and $a=0$. Its two realizations are $(0,0,0)$ and $(0,1,1)$. Observing $b$ has rank one on the ambiguity space and determines the remaining coordinate. Repeating the same observation in two output rows does not double the information.
++
++\subsection{Executable witnesses and a native declaration export}
++
++Four exact examples are regenerated from the Python implementation: a one-bit ambiguity, an incompatible protected assignment, a redundant observation, and a uniquely determined realization. The generator emits the original stacked matrices and right sides alongside the proposed solutions or row witnesses. It also emits Lean declarations which check those concrete equations and cardinalities by kernel reduction. A faulty generator cannot make a false displayed proposition pass merely by assigning a certification flag. The generator itself is not thereby verified for arbitrary inputs, and the correspondence between the supplied JSON input and its emitted Lean syntax remains an audited software boundary.
++
++A separate native exporter reads five already compiled Lean declarations, extracts their direct type and proof-constant dependencies, and records the transitive axiom sets. Dependencies outside the selected roots are explicit external leaves. This yields an actual proof-field JSON record rather than a hand-authored imitation of one. The exported field is then loaded through the public Python importer, and its declared closure is checked to contain its roots.
++
++The export has a deliberately narrow meaning. It is syntactic dependency data for selected declarations, not a reconstruction of the entire discovery process. It does not recover failed attempts, prove that every constant in a type was a historically essential idea, or formally verify the metaprogram that extracts the data. The mathematical proof-field bridge is checked independently of that metaprogram. Its semantic interpretation retains the explicit hypotheses in Theorem~\ref{thm:relative-completeness}.
++
++\subsection{Verification scope and reproducibility}
++
++The formal source contains eight production Lean modules. The recorded verification of technical release 1.2.0 rebuilt each module in a fresh object directory and replayed it through Lean's own kernel against the pinned imported environment. Selected named declarations also received an axiom audit. The formal sources in this monograph edition are unchanged from that record. This edition does not claim a new compiler run. The earlier replay was not an independent implementation of Lean, and it did not rebuild or replay the entire cached Mathlib library.
++
++Four deliberate invalid files test rejection of a false equality, an invalid row witness, the invalid conjunction model, and a proof placeholder. A fifth file introduces an explicit false axiom. Lean correctly accepts a consequence relative to that axiom, while the release's separate axiom policy rejects the dependency. A missing import or a timeout does not count as a successful mathematical rejection.
++
++The monograph review reruns the finite software tests and comparisons and rebuilds the manuscript. Its new records are separate from the inherited compiler evidence. Written proofs, general Lean declarations, concrete checked examples, and implementation tests remain distinct verification categories. A corrected paragraph is not automatically a newly checked Lean theorem.
++
++
++
++\monographpart{Compression, representation, and memory}{Compression and memory}{A shorter record may preserve everything needed to check a theorem while losing the example that makes a later theorem accessible. Compression is therefore evaluated against a family of tasks. The resulting order of representations, loss models, and retention problems make this difference precise.}
++
+ \section{Compression relative to a task family}
+-
+-A representation is not simply good or bad. It is sufficient or insufficient for a declared family of questions.
++\label{sec:old7}
++
++A representation is sufficient only relative to specified questions and a specified class of possible archives. Fix a set $\mathscr A$ of admissible proof archives. A representation scheme is a map $C:\mathscr A\to\mathscr R$. Its output for an archive $\Pcal$ is $C(\Pcal)$. Distinguishing the scheme from one output is essential: a decoder chosen only after seeing one fixed archive could simply store the answer.
+ 
+ \begin{definition}[Task]
+-A task $q$ is a query whose answer is defined on the full proof field. Examples include:
+-\begin{itemize}
+-\item verify the target theorem;
+-\item reconstruct every primitive dependency;
+-\item teach the conceptual bottleneck;
+-\item recover a boundary example;
+-\item identify all claims affected by a revision;
+-\item search for bridges to a future target family.
+-\end{itemize}
+-A task family is a set $\Qcal$ of such queries.
++\label{res:7:1}
++A task is a map $q:\mathscr A\to Y_q$ to a declared answer set. A task family $\Qcal$ is a set of such maps. Examples include asking for the target certificate, a dependency list, a specified boundary example, or the claims affected by a recorded revision. A teaching or discovery objective becomes an exact task only after its required output or acceptance criterion has been specified.
+ \end{definition}
+ 
+ \begin{definition}[Task-sufficient representation]
+-A representation $R$ of a proof field $\Pcal$ is sufficient for task $q$ when there exists a decoder $d_q$ such that
+-\[
+-q(\Pcal)=d_q(R).
+-\]
+-It is $\Qcal$-sufficient when it is sufficient for every $q\in\Qcal$.
+-\end{definition}
+-
+-This definition includes exact reconstruction as one task, but it does not require exact reconstruction for every purpose. A certificate can be sufficient for verification and insufficient for teaching. A discovery archive can be sufficient for bridge search and unnecessarily large for routine checking.
++\label{res:7:2}
++The scheme $C:\mathscr A\to\mathscr R$ is sufficient for $q$ when there is a single decoder $d_q:C(\mathscr A)\to Y_q$ such that
++\[
++q(\Pcal)=d_q(C(\Pcal))\qquad\text{for every }\Pcal\in\mathscr A.
++\]
++It is $\Qcal$-sufficient when this holds for every $q\in\Qcal$. The decoder may depend on the task and the scheme, but not on hidden knowledge of the particular archive being decoded.
++\end{definition}
++
++The decoder is defined on attained representations, so no arbitrary answer is required for an encoding that never occurs. Exact reconstruction is one possible task, not a requirement for every purpose. The basic definition is set theoretic and does not assert that a decoder is computable, efficient, or available to a particular reader. Those are additional conditions on a practical compiler.
+ 
+ \begin{theorem}[Task information loss criterion]
++\label{res:7:3}
+ Let $C$ be a compression map and let $q$ be a task. If there exist proof fields $\Pcal_1$ and $\Pcal_2$ such that
+ \[
+ C(\Pcal_1)=C(\Pcal_2)
+@@ -415,14 +831,16 @@
+ \end{proof}
+ 
+ \begin{definition}[Recoverability preorder]
++\label{res:7:4}
+ For a fixed task family $\Qcal$, write
+ \[
+ R_1\preceq_{\Qcal} R_2
+ \]
+-when every task in $\Qcal$ that is recoverable from $R_1$ is also recoverable from $R_2$.
++when every task in $\Qcal$ that factors through the representation scheme $R_1$ also factors through $R_2$. Both schemes have domain $\mathscr A$, and each factorization uses one decoder valid on that whole domain.
+ \end{definition}
+ 
+ \begin{proposition}[Recoverability is a preorder]
++\label{res:7:5}
+ The relation $\preceq_{\Qcal}$ is reflexive and transitive.
+ \end{proposition}
+ 
+@@ -433,6 +851,7 @@
+ Define $R_1\sim_{\Qcal}R_2$ when both $R_1\preceq_{\Qcal}R_2$ and $R_2\preceq_{\Qcal}R_1$.
+ 
+ \begin{corollary}[Quotient poset]
++\label{res:7:6}
+ The recoverability preorder descends to a partial order on the equivalence classes under $\sim_{\Qcal}$.
+ \end{corollary}
+ 
+@@ -446,6 +865,7 @@
+ The simplest compression removes nodes without rewriting the retained material. This baseline is useful because it separates information deletion from more complicated summarization or reinterpretation.
+ 
+ \begin{definition}[Retention projection]
++\label{res:7:7}
+ Fix a finite node universe $V$. For a mask $K\subseteq V$, define
+ \[
+ P_K(S)=S\cap K,
+@@ -454,6 +874,7 @@
+ \end{definition}
+ 
+ \begin{theorem}[Retention projection algebra]
++\label{res:7:8}
+ For masks $K,L\subseteq V$,
+ \[
+ P_K\circ P_L=P_{K\cap L}=P_L\circ P_K.
+@@ -470,6 +891,7 @@
+ \end{proof}
+ 
+ \begin{corollary}[Task monotonicity under retention]
++\label{res:7:9}
+ If $K\subseteq L$, every task whose required nodes and metadata are retained by $P_K$ is also supported by $P_L$.
+ \end{corollary}
+ 
+@@ -479,7 +901,7 @@
+ 
+ Pure retention operators commute. Noncommutativity in real proof workflows therefore requires an additional operation such as state-dependent summarization, renaming, quotienting, or reinterpretation. This distinction prevents simple deletion from being credited with structure it does not possess.
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.82\linewidth]{fig_05_recoverability_preorder.pdf}
+ \caption{A task-relative recoverability preorder. Teaching, discovery, and formal views may be incomparable.}
+@@ -487,14 +909,18 @@
+ \end{figure}
+ 
+ \begin{theorem}[Task-family dependence of minimal compression]
+-There need not be one proper compression that is simultaneously minimal and sufficient for every task family on a proof field.
+-\end{theorem}
+-
+-\begin{proof}
+-Consider a proof archive containing a certificate and two independent side records $x$ and $y$. Let $q_x$ ask for $x$ and let $q_y$ ask for $y$. For the singleton family $\{q_x\}$, a minimal sufficient representation retains the certificate and $x$ but may omit $y$. For $\{q_y\}$, a minimal sufficient representation may omit $x$ instead. For $\{q_x,q_y\}$, every sufficient representation must distinguish both records. Hence the minimal sufficient representations differ with the task family. Here minimality is relative to deletion of independently variable records and its stated retention cost. Sufficiency for all possible archive queries instead requires an injective representation. A lossless recoding can preserve every query while using a different, possibly shorter, encoding. The obstruction is identification of distinguishable archives, not a change of notation or file length.
+-\end{proof}
++\label{res:7:10}
++There is a family of archives with a fixed mandatory certificate and two independently variable side records for which different task families have different least sufficient retention masks.
++\end{theorem}
++
++\begin{proof}
++Let the archives be $\Pcal_{xy}=(C_0,x,y)$ for $(x,y)\in\{0,1\}^2$, where $C_0$ is a fixed certificate retained by every allowed mask. Let $q_x(\Pcal_{xy})=x$ and $q_y(\Pcal_{xy})=y$. Retaining $x$ is sufficient for $q_x$. Any mask omitting $x$ identifies $\Pcal_{0y}$ with $\Pcal_{1y}$, so it is not sufficient for that task. Thus the least mask for $\{q_x\}$ retains exactly $C_0$ and $x$. The same argument gives the least mask $C_0$ and $y$ for $\{q_y\}$. Their joint task family requires both records. These masks are also the unique minima for unit cost per retained side record.
++\end{proof}
++
++The example concerns pure retention. A general encoding may recode the records rather than delete them. Sufficiency for all archive queries requires an injective encoding, not literal preservation of the original file. The following theorem makes that distinction precise.
+ 
+ \begin{theorem}[All predicates distinguish exactly injective encodings]
++\label{res:7:11}
+ \label{thm:injective-compression}
+ Let $C:A\to B$. Every predicate $q:A\to\mathrm{Prop}$ factors through $C$ if and only if $C$ is injective.
+ \end{theorem}
+@@ -504,48 +930,58 @@
+ 
+ The formal result \path{ProofPath.all_predicates_sufficient_iff_injective} records the corrected distinction between information loss and lossless recoding. It makes no assertion about how cheaply a decoder can be computed.
+ 
++
+ \section{Endpoint, audit, and discovery equivalence}
++\label{sec:old8}
+ 
+ The phrase ``the same proof'' can refer to several distinct equivalence relations.
+ 
+ \begin{definition}[Endpoint equivalence]
++\label{res:8:1}
+ Two representations are endpoint equivalent when they certify the same declared premises and targets.
+ \end{definition}
+ 
+ \begin{definition}[Audit equivalence]
++\label{res:8:2}
+ Two representations are audit equivalent when they preserve equivalent dependency, evidence, provenance, and scope information for checking the declared targets.
+ \end{definition}
+ 
+ \begin{definition}[Discovery equivalence]
++\label{res:8:3}
+ Two representations are discovery equivalent relative to a declared bridge model when they preserve the same examples, alternatives, boundary cases, candidate routes, and future reach, up to the chosen graph equivalence.
+ \end{definition}
+ 
+ When audit and discovery task families are required to include the endpoint tasks, either equivalence implies endpoint equivalence. Audit and discovery equivalence need not imply one another: a representation may preserve provenance without alternatives, or alternatives without provenance. Their joint task family is stronger than either. Any further hierarchy requires an explicit inclusion of task families. Two perfectly valid certificates can therefore expose different mathematical neighborhoods without differing in validity.
+ 
+ \begin{remark}
++\label{res:8:4}
+ These equivalences are task-relative. Discovery equivalence requires a declared bridge model. It is not an assertion that every future use of a proof can be predicted.
+ \end{remark}
+ 
++
+ \section{Vector-valued loss}
+-
+-Let a node $v$ carry nonnegative coordinates
++\label{sec:old9}
++
++Let a node $v$ carry finite nonnegative numerical coordinates
+ \[
+ \mathbf v(v)=
+ \bigl(V(v),D(v),M(v),F(v),A(v)\bigr),
+ \]
+-representing verification, discovery, meaning, future bridge, and auditability values. These coordinates are declared model inputs. They may be exact, estimated, or ordinal after a scale has been chosen.
++representing declared verification, discovery, meaning, future bridge, and auditability weights. Summation requires an additive numerical model. The weights may be supplied or estimated, but an ordinal ranking alone does not justify adding them. Changing a numerical scale can change the resulting loss and retention problem.
+ 
+ \begin{definition}[Additive loss vector]
++\label{res:9:1}
+ For a retained node set $K\subseteq V$, define
+ \[
+ \Loss(\Pcal,K)
+ =
+ \sum_{v\notin K}\mathbf v(v).
+ \]
+-When normalization is useful, divide each coordinate by the corresponding total coordinate of the full field.
++Normalize a coordinate by its total only when that total is positive. If the total is zero, nonnegativity makes every contribution in that coordinate zero. The implementation records normalized loss zero there as a convention, rather than dividing by zero.
+ \end{definition}
+ 
+ \begin{proposition}[Zero verification loss can coexist with positive discovery loss]
++\label{res:9:2}
+ There exist proof fields and certificates $K$ for which the verification coordinate of $\Loss(\Pcal,K)$ is zero while the discovery and bridge coordinates are positive.
+ \end{proposition}
+ 
+@@ -553,7 +989,7 @@
+ Take an AND-DAG certificate from $A$ to $B$ and add an optional example node $E$ that is not an ancestor of $B$. Assign positive discovery and bridge values to $E$ and zero verification value. The unique core omits $E$ while preserving the entire verification ancestry. The verification loss is zero and the other declared losses are positive.
+ \end{proof}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.84\linewidth]{fig_06_loss_vectors.pdf}
+ \caption{One finite example in which certificate extraction preserves verification and discards discovery value.}
+@@ -562,15 +998,19 @@
+ 
+ No claim is made that all value coordinates are additive. Additivity is a transparent baseline. Interactions can be represented by hyperedge values, submodular utilities, or task-specific decoders when the application requires them.
+ 
++
+ \section{Compression debt}
++\label{sec:old10}
+ 
+ Compression may postpone work rather than eliminate it. A later task may require reconstruction of material that was omitted from the current representation.
+ 
+ \begin{definition}[Future task model]
++\label{res:10:1}
+ Let $\Tcal$ be a finite task set with probabilities $p_t\ge0$ satisfying $\sum_t p_t=1$. Let $R_t\subseteq V$ be the node set required by task $t$, and let $c(v)\ge0$ be the recovery cost of node $v$ when it is absent.
+ \end{definition}
+ 
+ \begin{definition}[Expected compression debt]
++\label{res:10:2}
+ The expected compression debt of retained set $K$ is
+ \[
+ \Debt(K)
+@@ -581,6 +1021,7 @@
+ \end{definition}
+ 
+ \begin{proposition}[Debt is monotone under retention]
++\label{res:10:3}
+ If $K_1\subseteq K_2$, then
+ \[
+ \Debt(K_2)\le\Debt(K_1).
+@@ -592,6 +1033,7 @@
+ \end{proof}
+ 
+ \begin{corollary}[Irreversible compression accumulates debt]
++\label{res:10:4}
+ For a descending sequence of retained sets
+ \[
+ K_0\supseteq K_1\supseteq\cdots\supseteq K_r,
+@@ -601,7 +1043,9 @@
+ 
+ A recovery archive can change the cost function. If an omitted node has a stable provenance pointer and a reproducible generator, its recovery cost may be small. If it survives only in memory, its recovery cost may be effectively infinite.
+ 
++
+ \section{A proof ecology rather than one ideal form}
++\label{sec:old11}
+ 
+ The same theorem can support several legitimate representations:
+ \[
+@@ -612,27 +1056,32 @@
+ The certificate is optimized for checking. The journal form balances rigor and readable length. The teaching form expands conceptual bottlenecks. The formal form exposes primitive dependencies. The discovery form retains alternatives and failed routes. The archive preserves reconstruction information.
+ 
+ \begin{definition}[Representation portfolio]
++\label{res:11:1}
+ A representation portfolio is a family of proof representations together with stable claim identifiers, translation maps, and a shared status ledger.
+ \end{definition}
+ 
+ \begin{proposition}[Portfolio robustness]
+-If several representations lose different information, then their union retains at least as much recoverable information as any one representation alone.
++\label{res:11:2}
++For representation schemes $C_i:\mathscr A\to R_i$, retain the tagged portfolio $C(\Pcal)=(C_i(\Pcal))_i$. Every task recoverable from any one $C_i$ is recoverable from $C$.
+ \end{proposition}
+ 
+ \begin{proof}
+-Every item recoverable from one representation is recoverable from the union containing it. Additional representations may restore information absent from the first. Recoverable information is therefore monotone under enlargement of the portfolio.
++If $q=d_i\circ C_i$, compose $d_i$ with the $i$th coordinate projection from the portfolio. This gives a decoder of $q$ from $C$. Retaining the coordinate labels is part of the construction. An untagged union that loses source identities need not permit the same recovery.
+ \end{proof}
+ 
+ Redundancy is useful when it is heterogeneous. Storing six copies of the same compressed certificate adds little. Storing a certificate, an expanded explanation, a formal dependency graph, and a reproducible notebook may preserve genuinely different values.
+ 
++
+ \section{Proof compilers and shared ledgers}
+-
+-A proof compiler generates a goal-specific representation from one canonical proof field.
++\label{sec:old12}
++
++A proof compiler generates a representation for a specified purpose from one canonical proof field. The connection between source and readable exposition also motivates literate programming \cite{knuth}.
+ 
+ \begin{definition}[Proof compiler]
+-Let $g$ be a presentation goal and let $\Pcal$ be a versioned proof field. A proof compiler is a map
+-\[
+-\Gamma_g:\Pcal\longrightarrow R_g
++\label{res:12:1}
++Let $g$ be a presentation goal and let $\Pcal$ be a versioned proof field. A proof compiler is a map on the declared archive class
++\[
++\Gamma_g:\mathscr A\longrightarrow R_g
+ \]
+ that selects, orders, and renders the material required by $g$ while preserving links to canonical claim and justification identifiers.
+ \end{definition}
+@@ -640,6 +1089,7 @@
+ Typical goals include certificate, journal, teaching, discovery, formal verification, and archive. The compiler does not invent logical status. It reads status from the canonical ledger.
+ 
+ \begin{proposition}[Shared-ledger consistency]
++\label{res:12:2}
+ Suppose every compiled representation is generated from one canonical ledger and every rendered claim retains its ledger identifier. Then a status correction can be propagated consistently to every compiled representation containing that claim by updating the ledger and recompiling.
+ \end{proposition}
+ 
+@@ -649,11 +1099,14 @@
+ 
+ This proposition is simple, but it is operationally important. A monograph, a formal library, and a teaching site should not maintain independent truth labels for the same claim.
+ 
++
+ \section{Latent bridge graphs}
++\label{sec:old13}
+ 
+ A proof field records certified dependencies. A latent bridge graph records possible future transfers. The two graphs have different logical roles.
+ 
+ \begin{definition}[Latent bridge graph]
++\label{res:13:1}
+ A latent bridge graph is a finite directed graph
+ \[
+ \Bcal=(W,E_B)
+@@ -664,6 +1117,7 @@
+ Let $S\subseteq W$ be the retained starting set. Let $F\subseteq W$ be a future target set with weights $w_f\ge0$.
+ 
+ \begin{definition}[Future reach utility]
++\label{res:13:2}
+ The weighted future reach of $S$ is
+ \[
+ U(S)=\sum_{f\in F}w_f\,
+@@ -676,12 +1130,14 @@
+ \subsection{Bridge criticality and dominators}
+ 
+ \begin{definition}[Bridge-critical node]
++\label{res:13:3}
+ A node $v$ is bridge critical for target $f$ relative to starts $S$ when $f$ is reachable from $S$ in $\Bcal$ and becomes unreachable after $v$ is removed.
+ \end{definition}
+ 
+-In graph language, $v$ dominates $f$ relative to $S$ when every directed path from $S$ to $f$ passes through $v$.
++In graph language, $v$ dominates an initially reachable $f$ relative to $S$ when every directed path from $S$ to $f$ passes through $v$. Paths of length zero are allowed in the reachability convention. Standard graph terminology is used throughout \cite{diestel}.
+ 
+ \begin{theorem}[Criticality equals domination]
++\label{res:13:4}
+ Assume $f$ is reachable from $S$. A node $v\notin S$ is bridge critical for $f$ if and only if $v$ dominates $f$ relative to $S$.
+ \end{theorem}
+ 
+@@ -690,15 +1146,16 @@
+ \end{proof}
+ 
+ \begin{corollary}[Weighted criticality]
+-The utility lost by removing $v$ is the total weight of future targets dominated by $v$:
++\label{res:13:5}
++For $v\notin S$, the utility lost by deleting $v$ is the total weight of initially reachable future targets dominated by $v$:
+ \[
+ U(S)-U_{\Bcal\setminus\{v\}}(S)
+-=
+-\sum_{f\in F:\,v\text{ dominates }f}w_f.
+-\]
++=\sum_{\substack{f\in F\cap\Reach_{\Bcal}(S)\\v\text{ dominates }f}}w_f.
++\]
++Deleted target vertices are counted as unreachable.
+ \end{corollary}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.82\linewidth]{fig_07_bridge_dominators.pdf}
+ \caption{A bridge-critical node dominates two future targets.}
+@@ -707,7 +1164,9 @@
+ 
+ A node may have low verification value for the current theorem and high domination value for future targets. This is the precise form of the claim that a forgotten step can remain mathematically important after it has lost its role in the original certificate.
+ 
++
+ \section{Retention under a budget}
++\label{sec:old14}
+ 
+ An archive cannot retain every object at full resolution. The first mathematically controlled retention problem is to choose a finite supplement that preserves as much future reach as possible.
+ 
+@@ -715,8 +1174,10 @@
+ \[
+ U_M(S)=U(M\cup S).
+ \]
++The bridge graph remains fixed: retention changes the starting set, not the available intermediate vertices or edges. Deleting unretained intermediate vertices would define a different objective, for which the coverage proof below need not apply.
+ 
+ \begin{theorem}[Bridge coverage is monotone and submodular]
++\label{res:14:1}
+ \label{thm:bridge-submodular}
+ The future reach utility $U_M$ is a nonnegative monotone submodular set function on $C$.
+ \end{theorem}
+@@ -739,8 +1200,9 @@
+ \end{proof}
+ 
+ \begin{theorem}[Greedy cardinality guarantee]
++\label{res:14:2}
+ \label{thm:bridge-greedy}
+-Let $S_k$ be the set obtained by starting from the empty supplement and repeatedly adding the candidate with largest marginal future reach until $k$ candidates have been selected. Let $O_k$ be an optimal supplement of size at most $k$. Then
++Let $k$ be an integer with $1\leq k\leq|C|$. Starting from the empty supplement, let $S_k$ result from repeatedly adding an unselected candidate with largest marginal future reach. Let $O_k$ be an optimal supplement of size at most $k$. Then
+ \[
+ U_M(S_k)-U_M(\varnothing)
+ \ge
+@@ -766,7 +1228,7 @@
+ Rearranging gives the first bound. The inequality $(1-1/k)^k\le e^{-1}$ gives the second.
+ \end{proof}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.80\linewidth]{fig_08_submodular_greedy.pdf}
+ \caption{Greedy and exact bridge retention on one reproducible finite example. The theorem gives a worst-case guarantee. The displayed instance performs better.}
+@@ -774,15 +1236,21 @@
+ \end{figure}
+ 
+ \begin{warning}[Arbitrary costs]
+-The simple marginal-gain-per-cost rule included in the software is an interpretable heuristic for arbitrary real costs. The cardinality guarantee above does not automatically apply to that heuristic. Stronger knapsack guarantees require additional algorithmic machinery.
++\label{res:14:3}
++For $k=0$, both gains are zero without using the displayed division by $k$. For a budget at least $|C|$, retaining all candidates is optimal. The displayed theorem is the cardinality form of the standard submodular greedy bound \cite{nemhauser}. A gain-per-cost rule for unequal costs is a different algorithm and does not inherit this guarantee. Zero-cost candidates also need an explicit convention.
+ \end{warning}
+ 
++
++\monographpart{Revision, review, and inquiry}{Revision and inquiry}{The archive continues to change after a certificate has been found. Revisions create review obligations, shared errors limit aggregation, and finite audit capacity constrains the checking process. These models describe declared information and resources. They do not assign truth by consensus or infer a reviewer's motives.}
++
+ \section{Versioned proof objects}
++\label{sec:old15}
+ \label{sec:versioned}
+ 
+ A proof archive changes. Claims are strengthened, corrected, refuted, or split. A reproducible theory therefore needs stable identifiers and explicit version relations.
+ 
+ \begin{definition}[Versioned proof object]
++\label{res:15:1}
+ A versioned proof object is a sequence
+ \[
+ \Pcal_0\longrightarrow\Pcal_1\longrightarrow\cdots
+@@ -791,10 +1259,12 @@
+ \end{definition}
+ 
+ \begin{definition}[Append-only certified update]
+-An update $\Pcal_i\to\Pcal_{i+1}$ is append-only certified when every node and justification of $\Pcal_i$ remains unchanged, and $\Pcal_{i+1}$ only adds nodes, evidence, or certified justifications.
++\label{res:15:2}
++An update $\Pcal_i\to\Pcal_{i+1}$ is append-only certified when every existing node, admissible-leaf status, evidence record, interpretation, and certified justification remains unchanged. The later field may add records and certified rules but may not withdraw an earlier admitted leaf or change the scope of an earlier inference.
+ \end{definition}
+ 
+ \begin{theorem}[Derivability is monotone under append-only updates]
++\label{res:15:3}
+ Every target derivable in $\Pcal_i$ remains derivable in $\Pcal_{i+1}$ under an append-only certified update.
+ \end{theorem}
+ 
+@@ -805,6 +1275,7 @@
+ Retractions and semantic changes are not append-only. They require invalidation analysis.
+ 
+ \begin{definition}[Syntactic affected set]
++\label{res:15:4}
+ For a changed node set $X\subseteq V$, define
+ \[
+ \operatorname{Aff}(X)=X\cup\Desc(X),
+@@ -813,6 +1284,7 @@
+ \end{definition}
+ 
+ \begin{theorem}[Minimal closed syntactic review set]
++\label{res:15:5}
+ The set $\operatorname{Aff}(X)$ is the unique smallest node set $Y$ such that $X\subseteq Y$ and $Y$ is closed under outgoing dependency edges: whenever $u\in Y$ and $u\to v$ is a declared dependency edge, then $v\in Y$.
+ \end{theorem}
+ 
+@@ -820,7 +1292,7 @@
+ By construction, every node reachable from $X$ lies in $\operatorname{Aff}(X)$, so the set contains $X$ and is closed under outgoing edges. Let $Y$ be any other set with those two properties. Every directed path beginning in $X$ remains inside $Y$ by induction on path length. Hence every descendant of $X$ lies in $Y$, and $\operatorname{Aff}(X)\subseteq Y$.
+ \end{proof}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.82\linewidth]{fig_09_version_invalidation.pdf}
+ \caption{A changed claim and its forward dependency closure.}
+@@ -829,7 +1301,9 @@
+ 
+ The theorem is intentionally syntactic. A descendant can survive after rechecking. The affected set says where review is required, not where falsehood is guaranteed.
+ 
++
+ \section{Evidence ledgers and provenance}
++\label{sec:old16}
+ 
+ A claim ledger should answer five questions without reconstructing the entire research history.
+ 
+@@ -842,29 +1316,34 @@
+ \end{enumerate}
+ 
+ \begin{definition}[Evidence ledger]
++\label{res:16:1}
+ An evidence ledger is an appendable collection of typed, scoped records linked to claim and justification identifiers. A record may certify, support, challenge, interpret, or refute an object. Its role is explicit rather than inferred from prose placement.
+ \end{definition}
+ 
+ \begin{definition}[Provenance digest]
++\label{res:16:2}
+ A provenance digest is a cryptographic hash of a canonical serialization of the claim identifier, content, scope, evidence references, parent version, and relevant build inputs.
+ \end{definition}
+ 
+-A digest does not prove a theorem. It detects unrecorded changes and gives independently generated representations a common reference point.
++A digest does not prove a theorem. A changed digest establishes that the hashed byte sequence changed. An unchanged digest is an integrity check only subject to the possibility of collisions. Canonical serialization gives different representations a common byte-level reference.
+ 
+ \begin{proposition}[Digest stability]
++\label{res:16:3}
+ A deterministic canonical serialization gives the same provenance digest for identical records and, except for hash collisions, a different digest after any serialized field changes.
+ \end{proposition}
+ 
+ \begin{proof}
+-Deterministic serialization produces the same byte sequence for identical records, so the hash is identical. Any change that alters the canonical byte sequence changes the hash input. A collision-resistant hash is designed to make equal hashes for distinct byte sequences computationally negligible, though not logically impossible.
+-\end{proof}
++Identical canonical byte sequences have identical images under the deterministic hash function. If two distinct byte sequences have the same hash, they form a collision by definition. Thus the first assertion is unconditional, while the change-detection assertion explicitly excludes that case. No injectivity of a fixed-length hash on arbitrary records is asserted.
++\end{proof}
++
+ 
+ \section{Correlated review}
++\label{sec:old17}
+ \label{sec:correlated-review}
+ 
+ Several reviews are not equivalent to several independent reviews. Reviewers may share training, notation, examples, software, or an unnoticed premise.
+ 
+-Let $X_i=\theta+\varepsilon_i$ be reviewer estimates of a quantity $\theta$, with common variance $\sigma^2$ and common pairwise correlation $\rho$. For $n>1$, assume $-1/(n-1)<\rho\le1$, so the mean has positive variance. The mean has variance
++Let $X_i=\theta+\varepsilon_i$ be numerical estimates of a fixed quantity $\theta$. Assume $\mathbb E\varepsilon_i=0$, $\operatorname{Var}(\varepsilon_i)=\sigma^2>0$, and common pairwise correlation $\rho$. For $n>1$, assume $-1/(n-1)<\rho\leq1$, so the mean has positive variance. These variables model estimates, not proof truth values. The mean has variance
+ \[
+ \operatorname{Var}(\bar X)
+ =
+@@ -872,8 +1351,9 @@
+ \]
+ 
+ \begin{theorem}[Effective reviewer count]
++\label{res:17:1}
+ \label{thm:review-count}
+-Under the equicorrelated model, the reviewer mean has the same variance as the mean of
++Under the equicorrelated model, define the variance-equivalent reviewer count by
+ \[
+ \boxed{
+  n_{\mathrm{eff}}
+@@ -881,7 +1361,7 @@
+  \frac{n}{1+(n-1)\rho}
+ }
+ \]
+-independent reviewers of variance $\sigma^2$.
++so that $\operatorname{Var}(\bar X)=\sigma^2/n_{\mathrm{eff}}$. This effective count is a positive real number and need not be an integer.
+ \end{theorem}
+ 
+ \begin{proof}
+@@ -896,9 +1376,9 @@
+ Solving for $m$ gives the formula.
+ \end{proof}
+ 
+-For fixed positive $\rho$, $n_{\mathrm{eff}}$ approaches $1/\rho$ as $n$ grows. Headcount continues to help, but shared dependence creates a saturation floor.
+-
+-\begin{figure}[H]
++For $n=1$, the effective count is one. At the excluded boundary $\rho=-1/(n-1)$, the mean has zero variance and there is no finite variance-equivalent count. For fixed $0<\rho\leq1$, $n_{\mathrm{eff}}\to1/\rho$ as $n\to\infty$. Negative correlations can give $n_{\mathrm{eff}}>n$, but a fixed negative correlation is not admissible for arbitrarily large $n$.
++
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.80\linewidth]{fig_10_effective_reviewers.pdf}
+ \caption{Effective independent reviewer count under equicorrelated errors.}
+@@ -908,6 +1388,7 @@
+ For a general positive definite covariance matrix $\Sigma$, consider unbiased linear aggregates $w^\top X$ with $\mathbf 1^\top w=1$.
+ 
+ \begin{theorem}[Minimum-variance covariance-aware weights]
++\label{res:17:2}
+ The unique minimum-variance unbiased linear aggregate has weights
+ \[
+ w^*
+@@ -934,19 +1415,65 @@
+ \end{proof}
+ 
+ \begin{warning}[Bias is not covariance]
++\label{res:17:3}
+ Covariance-aware weighting does not remove a common bias that is absent from the covariance model. If every reviewer shares bias $b$, the mean squared error contains the irreducible term $b^2$.
+ \end{warning}
+ 
+-The practical conclusion is not that consensus is useless. It is that review portfolios should diversify dependence structure, not only increase nominal count.
++Under the model, dependence rather than nominal count determines the variance reduction. Whether a particular review process has this covariance structure is an empirical question. The formula alone neither endorses nor discredits a community judgment.
++
++
++\section{Shared interpretation, review dependence, and identification}
++\label{sec:old25}
++\label{sec:interpretation}
++
++The distinction between proof and proof field also matters when many people assess the same mathematics. An individual can evaluate a theorem through the notation, examples, expectations, and disciplinary assumptions available to them. Different reviewers may share these influences. Agreement therefore need not provide independent evidence, although substantive criticism can still identify a real defect. The mathematical contribution of a model lies in making its assumptions explicit, not in diagnosing the motives of reviewers.
++
++\subsection{Correlated noise and persistent common bias}
++
++The covariance model of Section~\ref{sec:correlated-review} measures how dependence reduces the effective information in repeated estimates. It cannot remove a common offset. The next proposition puts both effects into one equation.
++
++\begin{proposition}[MSE with a shared interpretive offset]
++\label{res:25:1}
++Suppose reviewers report $J_i=\theta+b+\varepsilon_i$, where $\theta$ is the target quantity, $b$ is a fixed shared offset, $\mathbb E\varepsilon_i=0$, $\operatorname{Var}(\varepsilon_i)=\sigma^2$, and $\operatorname{Cov}(\varepsilon_i,\varepsilon_j)=\rho\sigma^2$ for $i\ne j$. For admissible $\rho$, the mean squared error of the reviewer average is
++\[
++\boxed{\mathbb E(\overline J_n-\theta)^2=b^2+\sigma^2\left(\rho+\frac{1-\rho}{n}\right).}
++\]
++For fixed $\rho\ge0$, it approaches $b^2+\rho\sigma^2$ as $n\to\infty$.
++\end{proposition}
++\begin{proof}
++The estimation error is $\overline J_n-\theta=b+\overline\varepsilon_n$. Its mean is $b$, and its variance is $\sigma^2\big((1-\rho)/n+\rho\big)$ by summing all diagonal and off-diagonal covariance entries. Mean squared error is variance plus squared bias. Taking the limit completes the proof.
++\end{proof}
++
++This formula complements, rather than replaces, the effective reviewer count. Adding reviewers may reduce independent error while leaving the common offset untouched. The existing Python routine \path{shared_bias_mse} computes this model and permits an additional declared variance term for a shared random lens. Its input parameters are model choices, not measured facts about a given intellectual community.
++
++\subsection{When an identity effect can actually be measured}
++
++A claim about identity effects needs a design that can distinguish them from other differences. Hold the mathematical content fixed and let $Y_i(1)$ and $Y_i(0)$ be the fixed potential evaluations of reviewer $i$ under two labels. In a finite set of $N$ reviewers, assign exactly $n_1$ to the first label and $n_0=N-n_1$ to the second, uniformly over assignments with those sizes, where $n_0,n_1>0$. Assume each observed response equals the potential response under its assigned label and does not depend on other assignments. Then the difference of the two sample means is unbiased for $N^{-1}\sum_i(Y_i(1)-Y_i(0))$. Indeed, each reviewer has inclusion probability $n_1/N$ in the first mean and $n_0/N$ in the second, so linearity of expectation gives that identity.
++
++This conclusion concerns the assigned reviewers. Generalizing to a broader population requires a sampling model. Missing responses, shared discussion, or changes to the argument itself can invalidate the simple interpretation. None of these comparisons determines whether the proof is correct. Correctness requires its own mathematical audit.
++
++This distinction is central to a proposed application of Proof Path Theory. One may observe that a presentation changes which branches reviewers explore or how they estimate importance. Those differences become evidence of a contextual effect only after alternative explanations have been addressed. A skeptical review can be correct. Agreement can be justified. The mere presence of community influence neither validates nor invalidates a theorem.
++
++The research opportunity is to connect a typed archive of mathematical claims with controlled studies of how proof paths are selected, compressed, and interpreted. A certified proof core would be held fixed while the accompanying discovery field or contextual labels change. The questions are which alternatives readers recognize, which obstructions they find, and how their subsequent mathematical exploration differs. These are empirical targets for future work, not conclusions established by this finite model.
++
++\subsection{Interpretation and mathematical validity}
++
++The ambient field records exploratory trajectories, the realization theory determines whether specified local models assemble, and the review model describes the effect of declared dependence among numerical judgments. They address different questions. Their common archive makes comparison possible without identifying agreement, coherence, and deductive validity.
++
++These constructions do not yield a general solver for mathematical conjectures, a unique numerical measure of mathematical meaning, a canonical global proof field, or an empirical diagnosis of actual mathematical communities. They provide explicit finite questions with checkable answers and identify the conditions needed for stronger generalizations. Most importantly, they preserve the difference between a valid result and the circumstances through which people discover or evaluate it.
++
++
+ 
+ \section{Verification bandwidth and audit queues}
+-
+-A system can generate mathematical candidates faster than it can verify them. Let $a_t$ be arrivals during audit cycle $t$, let $s_t$ be service capacity, and let $B_t$ be the unresolved backlog. The basic deterministic queue is
++\label{sec:old18}
++
++Let $a_t\geq0$ be candidate arrivals during audit cycle $t$, let $s_t\geq0$ be service capacity, and let $B_t\geq0$ be the unresolved backlog. Suppose arrivals in a cycle are available to that cycle's service. The basic deterministic queue is
+ \[
+ B_{t+1}=\max\{0,B_t+a_t-s_t\}.
+ \]
+ 
+ \begin{theorem}[Constant-rate audit regimes]
++\label{res:18:1}
+ \label{thm:audit-rates}
+ Suppose $a_t\equiv\lambda$ and $s_t\equiv\mu$.
+ \begin{enumerate}[label=\textup{(\roman*)}]
+@@ -960,7 +1487,7 @@
+ Before the truncation at zero, each cycle adds $\lambda-\mu$. When this quantity is negative, the backlog decreases by a fixed amount until it reaches zero. When it is zero, the backlog is unchanged. When it is positive, the truncation is never active after a nonnegative start, and the backlog is $B_0+t(\lambda-\mu)$.
+ \end{proof}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.80\linewidth]{fig_11_audit_queues.pdf}
+ \caption{Stable, critical, and unstable audit regimes in the constant-rate model.}
+@@ -975,23 +1502,23 @@
+ \bigl(1+r_{\mathrm{dependency}}(x)\bigr)}
+ {c_{\mathrm{audit}}(x)}.
+ \]
+-This is a decision model, not a truth measure. It makes the assumptions behind triage explicit.
++Here $p_{\mathrm{err}}(x)\in[0,1]$, the consequence and dependency factors are nonnegative, and $c_{\mathrm{audit}}(x)>0$. Zero-cost checks can be handled separately. This is a declared priority heuristic, not a probability of truth or a proved optimal scheduling rule.
++
+ 
+ \section{Recursive proof cubes and expansion depth}
++\label{sec:old19}
+ 
+ A visible proof step is rarely atomic. A lemma opens into definitions and sublemmas. A computation opens into algorithms, parameters, and exact checks. A citation opens into another dependency graph. Proof Path Theory treats this as recursive refinement.
+ 
+ \begin{definition}[Proof packet and refinement]
++\label{res:19:1}
+ A proof packet is a node presented at one resolution. A refinement replaces that node by a finite subfield whose certified target reconstructs the original node on the declared scope.
+ \end{definition}
+ 
+-Repeated refinement gives a nested sequence of representations
+-\[
+-R_0\prec R_1\prec\cdots\prec R_d,
+-\]
+-where deeper levels expose more internal structure. Let $r_d\ge0$ be the unresolved residual at depth $d$ and let $c_d\ge0$ be the cumulative cost.
++Repeated refinement gives $R_0\preceq R_1\preceq\cdots\preceq R_d$ for the chosen recoverability tasks. More records need not give a strict gain for every task. Let $r_d\geq0$ be a declared unresolved-work score and $c_d\geq0$ the cumulative cost. These are model inputs. A small $r_d$ is not, without another theorem, a certificate of a nearly valid proof. The word cube names the layered presentation, not a cubical complex supplied with additional geometric axioms.
+ 
+ \begin{definition}[Goal-relative depth objective]
++\label{res:19:2}
+ For goal $g$ with weights $\alpha_g,\beta_g\ge0$, define
+ \[
+ J_g(d)=\alpha_g r_d+\beta_g c_d.
+@@ -1000,39 +1527,34 @@
+ \end{definition}
+ 
+ \begin{theorem}[Expansion depth is goal dependent]
++\label{res:19:3}
+ The same proof object can have different optimal expansion depths for different goals.
+ \end{theorem}
+ 
+ \begin{proof}
+-It is enough to construct a proof object with exactly two available depths. Choose $d_1<d_2$ with $r_{d_2}<r_{d_1}$ and $c_{d_2}>c_{d_1}$. Goal $g$ prefers $d_2$ over $d_1$ exactly when
+-\[
+-\frac{\alpha_g}{\beta_g}
+->
+-\frac{c_{d_2}-c_{d_1}}{r_{d_1}-r_{d_2}},
+-\]
+-with the usual interpretation when $\beta_g=0$. Choose one goal ratio below this threshold and another above it. The first prefers the shallower depth and the second prefers the deeper depth.
+-\end{proof}
+-
+-A practical stopping rule selects the first depth satisfying either
+-\[
+-r_d\le\varepsilon
+-\]
+-or
+-\[
++Take a proof object with exactly two available depths $d_1<d_2$, with $r_{d_2}<r_{d_1}$ and $c_{d_2}>c_{d_1}$. Direct subtraction shows that $d_2$ is preferred exactly when
++\[
++\alpha_g(r_{d_1}-r_{d_2})>\beta_g(c_{d_2}-c_{d_1}).
++\]
++The goal $(\alpha_g,\beta_g)=(1,0)$ strictly prefers $d_2$, whereas $(0,1)$ strictly prefers $d_1$. Since these are the only available depths, each preference is a global optimum. If both weights vanish, every depth is optimal. No division by a possibly zero weight is needed.
++\end{proof}
++
++A practical stopping rule selects the first depth satisfying
++\[
++r_d\le\varepsilon\qquad\text{or}\qquad
+ \frac{r_{d-1}-r_d}{c_d-c_{d-1}}<\tau.
+ \]
+-The first condition stops when the residual is small enough. The second stops when the next refinement gives too little residual reduction per unit cost.
+-
+-\begin{figure}[H]
+-\centering
+-\includegraphics[width=0.80\linewidth]{fig_12_refinement_goals.pdf}
+-\caption{Certificate, teaching, and archive goals select different depths in one finite model.}
+-\label{fig:refinement}
+-\end{figure}
++The first condition uses a declared tolerance. The second applies only at $d\geq1$ with $c_d>c_{d-1}$ and compares the most recent reduction with its extra cost. Zero-cost refinements require separate handling. These stopping rules do not generally minimize $J_g$ over all remaining depths.
++
++Figure~\ref{fig:refinement} and the worked example in Section~\ref{sec:depth-example} give explicit costs and unresolved-work scores for three goals.
+ 
+ Deeper is not automatically better. A formal checker may need primitive steps. A specialist paper may cite a standard theorem. A teaching account may expand only the conceptual bottleneck. An archive may retain a failed branch that neither certificate requires.
+ 
++
++\monographpart{Examples, implementation, and boundaries}{Examples and scope}{The finite examples connect the definitions to executable records. The implementation makes its evidence and computational limits explicit. The closing sections separate established statements, inherited formal checks, and the further questions that remain open.}
++
+ \section{Worked finite examples}
++\label{sec:old20}
+ 
+ The accompanying repository contains three canonical JSON proof fields and several auxiliary models. The examples are small enough to inspect by hand and complete enough to exercise the formal distinctions.
+ 
+@@ -1073,7 +1595,7 @@
+ 
+ \begin{table}[H]
+ \centering
+-\caption{Canonical finite checks in the version 1.0 release.}
++\caption{Canonical finite examples and their mathematical roles.}
+ \begin{tabular}{@{}lll@{}}
+ \toprule
+ Object & Computed result & Mathematical role\\
+@@ -1088,7 +1610,28 @@
+ \end{tabular}
+ \end{table}
+ 
++
++\subsection{An expansion-depth calculation}
++\label{sec:depth-example}
++For depths $0$ through $6$, take unresolved-work scores
++$(1,0.55,0.30,0.18,0.12,0.09,0.075)$ and costs
++$(0,0.25,0.65,1.2,2.1,3.5,5.5)$. The declared weights
++$(\alpha,\beta)=(1,0.75)$, $(2.5,0.35)$, and $(5,0.15)$ give
++minimizing depths $1$, $3$, and $4$, respectively. Their minimum objective
++values are $0.7375$, $0.87$, and $0.915$. These follow by evaluating
++$\alpha r_d+\beta c_d$ at the seven available depths. The labels certificate,
++teaching, and archive name these three supplied objectives rather than
++measured preferences of actual readers.
++
++\begin{figure}[htbp]
++\centering
++\includegraphics[width=0.72\linewidth]{fig_12_refinement_goals.pdf}
++\caption{Certificate, teaching, and archive goals select different depths in one finite model.}
++\label{fig:refinement}
++\end{figure}
++
+ \section{Reference implementation}
++\label{sec:old21}
+ 
+ The repository implements the finite theory as the Python package \texttt{proof\_path\_theory}. The public modules are organized by mathematical responsibility.
+ 
+@@ -1124,7 +1667,7 @@
+ proof-path audit examples/and_dag.json core.json
+ \end{lstlisting}
+ 
+-\begin{figure}[H]
++\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.94\linewidth]{fig_13_repository_workflow.pdf}
+ \caption{Repository workflow from a canonical JSON field to compiled representations and reproducible records.}
+@@ -1135,10 +1678,10 @@
+ 
+ A proof field file contains:
+ \begin{itemize}
+-\item a schema version and metadata;
+-\item required premises and targets;
+-\item typed nodes with value and cost vectors;
+-\item typed evidence records with scope and certification flags;
++\item a schema version and metadata.
++\item required premises and targets.
++\item typed nodes with value and cost vectors.
++\item typed evidence records with scope and certification flags.
+ \item justifications with premise sets, conclusions, rules, evidence references, and certification flags.
+ \end{itemize}
+ 
+@@ -1146,181 +1689,22 @@
+ 
+ \subsection{Tests and build discipline}
+ 
+-Version 1.2 expands the original seventy-four-test suite with bridge, schema-boundary, and input-validation regressions. The exact executed count is recorded in the release verification report. They cover graph validation, derivability, certificate extraction, alternative proofs, the Set Cover encoding, loss vectors, task sufficiency, bridge submodularity, retention, review covariance, audit queues, refinement, version propagation, JSON round trips, and command-line smoke tests.
++The regression suite covers graph validation, derivability, certificate extraction, alternative proofs, schema boundaries, and input validation. It also exercises loss vectors, task sufficiency, bridge coverage, retention, review covariance, audit queues, refinement, version propagation, JSON round trips, and the command line. The dated verification record gives the executed count for each edition.
+ 
+ A separate deterministic cross-check compares the exact certificate solver with brute-force enumeration over eighteen cost profiles, tests the greedy cardinality guarantee on one hundred generated coverage instances, verifies 1,024 retention-algebra identities, and compares the effective-reviewer formula with direct covariance calculations in 114 parameter settings.
+ 
+-The tests and cross-checks verify the implementation of finite definitions and examples. They do not replace the proofs in this paper. Conversely, the proofs do not guarantee that a software implementation is free of defects. The release keeps both forms of verification.
+-
+-\section{The ambient proof field and the meaning of failure}
+-\label{sec:ambient}
+-
+-A finished proof is rarely the only route the researcher could have explored. An archive often contains sketches that were never completed, arguments that failed because of a specific hypothesis, conjectured bridges that remain untested, and genuinely refuted local constructions. It is tempting to call this whole archive a proof, but doing so would erase the distinction between a certified result and a record of exploration. The \emph{ambient proof field} provides a more precise language: it is the declared field of reachable or recorded mathematical states and typed candidate transitions in which certified proof paths form a distinguished subfield.
+-
+-This section sharpens an idea already implicit in the finite hypergraph model. The existing \path{ProofField} permits \path{failed_route}, \path{boundary_case}, and \path{counterexample} nodes. Their presence is useful, but none is a logically justified global nonexistence claim by itself. A failed search is not necessarily a proof of impossibility. A counterexample to one proposed lemma is not necessarily a counterexample to the goal. An exact obstruction must have a declared scope and a checkable witness.
+-
+-\begin{definition}[Scoped branch assessment]
+-Let $\Pcal$ be a finite typed proof field with declared premises $A$ and target $t$. An exploratory branch is a finite sequence of candidate justifications whose certification and outstanding obligations are explicitly recorded. Its assessment is one of the following, relative to stated premises and rules:
+-\begin{enumerate}[label=\textup{(\roman*)}]
+-\item \emph{Open}: obligations remain unresolved.
+-\item \emph{Abandoned}: exploration stopped without a certificate of impossibility.
+-\item \emph{Locally refuted}: a checked counterexample or obstruction excludes a stated intermediate step under specified hypotheses.
+-\item \emph{Certified}: the selected justifications meet the declared proof certificate conditions.
+-\end{enumerate}
+-An assessment is a record of the branch, not a truth value assigned to every possible proof of $t$.
+-\end{definition}
+-
+-\begin{proposition}[Local failure does not imply global failure]
+-A finite proof field may contain a locally refuted branch to target $t$ while also containing a certified derivation of $t$ from its declared premises.
+-\end{proposition}
+-\begin{proof}
+-Take a premise $A$ and two alternative candidate derivations of $t$. Let the first use a proposed intermediate lemma $L$ that has a checked counterexample, so the corresponding justification is not certified. Let the second use a distinct certified justification from $A$ to $t$. The certified closure reaches $t$ by the second route. The failed first route remains a valid record of unsuccessful exploration, but cannot negate the existence of the second certificate. The same example can be represented by the alternative justification hypergraph developed earlier.
+-\end{proof}
+-
+-\begin{figure}[H]
+-\centering
+-\includegraphics[width=0.92\linewidth]{fig_14_ambient_field.pdf}
+-\caption{A certified derivation and a locally blocked candidate route coexist in the same declared proof field. The blocked branch is not a certificate that the goal itself is impossible. Generated by the supplied Python script.}
+-\label{fig:ambient}
+-\end{figure}
+-
+-The logical lesson is substantive for machine reasoning. A search timeout, budget exhaustion, invalid intermediate conjecture, or failure to find a proof all have different meanings. Only a certificate whose conclusion explicitly concerns nonexistence under a declared model and scope licenses a nonexistence claim. This is especially important when a failed branch is used to prune an automated search. Pruning the refuted step may be safe, while pruning its entire goal may discard a genuine proof.
+-
+-\begin{proposition}[Scoped refutation survives unchanged context]
+-Suppose a witness $w$ is verified by a sound checker to refute the predicate $L$ under assumptions $A$. In any later archive revision that retains the same interpretation of $L$, the same assumptions, and the checker's verification rules, $w$ remains a refutation of $L$. No conclusion follows about different predicates, altered assumptions, or alternative branches to a different goal.
+-\end{proposition}
+-\begin{proof}
+-The verification of $w$ depends only on the declared predicate, assumptions, and checking rules. An append-only collection of unrelated exploratory records does not alter those inputs. Therefore the same verification remains valid. When any of those inputs changes, the earlier check no longer certifies the revised claim without an explicit comparison theorem.
+-\end{proof}
+-
+-This is a qualified stability principle, not a general theorem that proof search is decidable. The append-only derivability result of Section~\ref{sec:versioned} concerns certified edges. The present proposition concerns the narrower persistence of a checked counterexample under a fixed interpretation. Both retain scope as part of the mathematical data.
+-
+-\section{Komorebi Space, realization fibers, and informative questions}
+-\label{sec:komorebi-bridge}
+-
+-Komorebi Space supplies a natural setting for studying the proof field's coherent realizations. Here the connection is \emph{relative} to an explicitly chosen system of views. Nothing in a finite proof hypergraph canonically supplies one universal category of all proofs, and a formal proof term is not automatically equivalent to an intended semantic object. The view system must be stated, together with its restrictions and the observations that are required to survive.
+-
+-\begin{definition}[Coherent views of a proof field]
+-Choose a finite collection of views $V$, fibers $F_v$ of local proof states or annotations, and for each declared directed edge $e:v\to w$ a restriction map $e^*:F_w\to F_v$. The \emph{strict realization set} is
+-\[
+-\Gamma(F)=\big\{(x_v)\in\prod_{v\in V}F_v : e^*(x_w)=x_v\text{ for every declared edge }e\big\}.
+-\]
+-The \emph{extension fiber} of prescribed information $s$ on $U\subseteq V$ consists of those global coherent families whose restrictions equal $s$. If the edges form a category, the usual functorial composition equations are additional explicit obligations.
+-\end{definition}
+-
+-The finite implementation \path{ambient.py} realizes this edge-defined model exactly. The gluing condition should not be weakened to covering the objects alone: a compatibility equation is attached to an edge and must appear in at least one patch.
+-
+-\begin{theorem}[Finite arrow-cover gluing]
+-Suppose patches $U_i\subseteq V$ cover every view and every declared edge has both endpoints in some $U_i$. Let $s_i$ be coherent assignments on $U_i$ that agree on all overlaps. There is a unique global coherent assignment $s\in\Gamma(F)$ restricting to every $s_i$.
+-\end{theorem}
+-\begin{proof}
+-For each view $v$, choose any patch containing it and define $s(v)$ to be the value supplied by that patch. Agreement on overlaps makes this independent of the choice. For a declared edge $e:v\to w$, choose a patch containing both endpoints. The local assignment on that patch obeys $e^*s(w)=s(v)$, so the global assignment is coherent. It is the only possible glue because every coordinate was prescribed by at least one patch.
+-\end{proof}
+-
+-\begin{example}[Object coverage cannot replace arrow coverage]
+-Let $V=\{v,w\}$ with an edge $v\to w$, both fibers $\{0,1\}$, and identity restriction. Singleton patches prescribe $s(v)=0$ and $s(w)=1$. These assignments cover all views and agree on their empty overlap. There is no global coherent assignment with those coordinates. The missing ingredient is the edge condition, not the availability of the two individual values.
+-\end{example}
+-
+-The theorem is a finite instance of the strict gluing construction in \emph{Komorebi Space} \cite{komorebi-space}. It does not claim a general stack theorem for nonabelian proof objects. Gluing up to isomorphism requires the identifications and their coherence witnesses, which are retained in the corresponding groupoid setting.
+-
+-\subsection{Exact finite realization and obstruction certificates}
+-
+-A second connection is quantitative. Work over $\mathbb F_2$ with $E=\mathbb F_2^n$. Let $A:E\to\mathbb F_2^m$ impose coherence, $P:E\to\mathbb F_2^p$ retain prescribed information, and $x\in E$ be a raw candidate. Define
+-\[
+-\mathfrak K_P(x)=\{y\in E:Ay=0,\ Py=Px\},\qquad
+-M=\begin{bmatrix}A\\P\end{bmatrix},\quad
+-b=\begin{bmatrix}0\\Px\end{bmatrix}.
+-\]
+-This is a finite linear realization fiber. The statement $My=b$ does not automatically produce a solution; compatibility of the prescribed information must first be established.
+-
+-\begin{theorem}[Finite realization alternative and ambiguity]
+-Exactly one of the following holds:
+-\begin{enumerate}[label=\textup{(\roman*)}]
+-\item $My=b$ has a solution $y_0$. Its complete solution set is $y_0+H$, where $H=\ker A\cap\ker P$, and
+-\[
+-|\mathfrak K_P(x)|=2^{n-\operatorname{rank}(M)}.
+-\]
+-\item A row vector $\lambda$ exists with $\lambda M=0$ and $\lambda b=1$. It is a directly checkable certificate that $\mathfrak K_P(x)=\varnothing$.
+-\end{enumerate}
+-\end{theorem}
+-\begin{proof}
+-If $My_0=b$, any other solution differs from $y_0$ by an element of $\ker M=H$, and every such difference gives another solution. Rank nullity gives $\dim H=n-\operatorname{rank}(M)$. If $b$ is not in the column space of $M$, linear algebra supplies a linear functional that vanishes on that column space and takes value $1$ on $b$. Expressing it as a row vector gives $\lambda$. Conversely such a witness contradicts any proposed equation $My=b$, since it would imply $0=\lambda My=\lambda b=1$. These cases are mutually exclusive and exhaustive over a field.
+-\end{proof}
+-
+-This negative certificate is a concrete instance of the protected obstruction principle from Komorebi Space. Its scope is exactly the finite linear system $My=b$. It is not a certificate that some broad mathematical conjecture is unprovable.
+-
+-\subsection{The information gained by a new observation}
+-
+-Suppose the realization fiber is nonempty and a new linear observation $Q:E\to\mathbb F_2^q$ becomes available. The right question is not how many bits appear in the output of $Q$ but how many remaining degrees of freedom in the fiber it distinguishes.
+-
+-\begin{theorem}[Exact observation gain]
+-Give the nonempty finite affine fiber $y_0+H$ the uniform distribution. Then the Shannon entropy of the observed value $Qy$ is
+-\[
+-H(Qy)=\operatorname{rank}(Q|_H)\quad\text{bits}.
+-\]
+-For every observation value that actually occurs, the corresponding conditional fiber contains
+-\[
+-2^{\dim H-\operatorname{rank}(Q|_H)}
+-\]
+-realizations. Thus the uncertainty reduction is exactly $\operatorname{rank}(Q|_H)$ bits.
+-\end{theorem}
+-\begin{proof}
+-The image $Q(H)$ is a vector subspace of dimension $r=\operatorname{rank}(Q|_H)$, so the observed values form the affine set $Qy_0+Q(H)$ of size $2^r$. Every such value has a preimage that is a coset of $H\cap\ker Q$, whose dimension is $\dim H-r$ by rank nullity. Equal fiber cardinalities make the induced output distribution uniform on $2^r$ values. Its entropy is $\log_2(2^r)=r$, and each conditional fiber has cardinality $2^{\dim H-r}$.
+-\end{proof}
+-
+-\begin{example}[One informative question]
+-Let $y=(a,b,c)\in\mathbb F_2^3$ with $a+b+c=0$ and protected value $a=0$. The realization fiber is $\{(0,0,0),(0,1,1)\}$. It has one bit of ambiguity. Observing $b$ resolves that bit exactly. Observing $a$ supplies no new information, despite being a perfectly valid measurement. This difference is measured by the rank of the observation restricted to $H$, rather than by the output width of the observation.
+-\end{example}
+-
+-The new module \path{realization.py} computes these quantities through exact binary row reduction, and returns an explicit linear witness when the protected realization is impossible. The program does not enumerate all solutions, although the tests compare its results with exhaustive enumeration on small cases. The entropy statement assumes uniform sampling of the compatible realizations. It does not assert a universal prior over mathematical discoveries, or that the most informative observation is automatically the most valuable research question once costs and task priorities are included.
+-
+-\input{sections/bridge.tex}
+-
+-\section{Shared interpretation, review dependence, and identification}
+-\label{sec:interpretation}
+-
+-The distinction between proof and proof field also matters when many people assess the same mathematics. An individual can evaluate a theorem through the notation, examples, expectations, and disciplinary assumptions available to them. Different reviewers may share these influences. Agreement therefore need not provide independent evidence, although substantive criticism can still identify a real defect. The mathematical contribution of a model lies in making its assumptions explicit, not in diagnosing the motives of reviewers.
+-
+-\subsection{Correlated noise and persistent common bias}
+-
+-The covariance model of Section~\ref{sec:correlated-review} measures how dependence reduces the effective information in repeated estimates. It cannot remove a common offset. The next proposition puts both effects into one equation.
+-
+-\begin{proposition}[MSE with a shared interpretive offset]
+-Suppose reviewers report $J_i=\theta+b+\varepsilon_i$, where $\theta$ is the target quantity, $b$ is a fixed shared offset, $\mathbb E\varepsilon_i=0$, $\operatorname{Var}(\varepsilon_i)=\sigma^2$, and $\operatorname{Cov}(\varepsilon_i,\varepsilon_j)=\rho\sigma^2$ for $i\ne j$. For admissible $\rho$, the mean squared error of the reviewer average is
+-\[
+-\boxed{\mathbb E(\overline J_n-\theta)^2=b^2+\sigma^2\left(\rho+\frac{1-\rho}{n}\right).}
+-\]
+-For fixed $\rho\ge0$, it approaches $b^2+\rho\sigma^2$ as $n\to\infty$.
+-\end{proposition}
+-\begin{proof}
+-The estimation error is $\overline J_n-\theta=b+\overline\varepsilon_n$. Its mean is $b$, and its variance is $\sigma^2\big((1-\rho)/n+\rho\big)$ by summing all diagonal and off-diagonal covariance entries. Mean squared error is variance plus squared bias. Taking the limit completes the proof.
+-\end{proof}
+-
+-This formula complements, rather than replaces, the effective reviewer count. Adding reviewers may reduce independent error while leaving the common offset untouched. The existing Python routine \path{shared_bias_mse} computes this model and permits an additional declared variance term for a shared random lens. Its input parameters are model choices, not measured facts about a given intellectual community.
+-
+-\subsection{When an identity effect can actually be measured}
+-
+-It is easy to speculate that authorship or disciplinary identity changed an evaluation; it is harder to establish such an effect. A direct experimental design can hold an argument fixed while randomizing its surrounding label. Let $Y_i(1)$ and $Y_i(0)$ denote the evaluations that a reviewer would give the same declared mathematical content under two different labels. In a randomized design, the difference of treatment-group and control-group mean responses estimates the population average label effect, subject to the usual sampling, assignment, and interference conditions. It does not establish whether the proof is correct. That requires a separate audit of the mathematical claim.
+-
+-This distinction is central to a proposed application of Proof Path Theory. One may observe that a presentation changes which branches reviewers explore or how they estimate importance. Those differences become evidence of a contextual effect only after alternative explanations have been addressed. A skeptical review can be correct. Agreement can be justified. The mere presence of community influence neither validates nor invalidates a theorem.
+-
+-The research opportunity is to connect a typed archive of mathematical claims with controlled studies of how proof paths are selected, compressed, and interpreted. A certified proof core would be held fixed while the accompanying discovery field or contextual labels change. The questions are which alternatives readers recognize, which obstructions they find, and how their subsequent mathematical exploration differs. These are empirical targets for future work, not conclusions established by this finite model.
+-
+-\subsection{What the new bridge does and does not claim}
+-
+-The new sections join three previously separated themes. The ambient field retains unsuccessful and unresolved mathematical trajectories. Komorebi Space determines when selected local realizations are coherent and whether prescribed information extends. A quantitative review model distinguishes added headcount from independent information. Together they furnish a sharper architecture for machine-supported mathematical inquiry.
+-
+-These constructions do not yield a general solver for mathematical conjectures, a unique numerical measure of mathematical meaning, a canonical global proof field, or an empirical diagnosis of actual mathematical communities. They provide explicit finite questions with checkable answers and identify the conditions needed for stronger generalizations. Most importantly, they preserve the difference between a valid result and the circumstances through which people discover or evaluate it.
++The tests and cross-checks verify the implementation of finite definitions and examples. They do not replace the proofs in this monograph. Conversely, the proofs do not guarantee that a software implementation is free of defects. The release keeps both forms of verification.
+ 
+ 
+ \section{What the theory establishes}
+-
+-The completed finite theory establishes the following structural facts.
++\label{sec:old26}
++
++The finite theory establishes the following structural facts.
+ 
+ \begin{enumerate}
+ \item A proof field can represent conjunction within a justification and alternatives among justifications without confusing candidate edges with certified edges.
+ \item Derivability in a finite acyclic selected subfield is well defined and computable in topological order.
+-\item A fixed AND-DAG has a unique minimal verification core.
++\item A fixed AND-DAG, expanded only outside its admitted leaves, has a least certificate pair.
+ \item Alternative derivations make minimum certificate selection NP-complete in general.
+ \item Compression is meaningful only relative to a task family.
+ \item Task-relative recoverability forms a preorder and a quotient partial order.
+@@ -1330,17 +1714,19 @@
+ \item Weighted future reach is monotone and submodular.
+ \item Greedy cardinality retention has the standard $(1-1/e)$ guarantee.
+ \item Append-only certified updates preserve existing derivability.
+-\item The forward dependency closure is the smallest universally sound syntactic invalidation set.
+-\item Review dependence reduces effective independent review, and generalized least squares gives the optimal linear unbiased aggregate under a known covariance model.
++\item The forward dependency closure is the least set containing the changed nodes and closed under outgoing dependency edges. It marks potential review, not automatic falsehood.
++\item Positive review dependence lowers the variance-equivalent count. Under a positive definite covariance model, generalized least squares gives the minimum-variance unbiased linear aggregate.
+ \item Constant-rate audit queues have an exact stable, critical, or unstable classification.
+ \item Optimal proof expansion depth depends on the presentation goal.
+ \end{enumerate}
+ 
+ These results turn the original methodological insight into a finite mathematical branch with explicit objects, algorithms, complexity, and failure boundaries.
+ 
+-\noindent The ambient extensions add a finite view system, scope-aware failed-path analysis, the protected linear realization alternative, exact observation gain, and an explicit interpretation model. Version 1.2 gives the proof field an actual contravariant local-model diagram and a checked equivalence with its coherent sections. Whole-support gluing establishes extension from suitable proper patches. The native exporter reads compiled Lean declarations, but arbitrary semantic interpretation and general correctness of the exporter are not inferred from that successful execution.
++\noindent The realization theory gives the proof field a contravariant diagram of local models and an explicit equivalence with its coherent sections. Whole-support gluing proves extension from suitably covering patches. The protected linear alternative classifies feasible fibers and supplies normalized witnesses for infeasibility. Exact finite-field counts yield an information formula only after a uniform distribution is chosen. The native exporter supplies syntactic dependencies from compiled declarations, not the complete history of discovery.
++
+ 
+ \section{Limitations and claim boundaries}
++\label{sec:old27}
+ 
+ Proof Path Theory does not establish a theorem by preserving the history of an argument. A richly documented wrong proof remains wrong. Bridge value is not validity. Explanatory power is not validity. Consensus is not validity. The certified subfield remains the object that carries deductive force.
+ 
+@@ -1354,67 +1740,83 @@
+ 
+ The review and queue models are deliberately elementary. They isolate dependence and capacity effects, but they do not model every institutional or psychological feature of mathematical review.
+ 
+-Finally, the paper does not claim that graphs, hypergraphs, proof theory, submodular optimization, covariance-aware aggregation, or queueing recurrences were invented here. The contribution is the formal assembly of these structures around proof compression, discovery fields, mathematical memory, and versioned proof portfolios.
++Finally, the monograph does not claim that graphs, hypergraphs, proof theory, submodular optimization, covariance-aware aggregation, or queueing recurrences were invented here. The contribution is the formal assembly of these structures around proof compression, discovery fields, mathematical memory, and versioned proof portfolios.
++
+ 
+ \section{Open theorem program}
++\label{sec:old28}
+ 
+ \begin{problem}[Proof-path view functors and comparison]
++\label{res:28:1}
+ The declared-field local-model functor and whole-support gluing are established here. Extend the checked interface to richer proof-state representations, and verify the implementation of general proof assistant adapters. Determine when objects with symmetry require nonabelian or higher descent rather than the strict set-valued construction.
+ \end{problem}
+ 
+ \begin{problem}[Counterfactual proof-search observations]
++\label{res:28:2}
+ Study which observations on a finite realization fiber yield the greatest task-relative reduction of uncertainty per unit cost. Extend the binary rank theorem to controlled infinite or nonlinear settings only after specifying distributions, admissible questions, and the semantics of proof state.
+ \end{problem}
+ 
+ \begin{problem}[Collective evaluation without shared-context confounding]
++\label{res:28:3}
+ Design preregistered evaluations of identical certified mathematics under randomized labels and alternative explanatory contexts. Separate measurement of interpretation differences from independent verification of correctness, and test whether models of correlated review predict actual audit errors.
+ \end{problem}
+ 
+ 
+ 
+-The finite theory leaves several focused directions.
++Further directions include the following problems.
+ 
+ \begin{problem}[Infinite proof fields]
++\label{res:28:4}
+ Develop locally finite and countable proof fields with conditions guaranteeing that finite certificates approximate an infinite derivation without losing domain or convergence information.
+ \end{problem}
+ 
+ \begin{problem}[Parameterized certificate complexity]
++\label{res:28:5}
+ Classify minimum certificate selection by treewidth, number of alternative justifications, justification arity, shared-subproof width, and target count. Identify fixed-parameter tractable regimes and approximation bounds.
+ \end{problem}
+ 
+ \begin{problem}[Probabilistic bridge calibration]
++\label{res:28:6}
+ Replace declared bridge weights by calibrated posterior models while keeping conjectural reach separate from certified derivability.
+ \end{problem}
+ 
+ \begin{problem}[Proof assistant interoperability]
++\label{res:28:7}
+ Construct adapters that export stable claim identifiers, primitive dependencies, scopes, and proof terms from existing formal systems into the common proof-field schema.
+ \end{problem}
+ 
+ \begin{problem}[Higher proof transformations]
++\label{res:28:8}
+ Model transformations between proofs, transformations between transformations, and coherent compiler pipelines in a higher categorical setting.
+ \end{problem}
+ 
+ \begin{problem}[Privacy and attribution]
++\label{res:28:9}
+ Design proof archives that preserve provenance and priority while allowing private notes, embargoed routes, and sensitive collaboration records to remain access controlled.
+ \end{problem}
+ 
+ \begin{problem}[Empirical validation]
++\label{res:28:10}
+ Study real mathematical projects to estimate recovery costs, audit bottlenecks, and the predictive value of bridge-retention scores. Such work should test the models rather than assume them.
+ \end{problem}
+ 
+ \begin{problem}[Distributed audit systems]
++\label{res:28:11}
+ Extend the queue model to heterogeneous reviewers, dependent tasks, rework, priority classes, and claims whose audit cost changes after neighboring claims are resolved.
+ \end{problem}
+ 
++
++\clearpage
+ \section{Conclusion}
+-
+-The version 1.2 continuation sharpens the original distinction between a proof certificate and the larger proof field. The field need not consist only of viable derivations. It can retain failed strategies and genuine local refutations without allowing either to masquerade as global unprovability. A checked contravariant system of local field models gives an explicit bridge to Komorebi Space. The need to cover whole justifications identifies a constraint that a pairwise dependency graph can miss. In the linear finite case, protected observations admit exact success or failure certificates and a measurable information gain. A separate review model distinguishes proof correctness from correlated social interpretation.
+-
+-
+-
+-A final proof is indispensable, but it is not always the whole mathematical object. The completed theory distinguishes the certificate from the proof field that produced it. It gives that field typed nodes, alternative justifications, evidence records, task-relative compressions, bridge graphs, version histories, and explicit audit models.
+-
+-The main mathematical boundary is now clear. Verification is a closure property of the certified subfield. Discovery value belongs to a larger graph. Compression can preserve the first while reducing the second. Once that separation is formal, several consequences follow. Minimal certificates can be extracted exactly in fixed AND-DAGs. Alternative derivations create a genuine combinatorial optimization problem. Future-reach retention becomes submodular coverage. Version changes propagate through descendants. Correlated review has an effective sample size. Candidate generation is constrained by audit capacity. Expansion depth depends on purpose.
++\label{sec:old29}
++
++A proof certificate and its surrounding proof field answer different mathematical questions. The field need not consist only of viable derivations. It can retain failed strategies and genuine local refutations without allowing either to masquerade as global unprovability. A checked contravariant system of local field models gives an explicit bridge to Komorebi Space. The need to cover whole justifications identifies a constraint that a pairwise dependency graph can miss. In the linear finite case, protected observations admit exact success or failure certificates and a measurable information gain. A separate review model distinguishes proof correctness from correlated social interpretation.
++
++
++
++A final proof is indispensable, but it is not always the whole mathematical object. The theory distinguishes the certificate from the declared field in which it is recorded. It gives that field typed nodes, alternative justifications, evidence records, task-relative compressions, bridge graphs, version histories, and explicit audit models.
++
++The main mathematical boundary is now clear. Verification is a closure property of the certified subfield. Discovery value belongs to a larger graph. Compression can preserve the first while reducing the second. Once that separation is formal, several consequences follow. Least certificate pairs can be extracted in fixed AND-DAGs. Alternative derivations create a genuine combinatorial optimization problem. Future-reach retention becomes submodular coverage. Version changes propagate through descendants. Correlated review has an effective sample size. Candidate generation is constrained by audit capacity. Expansion depth depends on purpose.
+ 
+ The final thesis is therefore:
+ \[
+@@ -1423,96 +1825,154 @@
+ \end{minipage}}
+ \]
+ 
++
++\FloatBarrier
++\clearpage
+ \appendix
+-
++\markboth{Reference material}{Reference material}
++\section{Notation and hypotheses}
++\label{app:notation}
++
++Letters are local to a section. In particular, $A$ denotes required premises in a proof field, but a matrix in the binary examples. The type declarations, not the letter alone, determine the object.
++
++\begin{longtable}{@{}L{0.24\linewidth}L{0.71\linewidth}@{}}
++\toprule
++Symbol & Meaning \\
++\midrule
++\endhead
++$\Pcal$, $V$, $\Jcal$ & A declared proof field, its nodes, and its justifications. \\
++$A$, $L$, $T_0$ & Required premises, admissible leaves, and requested targets, with $A\subseteq L$. \\
++$(K,H)$ & Selected nodes and certified justification records. Only usable rules contribute to derivability. \\
++$D_{\mathrm{cert}}(K,H)$ & The least certified closure in the selected record. \\
++$\Anc_L(T_0)$ & Backward ancestry expanded only outside the admissible leaves. \\
++$\mathcal M_F(U)$ & Local models on patch $U$ satisfying all certified rules supported entirely in $U$. \\
++$\Gamma(\mathcal M_F)$ & Coherent families of those local models under restriction. \\
++$\mathscr A$, $C$, $q$ & A class of possible archives, an encoding scheme, and a task on that class. \\
++$P_K(S)=S\cap K$ & Pure retention of records selected by a fixed mask. \\
++$D:E\to R$, $p:E\to S$ & A linear defect and a protected observable. The repair condition is $Dy=0$, $p(y)=p(x)$. \\
++$H=\ker D\cap\ker p$ & The ambiguity space of a nonempty protected fiber. This $H$ is not a set of justifications. \\
++$U_M(S)$ & Weighted target reach from the mandatory starts and a selected supplement, in a fixed directed bridge graph. \\
++$n_{\mathrm{eff}}$ & A real, variance-equivalent review count in the specified covariance model. \\
++\bottomrule
++\end{longtable}
++
++\subsection*{Assumptions that change the conclusions}
++The unique-core theorem uses backward expansion that stops at admissible leaves and proves a least \emph{pair} of record sets. The compression results quantify over a whole archive class with one decoder for each task. Weighted domination counts only targets reachable before deletion. The greedy ratio requires a positive cardinality budget, with zero and saturated budgets handled separately.
++
++Whole-support gluing is sufficient when the patches cover all nodes and every complete certified rule support. Merely covering pairwise dependencies is not sufficient in general. The linear alternative requires a field. General algebraic functionals need not be bounded under an added topology. The information formula requires a finite field, a finite-dimensional feasible affine fiber, and a uniform distribution.
++
++The review mean is unbiased only when its error means vanish. Its effective count requires positive marginal variance and positive variance of the mean. A minimum-variance aggregate allows real weights and assumes a known positive definite covariance matrix. No probability of mathematical correctness follows from these assumptions alone.
++
++
++
++\clearpage
+ \section{Theorem ledger}
+-
+-\emph{Proved} denotes a written proof. \emph{Lean} denotes the specified checked interface, not a formalization of the entire paper. \emph{Mixed} distinguishes checked counts from their written probabilistic interpretation. The separate Lean concordance lists every source declaration and its scope.
++\label{app:ledger}
++
++\emph{Written} denotes a written proof. \emph{Lean} denotes the specified interface with inherited compiler evidence, not a formalization of the entire monograph. \emph{Mixed} distinguishes checked counts from their written probabilistic interpretation. The separate Lean concordance lists every source declaration and its scope.
+ 
+ \begin{longtable}{@{}L{0.09\linewidth}L{0.43\linewidth}L{0.12\linewidth}L{0.27\linewidth}@{}}
+ \toprule
+ ID & Result & Status & Executable support\\
+ \midrule
+ \endhead
+-PPT-001 & Finite derivability is unique and computable in topological order. & Proved & \path{ProofField.derive}\\
+-PPT-002 & An AND-DAG has a unique minimal verification core. & Proved & \path{unique_and_dag_certificate}\\
+-PPT-003 & AND-DAG core extraction is linear with indexed adjacency. & Proved & graph algorithm, not a runtime certificate\\
+-PPT-004 & Minimum Certificate Decision is NP-complete. & Proved & Set Cover example\\
+-PPT-005 & Certified paths transport functorially. & Proved & structural theorem\\
+-PPT-006 & Local auditable certificates compose under a certificate functor. & Proved & structural theorem\\
+-PPT-007 & Task information loss follows from compression collisions. & Proved & task API\\
+-PPT-008 & Recoverability is a preorder. & Proved & \path{recoverability_preorder}\\
+-PPT-009 & The quotient by mutual recoverability is a partial order. & Proved & equivalence API\\
+-PPT-010 & Minimal sufficient compression depends on the declared task family. & Proved & finite countermodel\\
+-PPT-011 & Zero verification loss can coexist with positive discovery loss. & Proved & AND-DAG example\\
+-PPT-012 & Compression debt is monotone under retention. & Proved & \path{compression_debt}\\
+-PPT-013 & Bridge criticality equals target domination. & Proved & \path{dominated_targets}\\
+-PPT-014 & Weighted future reach is monotone and submodular. & Proved & exhaustive finite checker\\
+-PPT-015 & Greedy cardinality retention achieves at least $1-1/e$. & Proved & greedy and exact solvers\\
+-PPT-016 & Append-only certified updates preserve derivability. & Proved & versioning check\\
+-PPT-017 & Forward dependency closure is the minimal closed syntactic review set. & Proved & \path{affected_descendants}\\
+-PPT-018 & Equicorrelated review has the stated effective count. & Proved & covariance implementation\\
+-PPT-019 & GLS weights minimize unbiased linear review variance. & Proved & \path{generalized_least_squares_weights}\\
+-PPT-020 & Constant-rate audit queues have exact stable, critical, and unstable regimes. & Proved & queue simulation\\
+-PPT-021 & Optimal expansion depth depends on the goal. & Proved & refinement implementation\\
+-PPT-022 & Pure retention projections commute and are idempotent. & Proved & \path{retention_projection}\\
+-PPT-023 & Retention masks form a Boolean lattice. & Proved & \path{retention_meet}, \path{retention_join}\\
+-PPT-024 & A locally refuted route can coexist with another certified route. & Proved & Alternative justification field\\
+-PPT-025 & A checked local refutation persists under unchanged interpretation. & Proved & Scoped witness principle\\
++PPT-001 & Finite derivability is unique and computable in topological order. & Written & \path{ProofField.derive}\\
++PPT-002 & An AND-DAG has a least certificate pair, stopping at admissible leaves. & Written & \path{unique_and_dag_certificate}\\
++PPT-003 & AND-DAG core extraction is linear with indexed adjacency. & Written & graph algorithm, not a runtime certificate\\
++PPT-004 & Minimum Certificate Decision is NP-complete. & Written & Set Cover example\\
++PPT-005 & Certified paths transport functorially. & Written & structural theorem\\
++PPT-006 & Local auditable certificates compose under a certificate functor. & Written & structural theorem\\
++PPT-007 & Task information loss follows from compression collisions. & Lean & task API\\
++PPT-008 & Recoverability is a preorder. & Written & \path{recoverability_preorder}\\
++PPT-009 & The quotient by mutual recoverability is a partial order. & Written & equivalence API\\
++PPT-010 & Least sufficient retention masks depend on the task family. & Written & finite countermodel\\
++PPT-011 & Zero verification loss can coexist with positive discovery loss. & Written & AND-DAG example\\
++PPT-012 & Compression debt is monotone under retention. & Written & \path{compression_debt}\\
++PPT-013 & Bridge criticality equals target domination. & Written & \path{dominated_targets}\\
++PPT-014 & Weighted future reach is monotone and submodular. & Written & exhaustive finite checker\\
++PPT-015 & Greedy cardinality retention achieves at least $1-1/e$ for positive feasible cardinality budgets. & Written & greedy and exact solvers\\
++PPT-016 & Append-only certified updates preserve derivability. & Written & versioning check\\
++PPT-017 & Forward dependency closure is the minimal closed syntactic review set. & Written & \path{affected_descendants}\\
++PPT-018 & Equicorrelated review has the stated effective count. & Written & covariance implementation\\
++PPT-019 & GLS weights minimize unbiased linear review variance. & Written & \path{generalized_least_squares_weights}\\
++PPT-020 & Constant-rate audit queues have exact stable, critical, and unstable regimes. & Written & queue simulation\\
++PPT-021 & Optimal expansion depth depends on the goal. & Written & refinement implementation\\
++PPT-022 & Pure retention projections commute and are idempotent. & Written & \path{retention_projection}\\
++PPT-023 & Retention masks form a Boolean lattice. & Written & \path{retention_meet}, \path{retention_join}\\
++PPT-024 & A locally refuted route can coexist with another certified route. & Written & Alternative justification field\\
++PPT-025 & A checked local refutation persists under unchanged interpretation. & Written & Scoped witness principle\\
+ PPT-026 & Finite arrow-covered matching views glue uniquely. & Lean & \path{FiniteViewSystem.glue}\\
+ PPT-027 & Protected realizations admit exact solutions or obstruction witnesses, with classified fibers. & Lean & \path{analyze_affine_realizations}\\
+ PPT-028 & Finite affine fibers have exact observation counts. Uniform entropy is a written corollary. & Mixed & Lean counts and binary tests\\
+-PPT-029 & Common offset and correlated error have the displayed reviewer MSE. & Proved & \path{shared_bias_mse}\\
+-PPT-030 & Declared derivability equals truth in every declared field model. & Lean & Closure and countermodels\\
++PPT-029 & Common offset and correlated error have the displayed reviewer MSE. & Written & \path{shared_bias_mse}\\
++PPT-030 & Declared derivability equals membership in every declared field model. & Lean & Closure and countermodels\\
+ PPT-031 & Local models form a contravariant diagram with an explicit realization equivalence. & Lean & \path{Field.modelEquivSections}\\
+-PPT-032 & Whole-support matching local models glue; pairwise coverage can fail. & Lean & Proof-field views and counterexample\\
++PPT-032 & Whole-support matching local models glue. Pairwise coverage can fail. & Lean & Proof-field views and counterexample\\
+ PPT-033 & All predicate tasks are sufficient exactly for injective encodings. & Lean & Compression collision theorem\\
+ \bottomrule
+ \end{longtable}
+ 
+-\section{Reproduction}
+-
+-From the extracted section root, with the separate pinned offline runtime available:
+-
++\clearpage
++\section{Reproduction and verification records}
++\label{app:reproduction}
++
++The package separates the present editorial and finite-computation checks from the inherited Lean run. The formal source files and dependency pins can be compared byte for byte with the preceding release. The recorded compiler evidence remains in \path{evidence/lean/}. A new compiler replay requires the separate pinned runtime and is not implied by a successful manuscript build.
++
++From the extracted package directory, the finite and publication checks are:
+ \begin{lstlisting}[language=bash]
+ python -m pip install -e . --no-build-isolation
+-python scripts/verify_release.py --runtime /path/to/portable-kit
+-# Only the formal bridge:
+-python scripts/verify_lean.py --runtime /path/to/portable-kit
+-# Finite computations without a Lean claim:
+-python -m pytest
+-python examples/ambient_realization.py
+-# Standalone paper build uses docs/ as its working directory:
++python -m pytest -o addopts='' -q
++python scripts/deep_validation.py
++python scripts/verify_bridge.py
++python scripts/verify_editorial.py
++python scripts/check_manifest.py
++\end{lstlisting}
++
++The manuscript can be rebuilt independently from \path{docs/}:
++\begin{lstlisting}[language=bash]
+ cd docs
+ pdflatex -interaction=nonstopmode -halt-on-error Proof_Path_Theory.tex
+ pdflatex -interaction=nonstopmode -halt-on-error Proof_Path_Theory.tex
+ pdflatex -interaction=nonstopmode -halt-on-error Proof_Path_Theory.tex
+ \end{lstlisting}
+ 
+-The source archive also contains a wheel build script and a GitHub Actions workflow fragment for a multi-section repository.
+-
+-\section{Canonical proof-field schema excerpt}
+-
+-\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
++A separate formal replay, with the pinned runtime already available, uses:
++\begin{lstlisting}[language=bash]
++python scripts/verify_lean.py --runtime /path/to/portable-kit
++\end{lstlisting}
++
++For PowerShell, extraction precedes installation:
++\begin{lstlisting}[language={},basicstyle=\ttfamily\small]
++Expand-Archive -LiteralPath .\Proof_Path_Theory_Monograph_1.3.0.zip `
++  -DestinationPath .\proof-path-release
++Set-Location .\proof-path-release\Proof_Path_Theory_Monograph_v1.3.0
++python -m pip install -e . --no-build-isolation
++python -m pytest -o addopts='' -q
++\end{lstlisting}
++
++The dated editorial report records which commands ran in this environment. Independent peer review, a formal verification of every Python routine, and empirical studies of social interpretation are not supplied by those checks. The author's redistribution-license decision is unchanged by this edition.
++
++\clearpage
++\section{A complete minimal proof-field record}
++\label{app:schema}
++
++The following record defines both its premise and its target. It is a complete importable example rather than a schema fragment with an unresolved target reference. The rule is explicitly assumed for this demonstration. Its declared certification must not be mistaken for a proof of an arbitrary implication between the displayed labels.
++
++\begin{lstlisting}[language={},basicstyle=\ttfamily\small]
+ {
+   "schema_version": "1.0",
+   "premises": ["A"],
+   "targets": ["B"],
+   "nodes": [
+-    {
+-      "id": "A",
+-      "label": "Premise A",
+-      "kind": "premise",
+-      "values": {"verification": 1.0},
+-      "costs": {"storage": 0.2}
+-    }
++    {"id": "A", "label": "Premise A", "kind": "premise"},
++    {"id": "B", "label": "Target B", "kind": "claim"}
+   ],
+   "evidence": [
+     {
+-      "id": "e-proof",
+-      "kind": "formal_proof",
+-      "source": "declared derivation",
+-      "scope": "",
++      "id": "e-rule",
++      "kind": "assumption",
++      "source": "Declared demonstration rule A implies B",
++      "scope": "This finite inference model only",
+       "certifies": true
+     }
+   ],
+@@ -1521,14 +1981,19 @@
+       "id": "j1",
+       "premises": ["A"],
+       "conclusion": "B",
+-      "rule": "deduction",
++      "rule": "assumed implication",
+       "certified": true,
+-      "evidence_ids": ["e-proof"]
++      "evidence_ids": ["e-rule"]
+     }
+   ]
+ }
+ \end{lstlisting}
+ 
++The file \path{examples/minimal_monograph.json} contains this record. The public importer checks its identifiers and Boolean fields, and declared closure reaches \texttt{B}. Mathematical soundness still requires the explicit interpretation contract of Section~\ref{sec:old24}.
++
++\clearpage
++\phantomsection
++\addcontentsline{toc}{section}{References}
+ \begin{thebibliography}{99}
+ 
+ \bibitem{komorebi-space}

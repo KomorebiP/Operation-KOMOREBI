@@ -1,0 +1,10 @@
+\begin{proposition}[Hashing cannot add recoverable tasks]
+\label{res:new:hash}
+Let $s:\mathscr A\to B$ be serialization and $h:B\to D$ be any deterministic map. Every task recoverable from $h\circ s$ is recoverable from $s$. If $h$ is injective on the attained set $s(\mathscr A)$, the two encodings support exactly the same tasks.
+\end{proposition}
+\begin{proof}
+If $s(a)=s(b)$, then $h(s(a))=h(s(b))$. Any task constant on the digest fibers is therefore constant on the serialization fibers, and Theorem~\ref{res:new:factorization} supplies its decoder. If $h$ is injective on attained serializations, equality of digests conversely implies equality of serializations, so the two fiber partitions coincide and the same criterion applies in both directions.
+\end{proof}
+
+The module \path{ProofPath.Recovery} checks both implications. The injectivity condition is a conditional mathematical hypothesis, not a claim that a fixed-length cryptographic hash is injective on arbitrary inputs. A hash cannot repair an ambiguity introduced before hashing. It may introduce additional collisions, which must be kept separate from the serializer's preservation contract.
+

@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "komorebi-proof-path-theory"
+version = "1.6.0"
+description = "Finite formal models for proof fields, certificates, compression, bridge retention, review dependence, and audit capacity."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Komorebi P."}]
+keywords = ["proof theory", "mathematical methodology", "graph algorithms", "compression", "provenance"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Typing :: Typed",
+  "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = ["numpy>=1.26"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+docs = ["matplotlib>=3.8", "networkx>=3.2"]
+release = ["build>=1.2", "pytest>=8", "matplotlib>=3.8", "networkx>=3.2", "pymupdf"]
+
+[project.scripts]
+proof-path = "proof_path_theory.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+proof_path_theory = ["py.typed", "schemas/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"

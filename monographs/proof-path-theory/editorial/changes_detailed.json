@@ -1,0 +1,404 @@
+[
+  {
+    "kind": "prose",
+    "note": "Mathematics usually publishes a proof after the proof has been compressed. Definitions have stabilized. Failed attempts have disappeared. A long calcu",
+    "old": "Mathematics usually publishes a proof after the proof has been compressed. Definitions have stabilized. Failed attempts have disappeared. A long calculation has become a lemma. A representation change that made the argument visible is replaced by a direct sentence. This is often an improvement. The final certificate is easier to verify and easier to reuse.",
+    "new": "A published proof often presents an argument after its exploratory work has been compressed. Definitions have stabilized, unsuccessful approaches have been set aside, and a long calculation may now appear as a lemma. The change of representation that first made the argument visible can disappear into a single sentence. Such compression is often useful: it leaves a certificate that is easier to check and reuse."
+  },
+  {
+    "kind": "prose",
+    "note": "The finite theory developed here has six connected layers.\n\n\\begin{enumerate}\n\\item A typed proof field records claims, admissible leaves, justificati",
+    "old": "The finite theory developed here has six connected layers.\n\n\\begin{enumerate}\n\\item A typed proof field records claims, admissible leaves, justifications, evidence, and targets.\n\\item A certified subfield separates proved or otherwise certified transitions from candidates and interpretations.\n\\item A certificate is a selected subfield that derives the target.\n\\item Compression is evaluated relative to declared tasks rather than by length alone.\n\\item A bridge graph represents possible future reach and makes archival retention an optimization problem.\n\\item Versioning, review, audit, and refinement describe the life of the proof after the first certificate exists.\n\\end{enumerate}",
+    "new": "The construction begins with a typed field of claims, justifications, evidence, and targets. Its certified rules determine which targets are derivable. A certificate selects enough of those records to support a declared conclusion, while the ambient field can retain unresolved or refuted alternatives.\n\nA second layer asks what survives when the field is compressed. The answer depends on the questions that a representation must support. An archive intended for future discovery may preserve examples and failed approaches that a verification certificate can omit. A bridge graph makes one such retention problem precise.\n\nThe final layer concerns the continuing life of the archive. Revisions change the set of claims that need review. Shared errors affect the information supplied by multiple reviewers. Audit capacity limits how quickly new candidates can be checked. These models are connected by their declared proof objects, without treating social judgments as substitutes for deduction."
+  },
+  {
+    "kind": "prose",
+    "note": "The ambient development treats the proof field as an ambient field of candidate and certified paths. It connects coherent local proof views to the str",
+    "old": "The ambient development treats the proof field as an ambient field of candidate and certified paths. It connects coherent local proof views to the strict Komorebi realization construction, and adds an exact finite information measure for informative observations. The mathematical validity of a proof remains distinct from how communities discover, interpret, or review it.",
+    "new": "Komorebi Space enters when local descriptions of a proof field must agree. The construction of local rule models supplies actual restriction maps, not merely a visual analogy between two graphs. A gluing theorem identifies a sufficient condition for assembling those models, and a counterexample explains why pairwise dependency checks can miss a conjunctive rule. In a separate linear setting, the size of a realization fiber measures exactly what a new observation distinguishes."
+  },
+  {
+    "kind": "scope",
+    "note": "The theory is intentionally finite at its foundation. Finite objects make every closure condition and algorithm explicit. Infinite, probabilistic, and",
+    "old": "The theory is intentionally finite at its foundation. Finite objects make every closure condition and algorithm explicit. Infinite, probabilistic, and higher categorical extensions are listed later as open programs rather than silently assumed.",
+    "new": "The implemented proof fields are finite and acyclic. Some structural statements, including rule soundness and the linear separation alternative, are given in greater generality where their hypotheses allow it. Extensions to infinite search, probabilistic inference, and higher categorical proof objects require their own assumptions. Background on formal proof systems may be found in \\cite{buss,troelstra}."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "A node is an admissible leaf when it is a required premise, a declared axiom, or an explicitly cited external result. A zero-premise certified justifi",
+    "old": "A node is an admissible leaf when it is a required premise, a declared axiom, or an explicitly cited external result. A zero-premise certified justification may also introduce a leaf when the proof system permits it.",
+    "new": "A node is an admissible leaf when it is a required premise, a declared axiom, or an explicitly admitted external result. Write $L$ for this set, so $A\\subseteq L$. A certified justification with no premises can also derive a node, but it remains a justification and need not make that node a member of $L$. The distinction matters when extracting the smallest certificate."
+  },
+  {
+    "kind": "scope",
+    "note": "The certified subfield $\\Pcal^{\\mathrm{cert}}$ contains every node of $\\Pcal$ and only those justifications whose evidence and scope have been declare",
+    "old": "The certified subfield $\\Pcal^{\\mathrm{cert}}$ contains every node of $\\Pcal$ and only those justifications whose evidence and scope have been declared sufficient to certify the recorded transition.",
+    "new": "The certified subfield $\\Pcal^{\\mathrm{cert}}$ contains every node of $\\Pcal$ and only those justifications accepted by the declared certification policy. Evidence and scope are part of that policy. A certification flag records acceptance: it is not itself a proof that the rule is sound under an intended mathematical interpretation. That separate soundness contract is made explicit in Section~\\ref{sec:old24}."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "A certificate for a requested target set $T_0\\subseteq V$ is a pair",
+    "old": "A certificate for a requested target set $T_0\\subseteq V$ is a pair",
+    "new": "A certificate for a nonempty requested target set $T_0\\subseteq V$ is a pair"
+  },
+  {
+    "kind": "correction",
+    "note": "Separate least pairs from one-coordinate minimality",
+    "old": "The certificate is node-minimal, justification-minimal, or cost-minimal according to the declared objective.",
+    "new": "Order certificates componentwise: $(K,H)\\leq(K^{\\prime},H^{\\prime})$ means $K\\subseteq K^{\\prime}$ and $H\\subseteq H^{\\prime}$. A least certificate is contained in every certificate for the same request. Minimizing only the node set, only the justification set, or a numerical cost is a different objective."
+  },
+  {
+    "kind": "clarification",
+    "note": "The canonical target request is usually a subset of the declared set $T$, although the same object can certify an intermediate node selected for local",
+    "old": "The canonical target request is usually a subset of the declared set $T$, although the same object can certify an intermediate node selected for local analysis. This definition preserves the requested endpoint judgment and requires every target to be reconstructed from certified transitions. Extra nodes may remain in a certificate, but they do not help minimality under nonnegative costs.",
+    "new": "The usual target request is a subset of $T$, but an intermediate node may be requested for local analysis. Only a justification whose premises have been derived and whose conclusion is selected can contribute to the derivation. A record may retain other, inactive justifications without using them as proof steps. Extra records cannot lower a nonnegative additive cost, although zero costs can allow several minimizing records."
+  },
+  {
+    "kind": "clarification",
+    "note": "The simplest case occurs when every relevant derived node has exactly one certified incoming justification. Then every recorded dependency is mandator",
+    "old": "The simplest case occurs when every relevant derived node has exactly one certified incoming justification. Then every recorded dependency is mandatory.",
+    "new": "The simplest case occurs when each relevant node that is not an admissible leaf has one certified incoming justification. Backward expansion stops at admissible leaves. A proof of a statement that has already been admitted as a leaf is not required to use that statement."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "A certified proof field is an AND-DAG relative to target set $T_0$ when every nonleaf node in the certified ancestry of $T_0$ has exactly one certifie",
+    "old": "A certified proof field is an AND-DAG relative to target set $T_0$ when every nonleaf node in the certified ancestry of $T_0$ has exactly one certified incoming justification.",
+    "new": "Starting at $T_0$, expand backward only at nodes outside $L$. The field is an AND-DAG relative to $T_0$ when every node reached outside $L$ has exactly one certified incoming justification. Every premise of that justification is then expanded in the same manner. The process may terminate at an admissible leaf or at a certified justification with no premises."
+  },
+  {
+    "kind": "notation",
+    "note": "Let $\\Anc(T_0)$ denote the node ancestry obtained by following the unique certified justifications backward from $T_0$.",
+    "old": "Let $\\Anc(T_0)$ denote the node ancestry obtained by following the unique certified justifications backward from $T_0$.",
+    "new": "Let $\\Anc_L(T_0)$ denote the premise nodes reached by this backward expansion, stopping at $L$. Let $H_{\\mathrm{core}}$ contain exactly the justifications selected at expanded nodes outside $L$."
+  },
+  {
+    "kind": "correction",
+    "note": "Let $\\Pcal$ be an AND-DAG relative to $T_0$. The selected nodes\n\\[\nK_{\\mathrm{core}}=A\\cup T_0\\cup\\Anc(T_0)\n\\]\ntogether with the unique incoming justi",
+    "old": "Let $\\Pcal$ be an AND-DAG relative to $T_0$. The selected nodes\n\\[\nK_{\\mathrm{core}}=A\\cup T_0\\cup\\Anc(T_0)\n\\]\ntogether with the unique incoming justification of every selected nonleaf node form a certificate. This certificate is the unique node-minimal and justification-minimal certificate for the recorded derivation.",
+    "new": "Let $\\Pcal$ be a finite acyclic AND-DAG relative to $T_0$. Put\n\\[\nK_{\\mathrm{core}}=A\\cup T_0\\cup\\Anc_L(T_0).\n\\]\nThen $(K_{\\mathrm{core}},H_{\\mathrm{core}})$ is a certificate and is the least certificate under componentwise inclusion. In particular it is the unique inclusion-minimal certificate pair for this recorded inference problem."
+  },
+  {
+    "kind": "proof",
+    "note": "Backward traversal from each target selects the unique justification that can derive it and every premise required by that justification. Repeating th",
+    "old": "Backward traversal from each target selects the unique justification that can derive it and every premise required by that justification. Repeating the process terminates because the dependency graph is finite and acyclic. The selected leaves are admissible, and a forward topological pass derives every selected node, so the construction is a certificate.\n\nLet $(K,H)$ be any certificate for the same target set. Each target must be derived. Since it has one certified incoming justification, that justification must lie in $H$, and all of its premises must lie in $K$. Applying the same argument recursively forces every node and justification in the backward ancestry into $(K,H)$. Therefore every certificate contains the constructed core. Uniqueness and minimality follow.",
+    "new": "Backward expansion terminates because the dependency graph is finite and acyclic. Every terminal node is either an admissible leaf or the conclusion of the selected justification with no premises. A forward topological pass therefore derives every expanded node. The required premises in $A$ are admissible and are retained even if the target does not use them. Thus the constructed pair is a certificate.\n\nNow let $(K,H)$ be any certificate for the same request. It contains $A\\cup T_0$. If a requested or required predecessor node is outside $L$, its derivation must use its unique certified incoming justification. That justification belongs to $H$, and every one of its premises belongs to $K$. Repeating the argument forces all of $\\Anc_L(T_0)$ and $H_{\\mathrm{core}}$. At nodes in $L$ the argument stops. Hence $K_{\\mathrm{core}}\\subseteq K$ and $H_{\\mathrm{core}}\\subseteq H$, which proves the least-pair assertion.\n\nMinimizing one coordinate alone does not make the whole record unique. One may add an irrelevant node without changing the least justification set, or retain an unused rule without changing the least node set. The componentwise statement avoids this ambiguity."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "The unique core of an AND-DAG can be extracted in time linear in the size of the relevant certified ancestry, assuming indexed adjacency and constant-",
+    "old": "The unique core of an AND-DAG can be extracted in time linear in the size of the relevant certified ancestry, assuming indexed adjacency and constant-time membership bookkeeping.",
+    "new": "With indexed certified adjacency and constant-time membership bookkeeping, the core can be extracted in time linear in $|A|$ plus the number of visited nodes, selected justifications, and premise incidences."
+  },
+  {
+    "kind": "scope",
+    "note": "Exact minimum certificate search is practical for small fields or fields with few alternatives. Large formal libraries require branch and bound, dynam",
+    "old": "Exact minimum certificate search is practical for small fields or fields with few alternatives. Large formal libraries require branch and bound, dynamic programming on restricted structures, integer programming, approximation, or proof-system-specific methods. The reference package includes an exact finite search with an explicit state limit. It does not hide the exponential worst case.",
+    "new": "Exhaustive certificate selection is useful for small fields or fields with few alternatives. The reference implementation uses branch and bound with an explicit search-state limit. Its result is optimal for the stored finite cost data when the search completes. It does not remove the exponential worst case. The decision theorem concerns integer costs, while the Python interface accepts finite floating-point costs and compares their exact stored binary values as rationals. Printed cost totals remain floating-point summaries. The input conversion does not recover an intended real or decimal value that was never represented. See \\cite{garey-johnson} for the background complexity language."
+  },
+  {
+    "kind": "definition",
+    "note": "A certified proof category $\\mathsf{Cert}$ has mathematical states as objects and certified transformations as morphisms. Identity morphisms retain a ",
+    "old": "A certified proof category $\\mathsf{Cert}$ has mathematical states as objects and certified transformations as morphisms. Identity morphisms retain a state unchanged. Composition is sequential use of compatible certified transformations.",
+    "new": "Fix a directed graph of typed mathematical states and certified primitive transformations. Its path category $\\mathsf{Cert}$ has these states as objects and finite composable paths as morphisms. The empty path is an identity, and composition is concatenation. One may further identify paths by a declared congruence compatible with concatenation. Associativity and the identity laws then hold by construction."
+  },
+  {
+    "kind": "scope",
+    "note": "The proposition is elementary, but its interpretation is central. A proof may be transported into another language without changing validity. What cha",
+    "old": "The proposition is elementary, but its interpretation is central. A proof may be transported into another language without changing validity. What changes is visibility. A spectral representation may expose a symmetry hidden in physical coordinates. A finite exact computation may expose the correct statement before a general derivation is known. A formal proof assistant may expand dependencies that a journal proof compresses.",
+    "new": "The proposition transports certification inside the two declared categories. To interpret that transport as preservation of a mathematical judgment, the target category and functor must also have sound interpretations of their objects and rules. These requirements cannot be inferred merely from the word functor. Under that contract, different representations can preserve a judgment while exposing different features of its argument. The category language is standard \\cite{maclane}."
+  },
+  {
+    "kind": "correction",
+    "note": "A representation is not simply good or bad. It is sufficient or insufficient for a declared family of questions.",
+    "old": "A representation is not simply good or bad. It is sufficient or insufficient for a declared family of questions.",
+    "new": "A representation is sufficient only relative to specified questions and a specified class of possible archives. Fix a set $\\mathscr A$ of admissible proof archives. A representation scheme is a map $C:\\mathscr A\\to\\mathscr R$. Its output for an archive $\\Pcal$ is $C(\\Pcal)$. Distinguishing the scheme from one output is essential: a decoder chosen only after seeing one fixed archive could simply store the answer."
+  },
+  {
+    "kind": "definition",
+    "note": "A task $q$ is a query whose answer is defined on the full proof field. Examples include:\n\\begin{itemize}\n\\item verify the target theorem;\n\\item recons",
+    "old": "A task $q$ is a query whose answer is defined on the full proof field. Examples include:\n\\begin{itemize}\n\\item verify the target theorem;\n\\item reconstruct every primitive dependency;\n\\item teach the conceptual bottleneck;\n\\item recover a boundary example;\n\\item identify all claims affected by a revision;\n\\item search for bridges to a future target family.\n\\end{itemize}\nA task family is a set $\\Qcal$ of such queries.",
+    "new": "A task is a map $q:\\mathscr A\\to Y_q$ to a declared answer set. A task family $\\Qcal$ is a set of such maps. Examples include asking for the target certificate, a dependency list, a specified boundary example, or the claims affected by a recorded revision. A teaching or discovery objective becomes an exact task only after its required output or acceptance criterion has been specified."
+  },
+  {
+    "kind": "correction",
+    "note": "A representation $R$ of a proof field $\\Pcal$ is sufficient for task $q$ when there exists a decoder $d_q$ such that\n\\[\nq(\\Pcal)=d_q(R).\n\\]\nIt is $\\Qc",
+    "old": "A representation $R$ of a proof field $\\Pcal$ is sufficient for task $q$ when there exists a decoder $d_q$ such that\n\\[\nq(\\Pcal)=d_q(R).\n\\]\nIt is $\\Qcal$-sufficient when it is sufficient for every $q\\in\\Qcal$.",
+    "new": "The scheme $C:\\mathscr A\\to\\mathscr R$ is sufficient for $q$ when there is a single decoder $d_q:C(\\mathscr A)\\to Y_q$ such that\n\\[\nq(\\Pcal)=d_q(C(\\Pcal))\\qquad\\text{for every }\\Pcal\\in\\mathscr A.\n\\]\nIt is $\\Qcal$-sufficient when this holds for every $q\\in\\Qcal$. The decoder may depend on the task and the scheme, but not on hidden knowledge of the particular archive being decoded."
+  },
+  {
+    "kind": "scope",
+    "note": "This definition includes exact reconstruction as one task, but it does not require exact reconstruction for every purpose. A certificate can be suffic",
+    "old": "This definition includes exact reconstruction as one task, but it does not require exact reconstruction for every purpose. A certificate can be sufficient for verification and insufficient for teaching. A discovery archive can be sufficient for bridge search and unnecessarily large for routine checking.",
+    "new": "The decoder is defined on attained representations, so no arbitrary answer is required for an encoding that never occurs. Exact reconstruction is one possible task, not a requirement for every purpose. The basic definition is set theoretic and does not assert that a decoder is computable, efficient, or available to a particular reader. Those are additional conditions on a practical compiler."
+  },
+  {
+    "kind": "definition",
+    "note": "when every task in $\\Qcal$ that is recoverable from $R_1$ is also recoverable from $R_2$.",
+    "old": "when every task in $\\Qcal$ that is recoverable from $R_1$ is also recoverable from $R_2$.",
+    "new": "when every task in $\\Qcal$ that factors through the representation scheme $R_1$ also factors through $R_2$. Both schemes have domain $\\mathscr A$, and each factorization uses one decoder valid on that whole domain."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "Let a node $v$ carry nonnegative coordinates\n",
+    "old": "Let a node $v$ carry nonnegative coordinates\n",
+    "new": "Let a node $v$ carry finite nonnegative numerical coordinates\n"
+  },
+  {
+    "kind": "correction",
+    "note": "representing verification, discovery, meaning, future bridge, and auditability values. These coordinates are declared model inputs. They may be exact,",
+    "old": "representing verification, discovery, meaning, future bridge, and auditability values. These coordinates are declared model inputs. They may be exact, estimated, or ordinal after a scale has been chosen.",
+    "new": "representing declared verification, discovery, meaning, future bridge, and auditability weights. Summation requires an additive numerical model. The weights may be supplied or estimated, but an ordinal ranking alone does not justify adding them. Changing a numerical scale can change the resulting loss and retention problem."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "When normalization is useful, divide each coordinate by the corresponding total coordinate of the full field.",
+    "old": "When normalization is useful, divide each coordinate by the corresponding total coordinate of the full field.",
+    "new": "Normalize a coordinate by its total only when that total is positive. If the total is zero, nonnegativity makes every contribution in that coordinate zero. The implementation records normalized loss zero there as a convention, rather than dividing by zero."
+  },
+  {
+    "kind": "correction",
+    "note": "If several representations lose different information, then their union retains at least as much recoverable information as any one representation alo",
+    "old": "If several representations lose different information, then their union retains at least as much recoverable information as any one representation alone.",
+    "new": "For representation schemes $C_i:\\mathscr A\\to R_i$, retain the tagged portfolio $C(\\Pcal)=(C_i(\\Pcal))_i$. Every task recoverable from any one $C_i$ is recoverable from $C$."
+  },
+  {
+    "kind": "proof",
+    "note": "Every item recoverable from one representation is recoverable from the union containing it. Additional representations may restore information absent ",
+    "old": "Every item recoverable from one representation is recoverable from the union containing it. Additional representations may restore information absent from the first. Recoverable information is therefore monotone under enlargement of the portfolio.",
+    "new": "If $q=d_i\\circ C_i$, compose $d_i$ with the $i$th coordinate projection from the portfolio. This gives a decoder of $q$ from $C$. Retaining the coordinate labels is part of the construction. An untagged union that loses source identities need not permit the same recovery."
+  },
+  {
+    "kind": "typing",
+    "note": "A proof compiler is a map\n\\[\n\\Gamma_g:\\Pcal\\longrightarrow R_g\n\\]",
+    "old": "A proof compiler is a map\n\\[\n\\Gamma_g:\\Pcal\\longrightarrow R_g\n\\]",
+    "new": "A proof compiler is a map on the declared archive class\n\\[\n\\Gamma_g:\\mathscr A\\longrightarrow R_g\n\\]"
+  },
+  {
+    "kind": "correction",
+    "note": "Exclude vacuous domination of unreachable targets",
+    "old": "The utility lost by removing $v$ is the total weight of future targets dominated by $v$:\n\\[\nU(S)-U_{\\Bcal\\setminus\\{v\\}}(S)\n=\n\\sum_{f\\in F:\\,v\\text{ dominates }f}w_f.\n\\]",
+    "new": "For $v\\notin S$, the utility lost by deleting $v$ is the total weight of initially reachable future targets dominated by $v$:\n\\[\nU(S)-U_{\\Bcal\\setminus\\{v\\}}(S)\n=\\sum_{\\substack{f\\in F\\cap\\Reach_{\\Bcal}(S)\\\\v\\text{ dominates }f}}w_f.\n\\]\nDeleted target vertices are counted as unreachable."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "Let $S_k$ be the set obtained by starting from the empty supplement and repeatedly adding the candidate with largest marginal future reach until $k$ c",
+    "old": "Let $S_k$ be the set obtained by starting from the empty supplement and repeatedly adding the candidate with largest marginal future reach until $k$ candidates have been selected. Let $O_k$ be an optimal supplement of size at most $k$. Then",
+    "new": "Let $k$ be an integer with $1\\leq k\\leq|C|$. Starting from the empty supplement, let $S_k$ result from repeatedly adding an unselected candidate with largest marginal future reach. Let $O_k$ be an optimal supplement of size at most $k$. Then"
+  },
+  {
+    "kind": "hypothesis",
+    "note": "The simple marginal-gain-per-cost rule included in the software is an interpretable heuristic for arbitrary real costs. The cardinality guarantee abov",
+    "old": "The simple marginal-gain-per-cost rule included in the software is an interpretable heuristic for arbitrary real costs. The cardinality guarantee above does not automatically apply to that heuristic. Stronger knapsack guarantees require additional algorithmic machinery.",
+    "new": "For $k=0$, both gains are zero without using the displayed division by $k$. For a budget at least $|C|$, retaining all candidates is optimal. The displayed theorem is the cardinality form of the standard submodular greedy bound \\cite{nemhauser}. A gain-per-cost rule for unequal costs is a different algorithm and does not inherit this guarantee. Zero-cost candidates also need an explicit convention."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "every node and justification of $\\Pcal_i$ remains unchanged, and $\\Pcal_{i+1}$ only adds nodes, evidence, or certified justifications.",
+    "old": "every node and justification of $\\Pcal_i$ remains unchanged, and $\\Pcal_{i+1}$ only adds nodes, evidence, or certified justifications.",
+    "new": "every existing node, admissible-leaf status, evidence record, interpretation, and certified justification remains unchanged. The later field may add records and certified rules but may not withdraw an earlier admitted leaf or change the scope of an earlier inference."
+  },
+  {
+    "kind": "scope",
+    "note": "A digest does not prove a theorem. It detects unrecorded changes and gives independently generated representations a common reference point.",
+    "old": "A digest does not prove a theorem. It detects unrecorded changes and gives independently generated representations a common reference point.",
+    "new": "A digest does not prove a theorem. A changed digest establishes that the hashed byte sequence changed. An unchanged digest is an integrity check only subject to the possibility of collisions. Canonical serialization gives different representations a common byte-level reference."
+  },
+  {
+    "kind": "proof",
+    "note": "Deterministic serialization produces the same byte sequence for identical records, so the hash is identical. Any change that alters the canonical byte",
+    "old": "Deterministic serialization produces the same byte sequence for identical records, so the hash is identical. Any change that alters the canonical byte sequence changes the hash input. A collision-resistant hash is designed to make equal hashes for distinct byte sequences computationally negligible, though not logically impossible.",
+    "new": "Identical canonical byte sequences have identical images under the deterministic hash function. If two distinct byte sequences have the same hash, they form a collision by definition. Thus the first assertion is unconditional, while the change-detection assertion explicitly excludes that case. No injectivity of a fixed-length hash on arbitrary records is asserted."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "Let $X_i=\\theta+\\varepsilon_i$ be reviewer estimates of a quantity $\\theta$, with common variance $\\sigma^2$ and common pairwise correlation $\\rho$. F",
+    "old": "Let $X_i=\\theta+\\varepsilon_i$ be reviewer estimates of a quantity $\\theta$, with common variance $\\sigma^2$ and common pairwise correlation $\\rho$. For $n>1$, assume $-1/(n-1)<\\rho\\le1$, so the mean has positive variance.",
+    "new": "Let $X_i=\\theta+\\varepsilon_i$ be numerical estimates of a fixed quantity $\\theta$. Assume $\\mathbb E\\varepsilon_i=0$, $\\operatorname{Var}(\\varepsilon_i)=\\sigma^2>0$, and common pairwise correlation $\\rho$. For $n>1$, assume $-1/(n-1)<\\rho\\leq1$, so the mean has positive variance. These variables model estimates, not proof truth values."
+  },
+  {
+    "kind": "correction",
+    "note": "Under the equicorrelated model, the reviewer mean has the same variance as the mean of",
+    "old": "Under the equicorrelated model, the reviewer mean has the same variance as the mean of",
+    "new": "Under the equicorrelated model, define the variance-equivalent reviewer count by"
+  },
+  {
+    "kind": "correction",
+    "note": "independent reviewers of variance $\\sigma^2$.\n\\end{theorem}",
+    "old": "independent reviewers of variance $\\sigma^2$.\n\\end{theorem}",
+    "new": "so that $\\operatorname{Var}(\\bar X)=\\sigma^2/n_{\\mathrm{eff}}$. This effective count is a positive real number and need not be an integer.\n\\end{theorem}"
+  },
+  {
+    "kind": "hypothesis",
+    "note": "For fixed positive $\\rho$, $n_{\\mathrm{eff}}$ approaches $1/\\rho$ as $n$ grows. Headcount continues to help, but shared dependence creates a saturatio",
+    "old": "For fixed positive $\\rho$, $n_{\\mathrm{eff}}$ approaches $1/\\rho$ as $n$ grows. Headcount continues to help, but shared dependence creates a saturation floor.",
+    "new": "For $n=1$, the effective count is one. At the excluded boundary $\\rho=-1/(n-1)$, the mean has zero variance and there is no finite variance-equivalent count. For fixed $0<\\rho\\leq1$, $n_{\\mathrm{eff}}\\to1/\\rho$ as $n\\to\\infty$. Negative correlations can give $n_{\\mathrm{eff}}>n$, but a fixed negative correlation is not admissible for arbitrarily large $n$."
+  },
+  {
+    "kind": "scope",
+    "note": "The practical conclusion is not that consensus is useless. It is that review portfolios should diversify dependence structure, not only increase nomin",
+    "old": "The practical conclusion is not that consensus is useless. It is that review portfolios should diversify dependence structure, not only increase nominal count.",
+    "new": "Under the model, dependence rather than nominal count determines the variance reduction. Whether a particular review process has this covariance structure is an empirical question. The formula alone neither endorses nor discredits a community judgment."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "A system can generate mathematical candidates faster than it can verify them. Let $a_t$ be arrivals during audit cycle $t$, let $s_t$ be service capac",
+    "old": "A system can generate mathematical candidates faster than it can verify them. Let $a_t$ be arrivals during audit cycle $t$, let $s_t$ be service capacity, and let $B_t$ be the unresolved backlog.",
+    "new": "Let $a_t\\geq0$ be candidate arrivals during audit cycle $t$, let $s_t\\geq0$ be service capacity, and let $B_t\\geq0$ be the unresolved backlog. Suppose arrivals in a cycle are available to that cycle's service."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "This is a decision model, not a truth measure. It makes the assumptions behind triage explicit.",
+    "old": "This is a decision model, not a truth measure. It makes the assumptions behind triage explicit.",
+    "new": "Here $p_{\\mathrm{err}}(x)\\in[0,1]$, the consequence and dependency factors are nonnegative, and $c_{\\mathrm{audit}}(x)>0$. Zero-cost checks can be handled separately. This is a declared priority heuristic, not a probability of truth or a proved optimal scheduling rule."
+  },
+  {
+    "kind": "notation",
+    "note": "R_0\\prec R_1\\prec\\cdots\\prec R_d,",
+    "old": "R_0\\prec R_1\\prec\\cdots\\prec R_d,",
+    "new": "R_0\\preceq R_1\\preceq\\cdots\\preceq R_d,"
+  },
+  {
+    "kind": "scope",
+    "note": "where deeper levels expose more internal structure. Let $r_d\\ge0$ be the unresolved residual at depth $d$ and let $c_d\\ge0$ be the cumulative cost.",
+    "old": "where deeper levels expose more internal structure. Let $r_d\\ge0$ be the unresolved residual at depth $d$ and let $c_d\\ge0$ be the cumulative cost.",
+    "new": "where the order records the chosen recoverability tasks. Exposing more records need not give a strict gain for every task, which is why the order is not written as strict. Let $r_d\\geq0$ be a declared unresolved-work score and $c_d\\geq0$ the cumulative cost. These are model inputs. A small $r_d$ is not, without another theorem, a certificate of a nearly valid proof. The word cube names the layered presentation, not a cubical complex supplied with additional geometric axioms."
+  },
+  {
+    "kind": "proof",
+    "note": "It is enough to construct a proof object with exactly two available depths. Choose $d_1<d_2$ with $r_{d_2}<r_{d_1}$ and $c_{d_2}>c_{d_1}$. Goal $g$ pr",
+    "old": "It is enough to construct a proof object with exactly two available depths. Choose $d_1<d_2$ with $r_{d_2}<r_{d_1}$ and $c_{d_2}>c_{d_1}$. Goal $g$ prefers $d_2$ over $d_1$ exactly when\n\\[\n\\frac{\\alpha_g}{\\beta_g}\n>\n\\frac{c_{d_2}-c_{d_1}}{r_{d_1}-r_{d_2}},\n\\]\nwith the usual interpretation when $\\beta_g=0$. Choose one goal ratio below this threshold and another above it. The first prefers the shallower depth and the second prefers the deeper depth.",
+    "new": "Take a proof object with exactly two available depths $d_1<d_2$, with $r_{d_2}<r_{d_1}$ and $c_{d_2}>c_{d_1}$. Direct subtraction shows that $d_2$ is preferred exactly when\n\\[\n\\alpha_g(r_{d_1}-r_{d_2})>\\beta_g(c_{d_2}-c_{d_1}).\n\\]\nThe goal $(\\alpha_g,\\beta_g)=(1,0)$ strictly prefers $d_2$, whereas $(0,1)$ strictly prefers $d_1$. Since these are the only available depths, each preference is a global optimum. If both weights vanish, every depth is optimal. No division by a possibly zero weight is needed."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "The first condition stops when the residual is small enough. The second stops when the next refinement gives too little residual reduction per unit co",
+    "old": "The first condition stops when the residual is small enough. The second stops when the next refinement gives too little residual reduction per unit cost.",
+    "new": "The first condition uses a declared tolerance. The second applies only at $d\\geq1$ with $c_d>c_{d-1}$ and compares the most recent reduction with its extra cost. Zero-cost refinements require separate handling. These stopping rules do not generally minimize $J_g$ over all remaining depths."
+  },
+  {
+    "kind": "prose",
+    "note": "\\caption{Canonical finite checks in the version 1.0 release.}",
+    "old": "\\caption{Canonical finite checks in the version 1.0 release.}",
+    "new": "\\caption{Canonical finite examples and their mathematical roles.}"
+  },
+  {
+    "kind": "prose",
+    "note": "Version 1.2 expands the original seventy-four-test suite with bridge, schema-boundary, and input-validation regressions. The exact executed count is r",
+    "old": "Version 1.2 expands the original seventy-four-test suite with bridge, schema-boundary, and input-validation regressions. The exact executed count is recorded in the release verification report. They cover graph validation, derivability, certificate extraction, alternative proofs, the Set Cover encoding, loss vectors, task sufficiency, bridge submodularity, retention, review covariance, audit queues, refinement, version propagation, JSON round trips, and command-line smoke tests.",
+    "new": "The regression suite covers graph validation, derivability, certificate extraction, alternative proofs, schema boundaries, and input validation. It also exercises loss vectors, task sufficiency, bridge coverage, retention, review covariance, audit queues, refinement, version propagation, JSON round trips, and the command line. The dated verification record gives the executed count for each edition."
+  },
+  {
+    "kind": "prose",
+    "note": "This section sharpens an idea already implicit in the finite hypergraph model. The existing \\path{ProofField} permits \\path{failed_route}, \\path{bound",
+    "old": "This section sharpens an idea already implicit in the finite hypergraph model. The existing \\path{ProofField} permits \\path{failed_route}, \\path{boundary_case}, and \\path{counterexample} nodes.",
+    "new": "The finite hypergraph model permits \\path{failed_route}, \\path{boundary_case}, and \\path{counterexample} nodes."
+  },
+  {
+    "kind": "prose",
+    "note": "Generated by the supplied Python script.",
+    "old": "Generated by the supplied Python script.",
+    "new": "The figure records declared branch statuses, not an exhaustive space of all possible proofs."
+  },
+  {
+    "kind": "prose",
+    "note": "The new module \\path{realization.py} computes these quantities",
+    "old": "The new module \\path{realization.py} computes these quantities",
+    "new": "The module \\path{realization.py} computes these quantities"
+  },
+  {
+    "kind": "hypothesis",
+    "note": "Suppose $K$ has $q$ elements and $E$ is finite. Set",
+    "old": "Suppose $K$ has $q$ elements and $E$ is finite. Set",
+    "new": "Suppose $K$ is a finite field of cardinality $q$ and $E$ is a finite-dimensional $K$-vector space. Set"
+  },
+  {
+    "kind": "verification",
+    "note": "The release contains eight production Lean modules. Each is rebuilt from source into a fresh object directory using the pinned compiler and dependency",
+    "old": "The release contains eight production Lean modules. Each is rebuilt from source into a fresh object directory using the pinned compiler and dependency revisions. The project is then replayed through Lean's own kernel against its imported environment, and every selected named declaration receives an axiom audit. This is not an independent implementation of Lean, and the cached Mathlib library is not rebuilt or replayed in its entirety.",
+    "new": "The formal source contains eight production Lean modules. The recorded verification of technical release 1.2.0 rebuilt each module in a fresh object directory and replayed it through Lean's own kernel against the pinned imported environment. Selected named declarations also received an axiom audit. The formal sources in this monograph edition are unchanged from that record. This edition does not claim a new compiler run. The earlier replay was not an independent implementation of Lean, and it did not rebuild or replay the entire cached Mathlib library."
+  },
+  {
+    "kind": "verification",
+    "note": "The same verification run exercises the software tests, inherited exact comparisons, regenerated examples, native export, package installation, and ma",
+    "old": "The same verification run exercises the software tests, inherited exact comparisons, regenerated examples, native export, package installation, and manuscript build. Machine-readable logs distinguish written proofs, general Lean theorems, concrete checked examples, and implementation tests. The release does not use one category as a substitute for another.",
+    "new": "The monograph review reruns the finite software tests and comparisons and rebuilds the manuscript. Its new records are separate from the inherited compiler evidence. Written proofs, general Lean declarations, concrete checked examples, and implementation tests remain distinct verification categories. A corrected paragraph is not automatically a newly checked Lean theorem."
+  },
+  {
+    "kind": "correction",
+    "note": "It is easy to speculate that authorship or disciplinary identity changed an evaluation; it is harder to establish such an effect. A direct experimenta",
+    "old": "It is easy to speculate that authorship or disciplinary identity changed an evaluation; it is harder to establish such an effect. A direct experimental design can hold an argument fixed while randomizing its surrounding label. Let $Y_i(1)$ and $Y_i(0)$ denote the evaluations that a reviewer would give the same declared mathematical content under two different labels. In a randomized design, the difference of treatment-group and control-group mean responses estimates the population average label effect, subject to the usual sampling, assignment, and interference conditions. It does not establish whether the proof is correct. That requires a separate audit of the mathematical claim.",
+    "new": "A claim about identity effects needs a design that can distinguish them from other differences. Hold the mathematical content fixed and let $Y_i(1)$ and $Y_i(0)$ be the fixed potential evaluations of reviewer $i$ under two labels. In a finite set of $N$ reviewers, assign exactly $n_1$ to the first label and $n_0=N-n_1$ to the second, uniformly over assignments with those sizes, where $n_0,n_1>0$. Assume each observed response equals the potential response under its assigned label and does not depend on other assignments. Then the difference of the two sample means is unbiased for $N^{-1}\\sum_i(Y_i(1)-Y_i(0))$. Indeed, each reviewer has inclusion probability $n_1/N$ in the first mean and $n_0/N$ in the second, so linearity of expectation gives that identity.\n\nThis conclusion concerns the assigned reviewers. Generalizing to a broader population requires a sampling model. Missing responses, shared discussion, or changes to the argument itself can invalidate the simple interpretation. None of these comparisons determines whether the proof is correct. Correctness requires its own mathematical audit."
+  },
+  {
+    "kind": "prose",
+    "note": "\\subsection{What the new bridge does and does not claim}",
+    "old": "\\subsection{What the new bridge does and does not claim}",
+    "new": "\\subsection{Interpretation and mathematical validity}"
+  },
+  {
+    "kind": "prose",
+    "note": "The new sections join three previously separated themes. The ambient field retains unsuccessful and unresolved mathematical trajectories. Komorebi Spa",
+    "old": "The new sections join three previously separated themes. The ambient field retains unsuccessful and unresolved mathematical trajectories. Komorebi Space determines when selected local realizations are coherent and whether prescribed information extends. A quantitative review model distinguishes added headcount from independent information. Together they furnish a sharper architecture for machine-supported mathematical inquiry.",
+    "new": "The ambient field records exploratory trajectories, the realization theory determines whether specified local models assemble, and the review model describes the effect of declared dependence among numerical judgments. They address different questions. Their common archive makes comparison possible without identifying agreement, coherence, and deductive validity."
+  },
+  {
+    "kind": "correction",
+    "note": "The forward dependency closure is the smallest universally sound syntactic invalidation set.",
+    "old": "The forward dependency closure is the smallest universally sound syntactic invalidation set.",
+    "new": "The forward dependency closure is the least set containing the changed nodes and closed under outgoing dependency edges. It marks potential review, not automatic falsehood."
+  },
+  {
+    "kind": "correction",
+    "note": "Review dependence reduces effective independent review, and generalized least squares gives the optimal linear unbiased aggregate under a known covari",
+    "old": "Review dependence reduces effective independent review, and generalized least squares gives the optimal linear unbiased aggregate under a known covariance model.",
+    "new": "Positive review dependence lowers the variance-equivalent count. Under a positive definite covariance model, generalized least squares gives the minimum-variance unbiased linear aggregate."
+  },
+  {
+    "kind": "prose",
+    "note": "The ambient extensions add a finite view system, scope-aware failed-path analysis, the protected linear realization alternative, exact observation gai",
+    "old": "The ambient extensions add a finite view system, scope-aware failed-path analysis, the protected linear realization alternative, exact observation gain, and an explicit interpretation model. Version 1.2 gives the proof field an actual contravariant local-model diagram and a checked equivalence with its coherent sections. Whole-support gluing establishes extension from suitable proper patches. The native exporter reads compiled Lean declarations, but arbitrary semantic interpretation and general correctness of the exporter are not inferred from that successful execution.",
+    "new": "The realization theory gives the proof field a contravariant diagram of local models and an explicit equivalence with its coherent sections. Whole-support gluing proves extension from suitably covering patches. The protected linear alternative classifies feasible fibers and supplies normalized witnesses for infeasibility. Exact finite-field counts yield an information formula only after a uniform distribution is chosen. The native exporter supplies syntactic dependencies from compiled declarations, not the complete history of discovery."
+  },
+  {
+    "kind": "prose",
+    "note": "The version 1.2 continuation sharpens the original distinction between a proof certificate and the larger proof field.",
+    "old": "The version 1.2 continuation sharpens the original distinction between a proof certificate and the larger proof field.",
+    "new": "A proof certificate and its surrounding proof field answer different mathematical questions."
+  },
+  {
+    "kind": "scope",
+    "note": "The completed theory distinguishes the certificate from the proof field that produced it.",
+    "old": "The completed theory distinguishes the certificate from the proof field that produced it.",
+    "new": "The theory distinguishes the certificate from the declared field in which it is recorded."
+  },
+  {
+    "kind": "correction",
+    "note": "Minimal certificates can be extracted exactly in fixed AND-DAGs.",
+    "old": "Minimal certificates can be extracted exactly in fixed AND-DAGs.",
+    "new": "Least certificate pairs can be extracted in fixed AND-DAGs."
+  },
+  {
+    "kind": "citation",
+    "note": "The hypergraph model records local justifications. A complementary view treats complete certified transformations as morphisms.",
+    "old": "The hypergraph model records local justifications. A complementary view treats complete certified transformations as morphisms.",
+    "new": "The hypergraph model records local justifications. A complementary construction treats complete certified transformations as morphisms. It uses the usual category of paths \\cite{maclane}."
+  },
+  {
+    "kind": "citation",
+    "note": "The entropy statement assumes uniform sampling of the compatible realizations.",
+    "old": "The entropy statement assumes uniform sampling of the compatible realizations.",
+    "new": "The entropy statement uses Shannon entropy \\cite{cover-thomas} and assumes uniform sampling of the compatible realizations."
+  },
+  {
+    "kind": "citation",
+    "note": "A proof compiler generates a goal-specific representation from one canonical proof field.",
+    "old": "A proof compiler generates a goal-specific representation from one canonical proof field.",
+    "new": "A proof compiler generates a representation for a specified purpose from one canonical proof field. The connection between source and readable exposition also motivates literate programming \\cite{knuth}."
+  },
+  {
+    "kind": "hypothesis",
+    "note": "In graph language, $v$ dominates $f$ relative to $S$ when every directed path from $S$ to $f$ passes through $v$.",
+    "old": "In graph language, $v$ dominates $f$ relative to $S$ when every directed path from $S$ to $f$ passes through $v$.",
+    "new": "In graph language, $v$ dominates an initially reachable $f$ relative to $S$ when every directed path from $S$ to $f$ passes through $v$. Paths of length zero are allowed in the reachability convention. Standard graph terminology is used throughout \\cite{diestel}."
+  }
+]

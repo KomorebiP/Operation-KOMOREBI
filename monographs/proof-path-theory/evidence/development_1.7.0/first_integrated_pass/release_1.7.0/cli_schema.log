@@ -1,0 +1,230 @@
+{
+  "$defs": {
+    "costVector": {
+      "additionalProperties": false,
+      "properties": {
+        "audit": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "cognitive": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "recovery": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "storage": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        }
+      },
+      "type": "object"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "certifies": {
+          "type": "boolean"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "formal_proof",
+            "assumption",
+            "exact_computation",
+            "numerical_evidence",
+            "conjecture",
+            "external_result",
+            "counterexample",
+            "interpretation"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "source"
+      ],
+      "type": "object"
+    },
+    "justification": {
+      "additionalProperties": false,
+      "properties": {
+        "certified": {
+          "type": "boolean"
+        },
+        "conclusion": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "premises": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "rule": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "premises",
+        "conclusion",
+        "rule"
+      ],
+      "type": "object"
+    },
+    "node": {
+      "additionalProperties": false,
+      "properties": {
+        "costs": {
+          "$ref": "#/$defs/costVector"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "premise",
+            "axiom",
+            "external_result",
+            "definition",
+            "claim",
+            "lemma",
+            "theorem",
+            "example",
+            "computation",
+            "boundary_case",
+            "failed_route",
+            "conjecture",
+            "counterexample"
+          ]
+        },
+        "label": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "values": {
+          "$ref": "#/$defs/valueVector"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "type": "object"
+    },
+    "nonnegativeNumber": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "valueVector": {
+      "additionalProperties": false,
+      "properties": {
+        "auditability": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "bridge": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "discovery": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "meaning": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        },
+        "verification": {
+          "$ref": "#/$defs/nonnegativeNumber"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "$id": "urn:komorebi:proof-path-theory:schema:proof-field:1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/evidence"
+      },
+      "type": "array"
+    },
+    "justifications": {
+      "items": {
+        "$ref": "#/$defs/justification"
+      },
+      "type": "array"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/node"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "premises": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "targets": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "nodes",
+    "justifications"
+  ],
+  "title": "Proof Path Theory proof field",
+  "type": "object"
+}

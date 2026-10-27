@@ -1,0 +1,180 @@
+\section{A checked realization bridge for proof fields}
+\label{sec:checked-bridge}
+
+The ambient interpretation can be made into a mathematical construction rather than left as an analogy. The important step is to specify what a local realization means. A node label may describe an arbitrary mathematical sentence, but a Boolean value attached to that node does not automatically evaluate that sentence. In this section it records membership in a set closed under the declared certified rules. This restricted interpretation has an exact soundness and completeness theorem. An interpretation in actual mathematical propositions is a separate contract.
+
+\subsection{The declared rule system and its models}
+
+Fix a node set $V$, a set $L\subseteq V$ of admissible leaves, and a set $J$ of justifications. A justification $j$ has a premise set $A_j$, a conclusion $c_j$, and a certification predicate. Define its support by
+\[
+S_j=A_j\cup\{c_j\}.
+\]
+A set $X\subseteq V$ is a \emph{model of the declared field} when $L\subseteq X$ and, for every certified $j$,
+\[
+A_j\subseteq X\quad\Longrightarrow\quad c_j\in X.
+\]
+Each justification is one implication with conjunctive premises. Alternative justifications remain separate implications. Uncertified attempts and failed-route annotations do not contribute a deduction rule merely by appearing in the archive.
+
+Let $\operatorname{Der}_F$ be the inductively generated set obtained from the leaves by certified rules. For a finite field, repeated forward closure computes this set. It is not necessary to enumerate all valuations to perform that computation.
+
+\begin{theorem}[Soundness and relative completeness]
+\label{thm:relative-completeness}
+For every node $v$,
+\[
+v\in\operatorname{Der}_F
+\quad\Longleftrightarrow\quad
+\text{$v\in X$ for every model $X$ of the declared field}.
+\]
+If $v$ is not derivable, $\operatorname{Der}_F$ itself is a model omitting $v$.
+\end{theorem}
+\begin{proof}
+Every model contains the leaves. Induction on a derivation shows that it contains the conclusion of every certified application whose premises have already been derived. Thus every model contains $\operatorname{Der}_F$. Conversely, the inductive constructors show that $\operatorname{Der}_F$ contains the leaves and is closed under every certified rule. It is therefore a model. Applying the universal condition to this particular model proves the reverse implication, and the same model gives the stated countermodel.
+\end{proof}
+
+This is relative completeness for the declared rule system, not completeness of arbitrary mathematical proof search. A missing theorem may simply require a rule or a lemma absent from the field. A failed search can therefore produce a useful countermodel to a proposed finite inference architecture without disproving the mathematical target.
+
+For an intended interpretation $\mu:V\to\mathrm{Prop}$, the transfer to mathematical truth has explicit hypotheses: every leaf must satisfy $\mu$, and every certified rule must preserve $\mu$ from all its premises to its conclusion. Under those hypotheses, induction gives $v\in\operatorname{Der}_F\Rightarrow\mu(v)$. Lean checks this statement as \path{ProofPath.Field.semantic_soundness}. It does not infer those hypotheses from a JSON certification flag.
+
+\subsection{From patches to a contravariant view system}
+
+For a patch $U\subseteq V$, let $\mathcal M_F(U)$ consist of subsets $X_U\subseteq U$ which contain $L\cap U$ and obey every certified rule whose entire support lies in $U$. If $U\subseteq W$, define
+\[
+\rho_{U,W}:\mathcal M_F(W)\longrightarrow\mathcal M_F(U),
+\qquad \rho_{U,W}(X_W)=X_W\cap U.
+\]
+This map is well defined. A rule supported in $U$ is also supported in $W$, and its conclusion remains in $U$. The restriction therefore preserves both the local leaves and the local implication conditions.
+
+\begin{proposition}[The proof-field view laws]
+The restriction maps satisfy
+\[
+\rho_{U,U}=\mathrm{id},\qquad
+\rho_{U,W}\rho_{W,Z}=\rho_{U,Z}\quad(U\subseteq W\subseteq Z).
+\]
+Consequently $U\mapsto\mathcal M_F(U)$ is a contravariant set-valued view system on the inclusion order of patches.
+\end{proposition}
+\begin{proof}
+Both laws are the corresponding intersection identities. For the second, $(X\cap W)\cap U=X\cap U$ because $U\subseteq W$. The values outside a patch are absent, or equivalently normalized to false in the Lean representation. There are no additional hidden coordinates.
+\end{proof}
+
+The strict Komorebi realization is now an actual set of coherent local models,
+\[
+\Gamma(\mathcal M_F)=
+\left\{(X_U)_U:\rho_{U,W}(X_W)=X_U\text{ whenever }U\subseteq W\right\}.
+\]
+There is an explicit bijection
+\[
+\operatorname{Models}(F)\simeq\Gamma(\mathcal M_F),
+\qquad X\longmapsto(X\cap U)_U.
+\]
+Its inverse evaluates a coherent family at the full patch $V$. Coherence shows that every other component is precisely the restriction of that value. The Lean declaration \path{ProofPath.Field.modelEquivSections} constructs this equivalence, using \path{ViewDiagram} and the actual local restriction maps.
+
+The full-patch equivalence identifies the ambient construction. It does not prove that arbitrary prescribed proper-patch data extend: the full patch already contains the global problem. Extension from smaller views is the distinct content of the following theorem.
+
+\subsection{The correct coverage condition is a whole support}
+
+Let $(U_i)_{i\in I}$ cover the nodes. A family $X_i\in\mathcal M_F(U_i)$ is matching when
+\[
+X_i\cap U_j=X_j\cap U_i\qquad\text{for every }i,j.
+\]
+This equality includes agreement about false values, not merely common true values.
+
+\begin{theorem}[Whole-support gluing]
+\label{thm:support-gluing}
+Suppose every certified justification has its whole support in some patch:
+\[
+\forall j\text{ certified},\quad\exists i\quad S_j\subseteq U_i.
+\]
+Then every matching family $(X_i)$ has a unique global field model $X$ satisfying $X\cap U_i=X_i$ for all $i$.
+\end{theorem}
+\begin{proof}
+Set $X=\bigcup_iX_i$. Matching and node coverage imply $X\cap U_i=X_i$. A leaf belongs to some patch and hence to its local model, so $L\subseteq X$. Consider a certified rule whose premises belong to $X$. Choose a patch containing its entire support. Matching implies that every premise is true in that patch's local model, whose rule condition forces the conclusion. Hence $X$ obeys all certified rules. Any other global model with the specified restrictions agrees with $X$ at every node because the patches cover the nodes. This proves uniqueness.
+\end{proof}
+
+\begin{example}[Pairwise dependencies do not suffice]
+Take nodes $a,b,c$, no required leaves, and one certified rule
+\[
+\{a,b\}\longrightarrow c.
+\]
+Use patches $U_0=\{a,c\}$ and $U_1=\{b,c\}$. The local valuations $X_0=\{a\}$ and $X_1=\{b\}$ agree on their overlap: both assign false to $c$. Both are local models, since neither patch contains the full rule support. They cover every node and both pairwise premise-to-conclusion dependencies. Nevertheless, a global model realizing them would contain $a,b$ and omit $c$, contradicting the rule. Thus replacing a conjunctive hyperedge by unrelated pairwise checks can lose precisely the constraint that matters.
+\end{example}
+
+The example is kernel checked in \path{ProofPath.Examples}. It does not contradict the earlier arrow-cover theorem. That theorem applies to a problem already specified by binary restriction equations. A conjunctive proof rule is a different constraint until a correct representation of its whole support has been supplied. The full support may be redundant in particular fields, so the theorem gives a sufficient cover condition rather than a necessary one for every individual diagram.
+
+The Python class \path{ProofFieldViews} implements these definitions. It freezes the rule and leaf contents at construction, restricts local valuations by literal intersection, checks support coverage before gluing, and can form a finite intersection-closed diagram for \path{FiniteViewSystem}. Local enumeration has explicit size limits. Forward closure and declared-field countermodels do not require that enumeration.
+
+\subsection{Protected realization over a field}
+
+The exact binary model admits a general algebraic formulation. Let $K$ be a field, let $E,R,S$ be $K$-vector spaces, and let $D:E\to R$ and $p:E\to S$ be linear. The prescribed problem is to repair $x$ while retaining $p(x)$:
+\[
+Dy=0,\qquad p(y)=p(x).
+\]
+The admissible correction image is $B=D(\ker p)$. The elementary correction equivalence gives feasibility exactly when $Dx\in B$.
+
+\begin{theorem}[A linear certificate alternative]
+\label{thm:linear-alternative}
+The protected problem is infeasible if and only if there is a linear functional $\lambda:R\to K$ satisfying
+\[
+\lambda(Dh)=0\quad\text{whenever }p(h)=0,
+\qquad \lambda(Dx)=1.
+\]
+For a finite matrix $M$ and right side $b$, the corresponding alternative is
+\[
+\nexists y\ (My=b)
+\quad\Longleftrightarrow\quad
+\exists\ell\ (\ell M=0\ \text{and}\ \ell b=1).
+\]
+\end{theorem}
+\begin{proof}
+If $Dx\notin B$, linear separation of a vector from a subspace gives a functional vanishing on $B$ and nonzero at $Dx$. One construction extends a basis of $B$ by $Dx$ and then to a basis of $R$. Assign value zero to the basis of $B$ and value one to $Dx$, and extend linearly. Equivalently, normalize any separating functional by its nonzero value. Conversely, if $y$ were feasible, then $h=x-y$ would satisfy $p(h)=0$ and $Dh=Dx$, contradicting the displayed functional equations. For a matrix, take $B$ to be its column image. In finite coordinates the separating functional is a row vector, giving the stated alternative.
+\end{proof}
+
+The general existence proof is classical. It does not claim an efficient procedure for arbitrary infinite spaces. In the implemented binary case, Gaussian elimination constructs a row witness, and the witness is checked against the original matrix and right side. A positive solution and a normalized negative witness cannot both verify.
+
+\subsection{Counting what remains after an observation}
+
+Let $T:E\to R$ and $Q:E\to W$ be linear, and fix a known point $x_0$. Put
+\[
+\mathcal A=\{y:Ty=Tx_0\},\quad H=\ker T,\quad
+Q_H=Q|_H.
+\]
+Translation $h\mapsto x_0+h$ identifies $H$ with $\mathcal A$. The observation image is the translate $Qx_0+Q(H)$, and the fiber above the attained value $Qx_0$ is a translate of $\ker Q_H$.
+
+\begin{theorem}[Exact observation counts]
+\label{thm:checked-counts}
+Suppose $K$ has $q$ elements and $E$ is finite. Set
+$k=\dim_K H$ and $r=\dim_K Q(H)$. Then
+\[
+|\mathcal A|=q^k,\qquad
+|Q(\mathcal A)|=q^r,\qquad
+|\{y\in\mathcal A:Qy=Qx_0\}|=q^{k-r}.
+\]
+In particular the exact count identity is
+\[
+|\mathcal A|=
+|\{y\in\mathcal A:Qy=Qx_0\}|\,q^r.
+\]
+Every attained observation fiber has the same size. For the uniform distribution on $\mathcal A$, the observation removes exactly $r\log_2q$ bits of uncertainty.
+\end{theorem}
+\begin{proof}
+The two translation equivalences reduce the counts to finite vector spaces. Such a space of dimension $d$ has $q^d$ elements. Rank-nullity for $Q_H$ gives $\dim\ker Q_H+r=k$, proving the product identity and all the counts. An attained value can be treated by choosing a point attaining it as the base point. Equal fiber sizes imply a uniform observation distribution and a uniform conditional distribution on each fiber. The entropy difference is therefore $\log_2(q^k)-\log_2(q^{k-r})=r\log_2q$.
+\end{proof}
+
+Lean checks the translation equivalences, rank-nullity specialization, fiber cardinalities, and product identity in \path{ProofPath.Protected}, with the binary specialization in \path{ProofPath.Binary}. The logarithmic entropy interpretation is the written corollary above, not a newly compiled theorem about a Lean probability distribution. Uniformity is substantive. With a nonuniform prior, dimension alone does not determine Shannon information.
+
+For the protected problem, set $T=(D,p)$ and choose an actual feasible $y_0$, so $Ty_0=(0,px)$. This reduces its solution fiber to the theorem without changing the protected values. A concrete binary example has $a+b+c=0$ and $a=0$. Its two realizations are $(0,0,0)$ and $(0,1,1)$. Observing $b$ has rank one on the ambiguity space and determines the remaining coordinate. Repeating the same observation in two output rows does not double the information.
+
+\subsection{Executable witnesses and a native declaration export}
+
+Four exact examples are regenerated from the Python implementation: a one-bit ambiguity, an incompatible protected assignment, a redundant observation, and a uniquely determined realization. The generator emits the original stacked matrices and right sides alongside the proposed solutions or row witnesses. It also emits Lean declarations which check those concrete equations and cardinalities by kernel reduction. A faulty generator cannot make a false displayed proposition pass merely by assigning a certification flag. The generator itself is not thereby verified for arbitrary inputs, and the correspondence between the supplied JSON input and its emitted Lean syntax remains an audited software boundary.
+
+A separate native exporter reads five already compiled Lean declarations, extracts their direct type and proof-constant dependencies, and records the transitive axiom sets. Dependencies outside the selected roots are explicit external leaves. This yields an actual proof-field JSON record rather than a hand-authored imitation of one. The exported field is then loaded through the public Python importer, and its declared closure is checked to contain its roots.
+
+The export has a deliberately narrow meaning. It is syntactic dependency data for selected declarations, not a reconstruction of the entire discovery process. It does not recover failed attempts, prove that every constant in a type was a historically essential idea, or formally verify the metaprogram that extracts the data. The mathematical proof-field bridge is checked independently of that metaprogram. Its semantic interpretation retains the explicit hypotheses in Theorem~\ref{thm:relative-completeness}.
+
+\subsection{Verification scope and reproducibility}
+
+The release contains eight production Lean modules. Each is rebuilt from source into a fresh object directory using the pinned compiler and dependency revisions. The project is then replayed through Lean's own kernel against its imported environment, and every selected named declaration receives an axiom audit. This is not an independent implementation of Lean, and the cached Mathlib library is not rebuilt or replayed in its entirety.
+
+Four deliberate invalid files test rejection of a false equality, an invalid row witness, the invalid conjunction model, and a proof placeholder. A fifth file introduces an explicit false axiom. Lean correctly accepts a consequence relative to that axiom, while the release's separate axiom policy rejects the dependency. A missing import or a timeout does not count as a successful mathematical rejection.
+
+The same verification run exercises the software tests, inherited exact comparisons, regenerated examples, native export, package installation, and manuscript build. Machine-readable logs distinguish written proofs, general Lean theorems, concrete checked examples, and implementation tests. The release does not use one category as a substitute for another.

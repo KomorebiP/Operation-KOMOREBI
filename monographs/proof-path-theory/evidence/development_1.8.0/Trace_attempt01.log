@@ -1,0 +1,44 @@
+ProofPath/Trace.lean:112:2: error: Type mismatch: After simplification, term
+  hc
+ has type
+  ({ leaf := {v | v ∈ p.leaves},
+            premises := fun j => {v | v ∈ ((lookup p.rules j).getD { premises := [], conclusion := 0 }).premises},
+            conclusion := fun j => ((lookup p.rules j).getD { premises := [], conclusion := 0 }).conclusion,
+            certified := fun j => (lookup p.rules j).isSome = true }.seeded
+        p.seeds).Derives
+    r.conclusion
+but is expected to have type
+  r.conclusion ∈ p.exactClosure
+ProofPath/Trace.lean:120:51: error: invalid `▸` notation, expected result type of cast is 
+  ∀ v ∈ out, v ∈ p.exactClosure
+however, the equality 
+  h
+of type 
+  replay p strict known [] = some out
+does not contain the expected result type on either the left or the right hand side
+ProofPath/Trace.lean:128:20: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+ProofPath/Trace.lean:142:11: error: Type mismatch: After simplification, term
+  h
+ has type
+  known = out
+but is expected to have type
+  ∀ v ∈ known, v ∈ out
+ProofPath/Trace.lean:176:16: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+ProofPath/Trace.lean:195:10: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mpr`
+ProofPath/Trace.lean:196:4: error: No goals to be solved
+ProofPath/Trace.lean:284:42: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+ProofPath/Trace.lean:290:18: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+ProofPath/Trace.lean:288:68: error: unsolved goals
+p : Problem
+c : Certificate
+h : checkCertificate p c = true
+hf : c.feasible = true
+he : ∀ (v : ℕ), v ∈ c.closure ↔ v ∈ p.exactClosure
+⊢ p.field.Extends p.seeds p.forbidden fun v => v ∈ c.closure
+ProofPath/Trace.lean:307:18: error(lean.unknownIdentifier): Unknown constant `Bool.and_eq_true.mp`
+ProofPath/Trace.lean:306:52: error: unsolved goals
+p : Problem
+c : Certificate
+h : checkCertificate p c = true
+hf : c.feasible = false
+⊢ ¬∃ x, p.field.Extends p.seeds p.forbidden x

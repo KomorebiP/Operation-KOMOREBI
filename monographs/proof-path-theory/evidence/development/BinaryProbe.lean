@@ -1,0 +1,10 @@
+import ProofPath.Protected
+import Mathlib.Data.ZMod.Basic
+import Mathlib.LinearAlgebra.Matrix.ToLin
+#check Matrix.mulVecLin
+#check Matrix.mulVecLin_apply
+#check dotProduct
+#check Matrix.vecHead
+#check Matrix.of
+#check ZMod.card
+#check Finset.sum_comm

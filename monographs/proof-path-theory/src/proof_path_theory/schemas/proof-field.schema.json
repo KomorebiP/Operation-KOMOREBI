@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:komorebi:proof-path-theory:schema:proof-field:1.0",
+  "title": "Proof Path Theory proof field",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "nodes", "justifications"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "metadata": {"type": "object"},
+    "premises": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "targets": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/node"}
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "justifications": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/justification"}
+    }
+  },
+  "$defs": {
+    "nonnegativeNumber": {
+      "type": "number",
+      "minimum": 0
+    },
+    "valueVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verification": {"$ref": "#/$defs/nonnegativeNumber"},
+        "discovery": {"$ref": "#/$defs/nonnegativeNumber"},
+        "meaning": {"$ref": "#/$defs/nonnegativeNumber"},
+        "bridge": {"$ref": "#/$defs/nonnegativeNumber"},
+        "auditability": {"$ref": "#/$defs/nonnegativeNumber"}
+      }
+    },
+    "costVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "storage": {"$ref": "#/$defs/nonnegativeNumber"},
+        "audit": {"$ref": "#/$defs/nonnegativeNumber"},
+        "recovery": {"$ref": "#/$defs/nonnegativeNumber"},
+        "cognitive": {"$ref": "#/$defs/nonnegativeNumber"}
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "kind": {
+          "enum": [
+            "premise",
+            "axiom",
+            "external_result",
+            "definition",
+            "claim",
+            "lemma",
+            "theorem",
+            "example",
+            "computation",
+            "boundary_case",
+            "failed_route",
+            "conjecture",
+            "counterexample"
+          ]
+        },
+        "values": {"$ref": "#/$defs/valueVector"},
+        "costs": {"$ref": "#/$defs/costVector"},
+        "metadata": {"type": "object"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "source"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {
+          "enum": [
+            "formal_proof",
+            "assumption",
+            "exact_computation",
+            "numerical_evidence",
+            "conjecture",
+            "external_result",
+            "counterexample",
+            "interpretation"
+          ]
+        },
+        "source": {"type": "string", "minLength": 1},
+        "scope": {"type": "string"},
+        "certifies": {"type": "boolean"},
+        "note": {"type": "string"}
+      }
+    },
+    "justification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "premises", "conclusion", "rule"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "premises": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "conclusion": {"type": "string", "minLength": 1},
+        "rule": {"type": "string", "minLength": 1},
+        "certified": {"type": "boolean"},
+        "evidence_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "metadata": {"type": "object"}
+      }
+    }
+  }
+}

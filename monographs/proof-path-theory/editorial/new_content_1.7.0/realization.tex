@@ -1,0 +1,168 @@
+\subsection{Protected extensions of the actual rule field}
+\label{sec:protected-rule-extension}
+
+The linear model is not the only setting in which an obstruction can be returned explicitly. The original rule field has its own constructive extension problem. A partial Boolean description records which nodes must belong to a model and which must remain absent. These are observations about the declared model, not assertions that the sentences attached to the nodes are true or false in an intended mathematical universe.
+
+Fix the field $F$, including its admitted leaves and certified rules. For a positive observation set $S\subseteq V$, let
+\[
+  \operatorname{cl}_F(S)=\operatorname{Der}_{F[S]},
+\]
+where $F[S]$ is obtained by admitting $L\cup S$ as leaves and changing nothing else. For a negative observation set $N\subseteq V$, define
+\[
+ \operatorname{Ext}_F(S,N)=
+ \{X\subseteq V:X\text{ is an }F\text{-model},\ S\subseteq X,\ X\cap N=\varnothing\}.
+\]
+Positive and negative observations are both part of the preservation contract. Dropping the negative observations can turn an impossible request into a different, feasible problem.
+
+\begin{theorem}[Least protected extension and a complete obstruction]
+\label{res:new:extension}
+The extension fiber is nonempty exactly when
+\[
+ \operatorname{cl}_F(S)\cap N=\varnothing.
+\]
+When this condition holds, $\operatorname{cl}_F(S)$ is its least member. More generally,
+\[
+ X\in\operatorname{Ext}_F(S,N)
+ \quad\Longleftrightarrow\quad
+ X\text{ is an }F\text{-model and }
+ \operatorname{cl}_F(S)\subseteq X\subseteq V\setminus N.
+\]
+If no extension exists, some $n\in N$ has a derivation from $L\cup S$ using only the declared certified rules.
+\end{theorem}
+\begin{proof}
+Induction on a derivation shows that every model containing $S$ contains $\operatorname{cl}_F(S)$. The inductive closure is itself a model and contains $S$. If it avoids $N$, it is therefore a permitted extension, and the preceding inclusion proves leastness. If it meets $N$, every model containing $S$ contains a forbidden node, so no extension is possible. The displayed classification follows from the same inclusions. A point of the nonempty intersection is exactly the conclusion of the stated forbidden-node derivation.
+\end{proof}
+
+This describes an interval \emph{inside the family of rule models}, not an arbitrary interval of the power set. Closure under the rules remains essential. Nor is the fiber generally an affine space. For the rule $\{a,b\}\to c$, with no leaves, $S=\varnothing$ and $N=\{c\}$, the allowed models are precisely $\varnothing$, $\{a\}$, and $\{b\}$. There are three, not a power of two. The rank and entropy formulas for vector spaces cannot be imported into this model without additional structure.
+
+\begin{corollary}[Exact extension of a partial valuation]
+\label{res:new:partial}
+Let $S\subseteq U\subseteq V$. A global model whose true nodes on $U$ are exactly $S$ exists if and only if
+\[
+ \operatorname{cl}_F(S)\cap U=S.
+\]
+\end{corollary}
+\begin{proof}
+Set $N=U\setminus S$. Closure always contains $S$, so avoiding $N$ is equivalent to the displayed equality. Apply Theorem~\ref{res:new:extension}.
+\end{proof}
+
+In particular, the test works for partial data that already violate a local rule. It need not assume local consistency and then hide that failure in a precondition. A contradictory observation can be exposed as a specific forbidden consequence.
+
+\begin{proposition}[Staged closure and persistent obstructions]
+\label{res:new:stages}
+For positive sets $S,T$,
+\[
+ \operatorname{cl}_F\bigl(\operatorname{cl}_F(S)\cup T\bigr)
+   =\operatorname{cl}_F(S\cup T).
+\]
+If $S\subseteq S'$ and $N\subseteq N'$, then
+$\operatorname{Ext}_F(S',N')\subseteq\operatorname{Ext}_F(S,N)$.
+Consequently an infeasible request stays infeasible under those additions, while the field and the meaning of its rules remain fixed.
+\end{proposition}
+\begin{proof}
+Closure is extensive, monotone, and idempotent because it is the least model containing its seed. The model $\operatorname{cl}_F(S\cup T)$ contains $\operatorname{cl}_F(S)$ and $T$, giving one inclusion in the first equation. Extensivity gives $S\cup T\subseteq\operatorname{cl}_F(S)\cup T$, and monotonicity gives the other. A model satisfying the larger positive and negative prescriptions also satisfies the smaller ones. The last conclusion follows by inclusion of the extension fibers.
+\end{proof}
+
+The module \path{ProofPath.Extension} checks these statements on the existing \path{Field} type. The Python module \path{extension.py} uses the same \path{ProofFieldViews} snapshot as the local-model construction. It computes closure by forward rule scans and records each newly derived node. At most $|V|$ successful insertions occur. If a forbidden node is reached, a causal subtrace is extracted. It need not be the shortest or cheapest refutation.
+
+The independent result checker replays that trace and checks that the recorded closure is closed under every rule. Derivability of every recorded node and closure of the recorded set together establish leastness. A negative witness only needs a valid derivation of one forbidden node. Its replay permits a previously derived node to have become an admitted observation, so the same witness can remain valid after positive data are strengthened. The checker does not call the producer, and a timeout is never returned as an obstruction.
+
+\subsection{Semantic covers rather than only syntactic covers}
+\label{sec:semantic-cover}
+
+Whole-support coverage is easy to inspect and is sufficient for gluing. It can nevertheless be unnecessarily strong. Suppose $F$ contains $a\to b$, $b\to c$, and $a\to c$, with patches $\{a,b\}$ and $\{b,c\}$. The last support $\{a,c\}$ is absent from both patches. Yet the first two visible rules already imply the last rule. Requiring another patch would duplicate information rather than restore a missing constraint.
+
+Let $\mathcal U=(U_i)_i$ cover every node. Define $F_{\mathcal U}$ to have the same nodes and leaves as $F$ but only those certified rules whose entire support lies in some $U_i$. The distinction between the two fields is explicit. We call the cover \emph{semantically sufficient for the declared rules} when
+\[
+ \forall j\text{ certified in }F,\qquad
+ c_j\in\operatorname{cl}_{F_{\mathcal U}}(A_j).
+ \tag{SC}\label{eq:semantic-cover}
+\]
+The word semantic here refers to the Boolean rule-model semantics of Section~\ref{sec:old24}, not to an automatic interpretation of node labels as arbitrary mathematical truths.
+
+\begin{theorem}[Exact criterion for universal gluing]
+\label{res:new:semantic-cover}
+Under node coverage, the following conditions are equivalent:
+\begin{enumerate}[label=(\roman*)]
+\item Every matching family of local $F$-models on the patches has a unique global $F$-model extending it.
+\item Every model of $F_{\mathcal U}$ is a model of $F$.
+\item Condition~\eqref{eq:semantic-cover} holds.
+\item For every positive seed $S$, $\operatorname{cl}_{F_{\mathcal U}}(S)=\operatorname{cl}_F(S)$.
+\end{enumerate}
+Whole-support coverage implies these conditions, but the converse need not hold.
+\end{theorem}
+\begin{proof}
+A matching family assembles uniquely to a subset $X\subseteq V$ because the patches cover all nodes and agree on their common coordinates. Its local rule conditions say exactly that $X$ is a model of $F_{\mathcal U}$. Conversely, a model of $F_{\mathcal U}$ restricts to an $F$-model on every patch: every original rule supported in that patch is among the retained rules. Those restrictions match. Thus (i) and (ii) are equivalent, and uniqueness follows from node coverage.
+
+Assume (ii) and fix a certified rule $j$. The set $\operatorname{cl}_{F_{\mathcal U}}(A_j)$ is a model of $F_{\mathcal U}$ containing all of $A_j$. By (ii) it obeys the original rule and contains $c_j$, proving (iii). Conversely, if $X$ is a model of $F_{\mathcal U}$ containing $A_j$, leastness gives $\operatorname{cl}_{F_{\mathcal U}}(A_j)\subseteq X$. Condition (iii) therefore forces $c_j\in X$. Every original rule is satisfied, which proves (ii).
+
+Under (ii) the two fields have exactly the same models, since every $F$-model already obeys the retained rules. Their least models containing any seed are equal, giving (iv). If (iv) holds, apply it to $A_j$. The conclusion $c_j$ lies in $\operatorname{cl}_F(A_j)$ by the original rule, so it lies in the retained closure as required by (iii). Finally, whole-support coverage retains every certified rule. The three-rule example above proves that this condition is not necessary.
+\end{proof}
+
+There is a constructive negative result as well. If (SC) fails for $j$, let
+\[
+ X=\operatorname{cl}_{F_{\mathcal U}}(A_j).
+\]
+Then $A_j\subseteq X$ and $c_j\notin X$. The restrictions $X\cap U_i$ are matching local $F$-models, but their only assembled subset violates the original rule. They are a checkable obstruction to \emph{universal gluing for this cover}. They do not show that every matching family on the cover fails.
+
+The module \path{ProofPath.SemanticCover} proves the criterion, including its connection to the actual \path{Local}, \path{Matching}, and \path{gluedValue} constructions. It is not a replacement field chosen only to have a convenient name. The Python producer returns a derivation of each original conclusion from its premises using only visible rules, or the countermodel just described. The verifier replays the positive derivations or checks the negative valuation directly. A new \path{glue_semantic} operation requires the positive certificate. The older \path{glue} method retains its simpler whole-support contract.
+
+\studyhead{05}{A missing support can be redundant}
+The patches $U_0=\{a,b\}$ and $U_1=\{b,c\}$ do not contain the support of $a\to c$. Their visible rules $a\to b$ and $b\to c$ nevertheless provide a certified derivation of that implication. Compare this with the missing conjunctive support in Figure~\ref{fig:whole-support}: neither visible patch there provides a substitute for $\{a,b\}\to c$.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{fig_22_semantic_cover.pdf}
+\caption{The exact semantic-cover check for a redundant rule. The two solid rules are visible in the displayed patches. The dashed original rule has no covered whole support, but its conclusion is derived by the solid path. Dashed here means omitted from the visible subsystem, not uncertified in the original field.}
+\label{fig:semantic-cover}
+\end{figure}
+
+\calloutbox{Preserve the constraint, not necessarily its original presentation}{The cover is sufficient because its visible rules impose the same models as the full field. The criterion checks every original rule, not just the target of one successful example.}
+
+For a finite field, one closure computation per original rule is enough to produce the positive certificates or expose a failed entailment. This avoids enumerating all local valuations or all matching families. The implementation uses repeated rule scans, so the release does not claim the indexed linear-time bound for its code. Its output certificates can be verified without trusting that search procedure.
+\clearpage
+
+\subsection{Typed transport of derivations and obstructions}
+\label{sec:rule-transports}
+
+A change of proof-field representation needs more than a map of node names. Let $F$ and $G$ be declared fields. A rule transport consists of a node map $f:V_F\to V_G$ and a rule map $h:J_F\to J_G$ satisfying
+\[
+\begin{aligned}
+ f(L_F)&\subseteq L_G,\\
+ j\text{ certified in }F&\Longrightarrow h(j)\text{ certified in }G,\\
+ A^G_{h(j)}&\subseteq f(A^F_j),\\
+ c^G_{h(j)}&=f(c^F_j).
+\end{aligned}
+\]
+The premise inclusion points in the direction needed for executing the translated step. The mapped target rule may need fewer premises, but it must not introduce a new premise unsupported by the source step. This is a sufficient, deliberately concrete transport interface. A more general translation could map one rule to an entire derivation.
+
+\begin{theorem}[Compositional rule transport]
+\label{res:new:transport}
+Rule transports admit identities and associative composition. A transport $(f,h):F\to G$ sends every derivation of $v$ in $F$ to a derivation of $f(v)$ in $G$. Every $G$-model pulls back along $f$ to an $F$-model. In particular,
+\[
+ Y\in\operatorname{Ext}_G(f(S),f(N))
+   \Longrightarrow f^{-1}(Y)\in\operatorname{Ext}_F(S,N).
+\]
+An obstruction in the source extension problem therefore implies an obstruction in the target extension problem with the mapped observations.
+\end{theorem}
+\begin{proof}
+Identity maps meet each displayed condition. For two composable transports, compose the node and rule maps. Applying the second map to the first premise inclusion and then using the second inclusion proves the composite premise condition. The conclusion and leaf conditions also compose. Function composition gives the identity and associativity laws.
+
+Proceed by induction on a source derivation. A source leaf maps to a target leaf. For a rule step, every premise of the target rule is the image of a source premise, so the induction hypotheses supply all the required target premises. Certification and the conclusion equation then give the translated conclusion.
+
+If $Y$ is a target model, $f^{-1}(Y)$ contains all source leaves. When it contains every premise of a source rule, $Y$ contains every premise of the mapped rule and hence its conclusion. This proves the model pullback. Positive and negative observations pull back by their image definitions. If a target extension existed while the source problem were infeasible, its pullback would contradict that infeasibility.
+\end{proof}
+
+Positive seeds can be added before transport. The same rule transport sends $F[S]$ to $G[f(S)]$, and hence
+\[
+ f\bigl(\operatorname{cl}_F(S)\bigr)
+      \subseteq\operatorname{cl}_G(f(S)).
+\]
+A forbidden source consequence $n\in N\cap\operatorname{cl}_F(S)$ maps to the explicit forbidden consequence $f(n)\in f(N)\cap\operatorname{cl}_G(f(S))$. The formal development checks this witness map, not only the existence statement obtained by contraposition.
+
+\begin{example}[Why transport is not an equivalence]
+\label{res:new:collapse}
+Let the source have nodes $a,b$, no leaves, and no rules. The request $a$ true and $b$ false is feasible. Map both nodes to one target node $u$, again with no leaves or rules. This is a rule transport, but the image request requires $u$ both true and false and is infeasible. Thus source feasibility need not imply target feasibility, and target infeasibility need not imply source infeasibility.
+\end{example}
+
+\path{ProofPath.RuleTransport} checks the transport laws and their action on actual derivations. \path{ProofPath.ExtensionExamples} checks both sides of the collapsed-node example. Semantic truth still requires a sound interpretation of the target leaves and rules. Under that additional contract, soundness applied to the transported derivation establishes the interpreted conclusion. A renaming operation alone does not supply the contract.
+

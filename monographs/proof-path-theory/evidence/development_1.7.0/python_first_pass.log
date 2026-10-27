@@ -1,0 +1,40 @@
+........................F...F...                                         [100%]
+=================================== FAILURES ===================================
+____________________ test_obstruction_reuse_requires_scope _____________________
+
+    def test_obstruction_reuse_requires_scope():
+        v=views();r=solve_extension(v,positive={'a','b'},negative={'c'})
+>       assert verify_extension_obstruction(v,{'a','b','c'},{'c'},r.obstruction)
+E       AssertionError: assert False
+E        +  where False = verify_extension_obstruction(<proof_path_theory.views.ProofFieldViews object at 0x7f2cc1c1f9b0>, {'a', 'b', 'c'}, {'c'}, DerivationWitness(target='c', rule_ids=('r0',)))
+E        +    where DerivationWitness(target='c', rule_ids=('r0',)) = ExtensionResult(feasible=False, closure=frozenset({'c', 'b', 'a'}), rule_ids=('r0',), obstruction=DerivationWitness(target='c', rule_ids=('r0',))).obstruction
+
+tests/test_recovery_extension.py:140: AssertionError
+_________________ test_malformed_witness_is_rejected_not_used __________________
+
+    def test_malformed_witness_is_rejected_not_used():
+        v=views()
+>       assert not verify_extension_obstruction(v,(),{'c'},DerivationWitness(['c'],()))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_recovery_extension.py:169: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+views = <proof_path_theory.views.ProofFieldViews object at 0x7f2cc10ea120>
+positive = (), negative = {'c'}
+witness = DerivationWitness(target=['c'], rule_ids=())
+
+    def verify_extension_obstruction(views: ProofFieldViews, positive: Iterable[str],
+                                     negative: Iterable[str], witness: DerivationWitness) -> bool:
+        n = _nodes(views, negative, "negative observations")
+>       return isinstance(witness, DerivationWitness) and witness.target in n and verify_derivation(views, positive, witness)
+                                                          ^^^^^^^^^^^^^^^^^^^
+E       TypeError: unhashable type: 'list'
+
+src/proof_path_theory/extension.py:62: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_recovery_extension.py::test_obstruction_reuse_requires_scope - AssertionError: assert False
+ +  where False = verify_extension_obstruction(<proof_path_theory.views.ProofFieldViews object at 0x7f2cc1c1f9b0>, {'a', 'b', 'c'}, {'c'}, DerivationWitness(target='c', rule_ids=('r0',)))
+ +    where DerivationWitness(target='c', rule_ids=('r0',)) = ExtensionResult(feasible=False, closure=frozenset({'c', 'b', 'a'}), rule_ids=('r0',), obstruction=DerivationWitness(target='c', rule_ids=('r0',))).obstruction
+FAILED tests/test_recovery_extension.py::test_malformed_witness_is_rejected_not_used - TypeError: unhashable type: 'list'
+2 failed, 30 passed in 0.47s

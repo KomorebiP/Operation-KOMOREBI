@@ -1,0 +1,14 @@
+import Mathlib.LinearAlgebra.Dual.Lemmas
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
+import Mathlib.FieldTheory.Finite.Basic
+#check Submodule.exists_dual_map_eq_bot_of_notMem
+#check Module.card_eq_pow_finrank
+#check LinearMap.finrank_range_add_finrank_ker
+#check LinearEquiv.ofBijective
+#check Equiv.ofBijective
+#check Submodule.mem_map
+#check LinearMap.mem_range
+#check Nat.card_congr
+#check Fintype.card_congr
+#check Submodule.Quotient.eq_zero_iff_mem
+#check LinearMap.quotKerEquivRange

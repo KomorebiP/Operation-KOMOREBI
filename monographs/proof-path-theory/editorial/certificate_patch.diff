@@ -1,0 +1,113 @@
+--- v1.2.0/src/proof_path_theory/certificate.py
++++ v1.3.0/src/proof_path_theory/certificate.py
+@@ -1,7 +1,8 @@
+ from __future__ import annotations
+ 
+ from dataclasses import dataclass
+-from math import fsum, inf, isfinite
++from math import fsum, isfinite
++from fractions import Fraction
+ from typing import Iterable, Mapping
+ 
+ from .model import ProofField
+@@ -89,13 +90,29 @@
+ 
+ 
+ def is_and_dag(field: ProofField, targets: Iterable[str] | None = None) -> bool:
++    """Check the relevant AND-DAG, stopping expansion at admitted leaves.
++
++    A recorded derivation of a premise already admitted by the field is not
++    needed to use that premise. Unrelated ancestors must not create artificial
++    proof obligations for the requested target.
++    """
+     target_set = field.targets if targets is None else frozenset(targets)
+-    relevant = field.ancestors(target_set, certified_only=True)
+-    for node_id in relevant:
++    unknown = target_set.difference(field.nodes)
++    if unknown:
++        raise KeyError(sorted(unknown)[0])
++    visited: set[str] = set()
++    pending = list(target_set)
++    while pending:
++        node_id = pending.pop()
++        if node_id in visited:
++            continue
++        visited.add(node_id)
+         if field.is_admissible_leaf(node_id):
+             continue
+-        if len(field.incoming(node_id, certified_only=True)) != 1:
++        incoming = field.incoming(node_id, certified_only=True)
++        if len(incoming) != 1:
+             return False
++        pending.extend(incoming[0].premises)
+     return True
+ 
+ 
+@@ -182,7 +199,8 @@
+ 
+     The search is exponential in the number of alternative derivations. It is
+     intended for finite research examples and validation, not large proof
+-    assistant libraries.
++    assistant libraries. Selection compares exact rational values of the stored
++    binary floating-point costs. Public cost summaries are still floats.
+     """
+ 
+     if max_search_states <= 0:
+@@ -205,19 +223,27 @@
+         if not isfinite(numeric) or numeric < 0:
+             raise ValueError("certificate costs must be finite and nonnegative")
+ 
+-    best_cost = inf
++    # Binary floats are rational numbers. Exact rational accumulation avoids
++    # both tolerance-based pruning and loss of small costs beside a large one.
++    # This does not recover a user's intended decimal before float conversion.
++    exact_node_cost = {
++        node_id: Fraction.from_float(float(node_cost.get(node_id, 0.0)))
++        for node_id in field.nodes
++    }
++    exact_justification_cost = {
++        item_id: Fraction.from_float(float(justification_cost.get(item_id, 0.0)))
++        for item_id in field.justifications
++    }
++    best_cost: Fraction | None = None
+     best: Certificate | None = None
+     states = 0
+ 
+-    def current_cost(nodes: set[str], justifications: set[str]) -> float:
+-        return float(
+-            fsum(
+-                [float(node_cost.get(node_id, 0.0)) for node_id in nodes]
+-                + [
+-                    float(justification_cost.get(justification_id, 0.0))
+-                    for justification_id in justifications
+-                ]
+-            )
++    def current_cost(nodes: set[str], justifications: set[str]) -> Fraction:
++        return sum(
++            (exact_node_cost[node_id] for node_id in nodes), Fraction(0)
++        ) + sum(
++            (exact_justification_cost[item_id] for item_id in justifications),
++            Fraction(0),
+         )
+ 
+     def first_missing_dependency(
+@@ -249,7 +275,7 @@
+                 "minimum-certificate search exceeded max_search_states"
+             )
+         cost = current_cost(nodes, justifications)
+-        if cost >= best_cost - 1e-12:
++        if best_cost is not None and cost >= best_cost:
+             return
+ 
+         report = validate_certificate(
+@@ -281,8 +307,8 @@
+             sorted(
+                 alternatives,
+                 key=lambda item: (
+-                    float(justification_cost.get(item.id, 0.0))
+-                    + sum(float(node_cost.get(premise, 0.0)) for premise in item.premises),
++                    exact_justification_cost[item.id]
++                    + sum((exact_node_cost[premise] for premise in item.premises), Fraction(0)),
+                     item.id,
+                 ),
+             )

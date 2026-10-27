@@ -1,0 +1,49 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+__ test_surrogate_code_points_are_outside_the_unicode_scalar_contract[\ud800] __
+
+bad = '\ud800'
+
+    @pytest.mark.parametrize('bad', ['\ud800', '\udfff', '\ud83d\ude00'])
+    def test_surrogate_code_points_are_outside_the_unicode_scalar_contract(bad: str) -> None:
+        # JSON's ASCII escapes otherwise identify a surrogate pair with an astral scalar.
+        if len(bad) == 2:
+            assert json.dumps(bad, ensure_ascii=True) == json.dumps('\U0001f600', ensure_ascii=True)
+>       with pytest.raises(ValueError, match='surrogate'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_finalization_contracts.py:119: Failed
+__ test_surrogate_code_points_are_outside_the_unicode_scalar_contract[\udfff] __
+
+bad = '\udfff'
+
+    @pytest.mark.parametrize('bad', ['\ud800', '\udfff', '\ud83d\ude00'])
+    def test_surrogate_code_points_are_outside_the_unicode_scalar_contract(bad: str) -> None:
+        # JSON's ASCII escapes otherwise identify a surrogate pair with an astral scalar.
+        if len(bad) == 2:
+            assert json.dumps(bad, ensure_ascii=True) == json.dumps('\U0001f600', ensure_ascii=True)
+>       with pytest.raises(ValueError, match='surrogate'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_finalization_contracts.py:119: Failed
+_ test_surrogate_code_points_are_outside_the_unicode_scalar_contract[\ud83d\ude00] _
+
+bad = '\ud83d\ude00'
+
+    @pytest.mark.parametrize('bad', ['\ud800', '\udfff', '\ud83d\ude00'])
+    def test_surrogate_code_points_are_outside_the_unicode_scalar_contract(bad: str) -> None:
+        # JSON's ASCII escapes otherwise identify a surrogate pair with an astral scalar.
+        if len(bad) == 2:
+            assert json.dumps(bad, ensure_ascii=True) == json.dumps('\U0001f600', ensure_ascii=True)
+>       with pytest.raises(ValueError, match='surrogate'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+tests/test_finalization_contracts.py:119: Failed
+=========================== short test summary info ============================
+FAILED tests/test_finalization_contracts.py::test_surrogate_code_points_are_outside_the_unicode_scalar_contract[\ud800] - Failed: DID NOT RAISE <class 'ValueError'>
+FAILED tests/test_finalization_contracts.py::test_surrogate_code_points_are_outside_the_unicode_scalar_contract[\udfff] - Failed: DID NOT RAISE <class 'ValueError'>
+FAILED tests/test_finalization_contracts.py::test_surrogate_code_points_are_outside_the_unicode_scalar_contract[\ud83d\ude00] - Failed: DID NOT RAISE <class 'ValueError'>
+3 failed, 14 deselected in 0.12s

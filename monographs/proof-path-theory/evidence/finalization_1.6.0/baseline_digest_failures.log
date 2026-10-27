@@ -1,0 +1,31 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_tuple_boundaries_survive_embedded_legacy_separator ____________
+
+    def test_tuple_boundaries_survive_embedded_legacy_separator() -> None:
+        left, right = ("A\x1fB", "C"), ("A", "B\x1fC")
+        # This was an encoding collision, not a collision between different hash inputs.
+        assert "\x1f".join(left) == "\x1f".join(right)
+>       assert provenance_digest(*left) != provenance_digest(*right)
+E       AssertionError: assert 'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd' != 'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd'
+E        +  where 'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd' = provenance_digest(*('A\x1fB', 'C'))
+E        +  and   'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd' = provenance_digest(*('A', 'B\x1fC'))
+
+tests/test_finalization_contracts.py:34: AssertionError
+_______________ test_zero_parts_and_one_empty_part_are_distinct ________________
+
+    def test_zero_parts_and_one_empty_part_are_distinct() -> None:
+>       assert provenance_digest() != provenance_digest("")
+E       AssertionError: assert 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+E        +  where 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' = provenance_digest()
+E        +  and   'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' = provenance_digest('')
+
+tests/test_finalization_contracts.py:38: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_finalization_contracts.py::test_tuple_boundaries_survive_embedded_legacy_separator - AssertionError: assert 'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd' != 'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd'
+ +  where 'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd' = provenance_digest(*('A\x1fB', 'C'))
+ +  and   'c2fc6a821385dc20b3ba2a597c222db474f5fdba5a383c3aeb5ba5616a4ad5dd' = provenance_digest(*('A', 'B\x1fC'))
+FAILED tests/test_finalization_contracts.py::test_zero_parts_and_one_empty_part_are_distinct - AssertionError: assert 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' != 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+ +  where 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' = provenance_digest()
+ +  and   'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' = provenance_digest('')
+2 failed, 12 deselected in 0.13s

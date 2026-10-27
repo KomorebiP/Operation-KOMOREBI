@@ -1,0 +1,59 @@
+# Theorem and result ledger — monograph 1.8.0
+
+The 41 earlier groups are retained and six scoped checker/codec groups are added. `proved`
+means a written proof, not a formal declaration count. `written_and_lean`
+identifies the named mathematical interfaces freshly compiled and replayed in
+this release. Entropy remains a written consequence of checked counts. No
+entry asserts that Python or a metaprogram has been verified for all inputs.
+The archived total-codomain decoder notion remains available; the new Recovery
+namespace implements the attained-output definition actually used in the text.
+
+| ID | Result | Status | Scope | Executable support |
+| --- | --- | --- | --- | --- |
+| PPT-001 | Finite derivability by topological closure | proved | finite acyclic proof fields | ProofField.derive |
+| PPT-002 | Least certificate pair in a leaf-relative AND-DAG | proved | backward expansion stops at admitted leaves; least pair under componentwise inclusion | unique_and_dag_certificate |
+| PPT-003 | Linear AND-DAG core extraction | proved | indexed adjacency; includes required premises and visited premise incidences; not a runtime theorem for scanning Python code | unique_and_dag_certificate |
+| PPT-004 | Minimum Certificate Decision is NP-complete | proved | finite acyclic fields with nonnegative integer costs and binary-encoded budget | set_cover_certificate.json |
+| PPT-005 | Functorial transport of certified paths | proved | path categories of declared certified transitions; semantic transport needs a sound interpretation | structural theorem |
+| PPT-006 | Local auditable certificates compose | proved | finite compositional certificate maps | structural theorem |
+| PPT-007 | Task information loss criterion | written_and_lean | one encoding on an archive family and one uniform decoder per task | Recovery.not_sufficient_iff_collision; factor_task and its separate verifier |
+| PPT-008 | Recoverability is a preorder | proved | fixed task family on a common archive domain | recoverability_preorder |
+| PPT-009 | Mutual recoverability quotient is a partial order | proved | fixed task family on a common archive domain | recoverability_equivalent |
+| PPT-010 | Least sufficient retention masks depend on the task family | proved | fixed mandatory certificate and independently variable side records; pure retention | worked countermodel |
+| PPT-011 | Zero verification loss can coexist with positive discovery loss | proved | declared nonnegative additive numerical values; not arbitrary ordinal ranks | compression_report |
+| PPT-012 | Compression debt is monotone under retention | proved | nonnegative recovery costs | compression_debt |
+| PPT-013 | Bridge criticality equals target domination | proved | fixed finite directed graph; removed node outside starts; initially reachable targets | dominated_targets |
+| PPT-014 | Weighted future reach is monotone and submodular | proved | fixed bridge graph and nonnegative target weights; varying retained starting set | is_monotone_submodular_coverage |
+| PPT-015 | Greedy cardinality retention has the standard approximation bound | proved | fixed coverage utility; integer 1 <= k <= candidate count; zero and saturated budgets handled separately | greedy_cardinality_retention |
+| PPT-016 | Append-only certified updates preserve derivability | proved | unchanged nodes, admitted leaves, evidence, interpretation, and certified rules | append_only_derivability_preserved |
+| PPT-017 | Forward dependency closure is the minimal closed syntactic review set | proved | finite declared dependency graph | affected_descendants |
+| PPT-018 | Equicorrelated review has an exact effective count | proved | unbiased errors with positive common variance and admissible equicorrelation; effective count is real | equicorrelated_effective_count |
+| PPT-019 | GLS weights minimize unbiased linear review variance | proved | unbiased estimates, positive definite covariance, weights summing to one | generalized_least_squares_weights |
+| PPT-020 | Constant-rate audit queues have exact regimes | proved | nonnegative deterministic arrivals, service and initial backlog; arrivals available for same-cycle service | constant_rate_regime |
+| PPT-021 | Optimal expansion depth depends on the goal | proved | finite depth set and declared nonnegative scores, costs and weights; stopping heuristic distinct from optimum | optimal_depth |
+| PPT-022 | Pure retention projections commute and are idempotent | proved | fixed finite node universe | retention_projection |
+| PPT-023 | Retention masks form a Boolean lattice | proved | fixed finite node universe | retention_meet and retention_join |
+| PPT-024 | Local route refutation need not refute a goal | proved | finite alternative certified justifications | alternative justification test model |
+| PPT-025 | Scoped refutation persists in unchanged context | proved | same assumptions interpretation and sound checker | scoped witness proposition |
+| PPT-026 | Arrow-covered coherent finite patches glue uniquely | written_and_lean | finite edge-defined view systems | ProofPath.ViewDiagram.arrow_cover_gluing; FiniteViewSystem.glue |
+| PPT-027 | Finite GF2 protected realization alternative and ambiguity | written_and_lean | declared vector spaces over a field; implemented GF(2) | ProofPath.protected_alternative; row_alternative; kernelEquivFiber; GF(2) solver |
+| PPT-028 | Finite affine observation counts and uniform entropy interpretation | lean_counts_written_entropy | finite-dimensional vector spaces over a finite field; entropy requires a uniform prior | ProofPath.exact_observation_count; binary_fiber_card; exact finite checks |
+| PPT-029 | Equicorrelation plus shared offset gives MSE formula | proved | declared equicorrelation and constant bias model | shared_bias_mse |
+| PPT-030 | Declared model soundness and relative completeness | written_and_lean | declared certified inference system | Field.derives_iff_all_models; Field.nonderivable_countermodel |
+| PPT-031 | Contravariant local-model realization equivalence | written_and_lean | all patch local models; explicit full-patch equivalence | Field.restrict_composition; Field.modelEquivSections |
+| PPT-032 | Whole-support gluing with pairwise-cover counterexample | written_and_lean | node and whole-certified-support coverage | Field.support_cover_gluing; Examples.pairwise_data_have_no_glue |
+| PPT-033 | All predicate tasks sufficient iff encoding injective | written_and_lean | arbitrary functions and predicate decoders | all_predicates_sufficient_iff_injective |
+| PPT-034 | Attained factorization iff task fiber constancy and unique decoder | written_and_lean | arbitrary sets and attained outputs; classical choice; explicit empty-domain comparison | Recovery.sufficient_iff_fiber_constant; decoder_unique; empty_attained_not_total |
+| PPT-035 | Joint tasks give the least retained distinctions and recovery composes | written_and_lean | common archive domain; dependent task answer types; no byte or runtime optimality | Recovery.joint_sufficient_iff; task_transport; recovers_trans |
+| PPT-036 | Protected rule extension has a least model or forbidden derivation | written_and_lean | fixed declared positive-rule system; positive and negative observations explicit | Field.extension_iff_avoids_closure; extension_iff_closed_interval; partial_extension_iff |
+| PPT-037 | Staged closure and persistence under stronger observations | written_and_lean | fixed rules and leaf meaning; inclusion of positive and negative observations | Field.staged_closure; extends_antitone; obstruction_persists |
+| PPT-038 | Universal gluing iff visible rules entail every original rule | written_and_lean | node-covering patches; original local-rule models and restrictions; all matching families | Field.universal_gluing_iff_semantic_cover; filtered_closures_iff_rule_entailment |
+| PPT-039 | Explicit rule transports compose and preserve derivations | written_and_lean | node and rule maps; declared leaf certification premise and conclusion contracts | RuleTransport.comp_assoc; derives_map; model_pullback; obstruction_witness_map |
+| PPT-040 | Noninjective rule transport need not preserve feasibility forward | written_and_lean | two-node ruleless source collapsed to a one-node ruleless target; conflicting observations | ExtensionExamples.source_feasible; collapsed_target_infeasible |
+| PPT-041 | Hashing cannot add tasks and restricted injectivity preserves them | written_and_lean | deterministic maps; injectivity only on attained serializations is a conditional hypothesis | Recovery.hash_task_data_processing; hash_preserves_tasks |
+| PPT-042 | Executable trace replay preserves derivability and composes | written_and_lean | finite list-coded rule fields; causal and strict modes; explicit failures | Trace.replay_sound; replay_extensive; replay_append; accepted_meaning |
+| PPT-043 | Accepted complete traces identify the least seeded model | written_and_lean | strict derivation trace plus final saturation; membership rather than list equality | Trace.closed_iff_model; checkClosure_exact; certificate_decides_feasibility |
+| PPT-044 | Accepted forbidden-node witnesses exist exactly for infeasible protected requests | written_and_lean | finite premise lists; fixed leaves rules and observations; causal replay permits redundancy | Trace.replay_weaken; derivation_has_trace; witness_exists_iff_infeasible |
+| PPT-045 | Typed JSON encoding has a left inverse and is injective | written_and_lean | Lean Json syntax trees; typed problem and result records; validity checked separately | Trace.Wire.problem_roundtrip; certificate_roundtrip; encodeProblem_injective; encodeCertificate_injective |
+| PPT-046 | Accepted JSON records certify the exact decoded protected answer | written_and_lean | decoded problem supplied separately; no universal byte parser or Python adapter theorem | Trace.Wire.encoded_acceptance; acceptance_sound; json_acceptance_sound |
+| PPT-047 | Valid indexed problems derive only bounded node addresses | written_and_lean | natural-number slots; in-range leaves observations and rule rows; only successful lookups certified | Trace.Wire.valid_closure_bounded |
