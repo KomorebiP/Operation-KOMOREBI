@@ -1,0 +1,49 @@
+\chapter{Uniform circuits and the classical cost model}
+\label{ch:complexity-model}
+\index{uniform circuit}
+\index{classical simulation}
+
+\section{Circuit families}
+A quantum decision procedure is a polynomial-time uniform family of circuits $\{C_x\}$, where the input string $x$ determines a circuit on $n=n(|x|)$ qubits with at most $\poly(|x|)$ gates. Let
+\[
+C_x=G_m\cdots G_1.
+\]
+A classical simulation theorem must describe an algorithm receiving the same succinct description of $x$ and the circuit. It is not enough to assume that an exponentially large matrix or a complete orbit list has already been supplied.
+
+\section{The packet access model}
+For each input length, suppose there is a packet projector $P_n$ and a basis
+\[
+\B_n=
+\{\ket{b_1},\ldots,\ket{b_{D_n}}\}
+\]
+of $P_n\Hh_n$. The simulation interface has four routines.
+
+\begin{enumerate}
+\item \textbf{Discovery and indexing.} Produce or index $\B_n$ in polynomial time.
+\item \textbf{Initialization.} Express the initial state in this basis.
+\item \textbf{Gate update.} Apply each restricted gate $P_nG_jP_n$ to the packet coordinates in polynomial time.
+\item \textbf{Measurement.} Compute the final acceptance probability to the needed precision.
+\end{enumerate}
+
+The basis need not be listed explicitly if there is a compact data structure supporting these operations. Stabilizer tableaux and covariance matrices are examples of representations that encode exponentially many computational-basis amplitudes without storing them individually.
+
+\section{Precision and promise gaps}
+A BQP decision problem has an inverse-constant promise gap after standard amplification. A deterministic classical simulator need only estimate the acceptance probability to an additive error smaller than this gap. If the gate entries are algebraic or otherwise polynomial-time computable, ordinary numerical analysis gives polynomial bit complexity for polynomially many updates, provided condition numbers and error amplification are controlled.
+
+\section{State-vector cost inside a packet}
+If the simulator stores $D$ amplitudes and a local gate can be applied in $O(nD)$ arithmetic operations, a depth-$d$ packet simulation has schematic cost
+\[
+C_{\mathrm{packet}}=O(dnD)+C_{\mathrm{compile}}.
+\]
+The corresponding full state-vector path is
+\[
+C_{\mathrm{full}}=O(dn2^n).
+\]
+These formulas are intentionally schematic. Cache behavior, indexing, vectorization, and basis compilation determine actual runtime. The asymptotic distinction is exact when $D$ is polynomial and $2^n$ is exponential.
+
+\section{Reuse and amortization}
+Packet compilation can be expensive. Repeated parameter sweeps, time stepping, variational optimization, and repeated likelihood evaluation benefit from cached basis maps and gate plans. A one-shot simulation can be slower even when each subsequent packet update is much cheaper. The benchmark chapter preserves both one-shot and repeated-application measurements for this reason.
+
+\begin{scopebox}
+A polynomial-dimensional invariant sector does not guarantee a practical speedup at small $n$. It guarantees that the state-vector representation within that sector has polynomial asymptotic size under the stated access assumptions.
+\end{scopebox}

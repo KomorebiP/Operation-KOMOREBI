@@ -1,0 +1,83 @@
+\chapter{Permutation-symmetric circuits and Dicke coordinates}
+\label{ch:permutation-symmetry}
+\index{Dicke state}
+\index{permutation symmetry}
+
+\section{The symmetric subspace}
+Let the symmetric group $S_n$ act by permuting the $n$ tensor factors. The fully symmetric qubit subspace is spanned by the Dicke states
+\[
+\ket{D_n^k}
+=
+\binom nk^{-1/2}
+\sum_{|x|=k}\ket x,
+\qquad
+0\le k\le n.
+\]
+Its dimension is $n+1$.
+
+\begin{derivedbox}
+If the initial state is permutation symmetric with efficiently computable Dicke coordinates, every gate preserves the fully symmetric subspace, the gate matrices in the Dicke basis are computable in polynomial time, and the final measurement is permutation invariant and efficient, then the circuit family lies in $P$.
+\end{derivedbox}
+
+\begin{theorem}[Permutation-symmetric collapse]
+\label{thm:permutation-collapse}
+Under the hypotheses above, an $n$-qubit circuit can be simulated using an $(n+1)$-component classical state vector and polynomial-time updates.
+\end{theorem}
+
+\begin{proof}
+The projector onto the trivial $S_n$ representation has rank $n+1$. The Dicke basis is explicitly indexed by $k=0,\ldots,n$. Apply \cref{thm:poly-packet}.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\textwidth]{dicke_basis.pdf}
+\caption{Computational-basis orbits become Dicke coordinates.}
+\end{figure}
+
+\section{Collective spin operators}
+Define
+\[
+J_a=\frac12\sum_{q=1}^n\sigma_a^{(q)},
+\qquad a\in\{x,y,z\}.
+\]
+The operators $J_a$ preserve the symmetric subspace. We use the computational convention $\sigma_z\ket0=\ket0$ and $\sigma_z\ket1=-\ket1$. Thus $J_z\ket{D_n^k}=(n/2-k)\ket{D_n^k}$. For the following occupation formulas define $J_+=J_x-iJ_y$ and $J_-=J_x+iJ_y$, so that the subscript records increasing or decreasing excitation number rather than magnetic quantum number. Then
+\[
+J_+\ket{D_n^k}
+=
+\sqrt{(n-k)(k+1)}\ket{D_n^{k+1}},
+\]
+\[
+J_-\ket{D_n^k}
+=
+\sqrt{k(n-k+1)}\ket{D_n^{k-1}}.
+\]
+Thus collective rotations and polynomial functions of collective spin admit banded or structured updates on $n+1$ amplitudes.
+
+\section{Symmetric qudits}
+For local dimension $d$, the symmetric subspace has occupation-number basis
+\[
+(n_1,\ldots,n_d),
+\qquad
+n_1+\cdots+n_d=n,
+\]
+and dimension
+\begin{equation}
+\dim\Sym^n(\C^d)
+=
+\binom{n+d-1}{d-1}.
+\label{eq:symmetric-qudit-dim}
+\end{equation}
+For fixed $d$, this is polynomial in $n$.
+
+\begin{corollary}[Fixed-local-dimension symmetric qudits]
+A uniform family of fully symmetric $d$-level circuits is classically polynomial-time simulable for fixed $d$, provided its occupation-basis updates and measurement are polynomial-time computable.
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.80\textwidth]{symmetric_qudit_scaling.pdf}
+\caption{Symmetric qudit sectors remain polynomial for every fixed local dimension.}
+\end{figure}
+
+\section{What full symmetry excludes}
+A generic two-qubit gate acting on one selected pair does not preserve the fully symmetric subspace. Symmetry is preserved by collective gates or by circuits arranged so that the total operation commutes with all permutations. A gatewise packet simulator requires gatewise invariance, or else it must combine several elementary gates into a symmetry-preserving layer and audit intermediate leakage.

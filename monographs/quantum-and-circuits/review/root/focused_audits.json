@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "executor": "coordinator",
+  "method": "self-review re-derivation of reviewer leads, with original source statements inspected; not a blinded independent review",
+  "claims": [
+    {
+      "id": "root-entropy",
+      "original_claim": "If k(n)/n tends to p in (0,1), log2 binom(n,k)=n H2(p)+O(log n).",
+      "verdict": "refuted, with the smallest valid counterexample",
+      "counterexample": "p=1/4 and k=floor(n/4+sqrt(n)). Taylor expansion H2(1/4+u)=H2(1/4)+log2(3)u+O(u^2) gives a difference log2(3)sqrt(n)+O(log n), which is not O(log n).",
+      "safe_statement": "log2 binom(n,k)=n H2(k/n)+O(log n)=n H2(p)+o(n).",
+      "dependencies": [
+        "Stirling expansion for factorials",
+        "Taylor expansion of binary entropy on a compact interval inside (0,1)"
+      ],
+      "scope": "The exponential conclusion survives. Quantitative remainder is repaired."
+    },
+    {
+      "id": "root-retraction",
+      "original_claim": "A set retraction pi:G->H that does not increase generator cost proves intrinsic and ambient lengths agree on H.",
+      "verdict": "correct only after a stated restriction",
+      "counterexample": "G=(Z,+), H=2Z, restricted generators \u00b12, ambient generators \u00b11, \u00b12, \u00b13, all unit cost. Define pi(even)=itself and pi(odd)=0. Every ambient generator maps to a restricted generator or identity. Yet 6 has restricted length 3 and ambient length 2.",
+      "safe_statement": "Require a group homomorphism retraction, or a map on paths whose projected endpoint and total cost have the required properties.",
+      "dependencies": [
+        "Multiplicativity of pi over a word",
+        "Matched cost on shared generators"
+      ],
+      "scope": "General retraction template; not a retraction claimed to exist for the six-row atom."
+    },
+    {
+      "id": "root-cosets",
+      "original_claim": "Left-multiplied prefixes s_t...s_1 are edges in the right-coset Schreier system H\\G.",
+      "verdict": "correct only after a stated restriction",
+      "counterexample": "Left multiplication of Hg is not well-defined for a nonnormal subgroup H: a different representative hg gives shg, which need not belong to Hsg.",
+      "safe_statement": "Use left cosets G/H with the left action gH -> sgH. To identify base-fiber paths with intrinsic words require the base-preserving ambient labels to have the stated restricted realization cost, e.g. S_H=S_G intersect H.",
+      "dependencies": [
+        "Group action on cosets",
+        "Prefix convention",
+        "Generator-cost convention"
+      ],
+      "scope": "Holonomy formulation and excursion notation."
+    },
+    {
+      "id": "root-green",
+      "original_claim": "Nonnegative integer generator costs give a formal Green series whose coefficients count all finite words of each cost.",
+      "verdict": "correct only after a stated restriction",
+      "counterexample": "A zero-cost involution permits infinitely many zero-cost repetitions. The constant coefficient word count diverges and I-A(0) is singular for a permutation action.",
+      "safe_statement": "Require positive integer scalar costs, or use an explicit free-move contraction/other completed semiring with separately proved finiteness.",
+      "dependencies": [
+        "Finite number of words for a fixed total degree",
+        "Formal invertibility of I-A(z)"
+      ],
+      "scope": "Weighted counting series; zero-one BFS metric computations remain valid under their own algorithm."
+    },
+    {
+      "id": "root-directsum",
+      "original_claim": "Separate nonincreasing projections imply direct-sum word length is the sum of factor lengths.",
+      "verdict": "correct only after a stated restriction",
+      "counterexample": "C2 x C2 with all three nonidentity elements available at unit cost projects nonincreasingly to each C2 factor. The target (1,1) has length 1 but both factor lengths are 1.",
+      "safe_statement": "Require an aggregate cost budget across projected words, plus cost-preserving independent lifts for the upper bound.",
+      "dependencies": [
+        "Cost cannot be charged twice to the same large-system gate",
+        "Independent lifts"
+      ],
+      "scope": "Abstract amplification criterion; concrete linear-core lower bounds require their own proof."
+    },
+    {
+      "id": "root-parity",
+      "original_claim": "No-ancilla NOT/CNOT/Toffoli generate every permutation of n-bit strings for all n.",
+      "verdict": "refuted, with the smallest valid counterexample",
+      "counterexample": "At n=4 each gate acts as respectively 8,4,2 disjoint transpositions, hence is even. A single transposition is unreachable.",
+      "safe_statement": "State the generated subgroup, or restrict the full symmetric-group assertion to a validated small width.",
+      "dependencies": [
+        "Parity homomorphism of symmetric group"
+      ],
+      "scope": "Does not change complete three-bit enumeration."
+    },
+    {
+      "id": "root-nonnegative-defect",
+      "original_claim": "Changing nonnegative scalar resource weights can change the sign of restricted-minus-ambient optimum for nested admissible circuits with identical word costs.",
+      "verdict": "refuted, with the smallest valid counterexample",
+      "counterexample": "Set inclusion alone gives min_ambient cost <= min_restricted cost for every fixed weight, so the difference is never negative.",
+      "safe_statement": "Weights may change whether the defect is zero or positive and which realization is optimal.",
+      "dependencies": [
+        "Nested feasible sets",
+        "Same cost functional"
+      ],
+      "scope": "Scalarized optimization only."
+    },
+    {
+      "id": "root-adaptive",
+      "original_claim": "Adaptive discarded-state certificate in chapters/06_dynamic_frames.tex",
+      "verdict": "proved as written",
+      "hypotheses": "Finite-dimensional Hilbert space; same initial unit state and unitary sequence for exact and approximate trajectories; orthogonal projectors chosen adaptively from prior approximate states; no renormalization; measurement effect 0<=M<=I.",
+      "dependency_graph": [
+        "d_t=(I-P_t)G_t phi_(t-1)",
+        "e_t=G_t e_(t-1)+d_t",
+        "e_0=0 and unitary norm preservation imply ||e_m||<=sum ||d_t||",
+        "projective contractions imply ||phi_m||<=1",
+        "quadratic form difference is bounded by (||psi_m||+||phi_m||)||M||||e_m||<=2sum||d_t||"
+      ],
+      "checks": "Re-derived the recurrence and effect bound from the source statement. Rational example recalculated: psi2=(-7,24)/25, phi2=(9,0)/25, error squared=(256+576)/625=832/625; (4/5+12/25)^2=1024/625.",
+      "scope": "Written theorem only. No efficiency, representation-size or normalization guarantee."
+    }
+  ],
+  "reviewed_dimensions": [
+    "logic",
+    "quantifiers",
+    "degenerate cases",
+    "group action side",
+    "cost model",
+    "computational vs formal scope"
+  ],
+  "outside_scope": [
+    "No new novelty verdict",
+    "No universal quantum simulation or general hardness claim",
+    "No full Lean formalization of symmetry/catalytic chapters"
+  ]
+}

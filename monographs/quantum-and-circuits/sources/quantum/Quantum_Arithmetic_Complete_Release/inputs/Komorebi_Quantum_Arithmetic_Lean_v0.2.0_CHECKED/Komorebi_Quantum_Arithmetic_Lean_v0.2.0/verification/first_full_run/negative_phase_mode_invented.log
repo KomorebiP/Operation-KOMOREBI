@@ -1,0 +1,28 @@
+COMMAND ["/mnt/data/lean_runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean", "-j1", "-DwarningAsError=true", "Negative_phase_mode_invented.lean"]
+Negative_phase_mode_invented.lean:225:2: error: Tactic `decide` failed for proposition
+  List.map (dft12 absRamanujanCVector) (List.range 12) =
+    [cRat 16, cRat 1, cRat 4, cRat 0, cRat 4, cRat 0, cRat 16, cRat 0, cRat 4, cRat 0, cRat 4, cRat 0]
+because its `Decidable` instance
+  instDecidableEqList (List.map (dft12 absRamanujanCVector) (List.range 12))
+    [cRat 16, cRat 1, cRat 4, cRat 0, cRat 4, cRat 0, cRat 16, cRat 0, cRat 4, cRat 0, cRat 4, cRat 0]
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match
+    (((fun n => cMul (absRamanujanCVector.getD n cZero) (cPow zeta12Inv (0 * n))) 0).a.add
+        (cSum
+            (List.map (fun n => cMul (absRamanujanCVector.getD n cZero) (cPow zeta12Inv (0 * n)))
+              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])).a).num,
+    ↑16 with
+  | Int.ofNat a, Int.ofNat b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+  | Int.ofNat a, Int.negSucc a_1 => isFalse ⋯
+  | Int.negSucc a, Int.ofNat a_1 => isFalse ⋯
+  | Int.negSucc a, Int.negSucc b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+
+RESULT {"command": ["/mnt/data/lean_runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean", "-j1", "-DwarningAsError=true", "Negative_phase_mode_invented.lean"], "exit_code": 1, "timed_out": false, "seconds": 7.7238234120000016, "log": "negative_phase_mode_invented.log"}

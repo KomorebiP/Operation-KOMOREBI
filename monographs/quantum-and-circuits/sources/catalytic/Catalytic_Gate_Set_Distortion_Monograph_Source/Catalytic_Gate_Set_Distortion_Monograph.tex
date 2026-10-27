@@ -1,0 +1,249 @@
+\documentclass[11pt,openany]{book}
+
+\usepackage[margin=1.02in,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{booktabs,longtable,array,tabularx,multirow}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,capitalize,noabbrev]{cleveref}
+\usepackage[most]{tcolorbox}
+\usepackage{makeidx}
+\usepackage{url}
+\usepackage{bm}
+
+% Suppress intentionally blank verso pages in the digital monograph.
+\let\cleardoublepage\clearpage
+
+\graphicspath{{figures/}}
+\makeindex
+\setlist[itemize]{leftmargin=2em,itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=2.2em,itemsep=2pt,topsep=4pt}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\numberwithin{equation}{chapter}
+\emergencystretch=1.5em
+
+\definecolor{restrictedblue}{HTML}{355C7D}
+\definecolor{ambientrose}{HTML}{C06C84}
+\definecolor{provedgreen}{HTML}{E8F8F5}
+\definecolor{computedblue}{HTML}{EAF2F8}
+\definecolor{skeletonyellow}{HTML}{FEF9E7}
+\definecolor{conjecturered}{HTML}{FDEDEC}
+\definecolor{ink}{HTML}{263238}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=restrictedblue,
+  citecolor=restrictedblue,
+  urlcolor=ambientrose,
+  pdftitle={Catalytic Gate-Set Distortion: Temporary Escape in Quantum and Reversible Circuits},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Symbolic, algebraic, and computational framework for restricted versus ambient gate complexity},
+  pdfkeywords={quantum circuits, CNOT, Clifford, Toffoli, catalytic shortcut, word metric, holonomy, gate-set distortion, exact synthesis}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\thepage\quad\nouppercase{\leftmark}}
+\fancyhead[RO]{\small\nouppercase{\rightmark}\quad\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{principle}[theorem]{Principle}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{protocol}[theorem]{Protocol}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newtcolorbox{provedbox}[1][]{colback=provedgreen,colframe=restrictedblue,title={Proved statement},fonttitle=\bfseries,#1}
+\newtcolorbox{computedbox}[1][]{colback=computedblue,colframe=restrictedblue,title={Exact finite computation},fonttitle=\bfseries,#1}
+\newtcolorbox{skeletonbox}[1][]{colback=skeletonyellow,colframe=orange!60!black,title={Formal research skeleton},fonttitle=\bfseries,#1}
+\newtcolorbox{conjecturebox}[1][]{colback=conjecturered,colframe=ambientrose,title={Conjectural frontier},fonttitle=\bfseries,#1}
+\newtcolorbox{boundarybox}[1][]{colback=gray!7,colframe=gray!65,title={Scope boundary},fonttitle=\bfseries,#1}
+
+\lstdefinestyle{pythonstyle}{
+ language=Python,
+ basicstyle=\ttfamily\small,
+ keywordstyle=\color{restrictedblue}\bfseries,
+ commentstyle=\color{gray!70!black},
+ stringstyle=\color{ambientrose},
+ showstringspaces=false,
+ breaklines=true,
+ frame=single,
+ rulecolor=\color{gray!40},
+ columns=fullflexible
+}
+\lstdefinestyle{cppstyle}{
+ language=C++,
+ basicstyle=\ttfamily\small,
+ keywordstyle=\color{restrictedblue}\bfseries,
+ commentstyle=\color{gray!70!black},
+ stringstyle=\color{ambientrose},
+ showstringspaces=false,
+ breaklines=true,
+ frame=single,
+ rulecolor=\color{gray!40},
+ columns=fullflexible
+}
+
+\newcommand{\F}{\mathbb F}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\Sp}{\operatorname{Sp}}
+\newcommand{\Egrp}{\operatorname{E}}
+\newcommand{\U}{\operatorname{U}}
+\newcommand{\Mat}{\operatorname{Mat}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\codim}{\operatorname{codim}}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\Exp}{\mathbb E}
+\newcommand{\id}{I}
+\newcommand{\ellDown}{\ell_{\downarrow}}
+\newcommand{\ellAll}{\ell_{*}}
+\newcommand{\ellBudget}[1]{\ell_{\le #1}}
+\newcommand{\ellWeight}[1]{\ell_{#1}}
+\newcommand{\tauGate}[3]{\tau_{#1,#2}(#3)}
+\newcommand{\ellExc}[2]{\ell^{(#1,#2)}}
+\newcommand{\ellRes}{\ell_{\mathrm{res}}}
+\newcommand{\ellAmb}{\ell_{\mathrm{amb}}}
+\newcommand{\DeltaDef}{\Delta}
+\newcommand{\Gate}{\mathsf G}
+\newcommand{\Res}{\mathsf R}
+\newcommand{\Amb}{\mathsf A}
+\newcommand{\cost}{\operatorname{cost}}
+\newcommand{\Syn}{\operatorname{Syn}}
+\newcommand{\Cliff}{\operatorname{Cliff}}
+\newcommand{\Pauli}{\mathcal P}
+\newcommand{\CX}{\operatorname{CX}}
+\newcommand{\CZ}{\operatorname{CZ}}
+\newcommand{\SWAP}{\operatorname{SWAP}}
+\newcommand{\SUM}{\operatorname{SUM}}
+\newcommand{\TOF}{\operatorname{TOF}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Aff}{\mathbb A}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\bra}[1]{\langle #1\rvert}
+\newcommand{\braket}[2]{\langle #1\mid #2\rangle}
+
+\title{\Huge Catalytic Gate-Set Distortion\\[0.5em]
+\Large Temporary Escape in Quantum and Reversible Circuits\\[1em]
+\large A Symbolic, Algebraic, and Computational Monograph}
+\author{Komorebi P.}
+\date{August 2026}
+
+\begin{document}
+\frontmatter
+\maketitle
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+This monograph develops a general theory of \emph{catalytic gate-set distortion}: a target belongs to a restricted circuit model, yet a shorter ambient realization temporarily leaves that model, reuses the resulting resource, and returns with the resource fully removed.  The framework covers metric defects, where both realizations exist but have different costs, and existence defects, where the restricted realization is impossible.  It treats scalar and vector resource costs, subgroup and groupoid holonomy, first-arrival Green kernels, algebraic product loci, border effects, tensor regularization, representable matroids, quiver factorizations, and root-system commutators.
+
+The established linear core is reproduced in full.  A universal six-row transvection target has intrinsic length seven and ambient length six over every nonzero commutative ring with identity.  Connected families show that two reverse-directed gates can save linearly many gates, while tensor products yield an additive separation of order $n\log n$.  At fixed dimension, generic targets are rigid and defect-$d$ loci have codimension at least $d$.
+
+The monograph then extends the program to quantum gate logic.  Modular SUM gates inherit the universal atom for every qudit dimension.  New exact finite computations are supplied for a symplectic Clifford model: in the swap-free primitive-count metric the parabolic subgroup is rigid through two qubits and has twenty-four defective targets at three qubits, whereas an entangling-count metric already has four two-qubit defects and $1624$ three-qubit defects.  Adding SWAP as a unit-cost primitive removes all three-qubit total-count defects.  By contrast, exhaustive three-bit enumeration finds no affine target shortened by adding Toffoli gates, under either total-count or entangling-count cost.  These results illustrate that defects depend essentially on the target class, gate alphabet, ancilla convention, and cost vector.
+
+The remaining chapters give rigorous symbolic skeletons for CSS and Clifford synthesis, affine-to-nonlinear reversible logic, Clifford+$T$ and phase-polynomial circuits, Gaussian and fermionic systems, symmetry-preserving circuits, measurement and feedforward, architecture constraints, and finite packet or realization hierarchies.  Proved statements, exact computations, formal skeletons, and conjectures are visibly separated throughout.  The accompanying Python and C++ atlas reproduces the finite experiments and provides reusable search, certificate, and circuit-drawing components.
+
+\chapter*{Reader's guide and status convention}
+\addcontentsline{toc}{chapter}{Reader's guide and status convention}
+The scope is intentionally broad, but the logical status is not blurred.  Green boxes contain symbolic proofs or consequences of stated hypotheses.  Blue boxes contain complete finite computations with an explicit state model and exhaustive search.  Yellow boxes specify a mathematically complete research skeleton whose decisive lower bound or classification remains open.  Red boxes state conjectures or candidate mechanisms.  A statement in a yellow or red box is not promoted to a theorem elsewhere in the text.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.92\textwidth]{status_map.pdf}
+\caption{The status separation used throughout the monograph.}
+\end{figure}
+
+The established unitriangular paper is incorporated as a complete core chapter rather than paraphrased.  Its computer-assisted claims retain their original finite-state completeness conditions.  The new Clifford and affine-versus-Toffoli computations use exact binary symplectic matrices and exact permutations, respectively.  Quantum Latin squares enter only as a contextual example of an existence defect; no circuit theorem is inferred from that example.
+
+\chapter*{Notation and recurring objects}
+\addcontentsline{toc}{chapter}{Notation and recurring objects}
+\begin{longtable}{@{}p{.22\textwidth}p{.70\textwidth}@{}}
+\toprule
+Symbol & Meaning\\
+\midrule
+$H\le G$ & Restricted and ambient groups, when both models are group generated.\\
+$\mathcal S_H\subseteq\mathcal S_G$ & Restricted and ambient elementary gate alphabets.\\
+$\ellRes(U),\ellAmb(U)$ & Minimum restricted and ambient costs of a target $U$.\\
+$\Delta(U)$ & Gate-set defect $\ellRes(U)-\ellAmb(U)$, with $+\infty$ allowed for existence defects.\\
+$D_n$ & Worst additive defect at size $n$.\\
+$R_n$ & Worst multiplicative distortion at size $n$.\\
+$A_S$ & Convolution or adjacency operator associated with a finite generator set $S$.\\
+$\mathcal G_{S,U}(z)$ & Endpoint Green kernel $\langle\delta_U,(I-zA_S)^{-1}\delta_e\rangle$.\\
+$P_n$ & Binary symplectic parabolic subgroup preserving the $Z$ Lagrangian.\\
+$\tau_\otimes$ & Stable tensor-normalized ambient cost.\\
+$\kappa_\otimes$ & Stable catalytic tensor capacity.\\
+\bottomrule
+\end{longtable}
+
+\tableofcontents
+\listoffigures
+\begingroup
+\renewcommand{\addvspace}[1]{}
+\listoftables
+\endgroup
+
+\mainmatter
+
+\part{General theory of temporary escape}
+\input{chapters/01_nested_models}
+\input{chapters/02_holonomy_resources}
+\input{chapters/03_spectral_algebraic}
+\input{chapters/04_matroid_quiver_roots}
+
+\part{Established unitriangular theory}
+\chapter{The complete linear core}\label{ch:linear-core}
+\index{unitriangular group}\index{CNOT circuit}\index{catalytic escape}\index{tensor amplification}
+\begin{boundarybox}
+This chapter incorporates the publication-ready unitriangular manuscript.  Its symbolic theorems, exact finite searches, and asymptotic constructions are the proved foundation for the broader gate-set program.  The notation $\ellDown$ and $\ellAll$ specializes $\ellRes$ and $\ellAmb$.
+\end{boundarybox}
+\input{chapters/core_unitriangular}
+
+\part{Quantum and reversible gate atlas}
+\input{chapters/06_qudit_sum}
+\input{chapters/07_clifford}
+\input{chapters/08_affine_toffoli}
+\input{chapters/09_phase_cliffordt}
+\input{chapters/10_gaussian_matchgate}
+\input{chapters/11_symmetry_measurement_architecture}
+
+\part{Packets, realization, and local-to-global structure}
+\input{chapters/12_packet_realization}
+
+\part{Computational atlas and theorem templates}
+\input{chapters/13_computational_atlas}
+\input{chapters/14_theorem_templates}
+\input{chapters/15_research_program}
+
+\appendix
+\input{chapters/A_gate_matrices}
+\input{chapters/B_census_tables}
+\input{chapters/C_python_api}
+\input{chapters/D_conjecture_ledger}
+
+\backmatter
+\input{chapters/bibliography}
+\printindex
+
+\end{document}

@@ -1,0 +1,73 @@
+\chapter{Exact packet simulation and polynomial collapse}
+\label{ch:exact-simulation}
+
+\section{Gatewise invariance}
+Let $P$ be an orthogonal projector and suppose the initial state obeys $P\ket{\psi_0}=\ket{\psi_0}$. If every gate satisfies
+\begin{equation}
+G_jP=PG_jP,
+\label{eq:gatewise-invariance}
+\end{equation}
+then $G_j$ maps $P\Hh$ into itself. For a general linear map, this equation asserts only invariance of the selected subspace. For the finite-dimensional unitary gates considered here, invariance also implies invariance of the orthogonal complement, so it is equivalent to commutation with $P$.
+
+\begin{theorem}[Invariant-basis simulation]
+\label{thm:invariant-basis}
+Let $U=G_m\cdots G_1$ and assume \cref{eq:gatewise-invariance} for every gate. If $P\ket{\psi_0}=\ket{\psi_0}$, then
+\[
+U\ket{\psi_0}
+=
+(PG_mP)\cdots(PG_1P)\ket{\psi_0}.
+\]
+In any basis of $P\Hh$, the restricted circuit gives exactly the same amplitudes after embedding.
+\end{theorem}
+
+\begin{proof}
+Inductively, if $P\ket{\psi_{j-1}}=\ket{\psi_{j-1}}$, then
+\[
+G_j\ket{\psi_{j-1}}
+=
+G_jP\ket{\psi_{j-1}}
+=
+PG_jP\ket{\psi_{j-1}},
+\]
+so the next state remains in $P\Hh$. Iterating proves the identity.
+\end{proof}
+
+\section{Polynomial packet-simulation theorem}
+\begin{theorem}[Polynomial packet-simulation theorem]
+\label{thm:poly-packet}
+Let $\{C_x\}$ be a polynomial-time uniform family of quantum circuits. Suppose there is an efficiently computable packet representation such that:
+
+\begin{enumerate}
+\item the initial state lies in the represented packet and its coordinates are computable in polynomial time;
+\item every gate preserves the representation;
+\item the representation size is at most $\poly(|x|)$;
+\item each gate update is computable to polynomial precision in polynomial time;
+\item the final acceptance probability is computable from the representation in polynomial time.
+\end{enumerate}
+
+Then the language decided by the circuit family belongs to $P$.
+\end{theorem}
+
+\begin{proof}
+The simulator stores a polynomial-size classical description of the evolving state. It performs polynomially many polynomial-time gate updates and evaluates the final measurement to inverse-polynomial precision. Choosing an error smaller than the amplified promise gap yields a deterministic polynomial-time decision algorithm.
+\end{proof}
+
+\begin{provedbox}
+The theorem is a genuine quantum-to-classical complexity collapse for the declared subclass. It does not assume that a full $2^n$ state vector is ever constructed.
+\end{provedbox}
+
+\section{Dimension-only corollary}
+A convenient special case uses an explicit basis of a packet of dimension $D_n$.
+
+\begin{corollary}[Polynomial-dimensional invariant packet]
+If $D_n\le\poly(n)$, the packet basis is efficiently indexed, every gate has a polynomial-time sparse or structured action in that basis, and the measurement is efficiently evaluable, then the circuit family is classically polynomial-time simulable.
+\end{corollary}
+
+\section{A broader compressed representation}
+The state description need not be a vector of packet amplitudes. Let $\mathcal R_n$ be a polynomial-size classical representation class with an embedding into the packet Hilbert space. If initialization, gate updates, and measurement stay within $\mathcal R_n$ and are efficient, the same proof applies. This observation will later combine packet labels with stabilizer, Gaussian, or tensor-network coordinates.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\textwidth]{compiler_pipeline.pdf}
+\caption{A complete collapse certificate includes discovery, update, leakage, measurement, and complexity information.}
+\end{figure}

@@ -1,0 +1,245 @@
+\chapter{Reusable theorem templates}\label{ch:templates}
+\index{theorem template}
+\index{lower bound}
+\index{dimension per gate}
+\index{tensor amplification}
+
+
+\section{Purpose}
+This chapter collects proof architectures that recur across gate logics.  Each template separates the easy upper-bound identity from the difficult lower-bound obligation.  The templates are not claims that every gate hierarchy satisfies the hypotheses.
+
+\section{Template I: catalytic conjugation}
+Let $H\le G$ have restricted and ambient costs.  Choose $g\in G$ and $h_1,\ldots,h_m\in H$ such that
+\[
+U=g h_m\cdots h_1 g^{-1}\in H.
+\]
+Then
+\[
+\ellAmb(U)
+\le
+2\ellAmb(g)+\sum_i\ellAmb(h_i).
+\]
+
+\begin{theorem}[Catalytic comparison template]
+Assume a restricted lower bound of the form
+\[
+\ellRes(U)
+\ge
+\sum_i r_i-\beta,
+\]
+where $r_i$ is the restricted cost of the $i$th transported obligation and $\beta$ is the maximum certified sharing.  Then
+\[
+\Delta(U)
+\ge
+\sum_i r_i-\beta
+-
+2\ellAmb(g)-\sum_i\ellAmb(h_i).
+\]
+\end{theorem}
+
+The proof is immediate.  The research content lies in bounding $\beta$.
+
+\section{Template II: amortized consumers}
+Suppose a catalyst costs $c_{\mathrm{open}}+c_{\mathrm{close}}$ and each of $m$ consumers saves at least $s_i$ restricted cost.  Then
+\[
+\Delta(U)
+\ge
+\sum_{i=1}^m s_i
+-c_{\mathrm{open}}-c_{\mathrm{close}}-r,
+\]
+where $r$ is repair or interference cost.  A threshold occurs when the right side first becomes positive.
+
+This template explains the three-cross rule in the linear atom and guides searches in phase, Gaussian, and routing models.
+
+\section{Template III: first-arrival Green valuation}
+Let $S$ be a finite symmetric generating set and
+\[
+A_S=\sum_{s\in S}\rho(s).
+\]
+Then
+\[
+\mathcal G_{S,g}(z)
+=\sum_{k\ge0}\langle\delta_g,A_S^k\delta_e\rangle z^k.
+\]
+
+\begin{theorem}[First-arrival template]
+If word multiplicities are nonnegative, then
+\[
+d_S(e,g)=\ord_{z=0}\mathcal G_{S,g}(z).
+\]
+For restricted and ambient sets,
+\[
+\Delta(g)=\ord_0\mathcal G_{S_R,g}-\ord_0\mathcal G_{S_A,g}.
+\]
+\end{theorem}
+
+This template provides an exact spectral restatement.  To turn it into a lower bound without enumeration, one needs control of the endpoint projector coefficients.
+
+\section{Template IV: one-Lipschitz potentials}
+Let $F$ be a function on circuit states satisfying
+\[
+F(I)=0,
+\qquad
+|F(gs)-F(g)|\le c(s)
+\]
+for every allowed restricted gate $s$.  Then
+\[
+\ellRes(U)\ge F(U).
+\]
+
+Potential design steps:
+\begin{enumerate}
+\item choose a decomposition into cuts, packets, or degree layers;
+\item prove a gate changes the total charge by at most its cost;
+\item ensure cancellations cannot create free progress on many layers;
+\item evaluate the target exactly.
+\end{enumerate}
+Static sums of ranks are often too coarse in ambient models; time-expanded or target-relative potentials may be required.
+
+\section{Template V: dimension per gate}
+Let $X$ be an algebraic family of elementary gates whose irreducible components have dimension at most $r$.  Let $V$ be an irreducible target variety of dimension $N$.
+
+\begin{theorem}[Dimension-per-gate template]
+The closure of the locus reachable in $L$ gates has dimension at most $rL$.  If $rL<N$, a generic point of $V$ is not reachable in $L$ gates.
+\end{theorem}
+
+If every target in $V$ has a restricted construction of length at most $N/r$, then generic restricted and ambient lengths coincide at that value, provided the same parameter bound applies to the ambient alphabet.
+
+\section{Template VI: defect codimension}
+Assume every target has restricted cost at most $M$.  A defect of size at least $d$ implies ambient cost at most $M-d$.  If the $(M-d)$-gate ambient locus has dimension at most $N-d$, then
+\[
+\codim\overline{\mathcal D_{\ge d}}\ge d.
+\]
+This is the general mechanism behind algebraic rarity.
+
+\section{Template VII: finite-field sparsity}
+Suppose there are at most $B$ gate directions and at most $q^r$ parameter choices per gate over $\F_q$.  Then the number of words of length at most $L$ is at most
+\[
+\sum_{j=0}^L(Bq^r)^j.
+\]
+If the target family has $q^N$ points and defect $d$ forces $L\le (N-d)/r$, this yields a density bound of order $q^{-d}$ up to a fixed combinatorial factor.
+
+The estimate counts words, not distinct endpoints, and is therefore an upper bound without injectivity assumptions.
+
+\section{Template VIII: block retraction}
+Let a large restricted system contain a smaller one through an embedding $\iota$, and suppose a gate-nonincreasing retraction $\pi$ maps large restricted generators to small restricted generators or the identity.  Then
+\[
+\ell_{\mathrm{large,res}}(\iota U)
+\ge
+\ell_{\mathrm{small,res}}(U).
+\]
+If the ambient embedding preserves gate cost,
+\[
+\Delta_{\mathrm{large}}(\iota U)
+\ge
+\Delta_{\mathrm{small}}(U).
+\]
+This transfers a catalytic atom to architectures containing it as a retract.
+
+\section{Template IX: exact block coupling}
+For block-lower matrices
+\[
+M=
+\begin{pmatrix}
+A&0\\
+XA&D
+\end{pmatrix},
+\]
+projection to diagonal blocks forces the costs of $A$ and $D$, while rank of the cross block forces at least $\rank X$ cross transmissions.  If $X$ is a partial monomial matrix, the lower bound is attained by direct construction.
+
+The same logic extends to trees of blocks whenever every coupling layer has an exact rank certificate and the projections are homomorphisms.
+
+\section{Template X: tensor Leibniz rule}
+Suppose a restricted complexity is tree tight and satisfies
+\[
+\ellRes(A\otimes B)
+=n\ellRes(A)+m\ellRes(B)
+\]
+for $A$ of size $m$ and $B$ of size $n$.  If ambient complexity satisfies the corresponding upper bound, then
+\[
+\Delta(A\otimes B)
+\ge
+n\Delta(A)+m\Delta(B).
+\]
+For tensor powers,
+\[
+\Delta(A^{\otimes r})
+\ge
+r m^{r-1}\Delta(A).
+\]
+This is the standard route from a finite atom to an $N\log N$ defect.
+
+\section{Template XI: stable capacity}
+If
+\[
+a_{r+s}\le m^s a_r+m^r a_s,
+\]
+then
+\[
+b_r=\frac{a_r}{m^{r-1}}
+\]
+is subadditive and
+\[
+\lim_{r\to\infty}\frac{a_r}{r m^{r-1}}
+\]
+exists by Fekete's lemma.  This defines a regularized ambient cost and exposes possible tensor activation.
+
+\section{Template XII: vector costs}
+Let gates carry costs in $\R_+^k$.  A lower bound may be a vector inequality
+\[
+F(U)\preceq\sum_{g\in W}c(g)
+\]
+or a family of scalar inequalities indexed by dual weights $w\in\R_+^k$:
+\[
+w\cdot F(U)\le w\cdot c(W).
+\]
+A complete Pareto proof may require enough supporting weights to separate the restricted and ambient convex lower hulls.
+
+\section{Template XIII: ancilla restoration}
+Let $W$ act on data $D$ and ancilla $A$.  To certify a dirty catalyst, prove the operator identity
+\[
+W=U_D\otimes I_A
+\]
+on the full joint space, not only on one ancilla input.  For a clean catalyst, prove
+\[
+W(\ket\psi\otimes\ket0)
+=(U\ket\psi)\otimes\ket0
+\]
+for all $\ket\psi$.  The distinction changes both the target equations and lower bounds.
+
+\section{Template XIV: symmetry-sector escape}
+Given projectors $P_q$, define off-sector transfer blocks
+\[
+T_{qr}=P_qUP_r.
+\]
+A restricted gate preserves all diagonal sectors.  An ambient gate changes a controlled collection of blocks.  A candidate potential is a weighted sum of ranks or norms of obligations relative to the final target.  The proof must charge both creation and useful consumption of off-sector coherence.
+
+\section{Template XV: exhaustive threshold classification}
+A finite first-threshold theorem should contain:
+\begin{enumerate}
+\item no defects below size $n_0$;
+\item at least one defect at $n_0$;
+\item exact classification of every defect at $n_0$ modulo declared equivalence;
+\item analytic generation of the exceptional motifs;
+\item equality between the analytic set and computational census;
+\item witness and completeness certificates.
+\end{enumerate}
+This is the standard achieved by the six-wire linear core and is the target standard for future gate logics.
+
+\section{A proof-obligation ledger}
+Before promoting a catalytic identity to a theorem, record:
+\begin{longtable}{@{}p{.29\textwidth}p{.62\textwidth}@{}}
+\toprule
+Obligation & Required evidence\\
+\midrule
+Endpoint membership & Symbolic proof that the target lies in the restricted class.\\
+Ambient upper bound & Explicit circuit evaluated exactly.\\
+Restricted lower bound & Potential, rank, algebraic, search, or certificate argument.\\
+Restoration & Identity on all data and work inputs under the chosen convention.\\
+Cost compatibility & Same gate alphabet, weights, and free operations in both metrics.\\
+Minimal threshold & Exhaustive or symbolic exclusion of smaller instances.\\
+Equivalence classification & Orbit or normal-form analysis of all minimal defects.\\
+Amplification & Proof that the lower bound and upper construction compose.\\
+Reproducibility & Source, frozen outputs, and deterministic commands.\\
+\bottomrule
+\end{longtable}

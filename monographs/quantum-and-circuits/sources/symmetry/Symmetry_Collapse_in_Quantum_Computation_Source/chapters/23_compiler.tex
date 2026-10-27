@@ -1,0 +1,58 @@
+\chapter{Architecture of a symmetry-collapse compiler}
+\label{ch:compiler}
+\index{compiler}
+
+\section{The five-stage pipeline}
+A practical compiler must perform more than symbolic block diagonalization.
+
+\begin{enumerate}
+\item Detect exact or approximate symmetries.
+\item Construct an invariant basis, orbit quotient, or compact internal representation.
+\item Compile each gate into that representation.
+\item Track leakage, truncation, and numerical error.
+\item Evaluate the requested measurement and emit a complexity certificate.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\textwidth]{compiler_pipeline.pdf}
+\caption{A symmetry-collapse compiler and its required certificate.}
+\end{figure}
+
+\section{Symmetry detection}
+Detection may use declared conserved quantities, commutators, finite-group generators, graph automorphisms, stabilizer relations, occupation conservation, or numerical approximate symmetries. Exact symbolic detection is preferable when available. Numerical detection must specify tolerances and how they propagate.
+
+\section{Basis construction}
+Examples include:
+
+\begin{itemize}
+\item subset indexing for fixed weight,
+\item occupation vectors for bosons,
+\item Dicke states for full permutation symmetry,
+\item Schur coordinates for broader permutation symmetry,
+\item orbit states for graph walks,
+\item stabilizer tableaux,
+\item fermionic or bosonic covariance matrices,
+\item matrix-product states for bounded entanglement.
+\end{itemize}
+
+The compiler should avoid materializing an exponentially large change-of-basis matrix. It needs direct indexing and update formulas.
+
+\section{Gate plan caching}
+For a repeated circuit family, compile a packet plan containing affected index pairs, sparse matrix blocks, phase tables, and quotient couplings. The plan can be reused across parameter values when the sparsity pattern is fixed.
+
+\section{Fallback and adaptive enlargement}
+If a gate leaks from the current representation, the compiler can reject the reduction, merge packets, add neighboring sectors, or switch internal representations. The choice must preserve a certified error budget.
+
+\section{Output certificate}
+A useful machine-readable certificate should include:
+
+\begin{itemize}
+\item the symmetry or invariant-subspace proof,
+\item active dimensions or representation sizes,
+\item gate update complexity,
+\item leakage or approximation bounds,
+\item measurement complexity,
+\item benchmark and hardware metadata,
+\item the final complexity conclusion and its scope.
+\end{itemize}

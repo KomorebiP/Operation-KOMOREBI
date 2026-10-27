@@ -1,0 +1,38 @@
+\chapter{Stabilizer syndromes and Clifford packets}
+\label{ch:stabilizer}
+\index{stabilizer}
+\index{Clifford circuit}
+
+\section{Syndrome projectors}
+Let $S_1,\ldots,S_m$ be commuting Pauli stabilizers with eigenvalues $\pm1$. A syndrome $s\in\{0,1\}^m$ defines
+\[
+P_s
+=
+\prod_{j=1}^m
+\frac{I+(-1)^{s_j}S_j}{2}.
+\]
+These projectors are orthogonal and sum to the identity. Syndrome measurement selects one packet, while recovery applies a syndrome-dependent transfer toward the code packet.
+
+\section{The syndrome label is not the logical state}
+If the code encodes $k$ logical qubits, a fixed syndrome packet can have dimension $2^k$. The syndrome has only $m$ bits, but arbitrary logical information remains inside the packet. Syndrome packetization therefore does not by itself prove efficient simulation.
+
+\section{Tableau compression}
+Clifford circuits provide a different route. A stabilizer state may occupy exponentially many computational-basis strings, yet it is represented by a polynomial-size stabilizer tableau. Clifford gates update the tableau in polynomial time, and Pauli measurements are efficiently computable. This is an example of the compressed-packet theorem rather than a small-dimensional packet theorem.
+
+\begin{derivedbox}
+Packet labels and internal encoding are complementary. A Clifford circuit restricted to selected syndromes may be simulated by a tableau augmented with the active syndrome graph, even when the packet dimensions are exponential.
+\end{derivedbox}
+
+\section{Non-Clifford residues}
+A few non-Clifford gates can be handled by stabilizer decompositions, quasiprobability expansions, or magic-state rank methods. The cost grows with a non-Clifford resource such as stabilizer rank or robustness. Symmetry packets may reduce the number of relevant branches, but they do not eliminate the intrinsic cost of the non-Clifford residue.
+
+\section{Error-correction interpretation}
+The packet view separates three objects:
+\[
+\text{syndrome label},
+\qquad
+\text{logical state},
+\qquad
+\text{recovery transfer}.
+\]
+This separation is useful for compressed simulation of fault-tolerant protocols, but a full complexity statement must include repeated measurements, classical control, and the size of the logical state.

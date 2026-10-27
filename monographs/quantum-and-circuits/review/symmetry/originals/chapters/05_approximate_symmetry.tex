@@ -1,0 +1,94 @@
+\chapter{Approximate symmetry and leakage certificates}
+\label{ch:approximate-symmetry}
+\index{leakage}
+
+\section{Hamiltonian leakage}
+Exact conservation is not the only useful regime. Let $P$ be an orthogonal projector and let
+\[
+U(t)=e^{-itH}
+\]
+for a bounded self-adjoint Hamiltonian $H$. The leakage operator from the packet is
+\[
+L_P(t)=(I-P)e^{-itH}P.
+\]
+
+\begin{theorem}[Commutator leakage bound]
+\label{thm:commutator-leakage}
+For every real $t$,
+\[
+\|(I-P)e^{-itH}P\|
+\le
+|t|\,\|[H,P]\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Define
+\[
+F(s)=e^{-i(t-s)H}Pe^{-isH}P.
+\]
+Then $F(0)=e^{-itH}P$ and $F(t)=Pe^{-itH}P$. Differentiation gives
+\[
+F'(s)=ie^{-i(t-s)H}[H,P]e^{-isH}P.
+\]
+Therefore
+\[
+(I-P)e^{-itH}P
+=-(I-P)\int_0^tF'(s)\,ds.
+\]
+The unitary factors and projectors have norm at most one, so the integral is bounded by $|t|\|[H,P]\|$.
+\end{proof}
+
+\section{Circuit leakage}
+For a gate $G_j$, define
+\[
+\delta_j=\|(I-P)G_jP\|.
+\]
+Let $V_j=PG_jP$. A telescoping expansion gives
+\[
+G_m\cdots G_1P-V_m\cdots V_1P
+=
+\sum_{k=1}^m
+G_m\cdots G_{k+1}(G_k-V_k)V_{k-1}\cdots V_1P.
+\]
+Taking norms yields the following.
+
+\begin{proposition}[Sum-of-leakages bound]
+\label{prop:sum-leakage}
+For an initial state in $P\Hh$,
+\[
+\|G_m\cdots G_1\ket{\psi_0}
+-
+V_m\cdots V_1\ket{\psi_0}\|
+\le
+\sum_{j=1}^m\delta_j.
+\]
+\end{proposition}
+
+This is conservative because leakage contributions may interfere destructively. Its value is that it is composable and can be checked gate by gate.
+
+\section{Decision-problem consequence}
+If the packet representation is polynomial, the restricted updates are efficient, and
+\[
+\sum_j\delta_j\le\frac1{\poly(n)},
+\]
+then the approximate packet simulator reproduces the final acceptance probability to inverse-polynomial accuracy. After ordinary promise-gap amplification, this suffices for a deterministic polynomial-time decision algorithm.
+
+\section{Adaptive packet enlargement}
+A practical simulator need not fix one packet forever. It can maintain an active set $A_t$ of packets, estimate transfers $P_\alpha G_tP_\beta$, and add a packet when its predicted mass exceeds a tolerance. The proof obligation becomes a global accounting identity:
+\[
+\text{total error}
+\le
+\text{discarded transfer}
++
+\text{numerical error}
++
+\text{measurement approximation}.
+\]
+The key research problem is to retain polynomial active size while certifying the tail.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.76\textwidth]{leakage_bound.pdf}
+\caption{Recorded leakage examples and the analytic commutator certificate.}
+\end{figure}

@@ -1,0 +1,247 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,mathtools,newtxtext,newtxmath}
+\usepackage[letterpaper,left=.91in,right=.91in,top=.82in,bottom=.84in,headheight=15pt,headsep=.23in]{geometry}
+\usepackage{microtype,xcolor,booktabs,longtable,tabularx,array,fancyhdr,titlesec,xurl,fvextra}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref,bookmark}
+\definecolor{ink}{HTML}{183247}\definecolor{accent}{HTML}{39766E}
+\definecolor{muted}{HTML}{596773}\definecolor{pale}{HTML}{EFF4F4}\definecolor{linegray}{HTML}{CCD6DA}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=accent,pdftitle={Komorebi Circuit Obstructions: Lean-Verified Bounds, Block 02},pdfauthor={Komorebi P.},pdfsubject={C01, NCT degree dependency, and C02 lower-bound component; 115 declarations}}
+\urlstyle{tt}\setlength{\parindent}{0pt}\setlength{\parskip}{5.3pt}
+\setlength{\emergencystretch}{2em}\linespread{1.03}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\sffamily\color{muted}KOMOREBI CIRCUIT OBSTRUCTIONS}\fancyhead[R]{\small\sffamily\color{muted}LEAN BLOCK 02}
+\fancyfoot[L]{\footnotesize\sffamily\color{muted}v1.2.0\enspace /\enspace formal scope stated explicitly}\fancyfoot[R]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{.35pt}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{0pt}{12pt}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{9pt}{4pt}
+\newcommand{\pagehead}[2]{\clearpage\section*{#1}\addcontentsline{toc}{section}{#1}{\small\sffamily\color{accent}#2}\par\medskip}
+\newcommand{\B}{\{0,1\}}\newcommand{\TC}{\operatorname{tc}}\newcommand{\Deg}{\operatorname{DegreeLE}}\newcommand{\x}{\oplus}
+\newcommand{\pathref}[1]{{\small\nolinkurl{#1}}}
+\newtcolorbox{statusbox}[1]{colback=pale,colframe=linegray,boxrule=.45pt,arc=0pt,left=9pt,right=9pt,top=7pt,bottom=7pt,title={#1},colbacktitle=ink,coltitle=white,fonttitle=\small\sffamily\bfseries}
+\begin{document}
+\begin{titlepage}\thispagestyle{empty}
+{\small\sffamily\bfseries\color{accent}OPERATION KOMOREBI}\par
+\vspace{.92in}
+{\fontsize{32}{36}\selectfont\sffamily\bfseries\color{ink}Komorebi\\[3pt]Circuit Obstructions}\par
+\vspace{.32in}
+{\fontsize{23}{28}\selectfont\sffamily Lean-Verified Bounds}\par
+\vspace{.16in}{\large\color{muted}Block 02: degree with sharing\\and complete safe-cover restoration}\par
+\vspace{.5in}{\color{accent}\rule{.67\linewidth}{1.3pt}}\par
+\vspace{.24in}{\large Komorebi P.}\par
+{\small\sffamily Local source release v1.2.0\quad\textbullet\quad September 21, 2026}\par
+\vfill
+\begin{statusbox}{115 checked declarations, including 75 added in this block}
+The cumulative formalization covers C01, the maintained NCT degree dependency, and the lower-bound component of C02. C02's evaluation-span dual and C03--C08 are not formalized by this block.
+\end{statusbox}
+{\small Definitions, proof arguments, exact declaration register, source locations, axiom dependencies, and verification boundaries. No resolution of P versus NP or independent mathematical review is claimed.}
+\end{titlepage}
+\setcounter{page}{2}
+\section*{The verified result}
+\addcontentsline{toc}{section}{The verified result}
+Let $c$ be a finite legal classical NOT/CNOT/Toffoli circuit. For $n$ input bits and $a$ zero-initialized ancillas, assume for every $x$ and both initial target values $b$ that
+\[
+\operatorname{run}(c)(x,0^a,b)=(x,0^a,b\x f(x)).
+\]
+Write $T=\TC(c)$ for its number of Toffoli gates. The new joint endpoint is
+\begin{statusbox}{Degree and complete-cover bound}
+\[
+\boxed{\Deg(T+1,f)\quad\text{and}\quad 2\beta^*(f)\le T+3.}
+\]
+\pathref{CircuitObstructions.restored_degree_and_cover_bound}
+\end{statusbox}
+The first conclusion is an explicit certificate that $f$ has a Boolean polynomial representation of degree at most $T+1$. The second is the affine-optimized complete safe-cover lower bound, equivalently $T\ge\max\{0,2\beta^*(f)-3\}$.
+
+This applies even when the output controls intermediate gates, the inputs are modified temporarily, and workspace is dirty internally. It requires restoration only at the boundary. It makes no restriction to clean intermediate representations.
+
+\subsection*{What changed}
+Block 01 proved that discrepancies between a prefix and an inverse suffix form a complete safe cover. Block 02 supplies the missing degree dependency, proves that the cover parameters exist, constructs the balanced cut, and implements affine-output adjustment using legal zero-Toffoli circuits.
+
+\subsection*{What did not change}
+The mathematical scope remains the eight maintained claim groups. C02 is still partial as a group: its dual-certificate theorem is not included. The formal source also proves
+\[
+\beta(f)\le\beta^*(f)\le n.
+\]
+This ceiling prevents the degree parameter alone from producing a superpolynomial lower bound. No new best-known bound or publication-novelty claim is made.
+
+\subsection*{Where the proof lives}
+Every proof term is in \pathref{formalization/lean/CircuitObstructions/}. The source inventory, fresh elaboration log, and axiom report identify the exact statements. The register in this document lists all 115 maintained theorem declarations, including the 40 inherited declarations. Imported standard-library theorems are not counted.
+
+\pagehead{Model and definitions}{THE ASSUMPTIONS ARE PART OF THE THEOREM}
+A register state is a Boolean function on a finite wire set. The canonical set has $n$ input wires, $a$ ancillas, and one target. A NOT complements a bit. A CNOT adds one control to a distinct target. A Toffoli adds the product of two distinct controls to a third distinct wire. Gate constructors carry the required inequalities.
+
+All arithmetic is over $\mathbb F_2$, implemented using Boolean XOR and AND. Each gate is its own inverse. Circuit reversal, restoration, and every cut are inherited from the unchanged Block 01 source.
+
+\begin{tabularx}{\linewidth}{@{}p{1.25in}X@{}}\toprule
+Quantity & Meaning in the formal source\\\midrule
+$T$ & Toffoli count. NOT and CNOT have cost zero in this count only.\\
+$\Deg(d,f)$ & $f$ is an XOR of finitely many monomials, each containing at most $d$ variable occurrences.\\
+Safe detector & A Boolean $h$ with $h(x)=1\Rightarrow f(x)=1$.\\
+Complete coverage & Every positive $v$ has a safe detector with $h(v)=1$.\\
+$\beta(f)$ & Least degree bound sufficient for complete safe coverage.\\
+$\beta^*(f)$ & Least upper bound on $\beta(f\x g)$ over all degree-one $g$.\\\bottomrule
+\end{tabularx}
+
+\subsection*{Polynomial certificates are not postulated degree oracles}
+The inductive certificate has three constructors: zero, a bounded-length monomial, and XOR of two certified functions. It is tied to the concrete evaluator
+\[
+\operatorname{polyEval}(p,x)=\bigoplus_{L\in p}\prod_{i\in L}x_i
+\]
+by a proved equivalence. A certificate yields an explicit finite monomial list, and such a list yields a certificate.
+
+Repeated variables are allowed in the list. Boolean idempotence reduces their repetitions without increasing degree. This is the representation form of the usual Boolean degree bound. The formal source does not separately implement canonical ANF normalization or claim that extracting every homogeneous grade is free.
+
+\subsection*{Boundary of the model}
+There are no quantum phases, measurements, or discarded work registers. Inputs and zero ancillas restore for every logical input and both target values. Standard classical choice defines least semantic bounds, but supplies no polynomial-time procedure for finding their witnesses.
+
+\pagehead{Why sharing does not break the degree bound}{A STRONGER INVARIANT THAN SINGLE-REGISTER DEGREE}
+For a current state $s(x)$ after $t$ Toffolis, the invariant is
+\[
+\forall L,\qquad
+\Deg\!\left(t+|L|,\;x\mapsto\prod_{i\in L}s_i(x)\right).
+\]
+$L$ may be any finite list, including repeated registers. Initially each coordinate is a variable or a constant, so a product of $r$ coordinates has degree at most $r$.
+
+Suppose the next gate toggles target $u$ by the product of a control list of length $q$. A product that omits $u$ is unchanged. If $u$ occurs, idempotence removes all its repetitions. With $R$ the remaining list, the updated product is
+\[
+\left(s_u\prod_{i\in R}s_i\right)
+\x
+\left(\prod_{j\in\mathrm{controls}}s_j\prod_{i\in R}s_i\right).
+\]
+The two old-state products have certified degrees at most
+\[
+t+1+|R|\qquad\text{and}\qquad t+q+|R|.
+\]
+Since $|R|+1\le |L|$, the invariant's budget rises by at most $\max\{q-1,0\}$: zero for NOT and CNOT, one for Toffoli.
+
+Induction along the actual gate list gives
+\[
+\Deg\!\left(T+r,\;x\mapsto\prod_{i\in L}\operatorname{run}(c)(s(x))_i\right),
+\qquad r=|L|.
+\]
+With $r=1$, every register has degree at most $T+1$.
+
+\begin{statusbox}{Why this handles a DAG rather than just a formula}
+The proof never unfolds a reused intermediate value into duplicated computation. It estimates arbitrary products of the current registers in one shared state. The budget increases once per actual Toffoli, including when its controls share earlier work or its target participates in feedback.
+\end{statusbox}
+
+The statements are \pathref{workspaceDegree_run} and \pathref{canonical_run_coordinate_degree}. This formalizes the maintained NCT specialization of F3. A separate generic XOR--AND circuit syntax and simulation theorem are not added here.
+
+\pagehead{From the cut to a numerical lower bound}{EXISTENCE, BALANCE, AND COMPLETE COVERAGE}
+Write $c=p\mathbin{++}q$. At this cut, Block 01 defines
+\[
+H_i(x)=\operatorname{run}(p)(x,0^a,0)_i\x
+       \operatorname{run}(q^{-1})(x,0^a,0)_i
+\]
+and proves
+\[
+H_i\le f,\qquad f(x)=1\iff\exists i\;H_i(x)=1.
+\]
+Reversal does not change Toffoli count. The new coordinate degree theorem therefore gives
+\[
+\deg(H_i)\le\max\{\TC(p),\TC(q)\}+1.
+\]
+
+\subsection*{The least safe degree exists}
+For a positive $v$, take the point indicator
+\[
+\delta_v(x)=\prod_{i=1}^{n}
+\begin{cases}
+x_i,&v_i=1,\\
+1+x_i,&v_i=0.
+\end{cases}
+\]
+It is safe, detects $v$, and has a degree-$n$ certificate. Hence complete safe coverage exists at degree $n$ for every function. Strong induction proves the existence of a least admissible natural degree. The definition \pathref{beta} chooses this bound and its specification and minimality are proved.
+
+\subsection*{The balanced cut is constructed}
+Because each gate has cost zero or one, a prefix can realize every Toffoli count from zero to $T$. The source proves this fact and extracts a cut with
+\[
+\max\{\TC(p),\TC(q)\}\le\left\lceil T/2\right\rceil.
+\]
+The complete safe cut cover then proves
+\[
+\beta(f)\le\left\lceil T/2\right\rceil+1,
+\qquad\boxed{2\beta(f)\le T+3.}
+\]
+Natural-number arithmetic retains the floor/ceiling and small-$T$ cases. No balance assumption is added to the final theorem.
+
+\pagehead{Affine output adjustment is an actual circuit}{THE OPTIMIZATION DOES NOT ASSUME A CLEAN NORMAL FORM}
+For every degree-one Boolean function $g$, the source constructs a restored implementation with zero Toffolis.
+
+A constant is computed by the empty circuit or target NOT. An input variable uses a legal input-to-target CNOT. XOR is implemented by concatenating restored circuits. Induction on a degree-one certificate gives the general construction.
+
+If $c$ restores $f$ and $d$ restores $g$, their concatenation restores $f\x g$. For the affine implementation,
+\[
+\TC(c\mathbin{++}d)=\TC(c).
+\]
+The unoptimized bound applies to every affine $g$ at the same $T$. Define $\beta^*(f)$ as the least upper bound of those $\beta(f\x g)$ values. Existence follows from their common upper bound $n$.
+
+Therefore
+\[
+\boxed{2\beta^*(f)\le T+3,\qquad \beta(f)\le\beta^*(f)\le n.}
+\]
+The final output at initial target zero is exactly $f$, so the forward coordinate theorem also gives $\Deg(T+1,f)$. The joint endpoint combines these two proved conclusions.
+
+\subsection*{Nonvacuity: two-input AND}
+Every degree-one function on two inputs has zero XOR over the four corners of the input square. AND has corner XOR one. Thus AND has no degree-one certificate.
+
+A degree-one complete safe cover for AND would include a detector of its sole accepting input. Safety forces that detector to be AND itself, contradicting the corner-parity lemma. The degree-two monomial is a valid detector. The source proves
+\[
+\beta(\mathrm{AND}_2)=\beta^*(\mathrm{AND}_2)=2
+\]
+and therefore every restored implementation of AND$_2$ uses at least one Toffoli.
+
+This is a theorem about all implementations in the model, not an exhaustive search through circuits. It does not formalize the general $k$-input monomial optimum.
+
+\pagehead{Verification and proof boundaries}{UNIVERSAL PROOFS AND FINITE CONTROLS REMAIN DISTINCT}
+\begin{tabularx}{\linewidth}{@{}p{1.9in}rX@{}}\toprule
+Module & Count & Formal role\\\midrule
+Gates & 16 & Inherited legal primitives and reversal\\
+CutComparison & 13 & Inherited complete cut cover\\
+Examples & 11 & Inherited dirty and output-active controls\\
+Degree & 19 & Polynomial certificates and closure\\
+MultiplicativeDegree & 12 & Degree invariant with sharing\\
+SafeDegree & 22 & Least complete degree and balanced cuts\\
+AffineOutput & 14 & Affine compiler and optimized bound\\
+DegreeChecks & 8 & AND2 exclusion and exact parameters\\\midrule
+Total & 115 & 75 new declarations, 40 inherited\\\bottomrule
+\end{tabularx}
+
+The recorded audit builds all source in a fresh project directory, treats warnings as errors, prints each declaration's type and axiom dependencies, and replays all eight modules through the bundled checker. Eight deliberately invalid proof controls are required to be rejected.
+
+Only \texttt{propext}, \texttt{Classical.choice}, and \texttt{Quot.sound} occur in the audited dependencies. No custom axiom, admitted proof, native-decision oracle, or kernel bypass is used. Lean 4.34.0-rc2 and its bundled Std are pinned. This checker shares the toolchain's trust boundary and is not an independent implementation or human review.
+
+The separate Python checker uses exact truth tables and integer M\"obius transforms. It covers all 278 functions on zero through three inputs; 2,698 legal circuit words in specified width/length ranges; 28,088 register-product checks; and 251 restored words. The universal theorems do not follow by extrapolation from those finite tests.
+
+\subsection*{What remains outside the formal block}
+C02's evaluation-span dual, affine input invariance, and general monotone ideal are not formalized. C03--C08 retain their previous written and finite-check status. The original classical/reversible circuit-size comparison and general exact monomial-cost theorem are not newly formalized. The active claim register controls interpretation.
+
+\pagehead{Reproduction, provenance, and the declaration register}{A REPLAYABLE LOCAL RELEASE}
+From the repository root, with the pinned toolchain installed:
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+python scripts/verify_lean.py --toolchain /path/to/toolchain
+python scripts/verify.py --full
+\end{Verbatim}
+The first command performs the fresh formal audit. The second reproduces the seven original frozen scientific outputs and the new independent degree controls. No toolchain or package downloads occur in these commands. Only Linux x86\_64 execution is recorded.
+
+\subsection*{Provenance and development failures}
+The parent release is v1.1.0, commit
+\pathref{ab5010d0eba21f3711e00ed1eaa3268dee9ee56b}.
+The original gate, cut, and example modules remain byte-identical. Their 40 declarations are rechecked along with the new files; predecessor logs are not substituted for the new build.
+
+A download probe failed, and a rejected streaming launch did not start a compiler. The core toolchain was recovered from a CRC-checked first portable archive part. Its executable hashes match the predecessor. The partial XZ/TAR stream ended at the multipart boundary, so no complete upstream-distribution integrity claim is made.
+
+Early Lean attempts used unavailable library names or incomplete unfolding and encountered strict-warning failures. These were corrected without admitted proofs. A draft README link to the not-yet-created PDF was also caught. The retained development log distinguishes those failures from the expected rejection controls and from the final passing audit.
+
+\subsection*{How to read the register}
+All 115 entries below come from the fresh elaboration log and the checked source inventory. Each entry identifies its source file, line, and axiom dependencies. The 40 inherited entries remain included so the reference is cumulative. Definitions are explained above and remain in the source; imported library declarations are not listed as project results.
+
+For monospace readability, logical glyphs in printed signatures are rendered in ASCII: \texttt{forall}, \texttt{exists}, \texttt{->}, \texttt{<->}, \texttt{<=}, \texttt{!=}, and \texttt{/\textbackslash}. Lean's \texttt{\string^\string^} denotes Boolean XOR. These are editorial glyph substitutions, not a claim that the printed text is standalone compilable source. Unmodified UTF-8 signatures are retained in \pathref{signatures_utf8.txt} and \pathref{declaration_catalog.json}.
+
+The Lean files and elaborated types are authoritative if any explanatory rendering differs. The original literature references remain in \pathref{docs/REFERENCES.md}; this supplement makes no novelty claim.
+
+\input{register.tex}
+\end{document}

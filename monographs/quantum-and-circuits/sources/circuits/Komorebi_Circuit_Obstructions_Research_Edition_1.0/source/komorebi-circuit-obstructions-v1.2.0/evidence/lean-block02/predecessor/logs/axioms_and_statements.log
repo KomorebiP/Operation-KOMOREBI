@@ -1,0 +1,191 @@
+CircuitObstructions.Boundary.target_separated {X W : Type} (e : CircuitObstructions.Boundary X W) (x : X) :
+  e.encode x false ≠ e.encode x true
+'CircuitObstructions.Boundary.target_separated' depends on axioms: [propext]
+CircuitObstructions.canonical_input (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin n) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inl i) = x i
+'CircuitObstructions.canonical_input' does not depend on any axioms
+CircuitObstructions.canonical_ancilla (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin a) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inl i)) = false
+'CircuitObstructions.canonical_ancilla' does not depend on any axioms
+CircuitObstructions.canonical_target (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inr ())) = b
+'CircuitObstructions.canonical_target' does not depend on any axioms
+CircuitObstructions.inverse_suffix_boundary {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (b : Bool) :
+  CircuitObstructions.run (List.reverse q) (e.encode x b) = CircuitObstructions.run p (e.encode x (b ^^ f x))
+'CircuitObstructions.inverse_suffix_boundary' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.direction_nonzero {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p : CircuitObstructions.Circuit W) (x : X) : ∃ i, CircuitObstructions.direction e p x i = true
+'CircuitObstructions.direction_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+CircuitObstructions.cut_transport_identity {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = (f x && CircuitObstructions.direction e p x i)
+'CircuitObstructions.cut_transport_identity' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.cut_packet_safe {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = true → f x = true
+'CircuitObstructions.cut_packet_safe' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.cut_cover_complete {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+'CircuitObstructions.cut_cover_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+CircuitObstructions.complete_safe_cover {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) :
+  (∀ (x : X) (i : W), CircuitObstructions.packet e p q x i = true → f x = true) ∧
+    ∀ (x : X), f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+'CircuitObstructions.complete_safe_cover' depends on axioms: [propext, Classical.choice, Quot.sound]
+CircuitObstructions.cut_states_equal_iff_reject {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  CircuitObstructions.run p (e.encode x false) = CircuitObstructions.run (List.reverse q) (e.encode x false) ↔
+    f x = false
+'CircuitObstructions.cut_states_equal_iff_reject' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.every_index_cut {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e c f) (k : Nat) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e (List.take k c) (List.drop k c) x i = true
+'CircuitObstructions.every_index_cut' depends on axioms: [propext, Classical.choice, Quot.sound]
+CircuitObstructions.canonical_complete_safe_cover (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : (Fin n → Bool) → Bool)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) (k : Nat) :
+  (∀ (x : Fin n → Bool) (i : CircuitObstructions.CanonicalWire n a),
+      CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+          true →
+        f x = true) ∧
+    ∀ (x : Fin n → Bool),
+      f x = true ↔
+        ∃ i,
+          CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+            true
+'CircuitObstructions.canonical_complete_safe_cover' depends on axioms: [propext, Classical.choice, Quot.sound]
+CircuitObstructions.Examples.andOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.andBoundary CircuitObstructions.Examples.andOracle fun x =>
+    x.fst && x.snd
+'CircuitObstructions.Examples.andOracle_restores' depends on axioms: [Quot.sound]
+CircuitObstructions.Examples.andOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.andOracle = 2
+'CircuitObstructions.Examples.andOracle_toffoli_count' depends on axioms: [propext]
+CircuitObstructions.Examples.and_scratch_can_be_dirty :
+  CircuitObstructions.run CircuitObstructions.Examples.andCompute
+      (CircuitObstructions.Examples.andBoundary.encode (true, true) false)
+      CircuitObstructions.Examples.WorkWire.scratch =
+    true
+'CircuitObstructions.Examples.and_scratch_can_be_dirty' does not depend on any axioms
+CircuitObstructions.Examples.andOracle_every_cut (k : Nat) (x : Bool × Bool) :
+  (x.fst && x.snd) = true ↔
+    ∃ i,
+      CircuitObstructions.packet CircuitObstructions.Examples.andBoundary
+          (List.take k CircuitObstructions.Examples.andOracle) (List.drop k CircuitObstructions.Examples.andOracle) x
+          i =
+        true
+'CircuitObstructions.Examples.andOracle_every_cut' depends on axioms: [propext, Classical.choice, Quot.sound]
+CircuitObstructions.Examples.outputActiveOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.outputActiveOracle
+    fun x => true
+'CircuitObstructions.Examples.outputActiveOracle_restores' depends on axioms: [Quot.sound]
+CircuitObstructions.Examples.outputActiveOracle_length : List.length CircuitObstructions.Examples.outputActiveOracle = 7
+'CircuitObstructions.Examples.outputActiveOracle_length' does not depend on any axioms
+CircuitObstructions.Examples.outputActiveOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.outputActiveOracle = 0
+'CircuitObstructions.Examples.outputActiveOracle_toffoli_count' depends on axioms: [propext]
+CircuitObstructions.Examples.moved_discrepancy_data (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.data =
+    true
+'CircuitObstructions.Examples.moved_discrepancy_data' does not depend on any axioms
+CircuitObstructions.Examples.moved_discrepancy_target (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+    false
+'CircuitObstructions.Examples.moved_discrepancy_target' does not depend on any axioms
+CircuitObstructions.Examples.target_only_reconstruction_is_false :
+  ¬∀ (x : Bool),
+      CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+          CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+        true
+'CircuitObstructions.Examples.target_only_reconstruction_is_false' does not depend on any axioms
+CircuitObstructions.Examples.degenerate_encoding_control :
+  have bad := fun x x_1 => false;
+  (∀ (y : Bool), CircuitObstructions.run [] (bad y) = bad (y ^^ true)) ∧
+    ∀ (i : CircuitObstructions.Examples.SwapWire), (bad false i ^^ bad false i) = false
+'CircuitObstructions.Examples.degenerate_encoding_control' does not depend on any axioms
+CircuitObstructions.write_same {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t : W) (b : Bool) :
+  CircuitObstructions.write s t b t = b
+'CircuitObstructions.write_same' depends on axioms: [propext]
+CircuitObstructions.write_other {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t i : W) (b : Bool)
+  (h : i ≠ t) : CircuitObstructions.write s t b i = s i
+'CircuitObstructions.write_other' depends on axioms: [propext]
+CircuitObstructions.xor_cancel_right (a b : Bool) : (a ^^ b ^^ b) = a
+'CircuitObstructions.xor_cancel_right' does not depend on any axioms
+CircuitObstructions.xor_cancel_left (a b : Bool) : (a ^^ (a ^^ b)) = b
+'CircuitObstructions.xor_cancel_left' does not depend on any axioms
+CircuitObstructions.xor_commute (a b : Bool) : (a ^^ b) = (b ^^ a)
+'CircuitObstructions.xor_commute' does not depend on any axioms
+CircuitObstructions.xor_true_iff_ne (a b : Bool) : (a ^^ b) = true ↔ a ≠ b
+'CircuitObstructions.xor_true_iff_ne' does not depend on any axioms
+CircuitObstructions.Gate.eval_involutive {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (s : CircuitObstructions.State W) : g.eval (g.eval s) = s
+'CircuitObstructions.Gate.eval_involutive' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.Gate.eval_injective {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  {s t : CircuitObstructions.State W} (h : g.eval s = g.eval t) : s = t
+'CircuitObstructions.Gate.eval_injective' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.run_nil {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) :
+  CircuitObstructions.run [] s = s
+'CircuitObstructions.run_nil' does not depend on any axioms
+CircuitObstructions.run_cons {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (gs : CircuitObstructions.Circuit W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (g :: gs) s = CircuitObstructions.run gs (g.eval s)
+'CircuitObstructions.run_cons' does not depend on any axioms
+CircuitObstructions.run_append {W : Type} [DecidableEq W] (p q : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (p ++ q) s = CircuitObstructions.run q (CircuitObstructions.run p s)
+'CircuitObstructions.run_append' does not depend on any axioms
+CircuitObstructions.run_reverse_run {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run (List.reverse c) (CircuitObstructions.run c s) = s
+'CircuitObstructions.run_reverse_run' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.run_run_reverse {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run c (CircuitObstructions.run (List.reverse c) s) = s
+'CircuitObstructions.run_run_reverse' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.run_injective {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  {s t : CircuitObstructions.State W} (h : CircuitObstructions.run c s = CircuitObstructions.run c t) : s = t
+'CircuitObstructions.run_injective' depends on axioms: [propext, Quot.sound]
+CircuitObstructions.toffoliCount_append {W : Type} (p q : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (p ++ q) = CircuitObstructions.toffoliCount p + CircuitObstructions.toffoliCount q
+'CircuitObstructions.toffoliCount_append' depends on axioms: [propext]
+CircuitObstructions.toffoliCount_reverse {W : Type} (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (List.reverse c) = CircuitObstructions.toffoliCount c
+'CircuitObstructions.toffoliCount_reverse' depends on axioms: [propext]
+def CircuitObstructions.Restores : {X W : Type} →
+  [DecidableEq W] → CircuitObstructions.Boundary X W → CircuitObstructions.Circuit W → (X → Bool) → Prop :=
+fun {X W} [DecidableEq W] e c f =>
+  ∀ (x : X) (b : Bool), CircuitObstructions.run c (e.encode x b) = e.encode x (b ^^ f x)
+theorem CircuitObstructions.cut_transport_identity : ∀ {X W : Type} [inst : DecidableEq W]
+  (e : CircuitObstructions.Boundary X W) (p q : CircuitObstructions.Circuit W) (f : X → Bool),
+  CircuitObstructions.Restores e (p ++ q) f →
+    ∀ (x : X) (i : W), CircuitObstructions.packet e p q x i = (f x && CircuitObstructions.direction e p x i) :=
+⋯
+theorem CircuitObstructions.complete_safe_cover : ∀ {X W : Type} [inst : DecidableEq W]
+  (e : CircuitObstructions.Boundary X W) (p q : CircuitObstructions.Circuit W) (f : X → Bool),
+  CircuitObstructions.Restores e (p ++ q) f →
+    (∀ (x : X) (i : W), CircuitObstructions.packet e p q x i = true → f x = true) ∧
+      ∀ (x : X), f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true :=
+⋯
+theorem CircuitObstructions.canonical_complete_safe_cover : ∀ (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : (Fin n → Bool) → Bool),
+  CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f →
+    ∀ (k : Nat),
+      (∀ (x : Fin n → Bool) (i : CircuitObstructions.CanonicalWire n a),
+          CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+              true →
+            f x = true) ∧
+        ∀ (x : Fin n → Bool),
+          f x = true ↔
+            ∃ i,
+              CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x
+                  i =
+                true :=
+⋯
+theorem CircuitObstructions.every_index_cut : ∀ {X W : Type} [inst : DecidableEq W]
+  (e : CircuitObstructions.Boundary X W) (c : CircuitObstructions.Circuit W) (f : X → Bool),
+  CircuitObstructions.Restores e c f →
+    ∀ (k : Nat) (x : X), f x = true ↔ ∃ i, CircuitObstructions.packet e (List.take k c) (List.drop k c) x i = true :=
+⋯

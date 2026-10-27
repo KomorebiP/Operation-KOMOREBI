@@ -1,0 +1,248 @@
+import CircuitObstructions
+set_option pp.universes false
+set_option pp.proofs false
+#check CircuitObstructions.restores_append
+#print axioms CircuitObstructions.restores_append
+#check CircuitObstructions.canonical_target_not
+#print axioms CircuitObstructions.canonical_target_not
+#check CircuitObstructions.canonical_input_to_target
+#print axioms CircuitObstructions.canonical_input_to_target
+#check CircuitObstructions.affine_restored_exists
+#print axioms CircuitObstructions.affine_restored_exists
+#check CircuitObstructions.betaStar_exists
+#print axioms CircuitObstructions.betaStar_exists
+#check CircuitObstructions.betaStar_spec
+#print axioms CircuitObstructions.betaStar_spec
+#check CircuitObstructions.betaStar_le_of_bound
+#print axioms CircuitObstructions.betaStar_le_of_bound
+#check CircuitObstructions.betaStar_le_inputs
+#print axioms CircuitObstructions.betaStar_le_inputs
+#check CircuitObstructions.beta_le_betaStar
+#print axioms CircuitObstructions.beta_le_betaStar
+#check CircuitObstructions.betaStar_le_half_toffoliCount
+#print axioms CircuitObstructions.betaStar_le_half_toffoliCount
+#check CircuitObstructions.betaStar_restoration_bound
+#print axioms CircuitObstructions.betaStar_restoration_bound
+#check CircuitObstructions.toffoliCount_ge_two_betaStar_sub_three
+#print axioms CircuitObstructions.toffoliCount_ge_two_betaStar_sub_three
+#check CircuitObstructions.canonical_restored_output_degree
+#print axioms CircuitObstructions.canonical_restored_output_degree
+#check CircuitObstructions.restored_degree_and_cover_bound
+#print axioms CircuitObstructions.restored_degree_and_cover_bound
+#check CircuitObstructions.Boundary.target_separated
+#print axioms CircuitObstructions.Boundary.target_separated
+#check CircuitObstructions.canonical_input
+#print axioms CircuitObstructions.canonical_input
+#check CircuitObstructions.canonical_ancilla
+#print axioms CircuitObstructions.canonical_ancilla
+#check CircuitObstructions.canonical_target
+#print axioms CircuitObstructions.canonical_target
+#check CircuitObstructions.inverse_suffix_boundary
+#print axioms CircuitObstructions.inverse_suffix_boundary
+#check CircuitObstructions.direction_nonzero
+#print axioms CircuitObstructions.direction_nonzero
+#check CircuitObstructions.cut_transport_identity
+#print axioms CircuitObstructions.cut_transport_identity
+#check CircuitObstructions.cut_packet_safe
+#print axioms CircuitObstructions.cut_packet_safe
+#check CircuitObstructions.cut_cover_complete
+#print axioms CircuitObstructions.cut_cover_complete
+#check CircuitObstructions.complete_safe_cover
+#print axioms CircuitObstructions.complete_safe_cover
+#check CircuitObstructions.cut_states_equal_iff_reject
+#print axioms CircuitObstructions.cut_states_equal_iff_reject
+#check CircuitObstructions.every_index_cut
+#print axioms CircuitObstructions.every_index_cut
+#check CircuitObstructions.canonical_complete_safe_cover
+#print axioms CircuitObstructions.canonical_complete_safe_cover
+#check CircuitObstructions.bprod_nil
+#print axioms CircuitObstructions.bprod_nil
+#check CircuitObstructions.bprod_cons
+#print axioms CircuitObstructions.bprod_cons
+#check CircuitObstructions.bprod_append
+#print axioms CircuitObstructions.bprod_append
+#check CircuitObstructions.xor_and_right
+#print axioms CircuitObstructions.xor_and_right
+#check CircuitObstructions.and_xor_right
+#print axioms CircuitObstructions.and_xor_right
+#check CircuitObstructions.not_as_xor_one
+#print axioms CircuitObstructions.not_as_xor_one
+#check CircuitObstructions.DegreeLE.mono
+#print axioms CircuitObstructions.DegreeLE.mono
+#check CircuitObstructions.DegreeLE.one
+#print axioms CircuitObstructions.DegreeLE.one
+#check CircuitObstructions.DegreeLE.constant
+#print axioms CircuitObstructions.DegreeLE.constant
+#check CircuitObstructions.DegreeLE.variable
+#print axioms CircuitObstructions.DegreeLE.variable
+#check CircuitObstructions.DegreeLE.xor
+#print axioms CircuitObstructions.DegreeLE.xor
+#check CircuitObstructions.DegreeLE.not
+#print axioms CircuitObstructions.DegreeLE.not
+#check CircuitObstructions.DegreeLE.monomial_mul
+#print axioms CircuitObstructions.DegreeLE.monomial_mul
+#check CircuitObstructions.DegreeLE.mul
+#print axioms CircuitObstructions.DegreeLE.mul
+#check CircuitObstructions.DegreeLE.product
+#print axioms CircuitObstructions.DegreeLE.product
+#check CircuitObstructions.polyEval_append
+#print axioms CircuitObstructions.polyEval_append
+#check CircuitObstructions.DegreeLE.polynomial_witness
+#print axioms CircuitObstructions.DegreeLE.polynomial_witness
+#check CircuitObstructions.polynomial_degree_certificate
+#print axioms CircuitObstructions.polynomial_degree_certificate
+#check CircuitObstructions.degreeLE_iff_polynomial
+#print axioms CircuitObstructions.degreeLE_iff_polynomial
+#check CircuitObstructions.squareParity_add
+#print axioms CircuitObstructions.squareParity_add
+#check CircuitObstructions.affine_squareParity_zero
+#print axioms CircuitObstructions.affine_squareParity_zero
+#check CircuitObstructions.andTwo_degree_two
+#print axioms CircuitObstructions.andTwo_degree_two
+#check CircuitObstructions.andTwo_not_affine
+#print axioms CircuitObstructions.andTwo_not_affine
+#check CircuitObstructions.andTwo_no_degree_one_safe_cover
+#print axioms CircuitObstructions.andTwo_no_degree_one_safe_cover
+#check CircuitObstructions.beta_andTwo
+#print axioms CircuitObstructions.beta_andTwo
+#check CircuitObstructions.betaStar_andTwo
+#print axioms CircuitObstructions.betaStar_andTwo
+#check CircuitObstructions.restored_andTwo_needs_toffoli
+#print axioms CircuitObstructions.restored_andTwo_needs_toffoli
+#check CircuitObstructions.Examples.andOracle_restores
+#print axioms CircuitObstructions.Examples.andOracle_restores
+#check CircuitObstructions.Examples.andOracle_toffoli_count
+#print axioms CircuitObstructions.Examples.andOracle_toffoli_count
+#check CircuitObstructions.Examples.and_scratch_can_be_dirty
+#print axioms CircuitObstructions.Examples.and_scratch_can_be_dirty
+#check CircuitObstructions.Examples.andOracle_every_cut
+#print axioms CircuitObstructions.Examples.andOracle_every_cut
+#check CircuitObstructions.Examples.outputActiveOracle_restores
+#print axioms CircuitObstructions.Examples.outputActiveOracle_restores
+#check CircuitObstructions.Examples.outputActiveOracle_length
+#print axioms CircuitObstructions.Examples.outputActiveOracle_length
+#check CircuitObstructions.Examples.outputActiveOracle_toffoli_count
+#print axioms CircuitObstructions.Examples.outputActiveOracle_toffoli_count
+#check CircuitObstructions.Examples.moved_discrepancy_data
+#print axioms CircuitObstructions.Examples.moved_discrepancy_data
+#check CircuitObstructions.Examples.moved_discrepancy_target
+#print axioms CircuitObstructions.Examples.moved_discrepancy_target
+#check CircuitObstructions.Examples.target_only_reconstruction_is_false
+#print axioms CircuitObstructions.Examples.target_only_reconstruction_is_false
+#check CircuitObstructions.Examples.degenerate_encoding_control
+#print axioms CircuitObstructions.Examples.degenerate_encoding_control
+#check CircuitObstructions.write_same
+#print axioms CircuitObstructions.write_same
+#check CircuitObstructions.write_other
+#print axioms CircuitObstructions.write_other
+#check CircuitObstructions.xor_cancel_right
+#print axioms CircuitObstructions.xor_cancel_right
+#check CircuitObstructions.xor_cancel_left
+#print axioms CircuitObstructions.xor_cancel_left
+#check CircuitObstructions.xor_commute
+#print axioms CircuitObstructions.xor_commute
+#check CircuitObstructions.xor_true_iff_ne
+#print axioms CircuitObstructions.xor_true_iff_ne
+#check CircuitObstructions.Gate.eval_involutive
+#print axioms CircuitObstructions.Gate.eval_involutive
+#check CircuitObstructions.Gate.eval_injective
+#print axioms CircuitObstructions.Gate.eval_injective
+#check CircuitObstructions.run_nil
+#print axioms CircuitObstructions.run_nil
+#check CircuitObstructions.run_cons
+#print axioms CircuitObstructions.run_cons
+#check CircuitObstructions.run_append
+#print axioms CircuitObstructions.run_append
+#check CircuitObstructions.run_reverse_run
+#print axioms CircuitObstructions.run_reverse_run
+#check CircuitObstructions.run_run_reverse
+#print axioms CircuitObstructions.run_run_reverse
+#check CircuitObstructions.run_injective
+#print axioms CircuitObstructions.run_injective
+#check CircuitObstructions.toffoliCount_append
+#print axioms CircuitObstructions.toffoliCount_append
+#check CircuitObstructions.toffoliCount_reverse
+#print axioms CircuitObstructions.toffoliCount_reverse
+#check CircuitObstructions.withoutWire_length_le
+#print axioms CircuitObstructions.withoutWire_length_le
+#check CircuitObstructions.withoutWire_length_lt
+#print axioms CircuitObstructions.withoutWire_length_lt
+#check CircuitObstructions.bprod_write
+#print axioms CircuitObstructions.bprod_write
+#check CircuitObstructions.bprod_write_absent
+#print axioms CircuitObstructions.bprod_write_absent
+#check CircuitObstructions.workspaceDegree_initial
+#print axioms CircuitObstructions.workspaceDegree_initial
+#check CircuitObstructions.workspaceDegree_toggle
+#print axioms CircuitObstructions.workspaceDegree_toggle
+#check CircuitObstructions.workspaceDegree_gate
+#print axioms CircuitObstructions.workspaceDegree_gate
+#check CircuitObstructions.workspaceDegree_run
+#print axioms CircuitObstructions.workspaceDegree_run
+#check CircuitObstructions.run_coordinate_degree
+#print axioms CircuitObstructions.run_coordinate_degree
+#check CircuitObstructions.canonical_boundary_degree
+#print axioms CircuitObstructions.canonical_boundary_degree
+#check CircuitObstructions.canonical_run_coordinate_degree
+#print axioms CircuitObstructions.canonical_run_coordinate_degree
+#check CircuitObstructions.canonical_cut_packet_degree
+#print axioms CircuitObstructions.canonical_cut_packet_degree
+#check CircuitObstructions.CompleteSafeDegreeLE.mono
+#print axioms CircuitObstructions.CompleteSafeDegreeLE.mono
+#check CircuitObstructions.bprod_true_iff
+#print axioms CircuitObstructions.bprod_true_iff
+#check CircuitObstructions.pointIndicator_true_iff
+#print axioms CircuitObstructions.pointIndicator_true_iff
+#check CircuitObstructions.pointIndicator_degree
+#print axioms CircuitObstructions.pointIndicator_degree
+#check CircuitObstructions.completeSafeDegree_le_inputs
+#print axioms CircuitObstructions.completeSafeDegree_le_inputs
+#check CircuitObstructions.exists_least_degree
+#print axioms CircuitObstructions.exists_least_degree
+#check CircuitObstructions.beta_exists
+#print axioms CircuitObstructions.beta_exists
+#check CircuitObstructions.beta_spec
+#print axioms CircuitObstructions.beta_spec
+#check CircuitObstructions.beta_le_of_cover
+#print axioms CircuitObstructions.beta_le_of_cover
+#check CircuitObstructions.beta_le_iff
+#print axioms CircuitObstructions.beta_le_iff
+#check CircuitObstructions.beta_le_inputs
+#print axioms CircuitObstructions.beta_le_inputs
+#check CircuitObstructions.beta_zero
+#print axioms CircuitObstructions.beta_zero
+#check CircuitObstructions.canonical_cut_completeSafeDegree
+#print axioms CircuitObstructions.canonical_cut_completeSafeDegree
+#check CircuitObstructions.Gate.toffoliCost_le_one
+#print axioms CircuitObstructions.Gate.toffoliCost_le_one
+#check CircuitObstructions.toffoliCount_nil
+#print axioms CircuitObstructions.toffoliCount_nil
+#check CircuitObstructions.toffoliCount_cons
+#print axioms CircuitObstructions.toffoliCount_cons
+#check CircuitObstructions.exists_cut_with_toffoliCount
+#print axioms CircuitObstructions.exists_cut_with_toffoliCount
+#check CircuitObstructions.exists_balanced_toffoli_cut
+#print axioms CircuitObstructions.exists_balanced_toffoli_cut
+#check CircuitObstructions.canonical_restored_completeSafeDegree
+#print axioms CircuitObstructions.canonical_restored_completeSafeDegree
+#check CircuitObstructions.beta_le_half_toffoliCount
+#print axioms CircuitObstructions.beta_le_half_toffoliCount
+#check CircuitObstructions.beta_restoration_bound
+#print axioms CircuitObstructions.beta_restoration_bound
+#check CircuitObstructions.toffoliCount_ge_two_beta_sub_three
+#print axioms CircuitObstructions.toffoliCount_ge_two_beta_sub_three
+#print CircuitObstructions.Restores
+#print CircuitObstructions.cut_transport_identity
+#print CircuitObstructions.complete_safe_cover
+#print CircuitObstructions.canonical_complete_safe_cover
+#print CircuitObstructions.every_index_cut
+#print CircuitObstructions.DegreeLE
+#print CircuitObstructions.WorkspaceDegree
+#print CircuitObstructions.workspaceDegree_run
+#print CircuitObstructions.canonical_cut_packet_degree
+#print CircuitObstructions.CompleteSafeDegreeLE
+#print CircuitObstructions.beta
+#print CircuitObstructions.betaStar
+#print CircuitObstructions.betaStar_restoration_bound
+#print CircuitObstructions.canonical_restored_output_degree
+#print CircuitObstructions.restored_degree_and_cover_bound

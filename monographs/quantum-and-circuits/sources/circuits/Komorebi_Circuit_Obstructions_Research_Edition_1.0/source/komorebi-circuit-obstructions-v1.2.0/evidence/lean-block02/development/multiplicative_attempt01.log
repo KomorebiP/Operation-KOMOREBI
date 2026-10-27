@@ -1,0 +1,61 @@
+CircuitObstructions/MultiplicativeDegree.lean:43:51: error: This simp argument is unused:
+  Bool.and_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [bprod, withoutWire, write, ih, hm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CircuitObstructions/MultiplicativeDegree.lean:46:16: error: This simp argument is unused:
+  Bool.and_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [bprod, withoutWire, write, ih, hit, Ne.symm hit, hm, Bool.and_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+CircuitObstructions/MultiplicativeDegree.lean:92:45: error: `if_pos` has been deprecated: Use `ite_eq_left` instead
+CircuitObstructions/MultiplicativeDegree.lean:90:47: error: unsolved goals
+n : Nat
+W : Type
+inst✝ : DecidableEq W
+s : (Fin n → Bool) → State W
+t : W
+controls : List W
+k : Nat
+h : WorkspaceDegree s k
+l : List W
+ht : t ∈ l
+rest : List W := withoutWire l t
+hlen : rest.length + 1 ≤ l.length
+hfirst : DegreeLE (k + (t :: rest).length) fun x => bprod (t :: rest) (s x)
+hsecond : DegreeLE (k + (controls ++ rest).length) fun x => bprod (controls ++ rest) (s x)
+hb1 : k + (t :: rest).length ≤ k + (controls.length - 1) + l.length
+hb2 : k + (controls ++ rest).length ≤ k + (controls.length - 1) + l.length
+hb : DegreeLE (k + (controls.length - 1) + l.length) fun x => bprod (t :: rest) (s x) ^^ bprod (controls ++ rest) (s x)
+x : Fin n → Bool
+⊢ (s x t && bprod (withoutWire l t) (s x) ^^ bprod controls (s x) && bprod (withoutWire l t) (s x)) =
+    (s x t && bprod rest (s x) ^^ bprod controls (s x) && bprod rest (s x))
+CircuitObstructions/MultiplicativeDegree.lean:109:6: error: Tactic `simp` failed with a nested error:
+maximum recursion depth has been reached
+use `set_option maxRecDepth <num>` to increase limit
+use `set_option diagnostics true` to get diagnostic information
+CircuitObstructions/MultiplicativeDegree.lean:112:6: error: Type mismatch: After simplification, term
+  workspaceDegree_toggle s t [c] k h
+ has type
+  WorkspaceDegree (toggleProduct s t [c]) k
+but is expected to have type
+  WorkspaceDegree (fun x => write (s x) t (s x t ^^ s x c)) k
+CircuitObstructions/MultiplicativeDegree.lean:115:6: error: Type mismatch: After simplification, term
+  workspaceDegree_toggle s t [a, b] k h
+ has type
+  WorkspaceDegree (toggleProduct s t [a, b]) (k + 1)
+but is expected to have type
+  WorkspaceDegree (fun x => write (s x) t (s x t ^^ s x a && s x b)) (k + 1)
+CircuitObstructions/MultiplicativeDegree.lean:157:36: error(lean.unknownIdentifier): Unknown constant `Nat.max_add_add_right`
+CircuitObstructions/MultiplicativeDegree.lean:157:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  DegreeLE (max (toffoliCount p + 1) (toffoliCount q + 1)) fun x =>
+    run p ((canonicalBoundary n a).encode x false) i ^^ run (List.reverse q) ((canonicalBoundary n a).encode x false) i
+but is expected to have type
+  DegreeLE (max (toffoliCount p) (toffoliCount q) + 1) fun x =>
+    run p ((canonicalBoundary n a).encode x false) i ^^ run (List.reverse q) ((canonicalBoundary n a).encode x false) i

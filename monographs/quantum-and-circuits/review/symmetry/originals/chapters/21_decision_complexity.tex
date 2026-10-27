@@ -1,0 +1,59 @@
+\chapter{Simulation complexity versus decision complexity}
+\label{ch:decision-complexity}
+
+\section{Why simulator lower bounds are insufficient}
+Showing that a circuit defeats one simulation strategy does not prove that its decision problem is outside $P$. A classical algorithm may compute the answer without reconstructing the quantum state. It is therefore insufficient to rule out only:
+
+\begin{itemize}
+\item full state-vector simulation,
+\item one projector family,
+\item bounded-width tensor-network contraction,
+\item path sampling,
+\item low-rank transfer matrices,
+\item stabilizer decompositions,
+\item any fixed catalogue of known simulators.
+\end{itemize}
+
+A proof of $P\neq BQP$ would need a lower bound against every deterministic polynomial-time classical algorithm for an explicit language.
+
+\section{A representation-relative invariant}
+For a declared classical representation class $\mathcal R$, define
+\[
+\operatorname{TC}^{\mathcal R}_\varepsilon(C)
+=
+\min\left\{
+\operatorname{cost}(R):
+R\in\mathcal R,
+\ |R(C)-p_C|\le\varepsilon
+\right\},
+\]
+where $p_C$ is the target acceptance probability. This permits a disciplined ladder:
+
+\begin{enumerate}
+\item exact polynomial-packet simulation for easy sectors;
+\item lower bounds for local packet-query methods;
+\item lower bounds for broader tensor, sampling, low-degree, and communication representations;
+\item a representation-independent lower bound;
+\item a separation of $P$ and $BQP$.
+\end{enumerate}
+
+Only the first step is completed here.
+
+\section{Universal packetization and its consequence}
+Consider the statement:
+
+\begin{conjecture}[Universal polynomial packetization]
+Every polynomial-time uniform quantum circuit family admits an efficiently discoverable exact or approximate packet representation of polynomial active size and polynomial transfer complexity, sufficient to compute its acceptance probability.
+\end{conjecture}
+
+If true, \cref{thm:poly-packet,thm:compressed-packet} would imply $BQP\subseteq P$, and hence $P=BQP$. The records do not establish this conjecture and explicitly identify global interference as an obstacle.
+
+\section{The opposite route}
+An explicit uniform family with a proved representation-independent classical lower bound and a polynomial quantum algorithm would establish $P\neq BQP$. The candidate succinct transfer-interference problem in the records illustrates the form of such a target, but the required lower bound is the unresolved theorem itself.
+
+\begin{scopebox}
+This monograph proves polynomial classical simulation for declared subclasses. It neither proves nor assumes a universal collapse of quantum computation.
+\end{scopebox}
+
+\section{Nonrelativizing issues}
+Oracle separations show that query complexity can distinguish quantum and classical access. They also show why a black-box argument alone cannot settle ordinary $P$ versus $BQP$. A full separation would have to use explicit features such as uniform circuit generation, arithmetic structure, algebraic degree, communication constraints, or another nonrelativizing mechanism.

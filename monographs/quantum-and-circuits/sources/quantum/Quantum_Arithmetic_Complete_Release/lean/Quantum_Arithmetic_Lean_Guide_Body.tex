@@ -1,0 +1,990 @@
+\section{What this guide certifies}
+The completed fixed example is a bridge between exact arithmetic and ordinary
+complex linear algebra. It certifies a twelve-dimensional Fourier matrix, a
+Ramanujan projector, two normalized states with the same initial probabilities,
+and their opposite outcomes after a basis change. This guide maps those claims to
+actual Lean declarations rather than treating numerical agreement as a proof.
+
+The authoritative formal checkpoint is the later five-module version of the
+September 21, 2026 development. It contains \textbf{96 named mathematical
+theorems}. Their source and archived execution records are supplied unchanged.
+The present release has independently reconciled the source and log hashes and
+the complete theorem inventory. A new compiler run was blocked by a runtime
+transfer error. The distinction between an archived checked proof and a fresh
+replay is retained throughout.
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Production module & Named theorems\\
+\midrule
+\texttt{QuantumArithmeticBridge} & 22\\
+\texttt{FiniteFourier} & 17\\
+\texttt{SemanticBridge} & 30\\
+\texttt{Conventions} & 17\\
+\texttt{Publication} & 10\\
+\midrule
+Total & 96\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+These counts include supporting lemmas. They count named source declarations,
+not new discoveries, compiler jobs, or declarations generated internally by Lean.
+The namespace is \texttt{Komorebi.QuantumArithmetic} throughout.
+
+\section{The typed mathematical target}
+The complex matrices act on vectors indexed by \(\operatorname{Fin}(12)\).
+The Fourier convention is
+\[
+ F_{nk}=\frac{1}{\sqrt{12}}\exp\!\left(\frac{2\pi i nk}{12}\right),
+ \qquad n,k\in\{0,\ldots,11\}.
+\]
+The adjoint \(F^*\) therefore carries the negative exponential sign. The
+selector \(D\) is diagonal with value one precisely at the residues
+\(U=\{1,5,7,11\}\). The transported operator is \(P=FDF^*\).
+
+Write
+\[
+ c=(4,0,2,0,-2,0,-4,0,-2,0,2,0),\qquad
+ \psi=\frac{c}{\sqrt{48}},\qquad \chi=\frac{|c|}{\sqrt{48}}.
+\]
+Both vectors have norm one. Their initial probability histograms are identical,
+but their inner product is zero. The vector \(u\) has entry \(1/2\) on \(U\)
+and zero elsewhere. Lean proves the actual complex identities \(Fu=\psi\) and
+\(F^*\psi=u\), as well as transformed coprime probability one for \(\psi\)
+and zero for \(\chi\).
+
+The statements are finite and exact. No parameterized arbitrary-modulus theorem,
+general circuit construction, physical phase-removal process, or quantum speedup
+is included in these formal claims.
+
+\section{Revision reconciliation}
+Two retrieved archives carry version \texttt{0.2.0}, but they do not have the same
+active source. The earlier four-module checkpoint has 59 mathematical theorems
+and four separately checked refutation controls. The later five-module checkpoint
+has 96 mathematical theorems and three rejected control files. Its proof receipt
+is the later \texttt{verification/final/REPORT.json}.
+
+The original 22 finite-table statements are retained inside both checkpoints.
+They are not counted a second time. Likewise, \(59+96\) is not a meaningful
+theorem total: these are overlapping revisions of one formal development.
+
+The earlier proof boundary disclosed that explicit projector transport and
+normalized-state matrix actions had not yet been supplied. The later source
+supplies both, connects the Fourier matrix to the usual complex exponential, and
+proves a histogram nonreconstruction theorem. The earlier boundary remains a
+record of its own revision, rather than a gap list for the current publication.
+
+The entire later checkpoint is preserved under \texttt{lean/checked\_checkpoint}.
+The source files are not edited to match this guide.
+
+\section{Architecture of the proof}
+The proof crosses two representations. First, rational coordinates support exact
+finite calculations. Second, a semantics map transfers those calculations to
+ordinary complex matrices and vectors.
+
+\begin{center}
+\begin{tabular}{p{0.27\linewidth}p{0.64\linewidth}}
+\toprule
+Layer & Role\\
+\midrule
+Rational tables & Signal, projector entries, filtering, and energies.\\
+Exact coordinates & Algebra in the basis \(1,\sqrt3,i,i\sqrt3\).\\
+Finite matrices & All entries indexed by \(\operatorname{Fin}(12)\), with exact finite sums.\\
+Complex semantics & Preservation of multiplication, adjoint, matrix action, and squared norm.\\
+Conventions & Identification of roots and normalization with standard exponentials and square roots.\\
+Publication theorem & Bundling of the actual complex identities and reconstruction obstructions.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The active import chain is \texttt{QuantumArithmeticBridge} into
+\texttt{FiniteFourier}, then \texttt{SemanticBridge}, then \texttt{Conventions},
+then \texttt{Publication}. Supporting Mathlib imports enter at the layer that
+uses them. There is no circular theorem dependency.
+
+\section{The rational signal and its filter}
+The first layer uses literal rational lists. The chosen perturbation is
+\(r_n=3\cos(\pi n/2)+2\), whose displayed rational entries can be certified
+without numerical trigonometric evaluation. Its sum with \(c\) is the test signal.
+
+\Needspace{16\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{QuantumArithmeticBridge.lean}}, physical lines 51--61.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- Ramanujan sum c_12(n), n = 0,...,11. -/
+def ramanujan12 : QVector :=
+  [4, 0, 2, 0, -2, 0, -4, 0, -2, 0, 2, 0]
+
+/-- A deliberately off-band perturbation: 3 cos(pi n/2) + 2. -/
+def noise12 : QVector :=
+  [5, 2, -1, 2, 5, 2, -1, 2, 5, 2, -1, 2]
+
+/-- Signal used in the essay's filter demonstration. -/
+def testSignal12 : QVector :=
+  [9, 2, 1, 2, 3, 2, -5, 2, 3, 2, 1, 2]
+\end{Verbatim}
+
+The cyclic matrix has entry \(c_{(n-m)\bmod12}/12\). The original layer proves
+its symmetry, idempotence, preservation of \(c\), rejection of the chosen
+perturbation, and exact recovery from the displayed contaminated signal.
+The exact energy contract is \(150=48+102\).
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{QuantumArithmeticBridge.lean}}, physical lines 92--126.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+theorem projector12_idempotent :
+    matMulN 12 projector12 projector12 = projector12 := by
+  decide +kernel
+
+/-- The arithmetic signal lies in the selected subspace. -/
+theorem projector12_fixes_ramanujan :
+    matVec projector12 ramanujan12 = ramanujan12 := by
+  decide +kernel
+
+/-- The chosen constant-plus-frequency-3 perturbation lies in the complementary subspace. -/
+theorem projector12_kills_noise :
+    matVec projector12 noise12 = List.replicate 12 0 := by
+  decide +kernel
+
+/-- Therefore the exact filter recovers the arithmetic component. -/
+theorem projector12_recovers_test_signal :
+    matVec projector12 testSignal12 = ramanujan12 := by
+  decide +kernel
+
+/-- The arithmetic amplitude vector has squared norm 48. -/
+theorem ramanujan12_energy : sqEnergy ramanujan12 = 48 := by
+  decide +kernel
+
+/-- The perturbation has squared norm 102. -/
+theorem noise12_energy : sqEnergy noise12 = 102 := by
+  decide +kernel
+
+/-- The full signal has squared norm 150. -/
+theorem testSignal12_energy : sqEnergy testSignal12 = 150 := by
+  decide +kernel
+
+/-- Exact orthogonal energy decomposition 150 = 48 + 102. -/
+theorem energy_decomposition :
+    sqEnergy testSignal12 = sqEnergy ramanujan12 + sqEnergy noise12 := by
+  decide +kernel
+\end{Verbatim}
+
+The list operations use finite lists, including zero defaults and zip-based dot
+products. These facts are therefore claims about the supplied twelve-entry
+objects. They should not be silently interpreted as universal matrix theorems
+for arbitrary ragged lists. The later \(\operatorname{Fin}(12)\) layer supplies
+the typed matrix identities used in the publication.
+
+\section{The exact phase arithmetic}
+The structure \texttt{Cyclo12} represents
+\[
+ (a,b,c,d)\longmapsto a+b\sqrt3+i(c+d\sqrt3),\qquad a,b,c,d\in\mathbb Q.
+\]
+Its multiplication explicitly incorporates \((\sqrt3)^2=3\) and \(i^2=-1\).
+It is a concrete arithmetic representation. The development does not need or
+install a global field instance to certify the finite example.
+
+\Needspace{17\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{QuantumArithmeticBridge.lean}}, physical lines 130--141.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/--
+An exact coordinate model for Q(sqrt(3), i).  The tuple (a,b,c,d) denotes
+  a + b*sqrt(3) + i*(c + d*sqrt(3)).
+Only the concrete arithmetic needed for the q=12 certificate is used below;
+we do not install a global field instance.
+-/
+structure Cyclo12 where
+  a : ℚ
+  b : ℚ
+  c : ℚ
+  d : ℚ
+  deriving DecidableEq, Repr
+\end{Verbatim}
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{QuantumArithmeticBridge.lean}}, physical lines 155--173.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+/-- Multiplication in Q(sqrt(3), i). -/
+def cMul (x y : Cyclo12) : Cyclo12 :=
+  ⟨x.a*y.a + 3*x.b*y.b - x.c*y.c - 3*x.d*y.d,
+   x.a*y.b + x.b*y.a - x.c*y.d - x.d*y.c,
+   x.a*y.c + 3*x.b*y.d + x.c*y.a + 3*x.d*y.b,
+   x.a*y.d + x.b*y.c + x.c*y.b + x.d*y.a⟩
+
+def cConj (x : Cyclo12) : Cyclo12 := ⟨x.a, x.b, -x.c, -x.d⟩
+
+def cPow (x : Cyclo12) : Nat → Cyclo12
+  | 0 => cOne
+  | n + 1 => cMul (cPow x n) x
+
+def cSum : List Cyclo12 → Cyclo12
+  | [] => cZero
+  | x :: xs => cAdd x (cSum xs)
+
+/-- zeta = exp(2*pi*i/12) = sqrt(3)/2 + i/2. -/
+def zeta12 : Cyclo12 := ⟨0, (1/2 : ℚ), (1/2 : ℚ), 0⟩
+\end{Verbatim}
+
+The phase \(\zeta=(0,1/2,1/2,0)\) has complex meaning
+\(\sqrt3/2+i/2\). Exact finite certificates establish its twelfth power, inverse,
+and absence of a smaller positive power below twelve. Later the convention
+module identifies it with \(\exp(\pi i/6)\).
+
+The Ramanujan vector is obtained by summing powers of this phase over
+\(1,5,7,11\). The negative-sign unnormalized DFT has value 12 at these four
+frequencies and zero elsewhere. The absolute-value vector has Fourier support
+on the even frequencies instead. These are exact phase calculations over
+rational coordinates.
+
+\section{Finite indices and normalized Fourier certificates}
+The finite layer uses \texttt{Index := Fin 12}. Its normalized Fourier scale is
+represented exactly as \(\sqrt3/6=1/\sqrt{12}\), and its state scale as
+\(\sqrt3/12=1/\sqrt{48}\). The use of a finite index type makes every row and
+column well defined without list-length side conditions.
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{FiniteFourier.lean}}, physical lines 58--93.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+/-- The stored arithmetic selector is exactly the coprimality predicate. -/
+theorem coprime_residues_exact :
+    (List.range 12).filter (fun a => Nat.gcd a 12 == 1) = unitResidues12 := by
+  decide +kernel
+
+theorem root_exact_order :
+    ∀ n : Fin 12, 0 < n.val → cPow zeta12 n.val ≠ cOne := by
+  decide +kernel
+
+theorem normalized_fourier_left :
+    ∀ i j, kMatMul (kAdjoint exactFourier) exactFourier i j = kIdentity i j := by
+  decide +kernel
+
+theorem normalized_fourier_right :
+    ∀ i j, kMatMul exactFourier (kAdjoint exactFourier) i j = kIdentity i j := by
+  decide +kernel
+
+def selectedKernel : KMatrix := fun i j =>
+  kSum (fun k => if Nat.gcd k.val 12 = 1 then
+    cMul (exactFourier i k) (cConj (exactFourier j k)) else cZero)
+
+theorem exact_projector_transport :
+    ∀ i j, selectedKernel i j = exactProjector i j := by
+  decide +kernel
+
+theorem exact_projector_matches_rational_table :
+    ∀ i j, exactProjector i j = cRat ((projector12.getD i.val []).getD j.val 0) := by
+  decide +kernel
+
+theorem exact_state_preparation :
+    ∀ i, kMatVec exactFourier exactUnitState i = exactPsi i := by
+  decide +kernel
+
+theorem exact_state_recovery :
+    ∀ i, kMatVec (kAdjoint exactFourier) exactPsi i = exactUnitState i := by
+  decide +kernel
+\end{Verbatim}
+
+The two Fourier identities above quantify over all \(12\times12\) entries.
+Kernel reduction proves these concrete universal statements over a finite type.
+The selected-kernel equality and state actions are also complete finite
+certificates, rather than floating-point matrix comparisons.
+
+\section{Why the coordinate certificates mean complex identities}
+The semantics map is explicitly defined with the positive real square root.
+Soundness for addition, multiplication, conjugation, powers, and finite sums
+prevents the exact coordinate layer from being a detached calculation with an
+unproved interpretation.
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{SemanticBridge.lean}}, physical lines 14--56.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+/-- The exact coordinate arithmetic is interpreted in the ordinary complex numbers. -/
+noncomputable def interpret (x : Cyclo12) : ℂ :=
+  ⟨(x.a : ℝ) + (x.b : ℝ) * Real.sqrt 3,
+   (x.c : ℝ) + (x.d : ℝ) * Real.sqrt 3⟩
+
+@[simp] theorem interpret_zero : interpret cZero = 0 := by
+  apply Complex.ext <;> simp [interpret, cZero]
+
+@[simp] theorem interpret_one : interpret cOne = 1 := by
+  apply Complex.ext <;> simp [interpret, cOne]
+
+@[simp] theorem interpret_rat (r : ℚ) : interpret (cRat r) = (r : ℂ) := by
+  apply Complex.ext <;> simp [interpret, cRat]
+
+@[simp] theorem interpret_add (x y : Cyclo12) :
+    interpret (cAdd x y) = interpret x + interpret y := by
+  apply Complex.ext <;> simp [interpret, cAdd] <;> ring
+
+@[simp] theorem interpret_mul (x y : Cyclo12) :
+    interpret (cMul x y) = interpret x * interpret y := by
+  apply Complex.ext <;> simp [interpret, cMul, Complex.mul_re, Complex.mul_im] <;>
+    ring_nf <;> norm_num [Real.sq_sqrt]
+
+@[simp] theorem interpret_conj (x : Cyclo12) :
+    interpret (cConj x) = star (interpret x) := by
+  apply Complex.ext <;> simp [interpret, cConj]
+  ring
+
+@[simp] theorem interpret_pow (x : Cyclo12) (n : Nat) :
+    interpret (cPow x n) = interpret x ^ n := by
+  induction n with
+  | zero => simp [cPow]
+  | succ n ih => simp [cPow, ih, pow_succ]
+
+@[simp] theorem interpret_sum (xs : List Cyclo12) :
+    interpret (cSum xs) = (xs.map interpret).sum := by
+  induction xs with
+  | nil => simp [cSum]
+  | cons x xs ih => simp [cSum, ih]
+
+@[simp] theorem interpret_kSum (f : Index → Cyclo12) :
+    interpret (kSum f) = ∑ i, interpret (f i) := by
+  simp only [kSum, interpret_sum, List.map_ofFn, List.sum_ofFn]
+\end{Verbatim}
+
+The multiplication proof uses complex extensionality, real polynomial
+normalization, and the square-root identity. It proves preservation for arbitrary
+coordinates, not merely for the handful of roots that occur in the example.
+The power and finite-sum proofs use induction.
+
+Injectivity of this interpretation is not needed to transfer an equality: if
+two coordinate expressions are proved equal, applying the interpretation gives
+equal complex expressions. No claim of a globally packaged field equivalence is
+required by the theorem chain.
+
+\section{Matrix transport and actual unitarity}
+The semantics layer proves that coordinate matrix multiplication, adjoint,
+identity, and matrix-vector action have their ordinary complex meanings.
+The matrices \(F,P,D\) and the normalized states are then defined directly
+in that complex representation.
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{SemanticBridge.lean}}, physical lines 65--91.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+@[simp] theorem complexMatrix_mul (A B : KMatrix) :
+    complexMatrix (kMatMul A B) = complexMatrix A * complexMatrix B := by
+  ext i j
+  simp [complexMatrix, kMatMul, Matrix.mul_apply]
+
+@[simp] theorem complexMatrix_adjoint (A : KMatrix) :
+    complexMatrix (kAdjoint A) = (complexMatrix A)ᴴ := by
+  ext i j
+  simp [complexMatrix, kAdjoint, Matrix.conjTranspose_apply]
+
+@[simp] theorem complexMatrix_identity :
+    complexMatrix kIdentity = 1 := by
+  ext i j
+  by_cases h : i = j <;> simp [complexMatrix, kIdentity, h, Matrix.one_apply]
+
+@[simp] theorem complexVector_mul (A : KMatrix) (v : KVector) :
+    complexVector (kMatVec A v) = (complexMatrix A).mulVec (complexVector v) := by
+  ext i
+  simp [complexVector, complexMatrix, kMatVec, Matrix.mulVec, dotProduct]
+
+noncomputable def F : Matrix Index Index ℂ := complexMatrix exactFourier
+noncomputable def P : Matrix Index Index ℂ := complexMatrix exactProjector
+noncomputable def D : Matrix Index Index ℂ :=
+  Matrix.diagonal (fun i => if Nat.gcd i.val 12 = 1 then 1 else 0)
+noncomputable def psi : Index → ℂ := complexVector exactPsi
+noncomputable def chi : Index → ℂ := complexVector exactChi
+noncomputable def unitState : Index → ℂ := complexVector exactUnitState
+\end{Verbatim}
+
+Consequently, the finite certificates produce actual complex unitarity and
+projector transport. The following excerpt contains the full proofs of both
+unitary identities, the cross-representation projector identity, and the two
+state-action identities.
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{SemanticBridge.lean}}, physical lines 93--120.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+/-- Actual complex unitarity, not an assertion only about the coordinate checker. -/
+theorem fourier_unitary_left : Fᴴ * F = 1 := by
+  have h : kMatMul (kAdjoint exactFourier) exactFourier = kIdentity :=
+    funext (fun i => funext (normalized_fourier_left i))
+  simpa [F] using congrArg complexMatrix h
+
+theorem fourier_unitary_right : F * Fᴴ = 1 := by
+  have h : kMatMul exactFourier (kAdjoint exactFourier) = kIdentity :=
+    funext (fun i => funext (normalized_fourier_right i))
+  simpa [F] using congrArg complexMatrix h
+
+theorem projector_transport : F * D * Fᴴ = P := by
+  ext i j
+  have h := congrArg interpret (exact_projector_transport i j)
+  simp only [selectedKernel, interpret_kSum] at h
+  rw [Matrix.mul_apply]
+  simpa [D, P, F, complexMatrix, Matrix.mul_diagonal, Matrix.conjTranspose_apply,
+    apply_ite interpret, mul_ite] using h
+
+theorem state_preparation : F.mulVec unitState = psi := by
+  have h : kMatVec exactFourier exactUnitState = exactPsi :=
+    funext exact_state_preparation
+  simpa [F, unitState, psi] using congrArg complexVector h
+
+theorem state_recovery : Fᴴ.mulVec psi = unitState := by
+  have h : kMatVec (kAdjoint exactFourier) exactPsi = exactUnitState :=
+    funext exact_state_recovery
+  simpa [F, unitState, psi] using congrArg complexVector h
+\end{Verbatim}
+
+This is the key strengthening over the earlier checkpoint. The rational matrix,
+the exact coordinate kernel, and the complex matrix \(FDF^*\) are explicitly
+connected. State preparation and recovery are equalities of actual complex
+vectors. The theorem name \texttt{state\_preparation} describes a matrix identity,
+not an efficient hardware preparation algorithm.
+
+\section{The exponential sign and square-root normalization}
+The usual Fourier matrix is not left as an informal interpretation. The
+convention module proves that the coordinate root equals the positive
+exponential root, including the selected square-root branch.
+
+\Needspace{20\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Conventions.lean}}, physical lines 10--24.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- The coordinate root is exactly the usual exponential twelfth root. -/
+theorem root_is_exponential :
+    interpret zeta12 = Complex.exp (((Real.pi / 6 : ℝ) : ℂ) * Complex.I) := by
+  rw [Complex.exp_mul_I]
+  rw [← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_pi_div_six, Real.sin_pi_div_six]
+  apply Complex.ext <;> simp [interpret, zeta12]
+  ring
+
+theorem root_power_twelve : interpret zeta12 ^ 12 = 1 := by
+  simpa using congrArg interpret zeta12_order_certificate
+
+theorem rootPower_interpret (n : Nat) :
+    interpret (rootPower n) = interpret zeta12 ^ n := by
+  simp only [rootPower, interpret_pow]
+  exact (pow_eq_pow_mod n root_power_twelve).symm
+\end{Verbatim}
+
+Its normalization lemmas prove \(\sqrt{12}=2\sqrt3\) and
+\(\sqrt{48}=4\sqrt3\), then identify the exact scales with their ordinary
+reciprocals. The matrix entry formula and state formula below are therefore
+literal equalities in \(\mathbb C\).
+
+\Needspace{18\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Conventions.lean}}, physical lines 42--54.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+theorem fourierScale_interpret :
+    interpret fourierScale = ((1 / Real.sqrt 12 : ℝ) : ℂ) := by
+  apply Complex.ext <;> simp [interpret, fourierScale, sqrt_twelve]
+  have h : Real.sqrt 3 ≠ 0 := by positivity
+  field_simp
+  nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
+
+theorem stateScale_interpret :
+    interpret stateScale = ((1 / Real.sqrt 48 : ℝ) : ℂ) := by
+  apply Complex.ext <;> simp [interpret, stateScale, sqrt_fortyeight]
+  have h : Real.sqrt 3 ≠ 0 := by positivity
+  field_simp
+  nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 3 by norm_num)]
+\end{Verbatim}
+
+\Needspace{15\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Conventions.lean}}, physical lines 56--65.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- The matrix checked in the certificate is the standard positive sign Fourier matrix. -/
+theorem fourier_entry_formula (i j : Index) :
+    F i j = ((1 / Real.sqrt 12 : ℝ) : ℂ) *
+      Complex.exp (2 * (Real.pi : ℂ) * Complex.I * (i.val : ℂ) * (j.val : ℂ) / 12) := by
+  simp only [F, complexMatrix, exactFourier, interpret_mul, fourierScale_interpret,
+    rootPower_interpret, root_is_exponential]
+  rw [← Complex.exp_nat_mul]
+  congr 2
+  push_cast
+  ring
+\end{Verbatim}
+
+\Needspace{21\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Conventions.lean}}, physical lines 67--82.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+theorem psi_entry_formula (i : Index) :
+    psi i = ((1 / Real.sqrt 48 : ℝ) : ℂ) * (ramanujan12.getD i.val 0 : ℂ) := by
+  simp [psi, complexVector, exactPsi, stateScale_interpret]
+
+theorem chi_entry_formula (i : Index) :
+    chi i = ((1 / Real.sqrt 48 : ℝ) : ℂ) * (absRamanujan12.getD i.val 0 : ℂ) := by
+  simp [chi, complexVector, exactChi, stateScale_interpret]
+
+theorem unitState_entry_formula (i : Index) :
+    unitState i = if Nat.gcd i.val 12 = 1 then (1/2 : ℂ) else 0 := by
+  by_cases h : Nat.gcd i.val 12 = 1 <;>
+    simp [unitState, complexVector, exactUnitState, h]
+
+theorem projector_entry_formula (i j : Index) :
+    P i j = (ramanujan12.getD ((i.val + 12 - j.val) % 12) 0 : ℂ) / 12 := by
+  simp [P, complexMatrix, exactProjector]
+\end{Verbatim}
+
+The convention is positive sign for \(F\) and negative sign for \(F^*\). The
+earlier unnormalized \texttt{dft12} uses the negative sign. The normalization
+and adjoint are the precise link between those notations.
+
+\section{Hermitian projection and phase-sensitive states}
+The selector is Hermitian and idempotent. Transport through a unitary matrix
+then proves the corresponding facts for \(P\). They are ordinary matrix
+identities, not claims that every rational list operation is an orthogonal
+projection.
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Conventions.lean}}, physical lines 84--108.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+theorem selector_idempotent : D * D = D := by
+  unfold D
+  rw [Matrix.diagonal_mul_diagonal]
+  congr 1
+  funext i
+  by_cases h : Nat.gcd i.val 12 = 1 <;> simp [h]
+
+theorem selector_selfAdjoint : Dᴴ = D := by
+  ext i j
+  by_cases h : i = j
+  · subst j
+    simp [D, Matrix.conjTranspose_apply, apply_ite star]
+  · simp [D, Matrix.conjTranspose_apply, h, Ne.symm h]
+
+theorem projector_idempotent_complex : P * P = P := by
+  rw [← projector_transport]
+  calc
+    (F * D * Fᴴ) * (F * D * Fᴴ) = F * D * (Fᴴ * F) * D * Fᴴ := by
+      simp only [Matrix.mul_assoc]
+    _ = F * D * Fᴴ := by rw [fourier_unitary_left, Matrix.mul_one, Matrix.mul_assoc F D D,
+      selector_idempotent]
+
+theorem projector_selfAdjoint_complex : Pᴴ = P := by
+  rw [← projector_transport]
+  simp [Matrix.conjTranspose_mul, selector_selfAdjoint, Matrix.mul_assoc]
+\end{Verbatim}
+
+The vectors \(\psi\) and \(\chi\) are separately defined states. One is the
+signed arithmetic amplitude vector and the other its entrywise absolute value.
+They have the same squared amplitudes at each initial index but retain different
+relative phase. The development neither claims nor requires a universal quantum
+operation implementing the nonlinear map \(v\mapsto |v|\).
+
+\Needspace{6\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{SemanticBridge.lean}}, physical lines 145--174.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize]
+theorem psi_normalized : totalProbability psi = 1 := by
+  have h := congrArg interpret exact_psi_normalized
+  simpa [psi] using congrArg Complex.re h
+
+theorem chi_normalized : totalProbability chi = 1 := by
+  have h := congrArg interpret exact_chi_normalized
+  simpa [chi] using congrArg Complex.re h
+
+theorem unitState_normalized : totalProbability unitState = 1 := by
+  have h := congrArg interpret exact_unit_normalized
+  simpa [unitState] using congrArg Complex.re h
+
+theorem same_initial_probabilities (i : Index) :
+    Complex.normSq (psi i) = Complex.normSq (chi i) := by
+  have h := congrArg interpret (exact_same_initial_probabilities i)
+  simpa [psi, chi, complexVector] using congrArg Complex.re h
+
+theorem states_orthogonal : ∑ i, star (psi i) * chi i = 0 := by
+  have h := congrArg interpret exact_orthogonal_states
+  simpa [psi, chi, complexVector] using h
+
+theorem signed_state_recovers_arithmetic :
+    coprimeProbability (Fᴴ.mulVec psi) = 1 := by
+  have h := congrArg interpret exact_coprime_mass_psi
+  simpa [F, psi] using congrArg Complex.re h
+
+theorem unsigned_state_erases_arithmetic :
+    coprimeProbability (Fᴴ.mulVec chi) = 0 := by
+  have h := congrArg interpret exact_coprime_mass_chi
+  simpa [F, chi] using congrArg Complex.re h
+\end{Verbatim}
+
+The transformed probability statement is exact. The measurement event is the
+coprime-frequency subset. After applying \(F^*\), its probability is one for
+\(\psi\) and zero for \(\chi\). This basis change reveals information that their
+shared initial histogram does not contain.
+
+\section{Two exact information-loss statements}
+The formal development isolates distinct obstructions. First, the initial
+histogram cannot be inverted on both states by any reconstruction function.
+Second, the projector itself is noninjective because it annihilates the nonzero
+normalized state \(\chi\).
+
+\Needspace{17\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Publication.lean}}, physical lines 39--50.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- No state reconstruction function can invert the initial probability histogram on both states. -/
+theorem no_reconstruction_from_initial_probabilities :
+    ¬ ∃ R : (Index → ℝ) → (Index → ℂ),
+      R (fun i => Complex.normSq (psi i)) = psi ∧
+      R (fun i => Complex.normSq (chi i)) = chi := by
+  rintro ⟨R, hpsi, hchi⟩
+  have heq : (fun i => Complex.normSq (psi i)) =
+      (fun i => Complex.normSq (chi i)) := funext same_initial_probabilities
+  have hstate : psi = chi := by rw [← hpsi, ← hchi, heq]
+  have h := signed_state_recovers_arithmetic
+  rw [hstate, unsigned_state_erases_arithmetic] at h
+  norm_num at h
+\end{Verbatim}
+
+\Needspace{11\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Publication.lean}}, physical lines 52--57.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- Exact probabilities in the recovered basis, connected to the normalized state. -/
+theorem recovered_probability_at (i : Index) :
+    Complex.normSq (Fᴴ.mulVec psi i) =
+      if Nat.gcd i.val 12 = 1 then (1/4 : ℝ) else 0 := by
+  rw [state_recovery, unitState_entry_formula]
+  by_cases h : Nat.gcd i.val 12 = 1 <;> norm_num [h, Complex.normSq_apply]
+\end{Verbatim}
+
+\Needspace{12\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Publication.lean}}, physical lines 59--65.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- The operator is not injective. Its nonzero normalized kernel state is explicit. -/
+theorem projector_not_injective : ¬ Function.Injective P.mulVec := by
+  intro h
+  have hz : chi = 0 := h (by simp [projector_kills_chi])
+  have hp := chi_normalized
+  rw [hz] at hp
+  norm_num [totalProbability] at hp
+\end{Verbatim}
+
+The nonreconstruction theorem quantifies over every function from real-valued
+histograms to complex-valued vectors. It uses equality of the two histograms and
+the incompatible transformed probabilities. This is a mathematical obstruction
+to a specified inverse, not a statistical claim about estimating a state from
+many measurements in several bases.
+
+The traditional paper also proves that the two states cannot both be recovered
+up to an overall phase from this histogram. That strengthening is a prose
+corollary of their orthogonality and normalization. It is not separately exported
+as a quotient-by-global-phase Lean theorem.
+
+Projection becomes reconstructive when its residual is retained. The next
+identity holds for every twelve-dimensional complex vector, including vectors
+outside the arithmetic signal subspace.
+
+\Needspace{10\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Publication.lean}}, physical lines 33--37.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- Every signal is reconstructible from the retained and discarded components together. -/
+theorem projector_residual_reconstructs (v : Index → ℂ) :
+    P.mulVec v + (1 - P).mulVec v = v := by
+  rw [Matrix.sub_mulVec, Matrix.one_mulVec]
+  exact add_sub_cancel _ _
+\end{Verbatim}
+
+Its proof is algebraic. The identity \(Pv+(I-P)v=v\) itself does not require
+idempotence. Hermitian idempotence supplies the stronger interpretation as
+orthogonal retained and discarded components. This separates the reconstruction
+identity from the additional geometric structure.
+
+\section{The publication theorem in full}
+The final declaration bundles the formal core of the worked example. Every
+conjunct is supported by a previously proved declaration rather than by a new
+numerical test or an implicit physical assumption.
+
+\Needspace{19\baselineskip}
+\noindent\textbf{Literal source.} \texttt{\detokenize{Publication.lean}}, physical lines 67--80.
+
+\begin{Verbatim}[breaklines=true,breakanywhere=true,fontsize=\footnotesize,samepage=true]
+/-- Publication theorem gathering the complex identities stated in the worked example. -/
+theorem publication_bridge :
+    Fᴴ * F = 1 ∧ F * Fᴴ = 1 ∧ F * D * Fᴴ = P ∧
+    P * P = P ∧ Pᴴ = P ∧ F.mulVec unitState = psi ∧
+    Fᴴ.mulVec psi = unitState ∧ totalProbability psi = 1 ∧
+    totalProbability chi = 1 ∧
+    (∀ i, Complex.normSq (psi i) = Complex.normSq (chi i)) ∧
+    (∑ i, star (psi i) * chi i) = 0 ∧
+    coprimeProbability (Fᴴ.mulVec psi) = 1 ∧
+    coprimeProbability (Fᴴ.mulVec chi) = 0 := by
+  exact ⟨fourier_unitary_left, fourier_unitary_right, projector_transport,
+    projector_idempotent_complex, projector_selfAdjoint_complex, state_preparation,
+    state_recovery, psi_normalized, chi_normalized, same_initial_probabilities,
+    states_orthogonal, signed_state_recovers_arithmetic, unsigned_state_erases_arithmetic⟩
+\end{Verbatim}
+
+The bundled theorem has a fixed dimension and explicitly named operators and
+states. It establishes the bridge used in the paper. Broader arbitrary-modulus
+results remain separate prose theorems, with their own proofs and evidence.
+
+The manuscript's QA18 additionally includes filtering and energy, normalization
+of \(u\), the projector actions on both states, and noninjectivity. Those clauses
+use separately exported declarations, including
+\texttt{projector12\_recovers\_test\_signal}, \texttt{energy\_decomposition},
+\texttt{unitState\_normalized}, \texttt{projector\_fixes\_psi},
+\texttt{projector\_kills\_chi}, and \texttt{projector\_not\_injective}.
+The complete machine concordance lists these supporting results. The manuscript
+bundle is not identified with a literal statement that omits its extra clauses.
+
+\section{Manuscript-to-Lean concordance}
+The main paper labels its results QA01 through QA20. The table below distinguishes
+the exact fixed-example formal coverage from the more general mathematical
+development. ``Not formalized here'' is a scope label, not a claim that the prose
+result is false.
+
+\small
+\begin{longtable}{p{0.08\linewidth}p{0.26\linewidth}p{0.56\linewidth}}
+\toprule
+Claim & Subject & Formal coverage\\
+\midrule
+\endhead
+QA01 & Primitive root & Exact order 12 and standard exponential root.\\
+QA02 & Character orthogonality & Fixed-example content through both exact unitary identities; general theorem not separately exported.\\
+QA03 & Fourier theory & Both ordinary complex unitary identities and standard entry formula; general Parseval theorem not separately exported.\\
+QA04 & M\"obius formula & General modulus formula not formalized; exact integer table for 12 certified.\\
+QA05 & Ramanujan support & Exact signed and unsigned twelve-frequency DFT tables and arithmetic energy 48.\\
+QA06 & Divisor projectors & Primitive-order projector at 12 certified; the full divisor family not a general Lean family.\\
+QA07 & Projector geometry & Hermitian idempotence, displayed energies, explicit noninjectivity, and all-vector residual reconstruction.\\
+QA08 & Residue recombination & No theorem in this checkpoint.\\
+QA09 & Polyphase aliasing & No theorem in this checkpoint.\\
+QA10 & Arithmetic example & Phase sum connected to the exact rational sample table.\\
+QA11 & Exact filtering & Displayed contaminated signal and orthogonal energy decomposition.\\
+QA12 & State preparation & Ordinary complex normalized vector actions and recovery.\\
+QA13 & Shared histogram & Entrywise probability equality and state orthogonality.\\
+QA14 & Phase separation & Actual transformed coprime probabilities 1 versus 0.\\
+QA15 & Reconstruction barrier & No vector-valued initial-histogram inverse works on both specified states; the global-phase corollary is prose only.\\
+QA16 & Measurement law & Relevant projector algebra and state probabilities; no general conditional-state-update API.\\
+QA17 & Arithmetic semantics & Soundness for scalar, matrix, vector, adjoint, and mass operations.\\
+QA18 & Central bridge & Publication bundle plus separately exported filter, energy, normalization, projector-action, and noninjectivity results.\\
+QA19 & Relative-phase family & Prose extension \(\sin^2(\theta/2)\); not an inherited Lean theorem.\\
+QA20 & Dephased probability & Prose density-matrix calculation \(1/3\); not an inherited Lean theorem.\\
+\bottomrule
+\end{longtable}
+\normalsize
+
+The machine concordance includes all theorem statements verbatim, per-theorem
+axiom records, source hashes, and exact physical line locators. Its mapping
+records formal scope; it does not upgrade general manuscript claims merely
+because a nearby finite special case is checked.
+
+\section{Trust boundary and current verification}
+The archived run used Lean 4.34.0-rc2, compiler commit
+\texttt{\detokenize{6a10ac8c22beadecabdbb0919c2b50214762f91d}}, and Mathlib revision
+\texttt{\detokenize{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}}.
+It built the five source modules with warnings treated as errors, printed axiom
+dependencies for all 96 named theorems, and replayed each module with
+\texttt{leanchecker}. The compiler and imported dependency cache were not rebuilt
+from their source. Kernel replay uses Lean's own kernel, not a second independent
+proof checker.
+
+The axiom union is exactly \texttt{propext}, \texttt{Classical.choice}, and
+\texttt{Quot.sound}. This is the standard foundation used by the audited proof
+terms, not an axiom-free claim. The active source contains no proof placeholders,
+custom axiom declarations, native decision proofs, or unsafe declarations.
+Historical failed or native-decision drafts are excluded from the active build.
+
+Current source reconciliation checked all five source hashes and all eleven
+archived check-log hashes against the archived report. All sixteen match.
+The current inventory contains exactly 96 unique names and 96 archived axiom
+records. All line numbers agree with the archived source index.
+
+The present environment had no \texttt{lean}, \texttt{lake}, or
+\texttt{leanchecker} on PATH. The exact pinned five-part portable runtime was
+resolved from its documented existing files, but three materialization attempts
+failed with HTTP status 502. No runtime bytes landed and no compiler process ran.
+The current \texttt{FRESH\_LEAN\_STATUS.json} therefore says
+\textbf{NOT\_RUN}. This transfer failure is preserved; the release does not claim
+a fresh Lean pass.
+
+\section{Controls, failed attempts, and reproducibility}
+The latest archive rejected a deliberately false signal sign and a proof using
+\texttt{sorry} under warnings as errors. Its false Fourier-mode control also
+failed, but the compiler stopped at opaque \texttt{Decidable} reduction. That
+failure alone is not a direct mathematical certificate that the proposition is
+false. The positive \texttt{ramanujan\_dft\_table} theorem separately establishes
+the correct value 12.
+
+The control runner's broad diagnostic expression can match the word ``false''
+in a filename. The guide does not interpret that match as a stronger arithmetic
+test than the actual log provides. The earlier checkpoint's four explicit
+refutation proofs are retained as earlier evidence and are not silently counted
+as current production theorems.
+
+The supplied verifier creates a fresh source project, checks dependency revisions,
+builds, prints all theorem axiom dependencies, replays all five modules, and runs
+the controls. It refuses to overwrite an existing fresh build directory and
+treats timeouts as failures. It makes no network requests or installations.
+With the pinned runtime restored, the documented command is:
+
+\begin{Verbatim}[breaklines=true,fontsize=\footnotesize]
+python scripts/verify_lean.py \
+  --toolchain /path/to/Komorebi_Portable_Lean_4.34.0-rc2/toolchain \
+  --packages /path/to/Komorebi_Portable_Lean_4.34.0-rc2/workspace/.lake/packages \
+  --out verification/reproduction_new
+\end{Verbatim}
+The runner was exercised under Linux x86-64. It uses POSIX process groups and
+filesystem symlinks. Native Windows behavior is not tested. WSL2 with the pinned
+Linux runtime is the documented route for a Windows machine.
+
+Full proof source, manifests, archived build and replay logs, the static
+concordance builder, and the current failed runtime restoration status are
+included. The runtime itself remains an external dependency.
+
+\section{Complete active theorem inventory}
+All names in the following table have prefix
+\texttt{Komorebi.QuantumArithmetic}. File and physical source line identify the
+exact declaration. The full literal statements and axiom lists are also available
+in \texttt{Lean\_Concordance.json} and \texttt{Lean\_Concordance.csv}.
+
+\Needspace{10\baselineskip}
+\subsection{\texttt{\detokenize{QuantumArithmeticBridge}}: 22 theorems}
+
+\small\begin{longtable}{p{0.79\linewidth}r}
+\toprule Declaration & Line\\\midrule\endhead
+\texttt{\detokenize{ramanujan12_length}} & 80\\
+\texttt{\detokenize{projector12_shape}} & 82\\
+\texttt{\detokenize{projector12_symmetric}} & 88\\
+\texttt{\detokenize{projector12_idempotent}} & 92\\
+\texttt{\detokenize{projector12_fixes_ramanujan}} & 97\\
+\texttt{\detokenize{projector12_kills_noise}} & 102\\
+\texttt{\detokenize{projector12_recovers_test_signal}} & 107\\
+\texttt{\detokenize{ramanujan12_energy}} & 112\\
+\texttt{\detokenize{noise12_energy}} & 116\\
+\texttt{\detokenize{testSignal12_energy}} & 120\\
+\texttt{\detokenize{energy_decomposition}} & 124\\
+\texttt{\detokenize{zeta12_order_certificate}} & 177\\
+\texttt{\detokenize{zeta12_inverse_certificate}} & 180\\
+\texttt{\detokenize{ramanujanC12_table}} & 190\\
+\texttt{\detokenize{ramanujan_dft_table}} & 205\\
+\texttt{\detokenize{abs_ramanujan_dft_table}} & 217\\
+\texttt{\detokenize{same_computational_basis_probabilities}} & 231\\
+\texttt{\detokenize{abs_ramanujan12_energy}} & 235\\
+\texttt{\detokenize{recovered_mode_probability}} & 243\\
+\texttt{\detokenize{recovered_total_probability}} & 248\\
+\texttt{\detokenize{phase_stripping_coprime_probability}} & 253\\
+\texttt{\detokenize{arithmetic_signal_quantum_bridge}} & 258\\
+\bottomrule\end{longtable}\normalsize
+
+\Needspace{10\baselineskip}
+\subsection{\texttt{\detokenize{FiniteFourier}}: 17 theorems}
+
+\small\begin{longtable}{p{0.79\linewidth}r}
+\toprule Declaration & Line\\\midrule\endhead
+\texttt{\detokenize{coprime_residues_exact}} & 59\\
+\texttt{\detokenize{root_exact_order}} & 63\\
+\texttt{\detokenize{normalized_fourier_left}} & 67\\
+\texttt{\detokenize{normalized_fourier_right}} & 71\\
+\texttt{\detokenize{exact_projector_transport}} & 79\\
+\texttt{\detokenize{exact_projector_matches_rational_table}} & 83\\
+\texttt{\detokenize{exact_state_preparation}} & 87\\
+\texttt{\detokenize{exact_state_recovery}} & 91\\
+\texttt{\detokenize{exact_unit_normalized}} & 95\\
+\texttt{\detokenize{exact_psi_normalized}} & 98\\
+\texttt{\detokenize{exact_chi_normalized}} & 101\\
+\texttt{\detokenize{exact_same_initial_probabilities}} & 104\\
+\texttt{\detokenize{exact_orthogonal_states}} & 108\\
+\texttt{\detokenize{exact_coprime_mass_psi}} & 112\\
+\texttt{\detokenize{exact_coprime_mass_chi}} & 116\\
+\texttt{\detokenize{exact_projector_fixes_psi}} & 120\\
+\texttt{\detokenize{exact_projector_kills_chi}} & 124\\
+\bottomrule\end{longtable}\normalsize
+
+\Needspace{10\baselineskip}
+\subsection{\texttt{\detokenize{SemanticBridge}}: 30 theorems}
+
+\small\begin{longtable}{p{0.79\linewidth}r}
+\toprule Declaration & Line\\\midrule\endhead
+\texttt{\detokenize{interpret_zero}} & 19\\
+\texttt{\detokenize{interpret_one}} & 22\\
+\texttt{\detokenize{interpret_rat}} & 25\\
+\texttt{\detokenize{interpret_add}} & 28\\
+\texttt{\detokenize{interpret_mul}} & 32\\
+\texttt{\detokenize{interpret_conj}} & 37\\
+\texttt{\detokenize{interpret_pow}} & 42\\
+\texttt{\detokenize{interpret_sum}} & 48\\
+\texttt{\detokenize{interpret_kSum}} & 54\\
+\texttt{\detokenize{complexMatrix_mul}} & 65\\
+\texttt{\detokenize{complexMatrix_adjoint}} & 70\\
+\texttt{\detokenize{complexMatrix_identity}} & 75\\
+\texttt{\detokenize{complexVector_mul}} & 80\\
+\texttt{\detokenize{fourier_unitary_left}} & 94\\
+\texttt{\detokenize{fourier_unitary_right}} & 99\\
+\texttt{\detokenize{projector_transport}} & 104\\
+\texttt{\detokenize{state_preparation}} & 112\\
+\texttt{\detokenize{state_recovery}} & 117\\
+\texttt{\detokenize{interpret_normSq}} & 122\\
+\texttt{\detokenize{interpret_mass}} & 133\\
+\texttt{\detokenize{interpret_coprimeMass}} & 137\\
+\texttt{\detokenize{psi_normalized}} & 145\\
+\texttt{\detokenize{chi_normalized}} & 149\\
+\texttt{\detokenize{unitState_normalized}} & 153\\
+\texttt{\detokenize{same_initial_probabilities}} & 157\\
+\texttt{\detokenize{states_orthogonal}} & 162\\
+\texttt{\detokenize{signed_state_recovers_arithmetic}} & 166\\
+\texttt{\detokenize{unsigned_state_erases_arithmetic}} & 171\\
+\texttt{\detokenize{projector_fixes_psi}} & 176\\
+\texttt{\detokenize{projector_kills_chi}} & 181\\
+\bottomrule\end{longtable}\normalsize
+
+\Needspace{10\baselineskip}
+\subsection{\texttt{\detokenize{Conventions}}: 17 theorems}
+
+\small\begin{longtable}{p{0.79\linewidth}r}
+\toprule Declaration & Line\\\midrule\endhead
+\texttt{\detokenize{root_is_exponential}} & 11\\
+\texttt{\detokenize{root_power_twelve}} & 18\\
+\texttt{\detokenize{rootPower_interpret}} & 21\\
+\texttt{\detokenize{sqrt_twelve}} & 26\\
+\texttt{\detokenize{sqrt_fortyeight}} & 34\\
+\texttt{\detokenize{fourierScale_interpret}} & 42\\
+\texttt{\detokenize{stateScale_interpret}} & 49\\
+\texttt{\detokenize{fourier_entry_formula}} & 57\\
+\texttt{\detokenize{psi_entry_formula}} & 67\\
+\texttt{\detokenize{chi_entry_formula}} & 71\\
+\texttt{\detokenize{unitState_entry_formula}} & 75\\
+\texttt{\detokenize{projector_entry_formula}} & 80\\
+\texttt{\detokenize{selector_idempotent}} & 84\\
+\texttt{\detokenize{selector_selfAdjoint}} & 91\\
+\texttt{\detokenize{projector_idempotent_complex}} & 98\\
+\texttt{\detokenize{projector_selfAdjoint_complex}} & 106\\
+\texttt{\detokenize{complete_phase_separation}} & 111\\
+\bottomrule\end{longtable}\normalsize
+
+\Needspace{10\baselineskip}
+\subsection{\texttt{\detokenize{Publication}}: 10 theorems}
+
+\small\begin{longtable}{p{0.79\linewidth}r}
+\toprule Declaration & Line\\\midrule\endhead
+\texttt{\detokenize{exact_phase_signal_lookup}} & 9\\
+\texttt{\detokenize{complex_ramanujan_signal}} & 14\\
+\texttt{\detokenize{absolute_signal_lookup}} & 22\\
+\texttt{\detokenize{retained_discarded_orthogonal}} & 27\\
+\texttt{\detokenize{signal_decomposition}} & 30\\
+\texttt{\detokenize{projector_residual_reconstructs}} & 34\\
+\texttt{\detokenize{no_reconstruction_from_initial_probabilities}} & 40\\
+\texttt{\detokenize{recovered_probability_at}} & 53\\
+\texttt{\detokenize{projector_not_injective}} & 60\\
+\texttt{\detokenize{publication_bridge}} & 68\\
+\bottomrule\end{longtable}\normalsize
+
+\section{What completion means here}
+The fixed twelve-dimensional bridge is formally covered in the preserved later
+checkpoint. This guide and machine concordance expose its proof and trust
+boundaries.
+
+General-modulus M\"obius and divisor-projector theory, polyphase identities, and a
+general measurement API remain outside this Lean package. The traditional paper
+supplies separate proofs. Runtime restoration failed, so no fresh replay is
+claimed.
+

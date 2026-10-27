@@ -1,0 +1,72 @@
+\chapter{The symmetry-collapse question}
+\label{ch:question}
+\index{symmetry collapse}
+
+\section{The computational mismatch}
+An $n$-qubit pure state has $2^n$ complex amplitudes in the computational basis. That description is universal but frequently redundant. A number-preserving circuit started with two excitations never visits basis strings of weight zero, one, three, or more. A permutation-symmetric circuit started in a symmetric state never distinguishes two strings that differ only by a relabeling of qubits. A quantum walk on a highly symmetric graph may evolve entirely in the span of a polynomial number of orbit states. In each case the full Hilbert space is a valid container but not the intrinsic state space of the computation.
+
+The question is therefore not whether a quantum circuit acts on an exponential ambient space. It is whether the reachable part of that space, together with the gate action and measurement, has a polynomial classical representation.
+
+\begin{definition}[Exact symmetry collapse]
+A uniform quantum circuit family exhibits an exact symmetry collapse when its acceptance probability can be computed by an exact classical simulation on an invariant representation whose description and update costs are polynomial in the input length.
+\end{definition}
+
+\begin{definition}[Approximate symmetry collapse]
+A uniform circuit family exhibits an approximate symmetry collapse to error $\varepsilon(n)$ when a polynomial-size classical representation reproduces its acceptance probability to additive error $\varepsilon(n)$, with the error below the promise gap required by the decision problem.
+\end{definition}
+
+\section{Four conclusions that must not be conflated}
+The phrase ``symmetry reduction'' is used for several logically different achievements.
+
+\begin{enumerate}
+\item \textbf{Structural reduction.} A projector, quotient, or representation-theoretic coordinate change removes redundant coordinates.
+\item \textbf{Practical acceleration.} A concrete implementation uses less time or memory on tested instances.
+\item \textbf{Polynomial classical simulation.} A uniform family admits a deterministic polynomial-time classical algorithm.
+\item \textbf{Universal complexity collapse.} Every polynomial-size quantum circuit admits such a representation.
+\end{enumerate}
+
+The first three occur in this monograph for declared subclasses. The fourth would imply $BQP\subseteq P$ and is not established. A benchmark can support the second conclusion without proving the third. A small invariant label set can support the first conclusion while leaving exponentially large internal blocks and therefore failing to prove the third.
+
+\section{The four audit quantities}
+For a proposed reduction, define the schematic complexity record
+\[
+\mathfrak C_n=
+\bigl(
+N_{\mathrm{packets}},
+D_{\mathrm{internal}},
+S_{\mathrm{transfer}},
+L_{\mathrm{leakage}}
+\bigr).
+\]
+Here:
+
+\begin{itemize}
+\item $N_{\mathrm{packets}}$ is the number of reachable symmetry labels.
+\item $D_{\mathrm{internal}}$ is the packet dimension or the size of a compressed internal representation.
+\item $S_{\mathrm{transfer}}$ records the sparsity and cost of gate-induced transitions.
+\item $L_{\mathrm{leakage}}$ measures departure from the proposed representation.
+\end{itemize}
+
+A complete claim must also state the cost of discovering this structure from the input. A decomposition that is small but exponentially hard to find does not yield a polynomial algorithm.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.91\textwidth]{collapse_decision_tree.pdf}
+\caption{A disciplined decision tree for proposed symmetry-collapse claims.}
+\end{figure}
+
+\section{Why symmetry is only the beginning}
+Suppose a group $G$ acts on the Hilbert space and the circuit commutes with this action. Representation theory decomposes the space into isotypic pieces. This gives a canonical block structure, but three questions remain.
+
+First, how many pieces are reachable from the input? Second, how large is each piece or how compactly can its states be encoded? Third, can each gate and measurement be applied in those coordinates without reconstructing the full state? The monograph repeatedly returns to this three-stage distinction:
+\[
+\text{symmetry label}
+\longrightarrow
+\text{reachable representation}
+\longrightarrow
+\text{efficient classical algorithm}.
+\]
+
+\begin{principle}[No free collapse]
+Block diagonality is a structural statement. Polynomial-time classical simulation requires an efficient basis or encoding, efficient updates, and efficient output evaluation in addition to the block decomposition.
+\end{principle}

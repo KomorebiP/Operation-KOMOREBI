@@ -1,0 +1,15 @@
+import SemanticBridge
+#check Complex.exp_mul_I
+#check Complex.exp_mul_I_re
+#check Complex.exp_mul_I_im
+#check Complex.cos_ofReal_re
+#check Complex.cos_ofReal_im
+#check Real.sqrt_mul
+#check Real.sq_sqrt
+#check Matrix.diagonal_mul_diagonal
+#check Matrix.conjTranspose_diagonal
+#check Matrix.mul_assoc
+#check Complex.ofReal_inj
+#check Complex.exp_nat_mul
+#check pow_eq_pow_mod
+#check Complex.normSq_nonneg

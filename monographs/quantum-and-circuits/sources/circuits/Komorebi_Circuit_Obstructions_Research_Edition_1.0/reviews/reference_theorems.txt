@@ -1,0 +1,1310 @@
+OPERATION KOMOREBI
+
+
+
+
+Komorebi
+Circuit Obstructions
+Theorems, Proofs,
+and Verification
+Restoration, complete discrepancy covers,
+and the limits of exact projection
+
+
+
+
+Komorebi P.
+
+Source release v1.0.0    •   Document edition 1
+September 21, 2026
+
+
+
+
+A self-contained reference for the eight maintained claim groups and their supporting arguments in the closed
+circuit-obstructions release. General statements are accompanied by written proofs; finite checks and conditional
+implications are identified separately.
+Verification status: written and self-reviewed, with exact finite evidence. No Lean kernel verification or
+independent mathematical review is claimed.
+Edition and proof status
+
+This document is the theorem-and-proof companion to Komorebi Circuit Obstructions, source release v1.0.0. It
+is a typeset consolidation, not a new research release. The authoritative mathematical scope is the repository’s
+register C01–C08. Numbered supporting lemmas below make those arguments readable in one place; their
+number is not a count of new discoveries.
+   The formal-verification boundary
+
+   The source release contains written arguments and exact computational checks. It does not contain a
+   maintained Lean formalization of C01–C08, and this edition does not create one. No result in this book is
+   labelled Lean-verified. A theorem atlas for the broader Komorebi Lean projects is a different, separately
+   pinned publication and is not represented by this document.
+
+The mathematical statements, hypotheses, and limits follow docs/FOUNDATIONS.md, docs/THEORY.md, and
+docs/CLAIMS.md. The controlling proof boundary is PROOF_BOUNDARY.md. The source files are preserved
+unchanged in the documentation supplement.
+
+Source repository          komorebi-circuit-obstructions
+Source tag                 v1.0.0
+Source commit              caa9e3be9af8e0dc8ba8f44726f9d28e81f93f20
+Document edition           1, September 21, 2026
+Maintained scope           Eight claim groups, C01–C08, plus their supporting arguments
+Author identity            Komorebi P., publication pseudonym
+This work was developed with AI assistance. No legal name, affiliation, DOI, live repository address, distribution
+licence, or hosted-publication status is asserted. Producing this PDF does not modify the source tag or publish a
+GitHub repository.
+Evidence vocabulary. Written means that an argument is supplied with hypotheses. Finite means that the
+specified assertions were executed on a stated finite domain. Counterexample means that a displayed inference
+fails in a specified model. Conditional identifies a conclusion whose premise is not implemented here. Archived
+denotes historical material outside the active claim register.
+The release’s recorded full runs are reported as inherited evidence. The documentation-build record distinguishes
+any checks performed for this edition from those historical runs. Compilation of this PDF is not formal proof
+checking.
+
+
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                    i
+Contents
+
+Edition and proof status                                                                                          i
+
+1   Scope, notation, and computational model                                                                      1
+    1.1   Boolean and algebraic conventions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       1
+    1.2   The restored classical oracle . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     1
+    1.3   Comparison with ordinary circuits . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       2
+    1.4   The degree bound used throughout . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        2
+
+2   Exact cut comparison and safe discrepancies                                                                   3
+    2.1   What the comparison does and does not require . . . . . . . . . . . . . . . . . . . . . . . . .         3
+
+3   Complete safe-packet degree                                                                                  4
+    3.1   Pointwise coverage rather than one easy packet . . . . . . . . . . . . . . . . . . . . . . . . .        4
+    3.2   The restored lower bound . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      5
+    3.3   Exact evaluation-span certificates . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    5
+    3.4   Monotone specialization . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       6
+
+4   Calibration families and exact small oracles                                                                  7
+    4.1   An unbalanced disjunction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       7
+    4.2   An explicit moment certificate . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      8
+    4.3   All functions on at most three inputs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     9
+
+5   Homogeneous projection: cost and safety                                                                      10
+    5.1   Two supporting lower bounds . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      10
+    5.2   A compact whole function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       10
+    5.3   Extracting the quadratic grade . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     11
+
+6   Faithful linear gluing algebras                                                                              13
+    6.1   The witness algebra . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    13
+    6.2   The quantified model boundary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      14
+
+7 Weighted witness fingerprints                                                                                  15
+    7.1   A polynomial that distinguishes witnesses . . . . . . . . . . . . . . . . . . . . . . . . . . . .      15
+    7.2   Exact top-coefficient extraction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   15
+    7.3   The conditional algorithmic consequence . . . . . . . . . . . . . . . . . . . . . . . . . . . .        16
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                     ii
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                          THEOREM REFERENCE
+
+
+8 The overlap obstruction to composition                                                                      17
+
+A Claim coverage and theorem index                                                                            18
+    A.1 Coverage of the maintained register . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     18
+    A.2 Dependency structure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    18
+    A.3 Complete numbered-result index . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .      19
+
+B Verification evidence and reproduction                                                                      20
+    B.1 What was checked for this PDF edition . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     20
+    B.2 The pinned release’s computation record . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     20
+    B.3 Reproduction commands . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .       21
+
+C Boundaries, corrections, and source provenance                                                              22
+    C.1 Excluded inferences . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   22
+    C.2 Historical execution corrections . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    22
+    C.3 What this reference does not claim . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .    22
+    C.4 Source identity and editorial treatment . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .   23
+    C.5 Rebuilding the document . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .     23
+
+Sources and background references                                                                             24
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                            iii
+CHAPTER 1
+
+
+Scope, notation, and computational model
+
+Source alignment: Foundations, conventions and F1–F3; Proof Boundary [R1, R4].
+
+
+
+1.1 Boolean and algebraic conventions
+
+A Boolean function is a map 𝑓 : {0, 1} 𝑛 → {0, 1}. Unless a different field is explicitly stated, polynomials are
+the unique multilinear representatives in
+
+                                   R 𝑛 = F2 [𝑥 1 , . . . , 𝑥 𝑛 ]/(𝑥 𝑖2 − 𝑥 𝑖 : 1 ≤ 𝑖 ≤ 𝑛).
+
+Addition in this ring is XOR. Multiplication is AND. Boolean OR is written ∨ and satisfies 𝑎 ∨ 𝑏 = 𝑎 + 𝑏 + 𝑎𝑏.
+A statement ℎ ≤ 𝑓 is pointwise and means that ℎ has no positive value at a negative input of 𝑓 .
+The degree of a nonzero function is its multilinear algebraic degree. A nonzero constant has degree zero.
+For mathematical statements involving a constant-zero function we use deg 0 = −∞; stored profile tables and
+Python helpers use their documented sentinels instead. Those implementation conventions do not change the
+inequalities.
+                         Î
+For 𝑆 ⊆ [𝑛], write 𝑥 𝑆 = 𝑖 ∈𝑆 𝑥𝑖 and let 1𝑆 be the input with support 𝑆. A minterm of a monotone function
+means an inclusion-minimal positive support, not an arbitrary positive input.
+
+   Symbol                Meaning
+   𝐶( 𝑓 )                Minimum fan-in-two AND/OR/NOT gate count, allowing fan-out.
+   𝐿( 𝑓 )                Minimum total NOT/CNOT/Toffoli count of a restored implementation.
+   𝑇                     Number of Toffoli gates in a specified implementation.
+   𝑇rest ( 𝑓 )           Minimum such Toffoli count, allowing any finite zero workspace.
+   𝑀( 𝑓 )                Minimum AND count in an XOR–AND computation, with affine operations un-
+                         charged.
+   𝐼𝑓                    Boolean functions supported only on positive inputs of 𝑓 .
+   𝛼1 ( 𝑓 )              Minimum degree of one nonzero member of 𝐼 𝑓 .
+   𝛽𝑣 ( 𝑓 )              Minimum degree of a member of 𝐼 𝑓 that is one at 𝑣.
+   𝛽( 𝑓 ), 𝛽∗ ( 𝑓 )      Complete-cover degree and its affine-output optimization.
+   [𝑃] 2                 Homogeneous degree-two component of the multilinear polynomial 𝑃 in the specified
+                         coordinates.
+
+
+1.2 The restored classical oracle
+
+A legal NOT changes one target bit. A CNOT adds a control bit to a distinct target. A Toffoli adds the product of
+two distinct controls to a third distinct wire. Gates have positive controls and are self-inverse. Their composition
+is a permutation of all register states.
+A restored oracle is a circuit satisfying
+
+                                            (𝑥, 0𝑎 , 𝑦) ↦−→ (𝑥, 0𝑎 , 𝑦 + 𝑓 (𝑥))                                (1.1)
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                     1
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                             THEOREM REFERENCE
+
+
+for every logical input 𝑥 and both initial target values 𝑦 ∈ {0, 1}. The zero-workspace condition is imposed
+at the boundary, not at intermediate times. The circuit may disturb logical inputs, use output feedback, reuse
+intermediate values, and make arbitrary reversible excursions before restoring the required registers.
+NOT and CNOT are free only when counting 𝑇. They are charged in 𝐿. This distinction is essential in the
+projection example. There are no measurements, quantum phases, discarded work registers, or unverified ancilla
+initializations in this model.
+
+
+1.3 Comparison with ordinary circuits
+
+Theorem 1.1 (Classical/restored simulation comparison). For every Boolean function 𝑓 ,
+
+                                           𝐶( 𝑓 )
+                                                  ≤ 𝐿( 𝑓 ) ≤ 6𝐶 ( 𝑓 ) + 1.
+                                            5
+
+Proof. Compute every Boolean gate onto a fresh zero wire. An AND costs one Toffoli. A NOT of an existing
+signal is obtained with one NOT and one CNOT. An OR is computed as 𝑎 + 𝑏 + 𝑎𝑏, using two CNOTs and one
+Toffoli. Repeated operands are simplified to a copy, not encoded as an illegal repeated-control gate. Compute
+the output, copy it to 𝑦, and reverse the first computation. This uses at most 6𝐶 ( 𝑓 ) + 1 gates and restores every
+work register.
+Conversely, express each reversible gate as an ordinary Boolean update. XOR has a four-gate AND/OR/NOT
+realization. A Toffoli needs that XOR plus one AND, hence at most five gates. Substitute zero for initial ancillas
+and 𝑦 = 0, then read the final target. The resulting Boolean circuit has at most 5𝐿( 𝑓 ) gates.                 □
+
+
+1.4 The degree bound used throughout
+
+Lemma 1.2 (Degree per multiplication). An XOR–AND computation with 𝑡 AND gates has output degree at
+most 𝑡 + 1, allowing constants and arbitrary sharing. The same bound holds for each coordinate of a reversible
+computation containing 𝑡 Toffoli gates.
+
+Proof. Introduce a formal Boolean variable for each AND output. Its defining expression is a product of two
+affine forms in the logical inputs and earlier gate variables. The final output is affine in the inputs and all gate
+variables.
+Substitute the gate variables in reverse topological order. A multilinear monomial contains the variable being
+replaced at most once. Replacing it by a quadratic expression raises degree by at most one; multilinear reduction
+cannot raise it. After 𝑡 substitutions the degree is at most 𝑡 + 1.
+A Toffoli contributes one multiplication to such a straight-line computation, while NOT and CNOT are affine.
+The argument also applies to a suffix executed backwards because the gates are self-inverse.              □
+
+The source identifies this standard degree bound with the XOR–AND background in [S1].
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                                2
+CHAPTER 2
+
+
+Exact cut comparison and safe discrepancies
+
+MAINTAINED CLAIM C01
+
+
+Source alignment: Foundations F2; Claim Register C01 [R1, R3].
+
+
+Theorem 2.1 (Cut-comparison identity and complete coverage). Let a restored oracle be written C = 𝑄 ◦ 𝑃,
+and put 𝑅 = 𝑄 −1 . Suppress zero ancillas in boundary arguments and define
+
+                     𝐴(𝑥) = 𝑃(𝑥, 0),       𝐵(𝑥) = 𝑅(𝑥, 0),       𝐷 (𝑥) = 𝑃(𝑥, 1) + 𝑃(𝑥, 0).
+
+These are vectors indexed by all registers. Then
+
+                                   𝐴(𝑥) + 𝐵(𝑥) = 𝑓 (𝑥)𝐷 (𝑥),         𝐷 (𝑥) ≠ 0.                             (2.1)
+
+Consequently, the coordinate discrepancies 𝐻𝑖 = 𝐴𝑖 + 𝐵𝑖 satisfy
+                                                             Ü
+                                   𝐻𝑖 ≤ 𝑓 for every 𝑖,          𝐻𝑖 = 𝑓 .                                    (2.2)
+                                                                 𝑖
+
+Proof. For a boundary state with target 𝑧, correctness of the full circuit gives
+
+                                           𝑅(𝑥, 𝑧) = 𝑃(𝑥, 𝑧 + 𝑓 (𝑥)).
+
+When 𝑓 (𝑥) = 0, this says 𝐵(𝑥) = 𝐴(𝑥). When 𝑓 (𝑥) = 1, it says 𝐵(𝑥) = 𝑃(𝑥, 1), and the discrepancy is 𝐷 (𝑥).
+Both cases are summarized by (2.1).
+The prefix 𝑃 is a permutation. Its images of the two distinct boundary states (𝑥, 0) and (𝑥, 1) are different, so
+𝐷 (𝑥) is a nonzero vector.
+If 𝑓 (𝑥) = 0, every discrepancy is zero. If 𝑓 (𝑥) = 1, at least one discrepancy is one. These are precisely the
+safety and complete-coverage assertions in (2.2).                                                             □
+
+
+2.1 What the comparison does and does not require
+
+The suffix need not reverse the prefix. Output feedback and a target direction distributed among many registers
+are permitted. Only boundary correctness and reversibility are used. Equivalently,
+
+                                   𝑓 (𝑥) = 1    ⇐⇒      𝑃(𝑥, 0) ≠ 𝑄 −1 (𝑥, 0).
+
+This is a necessary representation, not a circuit lower bound from packet count. Expanded monomial counts,
+individual degrees, and algebra dimensions remain distinct from the shared cost of constructing the complete
+family. The declared finite cut checks are reported in Appendix B.
+
+
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                  3
+CHAPTER 3
+
+
+Complete safe-packet degree
+
+MAINTAINED CLAIM C02
+
+
+Source alignment: Theory §1 and Foundations F4 [R2, R1].
+
+
+
+3.1 Pointwise coverage rather than one easy packet
+
+Let
+                                             𝐼 𝑓 = {ℎ ∈ R 𝑛 : ℎ(1 + 𝑓 ) = 0}.
+This is the ideal of functions supported only on the accepting set of 𝑓 . For nonzero 𝑓 , the one-packet parameter
+is
+                                       𝛼1 ( 𝑓 ) = min{deg ℎ : 0 ≠ ℎ ∈ 𝐼 𝑓 }.
+It asks for one safe nonzero polynomial, which may detect only an easy portion of the accepting set. One-sided
+polynomial immunity is established terminology in this setting; see the background reference [S3].
+For a positive input 𝑣, define instead
+
+                         𝛽𝑣 ( 𝑓 ) = min{deg ℎ : ℎ ∈ 𝐼 𝑓 , ℎ(𝑣) = 1},                    𝛽( 𝑓 ) = max 𝛽𝑣 ( 𝑓 ).
+                                                                                                𝑣: 𝑓 (𝑣)=1
+
+Set 𝛽(0) = 0. Thus 𝛽( 𝑓 ) is the degree needed before safe polynomials collectively detect every positive input.
+Finally, put
+                                           𝛽∗ ( 𝑓 ) = max 𝛽( 𝑓 + ℓ),
+                                                             ℓ ∈Aff 𝑛
+
+where Aff 𝑛 is the set of affine Boolean functions on the logical inputs.
+
+Proposition 3.1 (Basic size bounds). For nonzero 𝑓 on 𝑛 inputs,
+
+                                                   𝛼1 ( 𝑓 ) ≤ 𝛽( 𝑓 ) ≤ 𝑛.
+
+If 𝑓 has at least two positive inputs, then 𝛽( 𝑓 ) ≤ 𝑛 − 1. In particular 𝛽∗ ( 𝑓 ) ≤ 𝑛.
+
+Proof. Any polynomial detecting a specified positive input is nonzero, giving the first inequality. For 𝑣 ∈ {0, 1} 𝑛 ,
+its point indicator is                                    Ö              Ö
+                                             𝛿 𝑣 (𝑥) =             𝑥𝑖             (1 + 𝑥 𝑖 ).
+                                                         𝑖:𝑣𝑖 =1        𝑖:𝑣𝑖 =0
+
+If 𝑓 (𝑣) = 1, then 𝛿 𝑣 ∈ 𝐼 𝑓 and has degree 𝑛, proving the upper bound.
+If 𝑣 and 𝑤 are distinct positive inputs, 𝛿 𝑣 + 𝛿 𝑤 is safe and equals one at 𝑣. The degree-𝑛 coefficients of its
+two summands are both one, so they cancel. Its degree is at most 𝑛 − 1. Do this for each positive 𝑣. The last
+assertion applies the general bound to every affine adjustment, with the stated zero convention.              □
+
+Proposition 3.2 (Affine input invariance). Invertible affine changes of logical input coordinates preserve 𝛼1 ,
+𝛽, and 𝛽∗ , with the pointwise parameters transported by the corresponding bijection of inputs.
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                       4
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                               THEOREM REFERENCE
+
+
+Proof. Composition with an affine map cannot increase multilinear degree. Composition with its affine inverse
+proves equality of degrees. Such composition bijects the accepting and rejecting inputs, hence maps safe
+polynomials bijectively to safe polynomials and preserves their pointwise detecting property. It also permutes
+the affine output masks used in the definition of 𝛽∗ .                                                      □
+
+
+3.2 The restored lower bound
+
+Theorem 3.3 (Affine-optimized complete-cover bound). Every restored implementation of 𝑓 with 𝑇 Toffoli
+gates satisfies
+                                       𝑇 ≥ max{0, deg 𝑓 − 1, 2𝛽∗ ( 𝑓 ) − 3}.                                  (3.1)
+In particular,
+                               𝑇 ≥ max{0, deg 𝑓 − 1, 2𝛽( 𝑓 ) − 3, 2𝛽(1 + 𝑓 ) − 3}.
+
+Proof. Cut the implementation after ⌊𝑇/2⌋ Toffolis. The forward prefix and the inverse suffix use at most ⌈𝑇/2⌉
+Toffolis each. By Lemma 1.2, each of their coordinates, and therefore each discrepancy 𝐻𝑖 , has degree at most
+                                                   
+                                                   𝑇
+                                                      + 1.
+                                                   2
+Theorem 2.1 gives 𝐻𝑖 ≤ 𝑓 and a complete cover of the positive inputs. Every positive 𝑣 is therefore detected by
+a safe polynomial within this degree bound, so
+                                                         
+                                                         𝑇
+                                               𝛽( 𝑓 ) ≤     + 1.
+                                                         2
+Integer rounding gives 𝑇 ≥ 2𝛽( 𝑓 ) − 3.
+At the end of a restored oracle the logical inputs are available unchanged. CNOTs from those inputs and, when
+needed, a target NOT append any affine ℓ to the target at no Toffoli cost. Apply the same inequality to each
+𝑓 + ℓ and maximize. Finally, reading the target with initial value zero computes 𝑓 using 𝑇 multiplications, so
+Lemma 1.2 gives 𝑇 ≥ deg 𝑓 − 1.                                                                               □
+
+   Scope of the lower bound
+
+   The circuit may use output feedback and arbitrary dirty intermediate states, but it must satisfy the restored
+   classical oracle convention. The inequality does not apply automatically to a model with discarded
+   garbage or measurement. Because 𝛽∗ ( 𝑓 ) ≤ 𝑛, this parameter alone cannot prove a superpolynomial lower
+   bound in the actual input length.
+
+
+
+3.3 Exact evaluation-span certificates
+
+For an integer 𝑑 ≥ 0, form the evaluation vector
+                                                          
+                                             𝑣 𝑑 (𝑥) = 𝑥 𝑆 𝑆 ⊆ [𝑛], |𝑆 | ≤𝑑 ,
+
+and write 𝑈 = 𝑓 −1 (0).
+
+Theorem 3.4 (Dual certificate for failure of safe detection). For every positive input 𝑣,
+
+                              𝛽𝑣 ( 𝑓 ) > 𝑑   ⇐⇒       𝑣 𝑑 (𝑣) ∈ spanF2 {𝑣 𝑑 (𝑢) : 𝑢 ∈ 𝑈}.                     (3.2)
+
+Source v1.0.0 / Document edition 1                                                                                 5
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                                        THEOREM REFERENCE
+
+
+Proof. A degree-at-most-𝑑 polynomial is a coefficient covector on the evaluation space. It is safe exactly when
+it annihilates every negative evaluation vector, equivalently their span. Such a covector can equal one on 𝑣 𝑑 (𝑣)
+exactly when 𝑣 𝑑 (𝑣) lies outside that span. This is finite-dimensional linear duality over F2 .                □
+
+Corollary 3.5 (Finite support of a dual witness). When the right side of (3.2) holds, there is 𝑊 ⊆ 𝑈 with
+                                                                                  min(𝑑,𝑛)
+                                                                                    ∑︁        
+                                                 ∑︁                                          𝑛
+                                     𝑣 𝑑 (𝑣) =         𝑣 𝑑 (𝑢),          |𝑊 | ≤                  .
+                                                 𝑢∈𝑊                                𝑗=0
+                                                                                             𝑗
+
+The cardinality |𝑊 | is odd.
+
+Proof. Choose a basis of the span from negative evaluation vectors and express 𝑣 𝑑 (𝑣) in that basis. Over F2 ,
+the nonzero coefficients select a subset 𝑊 of size at most the ambient dimension. The constant-monomial
+coordinate of every evaluation vector is one; comparing it on both sides shows that |𝑊 | is odd.     □
+
+Such a relation is replayable by exact linear arithmetic. It does not provide an efficient way to enumerate all
+negatives of an arbitrary SAT verifier. The theorem assumes that the negative vectors or their proved structure
+are available.
+
+
+3.4 Monotone specialization
+
+Theorem 3.6 (Safe monomial ideal for a monotone function). If 𝑓 is monotone, 𝐼 𝑓 has a monomial basis
+indexed by the positive supports of 𝑓 . For each positive 𝑣,
+                                     𝛽𝑣 ( 𝑓 ) = min{|𝑆| : 𝑆 ⊆ supp(𝑣), 𝑓 (1𝑆 ) = 1}.
+Consequently,
+                     𝛼1 ( 𝑓 ) = minimum minterm size,                    𝛽( 𝑓 ) = maximum minterm size.
+
+Proof. For any Boolean polynomial ℎ, its coefficient on 𝑥 𝑆 is
+                                                                  ∑︁
+                                                      [𝑥 𝑆 ]ℎ =          ℎ(1𝑇 )
+                                                                  𝑇 ⊆𝑆
+
+over F2 . If 𝑆 is negative for monotone 𝑓 , every subset 𝑇 is negative. A safe ℎ vanishes at each 1𝑇 , so its 𝑥 𝑆
+coefficient is zero. Conversely, a monomial on a positive support is safe by monotonicity. This proves the basis
+assertion.
+If a safe ℎ satisfies ℎ(𝑣) = 1, at least one of its nonzero monomials is supported inside supp(𝑣). That support is
+positive and has size at most deg ℎ. Conversely, a smallest such positive-support monomial detects 𝑣. This
+proves the pointwise formula. Taking the appropriate minima and maxima gives the minterm statements: a
+minimal positive support cannot contain a smaller positive one, and every positive input contains a minterm. □
+
+Corollary 3.7 (Exact monomial oracle cost). For 𝑘 ≥ 2,
+
+                                                 𝑇rest (𝑥 1 𝑥 2 · · · 𝑥 𝑘 ) = 2𝑘 − 3.
+
+Proof. The unique positive input of the 𝑘-variable monomial needs a safe polynomial of degree 𝑘. The
+complete-cover lower bound gives 2𝑘 − 3. For the matching construction, successively compute 𝑥 1 𝑥 2 , then
+𝑥 1 𝑥2 𝑥 3 , and so on up to a (𝑘 − 1)-fold product on clean work wires. Toggle the output using that product and 𝑥 𝑘 ,
+then uncompute the 𝑘 − 2 work products. The count is (𝑘 − 2) + 1 + (𝑘 − 2) = 2𝑘 − 3. For 𝑘 = 2, a single
+Toffoli suffices.                                                                                                  □
+
+
+Source v1.0.0 / Document edition 1                                                                                   6
+CHAPTER 4
+
+
+Calibration families and exact small oracles
+
+MAINTAINED CLAIM C03 and C04
+
+
+Source alignment: Theory §2 [R2]; baseline completeness.json.
+
+
+
+4.1 An unbalanced disjunction
+
+For 𝑘 ≥ 2 and 𝑛 = 𝑘 + 2, define
+
+                𝐵 = 𝑧1 · · · 𝑧 𝑘 ,       𝐹𝑘 (𝑎, 𝑏, 𝑧) = (𝑎𝑏) ∨ 𝐵 = 𝑎𝑏 + 𝐵 + 𝑎𝑏𝐵,               𝐺 𝑘 = 𝐹𝑘 + 𝑎.
+
+This is a deliberately easy family with two differently sized accepting regions. It separates the cost of finding
+one safe packet from the degree needed for complete coverage.
+
+Proposition 4.1 (Raw calibration parameters). For this family,
+
+                                     𝛼1 (𝐹𝑘 ) = 2,        𝛽(𝐹𝑘 ) = 𝑘,        deg 𝐹𝑘 = 𝑘 + 2.
+
+Proof. The minterms have supports {𝑎, 𝑏} and {𝑧 1 , . . . , 𝑧 𝑘 }. The first two assertions follow from Theorem 3.6.
+The monomial 𝑎𝑏𝐵 has degree 𝑘 + 2 and does not cancel with either lower-degree term in the displayed
+polynomial.                                                                                                       □
+
+Theorem 4.2 (Affine optimization of the one-packet parameter). For every 𝑘 ≥ 2,
+
+                                                      max 𝛼1 (𝐹𝑘 + ℓ) = 3.
+                                                     ℓ ∈Aff 𝑛
+
+
+Proof. First restrict to the face 𝑧 1 = 0. There 𝐹𝑘 + ℓ becomes 𝑎𝑏 + ℓ| 𝑧1 =0 , a nonzero quadratic. If the restricted
+affine term contains a remaining 𝑧 variable, set 𝑎 = 0 and set the remaining affine form to one. This gives an
+accepting affine subspace of codimension at most two inside the face. If it contains no remaining 𝑧 variable, fix
+𝑎, 𝑏 to an accepting pair instead. The indicator of the resulting affine subspace in the full input space has degree
+at most three and is safe. Thus every affine adjustment has a nonzero safe polynomial of degree at most three.
+For equality, take ℓ = 𝑎. The degree-three polynomial
+
+                                                        𝑎(1 + 𝑏) (1 + 𝑧1 )
+
+is safe for 𝐺 𝑘 . Suppose a safe ℎ of degree at most two existed. On 𝑎 = 0, acceptance requires 𝐵 = 1. For 𝑘 ≥ 3,
+the monotone-ideal argument forces ℎ| 𝑎=0 = 0, hence ℎ = 𝑎𝐿 with 𝐿 affine in the remaining variables. The
+negative face 𝑎 = 𝑏 = 1 forces 𝐿(1, 𝑧) = 0, so 𝐿 = 𝑐(1 + 𝑏). The negative point 𝑎 = 1, 𝑏 = 0, 𝑧 = (1, . . . , 1)
+then forces 𝑐 = 0.
+When 𝑘 = 2, the restriction can initially be ℎ| 𝑎=0 = 𝑐𝐵. Write ℎ = 𝑐𝐵 + 𝑎𝐿. On the same negative face
+𝑎 = 𝑏 = 1, the quadratic term 𝑐𝐵 cannot be cancelled by affine 𝐿, so 𝑐 = 0. The previous argument then applies.
+There is no nonzero safe polynomial of degree at most two, proving equality.                                 □
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                       7
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                              THEOREM REFERENCE
+
+
+Theorem 4.3 (Affine optimization of complete coverage). For every 𝑘 ≥ 2,
+
+                                                   𝛽∗ (𝐹𝑘 ) = 𝑘 + 1.
+
+Proof. Restrict 𝐺 𝑘 = 𝐹𝑘 + 𝑎 to 𝑏 = 1. Then
+
+                                                 𝐺 𝑘 | 𝑏=1 = (1 + 𝑎)𝐵.
+
+This is the indicator of one point on 𝑘 + 1 variables. At the positive input 𝑎 = 0, 𝑏 = 1, 𝑧 = (1, . . . , 1), a safe
+detecting polynomial must restrict to that singleton indicator and therefore have degree at least 𝑘 + 1. Thus
+𝛽(𝐺 𝑘 ) ≥ 𝑘 + 1.
+For the upper bound, Theorem 4.2 shows that no 𝐹𝑘 + ℓ is a singleton indicator: a singleton would have
+one-packet degree 𝑛 = 𝑘 + 2 > 3. These functions are also nonzero because 𝐹𝑘 is not affine. Each has at least
+two positive inputs, so Proposition 3.1 gives 𝛽(𝐹𝑘 + ℓ) ≤ 𝑛 − 1 = 𝑘 + 1.                                   □
+
+Corollary 4.4 (Restored cost interval for the calibration family). For 𝑛 = 𝑘 + 2,
+
+                                           2𝑛 − 5 ≤ 𝑇rest (𝐹𝑘 ) ≤ 2𝑛 − 3.
+
+Proof. The lower bound follows from Theorems 3.3 and 4.3. For the upper bound, compute 𝐴 = 𝑎𝑏 with one
+multiplication and 𝐵 using 𝑘 − 1 multiplications. Toggle the output by 𝐴 + 𝐵 + 𝐴𝐵, requiring one output Toffoli
+and affine additions. Uncompute 𝐴 and 𝐵. The total Toffoli count is 𝑘 + 1 + 𝑘 = 2𝑘 + 1 = 2𝑛 − 3.             □
+
+The preceding one-packet bound, even optimized over affine target adjustments, gives only 𝑛 − 1 for this family.
+The complete-cover bound gives 2𝑛 − 5. The stronger estimate can also be recognized by restriction to 𝑏 = 1
+followed by a free affine output adjustment. No exact optimum is claimed when the displayed endpoints differ.
+
+
+                     Inputs 𝑛    maxℓ 𝛼1    𝛽∗    One-packet bound          Complete-cover bound
+                            4          3     3                          3                     3
+                            5          3     4                          4                     5
+                            6          3     5                          5                     7
+                            7          3     6                          6                     9
+                            8          3     7                          7                    11
+                            9          3     8                          8                    13
+
+The formulas are proved for all 𝑘 ≥ 2. The source evaluates the designated family truth tables through nine
+inputs, but checks every affine mask only through eight. The ninth-input affine maximum is justified by the
+proof, not by a stored exhaustive mask search.
+
+
+4.2 An explicit moment certificate
+
+On the face 𝑏 = 1, every point except 𝑣 = (𝑎 = 0, 𝑧 = (1, . . . , 1)) is negative for 𝐺 𝑘 . A polynomial of degree at
+most 𝑘 sums to zero over the (𝑘 + 1)-dimensional cube: each monomial omits some coordinate and contributes
+an even number of ones. Therefore                      ∑︁
+                                          𝑣 𝑘 (𝑣) =                𝑣 𝑘 (𝑢).
+                                                      𝑢≠𝑣 on the face
+
+This is the certificate from Theorem 3.4, proving that no safe degree-𝑘 polynomial detects 𝑣.
+
+Source v1.0.0 / Document edition 1                                                                                 8
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                              THEOREM REFERENCE
+
+
+The finite four-input computation found maxℓ 𝛼1 ( 𝑓 + ℓ) = 𝛽∗ ( 𝑓 ) for every function in that domain. The family
+above disproves extrapolation of that equality: it already fails at five inputs, with values three and four, and the
+difference grows without bound.
+
+
+4.3 All functions on at most three inputs
+
+Theorem 4.5 (Exact small restored-oracle calibration). For every Boolean function on one, two, or three
+logical inputs, the bound in Theorem 3.3 is attained by an explicit restored implementation. The optimum Toffoli
+counts are zero for affine functions, one for nonaffine quadratics, and three for three-input cubics.
+
+Proof. An affine function is added to the target using only NOT and CNOT gates, so its optimum is zero.
+A nonaffine quadratic on at most three variables has an alternating polar matrix of rank two. In suitable invertible
+linear coordinates, its quadratic part is a product of two linear forms; the remaining part is affine. A single
+Toffoli, together with affine preparation and restoration, computes the oracle. The degree bound requires at least
+one.
+A cubic on three variables has the form
+
+                                               𝑥 1 𝑥 2 𝑥 3 + 𝑞(𝑥) + ℓ(𝑥),
+
+with 𝑞 quadratic and ℓ affine. Translating 𝑥 𝑖 ↦→ 𝑥 𝑖 + 𝑐 𝑖 adjusts independently the coefficients of 𝑥 𝑗 𝑥 𝑘 , so all
+quadratic terms can be cancelled. The resulting function is a three-variable monomial plus an affine function.
+Affine input changes and affine output additions cost no Toffolis. Corollary 3.7 gives both the lower bound three
+and a matching restored construction.                                                                               □
+
+There are 4 + 16 + 256 = 276 functions over the three input sizes. The distribution is
+
+                                       Optimum Toffolis    0   1    3
+                                      Number of functions 28 120 128.
+
+The source constructs and checks the actual circuits. Optimality is obtained from the written lower bounds and
+matching constructions, not from exhaustive enumeration of all reversible circuits.
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                                  9
+CHAPTER 5
+
+
+Homogeneous projection: cost and safety
+
+MAINTAINED CLAIM C05
+
+
+Source alignment: Theory §3 [R2]; baseline projection.json.
+
+This chapter separates the nonlinear cost of a complete function from the nonlinear cost of one extracted
+homogeneous component. It also shows that an algebraic projection need not preserve safe support.
+
+
+5.1 Two supporting lower bounds
+
+Lemma 5.1 (Affine subspace after multiplication restrictions). If a Boolean function on 𝑛 inputs is computed
+with 𝑡 AND gates in an XOR–AND circuit, there is an affine subspace of dimension at least 𝑛 − 𝑡 on which the
+output is affine.
+
+Proof. Process the AND gates in topological order while maintaining an affine subspace on which all preceding
+product outputs are affine. The operands of the next gate are then affine on the current subspace. If an operand
+is constant, their product is already affine. Otherwise impose one nonempty affine equation setting that operand
+to zero. This loses at most one dimension and makes the product affine. Earlier affine outputs stay affine under
+restriction. After at most 𝑡 restrictions the output is affine on a subspace of dimension at least 𝑛 − 𝑡.      □
+
+This is the affine-restriction method used in the background literature on multiplicative complexity [S2]. The
+proof is reproduced here in the scalar convention needed below.
+
+Proposition 5.2 (Exact cost of a nondegenerate paired quadratic). For even 𝑛, let
+
+                                        𝑄(𝑥) = 𝑥 1 𝑥2 + 𝑥 3 𝑥 4 + · · · + 𝑥 𝑛−1 𝑥 𝑛 .
+
+Then
+                                               𝑀 (𝑄) = 𝑇rest (𝑄) = 𝑛/2.
+
+Proof. The polar bilinear form of 𝑄 is the full-rank alternating form made of 𝑛/2 disjoint 2 × 2 blocks. If 𝑄 is
+affine on an affine subspace with direction space 𝑈, its second differences vanish on 𝑈, so 𝑈 is totally isotropic.
+Nondegeneracy gives dim 𝑈 ≤ 𝑛/2.
+Lemma 5.1 therefore implies 𝑛 − 𝑡 ≤ 𝑛/2, or 𝑡 ≥ 𝑛/2, for any XOR–AND computation. Every restored Toffoli
+implementation gives such a computation by fixing its ancillary inputs and initial target, so the same lower
+bound applies to 𝑇rest . Directly add the 𝑛/2 disjoint pair products to the target with one Toffoli each. This attains
+both bounds and requires no nonlinear work register.                                                                □
+
+
+5.2 A compact whole function
+
+Let 𝑚 ≥ 2, let 𝑎 = (1, . . . , 1) ∈ F2𝑚 , and introduce one logical bit 𝑥 𝑣 for each
+
+                                                 𝑣 ∈ 𝑉 = F2𝑚 \ {0, 𝑎}.
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                      10
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                                         THEOREM REFERENCE
+
+
+There are 𝑛 = 2𝑚 − 2 such bits. Define
+                                                  ∑︁                                𝑚
+                                                                                    Ö
+                                     𝐿 𝑗 (𝑥) =              𝑥𝑣 ,        𝑃𝑚 (𝑥) =           𝐿 𝑗 (𝑥).
+                                                 𝑣:𝑣 𝑗 =1                            𝑗=1
+
+Theorem 5.3 (Exact nonlinear cost of the whole function). For the family above,
+
+                                     𝑀 (𝑃𝑚 ) = 𝑚 − 1,                   𝑇rest (𝑃𝑚 ) = 2𝑚 − 3.
+
+Proof. The linear map 𝑥 ↦→ (𝐿 1 (𝑥), . . . , 𝐿 𝑚 (𝑥)) has rank 𝑚, since its columns include the standard basis
+vectors. Extend these forms to an invertible system of linear coordinates. In those coordinates 𝑃𝑚 is the product
+of the first 𝑚 variables, with the other 𝑛 − 𝑚 variables unused.
+Degree is invariant under an invertible affine change, so deg 𝑃𝑚 = 𝑚 and Lemma 1.2 gives 𝑀 (𝑃𝑚 ) ≥ 𝑚 − 1. A
+product chain attains it.
+For the restored lower bound, the safe ideal of the product in these coordinates consists of polynomials divisible
+by the 𝑚-variable monomial. Any nonzero safe polynomial has degree at least 𝑚. Theorem 3.3 gives 2𝑚 − 3.
+Compute the 𝑚 parities onto clean registers by CNOT, apply the optimal monomial oracle there, and uncompute
+the parities. No additional Toffolis are needed.                                                                □
+
+
+5.3 Extracting the quadratic grade
+
+Theorem 5.4 (Exact cost of the extracted grade). Let 𝑄 𝑚 = [𝑃𝑚 ] 2 denote the homogeneous quadratic part in
+the original 𝑥 𝑣 coordinates. Then                                 ∑︁
+                                                 𝑄𝑚 =                      𝑥 𝑣 𝑥 𝑣+𝑎 ,
+                                                             {𝑣,𝑣+𝑎} ⊆𝑉
+
+where every unordered pair is used once, and
+
+                                      𝑀 (𝑄 𝑚 ) = 𝑇rest (𝑄 𝑚 ) = 𝑛/2 = 2𝑚−1 − 1.
+
+Proof. The excluded columns give 𝑃𝑚 (0) = 𝑃𝑚 (𝑒 𝑣 ) = 0. For distinct 𝑢, 𝑣, Boolean coefficient inversion
+therefore gives
+                                      [𝑥 𝑢 𝑥 𝑣 ]𝑃𝑚 = 𝑃𝑚 (𝑒 𝑢 + 𝑒 𝑣 ) = [𝑢 + 𝑣 = 𝑎].
+The map 𝑣 ↦→ 𝑣 + 𝑎 is a fixed-point-free involution of 𝑉, so the displayed terms form 𝑛/2 disjoint pairs.
+Proposition 5.2 supplies the exact costs.                                                              □
+
+Counterexample 5.5 (Projection does not preserve safe support). The quadratic extraction [𝑃𝑚 ] 2 need not
+be supported on the positive set of 𝑃𝑚 .
+
+Proof. Take 𝑚 = 3, identify the columns with the integers 1, . . . , 6 using their three-bit expansions, and set
+𝑥 1 = 𝑥 3 = 𝑥 4 = 1 with all other inputs zero. Their column sum is 1 + 3 + 4 = 6 under bitwise XOR, not 𝑎 = 7, so
+𝑃3 = 0. Among the complementary pairs (1, 6), (2, 5), (3, 4), exactly (3, 4) has both inputs one. Thus 𝑄 3 = 1.
+In the source ordering this is the logical assignment encoded by integer 13.                                     □
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                                   11
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                              THEOREM REFERENCE
+
+
+                  𝑚    Actual inputs 𝑛   𝑇rest (𝑃𝑚 )   𝑇rest (𝑄 𝑚 )   Constructed total gates for 𝑃𝑚
+                  2                  2            1             1                                 5
+                  3                  6            3             3                                21
+                  4                 14            5             7                                61
+                  6                 62            9            31                               381
+                  8                254           13           127                             2,045
+                 10              1,022           17           511                            10,237
+
+These are exact cost formulas. The large-input entries were not obtained by searching for optimal circuits. The
+full construction uses
+                                                2𝑚(2𝑚−1 − 1)
+CNOTs as well as 2𝑚 − 3 Toffolis, giving total count 𝑂 (𝑛 log 𝑛). The projected quadratic has 𝑛/2 total gates.
+   What the counterexample excludes
+
+   The nonlinear projection cost grows exponentially in 𝑚, but only linearly in actual input length 𝑛. The
+   example does not give an exponential separation in ordinary total gate count. It rules out treating this grade
+   extraction as having overhead bounded only by a polynomial in the original Toffoli count, independently
+   of linear and input-size resources. It also shows that homogeneous extraction may destroy safety. It does
+   not exclude a bound polynomial in 𝑛 + 𝑇 or every possible graded invariant.
+
+The source checks all pair coefficients and exact ranks for 2 ≤ 𝑚 ≤ 10. Full truth tables and complete restored
+evaluations are restricted to 𝑚 = 2, 3, 4. At 𝑚 = 4, the quadratic accepts 7,616 inputs that the whole function
+rejects; that count is finite evidence, distinct from the explicit universal mechanism above.
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                                  12
+CHAPTER 6
+
+
+Faithful linear gluing algebras
+
+MAINTAINED CLAIM C06
+
+Source alignment: Theory §4 [R2].
+
+This chapter states an exponential dimension result for a specified summary model. The qualifications are part
+of the theorem’s meaning: a lower bound on an algebra’s dimension is not automatically a lower bound on the
+length of a circuit describing one of its elements.
+
+
+6.1 The witness algebra
+
+Let 𝐾 be a field and let 𝑊 = {0, 1} 𝑚 . The full witness algebra is
+                                                        B = 𝐾𝑊 ,
+with pointwise addition and multiplication. For each witness 𝑣, let 𝛿 𝑣 be its indicator function. These form a
+basis of B and satisfy                                               ∑︁
+                            𝛿2𝑣 = 𝛿 𝑣 ,   𝛿 𝑣 𝛿𝑢 = 0 (𝑢 ≠ 𝑣),             𝛿 𝑣 = 1.
+                                                                             𝑣 ∈𝑊
+In characteristic two, this is equivalently the Boolean quotient algebra
+                                     𝐾 [𝑤 1 , . . . , 𝑤 𝑚 ]/(𝑤 2𝑖 − 𝑤 𝑖 : 1 ≤ 𝑖 ≤ 𝑚).
+Theorem 6.1 (Dimension of a faithful multiplicative summary). Let Φ : B → 𝐴 be a 𝐾-linear multiplicative
+map into a 𝐾-algebra. Suppose
+                                          Φ(𝛿 𝑣 ) ≠ 0         for every 𝑣 ∈ 𝑊 .
+Then
+                                                    dim𝐾 𝐴 ≥ 2𝑚 .
+No unital hypothesis on Φ is required.
+
+Proof. Write 𝑒 𝑣 = Φ(𝛿 𝑣 ). Multiplicativity makes these nonzero orthogonal idempotents. If
+                                                    ∑︁
+                                                            𝑐 𝑣 𝑒 𝑣 = 0,
+                                                    𝑣 ∈𝑊
+
+multiply the equality by 𝑒 𝑢 . Orthogonality annihilates every term except 𝑐 𝑢 𝑒 𝑢 , which must be zero. Since 𝐾 is a
+field and 𝑒 𝑢 ≠ 0, 𝑐 𝑢 = 0. This holds for every 𝑢, so the 2𝑚 vectors 𝑒 𝑣 are linearly independent.                □
+
+Corollary 6.2 (Scalar unital summaries are evaluations). Every unital 𝐾-linear multiplicative map Φ : 𝐾 𝑊 →
+𝐾 is evaluation at exactly one witness.
+
+Proof. An idempotent scalar in a field is either zero or one. Orthogonality allows at most one Φ(𝛿 𝑣 ) to be one,
+and preservation of the unit requires exactly one. If it occurs at 𝑣 0 , linearity gives
+                                                                !
+                                                    ∑︁
+                                       Φ(𝑔) = Φ          𝑔(𝑣)𝛿 𝑣 = 𝑔(𝑣 0 ).
+                                                        𝑣
+                                                                                                                   □
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                     13
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                            THEOREM REFERENCE
+
+
+Such a scalar summary necessarily loses every singleton witness other than 𝑣 0 . The dimension theorem is an
+elementary product-algebra fact, not a claim of new algebra or a universal computational lower bound.
+
+
+6.2 The quantified model boundary
+
+The same map Φ here serves all predicates on a fixed witness space. It is linear, multiplicative, and retains every
+primitive witness indicator. Under exactly these assumptions, a polynomial-dimensional summary is impossible
+as 𝑚 grows.
+An arbitrary algorithm is not required to satisfy these hypotheses. It may use nonlinear encodings, syntax-
+dependent operations, changing spaces, or succinct descriptions inside an exponentially large algebra. A
+description of the algebra and a description of one relevant element can be much shorter than a full coordinate
+listing.
+   No dimension-to-circuit inference
+
+   The theorem excludes a fixed faithful linear multiplicative compression of the full witness algebra into
+   fewer than 2𝑚 dimensions. It does not exclude every polynomial-time decision procedure, does not prove
+   𝑃 ≠ 𝑁 𝑃, and does not justify treating the algebra’s dimension as the circuit cost of an individual decision
+   function.
+
+The finite scalar controls enumerate 256 linear maps from a two-point witness algebra to GF(16), 65,536
+maps for four points, and 256 maps from an eight-point algebra to F2 . The respective counts of unital algebra
+homomorphisms are two, four, and eight, matching the evaluation classification. The all-size result rests on the
+proof above.
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                                14
+CHAPTER 7
+
+
+Weighted witness fingerprints
+
+MAINTAINED CLAIM C07
+
+Source alignment: Theory §5 [R2]; baseline fingerprint.json.
+
+
+
+7.1 A polynomial that distinguishes witnesses
+
+Let 𝑅 : {0, 1} 𝑚 → {0, 1} be a Boolean verifier, and let 𝐾 be a characteristic-two field. Define the formal
+polynomial
+                                                   ∑︁      𝑚
+                                                           Ö
+                        𝑃 𝑅 (𝑧 1 , . . . , 𝑧 𝑚 ) =    𝑅(𝑤)   𝑧 𝑖𝑤𝑖 ∈ 𝐾 [𝑧 1 , . . . , 𝑧 𝑚 ].
+                                               𝑤 ∈ {0,1} 𝑚          𝑖=1
+
+The variables 𝑧 𝑖 in this expression are ordinary polynomial variables, not reduced by 𝑧 2𝑖 = 𝑧 𝑖 .
+
+Theorem 7.1 (Exact witness fingerprint). The polynomial 𝑃 𝑅 is identically zero if and only if 𝑅 has no
+accepting witness. Its total degree is at most 𝑚.
+
+Proof. Different Boolean witnesses have different exponent vectors, so their monomials are distinct. Each
+accepting witness contributes coefficient one to its own monomial and cannot cancel another witness’s term.
+The polynomial is zero exactly when there are no such terms. Each monomial uses at most 𝑚 variables.     □
+
+This avoids the cancellation of an unweighted parity count. It does not, by itself, give a small circuit for
+evaluating the sum.
+
+
+7.2 Exact top-coefficient extraction
+
+Lemma 7.2 (Top coefficient as a Boolean-cube sum). Let 𝐺 (𝑤) be a multilinear polynomial over a
+characteristic-two field. Then                                     ∑︁
+                                          [𝑤 1 · · · 𝑤 𝑚 ]𝐺 =                 𝐺 (𝑣).
+                                                                𝑣 ∈ {0,1} 𝑚
+
+
+Proof. It is enough to check a monomial. A monomial of proper support is one on an even number 2𝑚− |𝑆 | of
+Boolean inputs, so its cube sum is zero in characteristic two. The full-support monomial is one at exactly one
+input and has cube sum one. Linearity gives the identity.                                                    □
+
+Theorem 7.3 (Weighted top-coefficient identity). Let Top𝑤 extract the coefficient of 𝑤 1 · · · 𝑤 𝑚 after reduction
+in the Boolean 𝑤 algebra. Then
+                                                    "        𝑚
+                                                                                            #
+                                                             Ö                          
+                                   𝑃 𝑅 (𝑧) = Top𝑤 𝑅(𝑤)              1 + (1 + 𝑧 𝑖 )𝑤 𝑖           .            (7.1)
+                                                             𝑖=1
+
+Proof. At 𝑤 𝑖 = 0, the 𝑖th factor is one. At 𝑤 𝑖 = 1, it is 𝑧 𝑖 . Lemma 7.2 therefore converts the right side to
+exactly the weighted sum defining 𝑃 𝑅 .                                                                         □
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                  15
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                                  THEOREM REFERENCE
+
+
+The expression inside Top𝑤 has a circuit with 𝑂 (|𝑅| + 𝑚) operations when the verifier has circuit size |𝑅|. The
+cost of applying Top𝑤 to that succinct expression is not bounded by writing down the operator. The source
+evaluator explicitly stores 2𝑚 coefficients and remains exponential in witness length.
+
+
+7.3 The conditional algorithmic consequence
+
+Lemma 7.4 (Finite-field root bound). If a nonzero polynomial 𝑃 ∈ 𝐾 [𝑧 1 , . . . , 𝑧 𝑚 ] has total degree at most 𝑑,
+where 𝐾 is finite, then
+                                                                                   𝑑
+                                                   Pr         [𝑃(𝑧) = 0] ≤             .
+                                          𝑧 uniform in 𝐾 𝑚                        |𝐾 |
+
+Proof. Induct on the number of variables. For one variable this is the elementary root bound. In the inductive
+step, write
+                                           𝑟
+                                          ∑︁
+                                                                           𝑗
+                                     𝑃=         𝑃 𝑗 (𝑧 1 , . . . , 𝑧 𝑚−1 )𝑧 𝑚 ,      𝑃𝑟 ≠ 0.
+                                          𝑗=0
+
+The leading coefficient has total degree at most 𝑑 − 𝑟, so it vanishes at a random first (𝑚 − 1)-tuple with
+probability at most (𝑑 − 𝑟)/|𝐾 |. Otherwise the remaining univariate polynomial is nonzero with at most 𝑟 roots.
+The union bound gives (𝑑 − 𝑟 + 𝑟)/|𝐾 | = 𝑑/|𝐾 |.                                                             □
+
+Proposition 7.5 (Conditional randomized satisfiability test). Suppose the weighted expression in (7.1) can be
+evaluated exactly and uniformly in time polynomial in the verifier description and witness length, over explicitly
+represented characteristic-two fields of polynomial size. Then choosing |𝐾 | ≥ 4𝑚 gives a one-sided randomized
+polynomial-time satisfiability test. It never accepts an unsatisfiable verifier and accepts a satisfiable one with
+probability at least 3/4 per evaluation.
+
+Proof. Choose a uniformly random 𝑧 ∈ 𝐾 𝑚 , evaluate 𝑃 𝑅 (𝑧) under the assumed algorithm, and accept when
+it is nonzero. If no witness accepts, Theorem 7.1 makes the polynomial zero identically, so there is no false
+acceptance. Otherwise Lemma 7.4 bounds the rejection probability by 𝑚/|𝐾 | ≤ 1/4. A field of polynomial size
+uses 𝑂 (log 𝑚) bits per element, so the random input has 𝑂 (𝑚 log 𝑚) bits. Under the explicit efficient-field and
+evaluator hypotheses, the procedure has polynomial running time.                                                □
+
+   Conditional means the evaluator is still missing
+
+   The proposition assumes a uniform efficient evaluator that has not been constructed here. The implemented
+   evaluator is exponential. Even with the assumed evaluator, the stated conclusion is randomized with
+   one-sided error, not a deterministic proof of 𝑃 = 𝑁 𝑃.
+
+The exact tests use GF(16) = F2 [𝑡]/(𝑡 4 + 𝑡 + 1). They evaluate every specified verifier through three witness
+bits at every field point, while the independent top-coefficient check uses all field points through two witness
+bits and the declared smaller coordinate grid at three bits. These domains must not be conflated.
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                              16
+CHAPTER 8
+
+
+The overlap obstruction to composition
+
+MAINTAINED CLAIM C08
+
+Source alignment: Theory §5, overlap subsection [R2].
+
+The weighted fingerprint is compatible with products on disjoint witness coordinates. The same formula fails
+when the factors share a coordinate. The distinction isolates a concrete compatibility obligation, rather than
+asserting that all compression is impossible.
+
+Proposition 8.1 (Disjoint-variable factorization). If predicates 𝐴(𝑢) and 𝐵(𝑣) use disjoint witness-variable
+sets, then their weighted fingerprints satisfy
+                                           𝑃 𝐴∧𝐵 (𝑧 𝑢 , 𝑧 𝑣 ) = 𝑃 𝐴 (𝑧 𝑢 )𝑃 𝐵 (𝑧 𝑣 ).
+
+Proof. Expand the left side as a sum over the Cartesian product of witnesses:
+                                                                              !               !
+                                ∑︁                            ∑︁                  ∑︁
+                                      𝐴(𝑢)𝐵(𝑣)𝑧 𝑢𝑢 𝑧 𝑣𝑣 =          𝐴(𝑢)𝑧 𝑢𝑢            𝐵(𝑣)𝑧 𝑣𝑣 .
+                                𝑢,𝑣                           𝑢                   𝑣
+
+Disjointness makes the exponent data independent and the factorization exact.                                 □
+
+Counterexample 8.2 (Shared-variable multiplication fails). For a single witness bit, define Tr 𝑧 ( 𝐴) = 𝐴(0) +
+𝑧 𝐴(1). Then in the Boolean 𝑤 algebra,
+                                          Tr 𝑧 (𝑤) = 𝑧,           Tr 𝑧 (1 + 𝑤) = 1,
+but
+                                               
+                                  Tr 𝑧 𝑤(1 + 𝑤) = 0 ≠ 𝑧 = Tr 𝑧 (𝑤) Tr 𝑧 (1 + 𝑤)
+whenever 𝑧 ≠ 0. Also,
+                                           Tr 𝑧 (𝑤 2 ) = 𝑧,        Tr 𝑧 (𝑤) 2 = 𝑧 2 ,
+which differ for field elements 𝑧 with 𝑧 2 ≠ 𝑧.
+
+Proof. Evaluate 𝑤 and 1 + 𝑤 at zero and one. In the Boolean quotient 𝑤(1 + 𝑤) = 𝑤 + 𝑤 2 = 0 and 𝑤 2 = 𝑤.
+The displayed identities follow directly. In GF(16), any element outside F2 supplies the second inequality.   □
+
+The input predicates are individually easy and their separate fingerprints are explicit. Their conjunction
+nevertheless imposes a common-witness requirement that ordinary multiplication of the summaries fails to
+preserve.
+Theorem 6.1 explains a related all-size restriction: a fixed linear multiplicative summary retaining every
+witness cannot reduce the full witness algebra below dimension 2𝑚 . That statement does not rule out all
+context-dependent nonlinear evaluation methods. It rules out the displayed context-free multiplicative compiler
+under its exact hypotheses.
+The eight maintained claim groups end here. Their proofs do not assume a superpolynomial shared-generation
+bound or a polynomial-time weighted-trace evaluator. The appendices identify the exact source coverage,
+evidence, and closed-scope boundaries.
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                 17
+APPENDIX A
+
+
+Claim coverage and theorem index
+
+The source register has eight maintained claim groups. This reference expands their proofs and supporting facts
+into 29 numbered entries. Those entries are not 29 independent discoveries, and none is a Lean declaration.
+The machine-readable theorem-map.json accompanies the document source.
+
+
+A.1 Coverage of the maintained register
+
+
+  ID        Maintained subject               Results in this reference               Source location
+  C01       Exact cut-comparison cover       Theorem 2.1                             Foundations F2
+  C02       Complete-cover bound and dual    Results 3.1–3.7                         Theory §1; Foundations
+            certificates                                                             F4
+  C03       Unbalanced-OR calibration        Results 4.1–4.4                         Theory §2
+  C04       Optimal small restored oracles   Theorem 4.5                             Theory §2
+  C05       Projection cost and safety       Results 5.1–5.5                         Theory §3
+  C06       Faithful flat gluing dimension   Theorem 6.1; Corollary 6.2              Theory §4
+  C07       Weighted witness fingerprint     Results 7.1–7.5                         Theory §5
+  C08       Overlap obstruction              Proposition 8.1; Counterexample 8.2     Theory §5
+
+
+The foundational simulation and degree results, Theorem 1.1 and Lemma 1.2, support the active claims. The
+conditional status of Proposition 7.5 is unchanged from C07. Counterexamples are deliberately indexed as
+counterexamples, rather than presented as successful universal compression theorems.
+
+
+A.2 Dependency structure
+
+The main proof dependencies are:
+
+                              restored oracle convention =⇒ cut comparison,
+               cut comparison + degree per multiplication =⇒ complete-cover lower bound,
+                      safe ideal + finite linear duality =⇒ evaluation-span certificates,
+                  monotone ideal + affine input/output changes =⇒ calibration formulas,
+                 affine restriction + quadratic polar rank =⇒ projection-cost lower bound,
+                               orthogonal idempotents =⇒ gluing dimension,
+                 Boolean coefficient identity + root bound =⇒ conditional fingerprint test.
+
+The gluing-dimension theorem and fingerprint construction are separate from the circuit-cut theorem. No proof
+step identifies algebra dimension with unrestricted circuit size.
+
+
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                 18
+KOMOREBI CIRCUIT OBSTRUCTIONS                                      THEOREM REFERENCE
+
+
+A.3 Complete numbered-result index
+
+
+     No.       Result                                              Scope     Page
+     1.1       Classical/restored simulation comparison            Base         2
+     1.2       Degree per multiplication                           Base         2
+     2.1       Cut-comparison identity and complete coverage       C01          3
+     3.1       Basic size bounds                                   C02          4
+     3.2       Affine input invariance                             C02          4
+     3.3       Affine-optimized complete-cover bound               C02          5
+     3.4       Dual certificate for failure of safe detection      C02          5
+     3.5       Finite support of a dual witness                    C02          6
+     3.6       Safe monomial ideal for a monotone function         C02          6
+     3.7       Exact monomial oracle cost                          C02          6
+     4.1       Raw calibration parameters                          C03          7
+     4.2       Affine optimization of the one-packet parameter     C03          7
+     4.3       Affine optimization of complete coverage            C03          8
+     4.4       Restored cost interval for the calibration family   C03          8
+     4.5       Exact small restored-oracle calibration             C04          9
+     5.1       Affine subspace after multiplication restrictions   C05         10
+     5.2       Exact cost of a nondegenerate paired quadratic      C05         10
+     5.3       Exact nonlinear cost of the whole function          C05         11
+     5.4       Exact cost of the extracted grade                   C05         11
+     5.5       Projection does not preserve safe support           C05         11
+     6.1       Dimension of a faithful multiplicative summary      C06         13
+     6.2       Scalar unital summaries are evaluations             C06         13
+     7.1       Exact witness fingerprint                           C07         15
+     7.2       Top coefficient as a Boolean-cube sum               C07         15
+     7.3       Weighted top-coefficient identity                   C07         15
+     7.4       Finite-field root bound                             C07         16
+     7.5       Conditional randomized satisfiability test          C07         16
+     8.1       Disjoint-variable factorization                     C08         17
+     8.2       Shared-variable multiplication fails                C08         17
+
+
+
+
+Source v1.0.0 / Document edition 1                                                  19
+APPENDIX B
+
+
+Verification evidence and reproduction
+
+Source alignment: Release Audit, Reproducibility, and frozen baseline records [R5, R6].
+
+
+
+B.1 What was checked for this PDF edition
+
+The source archive was extracted into a separate documentation workspace. Its 51 sealed source files and 27
+sealed evidence files passed the repository integrity checker. The maintained quick verification command also
+passed. Its output manifest is retained with the documentation records.
+The active source tree contains no maintained .lean file. No Lean compiler was invoked. The full scientific
+suite and historical replay were not rerun for this PDF edition. Their results below are inherited from the pinned
+release audit and frozen result files. Bibliographic metadata for the three versioned background papers were
+checked against their primary arXiv records; this is not a new literature or novelty audit.
+Document quality checks include multi-pass LaTeX compilation, resolved cross-references, theorem-index
+coverage, text extraction, and visual inspection of rendered pages. These checks establish that the artifact has
+been built and examined. They are not a substitute for mathematical review.
+
+
+B.2 The pinned release’s computation record
+
+The release audit reports that all 92 sealed files in its original source checkpoint were preserved, the original
+runner replay completed, and seven immediate scientific outputs matched. The maintained quick suite passed
+17 unit-test methods. Full active and historical modes reproduced the frozen scientific results; a fresh source
+extraction also passed the full active runner.
+The recorded scientific environment was Python 3.13.5 and g++ 14.2.0 on Linux x86_64. Those versions
+describe the release record, not a claim about every supported platform. Configured CI is not evidence that
+hosted CI has run.
+
+    Evidence area                 Executed domain in the baseline                Limit of the evidence
+    Small functions               All 276 functions on one, two, or three in-    Exact constructions plus proved
+                                  puts; 4,240 scalar input/target cases; 2,344   lower bounds, not exhaustive circuit
+                                  cuts                                           search
+    Four-input profiles           All 65,536 truth tables; all 168 monotone      Independent evaluation-span method
+                                  functions                                      checks only the declared 765 cases
+    Unbalanced-OR family          Designated truth tables through nine in-       No exhaustive ninth-input affine-
+                                  puts; all affine masks through eight           mask claim
+    Projection coefficients       693,965 pair coefficients and nine exact       Full truth tables only at 𝑚 = 2, 3, 4
+                                  rank cases, through 1,022 inputs
+    Projection oracle checks      65,808 logical-input/target cases across       Large entries use symbolic formulas,
+                                  the two constructed oracle families in the     exact rank, and construction counts
+                                  stated small domains
+    Weighted fingerprints         1,052,736 verifier/field-point evaluations     Enumerated verifiers have at most
+                                                                                 three witness bits
+
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                            20
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                                    THEOREM REFERENCE
+
+
+    Evidence area                    Executed domain in the baseline               Limit of the evidence
+    Independent coefficient ex-      20,544 cases                                  All field points for 𝑚 ≤ 2; restricted
+    traction                                                                       coordinate grid at 𝑚 = 3
+    Disjoint product rule            4,096 exact controls                          Does not extend the rule to shared
+                                                                                   variables
+    Scalar algebra maps              66,048 linear maps over the three specified   Controls the scalar special case; gen-
+                                     witness/field domains                         eral dimension theorem has a written
+                                                                                   proof
+
+
+The field used in the fingerprint checker is
+
+                                             GF(16) = F2 [𝑡]/(𝑡 4 + 𝑡 + 1).
+
+All mathematical arithmetic in these tests is Boolean, exact integer, or finite-field arithmetic. Runtime is not
+presented as a complexity benchmark. Equality of checksums certifies matching bytes, not mathematical truth.
+
+
+B.3 Reproduction commands
+
+From the root of the supplied v1.0.0 repository:
+
+python scripts/check_integrity.py
+python scripts/verify.py --quick
+python scripts/verify.py --full
+python scripts/verify.py --history
+python scripts/verify.py --all
+
+The quick suite requires Python 3.10+ and the standard library. The full active suite additionally requires a
+C++17 compiler, selected through CXX, with g++ as the default. No network connection, external solver, hidden
+dataset, or Python package installation is needed for these scientific checks. The historical runner is documented
+for Linux/WSL; this edition makes no new cross-platform execution claim.
+Do not run with optimized Python or PYTHONOPTIMIZE. Assertions are part of the checker, and the launcher
+rejects optimized execution. Missing results, failed commands, timeouts, mutated source inputs, and baseline
+mismatches are failures or inconclusive executions, not silent skips.
+Each run writes a new directory under build/verification/. A run manifest can be validated with
+
+python scripts/validate_manifest.py \
+  build/verification/RUN_ID/manifest.json --root .
+
+Replace RUN_ID with the actual emitted directory. The immutable source and baseline evidence are not
+overwritten.
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                                          21
+APPENDIX C
+
+
+Boundaries, corrections, and source provenance
+
+C.1 Excluded inferences
+
+The following boundaries are retained from the release’s failure register. They are part of the closed scope, not a
+promise to finish every exploratory route.
+Semantic elimination curvature. Exact existential eliminations commute. A nonzero semantic commutator
+cannot be asserted for those exact operators.
+Expanded-state counting. Exponentially many residuals or obstruction descriptions can arise from a small
+circuit. The number of expanded objects is not their shared construction cost.
+Small-case equality. Agreement of affine-optimized one-packet and complete-cover degrees through four
+inputs does not extend to all sizes. Chapter 4 gives an exact separating family.
+Free homogeneous extraction. A projected grade may have greater nonlinear cost than the whole and can fail
+to remain safe. Chapter 5 keeps the input length and total affine cost explicit.
+Unrestricted gluing. The exponential dimension theorem applies to a fixed faithful linear multiplicative map.
+It does not exclude succinct, nonlinear, or context-dependent algorithms.
+Context-free trace multiplication. The disjoint-variable product rule fails at shared witness variables. A short
+expression containing an extraction operator is not an efficient implementation of that extraction.
+
+
+C.2 Historical execution corrections
+
+Earlier sources corrected illegal repeated-control Toffoli emissions to legal copies, replaced a timed-out large
+clique search by explicit matching certificates, restored a missing module in isolated replay, and repaired a
+log-sealing race. These are preserved historical events, not failures newly observed in preparing this PDF.
+The release-assembly record also distinguishes a rejected streaming launch, inaccessible GitHub operations, and
+a repaired draft metadata-summary check from scientific assertions. None is reinterpreted as mathematical
+UNSAT, a counterexample, or hosted-publication success. The complete release record remains authoritative
+for those events [R5].
+
+
+C.3 What this reference does not claim
+
+There is no resolution of 𝑃 versus 𝑁 𝑃, no superpolynomial unrestricted Boolean-circuit lower bound, no
+polynomial-time weighted-trace evaluator, no quantum-circuit lower bound, no Lean kernel check, no independent
+review, and no comprehensive novelty or best-known-bound audit.
+The conditional randomized implication remains conditional and randomized. An exact finite pass does not
+turn a written argument into a kernel-checked theorem. Historical archives are not automatically additional
+maintained claims.
+
+
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                                   22
+KOMOREBI CIRCUIT OBSTRUCTIONS                                                          THEOREM REFERENCE
+
+
+C.4 Source identity and editorial treatment
+
+The source tag and commit are fixed on the edition page. The original source files are preserved byte-for-byte in
+the supplement. The PDF standardizes 𝑏 to 𝛽 where the original manuscript used the former notation, typesets
+formulas, expands some compressed proof steps, and adds cross-references and a complete numbered index. It
+does not alter the eight source claim groups or promote an archived conjecture to a theorem.
+A source-file reference in this document refers to the pinned repository snapshot, not to an unversioned current
+website. The companion manifest records exact SHA-256 values for the source archive and each included source
+document. The PDF and its build outputs have their own hashes in the delivery record.
+Source archive SHA-256
+b01a8d2a03f0cd42784df0e64af3809cc63c8a23119b7a2ad126cf0245351f5f
+
+  Pinned file                        SHA-256
+  PROOF_BOUNDARY.md                  23c4b9ac3e32f89c06a42d2788a8c7b320d0a73391b2111841f9513475
+                                     747bb0
+  docs/FOUNDATIONS.md                918ee9e440488d9da9884e1628adc11a31b266f194baf66fabc386cea8
+                                     7f61a3
+  docs/THEORY.md                     dfa743698debe774d2368e688e7cdfadd6cef35f80d27d85542a40f925
+                                     e26ac2
+  docs/CLAIMS.md                     e5d63bdd174d4963f83c87f2cb04cc5223aa31dd3fd7c036eee717a7d6
+                                     54698a
+  docs/claims.json                   5fa2c26b3d7f64022f086b746792ce4eb808a60e5bc6b95edb798ff152
+                                     8901d2
+
+
+
+C.5 Rebuilding the document
+
+The documentation supplement supplies this complete LaTeX source, the theorem map, source-byte provenance,
+and the source documents used for transcription. A conventional TeX Live installation with the listed packages
+can build it with
+
+pdflatex -interaction=nonstopmode -halt-on-error theorems.tex
+pdflatex -interaction=nonstopmode -halt-on-error theorems.tex
+pdflatex -interaction=nonstopmode -halt-on-error theorems.tex
+
+Repeated passes resolve the table of contents, bibliography citations, theorem references, and page numbers.
+The supplement does not distribute font files. Source and generated-output hashes are recorded separately to
+avoid confusing provenance with proof certification.
+
+
+
+
+Source v1.0.0 / Document edition 1                                                                            23
+Bibliography
+
+[R1]   Komorebi P. Foundations: restored computation and complete discrepancies. docs/FOUNDATIONS.md,
+       source release v1.0.0, September 21, 2026. Supplied repository source.
+
+[R2]   Komorebi P. Complete discrepancy covers, grade extraction, and exact gluing. docs/THEORY.md, source
+       release v1.0.0, September 21, 2026. Supplied repository manuscript.
+
+[R3]   Komorebi P. Claim register. docs/CLAIMS.md and docs/claims.json, source release v1.0.0. Authorita-
+       tive active groups C01–C08.
+
+[R4]   Komorebi P. Proof and computation boundary. PROOF_BOUNDARY.md, source release v1.0.0. Controlling
+       model and evidence qualifications.
+
+[R5]   Komorebi P. Release audit: 1.0.0. evidence/closure/RELEASE_AUDIT.md, September 21, 2026.
+       Recorded release verification, provenance, failures, and publication status.
+
+[R6]   Komorebi P. Reproduction contract. docs/REPRODUCIBILITY.md, source release v1.0.0. Frozen finite
+       results: evidence/baseline/completeness.json, projection.json, and fingerprint.json in the
+       same baseline directory.
+
+[S1]   Mathias Soeken. Determining the Multiplicative Complexity of Boolean Functions using SAT.
+       arXiv:2005.01778v1, 2020. Background XOR–AND model and degree-bound context.
+       https://arxiv.org/abs/2005.01778v1
+
+[S2]   Magnus Gausdal Find and Joan Boyar. Multiplicative Complexity of Vector Valued Boolean Functions.
+       arXiv:1407.6169v3, 2018 revision of the 2014 preprint. Background affine-restriction and quadratic-
+       complexity context.
+       https://arxiv.org/abs/1407.6169v3
+
+[S3]   Chris Beck and Yuan Li. Represent MOD function by low degree polynomial with unbounded one-sided
+       error. arXiv:1304.0713v1, 2013. Background one-sided polynomial-immunity terminology.
+       https://arxiv.org/abs/1304.0713v1
+
+
+
+
+KOMOREBI / THEOREMS, PROOFS, AND VERIFICATION                                                          24
+

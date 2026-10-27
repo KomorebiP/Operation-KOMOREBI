@@ -1,0 +1,48 @@
+{
+  "checks": [
+    {
+      "label": "mode_one_kernel_replay",
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "--verbose",
+        "QuantumFourierRefutation"
+      ],
+      "exit_code": 0,
+      "expected_failure": false,
+      "log": "mode_one_kernel_replay.log",
+      "log_sha256": "323a167c4f895659f93933e03cfea9b62dbcd1b66a1247d2c0ad6a10ed672bba"
+    },
+    {
+      "label": "reject_false_mode_explicit",
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "negative_controls/FalseFourierModeExplicit.lean"
+      ],
+      "exit_code": 1,
+      "expected_failure": true,
+      "log": "reject_false_mode_explicit.log",
+      "log_sha256": "45425086493a747f7269a8bd395669a6700f3470532ceca584167c501ab71692"
+    }
+  ],
+  "positive_refutation_source": "fresh/QuantumFourierRefutation.lean",
+  "status": "PASS",
+  "strict_positive_compile_exit_code": 0,
+  "kernel_replay_passed": true,
+  "false_coordinate_rejected": true,
+  "axiom_union": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "positive_source_sha256": "b5a6b6e4729b369311dc80b28fa327fb522a8e737b6486eecf6147e7ba4576de",
+  "negative_source_sha256": "f26bc017fb7b07a0a082962c87a2bf6e44535f61cd0231a5f988ba6b9db6b33d",
+  "strict_positive_compile_log": "mode_one_refutation.log",
+  "strict_positive_compile_log_sha256": "2958a361aab9a2f426064c6874144490767286d721e7eb1997d9fcb9f80dfe81",
+  "scope": "Two supplementary verification lemmas extracted from the existing Fourier table; not added to the monograph count of 96 theorems.",
+  "historical_negative_control_caveat": "The original false-mode test still rejects through opaque-Decidable reduction. This supplemental pair proves the precise mode value and negation, then rejects the rewritten false rational-coordinate equality with an explicit is-false diagnostic."
+}

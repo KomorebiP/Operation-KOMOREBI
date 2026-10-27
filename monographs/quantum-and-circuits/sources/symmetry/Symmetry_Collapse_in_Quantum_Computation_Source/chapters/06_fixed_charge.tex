@@ -1,0 +1,76 @@
+\chapter{Fixed charge and exact-number circuits}
+\label{ch:fixed-charge}
+\index{Hamming weight}
+\index{particle number}
+
+\section{Excitation-number packets}
+For $n$ qubits, define
+\[
+\widehat N
+=
+\sum_{q=1}^n\frac{I-Z_q}{2}.
+\]
+Its eigenvalues are $k=0,1,\ldots,n$. The projector onto Hamming weight $k$ is
+\[
+P_{n,k}
+=
+\sum_{|x|=k}\ket x\bra x,
+\]
+and
+\[
+\dim P_{n,k}\Hh
+=
+\binom nk.
+\]
+The decomposition
+\[
+(\C^2)^{\otimes n}
+=
+\bigoplus_{k=0}^n\Hh_{n,k}
+\]
+recovers the full dimension through
+\[
+\sum_{k=0}^n\binom nk=2^n.
+\]
+
+\section{Number-preserving gates}
+Single-qubit $R_Z$ gates commute with $\widehat N$. A two-qubit exchange rotation acts in the ordered basis $\ket{00},\ket{01},\ket{10},\ket{11}$ as
+\[
+U_{XY}(\theta,\phi)
+=
+\begin{pmatrix}
+1&0&0&0\\
+0&\cos\theta&-ie^{-i\phi}\sin\theta&0\\
+0&-ie^{i\phi}\sin\theta&\cos\theta&0\\
+0&0&0&1
+\end{pmatrix}.
+\]
+It rotates $\ket{01}$ and $\ket{10}$ while fixing $\ket{00}$ and $\ket{11}$, so it preserves exact Hamming weight.
+
+\begin{corollary}[Fixed-charge polynomial simulation]
+\label{cor:fixed-charge-poly}
+For every fixed $k$, a polynomial-time uniform family of number-preserving circuits initialized in $\Hh_{n,k}$ and measured by an efficiently computable observable is classically simulable in polynomial time, provided the initial weight-$k$ coordinates can be computed efficiently and each restricted local gate is efficiently applied in that basis.
+\end{corollary}
+
+\begin{proof}
+For fixed $k$,
+\[
+\dim\Hh_{n,k}=\binom nk=O(n^k).
+\]
+The weight-$k$ basis is efficiently indexed by $k$-element subsets. A local number-preserving gate changes only basis states containing the affected occupation pattern. Apply \cref{thm:poly-packet}.
+\end{proof}
+
+\section{Sparse update structure}
+A one-qubit diagonal phase changes one amplitude at a time. An exchange gate on modes $p,q$ couples a basis state only to the state obtained by moving one excitation between those modes. Thus every column of the restricted gate has at most two nonzero entries. For fixed $k$, the total update cost is polynomial in $n$.
+
+\section{Uniformity and input encoding}
+The fixed-charge corollary assumes $k$ is a fixed constant independent of $n$. It also applies when $k=O(1)$ is supplied by the circuit family. If $k$ is written in binary and allowed to scale as $n/2$, the sector can become exponential. The theorem is about the dimension and update cost of the actual active sector, not the name of the symmetry.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.83\textwidth]{dimension_scaling.pdf}
+\caption{Fixed weight and permutation symmetry can be polynomial, while half filling remains exponential.}
+\end{figure}
+
+\section{Observables}
+A diagonal observable depending on occupations is immediate. Few-body number-preserving observables are sparse in the subset basis. More global observables may require additional structure. The measurement hypothesis in \cref{thm:poly-packet} cannot be omitted: a compactly evolved state does not help if the requested output itself hides exponential work.

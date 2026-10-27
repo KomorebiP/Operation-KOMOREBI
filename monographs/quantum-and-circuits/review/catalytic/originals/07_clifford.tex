@@ -1,0 +1,275 @@
+\chapter{Catalytic basis escape in symplectic Clifford synthesis}\label{ch:clifford}
+\index{Clifford group}
+\index{symplectic group}
+\index{parabolic subgroup}
+\index{CSS circuit}
+\index{entangling count}
+
+
+\section{Binary symplectic representation}
+Modulo global phase and Pauli translations, an $n$-qubit Clifford operation acts on Pauli exponent vectors
+\[
+v=(x_0,\ldots,x_{n-1}\mid z_0,\ldots,z_{n-1})^T\in\F_2^{2n}
+\]
+through a symplectic matrix
+\[
+M\in\Sp(2n,2).
+\]
+The elementary gates used here act as follows:
+\begin{align*}
+H_i &: (x_i,z_i)\mapsto(z_i,x_i),\\
+S_i &: z_i\mapsto z_i+x_i,\\
+\CX_{i\to j} &: x_j\mapsto x_j+x_i,
+\quad z_i\mapsto z_i+z_j,\\
+\CZ_{ij} &: z_i\mapsto z_i+x_j,
+\quad z_j\mapsto z_j+x_i.
+\end{align*}
+
+Let $P_n\le\Sp(2n,2)$ be the parabolic subgroup stabilizing the $Z$ Lagrangian
+\[
+L_Z=\{(0\mid z):z\in\F_2^n\}.
+\]
+The gates $S$, $\CZ$, and $\CX$ preserve $L_Z$.  Hadamard gates do not.
+
+\begin{definition}[Parabolic and ambient Clifford metrics]
+The restricted alphabet is
+\[
+\mathcal S_P
+=
+\{S_i,\CZ_{ij},\CX_{i\to j}\},
+\]
+and the ambient alphabet is
+\[
+\mathcal S_C
+=
+\mathcal S_P\cup\{H_i\}.
+\]
+Targets lie in $P_n$.  We study both total primitive count and entangling count, where $H_i$ and $S_i$ have cost zero while $\CX$ and $\CZ$ have cost one.
+\end{definition}
+
+This is a precise basis-escape model.  It is not the unique meaning of ``CSS preserving'' or ``Clifford cost.''  It is chosen because both groups are finite and the restricted subgroup has a clean Lagrangian interpretation.
+
+\section{Exact group sizes}
+The finite state spaces are
+\[
+|P_n|
+=
+2^{n(n+1)/2}|\GL(n,2)|,
+\]
+and
+\[
+|\Sp(2n,2)|
+=
+2^{n^2}\prod_{j=1}^n(2^{2j}-1).
+\]
+For $n=1,2,3$ this gives:
+\begin{center}
+\begin{tabular}{@{}rcc@{}}
+\toprule
+$n$&$|P_n|$&$|\Sp(2n,2)|$\\
+\midrule
+1&2&6\\
+2&48&720\\
+3&10,752&1,451,520\\
+\bottomrule
+\end{tabular}
+\end{center}
+These sizes permit exhaustive breadth-first or zero-one search through three qubits.
+
+\section{Total primitive count}
+\begin{computedbox}
+With every gate in $\mathcal S_P$ and $\mathcal S_C$ assigned unit cost and with SWAP excluded as a primitive, exhaustive search gives:
+\begin{center}
+\begin{tabular}{@{}rcccc@{}}
+\toprule
+$n$&restricted diameter&ambient diameter&defective targets&maximum defect\\
+\midrule
+1&1&3&0&0\\
+2&5&8&0&0\\
+3&8&12&24&1\\
+\bottomrule
+\end{tabular}
+\end{center}
+At $n=3$, six targets have distance pair $(7,6)$ and eighteen have pair $(8,7)$.
+\end{computedbox}
+
+Thus three qubits are the first total-count threshold in this exact swap-free model.
+
+\subsection{A three-qubit witness}
+One defective target has symplectic matrix
+\[
+M_3=
+\begin{pmatrix}
+0&1&0&0&0&0\\
+0&0&1&0&0&0\\
+1&0&0&0&0&0\\
+1&0&1&0&1&0\\
+0&1&0&0&0&1\\
+0&1&0&1&0&0
+\end{pmatrix}.
+\]
+A restricted word of length seven is
+\[
+\CX_{0\to2},
+\CZ_{12},
+\CX_{2\to0},
+\CX_{0\to2},
+\CX_{0\to1},
+\CX_{1\to0},
+\CX_{0\to1}.
+\]
+An ambient word of length six is
+\[
+H_1,
+\CX_{1\to2},
+\CX_{2\to1},
+\CX_{2\to0},
+\CX_{0\to2},
+H_0.
+\]
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.98\textwidth]{clifford_three_qubit_defect.pdf}
+\caption{A swap-free three-qubit parabolic target with total primitive-count defect one.}
+\label{fig:clifford-three}
+\end{figure}
+
+The Hadamards do not form a matched pair on the same wire.  They open and close the Lagrangian excursion in different coordinates.  This is a useful warning against assuming that every catalyst has the literal form $g\cdots g^{-1}$.
+
+\section{SWAP sensitivity}
+Add $\SWAP_{ij}$ to both alphabets as a unit-cost primitive.  The target groups remain unchanged, but the metric changes.
+
+\begin{computedbox}
+For $n=3$ with unit-cost SWAP gates, the restricted diameter drops from eight to seven, the ambient diameter drops from twelve to eleven, and every one of the $10,752$ parabolic targets has zero total-count defect.
+\end{computedbox}
+
+The preceding twenty-four defects therefore measure a real gate-alphabet distinction, not an invariant of the subgroup inclusion alone.  In many architectures SWAP is not elementary and costs three CNOTs, while in others qubit movement or relabeling changes the accounting.  The theorem must retain the convention.
+
+\section{Entangling-count defects}
+Now assign cost zero to $H_i$ and $S_i$ and cost one to $\CX$ and $\CZ$.
+
+\begin{computedbox}
+The exact censuses are:
+\begin{center}
+\begin{tabular}{@{}rccc@{}}
+\toprule
+$n$&defective targets&distance pairs&maximum defect\\
+\midrule
+1&0&none&0\\
+2&4&$(3,2)$ with multiplicity $4$&1\\
+3&1,624&
+$\begin{array}{c}
+(3,2):24,\ (4,3):432,\ (5,4):1056,\\
+(6,4):48,\ (6,5):64
+\end{array}$
+&2\\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{computedbox}
+The entangling metric has an earlier threshold and a larger exceptional set.
+
+\subsection{A two-qubit witness}
+A canonical target is
+\[
+M_2=
+\begin{pmatrix}
+0&1&0&0\\
+1&0&0&0\\
+1&1&0&1\\
+1&1&1&0
+\end{pmatrix}.
+\]
+A restricted realization is
+\[
+\CX_{0\to1},
+S_1,
+\CX_{1\to0},
+\CX_{0\to1},
+\]
+with three entangling gates.  An ambient realization is
+\[
+H_1,
+\CX_{1\to0},
+\CX_{0\to1},
+H_0,
+S_1,
+S_0,
+\]
+with two entangling gates.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.98\textwidth]{clifford_two_qubit_defect.pdf}
+\caption{A two-qubit entangling-count defect.  Local Clifford gates are free in this cost model.}
+\label{fig:clifford-two}
+\end{figure}
+
+\section{Census summary}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.76\textwidth]{clifford_census.pdf}
+\caption{Exact parabolic-versus-ambient Clifford census.  The vertical scale is symlogarithmic.}
+\label{fig:clifford-census}
+\end{figure}
+
+The results establish three distinct lessons.
+\begin{enumerate}
+\item Basis escape produces genuine Clifford defects, not only linear CNOT defects.
+\item The first threshold depends on whether local gates are free.
+\item Adding a SWAP primitive can eliminate a finite total-count threshold.
+\end{enumerate}
+
+\section{Search completeness}
+The search state is the exact $2n\times2n$ binary symplectic matrix.  Every generator acts by a fixed row update.  Ordinary breadth-first search gives exact unit-cost distances.  Zero-one breadth-first search gives exact entangling costs.  Since every state of $P_n$ and $\Sp(2n,2)$ is reached, comparing the two distance maps is a complete census.
+
+The optimized C++ verifier represents a $6\times6$ matrix by a $36$-bit integer.  It enumerates the full three-qubit group in a few seconds in the present environment.  The Python implementation is slower but independently expresses the same state model.
+
+\section{Interpretation as symplectic holonomy}
+The parabolic subgroup is a fiber over the Lagrangian Grassmannian.  A Hadamard moves one coordinate out of the chosen Lagrangian.  The ambient path traverses other Lagrangian frames and returns to a target stabilizing $L_Z$.
+
+This is the symplectic analogue of the unitriangular Schreier loop.  The catalyst is a temporary exchange of $X$ and $Z$ roles.  The consumers are entangling gates that become cheaper in the changed frame.
+
+\section{CSS-preserving extensions}
+The parabolic model fixes one Lagrangian, but CSS circuit classes can be defined more narrowly or more broadly.  Possible restricted alphabets include:
+\begin{enumerate}
+\item CNOT and Pauli gates only,
+\item CNOT, $S$, and diagonal controlled phases,
+\item block-diagonal symplectic transformations preserving separate $X$ and $Z$ codes,
+\item logical Clifford gates preserving a CSS stabilizer decomposition,
+\item architecture-constrained versions of the preceding models.
+\end{enumerate}
+Each produces a different subgroup and metric.
+
+\begin{skeletonbox}
+A full CSS threshold paper should classify cost-preserving orbits of minimal defects, identify a symplectic-flag lower-bound invariant, and determine which defects survive when SWAP, qubit permutation, or local Cliffords are assigned alternative costs.
+\end{skeletonbox}
+
+\section{Depth and parallelism}
+Gate-count defects do not automatically imply depth defects.  Given a gate sequence, define its dependency graph and schedule commuting or disjoint gates in parallel.  The appropriate quantities are
+\[
+\Delta_{\mathrm{depth}}(U),
+\qquad
+\Delta_{\mathrm{2q-depth}}(U),
+\qquad
+\Delta_{\mathrm{space-time}}(U).
+\]
+A basis change applied transversally to many qubits may have small depth even when its total count is large.  Conversely, a two-gate count saving can increase depth under locality constraints.
+
+\section{Open Clifford problems}
+\begin{question}
+What are the defect orbits of the twenty-four three-qubit total-count targets under qubit permutations and parabolic conjugation?
+\end{question}
+\begin{question}
+Does the maximum parabolic-versus-Clifford defect grow linearly, as $n\log n$, or faster under total primitive count?
+\end{question}
+\begin{question}
+Can one prove a symbolic family with entangling-count defect greater than two, rather than relying on finite census data?
+\end{question}
+\begin{question}
+Which finite symplectic parabolics are geodesically convex after SWAP is included as a primitive?
+\end{question}
+\begin{conjecturebox}
+The observed three-qubit defects should admit a small collection of symplectic root motifs analogous to the three-cross, one-phase classification in the unitriangular case.  The present monograph records the exact census and witnesses but does not claim that classification.
+\end{conjecturebox}

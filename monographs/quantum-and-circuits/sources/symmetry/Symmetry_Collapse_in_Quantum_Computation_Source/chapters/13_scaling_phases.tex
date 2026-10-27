@@ -1,0 +1,167 @@
+\chapter{Scaling phase diagrams for charge, particles, and local dimension}
+\label{ch:scaling-phases}
+\index{particle-number scaling}
+\index{quasipolynomial simulation}
+\index{subexponential simulation}
+
+\section{Exact sector size is a complexity phase variable}
+The statement ``fixed particle number is polynomial'' has a sharp extension. Let the particle number depend on the system size:
+\[
+k=k(n).
+\]
+The explicit-amplitude simulation cost of one fermionic or qubit weight packet is governed by
+\[
+D_{n,k}=\binom nk.
+\]
+For $1\le k\le n$, the standard bounds
+\begin{equation}
+\left(\frac nk\right)^k
+\le
+\binom nk
+\le
+\left(\frac{en}{k}\right)^k
+\label{eq:binomial-basic-bounds}
+\end{equation}
+show that the growth changes continuously between polynomial and exponential regimes.
+
+Because
+\[
+\binom nk=\binom n{n-k},
+\]
+write
+\[
+r(n)=\min\{k(n),n-k(n)\}.
+\]
+
+\begin{theorem}[Explicit fixed-charge phase diagram]
+\label{thm:charge-phase-diagram}
+For explicit amplitude storage in a weight-$k(n)$ packet:
+\begin{enumerate}
+\item the packet dimension is polynomial in $n$ if $r(n)=O(1)$;
+\item the packet dimension is superpolynomial whenever $r(n)\to\infty$;
+\item if $r(n)=O(\log n)$, then
+\[
+D_{n,k}=2^{O((\log n)^2)},
+\]
+so the explicit packet simulation is quasipolynomial;
+\item if $r(n)=O(n^\alpha)$ for a fixed $0<\alpha<1$, then
+\[
+D_{n,k}=2^{O(n^\alpha\log n)},
+\]
+which is subexponential;
+\item if $k(n)/n\to p\in(0,1)$, then
+\[
+\log_2 D_{n,k}
+=
+nH_2(k(n)/n)+O(\log n)
+=
+nH_2(p)+o(n),
+\]
+where $H_2$ is binary entropy, and the packet remains exponential.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The upper bounds follow from \cref{eq:binomial-basic-bounds}. If $r=O(1)$, then $\binom nr=O(n^r)$. Conversely, suppose $r\to\infty$ and $r\le n/2$. If $r\le\sqrt n$, then
+\[
+\log\binom nr
+\ge
+r\log(n/r)
+\ge
+\frac r2\log n,
+\]
+whose ratio to $\log n$ diverges. If $r>\sqrt n$, then
+\[
+\log\binom nr
+\ge
+r\log2
+\ge
+\sqrt n\log2,
+\]
+which also dominates every constant multiple of $\log n$. For the final assertion, $p_n=k(n)/n$ stays in a compact subinterval of $(0,1)$. Stirling's formula gives
+\[
+\log_2\binom n{k(n)}
+=nH_2(p_n)-\frac12\log_2\!\bigl(2\pi n p_n(1-p_n)\bigr)+O(1/n).
+\]
+The logarithmic term is $O(\log n)$, uniformly on that subinterval. Continuity of $H_2$ gives $nH_2(p_n)=nH_2(p)+o(n)$. Replacing $p_n$ by its limit inside an $O(\log n)$ estimate would require a convergence rate, which is not assumed here.
+\end{proof}
+
+\begin{derivedbox}
+For the explicit occupation-amplitude representation, ``few particles'' means a bounded number of particles or holes. A slowly growing charge can still improve on full state-vector scaling, but it no longer guarantees membership in $P$.
+\end{derivedbox}
+
+\section{A bounded-excitation hierarchy}
+The union of the first $K$ weight sectors has dimension
+\[
+D_{\le K}(n)
+=
+\sum_{k=0}^{K}\binom nk.
+\]
+For fixed $K$,
+\[
+D_{\le K}(n)=O(n^K).
+\]
+If $K=O(\log n)$, the same union is quasipolynomial. This refines \cref{cor:bounded-excitation-collapse}: bounded symmetry breaking preserves polynomial simulation, while logarithmically growing excitation gives a controlled quasipolynomial regime.
+
+\section{Bosonic and fermionic analogues}
+For $N$ fermions in $m$ modes,
+\[
+D_{\mathrm F}(m,N)=\binom mN.
+\]
+For $N$ bosons in $m$ modes,
+\[
+D_{\mathrm B}(m,N)=\binom{m+N-1}{N}.
+\]
+The same binomial analysis gives:
+
+\begin{corollary}[Few-particle scaling]
+\label{cor:few-particle-scaling}
+With the number of modes as the input-size parameter:
+\begin{enumerate}
+\item fixed $N$ gives polynomial explicit-amplitude simulation;
+\item $N=O(\log m)$ gives quasipolynomial sector size;
+\item $N=O(m^\alpha)$, $0<\alpha<1$, gives subexponential sector size;
+\item finite-density fermionic sectors remain exponential.
+\end{enumerate}
+For bosons, the statements hold in the dilute regime with the same occupation-basis access assumptions.
+\end{corollary}
+
+The adjective ``polynomial'' here refers to the sector dimension and efficient gate action. It does not assert that every interacting Hamiltonian has efficiently computable matrix elements or that every compact description remains closed.
+
+\section{Symmetric qudits with growing local dimension}
+The symmetric $d$-level subspace has dimension
+\[
+S(n,d)
+=
+\binom{n+d-1}{d-1}.
+\]
+For fixed $d$, this is polynomial in $n$. If $d=d(n)$ grows, the same phase transition appears.
+
+\begin{proposition}[Growing-local-dimension boundary]
+\label{prop:growing-d-boundary}
+In the explicit occupation basis:
+\begin{enumerate}
+\item fixed $d$ gives $S(n,d)=O(n^{d-1})$;
+\item $d=O(\log n)$ gives $S(n,d)=2^{O((\log n)^2)}$;
+\item unbounded $d$ is not covered by the fixed-$d$ polynomial-collapse theorem without an additional internal compression.
+\end{enumerate}
+\end{proposition}
+
+Thus permutation symmetry removes the exponential tensor-product multiplicity only when the number of local levels is controlled, or when the occupation record itself admits a second compression.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\textwidth]{particle_scaling_phases.pdf}
+\caption{The active dimension passes through polynomial, quasipolynomial, subexponential, and exponential regimes as particle number grows.}
+\end{figure}
+
+\section{Complexity class versus practical runtime}
+A polynomial sector can still have a large exponent. Fixed $k=20$ gives $O(n^{20})$ explicit amplitudes, which is in $P$ but may be impractical. Conversely, a subexponential sector may be useful at moderate size without changing the formal complexity class.
+
+A complete performance claim should therefore report both:
+\[
+\text{asymptotic class}
+\qquad\text{and}\qquad
+\text{actual representation size and update cost}.
+\]
+This is why the benchmark chapters keep wall-clock evidence separate from the dimension theorems.

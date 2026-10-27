@@ -1,0 +1,297 @@
+\chapter{Moving packets, dynamic frames, and sparse transfer graphs}
+\label{ch:dynamic-frames}
+\index{moving packet}
+\index{time-dependent projector}
+\index{packet transfer graph}
+
+\section{Why one fixed projector is not the end of the theory}
+The exact packet theorem in \cref{ch:exact-simulation} follows a state inside one fixed subspace. That is sufficient for a conserved charge, but it is not necessary for classical collapse. A circuit may move through a sequence of small subspaces, or it may preserve a small packet only after a time-dependent change of coordinates. The correct object is therefore a \emph{packet schedule}, not necessarily one static projector.
+
+\begin{definition}[Packet schedule]
+For a circuit
+\[
+U=G_m\cdots G_1
+\]
+on a Hilbert space $\Hh$, a packet schedule is a sequence of orthogonal projectors
+\[
+P_0,P_1,\ldots,P_m.
+\]
+It is exact when
+\begin{equation}
+G_tP_{t-1}=P_tG_tP_{t-1}
+\qquad(1\le t\le m).
+\label{eq:dynamic-packet-condition}
+\end{equation}
+\end{definition}
+
+The condition says that gate $G_t$ maps the currently active packet into the next active packet. The dimensions may vary with time.
+
+\section{Exact dynamic-packet simulation}
+Choose isometries
+\[
+B_t:\C^{D_t}\longrightarrow\Hh,
+\qquad
+B_tB_t^*=P_t,
+\qquad
+B_t^*B_t=I_{D_t},
+\]
+where $D_t=\rank P_t$. Define the rectangular coordinate update
+\begin{equation}
+M_t=B_t^*G_tB_{t-1}.
+\label{eq:dynamic-coordinate-update}
+\end{equation}
+
+\begin{theorem}[Exact dynamic-packet theorem]
+\label{thm:dynamic-packet}
+Suppose $P_0\ket{\psi_0}=\ket{\psi_0}$ and \cref{eq:dynamic-packet-condition} holds for every gate. Put
+\[
+z_0=B_0^*\ket{\psi_0},
+\qquad
+z_t=M_tz_{t-1}.
+\]
+Then
+\[
+G_t\cdots G_1\ket{\psi_0}=B_tz_t
+\]
+for every $t$.
+\end{theorem}
+
+\begin{proof}
+The claim is true at $t=0$. If the state after $t-1$ gates is $B_{t-1}z_{t-1}$, then
+\[
+G_tB_{t-1}z_{t-1}
+=P_tG_tP_{t-1}B_{t-1}z_{t-1}
+=B_tB_t^*G_tB_{t-1}z_{t-1}
+=B_tM_tz_{t-1}.
+\]
+This is $B_tz_t$.
+\end{proof}
+
+\begin{theorem}[Polynomial moving-packet collapse]
+\label{thm:moving-packet-collapse}
+Let $\{C_x\}$ be a polynomial-time uniform circuit family. Suppose an exact packet schedule can be produced from $x$ in polynomial time such that:
+\begin{enumerate}
+\item $\max_tD_t\le\poly(|x|)$;
+\item the coordinate description of the initial state is computable in polynomial time;
+\item each rectangular update $M_t$ can be applied to polynomial precision in polynomial time;
+\item the final acceptance probability is computable from $z_m$ in polynomial time.
+\end{enumerate}
+Then the language decided by the circuit family belongs to $P$.
+\end{theorem}
+
+\begin{proof}
+The simulator stores at most polynomially many coordinates at every step and applies polynomially many polynomial-time updates. \Cref{thm:dynamic-packet} proves exactness before numerical rounding. Polynomial precision below the amplified promise gap gives a deterministic polynomial-time decision procedure.
+\end{proof}
+
+\begin{derivedbox}
+A circuit does not need one globally conserved sector. It is enough that the state follow an efficiently discoverable path through polynomial-dimensional sectors.
+\end{derivedbox}
+
+\section{Moving frames and hidden symmetry}
+The packet schedule has a useful coordinate form. Let $P$ be one fixed projector and let $W_t$ be unitaries with
+\[
+P_t=W_tPW_t^*.
+\]
+In the moving frame, the transformed gate is
+\begin{equation}
+\widetilde G_t
+=W_t^*G_tW_{t-1}.
+\label{eq:moving-frame-gate}
+\end{equation}
+The schedule condition is equivalent to
+\[
+\widetilde G_tP=P\widetilde G_tP.
+\]
+
+\begin{corollary}[Moving-frame collapse]
+\label{cor:moving-frame-collapse}
+Suppose a polynomial-time uniform circuit admits efficiently described frames $W_t$ for which the transformed gates in \cref{eq:moving-frame-gate} preserve one fixed polynomial-dimensional packet, the initial state has efficiently computable coordinates in $W_0P\Hh$, and their restricted matrices and the transformed final measurement are efficiently computable. Then the circuit family is classically simulable in polynomial time.
+\end{corollary}
+
+This is the appropriate theorem for a symmetry that changes orientation with time. Examples to test include Clifford frames, Gaussian mode frames, rotating spin axes, and gauge-fixed local coordinates.
+
+\begin{scopebox}
+The frame must be independently discoverable and efficiently usable. Choosing $W_t=G_t\cdots G_1$ makes the transformed state trivial but is circular: computing that frame is the original simulation problem. The theorem is useful only when the frames have a compact classical description and their restricted actions can be computed without constructing the full state.
+\end{scopebox}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\textwidth]{moving_frame_packets.pdf}
+\caption{A circuit may fail to preserve one laboratory-frame packet while remaining inside a small packet in a computable moving frame.}
+\end{figure}
+
+\section{Sparse packet-transfer graphs}
+Let
+\[
+I=\sum_{\alpha\in\Lambda}P_\alpha
+\]
+be an orthogonal packet decomposition. Write the gate blocks as
+\[
+G_{t;\beta\alpha}=P_\beta G_tP_\alpha.
+\]
+Starting from an active packet set $S_0$, define recursively
+\begin{equation}
+S_t
+=
+\left\{
+\beta:\exists\alpha\in S_{t-1}
+\text{ with }G_{t;\beta\alpha}\ne0
+\right\}.
+\label{eq:reachable-packet-set}
+\end{equation}
+
+\begin{corollary}[Reachable packet-graph collapse]
+\label{cor:packet-graph-collapse}
+Suppose the packet sets $S_t$ and nonzero transfer blocks are computable in polynomial time, and
+\[
+D_t
+=
+\sum_{\alpha\in S_t}\rank P_\alpha
+\le\poly(n)
+\]
+for every $t$. If all active block updates and the final measurement are efficiently computable, then the circuit family is classically polynomial-time simulable.
+\end{corollary}
+
+\begin{proof}
+Take
+\[
+P_t=\sum_{\alpha\in S_t}P_\alpha.
+\]
+The definition of $S_t$ gives $G_tP_{t-1}=P_tG_tP_{t-1}$. Apply \cref{thm:moving-packet-collapse}.
+\end{proof}
+
+This theorem permits exact sector changes. What matters is not that one charge be fixed, but that the union of reachable sectors remain polynomial.
+
+\begin{corollary}[Bounded-excitation collapse]
+\label{cor:bounded-excitation-collapse}
+Consider $n$ qubits and suppose the initial state and every circuit prefix are certified to lie in
+\[
+\Hh_{\le K}
+=
+\bigoplus_{k=0}^{K}\Hh_{n,k}
+\]
+for a fixed constant $K$. If initialization, the gate actions, and the measurement are computable in polynomial time in the occupation basis, then the circuit family lies in $P$, even when individual gates change excitation number.
+\end{corollary}
+
+\begin{proof}
+The active dimension is
+\[
+\sum_{k=0}^{K}\binom nk
+=O(n^K).
+\]
+Let $P$ project onto $\Hh_{\le K}$. By the hypothesis on the actual circuit prefixes, $P\psi_t=\psi_t$ at every step. Consequently $PG_tP\psi_{t-1}=G_t\psi_{t-1}$ on the evolving state, even if the gate does not preserve all of $P\Hh$. The restricted update therefore reproduces that trajectory exactly. The hypothesis supplies efficient initialization, updates, and measurement in these polynomially many coordinates.
+\end{proof}
+
+For example, a fixed-weight input followed by only a constant number of pair-creation or pair-annihilation events remains in a constant collection of low-weight sectors. Exact number conservation is therefore stronger than necessary.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\textwidth]{reachable_packet_graph.pdf}
+\caption{Sector-changing gates remain classically tractable when the reachable packet graph and total active dimension stay polynomial.}
+\end{figure}
+
+\section{Approximate dynamic packets}
+Define the one-step leakage from the scheduled packet by
+\[
+\delta_t
+=
+\|(I-P_t)G_tP_{t-1}\|.
+\]
+Let
+\[
+\widehat G_t=P_tG_tP_{t-1}.
+\]
+
+\begin{theorem}[Dynamic sum-of-leakages bound]
+\label{thm:dynamic-leakage}
+For an initial unit vector in $P_0\Hh$,
+\[
+\left\|
+G_m\cdots G_1\ket{\psi_0}
+-
+\widehat G_m\cdots\widehat G_1\ket{\psi_0}
+\right\|
+\le
+\sum_{t=1}^{m}\delta_t.
+\]
+For any acceptance operator $0\le M\le I$, the corresponding acceptance probabilities differ by at most
+\[
+2\sum_{t=1}^{m}\delta_t.
+\]
+\end{theorem}
+
+\begin{proof}
+A telescoping expansion inserts $G_t-\widehat G_t$ at one time. On $P_{t-1}\Hh$ this difference equals $(I-P_t)G_tP_{t-1}$, while all other unitary or projected factors have norm at most one. Summing the operator norms proves the state bound. If $\psi$ and $\phi$ have norm at most one, then
+\[
+|\langle\psi,M\psi\rangle-\langle\phi,M\phi\rangle|
+\le
+(\|\psi\|+\|\phi\|)\|\psi-\phi\|
+\le2\|\psi-\phi\|.
+\]
+\end{proof}
+
+\begin{corollary}[Approximate moving-packet collapse]
+If the scheduled dimensions and updates are polynomial and
+\[
+\sum_t\delta_t\le\frac1{\poly(n)},
+\]
+then, after ordinary promise-gap amplification, the circuit family remains deterministically classically simulable in polynomial time.
+\end{corollary}
+
+The result is conservative but fully composable. It extends the fixed-projector estimate of \cref{ch:approximate-symmetry} to moving frames and changing packet sets.
+
+
+\section{An adaptive certificate from discarded state vectors}
+The operator-norm leakage certificate is uniform over every input in a packet. An adaptive simulator can use a less expensive certificate that follows its actual approximate state. The discarded vector must be accounted for before any normalization.
+
+\begin{theorem}[Adaptive discarded-state certificate]
+\label{thm:adaptive-discarded-state}
+Let $G_1,\ldots,G_m$ be unitary operators on a finite-dimensional Hilbert space, and let $\psi_0=\phi_0$ be a unit vector. At each step choose an orthogonal projector $P_t$, possibly as a function of the previously computed approximate states. Define
+\[
+\psi_t=G_t\psi_{t-1},\qquad
+\phi_t=P_tG_t\phi_{t-1},\qquad
+\eta_t=\|(I-P_t)G_t\phi_{t-1}\|.
+\]
+Then
+\[
+\|\psi_m-\phi_m\|\le\sum_{t=1}^m\eta_t.
+\]
+For an effect $0\le M\le I$,
+\[
+\left|\langle\psi_m,M\psi_m\rangle-\langle\phi_m,M\phi_m\rangle\right|
+\le2\sum_{t=1}^m\eta_t.
+\]
+No renormalization of $\phi_t$ is performed. The second quadratic form is an unnormalized acceptance estimate.
+\end{theorem}
+
+\begin{proof}
+Fix the projectors chosen during the particular run. Put $d_t=(I-P_t)G_t\phi_{t-1}$. Subtraction gives the exact recurrence
+\[
+\psi_t-\phi_t=G_t(\psi_{t-1}-\phi_{t-1})+d_t.
+\]
+Since $\psi_0-\phi_0=0$, iteration yields
+\[
+\psi_m-\phi_m=\sum_{t=1}^mG_m\cdots G_{t+1}d_t.
+\]
+Every unitary product preserves norm, so the triangle inequality proves the state estimate. Also $\|\psi_m\|=1$ and $\|\phi_m\|\le1$ because each projector is contractive. Expanding the difference of the two quadratic forms and using $\|M\|\le1$ gives the factor two. This proof applies to the chosen run even when the projectors were selected adaptively.
+\end{proof}
+
+\begin{example}[A rational two-step certificate]
+Take
+\[
+G=\begin{pmatrix}3/5&-4/5\\4/5&3/5\end{pmatrix},
+\qquad
+P=\begin{pmatrix}1&0\\0&0\end{pmatrix},
+\qquad
+\psi_0=\phi_0=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+Using $G_1=G_2=G$ and $P_1=P_2=P$ gives
+\[
+\phi_2=\begin{pmatrix}9/25\\0\end{pmatrix},\qquad
+\psi_2=\begin{pmatrix}-7/25\\24/25\end{pmatrix},\qquad
+\eta_1=4/5,\quad\eta_2=12/25.
+\]
+The squared state error is $832/625$, below $(\eta_1+\eta_2)^2=1024/625$. The rational validation script checks these values exactly. The deliberately large tail illustrates a valid but loose certificate, not an efficient approximation.
+\end{example}
+
+The theorem closes global error accounting for any adaptive projection run whose discarded vectors or certified norm bounds can be computed. It does not prove that the retained representation stays polynomial, that the discarded norm is cheap to evaluate, or that a small tail can always be found. Those are separate algorithmic obligations. This is a written theorem with exact finite controls, not an additional Lean formalization.

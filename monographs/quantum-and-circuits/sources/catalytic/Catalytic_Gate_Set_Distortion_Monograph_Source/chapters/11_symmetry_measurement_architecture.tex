@@ -1,0 +1,226 @@
+\chapter{Symmetry, ancillas, measurement, and architecture}\label{ch:symmetry-measurement}
+\index{symmetry-preserving circuit}
+\index{ancilla}
+\index{measurement and feedforward}
+\index{architecture constraint}
+\index{resource theory}
+
+
+\section{Beyond subgroup word metrics}
+Some of the most important quantum resource enlargements are not inclusions of groups.  Measurement introduces branches, reset is irreversible, and ancillas enlarge the Hilbert space.  The appropriate abstraction is a nested pair of realization categories
+\[
+\mathcal C_{\mathrm{res}}
+\subseteq
+\mathcal C_{\mathrm{amb}},
+\]
+with a cost assigned to generating morphisms.
+
+For a target channel $\Phi$ in the restricted category, define
+\[
+c_{\mathrm{res}}(\Phi)
+=
+\inf\{\cost(W):W\text{ realizes }\Phi\text{ in }\mathcal C_{\mathrm{res}}\}
+\]
+and similarly $c_{\mathrm{amb}}(\Phi)$.  The value $+\infty$ is allowed.  A finite positive difference is a metric defect; an infinite difference is an existence defect.
+
+\section{Symmetry-preserving circuits}
+Let $Q$ be a conserved charge and let
+\[
+H_Q=\{U:[U,Q]=0\}.
+\]
+Restricted circuits use gates commuting with $Q$.  Ambient circuits may temporarily leave $H_Q$ but must return to a charge-preserving endpoint.
+
+Examples include:
+\begin{itemize}
+\item particle-number conservation,
+\item parity conservation,
+\item total spin or magnetization,
+\item lattice gauge constraints,
+\item stabilizer or CSS sector preservation,
+\item block-diagonal representation sectors.
+\end{itemize}
+
+The Hilbert space decomposes as
+\[
+\mathcal H=\bigoplus_q\mathcal H_q.
+\]
+A restricted circuit is block diagonal.  An ambient catalyst may couple sectors, use the enlarged route, and decouple them at the endpoint.
+
+\begin{skeletonbox}
+A symmetry-breaking catalyst has three obligations:
+\begin{enumerate}
+\item quantify how far the path leaves the symmetry algebra;
+\item prove exact return, not merely return on a chosen input state;
+\item compare the cost with every symmetry-preserving realization of the full target operator.
+\end{enumerate}
+\end{skeletonbox}
+
+\section{Sector-flow invariants}
+Let $P_q$ be the projector onto sector $q$.  For an intermediate unitary $U_t$, define transfer blocks
+\[
+T_{q,r}(t)=P_q U_t P_r.
+\]
+A restricted path has $T_{q,r}=0$ for $q\ne r$.  Ambient paths may populate off-diagonal blocks.  Possible excursion measures include
+\[
+\sum_{q\ne r}\rank T_{q,r},
+\qquad
+\max_{q\ne r}\|T_{q,r}\|,
+\qquad
+\text{bandwidth in }|q-r|.
+\]
+These are analogues of strict-upper rank and bandwidth in the unitriangular theory.
+
+\section{Clean and dirty ancillas}
+A clean ancilla starts in a specified state, usually $\ket0$, and must be returned to that state.  A dirty ancilla starts in an unknown state and must be restored for every input.
+
+Let $U$ act on the data register.  A clean-ancilla realization is a unitary $W$ satisfying
+\[
+W(\ket\psi\otimes\ket0)
+=(U\ket\psi)\otimes\ket0
+\quad\text{for every }\ket\psi.
+\]
+A dirty-ancilla realization requires
+\[
+W(\ket\psi\otimes\ket\phi)
+=(U\ket\psi)\otimes\ket\phi
+\quad\text{for every }\ket\psi,\ket\phi.
+\]
+The second condition is strictly stronger.
+
+Ancillas define a family of defects
+\[
+\Delta_{a,\mathrm{clean}}(U),
+\qquad
+\Delta_{a,\mathrm{dirty}}(U),
+\]
+where $a$ is the number of ancillary qubits or modes.  Stable ancilla capacity asks whether a fixed number of reusable ancillas can yield an unbounded saving as the data size grows.
+
+\section{Measurement and feedforward}
+A measurement-assisted realization is described by an instrument with classical outcomes $m$, conditional channels $\Phi_m$, and feedforward operations.  Exact deterministic implementation of a unitary target requires every branch, after correction, to induce the same channel.
+
+The cost vector may include
+\[
+(
+T\text{-count},
+\text{two-qubit count},
+\text{measurement rounds},
+\text{classical latency},
+\text{ancilla qubits}
+).
+\]
+A measurement can create an existence defect by realizing a channel unavailable unitarily under the same locality or depth constraints, or a metric defect by reducing one resource while increasing another.
+
+\begin{definition}[Branch-catalytic realization]
+A measurement-assisted circuit is branch catalytic when the intermediate classical or quantum branch information is absent from the final data channel and all declared work systems are reset or discarded according to the model.
+\end{definition}
+
+\section{Teleportation as a canonical ambient excursion}
+Gate teleportation replaces direct implementation by:
+\[
+\text{prepare resource state}
+\to
+\text{entangle and measure}
+\to
+\text{classical correction}.
+\]
+The ambient category contains resources not present in the target channel: entanglement, measurement outcomes, and feedforward.  The endpoint can nevertheless be a deterministic unitary.
+
+This is an archetypal realization defect, but careful accounting is mandatory.  A claimed saving must include resource-state preparation or explicitly treat the state as an external catalyst.
+
+\section{Architecture-constrained gates}
+Let $\Gamma=(V,E)$ be a hardware graph.  A restricted two-qubit gate may act only on edges of $E$.  The ambient model may permit a small number of nonlocal interactions, temporary logical relabelings, teleportation edges, or bus-mediated gates.
+
+For a target $U$, define
+\[
+\ell_\Gamma(U)
+=
+\text{minimum hardware-respecting cost},
+\]
+and compare it with an enlarged graph $\Gamma'$.  A matched routing excursion has the form
+\[
+\pi
+\;W\;
+\pi^{-1},
+\]
+where $\pi$ is a logical permutation.  The excursion is profitable when many gates in $W$ become local in the permuted frame.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.91\textwidth]{resource_pareto.pdf}
+\caption{Gate-set defects generally live in a multi-resource Pareto geometry.}
+\label{fig:resource-pareto}
+\end{figure}
+
+\section{Depth, count, and space-time volume}
+Let $g_t$ be the set of gates scheduled in layer $t$.  Common scalar costs are
+\[
+\sum_t |g_t|,
+\qquad
+\#\{t:g_t\ne\varnothing\},
+\qquad
+\sum_t \#\{\text{active qubits in layer }t\}.
+\]
+A catalyst may reduce count but increase depth, or vice versa.  Space-time volume is often the more stable hardware quantity.
+
+For stochastic error rates $p_g$, a first-order weighted cost is
+\[
+C_{\mathrm{err}}(W)=\sum_{g\in W}-\log(1-p_g).
+\]
+This additive approximation can be inserted directly into Dijkstra search.  It does not capture coherent or correlated errors, but it produces a declared and reproducible metric.
+
+\section{Approximate synthesis}
+For continuous gate sets, define
+\[
+\ell_{\mathrm{res},\varepsilon}(U)
+=
+\min\{\cost(W):\|W-U\|\le\varepsilon\}.
+\]
+There are two distinct border phenomena:
+\begin{enumerate}
+\item algebraic border length, where a target lies in the closure of a bounded exact word locus;
+\item analytic approximation length, where an error tolerance is explicitly permitted.
+\end{enumerate}
+They should not be conflated.
+
+A catalyst can improve the asymptotic Solovay--Kitaev or number-theoretic approximation constant even when exact synthesis is impossible in both models.
+
+\section{Resource theories and monotones}
+A quantum resource theory provides free states, free operations, and monotones.  Gate-set distortion adds a path-sensitive question: the endpoint may be free even though the path temporarily creates resource.
+
+A state monotone $M(\rho)$ alone may fail because the catalyst acts at the channel level.  Useful channel-level quantities include:
+\begin{itemize}
+\item robustness or magic capacity,
+\item entangling power,
+\item operator Schmidt rank,
+\item Choi-state resource measures,
+\item symmetry asymmetry of the channel,
+\item amortized resource generation.
+\end{itemize}
+A lower bound must relate the cumulative or peak resource to the declared gate cost and account for cancellation.
+
+\section{A categorical amplification principle}
+Suppose a monoidal category admits a tensor product and a cost satisfying
+\[
+c_{\mathrm{amb}}(f\otimes g)
+\le
+c_{\mathrm{amb}}(f)+c_{\mathrm{amb}}(g).
+\]
+If restricted cost is additive on a target family, then any one-copy defect amplifies linearly under independent tensor powers.  Superlinear amplification requires a normalization in which dimensions multiply, as in the matrix tensor rule of the core theory, or a joint-synthesis synergy across copies.
+
+\section{Experimental standards}
+Every architecture, measurement, or ancilla claim should state:
+\begin{enumerate}
+\item gate alphabet and native connectivity;
+\item clean, dirty, catalytic, or consumable ancilla convention;
+\item deterministic or postselected implementation;
+\item exact or approximate endpoint condition;
+\item total, weighted, depth, or Pareto cost;
+\item whether resource-state preparation is included;
+\item whether qubit relabeling is free;
+\item certificate of restoration on all inputs.
+\end{enumerate}
+Without these declarations, two reported ``gate counts'' may refer to incomparable problems.
+
+\begin{conjecturebox}
+For several common symmetry and architecture restrictions, a constant-size restored excursion should yield an unbounded saving on structured target families.  The unitriangular construction proves this phenomenon for directed linear information flow; analogous theorems for charge sectors, measurement branches, and nonlocal routing remain open.
+\end{conjecturebox}

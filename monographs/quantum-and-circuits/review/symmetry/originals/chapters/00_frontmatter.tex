@@ -1,0 +1,62 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+Quantum circuits are often described in the full $2^n$-dimensional Hilbert space even when the input, gates, and measurement occupy a much smaller invariant representation. This monograph develops a precise theory of \emph{symmetry collapse}: the replacement of an apparently exponential quantum evolution by an exact or controlled classical computation on symmetry packets, orbit quotients, occupation coordinates, or another efficiently maintained representation.
+
+The foundational theorem states that a polynomial-size uniform quantum circuit family lies in $P$ whenever an efficiently discoverable invariant packet contains the initial state, has polynomial dimension, admits polynomial-time gate updates, and supports polynomial-time evaluation of the final measurement. Fixed-particle-number circuits at constant particle number provide the basic example. A recorded benchmark at twenty qubits reduces $1{,}048{,}576$ full amplitudes to $190$ exact weight-two amplitudes, with zero reconstruction error in the common arithmetic path and large repeated-application and memory gains.
+
+The framework is then extended. Time-dependent packet schedules and moving frames permit exact simulation even when no single laboratory-frame sector is invariant. Sparse packet-transfer graphs show that a bounded collection of low-excitation sectors remains polynomial despite controlled symmetry breaking. Permutation-symmetric qubit circuits collapse to an $(n+1)$-dimensional Dicke representation, while permutation-invariant mixed-state dynamics admit a stronger Schur-commutant compression: for fixed local dimension $d$, the complete invariant operator record has size $O_d(n^{d^2-1})$, and for qubits it uses $O(n^3)$ block parameters under efficient access hypotheses. Fixed-local-dimension qudit symmetry has dimension $\binom{n+d-1}{d-1}$. Quantum walks with polynomially many symmetry orbits collapse to quotient dynamics. Few-boson and few-fermion sectors are polynomial for fixed particle number, with a precise phase diagram from polynomial through quasipolynomial and subexponential to exponential growth. Density matrices require two packet labels, channels require four, and approximate moving packets admit cumulative leakage bounds. A second simulation route is also formalized: an exponentially large packet can remain classically tractable when its states admit a compact representation closed under the gate set, as in stabilizer, Gaussian, or bounded-bond tensor-network models.
+
+The limits are equally important. Parity and weight-modulo-four packets provide only constant-factor reductions. Half-filled sectors remain exponential. Stabilizer syndromes do not by themselves compress the logical state. Block encoding does not imply efficient classical access. Forrelation illustrates the opposite regime, where the answer is stored in coherent relations across exponentially many paths rather than in one small invariant sector. The document therefore separates four notions that are often conflated: state-space reduction, practical acceleration, polynomial-time classical simulation, and a universal collapse of quantum complexity. Only the first three are established for declared subclasses. No claim that $P=BQP$ is made.
+
+All figures are generated in Python. The accompanying source contains the figure generator, packet utilities, exact small-instance validation, and archival benchmark data.
+
+\chapter*{Status convention and record basis}
+\addcontentsline{toc}{chapter}{Status convention and record basis}
+The monograph is grounded in the quantum packet and transfer records supplied with the project. Four statuses remain distinct.
+
+\begin{provedbox}
+Green boxes contain direct proofs, including the invariant-basis theorem, the polynomial packet-simulation theorem, fixed-charge corollaries, and exact operator-block identities.
+\end{provedbox}
+
+\begin{derivedbox}
+Gold boxes contain deductions made explicit here from the same theorem architecture. The permutation-symmetric, orbit-quotient, few-boson, few-fermion, and compressed-packet results are of this type. Their computational hypotheses are stated rather than hidden.
+\end{derivedbox}
+
+\begin{recordbox}
+Blue boxes contain benchmark values or exact finite checks imported from the prior record. They are not reinterpreted as asymptotic theorems. The release code independently verifies the core dimension formulas and exact packet reconstruction on representative instances.
+\end{recordbox}
+
+\begin{frontierbox}
+Red boxes identify boundaries and research programs, including efficient discovery of hidden packets, hybrid packet--tensor compression, approximate-symmetry compilation, and representation-independent lower bounds on global interference compression.
+\end{frontierbox}
+
+\begin{scopebox}
+The phrase ``collapse to classical polynomial time'' means membership in the classical complexity class $P$ for the declared circuit subclass and access model. It does not mean equal polynomial exponents, equal wall-clock time, or a proof that every quantum circuit is classically efficient.
+\end{scopebox}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.96\textwidth]{packet_hierarchy.pdf}
+\caption{The reduction hierarchy used throughout the monograph.}
+\end{figure}
+
+\chapter*{Executive summary}
+\addcontentsline{toc}{chapter}{Executive summary}
+The records already contain a rigorous classical-collapse theorem. If a uniform family of polynomial-size quantum circuits evolves inside a polynomial-dimensional invariant packet, and the packet basis, restricted gates, and final measurement are all computable in polynomial time, then the accepted language lies in $P$. The proof is not a physical approximation. It is ordinary deterministic simulation of a polynomial-length vector by polynomial-size matrices.
+
+This theorem has several exact consequences.
+
+\begin{enumerate}
+\item For fixed $k$, number-preserving circuits initialized in the weight-$k$ sector are classically polynomial-time simulable because $\binom nk=O(n^k)$.
+\item Exact conservation is stronger than necessary: a circuit that moves among a polynomial-dimensional schedule of sectors, or remains inside one small packet in an efficiently computable moving frame, is also in $P$.
+\item Circuits confined to a fixed union of low-excitation sectors are polynomial even when individual gates create or annihilate particles.
+\item Fully permutation-symmetric qubit circuits initialized and measured symmetrically are classically polynomial-time simulable in an $(n+1)$-dimensional Dicke basis, provided the collective gate matrices are efficiently available.
+\item More generally, fixed-$d$ permutation-invariant mixed-state dynamics and measurements admit a polynomial Schur-commutant record; the qubit record has $O(n^3)$ density-matrix parameters under efficient block access.
+\item Fixed-local-dimension symmetric qudit circuits are polynomial because $\dim\Sym^n(\C^d)=\binom{n+d-1}{d-1}$.
+\item Quantum walks reduce to polynomial quotient dynamics when the initial state and measurement are orbit invariant, the number of relevant orbits is polynomial, and quotient couplings are computable without enumerating the full graph.
+\item Fixed-number bosonic and fermionic systems are polynomial for a fixed number of particles and polynomially many modes, subject to efficient gate updates. Slowly growing particle number gives quasipolynomial or subexponential, rather than polynomial, explicit-amplitude simulation.
+\end{enumerate}
+
+The benchmark record gives a practical demonstration. At $n=20$ and exact weight two, the full state has $1{,}048{,}576$ amplitudes while the packet state has $190$. The archived repeated-application gain is approximately $958.8$ and the amplitude-memory ratio is $5518.8$, with zero reported reconstruction error in the common arithmetic path. These values are implementation evidence, not universal machine-independent speedup constants.
+
+The main negative conclusion is just as important. A symmetry label, a moving frame, or a short Schur label does not automatically imply polynomial simulation. Parity leaves $2^{n-1}$ states. Half filling leaves $\binom{n}{n/2}\sim 2^n/\sqrt n$. Entanglement may remain difficult inside one packet. Global interference may encode the answer in relations between exponentially many contributions. A correct collapse claim must therefore account for packet discovery, internal representation, transfer sparsity, leakage, and measurement.

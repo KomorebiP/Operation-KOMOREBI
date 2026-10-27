@@ -1,0 +1,50 @@
+\chapter{Global interference and the failure of local packet collapse}
+\label{ch:global-interference}
+\index{Forrelation}
+\index{interference}
+
+\section{A different quantum mechanism}
+Invariant-packet reduction succeeds when large parts of Hilbert space are never occupied or can be compressed locally. A different regime stores the answer in coherent relations among many paths. The individual amplitudes may be simple, while their signed sum is the computational object.
+
+\section{Forrelation amplitude}
+Let $f,g:\{0,1\}^n\to\{-1,1\}$ and $N=2^n$. The circuit with alternating Hadamards and phase oracles has zero-state amplitude
+\begin{equation}
+\Phi(f,g)
+=
+\frac1{N^{3/2}}
+\sum_{x,y}
+ f(x)(-1)^{x\cdot y}g(y).
+\label{eq:forrelation}
+\end{equation}
+The circuit does not evaluate the $N^2$ terms separately. It preserves phases and lets them interfere.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\textwidth]{forrelation_interference.pdf}
+\caption{Forrelation is governed by coherent Fourier transfer rather than a small invariant sector.}
+\end{figure}
+
+\section{Why Fourier structure is not automatically easy}
+The Walsh transform is explicit and highly symmetric. That does not imply that the bilinear expression in \cref{eq:forrelation} is classically polynomial-time computable when $f$ and $g$ are supplied through restricted query access. The difficulty lies in the access model and the coherent global relation, not in the absence of algebraic structure.
+
+\section{Truth tables versus succinct access}
+If the complete truth tables of $f$ and $g$ are part of the classical input, their length is already $N$, and an $O(N\log N)$ Walsh transform is polynomial in the explicit input length. In a query or succinct-circuit model, $n$ is the parameter and $N=2^n$. The same formula then represents exponentially many values.
+
+This distinction illustrates a general rule: complexity statements must be measured against the input encoding. A quotient of exponential dimension may be efficient relative to an explicit matrix input but exponential relative to a succinct circuit input.
+
+\section{Cross-packet coherence}
+Suppose a projector family gives many packets $P_\alpha$. Even if each diagonal block is simple, the output can depend on the phases of
+\[
+P_\alpha\ket\psi
+\quad\text{relative to}\quad
+P_\beta\ket\psi
+\]
+for exponentially many pairs. A simulator that retains only populations
+\[
+\|P_\alpha\ket\psi\|^2
+\]
+loses this information. The hard-side invariant must measure classical compression of coherent relations, not merely active dimension.
+
+\begin{frontierbox}
+A representation-independent lower bound on interference compression for an explicit, succinct, uniform circuit family would be a major complexity result. The packet framework states the missing object but does not provide that lower bound.
+\end{frontierbox}

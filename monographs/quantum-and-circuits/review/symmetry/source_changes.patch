@@ -1,0 +1,627 @@
+--- before/CLAIM_STATUS.md
++++ after/CLAIM_STATUS.md
+@@ -27,8 +27,8 @@
+ 
+ ## Recorded computation
+ 
+-- exact-weight-two packet/full-state reconstruction;
+-- exact rank-two moving-frame reconstruction check;
++- floating-point reconstruction of structurally exact weight-two packet/full-state dynamics;
++- floating-point rank-two moving-frame reconstruction check;
+ - total-spin commutant parameter-count checks;
+ - exact-weight-two scaling benchmark;
+ - parity, modulo-four, half-filled, and symmetry-breaking control tables;
+@@ -42,8 +42,16 @@
+ 
+ - universal efficiently discoverable packetization;
+ - representation-independent classical interference-compression lower bounds;
+-- adaptive polynomial packet growth with global error control;
++- guaranteed polynomial adaptive packet growth with efficiently accessible small discarded tails;
+ - efficient discovery of noncircular moving frames;
+ - efficient Schur-block compilation for broad permutation-covariant channels;
+ - broad hybrid Gaussian/tensor/stabilizer closure theorems;
+ - classification of the maximal quantum circuit families admitting symmetry-collapse simulation.
++
++## Completion review
++
++- The adaptive discarded-state certificate is proved in the written text. It gives global error accounting for unnormalized adaptive projection trajectories and does not assert polynomial retained size.
++- Exact rational validation passes 308 assertions over 27 fixed-weight examples on one through six qubits, integer dimension checks through twelve qubits, and the two-step discarded-state example.
++- Numerical reconstruction passes the declared 2e-12 tolerance, with maximum observed residual 2.532e-16. These are numerical checks, not exact arithmetic.
++- Twenty-one boundary controls verify invalid-input rejection, strict support preservation, and complex-valued updates of real input states.
++- No symmetry Lean formalization is supplied or claimed.
+--- before/README.md
++++ after/README.md
+@@ -11,7 +11,7 @@
+ - 104-page compiled PDF
+ - standalone master LaTeX source and modular chapter sources
+ - 19 vector figures generated entirely in Python
+-- exact packet-state, moving-frame, and parameter-count utilities
++- packet-state and moving-frame numerical utilities, with exact integer parameter counts
+ - validation tests and archival benchmark tables
+ - two materialized project records used as the principal source basis
+ - theorem and evidence-status ledger, extension notes, and build audit
+@@ -37,7 +37,7 @@
+ 
+ The script:
+ 
+-1. runs the exact packet/full-state and moving-frame validations;
++1. runs exact rational tests, numerical packet/full-state and moving-frame validations, and input-boundary controls;
+ 2. regenerates every figure with Python;
+ 3. compiles the LaTeX monograph with `latexmk`;
+ 4. updates the checksum manifest.
+@@ -57,3 +57,11 @@
+ ## Principal conclusion
+ 
+ An apparently exponential quantum state-space computation collapses to deterministic classical polynomial time when its reachable dynamics admit an efficiently discoverable, polynomial-size classical representation preserved by the evolution and sufficient for the final measurement. The representation may be a fixed packet, a moving packet, a sparse union of packets, or a symmetry commutant record. None of these results implies that arbitrary BQP computation collapses to P.
++
++## Completion review
++
++The current source corrects the entropy estimate for a varying particle density, states the normalization convention for zero-weight Schur blocks, and makes initialization and enumeration costs explicit. It adds a proved adaptive discarded-state error certificate and an exact rational worked example. The numerical packet compiler now rejects every represented nonzero off-packet coefficient rather than silently dropping small leakage.
++
++Run `PYTHONPATH=code python3 code/validate_exact.py` for 308 exact rational/integer assertions and `PYTHONPATH=code python3 code/validate_boundaries.py` for 21 API controls. The original `validate.py` remains the numerical reconstruction path with tolerance 2e-12. These finite checks do not prove the general theorems.
++
++The original standalone PDF and original checksum manifest are retained as historical inputs. They do not contain these source revisions. The rebuilt combined Quantum and Circuits volume is the current reader edition.
+--- before/run_all.sh
++++ after/run_all.sh
+@@ -3,6 +3,8 @@
+ ROOT="$(cd "$(dirname "$0")" && pwd)"
+ cd "$ROOT"
+ PYTHONPATH=code python3 code/validate.py
++PYTHONPATH=code python3 code/validate_exact.py
++PYTHONPATH=code python3 code/validate_boundaries.py
+ python3 code/make_figures.py
+ latexmk -pdf -interaction=nonstopmode Symmetry_Collapse_in_Quantum_Computation.tex
+ {
+--- before/Symmetry_Collapse_in_Quantum_Computation.tex
++++ after/Symmetry_Collapse_in_Quantum_Computation.tex
+@@ -70,7 +70,7 @@
+ \newtheorem{conjecture}[theorem]{Conjecture}
+ 
+ \newtcolorbox{provedbox}[1][]{colback=proofgreen,colframe=deepblue,title={Proved statement},fonttitle=\bfseries,#1}
+-\newtcolorbox{recordbox}[1][]{colback=recordblue,colframe=deepblue,title={Recorded exact computation},fonttitle=\bfseries,#1}
++\newtcolorbox{recordbox}[1][]{colback=recordblue,colframe=deepblue,title={Recorded computation},fonttitle=\bfseries,#1}
+ \newtcolorbox{derivedbox}[1][]{colback=derivedgold,colframe=orange!65!black,title={Derived theorem or corollary},fonttitle=\bfseries,#1}
+ \newtcolorbox{frontierbox}[1][]{colback=openred,colframe=rose,title={Open program or boundary},fonttitle=\bfseries,#1}
+ \newtcolorbox{scopebox}[1][]{colback=gray!6,colframe=gray!60,title={Scope boundary},fonttitle=\bfseries,#1}
+--- before/code/symmetry_packets.py
++++ after/code/symmetry_packets.py
+@@ -2,7 +2,7 @@
+ 
+ from dataclasses import dataclass
+ from itertools import combinations
+-from math import comb, lgamma, log
++from math import comb, isfinite, lgamma, log
+ from typing import Iterable, Sequence
+ 
+ import numpy as np
+@@ -109,7 +109,11 @@
+         raise ValueError("gate dimension does not match qubits")
+     if state.shape != (1 << n,):
+         raise ValueError("state has the wrong dimension")
+-    out = np.zeros_like(state)
++    if n < 0 or len(set(qubits)) != len(qubits) or any(q < 0 or q >= n for q in qubits):
++        raise ValueError("qubit indices must be distinct and in range")
++    if not np.all(np.isfinite(state)) or not np.all(np.isfinite(gate)):
++        raise ValueError("state and gate must have finite entries")
++    out = np.zeros(state.shape, dtype=np.result_type(state.dtype, gate.dtype, np.complex128))
+     for x, amp in enumerate(state):
+         if amp == 0:
+             continue
+@@ -127,6 +131,14 @@
+     n: int
+     basis: tuple[int, ...]
+ 
++    def __post_init__(self) -> None:
++        if self.n < 0:
++            raise ValueError("n must be nonnegative")
++        if len(set(self.basis)) != len(self.basis):
++            raise ValueError("packet basis must not contain duplicate indices")
++        if any(x < 0 or x >= (1 << self.n) for x in self.basis):
++            raise ValueError("packet basis indices must be in range")
++
+     @classmethod
+     def fixed_weight(cls, n: int, k: int) -> "PacketPlan":
+         return cls(n=n, basis=tuple(weight_basis(n, k)))
+@@ -154,15 +166,22 @@
+     def restrict_gate(self, gate: np.ndarray, qubits: Sequence[int]) -> np.ndarray:
+         """Compile a full local gate into the packet basis.
+ 
+-        Raises ValueError if the gate leaks from the packet.
++        Raises ValueError for every nonzero represented off-packet entry.
++        This strict support check does not silently tolerate or discard leakage.
++        It tests the supplied finite-precision matrix, not symbolic exactness.
+         """
+         qubits = tuple(qubits)
+         size = 1 << len(qubits)
+         if gate.shape != (size, size):
+             raise ValueError("gate dimension does not match qubits")
++        if len(set(qubits)) != len(qubits) or any(q < 0 or q >= self.n for q in qubits):
++            raise ValueError("qubit indices must be distinct and in range")
++        if not np.all(np.isfinite(gate)):
++            raise ValueError("gate must have finite entries")
+         idx = self.index_map
+         out = np.zeros((self.dimension, self.dimension), dtype=np.complex128)
+         leakage = 0.0
++        leaks = False
+         for column, x in enumerate(self.basis):
+             local_in = _extract_bits(x, qubits)
+             for local_out in range(size):
+@@ -173,13 +192,16 @@
+                 if y in idx:
+                     out[idx[y], column] += coefficient
+                 else:
++                    leaks = True
+                     leakage += float(abs(coefficient) ** 2)
+-        if leakage > 1e-12:
++        if leaks:
+             raise ValueError(f"gate leaks from packet: total column leakage {leakage:.3e}")
+         return out
+ 
+ 
+ def random_packet_state(plan: PacketPlan, seed: int = 0) -> np.ndarray:
++    if plan.dimension == 0:
++        raise ValueError("cannot normalize a state in an empty packet")
+     rng = np.random.default_rng(seed)
+     v = rng.normal(size=plan.dimension) + 1j * rng.normal(size=plan.dimension)
+     v = v.astype(np.complex128)
+@@ -216,11 +238,16 @@
+ 
+ def circuit_leakage_bound(local_leakages: Iterable[float]) -> float:
+     """Telescoping upper bound for state-vector error."""
+-    return float(sum(max(0.0, x) for x in local_leakages))
++    values = [float(x) for x in local_leakages]
++    if any(not isfinite(x) or x < 0 for x in values):
++        raise ValueError("leakage bounds must be finite and nonnegative")
++    return float(sum(values))
+ 
+ 
+ def hamiltonian_leakage_bound(time: float, commutator_norm: float) -> float:
+-    return abs(float(time)) * max(0.0, float(commutator_norm))
++    if not isfinite(time) or not isfinite(commutator_norm) or commutator_norm < 0:
++        raise ValueError("time must be finite and commutator norm finite and nonnegative")
++    return abs(float(time)) * float(commutator_norm)
+ 
+ 
+ def log2_binomial(n: int, k: int) -> float:
+--- before/code/validate_exact.py
++++ after/code/validate_exact.py
+@@ -0,0 +1,94 @@
++"""Exact finite controls over Q. No floating arithmetic or universal claims."""
++from fractions import Fraction as F
++from math import comb
++import json
++from symmetry_packets import weight_basis, qubit_commutant_parameter_count
++
++
++def mul(a, b):
++    return [[sum((x*y for x,y in zip(row,col)), F(0)) for col in zip(*b)] for row in a]
++
++
++def transpose(a):
++    return list(map(list, zip(*a)))
++
++
++def identity(n):
++    return [[F(i == j) for j in range(n)] for i in range(n)]
++
++
++def norm2(v):
++    return sum((row[0]**2 for row in v), F(0))
++
++
++def main():
++    count = 0
++    def check(condition):
++        nonlocal count
++        assert condition
++        count += 1
++    # Independent bit-count enumeration versus subset-based API indexing.
++    for n in range(13):
++        for k in range(n+1):
++            check(sorted(weight_basis(n,k)) == [x for x in range(1<<n) if x.bit_count() == k])
++        check(qubit_commutant_parameter_count(n) == comb(n+3,3))
++    # Orthogonal rational exchange: a structurally number-preserving rotation.
++    rotation = [[F(3,5), -F(4,5)], [F(4,5), F(3,5)]]
++    check(mul(transpose(rotation), rotation) == identity(2))
++    circuit_instances = 0
++    for n in range(1,7):
++        size = 1<<n
++        gates=[]
++        for q in range(n-1):
++            g=identity(size)
++            mask=(1<<q)|(1<<(q+1))
++            for x in range(size):
++                if (x & mask)==(1<<q):
++                    y=x^mask
++                    for i,a in enumerate([x,y]):
++                        for j,b in enumerate([x,y]):
++                            g[a][b]=rotation[i][j]
++            gates.append(g)
++        for k in range(n+1):
++            basis=weight_basis(n,k)
++            initial=[[F(i+1,len(basis)+1)] for i in range(len(basis))]
++            reduced=initial
++            full=[[F(0)] for _ in range(size)]
++            for i,x in enumerate(basis):full[x]=initial[i]
++            for g in gates:
++                full=mul(g,full)
++                restricted=[[g[x][y] for y in basis] for x in basis]
++                reduced=mul(restricted,reduced)
++                check([full[x] for x in basis]==reduced)
++                check(all(full[x]==[F(0)] for x in range(size) if x not in basis))
++            check(norm2(full)==norm2(initial))
++            circuit_instances+=1
++    # Adaptive-projection example from the written theorem, with exact tail norms.
++    initial=[[F(1)],[F(0)]]
++    p=[[F(1),F(0)],[F(0),F(0)]]
++    exact=initial
++    approx=initial
++    tails=[]
++    for _ in range(2):
++        exact=mul(rotation,exact)
++        unprojected=mul(rotation,approx)
++        approx=mul(p,unprojected)
++        tails.append(abs(unprojected[1][0]))
++    check(tails==[F(4,5),F(12,25)])
++    check(approx==[[F(9,25)],[F(0)]])
++    check(exact==[[F(-7,25)],[F(24,25)]])
++    error2=norm2([[a[0]-b[0]] for a,b in zip(exact,approx)])
++    check(error2 <= sum(tails)**2)
++    effect_difference=abs(exact[0][0]**2-approx[0][0]**2)
++    check(effect_difference <= 2*sum(tails))
++    # Negative control: renormalization is excluded by the theorem.
++    renormalized=[[F(1)],[F(0)]]
++    check(renormalized != approx)
++    print(json.dumps({'status':'PASS','domain':'rational/integer exact','assertions':count,
++                      'fixed_weight_instances':circuit_instances,'qubits':{'min':1,'max':6},
++                      'dimension_count_n':{'min':0,'max':12},
++                      'adaptive_tails':[str(x) for x in tails],
++                      'adaptive_error_squared':str(error2),
++                      'non_claims':['No universal theorem follows from finite checks.','No timing benchmark was rerun.']}))
++
++if __name__=='__main__':main()
+--- before/code/validate_boundaries.py
++++ after/code/validate_boundaries.py
+@@ -0,0 +1,39 @@
++"""Regression controls for exact support and numerical packet API validation."""
++import json
++import numpy as np
++from symmetry_packets import PacketPlan, apply_local_gate_full, circuit_leakage_bound, hamiltonian_leakage_bound, random_packet_state
++
++
++def main():
++    assertions=0
++    def rejected(f):
++        nonlocal assertions
++        try:f()
++        except ValueError:assertions+=1
++        else:raise AssertionError('invalid input was accepted')
++    p=PacketPlan.fixed_weight(2,1)
++    for qubits in [(0,0),(2,),(-1,)]:
++        gate=np.eye(1<<len(qubits))
++        rejected(lambda:p.restrict_gate(gate,qubits))
++        rejected(lambda:apply_local_gate_full(np.array([0.,1.,0.,0.]),gate,qubits,2))
++    rejected(lambda:PacketPlan(2,(1,1)))
++    rejected(lambda:PacketPlan(2,(4,)))
++    rejected(lambda:PacketPlan(-1,()))
++    rejected(lambda:random_packet_state(PacketPlan(2,())))
++    for invalid in [-0.1,float('nan'),float('inf')]:
++        rejected(lambda:circuit_leakage_bound([invalid]))
++        rejected(lambda:hamiltonian_leakage_bound(1,invalid))
++    rejected(lambda:p.restrict_gate(np.full((2,2),np.nan),(0,)))
++    rejected(lambda:apply_local_gate_full(np.ones(4),np.full((2,2),np.nan),(0,),2))
++    # The old implementation silently accepted this off-packet coefficient:
++    # its squared leakage falls below the old 1e-12 threshold.
++    for epsilon in [1e-7,1e-200]:
++        gate=np.array([[np.sqrt(1-epsilon**2),-epsilon],[epsilon,np.sqrt(1-epsilon**2)]])
++        rejected(lambda:p.restrict_gate(gate,(0,)))
++    # A real input vector must accept a complex gate without losing imaginary parts.
++    state=np.array([1.,0.])
++    got=apply_local_gate_full(state,np.array([[1j,0],[0,-1j]]),(0,),1)
++    assert np.array_equal(got,np.array([1j,0]));assertions+=1
++    print(json.dumps({'status':'PASS','assertions':assertions,'non_claims':['No symbolic exactness claim for floating matrices.']}))
++
++if __name__=='__main__':main()
+--- before/chapters/B_python_api.tex
++++ after/chapters/B_python_api.tex
+@@ -37,6 +37,8 @@
+ From the project root, run
+ \begin{lstlisting}[style=pythonstyle]
+ PYTHONPATH=code python3 code/validate.py
++PYTHONPATH=code python3 code/validate_exact.py
++PYTHONPATH=code python3 code/validate_boundaries.py
+ \end{lstlisting}
+ The expected output reports successful formula checks and reconstruction errors near machine precision for the representative fixed-weight circuits.
+ 
+--- before/chapters/12_few_particles.tex
++++ after/chapters/12_few_particles.tex
+@@ -30,7 +30,7 @@
+ For fixed $N$, this is also polynomial in $m$.
+ 
+ \begin{corollary}[Few-particle collapse]
+-A polynomial-size number-preserving bosonic or fermionic circuit with a fixed number of particles is classically polynomial-time simulable if its mode-gate updates and final observable are computable in polynomial time in the occupation basis.
++A polynomial-size number-preserving bosonic or fermionic circuit with a fixed number of particles is classically polynomial-time simulable if its initial occupation coordinates, mode-gate updates, and final observable are computable in polynomial time in the occupation basis.
+ \end{corollary}
+ 
+ \begin{proof}
+--- before/chapters/00_frontmatter.tex
++++ after/chapters/00_frontmatter.tex
+@@ -8,7 +8,7 @@
+ 
+ The limits are equally important. Parity and weight-modulo-four packets provide only constant-factor reductions. Half-filled sectors remain exponential. Stabilizer syndromes do not by themselves compress the logical state. Block encoding does not imply efficient classical access. Forrelation illustrates the opposite regime, where the answer is stored in coherent relations across exponentially many paths rather than in one small invariant sector. The document therefore separates four notions that are often conflated: state-space reduction, practical acceleration, polynomial-time classical simulation, and a universal collapse of quantum complexity. Only the first three are established for declared subclasses. No claim that $P=BQP$ is made.
+ 
+-All figures are generated in Python. The accompanying source contains the figure generator, packet utilities, exact small-instance validation, and archival benchmark data.
++All figures are generated in Python. The accompanying source contains the figure generator, packet utilities, integer dimension checks and floating-point small-instance validation, and archival benchmark data.
+ 
+ \chapter*{Status convention and record basis}
+ \addcontentsline{toc}{chapter}{Status convention and record basis}
+@@ -23,7 +23,7 @@
+ \end{derivedbox}
+ 
+ \begin{recordbox}
+-Blue boxes contain benchmark values or exact finite checks imported from the prior record. They are not reinterpreted as asymptotic theorems. The release code independently verifies the core dimension formulas and exact packet reconstruction on representative instances.
++Blue boxes contain benchmark values or exact finite checks imported from the prior record. They are not reinterpreted as asymptotic theorems. The release code independently verifies the core integer dimension formulas and floating-point packet reconstruction on representative instances, supplemented by exact rational checks.
+ \end{recordbox}
+ 
+ \begin{frontierbox}
+--- before/chapters/06_fixed_charge.tex
++++ after/chapters/06_fixed_charge.tex
+@@ -49,7 +49,7 @@
+ 
+ \begin{corollary}[Fixed-charge polynomial simulation]
+ \label{cor:fixed-charge-poly}
+-For every fixed $k$, a polynomial-time uniform family of number-preserving circuits initialized in $\Hh_{n,k}$ and measured by an efficiently computable observable is classically simulable in polynomial time, provided each restricted local gate is efficiently applied in the weight-$k$ basis.
++For every fixed $k$, a polynomial-time uniform family of number-preserving circuits initialized in $\Hh_{n,k}$ and measured by an efficiently computable observable is classically simulable in polynomial time, provided the initial weight-$k$ coordinates can be computed efficiently and each restricted local gate is efficiently applied in that basis.
+ \end{corollary}
+ 
+ \begin{proof}
+--- before/chapters/D_status_ledger.tex
++++ after/chapters/D_status_ledger.tex
+@@ -25,6 +25,7 @@
+ Half-filling remains exponential & Proved dimension statement & Runtime constants remain implementation dependent.\\
+ Parity gives only a factor-two dimension reduction & Proved dimension statement & Does not preclude further internal compression.\\
+ Quantum Latin order-six product realization absent, entangled realization present & External theorem & Contextual existence defect, not a simulation theorem.\\
++Adaptive discarded-state error certificate & Proved & Unnormalized trajectories, explicitly accounted discarded norms.\\
+ Universal polynomial packetization & Open conjecture & Would imply $P=BQP$.\\
+ Representation-independent interference lower bound & Open & Required for a full hard-side complexity conclusion.\\
+ \bottomrule
+--- before/chapters/11_commutant_collapse.tex
++++ after/chapters/11_commutant_collapse.tex
+@@ -72,7 +72,7 @@
+ 
+ \begin{lemma}[Permutation-invariant state normal form]
+ \label{lem:invariant-state-normal-form}
+-A density operator $\rho$ commutes with every permutation if and only if it can be written uniquely as
++A density operator $\rho$ commutes with every permutation if and only if it can be written as
+ \begin{equation}
+ \rho
+ =
+@@ -81,7 +81,7 @@
+ \frac{I_{\mathcal V_\lambda}}{f_\lambda},
+ \label{eq:commutant-state-record}
+ \end{equation}
+-where $p_\lambda\ge0$, $\sum_\lambda p_\lambda=1$, and each $\rho_\lambda$ is a density operator on $\mathcal U_\lambda$ whenever $p_\lambda>0$.
++where $p_\lambda\ge0$, $\sum_\lambda p_\lambda=1$, and each $\rho_\lambda$ is a density operator on $\mathcal U_\lambda$ whenever $p_\lambda>0$. The weights $p_\lambda$ and the unnormalized blocks $p_\lambda\rho_\lambda$ are unique. The normalized block $\rho_\lambda$ is unique only when $p_\lambda>0$ and is omitted when $p_\lambda=0$.
+ \end{lemma}
+ 
+ The complete state record is therefore
+--- before/chapters/06_dynamic_frames.tex
++++ after/chapters/06_dynamic_frames.tex
+@@ -69,7 +69,7 @@
+ 
+ \begin{theorem}[Polynomial moving-packet collapse]
+ \label{thm:moving-packet-collapse}
+-Let $\{C_x\}$ be a polynomial-time uniform circuit family. Suppose an exact packet schedule can be produced from $x$ such that:
++Let $\{C_x\}$ be a polynomial-time uniform circuit family. Suppose an exact packet schedule can be produced from $x$ in polynomial time such that:
+ \begin{enumerate}
+ \item $\max_tD_t\le\poly(|x|)$;
+ \item the coordinate description of the initial state is computable in polynomial time;
+@@ -105,7 +105,7 @@
+ 
+ \begin{corollary}[Moving-frame collapse]
+ \label{cor:moving-frame-collapse}
+-Suppose a polynomial-time uniform circuit admits efficiently described frames $W_t$ for which the transformed gates in \cref{eq:moving-frame-gate} preserve one fixed polynomial-dimensional packet, and their restricted matrices and the transformed final measurement are efficiently computable. Then the circuit family is classically simulable in polynomial time.
++Suppose a polynomial-time uniform circuit admits efficiently described frames $W_t$ for which the transformed gates in \cref{eq:moving-frame-gate} preserve one fixed polynomial-dimensional packet, the initial state has efficiently computable coordinates in $W_0P\Hh$, and their restricted matrices and the transformed final measurement are efficiently computable. Then the circuit family is classically simulable in polynomial time.
+ \end{corollary}
+ 
+ This is the appropriate theorem for a symmetry that changes orientation with time. Examples to test include Clifford frames, Gaussian mode frames, rotating spin axes, and gauge-fixed local coordinates.
+@@ -170,7 +170,7 @@
+ =
+ \bigoplus_{k=0}^{K}\Hh_{n,k}
+ \]
+-for a fixed constant $K$. If the gates and measurement have polynomial-time actions in the occupation basis, then the circuit family lies in $P$, even when individual gates change excitation number.
++for a fixed constant $K$. If initialization, the gate actions, and the measurement are computable in polynomial time in the occupation basis, then the circuit family lies in $P$, even when individual gates change excitation number.
+ \end{corollary}
+ 
+ \begin{proof}
+@@ -179,7 +179,7 @@
+ \sum_{k=0}^{K}\binom nk
+ =O(n^K).
+ \]
+-Use the weight sectors as packet nodes and apply \cref{cor:packet-graph-collapse}.
++Let $P$ project onto $\Hh_{\le K}$. By the hypothesis on the actual circuit prefixes, $P\psi_t=\psi_t$ at every step. Consequently $PG_tP\psi_{t-1}=G_t\psi_{t-1}$ on the evolving state, even if the gate does not preserve all of $P\Hh$. The restricted update therefore reproduces that trajectory exactly. The hypothesis supplies efficient initialization, updates, and measurement in these polynomially many coordinates.
+ \end{proof}
+ 
+ For example, a fixed-weight input followed by only a constant number of pair-creation or pair-annihilation events remains in a constant collection of low-weight sectors. Exact number conservation is therefore stronger than necessary.
+@@ -239,3 +239,59 @@
+ \end{corollary}
+ 
+ The result is conservative but fully composable. It extends the fixed-projector estimate of \cref{ch:approximate-symmetry} to moving frames and changing packet sets.
++
++
++\section{An adaptive certificate from discarded state vectors}
++The operator-norm leakage certificate is uniform over every input in a packet. An adaptive simulator can use a less expensive certificate that follows its actual approximate state. The discarded vector must be accounted for before any normalization.
++
++\begin{theorem}[Adaptive discarded-state certificate]
++\label{thm:adaptive-discarded-state}
++Let $G_1,\ldots,G_m$ be unitary operators on a finite-dimensional Hilbert space, and let $\psi_0=\phi_0$ be a unit vector. At each step choose an orthogonal projector $P_t$, possibly as a function of the previously computed approximate states. Define
++\[
++\psi_t=G_t\psi_{t-1},\qquad
++\phi_t=P_tG_t\phi_{t-1},\qquad
++\eta_t=\|(I-P_t)G_t\phi_{t-1}\|.
++\]
++Then
++\[
++\|\psi_m-\phi_m\|\le\sum_{t=1}^m\eta_t.
++\]
++For an effect $0\le M\le I$,
++\[
++\left|\langle\psi_m,M\psi_m\rangle-\langle\phi_m,M\phi_m\rangle\right|
++\le2\sum_{t=1}^m\eta_t.
++\]
++No renormalization of $\phi_t$ is performed. The second quadratic form is an unnormalized acceptance estimate.
++\end{theorem}
++
++\begin{proof}
++Fix the projectors chosen during the particular run. Put $d_t=(I-P_t)G_t\phi_{t-1}$. Subtraction gives the exact recurrence
++\[
++\psi_t-\phi_t=G_t(\psi_{t-1}-\phi_{t-1})+d_t.
++\]
++Since $\psi_0-\phi_0=0$, iteration yields
++\[
++\psi_m-\phi_m=\sum_{t=1}^mG_m\cdots G_{t+1}d_t.
++\]
++Every unitary product preserves norm, so the triangle inequality proves the state estimate. Also $\|\psi_m\|=1$ and $\|\phi_m\|\le1$ because each projector is contractive. Expanding the difference of the two quadratic forms and using $\|M\|\le1$ gives the factor two. This proof applies to the chosen run even when the projectors were selected adaptively.
++\end{proof}
++
++\begin{example}[A rational two-step certificate]
++Take
++\[
++G=\begin{pmatrix}3/5&-4/5\\4/5&3/5\end{pmatrix},
++\qquad
++P=\begin{pmatrix}1&0\\0&0\end{pmatrix},
++\qquad
++\psi_0=\phi_0=\begin{pmatrix}1\\0\end{pmatrix}.
++\]
++Using $G_1=G_2=G$ and $P_1=P_2=P$ gives
++\[
++\phi_2=\begin{pmatrix}9/25\\0\end{pmatrix},\qquad
++\psi_2=\begin{pmatrix}-7/25\\24/25\end{pmatrix},\qquad
++\eta_1=4/5,\quad\eta_2=12/25.
++\]
++The squared state error is $832/625$, below $(\eta_1+\eta_2)^2=1024/625$. The rational validation script checks these values exactly. The deliberately large tail illustrates a valid but loose certificate, not an efficient approximation.
++\end{example}
++
++The theorem closes global error accounting for any adaptive projection run whose discarded vectors or certified norm bounds can be computed. It does not prove that the retained representation stays polynomial, that the discarded norm is cheap to evaluate, or that a small tail can always be found. Those are separate algorithmic obligations. This is a written theorem with exact finite controls, not an additional Lean formalization.
+--- before/chapters/09_permutation_symmetry.tex
++++ after/chapters/09_permutation_symmetry.tex
+@@ -16,7 +16,7 @@
+ Its dimension is $n+1$.
+ 
+ \begin{derivedbox}
+-If the initial state is permutation symmetric, every gate preserves the fully symmetric subspace, the gate matrices in the Dicke basis are computable in polynomial time, and the final measurement is permutation invariant and efficient, then the circuit family lies in $P$.
++If the initial state is permutation symmetric with efficiently computable Dicke coordinates, every gate preserves the fully symmetric subspace, the gate matrices in the Dicke basis are computable in polynomial time, and the final measurement is permutation invariant and efficient, then the circuit family lies in $P$.
+ \end{derivedbox}
+ 
+ \begin{theorem}[Permutation-symmetric collapse]
+@@ -40,7 +40,7 @@
+ J_a=\frac12\sum_{q=1}^n\sigma_a^{(q)},
+ \qquad a\in\{x,y,z\}.
+ \]
+-The operators $J_a$ preserve the symmetric subspace. In the Dicke basis, $J_z$ is diagonal and
++The operators $J_a$ preserve the symmetric subspace. We use the computational convention $\sigma_z\ket0=\ket0$ and $\sigma_z\ket1=-\ket1$. Thus $J_z\ket{D_n^k}=(n/2-k)\ket{D_n^k}$. For the following occupation formulas define $J_+=J_x-iJ_y$ and $J_-=J_x+iJ_y$, so that the subscript records increasing or decreasing excitation number rather than magnetic quantum number. Then
+ \[
+ J_+\ket{D_n^k}
+ =
+--- before/chapters/27_conclusion.tex
++++ after/chapters/27_conclusion.tex
+@@ -1,7 +1,7 @@
+ \chapter{Conclusion}
+ The quantum state vector is a universal coordinate system, not always the computationally intrinsic one. Conserved charges, finite-group representations, permutation orbits, few-particle sectors, and operator packets can expose much smaller dynamics. When the packet is efficiently discoverable, polynomial in size, closed under the gates, and compatible with the measurement, the quantum computation collapses exactly to a deterministic classical polynomial-time simulation.
+ 
+-The strongest current examples are concrete. Fixed charge at constant particle number is polynomial. Exact charge conservation is not necessary: moving packet schedules, efficiently computable moving frames, and bounded unions of low-excitation sectors also collapse to polynomial classical simulation. Fully symmetric fixed-local-dimension dynamics is polynomial. A stronger mixed-state theorem compresses all permutation-invariant Schur sectors into a polynomial commutant record, with $O(n^3)$ density-matrix parameters for qubits under efficient block access. Polynomial-orbit walks are polynomial under quotient-access hypotheses. Few-particle bosonic and fermionic systems are polynomial under efficient updates, while growing particle number gives a sharp progression through quasipolynomial, subexponential, and exponential sector sizes. Stabilizer and Gaussian representations show that an exponential packet can also be easy when its internal states admit compact closed coordinates. Recorded number-conserving benchmarks show large memory and repeated-application gains with exact reconstruction.
++The strongest current examples are concrete. Fixed charge at constant particle number is polynomial. Exact charge conservation is not necessary: moving packet schedules, efficiently computable moving frames, and bounded unions of low-excitation sectors also collapse to polynomial classical simulation. Fully symmetric fixed-local-dimension dynamics is polynomial. A stronger mixed-state theorem compresses all permutation-invariant Schur sectors into a polynomial commutant record, with $O(n^3)$ density-matrix parameters for qubits under efficient block access. Polynomial-orbit walks are polynomial under quotient-access hypotheses. Few-particle bosonic and fermionic systems are polynomial under efficient updates, while growing particle number gives a sharp progression through quasipolynomial, subexponential, and exponential sector sizes. Stabilizer and Gaussian representations show that an exponential packet can also be easy when its internal states admit compact closed coordinates. Recorded number-conserving benchmarks show large memory and repeated-application gains with zero reconstruction error at the recorded precision.
+ 
+ The boundaries are equally sharp. Parity, modulo-four charge, and half filling do not generally change exponential scaling. Entanglement can remain hard inside one packet. A syndrome label does not compress logical information. A block encoding does not provide a classical access model. Global Fourier interference may be fully structured yet resist small packetization. Symmetry collapse is therefore not a slogan that all quantum computation is classical. It is a theorem architecture for identifying substantial subclasses that are.
+ 
+--- before/chapters/17_measurement_feedback.tex
++++ after/chapters/17_measurement_feedback.tex
+@@ -24,7 +24,7 @@
+ Suppose each branch is represented by a pair $(\alpha,r)$, where $\alpha$ is a packet label and $r$ is a compact internal state. If polynomially many distinct pairs occur at every depth, identical pairs can be merged and their probabilities added. This gives a dynamic program instead of an exponential branch tree.
+ 
+ \begin{proposition}[Branch-merging simulation]
+-If a measurement-and-feedback circuit has polynomial depth, polynomially many distinct reachable packet representations at each step, polynomial-time transition probabilities, and an efficient final predicate, then its output distribution is classically computable in polynomial time.
++Suppose a measurement-and-feedback circuit has polynomial depth and polynomially many distinct reachable packet representations at each step. Assume that the initial representation is efficiently constructible, each representation has a polynomial-time canonical key sufficient for all future transitions, all successor representations and their transition probabilities can be enumerated in polynomial time, and the final predicate is efficient. Then the final acceptance probability is classically computable to the requested polynomial precision in polynomial time. The same conclusion holds for any polynomially supported final output distribution.
+ \end{proposition}
+ 
+ \begin{proof}
+--- before/chapters/13_scaling_phases.tex
++++ after/chapters/13_scaling_phases.tex
+@@ -53,7 +53,9 @@
+ \[
+ \log_2 D_{n,k}
+ =
+-nH_2(p)+O(\log n),
++nH_2(k(n)/n)+O(\log n)
++=
++nH_2(p)+o(n),
+ \]
+ where $H_2$ is binary entropy, and the packet remains exponential.
+ \end{enumerate}
+@@ -76,7 +78,12 @@
+ \ge
+ \sqrt n\log2,
+ \]
+-which also dominates every constant multiple of $\log n$. The linear-density estimate is the usual entropy asymptotic for binomial coefficients.
++which also dominates every constant multiple of $\log n$. For the final assertion, $p_n=k(n)/n$ stays in a compact subinterval of $(0,1)$. Stirling's formula gives
++\[
++\log_2\binom n{k(n)}
++=nH_2(p_n)-\frac12\log_2\!\bigl(2\pi n p_n(1-p_n)\bigr)+O(1/n).
++\]
++The logarithmic term is $O(\log n)$, uniformly on that subinterval. Continuity of $H_2$ gives $nH_2(p_n)=nH_2(p)+o(n)$. Replacing $p_n$ by its limit inside an $O(\log n)$ estimate would require a convergence rate, which is not assumed here.
+ \end{proof}
+ 
+ \begin{derivedbox}
+--- before/chapters/24_benchmark_protocol.tex
++++ after/chapters/24_benchmark_protocol.tex
+@@ -19,8 +19,8 @@
+ \item number of repetitions over which compilation is amortized.
+ \end{enumerate}
+ 
+-\section{Exact validation path}
+-For manageable $n$, embed a random packet state into the full space, apply identical gates in both representations, and compare final states. The included validation program performs this check for exact fixed-weight circuits.
++\section{Algebraic and numerical validation paths}
++For manageable $n$, embed a random packet state into the full space, apply identical gates in both representations, and compare final states. The included numerical validation program performs this check for structurally invariant fixed-weight circuits using complex floating-point arithmetic, with reconstruction tolerance $2\cdot10^{-12}$. The separate rational validation uses exact fractions and rational orthogonal gates. Exact subspace invariance is a property of the model, while near-machine-precision agreement is numerical evidence about this implementation.
+ 
+ \section{Scaling studies}
+ A scaling plot should include both fine packets and coarse packets. Fixed weight two demonstrates polynomial dimension. Parity demonstrates a constant-factor packet. Half filling demonstrates an exponential packet with a polynomial memory reduction factor. These controls prevent overinterpreting a speedup as a complexity collapse.
+@@ -35,7 +35,7 @@
+ \item the benchmark JSON data,
+ \item the Python figure generator,
+ \item packet and gate utilities,
+-\item exact validation tests,
++\item exact rational checks and separately labeled numerical validation tests,
+ \item LaTeX source,
+ \item deterministic build commands,
+ \item checksums of final artifacts.
+--- before/chapters/11_orbit_quotients.tex
++++ after/chapters/11_orbit_quotients.tex
+@@ -22,7 +22,7 @@
+ 
+ \begin{theorem}[Orbit-quotient collapse]
+ \label{thm:orbit-collapse}
+-Suppose a uniformly described quantum walk has a polynomial number $r(n)$ of relevant orbits, an orbit-uniform initial state, an orbit-invariant final measurement, and polynomial-time algorithms for orbit sizes and quotient entries. Then the walk can be simulated classically in polynomial time by the $r(n)\times r(n)$ quotient dynamics.
++Suppose a uniformly described quantum walk has a polynomial number $r(n)$ of relevant orbits, an orbit-uniform initial state, an orbit-invariant final measurement, and polynomial-time algorithms for orbit sizes, quotient entries, initial orbit coordinates, and the restricted final measurement. For continuous-time evolution, also assume a polynomial bound on $|t|\|\widetilde H\|$ and efficient entry access to the precision required by the simulation. Then the walk can be simulated classically in polynomial time by the $r(n)\times r(n)$ quotient dynamics.
+ \end{theorem}
+ 
+ \begin{proof}
+--- before/chapters/04_exact_simulation.tex
++++ after/chapters/04_exact_simulation.tex
+@@ -7,7 +7,7 @@
+ G_jP=PG_jP,
+ \label{eq:gatewise-invariance}
+ \end{equation}
+-then $G_j$ maps $P\Hh$ into itself. The equation is slightly more general than commutation: it requires invariance of the selected subspace, not necessarily invariance of its orthogonal complement.
++then $G_j$ maps $P\Hh$ into itself. For a general linear map, this equation asserts only invariance of the selected subspace. For the finite-dimensional unitary gates considered here, invariance also implies invariance of the orthogonal complement, so it is equivalent to commutation with $P$.
+ 
+ \begin{theorem}[Invariant-basis simulation]
+ \label{thm:invariant-basis}
+@@ -38,7 +38,7 @@
+ Let $\{C_x\}$ be a polynomial-time uniform family of quantum circuits. Suppose there is an efficiently computable packet representation such that:
+ 
+ \begin{enumerate}
+-\item the initial state lies in the represented packet;
++\item the initial state lies in the represented packet and its coordinates are computable in polynomial time;
+ \item every gate preserves the representation;
+ \item the representation size is at most $\poly(|x|)$;
+ \item each gate update is computable to polynomial precision in polynomial time;

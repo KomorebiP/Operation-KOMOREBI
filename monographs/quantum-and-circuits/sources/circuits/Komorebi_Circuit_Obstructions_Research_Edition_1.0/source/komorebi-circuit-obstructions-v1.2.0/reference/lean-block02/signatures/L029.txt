@@ -1,0 +1,12 @@
+CircuitObstructions.canonical_complete_safe_cover (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : (Fin n -> Bool) -> Bool)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) (k : Nat) :
+  (forall (x : Fin n -> Bool) (i : CircuitObstructions.CanonicalWire n a),
+      CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+          true ->
+        f x = true) /\
+    forall (x : Fin n -> Bool),
+      f x = true <->
+        exists i,
+          CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+            true

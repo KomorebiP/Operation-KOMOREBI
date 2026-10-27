@@ -1,0 +1,190 @@
+\chapter{Permutation-invariant mixed states and commutant compression}
+\label{ch:commutant-collapse}
+\index{commutant compression}
+\index{permutation twirl}
+\index{permutation-invariant density operator}
+
+\section{Why multiplicity can disappear without being discarded}
+The fully symmetric subspace is only one Schur--Weyl packet. A general permutation-invariant mixed state can occupy every Schur label while still admitting a polynomial classical description for fixed local dimension. The reason is that the exponentially large symmetric-group multiplicities occur as identity factors rather than independent dynamical coordinates.
+
+Let $S_n$ act on
+\[
+\Hh_{n,d}=(\C^d)^{\otimes n}
+\]
+by permuting tensor factors. Schur--Weyl duality gives
+\begin{equation}
+\Hh_{n,d}
+\cong
+\bigoplus_{\lambda\vdash n,\,\ell(\lambda)\le d}
+\mathcal U_\lambda\otimes\mathcal V_\lambda,
+\label{eq:schur-decomp-commutant}
+\end{equation}
+where $S_n$ acts trivially on the first tensor factor and irreducibly on $\mathcal V_\lambda$.
+
+\section{The permutation twirl}
+Define the twirling channel
+\begin{equation}
+\mathcal T_n(X)
+=
+\frac1{n!}
+\sum_{\pi\in S_n}
+U_\pi XU_\pi^*.
+\label{eq:permutation-twirl}
+\end{equation}
+Its image is the commutant of the permutation action.
+
+\begin{lemma}[Invariant observables see only the twirl]
+\label{lem:twirl-observable}
+If $A$ commutes with every $U_\pi$, then
+\[
+\Tr(A\rho)
+=
+\Tr\bigl(A\mathcal T_n(\rho)\bigr)
+\]
+for every density operator $\rho$.
+\end{lemma}
+
+\begin{proof}
+Using cyclicity of the trace and $U_\pi^*AU_\pi=A$,
+\[
+\Tr\bigl(A\mathcal T_n(\rho)\bigr)
+=
+\frac1{n!}\sum_\pi
+\Tr(AU_\pi\rho U_\pi^*)
+=
+\frac1{n!}\sum_\pi
+\Tr(U_\pi^*AU_\pi\rho)
+=
+\Tr(A\rho).
+\]
+\end{proof}
+
+If a unitary $U$ and acceptance operator $M$ are permutation invariant, then $U^*MU$ is invariant. Therefore the final probability depends on the input only through its twirl. This permits an observable-specific collapse even when the original pure input is not itself symmetric.
+
+\section{Exact commutant record}
+Let
+\[
+u_\lambda=\dim\mathcal U_\lambda,
+\qquad
+f_\lambda=\dim\mathcal V_\lambda.
+\]
+Schur's lemma gives the following normal form.
+
+\begin{lemma}[Permutation-invariant state normal form]
+\label{lem:invariant-state-normal-form}
+A density operator $\rho$ commutes with every permutation if and only if it can be written uniquely as
+\begin{equation}
+\rho
+=
+\bigoplus_\lambda
+p_\lambda\,\rho_\lambda\otimes
+\frac{I_{\mathcal V_\lambda}}{f_\lambda},
+\label{eq:commutant-state-record}
+\end{equation}
+where $p_\lambda\ge0$, $\sum_\lambda p_\lambda=1$, and each $\rho_\lambda$ is a density operator on $\mathcal U_\lambda$ whenever $p_\lambda>0$.
+\end{lemma}
+
+The complete state record is therefore
+\[
+\left\{
+(p_\lambda,\rho_\lambda)
+\right\}_\lambda.
+\]
+The multiplicity dimension $f_\lambda$ affects normalization and degeneracy, but no $f_\lambda\times f_\lambda$ matrix needs to be stored.
+
+A permutation-invariant unitary has the form
+\begin{equation}
+U
+=
+\bigoplus_\lambda
+U_\lambda\otimes I_{\mathcal V_\lambda},
+\label{eq:commutant-unitary-form}
+\end{equation}
+and a permutation-invariant measurement operator has the analogous form
+\[
+M
+=
+\bigoplus_\lambda
+M_\lambda\otimes I_{\mathcal V_\lambda}.
+\]
+The output probability is
+\begin{equation}
+\Tr(MU\rho U^*)
+=
+\sum_\lambda
+p_\lambda
+\Tr\bigl(M_\lambda U_\lambda\rho_\lambda U_\lambda^*\bigr).
+\label{eq:commutant-output}
+\end{equation}
+
+\section{Polynomial parameter bound}
+The number of partitions of $n$ with at most $d$ parts is bounded by the number of weak compositions:
+\[
+\#\{\lambda:\ell(\lambda)\le d\}
+\le
+\binom{n+d-1}{d-1}
+=O_d(n^{d-1}).
+\]
+The Weyl dimension formula gives
+\begin{equation}
+u_\lambda
+=
+\prod_{1\le i<j\le d}
+\frac{\lambda_i-\lambda_j+j-i}{j-i}
+=O_d\left(n^{d(d-1)/2}\right).
+\label{eq:weyl-dimension-bound}
+\end{equation}
+Therefore
+\begin{equation}
+\sum_\lambda u_\lambda^2
+=O_d\left(n^{d^2-1}\right).
+\label{eq:commutant-parameter-bound}
+\end{equation}
+
+\begin{theorem}[Schur-commutant collapse]
+\label{thm:schur-commutant-collapse}
+Fix the local dimension $d$. Consider a polynomial-time uniform family of permutation-invariant quantum circuits or channels on $n$ qudits. Suppose:
+\begin{enumerate}
+\item the Schur-block record of the twirled input can be constructed in polynomial time;
+\item the induced update on the invariant operator record in \cref{eq:commutant-state-record} is computable to polynomial precision in polynomial time;
+\item the final measurement is permutation invariant and its Schur blocks are efficiently computable.
+\end{enumerate}
+Then the associated decision problem belongs to $P$.
+\end{theorem}
+
+\begin{proof}
+Permutation covariance keeps the density operator inside the commutant algebra. By \cref{eq:commutant-parameter-bound}, that algebra has polynomial dimension for fixed $d$. The hypotheses supply polynomial-time initialization, updates, and measurement on this record. Apply \cref{thm:compressed-packet}.
+\end{proof}
+
+\begin{derivedbox}
+For fixed local dimension, permutation-invariant mixed-state dynamics can be classically polynomial even when the state has support across exponentially large symmetric-group multiplicity spaces. Those multiplicities are exact identity factors in the invariant operator record.
+\end{derivedbox}
+
+\section{Qubit corollary}
+For qubits, Schur labels are total spins $j$. The carrier dimension is
+\[
+u_j=2j+1\le n+1,
+\]
+and there are at most $\lfloor n/2\rfloor+1$ labels. Hence
+\begin{equation}
+\sum_j(2j+1)^2=O(n^3).
+\label{eq:qubit-commutant-size}
+\end{equation}
+
+\begin{corollary}[Permutation-invariant qubit channels]
+\label{cor:perm-invariant-qubit-channels}
+A uniform permutation-covariant qubit channel family with efficiently computable total-spin block updates, efficiently available twirled input blocks, and a permutation-invariant measurement is classically simulable using $O(n^3)$ density-matrix parameters, up to constant factors and numerical precision.
+\end{corollary}
+
+Collective Hamiltonians that are polynomial expressions in $J_x,J_y,J_z$ are a basic test class because their total-spin matrices can be generated directly without constructing the full $2^n\times2^n$ operator.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\textwidth]{schur_commutant_compression.pdf}
+\caption{Permutation-invariant density operators retain the polynomial carrier blocks and replace each possibly exponential multiplicity space by an exact identity factor.}
+\end{figure}
+
+\section{What this theorem does not cover}
+The theorem does not make an arbitrary local circuit easy. A gate acting on one selected pair generally fails to commute with all permutations. An arbitrary input may have Schur blocks that are difficult to compute from its succinct description. A non-invariant measurement can read information stored in multiplicity coordinates. Finally, allowing local dimension $d$ to grow with $n$ can make the commutant record superpolynomial.
+
+The result is therefore a complete collapse theorem for a declared symmetry and access model, not a claim that Schur--Weyl decomposition alone solves generic many-body simulation.

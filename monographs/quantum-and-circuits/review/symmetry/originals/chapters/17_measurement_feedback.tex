@@ -1,0 +1,38 @@
+\chapter{Measurement, conditioning, and classical feedback}
+\label{ch:measurement}
+\index{measurement}
+
+\section{Projective measurement}
+For projectors $\{P_\alpha\}$, the probability of outcome $\alpha$ is
+\[
+p_\alpha
+=
+\Tr(P_\alpha\rho),
+\]
+and the conditioned state is
+\[
+\rho_\alpha
+=
+\frac{P_\alpha\rho P_\alpha}{p_\alpha}
+\]
+when $p_\alpha>0$. Measurement is therefore packet selection followed by normalization.
+
+\section{Branching complexity}
+A measurement-assisted circuit produces a tree of outcomes. Classical simulation is efficient when the branch distribution can be sampled or summed without enumerating exponentially many relevant histories. Symmetry can merge histories that lead to the same packet state, but only if the feedforward policy respects the same equivalence.
+
+\section{Dynamic programming on packet states}
+Suppose each branch is represented by a pair $(\alpha,r)$, where $\alpha$ is a packet label and $r$ is a compact internal state. If polynomially many distinct pairs occur at every depth, identical pairs can be merged and their probabilities added. This gives a dynamic program instead of an exponential branch tree.
+
+\begin{proposition}[Branch-merging simulation]
+If a measurement-and-feedback circuit has polynomial depth, polynomially many distinct reachable packet representations at each step, polynomial-time transition probabilities, and an efficient final predicate, then its output distribution is classically computable in polynomial time.
+\end{proposition}
+
+\begin{proof}
+Maintain a probability dictionary over distinct packet representations. Each measurement or controlled gate updates every entry into polynomially many successors. Merge equal successors. The dictionary remains polynomial by hypothesis.
+\end{proof}
+
+\section{Reset and dissipation}
+Reset is nonunitary but often simplifies a classical representation by removing entropy or closing branches. Conversely, measurement may expose a classical label while leaving a complex logical state. The resource value of measurement depends on the target, ancilla convention, and cost function.
+
+\section{Connection to catalytic gate models}
+The larger gate-set monograph studies temporary excursions into measurement, ancilla, or symmetry-breaking resources. The present monograph asks a different question: when does the resulting model remain classically simulable? A temporary resource may shorten a quantum circuit without making the computation classically easy.

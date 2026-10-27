@@ -1,0 +1,1247 @@
+\clearpage\section*{Complete declaration register}
+\addcontentsline{toc}{section}{Complete declaration register}
+The following 115 types are transcribed from the archived Block 02 declaration catalog. Unicode logical operators are rendered as mathematical glyphs; the complete original UTF-8 statements are also supplied. Source files and line locators match the preserved source hashes. These are archived elaborated types, not a new compilation result.
+\begingroup
+\lstset{basicstyle=\ttfamily\scriptsize,breakatwhitespace=false,
+literate={¬}{{\ensuremath{\neg}}}1 {×}{{\ensuremath{\times}}}1
+{→}{{\ensuremath{\to}}}1 {↔}{{\ensuremath{\leftrightarrow}}}1
+{∀}{{\ensuremath{\forall}}}1 {∃}{{\ensuremath{\exists}}}1
+{∈}{{\ensuremath{\in}}}1 {∧}{{\ensuremath{\land}}}1
+{≠}{{\ensuremath{\ne}}}1 {≤}{{\ensuremath{\le}}}1}
+
+\subsection*{Gates: 16 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L001\enspace\texttt{write\_same}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:17\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.write_same {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t : W) (b : Bool) :
+  CircuitObstructions.write s t b t = b
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L002\enspace\texttt{write\_other}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:20\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.write_other {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t i : W) (b : Bool)
+  (h : i ≠ t) : CircuitObstructions.write s t b i = s i
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L003\enspace\texttt{xor\_cancel\_right}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:23\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.xor_cancel_right (a b : Bool) : (a ^^ b ^^ b) = a
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L004\enspace\texttt{xor\_cancel\_left}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:26\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.xor_cancel_left (a b : Bool) : (a ^^ (a ^^ b)) = b
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L005\enspace\texttt{xor\_commute}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:29\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.xor_commute (a b : Bool) : (a ^^ b) = (b ^^ a)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L006\enspace\texttt{xor\_true\_iff\_ne}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:32\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.xor_true_iff_ne (a b : Bool) : (a ^^ b) = true ↔ a ≠ b
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L007\enspace\texttt{eval\_involutive}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:48\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Gate.eval_involutive {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (s : CircuitObstructions.State W) : g.eval (g.eval s) = s
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L008\enspace\texttt{eval\_injective}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:67\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Gate.eval_injective {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  {s t : CircuitObstructions.State W} (h : g.eval s = g.eval t) : s = t
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L009\enspace\texttt{run\_nil}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:78\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_nil {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) :
+  CircuitObstructions.run [] s = s
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L010\enspace\texttt{run\_cons}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:81\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_cons {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (gs : CircuitObstructions.Circuit W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (g :: gs) s = CircuitObstructions.run gs (g.eval s)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L011\enspace\texttt{run\_append}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:84\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_append {W : Type} [DecidableEq W] (p q : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (p ++ q) s = CircuitObstructions.run q (CircuitObstructions.run p s)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L012\enspace\texttt{run\_reverse\_run}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:90\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_reverse_run {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run (List.reverse c) (CircuitObstructions.run c s) = s
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L013\enspace\texttt{run\_run\_reverse}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:98\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_run_reverse {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run c (CircuitObstructions.run (List.reverse c) s) = s
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L014\enspace\texttt{run\_injective}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:102\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_injective {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  {s t : CircuitObstructions.State W} (h : CircuitObstructions.run c s = CircuitObstructions.run c t) : s = t
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L015\enspace\texttt{toffoliCount\_append}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:114\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.toffoliCount_append {W : Type} (p q : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (p ++ q) = CircuitObstructions.toffoliCount p + CircuitObstructions.toffoliCount q
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L016\enspace\texttt{toffoliCount\_reverse}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Gates.lean}:118\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.toffoliCount_reverse {W : Type} (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (List.reverse c) = CircuitObstructions.toffoliCount c
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{CutComparison: 13 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L017\enspace\texttt{target\_separated}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:17\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Boundary.target_separated {X W : Type} (e : CircuitObstructions.Boundary X W) (x : X) :
+  e.encode x false ≠ e.encode x true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L018\enspace\texttt{canonical\_input}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:39\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_input (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin n) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inl i) = x i
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L019\enspace\texttt{canonical\_ancilla}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:42\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_ancilla (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin a) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inl i)) = false
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L020\enspace\texttt{canonical\_target}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:45\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_target (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inr ())) = b
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L021\enspace\texttt{inverse\_suffix\_boundary}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:49\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.inverse_suffix_boundary {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (b : Bool) :
+  CircuitObstructions.run (List.reverse q) (e.encode x b) = CircuitObstructions.run p (e.encode x (b ^^ f x))
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L022\enspace\texttt{direction\_nonzero}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:67\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.direction_nonzero {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p : CircuitObstructions.Circuit W) (x : X) : ∃ i, CircuitObstructions.direction e p x i = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L023\enspace\texttt{cut\_transport\_identity}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:82\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.cut_transport_identity {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = (f x && CircuitObstructions.direction e p x i)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L024\enspace\texttt{cut\_packet\_safe}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:91\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.cut_packet_safe {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = true → f x = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L025\enspace\texttt{cut\_cover\_complete}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:99\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.cut_cover_complete {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L026\enspace\texttt{complete\_safe\_cover}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:111\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.complete_safe_cover {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) :
+  (∀ (x : X) (i : W), CircuitObstructions.packet e p q x i = true → f x = true) ∧
+    ∀ (x : X), f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L027\enspace\texttt{cut\_states\_equal\_iff\_reject}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:119\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.cut_states_equal_iff_reject {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  CircuitObstructions.run p (e.encode x false) = CircuitObstructions.run (List.reverse q) (e.encode x false) ↔
+    f x = false
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L028\enspace\texttt{every\_index\_cut}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:131\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.every_index_cut {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e c f) (k : Nat) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e (List.take k c) (List.drop k c) x i = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L029\enspace\texttt{canonical\_complete\_safe\_cover}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/CutComparison.lean}:139\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_complete_safe_cover (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : (Fin n → Bool) → Bool)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) (k : Nat) :
+  (∀ (x : Fin n → Bool) (i : CircuitObstructions.CanonicalWire n a),
+      CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+          true →
+        f x = true) ∧
+    ∀ (x : Fin n → Bool),
+      f x = true ↔
+        ∃ i,
+          CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+            true
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{Examples: 11 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L030\enspace\texttt{andOracle\_restores}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:27\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.andOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.andBoundary CircuitObstructions.Examples.andOracle fun x =>
+    x.fst && x.snd
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L031\enspace\texttt{andOracle\_toffoli\_count}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:33\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.andOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.andOracle = 2
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L032\enspace\texttt{and\_scratch\_can\_be\_dirty}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:36\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.and_scratch_can_be_dirty :
+  CircuitObstructions.run CircuitObstructions.Examples.andCompute
+      (CircuitObstructions.Examples.andBoundary.encode (true, true) false)
+      CircuitObstructions.Examples.WorkWire.scratch =
+    true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L033\enspace\texttt{andOracle\_every\_cut}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:40\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.andOracle_every_cut (k : Nat) (x : Bool × Bool) :
+  (x.fst && x.snd) = true ↔
+    ∃ i,
+      CircuitObstructions.packet CircuitObstructions.Examples.andBoundary
+          (List.take k CircuitObstructions.Examples.andOracle) (List.drop k CircuitObstructions.Examples.andOracle) x
+          i =
+        true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L034\enspace\texttt{outputActiveOracle\_restores}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:66\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.outputActiveOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.outputActiveOracle
+    fun x => true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L035\enspace\texttt{outputActiveOracle\_length}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:71\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.outputActiveOracle_length : List.length CircuitObstructions.Examples.outputActiveOracle = 7
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L036\enspace\texttt{outputActiveOracle\_toffoli\_count}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:73\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.outputActiveOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.outputActiveOracle = 0
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L037\enspace\texttt{moved\_discrepancy\_data}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:76\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.moved_discrepancy_data (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.data =
+    true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L038\enspace\texttt{moved\_discrepancy\_target}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:80\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.moved_discrepancy_target (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+    false
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L039\enspace\texttt{target\_only\_reconstruction\_is\_false}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:85\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.target_only_reconstruction_is_false :
+  ¬∀ (x : Bool),
+      CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+          CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+        true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L040\enspace\texttt{degenerate\_encoding\_control}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Examples.lean}:93\par
+\textbf{Block.}\enspace 01\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Examples.degenerate_encoding_control :
+  have bad := fun x x_1 => false;
+  (∀ (y : Bool), CircuitObstructions.run [] (bad y) = bad (y ^^ true)) ∧
+    ∀ (i : CircuitObstructions.Examples.SwapWire), (bad false i ^^ bad false i) = false
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{Degree: 19 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L041\enspace\texttt{bprod\_nil}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:19\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.bprod_nil {W : Type} (s : CircuitObstructions.State W) : CircuitObstructions.bprod [] s = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L042\enspace\texttt{bprod\_cons}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:20\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.bprod_cons {W : Type} (i : W) (is : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod (i :: is) s = (s i && CircuitObstructions.bprod is s)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L043\enspace\texttt{bprod\_append}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:23\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.bprod_append {W : Type} (l k : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod (l ++ k) s = (CircuitObstructions.bprod l s && CircuitObstructions.bprod k s)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L044\enspace\texttt{xor\_and\_right}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:29\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.xor_and_right (a b c : Bool) : ((a ^^ b) && c) = (a && c ^^ b && c)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L045\enspace\texttt{and\_xor\_right}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:33\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.and_xor_right (a b c : Bool) : (a && (b ^^ c)) = (a && b ^^ a && c)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L046\enspace\texttt{not\_as\_xor\_one}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:37\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.not_as_xor_one (a : Bool) : (!a) = (a ^^ true)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L047\enspace\texttt{mono}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:47\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.mono {n d e : Nat} {f : CircuitObstructions.BFun n} (h : CircuitObstructions.DegreeLE d f)
+  (hde : d ≤ e) : CircuitObstructions.DegreeLE e f
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L048\enspace\texttt{one}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:54\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.one (n d : Nat) : CircuitObstructions.DegreeLE d fun x => true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L049\enspace\texttt{constant}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:57\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.constant (n d : Nat) (b : Bool) : CircuitObstructions.DegreeLE d fun x => b
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L050\enspace\texttt{variable}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:63\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.variable {n : Nat} (i : Fin n) : CircuitObstructions.DegreeLE 1 fun x => x i
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L051\enspace\texttt{xor}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:67\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.xor {n d e : Nat} {f g : CircuitObstructions.BFun n}
+  (hf : CircuitObstructions.DegreeLE d f) (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (max d e) fun x => f x ^^ g x
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L052\enspace\texttt{not}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:72\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.not {n d : Nat} {f : CircuitObstructions.BFun n} (hf : CircuitObstructions.DegreeLE d f) :
+  CircuitObstructions.DegreeLE d fun x => !f x
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L053\enspace\texttt{monomial\_mul}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:76\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.monomial_mul {n d e : Nat} (l : List (Fin n)) (hl : l.length ≤ d)
+  {g : CircuitObstructions.BFun n} (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (d + e) fun x => CircuitObstructions.bprod l x && g x
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L054\enspace\texttt{mul}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:87\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.mul {n d e : Nat} {f g : CircuitObstructions.BFun n}
+  (hf : CircuitObstructions.DegreeLE d f) (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (d + e) fun x => f x && g x
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L055\enspace\texttt{product}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:96\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.product {n : Nat} {W : Type} (l : List W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (h : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i) :
+  CircuitObstructions.DegreeLE l.length fun x => CircuitObstructions.bprod l (s x)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L056\enspace\texttt{polyEval\_append}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:109\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.polyEval_append {n : Nat} (p q : List (List (Fin n))) (x : Fin n → Bool) :
+  CircuitObstructions.polyEval (p ++ q) x = (CircuitObstructions.polyEval p x ^^ CircuitObstructions.polyEval q x)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L057\enspace\texttt{polynomial\_witness}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:115\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.DegreeLE.polynomial_witness {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.DegreeLE d f) :
+  ∃ p, (∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) ∧ CircuitObstructions.polyEval p = f
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L058\enspace\texttt{polynomial\_degree\_certificate}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:134\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.polynomial_degree_certificate {n d : Nat} (p : List (List (Fin n)))
+  (hp : ∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) : CircuitObstructions.DegreeLE d (CircuitObstructions.polyEval p)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L059\enspace\texttt{degreeLE\_iff\_polynomial}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/Degree.lean}:142\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.degreeLE_iff_polynomial {n d : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.DegreeLE d f ↔
+    ∃ p, (∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) ∧ CircuitObstructions.polyEval p = f
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{MultiplicativeDegree: 12 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L060\enspace\texttt{withoutWire\_length\_le}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:17\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.withoutWire_length_le {W : Type} [DecidableEq W] (l : List W) (t : W) :
+  (CircuitObstructions.withoutWire l t).length ≤ l.length
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L061\enspace\texttt{withoutWire\_length\_lt}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:21\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.withoutWire_length_lt {W : Type} [DecidableEq W] (l : List W) (t : W) (ht : t ∈ l) :
+  (CircuitObstructions.withoutWire l t).length + 1 ≤ l.length
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L062\enspace\texttt{bprod\_write}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:33\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.bprod_write {W : Type} [DecidableEq W] (l : List W) (s : CircuitObstructions.State W) (t : W)
+  (b : Bool) :
+  CircuitObstructions.bprod l (CircuitObstructions.write s t b) =
+    ((if t ∈ l then b else true) && CircuitObstructions.bprod (CircuitObstructions.withoutWire l t) s)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L063\enspace\texttt{bprod\_write\_absent}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:48\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.bprod_write_absent {W : Type} [DecidableEq W] (l : List W) (s : CircuitObstructions.State W) (t : W)
+  (b : Bool) (ht : ¬t ∈ l) :
+  CircuitObstructions.bprod l (CircuitObstructions.write s t b) = CircuitObstructions.bprod l s
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L064\enspace\texttt{workspaceDegree\_initial}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:62\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.workspaceDegree_initial {n : Nat} {W : Type} (s : (Fin n → Bool) → CircuitObstructions.State W)
+  (h : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i) : CircuitObstructions.WorkspaceDegree s 0
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L065\enspace\texttt{workspaceDegree\_toggle}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:73\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.workspaceDegree_toggle {n : Nat} {W : Type} [DecidableEq W]
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (t : W) (controls : List W) (k : Nat)
+  (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (CircuitObstructions.toggleProduct s t controls) (k + (controls.length - 1))
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L066\enspace\texttt{workspaceDegree\_gate}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:104\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.workspaceDegree_gate {n : Nat} {W : Type} [DecidableEq W]
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (g : CircuitObstructions.Gate W) (k : Nat)
+  (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (fun x => g.eval (s x)) (k + g.toffoliCost)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L067\enspace\texttt{workspaceDegree\_run}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:128\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.workspaceDegree_run {n : Nat} {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (k : Nat) (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (fun x => CircuitObstructions.run c (s x))
+    (k + CircuitObstructions.toffoliCount c)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L068\enspace\texttt{run\_coordinate\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:139\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.run_coordinate_degree {n : Nat} {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (hs : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i)
+  (i : W) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) fun x => CircuitObstructions.run c (s x) i
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L069\enspace\texttt{canonical\_boundary\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:146\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_boundary_degree (n a : Nat) (b : Bool) (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE 1 fun x => (CircuitObstructions.canonicalBoundary n a).encode x b i
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L070\enspace\texttt{canonical\_run\_coordinate\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:155\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_run_coordinate_degree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (b : Bool)
+  (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) fun x =>
+    CircuitObstructions.run c ((CircuitObstructions.canonicalBoundary n a).encode x b) i
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L071\enspace\texttt{canonical\_cut\_packet\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/MultiplicativeDegree.lean}:161\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_cut_packet_degree (n a : Nat)
+  (p q : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a))
+  (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE (max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) + 1)
+    fun x => CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) p q x i
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{SafeDegree: 22 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L072\enspace\texttt{mono}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:16\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace none\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.CompleteSafeDegreeLE.mono {n d e : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.CompleteSafeDegreeLE f d) (hde : d ≤ e) : CircuitObstructions.CompleteSafeDegreeLE f e
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L073\enspace\texttt{bprod\_true\_iff}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:22\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.bprod_true_iff {W : Type} (l : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod l s = true ↔ ∀ (i : W), i ∈ l → s i = true
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L074\enspace\texttt{pointIndicator\_true\_iff}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:31\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.pointIndicator_true_iff {n : Nat} (v x : Fin n → Bool) :
+  CircuitObstructions.pointIndicator v x = true ↔ x = v
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L075\enspace\texttt{pointIndicator\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:44\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.pointIndicator_degree {n : Nat} (v : Fin n → Bool) :
+  CircuitObstructions.DegreeLE n (CircuitObstructions.pointIndicator v)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L076\enspace\texttt{completeSafeDegree\_le\_inputs}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:56\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.completeSafeDegree_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.CompleteSafeDegreeLE f n
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L077\enspace\texttt{exists\_least\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:65\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.exists_least_degree (P : Nat → Prop) (n : Nat) (hn : P n) : ∃ r, P r ∧ ∀ (k : Nat), P k → r ≤ k
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L078\enspace\texttt{beta\_exists}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:83\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_exists {n : Nat} (f : CircuitObstructions.BFun n) :
+  ∃ r, CircuitObstructions.CompleteSafeDegreeLE f r ∧ ∀ (k : Nat), CircuitObstructions.CompleteSafeDegreeLE f k → r ≤ k
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L079\enspace\texttt{beta\_spec}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:90\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_spec {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.CompleteSafeDegreeLE f (CircuitObstructions.beta f)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L080\enspace\texttt{beta\_le\_of\_cover}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:93\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_le_of_cover {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.CompleteSafeDegreeLE f d) : CircuitObstructions.beta f ≤ d
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L081\enspace\texttt{beta\_le\_iff}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:97\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_le_iff {n d : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.beta f ≤ d ↔ CircuitObstructions.CompleteSafeDegreeLE f d
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L082\enspace\texttt{beta\_le\_inputs}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:103\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) : CircuitObstructions.beta f ≤ n
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L083\enspace\texttt{beta\_zero}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:106\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_zero (n : Nat) : (CircuitObstructions.beta fun x => false) = 0
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L084\enspace\texttt{canonical\_cut\_completeSafeDegree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:113\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_cut_completeSafeDegree (n a : Nat)
+  (p q : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) (p ++ q) f) :
+  CircuitObstructions.CompleteSafeDegreeLE f
+    (max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) + 1)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L085\enspace\texttt{toffoliCost\_le\_one}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:124\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.Gate.toffoliCost_le_one {W : Type} (g : CircuitObstructions.Gate W) : g.toffoliCost ≤ 1
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L086\enspace\texttt{toffoliCount\_nil}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:127\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.toffoliCount_nil {W : Type} : CircuitObstructions.toffoliCount [] = 0
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L087\enspace\texttt{toffoliCount\_cons}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:129\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.toffoliCount_cons {W : Type} (g : CircuitObstructions.Gate W) (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (g :: c) = g.toffoliCost + CircuitObstructions.toffoliCount c
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L088\enspace\texttt{exists\_cut\_with\_toffoliCount}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:133\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.exists_cut_with_toffoliCount {W : Type} (c : CircuitObstructions.Circuit W) (k : Nat)
+  (hk : k ≤ CircuitObstructions.toffoliCount c) : ∃ p q, c = p ++ q ∧ CircuitObstructions.toffoliCount p = k
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L089\enspace\texttt{exists\_balanced\_toffoli\_cut}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:155\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.exists_balanced_toffoli_cut {W : Type} (c : CircuitObstructions.Circuit W) :
+  ∃ p q,
+    c = p ++ q ∧
+      max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) ≤
+        (CircuitObstructions.toffoliCount c + 1) / 2
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L090\enspace\texttt{canonical\_restored\_completeSafeDegree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:165\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_restored_completeSafeDegree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.CompleteSafeDegreeLE f ((CircuitObstructions.toffoliCount c + 1) / 2 + 1)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L091\enspace\texttt{beta\_le\_half\_toffoliCount}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:173\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_le_half_toffoliCount (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.beta f ≤ (CircuitObstructions.toffoliCount c + 1) / 2 + 1
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L092\enspace\texttt{beta\_restoration\_bound}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:179\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_restoration_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.beta f ≤ CircuitObstructions.toffoliCount c + 3
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L093\enspace\texttt{toffoliCount\_ge\_two\_beta\_sub\_three}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/SafeDegree.lean}:186\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.toffoliCount_ge_two_beta_sub_three (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.beta f - 3 ≤ CircuitObstructions.toffoliCount c
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{AffineOutput: 14 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L094\enspace\texttt{restores\_append}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:12\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.restores_append {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c d : CircuitObstructions.Circuit W) (f g : X → Bool) (hc : CircuitObstructions.Restores e c f)
+  (hd : CircuitObstructions.Restores e d g) : CircuitObstructions.Restores e (c ++ d) fun x => f x ^^ g x
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L095\enspace\texttt{canonical\_target\_not}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:20\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_target_not (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.Gate.not (CircuitObstructions.canonicalBoundary n a).target).eval
+      ((CircuitObstructions.canonicalBoundary n a).encode x b) =
+    (CircuitObstructions.canonicalBoundary n a).encode x (b ^^ true)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L096\enspace\texttt{canonical\_input\_to\_target}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:34\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_input_to_target (n a : Nat) (i : Fin n) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.inputToTarget n a i).eval ((CircuitObstructions.canonicalBoundary n a).encode x b) =
+    (CircuitObstructions.canonicalBoundary n a).encode x (b ^^ x i)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L097\enspace\texttt{affine\_restored\_exists}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:45\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.affine_restored_exists (n a : Nat) (g : CircuitObstructions.BFun n)
+  (hg : CircuitObstructions.DegreeLE 1 g) :
+  ∃ d,
+    CircuitObstructions.toffoliCount d = 0 ∧
+      CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) d g
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L098\enspace\texttt{betaStar\_exists}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:76\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_exists {n : Nat} (f : CircuitObstructions.BFun n) :
+  ∃ r, CircuitObstructions.AffineSafeDegreeLE f r ∧ ∀ (k : Nat), CircuitObstructions.AffineSafeDegreeLE f k → r ≤ k
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L099\enspace\texttt{betaStar\_spec}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:85\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_spec {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.AffineSafeDegreeLE f (CircuitObstructions.betaStar f)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L100\enspace\texttt{betaStar\_le\_of\_bound}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:88\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_le_of_bound {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.AffineSafeDegreeLE f d) : CircuitObstructions.betaStar f ≤ d
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L101\enspace\texttt{betaStar\_le\_inputs}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:92\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) : CircuitObstructions.betaStar f ≤ n
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L102\enspace\texttt{beta\_le\_betaStar}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:97\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_le_betaStar {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.beta f ≤ CircuitObstructions.betaStar f
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L103\enspace\texttt{betaStar\_le\_half\_toffoliCount}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:101\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_le_half_toffoliCount (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.betaStar f ≤ (CircuitObstructions.toffoliCount c + 1) / 2 + 1
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L104\enspace\texttt{betaStar\_restoration\_bound}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:112\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_restoration_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.betaStar f ≤ CircuitObstructions.toffoliCount c + 3
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L105\enspace\texttt{toffoliCount\_ge\_two\_betaStar\_sub\_three}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:119\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.toffoliCount_ge_two_betaStar_sub_three (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.betaStar f - 3 ≤ CircuitObstructions.toffoliCount c
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L106\enspace\texttt{canonical\_restored\_output\_degree}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:126\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.canonical_restored_output_degree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) f
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L107\enspace\texttt{restored\_degree\_and\_cover\_bound}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/AffineOutput.lean}:140\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.restored_degree_and_cover_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) f ∧
+    2 * CircuitObstructions.betaStar f ≤ CircuitObstructions.toffoliCount c + 3
+\end{lstlisting}
+\end{minipage}\par
+
+\subsection*{DegreeChecks: 8 declarations}
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L108\enspace\texttt{squareParity\_add}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:17\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.squareParity_add (f g : CircuitObstructions.BFun 2) :
+  (CircuitObstructions.squareParity fun x => f x ^^ g x) =
+    (CircuitObstructions.squareParity f ^^ CircuitObstructions.squareParity g)
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L109\enspace\texttt{affine\_squareParity\_zero}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:22\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.affine_squareParity_zero (f : CircuitObstructions.BFun 2) (h : CircuitObstructions.DegreeLE 1 f) :
+  CircuitObstructions.squareParity f = false
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L110\enspace\texttt{andTwo\_degree\_two}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:39\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.andTwo_degree_two : CircuitObstructions.DegreeLE 2 CircuitObstructions.andTwo
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L111\enspace\texttt{andTwo\_not\_affine}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:43\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.andTwo_not_affine : ¬CircuitObstructions.DegreeLE 1 CircuitObstructions.andTwo
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L112\enspace\texttt{andTwo\_no\_degree\_one\_safe\_cover}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:49\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.andTwo_no_degree_one_safe_cover :
+  ¬CircuitObstructions.CompleteSafeDegreeLE CircuitObstructions.andTwo 1
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L113\enspace\texttt{beta\_andTwo}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:64\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.beta_andTwo : CircuitObstructions.beta CircuitObstructions.andTwo = 2
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L114\enspace\texttt{betaStar\_andTwo}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:72\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.betaStar_andTwo : CircuitObstructions.betaStar CircuitObstructions.andTwo = 2
+\end{lstlisting}
+\end{minipage}\par
+
+\par\medskip\noindent\begin{minipage}{\textwidth}
+{\small\bfseries L115\enspace\texttt{restored\_andTwo\_needs\_toffoli}\par}
+{\footnotesize\raggedright\textbf{Source.}\enspace\code{CircuitObstructions/DegreeChecks.lean}:78\par
+\textbf{Block.}\enspace 02\quad\textbf{Axioms.}\enspace propext, Classical.choice, Quot.sound\par}\nopagebreak
+\begin{lstlisting}
+CircuitObstructions.restored_andTwo_needs_toffoli (a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire 2 a))
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary 2 a) c CircuitObstructions.andTwo) :
+  1 ≤ CircuitObstructions.toffoliCount c
+\end{lstlisting}
+\end{minipage}\par
+
+\endgroup

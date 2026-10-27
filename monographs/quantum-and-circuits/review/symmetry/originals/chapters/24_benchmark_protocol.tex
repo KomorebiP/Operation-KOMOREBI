@@ -1,0 +1,46 @@
+\chapter{Benchmark and validation protocol}
+\label{ch:benchmark-protocol}
+
+\section{Fair comparison}
+A packet simulator and a full simulator should use the same precision, gate parameters, initial state, observable, and arithmetic path wherever possible. Report compilation separately from repeated application.
+
+\section{Required metrics}
+A complete benchmark should report:
+
+\begin{enumerate}
+\item full and reduced dimensions,
+\item packet-discovery and compilation time,
+\item one-shot runtime,
+\item repeated-application runtime,
+\item peak memory,
+\item reconstruction or observable error,
+\item symmetry leakage,
+\item hardware and software versions,
+\item number of repetitions over which compilation is amortized.
+\end{enumerate}
+
+\section{Exact validation path}
+For manageable $n$, embed a random packet state into the full space, apply identical gates in both representations, and compare final states. The included validation program performs this check for exact fixed-weight circuits.
+
+\section{Scaling studies}
+A scaling plot should include both fine packets and coarse packets. Fixed weight two demonstrates polynomial dimension. Parity demonstrates a constant-factor packet. Half filling demonstrates an exponential packet with a polynomial memory reduction factor. These controls prevent overinterpreting a speedup as a complexity collapse.
+
+\section{Leakage tests}
+Deliberately append a gate that breaks the proposed symmetry and verify that the simulator detects nonzero leakage. The archived tests break exact weight, parity, and weight modulo four, producing retained probabilities below one. A simulator that reports zero error after a symmetry-breaking gate without enlarging its representation is incorrect.
+
+\section{Reproducibility contract}
+The release preserves:
+
+\begin{itemize}
+\item the benchmark JSON data,
+\item the Python figure generator,
+\item packet and gate utilities,
+\item exact validation tests,
+\item LaTeX source,
+\item deterministic build commands,
+\item checksums of final artifacts.
+\end{itemize}
+
+\begin{recordbox}
+The release validation reproduces fixed-weight basis dimensions, residue partitions, symmetric/bosonic/fermionic dimension formulas, hypercube quotient symmetry, and full-vs-packet state reconstruction near machine precision.
+\end{recordbox}

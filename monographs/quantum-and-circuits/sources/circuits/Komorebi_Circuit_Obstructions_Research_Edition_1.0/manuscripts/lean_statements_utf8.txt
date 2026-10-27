@@ -1,0 +1,536 @@
+L001
+CircuitObstructions.write_same {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t : W) (b : Bool) :
+  CircuitObstructions.write s t b t = b
+
+L002
+CircuitObstructions.write_other {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t i : W) (b : Bool)
+  (h : i ≠ t) : CircuitObstructions.write s t b i = s i
+
+L003
+CircuitObstructions.xor_cancel_right (a b : Bool) : (a ^^ b ^^ b) = a
+
+L004
+CircuitObstructions.xor_cancel_left (a b : Bool) : (a ^^ (a ^^ b)) = b
+
+L005
+CircuitObstructions.xor_commute (a b : Bool) : (a ^^ b) = (b ^^ a)
+
+L006
+CircuitObstructions.xor_true_iff_ne (a b : Bool) : (a ^^ b) = true ↔ a ≠ b
+
+L007
+CircuitObstructions.Gate.eval_involutive {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (s : CircuitObstructions.State W) : g.eval (g.eval s) = s
+
+L008
+CircuitObstructions.Gate.eval_injective {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  {s t : CircuitObstructions.State W} (h : g.eval s = g.eval t) : s = t
+
+L009
+CircuitObstructions.run_nil {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) :
+  CircuitObstructions.run [] s = s
+
+L010
+CircuitObstructions.run_cons {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (gs : CircuitObstructions.Circuit W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (g :: gs) s = CircuitObstructions.run gs (g.eval s)
+
+L011
+CircuitObstructions.run_append {W : Type} [DecidableEq W] (p q : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (p ++ q) s = CircuitObstructions.run q (CircuitObstructions.run p s)
+
+L012
+CircuitObstructions.run_reverse_run {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run (List.reverse c) (CircuitObstructions.run c s) = s
+
+L013
+CircuitObstructions.run_run_reverse {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run c (CircuitObstructions.run (List.reverse c) s) = s
+
+L014
+CircuitObstructions.run_injective {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  {s t : CircuitObstructions.State W} (h : CircuitObstructions.run c s = CircuitObstructions.run c t) : s = t
+
+L015
+CircuitObstructions.toffoliCount_append {W : Type} (p q : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (p ++ q) = CircuitObstructions.toffoliCount p + CircuitObstructions.toffoliCount q
+
+L016
+CircuitObstructions.toffoliCount_reverse {W : Type} (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (List.reverse c) = CircuitObstructions.toffoliCount c
+
+L017
+CircuitObstructions.Boundary.target_separated {X W : Type} (e : CircuitObstructions.Boundary X W) (x : X) :
+  e.encode x false ≠ e.encode x true
+
+L018
+CircuitObstructions.canonical_input (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin n) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inl i) = x i
+
+L019
+CircuitObstructions.canonical_ancilla (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin a) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inl i)) = false
+
+L020
+CircuitObstructions.canonical_target (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inr ())) = b
+
+L021
+CircuitObstructions.inverse_suffix_boundary {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (b : Bool) :
+  CircuitObstructions.run (List.reverse q) (e.encode x b) = CircuitObstructions.run p (e.encode x (b ^^ f x))
+
+L022
+CircuitObstructions.direction_nonzero {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p : CircuitObstructions.Circuit W) (x : X) : ∃ i, CircuitObstructions.direction e p x i = true
+
+L023
+CircuitObstructions.cut_transport_identity {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = (f x && CircuitObstructions.direction e p x i)
+
+L024
+CircuitObstructions.cut_packet_safe {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = true → f x = true
+
+L025
+CircuitObstructions.cut_cover_complete {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+
+L026
+CircuitObstructions.complete_safe_cover {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) :
+  (∀ (x : X) (i : W), CircuitObstructions.packet e p q x i = true → f x = true) ∧
+    ∀ (x : X), f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+
+L027
+CircuitObstructions.cut_states_equal_iff_reject {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  CircuitObstructions.run p (e.encode x false) = CircuitObstructions.run (List.reverse q) (e.encode x false) ↔
+    f x = false
+
+L028
+CircuitObstructions.every_index_cut {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e c f) (k : Nat) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e (List.take k c) (List.drop k c) x i = true
+
+L029
+CircuitObstructions.canonical_complete_safe_cover (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : (Fin n → Bool) → Bool)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) (k : Nat) :
+  (∀ (x : Fin n → Bool) (i : CircuitObstructions.CanonicalWire n a),
+      CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+          true →
+        f x = true) ∧
+    ∀ (x : Fin n → Bool),
+      f x = true ↔
+        ∃ i,
+          CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+            true
+
+L030
+CircuitObstructions.Examples.andOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.andBoundary CircuitObstructions.Examples.andOracle fun x =>
+    x.fst && x.snd
+
+L031
+CircuitObstructions.Examples.andOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.andOracle = 2
+
+L032
+CircuitObstructions.Examples.and_scratch_can_be_dirty :
+  CircuitObstructions.run CircuitObstructions.Examples.andCompute
+      (CircuitObstructions.Examples.andBoundary.encode (true, true) false)
+      CircuitObstructions.Examples.WorkWire.scratch =
+    true
+
+L033
+CircuitObstructions.Examples.andOracle_every_cut (k : Nat) (x : Bool × Bool) :
+  (x.fst && x.snd) = true ↔
+    ∃ i,
+      CircuitObstructions.packet CircuitObstructions.Examples.andBoundary
+          (List.take k CircuitObstructions.Examples.andOracle) (List.drop k CircuitObstructions.Examples.andOracle) x
+          i =
+        true
+
+L034
+CircuitObstructions.Examples.outputActiveOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.outputActiveOracle
+    fun x => true
+
+L035
+CircuitObstructions.Examples.outputActiveOracle_length : List.length CircuitObstructions.Examples.outputActiveOracle = 7
+
+L036
+CircuitObstructions.Examples.outputActiveOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.outputActiveOracle = 0
+
+L037
+CircuitObstructions.Examples.moved_discrepancy_data (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.data =
+    true
+
+L038
+CircuitObstructions.Examples.moved_discrepancy_target (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+    false
+
+L039
+CircuitObstructions.Examples.target_only_reconstruction_is_false :
+  ¬∀ (x : Bool),
+      CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+          CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+        true
+
+L040
+CircuitObstructions.Examples.degenerate_encoding_control :
+  have bad := fun x x_1 => false;
+  (∀ (y : Bool), CircuitObstructions.run [] (bad y) = bad (y ^^ true)) ∧
+    ∀ (i : CircuitObstructions.Examples.SwapWire), (bad false i ^^ bad false i) = false
+
+L041
+CircuitObstructions.bprod_nil {W : Type} (s : CircuitObstructions.State W) : CircuitObstructions.bprod [] s = true
+
+L042
+CircuitObstructions.bprod_cons {W : Type} (i : W) (is : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod (i :: is) s = (s i && CircuitObstructions.bprod is s)
+
+L043
+CircuitObstructions.bprod_append {W : Type} (l k : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod (l ++ k) s = (CircuitObstructions.bprod l s && CircuitObstructions.bprod k s)
+
+L044
+CircuitObstructions.xor_and_right (a b c : Bool) : ((a ^^ b) && c) = (a && c ^^ b && c)
+
+L045
+CircuitObstructions.and_xor_right (a b c : Bool) : (a && (b ^^ c)) = (a && b ^^ a && c)
+
+L046
+CircuitObstructions.not_as_xor_one (a : Bool) : (!a) = (a ^^ true)
+
+L047
+CircuitObstructions.DegreeLE.mono {n d e : Nat} {f : CircuitObstructions.BFun n} (h : CircuitObstructions.DegreeLE d f)
+  (hde : d ≤ e) : CircuitObstructions.DegreeLE e f
+
+L048
+CircuitObstructions.DegreeLE.one (n d : Nat) : CircuitObstructions.DegreeLE d fun x => true
+
+L049
+CircuitObstructions.DegreeLE.constant (n d : Nat) (b : Bool) : CircuitObstructions.DegreeLE d fun x => b
+
+L050
+CircuitObstructions.DegreeLE.variable {n : Nat} (i : Fin n) : CircuitObstructions.DegreeLE 1 fun x => x i
+
+L051
+CircuitObstructions.DegreeLE.xor {n d e : Nat} {f g : CircuitObstructions.BFun n}
+  (hf : CircuitObstructions.DegreeLE d f) (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (max d e) fun x => f x ^^ g x
+
+L052
+CircuitObstructions.DegreeLE.not {n d : Nat} {f : CircuitObstructions.BFun n} (hf : CircuitObstructions.DegreeLE d f) :
+  CircuitObstructions.DegreeLE d fun x => !f x
+
+L053
+CircuitObstructions.DegreeLE.monomial_mul {n d e : Nat} (l : List (Fin n)) (hl : l.length ≤ d)
+  {g : CircuitObstructions.BFun n} (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (d + e) fun x => CircuitObstructions.bprod l x && g x
+
+L054
+CircuitObstructions.DegreeLE.mul {n d e : Nat} {f g : CircuitObstructions.BFun n}
+  (hf : CircuitObstructions.DegreeLE d f) (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (d + e) fun x => f x && g x
+
+L055
+CircuitObstructions.DegreeLE.product {n : Nat} {W : Type} (l : List W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (h : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i) :
+  CircuitObstructions.DegreeLE l.length fun x => CircuitObstructions.bprod l (s x)
+
+L056
+CircuitObstructions.polyEval_append {n : Nat} (p q : List (List (Fin n))) (x : Fin n → Bool) :
+  CircuitObstructions.polyEval (p ++ q) x = (CircuitObstructions.polyEval p x ^^ CircuitObstructions.polyEval q x)
+
+L057
+CircuitObstructions.DegreeLE.polynomial_witness {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.DegreeLE d f) :
+  ∃ p, (∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) ∧ CircuitObstructions.polyEval p = f
+
+L058
+CircuitObstructions.polynomial_degree_certificate {n d : Nat} (p : List (List (Fin n)))
+  (hp : ∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) : CircuitObstructions.DegreeLE d (CircuitObstructions.polyEval p)
+
+L059
+CircuitObstructions.degreeLE_iff_polynomial {n d : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.DegreeLE d f ↔
+    ∃ p, (∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) ∧ CircuitObstructions.polyEval p = f
+
+L060
+CircuitObstructions.withoutWire_length_le {W : Type} [DecidableEq W] (l : List W) (t : W) :
+  (CircuitObstructions.withoutWire l t).length ≤ l.length
+
+L061
+CircuitObstructions.withoutWire_length_lt {W : Type} [DecidableEq W] (l : List W) (t : W) (ht : t ∈ l) :
+  (CircuitObstructions.withoutWire l t).length + 1 ≤ l.length
+
+L062
+CircuitObstructions.bprod_write {W : Type} [DecidableEq W] (l : List W) (s : CircuitObstructions.State W) (t : W)
+  (b : Bool) :
+  CircuitObstructions.bprod l (CircuitObstructions.write s t b) =
+    ((if t ∈ l then b else true) && CircuitObstructions.bprod (CircuitObstructions.withoutWire l t) s)
+
+L063
+CircuitObstructions.bprod_write_absent {W : Type} [DecidableEq W] (l : List W) (s : CircuitObstructions.State W) (t : W)
+  (b : Bool) (ht : ¬t ∈ l) :
+  CircuitObstructions.bprod l (CircuitObstructions.write s t b) = CircuitObstructions.bprod l s
+
+L064
+CircuitObstructions.workspaceDegree_initial {n : Nat} {W : Type} (s : (Fin n → Bool) → CircuitObstructions.State W)
+  (h : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i) : CircuitObstructions.WorkspaceDegree s 0
+
+L065
+CircuitObstructions.workspaceDegree_toggle {n : Nat} {W : Type} [DecidableEq W]
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (t : W) (controls : List W) (k : Nat)
+  (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (CircuitObstructions.toggleProduct s t controls) (k + (controls.length - 1))
+
+L066
+CircuitObstructions.workspaceDegree_gate {n : Nat} {W : Type} [DecidableEq W]
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (g : CircuitObstructions.Gate W) (k : Nat)
+  (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (fun x => g.eval (s x)) (k + g.toffoliCost)
+
+L067
+CircuitObstructions.workspaceDegree_run {n : Nat} {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (k : Nat) (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (fun x => CircuitObstructions.run c (s x))
+    (k + CircuitObstructions.toffoliCount c)
+
+L068
+CircuitObstructions.run_coordinate_degree {n : Nat} {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (hs : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i)
+  (i : W) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) fun x => CircuitObstructions.run c (s x) i
+
+L069
+CircuitObstructions.canonical_boundary_degree (n a : Nat) (b : Bool) (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE 1 fun x => (CircuitObstructions.canonicalBoundary n a).encode x b i
+
+L070
+CircuitObstructions.canonical_run_coordinate_degree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (b : Bool)
+  (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) fun x =>
+    CircuitObstructions.run c ((CircuitObstructions.canonicalBoundary n a).encode x b) i
+
+L071
+CircuitObstructions.canonical_cut_packet_degree (n a : Nat)
+  (p q : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a))
+  (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE (max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) + 1)
+    fun x => CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) p q x i
+
+L072
+CircuitObstructions.CompleteSafeDegreeLE.mono {n d e : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.CompleteSafeDegreeLE f d) (hde : d ≤ e) : CircuitObstructions.CompleteSafeDegreeLE f e
+
+L073
+CircuitObstructions.bprod_true_iff {W : Type} (l : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod l s = true ↔ ∀ (i : W), i ∈ l → s i = true
+
+L074
+CircuitObstructions.pointIndicator_true_iff {n : Nat} (v x : Fin n → Bool) :
+  CircuitObstructions.pointIndicator v x = true ↔ x = v
+
+L075
+CircuitObstructions.pointIndicator_degree {n : Nat} (v : Fin n → Bool) :
+  CircuitObstructions.DegreeLE n (CircuitObstructions.pointIndicator v)
+
+L076
+CircuitObstructions.completeSafeDegree_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.CompleteSafeDegreeLE f n
+
+L077
+CircuitObstructions.exists_least_degree (P : Nat → Prop) (n : Nat) (hn : P n) : ∃ r, P r ∧ ∀ (k : Nat), P k → r ≤ k
+
+L078
+CircuitObstructions.beta_exists {n : Nat} (f : CircuitObstructions.BFun n) :
+  ∃ r, CircuitObstructions.CompleteSafeDegreeLE f r ∧ ∀ (k : Nat), CircuitObstructions.CompleteSafeDegreeLE f k → r ≤ k
+
+L079
+CircuitObstructions.beta_spec {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.CompleteSafeDegreeLE f (CircuitObstructions.beta f)
+
+L080
+CircuitObstructions.beta_le_of_cover {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.CompleteSafeDegreeLE f d) : CircuitObstructions.beta f ≤ d
+
+L081
+CircuitObstructions.beta_le_iff {n d : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.beta f ≤ d ↔ CircuitObstructions.CompleteSafeDegreeLE f d
+
+L082
+CircuitObstructions.beta_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) : CircuitObstructions.beta f ≤ n
+
+L083
+CircuitObstructions.beta_zero (n : Nat) : (CircuitObstructions.beta fun x => false) = 0
+
+L084
+CircuitObstructions.canonical_cut_completeSafeDegree (n a : Nat)
+  (p q : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) (p ++ q) f) :
+  CircuitObstructions.CompleteSafeDegreeLE f
+    (max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) + 1)
+
+L085
+CircuitObstructions.Gate.toffoliCost_le_one {W : Type} (g : CircuitObstructions.Gate W) : g.toffoliCost ≤ 1
+
+L086
+CircuitObstructions.toffoliCount_nil {W : Type} : CircuitObstructions.toffoliCount [] = 0
+
+L087
+CircuitObstructions.toffoliCount_cons {W : Type} (g : CircuitObstructions.Gate W) (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (g :: c) = g.toffoliCost + CircuitObstructions.toffoliCount c
+
+L088
+CircuitObstructions.exists_cut_with_toffoliCount {W : Type} (c : CircuitObstructions.Circuit W) (k : Nat)
+  (hk : k ≤ CircuitObstructions.toffoliCount c) : ∃ p q, c = p ++ q ∧ CircuitObstructions.toffoliCount p = k
+
+L089
+CircuitObstructions.exists_balanced_toffoli_cut {W : Type} (c : CircuitObstructions.Circuit W) :
+  ∃ p q,
+    c = p ++ q ∧
+      max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) ≤
+        (CircuitObstructions.toffoliCount c + 1) / 2
+
+L090
+CircuitObstructions.canonical_restored_completeSafeDegree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.CompleteSafeDegreeLE f ((CircuitObstructions.toffoliCount c + 1) / 2 + 1)
+
+L091
+CircuitObstructions.beta_le_half_toffoliCount (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.beta f ≤ (CircuitObstructions.toffoliCount c + 1) / 2 + 1
+
+L092
+CircuitObstructions.beta_restoration_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.beta f ≤ CircuitObstructions.toffoliCount c + 3
+
+L093
+CircuitObstructions.toffoliCount_ge_two_beta_sub_three (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.beta f - 3 ≤ CircuitObstructions.toffoliCount c
+
+L094
+CircuitObstructions.restores_append {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c d : CircuitObstructions.Circuit W) (f g : X → Bool) (hc : CircuitObstructions.Restores e c f)
+  (hd : CircuitObstructions.Restores e d g) : CircuitObstructions.Restores e (c ++ d) fun x => f x ^^ g x
+
+L095
+CircuitObstructions.canonical_target_not (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.Gate.not (CircuitObstructions.canonicalBoundary n a).target).eval
+      ((CircuitObstructions.canonicalBoundary n a).encode x b) =
+    (CircuitObstructions.canonicalBoundary n a).encode x (b ^^ true)
+
+L096
+CircuitObstructions.canonical_input_to_target (n a : Nat) (i : Fin n) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.inputToTarget n a i).eval ((CircuitObstructions.canonicalBoundary n a).encode x b) =
+    (CircuitObstructions.canonicalBoundary n a).encode x (b ^^ x i)
+
+L097
+CircuitObstructions.affine_restored_exists (n a : Nat) (g : CircuitObstructions.BFun n)
+  (hg : CircuitObstructions.DegreeLE 1 g) :
+  ∃ d,
+    CircuitObstructions.toffoliCount d = 0 ∧
+      CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) d g
+
+L098
+CircuitObstructions.betaStar_exists {n : Nat} (f : CircuitObstructions.BFun n) :
+  ∃ r, CircuitObstructions.AffineSafeDegreeLE f r ∧ ∀ (k : Nat), CircuitObstructions.AffineSafeDegreeLE f k → r ≤ k
+
+L099
+CircuitObstructions.betaStar_spec {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.AffineSafeDegreeLE f (CircuitObstructions.betaStar f)
+
+L100
+CircuitObstructions.betaStar_le_of_bound {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.AffineSafeDegreeLE f d) : CircuitObstructions.betaStar f ≤ d
+
+L101
+CircuitObstructions.betaStar_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) : CircuitObstructions.betaStar f ≤ n
+
+L102
+CircuitObstructions.beta_le_betaStar {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.beta f ≤ CircuitObstructions.betaStar f
+
+L103
+CircuitObstructions.betaStar_le_half_toffoliCount (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.betaStar f ≤ (CircuitObstructions.toffoliCount c + 1) / 2 + 1
+
+L104
+CircuitObstructions.betaStar_restoration_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.betaStar f ≤ CircuitObstructions.toffoliCount c + 3
+
+L105
+CircuitObstructions.toffoliCount_ge_two_betaStar_sub_three (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.betaStar f - 3 ≤ CircuitObstructions.toffoliCount c
+
+L106
+CircuitObstructions.canonical_restored_output_degree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) f
+
+L107
+CircuitObstructions.restored_degree_and_cover_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) f ∧
+    2 * CircuitObstructions.betaStar f ≤ CircuitObstructions.toffoliCount c + 3
+
+L108
+CircuitObstructions.squareParity_add (f g : CircuitObstructions.BFun 2) :
+  (CircuitObstructions.squareParity fun x => f x ^^ g x) =
+    (CircuitObstructions.squareParity f ^^ CircuitObstructions.squareParity g)
+
+L109
+CircuitObstructions.affine_squareParity_zero (f : CircuitObstructions.BFun 2) (h : CircuitObstructions.DegreeLE 1 f) :
+  CircuitObstructions.squareParity f = false
+
+L110
+CircuitObstructions.andTwo_degree_two : CircuitObstructions.DegreeLE 2 CircuitObstructions.andTwo
+
+L111
+CircuitObstructions.andTwo_not_affine : ¬CircuitObstructions.DegreeLE 1 CircuitObstructions.andTwo
+
+L112
+CircuitObstructions.andTwo_no_degree_one_safe_cover :
+  ¬CircuitObstructions.CompleteSafeDegreeLE CircuitObstructions.andTwo 1
+
+L113
+CircuitObstructions.beta_andTwo : CircuitObstructions.beta CircuitObstructions.andTwo = 2
+
+L114
+CircuitObstructions.betaStar_andTwo : CircuitObstructions.betaStar CircuitObstructions.andTwo = 2
+
+L115
+CircuitObstructions.restored_andTwo_needs_toffoli (a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire 2 a))
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary 2 a) c CircuitObstructions.andTwo) :
+  1 ≤ CircuitObstructions.toffoliCount c

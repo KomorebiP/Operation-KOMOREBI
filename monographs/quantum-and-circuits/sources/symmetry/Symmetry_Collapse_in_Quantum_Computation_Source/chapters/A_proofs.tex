@@ -1,0 +1,79 @@
+\chapter{Proof details and auxiliary derivations}
+\label{app:proofs}
+
+\section{Residue projector formula}
+Let $Q\ket{\psi_k}=k\ket{\psi_k}$. Then
+\[
+\frac1M\sum_{\ell=0}^{M-1}
+\omega_M^{-r\ell}e^{2\pi i\ell Q/M}\ket{\psi_k}
+=
+\left(
+\frac1M\sum_{\ell=0}^{M-1}
+\omega_M^{(k-r)\ell}
+\right)\ket{\psi_k}.
+\]
+The bracket equals one when $k\equiv r\pmod M$ and zero otherwise. This proves \cref{eq:residue-projector} and the orthogonality of the residue packets.
+
+\section{Circuit leakage telescoping}
+Let $V_j=PG_jP$. Insert and subtract one factor at a time:
+\[
+G_m\cdots G_1P-V_m\cdots V_1P
+=
+\sum_{k=1}^m
+G_m\cdots G_{k+1}(G_k-V_k)V_{k-1}\cdots V_1P.
+\]
+Every $G_j$ has norm one and every $V_j$ has norm at most one. On $P\Hh$,
+\[
+(G_k-V_k)P=(I-P)G_kP.
+\]
+Taking norms gives \cref{prop:sum-leakage}.
+
+\section{Hypercube quotient coupling}
+Let
+\[
+\ket k
+=
+\binom nk^{-1/2}
+\sum_{|x|=k}\ket x.
+\]
+Every weight-$k$ string has $n-k$ neighbors of weight $k+1$, while every weight-$(k+1)$ string has $k+1$ neighbors of weight $k$. Counting the bipartite edges yields
+\[
+\bra{k+1}A\ket k
+=
+\frac{\binom nk(n-k)}
+{\sqrt{\binom nk\binom n{k+1}}}
+=
+\sqrt{(k+1)(n-k)},
+\]
+proving \cref{eq:hypercube-coupling}.
+
+\section{Symmetric-subspace dimension}
+A symmetric basis state of $n$ qudits is indexed by occupation numbers
+\[
+(n_1,\ldots,n_d),
+\qquad
+n_1+\cdots+n_d=n.
+\]
+The stars-and-bars count is
+\[
+\binom{n+d-1}{d-1},
+\]
+proving \cref{eq:symmetric-qudit-dim}.
+
+\section{Bosonic and fermionic dimensions}
+Bosonic occupations are weak compositions of $N$ into $m$ parts, giving $\binom{N+m-1}{N}$. Fermionic occupations are $N$-element subsets of $m$ modes, giving $\binom mN$.
+
+\section{Acceptance-probability stability}
+If normalized states $\ket\psi,\ket\phi$ satisfy
+\[
+\|\ket\psi-\ket\phi\|\le\varepsilon
+\]
+and $0\le M\le I$, then
+\[
+|\bra\psi M\ket\psi-\bra\phi M\ket\phi|
+\le 2\varepsilon.
+\]
+Indeed, add and subtract $\bra\phi M\ket\psi$ and use Cauchy--Schwarz. This converts state-vector leakage bounds into measurement-error bounds.
+
+\section{Orbit quotient invariance}
+For an automorphism group $G$, the adjacency matrix commutes with the permutation representation. The fixed subspace of the action is spanned by normalized orbit states. Therefore adjacency preserves that span. Polynomial-time simulation additionally requires direct computation of the quotient entries.

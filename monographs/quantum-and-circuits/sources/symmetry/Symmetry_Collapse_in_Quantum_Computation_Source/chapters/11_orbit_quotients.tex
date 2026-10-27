@@ -1,0 +1,56 @@
+\chapter{Orbit-quotient quantum walks}
+\label{ch:orbit-quotients}
+\index{quantum walk}
+\index{orbit quotient}
+
+\section{Orbit states}
+Let a group $G$ act by automorphisms on a finite graph with vertex set $V$. The orbits are $\mathcal O_1,\ldots,\mathcal O_r$. Define normalized orbit states
+\[
+\ket{\mathcal O_a}
+=
+\frac1{\sqrt{|\mathcal O_a|}}
+\sum_{x\in\mathcal O_a}\ket x.
+\]
+If the adjacency or Hamiltonian $H$ commutes with the group action, the span of these states is invariant whenever the partition is equitable.
+
+The quotient matrix is
+\[
+\widetilde H_{ab}
+=
+\bra{\mathcal O_a}H\ket{\mathcal O_b}.
+\]
+
+\begin{theorem}[Orbit-quotient collapse]
+\label{thm:orbit-collapse}
+Suppose a uniformly described quantum walk has a polynomial number $r(n)$ of relevant orbits, an orbit-uniform initial state, an orbit-invariant final measurement, and polynomial-time algorithms for orbit sizes, quotient entries, initial orbit coordinates, and the restricted final measurement. For continuous-time evolution, also assume a polynomial bound on $|t|\|\widetilde H\|$ and efficient entry access to the precision required by the simulation. Then the walk can be simulated classically in polynomial time by the $r(n)\times r(n)$ quotient dynamics.
+\end{theorem}
+
+\begin{proof}
+The orbit-state span is invariant. The state is represented by $r(n)$ amplitudes. Polynomial-time computation of quotient entries and ordinary polynomial-precision linear algebra satisfy \cref{thm:poly-packet}.
+\end{proof}
+
+\section{Hypercube example}
+The $n$-dimensional hypercube is invariant under coordinate permutations. Its vertex orbits are Hamming-weight layers $0,1,\ldots,n$. In the normalized orbit basis, the quotient adjacency has couplings
+\begin{equation}
+\bra{k+1}A\ket{k}
+=
+\sqrt{(k+1)(n-k)}.
+\label{eq:hypercube-coupling}
+\end{equation}
+Thus a walk on $2^n$ vertices initialized at $0^n$ evolves in an $(n+1)$-dimensional subspace.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.94\textwidth]{hypercube_quotient.pdf}
+\caption{The hypercube walk collapses to a weighted path of Hamming-weight orbits.}
+\end{figure}
+
+\section{The succinct-input caveat}
+If the full graph is supplied explicitly, a polynomial-in-$|V|$ algorithm may still be exponential in the succinct parameter $n$. The theorem requires quotient data computable directly from the succinct graph description. Discovering graph automorphisms or orbit partitions can itself be difficult. For regular families such as hypercubes, Johnson graphs, association schemes, and Cayley graphs with known character theory, the quotient is explicit.
+
+\section{Fourier packets}
+On a cycle, translation characters diagonalize the adjacency operator. The continuous-time walk
+\[
+\ket{\psi(t)}=e^{-itA}\ket0
+\]
+is a sum of Fourier-character packets. This is the same discrete Fourier transform that appears as a signal-processing coordinate change, a group-character decomposition, and a quantum basis transformation.

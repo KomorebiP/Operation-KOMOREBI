@@ -1,0 +1,231 @@
+\chapter{Catalytic holonomy, excursion geometry, and resource reuse}\label{ch:holonomy}
+\index{holonomy}
+\index{Schreier graph}
+\index{catalytic conjugation}
+\index{dirty workspace}
+\index{resource amortization}
+
+
+\section{Subgroup metrics and Schreier loops}
+Assume first that the restricted and ambient models are groups
+\[
+H=\langle\mathcal S_H\rangle
+\le
+G=\langle\mathcal S_G\rangle.
+\]
+For $h\in H$, the intrinsic and ambient word metrics are
+\[
+\ell_H(h)=|h|_{\mathcal S_H},
+\qquad
+\ell_G(h)=|h|_{\mathcal S_G}.
+\]
+In the group-metric statements, the generating alphabets are symmetric and a generator and its inverse have equal cost.  The quotient geometry is the left Schreier graph $G/H$, with edges $gH\longmapsto sgH$.  For the base-fiber assertion below, assume also $\mathcal S_H=\mathcal S_G\cap H$.  This last condition excludes additional ambient primitives that already lie in $H$ but have no equally cheap restricted realization.
+
+\begin{theorem}[Holonomy-compression identity]
+Let every generator have unit cost.  For $h\in H$, $\ell_G(h)$ is the minimum length of a based loop in $G/H$ whose lifted word has holonomy $h$.  The intrinsic length $\ell_H(h)$ is the minimum length among loops that remain in the base fiber.
+\end{theorem}
+\begin{proof}
+An ambient word $s_k\cdots s_1=h$ projects to the loop
+\[
+H,
+s_1H,
+s_2s_1H,
+\ldots,
+hH=H.
+\]
+Conversely, a based Schreier loop has product in $H$.  If every prefix lies in $H$, each edge label is the product of two elements of $H$ and belongs to $\mathcal S_G\cap H=\mathcal S_H$.  Conversely every restricted word remains in the base fiber.  Minimizing the labeled words with endpoint $h$ gives the two asserted lengths.
+\end{proof}
+
+Thus
+\[
+\Delta_{H\hookrightarrow G}(h)
+=
+\text{intrinsic fiber cost}
+-
+\text{shortest holonomy loop cost}.
+\]
+This is the geometric content of a dirty-workspace shortcut.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.90\textwidth]{catalytic_excursion_general.pdf}
+\caption{A catalytic excursion leaves a restricted fiber, reuses an ambient state, and returns with nontrivial holonomy.}
+\label{fig:catalytic-excursion}
+\end{figure}
+
+\section{The basic conjugation inequality}
+Let $g\in G$ and $k\in H$ satisfy $gkg^{-1}\in H$.  Then
+\[
+\ell_G(gkg^{-1})
+\le 2\ell_G(g)+\ell_H(k).
+\]
+Define the intrinsic conjugation stretch
+\[
+\operatorname{Stretch}_g(k)
+=
+\ell_H(gkg^{-1})-\ell_H(k).
+\]
+
+\begin{proposition}[Catalytic stretch criterion]
+If
+\[
+\operatorname{Stretch}_g(k)>2\ell_G(g),
+\]
+then $gkg^{-1}$ has positive defect.
+\end{proposition}
+The opening and closing cost is paid once.  Every useful consumer inside the excursion contributes to the stretch.
+
+\section{Many consumers and catalytic excess}
+Suppose the middle word is
+\[
+k=h_m\cdots h_1,
+\qquad h_i\in H.
+\]
+The ambient word
+\[
+gh_m\cdots h_1g^{-1}
+\]
+has cost at most
+\[
+2c(g)+\sum_i c(h_i).
+\]
+If the restricted images $gh_ig^{-1}$ require costs $r_i$ and a lower-bound invariant proves that their obligations cannot be shared, then
+\[
+\ell_H(gkg^{-1})\ge\sum_i r_i.
+\]
+A sufficient inequality is
+\[
+\sum_i(r_i-c(h_i))>2c(g).
+\]
+The left side is the gross catalytic benefit.  The right side is the restoration cost.
+
+\begin{definition}[Catalytic excess]
+For a normal form with $r$ matched excursions and $C$ useful cross interactions, define
+\[
+\mathcal E=C-2r
+\]
+when each consumer contributes one unit and each opening or closing costs one unit.
+\end{definition}
+Positive excess is necessary in the simplest transvection model, but it is not sufficient.  An all-cross configuration may admit a mirror word of equal restricted length.  Temporal asymmetry or phase holonomy is also required.
+
+\section{Excursion budgets}
+Counting ambient-only gates is only one measure of how far a circuit leaves its restricted model.
+\begin{definition}[Excursion profile]
+For a circuit path $X_0,X_1,\ldots,X_L$, an excursion profile may include
+\begin{enumerate}
+\item the number $q$ of ambient-only gates,
+\item the maximum Schreier distance $d(X_tH,H)$,
+\item the rank of a forbidden block,
+\item the bandwidth of a forbidden dependency,
+\item the number of simultaneously open catalytic intervals,
+\item the intersection graph of those intervals,
+\item the maximum algebraic degree created temporarily,
+\item the maximum ancilla dimension or branch count.
+\end{enumerate}
+\end{definition}
+The established linear family shows that a rank-one, bandwidth-one excursion using exactly two forbidden gates can save linearly many operations.  Thus geometric excursion size need not control computational benefit.
+
+\section{Catalytic interval geometry}
+Associate to every matched opening and closing operation an interval
+\[
+I_j=[t_j^{\mathrm{open}},t_j^{\mathrm{close}}].
+\]
+The family of intervals can be disjoint, nested, laminar, or crossing.
+
+\begin{principle}[First higher-order frontier]
+Independent or disjoint intervals often reduce to additive copies of a one-catalyst analysis.  Crossing intervals are the first place where one dirty resource can alter another and where a multiplicative distortion larger than the clean one-carrier value may occur.
+\end{principle}
+
+Define the catalytic width
+\[
+w_{\mathrm{cat}}=
+\max_t
+\#\{j:t\in I_j\}.
+\]
+One may then study
+\[
+D_n^{(w)}
+=
+\max_{U}
+\left(
+\ellRes(U)-\ellAmb^{(w)}(U)
+\right),
+\]
+where the ambient circuit has width at most $w$.  The unitriangular snapshot family gives $D_n^{(1)}=\Omega(n)$ in its corresponding interval model.
+
+\section{Four recurrent catalytic mechanisms}
+\subsection{Basis-change catalysis}
+An ambient gate $g$ changes the frame in which several restricted operations are cheap:
+\[
+h_i\mapsto gh_ig^{-1}.
+\]
+Hadamard and Fourier transforms are the basic quantum examples.  The frame is restored at the end.
+
+\subsection{Commutator catalysis}
+An ambient commutator creates a new direction:
+\[
+[g,h]=ghg^{-1}h^{-1}.
+\]
+For continuous controls,
+\[
+e^{\varepsilon X}e^{\varepsilon Y}e^{-\varepsilon X}e^{-\varepsilon Y}
+=
+e^{\varepsilon^2[X,Y]+O(\varepsilon^3)}.
+\]
+The desired effective generator may lie in the restricted algebra even though the path does not.
+
+\subsection{Degree catalysis}
+A Toffoli, CCZ, or non-Gaussian gate can create higher algebraic degree or higher moments temporarily.  If the nonlinear object is reused and canceled, the final target may remain affine, diagonal, or Gaussian.
+
+\subsection{Branch and workspace catalysis}
+Ancillas, measurements, reset, teleportation, and classical feedforward enlarge the realization category.  The resource is a temporary branch, subsystem, or borrowed state rather than a group element.
+
+\section{When defects are impossible}
+A useful positive theorem is a criterion guaranteeing geodesic convexity.
+\begin{proposition}[One-Lipschitz retraction criterion]
+Suppose there is a group homomorphism $\pi:G\to H$ with $\pi|_H=\operatorname{id}_H$ such that every ambient generator $s\in\mathcal S_G$ satisfies
+\[
+\ell_H(\pi(s))\le c(s).
+\]
+Then
+\[
+\ell_H(h)\le\ell_G(h)
+\]
+for every $h\in H$, hence the two metrics agree on $H$.
+\end{proposition}
+\begin{proof}
+For an ambient word $h=s_L\cdots s_1$, multiplicativity gives $h=\pi(h)=\pi(s_L)\cdots\pi(s_1)$.  Subadditivity and the generator bounds give $\ell_H(h)\le\sum_j c(s_j)$.  Taking the infimum over ambient words proves the claim.
+\end{proof}
+
+The unitriangular counterexample proves that no such generator-wise one-Lipschitz retraction exists for the lower transvection model inside the all-transvection model.
+
+\section{Weighted restoration and phase transitions}
+Let every restricted gate cost one and every ambient-only gate cost $\lambda$.  For a catalyst used by $v$ consumers with unit benefit, the displayed construction has net gain at least
+\[
+v-2\lambda.
+\]
+The critical weight is therefore target and mechanism dependent.
+
+\begin{definition}[Critical catalyst penalty]
+For a target family $U_n$, define
+\[
+\lambda_c(U_n)
+=
+\sup\{\lambda:\ell_{\lambda,\mathrm{amb}}(U_n)<\ellRes(U_n)\}.
+\]
+\end{definition}
+Determining $\lambda_c$ exactly is a refined synthesis problem.  It can be more physically meaningful than unweighted gate count.
+
+\section{Restoration is the source of nontriviality}
+If the ambient resource need not be restored, the opening cost can dominate the comparison and many examples become trivial.  Catalytic escape is strongest when the following all hold:
+\begin{enumerate}
+\item the final target lies entirely in the restricted class,
+\item every auxiliary subsystem or violated constraint is restored,
+\item the ambient-only resource is used more than once,
+\item the restricted lower bound charges the same repeated obligations separately,
+\item the gain survives a realistic weighted cost.
+\end{enumerate}
+
+\begin{conjecturebox}
+In many finite gate hierarchies, minimal defects should admit a bounded-width catalytic normal form.  Proving or refuting this would turn an unrestricted synthesis search into a search over a finite family of excursion motifs.
+\end{conjecturebox}

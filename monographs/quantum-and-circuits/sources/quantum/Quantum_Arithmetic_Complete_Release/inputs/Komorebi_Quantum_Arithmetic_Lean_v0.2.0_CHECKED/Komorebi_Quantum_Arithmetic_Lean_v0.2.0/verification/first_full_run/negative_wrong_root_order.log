@@ -1,0 +1,24 @@
+COMMAND ["/mnt/data/lean_runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean", "-j1", "-DwarningAsError=true", "Negative_wrong_root_order.lean"]
+Negative_wrong_root_order.lean:182:2: error: Tactic `decide` failed for proposition
+  cPow zeta12 6 = cOne
+because its `Decidable` instance
+  instDecidableEqCyclo12 (cPow zeta12 6) cOne
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match
+    (((cPow zeta12 5).a * zeta12.a + 3 * (cPow zeta12 5).b * zeta12.b - (cPow zeta12 5).c * zeta12.c).sub
+        (3 * (cPow zeta12 5).d * zeta12.d)).num,
+    ↑1 with
+  | Int.ofNat a, Int.ofNat b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+  | Int.ofNat a, Int.negSucc a_1 => isFalse ⋯
+  | Int.negSucc a, Int.ofNat a_1 => isFalse ⋯
+  | Int.negSucc a, Int.negSucc b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+
+RESULT {"command": ["/mnt/data/lean_runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean", "-j1", "-DwarningAsError=true", "Negative_wrong_root_order.lean"], "exit_code": 1, "timed_out": false, "seconds": 9.331279218999953, "log": "negative_wrong_root_order.log"}

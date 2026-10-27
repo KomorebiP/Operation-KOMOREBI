@@ -1,0 +1,161 @@
+\chapter{Qudit SUM gates and ring-valued linear logic}\label{ch:qudit-sum}
+\index{qudit SUM gate}
+\index{controlled addition}
+\index{ring universality}
+
+
+\section{From transvections to quantum gates}
+Let $d\ge2$.  On $n$ qudits with computational basis labeled by $\Z_d^n$, define the scaled SUM gate
+\[
+\SUM^{(a)}_{s\to t}
+\ket{x_0,\ldots,x_{n-1}}
+=
+\ket{x_0,\ldots,x_t+a x_s,\ldots,x_{n-1}},
+\qquad a\in\Z_d.
+\]
+It is a permutation unitary.  Its action on basis labels is the row transvection
+\[
+I+aE_{t,s}.
+\]
+For $d=2$ and $a=1$, it is CNOT.  For prime $d$, these gates lie in the standard qudit Clifford group.  For composite $d$, they remain exact reversible modular-addition gates.
+
+\begin{provedbox}
+The universal six-row atom in the core chapter is valid over every nonzero commutative ring with identity.  Taking $R=\Z_d$ gives a six-qudit target with restricted directed-SUM length seven and ambient all-direction SUM length six for every $d\ge2$.
+\end{provedbox}
+
+\section{The universal six-qudit circuit}
+Use the coordinate names
+\[
+x,p,q,t_0,t_1,t_2.
+\]
+The target acts on basis labels by
+\begin{align*}
+p&\mapsto p+x,\\
+t_0&\mapsto t_0+p+q,\\
+t_1&\mapsto t_1+x+p+q,\\
+t_2&\mapsto t_2+x+p+q,
+\end{align*}
+with $x$ and $q$ unchanged.  An ambient word is
+\[
+\SUM_{q\to p},
+\quad
+\SUM_{p\to t_0},
+\quad
+\SUM_{x\to p},
+\quad
+\SUM_{p\to t_1},
+\quad
+\SUM_{p\to t_2},
+\quad
+\SUM^{(-1)}_{q\to p}.
+\]
+The first gate adds the dirty $q$ component to $p$.  The middle gates export two different carrier states.  The final inverse gate restores $p$.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.96\textwidth]{qudit_sum_circuit.pdf}
+\caption{The universal six-qudit catalytic circuit.  Coefficients are interpreted modulo $d$.}
+\label{fig:qudit-sum}
+\end{figure}
+
+A lower-only word needs seven gates.  The exact proof is coefficient-domain independent because it uses pivot support and the number of distinct carrier states rather than division.
+
+\section{Connected higher-dimensional qudit families}
+The snapshot target $A(u;s_1,\ldots,s_v)$ from the core chapter is defined over any coefficient ring for which the displayed additions make sense.  Over $\Z_d$, it becomes a modular SUM circuit.  Its explicit ambient word uses exactly two reverse-directed SUM gates and has length
+\[
+u+v+2.
+\]
+The interval-tree proof of exact restricted length is most transparent over fields, but the displayed upper-bound and resource-amortization mechanism remain valid over every $\Z_d$.
+
+For a field $\F_q$, the exact formula is
+\[
+\ellDown(A)=u+2v,
+\qquad
+\ellAll(A)\le u+v+2,
+\]
+so
+\[
+\Delta(A)\ge v-2.
+\]
+The connected family has asymptotic ratio approaching $3/2$.
+
+\section{Weighted physical costs}
+Suppose forward SUM gates cost one and reverse-directed SUM gates cost $\lambda$.  The displayed word has weighted cost
+\[
+u+v+2\lambda,
+\]
+while the restricted construction costs $u+2v$.  Hence the gain is at least
+\[
+v-2\lambda.
+\]
+This formula can be combined with hardware calibration.  If reverse orientation requires echo pulses or routing, the catalyst remains useful when the number of exported snapshots exceeds twice the effective penalty.
+
+\begin{boundarybox}
+A gate-count saving does not imply a lower physical error or depth.  Device-specific conclusions require a cost vector containing duration, infidelity, crosstalk, and routing.  The algebraic theorem identifies candidate rewrites and the exact break-even inequality.
+\end{boundarybox}
+
+\section{Pauli action for prime qudits}
+For odd prime $d$, let $X$ and $Z$ denote generalized Pauli operators.  The SUM gate acts by
+\begin{align*}
+X_s&\mapsto X_sX_t^a,
+&
+X_t&\mapsto X_t,\\
+Z_s&\mapsto Z_s,
+&
+Z_t&\mapsto Z_s^{-a}Z_t.
+\end{align*}
+Thus the modular linear action embeds into a symplectic transformation.  The catalytic row excursion has a dual Pauli interpretation: a temporary reverse dependency changes both $X$ propagation and the contragredient $Z$ propagation, then restores them.
+
+This makes the SUM family a bridge between the transvection paper and the Clifford chapter.  It is the only quantum extension in this monograph that follows directly from the ring-universal theorem without a new finite search.
+
+\section{Continuous-variable shear analogue}
+On continuous variables, a linear coordinate map $A$ embeds symplectically as
+\[
+A\longmapsto
+\begin{pmatrix}
+A&0\\
+0&A^{-T}
+\end{pmatrix}.
+\]
+A row shear therefore gives a Gaussian SUM transformation.  The six-row word identity remains a matrix identity in the corresponding shear subgroup.
+
+\begin{skeletonbox}
+To claim an advantage in a full Gaussian gate library, one must compare against rotations, squeezers, beam splitters, and general symplectic decompositions.  The current theorem proves a defect only inside the directed-shear versus all-shear comparison.
+\end{skeletonbox}
+
+\section{Compiler primitive}
+A compiler can search for a carrier row $p$, a temporary source $q$, and output rows requiring several successive states of $p$.  The symbolic pattern is:
+\begin{enumerate}
+\item add $q$ into $p$ in the disallowed direction,
+\item update $p$ through a sequence of allowed additions,
+\item copy selected intermediate states of $p$ into outputs,
+\item subtract $q$ from $p$,
+\item verify that the outputs contain the intended modular combinations.
+\end{enumerate}
+The Python function \texttt{snapshot\_target} constructs the target and \texttt{snapshot\_ambient\_word} emits the word.
+
+\begin{lstlisting}[style=pythonstyle,caption={Constructing a modular snapshot family.}]
+from catalytic_gate_atlas.linear import (
+    snapshot_target,
+    snapshot_ambient_word,
+    apply_row_word,
+)
+
+u = 4
+phases = [0, 2, 4]
+modulus = 5
+A = snapshot_target(u, phases, modulus)
+word = snapshot_ambient_word(u, phases, modulus)
+assert apply_row_word(len(A), word, modulus) == A
+\end{lstlisting}
+
+\section{Open qudit questions}
+\begin{question}
+Does the first defective dimension remain six for every finite field and every modular ring $\Z_d$ under the directed-SUM metric?
+\end{question}
+\begin{question}
+Can qudit Clifford gates outside the SUM subgroup produce a larger defect for a SUM target under total, entangling, or depth cost?
+\end{question}
+\begin{question}
+Do composite dimensions admit characteristic-dependent catalytic motifs unavailable over fields?
+\end{question}

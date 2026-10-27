@@ -1,0 +1,348 @@
+
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[letterpaper,landscape,margin=0.62in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{booktabs,longtable,array,enumitem,xcolor,graphicx,hyperref,subcaption,microtype,float}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\setlist[itemize]{nosep,leftmargin=*}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,pdfauthor={Komorebi P.},pdftitle={Quantum Transfer Blocks}}
+\begin{document}
+\begin{center}
+{\Large\bfseries Quantum Transfer Blocks}\\[4pt]
+{\large Symmetry sectors, circuits, channels, and classical simulation acceleration}\\[5pt]
+{\large Komorebi P.}
+\end{center}
+\tableofcontents
+\clearpage
+
+\section{Quantum transfer blocks: symmetry sectors, circuits, channels, and simulation}
+\label{secdir:030q}
+\label{app:quantum-transfer-blocks}
+
+Quantum mechanics already comes with projectors.  Spectral subspaces, measurement outcomes, conserved charges, symmetry sectors, and subsystem decompositions are all naturally expressed through orthogonal projections.  The transfer-block calculus therefore enters the subject without changing its basic language.  Its role is to keep the projector structure visible long enough to separate invariant quantum sectors, coherence blocks, measurement packets, and channel couplings.
+
+The most concrete example in this appendix is a number-conserving quantum circuit.  The same circuit may be simulated on the full $2^n$-dimensional state space or inside one excitation-number packet of dimension $\binom nk$.  The two calculations agree exactly.  When the state occupies a small sector, the packet calculation can be much faster and smaller.  This is a classical simulation advantage obtained from symmetry; it is not a claim of quantum hardware speedup.
+
+\subsection{State-space projectors and operator blocks}
+
+Let $\mathcal H$ be a finite-dimensional Hilbert space and let
+\[
+        B_iB_j=\delta_{ij}B_j,
+        \qquad
+        \sum_iB_i=I.
+\]
+Every state vector and operator decomposes as
+\[
+        |\psi\rangle=\sum_iB_i|\psi\rangle,
+        \qquad
+        A=\sum_{i,j}B_iAB_j.
+\]
+The diagonal operator blocks $B_iAB_i$ act within packets.  The off-diagonal blocks carry amplitude or coherence between packets.
+
+\begin{theorem}[Invariant quantum packets]
+Let $Q$ be a self-adjoint conserved quantity with spectral projectors $B_i$.  If a unitary $U$ satisfies
+\[
+        [U,Q]=0,
+\]
+then
+\[
+        B_iUB_j=0\qquad(i\ne j),
+\]
+and
+\[
+        U=\bigoplus_i U_i,
+        \qquad U_i=B_iUB_i|_{B_i\mathcal H}.
+\]
+If $|\psi\rangle\in B_k\mathcal H$, then $U|\psi\rangle\in B_k\mathcal H$.
+\end{theorem}
+
+\begin{proof}
+Because $U$ commutes with $Q$, it commutes with every spectral projector $B_i$ of $Q$.  Hence
+\[
+        B_iUB_j=UB_iB_j=0
+\]
+for $i\ne j$.  Summing the diagonal blocks gives $U=\sum_iB_iUB_i$.  If $B_k|\psi\rangle=|\psi\rangle$, then
+\[
+        B_kU|\psi\rangle=UB_k|\psi\rangle=U|\psi\rangle,
+\]
+so the evolved state remains in the same sector.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.74\linewidth]{figures/appendix_quantum_theory/quantum_sector_block_matrix.png}
+\caption{Excitation-number projectors reorder the Hilbert space into invariant Hamming-weight blocks.  A number-conserving circuit has no off-diagonal transfer between these sectors.}
+\end{figure}
+
+\subsection{Excitation-number packets}
+
+For $n$ qubits, define the excitation-number operator
+\[
+        \widehat N=\sum_{q=1}^n\frac{I-Z_q}2.
+\]
+Its eigenvalues are $k=0,1,\ldots,n$.  The projector onto Hamming weight $k$ is
+\[
+        B_k=\sum_{|x|=k}|x\rangle\langle x|,
+\]
+and
+\[
+        \dim B_k\mathcal H=\binom nk.
+\]
+Therefore
+\[
+        (\mathbb C^2)^{\otimes n}
+        =\bigoplus_{k=0}^n\mathcal H_{n,k},
+        \qquad
+        \dim\mathcal H_{n,k}=\binom nk.
+\]
+The full dimension is recovered from
+\[
+        \sum_{k=0}^n\binom nk=2^n.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/appendix_quantum_theory/quantum_sector_dimensions.png}
+\caption{The full state dimension is $2^n$.  A fixed two-excitation packet has dimension $\binom n2$, while the half-filled packet remains exponentially large but is smaller than the full space by a factor of order $\sqrt n$.}
+\end{figure}
+
+A packet simulation is most effective when physics, initialization, and gates confine the state to one small sector.  At half filling the sector is still large, so the gain is more modest.  This distinction is visible in both the theorem and the benchmark.
+
+\subsection{A number-conserving circuit}
+
+The circuit used below alternates single-qubit $R_Z$ phases with nearest-neighbour $XY$ exchange gates.  In the ordered basis $|00\rangle,|01\rangle,|10\rangle,|11\rangle$, the exchange gate is
+\[
+        U_{XY}(\theta)=
+        \begin{pmatrix}
+        1&0&0&0\\
+        0&\cos\theta&-i\sin\theta&0\\
+        0&-i\sin\theta&\cos\theta&0\\
+        0&0&0&1
+        \end{pmatrix}.
+\]
+It rotates $|01\rangle$ and $|10\rangle$ while leaving $|00\rangle$ and $|11\rangle$ fixed.  Both $R_Z$ and $U_{XY}$ commute with $\widehat N$.  Their product therefore does as well.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.96\linewidth]{figures/appendix_quantum_theory/quantum_number_conserving_circuit.png}
+\caption{Python-generated circuit diagram.  Each layer contains $R_Z$ phases and a brickwork pattern of $XY$ exchange gates.  Every gate preserves excitation number.}
+\end{figure}
+
+\begin{proposition}[Sector simulation identity]
+Let $U$ be the circuit above and let $|\psi\rangle\in\mathcal H_{n,k}$.  If $U_k$ is the matrix-free circuit action compiled on the basis $\{|x\rangle:|x|=k\}$, then embedding the sector result into the full basis gives
+\[
+        \iota_k(U_k|\psi\rangle)=U\iota_k(|\psi\rangle).
+\]
+\end{proposition}
+
+\begin{proof}
+Every gate preserves $\mathcal H_{n,k}$.  Its action on the sector basis is the restriction of its full state-vector action.  Products of the restricted gates therefore equal the restriction of the full product.  Embedding after the restricted calculation gives the same amplitude on every weight-$k$ basis state and zero amplitude elsewhere.
+\end{proof}
+
+\subsection{Computational cost}
+
+A standard state-vector application touches $2^n$ amplitudes per circuit layer.  A sector calculation touches $\binom nk$ amplitudes.  For a fixed circuit depth $d$, the leading work scales schematically as
+\[
+        C_{\rm full}=O(dn2^n),
+        \qquad
+        C_{n,k}=O\!\left(dn\binom nk\right).
+\]
+The ideal dimension ratio is
+\[
+        \mathcal R_{n,k}=\frac{2^n}{\binom nk}.
+\]
+For fixed $k$, $\binom nk$ is polynomial in $n$, while $2^n$ is exponential.  At half filling,
+\[
+        \binom n{\lfloor n/2\rfloor}
+        \sim\frac{2^n}{\sqrt{\pi n/2}},
+\]
+so the ideal reduction is only of order $\sqrt n$.
+
+This is the central practical lesson: projector blocks do not create speed by notation alone.  They create speed when the state and the dynamics genuinely occupy a small invariant packet.
+
+\subsection{Benchmark design}
+
+The benchmark used NumPy state vectors and the same matrix-free gate kernel in both calculations.  The baseline stored all $2^n$ amplitudes.  The packet calculation stored only the weight-$k$ amplitudes.  Circuit compilation was measured separately from repeated circuit application.  Six alternating layers were used.  The initial state was a reproducible random normalized state inside the selected sector.
+
+Two regimes were tested:
+\begin{itemize}
+\item a two-excitation state, $k=2$;
+\item a half-filled state, $k=\lfloor n/2\rfloor$.
+\end{itemize}
+
+The reported speedup is a classical simulation speedup.  It should not be confused with a quantum computational advantage, a hardware benchmark, or a comparison with production simulators that use additional tensor-network, stabilizer, GPU, or distributed-memory methods.
+
+\subsection{Two-excitation benchmark}
+
+\begin{center}
+\scriptsize
+\begin{tabular}{rrrrrrrr}
+\toprule
+$n$ & $k$ & full dim. & sector dim. & apply gain & one-shot gain & memory gain & rel. error\\
+\midrule
+8 & 2 & 256 & 28 & 1.227x & 1.555x & 9.143x & 0 \\
+10 & 2 & 1024 & 45 & 1.289x & 1.727x & 22.76x & 0 \\
+12 & 2 & 4096 & 66 & 2.682x & 4.076x & 62.06x & 0 \\
+14 & 2 & 16384 & 91 & 7.322x & 10.66x & 180x & 0 \\
+16 & 2 & 65536 & 120 & 45.02x & 84.79x & 546.1x & 0 \\
+18 & 2 & 262144 & 153 & 227.7x & 175.4x & 1713x & 0 \\
+20 & 2 & 1048576 & 190 & 1163x & 869x & 5519x & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At $n=20$, the full state has $2^{20}=1{,}048{,}576$ amplitudes, while the two-excitation packet has $\binom{20}2=190$.  The measured repeated-application speedup was about 1163$\times$ and the state-memory reduction was 5519$\times$.  The reconstructed state agreed with the full simulation to the displayed numerical precision.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.48\linewidth}
+\includegraphics[width=\linewidth]{figures/appendix_quantum_theory/quantum_apply_speedup.png}
+\caption{Repeated circuit application.}
+\end{subfigure}
+\begin{subfigure}{.48\linewidth}
+\includegraphics[width=\linewidth]{figures/appendix_quantum_theory/quantum_memory_reduction.png}
+\caption{State-vector memory reduction.}
+\end{subfigure}
+\caption{The small excitation packet produces the largest gain.  The half-filled packet gives a smaller but still visible repeated-application speedup.}
+\end{figure}
+
+\subsection{Half-filled benchmark and the cost of compilation}
+
+\begin{center}
+\scriptsize
+\begin{tabular}{rrrrrrrr}
+\toprule
+$n$ & $k$ & full dim. & sector dim. & apply gain & one-shot gain & memory gain & rel. error\\
+\midrule
+8 & 4 & 256 & 70 & 1.212x & 1.083x & 3.657x & 0 \\
+10 & 5 & 1024 & 252 & 1.234x & 0.7513x & 4.063x & 0 \\
+12 & 6 & 4096 & 924 & 2.083x & 0.5092x & 4.433x & 0 \\
+14 & 7 & 16384 & 3432 & 3.24x & 0.2092x & 4.774x & 0 \\
+16 & 8 & 65536 & 12870 & 7.041x & 1.501x & 5.092x & 0 \\
+18 & 9 & 262144 & 48620 & 7.757x & 0.7458x & 5.392x & 0 \\
+20 & 10 & 1048576 & 184756 & 7.396x & 0.6529x & 5.675x & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At $n=20$ and $k=10$, the sector dimension is $184{,}756$.  Repeated application was about 7.396$\times$ faster than the full state-vector kernel.  The one-shot ratio was only 0.6529$\times$: sector compilation and index-map construction outweighed the smaller application cost in this single-run test.  The packet method is therefore most compelling when the circuit is applied repeatedly, the sector is small, or the compiled packet plan is reused.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.48\linewidth}
+\includegraphics[width=\linewidth]{figures/appendix_quantum_theory/quantum_one_shot_speedup.png}
+\caption{Compilation plus one application.}
+\end{subfigure}
+\begin{subfigure}{.48\linewidth}
+\includegraphics[width=\linewidth]{figures/appendix_quantum_theory/quantum_speedup_vs_dimension.png}
+\caption{Measured gain versus dimension reduction.}
+\end{subfigure}
+\caption{Compilation overhead matters.  The measured runtime gain follows the sector-size reduction, but it does not equal the ideal dimension ratio.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.70\linewidth]{figures/appendix_quantum_theory/quantum_accuracy.png}
+\caption{The sector and full state-vector calculations agree exactly in the tested arithmetic path.  The plotted floor is used only to display zero errors on a logarithmic axis.}
+\end{figure}
+
+\subsection{Density operators: populations and coherences}
+
+For a density operator $\rho$,
+\[
+        \rho=\sum_{i,j}B_i\rho B_j.
+\]
+The diagonal block $B_i\rho B_i$ is the population inside packet $i$.  The off-diagonal block $B_i\rho B_j$ is coherence between packets $i$ and $j$.
+
+A unitary commuting with the conserved quantity preserves each sector population and evolves the coherence blocks without mixing their left and right labels.  Noise or a symmetry-breaking Hamiltonian can create new off-diagonal transfer.  The block matrix therefore distinguishes population transport from coherence transport.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.70\linewidth]{figures/appendix_quantum_theory/quantum_density_packet_blocks.png}
+\caption{A density operator supported on the one- and two-excitation packets.  The diagonal blocks are populations; the two off-diagonal rectangles are cross-sector coherences.}
+\end{figure}
+
+\subsection{Measurement as normalized packet transfer}
+
+For a projective measurement $\{B_i\}$, the outcome probability is
+\[
+        p_i=\operatorname{Tr}(B_i\rho),
+\]
+and, when $p_i>0$, the conditioned state is
+\[
+        \rho_i=\frac{B_i\rho B_i}{p_i}.
+\]
+The measurement therefore has the same broad form as other positive packet updates: select a positive packet, compute its mass, and normalize.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/appendix_quantum_theory/quantum_measurement_packet_flow.png}
+\caption{Projective measurement written as packet selection followed by normalization.}
+\end{figure}
+
+\subsection{Channels and open-system dynamics}
+
+A quantum channel with Kraus operators $K_\alpha$ acts by
+\[
+        \Phi(\rho)=\sum_\alpha K_\alpha\rho K_\alpha^*.
+\]
+Relative to the operator packets $\mathcal B_{ij}(X)=B_iXB_j$, the channel has superoperator blocks
+\[
+        \Phi_{ab,ij}
+        =\mathcal B_{ab}\,\Phi\,\mathcal B_{ij}.
+\]
+This four-index object records how an input coherence packet $(i,j)$ reaches an output packet $(a,b)$.  A symmetry-preserving channel is sparse in these labels.  Dephasing suppresses selected off-diagonal packets.  Amplitude damping transfers population between number sectors.  Lindblad generators admit the same operator-space decomposition, subject to their domain assumptions.
+
+The four-index notation matters.  A density operator already has left and right packet labels; a channel maps one pair of labels to another.  Treating it as an ordinary two-index state transfer would erase the distinction between population and coherence.
+
+\subsection{Exact finite checks}
+
+\begin{center}
+\small
+\begin{tabular}{L{5.9in}r}
+\toprule
+Check & Error\\
+\midrule
+XY gate commutes with two-qubit number operator & 0 \\
+density operator reconstructed from all left-right packet blocks & 0 \\
+measurement packet probabilities sum to one & 2.22e-16 \\
+number operator has zero off-diagonal packet norm & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The checks confirm the finite algebra used in the appendix: the exchange gate commutes with the number operator, all density blocks reconstruct the original density operator, projective probabilities sum to one, and the number operator has zero off-diagonal packet norm.
+
+\subsection{Interpretation and limits}
+
+The example supports several concrete claims.
+
+\begin{enumerate}[label=(\arabic*)]
+\item A conserved observable supplies a canonical projector family.
+\item A circuit commuting with that observable splits exactly into invariant blocks.
+\item A state confined to one block can be simulated without allocating unused sectors.
+\item The gain depends on sector size, compilation cost, reuse, and the quality of the conserved symmetry.
+\item Density matrices and channels require left-right operator packets, not only state-vector packets.
+\end{enumerate}
+
+The example does not show that every quantum circuit becomes easy.  A generic circuit may populate the entire Hilbert space.  A symmetry-breaking gate can couple the sectors.  A half-filled sector remains exponentially large.  Entanglement inside one packet can still be difficult.  The block logic removes unused symmetry sectors; it does not remove all quantum complexity.
+
+\subsection{Conclusion}
+
+Quantum theory gives a direct realization of the projector calculus.  Conserved quantities produce invariant sectors, density operators split into populations and coherences, measurements are normalized packet updates, and channels act on left-right operator packets.  The circuit benchmark makes the computational meaning explicit: when a circuit and its initial state remain inside a small symmetry sector, the packet representation can replace a $2^n$ state vector by a $\binom nk$ vector without changing the answer.
+
+The strongest result in the demonstration is not the largest measured speedup.  It is the exact reason the speedup is legitimate:
+\[
+        [U,\widehat N]=0
+        \quad\Longrightarrow\quad
+        U=\bigoplus_kU_k.
+\]
+The block logic is useful because it follows a real invariant of the circuit.
+
+\end{document}

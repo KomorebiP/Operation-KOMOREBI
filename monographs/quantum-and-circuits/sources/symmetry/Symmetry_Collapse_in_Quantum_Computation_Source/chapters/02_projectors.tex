@@ -1,0 +1,117 @@
+\chapter{Projectors and quantum packets}
+\label{ch:projectors}
+\index{projector}
+\index{packet decomposition}
+
+\section{Orthogonal packet decompositions}
+Let $\Hh$ be a finite-dimensional Hilbert space and let $\{P_\alpha\}_{\alpha\in A}$ be orthogonal projectors satisfying
+\[
+P_\alpha P_\beta=\delta_{\alpha\beta}P_\alpha,
+\qquad
+\sum_{\alpha\in A}P_\alpha=I.
+\]
+Every state and operator decompose as
+\[
+\ket\psi=\sum_\alpha P_\alpha\ket\psi,
+\qquad
+X=\sum_{\alpha,\beta}P_\alpha X P_\beta.
+\]
+The diagonal blocks act within packets. The off-diagonal blocks transfer amplitude or coherence between packets.
+
+Define the packet-transfer graph of an operator $X$ by placing an edge $\beta\to\alpha$ whenever
+\[
+P_\alpha X P_\beta\neq0.
+\]
+An exactly symmetry-preserving operator has only diagonal edges. A sparse transfer graph may still permit efficient simulation if the active packets and internal states remain compact.
+
+\section{Conserved observables}
+Let
+\[
+Q=\sum_k q_kP_k
+\]
+be a self-adjoint observable with spectral projectors $P_k$.
+
+\begin{theorem}[Invariant quantum packets]
+\label{thm:invariant-packets}
+If a unitary $U$ satisfies $[U,Q]=0$, then
+\[
+P_iUP_j=0\qquad(i\neq j),
+\]
+and
+\[
+U=\bigoplus_i U_i,
+\qquad
+U_i=P_iUP_i\big|_{P_i\Hh}.
+\]
+If $P_k\ket\psi=\ket\psi$, then $P_kU\ket\psi=U\ket\psi$.
+\end{theorem}
+
+\begin{proof}
+Since $U$ commutes with $Q$, it commutes with every spectral projector obtained from the functional calculus of $Q$. Thus
+\[
+P_iUP_j=UP_iP_j=0
+\]
+for $i\neq j$. Summing the diagonal blocks gives the direct-sum form. The final statement follows from
+\[
+P_kU\ket\psi=UP_k\ket\psi=U\ket\psi.
+\]
+\end{proof}
+
+\section{Residue and character packets}
+Suppose $Q$ has integer spectrum. For a modulus $M$, define
+\[
+B_r^{(M)}=
+\sum_{k\equiv r\pmod M}P_k.
+\]
+Let
+\[
+V_M=\exp\left(\frac{2\pi i}{M}Q\right),
+\qquad
+\omega_M=e^{2\pi i/M}.
+\]
+Then
+\begin{equation}
+B_r^{(M)}
+=
+\frac1M\sum_{\ell=0}^{M-1}
+\omega_M^{-r\ell}V_M^\ell.
+\label{eq:residue-projector}
+\end{equation}
+On a $Q$-eigenvector, the right side is the roots-of-unity filter. The same finite-character formula selects residue classes in signal polyphase analysis and charge sectors in quantum theory.
+
+\section{Finite-group projectors}
+Let a finite group $G$ act unitarily by $U_g$. For an irreducible character $\chi$ of degree $d_\chi$, the central isotypic projector is
+\begin{equation}
+P_\chi
+=
+\frac{d_\chi}{|G|}
+\sum_{g\in G}
+\overline{\chi(g)}U_g.
+\label{eq:character-projector}
+\end{equation}
+Character orthogonality gives
+\[
+P_\chi P_\psi=\delta_{\chi\psi}P_\chi,
+\qquad
+\sum_\chi P_\chi=I
+\]
+on the represented space. If an operator $A$ commutes with every $U_g$, then
+\[
+P_\chi A P_\psi=0
+\qquad(\chi\neq\psi).
+\]
+
+This framework includes momentum, parity, total spin, point-group symmetry, permutation symmetry, and stabilizer syndrome labels. The isotypic projector identifies a symmetry type. It does not necessarily resolve the multiplicity space within that type.
+
+\section{Nested refinements}
+If one conserved label is too coarse, intersect commuting projector families. For mutually commuting observables $Q_1,\ldots,Q_s$, a joint packet has the form
+\[
+P_{\bm\alpha}
+=
+P^{(1)}_{\alpha_1}\cdots P^{(s)}_{\alpha_s}.
+\]
+The dimension can decrease dramatically, but each extra label must be efficiently computable and preserved. A refinement that requires exponential preprocessing merely relocates the complexity.
+
+\begin{remark}
+A packet decomposition is basis independent as an orthogonal direct sum, although a practical simulator must choose a concrete basis or compressed coordinate system within each active packet.
+\end{remark}

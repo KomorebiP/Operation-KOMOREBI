@@ -1,0 +1,288 @@
+\chapter{First arrival, spectral packets, algebraic rarity, and tensor regularization}\label{ch:spectral-algebraic}
+\index{Green kernel}
+\index{first-arrival valuation}
+\index{word map}
+\index{algebraic defect locus}
+\index{border rank}
+\index{tensor capacity}
+
+
+\section{Word distance as first arrival}
+Let $G$ be finite and let $S=S^{-1}$ be a symmetric generating multiset.  In the right regular representation, define
+\[
+A_S=\sum_{s\in S}\rho(s).
+\]
+Then
+\[
+\langle\delta_g,A_S^k\delta_e\rangle
+\]
+counts length-$k$ words ending at $g$.
+
+\begin{theorem}[Endpoint Green valuation]
+The word distance is
+\[
+d_S(e,g)
+=
+\ord_{z=0}
+\left\langle
+\delta_g,(I-zA_S)^{-1}\delta_e
+\right\rangle.
+\]
+\end{theorem}
+\begin{proof}
+Expand the resolvent as a formal power series:
+\[
+(I-zA_S)^{-1}=\sum_{k\ge0}z^kA_S^k.
+\]
+The first nonzero endpoint coefficient occurs at the shortest word length.
+\end{proof}
+
+For strictly positive integer costs, replace each generator $s$ by the monomial $z^{c(s)}\rho(s)$.  Every coefficient then counts finitely many words of a given total cost, and the same formal inverse is defined.  Zero-cost cycles require separate treatment: they can create infinitely many words of cost zero, so the ordinary counting series need not exist.  The finite atlases with free gates use shortest-path search with zero-cost edges instead.  Multivariate variables can track several resources when the grading gives every generator positive total degree.
+
+\section{Why eigenvalues alone are insufficient}
+If
+\[
+A_S=\sum_\lambda\lambda\Pi_\lambda,
+\]
+then
+\[
+\mathcal G_{S,g}(z)
+=
+\sum_\lambda
+\frac{\langle\delta_g,\Pi_\lambda\delta_e\rangle}{1-\lambda z}.
+\]
+The eigenvalues and multiplicities do not determine the endpoint coefficients
+\[
+\langle\delta_g,\Pi_\lambda\delta_e\rangle.
+\]
+Two Cayley or Schreier systems can therefore be cospectral and still have different first-arrival behavior at distinguished targets.
+
+\begin{principle}[Embedded packet principle]
+For threshold questions, a spectral label is usually weaker than an embedded spectral projector.  The matrix coefficients of the projector relative to the initial and target states retain positional information that multiplicities erase.
+\end{principle}
+
+This distinction recurs in the Latin-square example discussed later.  The natural commuting row, column, and symbol operators have universal eigenvalue packets at fixed order, while the embedded incidence and transition data still vary.
+
+\section{Subgroup-holonomy Fourier packets}
+Let $H\le G$.  Let $\mu_k(h)$ count ambient words of length $k$ with product $h\in H$.  For every irreducible representation $\tau\in\widehat H$, define
+\[
+\widehat\mu_k(\tau)
+=
+\sum_{h\in H}\mu_k(h)\tau(h).
+\]
+Fourier inversion gives
+\[
+\mu_k(h)
+=
+\frac1{|H|}
+\sum_{\tau\in\widehat H}
+\dim(\tau)
+\operatorname{tr}
+\bigl(
+\tau(h^{-1})\widehat\mu_k(\tau)
+\bigr).
+\]
+The matrix-valued Green packet
+\[
+\widehat{\mathcal G}_\tau(z)
+=
+\sum_{k\ge0}\widehat\mu_k(\tau)z^k
+\]
+recovers every endpoint series after Fourier inversion.
+
+The trivial representation records only the total number of loops returning to the subgroup.  Nontrivial $H$-types retain their holonomy.  This yields a hierarchy:
+\[
+\text{spherical return data}
+\prec
+\text{type-resolved holonomy packets}
+\prec
+\text{exact endpoint realization}.
+\]
+
+\section{Word maps and product loci}
+Let $K$ be a field and let $X\subseteq G$ be an algebraic gate family.  For a fixed length $L$, multiplication defines
+\[
+\mu_L:X^L\to G,
+\qquad
+(x_L,\ldots,x_1)\mapsto x_L\cdots x_1.
+\]
+The exact length-$L$ locus is $\mu_L(X^L)$, and the length-at-most-$L$ locus is a finite union of such images when the gate family has finitely many components.
+
+\begin{theorem}[Dimension per gate]
+Suppose every irreducible component of $X$ has dimension at most $r$.  Then the Zariski closure of the locus reachable in at most $L$ gates has dimension at most $rL$.
+\end{theorem}
+\begin{proof}
+Every component of $X^L$ has dimension at most $rL$.  A morphism cannot increase dimension.  A finite union has dimension equal to the maximum dimension of its components.
+\end{proof}
+
+For scaled transvections, $r=1$.  This immediately yields generic lower bounds in a target variety whose dimension exceeds $L$.
+
+\section{Generic rigidity}
+Work over an algebraically closed field.  Suppose the restricted target variety $V$ is irreducible of dimension $N$, every target has a restricted realization using at most $N$ unit-cost gates, and the ambient alphabet is an algebraic family with finitely many components of dimension at most one.  Then ambient realizations of length below $N$ occupy a proper closed subset of $V$.
+
+\begin{theorem}[Abstract generic rigidity]
+Under the preceding hypotheses, there is a nonempty Zariski-open subset $\Omega\subseteq V$ such that
+\[
+\ellRes(U)=\ellAmb(U)=N
+\qquad(U\in\Omega).
+\]
+\end{theorem}
+The unitriangular theorem in the core chapter is a concrete instance with
+\[
+N=\binom n2.
+\]
+
+\section{Defect codimension}
+If every target has restricted cost at most $N$, then defect at least $d$ forces ambient cost at most $N-d$.  The dimension-per-gate theorem gives
+\[
+\codim_V\overline{\{U:\Delta(U)\ge d\}}
+\ge d
+\]
+when each ambient gate carries one parameter.
+
+\begin{principle}[Rare but amplifiable]
+At fixed dimension, large defects require increasingly special algebraic conditions.  Under direct sums, recursive lifts, or tensor products, a point on a thin exceptional stratum can nevertheless seed a macroscopic family.
+\end{principle}
+
+This is one of the central tensions of the subject.  Catalysis is neither generic nor negligible.
+
+\section{Finite-field sparsity}
+A word-counting analogue applies over $\F_q$.  If the ambient alphabet has at most $M(q-1)$ nontrivial scaled gates, then the number of targets reached in $L$ gates is at most
+\[
+\sum_{j=0}^L[M(q-1)]^j.
+\]
+When the target space has $q^N$ points and defect $d$ implies ambient length at most $N-d$, the crude bound is
+\[
+\Prob[\Delta\ge d]
+=O_{N,M}(q^{-d}).
+\]
+The estimate can be sharpened by orbit counting, stabilizers, and the geometry of word-map fibers.
+
+\section{Direct sums and monoidal amplification}
+Suppose targets admit a direct sum $U\oplus V$ and a homomorphism from the large restricted group onto the two factor groups sends $U\oplus V$ to $(U,V)$.  Require the aggregate generator bound
+\[
+\ellRes(\pi_1(s))+\ellRes(\pi_2(s))\le c(s)
+\]
+for every large restricted generator $s$.  Assume that both restricted and ambient factor circuits embed into the corresponding large model without increasing cost.  Then
+\[
+\ellRes(U\oplus V)
+=
+\ellRes(U)+\ellRes(V).
+\]
+Indeed, projecting any word and summing the two factor bounds gives the lower bound, while concatenating the embedded factor circuits gives the upper bound.  Separate one-Lipschitz projections alone do not imply this sum inequality.
+Under the ambient embedding assumption, the constructive upper bound is
+\[
+\ellAmb(U\oplus V)
+\le
+\ellAmb(U)+\ellAmb(V),
+\]
+so
+\[
+\Delta(U\oplus V)
+\ge
+\Delta(U)+\Delta(V).
+\]
+One finite defect therefore gives an unbounded additive family.
+
+\section{Tensor products and normalized rates}
+Let $U$ have dimension $m$ and $V$ dimension $n$.  In linear transvection models with tree-tight certificates,
+\[
+\ellRes(U\otimes V)
+=
+n\ellRes(U)+m\ellRes(V).
+\]
+The ambient model satisfies the corresponding inequality.  Normalizing by dimension gives an entropy-like law:
+\[
+\frac{\ellRes(U\otimes V)}{mn}
+=
+\frac{\ellRes(U)}m+
+\frac{\ellRes(V)}n.
+\]
+The normalized defect is superadditive under tensor products.
+
+\begin{definition}[Tensor synergy]
+Define
+\[
+\Syn(U,V)
+=
+n\ellAmb(U)+m\ellAmb(V)-\ellAmb(U\otimes V).
+\]
+Positive synergy means that the joint ambient realization improves on independent lifted circuits.
+\end{definition}
+Restricted tree-tight metrics have zero tensor synergy.  Ambient synergy is a possible source of collective activation.
+
+\begin{definition}[Stable tensor cost]
+For a size-$m$ target $U$, define
+\[
+\tau_\otimes(U)
+=
+\lim_{r\to\infty}
+\frac{\ellAmb(U^{\otimes r})}{r m^{r-1}},
+\]
+when the subadditivity argument applies.  Define
+\[
+\kappa_\otimes(U)
+=
+\ellRes(U)-\tau_\otimes(U).
+\]
+\end{definition}
+Fekete's lemma gives the limit from the tensor subadditivity inequality.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.72\textwidth]{tensor_capacity.pdf}
+\caption{Schematic stable tensor capacity.  The figure illustrates definitions, not measured data.}
+\end{figure}
+
+\begin{definition}[Tensor activation]
+A target is tensor activated if
+\[
+\Delta(U)=0
+\quad\text{but}\quad
+\kappa_\otimes(U)>0.
+\]
+\end{definition}
+This is analogous to regularized capacities and asymptotic ranks.  It asks whether collective synthesis can unlock a catalyst invisible in one copy.
+
+\section{Border catalysis}
+Let $X_{\mathrm{res}}$ and $X_{\mathrm{amb}}$ be algebraic gate varieties.  The exact product rank is
+\[
+\operatorname{rk}_{X}(U)
+=
+\min\{L:U\in X^L\},
+\]
+while border product rank is
+\[
+\underline{\operatorname{rk}}_{X}(U)
+=
+\min\{L:U\in\overline{X^L}\}.
+\]
+The four possible comparisons are:
+\begin{enumerate}
+\item exact and border defects both positive,
+\item exact defect positive but border defect zero,
+\item one-copy defect zero but tensor-regularized defect positive,
+\item ambient and restricted border ranks both smaller than exact ranks but by different amounts.
+\end{enumerate}
+Each requires a separate certificate.  Numerical approximation alone does not distinguish them.
+
+\section{A packet-resolved threshold principle}
+Combining the preceding constructions gives the following architecture.
+\begin{enumerate}
+\item A coarse commutative algebra supplies spherical spectral packets.
+\item Embedded projectors retain incidence and endpoint position.
+\item Noncommutative transition data record holonomy.
+\item A realization theorem decides whether the packet has a restricted representative and at what cost.
+\item Direct sums and tensor products propagate local defects.
+\end{enumerate}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.86\textwidth]{packet_hierarchy.pdf}
+\caption{The spectral-to-realization hierarchy.}
+\label{fig:packet-hierarchy}
+\end{figure}
+
+\begin{boundarybox}
+A packet hierarchy organizes evidence.  It does not replace the final lower bound, positivity argument, orthogonality construction, or descent theorem.  Classification and realization remain distinct layers.
+\end{boundarybox}

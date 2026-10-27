@@ -1,0 +1,65 @@
+\chapter{The exact weight-two benchmark}
+\label{ch:benchmarks}
+\index{benchmark}
+
+\section{Purpose and status}
+The benchmark record compares a full state-vector simulator with a simulator restricted to the exact weight-two packet. Both use the same local gate arithmetic. The benchmark is not a hardware claim and not a universal performance model. It shows that the exact dimension reduction can translate into large memory and repeated-application gains in an ordinary implementation.
+
+\begin{recordbox}
+At $n=20$, the full state has $1{,}048{,}576$ amplitudes and the exact weight-two packet has $190$. The archived repeated-application gain is $958.8$, the one-shot gain is $54.8$, and the amplitude-memory ratio is $5518.8$. The recorded relative reconstruction error is zero at the displayed precision.
+\end{recordbox}
+
+\section{Recorded table}
+\begin{longtable}{@{}rrrrrrr@{}}
+\caption{Recorded exact-weight-two benchmark.}\label{tab:weight-two}\\
+\toprule
+$n$ & full dim. & packet dim. & apply gain & one-shot gain & memory gain & rel. error\\
+\midrule
+\endfirsthead
+\toprule
+$n$ & full dim. & packet dim. & apply gain & one-shot gain & memory gain & rel. error\\
+\midrule
+\endhead
+8 & 256 & 28 & 1.11 & 1.64 & 9.14 & 0\\
+10 & 1,024 & 45 & 1.51 & 2.02 & 22.8 & 0\\
+12 & 4,096 & 66 & 2.95 & 3.98 & 62.1 & 0\\
+14 & 16,384 & 91 & 8.55 & 11.0 & 180.0 & 0\\
+16 & 65,536 & 120 & 33.0 & 36.9 & 546.1 & 0\\
+18 & 262,144 & 153 & 131.3 & 39.1 & 1,713.4 & 0\\
+20 & 1,048,576 & 190 & 958.8 & 54.8 & 5,518.8 & 0\\
+\bottomrule
+\end{longtable}
+
+\section{What is machine independent}
+The dimension identity
+\[
+\frac{2^n}{\binom n2}
+\]
+is independent of implementation. It predicts an exponential memory advantage for fixed $k=2$. The measured runtime ratio need not equal the dimension ratio. Packet indexing, compilation, sparse update kernels, allocation, and cache behavior determine the constant factors.
+
+\section{Repeated application versus one shot}
+Let $C_{\rm compile}$ be the cost of constructing the packet basis and restricted gate plans, and let $C_{\rm apply}$ be one packet application. Reusing the compiled plan $R$ times costs
+\[
+C_{\rm packet}(R)
+=
+C_{\rm compile}+RC_{\rm apply}.
+\]
+If the full path costs $RC_{\rm full}$, the packet method breaks even when
+\[
+R>
+\frac{C_{\rm compile}}
+{C_{\rm full}-C_{\rm apply}}.
+\]
+This is why time evolution, parameter sweeps, variational loops, and repeated likelihood evaluations are natural applications.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\textwidth]{weight_two_benchmark.pdf}
+\caption{Recorded runtime and memory gains for the exact-weight-two packet.}
+\end{figure}
+
+\section{Independent reconstruction check}
+The release code generates a random packet state, embeds it in the full Hilbert space, applies the same $R_Z$ and exchange gates through both arithmetic paths, and compares the final states. The representative checks at $(n,k)=(6,1),(8,2),(10,2)$ produce errors near machine precision.
+
+\paragraph{Scope.}
+The recorded benchmark supports exactness and implementation value for a symmetry-preserving subclass. It does not show that generic quantum circuits admit comparable reductions.

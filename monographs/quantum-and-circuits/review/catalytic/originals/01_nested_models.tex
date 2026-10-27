@@ -1,0 +1,210 @@
+\chapter{Nested gate models and distortion invariants}\label{ch:nested-models}
+\index{gate-set distortion}
+\index{restricted realization}
+\index{ambient realization}
+\index{cost vector}
+\index{existence defect}
+
+
+\section{Why a separate theory is needed}
+A target transformation often belongs to a visibly structured class even when the machine used to realize it is capable of much more.  A lower-triangular linear transformation may be synthesized by an unrestricted CNOT network.  A diagonal unitary may be realized by a non-diagonal Clifford+$T$ circuit.  A charge-preserving unitary may be compiled by gates that temporarily visit other charge sectors.  A Gaussian target may be realized by a circuit that briefly uses a non-Gaussian primitive.  These situations share a question that is not answered by ordinary exact synthesis:
+\begin{quote}
+How much does it cost to require the \emph{entire path} of a computation to retain the structure possessed by its endpoint?
+\end{quote}
+The distinction is path dependent.  It is not determined only by membership of the final target in a subgroup, a subcategory, or a model class.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.90\textwidth]{gate_hierarchy.pdf}
+\caption{Representative nested gate models.  The same target can be assigned different costs at several levels.}
+\label{fig:gate-hierarchy}
+\end{figure}
+
+\section{Exact gate models}
+\begin{definition}[Gate model]
+An \emph{exact gate model} is a tuple
+\[
+\mathfrak M=(\mathcal X,\mathcal S,c,\circ),
+\]
+where $\mathcal X$ is a set of states or morphisms, $\mathcal S$ is a specified family of elementary generators, $c:\mathcal S\to\R_{\ge0}$ is a cost function, and $\circ$ is the composition law.  A word
+\[
+w=s_L\cdots s_1
+\]
+has cost
+\[
+c(w)=\sum_{j=1}^L c(s_j).
+\]
+For a target $U\in\mathcal X$, the exact synthesis cost is
+\[
+\ell_{\mathfrak M}(U)=\inf\{c(w):w=U\}.
+\]
+The value is $+\infty$ when the target has no realization.
+\end{definition}
+
+The composition law may be group multiplication, composition of permutations, composition of quantum channels, tensor-network contraction, or composition in a dagger symmetric monoidal category.  The cost may count all gates, only entangling gates, only non-Clifford gates, depth, weighted error, or a vector of several resources.
+
+\begin{definition}[Nested realization pair]
+A \emph{nested realization pair} consists of restricted and ambient models
+\[
+\mathfrak M_{\mathrm{res}}\subseteq\mathfrak M_{\mathrm{amb}}
+\]
+with a common target class $\mathcal T$.  For $U\in\mathcal T$, define
+\[
+\ellRes(U)=\ell_{\mathfrak M_{\mathrm{res}}}(U),
+\qquad
+\ellAmb(U)=\ell_{\mathfrak M_{\mathrm{amb}}}(U).
+\]
+The additive defect is
+\[
+\Delta(U)=\ellRes(U)-\ellAmb(U).
+\]
+\end{definition}
+
+When both costs are finite, $\Delta(U)$ is a metric or optimization defect.  If $\ellRes(U)=+\infty$ and $\ellAmb(U)<+\infty$, it is an existence defect.  This convention unifies finite gate savings with the failure of a restricted realization category.
+
+\begin{proposition}[Monotonicity]
+For every target in the common domain,
+\[
+\ellAmb(U)\le \ellRes(U).
+\]
+Consequently $\Delta(U)\ge0$ whenever both models use the same nonnegative cost on their common generators.
+\end{proposition}
+\begin{proof}
+Every restricted word is also an ambient word.
+\end{proof}
+
+\section{Cost models are part of the theorem}
+A gate-set comparison is incomplete until the cost convention is fixed.  The same pair of groups can display a defect under entangling count and no defect under total primitive count.  A SWAP gate may be primitive, may cost three CNOTs, or may be implemented by physical motion.  A local Clifford may be free in a fault-tolerant resource estimate and nonfree in a pulse-level model.
+
+\begin{definition}[Resource vector]
+Let
+\[
+\mathbf c(s)=(c_1(s),\ldots,c_r(s))\in\R_{\ge0}^r
+\]
+be the resource vector of a gate.  The achievable resource region of a target is
+\[
+\mathcal P_{\mathfrak M}(U)
+=
+\left\{
+\sum_{j=1}^L\mathbf c(s_j):s_L\cdots s_1=U
+\right\}.
+\]
+Its nondominated points form the Pareto boundary.
+\end{definition}
+
+For a weight vector $\lambda\in\R_{\ge0}^r$, scalarization gives
+\[
+\ell_{\mathfrak M}^{\lambda}(U)
+=
+\inf_{x\in\mathcal P_{\mathfrak M}(U)}\lambda\cdot x.
+\]
+The scalar defect $\Delta^\lambda(U)$ can vary with $\lambda$ even when the target and gate alphabets are fixed.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.74\textwidth]{resource_pareto.pdf}
+\caption{Restricted and ambient Pareto regions can differ without one model dominating by the same amount under every resource weighting.}
+\label{fig:pareto}
+\end{figure}
+
+\begin{principle}[Model specificity]
+Every claimed shortcut must state the target class, elementary gate alphabet, ancilla convention, exact or approximate synthesis criterion, and cost vector.  Changing any one of these may remove, create, or reverse a defect.
+\end{principle}
+
+\section{Ancilla and restoration conventions}
+Temporary workspace is meaningful only after its restoration rule is specified.
+\begin{definition}[Ancilla conventions]
+An ancilla is
+\begin{enumerate}
+\item \emph{clean} if it begins in a specified state and must return to that state,
+\item \emph{borrowed} or \emph{dirty} if its initial state is arbitrary but must be restored,
+\item \emph{consumable} if restoration is not required,
+\item \emph{catalytic} if it is restored while enabling a cheaper realization of the target.
+\end{enumerate}
+\end{definition}
+The present theory focuses on restoration.  If an auxiliary resource may be discarded, the comparison becomes a different channel or isometry synthesis problem.
+
+\section{Worst-case and threshold functions}
+For a size parameter $n$, let $\mathcal T_n$ denote the target family.
+\begin{definition}[Extremal distortion]
+Define
+\[
+D_n=\sup_{U\in\mathcal T_n}\Delta(U)
+\]
+and, when $0<\ellAmb(U)<\infty$,
+\[
+R_n=\sup_{U\in\mathcal T_n}
+\frac{\ellRes(U)}{\ellAmb(U)}.
+\]
+The first defective size is
+\[
+\tau=\min\{n:D_n>0\}.
+\]
+\end{definition}
+
+Several threshold notions should not be conflated:
+\begin{align*}
+\tau_{\mathrm{metric}}&=\min\{n:\exists U,\ 0<\Delta(U)<\infty\},\\
+\tau_{\mathrm{exist}}&=\min\{n:\exists U,\ \ellRes(U)=\infty,\ \ellAmb(U)<\infty\},\\
+\tau_{q}&=\min\{n:\exists U,\ \ell_{\le q}(U)<\ell_{\le0}(U)\},
+\end{align*}
+where $\ell_{\le q}$ permits at most $q$ ambient-only gates.  A model may have an early metric threshold and a later existence threshold, or no threshold at all.
+
+\section{Equivalence, orbits, and classification}
+A finite census should be quotiented by transformations preserving both gate models and the cost.  Depending on the problem, these may include wire permutations, local Clifford conjugation, isotopy, simultaneous row and column relabeling, or graph automorphisms.
+
+\begin{definition}[Cost-preserving equivalence]
+Targets $U$ and $V$ are equivalent if an automorphism $\varphi$ of the ambient realization system satisfies
+\[
+\varphi(U)=V,
+\qquad
+\varphi(\mathcal S_{\mathrm{res}})=\mathcal S_{\mathrm{res}},
+\qquad
+\varphi(\mathcal S_{\mathrm{amb}})=\mathcal S_{\mathrm{amb}},
+\]
+and preserves the gate costs.
+\end{definition}
+Under this equivalence, both lengths and the defect are orbit invariants.  A useful threshold theorem should classify minimal defective orbits, not merely list raw matrices.
+
+\section{Approximate synthesis and border defects}
+For continuous gate models, exact word length can differ from the minimum length achievable as a limit.
+\begin{definition}[Border cost]
+Let $\overline{\mathcal W}_{L}$ be the topological or Zariski closure of targets realizable with cost at most $L$.  The border cost is
+\[
+\underline\ell(U)=\inf\{L:U\in\overline{\mathcal W}_{L}\}.
+\]
+The border defect is
+\[
+\underline\Delta(U)=
+\underline\ell_{\mathrm{res}}(U)-
+\underline\ell_{\mathrm{amb}}(U).
+\]
+\end{definition}
+This is the circuit analogue of the distinction between tensor rank and border rank.  An exact defect can disappear under degeneration, persist, or become larger after approximation changes the relevant cost geometry.
+
+\section{Metric and existence defects in one category}
+Let $\mathcal C_{\mathrm{res}}\subseteq\mathcal C_{\mathrm{amb}}$ be categories with weighted generating morphisms.  For a morphism $f$ in the restricted target class, the same definition
+\[
+\Delta(f)=c_{\mathrm{res}}(f)-c_{\mathrm{amb}}(f)
+\]
+includes group-word metrics, adaptive quantum channels, tensor-network realizations, and orthogonality designs.  This categorical form is essential when the ambient model permits measurement, branching, postselection, or entangled objects that do not lie in a common group.
+
+\begin{boundarybox}
+The abstract definition does not prove that a defect exists.  It provides a common language in which a finite search, a symbolic identity, and a lower-bound certificate can be compared without changing the meaning of the target or the cost.
+\end{boundarybox}
+
+\section{A standard theorem package}
+A mature gate-set distortion result should contain as many of the following components as the model allows:
+\begin{enumerate}
+\item a precisely defined nested gate pair and cost vector,
+\item a smallest defective target or a no-defect theorem below a threshold,
+\item an explicit ambient word,
+\item a restricted lower-bound certificate,
+\item classification modulo cost-preserving equivalence,
+\item a reusable catalytic normal form,
+\item direct-sum, recursive, or tensor amplification,
+\item generic-rigidity or sparsity results,
+\item a certificate-producing implementation,
+\item a clear account of which statements are symbolic, computed, or conjectural.
+\end{enumerate}
+The remainder of the monograph follows this package.

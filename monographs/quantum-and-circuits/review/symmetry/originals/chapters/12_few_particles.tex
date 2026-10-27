@@ -1,0 +1,60 @@
+\chapter{Few bosons and few fermions}
+\label{ch:few-particles}
+\index{boson}
+\index{fermion}
+
+\section{Bosonic occupation space}
+For $N$ indistinguishable bosons in $m$ modes, a Fock basis state is an occupation vector
+\[
+(n_1,\ldots,n_m),
+\qquad
+n_1+\cdots+n_m=N.
+\]
+The dimension is
+\begin{equation}
+D_{\rm boson}(m,N)
+=
+\binom{N+m-1}{N}.
+\label{eq:boson-dim}
+\end{equation}
+For fixed $N$, this is $O(m^N)$.
+
+\section{Fermionic occupation space}
+For $N$ fermions in $m$ modes, each mode is occupied at most once and
+\begin{equation}
+D_{\rm fermion}(m,N)
+=
+\binom mN.
+\label{eq:fermion-dim}
+\end{equation}
+For fixed $N$, this is also polynomial in $m$.
+
+\begin{corollary}[Few-particle collapse]
+A polynomial-size number-preserving bosonic or fermionic circuit with a fixed number of particles is classically polynomial-time simulable if its mode-gate updates and final observable are computable in polynomial time in the occupation basis.
+\end{corollary}
+
+\begin{proof}
+Use \cref{eq:boson-dim,eq:fermion-dim} and \cref{thm:poly-packet}.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\textwidth]{few_particle_dimensions.pdf}
+\caption{Fixed-particle bosonic and fermionic sectors grow polynomially with the number of modes.}
+\end{figure}
+
+\section{Gate updates}
+A number-preserving one-body unitary acts on mode creation operators by
+\[
+a_i^\dagger
+\longmapsto
+\sum_j U_{ji}a_j^\dagger.
+\]
+A generic dense mode transformation can induce many occupation-basis transitions, but for fixed $N$ the basis dimension remains polynomial. Local hopping and phase gates are sparse. Few-body interactions remain polynomial to apply for fixed $N$, although the exponent can grow with $N$.
+
+\section{Where the theorem stops}
+If $N$ scales linearly with $m$, both dimensions become exponential. The fixed-number symmetry still reduces the full Fock space, but it does not prove polynomial simulation. Boson-sampling-type interference also shows that a fixed total particle number is not enough when the particle count itself scales with input size and the output asks for detailed many-body amplitudes.
+
+\begin{scopebox}
+The corollary is a fixed-particle theorem. It is not a claim that general many-boson or many-fermion quantum dynamics are classically easy.
+\end{scopebox}

@@ -1,0 +1,58 @@
+\chapter{Density operators: populations and coherences}
+\label{ch:density}
+\index{density operator}
+\index{coherence}
+
+\section{Two packet indices}
+A pure state uses one packet label. A density operator uses two:
+\[
+\rho
+=
+\sum_{\alpha,\beta}
+P_\alpha\rho P_\beta.
+\]
+The diagonal block $P_\alpha\rho P_\alpha$ is population inside packet $\alpha$. The off-diagonal block $P_\alpha\rho P_\beta$ is coherence between packets $\alpha$ and $\beta$.
+
+Discarding off-diagonal blocks is not merely a change of coordinates. It is a physical operation such as dephasing. An exact simulator must preserve all coherence blocks relevant to the final observable.
+
+\section{Hilbert--Schmidt decomposition}
+Orthogonality of the left-right operator packets gives
+\[
+\|\rho\|_2^2
+=
+\sum_{\alpha,\beta}
+\|P_\alpha\rho P_\beta\|_2^2.
+\]
+This identity supplies an exact coherence-energy ledger. It can be used to decide which blocks are large, to audit dephasing, or to bound truncation errors in approximate packet simulations.
+
+\section{Symmetry-preserving unitary dynamics}
+If $U$ commutes with every packet projector, then
+\[
+P_\alpha U\rho U^\dagger P_\beta
+=
+U(P_\alpha\rho P_\beta)U^\dagger.
+\]
+The left and right packet labels are preserved. Populations and coherences evolve independently by their declared labels.
+
+\section{Observable sparsity}
+For an observable $M$,
+\[
+\Tr(M\rho)
+=
+\sum_{\alpha,\beta}
+\Tr(P_\beta M P_\alpha\,P_\alpha\rho P_\beta).
+\]
+Only operator packets coupled by $M$ contribute. A measurement that is diagonal in the symmetry labels depends only on populations. A phase-sensitive measurement can require off-diagonal coherences.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.78\textwidth]{channel_blocks.pdf}
+\caption{State operators carry two packet indices, while channels act between pairs of packet labels.}
+\end{figure}
+
+\section{Polynomial operator-space collapse}
+If only polynomially many density blocks are reachable and every block has a polynomial representation, then mixed-state evolution can also be simulated in polynomial time. The representation size is not the square of the full Hilbert dimension. It is the total cost of the active left-right blocks.
+
+\begin{derivedbox}
+For a polynomial active set $A_n$ of packet labels, a density-matrix simulator has at most $|A_n|^2$ label pairs. Polynomial-time simulation follows when each active coherence block has a polynomial classical representation and channel updates remain sparse and efficient.
+\end{derivedbox}

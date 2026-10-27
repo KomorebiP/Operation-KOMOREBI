@@ -1,0 +1,383 @@
+--- original/01_nested_models.tex
++++ chapters/01_nested_models.tex
+@@ -41,14 +41,14 @@
+ The value is $+\infty$ when the target has no realization.
+ \end{definition}
+ 
+-The composition law may be group multiplication, composition of permutations, composition of quantum channels, tensor-network contraction, or composition in a dagger symmetric monoidal category.  The cost may count all gates, only entangling gates, only non-Clifford gates, depth, weighted error, or a vector of several resources.
++The composition law may be group multiplication, composition of permutations, composition of quantum channels, tensor-network contraction, or composition in a dagger symmetric monoidal category.  The additive cost may count all gates, only entangling gates, only non-Clifford gates, weighted error, or a vector of several resources.  Depth fits this additive model by taking admissible parallel layers as generators, rather than charging one unit to each individual gate.
+ 
+ \begin{definition}[Nested realization pair]
+ A \emph{nested realization pair} consists of restricted and ambient models
+ \[
+ \mathfrak M_{\mathrm{res}}\subseteq\mathfrak M_{\mathrm{amb}}
+ \]
+-with a common target class $\mathcal T$.  For $U\in\mathcal T$, define
++with a common target class $\mathcal T$ of finite ambient cost and the same cost on common generators.  For $U\in\mathcal T$, define
+ \[
+ \ellRes(U)=\ell_{\mathfrak M_{\mathrm{res}}}(U),
+ \qquad
+@@ -140,6 +140,7 @@
+ \[
+ \tau=\min\{n:D_n>0\}.
+ \]
++We set a threshold to $+\infty$ when its defining set is empty.
+ \end{definition}
+ 
+ Several threshold notions should not be conflated:
+--- original/02_holonomy_resources.tex
++++ chapters/02_holonomy_resources.tex
+@@ -19,21 +19,21 @@
+ \qquad
+ \ell_G(h)=|h|_{\mathcal S_G}.
+ \]
+-The quotient geometry is the right Schreier graph $H\backslash G$.
++In the group-metric statements, the generating alphabets are symmetric and a generator and its inverse have equal cost.  The quotient geometry is the left Schreier graph $G/H$, with edges $gH\longmapsto sgH$.  For the base-fiber assertion below, assume also $\mathcal S_H=\mathcal S_G\cap H$.  This last condition excludes additional ambient primitives that already lie in $H$ but have no equally cheap restricted realization.
+ 
+ \begin{theorem}[Holonomy-compression identity]
+-Let every generator have unit cost.  For $h\in H$, $\ell_G(h)$ is the minimum length of a based loop in $H\backslash G$ whose lifted word has holonomy $h$.  The intrinsic length $\ell_H(h)$ is the minimum length among loops that remain in the base fiber.
++Let every generator have unit cost.  For $h\in H$, $\ell_G(h)$ is the minimum length of a based loop in $G/H$ whose lifted word has holonomy $h$.  The intrinsic length $\ell_H(h)$ is the minimum length among loops that remain in the base fiber.
+ \end{theorem}
+ \begin{proof}
+ An ambient word $s_k\cdots s_1=h$ projects to the loop
+ \[
+ H,
+-Hs_1,
+-Hs_2s_1,
++s_1H,
++s_2s_1H,
+ \ldots,
+-Hh=H.
+-\]
+-Conversely, a based Schreier loop has product in $H$.  Restricting the path to the base fiber forces every prefix to lie in $H$, hence every edge label can be replaced by a restricted generator under the chosen intrinsic Cayley structure.
++hH=H.
++\]
++Conversely, a based Schreier loop has product in $H$.  If every prefix lies in $H$, each edge label is the product of two elements of $H$ and belongs to $\mathcal S_G\cap H=\mathcal S_H$.  Conversely every restricted word remains in the base fiber.  Minimizing the labeled words with endpoint $h$ gives the two asserted lengths.
+ \end{proof}
+ 
+ Thus
+@@ -114,7 +114,7 @@
+ For a circuit path $X_0,X_1,\ldots,X_L$, an excursion profile may include
+ \begin{enumerate}
+ \item the number $q$ of ambient-only gates,
+-\item the maximum Schreier distance $d(HX_t,H)$,
++\item the maximum Schreier distance $d(X_tH,H)$,
+ \item the rank of a forbidden block,
+ \item the bandwidth of a forbidden dependency,
+ \item the number of simultaneously open catalytic intervals,
+@@ -183,7 +183,7 @@
+ \section{When defects are impossible}
+ A useful positive theorem is a criterion guaranteeing geodesic convexity.
+ \begin{proposition}[One-Lipschitz retraction criterion]
+-Suppose there is a retraction $\pi:G\to H$ with $\pi|_H=\operatorname{id}_H$ such that every ambient generator $s\in\mathcal S_G$ satisfies
++Suppose there is a group homomorphism $\pi:G\to H$ with $\pi|_H=\operatorname{id}_H$ such that every ambient generator $s\in\mathcal S_G$ satisfies
+ \[
+ \ell_H(\pi(s))\le c(s).
+ \]
+@@ -194,7 +194,7 @@
+ for every $h\in H$, hence the two metrics agree on $H$.
+ \end{proposition}
+ \begin{proof}
+-Apply $\pi$ gate by gate to an ambient word for $h$.  The projected factors form a restricted word of no greater cost.
++For an ambient word $h=s_L\cdots s_1$, multiplicativity gives $h=\pi(h)=\pi(s_L)\cdots\pi(s_1)$.  Subadditivity and the generator bounds give $\ell_H(h)\le\sum_j c(s_j)$.  Taking the infimum over ambient words proves the claim.
+ \end{proof}
+ 
+ The unitriangular counterexample proves that no such generator-wise one-Lipschitz retraction exists for the lower transvection model inside the all-transvection model.
+--- original/03_spectral_algebraic.tex
++++ chapters/03_spectral_algebraic.tex
+@@ -37,7 +37,7 @@
+ The first nonzero endpoint coefficient occurs at the shortest word length.
+ \end{proof}
+ 
+-For weighted nonnegative integer costs, replace each generator $s$ by the monomial $z^{c(s)}\rho(s)$.  The coefficient of $z^k$ then counts words of total cost $k$.  Multivariate variables can track several resources at once.
++For strictly positive integer costs, replace each generator $s$ by the monomial $z^{c(s)}\rho(s)$.  Every coefficient then counts finitely many words of a given total cost, and the same formal inverse is defined.  Zero-cost cycles require separate treatment: they can create infinitely many words of cost zero, so the ordinary counting series need not exist.  The finite atlases with free gates use shortest-path search with zero-cost edges instead.  Multivariate variables can track several resources when the grading gives every generator positive total degree.
+ 
+ \section{Why eigenvalues alone are insufficient}
+ If
+@@ -118,7 +118,7 @@
+ For scaled transvections, $r=1$.  This immediately yields generic lower bounds in a target variety whose dimension exceeds $L$.
+ 
+ \section{Generic rigidity}
+-Suppose the restricted target variety $V$ has dimension $N$, every target has a restricted realization of cost at most $N$, and each ambient gate contributes at most one algebraic parameter.  Then ambient realizations of length below $N$ occupy a proper closed subset.
++Work over an algebraically closed field.  Suppose the restricted target variety $V$ is irreducible of dimension $N$, every target has a restricted realization using at most $N$ unit-cost gates, and the ambient alphabet is an algebraic family with finitely many components of dimension at most one.  Then ambient realizations of length below $N$ occupy a proper closed subset of $V$.
+ 
+ \begin{theorem}[Abstract generic rigidity]
+ Under the preceding hypotheses, there is a nonempty Zariski-open subset $\Omega\subseteq V$ such that
+@@ -159,13 +159,18 @@
+ The estimate can be sharpened by orbit counting, stabilizers, and the geometry of word-map fibers.
+ 
+ \section{Direct sums and monoidal amplification}
+-Suppose targets admit a direct sum $U\oplus V$ and the restricted metric has an exact projection onto both factors.  Then
++Suppose targets admit a direct sum $U\oplus V$ and a homomorphism from the large restricted group onto the two factor groups sends $U\oplus V$ to $(U,V)$.  Require the aggregate generator bound
++\[
++\ellRes(\pi_1(s))+\ellRes(\pi_2(s))\le c(s)
++\]
++for every large restricted generator $s$.  Assume that both restricted and ambient factor circuits embed into the corresponding large model without increasing cost.  Then
+ \[
+ \ellRes(U\oplus V)
+ =
+ \ellRes(U)+\ellRes(V).
+ \]
+-The ambient model always satisfies the constructive upper bound
++Indeed, projecting any word and summing the two factor bounds gives the lower bound, while concatenating the embedded factor circuits gives the upper bound.  Separate one-Lipschitz projections alone do not imply this sum inequality.
++Under the ambient embedding assumption, the constructive upper bound is
+ \[
+ \ellAmb(U\oplus V)
+ \le
+--- original/04_matroid_quiver_roots.tex
++++ chapters/04_matroid_quiver_roots.tex
+@@ -103,7 +103,7 @@
+ The first threshold now depends on the forbidden-edge geometry of $P$.  One may ask whether a six-role catalytic motif embeds as a generator-preserving retract.  If it does, the larger architecture inherits a defect.
+ 
+ \begin{proposition}[Retraction inheritance]
+-Suppose a smaller nested pair $H\le G$ embeds into $H'\le G'$ and there is a generator-nonincreasing retraction $H'\to H$.  Then every defect in $H\le G$ gives a defect at least as large in $H'\le G'$.
++Suppose a smaller nested pair $H\le G$ embeds into $H'\le G'$ by homomorphisms preserving the inclusion, the ambient embedding does not increase gate cost, and there is a homomorphic retraction $\pi:H'\to H$ onto the embedded copy.  Require $\ell_H(\pi(s))\le c(s)$ for every restricted generator $s$ of $H'$.  Then every defect in $H\le G$ gives a defect at least as large in $H'\le G'$.
+ \end{proposition}
+ The proof projects a restricted word in the larger system and embeds the shorter ambient word from the smaller system.
+ 
+--- original/07_clifford.tex
++++ chapters/07_clifford.tex
+@@ -207,6 +207,41 @@
+ \end{figure}
+ 
+ \section{Census summary}
++\subsection{An analytic certificate for the four two-qubit defects}
++
++The four exceptional matrices admit one common lower-bound proof.  Work in the declared symplectic quotient and entangling metric, with $H_i$ and $S_i$ free and SWAP excluded as a primitive.  Put
++\[
++J_2=\begin{pmatrix}0&1\\1&0\end{pmatrix},
++\qquad D=\operatorname{diag}(d_0,d_1),
++\qquad d_0,d_1\in\F_2,
++\]
++and define
++\[
++M_D=\begin{pmatrix}J_2&0\\I_2+DJ_2&J_2\end{pmatrix}.
++\]
++
++\begin{theorem}[Two-qubit orbit and exact costs]\label{thm:clifford-two-analytic}
++Each of the four distinct matrices $M_D$ lies in $P_2$ and has restricted entangling cost three and ambient entangling cost two.  They form one orbit under left multiplication by the free restricted subgroup generated by $S_0,S_1$.
++\end{theorem}
++\begin{proof}
++The ambient sequence
++\[
++H_1,\ \CX_{1\to0},\ \CX_{0\to1},\ H_0
++\]
++has matrix $M_0=\left(\begin{smallmatrix}J_2&0\\I_2&J_2\end{smallmatrix}\right)$.  Applying $S_0^{d_0}S_1^{d_1}$ afterwards left multiplies by $\left(\begin{smallmatrix}I_2&0\\D&I_2\end{smallmatrix}\right)$ and gives $M_D$.  These matrices are distinct because $J_2$ is invertible.  This also proves their orbit statement and the ambient upper bound two.  The displayed restricted sequence for $M_2$ above gives $M_{I_2}$ using three CNOT gates and one free $S_1$.  Free final phase gates then give every $M_D$, proving the restricted upper bound three.
++
++For the restricted lower bound, the upper-left block of a parabolic product is the product of its upper-left blocks.  Each $S$ or CZ contributes $I_2$, while the two directed CNOTs contribute the elementary matrices
++\[
++L=\begin{pmatrix}1&0\\1&1\end{pmatrix},
++\qquad U=\begin{pmatrix}1&1\\0&1\end{pmatrix}.
++\]
++Products using at most two CNOTs belong to $\{I_2,L,U,LU,UL\}$, which does not contain $J_2$.  Thus any restricted circuit for $M_D$ requires at least three charged gates.
++
++For the ambient lower bound, reorder the coordinates as $(x_0,z_0\mid x_1,z_1)$.  A local Clifford acts by an invertible block-diagonal matrix in this order.  In $M_D$, each of the two diagonal $2\times2$ blocks is $\left(\begin{smallmatrix}0&0\\1&0\end{smallmatrix}\right)$ and has rank one.  In either directed CNOT or CZ, both diagonal blocks are $I_2$ and have rank two.  Left and right multiplication by local Cliffords preserve these diagonal-block ranks.  A circuit with one charged gate has the form $K_1 E K_2$ with $K_1,K_2$ local and $E$ a CNOT or CZ, so it cannot equal $M_D$.  A circuit with no charged gate is local and also has rank-two diagonal blocks.  The ambient cost is therefore at least two.
++\end{proof}
++
++The complete finite census finds exactly four defective targets.  Since the theorem supplies four distinct defective targets, it identifies the entire exceptional set in that census.  The exact costs and orbit description above have analytic proofs, while completeness of the finite classification retains the exhaustive-search evidence.
++
+ \begin{figure}[ht]
+ \centering
+ \includegraphics[width=.76\textwidth]{clifford_census.pdf}
+--- original/08_affine_toffoli.tex
++++ chapters/08_affine_toffoli.tex
+@@ -12,7 +12,7 @@
+ =
+ \{x\mapsto Ax+b:A\in\GL(n,2),\ b\in\F_2^n\}
+ \]
+-be the affine reversible group.  It is generated by NOT and CNOT gates.  The full classical reversible group on $n$ bits is generated by NOT, CNOT, and Toffoli.
++be the affine reversible group.  It is generated by NOT and CNOT gates.  The ambient gate set adds Toffoli.  On three bits it generates the full reversible group.  On $n\ge4$ bits with no ancillas, each NOT, CNOT, or Toffoli gate is an even permutation, so this alphabet does not generate the full symmetric group.
+ 
+ The catalytic question is:
+ \begin{quote}
+@@ -111,7 +111,7 @@
+ \[
+ ThT^{-1}\in\operatorname{AGL}(n,2).
+ \]
+-For one Toffoli and an affine middle word, this is a normalizer-intersection problem.  The exploratory four-bit search accompanying the monograph found no defect among simple two-Toffoli sandwiches with a middle affine word of restricted length at most five.  This is a partial negative check, not an exhaustive four-bit theorem.
++For one Toffoli and an affine middle word, this is a normalizer-intersection problem.  A useful next bounded test is to examine simple two-Toffoli sandwiches with an affine middle word of restricted length at most five.  The present archive contains no reproducible implementation or receipt for this four-bit test, so no negative result from it is claimed here.
+ 
+ \section{Potential lower-bound invariants}
+ \subsection{Quadratic support debt}
+@@ -132,7 +132,7 @@
+ A restricted affine circuit remains in degrees zero and one.  The ambient circuit can populate higher packets temporarily.  A successful lower bound must charge the useful flow through those packets, not merely their instantaneous dimension.
+ 
+ \section{Four-bit search architecture}
+-A full four-bit ambient group has size $16!$, so direct enumeration is impossible.  Several exact approaches remain available.
++The full permutation group on four-bit states has size $16!$.  The declared no-ancilla gate alphabet lies in its alternating subgroup: NOT, CNOT, and Toffoli are respectively products of eight, four, and two disjoint transpositions.  Even this reduced ambient search is large enough to require a more structured approach.  Several exact approaches remain available.
+ \begin{enumerate}
+ \item Meet in the middle for a fixed candidate target and length.
+ \item SAT or SMT encoding of a length-$L$ circuit with affine endpoint constraints.
+@@ -150,7 +150,7 @@
+ \item If no defect appears, increase the Toffoli budget and produce an unsatisfiability certificate for every shorter length.
+ \end{enumerate}
+ \end{protocol}
+-The first step has already been implemented.  The simple two-Toffoli sandwich test found no defect, but the full normal-form quotient remains open.
++This protocol is a research plan.  The packaged executable census stops at three bits, and neither the four-bit normal-form search nor its lower-bound certificates is supplied.
+ 
+ \section{Resource variants}
+ Temporary nonlinearity may be useful under one metric and useless under another.  Natural costs include:
+--- original/09_phase_cliffordt.tex
++++ chapters/09_phase_cliffordt.tex
+@@ -131,7 +131,7 @@
+ -
+ \min_{c\in\mathcal C_{\mathrm{amb}}(U)}w\cdot c.
+ \]
+-Different $w$ can change the sign of the defect.  This is expected, not pathological.
++Different $w$ can change the magnitude of the defect and whether it is zero or positive.  It remains nonnegative because every restricted realization is also an ambient realization with the same resource vector.
+ 
+ \section{Exact finite-search model}
+ A finite exact atlas can be built \cite{KliuchnikovEtAl2013,AmyEtAl2013} for small $n$ by representing Clifford+$T$ operators in one of three ways.
+--- original/12_packet_realization.tex
++++ chapters/12_packet_realization.tex
+@@ -91,9 +91,9 @@
+ \]
+ Thus the graph spectrum cannot distinguish the twelve main classes of order six.
+ 
+-\begin{computedbox}
+-The accompanying atlas transcribes all twelve order-six main classes used in the quantum-Latin-square reduction and verifies that their abstract $R,C,S$ joint eigenvalue packets coincide.  This is an exact no-go result for an eigenvalue-only explanation of the order-six obstruction.
+-\end{computedbox}
++\begin{provedbox}
++The displayed projector formulas depend only on the Latin-square axioms and the order.  They therefore prove that the abstract $R,C,S$ joint eigenvalue packets cannot distinguish squares of the same order.  This conclusion does not require an enumeration of the order-six main classes.
++\end{provedbox}
+ 
+ \section{Transition fusion also collapses}
+ Let $\rho_i$ be the row permutations of a Latin square.  The symmetrized aggregate of all pair transitions satisfies
+@@ -120,7 +120,7 @@
+ \item ramification or block data in a finite group action.
+ \end{itemize}
+ 
+-In the order-six Latin-square computation, the discrete projective algorithm leaves two hard classes with a spread of twelve disjoint projective lines on the $36$ cells.  The spread adjacency operator commutes with $R,C,S$ and therefore refines the spherical packet.  The two hard classes nevertheless retain the same refined abstract spectrum.  One type operator is not complete.
++A projective-line closure procedure can supply additional type operators, such as adjacency operators of a line spread.  Whether a particular added operator separates two classes is a further question.  The present archive does not include the separate order-six projective computation, so it supplies no new finite certification of that comparison.
+ 
+ \section{Holonomy packets}
+ Let a family of local charts or rows be represented by permutations $\rho_i$.  Define normalized transitions
+@@ -146,15 +146,15 @@
+ 
+ Isotopy conjugates these transition groups; paratopy permutes the three roles.  Therefore the unordered multiset of role signatures is a paratopy invariant.
+ 
+-\begin{computedbox}
+-For the twelve order-six main classes, the finite packet consisting of transition-group order, pair-transition cycle inventory, and nontrivial block sizes is invariant under tested isotopies and all six role permutations.  The twelve packets are pairwise distinct.
+-\end{computedbox}
+-This classification result does not prove orthonormal representability.  It demonstrates that noncommutative transition data recover information lost under spherical fusion.
++\begin{skeletonbox}
++For a specified collection of Latin squares, one can compute transition-group orders, pair-transition cycle inventories, and nontrivial block sizes, then test whether the resulting role signatures separate the collection.  The separate order-six input tables and verifier are not included in this archive, so pairwise separation of all twelve main classes is an open verification obligation here.
++\end{skeletonbox}
++Even a complete discrete classification would not prove orthonormal representability.  Noncommutative transition data are candidate refinements of the information lost under spherical fusion.
+ 
+ \section{Imprimitivity as hidden decomposition}
+ A transitive permutation group is imprimitive when it preserves a nontrivial block system.  In combinatorial designs, imprimitivity often signals a subsquare, product, congruence, or module decomposition.
+ 
+-For a Latin square of order $2m$, the normalized row-transition group preserves a two-block system of sizes $m+m$ precisely when the square contains an $m\times m$ Latin subsquare, under the normalization used in the atlas.  At order six this identifies the four classes containing $3\times3$ subsquares.
++For a Latin square of order $2m$, normalize one row to the identity permutation on the symbols.  An $m\times m$ Latin subsquare determines a partition of the symbols into its $m$ symbols and their complement.  Rows meeting the subsquare preserve the two corresponding column blocks, and the remaining rows exchange them.  Thus normalized row transitions preserve this two-block system.  Conversely, if all normalized row transitions preserve a partition into two blocks of size $m$, exactly $m$ rows send a fixed column block into a fixed symbol block, producing an $m\times m$ Latin subsquare.  This is a structural criterion.  Counting the order-six classes with this property requires separate input representatives.
+ 
+ \begin{principle}[Clifford-type decomposition]
+ Combinatorial substructure can be detected as imprimitivity of a transition packet.  The spherical packet sees aggregate multiplicities; the holonomy packet sees how those multiplicities are assembled into blocks.
+--- original/13_computational_atlas.tex
++++ chapters/13_computational_atlas.tex
+@@ -81,9 +81,9 @@
+ \item total primitive count;
+ \item total count with unit-cost SWAP;
+ \item entangling count with $H$ and $S$ free;
+-\item witness reconstruction and JSON output.
+-\end{itemize}
+-The C++ program and the independent Python implementation use the same gate matrices but different traversal code.
++\item exact distance distributions and JSON output.
++\end{itemize}
++The C++ program and the independent Python implementation use the same gate matrices but different traversal code.  Witness reconstruction is supplied by the Python implementation, not by the C++ census executable.
+ 
+ \section{Computed Clifford census}
+ \begin{longtable}{@{}ccccccc@{}}
+--- original/14_theorem_templates.tex
++++ chapters/14_theorem_templates.tex
+@@ -9,7 +9,7 @@
+ This chapter collects proof architectures that recur across gate logics.  Each template separates the easy upper-bound identity from the difficult lower-bound obligation.  The templates are not claims that every gate hierarchy satisfies the hypotheses.
+ 
+ \section{Template I: catalytic conjugation}
+-Let $H\le G$ have restricted and ambient costs.  Choose $g\in G$ and $h_1,\ldots,h_m\in H$ such that
++Let $H\le G$ have restricted and ambient costs with $\ellAmb(g^{-1})=\ellAmb(g)$.  Choose $g\in G$ and $h_1,\ldots,h_m\in H$ such that
+ \[
+ U=g h_m\cdots h_1 g^{-1}\in H.
+ \]
+@@ -122,7 +122,7 @@
+ The estimate counts words, not distinct endpoints, and is therefore an upper bound without injectivity assumptions.
+ 
+ \section{Template VIII: block retraction}
+-Let a large restricted system contain a smaller one through an embedding $\iota$, and suppose a gate-nonincreasing retraction $\pi$ maps large restricted generators to small restricted generators or the identity.  Then
++Let a large restricted group contain a smaller one through a homomorphic embedding $\iota$, and suppose a homomorphic retraction $\pi$ satisfies $\pi\iota=\operatorname{id}$.  Require that every large restricted generator maps to a small restricted word of no greater cost.  Then
+ \[
+ \ell_{\mathrm{large,res}}(\iota U)
+ \ge
+--- original/15_research_program.tex
++++ chapters/15_research_program.tex
+@@ -39,7 +39,7 @@
+ 
+ \subsection{Immediate tasks}
+ \begin{enumerate}
+-\item Classify the four two-qubit entangling defects under local Clifford and qubit-swap equivalence.
++\item Extend the analytic four-target free-phase orbit certificate to other cost-preserving Clifford equivalences and larger widths.
+ \item Classify the twenty-four three-qubit total-count defects under parabolic conjugation and qubit permutations.
+ \item Derive analytic normal forms for the witness circuits.
+ \item Prove lower bounds independent of full group enumeration.
+@@ -215,7 +215,7 @@
+ \item Determine the lower border length of the canonical six-row atom.
+ \item Classify tree-tight catalytic matroids.
+ \item Find a one-copy rigid target with tensor activation.
+-\item Analytically classify the two-qubit Clifford entangling defects.
++\item Extend the two-qubit analytic orbit certificate to larger Clifford systems.
+ \item Analytically classify the three-qubit total-count Clifford defects.
+ \item Determine whether SWAP restores rigidity for all $n$ in the chosen primitive model.
+ \item Find the first affine target shortened by temporary nonlinearity, or prove none exists.
+--- original/A_gate_matrices.tex
++++ chapters/A_gate_matrices.tex
+@@ -157,7 +157,7 @@
+ \[
+ \TOF_{a,b\to t}:x_t\leftarrow x_t+x_ax_b.
+ \]
+-All other coordinates are unchanged.  The first two generate $\operatorname{AGL}(n,2)$; all three generate the full reversible group for $n\ge3$.
++All other coordinates are unchanged.  The first two generate $\operatorname{AGL}(n,2)$.  On three bits, all three generate the full permutation group $S_8$.  For $n\ge4$ without ancillas they are all even permutations, so the generated group is contained in $A_{2^n}$ and is not the full symmetric group.
+ 
+ \section{Bosonic symplectic embedding}
+ For $A\in\GL(n,\R)$,
+--- original/C_python_api.tex
++++ chapters/C_python_api.tex
+@@ -160,4 +160,4 @@
+ A partial search must not use the status string ``complete finite enumeration.''
+ 
+ \section{Error handling}
+-The package raises \texttt{ValueError} for invalid dimensions, repeated controls, non-square matrices, incompatible costs, and requests that exceed intentionally supported complete censuses.  Search code does not silently truncate the state space.
++Several entry points validate dimensions, distinct controls, matrix shape, and cost restrictions.  The complete affine census rejects widths above three, and the C++ Clifford executable accepts only one through three qubits.  Low-level helpers assume well-formed indices and states, so callers should not treat every helper as a fully validated public parser.  The search code does not silently truncate its reachable state space.
+--- original/D_conjecture_ledger.tex
++++ chapters/D_conjecture_ledger.tex
+@@ -15,7 +15,7 @@
+ L4 & Multiplicative unitriangular distortion is bounded by $3/2$. & Open & Normal form beyond one clean carrier.\\
+ L5 & Canonical atom has lower border length seven. & Open & Eliminate six-gate word-map components algebraically.\\
+ L6 & A one-copy rigid target exhibits tensor activation. & Open & Exact tensor-power search or asymptotic construction.\\
+-C1 & Two-qubit parabolic Clifford entangling model has four $3\to2$ defects. & Computed & Analytic orbit classification and lower bound.\\
++C1 & Two-qubit parabolic Clifford entangling model has four $3\to2$ defects in one free-phase orbit. & Analytic costs and orbit; finite classification & Complete: Theorem~\ref{thm:clifford-two-analytic} plus the exhaustive census.\\
+ C2 & Three-qubit swap-free total Clifford model has twenty-four defects. & Computed & Analytic motif classification.\\
+ C3 & Unit-cost SWAP eliminates all three-qubit total defects. & Computed & Determine whether rigidity persists for larger $n$.\\
+ C4 & Parabolic-versus-full Clifford defect is unbounded. & Open & Construct and certify an amplifiable atom.\\
+@@ -37,9 +37,9 @@
+ \section{Negative results worth preserving}
+ The following failed or negative conclusions are part of the research record.
+ \begin{itemize}
+-\item The circuit Pasch configuration and the hard Latin line spread are not the same local projective motif.
++\item Comparisons involving the separate hard Latin line-spread computation remain pending until its input representatives and verifier are supplied.
+ \item Abstract row-column-symbol eigenvalues do not distinguish order-six Latin main classes.
+-\item One projective spread operator does not distinguish the two hard classes.
++\item No classification of the two hard classes by a projective spread operator is certified by the present archive.
+ \item Three-bit Toffoli assistance does not shorten affine targets in the tested costs.
+ \item Adding unit-cost SWAP removes the three-qubit total-count Clifford defects in the declared quotient model.
+ \end{itemize}
+--- original/core_unitriangular.tex
++++ chapters/core_unitriangular.tex
+@@ -509,7 +509,7 @@
+ \end{proposition}
+ 
+ \begin{proof}
+-Assume that a five-gate ambient word produces $C$.  Rows $1,3,4,5$ must each be targeted.  Rows $0$ and $2$ are unchanged.  If either were targeted, it would require at least two targetings, giving at least six gates in total.  Thus rows $0$ and $2$ are never targeted.  Among rows $1,3,4,5$, exactly one is targeted twice and the other three are targeted once.
++Assume that an ambient word of length at most five produces $C$.  Rows $1,3,4,5$ must each be targeted.  Rows $0$ and $2$ are unchanged.  If either were targeted, it would require at least two targetings, giving at least six gates in total.  Thus rows $0$ and $2$ are never targeted.  If all four changed rows are targeted once, each has only its initial and final state.  No such source is a unit multiple of $v=e_1+e_2$ or $w=e_0+e_1+e_2$, so the output rows cannot be completed.  In the only remaining case, exactly one of rows $1,3,4,5$ is targeted twice and the other three are targeted once.
+ 
+ Project the rows to the quotient module $R^6/W$.  Rows $0,1,2$ have zero image, while rows $3,4,5$ begin and end at the three distinct quotient basis vectors of the free quotient module.  An output row targeted exactly once must therefore use a source lying in $W$, by \cref{lem:one-target-source}.
+ 

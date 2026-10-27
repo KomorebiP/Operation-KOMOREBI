@@ -1,0 +1,193 @@
+import Publication
+#print axioms Komorebi.QuantumArithmetic.ramanujan12_length
+#check Komorebi.QuantumArithmetic.ramanujan12_length
+#print axioms Komorebi.QuantumArithmetic.projector12_shape
+#check Komorebi.QuantumArithmetic.projector12_shape
+#print axioms Komorebi.QuantumArithmetic.projector12_symmetric
+#check Komorebi.QuantumArithmetic.projector12_symmetric
+#print axioms Komorebi.QuantumArithmetic.projector12_idempotent
+#check Komorebi.QuantumArithmetic.projector12_idempotent
+#print axioms Komorebi.QuantumArithmetic.projector12_fixes_ramanujan
+#check Komorebi.QuantumArithmetic.projector12_fixes_ramanujan
+#print axioms Komorebi.QuantumArithmetic.projector12_kills_noise
+#check Komorebi.QuantumArithmetic.projector12_kills_noise
+#print axioms Komorebi.QuantumArithmetic.projector12_recovers_test_signal
+#check Komorebi.QuantumArithmetic.projector12_recovers_test_signal
+#print axioms Komorebi.QuantumArithmetic.ramanujan12_energy
+#check Komorebi.QuantumArithmetic.ramanujan12_energy
+#print axioms Komorebi.QuantumArithmetic.noise12_energy
+#check Komorebi.QuantumArithmetic.noise12_energy
+#print axioms Komorebi.QuantumArithmetic.testSignal12_energy
+#check Komorebi.QuantumArithmetic.testSignal12_energy
+#print axioms Komorebi.QuantumArithmetic.energy_decomposition
+#check Komorebi.QuantumArithmetic.energy_decomposition
+#print axioms Komorebi.QuantumArithmetic.zeta12_order_certificate
+#check Komorebi.QuantumArithmetic.zeta12_order_certificate
+#print axioms Komorebi.QuantumArithmetic.zeta12_inverse_certificate
+#check Komorebi.QuantumArithmetic.zeta12_inverse_certificate
+#print axioms Komorebi.QuantumArithmetic.ramanujanC12_table
+#check Komorebi.QuantumArithmetic.ramanujanC12_table
+#print axioms Komorebi.QuantumArithmetic.ramanujan_dft_table
+#check Komorebi.QuantumArithmetic.ramanujan_dft_table
+#print axioms Komorebi.QuantumArithmetic.abs_ramanujan_dft_table
+#check Komorebi.QuantumArithmetic.abs_ramanujan_dft_table
+#print axioms Komorebi.QuantumArithmetic.same_computational_basis_probabilities
+#check Komorebi.QuantumArithmetic.same_computational_basis_probabilities
+#print axioms Komorebi.QuantumArithmetic.abs_ramanujan12_energy
+#check Komorebi.QuantumArithmetic.abs_ramanujan12_energy
+#print axioms Komorebi.QuantumArithmetic.recovered_mode_probability
+#check Komorebi.QuantumArithmetic.recovered_mode_probability
+#print axioms Komorebi.QuantumArithmetic.recovered_total_probability
+#check Komorebi.QuantumArithmetic.recovered_total_probability
+#print axioms Komorebi.QuantumArithmetic.phase_stripping_coprime_probability
+#check Komorebi.QuantumArithmetic.phase_stripping_coprime_probability
+#print axioms Komorebi.QuantumArithmetic.arithmetic_signal_quantum_bridge
+#check Komorebi.QuantumArithmetic.arithmetic_signal_quantum_bridge
+#print axioms Komorebi.QuantumArithmetic.coprime_residues_exact
+#check Komorebi.QuantumArithmetic.coprime_residues_exact
+#print axioms Komorebi.QuantumArithmetic.root_exact_order
+#check Komorebi.QuantumArithmetic.root_exact_order
+#print axioms Komorebi.QuantumArithmetic.normalized_fourier_left
+#check Komorebi.QuantumArithmetic.normalized_fourier_left
+#print axioms Komorebi.QuantumArithmetic.normalized_fourier_right
+#check Komorebi.QuantumArithmetic.normalized_fourier_right
+#print axioms Komorebi.QuantumArithmetic.exact_projector_transport
+#check Komorebi.QuantumArithmetic.exact_projector_transport
+#print axioms Komorebi.QuantumArithmetic.exact_projector_matches_rational_table
+#check Komorebi.QuantumArithmetic.exact_projector_matches_rational_table
+#print axioms Komorebi.QuantumArithmetic.exact_state_preparation
+#check Komorebi.QuantumArithmetic.exact_state_preparation
+#print axioms Komorebi.QuantumArithmetic.exact_state_recovery
+#check Komorebi.QuantumArithmetic.exact_state_recovery
+#print axioms Komorebi.QuantumArithmetic.exact_unit_normalized
+#check Komorebi.QuantumArithmetic.exact_unit_normalized
+#print axioms Komorebi.QuantumArithmetic.exact_psi_normalized
+#check Komorebi.QuantumArithmetic.exact_psi_normalized
+#print axioms Komorebi.QuantumArithmetic.exact_chi_normalized
+#check Komorebi.QuantumArithmetic.exact_chi_normalized
+#print axioms Komorebi.QuantumArithmetic.exact_same_initial_probabilities
+#check Komorebi.QuantumArithmetic.exact_same_initial_probabilities
+#print axioms Komorebi.QuantumArithmetic.exact_orthogonal_states
+#check Komorebi.QuantumArithmetic.exact_orthogonal_states
+#print axioms Komorebi.QuantumArithmetic.exact_coprime_mass_psi
+#check Komorebi.QuantumArithmetic.exact_coprime_mass_psi
+#print axioms Komorebi.QuantumArithmetic.exact_coprime_mass_chi
+#check Komorebi.QuantumArithmetic.exact_coprime_mass_chi
+#print axioms Komorebi.QuantumArithmetic.exact_projector_fixes_psi
+#check Komorebi.QuantumArithmetic.exact_projector_fixes_psi
+#print axioms Komorebi.QuantumArithmetic.exact_projector_kills_chi
+#check Komorebi.QuantumArithmetic.exact_projector_kills_chi
+#print axioms Komorebi.QuantumArithmetic.interpret_zero
+#check Komorebi.QuantumArithmetic.interpret_zero
+#print axioms Komorebi.QuantumArithmetic.interpret_one
+#check Komorebi.QuantumArithmetic.interpret_one
+#print axioms Komorebi.QuantumArithmetic.interpret_rat
+#check Komorebi.QuantumArithmetic.interpret_rat
+#print axioms Komorebi.QuantumArithmetic.interpret_add
+#check Komorebi.QuantumArithmetic.interpret_add
+#print axioms Komorebi.QuantumArithmetic.interpret_mul
+#check Komorebi.QuantumArithmetic.interpret_mul
+#print axioms Komorebi.QuantumArithmetic.interpret_conj
+#check Komorebi.QuantumArithmetic.interpret_conj
+#print axioms Komorebi.QuantumArithmetic.interpret_pow
+#check Komorebi.QuantumArithmetic.interpret_pow
+#print axioms Komorebi.QuantumArithmetic.interpret_sum
+#check Komorebi.QuantumArithmetic.interpret_sum
+#print axioms Komorebi.QuantumArithmetic.interpret_kSum
+#check Komorebi.QuantumArithmetic.interpret_kSum
+#print axioms Komorebi.QuantumArithmetic.complexMatrix_mul
+#check Komorebi.QuantumArithmetic.complexMatrix_mul
+#print axioms Komorebi.QuantumArithmetic.complexMatrix_adjoint
+#check Komorebi.QuantumArithmetic.complexMatrix_adjoint
+#print axioms Komorebi.QuantumArithmetic.complexMatrix_identity
+#check Komorebi.QuantumArithmetic.complexMatrix_identity
+#print axioms Komorebi.QuantumArithmetic.complexVector_mul
+#check Komorebi.QuantumArithmetic.complexVector_mul
+#print axioms Komorebi.QuantumArithmetic.fourier_unitary_left
+#check Komorebi.QuantumArithmetic.fourier_unitary_left
+#print axioms Komorebi.QuantumArithmetic.fourier_unitary_right
+#check Komorebi.QuantumArithmetic.fourier_unitary_right
+#print axioms Komorebi.QuantumArithmetic.projector_transport
+#check Komorebi.QuantumArithmetic.projector_transport
+#print axioms Komorebi.QuantumArithmetic.state_preparation
+#check Komorebi.QuantumArithmetic.state_preparation
+#print axioms Komorebi.QuantumArithmetic.state_recovery
+#check Komorebi.QuantumArithmetic.state_recovery
+#print axioms Komorebi.QuantumArithmetic.interpret_normSq
+#check Komorebi.QuantumArithmetic.interpret_normSq
+#print axioms Komorebi.QuantumArithmetic.interpret_mass
+#check Komorebi.QuantumArithmetic.interpret_mass
+#print axioms Komorebi.QuantumArithmetic.interpret_coprimeMass
+#check Komorebi.QuantumArithmetic.interpret_coprimeMass
+#print axioms Komorebi.QuantumArithmetic.psi_normalized
+#check Komorebi.QuantumArithmetic.psi_normalized
+#print axioms Komorebi.QuantumArithmetic.chi_normalized
+#check Komorebi.QuantumArithmetic.chi_normalized
+#print axioms Komorebi.QuantumArithmetic.unitState_normalized
+#check Komorebi.QuantumArithmetic.unitState_normalized
+#print axioms Komorebi.QuantumArithmetic.same_initial_probabilities
+#check Komorebi.QuantumArithmetic.same_initial_probabilities
+#print axioms Komorebi.QuantumArithmetic.states_orthogonal
+#check Komorebi.QuantumArithmetic.states_orthogonal
+#print axioms Komorebi.QuantumArithmetic.signed_state_recovers_arithmetic
+#check Komorebi.QuantumArithmetic.signed_state_recovers_arithmetic
+#print axioms Komorebi.QuantumArithmetic.unsigned_state_erases_arithmetic
+#check Komorebi.QuantumArithmetic.unsigned_state_erases_arithmetic
+#print axioms Komorebi.QuantumArithmetic.projector_fixes_psi
+#check Komorebi.QuantumArithmetic.projector_fixes_psi
+#print axioms Komorebi.QuantumArithmetic.projector_kills_chi
+#check Komorebi.QuantumArithmetic.projector_kills_chi
+#print axioms Komorebi.QuantumArithmetic.root_is_exponential
+#check Komorebi.QuantumArithmetic.root_is_exponential
+#print axioms Komorebi.QuantumArithmetic.root_power_twelve
+#check Komorebi.QuantumArithmetic.root_power_twelve
+#print axioms Komorebi.QuantumArithmetic.rootPower_interpret
+#check Komorebi.QuantumArithmetic.rootPower_interpret
+#print axioms Komorebi.QuantumArithmetic.sqrt_twelve
+#check Komorebi.QuantumArithmetic.sqrt_twelve
+#print axioms Komorebi.QuantumArithmetic.sqrt_fortyeight
+#check Komorebi.QuantumArithmetic.sqrt_fortyeight
+#print axioms Komorebi.QuantumArithmetic.fourierScale_interpret
+#check Komorebi.QuantumArithmetic.fourierScale_interpret
+#print axioms Komorebi.QuantumArithmetic.stateScale_interpret
+#check Komorebi.QuantumArithmetic.stateScale_interpret
+#print axioms Komorebi.QuantumArithmetic.fourier_entry_formula
+#check Komorebi.QuantumArithmetic.fourier_entry_formula
+#print axioms Komorebi.QuantumArithmetic.psi_entry_formula
+#check Komorebi.QuantumArithmetic.psi_entry_formula
+#print axioms Komorebi.QuantumArithmetic.chi_entry_formula
+#check Komorebi.QuantumArithmetic.chi_entry_formula
+#print axioms Komorebi.QuantumArithmetic.unitState_entry_formula
+#check Komorebi.QuantumArithmetic.unitState_entry_formula
+#print axioms Komorebi.QuantumArithmetic.projector_entry_formula
+#check Komorebi.QuantumArithmetic.projector_entry_formula
+#print axioms Komorebi.QuantumArithmetic.selector_idempotent
+#check Komorebi.QuantumArithmetic.selector_idempotent
+#print axioms Komorebi.QuantumArithmetic.selector_selfAdjoint
+#check Komorebi.QuantumArithmetic.selector_selfAdjoint
+#print axioms Komorebi.QuantumArithmetic.projector_idempotent_complex
+#check Komorebi.QuantumArithmetic.projector_idempotent_complex
+#print axioms Komorebi.QuantumArithmetic.projector_selfAdjoint_complex
+#check Komorebi.QuantumArithmetic.projector_selfAdjoint_complex
+#print axioms Komorebi.QuantumArithmetic.complete_phase_separation
+#check Komorebi.QuantumArithmetic.complete_phase_separation
+#print axioms Komorebi.QuantumArithmetic.exact_phase_signal_lookup
+#check Komorebi.QuantumArithmetic.exact_phase_signal_lookup
+#print axioms Komorebi.QuantumArithmetic.complex_ramanujan_signal
+#check Komorebi.QuantumArithmetic.complex_ramanujan_signal
+#print axioms Komorebi.QuantumArithmetic.absolute_signal_lookup
+#check Komorebi.QuantumArithmetic.absolute_signal_lookup
+#print axioms Komorebi.QuantumArithmetic.retained_discarded_orthogonal
+#check Komorebi.QuantumArithmetic.retained_discarded_orthogonal
+#print axioms Komorebi.QuantumArithmetic.signal_decomposition
+#check Komorebi.QuantumArithmetic.signal_decomposition
+#print axioms Komorebi.QuantumArithmetic.projector_residual_reconstructs
+#check Komorebi.QuantumArithmetic.projector_residual_reconstructs
+#print axioms Komorebi.QuantumArithmetic.no_reconstruction_from_initial_probabilities
+#check Komorebi.QuantumArithmetic.no_reconstruction_from_initial_probabilities
+#print axioms Komorebi.QuantumArithmetic.recovered_probability_at
+#check Komorebi.QuantumArithmetic.recovered_probability_at
+#print axioms Komorebi.QuantumArithmetic.projector_not_injective
+#check Komorebi.QuantumArithmetic.projector_not_injective
+#print axioms Komorebi.QuantumArithmetic.publication_bridge
+#check Komorebi.QuantumArithmetic.publication_bridge

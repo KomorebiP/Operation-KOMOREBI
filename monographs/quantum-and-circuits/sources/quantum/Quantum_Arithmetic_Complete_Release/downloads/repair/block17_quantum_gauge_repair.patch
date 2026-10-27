@@ -1,0 +1,1063 @@
+--- a/RELEASE_ID.json
++++ b/RELEASE_ID.json
+@@ -3,12 +3,12 @@
+   "baseline_archive_sha256": "24cbd13e88dd5ab9aa4cf13e4530ece2a6643a09ce79c160b99b6f2d4562436a",
+   "license_note": "Existing proprietary/private-evaluation terms are preserved. No new public redistribution or reuse permissions are granted.",
+   "package_version": "1.0.0b4",
+-  "predecessor_archive_sha256": "4a5c53d1fbeccdbc6bcf6b0b8513bd700a44ff692a1957c7c1683d1cbdabba5e",
++  "predecessor_archive_sha256": "1f62bfa5723d1f0c0a1e75c8f4cafbeaf8c581e721fa208e2bb072dcc04d03dd",
+   "release_channel": "development_checkpoint",
+-  "release_id": "1.0.0b4-repair-r4-block16",
++  "release_id": "1.0.0b4-repair-r4-block17",
+   "repair_date": "2026-09-23",
+   "schema": "komorebi-math.release-identity",
+   "schema_version": 1,
+-  "scope": "Episode 012 Hankel-rank falsification: audit discrete continuation observers against classical weighted linear realization on existing polyphase route and recurrence subsystems. No generic weighted-automaton layer is added; stable aggregate API remains frozen.",
+-  "wheel_build_tag": "4b16"
++  "scope": "Episode 013 quantum semantic-gauge audit: repair the numerical Knill-Laflamme certificate so validity is defined on the resolved Hilbert-Schmidt error span rather than the arbitrary declared Kraus/error basis. Preserve decomposition-sensitive residuals as diagnostics; stable aggregate API remains frozen.",
++  "wheel_build_tag": "4b17"
+ }
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,3 +1,11 @@
++## R4 Block 17 quantum Kraus/error-span gauge repair
++
++- Audit Kraus/channel semantics against decomposition-sensitive quantum diagnostics.
++- Repair the numerical Knill--Laflamme certificate: validity now uses a spectral norm of the full residual block operator after Hilbert--Schmidt orthonormalization of the declared error span.
++- Retain the old maximum declared-basis residual only as a diagnostic because it is not invariant under harmless error-label mixing.
++- Add adversarial default-tolerance, uniform-rescaling, random error-span, channel-gauge, and recovery-gauge tests.
++- Preserve the frozen aggregate API; this is a semantic correctness repair inside the research-tier quantum subsystem.
++
+ # Changelog
+ 
+ ## R4 Block 16 development checkpoint
+--- a/src/komorebi_math/quantum/error_correction.py
++++ b/src/komorebi_math/quantum/error_correction.py
+@@ -53,8 +53,47 @@
+         self.code_dimension = rank
+         self.tolerance = float(tolerance)
+ 
++    def _orthonormal_error_span(self) -> tuple[tuple[np.ndarray, ...], np.ndarray, float]:
++        """Return a Hilbert--Schmidt orthonormal basis of the declared error span.
++
++        The numerical rank threshold scales with the largest singular value, so
++        uniform rescaling of every declared generator does not change the
++        resolved span.  Extremely ill-conditioned generating families remain a
++        finite-precision boundary and their singular spectrum is exposed in the
++        Knill--Laflamme certificate diagnostics.
++        """
++
++        vectors = np.column_stack([error.reshape(-1) for error in self.errors])
++        left_vectors, singular_values, _ = np.linalg.svd(vectors, full_matrices=False)
++        if singular_values.size == 0 or float(singular_values[0]) == 0.0:
++            return (), singular_values, 0.0
++        threshold = (
++            np.finfo(float).eps
++            * max(vectors.shape)
++            * float(singular_values[0])
++        )
++        rank = int(np.sum(singular_values > threshold))
++        basis = tuple(
++            left_vectors[:, index].reshape(self.dimension, self.dimension)
++            for index in range(rank)
++        )
++        return basis, singular_values, threshold
++
+     def knill_laflamme_report(self) -> KnillLaflammeReport:
+-        """Return the scalar compression matrix and packet obstruction residuals."""
++        """Return Knill--Laflamme data with an error-span invariant certificate.
++
++        ``coefficient_matrix``, ``residual_matrix``, and ``maximum_residual`` retain
++        the declared error-family coordinates for diagnostics.  Certificate validity
++        is intentionally *not* based on the largest declared-coordinate residual:
++        that quantity changes under harmless unitary mixing of Kraus/error labels.
++
++        Instead, the declared operators are first replaced by an orthonormal
++        Hilbert--Schmidt basis of their linear span.  The residual operators in that
++        basis are assembled into one block operator.  Its spectral norm is invariant
++        under unitary changes of orthonormal error-span basis, so the numerical
++        obstruction is a property of the represented error space rather than of one
++        arbitrary decomposition.
++        """
+ 
+         count = len(self.errors)
+         coefficients = np.zeros((count, count), dtype=complex)
+@@ -66,19 +105,61 @@
+                 coefficients[left, right] = scalar
+                 residuals[left, right] = np.linalg.norm(compressed - scalar * self.projector, ord=2)
+         maximum = float(np.max(residuals))
+-        scale = max(1.0, float(np.linalg.norm(coefficients, ord=2)))
++
++        # Correctability depends on the linear span of the declared errors, not on
++        # a particular generating family.  Resolve that span with a scale-covariant
++        # numerical-rank threshold and use an orthonormal Hilbert--Schmidt basis.
++        basis, singular_values, rank_threshold = self._orthonormal_error_span()
++        span_rank = len(basis)
++
++        if span_rank == 0:
++            invariant_obstruction = 0.0
++            invariant_scale = 1.0
++        else:
++            span_coefficients = np.zeros((span_rank, span_rank), dtype=complex)
++            obstruction = np.zeros(
++                (span_rank * self.dimension, span_rank * self.dimension),
++                dtype=complex,
++            )
++            for left, error_left in enumerate(basis):
++                for right, error_right in enumerate(basis):
++                    compressed = self.projector @ error_left.conj().T @ error_right @ self.projector
++                    scalar = np.trace(compressed) / self.code_dimension
++                    span_coefficients[left, right] = scalar
++                    residual = compressed - scalar * self.projector
++                    row = slice(left * self.dimension, (left + 1) * self.dimension)
++                    column = slice(right * self.dimension, (right + 1) * self.dimension)
++                    obstruction[row, column] = residual
++            invariant_obstruction = float(np.linalg.norm(obstruction, ord=2))
++            invariant_scale = max(1.0, float(np.linalg.norm(span_coefficients, ord=2)))
++
+         return KnillLaflammeReport(
+             coefficients,
+             residuals,
+             maximum,
+             Certificate(
+-                valid=maximum <= self.tolerance * scale,
++                valid=invariant_obstruction <= self.tolerance * invariant_scale,
+                 exactness=Exactness.NUMERICAL,
+-                residuals={"compression_obstruction": maximum},
+-                tolerance=self.tolerance * scale,
+-                assumptions_checked=("orthogonal code projector", "finite error family"),
++                residuals={
++                    "compression_obstruction": invariant_obstruction,
++                    "declared_basis_max_residual": maximum,
++                },
++                tolerance=self.tolerance * invariant_scale,
++                assumptions_checked=(
++                    "orthogonal code projector",
++                    "finite error family",
++                    "Hilbert Schmidt error span resolved by numerical SVD",
++                ),
++                diagnostics={
++                    "declared_error_count": count,
++                    "error_span_rank": span_rank,
++                    "error_span_rank_threshold": rank_threshold,
++                    "error_span_singular_values": tuple(float(value) for value in singular_values),
++                    "obstruction_norm": "spectral norm of the full Knill-Laflamme residual block operator",
++                    "declared_basis_max_residual_is_gauge_invariant": False,
++                },
+                 theorem_id="PSC-VII-T42",
+-                message="error products compress to scalars on the code",
++                message="error products compress to scalars on the code error span",
+             ),
+         )
+ 
+@@ -87,14 +168,29 @@
+ 
+         report = self.knill_laflamme_report()
+         report.certificate.require()
+-        hermitian = (report.coefficient_matrix + report.coefficient_matrix.conj().T) / 2
++        basis, _, _ = self._orthonormal_error_span()
++        span_rank = len(basis)
++        span_coefficients = np.zeros((span_rank, span_rank), dtype=complex)
++        for left, error_left in enumerate(basis):
++            for right, error_right in enumerate(basis):
++                compressed = self.projector @ error_left.conj().T @ error_right @ self.projector
++                span_coefficients[left, right] = np.trace(compressed) / self.code_dimension
++        hermitian = (span_coefficients + span_coefficients.conj().T) / 2
+         eigenvalues, eigenvectors = np.linalg.eigh(hermitian)
+-        active = [index for index, value in enumerate(eigenvalues) if value > self.tolerance]
++        if eigenvalues.size == 0 or float(np.max(eigenvalues)) <= 0.0:
++            active_threshold = 0.0
++        else:
++            active_threshold = (
++                np.finfo(float).eps
++                * max(1, span_rank)
++                * float(np.max(eigenvalues))
++            )
++        active = [index for index, value in enumerate(eigenvalues) if value > active_threshold]
+         recovery_kraus: list[np.ndarray] = []
+         syndrome_projector = np.zeros_like(self.projector)
+         for index in active:
+             coefficients = eigenvectors[:, index]
+-            transformed = sum(self.errors[error] * coefficients[error] for error in range(len(self.errors)))
++            transformed = sum(basis[error] * coefficients[error] for error in range(span_rank))
+             isometry = transformed @ self.projector / np.sqrt(eigenvalues[index])
+             syndrome = isometry @ isometry.conj().T
+             syndrome_projector += syndrome
+--- /dev/null
++++ b/tests/test_r4_block17_quantum_kraus_gauge.py
+@@ -0,0 +1,131 @@
++from __future__ import annotations
++
++import numpy as np
++
++from komorebi_math.quantum import QuantumChannel, QuantumCode, amplitude_damping
++
++
++def _hadamard4() -> np.ndarray:
++    return np.array(
++        [
++            [1, 1, 1, 1],
++            [1, -1, 1, -1],
++            [1, 1, -1, -1],
++            [1, -1, -1, 1],
++        ],
++        dtype=complex,
++    ) / 2
++
++
++def _mix(operators: tuple[np.ndarray, ...], unitary: np.ndarray) -> tuple[np.ndarray, ...]:
++    return tuple(
++        sum(unitary[row, column] * operators[column] for column in range(len(operators)))
++        for row in range(unitary.shape[0])
++    )
++
++
++def _bit_flip_code_errors() -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
++    identity = np.eye(2, dtype=complex)
++    x = np.array([[0, 1], [1, 0]], dtype=complex)
++    zero = np.zeros(8, dtype=complex)
++    zero[0] = 1
++    one = np.zeros(8, dtype=complex)
++    one[-1] = 1
++    projector = np.outer(zero, zero.conj()) + np.outer(one, one.conj())
++    errors = (
++        np.eye(8, dtype=complex),
++        np.kron(np.kron(x, identity), identity),
++        np.kron(np.kron(identity, x), identity),
++        np.kron(np.kron(identity, identity), x),
++    )
++    return projector, errors
++
++
++def test_quantum_channel_semantics_are_invariant_under_kraus_unitary_mixing() -> None:
++    channel = amplitude_damping(0.37)
++    hadamard = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2)
++    mixed = QuantumChannel(_mix(channel.kraus, hadamard))
++    state = np.array([[0.31, 0.12 - 0.07j], [0.12 + 0.07j, 0.69]], dtype=complex)
++    assert np.allclose(channel.apply(state), mixed.apply(state), atol=1e-14, rtol=0.0)
++    assert np.allclose(channel.superoperator(), mixed.superoperator(), atol=1e-14, rtol=0.0)
++    assert np.allclose(channel.choi_matrix(), mixed.choi_matrix(), atol=1e-14, rtol=0.0)
++    assert channel.certificate().valid
++    assert mixed.certificate().valid
++
++
++def test_knill_laflamme_certificate_is_error_span_invariant_under_label_mixing() -> None:
++    # Same one-dimensional error space, represented once sparsely and once after
++    # a unitary Hadamard change of Kraus/error labels.  The old entrywise-max
++    # certificate flipped False -> True at the default tolerance because the
++    # same residual was spread across sixteen label blocks.
++    c = 2e-5
++    error = np.diag([c, 0.0]).astype(complex)
++    zero = np.zeros((2, 2), dtype=complex)
++    sparse = (error, zero, zero, zero)
++    mixed = _mix(sparse, _hadamard4())
++
++    sparse_report = QuantumCode(np.eye(2), sparse).knill_laflamme_report()
++    mixed_report = QuantumCode(np.eye(2), mixed).knill_laflamme_report()
++
++    assert not sparse_report.certificate.valid
++    assert not mixed_report.certificate.valid
++    assert np.isclose(sparse_report.maximum_residual, 2e-10, rtol=1e-12, atol=0.0)
++    assert np.isclose(mixed_report.maximum_residual, 5e-11, rtol=1e-12, atol=0.0)
++    assert np.isclose(
++        sparse_report.certificate.residuals["compression_obstruction"],
++        mixed_report.certificate.residuals["compression_obstruction"],
++        rtol=1e-12,
++        atol=1e-14,
++    )
++    assert sparse_report.certificate.diagnostics["error_span_rank"] == 1
++    assert mixed_report.certificate.diagnostics["error_span_rank"] == 1
++
++
++def test_knill_laflamme_certificate_is_invariant_under_uniform_error_rescaling() -> None:
++    # Correctability is a property of the represented error span. Uniformly
++    # shrinking every generator must not turn an uncorrectable span into a
++    # numerically correctable one.
++    primitive = np.diag([1.0, 0.0]).astype(complex)
++    zero = np.zeros((2, 2), dtype=complex)
++    large = QuantumCode(np.eye(2), (primitive, zero)).knill_laflamme_report()
++    tiny = QuantumCode(np.eye(2), (1e-12 * primitive, zero)).knill_laflamme_report()
++    assert not large.certificate.valid
++    assert not tiny.certificate.valid
++    assert np.isclose(
++        large.certificate.residuals["compression_obstruction"],
++        tiny.certificate.residuals["compression_obstruction"],
++        rtol=1e-12,
++        atol=1e-14,
++    )
++
++
++def test_bit_flip_recovery_is_unchanged_by_unitary_error_label_gauge() -> None:
++    projector, errors = _bit_flip_code_errors()
++    base = QuantumCode(projector, errors)
++    mixed = QuantumCode(projector, _mix(errors, _hadamard4()))
++
++    base.knill_laflamme_report().certificate.require()
++    mixed.knill_laflamme_report().certificate.require()
++    base.recovered_channel_certificate().require()
++    mixed.recovered_channel_certificate().require()
++
++    assert np.allclose(
++        base.recovery_channel().superoperator(),
++        mixed.recovery_channel().superoperator(),
++        atol=1e-12,
++        rtol=0.0,
++    )
++
++
++def test_recovery_channel_depends_on_error_span_not_generator_scaling() -> None:
++    projector, errors = _bit_flip_code_errors()
++    baseline = QuantumCode(projector, errors).recovery_channel().superoperator()
++    for scale in (1e-12, 1e-8, 1e-4, 1e4):
++        scaled = QuantumCode(projector, tuple(scale * error for error in errors))
++        scaled.knill_laflamme_report().certificate.require()
++        assert np.allclose(
++            scaled.recovery_channel().superoperator(),
++            baseline,
++            atol=1e-12,
++            rtol=0.0,
++        )
+--- /dev/null
++++ b/verification/episode013_quantum_gauge_probe.py
+@@ -0,0 +1,228 @@
++from __future__ import annotations
++
++import argparse
++import json
++from pathlib import Path
++
++import numpy as np
++
++from komorebi_math.quantum import QuantumChannel, QuantumCode
++
++SEED = 20260923
++
++
++def unitary(rng: np.random.Generator, n: int) -> np.ndarray:
++    z = rng.normal(size=(n, n)) + 1j * rng.normal(size=(n, n))
++    q, r = np.linalg.qr(z)
++    diagonal = np.diag(r)
++    phases = np.where(np.abs(diagonal) > 0, diagonal / np.abs(diagonal), 1.0)
++    return q @ np.diag(np.conj(phases))
++
++
++def mix(operators: tuple[np.ndarray, ...], matrix: np.ndarray) -> tuple[np.ndarray, ...]:
++    return tuple(
++        sum(matrix[row, column] * operators[column] for column in range(len(operators)))
++        for row in range(matrix.shape[0])
++    )
++
++
++def random_channel(rng: np.random.Generator, env: int = 3) -> QuantumChannel:
++    z = rng.normal(size=(2 * env, 2)) + 1j * rng.normal(size=(2 * env, 2))
++    q, _ = np.linalg.qr(z)
++    kraus = tuple(q[2 * index : 2 * (index + 1), :] for index in range(env))
++    return QuantumChannel(kraus)
++
++
++def random_projector(rng: np.random.Generator, dimension: int = 4, rank: int = 2) -> np.ndarray:
++    q = unitary(rng, dimension)
++    basis = q[:, :rank]
++    return basis @ basis.conj().T
++
++
++def moderate_invertible(rng: np.random.Generator, n: int) -> np.ndarray:
++    left = unitary(rng, n)
++    right = unitary(rng, n)
++    scales = np.exp(rng.uniform(-2.0, 2.0, size=n))
++    return left @ np.diag(scales) @ right
++
++
++def bit_flip_data() -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
++    identity = np.eye(2, dtype=complex)
++    x = np.array([[0, 1], [1, 0]], dtype=complex)
++    zero = np.zeros(8, dtype=complex)
++    zero[0] = 1
++    one = np.zeros(8, dtype=complex)
++    one[-1] = 1
++    projector = np.outer(zero, zero.conj()) + np.outer(one, one.conj())
++    errors = (
++        np.eye(8, dtype=complex),
++        np.kron(np.kron(x, identity), identity),
++        np.kron(np.kron(identity, x), identity),
++        np.kron(np.kron(identity, identity), x),
++    )
++    return projector, errors
++
++
++def run() -> dict[str, object]:
++    rng = np.random.default_rng(SEED)
++
++    channel_trials = 400
++    channel_failures = 0
++    channel_max_superoperator_error = 0.0
++    channel_max_choi_error = 0.0
++    for _ in range(channel_trials):
++        channel = random_channel(rng)
++        transformed = QuantumChannel(mix(channel.kraus, unitary(rng, len(channel.kraus))))
++        super_error = float(np.linalg.norm(channel.superoperator() - transformed.superoperator(), ord=2))
++        choi_error = float(np.linalg.norm(channel.choi_matrix() - transformed.choi_matrix(), ord=2))
++        channel_max_superoperator_error = max(channel_max_superoperator_error, super_error)
++        channel_max_choi_error = max(channel_max_choi_error, choi_error)
++        if not channel.certificate().valid or not transformed.certificate().valid or super_error > 1e-11 or choi_error > 1e-11:
++            channel_failures += 1
++
++    span_trials = 400
++    span_failures = 0
++    span_max_abs_error = 0.0
++    span_max_rel_error = 0.0
++    declared_max_ratio = 1.0
++    for _ in range(span_trials):
++        projector = random_projector(rng)
++        errors = tuple(
++            rng.normal(size=(4, 4)) + 1j * rng.normal(size=(4, 4))
++            for _ in range(3)
++        )
++        transformed = mix(errors, moderate_invertible(rng, 3))
++        first = QuantumCode(projector, errors).knill_laflamme_report()
++        second = QuantumCode(projector, transformed).knill_laflamme_report()
++        a = first.certificate.residuals["compression_obstruction"]
++        b = second.certificate.residuals["compression_obstruction"]
++        absolute = abs(a - b)
++        relative = absolute / max(1.0, abs(a), abs(b))
++        span_max_abs_error = max(span_max_abs_error, absolute)
++        span_max_rel_error = max(span_max_rel_error, relative)
++        positive = [value for value in (first.maximum_residual, second.maximum_residual) if value > 0]
++        if len(positive) == 2:
++            declared_max_ratio = max(declared_max_ratio, max(positive) / min(positive))
++        if relative > 5e-11:
++            span_failures += 1
++
++    recovery_trials = 80
++    recovery_failures = 0
++    recovery_max_superoperator_error = 0.0
++    projector, errors = bit_flip_data()
++    baseline = QuantumCode(projector, errors)
++    baseline_recovery = baseline.recovery_channel().superoperator()
++    for _ in range(recovery_trials):
++        transformed_code = QuantumCode(projector, mix(errors, unitary(rng, 4)))
++        report = transformed_code.knill_laflamme_report()
++        recovered = transformed_code.recovered_channel_certificate()
++        difference = float(np.linalg.norm(transformed_code.recovery_channel().superoperator() - baseline_recovery, ord=2))
++        recovery_max_superoperator_error = max(recovery_max_superoperator_error, difference)
++        if not report.certificate.valid or not recovered.valid or difference > 1e-10:
++            recovery_failures += 1
++
++    recovery_scaling_failures = 0
++    recovery_scaling_max_superoperator_error = 0.0
++    for scale in (1e-12, 1e-8, 1e-4, 1e4):
++        scaled = QuantumCode(projector, tuple(scale * error for error in errors))
++        difference = float(np.linalg.norm(scaled.recovery_channel().superoperator() - baseline_recovery, ord=2))
++        recovery_scaling_max_superoperator_error = max(recovery_scaling_max_superoperator_error, difference)
++        if not scaled.knill_laflamme_report().certificate.valid or difference > 1e-10:
++            recovery_scaling_failures += 1
++
++    recovery_general_linear_trials = 80
++    recovery_general_linear_failures = 0
++    recovery_general_linear_max_superoperator_error = 0.0
++    recovery_general_linear_max_condition = 0.0
++    for _ in range(recovery_general_linear_trials):
++        transform = moderate_invertible(rng, 4)
++        recovery_general_linear_max_condition = max(
++            recovery_general_linear_max_condition, float(np.linalg.cond(transform))
++        )
++        transformed_code = QuantumCode(projector, mix(errors, transform))
++        difference = float(
++            np.linalg.norm(
++                transformed_code.recovery_channel().superoperator() - baseline_recovery,
++                ord=2,
++            )
++        )
++        recovery_general_linear_max_superoperator_error = max(
++            recovery_general_linear_max_superoperator_error, difference
++        )
++        if not transformed_code.knill_laflamme_report().certificate.valid or difference > 1e-10:
++            recovery_general_linear_failures += 1
++
++    c = 2e-5
++    error = np.diag([c, 0.0]).astype(complex)
++    zeros = tuple(np.zeros((2, 2), dtype=complex) for _ in range(3))
++    sparse = (error, *zeros)
++    hadamard = np.array(
++        [[1, 1, 1, 1], [1, -1, 1, -1], [1, 1, -1, -1], [1, -1, -1, 1]],
++        dtype=complex,
++    ) / 2
++    spread = mix(sparse, hadamard)
++    sparse_report = QuantumCode(np.eye(2), sparse).knill_laflamme_report()
++    spread_report = QuantumCode(np.eye(2), spread).knill_laflamme_report()
++
++    scale_large = QuantumCode(np.eye(2), (np.diag([1.0, 0.0]), np.zeros((2, 2)))).knill_laflamme_report()
++    scale_tiny = QuantumCode(np.eye(2), (1e-12 * np.diag([1.0, 0.0]), np.zeros((2, 2)))).knill_laflamme_report()
++
++    return {
++        "schema": "komorebi-math.episode013-quantum-gauge-probe",
++        "schema_version": 1,
++        "seed": SEED,
++        "channel_trials": channel_trials,
++        "channel_failures": channel_failures,
++        "channel_max_superoperator_error": channel_max_superoperator_error,
++        "channel_max_choi_error": channel_max_choi_error,
++        "span_trials": span_trials,
++        "span_failures": span_failures,
++        "span_max_abs_error": span_max_abs_error,
++        "span_max_rel_error": span_max_rel_error,
++        "declared_basis_max_residual_ratio_observed": declared_max_ratio,
++        "recovery_trials": recovery_trials,
++        "recovery_failures": recovery_failures,
++        "recovery_max_superoperator_error": recovery_max_superoperator_error,
++        "recovery_scaling_failures": recovery_scaling_failures,
++        "recovery_scaling_max_superoperator_error": recovery_scaling_max_superoperator_error,
++        "recovery_general_linear_trials": recovery_general_linear_trials,
++        "recovery_general_linear_failures": recovery_general_linear_failures,
++        "recovery_general_linear_max_superoperator_error": recovery_general_linear_max_superoperator_error,
++        "recovery_general_linear_max_condition": recovery_general_linear_max_condition,
++        "default_tolerance_counterexample": {
++            "sparse_valid": sparse_report.certificate.valid,
++            "spread_valid": spread_report.certificate.valid,
++            "sparse_declared_max_residual": sparse_report.maximum_residual,
++            "spread_declared_max_residual": spread_report.maximum_residual,
++            "sparse_invariant_obstruction": sparse_report.certificate.residuals["compression_obstruction"],
++            "spread_invariant_obstruction": spread_report.certificate.residuals["compression_obstruction"],
++        },
++        "uniform_scaling_probe": {
++            "large_valid": scale_large.certificate.valid,
++            "tiny_valid": scale_tiny.certificate.valid,
++            "large_invariant_obstruction": scale_large.certificate.residuals["compression_obstruction"],
++            "tiny_invariant_obstruction": scale_tiny.certificate.residuals["compression_obstruction"],
++            "large_declared_max_residual": scale_large.maximum_residual,
++            "tiny_declared_max_residual": scale_tiny.maximum_residual,
++        },
++        "pass": channel_failures == 0 and span_failures == 0 and recovery_failures == 0 and recovery_scaling_failures == 0 and recovery_general_linear_failures == 0 and not sparse_report.certificate.valid and not spread_report.certificate.valid and not scale_large.certificate.valid and not scale_tiny.certificate.valid,
++        "non_claims": [
++            "Randomized trials do not prove universal gauge invariance; the block-operator similarity argument supplies the proof for resolved spans.",
++            "Numerical SVD cannot stably resolve arbitrarily ill-conditioned error generators; the singular spectrum remains part of the certificate diagnostics.",
++            "The random general-linear recovery audit is bounded to moderate generator condition numbers; arbitrarily ill-conditioned error bases remain a finite-precision boundary even though exact span semantics is unchanged.",
++        ],
++    }
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--output", type=Path, required=True)
++    args = parser.parse_args()
++    result = run()
++    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++    print(json.dumps(result, indent=2, sort_keys=True))
++    return 0 if result["pass"] else 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+--- /dev/null
++++ b/verification/installed_block17_probe.py
+@@ -0,0 +1,80 @@
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import sys
++
++import numpy as np
++
++
++def _mix(operators, matrix):
++    return tuple(
++        sum(matrix[row, column] * operators[column] for column in range(len(operators)))
++        for row in range(matrix.shape[0])
++    )
++
++
++def main(output: str | None = None) -> int:
++    import komorebi_math
++    from komorebi_math.quantum import QuantumCode
++
++    source = Path(komorebi_math.__file__).resolve()
++    if "site-packages" not in str(source) and "dist-packages" not in str(source):
++        raise RuntimeError(f"probe must import installed artifact, got {source}")
++
++    c = 2e-5
++    error = np.diag([c, 0.0]).astype(complex)
++    zero = np.zeros((2, 2), dtype=complex)
++    sparse = (error, zero, zero, zero)
++    hadamard = np.array(
++        [[1, 1, 1, 1], [1, -1, 1, -1], [1, 1, -1, -1], [1, -1, -1, 1]],
++        dtype=complex,
++    ) / 2
++    spread = _mix(sparse, hadamard)
++    sparse_report = QuantumCode(np.eye(2), sparse).knill_laflamme_report()
++    spread_report = QuantumCode(np.eye(2), spread).knill_laflamme_report()
++
++    identity = np.eye(2, dtype=complex)
++    x = np.array([[0, 1], [1, 0]], dtype=complex)
++    ket0 = np.zeros(8, dtype=complex)
++    ket0[0] = 1
++    ket1 = np.zeros(8, dtype=complex)
++    ket1[-1] = 1
++    projector = np.outer(ket0, ket0.conj()) + np.outer(ket1, ket1.conj())
++    errors = (
++        np.eye(8, dtype=complex),
++        np.kron(np.kron(x, identity), identity),
++        np.kron(np.kron(identity, x), identity),
++        np.kron(np.kron(identity, identity), x),
++    )
++    baseline = QuantumCode(projector, errors).recovery_channel().superoperator()
++    scaled = QuantumCode(projector, tuple(1e-12 * error for error in errors))
++    scaled_recovery_error = float(np.linalg.norm(scaled.recovery_channel().superoperator() - baseline, ord=2))
++
++    result = {
++        "schema": "komorebi-math.episode013-installed-block17-probe",
++        "schema_version": 1,
++        "import_path": str(source),
++        "sparse_valid": sparse_report.certificate.valid,
++        "spread_valid": spread_report.certificate.valid,
++        "sparse_declared_max": sparse_report.maximum_residual,
++        "spread_declared_max": spread_report.maximum_residual,
++        "sparse_invariant": sparse_report.certificate.residuals["compression_obstruction"],
++        "spread_invariant": spread_report.certificate.residuals["compression_obstruction"],
++        "scaled_recovery_superoperator_error": scaled_recovery_error,
++    }
++    result["passed"] = (
++        not result["sparse_valid"]
++        and not result["spread_valid"]
++        and abs(result["sparse_invariant"] - result["spread_invariant"]) < 1e-12
++        and scaled_recovery_error < 1e-10
++    )
++    rendered = json.dumps(result, indent=2, sort_keys=True) + "\n"
++    if output is not None:
++        Path(output).write_text(rendered, encoding="utf-8")
++    print(rendered, end="")
++    return 0 if result["passed"] else 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main(sys.argv[1] if len(sys.argv) > 1 else None))
+--- /dev/null
++++ b/verification/build_r4_block17_distributions.py
+@@ -0,0 +1,109 @@
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import tempfile
++
++from setuptools.build_meta import build_sdist, build_wheel
++
++SOURCE_DATE_EPOCH = 1787356800
++
++
++def sha256(path: Path) -> str:
++    h = hashlib.sha256()
++    with path.open('rb') as f:
++        for chunk in iter(lambda: f.read(1024 * 1024), b''):
++            h.update(chunk)
++    return h.hexdigest()
++
++
++def clean(root: Path) -> None:
++    for rel in ('build', 'src/komorebi_math.egg-info'):
++        p = root / rel
++        if p.exists():
++            shutil.rmtree(p)
++
++
++def canonicalize(root: Path, sdist: Path) -> None:
++    import sys
++    sys.path.insert(0, str(root / 'verification'))
++    try:
++        from canonicalize_block20_sdist import canonicalize as canon
++        canon(sdist, epoch=SOURCE_DATE_EPOCH)
++    finally:
++        sys.path.pop(0)
++
++
++def build_once(root: Path, destination: Path) -> tuple[Path, Path]:
++    identity = json.loads((root / 'RELEASE_ID.json').read_text())
++    tag = identity['wheel_build_tag']
++    clean(root)
++    destination.mkdir(parents=True, exist_ok=True)
++    old = Path.cwd()
++    try:
++        os.chdir(root)
++        wheel_name = build_wheel(str(destination), config_settings={'--build-option': [f'--build-number={tag}']})
++        sdist_name = build_sdist(str(destination))
++    finally:
++        os.chdir(old)
++    wheel = destination / wheel_name
++    sdist = destination / sdist_name
++    canonicalize(root, sdist)
++    return wheel, sdist
++
++
++def main() -> int:
++    root = Path(__file__).resolve().parents[1]
++    release = root / 'release'
++    dist = release / 'dist'
++    report_path = release / 'REPAIR_R4_BLOCK17_DISTRIBUTION_BUILD.json'
++    previous = os.environ.get('SOURCE_DATE_EPOCH')
++    os.environ['SOURCE_DATE_EPOCH'] = str(SOURCE_DATE_EPOCH)
++    try:
++        with tempfile.TemporaryDirectory(prefix='komorebi-r4b17-build-') as td:
++            temp = Path(td)
++            w1, s1 = build_once(root, temp / 'first')
++            w2, s2 = build_once(root, temp / 'replay')
++            wheel_repro = w1.read_bytes() == w2.read_bytes()
++            sdist_repro = s1.read_bytes() == s2.read_bytes()
++            if not wheel_repro or not sdist_repro:
++                raise SystemExit('distribution build is not byte reproducible')
++            if dist.exists():
++                for p in dist.iterdir():
++                    if p.is_file():
++                        p.unlink()
++                    elif p.is_dir():
++                        shutil.rmtree(p)
++            else:
++                dist.mkdir(parents=True)
++            final_wheel = dist / w1.name
++            final_sdist = dist / s1.name
++            shutil.copy2(w1, final_wheel)
++            shutil.copy2(s1, final_sdist)
++            report = {
++                'schema': 'komorebi-math.repair-r4-block17-distribution-build',
++                'schema_version': 1,
++                'source_date_epoch': SOURCE_DATE_EPOCH,
++                'wheel_build_tag': json.loads((root / 'RELEASE_ID.json').read_text())['wheel_build_tag'],
++                'wheel_byte_reproducible': wheel_repro,
++                'sdist_byte_reproducible': sdist_repro,
++                'artifacts': [
++                    {'name': final_wheel.name, 'sha256': sha256(final_wheel), 'size': final_wheel.stat().st_size},
++                    {'name': final_sdist.name, 'sha256': sha256(final_sdist), 'size': final_sdist.stat().st_size},
++                ],
++            }
++            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
++            print(json.dumps(report, indent=2, sort_keys=True))
++    finally:
++        if previous is None:
++            os.environ.pop('SOURCE_DATE_EPOCH', None)
++        else:
++            os.environ['SOURCE_DATE_EPOCH'] = previous
++    return 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+--- /dev/null
++++ b/EPISODE013_MATHEMATICAL_AUDIT.md
+@@ -0,0 +1,193 @@
++# Episode 013 Mathematical Audit — Quantum Kraus/Error-Span Gauge Repair
++
++## Research question
++
++Does the semantic-typing discipline developed in Episodes 001–012 expose a real correctness defect in an independently developed mature Komorebi subsystem?
++
++The selected target was finite quantum channels and quantum error correction, with particular attention to the distinction between:
++
++1. a quantum channel / correctable error *space*;
++2. one Kraus or error-operator generating family for that object;
++3. numerical diagnostics attached to the generating labels.
++
++## Classical semantic boundary
++
++For a finite error family \(E_a\) and code projector \(P\) of rank \(k\), the Knill–Laflamme condition is
++
++\[
++P E_a^* E_b P = c_{ab} P.
++\]
++
++The condition is bilinear in the error operators. Consequently it holds for one spanning family iff it holds for every spanning family of the same error space.
++
++For a completely positive map, equal-cardinality Kraus representations of the same map are related by a unitary change of Kraus labels. Thus any diagnostic advertised as a property of the channel or correctable error space must not depend on that harmless label gauge.
++
++## Predecessor defect
++
++Block 16 computed each residual
++
++\[
++R_{ab}=P E_a^*E_bP-c_{ab}P
++\]
++
++and certified the criterion using
++
++\[
++\max_{a,b}\|R_{ab}\|_2.
++\]
++
++This is not invariant under unitary changes of error labels.
++
++A default-tolerance counterexample is:
++
++\[
++P=I_2,\qquad E=\operatorname{diag}(2\cdot10^{-5},0),
++\]
++
++with declared family
++
++\[
++(E,0,0,0).
++\]
++
++Block 16 reports
++
++\[
++\max\|R_{ab}\|_2=2\cdot10^{-10}
++\]
++
++and therefore rejects the family at tolerance \(10^{-10}\).
++
++After a normalized \(4\times4\) Hadamard unitary mixes the error labels, every new generator is \(\pm E/2\). The error span and completely positive map are unchanged, but Block 16 reports
++
++\[
++\max\|R'_{ab}\|_2=5\cdot10^{-11}
++\]
++
++and accepts it.
++
++The predecessor artifact therefore assigned different validity to the same semantic error space.
++
++A second defect followed from the same coordinate dependence: uniformly shrinking an uncorrectable generating family could shrink the absolute residual below tolerance without changing its error span.
++
++## Span-invariant obstruction
++
++Let \(\mathcal E\) be the linear span of the declared errors. Choose any Hilbert–Schmidt orthonormal basis
++
++\[
++B_1,\ldots,B_r
++\]
++
++of \(\mathcal E\). Define
++
++\[
++c_{ab}=\frac1k\operatorname{Tr}(P B_a^*B_bP)
++\]
++
++and
++
++\[
++R_{ab}=P B_a^*B_bP-c_{ab}P.
++\]
++
++Assemble the full block operator
++
++\[
++\mathcal R=[R_{ab}]_{a,b=1}^r
++\]
++
++on \(\mathbb C^r\otimes\mathcal H\).
++
++Define the numerical obstruction
++
++\[
++\boxed{\Omega(\mathcal E,P)=\|\mathcal R\|_2.}
++\]
++
++### Basis-invariance theorem
++
++If \(B'_a=\sum_i U_{ai}B_i\) for a unitary matrix \(U\), then
++
++\[
++\mathcal R'
++=(\overline U\otimes I)\mathcal R(\overline U\otimes I)^*.
++\]
++
++Hence
++
++\[
++\boxed{\|\mathcal R'\|_2=\|\mathcal R\|_2.}
++\]
++
++Any two Hilbert–Schmidt orthonormal bases of the same resolved error span differ by such a unitary, so \(\Omega\) is a property of the error span, not of a declared generating family.
++
++The exact Knill–Laflamme condition holds iff
++
++\[
++\Omega=0.
++\]
++
++**Status: PROVED.**
++
++## Numerical span contract
++
++The implementation obtains the error span from the column space of vectorized declared errors using SVD. The rank threshold is
++
++\[
++\epsilon_{\rm mach}\,\max(d^2,m)\,\sigma_{\max}.
++\]
++
++This threshold scales with uniform rescaling of all declared errors and therefore does not create the predecessor's absolute-scale bug.
++
++However, no floating implementation can reliably distinguish arbitrarily ill-conditioned generating families from a lower-dimensional span. Block 17 therefore records in the certificate diagnostics:
++
++- the resolved error-span rank;
++- the numerical rank threshold;
++- all singular values of the declared generator matrix.
++
++This is a finite-precision contract, not a claim of exact symbolic rank detection.
++
++## Recovery-channel repair
++
++The predecessor's `recovery_channel()` also diagonalized the coefficient matrix in the *declared error coordinates*. Uniform scaling of the correctable three-qubit bit-flip error family by \(10^{-8}\) caused the returned recovery superoperator to change by spectral norm approximately
++
++\[
++2.8284271247461903,
++\]
++
++because the scaled syndrome eigenvalues fell below the absolute activity threshold.
++
++Block 17 now constructs the recovery from the Hilbert–Schmidt orthonormal basis of the resolved error span. Its syndrome eigenspace threshold is relative to machine precision and the largest canonical coefficient eigenvalue.
++
++Under exact arithmetic, changing the orthonormal span basis only unitary-mixes the syndrome construction, leaving the resulting recovery channel unchanged. Numerically this was tested under unitary gauges, uniform scalings, and moderate invertible generator changes.
++
++The distinct method `recovered_channel_certificate()` still constructs the explicitly declared equal-weight noise channel. That channel is invariant under unitary Kraus mixing, but not under arbitrary nonunitary changes of error generators. The API distinction is intentional.
++
++## Finite computation
++
++The deterministic probe uses seed `20260923`.
++
++- 400 random CPTP channels under Kraus-unitary mixing: 0 semantic failures.
++- 400 random error spans under moderate invertible generator changes: 0 invariant-obstruction failures.
++- Largest absolute invariant-obstruction discrepancy: `1.2212453270876722e-15`.
++- Largest ratio observed between decomposition-sensitive declared-basis maximum residuals: `40.82057756894647`.
++- 80 bit-flip recovery tests under random unitary error-label gauges: 0 failures.
++- 80 bit-flip recovery tests under moderate general-linear generator changes (maximum condition number about 49.47): 0 failures.
++- Uniform generator scalings from `1e-12` to `1e4`: recovery superoperator remained invariant to about `7e-16` in the explicit scaling probe.
++- The default-tolerance predecessor counterexample is rejected in both sparse and Hadamard-spread representations after repair, with invariant obstruction approximately `0.5` in each.
++
++These computations verify the implementation in the stated range. The universal invariance statement is supplied by the block-operator proof, not by random sampling.
++
++## Epistemic status
++
++- **PROVED:** exact Knill–Laflamme validity depends only on the error span; the block spectral obstruction is invariant under orthonormal error-span basis changes; exact zero of the obstruction is equivalent to the Knill–Laflamme condition.
++- **COMPUTATIONALLY VERIFIED:** the Block 17 implementation respects channel Kraus gauge, error-span generator changes in the tested condition range, and recovery gauge/scaling tests.
++- **REFUTED:** the predecessor's largest declared-basis residual is a valid semantic numerical obstruction.
++- **REFUTED:** absolute generator magnitude may legitimately determine correctability of a fixed error span.
++- **SUPPORTED:** semantic typing is useful as an adversarial audit method; here it exposed and repaired a real mature-subsystem defect.
++
++## Novelty boundary
++
++The Knill–Laflamme criterion, unitary freedom of Kraus representations, error-span invariance, Hilbert–Schmidt orthonormalization, and unitary-invariant block norms are classical ingredients. No novelty claim is made for those pieces.
++
++The contribution of Episode 013 is project-specific: it identified a decomposition-dependent numerical certificate where a semantic invariant was required, supplied a counterexample, repaired both certification and recovery construction, and froze adversarial regression tests.
+--- /dev/null
++++ b/EPISODE013_LITERATURE_AUDIT.md
+@@ -0,0 +1,68 @@
++# Episode 013 Literature Audit
++
++## Source question
++
++The quantum audit depends on two external classical facts:
++
++1. what the exact Knill–Laflamme error-correction condition is;
++2. whether Kraus labels are representation data rather than channel semantics.
++
++The project-specific block-norm repair is then derived directly.
++
++## Source 1 — Knill and Laflamme
++
++Emanuel Knill and Raymond Laflamme, **A Theory of Quantum Error-Correcting Codes**, arXiv:quant-ph/9604034 (1996).
++
++Relevant statement: Theorem 3.2 gives the necessary and sufficient pairwise conditions on the products \(A_a^\dagger A_b\) restricted to the code. In projector form these are equivalent to
++
++\[
++P A_a^\dagger A_b P = c_{ab}P.
++\]
++
++Application to this project: because the condition is sesquilinear in \((A_a,A_b)\), validity for a spanning family is equivalent to validity for its entire linear span. This span-invariance is a formal consequence of the displayed condition; it is not being attributed as a separately named theorem in the source.
++
++Classification: **KNOWN AFTER TRANSLATION OF NOTATION**.
++
++## Source 2 — Watrous
++
++John Watrous, **The Theory of Quantum Information**, Chapter 2, Corollary 2.23.
++
++Corollary 2.23 states that if two equal-cardinality Kraus collections define the same completely positive map, then there exists a unitary matrix on the Kraus-index space relating the two collections:
++
++\[
++B_a=\sum_b U(a,b)A_b.
++\]
++
++Application to this project: a channel-level diagnostic cannot depend on which such Kraus basis is chosen. The predecessor Block 16 channel methods (`apply`, Choi matrix, superoperator, CPTP certificate) already satisfy this. The QEC `maximum_residual` did not.
++
++Classification: **KNOWN VERBATIM** for unitary Kraus equivalence.
++
++## Project derivation
++
++For a Hilbert–Schmidt orthonormal error-span basis \(B_a\), define residual blocks
++
++\[
++R_{ab}=P B_a^*B_bP-c_{ab}P.
++\]
++
++Under another orthonormal basis \(B'_a=\sum_iU_{ai}B_i\),
++
++\[
++R'_{ab}=\sum_{ij}\overline{U}_{ai}U_{bj}R_{ij}.
++\]
++
++Thus the full block matrix transforms by unitary similarity:
++
++\[
++\mathcal R'=(\overline U\otimes I)\mathcal R(\overline U\otimes I)^*.
++\]
++
++Its spectral norm is therefore basis invariant.
++
++This derivation is elementary linear algebra. No claim of novelty is made.
++
++## Search boundary and conclusion
++
++The literature check was targeted, not a global novelty search. It authenticated the classical semantic facts required for the audit and confirmed that the project should treat Kraus/error labels as representation data.
++
++Episode 013 should therefore be described as a **semantic correctness repair grounded in classical quantum information**, not as a new quantum-error-correction theorem.
+--- /dev/null
++++ b/EPISODE013_HANDOFF.md
+@@ -0,0 +1,48 @@
++# Episode 013 Handoff — Quantum Kraus/Error-Span Gauge Repair
++
++## Authoritative predecessor
++
++`Komorebi_Math_R4_Block16_Hankel_Falsification_2026-09-23.zip`
++
++SHA-256:
++
++`1f62bfa5723d1f0c0a1e75c8f4cafbeaf8c581e721fa208e2bb072dcc04d03dd`
++
++## Repair summary
++
++Episode 013 left the packet/automata trajectory and audited the mature quantum subsystem. It found a real semantic bug in `QuantumCode.knill_laflamme_report()`:
++
++- exact correctability is a property of the linear error span;
++- Block 16 certified it using the largest residual in the arbitrary declared error basis;
++- a default-tolerance Hadamard change of error labels flipped the certificate from invalid to valid without changing the error span or CP map.
++
++Block 17 repairs certification by Hilbert–Schmidt orthonormalizing the declared error span and taking the spectral norm of the complete Knill–Laflamme residual block operator.
++
++`recovery_channel()` is also constructed from the canonicalized error span, eliminating generator-scaling dependence.
++
++The legacy `maximum_residual` remains available as a declared-basis diagnostic and must not be interpreted as gauge invariant.
++
++## Key files
++
++- `src/komorebi_math/quantum/error_correction.py`
++- `tests/test_r4_block17_quantum_kraus_gauge.py`
++- `verification/episode013_quantum_gauge_probe.py`
++- `verification/EPISODE013_QUANTUM_GAUGE_PROBE.json`
++- `EPISODE013_MATHEMATICAL_AUDIT.md`
++- `EPISODE013_LITERATURE_AUDIT.md`
++
++## Qualification target
++
++This is an incremental semantic-repair checkpoint. Qualify:
++
++1. all quantum source tests plus Block 17 adversarial tests;
++2. installed quantum verification;
++3. release/publication parity after rebuilding `4b17` distributions;
++4. offline light installed-artifact gate;
++5. a Block-17-specific installed-wheel probe.
++
++Do not claim a fresh complete-source or full installed-runtime qualification unless those gates are actually run.
++
++## Remaining boundary
++
++Numerical error-span discovery uses SVD. Arbitrarily ill-conditioned generating families can cross the finite-precision rank threshold even though exact span semantics does not change. Certificate diagnostics retain the singular spectrum and threshold; this conditioning boundary should not be hidden.

@@ -1,0 +1,41 @@
+\chapter{Gaussian, fermionic, and matchgate compression}
+\label{ch:gaussian}
+\index{Gaussian circuit}
+\index{matchgate}
+
+\section{Polynomial covariance representations}
+Gaussian bosonic and fermionic states are specified by first and second moments rather than by all Fock-basis amplitudes. A bosonic covariance matrix has size polynomial in the number of modes, and a fermionic Gaussian state is represented by an antisymmetric Majorana covariance matrix. Gaussian unitaries act by symplectic or orthogonal transformations:
+\[
+\Gamma\longmapsto S\Gamma S^T
+\quad\text{or}\quad
+\Gamma\longmapsto O\Gamma O^T.
+\]
+This is a compact internal encoding even when the corresponding Hilbert-space packet is exponentially large.
+
+\section{Hybrid symmetry and Gaussianity}
+Number conservation, parity, translation symmetry, and point-group symmetry can further block the covariance matrices. A simulator can therefore combine two reductions:
+\[
+\text{symmetry packetization}
++
+\text{Gaussian internal encoding}.
+\]
+The first removes unreachable sectors. The second compresses states within the remaining sectors.
+
+\section{Matchgate circuits}
+Nearest-neighbor matchgate circuits have polynomial classical representations through fermionic Gaussian dynamics. Geometry matters: adding SWAP, fermionic SWAP, long-range gates, or a non-matchgate resource changes the simulation problem. A symmetry-collapse atlas should therefore record the gate library and connectivity as part of the model, not as implementation details.
+
+\section{Low-rank non-Gaussian corrections}
+One research direction is to represent a weakly non-Gaussian state as
+\[
+\rho
+=
+\sum_{a=1}^R c_a\rho_a^{\rm Gauss}
+\]
+with small Gaussian rank $R$, or as a Gaussian reference plus sparse packet corrections. A polynomial collapse requires $R$ and the update cost to remain polynomial.
+
+\begin{frontierbox}
+Gaussianity is an internal representation class, not a symmetry projector. A complete hybrid theorem must prove closure of the chosen compressed class under every allowed gate and bound the growth of any non-Gaussian residue.
+\end{frontierbox}
+
+\section{Few-particle versus Gaussian routes}
+Fixed-particle simulation and Gaussian simulation are independent. A fixed two-fermion state may be non-Gaussian but live in a polynomial-dimensional sector. A half-filled Gaussian state may live in an exponential number sector but have a polynomial covariance description. The two-axis model in \cref{ch:compressed-packets} is designed to capture this distinction.

@@ -1,0 +1,85 @@
+\documentclass[11pt,oneside,openany]{book}
+\usepackage[letterpaper,left=.9in,right=.9in,top=.9in,bottom=.9in,headheight=16pt,headsep=.22in]{geometry}
+\usepackage{fontspec}
+\setmainfont{P052-Roman.otf}[Path=fonts/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
+\setsansfont{NimbusSans-Regular.otf}[Path=fonts/,Scale=.94,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf]
+\setmonofont{DejaVu Sans Mono}[Scale=.76]
+\usepackage{amsmath,amssymb,mathtools,amsthm,bm,microtype}
+\usepackage{graphicx,float,booktabs,longtable,tabularx,array,multirow,ragged2e}
+\usepackage[table,dvipsnames]{xcolor}
+\usepackage{enumitem,fancyhdr,titlesec,xurl,needspace,calc,fvextra,listings,makeidx}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref,bookmark}
+\usepackage[nameinlink,capitalize,noabbrev]{cleveref}
+\definecolor{Ink}{HTML}{183247}
+\definecolor{Teal}{HTML}{39766E}
+\definecolor{Muted}{HTML}{596773}
+\definecolor{Pale}{HTML}{EFF4F4}
+\definecolor{Coral}{HTML}{B66151}
+\definecolor{Gold}{HTML}{A98440}
+\colorlet{ink}{Ink}\colorlet{teal}{Teal}\colorlet{accent}{Teal}\colorlet{muted}{Muted}\colorlet{pale}{Pale}\colorlet{light}{Pale}\colorlet{red}{Coral}\colorlet{gold}{Gold}
+\colorlet{deepblue}{Ink}\colorlet{rose}{Coral}\colorlet{restrictedblue}{Ink}\colorlet{ambientrose}{Coral}
+\colorlet{proofgreen}{Pale}\colorlet{recordblue}{Pale}\colorlet{derivedgold}{Gold!8}\colorlet{openred}{Coral!7}
+\colorlet{provedgreen}{Pale}\colorlet{computedblue}{Pale}\colorlet{skeletonyellow}{Gold!8}\colorlet{conjecturered}{Coral!7}\colorlet{rulegray}{Muted!30}
+\hypersetup{colorlinks=true,linkcolor=Ink,citecolor=Teal,urlcolor=Teal,pdftitle={Realization Calculus: Quantum and Circuits},pdfauthor={Komorebi P.},pdfsubject={Arithmetic, Symmetry, and the Cost of Realization}}
+\urlstyle{tt}\raggedbottom
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt plus 1pt minus 1pt}
+\setlength{\emergencystretch}{4em}
+\setlist{nosep,leftmargin=1.6em,topsep=4pt}
+\setcounter{tocdepth}{0}\setcounter{secnumdepth}{2}
+\numberwithin{equation}{chapter}
+\let\cleardoublepage\clearpage
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily\color{Muted}REALIZATION CALCULUS}
+\fancyhead[R]{\small\sffamily\color{Muted}Quantum and Circuits}
+\fancyfoot[R]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[R]{\small\sffamily\thepage}\renewcommand{\headrulewidth}{0pt}}
+\titleformat{\chapter}[display]{\normalfont\sffamily\bfseries\color{Ink}\raggedright\hyphenpenalty=10000}{\small\MakeUppercase{\chaptertitlename}\ \thechapter}{12pt}{\fontsize{26}{31}\selectfont}
+\titlespacing*{\chapter}{0pt}{0pt}{22pt}
+\titleformat{\section}{\large\sffamily\bfseries\color{Ink}}{\thesection}{.65em}{}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{Ink}}{\thesubsection}{.65em}{}
+\titleformat{\subsubsection}{\normalsize\sffamily\bfseries\color{Ink}}{}{0pt}{}
+\newtheoremstyle{volume}{8pt}{5pt}{\itshape}{}{\bfseries\color{Ink}}{.}{.6em}{}
+\theoremstyle{volume}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}\newtheorem{lemma}[theorem]{Lemma}\newtheorem{corollary}[theorem]{Corollary}\newtheorem{principle}[theorem]{Principle}\newtheorem{counterexample}[theorem]{Counterexample}
+\theoremstyle{definition}\newtheorem{definition}[theorem]{Definition}\newtheorem{example}[theorem]{Example}\newtheorem{algorithm}[theorem]{Algorithm}\newtheorem{protocol}[theorem]{Protocol}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}\newtheorem{question}[theorem]{Question}\newtheorem{conjecture}[theorem]{Conjecture}
+\tcbset{enhanced,breakable,arc=0pt,boxrule=.3pt,colframe=Muted!35,left=9pt,right=9pt,top=7pt,bottom=7pt,fonttitle=\small\sffamily\bfseries,coltitle=Ink,colbacktitle=Pale}
+\newtcolorbox{provedbox}[1][]{colback=Pale,title={Proved statement},#1}
+\newtcolorbox{recordbox}[1][]{colback=Pale,title={Recorded computation},#1}
+\newtcolorbox{derivedbox}[1][]{colback=Gold!8,title={Derived theorem or corollary},#1}
+\newtcolorbox{frontierbox}[1][]{colback=Coral!6,title={Open program or boundary},#1}
+\newtcolorbox{scopebox}[1][]{colback=Pale,title={Scope boundary},#1}
+\newtcolorbox{computedbox}[1][]{colback=Pale,title={Exact finite computation},#1}
+\newtcolorbox{skeletonbox}[1][]{colback=Gold!8,title={Research template},#1}
+\newtcolorbox{conjecturebox}[1][]{colback=Coral!6,title={Conjectural frontier},#1}
+\newtcolorbox{boundarybox}[1][]{colback=Pale,title={Scope boundary},#1}
+\newtcolorbox{circuitscopebox}[1]{colback=Pale,title={#1}}
+\newenvironment{statusbox}[1]{\begin{circuitscopebox}{#1}}{\end{circuitscopebox}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newcommand{\lead}[1]{{\fontsize{12}{16}\selectfont #1}\par}
+\newcommand{\note}[1]{\begin{tcolorbox}[colback=Pale]#1\end{tcolorbox}}
+\newcommand{\fig}[3]{\begin{center}\includegraphics[width=#2\linewidth,height=.46\textheight,keepaspectratio]{assets/q_#1.pdf}\end{center}{\small\color{Muted}#3}\par}
+\newcommand{\guidepage}[1]{\clearpage\section*{#1}}
+\newcommand{\evidence}[1]{\par{\small\color{Muted}#1}\par}
+\newcommand{\sourcepath}[1]{}
+\newcommand{\visualfigure}[2]{\begin{center}\includegraphics[width=\textwidth,height=3.15in,keepaspectratio]{assets/c_#1.pdf}\par\vspace{3pt}{\small #2}\end{center}}
+\newcommand{\circuitscope}[1]{\begin{quote}\small\textbf{Scope.} #1\end{quote}}
+\newcommand{\source}[1]{}
+\newcommand{\claim}[1]{\par{\small\sffamily\bfseries\color{Teal}CLAIM #1}\par\medskip}
+\newcommand{\pathref}[1]{{\small\texttt{\detokenize{#1}}}}
+\newcommand{\code}[1]{{\small\texttt{\detokenize{#1}}}}
+\newcommand{\resultrow}[4]{\ref{#1} & #2 & #3 & \pageref{#1}\\}
+\newcommand{\pagehead}[2]{\clearpage\section*{#1}\addcontentsline{toc}{section}{#1}{\small\color{Teal}\sffamily #2}\par\medskip}
+\newcommand{\TC}{\operatorname{tc}}\newcommand{\Deg}{\operatorname{DegreeLE}}\newcommand{\x}{\mathbin{\oplus}}\newcommand{\xor}{\mathbin{\oplus}}
+\newcommand{\F}{\mathbb F}\newcommand{\B}{\mathcal B}
+\lstdefinestyle{pythonstyle}{language=Python,basicstyle=\ttfamily\footnotesize,keywordstyle=\color{Ink}\bfseries,commentstyle=\color{Muted},stringstyle=\color{Coral},showstringspaces=false,breaklines=true,frame=single,rulecolor=\color{Muted!30},columns=fullflexible}
+\lstdefinestyle{cppstyle}{style=pythonstyle,language=C++}
+\lstset{style=pythonstyle}
+\makeindex
+
+% Presentation layer; mathematical macros above remain unchanged.
+\input{monograph_style.tex}

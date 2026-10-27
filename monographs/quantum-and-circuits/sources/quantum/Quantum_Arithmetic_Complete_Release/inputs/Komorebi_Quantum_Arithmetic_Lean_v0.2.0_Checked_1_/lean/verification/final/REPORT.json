@@ -1,0 +1,225 @@
+{
+  "status": "PASS",
+  "started_utc": "2026-09-21T22:03:50.862698+00:00",
+  "modules": [
+    "QuantumArithmeticBridge",
+    "FiniteFourier",
+    "SemanticBridge",
+    "Conventions",
+    "Publication"
+  ],
+  "checks": [
+    {
+      "label": "lean_version",
+      "command": [
+        "lean",
+        "--version"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 0.165,
+      "status": "PASS",
+      "log": "lean_version.log",
+      "log_sha256": "363bc3afb9bc8366f799b72ce6af6f3fdd0907d272b79ffa85b86897caae8510"
+    },
+    {
+      "label": "fresh_build",
+      "command": [
+        "lake",
+        "--wfail",
+        "build",
+        "Publication"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 90.643,
+      "status": "PASS",
+      "log": "fresh_build.log",
+      "log_sha256": "dbc6edc1e63472d9a2646f7b0f835881d941240cb32e545bc9b521a3e1c80718"
+    },
+    {
+      "label": "axiom_audit",
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "AxiomAudit.lean"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 2.655,
+      "status": "PASS",
+      "log": "axiom_audit.log",
+      "log_sha256": "124c0220335507173b191871083383f39100a5e42a0c8ec75157ef746e3bac99"
+    },
+    {
+      "label": "kernel_replay_QuantumArithmeticBridge",
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "--verbose",
+        "QuantumArithmeticBridge"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 12.032,
+      "status": "PASS",
+      "log": "kernel_replay_QuantumArithmeticBridge.log",
+      "log_sha256": "8093cfb600bf72c972c6d377c9a3e5d1d089e159a1945e7fa232fb5dfd4b18af"
+    },
+    {
+      "label": "kernel_replay_FiniteFourier",
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "--verbose",
+        "FiniteFourier"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 62.326,
+      "status": "PASS",
+      "log": "kernel_replay_FiniteFourier.log",
+      "log_sha256": "77457589f818c8c0b2fada95f9c36f271688ffe5b3eceaf1a3e5ead76c8a6cc9"
+    },
+    {
+      "label": "kernel_replay_SemanticBridge",
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "--verbose",
+        "SemanticBridge"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 6.359,
+      "status": "PASS",
+      "log": "kernel_replay_SemanticBridge.log",
+      "log_sha256": "f4b08d2667b920a481c49e3b85130e0dbcbf6f8410bfcc7aee950183d66a93aa"
+    },
+    {
+      "label": "kernel_replay_Conventions",
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "--verbose",
+        "Conventions"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 4.587,
+      "status": "PASS",
+      "log": "kernel_replay_Conventions.log",
+      "log_sha256": "b73a43b20047cd781948e42094360e38f585c7a9aa29e992bf82f2d148f9d796"
+    },
+    {
+      "label": "kernel_replay_Publication",
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "--verbose",
+        "Publication"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "expected_failure": false,
+      "seconds": 5.692,
+      "status": "PASS",
+      "log": "kernel_replay_Publication.log",
+      "log_sha256": "192fb4f2287eb86a7b0c7939f871037b8bd9dbb07b35fe17ef3973ba1e786e1f"
+    },
+    {
+      "label": "reject_false_mode",
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "negative_controls/FalseFourierMode.lean"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "expected_failure": true,
+      "seconds": 4.14,
+      "status": "PASS",
+      "log": "reject_false_mode.log",
+      "log_sha256": "d6a71cdb3b0e8459cbfe1172c7cd6fc07161323a001cccba03733964f2dc599f"
+    },
+    {
+      "label": "reject_false_sign",
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "negative_controls/FalseSignalSign.lean"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "expected_failure": true,
+      "seconds": 2.975,
+      "status": "PASS",
+      "log": "reject_false_sign.log",
+      "log_sha256": "d1456536e755c852a748e70d159e31d3e244b075d22f18ef1d1ccb6ac1a9ed8c"
+    },
+    {
+      "label": "reject_admitted_proof",
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "negative_controls/AdmittedProof.lean"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "expected_failure": true,
+      "seconds": 1.971,
+      "status": "PASS",
+      "log": "reject_admitted_proof.log",
+      "log_sha256": "2c1c31de0d5298e32cb05b4d80729049e22c70ce04c6874f029eef73990ce1ee"
+    }
+  ],
+  "source_sha256": {
+    "QuantumArithmeticBridge.lean": "087f1f22c465f910e343ae917d252b87717c1811f74492d219bc70894d8cc825",
+    "FiniteFourier.lean": "f11757042bdda213f442659fd7649bb25cf3a79d49728db124c2a71741510f8f",
+    "SemanticBridge.lean": "2841b63adaa735e9ca50044407786a78710d36440267c9973e7bbc77c6b43af5",
+    "Conventions.lean": "d6057793389c3ee66789caf78021fbcfc31f752db98601604373abfa564083a8",
+    "Publication.lean": "ecc1a217c137824daf6d9ec7ae785004c3684cd7a66274834d3cd9228f05bf63"
+  },
+  "trust_boundary": "New module proofs rebuilt and replayed against supplied pinned Lean and Mathlib cache. The compiler and dependency cache were not rebuilt from source. leanchecker uses the Lean kernel, not an independently implemented verifier.",
+  "lean_version": "Lean (version 4.34.0-rc2, x86_64-unknown-linux-gnu, commit 6a10ac8c22beadecabdbb0919c2b50214762f91d, Release)",
+  "compiler_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "dependency_revisions": {
+    "mathlib": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+    "plausible": "d9598f07b1bc701f1e3aae163d2681c1fd978793",
+    "LeanSearchClient": "ba67e212be1197b84c1f1f6299488a10a3002713",
+    "importGraph": "d8823026ac7ef130c253089d95685f9877b95323",
+    "proofwidgets": "a8acbfd87375ff4abe14ce09db5b7664d383bc7f",
+    "aesop": "18889deb9e83ea7420ef51c160d6f88552e744e3",
+    "Qq": "507746ab8f4b643ccdacb2ec4cdb5853fa9f8ab3",
+    "batteries": "4cac2177c37f5530c4da76aa8e4307f3fc9e4dcb",
+    "Cli": "ab3a82db9fea14cf0fd7f5a2de650f4b534640af"
+  },
+  "theorem_count": 96,
+  "axiom_union": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "axiom_audit_count": 96,
+  "finished_utc": "2026-09-21T22:07:04.437938+00:00"
+}

@@ -1,0 +1,151 @@
+% Shared presentation for the Quantum and Circuits monograph.
+% The text block and mathematical font system are intentionally retained.
+\usepackage{setspace,caption,etoolbox}
+\usepackage[titles]{tocloft}
+\definecolor{CoverNavy}{HTML}{142D3B}
+\definecolor{Ink}{HTML}{142D3B}
+\definecolor{BodyInk}{HTML}{22282C}
+\definecolor{Teal}{HTML}{286B6D}
+\definecolor{Muted}{HTML}{55616A}
+\definecolor{Pale}{HTML}{F1F5F4}
+\definecolor{Gold}{HTML}{A97D4E}
+\definecolor{CoverMist}{HTML}{D7E5E5}
+\colorlet{ink}{BodyInk}\colorlet{teal}{Teal}\colorlet{accent}{Teal}
+\colorlet{muted}{Muted}\colorlet{pale}{Pale}\colorlet{light}{Pale}
+\colorlet{deepblue}{Ink}\colorlet{restrictedblue}{Ink}\colorlet{gold}{Gold}
+\colorlet{proofgreen}{Pale}\colorlet{recordblue}{Pale}\colorlet{provedgreen}{Pale}\colorlet{computedblue}{Pale}
+\color{BodyInk}\setstretch{1.04}
+% Reserve room for the running head while leaving the body origin unchanged.
+\setlength{\headheight}{21pt}\addtolength{\topmargin}{-5pt}
+\setlength{\parindent}{1.05em}
+\setlength{\parskip}{2.5pt plus .5pt minus .3pt}
+\setlength{\abovedisplayskip}{9pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{9pt plus 2pt minus 2pt}
+\setlength{\abovedisplayshortskip}{5pt plus 2pt minus 1pt}
+\setlength{\belowdisplayshortskip}{6pt plus 2pt minus 1pt}
+\clubpenalty=10000\widowpenalty=10000\displaywidowpenalty=10000\brokenpenalty=10000
+\frenchspacing
+% Full-width source tables start at the text-block edge, not a paragraph indent.
+\BeforeBeginEnvironment{tabularx}{\noindent}
+% Display math resumes horizontal mode before endproof, so the break must
+% be prevented when the display is built, rather than at the later QED.
+\AtBeginEnvironment{proof}{\postdisplaypenalty=10000\relax}
+
+% A few short concluding treatments benefit from a slightly tighter rhythm.
+% These scopes use chapter identifiers, never physical page numbers.
+\newcommand{\VolumeChapterComposition}{%
+  \setstretch{1.04}%
+  \setlength{\parskip}{2.5pt plus .5pt minus .3pt}%
+  \setlength{\abovedisplayskip}{9pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayskip}{9pt plus 2pt minus 2pt}%
+  \edef\VolumeChapterKey{\thechapter}%
+  \ifdefstring{\VolumeChapterKey}{20}{%
+    \setstretch{1.0}\setlength{\parskip}{1.4pt plus .4pt minus .2pt}%
+    \setlength{\abovedisplayskip}{7pt plus 1pt minus 1pt}%
+    \setlength{\belowdisplayskip}{7pt plus 1pt minus 1pt}%
+  }{}%
+  \ifdefstring{\VolumeChapterKey}{E}{%
+    \setstretch{1.0}\setlength{\parskip}{1.5pt plus .4pt minus .2pt}%
+    \setlength{\jot}{0pt}%
+    \setlength{\abovedisplayskip}{6pt plus 1pt minus 1pt}%
+    \setlength{\belowdisplayskip}{6pt plus 1pt minus 1pt}%
+    \setlength{\LTpre}{5pt}\setlength{\LTpost}{5pt}%
+  }{}%
+}
+\AtBeginEnvironment{longtable}{%
+  \edef\VolumeTableChapter{\thechapter}%
+  \ifdefstring{\VolumeTableChapter}{B}{\small\setstretch{1.0}}{}%
+}
+
+\newcommand{\VolumeLabel}[1]{{\sffamily\fontsize{8.5}{11}\selectfont\addfontfeatures{LetterSpace=14}\MakeUppercase{#1}}}
+\newcommand{\VolumeGoldRule}{\noindent\textcolor{Gold}{\rule{42pt}{.8pt}}\par}
+\newcommand{\VolumeRunningPart}{Front matter}
+\fancyhf{}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont\color{Muted}Quantum and Circuits}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont\color{Teal}\MakeUppercase{\VolumeRunningPart}}
+\fancyfoot[R]{\normalfont\small\color{Muted}\thepage}
+\renewcommand{\headrulewidth}{.25pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{Muted!25}\leaders\hrule height \headrulewidth\hfill}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[R]{\normalfont\small\color{Muted}\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+\titleformat{\chapter}[display]{\normalfont\color{Ink}\raggedright\hyphenpenalty=10000}{\color{Teal}\VolumeLabel{\chaptertitlename\enspace\thechapter}}{11pt}{\fontsize{25}{31}\selectfont\bfseries}
+\titlespacing*{\chapter}{0pt}{5pt}{22pt}
+\titleformat{\section}{\normalfont\bfseries\fontsize{14}{18}\selectfont\color{Ink}\raggedright}{\textcolor{Teal}{\thesection}}{.65em}{}
+\titleformat{\subsection}{\normalfont\bfseries\fontsize{11.8}{15}\selectfont\color{Ink}\raggedright}{\thesubsection}{.65em}{}
+\titleformat{\subsubsection}{\normalfont\itshape\fontsize{11.3}{14}\selectfont\color{Ink}\raggedright}{}{0pt}{}
+\titlespacing*{\section}{0pt}{18pt plus 3pt minus 2pt}{8pt}
+\titlespacing*{\subsection}{0pt}{13pt plus 2pt minus 1pt}{6pt}
+\titlespacing*{\subsubsection}{0pt}{11pt}{4pt}
+
+\captionsetup{format=hang,justification=raggedright,singlelinecheck=false,font={small,sf,stretch=1.04},labelfont={bf,sf,color=BodyInk},textfont={color=Muted},labelsep=period,skip=8pt}
+\hypersetup{linkcolor=Teal,citecolor=Teal,urlcolor=Teal,breaklinks=true,linktoc=page}
+\tcbset{enhanced,breakable,sharp corners,frame hidden,boxrule=0pt,borderline west={.8pt}{0pt}{Teal},left=11pt,right=10pt,top=9pt,bottom=8pt,before skip=11pt,after skip=11pt,fonttitle=\sffamily\bfseries\small,coltitle=Teal,colbacktitle=Pale,attach title to upper={\par\smallskip},title filled=false}
+
+% An uncluttered table of contents with restrained part headings.
+\renewcommand{\cftpartfont}{\normalfont\bfseries\color{Teal}}
+\renewcommand{\cftpartpagefont}{\normalfont\color{Teal}}
+\renewcommand{\cftchapfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\normalfont}
+\renewcommand{\cftchapleader}{\hfill}
+\setlength{\cftbeforepartskip}{17pt}
+\setlength{\cftbeforechapskip}{5pt}
+\setlength{\cftchapindent}{12pt}
+\setlength{\cftchapnumwidth}{25pt}
+\setlength{\cftpartnumwidth}{32pt}
+\cftsetpnumwidth{2em}\cftsetrmarg{3em}
+
+% Stable chapter anchors support the navigational lists on the part openings.
+\makeatletter
+\apptocmd{\ttl@mkchap@i}{\VolumeChapterComposition\ifttl@label\if@mainmatter\label{vol-ch-\thechapter}\fi\fi}{}{}
+\makeatother
+\newcommand{\VolumePartEntry}[2]{%
+  \noindent\begin{tabularx}{\linewidth}{@{}Xr@{}}%
+  #2 & \textcolor{Teal}{\pageref{vol-ch-#1}}\\%
+  \end{tabularx}\par\vspace{5pt}%
+}
+\newcommand{\VolumePart}[3]{%
+  \clearpage\refstepcounter{part}%
+  \addcontentsline{toc}{part}{\protect\numberline{\thepart}#1}%
+  \gdef\VolumeRunningPart{Part \thepart}%
+  \thispagestyle{plain}\begingroup\setlength{\parindent}{0pt}%
+  \vspace*{12pt}%
+  {\color{Teal}\VolumeLabel{Part \thepart}\par}%
+  \vspace{16pt}%
+  {\fontsize{31}{38}\selectfont\color{Ink}\raggedright #1\par}%
+  \vspace{14pt}\VolumeGoldRule\vspace{18pt}%
+  {\fontsize{11.5}{16}\selectfont\color{Muted}#2\par}%
+  \vspace{24pt}%
+  {\color{Teal}\VolumeLabel{In this part}\par}%
+  \vspace{13pt}%
+  {\fontsize{10.8}{15}\selectfont #3\par}%
+  \endgroup\clearpage%
+}
+
+% The first visual-guide section shares its chapter opening; later guide
+% sections keep their intentional page breaks. Generated source stays intact.
+\newcommand{\VolumeVisualInput}[1]{%
+  \begingroup\let\VolumeSavedClearpage\clearpage%
+  \def\clearpage{\let\clearpage\VolumeSavedClearpage}%
+  \input{#1}\endgroup%
+}
+
+\newcommand{\VolumeCover}{%
+  \begin{titlepage}\thispagestyle{empty}%
+  \pagecolor{CoverNavy}\color{white}%
+  \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}%
+  \vspace*{3pt}%
+  {\color{CoverMist}\VolumeLabel{Realization Calculus}\par}%
+  \vspace{22pt}\VolumeGoldRule%
+  \vspace{30pt}%
+  {\fontsize{52}{59}\selectfont\raggedright Quantum\\and Circuits\par}%
+  \vspace{25pt}%
+  {\fontsize{22}{29}\selectfont\raggedright Arithmetic, Symmetry,\\and the Cost of Realization\par}%
+  \vspace{33pt}%
+  {\color{CoverMist}\sffamily\fontsize{8}{11}\selectfont\addfontfeatures{LetterSpace=12}OPERATORS\enspace /\enspace GATES\enspace /\enspace OBSTRUCTIONS\par}%
+  \vfill%
+  {\color{white!14!CoverNavy}\rule{\linewidth}{.4pt}\par}%
+  \vspace{16pt}%
+  {\fontsize{12}{16}\selectfont Komorebi P.\par}%
+  \vspace{7pt}%
+  \end{titlepage}\nopagecolor\color{BodyInk}%
+}

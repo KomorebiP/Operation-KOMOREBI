@@ -1,0 +1,789 @@
+\guidepage{The model: boundary restoration and Boolean degree}
+A state has logical input wires $x$, zero-initialized ancillary wires, and a
+target bit $y$. A restored oracle is a legal classical circuit satisfying
+\[
+ C(x,0^a,y)=(x,0^a,y+f(x))
+ \qquad\text{for every }x\text{ and both }y.
+\]
+The input and scratch restoration conditions hold at the boundary. Wires may
+change internally, and the target may control an intermediate gate. Each
+primitive gate is an involution:
+\[
+ y\leftarrow y+1,\quad y\leftarrow y+x_i,\quad
+ y\leftarrow y+x_i x_j.
+\]
+In a CNOT the control differs from the target. In a Toffoli all three wires
+are distinct. These are construction rules, not informal assumptions.
+
+All polynomial arithmetic in the Boolean state model is over $\F_2$, with
+$x_i^2=x_i$. Every function has a unique multilinear algebraic normal form.
+Its degree is the largest support size with a nonzero coefficient; the zero
+function has mathematical degree $-1$ in the Python helpers. A formal degree
+bound uses a natural number, so zero has a degree-zero certificate.
+
+\begin{tabularx}{\textwidth}{@{}p{1.15in}X@{}}\toprule
+Quantity & Meaning\\\midrule
+$T$ & Number of Toffoli gates; NOT and CNOT have zero cost in this quantity\\
+$L$ & Total number of NOT, CNOT, and Toffoli gates\\
+$M$ & Number of binary AND operations in an XOR--AND computation\\
+$n$ & Actual number of input bits, including all variables in a displayed family\\
+$\dim_K A$ & Dimension of a specified linear summary algebra over $K$\\\bottomrule
+\end{tabularx}
+
+A bound on one row of this table cannot silently be substituted for a bound
+on another row. In particular, a computation can have few Toffolis and many
+CNOTs. An exponentially large ambient algebra can have succinct expressions.
+Those distinctions explain the projection and gluing examples later.
+
+\sourcepath{docs/FOUNDATIONS.md, Conventions; formalization/lean/CircuitObstructions/Gates.lean}
+
+\guidepage{An arbitrary cut compares two reversible computations}
+Write the circuit as $C=Q\circ P$. The prefix $P$ runs forward; the inverse
+suffix $Q^{-1}$ starts from the same zero-target boundary state. Define
+\[
+ A(x)=P(x,0),\qquad B(x)=Q^{-1}(x,0),\qquad
+ D(x)=P(x,1)+P(x,0).
+\]
+The zero ancillas are suppressed here. The two executions generally arrive
+at different interior states, even though they start at matching boundaries.
+
+\visualfigure{cut_transport}{The exact C01 objects. Both arrows remain inside the legal reversible state space.}
+
+Correctness on both target branches gives
+\[
+ Q^{-1}(x,b)=P(x,b+f(x)).
+\]
+To derive it, apply $C$ to $(x,b+f(x))$ and then apply $Q^{-1}$ to the result.
+For $b=0$, $B=A$ when $f(x)=0$, while $B=P(x,1)$ when $f(x)=1$. Thus
+\[
+ H(x):=A(x)+B(x)=f(x)D(x).
+\]
+The two original states differ in their target. Since $P$ is injective,
+$D(x)\ne0$. Each coordinate discrepancy is supported on positives, and
+some coordinate discrepancy detects every positive input.
+
+\evidence{General written identity; archived formal declarations
+\code{cut_transport_identity}, \code{direction_nonzero}, and \code{complete_safe_cover}.}
+
+\guidepage{Why completeness is pointwise, and why no decoder is needed}
+For a coordinate $i$, let $H_i=A_i+B_i$. The cut identity says
+\[
+ H_i(x)=f(x)D_i(x),\qquad H_i\le f,\qquad \bigvee_i H_i=f.
+\]
+The last equation is pointwise. For every fixed accepted $x$, at least one
+coordinate has $D_i(x)=1$. The detecting coordinate may depend on $x$ and
+may be an input, scratch, or target wire. The argument does not require a
+single fixed coordinate to detect all positives.
+
+At an empty prefix, the direction is simply the target unit vector. At a
+full prefix, all non-target wires have restored and the target discrepancy
+is $f$. Interior cuts can spread the direction through the workspace.
+These minimum cases verify the composition order and the role of the two
+target branches.
+
+The zero-input cases are also valid. With only a target wire, the empty
+circuit realizes the constant-zero oracle and one NOT realizes the
+constant-one oracle. At every cut, the direction is nonzero and the
+discrepancy cover has the correct accepting set.
+
+\begin{quote}\small
+\textbf{Essential hypothesis.} The endpoint condition holds for both initial
+target values. The inverse-suffix derivation uses the branch $b+f(x)$.
+Correctness only for initial target zero is not the stated model.
+\end{quote}
+
+The theorem also does not require scratch to remain zero at the cut. Imposing
+that extra condition would exclude admitted restored circuits. Conversely,
+dropping target separation from the boundary encoding permits a vacuous
+endpoint equation: an encoding that ignores $y$ can make the empty circuit
+appear to compute a nonzero function. The formal \code{Boundary.target_eq}
+property prevents precisely this degeneracy.
+
+\sourcepath{CutComparison.lean: inverse_suffix_boundary, every_index_cut, canonical_complete_safe_cover}
+
+\guidepage{A dirty scratch wire can be fully restored}
+Consider the four-wire oracle in the Lean examples. First compute $ab$ into
+scratch $s$, copy $s$ into the target, and uncompute $s$:
+\[
+ (a,b,s,y)\xrightarrow{T(a,b;s)}(a,b,s+ab,y)
+ \xrightarrow{C(s;y)}(a,b,s+ab,y+s+ab)
+ \xrightarrow{T(a,b;s)}(a,b,s,y+s+ab).
+\]
+The displayed final expression specializes to the required oracle when
+the boundary scratch is zero. On the positive input $a=b=1$, the scratch
+is dirty between the first and last gates.
+
+\visualfigure{dirty_and_trace}{Exact states for the accepting input, in wire order $(a,b,s,y)$. White cells are zero; teal cells are one.}
+
+The two panels check both initial targets. The final target is toggled,
+the logical inputs are unchanged, and scratch returns to zero. A proof that
+used an intermediate clean-workspace assumption would fail to cover this
+explicit legal fixture.
+
+This circuit uses two Toffolis. It is a useful restoration witness, not the
+optimal two-input AND oracle: the direct gate $T(a,b;y)$ computes that oracle
+with one Toffoli and no scratch. The guide distinguishes an exact example
+from an optimization claim.
+
+\evidence{Exact new trace assertion imported from the source gate semantics;
+the same fixture is formalized by \code{Examples.andOracle_restores}.}
+
+\guidepage{The output direction can move away from the target}
+Two data/target wires already suffice. A SWAP is implemented by three legal
+CNOTs. Let $P$ be that SWAP, and let $Q$ be NOT on the data wire followed
+by another SWAP. Then
+\[
+ (x,y)\xrightarrow{P}(y,x)
+ \xrightarrow{Q}(x,1+y).
+\]
+The whole circuit is a restored constant-one oracle with zero Toffolis.
+At the cut after the first SWAP,
+\[
+ A=P(x,0)=(0,x),\qquad B=Q^{-1}(x,0)=(1,x),
+ \qquad H=(1,0).
+\]
+The target discrepancy is zero on every input, while the data discrepancy
+is one on every input. Reading only the target at this cut would reject
+the constant-one function.
+
+\begin{center}
+\begin{tabular}{@{}ccccc@{}}\toprule
+$x$ & $A$ & $B$ & $H$ & named target discrepancy\\\midrule
+0 & $(0,0)$ & $(1,0)$ & $(1,0)$ & 0\\
+1 & $(0,1)$ & $(1,1)$ & $(1,0)$ & 0\\\bottomrule
+\end{tabular}
+\end{center}
+
+This example uses the target as a control during each SWAP. That behavior
+is expressly allowed by the model. Its relevance is logical: completeness
+belongs to the full register comparison, not to an arbitrarily chosen wire.
+The coordinate packets remain perfectly safe even though the detection
+direction has moved.
+
+\evidence{Constructive formal counterexample to target-only reconstruction:
+\code{outputActiveOracle_restores}, \code{moved_discrepancy_data},
+\code{moved_discrepancy_target}.}
+
+\guidepage{Degree bounds must retain shared register products}
+Take four independent input bits. Compute
+\[
+ q_1=x_1x_2,\qquad q_2=x_3x_4,\qquad q_3=q_1q_2.
+\]
+After two ANDs, each nonlinear register has degree two, but their product
+has degree four. After the third AND, a coordinate of degree four appears.
+
+\visualfigure{sharing_degree}{Exact degrees from the complete four-input truth tables. The square marker is a two-register product, not a coordinate.}
+
+The correct invariant tracks a product of $r$ current registers after $t$
+Toffolis:
+\[
+ \deg\!\left(\prod_{i\in L}s_i(x)\right)\le t+|L|=t+r.
+\]
+At $t=2$, the product $q_1q_2$ has $r=2$ and saturates $t+r=4$. At $t=3$,
+the resulting coordinate has $r=1$ and saturates $t+1=4$.
+
+This explains why tracking only individual register degrees and then
+adding their separate histories can lose the shared accounting. The
+invariant applies to the actual evolving state. It does not unfold a
+reused register into a new copy of the entire computation.
+
+\evidence{Exact finite fixture plus the general register-product invariant;
+the source proves \code{workspaceDegree_run} for arbitrary gate lists.}
+
+\guidepage{The invariant handles duplicates, NOT, and CNOT}
+Suppose a gate toggles target $u$ by a product of $c$ controls. In a product
+list $L$ that contains $u$, remove all occurrences of $u$ to obtain $R$.
+Boolean idempotence leaves one updated target factor, and
+\[
+ \prod_{i\in L}s_i'=
+ s_u\prod_{i\in R}s_i+
+ \left(\prod_{j\in\mathrm{controls}}s_j\right)\prod_{i\in R}s_i.
+\]
+The old invariant bounds these terms by $t+1+|R|$ and $t+c+|R|$.
+Since $|R|+1\le |L|$, the budget rises by at most $\max\{c-1,0\}$.
+
+\begin{center}
+\begin{tabular}{@{}lccc@{}}\toprule
+Gate & $c$ & toggle expression & extra budget\\\midrule
+NOT & 0 & 1 & 0\\
+CNOT & 1 & one control & 0\\
+Toffoli & 2 & two controls & 1\\\bottomrule
+\end{tabular}
+\end{center}
+
+If the target is absent from $L$, the product is unchanged. An empty list
+is the constant-one product. Repeated target indices are removed using
+idempotence; repeated other indices can only reduce multilinear degree.
+Controls already appearing in $R$ also cause no difficulty.
+
+For general XOR--AND computations, the written proof introduces a Boolean
+variable for each AND output. Every wire is affine in inputs and preceding
+gate variables. Substitute those variables in reverse topological order.
+A squarefree monomial contains each substituted variable at most once,
+so replacing it by a quadratic raises degree by at most one. After $t$
+substitutions, the affine output has degree at most $t+1$.
+
+These are two precise proof routes. The general syntax argument is written;
+the maintained NCT register argument is in Lean. The formalization does not
+assert a separate arbitrary XOR--AND compiler or a canonical ANF algorithm.
+
+\sourcepath{MultiplicativeDegree.lean; docs/FOUNDATIONS.md, F3}
+
+\guidepage{One safe packet need not cover every accepting point}
+For $k=3$ consider
+\[
+ F_3(a,b,z_1,z_2,z_3)=ab\ \mathrm{OR}\ z_1z_2z_3.
+\]
+The packet $ab$ is safe and has degree two. It detects every teal point
+below. It misses three additional positives, which require the other
+packet $z_1z_2z_3$.
+
+\visualfigure{packet_coverage}{All 32 assignments. There are 11 positives: 8 in the teal row and 3 additional gold points. The coordinate labels use $(z_1,z_2,z_3)$ order.}
+
+The one-packet parameter $\alpha_1$ asks for any nonzero safe polynomial.
+The complete parameter $\beta$ asks for safe detection of every positive:
+\[
+ \beta_v(f)=\min\{\deg h:h\le f,\ h(v)=1\},\qquad
+ \beta(f)=\max_{v:f(v)=1}\beta_v(f).
+\]
+For this monotone function, its minimal positive supports have sizes two
+and three. Thus $\alpha_1(F_3)=2$ while $\beta(F_3)=3$. Selecting one
+easy accepting region loses the pointwise obstruction at the other region.
+
+\evidence{All 32 points and the two parameter values were freshly recomputed;
+the general monotone minterm characterization is a written proof for nonzero functions.}
+
+\guidepage{Balanced cuts turn coverage into a Toffoli bound}
+Choose a cut after $\lfloor T/2\rfloor$ Toffolis. Both sides have at most
+$\lceil T/2\rceil$ Toffolis. Reversing the suffix preserves its count because
+every gate is self-inverse. Each forward or inverse-suffix coordinate has
+degree at most $\lceil T/2\rceil+1$, and their XOR has the same upper bound.
+
+For every positive $v$, completeness chooses a discrepancy $H_i$ that
+detects $v$. Its safety and degree bound imply
+\[
+ \beta(f)\le\left\lceil\frac T2\right\rceil+1,
+ \qquad 2\beta(f)\le T+3.
+\]
+The integer rounding matters. If $T=2r$, the first bound gives
+$2\beta\le T+2$. If $T=2r+1$, it gives $2\beta\le T+3$.
+The uniform bound uses the latter constant.
+
+An affine output mask $\ell(x)$ costs zero additional Toffolis: append
+CNOTs from restored inputs and, if needed, a target NOT. This constructs
+a restored oracle for $f+\ell$, so the bound applies to every affine mask.
+Define
+\[
+ \beta^*(f)=\max_{\ell\text{ affine}}\beta(f+\ell).
+\]
+Together with the output degree bound,
+\[
+ \boxed{T\ge\max\{0,\deg f-1,2\beta^*(f)-3\}.}
+\]
+
+There are finitely many affine masks. The Lean definition uses the least
+upper bound of their beta values, which equals this finite maximum. Its
+affine-output theorem constructs legal gates rather than assuming masks
+are free transformations of an arbitrary interior computation.
+
+\evidence{Written theorem and archived endpoint
+\code{restored_degree_and_cover_bound}; the dual is a separate written result.}
+
+\guidepage{An affine shift reveals a harder accepting point}
+For $k\ge2$, let $B=z_1\cdots z_k$ and $F_k=ab\ \mathrm{OR}\ B$ on
+$n=k+2$ inputs. Add the affine mask $a$ to obtain $G_k=F_k+a$.
+On the face $b=1$,
+\[
+ G_k|_{b=1}=(1+a)B.
+\]
+This is a singleton indicator on the $k+1$ variables $(a,z)$.
+At $v=(a=0,b=1,z=1^k)$, every safe detecting polynomial must restrict to
+that singleton indicator, so its degree is at least $k+1$.
+
+The general two-positive indicator construction gives the matching upper
+bound $\beta(G_k)\le n-1=k+1$. The maintained family proves
+\[
+ \max_\ell\alpha_1(F_k+\ell)=3,\qquad \beta^*(F_k)=k+1.
+\]
+The gap between one-packet and complete degree therefore grows with $k$.
+
+\begin{center}
+\begin{tabular}{@{}rrrrr@{}}\toprule
+$k$ & $n$ & $\beta^*$ & complete bound $2k-1$ & combined degree/one-packet bound\\\midrule
+2 & 4 & 3 & 3 & 3\\
+3 & 5 & 4 & 5 & 4\\
+4 & 6 & 5 & 7 & 5\\
+6 & 8 & 7 & 11 & 7\\\bottomrule
+\end{tabular}
+\end{center}
+
+For $k=3$, all 64 affine masks were freshly checked and the optimized
+parameters are exactly $(3,4)$. The all-size family proof is not inferred
+from those 64 cases. Its restored construction has $T\le2n-3$, so this
+remains a linear-size easy family. The exact optimum between the lower and
+upper constructions is not asserted when they differ.
+
+\sourcepath{docs/THEORY.md, section 2; reviews/visual_examples.json, unbalanced_or}
+
+\guidepage{A degree-one dual certificate for two-input AND}
+Let $f(a,b)=ab$, with unique positive point $(1,1)$. For degree at most one,
+the evaluation vector is $v_1(a,b)=(1,a,b)$. The three negative points
+already span the positive vector.
+
+\visualfigure{evaluation_dual}{The first three rows are negative inputs. Their XOR equals the last evaluation row.}
+
+Any affine polynomial is a coefficient covector $c=(c_0,c_a,c_b)$.
+Safety means that it pairs to zero with each negative row. The displayed
+dependence therefore forces its value at $(1,1)$ to be zero. No safe affine
+packet detects the positive point.
+
+The degree-two polynomial $ab$ does detect it, so
+$\beta_{11}(f)=\beta(f)=2$. Since $\beta^*\le n=2$ and $\beta^*\ge\beta$,
+$\beta^*=2$. The complete bound gives $T\ge1$, attained by one direct
+Toffoli to the target.
+
+The constant coordinate also checks parity: this dependence uses three
+negative rows, an odd number. Without the constant coordinate, that parity
+conclusion would not follow.
+
+\evidence{Exact finite dependence plus written duality. Lean proves the
+corresponding AND2 degree and beta exclusions by four-corner parity,
+without formalizing the general evaluation-span dual.}
+
+\guidepage{The finite evaluation-span dual in full}
+Fix a positive $v$ and integer $d\ge0$. Let
+\[
+ v_d(x)=(x^S)_{S\subseteq[n],\ |S|\le d},\qquad
+ U=f^{-1}(0),\qquad N=\Span_{\F_2}\{v_d(u):u\in U\}.
+\]
+The constant monomial $S=\varnothing$ is included. Degree-$d$ coefficient
+covectors form the finite dual of this evaluation space. A covector is safe
+exactly when it annihilates $N$.
+
+If $v_d(v)\in N$, every safe covector vanishes at $v$. If $v_d(v)\notin N$,
+extend a basis of $N$ by $v_d(v)$ and then to a basis of the full space.
+Assign zero to the $N$ basis and one to $v_d(v)$. The resulting covector is
+a safe detector. Hence
+\[
+ \boxed{\beta_v(f)>d\quad\Longleftrightarrow\quad v_d(v)\in N.}
+\]
+Choose a basis of $N$ from negative evaluation rows. A span representation
+of the positive row gives a subset $W\subseteq U$ with
+\[
+ v_d(v)=\sum_{u\in W}v_d(u),\quad |W|\text{ odd},\quad
+ |W|\le\sum_{j=0}^{\min(d,n)}\binom nj.
+\]
+It is a replayable finite obstruction to every safe degree-$d$ detector.
+
+At $d=0$, a negative exists exactly when the constant-one detector is unsafe.
+At $d\ge n$, the full evaluation rows are independent and no positive row
+lies in the negative span. This matches $\beta_v\le n$ from point indicators.
+For $f=0$, there is no positive $v$ and the separate convention is $\beta(0)=0$.
+
+Fresh enumeration checked all 278 functions on zero through three inputs,
+all positives, and every $d=0,\ldots,n$: 4,201 primal/dual checks agree.
+Those bounded checks support the independently supplied universal proof.
+
+\sourcepath{scripts/core_dual_checks.py; reviews/core_dual_checks.json}
+
+\guidepage{Every function through three inputs has a matching oracle}
+The small calibration concerns every truth table on one, two, or three
+inputs. It is not a search through all reversible circuit words. A theorem
+lower bound and an explicit construction coincide.
+
+\visualfigure{small_oracle_counts}{Reconstructed source constructions for all 276 functions. Totals are 28 with $T=0$, 120 with $T=1$, and 128 with $T=3$.}
+
+Affine functions use target CNOTs and possibly NOT. A nonaffine quadratic
+through three bits has alternating quadratic rank two, so it is a product
+of two independent linear forms plus an affine residual. Compute those
+forms on clean wires, apply one Toffoli, uncompute, and append the residual.
+
+Every three-bit cubic is a translated three-variable monomial plus an
+affine residual. The singleton monomial needs three Toffolis by complete
+coverage, and compute/toggle/uncompute attains that number.
+
+The new figure script rebuilds and validates all 276 circuits and both target
+branches, covering 4,240 scalar input/target cases via exact truth tables.
+Its totals match the frozen baseline. Zero-input constants were checked in
+the separate dual suite, rather than being added to this 276-function count.
+
+\evidence{Matching written lower bounds and exact constructed implementations;
+not exhaustive optimal-circuit synthesis. The generic monomial cost theorem
+is not newly Lean-certified by this edition.}
+
+\guidepage{Projection is defined in the original coordinates}
+For $m\ge2$, put $a=(1,\ldots,1)$ and
+\[
+ V=\F_2^m\setminus\{0,a\},\qquad n=2^m-2.
+\]
+There is one input bit $x_v$ for each $v\in V$. Define
+\[
+ L_j(x)=\sum_{v:v_j=1}x_v,\qquad
+ P_m(x)=\prod_{j=1}^m L_j(x).
+\]
+The linear map $x\mapsto L(x)$ has rank $m$, because the standard basis
+columns are present. In the $L$ coordinates, $P_m$ is a monomial in $m$
+independent bits. Its restored nonlinear cost is $2m-3$.
+
+Now extract the quadratic homogeneous ANF component $Q_m$ in the
+\emph{original} $x_v$ coordinates. Since $P_m(0)=P_m(e_v)=0$, for distinct
+$u,v$ its quadratic coefficient is
+\[
+ [x_ux_v]P_m=P_m(e_u+e_v)=[u+v=a].
+\]
+The involution $v\mapsto v+a$ pairs every variable with one other variable:
+\[
+ Q_m=\sum_{\{v,v+a\}}x_vx_{v+a}.
+\]
+It is a quadratic inner product on $n/2$ disjoint pairs. Its alternating
+polar matrix has full rank $n$.
+
+The coordinate choice is essential. Homogeneous grade is not invariant
+under arbitrary affine changes of variables. A cheap representation in
+the $L$ coordinates does not imply cheap independent generation of the
+quadratic grade in the original coordinates. The comparison keeps the
+definition of projection fixed throughout.
+
+\sourcepath{docs/THEORY.md, section 3; checks/verify_projection.py}
+
+\guidepage{Exact nonlinear projection costs versus actual input length}
+The source proves the all-size formulas
+\[
+ M(P_m)=m-1,\quad T_{\mathrm{rest}}(P_m)=2m-3,\qquad
+ M(Q_m)=T_{\mathrm{rest}}(Q_m)=n/2.
+\]
+The chart uses actual input length $n=2^m-2$ on its horizontal axis.
+
+\visualfigure{projection_costs}{Exact formulas for $m=2,\ldots,10$. Both axes are logarithmic; the plotted points are not optimal-circuit search results.}
+
+For $Q_m$, each disjoint quadratic pair is accumulated directly into the
+target with one Toffoli. The lower bound allows nonlinear intermediates:
+any computation with $t$ multiplications is affine on an affine subspace
+of codimension at most $t$. A nondegenerate quadratic can be affine only
+on a subspace with isotropic direction space, whose dimension is at most
+$n/2$. Thus $t\ge n/2$.
+
+The separation grows exponentially in $m$, but $n$ itself grows
+exponentially in $m$. The quadratic cost is linear in actual input length.
+The conclusion is about nonlinear generation and a specified grade
+extraction operation, not a superpolynomial unrestricted circuit bound.
+
+\evidence{All-size written cost proofs; constructor gate counts freshly
+asserted through $m=10$. No full truth-table enumeration at $m>4$ is claimed.}
+
+\guidepage{At $m=10$, the total-gate accounting points the other way}
+Here $n=1,022$. The full function uses 17 Toffolis; its quadratic grade
+needs 511. However, computing and uncomputing the $m$ parities also uses
+\[
+ 2m(2^{m-1}-1)=20\cdot511=10,220\quad\text{CNOTs}.
+\]
+The explicit full construction has $10,237$ total gates. The quadratic
+accumulation uses only 511 total gates.
+
+\visualfigure{projection_m10}{Two different resource comparisons at the same input length. The right panel reports the totals of the stated constructions, not an asserted optimal total for $P_{10}$.}
+
+The left panel is a valid nonlinear-cost separation. The right panel
+prevents interpreting it as an exponential ordinary total-gate separation.
+The total full construction is $O(n\log n)$, whereas the quadratic
+construction is $n/2$ gates.
+
+A proposed invariant that charges an original computation for every
+separately extracted grade would have to justify that extraction's cost.
+These formulas refute an overhead bounded only by a polynomial in the
+original nonlinear count, independently of input and linear resources.
+They do not exclude an overhead polynomial in $n+T$ or a different
+precisely defined invariant.
+
+\evidence{Exact counts obtained from the source constructors; optimal
+Toffoli formulas have written proofs. The full total-gate count is an upper
+construction count.}
+
+\guidepage{Quadratic projection can destroy safety}
+At $m=3$, variables are ordered by source labels $v=1,2,3,4,5,6$.
+Assignment index $13$ is read least-significant-bit first:
+\[
+ (x_1,x_2,x_3,x_4,x_5,x_6)=(1,0,1,1,0,0).
+\]
+The active labels have syndrome $1+3+4=6$, not $a=7$.
+
+\visualfigure{unsafe_projection}{A concrete accepted point for $Q_3$ that is rejected by $P_3$. The variable ordering matches the source checker.}
+
+The three linear forms evaluate to $L=(0,1,1)$, so $P_3=L_1L_2L_3=0$.
+The quadratic grade has pairs $(1,6)$, $(2,5)$, $(3,4)$, so
+\[
+ Q_3=x_1x_6+x_2x_5+x_3x_4=0+0+1=1.
+\]
+Thus $Q_3\notin I_{P_3}$: homogeneous extraction does not preserve the
+positive-support ideal. The whole polynomial is supported on its own
+accepting set, but its isolated homogeneous components need not be.
+
+The new script checks all 64 inputs here, finds 24 false positives, and
+confirms that 13 is the first in the stated integer ordering. The frozen
+$m=4$ control similarly has 7,616 false positives among its $2^{14}$
+assignments. These are separate finite statements with exact ranges.
+
+\evidence{Fresh complete $m=3$ truth-table check; baseline $m=4$ check was
+reproduced by the full source verifier. Safety failure is already established
+by the single valid assignment above.}
+
+\guidepage{Witness indicators are orthogonal idempotents}
+Let $K$ be a field and $W=\{0,1\}^m$. The full witness algebra is
+$B=K^W$ with pointwise addition and multiplication. For each witness $v$,
+the indicator $\delta_v$ is one at $v$ and zero elsewhere. Then
+\[
+ \delta_v^2=\delta_v,\qquad \delta_u\delta_v=0\ (u\ne v),
+ \qquad \sum_v\delta_v=1.
+\]
+
+\visualfigure{orthogonal_gluing}{The four-witness multiplication table at $m=2$. Each nonzero diagonal entry is its own point indicator.}
+
+The four indicator functions form a basis of $K^4$. General $m$ has $2^m$
+such basis elements. A verifier is the sum of the indicators of its accepted
+witnesses, and pointwise multiplication models intersection of accepting
+sets.
+
+This algebra retains exact witness compatibility: disjoint singleton
+predicates multiply to zero. A summary that preserves that product operation
+while retaining every singleton must preserve the same orthogonal structure.
+The following dimension theorem says exactly how much fixed linear space
+that requires.
+
+\evidence{Exact $m=2$ multiplication table; general product-algebra identities
+hold over any field. No characteristic-two assumption is needed for the
+dimension proof.}
+
+\guidepage{Faithful linear multiplicative summaries need $2^m$ dimensions}
+Suppose $\Phi:K^W\to A$ is $K$-linear and multiplicative, and
+$\Phi(\delta_v)\ne0$ for every $v\in W$. Put $e_v=\Phi(\delta_v)$.
+The images are nonzero orthogonal idempotents.
+
+If $\sum_v c_v e_v=0$, multiply by $e_u$. Orthogonality removes every other
+term and idempotence gives $c_u e_u=0$. Since $K$ is a field and $e_u\ne0$,
+$c_u=0$. Hence all $e_v$ are linearly independent and
+\[
+ \boxed{\dim_K A\ge |W|=2^m.}
+\]
+No unital hypothesis is needed. At $m=0$, there is one empty witness and
+the bound is simply $\dim_K A\ge1$.
+
+For a unital scalar map to $K$, scalar idempotents are zero or one.
+Orthogonality permits at most one nonzero image, and preservation of one
+requires exactly one. Such a map is evaluation at one witness. For $m\ge1$
+it loses at least one other singleton verifier. For $m=0$, there is no other
+witness to lose.
+
+\begin{quote}\small
+\textbf{Model boundary.} The theorem quantifies a fixed summary serving all
+predicates at a witness length, preserving linear combinations and exact
+pointwise multiplication. An unrestricted algorithm need not use such a
+summary. Syntax, nonlinear encodings, changing spaces, context-dependent
+operations, and succinct expressions are outside these hypotheses.
+\end{quote}
+
+An exponentially large algebra can still contain short circuit expressions.
+Therefore exponential dimension does not imply exponential expression length
+or a lower bound for every algorithm on one explicit decision family.
+
+\sourcepath{docs/THEORY.md, Theorem 4.1; reviews/extended_audit.md}
+
+\guidepage{Distinct witness monomials prevent formal cancellation}
+Over a characteristic-two field, define
+\[
+ P_R(z)=\sum_{w\in\{0,1\}^m}R(w)\prod_i z_i^{w_i}.
+\]
+The $z_i$ are formal indeterminates, not Boolean variables. Different
+witnesses produce different monomials, so $P_R=0$ exactly when there is
+no accepting witness.
+
+\visualfigure{witness_fingerprint}{An exact three-bit verifier accepts witness indices $1,2,5,6$ in least-significant-bit order. Four accepts have parity zero, but their monomials are distinct.}
+
+Here
+\[
+ P_R=z_1+z_2+z_1z_3+z_2z_3=(z_1+z_2)(1+z_3)\ne0.
+\]
+The ordinary unweighted characteristic-two sum of the four accepts is
+zero. The formal polynomial avoids this cancellation by retaining witness
+labels as monomial supports.
+
+Nonzero as a formal polynomial does not mean nonzero at every field point.
+For instance, this example vanishes whenever $z_1=z_2$ or $z_3=1$.
+Random evaluation is governed by a root bound, not by the formal identity
+alone. Evaluating the polynomial efficiently remains a separate task.
+
+\evidence{Exact support fixture; general no-cancellation argument is written.
+The source finite evaluator retains $2^m$ coefficients.}
+
+\guidepage{A short expression inside a trace is not a computed trace}
+Let $\tau_w$ extract the top multilinear coefficient in the Boolean witness
+ring. For any $G(w)$ over a characteristic-two field,
+\[
+ \tau_w(G)=\sum_{v\in\{0,1\}^m}G(v).
+\]
+A proper-support monomial evaluates to one an even number of times; the
+full-support monomial does so once. This proves the identity directly.
+
+Applying it to a weighted expression gives
+\[
+ P_R(z)=\tau_w\!\left[
+ R(w)\prod_{i=1}^m\bigl(1+(1+z_i)w_i\bigr)\right].
+\]
+At $w_i=0$, a multiplier equals one. At $w_i=1$, it equals $z_i$.
+Summing evaluations therefore produces exactly the witness monomials.
+For the preceding verifier, the four surviving products are
+$z_1,z_2,z_1z_3,z_2z_3$.
+
+The circuit expression \emph{inside} the trace adds only $O(m)$ operations
+to the verifier. That observation bounds the expression's construction,
+not the cost of applying $\tau_w$. The finite checker computes with a
+complete table of $2^m$ witness coefficients.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{@{}p{1.8in}X@{}}\toprule
+Established & Not supplied by the expression\\\midrule
+Small weighted circuit inside $\tau$ & A polynomial-time evaluator for the trace\\
+Formal polynomial detects nonemptiness & A deterministic identity test from one evaluation\\
+Exact finite table algorithm & Polynomial storage in the witness length\\\bottomrule
+\end{tabularx}
+\end{center}
+
+At $m=0$, the empty product is one, the top coefficient is the constant
+itself, and there is a single empty witness. The definitions remain valid.
+
+\sourcepath{docs/THEORY.md, equations (10)--(11); checks/verify_fingerprint.py}
+
+\guidepage{Disjoint-variable factorization uses each predicate's own block}
+Suppose $A$ depends on witness variables in block $S$ and $B$ on a disjoint
+block $T$. Write $\tau_{z_S}(A)=\sum_s A(s)z_S^s$ for the weighted trace
+on $S$, distinct from the unweighted top-coefficient notation $\tau_w$.
+Weighted sum over the union factors as
+\[
+ \sum_{s,t} A(s)B(t)z_S^s z_T^t
+ =\left(\sum_s A(s)z_S^s\right)
+  \left(\sum_t B(t)z_T^t\right).
+\]
+Each factor is traced on its own variable block. The union trace is then
+their product. This is an ordinary factorization of a finite double sum.
+
+For $A=w_1$ and $B=w_2$,
+\[
+ \tau_{z_1}(A)=z_1,\qquad \tau_{z_2}(B)=z_2,\qquad
+ \tau_{z_1,z_2}(AB)=z_1z_2.
+\]
+Tracing both factors over the full two-bit ambient domain introduces unused
+variable sums:
+\[
+ \tau_{z_1,z_2}(A)=z_1(1+z_2),\qquad
+ \tau_{z_1,z_2}(B)=z_2(1+z_1).
+\]
+Their product generally differs from the union trace. At $z_1=z_2=1$, each
+full ambient factor is zero, while the trace of $AB$ is one. Disjoint
+dependence alone does not justify multiplying traces with mismatched domains.
+
+The source checker tests all four one-bit predicates per block and every
+pair of GF(16) weights: $4\cdot4\cdot16^2=4,096$ own-block factorization
+cases. It does not claim an ambient-domain product identity.
+
+\evidence{General written factorization under the own-block convention;
+exact finite source check and an explicit ambient-domain counterexample.}
+
+\guidepage{Overlap breaks the attempted context-free product rule}
+One shared witness bit already defeats multiplicativity. With
+$\tau_z(P)=P(0)+zP(1)$,
+\[
+ \tau_z(w)=z,\qquad \tau_z(1+w)=1,
+ \qquad \tau_z(w(1+w))=0.
+\]
+The product of the separate summaries is $z$. Also $w^2=w$ in the Boolean
+ring, so $\tau_z(w^2)=z$, whereas $\tau_z(w)^2=z^2$.
+
+\visualfigure{overlap_gf16}{A concrete field point $z=\theta$ with $\theta\ne0,1$. The two columns are unequal in both rows.}
+
+The field is $\F_{16}=\F_2[\theta]/(\theta^4+\theta+1)$. The checker stores
+field elements as four-bit coefficient vectors: $\theta$ is integer 2 and
+$\theta^2$ is integer 4. These integers encode field elements; they are not
+ordinary integer multiplication. Exact field multiplication gives the
+reported mismatch.
+
+The first row loses witness compatibility: $w$ and $1+w$ have no common
+accepting witness, yet their separate weighted summaries multiply to a
+nonzero value. The second row loses Boolean idempotence. This is a genuine
+counterexample to a context-free multiplicative trace compiler, not a
+floating-point effect or an implementation anomaly.
+
+\evidence{Exact GF(16) fixture imported from the source field routines. The
+general overlap failure is symbolic and does not depend on the selected field.}
+
+\guidepage{Randomized detection is conditional on efficient evaluation}
+The witness polynomial has total degree at most $m$. Over a finite field
+$K$, a nonzero polynomial of total degree at most $m$ vanishes on at most
+an $m/|K|$ fraction of independent uniform field points. The standard
+inductive proof separates the leading coefficient in the last variable
+and applies the univariate root bound.
+
+If a uniform polynomial-time exact evaluator for the weighted trace were
+available, with efficient field representation and arithmetic and
+$|K|\ge4m$, one evaluation would accept a satisfiable verifier with
+probability at least $3/4$. An unsatisfiable verifier has the zero polynomial,
+so it never produces a false acceptance. Repetition with independent samples
+reduces the false-rejection probability to at most $4^{-r}$ after $r$ trials.
+
+\begin{center}
+\begin{tabular}{@{}rrrr@{}}\toprule
+Witness bits & GF(16) points & maximum zeros in source tests & degree-bound zeros\\\midrule
+1 & 16 & 1 & 1\\
+2 & 256 & 31 & 32\\
+3 & 4,096 & 721 & 768\\\bottomrule
+\end{tabular}
+\end{center}
+
+These source tests enumerate every verifier at each displayed witness length
+and all field points for the polynomial evaluations. The independent
+coefficient-extraction comparison has a narrower three-variable grid:
+coordinates $0,1,2,3$, rather than all GF(16) points. Both scopes are recorded.
+
+This is a conditional randomized algorithmic implication. The required
+efficient trace evaluator is not supplied. The existing exact evaluator is
+exponential in witness length, and no deterministic $P=NP$ conclusion is
+drawn. Random bits and polynomial output description alone do not account
+for the evaluation operation.
+
+\sourcepath{docs/THEORY.md, section 5; evidence/baseline/fingerprint.json}
+
+\guidepage{Reproduce the figures and inspect their exact evidence}
+All 12 figure pairs are vector PDFs plus raster PNG previews. Their single
+generation command, from the publication-set root, is
+\begin{lstlisting}
+python scripts/make_figures.py
+\end{lstlisting}
+The script imports the original gate, profile, construction, and GF(16)
+functions without invoking their release-writing entry points. It writes
+only new figures and \code{reviews/visual_examples.json}. That record contains
+fixture truth-table integers, ordered bits, exact gate lists, scalar counts,
+the source hashes, and the distinction between finite assertions and
+plotted all-size formulas.
+
+The separate dual sanity suite runs as
+\begin{lstlisting}
+python scripts/core_dual_checks.py \
+  --output reviews/core_dual_checks.json
+\end{lstlisting}
+It compares exhaustive degree-bounded safe truth tables with a separate
+Gaussian-elimination calculation of the negative evaluation span. Its
+range is all truth tables at $n=0,1,2,3$, not an extrapolation.
+
+\begin{tabularx}{\textwidth}{@{}p{1.4in}X@{}}\toprule
+Evidence layer & Publication treatment\\\midrule
+General mathematics & Main paper written proofs with explicit model boundaries\\
+Formal subset & C01, maintained NCT degree, and numerical C02; fresh compiler and kernel replay passed\\
+New figures & 12 exact generated examples/formula plots, each with fixture provenance\\
+Fresh source checks & Complete source \code{--all} verification and preserved historical outputs passed in the current replay\\
+Rendering & This guide is compiled and visually checked separately from mathematical and kernel verification\\\bottomrule
+\end{tabularx}
+
+The source release, earlier companions, and archived evidence remain
+unchanged. Publication corrections clarify evidence labels, the nonzero
+monotone minterm domain, the $m=0$ scalar-summary boundary, and trace-variable
+domains. No new conjecture or extension to unrestricted hardness is added.
+
+\evidence{Figure and manuscript sources are included for review and reproduction.}
+

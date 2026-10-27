@@ -1,0 +1,149 @@
+{
+  "pass_id": "symmetry-completion",
+  "issues": [
+    {
+      "id": "symmetry-F001",
+      "lane": "correctness",
+      "title": "Density-limit entropy remainder is too strong",
+      "severity": "moderate",
+      "type": "computation-error",
+      "confidence": 0.99,
+      "location": "chapters/13_scaling_phases.tex",
+      "quote": "nH_2(p)+O(\\log n),",
+      "analysis": "Only k(n)/n\u2192p is assumed. For p=1/4 and k=floor(n/4+sqrt(n)), differentiability of entropy gives nH(k/n)-nH(p)=log2(3)*sqrt(n)+O(1), exceeding logarithmic error. The exponential classification survives.",
+      "suggested_fix": "Use nH2(k(n)/n)+O(log n)=nH2(p)+o(n), with the uniform Stirling argument.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F002",
+      "lane": "correctness",
+      "title": "Schur state record is not unique at zero weight",
+      "severity": "moderate",
+      "type": "well-definedness",
+      "confidence": 0.99,
+      "location": "chapters/11_commutant_collapse.tex",
+      "quote": "if and only if it can be written uniquely as",
+      "analysis": "A normalized density block attached to p_lambda=0 is unconstrained by the represented state. Unnormalized blocks are unique.",
+      "suggested_fix": "State uniqueness for weights and unnormalized blocks; omit normalized blocks of zero weight.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F003",
+      "lane": "correctness",
+      "title": "Trajectory confinement does not imply gatewise subspace invariance",
+      "severity": "moderate",
+      "type": "hidden-hypothesis",
+      "confidence": 0.99,
+      "location": "chapters/06_dynamic_frames.tex",
+      "quote": "Use the weight sectors as packet nodes and apply \\cref{cor:packet-graph-collapse}.",
+      "analysis": "Bounded-excitation corollary assumes confinement of the actual trajectory, while the graph corollary requires all active sector inputs to stay in the sector union. The conclusion is valid directly by inserting P on the actual trajectory.",
+      "suggested_fix": "Replace that application with PG_tP psi_(t-1)=G_t psi_(t-1), and require efficient initialization.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F004",
+      "lane": "claims",
+      "title": "Numerical reconstruction mislabeled as exact computation",
+      "severity": "moderate",
+      "type": "overclaim",
+      "confidence": 0.99,
+      "location": "Symmetry_Collapse_in_Quantum_Computation.tex",
+      "quote": "title={Recorded exact computation}",
+      "analysis": "validate.py uses NumPy complex128 and tolerance 2e-12. Structural exactness of the mathematical subspace is distinct from exact arithmetic.",
+      "suggested_fix": "Rename recorded panels; distinguish integer checks, new rational controls, numerical diagnostics, and historical timings.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F005",
+      "lane": "correctness",
+      "title": "Small nonzero leakage silently accepted by exact packet compiler",
+      "severity": "moderate",
+      "type": "computation-error",
+      "confidence": 0.99,
+      "location": "code/symmetry_packets.py",
+      "quote": "if leakage > 1e-12:",
+      "analysis": "Nonzero off-packet coefficients below squared threshold are dropped while method claims to reject leakage. A one-qubit rotation of size 1e-7 in a fixed-weight packet demonstrates it. Squared magnitudes can also underflow.",
+      "suggested_fix": "Reject based on any nonzero represented off-packet coefficient, separately retaining magnitude as diagnostic.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F006",
+      "lane": "correctness",
+      "title": "Complex gates cannot update a real input array",
+      "severity": "moderate",
+      "type": "computation-error",
+      "confidence": 0.99,
+      "location": "code/symmetry_packets.py",
+      "quote": "out = np.zeros_like(state)",
+      "analysis": "A real input state with imaginary diagonal gate causes an unsafe complex-to-real accumulation. It must promote the output dtype.",
+      "suggested_fix": "Promote to result_type(state,gate,complex128) and exercise control.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F007",
+      "lane": "notation",
+      "title": "Finite unitary invariance described as weaker than commutation",
+      "severity": "minor",
+      "type": "hypothesis-mismatch",
+      "confidence": 0.99,
+      "location": "chapters/04_exact_simulation.tex",
+      "quote": "The equation is slightly more general than commutation: it requires invariance of the selected subspace, not necessarily invariance of its orthogonal complement.",
+      "analysis": "For finite-dimensional unitary G, invariant S maps onto itself and S-perp is invariant, hence G commutes with P. The weaker relation holds for general linear maps.",
+      "suggested_fix": "State distinction between general maps and finite-dimensional unitaries.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    },
+    {
+      "id": "symmetry-F008",
+      "lane": "correctness",
+      "title": "Algorithmic access hypotheses need explicit initialization and enumeration",
+      "severity": "moderate",
+      "type": "hidden-hypothesis",
+      "confidence": 0.99,
+      "location": "chapters/17_measurement_feedback.tex",
+      "quote": "polynomial-time transition probabilities",
+      "analysis": "Knowing each transition probability is efficient is not an algorithm for enumerating successors or identifying equivalent histories. Several simulation corollaries similarly left initialization implicit.",
+      "suggested_fix": "Require polynomial enumeration, canonical state keys sufficient for future evolution, initialization, numerical precision and appropriate output support; make shared initialization hypotheses explicit.",
+      "unit_id": null,
+      "reviewer": "symmetry-completion"
+    }
+  ],
+  "checks": {
+    "reviewed_core": [
+      "invariant packets and basis simulation",
+      "fixed and moving packet simulation",
+      "fixed and dynamic leakage",
+      "bounded-excitation trajectories",
+      "Schur normal form and dimension bound",
+      "fixed-charge phase diagram",
+      "orbit quotient hypotheses",
+      "branch merging",
+      "new adaptive certificate"
+    ],
+    "other_scope": "Read the component chapter sources for notation, evidence labels, theorem framing, and open endpoints. This is not an independent reproof of all external stabilizer/Gaussian/Schur results. Source appendix records are historical context, not newly audited.",
+    "computation": "Original validation plus new exact and boundary scripts; three completed and validated schema-v2 manifests.",
+    "presentation": "Changed-hunk math proofreading, all environments balanced, all internal references resolved. Final visual PDF inspection belongs to volume build.",
+    "failed_execution": "Disk full truncated symmetry_packets.py during a write. Restored from recorded original, reapplied edits, AST check and all tests passed. Initial manifest validator rejected absolute paths; paths corrected relative to workspace and all three validations passed.",
+    "not_run": [
+      "No symmetry Lean formalization",
+      "No fresh archival timing reproduction",
+      "No separate symmetry PDF rebuild"
+    ]
+  },
+  "source_changes": "source_changes.json",
+  "model_assignment": {
+    "assignment_source": null,
+    "requested_model": null,
+    "requested_reasoning": null,
+    "actual_model": null,
+    "actual_reasoning": null,
+    "fallback_reason": null
+  },
+  "provenance": "Native delegated review and self-review of own corrections; parent independently confirmed entropy counterexample."
+}

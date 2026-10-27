@@ -1,0 +1,69 @@
+\chapter{Compressed packet simulation}
+\label{ch:compressed-packets}
+\index{compressed representation}
+
+\section{Beyond packet dimension}
+The small-packet theorem stores one amplitude per packet-basis state. This is not the only classical representation. A state in an exponentially large packet may lie on a polynomially parameterized manifold. Stabilizer states, Gaussian states, matrix-product states of bounded bond dimension, and low-rank operator states are standard examples of compact internal encodings.
+
+Let $\mathcal R_n$ be a class of classical descriptions, and let
+\[
+\operatorname{decode}:\mathcal R_n\to P_n\Hh_n
+\]
+associate a quantum state with each description.
+
+\begin{theorem}[Compressed-packet simulation]
+\label{thm:compressed-packet}
+A polynomial-time uniform quantum circuit family lies in $P$ if there is a polynomial-size classical representation satisfying:
+
+\begin{enumerate}
+\item the initial state has an efficiently constructible description $r_0\in\mathcal R_n$;
+\item every gate induces a polynomial-time update $r\mapsto T_j(r)$ with
+\[
+\operatorname{decode}(T_j(r))
+=
+G_j\operatorname{decode}(r);
+\]
+\item all intermediate description sizes remain polynomial;
+\item the acceptance probability is computable from the final description in polynomial time.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Iterate the polynomial-time classical updates on the polynomial-size descriptions and evaluate the final measurement. The algorithm never reconstructs the full state vector.
+\end{proof}
+
+\section{Two-axis complexity}
+The records suggest the pair
+\[
+(D_{\rm packet},\chi_{\rm internal}),
+\]
+where $D_{\rm packet}$ measures active packet size or count and $\chi_{\rm internal}$ measures the representation cost inside the packet. Efficient simulation may follow from either coordinate:
+
+\begin{itemize}
+\item fixed weight has polynomial $D_{\rm packet}$ and can use explicit amplitudes;
+\item stabilizer states may have exponential support but polynomial $\chi_{\rm internal}$;
+\item Gaussian states may occupy large number sectors but have polynomial covariance descriptions;
+\item half-filled generic states may have both coordinates exponential.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.72\textwidth]{two_axis_complexity.pdf}
+\caption{Packet dimension and internal representation cost are independent classical resources.}
+\end{figure}
+
+\section{Hybrid transfer graphs}
+Suppose packets are nodes of a sparse graph and each node carries an internal representation. A gate may update a node internally or transfer a compact component to neighboring nodes. The simulation cost depends on
+\[
+\sum_{\alpha\in A_t}\operatorname{size}(r_\alpha)
++
+\#\{\text{nonzero transfers at time }t\}.
+\]
+This model combines symmetry selection rules with compact state classes.
+
+\section{Closure is the decisive condition}
+A compact representation may be destroyed by one gate. Clifford tableaux fail under generic non-Clifford rotations. Gaussian covariance matrices fail under generic non-Gaussian operations. Low-bond tensor networks may acquire exponential bond dimension. The theorem therefore requires closure or a proved polynomial growth bound, not merely a compact initial state.
+
+\begin{principle}[Representation growth audit]
+The correct complexity variable is the maximum representation size reached along the computation, not the size of the initial or final state alone.
+\end{principle}

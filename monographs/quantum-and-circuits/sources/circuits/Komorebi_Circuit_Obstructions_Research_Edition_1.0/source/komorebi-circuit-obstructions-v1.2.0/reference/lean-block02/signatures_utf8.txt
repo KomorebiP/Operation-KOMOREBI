@@ -1,0 +1,651 @@
+[L001] CircuitObstructions/Gates.lean:17
+CircuitObstructions.write_same {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t : W) (b : Bool) :
+  CircuitObstructions.write s t b t = b
+AXIOMS: propext
+
+[L002] CircuitObstructions/Gates.lean:20
+CircuitObstructions.write_other {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) (t i : W) (b : Bool)
+  (h : i ≠ t) : CircuitObstructions.write s t b i = s i
+AXIOMS: propext
+
+[L003] CircuitObstructions/Gates.lean:23
+CircuitObstructions.xor_cancel_right (a b : Bool) : (a ^^ b ^^ b) = a
+AXIOMS: none
+
+[L004] CircuitObstructions/Gates.lean:26
+CircuitObstructions.xor_cancel_left (a b : Bool) : (a ^^ (a ^^ b)) = b
+AXIOMS: none
+
+[L005] CircuitObstructions/Gates.lean:29
+CircuitObstructions.xor_commute (a b : Bool) : (a ^^ b) = (b ^^ a)
+AXIOMS: none
+
+[L006] CircuitObstructions/Gates.lean:32
+CircuitObstructions.xor_true_iff_ne (a b : Bool) : (a ^^ b) = true ↔ a ≠ b
+AXIOMS: none
+
+[L007] CircuitObstructions/Gates.lean:48
+CircuitObstructions.Gate.eval_involutive {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (s : CircuitObstructions.State W) : g.eval (g.eval s) = s
+AXIOMS: propext, Quot.sound
+
+[L008] CircuitObstructions/Gates.lean:67
+CircuitObstructions.Gate.eval_injective {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  {s t : CircuitObstructions.State W} (h : g.eval s = g.eval t) : s = t
+AXIOMS: propext, Quot.sound
+
+[L009] CircuitObstructions/Gates.lean:78
+CircuitObstructions.run_nil {W : Type} [DecidableEq W] (s : CircuitObstructions.State W) :
+  CircuitObstructions.run [] s = s
+AXIOMS: none
+
+[L010] CircuitObstructions/Gates.lean:81
+CircuitObstructions.run_cons {W : Type} [DecidableEq W] (g : CircuitObstructions.Gate W)
+  (gs : CircuitObstructions.Circuit W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (g :: gs) s = CircuitObstructions.run gs (g.eval s)
+AXIOMS: none
+
+[L011] CircuitObstructions/Gates.lean:84
+CircuitObstructions.run_append {W : Type} [DecidableEq W] (p q : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) :
+  CircuitObstructions.run (p ++ q) s = CircuitObstructions.run q (CircuitObstructions.run p s)
+AXIOMS: none
+
+[L012] CircuitObstructions/Gates.lean:90
+CircuitObstructions.run_reverse_run {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run (List.reverse c) (CircuitObstructions.run c s) = s
+AXIOMS: propext, Quot.sound
+
+[L013] CircuitObstructions/Gates.lean:98
+CircuitObstructions.run_run_reverse {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : CircuitObstructions.State W) : CircuitObstructions.run c (CircuitObstructions.run (List.reverse c) s) = s
+AXIOMS: propext, Quot.sound
+
+[L014] CircuitObstructions/Gates.lean:102
+CircuitObstructions.run_injective {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  {s t : CircuitObstructions.State W} (h : CircuitObstructions.run c s = CircuitObstructions.run c t) : s = t
+AXIOMS: propext, Quot.sound
+
+[L015] CircuitObstructions/Gates.lean:114
+CircuitObstructions.toffoliCount_append {W : Type} (p q : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (p ++ q) = CircuitObstructions.toffoliCount p + CircuitObstructions.toffoliCount q
+AXIOMS: propext
+
+[L016] CircuitObstructions/Gates.lean:118
+CircuitObstructions.toffoliCount_reverse {W : Type} (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (List.reverse c) = CircuitObstructions.toffoliCount c
+AXIOMS: propext
+
+[L017] CircuitObstructions/CutComparison.lean:17
+CircuitObstructions.Boundary.target_separated {X W : Type} (e : CircuitObstructions.Boundary X W) (x : X) :
+  e.encode x false ≠ e.encode x true
+AXIOMS: propext
+
+[L018] CircuitObstructions/CutComparison.lean:39
+CircuitObstructions.canonical_input (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin n) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inl i) = x i
+AXIOMS: none
+
+[L019] CircuitObstructions/CutComparison.lean:42
+CircuitObstructions.canonical_ancilla (n a : Nat) (x : Fin n → Bool) (b : Bool) (i : Fin a) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inl i)) = false
+AXIOMS: none
+
+[L020] CircuitObstructions/CutComparison.lean:45
+CircuitObstructions.canonical_target (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.canonicalBoundary n a).encode x b (Sum.inr (Sum.inr ())) = b
+AXIOMS: none
+
+[L021] CircuitObstructions/CutComparison.lean:49
+CircuitObstructions.inverse_suffix_boundary {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (b : Bool) :
+  CircuitObstructions.run (List.reverse q) (e.encode x b) = CircuitObstructions.run p (e.encode x (b ^^ f x))
+AXIOMS: propext, Quot.sound
+
+[L022] CircuitObstructions/CutComparison.lean:67
+CircuitObstructions.direction_nonzero {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p : CircuitObstructions.Circuit W) (x : X) : ∃ i, CircuitObstructions.direction e p x i = true
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L023] CircuitObstructions/CutComparison.lean:82
+CircuitObstructions.cut_transport_identity {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = (f x && CircuitObstructions.direction e p x i)
+AXIOMS: propext, Quot.sound
+
+[L024] CircuitObstructions/CutComparison.lean:91
+CircuitObstructions.cut_packet_safe {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X)
+  (i : W) : CircuitObstructions.packet e p q x i = true → f x = true
+AXIOMS: propext, Quot.sound
+
+[L025] CircuitObstructions/CutComparison.lean:99
+CircuitObstructions.cut_cover_complete {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L026] CircuitObstructions/CutComparison.lean:111
+CircuitObstructions.complete_safe_cover {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) :
+  (∀ (x : X) (i : W), CircuitObstructions.packet e p q x i = true → f x = true) ∧
+    ∀ (x : X), f x = true ↔ ∃ i, CircuitObstructions.packet e p q x i = true
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L027] CircuitObstructions/CutComparison.lean:119
+CircuitObstructions.cut_states_equal_iff_reject {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (p q : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e (p ++ q) f) (x : X) :
+  CircuitObstructions.run p (e.encode x false) = CircuitObstructions.run (List.reverse q) (e.encode x false) ↔
+    f x = false
+AXIOMS: propext, Quot.sound
+
+[L028] CircuitObstructions/CutComparison.lean:131
+CircuitObstructions.every_index_cut {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c : CircuitObstructions.Circuit W) (f : X → Bool) (hR : CircuitObstructions.Restores e c f) (k : Nat) (x : X) :
+  f x = true ↔ ∃ i, CircuitObstructions.packet e (List.take k c) (List.drop k c) x i = true
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L029] CircuitObstructions/CutComparison.lean:139
+CircuitObstructions.canonical_complete_safe_cover (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : (Fin n → Bool) → Bool)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) (k : Nat) :
+  (∀ (x : Fin n → Bool) (i : CircuitObstructions.CanonicalWire n a),
+      CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+          true →
+        f x = true) ∧
+    ∀ (x : Fin n → Bool),
+      f x = true ↔
+        ∃ i,
+          CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) (List.take k c) (List.drop k c) x i =
+            true
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L030] CircuitObstructions/Examples.lean:27
+CircuitObstructions.Examples.andOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.andBoundary CircuitObstructions.Examples.andOracle fun x =>
+    x.fst && x.snd
+AXIOMS: Quot.sound
+
+[L031] CircuitObstructions/Examples.lean:33
+CircuitObstructions.Examples.andOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.andOracle = 2
+AXIOMS: propext
+
+[L032] CircuitObstructions/Examples.lean:36
+CircuitObstructions.Examples.and_scratch_can_be_dirty :
+  CircuitObstructions.run CircuitObstructions.Examples.andCompute
+      (CircuitObstructions.Examples.andBoundary.encode (true, true) false)
+      CircuitObstructions.Examples.WorkWire.scratch =
+    true
+AXIOMS: none
+
+[L033] CircuitObstructions/Examples.lean:40
+CircuitObstructions.Examples.andOracle_every_cut (k : Nat) (x : Bool × Bool) :
+  (x.fst && x.snd) = true ↔
+    ∃ i,
+      CircuitObstructions.packet CircuitObstructions.Examples.andBoundary
+          (List.take k CircuitObstructions.Examples.andOracle) (List.drop k CircuitObstructions.Examples.andOracle) x
+          i =
+        true
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L034] CircuitObstructions/Examples.lean:66
+CircuitObstructions.Examples.outputActiveOracle_restores :
+  CircuitObstructions.Restores CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.outputActiveOracle
+    fun x => true
+AXIOMS: Quot.sound
+
+[L035] CircuitObstructions/Examples.lean:71
+CircuitObstructions.Examples.outputActiveOracle_length : List.length CircuitObstructions.Examples.outputActiveOracle = 7
+AXIOMS: none
+
+[L036] CircuitObstructions/Examples.lean:73
+CircuitObstructions.Examples.outputActiveOracle_toffoli_count :
+  CircuitObstructions.toffoliCount CircuitObstructions.Examples.outputActiveOracle = 0
+AXIOMS: propext
+
+[L037] CircuitObstructions/Examples.lean:76
+CircuitObstructions.Examples.moved_discrepancy_data (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.data =
+    true
+AXIOMS: none
+
+[L038] CircuitObstructions/Examples.lean:80
+CircuitObstructions.Examples.moved_discrepancy_target (x : Bool) :
+  CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+      CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+    false
+AXIOMS: none
+
+[L039] CircuitObstructions/Examples.lean:85
+CircuitObstructions.Examples.target_only_reconstruction_is_false :
+  ¬∀ (x : Bool),
+      CircuitObstructions.packet CircuitObstructions.Examples.swapBoundary CircuitObstructions.Examples.swapCircuit
+          CircuitObstructions.Examples.swapSuffix x CircuitObstructions.Examples.SwapWire.target =
+        true
+AXIOMS: none
+
+[L040] CircuitObstructions/Examples.lean:93
+CircuitObstructions.Examples.degenerate_encoding_control :
+  have bad := fun x x_1 => false;
+  (∀ (y : Bool), CircuitObstructions.run [] (bad y) = bad (y ^^ true)) ∧
+    ∀ (i : CircuitObstructions.Examples.SwapWire), (bad false i ^^ bad false i) = false
+AXIOMS: none
+
+[L041] CircuitObstructions/Degree.lean:19
+CircuitObstructions.bprod_nil {W : Type} (s : CircuitObstructions.State W) : CircuitObstructions.bprod [] s = true
+AXIOMS: none
+
+[L042] CircuitObstructions/Degree.lean:20
+CircuitObstructions.bprod_cons {W : Type} (i : W) (is : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod (i :: is) s = (s i && CircuitObstructions.bprod is s)
+AXIOMS: none
+
+[L043] CircuitObstructions/Degree.lean:23
+CircuitObstructions.bprod_append {W : Type} (l k : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod (l ++ k) s = (CircuitObstructions.bprod l s && CircuitObstructions.bprod k s)
+AXIOMS: propext
+
+[L044] CircuitObstructions/Degree.lean:29
+CircuitObstructions.xor_and_right (a b c : Bool) : ((a ^^ b) && c) = (a && c ^^ b && c)
+AXIOMS: none
+
+[L045] CircuitObstructions/Degree.lean:33
+CircuitObstructions.and_xor_right (a b c : Bool) : (a && (b ^^ c)) = (a && b ^^ a && c)
+AXIOMS: none
+
+[L046] CircuitObstructions/Degree.lean:37
+CircuitObstructions.not_as_xor_one (a : Bool) : (!a) = (a ^^ true)
+AXIOMS: none
+
+[L047] CircuitObstructions/Degree.lean:47
+CircuitObstructions.DegreeLE.mono {n d e : Nat} {f : CircuitObstructions.BFun n} (h : CircuitObstructions.DegreeLE d f)
+  (hde : d ≤ e) : CircuitObstructions.DegreeLE e f
+AXIOMS: none
+
+[L048] CircuitObstructions/Degree.lean:54
+CircuitObstructions.DegreeLE.one (n d : Nat) : CircuitObstructions.DegreeLE d fun x => true
+AXIOMS: none
+
+[L049] CircuitObstructions/Degree.lean:57
+CircuitObstructions.DegreeLE.constant (n d : Nat) (b : Bool) : CircuitObstructions.DegreeLE d fun x => b
+AXIOMS: none
+
+[L050] CircuitObstructions/Degree.lean:63
+CircuitObstructions.DegreeLE.variable {n : Nat} (i : Fin n) : CircuitObstructions.DegreeLE 1 fun x => x i
+AXIOMS: propext, Quot.sound
+
+[L051] CircuitObstructions/Degree.lean:67
+CircuitObstructions.DegreeLE.xor {n d e : Nat} {f g : CircuitObstructions.BFun n}
+  (hf : CircuitObstructions.DegreeLE d f) (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (max d e) fun x => f x ^^ g x
+AXIOMS: propext
+
+[L052] CircuitObstructions/Degree.lean:72
+CircuitObstructions.DegreeLE.not {n d : Nat} {f : CircuitObstructions.BFun n} (hf : CircuitObstructions.DegreeLE d f) :
+  CircuitObstructions.DegreeLE d fun x => !f x
+AXIOMS: Quot.sound
+
+[L053] CircuitObstructions/Degree.lean:76
+CircuitObstructions.DegreeLE.monomial_mul {n d e : Nat} (l : List (Fin n)) (hl : l.length ≤ d)
+  {g : CircuitObstructions.BFun n} (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (d + e) fun x => CircuitObstructions.bprod l x && g x
+AXIOMS: propext, Quot.sound
+
+[L054] CircuitObstructions/Degree.lean:87
+CircuitObstructions.DegreeLE.mul {n d e : Nat} {f g : CircuitObstructions.BFun n}
+  (hf : CircuitObstructions.DegreeLE d f) (hg : CircuitObstructions.DegreeLE e g) :
+  CircuitObstructions.DegreeLE (d + e) fun x => f x && g x
+AXIOMS: propext, Quot.sound
+
+[L055] CircuitObstructions/Degree.lean:96
+CircuitObstructions.DegreeLE.product {n : Nat} {W : Type} (l : List W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (h : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i) :
+  CircuitObstructions.DegreeLE l.length fun x => CircuitObstructions.bprod l (s x)
+AXIOMS: propext, Quot.sound
+
+[L056] CircuitObstructions/Degree.lean:109
+CircuitObstructions.polyEval_append {n : Nat} (p q : List (List (Fin n))) (x : Fin n → Bool) :
+  CircuitObstructions.polyEval (p ++ q) x = (CircuitObstructions.polyEval p x ^^ CircuitObstructions.polyEval q x)
+AXIOMS: propext
+
+[L057] CircuitObstructions/Degree.lean:115
+CircuitObstructions.DegreeLE.polynomial_witness {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.DegreeLE d f) :
+  ∃ p, (∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) ∧ CircuitObstructions.polyEval p = f
+AXIOMS: propext, Quot.sound
+
+[L058] CircuitObstructions/Degree.lean:134
+CircuitObstructions.polynomial_degree_certificate {n d : Nat} (p : List (List (Fin n)))
+  (hp : ∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) : CircuitObstructions.DegreeLE d (CircuitObstructions.polyEval p)
+AXIOMS: propext
+
+[L059] CircuitObstructions/Degree.lean:142
+CircuitObstructions.degreeLE_iff_polynomial {n d : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.DegreeLE d f ↔
+    ∃ p, (∀ (l : List (Fin n)), l ∈ p → l.length ≤ d) ∧ CircuitObstructions.polyEval p = f
+AXIOMS: propext, Quot.sound
+
+[L060] CircuitObstructions/MultiplicativeDegree.lean:17
+CircuitObstructions.withoutWire_length_le {W : Type} [DecidableEq W] (l : List W) (t : W) :
+  (CircuitObstructions.withoutWire l t).length ≤ l.length
+AXIOMS: propext
+
+[L061] CircuitObstructions/MultiplicativeDegree.lean:21
+CircuitObstructions.withoutWire_length_lt {W : Type} [DecidableEq W] (l : List W) (t : W) (ht : t ∈ l) :
+  (CircuitObstructions.withoutWire l t).length + 1 ≤ l.length
+AXIOMS: propext, Quot.sound
+
+[L062] CircuitObstructions/MultiplicativeDegree.lean:33
+CircuitObstructions.bprod_write {W : Type} [DecidableEq W] (l : List W) (s : CircuitObstructions.State W) (t : W)
+  (b : Bool) :
+  CircuitObstructions.bprod l (CircuitObstructions.write s t b) =
+    ((if t ∈ l then b else true) && CircuitObstructions.bprod (CircuitObstructions.withoutWire l t) s)
+AXIOMS: propext, Quot.sound
+
+[L063] CircuitObstructions/MultiplicativeDegree.lean:48
+CircuitObstructions.bprod_write_absent {W : Type} [DecidableEq W] (l : List W) (s : CircuitObstructions.State W) (t : W)
+  (b : Bool) (ht : ¬t ∈ l) :
+  CircuitObstructions.bprod l (CircuitObstructions.write s t b) = CircuitObstructions.bprod l s
+AXIOMS: propext
+
+[L064] CircuitObstructions/MultiplicativeDegree.lean:62
+CircuitObstructions.workspaceDegree_initial {n : Nat} {W : Type} (s : (Fin n → Bool) → CircuitObstructions.State W)
+  (h : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i) : CircuitObstructions.WorkspaceDegree s 0
+AXIOMS: propext, Quot.sound
+
+[L065] CircuitObstructions/MultiplicativeDegree.lean:73
+CircuitObstructions.workspaceDegree_toggle {n : Nat} {W : Type} [DecidableEq W]
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (t : W) (controls : List W) (k : Nat)
+  (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (CircuitObstructions.toggleProduct s t controls) (k + (controls.length - 1))
+AXIOMS: propext, Quot.sound
+
+[L066] CircuitObstructions/MultiplicativeDegree.lean:104
+CircuitObstructions.workspaceDegree_gate {n : Nat} {W : Type} [DecidableEq W]
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (g : CircuitObstructions.Gate W) (k : Nat)
+  (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (fun x => g.eval (s x)) (k + g.toffoliCost)
+AXIOMS: propext, Quot.sound
+
+[L067] CircuitObstructions/MultiplicativeDegree.lean:128
+CircuitObstructions.workspaceDegree_run {n : Nat} {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (k : Nat) (h : CircuitObstructions.WorkspaceDegree s k) :
+  CircuitObstructions.WorkspaceDegree (fun x => CircuitObstructions.run c (s x))
+    (k + CircuitObstructions.toffoliCount c)
+AXIOMS: propext, Quot.sound
+
+[L068] CircuitObstructions/MultiplicativeDegree.lean:139
+CircuitObstructions.run_coordinate_degree {n : Nat} {W : Type} [DecidableEq W] (c : CircuitObstructions.Circuit W)
+  (s : (Fin n → Bool) → CircuitObstructions.State W) (hs : ∀ (i : W), CircuitObstructions.DegreeLE 1 fun x => s x i)
+  (i : W) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) fun x => CircuitObstructions.run c (s x) i
+AXIOMS: propext, Quot.sound
+
+[L069] CircuitObstructions/MultiplicativeDegree.lean:146
+CircuitObstructions.canonical_boundary_degree (n a : Nat) (b : Bool) (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE 1 fun x => (CircuitObstructions.canonicalBoundary n a).encode x b i
+AXIOMS: propext, Quot.sound
+
+[L070] CircuitObstructions/MultiplicativeDegree.lean:155
+CircuitObstructions.canonical_run_coordinate_degree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (b : Bool)
+  (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) fun x =>
+    CircuitObstructions.run c ((CircuitObstructions.canonicalBoundary n a).encode x b) i
+AXIOMS: propext, Quot.sound
+
+[L071] CircuitObstructions/MultiplicativeDegree.lean:161
+CircuitObstructions.canonical_cut_packet_degree (n a : Nat)
+  (p q : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a))
+  (i : CircuitObstructions.CanonicalWire n a) :
+  CircuitObstructions.DegreeLE (max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) + 1)
+    fun x => CircuitObstructions.packet (CircuitObstructions.canonicalBoundary n a) p q x i
+AXIOMS: propext, Quot.sound
+
+[L072] CircuitObstructions/SafeDegree.lean:16
+CircuitObstructions.CompleteSafeDegreeLE.mono {n d e : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.CompleteSafeDegreeLE f d) (hde : d ≤ e) : CircuitObstructions.CompleteSafeDegreeLE f e
+AXIOMS: none
+
+[L073] CircuitObstructions/SafeDegree.lean:22
+CircuitObstructions.bprod_true_iff {W : Type} (l : List W) (s : CircuitObstructions.State W) :
+  CircuitObstructions.bprod l s = true ↔ ∀ (i : W), i ∈ l → s i = true
+AXIOMS: propext, Quot.sound
+
+[L074] CircuitObstructions/SafeDegree.lean:31
+CircuitObstructions.pointIndicator_true_iff {n : Nat} (v x : Fin n → Bool) :
+  CircuitObstructions.pointIndicator v x = true ↔ x = v
+AXIOMS: propext, Quot.sound
+
+[L075] CircuitObstructions/SafeDegree.lean:44
+CircuitObstructions.pointIndicator_degree {n : Nat} (v : Fin n → Bool) :
+  CircuitObstructions.DegreeLE n (CircuitObstructions.pointIndicator v)
+AXIOMS: propext, Quot.sound
+
+[L076] CircuitObstructions/SafeDegree.lean:56
+CircuitObstructions.completeSafeDegree_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.CompleteSafeDegreeLE f n
+AXIOMS: propext, Quot.sound
+
+[L077] CircuitObstructions/SafeDegree.lean:65
+CircuitObstructions.exists_least_degree (P : Nat → Prop) (n : Nat) (hn : P n) : ∃ r, P r ∧ ∀ (k : Nat), P k → r ≤ k
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L078] CircuitObstructions/SafeDegree.lean:83
+CircuitObstructions.beta_exists {n : Nat} (f : CircuitObstructions.BFun n) :
+  ∃ r, CircuitObstructions.CompleteSafeDegreeLE f r ∧ ∀ (k : Nat), CircuitObstructions.CompleteSafeDegreeLE f k → r ≤ k
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L079] CircuitObstructions/SafeDegree.lean:90
+CircuitObstructions.beta_spec {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.CompleteSafeDegreeLE f (CircuitObstructions.beta f)
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L080] CircuitObstructions/SafeDegree.lean:93
+CircuitObstructions.beta_le_of_cover {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.CompleteSafeDegreeLE f d) : CircuitObstructions.beta f ≤ d
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L081] CircuitObstructions/SafeDegree.lean:97
+CircuitObstructions.beta_le_iff {n d : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.beta f ≤ d ↔ CircuitObstructions.CompleteSafeDegreeLE f d
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L082] CircuitObstructions/SafeDegree.lean:103
+CircuitObstructions.beta_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) : CircuitObstructions.beta f ≤ n
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L083] CircuitObstructions/SafeDegree.lean:106
+CircuitObstructions.beta_zero (n : Nat) : (CircuitObstructions.beta fun x => false) = 0
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L084] CircuitObstructions/SafeDegree.lean:113
+CircuitObstructions.canonical_cut_completeSafeDegree (n a : Nat)
+  (p q : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) (p ++ q) f) :
+  CircuitObstructions.CompleteSafeDegreeLE f
+    (max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) + 1)
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L085] CircuitObstructions/SafeDegree.lean:124
+CircuitObstructions.Gate.toffoliCost_le_one {W : Type} (g : CircuitObstructions.Gate W) : g.toffoliCost ≤ 1
+AXIOMS: propext, Quot.sound
+
+[L086] CircuitObstructions/SafeDegree.lean:127
+CircuitObstructions.toffoliCount_nil {W : Type} : CircuitObstructions.toffoliCount [] = 0
+AXIOMS: propext
+
+[L087] CircuitObstructions/SafeDegree.lean:129
+CircuitObstructions.toffoliCount_cons {W : Type} (g : CircuitObstructions.Gate W) (c : CircuitObstructions.Circuit W) :
+  CircuitObstructions.toffoliCount (g :: c) = g.toffoliCost + CircuitObstructions.toffoliCount c
+AXIOMS: propext
+
+[L088] CircuitObstructions/SafeDegree.lean:133
+CircuitObstructions.exists_cut_with_toffoliCount {W : Type} (c : CircuitObstructions.Circuit W) (k : Nat)
+  (hk : k ≤ CircuitObstructions.toffoliCount c) : ∃ p q, c = p ++ q ∧ CircuitObstructions.toffoliCount p = k
+AXIOMS: propext, Quot.sound
+
+[L089] CircuitObstructions/SafeDegree.lean:155
+CircuitObstructions.exists_balanced_toffoli_cut {W : Type} (c : CircuitObstructions.Circuit W) :
+  ∃ p q,
+    c = p ++ q ∧
+      max (CircuitObstructions.toffoliCount p) (CircuitObstructions.toffoliCount q) ≤
+        (CircuitObstructions.toffoliCount c + 1) / 2
+AXIOMS: propext, Quot.sound
+
+[L090] CircuitObstructions/SafeDegree.lean:165
+CircuitObstructions.canonical_restored_completeSafeDegree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.CompleteSafeDegreeLE f ((CircuitObstructions.toffoliCount c + 1) / 2 + 1)
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L091] CircuitObstructions/SafeDegree.lean:173
+CircuitObstructions.beta_le_half_toffoliCount (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.beta f ≤ (CircuitObstructions.toffoliCount c + 1) / 2 + 1
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L092] CircuitObstructions/SafeDegree.lean:179
+CircuitObstructions.beta_restoration_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.beta f ≤ CircuitObstructions.toffoliCount c + 3
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L093] CircuitObstructions/SafeDegree.lean:186
+CircuitObstructions.toffoliCount_ge_two_beta_sub_three (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.beta f - 3 ≤ CircuitObstructions.toffoliCount c
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L094] CircuitObstructions/AffineOutput.lean:12
+CircuitObstructions.restores_append {X W : Type} [DecidableEq W] (e : CircuitObstructions.Boundary X W)
+  (c d : CircuitObstructions.Circuit W) (f g : X → Bool) (hc : CircuitObstructions.Restores e c f)
+  (hd : CircuitObstructions.Restores e d g) : CircuitObstructions.Restores e (c ++ d) fun x => f x ^^ g x
+AXIOMS: propext
+
+[L095] CircuitObstructions/AffineOutput.lean:20
+CircuitObstructions.canonical_target_not (n a : Nat) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.Gate.not (CircuitObstructions.canonicalBoundary n a).target).eval
+      ((CircuitObstructions.canonicalBoundary n a).encode x b) =
+    (CircuitObstructions.canonicalBoundary n a).encode x (b ^^ true)
+AXIOMS: propext, Quot.sound
+
+[L096] CircuitObstructions/AffineOutput.lean:34
+CircuitObstructions.canonical_input_to_target (n a : Nat) (i : Fin n) (x : Fin n → Bool) (b : Bool) :
+  (CircuitObstructions.inputToTarget n a i).eval ((CircuitObstructions.canonicalBoundary n a).encode x b) =
+    (CircuitObstructions.canonicalBoundary n a).encode x (b ^^ x i)
+AXIOMS: propext, Quot.sound
+
+[L097] CircuitObstructions/AffineOutput.lean:45
+CircuitObstructions.affine_restored_exists (n a : Nat) (g : CircuitObstructions.BFun n)
+  (hg : CircuitObstructions.DegreeLE 1 g) :
+  ∃ d,
+    CircuitObstructions.toffoliCount d = 0 ∧
+      CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) d g
+AXIOMS: propext, Quot.sound
+
+[L098] CircuitObstructions/AffineOutput.lean:76
+CircuitObstructions.betaStar_exists {n : Nat} (f : CircuitObstructions.BFun n) :
+  ∃ r, CircuitObstructions.AffineSafeDegreeLE f r ∧ ∀ (k : Nat), CircuitObstructions.AffineSafeDegreeLE f k → r ≤ k
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L099] CircuitObstructions/AffineOutput.lean:85
+CircuitObstructions.betaStar_spec {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.AffineSafeDegreeLE f (CircuitObstructions.betaStar f)
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L100] CircuitObstructions/AffineOutput.lean:88
+CircuitObstructions.betaStar_le_of_bound {n d : Nat} {f : CircuitObstructions.BFun n}
+  (h : CircuitObstructions.AffineSafeDegreeLE f d) : CircuitObstructions.betaStar f ≤ d
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L101] CircuitObstructions/AffineOutput.lean:92
+CircuitObstructions.betaStar_le_inputs {n : Nat} (f : CircuitObstructions.BFun n) : CircuitObstructions.betaStar f ≤ n
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L102] CircuitObstructions/AffineOutput.lean:97
+CircuitObstructions.beta_le_betaStar {n : Nat} (f : CircuitObstructions.BFun n) :
+  CircuitObstructions.beta f ≤ CircuitObstructions.betaStar f
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L103] CircuitObstructions/AffineOutput.lean:101
+CircuitObstructions.betaStar_le_half_toffoliCount (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.betaStar f ≤ (CircuitObstructions.toffoliCount c + 1) / 2 + 1
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L104] CircuitObstructions/AffineOutput.lean:112
+CircuitObstructions.betaStar_restoration_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.betaStar f ≤ CircuitObstructions.toffoliCount c + 3
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L105] CircuitObstructions/AffineOutput.lean:119
+CircuitObstructions.toffoliCount_ge_two_betaStar_sub_three (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  2 * CircuitObstructions.betaStar f - 3 ≤ CircuitObstructions.toffoliCount c
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L106] CircuitObstructions/AffineOutput.lean:126
+CircuitObstructions.canonical_restored_output_degree (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) f
+AXIOMS: propext, Quot.sound
+
+[L107] CircuitObstructions/AffineOutput.lean:140
+CircuitObstructions.restored_degree_and_cover_bound (n a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire n a)) (f : CircuitObstructions.BFun n)
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary n a) c f) :
+  CircuitObstructions.DegreeLE (CircuitObstructions.toffoliCount c + 1) f ∧
+    2 * CircuitObstructions.betaStar f ≤ CircuitObstructions.toffoliCount c + 3
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L108] CircuitObstructions/DegreeChecks.lean:17
+CircuitObstructions.squareParity_add (f g : CircuitObstructions.BFun 2) :
+  (CircuitObstructions.squareParity fun x => f x ^^ g x) =
+    (CircuitObstructions.squareParity f ^^ CircuitObstructions.squareParity g)
+AXIOMS: propext
+
+[L109] CircuitObstructions/DegreeChecks.lean:22
+CircuitObstructions.affine_squareParity_zero (f : CircuitObstructions.BFun 2) (h : CircuitObstructions.DegreeLE 1 f) :
+  CircuitObstructions.squareParity f = false
+AXIOMS: propext, Quot.sound
+
+[L110] CircuitObstructions/DegreeChecks.lean:39
+CircuitObstructions.andTwo_degree_two : CircuitObstructions.DegreeLE 2 CircuitObstructions.andTwo
+AXIOMS: propext, Quot.sound
+
+[L111] CircuitObstructions/DegreeChecks.lean:43
+CircuitObstructions.andTwo_not_affine : ¬CircuitObstructions.DegreeLE 1 CircuitObstructions.andTwo
+AXIOMS: propext, Quot.sound
+
+[L112] CircuitObstructions/DegreeChecks.lean:49
+CircuitObstructions.andTwo_no_degree_one_safe_cover :
+  ¬CircuitObstructions.CompleteSafeDegreeLE CircuitObstructions.andTwo 1
+AXIOMS: propext, Quot.sound
+
+[L113] CircuitObstructions/DegreeChecks.lean:64
+CircuitObstructions.beta_andTwo : CircuitObstructions.beta CircuitObstructions.andTwo = 2
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L114] CircuitObstructions/DegreeChecks.lean:72
+CircuitObstructions.betaStar_andTwo : CircuitObstructions.betaStar CircuitObstructions.andTwo = 2
+AXIOMS: propext, Classical.choice, Quot.sound
+
+[L115] CircuitObstructions/DegreeChecks.lean:78
+CircuitObstructions.restored_andTwo_needs_toffoli (a : Nat)
+  (c : CircuitObstructions.Circuit (CircuitObstructions.CanonicalWire 2 a))
+  (hR : CircuitObstructions.Restores (CircuitObstructions.canonicalBoundary 2 a) c CircuitObstructions.andTwo) :
+  1 ≤ CircuitObstructions.toffoliCount c
+AXIOMS: propext, Classical.choice, Quot.sound

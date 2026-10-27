@@ -1,0 +1,1032 @@
+---
+title: 'Quantum–Arithmetic Bridge: Projectors, Fourier Packets, and Unitary Realization'
+author: 'Komorebi P.'
+date: 'Final edition, 6 October 2026'
+---
+
+## Abstract
+
+A finite arithmetic selector can be transported into a rational signal projector and a complex projective measurement by one explicitly normalized Fourier transformation. This paper gives the full proof chain and follows a single exact twelve-dimensional example through every representation. The arithmetic input is the coprime residue set modulo twelve. Its Fourier synthesis is the integer-valued Ramanujan signal. The associated circulant matrix is an orthogonal projector of rank four. A normalized version of the signal is a quantum state, and an inverse Fourier transformation recovers the arithmetic support. An unsigned state has the same probabilities in the original basis yet zero probability on the selected support after transformation. The two states are orthogonal. A continuous relative-phase family makes that difference visible without changing the initial probability histogram.
+
+The general finite Fourier, Möbius, divisor-projector, and polyphase identities are proved in the text. The formal companion covers the concrete modulus-twelve realization, including the sound interpretation of exact rational coordinates in the ordinary complex numbers, both unitarity identities, projector transport, state preparation and recovery, and the phase-sensitive probability conclusions. The later inherited checkpoint contains ninety-six named theorems across five production modules and preserves the twenty-two original bridge statements. The current edition separates that archived compiler and kernel evidence from current source audits and Python replay. A fresh Lean build was not available for this edition.
+
+Ramanujan sums, Fourier orthogonality, rational cyclic projectors, and Ramanujan signal subspaces are classical. The contribution of this presentation is an exact, inspectable realization chain, its theorem-to-code concordance, and its explicit account of the information retained or discarded at each map. It makes no circuit-efficiency or quantum-advantage claim.
+
+## 1. The mathematical object being transported
+
+The word *bridge* is useful only when its arrows have definitions. In the present example the common object is a selector: a diagonal operator that retains certain Fourier coordinates and discards the others. Arithmetic supplies the selected labels. Fourier synthesis expresses that selector in sample coordinates. Complex normalization then supplies a unitary transformation and the state vectors used in a quantum interpretation.
+
+The basic identity is
+
+$$
+P=FDF^\dagger.
+$$
+
+Here $D$ is a diagonal zero-or-one matrix, $F$ is unitary, and $\dagger$ denotes conjugate transpose. Consequently $P$ is an orthogonal projector. The transformation $F$ is reversible. The selection $P$ need not be. A complete decomposition consists of both $Px$ and $(I-P)x$, whose sum recovers $x$.
+
+This distinction determines what can be transported. A Fourier basis change preserves dimension, inner products, norms, and the entire vector. A projector preserves only its selected component. Measurement probabilities discard still more information. The same exact operator can appear in arithmetic, signal processing, and finite-dimensional quantum theory, while those uses retain different observables and have different implementation costs.
+
+We work over $\mathbb C$ for Fourier transformations and use $\mathbb Q$ for the rational kernels. All index sets in the main finite construction are specified, and no limit argument is needed. A packet in this paper means a component together with its stated realization map. This definition does not turn every kind of component into the same object. Character-order packets and coefficient-residue lanes will be distinguished explicitly in Section 6.
+
+### 1.1. Claim labels and evidence classes
+
+The labels QA01 through QA20 refer to mathematical statements in this paper. They are not a count of Lean declarations. A single claim can use several formal lemmas, and a general theorem can have a formally checked specialization rather than a generic Lean proof.
+
+We use three evidence descriptions. A *general prose theorem* has a proof below for all inputs satisfying its hypotheses. A *formal specialization* is an actual declaration in the preserved modulus-twelve source. A *finite computational check* is a bounded verification of an implementation. These descriptions can support the same identity, but they are not interchangeable. The Lean guide gives the exact declaration mapping.
+
+The central example uses the vectors
+
+$$
+\begin{aligned}
+c&=(4,0,2,0,-2,0,-4,0,-2,0,2,0),\\
+b&=(5,2,-1,2,5,2,-1,2,5,2,-1,2),\\
+x&=(9,2,1,2,3,2,-5,2,3,2,1,2).
+\end{aligned}
+$$
+
+These are the literal coefficients of the formal source, and $x=c+b$. Keeping one example fixed makes every arrow independently checkable.
+
+## 2. Fourier conventions and the finite proof chain
+
+Let $q$ be a positive integer. Write $I_q=\{0,1,\ldots,q-1\}$, interpreting indices modulo $q$, and put
+
+$$
+\zeta_q=e^{2\pi i/q}.
+$$
+
+A signal is a vector $x:I_q\to\mathbb C$. We write $\operatorname{Id}_q$ for the identity matrix of dimension $q$, and $I$ for an identity matrix when its dimension is clear. Our inner product is conjugate-linear in the first argument:
+
+$$
+\langle x,y\rangle=\sum_{n=0}^{q-1}\overline{x(n)}y(n),
+\qquad \|x\|^2=\langle x,x\rangle.
+$$
+
+The unscaled negative-sign discrete Fourier transform is
+
+$$
+\widehat{x}(k)=\sum_{n=0}^{q-1}x(n)\zeta_q^{-kn}.
+$$
+
+The positive-sign normalized Fourier matrix is
+
+$$
+(F_q)_{na}=q^{-1/2}\zeta_q^{na}.
+$$
+
+Thus $F_q$ synthesizes a signal from normalized frequency coordinates, while $F_q^\dagger x=\widehat{x}/\sqrt q$ analyzes it. This convention explains all signs and all square-root factors below. The negative-sign transform and the positive-sign synthesis are adjoints of one another.
+
+### Theorem QA01. The order of a finite phase
+
+For $a\in I_q$, the multiplicative order of $\zeta_q^a$ is
+
+$$
+\frac q{\gcd(a,q)}.
+$$
+
+**Proof.** The equation $(\zeta_q^a)^t=1$ holds exactly when $q$ divides $at$. Write $g=\gcd(a,q)$, $q=gq'$, and $a=ga'$, with $\gcd(a',q')=1$. The divisibility condition is $q'\mid a't$, which is equivalent to $q'\mid t$. Its smallest positive solution is $t=q'$. This includes $a=0$: then $g=q$ and the order is one. $\square$
+
+### Theorem QA02. Character orthogonality
+
+For any integer $h$,
+
+$$
+\sum_{n=0}^{q-1}\zeta_q^{hn}
+=\begin{cases}q,&q\mid h,\\0,&q\nmid h.\end{cases}
+$$
+
+**Proof.** If $q\mid h$, every summand is one. Otherwise $r=\zeta_q^h\ne1$ and $r^q=1$. Multiplying the sum by $1-r$ gives $1-r^q=0$, so the sum is zero. This argument also covers $q=1$, where only the first case occurs. $\square$
+
+### Theorem QA03. Unitarity, inversion, and Parseval
+
+For every positive $q$,
+
+$$
+F_q^\dagger F_q=\operatorname{Id}_q,
+\qquad F_qF_q^\dagger=\operatorname{Id}_q.
+$$
+
+Consequently,
+
+$$
+x(n)=\frac1q\sum_{k=0}^{q-1}\widehat{x}(k)\zeta_q^{kn},
+\qquad
+\sum_n|x(n)|^2=\frac1q\sum_k|\widehat{x}(k)|^2.
+$$
+
+**Proof.** The $(a,b)$ entry of the first matrix product is
+
+$$
+\frac1q\sum_{n=0}^{q-1}\zeta_q^{n(b-a)}.
+$$
+
+By QA02 it is one when $a=b$ and zero otherwise. The $(n,m)$ entry of the second product is the same orthogonality sum with indices interchanged. Since $F_q^\dagger x=\widehat{x}/\sqrt q$, the identity $F_qF_q^\dagger x=x$ is the displayed inverse formula. Finally, a unitary matrix preserves inner products:
+
+$$
+\|F_q^\dagger x\|^2
+=x^\dagger F_qF_q^\dagger x
+=x^\dagger x.
+$$
+
+Replacing $F_q^\dagger x$ by $\widehat{x}/\sqrt q$ proves Parseval. $\square$
+
+These proofs use finite sums, ordinary complex multiplication, and the positive real square root of $q$. No asymptotic approximation enters. At $q=1$ the Fourier matrix is the one-by-one identity, and all identities have their literal scalar meanings.
+
+## 3. Coprimality becomes an integer signal
+
+Let
+
+$$
+U_q=\{a\in I_q:\gcd(a,q)=1\},
+\qquad \varphi(q)=|U_q|.
+$$
+
+The Ramanujan sum is
+
+$$
+c_q(n)=\sum_{a\in U_q}\zeta_q^{an},
+\qquad n\in\mathbb Z.
+$$
+
+It adds the primitive $q$th-root phases selected by QA01. Its definition is complex, but its value is an integer. That integrality is the step that makes the sample-coordinate projector rational. Ramanujan sums and their divisor formulas are classical arithmetic constructions [@Ramanujan1918].
+
+### Theorem QA04. Möbius formula and integrality
+
+Let $\mu$ be the Möbius function, with $\mu(1)=1$. For every positive $q$ and every integer $n$,
+
+$$
+\boxed{c_q(n)=\sum_{d\mid\gcd(q,n)}d\,\mu(q/d)\in\mathbb Z.}
+$$
+
+In particular $c_q$ has period $q$, is real-valued, satisfies $c_q(-n)=c_q(n)$, and has $c_q(0)=\varphi(q)$.
+
+**Proof.** For a positive integer $g$,
+
+$$
+\sum_{d\mid g}\mu(d)
+=\begin{cases}1,&g=1,\\0,&g>1.\end{cases}
+$$
+
+To see this, only squarefree divisors contribute. If $g$ has $r$ distinct prime factors, the sum is $(1-1)^r$, with value one when $r=0$. Therefore
+
+$$
+\mathbf1_{\gcd(a,q)=1}=\sum_{d\mid\gcd(a,q)}\mu(d).
+$$
+
+Substitute this into the phase sum over all $a\in I_q$, exchange the finite sums, and write $a=db$ in the terms where $d\mid a$:
+
+$$
+\begin{aligned}
+c_q(n)
+&=\sum_{d\mid q}\mu(d)
+  \sum_{b=0}^{q/d-1}e^{2\pi ibn/(q/d)}\\
+&=\sum_{\substack{d\mid q\\(q/d)\mid n}}\mu(d)\frac qd.
+\end{aligned}
+$$
+
+The second equality is QA02. Replacing $q/d$ by $e$ gives the displayed divisor sum. It is an integer. Periodicity follows already from the phase definition. The divisor formula is unchanged by $n\mapsto -n$, so $c_q(-n)=c_q(n)$. At $n=0$, every selected phase is one, giving $c_q(0)=|U_q|$. $\square$
+
+At $q=1$, $U_1=\{0\}$ because $\gcd(0,1)=1$. The phase sum and the divisor formula both give $c_1(n)=1$. This boundary case is included in the proofs even though the inherited arithmetic regression range begins at modulus two.
+
+### Theorem QA05. Exact spectral support and energy
+
+Over one period,
+
+$$
+\boxed{\widehat{c_q}(k)=q\,\mathbf1_{k\in U_q},\qquad k\in I_q.}
+$$
+
+Moreover,
+
+$$
+\sum_{n=0}^{q-1}|c_q(n)|^2=q\varphi(q).
+$$
+
+**Proof.** Substitute the phase definition and exchange two finite sums:
+
+$$
+\widehat{c_q}(k)
+=\sum_{a\in U_q}\sum_{n=0}^{q-1}\zeta_q^{(a-k)n}.
+$$
+
+QA02 makes the inner sum $q$ exactly when $a=k$, and zero otherwise. The energy identity follows from QA03:
+
+$$
+\|c_q\|^2
+=\frac1q\sum_k|\widehat{c_q}(k)|^2
+=\frac1q\varphi(q)q^2.
+$$
+$\square$
+
+The selector has been recovered by an identity. A numerical spectrum can illustrate the result, but neither a tolerance nor a peak-finding rule defines the arithmetic support.
+
+## 4. Rational character-order projectors
+
+It is helpful to distinguish the size of an ambient signal from the order of a character. Fix a positive ambient length $N$. For each divisor $d$ of $N$, define
+
+$$
+S_d=\{a\in I_N:N/\gcd(a,N)=d\}.
+$$
+
+The set $S_d$ contains the labels of characters of exact order $d$. Put $D_d=\operatorname{diag}(\mathbf1_{a\in S_d})$ and
+
+$$
+P_d^{(N)}=F_ND_dF_N^\dagger.
+$$
+
+The superscript records the ambient dimension. In particular, the kernel normalization below is $1/N$, even when $d<N$.
+
+### Theorem QA06. Rational kernels and complete divisor decomposition
+
+For every $d\mid N$,
+
+$$
+\boxed{(P_d^{(N)})_{nm}=\frac1N c_d(n-m).}
+$$
+
+The matrices have rational entries and satisfy
+
+$$
+\begin{aligned}
+(P_d^{(N)})^\dagger&=P_d^{(N)},\\
+P_d^{(N)}P_e^{(N)}&=\delta_{de}P_d^{(N)},\\
+\sum_{d\mid N}P_d^{(N)}&=\operatorname{Id}_N,\\
+\operatorname{rank}P_d^{(N)}&=\operatorname{tr}P_d^{(N)}=\varphi(d).
+\end{aligned}
+$$
+
+**Proof.** A label in $S_d$ has the unique form $a=(N/d)b$, where $0\le b<d$ and $\gcd(b,d)=1$. Indeed,
+
+$$
+\gcd((N/d)b,N)=(N/d)\gcd(b,d).
+$$
+
+Direct multiplication therefore gives
+
+$$
+\begin{aligned}
+(F_ND_dF_N^\dagger)_{nm}
+&=\frac1N\sum_{a\in S_d}\zeta_N^{a(n-m)}\\
+&=\frac1N\sum_{b\in U_d}\zeta_d^{b(n-m)}
+=\frac1N c_d(n-m).
+\end{aligned}
+$$
+
+QA04 proves rationality. Each $D_d$ is a self-adjoint diagonal projector. The sets $S_d$ partition $I_N$, because every character has exactly one order dividing $N$. Hence $D_dD_e=\delta_{de}D_d$ and $\sum_{d\mid N}D_d=\operatorname{Id}_N$. Conjugating these identities by the unitary $F_N$ proves the projector identities. The rank is unchanged under multiplication by invertible matrices, so it equals the number of selected diagonal entries, $|S_d|=\varphi(d)$. The diagonal kernel entries are all $c_d(0)/N=\varphi(d)/N$, whose sum is $\varphi(d)$. $\square$
+
+This orthogonal divisor-shell decomposition has established antecedents in Ramanujan subspaces and filter banks [@Vaidyanathan2014FIR; @Vaidyanathan2014I; @Vaidyanathan2014II]. The general theorem above is proved independently in this text. The formal companion certifies the concrete $N=d=12$ projector and its transport identity, rather than an arbitrary-divisor Lean theorem.
+
+### 4.1. A shift-operator realization and its sign
+
+Let $A$ be the cyclic shift $(Ax)(n)=x(n-1)$. A Fourier column $f_a(n)=N^{-1/2}\zeta_N^{na}$ satisfies $Af_a=\zeta_N^{-a}f_a$. Therefore
+
+$$
+E_a=\frac1N\sum_{\ell=0}^{N-1}\zeta_N^{a\ell}A^\ell
+$$
+
+acts as the identity on $f_a$ and as zero on every other column, by QA02. Summing $E_a$ over $S_d$ gives
+
+$$
+P_d^{(N)}=\frac1N\sum_{\ell=0}^{N-1}c_d(\ell)A^\ell.
+$$
+
+This formula also follows entrywise because $(A^\ell)_{nm}$ is one exactly when $n-m=\ell$ modulo $N$. A group-algebra convention with the opposite shift sign writes individual idempotents with the opposite phase sign. The divisor shells are unchanged under $a\mapsto -a$, and $c_d(-\ell)=c_d(\ell)$, so the rational shell formula remains the same.
+
+Proposition 21.11 of *Stratified Universality for Resolved Representations*, v1.16.0, gives the rational cyclic order-projector formula in the group algebra. Boundary 21.12 distinguishes it from formal-series coefficient-residue selection [@KomorebiStratified16]. The present shift calculation makes the representation and the sign explicit.
+
+### 4.2. Unions of order classes
+
+If $\mathcal D$ is any set of divisors of $N$, then
+
+$$
+P_{\mathcal D}=\sum_{d\in\mathcal D}P_d^{(N)}
+$$
+
+is a rational orthogonal projector of rank $\sum_{d\in\mathcal D}\varphi(d)$. Its complement is the sum over the remaining divisors. Individual split Fourier projectors can have nonrational entries. Summing complete order classes is a sufficient mechanism for rationality. No converse classification of every rational selector is needed for the present bridge.
+
+## 5. Selection, residuals, and information loss
+
+For any set $S\subseteq I_N$, let $D_S$ be its diagonal indicator and $P_S=F_ND_SF_N^\dagger$. This construction does not require $S$ to be an order class. Rationality is special, but orthogonal projection is general.
+
+### Theorem QA07. Projector geometry and exact residual reconstruction
+
+For every $x\in\mathbb C^N$,
+
+$$
+\begin{aligned}
+x&=P_Sx+(I-P_S)x,\\
+\langle P_Sx,(I-P_S)x\rangle&=0,\\
+\|x\|^2&=\|P_Sx\|^2+\|(I-P_S)x\|^2.
+\end{aligned}
+$$
+
+Furthermore, $P_S$ is injective exactly when $S=I_N$. If $S$ is proper, its kernel has dimension $N-|S|$.
+
+**Proof.** The first equality is distributivity. Since $P_S^\dagger=P_S$ and $P_S^2=P_S$,
+
+$$
+\langle P_Sx,(I-P_S)x\rangle
+=x^\dagger P_S(I-P_S)x=0.
+$$
+
+Expanding the norm square of the orthogonal sum proves the energy identity. In Fourier coordinates, $P_S$ is $D_S$, whose kernel consists exactly of the vectors supported outside $S$. Its dimension is $N-|S|$. This kernel is zero exactly when every label is selected. $\square$
+
+This gives a precise reconstruction contract. The pair of packets $(P_Sx,(I-P_S)x)$ retains the complete vector, subject to the compatibility condition that the first lies in the range and the second in the kernel. Keeping only the first packet is an exact projection but an incomplete representation of an arbitrary input.
+
+For character-order packets, QA06 gives the stronger complete decomposition
+
+$$
+x=\sum_{d\mid N}P_d^{(N)}x,
+\qquad
+\|x\|^2=\sum_{d\mid N}\|P_d^{(N)}x\|^2.
+$$
+
+The decomposition is a change in organization rather than a reduction in the dimension of the whole signal. Smaller stored selectors do not make an arbitrary signal contain less information. Compression requires a restriction on the admissible signals or an explicit approximation criterion.
+
+## 6. Coefficient-residue lanes and polyphase transport
+
+There is a second exact decomposition that is common in Komorebi calculations and in signal processing. It separates *positions* by residue class rather than separating *Fourier characters* by order. Both decompositions use projectors, but they select different objects.
+
+### 6.1. Formal coefficient lanes
+
+Let $L\ge1$ and let $f(z)=\sum_{n\ge0}a_nz^n$ be a formal power series over a field containing a primitive $L$th root $\omega$ and $1/L$. For $0\le r<L$, define
+
+$$
+E_rf(t)=\sum_{m\ge0}a_{r+Lm}t^m,
+\qquad
+R_rf(z)=z^rE_rf(z^L).
+$$
+
+The first expression addresses the lane in a new variable. The second places that lane back at its original coefficient positions.
+
+### Theorem QA08. Exact coefficient-residue decomposition
+
+The coefficient-residue maps satisfy
+
+$$
+\begin{aligned}
+R_rf(z)&=\frac1L\sum_{j=0}^{L-1}\omega^{-rj}f(\omega^jz),\\
+R_rR_s&=\delta_{rs}R_r,\\
+\sum_{r=0}^{L-1}R_rf&=f.
+\end{aligned}
+$$
+
+**Proof.** The coefficient of $z^n$ in the first right-hand side is
+
+$$
+\frac{a_n}{L}\sum_{j=0}^{L-1}\omega^{j(n-r)}.
+$$
+
+Character orthogonality makes it $a_n$ when $n\equiv r\pmod L$ and zero otherwise. This is precisely the coefficient of $R_rf$. Each coefficient position belongs to a unique lane, so the projector and completeness identities follow coefficientwise. The equality is formal, with no analytic convergence hypothesis. $\square$
+
+For an infinite analytic series, the same identity holds wherever all displayed evaluations are defined, but the formal theorem does not need that interpretation. The lane index is an exponent residue. It is not a multiplicative-order class of a Fourier character.
+
+### 6.2. Finite polyphase lanes
+
+Now suppose $N=LM$ with positive integers $L$ and $M$. For a vector $x\in\mathbb C^N$, define its $L$ lanes by
+
+$$
+x_r(m)=x(r+Lm),
+\qquad 0\le r<L,\quad 0\le m<M.
+$$
+
+The addressing map $T:x\mapsto(x_0,\ldots,x_{L-1})$ is bijective. Interleaving the lanes reconstructs $x$, and
+
+$$
+\sum_{n=0}^{N-1}|x(n)|^2
+=\sum_{r=0}^{L-1}\sum_{m=0}^{M-1}|x_r(m)|^2.
+$$
+
+This energy identity is an exact reindexing. It is useful to preserve it separately from the spectral aliasing identity that follows.
+
+### Theorem QA09. Polyphase Fourier identities and decimation aliasing
+
+Write $\widehat{x_r}$ for the unscaled $M$-point transform of lane $r$. Then for $k\in I_N$,
+
+$$
+\boxed{\widehat{x}(k)
+=\sum_{r=0}^{L-1}\zeta_N^{-kr}\widehat{x_r}(k\bmod M).}
+$$
+
+Conversely, for $\ell\in I_M$,
+
+$$
+\boxed{\widehat{x_r}(\ell)
+=\frac1L\sum_{j=0}^{L-1}
+\zeta_N^{r(\ell+jM)}\widehat{x}(\ell+jM).}
+$$
+
+**Proof.** Partition the $N$ samples by their unique representation $n=r+Lm$:
+
+$$
+\begin{aligned}
+\widehat{x}(k)
+&=\sum_{r=0}^{L-1}\sum_{m=0}^{M-1}
+x_r(m)\zeta_N^{-k(r+Lm)}\\
+&=\sum_r\zeta_N^{-kr}\sum_mx_r(m)\zeta_M^{-km}.
+\end{aligned}
+$$
+
+The inner sum is $\widehat{x_r}(k\bmod M)$, proving the first identity. For the second, insert Fourier inversion into the lane transform:
+
+$$
+\begin{aligned}
+\widehat{x_r}(\ell)
+&=\sum_{m=0}^{M-1}x(r+Lm)\zeta_M^{-\ell m}\\
+&=\frac1N\sum_{k=0}^{N-1}\widehat{x}(k)\zeta_N^{kr}
+\sum_{m=0}^{M-1}\zeta_M^{(k-\ell)m}.
+\end{aligned}
+$$
+
+QA02 makes the inner sum $M$ exactly when $k=\ell+jM$ for some $0\le j<L$. Since $M/N=1/L$, this is the second displayed identity. $\square$
+
+Every lane transform combines an alias class of $L$ full-spectrum coefficients. One decimated lane generally cannot distinguish those coefficients. All $L$ offsets together retain the original signal. For a fixed alias class $\ell$, the equations across $r$ are an invertible Fourier mixing system after the nonzero phases $\zeta_N^{r\ell}$ are removed. The apparent collapse is resolved by preserving the complete collection of offsets.
+
+### 6.3. Why the two projectors must not be conflated
+
+A coefficient-residue selector keeps samples such as $x(0),x(3),x(6),x(9)$. A character-order projector keeps spectral modes such as $1,5,7,11$. The former is diagonal in sample coordinates; the latter is diagonal in frequency coordinates. Under a Fourier basis change, a sample-residue mask generally produces a different operator, with its own alias structure.
+
+A valid comparison therefore specifies the conjugating matrix and the chosen selector. The fact that both constructions use roots of unity does not identify their packets. QA08 and QA09 supply an explicit rotation and Fourier calculation where a bridge is needed. Neither statement is claimed as a generic theorem in the inherited Lean package used here.
+
+## 7. The exact modulus-twelve arithmetic calculation
+
+We now fix $q=12$. The coprime labels are
+
+$$
+U_{12}=\{1,5,7,11\},
+\qquad \varphi(12)=4,
+\qquad \zeta=e^{\pi i/6}=\frac{\sqrt3}{2}+\frac i2.
+$$
+
+The signal is
+
+$$
+c(n)=\zeta^n+\zeta^{5n}+\zeta^{7n}+\zeta^{11n}
+=2\cos(\pi n/6)+2\cos(5\pi n/6).
+$$
+
+The cosine formula comes from conjugate pairs. It exposes interference, while the integer divisor formula provides an independent arithmetic route to each value.
+
+### Theorem QA10. The exact phase and transform tables
+
+Over one period,
+
+$$
+c=(4,0,2,0,-2,0,-4,0,-2,0,2,0),
+$$
+
+and
+
+$$
+\widehat c=(0,12,0,0,0,12,0,12,0,0,0,12).
+$$
+
+**Proof.** For $q=12$, QA04 becomes
+
+$$
+c(n)=2\mathbf1_{2\mid n}-4\mathbf1_{4\mid n}
+-6\mathbf1_{6\mid n}+12\mathbf1_{12\mid n}.
+$$
+
+Indeed, the only divisors $d$ of twelve for which $\mu(12/d)\ne0$ are $2,4,6,12$, with coefficients $2,-4,-6,12$. Evaluating the divisibility indicators at $0,\ldots,11$ gives the sample table. QA05 gives value twelve at the four coprime labels and zero elsewhere. $\square$
+
+At sample zero, all four phases agree and the value is four. At sample one, they cancel. At sample six, all four are minus one and the value is minus four. Those signs are the relative phase information that will later distinguish two states with the same initial probabilities.
+
+### 7.1. A compact projector matrix
+
+Put $P=P_{12}^{(12)}$. Its entries are
+
+$$
+P_{nm}=\frac{c(n-m)}{12}.
+$$
+
+Equivalently, its first row is
+
+$$
+\left(\frac13,0,\frac16,0,-\frac16,0,-\frac13,0,-\frac16,0,\frac16,0\right),
+$$
+
+and each subsequent row is the cyclic right shift of the preceding row. This specifies every entry of the twelve-by-twelve rational matrix. It agrees exactly with the literal matrix in the original formal module and with the indexed matrix in the later transport module.
+
+With $D=\operatorname{diag}(\mathbf1_{a\in U_{12}})$ and $F=F_{12}$,
+
+$$
+P=FDF^\dagger,
+\qquad P^2=P,
+\qquad P^\dagger=P,
+\qquad \operatorname{rank}P=\operatorname{tr}P=4.
+$$
+
+The six divisor shells of length twelve have orders $1,2,3,4,6,12$ and ranks $1,1,2,2,2,4$. Their ranks add to twelve, and their orthogonal sum is the identity by QA06.
+
+### 7.2. The finite lanes of the same signal
+
+For $L=3$ and $M=4$, the coefficient-residue lanes are
+
+$$
+\begin{aligned}
+c_0&=(4,0,-4,0),\\
+c_1&=(0,-2,0,2),\\
+c_2&=(2,0,-2,0).
+\end{aligned}
+$$
+
+Their four-point Fourier transforms are
+
+$$
+\widehat c_0=(0,8,0,8),
+\quad \widehat c_1=(0,4i,0,-4i),
+\quad \widehat c_2=(0,4,0,4).
+$$
+
+For example, a full coefficient at $k=1$ is reconstructed as
+
+$$
+\widehat c(1)=8+4i\zeta^{-1}+4\zeta^{-2}=12.
+$$
+
+At $k=9$, the same lane-frequency index $1$ gives
+
+$$
+\widehat c(9)=8+4i\zeta^{-9}+4\zeta^{-18}=8-4-4=0.
+$$
+
+The offsets distinguish two full Fourier labels with the same reduced frequency. These equations demonstrate the role of the phases in QA09. They do not identify a lane with a character-order shell.
+
+## 8. Filtering a signal with something to remove
+
+Take the off-band perturbation
+
+$$
+b(n)=3\cos(\pi n/2)+2.
+$$
+
+The constant occupies frequency zero, and the cosine occupies labels three and nine. These labels all lie outside $U_{12}$. The perturbation has the literal rational vector
+
+$$
+b=(5,2,-1,2,5,2,-1,2,5,2,-1,2).
+$$
+
+Set $x=c+b$, giving
+
+$$
+x=(9,2,1,2,3,2,-5,2,3,2,1,2).
+$$
+
+### Theorem QA11. Exact filter recovery and orthogonal energy
+
+The test signal satisfies
+
+$$
+Pc=c,
+\qquad Pb=0,
+\qquad Px=c,
+\qquad (I-P)x=b,
+$$
+
+and
+
+$$
+\langle c,b\rangle=0,
+\qquad \|c\|^2=48,
+\qquad \|b\|^2=102,
+\qquad \|x\|^2=150=48+102.
+$$
+
+**Proof.** QA05 gives the support of $\widehat c$. Write the cosine as
+
+$$
+3\cos(\pi n/2)=\frac32(\zeta^{3n}+\zeta^{9n}).
+$$
+
+Thus $\widehat b$ equals twenty-four at zero, eighteen at three and nine, and zero elsewhere. Multiplication by $D$ fixes the spectrum of $c$ and kills the spectrum of $b$, proving the filter identities. Their supports are disjoint, so Parseval for inner products gives $\langle c,b\rangle=0$. QA05 gives $\|c\|^2=12\cdot4=48$, and
+
+$$
+\|b\|^2=\frac{24^2+18^2+18^2}{12}=102.
+$$
+
+QA07 then gives $\|x\|^2=48+102=150$. The same numbers follow by direct rational squaring of the displayed vectors. $\square$
+
+The discarded component is part of a complete explanation of the input. It is called a perturbation because the example declares $c$ to be the target. It is a perfectly exact signal component rather than an error introduced by the representation. If the task were to recover all of $x$, deleting $b$ would lose valid information.
+
+## 9. Normalized states and literal unitary transport
+
+In a twelve-dimensional complex Hilbert space, let $|0\rangle,\ldots,|11\rangle$ be an orthonormal basis. Define
+
+$$
+|u\rangle=\frac{|1\rangle+|5\rangle+|7\rangle+|11\rangle}{2}.
+$$
+
+Its squared norm is $4(1/2)^2=1$. Define the amplitude states
+
+$$
+|\psi\rangle=\frac1{\sqrt{48}}\sum_{n=0}^{11}c(n)|n\rangle,
+\qquad
+|\chi\rangle=\frac1{\sqrt{48}}\sum_{n=0}^{11}|c(n)|\,|n\rangle.
+$$
+
+Both have norm one because $\sum_nc(n)^2=48$. The second state is a separately specified state, constructed from the absolute-value vector. No universal quantum operation implementing the nonlinear rule $z\mapsto|z|$ is being asserted.
+
+### Theorem QA12. Exact preparation and recovery
+
+With the positive-sign Fourier matrix defined in Section 2,
+
+$$
+\boxed{F|u\rangle=|\psi\rangle,
+\qquad F^\dagger|\psi\rangle=|u\rangle.}
+$$
+
+**Proof.** At coordinate $n$, the first left-hand side is
+
+$$
+\frac1{2\sqrt{12}}\sum_{a\in U_{12}}\zeta^{na}
+=\frac{c(n)}{\sqrt{48}}.
+$$
+
+This is the defining coordinate of $\psi$. Applying $F^\dagger$ and using $F^\dagger F=I$ proves the second equality. $\square$
+
+The normalization relation is $\sqrt{48}=2\sqrt{12}$. In the exact coordinate implementation the Fourier scale is $\sqrt3/6=1/\sqrt{12}$, and the state scale is $\sqrt3/12=1/\sqrt{48}$. The later formal source proves those scale identities and the exponential entry formula, rather than leaving them as informal interpretations of a rational tuple.
+
+This is a mathematical quantum-state construction. An actual realization would additionally require state preparation, a twelve-dimensional unitary implementation, coherence control, and sampling. A twelve-dimensional Fourier matrix is not the ordinary sixteen-dimensional Fourier transformation on four qubits. The unitary direct sum $F_{12}\oplus I_4$ supplies a mathematical sixteen-dimensional embedding, but it supplies no gate synthesis or resource bound by itself.
+
+## 10. Relative phase is absent from one histogram and present in another
+
+For a normalized state $|v\rangle=\sum_nv(n)|n\rangle$, the standard-basis probabilities are $|v(n)|^2$. In the basis analyzed by $F^\dagger$, the probabilities are $|(F^\dagger v)(k)|^2$.
+
+These describe two measurement procedures on separately prepared copies. Measuring the first histogram on a particular copy does not preserve that copy as a coherent input for the second procedure.
+
+### Theorem QA13. Equal initial probabilities and orthogonal states
+
+The states $\psi$ and $\chi$ have identical probabilities in the original basis and are orthogonal:
+
+$$
+|\psi(n)|^2=|\chi(n)|^2\quad\text{for all }n,
+\qquad \langle\psi,\chi\rangle=0.
+$$
+
+**Proof.** Squaring a real number or its absolute value gives the same result, proving the first claim. For orthogonality,
+
+$$
+\langle\psi,\chi\rangle
+=\frac1{48}\sum_{n=0}^{11}c(n)|c(n)|.
+$$
+
+The positive entries contribute $16+4+4=24$, and the negative entries contribute $-4-16-4=-24$. Their sum is zero. $\square$
+
+This is a strong information boundary. The states are distinct even after the physically irrelevant overall phase is disregarded. Orthogonal normalized states cannot be scalar multiples of one another. Yet their original-basis probability histograms are identical.
+
+### Theorem QA14. Complete arithmetic phase separation
+
+After applying $F^\dagger$,
+
+$$
+\Pr_{F^\dagger\psi}(k\in U_{12})=1,
+\qquad
+\Pr_{F^\dagger\chi}(k\in U_{12})=0.
+$$
+
+More explicitly,
+
+$$
+(F^\dagger\psi)(k)
+=\begin{cases}1/2,&k\in\{1,5,7,11\},\\0,&\text{otherwise},\end{cases}
+$$
+
+whereas
+
+$$
+(F^\dagger\chi)(k)
+=\begin{cases}
+2/3,&k\in\{0,6\},\\
+1/6,&k\in\{2,4,8,10\},\\
+0,&\text{otherwise}.
+\end{cases}
+$$
+
+**Proof.** QA12 gives the first amplitude table. For the second, set $a(n)=|c(n)|$. Its vector is
+
+$$
+a=(4,0,2,0,2,0,4,0,2,0,2,0).
+$$
+
+It has period six. Pairing $n$ and $n+6$ in its twelve-point transform produces a factor $1+(-1)^k$, so every odd transform coefficient vanishes. For $k=2\ell$, its transform is twice the six-point transform of $(4,0,2,0,2,0)$. The doubled transform is sixteen when $\ell$ is divisible by three and four otherwise, as one sees from
+
+$$
+2\left(4+2e^{-2\pi i\ell/3}+2e^{-4\pi i\ell/3}\right).
+$$
+
+When $\ell\equiv0\pmod3$, the bracket is eight. Otherwise the two cubic phases sum to minus one and the bracket is two. Thus
+
+$$
+\widehat a=(16,0,4,0,4,0,16,0,4,0,4,0).
+$$
+
+State normalization and the unitary inverse transform divide this table by $\sqrt{48}\sqrt{12}=24$, producing the second amplitude table. Its support is even, while every label in $U_{12}$ is odd. The selected probability is therefore zero. The signed state has four probabilities of $1/4$, with total one. $\square$
+
+The full probability comparison is:
+
+| Label | Initial probability, both states | After $F^\dagger$, signed state | After $F^\dagger$, unsigned state |
+|:--:|:--:|:--:|:--:|
+| 0 | $1/3$ | $0$ | $4/9$ |
+| 1 | $0$ | $1/4$ | $0$ |
+| 2 | $1/12$ | $0$ | $1/36$ |
+| 3 | $0$ | $0$ | $0$ |
+| 4 | $1/12$ | $0$ | $1/36$ |
+| 5 | $0$ | $1/4$ | $0$ |
+| 6 | $1/3$ | $0$ | $4/9$ |
+| 7 | $0$ | $1/4$ | $0$ |
+| 8 | $1/12$ | $0$ | $1/36$ |
+| 9 | $0$ | $0$ | $0$ |
+| 10 | $1/12$ | $0$ | $1/36$ |
+| 11 | $0$ | $1/4$ | $0$ |
+
+Every column sums to one. The Fourier probability supports are disjoint. Negative amplitudes in the original arithmetic signal therefore encode observable relative phase, even though their signs do not appear in the first probability column.
+
+### Theorem QA15. No inverse from the initial histogram alone
+
+There is no function from original-basis probability histograms to state vectors that reconstructs both $\psi$ and $\chi$. There is also no reconstruction of both states up to overall phase from that histogram alone.
+
+**Proof.** The two histograms are equal by QA13. A function assigns the same output to equal inputs, so it cannot output the two distinct vectors. For the phase-insensitive formulation, QA13 shows that the states are orthogonal and normalized. If $\chi=\lambda\psi$ for any complex scalar of modulus one, then $\langle\psi,\chi\rangle=\lambda\ne0$, a contradiction. $\square$
+
+The first formulation is formalized in the later publication module. The strengthening to equivalence up to global phase is a prose corollary proved here. It is not counted as an additional inherited Lean declaration.
+
+## 11. The selector as a projective measurement
+
+The pair $\{P,I-P\}$ is a projective measurement because its two members are self-adjoint, idempotent, orthogonal, and sum to the identity. For the conditional update we choose the ideal Lüders instrument, whose unnormalized branches send a density matrix $\rho$ to $P\rho P$ and $(I-P)\rho(I-P)$. The projector effects determine the outcome probabilities; this chosen instrument determines the state update. The probability rule and this conditional update can be stated independently of the arithmetic example.
+
+### Theorem QA16. Selection probability and conditional state
+
+Let $P$ be an orthogonal projector on $\mathbb C^N$ and let $v$ be a normalized state. For the ideal Lüders instrument just specified, the two probabilities are
+
+$$
+p=\|Pv\|^2=\langle v,Pv\rangle,
+\qquad 1-p=\|(I-P)v\|^2.
+$$
+
+When $p>0$, the normalized selected state is $Pv/\sqrt p$. When $1-p>0$, the normalized complementary state is $(I-P)v/\sqrt{1-p}$. The probabilities belong to $[0,1]$ and sum to one.
+
+**Proof.** Since $P^\dagger P=P$, the quadratic form equals $\|Pv\|^2$ and is nonnegative. QA07 applied to a unit vector gives the probability sum and the upper bound. Division by the positive square root produces a state of squared norm one in each nonzero branch. $\square$
+
+For the explicit normalized test signal $v=x/\sqrt{150}$, QA11 gives
+
+$$
+p=\frac{48}{150}=\frac8{25},
+\qquad 1-p=\frac{102}{150}=\frac{17}{25}.
+$$
+
+The selected conditional state is $c/\sqrt{48}=\psi$, and the complementary conditional state is $b/\sqrt{102}$. An exact classical filter applied to the full vector returns $c$. A projective measurement on the normalized input instead returns a branch with these probabilities. These are compatible uses of the same operator with different observation rules.
+
+The vector $\chi$ makes noninjectivity concrete: $P\chi=0$ although $\|\chi\|=1$. A reversible Fourier change of basis cannot be substituted for this loss of information. Conversely, retaining both complementary packets reconstructs every vector, as QA07 and the publication module explicitly state.
+
+The inherited formal source certifies the concrete projectors, states, and probability identities. It does not provide a general quantum measurement library or a generic theorem implementing the conditional state-update rule. QA16 is a general prose theorem, with the usual finite-dimensional measurement interpretation.
+
+## 12. Exact arithmetic coordinates and their complex meaning
+
+The twelfth root contains $\sqrt3$ and $i$. Its relevant exact arithmetic can be represented without floating-point trigonometric evaluation. Let a tuple
+
+$$
+(a,b,c,d)\in\mathbb Q^4
+$$
+
+denote
+
+$$
+\iota(a,b,c,d)=a+b\sqrt3+i(c+d\sqrt3).
+$$
+
+The coordinate root is $(0,1/2,1/2,0)$, whose interpretation is $\sqrt3/2+i/2$. Coordinate conjugation sends $(a,b,c,d)$ to $(a,b,-c,-d)$. Addition is entrywise, and multiplication is
+
+$$
+\begin{aligned}
+(a,b,c,d)(A,B,C,D)=\big(&aA+3bB-cC-3dD,\\
+&aB+bA-cD-dC,\\
+&aC+3bD+cA+3dB,\\
+&aD+bC+cB+dA\big).
+\end{aligned}
+$$
+
+### Theorem QA17. Sound interpretation of the exact operations
+
+The map $\iota$ preserves zero, one, rational scalars, addition, multiplication, conjugation, natural powers, and finite sums. Therefore an equality obtained with these exact coordinate operations yields the corresponding equality in $\mathbb C$.
+
+**Proof.** The claims for zero, one, rational scalars, addition, and conjugation follow directly from the definition. For multiplication, write the two interpreted values as $(a+b\sqrt3)+i(c+d\sqrt3)$ and $(A+B\sqrt3)+i(C+D\sqrt3)$. Their product has real part
+
+$$
+(a+b\sqrt3)(A+B\sqrt3)-(c+d\sqrt3)(C+D\sqrt3)
+$$
+
+and imaginary part
+
+$$
+(a+b\sqrt3)(C+D\sqrt3)+(c+d\sqrt3)(A+B\sqrt3).
+$$
+
+Expanding and using $(\sqrt3)^2=3$ gives exactly the displayed tuple product. Power preservation follows by induction from multiplication and one. Finite-sum preservation follows by induction from addition and zero. Applying a function to equal coordinate tuples gives equal complex numbers. $\square$
+
+Only sound transport of equalities is needed here. The formal source does not install the tuple type as a global field instance, and it does not need an injectivity theorem for $\iota$. It proves preservation of the actual operations and explicitly connects the scales and root to their conventional complex formulas.
+
+The matrix interpretation is entrywise. Since multiplication is a finite sum of products and the adjoint uses conjugation, QA17 also transports coordinate matrix multiplication and adjoints. The same argument transports matrix action on vectors and squared norms. This is what closes the gap between an exact coordinate certificate and an identity about an ordinary complex unitary matrix.
+
+## 13. The central finite bridge theorem
+
+The arithmetic, signal, and state statements can now be gathered without leaving any undefined arrow.
+
+### Theorem QA18. Arithmetic, rational signal, and unitary realization
+
+Let $F$, $D$, $P$, $c$, $b$, $x$, $u$, $\psi$, and $\chi$ have the explicit modulus-twelve definitions above. Then:
+
+1. $F^\dagger F=FF^\dagger=I$.
+2. $P=FDF^\dagger$, $P^2=P$, and $P^\dagger=P$.
+3. $Px=c$ and $(I-P)x=b$, with $\|x\|^2=48+102=150$.
+4. $Fu=\psi$ and $F^\dagger\psi=u$.
+5. $u$, $\psi$, and $\chi$ are normalized, and $\psi$ is orthogonal to $\chi$.
+6. $\psi$ and $\chi$ have identical original-basis probabilities.
+7. Their inverse-Fourier coprime probabilities are respectively one and zero.
+8. $P\psi=\psi$, $P\chi=0$, and $P$ is not injective.
+
+**Proof.** QA03 gives the unitarity identities. QA06 gives projector transport and the two projector identities. QA11 gives the filter and energy statements. QA12 gives preparation and recovery; the displayed normalizations and QA13 give statement five and statement six. QA14 gives statement seven. In Fourier coordinates $\psi$ is supported on $U_{12}$ while $\chi$ is supported outside it, so $P\psi=\psi$ and $P\chi=0$. The normalized nonzero vector $\chi$ is therefore in the kernel, proving noninjectivity. $\square$
+
+The later formal publication theorem gathers the principal complex transport and probability identities into a single conjunction. Its supporting modules also supply the exact vector coefficients, filter recovery, residual reconstruction, and noninjectivity theorem. The general prose route above explains why the identities hold; the finite formal source certifies this literal example under its exact definitions.
+
+One mathematical object has thus appeared in three realizations. Arithmetic selects coprime character labels. The signal realization is a rational circulant projector. The complex state realization uses a unitary basis change and a projective measurement. The complete vector information is preserved by the basis change, while selection and observation have separately stated losses.
+
+## 14. A continuous phase family with a fixed initial histogram
+
+The two endpoint states are especially simple, but the mechanism is continuous. Define the nonnegative vectors $v_+$ and $v_-$ by placing $|c(n)|/\sqrt{48}$ respectively on the positive and negative entries of $c$, with zero elsewhere. Thus
+
+$$
+\chi=v_++v_-,
+\qquad \psi=v_+-v_-.
+$$
+
+Their supports are disjoint, and each has squared norm $1/2$. For real $\theta$, define
+
+$$
+\chi_\theta=v_++e^{i\theta}v_-.
+$$
+
+It is a normalized state with the same original-basis probabilities for every $\theta$. The endpoints are $\chi_0=\chi$ and $\chi_\pi=\psi$.
+
+### Theorem QA19. Relative-phase response
+
+For this family,
+
+$$
+\boxed{\Pr_{F^\dagger\chi_\theta}(k\in U_{12})
+=\|P\chi_\theta\|^2=\sin^2(\theta/2).}
+$$
+
+**Proof.** Disjoint support gives $\|\chi_\theta\|^2=\|v_+\|^2+\|v_-\|^2=1$ and unchanged entrywise squared magnitudes. Solving for $v_+$ and $v_-$ in terms of $\chi$ and $\psi$ gives
+
+$$
+\chi_\theta
+=\frac{1+e^{i\theta}}2\chi
++\frac{1-e^{i\theta}}2\psi.
+$$
+
+Since $P\chi=0$ and $P\psi=\psi$,
+
+$$
+P\chi_\theta=\frac{1-e^{i\theta}}2\psi.
+$$
+
+Its squared norm is
+
+$$
+\frac{|1-e^{i\theta}|^2}{4}
+=\frac{1-\cos\theta}{2}
+=\sin^2(\theta/2).
+$$
+
+Finally, $P=FDF^\dagger$ and unitarity imply $\|P\chi_\theta\|^2=\|DF^\dagger\chi_\theta\|^2$, exactly the sum of the selected Fourier-basis probabilities. $\square$
+
+This is a proved prose extension for the visual guide. It is not presented as an inherited Lean theorem. It shows that a probability histogram can stay fixed while an interference-based observation varies from zero to one.
+
+## 15. Phase replacement and dephasing are different operations
+
+The unsigned endpoint is a coherent state with specified positive amplitudes. It should not be confused with a state obtained by forgetting all relative phases. The latter is represented by a mixed state, not generally by one state vector.
+
+For a normalized vector $v$, its density matrix is $vv^\dagger$. Complete dephasing in the sample basis keeps only its diagonal entries. In the present example, dephasing either $\psi$ or $\chi$ gives the same diagonal matrix
+
+$$
+\rho_{\mathrm{diag}}=\operatorname{diag}\big(c(n)^2/48\big)_{n=0}^{11}.
+$$
+
+Its trace is one, and every diagonal entry is nonnegative.
+
+### Theorem QA20. The dephased selected probability
+
+The selected projective-measurement probability of this diagonal state is
+
+$$
+\operatorname{tr}(P\rho_{\mathrm{diag}})=\frac13.
+$$
+
+**Proof.** Every diagonal entry of $P$ is $c(0)/12=4/12=1/3$. Multiplication by a diagonal matrix and taking the trace gives
+
+$$
+\operatorname{tr}(P\rho_{\mathrm{diag}})
+=\sum_n P_{nn}\frac{c(n)^2}{48}
+=\frac13\sum_n\frac{c(n)^2}{48}
+=\frac13.
+$$
+$\square$
+
+The three outcomes are therefore distinct: the signed coherent state has selected probability one, the unsigned coherent state has probability zero, and the completely dephased state has probability one third. This calculation prevents an incorrect identification of amplitude sign removal with physical decoherence. QA20 is a general finite-dimensional calculation specialized to the example and proved here. Density matrices and dephasing are outside the inherited Lean package.
+
+## 16. Formal coverage, lineage, and reproducibility
+
+### 16.1. Two inherited checkpoints and the expanded boundary
+
+The earlier checked package has four mathematical production modules and fifty-nine named theorem declarations. Its first module preserves twenty-two original statements. Its proof-boundary document correctly says that explicit matrix transport between independently defined representations and normalized state-action identities are not supplied as additional theorems in that package. Those limitations must not be erased when describing the earlier evidence.
+
+The later checked package has five production modules and ninety-six named theorem declarations:
+
+| Module | Named theorems | Principal role |
+|:--|--:|:--|
+| `QuantumArithmeticBridge` | 22 | Literal rational projector and cyclotomic tables |
+| `FiniteFourier` | 17 | Indexed exact Fourier and normalized state identities |
+| `SemanticBridge` | 30 | Sound complex interpretation and transported identities |
+| `Conventions` | 17 | Exponential entries, scales, and complex projector laws |
+| `Publication` | 10 | Phase lookup, residual reconstruction, nonreconstruction, and central bundle |
+| Total | 96 | Finite modulus-twelve proof chain, including helpers |
+
+The later source explicitly supplies $FDF^\dagger=P$, both normalized state-action identities, the conventional exponential formula for $F$, identical initial probabilities, orthogonality, exact selected probability one versus zero, histogram nonreconstruction, and projector noninjectivity. It therefore closes the representation-transport obligations that the earlier package leaves outside its formal boundary.
+
+The ninety-six count includes helper lemmas and bundled propositions. It is not a count of ninety-six independent discoveries. Nor should the earlier fifty-nine and later ninety-six counts be added as if their shared declarations were disjoint.
+
+### 16.2. Current and inherited checks
+
+This edition preserves the source, theorem index, verification records, and compiled-artifact lineage of the checked checkpoints. The archived records provide the earlier compiler and kernel-checking evidence. Current static audits and independent Python replay provide current bounded evidence about the downloaded files and the example implementation. These are disclosed separately in the release records.
+
+A fresh Lean runtime could not be restored in this edition. The attempted runtime retrieval failed with server errors on three retries, and no Lean compiler was run. Accordingly, this paper does not describe the archived Lean evidence as a new build. A future fresh build must use the checkpoint's exact pinned toolchain and dependencies and record its own result.
+
+The exact source uses kernel-reduction decision proofs for finite identities and ordinary proof terms for the transport lemmas. The declaration audit rejects admitted proofs and unapproved project-specific axioms. Standard foundational dependencies are reported in the formal guide. Compiled artifact checking reuses Lean's kernel; it is not an independently implemented proof assistant.
+
+The later checkpoint preserves three negative controls with distinct meanings. The false-sign claim is a directly false finite statement. The false-mode case is an operational rejection whose failure mechanism must be read alongside its diagnostic and the positive checked transform table. The admitted-proof case tests the verification policy for incomplete proof evidence. These controls are not combined with the four controls of the earlier checkpoint into an artificial total.
+
+### 16.3. Independent arithmetic evidence
+
+The original reproducibility package records 3,003 exact Python assertions, separately from floating-point checks. Its exact verifier represents the twelfth root in a cyclotomic quotient, checks the signal and transform tables, the rational projector identities, the test-signal decomposition, divisor-shell completeness, and the phase-sensitive example. Its arithmetic regression range is bounded to moduli two through sixty-four.
+
+The release also includes the current replay and any added finite checks with their own records. Exact rational or cyclotomic arithmetic and numerical residuals are reported separately. A small floating-point residual verifies the implementation at its declared tolerance; it does not replace the exact proof of the general formula. Likewise, a finite modulus sweep does not prove the arbitrary-modulus theorem. QA01 through QA09 provide the general proofs needed here.
+
+### 16.4. The twenty-two preserved original statements
+
+The original bridge module's statements remain available under their original names. The following list records their substantive content rather than treating each source helper as a separate main theorem.
+
+| Original declaration | Preserved statement |
+|:--|:--|
+| `ramanujan12_length` | The rational signal list has length twelve |
+| `projector12_shape` | The literal matrix has twelve rows and twelve columns |
+| `projector12_symmetric` | The rational matrix equals its transpose |
+| `projector12_idempotent` | Exact rational multiplication gives $P^2=P$ |
+| `projector12_fixes_ramanujan` | The matrix fixes the signal $c$ |
+| `projector12_kills_noise` | The matrix sends the displayed perturbation $b$ to zero |
+| `projector12_recovers_test_signal` | Applying it to $x$ returns $c$ |
+| `ramanujan12_energy` | $\|c\|^2=48$ |
+| `noise12_energy` | $\|b\|^2=102$ |
+| `testSignal12_energy` | $\|x\|^2=150$ |
+| `energy_decomposition` | The exact energy balance is $150=48+102$ |
+| `zeta12_order_certificate` | The coordinate root raised to the twelfth power is one |
+| `zeta12_inverse_certificate` | The coordinate root times its conjugate is one |
+| `ramanujanC12_table` | Four primitive phase sums give the exact twelve-entry signal table |
+| `ramanujan_dft_table` | The negative-sign DFT gives twelve exactly at $1,5,7,11$ |
+| `abs_ramanujan_dft_table` | The unsigned DFT gives the exact even-support table |
+| `same_computational_basis_probabilities` | Signed and unsigned rational entries have the same squares |
+| `abs_ramanujan12_energy` | The unsigned signal also has squared energy forty-eight |
+| `recovered_mode_probability` | The scalar normalization gives $12^2/(48\cdot12)=1/4$ |
+| `recovered_total_probability` | Four recovered mode probabilities sum to one |
+| `phase_stripping_coprime_probability` | Zero transformed coefficients give zero selected mass |
+| `arithmetic_signal_quantum_bridge` | The original finite projector, recovery, DFT, and equal-square claims are bundled |
+
+The later source strengthens the specification around these statements. It proves that the four labels are exactly the coprime residues, that the coordinate root has no smaller positive order, that the literal rational and indexed matrices agree, and that the probability consequences belong to the actual normalized complex state vectors.
+
+The list operations in the original module use explicit finite literal lists. Their generic helper definitions are not an assertion of arbitrary-dimensional linear algebra for unsized lists, where zip operations could truncate. General vector identities in this paper use fixed finite index sets, and the later matrix source uses `Fin 12` for exactly that reason.
+
+## 17. What is complete and what remains a separate question
+
+The finite worked bridge is complete as a mathematical result. Its maps are defined, its identities are proved, its literal coefficients agree across the rational and cyclotomic representations, and its principal modulus-twelve transport and phase claims have inherited formal certificates. The current release provides the traditional paper, visual guide, formal concordance, source, and reproducibility records.
+
+The general prose theorems also establish Fourier unitarity, the Möbius divisor formula, rational divisor-projector completeness, and polyphase aliasing for the declared finite or formal models. Their arbitrary-modulus formulations are not claimed as generic Lean declarations in this package. The continuous phase and dephased-state extensions are proved prose results rather than inherited formal additions. The visual guide illustrates the continuous phase family.
+
+Several broader questions have different proof obligations. Efficient preparation of coprime-support states needs an algorithm and a cost model. Efficient circuit synthesis of the twelve-dimensional transformation or its qubit embedding needs a gate construction and resource bounds. Incomplete-sample recovery needs an observation map that is injective on the declared model, or a stability theorem with stated conditioning. Noisy implementation needs a perturbation analysis. A physical claim needs an experimental protocol and measured data.
+
+These questions can be asked using the same operator language. Their existence does not weaken the exact bridge proved here, and the bridge does not answer them automatically. The present result shows, in one fully specified example, how arithmetic selection becomes rational filtering and phase-sensitive unitary realization while keeping reconstruction, information loss, and measurement distinct.
+
+## Source lineage
+
+The four primary literature entries are provided in the accompanying reference fragment. Ramanujan's work supplies the arithmetic lineage. Vaidyanathan's papers establish the signal-processing setting of Ramanujan spaces and filter banks. The internal Komorebi lineage is *Stratified Universality for Resolved Representations*, v1.16.0, Proposition 21.11, printed page 189, with Boundary 21.12 on the distinction between character orders and coefficient-residue lanes.
+
+The local authoritative source set for the finite example consists of `Worked_Example.md`, the original reproducibility verifier, the earlier four-module checked source and proof-boundary document, and the later five-module checked source with its verification records. Their exact filenames, source hashes, and evidence classification are listed in the release provenance and the Lean guide. The traditional paper supplies self-contained mathematical proofs, while those companion records make the implementation and formal scope inspectable.
+
+## References
+
+**Ramanujan1918.** S. Ramanujan, *On certain trigonometrical sums and their applications in the theory of numbers*, Transactions of the Cambridge Philosophical Society **22**, no. 13 (1918), 259–276. Original-paper scan index: https://www.imsc.res.in/~rao/ramanujan/CamUnivCpapers/Cpaper21/page1.htm.
+
+**Vaidyanathan2014FIR.** P. P. Vaidyanathan, *Ramanujan-sum expansions for finite duration (FIR) sequences*, 2014 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 4933–4937. https://doi.org/10.1109/ICASSP.2014.6854540. Author manuscript: https://systems.caltech.edu/dsp/PPVSquare.pdf.
+
+**Vaidyanathan2014I.** P. P. Vaidyanathan, *Ramanujan Sums in the Context of Signal Processing—Part I: Fundamentals*, IEEE Transactions on Signal Processing **62**(16) (2014), 4145–4157. https://doi.org/10.1109/TSP.2014.2331617.
+
+**Vaidyanathan2014II.** P. P. Vaidyanathan, *Ramanujan Sums in the Context of Signal Processing—Part II: FIR Representations and Applications*, IEEE Transactions on Signal Processing **62**(16) (2014), 4158–4172. https://doi.org/10.1109/TSP.2014.2331624.
+
+**KomorebiStratified16.** Komorebi P., *Stratified Universality for Resolved Representations*, v1.16.0, Block 16, internal manuscript (2026). Proposition 21.11 and Boundary 21.12, printed pages 189–190. Preserved source: `Komorebi_Stratified_Universality_Foundations_v1.16.0_Block16.pdf`.

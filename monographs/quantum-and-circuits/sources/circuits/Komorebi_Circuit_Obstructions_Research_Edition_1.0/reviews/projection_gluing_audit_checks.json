@@ -1,0 +1,93 @@
+{
+  "artifact_kind": "independent_read_only_audit_replay_record",
+  "created_utc": "2026-10-07T13:15:21.887473+00:00",
+  "source_root": "/workspace/scratch/052464f5391e/circuit_publication/source/komorebi-circuit-obstructions-v1.2.0",
+  "execution": {
+    "command": "python - <<'PY'\nfrom pathlib import Path\nimport importlib.util, json, sys, tempfile, contextlib, io\nroot=Path('/workspace/scratch/052464f5391e/circuit_publication/source/komorebi-circuit-obstructions-v1.2.0')\nsys.path.insert(0,str(root/'checks'))\nspec=importlib.util.spec_from_file_location('projection_audit',root/'checks/verify_projection.py')\nmod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)\nwith tempfile.TemporaryDirectory(prefix='projection-audit-') as tmp:\n mod.R=Path(tmp);(mod.R/'results').mkdir()\n with contextlib.redirect_stdout(io.StringIO()):mod.main()\n actual=json.loads((mod.R/'results/projection.json').read_text())\n baseline=json.loads((root/'evidence/baseline/projection.json').read_text())\n print(json.dumps({'matches_baseline':actual==baseline,'status':actual['status'],'quadratic_coefficient_checks':actual['quadratic_coefficient_checks'],'full_rank_cases':actual['full_rank_cases'],'full_function_truth_inputs':actual['full_function_truth_inputs'],'restored_input_target_cases_both_oracles':actual['restored_input_target_cases_both_oracles'],'m2':actual['rows'][0],'m3':actual['rows'][1],'m4':actual['rows'][2]},indent=2))\nPY",
+    "working_directory": "/workspace/scratch/052464f5391e",
+    "exit_code": 0,
+    "rerun_for_this_record": false,
+    "output_mode": "temporary directory; checker stdout captured; summary emitted to tool transcript",
+    "temporary_full_report_available": false,
+    "summary_output_available_in_tool_transcript": true,
+    "executed_at_utc": null
+  },
+  "source_hashes": {
+    "docs/THEORY.md": "6d06aa874dd9ef2dbdd17e574157872334e9594ce2eb7b695cba61e4e53703c8",
+    "docs/FOUNDATIONS.md": "f8d428d6263bd1380f08d74711ffa7577c9a6b9013a6cffc9ddcc83d5ce629c6",
+    "checks/verify_projection.py": "253069b7f3b5cdbcd88c151c41a5dca887cbc1cc0fbd45dc12b237979ac2bc17",
+    "checks/reversible.py": "a8fef7a57ee0650044448c2bcf6140b76541c49d7d4bed2cfadddf89fc47595f",
+    "evidence/baseline/projection.json": "3695332faa8a1666b3d07525e844e154c6b6c7fcd759531db5c97da706682238"
+  },
+  "hash_timing": "Hashes computed when this record was written, after the completed replay; no maintained source edits were performed by this auditor.",
+  "observed_result": {
+    "status": "PASS",
+    "matches_baseline": true,
+    "quadratic_coefficient_checks": 693965,
+    "full_rank_cases": 9,
+    "full_function_truth_inputs": 16452,
+    "restored_input_target_cases_both_oracles": 65808
+  },
+  "scope": {
+    "coefficient_rank_and_construction_counts_m": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "full_truth_table_and_restored_oracle_checks_m": [
+      2,
+      3,
+      4
+    ],
+    "truth_table_inputs_by_m": {
+      "2": 4,
+      "3": 64,
+      "4": 16384
+    },
+    "arithmetic": "exact F2; integer-encoded truth tables and exact binary rank",
+    "optimality": "Written all-size proof; checker does not exhaustively search circuits."
+  },
+  "boundary_observations": {
+    "m2": {
+      "input_bits": 2,
+      "full_restored_Toffoli_optimum": 1,
+      "quadratic_restored_Toffoli_optimum": 1,
+      "quadratic_false_positive_count": 0
+    },
+    "m3": {
+      "input_bits": 6,
+      "full_restored_Toffoli_optimum": 3,
+      "quadratic_restored_Toffoli_optimum": 3,
+      "quadratic_false_positive_count": 24,
+      "smallest_unsafe_projection_witness": 13
+    },
+    "m4": {
+      "input_bits": 14,
+      "full_restored_Toffoli_optimum": 5,
+      "quadratic_restored_Toffoli_optimum": 7,
+      "quadratic_false_positive_count": 7616,
+      "smallest_unsafe_projection_witness": 193
+    }
+  },
+  "written_audit": {
+    "C05": "proved as written for m>=2",
+    "C06_theorem_4_1": "proved as written",
+    "C06_needed_target_structure": "K-vector space with bilinear multiplication; associativity, commutativity and unit unnecessary",
+    "C06_ancillary_correction": {
+      "locator": "docs/THEORY.md:215",
+      "restriction": "The scalar-summary assertion about failing every singleton verifier needs m>=1. At m=0 evaluation preserves the unique singleton.",
+      "main_dimension_theorem_affected": false
+    }
+  },
+  "limitations": [
+    "This record preserves the observed summary, not the deleted temporary full output.",
+    "Source hashes were computed after execution; they are not a separately captured execution-time manifest.",
+    "No independent universal optimality conclusion comes from finite checks."
+  ]
+}

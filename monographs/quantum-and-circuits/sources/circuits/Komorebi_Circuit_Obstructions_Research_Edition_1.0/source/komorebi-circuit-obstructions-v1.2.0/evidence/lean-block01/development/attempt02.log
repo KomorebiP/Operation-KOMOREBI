@@ -1,0 +1,53 @@
+✖ [3/5] Building CircuitObstructions.CutComparison (682ms)
+trace: .> LEAN_PATH=/mnt/data/komorebi-circuit-obstructions-lean-block01/formalization/lean/.lake/build/lib/lean /mnt/data/_toolchain_recovery/unpacked/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean /mnt/data/komorebi-circuit-obstructions-lean-block01/formalization/lean/CircuitObstructions/CutComparison.lean -o /mnt/data/komorebi-circuit-obstructions-lean-block01/formalization/lean/.lake/build/lib/lean/CircuitObstructions/CutComparison.olean -i /mnt/data/komorebi-circuit-obstructions-lean-block01/formalization/lean/.lake/build/lib/lean/CircuitObstructions/CutComparison.ilean -c /mnt/data/komorebi-circuit-obstructions-lean-block01/formalization/lean/.lake/build/ir/CircuitObstructions/CutComparison.c --setup /mnt/data/komorebi-circuit-obstructions-lean-block01/formalization/lean/.lake/build/ir/CircuitObstructions/CutComparison.setup.json --json
+error: CircuitObstructions/CutComparison.lean:21:2: Type mismatch: After simplification, term
+  hh
+ has type
+  false = true
+but is expected to have type
+  False
+error: CircuitObstructions/CutComparison.lean:54:18: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ?a ^^ ?b ^^ decide (?b = ?a)
+in the target expression
+  run q (run p (e.encode x (b ^^ f x))) = e.encode x (b ^^ f x ^^ f x)
+
+X W : Type
+inst✝ : DecidableEq W
+e : Boundary X W
+p q : Circuit W
+f : X → Bool
+hR : Restores e (p ++ q) f
+x : X
+b : Bool
+h : run q (run p (e.encode x (b ^^ f x))) = e.encode x (b ^^ f x ^^ f x)
+⊢ run (List.reverse q) (e.encode x b) = run p (e.encode x (b ^^ f x))
+error: CircuitObstructions/CutComparison.lean:71:3: unknown tactic
+error: CircuitObstructions/CutComparison.lean:69:37: unsolved goals
+X W : Type
+inst✝ : DecidableEq W
+e : Boundary X W
+p : Circuit W
+x : X
+⊢ ∃ i, direction e p x i = true
+error: CircuitObstructions/CutComparison.lean:84:53: unsolved goals
+case true
+X W : Type
+inst✝ : DecidableEq W
+e : Boundary X W
+p q : Circuit W
+f : X → Bool
+hR : Restores e (p ++ q) f
+x : X
+i : W
+hf : f x = true
+⊢ (run p (e.encode x false) i ^^ run p (e.encode x true) i) = (run p (e.encode x true) i ^^ run p (e.encode x false) i)
+warning: CircuitObstructions/CutComparison.lean:87:38: This simp argument is unused:
+  xor_commute
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [direction]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Some required targets logged failures:
+- CircuitObstructions.CutComparison
+error: build failed

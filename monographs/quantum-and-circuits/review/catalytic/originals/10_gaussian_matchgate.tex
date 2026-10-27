@@ -1,0 +1,202 @@
+\chapter{Gaussian, matchgate, and fermionic catalytic models}\label{ch:gaussian}
+\index{Gaussian circuit}
+\index{matchgate}
+\index{Bogoliubov transformation}
+\index{fermionic Gaussian circuit}
+\index{symplectic embedding}
+
+
+\section{Two Gaussian settings}
+Quantum Gaussianity occurs \cite{WeedbrookEtAl2012} in two closely related but algebraically different settings.
+
+For $n$ bosonic modes, a Gaussian unitary acts on quadratures
+\[
+\mathbf r=(q_1,\ldots,q_n,p_1,\ldots,p_n)^T
+\]
+by an affine symplectic transformation
+\[
+\mathbf r\longmapsto S\mathbf r+d,
+\qquad
+S\in\Sp(2n,\R).
+\]
+For $n$ fermionic modes, a fermionic Gaussian unitary acts on $2n$ Majorana operators by
+\[
+\gamma\longmapsto O\gamma,
+\qquad O\in SO(2n).
+\]
+Nearest-neighbor matchgates give a circuit presentation of a fermionic Gaussian subgroup on qubits.
+
+In both cases one can choose a restricted subgroup preserving a flag, mode ordering, particle number, or bipartition, and compare it with a larger Gaussian or non-Gaussian gate set.
+
+\section{An inherited symplectic shear theorem}
+Every invertible linear transformation $A\in\GL(n,R)$ has a canonical symplectic embedding
+\begin{equation}\label{eq:symplectic-embedding}
+\iota(A)=
+\begin{pmatrix}
+A&0\\
+0&A^{-T}
+\end{pmatrix}.
+\end{equation}
+Indeed, with
+\[
+J=
+\begin{pmatrix}0&I\\-I&0\end{pmatrix},
+\]
+one checks
+\[
+\iota(A)^T J\iota(A)=J.
+\]
+Thus every row-transvection identity in the established linear theory induces an exact identity between symplectic shear circuits.
+
+\begin{provedbox}
+Under a Gaussian gate alphabet in which each embedded elementary transvection $\iota(I+aE_{ij})$ is one primitive and direction is the only restriction, the universal six-row catalytic atom embeds into a twelve-quadrature Gaussian atom with restricted length seven and ambient length six.
+\end{provedbox}
+
+This is a formal inheritance statement for the declared shear alphabet.  It does not assert optimality after arbitrary beam splitters, squeezers, Fourier transforms, or local Gaussian gates are admitted at unit cost.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.94\textwidth]{gaussian_shear_catalysis.pdf}
+\caption{The row-transvection atom embedded as a Gaussian symplectic shear circuit.}
+\label{fig:gaussian-shear}
+\end{figure}
+
+\section{Bosonic gate hierarchies}
+Natural nested models include
+\[
+\text{triangular shears}
+\subset
+\text{all Gaussian unitaries}
+\subset
+\text{Gaussian plus a non-Gaussian primitive}
+\subset
+U(\mathcal H).
+\]
+Typical primitive resources are:
+\begin{itemize}
+\item SUM or controlled displacement gates,
+\item beam splitters,
+\item single-mode and two-mode squeezers,
+\item Fourier transforms,
+\item cubic phase gates,
+\item photon counting or non-Gaussian state injection.
+\end{itemize}
+Each inclusion supports a different defect.  A target Gaussian transformation might be shortened by leaving a triangular decomposition but remaining Gaussian.  A more radical question asks whether temporary non-Gaussianity can shorten a final Gaussian target.
+
+\section{Bloch--Messiah versus catalytic synthesis}
+A bosonic Gaussian unitary admits a Bloch--Messiah decomposition
+\[
+S=K_1 D K_2,
+\]
+where $K_1,K_2$ are passive symplectic transformations and $D$ is a diagonal squeezing layer.  This normal form optimizes conceptual structure, not necessarily a weighted gate count on a specific architecture.
+
+Catalytic synthesis asks whether a short excursion into a basis where many shear or squeezing obligations align can reduce total cost.  The opening and closing passive layers play the role of the catalyst.
+
+\begin{skeletonbox}
+A Gaussian catalytic theorem requires:
+\begin{enumerate}
+\item a declared primitive library and cost vector;
+\item a target subgroup, such as triangular, number conserving, or local;
+\item an explicit sandwich $KHK^{-1}$ returning to the target subgroup;
+\item a lower bound based on symplectic rank, singular values, graph cuts, or mode support;
+\item treatment of approximation error when continuous parameters are synthesized numerically.
+\end{enumerate}
+\end{skeletonbox}
+
+\section{Fermionic Gaussian and matchgate circuits}
+Let $c_j,c_j^\dagger$ be fermionic creation and annihilation operators.  Quadratic Hamiltonians generate Gaussian unitaries, and their action is determined by an orthogonal transformation on Majoranas.  Number-conserving Gaussian operations correspond to a unitary action on modes, while general Gaussian operations allow particle-hole mixing.
+
+This yields the hierarchy
+\[
+\begin{gathered}
+U(n)\text{ mode transformations}
+\subset SO(2n)\text{ fermionic Gaussian transformations}\\
+\subset \text{parity-preserving unitaries}.
+\end{gathered}
+\]
+A temporary Bogoliubov transformation can violate number conservation while preserving parity.  The target may nevertheless return to the number-conserving subgroup.
+
+\begin{definition}[Bogoliubov catalytic defect]
+For a number-conserving Gaussian target $U$, compare the minimum cost using number-conserving primitives with the minimum cost using general Gaussian primitives, requiring the endpoint to conserve number exactly.
+\end{definition}
+
+\section{Matchgates and geometry}
+Nearest-neighbor matchgate circuits \cite{Valiant2002,JozsaMiyake2008} have strong classical simulation properties.  Their geometry changes when SWAP, fermionic SWAP, long-range connectivity, or a single non-matchgate resource is added.  Candidate restricted/ambient pairs include:
+\begin{enumerate}
+\item nearest-neighbor matchgates versus all-to-all matchgates;
+\item number-conserving matchgates versus general matchgates;
+\item matchgates versus parity-preserving two-qubit gates;
+\item Gaussian circuits versus Gaussian circuits with one reusable non-Gaussian ancilla.
+\end{enumerate}
+
+A compiler application is immediate: a temporary mode permutation or particle-hole rotation may allow a batch of otherwise expensive interactions to share one routing or basis-change layer.
+
+\section{Covariance-matrix lower bounds}
+For a Gaussian state, the covariance matrix $\Gamma$ transforms as
+\[
+\Gamma\longmapsto S\Gamma S^T
+\]
+in the bosonic case and
+\[
+\Gamma\longmapsto O\Gamma O^T
+\]
+in the fermionic case.  Possible restricted lower bounds include:
+\begin{itemize}
+\item rank change of off-diagonal covariance blocks,
+\item symplectic singular-value obligations,
+\item growth of mode support,
+\item graph bandwidth and cut rank,
+\item number of nontrivial canonical angles between invariant subspaces.
+\end{itemize}
+One elementary gate changes only a controlled portion of these data.  A useful invariant must also charge preparation of a carrier that makes progress on many cuts simultaneously.
+
+\section{Temporary non-Gaussianity}
+Suppose a non-Gaussian primitive $g$ is introduced and later removed:
+\[
+U=g h_m\cdots h_1 g^{-1},
+\qquad U\in G_{\mathrm{Gauss}}.
+\]
+If $g h_i g^{-1}$ generates several useful Gaussian effects, the excursion may be catalytic.  However, many standard non-Gaussianity monotones vanish only on states rather than unitaries, and cancellation at the endpoint complicates direct lower bounds.
+
+Candidate monotones and certificates include:
+\begin{itemize}
+\item degree in the Weyl characteristic function,
+\item Wigner negativity generated during the path,
+\item operator Schmidt rank across mode cuts,
+\item polynomial degree of Heisenberg-evolved quadratures,
+\item stabilizer rank for encoded finite-dimensional subspaces.
+\end{itemize}
+
+\section{Exact and numerical search}
+Finite exact enumeration is available for binary symplectic or orthogonal quotients, but continuous Gaussian groups require a different strategy.
+\begin{enumerate}
+\item Fix a symbolic gate skeleton and solve polynomial equations for parameters.
+\item Use interval arithmetic to certify nonexistence below a length.
+\item Exploit canonical decompositions to quotient local or passive layers.
+\item For discrete-angle Gaussian libraries, use exact algebraic-number arithmetic.
+\item Store both an upper-bound circuit and a dual or algebraic certificate.
+\end{enumerate}
+
+\section{Architecture and routing}
+On a line or grid, Gaussian and matchgate circuits may be dominated by routing.  Let $G_{\mathrm{conn}}$ be the hardware graph.  A mode permutation $\pi$ can be treated as a catalyst if it is opened, many interactions are executed in the reordered frame, and $\pi^{-1}$ restores the logical labeling.  The benefit is
+\[
+\text{routing saved across consumers}
+-
+2\,\text{cost}(\pi).
+\]
+This is the same amortization law as the linear snapshot family, now applied to mode geometry.
+
+\begin{conjecturebox}
+There exist number-conserving or nearest-neighbor Gaussian targets whose minimum weighted cost is reduced by a restored Bogoliubov, mode-permutation, or non-Gaussian excursion.  The first exact threshold depends on the primitive library and is not determined here.
+\end{conjecturebox}
+
+\section{Research deliverables}
+A complete Gaussian extension should produce:
+\begin{enumerate}
+\item a finite or semialgebraic model with exact endpoint equality;
+\item at least one nontrivial lower-bound invariant;
+\item a minimal catalytic atom;
+\item a weighted hardware interpretation;
+\item a tensor or repeated-mode amplification theorem;
+\item code using exact arithmetic or certified intervals.
+\end{enumerate}

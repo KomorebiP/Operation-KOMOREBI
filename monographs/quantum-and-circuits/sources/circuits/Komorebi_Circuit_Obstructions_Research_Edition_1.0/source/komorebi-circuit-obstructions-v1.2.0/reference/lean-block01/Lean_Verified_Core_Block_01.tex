@@ -1,0 +1,324 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,mathtools,newtxtext,newtxmath}
+\usepackage[letterpaper,left=.91in,right=.91in,top=.82in,bottom=.84in,headheight=15pt,headsep=.23in]{geometry}
+\usepackage{microtype,xcolor,booktabs,longtable,tabularx,array,fancyhdr,titlesec,xurl}
+\usepackage[most]{tcolorbox}
+\usepackage{hyperref,bookmark}
+\definecolor{ink}{HTML}{183247}\definecolor{accent}{HTML}{39766E}
+\definecolor{muted}{HTML}{596773}\definecolor{pale}{HTML}{EFF4F4}\definecolor{linegray}{HTML}{CCD6DA}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=accent,pdftitle={Komorebi Circuit Obstructions: Lean-Verified Core, Block 01},pdfauthor={Komorebi P.},pdfsubject={C01 formalization; 40 declarations; Lean 4.34.0-rc2}}
+\urlstyle{tt}\setlength{\parindent}{0pt}\setlength{\parskip}{5.4pt}
+\setlength{\emergencystretch}{2em}\linespread{1.04}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\sffamily\color{muted}KOMOREBI CIRCUIT OBSTRUCTIONS}\fancyhead[R]{\small\sffamily\color{muted}LEAN BLOCK 01}
+\fancyfoot[L]{\footnotesize\sffamily\color{muted}v1.1.0\enspace /\enspace C01 only}\fancyfoot[R]{\small\sffamily\thepage}
+\renewcommand{\headrulewidth}{.35pt}
+\titleformat{\section}{\Large\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{0pt}{12pt}
+\titleformat{\subsection}{\normalsize\sffamily\bfseries\color{ink}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\newcommand{\pagehead}[2]{\clearpage\section*{#1}\addcontentsline{toc}{section}{#1}{\small\sffamily\color{accent}#2}\par\medskip}
+\newcommand{\B}{\{0,1\}}\newcommand{\Enc}{\operatorname{Enc}}\newcommand{\Run}{\operatorname{run}}\newcommand{\Rev}{\operatorname{rev}}\newcommand{\TC}{\operatorname{tc}}\newcommand{\x}{\oplus}
+\newcommand{\pathref}[1]{{\small\nolinkurl{#1}}}
+\newcommand{\entry}[5]{\par\smallskip\begin{minipage}{\linewidth}\hypertarget{#1}{}{\sffamily\bfseries\color{ink}#1\quad #2}\par{\fontsize{8.5}{10}\selectfont\color{muted}\nolinkurl{#3}\enspace [line #4]}\par\vspace{2pt}#5\end{minipage}\par\smallskip}
+\newtcolorbox{statusbox}[1]{colback=pale,colframe=linegray,boxrule=.45pt,arc=0pt,left=9pt,right=9pt,top=7pt,bottom=7pt,title={#1},colbacktitle=ink,coltitle=white,fonttitle=\small\sffamily\bfseries}
+\begin{document}
+\begin{titlepage}\thispagestyle{empty}
+{\small\sffamily\bfseries\color{accent}OPERATION KOMOREBI}\par
+\vspace{.95in}
+{\fontsize{32}{36}\selectfont\sffamily\bfseries\color{ink}Komorebi\\[3pt]Circuit Obstructions}\par
+\vspace{.32in}
+{\fontsize{23}{28}\selectfont\sffamily Lean-Verified Core}\par
+\vspace{.16in}{\large\color{muted}Block 01: restored computation\\and complete cut-discrepancy covers}\par
+\vspace{.5in}{\color{accent}\rule{.67\linewidth}{1.3pt}}\par
+\vspace{.24in}{\large Komorebi P.}\par
+{\small\sffamily Local source release v1.1.0\quad\textbullet\quad September 21, 2026}\par
+\vfill
+\begin{statusbox}{Formal coverage, not a change to the research scope}
+Forty checked declarations support maintained claim C01 and Theorem 2.1 of the original 28-page companion. The other seven maintained claim groups and the other 28 numbered entries are not formalized by this block.
+\end{statusbox}
+{\small Exact source statements, source locations, checked examples, build evidence, and proof boundaries. No resolution of P versus NP or independent mathematical review is claimed.}
+\end{titlepage}
+\setcounter{page}{2}
+\section*{What is now formally proved}
+\addcontentsline{toc}{section}{What is now formally proved}
+Let $C=Q\circ P$ be a finite legal classical NOT/CNOT/Toffoli circuit satisfying, for every input $x$ and both initial target bits $b$,
+\[
+C(x,0^a,b)=(x,0^a,b\x f(x)).
+\]
+At any cut, define the complete register discrepancy
+\[
+H_i(x)=P(x,0^a,0)_i\x Q^{-1}(x,0^a,0)_i.
+\]
+The formal development proves
+\begin{statusbox}{Maintained result C01}
+\[
+H_i(x)=1\Longrightarrow f(x)=1,
+\qquad
+f(x)=1\Longleftrightarrow\exists i\;H_i(x)=1.
+\]
+Equivalently, every packet is safe and the packets together cover every positive input. For the finite register set, $f(x)=\bigvee_i H_i(x)$.
+\end{statusbox}
+The quantifiers cover every finite input size, every finite zero-workspace size, every legal circuit satisfying the endpoint condition, every logical input, and every cut index. Intermediate workspace may be dirty; input registers may change temporarily; the designated output may be used as a control.
+
+\subsection*{Exact formal endpoint}
+\pathref{CircuitObstructions.canonical_complete_safe_cover}
+
+The generic theorem \pathref{CircuitObstructions.complete_safe_cover} works for any Boolean register encoding with a designated target that truly stores $b$. The canonical specialization instantiates precisely the finite $(x,0^a,b)$ model.
+
+\par\medskip
+\begin{tabularx}{\linewidth}{@{}p{1.70in}X@{}}\toprule
+Maintained claims & 1 of 8 formalized: C01.\\
+Original companion & Theorem 2.1 of 29 numbered entries.\\
+Formal inventory & 16 gate/circuit lemmas, 13 boundary/cut lemmas, 11 example and control theorems.\\
+Compiler & Lean 4.34.0-rc2, bundled standard library only.\\
+Audit & Fresh build, strict warnings, axiom inventory, and bundled checker replay.\\\bottomrule
+\end{tabularx}\par\medskip
+\textbf{Forty declarations are not forty independent discoveries.} Many are support lemmas or explicit model controls. The accompanying Lean sources contain every proof term; the statement register below covers all 40 declarations without including imported library theorems.
+\pagehead{The model and the proof}{DEFINITIONS USED IN EVERY REGISTER ENTRY}
+A state is $s:W\to\B$, where $W$ has decidable equality. Write $s[t\leftarrow b]$ for replacement of coordinate $t$ by $b$. The primitive gates are
+\[
+\begin{aligned}
+N_t(s)&=s[t\leftarrow\neg s_t],\\
+C_{c,t}(s)&=s[t\leftarrow s_t\x s_c],\qquad c\ne t,\\
+T_{a,b,t}(s)&=s[t\leftarrow s_t\x(s_a\land s_b)],
+\end{aligned}
+\]
+with three pairwise distinct wires in $T_{a,b,t}$. These inequalities are fields of the Lean gate constructors, not comments checked only by a parser.
+
+A circuit is a list of gates, executed from left to right. We write $p;q$ for list append and $\Rev(p)$ for list reversal. Because each gate is self-inverse, reversal is a proved circuit inverse.
+
+An encoding $\Enc(x,b)$ has a named target $t$ with $\Enc(x,b)_t=b$. The predicate $\operatorname{Restores}(\Enc,c,f)$ is exactly
+\[
+\forall x,b,\quad\Run(c,\Enc(x,b))=\Enc(x,b\x f(x)).
+\]
+It is a hypothesis defining which circuits implement the specified oracle. It does not assume the discrepancy-cover conclusion.
+
+\subsection*{Derivation at an arbitrary cut}
+Apply restoration to initial target $b\x f(x)$ and undo the suffix. Circuit reversal and XOR cancellation give
+\[
+\Run(\Rev(q),\Enc(x,b))=\Run(p,\Enc(x,b\x f(x))).
+\]
+Put $A_i=\Run(p,\Enc(x,0))_i$ and
+\[
+D_i=\Run(p,\Enc(x,1))_i\x A_i.
+\]
+The states $\Enc(x,0)$ and $\Enc(x,1)$ differ at their target. Injectivity of $p$ therefore gives $D_i=1$ for at least one coordinate. Substituting $b=0$ into the inverse-suffix identity gives
+\[
+H_i=f(x)\land D_i.
+\]
+If $f(x)=0$, every discrepancy vanishes. If $f(x)=1$, a nonzero direction coordinate supplies a discrepancy. This proves simultaneous safety and completeness.
+
+\subsection*{No hidden cost theorem}
+This block formalizes the semantic identity, reversal laws, and example counts. It does not formalize polynomial degree, minimal gate complexity, safe-packet degree, the ordinary-circuit simulation bounds, or any superpolynomial lower bound.
+\pagehead{State updates and Boolean identities}{GATES.LEAN \enspace /\enspace  DECLARATIONS G01--G06}\entry{G01}{Read the updated wire}{CircuitObstructions.write_same}{17}{$s[t\leftarrow b]_t=b$ for every state, target, and Boolean value.}
+\entry{G02}{Other wires are unchanged}{CircuitObstructions.write_other}{20}{If $i\ne t$, then $s[t\leftarrow b]_i=s_i$.}
+\entry{G03}{Right XOR cancellation}{CircuitObstructions.xor_cancel_right}{23}{$(a\x b)\x b=a$ for all $a,b\in\B$.}
+\entry{G04}{Left XOR cancellation}{CircuitObstructions.xor_cancel_left}{26}{$a\x(a\x b)=b$ for all $a,b\in\B$.}
+\entry{G05}{XOR commutativity}{CircuitObstructions.xor_commute}{29}{$a\x b=b\x a$ for all Boolean $a,b$.}
+\entry{G06}{XOR detects inequality}{CircuitObstructions.xor_true_iff_ne}{32}{$a\x b=1$ if and only if $a\ne b$.}
+\medskip
+\begin{statusbox}{Why these elementary lemmas are exposed}
+The proof audit prints elaborated statement types, not just theorem names. A development attempt used overloaded infix notation that did not elaborate to the intended equality. The checked version uses explicit \pathref{Bool.xor} in the formal source. The mathematical formulas above are the intended and checked statements.
+\end{statusbox}
+The proofs of G03--G06 reduce the Boolean cases inside Lean. They do not use external truth-table output as a proof certificate. Functional update lemmas are proved from the definition of \pathref{write}.
+\pagehead{Reversal is proved from legal gates}{GATES.LEAN \enspace /\enspace  DECLARATIONS G07--G14}\entry{G07}{Each legal gate is self-inverse}{CircuitObstructions.Gate.eval_involutive}{48}{$g(g(s))=s$. Distinct control and target wires are part of $g$.}
+\entry{G08}{Each gate is injective}{CircuitObstructions.Gate.eval_injective}{67}{$g(s)=g(t)\Longrightarrow s=t$.}
+\entry{G09}{Empty execution}{CircuitObstructions.run_nil}{78}{$\Run([],s)=s$.}
+\entry{G10}{Execution of a leading gate}{CircuitObstructions.run_cons}{81}{$\Run(g::p,s)=\Run(p,g(s))$.}
+\entry{G11}{Composition convention}{CircuitObstructions.run_append}{84}{$\Run(p;q,s)=\Run(q,\Run(p,s))$.}
+\entry{G12}{Reverse after forward}{CircuitObstructions.run_reverse_run}{90}{$\Run(\Rev(c),\Run(c,s))=s$.}
+\entry{G13}{Forward after reverse}{CircuitObstructions.run_run_reverse}{98}{$\Run(c,\Run(\Rev(c),s))=s$.}
+\entry{G14}{Every legal circuit is injective}{CircuitObstructions.run_injective}{102}{$\Run(c,s)=\Run(c,t)\Longrightarrow s=t$.}
+G07 uses the update rules and cancellation. G12 is induction on the gate list using G07 and G11; G13 and G14 follow from the inverse identity. No external permutation oracle is assumed.
+\pagehead{Counts and boundary coordinates}{GATES.LEAN / CUTCOMPARISON.LEAN}\entry{G15}{Toffoli counts add}{CircuitObstructions.toffoliCount_append}{114}{$\TC(p;q)=\TC(p)+\TC(q)$. A Toffoli has cost one; NOT and CNOT have cost zero for this statistic.}
+\entry{G16}{Reversal preserves the count}{CircuitObstructions.toffoliCount_reverse}{118}{$\TC(\Rev(c))=\TC(c)$. This is an exact list-count identity, not a lower bound.}
+\entry{B01}{The two target branches are distinct}{CircuitObstructions.Boundary.target_separated}{17}{$\Enc(x,0)\ne\Enc(x,1)$, because their designated target values differ.}
+\entry{B02}{Canonical logical input}{CircuitObstructions.canonical_input}{39}{On the input wire indexed by $i\in\operatorname{Fin}(n)$, $\Enc(x,b)_i=x_i$.}
+\entry{B03}{Canonical workspace initialization}{CircuitObstructions.canonical_ancilla}{42}{On every workspace wire indexed by $j\in\operatorname{Fin}(a)$, $\Enc(x,b)_j=0$.}
+\entry{B04}{Canonical target initialization}{CircuitObstructions.canonical_target}{45}{The unique designated target has value $b$.}
+The canonical wire type is
+\[
+\operatorname{Fin}(n)\;\sqcup\;(\operatorname{Fin}(a)\;\sqcup\;\mathbf1).
+\]
+This covers zero inputs or zero ancillary wires as well as arbitrary positive sizes. It imposes zero workspace only at the endpoints, not during the gate list.
+\pagehead{The exact transport identity}{CUTCOMPARISON.LEAN \enspace /\enspace  DECLARATIONS B05--B07}Throughout B05--B13, $p;q$ is legal and $\operatorname{Restores}(\Enc,p;q,f)$ holds. The symbols $A_i,D_i,H_i$ have the definitions on page 3.
+\entry{B05}{The inverse suffix meets the correct target branch}{CircuitObstructions.inverse_suffix_boundary}{49}{For every $x,b$,\[\Run(\Rev(q),\Enc(x,b))=\Run(p,\Enc(x,b\x f(x))).\]}
+\entry{B06}{The transported target direction cannot disappear}{CircuitObstructions.direction_nonzero}{67}{For every $x$, there exists a wire $i$ with $D_i(x)=1$. This theorem needs only $p$ and the separated encoding, not restoration of a whole circuit.}
+\entry{B07}{Discrepancy equals output times direction}{CircuitObstructions.cut_transport_identity}{82}{For every $x,i$,\[H_i(x)=f(x)\land D_i(x).\]}
+\subsection*{How the assumptions are used}
+B05 uses the restoration equation and the proved inverse of $q$. B06 uses only target separation and injectivity of $p$. B07 splits on the Boolean value $f(x)$ and substitutes B05.
+
+This separates an actual circuit fact from its specification. A different function $f$ can be substituted only after proving the corresponding endpoint equation. The theorem does not claim that a restored implementation of an arbitrary $f$ is small or easy to find.
+
+\begin{statusbox}{The complete state matters}
+The coordinate witnessing $D_i=1$ need not be the originally designated target. The output-active example on page 11 places every useful discrepancy in a data wire at the chosen cut.
+\end{statusbox}
+\pagehead{Safety and complete coverage}{CUTCOMPARISON.LEAN \enspace /\enspace  DECLARATIONS B08--B11}\entry{B08}{Every discrepancy is safe}{CircuitObstructions.cut_packet_safe}{91}{For all $x,i$, $H_i(x)=1\Longrightarrow f(x)=1$.}
+\entry{B09}{Every positive input is detected}{CircuitObstructions.cut_cover_complete}{99}{For each $x$,\[f(x)=1\Longleftrightarrow\exists i\;H_i(x)=1.\]}
+\entry{B10}{Safety and completeness in one declaration}{CircuitObstructions.complete_safe_cover}{111}{The conjunction of\[\bigl(\forall x,i,\ H_i(x)=1\Rightarrow f(x)=1\bigr)\]and\[\bigl(\forall x,\ f(x)=1\Longleftrightarrow\exists i\;H_i(x)=1\bigr).\]}
+\entry{B11}{Equality characterizes rejection}{CircuitObstructions.cut_states_equal_iff_reject}{119}{For every $x$,\[\Run(p,\Enc(x,0))=\Run(\Rev(q),\Enc(x,0))\]\[\Longleftrightarrow\quad f(x)=0.\]}
+B08 follows directly from B07. For B09, an accepted input and the witness supplied by B06 give a true discrepancy through B07. The reverse implication is B08. B10 packages these universal statements. B11 follows by the inverse-suffix identity and target separation.
+
+\textbf{Scope alignment.} B06, B07, and B10 collectively discharge the mathematical statement of original companion Theorem 2.1. The existence form of the cover is equivalent to its finite OR formulation. No numerical degree argument is part of this alignment.
+\pagehead{Every cut, in the canonical finite model}{CUTCOMPARISON.LEAN \enspace /\enspace  DECLARATIONS B12--B13}\entry{B12}{Cut positions are arbitrary}{CircuitObstructions.every_index_cut}{131}{For every $k\in\mathbb N$ and $x$, take $p=c.\operatorname{take}(k)$ and $q=c.\operatorname{drop}(k)$. Then $f(x)=1\Longleftrightarrow\exists i\;H_i(x)=1$.}
+\entry{B13}{Complete safe coverage for finite zero-workspace oracles}{CircuitObstructions.canonical_complete_safe_cover}{139}{For all $n,a,c,f$ satisfying canonical restoration and for every cut index $k$, the simultaneous safety and completeness statement B10 holds for all $x:\operatorname{Fin}(n)\to\B$ and all canonical wires.}
+Indices past the end of the list are allowed: \texttt{take} gives the whole circuit and \texttt{drop} the empty circuit. The identity \texttt{take k ++ drop k = c} supplies restoration at every index.
+
+\subsection*{Exact source type of the principal specialization}
+{\fontsize{8.7}{10.8}\selectfont\ttfamily
+\begin{tabbing}
+xx\=xxxx\=xxxx\=\kill
+theorem canonical\_complete\_safe\_cover (n a : Nat)\\
+\> (c : Circuit (CanonicalWire n a))\\
+\> (f : (Fin n $\to$ Bool) $\to$ Bool)\\
+\> (hR : Restores (canonicalBoundary n a) c f) (k : Nat) :\\
+\> ($\forall$ x i,\\
+\>\> packet (canonicalBoundary n a) (c.take k) (c.drop k) x i\\
+\>\> = true $\to$ f x = true) $\land$\\
+\> ($\forall$ x, f x = true $\leftrightarrow$\\
+\>\> $\exists$ i, packet (canonicalBoundary n a)\\
+\>\>\> (c.take k) (c.drop k) x i = true)
+\end{tabbing}}
+The line wrapping above is editorial. The authoritative type and proof are in the named source, and the elaborated types are retained in the audit log.
+
+\begin{statusbox}{The verified bridge is semantic}
+This theorem identifies a complete safe discrepancy cover produced by any correctly restored legal circuit. It does not prove that the cover has high degree or that constructing it is expensive. C02 and its degree prerequisites are explicitly outside Block 01.
+\end{statusbox}
+\pagehead{A checked dirty-workspace example}{EXAMPLES.LEAN \enspace /\enspace  DECLARATIONS E01--E04}Use four wires $(u,v,s,y)$, with $s=0$ initially. The circuit is
+\[
+T_{u,v,s}\ ;\ C_{s,y}\ ;\ T_{u,v,s}.
+\]
+It first stores $u\land v$ in the scratch wire, copies that value to the target by XOR, and uncomputes the scratch wire. The input bits never need to be restricted to a chosen example for the restoration theorem.
+\entry{E01}{The AND oracle restores its registers}{CircuitObstructions.Examples.andOracle_restores}{27}{For all $u,v,y$,\[(u,v,0,y)\longmapsto(u,v,0,y\x(u\land v)).\]}
+\entry{E02}{The displayed implementation has two Toffolis}{CircuitObstructions.Examples.andOracle_toffoli_count}{33}{$\TC(\texttt{andOracle})=2$. This count is not an optimality claim: a direct Toffoli into the target also computes AND.}
+\entry{E03}{Workspace is genuinely nonzero at an intermediate step}{CircuitObstructions.Examples.and_scratch_can_be_dirty}{36}{On $(u,v,y)=(1,1,0)$, the scratch wire is $1$ after the first gate.}
+\entry{E04}{The complete cover holds at every cut}{CircuitObstructions.Examples.andOracle_every_cut}{40}{For all cut indices $k$ and both-bit inputs $(u,v)$,\[u\land v=1\Longleftrightarrow\exists i\;H_i(u,v)=1.\]}
+These example proofs reduce every Boolean case in Lean and instantiate the universal theorem. The proof of C01 itself is not a finite enumeration over circuit sizes.
+\pagehead{The discrepancy can leave the target}{EXAMPLES.LEAN \enspace /\enspace  DECLARATIONS E05--E10}On data wire $d$ and target $y$, implement SWAP with three CNOTs. Let
+\[
+C=\operatorname{SWAP}\ ;\ N_d\ ;\ \operatorname{SWAP}.
+\]
+This seven-gate circuit temporarily uses the target as a control and returns $(x,y)$ as $(x,\neg y)$. Cut immediately after the first SWAP.
+\entry{E05}{Restoration despite target feedback}{CircuitObstructions.Examples.outputActiveOracle_restores}{66}{$\operatorname{Restores}(\texttt{swapBoundary},C,\,x\mapsto1)$.}
+\entry{E06}{Seven gates in this explicit construction}{CircuitObstructions.Examples.outputActiveOracle_length}{71}{$|C|=7$. It is an example circuit, not a minimum-size realization.}
+\entry{E07}{No nonlinear gates are needed here}{CircuitObstructions.Examples.outputActiveOracle_toffoli_count}{73}{$\TC(C)=0$.}
+\entry{E08}{The data discrepancy is always true}{CircuitObstructions.Examples.moved_discrepancy_data}{76}{At the specified cut, $H_d(x)=1$ for every $x\in\B$.}
+\entry{E09}{The target discrepancy is always false}{CircuitObstructions.Examples.moved_discrepancy_target}{80}{At that same cut, $H_y(x)=0$ for every $x\in\B$.}
+\entry{E10}{Target-only reconstruction is refuted}{CircuitObstructions.Examples.target_only_reconstruction_is_false}{85}{$\neg(\forall x\in\B,\ H_y(x)=1)$. Since $f$ is identically one, this is a concrete failure of replacing the complete register comparison by the named target alone.}
+All six statements are checked propositions, not external simulation reports. They test the exact distinction between output-active computation and a protected-output simplification.
+\pagehead{A necessary boundary condition}{EXAMPLES.LEAN \enspace /\enspace  DECLARATION E11}\entry{E11}{Ignoring the target makes restoration vacuous}{CircuitObstructions.Examples.degenerate_encoding_control}{93}{Let $\operatorname{bad}(b)$ be the all-zero state, independent of $b$. Then\[\forall b,\quad \Run([],\operatorname{bad}(b))=\operatorname{bad}(b\x1),\]while\[\forall i,\quad\operatorname{bad}(0)_i\x\operatorname{bad}(0)_i=0.\]}
+The constant encoding satisfies a restoration-shaped equation for the wrong constant function without producing any discrepancy. It is deliberately not a valid \texttt{Boundary}: no designated target can read back both supplied Boolean values.
+
+This control explains why \texttt{Boundary.target\_eq} and B01 are substantive hypotheses, not bureaucratic encoding details.
+
+\subsection*{Four deliberate rejection tests}
+In addition to the positive library, the runner creates four invalid test files in its isolated build directory. None is imported into the theorem library.
+\par\medskip
+\begin{tabularx}{\linewidth}{@{}p{1.8in}X@{}}\toprule
+False proposition & An attempted proof of \texttt{False} must not compile.\\
+Illegal gate & A CNOT with identical control and target must not satisfy its constructor proof.\\
+Wrong reconstruction & The false target-only statement from the SWAP example must be rejected.\\
+Admitted proof & An intentional \texttt{sorry} must be rejected by the warning-as-error guard.\\\bottomrule
+\end{tabularx}\par\medskip
+All four were rejected in the recorded verification. Rejection of these controls is a check on the pipeline; it does not replace the proof of any universal theorem.
+
+\begin{statusbox}{What these tests do not certify}
+They are not an exhaustive audit of Lean or its kernel. The compiler and bundled checker come from the same pinned toolchain. No separate kernel implementation or independent human mathematical review was used.
+\end{statusbox}
+\pagehead{Verification, provenance, and reproduction}{EXACT EVIDENCE BOUNDARIES}
+\subsection*{Pinned implementation}
+Lean 4.34.0-rc2, \texttt{x86\_64-unknown-linux-gnu}, release commit
+\pathref{6a10ac8c22beadecabdbb0919c2b50214762f91d}.
+Only its bundled standard library is imported; there is no Mathlib dependency. A fresh source copy is built with \texttt{lake --wfail build}. Each module is also checked with warnings promoted to errors. The bundled \texttt{leanchecker} replays all three modules.
+
+\subsection*{Axiom and statement audit}
+All 40 source declarations are matched to elaborated statements and printed axiom dependencies. The union of dependencies is
+\[
+\{\texttt{propext},\ \texttt{Classical.choice},\ \texttt{Quot.sound}\}.
+\]
+These are standard Lean axioms. No active admitted proof, custom axiom, \texttt{native\_decide}, or kernel-check bypass is accepted by the runner. Standard axioms are not described as an axiom-free proof. Logs and the exact source inventory are delivered with the repository.
+
+\subsection*{Preserved scientific evidence}
+The original full active Python/C++ suite passed, including 17 unit-test methods and all seven frozen scientific-output comparisons. Those finite results remain separate from the Lean proof. A new full recursive replay of all ten historical research archives is not claimed for this block.
+
+\subsection*{Reproduce after installing the pinned toolchain}
+From the repository root:
+\begin{verbatim}
+python scripts/verify_lean.py --toolchain /path/to/toolchain
+python scripts/verify.py --full
+\end{verbatim}
+The formal runner creates a fresh source build, audits axioms, runs checker replay and the four negative controls, and records hashes. The second command needs a C++17 compiler in addition to Python. Neither command installs dependencies or contacts the network.
+
+\subsection*{Recovered compiler and retained failures}
+Direct compiler download failed because outbound access was blocked. The usable toolchain was recovered from the user's \texttt{Lean\_Compact\_01.zip}. This was a partial archive extraction: the complete multipiece portable package was not reassembled or authenticated. The required compiler, standard library, and checker ran successfully; their byte hashes are recorded.
+
+A Boolean-notation ambiguity and a comment-sensitive declaration parser were caught and corrected before the final formal inventory. Failed attempts are retained. No failed build is labelled verified. This local release does not publish, archive, or alter a hosted GitHub repository.
+\pagehead{Complete declaration index}{SOURCE LOCATIONS IN THE PINNED LEAN BLOCK}
+Each row names exactly one active theorem. Names below omit the common prefix \texttt{CircuitObstructions.}; example names retain their \texttt{Examples.} namespace. G, B, and E identify the statement entries in this reference. File lines are physical source lines.
+\begin{longtable}{@{}p{.39in}p{4.52in}r@{}}
+\toprule
+ID & Lean declaration & Line\\\midrule\endfirsthead
+\toprule ID & Lean declaration & Line\\\midrule\endhead
+\bottomrule\endfoot
+\hyperlink{G01}{G01} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{write_same}} & 17\\
+\hyperlink{G02}{G02} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{write_other}} & 20\\
+\hyperlink{G03}{G03} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{xor_cancel_right}} & 23\\
+\hyperlink{G04}{G04} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{xor_cancel_left}} & 26\\
+\hyperlink{G05}{G05} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{xor_commute}} & 29\\
+\hyperlink{G06}{G06} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{xor_true_iff_ne}} & 32\\
+\hyperlink{G07}{G07} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Gate.eval_involutive}} & 48\\
+\hyperlink{G08}{G08} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Gate.eval_injective}} & 67\\
+\hyperlink{G09}{G09} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{run_nil}} & 78\\
+\hyperlink{G10}{G10} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{run_cons}} & 81\\
+\hyperlink{G11}{G11} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{run_append}} & 84\\
+\hyperlink{G12}{G12} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{run_reverse_run}} & 90\\
+\hyperlink{G13}{G13} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{run_run_reverse}} & 98\\
+\hyperlink{G14}{G14} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{run_injective}} & 102\\
+\hyperlink{G15}{G15} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{toffoliCount_append}} & 114\\
+\hyperlink{G16}{G16} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{toffoliCount_reverse}} & 118\\
+\hyperlink{B01}{B01} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Boundary.target_separated}} & 17\\
+\hyperlink{B02}{B02} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{canonical_input}} & 39\\
+\hyperlink{B03}{B03} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{canonical_ancilla}} & 42\\
+\hyperlink{B04}{B04} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{canonical_target}} & 45\\
+\hyperlink{B05}{B05} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{inverse_suffix_boundary}} & 49\\
+\hyperlink{B06}{B06} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{direction_nonzero}} & 67\\
+\hyperlink{B07}{B07} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{cut_transport_identity}} & 82\\
+\hyperlink{B08}{B08} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{cut_packet_safe}} & 91\\
+\hyperlink{B09}{B09} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{cut_cover_complete}} & 99\\
+\hyperlink{B10}{B10} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{complete_safe_cover}} & 111\\
+\hyperlink{B11}{B11} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{cut_states_equal_iff_reject}} & 119\\
+\hyperlink{B12}{B12} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{every_index_cut}} & 131\\
+\hyperlink{B13}{B13} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{canonical_complete_safe_cover}} & 139\\
+\end{longtable}
+G entries are in \pathref{CircuitObstructions/Gates.lean}; B entries are in \pathref{CircuitObstructions/CutComparison.lean}. Every source file is relative to \pathref{formalization/lean/}.
+\pagehead{Examples and source identity}{COMPLETE DECLARATION INDEX, CONTINUED}
+The final eleven declarations are in \pathref{CircuitObstructions/Examples.lean}. They instantiate the universal result, check dirty and output-active behavior, or refute explicitly stated invalid shortcuts.
+\begin{longtable}{@{}p{.39in}p{4.52in}r@{}}
+\toprule ID & Lean declaration & Line\\\midrule\endhead
+\bottomrule\endfoot
+\hyperlink{E01}{E01} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.andOracle_restores}} & 27\\
+\hyperlink{E02}{E02} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.andOracle_toffoli_count}} & 33\\
+\hyperlink{E03}{E03} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.and_scratch_can_be_dirty}} & 36\\
+\hyperlink{E04}{E04} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.andOracle_every_cut}} & 40\\
+\hyperlink{E05}{E05} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.outputActiveOracle_restores}} & 66\\
+\hyperlink{E06}{E06} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.outputActiveOracle_length}} & 71\\
+\hyperlink{E07}{E07} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.outputActiveOracle_toffoli_count}} & 73\\
+\hyperlink{E08}{E08} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.moved_discrepancy_data}} & 76\\
+\hyperlink{E09}{E09} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.moved_discrepancy_target}} & 80\\
+\hyperlink{E10}{E10} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.target_only_reconstruction_is_false}} & 85\\
+\hyperlink{E11}{E11} & {\fontsize{8.9}{10.8}\selectfont\nolinkurl{Examples.degenerate_encoding_control}} & 93\\
+\end{longtable}
+The source modules are \pathref{CircuitObstructions/Gates.lean} (G), \pathref{CircuitObstructions/CutComparison.lean} (B), and \pathref{CircuitObstructions/Examples.lean} (E), relative to \pathref{formalization/lean/}.
+
+\subsection*{Source identity and maintained scope}
+The unchanged predecessor is tagged v1.0.0 at commit
+\pathref{caa9e3be9af8e0dc8ba8f44726f9d28e81f93f20}.
+The present additive formal block is pinned by \pathref{theorem_inventory.json}, source hashes in \pathref{evidence/lean-block01/verified/verification.json}, and the release's integrity seal. The original companion and source archive are preserved unchanged.
+
+\textbf{Remaining formalization boundary.} C02--C08, ordinary-circuit simulation, multiplicative degree, algebraic lower bounds, polynomial projection, and faithful-algebra dimension arguments remain written/computational material. Their appearance in the original book does not acquire Lean status by association with C01.
+
+\subsection*{References}
+The mathematical source is \pathref{docs/FOUNDATIONS.md}, claim C01 and original companion Theorem 2.1. The exact executable formal source is the three-module inventory above. For Lean's axiom conventions, see the official manual, \emph{Theorem Proving in Lean 4}, ``Axioms and Computation,'' \url{https://lean-lang.org/theorem_proving_in_lean4/Axioms-and-Computation/}. No novelty or independent-review claim is made.
+\end{document}

@@ -1,0 +1,995 @@
+
+\documentclass[11pt]{article}
+\usepackage[margin=0.88in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem}
+\usepackage{graphicx,float,subcaption,xcolor,hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black,pdfauthor={Komorebi P.},pdftitle={Quantum Polyphase Transfer Calculus}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Hh}{\mathcal H}
+\newcommand{\B}{\mathcal B}
+\newcommand{\C}{\mathbb C}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\F}{\mathbb F}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\title{Appendix: Quantum Polyphase Transfer Calculus\\\large Signal, algebra, symmetry sectors, circuits, channels, and the $P$ versus $BQP$ frontier}
+\author{Komorebi P.}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This appendix develops the quantum side of transfer-block calculus in a unified signal, algebraic, and circuit language.  A conserved integer charge is treated as a quantum polyphase coordinate.  Exact charge sectors refine coarse residue sectors, and character projectors recover those sectors by the same roots-of-unity formula used in classical polyphase analysis.  Three circuit families are constructed and tested: exact-number circuits, parity-preserving circuits that mix exact weights, and weight-modulo-four circuits that mix sectors separated by four excitations.  Each is simulated both on the full Hilbert space and on its invariant packet.  The appendix also treats density matrices, measurements, channels, Fourier quantum walks, and the Forrelation circuit.  The final sections make the strongest available push toward $P\ne BQP$: they prove polynomial-time classical simulation for circuits with polynomial active packet dimension, prove an oracle-level Fourier-transfer separation using known query lower bounds, and isolate the missing nonrelativizing lower bound required for an unconditional separation.  No unrelativized proof of $P\ne BQP$ is claimed.
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\section{Why quantum polyphase refinement is possible}
+
+Polyphase analysis begins by grouping an indexed object according to a residue class.  Quantum theory supplies a natural index: the eigenvalue of a conserved observable.  Let $Q$ be self-adjoint with integer spectrum,
+\[
+        Q=\sum_{k\in\Z} kP_k,
+        \qquad
+        P_kP_\ell=\delta_{k\ell}P_k,
+        \qquad
+        \sum_kP_k=I.
+\]
+The exact spectral packets are $P_k$.  For a modulus $M$, define the coarse charge packet
+\[
+        B_r^{(M)}=\sum_{k\equiv r\,({\rm mod}\,M)}P_k,
+        \qquad r=0,1,\ldots,M-1.
+\]
+Then
+\[
+        I=\sum_{r=0}^{M-1}B_r^{(M)}
+\]
+and each exact sector refines exactly one residue packet.  This is the quantum analogue of splitting a signal into subsequences $x[Mn+r]$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\linewidth]{figures/quantum_signal_algebra_triangle.png}
+\caption{Signal, algebraic, and quantum polyphase are three realizations of the same projector law.}
+\end{figure}
+
+The analogy is not only verbal.  Both constructions are character projectors for a cyclic action.
+
+\begin{theorem}[Character formula for quantum polyphase packets]
+Let
+\[
+        V_M=\exp\left(\frac{2\pi i}{M}Q\right),
+        \qquad
+        \omega_M=e^{2\pi i/M}.
+\]
+Then
+\[
+        B_r^{(M)}
+        =\frac1M\sum_{\ell=0}^{M-1}\omega_M^{-r\ell}V_M^\ell.
+\]
+The operators $B_r^{(M)}$ are mutually orthogonal projectors and sum to the identity.
+\end{theorem}
+
+\begin{proof}
+On an exact eigenvector $Q|\psi_k\rangle=k|\psi_k\rangle$,
+\[
+        V_M^\ell|\psi_k\rangle=\omega_M^{k\ell}|\psi_k\rangle.
+\]
+Therefore
+\[
+\frac1M\sum_{\ell=0}^{M-1}\omega_M^{-r\ell}V_M^\ell|\psi_k\rangle
+=\left(\frac1M\sum_{\ell=0}^{M-1}\omega_M^{(k-r)\ell}\right)|\psi_k\rangle.
+\]
+The roots-of-unity sum is one when $k\equiv r\pmod M$ and zero otherwise.  Hence the operator is precisely the sum of the exact spectral projectors in that residue class.  Orthogonality and completeness follow immediately.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\linewidth]{figures/quantum_character_projector_formula.png}
+\caption{The same finite-character idempotents select signal residues and quantum charge residues.}
+\end{figure}
+
+\section{Nested refinement and its limits}
+
+If $M$ divides $M'$, then the $M'$ packets refine the $M$ packets:
+\[
+        B_r^{(M)}
+        =\sum_{\substack{0\le s<M'\\s\equiv r\,({\rm mod}\,M)}} B_s^{(M')}.
+\]
+At the finest level the residue packets are replaced by exact spectral projectors.  For qubits with excitation number $\widehat N$, this produces the hierarchy
+\[
+        \text{full space}
+        \supset
+        \text{parity packets}
+        \supset
+        \text{weight mod }4\text{ packets}
+        \supset
+        \text{exact Hamming-weight packets}.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.88\linewidth]{figures/quantum_refinement_lattice.png}
+\caption{Nested quantum polyphase refinement.  A refinement is computationally useful only when the dynamics preserve it.}
+\end{figure}
+
+A finer packet is not automatically better.  It may fail to be invariant.  It may be expensive to compile.  It may also contain almost the entire Hilbert space.  The correct refinement is the finest packet that is both invariant and computationally useful.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.92\linewidth]{figures/quantum_polyphase_dimensions.png}
+\caption{Full, coarse, and exact packet dimensions.  Fixed-excitation packets are polynomial in $n$; half-filled packets remain exponential.}
+\end{figure}
+
+For $n$ qubits,
+\[
+        \dim\Hh_{n,k}=\binom nk.
+\]
+If $k$ is fixed, $\binom nk=O(n^k)$.  If $k=\lfloor n/2\rfloor$, then
+\[
+        \binom n{\lfloor n/2\rfloor}
+        \sim\frac{2^n}{\sqrt{\pi n/2}}.
+\]
+Parity has dimension $2^{n-1}$, while a typical mod-four packet has dimension close to $2^{n-2}$.  Coarse polyphase gives constant-factor savings.  Fixed low excitation can give exponential savings.
+
+\section{From classical signal polyphase to quantum charge polyphase}
+
+For a classical sequence $x[n]$, the $M$ polyphase components are
+\[
+        x_r[m]=x[Mm+r].
+\]
+The corresponding residue projector is diagonal on the index basis.  In the Fourier representation, roots-of-unity characters select the same packets.  Quantum charge polyphase uses the same algebra with the shift action replaced by the unitary $V_M=e^{2\pi iQ/M}$.
+
+This supplies a direct dictionary:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Signal processing & Algebra & Quantum theory\\
+\midrule
+sample index $n$ & integer weight $k$ & charge eigenvalue\\
+$n\bmod M$ & character packet & $Q\bmod M$\\
+decimation phase & cyclic idempotent & symmetry sector\\
+DFT character & irreducible character & phase eigenvalue\\
+polyphase matrix & block representation & sector transfer matrix\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\linewidth]{figures/quantum_qft_polyphase_map.png}
+\caption{The Fourier transform mixes basis packets, while projectors record which residue or charge information remains invariant.}
+\end{figure}
+
+The unification is strongest when it remains modest: the theories are not identical, but their projector grammar is identical.
+
+\section{Finite-group and representation-theoretic form}
+
+The cyclic formula is a special case of a finite-group projector.  Let $G$ act unitarily by $U_g$ on $\Hh$.  For an irreducible character $\chi$ of degree $d_\chi$, define
+\[
+        B_\chi=\frac{d_\chi}{|G|}\sum_{g\in G}\overline{\chi(g)}U_g.
+\]
+Character orthogonality implies
+\[
+        B_\chi B_\psi=\delta_{\chi\psi}B_\chi,
+        \qquad
+        \sum_\chi B_\chi=I
+\]
+on the represented subspace.  Any operator commuting with the group action is block diagonal in these isotypic packets.  Thus quantum polyphase is not limited to excitation number.  Momentum, parity, spin, point-group symmetry, permutation symmetry, and stabilizer syndromes all fit the same pattern.
+
+\begin{theorem}[Symmetry-block theorem]
+If $A$ commutes with $U_g$ for every $g\in G$, then
+\[
+        B_\chi A B_\psi=0\qquad(\chi\ne\psi).
+\]
+\end{theorem}
+
+\begin{proof}
+Since $A$ commutes with the representation, it commutes with each character projector.  Hence
+\[
+        B_\chi A B_\psi=AB_\chi B_\psi=0
+\]
+for distinct irreducible labels.
+\end{proof}
+
+\section{Three genuine circuit families}
+
+The numerical experiments use actual unitary gates on qubits.  They are not abstract matrix benchmarks.
+
+\subsection{Exact-number circuit}
+
+The first circuit uses single-qubit $R_Z$ gates and nearest-neighbour exchange rotations.  On two qubits,
+\[
+U_{XY}(\theta,\phi)
+=\begin{pmatrix}
+1&0&0&0\\
+0&\cos\theta&-ie^{-i\phi}\sin\theta&0\\
+0&-ie^{i\phi}\sin\theta&\cos\theta&0\\
+0&0&0&1
+\end{pmatrix}.
+\]
+It rotates $|01\rangle$ and $|10\rangle$, so exact Hamming weight is preserved.
+
+\subsection{Parity circuit}
+
+The second circuit adds the pair rotation
+\[
+U_{\rm pair}(\theta,\phi):
+\begin{cases}
+|00\rangle\mapsto \cos\theta|00\rangle-ie^{i\phi}\sin\theta|11\rangle,\\
+|11\rangle\mapsto -ie^{-i\phi}\sin\theta|00\rangle+\cos\theta|11\rangle.
+\end{cases}
+\]
+This changes excitation number by two.  Exact weight is no longer invariant, but parity is.
+
+\subsection{Weight-modulo-four circuit}
+
+The third circuit adds a four-qubit rotation between $|0000\rangle$ and $|1111\rangle$.  It changes excitation number by four and therefore preserves weight modulo four while mixing exact sectors.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.96\linewidth]{figures/quantum_polyphase_circuits.png}
+\caption{The three circuit families.  Each successive family preserves a coarser charge packet.}
+\end{figure}
+
+Each two-level rotation is unitary because its nontrivial block is
+\[
+        \begin{pmatrix}
+        \cos\theta & -ie^{-i\phi}\sin\theta\\
+        -ie^{i\phi}\sin\theta & \cos\theta
+        \end{pmatrix},
+\]
+whose columns are orthonormal.  The full circuit is a product of such local unitaries and diagonal phase gates.
+
+\section{Exact packet simulation theorem}
+
+\begin{theorem}[Invariant-basis simulation]
+Let $U=G_m\cdots G_1$ be a quantum circuit and let $B$ be a projector such that
+\[
+        G_jB=BG_jB
+\]
+for every gate.  If $B|\psi_0\rangle=|\psi_0\rangle$, then
+\[
+        U|\psi_0\rangle=(BUB)|\psi_0\rangle.
+\]
+In any basis of $B\Hh$, the restricted circuit gives exactly the same amplitudes as the full circuit after embedding.
+\end{theorem}
+
+\begin{proof}
+The relation $G_jB=BG_jB$ implies that each gate maps $B\Hh$ into itself.  Induction gives $B|\psi_j\rangle=|\psi_j\rangle$ after every gate.  Therefore each full gate can be replaced by its restriction $BG_jB$ without changing the evolving state.
+\end{proof}
+
+This theorem explains every zero reconstruction error in the benchmarks: the packet simulator is not an approximation.  It follows the same unitary on a smaller invariant basis.
+
+\section{Cost model}
+
+For a depth-$d$ local circuit on $n$ qubits, a direct state-vector calculation touches $2^n$ amplitudes per layer.  A packet calculation touches only $D$ active amplitudes.  The schematic costs are
+\[
+        C_{\rm full}=O(dn2^n),
+        \qquad
+        C_{\rm packet}=O(dnD)+C_{\rm compile}.
+\]
+The ideal memory ratio is $2^n/D$.  Runtime also depends on indexing, cache behavior, compilation, and how often the circuit is reused.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.78\linewidth]{figures/quantum_dimension_vs_speed.png}
+\caption{Dimension reduction predicts speedup, but compilation and memory access prevent exact proportionality.}
+\end{figure}
+
+\section{Scaling benchmark: exact weight two}
+
+The circuit depth is five.  The state is initialized randomly inside the weight-two packet.  Both simulators use the same NumPy gate arithmetic.
+
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+$n$ & full dim. & packet dim. & apply gain & one-shot gain & memory gain & error\\
+\midrule
+8 & 256 & 28 & 1.11 & 1.64 & 9.14 & 0 \\
+10 & 1,024 & 45 & 1.51 & 2.02 & 22.8 & 0 \\
+12 & 4,096 & 66 & 2.95 & 3.98 & 62.1 & 0 \\
+14 & 16,384 & 91 & 8.55 & 11 & 180.0 & 0 \\
+16 & 65,536 & 120 & 33 & 36.9 & 546.1 & 0 \\
+18 & 262,144 & 153 & 131.3 & 39.1 & 1713.4 & 0 \\
+20 & 1,048,576 & 190 & 958.8 & 54.8 & 5518.8 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At $n=20$ the full state contains $1{,}048{,}576$ amplitudes and the exact packet contains $190$.  The measured repeated-application gain is about $958.8\times$ and the memory reduction is $5518.8$.  The exact result depends on the local machine and implementation, but the asymptotic dimension difference does not.
+
+\section{Scaling benchmark: parity and modulo four}
+
+Parity removes only half the Hilbert space.  The measured gain therefore approaches a factor near two.  Modulo four removes roughly three quarters and gives a somewhat larger gain.
+
+\subsection{Even parity}
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+$n$ & full dim. & packet dim. & apply gain & one-shot gain & memory gain & error\\
+\midrule
+8 & 256 & 128 & 1.06 & 1.19 & 2 & 0 \\
+10 & 1,024 & 512 & 1.15 & 1.33 & 2 & 0 \\
+12 & 4,096 & 2,048 & 1.49 & 1.37 & 2 & 0 \\
+14 & 16,384 & 8,192 & 1.78 & 1.75 & 2 & 0 \\
+16 & 65,536 & 32,768 & 2 & 3.7 & 2 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Weight modulo four}
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+$n$ & full dim. & packet dim. & apply gain & one-shot gain & memory gain & error\\
+\midrule
+8 & 256 & 72 & 1.04 & 0.986 & 3.56 & 0 \\
+10 & 1,024 & 256 & 1.25 & 1.35 & 4 & 0 \\
+12 & 4,096 & 992 & 1.81 & 1.54 & 4.13 & 0 \\
+14 & 16,384 & 4,096 & 2.49 & 2.42 & 4 & 0 \\
+16 & 65,536 & 16,512 & 3.85 & 6.34 & 3.97 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.49\linewidth}
+\includegraphics[width=\linewidth]{figures/quantum_polyphase_speedups.png}
+\caption{Repeated application.}
+\end{subfigure}
+\begin{subfigure}{.49\linewidth}
+\includegraphics[width=\linewidth]{figures/quantum_polyphase_one_shot.png}
+\caption{Compilation plus one application.}
+\end{subfigure}
+\caption{Fine and coarse quantum packets exhibit different scaling.}
+\end{figure}
+
+\section{Half filling and the honest limitation}
+
+The half-filled exact sector remains exponentially large.  It still saves a factor of order $\sqrt n$ in dimension, but it does not turn a generic many-body problem into a polynomial one.
+
+\begin{center}
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+$n$ & full dim. & packet dim. & apply gain & one-shot gain & memory gain & error\\
+\midrule
+8 & 256 & 70 & 1.06 & 40.2 & 3.66 & 0 \\
+10 & 1,024 & 252 & 1.22 & 1.89 & 4.06 & 0 \\
+12 & 4,096 & 924 & 1.94 & 3.04 & 4.43 & 0 \\
+14 & 16,384 & 3,432 & 2.9 & 4.87 & 4.77 & 0 \\
+16 & 65,536 & 12,870 & 4.65 & 5.44 & 5.09 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This is the central limitation of symmetry reduction.  It removes forbidden sectors.  It does not remove entanglement, complexity, or exponential growth inside an allowed sector.
+
+\section{Symmetry breaking as packet leakage}
+
+A proposed refinement must be tested rather than assumed.  If a gate does not preserve the packet, the restricted simulator is invalid.  The leakage probability is
+\[
+        \varepsilon_B=1-\langle\psi|U^*BU|\psi\rangle.
+\]
+The three tests deliberately append a gate that breaks the selected symmetry.
+
+\begin{center}
+\small
+\begin{tabular}{lrr}
+\toprule
+Test & probability retained & leakage\\
+\midrule
+break exact weight with pair gate & 0.891 & 0.109 \\
+break parity with X rotation & 0.869 & 0.131 \\
+break mod4 with pair gate & 0.928 & 0.0723 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/quantum_symmetry_breaking_leakage.png}
+\caption{Symmetry-breaking gates move probability into previously forbidden packets.}
+\end{figure}
+
+This gives a practical audit rule: compute the commutator or measure packet leakage before trusting a sector reduction.
+
+\section{Density matrices: population and coherence packets}
+
+A density operator has two packet indices:
+\[
+        \rho=\sum_{i,j}B_i\rho B_j.
+\]
+The diagonal block $B_i\rho B_i$ is population in packet $i$.  The off-diagonal block $B_i\rho B_j$ is coherence between packets.  Discarding the off-diagonal blocks is a physical operation such as dephasing, not a harmless change of notation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/quantum_density_coherence_blocks.png}
+\caption{Density packet blocks distinguish populations from cross-packet coherence.}
+\end{figure}
+
+The Hilbert--Schmidt identity
+\[
+        \|\rho\|_2^2=\sum_{i,j}\|B_i\rho B_j\|_2^2
+\]
+follows from orthogonality of the left-right operator packets.  It gives an exact coherence-energy decomposition.
+
+\section{Measurement as normalized packet transfer}
+
+For a projective measurement $\{B_i\}$,
+\[
+        p_i=\Tr(B_i\rho),
+        \qquad
+        \rho_i=\frac{B_i\rho B_i}{p_i}
+\]
+when $p_i>0$.  Measurement selects a positive packet, computes its mass, and normalizes.  This is structurally similar to a Bayesian packet update, although the quantum and Bayesian interpretations remain different.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/quantum_measurement_as_packet_update.png}
+\caption{Projective measurement is packet selection followed by normalization.}
+\end{figure}
+
+\section{Channels and four-index transfer}
+
+A quantum channel has Kraus form
+\[
+        \Phi(\rho)=\sum_\alpha K_\alpha\rho K_\alpha^*.
+\]
+Because a density matrix has left and right packet indices, a channel has four packet indices:
+\[
+        \Phi_{ab,ij}(X)
+        =B_a\,\Phi(B_iXB_j)\,B_b.
+\]
+These blocks record how an input coherence $(i,j)$ reaches an output coherence $(a,b)$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/quantum_channel_superoperator_packets.png}
+\caption{Quantum channels route populations and coherences through a four-index transfer law.}
+\end{figure}
+
+Dephasing damps off-diagonal blocks.  Amplitude damping transfers population between number sectors.  A symmetry-preserving channel is sparse in the corresponding charge labels.
+
+\section{Quantum walks and Fourier packets}
+
+On a cycle graph, the adjacency operator is diagonal in the discrete Fourier basis.  The continuous-time walk
+\[
+        |\psi(t)\rangle=e^{-itA}|0\rangle
+\]
+is therefore a sum of character packets.  This is the same DFT diagonalization that appears in signal processing, now interpreted as quantum dynamics.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\linewidth]{figures/quantum_walk_fourier_packets.png}
+\caption{A cycle quantum walk is diagonal in Fourier-character packets.}
+\end{figure}
+
+The example shows why signal, algebra, and quantum theory meet naturally at the projector level: the DFT is simultaneously a filter-bank coordinate change, a decomposition into group characters, and a quantum change of basis.
+
+\section{Complexity boundary: when packet simulation is polynomial}
+
+The benchmark speedups suggest a precise theorem.
+
+\begin{theorem}[Polynomial packet-simulation theorem]
+Let $\{C_x\}$ be a polynomial-time uniform family of quantum circuits.  Suppose there is an efficiently computable projector $P_n$ such that:
+\begin{enumerate}[label=(\roman*)]
+\item the initial state lies in $P_n\Hh$;
+\item every gate preserves $P_n\Hh$;
+\item $\rank P_n\le\operatorname{poly}(n)$;
+\item restricted gates and the final measurement can be computed to polynomial precision in polynomial time.
+\end{enumerate}
+Then the language decided by the circuit family lies in $P$.
+\end{theorem}
+
+\begin{proof}
+Choose an efficiently indexed basis of $P_n\Hh$.  The state has polynomially many amplitudes.  Every restricted gate is computable and applicable in polynomial time, and the circuit has polynomially many gates.  The final acceptance probability can therefore be approximated to inverse-polynomial precision in deterministic polynomial time.  The constant BQP promise gap then decides the language.
+\end{proof}
+
+\begin{corollary}
+For every fixed $k$, uniform number-preserving circuits initialized in the weight-$k$ sector are classically simulable in polynomial time, because
+\[
+        \dim\Hh_{n,k}=\binom nk=O(n^k).
+\]
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.84\linewidth]{figures/packet_dimension_complexity_boundary.png}
+\caption{Fixed-charge packets are polynomial; half-filled and full spaces remain exponential.}
+\end{figure}
+
+This theorem is a real complexity consequence of the calculus.  It identifies a subclass of quantum circuits that collapses into $P$.  It does not separate $P$ from $BQP$.
+
+\section{Forrelation: a genuinely global interference packet}
+
+Let $f,g:\{0,1\}^n\to\{-1,1\}$ and $N=2^n$.  Define phase oracles $O_f|x\rangle=f(x)|x\rangle$ and $O_g|y\rangle=g(y)|y\rangle$.  The circuit
+\[
+        H^{\otimes n}O_gH^{\otimes n}O_fH^{\otimes n}|0^n\rangle
+\]
+has zero-state amplitude
+\[
+        \Phi(f,g)
+        =\frac1{N^{3/2}}\sum_{x,y}f(x)(-1)^{x\cdot y}g(y).
+\]
+
+\begin{proof}
+The first Hadamard transform creates the uniform state.  The first oracle inserts $f(x)$.  The second Hadamard transform contributes $N^{-1/2}(-1)^{x\cdot y}$.  The second oracle inserts $g(y)$, and the final overlap with $\langle0^n|H^{\otimes n}$ contributes another $N^{-1/2}$.  Multiplying the three normalization factors gives $N^{-3/2}$.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.90\linewidth]{figures/forrelation_circuit.png}
+\caption{Forrelation stores the answer in coherent Fourier transfer among all path packets.}
+\end{figure}
+
+The circuit does not inspect the $N^2$ path contributions separately.  It preserves their phases and lets them interfere.  This is qualitatively different from an invariant-sector speedup: the answer is the global cross-packet relation.
+
+\section{Forrelation experiments}
+
+The simulation generated independent random phase functions and a simple forrelated ensemble obtained by thresholding a Gaussian vector and its Walsh transform.
+
+\begin{center}
+\small
+\begin{tabular}{rrrr}
+\toprule
+$n$ & mean amplitude & standard deviation & mean absolute amplitude\\
+\midrule
+\multicolumn{4}{c}{independent phase functions}\\
+6 & 0.00677 & 0.132 & 0.117 \\
+8 & -0.00723 & 0.0635 & 0.0527 \\
+10 & 0.0103 & 0.0266 & 0.0241 \\
+12 & 8.17e-04 & 0.0159 & 0.0124 \\
+14 & -8.04e-04 & 0.00694 & 0.00561 \\
+16 & -1.59e-05 & 0.00393 & 0.00345 \\
+\midrule
+\multicolumn{4}{c}{forrelated phase functions}\\
+6 & 0.64 & 0.0439 & 0.64 \\
+8 & 0.639 & 0.0266 & 0.639 \\
+10 & 0.636 & 0.0117 & 0.636 \\
+12 & 0.635 & 0.00536 & 0.635 \\
+14 & 0.636 & 0.00324 & 0.636 \\
+16 & 0.637 & 0.00185 & 0.637 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/forrelation_amplitude_separation.png}
+\caption{The coherent circuit separates independent and forrelated phase packets in the tested ensemble.}
+\end{figure}
+
+A transparent classical baseline samples random path pairs $(x,y)$.  It is not an optimal classical algorithm; it shows how noisy individual path observations are compared with coherent interference.
+
+\begin{center}
+\small
+\begin{tabular}{rrrr}
+\toprule
+sampled pairs & true amplitude & mean estimate & RMSE\\
+\midrule
+16 & 0.638 & -1.6 & 29.1 \\
+64 & 0.638 & -3.4 & 17.8 \\
+256 & 0.638 & -2.17 & 8.68 \\
+1,024 & 0.638 & -0.119 & 3.81 \\
+4,096 & 0.638 & 0.756 & 1.89 \\
+16,384 & 0.638 & 0.797 & 1.1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/forrelation_query_error.png}
+\caption{Naive classical path sampling needs many oracle-pair observations to stabilize.}
+\end{figure}
+
+\section{Explicit truth tables and the query-model distinction}
+
+If the complete truth tables of $f$ and $g$ are given explicitly, a classical fast Walsh transform evaluates $\Phi(f,g)$ in $O(N\log N)$ time.  The oracle advantage concerns the number of function queries, not an unconditional speedup on explicit arrays.
+
+\begin{center}
+\small
+\begin{tabular}{rrrrrr}
+\toprule
+$n$ & $N$ & Walsh circuit (s) & double path sum (s) & ratio & difference\\
+\midrule
+5 & 32 & 4.86e-05 & 3.00e-04 & 6.18 & 0 \\
+6 & 64 & 5.68e-05 & 7.36e-04 & 13 & 0 \\
+7 & 128 & 7.06e-05 & 0.00243 & 34.4 & 0 \\
+8 & 256 & 8.99e-05 & 0.00882 & 98.1 & 0 \\
+9 & 512 & 1.14e-04 & 0.0321 & 282.3 & 0 \\
+10 & 1,024 & 1.73e-04 & 0.139 & 800.7 & 0 \\
+11 & 2,048 & 2.64e-04 & 0.497 & 1887.2 & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/forrelation_runtime_scaling.png}
+\caption{With explicit truth tables, the fast Walsh transform is also a classical algorithm.  The formal separation is a query-complexity statement.}
+\end{figure}
+
+This distinction prevents an easy but invalid leap from a circuit benchmark to $P\ne BQP$.
+
+\section{What is already proved about separation}
+
+Forrelation gives an almost maximal separation between quantum and randomized classical query complexity, and generalized Forrelation is BQP-complete in the query formulation \cite{AaronsonAmbainis}.  $k$-Forrelation strengthens the query separation toward $N^{1-\varepsilon}$ for constant quantum queries \cite{BansalSinha}.  Simon's problem supplies another exponential oracle/query separation \cite{Simon}.
+
+Therefore the transfer framework can support the following rigorous statement.
+
+\begin{theorem}[Oracle Fourier-transfer separation]
+There exists an oracle $O$ such that
+\[
+        P^O\ne BQP^O.
+\]
+Moreover, the separating quantum algorithm can be written as a constant-depth sequence of Fourier packet mixers and diagonal phase packets.
+\end{theorem}
+
+The lower bound is inherited from the classical query lower bound for the chosen oracle problem.  This is a real separation, but it is relativized.
+
+\section{Why the oracle result is not the final proof}
+
+A relativizing argument cannot settle ordinary $P$ versus $BQP$.  There are oracle worlds in which $P^O=BQP^O$ \cite{FortnowRogers} and oracle worlds in which quantum computation separates from larger classical hierarchies.  Therefore the final proof must use explicit non-oracle structure in a way that is not preserved under arbitrary oracle substitution.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.86\linewidth]{figures/quantum_complexity_barrier.png}
+\caption{The missing step is a representation-independent, nonrelativizing classical lower bound for an explicit succinct problem.}
+\end{figure}
+
+\section{The strongest proof push available here}
+
+The natural candidate is a succinct transfer-interference problem.  Let a polynomial-size classical description $z$ specify two reversible phase circuits computing $f_z$ and $g_z$.  Define
+\[
+        \Phi_z
+        =\frac1{2^{3n/2}}\sum_{x,y}f_z(x)(-1)^{x\cdot y}g_z(y).
+\]
+Promise either $|\Phi_z|\ge a$ or $|\Phi_z|\le b$, where $a-b\ge1/\operatorname{poly}(n)$.  The quantum circuit estimates the amplitude in polynomial time because the phase circuits are coherently implementable.
+
+\begin{conjecture}[Explicit transfer-interference lower bound]
+There is a polynomial-time uniform family of such succinct instances for which no deterministic polynomial-time classical algorithm distinguishes the two promise cases.
+\end{conjecture}
+
+\begin{theorem}[Consequence of the conjecture]
+If the explicit transfer-interference lower bound holds, then
+\[
+        P\ne BQP.
+\]
+\end{theorem}
+
+\begin{proof}
+The promise problem is in BQP by the coherent Fourier circuit and standard amplitude estimation or repetition.  The conjecture states that it is not in $P$.  Hence a language exists in $BQP\setminus P$.
+\end{proof}
+
+This is the shortest valid route from the framework to a full separation.  It also shows why the route is unfinished: the conjectured lower bound is essentially the missing complexity theorem.
+
+\section{Why simulator lower bounds are insufficient}
+
+It is not enough to prove that the circuit defeats:
+\begin{itemize}
+\item full state-vector simulation;
+\item one projector family;
+\item tensor-network contraction of bounded width;
+\item path sampling;
+\item low-rank transfer matrices;
+\item stabilizer decompositions;
+\item any fixed list of known classical simulators.
+\end{itemize}
+A classical decision algorithm may compute the answer without simulating the state.  Therefore
+\[
+        \boxed{\text{simulation hardness is not decision-problem hardness}.}
+\]
+
+The lower bound must cover every deterministic polynomial-time algorithm, including representations not yet invented.
+
+\section{Transfer complexity as a research invariant}
+
+For a stated classical representation class $\mathcal R$, define
+\[
+        \operatorname{TC}_{\varepsilon}^{\mathcal R}(C)
+        =\min\{\operatorname{cost}(R):R\in\mathcal R,\ |R(C)-p_C|\le\varepsilon\},
+\]
+where $p_C$ is the target circuit probability.  One can then prove lower bounds successively for packet, tensor, sampling, low-degree, and communication representations.
+
+This creates a disciplined proof ladder:
+\begin{enumerate}
+\item exact polynomial-packet simulation for easy sectors;
+\item exponential lower bounds for local packet queries;
+\item lower bounds for increasingly broad representation families;
+\item a representation-independent lower bound;
+\item $P\ne BQP$.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.80\linewidth]{figures/p_bqp_proof_ladder.png}
+\caption{The proof ladder.  The final step is not supplied by the finite benchmarks.}
+\end{figure}
+
+\section{Could universal packetization imply the opposite conclusion?}
+
+The same calculus also exposes a route to $P=BQP$.
+
+\begin{conjecture}[Universal polynomial packetization]
+Every uniform polynomial-size quantum circuit admits an efficiently discoverable invariant or approximately invariant packet representation of polynomial active dimension and polynomial transfer sparsity, sufficient to compute its acceptance probability.
+\end{conjecture}
+
+If true, the polynomial packet-simulation theorem would imply $BQP\subseteq P$, and therefore $P=BQP$.  The experiments strongly reject this conjecture as a universal empirical principle: coarse sectors remain exponential, and global interference problems do not reveal a small invariant packet.  But experiments cannot disprove it for every circuit.
+
+The framework therefore gives a clean dichotomy:
+\[
+\begin{aligned}
+\text{universal polynomial packetization}&\Longrightarrow P=BQP,\\
+\text{explicit representation-independent interference lower bound}&\Longrightarrow P\ne BQP.
+\end{aligned}
+\]
+
+\section{Polyphase refinement and the nature of quantum advantage}
+
+The experiments separate two mechanisms.
+
+\paragraph{Invariant-packet reduction.}
+When the state lives in a small preserved sector, quantum-looking evolution collapses to polynomial classical simulation.
+
+\paragraph{Coherent cross-packet interference.}
+When the answer is stored in a global phase relation rather than a small sector, projector reduction may expose the structure without reducing its classical complexity.
+
+This suggests that quantum advantage is not simply ``large Hilbert space.''  A large space can be irrelevant if only a small sector is occupied.  The harder cases are those in which the computational answer depends on coherent relations across many packets and no polynomial classical compression is available.
+
+\section{Further quantum examples}
+
+The same framework applies to:
+\begin{itemize}
+\item momentum sectors in translationally invariant spin chains;
+\item total-spin sectors from $SU(2)$ representation theory;
+\item particle-number and parity sectors in fermionic models;
+\item stabilizer syndrome packets in quantum error correction;
+\item irreducible representation packets in lattice gauge theory;
+\item Fourier packets in quantum walks and phase estimation;
+\item block-encoded operators and singular-value transformation;
+\item decoherence-free subspaces and noiseless subsystems;
+\item Kraus and Lindblad superoperator packets.
+\end{itemize}
+Each example requires its own physical and analytic hypotheses.  The common object is the projector block $B_iTB_j$.
+
+\section{Verification record}
+
+The Python implementation tests:
+\begin{itemize}
+\item exact-number packet simulation against the full state vector;
+\item parity packet simulation against the full state vector;
+\item weight-modulo-four packet simulation against the full state vector;
+\item exact reconstruction of the Forrelation amplitude;
+\item partition of the Hilbert space by exact and residue-sector dimensions.
+\end{itemize}
+All five tests pass.  Every invariant-circuit benchmark reports zero relative reconstruction error to the displayed precision.  The symmetry-breaking tests report nonzero leakage, as they should.
+
+\section{Approximate symmetry and controlled leakage}
+
+Exact commutation is not the only useful regime.  Suppose a Hamiltonian $H$ nearly preserves a projector $B$, and let
+\[
+        U(t)=e^{-itH}.
+\]
+The leakage operator is
+\[
+        L_B(t)=(I-B)U(t)B.
+\]
+If $[H,B]=0$, then $L_B(t)=0$.  When the commutator is small, leakage is controlled for finite time.
+
+\begin{theorem}[Commutator leakage bound]
+For bounded self-adjoint $H$ and an orthogonal projector $B$,
+\[
+        \|(I-B)e^{-itH}B\|
+        \le |t|\,\|[H,B]\|.
+\]
+\end{theorem}
+
+\begin{proof}
+Define
+\[
+        F(s)=e^{-i(t-s)H}Be^{-isH}B.
+\]
+Then $F(0)=e^{-itH}B$ and $F(t)=Be^{-itH}B$.  Differentiating gives
+\[
+        F'(s)=ie^{-i(t-s)H}[H,B]e^{-isH}B.
+\]
+Therefore
+\[
+        (I-B)e^{-itH}B
+        =(I-B)\bigl(F(0)-F(t)\bigr)
+        =-\int_0^t(I-B)F'(s)\,ds.
+\]
+Both unitary factors and the projectors have norm at most one, so the integral is bounded by $|t|\|[H,B]\|$.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.76\linewidth]{figures/quantum_approximate_symmetry_bound.png}
+\caption{A small commutator gives a short-time leakage certificate.  The bound is useful even when the packet is not exactly invariant.}
+\end{figure}
+
+This estimate gives a principled approximate polyphase model.  A circuit or Hamiltonian may be simulated in one packet for as long as the accumulated leakage remains below the required tolerance.  It also identifies the correct audit quantity: not a visual resemblance to block diagonality, but the commutator or directly measured leakage.
+
+\section{Worked finite examples}
+
+\subsection{Three qubits at exact weight one}
+
+For three qubits, the weight-one packet is
+\[
+        \Hh_{3,1}=\operatorname{span}\{|001\rangle,|010\rangle,|100\rangle\}.
+\]
+Its dimension is three rather than eight.  An exchange gate on qubits one and two acts as a $2\times2$ rotation on the appropriate pair of basis states and leaves the third state fixed.  In the ordered packet basis, the restricted unitary has the form
+\[
+        U_{3,1}=\begin{pmatrix}
+        \cos\theta&-ie^{-i\phi}\sin\theta&0\\
+        -ie^{i\phi}\sin\theta&\cos\theta&0\\
+        0&0&1
+        \end{pmatrix}
+\]
+up to the ordering convention for qubits.  The full $8\times8$ unitary contains the same block together with unrelated zero-, two-, and three-excitation sectors.  The packet calculation is not an approximation; it simply omits blocks the state can never reach.
+
+\subsection{Four qubits and parity refinement}
+
+For four qubits, the even-parity packet has dimension
+\[
+        \binom40+\binom42+\binom44=1+6+1=8.
+\]
+A pair-creation gate mixes weight zero with weight two and weight two with weight four, but it never reaches odd parity.  The even packet is therefore invariant even though no exact weight is invariant.  This is a genuine polyphase refinement: a coarse residue packet remains valid after the finer packets cease to be valid.
+
+\subsection{Four qubits and mod-four refinement}
+
+The weight-zero-mod-four packet is
+\[
+        \Hh_{4,0\bmod4}=\operatorname{span}\{|0000\rangle,|1111\rangle\}.
+\]
+A four-body rotation between these states is a nontrivial two-dimensional quantum circuit inside a sixteen-dimensional Hilbert space.  Exact weight is broken maximally, but charge modulo four is preserved exactly.
+
+These examples show why refinement should be chosen from the dynamics rather than from the state alone.  The initial state may lie in a very fine packet, but the gates determine which packet remains invariant.
+
+\section{Entanglement inside a packet}
+
+A symmetry packet can be small relative to the full space and still contain highly entangled states.  For example, the one-excitation $W$ state
+\[
+        |W_n\rangle=\frac1{\sqrt n}\sum_{q=1}^n|0\cdots010\cdots0\rangle
+\]
+lives in a packet of dimension $n$, yet it is entangled across every nontrivial bipartition.  At half filling, the packet dimension is exponential and can support volume-law entanglement.
+
+This matters computationally.  Charge projection and tensor-network compression are independent resources.  A charge packet removes forbidden sectors.  A low Schmidt rank removes entanglement complexity.  A simulator may combine both, but one does not imply the other.
+
+A useful two-axis complexity model is therefore
+\[
+        \bigl(D_{\rm packet},\,\chi_{\rm ent}\bigr),
+\]
+where $D_{\rm packet}$ is active packet dimension and $\chi_{\rm ent}$ is a tensor-network bond requirement.  Efficient simulation may follow from either coordinate being small, but the strongest circuits keep both large.
+
+\section{Stabilizer syndromes as polyphase packets}
+
+Quantum error correction supplies another exact projector family.  Let commuting stabilizers $S_1,\ldots,S_m$ have eigenvalues $\pm1$.  A syndrome $s\in\{0,1\}^m$ defines
+\[
+        B_s=\prod_{j=1}^m\frac{I+(-1)^{s_j}S_j}{2}.
+\]
+The projectors are orthogonal and sum to the identity.  Measuring the stabilizers selects one syndrome packet, and recovery applies a syndrome-dependent transfer back toward the code packet.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/quantum_stabilizer_packets.png}
+\caption{Error correction is a projector refinement by stabilizer eigenvalues.}
+\end{figure}
+
+The formula is the same finite-character construction used for ordinary polyphase packets, now applied to the abelian stabilizer group.  This is a particularly clean example of the signal--algebra--quantum unification: syndrome extraction is a multi-channel filter bank on commuting quantum observables.
+
+\section{Block encodings and polynomial operator transforms}
+
+Modern quantum algorithms often place a nonunitary operator $A$ inside a larger unitary $U$ so that
+\[
+        (\langle0|\otimes I)U(|0\rangle\otimes I)=A/\alpha.
+\]
+This is a projector block:
+\[
+        B_0UB_0=A/\alpha,
+        \qquad
+        B_0=|0\rangle\langle0|\otimes I.
+\]
+Once the block encoding is available, polynomial transformations of singular values can be implemented by controlled phase sequences.  The transfer-block calculus therefore meets block encoding at the literal level: the encoded operator is one selected block of a unitary.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\linewidth]{figures/quantum_block_encoding_map.png}
+\caption{Block encoding is another projector realization of operator calculus.}
+\end{figure}
+
+This does not imply that every transfer block can be implemented efficiently on quantum hardware.  The unitary dilation, normalization, and access model remain essential.  The point is structural: projector calculus supplies the language in which block encodings, symmetry sectors, and measurements can be discussed together.
+
+\section{A sharper statement of the separation program}
+
+The proof attempt can be organized around two quantities.  For a circuit family $C_n$, let
+\[
+        D_\varepsilon(C_n)
+\]
+be the least active packet dimension in an efficiently discoverable approximately invariant decomposition with leakage at most $\varepsilon$.  Let
+\[
+        I_\varepsilon(C_n)
+\]
+measure the least classical cost of reproducing the relevant coherent cross-packet interference to error $\varepsilon$.
+
+The easy regime is
+\[
+        D_\varepsilon(C_n)\le\operatorname{poly}(n)
+\]
+with efficiently applicable block gates.  The polynomial packet-simulation theorem applies.
+
+A candidate hard regime requires both
+\[
+        D_\varepsilon(C_n)=2^{\Omega(n)}
+\]
+and
+\[
+        I_\varepsilon(C_n)=2^{\Omega(n)}
+\]
+for every classical representation capable of deciding the output promise.  The first condition alone is not enough: a large state space can still admit a short classical formula.  The second condition is the real complexity-theoretic target.
+
+This refinement clarifies the role of the benchmarks.  They estimate $D$ for particular symmetry coordinates and test exact circuit action.  They do not establish a representation-independent lower bound on $I$.
+
+\section{Why the final lower bound must be nonrelativizing}
+
+The oracle results show that coherent Fourier transfer can outrun classical query access.  They also show the limit of that line of reasoning.  A proof that treats an arbitrary oracle as a black box cannot distinguish the ordinary world from every relativized world, because relativized worlds exist with opposite answers for $P$ versus $BQP$.
+
+A successful unrelativized proof must therefore use some explicit feature unavailable to a generic oracle.  Possible candidates include:
+\begin{itemize}
+\item arithmetic structure of succinct phase functions;
+\item uniform circuit generation;
+\item algebraic degree growth under composition;
+\item communication or information constraints tied to explicit encodings;
+\item nonrelativizing interactive or arithmetization methods;
+\item a universal lower bound on classical interference compression.
+\end{itemize}
+
+The transfer framework does not presently supply that theorem.  It supplies a way to state it cleanly and to test restricted versions without confusing them with the final separation.
+
+
+\section{Conclusion}
+
+Quantum polyphase refinement is mathematically exact and computationally useful.  The character formula unifies signal residues, algebraic idempotents, and quantum charge sectors.  Exact-number, parity, and modulo-four circuits show a controlled hierarchy from polynomial packets to constant-fraction packets.  Density matrices and channels require left-right packet indices, while quantum walks and Forrelation expose the Fourier side of the theory.
+
+The complexity conclusion is equally precise.  Polynomial active packet dimension gives a classical polynomial-time simulation theorem.  Fourier-transfer oracle problems give rigorous relativized separations.  What remains for $P\ne BQP$ is an explicit, succinct, nonrelativizing lower bound against every polynomial-time classical algorithm.  The appendix reaches that frontier and states the missing theorem, but it does not cross it.
+
+\appendix
+\section{Implementation notes}
+
+The circuit simulator stores only computational-basis indices in the selected packet.  A local two-level gate is compiled into paired local indices.  The same gate arithmetic is used in the full and packet calculations.  The benchmark source and raw CSV/JSON records accompany the appendix.
+
+\section{References}
+\begin{thebibliography}{9}
+\bibitem{BernsteinVazirani}
+E. Bernstein and U. Vazirani, ``Quantum Complexity Theory,'' \emph{SIAM Journal on Computing} 26 (1997), 1411--1473.
+\bibitem{Simon}
+D. Simon, ``On the Power of Quantum Computation,'' \emph{SIAM Journal on Computing} 26 (1997), 1474--1483.
+\bibitem{Shor}
+P. Shor, ``Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer,'' \emph{SIAM Journal on Computing} 26 (1997), 1484--1509.
+\bibitem{AaronsonAmbainis}
+S. Aaronson and A. Ambainis, ``Forrelation: A Problem that Optimally Separates Quantum from Classical Computing,'' \emph{SIAM Journal on Computing} 47 (2018), 982--1038.
+\bibitem{BansalSinha}
+N. Bansal and M. Sinha, ``Forrelation Optimally Separates Quantum and Classical Query Complexity,'' 2020.
+\bibitem{FortnowRogers}
+L. Fortnow and J. Rogers, ``Complexity Limitations on Quantum Computation,'' \emph{Journal of Computer and System Sciences} 59 (1999), 240--252.
+\end{thebibliography}
+\end{document}

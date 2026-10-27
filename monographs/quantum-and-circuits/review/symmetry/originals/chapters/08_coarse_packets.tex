@@ -1,0 +1,43 @@
+\chapter{Coarse packets and the honest limitation}
+\label{ch:coarse-packets}
+
+\section{Parity}
+The even- and odd-parity packets each have dimension
+\[
+2^{n-1}.
+\]
+Parity removes half the state vector. This can produce a useful constant factor, but it does not change exponential scaling.
+
+A pair-creation rotation mixes $\ket{00}$ and $\ket{11}$ and therefore changes excitation number by two while preserving parity. The packet is exact for a parity-preserving circuit, but its internal dimension remains exponential.
+
+\section{Weight modulo four}
+A four-qubit rotation between $\ket{0000}$ and $\ket{1111}$ changes excitation number by four. It can mix exact-weight sectors while preserving weight modulo four. A single residue packet contains asymptotically one quarter of all basis states. Again, the reduction is a constant factor.
+
+\section{Half filling}
+At half filling,
+\[
+\binom n{\lfloor n/2\rfloor}
+\sim
+\frac{2^n}{\sqrt{\pi n/2}}.
+\]
+The packet is smaller by a polynomial factor, but it remains exponential. At $n=20$, the half-filled packet contains $184{,}756$ amplitudes. The archived repeated-application gain is approximately $7.396$, while the one-shot gain is $0.6529$, meaning the packet path was slower in that single-run test after compilation overhead.
+
+\begin{recordbox}
+The half-filled benchmark demonstrates a necessary distinction: dimension reduction can be exact and useful without yielding polynomial complexity or a one-shot speedup.
+\end{recordbox}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=.82\textwidth]{coarse_vs_fine.pdf}
+\caption{Parity and mod-four packets retain an exponential number of basis states.}
+\end{figure}
+
+\section{Entanglement inside a packet}
+A small number of symmetry labels does not imply low entanglement. The half-filled packet can support volume-law entanglement. Tensor-network bond dimension and packet dimension are independent resources. A robust simulator should therefore track both
+\[
+(D_{\rm packet},\chi_{\rm internal}),
+\]
+where $\chi_{\rm internal}$ measures the cost of representing the state inside the packet.
+
+\section{The no-label shortcut}
+A stabilizer syndrome is only a label. A momentum quantum number is only a label. A total charge residue is only a label. The internal multiplicity space may still contain exponentially many degrees of freedom. The packet-simulation theorem becomes polynomial only when the complete active representation, not merely the label set, has polynomial classical cost.

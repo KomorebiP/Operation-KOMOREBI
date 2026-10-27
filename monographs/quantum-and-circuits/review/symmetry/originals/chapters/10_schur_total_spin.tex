@@ -1,0 +1,46 @@
+\chapter{Schur--Weyl coordinates and total-spin packets}
+\label{ch:schur}
+\index{Schur-Weyl duality}
+
+\section{Decomposition}
+For $n$ qudits of local dimension $d$, Schur--Weyl duality decomposes
+\[
+(\C^d)^{\otimes n}
+\cong
+\bigoplus_{\lambda\vdash n,\,\ell(\lambda)\le d}
+\mathcal U_\lambda\otimes\mathcal V_\lambda,
+\]
+where $\mathcal U_\lambda$ carries an irreducible unitary-group representation and $\mathcal V_\lambda$ carries a symmetric-group representation. A permutation-invariant operator acts as
+\[
+A
+=
+\bigoplus_\lambda
+A_\lambda\otimes I_{\mathcal V_\lambda}.
+\]
+
+The label $\lambda$ can be polynomially short even when the multiplicity space $\mathcal V_\lambda$ is exponentially large. This is a canonical example of the difference between a small packet label and a small active representation.
+
+\section{Qubit total spin}
+For qubits, the decomposition may be labeled by total spin $j$ and a multiplicity index. A collective $SU(2)$ operation acts nontrivially only on the $(2j+1)$-dimensional spin factor and as the identity on multiplicity. If the initial state and observable are insensitive to multiplicity, the effective dimension can be small. If arbitrary information is stored in multiplicity, total-spin labeling alone does not compress it.
+
+\begin{principle}[Multiplicity audit]
+A representation-theoretic packet must be recorded as
+\[
+\text{irrep label}
+\quad+
+\text{irrep carrier}
+\quad+
+\text{multiplicity space}.
+\]
+Dropping the multiplicity space is valid only when the dynamics, input, and measurement make it redundant.
+\end{principle}
+
+\section{Efficient Schur simulation regime}
+A Schur-coordinate simulation is polynomial when the number of active partitions is polynomial, the retained carrier and multiplicity dimensions are polynomial or compactly represented, and each gate has an efficient action in these coordinates. Fully symmetric dynamics is the one-row partition and therefore the simplest case.
+
+\section{Possible compiler use}
+A symmetry compiler can detect collective layers, transform them into Schur coordinates, apply small representation matrices, and transform only when required. The transformation itself must be costed. In a purely classical simulator, one may never materialize the full Schur transform if the initial state is already specified by occupation or spin coordinates.
+
+\begin{frontierbox}
+A broad Schur-based collapse theorem requires explicit uniform algorithms for active-partition discovery, multiplicity handling, and local-gate updates. The decomposition alone is not the algorithm.
+\end{frontierbox}

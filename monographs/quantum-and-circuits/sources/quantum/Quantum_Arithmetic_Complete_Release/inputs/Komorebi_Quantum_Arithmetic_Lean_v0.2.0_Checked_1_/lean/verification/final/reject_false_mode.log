@@ -1,0 +1,24 @@
+COMMAND ["lake", "env", "lean", "-DwarningAsError=true", "negative_controls/FalseFourierMode.lean"]
+negative_controls/FalseFourierMode.lean:4:2: error: Tactic `decide` failed for proposition
+  dft12 ramanujanCVector 1 = cRat 0
+because its `Decidable` instance
+  instDecidableEqCyclo12 (dft12 ramanujanCVector 1) (cRat 0)
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match
+    (((fun n => cMul (ramanujanCVector.getD n cZero) (cPow zeta12Inv (1 * n))) 0).a.add
+        (cSum
+            (List.map (fun n => cMul (ramanujanCVector.getD n cZero) (cPow zeta12Inv (1 * n)))
+              [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])).a).num,
+    ↑0 with
+  | Int.ofNat a, Int.ofNat b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+  | Int.ofNat a, Int.negSucc a_1 => isFalse ⋯
+  | Int.negSucc a, Int.ofNat a_1 => isFalse ⋯
+  | Int.negSucc a, Int.negSucc b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯

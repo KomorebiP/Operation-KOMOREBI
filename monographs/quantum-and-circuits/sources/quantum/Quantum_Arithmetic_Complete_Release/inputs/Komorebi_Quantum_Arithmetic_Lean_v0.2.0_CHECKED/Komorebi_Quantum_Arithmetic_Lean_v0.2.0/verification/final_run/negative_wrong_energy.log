@@ -1,0 +1,26 @@
+COMMAND ["/mnt/data/lean_runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean", "-j1", "-DwarningAsError=true", "Negative_wrong_energy.lean"]
+Negative_wrong_energy.lean:117:2: error: Tactic `decide` failed for proposition
+  sqEnergy ramanujan12 = 49
+because its `Decidable` instance
+  instDecidableEqRat (sqEnergy ramanujan12) 49
+did not reduce to `isTrue` or `isFalse`.
+
+Reduction got stuck at the `Decidable` instance
+  match
+    (((fun a b => a * b) 4 4).add
+        (List.foldr (fun x1 x2 => x1 + x2) 0
+          (List.zipWith (fun a b => a * b) [0, 2, 0, -2, 0, -4, 0, -2, 0, 2, 0]
+            [0, 2, 0, -2, 0, -4, 0, -2, 0, 2, 0]))).num,
+    ↑49 with
+  | Int.ofNat a, Int.ofNat b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+  | Int.ofNat a, Int.negSucc a_1 => isFalse ⋯
+  | Int.negSucc a, Int.ofNat a_1 => isFalse ⋯
+  | Int.negSucc a, Int.negSucc b =>
+    match decEq a b with
+    | isTrue h => isTrue ⋯
+    | isFalse h => isFalse ⋯
+
+RESULT {"command": ["/mnt/data/lean_runtime/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean", "-j1", "-DwarningAsError=true", "Negative_wrong_energy.lean"], "exit_code": 1, "timed_out": false, "seconds": 8.489784617000169, "log": "negative_wrong_energy.log"}
