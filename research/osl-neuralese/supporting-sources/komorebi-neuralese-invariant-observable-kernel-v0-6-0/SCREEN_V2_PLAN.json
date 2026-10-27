@@ -1,0 +1,80 @@
+{
+  "author": "Komorebi P.",
+  "decision_rules": {
+    "exact_v2": {
+      "depth_512_loss_vs_cr_max": 0.05,
+      "full_holonomy_median_max": 0.05,
+      "repeat_32_degradation_max": 0.1
+    },
+    "hybrid_v2": {
+      "must_not_underperform_exact_on_loop_or_depth": true
+    },
+    "packet_v2": {
+      "heldout_packet_defect_relative_reduction_min": 0.5,
+      "must_improve_repeat_16_and_32_over_supervised": true
+    }
+  },
+  "design": {
+    "arms": [
+      "polar_supervised",
+      "polar_cr_v04",
+      "polar_exact_flat",
+      "polar_packet_flat",
+      "polar_hybrid_flat",
+      "polar_shuffled_packet"
+    ],
+    "batch_size": 128,
+    "diamond_lengths": [
+      8,
+      9,
+      16,
+      17,
+      24,
+      25,
+      32,
+      33
+    ],
+    "diamond_suffix_lengths": [
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "diamonds_per_length": 16,
+    "loop_repeats": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "loop_suffix_lengths": [
+      0,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "loops_per_stratum": 8,
+    "seed": 137,
+    "steps": 1600
+  },
+  "interpretation": {
+    "exact_only": "full latent flatness is supported for this benchmark; the finite packet quotient is insufficient",
+    "packet_behavior_without_full_flatness": "finite multiscale quotient flatness is the preferred mechanism",
+    "packet_loss_without_heldout_behavior": "finite observation matching is insufficient; defer invariant observable kernel to v0.6"
+  },
+  "kind": "developmental_mechanism_screen",
+  "schema": "komorebi.flat_packet_connection.screen_plan.v2",
+  "source_file_sha256": {
+    "FLAT_CONNECTION_PREREGISTRATION.json": "ffef418370acbb039dfe8b64c53f9593f5872d88109a589187e8b85296f790ff",
+    "FLAT_CONNECTION_PROTOCOL.md": "8209f497ab5d79ae1796f1d899958a8cfe6c62a707bcde3cd2e24cc2c5e40aef",
+    "run_flat_connection.py": "d4ae348b339ce5df7370f5dd0b267aacf4bb34618e30a474ed27908c76fed7ca",
+    "src/komorebi_neuralese/flatness_eval.py": "a9ecec746a433d8ba3c51a071a310e783a8e08f1355d8ba85fc73637b38d8200",
+    "src/komorebi_neuralese/flatness_training.py": "78c7184385a34a448eef4749215902085d8ac4694c430c013c29eb93cf8c72fe"
+  },
+  "version": "0.5.0"
+}

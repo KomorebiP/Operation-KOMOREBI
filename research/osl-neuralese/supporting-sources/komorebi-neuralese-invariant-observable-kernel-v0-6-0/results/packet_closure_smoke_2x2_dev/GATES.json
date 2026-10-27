@@ -1,0 +1,464 @@
+{
+  "ambient_attribution_gates": {
+    "D01_specific_ambient_complement_use": {
+      "criterion": "descriptive only: every polar_cr family supports a Q-specific performance drop over the energy/rank-matched random control; failure does not invalidate closure",
+      "observed": [
+        {
+          "family": "d4",
+          "q_specific_excess_drop": 0.0625,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "family": "c8",
+          "q_specific_excess_drop": 0.0,
+          "seed": 53,
+          "status": "Q_DROP_NOT_SPECIFIC_TO_ANCHOR_COMPLEMENT"
+        },
+        {
+          "family": "mixed_cycle",
+          "q_specific_excess_drop": -0.03125,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        }
+      ],
+      "status": "NOT_EVALUABLE"
+    }
+  },
+  "ambient_attribution_status": "NOT_EVALUATED",
+  "assay_gates": {
+    "A01_paired_initialization_and_stream": {
+      "criterion": "identical full/shared initialization, accepted episode-stream, and terminal-proposal-stream digests within every seed",
+      "observed": [
+        true
+      ],
+      "status": "PASS"
+    },
+    "A02_construction_bank_shared": {
+      "criterion": "one construction digest and exactly 20 horizon-4 construction words",
+      "observed": {
+        "digests": [
+          "76bb8cab1b64c7f4a43c9a65214658a0b72849fa917703eb84e7d2a736d94c8a"
+        ],
+        "word_count": 20
+      },
+      "status": "PASS"
+    },
+    "A03_checkpoint_audit_firewall": {
+      "criterion": "no heldout/evaluation bank content in any checkpoint",
+      "observed": true,
+      "status": "PASS"
+    },
+    "A04_relation_group_holdout": {
+      "criterion": "170 exhaustive horizon-8 words in two whole reserved action groups; split verified",
+      "observed": {
+        "heldout_groups": 2,
+        "heldout_words": 170,
+        "split_verified": true
+      },
+      "status": "PASS"
+    },
+    "A05_checkpoint_before_evaluation_bank": {
+      "criterion": "checkpoint seal timestamp precedes evaluation-bank materialization",
+      "observed": {
+        "checkpoint_sealed": "2026-09-02T22:40:27.186413+00:00",
+        "evaluation_bank_materialized": "2026-09-02T22:40:27.281125+00:00",
+        "evaluation_finished": "2026-09-02T22:40:34.131202+00:00",
+        "started": "2026-09-02T22:40:24.976089+00:00",
+        "training_finished": "2026-09-02T22:40:27.183991+00:00"
+      },
+      "status": "PASS"
+    },
+    "A06_exact_episode_contracts": {
+      "criterion": "all bank targets, intermediates, and slot mappings exact",
+      "observed": true,
+      "status": "PASS"
+    },
+    "A07_nonvacuous_exact_feshbach_split": {
+      "criterion": "retained rank == 8 and nuisance rank == 4 for every evaluated checkpoint",
+      "observed": [
+        [
+          8,
+          4
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          8,
+          4
+        ],
+        [
+          8,
+          4
+        ]
+      ],
+      "status": "PASS"
+    },
+    "A08_switched_bank_contract": {
+      "criterion": "exactly all 256 length-8 words for pilot; declared deterministic bank with configured contexts otherwise",
+      "observed": {
+        "contexts": 2,
+        "exhaustive": true,
+        "word_count": 16,
+        "word_length": 4
+      },
+      "status": "PASS"
+    },
+    "A09_terminal_endpoint_group_firewall": {
+      "criterion": "every run uses the frozen identity/r2 endpoint-rejection policy; accepted count equals steps*batch and proposal/rejection counts close exactly",
+      "observed": [
+        {
+          "accepted": 640,
+          "arm": "euclidean_supervised",
+          "identity_rejections": 127,
+          "policy_digest": "5501e0201ec5c8e4016d76c3f62b816b45c39d0ab86f796eb9367acd55d22b90",
+          "proposal_count": 907,
+          "proposal_stream_digest": "0a8b189cde03d7e70519bb653503302e5dd78c043742c9051e1619cba3339ba5",
+          "r2_rejections": 140,
+          "rejected": 267,
+          "seed": 53
+        },
+        {
+          "accepted": 640,
+          "arm": "euclidean_cr",
+          "identity_rejections": 127,
+          "policy_digest": "5501e0201ec5c8e4016d76c3f62b816b45c39d0ab86f796eb9367acd55d22b90",
+          "proposal_count": 907,
+          "proposal_stream_digest": "0a8b189cde03d7e70519bb653503302e5dd78c043742c9051e1619cba3339ba5",
+          "r2_rejections": 140,
+          "rejected": 267,
+          "seed": 53
+        },
+        {
+          "accepted": 640,
+          "arm": "polar_supervised",
+          "identity_rejections": 127,
+          "policy_digest": "5501e0201ec5c8e4016d76c3f62b816b45c39d0ab86f796eb9367acd55d22b90",
+          "proposal_count": 907,
+          "proposal_stream_digest": "0a8b189cde03d7e70519bb653503302e5dd78c043742c9051e1619cba3339ba5",
+          "r2_rejections": 140,
+          "rejected": 267,
+          "seed": 53
+        },
+        {
+          "accepted": 640,
+          "arm": "polar_cr",
+          "identity_rejections": 127,
+          "policy_digest": "5501e0201ec5c8e4016d76c3f62b816b45c39d0ab86f796eb9367acd55d22b90",
+          "proposal_count": 907,
+          "proposal_stream_digest": "0a8b189cde03d7e70519bb653503302e5dd78c043742c9051e1619cba3339ba5",
+          "r2_rejections": 140,
+          "rejected": 267,
+          "seed": 53
+        }
+      ],
+      "status": "PASS"
+    },
+    "A10_hard_polar_isometry": {
+      "criterion": "both polar arms pass exact O(12) matrix and finite-bank projective-gain implementation checks for every seed",
+      "observed": [
+        {
+          "arm": "polar_supervised",
+          "hard_isometry_pass": true,
+          "maximum_frobenius_orthogonality_defect": 3.8439748315205354e-06,
+          "projective_switched_gain_sanity_pass": true,
+          "raw_prepolar_well_conditioned_pass": true,
+          "raw_relative_minimum_singular_value": 0.0012065542391679175,
+          "seed": 53
+        },
+        {
+          "arm": "polar_cr",
+          "hard_isometry_pass": true,
+          "maximum_frobenius_orthogonality_defect": 3.4018386876473687e-06,
+          "projective_switched_gain_sanity_pass": true,
+          "raw_prepolar_well_conditioned_pass": true,
+          "raw_relative_minimum_singular_value": 0.0004792600364498426,
+          "seed": 53
+        }
+      ],
+      "status": "PASS"
+    },
+    "A11_raw_prepolar_singular_diagnostic": {
+      "criterion": "raw pre-polar relative singular values are recorded for both polar arms; conditioning below 1e-4 is a warning, not a closure failure",
+      "observed": [
+        {
+          "arm": "polar_supervised",
+          "hard_isometry_pass": true,
+          "maximum_frobenius_orthogonality_defect": 3.8439748315205354e-06,
+          "projective_switched_gain_sanity_pass": true,
+          "raw_prepolar_well_conditioned_pass": true,
+          "raw_relative_minimum_singular_value": 0.0012065542391679175,
+          "seed": 53
+        },
+        {
+          "arm": "polar_cr",
+          "hard_isometry_pass": true,
+          "maximum_frobenius_orthogonality_defect": 3.4018386876473687e-06,
+          "projective_switched_gain_sanity_pass": true,
+          "raw_prepolar_well_conditioned_pass": true,
+          "raw_relative_minimum_singular_value": 0.0004792600364498426,
+          "seed": 53
+        }
+      ],
+      "status": "PASS"
+    },
+    "A12_ambient_control_geometry": {
+      "criterion": "all ambient assays have exact ranks 8/4, stable projectors, and rank/energy-matched random controls within 1e-8",
+      "observed": [
+        {
+          "anchor_rank": 8,
+          "arm": "euclidean_supervised",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 4.996003610813204e-16,
+          "family": "d4",
+          "projector_idempotence_error": 1.0239377979629817e-15,
+          "seed": 53,
+          "status": "Q_DROP_NOT_SPECIFIC_TO_ANCHOR_COMPLEMENT"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "euclidean_supervised",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 3.3306690738754696e-16,
+          "family": "c8",
+          "projector_idempotence_error": 1.0239377979629817e-15,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "euclidean_supervised",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 3.3306690738754696e-16,
+          "family": "mixed_cycle",
+          "projector_idempotence_error": 1.0239377979629817e-15,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "euclidean_cr",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 2.220446049250313e-16,
+          "family": "d4",
+          "projector_idempotence_error": 1.0354516057572321e-15,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "euclidean_cr",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 3.3306690738754696e-16,
+          "family": "c8",
+          "projector_idempotence_error": 1.0354516057572321e-15,
+          "seed": 53,
+          "status": "Q_DROP_NOT_SPECIFIC_TO_ANCHOR_COMPLEMENT"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "euclidean_cr",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 5.551115123125783e-16,
+          "family": "mixed_cycle",
+          "projector_idempotence_error": 1.0354516057572321e-15,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "polar_supervised",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 6.661338147750939e-16,
+          "family": "d4",
+          "projector_idempotence_error": 8.046667754458204e-16,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "polar_supervised",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 4.440892098500626e-16,
+          "family": "c8",
+          "projector_idempotence_error": 8.046667754458204e-16,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "polar_supervised",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 3.3306690738754696e-16,
+          "family": "mixed_cycle",
+          "projector_idempotence_error": 8.046667754458204e-16,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "polar_cr",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 3.885780586188048e-16,
+          "family": "d4",
+          "projector_idempotence_error": 1.037363573468406e-15,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "polar_cr",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 5.551115123125783e-16,
+          "family": "c8",
+          "projector_idempotence_error": 1.037363573468406e-15,
+          "seed": 53,
+          "status": "Q_DROP_NOT_SPECIFIC_TO_ANCHOR_COMPLEMENT"
+        },
+        {
+          "anchor_rank": 8,
+          "arm": "polar_cr",
+          "complement_rank": 4,
+          "energy_match_maximum_absolute_error": 3.885780586188048e-16,
+          "family": "mixed_cycle",
+          "projector_idempotence_error": 1.037363573468406e-15,
+          "seed": 53,
+          "status": "NO_MEANINGFUL_Q_PERFORMANCE_DROP"
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "assay_status": "PASS",
+  "attribution_gates": {
+    "T01_complete_paired_2x2": {
+      "criterion": "all four paired raw/polar x supervised/CR cells available",
+      "observed": true,
+      "status": "PASS"
+    },
+    "T02_causal_state_patch_specificity": {
+      "criterion": "polar_cr state patch >= 0.90 and matched random control <= 0.40 per pilot seed",
+      "observed": {
+        "control": [
+          0.03125
+        ],
+        "patch": [
+          0.15625
+        ]
+      },
+      "status": "NOT_EVALUABLE"
+    },
+    "T03_causal_operator_patch_specificity": {
+      "criterion": "polar_cr operator patch >= 0.90 and matched random control <= 0.40 per pilot seed",
+      "observed": {
+        "control": [
+          0.21875
+        ],
+        "patch": [
+          0.125
+        ]
+      },
+      "status": "NOT_EVALUABLE"
+    }
+  },
+  "attribution_status": "NOT_EVALUATED",
+  "capability_gates": {
+    "C01_primary_d4_depth_curve": {
+      "criterion": "polar_cr per-seed D4 accuracy >= 0.98@128, 0.90@256, 0.75@512",
+      "observed": {},
+      "status": "NOT_EVALUABLE"
+    }
+  },
+  "capability_status": "NOT_EVALUATED",
+  "execution_gates": {
+    "E01_preregistration_profile_match": {
+      "criterion": "contract schema/version/profile exactly match embedded implementation",
+      "observed": {
+        "available": false,
+        "path": "PACKET_CLOSURE_PREREGISTRATION.json",
+        "reason": "missing preregistration contract",
+        "valid": false
+      },
+      "status": "FAIL"
+    },
+    "E02_all_training_runs_completed": {
+      "criterion": "== 4",
+      "observed": 4,
+      "status": "PASS"
+    },
+    "E03_all_evaluations_completed": {
+      "criterion": "== 4",
+      "observed": 4,
+      "status": "PASS"
+    },
+    "E04_checkpoint_seal_complete": {
+      "criterion": "== 4 checkpoint receipts",
+      "observed": 4,
+      "status": "PASS"
+    },
+    "E05_frozen_checkpoint_reload": {
+      "criterion": "== 4 hash-verified disk reloads",
+      "observed": 4,
+      "status": "PASS"
+    }
+  },
+  "execution_status": "FAIL",
+  "full_developmental_claim": "NOT_EVALUATED",
+  "mechanism_gates": {
+    "M01_heldout_packet_membership": {
+      "criterion": ">= 0.90 at every audited prefix and in both reserved groups per polar_cr pilot seed",
+      "observed": [
+        0.0
+      ],
+      "status": "NOT_EVALUABLE"
+    },
+    "M02_heldout_margin_p10": {
+      "criterion": "> 0 at every audited prefix and in both reserved groups per polar_cr pilot seed",
+      "observed": [
+        -0.8326312729585748
+      ],
+      "status": "NOT_EVALUABLE"
+    },
+    "M03_null_loop_packet_retention": {
+      "criterion": ">= 0.90 for every relation and repeat through 32 per polar_cr pilot seed",
+      "observed": [
+        0.0
+      ],
+      "status": "NOT_EVALUABLE"
+    },
+    "M04_switched_projective_gain": {
+      "criterion": "hard-polar exhaustive length-8 maximum gain lies in [0.999, 1.001] per pilot seed",
+      "observed": [
+        1.000001378294037
+      ],
+      "status": "NOT_EVALUABLE"
+    },
+    "M05_switched_domain_defined": {
+      "criterion": "defined fraction == 1 per polar_cr pilot seed",
+      "observed": [
+        1.0
+      ],
+      "status": "NOT_EVALUABLE"
+    },
+    "M06_switched_word_accuracy": {
+      "criterion": "exhaustive length-8 switched-word behavioral accuracy >= 0.95 per polar_cr pilot seed",
+      "observed": [
+        0.21875
+      ],
+      "status": "NOT_EVALUABLE"
+    }
+  },
+  "mechanism_status": "NOT_EVALUATED",
+  "scientific_failures_are_retained": true,
+  "secondary_transfer_gates": {
+    "S01_zero_shot_cross_family_depth_curve": {
+      "criterion": "descriptive secondary: polar_cr per-seed C8 and mixed-cycle accuracy >= 0.98@128, 0.90@256, 0.75@512",
+      "observed": {},
+      "status": "NOT_EVALUABLE"
+    }
+  },
+  "secondary_transfer_status": "NOT_EVALUATED",
+  "study_status": "prospective_developmental_fresh_seed_paired_2x2"
+}

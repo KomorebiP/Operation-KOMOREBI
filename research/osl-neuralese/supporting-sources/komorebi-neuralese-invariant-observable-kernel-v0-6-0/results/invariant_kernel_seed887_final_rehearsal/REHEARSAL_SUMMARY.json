@@ -1,0 +1,80 @@
+{
+  "schema": "komorebi.neuralese.invariant_kernel.calibration_rehearsal.v1",
+  "version": "0.6.0",
+  "author": "Komorebi P.",
+  "evidence_status": "RETIRED_SEED_DEVELOPMENTAL_ONLY",
+  "screen_seed_947_touched": false,
+  "purpose": "Single non-branching implementation rehearsal of the frozen dev2 recipe before any untouched-seed screen.",
+  "decision_rule": "Do not change coefficients or gates after this rehearsal. If the learned arm fails, retain the failure. If the hard calibration arm fails, stop before seed 947.",
+  "config": {
+    "seed": 887,
+    "steps": 3200,
+    "batch_size": 128,
+    "auxiliary_contexts": 8,
+    "relation_cells_per_context": 9,
+    "relation_cells_per_step_total": 72,
+    "auxiliary_delay_steps": 800,
+    "auxiliary_ramp_end_step": 1600,
+    "weights": {
+      "observer_anchor_geometry": 0.1,
+      "observer_centered_readout": 1.0,
+      "observer_intertwining": 10.0,
+      "observer_semantic_relation": 0.3,
+      "hard_semantic_flatness": 0.3
+    }
+  },
+  "learned_intertwiner": {
+    "train_lengths_1_to_4_accuracy": 1.0,
+    "depth32_robust_accuracy": 1.0,
+    "depth128_robust_accuracy": 1.0,
+    "depth512_robust_accuracy": 0.8203125,
+    "extraction_valid": false,
+    "extraction_failure_reason": "observer_rank+sigma8_not_negligible",
+    "suffix_observer_rank": 12,
+    "sigma8_over_sigma1": 0.04995422993079227,
+    "principal_angle_projector_distance": 0.006345417820738828,
+    "centered_readout_leakage": 0.0030773615092173335,
+    "generator_leakage_p95": 0.02021713147607343,
+    "generator_leakage_max": 0.024339243166809462,
+    "intertwining_median": 0.007565113983427753,
+    "intertwining_p95": 0.009937098325710507,
+    "semantic_defect_median": 0.01729683078617362,
+    "semantic_defect_p95": 0.04180287418564735,
+    "centered_null_curvature_median": 0.39912593264037644,
+    "length64_leakage_median": 0.1127177715337687,
+    "length64_leakage_p95": 0.3568662742285347,
+    "length64_leakage_max": 0.6556325574780737
+  },
+  "hard_kernel_semantic_flat": {
+    "train_lengths_1_to_4_accuracy": 1.0,
+    "depth32_robust_accuracy": 1.0,
+    "depth128_robust_accuracy": 0.85546875,
+    "depth512_robust_accuracy": 0.3984375,
+    "extraction_valid": true,
+    "suffix_observer_rank": 7,
+    "sigma8_over_sigma1": 4.1097119086871557e-7,
+    "principal_angle_projector_distance": 4.267296166711639e-8,
+    "generator_leakage_max": 1.8522725543485369e-7,
+    "length64_leakage_median": 1.0829064012548522e-6,
+    "length64_leakage_p95": 4.034222564288552e-6,
+    "length64_leakage_max": 6.393311190407821e-6,
+    "semantic_defect_median": 0.051103707202763374,
+    "semantic_defect_p95": 0.08793606442348179,
+    "ambient_curvature_median": 1.374311579368591
+  },
+  "frozen_threshold_failures": {
+    "learned_intertwiner": [
+      "suffix_observer_rank_equals_12_not_7",
+      "sigma8_over_sigma1_exceeds_0.001",
+      "length64_leakage_p95_exceeds_0.1",
+      "length64_leakage_max_exceeds_0.2"
+    ],
+    "hard_kernel_semantic_flat": [
+      "depth512_robust_accuracy_below_0.8",
+      "semantic_defect_median_exceeds_0.02",
+      "semantic_defect_p95_exceeds_0.08"
+    ]
+  },
+  "decision": "CALIBRATION_FAILURE_STOP_BEFORE_SCREEN",
+  "interpretation": "The invariant ambient split and bounded orthogonal recurrence succeeded structurally, but learned quotient operators retained finite angular/path error that accumulated at long depth. Local leakage control was not sufficient for a globally flat observable connection."
+}
