@@ -1,0 +1,311 @@
+{
+  "bandwidth_budget_tbps": {
+    "hbm": 11.2,
+    "host": 0.512,
+    "package": 16.0
+  },
+  "bdlr_sensitivity": {
+    "block_sizes": [
+      16,
+      32,
+      64,
+      128,
+      256
+    ],
+    "modeled_speedups": [
+      [
+        43.96820944366526,
+        42.75949386820516,
+        39.68642160540134,
+        31.353314706629412,
+        22.080615347922006
+      ],
+      [
+        43.65847231776695,
+        42.46649568327131,
+        39.037950664136616,
+        30.947183687113487,
+        21.878411910669975
+      ],
+      [
+        43.051907965638826,
+        41.89238261695881,
+        37.80257247856267,
+        30.165689149560116,
+        21.484915293571593
+      ],
+      [
+        41.88797567580408,
+        40.35680034873583,
+        35.552419354838705,
+        28.715415632754336,
+        20.738911290322577
+      ],
+      [
+        37.80257247856267,
+        35.552419354838705,
+        31.77024708304735,
+        26.196519524617994,
+        19.39222873900293
+      ]
+    ],
+    "ranks": [
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "storage_reduction": [
+      [
+        409.6,
+        227.55555555555554,
+        120.47058823529412,
+        62.06060606060606,
+        31.50769230769231
+      ],
+      [
+        341.3333333333333,
+        204.8,
+        113.77777777777777,
+        60.23529411764706,
+        31.03030303030303
+      ],
+      [
+        256.0,
+        170.66666666666666,
+        102.4,
+        56.888888888888886,
+        30.11764705882353
+      ],
+      [
+        170.66666666666666,
+        128.0,
+        85.33333333333333,
+        51.2,
+        28.444444444444443
+      ],
+      [
+        102.4,
+        85.33333333333333,
+        64.0,
+        42.666666666666664,
+        25.6
+      ]
+    ]
+  },
+  "config": {
+    "clock_ghz": 1.5,
+    "compute_chiplets": 4,
+    "descriptor_cache_kib_per_psm": 128,
+    "exact_arithmetic_clusters_per_chiplet": 1,
+    "execution_groups_per_psm": 4,
+    "hbm4_bandwidth_tbps_per_stack": 2.8,
+    "hbm4_capacity_gib_per_stack": 36,
+    "hbm4_stacks": 4,
+    "host_bidirectional_gbps": 512.0,
+    "local_sram_kib_per_execution_group": 512,
+    "mac_cols": 16,
+    "mac_rows": 16,
+    "name": "Komorebi PRISM-1",
+    "package_network_tbps": 16.0,
+    "packet_streaming_multiprocessors_per_chiplet": 16,
+    "shared_sram_mib_per_chiplet": 16,
+    "solver_engines_per_chiplet": 4,
+    "tdp_w": 500,
+    "transform_engines_per_chiplet": 8,
+    "ucie_gtps": 64
+  },
+  "derived": {
+    "execution_groups": 256,
+    "execution_groups_per_psm": 4,
+    "fp16_tflops": 196.608,
+    "fp32_tflops": 98.304,
+    "fp64_tflops": 24.576,
+    "packet_streaming_multiprocessors": 64,
+    "packet_streaming_multiprocessors_per_chiplet": 16,
+    "tiles": 256,
+    "total_hbm_gib": 144,
+    "total_hbm_tbps": 11.2,
+    "total_sram_mib": 192.0
+  },
+  "estimates": [
+    {
+      "arithmetic_intensity": 15.875968992248062,
+      "bytes_moved": 270532608,
+      "compute_time_us": 70.46881720430108,
+      "energy_mj": 35.394408602150534,
+      "flops": 4294967296.0,
+      "memory_time_us": 32.641482625482624,
+      "notes": "Dense matrix is materialized and read once",
+      "schedule_time_us": 0.32,
+      "total_time_us": 70.78881720430107,
+      "workload": "Dense apply baseline"
+    },
+    {
+      "arithmetic_intensity": 7.270145544905929,
+      "bytes_moved": 5769216,
+      "compute_time_us": 0.5925925925925926,
+      "energy_mj": 0.9362962962962963,
+      "flops": 41943040.0,
+      "memory_time_us": 0.5008,
+      "notes": "Factor-first execution with block diagonal and two low-rank contractions",
+      "schedule_time_us": 1.28,
+      "total_time_us": 1.8725925925925926,
+      "workload": "Packet BDLR apply"
+    },
+    {
+      "arithmetic_intensity": 13.333333333333334,
+      "bytes_moved": 12582912,
+      "compute_time_us": 2.3703703703703702,
+      "energy_mj": 1.9851851851851854,
+      "flops": 167772160.0,
+      "memory_time_us": 1.0922666666666667,
+      "notes": "Edges are grouped by equal shape and scheduled as batches",
+      "schedule_time_us": 1.5999999999999999,
+      "total_time_us": 3.9703703703703703,
+      "workload": "Regular block-sparse transfer"
+    },
+    {
+      "arithmetic_intensity": 7.9411764705882355,
+      "bytes_moved": 71303168,
+      "compute_time_us": 9.290322580645162,
+      "energy_mj": 7.365161290322581,
+      "flops": 566231040.0,
+      "memory_time_us": 8.603181467181466,
+      "notes": "Each atlas writes an intermediate array to HBM",
+      "schedule_time_us": 5.44,
+      "total_time_us": 14.730322580645161,
+      "workload": "Separate multi-atlas kernels"
+    },
+    {
+      "arithmetic_intensity": 33.75,
+      "bytes_moved": 16777216,
+      "compute_time_us": 8.0,
+      "energy_mj": 4.4799999999999995,
+      "flops": 566231040.0,
+      "memory_time_us": 1.4563555555555556,
+      "notes": "Analysis, packet selection, feature reduction, and synthesis are fused",
+      "schedule_time_us": 0.9600000000000001,
+      "total_time_us": 8.959999999999999,
+      "workload": "Fused multi-atlas pipeline"
+    },
+    {
+      "arithmetic_intensity": 0.9335591311927939,
+      "bytes_moved": 1321536,
+      "compute_time_us": 0.0809688445060484,
+      "energy_mj": 1.67976972972973,
+      "flops": 1233732.0,
+      "memory_time_us": 0.15945173745173746,
+      "notes": "FFT and small solvers run as separate kernels",
+      "schedule_time_us": 3.8400000000000003,
+      "total_time_us": 3.999451737451738,
+      "workload": "General accelerator edge recovery"
+    },
+    {
+      "arithmetic_intensity": 3.094976719916513,
+      "bytes_moved": 398624,
+      "compute_time_us": 0.06972317165798611,
+      "energy_mj": 0.3509280246310764,
+      "flops": 1233732.0,
+      "memory_time_us": 0.03460277777777778,
+      "notes": "Streaming Hankel construction and resident small-solver cluster",
+      "schedule_time_us": 1.28,
+      "total_time_us": 1.349723171657986,
+      "workload": "PRISM polyphase edge recovery"
+    },
+    {
+      "arithmetic_intensity": 51.07809523809524,
+      "bytes_moved": 412876800,
+      "compute_time_us": 346.01290322580644,
+      "energy_mj": 213.96645161290323,
+      "flops": 21088960512.0,
+      "memory_time_us": 49.81621621621621,
+      "notes": "Each model reloads the shared state matrix",
+      "schedule_time_us": 81.92,
+      "total_time_us": 427.93290322580646,
+      "workload": "Independent Bayesian model kernels"
+    },
+    {
+      "arithmetic_intensity": 1787.7333333333333,
+      "bytes_moved": 11796480,
+      "compute_time_us": 297.9555555555556,
+      "energy_mj": 150.25777777777776,
+      "flops": 21088960512.0,
+      "memory_time_us": 1.024,
+      "notes": "Shared design matrices remain resident and models are grouped by shape",
+      "schedule_time_us": 2.56,
+      "total_time_us": 300.5155555555556,
+      "workload": "Shape-batched Bayesian posterior"
+    }
+  ],
+  "figure_pairs": 43,
+  "gain_decomposition": {
+    "measured_compressed_output_gain": 3.2067003792667506,
+    "measured_cuda_graph_gain_same_representation": 1.217948717948718,
+    "measured_packet_gpu_gain_vs_dense_gpu": 10.9355,
+    "note": "Factors are reported separately and are not multiplied unless timing scope and output contract match.",
+    "representation_reduction_bdlr": 102.4
+  },
+  "measured_cuda_baselines": {
+    "bdlr_graph_packet_ms": 0.079872,
+    "bdlr_graph_replay_gain": 1.217948717948718,
+    "bdlr_speedup_vs_cpu_dense": 153.6527,
+    "bdlr_speedup_vs_gpu_dense": 10.9355,
+    "bdlr_standard_packet_ms": 0.09728,
+    "compressed_output_gain": 3.2067003792667506,
+    "compressed_product_ms": 0.1582,
+    "equal_block_packet_ms": 0.046032,
+    "equal_block_speedup_vs_cpu_dense": 235.7404,
+    "equal_block_speedup_vs_gpu_dense": 14.8919,
+    "hardware": "NVIDIA GeForce RTX 3070 Ti Laptop GPU",
+    "materialized_product_ms": 0.5073,
+    "measured_rows": 154.0
+  },
+  "modeled_speedups": {
+    "Fused multi-atlas pipeline": 1.6440092165898619,
+    "PRISM polyphase edge recovery": 2.9631644632275616,
+    "Packet BDLR apply": 37.80257247856267,
+    "Shape-batched Bayesian posterior": 1.4239958475184342
+  },
+  "output_contracts": [
+    "apply",
+    "compressed_operator",
+    "factor_graph",
+    "transform_plan",
+    "explicit_array"
+  ],
+  "representation_forms": [
+    "explicit_dense",
+    "block_diagonal",
+    "block_sparse",
+    "low_rank",
+    "bdlr",
+    "kronecker",
+    "sparse_factor_chain",
+    "transform_domain",
+    "packet_graph"
+  ],
+  "self_tests": {
+    "bandwidth_hierarchy_valid": true,
+    "bdlr_residual": 1.4210854715202004e-14,
+    "commit_protocol_valid": true,
+    "cuda_baseline_registry_valid": true,
+    "derived_configuration_valid": true,
+    "descriptor_contract_valid": true,
+    "gain_decomposition_valid": true,
+    "haar_residual": 4.440892098500626e-16,
+    "local_refinement_bound_valid": true,
+    "local_schedule_valid": true,
+    "output_contracts_valid": true,
+    "packet_reconstruction_residual": 0.0,
+    "pmr_planner_valid": true,
+    "polyphase_residual": 0.0,
+    "precision_budget_valid": true,
+    "representation_registry_valid": true,
+    "routing_policy_valid": true,
+    "sensitivity_tables_valid": true,
+    "tests_passed": 18,
+    "tests_total": 18
+  }
+}

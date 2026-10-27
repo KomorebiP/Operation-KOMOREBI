@@ -1,0 +1,100 @@
+{
+  "command_format": "packet_seed_command_v1",
+  "commit_policy": {
+    "on_failure": "local_replay_or_abort",
+    "state": "provisional_until_certificate"
+  },
+  "edges": [
+    [
+      "load_x",
+      "diag"
+    ],
+    [
+      "load_x",
+      "vt_x"
+    ],
+    [
+      "vt_x",
+      "u_vtx"
+    ],
+    [
+      "diag",
+      "sum"
+    ],
+    [
+      "u_vtx",
+      "sum"
+    ],
+    [
+      "sum",
+      "cert"
+    ]
+  ],
+  "error_budget": 1e-05,
+  "nodes": [
+    {
+      "completion_token": 1,
+      "dependency_token": 0,
+      "id": "load_x",
+      "op": "PLOAD",
+      "packet": "all"
+    },
+    {
+      "batch": 128,
+      "completion_token": 2,
+      "dependency_token": 1,
+      "id": "diag",
+      "op": "BLK_GEMM",
+      "precision": "fp32",
+      "shape": [
+        64,
+        64
+      ]
+    },
+    {
+      "completion_token": 3,
+      "dependency_token": 2,
+      "id": "vt_x",
+      "op": "BLK_GEMM",
+      "precision": "fp32",
+      "shape": [
+        8,
+        8192
+      ]
+    },
+    {
+      "completion_token": 4,
+      "dependency_token": 3,
+      "id": "u_vtx",
+      "op": "BLK_GEMM",
+      "precision": "fp32",
+      "shape": [
+        8192,
+        8
+      ]
+    },
+    {
+      "completion_token": 5,
+      "dependency_token": 4,
+      "id": "sum",
+      "mode": "packet_add",
+      "op": "PSELECT"
+    },
+    {
+      "completion_token": 6,
+      "dependency_token": 5,
+      "id": "cert",
+      "mode": "bounded",
+      "op": "RESIDUAL"
+    }
+  ],
+  "output_contract": "vector_result",
+  "packets": {
+    "atlas": "coordinate_blocks",
+    "complete": true,
+    "count": 128,
+    "equal_width": 64
+  },
+  "program": "bdlr_apply_8192",
+  "route": "prism"
+}

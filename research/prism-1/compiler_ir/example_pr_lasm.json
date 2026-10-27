@@ -1,0 +1,130 @@
+{
+  "atlases": [
+    "spatial",
+    "fourier",
+    "haar",
+    "polyphase2",
+    "polyphase4",
+    "categorical_color"
+  ],
+  "command_format": "packet_seed_command_v1",
+  "commit_policy": {
+    "on_failure": "local_replay_or_abort",
+    "state": "provisional_until_certificate"
+  },
+  "edges": [
+    [
+      "archive",
+      "atlas"
+    ],
+    [
+      "atlas",
+      "features"
+    ],
+    [
+      "features",
+      "models"
+    ],
+    [
+      "models",
+      "posterior"
+    ],
+    [
+      "features",
+      "memory"
+    ],
+    [
+      "posterior",
+      "planner"
+    ],
+    [
+      "memory",
+      "planner"
+    ],
+    [
+      "planner",
+      "residual"
+    ],
+    [
+      "residual",
+      "refine"
+    ],
+    [
+      "refine",
+      "commit"
+    ]
+  ],
+  "nodes": [
+    {
+      "completion_token": 1,
+      "dependency_token": 0,
+      "id": "archive",
+      "op": "PLOAD"
+    },
+    {
+      "completion_token": 2,
+      "dependency_token": 1,
+      "graph": "multi_atlas_analysis",
+      "id": "atlas",
+      "op": "GRAPH_RUN"
+    },
+    {
+      "completion_token": 3,
+      "dependency_token": 2,
+      "id": "features",
+      "op": "MIXTURE_REDUCE"
+    },
+    {
+      "completion_token": 4,
+      "dependency_token": 3,
+      "id": "models",
+      "op": "BAYES_FIT",
+      "shape_classes": 8
+    },
+    {
+      "completion_token": 5,
+      "dependency_token": 4,
+      "id": "posterior",
+      "op": "BAYES_SCORE"
+    },
+    {
+      "completion_token": 6,
+      "dependency_token": 5,
+      "id": "memory",
+      "op": "VOLTERRA"
+    },
+    {
+      "completion_token": 7,
+      "dependency_token": 6,
+      "graph": "active_planner",
+      "id": "planner",
+      "op": "GRAPH_RUN"
+    },
+    {
+      "completion_token": 8,
+      "dependency_token": 7,
+      "id": "residual",
+      "op": "RESIDUAL"
+    },
+    {
+      "completion_token": 9,
+      "dependency_token": 8,
+      "id": "refine",
+      "op": "GRAPH_REFINE"
+    },
+    {
+      "completion_token": 10,
+      "dependency_token": 9,
+      "id": "commit",
+      "op": "COMMIT"
+    }
+  ],
+  "output_contract": "action_distribution_and_exact_archive",
+  "program": "pr_lasm_step",
+  "route": "prism",
+  "states": {
+    "macro": 48,
+    "meso": 96,
+    "micro": 192
+  }
+}

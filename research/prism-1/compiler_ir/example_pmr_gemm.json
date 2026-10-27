@@ -1,0 +1,45 @@
+{
+  "graph_name": "pmr_gemm_mixed_representation",
+  "output_contract": "compressed_operator",
+  "tolerance": 1e-06,
+  "inputs": [
+    {
+      "id": "A",
+      "forms": [
+        "block_sparse",
+        "low_rank",
+        "explicit_dense"
+      ]
+    },
+    {
+      "id": "B",
+      "forms": [
+        "transform_domain",
+        "kronecker",
+        "explicit_dense"
+      ]
+    }
+  ],
+  "candidate_middle_bases": [
+    "identity",
+    "fourier",
+    "packet_symmetry"
+  ],
+  "planner": {
+    "objective": "local_cost + lambda * local_error^2 + child_cost",
+    "generic_leaf_required": true,
+    "choices": [
+      "dense_leaf",
+      "low_rank",
+      "kronecker",
+      "sparse_factor_chain",
+      "transform_rule",
+      "split"
+    ]
+  },
+  "certificate": {
+    "kind": "product_residual_bound",
+    "threshold": 1e-06
+  },
+  "materialize_explicit_array": false
+}

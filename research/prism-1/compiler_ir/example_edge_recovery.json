@@ -1,0 +1,150 @@
+{
+  "atlases": [
+    "fourier",
+    "polyphase",
+    "edge_packet",
+    "smooth_residual"
+  ],
+  "command_format": "packet_seed_command_v1",
+  "commit_policy": {
+    "on_failure": "local_replay_or_abort",
+    "state": "provisional_until_certificate"
+  },
+  "edges": [
+    [
+      "fft",
+      "high_band"
+    ],
+    [
+      "high_band",
+      "polyphase"
+    ],
+    [
+      "polyphase",
+      "hankel"
+    ],
+    [
+      "hankel",
+      "rank"
+    ],
+    [
+      "rank",
+      "annihilator"
+    ],
+    [
+      "annihilator",
+      "roots"
+    ],
+    [
+      "roots",
+      "amplitudes"
+    ],
+    [
+      "amplitudes",
+      "edge"
+    ],
+    [
+      "fft",
+      "smooth"
+    ],
+    [
+      "edge",
+      "sum"
+    ],
+    [
+      "smooth",
+      "sum"
+    ],
+    [
+      "sum",
+      "cert"
+    ]
+  ],
+  "error_budget": 1e-06,
+  "nodes": [
+    {
+      "completion_token": 1,
+      "dependency_token": 0,
+      "id": "fft",
+      "op": "FFT_STAGE",
+      "precision": "fp64"
+    },
+    {
+      "completion_token": 2,
+      "dependency_token": 1,
+      "id": "high_band",
+      "op": "PSELECT",
+      "selector": "high_frequency_band"
+    },
+    {
+      "channels": 2,
+      "completion_token": 3,
+      "decimation": 10,
+      "dependency_token": 2,
+      "id": "polyphase",
+      "op": "POLYPHASE"
+    },
+    {
+      "completion_token": 4,
+      "dependency_token": 3,
+      "id": "hankel",
+      "max_rank": 12,
+      "op": "HANKEL_BUILD"
+    },
+    {
+      "completion_token": 5,
+      "dependency_token": 4,
+      "id": "rank",
+      "max_dimension": 13,
+      "op": "SVD_SMALL"
+    },
+    {
+      "completion_token": 6,
+      "dependency_token": 5,
+      "id": "annihilator",
+      "op": "ANNIHILATOR"
+    },
+    {
+      "completion_token": 7,
+      "dependency_token": 6,
+      "id": "roots",
+      "op": "ROOT_PHASE"
+    },
+    {
+      "completion_token": 8,
+      "dependency_token": 7,
+      "id": "amplitudes",
+      "op": "VANDERMONDE"
+    },
+    {
+      "atlas": "edge_packet",
+      "completion_token": 9,
+      "dependency_token": 8,
+      "id": "edge",
+      "op": "ATLAS_SYNTH"
+    },
+    {
+      "atlas": "smooth_residual",
+      "completion_token": 10,
+      "dependency_token": 9,
+      "id": "smooth",
+      "op": "ATLAS_SYNTH"
+    },
+    {
+      "completion_token": 11,
+      "dependency_token": 10,
+      "id": "sum",
+      "mode": "packet_add",
+      "op": "PSELECT"
+    },
+    {
+      "completion_token": 12,
+      "dependency_token": 11,
+      "id": "cert",
+      "op": "MARGIN_CHECK"
+    }
+  ],
+  "output_contract": "resolved_signal",
+  "program": "self_calibrating_polyphase_edge_recovery",
+  "route": "prism"
+}
