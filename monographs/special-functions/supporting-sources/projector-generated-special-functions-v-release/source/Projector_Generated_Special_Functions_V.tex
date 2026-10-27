@@ -1,0 +1,1275 @@
+\documentclass[11pt,openany]{report}
+\usepackage[letterpaper,margin=0.82in,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage{graphicx,float,placeins}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{needspace}
+\allowdisplaybreaks
+
+\hypersetup{
+  pdftitle={Projector-Generated Special Functions V},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Log-Gamma Gabor packets, Gamma-sech ambiguity kernels, Meixner-Pollaczek spectra, and SU(1,1) duality}
+}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Paper}{HTML}{FAFAF7}
+\definecolor{Muted}{HTML}{5D6D7E}
+\definecolor{CodeBG}{HTML}{F3F5F5}
+
+\pagecolor{Paper}
+\color{Ink}
+\graphicspath{{figures/}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.52em}
+\raggedbottom
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Projector-Generated Special Functions V}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Worked example}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary statement}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Kcal}{\mathcal K}
+\newcommand{\Ccal}{\mathcal C}
+\newcommand{\Dcal}{\mathcal D}
+\newcommand{\Mcal}{\mathcal M}
+\newcommand{\Fcal}{\mathcal F}
+\newcommand{\Ical}{\mathcal I}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sech}{\operatorname{sech}}
+\newcommand{\Expect}{\mathbb E}
+\newcommand{\ket}[1]{\left|#1\right\rangle}
+\newcommand{\bra}[1]{\left\langle#1\right|}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\Agamma}{\mathfrak A}
+\newcommand{\Lag}{\Lambda}
+\newcommand{\rhoMP}{\rho_{\alpha}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{CodeBG},
+  frame=single,
+  rulecolor=\color{Muted!45},
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{Muted},
+  numbersep=7pt,
+  tabsize=4,
+  columns=fullflexible,
+  keepspaces=true
+}
+\lstset{style=pythonstyle}
+
+\newcommand{\FigureWide}[3]{%
+\Needspace{0.53\textheight}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth,height=0.44\textheight,keepaspectratio]{#1.pdf}
+\caption{#2 #3}
+\label{fig:#1}
+\end{figure}
+}
+
+\newcommand{\InlinePart}[1]{%
+\FloatBarrier
+\Needspace{10\baselineskip}
+\refstepcounter{part}%
+\addcontentsline{toc}{part}{\protect\numberline{\thepart}#1}%
+\vspace{1.4em}
+{\color{Blue}\Large\bfseries Part \thepart\par}
+\vspace{0.2em}
+{\color{Blue}\LARGE\bfseries #1\par}
+\vspace{0.9em}
+}
+
+\newcommand{\FlowChapter}[1]{%
+\FloatBarrier
+\Needspace{14\baselineskip}
+\refstepcounter{chapter}%
+\setcounter{section}{0}%
+\setcounter{subsection}{0}%
+\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+\markboth{#1}{#1}%
+\vspace{1.3em}
+{\color{Muted}\large\bfseries Chapter \thechapter\par}
+\vspace{0.15em}
+{\LARGE\bfseries #1\par}
+\vspace{0.9em}
+}
+
+\title{\textbf{Projector-Generated Special Functions V}\\[0.25em]
+\Large Log-Gamma Gabor Packets, Gamma--Sech Ambiguity Kernels, Meixner--Pollaczek Spectra, and $\mathrm{SU}(1,1)$ Duality}
+\author{Komorebi P.}
+\date{}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\pagenumbering{roman}
+\maketitle
+
+\begin{abstract}
+This paper identifies the universal phase-space object hidden in the large-depth limit of the squarefree packet kernels developed in the preceding two papers. Let
+\[
+\alpha=\frac{2a-1}{\beta}>0.
+\]
+After logarithmic centering, the normalized arithmetic depth-time kernel converges to
+\[
+\boxed{
+\Agamma_\alpha(h,\eta)
+=
+\frac{\Gamma(\alpha+\ii\eta)}{\Gamma(\alpha)}
+\sech^{\alpha+\ii\eta}\!\left(\frac h2\right).
+}
+\]
+The limit is not only a closed asymptotic formula. It is exactly the centered Gabor ambiguity function of the normalized log-Gamma packet
+\[
+g_\alpha(y)
+=
+\Gamma(\alpha)^{-1/2}
+\exp\!\left(\frac{\alpha y}{2}-\frac{\e^y}{2}\right).
+\]
+This identification generates a complete special-function system. The ambiguity function is zero-free on real phase space, obeys an exact shape shift in $\alpha$, and solves a Pöschl--Teller equation. The Fourier transform of $g_\alpha$ is a Gamma function. Its squared modulus is the symmetric Meixner density and its characteristic function is the exact depth-overlap law $\sech^\alpha(h/2)$. The Wigner distribution has a Kontorovich--Lebedev closed form involving $K_{2\ii\omega}(\e^y)$.
+
+The packet has exact position and momentum variances
+\[
+\operatorname{Var}Y=\psi_1(\alpha),
+\qquad
+\operatorname{Var}P=\frac\alpha4.
+\]
+Its Heisenberg product is strictly larger than $1/2$ at every finite $\alpha$ and tends to $1/2$ as $\alpha$ grows. The Weyl orbit has constant quantum metric and unit Berry curvature in the selected coordinates.
+
+The orthogonal polynomial structure is also exact. Laguerre packets on logarithmic position space transform into the same Gamma envelope multiplied by orthonormal Meixner--Pollaczek polynomials. Both bases carry one positive discrete-series representation of $\mathfrak{su}(1,1)$. The Laguerre multiplication operator and the Meixner frequency operator are two linear combinations of the same ladder generators.
+
+Finally, the discrete arithmetic depth is extended to a continuous parameter. The resulting fractional-depth Möbius transfer admits an infinite binomial expansion in reciprocal $L$-values and an exact generator relation across the parameter $a$. The unconditional positive and representation-theoretic results do not prove the remaining principal Möbius coherence bound and do not prove RH. They isolate a universal phase-space geometry shared by the positive packet family.
+
+All figures were generated by the accompanying Python program. The release contains 26 vector figures, matching PNG files, exact tables, 19 built-in checks, 19 independent tests, and the complete Python source.
+\end{abstract}
+
+\chapter*{Status and claim boundary}
+\addcontentsline{toc}{chapter}{Status and claim boundary}
+The paper proves the log-Gamma ambiguity representation, the Gamma--sech closed form, its zero-free real phase-space law, the parameter shift, the Pöschl--Teller equation, the Fourier and Meixner density formulas, the Wigner--Kontorovich--Lebedev identity, the exact uncertainty formulas, the constant orbit geometry, the Laguerre--Meixner Fourier duality, and the $\mathfrak{su}(1,1)$ operator realization. It also proves the continuous-depth binomial expansion and the fractional generator relation under the stated absolute-convergence hypotheses.
+
+The squarefree arithmetic convergence theorem uses the standard squarefree counting asymptotic and is uniform only on compact sets of the ratio and time parameters described below. The associated numerical figures are finite checks of that theorem, not substitutes for it.
+
+The classical inputs include Gamma and polygamma functions, Laguerre polynomials, Meixner--Pollaczek polynomials, Gabor ambiguity functions, Wigner distributions, the Kontorovich--Lebedev kernel, and the positive discrete series of $\mathrm{SU}(1,1)$. The generated contribution is the exact bridge showing that these objects arise from one arithmetic packet limit with one common normalization and one common ladder system.
+
+The logarithmic quantum coordinate is compatible with the external 2026 construction based on the number-basis Hamiltonian $H\ket n=\log n\ket n$. The present observable is a scale-filtered squarefree kernel and is not the direct zeta amplitude of that work.
+
+None of the unconditional results proves RH. The open part remains the signed time-zero coherence of the principal Möbius packet.
+
+\tableofcontents
+\listoffigures
+\clearpage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+
+\InlinePart{The arithmetic limit and its exact packet window}
+
+\FlowChapter{The squarefree depth-time kernel}
+
+Fix
+\[
+a>\frac12,
+\qquad
+\beta>0,
+\qquad
+\alpha=\frac{2a-1}{\beta}.
+\]
+The positive depth-time kernel is
+\[
+\boxed{
+\Kcal_{a,\beta}(k,\ell,\tau)
+=
+\sum_{n\ge1}
+\frac{\mu(n)^2}{n^{2a+\ii\tau}}
+\left(1-\frac1{n^\beta}\right)^{k+\ell}.
+}
+\]
+When a character conductor is present, one adds the coprimality restriction or the factor $|\chi(n)|^2$. The principal formulas below are unchanged apart from the squarefree density constant.
+
+Set
+\[
+m=k+\ell,
+\qquad
+\eta=\frac\tau\beta.
+\]
+The active integers satisfy $n^\beta\asymp m$. This is the depth localization found in Paper III. Paper IV derived the separate time and cross-depth limits. The first result here joins them.
+
+\begin{theorem}[Joint arithmetic phase-space limit]
+Assume that $k,\ell\to\infty$ while $k/\ell$ remains in a compact subset of $(0,\infty)$ and $\tau$ remains in a compact real interval. Let
+\[
+h=\log\frac{k}{\ell}.
+\]
+Then
+\[
+\boxed{
+\e^{\ii\eta\log(2\sqrt{k\ell})}
+\frac{\Kcal_{a,\beta}(k,\ell,\tau)}
+{\sqrt{\Kcal_{a,\beta}(k,k,0)\Kcal_{a,\beta}(\ell,\ell,0)}}
+\longrightarrow
+\Agamma_\alpha(h,\eta),
+}
+\]
+where
+\[
+\boxed{
+\Agamma_\alpha(h,\eta)
+=
+\frac{\Gamma(\alpha+\ii\eta)}{\Gamma(\alpha)}
+\sech^{\alpha+\ii\eta}\!\left(\frac h2\right).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+A(x)=\sum_{n\le x}\mu(n)^2.
+\]
+The squarefree counting asymptotic is
+\[
+A(x)=\delta x+O(x^{1/2}),
+\qquad
+\delta=\frac1{\zeta(2)}.
+\]
+Partial summation converts the kernel into a Stieltjes integral against $A$. On replacing $A(x)$ by its main term and scaling
+\[
+x=m^{1/\beta}u,
+\]
+one obtains
+\[
+\Kcal_{a,\beta}(k,\ell,\tau)
+\sim
+\frac{\delta}{\beta}
+\Gamma(\alpha+\ii\eta)
+ m^{-\alpha-\ii\eta}.
+\]
+The same calculation at $(k,k,0)$ and $(\ell,\ell,0)$ gives
+\[
+\Kcal_{a,\beta}(k,k,0)
+\sim
+\frac{\delta}{\beta}\Gamma(\alpha)(2k)^{-\alpha}
+\]
+and the analogous formula for $\ell$. Therefore the normalized magnitude factor is
+\[
+\left(\frac{2\sqrt{k\ell}}{k+\ell}\right)^\alpha
+=
+\sech^\alpha\!\left(\frac h2\right).
+\]
+The carrier phase leaves
+\[
+\left(\frac{2\sqrt{k\ell}}{k+\ell}\right)^{\ii\eta}
+=
+\sech^{\ii\eta}\!\left(\frac h2\right).
+\]
+Combining these terms proves the formula. Uniformity on compact parameter sets follows from the same partial-summation estimate because the scaled kernels and their first derivatives remain integrably dominated there.
+\end{proof}
+
+\FigureWide{01_theory_pipeline}{The generated theory.}{The positive squarefree depth-time kernel converges to a log-Gamma Gabor packet. Exact transforms of that packet generate the ambiguity function, spectral density, Wigner function, orthogonal polynomials, and ladder operators studied in the rest of the paper.}
+
+\begin{example}[Principal parameters]
+For
+\[
+a=2,
+\qquad
+\beta=2,
+\]
+one has
+\[
+\alpha=\frac32.
+\]
+Taking $\ell=4k$ gives
+\[
+h=-\log4.
+\]
+At $\tau=2.4$, one has $\eta=1.2$. The exact limiting value is
+\[
+\Agamma_{3/2}(-\log4,1.2).
+\]
+The finite squarefree kernels used in \cref{fig:20_arithmetic_convergence,fig:21_arithmetic_trajectory} converge to this complex value after the carrier phase is removed.
+\end{example}
+
+\FlowChapter{The log-Gamma packet}
+
+\begin{definition}[Normalized log-Gamma window]
+For $\alpha>0$, define
+\[
+\boxed{
+g_\alpha(y)
+=
+\frac1{\sqrt{\Gamma(\alpha)}}
+\exp\!\left(
+\frac{\alpha y}{2}-\frac{\e^y}{2}
+\right),
+\qquad y\in\R.
+}
+\]
+\end{definition}
+
+Its squared modulus is
+\[
+\boxed{
+|g_\alpha(y)|^2
+=
+\frac1{\Gamma(\alpha)}
+\exp(\alpha y-\e^y).
+}
+\]
+Under the change of variables
+\[
+u=\e^y,
+\]
+this is the Gamma$(\alpha,1)$ law in logarithmic coordinates.
+
+\begin{proposition}[Normalization]
+For every $\alpha>0$,
+\[
+\norm{g_\alpha}_{L^2(\R)}=1.
+\]
+\end{proposition}
+
+\begin{proof}
+The substitution $u=\e^y$ gives
+\[
+\int_{-\infty}^{\infty}|g_\alpha(y)|^2\dd y
+=
+\frac1{\Gamma(\alpha)}
+\int_0^\infty u^{\alpha-1}\e^{-u}\dd u
+=1.
+\]
+\end{proof}
+
+\FigureWide{02_log_gamma_windows}{Normalized log-Gamma windows.}{Increasing $\alpha$ moves the packet to larger log scale and makes the local profile increasingly Gaussian after centering.}
+
+\FigureWide{03_log_gamma_density}{Position probability densities.}{The squared packet is the logarithm of a Gamma random variable. Its exact mean and variance are the digamma and trigamma functions.}
+
+\FlowChapter{The exact Gamma--sech ambiguity function}
+
+Use the centered ambiguity convention
+\[
+\Acal_g(h,\eta)
+=
+\int_{\R}
+ g\!\left(y+\frac h2\right)
+ \overline{g\!\left(y-\frac h2\right)}
+ \e^{\ii\eta y}\dd y.
+\]
+The packet is real, so the conjugate may be omitted.
+
+\begin{theorem}[Exact ambiguity formula]
+For every $\alpha>0$ and real $h,\eta$,
+\[
+\boxed{
+\Acal_{g_\alpha}(h,\eta)
+=
+\Agamma_\alpha(h,\eta)
+=
+\frac{\Gamma(\alpha+\ii\eta)}{\Gamma(\alpha)}
+\sech^{\alpha+\ii\eta}\!\left(\frac h2\right).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The product of the two shifted windows is
+\[
+\frac1{\Gamma(\alpha)}
+\exp\!\left(
+\alpha y-\e^y\cosh\frac h2
+\right).
+\]
+Therefore
+\[
+\Acal_{g_\alpha}(h,\eta)
+=
+\frac1{\Gamma(\alpha)}
+\int_\R
+\exp\!\left(
+(\alpha+\ii\eta)y-\e^y\cosh\frac h2
+\right)\dd y.
+\]
+Set
+\[
+u=\e^y\cosh\frac h2.
+\]
+The integral becomes
+\[
+\frac{\Gamma(\alpha+\ii\eta)}{\Gamma(\alpha)}
+\cosh^{-\alpha-\ii\eta}\!\left(\frac h2\right).
+\]
+\end{proof}
+
+\begin{corollary}[Real phase-space nonvanishing]
+For every real $h$ and $\eta$,
+\[
+\boxed{
+\Agamma_\alpha(h,\eta)\ne0.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The Gamma function has no zeros. The hyperbolic secant is strictly positive on the real line.
+\end{proof}
+
+\FigureWide{06_ambiguity_magnitude}{Magnitude of the ambiguity function.}{The generated packet has no real phase-space zeros. Decay in depth displacement comes from the hyperbolic secant. Decay in modulation comes from the Gamma factor.}
+
+\FigureWide{07_ambiguity_phase}{Phase of the ambiguity function.}{The phase separates into a Gamma phase and a depth-dependent carrier produced by the complex power of the hyperbolic secant.}
+
+\FigureWide{08_ambiguity_slices}{One-dimensional ambiguity slices.}{The left panel varies the depth displacement at fixed Mellin frequencies. The right panel varies the Mellin-frequency shift at fixed depth displacements.}
+
+\begin{proposition}[Shape shift]
+The family satisfies
+\[
+\boxed{
+\Agamma_{\alpha+1}(h,\eta)
+=
+\frac{\alpha+\ii\eta}{\alpha}
+\sech\!\left(\frac h2\right)
+\Agamma_\alpha(h,\eta).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Use
+\[
+\Gamma(\alpha+1+\ii\eta)
+=(\alpha+\ii\eta)\Gamma(\alpha+\ii\eta)
+\]
+and
+\[
+\Gamma(\alpha+1)=\alpha\Gamma(\alpha).
+\]
+\end{proof}
+
+\begin{theorem}[Pöschl--Teller equation]
+Let
+\[
+\nu=\alpha+\ii\eta.
+\]
+For fixed $\eta$, the function $h\mapsto\Agamma_\alpha(h,\eta)$ satisfies
+\[
+\boxed{
+\left[
+-4\frac{\dd^2}{\dd h^2}
+-\nu(\nu+1)\sech^2\!\left(\frac h2\right)
+\right]
+\Agamma_\alpha(h,\eta)
+=
+-\nu^2\Agamma_\alpha(h,\eta).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The Gamma prefactor is independent of $h$. Direct differentiation of
+\[
+f(h)=\sech^\nu(h/2)
+\]
+gives
+\[
+4f''(h)
+=
+\left[
+\nu^2-\nu(\nu+1)\sech^2(h/2)
+\right]f(h).
+\]
+Rearranging proves the equation.
+\end{proof}
+
+\FigureWide{09_poschl_teller}{Pöschl--Teller realization.}{The left panel shows the complex potential coefficient. The right panel verifies the differential equation numerically at high resolution.}
+
+\InlinePart{Fourier, Wigner, and information-geometric coordinates}
+
+\FlowChapter{The Meixner spectral law}
+
+Use the unitary Fourier convention
+\[
+\widehat f(\omega)
+=
+\frac1{\sqrt{2\pi}}
+\int_\R f(y)\e^{-\ii\omega y}\dd y.
+\]
+
+\begin{theorem}[Fourier transform of the log-Gamma packet]
+For real $\omega$,
+\[
+\boxed{
+\widehat g_\alpha(\omega)
+=
+\frac{
+2^{\alpha/2-\ii\omega}
+\Gamma(\alpha/2-\ii\omega)
+}{
+\sqrt{2\pi\Gamma(\alpha)}
+}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Set $x=\e^y$. Then
+\[
+\widehat g_\alpha(\omega)
+=
+\frac1{\sqrt{2\pi\Gamma(\alpha)}}
+\int_0^\infty
+x^{\alpha/2-\ii\omega-1}\e^{-x/2}\dd x.
+\]
+The Gamma integral gives the result.
+\end{proof}
+
+The spectral probability density is
+\[
+\boxed{
+\rho_\alpha(\omega)
+=
+|\widehat g_\alpha(\omega)|^2
+=
+\frac{2^{\alpha-1}}{\pi\Gamma(\alpha)}
+\left|
+\Gamma\!\left(\frac\alpha2+\ii\omega\right)
+\right|^2.
+}
+\]
+
+\begin{corollary}[Exact characteristic function]
+\[
+\boxed{
+\int_\R
+\rho_\alpha(\omega)
+\e^{\ii\omega h}\dd\omega
+=
+\sech^\alpha\!\left(\frac h2\right).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The left side is the Fourier autocorrelation of $g_\alpha$. The ambiguity theorem at $\eta=0$ gives the right side.
+\end{proof}
+
+\FigureWide{04_meixner_density}{Symmetric Meixner spectral densities.}{The logarithmic packet has a Gamma-function Fourier envelope. Its squared modulus is the orthogonality density used by the Meixner--Pollaczek packet basis.}
+
+\FigureWide{05_depth_autocorrelation}{Exact depth autocorrelation.}{The universal cross-depth overlap is the characteristic function of the Meixner density and the zero-modulation slice of the ambiguity function.}
+
+\FlowChapter{The Wigner--Kontorovich--Lebedev function}
+
+Define the Wigner distribution by
+\[
+W_\alpha(y,\omega)
+=
+\frac1{2\pi}
+\int_\R
+ g_\alpha\!\left(y+\frac h2\right)
+ g_\alpha\!\left(y-\frac h2\right)
+ \e^{-\ii\omega h}\dd h.
+\]
+
+\begin{theorem}[Closed Wigner formula]
+\[
+\boxed{
+W_\alpha(y,\omega)
+=
+\frac{2\e^{\alpha y}}{\pi\Gamma(\alpha)}
+K_{2\ii\omega}(\e^y).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The product of the shifted windows equals
+\[
+\Gamma(\alpha)^{-1}
+\exp\!\left(
+\alpha y-\e^y\cosh(h/2)
+\right).
+\]
+Set $h=2t$. The remaining integral is
+\[
+2\int_{-\infty}^{\infty}
+\e^{-\e^y\cosh t}
+\e^{-2\ii\omega t}\dd t.
+\]
+The integral representation of the modified Bessel function gives
+\[
+\int_{-\infty}^{\infty}
+\e^{-x\cosh t}\e^{-2\ii\omega t}\dd t
+=2K_{2\ii\omega}(x).
+\]
+Substitution yields the formula.
+\end{proof}
+
+\begin{corollary}[Exact marginals]
+\[
+\boxed{
+\int_\R W_\alpha(y,\omega)\dd\omega
+=|g_\alpha(y)|^2
+}
+\]
+and
+\[
+\boxed{
+\int_\R W_\alpha(y,\omega)\dd y
+=\rho_\alpha(\omega).
+}
+\]
+\end{corollary}
+
+\FigureWide{10_wigner_kl}{The Wigner--Kontorovich--Lebedev packet.}{The distribution is an exact Bessel function of imaginary order. Positive and negative regions encode the nonclassical phase-space interference of the packet.}
+
+\FigureWide{11_wigner_marginals}{Wigner marginals.}{Numerical integration of the Bessel closed form reproduces both the exact log-Gamma position density and the exact Meixner spectral density.}
+
+\FlowChapter{Uncertainty and quantum geometry}
+
+Let
+\[
+Yf(y)=yf(y),
+\qquad
+Pf(y)=-\ii f'(y).
+\]
+
+\begin{theorem}[Exact moments and uncertainty]
+For the state $g_\alpha$,
+\[
+\boxed{
+\Expect Y=\psi(\alpha),
+\qquad
+\operatorname{Var}Y=\psi_1(\alpha),
+}
+\]
+while
+\[
+\boxed{
+\Expect P=0,
+\qquad
+\operatorname{Var}P=\frac\alpha4.
+}
+\]
+Consequently,
+\[
+\boxed{
+\Delta Y\,\Delta P
+=
+\frac12\sqrt{\alpha\psi_1(\alpha)}
+>\frac12.
+}
+\]
+Moreover,
+\[
+\Delta Y\,\Delta P\longrightarrow\frac12
+\]
+as $\alpha\to\infty$.
+\end{theorem}
+
+\begin{proof}
+The variable $U=\e^Y$ has the Gamma$(\alpha,1)$ law. Its logarithmic moments give
+\[
+\Expect Y=\psi(\alpha),
+\qquad
+\operatorname{Var}Y=\psi_1(\alpha).
+\]
+For momentum,
+\[
+\frac{g_\alpha'(y)}{g_\alpha(y)}
+=
+\frac{\alpha-\e^y}{2}.
+\]
+The packet is real, so $\Expect P=0$. Integration by parts gives
+\[
+\Expect P^2
+=
+\int|g_\alpha'(y)|^2\dd y
+=
+\frac14\Expect(\alpha-U)^2
+=
+\frac\alpha4.
+\]
+The strict inequality follows from $\psi_1(\alpha)>1/\alpha$. The asymptotic expansion $\psi_1(\alpha)=\alpha^{-1}+O(\alpha^{-2})$ gives the limit.
+\end{proof}
+
+\input{generated_tables/uncertainty.tex}
+
+\FigureWide{12_uncertainty_product}{Exact uncertainty product.}{The packet is not a Gaussian at finite shape, but after centering and large-$\alpha$ scaling it approaches the minimum-uncertainty regime.}
+
+Define the centered Weyl orbit
+\[
+g_{u,\eta}(y)
+=
+\e^{\ii\eta(y-u/2)}g_\alpha(y-u).
+\]
+
+\begin{proposition}[Constant quantum geometric tensor]
+In coordinates $(u,\eta)$, the Fubini--Study metric is constant and diagonal:
+\[
+\boxed{
+g_{uu}=\frac\alpha4,
+\qquad
+g_{\eta\eta}=\psi_1(\alpha),
+\qquad
+g_{u\eta}=0.
+}
+\]
+The Berry curvature is
+\[
+\boxed{
+\Fcal_{u\eta}=1
+}
+\]
+for the chosen Weyl convention. The quantum Fisher information matrix is
+\[
+\boxed{
+\Ical
+=
+\diag\!\left(
+\alpha,
+4\psi_1(\alpha)
+\right).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Translation is generated by $P$ and modulation by $Y$. The real part of the quantum geometric tensor is the covariance matrix of these generators. The mixed covariance vanishes because $g_\alpha$ is real and the centered symmetric derivative is odd under integration by parts. The imaginary part is one half of the canonical commutator $[Y,P]=\ii I$. Multiplying the metric by four gives the quantum Fisher information.
+\end{proof}
+
+\FigureWide{13_quantum_geometry}{Quantum geometry of the Weyl orbit.}{Translation and modulation inherit exact metric coefficients from the packet variances. The canonical commutator supplies the constant symplectic curvature.}
+
+\InlinePart{Orthogonal packet bases and one ladder algebra}
+
+\FlowChapter{Laguerre packets on logarithmic position space}
+
+For $n\ge0$, define
+\[
+\boxed{
+\Lag_{n,\alpha}(y)
+=
+\sqrt{\frac{n!}{\Gamma(n+\alpha)}}
+\e^{\alpha y/2-\e^y/2}
+L_n^{(\alpha-1)}(\e^y).
+}
+\]
+The ground packet is
+\[
+\Lag_{0,\alpha}=g_\alpha.
+\]
+
+\begin{theorem}[Orthonormality]
+\[
+\boxed{
+\int_\R
+\Lag_{n,\alpha}(y)
+\Lag_{m,\alpha}(y)\dd y
+=\delta_{nm}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Set $x=\e^y$. Then $\dd y=\dd x/x$, and the inner product becomes the standard Laguerre integral
+\[
+\frac{\sqrt{n!m!}}{\sqrt{\Gamma(n+\alpha)\Gamma(m+\alpha)}}
+\int_0^\infty
+x^{\alpha-1}\e^{-x}
+L_n^{(\alpha-1)}(x)
+L_m^{(\alpha-1)}(x)\dd x.
+\]
+The Laguerre orthogonality formula gives $\delta_{nm}$.
+\end{proof}
+
+\FigureWide{14_laguerre_packets}{Laguerre packets in log coordinates.}{The packets form an exact orthonormal multioscillation family around the universal log-Gamma envelope.}
+
+\FlowChapter{Meixner--Pollaczek packets in Mellin frequency}
+
+Let $p_{n,\alpha}$ denote the orthonormal polynomial sequence for the density
+\[
+\rho_\alpha(\omega)
+=
+\frac{2^{\alpha-1}}{\pi\Gamma(\alpha)}
+\left|\Gamma\!\left(\frac\alpha2+\ii\omega\right)\right|^2.
+\]
+It is characterized by
+\[
+p_{0,\alpha}=1,
+\qquad
+p_{1,\alpha}(\omega)=\frac{2\omega}{\sqrt\alpha},
+\]
+and
+\[
+\boxed{
+\omega p_{n,\alpha}(\omega)
+=
+\frac12\sqrt{(n+1)(n+\alpha)}p_{n+1,\alpha}(\omega)
++
+\frac12\sqrt{n(n+\alpha-1)}p_{n-1,\alpha}(\omega).
+}
+\]
+These are normalized Meixner--Pollaczek polynomials at angle $\pi/2$.
+
+\begin{theorem}[Laguerre--Meixner Fourier duality]
+For every $n\ge0$,
+\[
+\boxed{
+\widehat{\Lag}_{n,\alpha}(\omega)
+=
+\ii^n
+\widehat g_\alpha(\omega)
+ p_{n,\alpha}(\omega).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+s=\frac\alpha2-\ii\omega.
+\]
+Using $x=\e^y$, the Fourier transform reduces to
+\[
+\sqrt{\frac{n!}{2\pi\Gamma(n+\alpha)}}
+\int_0^\infty
+x^{s-1}\e^{-x/2}L_n^{(\alpha-1)}(x)\dd x.
+\]
+Introduce a generating variable $z$. The Laguerre generating function gives
+\[
+\sum_{n\ge0}
+\left[
+\int_0^\infty x^{s-1}\e^{-x/2}L_n^{(\alpha-1)}(x)\dd x
+\right]z^n
+=
+2^s\Gamma(s)
+(1-z)^{-\alpha/2-\ii\omega}
+(1+z)^{-\alpha/2+\ii\omega}.
+\]
+After extracting the common ground-state factor, the remaining coefficients are the Meixner--Pollaczek generating coefficients with the phase $\ii^n$. The normalization is fixed by the Laguerre norms. This proves the formula.
+\end{proof}
+
+\FigureWide{15_meixner_packets}{Meixner--Pollaczek packets.}{Multiplying each orthonormal polynomial by the square root of its Gamma density gives the frequency-side packet family.}
+
+\FigureWide{16_fourier_duality}{Exact Fourier duality.}{The real and imaginary parts alternate with degree through the phase $\ii^n$. The Gamma envelope is common to every packet.}
+
+\FlowChapter{The common \texorpdfstring{$\mathfrak{su}(1,1)$}{su(1,1)} ladder}
+
+Let $\{e_n\}_{n\ge0}$ be an abstract orthonormal basis. Define
+\[
+K_0e_n
+=
+\left(n+\frac\alpha2\right)e_n,
+\]
+\[
+K_+e_n
+=
+\sqrt{(n+1)(n+\alpha)}e_{n+1},
+\]
+and
+\[
+K_-e_n
+=
+\sqrt{n(n+\alpha-1)}e_{n-1}.
+\]
+
+\begin{theorem}[$\mathfrak{su}(1,1)$ relations]
+On the finite linear span of the basis,
+\[
+\boxed{
+[K_0,K_+]=K_+,
+\qquad
+[K_0,K_-]=-K_-,
+\qquad
+[K_-,K_+]=2K_0.
+}
+\]
+The Casimir
+\[
+\mathcal Q
+=
+K_0^2-\frac12(K_+K_-+K_-K_+)
+\]
+is
+\[
+\boxed{
+\mathcal Q
+=
+\frac\alpha2
+\left(\frac\alpha2-1\right)I.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply each commutator to $e_n$. The coefficients reduce to elementary differences of the quadratic ladder weights. The same computation gives the constant Casimir value.
+\end{proof}
+
+In the Laguerre basis, multiplication by $x=\e^y$ is represented by
+\[
+\boxed{
+J_L
+=2K_0-K_+-K_-.
+}
+\]
+In the Meixner--Pollaczek basis, multiplication by $\omega$ is represented by
+\[
+\boxed{
+J_M
+=\frac12(K_++K_-).
+}
+\]
+Thus one representation carries two exact coordinate operators.
+
+\FigureWide{17_laguerre_jacobi}{Laguerre Jacobi matrix.}{The position-side multiplication operator is tridiagonal in the logarithmic Laguerre packet basis.}
+
+\FigureWide{18_meixner_jacobi}{Meixner Jacobi matrix.}{The Mellin-frequency operator is another tridiagonal combination of the same ladder generators.}
+
+\FigureWide{19_su11_duality}{One ladder and two atlases.}{The Laguerre and Meixner operators are not unrelated recurrences. They are two projections of the same positive discrete-series ladder.}
+
+\InlinePart{Fractional depth, quantum realization, and the RH boundary}
+
+\FlowChapter{Continuous packet depth}
+
+The integer-depth transfer from the earlier papers is
+\[
+C_{a,\beta,\chi}(k,t)
+=
+\sum_{n\ge1}
+\frac{\mu(n)\chi(n)}{n^{a+\ii t}}
+\left(1-\frac1{n^\beta}\right)^k.
+\]
+For every real $r>0$, define the continuous-depth extension
+\[
+\boxed{
+C_{a,\beta,\chi}(r,t)
+=
+\sum_{n\ge1}
+\frac{\mu(n)\chi(n)}{n^{a+\ii t}}
+\left(1-\frac1{n^\beta}\right)^r.
+}
+\]
+Assume $a>1$ so that all exchanges below are absolutely convergent.
+
+\begin{theorem}[Fractional binomial orbit]
+For $r>0$,
+\[
+\boxed{
+C_{a,\beta,\chi}(r,t)
+=
+\sum_{j=0}^{\infty}
+(-1)^j
+\binom rj
+\frac1{L(a+\beta j+\ii t,\chi)}.
+}
+\]
+At integer $r=k$, the series terminates and recovers the finite-difference orbit.
+\end{theorem}
+
+\begin{proof}
+For every $n\ge2$,
+\[
+\left(1-n^{-\beta}\right)^r
+=
+\sum_{j\ge0}(-1)^j\binom rj n^{-\beta j}.
+\]
+The generalized binomial coefficients are absolutely summable for $r>0$. The $n=1$ packet vanishes on the left and the binomial sum at one is zero. Absolute convergence for $a>1$ permits interchange of $n$ and $j$. The inner Dirichlet series is the reciprocal $L$-function.
+\end{proof}
+
+\begin{theorem}[Fractional-depth generator]
+\[
+\boxed{
+\frac{\partial}{\partial r}
+C_{a,\beta,\chi}(r,t)
+=
+-
+\sum_{m=1}^{\infty}
+\frac1m
+C_{a+m\beta,\beta,\chi}(r,t).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Differentiate the factor $(1-n^{-\beta})^r$ and use
+\[
+\log(1-n^{-\beta})
+=-\sum_{m\ge1}\frac{n^{-m\beta}}m.
+\]
+Absolute convergence justifies the exchange of the sums and derivative.
+\end{proof}
+
+\FigureWide{22_fractional_depth}{Continuous depth.}{The integer Bernoulli finite-difference orbit is embedded into a smooth depth evolution generated by an infinite parameter-shift operator.}
+
+\FigureWide{23_fractional_binomial}{Fractional binomial reconstruction.}{The infinite reciprocal-zeta expansion converges to the direct Möbius packet calculation for the noninteger depth $r=5/2$.}
+
+\FlowChapter{Finite arithmetic convergence}
+
+The theorem at the beginning of the paper is asymptotic. The accompanying program evaluates the finite squarefree kernel directly and compares it with $\Agamma_\alpha$.
+
+\input{generated_tables/arithmetic_convergence.tex}
+
+\FigureWide{20_arithmetic_convergence}{Arithmetic convergence.}{The finite squarefree packet moves toward the universal Gamma--sech kernel as the active scale grows. The displayed reference line is only a visual slope guide.}
+
+\FigureWide{21_arithmetic_trajectory}{Complex trajectory comparison.}{After centering, the finite arithmetic correlation and the universal phase-space curve nearly coincide over the tested time interval.}
+
+\begin{boundary}[What the arithmetic limit does not prove]
+The universal limit controls the positive squarefree kernel. It does not control the signed principal Möbius amplitude at time zero. The latter can be much smaller than the positive norm because of arithmetic cancellation. Establishing the required subpolynomial coherence remains the RH-equivalent problem.
+\end{boundary}
+
+\FlowChapter{Quantum and signal realization}
+
+On the number basis, define
+\[
+H\ket n
+=
+\log n\ket n,
+\qquad
+K_\beta\ket n
+=
+-\log(1-n^{-\beta})\ket n,
+\]
+and
+\[
+\Mcal\ket n=\mu(n)\ket n.
+\]
+The first operator is the logarithmic Hamiltonian. The second is the depth generator. The square $\Mcal^2$ is the projector onto the squarefree number packets. All three operators are diagonal and commute.
+
+For the amplitude vector
+\[
+\ket{\phi_a}=\sum_{n\ge2}n^{-a}\ket n,
+\]
+the two-depth overlap
+\[
+\boxed{
+\bra{\phi_a}
+\e^{-\ell K_\beta}
+\Mcal^2
+\e^{-\ii tH}
+\e^{-kK_\beta}
+\ket{\phi_a}
+=
+\Kcal_{a,\beta}(k,\ell,t)
+}
+\]
+produces the depth-time kernel, with the excluded $n=1$ packet treated separately at zero depth. In the large-depth limit, this number-basis overlap becomes the Gabor ambiguity function of $g_\alpha$.
+
+\FigureWide{24_coherent_state_lattice}{Packet lattice.}{Circle area is proportional to the exact overlap magnitude. The generated function supplies a natural nonuniform coherent-state geometry in log depth and Mellin frequency.}
+
+\FigureWide{25_quantum_packet_realization}{Quantum and signal path.}{The logarithmic Hamiltonian supplies the time phase. The depth filter supplies scale selection. Their centered overlap converges to the universal log-Gamma packet geometry.}
+
+The external quantum construction motivating this coordinate uses the same logarithmic spectrum and implements phases $n^{-\ii t}$ through a logarithm oracle. The present packet adds the commuting scale generator $K_\beta$ and studies a different positive overlap.
+
+\FlowChapter{The remaining RH boundary}
+
+For the principal parameters, define
+\[
+c_k
+=
+\sum_{n\ge1}
+\frac{\mu(n)}{n^2}
+\left(1-\frac1{n^2}\right)^k
+\]
+and
+\[
+E_k
+=
+\sum_{n\ge1}
+\frac{\mu(n)^2}{n^4}
+\left(1-\frac1{n^2}\right)^{2k}.
+\]
+The preceding papers prove
+\[
+E_k
+\sim
+\frac{3}{2^{5/2}\pi^{3/2}}k^{-3/2}.
+\]
+Define the packet coherence
+\[
+\Gamma_k
+=
+\frac{|c_k|^2}{E_k}.
+\]
+Using the classical sequential criterion,
+\[
+\boxed{
+\mathrm{RH}
+\iff
+\Gamma_k
+=O_\varepsilon(k^\varepsilon)
+\quad
+\text{for every }\varepsilon>0.
+}
+\]
+
+The present paper solves the positive large-depth phase-space geometry exactly. It shows that the positive kernel has a zero-free Gabor limit, a complete orthogonal basis, a universal Wigner function, and a rigid ladder algebra. None of those positive facts forces the signed Möbius packet to have small coherence at the distinguished time $t=0$.
+
+\begin{conjecture}[Principal Möbius coherence]
+For every $\varepsilon>0$, there is a constant $C_\varepsilon$ such that
+\[
+\boxed{
+|c_k|^2
+\le
+C_\varepsilon k^\varepsilon E_k.
+}
+\]
+\end{conjecture}
+
+This is stated as the remaining target, not as a theorem.
+
+\FigureWide{26_function_family_map}{The generated family.}{The Gamma--sech ambiguity function, log-Gamma window, Meixner spectrum, Wigner--Bessel function, Laguerre--Meixner Fourier pair, ladder algebra, and fractional-depth transfer are exact coordinates of one universal packet system.}
+
+\InlinePart{Verification, formula registry, and source}
+
+\FlowChapter{Verification ledger}
+
+\input{generated_tables/headline.tex}
+\input{generated_tables/checks.tex}
+
+The independent test suite rederives normalization, moments, ambiguity, the shape shift, spectral normalization, the characteristic function, Laguerre--Meixner duality, both orthogonalities, the ladder algebra, uncertainty, fractional depth, arithmetic Hermitian symmetry, and arithmetic convergence. It also verifies the figure inventory and the machine-readable result ledger.
+
+\FlowChapter{Formula registry}
+
+\begin{longtable}{L{0.31\textwidth}L{0.60\textwidth}}
+\toprule
+Object & Exact formula\\
+\midrule
+\endfirsthead
+\toprule
+Object & Exact formula\\
+\midrule
+\endhead
+Log-Gamma packet & $g_\alpha(y)=\Gamma(\alpha)^{-1/2}\exp(\alpha y/2-\e^y/2)$\\
+Ambiguity function & $\Agamma_\alpha(h,\eta)=\Gamma(\alpha+\ii\eta)\Gamma(\alpha)^{-1}\sech^{\alpha+\ii\eta}(h/2)$\\
+Fourier transform & $\widehat g_\alpha(\omega)=2^{\alpha/2-\ii\omega}\Gamma(\alpha/2-\ii\omega)/\sqrt{2\pi\Gamma(\alpha)}$\\
+Spectral density & $\rho_\alpha(\omega)=2^{\alpha-1}|\Gamma(\alpha/2+\ii\omega)|^2/(\pi\Gamma(\alpha))$\\
+Wigner function & $W_\alpha(y,\omega)=2\e^{\alpha y}K_{2\ii\omega}(\e^y)/(\pi\Gamma(\alpha))$\\
+Uncertainty & $\Delta Y\Delta P=\frac12\sqrt{\alpha\psi_1(\alpha)}$\\
+Laguerre packet & $\Lag_{n,\alpha}(y)=\sqrt{n!/\Gamma(n+\alpha)}\e^{\alpha y/2-\e^y/2}L_n^{(\alpha-1)}(\e^y)$\\
+Fourier duality & $\widehat\Lag_{n,\alpha}=\ii^n\widehat g_\alpha p_{n,\alpha}$\\
+Laguerre operator & $J_L=2K_0-K_+-K_-$\\
+Meixner operator & $J_M=(K_++K_-)/2$\\
+Fractional depth & $C(r,t)=\sum_{j\ge0}(-1)^j\binom rjL(a+\beta j+\ii t,\chi)^{-1}$\\
+\bottomrule
+\end{longtable}
+
+\FlowChapter{Relation to established function theory}
+
+The Meixner--Pollaczek polynomials, Laguerre polynomials, Gabor ambiguity function, Wigner distribution, Kontorovich--Lebedev kernel, and positive discrete series of $\mathrm{SU}(1,1)$ are classical objects. This paper does not claim their invention.
+
+The structural contribution is the exact generated bridge:
+\[
+\boxed{
+\begin{gathered}
+\text{squarefree depth-time packet}
+\longrightarrow
+\text{log-Gamma Gabor window}
+\longrightarrow
+\text{Gamma--sech ambiguity}
+\\[3pt]
+\longrightarrow
+\text{Laguerre--Meixner duality}
+\longrightarrow
+\mathfrak{su}(1,1)
+\end{gathered}
+}
+\]
+The arithmetic limit fixes the parameter $\alpha$, the centering, the carrier phase, and the normalization. The same parameter then controls the ambiguity function, uncertainty, polynomial recurrence, Casimir, and fractional-depth geometry.
+
+\begin{thebibliography}{12}
+
+\bibitem{Wei2026}
+S. Wei, Y. Zhai, Q. Lu, et al.,
+``The Riemann Hypothesis manifested in dynamical quantum phase transitions,''
+\emph{Nature Communications}, article in press, 2026.
+
+\bibitem{BaezDuarte}
+L. B\'aez-Duarte,
+``A sequential Riesz-like criterion for the Riemann hypothesis,''
+\emph{International Journal of Mathematics and Mathematical Sciences}, 2005.
+
+\bibitem{Koekoek}
+R. Koekoek, P. A. Lesky, and R. F. Swarttouw,
+\emph{Hypergeometric Orthogonal Polynomials and Their $q$-Analogues},
+Springer, 2010.
+
+\bibitem{Folland}
+G. B. Folland,
+\emph{Harmonic Analysis in Phase Space},
+Princeton University Press, 1989.
+
+\bibitem{Vilenkin}
+N. Ja. Vilenkin and A. U. Klimyk,
+\emph{Representation of Lie Groups and Special Functions}, volume 1,
+Kluwer, 1991.
+
+\bibitem{DLMF}
+NIST Digital Library of Mathematical Functions,
+chapters on Gamma functions, orthogonal polynomials, and integral transforms.
+
+\bibitem{KL}
+M. I. Kontorovich and N. N. Lebedev,
+classical papers on the transform generated by modified Bessel functions of imaginary order.
+
+\end{thebibliography}
+
+\appendix
+
+\chapter{Complete Python implementation}
+The following single program generates every figure, every numerical table, the built-in certificate ledger, and the machine-readable results used in this paper.
+
+\lstinputlisting{projector_generated_special_functions_v.py}
+
+\chapter{Reproduction}
+From the source directory, run
+\begin{lstlisting}[language=bash,numbers=none]
+python projector_generated_special_functions_v.py
+pytest -q
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_V.tex
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_V.tex
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_V.tex
+\end{lstlisting}
+The generator writes all figures and tables before the manuscript is compiled.
+
+\end{document}
