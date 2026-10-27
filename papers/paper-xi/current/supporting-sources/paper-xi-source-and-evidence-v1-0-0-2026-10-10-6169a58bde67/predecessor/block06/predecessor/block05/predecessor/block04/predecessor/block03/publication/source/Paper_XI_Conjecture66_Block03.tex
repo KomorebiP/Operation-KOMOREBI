@@ -1,0 +1,598 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amsthm,booktabs,longtable,array,enumitem,needspace}
+\usepackage{hyperref}
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Monomial Routes, Clifford Descent, and Exact Obstructions}
+\renewcommand{\KomorebiSubtitle}{Toward Arithmetic Packet Realization\par Part II of the Conjecture 66 progress paper}
+\renewcommand{\KomorebiSeries}{Paper XI / Research companion}
+\renewcommand{\KomorebiKind}{Publication Block 03}
+\renewcommand{\KomorebiEdition}{Working continuation v0.3.0 / 10 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper XI / Conjecture 66 / Part II}
+\renewcommand{\KomorebiTitleSize}{29}
+\renewcommand{\KomorebiTitleLeading}{34}
+\KomorebiSetup
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}[proposition]{Lemma}
+\newtheorem{corollary}[proposition]{Corollary}
+\theoremstyle{definition}\newtheorem{definition}[proposition]{Definition}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\cInd}{\operatorname{c\!\text{-}Ind}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\AI}{\operatorname{AI}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\Sw}{\operatorname{Sw}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\F}{\mathbf F}
+\newcommand{\Q}{\mathbf Q}
+\newcommand{\C}{\mathbf C}
+\newcommand{\Z}{\mathbf Z}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\pp}{\mathfrak p}
+\newcommand{\UU}{\mathcal U}
+\newcommand{\source}[1]{\par{\small\textsf{Source and status.}\ #1}\par}
+\setcounter{section}{13}
+\begin{document}
+\KomorebiCover
+\section*{Reading this continuation}
+\addcontentsline{toc}{section}{Reading this continuation}
+The first part of this research companion records the direct odd-prime and weighted dyadic constructions, including the low-rank carrier repairs. This continuation returns to the earlier monomial and Clifford branches. Their conclusions are not interchangeable. A genuine arithmetic candidate may have the right dimension and conductor while failing to contain a prescribed full simple character. A finite carrier may have enough dimension while failing the required action or marking. A compatible formal interface may still await its actual arithmetic input.
+
+The purpose here is to make those distinctions mathematically usable. We extract the precise restricted implications, explain the negative results, and retain the surviving routes. The presentation includes elementary proofs where the argument is short enough to expose completely. Deeper arithmetic statements are identified as inherited ordinary arguments with named classical inputs. No theorem in this continuation is newly certified by Lean.
+
+\textbf{Publication continuity.} The 33-page Block 02 reader and its ledger were recovered. Its complete editable source archive was not. Consequently, the cumulative v0.3.0 reader preserves those 33 pages and appends this independently editable continuation. It is not a claim that the unavailable Block 02 source has been rebuilt. The complete Block 01 source archive supplies the research records examined here. The ledger and source map document this recovery boundary.
+
+\textbf{Mathematical continuity.} Conjecture 66 remains the general arithmetic realization obligation, with the same-candidate H5 comparison kept separate. The positive constructions below are restricted statements. The negative examples refute specified shortcuts or prescribed candidates, not the entire conjecture.
+
+\tableofcontents
+\clearpage
+\section{The monomial branch and its actual scope}\label{sec:monomial}
+\subsection{Three statements that must remain separate}
+The recovered monomial materials contain three different layers. The oldest manuscript develops a classical-input route from rank-one characters through automorphic induction. The finite formal core describes packet and group-theoretic interfaces. The later Block 45 module connects a degree-induced representation to actual residue and Frobenius data. None of these layers, merely by existing, constructs every arithmetic witness demanded by Conjecture 66.
+
+A useful way to read the branch is to keep its input on the left:
+\[
+ \text{rank-one character and admissible induction tower}
+ \quad\Longrightarrow\quad
+ \text{the corresponding induced candidate}.
+\]
+This is not the implication from an arbitrary packet diagram to an admissible tower. The tower and its compatibility are substantial data. Nor does an equality between finite conductor profiles identify the full local factors of a separately specified candidate.
+
+\subsection{Actual Weil pullback and inertia invariants}
+The Block 45 source uses an actual residue-action pullback and a degree homomorphism
+\[
+ \delta:W\longrightarrow\Z.
+\]
+The subgroup for an induction of degree $n$ is $\delta^{-1}(n\Z)$. A finite cyclic inertia map is explicitly required to have image $\ker\delta$. This equality is a hypothesis to verify for the actual pullback, not an arbitrary identification of an abstract cyclic group with inertia.
+
+\begin{lemma}[Fixed vectors depend on the actual image]\label{lem:image}
+Let $\rho:G\to\GL(V)$ and let $\iota:H\to G$ be a homomorphism with image $I$. Then
+\[
+ V^{\rho\circ\iota(H)}=V^{\rho(I)}.
+\]
+\end{lemma}
+\begin{proof}
+A vector fixed by every $\rho(\iota(h))$ is fixed by every element of $\rho(I)$ because every element of $I$ has a preimage. The reverse inclusion follows immediately from $\iota(H)\subseteq I$.
+\end{proof}
+
+The hypothesis that the first positive ramification group acts trivially places the representation in the tame sector. In the degree-induced examples, triviality of the inertia character gives an $n$-dimensional fixed space. A nontrivial inertia character, together with its Frobenius conjugates, gives no inertia-fixed coordinate. Thus the Artin conductor is respectively $0$ or $n$, while the Swan conductor is zero. The local polynomial is formed on $V^I$, not automatically on the entire induced vector space.
+
+This is meaningful arithmetic comparison at a finite interface. It is not a formal definition of an automorphic representation and does not import every analytic identity attached to one. The finite Gauss phase also does not become a fully normalized local epsilon factor without the relevant additive character and measure conventions.
+
+\source{[M45] supplies the production module and binder conditions. The fixed-image lemma is proved here. The full module's terminal compilation receipt was not recovered. Earlier checked finite-tame comparison is not thereby invalidated.}
+
+\subsection{Admissible towers rather than a blanket solvability claim}
+Let $\Omega$ be a finite group and $\Lambda\leq\Omega$. For the induction route in the older manuscript, the required condition is a chain
+\[
+ \Lambda=\Lambda_r\triangleleft\Lambda_{r-1}
+ \triangleleft\cdots\triangleleft\Lambda_0=\Omega,
+ \qquad \Lambda_{i-1}/\Lambda_i\text{ cyclic of prime order}.
+ \tag{14.1}\label{eq:admissible}
+\]
+For a finite Galois extension with group $\Omega$, the reversed fixed-field chain has cyclic prime-degree steps. The rank-one character can then be processed through the stated cyclic automorphic-induction inputs. Induction in stages identifies the resulting Weil parameter with the original induced character. Cuspidality requires the appropriate regularity and stabilizer conditions. Without them, an isobaric conclusion must not be relabeled as a cuspidal one.
+
+\begin{proposition}[Subnormality is the subgroup requirement]\label{prop:admissible}
+For a finite solvable group $\Omega$, a subgroup $\Lambda$ admits a chain of the form \eqref{eq:admissible} if and only if it is subnormal in $\Omega$.
+\end{proposition}
+\begin{proof}
+One direction is the definition of subnormality. Conversely, start with a subnormal chain. Each quotient of two successive terms is finite and solvable. A composition series of that quotient has cyclic prime-order factors. Pulling it back refines the original step into the required chain. Repeat for all steps.
+\end{proof}
+
+The statement does not say that every subgroup of a solvable group is subnormal. In $S_3$, a subgroup generated by a transposition has order two. There is no proper intermediate subgroup between it and $S_3$, and it is not normal in $S_3$. It cannot serve as the bottom of \eqref{eq:admissible}. Yet $S_3$ is solvable through its normal subgroup of order three. The exact finite suite includes this countercontrol.
+
+The recovered manuscript has valid additional sectors, including nilpotent groups and suitable abelian-by-cyclic constructions. Their usefulness comes from producing the needed subgroup chain, not from deleting that requirement. Similarly, a virtual character identity with negative coefficients is not itself a construction of an actual automorphic representation. Dividing products of $L$-functions does not, by that operation alone, prove the required holomorphy.
+
+\subsection{What cyclic Clifford extension really supplies}
+\begin{proposition}[Extension across a cyclic quotient]\label{prop:cyclic}
+Let $H\triangleleft G$ be finite, with $G/H$ cyclic of order $d$. Let $\tau$ be an irreducible complex representation of $H$ whose isomorphism class is $G$-invariant. Then $\tau$ extends to $G$. Any two extensions differ by a character of $G/H$.
+\end{proposition}
+\begin{proof}
+Choose $t\in G$ lifting a generator. Invariance supplies an invertible operator $A$ with
+\[
+ A\tau(h)A^{-1}=\tau(tht^{-1}).
+\]
+The operator $A^d\tau(t^d)^{-1}$ commutes with $\tau(H)$ and is scalar by irreducibility. The same conjugation identity shows that $A$ commutes with $\tau(t^d)$. Rescale $A$ by a complex $d$th root so that $A^d=\tau(t^d)$. Sending $t$ to this rescaled operator and retaining $\tau$ on $H$ respects the defining conjugation and power relations, hence defines an extension.
+
+After identifying the two restrictions with $\tau$, the ratio between two possible operators at $t$ commutes with $\tau(H)$ and is scalar. Its $d$th power is one. These scalars are precisely the characters of the cyclic quotient.
+\end{proof}
+
+This finite representation argument removes a cyclic projective extension obstruction. It does not prove automorphic descent for an arbitrary local-field construction. The latter needs an actual descent theorem and its hypotheses. This distinction explains why the monomial branch supplies a strong restricted route while leaving the general assembly problem intact.
+
+\source{[M] contains the admissible tower and classical-input completion. [BH99, \S2.3] supplies a characteristic-zero monomial route through cyclic prime-degree steps. The finite group proofs above are ordinary proofs, independent of any unverified compilation claim.}
+
+\subsection{The Block 45 receipt boundary}
+Two identical copies of the terminal source were recovered. Its surrounding notes describe the new assertions as intended results and retain a pending verification gate. The preserved background log stops after building \texttt{PaperXI.FiniteTameComparison}, at item 3890 of 3891. The other log stops earlier. Neither recovered log contains a successful terminal build of \texttt{ActualMonomialLocalGlobal}.
+
+Therefore the publication status is \emph{production source recovered, terminal verification receipt not recovered}. This is not a proof that compilation fails. It is also not permission to label the target freshly or historically verified without its missing receipt. The ledger tracks that documentary obligation separately from the mathematics.
+
+\needspace{7\baselineskip}
+\section{Genuine Clifford multiplicities and dimension}\label{sec:clifford}
+\subsection{A projective multiplicity is not a decorative label}
+Clifford theory produces projective representations on multiplicity spaces. The carrier, cocycle, and actions must all come from the same actual restriction problem. Attaching several abstract Heisenberg packets to a diagram does not ensure that their multiplicities multiply inside a prescribed source representation.
+
+Here is the dimension mechanism in a form that exposes its hypotheses. Let $A$ be a finite abelian group and let $c:A\times A\to\C^\times$ be a unit-modulus multiplier. Write
+\[
+ T_aT_b=c(a,b)T_{a+b},\qquad
+ b_c(a,b)=\frac{c(a,b)}{c(b,a)},\qquad
+ R=\{a:b_c(a,b)=1\text{ for every }b\in A\}.
+\]
+The commutator pairing $b_c$ is alternating. The group $R$ is its radical.
+
+\begin{proposition}[Degree of an irreducible projective multiplicity]\label{prop:degree}
+For an irreducible projective representation with multiplier $c$ on $M$,
+\[
+ (\dim M)^2=|A/R|.
+ \tag{15.1}\label{eq:projective-degree}
+\]
+Every finite-dimensional module with this same multiplier has dimension divisible by $\sqrt{|A/R|}$.
+\end{proposition}
+\begin{proof}
+Average an inner product over the operators $T_a$. Unit modulus of the multiplier makes the averaged inner product invariant, so the operators may be taken unitary. If $r\in R$, then $T_r$ commutes with all $T_a$ and is scalar. Thus $|\Tr T_r|=\dim M$. If $a\notin R$, some $T_b$ conjugates $T_a$ to a nontrivial scalar multiple of itself, so $\Tr T_a=0$.
+
+The operators $\operatorname{Ad}(T_a)$ form an ordinary representation on $\End(M)$. Their average is the projection onto the commutant, which has dimension one by irreducibility. Its trace is
+\[
+ 1=\frac{1}{|A|}\sum_{a\in A}|\Tr T_a|^2
+   =\frac{|R|}{|A|}(\dim M)^2.
+\]
+This proves \eqref{eq:projective-degree}. Finally, averaging a projection gives invariant complements, so modules with the fixed unitary multiplier are semisimple. Every irreducible summand has the degree already computed, proving divisibility.
+\end{proof}
+
+No assertion that the original cocycle literally descends to $A/R$ is needed. Choosing a section can produce a quotient multiplier after incorporating the scalar radical action, but that is additional bookkeeping, not a reason to suppress the radical.
+
+If $A$ is elementary abelian of order a power of $p$ and the nondegenerate quotient has dimension $2r$ over $\F_p$, the multiplicity degree is $p^r$. Independent commuting projective factors on the \emph{same} carrier produce the tensor product degree $p^{r_1+\cdots+r_s}$. Both independence and commutation matter. A single Weyl plane represented twice on a $p$-dimensional space still has noncommuting cross-operators. It does not force divisibility by $p^2$.
+
+\subsection{The orbit factors in a normal chain}
+\needspace{10\baselineskip}
+\begin{proposition}[A compatible Clifford chain]\label{prop:chain}
+Suppose
+\[
+ G_0\triangleleft G_1\triangleleft\cdots\triangleleft G_s
+\]
+is a chain of finite groups. Choose irreducible $\rho_i$ of $G_i$ such that $\rho_{i-1}$ occurs in $\rho_i|_{G_{i-1}}$. Let $I_i$ be the inertia group of $\rho_{i-1}$ in $G_i$ and $t_i=[G_i:I_i]$. For a fixed prime $p$, if $G_i/G_{i-1}$ is elementary abelian of $p$-power order and the actual projective multiplicity pairing has rank $2r_i$, then
+\[
+ \dim\rho_s=\dim\rho_0\prod_{i=1}^s t_i p^{r_i}.
+ \tag{15.2}\label{eq:chain}
+\]
+\end{proposition}
+\begin{proof}
+The restriction at the $i$th step is a sum of $t_i$ distinct conjugate irreducibles, each of dimension $\dim\rho_{i-1}$ and common multiplicity $e_i$. The corresponding isotypic component is irreducible as a module for $I_i$. Factoring out the $G_{i-1}$ representation leaves the actual irreducible projective multiplicity representation of $I_i/G_{i-1}$. Its commutator rank is $2r_i$, so Proposition~\ref{prop:degree} gives $e_i=p^{r_i}$. Hence $\dim\rho_i=t_i p^{r_i}\dim\rho_{i-1}$. Multiplication over the chain proves the formula.
+\end{proof}
+
+For example, the two-dimensional irreducible of $S_3$ restricts to the two nontrivial characters of $C_3$. The multiplicity is one, and the orbit factor is two. Dropping the orbit factor would give the wrong dimension. A valid source bound therefore uses a genuine compatible chain, not merely a list of candidate projective factors.
+
+A consequence is $p^{\sum r_i}\leq\dim\rho_s$. This can make a proposed target dimensionally plausible. The fixed-rank constructor recorded in [C161] has, under its selected even-depth hypotheses, a host half-dimension $f n(n-1)/2$ over $\F_p$, where the residue field has order $p^f$. The source bound then provides enough room for the relevant abstract symplectic dimensions. That conclusion remains dimensional. It does not identify a native subgroup, prescribe its quadratic marking, make the action equivariant, or prove full-character occurrence.
+
+\source{[C161] gives the genuine-chain constraint and the constructor comparison. Propositions~\ref{prop:degree} and \ref{prop:chain} are expanded ordinary arguments. The executed finite models check small Weyl carriers, radicals, repeated-factor failures, and the $S_3$ orbit example, not arbitrary arithmetic host realization.}
+
+\needspace{7\baselineskip}
+\section{Genuine source fixtures and what they rule out}\label{sec:fixtures}
+\subsection{Two packets inside a single-slope source}
+The continuation112 fixtures were designed to avoid an artificial diagram whose purported packets did not come from one irreducible source. In the first construction, over $\F_5((t))$, an unramified degree-four extension supports two independent Heisenberg extensions. Their Schr\"odinger representations have dimensions five and five. The tensor product is irreducible of dimension 25.
+
+For one factor the finite group law is
+\[
+ (u,v,w)(u',v',w')=(u+u',v+v',w+w'+uv'),
+\]
+and its action on functions on $\F_p$ is
+\[
+ (T_{u,v,w}f)(s)=\zeta_p^{\,w+vs}f(s+u).
+ \tag{16.1}\label{eq:weyl}
+\]
+Direct composition verifies the group law. In the tensor product, the kernel on the product of the two centers is the anti-diagonal
+\[
+ \{(z(w),z(-w)):w\in\F_5\}.
+\]
+The quotient is the balanced central product, not the direct product with two unrelated central characters. The common central character remains the prescribed character.
+
+The two arithmetic factors have ramification breaks $\{2,4\}$ and $\{3,6\}$. Their disjointness supplies the product filtration. After quotienting by the balanced central kernel, the ambient jumps are $2,3,6$. The ordinary representation has only slope six, while the actual chain still contains two multiplicity-five packets. Thus a sole ordinary slope does not force a single projective multiplicity packet.
+
+The unramified Frobenius action has order four. It must not be relabeled as a nontrivial tame inertia group. The source fixture has trivial tame stabilizer in this sense, even though Frobenius acts nontrivially on the finite operators.
+
+\subsection{The symmetric characteristic-three fixture}
+The refined example works over $F=\F_3((t))$, with unramified degree-four field $K=\F_{81}((t))$. Choose $a$ with $a^9=-a\neq0$ and put $b=a^3$. For $m=1,5$, write $f=a t^{-m}$ and $g=b t^{-m}$. The torsor equations are
+\[
+ \wp x=f,\qquad \wp y=g,\qquad
+ \wp z=\frac{fy-gx}{2},\qquad \wp u=u^3-u.
+ \tag{16.2}\label{eq:symmetric}
+\]
+With $w=z+xy/2$, the final equation becomes
+\[
+ \wp w=fy+\frac{fg}{2}.
+\]
+For the ramification formula in [Imai, Example 3.8(1)], the differential term is
+\[
+ d(fg/2)-f\,dg=\frac{g\,df-f\,dg}{2}=0.
+\]
+The pole orders $m$ and $2m$ are prime to three. The leading coefficients $a,b$ are linearly independent over $\F_3$: otherwise $a^2=b/a$ would lie in $\F_3$, contradicting $a^8=-1$. The total ramification condition is supplied by the torsor argument in [C112]. Under these hypotheses, the two remaining terms give central break $4m/3$, not $2m$. The latter would correspond to the different unsymmetrized data. The factor break sets are therefore
+\[
+ \{1,4/3\},\qquad\{5,20/3\}.
+\]
+The balanced quotient has ambient jumps $1,5,20/3$. Its nine-dimensional irreducible source has a sole slope $20/3$, hence Swan conductor 60, and two genuine multiplicity-three packets. Native subgroup labels in a different upper-numbering convention cannot be substituted for these ambient labels.
+
+The ordinary arithmetic analysis of [C112] then tests whether suitable per-break simple-character targets can all be replaced by one raw maximal-type quotient of the same rank. Its rank-nine spectrum excludes the exponent needed for a degree-nine Heisenberg representation in that specific quotient. The result is a failure of that proposed one-quotient shortcut. It does not show that the source satisfies every strengthened realization hypothesis and then violates Conjecture 66.
+
+\subsection{Why the fixtures and later enlargements coexist}
+The first fixture did not even supply all the per-break arithmetic targets required by the stronger test. The second supplies a sharper comparison but still does not provide the full native marking, Frobenius action, and same-candidate H5 package. These omissions are part of its status, not cosmetic caveats.
+
+The later low-rank enlargements in Part I do not retroactively make a forbidden original quotient large enough. They change the assembly carrier while preserving a specified inducing representation. That is a different construction. The correct historical flow is therefore: genuine source multiplicities, obstruction to a particular arithmetic quotient, and a search for a permitted larger carrier with explicit recovery. It is not a sequence of contradictory claims about one unchanged quotient.
+
+\source{[C112] records the two arithmetic source fixtures and the maximal-type spectrum test. [Imai] supplies the selected ramification formula. The finite operator law and balanced-center kernel have been rerun here. The local-field torsor construction and full spectrum theorem remain inherited ordinary arguments, not newly formalized results.}
+
+\needspace{7\baselineskip}
+\section{An actual arithmetic candidate and a failed prescribed character}\label{sec:arithmetic}
+\subsection{The field, the character, and the source}
+Continuation113 supplies an explicit characteristic-zero experiment in which the source representation and the arithmetic candidate exist independently of the proposed packet attachment. Fix compatible roots of unity and write
+\[
+ F=\Q_3(\zeta_3),\qquad L=\Q_3(\zeta_9),\qquad
+ \varpi=\zeta_9-1,\qquad \varpi_F=\zeta_3-1,
+ \qquad \beta=\varpi^{-10}.
+ \tag{17.1}\label{eq:fields}
+\]
+The extension $L/F$ is cyclic and totally ramified of degree three. The polynomial of $\varpi$ over $F$ is
+\[
+ X^3+3X^2+3X-\varpi_F.
+\]
+Normalize $v_L(\varpi)=1$. Then $v_L(3)=6$ and the relative different has exponent six. Let $\psi_{\Q_3}$ have kernel $\Z_3$, and set
+\[
+ \psi_F(x)=\psi_{\Q_3}\!\left(\frac{\Tr_{F/\Q_3}(x)}{3}\right),
+ \qquad \psi_L=\psi_F\circ\Tr_{L/F}.
+\]
+The conductor ideal of $\psi_L$ is $\pp_L^{-3}$. This negative exponent is essential. Replacing it by $\pp_L$ shifts the unit thresholds and changes the calculation.
+
+Every element of $L^\times$ has a unique expression $\varpi^a\epsilon u$ with $a\in\Z$, $\epsilon\in\{1,-1\}$, and $u\in U_L^1$. Define the full multiplicative character by
+\[
+ \chi(\varpi^a\epsilon u)=\psi_L(\beta\log u).
+ \tag{17.2}\label{eq:chi}
+\]
+The logarithm converges on $U_L^1$. At depths at least four, logarithm and exponential are inverse, so the conductor condition becomes $r-10\geq-3$. Consequently $a_L(\chi)=7$. With $\sigma(\zeta_9)=\zeta_9^4$, one obtains
+\[
+ v_L(\sigma\beta-\beta)=-8.
+\]
+The nontrivial conjugate quotient has conductor five. In particular, the three conjugate characters are distinct on the actual unit group, not merely assigned distinct labels.
+
+The fresh exact program operates in the rational algebra
+\[
+ \Q[X]/(X^6+6X^5+15X^4+21X^3+18X^2+9X+3).
+\]
+It verifies field identities and rational trace witnesses such as
+\[
+ \chi(\exp(\varpi^6))=\zeta_3,\qquad
+ \psi_L((\sigma\beta-\beta)\varpi^4)=\zeta_3^2.
+\]
+The program does not approximate a $3$-adic exponential. The analytic reduction $\log(\exp x)=x$ is used only in its valid range, after which the calculation is exact rational arithmetic.
+
+Regularity makes
+\[
+ \rho=\Ind_{W_L}^{W_F}\chi
+\]
+irreducible of dimension three. The argument in [C113] excludes unramified self-twists. Under [BH99, Proposition 2.2], its wild restriction is irreducible as well. The conductor induction calculation gives
+\[
+ a_F(\rho)=7+6=13,\qquad \Sw_F(\rho)=10,
+ \qquad \operatorname{slope}(\rho)=10/3.
+ \tag{17.3}\label{eq:conductor}
+\]
+These are conductor statements for this source, not proofs of the general pair-factor contract.
+
+\subsection{The source-defined automorphic-induction candidate}
+The characteristic-zero cyclic monomial route in [BH99, \S2.3] gives an actual supercuspidal candidate
+\[
+ \pi_F^0=\AI_{L/F}(\chi).
+ \tag{17.4}\label{eq:AI}
+\]
+The central character is $\omega=\chi|_{F^\times}$. This construction imports the established automorphic-induction input. It is not described as selecting a representation with convenient packet coordinates and then declaring it to be the realizer of $\rho$.
+
+For this monomial subcase, the classical source has stronger comparison properties than conductor equality alone. Those properties belong to this actual candidate and its stated local correspondence. They do not prove that an independently specified simple character occurs in $\pi_F^0$, nor do they automatically identify a different constructed type with it.
+
+\subsection{The independent simple character}
+Let $\mathfrak a$ stabilize the $\OO_L$ lattice chain on the three-dimensional $F$-space $L$. The element $\beta=\varpi^{-10}$ is minimal over $F$. The actual full-degree simple stratum gives
+\[
+ H^1=U_L^1U_{\mathfrak a}^{6},\qquad
+ J^1=U_L^1U_{\mathfrak a}^{5}.
+\]
+The proposed simple character is
+\[
+ \theta_0(uy)=\chi(u)\,
+ \psi_F\!\left(\operatorname{tr}_{M_3(F)/F}(\beta(y-1))\right).
+ \tag{17.5}\label{eq:theta0}
+\]
+The intersection condition is checked on $U_L^6$. The quotient $J^1/H^1$ has order nine, and the associated Heisenberg representation $\eta_0$ has dimension three. The type-side conductor agrees with 13.
+
+At this point two real objects have been produced: the source-defined $\pi_F^0$ and the independently defined $\theta_0$. The missing assertion is not their existence but
+\[
+ \Hom_{H^1}(\theta_0,\pi_F^0)\neq0.
+ \tag{17.6}\label{eq:occurrence-original}
+\]
+The computation below shows that this assertion is false. This is more informative than marking it as an unfinished verification.
+
+\subsection{A nontrivial tame descent that still leaves occurrence open}
+Set $K=F(i)$, the unramified quadratic extension, and $M=KL$. The character $\chi_M=\chi\circ N_{M/L}$ gives $\pi_K^0=\AI_{M/K}(\chi_M)$. Its Galois invariance and norm-compatible central character meet the tame descent conditions in [BH99, Theorem 1.3]. In characteristic zero, Theorem 1.8 identifies the tame algebraic lift with cyclic base change here, since $[K:F]=2$ is prime to three.
+
+\begin{lemma}[Central normalization of a descent fibre]\label{lem:central}
+Suppose a nonempty descent fibre is a torsor under a group $X$ of characters of exponent dividing $d$. Suppose twisting a rank-$n$ representation by $\alpha\in X$ multiplies its central character by $\alpha^n$. If $\gcd(n,d)=1$, every compatible specified central character selects a unique member of the fibre.
+\end{lemma}
+\begin{proof}
+Choose integers $r,s$ with $rn+sd=1$. The power map $\alpha\mapsto\alpha^n$ on $X$ has inverse $\alpha\mapsto\alpha^r$, because $\alpha^d=1$. Relative to one member of the nonempty fibre, a compatible desired central-character ratio is an element of $X$. There is exactly one twisting character with that $n$th power.
+\end{proof}
+
+Here $n=3$ and $d=2$, so the central-normalized descent is unique. This is a useful actual descent conclusion. The applicable type transfer also provides an occurrence equivalence between $F$ and $K$. It does not manufacture the initial occurrence. In this example $\dim\eta_K=9$ while $\dim\eta_F=3$, and the literal restriction of the transferred simple character has the power $\theta_K|_{H_F^1}=\theta_F^2$. Equating the two entire finite carriers would erase the actual transfer mechanism.
+
+\source{[C113] contains the field, character, conductor, type and descent arguments. The cyclotomic identities and normalization checks were freshly replayed. [BH99, printed pp. 15, 18, 24 and 48] was read at the selected descent, monomial and central-type statements. A full new audit of every conductor formula and every transfer theorem is not claimed.}
+
+\needspace{7\baselineskip}
+\section{A full-extension scalar obstruction and its limited repair}\label{sec:scalar}
+\subsection{Why testing only the compact part can mislead}
+The cubic norm-kernel character of $F^\times$ defines $\Omega=\omega_{\rm cub}\circ\det$ on $\GL_3(F)$. The source-defined automorphic induction satisfies
+\[
+ \pi_F^0\otimes\Omega\simeq\pi_F^0.
+\]
+If a proposed extended type is to induce to $\pi_F^0$, it must be compatible with this self-twist. Continuation113 finds an element $g$ that makes the compact character appear compatible, but whose action on a noncompact generator leaves a nontrivial scalar.
+
+In the basis $1,\varpi,\varpi^2$, multiplication by $\varpi$ is
+\[
+ \Pi=\begin{pmatrix}0&0&\varpi_F\\1&0&-3\\0&1&-3\end{pmatrix},
+ \qquad
+ g=I+\operatorname{diag}(0,1,2)\Pi^4.
+ \tag{18.1}\label{eq:Pi}
+\]
+The actual group calculations show that $g$ normalizes the relevant compact groups and the extended inducing group $N=L^\times J^1$. With the convention $\tau^g(x)=\tau(g^{-1}xg)$, one has
+\[
+ \theta_0^g=\theta_0\Omega,\qquad
+ \eta_0^g=\eta_0\,\Omega|_{J^1}
+\]
+in the literal operator models used in the audit. The check includes $H^1$ and two quotient generators, not merely a comparison of characters on an abstract vector space.
+
+The decisive element is
+\[
+ h=g^{-1}\Pi g\Pi^{-1}\in H^1,
+ \qquad \theta_0(h)=\zeta_3.
+ \tag{18.2}\label{eq:scalar}
+\]
+In contrast, $\Omega(\Pi)=1$. For every full central extension $\Lambda$ of $\eta_0$, the compact equality remains true but
+\[
+ \Lambda^g(\Pi)=\zeta_3\Lambda(\Pi).
+\]
+
+\begin{lemma}[A generator scalar cannot be removed by an intertwiner rescaling]\label{lem:scalar}
+Let two representations of $N=\langle J,z\rangle$ have the same irreducible restriction to $J$. Suppose their operators at $z$ differ by a scalar $\xi\neq1$. Then they have no nonzero intertwiner.
+\end{lemma}
+\begin{proof}
+Any intertwiner on $J$ is scalar by irreducibility. A nonzero scalar commutes with the invertible operator at $z$. The intertwining equation at $z$ then forces $\xi=1$, a contradiction.
+\end{proof}
+
+The inherited all-extension argument combines this lemma with the actual simple-character intertwining group and the maximal-type induction theorem. Those inputs rule out an alternative intertwining coset elsewhere in the ambient group. The conclusion is therefore not based on numerically searching a finite list of matrices. Every supercuspidal containing this prescribed $\theta_0$ fails the required cubic self-twist, whereas $\pi_F^0$ has it. Thus
+\[
+ \boxed{\Hom_{H^1}(\theta_0,\pi_F^0)=0.}
+ \tag{18.3}\label{eq:nonoccurrence}
+\]
+This is the exact failure of the original prescribed-character route. Neither rescaling an intertwiner nor assigning a different scalar to the same noncompact extension repairs it.
+
+\subsection{The independent check and its scope}
+The replay includes the original rational cyclotomic program, the central-type calculations for three corrections, and an independent scalar calculation. The independent program decomposes the actual matrix $h$ into an $L$-unit and a deep congruence term. It computes the phase in \eqref{eq:scalar} directly, without searching for a Weyl intertwiner or choosing a favored central-type matrix.
+
+This is strong evidence for the specific scalar input. The universal phrase ``every extension'' still uses the ordinary group-generation and irreducibility argument. Finite arithmetic alone is not being credited with proving a quantified representation-theoretic statement.
+
+\subsection{A different full character passes the obstruction}
+Define a wild unit correction on $U_L^1$ by
+\[
+ \nu(u)=\psi_L(\varpi^{-8}\log u).
+ \tag{18.4}\label{eq:nu}
+\]
+Its conductor is five. It leaves the deeper part used in \eqref{eq:theta0} unchanged but changes the full unit character. The corrected simple character is
+\[
+ \theta'(uy)=\chi(u)\nu(u)\,
+ \psi_F\!\left(\operatorname{tr}_{M_3(F)/F}(\beta(y-1))\right).
+ \tag{18.5}\label{eq:theta-prime}
+\]
+It is not merely a different choice of basis for $\theta_0$.
+
+The noncompact normalization matters here too. The correction is trivial on $U_F^1$, but that alone does not establish $\nu|_{F^\times}=1$. The inherited calculation gives
+\[
+ \nu(\varpi_F/\varpi^3)=\zeta_3^2.
+\]
+Assigning $\nu(\varpi)=1$ would therefore change the central character. Instead set
+\[
+ \nu(\varpi)=\zeta_9,\qquad\nu(-1)=1.
+\]
+Then
+\[
+ \nu(\varpi_F)=\nu(\varpi)^3\nu(\varpi_F/\varpi^3)
+             =\zeta_3\zeta_3^2=1.
+ \tag{18.6}\label{eq:nu-central}
+\]
+This is the required full central normalization.
+
+For the correction powers $\nu^a$, $a=0,1,2$, the remaining generator scalars are respectively
+\[
+ \zeta_3,\qquad1,\qquad\zeta_3^2.
+ \tag{18.7}\label{eq:phases}
+\]
+The middle choice passes the cubic self-twist obstruction. The two other choices remain negative controls. The exact programs reproduce all three cases.
+
+\subsection{The remaining selection problem}
+Passing the self-twist test is necessary but not sufficient to establish
+\[
+ \Hom_{H^1}(\theta',\pi_F^0)\neq0.
+ \tag{18.8}\label{eq:corrected-occurrence}
+\]
+The fixed-center central-type family still has three members in this rank-three setting. [BH99, \S5.4] describes such a family as a torsor under the corresponding unramified characters. The corrected scalar does not single out the source-defined automorphic-induction member of that family.
+
+A successful next argument would have to establish occurrence in the actual $\pi_F^0$ and then identify the appropriate noncompact extension. Producing some representation containing $\theta'$ is a weaker statement. Replacing $\pi_F^0$ by a convenient member of the family would abandon the same-candidate obligation. Replacing the supplied canonical extension would be another change of input and would have to be tracked explicitly.
+
+\source{[C113-S] gives the all-extension obstruction, central-type hypotheses and corrected character. The fresh checks establish the named cyclotomic identities and phases. Equations~\eqref{eq:nonoccurrence} and \eqref{eq:phases} retain that ordinary proof boundary. Equation~\eqref{eq:corrected-occurrence} remains an unresolved occurrence assertion, not a failed theorem-prover build.}
+
+\needspace{7\baselineskip}
+\section{Compact binders and exact fixed-template obstructions}\label{sec:binder}
+\subsection{The compactness theorem with all hypotheses visible}
+A binder is intended to turn compatible finite constraints into one actual object. Compactness can perform that passage only after the admissible space and simultaneous finite solvability have been supplied. It does not supply those premises from unrelated finite successes.
+
+Let $\OO$ be the valuation ring of a nonarchimedean local field, with uniformizer $\pi$. Fix a closed subset $X\subseteq\OO^m$ and continuous functions $f_j:X\to\OO$, $j\geq1$. Put
+\[
+ C_n=\{x\in X:f_j(x)\in\pi^n\OO\text{ for }1\leq j\leq n\}.
+ \tag{19.1}\label{eq:compact-Cn}
+\]
+
+\begin{proposition}[A compact simultaneous binder]\label{prop:compact}
+If $C_n\neq\varnothing$ for every $n$, there is $x\in X$ with $f_j(x)=0$ for every $j$.
+\end{proposition}
+\begin{proof}
+The ring $\OO$ is compact, so $X$ is compact. Each $C_n$ is closed by continuity and the closedness of $\pi^n\OO$. Also $C_{n+1}\subseteq C_n$. The finite intersection property gives an element $x$ in their intersection. For fixed $j$, the value $f_j(x)$ lies in every $\pi^n\OO$ with $n\geq j$, so it is zero.
+\end{proof}
+
+The proof requires no surjectivity of the reduction maps between the sets of finite roots. For instance, $x^2=17$ has roots modulo every power of two, while the roots 3 and 5 modulo eight do not lift to roots modulo sixteen. An arbitrarily chosen partial root can fail even when the compactness conclusion applies to the full nested solution sets.
+
+Separate solvability is also insufficient. The equations $x\equiv0$ and $x\equiv1\pmod{3^n}$ each have solutions, but never have a common solution. Every finite test in the binder premise concerns one tuple satisfying all current constraints together.
+
+\subsection{What makes the result an arithmetic certificate}
+The variables must remain in one bounded, closed model with fixed rank, lattice data and normalizations. A nonzero leading coefficient should be encoded by a fixed nonzero residue class, a closed and open condition. Merely deleting the zero point from a compact model need not leave a compact space. In $\OO\setminus\{0\}$, all congruences $x\equiv0\pmod{\pi^n}$ are solvable, but the only exact zero has been removed.
+
+For polynomial constraints, or rational constraints with denominators uniformly units, congruence evaluation is compatible with a fixed finite quotient. An exhaustive empty solution set at some precision then certifies failure of that template. Conversely, if the exact common zero set in the compact template is empty, Proposition~\ref{prop:compact} implies that some finite stage is empty. This is a finite obstruction certificate for the \emph{specified model}, not automatically for every possible arithmetic host.
+
+Full characters require particular care. The domain on which their finite quotients are modeled must be fixed, and the evaluation constraints must be jointly continuous or uniformly descend to the claimed finite quotient. Values on noncompact generators require their own normalization constraints. A binder that only remembers the deep commutator form does not recover a full inducing representation for free.
+
+\subsection{A corner with a complete leading-profile test}
+The earlier cubic calculation is a concrete example of a useful finite obstruction. Work over $\F_3((t))$. The four-coordinate square-zero corner has entries in positions $05,16,27,38$. Adding a fifth coordinate gives
+\[
+ x=t(aE_{05}+bE_{16}+cE_{27}+dE_{38})
+       +\frac{t^2h}{1+t}E_{08}.
+ \tag{19.2}\label{eq:corner}
+\]
+The relevant leading target parameters are
+\[
+ u=cd,\qquad v=ab,\qquad w=bc,\qquad
+ p=c(a-h),\qquad q=b(d-h).
+ \tag{19.3}\label{eq:corner-coeff}
+\]
+Here $u,v,w$ are required nonzero. The structural calculation for the larger sixteen-coordinate corner shows that its remaining entries and higher series terms do not change these decisive coefficients. That leading-coefficient fact is an inherited symbolic calculation, not an assumption that five coordinates exhaust all matrices.
+
+\begin{proposition}[The nonzero-leading corner spectrum]\label{prop:corner}
+For targets in $\F_3$ with $uvw\neq0$, equations~\eqref{eq:corner-coeff} have a solution if and only if
+\[
+ p+u=w(q+v).
+ \tag{19.4}\label{eq:corner-invariant}
+\]
+Exactly 24 of the 72 possible targets satisfy this condition.
+\end{proposition}
+\begin{proof}
+Write $b=s\neq0$. The first three equations force
+\[
+ a=v/s,\qquad c=w/s,\qquad d=us/w.
+\]
+The equation for $q$ then forces $h=us/w-q/s$. Substitution into the equation for $p$ gives
+\[
+ s^2(p+u)=w(q+v).
+\]
+Over $\F_3$, every nonzero $s$ has square one. This proves necessity and, by the displayed formulas, sufficiency. There are eight choices of the nonzero triple $(u,v,w)$ and three choices of $q$, after which $p$ is forced. Hence there are 24 admissible targets among $8\cdot3\cdot3=72$.
+\end{proof}
+
+The target $(u,v,w,p,q)=(1,1,1,2,2)$ cannot be obtained with $h=0$ but is obtained by the fifth coordinate. The target $(1,1,1,1,2)$ violates \eqref{eq:corner-invariant}, so the larger corner still cannot produce it. The first is an actual repair of an overly small ansatz. The second is an obstruction that survives that repair.
+
+Neither conclusion proves that the target is impossible in every arithmetic matrix realization. It identifies precisely where this corner stops. That distinction is what makes the negative result reusable rather than misleading.
+
+\subsection{The arbitrary-exponent cubic family}
+The later general binder165 changes the construction rather than repeatedly enlarging the same leading-coefficient search. Let $E/F$ be the cubic field with
+\[
+ e^3+te+t=0,\qquad \pi=-t=\frac{e^3}{1+e}.
+\]
+On the period-nine lattice of $E^3$, let $S$ denote the lattice shift. For $h>0$ with $3\nmid h$, set $a=4h$ and take $x_h=S^aD$, where $D$ is supported in residue positions
+\[
+ \{0,2a,4a,6a\}\pmod9.
+\]
+Its image positions are $\{a,3a,5a,7a\}$, disjoint from its support, so $x_h^2=0$. In the expression $x_hS^{-3a}x_h$, exactly the three starting positions $2a,4a,6a$ survive. Modulo three they meet the three $E$-lanes once each. This support statement holds for every allowed $h$ because $a$ is invertible modulo nine.
+
+Under the retained normalized corestriction calculation, these paths give a primitive whole cycle. The full ordinary binder proposition then constructs the stated degree-nine parameter for allowed $h_1<h_2$, with critical data $n=12h_2$ and $k_0=-4h_1$. The finite replay of support residues illustrates this mechanism. The universal construction rests on the symbolic proof and its refinement hypotheses, not on testing the first hundred exponents.
+
+This family is genuine progress beyond one failed corner. It is still a parameter construction. It does not, without the additional full-character, stabilizer and transport arguments, provide the universal realization endpoint. The later direct odd-prime and dyadic constructions in Part I should be read as further developments of the constructor side, not as proofs that all the earlier occurrence obstructions disappeared.
+
+\source{[B162] supplies the fixed compact model theorem. [Corner] supplies the whole-corner leading calculation. [B165] supplies the arbitrary-exponent construction. The compactness and finite profile implications are proved here. The underlying full arithmetic refinement is retained as an ordinary source argument.}
+
+\needspace{7\baselineskip}
+\section{What this synthesis closes and what it does not}\label{sec:synthesis}
+\subsection{A single dependency chain}
+The source history now supports a coherent sequence. A monomial source with an admissible induction tower gives a restricted actual candidate through stated classical inputs. Genuine Clifford theory limits the multiplicities that can occur inside one source. Explicit fixtures show that ordinary slope data do not determine the packet chain. An independently constructed simple character then poses a genuine occurrence problem for that candidate.
+
+Continuation113 resolves one such occurrence question negatively and repairs one necessary self-twist condition only by changing the full character. Compactness explains how a fixed admissible template can be assembled from simultaneous finite solutions, while explicit corners give finite obstruction certificates. The later constructor families enlarge what can be built but do not identify every constructed object with an independently fixed candidate.
+
+\begin{center}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{.30\linewidth}>{\raggedright\arraybackslash}p{.62\linewidth}@{}}
+\toprule
+Statement available & Obligation that is not supplied by it \\
+\midrule
+Admissible monomial induction & An admissible tower for every allowed source. \\
+Projective dimension bound & A native, marked and equivariant arithmetic embedding. \\
+Conductor agreement & Occurrence of the prescribed full character. \\
+Cubic self-twist compatibility & Selection of the source-defined central type. \\
+Nonempty finite systems & A limit unless the model is fixed, compact and simultaneous. \\
+A repaired matrix corner & Success in every target profile or arithmetic host. \\
+A larger inducing carrier & Permission to change the original candidate or extension. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The most precise surviving occurrence task}
+For the characteristic-zero experiment, the next question is \eqref{eq:corrected-occurrence}, followed by the identification of the full noncompact central-type extension. It is not sensible to retry the already excluded \eqref{eq:occurrence-original} by changing only an intertwiner scalar. Its negative proof addresses every such rescaling.
+
+A future attempt at \eqref{eq:corrected-occurrence} should use an invariant or a theorem that actually distinguishes the three fixed-center possibilities. The cubic self-twist test does not do so. An explicit comparison of the full inducing character under the monomial construction, or a sufficiently discriminating normalized local-factor calculation for the same candidate, would address a stronger question than the conductor comparisons already performed. Neither is asserted as completed here.
+
+\subsection{The remaining publication work}
+The ledger retains the conductor/source-defined-induction audit as partial. This block has audited selected characteristic-zero monomial and tame-descent inputs. It has not freshly reconciled the separate conductor arguments used by the direct positive-characteristic constructors. Their hypotheses must not be imported silently from [BH99, \S2.3], where characteristic zero is an explicit restriction for the route used here.
+
+The fixed native marking audit also remains separate. A scalar pushout can carry a supplied subgroup and phase convention. It need not agree with an independently fixed native quadratic refinement. The equal-capacity dyadic boundary is a particularly important next case. After these source reconciliations, the dedicated conjecture visual companion and the synchronized XI main, visual and Lean readers can be revised against a stable claim map.
+
+\section{Evidence, reproducibility and continuity}\label{sec:evidence}
+\subsection{Evidence classes}
+This continuation uses four positive evidence classes and one open class. An \emph{ordinary proof} is a written argument with its hypotheses visible. An \emph{inherited arithmetic argument} is a source construction retained with its classical dependencies. A \emph{fresh bounded check} is a named executed program with a recorded input hash and scope. A \emph{historical formal receipt} is evidence of a past compiler execution, not a new execution in this block. An \emph{open obligation} has not been promoted by any of the other classes.
+
+The selected [BH99] page images were inspected at printed pages 15, 18, 24 and 48. These passages establish the scope of the tame descent fibre, the characteristic-zero comparison with base change, the monomial route, and the residual fixed-center ambiguity. The Imai ramification formula is used only at the specialized Heisenberg example. Neither source audit is a claim to have checked the entirety of either work.
+
+\subsection{Executable checks}
+The replay driver runs the new exact model suite and the preserved Block 01 suite, then the named continuation113 field, self-twist, central-correction, independent-exclusion and central-normalization programs. It copies historical programs into a temporary working directory because some write their own receipts. No source tree is mutated merely to obtain a test result. Each gate has its own hash, log and completion status. An interrupted orchestration attempt is retained as an interruption, not counted as a completed combined pass.
+
+The tests are deliberately bounded. For example, the corner test checks all 72 leading target profiles, while the symbolic statement explaining why the other corner coordinates cannot change the decisive coefficients is a separate ordinary input. The Weyl tests verify finite operators, not local automorphic induction. The exact field calculation verifies rational identities, not a new proof of the classical type theory.
+
+\subsection{The source recovery gap}
+The available Block 02 PDF, ledger, handoff, input audit and delivery record are preserved as predecessor artifacts. Their presence does not reconstruct missing editable section files or missing test drivers. The package therefore provides a small independently buildable source checkpoint for this new continuation in addition to the full inherited evidence archive. This makes future continuity less dependent on the availability of one large ZIP.
+
+All 18 preceding task IDs remain present. Additional IDs record the missing Block 02 source recovery, the terminal Block 45 receipt, and the corrected-character occurrence problem. Their status histories are appended rather than overwritten. The precise next restart is Publication Block 04, beginning with the native marking and constructor-conductor source audits. The corrected-character occurrence problem remains a separately named mathematical route, not a hidden premise of those audits.
+
+\clearpage
+\section*{Source register}
+\addcontentsline{toc}{section}{Source register}
+The machine-readable source map gives package-relative paths, SHA-256 hashes and selected locators. The short labels below keep the mathematical text readable. Historical source titles containing the word ``completion'' do not override their actual hypotheses or verification status.
+
+\begin{description}[leftmargin=1.3cm,style=nextline]
+\raggedright
+\item[M] \emph{PSC Langlands Monomial Completion}, recovered manuscript and \emph{Completion Ledger}. In particular: local monomial completion, prime-cyclic subgroup chains, and global monomial induction. Classical rank-one and automorphic-induction inputs remain explicit.
+\item[M45] \emph{Actual Monomial Local Global}, v0.45.0. Production Lean source, source-lineage and claim-classification notes, preliminary preservation record, and two incomplete build logs. The terminal successful receipt was not recovered.
+\item[C112] \emph{Continuation112 Realization Test}. The genuine characteristic-five Clifford fixture, symmetric characteristic-three fixture, and source-realizability report. Their arithmetic spectrum restrictions are retained with their original scope.
+\item[C113] \emph{Arithmetic Construction and Exact Occurrence Boundary113}. Characteristic-zero source, independent simple character, cyclic automorphic induction, tame descent and central normalization. Rational cyclotomic programs retained.
+\item[C113-S] \emph{Self Twist Audit113}, \emph{Failures113}, and the independent all-extension obstruction check. Original-character exclusion, the changed full-character correction, and the unresolved corrected-character occurrence.
+\item[C161] \emph{Clifford Size and Inputs161}. Genuine normal-chain dimensions and the conditional host-capacity comparison. Abstract packet lists are not substituted for actual source multiplicities.
+\item[B162] \emph{Compact Binder Theorem}, Closure Attempt162. Fixed compact models, simultaneous congruences and exact limits.
+\item[Corner] \emph{Structural Corner Note}, explicit binder extension, with the full sixteen-coordinate symbolic calculation. Fifth-coordinate repair and surviving leading-coefficient obstruction.
+\item[B165] \emph{General Cubic Binder165}. Square-zero support, whole-cycle corestriction and the arbitrary-exponent degree-nine construction, under its arithmetic refinement hypotheses.
+\item[BH99] Colin J. Bushnell and Guy Henniart. \emph{Local tame lifting for $\GL(N)$. II: Wildly ramified supercuspidals}. Ast\'erisque 254, 1999. Selected statements: Theorem 1.3, Theorem 1.8, Proposition 2.2, \S2.3, and \S5.4. Printed page references and the source-access record are in the audit file.
+\item[Imai] Koto Imai. \emph{Ramification groups of some finite Galois extensions of maximal nilpotency class over local fields of positive characteristic}. Manuscripta Mathematica 176, article 66 (2025), DOI 10.1007/s00229-025-01664-5. Example 3.8(1) and its stated ramification hypotheses. The source audit records the exact publication metadata returned by the primary source.
+\end{description}
+\end{document}

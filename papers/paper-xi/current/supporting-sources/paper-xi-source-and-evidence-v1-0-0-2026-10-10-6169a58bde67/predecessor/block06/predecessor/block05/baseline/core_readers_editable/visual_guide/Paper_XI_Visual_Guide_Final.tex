@@ -1,0 +1,684 @@
+\documentclass[11pt,letterpaper]{article}
+\pdfinfoomitdate=1
+\pdfsuppressptexinfo=15
+\pdftrailerid{PaperXIVisualGuideFinal20261006}
+\usepackage[margin=.83in,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,amsmath,amssymb,graphicx,booktabs,array,xcolor,fancyhdr,enumitem,microtype}
+\usepackage[colorlinks=true,linkcolor=teal!70!black,urlcolor=teal!70!black]{hyperref}
+\hypersetup{pdftitle={Paper XI: Tame and Wild Packet Geometry -- Visual Guide},pdfauthor={Komorebi P.},pdfsubject={Finite packet geometry, arithmetic realization, and Conjecture 66}}
+\definecolor{ink}{HTML}{173E58}
+\definecolor{accent}{HTML}{087F8C}
+\definecolor{warm}{HTML}{BD873A}
+\setlength\parindent{0pt}\setlength\parskip{7pt}
+\setlist[itemize]{leftmargin=1.5em,itemsep=4pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=4pt,topsep=4pt}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\sffamily\color{ink}KOMOREBI MATHEMATICS / PAPER XI}
+\fancyhead[R]{\small\sffamily VISUAL GUIDE}\fancyfoot[L]{\small Komorebi P.}\fancyfoot[R]{\thepage}
+\renewcommand\headrulewidth{.4pt}
+\newcommand\F{\mathbb F}\newcommand\C{\mathbb C}\newcommand\OO{\mathcal O}
+\newcommand\GL{\mathrm{GL}}\newcommand\Sp{\operatorname{Sp}}
+\newcommand\tr{\operatorname{tr}}\newcommand\Tr{\operatorname{Tr}}
+\newcommand\Ind{\operatorname{Ind}}\newcommand\cInd{\operatorname{c\!\!-\!\!Ind}}
+\newcommand\Sw{\operatorname{Sw}}\newcommand\Arf{\operatorname{Arf}}
+\newcommand\rad{\operatorname{rad}}\newcommand\LLC{\operatorname{LLC}}
+\newcommand\plate[2]{\begin{center}\includegraphics[width=\linewidth,height=3.35in,keepaspectratio]{figures/#1.pdf}\end{center}\small\textcolor{accent}{#2}\normalsize\par}
+\newcommand\lesson[3]{\clearpage\noindent{\small\sffamily\color{accent}#1}\section{#2}\noindent{\small\color{ink}\textit{Source: #3.}}\par}
+\newcommand\takeaway[1]{\par\smallskip\noindent\textcolor{accent}{\textbf{Reading the diagram.}} #1\par}
+\newcommand\boundary[1]{\par\smallskip\noindent\textcolor{warm}{\textbf{Scope.}} #1\par}
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Tame and Wild Packet Geometry}
+\renewcommand{\KomorebiSubtitle}{For local Langlands}
+\renewcommand{\KomorebiSeries}{Core series XI}
+\renewcommand{\KomorebiKind}{Visual guide}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper XI}
+\renewcommand{\KomorebiTitleSize}{38}
+\renewcommand{\KomorebiTitleLeading}{43}
+\renewcommand{\KomorebiProfile}{atlas}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{This guide follows the paper's mathematical route from finite Frobenius packets to finite wild comparison, then explains the actual arithmetic constructions developed in Blocks 166--167.
+
+The general arithmetic realization endpoint is stated as \textbf{Conjecture 66}. The comparison with the established local Langlands correspondence remains a theorem conditional on an actual realization and H5 for that same candidate.
+
+All mathematical artwork is deterministic Python/Matplotlib vector output. The complete editable source and its figure generator accompany this guide.}
+
+\section*{How to use this companion}
+\addcontentsline{toc}{section}{How to use this companion}
+Read the first two parts as an atlas of finite mathematical objects. The third part explains where finite objects acquire an actual arithmetic carrier. The final part separates the remaining realization conjecture from the conditional comparison theorem.
+
+Each spread develops one construction or one distinction. Displays preserve the normalizations used in the accompanying paper. The source line identifies an original manuscript section or a retained proof note. These are local source anchors, rather than a claim that every argument has been newly formalized.
+
+The symbol $K$ denotes the original local field in the finite-theory discussion. In the explicit arithmetic constructions, $F=\F_p((t))$ is the base field and $K=F[\beta]$ is its totally ramified parameter field. A symplectic quotient dimension and a Heisenberg representation dimension are different quantities.
+
+\textbf{Theorem numbering.} The historical proof obligation called ``66'' corresponds to the endpoint printed as Theorem 16.2 in the original manuscript. Conjecture 66 now isolates its general arithmetic realization requirement. It is not a claim that row 66 of the historical theorem register is this endpoint.
+
+\textbf{Supplementary materials.} The accompanying release includes Markdown (.md) files containing detailed proofs, construction notes, proof audits, and research records. These documents distinguish established results, conditional results, and the remaining obligations associated with Conjecture 66.
+
+\textbf{Evidence.} Blocks 166--167 contain ordinary mathematical arguments using the stated classical type-theory results. Their bounded exact computations support specified identities. They are not fresh Lean certificates for the arbitrary-length arithmetic theorems. The separate Lean guide states the actual formalization scope.
+\clearpage
+{\small\tableofcontents}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Three mathematical objects}{Original manuscript, Sections 2, 11, 16; contract audit 162}
+\plate{01_three_objects}{An atom, its finite packet data, and its arithmetic realization have different roles.}
+A Weil atom is an irreducible Weil representation. A finite packet records selected quotient spaces, projectors, central extensions, phases, and transports. An arithmetic realization is an actual admissible representation of the required general linear group together with a comparison and recovery of that packet.
+
+Monodromy organizes an atom into a finite Weil--Deligne chain. It does not supply an atom that is missing. Likewise a finite Heisenberg comparison identifies already supplied finite representations, rather than automatically constructing a representation of $\GL_n(K)$.
+\takeaway{The final existence arrow is the content of Conjecture 66. Finite comparison, arithmetic construction, and local-factor characterization are separate steps.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Monodromy is a finite transfer chain}{Original Section 2}
+\plate{02_monodromy}{The arrows point from $V_j$ to $V_{j-1}$, the direction of $N$.}
+Put $V=\bigoplus_{j=0}^{m-1}V_j$ and let $P_j$ be the coordinate projector. If $N(V_j)\subseteq V_{j-1}$ and $N(V_0)=0$, then
+\[
+ N=\sum_{j=1}^{m-1}P_{j-1}NP_j,\qquad N^m=0.
+\]
+Every term in $N^r$ follows a path of length $r$ down the chain. There is no path of length $m$. With $F=\operatorname{diag}(1,q,\ldots,q^{m-1})$, each nonzero transfer block gains the conjugation factor $q^{j-1}q^{-j}=q^{-1}$.
+\takeaway{Nilpotence and covariance follow from the displayed block structure. Assigning the initial supercuspidal atom is a separate arithmetic input.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Fourier projectors isolate tame inertia}{Original Section 3; geometric Frobenius convention}
+Let $t$ generate a finite tame quotient of order $M$, with $(q,M)=1$. For $j\in\mathbb Z/M\mathbb Z$ define
+\[
+ P_j=\frac1M\sum_{a=0}^{M-1}\zeta_M^{-ja}r(t)^a,
+ \qquad \zeta_M=e^{2\pi i/M}.
+\]
+The finite Fourier identities give $P_jP_k=\delta_{jk}P_j$ and $\sum_jP_j=I$. Thus $P_jV$ is the $\zeta_M^j$ character space for $r(t)$.
+
+The guide uses geometric Frobenius with
+\[
+ \Phi^{-1}r(t)\Phi=r(t)^q.
+\]
+Equivalently $\Phi r(t)\Phi^{-1}=r(t)^{q^{-1}}$, where the inverse is taken modulo $M$. Substituting in the Fourier sum gives
+\[
+ \Phi P_j\Phi^{-1}=P_{qj}.
+\]
+\boundary{If the forward relation $\Phi r(t)\Phi^{-1}=r(t)^q$ is used instead, the projector label is $q^{-1}j$. The two directions have the same orbit sets but different conjugation identities. The release corrects the historical mixed-convention sentence.}
+\takeaway{A packet is an actual eigenspace selected by an idempotent. Frobenius carries it to the next character packet.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{One orbit gives one tame atom}{Original Theorem 3.2}
+\plate{03_tame_orbit}{For $q=2$ modulo 15, the displayed geometric projector orbit is $(1,2,4,8)$.}
+For an irreducible tame Weil representation, a union of Frobenius orbits of nonzero inertia packets would give a stable subspace. Irreducibility therefore forces one orbit, of some length $f$.
+
+The stabilizer of a packet is $W_{K_f}=\langle I_K,\Phi^f\rangle$, where $K_f/K$ is the unramified extension of degree $f$. Inertia acts on the packet by one scalar character. Its remaining stabilizer action is generated by $\Phi^f$; an irreducible complex action of this cyclic quotient is one dimensional. Hence
+\[
+ \tau\simeq\Ind_{W_{K_f}}^{W_K}\xi,\qquad \dim\tau=f.
+\]
+\takeaway{Orbit transitivity supplies both the dimension and the induced model. It is a theorem about the tame case.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Regular orbits have exact counts}{Original Proposition 3.6}
+\plate{04_orbit_counts}{Exact integer counts; the vertical scale is logarithmic.}
+Characters of $\F_{q^n}^{\times}$ are indexed modulo $q^n-1$. Characters fixed by a Frobenius power of degree $r\mid n$ number $q^r-1$. Möbius inversion removes those belonging to smaller orbits:
+\[
+ c_n(q)=\frac1n\sum_{d\mid n}\mu(d)(q^{n/d}-1).
+\]
+For $q=2,n=4$, the regular exponent orbits modulo 15 are
+\[
+ (1,2,4,8),\quad(3,6,12,9),\quad(7,14,13,11).
+\]
+Their number is $\tfrac14(15-3)=3$. The plotted values are computed by the exact divisor sum and retained in \texttt{figure\_data.json}.
+\takeaway{Regularity is an exact orbit property. The plot illustrates an integer formula rather than supplying its proof.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{A primitive projector selects a cuspidal block}{Original Section 4}
+Let $G_n=\GL_n(\F_q)$ and $T_n\simeq\F_{q^n}^{\times}$ be an elliptic torus. A regular torus character determines an irreducible cuspidal representation $\kappa_\theta$ by the classical finite-field construction. If its character is $\chi_\theta$ and degree is $d_\theta$, then
+\[
+ e_\theta=\frac{d_\theta}{|G_n|}\sum_{g\in G_n}\chi_\theta(g^{-1})g
+\]
+is its primitive central idempotent in $\C[G_n]$.
+
+On an irreducible representation with character $\psi$, this central element acts by a scalar. Taking traces and using character orthogonality makes the scalar 1 on $\kappa_\theta$ and 0 on every other irreducible block.
+
+For a proper parabolic $P=LU$, averaging over its unipotent radical gives
+\[
+ e_U=|U|^{-1}\sum_{u\in U}u,\qquad e_Ue_\theta=e_\theta e_U=0.
+\]
+The average selects $U$-fixed vectors; the cuspidal block has none.
+\boundary{The existence and classification of $\kappa_\theta$ are classical inputs. The idempotent calculation explains its exact finite selector.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Tensor refinement is a diagonal orbit problem}{Original Theorem 5.1}
+\plate{05_tensor_grid}{The $4\times6$ grid separates into two diagonal translation orbits, labelled 0 and 1.}
+The simultaneous translation action on $\mathbb Z/n\mathbb Z\times\mathbb Z/m\mathbb Z$ has
+\[
+ d=\gcd(n,m)\quad\text{orbits, each of length}\quad L=\operatorname{lcm}(n,m).
+\]
+Mackey decomposition then gives
+\[
+ \Ind_{W_{K_n}}^{W_K}\xi\otimes\Ind_{W_{K_m}}^{W_K}\eta
+ \simeq\bigoplus_{i=0}^{d-1}
+ \Ind_{W_{K_L}}^{W_K}\bigl(\xi_{L,n}\eta_{L,m}^{\Phi^i}\bigr).
+\]
+Here the subscripts denote norm lifts and the Frobenius superscript follows the fixed source convention. The dimension identity is exact: $dL=nm$.
+\boundary{These are interaction packets before combining isomorphic summands. A refined induced summand need not remain irreducible.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Exponent coordinates test inertia triviality}{Original Proposition 5.3}
+Write the residue character exponents as $a\bmod(q^n-1)$ and $b\bmod(q^m-1)$. The $i$th refined packet has exponent
+\[
+ c_i=a\frac{q^L-1}{q^n-1}+bq^i\frac{q^L-1}{q^m-1}
+ \pmod{q^L-1}.
+\]
+Norm lifting multiplies an exponent by the quotient of group orders. Shifting the second character by Frobenius multiplies its exponent by $q^i$. Multiplication of characters adds the two terms.
+
+For $q=2,n=4,m=6$, the common modulus is $2^{12}-1=4095$. Taking $a=b=1$, the two packets have
+\[
+ c_0=273+65=338,\qquad c_1=273+130=403.
+\]
+Both are nonzero modulo 4095, so neither packet contributes inertia invariants.
+
+\takeaway{The test is $c_i=0$ in the common modulus. A numerical-looking residue formula is an exact character calculation.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{The closing scalar carries noncompact information}{Original Propositions 3.5 and 4.4}
+\plate{06_cycle_scalar}{The closing scalar is basis-invariant after multiplication around the cycle.}
+In an orbit basis let $\Phi e_j=e_{j+1}$ for $j<n-1$ and $\Phi e_{n-1}=ae_0$. Then
+\[
+ \det(XI-\Phi)=X^n-a,\qquad \det\Phi=(-1)^{n-1}a.
+\]
+Rescaling the individual basis vectors changes edge coefficients, but their product remains $a$. An unramified twist $\nu$ does not change the inertia orbit and sends the closing scalar to $a\nu(\Phi)^n$.
+\takeaway{Compact inertia information alone does not determine the unramified completion. The cyclic scalar is additional data.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Local polynomials and fixed vectors}{Original Propositions 5.4--5.8}
+For a packet of orbit length $r$ and closing scalar $a$,
+\[
+ \det(I-u\Phi\mid V^{I_K})=
+ \begin{cases}1-au^r,&\text{if inertia acts trivially},\\1,&\text{otherwise}.\end{cases}
+\]
+Thus tame tensor local factors multiply $(1-a_iu^{r_i})^{-1}$ over precisely the refined packets whose inertia exponent vanishes.
+
+An inertia-trivial companion cycle has a Weil-fixed vector exactly when $a_i=1$, and then its fixed space is one dimensional. Therefore
+\[
+ \dim(\tau_\xi\otimes\tau_\eta)^{W_K}
+ =\#\{i:c_i=0,\ a_i=1\}.
+\]
+For an irreducible nontrivial tame atom of dimension $n>1$, wild inertia acts trivially and inertia has no fixed vectors. Hence
+\[
+ \Sw(\tau)=0,\qquad \operatorname{Art}(\tau)=n.
+\]
+\boundary{These exact tame formulas do not establish the full wild pair-factor identities required by H5.}
+
+\lesson{PART I / FINITE TAME COORDINATES}{Finite Gauss phases are unit scalars}{Original Section 6}
+For a nontrivial additive character $\psi$ of $\F_q$ and a nontrivial multiplicative character $\chi$ of $\F_q^\times$, define
+\[
+ G(\chi,\psi)=\sum_{x\in\F_q^\times}\chi(x)\psi(x),\qquad
+ \gamma(\chi,\psi)=q^{-1/2}G(\chi,\psi).
+\]
+The exact identities are
+\[
+ |G(\chi,\psi)|^2=q,\qquad
+ \gamma(\chi,\psi)\gamma(\chi^{-1},\psi)=\chi(-1).
+\]
+The magnitude calculation substitutes $x=ty$ in the double sum. The inner sum is $q-1$ for $t=1$ and $-1$ otherwise; multiplicative-character orthogonality supplies the result.
+
+The normalized scalar therefore lies on the unit circle. Its value depends on the declared additive character and lifting normalization. Finite Gauss phases capture a residue-field part of normalization.
+\boundary{A full wild local factor also contains ramification depth, additive-character conductor, measure normalization, and pair interaction data. One finite phase is not that full factor.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Translations and multipliers create Heisenberg packets}{Original Section 7}
+\plate{07_heisenberg}{The commutator is central and nontrivial when the pairing is nonzero.}
+For odd $p$ let $V=X\oplus X^*$ and
+\[
+ b((x,\xi),(y,\eta))=\eta(x)-\xi(y).
+\]
+The group $H(V)=V\times\F_p$ has product
+\[
+ (v,z)(w,t)=(v+w,z+t+\tfrac12b(v,w)).
+\]
+On $\mathcal H=\C^X$ the Schrödinger operator is
+\[
+ (\rho(x,\xi,z)f)(u)
+ =\psi(z+\xi(u)+\tfrac12\xi(x))f(u+x).
+\]
+Translations and character multipliers generate every matrix unit by finite Fourier inversion. Thus the representation is irreducible and has dimension $|X|=\sqrt{|V|}$.
+
+\lesson{PART II / FINITE WILD COMPARISON}{An isotropic average selects one line}{Original Propositions 7.3--7.6}
+The Schrödinger character is supported on the center:
+\[
+ \Tr\rho(v,z)=\begin{cases}|X|\psi(z),&v=0,\\0,&v\ne0.\end{cases}
+\]
+A nonzero translation has no fixed coordinate. A nontrivial multiplier has vanishing character sum.
+
+For a maximal isotropic subspace $L$ and a subgroup lift $\widetilde L$ with trivial central coordinate, the average
+\[
+ P_L=\frac1{|L|}\sum_{\ell\in\widetilde L}\rho(\ell)
+\]
+is a self-adjoint idempotent. Its trace is $|X|/|L|=1$, because only the identity contributes. Its range is therefore one dimensional.
+
+For $L=X$ this range consists of constant functions:
+\[
+ (P_Lf)(u)=|X|^{-1}\sum_{x\in X}f(u+x).
+\]
+\takeaway{The complementary-line projector later used in arithmetic attachment is an exact operator in the Heisenberg image algebra. Its existence is finite representation theory.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Projective choices leave a commutator invariant}{Original Section 8}
+\plate{08_radical}{A cocycle contains choices; its alternating commutator forgets scalar rescaling.}
+For $T_aT_b=c(a,b)T_{a+b}$ define $b_c(a,b)=c(a,b)c(b,a)^{-1}$. Replacing $T_a$ by $\lambda_aT_a$ multiplies $c$ by the symmetric coboundary $\lambda_a\lambda_b\lambda_{a+b}^{-1}$, so $b_c$ is unchanged.
+
+The radical consists of $a$ commuting projectively with every $b$. Its quotient carries a nondegenerate alternating pairing. In the nondegenerate case the twisted group algebra has scalar center and is a full matrix algebra:
+\[
+ \C_c[A]\simeq M_{\sqrt{|A|}}(\C).
+\]
+\boundary{This constructs the finite envelope for a supplied projective action. It does not produce a canonical action for every arbitrary wild inertia atom.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Clifford multiplicity is the correct action space}{Original Section 9}
+Supply finite groups $N\triangleleft G$, elementary abelian quotient $A=G/N$, and irreducibles $\Pi$ and $\rho$, with $\rho$ fixed up to isomorphism by $G$ and $\Pi|_N$ isotypic. The multiplicity space is
+\[
+ M_\rho=\operatorname{Hom}_N(W,X),\qquad W\otimes M_\rho\simeq X.
+\]
+For a section $s:A\to G$ and intertwiners $I_a$ of $\rho$, write
+\[
+ \Pi(s(a))=I_a\otimes T_a.
+\]
+The operators $T_a$ give a projective action on $M_\rho$. Section and intertwiner changes alter it only by scalar changes and conjugation. Its commutator, radical, and symplectic quotient are intrinsic to this supplied datum.
+
+If the commutator is nondegenerate, $\dim M_\rho=\sqrt{|A|}$. A tame stabilizer acting by automorphisms of the datum preserves the induced symplectic form.
+\boundary{The normal group, isotypic constituent, and one-break interpretation are assumptions of the restricted construction. They have not been constructed for every wild atom.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{The type-side quotient is an actual group quotient}{Original Section 10}
+For an actual maximal simple character $\theta$ of $\GL_n(K)$, classical simple-type theory supplies
+\[
+ H_\theta^1\subseteq J_\theta^1\subseteq J_\theta,
+ \qquad V_\theta=J_\theta^1/H_\theta^1.
+\]
+The commutator pairing is encoded by
+\[
+ \psi_0(h_\theta(\bar x,\bar y))=\theta([x,y]).
+\]
+It is nondegenerate and alternating. The corresponding irreducible Heisenberg representation $\eta_\theta$ of $J_\theta^1$ contains $\theta$ and satisfies
+\[
+ \dim\eta_\theta=\sqrt{|J_\theta^1/H_\theta^1|}.
+\]
+The canonical beta extension supplies a normalized extension of this representation using the declared type-theory data and finite corrections.
+\boundary{An arbitrary abstract symplectic space is not automatically a quotient of an actual simple character. An equivalent inducing carrier need not have this original quotient or a newly invented canonical beta extension.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{A supplied bridge reduces comparison to a scalar}{Original Section 11}
+\plate{09_bridge}{The symplectic isometry is an input. Stone--von Neumann supplies the lower intertwiner.}
+Supply an equivariant symplectic isometry $\iota:V_\rho\to V_\theta$, a common nontrivial central character, and, in characteristic two, the compatible refinements and lift of central extensions.
+
+The two pulled-back irreducible Heisenberg representations then have the same central character. Stone--von Neumann gives an invertible $U$ with
+\[
+ U\omega_\rho(h)=\omega_\theta(\iota_H(h))U.
+\]
+Schur's lemma makes $U$ unique up to a nonzero scalar. After honest cyclic stabilizer linearizations, their discrepancy is a character $\delta:C\to\C^\times$. Equality at one generator kills this character.
+\boundary{Finite linearization does not identify the stabilizer action with an arithmetic action on a newly constructed common candidate.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Odd phases have a determinant certificate}{Original Section 12}
+For an odd prime $p$, a symplectic space $V$ of dimension $2r$, and fixed-point-free $g\in\Sp(V)$, the declared finite Weil normalization gives
+\[
+ \Phi_p(g,V)=\left(\frac{-1}{p}\right)^r
+ \left(\frac{\det(g-I)}p\right).
+\]
+With $P_g(X)=\det(XI-g)$, even dimension gives $\det(g-I)=P_g(1)$. The phase is therefore read from a characteristic polynomial and a square class.
+
+For a hyperbolic space $U\oplus U^*$ with $g=(a,(a^{-1})^*)$ and $a-I$ invertible,
+\[
+ \Phi_p(g,U\oplus U^*)=\left(\frac{\det a}{p}\right).
+\]
+If $g$ has order prime to $p$, then
+\[
+ V=\ker(g-I)\perp\operatorname{im}(g-I).
+\]
+The moving summand is nondegenerate and fixed-point-free. Orthogonal block phases multiply.
+\boundary{The fixed-point-free formula applies to the moving part. The full trace with a fixed part requires its declared normalization data.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Two dyadic refinements can have opposite signs}{Original Section 13}
+\plate{10_quadratic_planes}{The entries are exact values in $\F_2$; both polar forms are $xy'+x'y$.}
+A quadratic refinement satisfies $q(x+y)+q(x)+q(y)=b(x,y)$. On a plane,
+\[
+ q_0(x,y)=xy,\qquad q_1(x,y)=xy+x+y.
+\]
+For $q_0$ there are three zeros and one one, so its Gauss sum is $2$. For $q_1$ there is one zero and three ones, so its sum is $-2$. The alternating forms agree but the Arf invariants differ.
+\[
+ \sum_{x\in V}(-1)^{q(x)}=(-1)^{\Arf(q)}2^r,
+ \qquad \dim V=2r.
+\]
+\takeaway{Keeping the alternating form alone loses dyadic phase information. The refinement and the marked central extension must travel with the packet.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Refinements form an affine family}{Original Propositions 13.2 and 13.8--13.9}
+\plate{11_arf_counts}{Exact counts of refinements of a fixed nondegenerate alternating space.}
+The difference between two refinements is linear. Nondegeneracy identifies every linear form with $b(v,\cdot)$, so all refinements are
+\[
+ q_v(x)=q(x)+b(v,x),\qquad \Arf(q_v)=\Arf(q)+q(v).
+\]
+The numbers of the two Arf types are
+\[
+ 2^{r-1}(2^r+1),\qquad 2^{r-1}(2^r-1).
+\]
+For $r=1$ these are 3 and 1. For $r=3$ they are 36 and 28. Orthogonal sums add Arf invariants and multiply normalized Gauss signs.
+\takeaway{Equal dimension and equal alternating form do not force equal refinement. An embedding fixed in advance must preserve $q$ pointwise.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{A spanning tree fixes the vertex gauges}{Original Theorem 14.2}
+\plate{12_holonomy}{Four vertices and five edges leave two fundamental cycle tests.}
+Let $A_e:V_u\to V_v$ and $B_e:W_u\to W_v$ be invertible transports, with reverse-edge inverses. Fix a root comparison $U_r$.
+
+Choose a spanning tree. Along its unique root path $p_v$ define
+\[
+ U_v=B_{p_v}U_rA_{p_v}^{-1}.
+\]
+This forces every tree-edge equation $U_vA_e=B_eU_u$. Each non-tree edge closes one fundamental cycle. Its edge equation holds exactly when the root comparison intertwines that cycle's holonomy.
+\takeaway{All edge equations are equivalent to the fundamental cycle identities $U_rA_\gamma=B_\gamma U_r$. Holonomy need not be individually trivial; the two holonomy representations must agree through the root map.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Cycle defects measure edge residuals exactly}{Original Proposition 14.6}
+For a non-tree edge $e:u\to v$, let
+\[
+ D_e=U_rA_{p_v}^{-1}A_eA_{p_u}
+      -B_{p_v}^{-1}B_eB_{p_u}U_r.
+\]
+Substituting the tree-defined gauges gives the exact identity
+\[
+ U_vA_e-B_eU_u=B_{p_v}D_eA_{p_u}^{-1}.
+\]
+Consequently
+\[
+ \|U_vA_e-B_eU_u\|
+ \le\|B_{p_v}\|\,\|D_e\|\,\|A_{p_u}^{-1}\|.
+\]
+Small cycle defects give small edge residuals when the tree transports are conditioned. Zero defects give exact finite gluing. In the scalar case there are $|E|-|V|+1$ independent tests on a connected graph.
+
+\boundary{The theorem assumes both sets of fibers and transports already exist. Gauge propagation is not an arithmetic existence theorem.}
+
+\lesson{PART II / FINITE WILD COMPARISON}{Orthogonal breaks become tensor factors}{Original Section 15}
+\plate{13_break_tensor}{Symplectic direct sum and Heisenberg tensor product are compatible.}
+For $V=\perp_sV_s$ and compatible central characters,
+\[
+ \omega_V\simeq\bigotimes_s\omega_{V_s},\qquad
+ \prod_s\sqrt{|V_s|}=\sqrt{|V|}.
+\]
+The groups combine by a central product. Tensoring the individual intertwiners gives the full finite bridge, once the stabilizer actions and phases agree. Transport-graph compatibility is then the matrix holonomy condition.
+\boundary{Separate actual type quotients at each break do not, merely by tensoring, become one actual maximal simple type in the source atom's rank. Constructing a common arithmetic carrier and recovering a candidate are the extra realization requirements.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{A recursive matrix gives a literal parameter}{Blocks 166--167, tower notes}
+\plate{14_recursive_parameter}{The recursive lift is an actual filtered right inverse of normalized corestriction.}
+Start over a coefficient field $L$ with uniformizer $t_L$ and form
+\[
+ E=L(\alpha),\qquad \alpha^p-\alpha=t_L^{-q}.
+\]
+At a recursive stage, $C$ is an actual matrix over $E$. The outer matrix is
+\[
+ B=\alpha I_m+\operatorname{Lift}_E(C).
+\]
+The lift has prescribed corestriction and preserves its exact filtration valuation. The field and simple-stratum proof uses the actual displayed matrix, together with the cited type-theory derived-stratum criterion.
+\boundary{The derived field $E[C]$ is not identified with the final field $L[B]$. The recursion proves a literal defining sequence without silently declaring intermediate fields to be nested inside the final field.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{The approximation degrees and critical levels}{Blocks 166--167, combined arithmetic statements}
+\plate{15_degree_levels}{These examples were recomputed exactly; the all-length assertions are proved separately.}
+For increasing permitted $h_1<\cdots<h_d$, put $q_i=(p+1)h_i$ and $N=p^d$. The approximation-field degrees are $p,p^2,\ldots,p^d$, with
+\[
+ n_j=p^{d-j}q_{d-j+1}.
+\]
+For odd $p$, require $p\nmid h_i$. For $p=2$, require all $h_i$ odd and positive. The leading ambient level is $n_1$; $n_2,\ldots,n_d$ are the successive critical approximation levels.
+\boundary{Every amplified ambient approximation still has leading level $n_1$. The declining values plotted here are critical levels, not new leading valuations for those ambient matrices.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Odd towers retain native trace zero}{Block 166, recursive tower and full-character proofs}
+For odd $p$, $\Tr_{E/L}(\alpha)=0$. Choose $b$ with $qb\equiv-1\pmod p$, let $a=(qb+1)/p$, and set $z=t_L^a\alpha^b$. Then $z$ is a uniformizer.
+
+For its Eisenstein polynomial $f$ and constant-coordinate projection $P_0$, the normalized corestriction uses $\kappa=-f'(z)/z^{p-1}$. Writing $u_0=s(P_0)$,
+\[
+ \operatorname{Lift}_E(C)=u_0^{-1}CP_0,\qquad
+ \tr_L\operatorname{Lift}_E(C)
+ =\Tr_{E/L}(\kappa^{-1}\tr_EC).
+\]
+If $\tr_EC=0$, the lift has trace zero. Adding $\alpha I_m$ preserves trace zero. Induction therefore gives trace zero at every native stage and every native correction.
+
+\takeaway{This is stronger than the automatic ambient trace cancellation from a multiplicity divisible by $p$. Native trace controls the scalar restriction used in full-character construction.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Dyadic trace one is deep enough}{Block 167, depth invariant}
+\plate{16_scalar_depth}{The scalar correction disappears when its argument lies in $t\OO_F$.}
+Fix $\psi_F$ of conductor $t\OO_F$. On a scalar unit $u\in U_F^s$, the additive correction sees $(u-1)\tr\delta$. Hence
+\[
+ v_F(\tr\delta)+s\ge1
+ \quad\Longrightarrow\quad
+ \psi_F((u-1)\tr\delta)=1.
+\]
+The dyadic native corrections have trace 1. Its valuation is 0, so $s=1$ already satisfies the inequality. Thus trace zero is sufficient but unnecessary.
+\boundary{Euler's weighted-visibility viewpoint motivated this step. No Euler coefficient theorem is an arithmetic proof input here. In characteristic two, the weights are uniformizer depths, not integer powers of two in the coefficient field.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Native trace and ambient trace are different}{Block 167, exact trace transport}
+\plate{17_native_ambient_trace}{A trace-one native matrix amplified by an even multiplicity has ambient trace zero.}
+For odd $q$, let $a=(q+1)/2$ and $z=t_L^a\alpha$. Then
+\[
+ z^2+t_L^az+t_L=0,\quad \Tr_{E/L}\alpha=1,
+ \quad\operatorname{Lift}_E(C)=(z^2/t_L)CP_0.
+\]
+The trace identity is
+\[
+ \tr_L\operatorname{Lift}_E(C)=\Tr_{E/L}(\alpha\tr_EC).
+\]
+It sends inner trace 1 to outer trace 1. At native rank $2^j$, every constructor has trace 1; its next native correction has trace $1-2\cdot1=1$. In rank 8, the earlier amplified approximations instead have traces $0,0$, and the final matrix has trace 1.
+\takeaway{Only the appropriate native trace establishes the scalar-character compatibility at each recursive stage.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Full characters require shallow compatibility}{Blocks 166--167, central character induction}
+The full-character induction has an essential order. First construct the full native character, then transfer it to a higher multiplicity, add the actual correction on its forced domain, and extend at the next maximal native parameter field.
+
+On a scalar $u\in U_F^1$, multiplicity $p$ transfer gives
+\[
+ \Theta_j(uI)=\theta_j(u^p)=1.
+\]
+The correction is trivial on the scalar intersection by trace zero in the odd case, or integral trace and the depth inequality in the dyadic case. The forced deep character therefore agrees with the imposed trivial scalar character on their intersection. A finite abelian unit-character extension supplies the full next character.
+
+For an odd dyadic critical level $r$, put $m=\lfloor r/2\rfloor$. The endpoint satisfies $2(m+1)-r=1$, making the additive cross term lie in the character's radical.
+\boundary{Checking a leading trace alone does not check shallow forced values. The earlier fixed-field central argument failed on an actual scalar unit; the recursive native-field proof repairs that problem.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{The same arithmetic candidate has exact profiles}{Combined statements 166--167}
+Let $N=p^d$ and retain the constructed full character, canonical beta extension, and compatible central completion. Both families give an actual irreducible admissible supercuspidal candidate of $\GL_N(F)$ with torsion number 1.
+
+For odd $p$,
+\[
+ \begin{aligned}
+ \Sw(\pi)&=p^{d-1}(p+1)h_d,\\
+ \dim_{\F_p}(J^1/H^1)&=N-1,\quad\dim\eta=p^{(N-1)/2},\\
+ a(\pi^\vee\times\pi)&=p^{2d}-1+\sum_{i=1}^d(p^{2i}-p^{2i-2})h_i.
+ \end{aligned}
+\]
+For $p=2$,
+\[
+ \begin{aligned}
+ \Sw(\pi)&=3\,2^{d-1}h_d,\\
+ \dim_{\F_2}(J^1/H^1)&=N-2,\quad\dim\eta=2^{N/2-1},\\
+ a(\pi^\vee\times\pi)&=N^2-1+\sum_{i=1}^d3\,4^{i-1}h_i.
+ \end{aligned}
+\]
+\boundary{These identities belong to the same constructed candidate. Matching numerical profiles does not identify a source Weil atom, an endo-class, or H5 pair factors.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Dyadic capacity has two distinct dimensions}{Block 167, capacity proof}
+\plate{18_capacity}{Compare symplectic dimensions first. The original low-rank quotient remains too small.}
+The host symplectic quotient has dimension $N-2$ over $\F_2$; the supplied whole source of $d$ planes has dimension $2d$. Its original-type embedding is possible by dimension exactly when $d\ge3$.
+\begin{center}\begin{tabular}{rrrrr}\toprule
+$N$ & host quotient & source quotient & host carrier & source carrier\\\midrule
+2&0&2&1&2\\4&2&4&2&4\\8&6&6&8&8\\16&14&8&128&16\\\bottomrule
+\end{tabular}\end{center}
+\boundary{The low-rank obstruction concerns the original maximal-simple-character carrier. Enlarged actual arithmetic carriers repair ranks 2 and 4 without changing this quotient theorem.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{A sector can retain the whole source packet}{Blocks 166--167, scalar-pushout attachment}
+Suppose the supplied full break characters have labelled plane quotients and satisfy the one-vertex scalar-pushout assembly contract, initially with $C=1$. Their source representation has dimension $p^d=N$.
+
+For odd $p$, the actual leading subspace has dimension $(p-1)p^{d-1}\ge2d$. For dyadic $d\ge3$, use the host quotient dimension $N-2\ge2d$. Choose the declared symplectic embedding into the actual host.
+
+An orthogonal splitting $W=V_{\rm src}\perp V_{\rm src}^{\perp}$ gives
+\[
+ \eta_W\simeq\eta_{\rm src}\otimes\eta_{\perp}.
+\]
+A maximal-isotropic average on the complementary Heisenberg factor selects a one-dimensional representation line. Tensoring its projector with the identity gives a rank-$N$ image-algebra projector. The retained induction/recovery theorem recovers the same $\Lambda$ and then the same $\pi$.
+\boundary{For $p>3$, genuinely supplied plane data are required: a native minimal rank-$p$ quotient has dimension $p-1$ and is not automatically a plane. The construction retains source labels but does not prove their old numerical depth placement.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Retain the whole marked finite extension}{Block 167, markings proof}
+\plate{21_marked_extension}{Squares are preserved by the actual map of marked extensions.}
+For a full character $\theta_i$, its scalar pushout is
+\[
+ \mathcal P_i=(\C^\times\times J_i^1)/
+ \{(\theta_i(h)^{-1},h):h\in H_i^1\}.
+\]
+A center-fixing comparison retains every supplied character value. In the dyadic case retain the image of the entire marked finite subgroup, its central embedding, lifts, squares, refinements, and phases. An actual extension map $F_0$ obeys $F_0(a)^2=F_0(a^2)$.
+\boundary{The unmarked complex pushouts of $D_8$ and $Q_8$ coincide, while their marked finite $\mu_2$ extensions differ. Retaining only the central $\{\pm1\}$ loses that distinction. Invisible kernel elements already removed by the central character cannot be recovered by pushout.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{A native quadratic marking adds an embedding condition}{Block 167, markings theorem}
+Transported source markings and an independently prescribed native host marking are different inputs. If the native host refinement $q_W$ is independently supplied, a prescribed embedding $f$ must satisfy
+\[
+ q_W(f(v))=q_{\rm src}(v)\quad\text{for every }v.
+\]
+With a free embedding and equal dimensions, quadratic classification requires equal Arf invariants. This is the rank-eight case: both quotient spaces have dimension 6.
+
+For $d\ge4$, the dyadic host has at least one spare symplectic plane. The complement's Arf type can absorb the difference, so either source Arf type admits an embedding into the supplied native quadratic host.
+
+\takeaway{Dimension controls symplectic room. Arf controls a quadratic isometry class. A pointwise equation controls an already chosen embedding.}
+\boundary{Capacity does not manufacture a canonical native finite marking or identify it with the transported marking. That comparison remains outside the general realization proof.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Low-rank repair enlarges an actual compact group}{Block 167, low-rank constructions}
+\plate{19_enlarged_carrier}{The new carrier occurs in the original candidate; it is not an abstract extra tensor factor.}
+At rank two, write $q=2m+1$, $m\ge1$, and use
+\[
+ J=U_K^1U_A^{m+1},\qquad P=U_K^1U_A^m.
+\]
+Then $J\triangleleft P$, $[P:J]=2$, and $P\cap(K^\times J)=J$. The conjugate character ratio $\lambda=\theta^g/\theta$ is nontrivial and sign-valued. With $H_0=\ker\lambda$,
+\[
+ P/H_0\simeq\F_2^2,\qquad E=\Ind_J^P\theta,\quad\dim E=2.
+\]
+The represented diagonal sign and off-diagonal generators anticommute, proving the nondegenerate Heisenberg structure.
+\boundary{The original quotient $J^1/H^1$ is still zero-dimensional. The new pair is a separate arithmetic assembly carrier.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Rank four gains a four-dimensional carrier}{Block 167, rank-four enlarged carrier proof}
+Let $E_0/F$ be the actual outer quadratic approximation field and $B=\operatorname{End}_{E_0}(F^4)$. With lower odd critical level $r=3h_1=2m+1$ and half leading level $a=3h_2>r$, define
+\[
+ P=J\,U_B^m.
+\]
+The filtered-centralizer estimate proves this is a compact group with $J$ normal of index two. It does not assume $E_0\subset K$.
+
+For a new coset representative $u$, the ratio $\lambda=\theta^u/\theta$ on the actual $H^1$ is nontrivial and sign-valued. Setting $H_0=\ker\lambda$ gives
+\[
+ P/H_0\simeq\F_2^4,\qquad E=\Ind_J^P\eta,\quad\dim E=4.
+\]
+Its represented commutators are scalar; the quotient has exponent two; irreducibility and the exact scalar preimage prove nondegeneracy. The finite scalar center can exceed $\mu_2$.
+\boundary{No literal extraspecial quotient is claimed. Full character values and marked attachment are retained through the actual finite extension.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Induction in stages recovers the same candidate}{Block 167, low-rank recovery proof}
+\plate{20_induction_stages}{The noncompact extension $\Lambda$ is fixed before forming $\Sigma$.}
+At both low ranks, $K^\times$ normalizes $P$. Put
+\[
+ \mathcal N=K^\times J,\quad\mathcal M=K^\times P,
+ \qquad\Sigma=\Ind_{\mathcal N}^{\mathcal M}\Lambda.
+\]
+The subgroup $\mathcal N$ is normal of index two, $\Sigma|_P\simeq E$, and $\Sigma$ is irreducible. Induction in stages proves
+\[
+ \pi\simeq\cInd_{\mathcal M}^{G}\Sigma.
+\]
+\takeaway{The parameter, full character, original canonical beta-extension data, central character, and noncompact scalar remain those of the original candidate. The inducing carrier changes.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Compact recovery must remember the noncompact root}{Block 167, enlarged-carrier contract}
+Let $X=\cInd_J^G\eta$ and retain $A_0=\Lambda(\varpi_K)$. Define the normalized shift
+\[
+ (Tf)(g)=A_0^{-1}f(\varpi_Kg).
+\]
+The original candidate is the quotient
+\[
+ X/(T-1)X\simeq\pi.
+\]
+This does not split before central normalization: a vector of $X$ has finite support modulo compact $J$, whereas a scalar uniformizer shifts determinant valuations. It has no nonzero eigenvector with the required central eigenvalue.
+
+After imposing the already fixed central character, the relevant quotient is cyclic of order $N$. Then $T^N=1$ and the finite average
+\[
+ e_\Lambda=\frac1N\sum_{i=0}^{N-1}T^i
+\]
+selects the same extension. The operator acts on a complex representation space, where division by $N$ is valid.
+\boundary{This is a different recovery mechanism from a finite sector inside the original $\eta$. The root is retained, not reconstructed from the compact packet alone.}
+
+\lesson{PART III / ACTUAL ARITHMETIC CONSTRUCTION}{Central completion is a construction choice}{Blocks 166--167, full-character completion}
+\plate{22_completion}{This diagram starts with an already constructed compatible arithmetic host.}
+The full character is trivial on $U_F^1$. Residue data and the noncompact scalar can then match a prescribed smooth central quasicharacter $\omega$ trivial on $U_F^1$, when completion choices are free or already compatible.
+
+For $F=\F_2((t))$, the residue unit group is trivial, so these covered central characters are unramified. An $N$th root in $\C^\times$ fixes the action required by $\omega(t)$. All choices are recorded before invoking H5.
+
+\boundary{An incompatible immutably supplied completion is not silently replaced. Nor is an arbitrary one-factor wild determinant assumed trivial. The source central character must belong to the covered class.}
+\takeaway{A root choice completes an existing candidate. It does not prove the general realization conjecture or the same candidate's pair-factor equalities.}
+
+\lesson{PART IV / REALIZATION AND COMPARISON}{Why nontrivial stabilizer actions need another step}{Block 166, stabilizer contract}
+For the current totally ramified degree-$p^r$ maximal-type host, character-preserving normalizers have
+\[
+ N/(F^\times J^1)\simeq\mathbb Z/p^r\mathbb Z.
+\]
+A native action of a finite prime-to-$p$ group $C$ on the quotient therefore factors through a $p$-group and is trivial.
+
+The kernel of the action of center-fixing scalar-extension automorphisms on $W$ is $\operatorname{Hom}(W,\C^\times)$, an elementary abelian $p$-group. Hence the full native scalar-extension action is trivial as well. Honest implementers on an irreducible Heisenberg carrier are scalar by Schur's lemma.
+
+\boundary{This is an obstruction to the native inner-normalizer route for this host. It does not refute the original finite contract or Conjecture 66. Original breakwise H2 may supply a genuinely nontrivial symplectic action on separate actual type targets. Transporting abstract operators does not by itself identify a common arithmetic action.}
+
+\lesson{PART IV / REALIZATION AND COMPARISON}{Genuine scalar phases can descend from a finite cover}{Block 166, scalar native attachment}
+There is a proved extension beyond $C=1$ when the prime-to-$p$ stabilizer acts trivially on the source extension and its honest operators on the entire rank-$N$ source carrier are $\chi(c)I_N$ in the actual inertia image.
+
+Under the same-source determinant central-character condition, the required scalar phase can be implemented by actual central matrices after a finite cover $\widetilde C\twoheadrightarrow C$. The kernel acts trivially on the whole recovered candidate, so the represented action descends to $C$.
+
+\takeaway{A cover may be needed even when the represented operator is a scalar. A direct matrix homomorphism from $C$ need not exist.}
+\boundary{The theorem requires a genuine inertia phase on the whole carrier, the fixed reciprocity convention, and compatible completion. It does not apply merely because an arbitrary abstract phase on a multiplicity subspace is scalar. It does not change a fixed canonical beta extension to force a desired action.}
+
+\lesson{PART IV / REALIZATION AND COMPARISON}{Numerical matching does not construct realization}{Blocks 162, 166--167, profile and capacity audits}
+For compact $J\subset\GL_n(F)$, the homomorphism $v_F\circ\det$ has finite image in $\mathbb Z$, hence image zero. An unramified character
+\[
+ \nu_a(g)=a^{v_F(\det g)}
+\]
+is therefore trivial on $J$. The compact packet restrictions of $\pi$ and $\pi\otimes\nu_a$ agree, while the central character changes by $a^n$ on a scalar uniformizer. Choosing $a^n\ne1$ gives a different atom.
+
+Block 167 also records a rank-eight skipped-degree $8\to2$ host with the same torsion, Swan, and self-pair conductor as the full tower, but quotient dimension 4 rather than 6.
+\takeaway{The finite packet, numerical profiles, and noncompact normalization contain different information. No one of these alone is a substitute for an arithmetic witness preserving the full declared datum.}
+
+\lesson{PART IV / REALIZATION AND COMPARISON}{Conjecture 66 isolates the missing existence claim}{Historical Theorem 16.2; final release scope}
+\plate{23_conjecture_boundary}{The upper existence arrow is conjectural. The lower comparison follows conditionally.}
+\textbf{Conjecture 66 (arithmetic packet realization).} Fix the declared class $\mathcal A$ of wild atoms and the paper's normalizations. For every $\rho\in\mathcal A$ with supplied H1--H4 assembled finite datum $d_\rho$, there is one actual admissible supercuspidal representation $\pi$ of $\GL_{\dim\rho}(F)$ and an arithmetic realization witness $R(d_\rho,\pi)$ recovering the packet and preserving its declared stabilizer action, central-extension and phase data, and compatible transports.
+
+Here $R$ includes actual arithmetic inducing data and explicit comparison and recovery. It is not merely the existence of abstract operators with the right commutators.
+\boundary{The conjecture is restricted to the declared admitted class. It does not assert that arbitrary coefficient targets, arbitrary partial hosts, or independently conflicting completion choices can all be extended.}
+
+\lesson{PART IV / REALIZATION AND COMPARISON}{H5 compares this same actual candidate}{Contract audit 162; conditional comparison proposition}
+Suppose $\pi$ is an actual admissible supercuspidal representation of the correct rank and $R(d_\rho,\pi)$ is supplied. If H5 gives equality of its required pair local factors with those of $\LLC(\rho)$ on the stipulated characterizing twist family, with the fixed normalizations, then
+\[
+ \pi\simeq\LLC(\rho).
+\]
+The proof applies the supplied local-factor characterization to these two actual representations. It does not need existence for other diagrams or H5 for every alternative completion.
+
+There is a logical difference between
+\[
+ \forall\pi\,[R(d,\pi)\Rightarrow\mathrm{H5}(\pi)]
+ \quad\text{and}\quad
+ \exists\pi\,[R(d,\pi)\land\mathrm{H5}(\pi)].
+\]
+The first statement can be vacuous. The second includes an actual witness. Choosing the established reference atom only supplies a profile-matching object; it leaves its recovery of $d$ unproved.
+\takeaway{H5 remains a conditional premise about the same independently constructed candidate. It is not renamed as an unconditional factor-comparison theorem.}
+
+\lesson{PART IV / REALIZATION AND COMPARISON}{What the restricted realizations establish}{Blocks 166--167, final composition reviews}
+\begin{itemize}
+\item Actual totally ramified parameter fields, literal defining sequences, full simple characters, and covered central completions exist throughout the stated odd-prime and dyadic families.
+\item Under the one-vertex, $C=1$, supplied full-character scalar-pushout contract, the whole marked packet has an actual arithmetic assembly carrier and same-candidate recovery.
+\item In the dyadic low ranks, the actual enlarged carriers restore capacity without changing the original maximal-simple quotient.
+\item Genuine scalar inertia phases have the separately stated finite-cover descent result.
+\end{itemize}
+The remaining general obligations include nontrivial prescribed symplectic stabilizer actions on a common arithmetic candidate, general sources and transport diagrams, comparison with independently fixed canonical native markings, and numerical layer placement when the declared contract requires it.
+
+\boundary{The constructions are substantial restricted realization theorems. Their scopes do not close universal Conjecture 66, and their profile identities do not prove H5.}
+
+\lesson{PART IV / EVIDENCE AND REPRODUCIBILITY}{Exact computation checks a bounded identity}{Block 167, computation contract; final verification records}
+The rank-eight run for $h=(1,3,5)$ produces an actual matrix with 25 nonzero Laurent-polynomial entries. Its checked leading and adjacent-correction grades are
+\[
+ -60,\quad-18,\quad-3.
+\]
+It checks normalized lifts, actual matrix identities, native traces 1, and amplified ambient traces $0,0,1$. The odd $p=3$ example $h=(1,2,4)$ has levels $144,24,4$ and native trace zero.
+
+These finite outputs have contracts, scripts, input pins, results, and execution records in the release. The critical exponents, simplicity, full-character existence, and arbitrary-length statements use the separate ordinary mathematical arguments.
+
+\textbf{Rebuilding the guide.} Run \texttt{python build.py --output-dir PATH}. The builder regenerates all vector plates, copies the editable TeX into that output directory, compiles the PDF, and writes a build report. The source uses only ordinary TeX packages and Python/Matplotlib for diagrams.
+\boundary{A bounded matrix run cannot establish the universal realization claim. No fresh Lean certificate for Blocks 166--167 is asserted by this guide.}
+
+\lesson{SOURCE MAP / SUPPLEMENTARY MATERIALS}{Where the complete arguments are retained}{Release source collection}
+\small
+\begin{tabular}{p{.26\linewidth}p{.68\linewidth}}\toprule
+Topic&Retained source anchor\\\midrule
+Finite tame and wild route&Original manuscript, Sections 2--16. The release traditional paper preserves the route with the Frobenius correction and explicit realization boundary.\\[5pt]
+Original endpoint contract&\texttt{ORIGINAL\_CONTRACT\_162.md}: common-type versus separate-type readings, same-candidate H5, and exact witness requirement.\\[5pt]
+Odd arithmetic constructor&\texttt{PROOF166.md}; \texttt{TRACE\_ZERO\_AS\_TOWER166.md}; \texttt{RECURSIVE\_TOWER166.md}.\\[5pt]
+Full-character induction&\texttt{TRACE\_ZERO\_CHARACTER\_\allowbreak{}INDUCTION166.md};\newline \texttt{DYADIC\_FULL\_CHARACTER167.md}.\\[5pt]
+Dyadic construction&\texttt{PROOF167.md}; \texttt{DYADIC\_AS\_TOWER167.md}; \texttt{DYADIC\_CAPACITY167.md}.\\[5pt]
+Marked finite extensions&\texttt{DYADIC\_MARKINGS167.md}, including native-refinement conditions and whole-subgroup transport.\\[5pt]
+Enlarged low ranks&\texttt{ENLARGED\_CARRIER\_CONTRACT167.md}; the rank-two, rank-four, and induction-in-stages notes.\\[5pt]
+Stabilizer boundary&\texttt{STABILIZER\_CONTRACT166.md}; \texttt{SCALAR\_NATIVE\_ATTACHMENT166.md}.\\[5pt]
+Reviews and computation&The accompanying audit directories, exact computation contracts, source pins, and execution manifests.\\\bottomrule
+\end{tabular}
+\normalsize
+\vfill
+The .md materials accompany the PDFs. Historical optimistic filenames or superseded reviews are preserved as history and do not override the final statements and scope records.
+\end{document}

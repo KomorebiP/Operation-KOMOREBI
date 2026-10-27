@@ -1,0 +1,84 @@
+\section{An explicit correction for a quadratic marking defect}\label{sec:correction}
+\subsection{The discrepancy is a vector, not an unspecified search}
+Suppose a symplectic embedding $f:(V,B_V)\to(W,B_W)$ has already been supplied. Put
+\[
+ q'(v)=q_W(f(v)),\qquad \ell(v)=q'(v)+q_V(v).
+\]
+The two quadratic refinements have the same polar form, so $\ell$ is linear. Nondegeneracy gives a unique vector $a\in V$ such that
+\[
+ \ell(v)=B_V(a,v)\quad\hbox{for every }v.
+ \tag{28.1}\label{eq:defect}
+\]
+Finding $a$ is therefore one linear solve over $\F_2$. It is not a search over all symplectic automorphisms.
+
+\begin{lemma}[Arf change under a linear defect]\label{lem:arfshift}
+With the above notation,
+\[
+ \Arf(q')+\Arf(q_V)=q_V(a).
+ \tag{28.2}\label{eq:arfshift}
+\]
+\end{lemma}
+\begin{proof}
+The refinement identity gives
+\[
+ q_V(v)+B_V(a,v)=q_V(v+a)+q_V(a).
+\]
+Translation by $a$ permutes $V$. Summing the signs yields $G(q')=(-1)^{q_V(a)}G(q_V)$. Equation~\eqref{eq:gauss} identifies the two signs.
+\end{proof}
+
+Define the transvection
+\[
+ T_a(v)=v+B_V(a,v)a.
+ \tag{28.3}\label{eq:transvection}
+\]
+It is symplectic and satisfies $T_a^2=1$. For $a=0$ it is the identity.
+
+\begin{proposition}[One-transvection quadratic correction]\label{prop:transvection}
+If $q_V(a)=0$, then
+\[
+ q'\bigl(T_a(v)\bigr)=q_V(v)\quad\hbox{for every }v.
+ \tag{28.4}\label{eq:corrected}
+\]
+Thus $f\circ T_a$ is a quadratic isometric embedding. The condition is equivalent to equality of the Arf invariants of $q'$ and $q_V$.
+\end{proposition}
+\begin{proof}
+Write $b=B_V(a,v)$. Since $B_V(a,a)=0$, one has $B_V(a,T_av)=b$. Also
+\[
+ q_V(T_av)=q_V(v)+bq_V(a)+b.
+\]
+Adding the defect term $B_V(a,T_av)=b$ gives
+\[
+ q'(T_av)=q_V(v)+bq_V(a).
+\]
+This equals $q_V(v)$ when $q_V(a)=0$. For completeness, expanding the two cross terms in $B_V(T_av,T_aw)$ makes them cancel in characteristic two, so $T_a$ is symplectic. Its square is the identity because the same value $b$ is added twice. Lemma~\ref{lem:arfshift} proves the equivalence of the condition.
+\end{proof}
+
+This yields a direct finite correction procedure: compute the defect on a basis, solve for $a$, test $q_V(a)$, and, when it vanishes, compose with $T_a$. The test suite verifies the formula for all linear defects in dimensions two, four and six, against every vector. It also checks the symplectic identities independently.
+
+\subsection{Equal Arf does not validate an unchanged map}
+Take $V=\F_2^2$ with $q_V(x,y)=xy$ and $q'(x,y)=xy+y$. Both refinements have Arf invariant zero. The identity map does not preserve the refinement: their values differ at $(0,1)$. The defect vector is $a=(1,0)$, which is isotropic. The transvection $(x,y)\mapsto(x+y,y)$ repairs the map.
+
+The existence of that repair is not a proof that the original identity map worked. When the original embedding is prescribed by an arithmetic placement or a transport diagram, replacing it must itself be permitted and checked. A corrected finite embedding must never be silently substituted into a diagram that required the old map.
+
+\subsection{Preserving a previously correct subspace}
+There is a useful relative form. Let $U\subseteq V$ be a subspace on which the defect vanishes. Then $a\in U^\perp$, so $T_a(u)=u$ for every $u\in U$. Under the isotropy condition $q_V(a)=0$, the correction therefore fixes all previously correct vectors in $U$ pointwise.
+
+This statement does not automatically preserve selected lifts above those vectors. It fixes the quotient embedding there. The extension criterion and section products still determine whether the chosen lifted correction respects all prescribed elements. The distinction is small in notation but essential in a full marked packet.
+
+\subsection{A conditional equivariant form}
+Suppose a finite group $C$ acts symplectically on $V$ and $W$, preserves $q_V$ and $q_W$, and the supplied $f$ is $C$-equivariant. Then
+\[
+ \ell(gv)=q_W(f(gv))+q_V(gv)=\ell(v).
+\]
+Nondegeneracy in \eqref{eq:defect} implies $ga=a$ for every $g\in C$. Consequently $T_a$ commutes with the action. When $q_V(a)=0$, the correction $f\circ T_a$ remains equivariant.
+
+\begin{corollary}[Equivariant finite correction under supplied actions]\label{cor:equiv}
+A supplied equivariant symplectic embedding with matching pullback Arf invariant admits the explicit equivariant quadratic correction of Proposition~\ref{prop:transvection}. If its defect already vanishes on a prescribed subspace, the correction fixes that subspace pointwise.
+\end{corollary}
+\begin{proof}
+The invariance computation makes $a$ fixed by $C$. Inserting $ga=a$ into \eqref{eq:transvection} gives $gT_a=T_ag$. The subspace assertion follows from $a\in U^\perp$.
+\end{proof}
+
+These are finite statements conditional on actual actions and an initial equivariant embedding. They do not construct such actions inside an arithmetic normalizer. Nor do they show that an arbitrary quadratic embedding provided by a dimension argument can be chosen equivariantly. The relative correction is a way to finish a specified finite step, not a replacement for its input.
+
+\source{This section develops an explicit elementary repair from the linear-defect observation in [Q16]. The Gauss-sum proof and transvection computation are given in full. They are ordinary finite deductions, not a new Lean result or a claim of a new general arithmetic existence theorem.}

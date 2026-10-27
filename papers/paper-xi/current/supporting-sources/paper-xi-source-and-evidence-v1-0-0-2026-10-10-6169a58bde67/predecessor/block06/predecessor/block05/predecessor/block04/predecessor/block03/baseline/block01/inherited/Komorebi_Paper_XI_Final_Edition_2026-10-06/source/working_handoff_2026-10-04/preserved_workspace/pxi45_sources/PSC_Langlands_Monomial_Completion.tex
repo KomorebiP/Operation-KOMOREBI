@@ -1,0 +1,2781 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools}
+\usepackage{bm}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2600
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else
+    \edef\@subjects{Primary:~\@primarysubjects}%
+  \fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty
+      \edef\@subjects{Secondary:~\@secondarysubjects}%
+    \else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}%
+    \fi
+  \fi
+  \ifpdf
+    \hypersetup{pdfsubject=\@subjects}%
+  \fi
+  \if@aom@oldkeywords\else
+    \@footnotetext{AMS Classification:~\@subjects.}%
+  \fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\AI}{\operatorname{AI}}
+\newcommand{\BC}{\operatorname{BC}}
+\newcommand{\Sym}{\operatorname{Sym}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Frob}{\operatorname{Frob}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\Stab}{\operatorname{Stab}}
+\newcommand{\Irr}{\operatorname{Irr}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\rec}{\operatorname{rec}}
+\newcommand{\Art}{\operatorname{Art}}
+\newcommand{\e}{\mathrm e}
+\newcommand{\one}{\bm 1}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\calO}{\mathcal O}
+\newcommand{\calP}{\mathcal P}
+\newcommand{\calR}{\mathcal R}
+\newcommand{\calS}{\mathcal S}
+\newcommand{\calX}{\mathcal X}
+\newcommand{\calL}{\mathcal L}
+\newcommand{\calW}{\mathcal W}
+\newcommand{\Zeta}{\mathcal Z}
+\newcommand{\Adele}{\mathbb A}
+\newcommand{\boxplusop}{\mathbin{\boxplus}}
+
+\graphicspath{{figures/}}
+
+\title[Monomial Langlands packets]{Monomial Langlands Packets, Artin Functoriality, and Compatible Completion}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{11F70}
+\subject{secondary}{msc2020}{11F80}
+\subject{secondary}{msc2020}{20C15}
+\subject{secondary}{msc2020}{11R39}
+\subject{secondary}{msc2020}{22E55}
+\keyword{Langlands functoriality}
+\keyword{automorphic induction}
+\keyword{monomial representation}
+\keyword{symmetric power}
+\keyword{compatible system}
+\keyword{Clifford theory}
+\copyrightnote{}
+\doinumber{}
+
+\pdfstringdefDisableCommands{\let\unskip\relax}
+\hypersetup{
+  pdftitle={Monomial Langlands Packets, Artin Functoriality, and Compatible Completion},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Monomial parameters, Artin functoriality, automorphic induction, compatible systems, and finite wild Clifford towers}
+}
+
+\begin{document}
+\begin{abstract}
+Let a monomial parameter be induced from a character of a finite index subgroup. We prove orbit decompositions for its tensor, symmetric, and exterior powers without requiring the inducing subgroup to be normal. Mackey theory gives tensor product and base change packets, while local induction formulas reduce monomial pair factors to character factors. We isolate the global hypothesis needed by each packet: every stabilizer and intersection must lie on a cyclic subnormal tower. Solvable automorphic induction then gives compatible automorphic realizations for all admissible operations. Potentially abelian systems are also treated. Multiplicity free systems reduce to character orbits. Split multiplicity packets reduce to finite quotient representations. Over a nilpotent Galois envelope, finite central covers resolve arbitrary projective multiplicities. We prove strong Artin for finite induction monomial image and arbitrary algebraic functoriality when every quotient of the joint finite image is induction monomial. Recursive admissibility handles iterated tensor operations. Brauer induction gives virtual monomial resolutions and analytic continuation for arbitrary finite image functorial L functions. Prime cyclic Clifford towers isolate the remaining descent steps for solvable image. General nonnilpotent projective multiplicities, wild comparison, and unrestricted functoriality remain open.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+The Langlands program contains several questions that are often discussed together but must be separated in a proof. One must construct local parameters, identify local representations, compare local factors, build global automorphic representations, produce compatible coefficient place companions, and prove functorial transfers. No single formalism can remove every existence problem at once.
+
+There is, however, a large sector in which all of these operations are explicit. A monomial representation is induced from a character. Its natural basis is indexed by a coset space, and the group acts by permuting that basis up to nonzero scalars. Tensor operations therefore preserve a visible orbit structure. Tensor powers are indexed by tuples. Symmetric powers are indexed by weak compositions. Exterior powers are indexed by subsets. Every orbit spans another induced representation from a one dimensional stabilizer character.
+
+This observation gives a direct packet calculus for monomial parameters. The tensor product formula is Mackey's double coset formula \cite{Mackey1952}. The symmetric and exterior formulas arise by applying the same induction principle to monomial bases. Their orbit counts are given by Burnside averages. In the dihedral case, the orbit formulas become closed decompositions for every symmetric power.
+
+The local consequences are substantial. Local class field theory identifies the inducing characters \cite{Serre1967,Tate1979}. Induction formulas for local constants reduce the L, epsilon, and gamma factors of monomial pairs to character factors over finite extensions \cite{Deligne1973}. This closes the complete pair factor calculation when both parameters are monomial. Supersolvable finite image parameters are monomial by classical character theory \cite{Isaacs1976,Serre1977}. The result therefore includes a wild finite image region that is larger than the tame sector.
+
+The global consequences use class field theory and automorphic induction. Cyclic base change and automorphic induction are established through the trace formula \cite{ArthurClozel1989,Langlands1980}. A solvable Galois extension supplies the original monomial induction. A later packet operation requires more: each stabilizer or double coset intersection must lie on a cyclic subnormal tower. We isolate that operation by operation condition. Nilpotence is exactly the finite group property that makes every subgroup admissible at once.
+
+This produces an explicit completed region of functoriality. Let \(E/F\) be a finite solvable Galois extension, let \(\chi\) be an algebraic Hecke character of \(E\), and let
+\[
+\pi=\AI_{E/F}(\chi).
+\]
+Every packet operation whose stabilizers are induction admissible is an explicit sum of induced characters from intermediate fields. In a nilpotent Galois closure every symmetric degree, every exterior degree, every tensor product, every base change, and every finite iteration of these operations is admissible. Automorphic induction turns the parameter identities into automorphic transfers and produces the compatible Galois systems at the same time.
+
+The paper also records a finite wild structure theorem. Every irreducible representation of a finite solvable group admits a prime cyclic Clifford tower along a composition series. At each prime index step, restriction is either irreducible or splits into one orbit of conjugates. In the second case the representation is induced from the lower subgroup. In the first case a global construction requires a matching cyclic descent. This does not construct the canonical type side bridge for a general wild parameter. It isolates the exact induction and descent steps in finite solvable image representation theory.
+
+A second closure theorem no longer assumes that the parameter is presented in monomial form. Every irreducible representation of a finite nilpotent group is monomial, and every subgroup of that group is induction admissible. The same induction property holds for finite abelian by cyclic groups. It follows that every finite image Galois parameter in either class is automorphic. More generally, arbitrary algebraic functoriality holds whenever every quotient of the joint finite image remains induction monomial. A separate recognition theorem starts with a compatible system that becomes a multiplicity free sum of algebraic characters over one finite extension. The character lines form monomial orbits, so admissible stabilizers again give automorphic induction.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.96\textwidth]{01_architecture.pdf}
+\caption{The completed induction sector begins with character packets and ends with explicit compatible automorphic systems.}
+\label{fig:architecture}
+\end{figure}
+
+The article does not claim unrestricted functoriality. It does not construct the general wild symplectic bridge, prove automorphy for arbitrary geometric compatible systems, or address the full Langlands program for general reductive groups. Its purpose is exact. It completes the monomial, admissible potentially abelian, and finite induction sectors, then identifies the remaining boundary without hiding it inside a conditional theorem.
+
+
+\section{Abelian and unramified layers}\label{sec:abelian_unramified}
+
+The first completed layer of the Langlands program is one dimensional.
+
+\begin{standardfact}[Local and global class field theory]\label{fact:class_field_completion}
+Local reciprocity identifies continuous characters of \(K^{\times}\) with one dimensional representations of \(W_K^{\mathrm{ab}}\). Global reciprocity identifies Hecke characters of a number field \(F\) with one dimensional abelian Langlands parameters. The local factors and global L functions agree under these correspondences \cite{Serre1967,Tate1979}.
+\end{standardfact}
+
+\begin{corollary}[Complete general linear rank one sector]\label{cor:gl1_complete}
+The local and global Langlands correspondence for \(\GL_1\), including local factors, global L functions, and compatible realizations of algebraic characters, is complete.
+\end{corollary}
+
+\begin{proof}
+This is \cref{fact:class_field_completion} together with the compatible l adic realization of algebraic Hecke characters.
+\end{proof}
+
+At an unramified place, functoriality is also formal on the parameter side.
+
+\begin{proposition}[Unramified functorial packet]\label{prop:unramified_functoriality}
+Let \(K\) have residue size \(q\), and let an unramified \(n\) dimensional parameter have semisimple Frobenius matrix \(A\). Let
+\[
+r:\GL_n(\CC)\longrightarrow\GL_N(\CC)
+\]
+be an algebraic representation. Then the transformed unramified parameter has Frobenius matrix \(r(A)\), and its local factor is
+\[
+\boxed{
+L(s,r\circ\phi)
+=
+\det
+\left(
+I-r(A)q^{-s}
+\right)^{-1}.
+}
+\]
+Direct sums, tensor products, symmetric powers, exterior powers, and duals are obtained by applying the corresponding matrix operation to \(A\).
+\end{proposition}
+
+\begin{proof}
+An unramified Weil parameter is determined by the semisimple conjugacy class of Frobenius. Composition with \(r\) sends that class to the class of \(r(A)\). The local factor is the defining unramified determinant. The listed operations are the corresponding algebraic representations of \(\GL_n(\CC)\).
+\end{proof}
+
+\begin{remark}\label{rem:unramified_boundary}
+This proves the local parameter transformation at every unramified place. It does not prove that the transformed local classes arise from one global automorphic representation.
+\end{remark}
+
+\section{Monomial induced parameters}\label{sec:monomial}
+
+Let \(G\) be a group and let \(H\triangleleft G\) be a normal subgroup of finite index. Put
+\[
+\Gamma=G/H.
+\]
+Let \(\chi:H\to\CC^{\times}\) be a character. All representations in the finite algebra sections are over \(\CC\). The same formulas hold over any algebraically closed field whose characteristic does not divide the finite quotient orders that occur.
+
+\begin{definition}[Monomial datum]\label{def:monomial_datum}
+A monomial datum is a triple
+\[
+(G,H,\chi)
+\]
+with \(H\triangleleft G\) of finite index and \(\chi\) a one dimensional representation of \(H\). Its induced representation is
+\[
+\rho=\Ind_H^G\chi.
+\]
+The datum is regular when
+\[
+\chi^\gamma\neq\chi
+\]
+for every nonidentity \(\gamma\in\Gamma\).
+\end{definition}
+
+Here
+\[
+\chi^g(h)=\chi(g^{-1}hg).
+\]
+Because \(H\) is normal, this depends only on the coset of \(g\) in \(\Gamma\).
+
+\begin{standardfact}[Mackey irreducibility criterion]\label{fact:mackey_irreducibility}
+The induced representation \(\Ind_H^G\chi\) is irreducible exactly when the stabilizer of \(\chi\) in \(G\) is \(H\). Equivalently, the datum is regular.
+\end{standardfact}
+
+This is the normal subgroup case of the Mackey criterion \cite{Mackey1952,Serre1977}.
+
+Choose a section
+\[
+s:\Gamma\longrightarrow G.
+\]
+The induced space has a basis \((e_\gamma)_{\gamma\in\Gamma}\). The vector \(e_\gamma\) is supported on the coset \(Hs(\gamma)\).
+
+\begin{proposition}[Monomial coset action]\label{prop:monomial_action}
+For every \(g\in G\) and \(\gamma\in\Gamma\), there is a nonzero scalar \(c(g,\gamma)\) such that
+\[
+\boxed{
+ g e_\gamma
+ =
+ c(g,\gamma)e_{\bar g\gamma}
+}
+\]
+where \(\bar g\) is the image of \(g\) in \(\Gamma\). For \(h\in H\),
+\[
+\boxed{
+ h e_\gamma
+ =
+ \chi^\gamma(h)e_\gamma.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Left translation carries the coset \(Hs(\gamma)\) to \(Hs(\bar g\gamma)\). Each coset support is one dimensional in the induced model, so the translated basis vector is a nonzero scalar multiple of the basis vector on the target coset. If \(h\in H\), the target coset is unchanged and the scalar is the conjugate character \(\chi^\gamma(h)\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.84\textwidth]{02_coset_basis.pdf}
+\caption{The induced basis is permuted up to scalars. Every tensor construction inherits an orbit decomposition.}
+\label{fig:coset_basis}
+\end{figure}
+
+\begin{corollary}[Restriction to the inducing subgroup]\label{cor:restriction_H}
+There is an exact decomposition
+\[
+\boxed{
+\Res_H^G\rho
+\cong
+\bigoplus_{\gamma\in\Gamma}\chi^\gamma.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Each basis line \(\CC e_\gamma\) is \(H\) stable and carries the character \(\chi^\gamma\) by \cref{prop:monomial_action}.
+\end{proof}
+
+\begin{proposition}[Dual monomial datum]\label{prop:dual_monomial}
+The contragredient representation satisfies
+\[
+\boxed{
+\rho^\vee
+\cong
+\Ind_H^G\chi^{-1}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The dual basis is again permuted by the quotient. The restriction to \(H\) carries the inverse characters \((\chi^\gamma)^{-1}=(\chi^{-1})^\gamma\). The induced representation with this coset action is \(\Ind_H^G\chi^{-1}\).
+\end{proof}
+
+\begin{definition}[Orbit line packet]\label{def:orbit_line_packet}
+Let a representation of \(G\) have a basis \((v_x)_{x\in X}\) that is permuted up to scalars. For a \(G\) orbit \(\calO\subseteq X\), the orbit line packet is
+\[
+V_{\calO}=\operatorname{span}\{v_x:x\in\calO\}.
+\]
+\end{definition}
+
+\begin{lemma}[Transitive monomial packet]\label{lem:transitive_packet}
+Let \(G\) act transitively on a basis \((v_x)_{x\in\calO}\) up to scalars. Fix \(x_0\in\calO\), let
+\[
+G_{x_0}=\Stab_G(x_0),
+\]
+and let \(\xi_{x_0}\) be the character by which \(G_{x_0}\) acts on the line \(\CC v_{x_0}\). Then
+\[
+\boxed{
+V_{\calO}
+\cong
+\Ind_{G_{x_0}}^G\xi_{x_0}.
+}
+\]
+\end{lemma}
+
+\begin{proof}
+The orbit basis is indexed by \(G/G_{x_0}\). Send the standard induced basis vector on a coset \(gG_{x_0}\) to \(gv_{x_0}\). The scalar transformation rule on the stabilizer makes the map well defined. It is equivariant and carries one basis to the other.
+\end{proof}
+
+\section{Mackey tensor packets and base change}\label{sec:mackey}
+
+We now allow two inducing subgroups. Let \(H,K\leq G\) have finite index. Let \(V\) and \(W\) be finite dimensional representations of \(H\) and \(K\).
+
+\begin{standardfact}[Mackey restriction formula]\label{fact:mackey_restriction}
+For a set of representatives \(g\in K\backslash G/H\),
+\[
+\Res_K^G\Ind_H^GV
+\cong
+\bigoplus_{g\in K\backslash G/H}
+\Ind_{K\cap gHg^{-1}}^K
+\left({}^gV\big|_{K\cap gHg^{-1}}\right).
+\]
+\end{standardfact}
+
+\begin{theorem}[Mackey tensor packet formula]\label{thm:mackey_tensor}
+Let \(\chi\) and \(\psi\) be characters of \(H\) and \(K\). For every representative \(g\in H\backslash G/K\), put
+\[
+H_g=H\cap gKg^{-1}
+\]
+and
+\[
+\theta_g
+=
+\chi|_{H_g}\,({}^g\psi)|_{H_g}.
+\]
+Then
+\[
+\boxed{
+\Ind_H^G\chi
+\otimes
+\Ind_K^G\psi
+\cong
+\bigoplus_{g\in H\backslash G/K}
+\Ind_{H_g}^G\theta_g.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Use the tensor identity
+\[
+\Ind_H^G\chi\otimes U
+\cong
+\Ind_H^G
+\left(
+\chi\otimes\Res_H^GU
+\right)
+\]
+with \(U=\Ind_K^G\psi\). Apply the Mackey restriction formula to \(\Res_H^G\Ind_K^G\psi\). Induction in stages changes each resulting term into \(\Ind_{H_g}^G\theta_g\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{03_mackey.pdf}
+\caption{Every double coset contributes one induced tensor packet.}
+\label{fig:mackey}
+\end{figure}
+
+\begin{corollary}[Same normal subgroup]\label{cor:same_normal_tensor}
+Assume \(H\triangleleft G\), put \(\Gamma=G/H\), and let \(\chi\) and \(\psi\) be characters of \(H\). Then
+\[
+\boxed{
+\Ind_H^G\chi
+\otimes
+\Ind_H^G\psi
+\cong
+\bigoplus_{\gamma\in\Gamma}
+\Ind_H^G
+\left(
+\chi\psi^\gamma
+\right).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The double cosets \(H\backslash G/H\) are the elements of \(\Gamma\). Every intersection subgroup is \(H\).
+\end{proof}
+
+\begin{corollary}[Adjoint packet for a regular monomial representation]\label{cor:adjoint_general}
+Let \(\rho=\Ind_H^G\chi\) with \(H\triangleleft G\). Then
+\[
+\rho\otimes\rho^\vee
+\cong
+\bigoplus_{\gamma\in\Gamma}
+\Ind_H^G
+\left(
+\chi(\chi^{-1})^\gamma
+\right).
+\]
+The summand at \(\gamma=1\) is
+\[
+\Ind_H^G\one_H,
+\]
+which is the regular representation of \(\Gamma\) inflated to \(G\).
+\end{corollary}
+
+\begin{proof}
+Apply \cref{cor:same_normal_tensor} and \cref{prop:dual_monomial}.
+\end{proof}
+
+\begin{theorem}[Base change packet formula]\label{thm:base_change_mackey}
+Let \(L\leq G\) and let \(\rho=\Ind_H^G\chi\). For representatives \(g\in L\backslash G/H\), put
+\[
+L_g=L\cap gHg^{-1}.
+\]
+Then
+\[
+\boxed{
+\Res_L^G\rho
+\cong
+\bigoplus_{g\in L\backslash G/H}
+\Ind_{L_g}^L
+\left({}^g\chi|_{L_g}\right).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+This is the Mackey restriction formula for the one dimensional inducing representation.
+\end{proof}
+
+\begin{remark}\label{rem:mackey_scope}
+The formulas are identities of representations. They do not require irreducibility of the induced summands. If a stabilizer character has additional symmetry, the corresponding induced packet may split further.
+\end{remark}
+
+\section{Tensor powers}\label{sec:tensorpowers}
+
+Return to a normal subgroup \(H\triangleleft G\), put \(\Gamma=G/H\), and let
+\[
+\rho=\Ind_H^G\chi.
+\]
+
+\begin{theorem}[Exact tensor power packet decomposition]\label{thm:tensor_power}
+For every positive integer \(m\),
+\[
+\boxed{
+\rho^{\otimes m}
+\cong
+\bigoplus_{(\gamma_2,\ldots,\gamma_m)\in\Gamma^{m-1}}
+\Ind_H^G
+\left(
+\chi\chi^{\gamma_2}\cdots\chi^{\gamma_m}
+\right).
+}
+\]
+In particular, the tensor power has exactly
+\[
+\abs\Gamma^{m-1}
+\]
+transitive monomial packets before further decomposition of individual induced summands.
+\end{theorem}
+
+\begin{proof}
+The tensor basis is indexed by tuples
+\[
+(\gamma_1,\ldots,\gamma_m)\in\Gamma^m.
+\]
+The quotient \(\Gamma\) acts diagonally by left multiplication. This action is free. Every orbit has one unique representative whose first coordinate is the identity, obtained by multiplying the tuple by \(\gamma_1^{-1}\). The stabilizer in \(G\) is therefore \(H\). On the representative line
+\[
+e_1\otimes e_{\gamma_2}\otimes\cdots\otimes e_{\gamma_m},
+\]
+the subgroup \(H\) acts by the product character
+\[
+\chi\chi^{\gamma_2}\cdots\chi^{\gamma_m}.
+\]
+Apply \cref{lem:transitive_packet} to every orbit.
+\end{proof}
+
+\begin{corollary}[Tensor power local factor reduction]\label{cor:tensor_power_factor_reduction}
+Every local factor of \(\rho^{\otimes m}\) is a product of local factors of induced one dimensional characters appearing in \cref{thm:tensor_power}.
+\end{corollary}
+
+\begin{proof}
+Local factors are multiplicative under direct sums. Apply the decomposition in \cref{thm:tensor_power}.
+\end{proof}
+
+\begin{example}[Cyclic quotient of order three]\label{ex:tensor_c3}
+Let \(\Gamma=C_3=\langle\sigma\rangle\). Then
+\[
+\rho^{\otimes2}
+\cong
+\Ind_H^G\chi^2
+\oplus
+\Ind_H^G(\chi\chi^\sigma)
+\oplus
+\Ind_H^G(\chi\chi^{\sigma^2}).
+\]
+The three tensor packets correspond to the relative displacement of the two coset indices.
+\end{example}
+
+
+\section{General coset orbit packets}\label{sec:general_coset}
+
+The normal subgroup hypothesis gives closed formulas in the quotient group. The orbit construction itself does not require normality. This more general form is needed when packet operations produce intermediate inducing fields that are not Galois over the base.
+
+Let \(H\leq G\) have finite index, let \(\chi:H\to\CC^\times\) be a character, and put
+\[
+\rho=\Ind_H^G\chi.
+\]
+Let
+\[
+X=G/H
+\]
+be the finite coset space with its left \(G\) action.
+
+\begin{proposition}[General induced coset basis]\label{prop:general_coset_basis}
+The representation \(\rho\) has a basis \((e_x)_{x\in X}\) whose lines are permuted transitively by \(G\). For every \(g\in G\) and \(x\in X\), there is a nonzero scalar \(c(g,x)\) such that
+\[
+\boxed{
+ ge_x=c(g,x)e_{gx}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Use the induced model of functions \(f:G\to\CC\) satisfying \(f(yh)=\chi(h)^{-1}f(y)\). The group acts by left translation. For every coset choose one function supported on that coset. Left translation sends one support coset to another and hence sends its one dimensional support line to the target support line.
+\end{proof}
+
+For a finite set \(X\), write
+\[
+\calC_m(X)
+=
+\left\{
+ a:X\to\NN:
+ \sum_{x\in X}a_x=m
+\right\}.
+\]
+The group \(G\) acts on \(\calC_m(X)\) through its action on \(X\).
+
+\begin{theorem}[General symmetric coset decomposition]\label{thm:general_symmetric_coset}
+For \(a\in\calC_m(X)\), let \(G_a\) be its stabilizer. The monomial line
+\[
+\CC e^a
+=
+\CC\prod_{x\in X}e_x^{a_x}
+\]
+is stable under \(G_a\). Let \(\xi_a:G_a\to\CC^\times\) be its character. Then
+\[
+\boxed{
+\Sym^m\rho
+\cong
+\bigoplus_{[a]\in G\backslash\calC_m(X)}
+\Ind_{G_a}^G\xi_a.
+}
+\]
+The packet indexed by \([a]\) has dimension \([G:G_a]\).
+\end{theorem}
+
+\begin{proof}
+The symmetric monomials form a basis. By \cref{prop:general_coset_basis}, \(G\) permutes this basis up to nonzero scalars. Split the basis into orbits and apply \cref{lem:transitive_packet} to every orbit.
+\end{proof}
+
+For \(S\subseteq X\), let \(G_S\) be its setwise stabilizer. Reordering an exterior monomial contributes the sign of the induced permutation of \(S\).
+
+\begin{theorem}[General exterior coset decomposition]\label{thm:general_exterior_coset}
+For each \(G\) orbit of \(r\) element subsets \(S\subseteq X\), let \(\zeta_S:G_S\to\CC^\times\) be the character on the line
+\[
+\CC e_S,
+\qquad
+ e_S=\bigwedge_{x\in S}e_x.
+\]
+Then
+\[
+\boxed{
+\bigwedge^r\rho
+\cong
+\bigoplus_{[S]\in G\backslash\binom{X}{r}}
+\Ind_{G_S}^G\zeta_S.
+}
+\]
+The packet indexed by \([S]\) has dimension \([G:G_S]\).
+\end{theorem}
+
+\begin{proof}
+The exterior monomials form a basis and are permuted up to the product of the scalar coset action and the permutation sign. Decompose into orbits and apply \cref{lem:transitive_packet}.
+\end{proof}
+
+\begin{corollary}[Monomial closure under the basic tensor operations]\label{cor:monomial_basic_closure}
+The class of finite direct sums of representations induced from one dimensional characters of finite index subgroups is closed under duals, tensor products, symmetric powers, and exterior powers.
+\end{corollary}
+
+\begin{proof}
+Duals are handled by the standard duality of finite induction. Tensor products are handled by \cref{thm:mackey_tensor}. Apply \cref{thm:general_symmetric_coset,thm:general_exterior_coset} to one induced summand. For a direct sum, use
+\[
+\Sym^m\left(\bigoplus_iV_i\right)
+\cong
+\bigoplus_{\sum_im_i=m}
+\bigotimes_i\Sym^{m_i}V_i
+\]
+and
+\[
+\bigwedge^r\left(\bigoplus_iV_i\right)
+\cong
+\bigoplus_{\sum_ir_i=r}
+\bigotimes_i\bigwedge^{r_i}V_i.
+\]
+Repeated use of the tensor formula completes the proof.
+\end{proof}
+
+\begin{remark}\label{rem:normal_closed_counts}
+Normality is needed only for the closed regular quotient formulas and their Burnside counts. The orbit induction formulas remain exact for an arbitrary finite index inducing subgroup.
+\end{remark}
+
+\section{Symmetric power orbit packets}\label{sec:symmetric}
+
+Return to the normal subgroup setting of \cref{sec:monomial}. The general decomposition is \cref{thm:general_symmetric_coset}. Normality identifies the coset set with the regular quotient and gives closed orbit counts.
+
+Let
+\[
+\calC_m(\Gamma)
+=
+\left\{
+\bm a=(a_\gamma)_{\gamma\in\Gamma}
+\in\NN^{\Gamma}:
+\sum_{\gamma\in\Gamma}a_\gamma=m
+\right\}.
+\]
+The quotient \(\Gamma\) acts on \(\calC_m(\Gamma)\) by left translation of the indices.
+
+For \(\bm a\in\calC_m(\Gamma)\), define the symmetric monomial
+\[
+e^{\bm a}
+=
+\prod_{\gamma\in\Gamma}e_\gamma^{a_\gamma}
+\in
+\Sym^m\rho.
+\]
+Let
+\[
+\Gamma_{\bm a}=\Stab_\Gamma(\bm a)
+\]
+and let \(G_{\bm a}\) be its inverse image in \(G\).
+
+\begin{proposition}[Symmetric stabilizer character]\label{prop:symmetric_stabilizer_character}
+The line \(\CC e^{\bm a}\) is stable under \(G_{\bm a}\). It carries a character
+\[
+\xi_{\bm a}:G_{\bm a}\longrightarrow\CC^{\times}.
+\]
+Its restriction to \(H\) is
+\[
+\boxed{
+\xi_{\bm a}|_H
+=
+\prod_{\gamma\in\Gamma}
+(\chi^\gamma)^{a_\gamma}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The monomial action in \cref{prop:monomial_action} sends \(e^{\bm a}\) to a nonzero scalar multiple of the monomial indexed by the translated composition. Elements of \(G_{\bm a}\) preserve the index and therefore preserve the line. The scalar action on a one dimensional stable line is a character. The formula on \(H\) follows by multiplying the eigencharacters of the factors.
+\end{proof}
+
+\begin{proposition}[Orbit extension torsor]\label{prop:orbit_extension_torsor}
+Let
+\[
+\theta_{\bm a}
+=
+\prod_{\gamma\in\Gamma}(\chi^\gamma)^{a_\gamma}
+\]
+be the character of \(H\) on the symmetric monomial line. The character \(\theta_{\bm a}\) is invariant under \(G_{\bm a}\). It has at least one extension to \(G_{\bm a}\), namely \(\xi_{\bm a}\). The set of all extensions is a torsor under the character group of \(\Gamma_{\bm a}=G_{\bm a}/H\).
+\end{proposition}
+
+\begin{proof}
+Invariance follows because \(G_{\bm a}\) stabilizes the monomial line. The actual action on that line gives the extension \(\xi_{\bm a}\). If \(\xi\) and \(\xi'\) are two extensions, their quotient is trivial on \(H\) and therefore factors through a character of \(G_{\bm a}/H\). Conversely, multiplying one extension by a quotient character gives another extension.
+\end{proof}
+
+\begin{theorem}[Symmetric power packet decomposition]\label{thm:symmetric_packet}
+Choose one representative from every \(\Gamma\) orbit in \(\calC_m(\Gamma)\). Then
+\[
+\boxed{
+\Sym^m\rho
+\cong
+\bigoplus_{[\bm a]\in\Gamma\backslash\calC_m(\Gamma)}
+\Ind_{G_{\bm a}}^G\xi_{\bm a}.
+}
+\]
+The packet indexed by \([\bm a]\) has dimension
+\[
+\boxed{
+[\Gamma:\Gamma_{\bm a}].
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The monomials \(e^{\bm a}\) form a basis of \(\Sym^m\rho\). The group permutes this basis up to scalars. Decompose the basis into \(\Gamma\) orbits. The span of one orbit is a transitive monomial packet. Apply \cref{lem:transitive_packet}. Its basis is indexed by the orbit of \(\bm a\), whose size is \([\Gamma:\Gamma_{\bm a}]\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{04_symmetric_orbits.pdf}
+\caption{A symmetric monomial orbit produces one induced packet from its stabilizer character.}
+\label{fig:symmetric_orbits}
+\end{figure}
+
+\begin{theorem}[Burnside series for symmetric packets]\label{thm:symmetric_burnside}
+Let \(N_m(\Gamma)\) be the number of orbit packets in \(\Sym^m\rho\). Then
+\[
+\boxed{
+\sum_{m\geq0}
+N_m(\Gamma)t^m
+=
+\frac1{\abs\Gamma}
+\sum_{g\in\Gamma}
+\left(
+1-t^{\ord(g)}
+\right)^{-\abs\Gamma/\ord(g)}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Burnside's lemma averages the number of weak compositions fixed by each \(g\in\Gamma\). Left multiplication by \(g\) on \(\Gamma\) has \(\abs\Gamma/\ord(g)\) cycles, each of length \(\ord(g)\). A fixed composition is constant on every cycle. The generating series for the value on one cycle is
+\[
+1+t^{\ord(g)}+t^{2\ord(g)}+\cdots
+=
+\left(1-t^{\ord(g)}\right)^{-1}.
+\]
+Multiplying over the cycles and averaging gives the formula.
+\end{proof}
+
+\begin{corollary}[Cyclic symmetric packet count]\label{cor:cyclic_symmetric_count}
+For \(\Gamma=C_n\),
+\[
+\sum_{m\geq0}N_m(C_n)t^m
+=
+\frac1n
+\sum_{d\mid n}
+\varphi(d)
+\left(1-t^d\right)^{-n/d}.
+\]
+\end{corollary}
+
+\begin{proof}
+The cyclic group has \(\varphi(d)\) elements of order \(d\) for every divisor \(d\) of \(n\). Insert this count into \cref{thm:symmetric_burnside}.
+\end{proof}
+
+\begin{remark}\label{rem:symmetric_reducibility}
+The packet decomposition is exact even when an induced packet is reducible. Irreducibility of a packet is a separate stabilizer question.
+\end{remark}
+
+\section{Exterior power orbit packets}\label{sec:exterior}
+
+For a subset \(S\subseteq\Gamma\), choose the wedge basis vector
+\[
+e_S
+=
+\bigwedge_{\gamma\in S}e_\gamma
+\]
+using one fixed order on \(\Gamma\). Let
+\[
+\Gamma_S=\Stab_\Gamma(S)
+\]
+and let \(G_S\) be its inverse image in \(G\).
+
+\begin{proposition}[Exterior stabilizer character]\label{prop:exterior_stabilizer_character}
+The line \(\CC e_S\) is stable under \(G_S\). It carries a character
+\[
+\zeta_S:G_S\longrightarrow\CC^{\times}.
+\]
+Its restriction to \(H\) is
+\[
+\boxed{
+\zeta_S|_H
+=
+\prod_{\gamma\in S}\chi^\gamma.
+}
+\]
+The quotient part of \(\zeta_S\) includes the sign of the induced permutation of \(S\).
+\end{proposition}
+
+\begin{proof}
+The group action permutes the wedge factors and multiplies them by the scalars from \cref{prop:monomial_action}. An element stabilizing \(S\) preserves the line. Its scalar is the product of the basis scalars times the sign of the permutation of the wedge factors. On \(H\), no basis permutation occurs, which gives the displayed restriction.
+\end{proof}
+
+\begin{theorem}[Exterior power packet decomposition]\label{thm:exterior_packet}
+For every \(0\leq r\leq\abs\Gamma\),
+\[
+\boxed{
+\bigwedge^r\rho
+\cong
+\bigoplus_{[S]\in\Gamma\backslash{\binom{\Gamma}{r}}}
+\Ind_{G_S}^G\zeta_S.
+}
+\]
+The packet indexed by \([S]\) has dimension
+\[
+[\Gamma:\Gamma_S].
+\]
+\end{theorem}
+
+\begin{proof}
+The vectors \(e_S\), with \(\abs S=r\), form a basis of \(\bigwedge^r\rho\). They are permuted up to scalars. Decompose the basis into orbits and apply \cref{lem:transitive_packet}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{05_exterior_orbits.pdf}
+\caption{Exterior power packets are indexed by subset orbits and include the permutation sign.}
+\label{fig:exterior_orbits}
+\end{figure}
+
+\begin{theorem}[Burnside series for exterior packets]\label{thm:exterior_burnside}
+Let \(M_r(\Gamma)\) be the number of orbit packets in \(\bigwedge^r\rho\). Then
+\[
+\boxed{
+\sum_{r=0}^{\abs\Gamma}
+M_r(\Gamma)t^r
+=
+\frac1{\abs\Gamma}
+\sum_{g\in\Gamma}
+\left(
+1+t^{\ord(g)}
+\right)^{\abs\Gamma/\ord(g)}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+A subset fixed by \(g\) is a union of cycles of left multiplication by \(g\). Each cycle has length \(\ord(g)\). The choice to omit or include one cycle contributes \(1+t^{\ord(g)}\). Multiply over the cycles and average by Burnside's lemma.
+\end{proof}
+
+\begin{corollary}[Determinant packet]\label{cor:determinant_packet}
+The top exterior power is one dimensional:
+\[
+\boxed{
+\bigwedge^{\abs\Gamma}\rho
+=
+\det\rho.
+}
+\]
+Its restriction to \(H\) is
+\[
+\boxed{
+\det\rho|_H
+=
+\prod_{\gamma\in\Gamma}\chi^\gamma.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+There is one subset of size \(\abs\Gamma\), namely \(\Gamma\) itself. It is fixed by the whole quotient. Apply \cref{prop:exterior_stabilizer_character}.
+\end{proof}
+
+\begin{corollary}[Exterior duality]\label{cor:exterior_duality}
+Let \(n=\abs\Gamma\). Then
+\[
+\boxed{
+\bigwedge^{n-r}\rho
+\cong
+\det\rho\otimes
+\left(\bigwedge^r\rho\right)^\vee.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The perfect wedge pairing
+\[
+\bigwedge^r\rho
+\otimes
+\bigwedge^{n-r}\rho
+\longrightarrow
+\det\rho
+\]
+is \(G\) equivariant and nondegenerate.
+\end{proof}
+
+\section{Dihedral formulas}\label{sec:dihedral}
+
+Let \(H\triangleleft G\) have index two. Let \(\sigma\) be the nonidentity element of \(G/H\). Let
+\[
+\omega:G\longrightarrow\{1,-1\}
+\]
+be the quadratic character of the quotient. Assume
+\[
+\chi^\sigma\neq\chi
+\]
+and put
+\[
+\rho=\Ind_H^G\chi,
+\qquad
+\delta=\det\rho,
+\qquad
+\eta=\delta\omega.
+\]
+
+\begin{proposition}[Middle symmetric character]\label{prop:middle_character}
+The restriction of \(\eta\) to \(H\) is
+\[
+\eta|_H=\chi\chi^\sigma.
+\]
+For even \(m=2r\), the middle line in \(\Sym^m\rho\) carries the character
+\[
+\boxed{
+\eta^r.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+On \(H\), the determinant is \(\chi\chi^\sigma\) and \(\omega\) is trivial. Choose a coset basis \(e_1,e_\sigma\). An element \(s\notin H\) acts by a matrix
+\[
+\begin{pmatrix}
+0&a\\
+b&0
+\end{pmatrix}.
+\]
+The middle monomial \(e_1^re_\sigma^r\) is multiplied by \((ab)^r\). Since
+\[
+\delta(s)\omega(s)=(-ab)(-1)=ab,
+\]
+the middle character is \(\eta^r\).
+\end{proof}
+
+\begin{theorem}[All dihedral symmetric powers]\label{thm:dihedral_symmetric}
+For every positive integer \(m\),
+\[
+\boxed{
+\Sym^m\rho
+\cong
+\bigoplus_{j=0}^{\lfloor(m-1)/2\rfloor}
+\Ind_H^G
+\left(
+\chi^{m-j}(\chi^\sigma)^j
+\right)
+\mathbin{\oplus}
+\begin{cases}
+\eta^{m/2},&m\text{ even},\\
+0,&m\text{ odd}.
+\end{cases}
+}
+\]
+\end{theorem}
+
+\begin{proof}
+A weak composition of \(m\) on the two element quotient is a pair \((m-j,j)\). The quotient exchanges the two entries. For \(j<m-j\), the orbit has two elements and its stabilizer is \(H\). The character on the representative line is
+\[
+\chi^{m-j}(\chi^\sigma)^j.
+\]
+When \(m\) is even, the middle composition \((m/2,m/2)\) is fixed by the whole quotient. Its character is \(\eta^{m/2}\) by \cref{prop:middle_character}. Apply \cref{thm:symmetric_packet}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{08_dihedral.pdf}
+\caption{Every symmetric power of a dihedral parameter is an explicit sum of induced characters and, in even degree, one character.}
+\label{fig:dihedral}
+\end{figure}
+
+\begin{corollary}[Dihedral packet count]\label{cor:dihedral_packet_count}
+The number of symmetric orbit packets is
+\[
+\boxed{
+\left\lfloor\frac m2\right\rfloor+1.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The unordered pairs \(\{j,m-j\}\) are indexed by \(0\leq j\leq\lfloor m/2\rfloor\).
+\end{proof}
+
+\begin{corollary}[Dihedral cuspidality criterion for one summand]\label{cor:dihedral_cuspidality}
+Let
+\[
+\theta_{m,j}
+=
+\chi^{m-j}(\chi^\sigma)^j.
+\]
+The induced packet \(\Ind_H^G\theta_{m,j}\) is irreducible exactly when
+\[
+\boxed{
+\left(\chi/\chi^\sigma\right)^{m-2j}\neq 1.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The packet is irreducible exactly when \(\theta_{m,j}^\sigma\neq\theta_{m,j}\). Their quotient is
+\[
+\theta_{m,j}/\theta_{m,j}^\sigma
+=
+\left(\chi/\chi^\sigma\right)^{m-2j}.
+\]
+Apply \cref{fact:mackey_irreducibility}.
+\end{proof}
+
+\begin{corollary}[Dihedral adjoint decomposition]\label{cor:dihedral_adjoint}
+There is an exact decomposition
+\[
+\boxed{
+\Ad^0\rho
+\cong
+\omega
+\oplus
+\Ind_H^G
+\left(
+\chi/\chi^\sigma
+\right).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Use
+\[
+\Ad^0\rho
+\cong
+\Sym^2\rho\otimes\delta^{-1}.
+\]
+By \cref{thm:dihedral_symmetric},
+\[
+\Sym^2\rho
+\cong
+\Ind_H^G\chi^2
+\oplus
+\eta.
+\]
+Twisting the induced term by \(\delta^{-1}\) changes its inducing character on \(H\) to
+\[
+\chi^2(\chi\chi^\sigma)^{-1}
+=
+\chi/\chi^\sigma.
+\]
+The one dimensional term becomes \(\eta\delta^{-1}=\omega\).
+\end{proof}
+
+\begin{theorem}[Tensor product over one quadratic extension]\label{thm:dihedral_tensor}
+Let
+\[
+\rho=\Ind_H^G\chi,
+\qquad
+\tau=\Ind_H^G\psi.
+\]
+Then
+\[
+\boxed{
+\rho\otimes\tau
+\cong
+\Ind_H^G(\chi\psi)
+\oplus
+\Ind_H^G(\chi\psi^\sigma).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply \cref{cor:same_normal_tensor} to the quotient of order two.
+\end{proof}
+
+\begin{example}[The first four symmetric powers]\label{ex:first_dihedral_powers}
+The formulas begin as follows:
+\[
+\Sym^2\rho
+\cong
+\Ind_H^G\chi^2
+\oplus
+\eta,
+\]
+\[
+\Sym^3\rho
+\cong
+\Ind_H^G\chi^3
+\oplus
+\Ind_H^G(\chi^2\chi^\sigma),
+\]
+and
+\[
+\Sym^4\rho
+\cong
+\Ind_H^G\chi^4
+\oplus
+\Ind_H^G(\chi^3\chi^\sigma)
+\oplus
+\eta^2.
+\]
+\end{example}
+
+\section{Local factors of monomial packets}\label{sec:localfactors}
+
+Let \(K\) be a nonarchimedean local field. For a finite extension \(L/K\), let \(W_L\leq W_K\) be the corresponding Weil subgroup. Let \(\psi_K\) be a nontrivial additive character of \(K\), and put
+\[
+\psi_L=\psi_K\circ\Tr_{L/K}.
+\]
+
+\begin{standardfact}[Induction of local factors]\label{fact:induction_local_factors}
+Let \(\sigma\) be a finite dimensional representation of \(W_L\). Then
+\[
+L_K(s,\Ind_{W_L}^{W_K}\sigma)
+=
+L_L(s,\sigma),
+\]
+and
+\[
+\epsilon_K
+\left(
+ s,
+ \Ind_{W_L}^{W_K}\sigma,
+ \psi_K
+\right)
+=
+\lambda_{L/K}(\psi_K)^{\dim\sigma}
+\epsilon_L(s,\sigma,\psi_L).
+\]
+The local gamma factor is determined by
+\[
+\gamma(s,\sigma,\psi)
+=
+\epsilon(s,\sigma,\psi)
+\frac{L(1-s,\sigma^\vee)}{L(s,\sigma)}.
+\]
+\end{standardfact}
+
+This is the induction formula for Artin local factors and local constants \cite{Deligne1973,Tate1979}.
+
+\begin{theorem}[Pair factors for two monomial parameters]\label{thm:monomial_pair_factors}
+Let \(E/K\) and \(L/K\) be finite separable extensions. Let \(\chi\) and \(\psi\) be characters of \(W_E\) and \(W_L\). Put
+\[
+\rho=\Ind_{W_E}^{W_K}\chi,
+\qquad
+\tau=\Ind_{W_L}^{W_K}\psi.
+\]
+For every double coset representative
+\[
+g\in W_E\backslash W_K/W_L,
+\]
+let
+\[
+W_{M_g}
+=
+W_E\cap gW_Lg^{-1}
+\]
+and
+\[
+\theta_g
+=
+\chi|_{W_{M_g}}
+({}^g\psi)|_{W_{M_g}}.
+\]
+Then
+\[
+\boxed{
+L_K(s,\rho\otimes\tau)
+=
+\prod_g
+L_{M_g}(s,\theta_g).
+}
+\]
+The epsilon factor satisfies
+\[
+\boxed{
+\epsilon_K(s,\rho\otimes\tau,\psi_K)
+=
+\prod_g
+\lambda_{M_g/K}(\psi_K)
+\epsilon_{M_g}(s,\theta_g,\psi_{M_g}).
+}
+\]
+The gamma factor is the corresponding product of the induced character gamma factors.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:mackey_tensor} to the Weil groups. Every summand is induced from the one dimensional character \(\theta_g\). Local L and epsilon factors are multiplicative under direct sums. Apply \cref{fact:induction_local_factors} to every summand.
+\end{proof}
+
+\begin{corollary}[Pair factors against an arbitrary parameter]\label{cor:arbitrary_pair_reduction}
+Let
+\[
+\rho=\Ind_{W_E}^{W_K}\chi
+\]
+and let \(\tau\) be any finite dimensional Weil representation. Then
+\[
+\boxed{
+\rho\otimes\tau
+\cong
+\Ind_{W_E}^{W_K}
+\left(
+\chi\otimes\Res_{W_E}^{W_K}\tau
+\right).
+}
+\]
+Consequently,
+\[
+L_K(s,\rho\otimes\tau)
+=
+L_E
+\left(
+ s,
+ \chi\otimes\Res_{W_E}^{W_K}\tau
+\right),
+\]
+with the corresponding induction formula for epsilon and gamma factors.
+\end{corollary}
+
+\begin{proof}
+Use the tensor identity for induction and then \cref{fact:induction_local_factors}.
+\end{proof}
+
+\begin{corollary}[All dihedral symmetric power factors]\label{cor:dihedral_symmetric_factors}
+For a dihedral parameter \(\rho=\Ind_{W_E}^{W_K}\chi\), every local L, epsilon, and gamma factor of \(\Sym^m\rho\) is an explicit product of character factors over \(E\) and, when \(m\) is even, one character factor over \(K\).
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:dihedral_symmetric} and \cref{fact:induction_local_factors}.
+\end{proof}
+
+\begin{standardfact}[Local automorphic induction and characterization]\label{fact:local_ai}
+Local automorphic induction and base change for the classes considered below are compatible with local class field theory and with the local factors above. The local Langlands correspondence for general linear groups is characterized by its standard properties and pair factors \cite{Henniart1993,Henniart2000,BushnellHenniart2006}.
+\end{standardfact}
+
+\begin{theorem}[Completed local monomial sector]\label{thm:local_monomial_completion}
+Assume the standard local automorphic induction theorem for a finite extension \(E/K\). For every character \(\chi\) of \(W_E\), the representation
+\[
+\AI_{E/K}(\chi)
+\]
+has parameter
+\[
+\Ind_{W_E}^{W_K}\chi.
+\]
+Tensor products, base changes, symmetric powers, and exterior powers that decompose through \cref{thm:mackey_tensor,thm:base_change_mackey,thm:symmetric_packet,thm:exterior_packet} are determined by explicit induced character packets. Their local factors are the products prescribed by \cref{thm:monomial_pair_factors}.
+\end{theorem}
+
+\begin{proof}
+The first assertion is the compatibility of local automorphic induction with the local correspondence. The representation identities in the cited theorems decompose every declared tensor operation into induced characters. Local factor compatibility follows from \cref{fact:induction_local_factors} and multiplicativity.
+\end{proof}
+
+\begin{remark}\label{rem:local_scope}
+The theorem completes the monomial sector using local automorphic induction as an established input. Its tame part is consistent with the essentially tame correspondence developed by Bushnell and Henniart \cite{BushnellHenniart2005ET1,BushnellHenniart2005ET2,BushnellHenniart2010ET3}. It is not an independent construction of the local correspondence for a general wild parameter.
+\end{remark}
+
+\section{Automorphic induction admissibility}\label{sec:ai_admissibility}
+
+Let \(M/F\) be a finite Galois extension with group \(\Gamma\). A packet stabilizer gives an intermediate field, but automorphic induction from that field is available by cyclic iteration only when the stabilizer lies on a suitable subnormal chain.
+
+\begin{standardfact}[Cyclic automorphic induction and base change]\label{fact:solvable_ai}
+Local and global automorphic induction and base change exist for cyclic extensions of prime degree. By iteration they exist along a subnormal tower whose successive quotients are cyclic. They are transitive and compatible with the corresponding local inductions and restrictions \cite{ArthurClozel1989}.
+\end{standardfact}
+
+\begin{standardfact}[Supersolvable groups are monomial]\label{fact:supersolvable_monomial}
+Every irreducible complex representation of a finite supersolvable group is induced from a one dimensional representation of a subgroup \cite{Isaacs1976}.
+\end{standardfact}
+
+\begin{definition}[Cyclic induction admissibility]\label{def:ai_admissible}
+Let \(\Lambda\leq\Omega\leq\Gamma\). We say that \(\Lambda\) is induction admissible in \(\Omega\) if there is a chain
+\[
+\Lambda=\Lambda_r
+\triangleleft
+\Lambda_{r-1}
+\triangleleft\cdots\triangleleft
+\Lambda_0=\Omega
+\]
+such that every quotient \(\Lambda_{i-1}/\Lambda_i\) is cyclic of prime order.
+\end{definition}
+
+\begin{proposition}[Field tower attached to an admissible subgroup]\label{prop:ai_field_tower}
+If \(\Lambda\) is induction admissible in \(\Omega\), then
+\[
+M^\Omega
+\subseteq
+M^{\Lambda_{r-1}}
+\subseteq\cdots\subseteq
+M^\Lambda
+\]
+is a tower of cyclic extensions of prime degree. Automorphic induction of an algebraic Hecke character from \(M^\Lambda\) to \(M^\Omega\) is therefore defined by iteration.
+\end{proposition}
+
+\begin{proof}
+Normality of \(\Lambda_i\) in \(\Lambda_{i-1}\) makes the corresponding field extension Galois with group \(\Lambda_{i-1}/\Lambda_i\). Apply cyclic automorphic induction at each stage and use transitivity.
+\end{proof}
+
+\begin{proposition}[Solvable criterion at the bottom subgroup]\label{prop:solvable_bottom}
+The trivial subgroup is induction admissible in \(\Gamma\) exactly when \(\Gamma\) is solvable.
+\end{proposition}
+
+\begin{proof}
+An admissible chain is a subnormal series with cyclic prime factors, so it proves solvability. Conversely, a composition series of a finite solvable group has cyclic prime factors and gives an admissible chain from the trivial subgroup.
+\end{proof}
+
+\begin{standardfact}[Subnormality criterion for finite nilpotence]\label{fact:subnormal_nilpotent}
+A finite group is nilpotent exactly when every subgroup is subnormal \cite{Isaacs1976,Robinson1996}.
+\end{standardfact}
+
+\begin{theorem}[Universal packet admissibility]\label{thm:universal_packet_admissibility}
+For a finite group \(\Gamma\), the following conditions are equivalent.
+
+\begin{enumerate}
+\item The group \(\Gamma\) is nilpotent.
+\item Every subgroup of \(\Gamma\) is induction admissible in \(\Gamma\).
+\item Every stabilizer of a subset of the regular \(\Gamma\) set is induction admissible in \(\Gamma\).
+\item Every stabilizer of a weak composition on the regular \(\Gamma\) set is induction admissible in \(\Gamma\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+If \(\Gamma\) is nilpotent, every subgroup is subnormal by \cref{fact:subnormal_nilpotent}. Refine a subnormal series by composition series. Every composition factor of a finite nilpotent group is cyclic of prime order. Thus every subgroup is induction admissible, which implies the last two conditions.
+
+Conversely, every subgroup \(\Lambda\leq\Gamma\) is the stabilizer of the subset \(\Lambda\) under the left regular action. It is also the stabilizer of the weak composition that has value one on \(\Lambda\) and zero outside \(\Lambda\). Either of the last two conditions therefore makes every subgroup subnormal. Apply \cref{fact:subnormal_nilpotent}.
+\end{proof}
+
+\begin{definition}[Induction monomial finite group]\label{def:induction_monomial_group}
+A finite group \(Q\) is induction monomial if every irreducible complex representation of \(Q\) is induced from a one dimensional representation of a subgroup that is induction admissible in \(Q\). It is functorially induction monomial if every quotient of \(Q\) is induction monomial.
+\end{definition}
+
+\begin{proposition}[Nilpotent groups are functorially induction monomial]\label{prop:nilpotent_induction_monomial}
+Every finite nilpotent group is functorially induction monomial.
+\end{proposition}
+
+\begin{proof}
+Every quotient of a finite nilpotent group is nilpotent. It is supersolvable, so every irreducible representation is monomial by \cref{fact:supersolvable_monomial}. Every subgroup is induction admissible by \cref{thm:universal_packet_admissibility}.
+\end{proof}
+
+\begin{theorem}[Abelian by cyclic groups are functorially induction monomial]\label{thm:abelian_cyclic_induction_monomial}
+Let \(Q\) have an abelian normal subgroup \(A\) such that \(Q/A\) is cyclic. Then \(Q\) is functorially induction monomial.
+\end{theorem}
+
+\begin{proof}
+Let \(V\) be irreducible and choose a character \(\chi\) of \(A\) occurring in \(V|_A\). Let \(I\) be its inertia subgroup. Clifford theory gives
+\[
+V\cong\Ind_I^QW
+\]
+for an irreducible representation \(W\) of \(I\) lying above \(\chi\). The quotient \(I/A\) is cyclic. Choose \(x\in I\) whose image generates it, and put \(d=[I:A]\). Invariance of \(\chi\) gives
+\[
+\chi(xax^{-1})=\chi(a)
+\qquad(a\in A).
+\]
+Choose \(c\in\CC^\times\) with
+\[
+c^d=\chi(x^d).
+\]
+Every element of \(I\) has a unique form \(ax^j\) with \(0\leq j<d\). The formula
+\[
+\widetilde\chi(ax^j)=\chi(a)c^j
+\]
+defines an extension of \(\chi\) to \(I\). Tensoring \(W\) by \(\widetilde\chi^{-1}\) makes it factor through the cyclic group \(I/A\). It is therefore one dimensional. Thus
+\[
+W=\widetilde\chi\otimes\nu
+\]
+for a character \(\nu\) of \(I/A\).
+
+Every subgroup of the cyclic group \(Q/A\) is normal. Hence \(I\triangleleft Q\), and \(Q/I\) is cyclic. Refining that cyclic quotient gives an induction admissible chain. Thus \(Q\) is induction monomial. Every quotient of \(Q\) again has an abelian normal subgroup with cyclic quotient, so the same argument proves functorial induction monomiality.
+\end{proof}
+
+\begin{remark}\label{rem:operation_admissibility}
+Nilpotence is the exact condition that makes every packet stabilizer admissible at every degree. A nonnilpotent solvable group may still be admissible for one chosen symmetric power, exterior power, tensor product, or base change. The relevant condition is then imposed only on the stabilizers and intersections that occur in that operation.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{11_admissibility.pdf}
+\caption{Admissibility is checked on the stabilizers and intersections created by the chosen packet operation. Nilpotence makes every check automatic.}
+\label{fig:admissibility}
+\end{figure}
+
+\section{Prime cyclic Clifford towers and finite solvable image}\label{sec:clifford}
+
+The one break symplectic construction resolves one stable isotypic quotient. A general finite solvable image may contain several successive Clifford steps. We now give a prime cyclic tower for every irreducible representation of a finite solvable group. The special case of a p group recovers the familiar power of p degree theorem.
+
+\begin{standardfact}[Clifford restriction theorem]\label{fact:clifford}
+Let \(N\triangleleft G\) and let \(V\) be irreducible. If \(W\) is an irreducible constituent of \(\Res_N^GV\), then all constituents form one \(G\) orbit and occur with one common multiplicity. The representation \(V\) is induced from an irreducible representation of the inertia subgroup of \(W\) \cite{Clifford1937,Isaacs1976}.
+\end{standardfact}
+
+\begin{theorem}[Index p restriction dichotomy]\label{thm:index_p_dichotomy}
+Let \(G_1\triangleleft G_0\) be finite groups with
+\[
+[G_0:G_1]=p
+\]
+for a prime \(p\). Let \(V_0\) be an irreducible representation of \(G_0\), and let \(V_1\) be one irreducible constituent of \(\Res_{G_1}^{G_0}V_0\). Exactly one of the following holds.
+
+\begin{enumerate}
+\item The restriction is irreducible:
+\[
+\boxed{
+\Res_{G_1}^{G_0}V_0
+\cong
+V_1.
+}
+\]
+The representation \(V_1\) is invariant under \(G_0\), it extends to \(G_0\), and the possible extensions differ by characters of \(G_0/G_1\).
+\item The restriction is one full orbit:
+\[
+\boxed{
+\Res_{G_1}^{G_0}V_0
+\cong
+\bigoplus_{g\in G_0/G_1}V_1^g,
+}
+\]
+and
+\[
+\boxed{
+V_0
+\cong
+\Ind_{G_1}^{G_0}V_1.
+}
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Let \(I\) be the inertia subgroup of \(V_1\). Since \(G_1\) has prime index, either \(I=G_1\) or \(I=G_0\).
+
+If \(I=G_1\), the orbit has size p. Clifford theory gives the displayed sum with common multiplicity one because the total index is p. It also gives
+\[
+V_0\cong\Ind_{G_1}^{G_0}V_1.
+\]
+
+If \(I=G_0\), there is one invariant constituent and the restriction has the form \(eV_1\). The multiplicity space \(\Hom_{G_1}(V_1,V_0)\) carries an irreducible projective representation of the cyclic quotient \(G_0/G_1\) of dimension \(e\). Every projective representation of a finite cyclic group over \(\CC\) can be linearized, and every irreducible linear representation of that quotient is one dimensional. Hence \(e=1\), so the restriction is irreducible. The same linearization gives an extension of \(V_1\) to \(G_0\). Any two extensions differ by a character of the quotient.
+\end{proof}
+
+\begin{definition}[Prime cyclic Clifford tower]\label{def:clifford_tower}
+A prime cyclic Clifford tower for an irreducible representation \(V\) of a finite solvable group \(G\) consists of a composition series
+\[
+G=G_0\triangleright G_1\triangleright\cdots\triangleright G_r=1,
+\qquad
+[G_i:G_{i+1}]=p_i
+\]
+with prime indices \(p_i\), and irreducible representations \(V_i\) of \(G_i\) with \(V_0=V\), such that every adjacent pair satisfies one of the two alternatives in \cref{thm:index_p_dichotomy}.
+\end{definition}
+
+\begin{theorem}[Existence of a prime cyclic Clifford tower]\label{thm:clifford_tower_exists}
+Every irreducible complex representation of a finite solvable group admits a prime cyclic Clifford tower.
+\end{theorem}
+
+\begin{proof}
+Choose a composition series of the solvable group. Its factors are cyclic of prime order. Starting with \(V_0=V\), choose one irreducible constituent \(V_{i+1}\) of the restriction of \(V_i\) to \(G_{i+1}\). Apply \cref{thm:index_p_dichotomy} at every step. At the final trivial subgroup, the representation is one dimensional.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.74\textwidth]{06_clifford_tower.pdf}
+\caption{A finite solvable image is resolved into prime cyclic restriction, extension, and induction steps.}
+\label{fig:clifford_tower}
+\end{figure}
+
+\begin{corollary}[Degree as the product of induction indices]\label{cor:solvable_degree_product}
+Let \(I(V)\) be the set of levels at which a prime cyclic Clifford tower uses the induction alternative. Then
+\[
+\boxed{
+\dim V
+=
+\prod_{i\in I(V)}p_i.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+A restriction step preserves dimension. An induction step across an index \(p_i\) subgroup multiplies dimension by \(p_i\). The representation at the bottom has dimension one.
+\end{proof}
+
+\begin{corollary}[Degrees for a finite p group]\label{cor:p_power_degree}
+If \(V\) is irreducible for a finite p group and \(a(V)\) is the number of induction steps in a prime cyclic Clifford tower, then
+\[
+\boxed{
+\dim V=p^{a(V)}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Every composition factor of a finite p group has order \(p\). Apply \cref{cor:solvable_degree_product}.
+\end{proof}
+
+\begin{proposition}[Automorphic recursion along a Clifford tower]\label{prop:clifford_automorphic_recursion}
+Let a finite solvable Artin parameter be equipped with a prime cyclic Clifford tower. Suppose that every induction step is realized by cyclic automorphic induction and every extension step is realized by a cyclic base change descent whose local parameter is the selected extension. Then the parameter at the top of the tower is automorphic. It is cuspidal when the top parameter is irreducible.
+\end{proposition}
+
+\begin{proof}
+Begin with the one dimensional character at the bottom and apply global class field theory. Move upward through the tower. At an induction step, use cyclic automorphic induction. At an extension step, use the declared cyclic descent and select the descent with the prescribed local parameter. Transitivity identifies the final parameter with the original Artin representation. Irreducibility gives cuspidality.
+\end{proof}
+
+\begin{remark}[The solvable descent gate]\label{rem:solvable_descent_gate}
+The Clifford tower is unconditional finite representation theory. The automorphic recursion is conditional at its extension steps. The induction monomial sector completed below avoids this issue because one character is induced through a subnormal cyclic tower. A general solvable representation can contain extension steps, and the matching descent must be supplied there.
+\end{remark}
+
+\begin{remark}\label{rem:tower_choice}
+The tower exists but is not canonical. Different composition series and different Clifford constituents can give different intermediate packet systems. The endpoint representation and the product of induction indices are unchanged.
+\end{remark}
+
+\begin{theorem}[Supersolvable finite image parameters are monomial]\label{thm:supersolvable_parameter}
+Let \(K\) be a local field and let
+\[
+\rho:W_K\longrightarrow\GL_n(\CC)
+\]
+be irreducible with finite image. If the finite image group is supersolvable, then there is a finite extension \(L/K\) and a character \(\theta\) of \(W_L\) such that
+\[
+\boxed{
+\rho
+\cong
+\Ind_{W_L}^{W_K}\theta.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Factor \(\rho\) through its finite image group \(Q\). By \cref{fact:supersolvable_monomial}, the corresponding irreducible representation of \(Q\) is induced from a character of a subgroup \(J\leq Q\). The inverse image of \(J\) in \(W_K\) is an open finite index subgroup, hence the Weil group of a finite extension \(L/K\). Inflating the character gives \(\theta\), and induction commutes with inflation.
+\end{proof}
+
+\begin{corollary}[Closed pair factors for supersolvable finite image]\label{cor:supersolvable_factors}
+If two finite image Weil parameters have supersolvable images, then all of their pair L, epsilon, and gamma factors reduce to one dimensional character factors over finite extensions.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:supersolvable_parameter} to both parameters and then \cref{thm:monomial_pair_factors}.
+\end{proof}
+
+\begin{theorem}[Completed local induction monomial sector]\label{thm:local_nilpotent_completion}
+Let
+\[
+\rho:W_K\longrightarrow\GL_n(\CC)
+\]
+be irreducible with finite induction monomial image. Then there is a finite extension \(L/K\), obtained through a tower of cyclic extensions of prime degree, and a character \(\theta\) of \(W_L\) such that
+\[
+\boxed{
+\rho\cong\Ind_{W_L}^{W_K}\theta.
+}
+\]
+Under the established local Langlands correspondence, the representation attached to \(\rho\) is the iterated local automorphic induction of the character corresponding to \(\theta\). All pair factors reduce to one dimensional character factors.
+\end{theorem}
+
+\begin{proof}
+By induction monomiality, the irreducible representation is induced from a character of an induction admissible subgroup. Pull the resulting cyclic subnormal chain back to the Weil group. It gives a tower of cyclic field extensions from \(L\) to \(K\). Apply local class field theory and local automorphic induction at each stage. Pair factors reduce by \cref{thm:monomial_pair_factors}.
+\end{proof}
+
+\begin{corollary}[Local nilpotent and abelian by cyclic sectors]\label{cor:local_group_classes}
+The conclusion of \cref{thm:local_nilpotent_completion} holds when the finite image is nilpotent or abelian by cyclic.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{prop:nilpotent_induction_monomial,thm:abelian_cyclic_induction_monomial}.
+\end{proof}
+
+\begin{corollary}[Local algebraic functoriality for finite nilpotent image]\label{cor:local_nilpotent_functoriality}
+Let \(\rho_1,\ldots,\rho_t\) be finite image local parameters whose joint image is functorially induction monomial, and let \(r\) be an algebraic representation of the product of their general linear groups. Then \(r\circ(\rho_1,\ldots,\rho_t)\) is an isobaric sum of parameters obtained by iterated local automorphic induction from characters. Its local L, epsilon, and gamma factors reduce to character factors.
+\end{corollary}
+
+\begin{proof}
+The transformed parameter factors through a quotient of the joint image. That quotient is induction monomial by hypothesis. Decompose into irreducible constituents and apply \cref{thm:local_nilpotent_completion} to each constituent.
+\end{proof}
+
+\begin{remark}\label{rem:wild_boundary}
+The cyclic Clifford tower and the supersolvable monomial theorem enlarge the finite wild region. They do not produce a choice independent symplectic envelope for every wild inertia atom and do not identify a general type side quotient.
+\end{remark}
+
+
+\section{Brauer virtual packets}\label{sec:brauer}
+
+Actual monomial representations give automorphic inductions. A general finite image representation need not be monomial, but it still has a virtual monomial resolution.
+
+\begin{standardfact}[Brauer induction]\label{fact:brauer_induction}
+Let \(Q\) be a finite group and let \(\vartheta\) be a complex character of \(Q\). There are subgroups \(J_i\leq Q\), one dimensional characters \(\lambda_i\) of \(J_i\), and integers \(n_i\) such that
+\[
+\boxed{
+[\vartheta]
+=
+\sum_i n_i
+\left[
+\Ind_{J_i}^Q\lambda_i
+\right]
+}
+\]
+in the Grothendieck group of finite dimensional representations \cite{Brauer1947,Serre1977}.
+\end{standardfact}
+
+\begin{theorem}[Virtual monomial factorization of finite image L functions]\label{thm:brauer_L_factorization}
+Let \(\rho\) be a finite image complex Galois representation of a number field \(F\). Choose a Brauer decomposition
+\[
+[\rho]
+=
+\sum_i n_i
+\left[
+\Ind_{G_{E_i}}^{G_F}\chi_i
+\right].
+\]
+Then
+\[
+\boxed{
+L(s,\rho)
+=
+\prod_i
+L(s,\chi_i)^{n_i}.
+}
+\]
+The Artin L function of \(\rho\) therefore has meromorphic continuation and a functional equation.
+\end{theorem}
+
+\begin{proof}
+Inflate the Brauer character identity from the finite image group to \(G_F\). Artin L functions are multiplicative on direct sums and extend multiplicatively to the Grothendieck group. Induction identifies the Artin L function of \(\Ind_{G_{E_i}}^{G_F}\chi_i\) with the Hecke L function of \(\chi_i\). Hecke L functions have meromorphic continuation and functional equations.
+\end{proof}
+
+\begin{corollary}[Virtual finite image functoriality]\label{cor:brauer_functoriality}
+Let \(\rho_1,\ldots,\rho_t\) be finite image complex Galois representations and let
+\[
+r:\prod_i\GL_{n_i}(\CC)\longrightarrow\GL_N(\CC)
+\]
+be algebraic. Then the Artin L function of
+\[
+r\circ(\rho_1,\ldots,\rho_t)
+\]
+has meromorphic continuation and a functional equation. A Brauer decomposition gives it as a quotient of Hecke L functions.
+\end{corollary}
+
+\begin{proof}
+The transformed representation still has finite image. Apply \cref{thm:brauer_L_factorization} to that representation.
+\end{proof}
+
+\begin{corollary}[Positive Brauer resolution]\label{cor:positive_brauer}
+If a finite image representation admits a Brauer resolution with every \(n_i\geq0\), then it is a direct sum of monomial representations. If the inducing extensions lie in the solvable automorphic induction range, the representation is automorphic as an isobaric sum.
+\end{corollary}
+
+\begin{proof}
+Over \(\CC\), the Grothendieck group is free on the irreducible characters. If every coefficient on the displayed monomial side is nonnegative, equality of classes is equality of irreducible multiplicities and therefore gives an actual direct sum isomorphism. Apply automorphic induction to every monomial summand.
+\end{proof}
+
+\begin{remark}\label{rem:brauer_negative}
+General Brauer induction uses negative integers. Those negative multiplicities are exactly why the argument gives a quotient of Hecke L functions rather than an automorphic representation or an entireness theorem.
+\end{remark}
+
+
+\section{Global monomial systems}\label{sec:global}
+
+Let \(F\) be a number field and let \(E/F\) be a finite Galois extension with group \(\Gamma\). Let \(\chi\) be an algebraic Hecke character of \(E\).
+
+\begin{standardfact}[Hecke characters and compatible systems]\label{fact:hecke_compatible}
+An algebraic Hecke character \(\chi\) has one dimensional l adic realizations
+\[
+\chi_\lambda:G_E\longrightarrow\overline{\QQ}_\lambda^{\times}
+\]
+that form a strictly compatible system. Their unramified Frobenius values are the algebraic values of \(\chi\) under the chosen coefficient embedding \cite{Tate1979,Weil1967,Neukirch1999}.
+\end{standardfact}
+
+\begin{proposition}[Algebraicity of finite monomial orbit characters]\label{prop:general_orbit_algebraicity}
+Let \(M/F\) be finite Galois. Let \(E=M^H\) be an intermediate field and let \(\chi\) be an algebraic Hecke character of \(E\). Form the compatible induced systems from \(\chi\). Any one dimensional stabilizer character carried by a pure tensor, symmetric monomial, or exterior monomial line is the l adic realization of an algebraic Hecke character of the corresponding stabilizer field.
+\end{proposition}
+
+\begin{proof}
+Choose one number field containing the algebraic values of \(\chi\) and the roots of unity occurring in the finite coset action. On the absolute Galois group of \(M\), the line character is a finite product of conjugates of \(\chi\), with integral exponents. It is therefore algebraic. The full stabilizer line character is an actual one dimensional representation whose restriction to this finite index subgroup is algebraic. Algebraicity is unchanged by finite restriction and descent. Any two extensions with the same restriction differ through a finite quotient and hence by a finite order character. Global class field theory therefore gives an algebraic Hecke character on the stabilizer field.
+\end{proof}
+
+\begin{definition}[Solvable monomial datum]\label{def:solvable_global_datum}
+A solvable monomial datum consists of
+\[
+(E/F,\chi)
+\]
+where \(E/F\) is finite Galois with solvable Galois group \(\Gamma\), and \(\chi\) is an algebraic Hecke character of \(E\). The datum is regular when no nonidentity element of \(\Gamma\) fixes \(\chi\).
+\end{definition}
+
+\begin{lemma}[Subnormal cyclic tower in a nilpotent group]\label{lem:nilpotent_subnormal}
+Let \(\Lambda\leq\Gamma\) with \(\Gamma\) finite nilpotent. There is a chain
+\[
+\Lambda=\Lambda_r
+\triangleleft
+\Lambda_{r-1}
+\triangleleft\cdots\triangleleft
+\Lambda_0=\Gamma
+\]
+whose successive quotients are cyclic of prime order.
+\end{lemma}
+
+\begin{proof}
+Every proper subgroup of a finite nilpotent group is properly contained in its normalizer. Iterating normalizers gives a subnormal chain from \(\Lambda\) to \(\Gamma\). Every quotient in that chain is finite nilpotent. Refine each quotient by a composition series. The composition factors of a finite nilpotent group are cyclic of prime order. Lifting the refined series gives the required chain.
+\end{proof}
+
+\begin{theorem}[Global monomial automorphy]\label{thm:global_monomial_automorphy}
+Let \((E/F,\chi)\) be a solvable monomial datum. Then there is an isobaric automorphic representation
+\[
+\boxed{
+\pi=\AI_{E/F}(\chi)
+}
+\]
+of \(\GL_{[E:F]}(\Adele_F)\). If the datum is regular, \(\pi\) is cuspidal.
+
+For every coefficient place \(\lambda\), put
+\[
+\rho_\lambda
+=
+\Ind_{G_E}^{G_F}\chi_\lambda.
+\]
+Then \((\rho_\lambda)_\lambda\) is a strictly compatible system attached to \(\pi\).
+\end{theorem}
+
+\begin{proof}
+The trivial subgroup is induction admissible by \cref{prop:solvable_bottom}. Apply solvable automorphic induction along the corresponding field tower. Regularity gives the standard cuspidality criterion. The compatible characters \(\chi_\lambda\) exist by \cref{fact:hecke_compatible}. Induction preserves equality of unramified Frobenius characteristic polynomials and gives a compatible system. Local and global compatibility with \(\pi\) is part of \cref{fact:solvable_ai}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{07_global_induction.pdf}
+\caption{One algebraic Hecke character produces both the automorphic induction and every coefficient place member.}
+\label{fig:global_induction}
+\end{figure}
+
+\begin{corollary}[Companion completion in the monomial sector]\label{cor:monomial_companions}
+Every coefficient place companion of the system in \cref{thm:global_monomial_automorphy} exists. Every member has the same Frobenius spine and is automorphic through the one representation \(\pi\).
+\end{corollary}
+
+\begin{proof}
+The members are the induced l adic realizations of one algebraic Hecke character. Their common Frobenius polynomials are independent of \(\lambda\). The automorphic representation \(\pi\) supplies the common automorphic realization.
+\end{proof}
+
+\begin{corollary}[Monomial Artin automorphy]\label{cor:monomial_artin}
+Let \(\rho\) be an irreducible nontrivial finite image complex Galois representation induced from a finite order character along a solvable Galois extension. Then \(\rho\) is automorphic. Its Artin L function is the standard L function of a cuspidal automorphic representation and is entire.
+\end{corollary}
+
+\begin{proof}
+A finite order character is an algebraic Hecke character by global class field theory. Regularity follows from irreducibility. Apply \cref{thm:global_monomial_automorphy}. The standard L function of a nontrivial cuspidal representation of \(\GL_n\) is entire.
+\end{proof}
+
+\begin{remark}\label{rem:artin_scope}
+This proves the Artin conjecture for the declared solvable Galois monomial class. Brauer induction gives meromorphic continuation for general Artin L functions but not their entireness \cite{Brauer1947}.
+\end{remark}
+
+\begin{theorem}[Strong Artin theorem for induction monomial image]\label{thm:nilpotent_strong_artin}
+Let
+\[
+\rho:G_F\longrightarrow\GL_n(\CC)
+\]
+be irreducible with finite induction monomial image. Then \(\rho\) is attached to a cuspidal automorphic representation of \(\GL_n(\Adele_F)\). If \(\rho\) is nontrivial, its Artin L function is entire.
+\end{theorem}
+
+\begin{proof}
+Let \(Q\) be the finite image. Induction monomiality gives
+\[
+\rho\cong\Ind_J^Q\lambda
+\]
+for a character \(\lambda\) of an induction admissible subgroup \(J\leq Q\). Let \(E/F\) be the field fixed by the inverse image of \(J\). Global class field theory turns \(\lambda\) into a finite order Hecke character of \(E\). Iterated automorphic induction along the admissible tower gives an automorphic representation with parameter \(\rho\). Irreducibility gives cuspidality. The standard L function of a nontrivial cuspidal representation of a general linear group is entire.
+\end{proof}
+
+\begin{corollary}[Finite nilpotent and abelian by cyclic Artin sectors]\label{cor:nilpotent_all_artin}
+Every finite dimensional complex Galois representation whose finite image is nilpotent or abelian by cyclic is attached to an isobaric automorphic representation. Its irreducible nontrivial summands have entire Artin L functions.
+\end{corollary}
+
+\begin{proof}
+The two group classes are induction monomial by \cref{prop:nilpotent_induction_monomial,thm:abelian_cyclic_induction_monomial}. Decompose the semisimple representation into irreducible constituents, apply \cref{thm:nilpotent_strong_artin}, and take the isobaric sum.
+\end{proof}
+
+\begin{theorem}[Arbitrary algebraic functoriality for a quotient stable monomial image]\label{thm:nilpotent_algebraic_functoriality}
+Let
+\[
+\rho_i:G_F\longrightarrow\GL_{n_i}(\CC),
+\qquad
+1\leq i\leq t,
+\]
+be finite image representations whose joint image is functorially induction monomial. Let
+\[
+r:\prod_{i=1}^{t}\GL_{n_i}(\CC)\longrightarrow\GL_N(\CC)
+\]
+be an algebraic representation. Then
+\[
+\boxed{
+r\circ(\rho_1,\ldots,\rho_t)
+}
+\]
+is attached to an isobaric automorphic representation of \(\GL_N(\Adele_F)\). It has compatible realizations at every coefficient place and the expected local parameter at every place.
+\end{theorem}
+
+\begin{proof}
+Let \(Q\) be the joint image. The image under \(r\) is a quotient of \(Q\). It is induction monomial by the quotient stability hypothesis. Decompose the resulting representation into irreducible constituents and apply \cref{thm:nilpotent_strong_artin}. Their isobaric sum has the required global parameter. The finite image matrices are defined over a number field generated by roots of unity, so applying every coefficient embedding gives compatible coefficient place realizations. Local compatibility follows from local automorphic induction for the monomial constituents.
+\end{proof}
+
+\begin{corollary}[Complete nilpotent and abelian by cyclic tensor sectors]\label{cor:nilpotent_tensor_sector}
+Tensor products, duals, adjoint representations, all Schur functors, and every finite composition of algebraic representations are automorphic when the joint finite image is nilpotent or abelian by cyclic.
+\end{corollary}
+
+\begin{proof}
+Both group classes are functorially induction monomial by \cref{prop:nilpotent_induction_monomial,thm:abelian_cyclic_induction_monomial}. Each listed operation is algebraic. Apply \cref{thm:nilpotent_algebraic_functoriality}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{12_nilpotent_functoriality.pdf}
+\caption{A quotient stable induction monomial image is closed under every algebraic representation and every resulting constituent is automorphic.}
+\label{fig:nilpotent_functoriality}
+\end{figure}
+
+\begin{remark}[Historical status]\label{rem:finite_image_history}
+The strong Artin conclusions in this section are consequences of classical monomial character theory, class field theory, and solvable automorphic induction \cite{Serre1977,Isaacs1976,ArthurClozel1989}. They are included to identify the exact finite image region in which every global gate is already constructive. No claim of priority is made for the existence of these automorphic representations.
+\end{remark}
+
+
+\section{Multiplicity free potentially abelian systems}\label{sec:potentially_abelian}
+
+The preceding construction begins with one character and induces it to the base field. The same method applies to a compatible system that becomes a direct sum of distinct characters after one finite extension, even when no inducing character was specified in advance.
+
+\begin{definition}[Multiplicity free potentially abelian datum]\label{def:potentially_abelian}
+A multiplicity free potentially abelian datum over a number field \(F\) consists of the following objects.
+
+\begin{enumerate}
+\item A finite Galois extension \(E/F\) with group \(\Gamma\).
+\item A semisimple strictly compatible system \((\rho_\lambda)_\lambda\) of rank \(n\).
+\item A finite \(\Gamma\) set \(X\) and pairwise distinct algebraic Hecke characters \(\chi_x\) of \(E\), with compatible realizations \(\chi_{x,\lambda}\), such that
+\[
+\boxed{
+\Res_{G_E}^{G_F}\rho_\lambda
+\cong
+\bigoplus_{x\in X}\chi_{x,\lambda}
+}
+\]
+for every \(\lambda\).
+\item A common coefficient field over which the character lines and the action of \(G_F\) on those lines are defined.
+\end{enumerate}
+\end{definition}
+
+Because the characters are distinct, their eigenspaces are one dimensional and are permuted by \(G_F\). For \(x\in X\), let \(\Gamma_x\) be its stabilizer and put
+\[
+F_x=E^{\Gamma_x}.
+\]
+The line belonging to \(x\) is stable under \(G_{F_x}\). Let
+\[
+\xi_{x,\lambda}:G_{F_x}\longrightarrow\overline{\QQ}_\lambda^\times
+\]
+be the character on that line.
+
+\begin{proposition}[Compatible stabilizer line characters]\label{prop:potential_line_character}
+For every \(x\in X\), the characters \((\xi_{x,\lambda})_\lambda\) are the compatible realizations of an algebraic Hecke character \(\Xi_x\) of \(F_x\). Their restriction to \(G_E\) is \(\chi_{x,\lambda}\). Replacing \(x\) by another point in the same \(\Gamma\) orbit replaces \(\Xi_x\) by the corresponding conjugate character.
+\end{proposition}
+
+\begin{proof}
+The stabilizer line is one dimensional, so the action of \(G_{F_x}\) on it is a character. Its restriction to \(G_E\) is the algebraic character \(\chi_{x,\lambda}\). The restriction of the line character to the finite index subgroup \(G_E\) is algebraic. Algebraicity is unchanged by finite restriction and descent, so the full line character is algebraic. The common coefficient field in \cref{def:potentially_abelian} makes these line actions compatible as \(\lambda\) varies. Any two extensions of the same restricted character differ through the finite quotient \(\Gamma_x\), hence by a finite order character. Global class field theory gives the algebraic Hecke character \(\Xi_x\). Conjugating the line conjugates the character.
+\end{proof}
+
+\begin{theorem}[Orbit decomposition of a potentially abelian system]\label{thm:potential_orbit_decomposition}
+Choose one point from each \(\Gamma\) orbit in \(X\). Then, for every coefficient place \(\lambda\),
+\[
+\boxed{
+\rho_\lambda
+\cong
+\bigoplus_{[x]\in\Gamma\backslash X}
+\Ind_{G_{F_x}}^{G_F}\xi_{x,\lambda}.
+}
+\]
+The decomposition is compatible in \(\lambda\), and its total rank is
+\[
+\sum_{[x]}[\Gamma:\Gamma_x]=\abs X=n.
+\]
+\end{theorem}
+
+\begin{proof}
+The distinct character lines form a monomial basis after restriction to \(G_E\). The span of one \(\Gamma\) orbit is stable under \(G_F\). Its action on the orbit lines is transitive up to scalars. Apply \cref{lem:transitive_packet} to identify that orbit span with the induction of the stabilizer line character. Summing over the disjoint orbits gives the displayed decomposition. The rank identity is the orbit partition of \(X\).
+\end{proof}
+
+\begin{theorem}[Automorphy of an admissible potentially abelian system]\label{thm:potential_automorphy}
+Assume that every stabilizer \(\Gamma_x\) is induction admissible in \(\Gamma\). Then
+\[
+\boxed{
+\Pi
+=
+\boxplusop_{[x]\in\Gamma\backslash X}
+\AI_{F_x/F}(\Xi_x)
+}
+\]
+is an automorphic representation of \(\GL_n(\Adele_F)\). Its compatible system is \((\rho_\lambda)_\lambda\), and its local parameter at every place is the local parameter of that system.
+\end{theorem}
+
+\begin{proof}
+Every automorphic induction exists by the stabilizer hypothesis and \cref{prop:ai_field_tower}. Its compatible system is the induced system attached to \(\Xi_x\). The direct sum of those systems is \((\rho_\lambda)_\lambda\) by \cref{thm:potential_orbit_decomposition}. Local compatibility follows at every stage of cyclic automorphic induction.
+\end{proof}
+
+\begin{corollary}[Nilpotent potentially abelian completion]\label{cor:nilpotent_potential}
+If \(\Gamma\) is nilpotent, every multiplicity free potentially abelian datum over \(E/F\) is automorphic. All coefficient place companions and the common Frobenius spine are supplied by the explicit isobaric representation in \cref{thm:potential_automorphy}.
+\end{corollary}
+
+\begin{proof}
+Every stabilizer is induction admissible by \cref{thm:universal_packet_admissibility}. Apply \cref{thm:potential_automorphy}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{13_potentially_abelian.pdf}
+\caption{Distinct algebraic character lines give monomial orbits whose stabilizer fields support automorphic induction.}
+\label{fig:potentially_abelian}
+\end{figure}
+
+
+
+\begin{definition}[Potentially abelian datum with finite multiplicities]\label{def:potential_multiplicity}
+A potentially abelian datum with finite multiplicities consists of a finite Galois extension \(E/F\) with group \(\Gamma\), a semisimple compatible system \((\rho_\lambda)_\lambda\), and pairwise distinct algebraic character systems \(\chi_x\) such that
+\[
+\boxed{
+\Res_{G_E}^{G_F}\rho_\lambda
+\cong
+\bigoplus_{x\in X}
+\chi_{x,\lambda}\otimes M_x
+}
+\]
+with finite dimensional multiplicity spaces \(M_x\) of dimension independent of \(\lambda\). The character labels and the stabilizer actions are assumed to be defined over one common coefficient field.
+\end{definition}
+
+\begin{standardfact}[Finite central linearization of projective representations]\label{fact:projective_central_cover}
+Every projective representation of a finite group over characteristic zero becomes an ordinary representation of a finite central extension. The central kernel acts through one scalar character on every irreducible constituent belonging to one fixed projective cocycle class \cite{Karpilovsky1985}.
+\end{standardfact}
+
+\begin{definition}[Split multiplicity packet datum]\label{def:split_multiplicity}
+A split multiplicity packet datum has a finite Galois extension \(E/F\) with group \(\Gamma\), a semisimple compatible system \((\rho_\lambda)_\lambda\), and a decomposition
+\[
+\Res_{G_E}^{G_F}\rho_\lambda
+\cong
+\bigoplus_{x\in X}
+\chi_{x,\lambda}\otimes M_x
+\]
+with pairwise distinct algebraic character systems \(\chi_x\) and finite dimensional multiplicity spaces \(M_x\). For every orbit representative \(x\), the datum also includes the following objects.
+
+\begin{enumerate}
+\item An algebraic extension \(\widetilde\Xi_x\) of \(\chi_x\) to the stabilizer field \(F_x=E^{\Gamma_x}\).
+\item A finite image representation \(\tau_x\) of \(\Gamma_x\) such that the stabilizer isotypic representation is
+\[
+\widetilde\Xi_{x,\lambda}\otimes\tau_x.
+\]
+\item For every irreducible constituent of \(\tau_x\), a realization as induction from a character of a subgroup that is induction admissible in \(\Gamma\).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Automorphy of split multiplicity packets]\label{thm:split_multiplicity_automorphy}
+Every split multiplicity packet datum is attached to an isobaric automorphic representation. More precisely, write
+\[
+\tau_x
+\cong
+\bigoplus_j
+\Ind_{J_{x,j}}^{\Gamma_x}\nu_{x,j}
+\]
+with every \(J_{x,j}\) induction admissible in \(\Gamma\). Let
+\[
+L_{x,j}=E^{J_{x,j}}.
+\]
+Then the compatible system \((\rho_\lambda)_\lambda\) is attached to
+\[
+\boxed{
+\Pi
+=
+\boxplusop_{[x]\in\Gamma\backslash X}
+\boxplusop_j
+\AI_{L_{x,j}/F}
+\left(
+\widetilde\Xi_x|_{L_{x,j}}\,\nu_{x,j}
+\right).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Clifford decomposition gives
+\[
+\rho_\lambda
+\cong
+\bigoplus_{[x]}
+\Ind_{G_{F_x}}^{G_F}
+\left(
+\widetilde\Xi_{x,\lambda}\otimes\tau_x
+\right).
+\]
+Insert the declared monomial decomposition of \(\tau_x\). Tensoring an induced finite quotient character by \(\widetilde\Xi_x\) gives
+\[
+\widetilde\Xi_x\otimes
+\Ind_{J_{x,j}}^{\Gamma_x}\nu_{x,j}
+\cong
+\Ind_{G_{L_{x,j}}}^{G_{F_x}}
+\left(
+\widetilde\Xi_x|_{L_{x,j}}\nu_{x,j}
+\right).
+\]
+Transitivity of induction identifies the resulting representation over \(F\) with the displayed character induction from \(L_{x,j}\). Every subgroup \(J_{x,j}\) is induction admissible in \(\Gamma\), so the corresponding automorphic induction exists. Taking the isobaric sum gives the compatible system \((\rho_\lambda)_\lambda\).
+\end{proof}
+
+\begin{corollary}[Nilpotent split multiplicity completion]\label{cor:nilpotent_split_multiplicity}
+Assume \(\Gamma\) is nilpotent and every character \(\chi_x\) extends algebraically to its stabilizer field. Then every finite multiplicity representation \(\tau_x\) satisfies the induction condition in \cref{def:split_multiplicity}. Hence the compatible system is automorphic.
+\end{corollary}
+
+\begin{proof}
+Every irreducible representation of a finite nilpotent group is monomial, and every subgroup of \(\Gamma\) is induction admissible by \cref{prop:nilpotent_induction_monomial,thm:universal_packet_admissibility}. Apply \cref{thm:split_multiplicity_automorphy}.
+\end{proof}
+
+
+
+\begin{definition}[Projectively admissible multiplicity packet]\label{def:projective_admissibility}
+A potentially abelian multiplicity packet at \(x\) is projectively admissible in \(\Gamma\) when its projective line and multiplicity actions admit a common finite central cover
+\[
+1\longrightarrow Z_x
+\longrightarrow
+\widetilde\Gamma_x
+\longrightarrow
+\Gamma_x
+\longrightarrow1
+\]
+with the following property. Every irreducible constituent of the lifted multiplicity representation is
+\[
+\Ind_{\widetilde J}^{\widetilde\Gamma_x}\nu
+\]
+where \(Z_x\subseteq\widetilde J\), the central character of \(\nu\) cancels the central character of the lifted line, and the projected subgroup \(J=\widetilde J/Z_x\) is induction admissible in \(\Gamma\).
+\end{definition}
+
+\begin{theorem}[Automorphy under projective admissibility]\label{thm:projective_multiplicity_automorphy}
+A potentially abelian datum with finite multiplicities is automorphic when every character orbit is projectively admissible. Each lifted monomial constituent descends to an algebraic character of an intermediate field, and the global compatible system is the isobaric sum of the corresponding automorphic inductions.
+\end{theorem}
+
+\begin{proof}
+Fix one orbit representative \(x\). On the chosen central cover, tensor the lifted character line with one monomial constituent
+\[
+\Ind_{\widetilde J}^{\widetilde\Gamma_x}\nu
+\]
+of the lifted multiplicity representation. Tensor induction gives the induction from \(\widetilde J\) of the product character. The central characters cancel by hypothesis, so the product is trivial on \(Z_x\) and descends to an actual character of the preimage of \(J=\widetilde J/Z_x\) in \(G_{F_x}\). Its restriction to \(G_E\) is algebraic, hence the descended character is an algebraic Hecke character of \(E^J\). The subgroup \(J\) is induction admissible in \(\Gamma\), so automorphic induction from \(E^J\) to \(F\) exists. Sum over the irreducible multiplicity constituents and then over the character orbits.
+\end{proof}
+
+\begin{theorem}[Nilpotent projective multiplicity completion]\label{thm:nilpotent_projective_multiplicity}
+Let \((\rho_\lambda)_\lambda\) be a potentially abelian datum with finite multiplicities over a finite nilpotent Galois extension \(E/F\). Then the system is attached to an isobaric automorphic representation of \(\GL_n(\Adele_F)\). No splitting assumption on the character extension cocycles is required.
+\end{theorem}
+
+\begin{proof}
+Fix an orbit representative \(x\) and choose a finite central cover as in \cref{fact:projective_central_cover}. The stabilizer \(\Gamma_x\) is nilpotent. A central extension of a nilpotent group is nilpotent because the upper central series lifts and gains at most one additional central step. Hence \(\widetilde\Gamma_x\) is nilpotent.
+
+Every irreducible constituent of the lifted multiplicity representation is monomial. Write one such constituent as
+\[
+\Ind_{\widetilde J}^{\widetilde\Gamma_x}\nu.
+\]
+The central kernel acts by a scalar on the constituent. It must lie in \(\widetilde J\), since otherwise a central element would move a coset line in the induced model and could not act as a scalar. Its scalar character is inverse to that of the lifted line because their tensor product descends to the original linear isotypic packet. The projected subgroup \(J=\widetilde J/Z_x\) lies in the nilpotent group \(\Gamma\), so it is induction admissible. Thus every orbit is projectively admissible. Apply \cref{thm:projective_multiplicity_automorphy}.
+\end{proof}
+
+\begin{remark}[Status of the nilpotent multiplicity argument]\label{rem:nilpotent_multiplicity_status}
+The preceding theorem is a structural deduction from finite projective representation theory, monomiality of finite nilpotent groups, class field theory, and solvable automorphic induction. It is included because the central character cancellation makes the construction explicit. No claim of priority is made for the resulting automorphy statement.
+\end{remark}
+
+\begin{corollary}[Full potentially abelian completion over a nilpotent envelope]\label{cor:full_nilpotent_potential}
+Every semisimple compatible system that becomes a finite direct sum of algebraic characters after restriction to a finite nilpotent Galois extension is automorphic, provided the character decomposition and multiplicity actions are defined over one common coefficient field.
+\end{corollary}
+
+\begin{proof}
+Group equal characters into their finite multiplicity packets and apply \cref{thm:nilpotent_projective_multiplicity}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{15_split_multiplicity.pdf}
+\caption{Finite central covers resolve projective multiplicity packets in the nilpotent case. Split cocycles give the simpler direct construction.}
+\label{fig:split_multiplicity}
+\end{figure}
+
+\begin{remark}[Multiplicity obstruction]\label{rem:potential_multiplicity}
+If a character of \(G_E\) occurs with multiplicity greater than one, its stabilizer acts on a multiplicity space through a projective representation before an extension of the character is chosen. The split case is resolved by \cref{thm:split_multiplicity_automorphy}. When the extension cocycle is nonzero, the multiplicity action remains genuinely projective. The nilpotent case is resolved by a finite central cover in \cref{thm:nilpotent_projective_multiplicity}. For a general nonnilpotent stabilizer, the central cover may contain irreducible constituents that have no admissible monomial resolution. This is the precise point at which the finite Heisenberg and twisted packet theory of the wild local problem reappears.
+\end{remark}
+
+\section{Global symmetric and exterior functoriality}\label{sec:global_functoriality}
+
+Retain a solvable monomial datum \((E/F,\chi)\) with group \(\Gamma\). Let
+\[
+\rho_\lambda
+=
+\Ind_{G_E}^{G_F}\chi_\lambda.
+\]
+\begin{definition}[Degreewise packet admissibility]\label{def:degreewise_admissibility}
+The datum is symmetric admissible at degree \(m\) when every stabilizer \(\Gamma_{\bm a}\), for \(\bm a\in\calC_m(\Gamma)\), is induction admissible in \(\Gamma\). It is exterior admissible at degree \(r\) when every stabilizer \(\Gamma_S\), for \(S\in\binom{\Gamma}{r}\), is induction admissible in \(\Gamma\).
+\end{definition}
+
+For a symmetric composition \(\bm a\), let \(\Gamma_{\bm a}\) be its stabilizer and let
+\[
+F_{\bm a}=E^{\Gamma_{\bm a}}.
+\]
+The symmetric line in \(\Sym^m\rho_\lambda\) carries a character
+\[
+\xi_{\bm a,\lambda}:G_{F_{\bm a}}\longrightarrow\overline{\QQ}_\lambda^{\times}.
+\]
+
+\begin{proposition}[Algebraicity of orbit characters]\label{prop:orbit_character_algebraic}
+There is an algebraic Hecke character \(\Xi_{\bm a}\) of \(F_{\bm a}\) whose l adic realizations are the characters \(\xi_{\bm a,\lambda}\). Its restriction to \(G_E\) is the compatible product
+\[
+\boxed{
+\prod_{\gamma\in\Gamma}
+(\chi_\lambda^\gamma)^{a_\gamma}.
+}
+\]
+Any two extensions of this restricted character to \(G_{F_{\bm a}}\) differ by a finite order character of \(\Gamma_{\bm a}\).
+\end{proposition}
+
+\begin{proof}
+The restriction formula is \cref{prop:symmetric_stabilizer_character}. Algebraicity and compatibility follow from \cref{prop:general_orbit_algebraicity}. The statement about two extensions is \cref{prop:orbit_extension_torsor} applied at every coefficient place.
+\end{proof}
+
+\begin{theorem}[Automorphy of an admissible symmetric power]\label{thm:global_symmetric_automorphy}
+Fix \(m\geq0\) and assume the datum is symmetric admissible at degree \(m\). Define
+\[
+\boxed{
+\Pi_m^{\mathrm{sym}}
+=
+\boxplusop_{[\bm a]\in\Gamma\backslash\calC_m(\Gamma)}
+\AI_{F_{\bm a}/F}(\Xi_{\bm a}).
+}
+\]
+Every automorphic induction in this sum exists. The l adic system attached to \(\Pi_m^{\mathrm{sym}}\) is
+\[
+\boxed{
+\Sym^m\rho_\lambda
+}
+\]
+for every \(\lambda\). At every place \(v\) of \(F\), the local parameter of \(\Pi_{m,v}^{\mathrm{sym}}\) is the symmetric power of the local parameter of \(\pi_v\).
+\end{theorem}
+
+\begin{proof}
+Every stabilizer \(\Gamma_{\bm a}\) is induction admissible by hypothesis, so automorphic induction from \(F_{\bm a}\) to \(F\) exists. The Galois representation attached to the displayed isobaric sum is
+\[
+\bigoplus_{[\bm a]}
+\Ind_{G_{F_{\bm a}}}^{G_F}\xi_{\bm a,\lambda}.
+\]
+This is \(\Sym^m\rho_\lambda\) by \cref{thm:symmetric_packet}. Local compatibility follows from the local compatibility of automorphic induction.
+\end{proof}
+
+\begin{corollary}[All symmetric degrees for a nilpotent quotient]\label{cor:nilpotent_all_symmetric}
+If \(\Gamma\) is nilpotent, the transfer in \cref{thm:global_symmetric_automorphy} exists for every \(m\geq0\).
+\end{corollary}
+
+\begin{proof}
+Every stabilizer is induction admissible by \cref{thm:universal_packet_admissibility}.
+\end{proof}
+
+\begin{corollary}[Symmetric power L functions]\label{cor:symmetric_L_functions}
+For every symmetric admissible degree \(m\), the standard L function of \(\Sym^m\pi\) in the monomial sector has meromorphic continuation and a functional equation. It factors as
+\[
+\boxed{
+L(s,\Pi_m^{\mathrm{sym}})
+=
+\prod_{[\bm a]}
+L(s,\Xi_{\bm a}).
+}
+\]
+It is entire when no constituent character produces a pole.
+\end{corollary}
+
+\begin{proof}
+The standard L function of automorphic induction equals the Hecke L function of the inducing character. Standard L functions multiply under isobaric sums. Hecke L functions have meromorphic continuation and functional equations.
+\end{proof}
+
+For exterior powers, let \(S\subseteq\Gamma\), let \(\Gamma_S\) be its stabilizer, and put
+\[
+F_S=E^{\Gamma_S}.
+\]
+The exterior line character includes the finite order permutation sign.
+
+\begin{proposition}[Algebraicity of exterior orbit characters]\label{prop:exterior_character_algebraic}
+For every subset \(S\subseteq\Gamma\), the exterior line character is the l adic realization of an algebraic Hecke character \(\Zeta_S\) of \(F_S\). Its restriction to \(G_E\) is
+\[
+\boxed{
+\prod_{\gamma\in S}\chi_\lambda^\gamma.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The restriction formula is \cref{prop:exterior_stabilizer_character}. The quotient contribution is the finite order permutation sign together with the finite coset scalar. Apply \cref{prop:general_orbit_algebraicity}.
+\end{proof}
+
+\begin{theorem}[Automorphy of an admissible exterior power]\label{thm:global_exterior_automorphy}
+Fix \(0\leq r\leq\abs\Gamma\) and assume the datum is exterior admissible at degree \(r\). Define
+\[
+\boxed{
+\Pi_r^{\mathrm{ext}}
+=
+\boxplusop_{[S]\in\Gamma\backslash{\binom{\Gamma}{r}}}
+\AI_{F_S/F}(\Zeta_S).
+}
+\]
+Then \(\Pi_r^{\mathrm{ext}}\) is automorphic and its compatible l adic system is
+\[
+\boxed{
+\bigwedge^r\rho_\lambda.
+}
+\]
+Its local parameters are the exterior powers of the local parameters of \(\pi\).
+\end{theorem}
+
+\begin{proof}
+The proof is identical to that of \cref{thm:global_symmetric_automorphy}, using \cref{thm:exterior_packet} and the exterior stabilizer characters.
+\end{proof}
+
+\begin{corollary}[All exterior degrees for a nilpotent quotient]\label{cor:nilpotent_all_exterior}
+If \(\Gamma\) is nilpotent, the transfer in \cref{thm:global_exterior_automorphy} exists for every \(0\leq r\leq\abs\Gamma\).
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:universal_packet_admissibility}.
+\end{proof}
+
+\begin{corollary}[Determinant functoriality]\label{cor:global_determinant}
+The top exterior transfer is the Hecke character corresponding to \(\det\rho_\lambda\). It agrees with the central character of \(\pi\) under global class field theory.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{cor:determinant_packet} and the compatibility of automorphic induction with central characters.
+\end{proof}
+
+\section{Tensor products and base change under admissibility}\label{sec:global_tensor}
+
+Let \(M/F\) be a finite Galois extension with group \(\Gamma\). Let \(E=M^H\) and \(L=M^K\) for subgroups \(H,K\leq\Gamma\). Let \(\chi\) and \(\psi\) be algebraic Hecke characters of \(E\) and \(L\). Put
+\[
+\pi=\AI_{E/F}(\chi),
+\qquad
+\tau=\AI_{L/F}(\psi).
+\]
+Assume that \(H\) and \(K\) are induction admissible in \(\Gamma\), so both automorphic inductions exist.
+
+For \(g\in H\backslash\Gamma/K\), let
+\[
+J_g=H\cap gKg^{-1}
+\]
+and
+\[
+M_g=M^{J_g}.
+\]
+The product of the restricted character \(\chi\) and the conjugate restricted character \({}^g\psi\) gives an algebraic Hecke character \(\Theta_g\) of \(M_g\).
+
+\begin{theorem}[Automorphic tensor product under subgroup admissibility]\label{thm:global_tensor_product}
+Assume that every intersection subgroup \(J_g\) is induction admissible in \(\Gamma\). The isobaric representation
+\[
+\boxed{
+\pi\boxtimes\tau
+=
+\boxplusop_{g\in H\backslash\Gamma/K}
+\AI_{M_g/F}(\Theta_g)
+}
+\]
+is automorphic. Its local parameter at every place is the tensor product of the local parameters of \(\pi\) and \(\tau\). Its compatible Galois system is
+\[
+\rho_{\pi,\lambda}\otimes\rho_{\tau,\lambda}.
+\]
+\end{theorem}
+
+\begin{proof}
+Every intersection subgroup \(J_g\) is induction admissible by hypothesis. Thus each automorphic induction exists. The Galois representation attached to the isobaric sum is the Mackey tensor decomposition in \cref{thm:mackey_tensor}. Local compatibility follows at every place.
+\end{proof}
+
+\begin{corollary}[Rankin factorization]\label{cor:rankin_factorization}
+The Rankin L function factors as
+\[
+\boxed{
+L(s,\pi\times\tau)
+=
+\prod_{g\in H\backslash\Gamma/K}
+L(s,\Theta_g).
+}
+\]
+The completed product has meromorphic continuation and a functional equation.
+\end{corollary}
+
+\begin{proof}
+Apply the standard L function to the isobaric decomposition in \cref{thm:global_tensor_product}.
+\end{proof}
+
+\begin{theorem}[Monomial base change under subgroup admissibility]\label{thm:global_base_change}
+Let \(F'\) be an intermediate field of \(M/F\), with subgroup \(L_0=\Gal(M/F')\). Assume that \(L_0\) is induction admissible in \(\Gamma\), and that every subgroup \(L_0\cap gHg^{-1}\) is induction admissible in \(L_0\). For \(g\in L_0\backslash\Gamma/H\), let \(\chi_g\) be the base change of the conjugate character \({}^g\chi\) to the field \(M^{L_0\cap gHg^{-1}}\). Then the base change of \(\pi=\AI_{E/F}\chi\) to \(F'\) is
+\[
+\boxed{
+\BC_{F'/F}(\pi)
+=
+\boxplusop_{g\in L_0\backslash\Gamma/H}
+\AI_{M^{L_0\cap gHg^{-1}}/F'}
+\left(\chi_g\right).
+}
+\]
+Its local and Galois parameters are the restrictions of those of \(\pi\).
+\end{theorem}
+
+\begin{proof}
+Apply the Mackey restriction formula \cref{thm:base_change_mackey} to every l adic member. The declared subgroup hypotheses give the base change tower and every automorphic induction occurring in the formula. Local compatibility identifies the isobaric sum with base change.
+\end{proof}
+
+\begin{corollary}[Nilpotent closure removes every admissibility check]\label{cor:nilpotent_tensor_basechange}
+If \(\Gamma\) is nilpotent, the tensor product and base change constructions in \cref{thm:global_tensor_product,thm:global_base_change} exist for all subgroups and all double cosets.
+\end{corollary}
+
+\begin{proof}
+Every subgroup of \(\Gamma\), and every subgroup of one of its subgroups, is induction admissible by \cref{thm:universal_packet_admissibility}.
+\end{proof}
+
+\begin{remark}\label{rem:nilpotent_reason}
+The representation identities hold for every finite quotient. Nilpotence is the exact uniform condition that removes every subgroup admissibility check.
+\end{remark}
+
+
+\section{Recursive packet closure in one Galois envelope}\label{sec:polynomial_closure}
+
+Let \(M/F\) be a finite Galois extension with group \(\Gamma\). Begin with finitely many algebraic Hecke characters of intermediate fields. Apply a finite sequence of direct sums, duals, tensor products, symmetric powers, and exterior powers to their induced compatible systems.
+
+\begin{definition}[Packet polynomial expression]\label{def:packet_polynomial}
+A packet polynomial expression is any expression obtained from monomial induced compatible systems inside \(M/F\) by finitely many applications of
+\[
+\oplus,
+\qquad
+(\cdot)^\vee,
+\qquad
+\otimes,
+\qquad
+\Sym^m,
+\qquad
+\bigwedge^r.
+\]
+\end{definition}
+
+\begin{definition}[Resolution admissibility]\label{def:resolution_admissibility}
+Choose the recursive monomial resolution obtained by applying Mackey decomposition and the symmetric and exterior orbit decompositions at every node of a packet polynomial expression. The expression is resolution admissible in \(\Gamma\) when every final inducing subgroup in that resolution is induction admissible in \(\Gamma\).
+\end{definition}
+
+\begin{theorem}[Explicit monomial resolution of every packet polynomial expression]\label{thm:packet_polynomial_resolution}
+Every packet polynomial expression has a finite decomposition
+\[
+\boxed{
+\calR
+\cong
+\bigoplus_{j=1}^{N}
+\Ind_{G_{E_j}}^{G_F}\theta_j
+}
+\]
+where every \(E_j\) is an intermediate field of \(M/F\) and every \(\theta_j\) is the compatible realization of an algebraic Hecke character arising from the original characters by restriction, conjugation, multiplication, inversion, and a finite quotient character.
+\end{theorem}
+
+\begin{proof}
+Proceed by structural induction on the expression. The base objects are monomial. Direct sums require no work. Duals remain monomial. Tensor products decompose by \cref{thm:mackey_tensor}. Symmetric and exterior powers of one induced summand decompose by \cref{thm:general_symmetric_coset,thm:general_exterior_coset}. For a direct sum use the standard symmetric and exterior decomposition formulas displayed in the proof of \cref{cor:monomial_basic_closure}. Repeated tensor decomposition completes the induction. Every stabilizer and intersection is a subgroup of \(\Gal(M/F)\), so every fixed field remains inside \(M\). Algebraicity of every new line character follows from \cref{prop:general_orbit_algebraicity}.
+\end{proof}
+
+\begin{theorem}[Automorphy under recursive admissibility]\label{thm:packet_polynomial_automorphy}
+Every resolution admissible packet polynomial expression in \cref{def:packet_polynomial,def:resolution_admissibility} is attached to an isobaric automorphic representation. Its compatible coefficient place system is the result of applying the same expression to the original compatible systems. Its local parameter at every place is the corresponding packet polynomial expression in the original local parameters.
+\end{theorem}
+
+\begin{proof}
+Use the monomial resolution in \cref{thm:packet_polynomial_resolution}. Every final inducing subgroup is induction admissible by hypothesis. Apply automorphic induction to every character \(\theta_j\) and take the isobaric sum. Compatibility follows from the local and global compatibility of each induction.
+\end{proof}
+
+\begin{corollary}[Nilpotent recursive closure]\label{cor:nilpotent_recursive_closure}
+If \(\Gamma\) is nilpotent, every packet polynomial expression inside \(M/F\) is resolution admissible and automorphic.
+\end{corollary}
+
+\begin{proof}
+Every subgroup of \(\Gamma\) is induction admissible by \cref{thm:universal_packet_admissibility}. Apply \cref{thm:packet_polynomial_automorphy}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{14_recursive_resolution.pdf}
+\caption{A finite packet expression is resolved into monomial leaves. Automorphy follows when every final inducing subgroup lies on a cyclic subnormal tower.}
+\label{fig:recursive_resolution}
+\end{figure}
+
+\begin{theorem}[Pair factors for recursively resolved packets]\label{thm:recursive_pair_factors}
+Let \(\calR\) and \(\calS\) be two packet polynomial expressions with monomial resolutions
+\[
+\calR\cong\bigoplus_i\Ind_{G_{E_i}}^{G_F}\theta_i,
+\qquad
+\calS\cong\bigoplus_j\Ind_{G_{L_j}}^{G_F}\psi_j.
+\]
+Every local pair L, epsilon, and gamma factor of \(\calR\otimes\calS\) is a finite product of one dimensional character factors over the double coset intersection fields. If both expressions are resolution admissible, their global Rankin L function is a finite product of Hecke L functions and has meromorphic continuation and a functional equation.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:monomial_pair_factors} to every pair of monomial summands and use multiplicativity. When both inputs are resolution admissible, they are automorphic by \cref{thm:packet_polynomial_automorphy}. Their Rankin L function agrees with the L function of the tensor product parameter. The Mackey decomposition expresses that parameter as induced characters over the intersection fields, and induction identifies each factor with the corresponding Hecke L function. No additional automorphic induction hypothesis on the intersection fields is needed for this analytic factorization.
+\end{proof}
+
+\begin{corollary}[Iterated symmetric and exterior functoriality]\label{cor:iterated_functoriality}
+Inside a nilpotent Galois envelope, every finite iteration such as
+\[
+\Sym^a\left(\bigwedge^b(\rho_1\otimes\rho_2)\right),
+\qquad
+\bigwedge^c\left(\Sym^d\rho\right),
+\]
+and every finite direct sum or dual built from such expressions is automorphic inside one nilpotent Galois envelope.
+\end{corollary}
+
+\begin{proof}
+These are packet polynomial expressions. Apply \cref{cor:nilpotent_recursive_closure}.
+\end{proof}
+
+\section{All symmetric powers in the global dihedral case}\label{sec:global_dihedral}
+
+Let \(E/F\) be quadratic with nontrivial automorphism \(\sigma\). Let \(\chi\) be an algebraic Hecke character with \(\chi^\sigma\neq\chi\), and put
+\[
+\pi=\AI_{E/F}(\chi).
+\]
+Let \(\omega_{E/F}\) be the quadratic Hecke character of \(F\). Let \(\delta\) be the central character of \(\pi\), and put
+\[
+\eta=\delta\omega_{E/F}.
+\]
+
+\begin{theorem}[Automorphy of every dihedral symmetric power]\label{thm:global_dihedral_symmetric}
+For every positive integer \(m\), the symmetric power transfer exists and is the isobaric representation
+\[
+\boxed{
+\Sym^m\pi
+=
+\boxplusop_{j=0}^{\lfloor(m-1)/2\rfloor}
+\AI_{E/F}
+\left(
+\chi^{m-j}(\chi^\sigma)^j
+\right)
+\mathbin{\boxplusop}
+\begin{cases}
+\eta^{m/2},&m\text{ even},\\
+0,&m\text{ odd}.
+\end{cases}
+}
+\]
+At every place, its local Langlands parameter is the symmetric power of the local parameter of \(\pi\). Its compatible l adic system is \(\Sym^m\rho_{\pi,\lambda}\).
+\end{theorem}
+
+\begin{proof}
+This is \cref{thm:global_symmetric_automorphy} specialized to the quotient of order two. The explicit orbit decomposition is \cref{thm:dihedral_symmetric}. The middle character is identified by \cref{prop:middle_character}.
+\end{proof}
+
+\begin{corollary}[Cuspidality of the dihedral constituents]\label{cor:global_dihedral_cuspidality}
+The constituent
+\[
+\AI_{E/F}
+\left(
+\chi^{m-j}(\chi^\sigma)^j
+\right)
+\]
+is cuspidal exactly when
+\[
+\boxed{
+\left(\chi/\chi^\sigma\right)^{m-2j}\neq 1.
+}
+\]
+For even \(m\), the full symmetric power is never cuspidal because it contains the one dimensional constituent \(\eta^{m/2}\).
+\end{corollary}
+
+\begin{proof}
+Apply the automorphic induction cuspidality criterion and \cref{cor:dihedral_cuspidality}.
+\end{proof}
+
+\begin{corollary}[Dihedral symmetric power L function]\label{cor:global_dihedral_L}
+The standard L function is
+\[
+\boxed{
+L(s,\Sym^m\pi)
+=
+\prod_{j=0}^{\lfloor(m-1)/2\rfloor}
+L_E
+\left(
+ s,
+ \chi^{m-j}(\chi^\sigma)^j
+\right)
+\mathbin{\cdot}
+\begin{cases}
+L_F(s,\eta^{m/2}),&m\text{ even},\\
+1,&m\text{ odd}.
+\end{cases}
+}
+\]
+It has meromorphic continuation and a functional equation.
+\end{corollary}
+
+\begin{proof}
+Apply the standard L function to \cref{thm:global_dihedral_symmetric} and use compatibility of automorphic induction with Hecke L functions.
+\end{proof}
+
+\begin{corollary}[Dihedral adjoint lift]\label{cor:global_dihedral_adjoint}
+The adjoint transfer is
+\[
+\boxed{
+\Ad^0\pi
+=
+\omega_{E/F}
+\boxplusop
+\AI_{E/F}
+\left(
+\chi/\chi^\sigma
+\right).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Apply \cref{cor:dihedral_adjoint} at every local and l adic parameter.
+\end{proof}
+
+\begin{theorem}[Tensor product of two dihedral forms from one field]\label{thm:global_dihedral_tensor}
+Let
+\[
+\pi=\AI_{E/F}(\chi),
+\qquad
+\tau=\AI_{E/F}(\psi).
+\]
+Then
+\[
+\boxed{
+\pi\boxtimes\tau
+=
+\AI_{E/F}(\chi\psi)
+\boxplusop
+\AI_{E/F}(\chi\psi^\sigma).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:dihedral_tensor} to the local and compatible Galois parameters and then use automorphic induction.
+\end{proof}
+
+\begin{remark}\label{rem:dihedral_general_context}
+The automorphy of symmetric square lifts is known far beyond the dihedral sector \cite{GelbartJacquet1978}. The point here is different. In the dihedral sector every symmetric degree has one closed monomial formula.
+\end{remark}
+
+\section{Explicit completion of the global gates}\label{sec:gates}
+
+The global deformation approach separates residual existence, compatible companions, automorphic occupancy, comparison, and realization. In the monomial sector these objects can be constructed directly from the inducing Hecke character.
+
+\begin{definition}[Explicit monomial completion datum]\label{def:explicit_completion}
+An explicit monomial completion datum is a solvable monomial datum together with one packet operation whose stabilizers and intersections are induction admissible. A universally explicit datum lies in one nilpotent Galois envelope and permits every packet polynomial expression in \cref{sec:polynomial_closure}. More generally, one fixed expression is explicit whenever its recursive resolution is admissible.
+\end{definition}
+
+\begin{theorem}[Explicit completion of companion and occupancy gates]\label{thm:explicit_gate_completion}
+An explicit monomial completion datum supplies all of the following objects.
+
+\begin{enumerate}
+\item A residual representation at every coefficient place after choosing an integral lattice.
+\item A characteristic zero companion at every coefficient place.
+\item One common Frobenius spine.
+\item An automorphic representation whose Hecke system occupies that spine.
+\item Local and global compatibility between the automorphic and Galois constructions.
+\item The same five objects for every admissible symmetric power, exterior power, tensor product, base change, potentially abelian system completed above, and recursively admissible packet expression constructed in this article.
+\end{enumerate}
+
+Thus the companion existence and automorphic occupancy problems are solved in the declared monomial sector without a patching argument.
+\end{theorem}
+
+\begin{proof}
+The compatible l adic characters of \(\chi\), or the declared character lines in a potentially abelian datum, give residual reductions and characteristic zero members at every coefficient place. Their inductions have one common Frobenius spine by \cref{thm:global_monomial_automorphy}. The automorphic induction \(\pi\) occupies that spine. Local and global compatibility is part of solvable automorphic induction.
+
+For a multiplicity free potentially abelian datum, apply \cref{thm:potential_automorphy}. For a split multiplicity packet, apply \cref{thm:split_multiplicity_automorphy}. For arbitrary finite multiplicities over a nilpotent envelope, apply \cref{thm:nilpotent_projective_multiplicity}. For symmetric and exterior powers, apply \cref{thm:global_symmetric_automorphy,thm:global_exterior_automorphy}. For tensor products and base change, apply \cref{thm:global_tensor_product,thm:global_base_change}. For arbitrary resolution admissible packet polynomial expressions, apply \cref{thm:packet_polynomial_automorphy}. Every constituent is again built from an algebraic Hecke character and automorphic induction. The same construction therefore supplies every coefficient place member and its automorphic realization.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{09_gate_closure.pdf}
+\caption{In the monomial sector, explicit induction constructs the objects that patching must otherwise detect indirectly.}
+\label{fig:gate_closure}
+\end{figure}
+
+\begin{corollary}[One member propagation is automatic]\label{cor:automatic_propagation}
+In the monomial sector, automorphy at one coefficient place does not merely propagate conditionally. Every coefficient place member is constructed from the same Hecke character and is automorphic through the same isobaric representation.
+\end{corollary}
+
+\begin{proof}
+This is the common construction in \cref{thm:global_monomial_automorphy,thm:explicit_gate_completion}.
+\end{proof}
+
+\begin{corollary}[Functorial companion forests are nonempty]\label{cor:functorial_companion_forests}
+For every actual admissible packet construction in the article and every coefficient place \(\lambda\), every finite reduction level of the associated compatible system is nonempty and lies on a complete branch.
+\end{corollary}
+
+\begin{proof}
+The complete l adic representation exists at every \(\lambda\). Its reductions give a compatible point at every finite level.
+\end{proof}
+
+\section{Examples and exact packet counts}\label{sec:examples}
+
+\begin{example}[Symmetric packets for a quotient of order three]\label{ex:symmetric_c3}
+For \(\Gamma=C_3\), \cref{cor:cyclic_symmetric_count} gives
+\[
+\sum_{m\geq0}N_m(C_3)t^m
+=
+\frac13
+\left(
+(1-t)^{-3}
++2(1-t^3)^{-1}
+\right).
+\]
+The first packet counts are
+\[
+1,1,2,4,5,7,10.
+\]
+They count the orbits of weak compositions of degrees zero through six.
+\end{example}
+
+\begin{example}[Exterior packets for a quotient of order three]\label{ex:exterior_c3}
+The exterior orbit series is
+\[
+\frac13
+\left(
+(1+t)^3+2(1+t^3)
+\right)
+=
+1+t+t^2+t^3.
+\]
+There is one packet in every exterior degree.
+\end{example}
+
+\begin{example}[The finite \(S_3\) sector]\label{ex:s3_sector}
+The group \(S_3\) has the abelian normal subgroup \(A_3\) with cyclic quotient of order two. Its two dimensional irreducible representation \(V\) is induced from either nontrivial character of \(A_3\). The first symmetric powers are
+\[
+\Sym^2V\cong\one\oplus V
+\]
+and
+\[
+\Sym^3V\cong\one\oplus\operatorname{sgn}\oplus V.
+\]
+Thus every finite image Artin parameter with image contained in \(S_3\), and every algebraic functor applied to such parameters, lies in the completed sector of \cref{thm:nilpotent_algebraic_functoriality}.
+\end{example}
+
+\begin{example}[A projective multiplicity packet over the Klein group]\label{ex:v4_projective_packet}
+Let \(A=C_2\times C_2\) carry its nontrivial symplectic projective representation of degree two. One finite central cover is
+\[
+1\longrightarrow\{1,-1\}
+\longrightarrow Q_8
+\longrightarrow A
+\longrightarrow1.
+\]
+The degree two representation of \(Q_8\) is induced from a faithful character of a cyclic subgroup \(C_4\). The center lies inside that subgroup and acts by minus one. If the projective character line has the same central sign, the two signs cancel and the product descends to an ordinary character packet over the projected subgroup. This is the smallest model of \cref{thm:nilpotent_projective_multiplicity}.
+\end{example}
+
+\begin{example}[Quaternion Clifford tower]\label{ex:quaternion_tower}
+Let \(Q_8\) have its irreducible representation of degree two. Let
+\[
+Q_8\triangleright C_4\triangleright C_2\triangleright1.
+\]
+The first restriction splits into two conjugate characters of \(C_4\), so the degree two representation is induced from one of them. The next restrictions are irreducible one dimensional steps. The tower therefore has one induction step, in agreement with
+\[
+2=2^1.
+\]
+\end{example}
+
+\begin{example}[Dihedral symmetric power of degree five]\label{ex:dihedral_five}
+For \(m=5\),
+\[
+\Sym^5\rho
+\cong
+\Ind_H^G\chi^5
+\oplus
+\Ind_H^G(\chi^4\chi^\sigma)
+\oplus
+\Ind_H^G(\chi^3(\chi^\sigma)^2).
+\]
+The three packets have total dimension six.
+\end{example}
+
+\begin{example}[Tensor square over a cyclic cubic extension]\label{ex:cubic_tensor_square}
+Let \(E/F\) be cyclic cubic with generator \(\sigma\). For
+\[
+\pi=\AI_{E/F}(\chi),
+\]
+we have
+\[
+\pi\boxtimes\pi
+=
+\AI_{E/F}(\chi^2)
+\boxplusop
+\AI_{E/F}(\chi\chi^\sigma)
+\boxplusop
+\AI_{E/F}(\chi\chi^{\sigma^2}).
+\]
+This is the global form of \cref{ex:tensor_c3}.
+\end{example}
+
+\section{Completed region and exact remaining boundary}\label{sec:boundary}
+
+The results above close a specific region of the Langlands program. The word complete is used only inside the hypotheses displayed in the article.
+
+\begin{longtable}{p{.42\textwidth}p{.48\textwidth}}
+\caption{The completed induction sectors and the remaining general problems.}\label{tab:boundary}\\
+\toprule
+Completed in the declared sector & Not completed here\\
+\midrule
+\endfirsthead
+\toprule
+Completed in the declared sector & Not completed here\\
+\midrule
+\endhead
+Local and global class field theory for the inducing characters & A new proof of class field theory\\
+Exact Mackey tensor and base change packets & Tensor functoriality for arbitrary parameters\\
+All tensor powers of a regular monomial parameter & Tensor powers of a general nonmonomial parameter\\
+All admissible symmetric and exterior powers, with every degree in the nilpotent case & General symmetric power and exterior power functoriality\\
+All symmetric powers of dihedral automorphic forms & General symmetric powers of arbitrary cusp forms\\
+Full pair factors for pairs of monomial local parameters & Full pair factor comparison for arbitrary wild parameters\\
+Prime cyclic Clifford towers for finite solvable image representations & Matching automorphic descent at every extension step and a canonical type side bridge for every wild atom\\
+Finite induction monomial local and global parameters are automorphic & Finite image parameters outside the induction monomial sector\\
+Compatible companions from algebraic Hecke characters & Companion existence for arbitrary geometric representations\\
+All projectively admissible potentially abelian systems, including every finite multiplicity system over a nilpotent envelope & Projective multiplicity packets without an admissible central cover resolution\\
+Automorphic occupancy from explicit automorphic induction & Positive occupancy on every global deformation component\\
+Strong Artin for induction monomial image and algebraic functoriality for quotient stable image & The Artin conjecture for arbitrary irreducible finite image representations\\
+Recursive packet expressions whose final stabilizers are admissible & General functoriality when the recursive stabilizers are not admissible\\
+Brauer virtual factorization for all finite image functorial parameters & General automorphy or entireness when negative Brauer coefficients occur\\
+\bottomrule
+\end{longtable}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{10_boundary.pdf}
+\caption{The present work closes explicit induction sectors but leaves the general wild and nonmonomial problems intact.}
+\label{fig:boundary}
+\end{figure}
+
+\begin{theorem}[Exact scope of the completion]\label{thm:exact_scope}
+The following statements hold.
+
+\begin{enumerate}
+\item Every tensor product, symmetric power, and exterior power of a monomial parameter has an exact monomial orbit decomposition.
+\item Every pair factor of two monomial local parameters reduces to character factors over finite extensions.
+\item Every finite solvable image representation has a prime cyclic Clifford tower. Every supersolvable finite image local parameter is monomial. Every finite image global parameter with nilpotent or abelian by cyclic image is automorphic.
+\item Every solvable Galois monomial global parameter has an automorphic realization and a complete compatible system.
+\item Every multiplicity free potentially abelian compatible system with admissible stabilizers is automorphic. Split and projectively admissible multiplicity packets are automorphic. Over a nilpotent Galois envelope, every finite projective multiplicity packet is admissible.
+\item Every admissible symmetric power and exterior power of that global parameter is automorphic as an explicit isobaric sum. Nilpotent quotients make every degree admissible.
+\item Tensor products and base changes satisfying the subgroup criterion are automorphic as explicit isobaric sums. Every recursively resolved packet expression is automorphic when its final inducing subgroups are admissible. Nilpotent closures make every such criterion automatic.
+\item Every induction monomial finite image parameter is automorphic. Every algebraic functor applied to a functorially induction monomial image is automorphic. Every symmetric power of a dihedral automorphic representation has the closed formula in \cref{thm:global_dihedral_symmetric}.
+\item The residual, companion, occupancy, comparison, and realization objects are explicit throughout this sector.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The orbit statements are \cref{thm:tensor_power,thm:general_symmetric_coset,thm:general_exterior_coset}. The local factor reduction is \cref{thm:monomial_pair_factors}. The finite image local and global statements are \cref{thm:supersolvable_parameter,thm:local_nilpotent_completion,thm:nilpotent_strong_artin}. Global monomial automorphy is \cref{thm:global_monomial_automorphy}. Degreewise functoriality is \cref{thm:global_symmetric_automorphy,thm:global_exterior_automorphy}. Tensor product and base change are \cref{thm:global_tensor_product,thm:global_base_change}. Arbitrary quotient stable induction monomial functoriality and packet polynomial closure are \cref{thm:nilpotent_algebraic_functoriality,thm:packet_polynomial_automorphy}. The dihedral formula is \cref{thm:global_dihedral_symmetric}. The gate completion statement is \cref{thm:explicit_gate_completion}.
+\end{proof}
+
+\begin{remark}\label{rem:general_langlands_boundary}
+The general Langlands program is much larger. It includes nonmonomial local parameters, arbitrary wild type theory, functoriality for general L group morphisms, endoscopy, trace formulas, Shimura variety cohomology, general compatible systems, and geometric Langlands. None of those problems is claimed to follow from the finite orbit formulas alone.
+\end{remark}
+
+\section{Conclusion}\label{sec:conclusion}
+
+A monomial parameter carries more structure than the statement that it is induced. Its coset basis is a finite packet coordinate system. Every tensor basis is permuted up to scalars, so tensor operations decompose into transitive orbit packets. The stabilizer of one orbit supplies the next inducing character.
+
+This observation gives exact formulas for tensor powers, symmetric powers, exterior powers, tensor products, and base change. Local factors reduce through induction. Globally, cyclic induction admissibility identifies the exact subgroup condition needed for each transfer. Nilpotent Galois structure is the universal case because every subgroup is admissible. Automorphic induction then converts the packet identities into explicit functorial transfers.
+
+The result completes companion existence and automorphic occupancy in a substantial infinite family. It also proves the strong Artin conjecture for induction monomial finite image and arbitrary algebraic functoriality for quotient stable induction monomial image, and it extends the finite wild analysis through cyclic Clifford towers and the supersolvable monomial theorem. The remaining gap is not a larger finite calculation. It is the construction and comparison of genuinely nonmonomial wild data and the automorphic realization of general global parameters.
+
+\section*{Language model contribution}
+
+An OpenAI language model was used as a mathematical drafting and proof organization aid. Its contributions included the general coset orbit formulation, the dihedral closed formula, the cyclic Clifford tower organization, the subgroup admissibility criterion, the induction monomial finite image closure, and the grouping of the global completion statements. The author is responsible for checking every definition, proof, calculation, citation, and claim in any submitted version. The model is not an author.
+
+\bibliographystyle{amsplain}
+\bibliography{PSC_Langlands_Monomial_Completion}
+
+\end{document}

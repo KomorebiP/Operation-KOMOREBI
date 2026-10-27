@@ -1,0 +1,171 @@
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:51:8: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a => α ↑d ∈ _a
+Error: Application type mismatch: The argument
+  d
+has type
+  ↥D
+but is expected to have type
+  ↥_a
+in the application
+  ↑d
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+G : Type u_1
+A : Type u_2
+inst✝² : Group G
+inst✝¹ : CommGroup A
+D : Subgroup G
+inst✝ : D.Normal
+θ : ↥D →* ℂˣ
+hinv : TypeSideDescent.Invariant D θ
+q : G →* A
+hker : q.ker = D
+t : A → G
+ht : ∀ (a : A), q (t a) = a
+ht1 : t 1 = 1
+α : G ≃* G
+β : A ≃* A
+hq : ∀ (g : G), q (α g) = β (q g)
+d : ↥D
+⊢ α ↑d ∈ D
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:62:41: error: Application type mismatch: The argument
+  q
+has type
+  G →* A
+of sort `Type (max u_1 u_2)` but is expected to have type
+  G ≃* G
+of sort `Type u_1` in the application
+  subgroupMap D q
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:68:8: error: automatically included section variable(s) unused in theorem `PaperXI.ActualScalarLift113.actualPhase_one`:
+  [D.Normal]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [D.Normal] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:82:8: error(lean.unknownIdentifier): Unknown identifier `hq`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:90:21: error: Application type mismatch: The argument
+  q
+has type
+  G →* A
+of sort `Type (max u_1 u_2)` but is expected to have type
+  G ≃* G
+of sort `Type u_1` in the application
+  subgroupMap D q
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:107:62: error(lean.unknownIdentifier): Unknown identifier `hq`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:106:54: error: unsolved goals
+G : Type u_1
+A : Type u_2
+inst✝² : Group G
+inst✝¹ : CommGroup A
+D : Subgroup G
+inst✝ : D.Normal
+θ : ↥D →* ℂˣ
+hinv : TypeSideDescent.Invariant D θ
+q : G →* A
+hker : q.ker = D
+t : A → G
+ht : ∀ (a : A), q (t a) = a
+ht1 : t 1 = 1
+α : G ≃* G
+β : A ≃* A
+hθ : ∀ (d : ↥D), θ sorry = θ d
+a b : A
+⊢ sectionCocycle D θ q hker t ht a b * actualPhase D θ q hker t ht α (a * b) =
+    actualPhase D θ q hker t ht α a * actualPhase D θ q hker t ht α b * sectionCocycle D θ q hker t ht (β a) (β b)
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:133:4: error: unsolved goals
+case h₁
+G : Type u_1
+A : Type u_2
+inst✝² : Group G
+inst✝¹ : CommGroup A
+D : Subgroup G
+inst✝ : D.Normal
+θ : ↥D →* ℂˣ
+hinv : TypeSideDescent.Invariant D θ
+q : G →* A
+hker : q.ker = D
+t : A → G
+ht : ∀ (a : A), q (t a) = a
+ht1 : t 1 = 1
+α : G ≃* G
+β : A ≃* A
+hq : ∀ (g : G), q (α g) = β (q g)
+hθ : ∀ (d : ↥D), θ sorry = θ d
+z : ℂˣ
+⊢ ({ toFun := fun x => { scalar := x.scalar * actualPhase D θ q hker t ht α x.base, base := β x.base },
+          invFun := fun y =>
+            { scalar := y.scalar / actualPhase D θ q hker t ht α (β.symm y.base), base := β.symm y.base },
+          left_inv := ⋯, right_inv := ⋯, map_mul' := ⋯ }
+        ((Extension.scalarInclusion (actualScalarCocycle D θ hinv q hker t ht ht1)) z)).scalar =
+    z
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:133:51: error: This simp argument is unused:
+  Extension.scalarInclusion_base
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Extension.scalarInclusion_scalar, actualPhase_one D θ q hker t ht ht1 α, mul_one]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:134:8: error: This simp argument is unused:
+  actualPhase_one D θ q hker t ht ht1 α
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Extension.scalarInclusion_scalar, Extension.scalarInclusion_base, mul_one]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:134:47: error: This simp argument is unused:
+  mul_one
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [Extension.scalarInclusion_scalar, Extension.scalarInclusion_base,
+    actualPhase_one D θ q hker t ht ht1 α]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:138:5: error: Function expected at
+  actualLift D θ hinv q hker t ht ht1 α β
+but this term has type
+  ScalarLift (actualScalarCocycle D θ hinv q hker t ht ht1) β
+
+Note: Expected a function because this term is being applied to the argument
+  hq
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:144:5: error: Function expected at
+  actualLift D θ hinv q hker t ht ht1 α β
+but this term has type
+  ScalarLift (actualScalarCocycle D θ hinv q hker t ht ht1) β
+
+Note: Expected a function because this term is being applied to the argument
+  hq
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:148:59: error(lean.unknownIdentifier): Unknown identifier `β`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:148:61: error(lean.unknownIdentifier): Unknown identifier `hq`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:149:11: error(lean.unknownIdentifier): Unknown identifier `hq`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:152:6: error: Function expected at
+  actualLift D θ hinv q hker t ht ht1 α β
+but this term has type
+  ScalarLift (actualScalarCocycle D θ hinv q hker t ht ht1) β
+
+Note: Expected a function because this term is being applied to the argument
+  hq
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:168:5: error: Function expected at
+  actualLift D θ hinv q hker t ht ht1 α β
+but this term has type
+  ScalarLift (actualScalarCocycle D θ hinv q hker t ht ht1) β
+
+Note: Expected a function because this term is being applied to the argument
+  hq
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:31: error(lean.unknownIdentifier): Unknown identifier `D`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:33: error(lean.unknownIdentifier): Unknown identifier `θ`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:35: error(lean.unknownIdentifier): Unknown identifier `hinv`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:40: error(lean.unknownIdentifier): Unknown identifier `q`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:42: error(lean.unknownIdentifier): Unknown identifier `hker`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:47: error(lean.unknownIdentifier): Unknown identifier `t`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:49: error(lean.unknownIdentifier): Unknown identifier `ht`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:169:52: error(lean.unknownIdentifier): Unknown identifier `ht1`
+/workspace/scratch/bec226d7ce4b/Paper_XI_Continuation113_Arithmetic_Descent/formalization/PaperXI/ActualScalarLift113.lean:168:70: error: unsolved goals
+G : Type u_1
+inst✝ : Group G
+α : G ≃* G
+n : ℕ
+hn : α ^ n = 1
+⊢ sorry ^ n = 1

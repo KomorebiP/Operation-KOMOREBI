@@ -1,0 +1,2228 @@
+\documentclass[11pt]{amsart}
+
+\usepackage{fontspec}
+\setmainfont{P052-Roman.otf}[Path=fonts/,ItalicFont=P052-Italic.otf,
+BoldFont=P052-Bold.otf,BoldItalicFont=P052-BoldItalic.otf,
+SmallCapsFont=P052-Roman.otf]
+\setsansfont{DejaVuSans.ttf}[Path=fonts/]
+\setmonofont{DejaVuSansMono.ttf}[Path=fonts/,Scale=MatchLowercase]
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{newunicodechar}
+\newfontfamily{\mathSymbolFont}{DejaVuSans.ttf}[Path=fonts/]
+\newunicodechar{≅}{{\mathSymbolFont ≅}}
+\newunicodechar{↦}{{\mathSymbolFont ↦}}
+\newunicodechar{∘}{{\mathSymbolFont ∘}}
+\newunicodechar{∤}{{\mathSymbolFont ∤}}
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{verbatim}{Verbatim}{fontsize=\small,breaklines=true,breakanywhere=true}
+\newcommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newcommand{\passthrough}[1]{#1}
+\newlength{\pandocwidth}
+\setlength{\pandocwidth}{\linewidth}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools}
+\usepackage{bm}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2600
+\emergencystretch=4em
+
+
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\newaliascnt{conjecture}{theorem}
+\newtheorem{conjecture}[conjecture]{Conjecture}
+\aliascntresetthe{conjecture}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+\crefname{conjecture}{conjecture}{conjectures}
+
+\newcommand{\CC}{\mathbb C}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\Sp}{\operatorname{Sp}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\cInd}{\operatorname{cInd}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Frob}{\operatorname{Frob}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Irr}{\operatorname{Irr}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\lcm}{\operatorname{lcm}}
+\newcommand{\Hol}{\operatorname{Hol}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\Art}{\operatorname{Art}}
+\newcommand{\Swan}{\operatorname{Swan}}
+\newcommand{\Arf}{\operatorname{Arf}}
+\newcommand{\one}{\bm 1}
+\newcommand{\e}{\mathrm e}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\calH}{\mathcal H}
+\newcommand{\calV}{\mathcal V}
+\newcommand{\calW}{\mathcal W}
+\newcommand{\calP}{\mathcal P}
+\newcommand{\calA}{\mathcal A}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\calG}{\mathcal G}
+\newcommand{\calX}{\mathcal X}
+\newcommand{\calT}{\mathcal T}
+\newcommand{\frakH}{\mathfrak H}
+\newcommand{\frakA}{\mathfrak A}
+\newcommand{\frakC}{\mathfrak C}
+\newcommand{\perpbig}{\mathop{\perp}\limits}
+
+\graphicspath{{figures/}}
+
+\title[Tame and wild packet geometry]{Tame and Wild Packet Geometry for Local Langlands}
+\author[Komorebi P.]{Komorebi P.}
+\subjclass[2020]{11F70, 20C33, 22E50, 11S37, 20C25}
+\keywords{local Langlands correspondence, tame induction, Heisenberg representations,
+wild inertia, quadratic refinements, holonomy, arithmetic packet realization}
+\date{Final release edition, October 6, 2026}
+
+\pdfstringdefDisableCommands{\let\unskip\relax}
+\hypersetup{
+  pdftitle={Tame and Wild Packet Geometry for Local Langlands},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Tame Frobenius packets, wild Heisenberg envelopes, finite Weil phase, matrix holonomy, and restricted local bridges}
+}
+
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Tame and Wild Packet Geometry}
+\renewcommand{\KomorebiSubtitle}{For local Langlands}
+\renewcommand{\KomorebiSeries}{Core series XI}
+\renewcommand{\KomorebiKind}{Traditional paper}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Paper XI}
+\renewcommand{\KomorebiTitleSize}{38}
+\renewcommand{\KomorebiTitleLeading}{43}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\usepackage{newunicodechar}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{⊂}{\ensuremath{\subset}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{⊥}{\ensuremath{\perp}}
+\begin{document}
+\KomorebiCover
+
+\special{pdf:trailerid [<0e9d864536f570d7480471e0f99695cb><0e9d864536f570d7480471e0f99695cb>]}
+\begin{abstract}
+Let \(K\) be a nonarchimedean local field. We resolve several finite layers that occur inside the local Langlands correspondence for general linear groups. Frobenius semisimple Weil Deligne parameters first split into irreducible Weil atoms and finite monodromy chains. In the tame case, character projectors show that every irreducible atom is one transitive Frobenius orbit, and Mackey theory gives an exact greatest common divisor and least common multiple rule for tensor packets. Regular finite field characters produce primitive cuspidal projectors and finite Gauss phases. For wild data, projective intertwiners recover an alternating commutator form. Its radical free quotient determines a finite Heisenberg representation, and maximal isotropic averaging gives an exact selector. We prove a restricted one break bridge: an equivariant symplectic isometry between a declared Galois envelope and a type side quotient induces the Heisenberg comparison uniquely up to scalar, while one cyclic phase condition removes the remaining ambiguity. Odd residue characteristic is governed by finite Weil phases. Residue characteristic two requires a quadratic refinement and its Arf invariant. A matrix holonomy theorem then gives the exact gluing criterion on a finite transport graph. The general arithmetic packet realization is stated as Conjecture 66. Detailed ordinary proofs give restricted arithmetic realizations in all odd prime-power ranks and in all dyadic ranks for the stated increasing-break families. The complete comparison of pair local factors remains a conditional input for the same arithmetic candidate.
+\end{abstract}
+\makeatletter\@setabstract\makeatother
+\thispagestyle{plain}
+\clearpage
+\setcounter{tocdepth}{1}
+\tableofcontents
+\clearpage
+
+\section{Introduction}\label{sec:introduction}
+
+The local Langlands correspondence for \(\GL_n(K)\) is an established theorem. It matches irreducible smooth representations of \(\GL_n(K)\) with Frobenius semisimple Weil Deligne representations of dimension \(n\). Its proof and normalization draw on global methods, harmonic analysis, types, local factors, and the geometry of Shimura varieties \cite{Henniart2000,HarrisTaylor2001,BushnellHenniart2006}. The present article asks a narrower structural question. Which parts of the local correspondence admit finite packet coordinates whose projectors, transfers, phases, and gluing laws can be proved directly?
+
+The answer has a sharp division. The tame layers are explicit. A tame irreducible Weil representation is induced from a character of an unramified extension. Its inertia restriction is one Frobenius orbit. Regular characters of elliptic finite field tori give cuspidal blocks through the Deligne and Lusztig construction \cite{DeligneLusztig1976}. Their tensor products are controlled by a greatest common divisor and least common multiple decomposition. The corresponding cycle orientation and finite Gauss phases can be computed exactly. These features are closely related to the tame lifting and essentially tame correspondence of Bushnell and Henniart \cite{BushnellHenniart1996,BushnellHenniart1999,BushnellHenniart2005ET1,BushnellHenniart2005ET2,BushnellHenniart2010ET3}.
+
+Wild data are different. The restriction to wild inertia need not split into cyclic characters. On the type side, simple character theory produces finite symplectic quotients and Heisenberg representations \cite{BushnellKutzko1993}. Canonical beta extensions fix a phase ambiguity in the extension to the normalizer \cite{Blondel2012,Dotto2022}. On the Galois side, higher ramification gives a canonical filtration and strong numerical constraints \cite{BushnellHenniart2017}. The missing construction is not another finite matrix calculation. It is a choice free passage from an arbitrary wild inertia atom to a finite symplectic envelope that agrees with the type side quotient.
+
+We therefore separate three levels of assertion. First, the article proves finite algebraic theorems about tame orbits, Heisenberg groups, twisted group algebras, finite Weil phases, and transport graphs. Second, it proves a restricted one break bridge once a normal wild datum and an equivariant symplectic identification are declared. Third, it records the exact additional input needed to pass from that restricted bridge to an independent construction of all wild atoms.
+
+The finite Heisenberg theory used here is classical. We use the Stone von Neumann theorem, finite Weil representations, and standard projective representation theory \cite{Gerardin1977,Neuhauser2002,Prasad2009,Karpilovsky1985,GurevichHadani2007}. The contribution is the way these results are arranged into one comparison diagram and the matrix holonomy theorem that controls finite gluing. In residue characteristic two, the alternating form does not determine the phase. A quadratic refinement and its Arf invariant are required. The underlying quadratic form theory is standard \cite{MilnorHusemoller1973}.
+
+Local factors provide the final test. Henniart showed that pair epsilon factors characterize the local correspondence in the required range \cite{Henniart1993}. The tame packet calculations below recover exact local polynomials and finite Gauss phases for the declared tame atoms. They do not supply the complete pair factor comparison for arbitrary wild atoms. This boundary is retained throughout the paper.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.98\textwidth]{01_architecture.pdf}
+\caption{The finite theorem layers and the remaining wild boundary.}
+\label{fig:architecture}
+\end{figure}
+
+The final release separates the missing arithmetic realization from the
+conditional identification of one actual candidate. The endpoint formerly
+listed as proof obligation 66 (historical Theorem 16.2, row 95 of the
+all-records register) is now \cref{conj:arithmetic_realization}.
+The finite theorems retain their original statements and proofs, apart from
+the explicitly recorded geometric-Frobenius convention correction. The later
+restricted constructions are developed in \cref{sec:arithmetic_progress} and
+the detailed construction appendices. Their evidence is ordinary proof with
+retained independent reviews, rather than new Lean certificates.
+
+The accompanying release includes Markdown (\texttt{.md}) files containing
+detailed proofs, construction notes, proof audits, and research records.
+These documents distinguish established results, conditional results, and
+the remaining obligations associated with Conjecture 66.
+
+The article is organized as follows. Weil Deligne chains appear in \cref{sec:wd}. Tame Frobenius packets, finite field cuspidal projectors, tensor refinement, and Gauss phases are developed in \cref{sec:tame,sec:finitefield,sec:tensor,sec:gauss}. Finite Heisenberg groups and projective commutator envelopes appear in \cref{sec:heisenberg,sec:twisted}. The restricted one break Galois envelope and its comparison with the type side are treated in \cref{sec:onebreak,sec:typeside,sec:bridge}. Odd and dyadic phase data are separated in \cref{sec:oddphase,sec:dyadic}. Matrix holonomy and breakwise reconstruction appear in \cref{sec:holonomy,sec:breakwise}. The final section states the local factor boundary.
+
+\section{Weil Deligne chains}\label{sec:wd}
+
+Let \(W_K\) be the Weil group of \(K\), let \(I_K\) be inertia, let \(P_K\) be wild inertia, and choose a geometric Frobenius lift \(\Phi\). A Weil Deligne representation is a pair \((r,N)\) with
+\[
+r(w)Nr(w)^{-1}=\abs{w}_K N.
+\]
+
+\begin{standardfact}[Indecomposable monodromy blocks]\label{fact:spdecomp}
+Every Frobenius semisimple Weil Deligne representation is a direct sum of blocks
+\[
+\operatorname{Sp}_m(\tau),
+\]
+where \(\tau\) is an irreducible Weil representation and the nilpotent operator is one Jordan chain of length \(m\).
+\end{standardfact}
+
+This standard decomposition reduces the construction of a local correspondence to two tasks. One must understand irreducible Weil atoms, then one must attach the correct generalized Steinberg chain. The second task is formal once the first is known.
+
+\begin{definition}[Monodromy packet chain]\label{def:monodromy_chain}
+Let \(V_0,\ldots,V_{m-1}\) be copies of the space of \(\tau\). Put
+\[
+V=\bigoplus_{j=0}^{m-1}V_j.
+\]
+A monodromy packet chain is a nilpotent operator \(N\) with
+\[
+N(V_j)\subseteq V_{j-1}
+\]
+for \(j>0\), with \(N(V_0)=0\), together with a Frobenius operator whose conjugation scales \(N\) by \(q^{-1}\).
+\end{definition}
+
+\begin{proposition}[Exact block reconstruction]\label{prop:monodromy_reconstruction}
+Let \(P_j\) be the projector onto \(V_j\). Then
+\[
+N=\sum_{j=1}^{m-1}P_{j-1}NP_j,
+\qquad
+N^m=0.
+\]
+Every power \(N^r\) is the sum of the packet paths of length \(r\) along the chain.
+\end{proposition}
+
+\begin{proof}
+The projectors resolve the identity. Since \(N\) maps only from \(V_j\) to \(V_{j-1}\), every block except the displayed nearest neighbor blocks vanishes. A product of \(r\) nonzero blocks moves down exactly \(r\) levels. No path of length \(m\) exists, so \(N^m=0\).
+\end{proof}
+
+\begin{proposition}[Scalar covariance model]\label{prop:scalar_covariance}
+Let
+\[
+F=\operatorname{diag}(1,q,q^2,\ldots,q^{m-1})
+\]
+and let \(N_{j-1,j}=1\). Then
+\[
+FNF^{-1}=q^{-1}N.
+\]
+\end{proposition}
+
+\begin{proof}
+The only nonzero entry in column \(j\) and row \(j-1\) is multiplied by \(q^{j-1}q^{-j}=q^{-1}\) under conjugation.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{02_weil_deligne_chain.pdf}
+\caption{A Weil Deligne chain is reconstructed from one atom and finitely many nearest neighbor transfers.}
+\label{fig:wdchain}
+\end{figure}
+
+\begin{theorem}[Formal atomic reconstruction]\label{thm:formal_atomic}
+Assume that every irreducible Weil representation \(\tau\) has been assigned a supercuspidal representation \(\sigma_\tau\), compatibly with isomorphism and unramified twist. Then the rules
+\[
+\operatorname{Sp}_m(\tau)
+\longmapsto
+\operatorname{St}_m(\sigma_\tau)
+\]
+and normalized parabolic induction determine a candidate correspondence on all Frobenius semisimple Weil Deligne parameters.
+\end{theorem}
+
+\begin{proof}
+Decompose the parameter into indecomposable monodromy blocks. Replace each Weil atom by its assigned supercuspidal atom and each monodromy chain by the corresponding generalized Steinberg block. Order the resulting essentially square integrable factors in Langlands order and take the unique irreducible quotient. The multiset of indecomposable Weil Deligne blocks is intrinsic, so the result does not depend on the chosen display.
+\end{proof}
+
+\begin{remark}\label{rem:atomic_boundary}
+\Cref{thm:formal_atomic} is a reconstruction theorem. It does not produce the atomic assignment \(\tau\mapsto\sigma_\tau\), and it does not prove the required local factor identities.
+\end{remark}
+
+\section{Tame Frobenius packets}\label{sec:tame}
+
+Assume that \(P_K\) acts trivially. After passing to a finite quotient, tame inertia is cyclic. Let \(t\) generate a quotient of order \(M\), and put \(\zeta_M=\e^{2\pi i/M}\). For \(j\in\ZZ/M\ZZ\), define
+\[
+P_j
+=
+\frac1M
+\sum_{a=0}^{M-1}
+\zeta_M^{-ja}r(t)^a.
+\]
+
+\begin{proposition}[Tame character projectors]\label{prop:tame_projectors}
+The operators \(P_j\) are pairwise orthogonal idempotents whose sum is the identity. Frobenius permutes them by
+\[
+\Phi P_j\Phi^{-1}=P_{qj}.
+\]
+\end{proposition}
+
+\begin{proof}
+The first assertion is the Fourier idempotent calculation for a cyclic group. For the geometric Frobenius convention of \cref{sec:wd}, the relation is \(\Phi^{-1}t\Phi=t^q\). Equivalently, \(\Phi t\Phi^{-1}=t^{q^{-1}}\), with inverse taken modulo \(M\) since \(\gcd(q,M)=1\). Conjugating the Fourier sum and changing its summation index therefore gives \(\Phi P_j\Phi^{-1}=P_{qj}\). The inverse Frobenius convention reverses the label direction while preserving the same orbits.
+\end{proof}
+
+\begin{theorem}[Tame orbit induction]\label{thm:tame_induction}
+Let \(\tau\) be an irreducible complex representation of \(W_K\) with trivial wild inertia. Then the nonzero tame character packets form one transitive Frobenius orbit of length \(f\). If \(K_f/K\) is the unramified extension of degree \(f\), there is a character \(\xi\) of \(W_{K_f}\) such that
+\[
+\boxed{
+\tau\cong\Ind_{W_{K_f}}^{W_K}\xi.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The nonzero tame packets are permuted by Frobenius. A union of Frobenius orbits is stable under \(W_K\), so irreducibility forces one orbit. Choose one packet \(V_\theta\). Its stabilizer is \(W_{K_f}=\langle I_K,\Phi^f\rangle\). A nonzero proper stable subspace of \(V_\theta\) would generate a nonzero proper \(W_K\) stable subspace after summing its Frobenius translates. Thus \(V_\theta\) is irreducible for the stabilizer. Inertia acts on it by the scalar character \(\theta\), and the remaining action is generated by \(\Phi^f\). The stabilizer action on this packet is therefore one dimensional. Induction reconstructs the complete orbit.
+\end{proof}
+
+\begin{corollary}[Dimension and regularity]\label{cor:tame_dimension}
+The dimension of \(\tau\) equals the Frobenius orbit length of its tame inertia character. The inducing character is regular, meaning that no smaller positive power of Frobenius fixes it.
+\end{corollary}
+
+\begin{proof}
+The induced representation has one line for every Frobenius translate of the chosen character. A shorter orbit would produce a proper stabilizer and contradict the minimality of \(f\).
+\end{proof}
+
+
+\begin{proposition}[Dual and self dual tame packets]\label{prop:tame_dual}
+For a tame atom
+\[
+\tau_\xi=\Ind_{W_{K_f}}^{W_K}\xi,
+\]
+we have
+\[
+\tau_\xi^\vee
+\cong
+\Ind_{W_{K_f}}^{W_K}\xi^{-1}.
+\]
+The atom is self dual exactly when
+\[
+\xi^{-1}=\xi^{\Phi^j}
+\]
+for some \(j\in\ZZ/f\ZZ\).
+\end{proposition}
+
+\begin{proof}
+Duality commutes with finite index induction, giving the first statement. Two regular induced tame atoms are isomorphic exactly when their inducing characters lie in the same Frobenius orbit. Applying this to \(\xi\) and \(\xi^{-1}\) gives the criterion.
+\end{proof}
+
+\begin{proposition}[Unramified twist]\label{prop:tame_twist}
+Let \(\nu\) be an unramified character of \(W_K\). Then
+\[
+\tau_\xi\otimes\nu
+\cong
+\Ind_{W_{K_f}}^{W_K}
+\left(
+\xi\,\nu|_{W_{K_f}}
+\right).
+\]
+The tame inertia orbit is unchanged. If the original Frobenius cycle has closing scalar \(a\), the twisted cycle has closing scalar
+\[
+a\nu(\Phi)^f.
+\]
+\end{proposition}
+
+\begin{proof}
+The tensor identity follows from the projection formula for induction. Since \(\nu\) is trivial on inertia, it does not change any tame character packet. It multiplies every Frobenius step by \(\nu(\Phi)\), so a closed cycle of length \(f\) gains the factor \(\nu(\Phi)^f\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.62\textwidth]{03_tame_frobenius_orbit.pdf}
+\caption{A tame irreducible atom is one transitive Frobenius orbit.}
+\label{fig:tameorbit}
+\end{figure}
+
+\subsection{Regular orbit counts}
+
+Characters of \(\FF_{q^n}^{\times}\) are indexed by exponents modulo \(q^n-1\), and Frobenius acts by multiplication by \(q\).
+
+\begin{proposition}[Möbius orbit count]\label{prop:mobius_count}
+The number of regular Frobenius orbits of length \(n\) is
+\[
+\boxed{
+c_n(q)
+=
+\frac1n
+\sum_{d\mid n}
+\mu(d)
+\bigl(q^{n/d}-1\bigr).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+For every divisor \(r\mid n\), the characters fixed by \(\Frob^r\) are exactly those descending to \(\FF_{q^r}^{\times}\), and there are \(q^r-1\) of them. Möbius inversion gives the number of characters of exact orbit length \(n\). Division by \(n\) gives the number of orbits.
+\end{proof}
+
+\begin{example}[Degree four over \(\FF_2\)]\label{ex:degree_four}
+The regular exponent orbits modulo fifteen are
+\[
+(1,2,4,8),
+\qquad
+(3,6,12,9),
+\qquad
+(7,14,13,11).
+\]
+The formula gives
+\[
+\frac14\bigl((2^4-1)-(2^2-1)\bigr)=3.
+\]
+\end{example}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.76\textwidth]{04_regular_orbit_counts.pdf}
+\caption{Regular Frobenius orbit counts for three residue field sizes.}
+\label{fig:orbitcounts}
+\end{figure}
+
+\section{Finite field cuspidal projectors}\label{sec:finitefield}
+
+Let
+\[
+G_n=\GL_n(\FF_q),
+\qquad
+T_n\cong\FF_{q^n}^{\times}
+\]
+with \(T_n\) an elliptic maximal torus.
+
+\begin{standardfact}[Regular elliptic torus characters]\label{fact:deligne_lusztig}
+A regular character \(\theta:T_n\to\CC^{\times}\) determines an irreducible cuspidal representation \(\kappa_\theta\) of \(G_n\). Frobenius conjugate characters determine isomorphic representations, and every irreducible cuspidal representation of \(G_n\) occurs in this way.
+\end{standardfact}
+
+This is the finite field input from Deligne and Lusztig theory \cite{DeligneLusztig1976}. We use standard finite group character theory for the central idempotents \cite{Serre1977,Isaacs1976}. Once \(\kappa_\theta\) is known, its block is selected by a central idempotent.
+
+\begin{proposition}[Primitive cuspidal idempotent]\label{prop:cuspidal_idempotent}
+Let \(\chi_\theta\) be the irreducible character of \(\kappa_\theta\), and let \(d_\theta=\chi_\theta(1)\). Then
+\[
+e_\theta
+=
+\frac{d_\theta}{\abs{G_n}}
+\sum_{g\in G_n}
+\chi_\theta(g^{-1})g
+\]
+is the primitive central idempotent selecting the \(\kappa_\theta\) block in \(\CC[G_n]\).
+\end{proposition}
+
+\begin{proof}
+On an irreducible representation of character \(\psi\), the central element acts by a scalar. Taking traces shows that the scalar is
+\[
+\frac{d_\theta}{\abs{G_n}\psi(1)}
+\sum_{g\in G_n}
+\chi_\theta(g^{-1})\psi(g).
+\]
+Character orthogonality makes this scalar one for \(\psi=\chi_\theta\) and zero otherwise. The element is therefore central, idempotent, and primitive.
+\end{proof}
+
+\begin{proposition}[Parabolic annihilation]\label{prop:parabolic_annihilation}
+Let \(P=LU\) be a proper parabolic subgroup of \(G_n\), and put
+\[
+e_U=\frac1{\abs U}\sum_{u\in U}u.
+\]
+If \(\kappa_\theta\) is cuspidal, then
+\[
+\boxed{
+e_Ue_\theta=e_\theta e_U=0.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The operator \(e_U\) projects onto the subspace of \(U\) fixed vectors. A cuspidal representation has no nonzero fixed vector under the unipotent radical of a proper parabolic. Thus \(e_U\) acts by zero on the \(\kappa_\theta\) block. Since \(e_\theta\) is central, both products vanish.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{05_cuspidal_projector.pdf}
+\caption{A regular torus character determines a cuspidal block and its primitive central projector.}
+\label{fig:cuspidal}
+\end{figure}
+
+\subsection{Depth zero reconstruction and cycle orientation}
+
+The depth zero construction inflates a finite cuspidal representation to \(\GL_n(\OO_K)\), extends it to the standard compact modulo center subgroup, and then compactly induces it to \(\GL_n(K)\). This is classical type theory \cite{BushnellKutzko1993,BushnellHenniart2006}.
+
+The induced tame Weil atom has an elementary cycle invariant. In an orbit basis \(e_0,\ldots,e_{n-1}\), write
+\[
+\tau(\Phi)e_j=e_{j+1}
+\]
+for \(j<n-1\), and
+\[
+\tau(\Phi)e_{n-1}=ae_0.
+\]
+
+\begin{proposition}[Frobenius cycle polynomial]\label{prop:frobenius_cycle}
+The Frobenius transfer matrix has characteristic polynomial
+\[
+X^n-a
+\]
+and determinant
+\[
+\boxed{
+\det\tau(\Phi)=(-1)^{n-1}a.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The matrix is the companion matrix of \(X^n-a\). Its only nonzero determinant term is the closed \(n\) cycle. That cycle has sign \((-1)^{n-1}\), and the closing edge contributes \(a\).
+\end{proof}
+
+\begin{corollary}[Unramified orientation character]\label{cor:orientation}
+The sign \((-1)^{n-1}\) is the orientation of the closed Frobenius packet cycle. It is unchanged by rescaling the individual orbit basis vectors.
+\end{corollary}
+
+\begin{proof}
+A basis rescaling conjugates the transfer matrix by a diagonal matrix, so the determinant and characteristic polynomial remain unchanged.
+\end{proof}
+
+\section{Tensor refinement of tame atoms}\label{sec:tensor}
+
+Let
+\[
+\tau_\xi=\Ind_{W_{K_n}}^{W_K}\xi,
+\qquad
+\tau_\eta=\Ind_{W_{K_m}}^{W_K}\eta,
+\]
+where \(K_n/K\) and \(K_m/K\) are unramified. Put
+\[
+d=\gcd(n,m),
+\qquad
+L=\lcm(n,m).
+\]
+
+\begin{theorem}[Greatest common divisor and least common multiple packets]\label{thm:gcd_lcm}
+There is a decomposition
+\[
+\boxed{
+\tau_\xi\otimes\tau_\eta
+\cong
+\bigoplus_{i=0}^{d-1}
+\Ind_{W_{K_L}}^{W_K}
+\left(
+\xi_{L,n}\eta_{L,m}^{\Phi^i}
+\right),
+}
+\]
+where \(\xi_{L,n}\) and \(\eta_{L,m}\) are the norm lifts to \(K_L\).
+\end{theorem}
+
+\begin{proof}
+Apply Mackey decomposition \cite{Mackey1952}. The double cosets
+\[
+W_{K_n}\backslash W_K/W_{K_m}
+\]
+are the orbits of simultaneous translation on \(\ZZ/n\ZZ\times\ZZ/m\ZZ\). There are \(d\) orbits, each of length \(L\). The stabilizer of a point in each orbit is \(W_{K_L}\). The second character is shifted by the chosen Frobenius representative. Summing the induced terms over the double cosets gives the decomposition.
+\end{proof}
+
+\begin{corollary}[Packet count and depth]\label{cor:gcd_lcm_count}
+The tensor product has \(d\) interaction packets before any further isomorphism is combined, and each packet has Frobenius orbit depth \(L\). The total dimension is preserved because
+\[
+dL=nm.
+\]
+\end{corollary}
+\begin{proof}
+The double coset calculation in \cref{thm:gcd_lcm} gives exactly \(d\) summands, and every stabilizer is \(W_{K_L}\), so every induced packet has dimension \(L\). The identity \(dL=nm\) follows from the definitions of greatest common divisor and least common multiple.
+\end{proof}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.82\textwidth]{06_gcd_lcm_refinement.pdf}
+\caption{Tensor refinement separates into greatest common divisor many packets, each with least common multiple depth.}
+\label{fig:gcdlcm}
+\end{figure}
+
+\subsection{Exponent coordinates}
+
+Represent the residue characters by exponents
+\[
+a\pmod{q^n-1},
+\qquad
+b\pmod{q^m-1}.
+\]
+
+\begin{proposition}[Refined exponent formula]\label{prop:refined_exponent}
+The \(i\)th interaction packet on \(\FF_{q^L}^{\times}\) has exponent
+\[
+\boxed{
+c_i
+=
+a\frac{q^L-1}{q^n-1}
++bq^i\frac{q^L-1}{q^m-1}
+\pmod{q^L-1}.
+}
+\]
+It is trivial on tame inertia exactly when \(c_i=0\).
+\end{proposition}
+
+\begin{proof}
+Norm lifting a character exponent from \(\FF_{q^n}^{\times}\) to \(\FF_{q^L}^{\times}\) multiplies the exponent by \((q^L-1)/(q^n-1)\). The Frobenius shift multiplies the second exponent by \(q^i\). Multiplication of characters adds exponents. Triviality is equivalent to the resulting exponent being zero modulo \(q^L-1\).
+\end{proof}
+
+\subsection{Tame local polynomials}
+
+Let \(V\) be one interaction packet. If its inertia character is nontrivial, then \(V^{I_K}=0\). If the inertia character is trivial, Frobenius acts on the invariant packet by a companion cycle.
+
+\begin{proposition}[Local polynomial of one tame packet]\label{prop:tame_local_polynomial}
+Suppose an interaction packet has orbit length \(r\) and closing scalar \(a\). Its local polynomial is
+\[
+\det\left(I-u\Phi\mid V^{I_K}\right)
+=
+\begin{cases}
+1-a u^r,&\text{if the inertia character is trivial},\\
+1,&\text{otherwise}.
+\end{cases}
+\]
+\end{proposition}
+
+\begin{proof}
+For nontrivial inertia, the invariant space is zero. In the trivial case, Frobenius on the invariant packet is the companion matrix of \(X^r-a\). Substituting \(X=u^{-1}\) and multiplying by \(u^r\) gives \(1-a u^r\).
+\end{proof}
+
+\begin{corollary}[Tame tensor local factor]\label{cor:tame_tensor_factor}
+The local factor of the tame tensor product is the product of
+\[
+(1-a_i u^{r_i})^{-1}
+\]
+over precisely those refined packets whose inertia exponent vanishes.
+\end{corollary}
+
+\begin{proof}
+The invariant space is the direct sum of the invariant refined packets, and determinant is multiplicative on direct sums.
+\end{proof}
+
+\begin{proposition}[Trivial tensor packet criterion]\label{prop:trivial_tensor_packet}
+For every refined interaction packet, let \(r_i\) be its cycle length and \(a_i\) its closing scalar. The dimension of the \(W_K\) fixed space in \(\tau_\xi\otimes\tau_\eta\) equals the number of packets satisfying both
+\[
+c_i=0
+\qquad\text{and}\qquad
+a_i=1.
+\]
+\end{proposition}
+
+\begin{proof}
+A nonzero fixed vector must lie in an inertia trivial packet, so \(c_i=0\). On that packet, Frobenius is a companion cycle with characteristic polynomial \(X^{r_i}-a_i\). Its fixed space is the eigenspace for eigenvalue one. This eigenspace is one dimensional exactly when \(a_i=1\), and it is zero otherwise. Summing over the refined packets proves the formula.
+\end{proof}
+
+\begin{corollary}[Tame Hom test]\label{cor:tame_hom}
+For irreducible tame atoms,
+\[
+\dim\Hom_{W_K}(\tau_\xi^\vee,\tau_\eta)
+\]
+is zero or one, and it is one exactly when the refined tensor packet test in \cref{prop:trivial_tensor_packet} finds one trivial packet.
+\end{corollary}
+
+\begin{proof}
+The Hom space is the fixed space of \(\tau_\xi\otimes\tau_\eta\). Schur's lemma gives dimension zero or one, and \cref{prop:trivial_tensor_packet} gives the packet criterion.
+\end{proof}
+
+\subsection{Tame conductor}
+
+\begin{proposition}[Conductor of a nontrivial tame atom]\label{prop:tame_conductor}
+Let \(\tau\) be an irreducible tame Weil representation of dimension \(n>1\). Then
+\[
+\Swan(\tau)=0,
+\qquad
+\dim\tau^{I_K}=0,
+\qquad
+\Art(\tau)=n.
+\]
+\end{proposition}
+
+\begin{proof}
+Wild inertia acts trivially, so the Swan conductor is zero. An inertia fixed vector would generate a nonzero Frobenius stable sum of trivial character packets. Irreducibility would then make inertia act trivially on all of \(\tau\). An irreducible representation of the quotient generated by Frobenius would be one dimensional, contrary to \(n>1\). The Artin conductor is therefore
+\[
+\dim\tau-\dim\tau^{I_K}+\Swan(\tau)=n.
+\]
+\end{proof}
+
+\section{Finite Gauss phases}\label{sec:gauss}
+
+Let \(k=\FF_q\), let \(\psi:k\to\CC^{\times}\) be a nontrivial additive character, and let \(\chi:k^{\times}\to\CC^{\times}\) be a multiplicative character. Define
+\[
+G(\chi,\psi)
+=
+\sum_{x\in k^{\times}}\chi(x)\psi(x).
+\]
+The standard theory of Gauss and Jacobi sums will be used in the form recorded in \cite{DavenportHasse1935,BerndtEvansWilliams1998}.
+
+\begin{proposition}[Gauss magnitude]\label{prop:gauss_magnitude}
+If \(\chi\) is nontrivial, then
+\[
+\boxed{
+\abs{G(\chi,\psi)}=q^{1/2}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Compute
+\[
+\abs{G(\chi,\psi)}^2
+=
+\sum_{x,y\in k^{\times}}
+\chi(xy^{-1})\psi(x-y).
+\]
+Write \(x=ty\). The inner sum over \(y\) equals \(q-1\) when \(t=1\) and equals \(-1\) otherwise. Since \(\sum_{t\in k^{\times}}\chi(t)=0\), the result is \(q\).
+\end{proof}
+
+\begin{definition}[Normalized Gauss phase]\label{def:gauss_phase}
+For nontrivial \(\chi\), define
+\[
+\gamma(\chi,\psi)
+=
+q^{-1/2}G(\chi,\psi).
+\]
+Then \(\abs{\gamma(\chi,\psi)}=1\).
+\end{definition}
+
+\begin{proposition}[Duality of Gauss phases]\label{prop:gauss_duality}
+For nontrivial \(\chi\),
+\[
+\boxed{
+\gamma(\chi,\psi)\gamma(\chi^{-1},\psi)
+=
+\chi(-1).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The standard Gauss identity gives
+\[
+G(\chi,\psi)G(\chi^{-1},\psi)=\chi(-1)q.
+\]
+Divide by \(q\).
+\end{proof}
+
+\begin{standardfact}[Hasse and Davenport lifting]\label{fact:hasse_davenport}
+Let \(k_r/k\) be the extension of degree \(r\). Lift \(\chi\) by the norm and \(\psi\) by the trace. Then the lifted Gauss sum satisfies the Hasse and Davenport product relation, with a sign determined by the chosen additive character normalization.
+\end{standardfact}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.53\textwidth]{07_gauss_phase_circle.pdf}
+\caption{Normalized finite Gauss sums lie on the unit circle.}
+\label{fig:gausscircle}
+\end{figure}
+
+\begin{remark}\label{rem:gauss_boundary}
+Finite Gauss phases reproduce the finite field part of tame and depth zero normalization. They do not by themselves give the full epsilon factor of a general wild pair.
+\end{remark}
+
+\section{Finite Heisenberg packets}\label{sec:heisenberg}
+
+Let \(p\) be odd. Let \(X\) be an \(r\) dimensional vector space over \(\FF_p\), and put
+\[
+V=X\oplus X^*.
+\]
+Define the alternating form
+\[
+b\bigl((x,\xi),(y,\eta)\bigr)
+=
+\eta(x)-\xi(y).
+\]
+Let \(Z=\FF_p\), and define the Heisenberg group
+\[
+\frakH(V)=V\times Z
+\]
+with multiplication
+\[
+(v,z)(w,t)
+=
+\left(v+w,z+t+\frac12 b(v,w)\right).
+\]
+Fix the additive character
+\[
+\psi(z)=\e^{2\pi iz/p}.
+\]
+
+\begin{definition}[Schrödinger operators]\label{def:schrodinger}
+On \(\calH=\CC^X\), define
+\[
+\bigl(\rho(x,\xi,z)f\bigr)(u)
+=
+\psi\left(z+\xi(u)+\frac12\xi(x)\right)f(u+x).
+\]
+\end{definition}
+
+\begin{theorem}[Finite Schrödinger representation]\label{thm:schrodinger_rep}
+The map \(\rho:\frakH(V)\to\GL(\calH)\) is a representation. It is irreducible, its center acts by \(\psi\), and
+\[
+\dim\calH=p^r=\sqrt{\abs V}.
+\]
+\end{theorem}
+
+\begin{proof}
+A direct calculation gives
+\[
+\rho(v,z)\rho(w,t)
+=
+\rho\left(v+w,z+t+\frac12b(v,w)\right).
+\]
+Translations by \(X\) and multiplications by characters from \(X^*\) generate the full matrix algebra on \(\CC^X\). Indeed, the character multipliers give all diagonal projectors by finite Fourier inversion, and translations move each coordinate line to every other coordinate line. The commutant is therefore scalar, so the representation is irreducible. The dimension is \(\abs X=p^r\).
+\end{proof}
+
+\begin{proposition}[Character support]\label{prop:heisenberg_trace}
+The character of the Schrödinger representation satisfies
+\[
+\boxed{
+\Tr\rho(v,z)
+=
+\begin{cases}
+p^r\psi(z),&v=0,\\
+0,&v\ne0.
+\end{cases}
+}
+\]
+\end{proposition}
+
+\begin{proof}
+If the translation component \(x\) is nonzero, the operator permutes the standard basis without a fixed point, so its trace is zero. If \(x=0\) but \(\xi\ne0\), the trace is
+\[
+\psi(z)\sum_{u\in X}\psi(\xi(u))=0.
+\]
+When \(x=\xi=0\), the operator is the scalar \(\psi(z)\).
+\end{proof}
+
+\begin{standardfact}[Finite Stone von Neumann theorem]\label{fact:stone_von_neumann}
+For a finite Heisenberg group with nondegenerate commutator form and a fixed nontrivial central character, there is one irreducible representation up to isomorphism. Its dimension is the square root of the order of the symplectic quotient.
+\end{standardfact}
+
+The standard fact follows from the twisted group algebra argument in \cref{sec:twisted}. It is also the finite form used in the classical Weil representation literature \cite{Gerardin1977,Prasad2009}.
+
+\subsection{Maximal isotropic selectors}
+
+Let \(L\subseteq V\) be maximal isotropic. Choose a subgroup lift \(\widetilde L\subseteq\frakH(V)\) on which the central coordinate is zero.
+
+\begin{proposition}[Isotropic averaging projector]\label{prop:isotropic_selector}
+The operator
+\[
+P_L
+=
+\frac1{\abs L}
+\sum_{\ell\in\widetilde L}
+\rho(\ell)
+\]
+is an orthogonal projector. In the Schrödinger model with \(L=X\), it has rank one and selects the constant functions.
+\end{proposition}
+
+\begin{proof}
+The lifted isotropic subgroup is abelian, so group averaging is an idempotent. Every operator in the average is unitary, and the subgroup is closed under inversion, so the average is self adjoint. For \(L=X\), the average is the translation average
+\[
+(P_Lf)(u)
+=
+\frac1{\abs X}
+\sum_{x\in X}f(u+x),
+\]
+which is the constant function with value equal to the mean of \(f\). Its range is one dimensional.
+\end{proof}
+
+\begin{corollary}[Primitive line selector]\label{cor:primitive_selector}
+Every maximal isotropic subgroup selects a one dimensional fixed line in the irreducible Heisenberg representation.
+\end{corollary}
+
+\begin{proof}
+The projector rank equals its trace. The identity element contributes \(p^r\), while every nonidentity element of the lifted isotropic subgroup is noncentral and has trace zero by \cref{prop:heisenberg_trace}. Since \(\abs L=p^r\), we get
+\[
+\Tr P_L
+=
+\frac{p^r}{p^r}=1.
+\]
+Thus the projector has rank one.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{08_heisenberg_geometry.pdf}
+\caption{The finite Heisenberg packet and its maximal isotropic selector.}
+\label{fig:heisenberg}
+\end{figure}
+
+\section{Twisted group algebras and commutator envelopes}\label{sec:twisted}
+
+Let \(A\) be a finite abelian group, and let
+\[
+c:A\times A\to\CC^{\times}
+\]
+be a normalized two cocycle. The twisted group algebra \(\CC^c[A]\) has basis \((u_a)_{a\in A}\) and multiplication
+\[
+u_au_b=c(a,b)u_{a+b}.
+\]
+Define the commutator bicharacter
+\[
+b_c(a,b)=c(a,b)c(b,a)^{-1}.
+\]
+
+\begin{proposition}[Scalar choice invariance]\label{prop:cocycle_choice}
+Replacing \(u_a\) by \(\lambda_au_a\), with \(\lambda_a\in\CC^{\times}\), changes \(c\) by a coboundary and leaves \(b_c\) unchanged.
+\end{proposition}
+
+\begin{proof}
+The new cocycle is
+\[
+c'(a,b)
+=
+\lambda_a\lambda_b\lambda_{a+b}^{-1}c(a,b).
+\]
+The scalar coboundary factor is symmetric in \(a\) and \(b\), so it cancels from \(c'(a,b)c'(b,a)^{-1}\).
+\end{proof}
+
+\begin{proposition}[Alternating commutator form]\label{prop:commutator_form}
+The map \(b_c\) is an alternating bicharacter. Its radical
+\[
+R=\{a\in A:b_c(a,x)=1\text{ for every }x\in A\}
+\]
+is a subgroup, and \(b_c\) descends to a nondegenerate alternating bicharacter on \(A/R\).
+\end{proposition}
+
+\begin{proof}
+Associativity of the twisted product gives multiplicativity of scalar commutators in each variable. We have \(b_c(a,a)=1\) and \(b_c(b,a)=b_c(a,b)^{-1}\). The radical is the kernel of the homomorphism from \(A\) to its character group defined by \(a\mapsto b_c(a,\cdot)\). The induced pairing on the quotient is nondegenerate by construction.
+\end{proof}
+
+\begin{theorem}[Nondegenerate twisted group algebra]\label{thm:twisted_matrix}
+Assume that \(b_c\) is nondegenerate. Then \(\abs A\) is a square, and
+\[
+\boxed{
+\CC^c[A]
+\cong
+M_{\sqrt{\abs A}}(\CC).
+}
+\]
+Consequently, \(\CC^c[A]\) has one irreducible module up to isomorphism, of dimension \(\sqrt{\abs A}\).
+\end{theorem}
+
+\begin{proof}
+Let
+\[
+z=\sum_{a\in A}z_au_a
+\]
+be central. Commuting with \(u_x\) gives
+\[
+z_ab_c(x,a)=z_a
+\]
+for every \(x\). Nondegeneracy forces \(z_a=0\) for every nonzero \(a\). Thus the center is \(\CC\). Maschke averaging, applied after passing to a finite central extension realizing the cocycle, shows that the twisted algebra is semisimple. A finite dimensional central simple algebra over \(\CC\) is a full matrix algebra. Its dimension is \(\abs A\), so the matrix size is \(\sqrt{\abs A}\).
+\end{proof}
+
+\begin{corollary}[Radical free envelope]\label{cor:radical_free}
+For an arbitrary scalar projective action of \(A\), the quotient
+\[
+\boxed{
+A^{\mathrm{symp}}=A/\rad b_c
+}
+\]
+is the maximal quotient detected by noncommuting projective intertwiners. If \(A\) is an elementary abelian \(p\) group, then \(A^{\mathrm{symp}}\) is a symplectic \(\FF_p\) space.
+\end{corollary}
+
+\begin{proof}
+Every radical element commutes with all projective generators, so it contributes only central data. Quotienting by the radical leaves the nondegenerate commutator form. In the elementary abelian case, multiplicative values in the group of \(p\)th roots can be written as an alternating bilinear form over \(\FF_p\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{09_commutator_envelope.pdf}
+\caption{Projective intertwiners determine a radical free symplectic envelope.}
+\label{fig:commutator}
+\end{figure}
+
+\begin{remark}\label{rem:projective_scope}
+The envelope depends only on the projective representation. It does not by itself prove that a given wild inertia representation carries a canonical finite quotient with the required projective action.
+\end{remark}
+
+\section{A restricted one break Galois envelope}\label{sec:onebreak}
+
+We now isolate a finite Clifford setting in which the quotient projective action is defined on a multiplicity space. This avoids assigning a quotient action directly to arbitrary representatives of \(G/N\).
+
+\begin{definition}[One break Clifford datum]\label{def:one_break_datum}
+A one break Clifford datum consists of finite groups and representations
+\[
+N\triangleleft G,
+\qquad
+A=G/N,
+\qquad
+\Pi:G\to\GL(\calX),
+\qquad
+\rho:N\to\GL(W),
+\]
+with the following properties.
+
+\begin{enumerate}
+\item The quotient \(A\) is a finite elementary abelian \(p\) group.
+\item The representations \(\Pi\) and \(\rho\) are irreducible.
+\item The isomorphism class of \(\rho\) is fixed by \(G\).
+\item The restriction of \(\Pi\) to \(N\) is \(\rho\) isotypic.
+\item The quotient records one declared ramification break.
+\end{enumerate}
+
+The multiplicity space is
+\[
+M_\rho=\Hom_N(W,\calX).
+\]
+\end{definition}
+
+The isotypic condition gives an \(N\) equivariant evaluation isomorphism
+\[
+W\otimes M_\rho
+\longrightarrow
+\calX.
+\]
+Choose a section \(s:A\to G\). For every \(a\in A\), choose an intertwiner \(I_a\) from \(\rho\) to its conjugate by \(s(a)\). Under the evaluation isomorphism, there is a unique operator \(T_a\) on \(M_\rho\) such that
+\[
+\Pi(s(a))=I_a\otimes T_a.
+\]
+The operators \(T_a\) form a projective representation of \(A\).
+
+\begin{proposition}[Clifford multiplicity action]\label{prop:clifford_action}
+The projective equivalence class of the action \((T_a)_{a\in A}\) is independent of the section, the intertwiners, and the chosen isotypic evaluation isomorphism. The projective action is irreducible.
+\end{proposition}
+
+\begin{proof}
+Changing an intertwiner \(I_a\) by a scalar changes \(T_a\) by the inverse scalar. Changing the isotypic evaluation isomorphism conjugates all \(T_a\) by one element of \(\GL(M_\rho)\). Changing the section multiplies \(s(a)\) by an element of \(N\). That factor is absorbed by the \(\rho\) action on \(W\), leaving a scalar change on the multiplicity operator by Schur's lemma. Thus all choices give projectively equivalent actions.
+
+If a nonzero proper subspace of \(M_\rho\) were stable under all projective operators \(T_a\), then its tensor product with \(W\) would give a nonzero proper \(G\) stable subspace of \(\calX\). This contradicts irreducibility of \(\Pi\).
+\end{proof}
+
+\begin{definition}[Clifford cocycle class]\label{def:clifford_class}
+Choose scalars \(c(a,b)\) such that
+\[
+T_aT_b=c(a,b)T_{a+b}.
+\]
+The cohomology class
+\[
+[c_\rho]\in H^2(A,\CC^{\times})
+\]
+is the Clifford cocycle class of the datum.
+\end{definition}
+
+\begin{proposition}[Intrinsic commutator pairing]\label{prop:one_break_form}
+The pairing
+\[
+b_\rho(a,b)
+=
+c(a,b)c(b,a)^{-1}
+\]
+is independent of every choice in \cref{def:one_break_datum}. It is an alternating bicharacter
+\[
+b_\rho:A\times A\to\mu_p.
+\]
+\end{proposition}
+
+\begin{proof}
+The projective equivalence class is intrinsic by \cref{prop:clifford_action}. Conjugation does not change scalar commutators, and scalar changes alter the cocycle by a coboundary. The commutator pairing is therefore unchanged by \cref{prop:cocycle_choice}. Its alternating and bilinear properties follow from \cref{prop:commutator_form}. Since every element of \(A\) has order \(p\), every value has order dividing \(p\).
+\end{proof}
+
+\begin{definition}[One break symplectic envelope]\label{def:one_break_envelope}
+The one break symplectic envelope is
+\[
+\boxed{
+V_\rho=A/\rad b_\rho.
+}
+\]
+\end{definition}
+
+\begin{theorem}[Nondegenerate one break packet]\label{thm:one_break_matrix}
+If \(b_\rho\) is nondegenerate, then
+\[
+\CC^{c_\rho}[A]
+\cong
+\End(M_\rho),
+\qquad
+\dim M_\rho=\sqrt{\abs A}.
+\]
+\end{theorem}
+
+\begin{proof}
+The projective action gives a nonzero representation of the twisted group algebra on \(M_\rho\). The algebra is a full matrix algebra by \cref{thm:twisted_matrix}. Its unique irreducible module has dimension \(\sqrt{\abs A}\). The projective multiplicity action is irreducible by \cref{prop:clifford_action}, so it is that module.
+\end{proof}
+
+\begin{proposition}[Isomorphism invariance]\label{prop:one_break_invariance}
+The cocycle class and the equivariant isometry class of \(V_\rho\) depend only on the isomorphism class of the one break Clifford datum.
+\end{proposition}
+
+\begin{proof}
+An isomorphism of data transports the restriction, the multiplicity space, and its projective quotient action. It therefore transports the cocycle class, the commutator pairing, its radical, and the quotient.
+\end{proof}
+
+\begin{proposition}[Tame stabilizer action]\label{prop:tame_stabilizer}
+Suppose a finite group \(C\) acts by automorphisms of the one break Clifford datum. Then \(C\) acts on \(V_\rho\) by symplectic automorphisms.
+\end{proposition}
+
+\begin{proof}
+The automorphism action transports the intrinsic projective multiplicity representation. It therefore preserves the scalar commutator pairing and its radical. The induced action on the quotient is symplectic.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.96\textwidth]{10_one_break_envelope.pdf}
+\caption{The restricted one break construction is made on the Clifford multiplicity space.}
+\label{fig:onebreak}
+\end{figure}
+
+\begin{corollary}[Heisenberg representation attached to one break]\label{cor:one_break_heisenberg}
+Fix a nontrivial central character. The envelope \(V_\rho\) determines one irreducible finite Heisenberg representation up to isomorphism.
+\end{corollary}
+
+\begin{proof}
+Apply the finite Stone von Neumann theorem to the nondegenerate symplectic quotient.
+\end{proof}
+
+\begin{remark}\label{rem:clifford_scope}
+The group cohomology class records the extension obstruction for the multiplicity action. General background on projective representations and group cohomology can be found in \cite{Karpilovsky1985,Brown1982}. The theorem remains restricted because the finite quotient and the one break isotypic datum are assumed rather than constructed from arbitrary wild inertia.
+\end{remark}
+
+\section{The type side symplectic quotient}\label{sec:typeside}
+
+Let \(\theta\) be a maximal simple character for \(\GL_n(K)\), with compact open subgroups
+\[
+H_\theta^1\subseteq J_\theta^1\subseteq J_\theta.
+\]
+The quotient
+\[
+V_\theta=J_\theta^1/H_\theta^1
+\]
+is a finite vector space over the residue field. Its commutator pairing is defined by
+\[
+\psi_0\bigl(h_\theta(\bar x,\bar y)\bigr)
+=
+\theta([x,y]).
+\]
+
+\begin{standardfact}[Type side Heisenberg quotient]\label{fact:type_heisenberg}
+The pairing \(h_\theta\) is nondegenerate and alternating. There is one irreducible representation \(\eta_\theta\) of \(J_\theta^1\) containing \(\theta\), and its dimension is
+\[
+\sqrt{\abs{J_\theta^1/H_\theta^1}}.
+\]
+\end{standardfact}
+
+This is part of the simple character and Heisenberg representation theory used in the construction of types \cite{BushnellKutzko1993}. The extension of \(\eta_\theta\) from \(J_\theta^1\) to \(J_\theta\) is not unique before a normalization is chosen.
+
+\begin{standardfact}[Canonical beta extension]\label{fact:canonical_beta}
+The canonical beta extension is obtained from a primary extension together with finite symplectic and tame orientation corrections. The construction is functorial in the declared simple character data and removes the remaining extension ambiguity.
+\end{standardfact}
+
+The normalization and its relation to finite Weil representations are developed in \cite{Blondel2012,Dotto2022}. The present article uses this theorem as type side input. It does not rederive simple character theory.
+
+\begin{proposition}[Type side projective commutator]\label{prop:type_commutator}
+The projective action of \(J_\theta/J_\theta^1\) on the Heisenberg representation preserves the commutator form on \(V_\theta\). Any two choices of projective lifts give the same alternating form.
+\end{proposition}
+
+\begin{proof}
+Conjugation by \(J_\theta\) preserves \(\theta\), so it preserves the commutator pairing defined from \(\theta([x,y])\). Two choices of projective lifts differ by scalars. The scalar commutator is therefore unchanged by \cref{prop:cocycle_choice}.
+\end{proof}
+
+\section{The restricted Galois to type bridge}\label{sec:bridge}
+
+The full bridge would construct an intrinsic Galois envelope for every wild atom and identify it canonically with \(V_\theta\). We prove the comparison after the required symplectic identification has been supplied.
+
+\begin{definition}[Bridge datum]\label{def:bridge_datum}
+A restricted bridge datum consists of
+
+\begin{enumerate}
+\item a one break Galois envelope \((V_\rho,b_\rho)\)
+\item a type side quotient \((V_\theta,h_\theta)\)
+\item an equivariant symplectic isometry
+\[
+\iota:V_\rho\longrightarrow V_\theta
+\]
+for a finite cyclic stabilizer \(C=\langle c\rangle\)
+\item the same nontrivial central character on the two Heisenberg groups
+\item when \(p=2\), compatible quadratic refinements and an isomorphism of the resulting Heisenberg central extensions lifting \(\iota\).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Restricted Heisenberg bridge]\label{thm:restricted_bridge}
+A restricted bridge datum determines an isomorphism between the two Heisenberg representations, unique up to a nonzero scalar. More precisely, there is an invertible map
+\[
+U:\calH_\rho\longrightarrow\calH_\theta
+\]
+such that
+\[
+U\omega_\rho(h)
+=
+\omega_\theta(\iota_H(h))U
+\]
+for every Heisenberg element \(h\), and every other such map is a scalar multiple of \(U\).
+\end{theorem}
+
+\begin{proof}
+When \(p\) is odd, the symplectic isometry and the common central character induce the standard isomorphism \(\iota_H\) of the two Heisenberg groups. When \(p=2\), the required lift of \(\iota\) is part of the bridge datum because the alternating form alone does not determine the central extension. Pulling the type side representation back through \(\iota_H\) gives an irreducible Heisenberg representation with the same central character as the Galois side representation. The finite Stone von Neumann theorem gives an isomorphism. Schur's lemma gives uniqueness up to scalar.
+\end{proof}
+
+The stabilizer actions need not agree after choosing \(U\). Their discrepancy is scalar because both actions implement the same automorphisms of the irreducible Heisenberg representation.
+
+\begin{proposition}[Cyclic discrepancy character]\label{prop:cyclic_discrepancy}
+Assume that the two projective stabilizer actions have been linearized to honest representations of the cyclic group \(C\). Then there is a character
+\[
+\delta:C\to\CC^{\times}
+\]
+such that
+\[
+U\Omega_\rho(g)
+=
+\delta(g)\Omega_\theta(g)U
+\]
+for every \(g\in C\).
+\end{proposition}
+
+\begin{proof}
+For each \(g\), the operator
+\[
+\Omega_\theta(g)^{-1}U\Omega_\rho(g)U^{-1}
+\]
+commutes with the type side Heisenberg representation. It is therefore scalar. Since both stabilizer actions are honest representations, multiplication of group elements shows that the scalars form a character.
+\end{proof}
+
+\begin{lemma}[Linearization over a cyclic stabilizer]\label{lem:cyclic_linearization}
+Every finite dimensional projective representation of a finite cyclic group over \(\CC\) is projectively equivalent to an honest representation.
+\end{lemma}
+
+\begin{proof}
+Let \(C=\langle c\rangle\) have order \(m\), and let \(T\) be a lift of the projective generator. Since \(c^m=1\), the operator \(T^m\) is scalar. Choose \(\lambda\in\CC^{\times}\) with \(\lambda^mT^m=I\). Replacing \(T\) by \(\lambda T\) gives an honest cyclic representation.
+\end{proof}
+
+\begin{theorem}[One phase closes the cyclic bridge]\label{thm:one_phase_bridge}
+In a restricted bridge datum, choose linearizations of the cyclic stabilizer actions. If the two actions have the same scalar phase on the generator \(c\), then the Heisenberg intertwiner can be chosen to intertwine the full semidirect product action.
+\end{theorem}
+
+\begin{proof}
+By \cref{prop:cyclic_discrepancy}, the discrepancy is a character \(\delta\). Equality of the generator phase gives \(\delta(c)=1\). Since \(c\) generates \(C\), the character is trivial. The chosen map \(U\) then intertwines every stabilizer element as well as the Heisenberg group.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{11_restricted_bridge.pdf}
+\caption{An equivariant symplectic isometry reduces the finite comparison to one scalar cyclic phase.}
+\label{fig:restrictedbridge}
+\end{figure}
+
+\begin{corollary}[Bridge uniqueness]\label{cor:bridge_uniqueness}
+When the semidirect product representation is irreducible, the completed bridge is unique up to scalar.
+\end{corollary}
+
+\begin{proof}
+Any two completed bridges differ by an endomorphism commuting with the semidirect product representation. Schur's lemma applies.
+\end{proof}
+
+\begin{remark}\label{rem:bridge_scope}
+The theorem does not construct \(\iota\). It proves that, once an equivariant symplectic isometry exists, the remaining finite comparison is one dimensional for a cyclic stabilizer.
+\end{remark}
+
+\section{Odd residue characteristic phases}\label{sec:oddphase}
+
+Let \(p\) be odd, let \((V,b)\) be a finite symplectic \(\FF_p\) space of dimension \(2r\), and let
+\[
+g\in\Sp(V)
+\]
+have no fixed vector. Fix one of the standard finite Weil normalizations used in the literature \cite{Gerardin1977,Neuhauser2002,GurevichHadani2007}.
+
+\begin{standardfact}[Fixed point free Weil trace]\label{fact:weil_trace}
+Under the declared normalization,
+\[
+\boxed{
+\Tr\omega(g)
+=
+\left(\frac{-1}{p}\right)^r
+\left(\frac{\det(g-I)}{p}\right).
+}
+\]
+Here \((\frac{\cdot}{p})\) denotes the quadratic character of \(\FF_p^{\times}\).
+\end{standardfact}
+
+\begin{definition}[Odd finite Weil phase]\label{def:odd_phase}
+For fixed point free \(g\), define
+\[
+\Phi_p(g,V)
+=
+\left(\frac{-1}{p}\right)^r
+\left(\frac{\det(g-I)}{p}\right).
+\]
+\end{definition}
+
+\begin{proposition}[Symplectic invariance]\label{prop:phase_invariance}
+If
+\[
+\iota:(V,b)\longrightarrow(V',b')
+\]
+is a symplectic isometry and \(g'=\iota g\iota^{-1}\), then
+\[
+\Phi_p(g,V)=\Phi_p(g',V').
+\]
+\end{proposition}
+
+\begin{proof}
+The dimensions agree, and conjugate matrices have the same determinant of \(g-I\).
+\end{proof}
+
+\begin{proposition}[Orthogonal multiplicativity]\label{prop:odd_multiplicativity}
+Suppose
+\[
+V=V_1\perpbig\cdots\perpbig V_s
+\]
+and \(g\) preserves every summand. If no \(g|_{V_j}\) has a fixed vector, then
+\[
+\boxed{
+\Phi_p(g,V)
+=
+\prod_{j=1}^{s}
+\Phi_p(g|_{V_j},V_j).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The half dimensions add, and
+\[
+\det(g-I\mid V)
+=
+\prod_j\det(g-I\mid V_j).
+\]
+The quadratic character is multiplicative.
+\end{proof}
+
+\begin{corollary}[Characteristic polynomial certificate]\label{cor:characteristic_phase}
+Let
+\[
+P_g(X)=\det(XI-g\mid V).
+\]
+Then
+\[
+\boxed{
+\Phi_p(g,V)
+=
+\left(\frac{-1}{p}\right)^r
+\left(\frac{P_g(1)}{p}\right).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Since \(\dim V\) is even,
+\[
+\det(g-I)=\det(I-g)=P_g(1).
+\]
+\end{proof}
+
+
+\begin{proposition}[Fixed and moving decomposition]\label{prop:fixed_moving}
+Assume that \(g\in\Sp(V)\) has order prime to \(p\). Then
+\[
+V=\ker(g-I)\perpbig\im(g-I).
+\]
+The restriction of the symplectic form to \(\im(g-I)\) is nondegenerate, and \(g-I\) is invertible on that moving summand.
+\end{proposition}
+
+\begin{proof}
+The order hypothesis makes \(g\) semisimple, so
+\[
+V=\ker(g-I)\oplus\im(g-I).
+\]
+If \(x\in\ker(g-I)\) and \(y=(g-I)z\), then
+\[
+b(x,y)=b(x,gz)-b(x,z)=b(g^{-1}x,z)-b(x,z)=0.
+\]
+Thus the two summands are orthogonal. Nondegeneracy on each summand follows from nondegeneracy on \(V\). The last statement is immediate from the direct sum decomposition.
+\end{proof}
+
+\begin{definition}[Moving phase]\label{def:moving_phase}
+Under the hypotheses of \cref{prop:fixed_moving}, define
+\[
+\Phi_p^{\mathrm{mov}}(g,V)
+=
+\Phi_p\left(g|_{\im(g-I)},\im(g-I)\right).
+\]
+\end{definition}
+
+\begin{proposition}[Hyperbolic phase formula]\label{prop:hyperbolic_phase}
+Let \(U\) be a finite dimensional \(\FF_p\) space, let \(a\in\GL(U)\) have no eigenvalue one, and let \(g\) act on
+\[
+H(U)=U\oplus U^*
+\]
+by
+\[
+g=(a,(a^{-1})^*).
+\]
+Then
+\[
+\boxed{
+\Phi_p(g,H(U))
+=
+\left(\frac{\det a}{p}\right).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Put \(d=\dim U\). We have
+\[
+\det\bigl((a^{-1})^*-I\bigr)
+=
+(-1)^d(\det a)^{-1}\det(a-I).
+\]
+Hence
+\[
+\det(g-I)
+=
+(-1)^d(\det a)^{-1}\det(a-I)^2.
+\]
+Multiplying its quadratic character by the normalization factor \((\frac{-1}{p})^d\) cancels the sign and the square. Since a quadratic character equals its inverse, the result is \((\frac{\det a}{p})\).
+\end{proof}
+
+\begin{corollary}[Phase only bridge test]\label{cor:phase_only_test}
+Two odd characteristic moving packets have the same normalized phase whenever their moving half dimensions agree and the determinants of \(g-I\) lie in the same square class.
+\end{corollary}
+
+\begin{proof}
+Apply the definition of \(\Phi_p\).
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{12_odd_phase_blocks.pdf}
+\caption{Odd finite Weil phases multiply across orthogonal atomic blocks.}
+\label{fig:oddphase}
+\end{figure}
+
+\begin{remark}\label{rem:fixed_space}
+When \(g\) has fixed vectors, one first separates the fixed part and applies the formula to the moving quotient. Additional normalization data may enter the full trace on the fixed part.
+\end{remark}
+
+\section{Dyadic quadratic refinements}\label{sec:dyadic}
+
+Let \((V,b)\) be a symplectic vector space over \(\FF_2\). The alternating form alone is not enough to determine the finite phase.
+
+\begin{definition}[Quadratic refinement]\label{def:quadratic_refinement}
+A quadratic refinement of \(b\) is a map
+\[
+q:V\to\FF_2
+\]
+satisfying
+\[
+q(x+y)-q(x)-q(y)=b(x,y).
+\]
+\end{definition}
+
+\begin{proposition}[Affine space of refinements]\label{prop:refinement_affine}
+If one quadratic refinement exists, then the set of all quadratic refinements is an affine space over \(V^*\).
+\end{proposition}
+
+\begin{proof}
+The difference of two refinements has zero polar form, so it is additive and hence linear over \(\FF_2\). Conversely, adding a linear form does not change the polar form.
+\end{proof}
+
+\begin{definition}[Arf invariant]\label{def:arf}
+Choose a symplectic basis \((e_i,f_i)_{i=1}^{r}\). Define
+\[
+\Arf(q)
+=
+\sum_{i=1}^{r}q(e_i)q(f_i)
+\in\FF_2.
+\]
+\end{definition}
+
+\begin{standardfact}[Arf invariance and classification]\label{fact:arf_classification}
+The value in \cref{def:arf} is independent of the symplectic basis. Two nondegenerate quadratic refinements of one finite symplectic space are isometric exactly when their Arf invariants agree.
+\end{standardfact}
+
+This is the classical classification of nonsingular quadratic forms over \(\FF_2\) \cite{MilnorHusemoller1973}.
+
+\begin{theorem}[Dyadic Gauss sign]\label{thm:arf_gauss}
+Let \(\dim V=2r\), and let \(q\) be nondegenerate. Then
+\[
+\boxed{
+\sum_{x\in V}(-1)^{q(x)}
+=
+(-1)^{\Arf(q)}2^r.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Orthogonally decompose \((V,q)\) into two dimensional nonsingular planes. On a plane with Arf invariant zero, the four values of \((-1)^q\) sum to \(2\). On a plane with Arf invariant one, they sum to \(-2\). The total sum is the product of the plane sums. The parity of the number of anisotropic planes is the Arf invariant.
+\end{proof}
+
+\begin{corollary}[Orthogonal dyadic multiplicativity]\label{cor:arf_multiplicative}
+For an orthogonal sum
+\[
+(V,q)=(V_1,q_1)\perpbig(V_2,q_2),
+\]
+we have
+\[
+\Arf(q)=\Arf(q_1)+\Arf(q_2)
+\]
+and the normalized Gauss sign is the product of the two normalized signs.
+\end{corollary}
+
+\begin{proof}
+Take symplectic bases of the two summands and concatenate them. The Gauss sum factors as a product over the Cartesian decomposition.
+\end{proof}
+
+\begin{proposition}[The form alone does not determine the phase]\label{prop:dyadic_need_q}
+On every nonzero symplectic \(\FF_2\) space, there are quadratic refinements of both Arf invariants. Their polar forms agree, but their normalized Gauss signs are opposite.
+\end{proposition}
+
+\begin{proof}
+On a symplectic plane, the standard hyperbolic refinement has Arf invariant zero. Adding a suitable nonzero linear form produces a refinement with Arf invariant one. Orthogonally adjoining a fixed refinement on the complement gives the two choices in every positive even dimension. The signs differ by \cref{thm:arf_gauss}.
+\end{proof}
+
+
+\begin{proposition}[Translation of quadratic refinements]\label{prop:quadratic_translation}
+For \(v\in V\), put
+\[
+q_v(x)=q(x)+b(v,x).
+\]
+Then
+\[
+\boxed{
+\Arf(q_v)=\Arf(q)+q(v).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Using the quadratic identity,
+\[
+q_v(x)=q(x+v)+q(v).
+\]
+Therefore
+\[
+\sum_x(-1)^{q_v(x)}
+=
+(-1)^{q(v)}
+\sum_x(-1)^{q(x)}.
+\]
+Compare the signs in \cref{thm:arf_gauss}.
+\end{proof}
+
+\begin{theorem}[Number of dyadic refinements]\label{thm:quadratic_counts}
+Let \(\dim V=2r\). The number of quadratic refinements with Arf invariant zero is
+\[
+\boxed{
+2^{r-1}(2^r+1),
+}
+\]
+and the number with Arf invariant one is
+\[
+\boxed{
+2^{r-1}(2^r-1).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Every refinement is \(q_v\) for a unique \(v\in V\), because \(b\) identifies \(V\) with \(V^*\). By \cref{prop:quadratic_translation}, the Arf invariant changes according to \(q(v)\). Let \(Z\) and \(O\) be the numbers of zeros and ones of \(q\). Then
+\[
+Z+O=2^{2r}
+\]
+and \cref{thm:arf_gauss} gives
+\[
+Z-O=(-1)^{\Arf(q)}2^r.
+\]
+Solving gives the two displayed numbers, with their roles exchanged when the starting refinement has Arf invariant one. Since translation runs through every refinement, the final counts are independent of the starting choice.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{13_dyadic_quadratic_refinement.pdf}
+\caption{At residue characteristic two, the quadratic refinement and its Arf invariant carry phase information not contained in the alternating form.}
+\label{fig:dyadic}
+\end{figure}
+
+\section{Matrix holonomy and finite gluing}\label{sec:holonomy}
+
+Let \(\Gamma\) be a connected finite graph. At every vertex \(v\), place finite dimensional complex vector spaces \(V_v\) and \(W_v\) of the same dimension. For every oriented edge \(e:u\to v\), let
+\[
+A_e:V_u\longrightarrow V_v,
+\qquad
+B_e:W_u\longrightarrow W_v
+\]
+be invertible. The reversed edge carries the inverse map.
+
+\begin{definition}[Path transport]\label{def:path_transport}
+For an oriented path
+\[
+\gamma=(v_0\to v_1\to\cdots\to v_m),
+\]
+define
+\[
+A_\gamma=A_{v_m v_{m-1}}\cdots A_{v_1v_0},
+\qquad
+B_\gamma=B_{v_m v_{m-1}}\cdots B_{v_1v_0}.
+\]
+For a loop based at \(r\), these are the based holonomies.
+\end{definition}
+
+\begin{theorem}[Matrix holonomy criterion]\label{thm:matrix_holonomy}
+Fix a root \(r\) and an isomorphism
+\[
+U_r:V_r\longrightarrow W_r.
+\]
+The following conditions are equivalent.
+
+\begin{enumerate}
+\item There are isomorphisms \(U_v:V_v\to W_v\), with the declared \(U_r\), such that
+\[
+U_vA_e=B_eU_u
+\]
+for every edge \(e:u\to v\).
+\item For one fundamental cycle basis based at \(r\),
+\[
+U_rA_\gamma=B_\gamma U_r.
+\]
+\item The same identity holds for every based loop \(\gamma\).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+If the vertex maps exist, multiply the edge equations around a loop. Every intermediate vertex map cancels, giving condition three. Condition three implies condition two.
+
+Conversely, choose a spanning tree. Starting from \(U_r\), define \(U_v\) by transport along the unique tree path from \(r\) to \(v\). The edge equations hold on every tree edge by construction. Every non tree edge closes one fundamental cycle. The edge equation on that edge is equivalent to the root holonomy identity for its fundamental cycle. Condition two therefore gives all remaining edge equations.
+\end{proof}
+
+\begin{corollary}[Unbased gauge classification]\label{cor:unbased_holonomy}
+There exists some family of vertex isomorphisms if and only if the two holonomy representations
+\[
+\pi_1(\Gamma,r)\longrightarrow\GL(V_r),
+\qquad
+\pi_1(\Gamma,r)\longrightarrow\GL(W_r)
+\]
+are conjugate.
+\end{corollary}
+
+\begin{proof}
+Apply \cref{thm:matrix_holonomy} and allow \(U_r\) to vary.
+\end{proof}
+
+\begin{corollary}[Scalar and projective gluing]\label{cor:scalar_holonomy}
+If every based loop acts by a scalar, finite gluing is equivalent to equality of the scalar holonomies on a fundamental cycle basis. The number of independent tests is
+\[
+\boxed{
+\abs E-\abs V+1.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+A connected graph has a spanning tree with \(\abs V-1\) edges. Every remaining edge gives one fundamental cycle. In the scalar case, conjugacy has no effect.
+\end{proof}
+
+\begin{proposition}[Projective cocycle form]\label{prop:projective_holonomy}
+Suppose the edge maps are defined only up to scalar. Choose representatives. The ratio of the two scalar holonomies on each loop is unchanged by vertex rescaling. It defines a character of the first homology group when the scalar transport is abelian.
+\end{proposition}
+
+\begin{proof}
+A vertex rescaling appears once with positive exponent and once with negative exponent around a closed path, so it cancels. Multiplication of loops multiplies the scalar ratios. In the abelian case, the ratio factors through the abelianization of the fundamental group, which is the first homology group.
+\end{proof}
+
+
+\begin{proposition}[Exact edge residual from cycle defect]\label{prop:holonomy_residual}
+Fix a spanning tree and construct the vertex maps by tree transport from \(U_r\). Let \(e:u\to v\) be a non tree edge. Let \(p_u\) and \(p_v\) be the tree paths from the root to \(u\) and \(v\). Define the fundamental cycle defect
+\[
+D_e
+=
+U_rA_{p_v}^{-1}A_eA_{p_u}
+-
+B_{p_v}^{-1}B_eB_{p_u}U_r.
+\]
+Then the edge residual is exactly
+\[
+\boxed{
+U_vA_e-B_eU_u
+=
+B_{p_v}D_eA_{p_u}^{-1}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Substitute
+\[
+U_u=B_{p_u}U_rA_{p_u}^{-1},
+\qquad
+U_v=B_{p_v}U_rA_{p_v}^{-1}
+\]
+into the left side and factor \(B_{p_v}\) on the left and \(A_{p_u}^{-1}\) on the right.
+\end{proof}
+
+\begin{corollary}[Quantitative finite gluing]\label{cor:quantitative_holonomy}
+With the notation of \cref{prop:holonomy_residual},
+\[
+\norm{U_vA_e-B_eU_u}
+\leq
+\norm{B_{p_v}}\norm{D_e}\norm{A_{p_u}^{-1}}.
+\]
+Thus small fundamental cycle defects give small non tree edge residuals whenever the tree transports are uniformly conditioned.
+\end{corollary}
+
+\begin{proof}
+Take operator norms in the exact identity.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.72\textwidth]{14_matrix_holonomy.pdf}
+\caption{A spanning tree fixes the vertex gauges. The non tree edges test the remaining cycle holonomies.}
+\label{fig:holonomy}
+\end{figure}
+
+\begin{remark}\label{rem:holonomy_boundary}
+The theorem is an exact finite gluing result. It assumes that the packet spaces and edge transports have already been constructed on both sides.
+\end{remark}
+
+\section{Breakwise assembly}\label{sec:breakwise}
+
+Wild inertia carries an upper ramification filtration. In favorable settings, a wild atom separates into finitely many break pieces. We state the finite algebra needed once such pieces are intrinsic.
+
+\begin{definition}[Orthogonal break decomposition]\label{def:break_decomposition}
+An orthogonal break decomposition is a symplectic direct sum
+\[
+V=\perpbig_{s\in S}V_s
+\]
+that is preserved by the declared tame stabilizer. Each \(V_s\) is the finite symplectic packet assigned to one break.
+\end{definition}
+
+\begin{proposition}[Heisenberg tensor factorization]\label{prop:heisenberg_tensor}
+Fix compatible central characters. The irreducible Heisenberg representation of an orthogonal sum is the tensor product of the irreducible Heisenberg representations of its summands:
+\[
+\boxed{
+\omega_V
+\cong
+\bigotimes_{s\in S}\omega_{V_s}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+The Heisenberg group of an orthogonal sum is the central product of the Heisenberg groups of the summands. The tensor product representation has the declared central character and has dimension
+\[
+\prod_s\sqrt{\abs{V_s}}
+=
+\sqrt{\abs V}.
+\]
+It is irreducible by the finite Stone von Neumann theorem, so it is the required representation.
+\end{proof}
+
+\begin{corollary}[Breakwise phase product]\label{cor:break_phase}
+In odd residue characteristic, if the stabilizer preserves every break packet and is fixed point free on its moving part, then
+\[
+\boxed{
+\Phi_p(g,V)
+=
+\prod_{s\in S}\Phi_p(g,V_s).
+}
+\]
+In residue characteristic two, the analogous normalized Gauss sign is the product of the signs determined by the breakwise quadratic refinements.
+\end{corollary}
+
+\begin{proof}
+Use \cref{prop:odd_multiplicativity} in odd characteristic and \cref{cor:arf_multiplicative} in characteristic two.
+\end{proof}
+
+\begin{theorem}[Breakwise restricted bridge]\label{thm:breakwise_bridge}
+Suppose every break has a restricted bridge datum, the symplectic isometries are compatible with the stabilizer action, and the scalar phases agree on a generating set of the stabilizer. Then the tensor product of the breakwise Heisenberg intertwiners gives a bridge for the full finite envelope. Any remaining gluing obstruction is exactly the matrix holonomy obstruction of \cref{thm:matrix_holonomy}.
+\end{theorem}
+
+\begin{proof}
+Tensor the breakwise Heisenberg intertwiners from \cref{thm:restricted_bridge}. Phase agreement makes the tensor map equivariant on the chosen stabilizer generators. The breakwise direct sum and tensor factorization make the local comparisons compatible. If the packets are arranged over a transport graph, the only remaining condition is consistency of the local maps around cycles, which is exactly the holonomy criterion.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{15_breakwise_decomposition.pdf}
+\caption{Orthogonal break packets produce tensor factors of the finite Heisenberg representation.}
+\label{fig:breakwise}
+\end{figure}
+
+\section{Local factor tests and the remaining bridge}\label{sec:boundary}
+
+Local class field theory identifies one dimensional Weil characters with characters of \(K^{\times}\) \cite{Serre1967,Tate1979}. The tame induction theorem extends this explicit picture to higher dimensional tame atoms. The local polynomial and conductor calculations in \cref{prop:tame_local_polynomial,prop:tame_conductor} therefore give complete finite invariants for the declared tame packets. Finite Gauss sums give the residue field phase. The full local factor, however, also includes ramification depth, Haar measure normalization, the additive character conductor, and wild interaction data.
+
+\begin{proposition}[Finite tame comparison package]\label{prop:tame_package}
+For a tame induced atom, the following data are determined by its packet coordinates:
+
+\begin{enumerate}
+\item the dimension and inertia orbit
+\item the Frobenius cycle polynomial
+\item the Artin conductor
+\item the local polynomial
+\item the tensor refinement into interaction packets
+\item the finite Gauss phase of each declared residue character.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The dimension and orbit follow from \cref{thm:tame_induction}. The cycle polynomial is \cref{prop:frobenius_cycle}. The conductor is \cref{prop:tame_conductor}. The local polynomial is \cref{prop:tame_local_polynomial}. Tensor refinement is \cref{thm:gcd_lcm}. The finite Gauss phase is \cref{def:gauss_phase}.
+\end{proof}
+
+\subsection{Arithmetic realization and the conditional comparison}
+
+Fix the paper's reciprocity, additive-character, local-factor, and phase
+normalizations. Let \(\mathcal A\) be the declared class of irreducible wild
+Weil atoms under consideration. For \(\rho\in\mathcal A\), the supplied
+assembled finite datum \(d_\rho\) consists of the following inputs,
+historically denoted H1--H4:
+\begin{enumerate}
+\item an intrinsic finite break decomposition on the Galois side;
+\item the declared equivariant symplectic bridges to the supplied breakwise
+type-side quotients;
+\item compatible odd or dyadic central-extension and phase data on every
+break, including every prescribed finite marking;
+\item a compatible transport system with vanishing matrix holonomy
+obstruction.
+\end{enumerate}
+These are finite comparison inputs. Supplying separate breakwise target
+types does not itself supply one common arithmetic candidate. If a common
+candidate is already supplied, that is a stronger restricted hypothesis.
+
+An \emph{arithmetic realization witness}
+\(\mathcal R(d_\rho,\pi)\) consists of actual arithmetic inducing data
+for an admissible supercuspidal \(\pi\), together with explicit
+comparison and recovery maps carrying the prescribed assembled finite
+packet. The maps preserve its declared stabilizer action, all character values
+explicitly included in the supplied datum, central-extension and phase
+data, and compatible transports.
+Recovery returns that same \(\pi\), with its fixed central character and
+noncompact completion. An enlarged actual inducing carrier is permitted;
+the whole packet is not required to be the original maximal-simple-type
+quotient. Any stronger native-marking or numerical-layer requirement is
+part of the declared datum and must be verified separately.
+
+\begingroup
+\renewcommand{\theconjecture}{66}
+\begin{conjecture}[Arithmetic packet realization]
+\label{conj:arithmetic_realization}\label{thm:conditional_atomic}
+For every \(\rho\in\mathcal A\) with its supplied H1--H4 assembled
+finite datum \(d_\rho\), there exists an actual admissible supercuspidal
+representation \(\pi\) of \(\GL_{\dim\rho}(K)\) and an arithmetic
+realization witness \(\mathcal R(d_\rho,\pi)\).
+\end{conjecture}
+\endgroup
+
+\noindent This is the realization problem isolated from historical
+Theorem 16.2 and original proof obligation 66 (row 95 of the historical
+all-records register). It asks for one witness for each
+admitted source, rather than for success of every proposed host or every
+noncompact completion. No proof of the unrestricted statement is claimed.
+
+\begin{proposition}[Comparison of one realized candidate]
+\label{prop:realized_candidate_comparison}
+Let \(\rho\in\mathcal A\), and let \(\pi\) be one actual admissible
+supercuspidal representation of \(\GL_{\dim\rho}(K)\) with
+\(\mathcal R(d_\rho,\pi)\). Suppose H5 holds for this same \(\pi\):
+its required pair local factors equal those prescribed for \(\rho\)
+on the stipulated characterizing family of twists, with the fixed
+normalizations. Assume the stated local-factor characterization applies
+to that family and class. Then \(\pi\) is isomorphic to the representation
+assigned to \(\rho\) by the established local Langlands correspondence.
+\end{proposition}
+
+\begin{proof}
+H5 identifies the tested local factors for this actual candidate. The
+applicable local-factor characterization identifies its isomorphism
+class with the established correspondence \cite{Henniart1993}. The
+realization witness ensures that it is this same candidate which carries
+the prescribed assembled packet. No existence conclusion is inferred
+from the finite gluing conditions alone.
+\end{proof}
+
+\begin{remark}\label{rem:conditional_not_proof}
+H5 remains a conditional premise about the same fixed candidate. It is
+not a formal consequence of the finite symplectic bridge, conductor
+profiles, or a choice of noncompact root. This proposition adds no
+unconditional pair-factor obligation to the construction conjecture.
+\end{remark}
+
+\subsection{Exact open boundary}
+
+The following issues delimit the unrestricted program. The first four construct and normalize the finite inputs for broader source classes. Conjecture 66 asks for arithmetic realization once H1--H4 are supplied. The fifth is the independent route to replacing the retained conditional H5 input.
+
+\begin{enumerate}
+\item Construct a choice free finite symplectic envelope from an arbitrary irreducible wild inertia atom, with its ramification filtration and tame stabilizer action.
+\item Prove a canonical equivariant symplectic isometry from that envelope to the type side quotient \(J_\theta^1/H_\theta^1\).
+\item Recover the canonical beta extension phase in every break, including the required dyadic quadratic refinement.
+\item Prove matrix holonomy compatibility for the resulting packet transport system.
+\item Compare the full family of pair \(L\), epsilon, and gamma factors without invoking the established correspondence.
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.78\textwidth]{16_boundary_ladder.pdf}
+\caption{The proved finite layers and the remaining independent local correspondence steps.}
+\label{fig:boundary}
+\end{figure}
+
+The first item is a construction problem. The second is a comparison problem. The third is a normalization problem. The fourth is a descent problem. The fifth concerns proving the local factor premise needed for identification. Conjecture 66 does not assert this fifth step. None is replaced by a larger finite computation.
+
+\section{Examples and finite certificates}\label{sec:examples}
+
+The examples in this section illustrate the exact finite formulas. They are not used as proofs of the general theorems.
+
+\begin{example}[A degree four tame orbit]\label{ex:tame_four_again}
+Over \(\FF_2\), the exponent orbit
+\[
+1\longmapsto2\longmapsto4\longmapsto8\longmapsto1
+\]
+has length four. It therefore gives a tame atom induced from the unramified extension of degree four. The Frobenius transfer has one four cycle, and the number of regular degree four orbits is three by \cref{prop:mobius_count}.
+\end{example}
+
+\begin{example}[Tensor packets of lengths four and six]\label{ex:tensor_46}
+For \(n=4\) and \(m=6\),
+\[
+\gcd(4,6)=2,
+\qquad
+\lcm(4,6)=12.
+\]
+The tensor product splits into two interaction packets of depth twelve. Their total dimension is \(2\cdot12=24\), equal to the product \(4\cdot6\).
+\end{example}
+
+\begin{example}[Rank one Heisenberg group]\label{ex:heisenberg_rank_one}
+Take \(V=\FF_3^2\). The Heisenberg group has order \(3^3=27\), and its irreducible representation with a fixed nontrivial central character has dimension three. The trace vanishes on every noncentral element. Averaging the translation subgroup gives a rank one projector.
+\end{example}
+
+\begin{example}[Nondegenerate twisted algebra]\label{ex:twisted_plane}
+Let \(A=\FF_p^2\) with its standard alternating form. A cocycle with that commutator form gives
+\[
+\CC^c[A]\cong M_p(\CC).
+\]
+The unique irreducible projective representation has dimension \(p\).
+\end{example}
+
+\begin{example}[Dyadic phase ambiguity]\label{ex:dyadic_plane}
+On a symplectic plane over \(\FF_2\), choose refinements \(q_0\) and \(q_1\) with Arf invariants zero and one. Their polar forms are the same, while
+\[
+\sum_x(-1)^{q_0(x)}=2,
+\qquad
+\sum_x(-1)^{q_1(x)}=-2.
+\]
+Thus the alternating packet alone cannot select the dyadic sign.
+\end{example}
+
+\begin{example}[One cycle gluing obstruction]\label{ex:one_cycle}
+Let a connected graph have one non tree edge. Tree transport determines every vertex map from one root map. The final edge equation holds exactly when the two holonomies around the unique fundamental cycle intertwine. Changing the scalar on that edge changes the cycle holonomy and produces a genuine obstruction.
+\end{example}
+
+\section{Scope of the finite reconstruction}\label{sec:scope}
+
+The article proves the following statements under their displayed hypotheses.
+
+\begin{enumerate}
+\item Tame irreducible Weil atoms are transitive Frobenius packets induced from unramified extensions.
+\item Regular tame packets have the stated Möbius count.
+\item Finite cuspidal blocks have exact primitive central projectors.
+\item Tame tensor products satisfy the greatest common divisor and least common multiple packet formula.
+\item Tame local polynomials, conductors, and finite Gauss phases are explicit.
+\item Nondegenerate scalar projective commutators give full matrix twisted group algebras and unique finite Heisenberg representations.
+\item A declared one break Clifford datum has a choice independent radical free symplectic envelope.
+\item An equivariant symplectic isometry gives a Heisenberg bridge unique up to scalar.
+\item One generator phase removes the scalar discrepancy for a cyclic stabilizer.
+\item Odd finite Weil phases and dyadic Arf signs are multiplicative across orthogonal break packets.
+\item Matrix holonomy on a fundamental cycle basis is the exact finite gluing obstruction.
+\end{enumerate}
+
+The article does not independently prove the local Langlands correspondence, simple character theory, the canonical beta extension, or universal wild companion existence. It does not construct the Galois to type symplectic isometry for an arbitrary wild atom. It does not compare all pair local factors in the wild case.
+
+\section{Restricted arithmetic realization theorems}
+\label{sec:arithmetic_progress}
+
+The later constructions provide actual arithmetic candidates and exact
+finite packet recovery in substantial restricted families. They do not
+establish \cref{conj:arithmetic_realization} for every admitted source.
+Their detailed ordinary proofs are typeset in the appendices, and the
+original reviewed Markdown files accompany this edition. In these
+appendices \(F\) denotes the base local field, while \(K=F[\beta]\)
+denotes a parameter field; these are local notation conventions.
+All references to ``claim 66'' in the retained notes mean the general
+endpoint now isolated as Conjecture 66.
+
+\subsection{The odd-prime trace-zero construction}
+
+\begin{theorem}[Restricted odd-prime arithmetic realization]
+\label{thm:odd_arithmetic}
+Let \(p\) be an odd prime, \(F=\FF_p((t))\), fix \(d\ge1\), and let
+\[
+0<h_1<\cdots<h_d,\qquad p\nmid h_i,
+\qquad q_i=(p+1)h_i,\qquad N=p^d.
+\]
+There is an explicit maximal simple stratum in \(M_N(F)\) with totally
+ramified full-degree parameter field, a literal defining sequence of
+degrees \(p,p^2,\ldots,p^d\), and levels
+\(n_j=p^{d-j}q_{d-j+1}\). Every native parameter and consecutive
+correction has trace zero over its recursive base field.
+The stratum admits a full simple character trivial on \(U_F^1\).
+Its fixed canonical beta extension can be completed to an actual
+irreducible admissible supercuspidal \(\pi\) with any prescribed smooth
+central quasicharacter trivial on \(U_F^1\), when its completion choices
+are free or already compatible.
+
+Assume actually supplied labelled full-character extensions with whole
+two-dimensional symplectic quotients whose balanced complex-scalar
+central product has \(d\) planes, one vertex, and trivial stabilizer.
+Then the same \(\pi\) admits a full scalar-pushout realization of that
+packet and exact recovery of its unchanged inducing representation.
+The prescribed central character must lie in the covered tame class.
+No literal embedding of the old matrix groups, canonical native marking,
+or prescribed numerical host-depth placement is inferred.
+\end{theorem}
+
+\begin{proof}
+The explicit Artin--Schreier recursion and its normalized filtered lift
+construct the maximal parameter and literal defining sequence; see
+\cref{app:odd_tower}. Its trace transport identity makes every native
+trace zero, rather than relying on amplification by \(p\). Native-rank
+full-character construction, full beta-determinant transfer, trace-zero
+correction, and maximal-field character extension give the scalar
+triviality and central completion; see \cref{app:odd_character}.
+The actual leading symplectic layer has dimension
+\((p-1)p^{d-1}\ge2d\) and survives every later approximation
+(\cref{app:odd_capacity}). A labelled symplectic embedding gives a
+center-fixing full scalar-pushout isomorphism. Finite Stone--von Neumann
+decomposition separates the source factor from its orthogonal
+complement. Maximal-isotropic averaging on the complementary Heisenberg
+factor selects a one-dimensional representation line and hence a
+source-sized sector. The retained induction/idempotent recovery returns the same
+\(\Lambda\) and \(\pi\), as proved in \cref{app:odd_synthesis}.
+\end{proof}
+
+For \(p>3\), a native minimal rank-\(p\) type quotient has dimension
+\(p-1\), so it is not automatically a plane. The theorem requires
+genuinely supplied whole-plane data. Independence of source tensor
+factors is also an input. An arbitrary single-factor wild determinant
+need not be tame.
+
+Under additional actual-inertia hypotheses, genuine scalar phases on
+the entire source carrier are realized by actual central matrices of a
+finite cover and descend to the stipulated operators. A direct matrix
+homomorphism from the stabilizer itself need not exist; the exact
+statement and descent proof are in \cref{app:odd_scalar}.
+
+\subsection{The weighted dyadic construction and enlarged carriers}
+
+\begin{theorem}[Restricted dyadic marked assembly realization]
+\label{thm:dyadic_arithmetic}
+Let \(F=\FF_2((t))\), fix an additive character of conductor
+\(t\OO_F\), fix \(d\ge1\), and let \(h_1<\cdots<h_d\) be positive odd integers.
+Put \(q_i=3h_i\), \(N=2^d\), and
+\(n_j=2^{d-j}q_{d-j+1}\). The explicit recursive matrix generates a
+separable totally ramified degree-\(N\) maximal parameter field,
+normalizes the complete lattice chain, and has the literal defining
+sequence of degrees \(2,4,\ldots,2^d\). It admits a full simple character
+trivial on \(U_F^1\) and an actual supercuspidal completion with any
+prescribed central quasicharacter trivial on \(U_F^1\), when the
+noncompact completion is free or already compatible.
+
+For actually supplied full marked whole-plane scalar-pushout data with
+one vertex, trivial stabilizer, and prescribed source central character
+trivial on \(U_F^1\), an arithmetic assembly carrier exists
+at every length and recovers the same candidate: inside its original
+type for \(d\ge3\), and in explicit enlarged inducing carriers for
+\(d=1,2\). Every supplied full character value and transported whole
+finite subgroup, lift, square, and phase marking is retained at the
+represented marking level. Any central-character kernel already factored
+out remains recorded separately; scalar pushout does not recover its
+invisible elements. This does
+not identify the transported marking with an independently prescribed
+canonical native marking.
+\end{theorem}
+
+\begin{proof}
+The Artin--Schreier filtered lift has native trace one. Consequently
+each native correction \(\delta\) satisfies
+\[
+v_F(\operatorname{tr}\delta)+s\ge1 \quad (s=1),
+\]
+which makes its additive scalar correction trivial on \(U_F^1\).
+The actual field and defining-sequence proof is
+\cref{app:dyadic_tower}. Full beta-determinant transfer and character
+extension at each new maximal native field prove the full-character
+claim, including the odd-critical endpoint
+\(2(\lfloor r/2\rfloor+1)-r=1\); see \cref{app:dyadic_character}.
+The exact original quotient has dimension \(2^d-2\), which accommodates
+the required \(2d\) source dimensions precisely for \(d\ge3\)
+(\cref{app:dyadic_capacity}).
+
+At rank two, with \(q=2m+1\), enlarge
+\(J=U_K^1U_A^{m+1}\) to \(P=U_K^1U_A^m\). The actual character
+ratio \(\lambda=\theta^g/\theta\) for \(g\notin J\) is nontrivial
+and sign-valued. With \(H_0=\ker\lambda\), the quotient is
+\(P/H_0\simeq\FF_2^2\), and \(\Ind_J^P\theta\) is an
+irreducible two-dimensional Heisenberg carrier
+(\cref{app:rank2}). At rank four, the actual outer quadratic
+centralizer gives \(P=J U_B^m\), \([P:J]=2\), and
+\(P/H_0\simeq\FF_2^4\), with carrier \(\Ind_J^P\eta\) of
+dimension four (\cref{app:rank4}). The finite scalar center can be
+larger than \(\mu_2\); no literal extraspecial quotient is claimed.
+
+At both ranks \(K^\times\) normalizes \(P\). Thus
+\(\mathcal N=K^\times J\) is normal of index two in
+\(\mathcal M=K^\times P\), and
+\[
+\Sigma=\Ind_{\mathcal N}^{\mathcal M}\Lambda,
+\qquad
+\pi\simeq\cInd_{\mathcal M}^{\GL_N(F)}\Sigma.
+\]
+Induction in stages preserves the full original \(\Lambda\), its
+central character, and its noncompact root; see
+\cref{app:rank4_stages,app:lowrank_contract}. The full marked
+scalar-pushout comparison applies to these actual enlarged pairs as
+well as to the original higher-rank types (\cref{app:dyadic_markings}).
+The full synthesis and scope are in \cref{app:dyadic_synthesis}.
+\end{proof}
+
+The original low-rank maximal-type capacity obstruction remains true.
+The new pair is a common arithmetic assembly carrier; it is not renamed
+as the original maximal-simple-character pair. For an independently
+fixed native quadratic marking, a preassigned embedding must satisfy
+\(q_W(f(v))=q_{\rm src}(v)\). At equal capacity, a free embedding
+requires equal Arf invariant. Spare capacity for \(d\ge4\) admits
+either source Arf type when the embedding is free. Retaining only the
+central \(\{\pm1\}\) would erase the distinction between whole marked
+finite extensions such as \(D_8\) and \(Q_8\).
+
+\subsection{Scope, numerical invariants, and evidence}
+
+For the same candidates the constructions give
+\[
+\begin{array}{c|c|c}
+ & p\text{ odd} & p=2\\ \hline
+\dim_{\FF_p}(J^1/H^1) & p^d-1 & 2^d-2\\
+\Swan(\pi)&p^{d-1}(p+1)h_d&3\cdot2^{d-1}h_d
+\end{array}
+\]
+and torsion number one. Their self-pair conductor formulas are
+\[
+\begin{aligned}
+a(\pi^\vee\times\pi)
+ &=p^{2d}-1+\sum_{i=1}^d(p^{2i}-p^{2i-2})h_i
+ &&(p\text{ odd}),\\
+a(\pi^\vee\times\pi)
+ &=N^2-1+\sum_{i=1}^d3\cdot4^{i-1}h_i
+ &&(p=2).
+\end{aligned}
+\]
+These identities do not prove H5, identify an endo-class, or construct
+a canonical source-to-host marking. At rank eight, the retained
+skipped-degree host has the same displayed numerical profiles as the
+full tower and a smaller Heisenberg quotient. The explicit construction,
+rather than numerical matching alone, supplies the arithmetic object.
+
+The proofs use the stated Bushnell--Kutzko simple-type theorems
+\cite{BushnellKutzko1993} and the retained conductor inputs. Exact source
+locations and hypothesis checks are recorded in the component proofs
+and accompanying audits. The finite rank-nine and rank-eight runs check
+particular matrices, traces, normalized lifts, and filtration grades.
+They are bounded checks, not arbitrary-length proofs. No new Lean build
+of these arithmetic constructions is claimed.
+
+Nontrivial prescribed symplectic stabilizer actions, independently fixed
+canonical native markings, arbitrary source/transport diagrams, and any
+required numerical layer placement remain outside the restricted results.
+The current totally ramified host cannot implement nontrivial
+prime-to-\(p\) symplectic actions by the stronger character-preserving
+inner-normalizer mechanism; this obstruction is stated precisely in
+\cref{app:stabilizer_contract}. That stronger mechanism is not silently
+imposed on the original conjecture. H5 remains conditional for the same
+fixed candidate.
+
+The accompanying archive retains the mathematical reviews, computational evidence, and source records underlying the displayed scope.
+
+\clearpage
+\appendix
+\section*{Detailed ordinary proofs and construction records}
+\addcontentsline{toc}{section}{Detailed ordinary proofs and construction records}
+
+The following appendices typeset the complete selected current construction
+proofs from Blocks 166 and 167. Their source notation, numbered source
+subsections, exact hypotheses, and mathematical scope are retained.
+The synthesis appendices state the final combined results; component notes
+also document narrower lemmas, alternative routes, and failed interpretations.
+In particular, the separate classical arithmetic-induction application in
+the leading-capacity note is not an input to the direct constructor.
+
+Historical research identifiers, filenames, and references to earlier
+blocks are preserved to make the arguments traceable to the accompanying
+Markdown files. Earlier ``pending'' review language is superseded by the
+completed independent reviews included with those source files.
+Negative capacity conclusions concern the original maximal-type carrier;
+the later low-rank enlargement does not repeal them.
+These appendices are ordinary mathematical proofs. Neither their typesetting
+nor the inherited formalization certificates constitute a fresh Lean proof
+of these arithmetic results or of Conjecture 66.
+
+\input{appendices/odd_synthesis}
+\input{appendices/odd_tower}
+\input{appendices/odd_character}
+\input{appendices/odd_capacity}
+\input{appendices/odd_scalar}
+\input{appendices/stabilizer_contract}
+\input{appendices/dyadic_synthesis}
+\input{appendices/dyadic_tower}
+\input{appendices/dyadic_character}
+\input{appendices/dyadic_capacity}
+\input{appendices/dyadic_markings}
+\input{appendices/rank2}
+\input{appendices/rank4}
+\input{appendices/rank4_stages}
+\input{appendices/lowrank_contract}
+
+\clearpage
+\bibliographystyle{amsplain}
+\bibliography{Paper_XI_Traditional_Final}
+
+\end{document}

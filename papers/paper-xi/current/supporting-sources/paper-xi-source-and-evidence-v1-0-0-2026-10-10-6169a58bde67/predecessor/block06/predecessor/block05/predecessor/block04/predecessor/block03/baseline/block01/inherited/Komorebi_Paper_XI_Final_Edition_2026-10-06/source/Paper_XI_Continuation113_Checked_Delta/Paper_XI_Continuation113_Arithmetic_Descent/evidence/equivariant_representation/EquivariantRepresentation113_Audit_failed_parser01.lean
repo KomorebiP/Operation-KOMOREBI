@@ -1,0 +1,7 @@
+import PaperXI.EquivariantRepresentation113
+#check PaperXI.EquivariantRepresentation113.below
+#print axioms PaperXI.EquivariantRepresentation113.below
+#check PaperXI.EquivariantRepresentation113.scalarTransport_covariant
+#print axioms PaperXI.EquivariantRepresentation113.scalarTransport_covariant
+#check PaperXI.EquivariantRepresentation113.exists_equivariant_actual_action
+#print axioms PaperXI.EquivariantRepresentation113.exists_equivariant_actual_action

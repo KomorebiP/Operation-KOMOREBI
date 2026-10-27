@@ -1,0 +1,304 @@
+\clearpage
+\section{The trace-zero Artin--Schreier tower}\label{app:odd_tower}
+
+Date: 2026-10-05. Ordinary proof, submitted for independent audit.
+
+\hypertarget{odd_tower-exact-statement}{%
+\subsection{Exact statement}\label{odd_tower-exact-statement}}
+
+Let p be odd, F=F\_p((t)), and
+0\textless h\_1\textless\ldots\textless h\_d with p not dividing any
+h\_i. Put q\_i=(p+1)h\_i. The constructor below gives an actual matrix
+B\_d over F of size p\^{}d with exactly the field, simplicity,
+approximation-level, odd-prime quotient, and conductor conclusions of
+\path{RECURSIVE_TOWER166.md}. In addition, its matrix trace is exactly zero.
+Every native shorter constructor and every amplified arithmetic
+approximation also has matrix trace zero. Therefore every difference
+between consecutive arithmetic approximations has matrix trace zero.
+
+The trace statement is an identity over the current coefficient field,
+not merely a congruence, a field trace inferred from characteristic
+zero, or a division by the matrix size. All coefficient fields have
+characteristic p, so division by p\^{}j would be invalid.
+
+\hypertarget{odd_tower-an-explicit-separable-minimal-extension-with-a-traceless-parameter}{%
+\subsection{1. An explicit separable minimal extension with a traceless
+parameter}\label{odd_tower-an-explicit-separable-minimal-extension-with-a-traceless-parameter}}
+
+At an arbitrary recursive step let L have residue field F\_p and
+uniformizer t\_L. Given q\textgreater0 prime to p, set
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+E=L(alpha),  alpha^p-alpha=t_L^(-q).
+\end{Verbatim}
+
+The right side is not an Artin--Schreier coboundary in L: the negative
+valuation of x\^{}p-x, if x has negative valuation, is divisible by p.
+Thus the polynomial is irreducible of degree p.~The extension is
+separable, and the valuation equation forces ramification index p and
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+v_E(alpha)=-q.
+\end{Verbatim}
+
+It is therefore totally ramified and alpha is minimal over L. For odd p
+its field trace is
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+Tr_(E/L)(alpha)=sum_(c in F_p)(alpha+c)=0.
+\end{Verbatim}
+
+Choose the unique b in \{1,\ldots,p-1\} with qb congruent to -1 modulo
+p, put a=(qb+1)/p, and define
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+z=t_L^a alpha^b.
+\end{Verbatim}
+
+Then v\_E(z)=pa-qb=1, so z is a uniformizer and E=L(z). Its monic
+minimal polynomial f(X)=X\textsuperscript{p+a\_(p-1)X}(p-1)+\ldots+a\_0
+is Eisenstein. It is an explicit polynomial: compute the product over
+the p conjugates
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+f(X)=product_(c in F_p) (X-t_L^a(alpha+c)^b)
+\end{Verbatim}
+
+and reduce coefficients using alpha\textsuperscript{p-alpha=t\_L}(-q).
+The invariant coefficients belong to L. This is a finite algebraic
+instruction, with no choice of an unknown extension or matrix.
+
+\hypertarget{odd_tower-normalized-corestriction-and-an-explicit-filtered-right-inverse}{%
+\subsection{2. Normalized corestriction and an explicit filtered right
+inverse}\label{odd_tower-normalized-corestriction-and-an-explicit-filtered-right-inverse}}
+
+Use the basis 1,z,\ldots,z\^{}(p-1) of E over L. If T\_ij is its
+coefficient matrix unit and pr is the trace corestriction, then
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+pr(T_ij)=z^i z_j^*,
+z_j^*=sum_(k=j+1)^p a_k z^(k-j-1) / f'(z),  a_p=1.
+\end{Verbatim}
+
+Set
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+kappa=-f'(z)/z^(p-1),  s=kappa pr.
+\end{Verbatim}
+
+The displayed dual-basis formula gives
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+s(T_ij)=-z^(i-j) + terms of strictly larger E-valuation.
+\end{Verbatim}
+
+Indeed v\_E(a\_k)\textgreater=p for 1\textless=k\textless p, so the
+contribution indexed by a\_k has valuation at least k greater than the
+first contribution. Applying s entrywise on E\^{}m gives a B-bimodule
+corestriction from End\_L(E\^{}m) to B=End\_E(E\^{}m). With the complete
+interleaved period-pm L-chain and period-m E-chain, it preserves grades
+and satisfies s(P\textsuperscript{r)=Q}r.
+
+Let P0 extract the constant coefficient on every E-coordinate. The
+constant dual coefficient satisfies
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+z_0^*=-a_0/(z f'(z)),
+u_0=s(P0)=kappa z_0^*=a_0/z^p in O_E^times.
+\end{Verbatim}
+
+For any C in M\_m(E), define the actual L-linear matrix
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+Lift_E(C)=u_0^(-1) C P0.
+\end{Verbatim}
+
+Then
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+s(Lift_E(C))=C.
+\end{Verbatim}
+
+This lift preserves the exact filtration valuation. To see this, first
+multiply C by the unit u\_0\^{}(-1), which does not change its valuation
+in the E-chain. Expand each entry in the basis 1,z,\ldots,z\^{}(p-1).
+The only nonzero columns of Lift are its constant-coefficient columns.
+The L-grade of a coefficient c\_i z\^{}i E\_uv is
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+pm*v_L(c_i)+mi+u-v,
+\end{Verbatim}
+
+equal to its E-grade, and distinct i have valuations distinct modulo p.
+Thus the minimum cannot cancel. This also proves the stated surjectivity
+s(P\textsuperscript{r)=Q}r without a compactness or lifting-existence
+assumption.
+
+\hypertarget{odd_tower-exact-trace-identity}{%
+\subsection{3. Exact trace identity}\label{odd_tower-exact-trace-identity}}
+
+For y in E, extraction of its constant coefficient is
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+coeff_0(y)=Tr_(E/L)(z_0^* y).
+\end{Verbatim}
+
+The ordinary L-matrix trace of the rank-one operator yP0 is coeff\_0(y).
+Consequently, for every C in M\_m(E),
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+tr_L(Lift_E(C))
+   =Tr_(E/L)(z_0^* u_0^(-1) tr_E(C))
+   =Tr_(E/L)(kappa^(-1) tr_E(C)).             (T)
+\end{Verbatim}
+
+Here tr\_E(C) is the ordinary m-by-m matrix trace over E. In particular,
+if tr\_E(C)=0, then the lift has ordinary L-matrix trace zero exactly.
+
+\hypertarget{odd_tower-the-recursive-actual-matrix}{%
+\subsection{4. The recursive actual
+matrix}\label{odd_tower-the-recursive-actual-matrix}}
+
+Define B(L,t\_L;h\_1,\ldots,h\_d) by induction. For d=1 use the
+multiplication matrix of the alpha from Section1 with q=q\_1. For
+d\textgreater=2 use Section1 with q=q\_d, put m=p\^{}(d-1), recursively
+construct
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+C=B(E,z;h_1,...,h_(d-1)),
+\end{Verbatim}
+
+and set
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+B(L,t_L;h_1,...,h_d)=alpha I_m+Lift_E(C).       (ASR)
+\end{Verbatim}
+
+Everything in (ASR) is explicit in finite field operations and the
+displayed degree-p polynomial extensions. It differs from the old
+conjugacy-preserving two-summand construction. Preserving old lower
+summand conjugacy classes is not claimed.
+
+Inductively tr\_E(C)=0. Equation (T) and the Artin--Schreier trace give
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+tr_L(B)=m Tr_(E/L)(alpha)+tr_L(Lift_E(C))=0.
+\end{Verbatim}
+
+For the induction base the trace is Tr\_(E/L)(alpha)=0. Thus this
+argument proves tracelessness in the current base field for every native
+rank, not merely tracelessness after an amplification whose size is
+divisible by p.
+
+\hypertarget{odd_tower-actual-fields-and-profiles}{%
+\subsection{5. Actual fields and
+profiles}\label{odd_tower-actual-fields-and-profiles}}
+
+Set gamma=alpha I\_m and b=Lift\_E(C). The minimal outer stratum has
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+n=p^(d-1)q_d,  k_0(gamma)=-n.
+\end{Verbatim}
+
+The inner actual maximal field supplied by induction has
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+R=p^(d-2)q_(d-1),  v(C)=-R,  k_0(C)=-q_1.
+\end{Verbatim}
+
+We have s(b)=C, v(b)=-R, and n\textgreater pR\textgreater2R because p is
+odd and the h\_i increase. Hence
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+-2R > -n-q_1 = k_0(gamma)+k_0(C).
+\end{Verbatim}
+
+BK Remark2.2.7 applies to this pure derived maximal field. It gives the
+field generated by the actual displayed gamma+b, with degree and
+ramification p\^{}d, residue degree one, normalization of the complete
+chain, and k\_0=-q\_1. Its valuation remains -n.~Thus {[}A,n,0,B{]} is
+simple.
+
+This repeats the precise argument of \path{RECURSIVE_TOWER166.md} with a new
+outer minimal extension and normalized right inverse. No step of that
+argument required the old polynomial e\^{}p+t e+t.
+
+\hypertarget{odd_tower-native-approximations-amplification-and-traceless-corrections}{%
+\subsection{6. Native approximations, amplification, and traceless
+corrections}\label{odd_tower-native-approximations-amplification-and-traceless-corrections}}
+
+For the full rank p\^{}d matrix put, for 1\textless=j\textless=d,
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+B^[j]=B(F,t;h_(d-j+1),...,h_d) tensor I_(p^(d-j)).
+\end{Verbatim}
+
+These are literal truncations of (ASR). At the outer level the same
+largest q\_d selects the same Artin--Schreier extension and uniformizer
+in all truncations. At the next level the same q\_(d-1) does the same,
+and so on. Thus no hidden change of bases or incompatible parameter
+fields enters the truncations. Lift\_E commutes with amplification by an
+identity because P0 acts separately on each coordinate.
+
+Every native shorter B has trace zero by Section4. Its amplification
+therefore has trace zero. In particular
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+tr_F(B^[j])=0,
+tr_F(B^[j+1]-B^[j])=0.                        (Z)
+\end{Verbatim}
+
+The same is true at native rank p\^{}(j+1): the correction between
+B(F,t;h\_(d-j),\ldots,h\_d) and the identity-p amplification of
+B(F,t;h\_(d-j+1),\ldots,h\_d) has trace zero. This native assertion is
+the one relevant when constructing characters before each transfer.
+
+The field degrees and critical levels of B\footnote{j} are exactly
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+degree p^j,  n_j=p^(d-j)q_(d-j+1).
+\end{Verbatim}
+
+Valuation-preservation of every Lift gives
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+v_A(B^[j+1]-B^[j])=-n_(j+1).
+\end{Verbatim}
+
+Thus the approximation and defining-sequence proof of the first note
+applies unchanged. The odd-prime J/H dimensions, grade-index formula,
+Swan conductor and self-pair conductor depend on these same levels and
+centralizer degrees, so all their formulas carry over unchanged.
+
+\hypertarget{odd_tower-precisely-what-the-trace-supplies}{%
+\subsection{7. Precisely what the trace
+supplies}\label{odd_tower-precisely-what-the-trace-supplies}}
+
+For any displayed correction delta and any scalar u in L\^{}times for
+which its additive correction character is defined,
+
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+psi_delta(u I)=psi_L((u-1)tr_L(delta))=1.
+\end{Verbatim}
+
+This proves triviality of the actual additive correction on the scalar
+subgroup of its domain. It does not, by itself, construct a simple
+character with prescribed values on larger scalar groups. Compatible
+extension, transfer, and intersection arguments for the full simple
+character are separate obligations.
+
+The note also does not identify the constructed candidates with any Weil
+source, choose them by inverse LLC, realize arbitrary stabilizer
+operators, or prove same-candidate H5. Its new output is an explicit
+arithmetic defining sequence whose trace vanishes at every native and
+amplified stage, suitable as input to that separate character argument.
+
+\hypertarget{odd_tower-primary-dependency}{%
+\subsection{Primary dependency}\label{odd_tower-primary-dependency}}
+
+Bushnell--Kutzko, The admissible dual of GL(N) via compact open
+subgroups, Remark2.2.7 (printed p55), with the defining-sequence and
+ring recursion already pinned in \path{RECURSIVE_TOWER166.md}. Retained source
+SHA256:
+\path{d69db0827256707a34cd2562af68b9de11fc889ab3f43535ec47b620d58ca9c8}. The
+trace-dual and Artin--Schreier calculations above are given in full.
