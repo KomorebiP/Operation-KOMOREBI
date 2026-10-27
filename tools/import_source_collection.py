@@ -389,8 +389,30 @@ def _verify_staged(root: Path, destination: str, files: list[dict]) -> None:
                 f"Staged bytes or mode differ from verified source: {path}")
 
 
+def _preserve_source_bytes(config: dict, root: Path) -> None:
+    """Keep archived bytes exact despite inherited Git clean transformations.
+
+    These overrides belong only to the importer checkout's Git metadata. They
+    preserve the original tracked .gitattributes files and every source byte.
+    """
+    attribute_path = Path(_git(root, "rev-parse", "--git-path", "info/attributes"))
+    if not attribute_path.is_absolute():
+        attribute_path = root / attribute_path
+    rules = []
+    for component in config["components"]:
+        destination = safe_relative(component["destination"])
+        require(not any(c in destination for c in "*?[]"), "Glob characters in source destination")
+        pattern = json.dumps(destination + "/**", ensure_ascii=False)
+        rules.append(pattern + " -text -filter -ident -working-tree-encoding")
+    attribute_path.parent.mkdir(parents=True, exist_ok=True)
+    with attribute_path.open("a", encoding="utf-8") as stream:
+        stream.write("\n# Preserve exact archived bytes during the Komorebi source import.\n")
+        stream.write("\n".join(sorted(set(rules))) + "\n")
+
+
 def publish_batch(config: dict, batch: str, expected_base: str, root: Path) -> None:
     require(_git(root, "rev-parse", "HEAD") == expected_base, "Checkout does not match expected_base")
+    _preserve_source_bytes(config, root)
     require(not _git(root, "status", "--porcelain"), "Git working tree is not clean")
     require(_git(root, "ls-remote", "origin", "refs/heads/main").split()[0] == expected_base,
             "Remote main does not match expected_base")

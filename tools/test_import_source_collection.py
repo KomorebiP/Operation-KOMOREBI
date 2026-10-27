@@ -1,7 +1,9 @@
-"""Small offline contracts for the source importer. No remote or Git writes."""
+"""Offline importer contracts; local Git fixtures use temporary directories."""
 import hashlib
 import json
+import os
 import stat
+import subprocess
 import tempfile
 import unittest
 import zipfile
@@ -89,6 +91,62 @@ class SourceImportTests(unittest.TestCase):
             with self.assertRaises(imp.ImportFailure):
                 imp._install_owned(component, prepared, report, root)
             self.assertEqual((child / "other.lean").read_text(), "independent child\n")
+
+    def test_source_byte_preservation_overrides_inherited_eol_rules(self):
+        """Reproduce the archived CSV failure and preserve bytes through a clone."""
+        def git(root, *args):
+            result = subprocess.run(["git", *args], cwd=root, text=True,
+                                    encoding="utf-8", capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            return result.stdout.strip()
+
+        with tempfile.TemporaryDirectory(prefix="komorebi-import-eol-") as temp:
+            root = Path(temp) / "source"
+            root.mkdir()
+            git(root, "init", "--quiet")
+            git(root, "config", "user.name", "Komorebi P.")
+            git(root, "config", "user.email", "52508850+KomorebiP@users.noreply.github.com")
+            git(root, "config", "core.autocrlf", "false")
+            (root / ".gitattributes").write_text("* text=auto eol=lf\n", encoding="utf-8")
+            git(root, "add", "--", ".gitattributes")
+            git(root, "commit", "--quiet", "-m", "Fixture inherited text attributes")
+
+            # Include a space so the helper's quoted destination pattern matters.
+            destination = "monographs/source collection/supporting-sources"
+            relative = destination + "/verification/theorem_inventory.csv"
+            target = root / relative
+            target.parent.mkdir(parents=True)
+            original = b"claim,result\r\nfinite,checked\r\n"
+            target.write_bytes(original)
+            (root / "outside.csv").write_bytes(original)
+            raw_blob = hashlib.sha1(b"blob " + str(len(original)).encode("ascii")
+                                   + b"\0" + original).hexdigest()
+
+            git(root, "add", "--force", "--", relative, "outside.csv")
+            self.assertNotEqual(git(root, "rev-parse", ":" + relative), raw_blob,
+                                "The fixture must demonstrate normalization without the helper")
+
+            info = root / ".git/info/attributes"
+            info.write_text("unrelated.txt -text\n", encoding="utf-8")
+            config = {"components": [{"id": "archived-csv", "destination": destination}]}
+            imp._preserve_source_bytes(config, root)
+            self.assertIn("unrelated.txt -text\n", info.read_text(encoding="utf-8"))
+            git(root, "add", "--force", "--", relative, "outside.csv")
+            self.assertEqual(git(root, "rev-parse", ":" + relative), raw_blob)
+            self.assertNotEqual(git(root, "rev-parse", ":outside.csv"), raw_blob,
+                                "The override must stay within declared source destinations")
+            git(root, "commit", "--quiet", "-m", "Fixture preserves archived source bytes")
+            self.assertEqual(target.read_bytes(), original)
+            self.assertEqual(git(root, "status", "--porcelain"), "")
+
+            clone = Path(temp) / "fresh-checkout"
+            git(root, "clone", "--quiet", "--no-hardlinks", str(root), str(clone))
+            cloned_target = clone / relative
+            self.assertIn("text: auto", git(clone, "check-attr", "text", "--", relative))
+            self.assertEqual(cloned_target.read_bytes(), original)
+            self.assertEqual(git(clone, "rev-parse", ":" + relative), raw_blob)
+            os.utime(cloned_target, None)
+            self.assertEqual(git(clone, "status", "--porcelain"), "")
 
 
 if __name__ == "__main__":
