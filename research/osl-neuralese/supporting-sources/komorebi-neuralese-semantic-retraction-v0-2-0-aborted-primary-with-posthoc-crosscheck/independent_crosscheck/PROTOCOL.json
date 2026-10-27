@@ -1,0 +1,137 @@
+{
+  "schema": "komorebi.neuralese.semantic_retraction_null_sensitivity_protocol.v1",
+  "version": "0.2.0",
+  "author": "Komorebi P.",
+  "status": "FROZEN_POSTHOC_NULL_SENSITIVITY",
+  "analysis_status": "POSTHOC_SEALED_NULL_BANK_SENSITIVITY",
+  "claim_boundary": "This is an independent read-only NumPy sensitivity probe of the twelve already sealed v0.4 checkpoints. It does not alter any v0.4 gate and cannot establish a universal quotient or architecture-independent Neuralese.",
+  "source_panel": {
+    "archive": "Komorebi_Neuralese_Packet_Closure_v0.4.0.zip",
+    "archive_sha256": "4132faa934e94647ec267c0140240397b459c68b6770e95edc30144c39f3662d",
+    "checkpoint_seal_sha256": "78f8fad00b8a50edc6286b43edcc0c7433f25d9a5e39fd05c00a0f77d11d73d4",
+    "evaluation_bank_sha256": "70ef5a5f85f4a5029d06b1c9838dc60fb0f502a37dcc1088582d03b037c3fe26",
+    "arms": [
+      "euclidean_supervised",
+      "euclidean_cr",
+      "polar_supervised",
+      "polar_cr"
+    ],
+    "seeds": [101, 211, 307],
+    "checkpoint_count": 12,
+    "checkpoint_reader": "restricted inert tensor-descriptor unpickler; PyTorch is not imported"
+  },
+  "sealed_bank": {
+    "name": "null",
+    "source": "results/packet_closure_pilot/EVAL_BANK.json",
+    "contexts": 64,
+    "states_per_context": 8,
+    "use": "sensitivity only",
+    "context_policy": "regenerate the exact zero-length D4 bank and require every stored tensor receipt to match before checkpoint loading"
+  },
+  "stress_prefixes": {
+    "repeat": 16,
+    "words": {
+      "r4_x16": [0, 0, 0, 0],
+      "f2_x16": [1, 1],
+      "frfr_x16": [1, 0, 1, 0]
+    },
+    "expanded_lengths": {
+      "r4_x16": 64,
+      "f2_x16": 32,
+      "frfr_x16": 64
+    },
+    "semantic_requirement": "each expanded prefix must be the identity on all eight visible states in every sealed context"
+  },
+  "continuations": {
+    "alphabet": [0, 1],
+    "maximum_length": 4,
+    "word_count": 31,
+    "policy": "retain every syntactically distinct binary word in length-then-lexicographic order; do not collapse D4-equivalent presentations"
+  },
+  "interventions": [
+    "native",
+    "oracle_anchor",
+    "self_decoded_anchor",
+    "nearest_ray_anchor",
+    "crossfit_oracle_prototype",
+    "wrong_anchor_control"
+  ],
+  "prototype": {
+    "folds": "context index parity",
+    "fit_contexts": "opposite parity from the evaluation context",
+    "fit_prefixes": "the two stress-prefix families other than the evaluated family",
+    "labels": "ground-truth visible semantic state",
+    "estimator": "normalized oriented Euclidean mean with float64 accumulation, cast to float32 before continuation",
+    "minimum_contributions_per_prototype": 64,
+    "sign_flips": false
+  },
+  "wrong_control": {
+    "canonical_action": "r",
+    "definition": "convert the factual visible state through inverse phi, apply the canonical D4 rotation map r within its four-state coset, and map back through phi"
+  },
+  "selector_contract": {
+    "tie_break": "lowest visible state index, matching NumPy and PyTorch argmax",
+    "nearest_score": "oriented Euclidean cosine computed in float64 from finite float32 endpoints; any norm at most 1e-12 is undefined and fails the checkpoint before intervention",
+    "self_decoder_validity": "every decoder-logit row used for a selector must be finite or the checkpoint fails before intervention",
+    "audits": [
+      "section consistency on every learned anchor",
+      "selector idempotence after resetting to the selected anchor",
+      "one-step semantic commutation for both generators in every sealed context"
+    ]
+  },
+  "numerics": {
+    "learned_path": "NumPy float32 reconstruction of table encoding, polar factor, anchors, recurrence normalization, interventions, continuation, and decoder, with source formula and operation order followed where feasible",
+    "diagnostics": "float64 after float32 endpoint and logit construction",
+    "positive_rays_are_oriented": true,
+    "normalization_epsilon": 1e-8,
+    "backend_equivalence_claim": false,
+    "backend_note": "This is a NumPy reconstruction sensitivity, not a bitwise or 1e-6 equivalence claim for packaged PyTorch. NumPy BLAS, reduction, and SVD kernels may round differently even when dtype, formulas, and operation order match; the discrepancy can accumulate through a long rollout.",
+    "polar_note": "NumPy SVD is an independent float32 implementation and may choose a different valid polar factor near rank deficiency. Report raw-operator singular-value diagnostics for every checkpoint.",
+    "softmax_and_total_variation": "promote float32 logits to float64, compute softmax, then TV = 0.5 * sum(abs(p - q))",
+    "spherical_angle": "acos(clip(dot(z,z_prime)/(norm(z)*norm(z_prime)),-1,1)); antipodes remain distinct",
+    "angle_undefined_threshold": 1e-12,
+    "endpoint_validity": "task correctness and prediction agreement require an all-finite logit row and an all-finite hidden ray with float64 norm strictly above 1e-12; zero or undefined rays are counted and never receive argmax credit",
+    "undefined_h4_angle_policy": "for both clean and native references, count explicitly and substitute pi in every suffix maximum",
+    "undefined_h4_total_variation_policy": "for both clean and native references, count explicitly and substitute one in every suffix maximum",
+    "p95_quantile_method": "higher",
+    "argmax_tie_break": "lowest visible state index"
+  },
+  "bank_spending": "The sealed null bank was exposed by the preceding v0.4 cross-check, so every result here is a labeled sensitivity. Once this script exposes new learned outcomes, any revision and rerun on the same bank remains posthoc sensitivity and cannot earn a prospective gate.",
+  "reported_comparisons": [
+    "task correctness against integer-map targets",
+    "decision agreement with the clean semantic-anchor endpoint",
+    "decision agreement with the native path endpoint",
+    "joint correctness, damage, and rescue counts against both clean and native references",
+    "softmax total variation from both clean and native endpoints, plus per-context/state all-suffix maxima",
+    "oriented centered-logit angle from both clean and native endpoints, plus per-context/state all-suffix maxima",
+    "oriented hidden angle from both clean and native endpoints, plus per-context/state all-suffix maxima",
+    "correct-class margin",
+    "maximum length-at-most-four discrepancy per context and start",
+    "self-decoder and nearest-anchor selector accuracy",
+    "wrong-anchor counterfactual accuracy and factual leakage"
+  ],
+  "bounded_work": {
+    "split_states_per_checkpoint": 1536,
+    "suffix_endpoint_evaluations_per_checkpoint": 301568,
+    "float32_recurrent_matvecs_per_checkpoint": 374784,
+    "checkpoint_count": 12,
+    "total_suffix_endpoint_evaluations": 3618816,
+    "total_float32_recurrent_matvecs": 4497408,
+    "expected_runtime_seconds_vectorized_cpu": [20, 45],
+    "conservative_windows_laptop_seconds": [30, 90],
+    "expected_peak_memory_megabytes": 100
+  },
+  "execution_firewall": {
+    "requires_frozen_status_and_receipt": true,
+    "unlock_requirements": [
+      "change status to FROZEN_POSTHOC_NULL_SENSITIVITY only after review",
+      "write the exact SHA-256 of the final PROTOCOL.json bytes to FROZEN_PROTOCOL.sha256",
+      "invoke the script with --run-learned"
+    ]
+  },
+  "implementation_receipts": {
+    "binding": "The final protocol binds both the executable learned path and its independent tests; any code edit requires review, new digests here, and a new protocol receipt before another learned run.",
+    "probe_sha256": "90d21fc67d93841f2cfb26f03cd6789f1d838b277705755e6b0b51098d549daf",
+    "test_sha256": "44546dfc5c303c8a10e4a39c00298d9e047596c7dccdb8c5d9271358c837dfae"
+  }
+}

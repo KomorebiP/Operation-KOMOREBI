@@ -1,0 +1,77 @@
+Neuralese Semantic Retraction v0.2.0 — final validation summary
+Generated: 2026-09-03 UTC
+
+PRIMARY CHECKPOINT-FREE TEST SUITE
+Command:
+  PYTHONDONTWRITEBYTECODE=1 <torch-python> primary_probe/test_semantic_retraction_probe.py
+Result:
+  Ran 55 tests in 87.872s
+  OK
+Scope:
+  Checkpoint-free tests, including exact-control, frozen receipts, source census,
+  spend firewall, deterministic manifests, sharded bundle verifier, numerical
+  diagnostics, vectorized/scalar equivalence, and tamper rejection.
+
+INDEPENDENT CROSS-CHECK TEST SUITE
+Command:
+  PYTHONDONTWRITEBYTECODE=1 <torch-python> independent_crosscheck/test_null_retraction.py
+Result:
+  Ran 18 tests in 4.990s
+  OK
+
+INDEPENDENT FROZEN-DESIGN VALIDATION
+Command:
+  PYTHONDONTWRITEBYTECODE=1 <torch-python> independent_crosscheck/probe_null_retraction.py --validate-only
+Result:
+  status=FROZEN_POSTHOC_NULL_SENSITIVITY
+  valid=true
+  learned_execution_unlocked=true
+  observed_protocol_sha256=e53cf8a4e1e5c300b43b91b01c86c81910c176550dfdda7c487cb79e7f9bdd72
+  total_float32_recurrent_matvecs=4497408
+  total_suffix_endpoint_evaluations=3618816
+
+PRIMARY PARTIAL-BUNDLE VERIFICATION
+Command:
+  PYTHONDONTWRITEBYTECODE=1 <torch-python> primary_probe/run_semantic_retraction_probe.py --verify-bundle --output primary_probe/RESULTS.bundle
+Expected and observed result:
+  exit_code=1
+  RuntimeError: result bundle has missing or extra root entries
+Interpretation:
+  PASS for expected fail-closed behavior; NOT a valid primary result.
+
+ARTIFACT SANITY
+Checks:
+  PRIMARY_ABORT_RECORD.json parses as strict JSON.
+  POSTSPEND_PROJECTOR_DIAGNOSTIC.json parses as strict JSON.
+  independent_crosscheck/RESULTS.json parses as strict JSON.
+  postspend_diagnostics/projector_rank_forensics.py compiles.
+Result:
+  PASS
+
+INDEPENDENT RESULT AUDIT
+Result:
+  PASS
+Details:
+  RESULTS.json SHA-256 c2363561e845cdfe43e9302558f934065623fb246b68d28e3ec35ae4338c9faf.
+  Frozen protocol, implementation, and test receipts match.
+  Exact 12-checkpoint census and source/state digests match.
+  216 condition blocks and 6,696 condition-by-suffix cells validate.
+  No nonfinite or undefined diagnostic entries were found.
+  No learned evaluation was rerun during validation.
+
+POST-SPEND PROJECTOR FORENSICS
+First invocation:
+  Parameter-only analysis completed but publication stopped before output because
+  the diagnostic referenced MANIFEST.sha256 instead of the package's MANIFEST.json.
+  No behavioral bank was constructed or used, and no output was published.
+Corrected invocation:
+  Completed 12/12 checkpoint-local geometry audits and published
+  postspend_diagnostics/POSTSPEND_PROJECTOR_DIAGNOSTIC.json.
+Result:
+  classification=DTYPE_TOLERANCE_FALSE_REJECTION
+  all_cells_only_failure_is_dtype_mismatched_default_rank=true
+  all_cells_pass_every_non_rank_conjunct=true
+  result_sha256=6d25f0bd44fae2d4bf61cd7ad40d4ed1a8dae83e7b32aa2747b76968a3192ddd
+Boundary:
+  Post-spend, checkpoint-parameter-only diagnosis. It cannot repair the primary,
+  award a primary label, or restore prospective status.
