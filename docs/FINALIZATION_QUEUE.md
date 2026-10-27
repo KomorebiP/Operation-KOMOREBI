@@ -114,7 +114,7 @@ Existing review scopes do not cover all proofs or establish external submission 
 
 **Done when:** Record statement-specific reviews, resolve findings, and keep literature priority and empirical review distinct from proof correctness.
 
-**Progress:** Machine Societies has 26 distinct reviewed pairs of 62: 25 recorded passes and one explicit finite-index qualification for prop:memory; 36 pairs remain outside the targeted reviews. The new eight-claim batch adds seven passes and one qualification. A source-bound coverage index rejects duplicate counts and changed proof blocks. Source-edition clarification and all other listed review obligations remain open.
+**Progress:** Machine Societies has 32 distinct reviewed pairs of 62: 31 recorded passes and the existing finite-index qualification for prop:memory; 30 remain unreviewed. The six-claim batch on stochastic closure, error propagation, intervention ambiguity, transport, averaging, and robust enforcement passes under its stated assumptions. Source-edition clarification and all other listed review obligations remain open.
 
 Applies to: [Machine Societies](STATUS_CATALOG.md#monographs-machine-societies) · [Hypergraph Lumpability and Bayesian Refinement](STATUS_CATALOG.md#research-hypergraph-bayesian-refinement) · [Stratified Relational Workspace Theory](STATUS_CATALOG.md#research-stratified-relational-workspace) · [Seeded Two-Axis Calculus](STATUS_CATALOG.md#seeded-two-axis).
 

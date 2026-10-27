@@ -1,0 +1,207 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-27",
+  "source_revision": "c1ac19ba8e5c5557be02145f56d2f0e5bf37dd69",
+  "scope": "Six written statement/proof pairs: controlled lumpability, finite-horizon closure, implementation dependence, transport defects, finite-block averaging, and robust reduced-model enforcement.",
+  "provenance": "AI-assisted sequential self-review; not independent peer review.",
+  "new_lean_execution": false,
+  "new_computation": false,
+  "whole_collection_soundness_claim": false,
+  "reviewed_sources": [
+    {
+      "path": "monographs/machine-societies/MATHEMATICAL_REVIEW.md",
+      "sha": "bc9d43e8f2c1d706968fd214f6295e9c46a0064b",
+      "sha256": "4aa99d86245953c24fd19894976ad6e5a83d51cc27869e751a246d53b8d60bac"
+    },
+    {
+      "path": "monographs/machine-societies/RELEASE_LEDGER.json",
+      "sha": "011546e3e8b8f15cd76261447f943f26a0620260",
+      "sha256": "bf7424bab1139f49a013f789cfb697c2bdda76f2b52c5b2440b55a30230ac674"
+    },
+    {
+      "path": "monographs/machine-societies/verification/proof_review.json",
+      "sha": "f0a99f24f0f4b2ea75095dbf4264907094edd0c6",
+      "sha256": "5e802de10e04f1f04cf2f7b22569b2af773f8227f0f2f5579871e1872948c2ea"
+    },
+    {
+      "path": "monographs/machine-societies/publication/Machine_Societies_v1.0.0.tex",
+      "sha": "581c4979cac12ceae9ef94bafc75ef7932101847",
+      "sha256": "600a8100804c4c91d7cf79a4985e9312eacc19195395aee01debb240cb0a6be0"
+    }
+  ],
+  "cards": [
+    {
+      "label": "prop:lump",
+      "title": "Controlled lumpability",
+      "normalized_claim": "A common macro-kernel represents every projected microstate row exactly if and only if projected transition probabilities are constant on each fibre. Under a common macro-history policy, all projected history laws agree with the reduced model. Output agreement additionally requires fibre-constant output laws under the source’s conditional-independence convention.",
+      "hypotheses": "Finite nonempty microstate, control, and output sets; row-stochastic transition/output kernels; a surjective macrostate map; the same policy depending only on macro-history; matched initial macro-laws. The model explicitly makes the current report and next state conditionally independent given the current microstate and control.",
+      "decisive_argument": "The common fibre values are nonnegative and sum to one, hence define a stochastic macro-row. Conditional on a reachable macro-history and chosen control, the microstate distribution is supported on the current fibre; averaging identical projected rows preserves that macro-row. Induction gives history-law equality. Point-mass initializations and a fixed control give necessity. Fibre-constant output rows and the conditional-independence convention also make the joint next-macrostate/current-output row constant on each fibre.",
+      "dependencies": "Finite row sums and surjectivity → well-defined macro-kernel; conditional distribution on a fibre → common next-state law → induction. Point-mass tests → necessity. Conditional independence + fibre-constant output rows → joint output/state preservation. All leaves are hypotheses, conventions, or the internal proof.",
+      "boundary_cases": "Singleton and identity quotients, stochastic and deterministic rows, zero-probability histories (no conditional law is asserted there), and randomized macro-history policies. A controller reading the discarded microstate is outside the policy class. Equality of the two marginals is insufficient for a dependent report/transition mechanism; the joint law must then be preserved.",
+      "strongest_safe_statement": "Exact projected histories and, with the stated output assumptions, output histories are preserved under the specified common policy class. This does not establish that an arbitrary learned summary satisfies the fibre test.",
+      "next_check": "For an applied abstraction, compare every projected row for each allowed control and check the joint output convention before extending the policy class.",
+      "source_line": 312,
+      "statement_and_proof_sha256": "45770b1eb04e6a1fd9e59032795c6e5bbd2cbe95dd9beb54da5a8cf76d45bd5b",
+      "statement_and_proof": "\\begin{proposition}[Controlled lumpability]\\label{prop:lump}\nA common kernel $\\overline K_u$ represents the projected one-step laws from every microstate if and only if, for all $z'$ and all $x,x'$ with $\\pi(x)=\\pi(x')$,\n\\begin{equation}\\label{eq:lump}\n\\sum_{w:\\pi(w)=z'}K_u(x,w)\n=\\sum_{w:\\pi(w)=z'}K_u(x',w).\n\\end{equation}\nUnder this condition, every macro-history policy $\\alpha_t(u\\mid Z_{0:t})$ induces the same projected process as the macro-model with initial law $\\push\\mu_0$. For outputs to agree as well, require $Q_u(x,\\cdot)$ to be constant on each fibre.\n\\end{proposition}\n\\begin{proof}\nThe common fibre value in~\\eqref{eq:lump} defines $\\overline K_u(z,z')$. Conditional on any macro-history and selected control, the microstate has some distribution supported on the current fibre. Averaging identical projected rows leaves that common row unchanged. Induction gives equality of the macro-history laws. Conversely, start from the point masses at $x$ and $x'$ and apply the same fixed control. A common one-step macro-kernel forces~\\eqref{eq:lump}. The output statement follows identically.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_external_theorem": "none required",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope"
+      }
+    },
+    {
+      "label": "prop:time",
+      "title": "Approximate closure over time",
+      "normalized_claim": "A uniform one-step projected-kernel error at most epsilon gives marginal error at most min(1, e0 + t epsilon) under the same predeclared open-loop controls. If every reduced kernel contracts total variation by a factor kappa < 1, the error is at most kappa^t e0 + epsilon(1-kappa^t)/(1-kappa). Matched macro-history policies retain the linear path-law bound; their contraction estimate needs an additional closed-loop contraction premise.",
+      "hypotheses": "The finite controlled model, a uniform bound over all microstates and allowed controls, an initial macro-law discrepancy at most e0, and the same predeclared controls for the marginal/contraction estimates. The contraction coefficient has its usual nonnegative meaning. For the adaptive path claim, both models use the same macro-history policy.",
+      "decisive_argument": "Average the row error over the actual microstate distribution. Comparing the two current macro-laws after the common reduced kernel gives e(t+1) ≤ epsilon + e(t), or epsilon + kappa e(t) under contraction. Iteration gives the displayed bounds. For the adaptive claim, couple initial macrostates with failure probability at most e0; while histories agree, use the same sampled control and a finite maximal coupling of the next macro-laws. A first-mismatch union bound gives e0 + t epsilon for the complete macrostate path.",
+      "dependencies": "Uniform row error + convexity of total variation → one-step comparison; common-kernel nonexpansiveness or the stated contraction → recurrence → finite geometric sum. Matched history policies + maximal coupling → first-mismatch bound. Finite total-variation facts are reconstructed above; no external stability theorem is needed.",
+      "boundary_cases": "t = 0, epsilon = 0, kappa = 0, and bounds above one. At t = 0 the empty product is one. For feedback, individual control kernels can all be constant (contraction zero) while a state-dependent choice of control makes the closed-loop chain the identity. Thus the source correctly keeps the open-loop contraction claim separate from its adaptive path claim.",
+      "strongest_safe_statement": "The stated open-loop error estimates and matched-policy finite path estimate hold. Small training-average error is not the uniform row premise, and per-control contraction is not closed-loop contraction.",
+      "next_check": "For a proposed feedback controller, certify the closed-loop contraction separately or use the weaker finite-horizon path bound.",
+      "source_line": 345,
+      "statement_and_proof_sha256": "3a7d382fb42213dfb2d5967ae316161eec922730dc76c0c6c602508529f044e9",
+      "statement_and_proof": "\\begin{proposition}[Approximate closure over time]\\label{prop:time}\nUnder~\\eqref{eq:eps}, let the actual and reduced processes use the same predeclared open-loop control sequence. If their initial macro-laws are within $e_0$ in total variation, then at time $t$ they are within\n\\[\ne_t\\leq\\min\\{1,e_0+t\\varepsilon\\}.\n\\]\nIf each $\\overline K_u$ contracts total variation by at most $\\kappa<1$, then\n\\begin{equation}\\label{eq:contract}\ne_t\\leq\\kappa^t e_0+\\varepsilon\\frac{1-\\kappa^t}{1-\\kappa}.\n\\end{equation}\nWith matched macro-history policies, the weaker path-law bound $\\min\\{1,e_0+t\\varepsilon\\}$ also holds, but the contraction claim needs a separate closed-loop contraction assumption.\n\\end{proposition}\n\\begin{proof}\nAveraging~\\eqref{eq:eps} over the actual microstate law shows that its next projected law is within $\\varepsilon$ of the current projected law evolved by $\\overline K_u$. Kernel nonexpansiveness gives $e_{t+1}\\leq\\varepsilon+e_t$. Under contraction it gives $e_{t+1}\\leq\\varepsilon+\\kappa e_t$; iterate. For history policies, couple the histories while they agree. The controls can then be coupled to agree, and the next macrostate fails to couple with probability at most $\\varepsilon$. A union bound gives the path-law result.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_external_theorem": "none required",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope"
+      }
+    },
+    {
+      "label": "prop:lift",
+      "title": "Implementation dependence",
+      "normalized_claim": "If all admissible reset implementations have outcome laws within epsilon of one proposed law, their diameter eta(x,z′) is at most 2 epsilon. If two admissible implementations are distance eta apart, no one law can approximate both with error strictly below eta/2.",
+      "hypotheses": "A feasible target, a nonempty declared reset family supported on the target fibre, and one fixed outcome experiment on a common outcome space. Each outcome law is compared with the same proposed macro-intervention law.",
+      "decisive_argument": "For any pair, insert the proposed common law and apply the triangle inequality; then take the supremum over pairs. Conversely, if both errors were below half the pair distance, the triangle inequality would make their sum strictly smaller than that distance, a contradiction.",
+      "dependencies": "Common outcome space and reference law → total-variation triangle inequality → pairwise upper bound → supremum. The same inequality in reverse-obstruction form → half-distance lower bound. No attained maximum is needed for the first implication.",
+      "boundary_cases": "A singleton reset family, epsilon = 0, and large epsilon where 2 epsilon exceeds one. Two disjoint point-mass laws have distance one and their equal mixture attains error one-half for that pair. This is a necessary radius bound, not a theorem that every larger family has a common center at half its diameter.",
+      "strongest_safe_statement": "Implementation ambiguity is bounded by twice a certified common-law error, and a separated pair obstructs a smaller common error. Feasibility, permission to reset, and the proposed common-law certificate are separate obligations.",
+      "next_check": "Specify the admissible resets and common outcome experiment, then exhibit either a common-law bound or a separated admissible pair.",
+      "source_line": 382,
+      "statement_and_proof_sha256": "a3cf989f6da6a1d8221bc95907624defcb441662920bfe63b8928bc124ac06e3",
+      "statement_and_proof": "\\begin{proposition}[Implementation dependence]\\label{prop:lift}\nIf every $P_\\lambda$ is within $\\varepsilon$ of a proposed macro-intervention law $P^\\star_{z'}$, then $\\eta(x,z')\\leq2\\varepsilon$. Conversely, if two admissible implementations are distance $\\eta$ apart, no single law can approximate both within less than $\\eta/2$.\n\\end{proposition}\n\\begin{proof}\nBoth claims follow from the triangle inequality for total variation.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_external_theorem": "none required",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope"
+      }
+    },
+    {
+      "label": "prop:transport",
+      "title": "Accumulation of cultural transport defects",
+      "normalized_claim": "For metric spaces Z_j, updates F_j, Lipschitz translators T_j with constants L_j, and finite one-step commutation defects epsilon_j, the composite defect after m translations is at most the sum over j of epsilon_j times the product of all later L_k.",
+      "hypotheses": "Every update is a self-map of its stated metric space and every translator maps to the next space. The local defects are uniform suprema over their whole domains, and the Lipschitz constants are finite and nonnegative.",
+      "decisive_argument": "At the last translation, insert the translated prior-generation update. The first distance is at most L_(m-1) times the prior defect; the second is at most epsilon_(m-1) at the translated input. This gives D_m ≤ L_(m-1) D_(m-1) + epsilon_(m-1). Expanding that recurrence yields exactly the product over the later translators for each local defect.",
+      "dependencies": "Map typing → valid intermediate point; Lipschitz estimate + local defect supremum → recurrence; induction → weighted sum. The already-reviewed repair-budget recurrence is consistent with this argument, but this proof gives its own induction.",
+      "boundary_cases": "One translation gives epsilon_0; two give L_1 epsilon_0 + epsilon_1. A zero later Lipschitz constant removes earlier contributions; constants above one can amplify them. The zero-translation case is the identity with zero defect. No supremum attainment, compactness, or Lipschitz property of F_j is needed.",
+      "strongest_safe_statement": "The composite preserves the declared update up to the displayed weighted defect. Injectivity, reconstruction, all obligations, and all provenance are not implied by commutation of this one declared operation.",
+      "next_check": "For an actual translation chain, establish uniform local defects and translator Lipschitz constants on the declared domains, including every operation that must be preserved.",
+      "source_line": 1379,
+      "statement_and_proof_sha256": "1f6c460f7043a3670b45274a9a330023b03eec35d2629c4233004886254d1601",
+      "statement_and_proof": "\\begin{proposition}[Accumulation of cultural transport defects]\\label{prop:transport}\nAssume each $T_j$ is $L_j$-Lipschitz and $\\varepsilon_j<\\infty$ for $j=0,\\ldots,m-1$. Define $T_{0:m}=T_{m-1}\\cdots T_0$. For every $z\\in Z_0$,\n\\begin{equation}\\label{eq:cumulative-transport}\n\\begin{split}\n&d_m\\bigl(T_{0:m}F_0(z),F_mT_{0:m}(z)\\bigr)\\\\\n&\\qquad\\le\\sum_{j=0}^{m-1}\\varepsilon_j\\prod_{k=j+1}^{m-1}L_k,\n\\end{split}\n\\end{equation}\nwith empty products equal to $1$.\n\\end{proposition}\n\\begin{proof}\nFor $m=1$ this is the definition of $\\varepsilon_0$. Suppose the bound holds through generation $m-1$. Insert $T_{m-1}F_{m-1}T_{0:m-1}(z)$ between the two terms at generation $m$. Lipschitz continuity of $T_{m-1}$ bounds the first difference by $L_{m-1}$ times the prior defect, while~\\eqref{eq:transport-defect} bounds the second by $\\varepsilon_{m-1}$. The recurrence $D_m\\le L_{m-1}D_{m-1}+\\varepsilon_{m-1}$ unfolds to~\\eqref{eq:cumulative-transport}.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_external_theorem": "none required",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope"
+      }
+    },
+    {
+      "label": "thm:block-averaging",
+      "title": "Finite-block institutional averaging",
+      "normalized_claim": "Under the uniform m-step mixing bound, every reachable institutional-history conditional next-review law is within epsilon of the stationary endpoint average. With the same initial institutional law, total variation between T-review path laws is at most 1-(1-epsilon)^T, hence at most min(1,T epsilon).",
+      "hypotheses": "Finite institutional and fast-state spaces, a predeclared integer m ≥ 1, a fixed institution during each block, a stationary law for each fast kernel, a uniform row mixing bound with 0 ≤ epsilon ≤ 1, and a common endpoint-to-institution stochastic channel. Subsequent fast resets cannot revise the already selected institutional outcome.",
+      "decisive_argument": "Push the fast endpoint law and stationary law through the same revision channel; stochastic-kernel nonexpansiveness preserves the epsilon bound. Average over the conditional fast state for a positive-probability institutional history. Starting with identical institutional states, maximally couple successive review outcomes while histories agree. Each conditional agreement probability is at least 1-epsilon, so complete agreement has probability at least (1-epsilon)^T. The coupling inequality and union bound give the two estimates.",
+      "dependencies": "Uniform mixing + common endpoint channel → uniform review-row bound; conditional averaging → history-dependent bound; identical initial institutions + finite maximal coupling → product of conditional agreement bounds → path-law estimate. The proof does not invoke a singular-perturbation limit or an external averaging theorem.",
+      "boundary_cases": "T = 0 uses an empty product of one, including epsilon = 1; epsilon = 0 gives exact path agreement. Successive fast states may be correlated through resets and history. A data-dependent stopping time or a revision depending on the full fast trajectory violates the stated endpoint/fixed-block model and is not covered.",
+      "strongest_safe_statement": "Institutional paths at the specified review epochs are approximated for the declared finite horizon. The bound does not preserve every intervening action or establish actual fast mixing, safety between reviews, or empirical institutional stability.",
+      "next_check": "Establish the uniform mixing bound for each actual fast kernel and verify that the review schedule and revision rule use exactly the declared fixed endpoint experiment.",
+      "source_line": 1535,
+      "statement_and_proof_sha256": "04d36130f8243c042f6823c3a019668f0fc557adb9471a0e4884879813e92173",
+      "statement_and_proof": "\\begin{theorem}[Finite-block institutional averaging]\\label{thm:block-averaging}\nUnder~\\eqref{eq:uniform-fast-mixing}, every actual conditional one-review law, given an institutional history ending at $i$, is within $\\varepsilon$ of $\\overline R(i,\\cdot)$. Let $(J_n)$ be the Markov chain with kernel $\\overline R$ and the same initial institutional distribution. Then, for every integer $T\\geq0$,\n\\begin{equation}\\label{eq:institutional-path-error}\n\\TV\\bigl(\\Law(I_0,\\ldots,I_T),\\Law(J_0,\\ldots,J_T)\\bigr)\n\\leq 1-(1-\\varepsilon)^T\\leq\\min\\{1,T\\varepsilon\\},\n\\end{equation}\nwhere $0\\leq\\varepsilon\\leq1$ may be assumed and the empty product at $T=0$ is $1$. No independent initialization of the fast state at successive reviews is required.\n\\end{theorem}\n\\begin{proof}\nApplying the common stochastic kernel $R_i$ cannot increase total variation, so each row~\\eqref{eq:actual-review} is within $\\varepsilon$ of~\\eqref{eq:averaged-review}. Given any institutional history of positive probability, the current fast state has some conditional distribution. Averaging the uniform row bound over it preserves the bound. Couple initial institutional states identically. Whenever the two institutional histories still agree, maximally couple their next-state laws; the probability of disagreement at that step is at most $\\varepsilon$. The chance of maintaining agreement for all $T$ steps is at least $(1-\\varepsilon)^T$, by multiplying the successive conditional lower bounds. The coupling inequality gives the first estimate. The union bound gives the second.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_external_theorem": "none required",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope"
+      }
+    },
+    {
+      "label": "prop:robust-deterrence",
+      "title": "A robust margin for reduced-model enforcement",
+      "normalized_claim": "The sanction chosen by the positive reduced-law difference makes compliance weakly preferable when g ≤ F(dbar-epsilon_C-epsilon_D). No bounded observation-based sanction deters if g > F min(1,dbar+epsilon_C+epsilon_D). Its true compliance-sanction probability is at most its reduced-model probability plus epsilon_C.",
+      "hypotheses": "The source’s one-deviation model: g > 0, fixed F > 0 in the same utility units, risk neutrality, a committed sanction in [0,1], feasible authorized collection, and all other utility differences included in g. True and reduced observation laws share the finite alphabet and have the stated total-variation error bounds.",
+      "decisive_argument": "A [0,1]-valued sanction changes expectation by at most the law’s total-variation error. In the reduced model, the positive-difference indicator attains dbar. Subtracting the two expectation errors gives the lower bound on its true sanction gap. The source payoff identity gives sufficiency. The triangle inequality bounds the true total variation by dbar+epsilon_C+epsilon_D, capped at one; the previously reviewed bounded-sanction optimum gives the impossibility condition. The compliance inequality is the one-law expectation bound.",
+      "dependencies": "Finite signed-mass identity → bounded-function expectation estimate; reduced positive-difference indicator → gap dbar; certified law errors → true gap bound → payoff identity. Triangle inequality + prop:deterrence-tv → impossibility. The raw proof of that already-counted dependency was rechecked for this use; it is not counted twice.",
+      "boundary_cases": "Zero approximation errors recover the exact discrimination threshold. Equality in the sufficient condition gives weak preference and permits indifference. Tied reduced probabilities contribute zero and may be excluded from the indicator. A negative lower margin supplies no positive-g certificate. The impossible region is strict; the unclassified gap between the two sufficient criteria remains undecided. The final compliance bound can be capped at one without changing its validity.",
+      "strongest_safe_statement": "These are conditional incentive bounds for one specified deviation and fixed penalty model. They do not establish voluntary participation, legitimate enforcement, feasible collection, or a useful certificate when the error margin is too large.",
+      "next_check": "Certify the two conduct-specific law errors and the penalty/payoff assumptions before applying the sufficient deterrence margin.",
+      "source_line": 1578,
+      "statement_and_proof_sha256": "e15d6ff4d8cb251c5f3c8546065a9f5902c4064fac2e5a4e09e5e9987d4303ac",
+      "statement_and_proof": "\\begin{proposition}[A robust margin for reduced-model enforcement]\\label{prop:robust-deterrence}\nLet $s^\\star(o)$ sanction precisely where $\\overline P_D(o)>\\overline P_C(o)$ and put $\\overline d=\\TV(\\overline P_D,\\overline P_C)$. In the model of Section~\\ref{sec:enforcement}, this fixed policy makes compliance weakly preferable whenever\n\\[\ng\\leq F(\\overline d-\\varepsilon_C-\\varepsilon_D).\n\\]\nConversely, if $g>F\\min\\{1,\\overline d+\\varepsilon_C+\\varepsilon_D\\}$, no observation-based sanction with penalty $F$ deters the deviation. Also,\n\\[\n\\E_{P_C}s^\\star\\leq\\E_{\\overline P_C}s^\\star+\\varepsilon_C.\n\\]\n\\end{proposition}\n\\begin{proof}\nThe expectation of a $[0,1]$-valued function changes by at most total variation. Hence the true difference of sanction probabilities is at least $\\overline d-\\varepsilon_D-\\varepsilon_C$. Equation~\\eqref{eq:deterrence-gap} gives sufficiency. The triangle inequality bounds the true total variation above by $\\overline d+\\varepsilon_C+\\varepsilon_D$, capped at one; Proposition~\\ref{prop:deterrence-tv} then gives impossibility above that value. The final inequality is the same expectation bound under compliance.\n\\end{proof}",
+      "verdict": "proved as written",
+      "remaining_gap": null,
+      "provenance": "AI-assisted sequential self-review; not independent peer review",
+      "obligations": {
+        "typing_and_hypotheses": "passed",
+        "proof_implications": "passed",
+        "boundary_cases": "passed",
+        "dependency_circularity": "passed",
+        "load_bearing_external_theorem": "none required",
+        "load_bearing_computation": "none",
+        "empirical_or_deployment_validation": "out of scope"
+      }
+    }
+  ],
+  "prior_count": 26,
+  "additional_count": 6,
+  "combined_distinct_count": 32,
+  "proved_as_written_count": 31,
+  "qualified_count": 1,
+  "remaining_count": 30,
+  "report": {
+    "path": "docs/MACHINE_SOCIETIES_PROOF_REVIEW_BATCH3_2026-10-27.md",
+    "sha256": "a592c2909baa0c0d25c7bc4951a219ab966883d68942e6f9bece762072737461"
+  },
+  "decisions": [
+    {
+      "id": "monographs-machine-societies",
+      "placement": "retain_with_clarification",
+      "reason": "Six additional implications pass under their declared hypotheses. Combined coverage is 32 of 62, with 31 recorded passes, the existing memory-domain qualification, and 30 unreviewed pairs."
+    }
+  ]
+}

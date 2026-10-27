@@ -29,7 +29,7 @@ Read Realization Calculus and Komorebi Space together. Realization Boundaries de
 
 | Work | Focus |
 |---|---|
-| [Machine Societies](machine-societies/) | Final 118-page edition. Bound self-review records cover 26 of 62 statement/proof pairs: 25 recorded as proved as written, one memory-domain qualification, and 36 unreviewed. Coverage is not whole-book certification. |
+| [Machine Societies](machine-societies/) | Final 118-page edition. Bound self-review records cover 32 of 62 statement/proof pairs: 31 recorded as proved as written, one memory-domain qualification, and 30 unreviewed. Coverage is not whole-book certification. |
 | [Machine Native Reasoning](machine-native-reasoning/) | Mathematical interfaces, computational representations, and reasoning constructions. |
 | [Self-Improving Intelligence](self-improving-intelligence/) | Theoretical models and conditions for recursive improvement. |
 | [Self-Improving Intelligence: visual guide](self-improving-intelligence/visual-guide/) | Visual companion to the self-improvement development. |
