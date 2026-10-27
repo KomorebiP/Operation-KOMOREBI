@@ -1,0 +1,122 @@
+{
+  "schema": "komorebi.neuralese.causal_completion.preregistration.v1",
+  "version": "0.2.0",
+  "author": "Komorebi P.",
+  "date": "2026-09-03",
+  "status": "exploratory_new_endpoints_frozen_after_upstream_results_were_known_but_before_this_probe_was_run",
+  "scope": {
+    "system": "eight-state two-generator learned linear operator workspace",
+    "primary_question": "Do the saved learned dynamics form a continuation-stable positive-ray D4 action, and are identity-loop defects transversely attracting?",
+    "no_retraining": true,
+    "no_same_space_quotient_spectrum_before_invariance": true,
+    "known_before_freeze": [
+      "Stable Quotient v0.2.0 depth accuracies and named-loop endpoint angles",
+      "the projective checkpoints retain nonzero hidden holonomy",
+      "the synthetic six-case causal-completion controls all pass"
+    ]
+  },
+  "checkpoints": {
+    "raw_terminal_seed0.pt": "813c90ec9f0e782b2985f719884f11dc26f5d3da4339663a3e23ff679ce9e63a",
+    "raw_terminal_seed1.pt": "d2fe1f88cf4e438ad0c474a60b95bfc99884c9c2586544ff598e647852a8239a",
+    "relation_pressure_seed0.pt": "46503a54c304779ddf65f9658cdbd9bb0c113cafa183f5b11b53f8130ebc67a4",
+    "relation_pressure_seed1.pt": "d1b22656d320449b28d4086d34b6440a8b92f64aee5fb7cf5403cf1f7b9085b2",
+    "projective_terminal_seed0.pt": "b2d16d640dddc4f2f2ed69a4211f0d9948c71c3655901484238fa8ae11c1f702",
+    "projective_terminal_seed1.pt": "a52dd3def596553c2880dfd00516bd1bb7492d1cbfab1634b570f27c1737d2d7"
+  },
+  "upstream_reference": {
+    "file": "upstream/PROJECTIVE_RESULTS.json",
+    "sha256": "93f5b2d556fc52d5e50c8c3cfc29ff8d78630f323664d8c67545d098dd1335d0"
+  },
+  "checkpoint_extraction": {
+    "implementation": "restricted NumPy weights-only reader",
+    "allowed_pickle_globals": [
+      "collections.OrderedDict",
+      "torch._utils._rebuild_tensor_v2",
+      "torch.FloatStorage"
+    ],
+    "allowed_storage": "contiguous or strided CPU float32 within validated bounds",
+    "arbitrary_pickle_globals": "forbidden"
+  },
+  "replay_validation": {
+    "family": "d4",
+    "published_episode_seeds": "220000 + 1000 * checkpoint_seed",
+    "examples_per_depth": 2048,
+    "ordered_depths": [1, 2, 3, 4, 8, 12, 32, 64, 128, 256],
+    "accuracy_tolerance": 0.001,
+    "projective_arm": "normalize after each step",
+    "legacy_arms": "replay their published unnormalized recurrence"
+  },
+  "new_audit": {
+    "checkpoint_seeds": [0, 1],
+    "episode_seed_formula": "910000 + 1000 * checkpoint_seed",
+    "episodes_per_checkpoint": 64,
+    "start_states": "all eight per episode",
+    "dtype": "float64 for diagnostic geometry",
+    "positive_ray_angle": "acos(dot(unit_left, unit_right)); negative rays are distinct",
+    "relations": {
+      "r4": [0, 0, 0, 0],
+      "f2": [1, 1],
+      "frfr": [1, 0, 1, 0]
+    },
+    "relation_repeats": [1, 4, 16],
+    "behavioral_suffix_horizon": 8,
+    "full_cayley_suffix_horizon": 4,
+    "matched_nonidentity_control": "toggle the final generator of each registered relation word",
+    "observability_episode_count": 8,
+    "observability_horizon": 5,
+    "observability_relative_tolerance": 1e-8,
+    "scale_factors": [0.001, 0.1, 10.0, 1000.0],
+    "scale_suffix_horizon": 4,
+    "cluster_bootstrap_replicates": 1000,
+    "cluster_bootstrap_seed": 990000,
+    "confidence_level": 0.95
+  },
+  "registered_endpoints": [
+    "continuation-equivalence survival curve for identity-loop versus no-loop rays",
+    "first suffix horizon that reveals each loop defect",
+    "positive-ray angle and decoder decision-cone margin after each repeated loop",
+    "projective tangent derivative singular values for identity loops",
+    "all 64 D4 Cayley products compared with canonical reductions",
+    "all 28 D4 element pairs checked for a behavioral separating witness",
+    "local centered-logit tangent-observability tower",
+    "positive rescaling invariance under every registered suffix"
+  ],
+  "gate_chain": {
+    "execution": {
+      "checkpoint_digests": "all exact",
+      "restricted_loader": "all six checkpoints accepted and malicious globals rejected",
+      "numpy_replay": "maximum selected upstream accuracy discrepancy <= 0.001"
+    },
+    "P1_positive_scale_gauge": {
+      "criterion": "registered-future prediction agreement is exactly 1.0 for every positive scale"
+    },
+    "P2_projective_path_flatness": {
+      "criterion": "repeat-16 identity loops have worst median oriented angle <= 0.01 rad and behavioral equivalence through H=8 >= 0.999"
+    },
+    "A1_finite_D4_cayley": {
+      "criterion": "all 64 products have current behavioral agreement >= 0.999 and continuation equivalence through H=4 >= 0.99"
+    },
+    "A2_action_separation": {
+      "criterion": "at least 0.99 of episode-level D4 element pairs possess a current-output separating witness"
+    },
+    "N1_normal_attraction": {
+      "criterion": "for every identity relation, the 95th percentile of one-loop top tangent gain is < 1.0"
+    },
+    "comparative_completion": {
+      "criterion": "projective-terminal repeat-16 H=8 survival exceeds raw-terminal gauge-fixed survival and has lower median oriented loop angle"
+    }
+  },
+  "claim_rules": {
+    "finite_horizon_only": "Passing behavioral suffix tests supports only the registered H, episodes, and checkpoints.",
+    "observability_proxy": "Centered-logit tangent Gramians are local proxies, not exact nonlinear causal quotients.",
+    "normal_attraction": "A failed N1 gate rules out a normally attracting certificate under this assay; a pass is local sampled evidence, not a global proof.",
+    "projective_replay": "Normalizing a legacy checkpoint is a gauge-fixed replay, not its original trained architecture.",
+    "universal_exclusions": [
+      "spontaneous Neuralese",
+      "architecture independence",
+      "unbounded stable recurrence",
+      "frontier language-model mechanism",
+      "consciousness or awareness"
+    ]
+  }
+}
