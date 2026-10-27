@@ -1,0 +1,1 @@
+The manifest validator is copied byte-for-byte from tools/validate_manifest.py in the frozen Representation Calculus v0.4 archive. It implements the mathbox computation evidence schemas. Its SHA-256 is 4a109c8097b7a42a6c85d9a71c513ed84f61c2cd1a6abe3d771e877d6779d274.
