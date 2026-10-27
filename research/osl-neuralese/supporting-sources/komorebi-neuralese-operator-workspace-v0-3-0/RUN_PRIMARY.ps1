@@ -1,0 +1,1 @@
+$ErrorActionPreference="Stop"; $Root=Split-Path -Parent $MyInvocation.MyCommand.Path; Set-Location $Root; $Out=Join-Path .\local_runs ("stage_a_primary_"+(Get-Date -Format "yyyyMMdd_HHmmss")); python .\run_experiment.py --protocol .\protocols\V0_3_STAGE_A_PRIMARY.json --output-dir $Out --device cpu --threads 4

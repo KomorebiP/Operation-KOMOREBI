@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "protocol_id": "komorebi-v0.2-dev-calibration-2026-09-02",
+  "analysis_status": "exploratory_noninferential_after_documented_anticollapse_amendment",
+  "package_version": "0.2.0",
+  "expected_coordinate_split_digest": "3aceaac6852f88360de0851eefc43bf46331d3b4efe3a04d0f2b9dfeff455340",
+  "seeds": [110, 111],
+  "training": {
+    "steps": 1000,
+    "batch_size": 128,
+    "train_max_length": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.000001,
+    "grad_clip": 1.0,
+    "composition_min_length": 2,
+    "composition_max_length": 4
+  },
+  "arms": {
+    "terminal": {"model_name": "linear_hyper", "regime": "terminal"},
+    "relation_060": {"model_name": "linear_hyper", "regime": "relation", "relation_weight": 0.6, "relation_hidden_weight": 0.05},
+    "learned_metric_010": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.1},
+    "learned_metric_030": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.3},
+    "learned_metric_060": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.6},
+    "composition_003": {"model_name": "linear_hyper", "regime": "metric", "composition_weight": 0.003},
+    "composition_010": {"model_name": "linear_hyper", "regime": "metric", "composition_weight": 0.01},
+    "composition_030": {"model_name": "linear_hyper", "regime": "metric", "composition_weight": 0.03},
+    "joint_m030_c003": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.3, "composition_weight": 0.003},
+    "joint_m030_c010": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.3, "composition_weight": 0.01},
+    "joint_m030_c030": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.3, "composition_weight": 0.03},
+    "joint_m060_c030": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.6, "composition_weight": 0.03},
+    "joint_shuffle_m030_c030": {"model_name": "linear_hyper_metric", "regime": "metric", "metric_isometry_weight": 0.3, "composition_weight": 0.03, "composition_shuffle_targets": true}
+  },
+  "evaluation": {
+    "coordinate_split": "dev",
+    "seed_base": 600000,
+    "depths": [8, 32, 64, 128],
+    "neighbor_offsets": [0],
+    "examples_per_depth": 128,
+    "c8_examples_per_depth": 128,
+    "random_depths": [8, 32, 64],
+    "random_examples_per_depth": 64,
+    "batch_size": 128,
+    "geometry_examples": 256,
+    "composition_examples": 256,
+    "patch_examples": 256,
+    "composition_family": "random",
+    "patch_donor_family": "random",
+    "patch_recipient_family": "random",
+    "patch_prefix_length": 4,
+    "patch_suffix_length": 8
+  },
+  "selection_rule": {
+    "hard_exclusions": "finite trajectory fraction below 1.0 at depth 128 or metric condition above 100",
+    "priority": "choose the joint arm with the best mean D4/C8 depth-128 accuracy while requiring a lower isometry defect than terminal; choose the smaller weight when accuracy differs by less than 0.02",
+    "matched_null": "freeze the shuffled-composition arm at the selected metric and composition weights"
+  },
+  "transport": {"enabled": false, "arms": []},
+  "gates": []
+}

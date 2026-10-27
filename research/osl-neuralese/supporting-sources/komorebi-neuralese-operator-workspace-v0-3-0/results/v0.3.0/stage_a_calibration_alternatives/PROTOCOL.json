@@ -1,0 +1,82 @@
+{
+  "schema_version": 2,
+  "protocol_id": "komorebi-v0.3-stage-a-strict-path-alternatives-2026-09-02",
+  "analysis_status": "development_only_architecture_selection_test_unopened",
+  "package_version": "0.3.0",
+  "expected_code_digest": "814ea6f2301523965bf8d94dd9da8bbb598451f03e0200cae1cde2ab8de53624",
+  "expected_coordinate_split_digest": "3aceaac6852f88360de0851eefc43bf46331d3b4efe3a04d0f2b9dfeff455340",
+  "seeds": [260, 261],
+  "training": {
+    "steps": 8000,
+    "batch_size": 128,
+    "train_min_length": 1,
+    "train_max_length": 4,
+    "learning_rate": 0.0008,
+    "weight_decay": 0.000001,
+    "grad_clip": 1.0,
+    "operator_init_std": 0.08,
+    "composition_weight": 0.3,
+    "composition_min_length": 2,
+    "composition_max_length": 4,
+    "word_product_scope": "contiguous",
+    "conditioned_sampler_backend": "cached_exact_v1"
+  },
+  "arms": {
+    "hard_relation": {
+      "model_name": "linear_hyper_hard",
+      "regime": "relation",
+      "orthogonal_parameterization": "qr",
+      "metric_isometry_weight": 0.0,
+      "relation_weight": 0.15,
+      "relation_hidden_weight": 0.05,
+      "composition_shuffle_targets": false
+    },
+    "hard_composition_060": {
+      "model_name": "linear_hyper_hard",
+      "regime": "metric",
+      "orthogonal_parameterization": "qr",
+      "metric_isometry_weight": 0.0,
+      "composition_weight": 0.6,
+      "composition_shuffle_targets": false
+    },
+    "hard_learned_diagonal_metric": {
+      "model_name": "linear_hyper_hard_metric",
+      "regime": "metric",
+      "orthogonal_parameterization": "qr",
+      "metric_isometry_weight": 0.0,
+      "composition_shuffle_targets": false
+    }
+  },
+  "evaluation": {
+    "coordinate_split": "dev",
+    "seed_base": 8460000,
+    "depths": [8, 32, 64, 128],
+    "neighbor_offsets": [-1, 0, 1],
+    "examples_per_depth": 256,
+    "c8_examples_per_depth": 256,
+    "random_depths": [8, 32, 64, 128],
+    "random_examples_per_depth": 128,
+    "batch_size": 256,
+    "geometry_examples": 256,
+    "composition_examples": 512,
+    "patch_examples": 256,
+    "composition_family": "random",
+    "patch_donor_family": "random",
+    "patch_recipient_family": "random",
+    "patch_prefix_length": 4,
+    "patch_suffix_length": 8,
+    "semantic_holdout_family": "d4",
+    "semantic_holdout_depths": [8, 64, 128],
+    "semantic_holdout_examples": 128,
+    "semantic_holdout_batch_size": 128,
+    "semantic_holdout_seed_offset": 800000,
+    "semantic_holdout_maximum_candidate_multiplier": 100,
+    "extended_stability_depths": [],
+    "extended_examples_per_depth": 64,
+    "extended_stability_families": ["d4", "c8", "random"]
+  },
+  "oracle": {"enabled": true, "seed": 7460000},
+  "transport": {"enabled": false, "arms": [], "seed_pairs": []},
+  "gates": [],
+  "interpretation_boundary": "Development-only architecture selection on dev coordinates after the 4000-step qualification failure. The two weakest prior seeds are deliberately selected; results are biased diagnostics, not estimates or primary evidence."
+}

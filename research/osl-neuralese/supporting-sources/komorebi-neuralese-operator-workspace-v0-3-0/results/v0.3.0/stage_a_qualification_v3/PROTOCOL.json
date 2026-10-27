@@ -1,0 +1,165 @@
+{
+  "schema_version": 2,
+  "protocol_id": "komorebi-v0.3-stage-a-strict-path-qualification-v3-2026-09-02",
+  "analysis_status": "development_qualification_pretest_noninferential",
+  "package_version": "0.3.0",
+  "expected_code_digest": "814ea6f2301523965bf8d94dd9da8bbb598451f03e0200cae1cde2ab8de53624",
+  "expected_coordinate_split_digest": "3aceaac6852f88360de0851eefc43bf46331d3b4efe3a04d0f2b9dfeff455340",
+  "seeds": [260, 261, 262, 263],
+  "training": {
+    "steps": 8000,
+    "batch_size": 128,
+    "train_min_length": 1,
+    "train_max_length": 4,
+    "learning_rate": 0.0008,
+    "weight_decay": 0.000001,
+    "grad_clip": 1.0,
+    "operator_init_std": 0.08,
+    "composition_weight": 0.3,
+    "composition_min_length": 2,
+    "composition_max_length": 4,
+    "word_product_scope": "contiguous",
+    "conditioned_sampler_backend": "cached_exact_v1"
+  },
+  "arms": {
+    "hard_correct": {
+      "model_name": "linear_hyper_hard",
+      "regime": "metric",
+      "orthogonal_parameterization": "qr",
+      "metric_isometry_weight": 0.0,
+      "composition_shuffle_targets": false
+    },
+    "hard_shuffled": {
+      "model_name": "linear_hyper_hard",
+      "regime": "metric",
+      "orthogonal_parameterization": "qr",
+      "metric_isometry_weight": 0.0,
+      "composition_shuffle_targets": true
+    },
+    "soft_correct": {
+      "model_name": "linear_hyper",
+      "regime": "metric",
+      "metric_isometry_weight": 3.0,
+      "composition_shuffle_targets": false
+    },
+    "soft_shuffled": {
+      "model_name": "linear_hyper",
+      "regime": "metric",
+      "metric_isometry_weight": 3.0,
+      "composition_shuffle_targets": true
+    }
+  },
+  "evaluation": {
+    "coordinate_split": "dev",
+    "seed_base": 8260000,
+    "depths": [8, 32, 64, 128],
+    "neighbor_offsets": [-1, 0, 1],
+    "examples_per_depth": 256,
+    "c8_examples_per_depth": 256,
+    "random_depths": [8, 32, 64, 128],
+    "random_examples_per_depth": 128,
+    "batch_size": 256,
+    "geometry_examples": 256,
+    "composition_examples": 512,
+    "patch_examples": 256,
+    "composition_family": "random",
+    "patch_donor_family": "random",
+    "patch_recipient_family": "random",
+    "patch_prefix_length": 4,
+    "patch_suffix_length": 8,
+    "semantic_holdout_family": "d4",
+    "semantic_holdout_depths": [8, 64, 128],
+    "semantic_holdout_examples": 128,
+    "semantic_holdout_batch_size": 128,
+    "semantic_holdout_seed_offset": 800000,
+    "semantic_holdout_maximum_candidate_multiplier": 100,
+    "extended_stability_depths": [512, 2048],
+    "extended_examples_per_depth": 64,
+    "extended_stability_families": ["d4", "c8", "random"]
+  },
+  "oracle": {"enabled": true, "seed": 7260000},
+  "transport": {"enabled": false, "arms": [], "seed_pairs": []},
+  "gates": [
+    {
+      "id": "Q1_hard_d4_depth8",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "closure.deep_stability.by_depth.8.endpoint_accuracy",
+      "operator": "ge",
+      "threshold": 0.85,
+      "minimum_seed_fraction": 0.75
+    },
+    {
+      "id": "Q1b_hard_split_conditioned_d4_depth8",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "split_conditioned_final_action.by_depth.8.endpoint_accuracy",
+      "operator": "ge",
+      "threshold": 0.85,
+      "minimum_seed_fraction": 0.75
+    },
+    {
+      "id": "Q2_hard_depth2048_finite",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "extended_stability.d4.by_depth.2048.finite_trajectory_fraction",
+      "operator": "ge",
+      "threshold": 1.0,
+      "minimum_seed_fraction": 1.0
+    },
+    {
+      "id": "Q3_hard_depth2048_endpoint_norm",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "extended_stability.d4.by_depth.2048.g_endpoint_ratio.median",
+      "operator": "between",
+      "lower": 0.98,
+      "upper": 1.02,
+      "minimum_seed_fraction": 1.0
+    },
+    {
+      "id": "Q4_hard_depth2048_minimum_norm",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "extended_stability.d4.by_depth.2048.g_step_ratio.minimum",
+      "operator": "ge",
+      "threshold": 0.98,
+      "minimum_seed_fraction": 1.0
+    },
+    {
+      "id": "Q5_hard_depth2048_transient",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "extended_stability.d4.by_depth.2048.g_transient_gain.p95",
+      "operator": "le",
+      "threshold": 1.02,
+      "minimum_seed_fraction": 1.0
+    },
+    {
+      "id": "Q6_hard_orthogonality",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "hard_operator_health.d4.intrinsic_orthogonality_defect.p95",
+      "operator": "le",
+      "threshold": 0.00001,
+      "minimum_seed_fraction": 1.0
+    },
+    {
+      "id": "Q7_hard_minimum_singular_value",
+      "source": "arm",
+      "arm": "hard_correct",
+      "metric": "hard_operator_health.d4.intrinsic_minimum_singular_value.minimum",
+      "operator": "ge",
+      "threshold": 0.99999,
+      "minimum_seed_fraction": 1.0
+    }
+  ],
+  "development_provenance": {
+    "failed_4000_step_run": "results/v0.3.0/stage_a_qualification_failed_4000",
+    "failed_4000_step_reason": "Q1 would pass only 2/4 hard-correct development seeds",
+    "development_8000_step_calibration": "results/v0.3.0/stage_a_calibration_8000",
+    "architecture_scan": "results/v0.3.0/stage_a_calibration_alternatives",
+    "selection": "8000-step fixed-identity-metric hard QR with anonymous composition weight 0.3"
+  },
+  "interpretation_boundary": "Qualification is noninferential and uses only development coordinates. Every nonempty contiguous action in each sampled training word is confined to the train partition. Broad depth metrics condition only primitive input tables; the separate final-action assay additionally conditions the full word action on dev. Exact hard stability is architectural. The 8000-step duration and short-horizon thresholds were selected after the disclosed 4000-step failure and development-only calibration; they authorize no test-data inspection or scientific claim."
+}
