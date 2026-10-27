@@ -1,0 +1,3 @@
+import PaperXII.ConditionalCompletion
+
+#print axioms PaperXII.ConditionalCompletion.simultaneous_companion_completion

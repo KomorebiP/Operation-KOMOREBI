@@ -1,0 +1,185 @@
+import PaperXII.AdicQuotientTopology
+import Mathlib.RingTheory.TensorProduct.Quotient
+
+/-!
+# Actual completed base change along a quotient
+
+The carrier is the completion of `B ⊗[A] (A/J)`, with the sum of the two mapped
+adic ideals. It is not defined to be a quotient of `B`. The actual quotient
+comparison determines its points and the universal factorization criterion.
+-/
+noncomputable section
+open Filter Topology UniformSpace
+open scoped TensorProduct Uniformity
+set_option autoImplicit false
+namespace PaperXII.CompletedBaseChange
+
+variable {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
+variable (mA : Ideal A) (mB : Ideal B) (J : Ideal A)
+
+abbrev Raw := B ⊗[A] (A ⧸ J)
+
+/-- The literal sum defining the completed tensor topology. -/
+def tensorIdeal : Ideal (Raw (B := B) J) :=
+  mB.map (algebraMap B (Raw (B := B) J)) ⊔
+    ((mA.map (Ideal.Quotient.mk J)).map
+      (Algebra.TensorProduct.includeRight (A := B) (R := A)).toRingHom)
+
+abbrev Completed := AdicModel.Completed (Raw (B := B) J) (tensorIdeal mA mB J)
+
+/-- The canonical global ring map into the actual completed base change. -/
+def globalMap : B →+* Completed mA mB J :=
+  (AdicModel.embed _ (tensorIdeal mA mB J)).comp (algebraMap B (Raw (B := B) J))
+
+/-- The ordinary tensor quotient equivalence, only an intermediate step. -/
+def rawEquiv : Raw (B := B) J ≃+* B ⧸ J.map (algebraMap A B) :=
+  (Algebra.TensorProduct.quotIdealMapEquivTensorQuot B J).symm.toRingEquiv
+
+@[simp] theorem rawEquiv_left (b : B) :
+    rawEquiv (B := B) J (algebraMap B (Raw (B := B) J) b) =
+      Ideal.Quotient.mk (J.map (algebraMap A B)) b := by
+  change (Algebra.TensorProduct.quotIdealMapEquivTensorQuot B J).symm (b ⊗ₜ[A] 1) = _
+  simpa using Algebra.TensorProduct.quotIdealMapEquivTensorQuot_symm_tmul B J b (1 : A)
+
+@[simp] theorem rawEquiv_right (a : A) :
+    rawEquiv (B := B) J (Algebra.TensorProduct.includeRight (A := B) (R := A)
+      (Ideal.Quotient.mk J a)) =
+      Ideal.Quotient.mk (J.map (algebraMap A B)) (algebraMap A B a) := by
+  change (Algebra.TensorProduct.quotIdealMapEquivTensorQuot B J).symm
+    (1 ⊗ₜ[A] (Ideal.Quotient.mk J a)) = _
+  simp [Algebra.smul_def]
+
+/-- The sum topology is proved to correspond to the quotient topology. -/
+theorem rawEquiv_tensorIdeal (h : mA.map (algebraMap A B) ≤ mB) :
+    (tensorIdeal mA mB J).map (rawEquiv J).toRingHom =
+      mB.map (Ideal.Quotient.mk (J.map (algebraMap A B))) := by
+  have hl : (rawEquiv (B := B) J).toRingHom.comp (algebraMap B (Raw (B := B) J)) =
+      Ideal.Quotient.mk (J.map (algebraMap A B)) := by ext b; exact rawEquiv_left J b
+  have hr : ((rawEquiv (B := B) J).toRingHom.comp
+      (Algebra.TensorProduct.includeRight (A := B) (R := A)).toRingHom).comp
+      (Ideal.Quotient.mk J) =
+      (Ideal.Quotient.mk (J.map (algebraMap A B))).comp (algebraMap A B) := by
+    ext a; exact rawEquiv_right J a
+  simp only [tensorIdeal, Ideal.map_sup, Ideal.map_map]
+  rw [hl, ← RingHom.comp_assoc, hr, ← Ideal.map_map, sup_eq_left]
+  exact Ideal.map_mono h
+
+/-- The completed tensor ring compared with the actual completion of the quotient. -/
+def completedEquiv (h : mA.map (algebraMap A B) ≤ mB) :
+    Completed mA mB J ≃+*
+      AdicModel.Completed (B ⧸ J.map (algebraMap A B))
+        (mB.map (Ideal.Quotient.mk (J.map (algebraMap A B)))) :=
+  AdicModel.completedEquiv _ _ (rawEquiv J) (rawEquiv_tensorIdeal mA mB J h)
+
+theorem completedEquiv_continuous (h : mA.map (algebraMap A B) ≤ mB) :
+    Continuous (completedEquiv mA mB J h) :=
+  AdicModel.completedEquiv_continuous _ _ _ (rawEquiv_tensorIdeal mA mB J h)
+
+theorem completedEquiv_symm_continuous (h : mA.map (algebraMap A B) ≤ mB) :
+    Continuous (completedEquiv mA mB J h).symm :=
+  AdicModel.completedEquiv_symm_continuous _ _ _ (rawEquiv_tensorIdeal mA mB J h)
+
+@[simp] theorem completedEquiv_globalMap (h : mA.map (algebraMap A B) ≤ mB) (b : B) :
+    completedEquiv mA mB J h (globalMap mA mB J b) =
+      AdicModel.embed _ (mB.map (Ideal.Quotient.mk (J.map (algebraMap A B))))
+        (Ideal.Quotient.mk (J.map (algebraMap A B)) b) := by
+  change AdicModel.completedEquiv _ _ _ (rawEquiv_tensorIdeal mA mB J h)
+    (AdicModel.embed _ _ _) = _
+  rw [AdicModel.completedEquiv_embed]
+  exact congrArg (AdicModel.embed _ _) (rawEquiv_left J b)
+
+/-- The canonical map from the global ring has dense image. -/
+theorem globalMap_dense : DenseRange (globalMap mA mB J) := by
+  have hs : Function.Surjective (algebraMap B (Raw (B := B) J)) := by
+    intro t
+    obtain ⟨b, hb⟩ := Ideal.Quotient.mk_surjective (rawEquiv (B := B) J t)
+    refine ⟨b, (rawEquiv J).injective ?_⟩
+    exact (rawEquiv_left J b).trans hb
+  have hr : Set.range (globalMap mA mB J) =
+      Set.range ((↑) : AdicModel.Carrier (Raw (B := B) J) (tensorIdeal mA mB J) →
+        Completed mA mB J) := by
+    ext x
+    constructor
+    · rintro ⟨b, rfl⟩
+      exact ⟨(AdicModel.rawEquiv _ _).symm (algebraMap B (Raw (B := B) J) b), rfl⟩
+    · rintro ⟨t, rfl⟩
+      obtain ⟨b, hb⟩ := hs (AdicModel.rawEquiv _ _ t)
+      refine ⟨b, ?_⟩
+      change Completion.coeRingHom (AdicModel.Carrier (Raw (B := B) J) (tensorIdeal mA mB J))
+        ((AdicModel.rawEquiv _ _).symm (algebraMap B (Raw (B := B) J) b)) =
+          Completion.coeRingHom _ t
+      rw [hb, RingEquiv.symm_apply_apply]
+  change Dense (Set.range (globalMap mA mB J))
+  rw [hr]
+  exact Completion.denseRange_coe
+
+variable {P : Type*} [CommRing P] [UniformSpace P] [IsUniformAddGroup P]
+  [IsTopologicalRing P] [CompleteSpace P] [T2Space P]
+
+/-- Point on the quotient carrier obtained from a continuous global point. -/
+def quotientPoint (p : B →+* P) (_hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom))
+    (hJ : J.map (algebraMap A B) ≤ RingHom.ker p) :
+    AdicModel.Carrier (B ⧸ J.map (algebraMap A B))
+      (mB.map (Ideal.Quotient.mk (J.map (algebraMap A B)))) →+* P :=
+  (Ideal.Quotient.lift (AdicModel.carrierIdeal mB (J.map (algebraMap A B)))
+    (p.comp (AdicModel.rawEquiv B mB).toRingHom)
+    (by
+      intro b hb
+      change p (AdicModel.rawEquiv B mB b) = 0
+      exact hJ ((AdicModel.carrierIdeal_mem _ _ _).mp hb))).comp
+    (AdicModel.quotientCarrierEquiv mB (J.map (algebraMap A B))).symm.toRingHom
+
+omit [IsUniformAddGroup P] [IsTopologicalRing P] [CompleteSpace P] [T2Space P] in
+theorem quotientPoint_continuous (p : B →+* P)
+    (hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom))
+    (hJ : J.map (algebraMap A B) ≤ RingHom.ker p) : Continuous (quotientPoint mB J p hp hJ) := by
+  apply Continuous.comp _ (AdicModel.quotientCarrierEquiv_symm_continuous _ _)
+  apply (QuotientRing.isOpenQuotientMap_mk _).isQuotientMap.continuous_iff.mpr
+  exact hp
+
+omit [IsUniformAddGroup P] [IsTopologicalRing P] [CompleteSpace P] [T2Space P] in
+@[simp] theorem quotientPoint_mk (p : B →+* P)
+    (hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom))
+    (hJ : J.map (algebraMap A B) ≤ RingHom.ker p) (b : B) :
+    quotientPoint mB J p hp hJ ((AdicModel.rawEquiv _ _).symm
+      (Ideal.Quotient.mk (J.map (algebraMap A B)) b)) = p b := by
+  unfold quotientPoint
+  rw [RingHom.comp_apply]
+  have hb := AdicModel.quotientCarrierEquiv_mk mB (J.map (algebraMap A B)) b
+  rw [← hb]
+  simp only [RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, RingEquiv.symm_apply_apply]
+  rfl
+
+/-- Extend the quotient point and pull it back along the proved completed comparison. -/
+def factor (h : mA.map (algebraMap A B) ≤ mB) (p : B →+* P)
+    (hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom))
+    (hJ : J.map (algebraMap A B) ≤ RingHom.ker p) : Completed mA mB J →+* P :=
+  (Completion.extensionHom (quotientPoint mB J p hp hJ)
+    (quotientPoint_continuous mB J p hp hJ)).comp (completedEquiv mA mB J h).toRingHom
+
+theorem factor_continuous (h : mA.map (algebraMap A B) ≤ mB) (p : B →+* P)
+    (hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom))
+    (hJ : J.map (algebraMap A B) ≤ RingHom.ker p) : Continuous (factor mA mB J h p hp hJ) :=
+  Completion.continuous_extension.comp (completedEquiv_continuous mA mB J h)
+
+@[simp] theorem factor_globalMap (h : mA.map (algebraMap A B) ≤ mB) (p : B →+* P)
+    (hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom))
+    (hJ : J.map (algebraMap A B) ≤ RingHom.ker p) (b : B) :
+    factor mA mB J h p hp hJ (globalMap mA mB J b) = p b := by
+  change Completion.extensionHom (quotientPoint mB J p hp hJ)
+    (quotientPoint_continuous mB J p hp hJ)
+      (completedEquiv mA mB J h (globalMap mA mB J b)) = p b
+  rw [completedEquiv_globalMap]
+  exact (Completion.extensionHom_coe (quotientPoint mB J p hp hJ)
+    (quotientPoint_continuous mB J p hp hJ)
+      ((AdicModel.rawEquiv _ _).symm (Ideal.Quotient.mk (J.map (algebraMap A B)) b))).trans
+        (quotientPoint_mk mB J p hp hJ b)
+
+omit [IsUniformAddGroup P] [IsTopologicalRing P] [CompleteSpace P] in
+/-- No two continuous extensions of the same global point can differ. -/
+theorem factor_unique (g₁ g₂ : Completed mA mB J →+* P) (hg₁ : Continuous g₁) (hg₂ : Continuous g₂)
+    (heq : g₁.comp (globalMap mA mB J) = g₂.comp (globalMap mA mB J)) : g₁ = g₂ := by
+  apply DFunLike.coe_injective
+  exact (globalMap_dense mA mB J).equalizer hg₁ hg₂ (funext fun b ↦ DFunLike.congr_fun heq b)
+
+end PaperXII.CompletedBaseChange

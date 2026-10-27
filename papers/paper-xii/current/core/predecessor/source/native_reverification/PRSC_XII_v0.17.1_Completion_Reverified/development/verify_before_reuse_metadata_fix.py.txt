@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+"""Clean single-threaded cumulative Paper XII build and per-module axiom audit.
+Supports bounded batches: --start followed by --resume; the report stays RUNNING
+until every registered source, declaration audit and invalid control is checked.
+"""
+from __future__ import annotations
+import argparse,hashlib,json,os,re,shutil,signal,subprocess,sys,time
+from pathlib import Path
+from datetime import datetime,timezone
+ROOT=Path(__file__).resolve().parents[1]
+PIN='aeb72f1e9981b6d35b426b16dca7759be3e7ba06'
+ALLOWED={'propext','Classical.choice','Quot.sound'}
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def now():return datetime.now(timezone.utc).isoformat()
+def strip_comments(s):
+ out=[];i=depth=0
+ while i<len(s):
+  if s[i:i+2]=='/-':depth+=1;i+=2
+  elif depth and s[i:i+2]=='-/':depth-=1;i+=2
+  elif depth:i+=1
+  elif s[i:i+2]=='--':
+   j=s.find('\n',i);i=len(s) if j<0 else j
+  else:out.append(s[i]);i+=1
+ if depth:raise ValueError('Unterminated block comment')
+ return ''.join(out)
+def inventory(src,mod):
+ body=strip_comments(src.read_text())
+ # Ignore strings only for the prohibited-token check. No proof string is executed.
+ scan=re.sub(r'"(?:\\.|[^"\\])*"','""',body)
+ bad=re.findall(r'\b(?:sorry|admit|axiom|native_decide|unsafe)\b',scan)
+ if bad:raise ValueError('Forbidden production tokens '+mod+': '+str(bad))
+ namespaces=re.findall(r'^namespace\s+(\S+)',body,re.M)
+ if len(namespaces)!=1:raise ValueError('Review namespace parser for '+mod)
+ ns=namespaces[0]
+ pat=r'^(?:@\[[^\]]*\]\s*)*((?:(?:private|protected|noncomputable)\s+)*)(theorem|lemma|def|abbrev|structure|instance)\s+([\w.\']+)'
+ public=[];private=[]
+ for mods,kind,name in re.findall(pat,body,re.M):
+  if name in ('where',):raise ValueError('Unnamed declaration parser: '+mod)
+  d={'name':ns+'.'+name,'kind':kind,'module':mod,'reused_from_paper_x':mod.startswith('PaperX.')}
+  (private if 'private' in mods else public).append(d)
+ return public,private
+
+def run(cmd,env,log,timeout):
+ t=time.monotonic();p=subprocess.Popen(cmd,cwd=ROOT/'lean',env=env,stdout=subprocess.PIPE,
+   stderr=subprocess.STDOUT,text=True,start_new_session=True)
+ timed=False
+ try:out,_=p.communicate(timeout=timeout)
+ except subprocess.TimeoutExpired:
+  timed=True;os.killpg(p.pid,signal.SIGKILL);out,_=p.communicate()
+ log.write_text(out)
+ return {'argv':cmd,'exit_code':p.returncode,'timed_out':timed,'seconds':round(time.monotonic()-t,3),
+   'log':str(log.relative_to(ROOT)),'log_sha256':sha(log)}
+
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('portable_kit',type=Path)
+ ap.add_argument('--start',action='store_true');ap.add_argument('--resume',action='store_true')
+ ap.add_argument('--batch',type=int,default=10000);ap.add_argument('--timeout',type=int,default=180)
+ args=ap.parse_args();kit=args.portable_kit.resolve();lean=kit/'toolchain/bin/lean';ws=kit/'workspace'
+ report_path=ROOT/'verification.json';conf=json.loads((ROOT/'checks/modules.json').read_text())
+ env=os.environ.copy();env['MALLOC_ARENA_MAX']='2';env['LEAN_PATH']=os.pathsep.join(map(str,
+   [ROOT/'build',ws/'.lake/build/lib/lean',*sorted((ws/'.lake/packages').glob('*/.lake/build/lib/lean'))]))
+ def save(r):report_path.write_text(json.dumps(r,indent=2)+'\n')
+ try:
+  version=subprocess.check_output([str(lean),'--version'],text=True).strip()
+  commit=subprocess.check_output(['git','-C',str(ws/'.lake/packages/mathlib'),'rev-parse','HEAD'],text=True).strip()
+  if '4.34.0-rc2' not in version or commit!=PIN:raise ValueError('Toolchain/Mathlib pin mismatch')
+  manifest=json.loads((ws/'lake-manifest.json').read_text())
+  if next(p for p in manifest['packages'] if p['name']=='mathlib')['rev']!=PIN:raise ValueError('Manifest pin mismatch')
+  srcs={str(p.relative_to(ROOT/'lean')):sha(p) for p in sorted((ROOT/'lean').rglob('*.lean'))}
+  expected={m.replace('.','/')+'.lean' for m in conf['modules']}
+  if set(srcs)!=expected:raise ValueError('Source manifest mismatch')
+  decls=[];private=[];by_mod={}
+  for mod in conf['modules']:
+   ds,ps=inventory(ROOT/'lean'/Path(mod.replace('.','/')+'.lean'),mod)
+   by_mod[mod]=ds;decls+=ds;private+=ps
+  if len({d['name'] for d in decls})!=len(decls):raise ValueError('Duplicate qualified declaration name')
+  preservation=json.loads((ROOT/'UPSTREAM_PRESERVATION.json').read_text())
+  for key in ['original_v0_15_sources','fitting_v0_16_sources','new_v0_17_sources']:
+   for path,digest in preservation[key].items():
+    if srcs[path]!=digest:raise ValueError('Preservation hash mismatch: '+path)
+  old=json.loads((ROOT/'upstream/v0.15_VERIFICATION.json').read_text())['declarations']
+  fitting=json.loads((ROOT/'upstream/v0.16_FRESH_REPLAY.json').read_text())['declarations']
+  needed={d['name'] for d in old}|{d['name'] for d in fitting}
+  if not needed<={d['name'] for d in decls}:raise ValueError('Lost predecessor audit targets: '+str(needed-{d['name'] for d in decls}))
+  if args.resume:
+   r=json.loads(report_path.read_text())
+   if r['status']!='RUNNING':raise ValueError('Only RUNNING verification can resume')
+   if r['source_hashes_before']!=srcs or r['compiler_sha256']!=sha(lean):raise ValueError('Inputs changed during replay')
+   for item in r['modules']:
+    if sha(ROOT/item['olean_path'])!=item['olean_sha256']:raise ValueError('Fresh object changed: '+item['module'])
+  else:
+   if report_path.exists() and not args.start:raise ValueError('Use --start for a new clean replay')
+   shutil.rmtree(ROOT/'build',ignore_errors=True);(ROOT/'build').mkdir()
+   shutil.rmtree(ROOT/'logs',ignore_errors=True);(ROOT/'logs').mkdir()
+   r={'status':'RUNNING','started_utc':now(),'scope':'clean cumulative rebuild of every registered project module; cached pinned Mathlib is not rebuilt',
+      'lean_version':version,'mathlib_commit':commit,'compiler_sha256':sha(lean),'threads':1,
+      'warnings_as_errors':True,'timeout_per_process':args.timeout,'source_hashes_before':srcs,
+      'source_preservation_passed':True,'module_manifest_sha256':sha(ROOT/'checks/modules.json'),
+      'declarations':decls,'private_helpers':private,'modules':[],'axioms':[],'controls':[],
+      'inherited_targets_retained':len(needed),'all_twelve_paper_census_updated':False}
+  save(r)
+  start=len(r['modules']);stop=min(start+args.batch,len(conf['modules']))
+  for mod in conf['modules'][start:stop]:
+   rel=Path(mod.replace('.','/'));src=ROOT/'lean'/rel.with_suffix('.lean');obj=ROOT/'build'/rel.with_suffix('.olean')
+   obj.parent.mkdir(parents=True,exist_ok=True)
+   result=run([str(lean),'-j1','-DwarningAsError=true','-o',str(obj),str(src)],env,ROOT/'logs'/(mod+'.build.log'),args.timeout)
+   result.update(module=mod,source_sha256=sha(src),olean_path=str(obj.relative_to(ROOT)))
+   if result['exit_code'] or result['timed_out']:
+    r['failed_operation']=result;raise RuntimeError('Cumulative compilation failed: '+mod)
+   result['olean_sha256']=sha(obj)
+   audit=ROOT/'checks'/'CurrentAxiomAudit.lean'
+   audit.write_text('import '+mod+'\n\n'+'\n'.join('#print axioms '+d['name'] for d in by_mod[mod])+'\n')
+   ar=run([str(lean),'-j1','-DwarningAsError=true',str(audit)],env,ROOT/'logs'/(mod+'.axioms.log'),args.timeout)
+   if ar['exit_code'] or ar['timed_out']:
+    r['failed_operation']=ar;raise RuntimeError('Axiom command failed: '+mod)
+   text=(ROOT/ar['log']).read_text();ds=[]
+   for d in by_mod[mod]:
+    name=d['name'];ma=re.search(re.escape("'"+name+"'")+r' depends on axioms:\s*\[([^\]]*)\]',text)
+    if ma:axs=[x.strip() for x in ma[1].split(',') if x.strip()]
+    elif "'"+name+"' does not depend on any axioms" in text:axs=[]
+    else:raise ValueError('Missing axiom target: '+name)
+    if set(axs)-ALLOWED:raise ValueError('Unapproved axiom in '+name+': '+str(axs))
+    ds.append(dict(d,axioms=axs))
+   r['axioms']+=ds;result['axiom_audit']=ar;r['modules'].append(result)
+   save(r);print(f'PASS {len(r["modules"]):03d}/{len(conf["modules"])} {mod}; {len(ds)} audits',flush=True)
+  if len(r['modules'])<len(conf['modules']):
+   print('BATCH COMPLETE; cumulative report remains RUNNING',flush=True);return 0
+  for name,required in [('RejectFalse','Type mismatch'),('RejectPlaceholder','sorry'),('RejectWrongEmptyNormalization','unsolved goals')]:
+   cr=run([str(lean),'-j1','-DwarningAsError=true',str(ROOT/'checks'/(name+'.lean'))],env,ROOT/'logs'/(name+'.log'),args.timeout)
+   cr['name']=name;cr['passed']=cr['exit_code']!=0 and not cr['timed_out'] and required in (ROOT/cr['log']).read_text()
+   r['controls'].append(cr)
+   if not cr['passed']:raise ValueError('Invalid-proof control failed: '+name)
+   print('PASS rejected '+name,flush=True)
+  after={str(p.relative_to(ROOT/'lean')):sha(p) for p in sorted((ROOT/'lean').rglob('*.lean'))}
+  if after!=srcs:raise ValueError('Source mutation during replay')
+  own=[d for d in decls if not d['reused_from_paper_x']];new=[d for d in decls if d['module'] in conf['new_modules']]
+  th=lambda ds:sum(d['kind'] in ('theorem','lemma') for d in ds)
+  r.update(status='PASS',finished_utc=now(),source_hashes_after=after,module_count=len(conf['modules']),
+      new_module_count=len(conf['new_modules']),audited_declaration_count=len(r['axioms']),
+      own_theorem_count=th(own),reused_theorem_count=th([d for d in decls if d['reused_from_paper_x']]),
+      new_theorem_count=th(new),new_named_declaration_count=len(new),private_helper_count=len(private))
+  save(r);print('CUMULATIVE PASS '+json.dumps({k:r[k] for k in ['module_count','audited_declaration_count','own_theorem_count','reused_theorem_count','new_theorem_count']}),flush=True)
+  return 0
+ except Exception as e:
+  if 'r' not in locals():r={'started_utc':now()}
+  r.update(status='FAIL',failed_utc=now(),error=str(e));save(r);print('FAIL '+str(e),flush=True);return 1
+if __name__=='__main__':sys.exit(main())

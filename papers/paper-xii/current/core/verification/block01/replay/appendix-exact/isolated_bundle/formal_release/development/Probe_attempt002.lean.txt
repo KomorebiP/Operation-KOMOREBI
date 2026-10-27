@@ -1,0 +1,47 @@
+import Mathlib.Topology.Algebra.UniformRing
+import Mathlib.Topology.Algebra.Ring.Ideal
+import Mathlib.Topology.Algebra.IsUniformGroup.Basic
+import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+open Filter Topology UniformSpace
+open scoped Uniformity
+#check Completion.continuous_extension
+#check Completion.uniformContinuous_extension
+#check QuotientAddGroup.completeSpace_right
+#check QuotientAddGroup.instT1Space
+#check QuotientAddGroup.instT3Space
+#check Completion.denseRange_coe
+#check CauchyFilter.basis_uniformity
+#check SeparationQuotient.uniformity_eq
+#check Filter.HasCountableBasis.isCountablyGenerated
+#check Filter.HasBasis.isCountablyGenerated
+#check Filter.isCountablyGenerated_iff_exists_antitone_basis
+#check IsTopologicalAddGroup.rightUniformSpace
+#check isUniformAddGroup_of_addCommGroup
+#check UniformSpace.Completion.isDenseInducing_coe
+#check UniformSpace.Completion.extensionHom_coe
+#check Ideal.map_le_iff_le_comap
+#check Ideal.Quotient.ringHom_ext
+#check RingHom.ker
+#check RingHom.ext
+#check RingEquiv.ofRingHom
+variable {R : Type*} [CommRing R] [UniformSpace R] [IsUniformAddGroup R] [IsTopologicalRing R]
+example (J : Ideal (Completion R)) [IsClosed (J : Set (Completion R))] :
+ T2Space (Completion R ⧸ J) := by exact QuotientAddGroup.completeSpace_right (Completion R) J.toAddSubgroup
+example (J : Ideal (Completion R)) [FirstCountableTopology (Completion R)] :
+ @CompleteSpace (Completion R ⧸ J) (IsTopologicalAddGroup.rightUniformSpace (Completion R ⧸ J)) := by
+ exact QuotientAddGroup.completeSpace_right (Completion R) J.toAddSubgroup
+
+example {α : Type*} [UniformSpace α] [Filter.IsCountablyGenerated (𝓤 α)] :
+ Filter.IsCountablyGenerated (𝓤 (CauchyFilter α)) := by
+ obtain ⟨s,hs⟩ := Filter.isCountablyGenerated_iff_exists_antitone_basis.mp
+   (inferInstance : Filter.IsCountablyGenerated (𝓤 α))
+ exact (CauchyFilter.basis_uniformity hs.toHasBasis).isCountablyGenerated
+example {α : Type*} [UniformSpace α] [Filter.IsCountablyGenerated (𝓤 α)] :
+ Filter.IsCountablyGenerated (𝓤 (Completion α)) := by
+ haveI : Filter.IsCountablyGenerated (𝓤 (CauchyFilter α)) := by
+  obtain ⟨s,hs⟩ := Filter.isCountablyGenerated_iff_exists_antitone_basis.mp
+    (inferInstance : Filter.IsCountablyGenerated (𝓤 α))
+  exact (CauchyFilter.basis_uniformity hs.toHasBasis).isCountablyGenerated
+ change Filter.IsCountablyGenerated (𝓤 (SeparationQuotient (CauchyFilter α)))
+ rw [SeparationQuotient.uniformity_eq]
+ infer_instance

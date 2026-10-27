@@ -1,0 +1,1137 @@
+\documentclass[11pt]{article}
+
+\pdfinfoomitdate=1
+\pdftrailerid{}
+\pdfsuppressptexinfo=15
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=0.90in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,mathrsfs}
+\usepackage{booktabs,longtable,array,tabularx,multirow}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{bm}
+\usepackage{needspace}
+\usepackage{placeins}
+\usepackage{siunitx}
+
+\graphicspath{{figures/}}
+\allowdisplaybreaks
+\sisetup{scientific-notation=true,round-mode=places,round-precision=4}
+
+\hypersetup{
+  pdftitle={Projector-Resolved Seed Calculus XII},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Global seed completion, adequate generalized-eigenspace projectors, Taylor-Wiles packet refinement, R equals T, compatible systems, and final Hecke occupancy},
+  pdfcreator={},
+  pdfproducer={},
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Projector-Resolved Seed Calculus XII}
+\fancyhead[R]{Komorebi P.}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{classicalinput}[theorem]{Classical Input}
+\newtheorem{numericalcertificate}[theorem]{Numerical Certificate}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\F}{\mathbf F}
+\newcommand{\C}{\mathbf C}
+\newcommand{\Z}{\mathbf Z}
+\newcommand{\Q}{\mathbf Q}
+\newcommand{\Ocal}{\mathcal O}
+\newcommand{\mfrak}{\mathfrak m}
+\newcommand{\Acal}{\mathcal A}
+\newcommand{\Scal}{\mathcal S}
+\newcommand{\Tcal}{\mathcal T}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Hcal}{\mathcal H}
+\newcommand{\Mcal}{\mathcal M}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Spf}{\operatorname{Spf}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Ann}{\operatorname{Ann}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\Frob}{\operatorname{Frob}}
+\newcommand{\WD}{\operatorname{WD}}
+\newcommand{\rec}{\operatorname{rec}}
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\HT}{\operatorname{HT}}
+\newcommand{\HC}{\operatorname{HC}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\Hol}{\operatorname{Hol}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\T}{\mathbb T}
+\newcommand{\eps}{\varepsilon}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.62em}
+\setlist[itemize]{leftmargin=1.55em,itemsep=0.20em,topsep=0.30em}
+\setlist[enumerate]{leftmargin=1.75em,itemsep=0.24em,topsep=0.32em}
+\captionsetup{font=small,labelfont=bf}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  showstringspaces=false,
+  tabsize=4,
+  numbers=left,
+  numberstyle=\tiny,
+  xleftmargin=1.5em,
+  framexleftmargin=1.2em
+}
+
+\title{\textbf{Projector-Resolved Seed Calculus XII}\\[0.35em]
+\large Global Seed Completion: Adequate Projectors, Automorphy Lifting, and Final Occupancy}
+\author{Komorebi P.}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper completes the principal twelve-paper sequence by placing global automorphy lifting into the common operator language of seeds, projectors, transfer blocks, refinement, completion, and reconstruction.  The classical theorems are kept separate from the new packaging.  Universal deformation rings, adequate-image automorphy lifting, Taylor--Wiles--Kisin patching, local--global compatibility, and established instances of $R=\T$ are imported inputs.  The paper proves the finite algebraic statements needed to interpret those inputs packetwise.  Pairwise coprime primary factors give exact Bezout projectors onto generalized eigenspaces, with integral denominator weights controlled by resultants.  A complete finite adequacy certificate is worked out for the standard two-dimensional representation of $S_3$ over $\F_7$: the trace-zero adjoint module has no invariants or first cohomology, decomposes into sign and standard packets, and both packets are detected by generalized-eigenspace projectors.  Auxiliary Taylor--Wiles groups are treated as a refinement tower of finite group algebras; quotient maps preserve convolution, augmentation coinvariants recover the coarse module, and compatible free bases reconstruct a free module over the completed group algebra.  An $R=\T$ isomorphism is then interpreted as a coordinate identification rather than an occupancy theorem.  Faithfulness is the extra condition that forces every nonzero central idempotent packet to occur.  In a fixed finite-dimensional automorphic carrier, nested commuting Hecke projectors have nonzero total intersection if and only if every finite refinement has positive rank; an infinite-dimensional tail example proves that compactness cannot be omitted.  Compatible-system completion and one-member propagation are integrated with the weighted dyadic correction.  The final theorem is deliberately conditional: exhaustive residual coverage, populated companion forests, adequate or replacement deformation control, full-support patching, $R=\T$, positive finite Hecke-packet traces, local--global compatibility, and classicality imply global automorphic realization within the declared class.  The paper does not prove that these universal hypotheses hold.
+\end{abstract}
+
+\begin{center}
+\fbox{\begin{minipage}{0.94\linewidth}
+\textbf{Status of the paper.}  The primary-projector, finite adequacy, finite group-algebra refinement, augmentation, support, finite occupancy, compatible-carrier, and dyadic coordinate statements are proved under their stated hypotheses.  Automorphy lifting, Taylor--Wiles--Kisin patching, local--global compatibility, and $R=\T$ are classical inputs.  Universal residual companion existence, universal positive Hecke occupancy, a uniform replacement for the odd-prime adequacy hypotheses at coefficient prime two, and unrestricted global reciprocity are not proved.
+\end{minipage}}
+\end{center}
+
+\tableofcontents
+\newpage
+
+\section{The common operator language}
+
+Let $F$ be a number field, let $p$ be a coefficient prime, let $\Ocal$ be a complete discrete valuation ring with residue field $k$, and let
+\[
+\bar\rho:G_F\longrightarrow \GL_n(k)
+\]
+be a residual representation.  The global realization of the seed calculus is organized by
+\[
+\boxed{
+\begin{gathered}
+\text{residual seed}
+\longrightarrow
+\text{adequate projector}
+\longrightarrow
+\text{local deformation packet}
+\longrightarrow
+\text{Taylor--Wiles refinement}\\
+\longrightarrow
+\text{patched module}
+\longrightarrow
+R=\T
+\longrightarrow
+\text{Hecke occupancy}
+\longrightarrow
+\text{global reconstruction}.
+\end{gathered}}
+\]
+
+The entries have the following meanings.
+
+\begin{center}
+\begin{tabularx}{0.97\linewidth}{>{\bfseries}p{0.21\linewidth}X}
+\toprule
+Seed & a residual representation, residual root, or finite set of residual source packets \\
+Address & coefficient-prime depth, local deformation type, Frobenius factor, Taylor--Wiles level, or Hecke eigenvalue \\
+Projector & generalized-eigenspace projector, local-condition idempotent, component idempotent, or finite Hecke spectral projector \\
+Transfer & restriction, local-to-global deformation map, auxiliary-prime level map, patching morphism, or Hecke action \\
+Refinement & higher congruence depth, larger Taylor--Wiles datum, finer local type, or additional Hecke condition \\
+Constraint & adequacy, representability, obstruction vanishing, full support, local--global compatibility, and classicality \\
+Completion & inverse limit over congruence or auxiliary levels and compatible-system gluing across coefficient primes \\
+Reconstruction & a characteristic-zero Galois representation together with a genuine cuspidal automorphic realization \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.98\linewidth]{01_global_completion_architecture.pdf}
+\caption{The global problem separates into deformation, patching, coordinate identification, and occupancy.  No one arrow supplies all four tasks.}
+\label{fig:global-architecture}
+\end{figure}
+
+\subsection{Four statement types}
+
+Every assertion in the paper has one of four roles.
+
+\begin{enumerate}
+\item A \emph{classical input} is an established theorem used as part of the ambient automorphy-lifting argument.
+\item A \emph{theorem proved here} is a finite or abstract algebraic consequence of the stated packet hypotheses.
+\item A \emph{numerical certificate} is an exact finite calculation or a floating evaluation of an exact finite formula.
+\item A \emph{conjectural boundary} is an existence or nonvanishing statement not forced by the coordinate change.
+\end{enumerate}
+
+This separation is especially important globally.  Patching can prove that a deformation component is supported by an automorphic module once an automorphic residual seed and the relevant local hypotheses are present.  It cannot manufacture a residual root that never occurs, and a ring isomorphism cannot populate a spectral packet on which the chosen module is zero.
+
+\section{Classical global input and its exact boundary}
+
+\begin{classicalinput}[Universal deformation coordinates]
+Under the usual finiteness and Schur-type hypotheses, lifts or deformations of a fixed residual representation are represented by a complete local Noetherian ring.  Its tangent space is described by $Z^1$ or $H^1$, while presentation relations map into $H^2$.  Local deformation conditions are represented by quotients, and a global deformation problem with prescribed local conditions is represented by a global deformation ring.
+\end{classicalinput}
+
+The word \emph{fixed} is essential.  A universal deformation ring is universal above one residual root.  It does not contain other residual roots unless the moduli problem has first been enlarged to the full residual forest developed in Paper X.
+
+\begin{classicalinput}[Automorphy lifting]
+An automorphy-lifting theorem begins with a characteristic-zero representation $\rho$ whose semisimplified reduction $\bar\rho$ is already known to occur automorphically.  Under hypotheses controlling local deformation conditions, residual image, regularity, and the relevant global deformation problem, automorphy is lifted from $\bar\rho$ to $\rho$.
+\end{classicalinput}
+
+The initial automorphic occurrence is a zeroth-order occupancy hypothesis.  It is not a consequence of positive-depth lifting.
+
+\begin{classicalinput}[Adequate image]
+Let $G\subseteq\GL(V)$ act absolutely irreducibly over a finite field $k$ of characteristic $p$, with $p\nmid\dim V$ and all eigenvalues contained in $k$.  For $g\in G$ and an eigenvalue $\alpha$, let $e_{g,\alpha}$ be the projector onto the generalized $\alpha$-eigenspace.  Adequacy requires
+\[
+H^0(G,\ad^0V)=0,
+\qquad
+H^1(G,k)=0,
+\qquad
+H^1(G,\ad^0V)=0,
+\]
+and requires every irreducible submodule $W\subseteq\ad^0V$ to be detected by some functional
+\[
+w\longmapsto\Tr(e_{g,\alpha}w).
+\]
+\end{classicalinput}
+
+Adequacy is already expressed in projector language: generalized-eigenspace packets must see every irreducible adjoint direction.
+
+\begin{classicalinput}[Taylor--Wiles--Kisin patching]
+Auxiliary primes produce finite abelian groups $\Delta_N$, group algebras $\Ocal[\Delta_N]$, refined deformation rings, and automorphic modules that are free or nearly free over the auxiliary group algebras.  Passing through compatible levels produces a patched module over a completed group algebra and a larger power-series deformation ring.  Dimension and depth arguments then compare the patched arithmetic and automorphic coordinates.
+\end{classicalinput}
+
+\begin{classicalinput}[$R=\T$ in a declared automorphy-lifting setting]
+In an established $R=\T$ theorem, a localized deformation ring and a localized Hecke algebra are isomorphic as complete local rings.  The isomorphism identifies universal Frobenius traces with Hecke eigenvalues and converts a characteristic-zero point of the deformation ring into an automorphic eigensystem.
+\end{classicalinput}
+
+The paper does not re-prove those deep theorems.  It isolates the finite projector and support statements that explain what they do and what they still require.
+
+\section{Primary projectors and integral separation weights}
+
+The generalized-eigenspace projectors that occur in adequacy and local deformation theory are instances of one elementary primary decomposition theorem.
+
+\begin{theorem}[Bezout primary projectors]
+Let $A\in\End_K(V)$, where $K$ is a field, and suppose its minimal polynomial factors as
+\[
+m_A(X)=m_1(X)\cdots m_r(X)
+\]
+with the $m_i$ pairwise coprime.  Put $M_i=m_A/m_i$.  Choose $a_i,b_i\in K[X]$ such that
+\[
+a_i(X)M_i(X)+b_i(X)m_i(X)=1,
+\]
+and define
+\[
+E_i=a_i(A)M_i(A).
+\]
+Then
+\[
+E_i^2=E_i,
+\qquad
+E_iE_j=0\quad(i\neq j),
+\qquad
+\sum_{i=1}^rE_i=I,
+\]
+and
+\[
+\im E_i=\ker m_i(A).
+\]
+Consequently,
+\[
+V=\bigoplus_{i=1}^r\ker m_i(A).
+\]
+\end{theorem}
+
+\begin{proof}
+The Chinese remainder theorem gives
+\[
+K[X]/(m_A)
+\cong
+\prod_{i=1}^rK[X]/(m_i).
+\]
+The residue class of $a_iM_i$ is one in the $i$th factor and zero in every other factor.  Its classes are therefore pairwise orthogonal idempotents whose sum is one.  Evaluation at $A$ factors through $K[X]/(m_A)$, so the same identities hold for the $E_i$.  On $\ker m_i(A)$, the Bezout identity gives $E_i=I$; on $\ker m_j(A)$ with $j\neq i$, the factor $M_i$ contains $m_j$, so $E_i=0$.  Exact reconstruction follows.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.67\linewidth]{02_primary_projector_blocks.pdf}
+\caption{Three exact primary projectors resolve a five-dimensional operator into blocks of ranks $2$, $1$, and $2$.}
+\label{fig:primary-blocks}
+\end{figure}
+
+Over an integral coefficient ring, the same projectors may acquire denominators.  Those denominators measure how difficult it is to separate the packets integrally.
+
+\begin{proposition}[Resultant-controlled denominators]
+Let $m_i\in\Z[X]$ be monic and pairwise coprime over $\Q$.  For each $i$, there is a nonzero integer $d_i$ and polynomials $u_i,v_i\in\Z[X]$ such that
+\[
+u_iM_i+v_im_i=d_i.
+\]
+One may choose $d_i$ dividing a product of pairwise resultants involving $m_i$.  Hence
+\[
+E_i=\frac{u_i(A)M_i(A)}{d_i}
+\]
+is a rational primary projector, and the valuation of $d_i$ is an integral packet-separation weight.
+\end{proposition}
+
+\begin{proof}
+The resultant of two monic polynomials lies in their integral ideal and is nonzero precisely when they are coprime over $\Q$.  Combining the pairwise Bezout identities supplies an integer in the ideal $(M_i,m_i)$.  Division by that integer recovers the field-valued Chinese-remainder idempotent.  Its prime valuations record the denominators that must be inverted.
+\end{proof}
+
+\begin{numericalcertificate}[Exact primary decomposition]
+For the matrix with Jordan packets
+\[
+J_2(2),\qquad J_1(-1),\qquad J_2(3),
+\]
+the exact code obtains projector ranks
+\[
+(2,1,2),
+\]
+projector denominators
+\[
+(9,144,16),
+\]
+and pairwise resultant magnitudes
+\[
+(9,1,16).
+\]
+Every projector is exactly idempotent, the cross-products vanish, the sum is the identity, and all denominators divide the common resultant product $144$.
+\end{numericalcertificate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.73\linewidth]{03_resultant_denominator_weights.pdf}
+\caption{The rational projector denominators are controlled by the arithmetic separation of the primary factors.}
+\label{fig:resultant-weights}
+\end{figure}
+
+\section{A complete finite adequacy certificate}
+
+The adequacy definition is global representation-theoretic input, but its four conditions can be verified exactly in finite models.  The following example is deliberately small enough that every linear map can be inspected.
+
+Let $G=S_3$ and let $V$ be the standard two-dimensional representation over $\F_7$, obtained from the permutation representation on
+\[
+\{(x_1,x_2,x_3):x_1+x_2+x_3=0\}.
+\]
+In the basis
+\[
+v_1=(1,-1,0),
+\qquad
+v_2=(0,1,-1),
+\]
+a transposition and a three-cycle act by
+\[
+s=
+\begin{pmatrix}
+6&1\\
+0&1
+\end{pmatrix},
+\qquad
+t=
+\begin{pmatrix}
+0&6\\
+1&6
+\end{pmatrix}.
+\]
+The eigenvalues of $s$ are $1,6$, and those of $t$ are $2,4$, so the chosen field contains every eigenvalue.
+
+\begin{theorem}[Adequacy of the finite $S_3$ packet]
+The standard representation of $S_3$ over $\F_7$ is adequate.  More precisely:
+\[
+H^0(S_3,\ad^0V)=0,
+\qquad
+H^1(S_3,\F_7)=0,
+\qquad
+H^1(S_3,\ad^0V)=0,
+\]
+and
+\[
+\ad^0V\cong\operatorname{sgn}\oplus V.
+\]
+The sign packet is detected by a generalized eigenspace projector of a three-cycle, and the standard packet is detected by a generalized eigenspace projector of a transposition.
+\end{theorem}
+
+\begin{proof}
+The commutant of the standard representation consists only of scalar matrices, so the representation is absolutely irreducible.  The $S_3$-invariants of $\ad V$ are therefore the scalars.  Since $2$ is invertible in $\F_7$, the only trace-zero scalar is zero, proving the $H^0$ statement.
+
+Because $|S_3|=6$ is invertible in $\F_7$, the averaging operator contracts positive-degree group cochains.  Hence $H^1(S_3,M)=0$ for every $\F_7[S_3]$-module $M$, in particular for $M=\F_7$ and $M=\ad^0V$.
+
+The character of $\ad^0V$ has values $(3,-1,0)$ on the identity, transposition, and three-cycle classes.  This is the sum of the sign character $(1,-1,1)$ and the standard character $(2,0,-1)$, so
+\[
+\ad^0V\cong\operatorname{sgn}\oplus V.
+\]
+The exact central character projectors have ranks one and two.  For the sign packet, the three-cycle projector with eigenvalue $2$ pairs nontrivially with the witness vector $(2,3,4)$ in trace-zero matrix coordinates, giving trace pairing $3\in\F_7$.  For the standard packet, the transposition projector with eigenvalue $1$ pairs with $(6,4,3)$, giving trace pairing $1$.  Thus every irreducible adjoint packet is detected.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.67\linewidth]{04_adequacy_detection.pdf}
+\caption{The two irreducible trace-zero adjoint packets are detected by different generalized-eigenspace projectors.}
+\label{fig:adequacy-detection}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.66\linewidth]{05_adjoint_packet_decomposition.pdf}
+\caption{The trace-zero adjoint module contains no trivial packet and splits as a one-dimensional sign packet plus a two-dimensional standard packet.}
+\label{fig:ad0-split}
+\end{figure}
+
+\begin{remark}
+This finite theorem is an exact example of adequacy, not a new general adequacy criterion.  In an automorphy-lifting theorem, the actual residual image and coefficient field must satisfy the stated hypotheses.  The example demonstrates how the generalized-eigenspace condition becomes an explicit packet-detection calculation.
+\end{remark}
+
+\section{Local deformation packets and the global ring}
+
+Let $S$ be a finite set of places containing the places above $p$ and every ramified place.  For each $v\in S$, let $R_v$ represent a chosen local deformation condition.  The completed local coordinate ring is
+\[
+R_{\mathrm{loc}}
+=
+\widehat\bigotimes_{v\in S}R_v.
+\]
+A global deformation ring $R_{\Scal}$ receives the natural local map
+\[
+R_{\mathrm{loc}}\longrightarrow R_{\Scal}.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.83\linewidth]{06_local_global_deformation_packets.pdf}
+\caption{Local deformation packets are assembled into $R_{\mathrm{loc}}$; the remaining global equations define the global deformation ring.}
+\label{fig:local-global}
+\end{figure}
+
+Suppose one local Frobenius operator $A_v$ has pairwise coprime primary factors.  The projectors of the primary-projector theorem can be inserted into the local deformation module, and tensoring with the other local factors gives global packet projectors
+\[
+P_{v,i}
+=
+I\widehat\otimes\cdots\widehat\otimes E_{v,i}\widehat\otimes\cdots\widehat\otimes I.
+\]
+For a finite collection of such places, products of the commuting $P_{v,i}$ resolve the local-condition space into exact joint packets.
+
+\begin{proposition}[Local packet reconstruction]
+Let $M_{\mathrm{loc}}$ be a module over $R_{\mathrm{loc}}$, and suppose finitely many local operators admit complete commuting projector systems.  Then
+\[
+M_{\mathrm{loc}}
+=
+\bigoplus_{\alpha}P_\alpha M_{\mathrm{loc}},
+\qquad
+P_\alpha=\prod_vP_{v,\alpha_v}.
+\]
+Every $R_{\mathrm{loc}}$-linear operator $T$ has the exact block expansion
+\[
+T=\sum_{\alpha,\beta}P_\beta TP_\alpha.
+\]
+\end{proposition}
+
+\begin{proof}
+The local projectors commute because they act in different tensor factors.  Their products are pairwise orthogonal idempotents, and expanding the product of the local identities gives $\sum_\alpha P_\alpha=I$.  The operator expansion follows by inserting this identity on both sides of $T$.
+\end{proof}
+
+\begin{remark}
+A packet decomposition does not remove the global obstruction theory.  It localizes it.  When the global relation map preserves the packets, tangent and obstruction spaces split into smaller problems.  When it is filtered triangular, the weighted inverse calculus of Papers II and III organizes the correction paths.  An obstruction packet that remains outside the correction image is still a genuine obstruction.
+\end{remark}
+
+\section{Taylor--Wiles refinement as a group-algebra tower}
+
+Let $\Delta_N$ denote a finite auxiliary group at level $N$, and let
+\[
+\Lambda_N=\Ocal[\Delta_N].
+\]
+In the standard tower, the groups are quotients of a fixed pro-$p$ group, and their inverse limit produces a completed group algebra
+\[
+\Lambda=\varprojlim_N\Lambda_N.
+\]
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.74\linewidth]{07_taylor_wiles_tower.pdf}
+\caption{Finite auxiliary groups grow with the Taylor--Wiles level and approximate a completed group algebra.}
+\label{fig:tw-tower}
+\end{figure}
+
+The finite algebra behind this refinement is elementary and exact.
+
+\begin{theorem}[Quotient transfer for cyclic group algebras]
+Let $\Delta_{N+1}=C_{p^{N+1}}$ and $\Delta_N=C_{p^N}$, with quotient map $q_N:\Delta_{N+1}\to\Delta_N$.  The induced map
+\[
+q_{N,*}:\Ocal[\Delta_{N+1}]\longrightarrow\Ocal[\Delta_N]
+\]
+is given on coefficient vectors by summing over the $p$ elements of each fiber.  It is an algebra homomorphism, and the maps satisfy
+\[
+q_{N-1,*}q_{N,*}=q_{N-1,N+1,*}.
+\]
+The augmentation maps are compatible:
+\[
+\eps_Nq_{N,*}=\eps_{N+1}.
+\]
+\end{theorem}
+
+\begin{proof}
+The group quotient induces an algebra homomorphism by the universal property of the group algebra.  In the coefficient basis, every basis vector $[g]$ maps to $[q_N(g)]$, so coefficients with the same image add.  Functoriality of group quotients gives transitivity.  Since augmentation sends every group element to one, it is unchanged by the quotient.
+\end{proof}
+
+Let $\mathfrak a_N=\ker\eps_N$ be the augmentation ideal.
+
+\begin{theorem}[Exact coarse recovery by coinvariants]
+If
+\[
+M_N\cong\Lambda_N^r,
+\]
+then
+\[
+M_N/\mathfrak a_NM_N\cong\Ocal^r.
+\]
+More generally, base change along augmentation gives
+\[
+M_N\otimes_{\Lambda_N,\eps_N}\Ocal\cong\Ocal^r.
+\]
+\end{theorem}
+
+\begin{proof}
+For one free summand,
+\[
+\Lambda_N/\mathfrak a_N\cong\Ocal.
+\]
+Taking a direct sum of $r$ copies proves the statement.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{08_augmentation_coinvariants.pdf}
+\caption{The auxiliary group grows with refinement, while augmentation coinvariants recover the same coarse rank.}
+\label{fig:coinvariants}
+\end{figure}
+
+\begin{theorem}[Compatible free patching tower]
+Suppose the transition maps $\Lambda_{N+1}\to\Lambda_N$ are surjective and the modules $M_N$ have compatible chosen bases
+\[
+M_N\cong\Lambda_N^r.
+\]
+Then
+\[
+M_\infty:=\varprojlim_NM_N
+\cong
+\left(\varprojlim_N\Lambda_N\right)^r
+=\Lambda^r.
+\]
+Furthermore,
+\[
+M_\infty/\mathfrak aM_\infty\cong\Ocal^r,
+\]
+where $\mathfrak a=\ker(\Lambda\to\Ocal)$.
+\end{theorem}
+
+\begin{proof}
+The compatible bases identify every transition map on $M_N$ with the componentwise transition map on $\Lambda_N^r$.  Inverse limits commute with finite products, giving $M_\infty\cong\Lambda^r$.  Base change through the completed augmentation gives the final identity.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.77\linewidth]{09_patching_compatibility.pdf}
+\caption{Compatible free bases make every finite patching square commute and produce a free inverse-limit module.}
+\label{fig:patching-squares}
+\end{figure}
+
+\begin{numericalcertificate}[Odd and dyadic finite towers]
+The exact implementation constructs cyclic towers through orders $3^4$ and $2^5$, with two free module generators and coefficient rings modulo $3^5$ and $2^7$.  For every tested level it verifies:
+\[
+q_*(xy)=q_*(x)q_*(y),
+\qquad
+\eps q_* = \eps,
+\qquad
+q_*q_*=q_*,
+\]
+and obtains coinvariant dimension two at every level.  The calculation uses integer modular arithmetic only.
+\end{numericalcertificate}
+
+\section{Patching, full support, and what freeness means}
+
+The finite free tower explains the auxiliary coordinates.  The deep patching theorem supplies a module $M_\infty$ carrying compatible actions of a patched deformation ring $R_\infty$, a completed group algebra $\Lambda$, and a patched Hecke algebra.  The crucial module-theoretic question is support.
+
+\begin{definition}[Faithful packet carrier]
+Let $R$ be a commutative ring and $M$ an $R$-module.  The annihilator is
+\[
+\Ann_R(M)=\{r\in R:rM=0\}.
+\]
+The module is \emph{faithful} when $\Ann_R(M)=0$.  A central idempotent $e\in R$ is \emph{occupied} by $M$ when
+\[
+eM\neq0.
+\]
+\end{definition}
+
+\begin{theorem}[Faithfulness forces idempotent occupancy]
+Let $M$ be a faithful module over a commutative ring $R$.  Then every nonzero idempotent $e\in R$ is occupied:
+\[
+e\neq0
+\quad\Longrightarrow\quad
+eM\neq0.
+\]
+\end{theorem}
+
+\begin{proof}
+If $eM=0$, then $e\in\Ann_R(M)$.  Faithfulness forces $e=0$.
+\end{proof}
+
+\begin{corollary}[Component support]
+If a reduced ring decomposes as
+\[
+R=R_1\times\cdots\times R_s
+\]
+with coordinate idempotents $e_i$, then a faithful $R$-module has
+\[
+e_iM\neq0
+\]
+for every nonzero component $R_i$.
+\end{corollary}
+
+\begin{remark}
+Freeness over the auxiliary algebra and faithfulness over the deformation ring are different statements.  The first controls the added Taylor--Wiles directions.  The second prevents an arithmetic component from disappearing from the automorphic module.
+\end{remark}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\linewidth]{11_support_and_faithfulness.pdf}
+\caption{A faithful module occupies every component packet.  A nonfaithful module carries an explicit nonzero annihilator idempotent.}
+\label{fig:support}
+\end{figure}
+
+\section{\texorpdfstring{$R=\T$}{R equals T} as coordinate identification}
+
+An $R=\T$ theorem identifies arithmetic and Hecke coordinates.  The following elementary statement isolates exactly what a ring isomorphism transports.
+
+\begin{theorem}[Packet transport under a ring isomorphism]
+Let
+\[
+\varphi:R\stackrel{\sim}{\longrightarrow}T
+\]
+be a ring isomorphism.  Then:
+
+\begin{enumerate}
+\item $e\in R$ is an idempotent if and only if $\varphi(e)$ is an idempotent;
+\item orthogonal and complete families of idempotents are carried to orthogonal and complete families;
+\item for any $T$-module $M$, viewed as an $R$-module through $\varphi$,
+\[
+eM=\varphi(e)M;
+\]
+\item the annihilators correspond:
+\[
+\varphi(\Ann_RM)=\Ann_TM.
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Every statement follows by applying the ring homomorphism to the relevant multiplication or action identity.  Bijectivity supplies the converse statements.
+\end{proof}
+
+\begin{corollary}[$R=\T$ plus faithfulness]
+If $R\cong\T$ and the localized automorphic module is faithful over $\T$, then every nonzero arithmetic component idempotent corresponds to a nonzero occupied Hecke packet.
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.76\linewidth]{10_rt_coordinate_identification.pdf}
+\caption{$R=\T$ transports packet coordinates.  Faithfulness, not the isomorphism alone, forces nonzero packet support.}
+\label{fig:rt-square}
+\end{figure}
+
+\begin{proposition}[A quotient can erase packets]
+Let $R=R_1\times R_2$ and let $T=R_1$ be the quotient that forgets the second factor.  Then the nonzero idempotent
+\[
+e_2=(0,1)
+\]
+maps to zero.  Therefore a surjection $R\twoheadrightarrow T$ does not by itself prove occupancy of every arithmetic component.
+\end{proposition}
+
+\begin{proof}
+The kernel is $0\times R_2$, so $e_2$ is annihilated.
+\end{proof}
+
+\begin{numericalcertificate}[Support transport and negative control]
+In the five-component product model, an isomorphism permuting the factors preserves the occupancy of every central idempotent.  A faithful module has multiplicities
+\[
+(2,1,3,1,2).
+\]
+The nonfaithful control
+\[
+(2,0,3,0,1)
+\]
+has annihilator idempotent
+\[
+(0,1,0,1,0),
+\]
+which is nonzero but acts as zero.  A quotient retaining only three factors deletes the other two packets exactly.
+\end{numericalcertificate}
+
+\section{Finite Hecke occupancy and the compactness theorem}
+
+Let $V$ be a fixed finite-dimensional automorphic carrier, and let
+\[
+T_1,T_2,\ldots
+\]
+be commuting semisimple Hecke operators.  For a desired eigenvalue $a_i$ of $T_i$, let
+\[
+e_i
+=
+\prod_{\mu\in\Spec(T_i)\setminus\{a_i\}}
+\frac{T_i-\mu I}{a_i-\mu}
+\]
+be the spectral projector, with $e_i=0$ when $a_i$ is absent.  Define the finite joint packet
+\[
+E_m=e_1e_2\cdots e_m,
+\qquad
+V_m=E_mV.
+\]
+
+\begin{theorem}[Finite-carrier occupancy]
+Suppose $V$ is finite-dimensional.  Then the following are equivalent:
+
+\begin{enumerate}
+\item $V_m\neq0$ for every $m$;
+\item the nested ranks satisfy $\rank E_m>0$ for every $m$;
+\item the total joint packet is nonzero:
+\[
+\bigcap_{m\ge1}V_m\neq0.
+\]
+\end{enumerate}
+
+Moreover, if these conditions hold, the descending sequence stabilizes after finitely many steps.
+\end{theorem}
+
+\begin{proof}
+The equivalence of the first two statements is immediate.  Since the projectors commute,
+\[
+V_{m+1}\subseteq V_m.
+\]
+The dimensions form a nonincreasing sequence of nonnegative integers.  If every $V_m$ is nonzero, the dimensions eventually stabilize at a positive integer.  Once
+\[
+\dim V_{m+1}=\dim V_m
+\]
+for nested subspaces, equality follows.  Hence the sequence is eventually constant, and its total intersection is that nonzero stable subspace.  The converse is immediate.
+\end{proof}
+
+\begin{corollary}[Positive trace criterion]
+Under the same hypotheses,
+\[
+\Tr(E_m)=\rank(E_m)\in\Z_{\ge0}.
+\]
+The infinite packet is occupied if and only if
+\[
+\boxed{\Tr(E_m)>0\quad\text{for every finite refinement }m.}
+\]
+\end{corollary}
+
+\begin{proof}
+An idempotent is diagonalizable with eigenvalues zero and one, so its trace equals its rank.  Apply the theorem.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.73\linewidth]{12_finite_occupancy_staircase.pdf}
+\caption{Consistent Hecke conditions reduce the carrier to one stable vector.  One incompatible condition makes the joint projector zero at a finite stage.}
+\label{fig:occupancy-staircase}
+\end{figure}
+
+\begin{numericalcertificate}[Finite packet ranks]
+The twelve-dimensional test carrier has joint ranks
+\[
+7,
+\ 4,
+\ 3,
+\ 2,
+\ 1,
+\ 1.
+\]
+Every projector is exactly idempotent and the commutator residual is zero.  An inconsistent final eigenvalue has rank zero.
+\end{numericalcertificate}
+
+The finite-dimensional hypothesis cannot simply be removed.
+
+\begin{example}[Escape to infinity]
+In $\ell^2(\mathbf N)$, let $P_m$ project onto
+\[
+\overline{\operatorname{span}}\{e_m,e_{m+1},\ldots\}.
+\]
+Every finite intersection is nonzero:
+\[
+P_1P_2\cdots P_m=P_m\neq0.
+\]
+Nevertheless,
+\[
+\bigcap_{m\ge1}\im P_m=\{0\}.
+\]
+Thus finite-stage positivity requires a finite-dimensional carrier, compactness, a Mittag--Leffler condition, or another nonescape theorem before it implies total occupancy.
+\end{example}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.73\linewidth]{13_infinite_tail_escape.pdf}
+\caption{Finite truncations of tail packets remain nonzero while the limiting intersection in $\ell^2$ is zero.}
+\label{fig:tail-escape}
+\end{figure}
+
+\section{Compatible systems and one-member propagation}
+
+Paper X separated coefficient-prime realizations from the prime-independent Frobenius spine.  The system seed is written schematically as
+\[
+\mathfrak S_{\mathrm{sys}}
+=
+\mathfrak S_2^{\mathrm{wt}}
+\times_{\mathfrak C}
+\prod_{\lambda\nmid2}'\mathfrak S_\lambda,
+\]
+where $\mathfrak C$ records common Frobenius polynomials, weights, determinants, and local Weil--Deligne data.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.77\linewidth]{14_compatible_system_spine.pdf}
+\caption{The coefficient-prime representations are local coordinate realizations of one algebraic Frobenius spine.}
+\label{fig:system-spine}
+\end{figure}
+
+\begin{theorem}[One-member propagation in a fixed compatible system]
+Let
+\[
+\{\rho_\lambda\}_\lambda
+\]
+be a semisimple strictly compatible system over a number field $M$.  Suppose an algebraic cuspidal automorphic representation $\pi$ has an associated compatible system
+\[
+\{r_\lambda(\pi)\}_\lambda
+\]
+and that for one coefficient prime $\lambda_0$,
+\[
+\rho_{\lambda_0}\cong r_{\lambda_0}(\pi).
+\]
+Then for every $\lambda$,
+\[
+\rho_\lambda\cong r_\lambda(\pi).
+\]
+\end{theorem}
+
+\begin{proof}
+At every unramified place outside the common finite exceptional set, equality at $\lambda_0$ gives equality of the characteristic polynomials of Frobenius.  Strict compatibility makes these polynomials independent of $\lambda$, so the same equality holds at every coefficient prime.  Chebotarev density and Brauer--Nesbitt identify the semisimplifications.  The systems are semisimple, so the members are isomorphic.
+\end{proof}
+
+This theorem propagates an existing automorphic member.  It does not prove that a compatible system exists around an arbitrary geometric representation, and it does not produce the first automorphic member.
+
+\begin{theorem}[Finite companion obstruction]
+Suppose a proposed compatible-system forest has finite level sets $X_m$ with transition maps
+\[
+X_{m+1}\longrightarrow X_m.
+\]
+If some $X_m$ is empty, then there is no complete compatible branch.  If every $X_m$ is nonempty, the forest is finitely branching, and every finite node extends to arbitrarily large depth, then an infinite compatible branch exists.
+\end{theorem}
+
+\begin{proof}
+An infinite branch would have a point at every depth, so an empty level is impossible.  Under the second set of assumptions, the nested finite tree has nodes at every depth; finite-branch compactness gives an infinite path.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.73\linewidth]{15_companion_level_obstruction.pdf}
+\caption{A populated finite companion forest can continue; one empty level is a complete obstruction to the inverse limit.}
+\label{fig:companion-obstruction}
+\end{figure}
+
+\begin{numericalcertificate}[Frobenius carrier recovery]
+Three semisimple constituents are sampled at four Frobenius places.  Exact rational elimination recovers the multiplicity vector
+\[
+(2,0,1)
+\]
+from the trace vector.  A separate companion model verifies that the level counts
+\[
+(3,3,2,2,1,1)
+\]
+remain populated, whereas
+\[
+(3,2,0,0,0,0)
+\]
+is obstructed at its third level.
+\end{numericalcertificate}
+
+\section{The weighted dyadic correction}
+
+The coefficient prime two is not a formal substitution into an odd-prime automorphy-lifting theorem.  Several common splittings use denominators that cease to be units at two, and many standard image hypotheses explicitly require $p>2$ or $p\nmid n$.
+
+Consider the involution
+\[
+A=
+\begin{pmatrix}
+0&1\\
+1&0
+\end{pmatrix}.
+\]
+Over $\Q_2$ its sign projectors are
+\[
+E_+=\frac{I+A}{2},
+\qquad
+E_-=\frac{I-A}{2}.
+\]
+Their entries contain $1/2$, so they do not preserve the standard $\Z_2$-lattice.  The characteristic roots $1$ and $-1$ coincide modulo $2$ and first separate modulo $4$.
+
+\begin{proposition}[Dyadic separation weight]
+For the two signs,
+\[
+w_2(+,-)
+=
+\min\{m\ge1:1\not\equiv-1\pmod{2^m}\}
+=2.
+\]
+At an odd prime, $2$ is a unit and the same formal projectors are integral.
+\end{proposition}
+
+\begin{proof}
+The difference is two.  It is divisible by $2$ but not by $4$.  At an odd prime, division by two is allowed.
+\end{proof}
+
+\begin{theorem}[Augmentation survives at coefficient prime two]
+Let $\Delta_N$ be a finite $2$-group and $\Lambda_N=\Z_2[\Delta_N]$.  Even when nontrivial character idempotents are not integral, the augmentation map
+\[
+\eps_N:\Lambda_N\to\Z_2
+\]
+and its ideal $\mathfrak a_N$ are integral.  Hence for every free module $M_N\cong\Lambda_N^r$,
+\[
+M_N/\mathfrak a_NM_N\cong\Z_2^r.
+\]
+\end{theorem}
+
+\begin{proof}
+Augmentation is defined by sending every group element to one and involves no division.  The free-module quotient is the argument of the coinvariant theorem.
+\end{proof}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.73\linewidth]{16_weighted_dyadic_refinement.pdf}
+\caption{The dyadic theory retains augmentation coordinates but records delayed spectral separation and cumulative path weights.}
+\label{fig:dyadic-refinement}
+\end{figure}
+
+The corrected dyadic hypotheses for a global theorem must therefore state explicitly:
+
+\begin{enumerate}
+\item which integral local deformation conditions replace the odd-prime smoothness assumptions;
+\item how merged residual packets separate at higher depth;
+\item which rational projectors carry denominator weights;
+\item which patching and support theorem is available without semisimple character idempotents;
+\item how trace-zero and scalar directions are separated when division by $n$ is unavailable.
+\end{enumerate}
+
+This paper supplies finite weighted models and the integral augmentation theorem.  It does not prove a universal coefficient-prime-two automorphy-lifting theorem.
+
+\section{The conditional global completion theorem}
+
+The preceding results make it possible to state the final implication without hiding any missing existence statement.
+
+\begin{theorem}[Conditional global seed completion]
+Let $\mathscr C$ be a declared class of irreducible geometric Galois representations.  Assume the following eight statements.
+
+\begin{enumerate}
+\item \textbf{Exhaustive residual forest.} Every $\rho\in\mathscr C$ has exactly one residual root in a represented admissible residual forest.
+\item \textbf{Companion completion.} Every required coefficient-prime and finite-depth companion packet is nonempty, finitely branching, compatible under reduction, and closed under inverse limits.
+\item \textbf{Residual occupancy.} Every source component of the residual transport category contains an automorphic residual seed, and occupancy propagates along every declared transport.
+\item \textbf{Local deformation control.} The local deformation conditions are represented and their tangent, obstruction, and component packets are controlled through all depths, including a separately stated weighted dyadic theory at coefficient prime two.
+\item \textbf{Patching with full support.} Suitable Taylor--Wiles data exist; the patched module is finite free over the completed auxiliary algebra and faithful, or has full support, over the required patched deformation components.
+\item \textbf{Coordinate identification.} On every target component, the arithmetic and Hecke coordinates are identified by the required $R=\T$ theorem.
+\item \textbf{Finite Hecke occupancy.} Every finite refinement of the target local and unramified Hecke data has positive projector trace in one fixed finite-dimensional classical carrier.
+\item \textbf{Realization.} Local--global compatibility and classicality identify the occupied Hecke eigensystem with a cuspidal algebraic automorphic representation having the prescribed local Weil--Deligne and Hodge data.
+\end{enumerate}
+
+Then every $\rho\in\mathscr C$ is automorphic.
+\end{theorem}
+
+\begin{proof}
+Choose $\rho\in\mathscr C$.  Hypotheses 1 and 2 place it on a complete branch of the universal system forest.  Hypothesis 3 supplies an automorphic residual seed in its transport source component and carries occupancy to the required residual root.  Hypothesis 4 identifies the correct local deformation packets and controls all positive-depth lifting obstructions.  Hypothesis 5 patches the finite levels into a module whose support contains the target arithmetic component.  By Hypothesis 6, that arithmetic component is the corresponding Hecke component.  Hypothesis 7 and the finite-carrier occupancy theorem produce a nonzero simultaneous Hecke vector satisfying every required finite condition.  Hypothesis 8 converts that vector into a cuspidal algebraic automorphic representation and identifies its Galois representation with $\rho$ by the common Frobenius and local compatibility data.
+\end{proof}
+
+\begin{corollary}[Where unrestricted reciprocity remains]
+Within the declared class, unrestricted reciprocity follows once the eight hypotheses are proved uniformly.  The theorem itself does not prove universal companion existence, residual occupancy, full-support patching, positive Hecke traces, or a coefficient-prime-two replacement for the usual hypotheses.
+\end{corollary}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{17_proof_status_boundary.pdf}
+\caption{Finite theorems and classical inputs surround a smaller set of final universal existence and nonvanishing problems.}
+\label{fig:status-boundary}
+\end{figure}
+
+\section{Numerical certificates}
+
+All calculations in this paper are CPU-based.  No GPU result is claimed.  Exact integer, rational, symbolic, and modular arithmetic is used until figures are rendered.
+
+\subsection{Primary and adequate packets}
+
+\begin{center}
+\input{results/primary_projector_table.tex}
+\end{center}
+
+\begin{center}
+\input{results/adequacy_table.tex}
+\end{center}
+
+The $S_3$ certificate computes the complete group law, the commutant, the $H^0$ and $H^1$ dimensions, the central adjoint projectors, and the generalized-eigenspace detection functionals.  No floating-point calculation enters the adequacy verdict.
+
+\subsection{Patching tower}
+
+\begin{center}
+\resizebox{0.88\linewidth}{!}{\input{results/patching_table.tex}}
+\end{center}
+
+At every displayed odd and dyadic level, quotient transfer is an exact algebra homomorphism, the reduction squares commute, augmentation is preserved, and the coinvariant rank equals the free module rank.
+
+\subsection{Final occupancy}
+
+\begin{center}
+\input{results/occupancy_table.tex}
+\end{center}
+
+The consistent packet stabilizes at rank one.  The inconsistent control reaches zero at a finite stage, as the finite-dimensional theorem requires.
+
+\begin{numericalcertificate}[Automated suite]
+The release contains
+\[
+\boxed{34\text{ automated tests},}
+\]
+and every test passes.  They cover exact primary projectors, resultant weights, all four finite adequacy conditions, group-algebra quotient maps, augmentation ideals, odd and dyadic patching towers, support transport, finite occupancy, the infinite-tail negative control, compatible-carrier recovery, companion obstruction, and dyadic separation.
+\end{numericalcertificate}
+
+\section{Claim ledger}
+
+\begin{longtable}{p{0.42\linewidth}p{0.18\linewidth}p{0.32\linewidth}}
+\toprule
+Statement & Status & Scope or boundary\\
+\midrule
+\endfirsthead
+\toprule
+Statement & Status & Scope or boundary\\
+\midrule
+\endhead
+Bezout primary projectors & proved & pairwise coprime primary factors over a field\\
+Resultant denominator weights & proved & integral factors; weight controls rational projector denominators\\
+Finite $S_3/\F_7$ adequacy certificate & proved/computed & one exact finite residual-image model\\
+Adequacy-based automorphy lifting & classical input & only under the hypotheses of the imported theorem\\
+Local deformation rings and obstruction theory & classical input & one fixed residual root and declared local conditions\\
+Taylor--Wiles--Kisin patching & classical input & ambient global theorem, not reconstructed from finite code\\
+Finite group-algebra quotient and augmentation laws & proved & cyclic $p$-power models; free modules\\
+Compatible free inverse-limit tower & proved & compatible chosen bases and surjective transition maps\\
+Faithfulness implies idempotent occupancy & proved & any commutative ring and faithful module\\
+$R=\T$ packet transport & proved abstractly & assumes an existing ring isomorphism\\
+Established $R=\T$ theorems & classical input & only in their stated arithmetic settings\\
+Finite-carrier positive-trace criterion & proved & one fixed finite-dimensional commuting semisimple carrier\\
+Infinite-tail counterexample & proved & shows compactness cannot be omitted\\
+One-member compatible-system propagation & proved under hypotheses & strict compatibility, semisimplicity, existing automorphic system\\
+Finite companion obstruction & proved & one empty level prevents inverse-limit completion\\
+Weighted dyadic separation and augmentation & proved & finite coordinate statements; not a universal dyadic automorphy theorem\\
+Universal residual companion existence & not proved & zeroth-order arithmetic existence problem\\
+Universal positive Hecke occupancy & not proved & requires $\Tr(E_T)>0$ for all finite target packets\\
+Unrestricted global reciprocity & not proved & follows only after all hypotheses of the conditional theorem are established\\
+\bottomrule
+\end{longtable}
+
+\section{Conclusion}
+
+The final global coordinate system is now explicit:
+\[
+\boxed{
+\begin{aligned}
+\text{residual forest}
+&\longrightarrow
+\text{local deformation packets}
+\longrightarrow
+\text{Taylor--Wiles refinement},\\
+&\longrightarrow
+\text{patched full-support module}
+\longrightarrow
+R=\T,\\
+&\longrightarrow
+\text{positive finite Hecke traces}
+\longrightarrow
+\text{global automorphic object}.
+\end{aligned}}
+\]
+
+Each arrow has a different mathematical role.  Adequate projectors detect residual adjoint directions.  Deformation rings integrate positive-depth perturbations.  Auxiliary group algebras supply refinement coordinates.  Patching turns compatible finite levels into a completed module.  $R=\T$ identifies arithmetic and Hecke coordinates.  Faithfulness prevents component loss.  Positive finite projector traces prove that the desired eigensystem is actually occupied.  Local--global compatibility and classicality perform the final reconstruction.
+
+The framework therefore reaches a precise stopping point rather than an ambiguous near-proof.  The remaining global statements are not additional formal manipulations of the same seed.  They are two existence problems:
+\[
+\boxed{
+\begin{aligned}
+\text{completion: }&
+\text{populate every required residual and companion packet};\\
+\text{occupancy: }&
+\text{prove positive trace for every required finite Hecke packet}.
+\end{aligned}}
+\]
+
+Solving those problems uniformly, together with the required dyadic, patching, local--global, and classicality theorems, would complete the declared global correspondence.  The present paper proves the packet algebra surrounding that boundary and leaves the boundary visible.
+
+\appendix
+\section{Reproducibility and file map}
+
+From the release directory, the finite experiment and test sequence is
+
+\begin{lstlisting}[language={}]
+python -m pytest -q
+python scripts/generate_all.py
+python scripts/scrub_assets.py
+python scripts/make_contact_sheets.py figures Figure_Contact_Sheet.png --columns 4 --width 520
+python -m pip wheel . --no-deps --no-build-isolation -w dist
+latexmk -pdf -interaction=nonstopmode -halt-on-error Projector_Resolved_Seed_Calculus_XII.tex
+python scripts/scrub_pdf_metadata.py Projector_Resolved_Seed_Calculus_XII.pdf --title "Projector-Resolved Seed Calculus XII" --subject "Global seed completion, adequate projectors, Taylor-Wiles packet refinement, R equals T, and final Hecke occupancy"
+\end{lstlisting}
+
+The PowerShell runner performs the same steps, installs only missing packages unless the explicit \texttt{-Update} switch is supplied, and may skip PDF compilation with \texttt{-SkipPdf}.
+
+The main files are:
+
+\begin{center}
+\small
+\begin{tabularx}{0.96\linewidth}{>{\raggedright\arraybackslash}p{0.47\linewidth}X}
+\toprule
+\path{Projector_Resolved_Seed_Calculus_XII.tex} & complete paper source \\
+\path{projector_seed_global_completion/} & exact finite algebra, adequacy, patching, support, occupancy, compatible-system, and dyadic code \\
+\path{tests/} & automated regression and theorem-certificate tests \\
+\path{results/global_completion_results.json} & machine-readable result and claim ledger \\
+\path{tables/} & exact CSV summaries used by the paper \\
+\path{figures/} & Python-generated PNG and vector-PDF figure pairs \\
+\path{Source_and_Claim_Map.md} & source roles and proof boundary \\
+\path{Verification_Notes.md} & build, metadata, render, archive, and wheel audit \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\end{document}

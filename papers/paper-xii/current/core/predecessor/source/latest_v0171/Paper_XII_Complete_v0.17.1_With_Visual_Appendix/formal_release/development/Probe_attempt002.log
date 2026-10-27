@@ -1,0 +1,51 @@
+UniformSpace.Completion.continuous_extension.{u_1, u_2} {α : Type u_1} [UniformSpace α] {β : Type u_2} [UniformSpace β]
+  {f : α → β} [CompleteSpace β] : Continuous (Completion.extension f)
+UniformSpace.Completion.uniformContinuous_extension.{u_1, u_2} {α : Type u_1} [UniformSpace α] {β : Type u_2}
+  [UniformSpace β] {f : α → β} [CompleteSpace β] : UniformContinuous (Completion.extension f)
+QuotientAddGroup.completeSpace_right.{u_1} (G : Type u_1) [AddGroup G] [us : UniformSpace G] [IsRightUniformAddGroup G]
+  [FirstCountableTopology G] (N : AddSubgroup G) [N.Normal] [hG : CompleteSpace G] : CompleteSpace (G ⧸ N)
+QuotientAddGroup.instT1Space.{u_1} {G : Type u_1} [TopologicalSpace G] [AddGroup G] [SeparatelyContinuousAdd G]
+  {N : AddSubgroup G} [hN : IsClosed ↑N] : T1Space (G ⧸ N)
+QuotientAddGroup.instT3Space.{u_1} {G : Type u_1} [TopologicalSpace G] [AddGroup G] [IsTopologicalAddGroup G]
+  (N : AddSubgroup G) [N.Normal] [hN : IsClosed ↑N] : T3Space (G ⧸ N)
+UniformSpace.Completion.denseRange_coe.{u_1} {α : Type u_1} [UniformSpace α] : DenseRange Completion.coe'
+CauchyFilter.basis_uniformity.{u, u_1} {α : Type u} [UniformSpace α] {ι : Sort u_1} {p : ι → Prop} {s : ι → SetRel α α}
+  (h : (𝓤 α).HasBasis p s) : (𝓤 (CauchyFilter α)).HasBasis p (CauchyFilter.gen ∘ s)
+SeparationQuotient.uniformity_eq.{u} {α : Type u} [UniformSpace α] :
+  𝓤 (SeparationQuotient α) = map (Prod.map SeparationQuotient.mk SeparationQuotient.mk) (𝓤 α)
+Filter.HasCountableBasis.isCountablyGenerated.{u_1, u_3} {α : Type u_1} {ι : Type u_3} {f : Filter α} {p : ι → Prop}
+  {s : ι → Set α} (h : f.HasCountableBasis p s) : f.IsCountablyGenerated
+Filter.HasBasis.isCountablyGenerated.{u_1, u_3} {α : Type u_1} {ι : Type u_3} [Countable ι] {f : Filter α}
+  {p : ι → Prop} {s : ι → Set α} (h : f.HasBasis p s) : f.IsCountablyGenerated
+Filter.isCountablyGenerated_iff_exists_antitone_basis.{u_1} {α : Type u_1} {f : Filter α} :
+  f.IsCountablyGenerated ↔ ∃ x, f.HasAntitoneBasis x
+IsTopologicalAddGroup.rightUniformSpace.{u_1} (G : Type u_1) [AddGroup G] [TopologicalSpace G]
+  [IsTopologicalAddGroup G] : UniformSpace G
+isUniformAddGroup_of_addCommGroup.{u_1} {G : Type u_1} [AddCommGroup G] [TopologicalSpace G] [IsTopologicalAddGroup G] :
+  IsUniformAddGroup G
+UniformSpace.Completion.isDenseInducing_coe.{u_1} {α : Type u_1} [UniformSpace α] : IsDenseInducing Completion.coe'
+UniformSpace.Completion.extensionHom_coe.{u, u_1} {α : Type u_1} [Ring α] [UniformSpace α] [IsTopologicalRing α]
+  [IsUniformAddGroup α] {β : Type u} [UniformSpace β] [Ring β] [IsUniformAddGroup β] [IsTopologicalRing β] (f : α →+* β)
+  (hf : Continuous ⇑f) [CompleteSpace β] [T0Space β] (a : α) : (Completion.extensionHom f hf) ↑a = f a
+Ideal.map_le_iff_le_comap.{u, v, u_1} {R : Type u} {S : Type v} {F : Type u_1} [Semiring R] [Semiring S] [FunLike F R S]
+  {f : F} {I : Ideal R} {K : Ideal S} [RingHomClass F R S] : Ideal.map f I ≤ K ↔ I ≤ Ideal.comap f K
+Ideal.Quotient.ringHom_ext.{u, v} {R : Type u} [Ring R] {I : Ideal R} {S : Type v} [I.IsTwoSided] [NonAssocSemiring S]
+  ⦃f g : R ⧸ I →+* S⦄ (h : f.comp (Ideal.Quotient.mk I) = g.comp (Ideal.Quotient.mk I)) : f = g
+RingHom.ker.{u, v, u_1} {R : Type u} {S : Type v} {F : Type u_1} [Semiring R] [Semiring S] [FunLike F R S]
+  [rcf : RingHomClass F R S] (f : F) : Ideal R
+RingHom.ext.{u_2, u_3} {α : Type u_2} {β : Type u_3} {x✝ : NonAssocSemiring α} {x✝¹ : NonAssocSemiring β}
+  ⦃f g : α →+* β⦄ : (∀ (x : α), f x = g x) → f = g
+RingEquiv.ofRingHom.{u_4, u_5} {R : Type u_4} {S : Type u_5} [NonAssocSemiring R] [NonAssocSemiring S] (f : R →+* S)
+  (g : S →+* R) (h₁ : f.comp g = RingHom.id S) (h₂ : g.comp f = RingHom.id R) : R ≃+* S
+/mnt/data/xii_completion_work/lean/Probe.lean:29:40: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  FirstCountableTopology (Completion R)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+/mnt/data/xii_completion_work/lean/Probe.lean:41:1: error: Try this: 
+  haveI̵
+
+The goal is a proposition, so `have` is preferred over `haveI`.
+The difference between `have` and `haveI` is that `haveI` inlines the value.
+But this is not relevant for proofs because of proof irrelevance.
+
+Note: This linter can be disabled with `set_option linter.style.haveILetI false`

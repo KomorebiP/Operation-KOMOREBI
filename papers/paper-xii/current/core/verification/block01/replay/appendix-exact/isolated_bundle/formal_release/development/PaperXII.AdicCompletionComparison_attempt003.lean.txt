@@ -1,0 +1,102 @@
+import PaperXII.AdicQuotientTopology
+import Mathlib.RingTheory.AdicCompletion.LocalRing
+
+/-!
+# Comparison with the actual algebraic adic completion
+
+The inverse-limit completion is proved to be a completion of the same uniform
+space. Density and the inducing property are proved from actual residue maps;
+no completion package is supplied as an assumption.
+-/
+noncomputable section
+open Filter Topology UniformSpace
+open scoped Uniformity
+set_option autoImplicit false
+namespace PaperXII.AdicModel
+
+variable {R : Type*} [CommRing R] (I : Ideal R)
+
+abbrev AlgebraicTarget := Carrier (AdicCompletion I R)
+  (I.map (algebraMap R (AdicCompletion I R)))
+
+def intoAlgebraic : Carrier R I →+* AlgebraicTarget I :=
+  ((rawEquiv _ _).symm.toRingHom.comp (algebraMap R (AdicCompletion I R))).comp
+    (rawEquiv R I).toRingHom
+
+theorem algebraicTarget_complete (fg : I.FG) : CompleteSpace (AlgebraicTarget I) := by
+  have h : IsAdicComplete (WithIdeal.i : Ideal (AlgebraicTarget I)) (AlgebraicTarget I) :=
+    AdicCompletion.isAdicComplete_self I fg
+  exact ((carrier_isAdic _ _).isAdicComplete_iff.mp h).1
+
+theorem algebraicTarget_t2 (fg : I.FG) : T2Space (AlgebraicTarget I) := by
+  have h : IsAdicComplete (WithIdeal.i : Ideal (AlgebraicTarget I)) (AlgebraicTarget I) :=
+    AdicCompletion.isAdicComplete_self I fg
+  exact ((carrier_isAdic _ _).isAdicComplete_iff.mp h).2
+
+/-- Powers of the actual extended ideal are exactly residue-evaluation kernels. -/
+theorem algebraic_mem_power_iff (fg : I.FG) (n : ℕ) (x : AdicCompletion I R) :
+    x ∈ (I.map (algebraMap R (AdicCompletion I R))) ^ n ↔
+      AdicCompletion.eval I R n x = 0 := by
+  rw [← Ideal.map_pow, ← Submodule.restrictScalars_mem R, ← Ideal.smul_top_eq_map,
+    AdicCompletion.pow_smul_top_eq_ker_eval fg, LinearMap.mem_ker]
+
+/-- Inverse images of every ideal power are computed, not postulated. -/
+theorem intoAlgebraic_power_iff (fg : I.FG) (n : ℕ) (x : Carrier R I) :
+    intoAlgebraic I x ∈ (WithIdeal.i : Ideal (AlgebraicTarget I)) ^ n ↔
+      x ∈ (WithIdeal.i : Ideal (Carrier R I)) ^ n := by
+  change algebraMap R (AdicCompletion I R) (rawEquiv R I x) ∈
+    (I.map (algebraMap R (AdicCompletion I R))) ^ n ↔ rawEquiv R I x ∈ I ^ n
+  rw [algebraic_mem_power_iff I fg]
+  change AdicCompletion.eval I R n (AdicCompletion.of I R (rawEquiv R I x)) = 0 ↔ _
+  rw [AdicCompletion.eval_of]
+  simp [Ideal.Quotient.eq_zero_iff_mem, Ideal.mul_top]
+
+/-- The canonical map induces the exact original adic uniformity. -/
+theorem intoAlgebraic_isUniformInducing (fg : I.FG) : IsUniformInducing (intoAlgebraic I) := by
+  rw [(carrier_isAdic R I).hasBasis_nhds_zero.uniformity_of_nhds_zero.isUniformInducing_iff
+    (carrier_isAdic _ _).hasBasis_nhds_zero.uniformity_of_nhds_zero]
+  constructor
+  · intro n _
+    refine ⟨n, trivial, ?_⟩
+    intro x y hxy
+    change intoAlgebraic I y - intoAlgebraic I x ∈ (WithIdeal.i : Ideal (AlgebraicTarget I)) ^ n
+    rw [← map_sub]
+    exact (intoAlgebraic_power_iff I fg n (y - x)).mpr hxy
+  · intro n _
+    refine ⟨n, trivial, ?_⟩
+    intro x y hxy
+    change intoAlgebraic I y - intoAlgebraic I x ∈ (WithIdeal.i : Ideal (AlgebraicTarget I)) ^ n at hxy
+    rw [← map_sub] at hxy
+    exact (intoAlgebraic_power_iff I fg n (y - x)).mp hxy
+
+/-- Every residue class in the completion has an actual original representative. -/
+theorem intoAlgebraic_dense (fg : I.FG) : DenseRange (intoAlgebraic I) := by
+  rw [DenseRange, dense_iff_inter_open]
+  intro U hU hne
+  obtain ⟨x, hx⟩ := hne
+  obtain ⟨n, _, hn⟩ := (carrier_isAdic _ _).hasBasis_nhds x |>.mem_iff.mp (hU.mem_nhds hx)
+  obtain ⟨r, hr⟩ := Submodule.Quotient.mk_surjective _
+    (AdicCompletion.eval I R n (rawEquiv _ _ x))
+  let y : AlgebraicTarget I := intoAlgebraic I ((rawEquiv R I).symm r)
+  have hdiff : y - x ∈ (WithIdeal.i : Ideal (AlgebraicTarget I)) ^ n := by
+    change algebraMap R (AdicCompletion I R) r - rawEquiv _ _ x ∈
+      (I.map (algebraMap R (AdicCompletion I R))) ^ n
+    rw [algebraic_mem_power_iff I fg]
+    change AdicCompletion.eval I R n (AdicCompletion.of I R r - rawEquiv _ _ x) = 0
+    rw [map_sub, AdicCompletion.eval_of]
+    exact sub_eq_zero.mpr hr
+  refine ⟨y, ?_, ⟨(rawEquiv R I).symm r, rfl⟩⟩
+  apply hn
+  exact ⟨y - x, hdiff, add_sub_cancel _ _⟩
+
+/-- An abstract package constructed from the actual algebraic completion. -/
+def algebraicPackage (fg : I.FG) : AbstractCompletion (Carrier R I) where
+  space := AlgebraicTarget I
+  coe := intoAlgebraic I
+  uniformStruct := inferInstance
+  complete := algebraicTarget_complete I fg
+  separation := by have := algebraicTarget_t2 I fg; infer_instance
+  isUniformInducing := intoAlgebraic_isUniformInducing I fg
+  dense := intoAlgebraic_dense I fg
+
+end PaperXII.AdicModel

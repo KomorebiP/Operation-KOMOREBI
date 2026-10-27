@@ -1,0 +1,53 @@
+/mnt/data/xii_completion_work/lean/PaperXII/AdicCompletionComparison.lean:46:53: error: unsolved goals
+R : Type u_1
+inst✝ : CommRing R
+I : Ideal R
+fg : I.FG
+n : ℕ
+x : Carrier R I
+⊢ (AdicCompletion.eval I R n) ((AdicCompletion.of I R) ((rawEquiv R I) x)) = 0 ↔ (rawEquiv R I) x ∈ I ^ n
+/mnt/data/xii_completion_work/lean/PaperXII/AdicCompletionComparison.lean:50:41: error: This simp argument is unused:
+  AdicCompletion.eval_of
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [AdicCompletion.algebraMap_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/mnt/data/xii_completion_work/lean/PaperXII/AdicCompletionComparison.lean:81:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  @Membership.mem (AdicCompletion I R) (Ideal (AdicCompletion I R)) SetLike.instMembership
+    (Ideal.map (algebraMap R (AdicCompletion I R)) I ^ ?n) ?x
+in the target expression
+  @Membership.mem (AdicCompletion I R) (Ideal (AlgebraicTarget I)) SetLike.instMembership (WithIdeal.i ^ n)
+    ((algebraMap R (AdicCompletion I R)) r -
+      (rawEquiv (AdicCompletion I R) (Ideal.map (algebraMap R (AdicCompletion I R)) I)) x)
+
+R : Type u_1
+inst✝ : CommRing R
+I : Ideal R
+fg : I.FG
+U : Set (AlgebraicTarget I)
+hU : IsOpen U
+x : AlgebraicTarget I
+hx : x ∈ U
+n : ℕ
+left✝ : True
+hn : (fun x_1 => x + x_1) '' ↑(WithIdeal.i ^ n) ⊆ U
+r : R
+hr :
+  Submodule.Quotient.mk r =
+    (AdicCompletion.eval I R n) ((rawEquiv (AdicCompletion I R) (Ideal.map (algebraMap R (AdicCompletion I R)) I)) x)
+y : AlgebraicTarget I := (intoAlgebraic I) ((rawEquiv R I).symm r)
+⊢ (algebraMap R (AdicCompletion I R)) r -
+      (rawEquiv (AdicCompletion I R) (Ideal.map (algebraMap R (AdicCompletion I R)) I)) x ∈
+    WithIdeal.i ^ n
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    SetLike.instMembership
+  has type
+    Membership (AlgebraicTarget I) (Ideal (AlgebraicTarget I))
+  but is expected to have type
+    Membership (AdicCompletion I R) (Ideal (AlgebraicTarget I))
+  in the application
+    @Membership.mem (AdicCompletion I R) (Ideal (AlgebraicTarget I)) SetLike.instMembership

@@ -1,0 +1,112 @@
+import PaperXII.CompletedGlobalBaseChange
+import Mathlib.RingTheory.TensorProduct.Maps
+
+/-! Transport to a separately constructed local-condition ring, using an actual
+proved quotient equivalence. The final object is the completion of B ⊗[A] C. -/
+noncomputable section
+open UniformSpace
+open scoped TensorProduct
+set_option autoImplicit false
+namespace PaperXII.CompletedBaseChange
+
+variable {A B C : Type*} [CommRing A] [CommRing B] [CommRing C]
+  [Algebra A B] [Algebra A C]
+variable (mA : Ideal A) (mB : Ideal B) (J : Ideal A) (e : (A ⧸ J) ≃ₐ[A] C)
+
+def transportedIdeal : Ideal (B ⊗[A] C) :=
+  mB.map (algebraMap B (B ⊗[A] C)) ⊔
+    ((mA.map (Ideal.Quotient.mk J)).map e.toRingHom).map
+      (Algebra.TensorProduct.includeRight : C →ₐ[A] B ⊗[A] C).toRingHom
+
+abbrev Transported := AdicModel.Completed (B ⊗[A] C) (transportedIdeal mA mB J e)
+
+def transportedGlobalMap : B →+* Transported mA mB J e :=
+  (AdicModel.embed _ _).comp (algebraMap B (B ⊗[A] C))
+
+def rawTransport : Raw (B := B) J ≃ₐ[B] B ⊗[A] C :=
+  Algebra.TensorProduct.congr (AlgEquiv.refl : B ≃ₐ[B] B) e
+
+@[simp] theorem rawTransport_left (b : B) :
+    rawTransport (B := B) J e (algebraMap B (Raw (B := B) J) b) =
+      algebraMap B (B ⊗[A] C) b := AlgEquiv.commutes _ b
+
+@[simp] theorem rawTransport_right (a : A ⧸ J) :
+    rawTransport (B := B) J e
+      ((Algebra.TensorProduct.includeRight : A ⧸ J →ₐ[A] Raw (B := B) J) a) =
+        (Algebra.TensorProduct.includeRight : C →ₐ[A] B ⊗[A] C) (e a) := by
+  simp [rawTransport, Algebra.TensorProduct.includeRight_apply]
+
+theorem rawTransport_ideal :
+    (tensorIdeal mA mB J).map (rawTransport (B := B) J e).toRingHom =
+      transportedIdeal mA mB J e := by
+  have hl : (rawTransport (B := B) J e).toRingHom.comp (algebraMap B (Raw (B := B) J)) =
+      algebraMap B (B ⊗[A] C) := by ext b; exact rawTransport_left J e b
+  have hr : (rawTransport (B := B) J e).toRingHom.comp
+      (Algebra.TensorProduct.includeRight : A ⧸ J →ₐ[A] Raw (B := B) J).toRingHom =
+        (Algebra.TensorProduct.includeRight : C →ₐ[A] B ⊗[A] C).toRingHom.comp e.toRingHom := by
+    ext a; exact rawTransport_right J e a
+  simp only [tensorIdeal, transportedIdeal, Ideal.map_sup, Ideal.map_map]
+  rw [hl, ← RingHom.comp_assoc, hr]
+  rfl
+
+/-- The actual complete base changes are equivalent under the literal quotient identification. -/
+def completedTransport : Completed mA mB J ≃+* Transported mA mB J e :=
+  AdicModel.completedEquiv _ _ (rawTransport (B := B) J e).toRingEquiv
+    (rawTransport_ideal mA mB J e)
+
+theorem completedTransport_continuous : Continuous (completedTransport mA mB J e) :=
+  AdicModel.completedEquiv_continuous _ _ _ (rawTransport_ideal mA mB J e)
+
+theorem completedTransport_symm_continuous : Continuous (completedTransport mA mB J e).symm :=
+  AdicModel.completedEquiv_symm_continuous _ _ _ (rawTransport_ideal mA mB J e)
+
+@[simp] theorem completedTransport_globalMap (b : B) :
+    completedTransport mA mB J e (globalMap mA mB J b) = transportedGlobalMap mA mB J e b := by
+  change AdicModel.completedEquiv _ _ _ (rawTransport_ideal mA mB J e)
+    (AdicModel.embed _ _ (algebraMap B (Raw (B := B) J) b)) = _
+  rw [AdicModel.completedEquiv_embed, rawTransport_left]
+  rfl
+
+variable {P : Type*} [CommRing P] [UniformSpace P] [IsUniformAddGroup P]
+  [IsTopologicalRing P] [CompleteSpace P] [T2Space P]
+
+/-- Transported factorization, including continuity and uniqueness, for the named local ring. -/
+theorem transported_exists_unique_factor_iff (h : mA.map (algebraMap A B) ≤ mB)
+    (p : B →+* P) (hp : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom)) :
+    (∃! g : Transported mA mB J e →+* P,
+      Continuous g ∧ g.comp (transportedGlobalMap mA mB J e) = p) ↔
+        J ≤ RingHom.ker (p.comp (algebraMap A B)) := by
+  constructor
+  · rintro ⟨g, ⟨hg, hp'⟩, _⟩
+    rw [← Ideal.map_le_iff_le_comap]
+    intro b hb
+    change p b = 0
+    rw [← hp']
+    change g (transportedGlobalMap mA mB J e b) = 0
+    rw [← completedTransport_globalMap, show globalMap mA mB J b = 0 from
+      globalMap_kills mA mB J hb, map_zero, map_zero]
+  · intro hJ
+    obtain ⟨g, ⟨hg, hgp⟩, hgu⟩ :=
+      (exists_unique_factor_iff_restriction mA mB J h p hp).mpr hJ
+    refine ⟨g.comp (completedTransport mA mB J e).symm.toRingHom, ⟨?_, ?_⟩, ?_⟩
+    · exact hg.comp (completedTransport_symm_continuous mA mB J e)
+    · ext b
+      change g ((completedTransport mA mB J e).symm (transportedGlobalMap mA mB J e b)) = p b
+      rw [← completedTransport_globalMap, RingEquiv.symm_apply_apply]
+      exact DFunLike.congr_fun hgp b
+    · intro g' hg'
+      have heq : g'.comp (completedTransport mA mB J e).toRingHom = g := by
+        apply hgu
+        refine ⟨hg'.1.comp (completedTransport_continuous mA mB J e), ?_⟩
+        ext b
+        change g' (completedTransport mA mB J e (globalMap mA mB J b)) = p b
+        rw [completedTransport_globalMap]
+        exact DFunLike.congr_fun hg'.2 b
+      ext x
+      obtain ⟨y, rfl⟩ := (completedTransport mA mB J e).surjective x
+      change g' (completedTransport mA mB J e y) = g ((completedTransport mA mB J e).symm
+        (completedTransport mA mB J e y))
+      rw [RingEquiv.symm_apply_apply]
+      exact DFunLike.congr_fun heq y
+
+end PaperXII.CompletedBaseChange

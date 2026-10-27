@@ -1,0 +1,981 @@
+--- predecessor/traditional/README.md
++++ release/traditional/README.md
+@@ -1,22 +1,9 @@
+-# Paper XII — final traditional edition
++# Paper XII reading release 1.0.0
+ 
+-**Patching Support, Hecke Packets, and Conditional Automorphic Completion**  
+-Komorebi P. — 6 October 2026.
++This is a current editable reader, not the historical standalone build folder. From the release root run:
+ 
+-Open `Paper_XII_Traditional_Final.pdf`. The corresponding `.tex`, `.bib`, and generated `.bbl` are included, together with eighteen exact vector PDF figures. Supporting Markdown (`.md`) files are included: `PUBLICATION_NOTE.md`, `FORMAL_EVIDENCE_BOUNDARY.md`, `CLAIM_CROSSWALK.md`, `CURRENT_STATUS.md`, `EDITORIAL_CHANGES.md`, and `SOURCE_PRESERVATION.md`. They distinguish the preserved formal record, present editorial corrections, and conditional arithmetic inputs.
+-
+-## Portable isolated build
+-
+-Run with Python 3.9 or later from any working directory:
+-
+-```bash
+-python /absolute/path/to/traditional/build.py --output-dir /absolute/path/to/new-empty-output
++```text
++python tools/build_readers.py --output /absolute/path/to/fresh-output
+ ```
+ 
+-The output directory must be new or empty. The script copies only declared inputs into a temporary isolated build directory, compiles with shell escape disabled, regenerates the bibliography, resolves citations and cross-references, and removes the temporary compiler directory. It produces the PDF, bibliography output, UTF-8 extracted text, logs, PDF information and a SHA-256/page-count report. It never reads scratch font paths or writes intermediates beside the manuscript.
+-
+-Linux prerequisites: Python 3, pdfLaTeX/BibTeX from TeX Live, Latin Modern fonts, AMS and the listed LaTeX packages, and Poppler's `pdftotext` and `pdfinfo`. On Debian/Ubuntu the corresponding packages are `python3`, `texlive-latex-base`, `texlive-latex-recommended`, `texlive-latex-extra`, `texlive-fonts-recommended`, `lmodern`, and `poppler-utils`. The source uses TeX-distributed fonts and all used PDF fonts are embedded; no fonts under `/tmp` are required. Native Windows behavior is not asserted.
+-
+-For a byte-identical rebuild use the same TeX Live, package and font versions. The build fixes `SOURCE_DATE_EPOCH=1791244800` (6 October 2026, 00:00:00 UTC), `FORCE_SOURCE_DATE=1`, UTC locale/time settings, and suppresses the volatile PDF trailer ID. Two isolated builds in this environment are compared by PDF bytes, extracted text, page count, and per-page rendered pixels. The accompanying preflight record reports the inspected scope and result.
+-
+-The figure PDFs are the exact supplied Python-generated vector figures. No AI-generated visual assets were used. All original and revised proof-source snapshots are preserved. Temporary build directories are excluded from the deliverable.
++All three readers are built together so companion destinations agree. A working TeX Live installation, PyMuPDF and Matplotlib are required. Fonts are installed build dependencies, not bundled files. Consult the root BUILD.md and RELEASE_SCOPE.md. Preserved original instructions and audits are under predecessor/. No PDF build invokes Lean or Lake.
+--- predecessor/traditional/Paper_XII_Traditional_Final.bib
++++ release/traditional/Paper_XII_Traditional_Final.bib
+@@ -116,7 +116,8 @@
+   volume = {11},
+   number = {4},
+   year = {2012},
+-  pages = {907{\textendash}920}
++  pages = {907{\textendash}920},
++  note = {Appendix to Jack A. Thorne, On the automorphy of l-adic Galois representations with small residual image}
+ }
+ 
+ @article{Kisin2009,
+--- predecessor/traditional/komorebi-publication.sty
++++ release/traditional/komorebi-publication.sty
+@@ -26,10 +26,10 @@
+ \else
+   \RequirePackage{fontspec}
+   \@ifpackageloaded{unicode-math}{}{\RequirePackage{amssymb}\RequirePackage{mathpazo}}
+-  \setmainfont{P052-Roman.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
+-  \setsansfont{NimbusSans-Regular.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
++  \setmainfont{P052}
++  \setsansfont{Nimbus Sans}[Scale=.94]
+   \setmonofont{DejaVu Sans Mono}[Scale=.80]
+-  \@ifpackageloaded{unicode-math}{\setmathfont{Latin Modern Math}}{}
++  \@ifpackageloaded{unicode-math}{\setmathfont{latinmodern-math.otf}}{}
+ 
+ \fi
+ \providecommand{\KomorebiTitle}{Operation Komorebi}
+--- predecessor/traditional/Paper_XII_Traditional_Final.tex
++++ release/traditional/Paper_XII_Traditional_Final.tex
+@@ -1,4 +1,6 @@
+ % Final traditional edition. Raw manuscript snapshots are preserved in source_preserved/.
++\pdfinfoomitdate=1
++\pdfsuppressptexinfo=15
+ \pdftrailerid{}
+ \documentclass[11pt]{amsart}
+ \usepackage[margin=1.05in]{geometry}
+@@ -123,7 +125,7 @@
+ \author[Komorebi P.]{Komorebi P.}
+ \subjclass[2020]{11F80, 11F70, 13C14, 13D09, 11R34}
+ \keywords{automorphy lifting, Taylor Wiles patching, module support, Hecke algebra, compatible system, adequate image}
+-\date{6 October 2026. Final traditional edition.}
++\date{10 October 2026. Reading release 1.0.0.}
+ 
+ \pdfstringdefDisableCommands{\let\unskip\relax}
+ \hypersetup{
+@@ -138,16 +140,22 @@
+ \renewcommand{\KomorebiTitle}{Patching Support and Hecke Packets}
+ \renewcommand{\KomorebiSubtitle}{Conditional automorphic completion}
+ \renewcommand{\KomorebiSeries}{Core series XII}
+-\renewcommand{\KomorebiKind}{Traditional paper}
+-\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+-\renewcommand{\KomorebiShortTitle}{Paper XII}
++\renewcommand{\KomorebiKind}{Monograph}
++\renewcommand{\KomorebiEdition}{Reading release 1.0.0 / 10 October 2026}
++\renewcommand{\KomorebiShortTitle}{Paper XII / Conditional automorphic completion}
+ \renewcommand{\KomorebiTitleSize}{31}
+ \renewcommand{\KomorebiTitleLeading}{36}
+ \renewcommand{\KomorebiProfile}{classical}
+ \renewcommand{\KomorebiOrientation}{portrait}
+ \KomorebiSetup
++\makeatletter
++\providecommand\@dotsep{4.5}
++\renewcommand\l@section{\@dottedtocline{1}{0pt}{2.8em}}
++\renewcommand\numberline[1]{\hb@xt@\@tempdima{#1\hfil}}
++\makeatother
+ \begin{document}
+ \KomorebiCover
++\input{reading_route.tex}
+ 
+ \begin{abstract}
+ Let \(\bar\rho\) be a residual Galois representation and let \(R\) be a global deformation ring with declared local conditions. We separate the global automorphy problem into residual occupancy, deformation support, Hecke occupancy, and arithmetic realization. Local conditions are encoded by quotient rings rather than by idempotents, since irreducible components of a local deformation ring need not be clopen. For an ordinary or derived patching datum, full support descends through the augmentation quotient. Near faithfulness is shown to be equivalent to full support for finite modules over Noetherian rings. An isomorphism \(R\cong\TT\) transports support, Fitting ideals, and point fibers, but a quotient map can erase an entire component. Finite Hecke algebras are resolved into canonical Artin packets, so simultaneous generalized eigenspaces are available without assuming semisimplicity. Nested packets in one finite carrier stabilize; for changing finite carriers, nonzero stable cores give compatible inverse limit vectors. These results give a pointwise criterion: a characteristic zero deformation point in automorphic support produces a Hecke eigensystem. With attached Galois representations, local global compatibility, and classicality, the point is automorphic. A fixed compatible system then propagates the conclusion to every coefficient place. For finite coefficient quotients, compatible conjugacy classes admit compatible continuous representatives. Declared polynomial quotient conditions survive their adic reconstruction. These completion statements require explicit finite occupancy, continuity, and integral Frobenius data. Universal companion existence and unrestricted reciprocity are not proved.
+@@ -156,7 +164,7 @@
+ \thispagestyle{plain}
+ 
+ \section*{Publication and supporting files}
+-This traditional edition, dated 6 October 2026, retains the complete revised mathematical proofs and all eighteen supplied vector figures. Supporting Markdown (\texttt{.md}) files are included with the source: the publication note, formal-evidence boundary, original-to-revised claim crosswalk, current status, source-preservation ledger, and build instructions. They record the statement hypotheses, evidence scope, and editorial changes alongside the preserved original and revised source snapshots.
++This reading edition, dated 10 October 2026, retains the complete revised mathematical proofs. Fourteen inherited vector figures are unchanged. Four diagrams have been redrawn to separate their arrows, expose the supplied inputs, and synchronize the final architecture with the five gates of Theorem~\ref{thm:five_gate_completion}. Supporting Markdown (\texttt{.md}) files are included with the source: the publication note, formal-evidence boundary, original-to-revised claim crosswalk, current status, source-preservation ledger, and build instructions. They record the statement hypotheses, evidence scope, and editorial changes alongside the preserved original and revised source snapshots.
+ 
+ The saved release reports complete mapped formal evidence for all forty-nine revised internal claims, while the original-wording census is forty-one complete, seven partial, and one unchecked. These are different contracts. The completed tensor and point-factorization results are algebraic deductions for supplied deformation data; representability, residual occupancy, applicable patching and classicality theorems, attached Galois representations, Frobenius density, semisimplification, and the general Brauer--Nesbitt theorem remain external arithmetic or algebraic inputs. Neither Paper XI's general Conjecture~66 nor universal companion existence is assumed.
+ 
+--- predecessor/traditional/build.py
++++ release/traditional/build.py
+@@ -1,71 +1,7 @@
+ #!/usr/bin/env python3
+-"""Build Paper XII in an isolated directory with deterministic PDF metadata."""
+-from __future__ import annotations
+-import argparse, hashlib, json, os, pathlib, shutil, subprocess, tempfile
+-
+-ROOT = pathlib.Path(__file__).resolve().parent
+-NAME = 'Paper_XII_Traditional_Final'
+-EPOCH = '1791244800'  # 2026-10-06 00:00:00 UTC
+-
+-def run(command: list[str], work: pathlib.Path, env: dict[str, str], logs: list[str]) -> None:
+-    result = subprocess.run(command, cwd=work, env=env, text=True, stdout=subprocess.PIPE,
+-                            stderr=subprocess.STDOUT)
+-    logs.append('$ ' + ' '.join(command) + '\n' + result.stdout)
+-    if result.returncode:
+-        raise RuntimeError('Command failed: ' + ' '.join(command) + '\n' + result.stdout[-7000:])
+-
+-def main() -> None:
+-    parser = argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument('--output-dir', type=pathlib.Path, required=True,
+-                        help='A new or empty directory; all compiler work is isolated and temporary.')
+-    args = parser.parse_args()
+-    target = args.output_dir.resolve()
+-    if target.exists() and (not target.is_dir() or any(target.iterdir())):
+-        parser.error('--output-dir must be a new or empty directory')
+-    needed = ['pdflatex', 'bibtex', 'pdftotext', 'pdfinfo']
+-    missing = [x for x in needed if not shutil.which(x)]
+-    if missing:
+-        parser.error('Missing Linux prerequisites: ' + ', '.join(missing) + '; see README.md')
+-    target.mkdir(parents=True, exist_ok=True)
+-    env = os.environ.copy()
+-    env.update(SOURCE_DATE_EPOCH=EPOCH, FORCE_SOURCE_DATE='1', TZ='UTC', LC_ALL='C',
+-               TEXINPUTS='.:', BIBINPUTS='.:', BSTINPUTS='.:')
+-    logs: list[str] = []
+-    with tempfile.TemporaryDirectory(prefix='paper-xii-build-') as temp:
+-        work = pathlib.Path(temp)
+-        for suffix in ['tex', 'bib', 'bbl']:
+-            shutil.copyfile(ROOT / f'{NAME}.{suffix}', work / f'{NAME}.{suffix}')
+-        shutil.copytree(ROOT / 'figures', work / 'figures')
+-        latex = ['pdflatex', '-no-shell-escape', '-interaction=nonstopmode',
+-                 '-halt-on-error', '-file-line-error', f'{NAME}.tex']
+-        run(latex, work, env, logs)
+-        run(['bibtex', NAME], work, env, logs)
+-        run(latex, work, env, logs)
+-        run(latex, work, env, logs)
+-        log = (work / f'{NAME}.log').read_text(errors='replace')
+-        forbidden = ['LaTeX Warning: There were undefined references', 'Citation ',
+-                     'Reference ', 'Rerun to get cross-references right']
+-        if any(token in log and ('undefined' in log or 'Rerun' in log) for token in forbidden):
+-            raise RuntimeError('Unresolved citations or cross-references in final LaTeX log')
+-        for suffix in ['pdf', 'bbl']:
+-            shutil.copyfile(work / f'{NAME}.{suffix}', target / f'{NAME}.{suffix}')
+-        (target / f'{NAME}.log').write_text(log)
+-    subprocess.run(['pdftotext', '-enc', 'UTF-8', '-layout', str(target / f'{NAME}.pdf'),
+-                    str(target / f'{NAME}.txt')], env=env, check=True)
+-    info = subprocess.run(['pdfinfo', str(target / f'{NAME}.pdf')], env=env, text=True,
+-                          stdout=subprocess.PIPE, check=True).stdout
+-    (target / 'PDF_INFO.txt').write_text(info)
+-    (target / 'BUILD_LOG.txt').write_text('\n'.join(logs))
+-    pages = int(next(x.split(':', 1)[1].strip() for x in info.splitlines() if x.startswith('Pages:')))
+-    pdf = target / f'{NAME}.pdf'
+-    text = target / f'{NAME}.txt'
+-    report = {'document': NAME, 'source_date_epoch': int(EPOCH), 'pages': pages,
+-              'pdf_sha256': hashlib.sha256(pdf.read_bytes()).hexdigest(),
+-              'text_sha256': hashlib.sha256(text.read_bytes()).hexdigest(),
+-              'isolated_build': True, 'latex_passes': 3, 'bibtex': True,
+-              'figure_count': len(list((ROOT / 'figures').glob('*.pdf')))}
+-    (target / 'BUILD_REPORT.json').write_text(json.dumps(report, indent=2) + '\n')
+-    print(json.dumps(report, indent=2))
+-
+-if __name__ == '__main__':
+-    main()
++"""Compatibility entry point: rebuild all three synchronized readers."""
++import argparse, subprocess, sys
++from pathlib import Path
++p=argparse.ArgumentParser();p.add_argument('--output-dir', '--output', dest='output',type=Path,required=True);a=p.parse_args()
++root=Path(__file__).resolve().parents[3]
++raise SystemExit(subprocess.call([sys.executable,str(root/'tools/build_readers.py'),'--output',str(a.output)]))
+--- predecessor/traditional/Paper_XII_Traditional_Final.bbl
++++ release/traditional/Paper_XII_Traditional_Final.bbl
+@@ -66,7 +66,8 @@
+ \bibitem{GuralnickHerzigTaylorThorne2012}
+ Robert Guralnick, Florian Herzig, Richard Taylor, and Jack~A. Thorne,
+   \emph{Adequate subgroups}, Journal of the Institute of Mathematics of Jussieu
+-  \textbf{11} (2012), no.~4, 907{\textendash}920.
++  \textbf{11} (2012), no.~4, 907{\textendash}920, Appendix to Jack A. Thorne,
++  On the automorphy of l-adic Galois representations with small residual image.
+ 
+ \bibitem{Kisin2009}
+ Mark Kisin, \emph{Moduli of finite flat group schemes, and modularity}, Annals
+--- predecessor/lean_guide/README.md
++++ release/lean_guide/README.md
+@@ -1,63 +1,9 @@
+-# Paper XII: Final Lean Guide
++# Paper XII reading release 1.0.0
+ 
+-Komorebi P. — 2026-10-06
++This is a current editable reader, not the historical standalone build folder. From the release root run:
+ 
+-Read `Paper_XII_Lean_Guide_Final.pdf` for a standalone account of the completed tensor and global base-change constructions, ordinary and derived support, intrinsic Fitting ideals, packets, occupancy, adic class completion and conditional automorphic realization. The guide supplies exact mathematical hypotheses, a full 96-module catalog and a revised/original claim crosswalk. The production source is complete and unchanged.
+-
+-## Evidence boundary
+-
+-The preserved September 12, 2026 kernel records report all 96 production modules built, 1,229 public named declarations axiom-audited, and three invalid controls rejected. Independent finalization checks reconcile the actual source hashes, declaration set, 113 direct internal import edges and all 291 distinct targets in the 49 revised claim records. The 829 public theorem declarations divide into 748 own and 81 reused from Paper X. Two reuse files under the PaperXII directory retain Paper X namespaces; classification by directory alone would give the wrong originality counts. One private helper is outside the public count.
+-
+-No fresh Lean compilation was available during this finalization. The finalization source/provenance audits and new PDF builds are separate from inherited successful compiler records. The revised contract remains 49 complete; original wording remains 41 complete, seven partial and one unchecked. The original unchecked statement is 6.12; 10.5 is original-partial. Eight inherited amendments remain distinct from final editorial clarification of local point hypotheses, the upper Fitting-index boundary, Frobenius agreement and arithmetic conventions.
+-
+-Core `FinalClaimsConsumer.lean` has three supplementary interface tests. The native v0.17.1 `ManuscriptContractReplay.lean` has a separate three tests; its report and source are retained under `native_contract_evidence`. Neither consumer increases the production census or numbered claim census.
+-
+-## Included files
+-
+-- `formal_release/lean/`: all 96 production source modules, including Paper X reuse.
+-- `formal_release/checks/`: exact manifest, cumulative verifier, supplemental verifier/consumer and three invalid controls.
+-- `formal_release/logs/`: inherited compiler, axiom, consumer and control logs.
+-- `formal_release/*.json`: inherited coverage, claim roadmap, verification and preservation records. Required predecessor inventories remain in `formal_release/upstream/`.
+-- `data/`: full hashes, source catalog, qualified declaration CSV/JSON, direct import CSV/JSON, claim crosswalk CSV/JSON, final environment and source census audits.
+-- `excerpts/`: 24 complete byte-identical core source modules with all ambient hypotheses, plus display copies. `INDEX.json` records full hashes and the eleven typography substitutions used only in the PDF.
+-- `fonts/`: bundled relative font files and license notices.
+-- `native_contract_evidence/`: separately preserved native cumulative/contract records, exact contract source, log and mathematical review.
+-- `build.py`: fresh-directory portable document builder.
+-- `make_audit.py`: source-census/data generator used by finalization; it expects the adjacent authoritative source snapshot and is not needed to rebuild the supplied guide PDF.
+-
+-**Markdown (.md) files are included**, including this README, `SCOPE_AND_AUDIT.md` and the preserved release notes. They are ordinary plain-text documents readable without TeX or Lean. Exact sources and complete logs are supplied outside the PDF so readers can inspect full proof context.
+-
+-## Build the guide PDF
+-
+-Prerequisites: Python 3.10+, TeX Live with XeLaTeX, fontspec, unicode-math, fvextra, microtype, booktabs, longtable, fancyhdr and hyperref, plus Poppler `pdfinfo`, `pdftotext` and `pdffonts`. All selected text, math and code fonts use bundled relative paths. The finalization engine was XeTeX 0.999995 / TeX Live 2023 Debian; `build.py` reports its actual engine version.
+-
+-```bash
+-python3 build.py --output-dir /absolute/path/to/fresh-output
++```text
++python tools/build_readers.py --output /absolute/path/to/fresh-output
+ ```
+ 
+-The destination must be empty. The builder stages its relative inputs there, fixes the date, epoch and PDF trailer identifier, runs three passes and checks glyphs, references, overfull boxes, text anchors and font embedding. `BUILD_AUDIT.json` records PDF/text/source hashes and page count. Exact byte equality is verified by building in isolated fresh directories under the same engine and dependencies; portability does not promise byte-identical PDFs across unrelated TeX versions.
+-
+-## Replay the production Lean proofs
+-
+-Use a **writable extracted copy**, because replay cleans `build/`, `logs/` and regenerates the current reports. Preserve the inherited logs/reports before replay.
+-
+-The separate Linux/WSL portable runtime must supply `toolchain/bin/lean` and a `workspace/` containing the pinned dependency source and matching cached objects. This package does not supply the runtime or dependency cache. Native Windows behavior is not claimed.
+-
+-- Lean: `4.34.0-rc2`, commit `6a10ac8c22beadecabdbb0919c2b50214762f91d`.
+-- Compiler SHA-256: `e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550`.
+-- Mathlib commit: `aeb72f1e9981b6d35b426b16dca7759be3e7ba06`.
+-- One thread, warnings as errors, 180-second default per-process timeout.
+-- Allowed transitive axioms: `propext`, `Classical.choice`, `Quot.sound`.
+-
+-Check the exact compiler hash/commit and all dependency HEADs against the runtime's dependency pin records before replay. The inherited verifier checks a version substring plus Mathlib HEAD and manifest, so a reader should perform the stronger exact preflight separately. The inherited scripts set `MALLOC_ARENA_MAX=2` and `-j1` but do **not** enforce a resource limit themselves; enforce the reported 4 GiB address-space limit in the caller on Linux/WSL:
+-
+-```bash
+-cd formal_release
+-sha256sum /path/to/Komorebi_Portable_Lean_4.34.0-rc2/toolchain/bin/lean
+-ulimit -v 4194304
+-bash Run-Reverified.sh /path/to/Komorebi_Portable_Lean_4.34.0-rc2
+-```
+-
+-The wrapper cleans and compiles every registered source in dependency order, axiom-audits named declarations, rejects the three invalid controls, and runs the three core supplementary tests against the exact successful fresh objects. Cached pinned Mathlib is not rebuilt. No timeout or failed elaboration is counted as success. A completed result must have `status: PASS`; `RUNNING` is an intermediate resumable state.
+-
+-The arithmetic inputs listed in the guide remain external. Proof replay does not establish representability of arbitrary local conditions, residual occupancy, applicability of arithmetic patching/classicality/attachment theorems, universal companions or unrestricted reciprocity.
++All three readers are built together so companion destinations agree. A working TeX Live installation, PyMuPDF and Matplotlib are required. Fonts are installed build dependencies, not bundled files. Consult the root BUILD.md and RELEASE_SCOPE.md. Preserved original instructions and audits are under predecessor/. No PDF build invokes Lean or Lake.
+--- predecessor/lean_guide/Paper_XII_Lean_Guide_Final.tex
++++ release/lean_guide/Paper_XII_Lean_Guide_Final.tex
+@@ -1,9 +1,9 @@
+ \documentclass[11pt]{article}
+ \usepackage[margin=1in]{geometry}
+ \usepackage{fontspec,unicode-math,amsmath}
+-\setmainfont[Path=fonts/,BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]{lmroman10-regular.otf}
+-\setmonofont[Path=fonts/,Scale=.86,BoldFont=DejaVuSansMono-Bold.ttf,ItalicFont=DejaVuSansMono-Oblique.ttf,BoldItalicFont=DejaVuSansMono-BoldOblique.ttf]{DejaVuSansMono.ttf}
+-\setmathfont[Path=fonts/]{latinmodern-math.otf}
++\setmainfont{P052}
++\setmonofont{DejaVu Sans Mono}[Scale=.86]
++\setmathfont{latinmodern-math.otf}
+ \usepackage{booktabs,longtable,array,fvextra,microtype,xcolor,fancyhdr}
+ \usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+ \special{pdf:trailerid [<20261006000000000000000000000012><20261006000000000000000000000012>]}
+@@ -32,8 +32,8 @@
+ \renewcommand{\KomorebiSubtitle}{Conditional automorphic completion}
+ \renewcommand{\KomorebiSeries}{Core series XII}
+ \renewcommand{\KomorebiKind}{Lean and evidence guide}
+-\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+-\renewcommand{\KomorebiShortTitle}{Paper XII}
++\renewcommand{\KomorebiEdition}{Reading release 1.0.0 / 10 October 2026}
++\renewcommand{\KomorebiShortTitle}{Paper XII / Conditional automorphic completion}
+ \renewcommand{\KomorebiTitleSize}{31}
+ \renewcommand{\KomorebiTitleLeading}{36}
+ \renewcommand{\KomorebiProfile}{classical}
+@@ -41,16 +41,17 @@
+ \KomorebiSetup
+ \begin{document}
+ \KomorebiCover
++\input{reading_route.tex}
+ 
+ \relax
+ \begin{abstract}
+ This guide explains the complete production Lean source accompanying Paper XII, with a source catalog, declaration census, import audit, exact source excerpts, and a claim crosswalk. It separates constructed algebraic and topological objects from hypotheses supplied by an arithmetic application. The checked revised contract comprises 49 internal claims mapped to 291 distinct production targets. The original wording remains a separate ledger: 41 complete, seven partial, and one unchecked. The guide preserves all 96 production modules and their inherited verification records. Its new checks are source, provenance, and document checks; no fresh Lean compilation was available in the finalization environment.
+ \end{abstract}
+-\tableofcontents
++{\setlength{\parskip}{0pt}\linespread{1.0}\selectfont\tableofcontents}
+ \newpage
+ 
+ \section{What this guide certifies and how to use it}
+-The reference production tree is the \code{formal_release/lean/} tree from the complete v0.17.1 bundle. Its revised manuscript is the 36-page \code{Paper_XII_Revised_Formalization_Complete_v0.17.0.tex}; the v0.17.1 release reverified its unchanged production sources. This guide is dated 2026-10-06 and describes those exact sources, alongside the final manuscript's explicit editorial clarifications. It does not silently replace any production theorem or historical verification record.
++The reference production tree is the \code{formal_release/lean/} tree from the complete v0.17.1 bundle. Its revised manuscript is the 36-page \code{Paper_XII_Revised_Formalization_Complete_v0.17.0.tex}; the v0.17.1 release reverified its unchanged production sources. This reading edition is dated 2026-10-10 and describes those exact sources, alongside the final manuscript's explicit editorial clarifications. It does not silently replace any production theorem or historical verification record.
+ 
+ Read Sections 4--7 for the completed local and global constructions, Sections 8--12 for support, packets, occupancy and conditional realization, and Section 14 for replay. Appendices list every source module and every revised internal claim. The machine-readable catalog gives full SHA-256 hashes, source locations, imports, declaration names and line numbers. The full production source is supplied; printing every line in this PDF is unnecessary for reproducibility.
+ 
+@@ -277,9 +278,9 @@
+ 
+ \textbf{Markdown (.md) files are included.} \code{README.md} explains the guide package, evidence scope and build commands; \code{SCOPE_AND_AUDIT.md} explains counts, assumptions and final self-review. Preserved release Markdown notes describe the September replay, final two claims, historical failures and mathematical self-review. Markdown is plain text and can be read without TeX or Lean.
+ 
+-Build this guide from an extracted package using Python 3.10 or later, TeX Live with XeLaTeX, \code{fontspec}, \code{unicode-math}, \code{fvextra}, \code{microtype}, \code{booktabs}, \code{longtable}, \code{fancyhdr} and \code{hyperref}, and Poppler's \code{pdfinfo}, \code{pdftotext}, \code{pdffonts}. Fonts are supplied under relative \code{fonts/} paths with license notices. No machine-specific font path is required.
++From the release root, build this guide together with the other readers using Python 3.10 or later, TeX Live with XeLaTeX, \code{fontspec}, \code{unicode-math}, \code{fvextra}, \code{microtype}, \code{booktabs}, \code{longtable}, \code{fancyhdr} and \code{hyperref}, and Poppler's \code{pdfinfo}, \code{pdftotext}, \code{pdffonts}. Install P052, Nimbus Sans, DejaVu Sans Mono, and Latin Modern Math as local build dependencies. Standalone font files are not distributed. The builder stages all style and include files and does not require a bundled fonts directory.
+ \begin{Verbatim}[fontsize=\small,frame=lines]
+-python3 build.py --output-dir /absolute/path/to/fresh-output
++python3 tools/build_readers.py --output /absolute/path/to/fresh-output
+ \end{Verbatim}
+ The builder stages its relative inputs in the fresh output directory, fixes \code{SOURCE_DATE_EPOCH} and the document date, suppresses optional timestamp/trailer metadata, and runs three TeX passes. It checks missing glyphs, unresolved references, overfull boxes, required text anchors and embedded fonts. Its report records PDF, extracted-text and source hashes plus page count. Independent fresh-directory rebuilds must agree byte-for-byte on the PDF, text and pages under the documented same tool versions. PDF determinism is distinct from proof replay determinism.
+ 
+--- predecessor/lean_guide/komorebi-publication.sty
++++ release/lean_guide/komorebi-publication.sty
+@@ -26,10 +26,10 @@
+ \else
+   \RequirePackage{fontspec}
+   \@ifpackageloaded{unicode-math}{}{\RequirePackage{amssymb}\RequirePackage{mathpazo}}
+-  \setmainfont{P052-Roman.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
+-  \setsansfont{NimbusSans-Regular.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
++  \setmainfont{P052}
++  \setsansfont{Nimbus Sans}[Scale=.94]
+   \setmonofont{DejaVu Sans Mono}[Scale=.80]
+-  \@ifpackageloaded{unicode-math}{\setmathfont{Latin Modern Math}}{}
++  \@ifpackageloaded{unicode-math}{\setmathfont{latinmodern-math.otf}}{}
+ 
+ \fi
+ \providecommand{\KomorebiTitle}{Operation Komorebi}
+--- predecessor/lean_guide/build.py
++++ release/lean_guide/build.py
+@@ -1,40 +1,7 @@
+ #!/usr/bin/env python3
+-"""Portable deterministic guide build; builds in a fresh output directory."""
++"""Compatibility entry point: rebuild all three synchronized readers."""
++import argparse, subprocess, sys
+ from pathlib import Path
+-import argparse,datetime,hashlib,json,os,re,shutil,subprocess,sys
+-ROOT=Path(__file__).resolve().parent
+-STEM='Paper_XII_Lean_Guide_Final'
+-def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+-def main():
+- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output-dir',required=True,type=Path);a=p.parse_args()
+- out=a.output_dir.resolve()
+- if out==ROOT:raise SystemExit('Use a separate fresh output directory')
+- if out.exists() and any(out.iterdir()):raise SystemExit('Output directory must be empty')
+- out.mkdir(parents=True,exist_ok=True)
+- for tool in ['xelatex','pdftotext','pdfinfo','pdffonts']:
+-  if not shutil.which(tool):raise SystemExit('Required executable absent: '+tool)
+- shutil.copy2(ROOT/(STEM+'.tex'),out/(STEM+'.tex'))
+- for d in ['fonts','data','excerpts']:
+-  shutil.copytree(ROOT/d,out/d,dirs_exist_ok=True)
+- env=os.environ.copy();env['SOURCE_DATE_EPOCH']='1791244800';env['FORCE_SOURCE_DATE']='1';env['TZ']='UTC'
+- logs=[]
+- for i in range(3):
+-  proc=subprocess.run(['xelatex','-interaction=nonstopmode','-halt-on-error',STEM+'.tex'],cwd=out,env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+-  (out/f'build_pass_{i+1}.txt').write_text(proc.stdout);logs.append(proc.returncode)
+-  if proc.returncode:raise SystemExit('TeX failed; inspect '+str(out/f'build_pass_{i+1}.txt'))
+- log=(out/(STEM+'.log')).read_text(errors='replace')
+- bad=[line for line in log.splitlines() if re.search(r'(Missing character:|LaTeX Warning:.*undefined|LaTeX Font Warning:.*undefined|Overfull \\hbox)',line)]
+- if bad:raise SystemExit('Preflight failure: '+'\n'.join(bad))
+- pdf=out/(STEM+'.pdf')
+- subprocess.run(['pdftotext','-layout',str(pdf),str(out/(STEM+'.txt'))],check=True)
+- info=subprocess.check_output(['pdfinfo',str(pdf)],text=True);fonts=subprocess.check_output(['pdffonts',str(pdf)],text=True)
+- (out/'PDF_INFO.txt').write_text(info);(out/'PDF_FONTS.txt').write_text(fonts)
+- pages=int(re.search(r'^Pages:\s+(\d+)',info,re.M)[1])
+- text=(out/(STEM+'.txt')).read_text()
+- required=['Komorebi P.','2026','748','1,229','291','49','Original wording','Complete production source','Markdown','No fresh Lean']
+- assert all(t.lower() in text.lower() for t in required),[t for t in required if t.lower() not in text.lower()]
+- font_rows=fonts.splitlines()[2:];assert all(re.search(r'\s+yes\s+yes\s+',r) for r in font_rows),fonts
+- report={'status':'PASS','date':'2026-10-06','scope':'guide PDF build and document/source preflight; no Lean compilation','engine':subprocess.check_output(['xelatex','--version'],text=True).splitlines()[0],'pages':pages,'pdf_sha256':sha(pdf),'text_sha256':sha(out/(STEM+'.txt')),'tex_sha256':sha(out/(STEM+'.tex')),'three_passes':logs,'missing_glyphs':0,'overfull_hboxes':0,'undefined_references':0,'all_pdf_fonts_embedded':True,'source_date_epoch':1791244800,'build_prerequisites':['Python 3.10+','TeX Live with XeLaTeX, fontspec, unicode-math, fvextra, booktabs, longtable, microtype, fancyhdr, hyperref','Poppler pdfinfo, pdftotext, pdffonts'],'trailer_policy':'Fixed XeTeX/dvipdfmx trailer ID and CreationDate/ModDate; SOURCE_DATE_EPOCH; no wall-clock date in document'}
+- (out/'BUILD_AUDIT.json').write_text(json.dumps(report,indent=2)+'\n')
+- print(json.dumps(report,indent=2))
+-if __name__=='__main__':main()
++p=argparse.ArgumentParser();p.add_argument('--output-dir', '--output', dest='output',type=Path,required=True);a=p.parse_args()
++root=Path(__file__).resolve().parents[3]
++raise SystemExit(subprocess.call([sys.executable,str(root/'tools/build_readers.py'),'--output',str(a.output)]))
+--- predecessor/visual_guide/README.md
++++ release/visual_guide/README.md
+@@ -1,34 +1,9 @@
+-# Paper XII — standalone visual guide
++# Paper XII reading release 1.0.0
+ 
+-**Komorebi P. · Finalized 2026-10-06**
++This is a current editable reader, not the historical standalone build folder. From the release root run:
+ 
+-`Paper_XII_Visual_Guide_Final.pdf` is a standalone, source-aware worked guide to *Patching Support, Hecke Packets, and Conditional Automorphic Completion*. The first 18 topics preserve the existing worked appendix's substantive examples; the additional topics deepen actual completions, adequacy, augmentation, finite forests, matrix frames, polynomial effectivity, finite trace separation and the exact claim boundary.
+-
+-The source is `Paper_XII_Visual_Guide_Final.tex` with `source/pages.tex`. Every drawing uses exact TikZ. The generator `source/generate_graphics.py` regenerates 22 assets; two further diagrams are written directly in `source/pages.tex`. Editable `.tex` assets and separately reusable `.pdf` vector figures are included in `graphics/`. There are no AI-generated or raster figures. Supporting Markdown (`.md`) files are included.
+-
+-`SOURCE_COVERAGE.md` and `checks/SOURCE_ANCHORS.json` map every one of the historical 49 internal revised claims to a reading entry and an exact source label/line. The inherited revised census is **49 complete / 0 partial / 0 unchecked**. The original-wording census remains **41 complete / 7 partial / 1 unchecked**, with eight inherited amendments. This guide adds no new Lean certificate. External arithmetic inputs remain separate from internal conditional deductions.
+-
+-The final companions expose standing conventions about finite S, coherent Frobenius normalization, the local coefficient-test category in global base change, the Fitting boundary r>n, and both compared Frobenius polynomial identities in ordinary completion. Those editorial clarifications are distinguished from the historical eight-amendment record. They were not newly replayed in Lean.
+-
+-## Build in a fresh directory
+-
+-Requirements: Python 3.10+, SymPy, PyMuPDF, and a TeX installation with `pdflatex`, Latin Modern, TikZ, tcolorbox, fancyhdr, preview, hyperref and the other packages named in the source.
+-
+-```bash
+-python build.py --output-dir /absolute/path/to/fresh-output
++```text
++python tools/build_readers.py --output /absolute/path/to/fresh-output
+ ```
+ 
+-The build regenerates **all** figure sources and standalone vector figure PDFs inside the selected directory, copies the two manuscript source files there, compiles twice, runs the exact example checker and performs PDF preflight. The date, metadata and PDF trailer behavior are fixed. No original manuscript PDF, network service, raster asset or Lean toolchain is required.
+-
+-```bash
+-python checks/verify_examples.py --output /absolute/path/to/EXACT_CHECKS.json
+-python source/generate_graphics.py --output-dir /absolute/path/to/graphics
+-```
+-
+-The checker records **46 exact illustrative assertions**: the inherited 31 plus 15 further assertions. It covers exhaustive finite coefficient models, symbolic minors, explicit CRT/projector identities, modular matrices and uniform identities used by the examples. Finite horizons are explicitly bounded; all-level and infinite claims have arguments in the guide. Arithmetic existence, classicality and the inherited general Lean claims are outside this checker.
+-
+-Tested here with Python 3.12.14, SymPy 1.14.0, PyMuPDF 1.26.6 and pdfTeX 1.40.25. The default runtime did not initially provide SymPy; the verification used an existing local SymPy dependency directory through `PYTHONPATH`. The guide does not bundle that environment-specific path into its build script. Install the declared requirements in your chosen environment.
+-
+-`checks/BUILD_AUDIT.json` reports the final PDF bounds, page/topic alignment, zero raster images, and absence of overfull boxes or unresolved references. `checks/REBUILD_COMPARISON.json` records the isolated rebuild. `AUDIT.md` records mathematical self-review and complete-page visual inspection. The figures and tests explain the revised source contract; they do not certify universal companion existence or unrestricted reciprocity.
+-
+-To compare two finished output directories, run `python checks/compare_builds.py first-output second-output --output comparison.json`. Add `--render-dir preview-pages` to render all pages at 140 dpi.
++All three readers are built together so companion destinations agree. A working TeX Live installation, PyMuPDF and Matplotlib are required. Fonts are installed build dependencies, not bundled files. Consult the root BUILD.md and RELEASE_SCOPE.md. Preserved original instructions and audits are under predecessor/. No PDF build invokes Lean or Lake.
+--- predecessor/visual_guide/Paper_XII_Visual_Guide_Final.tex
++++ release/visual_guide/Paper_XII_Visual_Guide_Final.tex
+@@ -51,15 +51,28 @@
+ \renewcommand{\KomorebiSubtitle}{Conditional automorphic completion}
+ \renewcommand{\KomorebiSeries}{Core series XII}
+ \renewcommand{\KomorebiKind}{Visual guide}
+-\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+-\renewcommand{\KomorebiShortTitle}{Paper XII}
++\renewcommand{\KomorebiEdition}{Reading release 1.0.0 / 10 October 2026}
++\renewcommand{\KomorebiShortTitle}{Paper XII / Conditional automorphic completion}
+ \renewcommand{\KomorebiTitleSize}{31}
+ \renewcommand{\KomorebiTitleLeading}{36}
+ \renewcommand{\KomorebiProfile}{atlas}
+ \renewcommand{\KomorebiOrientation}{portrait}
+ \KomorebiSetup
++\geometry{left=.80in,right=.80in,top=.76in,bottom=.72in,headheight=16pt,headsep=15pt,footskip=22pt}
++\setlength{\parskip}{4pt}
++\linespread{1.0}
++\setlength{\abovedisplayskip}{6pt plus 1pt minus 1pt}
++\setlength{\belowdisplayskip}{6pt plus 1pt minus 1pt}
++\renewcommand{\arraystretch}{1.12}
++\fancyfoot[R]{\sffamily\small\color{KomorebiPine}V\,--\,\thepage}
++\renewcommand{\vpage}[4]{\ifstarted\clearpage\else\startedtrue\fi
++\phantomsection\label{v:#1}\pdfbookmark[1]{V#1. #2}{visual#1}
++{\sffamily\fontsize{9}{11}\selectfont\bfseries V#1\quad /\quad #3\par}\vspace{4pt}
++{\sffamily\bfseries\fontsize{22}{25}\selectfont #2\par}\vspace{4pt}
++{\sffamily\fontsize{8.7}{10.5}\selectfont\color{black!65} #4\par}\vspace{7pt}}
+ \begin{document}
+ \KomorebiCover
++\fontsize{10.5}{12.5}\selectfont
+ 
+ \input{source/pages.tex}
+ \end{document}
+--- predecessor/visual_guide/komorebi-publication.sty
++++ release/visual_guide/komorebi-publication.sty
+@@ -26,10 +26,10 @@
+ \else
+   \RequirePackage{fontspec}
+   \@ifpackageloaded{unicode-math}{}{\RequirePackage{amssymb}\RequirePackage{mathpazo}}
+-  \setmainfont{P052-Roman.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf,BoldItalicFont=P052-BoldItalic.otf]
+-  \setsansfont{NimbusSans-Regular.otf}[Path=/usr/share/fonts/opentype/urw-base35/,BoldFont=NimbusSans-Bold.otf,ItalicFont=NimbusSans-Italic.otf,BoldItalicFont=NimbusSans-BoldItalic.otf,Scale=.94]
++  \setmainfont{P052}
++  \setsansfont{Nimbus Sans}[Scale=.94]
+   \setmonofont{DejaVu Sans Mono}[Scale=.80]
+-  \@ifpackageloaded{unicode-math}{\setmathfont{Latin Modern Math}}{}
++  \@ifpackageloaded{unicode-math}{\setmathfont{latinmodern-math.otf}}{}
+ 
+ \fi
+ \providecommand{\KomorebiTitle}{Operation Komorebi}
+--- predecessor/visual_guide/build.py
++++ release/visual_guide/build.py
+@@ -1,117 +1,7 @@
+ #!/usr/bin/env python3
+-"""Rebuild the standalone guide and all vector figures in a chosen directory.
+-
+-Requires Python 3.10+, SymPy, PyMuPDF, pdflatex and the packages used by the TeX
+-source. No network, AI imagery, Lean invocation, or source-archive mutation.
+-"""
+-from __future__ import annotations
+-import argparse, hashlib, json, os, re, shutil, subprocess, sys
++"""Compatibility entry point: rebuild all three synchronized readers."""
++import argparse, subprocess, sys
+ from pathlib import Path
+-import fitz
+-
+-ROOT = Path(__file__).resolve().parent
+-NAME = 'Paper_XII_Visual_Guide_Final'
+-parser = argparse.ArgumentParser(description=__doc__)
+-parser.add_argument('--output-dir', type=Path, default=ROOT)
+-args = parser.parse_args()
+-OUT = args.output_dir.resolve()
+-OUT.mkdir(parents=True, exist_ok=True)
+-for sub in ('source', 'graphics', 'checks', 'texbuild'):
+-    (OUT/sub).mkdir(exist_ok=True)
+-for rel in (NAME+'.tex', 'source/pages.tex', 'source/generate_graphics.py',
+-            'checks/verify_examples.py', 'build.py', 'README.md',
+-            'SOURCE_COVERAGE.md', 'requirements.txt', 'checks/SOURCE_ANCHORS.json'):
+-    if not (ROOT/rel).is_file():
+-        continue
+-    if (ROOT/rel).resolve() != (OUT/rel).resolve():
+-        shutil.copyfile(ROOT/rel, OUT/rel)
+-
+-env = dict(os.environ, SOURCE_DATE_EPOCH='1791244800', FORCE_SOURCE_DATE='1', TZ='UTC')
+-def run(command, log):
+-    with (OUT/'texbuild'/log).open('w', encoding='utf8') as h:
+-        p = subprocess.run(command, cwd=OUT, env=env, stdout=h,
+-                           stderr=subprocess.STDOUT, timeout=180)
+-    if p.returncode:
+-        raise RuntimeError(f'Command failed ({p.returncode}); see {OUT/"texbuild"/log}')
+-
+-run([sys.executable, str(ROOT/'checks/verify_examples.py'),
+-     '--output', str(OUT/'checks/EXACT_CHECKS.json')], 'examples.stdout')
+-run([sys.executable, str(ROOT/'source/generate_graphics.py'),
+-     '--output-dir', str(OUT/'graphics')], 'graphics.stdout')
+-tex = shutil.which('pdflatex')
+-if not tex:
+-    raise RuntimeError('pdflatex is required')
+-for n in (1, 2):
+-    run([tex, '-interaction=nonstopmode', '-halt-on-error',
+-         '-output-directory=texbuild', NAME+'.tex'], f'latex_{n}.stdout')
+-log = (OUT/'texbuild'/f'{NAME}.log').read_text(errors='replace')
+-bad = re.findall(r'Overfull \\[hv]box|undefined references|LaTeX Error', log)
+-if bad:
+-    raise RuntimeError(f'Layout/reference errors: {bad}')
+-shutil.copyfile(OUT/'texbuild'/f'{NAME}.pdf', OUT/f'{NAME}.pdf')
+-
+-# Regenerate separately reusable PDF vector figures from the TikZ sources.
+-for figure in sorted((OUT/'graphics').glob('*.tex')):
+-    wrapper = OUT/'graphics'/f'{figure.stem}_wrapper.tex'
+-    wrapper.write_text(r'''\documentclass{article}
+-\pdfinfoomitdate=1
+-\pdfsuppressptexinfo=15
+-\pdftrailerid{}
+-\usepackage[T1]{fontenc}
+-\usepackage{lmodern,amsmath,amssymb,tikz}
+-\usetikzlibrary{arrows.meta,decorations.pathreplacing,patterns,calc}
+-\usepackage[active,tightpage]{preview}
+-\PreviewEnvironment{tikzpicture}
+-\setlength\PreviewBorder{6pt}
+-\begin{document}
+-''' + f'\\input{{graphics/{figure.name}}}\n' + r'\end{document}'+'\n')
+-    run([tex, '-interaction=nonstopmode', '-halt-on-error',
+-         '-output-directory=texbuild', str(wrapper)], f'figure_{figure.stem}.stdout')
+-    shutil.copyfile(OUT/'texbuild'/f'{figure.stem}_wrapper.pdf',
+-                    OUT/'graphics'/f'{figure.stem}.pdf')
+-    wrapper.unlink()
+-
+-doc = fitz.open(OUT/f'{NAME}.pdf')
+-topics=re.findall(r'\\vpage\{(\d+)\}\{([^{}]+)\}',
+-                  (OUT/'source/pages.tex').read_text())
+-if len(doc) != len(topics):
+-    raise RuntimeError(f'Unintentional continuation pages: {len(doc)} pages for {len(topics)} topics')
+-normalize=lambda s:' '.join(s.split())
+-for page, (identifier,title) in zip(doc, topics):
+-    if normalize(title) not in normalize(page.get_text()):
+-        raise RuntimeError(f'Misplaced topic {identifier}: {title}')
+-outline=doc.get_toc()
+-if len(outline)!=len(topics) or any(item[2]!=n for n,item in enumerate(outline,1)):
+-    raise RuntimeError('Outline destinations do not match topic pages')
+-pages = []
+-issues = []
+-for n, page in enumerate(doc, 1):
+-    outside=[]
+-    for block in page.get_text('dict')['blocks']:
+-        for line in block.get('lines', []):
+-            for span in line['spans']:
+-                if not span['text'].strip():
+-                    continue
+-                x0,y0,x1,y1=span['bbox']
+-                if x0 < 20 or x1 > page.rect.width-20 or y0 < 10 or y1 > page.rect.height-10:
+-                    outside.append(span['text'])
+-    rasters=len(page.get_images())
+-    if outside or rasters:
+-        issues.append({'page':n, 'outside':outside, 'rasters':rasters})
+-    pages.append({'page':n, 'word_count':len(page.get_text().split()),
+-                  'raster_images':rasters, 'out_of_bounds_text':outside})
+-if issues:
+-    raise RuntimeError(f'PDF preflight failed: {issues}')
+-sha=lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+-exact=json.loads((OUT/'checks/EXACT_CHECKS.json').read_text())
+-report={'status':'PASS', 'date':'2026-10-06', 'pages':len(doc),
+-        'example_check_count':exact['check_count'], 'all_figures_vector':True,
+-        'pdf_metadata':doc.metadata, 'pdf_sha256':sha(OUT/f'{NAME}.pdf'),
+-        'text_sha256':hashlib.sha256(''.join(p.get_text() for p in doc).encode()).hexdigest(),
+-        'overfull_boxes':0, 'unresolved_references':0,
+-        'underfull_boxes':len(re.findall(r'Underfull \\[hv]box',log)),
+-        'outline_items_on_correct_pages':len(outline),
+-        'page_checks':pages,
+-        'scope':'Exact illustrative examples and PDF build only; no new Lean verification.'}
+-(OUT/'checks/BUILD_AUDIT.json').write_text(json.dumps(report,indent=2)+'\n')
+-print(f'PASS: {len(doc)} pages; {exact["check_count"]} exact checks; vector figures regenerated.')
++p=argparse.ArgumentParser();p.add_argument('--output-dir', '--output', dest='output',type=Path,required=True);a=p.parse_args()
++root=Path(__file__).resolve().parents[3]
++raise SystemExit(subprocess.call([sys.executable,str(root/'tools/build_readers.py'),'--output',str(a.output)]))
+--- predecessor/visual_guide/source/pages.tex
++++ release/visual_guide/source/pages.tex
+@@ -1,6 +1,6 @@
+ % ---------------------------------------------------------------------------
+-\vpage{1}{Seeing the objects}{A STANDALONE READER'S COMPANION}{Patching Support, Hecke Packets, and Conditional Automorphic Completion}
+-{\sffamily\small Komorebi P.\quad\textbullet\quad 6 October 2026}\par
++\vpage{1}{Seeing the objects}{A STANDALONE READER'S COMPANION}{Patching Support, Hecke Packets, and Conditional Automorphic Completion\quad \href{p12-route:visual-1}{Main statement 12.6}}
++{\sffamily\small Komorebi P.\quad\textbullet\quad 10 October 2026}\par
+ The paper repeatedly asks three different questions: does an object exist, where is a supplied object nonzero, and when does that object have the desired arithmetic meaning? This guide makes those distinctions tangible through examples that can be followed by hand.
+ 
+ \begin{insight}
+@@ -13,7 +13,7 @@
+ 
+ \head{Three models, rather than one overloaded analogy}
+ \begin{tabularx}{\linewidth}{@{}p{.20\linewidth}Y>{\raggedright\arraybackslash}p{.15\linewidth}@{}}\toprule
+-\textbf{Model} & \textbf{What it lets you see} & \textbf{Pages}\\\midrule
++\textbf{Model} & \textbf{What it lets you see} & \textbf{Lessons}\\\midrule
+ A formal thickening & Conditions on power series, infinitesimal points, obstructed lifts, and compatible precision levels. & \pagerefV{3}--\pagerefV{5}\\
+ A presented module & Matrix rank, support, Fitting ideals, changes of coordinates, and nonreduced structure. & \pagerefV{6}--\pagerefV{8}\\
+ A finite Artin algebra & Generalized eigenspaces, nilpotent directions, canonical packets, and empty packet modules. & \pagerefV{12}--\pagerefV{14}\\\bottomrule
+@@ -22,15 +22,15 @@
+ The models are connected by the paper's theorems, but they are not the same ring. A polynomial coordinate plane is not a complete local spectrum, and a local branch is not an Artin product factor. Explicitly changing models prevents a picture from silently changing the hypotheses.
+ 
+ \head{A route through the guide}
+-Use the object atlas on \pagerefV{2} when a symbol becomes unfamiliar. The local model starts on \pagerefV{3}; the matrix model on \pagerefV{6}. Pages \pagerefV{9}--\pagerefV{11} explain what quotients, patching, and derived fibers preserve. Pages \pagerefV{15}--\pagerefV{16} separate finite occupancy from genuine infinite compatibility. The exact arithmetic boundary is on \pagerefV{17}.
++Use the object atlas on \pagerefV{2} when a symbol becomes unfamiliar. The local model starts on \pagerefV{3}; the matrix model on \pagerefV{6}. Lessons \pagerefV{9}--\pagerefV{11} explain what quotients, patching, and derived fibers preserve. Lessons \pagerefV{15}--\pagerefV{16} separate finite occupancy from genuine infinite compatibility. The exact arithmetic boundary is on \pagerefV{17}.
+ 
+ \head{How to read a visual claim}
+-Each page gives an explicit object, a calculation, and a source reference. Coordinate sketches display only the stated real points. Coefficient arrays and finite specialization diagrams describe the stated algebraic data exactly. Line thickness never stands for nilpotent multiplicity.
++Each lesson gives an explicit object, a calculation, and a source reference. Coordinate sketches display only the stated real points. Coefficient arrays and finite specialization diagrams describe the stated algebraic data exactly. Line thickness never stands for nilpotent multiplicity.
+ 
+ \takeaway{These are explanations of the formal release, not additional assumptions or new Lean certificates. The accompanying scripts check the explicit finite calculations. They do not establish universal arithmetic existence.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{2}{An atlas of the objects}{ORIENTATION}{Main text: Sections 2, 3, 6, 7, 8 and 12}
++\vpage{2}{An atlas of the objects}{ORIENTATION}{Main text: Sections 2, 3, 6, 7, 8 and 12\quad \href{p12-route:visual-2}{Main statement 3.3}}
+ A \emph{ring} describes possible points. A \emph{module over the ring} describes what is carried at those points. A nonempty space of possibilities does not imply a nonzero carrier at every point.
+ 
+ {\small
+@@ -61,7 +61,7 @@
+ Local quotient factorization is stated for continuous local coefficient-algebra maps to deformation test rings. The later field-valued point $x:R\to E'$ uses its kernel and scalar fiber. A characteristic-zero field point is generally not a local ring map: the coefficient uniformizer becomes a unit. These two uses of ``point'' must retain their own categories.
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{3}{Local conditions remove directions}{MODEL A / A FORMAL THICKENING}{Main text: Theorem 3.1 and Corollary 3.2}
++\vpage{3}{Local conditions remove directions}{MODEL A / A FORMAL THICKENING}{Main text: Theorem 3.1 and Corollary 3.2\quad \href{p12-route:visual-3}{Main statement 3.1}}
+ Fix $\OO=\ZZ_5$. Take two independent local variables and impose two different kinds of condition:
+ \[
+ R_1=\OO[[x]],\quad I_1=(x^2),\qquad
+@@ -90,7 +90,7 @@
+ \takeaway{The condition $y=0$ deletes a variable. The condition $x^2=0$ retains a first-order nilpotent direction. Both are quotient conditions, but their effects are different.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{4}{A point is a test of the equations}{MODEL A / FACTORIZATION AND OBSTRUCTION}{Main text: Proposition 3.3; this explicit example also exhibits a failed infinitesimal lift}
++\vpage{4}{A point is a test of the equations}{MODEL A / FACTORIZATION AND OBSTRUCTION}{Main text: Proposition 3.3; this explicit example also exhibits a failed infinitesimal lift\quad \href{p12-route:visual-4}{Main statement 3.3}}
+ Let $R^\square=\OO[[u,v]]$ and send $x\mapsto u$, $y\mapsto v-u$. The local conditions become
+ \[
+ u^2=0,\qquad v-u=0,
+@@ -126,7 +126,7 @@
+ \takeaway{A point satisfies equations in a target ring. A tangent direction can exist while its next-order lift fails. The factorization theorem identifies the condition; it does not promise that every point lifts.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{5}{Completion retains every precision}{MODEL A / COMPATIBLE COEFFICIENTS}{Main text: Theorem 3.1; reconstruction and finite occupancy in Section 10}
++\vpage{5}{Completion retains every precision}{MODEL A / COMPATIBLE COEFFICIENTS}{Main text: Theorem 3.1; reconstruction and finite occupancy in Section 10\quad \href{p12-route:visual-5}{Main statement 10.5}}
+ For $B=\ZZ_5[\varepsilon]/(\varepsilon^2)$, consider the finite quotient rings
+ \[
+ B_n=(\ZZ/5^n\ZZ)[\varepsilon]/(\varepsilon^2),
+@@ -164,7 +164,7 @@
+ 
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{6}{A matrix becomes a support locus}{MODEL B / FITTING STRATA}{Main text: Theorems 6.2, 6.3 and 6.4}
++\vpage{6}{A matrix becomes a support locus}{MODEL B / FITTING STRATA}{Main text: Theorems 6.2, 6.3 and 6.4\quad \href{p12-route:visual-6}{Main statement 6.3}}
+ Now change models. Let $R=k[x,y]$ for a field $k$, and present a module by
+ \[
+ R^2\xrightarrow{A}R^2\longrightarrow M\longrightarrow0,
+@@ -207,7 +207,7 @@
+ \takeaway{Support asks whether any direction survives. Higher Fitting strata ask how many generators the residue-field fiber needs. This is not an automorphic multiplicity formula.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{7}{The same support can hide more algebra}{MODEL B / NILPOTENT STRUCTURE}{Main text: Theorems 6.3--6.4; distinguish an ideal from its vanishing set}
++\vpage{7}{The same support can hide more algebra}{MODEL B / NILPOTENT STRUCTURE}{Main text: Theorems 6.3--6.4; distinguish an ideal from its vanishing set\quad \href{p12-route:visual-7}{Main statement 6.4}}
+ Compare the previous module with a slightly different presentation:
+ \[
+ M=\coker\begin{pmatrix}x&0\\0&y\end{pmatrix},
+@@ -256,7 +256,7 @@
+ \takeaway{Taking $V(I)$ forgets nilpotent thickness. Fitting \emph{ideals} can retain information that both the support set and the fiber-dimension function fail to distinguish.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{8}{Base change is an algebraic pullback}{MODEL B / SPECIALIZATION AND TRANSPORT}{Main text: Proposition 6.5 and Theorem 7.1}
++\vpage{8}{Base change is an algebraic pullback}{MODEL B / SPECIALIZATION AND TRANSPORT}{Main text: Proposition 6.5 and Theorem 7.1\quad \href{p12-route:visual-8}{Main statement 6.5}}
+ Return to $M=\coker\operatorname{diag}(x,y)$ over $R=k[x,y]$. Pull back along the diagonal $R\to k[t]$, $x\mapsto t$, $y\mapsto t$. The base-changed presentation is literal:
+ \[
+ M\otimes_R k[t]\cong\coker\begin{pmatrix}t&0\\0&t\end{pmatrix}
+@@ -291,7 +291,7 @@
+ \takeaway{Specialization substitutes into the actual relation matrix. An isomorphism transports all the data. Neither operation may be replaced by an informal edit of the support picture.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{9}{A branch is not an Artin packet}{LOCAL GEOMETRY / AN EXACT FINITE SPECTRUM}{Main text: Proposition 3.4 and Proposition 7.3}
++\vpage{9}{A branch is not an Artin packet}{LOCAL GEOMETRY / AN EXACT FINITE SPECTRUM}{Main text: Proposition 3.4 and Proposition 7.3\quad \href{p12-route:visual-9}{Main statement 7.3}}
+ Consider the complete local node
+ \[
+ R=k[[x,y]]/(xy),\qquad T=R/(x)\cong k[[y]].
+@@ -315,7 +315,7 @@
+ \takeaway{Intersecting local components are not product factors. Use quotient ideals and support for the node; use canonical idempotents only where an actual product decomposition exists.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{10}{Free over what? Supported where?}{PATCHING / A COUNTEREXAMPLE WITH A VISIBLE SPECIAL FIBER}{Main text: Theorems 6.7, 6.9 and 6.11; Example 6.13}
++\vpage{10}{Free over what? Supported where?}{PATCHING / A COUNTEREXAMPLE WITH A VISIBLE SPECIAL FIBER}{Main text: Theorems 6.7, 6.9 and 6.11; Example 6.13\quad \href{p12-route:visual-10}{Main statement 6.11}}
+ Let
+ \[
+ S=k[[t]],\qquad R_\infty=S[[x]]/(x(x-t)),\qquad
+@@ -353,7 +353,7 @@
+ \takeaway{A statement about freeness must name the base ring. A statement about occupancy must name the spectrum. Switching between them without a theorem loses the missing component.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{11}{A vanishing differential changes the fiber}{DERIVED SUPPORT / AN ACTUAL TWO-TERM COMPLEX}{Main text: Definition 6.14 and Theorem 6.16}
++\vpage{11}{A vanishing differential changes the fiber}{DERIVED SUPPORT / AN ACTUAL TWO-TERM COMPLEX}{Main text: Definition 6.14 and Theorem 6.16\quad \href{p12-route:visual-11}{Main statement 6.16}}
+ Take $R=k[t]$ and the perfect complex
+ \[
+ C=\bigl[R\xrightarrow{\;t\;}R\bigr]
+@@ -386,7 +386,7 @@
+ \takeaway{Derived nonvanishing means that some cohomology group survives after derived specialization. It neither specifies a classical automorphic class nor eliminates the need for a realization theorem.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{12}{A packet contains an entire Jordan chain}{MODEL C / A NONSEMISIMPLE HECKE ALGEBRA}{Main text: Theorem 8.2, Corollary 8.3 and Example 8.6}
++\vpage{12}{A packet contains an entire Jordan chain}{MODEL C / A NONSEMISIMPLE HECKE ALGEBRA}{Main text: Theorem 8.2, Corollary 8.3 and Example 8.6\quad \href{p12-route:visual-12}{Main statement 8.2}}
+ Work over $\QQ$ and let
+ \[
+ T=\QQ[z]\big/\bigl((z-1)^2(z+1)^3\bigr),\qquad V=T.
+@@ -423,7 +423,7 @@
+ \takeaway{Canonical idempotents isolate the full primary pieces, including their nilpotent structure. Semisimplicity is not required, and replacing a packet by an ordinary eigenspace can discard most of it.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{13}{A possible packet can still be empty}{MODEL C / OCCUPANCY IS MODULE DATA}{Main text: Theorem 7.4, Theorem 8.2 and Corollary 8.4}
++\vpage{13}{A possible packet can still be empty}{MODEL C / OCCUPANCY IS MODULE DATA}{Main text: Theorem 7.4, Theorem 8.2 and Corollary 8.4\quad \href{p12-route:visual-13}{Main statement 7.4}}
+ Keep the algebra $T=T_+\times T_-$ from \pagerefV{12}, but compare two different $T$-modules:
+ \[
+ V=T,\qquad W=T_+,
+@@ -468,7 +468,7 @@
+ \takeaway{A ring factor describes an available packet location. A nonzero localized module certifies occupancy there. A field fiber then specializes that module; it is not the whole generalized packet.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{14}{At two, division is the obstruction}{A COEFFICIENT-PRIME BOUNDARY}{Main text: Section 5, Remark 8.5 and Section 11}
++\vpage{14}{At two, division is the obstruction}{A COEFFICIENT-PRIME BOUNDARY}{Main text: Section 5, Remark 8.5 and Section 11\quad \href{p12-route:visual-14}{Main statement 11.1}}
+ Let $C_2=\langle g:g^2=1\rangle$. Over $\QQ_2$, the two familiar sign projectors are
+ \[
+ e_+=\frac{1+g}{2},\qquad e_-=\frac{1-g}{2},
+@@ -517,7 +517,7 @@
+ \takeaway{Use the algebra available at the coefficient prime. Augmentation recovery is valid here; it still does not prove full deformation support or supply a universal automorphy theorem at two.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{15}{Nonzero at every level is not enough}{INVERSE SYSTEMS / THE STABLE CORE}{Main text: Definition 8.9, Lemma 8.10 and Theorem 8.11}
++\vpage{15}{Nonzero at every level is not enough}{INVERSE SYSTEMS / THE STABLE CORE}{Main text: Definition 8.9, Lemma 8.10 and Theorem 8.11\quad \href{p12-route:visual-15}{Main statement 8.11}}
+ Let every level be $V_m=k^3$. For a transition matrix $F$, compatibility means $v_m=Fv_{m+1}$. The directions visible at level $m$ after looking $h$ levels ahead form $\im(F^h)$.
+ 
+ \begin{minipage}[t]{.48\linewidth}\centering
+@@ -554,7 +554,7 @@
+ \takeaway{The stable core tests persistence through the transition maps. Counting nonzero spaces at separate levels does not test persistence.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{16}{Finite dimension prevents tail escape}{TWO DIFFERENT COMPACTNESS MECHANISMS}{Main text: Theorem 8.7, Corollary 8.8 and Example 8.13}
++\vpage{16}{Finite dimension prevents tail escape}{TWO DIFFERENT COMPACTNESS MECHANISMS}{Main text: Theorem 8.7, Corollary 8.8 and Example 8.13\quad \href{p12-route:visual-16}{Main statement 8.7}}
+ Nested nonzero subspaces inside \emph{one fixed finite-dimensional space} behave differently from nested tails inside an infinite-dimensional space.
+ 
+ \begin{minipage}[t]{.44\linewidth}\centering
+@@ -588,7 +588,7 @@
+ \takeaway{Fixed finite-carrier stabilization, stable images in an inverse system, and infinite Hilbert-space tails are different situations. Their hypotheses cannot be exchanged.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{17}{Where the arithmetic still enters}{THE CONDITIONAL THEOREM / INPUTS AND CONSEQUENCES}{Main text: revised Theorem 12.6 and Section 13}
++\vpage{17}{Where the arithmetic still enters}{THE CONDITIONAL THEOREM / INPUTS AND CONSEQUENCES}{Main text: revised Theorem 12.6 and Section 13\quad \href{p12-route:visual-17}{Main statement 12.6}}
+ The final theorem is a composition of proved implications with explicitly supplied data. Use a single coherent Frobenius normalization in every polynomial comparison. These are not competing labels: an implication may be internally proved while its arithmetic premises remain external.
+ 
+ {\small
+@@ -610,7 +610,7 @@
+ \takeaway{The algebra locates and transports supplied nonzero data. Arithmetic inputs establish occurrence, classicality, and attachment. A visualization must not turn one of those inputs into an automatic consequence.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{18}{Return to the proofs with a concrete object}{READING ROUTE / SOURCE CROSSWALK / CHECKS}{Reading guide to Paper XII; formal source v0.17.0 and evidence v0.17.1}
++\vpage{18}{Return to the proofs with a concrete object}{READING ROUTE / SOURCE CROSSWALK / CHECKS}{Reading guide to Paper XII; formal source v0.17.0 and evidence v0.17.1\quad \href{p12-route:visual-18}{Main statement 3.1}}
+ Use the example on the left to keep the relevant object in view while reading the exact statement on the right. The guide is explanatory; the main text supplies the theorem hypotheses and the proof contract.
+ 
+ {\small
+@@ -644,7 +644,7 @@
+ 
+ % ---------------------------------------------------------------------------
+ \setlength{\parskip}{5pt}
+-\vpage{19}{Complete the actual topology}{TOPOLOGICAL ALGEBRA / THE COMPARISON MAP}{Main text: Theorem 3.1, Corollary 3.2 and Proposition 3.3}
++\vpage{19}{Complete the actual topology}{TOPOLOGICAL ALGEBRA / THE COMPARISON MAP}{Main text: Theorem 3.1, Corollary 3.2 and Proposition 3.3\quad \href{p12-route:visual-19}{Main statement 3.1}}
+ The hat in $\whot$ names an actual completion. For the finite family of local rings, start with the ordinary tensor and its ideal of definition:
+ \[
+  S=\bigotimes_{i=1}^s R_i,\qquad
+@@ -673,7 +673,7 @@
+ \takeaway{Closure and topology are structural data. A list of equations in a finite model illustrates the quotient but does not replace the actual completed comparison.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{20}{A finite adequacy calculation}{RESIDUAL IMAGE / ONE EXPLICIT CERTIFICATE}{Main text: Theorem 4.2; label \texttt{thm:s3\_adequacy}. Adequacy convention: external Standard Fact 4.1.}
++\vpage{20}{A finite adequacy calculation}{RESIDUAL IMAGE / ONE EXPLICIT CERTIFICATE}{Main text: Theorem 4.2; label \texttt{thm:s3\_adequacy}. Adequacy convention: external Standard Fact 4.1.\quad \href{p12-route:visual-20}{Main statement 4.2}}
+ Over $k=\FF_7$, the standard representation of $S_3$ has matrices
+ \[
+  s=\begin{pmatrix}6&1\\0&1\end{pmatrix},\qquad
+@@ -698,7 +698,7 @@
+ \takeaway{The calculation is exact for $S_3/\FF_7$. Applying an automorphy lifting theorem still requires its actual residual image hypotheses and residual occupancy. No coefficient-prime-two adequacy theorem follows from this picture.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{21}{Augmentation in two variables}{AUXILIARY ALGEBRA / AN EXACT MONOMIAL BASIS}{Main text: Proposition 5.1, Theorem 5.2 and Theorem 5.4}
++\vpage{21}{Augmentation in two variables}{AUXILIARY ALGEBRA / AN EXACT MONOMIAL BASIS}{Main text: Proposition 5.1, Theorem 5.2 and Theorem 5.4\quad \href{p12-route:visual-21}{Main statement 5.2}}
+ Take $\Delta=C_4\times C_2$ in residue characteristic two. If $g$ and $h$ generate its two factors, put $X=g-1$, $Y=h-1$. Then
+ \[
+ \FF_2[\Delta]\cong\FF_2[X,Y]/(X^4,Y^2).
+@@ -725,7 +725,7 @@
+ \takeaway{The augmentation quotient keeps the scalar coordinate. It needs no averaging denominator and supplies no missing patching-support hypothesis.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{22}{A finite forest selects a branch}{FINITE OCCUPANCY / MAPS NEED NOT BE SURJECTIVE}{Main text: Theorem 10.3 and Corollary 10.4}
++\vpage{22}{A finite forest selects a branch}{FINITE OCCUPANCY / MAPS NEED NOT BE SURJECTIVE}{Main text: Theorem 10.3 and Corollary 10.4\quad \href{p12-route:visual-22}{Main statement 10.3}}
+ A finite nonempty set at every precision, with total reduction maps, can select a compatible branch even when some nodes have no deeper lift. Here is an explicit system:
+ \[
+ X_1=\{r\},\quad X_2=\{a,b\},\quad X_3=\{c,d\},\quad
+@@ -747,7 +747,7 @@
+ \takeaway{Finite set compactness chooses a branch among existing admissible nodes. It neither extends every node nor produces an arithmetic node absent from the finite forest.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{23}{Classes are not matrix frames}{COMPANION COMPLETION / ACTUAL REPRESENTATIVES}{Main text: revised Theorem 10.5 and its preceding admissibility hypotheses}
++\vpage{23}{Classes are not matrix frames}{COMPANION COMPLETION / ACTUAL REPRESENTATIVES}{Main text: revised Theorem 10.5 and its preceding admissibility hypotheses\quad \href{p12-route:visual-23}{Main statement 10.5}}
+ Let $\Gamma=C_2$ with the discrete topology, and represent its generator by $D=\operatorname{diag}(1,-1)$ over $\ZZ_5$. At precision $n$, its conjugacy class is an admissible class in $\GL_2(\ZZ/5^n\ZZ)$. These classes are compatible. Arbitrary representatives need not be.
+ 
+ \vfig[.70]{frames_example}
+@@ -769,7 +769,7 @@
+ \takeaway{Compatibility of classes is the input. Strictly compatible continuous representatives are a constructed output, obtained with the finite-frame and coefficient hypotheses in the revised statement.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{24}{Equations survive every precision}{ADIC EFFECTIVITY / DECLARED POLYNOMIAL CONDITIONS}{Main text: revised Theorem 10.5 and Corollary 3.2}
++\vpage{24}{Equations survive every precision}{ADIC EFFECTIVITY / DECLARED POLYNOMIAL CONDITIONS}{Main text: revised Theorem 10.5 and Corollary 3.2\quad \href{p12-route:visual-24}{Main statement 10.5}}
+ The preceding involution gives an exact polynomial condition. For a matrix $A=(a_{ij})$, require all entries of $A^2-I$ to vanish. In
+ \[
+ B=\ZZ_5[a_{11},a_{12},a_{21},a_{22}],
+@@ -801,7 +801,7 @@
+ \takeaway{The precise coefficient and admissibility hypotheses preserve declared equations. Representability of a desired arithmetic condition remains a separate input.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{25}{Recover multiplicities from traces}{A FINITE SEPARATOR / A KNOWN SEMISIMPLE CARRIER}{Main text: Proposition 10.9}
++\vpage{25}{Recover multiplicities from traces}{A FINITE SEPARATOR / A KNOWN SEMISIMPLE CARRIER}{Main text: Proposition 10.9\quad \href{p12-route:visual-25}{Main statement 10.9}}
+ Suppose a known semisimple carrier is a sum of two known constituents with multiplicities $m_1,m_2$. Consider the independent trace functions
+ \[
+ t_1(\omega)=1,\qquad t_2(\omega)=\omega,\qquad \omega\in\QQ.
+@@ -832,7 +832,7 @@
+ \takeaway{A finite separator reconstructs coefficients in supplied independent trace data. It is not a construction of the constituents, their compatible systems, or automorphic realizations.}
+ 
+ % ---------------------------------------------------------------------------
+-\vpage{26}{Read the exact claim contract}{PROVENANCE / REVISED SCOPE AND ORIGINAL WORDING}{Source: formal release v0.17.0 manuscript, v0.17.1 status and claim delta; finalized 6 October 2026}
++\vpage{26}{Read the exact claim contract}{PROVENANCE / REVISED SCOPE AND ORIGINAL WORDING}{Source: formal release v0.17.0 manuscript, v0.17.1 status and claim delta; finalized 10 October 2026\quad \href{p12-route:visual-26}{Main statement 12.6}}
+ This guide explains the revised manuscript and retains its inherited verification boundaries. There are two censuses, with different statements as their subjects:
+ 
+ \begin{center}
+@@ -863,7 +863,7 @@
+ \head{Final editorial clarifications}
+ The final companions expose finite $S$, a coherent Frobenius normalization, the local coefficient-test category in 3.3, the $r>n$ Fitting boundary, and both compared Frobenius polynomial identities in ordinary completion. These clarifications are distinct from the eight inherited amendments; no new Lean replay certifies them.
+ 
+-\vpage{27}{How to assess the evidence}{VALIDATION / FOUR DISTINCT KINDS OF EVIDENCE}{Inherited source records, current illustrative calculations and final editorial review}
++\vpage{27}{How to assess the evidence}{VALIDATION / FOUR DISTINCT KINDS OF EVIDENCE}{Inherited source records, current illustrative calculations and final editorial review\quad \href{p12-route:visual-27}{Main statement 12.6}}
+ \head{What this companion adds and what its checks mean}
+ The guide preserves the earlier worked examples. TikZ generates every drawing from exact objects; there are no raster figures. Python checks finite enumerations, minors, projectors and matrices; the text argues uniform conclusions. These checks supply no new Lean certificate or census update. Supporting Markdown (.md) files accompany the source.
+ 
+--- predecessor/lean_guide/data/crosswalk.tex
++++ release/lean_guide/data/crosswalk.tex
+@@ -1,53 +1,53 @@
+ \begin{longtable}{l p{.34\textwidth} l l r}
+ \toprule Claim & Manuscript label & Revised & Original & Targets\\
+ \midrule\endhead
+-3.1 & \code{thm:tensor_quotient} & complete & complete & 17\\
+-3.2 & \code{cor:simultaneous_local} & complete & complete & 3\\
+-3.3 & \code{prop:global_local_basechange} & complete & complete & 13\\
+-3.4 & \code{prop:local_idempotent} & complete & complete & 1\\
+-4.2 & \code{thm:s3_adequacy} & complete & complete & 20\\
+-5.1 & \code{prop:group_algebra_transfer} & complete & complete & 5\\
+-5.2 & \code{thm:residual_augmentation_algebra} & complete & complete & 7\\
+-5.3 & \code{cor:no_residual_character_splitting} & complete & complete & 7\\
+-5.4 & \code{thm:coinvariant_recovery} & complete & complete & 6\\
+-6.2 & \code{thm:finite_module_support} & complete & complete & 1\\
+-6.3 & \code{thm:fitting_support} & complete & complete & 2\\
+-6.4 & \code{thm:higher_fitting_strata} & complete & complete & 2\\
+-6.5 & \code{prop:fitting_base_change} & complete & complete & 2\\
+-6.7 & \code{thm:near_faithful_full_support} & complete & complete & 4\\
+-6.8 & \code{cor:every_component_support} & complete & complete & 2\\
+-6.9 & \code{thm:quotient_support} & complete & complete & 3\\
+-6.11 & \code{thm:ordinary_support_descent} & complete & complete & 4\\
+-6.12 & \code{cor:componentwise_occupancy} & amended & unchecked & 1\\
+-6.16 & \code{thm:derived_quotient_support} & complete & complete & 20\\
+-6.18 & \code{thm:derived_support_descent} & complete & complete & 15\\
+-6.19 & \code{cor:derived_degree_survives} & complete & complete & 7\\
+-7.1 & \code{thm:rt_support_transport} & complete & complete & 2\\
+-7.2 & \code{cor:rt_full_support} & complete & complete & 1\\
+-7.3 & \code{prop:quotient_erases_component} & complete & complete & 10\\
+-7.4 & \code{thm:field_fiber_criterion} & complete & complete & 2\\
+-7.5 & \code{cor:supported_hecke_fiber} & complete & complete & 1\\
+-8.2 & \code{thm:canonical_hecke_packets} & complete & complete & 11\\
+-8.3 & \code{cor:simultaneous_generalized_eigenspaces} & complete & complete & 6\\
+-8.4 & \code{cor:rank_trace_detection} & complete & complete & 6\\
+-8.7 & \code{thm:nested_finite_carrier} & complete & complete & 1\\
+-8.8 & \code{cor:finite_witness_incompatibility} & complete & complete & 1\\
+-8.10 & \code{lem:stable_core_surjectivity} & complete & complete & 1\\
+-8.11 & \code{thm:nonzero_stable_core} & complete & complete & 2\\
+-8.12 & \code{cor:surjective_inverse_system} & complete & complete & 1\\
+-9.3 & \code{thm:support_gives_hecke_system} & complete & complete & 2\\
+-9.4 & \code{thm:pointwise_galois_realization} & amended & partial & 7\\
+-9.5 & \code{cor:full_support_pointwise_automorphy} & amended & partial & 1\\
+-9.6 & \code{thm:derived_pointwise_realization} & amended & partial & 21\\
+-10.3 & \code{thm:companion_branch_criterion} & complete & complete & 2\\
+-10.4 & \code{cor:empty_companion_obstruction} & complete & complete & 2\\
+-10.5 & \code{thm:simultaneous_companion_completion} & amended & partial & 1\\
+-10.7 & \code{thm:one_member_propagation} & complete & complete & 2\\
+-10.9 & \code{prop:finite_frobenius_separator} & complete & complete & 2\\
+-11.1 & \code{prop:dyadic_sign_projectors} & complete & complete & 14\\
+-11.2 & \code{cor:dyadic_coinvariant_recovery} & complete & complete & 5\\
+-12.2 & \code{thm:ordinary_conditional_completion} & amended & partial & 7\\
+-12.4 & \code{thm:derived_conditional_completion} & amended & partial & 14\\
+-12.5 & \code{thm:system_completion} & complete & complete & 1\\
+-12.6 & \code{thm:five_gate_completion} & amended & partial & 36\\
++\href{p12-route:claim-3.1}{3.1} & \code{thm:tensor_quotient} & complete & complete & 17\\
++\href{p12-route:claim-3.2}{3.2} & \code{cor:simultaneous_local} & complete & complete & 3\\
++\href{p12-route:claim-3.3}{3.3} & \code{prop:global_local_basechange} & complete & complete & 13\\
++\href{p12-route:claim-3.4}{3.4} & \code{prop:local_idempotent} & complete & complete & 1\\
++\href{p12-route:claim-4.2}{4.2} & \code{thm:s3_adequacy} & complete & complete & 20\\
++\href{p12-route:claim-5.1}{5.1} & \code{prop:group_algebra_transfer} & complete & complete & 5\\
++\href{p12-route:claim-5.2}{5.2} & \code{thm:residual_augmentation_algebra} & complete & complete & 7\\
++\href{p12-route:claim-5.3}{5.3} & \code{cor:no_residual_character_splitting} & complete & complete & 7\\
++\href{p12-route:claim-5.4}{5.4} & \code{thm:coinvariant_recovery} & complete & complete & 6\\
++\href{p12-route:claim-6.2}{6.2} & \code{thm:finite_module_support} & complete & complete & 1\\
++\href{p12-route:claim-6.3}{6.3} & \code{thm:fitting_support} & complete & complete & 2\\
++\href{p12-route:claim-6.4}{6.4} & \code{thm:higher_fitting_strata} & complete & complete & 2\\
++\href{p12-route:claim-6.5}{6.5} & \code{prop:fitting_base_change} & complete & complete & 2\\
++\href{p12-route:claim-6.7}{6.7} & \code{thm:near_faithful_full_support} & complete & complete & 4\\
++\href{p12-route:claim-6.8}{6.8} & \code{cor:every_component_support} & complete & complete & 2\\
++\href{p12-route:claim-6.9}{6.9} & \code{thm:quotient_support} & complete & complete & 3\\
++\href{p12-route:claim-6.11}{6.11} & \code{thm:ordinary_support_descent} & complete & complete & 4\\
++\href{p12-route:claim-6.12}{6.12} & \code{cor:componentwise_occupancy} & amended & unchecked & 1\\
++\href{p12-route:claim-6.16}{6.16} & \code{thm:derived_quotient_support} & complete & complete & 20\\
++\href{p12-route:claim-6.18}{6.18} & \code{thm:derived_support_descent} & complete & complete & 15\\
++\href{p12-route:claim-6.19}{6.19} & \code{cor:derived_degree_survives} & complete & complete & 7\\
++\href{p12-route:claim-7.1}{7.1} & \code{thm:rt_support_transport} & complete & complete & 2\\
++\href{p12-route:claim-7.2}{7.2} & \code{cor:rt_full_support} & complete & complete & 1\\
++\href{p12-route:claim-7.3}{7.3} & \code{prop:quotient_erases_component} & complete & complete & 10\\
++\href{p12-route:claim-7.4}{7.4} & \code{thm:field_fiber_criterion} & complete & complete & 2\\
++\href{p12-route:claim-7.5}{7.5} & \code{cor:supported_hecke_fiber} & complete & complete & 1\\
++\href{p12-route:claim-8.2}{8.2} & \code{thm:canonical_hecke_packets} & complete & complete & 11\\
++\href{p12-route:claim-8.3}{8.3} & \code{cor:simultaneous_generalized_eigenspaces} & complete & complete & 6\\
++\href{p12-route:claim-8.4}{8.4} & \code{cor:rank_trace_detection} & complete & complete & 6\\
++\href{p12-route:claim-8.7}{8.7} & \code{thm:nested_finite_carrier} & complete & complete & 1\\
++\href{p12-route:claim-8.8}{8.8} & \code{cor:finite_witness_incompatibility} & complete & complete & 1\\
++\href{p12-route:claim-8.10}{8.10} & \code{lem:stable_core_surjectivity} & complete & complete & 1\\
++\href{p12-route:claim-8.11}{8.11} & \code{thm:nonzero_stable_core} & complete & complete & 2\\
++\href{p12-route:claim-8.12}{8.12} & \code{cor:surjective_inverse_system} & complete & complete & 1\\
++\href{p12-route:claim-9.3}{9.3} & \code{thm:support_gives_hecke_system} & complete & complete & 2\\
++\href{p12-route:claim-9.4}{9.4} & \code{thm:pointwise_galois_realization} & amended & partial & 7\\
++\href{p12-route:claim-9.5}{9.5} & \code{cor:full_support_pointwise_automorphy} & amended & partial & 1\\
++\href{p12-route:claim-9.6}{9.6} & \code{thm:derived_pointwise_realization} & amended & partial & 21\\
++\href{p12-route:claim-10.3}{10.3} & \code{thm:companion_branch_criterion} & complete & complete & 2\\
++\href{p12-route:claim-10.4}{10.4} & \code{cor:empty_companion_obstruction} & complete & complete & 2\\
++\href{p12-route:claim-10.5}{10.5} & \code{thm:simultaneous_companion_completion} & amended & partial & 1\\
++\href{p12-route:claim-10.7}{10.7} & \code{thm:one_member_propagation} & complete & complete & 2\\
++\href{p12-route:claim-10.9}{10.9} & \code{prop:finite_frobenius_separator} & complete & complete & 2\\
++\href{p12-route:claim-11.1}{11.1} & \code{prop:dyadic_sign_projectors} & complete & complete & 14\\
++\href{p12-route:claim-11.2}{11.2} & \code{cor:dyadic_coinvariant_recovery} & complete & complete & 5\\
++\href{p12-route:claim-12.2}{12.2} & \code{thm:ordinary_conditional_completion} & amended & partial & 7\\
++\href{p12-route:claim-12.4}{12.4} & \code{thm:derived_conditional_completion} & amended & partial & 14\\
++\href{p12-route:claim-12.5}{12.5} & \code{thm:system_completion} & complete & complete & 1\\
++\href{p12-route:claim-12.6}{12.6} & \code{thm:five_gate_completion} & amended & partial & 36\\
+ \bottomrule\end{longtable}

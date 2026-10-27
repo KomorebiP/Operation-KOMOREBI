@@ -1,0 +1,83 @@
+import PaperXII.CompletedPaperCapstone
+
+/-! The point equivalence respects both locality and the base coefficient algebra. -/
+noncomputable section
+set_option autoImplicit false
+namespace PaperXII.CompletedLocalConditions
+
+variable {O ι : Type*} [CommRing O] [Fintype ι] [DecidableEq ι]
+variable (R : ι → Type*) [∀ i, CommRing (R i)] [∀ i, Algebra O (R i)]
+variable (mO : Ideal O) (m : ∀ i, Ideal (R i)) (I : ∀ i, Ideal (R i))
+variable {B : Type*} [CommRing B] [Algebra (LocalTensor R mO m) B] (mB : Ideal B)
+variable [UniformSpace B] [IsUniformAddGroup B] [IsTopologicalRing B] [CompleteSpace B]
+
+/-- The actual global map is surjective for a complete global coefficient ring. -/
+theorem globalMap_surjective (hB : IsAdic mB)
+    (h : (localIdeal R mO m).map (algebraMap (LocalTensor R mO m) B) ≤ mB) :
+    Function.Surjective (globalMap R mO m I mB) :=
+  CompletedBaseChange.transportedGlobalMap_surjective _ _ _ hB h
+    (quotientIdentification R mO m I)
+
+/-- The nonzero global completed tensor is a genuine local ring. -/
+theorem globalRing_isLocalRing [IsLocalRing B] [Nontrivial (GlobalRing R mO m I mB)]
+    (hB : IsAdic mB)
+    (h : (localIdeal R mO m).map (algebraMap (LocalTensor R mO m) B) ≤ mB) :
+    IsLocalRing (GlobalRing R mO m I mB) :=
+  IsLocalRing.of_surjective' (globalMap R mO m I mB) (globalMap_surjective R mO m I mB hB h)
+
+/-- Every factor of a local point is local; no extra local-lifting datum is assumed. -/
+theorem point_factor_isLocal {P : Type*} [CommRing P] (hB : IsAdic mB)
+    (h : (localIdeal R mO m).map (algebraMap (LocalTensor R mO m) B) ≤ mB)
+    (p : B →+* P) [IsLocalHom p] (g : GlobalRing R mO m I mB →+* P)
+    (hg : g.comp (globalMap R mO m I mB) = p) : IsLocalHom g :=
+  CompletedBaseChange.transported_factor_isLocal _ _ _ hB h
+    (quotientIdentification R mO m I) p g hg
+
+variable [Algebra O B]
+
+/-- The canonical coefficient algebra is the actual composite through the global map. -/
+def globalCoefficientAlgebra : Algebra O (GlobalRing R mO m I mB) :=
+  ((globalMap R mO m I mB).comp (algebraMap O B)).toAlgebra
+attribute [local instance] globalCoefficientAlgebra
+
+/-- The canonical global map respects the chosen coefficient algebra. -/
+def globalAlgMap : B →ₐ[O] GlobalRing R mO m I mB where
+  __ := globalMap R mO m I mB
+  commutes' _ := rfl
+
+variable {P : Type*} [CommRing P] [Algebra O P] [UniformSpace P]
+  [IsUniformAddGroup P] [IsTopologicalRing P] [CompleteSpace P] [T2Space P]
+
+/-- Claim 3.3 as an equivalence of continuous local algebra points. -/
+theorem local_algebra_point_iff (fgO : mO.FG) (fg : ∀ i, (m i).FG)
+    (hB : IsAdic mB)
+    (h : (localIdeal R mO m).map (algebraMap (LocalTensor R mO m) B) ≤ mB)
+    (p : B →ₐ[O] P) [IsLocalHom p.toRingHom] (hp : Continuous p) :
+    (∃! g : GlobalRing R mO m I mB →ₐ[O] P,
+      Continuous g ∧ IsLocalHom g.toRingHom ∧ g.comp (globalAlgMap R mO m I mB) = p) ↔
+        ∀ i, I i ≤ RingHom.ker ((p.toRingHom.comp (algebraMap (LocalTensor R mO m) B)).comp
+          (FiniteTensor.completedInclude R mO m i).toRingHom) := by
+  constructor
+  · rintro ⟨g, ⟨hg, _, hgp⟩, _⟩
+    apply (global_base_change R mO m I mB fgO fg hB h p.toRingHom hp).mp
+    refine ⟨g.toRingHom, ⟨hg, ?_⟩, ?_⟩
+    · exact congrArg AlgHom.toRingHom hgp
+    · intro g' hg'
+      ext x
+      obtain ⟨b, rfl⟩ := globalMap_surjective R mO m I mB hB h x
+      exact (DFunLike.congr_fun hg'.2 b).trans
+        (DFunLike.congr_fun (congrArg AlgHom.toRingHom hgp) b).symm
+  · intro hI
+    obtain ⟨g, ⟨hg, hgp⟩, hu⟩ :=
+      (global_base_change R mO m I mB fgO fg hB h p.toRingHom hp).mpr hI
+    let ga : GlobalRing R mO m I mB →ₐ[O] P :=
+      { __ := g
+        commutes' := fun a ↦ (DFunLike.congr_fun hgp (algebraMap O B a)).trans (p.commutes a) }
+    refine ⟨ga, ⟨hg, point_factor_isLocal R mO m I mB hB h p.toRingHom g hgp, ?_⟩, ?_⟩
+    · exact AlgHom.ext (fun b ↦ DFunLike.congr_fun hgp b)
+    · intro g' hg'
+      apply AlgHom.ext
+      intro x
+      exact DFunLike.congr_fun (hu g'.toRingHom ⟨hg'.1, congrArg AlgHom.toRingHom hg'.2.2⟩) x
+
+end PaperXII.CompletedLocalConditions

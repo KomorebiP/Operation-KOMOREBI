@@ -1,0 +1,45 @@
+import PaperXII.CompletedPointCategory
+
+/-! Exact edge checks for the completed objects and their defining ideals. -/
+noncomputable section
+set_option autoImplicit false
+namespace PaperXII.CompletionBoundaryChecks
+
+variable {O ι : Type*} [CommRing O] [Fintype ι] [DecidableEq ι]
+variable (R : ι → Type*) [∀ i, CommRing (R i)] [∀ i, Algebra O (R i)]
+variable (mO : Ideal O) (m : ∀ i, Ideal (R i))
+
+omit [Fintype ι] in
+/-- An empty tensor family retains the base-adic topology. -/
+theorem empty_definingIdeal [IsEmpty ι] :
+    FiniteTensor.definingIdeal R mO m = mO.map (algebraMap O (FiniteTensor.Raw (O := O) R)) := by
+  simp [FiniteTensor.definingIdeal, FiniteTensor.conditions]
+
+omit [Fintype ι] in
+/-- Zero local conditions generate the zero closed ideal, not a larger residual ideal. -/
+theorem zero_closedConditions :
+    FiniteTensor.closedConditions R mO m (fun _ ↦ ⊥) = ⊥ := by
+  rw [FiniteTensor.closedConditions_eq]
+  simp only [Ideal.map_bot, iSup_bot]
+  apply Ideal.closure_eq_of_isClosed
+  exact isClosed_singleton
+
+omit [Fintype ι] in
+/-- An inconsistent local condition kills the actual complete tensor ring. -/
+theorem top_closedCondition (I : ∀ i, Ideal (R i)) (i : ι) (hi : I i = ⊤) :
+    FiniteTensor.closedConditions R mO m I = ⊤ := by
+  rw [FiniteTensor.closedConditions_eq]
+  apply top_unique
+  have h : (I i).map (FiniteTensor.completedInclude R mO m i).toRingHom ≤
+      ⨆ j, (I j).map (FiniteTensor.completedInclude R mO m j).toRingHom := le_iSup (fun j ↦ (I j).map (FiniteTensor.completedInclude R mO m j).toRingHom) i
+  rw [hi, Ideal.map_top] at h
+  exact h.trans (show (⨆ j, (I j).map (FiniteTensor.completedInclude R mO m j).toRingHom) ≤
+    (⨆ j, (I j).map (FiniteTensor.completedInclude R mO m j).toRingHom).closure from subset_closure)
+
+/-- Completion imposes no nontriviality premise in the main quotient comparison. -/
+theorem quotientComparison_top (I : ∀ i, Ideal (R i)) :
+    Continuous (FiniteTensor.completed_tensor_quotient R mO m I) ∧
+      Continuous (FiniteTensor.completed_tensor_quotient R mO m I).symm :=
+  FiniteTensor.completed_tensor_quotient_continuous R mO m I
+
+end PaperXII.CompletionBoundaryChecks

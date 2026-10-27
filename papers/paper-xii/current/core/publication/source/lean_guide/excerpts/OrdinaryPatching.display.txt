@@ -1,0 +1,98 @@
+import PaperXII.QuotientSupport
+import Mathlib.RingTheory.Noetherian.Basic
+
+/-! Paper XII, Theorem 6.11. Only actual algebra and module identifications are inputs. -/
+namespace PaperXII.OrdinaryPatching
+
+open ModuleSupport QuotientSupport
+
+variable {A R P M : Type*} [CommRing A] [CommRing R]
+    [AddCommGroup P] [Module A P] [Module.Finite A P]
+
+/-- Full support descends to the actual augmentation quotient. -/
+theorem quotient_fullSupport (I : Ideal A) (h : FullSupport A P) :
+    FullSupport (A / I) (P / (I • ⊤ : Submodule A P)) := by
+  apply (fullSupport_iff_localizations _ _).mpr
+  intro q
+  apply (support_quotient_iff I q).mpr
+  exact (fullSupport_iff_localizations A P).mp h _
+
+/-- A concrete presentation of the ordinary patching identifications:
+A → R is surjective with kernel I, and P/IP ≃ M as A-modules.
+There is no support or occupancy conclusion in these inputs. -/
+theorem fullSupport_descends [Algebra A R] [AddCommGroup M] [Module A M]
+    [Module R M] [IsScalarTower A R M]
+    (I : Ideal A) (hf : Function.Surjective (algebraMap A R))
+    (hker : RingHom.ker (algebraMap A R) = I)
+    (e : (P / (I • ⊤ : Submodule A P)) ≃ₗ[A] M)
+    (h : FullSupport A P) : FullSupport R M := by
+  let : Module.Finite A M := Module.Finite.equiv e
+  apply (fullSupport_iff_localizations R M).mpr
+  intro q
+  apply (mem_support_restrictScalars_iff hf q).mp
+  rw [← e.support_eq, Module.support_quotient]
+  refine ⟨(fullSupport_iff_localizations A P).mp h _, ?_⟩
+  change I ≤ Ideal.comap (algebraMap A R) q.asIdeal
+  rw [← hker]
+  exact Ideal.ker_le_comap _
+
+/-- The near-faithfulness conclusion of 6.11, including transported patching data. -/
+theorem nearlyFaithful_descends [IsNoetherianRing A]
+    [Algebra A R] [AddCommGroup M] [Module A M]
+    [Module R M] [IsScalarTower A R M]
+    (I : Ideal A) (hf : Function.Surjective (algebraMap A R))
+    (hker : RingHom.ker (algebraMap A R) = I)
+    (e : (P / (I • ⊤ : Submodule A P)) ≃ₗ[A] M)
+    (h : NearlyFaithful A P) : NearlyFaithful R M := by
+  let : IsNoetherianRing R := isNoetherianRing_of_surjective A R (algebraMap A R) hf
+  let : Module.Finite A M := Module.Finite.equiv e
+  let : Module.Finite R M := Module.Finite.of_restrictScalars_finite A R M
+  exact (nearlyFaithful_iff_fullSupport R M).mpr
+    (fullSupport_descends I hf hker e ((nearlyFaithful_iff_fullSupport A P).mp h))
+
+/-- The reduced-ring faithfulness conclusion of 6.11. -/
+theorem faithful_descends_of_reduced [IsNoetherianRing A] [IsReduced R]
+    [Algebra A R] [AddCommGroup M] [Module A M]
+    [Module R M] [IsScalarTower A R M]
+    (I : Ideal A) (hf : Function.Surjective (algebraMap A R))
+    (hker : RingHom.ker (algebraMap A R) = I)
+    (e : (P / (I • ⊤ : Submodule A P)) ≃ₗ[A] M)
+    (h : NearlyFaithful A P) : FaithfulSMul R M := by
+  let : IsNoetherianRing R := isNoetherianRing_of_surjective A R (algebraMap A R) hf
+  exact (nearlyFaithful_iff_faithful_of_reduced R M).mp
+    (nearlyFaithful_descends I hf hker e h)
+
+/-- All conclusions of 6.11 from the actual ring and module quotient identifications. -/
+theorem conclusions_of_quotient_identifications [IsNoetherianRing A]
+    [Algebra A R] [AddCommGroup M] [Module A M]
+    [Module R M] [IsScalarTower A R M]
+    (I : Ideal A) (eR : (A / I) ≃ₐ[A] R)
+    (eM : (P / (I • ⊤ : Submodule A P)) ≃ₗ[A] M)
+    (h : FullSupport A P) :
+    FullSupport R M ∧ NearlyFaithful R M ∧ (IsReduced R → FaithfulSMul R M) := by
+  have hmap : algebraMap A R = eR.toRingHom.comp (Ideal.Quotient.mk I) := by
+    ext a
+    exact (eR.commutes a).symm
+  have hf : Function.Surjective (algebraMap A R) := by
+    rw [hmap]
+    exact eR.surjective.comp Ideal.Quotient.mk_surjective
+  have hker : RingHom.ker (algebraMap A R) = I := by
+    ext a
+    change algebraMap A R a = 0 ↔ a ∈ I
+    rw [hmap]
+    change eR (Ideal.Quotient.mk I a) = 0 ↔ a ∈ I
+    constructor
+    · intro hz
+      apply Ideal.Quotient.eq_zero_iff_mem.mp
+      apply eR.injective
+      exact hz.trans (map_zero eR).symm
+    · intro ha
+      rw [Ideal.Quotient.eq_zero_iff_mem.mpr ha, map_zero]
+  have hn := (nearlyFaithful_iff_fullSupport A P).mpr h
+  refine ⟨fullSupport_descends I hf hker eM h,
+    nearlyFaithful_descends I hf hker eM hn, ?_⟩
+  intro hred
+  let : IsReduced R := hred
+  exact faithful_descends_of_reduced I hf hker eM hn
+
+end PaperXII.OrdinaryPatching

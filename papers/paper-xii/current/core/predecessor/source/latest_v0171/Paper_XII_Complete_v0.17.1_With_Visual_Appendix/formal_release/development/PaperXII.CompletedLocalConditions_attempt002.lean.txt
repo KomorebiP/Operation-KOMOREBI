@@ -1,0 +1,98 @@
+import PaperXII.CompletedTensorUniversal
+import PaperXII.CompletedBaseChangeTransport
+
+/-!
+# The completed local-to-global quotient theorem
+
+The local-condition ring is the actual finite completed tensor of the factor
+quotients. Its action by the local tensor ring is constructed from the proved
+Claim 3.1 equivalence, not supplied as an identification hypothesis.
+-/
+noncomputable section
+open UniformSpace
+set_option autoImplicit false
+namespace PaperXII.CompletedLocalConditions
+
+variable {O ι : Type*} [CommRing O] [Fintype ι] [DecidableEq ι]
+variable (R : ι → Type*) [∀ i, CommRing (R i)] [∀ i, Algebra O (R i)]
+variable (mO : Ideal O) (m : ∀ i, Ideal (R i)) (I : ∀ i, Ideal (R i))
+
+abbrev LocalTensor := FiniteTensor.CompletedTensor R mO m
+abbrev Conditions := FiniteTensor.CompletedTensor (fun i ↦ R i ⧸ I i) mO
+  (fun i ↦ (m i).map (Ideal.Quotient.mk (I i)))
+abbrev closedIdeal := FiniteTensor.closedConditions R mO m I
+abbrev localIdeal := (FiniteTensor.definingIdeal R mO m).map
+  (FiniteTensor.tensorEmbed R mO m).toRingHom
+
+/-- The actual condition tensor receives the canonical local quotient action. -/
+instance conditionAlgebra : Algebra (LocalTensor R mO m) (Conditions R mO m I) :=
+  ((FiniteTensor.completedQuotientEquiv R mO m I).toRingHom.comp
+    (Ideal.Quotient.mk (closedIdeal R mO m I))).toAlgebra
+
+/-- Claim 3.1 upgraded to the local-tensor coefficient algebra. -/
+def quotientIdentification : (LocalTensor R mO m ⧸ closedIdeal R mO m I) ≃ₐ[LocalTensor R mO m]
+    Conditions R mO m I where
+  __ := FiniteTensor.completedQuotientEquiv R mO m I
+  commutes' _ := rfl
+
+/-- The transported ideal is exactly the one defining the actual condition tensor topology. -/
+theorem quotientIdentification_ideal :
+    ((localIdeal R mO m).map (Ideal.Quotient.mk (closedIdeal R mO m I))).map
+      (quotientIdentification R mO m I).toRingHom =
+        (FiniteTensor.definingIdeal (fun i ↦ R i ⧸ I i) mO
+          (fun i ↦ (m i).map (Ideal.Quotient.mk (I i)))).map
+            (FiniteTensor.tensorEmbed (fun i ↦ R i ⧸ I i) mO
+              (fun i ↦ (m i).map (Ideal.Quotient.mk (I i)))).toRingHom := by
+  simp only [localIdeal, Ideal.map_map]
+  have hcomp : (quotientIdentification R mO m I).toRingHom.comp
+      ((Ideal.Quotient.mk (closedIdeal R mO m I)).comp (FiniteTensor.tensorEmbed R mO m).toRingHom) =
+        (FiniteTensor.tensorEmbed (fun i ↦ R i ⧸ I i) mO
+          (fun i ↦ (m i).map (Ideal.Quotient.mk (I i)))).toRingHom.comp
+            (FiniteTensor.quotientMap R I).toRingHom := by
+    ext x
+    exact FiniteTensor.completedQuotientEquiv_mk_embed R mO m I x
+  rw [hcomp, ← Ideal.map_map, FiniteTensor.quotientMap_definingIdeal]
+
+variable {B : Type*} [CommRing B] [Algebra (LocalTensor R mO m) B]
+  (mB : Ideal B)
+
+/-- The actual completed global tensor with the independently constructed condition tensor. -/
+abbrev GlobalRing := CompletedBaseChange.Transported (localIdeal R mO m) mB
+  (closedIdeal R mO m I) (quotientIdentification R mO m I)
+
+def globalMap : B →+* GlobalRing R mO m I mB :=
+  CompletedBaseChange.transportedGlobalMap (localIdeal R mO m) mB
+    (closedIdeal R mO m I) (quotientIdentification R mO m I)
+
+/-- The defining construction provides genuine completeness and separation. -/
+theorem globalRing_complete : CompleteSpace (GlobalRing R mO m I mB) ∧
+    T2Space (GlobalRing R mO m I mB) := ⟨inferInstance, inferInstance⟩
+
+variable [UniformSpace B] [IsUniformAddGroup B] [IsTopologicalRing B]
+variable {P : Type*} [CommRing P] [UniformSpace P] [IsUniformAddGroup P]
+  [IsTopologicalRing P] [CompleteSpace P] [T2Space P]
+
+/-- Full Claim 3.3: the named completed base change imposes exactly all local conditions. -/
+theorem global_base_change (fgO : mO.FG) (fg : ∀ i, (m i).FG) (hB : IsAdic mB)
+    (h : (localIdeal R mO m).map (algebraMap (LocalTensor R mO m) B) ≤ mB)
+    (p : B →+* P) (hp : Continuous p) :
+    (∃! g : GlobalRing R mO m I mB →+* P,
+      Continuous g ∧ g.comp (globalMap R mO m I mB) = p) ↔
+        ∀ i, I i ≤ RingHom.ker ((p.comp (algebraMap (LocalTensor R mO m) B)).comp
+          (FiniteTensor.completedInclude R mO m i).toRingHom) := by
+  have hp' : Continuous (p.comp (AdicModel.rawEquiv B mB).toRingHom) :=
+    hp.comp (AdicModel.continuous_of_map_le (AdicModel.carrier_isAdic B mB) hB
+      (AdicModel.rawEquiv B mB).toRingHom (by
+        change mB.map (RingHom.id B) ≤ mB
+        simp))
+  rw [CompletedBaseChange.transported_exists_unique_factor_iff _ _ _ _ h p hp']
+  change FiniteTensor.closedConditions R mO m I ≤ RingHom.ker
+    (p.comp (algebraMap (LocalTensor R mO m) B)) ↔ _
+  rw [FiniteTensor.closedConditions_eq]
+  apply LocalQuotients.closed_conditions_iff R
+    (fun i ↦ (FiniteTensor.completedInclude R mO m i).toRingHom) I
+  exact hp.comp (AdicModel.continuous_of_map_le
+    (FiniteTensor.completedTensor_isAdic R mO m fgO fg) hB
+      (algebraMap (LocalTensor R mO m) B) h)
+
+end PaperXII.CompletedLocalConditions

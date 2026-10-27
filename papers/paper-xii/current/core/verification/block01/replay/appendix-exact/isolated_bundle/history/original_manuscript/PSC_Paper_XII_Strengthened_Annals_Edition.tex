@@ -1,0 +1,1696 @@
+\documentclass{aomart}
+
+\usepackage[T1]{fontenc}
+\usepackage[nopatch=footnote]{microtype}
+\usepackage{amssymb,mathtools}
+\usepackage{amscd}
+\usepackage{bm}
+\usepackage{aliascnt}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage[nameinlink,noabbrev]{cleveref}
+
+\allowdisplaybreaks
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=2600
+\emergencystretch=4em
+
+\makeatletter
+\def\@setsubjects{%
+  \let\@subjects\@empty
+  \ifx\@primarysubjects\@empty\else
+    \edef\@subjects{Primary:~\@primarysubjects}%
+  \fi
+  \ifx\@secondarysubjects\@empty\else
+    \ifx\@primarysubjects\@empty
+      \edef\@subjects{Secondary:~\@secondarysubjects}%
+    \else
+      \edef\@subjects{\@subjects, Secondary:~\@secondarysubjects}%
+    \fi
+  \fi
+  \ifpdf
+    \hypersetup{pdfsubject=\@subjects}%
+  \fi
+  \if@aom@oldkeywords\else
+    \@footnotetext{AMS Classification:~\@subjects.}%
+  \fi
+}
+\makeatother
+
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newaliascnt{proposition}{theorem}
+\newtheorem{proposition}[proposition]{Proposition}
+\aliascntresetthe{proposition}
+\newaliascnt{lemma}{theorem}
+\newtheorem{lemma}[lemma]{Lemma}
+\aliascntresetthe{lemma}
+\newaliascnt{corollary}{theorem}
+\newtheorem{corollary}[corollary]{Corollary}
+\aliascntresetthe{corollary}
+\theoremstyle{definition}
+\newaliascnt{definition}{theorem}
+\newtheorem{definition}[definition]{Definition}
+\aliascntresetthe{definition}
+\newaliascnt{example}{theorem}
+\newtheorem{example}[example]{Example}
+\aliascntresetthe{example}
+\newaliascnt{standardfact}{theorem}
+\newtheorem{standardfact}[standardfact]{Standard Fact}
+\aliascntresetthe{standardfact}
+\theoremstyle{remark}
+\newaliascnt{remark}{theorem}
+\newtheorem{remark}[remark]{Remark}
+\aliascntresetthe{remark}
+
+\crefname{theorem}{theorem}{theorems}
+\crefname{proposition}{proposition}{propositions}
+\crefname{lemma}{lemma}{lemmas}
+\crefname{corollary}{corollary}{corollaries}
+\crefname{definition}{definition}{definitions}
+\crefname{example}{example}{examples}
+\crefname{standardfact}{standard fact}{standard facts}
+\crefname{remark}{remark}{remarks}
+
+\newcommand{\OO}{\mathcal O}
+\newcommand{\FF}{\mathbb F}
+\newcommand{\QQ}{\mathbb Q}
+\newcommand{\ZZ}{\mathbb Z}
+\newcommand{\CC}{\mathbb C}
+\newcommand{\NN}{\mathbb N}
+\newcommand{\EE}{\mathbb E}
+\newcommand{\TT}{\mathbb T}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Spf}{\operatorname{Spf}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\Ann}{\operatorname{Ann}}
+\newcommand{\Fitt}{\operatorname{Fitt}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\Tor}{\operatorname{Tor}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Frob}{\operatorname{Frob}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\ad}{\operatorname{ad}}
+\newcommand{\Max}{\operatorname{Max}}
+\newcommand{\Perf}{\operatorname{Perf}}
+\newcommand{\nil}{\operatorname{Nil}}
+\newcommand{\rad}{\operatorname{rad}}
+\newcommand{\length}{\operatorname{length}}
+\newcommand{\id}{\operatorname{id}}
+\newcommand{\e}{\mathrm e}
+\newcommand{\one}{\bm 1}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\calA}{\mathcal A}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\calD}{\mathcal D}
+\newcommand{\calF}{\mathcal F}
+\newcommand{\calH}{\mathcal H}
+\newcommand{\calM}{\mathcal M}
+\newcommand{\calP}{\mathcal P}
+\newcommand{\calR}{\mathcal R}
+\newcommand{\calS}{\mathcal S}
+\newcommand{\calT}{\mathcal T}
+\newcommand{\calV}{\mathcal V}
+\newcommand{\calW}{\mathcal W}
+\newcommand{\frakC}{\mathfrak C}
+\newcommand{\frakF}{\mathfrak F}
+\newcommand{\frakm}{\mathfrak m}
+\newcommand{\frakp}{\mathfrak p}
+\newcommand{\fraka}{\mathfrak a}
+\newcommand{\wideotimes}{\mathbin{\widehat\otimes}}
+
+\graphicspath{{figures/}}
+
+\title[Patching support and automorphic completion]{Patching Support, Hecke Packets, and Conditional Automorphic Completion}
+\author[Komorebi P.]{Komorebi P.}
+\subject{primary}{msc2020}{11F80}
+\subject{secondary}{msc2020}{11F70}
+\subject{secondary}{msc2020}{13C14}
+\subject{secondary}{msc2020}{13D09}
+\subject{secondary}{msc2020}{11R34}
+\keyword{automorphy lifting}
+\keyword{Taylor Wiles patching}
+\keyword{module support}
+\keyword{Hecke algebra}
+\keyword{compatible system}
+\keyword{adequate image}
+\copyrightnote{}
+\doinumber{}
+
+\pdfstringdefDisableCommands{\let\unskip\relax}
+\hypersetup{
+  pdftitle={Patching Support, Hecke Packets, and Conditional Automorphic Completion},
+  pdfauthor={Komorebi P.},
+  pdfsubject={Global deformation conditions, patching support, Hecke packets, compatible systems, and conditional automorphic realization}
+}
+
+\begin{document}
+\begin{abstract}
+Let \(\bar\rho\) be a residual Galois representation and let \(R\) be a global deformation ring with declared local conditions. We separate the global automorphy problem into residual occupancy, deformation support, Hecke occupancy, and arithmetic realization. Local conditions are encoded by quotient rings rather than by idempotents, since irreducible components of a local deformation ring need not be clopen. For an ordinary or derived patching datum, full support descends through the augmentation quotient. Near faithfulness is shown to be equivalent to full support for finite modules over Noetherian rings. An isomorphism \(R\cong\TT\) transports support, Fitting ideals, and point fibers, but a quotient map can erase an entire component. Finite Hecke algebras are resolved into canonical Artin packets, so simultaneous generalized eigenspaces are available without assuming semisimplicity. Nested packets in one finite carrier stabilize, while changing carriers require a Mittag Leffler condition. These results give a pointwise criterion: a characteristic zero deformation point in automorphic support produces a Hecke eigensystem. With attached Galois representations, local global compatibility, and classicality, the point is automorphic. A fixed compatible system then propagates the conclusion to every coefficient place. Universal companion existence and unrestricted reciprocity are not proved.
+\end{abstract}
+\maketitle
+\thispagestyle{plain}
+
+\section{Introduction}\label{sec:introduction}
+
+Automorphy lifting joins several kinds of mathematics that are easy to conflate. A residual representation must first occur in an automorphic carrier. The chosen characteristic zero representation must lie on a deformation problem controlled by local conditions. A patching argument must show that the automorphic module reaches the relevant part of the deformation space. A comparison such as \(R\cong\TT\) must identify the arithmetic and Hecke coordinates. Finally, the resulting Hecke point must be classical and must carry the expected Galois representation with the required local compatibility.
+
+None of these steps is merely a change of notation. A deeper lift above one residual representation cannot create a missing residual companion. Freeness over an auxiliary group algebra does not imply that every component of a deformation ring is occupied. An isomorphism of rings transports support that already exists, but it does not create a nonzero automorphic vector. A nonzero class in completed or torsion cohomology need not be classical without a theorem that says so.
+
+The Taylor Wiles method and its later forms solve these problems in many important settings \cite{Wiles1995,TaylorWiles1995,Diamond1997,Kisin2009,Gee2022}. Higher dimensional and derived versions use a broader range of local deformation rings, residual image conditions, torsion classes, and cohomological carriers \cite{ClozelHarrisTaylor2008,BarnetLambGeeGeraghtyTaylor2014,CalegariGeraghty2018,Thorne2012,MiagkovThorne2023,Scholze2015,CaraianiScholze2017,NewtonThorne2016}. The present article does not replace those theorems. It isolates the algebraic support statements that explain exactly what a patching package supplies once its arithmetic hypotheses have been verified.
+
+The first correction concerns local packets. A local deformation ring is usually complete and local. Its irreducible components are rarely open and closed. They cannot generally be represented by central idempotents. The correct object is a quotient ring defining a local condition, together with the support of a module or complex on the resulting spectrum. Central idempotents reappear later, where they belong, inside finite Artin Hecke algebras and finite dimensional characteristic zero carriers.
+
+The second correction concerns patching. The useful global conclusion is full support, often expressed as near faithfulness. For a finite module over a Noetherian ring, near faithfulness is equivalent to full support. Full support descends through the quotient that removes the auxiliary variables. This statement is elementary, but it is the exact bridge from a patched module to componentwise occupancy at finite level. The same conclusion holds for perfect complexes through derived support.
+
+The third correction concerns Hecke packets. Semisimplicity is not required to isolate a maximal Hecke packet. Every finite commutative algebra over a field is a product of Artin local algebras. Its canonical central idempotents project onto simultaneous generalized eigenspaces. Trace is only a secondary criterion in characteristic zero. Support and localization are the primary notions.
+
+The last part assembles these statements into a conditional theorem. A characteristic zero point of \(R\) is automorphic when it lies in the support of the automorphic carrier, the comparison with the Hecke algebra is available, and the corresponding Hecke fiber satisfies the declared realization theorem. If the point belongs to a fixed strictly compatible system, equality of Frobenius polynomials propagates the automorphic identification to every coefficient place by Chebotarev density and Brauer Nesbitt \cite{BrauerNesbitt1941,Neukirch1999}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.98\textwidth]{01_global_gates.pdf}
+\caption{The global argument has several logically separate gates.}
+\label{fig:global_gates}
+\end{figure}
+
+The organization is as follows. Local quotient conditions are developed in \cref{sec:local_conditions}. Adequacy and residual occupancy appear in \cref{sec:adequacy}. Auxiliary group algebras are treated in \cref{sec:auxiliary}. Ordinary and derived patching support appear in \cref{sec:patching_support}. The effect of \(R\cong\TT\) is isolated in \cref{sec:rt}. Finite Hecke packets and infinite occupancy are developed in \cref{sec:hecke_packets}. Pointwise automorphy and compatible systems appear in \cref{sec:pointwise,sec:compatible}. The coefficient prime two is discussed in \cref{sec:two}. The final conditional theorem is stated in \cref{sec:completion}.
+
+\section{Global deformation data and exact boundaries}\label{sec:global_data}
+
+Let \(F\) be a number field. Fix a prime \(p\), a finite extension \(E/\QQ_p\), its valuation ring \(\OO\), uniformizer \(\varpi\), and residue field \(k\). Let
+\[
+\bar\rho:G_{F,S}\longrightarrow\GL_n(k)
+\]
+be a continuous residual representation, where \(S\) contains every place at which the deformation problem is allowed to ramify.
+
+\begin{definition}[Global deformation datum]\label{def:global_datum}
+A global deformation datum consists of the following objects.
+\begin{enumerate}
+\item A residual representation \(\bar\rho\).
+\item For every \(v\in S\), a framed local deformation ring \(R_v^\square\).
+\item A quotient \(R_v^{\tau_v}\) representing the chosen local condition whenever such a quotient is known to exist.
+\item A global deformation ring \(R^\square\) with a continuous local map
+\[
+R^{\mathrm{loc}}:=\wideotimes_{v\in S,\OO}R_v^\square
+\longrightarrow R^\square.
+\]
+\item The induced global ring with local conditions
+\[
+R^{\tau}:=R^\square\wideotimes_{R^{\mathrm{loc}}}R^{\mathrm{loc},\tau},
+\qquad
+R^{\mathrm{loc},\tau}:=\wideotimes_{v\in S,\OO}R_v^{\tau_v}.
+\]
+\end{enumerate}
+\end{definition}
+
+Representability of deformation functors and the construction of local condition quotients require hypotheses. The standard foundations are due to Mazur and Schlessinger, with many later refinements for local conditions and pseudorepresentations \cite{Mazur1989,Schlessinger1968,BellaicheChenevier2009}.
+
+\begin{standardfact}[Represented deformation problem]\label{fact:represented_deformation}
+Under the usual finiteness and Schur type hypotheses, framed lifts of \(\bar\rho\) are represented by complete Noetherian local \(\OO\) algebras. A declared local deformation condition is represented by a quotient when the corresponding subfunctor is representable. Tangent and obstruction spaces are described by the appropriate first and second cohomology groups.
+\end{standardfact}
+
+\begin{standardfact}[Automorphy lifting package]\label{fact:automorphy_package}
+Published automorphy lifting theorems begin with residual automorphic occupancy and impose hypotheses on the residual image, local deformation conditions, regularity, and the global deformation problem. They then use ordinary or derived patching to compare a deformation ring with a Hecke algebra and to prove automorphy for characteristic zero points in the supported locus. The precise assumptions depend on the theorem being used \cite{ClozelHarrisTaylor2008,BarnetLambGeeGeraghtyTaylor2014,CalegariGeraghty2018,Thorne2012,MiagkovThorne2023,AllenEtAl2023}.
+\end{standardfact}
+
+The article treats \cref{fact:represented_deformation,fact:automorphy_package} as external inputs. Its results begin after the relevant rings, modules, complexes, and comparison maps have been supplied.
+
+\begin{definition}[Residual automorphic occupancy]\label{def:residual_occupancy}
+The residual datum \((\bar\rho,\tau)\) is automorphically occupied when a nonzero localized automorphic or cohomological Hecke carrier realizes the residual representation and the declared local conditions.
+\end{definition}
+
+This is a depth zero hypothesis. A positive depth deformation argument above another residual root cannot produce it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{18_claim_boundary.pdf}
+\caption{The article proves formal support and occupancy theorems. It does not prove the universal existence statements shown on the right.}
+\label{fig:claim_boundary_intro}
+\end{figure}
+
+\section{Local conditions are quotient packets}\label{sec:local_conditions}
+
+The completed tensor product combines the local deformation conditions. The first theorem records the exact quotient law.
+
+\begin{theorem}[Completed tensor quotient]\label{thm:tensor_quotient}
+Let \(R_1,\ldots,R_s\) be complete Noetherian local \(\OO\) algebras with common residue field \(k\). Let \(I_i\subseteq R_i\) be closed ideals. Put
+\[
+R^{\mathrm{loc}}=R_1\wideotimes_{\OO}\cdots\wideotimes_{\OO}R_s
+\]
+and let \(J\) be the closed ideal generated by the images of the \(I_i\). Then there is a canonical isomorphism
+\[
+\boxed{
+(R_1/I_1)\wideotimes_{\OO}\cdots\wideotimes_{\OO}(R_s/I_s)
+\cong
+R^{\mathrm{loc}}/J.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Both rings represent the same functor on complete local \(\OO\) algebras with residue field \(k\). A continuous map from either ring to such an algebra \(A\) is the same as a collection of continuous maps \(R_i\to A\) whose restrictions to \(\OO\) agree and which kill every \(I_i\). The universal property of the completed tensor product gives a unique map from \(R^{\mathrm{loc}}\), and killing all \(I_i\) is equivalent to killing \(J\). The two representing objects are therefore canonically isomorphic.
+\end{proof}
+
+\begin{corollary}[Simultaneous local conditions]\label{cor:simultaneous_local}
+A point of \(R^{\mathrm{loc}}\) factors through \(R^{\mathrm{loc}}/J\) if and only if its restriction to every \(R_i\) factors through \(R_i/I_i\).
+\end{corollary}
+
+\begin{proof}
+A map kills \(J\) exactly when it kills the image of every \(I_i\).
+\end{proof}
+
+\begin{proposition}[Global base change for local conditions]\label{prop:global_local_basechange}
+Let \(R^\square\) receive a continuous map from \(R^{\mathrm{loc}}\). Then
+\[
+R^{\tau}
+=
+R^\square\wideotimes_{R^{\mathrm{loc}}}R^{\mathrm{loc},\tau}
+\]
+represents the base change of the global deformation problem to the simultaneous local conditions. A point of \(R^\square\) factors through \(R^{\tau}\) exactly when all of its local restrictions satisfy the declared quotient conditions.
+\end{proposition}
+
+\begin{proof}
+The completed tensor product is the pushout in the category of complete local algebras. A map from the pushout is the same as a map from \(R^\square\) whose restriction to \(R^{\mathrm{loc}}\) factors through \(R^{\mathrm{loc},\tau}\). The latter condition is equivalent to the local quotient conditions by \cref{cor:simultaneous_local}.
+\end{proof}
+
+\begin{proposition}[Idempotents in a local ring]\label{prop:local_idempotent}
+If \(R\) is a commutative local ring, then its only idempotents are zero and one.
+\end{proposition}
+
+\begin{proof}
+Let \(e^2=e\). Since \(e+(1-e)=1\), at least one of \(e\) and \(1-e\) is a unit. If \(e\) is a unit, then \(e=1\). If \(1-e\) is a unit, then \(e=0\).
+\end{proof}
+
+\begin{remark}\label{rem:components_not_idempotents}
+An irreducible component of \(\Spec R\) for a local deformation ring need not be open and closed. It therefore need not be selected by an idempotent. Components and local conditions should be described by quotient ideals and module support. Idempotent packet formulas are reserved for finite Artin algebras or other settings with an actual product decomposition.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{02_local_quotient_packets.pdf}
+\caption{Local conditions are imposed by quotient rings. Components are support loci unless a genuine product decomposition exists.}
+\label{fig:local_quotients}
+\end{figure}
+
+\section{Adequacy and the residual input}\label{sec:adequacy}
+
+Adequacy is one of the residual image hypotheses used in several automorphy lifting theorems. The definition and its role are external to the support arguments below \cite{GuralnickHerzigTaylorThorne2012,Thorne2012,MiagkovThorne2023}.
+
+\begin{standardfact}[Adequate image]\label{fact:adequacy}
+Let \(G\subseteq\GL(V)\) act absolutely irreducibly over a finite field \(k\) of characteristic \(p\). Under the standard definition, adequacy imposes vanishing conditions on \(H^1(G,k)\) and \(H^1(G,\ad^0V)\), a scalar condition, and a generalized eigenspace detection condition for every irreducible submodule of \(\ad^0V\).
+\end{standardfact}
+
+The following small example makes the projector detection condition explicit. It is a certificate for one finite representation, not a new adequacy criterion.
+
+Let \(G=S_3\), let \(k=\FF_7\), and let \(V\) be the standard two dimensional representation. In the basis
+\[
+v_1=(1,-1,0),
+\qquad
+v_2=(0,1,-1),
+\]
+a transposition and a three cycle act by
+\[
+s=
+\begin{pmatrix}
+6&1\\
+0&1
+\end{pmatrix},
+\qquad
+t=
+\begin{pmatrix}
+0&6\\
+1&6
+\end{pmatrix}.
+\]
+
+\begin{theorem}[Finite adequacy certificate]\label{thm:s3_adequacy}
+The standard representation of \(S_3\) over \(\FF_7\) is adequate. More precisely,
+\[
+H^0(S_3,\ad^0V)=0,
+\qquad
+H^1(S_3,\FF_7)=0,
+\qquad
+H^1(S_3,\ad^0V)=0,
+\]
+and
+\[
+\ad^0V\cong\operatorname{sgn}\oplus V.
+\]
+The sign summand is detected by an eigenprojector of a three cycle, and the standard summand is detected by an eigenprojector of a transposition.
+\end{theorem}
+
+\begin{proof}
+The commutant of the standard representation consists of scalars. The only trace zero scalar is zero, so \(H^0(S_3,\ad^0V)=0\). Since \(6\) is invertible in \(\FF_7\), averaging contracts positive degree group cochains. Thus \(H^1(S_3,M)=0\) for every \(\FF_7[S_3]\) module \(M\).
+
+The character of \(\ad^0V\) has values \((3,-1,0)\) on the identity, transposition, and three cycle classes. It is the sum of the sign character and the standard character, which gives the displayed decomposition.
+
+Write a trace zero matrix as
+\[
+W(a,b,c)=
+\begin{pmatrix}
+a&b\\
+c&-a
+\end{pmatrix}.
+\]
+The matrix
+\[
+W_{\mathrm{sgn}}=W(2,3,4)
+\]
+spans the sign summand. The projector onto the eigenvalue \(2\) of \(t\) is
+\[
+P_{t,2}=
+\begin{pmatrix}
+2&4\\
+3&6
+\end{pmatrix},
+\]
+and
+\[
+\Tr(P_{t,2}W_{\mathrm{sgn}})=3\neq0.
+\]
+The matrix
+\[
+W_{\mathrm{std}}=W(6,4,3)
+\]
+belongs to the standard summand. The projector onto the eigenvalue \(1\) of \(s\) is
+\[
+P_{s,1}=
+\begin{pmatrix}
+0&4\\
+0&1
+\end{pmatrix},
+\]
+and
+\[
+\Tr(P_{s,1}W_{\mathrm{std}})=6\neq0.
+\]
+Every irreducible summand of \(\ad^0V\) is therefore detected.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.86\textwidth]{03_adequacy_packets.pdf}
+\caption{The two irreducible adjoint packets are detected by different generalized eigenspace projectors.}
+\label{fig:adequacy_packets}
+\end{figure}
+
+\begin{remark}\label{rem:adequacy_boundary}
+The theorem verifies adequacy for one finite image. A global automorphy lifting argument must verify the published residual image hypothesis for its actual representation. The calculation does not replace that step, and it does not provide a uniform coefficient prime two theorem.
+\end{remark}
+
+\section{Auxiliary group algebras and augmentation}\label{sec:auxiliary}
+
+Let \(\Delta\) be a finite abelian \(p\) group and let
+\[
+\Lambda=\OO[\Delta].
+\]
+The augmentation map is
+\[
+\epsilon:\Lambda\longrightarrow\OO,
+\qquad
+\sum_{g\in\Delta}a_gg\longmapsto\sum_{g\in\Delta}a_g.
+\]
+Its kernel is the augmentation ideal \(\fraka\).
+
+\begin{proposition}[Functorial group algebra transfer]\label{prop:group_algebra_transfer}
+A group homomorphism \(q:\Delta'\to\Delta\) induces an \(\OO\) algebra homomorphism
+\[
+q_*:\OO[\Delta']\longrightarrow\OO[\Delta].
+\]
+If \(q\) is surjective, then \(q_*\) is surjective. Augmentation commutes with the transfer:
+\[
+\epsilon_\Delta q_*=\epsilon_{\Delta'}.
+\]
+\end{proposition}
+
+\begin{proof}
+Extend \(q\) linearly from the group basis. Multiplicativity follows from \(q(gh)=q(g)q(h)\). Surjectivity follows because every basis element of \(\OO[\Delta]\) has a preimage. Both augmentation maps send every group element to one, which gives the final identity.
+\end{proof}
+
+\begin{theorem}[Residual augmentation algebra]\label{thm:residual_augmentation_algebra}
+Suppose
+\[
+\Delta\cong
+\prod_{i=1}^{r}C_{p^{n_i}}.
+\]
+Choose generators \(\gamma_i\), and let \(X_i=\gamma_i-1\). Then
+\[
+\boxed{
+k[\Delta]
+\cong
+k[X_1,\ldots,X_r]
+\big/
+(X_1^{p^{n_1}},\ldots,X_r^{p^{n_r}}).
+}
+\]
+The augmentation ideal is generated by the \(X_i\), and \(k[\Delta]\) is local.
+\end{theorem}
+
+\begin{proof}
+In characteristic \(p\),
+\[
+(1+X_i)^{p^{n_i}}-1=X_i^{p^{n_i}}.
+\]
+Thus the assignment \(X_i\mapsto\gamma_i-1\) gives a surjective homomorphism from the displayed truncated polynomial ring to \(k[\Delta]\). Both sides have dimension \(\prod_ip^{n_i}=\abs{\Delta}\) over \(k\), so the map is an isomorphism. The quotient by the ideal generated by the \(X_i\) is \(k\). Since each \(X_i\) is nilpotent, that ideal is the unique maximal ideal.
+\end{proof}
+
+\begin{corollary}[No residual character splitting]\label{cor:no_residual_character_splitting}
+The residual group algebra \(k[\Delta]\) has no nontrivial idempotents. In particular, character projectors do not split a finite \(p\) group algebra in residue characteristic \(p\).
+\end{corollary}
+
+\begin{proof}
+The ring is local by \cref{thm:residual_augmentation_algebra}, so the conclusion follows from \cref{prop:local_idempotent}.
+\end{proof}
+
+\begin{theorem}[Coinvariant recovery]\label{thm:coinvariant_recovery}
+Let \(M\) be a free \(\Lambda\) module of rank \(d\). Then
+\[
+\boxed{
+M/\fraka M
+\cong
+M\otimes_{\Lambda,\epsilon}\OO
+\cong
+\OO^d.
+}
+\]
+The statement is valid for every coefficient prime, including two.
+\end{theorem}
+
+\begin{proof}
+Choose a \(\Lambda\) basis of \(M\). Tensoring the resulting isomorphism \(M\cong\Lambda^d\) along augmentation gives \(\OO^d\). Tensoring by \(\Lambda/\fraka\) is the same as quotienting by \(\fraka M\).
+\end{proof}
+
+\begin{standardfact}[Iwasawa limit]\label{fact:iwasawa_limit}
+For \(\Delta_m=(\ZZ/p^m\ZZ)^r\), the inverse limit of \(\OO[\Delta_m]\) is the Iwasawa algebra
+\[
+\OO[[\ZZ_p^r]]\cong\OO[[X_1,\ldots,X_r]],
+\]
+where \(X_i\) corresponds to a chosen topological generator minus one \cite{RibesZalesskii2010}.
+\end{standardfact}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{04_auxiliary_group_tower.pdf}
+\caption{Auxiliary group algebras refine through quotient maps, while augmentation recovers the coarse level.}
+\label{fig:auxiliary_tower}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{05_augmentation_algebra.pdf}
+\caption{The residual auxiliary algebra is a local truncated polynomial algebra at every coefficient prime.}
+\label{fig:augmentation_algebra}
+\end{figure}
+
+The augmentation formalism is uniform in \(p\). The difficult coefficient two questions lie elsewhere. Residual image hypotheses, local deformation geometry, and classicality may change at two even though coinvariant recovery remains exact.
+
+
+\section{Ordinary and derived patching support}\label{sec:patching_support}
+
+The algebraic conclusion supplied by a patching argument is most naturally stated through support. This section isolates the commutative algebra needed to descend that conclusion from a patched object to finite level.
+
+\begin{definition}[Support and near faithfulness]\label{def:support_near_faithful}
+Let \(R\) be a commutative ring and let \(M\) be an \(R\) module. Its support is
+\[
+\Supp_R(M)
+=
+\{\frakp\in\Spec R:M_{\frakp}\neq0\}.
+\]
+If \(R\) is Noetherian and \(M\) is finite, then \(M\) is \emph{nearly faithful} when \(\Ann_R(M)\) is a nilpotent ideal.
+\end{definition}
+
+\begin{theorem}[Finite module support]\label{thm:finite_module_support}
+Let \(R\) be a commutative ring and let \(M\) be a finite \(R\) module. Then
+\[
+\boxed{
+\Supp_R(M)
+=
+V\bigl(\Ann_R(M)\bigr).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(\frakp\in\Spec R\). If \(\Ann_R(M)\not\subseteq\frakp\), choose
+\(a\in\Ann_R(M)\setminus\frakp\). The element \(a\) becomes a unit in
+\(R_{\frakp}\), so \(M_{\frakp}=0\).
+
+Conversely, suppose \(M_{\frakp}=0\). Choose generators
+\(m_1,\ldots,m_d\) of \(M\). For each \(i\), there is an element
+\(s_i\notin\frakp\) such that \(s_im_i=0\). The product
+\(s=s_1\cdots s_d\) lies outside \(\frakp\) and annihilates every generator.
+Thus \(s\in\Ann_R(M)\setminus\frakp\). This proves the equality.
+\end{proof}
+
+\begin{theorem}[Fitting support criterion]\label{thm:fitting_support}
+Let \(R\) be Noetherian and let \(M\) be a finite \(R\) module. Then
+\[
+\boxed{
+\Supp_R(M)
+=
+V\bigl(\Fitt_0^R(M)\bigr).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+If \(M=0\), the statement follows from the usual convention \(\Fitt_0(0)=R\). Assume \(M\neq0\), and choose a finite presentation
+\[
+R^m\xrightarrow{A}R^n\longrightarrow M\longrightarrow0
+\]
+with \(n\geq1\).
+The zeroth Fitting ideal is generated by the \(n\) by \(n\) minors of \(A\). After localization at a prime \(\frakp\), the module \(M_{\frakp}\) vanishes exactly when \(A_{\frakp}\) is surjective. A map onto the free module \(R_{\frakp}^n\) is surjective exactly when one maximal minor is a unit. Thus \(M_{\frakp}=0\) exactly when \(\Fitt_0^R(M)\not\subseteq\frakp\).
+\end{proof}
+
+\begin{theorem}[Higher Fitting strata]\label{thm:higher_fitting_strata}
+Let \(R\) be Noetherian and let \(M\) be finite. For \(r\geq1\), put
+\[
+\mu_{\frakp}(M)
+=
+\dim_{\kappa(\frakp)}
+\left(M\otimes_R\kappa(\frakp)\right).
+\]
+Then
+\[
+\boxed{
+\left\{
+\frakp\in\Spec R:
+\mu_{\frakp}(M)\geq r
+\right\}
+=
+V\bigl(\Fitt_{r-1}^R(M)\bigr).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Use a finite presentation with target rank \(n\). At \(\frakp\), the fiber dimension is
+\[
+n-\rank A(\frakp).
+\]
+It is at least \(r\) exactly when the rank is at most \(n-r\), which is equivalent to the vanishing of every minor of size \(n-r+1\). Those minors generate \(\Fitt_{r-1}^R(M)\).
+\end{proof}
+
+\begin{proposition}[Fitting ideals and base change]\label{prop:fitting_base_change}
+Let \(R\to S\) be a ring map and let \(M\) be a finitely presented \(R\) module. Then for every \(j\geq0\),
+\[
+\boxed{
+\Fitt_j^S(M\otimes_RS)
+=
+\Fitt_j^R(M)S.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Base change carries a finite presentation matrix for \(M\) to a presentation matrix for \(M\otimes_RS\). Every defining minor is carried to the corresponding minor over \(S\).
+\end{proof}
+
+\begin{remark}
+Support records nonvanishing. The higher Fitting strata record lower bounds on the number of generators in each fiber. They should not be confused with automorphic multiplicity formulas, which require additional representation theoretic input.
+\end{remark}
+
+\begin{theorem}[Near faithfulness is full support]\label{thm:near_faithful_full_support}
+Let \(R\) be Noetherian and let \(M\) be a finite \(R\) module. The following conditions are equivalent.
+\begin{enumerate}
+\item \(M\) is nearly faithful.
+\item \(\Supp_R(M)=\Spec R\).
+\item \(\Ann_R(M)\subseteq\nil(R)\).
+\end{enumerate}
+If \(R\) is reduced, these conditions are equivalent to faithfulness.
+\end{theorem}
+
+\begin{proof}
+By \cref{thm:finite_module_support}, full support is equivalent to
+\[
+V\bigl(\Ann_R(M)\bigr)=\Spec R.
+\]
+This holds exactly when \(\Ann_R(M)\) is contained in every prime ideal, hence in the nilradical. Because \(R\) is Noetherian, the ideal \(\Ann_R(M)\) is finitely generated. An ideal generated by finitely many nilpotent elements is nilpotent. This proves the equivalence of the first three conditions. If \(R\) is reduced, its nilradical is zero.
+\end{proof}
+
+\begin{corollary}[Support on every irreducible component]\label{cor:every_component_support}
+Under the hypotheses of \cref{thm:near_faithful_full_support}, a nearly faithful module is nonzero at the generic point of every irreducible component of \(\Spec R\).
+\end{corollary}
+
+\begin{proof}
+Every generic point is a prime of \(R\), and full support contains every prime.
+\end{proof}
+
+\begin{theorem}[Support after a quotient]\label{thm:quotient_support}
+Let \(R\) be Noetherian, let \(I\subseteq R\) be an ideal, and let \(M\) be a finite \(R\) module. Under the canonical identification
+\[
+\Spec(R/I)\cong V(I)\subseteq\Spec R,
+\]
+one has
+\[
+\boxed{
+\Supp_{R/I}(M/IM)
+=
+\Supp_R(M)\cap V(I).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(\frakp\supseteq I\). Localizing gives
+\[
+(M/IM)_{\frakp}
+\cong
+M_{\frakp}/I_{\frakp}M_{\frakp}.
+\]
+If \(M_{\frakp}=0\), the quotient is zero. If \(M_{\frakp}\neq0\), then
+\(I_{\frakp}\) lies in the maximal ideal of the local ring \(R_{\frakp}\). Nakayama's lemma shows that
+\(M_{\frakp}/I_{\frakp}M_{\frakp}\neq0\). The stated equality follows.
+\end{proof}
+
+\begin{definition}[Ordinary patching datum]\label{def:ordinary_patching_datum}
+An ordinary patching datum consists of a Noetherian ring \(R_\infty\), an ideal
+\(\fraka\subseteq R_\infty\), a finite \(R_\infty\) module \(M_\infty\), and identifications
+\[
+R\cong R_\infty/\fraka,
+\qquad
+M\cong M_\infty/\fraka M_\infty.
+\]
+In automorphy lifting applications, \(R_\infty\) is a patched deformation ring and \(M_\infty\) is a patched automorphic module. The definition itself contains no automorphy assertion.
+\end{definition}
+
+\begin{theorem}[Ordinary patching support descent]\label{thm:ordinary_support_descent}
+Let \((R_\infty,\fraka,M_\infty,R,M)\) be an ordinary patching datum. If
+\[
+\Supp_{R_\infty}(M_\infty)=\Spec R_\infty,
+\]
+then
+\[
+\boxed{
+\Supp_R(M)=\Spec R.
+}
+\]
+Equivalently, if \(M_\infty\) is nearly faithful, then \(M\) is nearly faithful. If \(R\) is reduced, then \(M\) is faithful.
+\end{theorem}
+
+\begin{proof}
+Apply \cref{thm:quotient_support} with \(I=\fraka\). The support of the quotient is
+\[
+\Spec R_\infty\cap V(\fraka)=V(\fraka),
+\]
+which identifies with \(\Spec R\). The remaining statements follow from
+\cref{thm:near_faithful_full_support}.
+\end{proof}
+
+\begin{corollary}[Componentwise finite level occupancy]\label{cor:componentwise_occupancy}
+In the setting of \cref{thm:ordinary_support_descent}, every irreducible component of
+\(\Spec R\) contains the support of \(M\). In particular, no component of the finite level deformation ring is erased by the quotient from the patched level.
+\end{corollary}
+
+\begin{proof}
+The module \(M\) has full support by \cref{thm:ordinary_support_descent}.
+\end{proof}
+
+\begin{example}[Freeness over auxiliary variables is not enough]\label{ex:freeness_not_support}
+Let \(k\) be a field, let \(S=k[[t]]\), and put
+\[
+R=S[[x]]/(x(x-t)).
+\]
+The ring \(R\) is reduced and has two irreducible components. Let
+\[
+M=R/(x)\cong S.
+\]
+Then \(M\) is free of rank one over \(S\), but
+\[
+\Supp_R(M)=V(x)
+\]
+is only one component of \(\Spec R\). Thus freeness over the auxiliary power series ring does not imply full support over the deformation ring.
+\end{example}
+
+\begin{proof}
+The two nonassociate prime factors \(x\) and \(x-t\) occur with multiplicity one, so the principal quotient is reduced. The displayed isomorphism makes \(M\) free over \(S\). Its annihilator as an \(R\) module is \((x)\), hence
+\[
+\Supp_R(M)=V(x)
+\]
+by \cref{thm:finite_module_support}. The generic point \((x-t)\) of the other component does not contain \(x\), so it is not in the support.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{06_patching_support_descent.pdf}
+\caption{Full support at the patched level descends through the augmentation quotient.}
+\label{fig:patching_support_descent}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.86\textwidth]{07_freeness_counterexample.pdf}
+\caption{A module can be free over the auxiliary ring while occupying only one deformation component.}
+\label{fig:freeness_counterexample}
+\end{figure}
+
+Derived patching replaces one module by a perfect complex. The correct support is detected after derived specialization.
+
+\begin{definition}[Derived support]\label{def:derived_support}
+Let \(R\) be a commutative ring and let \(C\) be a perfect complex of \(R\) modules. Its derived support is
+\[
+\Supp_R(C)
+=
+\left\{
+\frakp\in\Spec R:
+C\mathbin{\mathop{\otimes}\limits_R^{\mathbf L}}\kappa(\frakp)
+\not\simeq0
+\right\}.
+\]
+\end{definition}
+
+\begin{standardfact}[Cohomological description of derived support]\label{fact:derived_support_cohomology}
+If \(R\) is Noetherian and \(C\) is perfect, then
+\[
+\Supp_R(C)
+=
+\bigcup_i\Supp_R H^i(C).
+\]
+In particular, derived support is closed and is empty exactly when \(C\simeq0\) \cite{Weibel1994,Eisenbud1995}.
+\end{standardfact}
+
+\begin{theorem}[Derived quotient support]\label{thm:derived_quotient_support}
+Let \(R\) be a commutative ring, let \(I\subseteq R\) be an ideal, and let \(C\) be a perfect complex over \(R\). Under
+\(\Spec(R/I)\cong V(I)\), one has
+\[
+\boxed{
+\Supp_{R/I}
+\left(
+C\mathbin{\mathop{\otimes}\limits_R^{\mathbf L}}R/I
+\right)
+=
+\Supp_R(C)\cap V(I).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(\frakp\supseteq I\). Associativity of the derived tensor product gives
+\[
+\left(
+C\mathbin{\mathop{\otimes}\limits_R^{\mathbf L}}R/I
+\right)
+\mathbin{\mathop{\otimes}\limits_{R/I}^{\mathbf L}}
+\kappa(\frakp)
+\simeq
+C\mathbin{\mathop{\otimes}\limits_R^{\mathbf L}}\kappa(\frakp).
+\]
+The two fibers vanish simultaneously, which proves the equality.
+\end{proof}
+
+\begin{definition}[Derived patching datum]\label{def:derived_patching_datum}
+A derived patching datum consists of a Noetherian ring \(R_\infty\), an ideal
+\(\fraka\), a perfect complex \(C_\infty\) over \(R_\infty\), and identifications
+\[
+R\cong R_\infty/\fraka,
+\qquad
+C\simeq
+C_\infty
+\mathbin{\mathop{\otimes}\limits_{R_\infty}^{\mathbf L}}R.
+\]
+\end{definition}
+
+\begin{theorem}[Derived patching support descent]\label{thm:derived_support_descent}
+Let \((R_\infty,\fraka,C_\infty,R,C)\) be a derived patching datum. If
+\[
+\Supp_{R_\infty}(C_\infty)=\Spec R_\infty,
+\]
+then
+\[
+\boxed{
+\Supp_R(C)=\Spec R.
+}
+\]
+For every point \(x:R\to E'\) to a field, the derived fiber
+\[
+C\mathbin{\mathop{\otimes}\limits_{R,x}^{\mathbf L}}E'
+\]
+is nonzero.
+\end{theorem}
+
+\begin{proof}
+The support equality follows from \cref{thm:derived_quotient_support}. The point
+\(x\) has kernel \(\frakp\in\Spec R\). Since \(\frakp\) lies in the full support, the fiber over \(\kappa(\frakp)\) is nonzero. Extending scalars from \(\kappa(\frakp)\) to \(E'\) preserves nonvanishing for a bounded complex of finite dimensional vector spaces.
+\end{proof}
+
+\begin{corollary}[A nonzero cohomological degree survives]\label{cor:derived_degree_survives}
+Under the hypotheses of \cref{thm:derived_support_descent}, for every field valued point \(x:R\to E'\), there is an integer \(i\) such that
+\[
+H^i
+\left(
+C\mathbin{\mathop{\otimes}\limits_{R,x}^{\mathbf L}}E'
+\right)
+\neq0.
+\]
+\end{corollary}
+
+\begin{proof}
+A bounded complex of vector spaces is zero in the derived category exactly when all of its cohomology groups vanish.
+\end{proof}
+
+\begin{remark}
+The support theorem does not decide the cohomological degree in which the point occurs. It also does not prove that the surviving class is classical. Those are separate arithmetic inputs.
+\end{remark}
+
+\section{Transport through an isomorphism \texorpdfstring{\(R\cong\TT\)}{R equals T}}\label{sec:rt}
+
+An isomorphism between a deformation ring and a Hecke algebra is an exact coordinate change. It transports support and finite presentation data, but it does not create a supported module.
+
+\begin{theorem}[Support and Fitting transport]\label{thm:rt_support_transport}
+Let \(\varphi:R\to\TT\) be an isomorphism of Noetherian rings. Let \(M\) be a finite \(\TT\) module, viewed as an \(R\) module through \(\varphi\). Then the homeomorphism
+\[
+\varphi^*:\Spec\TT\longrightarrow\Spec R
+\]
+satisfies
+\[
+\boxed{
+\varphi^*\bigl(\Supp_{\TT}(M)\bigr)
+=
+\Supp_R(M).
+}
+\]
+For every \(j\geq0\),
+\[
+\boxed{
+\varphi
+\left(
+\Fitt_j^R(M)
+\right)
+=
+\Fitt_j^{\TT}(M).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Localization commutes with transport along an isomorphism, so a localization of \(M\) vanishes on one side exactly when the corresponding localization vanishes on the other. This proves the support identity. A finite presentation matrix over \(R\) is carried entry by entry to a presentation matrix over \(\TT\). The minors generating each Fitting ideal are therefore carried to the corresponding minors.
+\end{proof}
+
+\begin{corollary}[Full support is invariant under \texorpdfstring{\(R\cong\TT\)}{R equals T}]\label{cor:rt_full_support}
+In the setting of \cref{thm:rt_support_transport}, \(M\) has full \(R\) support if and only if it has full \(\TT\) support.
+\end{corollary}
+
+\begin{proof}
+Apply the support homeomorphism in \cref{thm:rt_support_transport}.
+\end{proof}
+
+\begin{proposition}[A quotient can erase a component]\label{prop:quotient_erases_component}
+Let
+\[
+R=k[[x,y]]/(xy)
+\]
+and let
+\[
+\TT=R/(x)\cong k[[y]].
+\]
+Viewed as an \(R\) module, \(\TT\) has support \(V(x)\), which misses the generic point \((y)\) of the other irreducible component. Thus a surjection \(R\twoheadrightarrow\TT\) does not by itself imply full component occupancy.
+\end{proposition}
+
+\begin{proof}
+The annihilator of the \(R\) module \(\TT\) is \((x)\). Hence its support is \(V(x)\) by \cref{thm:finite_module_support}. The prime \((y)\) does not contain \(x\), so it is not in this support.
+\end{proof}
+
+\begin{theorem}[Field fiber criterion]\label{thm:field_fiber_criterion}
+Let \(R\) be a commutative ring, let \(M\) be a finite \(R\) module, and let
+\(x:R\to E'\) be a homomorphism to a field. Put \(\frakp=\ker x\). Then
+\[
+\boxed{
+M\otimes_{R,x}E'\neq0
+\quad\Longleftrightarrow\quad
+\frakp\in\Supp_R(M).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The map \(x\) factors through the local ring \(R_{\frakp}\) and then through an embedding of the residue field \(\kappa(\frakp)\) into \(E'\). Since \(M\) is finite, Nakayama's lemma gives
+\[
+M_{\frakp}\neq0
+\quad\Longleftrightarrow\quad
+M\otimes_R\kappa(\frakp)\neq0.
+\]
+Extension of scalars from \(\kappa(\frakp)\) to \(E'\) preserves nonzero vector spaces.
+\end{proof}
+
+\begin{corollary}[Supported deformation points give nonzero Hecke fibers]\label{cor:supported_hecke_fiber}
+Let \(R\cong\TT\), and let \(M\) be a finite Hecke module. If a point
+\(x:R\to E'\) lies in \(\Supp_R(M)\), then the corresponding Hecke fiber
+\[
+M\otimes_{\TT,x}E'
+\]
+is nonzero.
+\end{corollary}
+
+\begin{proof}
+Transport the support through \cref{thm:rt_support_transport}, then apply
+\cref{thm:field_fiber_criterion}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{08_rt_support_transport.pdf}
+\caption{An isomorphism transports occupied support exactly. A quotient can remove a component.}
+\label{fig:rt_support_transport}
+\end{figure}
+
+\section{Finite Hecke packets and infinite occupancy}\label{sec:hecke_packets}
+
+Finite Hecke carriers admit canonical packets even when the Hecke action is not semisimple. The packets come from the Artin local factors of the finite commutative Hecke algebra.
+
+\begin{standardfact}[Artin decomposition]\label{fact:artin_decomposition}
+Let \(E'\) be a field and let \(\TT\) be a finite dimensional commutative
+\(E'\) algebra. Then
+\[
+\boxed{
+\TT
+\cong
+\prod_{\frakm\in\Max\TT}\TT_{\frakm}.
+}
+\]
+Each factor is an Artin local algebra. Equivalently, there is a unique complete family of central idempotents \((e_{\frakm})\) such that
+\[
+e_{\frakm}e_{\mathfrak n}=0
+\quad(\frakm\neq\mathfrak n),
+\qquad
+\sum_{\frakm}e_{\frakm}=1,
+\]
+and \(e_{\frakm}\TT\cong\TT_{\frakm}\) \cite{AtiyahMacdonald1969,Matsumura1989}.
+\end{standardfact}
+
+\begin{theorem}[Canonical Hecke packet decomposition]\label{thm:canonical_hecke_packets}
+Let \(\TT\) be a finite dimensional commutative algebra over a field \(E'\), and let \(V\) be a finite \(\TT\) module. Then
+\[
+\boxed{
+V
+=
+\bigoplus_{\frakm\in\Max\TT}e_{\frakm}V.
+}
+\]
+For every maximal ideal \(\frakm\), the canonical map gives
+\[
+\boxed{
+e_{\frakm}V\cong V_{\frakm}.}
+\]
+The packet \(e_{\frakm}V\) is nonzero exactly when \(\frakm\in\Supp_{\TT}(V)\).
+\end{theorem}
+
+\begin{proof}
+The idempotent relations in \cref{fact:artin_decomposition} give the direct sum decomposition. Localization at \(\frakm\) kills every factor except the \(\frakm\) factor, where \(e_{\frakm}\) becomes one. Thus the localization map identifies \(e_{\frakm}V\) with \(V_{\frakm}\). The final statement is the definition of support.
+\end{proof}
+
+\begin{corollary}[Simultaneous generalized eigenspaces]\label{cor:simultaneous_generalized_eigenspaces}
+Assume that \(E'\) is algebraically closed and that \(\TT\) is generated by commuting operators \(T_1,\ldots,T_d\) on \(V\). For a maximal ideal
+\[
+\frakm
+=
+(T_1-\lambda_1,\ldots,T_d-\lambda_d),
+\]
+there is an integer \(N\geq1\) such that
+\[
+\boxed{
+e_{\frakm}V
+=
+\left\{
+v\in V:
+(T_i-\lambda_i)^Nv=0
+\text{ for every }i
+\right\}.
+}
+\]
+Thus the canonical Artin packet is the simultaneous generalized eigenspace.
+\end{corollary}
+
+\begin{proof}
+The maximal ideal of the Artin local algebra \(\TT_{\frakm}\) is nilpotent. Hence a common power of every \(T_i-\lambda_i\) kills the local packet. On every other local factor, at least one \(T_i-\lambda_i\) is a unit, so no nonzero vector can satisfy all the displayed nilpotence conditions.
+
+Conversely, suppose every \((T_i-\lambda_i)^N\) kills \(v\). Every monomial of total degree greater than \(d(N-1)\) contains one factor to exponent at least \(N\). Therefore a power of \(\frakm\) kills \(v\), which places \(v\) in the \(\frakm\) primary packet.
+\end{proof}
+
+\begin{corollary}[Rank and trace detection in characteristic zero]\label{cor:rank_trace_detection}
+Assume that \(E'\) has characteristic zero. For every maximal Hecke packet,
+\[
+\boxed{
+\Tr_{E'}(e_{\frakm}|V)
+=
+\rank_{E'}(e_{\frakm}|V)
+=
+\dim_{E'}e_{\frakm}V.
+}
+\]
+In particular, the packet is occupied exactly when its projector has positive rank, equivalently nonzero trace.
+\end{corollary}
+
+\begin{proof}
+An idempotent linear map has minimal polynomial dividing \(X(X-1)\), which has distinct roots. It is diagonalizable with eigenvalues zero and one. Its trace and rank both equal the multiplicity of the eigenvalue one. A positive integer is nonzero in characteristic zero.
+\end{proof}
+
+\begin{remark}
+The trace criterion can fail in positive characteristic when the packet dimension is divisible by the characteristic. The rank and localization criteria remain valid.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{09_hecke_artin_packets.pdf}
+\caption{A finite commutative Hecke algebra splits into canonical Artin local packets.}
+\label{fig:hecke_artin_packets}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{10_generalized_eigenspaces.pdf}
+\caption{An Artin packet is a simultaneous generalized eigenspace, not necessarily an ordinary eigenspace.}
+\label{fig:generalized_eigenspaces}
+\end{figure}
+
+\begin{example}[A nonsemisimple Hecke packet]\label{ex:nonsemisimple_hecke_packet}
+Let
+\[
+\TT
+=
+E'[u]/(u^2)
+\times
+E'[v]/(v^3)
+\]
+and let \(V=\TT\) be the regular module. The two canonical central idempotents split
+\[
+V=V_u\oplus V_v
+\]
+with dimensions two and three. Multiplication by \(u\) is nilpotent on \(V_u\), and multiplication by \(v\) is nilpotent on \(V_v\). Neither local factor is semisimple, but the two maximal Hecke packets are isolated exactly by the Artin idempotents.
+\end{example}
+
+\begin{proof}
+The product decomposition gives the two central idempotents \((1,0)\) and \((0,1)\). Their ranges are the two local factors. The classes of \(u\) and \(v\) are nilpotent of orders two and three, respectively.
+\end{proof}
+
+The next two theorems distinguish a fixed finite carrier from a sequence of changing carriers.
+
+\begin{theorem}[Nested packets in one finite carrier]\label{thm:nested_finite_carrier}
+Let \(V\) be a finite dimensional vector space. Let \(e_1,e_2,\ldots\) be idempotents such that
+\[
+e_{m+1}e_m=e_me_{m+1}=e_{m+1}
+\]
+for every \(m\). If \(e_mV\neq0\) for every \(m\), then the descending chain stabilizes and
+\[
+\boxed{
+\bigcap_{m\geq1}e_mV
+\neq0.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The displayed relations give
+\[
+e_{m+1}V\subseteq e_mV.
+\]
+The nonnegative dimensions form a nonincreasing sequence of positive integers, so they eventually become constant. Once two consecutive dimensions agree, the corresponding inclusion is equality. Thus the ranges stabilize at a nonzero subspace, which is their intersection.
+\end{proof}
+
+\begin{corollary}[Finite witness of incompatibility]\label{cor:finite_witness_incompatibility}
+Under the hypotheses of \cref{thm:nested_finite_carrier}, if
+\[
+\bigcap_{m\geq1}e_mV=0,
+\]
+then \(e_mV=0\) for some finite \(m\).
+\end{corollary}
+
+\begin{proof}
+This is the contrapositive of \cref{thm:nested_finite_carrier}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{11_finite_occupancy_staircase.pdf}
+\caption{Nested nonzero packets in one finite carrier stabilize after finitely many steps.}
+\label{fig:finite_occupancy_staircase}
+\end{figure}
+
+\begin{definition}[Stable core]\label{def:stable_core}
+Let
+\[
+V_1\longleftarrow V_2\longleftarrow V_3\longleftarrow\cdots
+\]
+be an inverse system of finite dimensional vector spaces. For \(n\geq m\), write
+\(f_{n,m}:V_n\to V_m\). The stable core at level \(m\) is
+\[
+Y_m
+=
+\bigcap_{n\geq m}\im(f_{n,m}).
+\]
+\end{definition}
+
+\begin{lemma}[Surjectivity on stable cores]\label{lem:stable_core_surjectivity}
+For every \(m\), the transition map \(V_{m+1}\to V_m\) induces a surjection
+\[
+\boxed{
+Y_{m+1}\twoheadrightarrow Y_m.
+}
+\]
+\end{lemma}
+
+\begin{proof}
+Fix \(y\in Y_m\). For \(n\geq m+1\), let
+\[
+A_n
+=
+\left\{
+z\in\im(f_{n,m+1}):
+f_{m+1,m}(z)=y
+\right\}.
+\]
+Each \(A_n\) is a nonempty affine subspace of \(V_{m+1}\), and the sequence
+\((A_n)\) is descending. A descending sequence of affine subspaces in a finite dimensional vector space stabilizes whenever every term is nonempty. Choose an element in its stable value. It lies in \(Y_{m+1}\) and maps to \(y\).
+\end{proof}
+
+\begin{theorem}[Nonzero stable core criterion]\label{thm:nonzero_stable_core}
+Let \((V_m)\) be an inverse system of finite dimensional vector spaces. If
+\[
+Y_m\neq0
+\]
+for every \(m\), then
+\[
+\boxed{
+\varprojlim_mV_m
+\neq0.
+}
+\]
+More precisely, the inverse limit contains a compatible sequence whose first coordinate is any prescribed nonzero element of \(Y_1\).
+\end{theorem}
+
+\begin{proof}
+Choose \(0\neq y_1\in Y_1\). By \cref{lem:stable_core_surjectivity}, choose recursively
+\(y_{m+1}\in Y_{m+1}\) mapping to \(y_m\). Every \(y_m\) is nonzero because it maps to the nonzero vector \(y_1\). The sequence \((y_m)\) is a nonzero element of the inverse limit.
+\end{proof}
+
+\begin{corollary}[Surjective systems]\label{cor:surjective_inverse_system}
+If every transition map \(V_{m+1}\to V_m\) is surjective and every \(V_m\) is nonzero, then the inverse limit is nonzero.
+\end{corollary}
+
+\begin{proof}
+Surjectivity gives \(Y_m=V_m\). Apply \cref{thm:nonzero_stable_core}.
+\end{proof}
+
+\begin{example}[Tail escape in an infinite carrier]\label{ex:tail_escape}
+Let \(V=\ell^2(\NN)\), and let \(P_m\) be the orthogonal projection onto the closed span of
+\[
+e_m,e_{m+1},e_{m+2},\ldots.
+\]
+Every range \(P_mV\) is nonzero and the ranges are nested, but
+\[
+\boxed{
+\bigcap_{m\geq1}P_mV=0.
+}
+\]
+Thus the finite carrier hypothesis in \cref{thm:nested_finite_carrier} cannot be removed.
+\end{example}
+
+\begin{proof}
+A vector in every tail range has its first \(m-1\) coordinates equal to zero for every \(m\). All of its coordinates vanish.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.9\textwidth]{12_stable_core_inverse_limit.pdf}
+\caption{Changing finite carriers require a nonzero stable core, not only nonzero individual levels.}
+\label{fig:stable_core_inverse_limit}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.88\textwidth]{13_tail_escape.pdf}
+\caption{Nested nonzero ranges can escape to infinity in an infinite dimensional carrier.}
+\label{fig:tail_escape}
+\end{figure}
+
+\section{Pointwise automorphy from support}\label{sec:pointwise}
+
+Support produces a nonzero Hecke fiber. A realization theorem is still required to turn that fiber into a classical automorphic representation and to identify its Galois representation.
+
+\begin{definition}[Automorphic Hecke datum]\label{def:automorphic_hecke_datum}
+An automorphic Hecke datum consists of the following objects.
+\begin{enumerate}
+\item A commutative \(\OO\) algebra \(\TT\).
+\item A finite \(\TT\) module \(H\), or a perfect \(\TT\) complex \(C\), obtained from an automorphic or cohomological carrier.
+\item For every unramified place \(v\) outside a finite set, a polynomial
+\[
+P_v(X)\in\TT[X].
+\]
+\item A declared characteristic zero locus on which a nonzero field fiber is known to be classical and is known to carry an attached Galois representation whose Frobenius polynomial at \(v\) is the specialization of \(P_v(X)\).
+\end{enumerate}
+\end{definition}
+
+\begin{standardfact}[Chebotarev and Brauer Nesbitt identification]\label{fact:chebotarev_brauer_nesbitt}
+Let \(E'\) be a characteristic zero field. Let
+\[
+\rho_1,\rho_2:G_{F,S}\longrightarrow\GL_n(E')
+\]
+be continuous semisimple representations. If their characteristic polynomials agree at every Frobenius element outside a density zero exceptional set, then
+\[
+\boxed{\rho_1\cong\rho_2.}
+\]
+This follows from Chebotarev density and the Brauer Nesbitt theorem
+\cite{BrauerNesbitt1941,Neukirch1999}.
+\end{standardfact}
+
+\begin{theorem}[Support gives a Hecke eigensystem]\label{thm:support_gives_hecke_system}
+Let \(R\cong\TT\), let \(H\) be a finite \(\TT\) module, and let
+\(x:R\to E'\) be a field valued point. If
+\[
+\ker x\in\Supp_R(H),
+\]
+then
+\[
+\boxed{
+H_x:=H\otimes_{\TT,x}E'\neq0.
+}
+\]
+Every element of \(\TT\) acts on \(H_x\) through the scalar prescribed by \(x\).
+\end{theorem}
+
+\begin{proof}
+Nonvanishing follows from \cref{cor:supported_hecke_fiber}. The tensor product relation
+\[
+th\otimes1=h\otimes x(t)
+\]
+shows that \(t\in\TT\) acts through \(x(t)\).
+\end{proof}
+
+\begin{theorem}[Pointwise Galois realization]\label{thm:pointwise_galois_realization}
+Assume the following data.
+\begin{enumerate}
+\item A represented deformation ring \(R\) with universal representation
+\[
+\rho_R:G_{F,S}\longrightarrow\GL_n(R).
+\]
+\item An isomorphism \(R\cong\TT\).
+\item An automorphic Hecke datum \((\TT,H,(P_v))\).
+\item A characteristic zero point \(x:R\to E'\) lying in \(\Supp_R(H)\).
+\item A classical automorphic representation \(\pi_x\) occurring in the fiber \(H_x\), together with a semisimple attached representation
+\[
+\rho_{\pi_x}:G_{F,S}\longrightarrow\GL_n(E')
+\]
+whose unramified characteristic polynomial is \(x(P_v(X))\).
+\item Equality
+\[
+\det\left(X-\rho_x(\Frob_v)\right)=x(P_v(X))
+\]
+for \(\rho_x=x\circ\rho_R\) at every unramified place in a Chebotarev dense set.
+\end{enumerate}
+Then
+\[
+\boxed{
+\rho_x^{\mathrm{ss}}
+\cong
+\rho_{\pi_x}.
+}
+\]
+If \(\rho_x\) is irreducible, then \(\rho_x\cong\rho_{\pi_x}\).
+\end{theorem}
+
+\begin{proof}
+The two semisimple representations have the same characteristic polynomials on a Chebotarev dense set. Apply \cref{fact:chebotarev_brauer_nesbitt}. If \(\rho_x\) is irreducible, it is already semisimple.
+\end{proof}
+
+\begin{corollary}[Full support gives pointwise automorphy on the realized locus]\label{cor:full_support_pointwise_automorphy}
+In the setting of \cref{thm:pointwise_galois_realization}, suppose
+\[
+\Supp_R(H)=\Spec R.
+\]
+Assume that the declared classicality and Galois realization input is available at every characteristic zero point in a locus \(U\subseteq\Spec R\). Then every point of \(U\) is automorphic in the precise sense of \cref{thm:pointwise_galois_realization}.
+\end{corollary}
+
+\begin{proof}
+Every point of \(U\) lies in the support, so \cref{thm:support_gives_hecke_system} gives a nonzero Hecke fiber. Apply the declared realization input and then \cref{thm:pointwise_galois_realization}.
+\end{proof}
+
+\begin{theorem}[Derived pointwise realization]\label{thm:derived_pointwise_realization}
+Let \(R\cong\TT\), and let \(C\) be a perfect automorphic Hecke complex with full derived support. For every characteristic zero point \(x:R\to E'\), there is an integer \(i\) such that
+\[
+H^i
+\left(
+C\mathbin{\mathop{\otimes}\limits_{R,x}^{\mathbf L}}E'
+\right)
+\neq0.
+\]
+If every nonzero Hecke eigensystem in the declared cohomological range satisfies the required classicality and Galois realization theorem, then the specialization \(\rho_x\) is automorphic after semisimplification.
+\end{theorem}
+
+\begin{proof}
+The nonzero cohomological degree follows from \cref{cor:derived_degree_survives}. The remaining conclusion is obtained by applying the declared realization theorem to a nonzero eigensystem in that fiber and then using \cref{fact:chebotarev_brauer_nesbitt}.
+\end{proof}
+
+\begin{remark}
+Derived support does not identify the cohomological degree, Hodge type, or classical weight of the surviving eigensystem. Those properties must come from the external local and global realization theorem.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{16_pointwise_automorphy.pdf}
+\caption{Support gives a nonzero Hecke fiber. Classicality and Galois realization complete the pointwise argument.}
+\label{fig:pointwise_automorphy}
+\end{figure}
+
+\section{Compatible systems and companion completion}\label{sec:compatible}
+
+Pointwise automorphy at one coefficient place and existence of companions at other coefficient places are different statements. They meet only after a common algebraic Frobenius spine has been fixed.
+
+\begin{definition}[Algebraic Frobenius spine]\label{def:frobenius_spine}
+An algebraic Frobenius spine consists of a number field \(L\), a finite set of places \(S\) of \(F\), and polynomials
+\[
+P_v(X)\in L[X]
+\]
+for every finite place \(v\notin S\), together with any additional local labels required by the declared compatibility problem.
+\end{definition}
+
+\begin{definition}[Finite companion forest]\label{def:companion_forest}
+Fix a coefficient place \(\lambda\) of \(L\). A finite companion forest for the spine is an inverse system of finite sets
+\[
+X_{\lambda,1}
+\longleftarrow
+X_{\lambda,2}
+\longleftarrow
+X_{\lambda,3}
+\longleftarrow\cdots
+\]
+whose points are admissible realizations modulo \(\lambda^m\), with edges given by reduction.
+\end{definition}
+
+\begin{theorem}[Companion branch criterion]\label{thm:companion_branch_criterion}
+Suppose every level \(X_{\lambda,m}\) is finite and nonempty, and every point reduces along the displayed forest to the fixed residual root. Then
+\[
+\boxed{
+\varprojlim_mX_{\lambda,m}
+\neq\varnothing.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The disjoint union of the levels is an infinite rooted tree. It is locally finite because every level is finite. It contains a vertex at every depth. König's infinity lemma gives an infinite branch \cite{Diestel2017}. That branch is a point of the inverse limit.
+\end{proof}
+
+\begin{corollary}[Empty finite companion obstruction]\label{cor:empty_companion_obstruction}
+If \(X_{\lambda,m}=\varnothing\) for some \(m\), then no complete \(\lambda\) adic realization of the declared spine exists.
+\end{corollary}
+
+\begin{proof}
+A complete realization would reduce to a point at every finite level.
+\end{proof}
+
+\begin{theorem}[Simultaneous companion completion]\label{thm:simultaneous_companion_completion}
+Let \(\Lambda\) be a set of coefficient places. Suppose that for every \(\lambda\in\Lambda\), the companion forest satisfies the hypotheses of \cref{thm:companion_branch_criterion}. Then one can choose a complete local realization at every \(\lambda\), all carrying the same algebraic Frobenius spine.
+\end{theorem}
+
+\begin{proof}
+Choose one branch in each nonempty inverse limit. Every branch realizes the same spine because the spine was fixed before the local forests were formed.
+\end{proof}
+
+\begin{standardfact}[Strict compatibility and one member determination]\label{fact:strict_compatibility}
+A strictly compatible semisimple system is determined at every coefficient place by its common unramified characteristic polynomials. If an automorphic representation gives a compatible system with the same polynomials, then Chebotarev density and Brauer Nesbitt identify the two systems member by member after semisimplification
+\cite{Serre1977,BarnetLambGeeGeraghtyTaylor2014}.
+\end{standardfact}
+
+\begin{theorem}[One member propagation in a fixed system]\label{thm:one_member_propagation}
+Let
+\[
+\{\rho_\lambda\}_{\lambda\in\Lambda}
+\]
+be a semisimple strictly compatible system with Frobenius spine \((P_v)\). Suppose that for one coefficient place \(\lambda_0\), the representation \(\rho_{\lambda_0}\) is identified with the Galois representation attached to an automorphic representation \(\pi\). Assume that the compatible system attached to \(\pi\) has the same polynomials \(P_v(X)\). Then for every \(\lambda\in\Lambda\),
+\[
+\boxed{
+\rho_\lambda
+\cong
+\rho_{\pi,\lambda}^{\mathrm{ss}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+For every \(\lambda\), the two semisimple representations have the same unramified characteristic polynomials at all places outside one finite set. Apply \cref{fact:chebotarev_brauer_nesbitt}.
+\end{proof}
+
+\begin{remark}
+The theorem propagates automorphy inside a compatible system that already exists. It does not construct a missing coefficient place member and does not prove universal companion existence.
+\end{remark}
+
+\begin{proposition}[Finite Frobenius separator]\label{prop:finite_frobenius_separator}
+Let \(t_1,\ldots,t_r\) be linearly independent functions on a set \(\Omega\) with values in a field \(E'\). Then there are points
+\(\omega_1,\ldots,\omega_r\in\Omega\) such that the matrix
+\[
+\left(t_i(\omega_j)\right)_{j,i}
+\]
+is invertible. In particular, when the trace functions of finitely many compatible constituents are linearly independent on the unramified Frobenius set, finitely many Frobenius traces recover their multiplicities in any known semisimple carrier.
+\end{proposition}
+
+\begin{proof}
+Let
+\[
+W
+=
+\operatorname{span}
+\left\{
+(t_1(\omega),\ldots,t_r(\omega)):\omega\in\Omega
+\right\}
+\subseteq E'^r.
+\]
+If \(W\neq E'^r\), a nonzero linear functional on \(E'^r\) would vanish on every evaluation vector, giving a nontrivial linear relation among the functions. Thus \(W=E'^r\). Choose \(r\) evaluation vectors forming a basis.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.94\textwidth]{14_companion_spine.pdf}
+\caption{Local companion branches become one system only through a Frobenius spine fixed in advance.}
+\label{fig:companion_spine}
+\end{figure}
+
+\section{The coefficient prime two}\label{sec:two}
+
+The auxiliary augmentation algebra works at every coefficient prime. What changes at two is the availability of integral character projectors and, in many applications, the residual image and local deformation hypotheses.
+
+\begin{proposition}[Failure of integral sign projectors]\label{prop:dyadic_sign_projectors}
+Let \(C_2=\langle g\rangle\). Over \(\QQ_2\), the two sign projectors are
+\[
+\boxed{
+e_+=\frac{1+g}{2},
+\qquad
+e_-=\frac{1-g}{2}.
+}
+\]
+Neither belongs to \(\ZZ_2[C_2]\). After reduction modulo two,
+\[
+\boxed{
+\FF_2[C_2]
+\cong
+\FF_2[X]/(X^2),
+\qquad
+X=g-1.
+}
+\]
+This ring is local and has no nontrivial idempotents.
+\end{proposition}
+
+\begin{proof}
+The displayed rational elements are the unique primitive idempotents because they project to the two characters of \(C_2\). Their coefficients contain \(1/2\), so they are not integral. In characteristic two,
+\[
+(g-1)^2=g^2-2g+1=0.
+\]
+The map \(X\mapsto g-1\) gives the displayed isomorphism. The quotient by \((X)\) is \(\FF_2\), and \((X)\) is nilpotent. Thus the ring is local.
+\end{proof}
+
+\begin{corollary}[Dyadic coinvariant recovery]\label{cor:dyadic_coinvariant_recovery}
+Let \(\Delta\) be a finite two group, let \(\Lambda=\OO[\Delta]\) with \(\OO\) a finite extension of \(\ZZ_2\), and let \(M\) be finite free over \(\Lambda\). Then
+\[
+\boxed{
+M\otimes_{\Lambda,\epsilon}\OO
+\cong
+M/\fraka M
+}
+\]
+is free over \(\OO\) of the same \(\Lambda\) rank. No semisimple character decomposition is required.
+\end{corollary}
+
+\begin{proof}
+This is \cref{thm:coinvariant_recovery} at \(p=2\).
+\end{proof}
+
+\begin{remark}
+The corollary is an algebraic statement about augmentation and coinvariants. It does not supply a coefficient two adequacy theorem, a local deformation ring with the desired geometry, or a classicality theorem. Those inputs must be checked in the automorphy lifting theorem being used.
+\end{remark}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.92\textwidth]{15_coefficient_two_boundary.pdf}
+\caption{Augmentation survives at two, while semisimple character projectors and arithmetic hypotheses require separate treatment.}
+\label{fig:coefficient_two_boundary}
+\end{figure}
+
+\section{Conditional automorphic completion}\label{sec:completion}
+
+We now assemble the preceding statements. The theorem is deliberately written as a chain of gates. Each gate has a distinct mathematical source.
+
+\begin{definition}[Ordinary completion datum at a point]\label{def:ordinary_completion_datum}
+An ordinary completion datum at a characteristic zero point \(x:R\to E'\) consists of the following objects.
+\begin{enumerate}
+\item A represented global deformation ring \(R\) with declared local quotient conditions and universal representation \(\rho_R\).
+\item An ordinary patching datum
+\[
+(R_\infty,\fraka,M_\infty,R,H)
+\]
+whose finite level module \(H\) is an automorphic Hecke carrier.
+\item Full patched support
+\[
+\Supp_{R_\infty}(M_\infty)=\Spec R_\infty.
+\]
+\item An isomorphism
+\[
+R\cong\TT
+\]
+with the Hecke algebra acting on \(H\).
+\item A pointwise classicality and Galois realization theorem for the nonzero fiber at \(x\).
+\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Ordinary conditional automorphic completion]\label{thm:ordinary_conditional_completion}
+Let \(x:R\to E'\) admit an ordinary completion datum. Then
+\[
+\boxed{
+H\otimes_{\TT,x}E'\neq0.
+}
+\]
+The specialization
+\[
+\rho_x=x\circ\rho_R
+\]
+is identified after semisimplification with the Galois representation attached to a classical automorphic representation in that fiber. If \(\rho_x\) is irreducible, it is itself automorphic.
+\end{theorem}
+
+\begin{proof}
+Full patched support descends to full support of \(H\) over \(R\) by
+\cref{thm:ordinary_support_descent}. The isomorphism \(R\cong\TT\) transports that support by \cref{thm:rt_support_transport}. The field fiber is nonzero by
+\cref{thm:support_gives_hecke_system}. The declared classicality and realization theorem supplies an automorphic representation in the fiber and an attached Galois representation. The comparison with \(\rho_x\) follows from \cref{thm:pointwise_galois_realization}.
+\end{proof}
+
+\begin{definition}[Derived completion datum at a point]\label{def:derived_completion_datum}
+A derived completion datum is defined in the same way, with a perfect patched complex
+\(C_\infty\) of full derived support and a finite level automorphic complex
+\[
+C
+\simeq
+C_\infty
+\mathbin{\mathop{\otimes}\limits_{R_\infty}^{\mathbf L}}R
+\]
+in place of the ordinary modules.
+\end{definition}
+
+\begin{theorem}[Derived conditional automorphic completion]\label{thm:derived_conditional_completion}
+Let \(x:R\to E'\) admit a derived completion datum. Then
+\[
+\boxed{
+C\mathbin{\mathop{\otimes}\limits_{R,x}^{\mathbf L}}E'
+\not\simeq0.
+}
+\]
+Some cohomological degree contains a nonzero Hecke eigensystem with character \(x\). If the declared classicality and Galois realization theorem applies to that eigensystem, then \(\rho_x\) is automorphic after semisimplification.
+\end{theorem}
+
+\begin{proof}
+Derived full support descends by \cref{thm:derived_support_descent}. Nonzero cohomology follows from \cref{cor:derived_degree_survives}. Apply the declared realization theorem and then \cref{thm:derived_pointwise_realization}.
+\end{proof}
+
+\begin{theorem}[Compatible system completion from one automorphic member]\label{thm:system_completion}
+Let
+\[
+\{\rho_\lambda\}_{\lambda\in\Lambda}
+\]
+be a semisimple strictly compatible system with common Frobenius spine. Suppose the member at \(\lambda_0\) admits an ordinary or derived completion datum and is identified with the Galois representation attached to an automorphic representation \(\pi\). Assume that the compatible system attached to \(\pi\) has the same Frobenius spine. Then
+\[
+\boxed{
+\rho_\lambda
+\cong
+\rho_{\pi,\lambda}^{\mathrm{ss}}
+\quad
+\text{for every }\lambda\in\Lambda.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The completion theorem at \(\lambda_0\) gives the automorphic representation \(\pi\). Apply \cref{thm:one_member_propagation} to the two compatible systems.
+\end{proof}
+
+\begin{theorem}[Five gate formulation]\label{thm:five_gate_completion}
+Fix a characteristic zero deformation point. The formal argument of this article proves automorphic realization when the following five gates are available.
+\begin{enumerate}
+\item \textbf{Residual gate.} The residual representation is already occupied in the declared automorphic carrier, and the chosen local deformation problem is represented.
+\item \textbf{Patching gate.} An ordinary module or perfect complex of full patched support is supplied by an applicable patching theorem.
+\item \textbf{Comparison gate.} The finite deformation and Hecke coordinates are identified by an isomorphism \(R\cong\TT\), or by another comparison that preserves the required support.
+\item \textbf{Fiber gate.} The characteristic zero point lies in the supported locus, so the corresponding ordinary or derived Hecke fiber is nonzero.
+\item \textbf{Realization gate.} A classicality and Galois realization theorem identifies the Hecke eigensystem with the required automorphic representation.
+\end{enumerate}
+If a compatible system already exists, the conclusion propagates to its other coefficient places by \cref{thm:one_member_propagation}.
+\end{theorem}
+
+\begin{proof}
+The residual gate supplies the starting automorphic deformation problem. The patching gate and \cref{thm:ordinary_support_descent,thm:derived_support_descent} give full support at finite level. The comparison gate transports support to the Hecke side. The fiber gate follows from \cref{thm:field_fiber_criterion} in the ordinary case and from derived support in the complex case. The realization gate gives automorphy by \cref{thm:pointwise_galois_realization,thm:derived_pointwise_realization}. The compatible system statement is \cref{thm:one_member_propagation}.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.97\textwidth]{17_final_completion.pdf}
+\caption{The final theorem is a composition of separate residual, support, comparison, fiber, and realization gates.}
+\label{fig:final_completion}
+\end{figure}
+
+\section{Exact boundary of the article}\label{sec:boundary}
+
+The formal results above sharpen the logical role of patching support, Hecke packets, and compatible systems. They do not replace the arithmetic theorems that supply the gates.
+
+\begin{table}[t]
+\centering
+\caption{Proved formal statements and arithmetic inputs that remain external.}
+\label{tab:boundary}
+\begin{tabular}{p{.44\textwidth}p{.44\textwidth}}
+\toprule
+Proved in this article & Not proved in this article\\
+\midrule
+Local conditions combine through completed quotient rings & Representability of every desired local deformation condition\\
+Full ordinary and derived support descends through the patching quotient & Near faithfulness or full support for every global deformation problem\\
+An isomorphism \(R\cong\TT\) transports support and Fitting data & An \(R\cong\TT\) theorem outside published hypotheses\\
+Finite Hecke algebras split into Artin packets & Positive automorphic occupancy of every residual or characteristic zero packet\\
+Nonzero stable cores produce compatible inverse limit points & Universal residual companion existence\\
+One automorphic member determines a fixed compatible system & Existence of a compatible system for every geometric representation\\
+Augmentation and coinvariant recovery work at coefficient prime two & A universal coefficient two replacement for residual image, local geometry, and classicality hypotheses\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}
+The strongest global conclusion is conditional automorphic realization inside a declared class for which the five gates have been verified. The article does not prove unrestricted global Langlands reciprocity.
+\end{remark}
+
+\begin{remark}
+A numerical certificate can check the finite algebra appearing in an example. It cannot verify a published automorphy lifting theorem, a classicality theorem, or a universal existence statement.
+\end{remark}
+
+\section*{Language model contribution}
+
+An OpenAI language model was used as a drafting and proof organization aid. Its contributions included suggestions concerning the support descent formulation in \cref{sec:patching_support}, the separation between Artin Hecke packets and deformation components in \cref{sec:local_conditions,sec:hecke_packets}, the stable core criterion, and the five gate statement in \cref{sec:completion}. The author is responsible for checking every definition, proof, citation, and claim in any submitted version. The model is not an author.
+
+\bibliographystyle{amsplain}
+\bibliography{PSC_Paper_XII_Strengthened_Annals_Edition}
+
+\end{document}

@@ -1,0 +1,30 @@
+Algebra.TensorProduct.quotIdealMapEquivTensorQuot.{u_1, u_2} {A : Type u_1} (B : Type u_2) [CommRing A] [CommRing B]
+  [Algebra A B] (I : Ideal A) : (B ⧸ Ideal.map (algebraMap A B) I) ≃ₐ[B] B ⊗[A] (A ⧸ I)
+Algebra.TensorProduct.quotIdealMapEquivTensorQuot_mk.{u_1, u_2} {A : Type u_1} (B : Type u_2) [CommRing A] [CommRing B]
+  [Algebra A B] (I : Ideal A) (b : B) :
+  (Algebra.TensorProduct.quotIdealMapEquivTensorQuot B I) ((Ideal.Quotient.mk (Ideal.map (algebraMap A B) I)) b) =
+    b ⊗ₜ[A] 1
+Algebra.TensorProduct.includeLeft_apply.{uR, uS, uA, uB} {R : Type uR} {S : Type uS} {A : Type uA} {B : Type uB}
+  [CommSemiring R] [Semiring A] [Algebra R A] [Semiring B] [Algebra R B] [CommSemiring S] [Algebra S A]
+  [SMulCommClass R S A] (a : A) : Algebra.TensorProduct.includeLeft a = a ⊗ₜ[R] 1
+Algebra.TensorProduct.includeRight_apply.{uR, uA, uB} {R : Type uR} {A : Type uA} {B : Type uB} [CommSemiring R]
+  [Semiring A] [Algebra R A] [Semiring B] [Algebra R B] (b : B) : Algebra.TensorProduct.includeRight b = 1 ⊗ₜ[R] b
+/mnt/data/xii_completion_work/lean/Probe.lean:8:7: error(lean.unknownIdentifier): Unknown constant `Algebra.TensorProduct.tmul_one_eq_algebraMap`
+TensorProduct.smul_tmul.{u_1, u_2, u_5, u_6} {R : Type u_1} {R' : Type u_2} [CommSemiring R] [Monoid R'] {M : Type u_5}
+  {N : Type u_6} [AddCommMonoid M] [AddCommMonoid N] [DistribMulAction R' M] [Module R M] [Module R N]
+  [DistribMulAction R' N] [TensorProduct.CompatibleSMul R R' M N] (r : R') (m : M) (n : N) :
+  (r • m) ⊗ₜ[R] n = m ⊗ₜ[R] (r • n)
+TensorProduct.tmul_smul.{u_1, u_2, u_5, u_6} {R : Type u_1} {R' : Type u_2} [CommSemiring R] [Monoid R'] {M : Type u_5}
+  {N : Type u_6} [AddCommMonoid M] [AddCommMonoid N] [DistribMulAction R' M] [Module R M] [Module R N]
+  [SMulCommClass R R' M] [DistribMulAction R' N] [TensorProduct.CompatibleSMul R R' M N] (r : R') (x : M) (y : N) :
+  x ⊗ₜ[R] (r • y) = r • x ⊗ₜ[R] y
+Ideal.map_mono.{u, v, u_1} {R : Type u} {S : Type v} {F : Type u_1} [Semiring R] [Semiring S] [FunLike F R S] {f : F}
+  {I J : Ideal R} (h : I ≤ J) : Ideal.map f I ≤ Ideal.map f J
+Ideal.Quotient.lift_mk.{u, v} {R : Type u} [Ring R] (I : Ideal R) {a : R} {S : Type v} [I.IsTwoSided] [Semiring S]
+  (f : R →+* S) (H : ∀ a ∈ I, f a = 0) : (Ideal.Quotient.lift I f H) ((Ideal.Quotient.mk I) a) = f a
+UniformSpace.Completion.induction_on.{u_1} {α : Type u_1} [UniformSpace α] {p : UniformSpace.Completion α → Prop}
+  (a : UniformSpace.Completion α) (hp : IsClosed {a | p a}) (ih : ∀ (a : α), p ↑a) : p a
+UniformSpace.Completion.coeRingHom.{u_1} {α : Type u_1} [Ring α] [UniformSpace α] [IsTopologicalRing α]
+  [IsUniformAddGroup α] : α →+* UniformSpace.Completion α
+Ideal.Quotient.mk_surjective.{u} {R : Type u} [Ring R] {I : Ideal R} [I.IsTwoSided] :
+  Function.Surjective ⇑(Ideal.Quotient.mk I)

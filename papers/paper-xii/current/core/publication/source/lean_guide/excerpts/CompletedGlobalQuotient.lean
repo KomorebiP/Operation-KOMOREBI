@@ -1,0 +1,173 @@
+import PaperXII.CompletedBaseChangeTransport
+import Mathlib.RingTheory.LocalRing.RingHom.Basic
+
+/-! For an actually complete global ring the completed base change is its
+closed ideal quotient. This additionally proves surjectivity and preservation
+of locality for the point factorizations. -/
+noncomputable section
+open Filter Topology UniformSpace
+open scoped Uniformity
+set_option autoImplicit false
+namespace PaperXII.CompletedBaseChange
+
+variable {A B : Type*} [CommRing A] [CommRing B] [Algebra A B]
+variable [UniformSpace B] [IsUniformAddGroup B] [IsTopologicalRing B]
+  [CompleteSpace B]
+variable (mA : Ideal A) (mB : Ideal B) (J : Ideal A) (hB : IsAdic mB)
+  (h : mA.map (algebraMap A B) ≤ mB)
+
+abbrev globalClosedIdeal := (J.map (algebraMap A B)).closure
+
+instance globalClosedIdeal_closed : IsClosed (globalClosedIdeal (B := B) J : Set B) := isClosed_closure
+attribute [local instance] CompletionQuotient.quotientUniformSpace
+
+include hB in
+theorem globalQuotient_complete : CompleteSpace (B ⧸ globalClosedIdeal (B := B) J) := by
+  have : Filter.IsCountablyGenerated (𝓤 B) :=
+    hB.hasBasis_nhds_zero.uniformity_of_nhds_zero.isCountablyGenerated
+  exact QuotientAddGroup.completeSpace_right B (globalClosedIdeal (B := B) J).toAddSubgroup
+
+omit [CompleteSpace B] [IsUniformAddGroup B] in
+include hB in
+theorem globalMap_continuous_actual : Continuous (globalMap mA mB J) := by
+  have ht : Continuous ((AdicModel.rawEquiv B mB).symm : B → AdicModel.Carrier B mB) := by
+    apply AdicModel.continuous_of_map_le hB (AdicModel.carrier_isAdic B mB)
+      (AdicModel.rawEquiv B mB).symm.toRingHom
+    change mB.map (RingHom.id B) ≤ mB
+    simp
+  exact (globalMap_continuous mA mB J).comp ht
+
+omit [CompleteSpace B] [IsUniformAddGroup B] in
+include hB in
+theorem globalClosedIdeal_le_ker : globalClosedIdeal (B := B) J ≤ RingHom.ker (globalMap mA mB J) := by
+  exact (LocalQuotients.closure_le_kernel_iff _ _ (globalMap_continuous_actual mA mB J hB)).mpr
+    (globalMap_kills mA mB J)
+
+/-- Map from the actual closed global quotient into the completed tensor. -/
+def fromGlobalQuotient : (B ⧸ globalClosedIdeal (B := B) J) →+* Completed mA mB J :=
+  Ideal.Quotient.lift _ (globalMap mA mB J) (globalClosedIdeal_le_ker mA mB J hB)
+
+omit [CompleteSpace B] [IsUniformAddGroup B] in
+theorem fromGlobalQuotient_continuous : Continuous (fromGlobalQuotient mA mB J hB) :=
+  LocalQuotients.continuous_lift _ _ (globalMap_continuous_actual mA mB J hB) _
+
+omit [CompleteSpace B] [IsUniformAddGroup B] in
+@[simp] theorem fromGlobalQuotient_mk (b : B) :
+    fromGlobalQuotient mA mB J hB (Ideal.Quotient.mk _ b) = globalMap mA mB J b := rfl
+
+omit [CompleteSpace B] [IsUniformAddGroup B] in
+include hB in
+theorem globalQuotient_point_continuous :
+    Continuous ((Ideal.Quotient.mk (globalClosedIdeal (B := B) J)).comp
+      (AdicModel.rawEquiv B mB).toRingHom) := by
+  have hr : Continuous ((AdicModel.rawEquiv B mB).toRingHom :
+      AdicModel.Carrier B mB →+* B) := by
+    apply AdicModel.continuous_of_map_le (AdicModel.carrier_isAdic B mB) hB
+      (AdicModel.rawEquiv B mB).toRingHom
+    change mB.map (RingHom.id B) ≤ mB
+    simp
+  have hq : Continuous (Ideal.Quotient.mk (globalClosedIdeal (B := B) J) :
+      B → B ⧸ globalClosedIdeal (B := B) J) :=
+    (QuotientRing.isOpenQuotientMap_mk (globalClosedIdeal (B := B) J)).continuous
+  exact hq.comp hr
+
+omit [CompleteSpace B] [IsUniformAddGroup B] in
+theorem globalQuotient_point_kills : J.map (algebraMap A B) ≤
+    RingHom.ker (Ideal.Quotient.mk (globalClosedIdeal (B := B) J)) :=
+  fun _ hb ↦ Ideal.Quotient.eq_zero_iff_mem.mpr (subset_closure hb)
+
+/-- Construct the reverse map using actual completeness of the closed quotient. -/
+def toGlobalQuotient : Completed mA mB J →+* (B ⧸ globalClosedIdeal (B := B) J) := by
+  letI := globalQuotient_complete mB J hB
+  exact factor mA mB J h (Ideal.Quotient.mk (globalClosedIdeal (B := B) J))
+    (globalQuotient_point_continuous mB J hB) (globalQuotient_point_kills J)
+
+theorem toGlobalQuotient_continuous : Continuous (toGlobalQuotient mA mB J hB h) := by
+  have := globalQuotient_complete mB J hB
+  exact factor_continuous mA mB J h (Ideal.Quotient.mk (globalClosedIdeal (B := B) J))
+    (globalQuotient_point_continuous mB J hB) (globalQuotient_point_kills J)
+
+@[simp] theorem toGlobalQuotient_globalMap (b : B) :
+    toGlobalQuotient mA mB J hB h (globalMap mA mB J b) = Ideal.Quotient.mk _ b := by
+  have := globalQuotient_complete mB J hB
+  exact factor_globalMap mA mB J h (Ideal.Quotient.mk (globalClosedIdeal (B := B) J))
+    (globalQuotient_point_continuous mB J hB) (globalQuotient_point_kills J) b
+
+theorem toGlobalQuotient_from (x : B ⧸ globalClosedIdeal (B := B) J) :
+    toGlobalQuotient mA mB J hB h (fromGlobalQuotient mA mB J hB x) = x := by
+  obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective x
+  rw [fromGlobalQuotient_mk, toGlobalQuotient_globalMap]
+
+theorem fromGlobalQuotient_to (x : Completed mA mB J) :
+    fromGlobalQuotient mA mB J hB (toGlobalQuotient mA mB J hB h x) = x := by
+  have he : (fromGlobalQuotient mA mB J hB).comp (toGlobalQuotient mA mB J hB h) =
+      RingHom.id _ := by
+    apply factor_unique mA mB J _ _
+      ((fromGlobalQuotient_continuous mA mB J hB).comp (toGlobalQuotient_continuous mA mB J hB h))
+      continuous_id
+    ext b
+    change fromGlobalQuotient mA mB J hB
+      (toGlobalQuotient mA mB J hB h (globalMap mA mB J b)) = globalMap mA mB J b
+    rw [toGlobalQuotient_globalMap, fromGlobalQuotient_mk]
+  exact DFunLike.congr_fun he x
+
+/-- Actual topological global quotient description; no completed object is postulated. -/
+def globalQuotientEquiv : Completed mA mB J ≃+* (B ⧸ globalClosedIdeal (B := B) J) :=
+  RingEquiv.ofRingHom (toGlobalQuotient mA mB J hB h) (fromGlobalQuotient mA mB J hB)
+    (RingHom.ext (toGlobalQuotient_from mA mB J hB h))
+    (RingHom.ext (fromGlobalQuotient_to mA mB J hB h))
+
+theorem globalQuotientEquiv_continuous :
+    Continuous (globalQuotientEquiv mA mB J hB h) ∧
+      Continuous (globalQuotientEquiv mA mB J hB h).symm :=
+  ⟨toGlobalQuotient_continuous mA mB J hB h, fromGlobalQuotient_continuous mA mB J hB⟩
+
+include hB h in
+/-- Actual completeness of the global ring makes its canonical base-change map surjective. -/
+theorem globalMap_surjective : Function.Surjective (globalMap mA mB J) := by
+  intro x
+  obtain ⟨b, hb⟩ := Ideal.Quotient.mk_surjective (globalQuotientEquiv mA mB J hB h x)
+  refine ⟨b, (globalQuotientEquiv mA mB J hB h).injective ?_⟩
+  exact (toGlobalQuotient_globalMap mA mB J hB h b).trans hb
+
+include hB h in
+/-- Nonzero actual global base changes retain locality. -/
+theorem completed_global_isLocalRing [IsLocalRing B] [Nontrivial (Completed mA mB J)] :
+    IsLocalRing (Completed mA mB J) :=
+  IsLocalRing.of_surjective' (globalMap mA mB J) (globalMap_surjective mA mB J hB h)
+
+include hB h in
+/-- A local global point has a local factor through its actual completed base change. -/
+theorem completed_factor_isLocal {P : Type*} [CommRing P] (p : B →+* P) [IsLocalHom p]
+    (g : Completed mA mB J →+* P) (hg : g.comp (globalMap mA mB J) = p) : IsLocalHom g := by
+  constructor
+  intro x hx
+  obtain ⟨b, rfl⟩ := globalMap_surjective mA mB J hB h x
+  have hp : IsUnit (p b) := by
+    rw [← hg]
+    exact hx
+  exact (isUnit_of_map_unit p b hp).map (globalMap mA mB J)
+
+variable {C : Type*} [CommRing C] [Algebra A C] (e : (A ⧸ J) ≃ₐ[A] C)
+
+include hB h in
+/-- The separately constructed condition ring gives the same surjective global map. -/
+theorem transportedGlobalMap_surjective :
+    Function.Surjective (transportedGlobalMap mA mB J e) := by
+  intro x
+  obtain ⟨y, rfl⟩ := (completedTransport mA mB J e).surjective x
+  obtain ⟨b, rfl⟩ := globalMap_surjective mA mB J hB h y
+  exact ⟨b, (completedTransport_globalMap mA mB J e b).symm⟩
+
+include hB h in
+/-- Every factor of a local point through the actual transported base change is local. -/
+theorem transported_factor_isLocal {P : Type*} [CommRing P] (p : B →+* P) [IsLocalHom p]
+    (g : Transported mA mB J e →+* P)
+    (hg : g.comp (transportedGlobalMap mA mB J e) = p) : IsLocalHom g := by
+  constructor
+  intro x hx
+  obtain ⟨b, rfl⟩ := transportedGlobalMap_surjective mA mB J hB h e x
+  have hp : IsUnit (p b) := by rw [← hg]; exact hx
+  exact (isUnit_of_map_unit p b hp).map (transportedGlobalMap mA mB J e)
+
+end PaperXII.CompletedBaseChange

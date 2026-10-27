@@ -1,0 +1,119 @@
+import PaperXII.PerfectModels
+import PaperXII.ComplexSupport
+import Mathlib.RingTheory.Spectrum.Prime.Topology
+
+/-!
+# Intrinsic derived support of perfect objects
+
+A perfect object is an actual object of Mathlib's derived category equipped
+with a bounded finite-projective model and an actual derived isomorphism.
+Every scalar specialization and support assertion is invariant under changing
+that model or replacing the derived object by an isomorphic one.
+-/
+
+noncomputable section
+
+open CategoryTheory CategoryTheory.Limits
+
+universe u
+
+attribute [local instance] HasDerivedCategory.standard
+
+namespace PaperXII.PerfectDerivedSupport
+
+open PerfectModels
+
+/-- An arbitrary perfect derived object with a bounded finite-projective model. -/
+structure PerfectComplex (R : Type u) [CommRing R] where
+  object : DerivedCategory (ModuleCat.{u} R)
+  model : PerfectModel R
+  modelIso : model.derivedObject ≅ object
+
+variable {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
+
+/-- A bounded projective model determines a perfect derived object. -/
+def ofModel (P : PerfectModel R) : PerfectComplex R :=
+  ⟨P.derivedObject, P, Iso.refl _⟩
+
+/-- Derived scalar extension, computed on the finite-projective model. -/
+def PerfectComplex.baseChange (P : PerfectComplex R) (f : R →+* S) : PerfectComplex S :=
+  ofModel (P.model.baseChange f)
+
+/-- Every actual derived isomorphism induces one after arbitrary scalar extension. -/
+def baseChangeIso (f : R →+* S) {P Q : PerfectComplex R}
+    (e : P.object ≅ Q.object) : (P.baseChange f).object ≅ (Q.baseChange f).object :=
+  baseChange_derivedIso f P.model Q.model (P.modelIso ≪≫ e ≪≫ Q.modelIso.symm)
+
+/-- Successive derived scalar extensions agree with extension by the composite. -/
+def baseChangeCompIso (P : PerfectComplex R) (f : R →+* S) (g : S →+* T) :
+    ((P.baseChange f).baseChange g).object ≅ (P.baseChange (g.comp f)).object :=
+  ComplexSupport.fiberCompIso f g P.model.complex
+
+/-- Identity scalar extension recovers the arbitrary represented derived object. -/
+def baseChangeIdIso (P : PerfectComplex R) :
+    (P.baseChange (RingHom.id R)).object ≅ P.object :=
+  DerivedCategory.Q.mapIso (ComplexBaseChange.baseChangeIdIso P.model.complex) ≪≫ P.modelIso
+
+/-- The residue-field definition of derived support in the original manuscript. -/
+def support (P : PerfectComplex R) : Set (PrimeSpectrum R) :=
+  ComplexSupport.support P.model.complex
+
+/-- Full support of a perfect derived object. -/
+def FullSupport (P : PerfectComplex R) : Prop := support P = Set.univ
+
+/-- Derived support is independent of both model and representative. -/
+theorem support_eq_of_iso {P Q : PerfectComplex R} (e : P.object ≅ Q.object) :
+    support P = support Q := by
+  ext p
+  exact not_congr (baseChangeIso (algebraMap R p.asIdeal.ResidueField) e).isZero_iff
+
+/-- The field-valued criterion uses the exact prime kernel of the point. -/
+theorem nonzero_fiber_iff_support {K : Type u} [Field K] (P : PerfectComplex R)
+    (x : R →+* K) :
+    ¬IsZero (P.baseChange x).object ↔ FieldFibers.pointPrime x ∈ support P :=
+  ComplexSupport.nonzero_fiber_iff_support x P.model.complex
+
+/-- Derived support under every scalar map is the actual spectral inverse image. -/
+theorem support_baseChange (P : PerfectComplex R) (f : R →+* S) :
+    support (P.baseChange f) = PrimeSpectrum.comap f ⁻¹' support P :=
+  ComplexSupport.support_baseChange f P.model.complex
+
+/-- Original Theorem 6.16, in literal ambient-spectrum form for the actual quotient. -/
+theorem derived_quotient_support (P : PerfectComplex R) (I : Ideal R) :
+    PrimeSpectrum.comap (Ideal.Quotient.mk I) '' support (P.baseChange (Ideal.Quotient.mk I)) =
+      support P ∩ PrimeSpectrum.zeroLocus I :=
+  ComplexSupport.image_support_quotient I P.model.complex
+
+/-- Support transports along a ring isomorphism by its actual map on spectra. -/
+theorem support_ringEquiv (P : PerfectComplex R) (e : R ≃+* S) :
+    PrimeSpectrum.comap e.toRingHom '' support (P.baseChange e.toRingHom) = support P := by
+  rw [support_baseChange, Set.image_preimage_eq_inter_range]
+  have hsurj : Function.Surjective (PrimeSpectrum.comap e.toRingHom) :=
+    (PrimeSpectrum.isHomeomorph_comap_of_bijective e.bijective).surjective
+  rw [Set.range_eq_univ.mpr hsurj, Set.inter_univ]
+
+/-- Full support survives arbitrary derived scalar extension. -/
+theorem fullSupport_baseChange (P : PerfectComplex R) (f : R →+* S)
+    (h : FullSupport P) : FullSupport (P.baseChange f) :=
+  ComplexSupport.fullSupport_baseChange f P.model.complex h
+
+/-- Every field-valued fiber of a full-support perfect complex is nonzero. -/
+theorem nonzero_fiber_of_fullSupport {K : Type u} [Field K] (P : PerfectComplex R)
+    (x : R →+* K) (h : FullSupport P) : ¬IsZero (P.baseChange x).object :=
+  ComplexSupport.nonzero_fiber_of_fullSupport x P.model.complex h
+
+/-- The actual derived cohomology functors detect nonzero field fibers. -/
+theorem exists_nonzero_cohomology {K : Type u} [Field K] (P : PerfectComplex R)
+    (x : R →+* K) (h : ¬IsZero (P.baseChange x).object) :
+    ∃ n : ℤ, ¬IsZero ((DerivedCategory.homologyFunctor (ModuleCat K) n).obj
+      (P.baseChange x).object) := by
+  contrapose! h
+  exact (ComplexFieldFibers.derived_isZero_iff_homology _).mpr h
+
+/-- A surviving actual cochain cohomology object witnesses the same derived fiber. -/
+theorem exists_nonzero_model_cohomology {K : Type u} [Field K] (P : PerfectComplex R)
+    (x : R →+* K) (h : ¬IsZero (P.baseChange x).object) :
+    ∃ n : ℤ, ¬IsZero ((P.baseChange x).model.complex.homology n) :=
+  ComplexFieldFibers.exists_nonzero_homology_of_not_isZero _ h
+
+end PaperXII.PerfectDerivedSupport
