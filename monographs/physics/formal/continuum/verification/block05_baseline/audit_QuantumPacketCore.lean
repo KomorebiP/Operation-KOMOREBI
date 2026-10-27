@@ -1,0 +1,26 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPaperVII.PacketFamily
+#print axioms KomorebiPaperVII.PacketFamily.idempotent
+#print axioms KomorebiPaperVII.PacketFamily.block
+#print axioms KomorebiPaperVII.PacketFamily.reconstruct
+#print axioms KomorebiPaperVII.PacketFamily.compose_blocks
+#print axioms KomorebiPaperVII.PacketFamily.circuit
+#print axioms KomorebiPaperVII.PacketFamily.pathSum
+#print axioms KomorebiPaperVII.PacketFamily.circuit_path_expansion
+#print axioms KomorebiPaperVII.PacketFamily.circuit_reconstruction
+#print axioms KomorebiPaperVII.PacketFamily.symmetry_no_transfer
+#print axioms KomorebiPaperVII.PacketFamily.symmetry_diagonal
+#print axioms KomorebiPaperVII.PacketFamily.dephase
+#print axioms KomorebiPaperVII.PacketFamily.dephase_idempotent
+#print axioms KomorebiPaperVII.PacketFamily.adjoint_block
+#print axioms KomorebiPaperVII.PacketFamily.unitarity_columns
+#print axioms KomorebiPaperVII.PacketFamily.unitarity_rows
+#print axioms KomorebiPaperVII.PacketFamily.symmetry_exponential_commutes
+#print axioms KomorebiPaperVII.PacketFamily.symmetry_exponential_diagonal
+#print axioms KomorebiPaperVII.PacketFamily.symmetry_exponential_no_transfer
+#print axioms KomorebiPaperVII.matrix_unitarity_columns
+#print axioms KomorebiPaperVII.matrix_unitarity_rows
+#print axioms KomorebiPaperVII.dephase_trace_duality
+#print axioms KomorebiPaperVII.measurement_invariance
+#print axioms KomorebiPaperVII.dephase_trace_preserving

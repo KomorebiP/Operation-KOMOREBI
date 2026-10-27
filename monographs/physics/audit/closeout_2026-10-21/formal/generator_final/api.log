@@ -1,0 +1,203 @@
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_evolution_commutes_cutoff (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t)
+      (KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation S f) =
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation S
+      ((KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.centered_evolution_commutes_cutoff (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t)
+      (KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation S f) =
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation S
+      ((KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.physicalCutoff
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_evolution_commutes_cutoff (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t)
+      (KomorebiPhysics.Relativistic3DGeneratorBridge.physicalCutoff S f) =
+    KomorebiPhysics.Relativistic3DGeneratorBridge.physicalCutoff S
+      ((KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_centered_evolution_commutes_cutoff (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  (KomorebiPhysics.Relativistic3DTorusFourierEvolution.centralTorusUnitary m h t)
+      (KomorebiPhysics.Relativistic3DGeneratorBridge.physicalCutoff S f) =
+    KomorebiPhysics.Relativistic3DGeneratorBridge.physicalCutoff S
+      ((KomorebiPhysics.Relativistic3DTorusFourierEvolution.centralTorusUnitary m h t) f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.coeff_tendsto_zero.{u_1} {X : Type u_1} {l : Filter X}
+  {u : X → ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2}
+  {bound : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode → ℝ} (hs : Summable fun n => bound n ^ 2)
+  (hc : ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode), Filter.Tendsto (fun a => ↑(u a) n) l (nhds 0))
+  (hb : ∀ᶠ (a : X) in l, ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode), ‖↑(u a) n‖ ≤ bound n) :
+  Filter.Tendsto u l (nhds 0)
+KomorebiPhysics.Relativistic3DGeneratorBridge.coeff_tendsto.{u_1} {X : Type u_1} {l : Filter X}
+  {u : X → ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2}
+  {f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2}
+  {bound : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode → ℝ} (hs : Summable fun n => bound n ^ 2)
+  (hc :
+    ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode), Filter.Tendsto (fun a => ↑(u a) n) l (nhds (↑f n)))
+  (hb : ∀ᶠ (a : X) in l, ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode), ‖↑(u a) n - ↑f n‖ ≤ bound n) :
+  Filter.Tendsto u l (nhds f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.timeScaled_eq_real_smul (t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator t A = t • -Complex.I • A
+KomorebiPhysics.Relativistic3DGeneratorBridge.mode_orbit_hasDerivAt (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) (t : ℝ) :
+  HasDerivAt (fun s => (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n s) ψ)
+    (-Complex.I •
+      (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t)
+        ((KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ))
+    t
+KomorebiPhysics.Relativistic3DGeneratorBridge.mode_propagator_zero (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n 0 = 1
+KomorebiPhysics.Relativistic3DGeneratorBridge.mode_increment_bound (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) (s t : ℝ) :
+  ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n s) ψ -
+        (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t) ψ‖ ≤
+    |s - t| * ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ‖
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_orbit_continuous (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  Continuous fun t => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_coeff_zero (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m 0) f = f
+KomorebiPhysics.Relativistic3DGeneratorBridge.coefficient_slope_bound (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m)) (s t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ‖↑(slope (fun u => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m u) ↑f) t s) n‖ ≤
+    ‖↑(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracOutput m f) n‖
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_orbit_hasDerivAt (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m)) (t : ℝ) :
+  HasDerivAt (fun s => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m s) ↑f)
+    (-Complex.I •
+      (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t)
+        (KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracOutput m f))
+    t
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_orbit_hasDerivAt_zero (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m)) :
+  HasDerivAt (fun t => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) ↑f)
+    (-Complex.I • KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracOutput m f) 0
+KomorebiPhysics.Relativistic3DGeneratorBridge.derivative_coordinates_zero (m : ℝ)
+  {f y : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2}
+  (h : HasDerivAt (fun t => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f) y 0)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑y n = -Complex.I • (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) (↑f n)
+KomorebiPhysics.Relativistic3DGeneratorBridge.mem_domain_of_hasDerivAt_zero (m : ℝ)
+  {f y : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2}
+  (h : HasDerivAt (fun t => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f) y 0) :
+  f ∈ KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m
+KomorebiPhysics.Relativistic3DGeneratorBridge.differentiableAt_zero_iff_mem_domain (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  DifferentiableAt ℝ (fun t => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f) 0 ↔
+    f ∈ KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_velocity_continuous (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m)) :
+  Continuous fun t =>
+    -Complex.I •
+      (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t)
+        (KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracOutput m f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.continuum_derivative_norm (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m)) (t : ℝ) :
+  ‖deriv (fun s => (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m s) ↑f) t‖ =
+    ‖KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracOutput m f‖
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_evolution_eq_fourier (m t : ℝ)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) f =
+    KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv.symm
+      ((KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t)
+        (KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv f))
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_output_eq_fourier (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) :
+  ↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f =
+    KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv.symm
+      (KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracOutput m
+        ((KomorebiPhysics.Relativistic3DWeightedDomain.physicalToCoeffDomain m) f))
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_orbit_continuous (m : ℝ)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  Continuous fun t => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) f
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_unitary_zero (m : ℝ)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m 0) f = f
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_orbit_hasDerivAt (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  HasDerivAt (fun s => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m s) ↑f)
+    (-Complex.I •
+      (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t)
+        (↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f))
+    t
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_orbit_hasDerivAt_zero (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) :
+  HasDerivAt (fun t => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) ↑f)
+    (-Complex.I • ↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f) 0
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_mem_domain_of_hasDerivAt_zero (m : ℝ)
+  {f y : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2}
+  (h : HasDerivAt (fun t => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) f) y 0) :
+  f ∈ KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_differentiableAt_zero_iff_mem_domain (m : ℝ)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  DifferentiableAt ℝ (fun t => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) f) 0 ↔
+    f ∈ KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_differentiableAt_zero_iff_summable_h1 (m : ℝ)
+  (f : KomorebiPhysics.Relativistic3DTorusFourierEvolution.TorusSpinorL2) :
+  DifferentiableAt ℝ (fun t => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) f) 0 ↔
+    Summable fun n =>
+      KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm
+        (KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv f) n
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_deriv_zero (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) :
+  deriv (fun t => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) ↑f) 0 =
+    -Complex.I • ↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_velocity_continuous (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) :
+  Continuous fun t =>
+    -Complex.I •
+      (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t)
+        (↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_derivative_norm (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  ‖deriv (fun s => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m s) ↑f) t‖ =
+    ‖↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f‖
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_shifted_orbit_hasDerivAt_zero (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  HasDerivAt
+    (fun s =>
+      (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m s)
+        ((KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) ↑f))
+    (-Complex.I •
+      (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t)
+        (↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f))
+    0
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_domain_invariant (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t) ↑f ∈
+    KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m
+KomorebiPhysics.Relativistic3DGeneratorBridge.physicalEvolvedDomain (m t : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) :
+  ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_hamiltonian_commutes (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  ↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m)
+      (KomorebiPhysics.Relativistic3DGeneratorBridge.physicalEvolvedDomain m t f) =
+    (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m t)
+      (↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f)
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_schrodinger_hasDerivAt (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  HasDerivAt (fun s => (KomorebiPhysics.Relativistic3DTorusFourierEvolution.continuumTorusUnitary m s) ↑f)
+    (-Complex.I •
+      ↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m)
+        (KomorebiPhysics.Relativistic3DGeneratorBridge.physicalEvolvedDomain m t f))
+    t
+KomorebiPhysics.Relativistic3DGeneratorBridge.physical_graph_energy_conserved (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)) (t : ℝ) :
+  ‖↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m)
+        (KomorebiPhysics.Relativistic3DGeneratorBridge.physicalEvolvedDomain m t f)‖ =
+    ‖↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f‖

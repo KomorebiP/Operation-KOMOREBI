@@ -1,0 +1,59 @@
+KomorebiPhysics/SpectralGraph.lean:60:2: error: Type mismatch: After simplification, term
+  lp.norm_compl_sum_single
+    (of_eq_true
+      (Eq.trans (Eq.trans (congrArg (LT.lt 0) (ENNReal.toReal_ofNat 2)) Nat.ofNat_pos._simp_1) (eq_true True.intro)))
+    x s
+ has type
+  @Eq ℝ (‖x - ∑ i ∈ s, lp.single 2 i (↑x i)‖ ^ 2) (‖x‖ ^ 2 - ∑ x_1 ∈ s, ‖↑x x_1‖ ^ 2)
+but is expected to have type
+  @Eq ℝ (‖x - DiagonalDomain.coordinateAtlas.partialSum s x‖ ^ 2) (‖x‖ ^ 2 - ∑ x_1 ∈ s, ‖↑x x_1‖ ^ 2)
+KomorebiPhysics/SpectralGraph.lean:72:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ‖?x - DiagonalDomain.coordinateAtlas.partialSum ?s ?x‖ ^ 2
+in the target expression
+  ‖↑x - (DiagonalDomain.atlas eig).atlas.partialSum s ↑x‖ ^ 2 +
+      ‖↑(DiagonalDomain.operator eig) x -
+            ∑ x_1 ∈ s, (DiagonalDomain.coordinate x_1) (↑(DiagonalDomain.operator eig) x)‖ ^
+        2 =
+    ‖↑x‖ ^ 2 + ‖↑(DiagonalDomain.operator eig) x‖ ^ 2 - ∑ x_1 ∈ s, (1 + eig x_1 ^ 2) * ‖↑↑x x_1‖ ^ 2
+
+I : Type u_1
+inst✝ : DecidableEq I
+eig : I → ℝ
+x : ↥(DiagonalDomain.operator eig).domain
+s : Finset I
+⊢ ‖↑x - (DiagonalDomain.atlas eig).atlas.partialSum s ↑x‖ ^ 2 +
+      ‖↑(DiagonalDomain.operator eig) x -
+            ∑ x_1 ∈ s, (DiagonalDomain.coordinate x_1) (↑(DiagonalDomain.operator eig) x)‖ ^
+        2 =
+    ‖↑x‖ ^ 2 + ‖↑(DiagonalDomain.operator eig) x‖ ^ 2 - ∑ x_1 ∈ s, (1 + eig x_1 ^ 2) * ‖↑↑x x_1‖ ^ 2
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun x => x ∈ lp (fun x => ℂ) 2
+  has type
+    (PreLp fun x => ℂ) → Prop
+  but is expected to have type
+    (I → ℂ) → Prop
+  in the application
+    @Subtype.val (I → ℂ) fun x => x ∈ lp (fun x => ℂ) 2
+KomorebiPhysics/SpectralGraph.lean:104:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  inner ℂ ((DiagonalDomain.coordinate i) ↑x) ((DiagonalDomain.coordinate j) (↑(DiagonalDomain.operator eig) x))
+in the target expression
+  2 *
+      (inner ℂ (((DiagonalDomain.atlas eig).atlas.proj i) ↑x)
+          ((DiagonalDomain.coordinate j) (↑(DiagonalDomain.operator eig) x))).im =
+    0
+
+case neg
+I : Type u_1
+inst✝ : DecidableEq I
+eig : I → ℝ
+x : ↥(DiagonalDomain.operator eig).domain
+i j : I
+hij : ¬i = j
+h : inner ℂ ((DiagonalDomain.coordinate i) ↑x) ((DiagonalDomain.coordinate j) (↑(DiagonalDomain.operator eig) x)) = 0
+⊢ 2 *
+      (inner ℂ (((DiagonalDomain.atlas eig).atlas.proj i) ↑x)
+          ((DiagonalDomain.coordinate j) (↑(DiagonalDomain.operator eig) x))).im =
+    0

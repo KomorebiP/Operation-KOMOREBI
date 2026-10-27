@@ -1,0 +1,20 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.TensorAtlas.sum_kronecker_left
+#print axioms KomorebiPhysics.TensorAtlas.sum_kronecker_right
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_mul_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_sum_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_sum_right_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_sum_left_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_coarsen_fst_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_coarsen_snd_proj
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_marginal_left_trace
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_marginal_right_trace
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_marginal_left
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_marginal_right
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_probability_normalized
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_product_trace
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_product_probability
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.tensor_hasDerivAt_probability

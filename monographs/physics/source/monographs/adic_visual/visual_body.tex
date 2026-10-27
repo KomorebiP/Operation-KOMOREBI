@@ -1,0 +1,353 @@
+% Twelve fresh bounded Python plates. No new Lean compilation.
+\begingroup
+\renewcommand{\atlasfigure}[2]{\begin{center}\includegraphics[width=.97\linewidth,height=.335\textheight,keepaspectratio]{adic_figures/#1.pdf}\end{center}{\small\color{muted}#2}\par}
+
+\section{Read the address, normalization, and operator together}
+
+The adic structure in this volume belongs to the register addresses and their refinement. Amplitudes remain complex and probabilities remain ordinary nonnegative Born weights. A finite change of address, a Haar decomposition, a compatible Hamiltonian, and a Schur elimination are distinct operations. The twelve plates make their relations visible while preserving those distinctions.
+
+The first four plates concern normalized descendants, child characters, cylinder averages, and finite unit coordinates. The next three concern compatible Hamiltonians, shell probabilities, and a local product-graph walk. The final five concern finite radial response, complete band folding, an infinite geometric tail example, prime spectral maps, and coherent number-residue packets.
+
+\paragraph{Construction of the figures.}
+All twelve figures were generated with Python and Matplotlib from small arrays or explicit scalar families. No inherited numerical table is reused. Exact modular, rational, and polynomial checks accompany floating matrix calculations. One scalar comparison uses sixty decimal digits. The computation record reports forty checks, including twelve elementary descendant normalization cases and an inventory check. These are checks on related implementations, rather than forty independent physical results.
+
+\paragraph{Conventions.}
+At finite depth $h$, addresses are $x\in\Z/p^h\Z$ with counting-norm Hilbert space $\ell^2$. The positive-exponent Fourier convention is
+\[
+(F_p)_{qd}=p^{-1/2}e^{2\pi iqd/p}.
+\]
+$E_r^{(h)}$ averages all addresses congruent modulo $p^r$. The detail projectors are $F_0^{(h)}=E_0^{(h)}$ and $F_r^{(h)}=E_r^{(h)}-E_{r-1}^{(h)}$ for $r\ge1$. The symbol $F_p$ with a prime subscript denotes the child Fourier matrix, while $F_r^{(h)}$ denotes a level projector. Tree couplings in these plates are real, and every resolvent evaluation lies in the upper half-plane.
+
+\paragraph{How far the figures reach.}
+The exact infinite geometric formulas in Plate 10 are a specialization of the manuscript's domain and truncation statements. Finite arrays do not prove the direct-limit theorem, self-adjointness, or every-depth convergence. The walk is a finite graph model, the radial chain is a chosen hidden-sector model, and the coherent packet plot is a standard oscillator calculation. The atlas reports no new Lean compilation or experimental calibration.
+
+\clearpage
+\section{A descendant weight is not an interaction matrix element}
+\atlasfigure{01_weighted_split}{Left: ternary descendant amplitudes and Born weights. Right: the collective visible-to-radial coupling for three independently chosen per-leaf exponents. All magnitudes are dimensionless and $g$ is factored out.}
+
+After $w$ normalized $p$-ary refinements, a parent basis vector becomes
+\[
+|R_{p,w}\rangle=p^{-w/2}\sum_{\mathbf d\in\{0,\ldots,p-1\}^w}|\mathbf d\rangle.
+\]
+There are $p^w$ orthonormal descendants, so the squared norm is one. Each descendant has amplitude magnitude $p^{-w/2}$ and probability $p^{-w}$. Using the probability as an amplitude would produce a norm defect. The script checks the probability sum exactly for $p=2,3$ and $w=0,\ldots,5$.
+
+Choose a real per-leaf coupling $g\,p^{-\alpha w}$. Equal coupling to all descendants selects the radial packet and gives
+\[
+G_{p,w}=\langle R_{p,w}|H|c\rangle
+=g\,p^{(1/2-\alpha)w}.
+\]
+Thus $\alpha=1/2$ preserves the collective strength, whereas $\alpha=1$ makes the collective amplitude decay as $p^{-w/2}$. The rank-one self-energy then has numerator $|G_{p,w}|^2=|g|^2p^{-w}$.
+
+Every descendant combination orthogonal to $R_{p,w}$ is dark to this equal-leaf source. This selection is a symmetry property of the chosen interaction. Haar normalization fixes the state geometry, but selecting $\alpha$ still specifies a Hamiltonian. A direct coupling to one normalized aggregate packet is another geometry and need not have the same exponent.
+
+
+
+\clearpage
+\section{One child character is inherited and the others are details}
+\atlasfigure{02_haar_channels}{Left: the real parts of the three normalized child characters are solid, and their imaginary parts are dashed. Right: the exact dimension of each detail level for $p=2,3,5$. The finite matrix audit uses $h=1,2,3$ with largest dimension $125$.}
+
+The zero character is the normalized child average. The nonzero characters sum to zero and span the orthogonal detail complement. For a common parent, character orthogonality is
+\[
+\frac1p\sum_{d=0}^{p-1}e^{2\pi i(q'-q)d/p}=\delta_{qq'}.
+\]
+At depth $h$, the level-$r$ wavelet for parent $a$ and nonzero child character $q$ is
+\[
+\psi_{r,a,q}^{(h)}(x)
+=p^{-(h-r+1)/2}e^{2\pi iq d_r(x)/p}
+\mathbf1_{\{x\equiv a\bmod p^{r-1}\}}.
+\]
+Its support has $p^{h-r+1}$ points. The normalization factor makes its norm one. Disjoint parents are orthogonal, and the zero-mean condition gives orthogonality to older levels.
+
+The independently assembled wavelet basis reconstructs
+\[
+F_r^{(h)}=\sum_{a,q}|\psi_{r,a,q}^{(h)}\rangle\langle\psi_{r,a,q}^{(h)}|,
+\qquad \operatorname{rank}F_r^{(h)}=(p-1)p^{r-1}.
+\]
+The script constructs cylinder differences separately and compares their entries with these wavelet outer products. It also checks the full basis Gram matrix and the trace ranks. The observed floating residuals concern nine finite cases. The uniform identity follows from the character-sum argument.
+
+
+
+\clearpage
+\section{Cylinder averages follow the low digits}
+\atlasfigure{03_cylinder_embeddings}{Left: the $9\times9$ ternary depth-two matrix $E_1^{(2)}$. Nonzero entries pair addresses with the same low ternary digit. Right: one fine vector and its depth-one and depth-zero averages.}
+
+The finite expectation is
+\[
+(E_r^{(h)}f)(x)=p^{-(h-r)}
+\sum_{y\equiv x\ (\mathrm{mod}\ p^r)}f(y).
+\]
+Cylinder blocks are interleaved in the ordinary integer ordering. The matrix therefore need not look like contiguous blocks until the addresses are permuted. This is an ordering issue, rather than a failure of locality in the cylinder geometry.
+
+Uniform refinement from $p^h$ to $p^{h+1}$ addresses is
+\[
+(V_{p,h}f)(a+dp^h)=p^{-1/2}f(a).
+\]
+It is an isometry in counting norm. At the next depth, its range is exactly the old-cylinder subspace:
+\[
+V_{p,h}^*V_{p,h}=I,\qquad
+V_{p,h}V_{p,h}^*=E_h^{(h+1)}.
+\]
+The cylinder expectations satisfy $E_rE_s=E_{\min(r,s)}$. The script checks every product of the three expectations at $p=3,h=2$ using exact rational matrices. It checks the refinement image separately in floating arithmetic.
+
+In the infinite Haar probability space, a normalized finite basis vector corresponds to $p^{h/2}\mathbf1_{a+p^h\Z_p}$. That measure factor compensates the counting-norm replication factor. An unnormalized copy of amplitudes would describe a different map and would not preserve the finite state norm.
+
+
+
+\clearpage
+\section{Unit coordinates retain the dyadic sign}
+\atlasfigure{04_character_sectors}{Left: the eight units modulo $16$ arranged as $(-1)^s5^a$, with sign $s=0,1$ and phase $a=0,1,2,3$. Right: dimensions of the full register, phase image, and lost linear directions when sign is forgotten.}
+
+For $h\ge0$, dyadic units have coordinates
+\[
+(\Z/2^{h+2}\Z)^\times
+\cong\Z/2\Z\times\Z/2^h\Z,
+\qquad(s,a)\longmapsto(-1)^s5^a.
+\]
+Odd-prime units have a separate torsion coordinate of size $p-1$ and a principal coordinate of size $p^h$. These finite maps readdress a basis. When the labels are all retained, the corresponding Hilbert-space map is a permutation unitary.
+
+Deleting a coordinate has a different effect. The linear map
+\[
+C_{\mathrm{phase}}|\pm,a\rangle=|a\rangle
+\]
+annihilates $|+,a\rangle-|-,a\rangle$. For the eight-dimensional example, its rank and kernel dimension are both four. The rank calculation is a negative control against interpreting coordinate deletion as a reversible change of basis. This linear map is not a partial trace or a normalized quantum measurement channel.
+
+The fresh modular checks enumerate every unit and every coordinate-pair product for moduli $16$, $9$, and $25$. These are exact integer checks on three chosen finite unit groups. The general decomposition uses the stated generators and the group-theoretic argument in the monograph. Sign-sensitive observables remain available because the dyadic sign factor is retained during principal-phase refinement.
+
+
+
+\clearpage
+\section{Compatible dynamics have a vanishing cross block}
+\atlasfigure{05_projector_tower}{Left: the absolute Hamiltonian entries in coarse-plus-new-detail coordinates for a ternary $9\to27$ tower. Right: new-detail occupation for a compatible Hamiltonian and a self-adjoint cross-block perturbation of size $\eta=0.3$.}
+
+Let $V$ be an isometry, $P=VV^*$, and $Q=I-P$. A self-adjoint pair is compatible when
+\[
+H_fV=VH_c.
+\]
+This is equivalent to $QH_fP=0$ and $PH_fP=VH_cV^*$. Self-adjointness removes the opposite cross block as well. The old subspace is then reducing, so bounded functional calculus gives
+\[
+e^{-itH_f}V=Ve^{-itH_c}.
+\]
+At a nonreal energy, its cross-block Feshbach term also vanishes.
+
+The displayed family uses
+\[
+H_h=\sum_{r=0}^h\epsilon_rF_r^{(h)}
++0.2(2I-S_h-S_h^*),\qquad
+\epsilon_0=0,\quad\epsilon_r=2^{r-1}\ (r\ge1).
+\]
+The script constructs the cyclic shifts and cylinder projectors independently at the two depths. It checks Hamiltonian, unitary, leakage, and self-energy relations within stated tolerances.
+
+For the negative control, $u=Ve_0$ and $v$ is a normalized new-detail wavelet. Adding $\eta(|u\rangle\langle v|+|v\rangle\langle u|)$ produces cross-block norm $\eta$ and visible detail occupation. Self-adjointness alone therefore does not imply refinement compatibility. The zero leakage in the compatible curve is a structural condition, not a universal property of arbitrary refinements.
+
+
+
+\clearpage
+\section{Hierarchical evolution is uniform within valuation shells}
+\atlasfigure{06_unitary_time}{Left: per-address probabilities for the pure ternary hierarchy, ordered by valuation shell, over $0\le t\le5$. Right: per-address and whole-shell probabilities at $t=0.7$. The final shell contains only the source address.}
+
+For orthogonal level projectors and real energies,
+\[
+H_h=\sum_{r=0}^h\epsilon_rF_r^{(h)},\qquad
+U_h(t)=\sum_{r=0}^he^{-it\epsilon_r}F_r^{(h)}.
+\]
+Every expectation kernel is a normalized congruence indicator. The resulting propagator kernel therefore depends on the valuation of the address difference, truncated at the register depth. Equal valuations have equal amplitudes in this pure hierarchical model.
+
+The plate uses $p=3$, $h=3$, and energies $(0,1,2,4)$, starting at address zero. Each time slice is constructed directly from the projector sum. Probability normalization and the spread within every valuation shell are checked at all $151$ plotted times.
+
+Uniformity is per address. The probability of an entire shell also includes its multiplicity. For $r<h$, the shell $v_p(x)=r$ contains $(p-1)p^{h-r-1}$ addresses; the diagonal source is a singleton. The two right-panel bar sets therefore describe different observables.
+
+Adding a cyclic Laplacian preserves the compatible tower used in the previous plate, but its kernel need not retain this pure hierarchical valuation-shell form. Cross-prime couplings can likewise change shell symmetries. The current plot isolates the spectral-projector mechanism and does not infer shell isotropy for all compatible Hamiltonians.
+
+
+
+\clearpage
+\section{A product-graph walk propagates one edge per tick}
+\atlasfigure{07_product_walk}{Left: a genuine three-dimensional probability surface at tick six on $C_7\square T_{2,2}$, summed over all tree vertices of each depth. The connecting surface guides the eye between discrete samples. Right: occupied product distances in two finite walks and the one-edge-per-tick bound.}
+
+The vertices are a physical cycle address and a rooted-tree prefix. A product edge changes exactly one of them. At each vertex, the Grover coin acts on outgoing arcs, and the flip-flop shift reverses an arc:
+\[
+U=SC,\qquad C_v=2|+_{\deg v}\rangle\langle+_{\deg v}|-I.
+\]
+The coin is local and unitary, while $S^2=I$. Starting at one vertex, occupation remains inside the product ball $d_C+d_T\le n$ after $n$ ticks.
+
+The fresh calculation runs eight ticks on $C_7\square T_{p,2}$ for $p=2,3$. It checks probability, the local incoming-minus-outgoing continuity identity, and the probability outside the exact cone. The latter is zero in the constructed finite arrays. The left surface is an aggregate of graph coordinates and probabilities, not a metric embedding of physical spacetime.
+
+Finite-depth locality does not supply a depth-refinement identity. Under canonical inclusion of old arcs, extending the tree changes an old leaf's degree from three to five in the binary example. Its Grover diagonal entry changes from $-1/3$ to $-3/5$. This explicit negative control prevents transferring the compatible Haar Hamiltonian theorem to this walk without a separately constructed intertwiner.
+
+
+
+\clearpage
+\section{Branch normalization isolates a prime-independent radial chain}
+\atlasfigure{08_radial_self_energy}{Left: the root resolvent response of one finite radial chain, with $z=E+0.08i$. The ternary markers use the same radial matrix as the binary curve. Right: the real and imaginary parts of the exact finite hidden-chain memory kernel.}
+
+At tree level $r$, give each edge coupling $\gamma_r/\sqrt p$ and each vertex onsite energy $\epsilon_r$. The normalized level state is
+\[
+|r\rangle=p^{-r/2}\sum_{|v|=r}|v\rangle.
+\]
+Its neighboring radial matrix element is $\gamma_r$, since the branching enhancement cancels the edge normalization. The invariant radial restriction is a Jacobi chain $J$ with diagonal $\epsilon_r$ and off-diagonal $\gamma_r$.
+
+For a nonreal $z$, repeated Schur elimination gives
+\[
+\Sigma_h=0,\qquad
+\Sigma_r(z)=\frac{\gamma_r^2}{z-\epsilon_{r+1}-\Sigma_{r+1}(z)},
+\quad
+G_0(z)=\frac1{z-\epsilon_0-\Sigma_0(z)}.
+\]
+The script compares the full binary and ternary tree root inverses with the Jacobi inverse and the continued fraction. The depth-three examples have $15$ and $40$ tree vertices. Prime dependence survives in dark-sector multiplicities.
+
+For a visible source coupled to the first tail site, the initially empty hidden sector contributes the causal convolution kernel
+\[
+K(t)=\gamma_0^2\langle0|e^{-itJ_{\rm tail}}|0\rangle,\qquad t\ge0.
+\]
+A finite tail has persistent spectral oscillations. This plot does not establish irreversible damping, an infinite-bath limit, or an experimentally selected hidden sector. The same finite algebra can support those questions once the additional model and limit are specified.
+
+
+
+\clearpage
+\section{Band folding preserves the spectrum when every channel is kept}
+\atlasfigure{09_polyphase_symbol}{Left: the three folded bands for $\mu=0.2$, $\kappa=0.7$, with markers at the nine coarse momenta of a $27$-site cycle. Right: the sorted direct matrix spectrum and the complete folded-band union.}
+
+Standard polyphase analysis sends $|pk+r\rangle$ to $|r\rangle\otimes|k\rangle$. Adic analysis splits the newest digit instead. Digit reversal converts one ordering to the other. Both are permutation unitaries while all phase channels are retained.
+
+For the circulant Hamiltonian
+\[
+H=\mu I+\kappa(S+S^*),
+\]
+the folded bands at coarse momentum $\theta$ are
+\[
+E_q(\theta)=\mu+2\kappa\cos\!\left(\frac{\theta+2\pi q}{p}\right),
+\qquad q=0,\ldots,p-1.
+\]
+At a finite register depth, the original fine index has the unique decomposition $k=j+qm$. Consequently the union of all folded bands reproduces the fine cyclic spectrum, including multiplicity.
+
+The fresh ternary check compares these scalar samples with the eigenvalues of the independently assembled $27\times27$ cyclic matrix. Keeping only one folded channel would leave nine spectral entries and discard eighteen. This dimension count is a negative control against presenting a channel truncation as an invertible coordinate change.
+
+Schur elimination can retain the low-channel resolvent through an energy-dependent self-energy when the hidden inverse exists. That reduced operator is a different operation from keeping the full polyphase symbol. Near a hidden pole, the eliminated representation requires the stated resolvent restrictions and may become singular.
+
+
+
+\clearpage
+\section{An infinite tail can converge in norm but fail in graph norm}
+\atlasfigure{10_tail_graph_norm}{Left: exact infinite $L^2$ and graph-norm tail formulas for $q=1/8$ and $\epsilon_r=2^r$. Right: domain-weighted level masses for this example and for $q=1/2$. The curves do not hide a finite depth ceiling.}
+
+Choose one unit vector in each infinite Haar level and assign squared coefficient
+\[
+m_r=(1-q)q^r,\qquad r\ge0,\quad0<q<1.
+\]
+These masses sum to one. With hierarchical energies $\epsilon_r=2^r$, membership in the Hamiltonian domain requires
+\[
+\sum_{r\ge0}\epsilon_r^2m_r<\infty,
+\qquad\text{equivalently }4q<1.
+\]
+For $q=1/8$, the exact tails after retaining level $H$ are
+\[
+\begin{aligned}
+\|(I-E_H)f\|_2^2&=q^{H+1},\\
+\|(I-E_H)f\|_{\Dom(H)}^2
+&=q^{H+1}+\frac{(1-q)(4q)^{H+1}}{1-4q},
+\end{aligned}
+\]
+where the graph norm is $\|f\|_{\Dom(H)}^2=\|f\|_2^2+\|Hf\|_2^2$. The plot evaluates these closed infinite geometric sums. A separate $100$-term check agrees with them within the recorded tolerance.
+
+For $q=1/2$, the state still has unit $L^2$ norm, but its domain-weighted summand is $2^{r-1}$ and fails to tend to zero. The norm convergence of cylinder expectations therefore cannot be upgraded to convergence of $Hf$ for this vector. General domain statements need the weighted-square-summability hypothesis, even though unitary evolution is defined on every $L^2$ vector by spectral calculus.
+
+
+
+\clearpage
+\section{Prime spectral maps preserve an arcsine law}
+\atlasfigure{11_prime_renormalization}{Left: the normalized maps $R_p(x)=2T_p(x/2)$ for $p=2,3,5$. Right: exact even arcsine moments and the same moments after prime maps, evaluated with $4096$ angle nodes.}
+
+On the free spectral interval, write $x=2\cos\theta$. Then
+\[
+R_p(2\cos\theta)=2\cos(p\theta),\qquad
+R_p\circ R_q=R_{pq}.
+\]
+The script checks the $2$- and $3$-step composition as an exact polynomial identity. For example, $R_2(x)=x^2-2$ and $R_3(x)=x^3-3x$.
+
+The arcsine probability measure is
+\[
+d\nu(x)=\frac{dx}{\pi\sqrt{4-x^2}},\qquad -2<x<2.
+\]
+It is the cosine pushforward of uniform angle. Multiplying the angle by an integer preserves that pushforward distribution, which proves $(R_p)_*\nu=\nu$. The fresh numerical comparison tests moments of degrees zero through eight. Their exact values are zero for odd degree and $\binom{2n}{n}$ for degree $2n$.
+
+In the Chebyshev orthonormal basis, the Koopman isometry sends mode $n$ to mode $pn$. Its adjoint retains divisible modes and removes the others. This is an isometry with a proper range, rather than an invertible spectral map. The plotted maps have several inverse branches. Recovering an eliminated fine state therefore requires the missing channel information.
+
+The normalized polynomial map extends across the spectral interval, while a particular Schur formula can have a hidden Dirichlet pole there. Polynomial continuation does not make the hidden resolvent invertible at that pole. The figure displays the normalized map, not an unrestricted inverse for every eliminated operator.
+
+
+
+\clearpage
+\section{Hypergeometric lanes partition coherent number probabilities}
+\atlasfigure{12_hypergeometric_packets}{Left: probabilities in the five number-residue packets of a coherent oscillator state. Right: the maximum deviation from $1/5$ and its root-filter exponential bound. The curves use $301$ values of $0\le\mu\le15$.}
+
+For $N\ge2$, the exponential lane is
+\[
+E_{N,j}(z)=\sum_{q\ge0}\frac{z^{Nq+j}}{(Nq+j)!}
+=\frac1N\sum_{\ell=0}^{N-1}\omega_N^{-j\ell}e^{\omega_N^\ell z}.
+\]
+Splitting the factorial into $N$ step lanes gives the same function in generalized hypergeometric form,
+\[
+E_{N,j}(z)=\frac{z^j}{j!}\,
+{}_0F_{N-1}\!\left(;\mathcal A_{N,j};\frac{z^N}{N^N}\right),
+\]
+where $\mathcal A_{N,j}$ is the multiset of $(j+r)/N$, $1\le r\le N$, with the one parameter equal to $1$ removed.
+
+A coherent state has Poisson number probabilities with mean $\mu=|\alpha|^2$. Its residue weight is $p_{N,j}(\mu)=e^{-\mu}E_{N,j}(\mu)$, so positivity follows from the series and normalization from lane reconstruction. For fixed $N$,
+\[
+\left|p_{N,j}(\mu)-\frac1N\right|
+\le\frac{N-1}{N}e^{-\mu[1-\cos(2\pi/N)]}.
+\]
+The fresh calculation compares root sums, sparse factorial series, and hypergeometric expressions for $N=3,5$ at sixty decimal digits. It also checks the plotted normalization, positivity, and bound. These oscillator spectral packets are actual orthogonal number projectors. Individual functions $E_{N,j}(z)$ are analytic lanes, and should not be called Hilbert-space projectors or assumed bounded when evaluated on an arbitrary unbounded Hamiltonian.
+
+
+
+\clearpage
+\section{Reproduce the figures and inspect the evidence}
+
+The editable generator is \code{tools/make_adic_figures.py}. From the source root, run
+\begin{lstlisting}
+python tools/make_adic_figures.py
+\end{lstlisting}
+It writes twelve PDF plates and twelve PNG previews in \code{source/adic_figures/}. It writes the computation record to \code{evidence/adic/figure_checks.json} and appends a small run-history entry. If a calculation fails, the script retains the failed manifest and the exact script snapshot, reports the failure on stderr, and exits with a nonzero status. A partial plate set is not a successful atlas run.
+
+\paragraph{What the record contains.}
+The record pins the executed source, each declared output, the Python and numerical-library versions, the UTC start and elapsed runtime, and the arithmetic and finite bounds of every check. The current run used no random sampling. There was no network request or inherited numerical-data dependency. The source correspondence map separately pins the archived chapter and script members from which the mathematical topics were developed.
+
+\paragraph{What the checks mean.}
+Exact finite modular and rational operations decide the specified finite assertions. Symbolic polynomial checks certify the displayed polynomial expressions through the installed symbolic library. Matrix and scalar comparisons are conditional on their recorded tolerances. The high-precision scalar calculation is not interval certified. Library versions are recorded but the environment is not locked, and no operating-system memory or CPU cap was imposed.
+
+The independent constructions matter: Haar wavelet outer products are compared with separately assembled cylinder differences, folded scalar bands with a cyclic matrix spectrum, full tree inverses with radial inverses and continued fractions, and root filters with factorial and hypergeometric forms. Negative controls expose the failure of probability-as-amplitude normalization, sign deletion, cross-block compatibility, old-arc Grover refinement, single-channel spectral reconstruction, and unrestricted graph-domain membership.
+
+\paragraph{Formal provenance.}
+Python checks do not replace a Lean kernel receipt. The companion maps the archived formal support and its limits. This atlas runs no Lean compilation and does not reinterpret historical build logs as new formal certification.
+
+\clearpage
+\section{Keep the exact interface with its hypotheses}
+
+The visual argument passes through several interfaces. Each one carries its own condition.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}L{.24\linewidth}X@{}}
+\toprule
+Interface & Condition preserved by the calculation \\
+\midrule
+Address factorization & Every coordinate is retained for a permutation unitary. \\
+Haar refinement & Counting amplitudes include $p^{-1/2}$ per new digit. \\
+Compatible dynamics & The old subspace reduces the self-adjoint fine Hamiltonian. \\
+Graph walk locality & The coin is vertex local and the shift crosses one edge. \\
+Radial compression & Level symmetry and branch-normalized couplings are specified. \\
+Schur reduction & The relevant hidden block has an inverse at the chosen energy. \\
+Infinite Hamiltonian & The vector lies in the weighted spectral domain when $Hf$ is used. \\
+Analytic residue calculus & Bounded operators admit the norm series; unbounded ones need domains or spectral cutoffs. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The direct-limit Hilbert identification and the self-adjoint spectral construction are analytical results developed in the monograph. The finite matrices illustrate their concrete coordinates. A forty-check success record therefore supports these displayed examples and their implementation, while the proofs retain responsibility for the uniform claims.
+
+The remaining physical interpretation is also explicit. A tree edge is a refinement adjacency, a finite memory kernel belongs to the selected hidden chain, and a number-residue probability belongs to an oscillator observable. The calculations provide reproducible mathematical coordinates for those models. A microscopic action, calibrated interaction strengths, an interacting unbounded theory, or an observable that selects a particular digit ordering would require additional work.
+
+\begin{sectionrecap}
+The atlas establishes the stated finite and explicit-family checks, with their input and output identities recorded. It preserves the difference between a unitary change of coordinates, a compatible tower, a conditional elimination, and an infinite operator domain. Those boundaries let the figures explain the mathematics without claiming a completed physical theory.
+\end{sectionrecap}
+\endgroup

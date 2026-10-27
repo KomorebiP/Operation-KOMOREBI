@@ -1,0 +1,8 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.LindbladCoherence.escapeRate
+#print axioms KomorebiPhysics.LindbladCoherence.escapeRate_nonneg
+#print axioms KomorebiPhysics.LindbladCoherence.escapeRate_cast
+#print axioms KomorebiPhysics.LindbladCoherence.dissipator_offdiag
+#print axioms KomorebiPhysics.LindbladCoherence.generator_offdiag
+#print axioms KomorebiPhysics.LindbladCoherence.hasDerivAt_coherence

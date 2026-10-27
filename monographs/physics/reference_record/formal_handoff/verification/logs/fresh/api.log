@@ -1,0 +1,147 @@
+KomorebiPhysics.Relativistic3DWeightedDomain.HilbertSpinor : Type
+KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) : ℝ
+KomorebiPhysics.Relativistic3DWeightedDomain.continuumHilbertModeOperator_apply_as_spinor (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DWeightedDomain.HilbertSpinor) :
+  (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ =
+    KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert
+      (KomorebiPhysics.Relativistic3DFourierGenerator.continuumModeAction m n
+        (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor ψ))
+KomorebiPhysics.Relativistic3DWeightedDomain.continuumHilbertModeOperator_sq (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DWeightedDomain.HilbertSpinor) :
+  (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n)
+      ((KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ) =
+    ↑(KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq m n) • ψ
+KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq_nonneg (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  0 ≤ KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq m n
+KomorebiPhysics.Relativistic3DWeightedDomain.inner_continuumHilbertModeOperator_self (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DWeightedDomain.HilbertSpinor) :
+  inner ℂ ((KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ)
+      ((KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ) =
+    ↑(KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq m n) * inner ℂ ψ ψ
+KomorebiPhysics.Relativistic3DWeightedDomain.norm_continuumHilbertModeOperator_sq (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DWeightedDomain.HilbertSpinor) :
+  ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n) ψ‖ ^ 2 =
+    KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq m n * ‖ψ‖ ^ 2
+KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  ℝ
+KomorebiPhysics.Relativistic3DWeightedDomain.diracCoeff_norm_sq (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  ‖KomorebiPhysics.Relativistic3DUnboundedDirac.diracCoeff m f n‖ ^ 2 =
+    KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm m f n
+KomorebiPhysics.Relativistic3DWeightedDomain.mem_continuumDiracDomain_iff_summable_weighted (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) :
+  f ∈ KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m ↔
+    Summable fun n => KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm m f n
+KomorebiPhysics.Relativistic3DWeightedDomain.momentumNormSq (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) : ℝ
+KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq_eq_mass_add_momentum (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  KomorebiPhysics.Relativistic3DWeightedDomain.modeEnergySq m n =
+    m ^ 2 + KomorebiPhysics.Relativistic3DWeightedDomain.momentumNormSq n
+KomorebiPhysics.Relativistic3DWeightedDomain.momentumModeTerm
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  ℝ
+KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) : ℝ
+KomorebiPhysics.Relativistic3DWeightedDomain.summable_coeff_norm_sq
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) : Summable fun n => ‖↑f n‖ ^ 2
+KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm_eq_mass_add_momentum (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm m f n =
+    m ^ 2 * ‖↑f n‖ ^ 2 + KomorebiPhysics.Relativistic3DWeightedDomain.momentumModeTerm f n
+KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm_eq_norm_add_momentum
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm f n =
+    ‖↑f n‖ ^ 2 + KomorebiPhysics.Relativistic3DWeightedDomain.momentumModeTerm f n
+KomorebiPhysics.Relativistic3DWeightedDomain.summable_weighted_iff_momentum (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) :
+  (Summable fun n => KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm m f n) ↔
+    Summable fun n => KomorebiPhysics.Relativistic3DWeightedDomain.momentumModeTerm f n
+KomorebiPhysics.Relativistic3DWeightedDomain.summable_h1_iff_momentum
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) :
+  (Summable fun n => KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm f n) ↔
+    Summable fun n => KomorebiPhysics.Relativistic3DWeightedDomain.momentumModeTerm f n
+KomorebiPhysics.Relativistic3DWeightedDomain.mem_continuumDiracDomain_iff_summable_h1 (m : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) :
+  f ∈ KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m ↔
+    Summable fun n => KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm f n
+KomorebiPhysics.Relativistic3DWeightedDomain.mem_continuumDiracDomain_iff_mass (m₁ m₂ : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DUnboundedDirac.CoeffL2) :
+  f ∈ KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m₁ ↔
+    f ∈ KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m₂
+KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2 : Type
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain (m : ℝ) :
+  Submodule ℂ KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2
+KomorebiPhysics.Relativistic3DWeightedDomain.mem_physicalDiracDomain_iff (m : ℝ)
+  (f : KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2) :
+  f ∈ KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m ↔
+    KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv f ∈
+      KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalToCoeffDomain (m : ℝ) :
+  ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m) →ₗ[ℂ]
+    ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracDomain m)
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap (m : ℝ) :
+  KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2 →ₗ.[ℂ]
+    KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2
+KomorebiPhysics.Relativistic3DWeightedDomain.torusFourierEquiv_physicalDiracPMap_apply (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).domain) :
+  KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv
+      (↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f) =
+    ↑(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracPMap m)
+      ((KomorebiPhysics.Relativistic3DWeightedDomain.physicalToCoeffDomain m) f)
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap_apply_coeff (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).domain)
+  (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode) :
+  ↑(KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv
+          (↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f))
+      n =
+    (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n)
+      (↑(KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv ↑f) n)
+KomorebiPhysics.Relativistic3DWeightedDomain.mem_physicalDiracDomain_iff_summable_h1 (m : ℝ)
+  (f : KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2) :
+  f ∈ KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m ↔
+    Summable fun n =>
+      KomorebiPhysics.Relativistic3DWeightedDomain.h1ModeTerm
+        (KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv f) n
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain_dense (m : ℝ) :
+  Dense ↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m)
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap_isFormalAdjoint (m : ℝ) :
+  (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).IsFormalAdjoint
+    (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m)
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap_le_adjoint (m : ℝ) :
+  KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m ≤
+    (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).adjoint
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracAdjoint_domain_le (m : ℝ) :
+  (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).adjoint.domain ≤
+    (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).domain
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracAdjoint_le (m : ℝ) :
+  (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).adjoint ≤
+    KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap_selfAdjoint (m : ℝ) :
+  IsSelfAdjoint (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m)
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap_isClosed (m : ℝ) :
+  (KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).IsClosed
+KomorebiPhysics.Relativistic3DWeightedDomain.norm_continuumDiracPMap_sq_eq_tsum_weighted (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracPMap m).domain) :
+  ‖↑(KomorebiPhysics.Relativistic3DUnboundedDirac.continuumDiracPMap m) f‖ ^ 2 =
+    ∑' (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode),
+      KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm m (↑f) n
+KomorebiPhysics.Relativistic3DWeightedDomain.mem_physicalDiracDomain_iff_mass (m₁ m₂ : ℝ)
+  (f : KomorebiPhysics.Relativistic3DWeightedDomain.TorusSpinorL2) :
+  f ∈ KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m₁ ↔
+    f ∈ KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m₂
+KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain_eq_mass (m₁ m₂ : ℝ) :
+  KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m₁ =
+    KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracDomain m₂
+KomorebiPhysics.Relativistic3DWeightedDomain.norm_physicalDiracPMap_sq_eq_tsum_weighted (m : ℝ)
+  (f : ↥(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m).domain) :
+  ‖↑(KomorebiPhysics.Relativistic3DWeightedDomain.physicalDiracPMap m) f‖ ^ 2 =
+    ∑' (n : KomorebiPhysics.Relativistic3DUnboundedDirac.Mode),
+      KomorebiPhysics.Relativistic3DWeightedDomain.weightedModeTerm m
+        (KomorebiPhysics.Relativistic3DTorusFourierEvolution.torusFourierEquiv ↑f) n

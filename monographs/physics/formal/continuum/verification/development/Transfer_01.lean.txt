@@ -1,0 +1,156 @@
+module
+
+public import KomorebiPhysics.Atlas
+public import Mathlib.Tactic.Linarith
+
+/-!
+Chapter 2, (2.16)--(2.30). Real-time derivatives of actual complex vectors
+and squared norms. Skew-adjointness is a stated operator hypothesis.
+The conservation conclusion is not used in any input field.
+-/
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+namespace KomorebiPhysics
+open scoped BigOperators
+
+/-- Cancellation of any finite antisymmetric real current matrix, including
+currents confined to one coarse packet. -/
+theorem antisymmetric_sum_zero {I : Type*} (J : I → I → ℝ) (s : Finset I)
+    (h : ∀ i ∈ s, ∀ j ∈ s, J i j = -J j i) :
+    (∑ i ∈ s, ∑ j ∈ s, J i j) = 0 := by
+  have heq : (∑ i ∈ s, ∑ j ∈ s, J i j) = -(∑ i ∈ s, ∑ j ∈ s, J i j) := by
+    calc
+      _ = ∑ i ∈ s, ∑ j ∈ s, -J j i := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        apply Finset.sum_congr rfl
+        intro j hj
+        exact h i hi j hj
+      _ = -(∑ i ∈ s, ∑ j ∈ s, J j i) := by
+        simp only [Finset.sum_neg_distrib]
+      _ = _ := by rw [Finset.sum_comm]
+  linarith
+
+section Hilbert
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+
+/-- Bounded skew-adjointness in inner-product form, avoiding domain ambiguity. -/
+def IsSkew (A : H →L[ℂ] H) : Prop :=
+  ∀ x y, inner ℂ (A x) y = -inner ℂ x (A y)
+
+/-- Bilinear real transfer pairing, with inner product linear in the second slot. -/
+def pairCurrent (A : H →L[ℂ] H) (x y : H) : ℝ :=
+  2 * (inner ℂ x (A y)).re
+
+theorem pairCurrent_antisymm (A : H →L[ℂ] H) (hA : IsSkew A) (x y : H) :
+    pairCurrent A x y = -pairCurrent A y x := by
+  have hreal : (inner ℂ (A x) y).re = -(inner ℂ x (A y)).re := by
+    rw [hA, Complex.neg_re]
+  have hsym : (inner ℂ (A x) y).re = (inner ℂ y (A x)).re :=
+    inner_re_symm (𝕜 := ℂ) _ _
+  unfold pairCurrent
+  linarith
+
+theorem pairCurrent_self (A : H →L[ℂ] H) (hA : IsSkew A) (x : H) :
+    pairCurrent A x x = 0 := by
+  have h := pairCurrent_antisymm A hA x x
+  linarith
+
+theorem pairCurrent_sum_left {I : Type*} (A : H →L[ℂ] H)
+    (s : Finset I) (x : I → H) (y : H) :
+    pairCurrent A (∑ i ∈ s, x i) y = ∑ i ∈ s, pairCurrent A (x i) y := by
+  simp only [pairCurrent, sum_inner, Complex.re_sum, Finset.mul_sum]
+
+theorem pairCurrent_sum_right {I : Type*} (A : H →L[ℂ] H)
+    (s : Finset I) (x : H) (y : I → H) :
+    pairCurrent A x (∑ i ∈ s, y i) = ∑ i ∈ s, pairCurrent A x (y i) := by
+  simp only [pairCurrent, map_sum, inner_sum, Complex.re_sum, Finset.mul_sum]
+
+/-- Actual real-time derivative of the squared norm, at any point including zero. -/
+theorem hasDerivAt_norm_sq {ψ : ℝ → H} {v : H} {t : ℝ}
+    (hψ : HasDerivAt ψ v t) :
+    HasDerivAt (fun s => ‖ψ s‖ ^ 2) (2 * (inner ℂ (ψ t) v).re) t := by
+  have h := Complex.reCLM.hasFDerivAt.comp_hasDerivAt t (hψ.inner ℂ hψ)
+  have self (x : H) : (inner ℂ x x).re = ‖x‖ ^ 2 :=
+    inner_self_eq_norm_sq (𝕜 := ℂ) x
+  have sym : (inner ℂ v (ψ t)).re = (inner ℂ (ψ t) v).re :=
+    inner_re_symm (𝕜 := ℂ) _ _
+  simpa only [Function.comp_def, Complex.reCLM_apply, Complex.add_re,
+    self, sym, two_mul] using h
+
+/-- Total norm conservation for any differentiable solution of the bounded
+skew-adjoint equation. This is not an existence theorem for that solution. -/
+theorem hasDerivAt_total_energy (A : H →L[ℂ] H) (hA : IsSkew A)
+    {ψ : ℝ → H} {t : ℝ} (hψ : HasDerivAt ψ (A (ψ t)) t) :
+    HasDerivAt (fun s => ‖ψ s‖ ^ 2) 0 t := by
+  have h := hasDerivAt_norm_sq hψ
+  change HasDerivAt (fun s => ‖ψ s‖ ^ 2) (pairCurrent A (ψ t) (ψ t)) t at h
+  rwa [pairCurrent_self A hA] at h
+
+/-- Equation (2.30), including the sign for A = -i H. No Hermiticity is
+needed for this algebraic formula alone. -/
+theorem hamiltonian_current (B : H →L[ℂ] H) (x y : H) :
+    pairCurrent ((-Complex.I) • B) x y = 2 * (inner ℂ x (B y)).im := by
+  simp [pairCurrent, inner_smul_right, Complex.mul_re]
+
+end Hilbert
+
+namespace Atlas
+variable {H I : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+  [Fintype I] [DecidableEq I]
+variable (P : Atlas H I)
+
+/-- Equation (2.17). -/
+def energy (ψ : H) (i : I) : ℝ := ‖P.packet ψ i‖ ^ 2
+
+/-- Equation (2.18); the first index is the receiving sector. -/
+def current (A : H →L[ℂ] H) (ψ : H) (i j : I) : ℝ :=
+  pairCurrent A (P.packet ψ i) (P.packet ψ j)
+
+theorem current_antisymm (A : H →L[ℂ] H) (hA : IsSkew A) (ψ : H) (i j : I) :
+    P.current A ψ i j = -P.current A ψ j i :=
+  pairCurrent_antisymm A hA _ _
+
+theorem current_diagonal (A : H →L[ℂ] H) (hA : IsSkew A) (ψ : H) (i : I) :
+    P.current A ψ i i = 0 := pairCurrent_self A hA _
+
+/-- Internal currents cancel on every finite set, not only the whole atlas. -/
+theorem internal_current_cancel (A : H →L[ℂ] H) (hA : IsSkew A)
+    (ψ : H) (s : Finset I) : (∑ i ∈ s, ∑ j ∈ s, P.current A ψ i j) = 0 :=
+  antisymmetric_sum_zero _ s (fun i _ j _ => P.current_antisymm A hA ψ i j)
+
+/-- Source-packet reconstruction of the current entering one sector. -/
+theorem current_row_sum (A : H →L[ℂ] H) (ψ : H) (i : I) :
+    (∑ j, P.current A ψ i j) = pairCurrent A (P.packet ψ i) ψ := by
+  unfold current
+  rw [← pairCurrent_sum_right, P.reconstruct_state]
+
+/-- Equations (2.19)--(2.20): differentiate the actual packet norm using the
+bounded projector and the chain rule. Skew-adjointness is not needed until
+antisymmetry and total conservation are asserted. -/
+theorem hasDerivAt_packet_energy (A : H →L[ℂ] H)
+    {ψ : ℝ → H} {t : ℝ} (hψ : HasDerivAt ψ (A (ψ t)) t) (i : I) :
+    HasDerivAt (fun s => P.energy (ψ s) i) (∑ j, P.current A (ψ t) i j) t := by
+  have hp := ((P.proj i).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt t hψ
+  have hn := hasDerivAt_norm_sq hp
+  change HasDerivAt (fun s => P.energy (ψ s) i)
+    (2 * (inner ℂ (P.packet (ψ t) i) (P.proj i (A (ψ t)))).re) t at hn
+  rw [P.inner_packet_project] at hn
+  simpa only [P.current_row_sum, pairCurrent] using hn
+
+/-- Equation (2.23), pairwise current cancellation. -/
+theorem total_current_zero (A : H →L[ℂ] H) (hA : IsSkew A) (ψ : H) :
+    (∑ i, ∑ j, P.current A ψ i j) = 0 :=
+  P.internal_current_cancel A hA ψ Finset.univ
+
+/-- The sum of actual packet energies has zero derivative along the flow. -/
+theorem hasDerivAt_sum_packet_energy (A : H →L[ℂ] H) (hA : IsSkew A)
+    {ψ : ℝ → H} {t : ℝ} (hψ : HasDerivAt ψ (A (ψ t)) t) :
+    HasDerivAt (fun s => ∑ i, P.energy (ψ s) i) 0 t := by
+  have h := HasDerivAt.fun_sum (u := Finset.univ)
+    (fun i _ => P.hasDerivAt_packet_energy A hψ i)
+  rwa [P.total_current_zero A hA] at h
+
+end Atlas
+end KomorebiPhysics

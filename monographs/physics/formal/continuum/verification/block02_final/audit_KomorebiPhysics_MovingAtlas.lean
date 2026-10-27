@@ -1,0 +1,20 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.MovingAtlas.effectiveGenerator
+#print axioms KomorebiPhysics.MovingAtlas.differentiated_unitarity
+#print axioms KomorebiPhysics.MovingAtlas.left_connection_skew
+#print axioms KomorebiPhysics.MovingAtlas.right_velocity_skew
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_adjoint_inverse
+#print axioms KomorebiPhysics.MovingAtlas.effective_generator_skew
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_unitary_projector
+#print axioms KomorebiPhysics.MovingAtlas.coordinate_rate_identity
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_operator_apply
+#print axioms KomorebiPhysics.MovingAtlas.isSkew_of_star
+#print axioms KomorebiPhysics.MovingAtlas.inner_unitary
+#print axioms KomorebiPhysics.MovingAtlas.norm_sq_unitary
+#print axioms KomorebiPhysics.MovingAtlas.unitaryAtlas
+#print axioms KomorebiPhysics.MovingAtlas.unitary_atlas_energy
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_moving_coordinates
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_moving_norm_sq
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_moving_packet_energy
+#print axioms KomorebiPhysics.MovingAtlas.hasDerivAt_lab_packet_energy

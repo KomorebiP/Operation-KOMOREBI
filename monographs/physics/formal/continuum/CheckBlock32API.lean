@@ -1,0 +1,24 @@
+import KomorebiPhysics.Relativistic3DHilbertFullWalkDefect
+
+open KomorebiPhysics
+open Relativistic3DCliffordTransportU1
+open Relativistic3DCliffordHilbertRefinement
+open Relativistic3DCubicalRefinement
+open Relativistic3DCombinedDefect
+open Relativistic3DHilbertScalarDefect
+open Relativistic3DHilbertFullWalkDefect
+
+#check directionalShiftHilbertCLM
+#check directionalShiftHilbertCLM_norm_eq
+#check directionalShiftHilbertDefect_opNorm_le_ratioSup
+#check hilbertSevenFactorPairs
+#check hilbertEdgeBudget
+#check norm_hilbertSevenFactorDefect_le_edgeBudget
+#check quarterX_hilbertEdgeBudget
+#check hilbertPhaseOp
+#check norm_hilbertPhaseDefectOp_eq_curvature
+#check hilbertCubeSwapSevenPairs
+#check norm_hilbertCubeSwapDefect_le_curvatureBudget
+#check combinedHilbertDefect
+#check norm_combinedHilbertDefect_le
+#check combinedHilbertDefect_eq_zero_of_exact_flat

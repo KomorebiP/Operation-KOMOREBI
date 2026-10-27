@@ -1,0 +1,31 @@
+KomorebiPhysics/SpectralCells.lean:105:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ((DiagonalDomain.atlas eig).coarsenOfPreserves f ?m.62).current ?x ?a ?b
+in the target expression
+  ((DiagonalDomain.atlas eig).coarsenOfPreserves f ⋯).current x a b = 0
+
+I : Type u_1
+J : Type u_2
+inst✝ : DecidableEq I
+eig : I → ℝ
+f : I → J
+x : ↥(DiagonalDomain.operator eig).domain
+a b : J
+⊢ ((DiagonalDomain.atlas eig).coarsenOfPreserves f ⋯).current x a b = 0
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun a x => mask_mem_domain eig (f ⁻¹' {a}) x
+  has type
+    ∀ (a : J) (x : ↥(DiagonalDomain.operator eig).domain),
+      @Membership.mem (↥(lp (fun x => ℂ) 2)) (Submodule ℂ ↥(lp (fun x => ℂ) 2)) SetLike.instMembership
+        (DiagonalDomain.operator eig).domain ((mask (f ⁻¹' {a})) ↑x)
+  but is expected to have type
+    ∀ (a : J) (x : ↥(DiagonalDomain.operator eig).domain),
+      @Membership.mem (↥(lp (fun x => ℂ) 2)) (Submodule ℂ ↥(lp (fun x => ℂ) 2)) SetLike.instMembership
+        (DiagonalDomain.operator eig).domain (((DiagonalDomain.atlas eig).atlas.cell (f ⁻¹' {a})) ↑x)
+  in the application
+    (DiagonalDomain.atlas eig).coarsenOfPreserves f ⋯
+  
+  Note: The following definitions were not unfolded because their definition is not exposed:
+    Complex.mulAux ↦ 6

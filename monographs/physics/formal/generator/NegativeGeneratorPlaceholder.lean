@@ -1,0 +1,8 @@
+import KomorebiPhysics.Relativistic3DGeneratorBridge
+noncomputable section
+open KomorebiPhysics.Relativistic3DGeneratorBridge
+open KomorebiPhysics.Relativistic3DWeightedDomain
+open KomorebiPhysics.Relativistic3DTorusFourierEvolution
+open scoped LinearPMap
+
+example : False := by sorry

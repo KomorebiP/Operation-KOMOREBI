@@ -1,0 +1,46 @@
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+KomorebiPhysics/RefinementBounds.lean:79:15: error: unsolved goals
+E : Type u_1
+inst✝¹ : NormedAddCommGroup E
+inst✝ : NormedSpace ℝ E
+b : ℝ
+hb : 1 < b
+f : ℝ → E
+S : Set ℝ
+hS : ∀ x ∈ S, x / b ∈ S
+C : ℝ
+p : ℕ
+hf : ∀ x ∈ S, ‖f x‖ ≤ C * ‖x‖ ^ p
+hb0 : 0 < b
+m : ℕ
+ih : ∀ {h : ℝ}, h ∈ S → ‖tower b f m h‖ ≤ amplification b p m * C * ‖h‖ ^ p
+h : ℝ
+hh : h ∈ S
+h1 : ‖tower b f m (h / b)‖ ≤ amplification b p m * C * ‖h / b‖ ^ p
+h2 : ‖tower b f m h‖ ≤ amplification b p m * C * ‖h‖ ^ p
+hp : 0 ≤ b ^ (m + 1)
+hd : 0 < b ^ (m + 1) - 1
+⊢ (b * b ^ m * b⁻¹ ^ p *
+              match m with
+              | 0 => 1
+              | m.succ =>
+                b * b ^ m * b⁻¹ ^ p * (-1 + b * b ^ m)⁻¹ * amplification b p m +
+                  (-1 + b * b ^ m)⁻¹ * amplification b p m) *
+            C *
+          ‖h‖ ^ p *
+        (-1 + b * b ^ m)⁻¹ +
+      (match m with
+            | 0 => 1
+            | m.succ =>
+              b * b ^ m * b⁻¹ ^ p * (-1 + b * b ^ m)⁻¹ * amplification b p m +
+                (-1 + b * b ^ m)⁻¹ * amplification b p m) *
+            C *
+          ‖h‖ ^ p *
+        (-1 + b * b ^ m)⁻¹ =
+    b * b ^ m * b⁻¹ ^ p * C * ‖h‖ ^ p * (-1 + b * b ^ m)⁻¹ * amplification b p m +
+      C * ‖h‖ ^ p * (-1 + b * b ^ m)⁻¹ * amplification b p m

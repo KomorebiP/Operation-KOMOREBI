@@ -1,0 +1,149 @@
+{
+  "schema": "komorebi.physics.block30.claim-audit.v1",
+  "release": "Komorebi Physics Lean v0.30.0 \u2014 Checked Block 30",
+  "status": "PASS",
+  "verification_report": "verification/block30_final/report.json",
+  "verification_report_sha256": "216e2e7fa6ac745624f2264bb20152fe04d03da9c672a15086e166a29813e405",
+  "counts": {
+    "active_modules": 129,
+    "parent_modules": 128,
+    "new_modules": 1,
+    "total_theorems": 2403,
+    "audited_declarations": 3022,
+    "new_theorems": 44,
+    "new_audited_declarations": 68,
+    "new_by_kind": {
+      "def": 24,
+      "theorem": 44
+    }
+  },
+  "axiom_audit": {
+    "status": "PASS",
+    "allowed": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "observed": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "declarations_checked": 68
+  },
+  "parent_preservation": {
+    "status": "PASS",
+    "modules_compared": 128,
+    "changed_modules": 0,
+    "ledger_sha256": "f3289dbe8cf336aadac63335324e7cb90b575d1212c9f4cf0e50167f592a5ff3",
+    "reference_report_sha256": "b3fe0dfd01af15f9c34193af7ff1227f0faa2fefa3f07da921b6bd0a74251d95",
+    "parent_cumulative_build_status": "PASS"
+  },
+  "negative_controls": {
+    "status": "PASS",
+    "new_passed": 3,
+    "new_total": 3,
+    "controls": [
+      {
+        "file": "negative_controls/block30/FalseConstantTwoBudgetSummable.lean",
+        "diagnostic_excerpt": [
+          "/mnt/data/kp30/Komorebi_Physics_Lean_v0.29.0_WORK/negative_controls/block30/FalseConstantTwoBudgetSummable.lean:7:2: error: Tactic `assumption` failed",
+          "\u22a2 Summable (combinedScaleBudget (fun x => 1) fun x => 0)"
+        ]
+      },
+      {
+        "file": "negative_controls/block30/FalseNonflatCurvatureBudgetZero.lean",
+        "diagnostic_excerpt": [
+          "/mnt/data/kp30/Komorebi_Physics_Lean_v0.29.0_WORK/negative_controls/block30/FalseNonflatCurvatureBudgetZero.lean:9:45: error: unsolved goals",
+          "\u22a2 \u2016-1 - 1\u2016 + \u2016\u2191(nonflatCube.plaquetteXZ true) - 1\u2016 + \u2016\u2191(nonflatCube.plaquetteYZ false) - 1\u2016 +"
+        ]
+      },
+      {
+        "file": "negative_controls/block30/FalseQuarterPairDefectOperatorZero.lean",
+        "diagnostic_excerpt": [
+          "/mnt/data/kp30/Komorebi_Physics_Lean_v0.29.0_WORK/negative_controls/block30/FalseQuarterPairDefectOperatorZero.lean:12:26: error: unsolved goals",
+          "\u22a2 (quarterPair PUnit.{1}).embed"
+        ]
+      }
+    ],
+    "parent_inherited_evidence": 159,
+    "cumulative_evidence_total": 162
+  },
+  "claims": [
+    {
+      "id": "continuous_linear_packaging",
+      "status": "CHECKED",
+      "statement": "Finite-site directional Clifford shifts, phase-frame embeddings, and arbitrary half-link defects are continuous linear maps.",
+      "declarations": [
+        "directionalShiftCLM",
+        "frameEmbedCLM",
+        "fineEdgeDefectCLM"
+      ],
+      "boundary": "Continuity uses finite dimensionality; the ambient operator norm is not identified with the separately defined half-cell Hilbert norm."
+    },
+    {
+      "id": "straight_seven_factor_bound",
+      "status": "CHECKED",
+      "statement": "Under contraction and exact mass-step hypotheses, the complete straight-refinement defect is bounded by the sum of five actual spatial operator defects.",
+      "declarations": [
+        "norm_straightSevenFactorDefect_le"
+      ],
+      "boundary": "The five terms are operator norms; no scalar reduction to sup |E_i-1| is included."
+    },
+    {
+      "id": "exact_straight_sector",
+      "status": "CHECKED",
+      "statement": "Exact straight reconstruction in x, y, and z annihilates the full seven-factor straight defect without a flatness hypothesis.",
+      "declarations": [
+        "straightDefectOpX_eq_zero",
+        "straightDefectOpY_eq_zero",
+        "straightDefectOpZ_eq_zero",
+        "straightSevenFactorDefect_eq_zero"
+      ],
+      "boundary": "This does not imply path independence for alternative cubical routes."
+    },
+    {
+      "id": "edge_ratio_equivalence",
+      "status": "CHECKED",
+      "statement": "The multiplicative edge ratio equals one exactly when the ordered two-half-link product reconstructs the framed coarse link.",
+      "declarations": [
+        "edgeRatioX_eq_one_iff",
+        "edgeRatioY_eq_one_iff",
+        "edgeRatioZ_eq_one_iff",
+        "straightCompatibleX_iff_ratios_one",
+        "straightCompatibleY_iff_ratios_one",
+        "straightCompatibleZ_iff_ratios_one"
+      ],
+      "boundary": "No quantitative norm inequality from a nonunit ratio is claimed."
+    },
+    {
+      "id": "independent_two_budget_bound",
+      "status": "CHECKED",
+      "statement": "A straight-edge stage and an independently controlled cubical gluing stage compose with an additive edge-plus-curvature defect bound.",
+      "declarations": [
+        "norm_twoStageDefect_le",
+        "norm_straightSeven_then_gluing_le",
+        "norm_combinedFiberDefect_le"
+      ],
+      "boundary": "Curvature enters only for path swaps/gluing and does not replace straight-edge data."
+    },
+    {
+      "id": "two_budget_global_limit",
+      "status": "CHECKED_CONDITIONAL",
+      "statement": "Separate summability of edge and curvature budgets implies convergence in a complete metric space and an explicit tail bound.",
+      "declarations": [
+        "summable_combinedScaleBudget",
+        "twoBudgetSummableDefect",
+        "tendsto_twoBudgetLimit",
+        "dist_twoBudgetLimit_le_tail"
+      ],
+      "boundary": "A concrete physical scale law and summability proof are not supplied."
+    }
+  ],
+  "global_nonclaims": [
+    "No sharp scalar edge-ratio-to-operator-norm estimate.",
+    "No concrete mesh-scale decay or concrete physical summability theorem.",
+    "No continuum Dirac convergence.",
+    "No dynamical gauge-field equations, gravity, cosmology, or empirical validation."
+  ]
+}

@@ -1,0 +1,34 @@
+import KomorebiPhysics.Relativistic3DL2CellReconstruction
+
+open KomorebiPhysics
+open Relativistic3DL2CellReconstruction
+open Relativistic3DL2CellReconstruction.UnitVolumePartition
+
+#check UnitVolumePartition
+#check CellState
+#check ContinuumState
+#check cellIndicatorLinear
+#check stepLinear
+#check stepLinear_apply
+#check real_inter_eq_zero_of_ne
+#check inner_cellIndicator
+#check step_inner
+#check stepIsometry
+#check inner_single_left
+#check step_single
+#check averagingCLM
+#check averaging_step
+#check averaging_apply
+#check stepProjection
+#check stepProjection_apply
+#check stepProjection_eq_sum_cellIntegrals
+#check stepProjection_step
+#check stepProjection_idem
+#check adjoint_stepProjection
+#check inner_step_residual
+#check norm_sq_stepProjection_add_residual
+#check norm_stepProjection_le
+#check norm_residual_le_norm_sub_step
+#check norm_stepProjection_op_le_one
+#check stepProjection_eq_self_iff
+#check stepProjection_tendsto_of_step_approximation

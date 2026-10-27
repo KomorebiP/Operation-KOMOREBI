@@ -1,0 +1,249 @@
+KomorebiPhysics.Relativistic3DFourierPropagator.Spinor : Type
+KomorebiPhysics.Relativistic3DFourierPropagator.Mode : Type
+KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd : Type
+KomorebiPhysics.Relativistic3DFourierPropagator.cliffordLinear
+  (A : KomorebiPhysics.Relativistic3DCliffordTransportU1.CliffordInvolution) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.Spinor →ₗ[ℂ] KomorebiPhysics.Relativistic3DFourierPropagator.Spinor
+KomorebiPhysics.Relativistic3DFourierPropagator.cliffordOperator
+  (A : KomorebiPhysics.Relativistic3DCliffordTransportU1.CliffordInvolution) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.cliffordOperator_apply
+  (A : KomorebiPhysics.Relativistic3DCliffordTransportU1.CliffordInvolution)
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  (KomorebiPhysics.Relativistic3DFourierPropagator.cliffordOperator A) ψ = A.act ψ
+KomorebiPhysics.Relativistic3DFourierPropagator.betaLinear :
+  KomorebiPhysics.Relativistic3DFourierPropagator.Spinor →ₗ[ℂ] KomorebiPhysics.Relativistic3DFourierPropagator.Spinor
+KomorebiPhysics.Relativistic3DFourierPropagator.betaOperator : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.betaOperator_apply
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.betaOperator ψ =
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.beta ψ
+KomorebiPhysics.Relativistic3DFourierPropagator.alphaXOperator :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.alphaYOperator :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.alphaZOperator :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator_apply (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n) ψ =
+    KomorebiPhysics.Relativistic3DFourierGenerator.continuumModeAction m n ψ
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator_apply (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  (KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n) ψ =
+    KomorebiPhysics.Relativistic3DFourierGenerator.centralModeAction m h n ψ
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator_sub_continuum (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n -
+      KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n =
+    ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot
+                (KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum n 0) h -
+              KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum n 0) •
+          KomorebiPhysics.Relativistic3DFourierPropagator.alphaXOperator +
+        ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot
+                (KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum n 1) h -
+              KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum n 1) •
+          KomorebiPhysics.Relativistic3DFourierPropagator.alphaYOperator +
+      ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot
+              (KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum n 2) h -
+            KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum n 2) •
+        KomorebiPhysics.Relativistic3DFourierPropagator.alphaZOperator
+KomorebiPhysics.Relativistic3DFourierPropagator.smulOperatorCLM
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  ℂ →L[ℂ] KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.smulOperatorCLM_apply
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) (z : ℂ) :
+  (KomorebiPhysics.Relativistic3DFourierPropagator.smulOperatorCLM A) z = z • A
+KomorebiPhysics.Relativistic3DFourierPropagator.sinQuot_residual_operator_isBigO (k : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  (fun h => ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot k h - k) • A) =O[nhdsWithin 0 (Set.Ioi 0)] fun h =>
+    h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator_sub_continuum_isBigO (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n -
+        KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.tendsto_centralModeOperator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  Filter.Tendsto (fun h => KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n)
+    (nhdsWithin 0 (Set.Ioi 0)) (nhds (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n))
+KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator (t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator_zero
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator 0 A = 0
+KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator_sub (m t h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t
+        (KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n) -
+      KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t
+        (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n) =
+    -(Complex.I * ↑t) •
+      (KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n -
+        KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n)
+KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator_sub_isBigO (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t
+          (KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n) -
+        KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t
+          (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n)) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.tendsto_timeScaledOperator (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  Filter.Tendsto
+    (fun h =>
+      KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t
+        (KomorebiPhysics.Relativistic3DFourierPropagator.centralModeOperator m h n))
+    (nhdsWithin 0 (Set.Ioi 0))
+    (nhds
+      (KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t
+        (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModeOperator m n)))
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) (t : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) (t : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator_zero_time (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n 0 = 1
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator_zero_time (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n 0 = 1
+KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator_add (s t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator (s + t) A =
+    KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator s A +
+      KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t A
+KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator_commute (s t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  Commute (KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator s A)
+    (KomorebiPhysics.Relativistic3DFourierPropagator.timeScaledOperator t A)
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator_add_time (m s t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n (s + t) =
+    KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n s *
+      KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator_add_time (m h s t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n (s + t) =
+    KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n s *
+      KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator_neg_mul (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n (-t) *
+      KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t =
+    1
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator_neg_mul (m h t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n (-t) *
+      KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t =
+    1
+KomorebiPhysics.Relativistic3DFourierPropagator.tendsto_centralModePropagator (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  Filter.Tendsto (fun h => KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t)
+    (nhdsWithin 0 (Set.Ioi 0)) (nhds (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t))
+KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator_sub_isBigO (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t -
+        KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.evalAtCLM (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd →L[ℂ] KomorebiPhysics.Relativistic3DFourierPropagator.Spinor
+KomorebiPhysics.Relativistic3DFourierPropagator.evalAtCLM_apply
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor)
+  (A : KomorebiPhysics.Relativistic3DFourierPropagator.SpinorEnd) :
+  (KomorebiPhysics.Relativistic3DFourierPropagator.evalAtCLM ψ) A = A ψ
+KomorebiPhysics.Relativistic3DFourierPropagator.modePropagatorAction_sub_isBigO (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  (fun h =>
+      (KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t) ψ -
+        (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t) ψ) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.tendsto_centralModePropagator_apply (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  Filter.Tendsto (fun h => (KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t) ψ)
+    (nhdsWithin 0 (Set.Ioi 0))
+    (nhds ((KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t) ψ))
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumPropagatedPacketL2 (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierL2Generator.TorusSpinorL2
+KomorebiPhysics.Relativistic3DFourierPropagator.centralPropagatedPacketL2 (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierL2Generator.TorusSpinorL2
+KomorebiPhysics.Relativistic3DFourierPropagator.continuumPropagatedPacketL2_zero_time (m : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.continuumPropagatedPacketL2 m 0 S a =
+    KomorebiPhysics.Relativistic3DFourierL2Generator.fourierPacketL2 S fun n =>
+      KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert (a n)
+KomorebiPhysics.Relativistic3DFourierPropagator.centralPropagatedPacketL2_zero_time (m h : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.centralPropagatedPacketL2 m h 0 S a =
+    KomorebiPhysics.Relativistic3DFourierL2Generator.fourierPacketL2 S fun n =>
+      KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert (a n)
+KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2 (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor)
+  (h : ℝ) : KomorebiPhysics.Relativistic3DFourierL2Generator.TorusSpinorL2
+KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2_eq_sum (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2 m t S a h =
+    ∑ n ∈ S,
+      (KomorebiPhysics.Relativistic3DFourierL2Generator.modeEmbedIsometry n)
+        (KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert
+          ((KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t) (a n) -
+            (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t) (a n)))
+KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2_norm_sq (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  ‖KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2 m t S a h‖ ^ 2 =
+    ∑ n ∈ S,
+      ‖KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert
+            ((KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t) (a n) -
+              (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t) (a n))‖ ^
+        2
+KomorebiPhysics.Relativistic3DFourierPropagator.modePropagatorResidualL2_isBigO (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  (fun h =>
+      (KomorebiPhysics.Relativistic3DFourierL2Generator.modeEmbedIsometry n)
+        (KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert
+          ((KomorebiPhysics.Relativistic3DFourierPropagator.centralModePropagator m h n t) ψ -
+            (KomorebiPhysics.Relativistic3DFourierPropagator.continuumModePropagator m n t)
+              ψ))) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2_isBigO (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2 m t S a =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.norm_packetPropagatorResidualL2_isBigO (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  (fun h =>
+      ‖KomorebiPhysics.Relativistic3DFourierPropagator.packetPropagatorResidualL2 m t S a
+          h‖) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierPropagator.tendsto_centralPropagatedPacketL2 (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierPropagator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierPropagator.Mode → KomorebiPhysics.Relativistic3DFourierPropagator.Spinor) :
+  Filter.Tendsto (fun h => KomorebiPhysics.Relativistic3DFourierPropagator.centralPropagatedPacketL2 m h t S a)
+    (nhdsWithin 0 (Set.Ioi 0))
+    (nhds (KomorebiPhysics.Relativistic3DFourierPropagator.continuumPropagatedPacketL2 m t S a))

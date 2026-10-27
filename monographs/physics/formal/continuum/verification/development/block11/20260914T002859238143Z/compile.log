@@ -1,0 +1,30 @@
+KomorebiPhysics/L2DominatedLimits.lean:26:4: error: Type mismatch: After simplification, term
+  tendsto_tsum_of_dominated_convergence hs
+    (fun i =>
+      Eq.mp
+        (congrArg (Tendsto (fun x => ‖↑(u x) i‖ ^ 2) l)
+          (congrArg 𝓝
+            (Eq.trans (congrFun' (congrArg HPow.hPow norm_zero) 2)
+              (zero_pow (of_eq_true (Eq.trans (congrArg Not (OfNat.ofNat_ne_zero._simp_1 2)) not_false_eq_true))))))
+        (Tendsto.pow (Tendsto.norm (hc i)) 2))
+    (mp_mem hb
+      (univ_mem'
+        (id fun a ha i =>
+          Eq.mpr (id (congrArg (fun _a => _a ≤ bound i ^ 2) (Real.norm_eq_abs (‖↑(u a) i‖ ^ 2))))
+            (Eq.mpr (id (congrArg (fun _a => _a ≤ bound i ^ 2) (abs_of_nonneg (sq_nonneg ‖↑(u a) i‖))))
+              (pow_le_pow_left₀ (norm_nonneg (↑(u a) i)) (ha i) 2)))))
+ has type
+  Tendsto (fun x => ∑' (k : I), ‖↑(u x) k‖ ^ 2) l (𝓝 (∑' (k : I), 0))
+but is expected to have type
+  Tendsto (fun a => ∑' (i : I), ‖↑(u a) i‖ ^ 2) l (𝓝 0)
+KomorebiPhysics/L2DominatedLimits.lean:47:8: error(lean.unknownIdentifier): Unknown identifier `tendsto_iff_sub_tendsto_zero.mpr`
+KomorebiPhysics/L2DominatedLimits.lean:48:2: error: No goals to be solved
+KomorebiPhysics/L2DominatedLimits.lean:71:4: error: Type mismatch: After simplification, term
+  HasDerivAt.tendsto_slope (hc i)
+ has type
+  @Tendsto ℝ ℂ (slope (fun s => ↑(f s) i) t) (𝓝[≠] t) (𝓝 (↑y i))
+but is expected to have type
+  @Tendsto ℝ ℂ (fun a => (a - t)⁻¹ • ↑(f a -ᵥ f t) i) (𝓝[≠] t) (𝓝 (↑y i))
+
+Note: The following definitions were not unfolded because their definition is not exposed:
+  Complex.mulAux ↦ 7

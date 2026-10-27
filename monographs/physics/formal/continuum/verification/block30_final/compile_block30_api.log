@@ -1,0 +1,225 @@
+KomorebiPhysics.Relativistic3DCombinedDefect.directionalShiftCLM.{u} {Site : Type u} [Fintype Site]
+  (A : KomorebiPhysics.Relativistic3DCliffordTransportU1.CliffordInvolution) (τ : Site ≃ Site)
+  (u : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link) :
+  KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ] KomorebiPhysics.Relativistic3DCliffordTransportU1.State
+KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM.{u} {Site : Type u} [Fintype Site]
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site) :
+  KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ] KomorebiPhysics.Relativistic3DCliffordTransportU1.State
+KomorebiPhysics.Relativistic3DCombinedDefect.straightDefectOpX.{u} {Site : Type u} [Fintype Site]
+  (A : KomorebiPhysics.Relativistic3DCliffordTransportU1.CliffordInvolution) (τ : Site ≃ Site)
+  (u : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site)
+  (v : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link) :
+  KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ] KomorebiPhysics.Relativistic3DCliffordTransportU1.State
+KomorebiPhysics.Relativistic3DCombinedDefect.fineEdgeDefectCLM.{u} {Site : Type u} [Fintype Site]
+  (P : KomorebiPhysics.Relativistic3DEdgeCompatibility.FineEdgePair Site)
+  (A : KomorebiPhysics.Relativistic3DCliffordTransportU1.CliffordInvolution) (τ : Site ≃ Site)
+  (u : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link) :
+  KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ] KomorebiPhysics.Relativistic3DCliffordTransportU1.State
+KomorebiPhysics.Relativistic3DCombinedDefect.fineEdgeDefectCLM_energy.{u} {Site : Type u} [Fintype Site]
+  (P : KomorebiPhysics.Relativistic3DEdgeCompatibility.FineEdgePair Site)
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford) (τ : Site ≃ Site)
+  (u : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (ψ : KomorebiPhysics.Relativistic3DCliffordTransportU1.State) :
+  KomorebiPhysics.Relativistic3DGeometricEdgeRefinement.halfCellIP
+      ((KomorebiPhysics.Relativistic3DCombinedDefect.fineEdgeDefectCLM P H.toClifford τ u) ψ)
+      ((KomorebiPhysics.Relativistic3DCombinedDefect.fineEdgeDefectCLM P H.toClifford τ u) ψ) =
+    ∑ x,
+      (KomorebiPhysics.Relativistic3DEdgeCompatibility.phaseErrorWeight (P.productLink (τ.symm x)) (u (τ.symm x)) *
+          KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.ip (H.toClifford.plus (ψ (τ.symm x)))
+            (H.toClifford.plus (ψ (τ.symm x))) +
+        KomorebiPhysics.Relativistic3DEdgeCompatibility.phaseErrorWeight (P.productLink x)⁻¹ (u x)⁻¹ *
+          KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.ip (H.toClifford.minus (ψ (τ x)))
+            (H.toClifford.minus (ψ (τ x))))
+KomorebiPhysics.Relativistic3DCombinedDefect.norm_straightSevenFactorDefect_le.{u} {Site : Type u} [Fintype Site]
+  (mFine₀ mFine₁ :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (mCoarse₀ mCoarse₁ :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (τx τy τz : Site ≃ Site) (ux uy uz : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site)
+  (vx vy vz : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (hFine :
+    ∀
+      p ∈
+        KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy τz
+          ux uy uz vx vy vz,
+      ‖p.1‖ ≤ 1)
+  (hCoarse :
+    ∀
+      p ∈
+        KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy τz
+          ux uy uz vx vy vz,
+      ‖p.2‖ ≤ 1)
+  (hm₀ :
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp mFine₀
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) mCoarse₀ =
+      0)
+  (hm₁ :
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp mFine₁
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) mCoarse₁ =
+      0) :
+  ‖KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp
+        (KomorebiPhysics.Relativistic3DFullWalkRefinement.fineComposite
+          (KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy
+            τz ux uy uz vx vy vz))
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r)
+        (KomorebiPhysics.Relativistic3DFullWalkRefinement.coarseComposite
+          (KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy
+            τz ux uy uz vx vy vz))‖ ≤
+    KomorebiPhysics.Relativistic3DCombinedDefect.straightSpatialBudget τx τy τz ux uy uz r vx vy vz
+KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorDefect_eq_zero.{u} {Site : Type u} [Fintype Site]
+  (mFine₀ mFine₁ :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (mCoarse₀ mCoarse₁ :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (τx τy τz : Site ≃ Site) (ux uy uz : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site)
+  (vx vy vz : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (hm₀ :
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp mFine₀
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) mCoarse₀ =
+      0)
+  (hm₁ :
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp mFine₁
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) mCoarse₁ =
+      0)
+  (hx : KomorebiPhysics.Relativistic3DEdgeCompatibility.StraightCompatibleX τx ux r vx)
+  (hy : KomorebiPhysics.Relativistic3DEdgeCompatibility.StraightCompatibleY τy uy r vy)
+  (hz : KomorebiPhysics.Relativistic3DEdgeCompatibility.StraightCompatibleZ τz uz r vz) :
+  KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp
+      (KomorebiPhysics.Relativistic3DFullWalkRefinement.fineComposite
+        (KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy τz
+          ux uy uz vx vy vz))
+      (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r)
+      (KomorebiPhysics.Relativistic3DFullWalkRefinement.coarseComposite
+        (KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy τz
+          ux uy uz vx vy vz)) =
+    0
+KomorebiPhysics.Relativistic3DCombinedDefect.edgeRatioX.{u} {Site : Type u} (τ : Site ≃ Site)
+  (u : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site)
+  (v : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (p : KomorebiPhysics.Relativistic3DFullWalkRefinement.FineSite3 Site) : Circle
+KomorebiPhysics.Relativistic3DCombinedDefect.straightCompatibleX_iff_ratios_one.{u} {Site : Type u} (τ : Site ≃ Site)
+  (u : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site)
+  (v : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link) :
+  KomorebiPhysics.Relativistic3DEdgeCompatibility.StraightCompatibleX τ u r v ↔
+    ∀ (p : KomorebiPhysics.Relativistic3DFullWalkRefinement.FineSite3 Site),
+      KomorebiPhysics.Relativistic3DCombinedDefect.edgeRatioX τ u r v p = 1
+KomorebiPhysics.Relativistic3DCombinedDefect.norm_straightSeven_then_gluing_le.{u} {Site : Type u} [Fintype Site]
+  (mFine₀ mFine₁ :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (mCoarse₀ mCoarse₁ :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (τx τy τz : Site ≃ Site) (ux uy uz : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (r : KomorebiPhysics.Relativistic3DFullWalkRefinement.PhaseFrame Site)
+  (vx vy vz : KomorebiPhysics.Relativistic3DCliffordTransportU1.Link)
+  (Fglue :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (Cglue :
+    KomorebiPhysics.Relativistic3DCliffordTransportU1.State →L[ℂ]
+      KomorebiPhysics.Relativistic3DCliffordTransportU1.State)
+  (L : KomorebiPhysics.Relativistic3DCubicalRefinement.CubeLinks)
+  (hFine :
+    ∀
+      p ∈
+        KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy τz
+          ux uy uz vx vy vz,
+      ‖p.1‖ ≤ 1)
+  (hCoarse :
+    ∀
+      p ∈
+        KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy τz
+          ux uy uz vx vy vz,
+      ‖p.2‖ ≤ 1)
+  (hm₀ :
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp mFine₀
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) mCoarse₀ =
+      0)
+  (hm₁ :
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp mFine₁
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) mCoarse₁ =
+      0)
+  (hFglue : ‖Fglue‖ ≤ 1)
+  (hGlue :
+    ‖KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp Fglue
+          (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r) Cglue‖ ≤
+      KomorebiPhysics.Relativistic3DCombinedDefect.curvatureBudget L) :
+  ‖KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp
+        (Fglue ∘SL
+          KomorebiPhysics.Relativistic3DFullWalkRefinement.fineComposite
+            (KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy
+              τz ux uy uz vx vy vz))
+        (KomorebiPhysics.Relativistic3DCombinedDefect.frameEmbedCLM r)
+        (Cglue ∘SL
+          KomorebiPhysics.Relativistic3DFullWalkRefinement.coarseComposite
+            (KomorebiPhysics.Relativistic3DCombinedDefect.straightSevenFactorPairs mFine₀ mFine₁ mCoarse₀ mCoarse₁ τx τy
+              τz ux uy uz vx vy vz))‖ ≤
+    KomorebiPhysics.Relativistic3DCombinedDefect.straightSpatialBudget τx τy τz ux uy uz r vx vy vz +
+      KomorebiPhysics.Relativistic3DCombinedDefect.curvatureBudget L
+KomorebiPhysics.Relativistic3DCombinedDefect.norm_combinedFiberDefect_le
+  (edgePairs :
+    List
+      ((KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor →L[ℂ]
+          KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor) ×
+        (KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor →L[ℂ]
+          KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor)))
+  (L : KomorebiPhysics.Relativistic3DCubicalRefinement.CubeLinks) (hFine : ∀ p ∈ edgePairs, ‖p.1‖ ≤ 1)
+  (hCoarse : ∀ p ∈ edgePairs, ‖p.2‖ ≤ 1) :
+  ‖KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp
+        (KomorebiPhysics.Relativistic3DCombinedDefect.combinedFiberFine edgePairs L)
+        (ContinuousLinearMap.id ℂ KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor)
+        (KomorebiPhysics.Relativistic3DCombinedDefect.combinedFiberCoarse edgePairs L)‖ ≤
+    KomorebiPhysics.Relativistic3DFullWalkRefinement.defectBudget
+        (ContinuousLinearMap.id ℂ KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor) edgePairs +
+      KomorebiPhysics.Relativistic3DCombinedDefect.curvatureBudget L
+KomorebiPhysics.Relativistic3DCombinedDefect.combinedFiberDefect_eq_zero
+  (edgePairs :
+    List
+      ((KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor →L[ℂ]
+          KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor) ×
+        (KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor →L[ℂ]
+          KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor)))
+  (L : KomorebiPhysics.Relativistic3DCubicalRefinement.CubeLinks)
+  (hEdge :
+    ∀ p ∈ edgePairs,
+      KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp p.1
+          (ContinuousLinearMap.id ℂ KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor) p.2 =
+        0)
+  (hFlat : L.Flat) :
+  KomorebiPhysics.Relativistic3DFullWalkRefinement.intertwiningDefectOp
+      (KomorebiPhysics.Relativistic3DCombinedDefect.combinedFiberFine edgePairs L)
+      (ContinuousLinearMap.id ℂ KomorebiPhysics.Relativistic3DCliffordTransportU1.Spinor)
+      (KomorebiPhysics.Relativistic3DCombinedDefect.combinedFiberCoarse edgePairs L) =
+    0
+KomorebiPhysics.Relativistic3DCombinedDefect.summable_combinedScaleBudget {edge curvature : ℕ → ℝ}
+  (hedge : Summable edge) (hcurvature : Summable curvature) :
+  Summable (KomorebiPhysics.Relativistic3DCombinedDefect.combinedScaleBudget edge curvature)
+KomorebiPhysics.Relativistic3DCombinedDefect.tendsto_twoBudgetLimit.{v} {Y : Type v} [MetricSpace Y] [CompleteSpace Y]
+  (f : ℕ → Y) (edge curvature : ℕ → ℝ) (hedge : Summable edge) (hcurvature : Summable curvature)
+  (hstep :
+    ∀ (n : ℕ),
+      dist (f n) (f n.succ) ≤ KomorebiPhysics.Relativistic3DCombinedDefect.combinedScaleBudget edge curvature n) :
+  Filter.Tendsto f Filter.atTop
+    (nhds
+      (KomorebiPhysics.Relativistic3DCombinedDefect.twoBudgetSummableDefect f edge curvature hedge hcurvature
+          hstep).limit)
+KomorebiPhysics.Relativistic3DCombinedDefect.dist_twoBudgetLimit_le_tail.{v} {Y : Type v} [MetricSpace Y]
+  [CompleteSpace Y] (f : ℕ → Y) (edge curvature : ℕ → ℝ) (hedge : Summable edge) (hcurvature : Summable curvature)
+  (hstep :
+    ∀ (n : ℕ),
+      dist (f n) (f n.succ) ≤ KomorebiPhysics.Relativistic3DCombinedDefect.combinedScaleBudget edge curvature n)
+  (n : ℕ) :
+  dist (f n)
+      (KomorebiPhysics.Relativistic3DCombinedDefect.twoBudgetSummableDefect f edge curvature hedge hcurvature
+          hstep).limit ≤
+    ∑' (m : ℕ), KomorebiPhysics.Relativistic3DCombinedDefect.combinedScaleBudget edge curvature (n + m)

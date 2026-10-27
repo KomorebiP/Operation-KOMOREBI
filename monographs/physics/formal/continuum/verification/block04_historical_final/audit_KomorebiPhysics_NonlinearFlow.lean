@@ -1,0 +1,12 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.NonlinearFlow.field
+#print axioms KomorebiPhysics.NonlinearFlow.hasDerivAt_total
+#print axioms KomorebiPhysics.NonlinearFlow.total_constant
+#print axioms KomorebiPhysics.NonlinearFlow.hasDerivAt_packet
+#print axioms KomorebiPhysics.NonlinearFlow.current_antisymm
+#print axioms KomorebiPhysics.NonlinearFlow.current_total_zero
+#print axioms KomorebiPhysics.NonlinearFlow.hasDerivAt_sum_packets
+#print axioms KomorebiPhysics.NonlinearFlow.sum_packets_constant
+#print axioms KomorebiPhysics.NonlinearFlow.hasDerivAt_subset
+#print axioms KomorebiPhysics.NonlinearFlow.hasDerivAt_coarse

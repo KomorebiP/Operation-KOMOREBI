@@ -1,0 +1,201 @@
+module
+
+public import KomorebiPhysics.Deformation
+public import KomorebiPhysics.Refinement
+public import Mathlib.Analysis.Calculus.Deriv.Star
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+
+/-!
+Full physics master, Chapter 2.5, equations (2.37)--(2.49).
+Actual operator-norm and state derivatives over real time, on a complex Hilbert
+space of arbitrary dimension. All maps are bounded and globally defined.
+Both unitarity identities are explicit; no unbounded-domain claim is made.
+-/
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+namespace KomorebiPhysics.MovingAtlas
+open scoped BigOperators
+open Deformation
+
+section StarAlgebra
+variable {R : Type*} [NormedRing R] [NormedAlgebra ℝ R]
+  [StarRing R] [StarModule ℝ R] [ContinuousStar R]
+
+/-- Master convention A_eff = U* A U - Gamma, where Gamma = U* dU. -/
+def effectiveGenerator (U A dU : R) : R := star U * A * U - star U * dU
+
+theorem differentiated_unitarity (U : ℝ → R) (dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hleft : ∀ s, star (U s) * U s = 1) :
+    star dU * U t + star (U t) * dU = 0 := by
+  have h := hU.star.mul hU
+  have heq : (fun s => star (U s)) * U = fun _ => (1 : R) := by
+    funext s
+    exact hleft s
+  rw [heq] at h
+  exact h.unique (hasDerivAt_const t (1 : R))
+
+theorem left_connection_skew (U : ℝ → R) (dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hleft : ∀ s, star (U s) * U s = 1) :
+    star (star (U t) * dU) = -(star (U t) * dU) := by
+  rw [star_mul, star_star]
+  exact (add_eq_zero_iff_eq_neg).mp (differentiated_unitarity U dU t hU hleft)
+
+theorem right_velocity_skew (U : ℝ → R) (dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hright : ∀ s, U s * star (U s) = 1) :
+    star (dU * star (U t)) = -(dU * star (U t)) := by
+  have h := hU.mul hU.star
+  have heq : U * (fun s => star (U s)) = fun _ => (1 : R) := by
+    funext s
+    exact hright s
+  rw [heq] at h
+  have hz := h.unique (hasDerivAt_const t (1 : R))
+  rw [star_mul, star_star]
+  exact (add_eq_zero_iff_eq_neg).mp (by simpa [add_comm] using hz)
+
+/-- Formula (2.45) is a consequence of differentiated inverse identities. -/
+theorem hasDerivAt_adjoint_inverse (U : ℝ → R) (dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hleft : star (U t) * U t = 1)
+    (hright : ∀ s, U s * star (U s) = 1) :
+    HasDerivAt (fun s => star (U s)) (-(star (U t) * dU * star (U t))) t := by
+  have h := hU.star
+  rwa [inverse_pair_rate U (fun s => star (U s)) dU (star dU) t hU h hright hleft] at h
+
+theorem effective_generator_skew (U : ℝ → R) (A dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hleft : ∀ s, star (U s) * U s = 1)
+    (hA : star A = -A) :
+    star (effectiveGenerator (U t) A dU) = -effectiveGenerator (U t) A dU := by
+  have hg := left_connection_skew U dU t hU hleft
+  unfold effectiveGenerator
+  rw [star_sub, hg]
+  simp only [star_mul, star_star, hA]
+  noncomm_ring
+
+theorem hasDerivAt_unitary_projector (U : ℝ → R) (dU P : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hleft : star (U t) * U t = 1)
+    (hright : ∀ s, U s * star (U s) = 1) :
+    HasDerivAt (fun s => transport (U s) (star (U s)) P)
+      (comm (dU * star (U t)) (transport (U t) (star (U t)) P)) t :=
+  hasDerivAt_transport_pair U (fun s => star (U s)) dU P t hU
+    (hasDerivAt_adjoint_inverse U dU t hU hleft hright) hleft
+
+omit [NormedAlgebra ℝ R] [StarModule ℝ R] [ContinuousStar R] in
+/-- Exact algebra used to rewrite the differentiated state in moving coordinates. -/
+theorem coordinate_rate_identity (U A dU : R) (hright : U * star U = 1) :
+    -(star U * dU * star U) + star U * A = effectiveGenerator U A dU * star U := by
+  unfold effectiveGenerator
+  have h : star U * A * U * star U = star U * A := by
+    rw [mul_assoc (star U * A) U (star U), hright, mul_one]
+  rw [sub_mul, h]
+  noncomm_ring
+
+end StarAlgebra
+
+section Hilbert
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+
+omit [CompleteSpace H] in
+/-- Real-time differentiation of a complex-linear operator applied to a varying state. -/
+theorem hasDerivAt_operator_apply (U : ℝ → H →L[ℂ] H) (ψ : ℝ → H)
+    (dU : H →L[ℂ] H) (dψ : H) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hψ : HasDerivAt ψ dψ t) :
+    HasDerivAt (fun s => U s (ψ s)) (dU (ψ t) + U t dψ) t := by
+  let S := ContinuousLinearMap.restrictScalarsL ℂ H H ℝ ℝ
+  have h := (S.hasFDerivAt.comp_hasDerivAt t hU).clm_apply hψ
+  exact h
+
+/-- Connect adjoint notation to the inner-product skew interface used in Block 01. -/
+theorem isSkew_of_star (A : H →L[ℂ] H) (hA : star A = -A) : IsSkew A := by
+  intro x y
+  rw [← A.adjoint_inner_right]
+  rw [← ContinuousLinearMap.star_eq_adjoint, hA]
+  simp only [neg_apply, inner_neg_right]
+
+theorem inner_unitary (U : H →L[ℂ] H) (hleft : star U * U = 1) (x y : H) :
+    inner ℂ (U x) (U y) = inner ℂ x y := by
+  rw [← U.adjoint_inner_right]
+  change inner ℂ x ((star U * U) y) = inner ℂ x y
+  rw [hleft]
+  rfl
+
+theorem norm_sq_unitary (U : H →L[ℂ] H) (hleft : star U * U = 1) (x : H) :
+    ‖U x‖ ^ 2 = ‖x‖ ^ 2 := by
+  have h := congrArg Complex.re (inner_unitary U hleft x x)
+  have self (z : H) : (inner ℂ z z).re = ‖z‖ ^ 2 := inner_self_eq_norm_sq (𝕜 := ℂ) z
+  simpa only [self] using h
+
+/-- Transport of a genuine orthogonal atlas by a two-sided unitary operator. -/
+def unitaryAtlas {I : Type*} [Fintype I] [DecidableEq I]
+    (P : Atlas H I) (U : H →L[ℂ] H) (hleft : star U * U = 1) (hright : U * star U = 1) :
+    Atlas H I where
+  toPacketFamily := transportedFamily P.toPacketFamily U (star U) hright hleft
+  selfAdjoint := by
+    intro i x y
+    change inner ℂ (U (P.proj i ((star U) x))) y = inner ℂ x (U (P.proj i ((star U) y)))
+    rw [← U.adjoint_inner_right]
+    change inner ℂ (P.proj i ((star U) x)) ((star U) y) = _
+    rw [P.selfAdjoint]
+    exact U.adjoint_inner_left (P.proj i ((star U) y)) x
+
+theorem unitary_atlas_energy {I : Type*} [Fintype I] [DecidableEq I]
+    (P : Atlas H I) (U : H →L[ℂ] H) (hleft : star U * U = 1) (hright : U * star U = 1)
+    (ψ : H) (i : I) :
+    (unitaryAtlas P U hleft hright).energy ψ i = P.energy ((star U) ψ) i := by
+  change ‖U (P.proj i ((star U) ψ))‖ ^ 2 = ‖P.proj i ((star U) ψ)‖ ^ 2
+  exact norm_sq_unitary U hleft _
+
+/-- Equations (2.38), (2.41), (2.43), (2.46)--(2.48), as an actual state derivative. -/
+theorem hasDerivAt_moving_coordinates (U : ℝ → H →L[ℂ] H) (ψ : ℝ → H)
+    (A dU : H →L[ℂ] H) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hψ : HasDerivAt ψ (A (ψ t)) t)
+    (hleft : star (U t) * U t = 1) (hright : ∀ s, U s * star (U s) = 1) :
+    HasDerivAt (fun s => (star (U s)) (ψ s))
+      ((effectiveGenerator (U t) A dU) ((star (U t)) (ψ t))) t := by
+  have h := hasDerivAt_operator_apply (fun s => star (U s)) ψ
+    (-(star (U t) * dU * star (U t))) (A (ψ t)) t
+    (hasDerivAt_adjoint_inverse U dU t hU hleft hright) hψ
+  have he := congrArg (fun T : H →L[ℂ] H => T (ψ t))
+    (coordinate_rate_identity (U t) A dU (hright t))
+  change ((-(star (U t) * dU * star (U t))) (ψ t)) + star (U t) (A (ψ t)) =
+    (effectiveGenerator (U t) A dU) ((star (U t)) (ψ t)) at he
+  rwa [he] at h
+
+/-- Conservation in moving coordinates follows from the actual transformed evolution. -/
+theorem hasDerivAt_moving_norm_sq (U : ℝ → H →L[ℂ] H) (ψ : ℝ → H)
+    (A dU : H →L[ℂ] H) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hψ : HasDerivAt ψ (A (ψ t)) t)
+    (hleft : ∀ s, star (U s) * U s = 1) (hright : ∀ s, U s * star (U s) = 1)
+    (hA : star A = -A) :
+    HasDerivAt (fun s => ‖(star (U s)) (ψ s)‖ ^ 2) 0 t :=
+  hasDerivAt_total_energy _ (isSkew_of_star _ (effective_generator_skew U A dU t hU hleft hA))
+    (hasDerivAt_moving_coordinates U ψ A dU t hU hψ (hleft t) hright)
+
+/-- Packet energy balance in moving coordinates, with all connection terms retained. -/
+theorem hasDerivAt_moving_packet_energy {I : Type*} [Fintype I] [DecidableEq I]
+    (P : Atlas H I) (U : ℝ → H →L[ℂ] H) (ψ : ℝ → H)
+    (A dU : H →L[ℂ] H) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hψ : HasDerivAt ψ (A (ψ t)) t)
+    (hleft : star (U t) * U t = 1) (hright : ∀ s, U s * star (U s) = 1) (i : I) :
+    HasDerivAt (fun s => P.energy ((star (U s)) (ψ s)) i)
+      (∑ j, P.current (effectiveGenerator (U t) A dU) ((star (U t)) (ψ t)) i j) t :=
+  P.hasDerivAt_packet_energy _
+    (hasDerivAt_moving_coordinates U ψ A dU t hU hψ hleft hright) i
+
+/-- The physically moving projector norm equals the moving-coordinate energy. -/
+theorem hasDerivAt_lab_packet_energy {I : Type*} [Fintype I] [DecidableEq I]
+    (P : Atlas H I) (U : ℝ → H →L[ℂ] H) (ψ : ℝ → H)
+    (A dU : H →L[ℂ] H) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hψ : HasDerivAt ψ (A (ψ t)) t)
+    (hleft : ∀ s, star (U s) * U s = 1) (hright : ∀ s, U s * star (U s) = 1) (i : I) :
+    HasDerivAt (fun s => ‖(transport (U s) (star (U s)) (P.proj i)) (ψ s)‖ ^ 2)
+      (∑ j, P.current (effectiveGenerator (U t) A dU) ((star (U t)) (ψ t)) i j) t := by
+  have heq : (fun s => ‖(transport (U s) (star (U s)) (P.proj i)) (ψ s)‖ ^ 2) =
+      fun s => P.energy ((star (U s)) (ψ s)) i := by
+    funext s
+    exact norm_sq_unitary (U s) (hleft s) (P.proj i ((star (U s)) (ψ s)))
+  rw [heq]
+  exact hasDerivAt_moving_packet_energy P U ψ A dU t hU hψ (hleft t) hright i
+
+end Hilbert
+end KomorebiPhysics.MovingAtlas

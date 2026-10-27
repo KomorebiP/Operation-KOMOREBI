@@ -1,0 +1,333 @@
+% Gauge atlas: twelve reproducible Python plates, with bounded evidence.
+\begingroup
+\renewcommand{\atlasfigure}[2]{\begin{center}\includegraphics[width=.97\linewidth,height=.39\textheight,keepaspectratio]{gauge_figures/#1.pdf}\end{center}{\small\color{muted}#2}\par}
+
+\section{Read the direction before multiplying the links}
+
+A link compares vectors that live at different sites. Its direction determines which gauge factor appears on the left and which appears on the right. A plaquette then compares two ways of transporting around a face. Refinement asks a further question: when fine links are composed, do they reproduce the prescribed coarse transporter, and how large is the discrepancy when they do not?
+
+The twelve plates keep these questions separate. The early examples concern exact finite covariance, ordered holonomy and population balance. The later examples concern straight-edge subdivision, selected cubical path comparisons, operator products and regularity bounds. The final plate explains why a geometric refinement needs a matching Hilbert-space normalization.
+
+\paragraph{Two directions, one convention.}
+The older covariant-difference and $SU(2)$ sections use backward links
+\[
+U_{x,\mu}:H_{x+\widehat\mu}\longrightarrow H_x,
+\qquad U_{x,\mu}'=g_xU_{x,\mu}g_{x+\widehat\mu}^{-1}.
+\]
+The later refinement construction uses forward links $u=U^{-1}$, with
+\[
+u:H_x\longrightarrow H_{x+\widehat\mu},
+\qquad u'=g_{x+\widehat\mu}u g_x^{-1}.
+\]
+States are columns and products act right to left. In particular, forward transport along a first edge $u_1$ followed by a second edge $u_2$ is $u_2u_1$. An Abelian phase commutes with another phase, but its endpoint interpretation still matters.
+
+\paragraph{What a computation establishes.}
+The figure script checks exact rational identities and explicit numerical examples. Every numerical claim has a finite range and a tolerance. The logarithm example uses a small finite family on the principal branch. The operator-product example uses $2\times2$ matrices on one common space. These illustrations do not replace the general arguments in the monograph or the hypotheses recorded in the Lean companion.
+
+The atlas reports no new Lean compilation. Its figures were made with Python and Matplotlib, and its finite assertions are recorded in a separate computation manifest. The selected formal gauge results establish transport and refinement identities. They do not by themselves supply coupled dynamical gauge-field evolution.
+
+\clearpage
+\section{A covariant difference belongs to its output site}
+\atlasfigure{01_link_covariance}{Left: backward and forward transport have inverse directions and opposite endpoint ordering. Right: one exact rational complex example, plotted in floating coordinates. The covariant difference rotates by the gauge phase at its output site, preserving its magnitude.}
+
+For a backward link, define
+\[
+D\psi_x=U_{x,\mu}\psi_{x+\widehat\mu}-\psi_x.
+\]
+Both terms lie in $H_x$. Under the endpoint gauge changes, the intermediate factor cancels:
+\[
+D'\psi'_x
+=g_xUg_{x+\widehat\mu}^{-1}g_{x+\widehat\mu}\psi_{x+\widehat\mu}
+-g_x\psi_x
+=g_xD\psi_x.
+\]
+Dividing by a scalar spacing $h$ gives the usual covariant forward difference without changing this transformation law. In a unitary representation, $\norm{D'\psi'_x}=\norm{D\psi_x}$.
+
+The displayed finite example uses
+\[
+U=\frac{3+4i}{5},\quad g_x=\frac{5+12i}{13},\quad
+g_y=\frac{8-15i}{17},\quad
+\psi_x=1+\frac i2,\quad\psi_y=-\frac13+i.
+\]
+Each link or gauge factor has unit modulus. The script checks $D'=g_xD$ exactly over the Gaussian rationals before drawing the two vectors. The circle is the locus of vectors with the original magnitude; it illustrates covariance, not a time evolution.
+
+Reversing the link gives $u'=g_yug_x^{-1}$. Keeping the old endpoint formula after reversing the arrow would assign the transformed vector to the wrong fiber.
+
+
+
+\clearpage
+\section{A closed Abelian loop cancels the endpoint phases}
+\atlasfigure{02_abelian_plaquette}{A backward-link plaquette based at the lower-left corner. The arrows follow the composed transport as it acts on a vector. Individual signed edge phases change under a gauge transformation, while their total remains $-2/5$ radians in this finite example.}
+
+Write the bottom, right, top and left backward links as $U_b,U_r,U_t,U_l$. Their based loop is
+\[
+W=U_bU_rU_t^{-1}U_l^{-1}.
+\]
+Applied from right to left, the path goes up the left side, across the top, down the right side and back along the bottom. At every intermediate vertex, the endpoint gauge factor from one link cancels the inverse factor from its neighbor.
+
+For Abelian links $U_e=e^{i\theta_e}$, this reduces to
+\[
+W=e^{i\Theta},\qquad
+\Theta=\theta_b+\theta_r-\theta_t-\theta_l.
+\]
+The plotted phases are $(3/10,-1/5,2/5,1/10)$, giving $\Theta=-2/5$. The gauge angles at the lower-left, lower-right, upper-right and upper-left vertices are $(1/10,-2/5,4/5,3/10)$. Their signed changes telescope to zero exactly.
+
+This calculation uses real phase lifts chosen for the example. The observable is the unit-circle value $e^{i\Theta}$, so a general phase angle is defined only modulo $2\pi$. No global principal-angle choice is needed for the exact product identity.
+
+The Wilson scalar $1-\operatorname{Re}W$ is consequently gauge invariant. Its small-angle expansion can connect a smooth small face to curvature, but that analytic interpretation needs additional smoothness and scaling assumptions.
+
+
+
+\clearpage
+\section{Non-Abelian order matters even when the trace is invariant}
+\atlasfigure{03_nonabelian_order}{A finite family $A(t)=e^{it\sigma_x}$ and $B=e^{0.7i\sigma_y}$. Left: the Frobenius norm of $AB-BA$. Right: the Wilson scalar of $ABA^{-1}B^{-1}$ before and after one fixed gauge conjugation; the curves coincide.}
+
+Matrix-valued links do not generally commute. In this example,
+\[
+\norm{A(t)B-BA(t)}_{\mathrm F}
+=2\sqrt2\,|\sin t\,\sin(0.7)|.
+\]
+The figure compares this independent formula with the direct matrix calculation at 301 angles. It vanishes at $t=0$ and $t=\pi$, but is nonzero at intermediate angles. The Frobenius norm here measures the difference between two finite matrices; it is not being identified with a lattice operator norm.
+
+A based loop transforms by conjugation,
+\[
+W'=GWG^{-1},
+\]
+and cyclicity of the trace gives $\operatorname{Tr}W'=\operatorname{Tr}W$. Thus a gauge-invariant scalar can survive even though the matrix representation of the transporter changes. Gauge invariance of the trace does not allow the internal link factors to be reordered.
+
+The exact benchmark uses rational $SU(2)$ matrices of the form
+\[
+Q_a(t)=\frac{(1-t^2)I+2it\sigma_a}{1+t^2},
+\qquad t\in\mathbb Q.
+\]
+With the specified rational parameters in the script, unitarity, determinant one, noncommutation and trace invariance are checked algebraically. The smooth curves illustrate the same distinctions over a sampled one-parameter family.
+
+
+
+\clearpage
+\section{Refinement requires a common basepoint and a fixed order}
+\atlasfigure{04_ordered_refinement}{A $2\times2$ array of noncommuting rational $SU(2)$ plaquettes. The source refinement formula reproduces the eight-link coarse boundary exactly. A naive product of the four plaquettes, without their required basepoint transports, differs in this same example.}
+
+Let $X_{ij}$ and $Y_{ij}$ denote backward horizontal and vertical fine links. Define
+\[
+W_{ij}=X_{ij}Y_{i+1,j}X_{i,j+1}^{-1}Y_{ij}^{-1}.
+\]
+The right plaquette in a row must first be moved to the left basepoint. The correct row loop and coarse loop are
+\[
+R_j=(X_{0j}W_{1j}X_{0j}^{-1})W_{0j},
+\qquad W^{(2)}=R_0Y_{00}R_1Y_{00}^{-1}.
+\]
+Expanding these factors cancels each interior link with its adjacent inverse. The surviving boundary is
+\[
+X_{00}X_{10}Y_{20}Y_{21}
+X_{12}^{-1}X_{02}^{-1}Y_{01}^{-1}Y_{00}^{-1}.
+\]
+No commutation of distinct matrices is used. Moving the factors merely because the cells look interchangeable would destroy the cancellation.
+
+All twelve edge matrices in this plate are specified by rational Cayley parameters in the script. Exact Gaussian rational arithmetic gives zero for the difference between the boundary product and the transported row expression. The naive product $W_{00}W_{10}W_{01}W_{11}$ is different. Its plotted residual is a counterexample to that naive finite prescription, not to the correct refinement identity.
+
+
+
+\clearpage
+\section{A first-order curvature error can be cancelled}
+\atlasfigure{05_curvature_richardson}{The explicit matrices $A=i\sigma_x$ and $B=i\sigma_y$, with $h=2^{-2},\ldots,2^{-9}$. The direct logarithmic curvature approaches $[A,B]$ with an observed first-order slope, while the displayed Richardson combination has an observed second-order slope. These finite slopes do not prove the asymptotic expansion.}
+
+Consider
+\[
+W_h=e^{hA}e^{hB}e^{-hA}e^{-hB},\qquad
+F_h=h^{-2}\log W_h.
+\]
+On a common analytic logarithm branch near the identity, the expansion has the form
+\[
+\log W_h=h^2[A,B]+h^3C_3+O(h^4).
+\]
+Therefore $F_h=[A,B]+hC_3+O(h^2)$. Evaluating the same family at half spacing and subtracting gives
+\[
+2F_{h/2}-F_h=[A,B]+O(h^2).
+\]
+The cancellation follows from the expansion, not from the appearance of the plotted lines.
+
+For this example, $[A,B]=-2i\sigma_z$. The script computes the principal matrix logarithm and records the largest absolute eigenangle for every displayed matrix and every half-spacing matrix used by the extrapolation. This verifies that the finite calculation stays near the identity; it does not establish a branch condition for every possible matrix family.
+
+At much smaller spacings, division by $h^2$ can amplify floating error. The present fixed range stops before that effect controls the plot. No larger range is claimed, and the numerical logarithm is not interval certified.
+
+
+
+\clearpage
+\section{A linked shift has an exact local population balance}
+\atlasfigure{06_walk_continuity}{One linked shift on six periodic sites, starting from explicitly specified post-coin amplitudes. The lower curves compare the observed site-population change with incoming current minus outgoing current. Their numerical residual is checked against the recorded tolerance.}
+
+Let $\eta_j^+$ and $\eta_j^-$ be the two post-coin components. For backward unit-modulus links $U_j$, the shift is
+\[
+\xi_j^+=U_{j-1}^{-1}\eta_{j-1}^+,
+\qquad \xi_j^-=U_j\eta_{j+1}^-.
+\]
+Its current through the edge between $j$ and $j+1$ is
+\[
+J_{j+1/2}=|\eta_j^+|^2-|\eta_{j+1}^-|^2.
+\]
+Writing $\rho_j=|\eta_j^+|^2+|\eta_j^-|^2$ and defining $\rho'_j$ from $\xi$, unit modulus immediately gives
+\[
+\rho'_j-\rho_j=J_{j-1/2}-J_{j+1/2}.
+\]
+Summing over the periodic lattice cancels all currents, so the total population is preserved.
+
+The example uses post-coin vectors proportional to $(1,2i,-1,1+i,-2i,2)$ and $(i,1,-i,2,-1,0)$, both divided by $\sqrt{24}$. Their combined squared norm is one. The six link phases are listed in the computation manifest. This plate describes one finite step; it makes no assertion about a separately chosen coin sequence or a coupled gauge-field update.
+
+The balance law also explains why the current is signed. A negative edge current represents net transport in the reverse direction, rather than a negative probability.
+
+
+
+\clearpage
+\section{Integrated edge links compose under subdivision}
+\atlasfigure{07_edge_subdivision}{An Abelian connection coefficient $a(s)=\sin s$ on the interval $[0.2,1.2]$, split at $0.7$. The two exact edge integrals add to the coarse integral. Replacing them by independent left-point samples produces a nonzero mismatch in this same example.}
+
+For the forward convention in this plate, set
+\[
+u_{ab}=\exp\!\left(i\int_a^b a(s)\,ds\right).
+\]
+Integral additivity gives
+\[
+u_{ac}=u_{bc}u_{ab}.
+\]
+The order is second edge times first edge. The phases commute in this Abelian example, but the direction and endpoints are retained so that the formula remains compatible with the general transport convention.
+
+For $a(s)=\sin s$, the integral is $\cos a-\cos b$. The script compares the coarse phase with the product of the two fine phases using this analytic expression. Their small floating residual measures evaluation error in an exactly composing example.
+
+By contrast, a left-point prescription sets $\widetilde u_{ab}=e^{i(b-a)\sin a}$. Its coarse exponent and the sum of its two fine exponents need not agree. This does not make left-point sampling unusable; it means exact subdivision is an additional property that this prescription does not automatically have.
+
+Similarly, a centered second-order continuum formula needs suitable link sampling, such as midpoint data or exact edge integrals under the stated regularity assumptions. A spatially varying left-point coefficient alone does not justify a second-order claim.
+
+
+
+\clearpage
+\section{The cubical comparison selects five face defects}
+\atlasfigure{08_five_face_budget}{The five faces used by the fixed cubical path comparison. The dashed top face $xy(1)$ is not a term in this budget. This plate is a combinatorial diagram, with an inventory check; it is not an operator-norm computation.}
+
+In the inherited cubical comparison, the curvature contribution is
+\begin{align*}
+\kappa={}&|\Omega_{xy}(0)-1|+|\Omega_{xz}(1)-1|
++|\Omega_{yz}(0)-1|\\
+&+|\Omega_{yz}(1)-1|+|\Omega_{xz}(0)-1|.
+\end{align*}
+Each term measures the unit-circle phase defect of a selected face. The arguments $0$ and $1$ specify the fixed value of the coordinate transverse to that face. Thus $xy(0)$ is the bottom face and $xy(1)$ is the top face.
+
+The chosen comparison decomposes its change of paths through five face swaps. The budget records those swaps. It is not the sum over every face of the cube, and it is not a claim that the omitted face is physically irrelevant. A different path comparison can have a different useful decomposition.
+
+When the selected face phases are all one, this budget vanishes. With nontrivial curvature it bounds the corresponding path discrepancy under the stated operator hypotheses. The Lean companion identifies the exact construction and the factor ordering on which the bound depends.
+
+The scalar inequality $|e^{i\theta}-1|\leq|\theta|$ later converts regularity estimates for real face phases into bounds for these unit-circle defects. Keeping the phase defect separate from its real-angle upper bound avoids imposing an unnecessary global logarithm.
+
+
+
+\clearpage
+\section{Repeated factors contribute repeated error terms}
+\atlasfigure{09_full_walk_defect}{A common-space $2\times2$ unitary surrogate for the product pattern $MXYZYXM$. The actual spectral-norm difference stays below the repeated-factor budget at nine specified perturbation sizes. The matrices illustrate telescoping; they are not the formal Clifford lattice walk.}
+
+For contractive factors on a common normed space, subtracting two products one factor at a time gives a telescoping sum. Each term contains one local factor difference surrounded by contractions, so its norm is no larger than that local difference.
+
+Here the two products have the pattern
+\[
+W=MXYZYXM,\qquad
+\widetilde W=M\widetilde X\widetilde Y\widetilde Z
+\widetilde Y\widetilde XM.
+\]
+The mass factors agree. If $\delta_x=\norm{\widetilde X-X}$ and similarly for the other directions, then
+\[
+\norm{\widetilde W-W}\leq2\delta_x+2\delta_y+\delta_z.
+\]
+The coefficients two count actual occurrences in the product. They cannot be dropped just because only three direction names appear.
+
+The script specifies all seven finite matrices through Pauli exponentials and measures the actual operator differences. It checks unitarity and the bound for $\varepsilon=2^{-2},\ldots,2^{-10}$. These $\delta$ values are matrix-factor differences; the formal lattice theorem has a separate argument connecting its local transport defects to edge-ratio suprema.
+
+For different fine and coarse spaces, an embedding or comparison map must first be included in the local defects. The present common-space example cannot supply that missing identification by itself.
+
+
+
+\clearpage
+\section{A regular connection supplies a uniform quadratic bound}
+\atlasfigure{10_regular_connection}{For the prescribed background $A_y=\sin x$ and $A_x=A_z=0$, the face phase is $h[\sin(x+h)-\sin x]$. Left: normalized defects at three spacings. Right: the analytic supremum and the derivative envelope $h^2$ for $h=1,1/2,\ldots,2^{-9}$.}
+
+Exact edge integration gives
+\[
+\Omega_{xy}(x,h)=\exp\!\bigl(ih[\sin(x+h)-\sin x]\bigr).
+\]
+Since $|\sin(x+h)-\sin x|\leq h$ for $h\geq0$,
+\[
+|\Omega_{xy}(x,h)-1|\leq h^2.
+\]
+This is uniform in the basepoint. The estimate follows from the derivative bound $|\cos x|\leq1$ and $|e^{it}-1|\leq|t|$, rather than from checking a sufficiently dense grid.
+
+The trigonometric identity
+\[
+\sin(x+h)-\sin x=2\sin(h/2)\cos(x+h/2)
+\]
+also gives the exact supremum $2\sin(h\sin(h/2))$ when $0<h\leq1$. The script compares 401 sampled basepoints with that analytic supremum and with the simpler $h^2$ envelope. This supplies an independent check of the plotted implementation.
+
+All other coordinate face types are flat for this prescribed coefficient field. Exact integrated links also have zero straight-edge subdivision defect. The example therefore isolates a curvature contribution without introducing a coupled gauge evolution. A background regularity estimate does not prove that an evolving gauge field retains those bounds.
+
+
+
+\clearpage
+\section{Quadratic dyadic errors have a summable remaining budget}
+\atlasfigure{11_dyadic_budget}{The explicit scalar model $b_n=C4^{-n}$ with $C=3/2$. Left: one-step and remaining geometric budgets. Right: the first five contributions as fractions of the entire remaining budget. The infinite-tail formula is derived analytically; the script checks exact rational finite decompositions.}
+
+If the spacing is $h_n=a_0\,2^{-n}$, a uniform bound proportional to $h_n^2$ becomes
+\[
+b_n=C4^{-n}.
+\]
+The scalar geometric series has the tail
+\[
+\sum_{k=n}^{\infty}b_k=\frac43C4^{-n}.
+\]
+Its first term is three quarters of the whole tail. The following term contributes $3/16$, the next $3/64$, and so on. The displayed percentages are evaluations of these exact fractions.
+
+For every displayed starting level $n$, the script checks that the finite sum through level eight plus the stated level-nine tail equals the full level-$n$ tail. These are exact rational identities. They validate the formula's implementation, while the universal tail identity comes from the geometric-series argument.
+
+To convert such a scalar tail into a Cauchy estimate for states or operators, all consecutive differences must be represented in a compatible common space and satisfy the corresponding norm bounds. The scalar sum alone does not construct the embeddings, identify the limiting physical operator, or establish an equation for a coupled continuum theory.
+
+The distinction is useful: a summable local budget is a strong ingredient, but the compatibility of the objects being compared remains part of the proof.
+
+
+
+\clearpage
+\section{Geometric subdivision needs a compatible normalization}
+\atlasfigure{12_weighted_cells}{A single unit cube divided into eight equal children. Repeating the same cell value preserves a volume-weighted norm. In unweighted coefficient coordinates, the same embedding divides each child amplitude by $\sqrt8$. This is one exact finite isometry example.}
+
+Suppose a parent cube has volume one and each child has volume $1/8$. If the parent carries a vector value $v$, repeating that value on every child gives
+\[
+\sum_{j=1}^8\frac18\norm{v}^2=\norm{v}^2.
+\]
+Here the geometric volume is part of the norm. If the child coordinates instead use the ordinary unweighted Euclidean norm, the corresponding isometric embedding is
+\[
+v\longmapsto\left(\frac v{\sqrt8},\ldots,\frac v{\sqrt8}\right).
+\]
+The two formulas express the same normalization in different coordinates. Repeating $v$ in an unweighted eight-child space would multiply its squared norm by eight.
+
+The exact example uses $v=(2,-1+i)^T$, with $\norm v^2=6$. The script checks both child representations and the parent value with rational and radical arithmetic. The cube drawing shows only this one subdivision; it is not a proof about arbitrary partitions.
+
+Finite-cell interpolation, weighted reconstruction and concrete Euclidean box realization are separate steps. A transported finite-resolution Euclidean subspace is not automatically the ordinary dyadic-box subspace. That identification requires its own construction and proof.
+
+
+
+\clearpage
+\section{Reproduce the plates and read the evidence}
+
+From the extracted source root, run
+\begin{verbatim}
+python tools/make_gauge_figures.py
+\end{verbatim}
+The script writes twelve PDF plates and twelve PNG previews to \path{source/gauge_figures/}. The successful computation record is \path{evidence/gauge/figure_checks.json}; the append-only run list is \path{evidence/gauge/figure_run_history.jsonl}. It records the source hash, before-and-after input identity, actual software dependencies, deterministic input families, numerical tolerances, artifact checksums and elapsed time.
+
+\paragraph{Exact finite checks.}
+The Gaussian rational calculations cover endpoint covariance, signed phase cancellation, a noncommuting $SU(2)$ benchmark, conjugation invariance and the ordered $2\times2$ refinement identity. Rational or radical checks also cover the scalar dyadic decompositions and eight-child normalization. These calculations rely on SymPy and are not proof-assistant compilation receipts.
+
+\paragraph{Numerical checks.}
+The floating calculations cover the plotted $SU(2)$ family, principal-log curvature values, one six-site linked walk, integrated edge phases, one common-space operator-product family and the regular sinusoidal connection. Their scopes and tolerances are written beside each check. Matrix logarithms, spectral norms and trigonometric evaluations are not interval certified.
+
+The numerical provenance record retains failed and corrected checks as well as successful outputs. A successful bounded calculation is evidence for its specified input and tolerance, not a universal proof.
+
+\paragraph{Interpretation.}
+The figures make the finite mechanisms inspectable: endpoint cancellation, ordered interior-link cancellation, local population balance, integral additivity, repeated-factor telescoping and norm-preserving subdivision. The monograph supplies the mathematical arguments and their restrictions. The Lean companion identifies the inherited formal evidence. None of the three evidence forms silently upgrades the others.
+
+\endgroup

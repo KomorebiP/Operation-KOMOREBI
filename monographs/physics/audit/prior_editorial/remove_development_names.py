@@ -1,0 +1,20 @@
+from pathlib import Path
+import json
+R=Path(__file__).resolve().parent;S=R/'source';changes=[]
+def rep(f,a,b):
+ p=S/f;s=p.read_text();assert s.count(a)==1,(f,s.count(a),a)
+ p.write_text(s.replace(a,b));changes.append({'source':str(p.relative_to(R)),'before':a,'after':b})
+rep('monographs/foundations/extensions.tex','The harmonic oscillator example in Volume I has','The harmonic oscillator example has')
+rep('monographs/chapters/finite_core.tex','The Block 44 proof uses the equivalent bounded-operator argument:','An equivalent bounded-operator argument is represented in the formal source:')
+rep('monographs/chapters/finite_core.tex','The checked Block 43 proof obtains this order from continuity and local','The formal algebraic-coordinate proof obtains this order from continuity and local')
+rep('monographs/chapters/finite_core.tex','agree with the Hilbert propagators separately defined in Block 44.','agree with the separately defined Hilbert propagators.')
+rep('monographs/chapters/finite_core.tex','The Block 43 packet, transported coefficientwise by\n\\(T\\), agrees with the Block 44 Hilbert packet','The algebraic-coordinate packet, transported coefficientwise by\n\\(T\\), agrees with the Hilbert packet')
+rep('monographs/chapters/continuum.tex','For a fixed finite $S$, Block 45 gives a compact-time estimate of the form','For a fixed finite $S$, the compact-time packet estimate gives')
+rep('monographs/chapters/continuum.tex','Block 47 proves the four-spinor Parseval identity and surjectivity of synthesis, producing','The four-spinor Parseval identity and surjectivity of synthesis produce')
+rep('monographs/chapters/continuum.tex','This is the checked graph-approximation statement from Block 48.','This graph-approximation statement is represented in the formal source.')
+rep('monographs/gauge/core.tex',"The Block 25 repair therefore replaces the earlier candidate's $\\C^\\times$ phase type with Mathlib's \\code{Circle}. The inherited proof guide also records correction of the fixed Boolean channels. These are mathematical repairs, not changes to terminology.","The phase must therefore lie in the unit circle, not merely in $\\C^\\times$. Norm preservation depends on that mathematical hypothesis. The formalization companion identifies its precise type and transport conventions.")
+rep('monographs/gravity_visual/visual_body.tex','The local balance and conformal examples follow Volume I Chapter 08. The Gowdy plates follow Chapters 14 and 16. The centered linearized and nonlinear-defect plates follow Chapters 27 and 28. The principal quasienergy map follows Chapter 43. The regular Dirac reduction and step follow Chapter 47. The electrovac and scalar plates follow Chapters 48 and 49. The monograph and verification companion give the fuller dependency and claim-status record.','The plates follow the local balance, Gowdy evolution, centered constraint, quasienergy, regular reduction, electrovac, and scalar models developed in the gravity treatment. The verification companion and source concordance identify the exact source passages and computational records.')
+rep('backreaction/source/02_covariant_eft.tex','The Volume II action makes the additional model choice','The cosmological action studied below makes the additional model choice')
+rep('backreaction/source/04_universality.tex','The Volume II benchmark ultimately used the direct discrete tower calculation when imposing its energy projection, so its discrete normalization is not replaced here by the continuous coefficient.  The new result explains','The cosmological benchmark uses the direct discrete tower calculation when imposing its energy projection, so its discrete normalization is not replaced by the continuous coefficient.  The estimate explains')
+rep('cosmology/Projector_Refinement_Physics_Volume_II.tex',r'Cosmology, Dark Sectors, and Structure Formation\par',r'Cosmology, Dark Sectors,\\and Structure Formation\par')
+(R/'audit/editorial_changes_development_names.json').write_text(json.dumps(changes,indent=2));print('edits',len(changes))

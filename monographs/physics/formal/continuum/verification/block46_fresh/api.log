@@ -1,0 +1,206 @@
+KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode : Type
+KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2 :
+  AddSubgroup (PreLp fun x => KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.modewiseMap
+  (U :
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor →L[ℂ]
+        KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor)
+  (hU :
+    ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+      (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor), ‖(U n) ψ‖ = ‖ψ‖)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.modewiseMap_apply
+  (U :
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor →L[ℂ]
+        KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor)
+  (hU :
+    ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+      (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor), ‖(U n) ψ‖ = ‖ψ‖)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑(KomorebiPhysics.Relativistic3DFullFourierEvolution.modewiseMap U hU f) n = (U n) (↑f n)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.modewiseIsometry
+  (U :
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor →L[ℂ]
+        KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor)
+  (hU :
+    ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+      (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor), ‖(U n) ψ‖ = ‖ψ‖) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2 →ₗᵢ[ℂ]
+    ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.modewiseIsometry_apply
+  (U :
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor →L[ℂ]
+        KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor)
+  (hU :
+    ∀ (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+      (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor), ‖(U n) ψ‖ = ‖ψ‖)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑((KomorebiPhysics.Relativistic3DFullFourierEvolution.modewiseIsometry U hU) f) n = (U n) (↑f n)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator (m t : ℝ) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2 →ₗᵢ[ℂ]
+    ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator (m h t : ℝ) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2 →ₗᵢ[ℂ]
+    ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator_apply (m t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑((KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f) n =
+    (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t) (↑f n)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator_apply (m h t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑((KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f) n =
+    (KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t) (↑f n)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.norm_continuumCoeffPropagator (m t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ‖(KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f‖ = ‖f‖
+KomorebiPhysics.Relativistic3DFullFourierEvolution.norm_centralCoeffPropagator (m h t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ‖(KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f‖ = ‖f‖
+KomorebiPhysics.Relativistic3DFullFourierEvolution.hilbertTimeScaledOperator_add (s t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator (s + t) A =
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator s A +
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator t A
+KomorebiPhysics.Relativistic3DFullFourierEvolution.hilbertTimeScaledOperator_commute (s t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd) :
+  Commute (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator s A)
+    (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator t A)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumHilbertModePropagator_add_time (m s t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n (s + t) =
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n s *
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralHilbertModePropagator_add_time (m h s t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n (s + t) =
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n s *
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumHilbertModePropagator_neg_mul (m t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n (-t) *
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t =
+    1
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralHilbertModePropagator_neg_mul (m h t : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n (-t) *
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t =
+    1
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator_surjective (m t : ℝ) :
+  Function.Surjective ⇑(KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator_surjective (m h t : ℝ) :
+  Function.Surjective ⇑(KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffUnitary (m t : ℝ) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2 ≃ₗᵢ[ℂ]
+    ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffUnitary (m h t : ℝ) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2 ≃ₗᵢ[ℂ]
+    ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffUnitary_apply (m t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffUnitary m t) f =
+    (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffUnitary_apply (m h t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffUnitary m h t) f =
+    (KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f
+KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator_add_time (m s t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m (s + t)) f =
+    (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m s)
+      ((KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator_add_time (m h s t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  (KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h (s + t)) f =
+    (KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h s)
+      ((KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f)
+KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation_apply
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑(KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation S f) n = if n ∈ S then ↑f n else 0
+KomorebiPhysics.Relativistic3DFullFourierEvolution.hasSum_single_coeff
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) : HasSum (fun n => lp.single 2 n (↑f n)) f
+KomorebiPhysics.Relativistic3DFullFourierEvolution.exists_coeffTruncation_approx
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) {ε : ℝ} (hε : 0 < ε) :
+  ∃ S, ‖f - KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffTruncation S f‖ < ε
+KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual_apply (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2)
+  (n : KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode) :
+  ↑(KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual m h t S f) n =
+    if n ∈ S then
+      (KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t -
+          KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t)
+        (↑f n)
+    else 0
+KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual_norm_sq (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ‖KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual m h t S f‖ ^ 2 =
+    ∑ n ∈ S,
+      ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t -
+              KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t)
+            (↑f n)‖ ^
+        2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.compactTimePacketResidualL2_norm_sq (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (a :
+    KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  ‖KomorebiPhysics.Relativistic3DFourierCompactTime.compactTimePacketResidualL2 m h t S a‖ ^ 2 =
+    ∑ n ∈ S,
+      ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t -
+              KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t)
+            (a n)‖ ^
+        2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.norm_coeffPacketResidual_eq_torus (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ‖KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual m h t S f‖ =
+    ‖KomorebiPhysics.Relativistic3DFourierCompactTime.compactTimePacketResidualL2 m h t S fun n => ↑f n‖
+KomorebiPhysics.Relativistic3DFullFourierEvolution.exists_compactTime_coeffTruncation_bound (m T : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFullFourierEvolution.Mode)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) (hT : 0 ≤ T) :
+  ∃ K,
+    0 ≤ K ∧
+      ∀ᶠ (h : ℝ) in nhdsWithin 0 (Set.Ioi 0),
+        ∀ (t : ℝ),
+          |t| ≤ T → ‖KomorebiPhysics.Relativistic3DFullFourierEvolution.coeffPacketResidual m h t S f‖ ≤ K * ‖h ^ 2‖
+KomorebiPhysics.Relativistic3DFullFourierEvolution.fullCoeffResidual (m h t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2
+KomorebiPhysics.Relativistic3DFullFourierEvolution.eventually_fullCoeffResidual_lt (m T : ℝ) (hT : 0 ≤ T)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) {ε : ℝ} (hε : 0 < ε) :
+  ∀ᶠ (h : ℝ) in nhdsWithin 0 (Set.Ioi 0),
+    ∀ (t : ℝ), |t| ≤ T → ‖KomorebiPhysics.Relativistic3DFullFourierEvolution.fullCoeffResidual m h t f‖ < ε
+KomorebiPhysics.Relativistic3DFullFourierEvolution.fullCoeffPropagator_compactTime_converges (m T : ℝ) (hT : 0 ≤ T)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) (ε : ℝ) :
+  ε > 0 →
+    ∀ᶠ (h : ℝ) in nhdsWithin 0 (Set.Ioi 0),
+      ∀ (t : ℝ),
+        |t| ≤ T →
+          ‖(KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f -
+                (KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f‖ <
+            ε
+KomorebiPhysics.Relativistic3DFullFourierEvolution.tendsto_centralCoeffPropagator (m t : ℝ)
+  (f : ↥KomorebiPhysics.Relativistic3DFullFourierEvolution.CoeffL2) :
+  Filter.Tendsto (fun h => (KomorebiPhysics.Relativistic3DFullFourierEvolution.centralCoeffPropagator m h t) f)
+    (nhdsWithin 0 (Set.Ioi 0))
+    (nhds ((KomorebiPhysics.Relativistic3DFullFourierEvolution.continuumCoeffPropagator m t) f))

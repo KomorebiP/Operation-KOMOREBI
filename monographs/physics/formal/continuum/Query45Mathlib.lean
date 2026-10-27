@@ -1,0 +1,31 @@
+import Mathlib
+open Filter Asymptotics
+open scoped Topology
+#check NormedSpace.exp_analytic
+#check Analytic.contDiff
+#check AnalyticAt.contDiffAt
+#check ContDiff.continuous_fderiv
+#check ContDiff.continuous
+#check Differentiable.continuous_fderiv
+#check IsCompact.bddAbove_image
+#check IsCompact.bddBelow_image
+#check IsCompact.isBounded_under
+#check IsCompact.image
+#check isCompact_closedBall
+#check ProperSpace.isCompact_closedBall
+#check Metric.isCompact_closedBall
+#check FiniteDimensional.proper
+#check Convex.lipschitzOnWith_of_nnnorm_fderiv_le
+#check lipschitzOnWith_of_nnnorm_fderiv_le
+#check IsCompact.exists_isMaxOn
+#check IsCompact.exists_forall_ge
+#check IsCompact.exists_isMaxOn
+#check ContinuousOn.isBoundedUnder_le
+#check IsCompact.bddAbove_image
+#check IsCompact.isBounded_image
+#check IsCompact.isBounded_under
+#check Bornology.IsBounded.image
+#check Metric.isBounded_iff
+#check Continuous.norm
+#check Continuous.clm_apply
+#check Filter.Eventually.of_forall

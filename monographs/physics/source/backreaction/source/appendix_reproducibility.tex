@@ -1,0 +1,202 @@
+\chapter{Computational Evidence and Reproducibility}
+\label{app:reproducibility}
+
+\section{Source integrity and executable provenance}
+
+The release audit found two different kinds of evidence.  First, the Volume II source manifest is internally intact.  All $\BridgeManifestEntries$ listed entries match their recorded SHA-256 digests.  Second, the computational package does not rebuild in place without staging and inherited files.
+
+\begin{longtable}{@{}P{0.43\textwidth}P{0.16\textwidth}P{0.31\textwidth}@{}}
+\toprule
+Record & Count & Meaning\\
+\midrule
+Volume II manifest entries verified & $\BridgeManifestEntries$ & byte integrity\\
+Frozen internal checks recorded as passing & $\BridgeFrozenPasses$ & archived implementation evidence\\
+Byte-identical inherited data artifacts & $\BridgeLineageData$ & cross-volume provenance\\
+Byte-identical inherited figures & $\BridgeLineageFigures$ & cross-volume provenance\\
+Nested scripts requiring a staging layout & $\BridgeStagingScripts$ & not runnable in place\\
+Required but absent declared paths & $\BridgeMissingPaths$ & three chapter records and one release manifest\\
+\bottomrule
+\end{longtable}
+
+The $\BridgeFrozenPasses$ passing checks were counted from ten archived verification summaries.  They are frozen records.  They were not all rerun from the Volume II package because the namespaced programs resolve their working root to the verification directory and then expect absent sibling data or parent inputs.  Three records named by the scale-covariant chapter are absent from that package.  Their ancestors exist in the first-volume source.  The release documents also require a release manifest that is not present.
+
+The Volume I technical supplement contains a visible status-key typo caused by a tab escape replacing the backslash in several \texttt{\string\textbf} commands.  This bridge records the defect in an errata ledger.  The frozen release is not silently overwritten.
+
+\begin{statusbox}[Provenance boundary]
+Hash agreement proves that a file has not changed relative to its manifest.  Byte-identical inheritance proves lineage.  Neither proves that the physical assumptions are correct.  A frozen pass count is not an independent rerun.
+\end{statusbox}
+
+
+\section{Scope of the executable record}
+
+The accompanying package reproduces the numerical statements associated with this model.  It also performs a read-only integrity and lineage audit of the extracted parent sources.  It does not claim to rerun every frozen parent computation.
+
+The bridge verification has three classes of output:
+\begin{enumerate}[leftmargin=2.2em]
+\item analytic constants evaluated in double precision
+\item resolved numerical identities and deliberately failing negative controls
+\item deterministic audits of hashes, paths, and cross-volume byte lineage
+\end{enumerate}
+
+The machine-readable claim registry gives every central statement a status and a validation route.  The parameter registry separates structural choices, benchmark values, and derived quantities.
+
+\section{Clean-run commands}
+
+From the package root on a Unix-like system, create an isolated environment and run
+\begin{verbatim}
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+python code/verify_covariant_backreaction.py \
+  --parent-json parent/Scale_Covariant_Dark_Sector_Verification.json \
+  --output data --figures figures
+python code/generate_latex_values.py \
+  --data data --output generated_values.tex
+python code/validate_release.py --root .
+latexmk -pdf -interaction=nonstopmode -halt-on-error \
+  -outdir=build \
+  Projector_Refinement_Physics_Covariant_Backreaction_Bridge.tex
+\end{verbatim}
+
+The parent JSON is included in the source package under \texttt{parent/}.  The separate provenance audit requires extracted Volume I, Volume II, and Volume I technical-supplement source roots.  Its command and expected directory arguments are documented in \texttt{REPRODUCIBILITY.md}.
+
+On Windows PowerShell, \texttt{build.ps1} performs the bridge verification, macro generation, validation, and PDF build after the Python environment is installed.
+
+\section{Verification checks}
+
+The new suite records nineteen passing checks.  Five of them are negative controls that pass only when the deliberately damaged or uncontrolled case is detected.
+
+\begin{longtable}{@{}P{0.13\textwidth}P{0.38\textwidth}P{0.15\textwidth}P{0.24\textwidth}@{}}
+\toprule
+ID & Test & Result & Boundary\\
+\midrule
+COV01 & finite-level commutant dimension & pass & numerical linear algebra illustration\\
+COV02 & refinement coefficient nullity & pass & numerical recurrence illustration\\
+COV03 & FLRW exchange identity & pass & double-precision residual\\
+COV04 & omitted exchange source & pass & nonzero negative control\\
+ADM01 & alias-free scalar-fiber bracket & pass & residual \(\BridgeSpectralResidual\)\\
+ADM02 & violated spectral headroom & pass & residual \(\BridgeAliasResidual\)\\
+ADM03 & centered-difference derivative & pass & residual \(\BridgeFiniteDifferenceResidual\)\\
+ADM04 & omitted detail gradient & pass & residual \(\BridgeMissingGradientResidual\)\\
+UNI01 & \(\sigma=1\) closed forms & pass & four analytic constants\\
+UNI02 & outer quadrature at \(\sigma=0.5\) & pass & independent continuum moments\\
+UNI03 & outer quadrature at \(\sigma=1\) & pass & independent continuum moments\\
+UNI04 & outer quadrature at \(\sigma=2\) & pass & independent continuum moments\\
+QUA01 & 96-node versus 128-node rule & pass & energy and pressure convergence\\
+BKR01 & specified benchmark energy overdraw & pass & uncontrolled production is detected\\
+BKR02 & parent overdraw reconstruction & pass & direct discrete moment check\\
+BKR03 & order-one threshold root & pass & \(R_{\mathrm{disc}}=1\) residual\\
+BKR04 & raw-continuum identity & pass & independent continuum coefficient\\
+CPL01 & nominal loop-coupling bound & pass & \(g_{\mathrm{peak}}=1\) boundary\\
+CPL02 & energy-control coupling relation & pass & linked \(\lambda\) scaling\\
+\bottomrule
+\end{longtable}
+
+``Pass'' for a negative control means that the deliberately damaged model produced a residual above its declared lower bound.  It does not mean that the damaged model is acceptable.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.84\linewidth]{constraint_negative_controls.pdf}
+\caption{Resolved bracket closure and negative controls.  The alias-free spectral calculation closes near machine precision.  Aliasing, a derivative without an exact product rule on the represented algebra, and removal of the detail gradient expose distinct failures.}
+\label{fig:repro-negative-controls}
+\end{figure}
+
+\section{Data products}
+
+\begin{longtable}{@{}P{0.38\textwidth}P{0.52\textwidth}@{}}
+\toprule
+Path & Contents\\
+\midrule
+\texttt{data/verification\_checks.csv} & individual check status, residual, tolerance, and role\\
+\texttt{data/verification\_summary.json} & aggregate pass count and central claim boundary\\
+\texttt{data/backreaction\_audit.json} & benchmark overdraw, order-one threshold diagnostics, and coupling bounds\\
+\texttt{data/continuum\_universality.csv} & arbitrary-\(\sigma\) analytic constants\\
+\texttt{data/discrete\_convergence.csv} & fixed-prime discrete and interpolation comparisons\\
+\texttt{data/energy\_saturation\_curve.csv} & cutoff-controlled discrete energy, pressure, and rest moments along the diagnostic scan\\
+\texttt{data/radiative\_scaling.csv} & finite-depth ultraviolet moments and fitted scaling inputs\\
+\path{data/frozen_verification_ledger.csv} & pass counts read from archived parent summaries\\
+\texttt{data/cross\_volume\_lineage.csv} & byte-identical parent artifact pairs\\
+\texttt{data/python\_staging\_audit.csv} & static root-resolution audit for namespaced programs\\
+\path{data/errata_and_broken_references.csv} & missing declared paths and released erratum\\
+\bottomrule
+\end{longtable}
+
+All CSV files use a header row and UTF-8 encoding.  JSON files are indented and key sorted.  Figures are emitted as both PDF and PNG from the same Python calculation.
+
+\section{Source-archive audit}
+
+The parent audit verifies \(\BridgeManifestEntries\) Volume II manifest entries.  It finds no digest mismatch.  It counts \(\BridgeFrozenPasses\) passing and zero failing checks across ten archived summary files.  These are frozen results, not fresh executions.
+
+The audit also detects \(\BridgeLineageData\) data files and \(\BridgeLineageFigures\) figures in Volume II that are byte-identical to Volume I ancestors.  The result is positive provenance evidence.  It is not independent confirmation because identical bytes carry the same assumptions and implementation history.
+
+Twelve nested Python programs require a staged directory layout to resolve their declared root.  Four declared release or chapter paths are absent.  Those conditions are retained in the ledger rather than repaired invisibly.
+
+\section{Source erratum}
+The supporting technical supplement contains malformed status-label typography. The original file is retained unchanged in the provenance archive. The defect concerns presentation rather than a mathematical identity. Source identity and the corrected reading text are recorded separately.
+
+\clearpage
+\section{Numerical methods and tolerances}
+
+Momentum moments use a 128-node generalized Gauss--Laguerre rule with weight exponent $1/2$ after the production exponential is separated analytically.  The pressure integrand supplies one additional factor of the quadrature variable.  The discrete tower is truncated only after the dimensionless mass reaches a declared suppression cutoff.  The order-one backreaction threshold is solved by a bracketed scalar root finder.  Spectral derivatives use the periodic discrete Fourier transform.
+
+Positive checks use tolerances appropriate to double-precision arithmetic or to the declared quadrature.  Negative controls use lower bounds rather than upper tolerances.  Every row states which direction is expected.  The package validator rejects any failed row, a disagreement between the CSV and JSON counts, or a missing central output.
+
+The computations are deterministic.  The only randomized test uses a fixed seed, \(20260819\), and records the worst residual across its trials.
+
+\section{Reproduction boundary}
+
+Reproduction of the bridge establishes that the formulas were implemented as documented and that the reported diagnostics follow from the frozen input.  It does not establish that the input action describes nature, that the chosen benchmark is unique, or that another implementation will agree outside the tested domain.
+
+Independent scientific confirmation requires at least one implementation not derived from this code, a specialist check of the analytic derivations, and a new backreacting solver that does not impose the output spectral shape.
+
+\chapter{Claim and Parameter Ledger}
+\label{app:ledgers}
+
+\section{Claim classes}
+
+The complete machine-readable ledger is \texttt{claim\_registry.csv}.  The principal classes are summarized here.
+
+\begin{longtable}{@{}P{0.18\textwidth}P{0.34\textwidth}P{0.38\textwidth}@{}}
+\toprule
+Class & Evidence required & Prohibited inference\\
+\midrule
+Theorem & derivation from explicit assumptions & empirical truth without a physical identification\\
+Conditional theorem & derivation plus declared regularity, cutoff, or resolution condition & validity after the condition is removed\\
+Controlled diagnostic & deterministic result for a specified model and input & uniqueness or observational preference\\
+Model proposition & internally consistent candidate with tests & derivation from projector axioms\\
+Frozen record & verified archival bytes or archived check status & independent rerun\\
+Open problem & explicit target and acceptance criteria & completed result\\
+\bottomrule
+\end{longtable}
+
+\section{Parameter taxonomy}
+
+\begin{longtable}{@{}P{0.20\textwidth}P{0.25\textwidth}P{0.45\textwidth}@{}}
+\toprule
+Category & Examples & Meaning\\
+\midrule
+Structural & \(p,\sigma,H\) & selects the finite refinement geometry and spectral order\\
+Microscopic & \(\Lambda,m_b,v,\lambda,\gamma\) & defines the effective action and interaction strength\\
+State & initial \(\phi,\dot\phi\), adiabatic vacuum order & defines a solution, not the theory alone\\
+Cosmological & \(H_0,\Omega_b,\Omega_D,n_s\) & external background or fit input\\
+Numerical & momentum cutoff, time step, quadrature order & must disappear from stable predictions\\
+Derived & \(A_\star,\eta,w,f_R\) & follows only after the action, state, and approximation are fixed\\
+\bottomrule
+\end{longtable}
+
+The scale factor value \(a_\star\) is not by itself an invariant physical parameter.  A completed model should tie the crossing to a temperature, curvature scalar, Hubble rate, or another physical clock.
+
+\section{Integrity checks}
+
+The source integrity checks distinguish the following requirements:
+\begin{enumerate}[leftmargin=2.2em]
+\item all new verification rows pass
+\item the parent manifest audit has zero hash failures
+\item the claim and parameter registries contain no empty status field
+\item every TeX input and figure dependency exists
+\item the PDF builds without undefined references
+\item every rendered page passes visual inspection for blank pages, clipping, malformed glyphs, and unreadable figures
+\item the source archive expands into a clean directory and reproduces the same new data products within declared tolerances
+\end{enumerate}
+
+These requirements concern artifact integrity, not scientific validation.

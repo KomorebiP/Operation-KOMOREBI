@@ -1,0 +1,17 @@
+import KomorebiPhysics.Relativistic3DCombinedDefect
+import Mathlib.Analysis.InnerProductSpace.PiL2
+open WithLp
+#check toLp
+#check ofLp
+#check WithLp.toLp
+#check WithLp.ofLp
+#check LinearMap.toContinuousLinearMap
+#check LinearMap.continuous_of_finiteDimensional
+#check ContinuousLinearMap.mkFinite
+#check LinearEquiv.toContinuousLinearEquiv
+#check PiLp.continuousLinearEquiv
+#check PiLp.linearEquiv
+#check EuclideanSpace.equiv
+#check FiniteDimensional.proper
+#check ContinuousLinearMap.mk
+#check ContinuousLinearMap.mkContinuous

@@ -1,0 +1,58 @@
+\section{The checked centered approximation}
+
+The centered approximation extends the same coefficient Hilbert space and physical Fourier equivalence used above. Four modules supply the new proofs: \path{Relativistic3DCenteredConvergence}, \path{Relativistic3DModalPerturbation}, \path{Relativistic3DCenteredRates}, and \path{Relativistic3DCenteredResolvent}, all in the \path{KomorebiPhysics} namespace. Their source contains seventy-four explicit theorem declarations, fifteen definitions, and eleven abbreviations. The compiled inventory has 162 declarations from these modules, including generated auxiliaries. Those counts describe the implementation, not a number of independent physical laws.
+
+\subsection{Bounded operators and the full graph domain}
+
+For every nonzero real spacing $h$, \path{centeredCoeffOperator} is the bounded operator whose modal action is the actual centered Dirac symbol. Its self-adjointness and bound
+\[
+ \norm{H_h}\le \sqrt{m^2+3|h|^{-2}}
+\]
+are proved. The exact Clifford identity for the difference from the continuum symbol controls the modal error by the first-order Fourier energy. Square-summable domination then gives $H_hf\to Hf$ for every $f\in\mathcal D(H)$ as $h$ approaches zero through either sign.
+
+The bounded-operator constructor assigns an auxiliary zero operator at $h=0$. Its identification with the centered modal multiplier requires $h\ne0$, and the convergence theorem uses a punctured neighborhood. This convention does not replace the continuum Hamiltonian by a bounded operator. The separately defined propagator retains its removable continuum value at zero spacing.
+
+\subsection{Actual resolvents and their domains}
+
+For every $z\in\C$ with $\operatorname{Im}z\ne0$ and every nonzero real spacing $h$, the source constructs the continuum and centered resolvents as bounded maps. It proves both inverse identities, proves that the continuum resolvent has range in the maximal Hamiltonian domain, and establishes the norm bound $|\operatorname{Im}z|^{-1}$. The construction applies in both complex half planes.
+
+The resolvent identity is then an equality between the constructed maps, with the continuum domain witness supplied explicitly. Its norm estimate reduces the resolvent error to the graph-domain error already proved. Consequently the resolvents converge strongly on every coefficient vector, and Fourier conjugation gives the same conclusion on physical torus fields. No operator-norm resolvent convergence is asserted.
+
+\subsection{The third-order moment and the quadratic rate}
+
+The proposition \path{HasThirdOrderMoment} is the summability condition for the chapter's actual weight $\sum_j|k_{n,j}|^6$. It implies membership in the maximal Hamiltonian domain. The scalar sine remainder gives the coefficient $1/6$, while a modal interpolation argument bounds the propagator difference without assuming that the distinct centered and continuum Hamiltonians commute.
+
+The checked global bounds are
+\[
+ \norm{(H_h-H)f}\le \frac{h^2}{6}M_3(f),\qquad
+ \norm{(U_h(t)-U(t))f}\le \frac{|t|h^2}{6}M_3(f).
+\]
+The generator estimate requires $h\ne0$. The propagator statement covers every real time, including negative time. For $T\ge0$, one envelope $Th^2M_3(f)/6$ holds at every $t\in[-T,T]$. The physical-space results use the same moment of the actual Fourier transform. The source does not infer moment finiteness merely because Lean gives a total value to an infinite sum.
+
+\subsection{Declaration correspondence and accepted checks}
+
+The prefixes C, M, Q, and R below refer respectively to the centered-convergence, modal-perturbation, centered-rates, and centered-resolvent namespaces just named.
+
+\begin{longtable}{@{}p{0.52\textwidth}p{0.41\textwidth}@{}}
+\toprule
+Declaration & Mathematical role\\
+\midrule
+\endhead
+C: \path{centeredCoeffOperator_selfAdjoint}, \path{centeredCoeffOperator_norm_le} & Actual bounded centered operator and its global norm bound.\\[3pt]
+C: \path{centered_graph_tendsto}, \path{physical_centered_graph_tendsto} & Two-sided punctured limit on the complete maximal domain.\\[3pt]
+R: \path{continuumCoeffResolvent_mem_domain}, \path{continuum_shift_resolvent}, \path{continuum_resolvent_shift} & Constructed continuum inverse with the correct domain.\\[3pt]
+R: \path{centered_shift_resolvent}, \path{centered_resolvent_shift} & Both centered inverse identities for nonzero spacing.\\[3pt]
+R: \path{centered_resolvent_error_le}, \path{centered_resolvent_tendsto} & All-nonreal resolvent estimate and strong limit.\\[3pt]
+M: \path{modal_perturbation_bound} & Signed-time estimate without cross-commutation.\\[3pt]
+Q: \path{HasThirdOrderMoment.mem_continuumDiracDomain}, \path{centered_generator_quadratic_bound} & Actual weighted-domain witness and generator rate.\\[3pt]
+Q: \path{centered_propagator_quadratic_bound}, \path{centered_propagator_compactTime_bound} & Global and compact-time propagator rates.\\[3pt]
+R and Q: physical resolvent and rate theorems & Transport through the existing torus Fourier isometry.\\
+\bottomrule
+\end{longtable}
+
+The accepted run freshly compiled all twenty-six local modules in the required import closure. Its sixty-four recorded commands include a recursive axiom audit of 209 environment declarations: 162 from the four new modules and 47 from the unchanged generator module. The larger environment count includes generated auxiliaries. Only \path{propext}, \path{Classical.choice}, and \path{Quot.sound} occur as axiom dependencies.
+
+Twenty-one controls have their expected outcomes: eight positive uses, twelve elaboration rejections, and one custom-axiom policy rejection. They exercise signed spacing and time, nonreal spectral parameters, the moment and domain hypotheses, and the distinction between an auxiliary zero-spacing definition and an actual inverse. Five module kernel replays cover the new modules and the generator.
+
+The exact acceptance receipt is \path{formal/continuum/verification/block51/current/receipt.json}. It binds the source snapshot, commands, logs, compiled objects, declaration inventory, and relevant runtime identities. The compiler and external compiled dependencies are pinned and reused. The module replays use the same Lean kernel and imported environment, not a second proof assistant or a source rebuild of all dependencies. Failed development and verification attempts remain in the delivery record.
+

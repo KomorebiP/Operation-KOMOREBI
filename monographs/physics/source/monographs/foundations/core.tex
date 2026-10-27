@@ -1,0 +1,519 @@
+\section{Resolving a state into orthogonal packets}\label{f:resolution}
+
+A packet begins with a choice of resolution. One may separate a field by spatial cells, a vector by coordinate groups, or a wave by spectral bands. The meaning of the labels changes between applications. The algebra below depends on the relations between the projectors and on the operators acting between their ranges. It does not require a preferred coordinate basis inside each range.
+
+Throughout this section, $\HH$ is a complex Hilbert space and $I$ is a finite index set. The inner product is conjugate-linear in its first argument and linear in its second. Every operator initially belongs to $\mathcal B(\HH)$, the bounded operators defined on all of $\HH$. The dimension of $\HH$ may be infinite. Finiteness refers to the number of packets. Countable resolutions and unbounded generators require the additional hypotheses developed later.
+
+\begin{definition}[Finite orthogonal atlas]
+A finite orthogonal atlas is a family $(P_a)_{a\in I}$ satisfying
+\begin{equation}\label{f:atlas-relations}
+ P_a^*=P_a,\qquad P_aP_b=\delta_{ab}P_a,
+ \qquad \sum_{a\in I}P_a=\id.
+\end{equation}
+Its packet of a vector $\psi$ is $\psi_a=P_a\psi$. Its packet weight is $p_a=\norm{\psi_a}^2$. Zero projectors are allowed, so a label can describe an empty sector.
+\end{definition}
+
+The word weight avoids assigning physical units before an application supplies them. If $\norm{\psi}=1$, these weights form a probability distribution. If the state carries another normalization, they sum to its squared norm. They are not automatically the energy expectation of a Hamiltonian. For example, a normalized energy eigenvector always has total packet weight one, regardless of its eigenvalue.
+
+\begin{proposition}[Reconstruction and norm separation]\label{f:parseval}
+For every $\psi,\phi\in\HH$,
+\begin{equation}\label{f:reconstruct}
+ \psi=\sum_a\psi_a,\qquad
+ \inner{\psi}{\phi}=\sum_a\inner{P_a\psi}{P_a\phi},\qquad
+ \norm{\psi}^2=\sum_a\norm{\psi_a}^2.
+\end{equation}
+Packets with different indices are orthogonal, including packets obtained from different vectors.
+\end{proposition}
+
+\begin{proof}
+Evaluate $\sum_aP_a=\id$ on $\psi$. For $a\ne b$, self-adjointness and orthogonality give
+\[
+ \inner{P_a\psi}{P_b\phi}
+ =\inner{\psi}{P_aP_b\phi}=0.
+\]
+Expand both entries of $\inner{\psi}{\phi}$ using the finite reconstruction. All terms with unequal indices vanish. Taking $\phi=\psi$ proves the norm identity.
+\end{proof}
+
+This proof separates three roles. Completeness reconstructs the vector, self-adjointness relates the projections to the inner product, and pairwise orthogonality removes cross terms. A mere decomposition of the identity by arbitrary linear maps does not imply the norm formula. A family of positive effects supplies a different probability construction, discussed later, because effects need not be idempotent or pairwise orthogonal.
+
+\begin{example}[Two packets inside four coordinates]\label{f:four-coordinate}
+Let $\HH=\C^4$ with its usual inner product, and set
+\[
+ \psi=\frac1{\sqrt7}(1,i,2,-i)^{\mathsf T},\qquad
+ P_A=\operatorname{diag}(1,1,0,0),\quad
+ P_B=\operatorname{diag}(0,0,1,1).
+\]
+Then $\psi_A=(1,i,0,0)^{\mathsf T}/\sqrt7$ and
+$\psi_B=(0,0,2,-i)^{\mathsf T}/\sqrt7$. The weights are $p_A=2/7$ and $p_B=5/7$. Refining into the four coordinate projectors gives weights $1/7,1/7,4/7,1/7$. The two descriptions resolve the same vector at different levels. The coarse description still contains the two-dimensional packet vectors. Retaining only the two scalar weights would discard their internal phases and amplitudes.
+\end{example}
+
+\foundationfigure{01_packets}{The four-coordinate state of Example~\ref{f:four-coordinate}. Packet vectors retain amplitudes and phases, while their two weights retain only the squared sizes.}
+
+
+
+\section{Operator blocks and exact reconstruction}\label{f:corners}
+
+The same atlas resolves an operator on both its input and output sides. For $X\in\mathcal B(\HH)$, define
+\begin{equation}\label{f:corner-def}
+ X_{ba}=P_bXP_a.
+\end{equation}
+The first index names the destination and the second names the source. As a map between packet spaces, this is $X_{ba}:\Ran P_a\to\Ran P_b$. As a bounded operator on $\HH$, it is extended by zero on the orthogonal complement of $\Ran P_a$. Keeping these two descriptions aligned prevents a block from being composed with an incompatible input space.
+
+\begin{proposition}[Block calculus]\label{f:block-calculus}
+For bounded $X,Y$,
+\begin{align}
+ X&=\sum_{b,a}X_{ba}, & P_bX\psi&=\sum_aX_{ba}\psi_a,\label{f:block-reconstruction}\\
+ (XY)_{ca}&=\sum_bX_{cb}Y_{ba}, & (X^*)_{ab}&=(X_{ba})^*.
+ \label{f:block-product}
+\end{align}
+The identity has diagonal blocks $P_a$ and zero off-diagonal blocks. If $X=X^*$, its opposite blocks are adjoints.
+\end{proposition}
+
+\begin{proof}
+Insert $\sum_bP_b=\id$ to the left of $X$ and $\sum_aP_a=\id$ to its right. This gives the first formula. Evaluate the right resolution on $\psi$ for the second. For the product,
+\[
+ P_cXYP_a=P_cX\Bigl(\sum_bP_b\Bigr)YP_a
+ =\sum_b(P_cXP_b)(P_bYP_a),
+\]
+where $P_b^2=P_b$ supplies the repeated middle projector. Finally,
+$(P_bXP_a)^*=P_aX^*P_b$.
+\end{proof}
+
+The multiplication law is ordinary matrix multiplication with operator-valued entries. It records the intermediate packet through which a composition passes. This matters even when two different paths reach the same destination. Their operator amplitudes add before any norm or probability is taken. Replacing each block by its norm would generally destroy interference and would no longer reconstruct the original operator.
+
+\begin{example}[A coarse block retains internal channels]\label{f:corner-example}
+Use the two-packet split of Example~\ref{f:four-coordinate} and the Hermitian matrix
+\[
+ H=\begin{pmatrix}
+ 0&1&0&2\\1&0&-1&0\\0&-1&0&1\\2&0&1&0
+ \end{pmatrix}.
+\]
+Relative to $\C^4=\C^2_A\oplus\C^2_B$, the four blocks are
+\[
+ H_{AA}=H_{BB}=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+ H_{BA}=\begin{pmatrix}0&-1\\2&0\end{pmatrix},\qquad
+ H_{AB}=H_{BA}^*.
+\]
+The block from $A$ to $B$ contains two distinct coordinate channels. Neither has to vanish for their net probability current to vanish at a particular state. The operator block describes available coupling. The current will also depend on the state occupying its source and destination.
+\end{example}
+
+Deleting off-diagonal blocks produces another operator, $\sum_aP_aXP_a$. It agrees with $X$ exactly when all omitted blocks vanish. Thus an atlas resolution is lossless, while keeping only its diagonal is an additional operation. Similarly, a finite-dimensional coordinate choice inside the packet ranges turns the blocks into numerical submatrices, but that coordinate representation is not needed for reconstruction itself.
+
+
+
+\section{From skew-adjoint evolution to transfer current}\label{f:transfer}
+
+Let $\psi(t)$ be a differentiable trajectory and suppose that
+\begin{equation}\label{f:flow}
+ \dot\psi(t)=K(t)\psi(t),\qquad K(t)^*=-K(t).
+\end{equation}
+Each $K(t)$ is bounded. The argument uses the stated derivative of the trajectory at the time under consideration. It does not manufacture a solution of an arbitrary differential equation. For a fixed bounded generator, the exponential series provides a separate construction of the evolution. A state-dependent vector field requires its own existence and uniqueness hypotheses.
+
+Define the receiving-first current by
+\begin{equation}\label{f:current}
+ J_{b\leftarrow a}(t)
+ =2\operatorname{Re}\inner{\psi_b(t)}{K(t)\psi_a(t)}
+ =2\operatorname{Re}\inner{\psi_b(t)}{K_{ba}(t)\psi_a(t)}.
+\end{equation}
+The second equality follows because $P_b\psi_b=\psi_b$. A positive value means that the contribution assigned to the pair increases the weight in $b$. The current is a real number, and its sign convention is fixed by the derivative calculation below.
+
+\begin{theorem}[Finite packet transfer]\label{f:transfer-theorem}
+For the trajectory in \eqref{f:flow},
+\begin{align}
+ \dot p_b&=\sum_aJ_{b\leftarrow a},\label{f:continuity}\\
+ J_{b\leftarrow a}&=-J_{a\leftarrow b},\qquad
+ J_{a\leftarrow a}=0,\label{f:antisymmetry}\\
+ \frac{d}{dt}\sum_ap_a&=0.
+\end{align}
+For every subset $C\subseteq I$, its total weight obeys
+\begin{equation}\label{f:boundary-current}
+ \frac{d}{dt}\sum_{b\in C}p_b
+ =\sum_{b\in C}\sum_{a\notin C}J_{b\leftarrow a}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+The projectors are fixed in time, so the product rule for the inner product gives
+\begin{align*}
+ \dot p_b
+ &=2\operatorname{Re}\inner{P_b\psi}{P_b\dot\psi}
+ =2\operatorname{Re}\inner{\psi_b}{K\psi}\\
+ &=\sum_a2\operatorname{Re}\inner{\psi_b}{K\psi_a}.
+\end{align*}
+The reconstruction of $\psi$ justifies the last finite sum. Skew-adjointness gives
+\[
+ \inner{\psi_a}{K\psi_b}
+ =-\inner{K\psi_a}{\psi_b}
+ =-\overline{\inner{\psi_b}{K\psi_a}}.
+\]
+Taking real parts proves antisymmetry. Putting $a=b$ gives zero diagonal current. Every internal ordered pair in $C\times C$ cancels with its reverse. Splitting the sum over all sources into $C$ and its complement proves \eqref{f:boundary-current}. Taking $C=I$ proves total conservation.
+\end{proof}
+
+The first line of this proof does not require skew-adjointness. It expresses the derivative of the actual packet weight for any bounded generator. Skew-adjointness is the additional input that turns the resulting pairing into an antisymmetric transfer law. Without it, one generally has sources or sinks as well as exchange.
+
+In the Hamiltonian convention $K=-iH$ with $H=H^*$ and $\hbar=1$, linearity in the second slot yields
+\begin{equation}\label{f:hamiltonian-current}
+ J_{b\leftarrow a}
+ =2\operatorname{Im}\inner{\psi_b}{H\psi_a}.
+\end{equation}
+Indeed, $\operatorname{Re}(-iz)=\operatorname{Im}z$. The plus sign belongs to this inner-product convention and to the choice that the first index receives the current. It should not be changed independently of either convention.
+
+\begin{example}[An exactly solved exchange]\label{f:rabi}
+On $\C^2$, take the coordinate atlas,
+\[
+ H=g\begin{pmatrix}0&1\\1&0\end{pmatrix},\quad g>0,
+ \qquad \psi(0)=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+Direct differentiation verifies the solution
+\[
+ \psi(t)=\begin{pmatrix}\cos(gt)\\-i\sin(gt)\end{pmatrix},
+ \quad p_1=\cos^2(gt),\quad p_2=\sin^2(gt).
+\]
+The current is
+\[
+ J_{2\leftarrow1}
+ =2\operatorname{Im}\bigl(i g\sin(gt)\cos(gt)\bigr)
+ =g\sin(2gt)=\dot p_2.
+\]
+It reverses sign during the cycle. At $t=0$ the coupling is nonzero but the instantaneous current is zero, since the destination amplitude vanishes. The population begins to change at second order in time. This is why coupling strength and instantaneous flow must be kept separate.
+\end{example}
+
+The same proof applies to $\dot\psi=K(\psi,t)\psi$ when the operator evaluated along the supplied trajectory is skew-adjoint. No derivative of the function $K(\psi,t)$ appears in the first derivative of $\norm{P_b\psi}^2$. Such derivatives would enter a second derivative or a linearized perturbation equation. Pointwise conservation therefore survives many nonlinear choices of generator, while well-posedness remains a separate question.
+
+\foundationfigure{03_coherent_current}{For the two-level Hamiltonian with coupling one, coherent evolution exchanges population periodically. The destination-first current changes sign when the direction of transfer reverses.}
+
+
+
+\section{Coarsening preserves the balance exactly}\label{f:coarsening}
+
+Let $\mathcal A$ be a finite set of coarse labels and let $f:I\to\mathcal A$ assign every fine packet to exactly one coarse label. Write $C_A=f^{-1}(A)$ and define
+\begin{equation}\label{f:coarse-projector}
+ Q_A=\sum_{a\in C_A}P_a.
+\end{equation}
+The fibers are disjoint and cover $I$, so $(Q_A)$ is another orthogonal atlas. Empty fibers give zero projectors. This is a grouping of an existing resolution. It need not be an approximation to a different physical system.
+
+\begin{theorem}[Exact coarse transfer]\label{f:coarse-theorem}
+The coarse weight and current are
+\begin{align}
+ p_A^{\mathrm c}&=\norm{Q_A\psi}^2=\sum_{a\in C_A}p_a,\\
+ J_{B\leftarrow A}^{\mathrm c}
+ &=2\operatorname{Re}\inner{Q_B\psi}{KQ_A\psi}
+ =\sum_{b\in C_B}\sum_{a\in C_A}J_{b\leftarrow a}.
+\end{align}
+They satisfy $\dot p_B^{\mathrm c}=\sum_AJ_{B\leftarrow A}^{\mathrm c}$ and
+$J_{B\leftarrow A}^{\mathrm c}=-J_{A\leftarrow B}^{\mathrm c}$. In particular, the sum of fine currents internal to a coarse cell is zero.
+\end{theorem}
+
+\begin{proof}
+Orthogonality proves the weight identity. Finite additivity of the real part of the inner product proves the current identity. The coarse projectors satisfy \eqref{f:atlas-relations}, so Theorem~\ref{f:transfer-theorem} applies to them. Equivalently, sum the fine balances inside each fiber and cancel all internal pairs.
+\end{proof}
+
+For an incidence matrix $R_{Aa}=1$ when $f(a)=A$ and zero otherwise, these formulas read
+\begin{equation}\label{f:incidence}
+ p^{\mathrm c}=Rp,\qquad J^{\mathrm c}=RJR^{\mathsf T},\qquad
+ R^{\mathsf T}\boldsymbol1_{\mathrm c}=\boldsymbol1_{\mathrm f}.
+\end{equation}
+The last identity expresses exactly one coarse assignment per fine index. An arbitrary binary matrix does not suffice. If $S$ performs a second grouping, then
+\[
+ S(Rp)=(SR)p,\qquad S(RJR^{\mathsf T})S^{\mathsf T}
+ =(SR)J(SR)^{\mathsf T}.
+\]
+Thus a tower of exact groupings is associative. There is no accumulation of approximation error in these identities.
+
+\begin{example}[Internal exchange disappears from the coarse boundary]
+Consider four labels with nonzero currents
+\[
+ J_{2\leftarrow1}=3,\quad J_{3\leftarrow2}=2,\quad
+ J_{4\leftarrow3}=1,\quad J_{1\leftarrow4}=\tfrac12,
+\]
+their negatives in the reverse directions, and all other currents zero. This is an example of the balance algebra, without an asserted underlying quantum trajectory. The weight derivatives are
+$(-5/2,1,1,1/2)$. For $A=\{1,2\}$ and $B=\{3,4\}$, the internal currents $3$ and $1$ cancel, leaving
+$J^{\mathrm c}_{B\leftarrow A}=2-1/2=3/2$.
+Hence $\dot p_A^{\mathrm c}=-3/2$ and $\dot p_B^{\mathrm c}=3/2$.
+\end{example}
+
+Exact balance should not be confused with closure of a reduced equation. The scalar vector $p^{\mathrm c}$ generally does not determine the state-dependent current $J^{\mathrm c}$. Internal phase or correlation data may still be needed. Even at the fine level, a continuity equation alone does not uniquely determine its current. On three labels, the antisymmetric matrix
+\[
+ \begin{pmatrix}0&c&-c\\-c&0&c\\c&-c&0\end{pmatrix}
+\]
+has zero row sums for any real $c$. Adding it changes circulation while preserving all weight derivatives. The operator and state specify a particular current through \eqref{f:current}. Observing only the derivatives cannot recover that additional information.
+
+\foundationfigure{04_coarse_balance}{An instantaneous antisymmetric current array and its two-cell aggregation. The internal arrows cancel, leaving net transfer $3/2$ across the coarse boundary. This balance example does not assume a constructed Hamiltonian trajectory.}
+
+
+
+\section{Moving atlases and their connection}\label{f:moving}
+
+A resolution can change with time even when the state is stationary. To retain orthogonality, transport the entire atlas by a unitary family. Let $U(t)$ be differentiable in operator norm and satisfy both $U^*U=\id$ and $UU^*=\id$. Set
+\begin{equation}\label{f:moving-defs}
+ P_a(t)=U(t)P_a^{(0)}U(t)^*,\qquad
+ \phi(t)=U(t)^*\psi(t),\qquad \Gamma(t)=U(t)^*\dot U(t).
+\end{equation}
+The coordinates $\phi$ see fixed projectors $P_a^{(0)}$. The physical weight in the moving packet is the same scalar:
+\[
+ \norm{P_a(t)\psi(t)}^2
+ =\norm{P_a^{(0)}\phi(t)}^2.
+\]
+
+\begin{proposition}[The transformed generator]\label{f:moving-theorem}
+If $\dot\psi=K\psi$ and $K^*=-K$, then
+\begin{equation}\label{f:effective-generator}
+ \dot\phi=K_{\mathrm{eff}}\phi,\qquad
+ K_{\mathrm{eff}}=U^*KU-\Gamma,\qquad
+ \Gamma^*=-\Gamma,\quad K_{\mathrm{eff}}^*=-K_{\mathrm{eff}}.
+\end{equation}
+Consequently the fixed-atlas current formula, applied to $\phi$ and $K_{\mathrm{eff}}$, gives the derivative of the moving physical packet weights.
+\end{proposition}
+
+\begin{proof}
+Differentiate $U^*U=\id$ to obtain
+$\dot U^*U+U^*\dot U=0$. This proves $\Gamma^*=-\Gamma$.
+Multiplication on the right by $U^*$ gives $\dot U^*=-\Gamma U^*$. Therefore
+\[
+ \dot\phi=\dot U^*\psi+U^*\dot\psi
+ =-\Gamma\phi+U^*KU\phi.
+\]
+Unitary conjugation preserves skew-adjointness. The difference of the two skew-adjoint operators in \eqref{f:effective-generator} is skew-adjoint, so the transfer theorem applies.
+\end{proof}
+
+The connection $\Gamma$ records the velocity of the frame. Omitting it would interpret a change of packet coordinates as if it were entirely a change of the physical state. In Hamiltonian notation the corresponding effective Hamiltonian is
+$H_{\mathrm{eff}}=U^*HU-i\Gamma$, which is self-adjoint because $\Gamma$ is skew-adjoint.
+
+\begin{example}[A stationary vector viewed through a rotating split]\label{f:rotating-frame}
+Let $\psi(t)=e_1$, $K=0$, and
+\[
+ U(t)=\begin{pmatrix}\cos\theta(t)&-\sin\theta(t)\\
+ \sin\theta(t)&\cos\theta(t)\end{pmatrix}.
+\]
+With the coordinate projectors as $P_a^{(0)}$,
+\[
+ \phi=\begin{pmatrix}\cos\theta\\-\sin\theta\end{pmatrix},\quad
+ \Gamma=\dot\theta\begin{pmatrix}0&-1\\1&0\end{pmatrix},\quad
+ K_{\mathrm{eff}}=-\Gamma.
+\]
+The moving weights are $p_1=\cos^2\theta$ and $p_2=\sin^2\theta$, with
+$J_{2\leftarrow1}=\dot\theta\sin(2\theta)=\dot p_2$.
+The state has not moved in the original Hilbert space. The measured sectors have moved around it. The connection term accounts for the entire change.
+\end{example}
+
+The same principle governs a time-dependent operator block. Write $V=\dot UU^*$ for the frame velocity in laboratory coordinates. Then
+\[
+ \dot P_a=[V,P_a],\qquad
+ \frac{d}{dt}(P_bXP_a)
+ =[V,P_b]XP_a+P_b\dot XP_a+P_bX[V,P_a].
+\]
+Both packet boundaries contribute, as does the operator itself. Conjugation by a general invertible family also preserves idempotence and completeness, but it need not preserve self-adjointness or orthogonality. The unitary hypothesis is what keeps these transported objects within the present orthogonal atlas setting.
+
+\foundationfigure{05_moving_frame}{A stationary laboratory vector observed in a rotating atlas. The varying packet weights are generated by the connection term $-U^*\dot U$ in moving coordinates.}
+
+
+
+\section{Mixed states and coherent transfer}\label{f:mixed}
+
+For this section take $\HH=\C^n$. A density matrix is a positive semidefinite Hermitian matrix $\rho$ with $\operatorname{Tr}\rho=1$. Its probability in a sharp packet is
+\begin{equation}\label{f:mixed-probability}
+ p_a=\operatorname{Tr}(P_a\rho).
+\end{equation}
+Hermiticity makes this trace real. Positivity makes it nonnegative, since cyclicity and $P_a^2=P_a$ give
+$\operatorname{Tr}(P_a\rho)=\operatorname{Tr}(P_a\rho P_a)\ge0$.
+Completeness gives $\sum_ap_a=\operatorname{Tr}\rho=1$.
+These are separate uses of the density-matrix assumptions.
+
+Suppose a differentiable matrix trajectory obeys the von Neumann equation
+\begin{equation}\label{f:von-neumann}
+ \dot\rho=-i[H,\rho],\qquad H=H^*.
+\end{equation}
+For its coherent transfer define
+\begin{equation}\label{f:mixed-current}
+ J^{(\rho)}_{b\leftarrow a}
+ =2\operatorname{Im}\operatorname{Tr}(P_bHP_a\rho).
+\end{equation}
+
+\begin{proposition}[Trace-current balance]\label{f:mixed-theorem}
+For a Hermitian $\rho$ satisfying \eqref{f:von-neumann},
+\[
+ \dot p_b=\sum_aJ^{(\rho)}_{b\leftarrow a},\qquad
+ J^{(\rho)}_{b\leftarrow a}=-J^{(\rho)}_{a\leftarrow b}.
+\]
+The subset boundary formula and exact coarse-current summation remain valid.
+\end{proposition}
+
+\begin{proof}
+Let $z_{ba}=\operatorname{Tr}(P_bHP_a\rho)$. Taking the conjugate trace and cyclically moving the first factor to the end yields
+\[
+ \overline{z_{ba}}=\operatorname{Tr}(\rho P_aHP_b)
+ =\operatorname{Tr}(P_aHP_b\rho)=z_{ab}.
+\]
+Completeness and cyclicity resolve the derivative as
+\[
+ \dot p_b=-i\sum_a(z_{ba}-z_{ab})
+ =\sum_a2\operatorname{Im}z_{ba}.
+\]
+The conjugate relation gives antisymmetry. Finite sums then prove cancellation and coarse aggregation exactly as before.
+\end{proof}
+
+For a rank-one state $\rho=|\psi\rangle\langle\psi|$, where the associated operator sends $x$ to $\psi\inner{\psi}{x}$, one has
+$\operatorname{Tr}(M\rho)=\inner{\psi}{M\psi}$. Substituting $M=P_bHP_a$ proves that \eqref{f:mixed-current} is precisely the pure-state formula. No normalization is needed for that identity itself.
+
+In the coordinate atlas, the current is $2\operatorname{Im}(H_{ba}\rho_{ab})$. It depends on off-diagonal coherence. A useful test is to compare
+\[
+ \rho_+=\frac12\begin{pmatrix}1&i\\-i&1\end{pmatrix},\qquad
+ \rho_-=\frac12\begin{pmatrix}1&-i\\i&1\end{pmatrix},\qquad
+ \rho_0=\frac12\begin{pmatrix}1&0\\0&1\end{pmatrix}.
+\]
+All three are density matrices with packet probabilities $(1/2,1/2)$. For $H=g\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$, however, their currents $J_{2\leftarrow1}$ are respectively $g,-g,0$. The same instantaneous populations can therefore have different derivatives under the same Hamiltonian. A closed equation involving only those two populations cannot represent all three coherent states.
+
+The trace balance requires Hermiticity, but its algebra does not require positivity or trace one. Those additional hypotheses justify the probabilistic interpretation. This distinction is useful in formalization because it reveals which assumptions belong to a calculation and which belong to interpreting its output. Infinite-dimensional mixed states would require a trace-class setting and further control of products and derivatives. They are not silently included in this finite matrix argument.
+
+
+
+\section{Tensor packets, marginals, and retained correlations}\label{f:tensor}
+
+Let $\HH_A$ and $\HH_B$ be finite-dimensional Hilbert spaces with finite orthogonal atlases $(P_a)$ and $(Q_\mu)$. Their tensor atlas is
+\[
+ R_{a\mu}=P_a\otimes Q_\mu.
+\]
+It is orthogonal because tensor multiplication gives
+$R_{a\mu}R_{b\nu}=\delta_{ab}\delta_{\mu\nu}R_{a\mu}$.
+Its sum is $\id_A\otimes\id_B$. For a density matrix $\rho_{AB}$, define
+\begin{equation}\label{f:joint-marginal}
+ p_{a\mu}=\operatorname{Tr}(R_{a\mu}\rho_{AB}),\qquad
+ p_a^A=\sum_\mu p_{a\mu},\quad p_\mu^B=\sum_a p_{a\mu}.
+\end{equation}
+These marginalizations are exact atlas coarsenings. For example,
+\[
+ p_a^A=\operatorname{Tr}\bigl((P_a\otimes\id_B)\rho_{AB}\bigr)
+ =\operatorname{Tr}(P_a\rho_A),\qquad \rho_A=\operatorname{Tr}_B\rho_{AB}.
+\]
+Choose full orthonormal bases of the two Hilbert spaces, with $(e_k)_k$ indexing the basis of $\HH_B$. In the resulting product basis the partial trace has entries
+$(\rho_A)_{ij}=\sum_k(\rho_{AB})_{(i,k),(j,k)}$.
+This explicit formula shows that it preserves Hermiticity and trace. Positivity follows by evaluating the quadratic form on $x$ and summing the nonnegative forms of $x\otimes e_k$. Thus the reduced matrix is itself a density matrix.
+
+For a product state $\rho_{AB}=\sigma_A\otimes\tau_B$, the trace factorizes and $p_{a\mu}=p_a^Ap_\mu^B$. General states need not have that property. The normalized vector
+$\Psi=(e_0\otimes e_0+e_1\otimes e_1)/\sqrt2$ has joint probabilities
+\[
+ (p_{a\mu})=\begin{pmatrix}1/2&0\\0&1/2\end{pmatrix},
+ \qquad p^A=p^B=(1/2,1/2).
+\]
+The product density matrix $(\id_A/2)\otimes(\id_B/2)$ has the same marginals but every joint entry is $1/4$. Marginals therefore fail to reconstruct even the joint measurement distribution. Moreover, the classical mixture of $e_0\otimes e_0$ and $e_1\otimes e_1$ has the same joint table as $\Psi$ but lacks its off-diagonal coherence. A single atlas table does not reconstruct the full density matrix or certify entanglement on its own.
+
+When a joint coherent current is defined on the product labels, the current into a marginal packet is obtained by summing over the hidden labels on both its source and destination. Internal exchange within a marginal cell cancels. Correlations can still enter the surviving current, so exact marginal balance does not imply autonomous marginal dynamics. The distinction repeats the one already encountered in coarse pure-state transfer.
+
+
+
+\section{Open dynamics and rank-one jump flow}\label{f:jumps}
+
+Coherent exchange is one mechanism for changing packet weights. A second comes from an explicitly chosen family of dissipative transitions. Fix an orthonormal basis $(e_a)_{a\in I}$ of $\C^n$, use its rank-one projectors, and choose rates $\gamma_{ba}\ge0$ for $b\ne a$. Set diagonal rates to zero for convenience and define
+\begin{equation}\label{f:jump-operators}
+ L_{ba}=\sqrt{\gamma_{ba}}\,|e_b\rangle\langle e_a|,
+ \qquad
+ \mathcal D_L(\rho)=L\rho L^*-	frac12(L^*L\rho+\rho L^*L).
+\end{equation}
+Consider a supplied differentiable matrix trajectory satisfying
+\begin{equation}\label{f:lindblad}
+ \dot\rho=\sum_{b\ne a}\mathcal D_{L_{ba}}(\rho).
+\end{equation}
+This choice of jumps is tied to the selected basis. A general dissipative operator or a higher-rank atlas does not automatically produce the same closed rate equation.
+
+\begin{proposition}[Population gain and loss]\label{f:jump-theorem}
+The diagonal populations $p_b=\rho_{bb}$ of a Hermitian solution satisfy
+\begin{equation}\label{f:jump-current}
+ \dot p_b=\sum_aF_{b\leftarrow a},\qquad
+ F_{b\leftarrow a}=\gamma_{ba}p_a-\gamma_{ab}p_b,
+ \qquad F_{b\leftarrow a}=-F_{a\leftarrow b}.
+\end{equation}
+The total population is constant, and every coarse population has the sum of the boundary jump currents as its derivative.
+\end{proposition}
+
+\begin{proof}
+For the one transition $a\to b$,
+\[
+ L_{ba}\rho L_{ba}^*=\gamma_{ba}p_aP_b,\qquad
+ L_{ba}^*L_{ba}=\gamma_{ba}P_a.
+\]
+Its diagonal gain is $\gamma_{ba}p_a$ at $b$, and the two halves of the anticommutator remove that same amount at $a$. No other diagonal entry changes from this one jump. Sum over ordered transitions to obtain \eqref{f:jump-current}. Antisymmetry is immediate, and the finite boundary cancellation applies.
+\end{proof}
+
+In this model the population equation closes without knowing the coherences. The coherences nevertheless have their own dynamics. For $i\ne j$, let $r_i=\sum_{b\ne i}\gamma_{bi}$ be the total rate leaving $i$. The gain matrices are diagonal, while each anticommutator selects its source row and column. Consequently
+\begin{equation}\label{f:coherence-decay}
+ \dot\rho_{ij}=-\tfrac12(r_i+r_j)\rho_{ij}.
+\end{equation}
+For fixed rates, $\rho_{ij}(t)=e^{-(r_i+r_j)t/2}\rho_{ij}(0)$. This decay law belongs to the stated rank-one jump family. Additional Hamiltonian or dephasing terms alter it in identifiable ways.
+
+\begin{example}[Two-state relaxation]
+Take $\gamma_{21}=\gamma_{12}=k>0$ and $p_1+p_2=1$. Then
+\[
+ \dot p_1=k(1-2p_1),\qquad
+ p_1(t)=\tfrac12+\bigl(p_1(0)-\tfrac12\bigr)e^{-2kt},
+ \qquad \rho_{12}(t)=e^{-kt}\rho_{12}(0).
+\]
+The populations relax toward equal weights. In the coherent exchange of Example~\ref{f:rabi}, the populations oscillate and depend on phase. Both systems admit antisymmetric probability currents, but that common bookkeeping does not make their mechanisms identical. Adding $-i[H,\rho]$ to \eqref{f:lindblad} adds the coherent current to the jump current. The resulting population equation then generally depends on coherence again.
+\end{example}
+
+The coarse jump balance is always exact. For it to close as a time-homogeneous Markov equation for coarse weights alone, a further compatibility condition suffices. For distinct coarse cells $A,B$, suppose
+\[
+ \sum_{b\in C_B}\gamma_{ba}=q_{BA}
+ \quad\text{for every }a\in C_A.
+\]
+Then summing the fine gains gives $q_{BA}p_A^{\mathrm c}$, so
+$\dot p_B^{\mathrm c}=\sum_{A\ne B}(q_{BA}p_A^{\mathrm c}-q_{AB}p_B^{\mathrm c})$.
+Without this equality of outgoing rates to each destination cell, the fine population distribution inside a source cell matters. This direct consequence of the gain sum shows precisely what an autonomous coarse model asks in addition to current conservation.
+
+\foundationfigure{06_density_and_jumps}{Coherent exchange and the specified symmetric rank-one jump dynamics have different population laws. The equal-population coherent states $\rho_+$ and $\rho_-$ give opposite initial derivatives of $p_2$, while the classical jump equilibrium has zero derivative.}
+
+
+
+\section{Information functionals and the role of detailed balance}\label{f:information}
+
+An antisymmetric current also organizes derivatives of scalar functionals of the packet distribution. Let $p_a(t)>0$ be differentiable, normalized, and obey $\dot p_b=\sum_aJ_{b\leftarrow a}$ with $J$ antisymmetric. For a differentiable real function $f$ on the positive half-line,
+\begin{equation}\label{f:functional-current}
+ \frac{d}{dt}\sum_b f(p_b)
+ =\frac12\sum_{b,a}J_{b\leftarrow a}
+       \bigl(f'(p_b)-f'(p_a)\bigr).
+\end{equation}
+To prove it, apply the ordinary chain rule and substitute the balance equation. Exchange the two indices in a second copy of the sum and use antisymmetry. Averaging the two expressions yields \eqref{f:functional-current}.
+
+For Shannon entropy $S(p)=-\sum_ap_a\log p_a$, this gives
+\begin{equation}\label{f:entropy-current}
+ \dot S=-\frac12\sum_{b,a}J_{b\leftarrow a}\log\frac{p_b}{p_a}.
+\end{equation}
+The constant derivative term cancels because the total current is zero. For a real $q$, the power sum $M_q=\sum_ap_a^q$ has derivative
+\[
+ \dot M_q=\frac q2\sum_{b,a}J_{b\leftarrow a}
+ (p_b^{q-1}-p_a^{q-1}).
+\]
+For $q\ne1$, the R\'enyi entropy $H_q=\log M_q/(1-q)$ therefore satisfies
+$\dot H_q=\dot M_q/((1-q)M_q)$. Strict positivity makes the powers and logarithmic derivatives valid, and $M_q>0$ when the finite index set is nonempty. Boundary points with zero populations require their own limiting argument and are not covered by these derivative statements as written.
+
+These formulas alone impose no sign on entropy change. The coherent two-state orbit can increase and then decrease its packet entropy as the state moves through a cycle. Packet entropy depends on the chosen atlas, and it is different from the von Neumann entropy of the density operator. In particular, a pure state can have positive packet entropy.
+
+For the rank-one jump model, detailed balance supplies a definite monotonicity theorem. Let $\pi_a>0$ be a fixed probability distribution, and assume
+\begin{equation}\label{f:detailed-balance}
+ \gamma_{ba}\pi_a=\gamma_{ab}\pi_b.
+\end{equation}
+Define relative densities $u_a=p_a/\pi_a$ and conductances $c_{ba}=\gamma_{ba}\pi_a$. Then $c_{ba}=c_{ab}\ge0$ and
+$F_{b\leftarrow a}=c_{ba}(u_a-u_b)$.
+
+\Needspace{13\baselineskip}
+\begin{theorem}[Relative-entropy dissipation]\label{f:relative-entropy}
+For a strictly positive solution of the finite jump balance and a fixed positive reference satisfying \eqref{f:detailed-balance},
+\begin{align}\label{f:dissipation}
+ D(p\Vert\pi)&=\sum_ap_a\log\frac{p_a}{\pi_a},\\
+ \frac{d}{dt}D(p\Vert\pi)
+ &=-\frac12\sum_{b,a}c_{ba}(u_b-u_a)(\log u_b-\log u_a)\le0.
+ \notag
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Differentiate with $\pi$ fixed. The terms without logarithms sum to zero. Pairing opposite currents leaves
+$\tfrac12\sum_{b,a}F_{b\leftarrow a}(\log u_b-\log u_a)$.
+Insert the conductance expression for $F$. The logarithm is increasing on $(0,\infty)$, so each product
+$(u_b-u_a)(\log u_b-\log u_a)$ is nonnegative. Every conductance is nonnegative, proving the inequality.
+\end{proof}
+
+The conductance form includes inactive edges without evaluating a logarithm of a zero flux. When $c_{ba}=0$, its contribution is simply zero. When $c_{ba}>0$, a summand vanishes exactly when $u_b=u_a$. Thus zero instantaneous dissipation means that the relative density is constant on each connected component of the positive-conductance graph. If that graph is connected, normalization forces the constant to be one and $p=\pi$. This identifies the equality case. The derivative calculation by itself does not provide a convergence rate to equilibrium.
+
+
+
+The finite calculus now has a common structure across pure states, mixed states, moving coordinates, tensor marginals, and the specified jump model. Each setting begins with actual mathematical objects and a stated derivative. Reconstruction produces the balance, antisymmetry gives cancellation, and an exact grouping preserves the resulting current. Extending this chain to positive effects, countable families, or unbounded generators requires new hypotheses at the step where the original finite proof used orthogonality, finite summation, or bounded application.

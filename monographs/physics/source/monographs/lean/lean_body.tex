@@ -1,0 +1,440 @@
+\section{What this companion certifies}
+
+This companion identifies the checked free Dirac Hamiltonian, its strong generator, and its centered approximation on the flat unit three-torus. It records the declarations, their hypotheses, and the boundary between written proofs and formal verification. The operator has an exact first-order Fourier domain, self-adjointness, closedness, and an energy identity. The generator identifies that full domain with strong differentiability. The centered extension supplies graph and resolvent limits and quadratic bounds under a third-order Fourier moment.
+
+The source release is classified as \textbf{checked modular cumulative}. That classification has a precise meaning. The new Block 49 module and its import closure have recorded successful checks, while earlier source files are retained under preservation records. It does not mean that every historical manuscript sentence has become a theorem, or that a single aggregate command has freshly checked every file in this editorial edition.
+
+The historical verification tables below describe the preserved v0.49.0 handoff. The preceding generator checkpoint rebuilt the exact operator target and checked the generator extension against the same pinned environment. The sections below distinguish that checkpoint from the current centered-extension record. The inherited Lean source files remain unchanged. Historical receipts are not silently relabelled as current runs.
+
+The mathematical source, its verification records, and its explanatory wrappers are different objects. Some generic baseline wrappers describe earlier checkpoints. The named source targets and their individual receipts govern the operator and generator claims. Package labels and aggregate inventory counts do not replace those records.
+
+\subsection{A reading convention}
+
+The words \emph{definition}, \emph{hypothesis}, and \emph{theorem} have separate roles here. A definition introduces an object, often together with proof fields required by a Lean structure. A hypothesis records what a theorem needs from its inputs. A theorem derives a conclusion from those inputs. For example, the early atlas laws are assumptions defining an admissible atlas. Reconstruction and coarse balance are consequences of those laws. A supplied evolution equation is not itself an existence theorem for that evolution.
+
+Names printed below are declaration names found in the supplied source. A short name is relative to the namespace explicitly stated for its section. File paths are relative to the root of the checked source archive. The machine-readable companion, \path{editorial/lean_crosswalk.csv}, includes the full namespace, declaration kind, exact source path, line, statement signature, available declaration comment, and source hash for every declaration extracted from Blocks 41--49. It contains 322 named declarations, of which 207 are theorems or lemmas. These are source-extraction counts for those nine modules, not independent counts of physical laws.
+
+\section{The mathematical objects and their Lean types}
+
+The final construction uses a fixed flat geometry and a fixed four-component spinor representation. The spatial torus is the unit torus, so its integer Fourier mode \(n\in\Z^3\) has momentum \(k_n=2\pi n\). The mass parameter is any real number. No positive-mass restriction is required by the final domain theorem.
+
+The implementation separates the algebraic four-spinor representation from the Hilbert-space representation. This is necessary because a function type with four complex coordinates does not, by itself, assert the Euclidean norm needed by the energy and unitarity arguments. The conversion maps preserve the coordinate values, while the Hilbert type supplies the correct norm and inner product.
+
+\begin{longtable}{@{}p{0.27\textwidth}p{0.66\textwidth}@{}}
+\toprule
+Mathematical object & Source representation and interpretation\\
+\midrule
+\endhead
+Fourier label & \path{Mode := Fin 3} $\to\Z$. The set of labels is infinite.\\[3pt]
+Algebraic spinor & \path{Fin 4} $\to\C$. Used for explicit Clifford formulas.\\[3pt]
+Hilbert spinor & \path{EuclideanSpace} $\C$ \path{(Fin 4)}. The norm is the Euclidean four-spinor norm.\\[3pt]
+Scalar torus field & \path{Lp} $\C$ \path{2 (volume : Measure (UnitAddTorus (Fin 3)))}. Equality is equality of \(L^2\) classes.\\[3pt]
+Physical spinor field & \path{PiLp 2 (fun _ : Fin 4 => ScalarTorusL2)}. This is the four-coordinate Hilbert sum used for \(L^2(\T^3;\C^4)\).\\[3pt]
+Coefficient field & \path{CoeffL2}, the space $\ell^2(\mathrm{Mode};\mathrm{HilbertSpinor})$. Square summability is already part of the type.\\[3pt]
+Bounded mode Hamiltonian & A continuous complex-linear endomorphism of one Hilbert spinor space. Each fixed mode has a bounded matrix Hamiltonian.\\[3pt]
+Full continuum Hamiltonian & A \path{LinearPMap}, written $\mathrm{CoeffL2}\to_{\C}^{\mathrm{partial}}\mathrm{CoeffL2}$ in mathematical notation or its physical-space counterpart. Its domain is a submodule, and an argument carries a proof of domain membership.\\[3pt]
+Fourier equivalence & \path{torusFourierEquiv}, a complex linear isometric equivalence from physical torus fields to coefficient fields.\\
+\bottomrule
+\end{longtable}
+
+The inner product convention is conjugate-linear in its first argument and linear in its second. The source uses \path{inner} $\C$. In particular, the time evolution of a mode is built from the bounded exponential of \(-itH_m(n)\). Maintaining this convention is necessary when reading the current signs and the adjoint calculations.
+
+\subsection{What the spacing parameter means here}
+
+In the Fourier evolution modules, the centered multiplier is
+\[
+ k_{h,j}(n)=\frac{\sin(k_{n,j}h)}{h},
+\]
+with the removable value \(k_{n,j}\) inserted at \(h=0\). Both the centered and continuum propagators act on the same infinite label space \(\Z^3\). Those original limit theorems take \(h\to0\) through positive real values; the centered extension below also supplies the two-sided punctured limit.
+
+This model does not replace \(\Z^3\) by the Fourier labels of a finite sampled grid. There is no changing Nyquist cutoff in the final theorem statement, and the proof is not an identification of a finite lattice state space with all of torus \(L^2\). Earlier finite-resolution and geometric refinement constructions are substantial results of their own. A further compatibility theorem is needed before those constructions can be substituted for the centered multiplier family in a full operator-limit claim.
+
+\section{The dependency chain from symbols to physical fields}
+
+Each of the nine recent modules introduces a distinct part of the argument. Their principal dependency chain follows the block order below. Some modules also import mathematical infrastructure and earlier Clifford constructions. Thus the table is a reading route, not a complete graph of all imported library files.
+
+\begin{longtable}{@{}p{0.07\textwidth}p{0.48\textwidth}p{0.38\textwidth}@{}}
+\toprule
+Block & Module below \path{KomorebiPhysics/} & Main responsibility\\
+\midrule
+\endhead
+41 & \path{Relativistic3DFourierGenerator.lean} & Centered symbol, exact mass shell, fixed-mode generator consistency.\\[3pt]
+42 & \path{Relativistic3DFourierL2Generator.lean} & Orthogonal torus embeddings and finite-packet \(L^2\) consistency.\\[3pt]
+43 & \path{Relativistic3DFourierPropagator.lean} & Bounded mode exponentials and fixed-time packet convergence.\\[3pt]
+44 & \path{Relativistic3DFourierHilbertStability.lean} & Hilbert self-adjoint mode operators and exact unitarity.\\[3pt]
+45 & \path{Relativistic3DFourierCompactTime.lean} & Uniform bounds on a fixed compact time interval.\\[3pt]
+46 & \path{Relativistic3DFullFourierEvolution.lean} & Full coefficient evolution and removal of finite support.\\[3pt]
+47 & \path{Relativistic3DTorusFourierEvolution.lean} & Surjective Fourier equivalence and physical-space transport.\\[3pt]
+48 & \path{Relativistic3DUnboundedDirac.lean} & Maximal coefficient domain, adjoint, and graph approximation.\\[3pt]
+49 & \path{Relativistic3DWeightedDiracDomain.lean} & Exact weighted domain and physical unbounded Hamiltonian.\\
+\bottomrule
+\end{longtable}
+
+The namespace usually matches the filename without its suffix. There is one important exception: Block 49 uses
+\begin{quote}\small
+\path{KomorebiPhysics.Relativistic3DWeightedDomain}
+\end{quote}
+although its filename contains \path{WeightedDiracDomain}. The crosswalk preserves this distinction. Guessing a fully qualified name from the filename would produce the wrong namespace.
+
+\subsection{Blocks 41 and 42: exact algebra before limits}
+
+In \path{KomorebiPhysics.Relativistic3DFourierGenerator}, the declaration \path{centralDifferenceMultiplier_eq} reduces the centered translation multiplier to the sine quotient. The Hamiltonian symbols are defined by \path{continuumDiracSymbol} and \path{centralDiracSymbol}. Their square identities are \path{continuumDiracSymbol_sq} and \path{centralDiracSymbol_sq}.
+
+For the continuum symbol, the identity is
+\[
+ H_m(n)^2=\bigl(m^2+|k_n|^2\bigr)I.
+\]
+The centered symbol has the same formula with each momentum component replaced by its sine quotient. These are exact identities for the chosen Clifford representation. They are not numerical tests of a dispersion curve.
+
+The small-spacing theorem \path{centralModeAction_sub_continuum_isBigO} fixes the mass, mode, and spinor before taking the limit. Its constant may therefore depend on those fixed inputs. The finite-packet theorem also fixes its finite support. This order of quantifiers prevents a finite-packet estimate from being read as a bound uniform over all Fourier modes.
+
+Block 42 moves these statements into actual torus \(L^2\). In namespace \path{KomorebiPhysics.Relativistic3DFourierL2Generator}, \path{modeEmbedIsometry} embeds a single Hilbert spinor at one Fourier mode. The declaration \path{inner_modeEmbed} supplies mode orthogonality, and \path{fourierPacketL2_norm_sq} gives the exact finite Parseval identity. The convergence theorem is \path{tendsto_centralPacketL2}. Its quadratic precursor is \path{packetResidualL2_isBigO}.
+
+This step turns coordinatewise symbol control into control of a field norm. It still retains fixed finite Fourier support. There is no unbounded operator acting on arbitrary torus fields at this stage of the chain.
+
+\subsection{Blocks 43 and 44: bounded exponentials and stability}
+
+In namespace \path{KomorebiPhysics.Relativistic3DFourierPropagator}, the mode Hamiltonians become continuous linear maps. The declarations \path{continuumModePropagator} and \path{centralModePropagator} use the Banach-algebra exponential. The theorem \path{centralModePropagator_sub_isBigO} gives quadratic convergence at a fixed time. The declaration \path{tendsto_centralPropagatedPacketL2} transfers this to a fixed finite packet.
+
+The group identities use the fact that two time-scaled copies of the same generator commute. For example, \path{continuumModePropagator_add_time} proves addition of times, and \path{continuumModePropagator_neg_mul} gives the inverse-time identity. Invertibility alone does not supply the Hilbert stability needed to remove Fourier tails.
+
+Block 44 supplies that stability in namespace \path{KomorebiPhysics.Relativistic3DFourierHilbertStability}. The declarations \path{continuumHilbertModeOperator_selfAdjoint} and \path{centralHilbertModeOperator_selfAdjoint} use the Euclidean Hilbert representation. Their exponentials are proved unitary by \path{continuumHilbertModePropagator_mem_unitary} and \path{centralHilbertModePropagator_mem_unitary}. The corresponding norm and inner-product preservation theorems apply to every spinor at each fixed mode.
+
+The finite-packet norm identities are \path{continuumHilbertPropagatedPacketL2_norm_sq} and \path{centralHilbertPropagatedPacketL2_norm_sq}. Stability is exact. It does not acquire an error depending on the number of modes or the time interval.
+
+\section{Compact-time convergence and removal of the cutoff}
+
+Block 45 changes the time quantifier. In namespace \path{KomorebiPhysics.Relativistic3DFourierCompactTime}, the theorem \path{exists_compactTime_mode_propagator_bound} takes \(m,T,n\), with \(T\ge0\), and proves that some \(K\ge0\) works eventually as \(h\to0^+\), simultaneously for every \(|t|\le T\):
+\[
+ \norm{U_{m,h}(t,n)-U_m(t,n)}\le Kh^2.
+\]
+The norm here is the bounded operator norm of the mode endomorphisms. The coefficient \(K\) may depend on the chosen mode, mass, and time window.
+
+The packet version, \path{exists_compactTime_packet_propagator_bound}, takes a finite set of modes and a fixed amplitude function. Its constant can also depend on these data. The proof first controls the exponential on one closed operator ball and then makes the finitely many eventual estimates hold together. The result is an existence bound. The guide does not replace it by a sharp Duhamel constant or an explicitly optimized constant.
+
+The reusable stability lemma is \path{norm_sub_le_two_tail}. For norm-preserving linear evolutions and any finite approximation \(g\), it gives
+\[
+ \norm{U_h(t)f-U(t)f}
+ \le 2\norm{f-g}+\norm{U_h(t)g-U(t)g}.
+\]
+The two tail terms have the same size because both evolutions preserve norm. This coefficient two is carried into the cutoff-removal proof.
+
+\subsection{Full coefficient evolution}
+
+In namespace \path{KomorebiPhysics.Relativistic3DFullFourierEvolution}, \path{modewiseMap} first packages coordinatewise action on square-summable coefficients. The proof that the output remains square summable uses the modewise norm equality. The definitions \path{continuumCoeffPropagator} and \path{centralCoeffPropagator} are linear isometries on the full coefficient space. Surjectivity follows by applying the opposite-time operator, yielding the linear isometric equivalences \path{continuumCoeffUnitary} and \path{centralCoeffUnitary}.
+
+The finite approximation is \path{coeffTruncation S f}. It retains exactly the coefficients in a finite set \(S\). The statement \path{exists_coeffTruncation_approx} says that every square-summable coefficient field has such an approximation with arbitrarily small norm error. No extra regularity is required for that statement.
+
+The final theorem \path{fullCoeffPropagator_compactTime_converges} has the following mathematical quantifier structure:
+\[
+\begin{split}
+ &m\in\R,\quad T\ge0,\quad f\in\ell^2(\Z^3;\C^4),\\
+ &\forall\varepsilon>0,\quad\text{eventually as }h\to0^+,\\
+ &\hspace{2em}\forall |t|\le T,\qquad
+ \norm{U_{m,h}(t)f-U_m(t)f}<\varepsilon.
+\end{split}
+\]
+The source expresses ``eventually'' with $\forall^{\mathrm f}h\text{ in }\mathcal N[>](0:\R)$. It is strong convergence for each fixed state, uniform over the selected compact time interval. It is not convergence in operator norm over the unit ball of the full coefficient space.
+
+The order of choices explains the rate boundary. First choose the finite support to make the tail small. Next choose the spacing to control that finite core. The finite-core constant may grow when the support grows. Consequently, the theorem proves convergence for every \(\ell^2\) state without supplying a universal quadratic rate for arbitrary states.
+
+\subsection{Physical-space transport}
+
+Block 47 proves that the Fourier map is onto. In namespace \path{KomorebiPhysics.Relativistic3DTorusFourierEvolution}, the declarations \path{modeEmbed_torusCoeffL2}, \path{modeEmbed_linearIsometry_surjective}, and \path{modeEmbed_isHilbertSum} establish the synthesis and surjectivity needed for \path{torusFourierEquiv}.
+
+This is more than an isometric embedding. An embedding alone would leave a possible missing orthogonal sector in physical space. Surjectivity permits every torus \(L^2\) spinor to be transported to coefficient space and back.
+
+The physical evolutions are \path{continuumTorusUnitary} and \path{centralTorusUnitary}. Their Fourier formulas are proved by \path{torusFourierEquiv_continuumTorusUnitary_apply} and \path{torusFourierEquiv_centralTorusUnitary_apply}. The equality \path{norm_fullTorusResidual_eq_coeff} transfers the residual norm exactly. The final physical convergence statement is \path{fullTorusPropagator_compactTime_converges}, with the same mass, time-window, state, tolerance, and positive-spacing quantifiers as the coefficient theorem.
+
+\section{The unbounded coefficient Hamiltonian}
+
+Block 48 deliberately changes operator type. In namespace \path{KomorebiPhysics.Relativistic3DUnboundedDirac}, \path{diracCoeff} applies the continuum mode matrix at each coefficient. A square-summable input need not have a square-summable output after this operation. The maximal domain is therefore defined by the output condition
+\[
+ \mathcal D(H_m)
+ =\{f\in\ell^2(\Z^3;\C^4):(H_m(n)f_n)_n\in\ell^2\}.
+\]
+The declaration \path{continuumDiracDomain} makes this set a complex submodule. The definition \path{continuumDiracOutput} packages the output only after domain membership has been supplied. The resulting partial linear map is \path{continuumDiracPMap}.
+
+An input of subtype \path{(continuumDiracPMap m).domain} includes both its coefficient field and the proof that the output is square summable. This is the formal counterpart of writing \(f\in\mathcal D(H_m)\) in an unbounded-operator theorem. Omitting that subtype would change the mathematical claim.
+
+\subsection{Density, symmetry, and the adjoint}
+
+The declarations \path{single_mem_continuumDiracDomain} and \path{coeffTruncation_mem_continuumDiracDomain} put all finite-support coefficient fields in the domain. Together with the earlier finite-tail approximation theorem, they establish \path{continuumDiracDomain_dense}.
+
+The theorem \path{continuumDiracPMap_isFormalAdjoint} proves symmetry on the specified domain. The route to self-adjointness then has two separate inclusions. Symmetry and density give \path{continuumDiracPMap_le_adjoint}. To obtain the reverse inclusion, the proof tests an adjoint-domain vector against fields supported at a single Fourier label. The declaration \path{continuumDiracAdjoint_apply_coord} identifies each coefficient of the adjoint output with the same Dirac matrix action.
+
+Since the adjoint output is itself an element of coefficient \(\ell^2\), this coordinate identity places the input in the maximal domain. That is \path{continuumDiracAdjoint_domain_le}. The theorem \path{continuumDiracAdjoint_le} then establishes the reverse partial-map inclusion. Equality with the adjoint is recorded in \path{continuumDiracPMap_selfAdjoint}, and closedness follows in \path{continuumDiracPMap_isClosed}.
+
+The argument does not replace the adjoint domain by the original domain by definition. Its reverse inclusion is a proved statement. This is the essential distinction between a symmetric expression and a self-adjoint realization of an unbounded operator.
+
+\subsection{Finite Fourier approximation in the graph}
+
+The theorem \path{continuumDiracPMap_coeffTruncation} proves that truncation commutes with the multiplier. The statement \path{exists_finite_graph_approx} then takes \(f\in\mathcal D(H_m)\) and \(\varepsilon>0\) and produces one finite set \(S\) satisfying both
+\[
+ \norm{f-P_Sf}<\varepsilon,
+ \qquad
+ \norm{H_mf-H_mP_Sf}<\varepsilon.
+\]
+The same truncation controls the state and its operator image. Separate approximations with unrelated supports would not state this result.
+
+This is the finite Fourier graph-approximation property underlying the graph-core interpretation. It does not assert graph convergence of a different family of lattice generators. Here the operator is fixed, and its domain vectors are approximated by finite Fourier fields.
+
+\section{The exact weighted domain and physical Hamiltonian}
+
+Block 49 works in namespace \path{KomorebiPhysics.Relativistic3DWeightedDomain}. Its first declarations expose the energy hidden in the maximal-domain definition. The function \path{modeEnergySq} is
+\[
+ E_m(n)^2=m^2+|k_n|^2.
+\]
+The theorem \path{continuumHilbertModeOperator_sq} transports the earlier Clifford-square identity to the Hilbert mode operator. Combining that identity with modewise symmetry gives \path{norm_continuumHilbertModeOperator_sq}:
+\[
+ \norm{H_m(n)v}^2
+ =\bigl(m^2+|k_n|^2\bigr)\norm{v}^2.
+\]
+The function \path{weightedModeTerm} is exactly the right-hand side with \(v=f_n\). Thus \path{mem_continuumDiracDomain_iff_summable_weighted} identifies the maximal domain with summability of the modal energy.
+
+\subsection{Why the domain is independent of mass}
+
+The ambient type has already guaranteed
+\[
+ \sum_{n\in\Z^3}\norm{f_n}^2<\infty.
+\]
+For any fixed real mass, the series \(m^2\sum_n\norm{f_n}^2\) is therefore finite. The remaining issue is the momentum-weighted series. The source formalizes this through \path{summable_weighted_iff_momentum} and \path{summable_h1_iff_momentum}.
+
+The definition \path{h1ModeTerm} uses the inhomogeneous weight \(1+|k_n|^2\). Consequently, \path{mem_continuumDiracDomain_iff_summable_h1} proves
+\[
+ f\in\mathcal D(H_m)
+ \quad\Longleftrightarrow\quad
+ \sum_{n\in\Z^3}(1+|k_n|^2)\norm{f_n}^2<\infty.
+\]
+This is the exact first-order Fourier condition. Calling it the first-order Fourier-Sobolev domain describes that explicit characterization. The formal statement uses \path{Summable} and \path{h1ModeTerm}, rather than an identification with every possible external implementation of a Sobolev space.
+
+The theorem \path{mem_continuumDiracDomain_iff_mass} states equality of membership for any two real masses. It covers zero mass as well. The conclusion concerns the domain, not equality of the two Hamiltonians or their energy values.
+
+\subsection{Conjugation includes the domain}
+
+The physical domain is defined by \path{physicalDiracDomain} as the preimage of the coefficient domain under the Fourier equivalence. The map \path{physicalToCoeffDomain} retains the membership proof while transporting a physical-domain vector into the coefficient domain. The definition \path{physicalDiracPMap} then gives the physical partial operator
+\[
+ H_m^{\mathrm{phys}}=\mathcal F^{-1}H_m\mathcal F,
+ \qquad
+ \mathcal D(H_m^{\mathrm{phys}})
+ =\mathcal F^{-1}\mathcal D(H_m).
+\]
+This formula refers to a partial operator with a transported domain. It is not an everywhere-defined bounded conjugation.
+
+The declarations \path{torusFourierEquiv_physicalDiracPMap_apply} and \path{physicalDiracPMap_apply_coeff} prove exact intertwining. The theorem \path{mem_physicalDiracDomain_iff_summable_h1} gives the physical statement
+\[
+ f\in\mathcal D(H_m^{\mathrm{phys}})
+ \quad\Longleftrightarrow\quad
+ \sum_{n\in\Z^3}(1+|2\pi n|^2)\norm{\widehat f(n)}^2<\infty.
+\]
+All Fourier coefficients here are those of the checked torus Fourier equivalence.
+
+\subsection{Self-adjointness in physical space}
+
+Density is \path{physicalDiracDomain_dense}. Symmetry is \path{physicalDiracPMap_isFormalAdjoint}. The proof of \path{physicalDiracAdjoint_domain_le} Fourier-transforms a vector in the physical adjoint domain and constructs the corresponding coefficient adjoint witness. The coefficient-domain theorem from Block 48 then applies. Fourier transport returns the resulting membership proof to physical space.
+
+This argument produces the reverse adjoint-domain inclusion needed for \path{physicalDiracAdjoint_le}. Combining it with \path{physicalDiracPMap_le_adjoint} proves \path{physicalDiracPMap_selfAdjoint}. The theorem \path{physicalDiracPMap_isClosed} records closedness.
+
+Finally, \path{norm_physicalDiracPMap_sq_eq_tsum_weighted} states the exact energy sum for a physical-domain vector:
+\[
+ \norm{H_m^{\mathrm{phys}}f}^2
+ =\sum_{n\in\Z^3}\bigl(m^2+|2\pi n|^2\bigr)
+       \norm{\widehat f(n)}^2.
+\]
+The related coefficient-space identity is \path{norm_continuumDiracPMap_sq_eq_tsum_weighted}. Both statements require a domain vector. Their series are justified by the domain condition, not by a formal rearrangement of a potentially divergent expression.
+
+\section{Verification records and the trust boundary}
+
+The v0.49.0 production receipt records Lean 4.34.0-rc2, compiler commit
+\begin{quote}\small\path{6a10ac8c22beadecabdbb0919c2b50214762f91d}\end{quote}
+and Mathlib revision
+\begin{quote}\small\path{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{quote}
+The recorded platform is Linux x86\_64. The supplied third-party notice states that the compiler, Mathlib, and their dependencies are external pinned software, not included in the Lean source package.
+
+\begin{longtable}{@{}p{0.43\textwidth}p{0.50\textwidth}@{}}
+\toprule
+Recorded gate & v0.49.0 result\\
+\midrule
+\endhead
+Production module import-closure build & Pass, 3,064 jobs.\\
+Clean-stage module import-closure build & Pass, 3,064 jobs.\\
+Exact final source-archive replay & Pass, 3,064 jobs.\\
+Warning-as-error source compilation & Pass.\\
+Block 49 API checks & 40 declarations checked.\\
+Block 49 theorem and lemma axiom audit & 30 declarations checked.\\
+New negative controls & Three correctly rejected.\\
+Immediate parent Lean files & 905 compared and byte-preserved.\\
+Final Lean/config identity & 919 files, as recorded by the handoff.\\
+Recorded cumulative inventory & 147 active mathematical modules, 3,920 named declarations, 2,968 theorem declarations, 207 negative controls.\\
+\bottomrule
+\end{longtable}
+
+The final-archive replay record identifies the source archive with SHA-256
+\begin{quote}\small
+\path{413b107ea21130ce45ff6ae261263d3a326e63047dfe1d9a389543f0928891aa}.
+\end{quote}
+It records 5,452 internal checksum checks without mismatches, no unsafe paths, and no CRC errors. These archive checks address packaging identity and integrity. They do not replace the proof checks.
+
+For the thirty new theorem or lemma declarations, the recorded axiom set is limited to \path{Classical.choice}, \path{Quot.sound}, and \path{propext}. The new-source scan reports zero occurrences counted as \path{sorry}, \path{admit}, \path{native_decide}, \path{unsafe}, or a custom axiom. The scope of that new-source scan should not be enlarged into an assertion that every dependency was rebuilt and audited from first principles. The pinned compiler and imported library environment remain part of the trust boundary.
+
+The negative controls try three invalid claims: that two physical mass domains differ, that zero lies outside the physical domain, and that the constructed physical operator is not self-adjoint. Their rejection checks the intended statements and hypotheses at specific boundaries. It is not an exhaustive search for all possible specification mistakes.
+
+The production receipt also retains failed attempts. Dependency builds exceeding an external command window were resumed and were not counted as passes. An early physical-adjoint draft failed during Fourier inverse simplification and subtype coercion. An API generation script failed with a \path{NameError} and produced no evidence. Only the repaired, completed gates support the reported release result.
+
+\subsection{Which files govern the current status}
+
+The versioned files \path{Komorebi_Physics_v0.49.0_RESULT.md}, \path{Komorebi_Physics_Block49_FINAL_STATUS.json}, and the v0.49.0 production, fresh, and final-archive replay receipts state the historical Block 49 frontier. The outer complete-handoff README describes that checkpoint and supplies its historical replay commands.
+
+Several generic files inside the cumulative source archive remain historical. Its \path{README.md}, \path{START_HERE.md}, and \path{HANDOFF_MANIFEST.json} describe Block 45. Its generic \path{RESULT.md} describes Block 48. Its \path{lakefile.toml} retains the package version 0.48.0. Its generic \path{declaration_inventory.json} contains 142 modules and 3,718 declarations through Block 43. These files should not be used alone to infer that the later verified blocks are absent.
+
+Conversely, their older statements should not silently be rewritten into new verification evidence. This editorial edition leaves the inherited source unchanged and records the discrepancy. The main aggregate \path{KomorebiPhysics.lean} imports through the Block 47 torus evolution module and does not import the Block 48 and 49 modules. The official Block 49 module target is therefore the relevant entrypoint for the current endpoint. The receipts reviewed here do not establish a fresh successful default-root build. Nor does this companion assert that an older root-build failure has been reproduced in the current editorial session.
+
+\section{Replaying the recorded endpoint}
+
+The outer complete-handoff README supplies the following commands. They are reproduced without adding a new verification procedure. Run them from an extracted source root after attaching the exact pinned portable Lean and Mathlib environment.
+
+\begin{quote}\small
+\begin{Verbatim}[fontsize=\small,breaklines=true,breakanywhere=true]
+lake build KomorebiPhysics.Relativistic3DWeightedDiracDomain
+lake env lean -DwarningAsError=true KomorebiPhysics/Relativistic3DWeightedDiracDomain.lean
+lake env lean -DwarningAsError=true CheckBlock49API.lean
+lake env lean -DwarningAsError=true AuditBlock49.lean
+\end{Verbatim}
+\end{quote}
+
+The first command builds the module import closure. The second checks the source with warnings treated as errors. The API file checks the forty new named declarations, and the audit file prints the axiom dependencies of the thirty theorem and lemma declarations. The recorded release procedure also includes the isolated negative controls, parent preservation, and archive integrity checks. The four commands above are the documented local entrypoints, not a claim that those additional gates have been rerun by this editorial edition.
+
+The source ZIP alone is not a complete offline runtime. An offline replay requires the pinned compiler and all corresponding dependency sources and caches to have been restored beforehand. The preceding generator replay recovered the seven-part offline runtime, checked its recorded combined digest, and used its exact dependency pins. The runtime itself remains an external dependency rather than part of the publication ZIP. Substituting an arbitrary later Lean or Mathlib version would be a compatibility migration and would require its own validation record.
+
+\section{The checked strong generator}
+
+The module \path{KomorebiPhysics/Relativistic3DGeneratorBridge.lean} imports the preserved physical Hamiltonian and works with its actual coefficient and torus types. It does not replace the infinite mode space by a finite test array. Its namespace is \path{KomorebiPhysics.Relativistic3DGeneratorBridge}. The source contains thirty-seven named theorems and two definitions, in addition to a local scalar instance. Compiler-generated auxiliary declarations are not counted as separate mathematical results.
+
+\subsection{The full-domain argument}
+
+The central statements have the following meaning. Let $U_m(t)$ be the previously constructed physical torus group and let $H_m$ be the existing partial Hamiltonian. Then
+\[
+ \frac{d}{dt}\bigg|_{t=0} U_m(t)f\text{ exists in }L^2
+ \quad\Longleftrightarrow\quad f\in\mathcal D(H_m),
+ \qquad
+ \frac{d}{dt}\bigg|_{t=0}U_m(t)f=-iH_mf.
+\]
+The domain on the right is the explicit first-order Fourier domain. No second Hamiltonian moment is assumed. The source also proves strong continuity for every $L^2$ field, not just fields in the operator domain.
+
+The proof begins with the derivative of the existing bounded exponential on one four-spinor mode. A mean-value estimate bounds each difference quotient by the norm of that mode's Hamiltonian output. Square-summable domination then promotes the coordinate derivatives to a derivative in the full coefficient Hilbert space. This proves the forward domain inclusion. For the converse, a continuous coordinate evaluation maps an assumed Hilbert derivative to its uniquely determined modal derivative. Multiplication by $i$ recovers a square-summable Hamiltonian output. Thus differentiability cannot silently enlarge the maximal domain.
+
+The same fixed Fourier equivalence transports the argument to physical fields, including their domain witnesses. Applying the group law to a shifted orbit gives domain invariance. Uniqueness of derivatives then gives Hamiltonian commutation. In particular,
+\[
+ U_m(t)\mathcal D(H_m)\subseteq\mathcal D(H_m),\qquad
+ H_mU_m(t)f=U_m(t)H_mf,\qquad
+ \frac{d}{dt}U_m(t)f=-iH_mU_m(t)f.
+\]
+Using the opposite time gives the reverse domain inclusion as an ordinary consequence of the checked group law. The derivative is continuous, and its norm is the constant $\norm{H_mf}$. The corresponding Hamiltonian-output norm is preserved by evolution.
+
+\subsection{Declaration correspondence}
+
+\begin{longtable}{@{}p{0.52\textwidth}p{0.41\textwidth}@{}}
+\toprule
+Declaration in the generator namespace & Mathematical role\\
+\midrule
+\endhead
+\path{coeff_tendsto_zero}, \path{coeff_tendsto} & Vector-valued square-summable domination.\\[3pt]
+\path{mode_orbit_hasDerivAt}, \path{mode_increment_bound} & Exact modal derivative and its output-dependent bound.\\[3pt]
+\path{continuum_orbit_continuous} & Strong continuity on all coefficient $L^2$.\\[3pt]
+\path{continuum_orbit_hasDerivAt} & Full-domain strong derivative at every time.\\[3pt]
+\path{mem_domain_of_hasDerivAt_zero} & Converse generator-domain inclusion.\\[3pt]
+\path{differentiableAt_zero_iff_mem_domain} & Exact coefficient generator domain.\\[3pt]
+\path{physical_differentiableAt_zero_iff_summable_h1} & Exact physical differentiability criterion in Fourier weights.\\[3pt]
+\path{physical_deriv_zero} & Generator value $-iH_m$ for the actual partial operator.\\[3pt]
+\path{physical_domain_invariant}, \path{physicalEvolvedDomain} & Evolution with an explicit domain witness.\\[3pt]
+\path{physical_hamiltonian_commutes} & Domain-correct Hamiltonian commutation.\\[3pt]
+\path{physical_schrodinger_hasDerivAt} & Strong physical Schr\"odinger equation.\\[3pt]
+\path{physical_velocity_continuous}, \path{physical_graph_energy_conserved} & Continuous velocity and conserved output norm.\\
+\bottomrule
+\end{longtable}
+
+The declaration inventory records the complete list, source locations, and source digest. The four cutoff commutation results remain useful finite identities, but they are not substituted for the Hilbert-space derivative proof.
+
+\subsection{Replay and trust boundary}
+
+The preceding generator checkpoint records a 3,066-job import-closure build and a 3,064-job baseline target replay. Those job totals include dependency traversal and cached products. They do not mean that the compiler or all of Mathlib was rebuilt from source. The compiler and Mathlib pins are the same as those stated above. The current centered-extension checks are recorded separately below.
+
+The generator source is checked with warnings treated as errors. Separate gates check its named API, print every named declaration's axiom dependencies, exercise positive API examples, and reject altered interfaces with the wrong sign, a missing imaginary unit, or an omitted domain witness. A deliberately inserted proof placeholder is also rejected. These are targeted mutation controls, not an exhaustive specification search. The axiom output is restricted to \path{propext}, \path{Classical.choice}, and \path{Quot.sound}.
+
+A separate-path copy of the exact source is checked without importing the compiled generator module. An imported-environment \path{leanchecker} run replays the new compiled declarations in the same Lean kernel. This is a check against environment manipulation, not an independent proof assistant, and it does not replay all imported mathematics from an empty environment. The earlier unsuccessful proof attempts are retained separately from the accepted results.
+
+The current replay instructions are in \path{formal/continuum/README.md}. They use the supplied runner and exact pinned external runtime, and write to a new verification directory. The historical generator and baseline receipts remain unchanged. The old aggregate project root is not used to claim a fresh verification of every historical physics module.
+
+\input{lean/centered_body.tex}
+
+\section{Remaining mathematical and physical comparisons}
+
+The chapter \emph{The Dirac Group and Its Generator} proves the spectral-exponential identity by the spectral theorem and uniqueness of a strongly continuous unitary group with the specified generator. The checked full-domain derivative and generator value supply the central identification, but the abstract spectral-functional-calculus expression itself has not been linked to a separate Lean spectral-calculus API. No such formal linkage is claimed here.
+
+The checked centered Fourier family acts on a fixed infinite coefficient space. A changing finite spatial lattice remains a separate comparison problem requiring sampling, interpolation, aliasing control, and compatible domains. The graph, resolvent, and third-order moment theorems do not supply those identifications by themselves.
+
+Regular-connection link estimates also remain to be transported into a complete background-coupled Hamiltonian and evolution. Dynamical gauge fields require additional degrees of freedom and a Gauss constraint. Gravitational dynamics, cosmological production, and empirical predictions do not follow from the checked free-matter construction. Declaration totals do not measure completion of those physical problems.
+
+
+\section{Historical block index}
+
+The index below is a compact navigation aid for the cumulative source. It is based on the block proof guides and source maps. Where an individual guide is absent, it uses the corresponding source module description and inventory origin. An entry identifies the work undertaken at a block, including corrections and explicit hypotheses. It is not a claim that every subject named in the historical master is fully formalized.
+
+\begin{longtable}{@{}p{0.065\textwidth}p{0.865\textwidth}@{}}
+\toprule
+Block & Recorded contribution\\
+\midrule
+\endhead
+1 & Finite projector atlases, state and operator reconstruction, packet currents, coarse balance, and exact hypothesis-sensitive examples.\\[2pt]
+2 & Moving frames and whole-object deformation under explicit differentiability and invertibility assumptions.\\[2pt]
+3 & Nonlinear flow identities along supplied trajectories, refinement towers, mixed-state transfer, and source balance.\\[2pt]
+4 & Finite tensor atlases, reduced states, partial traces, entropy and moment derivatives under their stated positivity hypotheses.\\[2pt]
+5 & Lindblad jump formulas, coherence loss, population balance, and detailed-balance statements.\\[2pt]
+6 & Exact refinement cancellation and analytic error-control estimates.\\[2pt]
+7 & Positive, overlapping, and moving effect atlases.\\[2pt]
+8 & Parseval channels, finite dilation constructions, and current gauge.\\[2pt]
+9 & Explicit domains, countable continuity, and a genuine unbounded spectral model.\\[2pt]
+10 & Bounded spectral operators and topology-specific truncation.\\[2pt]
+11 & Constructed spectral solutions and the differentiability domain.\\[2pt]
+12 & Infinite coarse cells, domain control, and current regrouping.\\[2pt]
+13 & Finite characters, infinite residue masks, and maximal ladder domains.\\[2pt]
+14 & Domain-correct resolvent commutators and nonreducing packets.\\[2pt]
+15 & Infinite reconstruction in strong, compact, and Hilbert--Schmidt settings.\\[2pt]
+16 & Finite pointwise derivation no-go and resolution through corner algebras.\\[2pt]
+17 & Exact one-dimensional discrete relativistic sector.\\[2pt]
+18 & One-dimensional shell asymptotics, exact group velocity, and a correction certificate.\\[2pt]
+19 & Exact one-dimensional continuum dispersion and group-velocity limit.\\[2pt]
+20 & Three-dimensional Clifford walk and doubled spectrum.\\[2pt]
+21 & Three-dimensional continuum correction, velocity, and anisotropy.\\[2pt]
+22 & Moving-momentum Lorentz-defect calculation.\\[2pt]
+23 & Four-spinor Clifford transport with genuine unit-circle phases. The current inventory records this source as the U(1) repair.\\[2pt]
+24 & Exact refinement towers and an abstract complete-metric limit from summable reconstruction defects.\\[2pt]
+25 & Hilbert refinement with corrected unit-circle phases and a concrete exact cylinder tower.\\[2pt]
+26 & Geometric subdivision of an edge into two half-edges and the associated directional compatibility.\\[2pt]
+27 & Cubical refinement, local path compatibility, and curvature-controlled gluing defects.\\[2pt]
+28 & Full three-axis geometric refinement of the ordered walk and a continuous-linear product-defect calculus.\\[2pt]
+29 & Separation of straight-edge compatibility from curvature, including a flat-but-incompatible counterexample.\\[2pt]
+30 & Continuous-linear finite-lattice realization and separate edge and curvature budgets.\\[2pt]
+31 & Euclidean Hilbert norm realization, constant-one directional mismatch estimate, and a sufficient dyadic summability regime.\\[2pt]
+32 & Full seven-factor Hilbert defect bound and the independent cubical path-swap contribution.\\[2pt]
+33 & Affine abelian connection links, exact affine plaquette formulas, and quadratic curvature bounds.\\[2pt]
+34 & Coordinate-regular abelian connections, exact line-integral composition, and quadratic derivative-envelope bounds.\\[2pt]
+35 & Unit-volume finite-cell interpolation into \(L^2\), adjoint averaging, and best approximation.\\[2pt]
+36 & Weighted octree reconstruction and density in the address-continuum \(L^2\) space.\\[2pt]
+37 & Cartesian binary coding of the octree continuum.\\[2pt]
+38 & Binary pushforward measure and Euclidean cube volume.\\[2pt]
+39 & Adjoint-transported Euclidean levels and strong convergence of orthogonal projections.\\[2pt]
+40 & Concrete dyadic boxes, almost-everywhere cylinder identification, and equality of concrete and transported levels.\\[2pt]
+41 & Fixed-mode centered Dirac generator consistency and exact symbol-square identities.\\[2pt]
+42 & Finite Fourier packet orthogonality, Parseval identities, and \(L^2\) generator consistency.\\[2pt]
+43 & Bounded mode exponentials, group identities, and fixed-time finite-packet convergence.\\[2pt]
+44 & Hilbert mode self-adjointness and exact propagator unitarity.\\[2pt]
+45 & Compact-time quadratic bounds for fixed modes and finite packets.\\[2pt]
+46 & Full coefficient-space unitary evolution and compact-time strong convergence for every square-summable field.\\[2pt]
+47 & Surjective torus Fourier equivalence and physical-space evolution and convergence.\\[2pt]
+48 & Maximal unbounded coefficient Hamiltonian, self-adjointness, closedness, and finite Fourier graph approximation.\\[2pt]
+49 & Exact first-order weighted Fourier domain, mass independence, and the self-adjoint closed physical torus Hamiltonian.\\
+\bottomrule
+\end{longtable}
+
+The earlier unbounded spectral and resolvent constructions are useful mathematical infrastructure. Their presence does not automatically supply the later missing identification for the specific free Dirac operator. Reuse requires an explicit theorem connecting the particular types, domains, and hypotheses. Keeping that connection visible is the purpose of the source-to-mathematics crosswalk.

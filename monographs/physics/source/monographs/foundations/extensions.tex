@@ -1,0 +1,507 @@
+\section{Positive effects and sharp dilation}
+\label{sec:foundation-effects}
+
+A sharp packet atlas assigns mutually orthogonal subspaces to its labels. Many useful descriptions overlap. A detector may respond partly to several channels, and a frame may analyze the same component more than once. The correct replacement is a positive partition of the identity. Its weights are expectation values, and its channel vectors live in a larger space where orthogonality can be restored.
+
+Throughout this chapter, inner products are conjugate linear in the first variable. A bounded state generator is denoted by $K$, with $K^*=-K$. When a Hamiltonian is present, $K=-iH$. The receiving label is written first in $J_{ba}$.
+
+\begin{definition}[Finite effect atlas]
+Let $\HH$ be a complex Hilbert space and let $A$ be a finite label set. An effect atlas is a family of bounded operators satisfying
+\[
+ F_a=F_a^*\geq0,\qquad \sum_{a\in A}F_a=I.
+\]
+Its weight in a state $\psi$ is $p_a=\inner{\psi}{F_a\psi}$. The partition identity implies $0\leq F_a\leq I$, so $p_a\geq0$ and $\sum_a p_a=\norm\psi^2$.
+\end{definition}
+
+For a sharp atlas, $F_a=P_a$ and $p_a=\norm{P_a\psi}^2$. In general, $p_a$ is not $\norm{F_a\psi}^2$. The latter quantity is $\inner{\psi}{F_a^2\psi}$ and therefore loses precisely the positive defect $F_a-F_a^2$.
+
+\begin{example}[Overlapping two-channel weights]
+On $\C^2$, take
+\[
+ F_+=\begin{pmatrix}4/5&0\\0&1/5\end{pmatrix},\qquad
+ F_-=\begin{pmatrix}1/5&0\\0&4/5\end{pmatrix},\qquad \psi=\binom10.
+\]
+The true weights are $4/5$ and $1/5$. Squared effect-vector norms would instead give $16/25$ and $1/25$, whose sum is $17/25$. The state still satisfies $F_+\psi+F_-\psi=\psi$, but its two summands are not orthogonal. Reconstruction and an orthogonal decomposition are different assertions.
+\end{example}
+
+\subsection{Continuity without orthogonality}
+
+Suppose that a differentiable state curve satisfies $\dot\psi=K\psi$. Define
+\begin{equation}
+ J^{F}_{ba}=\operatorname{Re}\inner{F_b\psi}{KF_a\psi}
+             -\operatorname{Re}\inner{F_a\psi}{KF_b\psi}.
+ \label{eq:foundation-effect-current}
+\end{equation}
+This current is antisymmetric directly from its definition. Skew-adjointness also gives
+\[
+ J^F_{ba}=2\operatorname{Re}\inner{F_b\psi}{KF_a\psi}.
+\]
+The same bilinear expression occurs for sharp packets, but its interpretation now concerns expectation weights.
+
+\begin{proposition}[Effect continuity]
+Under these hypotheses,
+\[
+ \dot p_b=\sum_a J^F_{ba},\qquad \sum_b\dot p_b=0.
+\]
+If $F_b=F_b(t)$ is differentiable in operator norm, the first identity becomes
+\[
+ \dot p_b=s_b+\sum_a J^F_{ba},\qquad
+ s_b=\inner{\psi}{\dot F_b\psi},\qquad \sum_b s_b=0.
+\]
+\end{proposition}
+\begin{proof}
+Self-adjointness of $F_b$ and differentiation give
+\[
+ \dot p_b=2\operatorname{Re}\inner{F_b\psi}{K\psi}
+\]
+for a fixed effect. Summing the two terms of \eqref{eq:foundation-effect-current} over $a$ and using $\sum_aF_a=I$ gives
+\[
+ \sum_aJ^F_{ba}=\operatorname{Re}\inner{F_b\psi}{K\psi}
+       -\operatorname{Re}\inner{\psi}{KF_b\psi}.
+\]
+The second real part is the negative of the first. The moving case adds the product-rule term $s_b$. Its total is zero because $\sum_b\dot F_b=0$. Antisymmetry cancels the finite double sum of currents.
+\end{proof}
+
+If a map $r:A\to B$ groups the labels, the coarse effect is $G_\beta=\sum_{r(a)=\beta}F_a$. Bilinearity proves
+\[
+ p^{\rm c}_\beta=\sum_{r(a)=\beta}p_a,\qquad
+ J^{\rm c}_{\beta\alpha}
+ =\sum_{\substack{r(b)=\beta\\r(a)=\alpha}}J^F_{ba}.
+\]
+No orthogonality is needed for this finite aggregation law. A divergence-free antisymmetric array may also be added to $J^F$ without changing its row sums. Thus the balance law determines the change in weight, while the generator-induced formula selects a particular representative of the current.
+
+\subsection{Analysis, synthesis, and the range projection}
+
+Choose Hilbert spaces $\KK_a$ and bounded maps $V_a:\HH\to\KK_a$ such that
+\[
+ \sum_aV_a^*V_a=I.
+\]
+The combined analysis map $V:\HH\to\KK=\bigoplus_a\KK_a$ is $V\psi=(V_a\psi)_a$. Its adjoint is synthesis, $V^*(y_a)_a=\sum_aV_a^*y_a$. Consequently
+\[
+ V^*V=I,\qquad R=VV^*,\qquad R^*=R^2=R.
+\]
+Here $R$ projects onto the closed range of the isometry $V$. The range need not fill $\KK$. If $\Pi_a$ is the coordinate projector, the compressed effect is
+\[
+ F_a=V^*\Pi_aV=V_a^*V_a,\qquad
+ p_a=\norm{V_a\psi}^2=\norm{\Pi_aV\psi}^2.
+\]
+Every finite effect atlas admits this construction by taking $\KK_a=\HH$ and $V_a=F_a^{1/2}$. Positivity supplies the bounded positive square root. No choice of a measurement outcome or post-measurement state is being made by this algebraic dilation.
+
+For $X\in\mathcal B(\HH)$, its channel block is $X_{ba}^{V}=V_bXV_a^*$. Inserting the partition on both sides proves
+\begin{equation}
+ X=\sum_{a,b}V_b^*X_{ba}^{V}V_a.
+ \label{eq:foundation-channel-reconstruction}
+\end{equation}
+The lifted operator $\widetilde X=VXV^*$ is multiplicative on lifted operators, since $V^*V=I$. Its identity is $R$, not $I_{\KK}$. Conversely, compressing arbitrary ambient operators need not preserve multiplication:
+\begin{equation}
+ V^*ABV-(V^*AV)(V^*BV)=V^*A(I-R)BV.
+ \label{eq:foundation-compression-defect}
+\end{equation}
+This is the exact missing-range term. Setting $A=B=\Pi_a$ gives
+\begin{equation}
+ \inner{\psi}{(F_a-F_a^2)\psi}
+ =\norm{(I-R)\Pi_aV\psi}^2.
+ \label{eq:foundation-unsharpness}
+\end{equation}
+Thus the failure of an effect to be sharp measures how much its coordinate projection leaves the embedded physical range. This identity also proves $F_a-F_a^2\geq0$ directly.
+
+The dynamics respects the same construction. Put $\widetilde K=VKV^*$. It is skew-adjoint, and $\frac{d}{dt}V\psi=\widetilde K V\psi$. Moving adjoints across the inner product shows
+\[
+ 2\operatorname{Re}\inner{\Pi_bV\psi}{\widetilde K\Pi_aV\psi}
+ =2\operatorname{Re}\inner{F_b\psi}{KF_a\psi}=J^F_{ba}.
+\]
+The positive-effect current is therefore exactly the sharp current of this lifted flow evaluated on the embedded state. It is not obtained by treating arbitrary compression as an algebra homomorphism.
+
+\foundationfigure{08_positive_effects}{An explicit two-effect example with $F_+=\operatorname{diag}(4/5,1/5)$ and $F_-=I-F_+$. The square-root channel isometry preserves the effect probabilities in an enlarged sharp resolution.}
+
+
+
+\clearpage
+\section{Countable packets and the domain of a generator}
+\label{sec:foundation-domains}
+
+An infinite resolution introduces two separate limits. Packet vectors must reconstruct the state, and applying an unbounded operator to the partial reconstruction requires additional control. Writing an infinite sum of matrix blocks conceals this distinction unless the domain is stated first.
+
+Let $(P_a)_{a\in A}$ be a countable orthogonal family of bounded projections with strong sum $I$. For finite $F\subset A$, write $S_F=\sum_{a\in F}P_a$. Strong completeness means $S_Fx\to x$ for each fixed $x\in\HH$, over the directed set of finite subsets. Orthogonality gives
+\[
+ \norm{S_Fx}^2=\sum_{a\in F}\norm{P_ax}^2,\qquad
+ \sum_a\norm{P_ax}^2=\norm x^2.
+\]
+These are Hilbert-space statements. They contain no unbounded operator.
+
+Now let $H:D(H)\subset\HH\to\HH$ be a densely defined symmetric operator. To write $HP_a\psi$ for every domain state, require
+\begin{equation}
+ P_aD(H)\subset D(H).
+ \label{eq:foundation-domain-preserve}
+\end{equation}
+Define $\norm x_H^2=\norm x^2+\norm{Hx}^2$. A domain-compatible atlas is graph compatible when
+\begin{equation}
+ S_Fx\longrightarrow x\quad\text{in the graph norm for every }x\in D(H).
+ \label{eq:foundation-graph-compatible}
+\end{equation}
+Equivalently, both $S_Fx\to x$ and $HS_Fx\to Hx$ hold in $\HH$. The second convergence does not follow from the first for an unbounded $H$.
+
+\begin{example}[A small state can have a large generator image]
+On $\ell^2(\N_{\geq1})$, let $He_n=ne_n$ on its maximal domain. The finitely supported vectors $x_N=e_N/N$ satisfy $\norm{x_N}=1/N\to0$, while $\norm{Hx_N}=1$. This gives a direct reason to track the generator tail in addition to the state tail. It does not contradict closedness, because $Hx_N=e_N$ has no norm limit.
+\end{example}
+
+\subsection{A maximal diagonal domain}
+
+Let $(\lambda_n)$ be any real sequence and define
+\[
+ D(H_\lambda)=\left\{c\in\ell^2:
+       \sum_n\lambda_n^2|c_n|^2<\infty\right\},\qquad
+ (H_\lambda c)_n=\lambda_nc_n.
+\]
+The operator is dense because it contains every finitely supported sequence. It is symmetric by the reality of the multipliers. Its domain is maximal for this coordinate action.
+
+\begin{proposition}[Self-adjointness of the diagonal realization]
+The operator $H_\lambda$ is self-adjoint. Its coordinate cutoffs converge in graph norm on $D(H_\lambda)$.
+\end{proposition}
+\begin{proof}
+If $y\in D(H_\lambda^*)$ and $H_\lambda^*y=z$, testing the adjoint identity against $e_n$ gives $z_n=\lambda_ny_n$. Since $z\in\ell^2$, the sequence $y$ belongs to $D(H_\lambda)$. Symmetry gives the opposite inclusion of domains, and the actions agree there. For $S_Nc=\sum_{n\leq N}c_ne_n$,
+\[
+ \norm{c-S_Nc}_{H_\lambda}^2
+ =\sum_{n>N}(1+\lambda_n^2)|c_n|^2\longrightarrow0.
+\]
+\end{proof}
+
+For positive $\lambda_n$, the quadratic-form domain instead uses $\sum_n\lambda_n|c_n|^2<\infty$. This is the domain of $H_\lambda^{1/2}$, not generally the domain of $H_\lambda$. With $\lambda_n=n$ and $c_n=n^{-s}$, the three thresholds are
+\[
+ \begin{array}{c|c}
+ \text{membership}&\text{condition}\\ \hline
+ \ell^2&s>1/2\\
+ D(H_\lambda^{1/2})&s>1\\
+ D(H_\lambda)&s>3/2.
+ \end{array}
+\]
+Each equality case diverges harmonically. Thus a state with finite mean positive energy can still lack the Hilbert-space derivative required by the Schr\"odinger equation. The harmonic oscillator example has $\lambda_n=n+1/2$ for $n\geq0$ and the same asymptotic thresholds after replacing $n$ by $n+1$ in the coefficients.
+
+\foundationfigure[H]{10_weighted_domains}{For $He_n=ne_n$, $n\geq1$, coefficients $a_n=n^{-s}$ encounter three different thresholds: state norm, quadratic-form domain, and operator domain. The finite partial-sum curves illustrate the analytic $p$-series criteria.}
+
+\subsection{Countable continuity and the stronger scalar-row argument}
+
+Suppose a supplied curve $\psi(t)\in D(H)$ is differentiable as a curve in $\HH$ and satisfies $\dot\psi=-iH\psi$. For a domain-preserving atlas, put
+\[
+ p_b=\norm{P_b\psi}^2,\qquad
+ J_{ba}=2\operatorname{Im}\inner{P_b\psi}{HP_a\psi}.
+\]
+Symmetry gives $J_{ba}=-J_{ab}$. Differentiating the bounded projected norm gives
+\[
+ \dot p_b=2\operatorname{Im}\inner{P_b\psi}{H\psi}.
+\]
+Graph compatibility permits direct insertion of $HS_F\psi\to H\psi$. The formal development also proves a stronger statement for one receiving packet: symmetry moves $H$ onto that packet, so only the strong state sum is needed. Indeed,
+\[
+ \inner{P_b\psi}{HP_a\psi}=\inner{HP_b\psi}{P_a\psi},
+\]
+and the sum over $a$ converges to $\inner{HP_b\psi}{\psi}=\inner{P_b\psi}{H\psi}$. In fact the row is absolutely summable, since
+\begin{align*}
+ \sum_a\left|\inner{HP_b\psi}{P_a\psi}\right|
+ &=\sum_a\left|\inner{P_aHP_b\psi}{P_a\psi}\right|\\
+ &\leq\left(\sum_a\norm{P_aHP_b\psi}^2\right)^{1/2}
+       \left(\sum_a\norm{P_a\psi}^2\right)^{1/2}
+ =\norm{HP_b\psi}\norm\psi.
+\end{align*}
+Consequently $\dot p_b=\sum_aJ_{ba}$ without assuming graph compatibility. The two tail estimates describe the distinct arguments:
+\begin{align}
+ \left|\sum_{a\in F}J_{ba}-\dot p_b\right|
+ &\leq2\norm{P_b\psi}\norm{HS_F\psi-H\psi},\label{eq:foundation-graph-row}\\
+ \left|\sum_{a\in F}J_{ba}-\dot p_b\right|
+ &\leq2\norm{HP_b\psi}\norm{S_F\psi-\psi}.\label{eq:foundation-strong-row}
+\end{align}
+The first bound uses graph-action control. The second uses symmetry and a fixed receiving packet. Neither states that the entire double array $(J_{ba})$ is absolutely summable.
+
+\subsection{Infinite coarse cells}
+
+For a partition $A=\bigsqcup_{\alpha}C_\alpha$, the strong sum $Q_\alpha=\sum_{a\in C_\alpha}P_a$ is a bounded orthogonal projection. Its weight is always
+\[
+ \norm{Q_\alpha\psi}^2=\sum_{a\in C_\alpha}\norm{P_a\psi}^2.
+\]
+To define a coarse current with $HQ_\alpha\psi$, additionally require $Q_\alpha D(H)\subset D(H)$. Fine domain preservation alone does not state this infinite-cell property.
+
+Under this coarse-domain hypothesis, symmetry and the strong cell sums justify both iterated sums separately:
+\begin{align*}
+ J^{\rm c}_{\beta\alpha}
+ &=2\operatorname{Im}\inner{Q_\beta\psi}{HQ_\alpha\psi}\\
+ &=\sum_{b\in C_\beta}\left(\sum_{a\in C_\alpha}J_{ba}\right)
+ =\sum_{a\in C_\alpha}\left(\sum_{b\in C_\beta}J_{ba}\right).
+\end{align*}
+For example, first summing $a$ moves $H$ onto $P_b\psi$, then the outer sum pairs $\sum_bP_b\psi$ with the fixed vector $HQ_\alpha\psi$. The reverse order has its own symmetric argument. Flattening these expressions to a single unordered sum on $C_\beta\times C_\alpha$ requires joint summability. Equality of two justified iterated sums does not supply that hypothesis.
+
+For a simple warning, the antisymmetric scalar array with $a_{2n,2n+1}=1/n$, $a_{2n+1,2n}=-1/n$ for $n\geq1$, and all other entries zero has finite support in each row but infinite total absolute sum. This array is only a summation example, not an asserted physical realization of the current. It shows why rowwise convergence alone cannot authorize arbitrary rearrangement.
+
+The coarse balance is obtained by differentiating $\norm{Q_\beta\psi(t)}^2$, using the bounded coarse projector. There is no need to interchange an infinite sum of derivatives. Likewise, the total packet norm is identified with $\norm{\psi(t)}^2$ by Parseval before its conservation is established. The order of these arguments keeps the domain and summation obligations visible.
+
+
+
+\section{Constructing evolution and controlling truncation}
+\label{sec:foundation-spectral-evolution}
+
+A continuity theorem that assumes a differentiable solution does not construct one. For the real diagonal model, the construction is explicit and the precise differentiability domain can be proved. This supplies a complete small model in which the preceding distinctions can be inspected directly.
+
+For real $(\lambda_n)$ define
+\begin{equation}
+ (U(t)c)_n=e^{-it\lambda_n}c_n,\qquad c\in\ell^2.
+ \label{eq:foundation-spectral-flow}
+\end{equation}
+The modulus of every multiplier is one. Hence $U(t)$ is a unitary operator, $U(t+s)=U(t)U(s)$, and $U(-t)=U(t)^*$. For each fixed state it is strongly continuous. To prove the latter claim, split $c$ into a finite head and a small $\ell^2$ tail. The finite head is continuous coordinatewise, while the norm of the difference on the tail is at most twice its initial norm.
+
+\begin{proposition}[The exact differentiability domain]
+The orbit $t\mapsto U(t)c$ is differentiable in $\ell^2$ at one, equivalently every, time precisely when $c\in D(H_\lambda)$. On that domain,
+\[
+ \frac{d}{dt}U(t)c=-iH_\lambda U(t)c,
+ \qquad H_\lambda U(t)c=U(t)H_\lambda c.
+\]
+\end{proposition}
+\begin{proof}
+If $c\in D(H_\lambda)$, each coordinate difference quotient tends to $-i\lambda_ne^{-it\lambda_n}c_n$. The elementary bound $|e^{-iu}-1|\leq|u|$ bounds the quotient magnitude by $|\lambda_nc_n|$. The squared difference from its limit is bounded by $4\lambda_n^2|c_n|^2$, a summable sequence. Dominated convergence therefore gives convergence in $\ell^2$.
+
+Conversely, if an $\ell^2$ derivative $d$ exists, bounded coordinate evaluation gives
+\[
+ d_n=-i\lambda_ne^{-it\lambda_n}c_n.
+\]
+Since $d\in\ell^2$, one has $\sum_n\lambda_n^2|c_n|^2<\infty$. Commutation and domain preservation follow from the same coordinate formula.
+\end{proof}
+
+The constructed orbit is the unique global domain-valued solution with a given domain initial state. If two supplied solutions have the same initial value, their difference $w$ satisfies $\dot w=-iH_\lambda w$. Symmetry gives
+\[
+ \frac{d}{dt}\norm w^2
+ =2\operatorname{Re}\inner{w}{-iH_\lambda w}=0.
+\]
+The initial zero norm remains zero. This uniqueness proof extends to supplied solutions of a symmetric operator, but the proof of existence above uses the explicit real diagonal construction.
+
+For domain states, the orbit also satisfies the quantitative bound
+\[
+ \norm{U(t)c-U(s)c}\leq|t-s|\norm{H_\lambda c}.
+\]
+The constant belongs to the state. It is not an operator-norm bound for the unbounded generator. Spectral coordinate populations remain constant and their interpacket currents vanish. A different domain-preserving atlas can mix spectral coordinates and carry nonzero currents under the same evolution.
+
+\foundationfigure[H]{11_graph_tails}{For the normalized state proportional to $n^{-2}$ and $He_n=ne_n$, the state tail and generator tail decay at different rates. Graph control retains both contributions.}
+
+\subsection{Uniformity in time for a fixed state}
+
+Coordinate cutoffs commute with $U(t)$. Thus for every $c\in\ell^2$,
+\begin{equation}
+ \norm{U(t)c-S_NU(t)c}=\norm{c-S_Nc}.
+ \label{eq:foundation-time-tail}
+\end{equation}
+The right side tends to zero independently of $t\in\R$. This gives uniform convergence over all times for each fixed initial state. For $c\in D(H_\lambda)$, differentiating the finite cutoff orbit and the full orbit gives a second exact identity:
+\begin{equation}
+ \norm{\frac{d}{dt}U(t)c-
+       \frac{d}{dt}S_NU(t)c}
+ =\norm{H_\lambda c-S_NH_\lambda c}.
+ \label{eq:foundation-velocity-tail}
+\end{equation}
+This tail also tends to zero uniformly in time. State convergence alone does not imply this velocity convergence.
+
+\begin{example}[Strong convergence with no differentiable limiting orbit]
+For $\lambda_n=n$, take $c_n=C/n$ with $C=(\sum_{n\geq1}n^{-2})^{-1/2}$. This is a normalized $\ell^2$ state outside $D(H_\lambda)$. Every finite cutoff orbit is differentiable, and \eqref{eq:foundation-time-tail} gives uniform convergence to the full orbit. Yet the full orbit is nowhere differentiable in $\ell^2$, by the preceding proposition. In fact the norm of the cutoff velocity is $C\sqrt N$, which diverges.
+\end{example}
+
+For the faster normalized tail $c_n=C/n^2$, both errors are controlled:
+\[
+ \norm{c-S_Nc}^2=C^2\sum_{n>N}n^{-4},\qquad
+ \norm{H_\lambda c-S_NH_\lambda c}^2=C^2\sum_{n>N}n^{-2}.
+\]
+The state tail is $O(N^{-3/2})$ in norm, while the velocity tail is $O(N^{-1/2})$. A small state error can therefore coexist with a much larger derivative error even inside the true domain.
+
+
+
+\section{Which topology does reconstruction use?}
+\label{sec:foundation-reconstruction-topologies}
+
+Let $S_N$ be orthogonal projections tending strongly to $I$. Their ranks need not be finite. For a bounded operator $X$, the reconstructed corner sum is $S_NXS_N$. Its natural convergence can be stronger when $X$ belongs to a smaller operator class.
+
+\begin{theorem}[Three reconstruction statements]
+Under these hypotheses:
+\begin{enumerate}
+\item If $X$ is bounded, $S_NXS_N\to X$ strongly.
+\item If $X$ is compact, $\norm{S_NXS_N-X}\to0$ in operator norm.
+\item If $X$ is Hilbert--Schmidt, $\norm{S_NXS_N-X}_2\to0$ in Hilbert--Schmidt norm.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Use the identity
+\[
+ S_NXS_N-X=S_NX(S_N-I)+(S_N-I)X.
+\]
+Since $\norm{S_N}\leq1$, application to a fixed $x$ bounds the error by
+\[
+ \norm X\norm{(S_N-I)x}+\norm{(S_N-I)Xx},
+\]
+which tends to zero.
+
+For compact $X$, choose finite-rank $Y$ with $\norm{X-Y}<\varepsilon$. Strong convergence is uniform on each fixed finite-dimensional subspace, and self-adjointness of $S_N$ controls the right error by the corresponding left error for $Y^*$. Thus $\norm{S_NYS_N-Y}\to0$. The difference between the two reconstruction errors is at most $2\varepsilon$, proving the claim.
+
+For the last assertion, fix an orthonormal basis $(e_j)$ and define
+\[
+ \norm X_2^2=\sum_j\norm{Xe_j}^2<\infty.
+\]
+Each column $(S_N-I)Xe_j$ tends to zero, and its squared norm is bounded by $4\norm{Xe_j}^2$. Dominated convergence gives $\norm{(S_N-I)X}_2\to0$. The right error follows by taking adjoints, using $S_N^*=S_N$ and $\norm{X^*}_2=\norm X_2$. The ideal inequality $\norm{AY}_2\leq\norm A\norm Y_2$ and the displayed decomposition finish the proof.
+\end{proof}
+
+The Hilbert--Schmidt norm is independent of the chosen orthonormal basis, and it bounds the operator norm. It measures the total square size of all matrix columns. In a coordinate packet basis, it also measures the square sum of all matrix entries. Retaining a larger square of entries removes a correspondingly smaller summable tail. Operator norm instead measures the largest action on a unit vector, allowing the testing vector to depend on the cutoff.
+
+\begin{example}[The identity never has a small omitted tail in operator norm]
+On an infinite-dimensional coordinate space, let $S_N$ retain the first $N$ coordinates. For $X=I$,
+\[
+ \norm{S_NIS_N-I}=\norm{S_N-I}=1.
+\]
+A unit vector $e_{N+1}$ witnesses the lower bound. Nevertheless, $S_Nx\to x$ for every fixed $x\in\ell^2$. This is the difference between pointwise control over states and uniform control over the full unit ball.
+\end{example}
+
+\subsection{Zero padding and the correct asymptotic tail}
+
+For a diagonal bounded multiplier $f(H_\lambda)$, zero padding gives the exact formula
+\[
+ \norm{f(H_\lambda)-S_Nf(H_\lambda)S_N}
+ =\sup_{n>N}|f(\lambda_n)|.
+\]
+For the unitary multiplier $f(\lambda)=e^{-it\lambda}$, this norm is one at every finite cutoff. Equation \eqref{eq:foundation-time-tail} remains valid. Uniformity in time for a fixed state and failure of operator-norm convergence are therefore compatible.
+
+For $\lambda_n=n$, a resolvent at $i\eta$, $\eta\ne0$, has zero-padded error
+\[
+ \sup_{n>N}\frac1{\sqrt{n^2+\eta^2}}
+ =\frac1{\sqrt{(N+1)^2+\eta^2}}\longrightarrow0.
+\]
+The heat multiplier $e^{-tn}$ has error $e^{-t(N+1)}$ for fixed $t>0$. These tails decay because the operators are compact. At $t=0$ the heat operator is the identity, so the same norm-convergence assertion is false.
+
+Two other bounded multipliers approach one along this positive spectrum:
+\[
+ b(n)=\frac{n}{\sqrt{1+n^2}},\qquad
+ q(n)=\frac{n-i}{n+i}.
+\]
+Their correct anchored cutoff is
+\[
+ A_N(f)=S_Nf(H_\lambda)S_N+(I-S_N).
+\]
+The errors are then
+\[
+ \norm{b(H_\lambda)-A_N(b)}
+ =\sup_{n>N}\left|\frac{n}{\sqrt{1+n^2}}-1\right|\longrightarrow0,
+\]
+and
+\[
+ \norm{q(H_\lambda)-A_N(q)}
+ =\sup_{n>N}\frac2{\sqrt{n^2+1}}\longrightarrow0.
+\]
+The identity tail is an analytic choice justified by these asymptotic multipliers. It is not a universal prescription for every two-sided or non-diagonal spectrum.
+
+On a graph-compatible atlas, an unbounded generator has another reconstruction statement:
+\[
+ S_NHS_N\psi-H\psi
+ =S_N(HS_N\psi-H\psi)+(S_N-I)H\psi\longrightarrow0,
+ \qquad\psi\in D(H).
+\]
+This is convergence of the displayed output vectors in the ambient Hilbert norm. It neither takes an operator norm of $H$ nor asserts graph-norm convergence of those output vectors, which would require additional domain and second-action information.
+
+\foundationfigure[H]{09_cutoff_topology}{Zero-padded unitary cutoffs converge on a fixed state but retain operator-norm error one. For the same spectrum $n\geq1$, the resolvent multiplier has a tail that decays in operator norm.}
+
+\subsection{A bounded certificate for a nonreducing packet}
+
+A packet need not commute with an unbounded Hamiltonian. Suppose now that $H$ is self-adjoint, $P$ is a bounded orthogonal projection preserving $D(H)$, and $[H,P]$ on $D(H)$ extends to a bounded operator $B$. For nonreal $z$, let $R_z=(H-z)^{-1}$. It maps $\HH$ into $D(H)$, so all products used below have their stated meaning. Multiplying the commutator identity on the domain by the resolvents gives
+\[
+ [R_z,P]=-R_zBR_z.
+\]
+Indeed, for $x\in\HH$, apply $H-z$ to $PR_zx$ to obtain $Px+BR_zx$, then apply $R_z$. Hence
+\[
+ \norm{[R_z,P]}\leq\norm{R_z}^2\norm B,
+ \qquad
+ \norm{[R_{i\eta},P]}\leq\frac{\norm B}{\eta^2}
+ \quad(\eta\ne0).
+\]
+The estimate converts a domain-sensitive commutator into a bounded one. In the generic formal certificate, the inverse and its domain properties are supplied explicitly. The diagonal modules also construct concrete inverses. Neither statement licenses a formal inverse for an unspecified operator.
+
+
+
+\clearpage
+\section{The finite differential obstruction and matrix corners}
+\label{sec:foundation-corner-derivations}
+
+Finite arrays support many useful difference operators. What they cannot support is a nonzero linear derivation of the full pointwise algebra $\C^N$ with its ordinary product. This obstruction explains why a finite operator calculus must declare which algebra carries its differentiation rule.
+
+\begin{theorem}[No nonzero derivation of the finite pointwise algebra]
+Let $D:\C^N\to\C^N$ be complex linear and satisfy
+\[
+ D(fg)=D(f)g+fD(g)
+\]
+for every pair of vectors, where multiplication is coordinatewise. Then $D=0$.
+\end{theorem}
+\begin{proof}
+For the coordinate idempotent $e_a$, the identity $e_a^2=e_a$ gives $D(e_a)=2e_aD(e_a)$. At a coordinate $b\ne a$, the right side is zero. At $b=a$, the equality reads $(D(e_a))_a=2(D(e_a))_a$, again forcing zero. Thus $D(e_a)=0$ for every basis vector, and linearity gives $D=0$.
+\end{proof}
+
+The theorem concerns the semisimple pointwise algebra $\C^N$. It does not assert that every finite-dimensional commutative complex algebra has only the zero derivation. For example, on $\C[\varepsilon]/(\varepsilon^2)$, the map $D(a+b\varepsilon)=b\varepsilon$ is a nonzero derivation. The nilpotent element changes the algebraic hypothesis.
+
+\begin{example}[The precise defect of a forward difference]
+On a cyclic grid, let $D_hf_j=(f_{j+1}-f_j)/h$, with $h\ne0$. Expanding the product gives
+\[
+ D_h(fg)_j-(D_hf)_jg_j-f_j(D_hg)_j
+ =h(D_hf)_j(D_hg)_j.
+\]
+Thus the ordinary Leibniz identity fails unless the displayed product vanishes. A small defect on sufficiently regular sampled functions is compatible with the no-go theorem, because that theorem concerns an exact identity for every vector at fixed finite resolution.
+\end{example}
+
+\subsection{Exact differentiation in the full matrix algebra}
+
+Move now to $M_N(\C)$. To avoid confusing a Hermitian observable with the skew-adjoint state generator $K$, denote a Hermitian matrix by $B=B^*$ and define
+\[
+ \delta_BX=i[B,X]=i(BX-XB).
+\]
+Then direct multiplication proves
+\begin{align}
+ \delta_B(XY)&=(\delta_BX)Y+X\delta_BY,\label{eq:foundation-matrix-leibniz}\\
+ (\delta_BX)^*&=\delta_B(X^*),\label{eq:foundation-matrix-star}\\
+ \operatorname{Tr}((\delta_BX)Y)&=-\operatorname{Tr}(X\delta_BY).
+ \label{eq:foundation-matrix-ibp}
+\end{align}
+For the first identity, the middle terms $-iXBY$ and $iXBY$ cancel. For the second, taking the adjoint reverses the product order and conjugates $i$, with $B^*=B$ restoring the stated sign. For the third, cyclicity moves the leading $B$ in $\operatorname{Tr}(BXY)$ to the end. The trace pairing is bilinear here. Combining \eqref{eq:foundation-matrix-star} and \eqref{eq:foundation-matrix-ibp} also gives the Hilbert--Schmidt identity
+\[
+ \inner{\delta_BX}{Y}_{\rm HS}=-\inner{X}{\delta_BY}_{\rm HS},
+ \qquad\inner{X}{Y}_{\rm HS}=\operatorname{Tr}(X^*Y).
+\]
+
+These identities preserve multiplication order. They do not turn $\delta_B$ into a derivation from diagonal matrices to diagonal matrices. Usually it leaves that commutative subalgebra.
+
+\begin{example}[A nonzero derivative leaves the pointwise subalgebra]
+For
+\[
+ B=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+ X=\begin{pmatrix}1&0\\0&0\end{pmatrix},
+\]
+one obtains
+\[
+ \delta_BX=\begin{pmatrix}0&-i\\i&0\end{pmatrix}\ne0.
+\]
+The output is off diagonal. This is exactly how the matrix algebra permits a nonzero derivation without violating the pointwise theorem.
+\end{example}
+
+For Hermitian generators $B_i,B_j$, put $\mathcal F_{ij}=i[B_i,B_j]$. This curvature matrix is Hermitian, and the Jacobi identity gives
+\begin{equation}
+ [\delta_{B_i},\delta_{B_j}]X
+ =-[[B_i,B_j],X]
+ =i[\mathcal F_{ij},X]=\delta_{\mathcal F_{ij}}X.
+ \label{eq:foundation-corner-curvature}
+\end{equation}
+Commuting generators produce commuting derivations. A nonzero curvature matrix need not act nontrivially on every observable: its action on a particular $X$ vanishes precisely when that $X$ commutes with it. This matrix identity provides an algebraic curvature mechanism. A physical geometric interpretation requires the additional structures developed in the gauge and gravity papers.
+
+\foundationfigure[H]{12_matrix_derivations}{A finite pointwise difference has a Leibniz defect. Commutation inside a full matrix algebra obeys the Leibniz rule exactly, with its output allowed to leave the diagonal subalgebra.}
+
+\subsection{Differentiated corner paths and coarse reconstruction}
+
+Let $(P_a)$ be a finite sharp atlas. Writing $X_{ba}=P_bXP_a$ and $B_{ba}=P_bBP_a$, insertion of $I=\sum_cP_c$ gives
+\begin{equation}
+ P_b\delta_B(X)P_a
+ =i\sum_c\left(B_{bc}X_{ca}-X_{bc}B_{ca}\right).
+ \label{eq:foundation-corner-path}
+\end{equation}
+Each term has a genuine intermediate packet $c$. One ordering applies $X$ then $B$, while the other applies $B$ then $X$. Replacing a matrix product by an entrywise product would destroy this path composition and the cancellation behind the Leibniz rule.
+
+Summing the differentiated corners reconstructs $\delta_BX$. For a coarse partition with $Q_\alpha=\sum_{a\in C_\alpha}P_a$,
+\[
+ Q_\beta\delta_B(X)Q_\alpha
+ =\sum_{\substack{b\in C_\beta\\a\in C_\alpha}}P_b\delta_B(X)P_a.
+\]
+This is exact aggregation of the already differentiated operator. It does not claim that discarding all internal matrix structure produces a new pointwise algebra with a nonzero exact derivation. The retained corners are the structure that makes the finite differential calculus work.
+
+

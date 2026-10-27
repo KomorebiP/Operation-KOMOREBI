@@ -1,0 +1,294 @@
+% Foundations atlas. Twelve reproducible Python plates, with explicit scopes.
+\begingroup
+\renewcommand{\atlasfigure}[2]{\begin{center}\includegraphics[width=.97\linewidth,height=.39\textheight,keepaspectratio]{foundation_figures/#1.pdf}\end{center}{\small\color{muted}#2}\par}
+
+\section{An exact decomposition is a way of asking questions}
+
+A projector atlas divides a state into orthogonal packets and an operator into the transfers between those packets. The division can be fine or coarse, fixed or moving, and finite or countable. The useful question is always specific: which information survives the chosen representation, and what additional hypothesis makes the next operation legitimate?
+
+These twelve plates build a common language before the specialized free Dirac construction. They begin with finite coordinates, where reconstruction is exact. They then introduce currents, changing frames, density matrices and tensor products. The final plates show what changes for positive measurement effects and for an unbounded operator on infinitely many coordinates. A finite commutative obstruction explains why ordinary pointwise differences cannot supply every desired differential identity.
+
+\paragraph{Conventions.}
+States are columns. The inner product is conjugate-linear in its first argument. An evolution generator $A$ obeys $\dot\psi=A\psi$. For Hamiltonian evolution, $A=-iH$ and $\hbar=1$. The first current index is the destination:
+\[
+J_{a\leftarrow b}=2\operatorname{Re}\inner{P_a\psi}{AP_b\psi}
+=2\operatorname{Im}\inner{P_a\psi}{HP_b\psi}.
+\]
+The diagonal infinite-dimensional examples use $H e_n=n e_n$ for $n\geq1$. They are transparent sequence models, rather than an identification of the full physical Hamiltonian with this particular spectrum.
+
+\paragraph{What the pictures establish.}
+Some plates display exact matrices. Others draw sampled values of explicit formulas. Their symbolic and numerical checks authenticate the examples and their implementation. The universal statements come from the arguments in the foundations monograph and the inherited source proofs. A curve that appears to level off does not prove that an infinite sum converges.
+
+\paragraph{How the atlas connects to the formal work.}
+The early Lean modules supply precise versions of the finite algebra, transfer identities, refinements, moving frames, density-matrix statements and positive-effect constructions. The companion Lean guide identifies exact declarations and hypotheses. The later diagonal examples explain analytic distinctions needed by the physics program. The atlas illustrates the mathematics and does not supply an additional compiler certificate.
+
+\clearpage
+\section{Packets retain amplitudes, while weights retain less}
+\atlasfigure{01_packets}{An exact four-coordinate state. The left panel preserves its real and imaginary amplitudes. The right panel keeps only the two coarse packet weights. The weights add to one, but do not determine the original state.}
+
+Take
+\[
+\psi=\frac1{\sqrt7}(1,i,2,-i)^T,\qquad
+P_A=\operatorname{diag}(1,1,0,0),\qquad P_B=I-P_A.
+\]
+These are orthogonal projectors, so $P_AP_B=0$ and $P_A+P_B=I$. The state is reconstructed exactly as $\psi=P_A\psi+P_B\psi$. Its squared norm splits without a cross term:
+\[
+\norm{\psi}^2=\norm{P_A\psi}^2+\norm{P_B\psi}^2
+=\frac27+\frac57=1.
+\]
+The packets remain vectors in the original space. Replacing each packet with its squared norm loses information. For example, changing the sign of the fourth imaginary coordinate preserves both weights, while changing the state. Relative phases can later change interference and transfer.
+
+Refinement separates coordinates that a coarse packet groups together. Coarsening sums orthogonal projectors and their populations. Neither operation requires discarding state information when all packet vectors are retained. An approximation begins only when some data are actually omitted or replaced.
+
+
+
+\clearpage
+\section{An operator has an input packet and an output packet}
+\atlasfigure{02_corners}{Left: an exact Hermitian matrix, with the coarse division after coordinate 2. Right: squared Frobenius norms of its four corners. These are descriptive matrix sizes, not transition probabilities or packet populations.}
+
+For the same two projectors, every operator has four corners:
+\[
+H=P_AHP_A+P_AHP_B+P_BHP_A+P_BHP_B.
+\]
+The rightmost projector accepts the input packet and the leftmost projector selects the output packet. Thus $P_AHP_B$ carries the part of $H$ that sends packet $B$ into packet $A$. This convention fixes the orientation of every later transfer formula.
+
+In the displayed example, the two within-packet blocks have squared Frobenius norm $2$, and the two between-packet blocks have squared Frobenius norm $5$. Their magnitudes alone do not determine a current. A current also depends on the evolving state and the phases in the relevant bilinear expression.
+
+Composition introduces intermediate packets. Inserting the identity between two operators gives
+\[
+P_aXY P_b=\sum_c(P_aXP_c)(P_cYP_b).
+\]
+The sum records all two-step paths from the input packet $b$ through $c$ to the output packet $a$. This is exact matrix multiplication expressed through an atlas. Dropping an intermediate packet changes the operator unless a separate argument shows that its contribution vanishes or is acceptably small.
+
+
+
+\clearpage
+\section{A current is signed, and its direction can reverse}
+\atlasfigure{03_coherent_current}{A two-level Hamiltonian with coupling $g=1$. The population curves exchange weight periodically. The lower panel uses destination-first currents, so a positive $J_{2\leftarrow1}$ increases the second population.}
+
+Let $H=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$ and start from $\psi(0)=(1,0)^T$. The exact solution is
+\[
+\psi(t)=(\cos t,-i\sin t)^T,\qquad
+p_1(t)=\cos^2t,\quad p_2(t)=\sin^2t.
+\]
+The current and its reverse are
+\[
+J_{2\leftarrow1}=2\operatorname{Im}(\overline{\psi_2}\psi_1)
+=\sin(2t),\qquad J_{1\leftarrow2}=-J_{2\leftarrow1}.
+\]
+Consequently $\dot p_2=J_{2\leftarrow1}$ and $\dot p_1=-J_{2\leftarrow1}$. Their sum is zero at every time. At a turning point of a population curve, the net current vanishes even though the coupling matrix is unchanged.
+
+The sign distinguishes a current from a nonnegative transition rate. An antisymmetric current is a balance quantity. Its negative value means that the net transfer goes in the reverse direction. No interpretation as a classical stochastic rate follows from this identity alone.
+
+The displayed solution is compared with an independent matrix exponential at 25 times. Its current is checked at 601 times. These checks catch sign and implementation errors. The exact formula supplies the all-time conclusion.
+
+
+
+\clearpage
+\section{Coarsening cancels internal transfers}
+\atlasfigure{04_coarse_balance}{An abstract instantaneous antisymmetric current array on four packets. Positive arrows show the listed current orientation. Coarsening into $A=\{1,2\}$ and $B=\{3,4\}$ retains the net cross-boundary transfer $2-1/2=3/2$.}
+
+The fine currents in the drawing are $J_{2\leftarrow1}=3$, $J_{3\leftarrow2}=2$, $J_{4\leftarrow3}=1$ and $J_{1\leftarrow4}=1/2$. Their reverses have the opposite sign. The fine population derivatives are
+\[
+\dot p=(-5/2,\;1,\;1,\;1/2)^T.
+\]
+Adding the first two entries gives $\dot p_A=-3/2$. Adding the last two gives $\dot p_B=3/2$. The internal transfers of sizes $3$ and $1$ disappear from these coarse derivatives because each contributes once with each sign.
+
+If $R$ is the matrix that sums fine populations into coarse cells, the identities are
+\[
+p^{\mathrm c}=Rp,\qquad J^{\mathrm c}=RJR^T,\qquad
+\dot p^{\mathrm c}=J^{\mathrm c}\mathbf1.
+\]
+This is exact aggregation. The array is a balance example and is not presented as a constructed Hamiltonian trajectory.
+
+Continuity does not determine every edge current. Adding a circulating current $1\to2\to3\to1$ of the same strength on all three edges changes no vertex divergence. In matrix notation, $K^T=-K$ and $K\mathbf1=0$ imply $(J+K)\mathbf1=J\mathbf1$. A generator-induced current contains more information than population derivatives alone.
+
+
+
+\clearpage
+\section{A moving atlas contributes its own connection}
+\atlasfigure{05_moving_frame}{The laboratory state stays fixed at $e_1$, while the orthonormal frame rotates by the angle $t$. Its moving-atlas populations vary. The drawing on the left shows a single instant, and the curves on the right show the full angle interval.}
+
+Write
+\[
+U(t)=\begin{pmatrix}\cos t&-\sin t\\\sin t&\cos t\end{pmatrix},
+\qquad \psi(t)=e_1,\qquad \phi(t)=U(t)^*\psi(t).
+\]
+The moving coordinates are $\phi=(\cos t,-\sin t)^T$. Their squared magnitudes are the two plotted populations, even though the laboratory generator is $A=0$.
+
+Differentiating the coordinate change gives
+\[
+\Gamma=U^*\dot U=\begin{pmatrix}0&-1\\1&0\end{pmatrix},
+\qquad \dot\phi=-\Gamma\phi.
+\]
+For a general laboratory generator, this becomes $\dot\phi=(U^*AU-\Gamma)\phi$. The minus sign is fixed by differentiating $U^*U=I$. Both terms are needed to describe what a moving observer records.
+
+This example separates a physical state change from a change in the measuring atlas. They can produce similar population curves while having different causes. Omitting the connection would predict constant moving coordinates for this stationary laboratory state, contradicting the explicit rotation.
+
+
+
+\clearpage
+\section{Coherences and jump rates carry different information}
+\atlasfigure{06_density_and_jumps}{Left: coherent Hamiltonian exchange and symmetric Lindblad jumps, both starting from population $(1,0)$. Right: two pure density matrices and a classical equal-population state have the same populations but different initial derivatives under their stated evolution laws.}
+
+For $H=\left(\begin{smallmatrix}0&1\\1&0\end{smallmatrix}\right)$, the density equation is $\dot\rho=-i[H,\rho]$. The two pure states
+\[
+\rho_+=\frac12\begin{pmatrix}1&i\\-i&1\end{pmatrix},\qquad
+\rho_-=\frac12\begin{pmatrix}1&-i\\i&1\end{pmatrix}
+\]
+have the same populations $(1/2,1/2)$. Yet they give $\dot p_2=1$ and $\dot p_2=-1$, respectively. Their opposite off-diagonal coherences determine opposite initial transfers. A law written only in terms of these two populations cannot reproduce both derivatives.
+
+For a different evolution, take the Lindblad jumps $L_{12}=|1\rangle\langle2|$ and $L_{21}=|2\rangle\langle1|$, with zero Hamiltonian. On diagonal density matrices they give
+\[
+\dot p_1=p_2-p_1,\qquad
+p_1(t)=\tfrac12+(p_1(0)-\tfrac12)e^{-2t}.
+\]
+The left panel therefore contrasts periodic coherent exchange with relaxation generated by these specified jumps. This does not say that all Lindblad systems reduce to a classical two-state chain. Closure holds here because of the chosen jump operators and invariant diagonal family.
+
+
+
+\clearpage
+\section{Marginals forget correlations}
+\atlasfigure{07_tensor_marginals}{The computational-basis joint populations of a Bell state and a product mixed state. Each row and each column sums to $1/2$ in both panels. The joint tables differ even though both subsystem density matrices are $I_2/2$.}
+
+On $\C^2\otimes\C^2$, let $\Phi=(|00\rangle+|11\rangle)/\sqrt2$. Its joint probabilities are $p_{00}=p_{11}=1/2$ and $p_{01}=p_{10}=0$. The product mixed state $(I_2/2)\otimes(I_2/2)$ instead gives all four outcomes probability $1/4$.
+
+For tensor projectors $P_a\otimes Q_b$, the marginal identities follow by summing one resolution of the identity:
+\[
+\sum_b p_{ab}=\operatorname{Tr}\bigl(\rho(P_a\otimes I)\bigr),\qquad
+\sum_a p_{ab}=\operatorname{Tr}\bigl(\rho(I\otimes Q_b)\bigr).
+\]
+These operations recover subsystem populations from the joint state. The reverse direction is underdetermined. Even knowing both complete reduced density matrices does not determine the full joint density matrix.
+
+The Bell state in this example is entangled, but this single joint probability table does not certify entanglement. The separable mixed state $\tfrac12|00\rangle\langle00|+\tfrac12|11\rangle\langle11|$ has the same table. One must retain or test additional information to distinguish its missing coherences from those of the Bell state.
+
+
+
+\clearpage
+\section{Positive effects need channel amplitudes}
+\atlasfigure{08_positive_effects}{An unsharp two-outcome measurement with $F_+=\operatorname{diag}(4/5,1/5)$ and $F_-=I-F_+$. Left: the probability $\langle\psi,F_+\psi\rangle$ differs from $\|F_+\psi\|^2$. Right: an explicit isometry realizes the probabilities as orthogonal channel norms in a larger space.}
+
+For $\psi_\theta=(\cos\theta,\sin\theta)^T$, the positive-effect probability is
+\[
+p_+=\frac45\cos^2\theta+\frac15\sin^2\theta.
+\]
+Applying $F_+$ as though it were a projector instead gives the squared norm $\frac{16}{25}\cos^2\theta+\frac1{25}\sin^2\theta$. At $\theta=0$, these are $4/5$ and $16/25$. The discrepancy is structural: $F_+^2\ne F_+$.
+
+Use $V_+=F_+^{1/2}$ and $V_-=F_-^{1/2}$ instead. Stacking the two channels gives an isometry $V:\C^2\to\C^4$ with
+\[
+V^*V=I,\qquad F_+=V^*\Pi_+V,\qquad
+p_+=\norm{\Pi_+V\psi}^2,
+\]
+where $\Pi_+$ selects the first two output coordinates. The channels are orthogonal in the enlarged space even though the original effects overlap: $F_+F_-\ne0$.
+
+This is an exact realization of a positive partition. It preserves probabilities and reconstruction through the analysis and synthesis maps. It does not make each original effect an idempotent projector.
+
+
+
+\clearpage
+\section{A cutoff can converge strongly without converging in norm}
+\atlasfigure{09_cutoff_topology}{For $He_n=ne_n$, retain the first $N$ coordinates and set the omitted output to zero. The unitary error on one fixed state decays, while its operator norm remains exactly one. The resolvent has a decaying tail and does converge in operator norm.}
+
+Let $P_N$ select coordinates $1,\ldots,N$, and let $U(t)e_n=e^{-itn}e_n$. The zero-padded approximation is $P_NU(t)P_N$. Every omitted basis vector gives
+\[
+\norm{(U(t)-P_NU(t)P_N)e_n}=1\qquad(n>N).
+\]
+The error has norm at most one because it is unitary evolution restricted to the tail, so its operator norm is exactly one for every finite $N$. The vector that witnesses this can move farther into the tail as $N$ increases.
+
+For the fixed normalized vector $a_n=n^{-1}/\sqrt{\zeta(2)}$, the error is instead
+\[
+\norm{(U(t)-P_NU(t)P_N)a}
+=\sqrt{\frac{\zeta(2,N+1)}{\zeta(2)}}\longrightarrow0.
+\]
+Here $\zeta(s,q)$ denotes the Hurwitz zeta tail. The error is independent of time in this commuting example. Strong convergence fixes a state first, whereas operator norm takes a supremum over all unit vectors.
+
+The resolvent $(H-i)^{-1}$ has multipliers $(n-i)^{-1}$. Its cutoff error has operator norm $((N+1)^2+1)^{-1/2}$. Decay of the multiplier, rather than the mere existence of a cutoff, changes the norm-convergence conclusion.
+
+
+
+\clearpage
+\section{Three spaces impose three different summability tests}
+\atlasfigure{10_weighted_domains}{Partial sums through $N=4096$ for $a_n=n^{-s}$ and $He_n=ne_n$. The three panels weight the same coefficients by $1$, $n$ and $n^2$. Four exponents illustrate the distinct membership regimes. These finite plots do not decide convergence.}
+
+The exact tests are
+\[
+\begin{array}{rcl}
+a\in\ell^2&\Longleftrightarrow&\sum_n n^{-2s}<\infty
+\quad\Longleftrightarrow\quad s>\tfrac12,\\[2pt]
+a\in D(H^{1/2})&\Longleftrightarrow&\sum_n n^{1-2s}<\infty
+\quad\Longleftrightarrow\quad s>1,\\[2pt]
+a\in D(H)&\Longleftrightarrow&\sum_n n^{2-2s}<\infty
+\quad\Longleftrightarrow\quad s>\tfrac32.
+\end{array}
+\]
+They follow from the integral test. Equality at any threshold produces a harmonic series and still fails the relevant test. The thresholds are strict.
+
+Thus $s=0.4$ does not define a Hilbert-space state. The choice $s=0.75$ defines a state outside the form domain. The choice $s=1.25$ belongs to the form domain but not to the operator domain. The choice $s=1.75$ belongs to all three. These distinctions survive multiplication by a nonzero normalization constant.
+
+For a positive unbounded operator, finite quadratic-form energy and an existing Hilbert-space image $Ha$ are different requirements. A probability-normalized state need not satisfy either. Specifying the ambient Hilbert space alone therefore does not specify the domain of a proposed generator.
+
+
+
+\clearpage
+\section{Graph convergence follows the state and its image}
+\atlasfigure{11_graph_tails}{The normalized domain vector $a_n=n^{-2}/\sqrt{\zeta(4)}$ for $He_n=ne_n$. Its state tail falls much faster than its image tail. The graph curve combines both errors and lies just above the image curve.}
+
+The graph norm remembers what the operator does:
+\[
+\norm{a}_H^2=\norm{a}^2+\norm{Ha}^2.
+\]
+For the displayed vector, each relevant infinite tail is explicit:
+\[
+\begin{aligned}
+\norm{a-P_Na}^2&=\frac{\zeta(4,N+1)}{\zeta(4)},\\
+\norm{H(a-P_Na)}^2&=\frac{\zeta(2,N+1)}{\zeta(4)},\\
+\norm{a-P_Na}_H^2&=\frac{\zeta(4,N+1)+\zeta(2,N+1)}{\zeta(4)}.
+\end{aligned}
+\]
+The ordinary state error is of order $N^{-3/2}$. The image and graph errors are of order $N^{-1/2}$. A visually small omitted state tail can therefore carry a substantially larger operator error.
+
+Here the cutoff commutes with $H$ and preserves its domain, so the weighted tail proves graph convergence. For a general countable atlas, those properties need hypotheses. Strong reconstruction of the identity on the ambient Hilbert space alone does not establish graph compatibility with an unbounded operator.
+
+
+
+\clearpage
+\section{Exact finite differentiation requires the right algebra}
+\atlasfigure{12_matrix_derivations}{Left: a nonzero two-point difference violates the ordinary pointwise Leibniz identity on an idempotent. Right: the nonzero matrix derivation $i[\sigma_x,\operatorname{diag}(1,0)]$. The matrix panel displays coefficients of $i$, so its off-diagonal entries are $-i$ and $i$.}
+
+In the finite pointwise algebra $\C^N$, each coordinate indicator $e_a$ satisfies $e_a^2=e_a$. An exact linear derivation would have to obey
+\[
+De_a=D(e_a^2)=2e_aDe_a.
+\]
+Outside coordinate $a$, this forces every component to zero. At coordinate $a$, it says $x=2x$, so that component is also zero. The indicators span $\C^N$, hence every such derivation is zero.
+
+The left panel uses $D(f_1,f_2)=(f_2-f_1,f_1-f_2)$. It is a useful finite difference, but $D(e_1^2)=(-1,1)$ while $2e_1De_1=(-2,0)$. The obstruction concerns the exact pointwise product rule, not the usefulness of discrete approximations.
+
+In $M_N(\C)$, a Hermitian $B$ instead gives the derivation $\delta_BX=i[B,X]$. Expanding the commutator proves
+\[
+\delta_B(XY)=(\delta_BX)Y+X\delta_BY,
+\qquad
+\operatorname{Tr}((\delta_BX)Y)=-\operatorname{Tr}(X\delta_BY).
+\]
+The algebra has changed, and its additional corners carry nontrivial derivatives. The finite example uses $B=\sigma_x$ and checks the two identities on all 16 pairs of $2\times2$ matrix units.
+
+
+
+\clearpage
+\section{What the twelve plates preserve, and what they forget}
+
+The atlas is organized around a sequence of exact distinctions. Packet vectors reconstruct a state, while packet weights omit phase information. Corners reconstruct an operator, while a corner norm omits the bilinear dependence of a current on a state. Coarse populations preserve net boundary balance, while they forget internal currents and divergence-free cycles.
+
+A moving atlas introduces another source of population change. Its connection records the coordinate motion. A density matrix retains the coherences that a population vector alone cannot determine. Tensor marginals retain local information while discarding some joint correlations. Positive effects retain normalized measurement probabilities, but their original-space images are not orthogonal packets.
+
+The infinite-dimensional passage makes the topology and the domain part of the statement. A cutoff that approximates every fixed state may still have operator-norm error one. A vector in the ambient Hilbert space may lie outside the form domain or the operator domain. A graph approximation must control the image under the operator as well as the vector itself.
+
+These are useful restrictions. They identify the exact data and hypotheses that the next result must supply. The free Dirac monograph uses the same distinctions when it passes from finite matrix actions to full coefficient evolution, Fourier transport, an unbounded Hamiltonian and its weighted domain. Keeping these passages separate makes the operator construction and its hypotheses precise.
+
+\paragraph{A practical reading order.}
+For the finite calculus, read plates 1 through 5 together and then return to the transfer proofs. For probability and composite systems, compare plates 6 through 8. For the unbounded-operator frontier, read plates 9 through 11 before the domain arguments in the Dirac paper. Plate 12 explains why a desired differential identity cannot be assumed merely because a finite model has coordinate differences.
+
+\paragraph{Reproduction and audit boundary.}
+Run \code{python tools/make_foundation_figures.py} from the source root. It produces twelve PDF figures, twelve PNG previews and \code{evidence/foundations/figure_checks.json}. The manifest records exact inputs, software dependencies, finite ranges, tolerances, output hashes and the limitations of the calculations. No random samples are used. The floating computations are not interval certified, and no Lean compilation is performed by this command.
+
+The figures are explanations of specified mathematical objects. Their checks authenticate implementation and finite examples. They are not a new empirical validation of the physics, and they do not turn an inherited conditional statement into an unconditional theorem.
+\endgroup

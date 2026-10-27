@@ -1,0 +1,10 @@
+import KomorebiPhysics.Relativistic3DEdgeCompatibility
+
+open KomorebiPhysics
+open Relativistic3DEdgeCompatibility
+
+#check arbitraryRefinedSevenFactorWalk_frameEmbed
+#check exact_refinement_can_preserve_nonflat_plaquette
+#check FineEdgePair.fineIntertwiningDefect_energy
+#check flat_curvature_with_nonzero_refinement_defect
+#check no_universal_flatness_implies_refinement

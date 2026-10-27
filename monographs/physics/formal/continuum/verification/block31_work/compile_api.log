@@ -1,0 +1,73 @@
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.HilbertState.{u} (Site : Type u) : Type u
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.stateHilbertEquiv.{u} {Site : Type u} : State ≃ₗ[ℂ] HilbertState Site
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.stateToHilbert_norm_sq.{u} {Site : Type u} [Fintype Site]
+  (ψ : State) : ‖stateToHilbert ψ‖ ^ 2 = (stateIP ψ ψ).re
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.directionalShift_sub_stateIP_re_le.{u} {Site : Type u} [Fintype Site]
+  (H : HermitianClifford) (τ : Site ≃ Site) (v u : Link) (δ : ℝ) (hδ : 0 ≤ δ)
+  (hdiff : ∀ (x : Site), ‖↑(v x) - ↑(u x)‖ ≤ δ) (ψ : State) :
+  (stateIP (directionalShift H.toClifford τ v ψ - directionalShift H.toClifford τ u ψ)
+        (directionalShift H.toClifford τ v ψ - directionalShift H.toClifford τ u ψ)).re ≤
+    δ ^ 2 * (stateIP ψ ψ).re
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.directionalShiftDefectHilbertCLM.{u} {Site : Type u} [Fintype Site]
+  (A : CliffordInvolution) (τ : Site ≃ Site) (v u : Link) : HilbertState Site →L[ℂ] HilbertState Site
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.directionalShiftDefectHilbertCLM_opNorm_le.{u} {Site : Type u}
+  [Fintype Site] (H : HermitianClifford) (τ : Site ≃ Site) (v u : Link) (δ : ℝ) (hδ : 0 ≤ δ)
+  (hdiff : ∀ (x : Site), ‖↑(v x) - ↑(u x)‖ ≤ δ) : ‖directionalShiftDefectHilbertCLM H.toClifford τ v u‖ ≤ δ
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.directionalShiftDefectHilbertCLM_opNorm_le_sup.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (H : HermitianClifford) (τ : Site ≃ Site) (v u : Link) :
+  ‖directionalShiftDefectHilbertCLM H.toClifford τ v u‖ ≤ edgeMismatchSup v u
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.HalfHilbertState.{u} (Site : Type u) : Type u
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.halfStateToHilbert_norm_sq.{u} {Site : Type u} [Fintype Site]
+  (Ψ : State) : ‖halfStateToHilbert Ψ‖ ^ 2 = (Relativistic3DGeometricEdgeRefinement.halfCellIP Ψ Ψ).re
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.fineEdgeDefectHilbertCLM.{u} {Site : Type u} [Fintype Site]
+  (P : FineEdgePair Site) (A : CliffordInvolution) (τ : Site ≃ Site) (u : Link) :
+  HilbertState Site →L[ℂ] HalfHilbertState Site
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.fineEdgeDefectHilbertCLM_norm_eq_coarse.{u} {Site : Type u}
+  [Fintype Site] (P : FineEdgePair Site) (H : HermitianClifford) (τ : Site ≃ Site) (u : Link) (ψ : HilbertState Site) :
+  ‖(fineEdgeDefectHilbertCLM P H.toClifford τ u) ψ‖ =
+    ‖(directionalShiftDefectHilbertCLM H.toClifford τ P.productLink u) ψ‖
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.fineEdgeDefectHilbertCLM_opNorm_le.{u} {Site : Type u} [Fintype Site]
+  (P : FineEdgePair Site) (H : HermitianClifford) (τ : Site ≃ Site) (u : Link) (δ : ℝ) (hδ : 0 ≤ δ)
+  (hdiff : ∀ (x : Site), ‖↑(P.productLink x) - ↑(u x)‖ ≤ δ) : ‖fineEdgeDefectHilbertCLM P H.toClifford τ u‖ ≤ δ
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.fineEdgeDefectHilbertCLM_opNorm_le_sup.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (P : FineEdgePair Site) (H : HermitianClifford) (τ : Site ≃ Site) (u : Link) :
+  ‖fineEdgeDefectHilbertCLM P H.toClifford τ u‖ ≤ edgeMismatchSup P.productLink u
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.edgeRatio.{u} {Site : Type u} (v u : Link) (x : Site) : Circle
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.edgeRatio_eq_one_iff.{u} {Site : Type u} (v u : Link) (x : Site) :
+  edgeRatio v u x = 1 ↔ v x = u x
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.edgeRatioSup.{u} {Site : Type u} [Fintype Site] [Nonempty Site]
+  (v u : Link) : ℝ
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.edgeMismatchSup_eq_edgeRatioSup.{u} {Site : Type u} [Fintype Site]
+  [Nonempty Site] (v u : Link) : edgeMismatchSup v u = edgeRatioSup v u
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.fineEdgeDefectHilbertCLM_opNorm_le_ratioSup.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (P : FineEdgePair Site) (H : HermitianClifford) (τ : Site ≃ Site) (u : Link) :
+  ‖fineEdgeDefectHilbertCLM P H.toClifford τ u‖ ≤ edgeRatioSup P.productLink u
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.dyadicMesh (a₀ : ℝ) (n : ℕ) : ℝ
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.tendsto_dyadicMesh_zero (a₀ : ℝ) :
+  Filter.Tendsto (dyadicMesh a₀) Filter.atTop (nhds 0)
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.dyadicScaleBudget (C : ℝ) (n : ℕ) : ℝ
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.summable_dyadicScaleBudget (C : ℝ) : Summable (dyadicScaleBudget C)
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.summable_dyadicTwoBudget (Cedge Ccurvature : ℝ) :
+  Summable (Relativistic3DCombinedDefect.combinedScaleBudget (dyadicScaleBudget Cedge) (dyadicScaleBudget Ccurvature))
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.tendsto_dyadicTwoBudgetLimit.{v} {Y : Type v} [MetricSpace Y]
+  [CompleteSpace Y] (f : ℕ → Y) (Cedge Ccurvature : ℝ)
+  (hstep :
+    ∀ (n : ℕ),
+      dist (f n) (f n.succ) ≤
+        Relativistic3DCombinedDefect.combinedScaleBudget (dyadicScaleBudget Cedge) (dyadicScaleBudget Ccurvature) n) :
+  Filter.Tendsto f Filter.atTop
+    (nhds
+      (Relativistic3DCombinedDefect.twoBudgetSummableDefect f (dyadicScaleBudget Cedge) (dyadicScaleBudget Ccurvature) ⋯
+          ⋯ hstep).limit)
+KomorebiPhysics.Relativistic3DHilbertScalarDefect.dist_dyadicTwoBudgetLimit_le_tail.{v} {Y : Type v} [MetricSpace Y]
+  [CompleteSpace Y] (f : ℕ → Y) (Cedge Ccurvature : ℝ)
+  (hstep :
+    ∀ (n : ℕ),
+      dist (f n) (f n.succ) ≤
+        Relativistic3DCombinedDefect.combinedScaleBudget (dyadicScaleBudget Cedge) (dyadicScaleBudget Ccurvature) n)
+  (n : ℕ) :
+  dist (f n)
+      (Relativistic3DCombinedDefect.twoBudgetSummableDefect f (dyadicScaleBudget Cedge) (dyadicScaleBudget Ccurvature) ⋯
+          ⋯ hstep).limit ≤
+    ∑' (m : ℕ),
+      Relativistic3DCombinedDefect.combinedScaleBudget (dyadicScaleBudget Cedge) (dyadicScaleBudget Ccurvature) (n + m)

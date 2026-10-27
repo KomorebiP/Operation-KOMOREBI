@@ -1,0 +1,133 @@
+KomorebiPhysics/WeightedEffects.lean:21:2: error: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+KomorebiPhysics/WeightedEffects.lean:36:17: error: unsolved goals
+H : Type u_1
+I : Type u_2
+J : Type u_3
+inst✝³ : NormedAddCommGroup H
+inst✝² : InnerProductSpace ℂ H
+inst✝¹ : Fintype I
+inst✝ : Fintype J
+F : EffectAtlas H I
+R : J → I → ℝ
+hR : ∀ (a : J) (i : I), 0 ≤ R a i
+hcol : ∀ (i : I), ∑ a, R a i = 1
+a : J
+x y : H
+i : I
+a✝ : i ∈ Finset.univ
+⊢ inner ℂ (R a i • (F.effect i) x) y = inner ℂ x (R a i • (F.effect i) y)
+KomorebiPhysics/WeightedEffects.lean:41:10: error: This simp argument is unused:
+  inner_smul_left
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [inner_smul_right, F.selfAdjoint]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:41:27: error: This simp argument is unused:
+  inner_smul_right
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [inner_smul_left, F.selfAdjoint]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:41:45: error: This simp argument is unused:
+  F.selfAdjoint
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [inner_smul_left, inner_smul_right]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:51:82: error: unsolved goals
+H : Type u_1
+I : Type u_2
+J : Type u_3
+inst✝³ : NormedAddCommGroup H
+inst✝² : InnerProductSpace ℂ H
+inst✝¹ : Fintype I
+inst✝ : Fintype J
+F : EffectAtlas H I
+R : J → I → ℝ
+hR : ∀ (a : J) (i : I), 0 ≤ R a i
+hcol : ∀ (i : I), ∑ a, R a i = 1
+ψ : H
+a : J
+⊢ ∑ i, (inner ℂ ψ (R a i • (F.effect i) ψ)).re = ∑ i, R a i * (inner ℂ ψ ((F.effect i) ψ)).re
+KomorebiPhysics/WeightedEffects.lean:53:4: error: This simp argument is unused:
+  inner_smul_right
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [probability, effectExpectation, postprocess, sum_apply, inner_sum, Complex.mul_re]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:53:22: error: This simp argument is unused:
+  Complex.mul_re
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [probability, effectExpectation, postprocess, sum_apply, inner_sum, inner_smul_right]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:72:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (postprocess ?F ?R ?hR ?hcol).current ?A ?ψ ?a ?b
+in the target expression
+  (F.postprocess R hR hcol).current A ψ a b = RefinementTower.aggregateCurrent R (Matrix.of (F.current A ψ)) a b
+
+H : Type u_1
+I : Type u_2
+J : Type u_3
+inst✝³ : NormedAddCommGroup H
+inst✝² : InnerProductSpace ℂ H
+inst✝¹ : Fintype I
+inst✝ : Fintype J
+F : EffectAtlas H I
+R : Matrix J I ℝ
+hR : ∀ (a : J) (i : I), 0 ≤ R a i
+hcol : ∀ (i : I), ∑ a, R a i = 1
+A : H →L[ℂ] H
+ψ : H
+a b : J
+⊢ (F.postprocess R hR hcol).current A ψ a b = RefinementTower.aggregateCurrent R (Matrix.of (F.current A ψ)) a b
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    R
+  has type
+    Matrix J I ℝ
+  but is expected to have type
+    J → I → ℝ
+  in the application
+    F.postprocess R
+KomorebiPhysics/WeightedEffects.lean:95:72: error: unsolved goals
+H : Type u_1
+I : Type u_2
+J : Type u_3
+inst✝² : NormedAddCommGroup H
+inst✝¹ : InnerProductSpace ℂ H
+inst✝ : Fintype I
+R : J → I → ℝ
+D : I → H →L[ℂ] H
+ψ : H
+a : J
+⊢ ∑ i, (inner ℂ ψ (R a i • (D i) ψ)).re = ∑ i, R a i * (inner ℂ ψ ((D i) ψ)).re
+KomorebiPhysics/WeightedEffects.lean:97:4: error: This simp argument is unused:
+  inner_smul_right
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [source, effectExpectation, postprocessVelocity, sum_apply, inner_sum, Complex.mul_re]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:97:22: error: This simp argument is unused:
+  Complex.mul_re
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [source, effectExpectation, postprocessVelocity, sum_apply, inner_sum, inner_smul_right]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/WeightedEffects.lean:115:0: error: automatically included section variable(s) unused in theorem `KomorebiPhysics.EffectAtlas.postprocess_weights_comp`:
+  [Fintype I]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype I] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`

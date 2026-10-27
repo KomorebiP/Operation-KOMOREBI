@@ -1,0 +1,79 @@
+module
+
+public import QuantumPacketCore
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+
+/-!
+Chapter 2, equations (2.1)--(2.11): finite orthogonal atlases on a complex
+inner product space. The ambient space need not be finite-dimensional.
+The maps are bounded and defined on the whole space. Unbounded generators
+and infinite sums are not represented by this module.
+-/
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+namespace KomorebiPhysics
+open scoped BigOperators
+
+variable {H I : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+  [Fintype I] [DecidableEq I]
+
+/-- An actual bounded, self-adjoint projector resolution, not an abstract
+list of energy values. Multiplication of maps is composition. -/
+structure Atlas (H I : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+    [Fintype I] [DecidableEq I]
+    extends KomorebiPaperVII.PacketFamily (H →L[ℂ] H) I where
+  selfAdjoint : ∀ i x y, inner ℂ (proj i x) y = inner ℂ x (proj i y)
+
+namespace Atlas
+variable (P : Atlas H I)
+
+/-- Equation (2.4). -/
+def packet (ψ : H) (i : I) : H := P.proj i ψ
+
+/-- Equation (2.6), deduced by evaluating the operator resolution. -/
+theorem reconstruct_state (ψ : H) : (∑ i, P.packet ψ i) = ψ := by
+  have h := congrArg (fun T : H →L[ℂ] H => T ψ) P.sum_proj
+  simpa only [sum_apply, one_apply_eq_self, packet] using h
+
+/-- Reapplying the same projector fixes its packet. -/
+theorem proj_packet (ψ : H) (i : I) : P.proj i (P.packet ψ i) = P.packet ψ i := by
+  have h := congrArg (fun T : H →L[ℂ] H => T ψ) (P.toPacketFamily.idempotent i)
+  exact h
+
+/-- Different packet vectors are orthogonal. -/
+theorem packet_orthogonal (ψ φ : H) (i j : I) (hij : i ≠ j) :
+    inner ℂ (P.packet ψ i) (P.packet φ j) = 0 := by
+  unfold packet
+  rw [P.selfAdjoint]
+  have h : P.proj i (P.proj j φ) = 0 := by
+    have h := congrArg (fun T : H →L[ℂ] H => T φ) (P.mul_proj i j)
+    simpa only [mul_apply_eq_comp, ite_eq_right hij,
+      zero_apply] using h
+  rw [h, inner_zero_right]
+
+/-- A packet on the left makes a second same-sector projection redundant. -/
+theorem inner_packet_project (ψ φ : H) (i : I) :
+    inner ℂ (P.packet ψ i) (P.proj i φ) = inner ℂ (P.packet ψ i) φ := by
+  rw [← P.selfAdjoint, P.proj_packet]
+
+/-- Orthogonal decomposition of the full inner product. -/
+theorem inner_reconstruct (ψ φ : H) :
+    inner ℂ ψ φ = ∑ i, inner ℂ (P.packet ψ i) (P.packet φ i) := by
+  calc
+    inner ℂ ψ φ = inner ℂ (∑ i, P.packet ψ i) φ := by rw [P.reconstruct_state]
+    _ = ∑ i, inner ℂ (P.packet ψ i) φ := sum_inner _ _ _
+    _ = ∑ i, inner ℂ (P.packet ψ i) (P.packet φ i) := by
+      apply Finset.sum_congr rfl
+      intro i _
+      exact (P.inner_packet_project ψ φ i).symm
+
+/-- Equation (2.11): Parseval/Pythagoras is proved, not an atlas field. -/
+theorem norm_sq_reconstruct (ψ : H) : ‖ψ‖ ^ 2 = ∑ i, ‖P.packet ψ i‖ ^ 2 := by
+  have h := congrArg Complex.re (P.inner_reconstruct ψ ψ)
+  have self (x : H) : (inner ℂ x x).re = ‖x‖ ^ 2 := inner_self_eq_norm_sq (𝕜 := ℂ) x
+  simpa only [Complex.re_sum, self] using h
+
+end Atlas
+end KomorebiPhysics

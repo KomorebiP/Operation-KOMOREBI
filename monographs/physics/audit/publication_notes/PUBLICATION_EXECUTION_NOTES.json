@@ -1,0 +1,42 @@
+{
+  "scope": "Publication build preparation only; distinct from Lean gate failures.",
+  "failures": [
+    {
+      "stage": "assembly before font restoration",
+      "cause": "kpsewhich qplr.afm returned exit 1 because TeX Gyre Type 1 fonts were not installed.",
+      "logs": [
+        "assembly_current.log",
+        "assembly_final.log"
+      ]
+    },
+    {
+      "stage": "initial dependency restoration",
+      "cause": "Package index absent, default apt sandbox user unsupported, then cache directory write blocked.",
+      "logs": [
+        "font_dependency_install.log",
+        "font_dependency_update.log",
+        "font_dependency_install_final.log"
+      ]
+    },
+    {
+      "stage": "editorial command path",
+      "cause": "One atlas prose edit used a duplicated relative root and raised FileNotFoundError; corrected before accepted final build.",
+      "log": "Captured in tool transcript; no target source was changed by that failed invocation."
+    }
+  ],
+  "restoration": {
+    "packages": "tex-gyre, fonts-texgyre, fonts-texgyre-math 20180621-6",
+    "commands": "apt-get update/install with APT::Sandbox::User=root and writable scratch cache",
+    "log": "font_dependency_install_restored.log",
+    "exit_code": 0,
+    "fonts_not_bundled": true
+  },
+  "layout_correction": "The first passing assembly was 573 pages because a longer status paragraph pushed generator prose to a sparse extra page. Shortening only that paragraph restored the generator to 7 pages and full book to 572.",
+  "later_scope_correction": "Clarified the Dirac boundary paragraph to distinguish the checked generator from the unlinked abstract spectral-calculus API; rebuilt and visually inspected p30.",
+  "accepted_logs": [
+    "assembly_closeout.log",
+    "design_audit_closeout.log",
+    "render_closeout.log",
+    "preview_closeout.log"
+  ]
+}

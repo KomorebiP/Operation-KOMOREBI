@@ -1,0 +1,157 @@
+KomorebiPhysics/SpectralEvolutionExamples.lean:19:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  Memℓp ?m.20 2
+in the target expression
+  (fun n => ↑(harmonicEigenvalue n)⁻¹) ∈ Space
+
+⊢ (fun n => ↑(harmonicEigenvalue n)⁻¹) ∈ Space
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun n => ↑(harmonicEigenvalue n)⁻¹
+  has type
+    ℕ → ℂ
+  but is expected to have type
+    PreLp fun x => ℂ
+  in the application
+    (fun n => ↑(harmonicEigenvalue n)⁻¹) ∈ Space
+KomorebiPhysics/SpectralEvolutionExamples.lean:17:4: error: (kernel) declaration has metavariables 'KomorebiPhysics.SpectralEvolutionExamples.roughState'
+KomorebiPhysics/SpectralEvolutionExamples.lean:24:8: error: (kernel) declaration type mismatch, 'KomorebiPhysics.SpectralEvolutionExamples.roughState_apply' has type
+  ∀ (n : ℕ), ↑roughState n = ↑roughState n
+but it is expected to have type
+  ∀ (n : ℕ), ↑roughState n = ↑(harmonicEigenvalue n)⁻¹
+KomorebiPhysics/SpectralEvolutionExamples.lean:34:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  1 = 0
+but is expected to have type
+  False
+KomorebiPhysics/SpectralEvolutionExamples.lean:36:8: error: (kernel) application type mismatch
+  congrArg Eq
+    (congrArg Complex.ofReal
+      (Eq.trans
+        (Eq.trans
+          (congrArg Inv.inv
+            (Mathlib.Meta.NormNum.IsNNRat.to_eq
+              (Mathlib.Meta.NormNum.isNNRat_add (Eq.refl HAdd.hAdd)
+                (Mathlib.Meta.NormNum.IsNat.to_isNNRat
+                  (Mathlib.Meta.NormNum.isNat_natCast 0 0 (Mathlib.Meta.NormNum.isNat_ofNat ℕ (Eq.refl 0))))
+                (Mathlib.Meta.NormNum.isNNRat_div
+                  (Mathlib.Meta.NormNum.isNNRat_mul (Eq.refl HMul.hMul)
+                    (Mathlib.Meta.NormNum.IsNat.to_isNNRat (Mathlib.Meta.NormNum.isNat_ofNat ℝ Nat.cast_one))
+                    (Mathlib.Meta.NormNum.isNNRat_inv_pos
+                      (Mathlib.Meta.NormNum.IsNat.to_isNNRat (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl 2))))
+                    (Eq.refl (Nat.mul 1 1)) (Eq.refl 2)))
+                (Eq.refl 1) (Eq.refl 2))
+              Nat.cast_one (Eq.refl 2)))
+          (inv_div 1 2))
+        (Mathlib.Meta.NormNum.IsNat.to_eq
+          (Mathlib.Meta.NormNum.IsNNRat.to_isNat
+            (Mathlib.Meta.NormNum.isNNRat_div
+              (Mathlib.Meta.NormNum.IsNat.to_isNNRat
+                (Mathlib.Meta.NormNum.isNat_mul (Eq.refl HMul.hMul) (Mathlib.Meta.NormNum.isNat_ofNat ℝ (Eq.refl 2))
+                  (Mathlib.Meta.NormNum.IsNNRat.to_isNat
+                    (Mathlib.Meta.NormNum.isNNRat_inv_pos
+                      (Mathlib.Meta.NormNum.IsNat.to_isNNRat (Mathlib.Meta.NormNum.isNat_ofNat ℝ Nat.cast_one))))
+                  (Eq.refl 2)))))
+          (Eq.refl 2))))
+argument has type
+  ↑(harmonicEigenvalue 0)⁻¹ = ↑2
+but function has type
+  ↑roughState 0 = 2 → Eq (↑roughState 0) = Eq 2
+KomorebiPhysics/SpectralEvolutionExamples.lean:52:2: error: Type mismatch: After simplification, term
+  Tendsto.const_mul Real.pi (Tendsto.comp tendsto_inv_atTop_zero eigenvalue_tendsto)
+ has type
+  @Tendsto ℕ ℝ (fun x => Real.pi * ((fun r => r⁻¹) ∘ harmonicEigenvalue) x) atTop (𝓝 0)
+but is expected to have type
+  @Tendsto ℕ ℝ halfTurnTime atTop (𝓝 0)
+KomorebiPhysics/SpectralEvolutionExamples.lean:77:42: error(lean.unknownIdentifier): Unknown constant `lp.coeFn_one`
+KomorebiPhysics/SpectralEvolutionExamples.lean:78:48: error: Invalid `←` modifier: `evolution` is a declaration name to be unfolded
+
+Hint: The simplifier cannot "refold" definitions by name. Use `rw` for this instead,
+                      or use the `←` simp modifier with an equational lemma for `evolution`.
+KomorebiPhysics/SpectralEvolutionExamples.lean:77:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  ‖-1 - ↑1 n‖ ≤ ‖diagonal (phaseSymbol harmonicEigenvalue (halfTurnTime n)) - ContinuousLinearMap.id ℂ ↥Space‖
+but is expected to have type
+  2 ≤ ‖evolution harmonicEigenvalue (halfTurnTime n) - ContinuousLinearMap.id ℂ ↥Space‖
+KomorebiPhysics/SpectralEvolutionExamples.lean:88:66: error: Application type mismatch: The argument
+  ht
+has type
+  Tendsto (fun x => ‖((fun t => evolution harmonicEigenvalue t) ∘ halfTurnTime) x - ContinuousLinearMap.id ℂ ↥Space‖)
+    atTop (𝓝 0)
+but is expected to have type
+  Tendsto (fun x => 2) ?m.78 (𝓝 0)
+in the application
+  tendsto_nhds_unique tendsto_const_nhds ht
+KomorebiPhysics/SpectralEvolutionExamples.lean:87:38: error: This simp argument is unused:
+  halfTurn_operator_distance
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [hz, sub_self, norm_zero] at ht
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralEvolutionExamples.lean:102:4: error: `simp` made no progress
+KomorebiPhysics/SpectralEvolutionExamples.lean:141:4: error: `simp` made no progress
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun x => x ∈ lp (fun x => ℂ) 2
+  has type
+    (PreLp fun x => ℂ) → Prop
+  but is expected to have type
+    (ℕ → ℂ) → Prop
+  in the application
+    @Subtype.val (ℕ → ℂ) fun x => x ∈ lp (fun x => ℂ) 2
+KomorebiPhysics/SpectralEvolutionExamples.lean:133:67: error: unsolved goals
+case e'_9
+h :
+  HasDerivAt
+    ((fun s => ↑((evolution harmonicEigenvalue s) ↑coherentState) 0) + fun s =>
+      ↑((evolution harmonicEigenvalue s) ↑coherentState) 1)
+    (-Complex.I * ↑(harmonicEigenvalue 0) * ↑((evolution harmonicEigenvalue 0) ↑coherentState) 0 +
+      -Complex.I * ↑(harmonicEigenvalue 1) * ↑((evolution harmonicEigenvalue 0) ↑coherentState) 1)
+    0
+⊢ 6 / 5 - 3 / 10 * Complex.I =
+    -Complex.I * ↑(harmonicEigenvalue 0) * ↑((evolution harmonicEigenvalue 0) ↑coherentState) 0 +
+      -Complex.I * ↑(harmonicEigenvalue 1) * ↑((evolution harmonicEigenvalue 0) ↑coherentState) 1
+KomorebiPhysics/SpectralEvolutionExamples.lean:138:15: error: This simp argument is unused:
+  evolution_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [coherentState_zero, coherentState_one, harmonicEigenvalue]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralEvolutionExamples.lean:138:31: error: This simp argument is unused:
+  coherentState_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [evolution_zero, coherentState_one, harmonicEigenvalue]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralEvolutionExamples.lean:138:51: error: This simp argument is unused:
+  coherentState_one
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [evolution_zero, coherentState_zero, harmonicEigenvalue]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralEvolutionExamples.lean:138:70: error: This simp argument is unused:
+  harmonicEigenvalue
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [evolution_zero, coherentState_zero, coherentState_one]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralEvolutionExamples.lean:148:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  coherentAmplitude 0
+in the target expression
+  Real.instAddCommGroup = NormedField.toNormedDivisionRing.toAddCommGroup
+
+case e'_4
+h :
+  HasDerivAt (fun x => ‖coherentAmplitude x‖ ^ 2 / 2)
+    (2 * (inner ℂ (coherentAmplitude 0) (6 / 5 - 3 / 10 * Complex.I)).re / 2) 0
+⊢ Real.instAddCommGroup = NormedField.toNormedDivisionRing.toAddCommGroup

@@ -1,0 +1,12 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPaperVII.MovingFrames.matrix_product_derivative
+#print axioms KomorebiPaperVII.MovingFrames.matrix_vector_derivative
+#print axioms KomorebiPaperVII.MovingFrames.adjoint_derivative
+#print axioms KomorebiPaperVII.MovingFrames.differentiated_unitarity
+#print axioms KomorebiPaperVII.MovingFrames.frame_velocity_skew
+#print axioms KomorebiPaperVII.MovingFrames.connection_hermitian
+#print axioms KomorebiPaperVII.MovingFrames.effectiveHamiltonian
+#print axioms KomorebiPaperVII.MovingFrames.effective_hamiltonian_hermitian
+#print axioms KomorebiPaperVII.MovingFrames.moving_frame_equation
+#print axioms KomorebiPaperVII.MovingFrames.moving_frame_coordinates

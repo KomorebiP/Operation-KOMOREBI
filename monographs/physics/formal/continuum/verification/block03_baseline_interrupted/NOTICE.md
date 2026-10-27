@@ -1,0 +1,1 @@
+This baseline attempt was interrupted by the outer tool execution deadline. Its partial logs and INCOMPLETE report are retained as-is. It is not a successful theorem audit. The completed retry is in ../block03_baseline_retry/.

@@ -1,0 +1,86 @@
+KomorebiPhysics/LindbladExamples.lean:30:25: error(lean.unknownIdentifier): Unknown constant `Real.sqrt_eq_iff_sq_eq`
+KomorebiPhysics/LindbladExamples.lean:29:48: error: unsolved goals
+⊢ Matrix.single 0 1 ↑√4 = Matrix.single 0 1 2
+KomorebiPhysics/LindbladExamples.lean:37:2: error: unsolved goals
+case «0».«0»
+⊢ generator ![![0, 4], ![1, 0]] !![1 / 2, 1 / 4; 1 / 4, 1 / 2] 0 0 = 3 / 2
+KomorebiPhysics/LindbladExamples.lean:38:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  generator rates density 0 1
+in the target expression
+  generator rates density ((fun i => i) ⟨0, ⋯⟩) ((fun i => i) ⟨1, ⋯⟩) =
+    !![3 / 2, -5 / 8; -5 / 8, -3 / 2] ((fun i => i) ⟨0, ⋯⟩) ((fun i => i) ⟨1, ⋯⟩)
+
+case «0».«1»
+⊢ generator rates density ((fun i => i) ⟨0, ⋯⟩) ((fun i => i) ⟨1, ⋯⟩) =
+    !![3 / 2, -5 / 8; -5 / 8, -3 / 2] ((fun i => i) ⟨0, ⋯⟩) ((fun i => i) ⟨1, ⋯⟩)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    generator rates density ((fun i => i) ⟨0, ⋯⟩)
+KomorebiPhysics/LindbladExamples.lean:40:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  generator rates density 1 0
+in the target expression
+  generator rates density ((fun i => i) ⟨1, ⋯⟩) ((fun i => i) ⟨0, ⋯⟩) =
+    !![3 / 2, -5 / 8; -5 / 8, -3 / 2] ((fun i => i) ⟨1, ⋯⟩) ((fun i => i) ⟨0, ⋯⟩)
+
+case «1».«0»
+⊢ generator rates density ((fun i => i) ⟨1, ⋯⟩) ((fun i => i) ⟨0, ⋯⟩) =
+    !![3 / 2, -5 / 8; -5 / 8, -3 / 2] ((fun i => i) ⟨1, ⋯⟩) ((fun i => i) ⟨0, ⋯⟩)
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    generator rates density ((fun i => i) ⟨1, ⋯⟩)
+KomorebiPhysics/LindbladExamples.lean:42:2: error: unsolved goals
+case «1».«1»
+⊢ generator ![![0, 4], ![1, 0]] !![1 / 2, 1 / 4; 1 / 4, 1 / 2] 1 1 = -(3 / 2)
+KomorebiPhysics/LindbladExamples.lean:69:9: error: Application type mismatch: The argument
+  h0
+has type
+  HasDerivAt (fun x => x * (generator ![![0, 4], ![1, 0]] !![1 / 2, 1 / 4; 1 / 4, 1 / 2] 0 0).re) (3 / 2) 0
+but is expected to have type
+  HasDerivAt (fun t => population (localCurve t) 0) (3 / 2) 0
+in the application
+  And.intro h0
+KomorebiPhysics/LindbladExamples.lean:76:2: error: Type mismatch
+  h
+has type
+  HasDerivAt (fun x => ↑x * generator ![![0, 4], ![1, 0]] !![1 / 2, 1 / 4; 1 / 4, 1 / 2] 0 1) (-(5 / 8)) 0
+but is expected to have type
+  HasDerivAt (fun t => localCurve t 0 1) (-5 / 8) 0
+
+Note: The following definitions were not unfolded because their definition is not exposed:
+  Complex.mulAux ↦ 87
+KomorebiPhysics/LindbladExamples.lean:93:32: error: Application type mismatch: The argument
+  rates_nonneg
+has type
+  ∀ (a b : Fin 2), 0 ≤ rates a b
+but is expected to have type
+  DetailedBalance.Balanced ?m.16 ?m.17
+in the application
+  dissipation_eq_activeFlux rates_nonneg
+KomorebiPhysics/LindbladExamples.lean:92:73: error: unsolved goals
+⊢ dissipation rates reference (population density) = 3 * Real.log 2
+KomorebiPhysics/LindbladExamples.lean:129:4: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  HMul (Matrix ℕ (Fin 2) ℂ) (Matrix ℕ ℕ ℂ) (Matrix ?m.37 ?m.39 ℂ)
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+KomorebiPhysics/LindbladExamples.lean:132:71: error: Application type mismatch: The argument
+  h
+has type
+  (Matrix.single 0 1 4)ᴴ * Matrix.single 0 1 4 = Matrix.single 1 1 4
+but is expected to have type
+  ?m.59 = ?m.60
+in the application
+  congrArg (fun M => (M 1 1).re) h
+KomorebiPhysics/LindbladExamples.lean:150:82: error: unsolved goals
+⊢ 2 - ((![1 / 2, 1 / 4] ᵥ* Matrix.single 1 1 4) 0 + (2 + (![1 / 4, 1 / 2] ᵥ* Matrix.single 1 1 4) 1)) = -2
+KomorebiPhysics/LindbladExamples.lean:157:75: error: unsolved goals
+⊢ (![1 / 2, 1 / 4] ᵥ* Matrix.single 0 0 4) 1 = 0
+KomorebiPhysics/LindbladExamples.lean:177:7: error: Variable name `a` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _a
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`

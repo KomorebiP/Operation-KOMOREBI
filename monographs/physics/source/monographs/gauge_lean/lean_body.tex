@@ -1,0 +1,411 @@
+\section{What this companion verifies}
+
+The formal gauge program proceeds from unit-circle transport to geometric refinement, separates edge reconstruction from curvature, and then supplies a concrete Hilbert space in which continuum reconstruction can be discussed. These are distinct achievements. A local gauge-covariance identity, an exact fine/coarse intertwining, a finite operator bound, and a strong limit of spatial projections do not assert the same thing.
+
+This companion explains the selected source modules through Block40. Its central reading route is Blocks25--34; Blocks35--40 supply the reconstruction interface. The surrounding physics project has reached Block49, whose free torus Dirac result is treated in the Dirac monograph. The later free result does not automatically incorporate the background connection developed here.
+
+The source is the retained checked Block49 archive. The accompanying record made a new comparison of source bytes, declaration locations and inherited evidence. It did not invoke Lean. All eighteen selected modules agree both with their archived members and with the inherited source digests used below. That source-identity result is stronger than recognizing a filename, and weaker than a new kernel check.
+
+The evidence comparison also found an inherited inconsistency. One Block27 cumulative-build log contains a Git failure although its receipt records a successful empty log. Six reported build or compile logs from Blocks36 and40 could not be located in the retained archive. Those exceptions are preserved and explained in Section~\ref{sec:gauge-evidence}. They are not silently repaired or counted as newly verified passes.
+
+\subsection{How to use the source map}
+
+The full crosswalk is \path{editorial/gauge/lean_declarations.csv}. Each entry records its namespace, source file, line, source digest and block assignment. The corresponding JSON, \path{editorial/gauge/lean_source_map.json}, records the original ZIP member, inherited receipt and result of each identity comparison. The CSV contains 1,135 named inventory entries, including 705 theorem or lemma entries. The separate \path{lean_instances.json} records eleven additional named instance forms and three anonymous instance forms. These are source inventory counts, not numbers of independent physical laws.
+
+The retained global \path{declaration_inventory.json} is an older 142-module snapshot. It is not used here to count the entire Block49 project. Its entries for the eighteen selected modules were checked individually against their actual source lines. Every selected entry matched. This distinction prevents a valid local index from becoming a misleading current global total.
+
+Most short names below are relative to the namespace \path{KomorebiPhysics} followed by the module stem. A name such as \path{EdgeSubdivision.two_halfSteps_embed} additionally lies inside the indicated structure namespace. The CSV supplies the fully qualified name when the short name is ambiguous.
+
+\clearpage
+\section{The reading map}
+
+The first three rows were integrated into the checked Block25 release. The corrected unit-circle transport originated as the Block23 topic; the complete-metric bridge was the Block24 topic. Their presence does not establish two additional independent release gates. The Block25 receipt separately records their theorem counts and the source identity of the integrated bridge.
+
+\begin{longtable}{@{}L{.08\textwidth}L{.58\textwidth}rr@{}}
+\toprule
+Topic & Mathematical responsibility & Names & Results\\
+\midrule
+\endhead
+23 & Corrected unit-circle Clifford transport & 67 & 38\\
+24 & Exact towers and summable metric defects & 28 & 19\\
+25 & Hilbert preservation and the cylinder tower & 84 & 51\\
+26 & Geometric half-edges and covariant interpolation & 76 & 45\\
+27 & Cubical paths, face phases and Bianchi identity & 89 & 52\\
+28 & Glued half-grid and finite-product defect calculus & 82 & 56\\
+29 & Straight-edge compatibility and its counterexamples & 65 & 42\\
+30 & Operator packaging and independent defect budgets & 68 & 44\\
+31 & Genuine finite Hilbert norms and constant-one bound & 59 & 44\\
+32 & Seven-factor scalar bound and two-stage comparison & 40 & 29\\
+33 & Exact affine links and quadratic curvature estimates & 85 & 48\\
+34 & Coordinate-regular background connections & 92 & 58\\
+35 & Unit-volume cell reconstruction in genuine \(L^2\) & 28 & 20\\
+36 & Weighted octree reconstruction and prefix density & 47 & 23\\
+37 & Cartesian bit coding and quotient geometry & 52 & 28\\
+38 & Binary measure and Euclidean cube volume & 89 & 58\\
+39 & Transported Euclidean levels and projection limits & 21 & 13\\
+40 & Concrete dyadic boxes and level identification & 63 & 37\\
+\midrule
+ & Selected inventory total & 1,135 & 705\\
+\bottomrule
+\end{longtable}
+
+Here ``Results'' counts both source theorems and lemmas, following the retained inventory convention. Named and anonymous instances are excluded from these two columns and recorded separately. In particular, the Block36,37 and38 release receipts use some different declaration-count conventions. The present table does not overwrite their original counts.
+
+The first group of files has the stem \path{Relativistic3DCliffordTransportU1}, \path{LocalDiscreteGlobalContinuum} and \path{Relativistic3DCliffordHilbertRefinement}. Thereafter the stems follow the topics: \path{Relativistic3DGeometricEdgeRefinement}, \path{Relativistic3DCubicalRefinement}, \path{Relativistic3DFullWalkRefinement}, \path{Relativistic3DEdgeCompatibility}, \path{Relativistic3DCombinedDefect}, \path{Relativistic3DHilbertScalarDefect}, \path{Relativistic3DHilbertFullWalkDefect}, \path{Relativistic3DAffineConnection} and \path{Relativistic3DRegularConnection}. All live under \path{KomorebiPhysics/} with extension \path{.lean}.
+
+\section{Types fix the gauge convention}
+
+\subsection{Unitary phases are actual unitary phases}
+
+The corrected local phase type is Mathlib's \path{Circle}. The earlier candidate used \(\C^\times\), the group of nonzero complex numbers. Every element of \(\C^\times\) is invertible, but multiplication by such an element need not preserve norm. Replacing that type by \path{Circle} is a mathematical repair, not a notational preference. The negative control \path{NonunitScalarIsometry.lean} records the sensitivity of the claimed isometry to this distinction.
+
+The spinor is a four-component complex function. A site state is a function from \path{Site} to that spinor; a link and a gauge are functions from \path{Site} to \path{Circle}. The translation is an equivalence \(\tau:\mathrm{Site}\simeq\mathrm{Site}\), so the inverse site appearing in the directional shift is supplied explicitly. Finite-site hypotheses enter the Hilbert sums, not the bare pointwise covariance identity.
+
+The source link \(u(x)\) is oriented from \(x\) to \(\tau x\). Its gauge action is
+\[
+ u^g(x)=g(\tau x)u(x)g(x)^{-1},
+ \qquad (G_g\psi)(x)=g(x)\psi(x).
+\]
+When the main monograph uses a backward transporter \(U_{x,\tau x}\), the conversion is \(u(x)=U_{x,\tau x}^{-1}\). One must convert the orientation together with the transformation law. Changing only the letter leaves the endpoint factors reversed.
+
+\subsection{Projector transport and covariance}
+
+A \path{CliffordInvolution} supplies a complex-linear involution \(A\). Its channels are \(P_\pm=(I\pm A)/2\). The module proves idempotence, complementarity and cross annihilation. Its directional transport is
+\[
+ (S_{A,\tau,u}\psi)(x)
+ =u(\tau^{-1}x)P_+\psi(\tau^{-1}x)
+  +u(x)^{-1}P_-\psi(\tau x).
+\]
+The explicit inverse in \path{directionalShiftInv} is checked in both orders. The declaration \path{directionalShiftEquiv} packages the resulting reversible map. This pointwise equivalence is not yet a statement about an infinite-lattice operator domain.
+
+The theorem \path{directionalShift_gauge_covariant} says exactly
+\[
+ S_{A,\tau,u^g}(G_g\psi)=G_g(S_{A,\tau,u}\psi).
+\]
+After expanding the two channels, its proof ends with the following exact source fragment:
+\begin{lstlisting}
+  funext x
+  simp only [directionalShift, gaugeState, plus_phaseMul, minus_phaseMul,
+    phaseMul_mul, phaseMul_add]
+  rw [gaugeLink_source_mul, gaugeLink_inv_target_mul]
+\end{lstlisting}
+The two cancellation lemmas encode the source and target endpoint factors separately. This is why the equality is a covariance theorem for the actual shift, rather than a desired transformation rule supplied as a field of a structure.
+
+The same module treats local spin steps that commute with scalar phases and composes them with the spatial shifts. The full palindromic walk has the factor order \(M-X-Y-Z-Y-X-M\). This occurrence order will later determine the coefficients in the scalar defect budget.
+
+\section{What the Hilbert and cylinder results add}
+
+The finite spinor pairing is conjugate-linear in the first input:
+\[
+ \operatorname{ip}(\psi,\phi)=\sum_{j=0}^{3}\overline{\psi_j}\phi_j.
+\]
+The module \path{Relativistic3DCliffordHilbertRefinement} proves its sesquilinearity, positivity and definiteness, then proves that the actual Clifford channels are orthogonal when the involution is Hermitian. Summing over a finite site type gives \path{stateIP}. Reindexing through the site equivalence establishes preservation of this pairing by a directional shift.
+
+This proof uses two inputs with different roles. Unit modulus controls the phases; Hermitian Clifford structure controls orthogonality of the two channels. Invertibility of the shift alone would not give the Hilbert conclusion. The spectral local mass step is treated separately, and composition gives the seven-factor preservation theorem.
+
+\subsection{Replication and its measure}
+
+The Block25 refinement changes \(\mathrm{Site}\) to \(\mathrm{Site}\times\mathrm{Fin}(2)\). The new child label is a spectator: translations and links are pulled back through the first coordinate, while the state is replicated. Exact walk intertwining follows for these lifted data.
+
+Raw counting measure satisfies
+\[
+ \operatorname{stateIP}(I\psi,I\phi)
+ =2\operatorname{stateIP}(\psi,\phi).
+\]
+Thus replication is not an isometry for the unweighted fine sum. The half-cell measure removes exactly this factor. At depth \(n\), the checked inner product is weighted by \(2^{-n}\). The negative control \path{RawReplicationIsometry.lean} prevents the raw and weighted statements from being confused.
+
+The recursively lifted states and walks instantiate \path{ExactRefinementTower}. A reconstruction along the zero-child branch is exactly compatible with replication. In this realization the reconstructed sequence is constant, and its global state and evolution reduce to the base state and base walk. The theorem gives an exact cylinder model. No Euclidean continuum field is introduced by calling the tower a refinement.
+
+\subsection{The general metric bridge}
+
+The independent module \path{LocalDiscreteGlobalContinuum} defines \path{SummableDefect} for a sequence \(f_n\) in a metric space. Its fields give a summable real sequence \(b_n\) and the adjacent estimate
+\[
+ d(f_n,f_{n+1})\le b_n.
+\]
+The theorem \path{SummableDefect.cauchySeq} derives the Cauchy property. In a complete target, \path{exists_limit} and \path{tendsto_limit} give an actual limit, and \path{dist_limit_le_tail} proves
+\[
+ d(f_n,f_\infty)\le\sum_{m=0}^{\infty}b_{n+m}.
+\]
+The target space, the reconstruction and its adjacent estimate must be supplied by an application. The metric theorem does not identify that limit with a Dirac propagator or solve a gauge-field equation. Later connection budgets use precisely this conditional bridge.
+
+\section{Geometric half-edges replace spectator children}
+
+Block26 uses \code{HalfSite Site = Sum Site Site}. The left injection denotes a coarse endpoint and the right injection the midpoint on its outgoing edge. The half translation sends the endpoint to its midpoint and the midpoint to the next endpoint. Its square is the lifted coarse translation, as proved by \path{halfShift_sq}.
+
+An \code{EdgeSubdivision u} supplies two links with the ordered contract
+\[
+ u_2(x)u_1(x)=u(x).
+\]
+The interpolation is the actual transported midpoint value:
+\[
+ (I\psi)(\operatorname{inl}x)=\psi(x),\qquad
+ (I\psi)(\operatorname{inr}x)=u_1(x)\psi(x).
+\]
+Endpoint and midpoint gauges are independent. The first half-link transforms with the midpoint gauge on the left; the second transforms with the next coarse endpoint gauge on the left. Their internal midpoint factors cancel in the product. The theorem \path{EdgeSubdivision.embed_gauge_covariant} checks the interpolation under this action.
+
+The declaration \path{EdgeSubdivision.two_halfSteps_embed} proves
+\[
+ S_{\mathrm{fine}}^{\,2}I=IS_{\mathrm{coarse}}.
+\]
+It uses the full Clifford channel split. It is not a scalar-translation identity relabelled as spin transport. The named \path{intertwiningDefect} is subsequently proved zero for these compatible data.
+
+The half-cell pairing again has weight \(1/2\). The theorem \path{embed_halfCellIP_isometry} proves exact normalization, and \path{embed_restrict_adjoint} identifies restriction as the Hilbert adjoint: average the endpoint with the midpoint transported back by the first sublink. The composite interpolation after restriction is idempotent and fixes interpolated states.
+
+\subsection{The one-axis massive walk has a precise factorization}
+
+A \path{LocalStepSubdivision} is additional data whose local half-step squares to the coarse local step. The theorem \path{refinedOneAxisWalk_embed} then compares \(M-S-M\) with its factorwise subdivision
+\[
+ M_{1/2}^{2}-S_{1/2}^{2}-M_{1/2}^{2}.
+\]
+This is not a theorem equating a coarse walk with the square of an arbitrary whole fine walk. Moving factors past one another would require additional commutation relations. The Hilbert-certified version retains the half-cell pairing throughout.
+
+\section{Cubical curvature and the exact obstruction}
+
+Block27 constructs one Boolean cube with eight vertices and twelve positively oriented edges. \path{CubeLinks} stores four edges for each axis. Its six face plaquettes are ratios of the two same-endpoint paths on the corresponding face. In the source convention,
+\[
+ \Omega_{xy}(z)=\frac{P_{xy}(z)}{P_{yx}(z)}.
+\]
+The vertex gauge factors telescope along each path, so these Abelian plaquettes are gauge invariant. For each face, plaquette one is equivalent to equality of the two path phases.
+
+The six origin-to-opposite-corner path phases are named \path{pathXYZ}, \path{pathXZY}, \path{pathYXZ}, \path{pathYZX}, \path{pathZXY} and \path{pathZYX}. Adjacent permutations differ by one face phase. Two transposition sequences yield the exact cube relation
+\[
+ \Omega_{yz}(1)\Omega_{xz}(0)\Omega_{xy}(1)
+ =\Omega_{xy}(0)\Omega_{xz}(1)\Omega_{yz}(0).
+\]
+This is \path{CubeLinks.cube_bianchi}. The factors commute because the formal link group here is \(U(1)\). A non-Abelian Bianchi statement would require basepoint transports and ordered multiplication; the displayed scalar identity is not that theorem.
+
+\subsection{Flatness is local path independence}
+
+\path{CubeLinks.Flat} requires all six face phases to be one. The theorem \path{CubeLinks.Flat.all_corner_paths} then identifies all six corner transports. The derived theorem \path{CubeLinks.Flat.xy1_of_other_five} supplies the omitted upper \(xy\) face from the other five. These are single-cell assertions, not a global trivialization on an arbitrary lattice with nontrivial loops.
+
+The chosen reference path to each child vertex defines a gauge-covariant interpolation. Since eight unitary copies of one spinor are used, \path{cubeIP} carries weight \(1/8\). The theorem \path{CubeLinks.embed_cubeIP_isometry} checks this exact cell normalization. The finite-site version \path{cellEmbed_isometry} then sums the cell identities.
+
+When two path phases satisfy \(p=\Omega q\), the path-defect theorem identifies
+\[
+ p\psi-q\psi=q(\Omega-1)\psi,
+ \qquad
+ \operatorname{ip}(D,D)=|\Omega-1|^2\operatorname{ip}(\psi,\psi).
+\]
+The namespace \path{CubeLinks} contains both \path{pathDefect_eq_curvature_transport} and \path{pathDefect_ip_eq_curvature_weight}. A fixed nonzero basis spinor makes zero defect equivalent to trivial phase. The checked \path{nonflatCube_defect_nonzero} supplies a concrete counterexample to universal path independence.
+
+\section{A full half-grid and two independent defects}
+
+Block28 glues child cubes into \(\mathrm{Site}\times\mathrm{CubeVertex}\). Each coordinate half shift toggles its bit and carries the coarse site on the second half step. The phase frame \(r\) defines an interpolation \(I_r\psi(s,v)=r(s,v)\psi(s)\). Canonical fine links insert the coarse link on the carrying half-step and conjugate by the frame phases at its endpoints.
+
+The exact two-half-step identities hold in all three directions. Their composition proves factorwise refinement of the complete seven-factor walk. The fine pairing uses \(1/8\) of the counting sum. These conclusions use the constructed canonical links. Their existence does not say that an arbitrary choice of fine links satisfies the same reconstruction contract.
+
+\subsection{Compatibility is the actual straight-edge hypothesis}
+
+Block29 isolates this issue in \path{StraightCompatibleX}, \path{StraightCompatibleY} and \path{StraightCompatibleZ}. Each condition equates the ordered two-half-link product with the framed intended coarse link. The contracts are gauge covariant. Under them, \path{arbitraryRefinedSevenFactorWalk_frameEmbed} proves exact full factorwise intertwining for arbitrary compatible fine links.
+
+Curvature and reconstruction compare different data. Curvature compares alternative paths at a fixed scale; compatibility compares the fine ordered product with its intended coarse edge. Two exact source witnesses prevent either condition from replacing the other:
+\begin{itemize}
+\item \path{exact_refinement_can_preserve_nonflat_plaquette} retains a nontrivial coarse plaquette in its two-by-two fine Wilson loop while the walk refinement is exact.
+\item \path{quarterPair_fineDefect_nonzero}, together with \path{flatQuarterCube_flat}, gives flat local data whose chosen half-edge product is incompatible with the prescribed coarse link.
+\end{itemize}
+Consequently \path{no_universal_flatness_implies_refinement} formally rejects a curvature-only zero-defect rule. This obstruction is a positive result of the formalization: it identifies the missing hypothesis instead of hiding it inside a norm estimate.
+
+\subsection{Finite-product telescoping preserves factor order}
+
+The continuous-linear calculus in Block28 defines the defect \(FI-IC\) for an interpolation \(I:X\to Y\). The two-factor identity retains the transported local defects. Iterating it over the finite ordered list gives \path{norm_fullDefect_le_budget} when all relevant factors are contractive. No factor is silently commuted past another.
+
+Block30 packages actual straight-edge maps and a separate cubical path-swap stage. Its operator norm initially comes from the ambient finite function-space norm. Finite dimensionality gives continuity, but does not identify that norm with the Hilbert counting norm. The source guide states this limitation explicitly. The next block supplies the missing Hilbert realization.
+
+\section{The constant-one Hilbert estimate}
+
+Block31 defines
+\[
+ \operatorname{HilbertState}(\mathrm{Site})
+ =\operatorname{EuclideanSpace}_{\C}(\mathrm{Site}\times\mathrm{Fin}(4)).
+\]
+The conversion from the earlier function representation is algebraically invertible, and \path{stateToHilbert_norm_sq} identifies the squared norm with the real part of \path{stateIP}. The operator norms below are therefore actual finite \(\ell^2\) operator norms.
+
+For two links \(v,u\), the shift difference splits into orthogonal Clifford channels. The exact energy formula, reindexing and unit modulus imply
+\[
+ \norm{S_v-S_u}\le\max_x|v(x)-u(x)|.
+\]
+The declaration \path{directionalShiftDefectHilbertCLM_opNorm_le_sup} records this constant-one estimate. It is independent of the number of sites. A triangle inequality that treated both channels as arbitrary overlapping vectors would lose this structure.
+
+\subsection{The genuine normalized fine defect}
+
+The map \path{halfStateToHilbert} contains a factor \(1/\sqrt2\), encoding the half-cell measure. For a \path{FineEdgePair} whose ordered product is \(v\), \path{fineEdgeDefectHilbertCLM_norm_eq_coarse} identifies the normalized fine-defect norm with the corresponding coarse-link mismatch norm.
+
+Define \(E(x)=v(x)u(x)^{-1}\). Unit modulus gives
+\[
+ |v(x)-u(x)|=|E(x)-1|.
+\]
+Thus the principal theorem \path{fineEdgeDefectHilbertCLM_opNorm_le_ratioSup} says
+\[
+ \norm{D_{\mathrm{fine}}}_{\ell^2\to\ell^2}
+ \le\max_x|E(x)-1|.
+\]
+Its statement explicitly requires a finite nonempty site type, a \path{HermitianClifford}, a site equivalence, the half-edge pair and the intended coarse link. The scalar supremum is not a curvature invariant; it measures reconstruction error. The quarter-turn witness has ratio error two.
+
+\section{The complete scalar budget and its scope}
+
+Block32 conjugates directional shifts into the finite Hilbert space, proves their norm preservation and applies the finite-product theorem there. The two mass factors are identical on the compared sides and assumed contractive. If \(\delta_x,\delta_y,\delta_z\) are the three link-ratio suprema, then
+\[
+ \norm{D_W}\le2\delta_x+2\delta_y+\delta_z.
+\]
+The coefficients count occurrences in \(M-X-Y-Z-Y-X-M\). The result is \path{norm_hilbertSevenFactorDefect_le_edgeBudget}. Its \path{hilbertSevenFactorPairs} compare effective reconstructed and prescribed links on a common finite Hilbert space. The theorem should not be read as an already constructed arbitrary global fine-grid Hamiltonian comparison.
+
+Uniform phase multiplication on the full finite Hilbert state gives \path{hilbertPhaseOp}. For \(p=\Omega q\), \path{norm_hilbertPhaseDefectOp_eq_curvature} proves the exact operator identity in norm,
+\[
+ \norm{P_p-P_q}=|\Omega-1|.
+\]
+The selected five-face set is
+\[
+ \mathcal F_5=\{xy(0),xz(1),yz(0),yz(1),xz(0)\}.
+\]
+It omits \(xy(1)\), which the Bianchi identity constrains. The exact source order of the path pairs is \(XYZ/YXZ\), \(YXZ/YZX\), \(YZX/ZYX\), \(XYZ/XZY\), \(XZY/ZXY\). The operators form a specified product comparison; the sum is not declared to be the defect of every possible physical gluing construction.
+
+The combined theorem applies a checked two-stage composition identity to the walk comparison and this cubical phase comparison:
+\[
+ \norm{D_{\mathrm{total}}}
+ \le2\delta_x+2\delta_y+\delta_z
+      +\sum_{f\in\mathcal F_5}|\Omega_f-1|.
+\]
+The declaration is \path{norm_combinedHilbertDefect_le}. Its exact zero sector requires both exact reconstructed links and flat cubical data. These are sufficient conditions for this specified comparison, with no claim that one condition implies the other.
+
+\section{Connections generate the links and the scale law}
+
+\subsection{Affine backgrounds}
+
+Block33 defines actual coordinate line-integral phases for an affine real Abelian connection. Additivity of the edge angle gives exact ordered half-edge composition. Thus the straight-link budget vanishes for the generated links rather than being assumed small.
+
+The constant curvature components give exact plaquette formulas
+\[
+ \Omega_{ij}(p,h)=e^{ih^2F_{ij}}.
+\]
+The source proves \(|e^{it}-1|\le|t|\), then applies it to the selected faces. The result is
+\[
+ \norm{D_{\mathrm{total}}(h)}
+ \le h^2\bigl(|F_{xy}|+2|F_{xz}|+2|F_{yz}|\bigr).
+\]
+The theorem \path{norm_affineGeneratedCombinedHilbertDefect_le} applies to the actual finite-site link functions and the specified cubical phase stage. The uniform background \(A_y=Bx\) supplies a nontrivial plaquette at \(B=\pi,h=1\). Vanishing straight-edge error therefore does not force flatness.
+
+\subsection{Coordinate regularity is explicit data}
+
+Block34's \path{RegularConnection3} stores \(A_x,A_y,A_z\), the six cross-coordinate derivative fields, actual one-dimensional \path{HasDerivAt} identities, and the continuity along coordinate lines needed by the integral proofs. \path{CrossDerivativeBounds} supplies six nonnegative uniform bounds. This interface should be read literally; it is not an unnamed blanket assertion that all fields are smooth in every required sense.
+
+For example,
+\[
+ \theta_x(p,h)=\int_0^h A_x(p+te_x)\,dt,
+ \qquad u_x(p,h)=e^{i\theta_x(p,h)}.
+\]
+Interval-integral additivity proves exact half-edge composition. The finite-site equality \path{regularHalfProductLinkXOn_eq_coarse} has the following exact proof body:
+\begin{lstlisting}
+  funext s
+  exact linkX_half_product C h (pos s)
+\end{lstlisting}
+The analogous declarations hold for \(y,z\). No quadrature approximation is hidden in these equalities.
+
+The fundamental theorem of calculus bounds coordinate variation. Integrating across the transverse edge gives a quadratic plaquette envelope. If \(B_{ji}\) bounds \(|\partial_iA_j|\), the checked bound is
+\[
+ |\Omega_{xy}(p,h)-1|\le(B_{yx}+B_{xy})|h|^2,
+\]
+and similarly for the other faces. The derivative envelope is
+\[
+ \mathcal A_\partial
+ =(B_{yx}+B_{xy})+2(B_{zx}+B_{xz})+2(B_{zy}+B_{yz}).
+\]
+The theorem \path{norm_regularGeneratedCombinedHilbertDefect_le} proves
+\[
+ \norm{D_{\mathrm{total}}(h)}\le h^2\mathcal A_\partial.
+\]
+It assumes a finite nonempty site type, contractive mass maps, site equivalences, a position map, the regular connection and its derivative bounds, and a base point for the cube. The position map and site equivalences are not accompanied here by a theorem identifying an arbitrary global lattice with a continuum covariant derivative.
+
+The plaquette estimate uses sums of absolute derivative bounds. It does not use a proved exact surface-integral formula for the curl of a general connection. Accordingly, it can be less sharp than a curl-only estimate. The non-affine example \(A_y=\sin x\) has \(F_{xy}=\cos x\), so this block extends beyond the constant-curvature affine class while retaining the stated sufficient envelope.
+
+\subsection{Summability is a derived scale statement}
+
+For \(h_n=h_0 2^{-n}\), the actual bound has ratio \(1/4\):
+\[
+ \varepsilon_n=h_0^2\mathcal A_\partial\,4^{-n}.
+\]
+The declarations \path{summable_regularDyadicBudget} and the corresponding summability theorem for the generated operator norms establish the scale summability. \path{tendsto_regularConnectionLimit} and \mbox{\path{dist_regularConnectionLimit_le_tail}} then instantiate the complete-metric bridge when its reconstructed sequence satisfies the required adjacent bound. The rate follows from the quadratic connection estimate. A ratio \(1/2\) would be a different bound, not the exact expression proved here.
+
+\section{From finite cells to a Euclidean reconstruction space}
+
+The final six modules establish a spatial interface. Their filenames end in \path{L2CellReconstruction}, \path{WeightedDyadicReconstruction}, \path{OctreeEuclideanCoding}, \path{BinaryLebesgue}, \path{EuclideanDyadicProjection} and \path{EuclideanDyadicBoxes}, each with the common \path{Relativistic3D} prefix.
+
+\subsection{Normalization precedes density}
+
+Block35's \path{UnitVolumePartition} is a finite measurable disjoint covering with every cell of measure one. Step interpolation is a linear isometry into genuine \(L^2\). The averaging map is defined as its Hilbert adjoint and then identified with cell integrals. The composite is the orthogonal cell projection; Pythagoras and best approximation are proved for the actual maps.
+
+Block36 replaces unit cell volume by a positive common volume \(v\). Its normalized finite coefficient \(\psi_i\) corresponds to the continuum value \(v^{-1/2}\psi_i\) on cell \(i\). This factor is necessary for an isometry from unweighted finite coefficient space. A cell value and a normalized coefficient cannot be interchanged without changing the norm.
+
+The octree address space is \(\N\to\mathrm{Fin}(8)\) with uniform product probability measure. At prefix length \(n\), there are \(8^n\) cells of measure \(8^{-n}\). The theorem \path{Octree.finitePrefixSubmodule_dense} proves density using the product measurable structure and \(L^2\) induction. At this stage the continuum is the address space, not yet the Euclidean cube.
+
+\subsection{Coding is surjective, but not injective}
+
+Block37 splits one octant into three bits, proves that the finite and infinite product measures are preserved by this rearrangement, and decodes each bit stream by its binary series. The decoder is continuous and surjective onto the closed unit cube. Compactness and the Hausdorff property give a quotient map. The explicit two expansions of \(1/2\) prove noninjectivity.
+
+The resulting prefix-tail bound controls the spatial diameter of decoded cells. It does not by itself identify the pushforward measure with Lebesgue volume. Block38 supplies that additional argument: the one-dimensional distribution function is squeezed between adjacent dyadic fractions, yielding the uniform interval distribution; coordinate products and address rearrangement then give cube volume. The pullback \(U\) from cube \(L^2\) to address \(L^2\) is a linear isometry.
+
+\subsection{Transported levels are identified only in Block40}
+
+Block39 first defines closed Euclidean levels by taking the closure of the adjoint images of finite-prefix subspaces. Since \(U^*U=I\), contractivity of \(U^*\) transports address approximants back to the cube. Nestedness and density imply strong convergence of the orthogonal projections for every fixed cube \(L^2\) state.
+
+Block40 identifies those levels with spans of concrete dyadic-box indicators. A prefix cylinder is contained in the decoder preimage of its closed box; equal measures upgrade that inclusion to equality almost everywhere. Closed boxes share boundary faces, so a pointwise disjointness assertion would be false. Equality of their \(L^2\) indicator representatives is the relevant exact statement.
+
+There is an index offset in this interface. The source's \path{initialLevelSubmodule d} uses the coordinate set \(\{0,\ldots,d\}\), hence prefix length \(d+1\). Its Euclidean level at index \(d\) corresponds to geometric depth \(n=d+1\). The monograph's volume formula \(8^{-n}\) uses geometric depth. Applying it directly as \(8^{-d}\) to the formal level index would be off by one refinement.
+
+The resulting concrete projections converge strongly to the identity. This gives spatial approximation of each fixed state. It does not give an operator-norm limit uniformly over the full infinite-dimensional unit ball, nor does it prove convergence of the gauge-coupled generators or propagators. Those dynamical comparisons require compatibility and domain theorems beyond density alone.
+
+\section{Evidence, exceptions and reproduction}\label{sec:gauge-evidence}
+
+\subsection{What was checked for the documented audit}
+
+The identity script \path{editorial/gauge/lean_collect_provenance.py} reads the extracted checked archive and edition root. It compares each selected source against its original ZIP member and the relevant inherited source digest, checks every selected declaration's source line, and resolves the log references in the selected receipts. It does not execute Lean or interpret a build log as a proof term.
+
+All eighteen module-source comparisons passed, as did all 1,135 selected declaration-location checks. The script resolved 108 log references with matching inherited hashes. It also recorded one hash mismatch, six unresolved references and three available negative-control logs without an inherited hash. These counts describe references in the selected receipts, including one explicitly excluded earlier attempt; they do not count 108 independent successful mathematical checks.
+
+Blocks25--36 use block-specific reports under \path{verification/}. The selected Block33 report is \path{block33_production/report.json}; Block34 uses \path{block34_production_final2/report.json}. Blocks37--40 use their named \path{Production_Verification.json} reports. The generic \path{verification/final/report.json} is not treated as the gauge frontier. Full source and receipt identities are retained in the JSON map.
+
+\subsection{The inherited Block27 discrepancy}
+
+The Block27 report records a successful cumulative build with return code zero and the SHA-256 digest of an empty log. The retained file \path{verification/block27_final/cumulative_build.log} instead contains:
+\begin{lstlisting}
+error: external command 'git' exited with code 128
+\end{lstlisting}
+Its digest therefore differs from the receipt. This log is excluded as evidence for that claimed successful cumulative gate. The report and the discrepant file are both preserved. The selected source digest, the direct Block27 module-compile log and the declaration-audit log do match their recorded identities. The discrepancy does not establish that the cubical theorem is false; it does establish that this cumulative gate cannot be authenticated from the retained log as presented.
+
+\subsection{Missing and unpinned records}
+
+Three Block36 references point to unavailable original paths: the cumulative-resume log, the import-closure build log and the direct warnings-as-errors compile log. Three Block40 build or compile references are also absent: \path{kp40_final_direct_compile.log}, \path{kp40_module_build2.log} and \path{kp40_cumulative_build2.log}. Their receipt claims remain inherited claims with incomplete attached evidence in this archive.
+
+The three Block40 negative-control logs are present, but their receipt does not provide a comparison hash. The accompanying record records their current identities without retroactively treating those new hashes as original receipt authentication. Thus source identity is complete for the selected scope, while retained receipt completeness is mixed.
+
+Earlier failed or interrupted runs are preserved in the original source archive. The Block37 report explicitly excludes an outer timeout before a terminal full-build result. Block38 excludes an earlier receipt with empty gates and a file-not-found error, as well as incomplete cumulative attempts. Block39 excludes a build-order failure and wrapper timeouts. These descriptions are not counted as successful checks. The later accepted receipts retain their own scope and trust boundary.
+
+\subsection{Reproduce identities first, then compile if needed}
+
+The edition contains the original ZIP under \path{recovered_sources/current/}. Extract it into a fresh working directory. From the edition root, the identity comparison can be repeated with:
+\begin{lstlisting}
+python editorial/gauge/lean_collect_provenance.py EXTRACTED_LEAN_ROOT .
+\end{lstlisting}
+The first argument is the directory containing \path{lean-toolchain}, \path{lakefile.toml} and \path{KomorebiPhysics/}. The script rewrites the derived gauge provenance records and copies the retained receipts; it leaves the extracted Lean source untouched.
+
+An actual compiler reproduction requires the pinned Lean \path{v4.34.0-rc2} environment and Mathlib revision
+\begin{center}\code{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}.\end{center}
+The archive is not a promise that those runtime binaries and dependency objects are already installed. Read its \path{AGENTS.md}, \path{CONTINUE_HERE.md}, block-specific proof guides and verifier before running a gate. Do not substitute a currently installed unpinned compiler and present the output as the original reproduction.
+
+For example, after restoring the pinned environment, a targeted regular-connection build uses the source module itself:
+\begin{lstlisting}
+lake build KomorebiPhysics.Relativistic3DRegularConnection
+lake env lean -DwarningAsError=true \
+  KomorebiPhysics/Relativistic3DRegularConnection.lean
+lake env lean AuditBlock34.lean
+\end{lstlisting}
+These are reproduction instructions, not commands executed for the documented audit. A complete gate must also run its API checks and isolated negative controls, validate their intended diagnostics, and write a terminal receipt tied to the source digests. A negative control's nonzero exit is useful only when it rejects the intended false mathematical assertion; an unknown import or missing executable is not that result.
+
+The inherited runs used the pinned compiler and Mathlib cache. They did not rebuild Lean and Mathlib from compiler source. Source-identity preservation of predecessor modules is an explicit part of the modular evidence chain. A claim of a wholly fresh from-source verification would exceed both those receipts and the present editorial work.
+
+\section{The next formal junction}
+
+The selected program now has exact unit-circle covariance, geometric edge and cubical constructions, independent reconstruction and curvature budgets, finite Hilbert estimates from regular background links, and a concrete Euclidean reconstruction space. The unresolved junction is their dynamical integration.
+
+The next background-gauge result must specify the continuum operator, its domain, the finite-resolution embeddings, and the precise sense in which the discrete action approaches that operator. Density of cell states supplies approximants; the quadratic link budget supplies local control. Neither supplies the missing operator-domain identification by itself.
+
+The historical continuation file lists background gauge coupling as a remaining target. The free theory now has checked strong-generator, centered graph and resolvent convergence, and third-order moment results. The abstract spectral-functional-calculus identification remains a written deduction without separate formal API linkage. Establishing dynamics for gauge-field degrees of freedom and a Gauss constraint is a further step beyond a prescribed background connection. The non-Abelian derivations in the monograph remain ordinary mathematical developments unless and until their own ordered transport statements receive a corresponding formal source and receipt.

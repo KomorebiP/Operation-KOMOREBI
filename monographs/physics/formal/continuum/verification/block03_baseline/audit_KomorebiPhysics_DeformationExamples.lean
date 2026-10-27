@@ -1,0 +1,20 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.DeformationExamples.N
+#print axioms KomorebiPhysics.DeformationExamples.P
+#print axioms KomorebiPhysics.DeformationExamples.Q
+#print axioms KomorebiPhysics.DeformationExamples.X
+#print axioms KomorebiPhysics.DeformationExamples.dX
+#print axioms KomorebiPhysics.DeformationExamples.shear
+#print axioms KomorebiPhysics.DeformationExamples.inverseShear
+#print axioms KomorebiPhysics.DeformationExamples.shear_inverse
+#print axioms KomorebiPhysics.DeformationExamples.transported_projector
+#print axioms KomorebiPhysics.DeformationExamples.transported_projector_idempotent
+#print axioms KomorebiPhysics.DeformationExamples.hasDerivAt_shear_entry
+#print axioms KomorebiPhysics.DeformationExamples.hasDerivAt_projector_entry
+#print axioms KomorebiPhysics.DeformationExamples.nonzero_projector_rate
+#print axioms KomorebiPhysics.DeformationExamples.exact_three_terms
+#print axioms KomorebiPhysics.DeformationExamples.exact_full_rate
+#print axioms KomorebiPhysics.DeformationExamples.omitted_terms_are_wrong
+#print axioms KomorebiPhysics.DeformationExamples.reversed_commutator_is_wrong
+#print axioms KomorebiPhysics.DeformationExamples.nonunitary_transport_not_symmetric

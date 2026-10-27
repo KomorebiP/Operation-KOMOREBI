@@ -1,0 +1,9 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.UniversalBalance.boundary_sum
+#print axioms KomorebiPhysics.UniversalBalance.source_boundary_sum
+#print axioms KomorebiPhysics.UniversalBalance.hasDerivAt_subset
+#print axioms KomorebiPhysics.UniversalBalance.hasDerivAt_total
+#print axioms KomorebiPhysics.UniversalBalance.coarse_antisymm
+#print axioms KomorebiPhysics.UniversalBalance.coarse_row_sum
+#print axioms KomorebiPhysics.UniversalBalance.hasDerivAt_coarse

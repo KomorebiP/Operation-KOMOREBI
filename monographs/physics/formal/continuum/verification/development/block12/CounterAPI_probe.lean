@@ -1,0 +1,11 @@
+import KomorebiPhysics.InfiniteCoarseExamples
+#check summable_ite_eq
+#check summable_const_iff
+#check Summable.comp_injective
+#check Summable.of_norm
+#check summable_norm_iff
+#check summable_prod_iff
+#check HasFiniteSupport.summable
+#check Function.HasFiniteSupport.summable
+#check tsum_ite_eq
+#check summable_of_ne_finset_zero

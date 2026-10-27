@@ -1,0 +1,115 @@
+module
+
+public import KomorebiPhysics.MovingAtlas
+public import MovingFrames
+public import Mathlib.Tactic.FinCases
+public import Mathlib.Tactic.NormNum
+public import Mathlib.Tactic.Ring
+
+/-!
+Exact two-sector witnesses and hypothesis-sensitivity checks. The real shear is
+intentionally nonunitary. Its moved idempotent need not be self-adjoint.
+Entrywise derivatives here provide an independent finite-dimensional witness;
+the general theorems use operator-norm derivatives. No floating point tests.
+-/
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+namespace KomorebiPhysics.DeformationExamples
+open scoped Matrix
+open Deformation
+
+def N : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+def P : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 0]
+def Q : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 0, 1]
+def X : Matrix (Fin 2) (Fin 2) ℝ := !![2, 0; 0, 3]
+def dX : Matrix (Fin 2) (Fin 2) ℝ := (4 : ℝ) • N
+
+def shear (s : ℝ) : Matrix (Fin 2) (Fin 2) ℝ := 1 + s • N
+def inverseShear (s : ℝ) : Matrix (Fin 2) (Fin 2) ℝ := 1 - s • N
+
+/-- A nonconstant, exactly invertible frame at every real time. -/
+theorem shear_inverse (s : ℝ) :
+    shear s * inverseShear s = 1 ∧ inverseShear s * shear s = 1 := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [shear, inverseShear, N, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Explicit nonconstant moving idempotent. -/
+theorem transported_projector (s : ℝ) :
+    transport (shear s) (inverseShear s) P = P - s • N := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [transport, shear, inverseShear, P, N, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem transported_projector_idempotent (s : ℝ) :
+    transport (shear s) (inverseShear s) P * transport (shear s) (inverseShear s) P =
+      transport (shear s) (inverseShear s) P := by
+  rw [transported_projector]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [P, N, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- Actual derivative of the original frame, rather than a formal velocity symbol. -/
+theorem hasDerivAt_shear_entry (t : ℝ) (i j : Fin 2) :
+    HasDerivAt (fun s => shear s i j) (N i j) t := by
+  have h := (hasDerivAt_id t).mul_const (N i j)
+  have h' := (hasDerivAt_const t ((1 : Matrix (Fin 2) (Fin 2) ℝ) i j)).add h
+  simpa only [shear, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, zero_add, one_mul,
+    Pi.add_def] using h'
+
+/-- The moved projector has the actual nonzero rate -N at every real time. -/
+theorem hasDerivAt_projector_entry (t : ℝ) (i j : Fin 2) :
+    HasDerivAt (fun s => transport (shear s) (inverseShear s) P i j) (-N i j) t := by
+  simp_rw [transported_projector]
+  have h := (hasDerivAt_const t (P i j)).sub ((hasDerivAt_id t).mul_const (N i j))
+  simpa only [Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul, one_mul, zero_sub,
+    Pi.sub_def] using h
+
+theorem nonzero_projector_rate : (-N) (0 : Fin 2) (1 : Fin 2) = -1 ∧
+    (-N : Matrix (Fin 2) (Fin 2) ℝ) ≠ 0 := by
+  constructor
+  · norm_num [N]
+  · intro h
+    have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+    norm_num [N] at he
+
+/-- Each of the three contributions is nonzero: 4N, -3N, 2N. -/
+theorem exact_three_terms :
+    P * dX * Q = (4 : ℝ) • N ∧
+    comm N P * X * Q = (-3 : ℝ) • N ∧
+    P * X * comm N Q = (2 : ℝ) • N := by
+  refine ⟨?_, ?_, ?_⟩ <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [P, Q, X, dX, N, comm, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem exact_full_rate :
+    P * dX * Q + comm N P * X * Q + P * X * comm N Q = (3 : ℝ) • N := by
+  rw [exact_three_terms.1, exact_three_terms.2.1, exact_three_terms.2.2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [N]
+
+/-- Deleting any of the three terms changes the answer in this one exact witness. -/
+theorem omitted_terms_are_wrong :
+    (3 : ℝ) • N ≠ comm N P * X * Q + P * X * comm N Q ∧
+    (3 : ℝ) • N ≠ P * dX * Q + P * X * comm N Q ∧
+    (3 : ℝ) • N ≠ P * dX * Q + comm N P * X * Q := by
+  rw [exact_three_terms.1, exact_three_terms.2.1, exact_three_terms.2.2]
+  refine ⟨?_, ?_, ?_⟩ <;> intro h <;>
+    have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h <;>
+    norm_num [N] at he
+
+theorem reversed_commutator_is_wrong : comm N P ≠ comm P N := by
+  intro h
+  have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+  norm_num [comm, N, P, Matrix.mul_apply, Fin.sum_univ_two] at he
+
+/-- An invertible frame alone does not preserve orthogonal-projector self-adjointness. -/
+theorem nonunitary_transport_not_symmetric :
+    (transport (shear 1) (inverseShear 1) P).transpose ≠
+      transport (shear 1) (inverseShear 1) P := by
+  rw [transported_projector]
+  intro h
+  have he := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+  norm_num [P, N, Matrix.transpose_apply] at he
+
+end KomorebiPhysics.DeformationExamples

@@ -1,0 +1,27 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.RefinementTower.push
+#print axioms KomorebiPhysics.RefinementTower.push_eq_fiber
+#print axioms KomorebiPhysics.RefinementTower.push_comp
+#print axioms KomorebiPhysics.RefinementTower.sum_push
+#print axioms KomorebiPhysics.RefinementTower.push_id
+#print axioms KomorebiPhysics.RefinementTower.pushList
+#print axioms KomorebiPhysics.RefinementTower.composeList
+#print axioms KomorebiPhysics.RefinementTower.pushList_eq
+#print axioms KomorebiPhysics.RefinementTower.incidence
+#print axioms KomorebiPhysics.RefinementTower.incidence_column_sum
+#print axioms KomorebiPhysics.RefinementTower.incidence_comp
+#print axioms KomorebiPhysics.RefinementTower.push_eq_mulVec
+#print axioms KomorebiPhysics.RefinementTower.aggregateCurrent
+#print axioms KomorebiPhysics.RefinementTower.aggregateCurrent_comp
+#print axioms KomorebiPhysics.RefinementTower.aggregateCurrent_incidence_comp
+#print axioms KomorebiPhysics.RefinementTower.aggregateCurrent_entry
+#print axioms KomorebiPhysics.RefinementTower.aggregateCurrent_antisymm
+#print axioms KomorebiPhysics.Atlas.coarsen_coarsen_proj
+#print axioms KomorebiPhysics.Atlas.coarsen_coarsen_packet
+#print axioms KomorebiPhysics.Atlas.coarsen_coarsen_corner
+#print axioms KomorebiPhysics.Atlas.coarsen_coarsen_energy
+#print axioms KomorebiPhysics.Atlas.coarsen_coarsen_current
+#print axioms KomorebiPhysics.Atlas.coarsen_energy_incidence
+#print axioms KomorebiPhysics.Atlas.coarsen_current_incidence
+#print axioms KomorebiPhysics.Atlas.hasDerivAt_tower_energy

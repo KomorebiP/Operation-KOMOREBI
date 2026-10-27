@@ -1,0 +1,46 @@
+warning: batteries: repository '/mnt/data/kp29_work/Komorebi_Physics_Lean_v0.28.0_WORK/.lake/packages/batteries' has local changes
+KomorebiPhysics.Relativistic3DEdgeCompatibility.arbitraryRefinedSevenFactorWalk_frameEmbed.{u} {Site : Type u}
+  {M : Relativistic3DCliffordTransportU1.LocalStep} (D : Relativistic3DGeometricEdgeRefinement.LocalStepSubdivision M)
+  (τx τy τz : Site ≃ Site) (ux uy uz : Relativistic3DCliffordTransportU1.Link)
+  (r : Relativistic3DFullWalkRefinement.PhaseFrame Site) (vx vy vz : Relativistic3DCliffordTransportU1.Link)
+  (hx : StraightCompatibleX τx ux r vx) (hy : StraightCompatibleY τy uy r vy) (hz : StraightCompatibleZ τz uz r vz)
+  (ψ : Relativistic3DCliffordTransportU1.State) :
+  arbitraryRefinedSevenFactorWalk D τx τy τz vx vy vz (Relativistic3DFullWalkRefinement.frameEmbed r ψ) =
+    Relativistic3DFullWalkRefinement.frameEmbed r
+      (Relativistic3DCliffordTransportU1.sevenFactorWalk M τx τy τz ux uy uz ψ)
+KomorebiPhysics.Relativistic3DEdgeCompatibility.exact_refinement_can_preserve_nonflat_plaquette.{u} {Site : Type u}
+  {M : Relativistic3DCliffordTransportU1.LocalStep} (D : Relativistic3DGeometricEdgeRefinement.LocalStepSubdivision M)
+  (τx τy τz : Site ≃ Site) (ux uy uz : Relativistic3DCliffordTransportU1.Link)
+  (r : Relativistic3DFullWalkRefinement.PhaseFrame Site) (hcomm : ∀ (s : Site), τy (τx s) = τx (τy s))
+  (p : Relativistic3DFullWalkRefinement.FineSite3 Site)
+  (hcurv : Relativistic3DGeometricEdgeRefinement.plaquette τx τy ux uy p.1 ≠ 1)
+  (ψ : Relativistic3DCliffordTransportU1.State) :
+  Relativistic3DFullWalkRefinement.refinedSevenFactorWalk D τx τy τz ux uy uz r
+        (Relativistic3DFullWalkRefinement.frameEmbed r ψ) =
+      Relativistic3DFullWalkRefinement.frameEmbed r
+        (Relativistic3DCliffordTransportU1.sevenFactorWalk M τx τy τz ux uy uz ψ) ∧
+    fineLargePlaquetteXY τx τy (Relativistic3DFullWalkRefinement.frameLinkX τx ux r)
+        (Relativistic3DFullWalkRefinement.frameLinkY τy uy r) p ≠
+      1
+KomorebiPhysics.Relativistic3DEdgeCompatibility.FineEdgePair.fineIntertwiningDefect_energy.{u} {Site : Type u}
+  [Fintype Site] (P : FineEdgePair Site) (H : Relativistic3DCliffordHilbertRefinement.HermitianClifford)
+  (τ : Site ≃ Site) (u : Relativistic3DCliffordTransportU1.Link) (ψ : Relativistic3DCliffordTransportU1.State) :
+  Relativistic3DGeometricEdgeRefinement.halfCellIP (P.fineIntertwiningDefect H.toClifford τ u ψ)
+      (P.fineIntertwiningDefect H.toClifford τ u ψ) =
+    ∑ x,
+      (phaseErrorWeight (P.productLink (τ.symm x)) (u (τ.symm x)) *
+          Relativistic3DCliffordHilbertRefinement.ip (H.toClifford.plus (ψ (τ.symm x)))
+            (H.toClifford.plus (ψ (τ.symm x))) +
+        phaseErrorWeight (P.productLink x)⁻¹ (u x)⁻¹ *
+          Relativistic3DCliffordHilbertRefinement.ip (H.toClifford.minus (ψ (τ x))) (H.toClifford.minus (ψ (τ x))))
+KomorebiPhysics.Relativistic3DEdgeCompatibility.flat_curvature_with_nonzero_refinement_defect :
+  flatQuarterCube.Flat ∧
+    ((quarterPair PUnit.{1}).fineIntertwiningDefect Relativistic3DCliffordTransportU1.cliffordX (Equiv.refl PUnit.{1})
+        (fun x => 1) fun x => Relativistic3DGeometricEdgeRefinement.basisSpinor0) ≠
+      0
+KomorebiPhysics.Relativistic3DEdgeCompatibility.no_universal_flatness_implies_refinement :
+  ¬∀ (L : Relativistic3DCubicalRefinement.CubeLinks),
+      L.Flat →
+        ((quarterPair PUnit.{1}).fineIntertwiningDefect Relativistic3DCliffordTransportU1.cliffordX
+            (Equiv.refl PUnit.{1}) (fun x => 1) fun x => Relativistic3DGeometricEdgeRefinement.basisSpinor0) =
+          0

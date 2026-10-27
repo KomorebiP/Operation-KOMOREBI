@@ -1,0 +1,70 @@
+KomorebiPhysics/SpectralGraph.lean:29:79: error: unexpected token 'omit'; expected 'lemma'
+KomorebiPhysics/SpectralGraph.lean:32:49: error: unsolved goals
+I : Type u_1
+eig : I → ℝ
+x : ↥(lp (fun x => ℂ) 2)
+⊢ (Summable fun i => ‖↑(eig i) * ↑x i‖ ^ 2) ↔ Summable fun i => eig i ^ 2 * ‖↑x i‖ ^ 2
+KomorebiPhysics/SpectralGraph.lean:35:35: error: This simp argument is unused:
+  Real.rpow_natCast
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [ENNReal.toReal_ofNat, weighted_norm_sq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralGraph.lean:35:54: error: This simp argument is unused:
+  weighted_norm_sq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [ENNReal.toReal_ofNat, Real.rpow_natCast]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/SpectralGraph.lean:60:2: error: Type mismatch: After simplification, term
+  lp.norm_compl_sum_single
+    (of_eq_true
+      (Eq.trans (Eq.trans (congrArg (LT.lt 0) (ENNReal.toReal_ofNat 2)) Nat.ofNat_pos._simp_1) (eq_true True.intro)))
+    x s
+ has type
+  ‖x - ∑ i ∈ s, lp.single 2 i (↑x i)‖ ^ (2 : ℝ) = ‖x‖ ^ 2 - ∑ x_1 ∈ s, ‖↑x x_1‖ ^ 2
+but is expected to have type
+  ‖x - DiagonalDomain.coordinateAtlas.partialSum s x‖ ^ (2 : ℕ) = ‖x‖ ^ 2 - ∑ x_1 ∈ s, ‖↑x x_1‖ ^ 2
+KomorebiPhysics/SpectralGraph.lean:70:26: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ↑(DomainAtlas.partialSum ?P ?s ?x)
+in the target expression
+  ‖↑(x - (DiagonalDomain.atlas eig).partialSum s x)‖ ^ 2 +
+      ‖↑(DiagonalDomain.operator eig) x - ↑(DiagonalDomain.operator eig) ((DiagonalDomain.atlas eig).partialSum s x)‖ ^
+        2 =
+    ‖↑x‖ ^ 2 + ‖↑(DiagonalDomain.operator eig) x‖ ^ 2 - ∑ i ∈ s, (1 + eig i ^ 2) * ‖↑↑x i‖ ^ 2
+
+I : Type u_1
+inst✝ : DecidableEq I
+eig : I → ℝ
+x : ↥(DiagonalDomain.operator eig).domain
+s : Finset I
+⊢ ‖↑(x - (DiagonalDomain.atlas eig).partialSum s x)‖ ^ 2 +
+      ‖↑(DiagonalDomain.operator eig) x - ↑(DiagonalDomain.operator eig) ((DiagonalDomain.atlas eig).partialSum s x)‖ ^
+        2 =
+    ‖↑x‖ ^ 2 + ‖↑(DiagonalDomain.operator eig) x‖ ^ 2 - ∑ i ∈ s, (1 + eig i ^ 2) * ‖↑↑x i‖ ^ 2
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  Application type mismatch: The argument
+    fun x => x ∈ lp (fun x => ℂ) 2
+  has type
+    (PreLp fun x => ℂ) → Prop
+  but is expected to have type
+    ((i : I) → (fun x => ℂ) i) → Prop
+  in the application
+    @Subtype.val ((i : I) → (fun x => ℂ) i) fun x => x ∈ lp (fun x => ℂ) 2
+KomorebiPhysics/SpectralGraph.lean:100:4: error: Type mismatch
+  DomainAtlas.current_self (DiagonalDomain.atlas eig) (DiagonalDomain.symmetric eig) x i
+has type
+  (DiagonalDomain.atlas eig).current x i i = 0
+but is expected to have type
+  2 *
+      (inner ℂ ((DiagonalDomain.coordinate i) ↑x)
+          ((DiagonalDomain.coordinate i) (↑(DiagonalDomain.operator eig) x))).im =
+    0
+
+Note: The following definitions were not unfolded because their definition is not exposed:
+  Complex.mulAux ↦ 28
+KomorebiPhysics/SpectralGraph.lean:101:8: error: Failed to rewrite using equation theorems for `DomainAtlas.current`

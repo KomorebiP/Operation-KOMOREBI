@@ -1,0 +1,30 @@
+Try this:
+  [apply] abel_nf
+KomorebiPhysics/ResolventParameters.lean:23:47: error: unsolved goals
+H : Type u_1
+inst✝¹ : NormedAddCommGroup H
+inst✝ : InnerProductSpace ℂ H
+T : H →ₗ.[ℂ] H
+z w : ℂ
+R : Certificate T z
+S : Certificate T w
+x : H
+h : S.op x = R.op x + R.op (w • S.op x - z • S.op x)
+⊢ -1 • R.op (w • S.op x + -1 • z • S.op x) =
+    z • R.op (R.op x + R.op (w • S.op x + -1 • z • S.op x)) +
+      -1 • w • R.op (R.op x + R.op (w • S.op x + -1 • z • S.op x))
+KomorebiPhysics/ResolventParameters.lean:25:66: error: This simp argument is unused:
+  map_smul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [R.left_inverse, S.shifted_lift, S.lift_coe, map_add, sub_smul] at h ⊢
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/ResolventParameters.lean:52:57: error: Application type mismatch: The argument
+  h
+has type
+  (z - w) • (R.op * S.op) = (z - w) • (S.op * R.op)
+but is expected to have type
+  (fun x => (z - w) • x) ?m.243 = (fun x => (z - w) • x) ?m.244
+in the application
+  smul_right_injective H (sub_ne_zero.mpr hzw) h

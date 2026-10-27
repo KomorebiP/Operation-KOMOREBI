@@ -1,0 +1,46 @@
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.directionalShiftHilbertCLM.{u} {Site : Type u} [Fintype Site]
+  (A : CliffordInvolution) (τ : Site ≃ Site) (u : Link) : HilbertState Site →L[ℂ] HilbertState Site
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.directionalShiftHilbertCLM_norm_eq.{u} {Site : Type u}
+  [Fintype Site] (H : HermitianClifford) (τ : Site ≃ Site) (u : Link) (ψ : HilbertState Site) :
+  ‖(directionalShiftHilbertCLM H.toClifford τ u) ψ‖ = ‖ψ‖
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.directionalShiftHilbertDefect_opNorm_le_ratioSup.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (H : HermitianClifford) (τ : Site ≃ Site) (v u : Link) :
+  ‖Relativistic3DFullWalkRefinement.intertwiningDefectOp (directionalShiftHilbertCLM H.toClifford τ v)
+        (ContinuousLinearMap.id ℂ (HilbertState Site)) (directionalShiftHilbertCLM H.toClifford τ u)‖ ≤
+    edgeRatioSup v u
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.hilbertSevenFactorPairs.{u} {Site : Type u} [Fintype Site]
+  (m₀ m₁ : HilbertState Site →L[ℂ] HilbertState Site) (τx τy τz : Site ≃ Site) (vx vy vz ux uy uz : Link) :
+  List ((HilbertState Site →L[ℂ] HilbertState Site) × (HilbertState Site →L[ℂ] HilbertState Site))
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.hilbertEdgeBudget.{u} {Site : Type u} [Fintype Site] [Nonempty Site]
+  (vx vy vz ux uy uz : Link) : ℝ
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.norm_hilbertSevenFactorDefect_le_edgeBudget.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (m₀ m₁ : HilbertState Site →L[ℂ] HilbertState Site) (τx τy τz : Site ≃ Site)
+  (vx vy vz ux uy uz : Link) (hm₀ : ‖m₀‖ ≤ 1) (hm₁ : ‖m₁‖ ≤ 1) :
+  ‖hilbertSevenFactorDefect m₀ m₁ τx τy τz vx vy vz ux uy uz‖ ≤ hilbertEdgeBudget vx vy vz ux uy uz
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.quarterX_hilbertEdgeBudget :
+  (hilbertEdgeBudget (Relativistic3DEdgeCompatibility.quarterPair PUnit.{1}).productLink (fun x => 1) (fun x => 1)
+      (fun x => 1) (fun x => 1) fun x => 1) =
+    4
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.hilbertPhaseOp.{u} {Site : Type u} [Fintype Site] (z : Circle) :
+  HilbertState Site →L[ℂ] HilbertState Site
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.norm_hilbertPhaseDefectOp_eq_curvature.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (p q Ω : Circle) (h : p = Ω * q) : ‖hilbertPhaseDefectOp p q‖ = ‖↑Ω - 1‖
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.hilbertCubeSwapSevenPairs.{u} {Site : Type u} [Fintype Site]
+  (L : CubeLinks) : List ((HilbertState Site →L[ℂ] HilbertState Site) × (HilbertState Site →L[ℂ] HilbertState Site))
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.norm_hilbertCubeSwapDefect_le_curvatureBudget.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site] (L : CubeLinks) :
+  ‖Relativistic3DFullWalkRefinement.intertwiningDefectOp
+        (Relativistic3DFullWalkRefinement.fineComposite (hilbertCubeSwapSevenPairs L))
+        (ContinuousLinearMap.id ℂ (HilbertState Site))
+        (Relativistic3DFullWalkRefinement.coarseComposite (hilbertCubeSwapSevenPairs L))‖ ≤
+    curvatureBudget L
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect.{u} {Site : Type u} [Fintype Site]
+  (m₀ m₁ : HilbertState Site →L[ℂ] HilbertState Site) (τx τy τz : Site ≃ Site) (vx vy vz ux uy uz : Link)
+  (L : CubeLinks) : HilbertState Site →L[ℂ] HilbertState Site
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.norm_combinedHilbertDefect_le.{u} {Site : Type u} [Fintype Site]
+  [Nonempty Site] (m₀ m₁ : HilbertState Site →L[ℂ] HilbertState Site) (τx τy τz : Site ≃ Site)
+  (vx vy vz ux uy uz : Link) (L : CubeLinks) (hm₀ : ‖m₀‖ ≤ 1) (hm₁ : ‖m₁‖ ≤ 1) :
+  ‖combinedHilbertDefect m₀ m₁ τx τy τz vx vy vz ux uy uz L‖ ≤ hilbertEdgeBudget vx vy vz ux uy uz + curvatureBudget L
+KomorebiPhysics.Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect_eq_zero_of_exact_flat.{u} {Site : Type u}
+  [Fintype Site] (m₀ m₁ : HilbertState Site →L[ℂ] HilbertState Site) (τx τy τz : Site ≃ Site) (ux uy uz : Link)
+  (L : CubeLinks) (hflat : L.Flat) : combinedHilbertDefect m₀ m₁ τx τy τz ux uy uz ux uy uz L = 0

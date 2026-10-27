@@ -1,0 +1,17 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.InformationTransport.entropy
+#print axioms KomorebiPhysics.InformationTransport.powerSum
+#print axioms KomorebiPhysics.InformationTransport.renyi
+#print axioms KomorebiPhysics.InformationTransport.weighted_current_symmetry
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_functional
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_xlogx
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_entropy_raw
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_entropy_current
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_powerSum_raw
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_powerSum_current
+#print axioms KomorebiPhysics.InformationTransport.powerSum_pos
+#print axioms KomorebiPhysics.InformationTransport.hasDerivAt_renyi_current
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.hasDerivAt_packet_entropy
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.hasDerivAt_packet_powerSum
+#print axioms KomorebiPhysics.MixedTransfer.MatrixAtlas.hasDerivAt_packet_renyi

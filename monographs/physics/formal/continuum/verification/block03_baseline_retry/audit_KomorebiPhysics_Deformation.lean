@@ -1,0 +1,30 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.Deformation.comm
+#print axioms KomorebiPhysics.Deformation.transport
+#print axioms KomorebiPhysics.Deformation.covariantRate
+#print axioms KomorebiPhysics.Deformation.comm_mul
+#print axioms KomorebiPhysics.Deformation.comm_one
+#print axioms KomorebiPhysics.Deformation.transport_mul
+#print axioms KomorebiPhysics.Deformation.transport_one
+#print axioms KomorebiPhysics.Deformation.transport_sum
+#print axioms KomorebiPhysics.Deformation.transport_corner
+#print axioms KomorebiPhysics.Deformation.transportedFamily
+#print axioms KomorebiPhysics.Deformation.transport_coarse
+#print axioms KomorebiPhysics.Deformation.corner_rate_split
+#print axioms KomorebiPhysics.Deformation.covariant_rate_of_comoving
+#print axioms KomorebiPhysics.Deformation.sum_comm_of_resolution
+#print axioms KomorebiPhysics.Deformation.sum_corner_rates
+#print axioms KomorebiPhysics.Deformation.transport_rate_identity
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_triple
+#print axioms KomorebiPhysics.Deformation.inverse_pair_rate
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_inverse_pair
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_transport_pair
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_corner
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_corner_covariant
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_comoving_corner
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_coarse_projector
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_reconstructed_corners
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_ring_inverse
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_moving_projector
+#print axioms KomorebiPhysics.Deformation.hasDerivAt_whole_object

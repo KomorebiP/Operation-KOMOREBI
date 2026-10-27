@@ -1,0 +1,378 @@
+\section{What this companion makes inspectable}
+
+The foundations formalization establishes a precise route from finite projector resolutions to domain-sensitive infinite reconstruction and finite matrix differential calculus. Its first sixteen blocks contain 91 mathematical modules and 1,731 inventoried named declarations. Of these, 1,461 are theorem declarations, 255 are definitions, nine are structures and six are abbreviations. The total includes 47 declarations recovered from Paper VII, including 39 theorems. These are counts of a working mathematical library, including support lemmas and exact examples. They do not count independent physical discoveries.
+
+This companion explains the principal interfaces and how their hypotheses limit a claim. The accompanying \path{editorial/foundations/lean_crosswalk.csv} lists every one of the 1,731 declarations with its fully qualified name, declaration kind, module, exact source line, source header and file hash. The headers are copied from the source. Section variables and local notation retain their original context, so the CSV is a source crosswalk rather than an independently elaborated collection of \path{#check} outputs. The original modules remain the authoritative statements.
+
+All source correspondence in this document refers to the foundations files preserved in the Block49 archive. The 91-module foundations audit reported here is a source-identity and receipt audit, not a new compilation of that entire foundations collection. The separately recorded generator replay does not enlarge this audit into a complete foundations replay. The inherited evidence is unusually direct: all 91 foundation module hashes match the retained successful replay of the Block16 frontier at \path{verification/block17_baseline_full/report.json}. All 114 log files named by that receipt are present and match its recorded hashes. This is a fresh identity check of historical evidence, not a fresh kernel run.
+
+\subsection{Three kinds of statement}
+
+An abstract interface can assume an operator law, a trajectory or a convergence condition, and then prove consequences of those inputs. A construction supplies an actual object satisfying the interface. An exact example can establish that a hypothesis matters or that a proposed stronger claim fails. All three occur in this library. Their logical roles should remain visible when the same subject is discussed in ordinary prose.
+
+For instance, the finite continuity theorem takes a trajectory whose vector derivative is already known. It proves the derivative of each projected squared norm. It does not assume that projected derivative as an input, but neither does it construct the trajectory. Block11 later constructs global evolution for an arbitrary real diagonal spectrum and proves the precise derivative-domain boundary. That later existence result has a narrower operator class than the earlier conditional balance theorem.
+
+The figures in the foundations atlas illustrate these structures. Their numerical checks have a separate reproduction record. A small numerical residual supports the accuracy of a plotted example. A Lean theorem establishes the quantified statement encoded in its type. Neither record is silently substituted for the other.
+
+\section{Types, conventions and the first logical boundary}
+
+The finite sector label type is usually called \(I\). Its \path{Fintype} instance makes sums finite. The ambient complex inner-product space \(H\) need not be finite-dimensional. A bounded complex-linear endomorphism belongs to \(\mathcal B_{\C}(H)\), represented in Lean by a continuous linear map. Completeness is requested by the constructions that actually use it, including adjoints and square-root dilation. It is not an extra hypothesis of every finite algebraic identity.
+
+The inner product is conjugate-linear on the left and linear on the right. Thus, with \(A=-iB\), the receiving-first transfer current is
+\[
+ J_{i\leftarrow j}=2\operatorname{Re}\inner{P_i\psi}{A P_j\psi}
+ =2\operatorname{Im}\inner{P_i\psi}{B P_j\psi}.
+\]
+The plus sign is part of the convention. The declaration \path{KomorebiPhysics.hamiltonian_current} proves this algebraic conversion without requiring Hermiticity of \(B\). Hermiticity enters the skewness and conservation conclusions, not this conversion alone.
+
+\begin{longtable}{@{}L{.29\textwidth}L{.64\textwidth}@{}}
+\toprule
+Formal object & Mathematical meaning\\
+\midrule
+\endhead
+\path{PacketFamily} & A finite idempotent resolution in an arbitrary ring. This algebraic layer does not itself supply an inner product.\\[3pt]
+\code{Atlas H I} & Bounded projectors on a complex inner-product space, with orthogonality, identity resolution and self-adjointness.\\[3pt]
+\code{IsSkew A} & The identity \(\inner{Ax}{y}=-\inner{x}{Ay}\) for all vectors. No unbounded-domain interpretation is hidden here.\\[3pt]
+\code{HasDerivAt psi v t} & An actual real-time derivative at \(t\), in the ambient normed space.\\[3pt]
+\code{EffectAtlas H I} & Positive Hermitian bounded effects whose finite sum is the identity. Effects may overlap and need not be idempotent.\\[3pt]
+\code{StrongAtlas H I} & An orthogonal resolution with \path{HasSum} over the directed set of finite subsets. Infinite index types are allowed.\\[3pt]
+\path{LinearPMap} & A linear operator on an explicit submodule domain. An input to the operator carries its domain-membership proof.\\[3pt]
+\code{DomainAtlas T I} & A strong atlas whose individual projections preserve the explicit domain of \(T\).\\[3pt]
+\path{GraphCompatible} & Convergence of the finite projector sums in the actual graph norm. It is additional to strong completeness and domain invariance.\\
+\bottomrule
+\end{longtable}
+
+A matrix in the finite mixed-state modules is an actual finite complex matrix. Positivity, Hermiticity, normalization and a differential equation remain distinct assumptions. The trace laws are established by matrix algebra. A positivity hypothesis at a time is not, by itself, a positivity-preservation theorem for an evolution.
+
+\section{The sixteen-block reading map}
+
+The following counts are increments assigned to each block. Block1 includes the Paper VII foundation. The CSV gives the complete module breakdown and the JSON source map records the source identity and evidence boundary.
+
+\begin{longtable}{@{}L{.07\textwidth}L{.56\textwidth}rr@{}}
+\toprule
+Block & Main responsibility & Names & Theorems\\
+\midrule
+\endhead
+1 & Sharp atlases, transfer, finite refinement & 96 & 76\\
+2 & Moving frames and whole-object deformation & 64 & 51\\
+3 & Nonlinear and mixed flows, refinement towers & 103 & 83\\
+4 & Tensor marginals and information transport & 109 & 94\\
+5 & Lindblad jumps and detailed balance & 118 & 98\\
+6 & Refinement cancellation and error amplification & 89 & 81\\
+7 & Positive effects and moving sources & 109 & 89\\
+8 & Parseval channels, dilation and current cycles & 120 & 98\\
+9 & Explicit domains and infinite continuity & 144 & 113\\
+10 & Bounded spectral surrogates and cutoff topologies & 132 & 113\\
+11 & Constructed diagonal evolution and domain boundary & 88 & 81\\
+12 & Infinite cells and certified current sums & 124 & 106\\
+13 & Residue projectors and unbounded ladders & 101 & 90\\
+14 & Domain-correct resolvent commutators & 105 & 87\\
+15 & Strong, compact, Hilbert--Schmidt and graph reconstruction & 124 & 111\\
+16 & Pointwise no-go and matrix corner differential calculus & 105 & 90\\
+\midrule
+ & Total & 1,731 & 1,461\\
+\bottomrule
+\end{longtable}
+
+The block order is a useful reading route, but it is not a single chain in which every theorem needs all previous results. Matrix information transport, extrapolation and infinite-domain constructions have their own branches. Imports identify actual dependencies. The module map records their location without promoting chronological order into a mathematical dependence.
+
+\section{Blocks 1 and 2: reconstruction, transport and motion}
+
+\subsection{What the atlas assumes and what it proves}
+
+The inherited namespace \path{KomorebiPaperVII.PacketFamily} supplies the purely algebraic operator corners and their finite reconstruction. Its \path{reconstruct} theorem retains the operator order
+\[
+ X=\sum_i\sum_j P_iXP_j.
+\]
+The receiving index is on the left. The related circuit and path-expansion theorems insert resolutions between consecutive operators. This finite ring calculation does not require norm estimates or a continuum limit.
+
+The structure \path{KomorebiPhysics.Atlas} extends that resolution by self-adjointness of the projectors. It does not include Parseval as a field. The declarations \path{Atlas.reconstruct_state}, \path{Atlas.packet_orthogonal}, \path{Atlas.inner_reconstruct} and \path{Atlas.norm_sq_reconstruct} derive vector reconstruction, orthogonality, inner-product reconstruction and
+\[
+ \norm{\psi}^2=\sum_i\norm{P_i\psi}^2.
+\]
+Here and below, a name beginning with \path{Atlas.} is relative to \path{KomorebiPhysics}.
+
+The theorem \path{Atlas.hasDerivAt_packet_energy} begins with
+\(\dot\psi(t)=A\psi(t)\), expressed as an actual \path{HasDerivAt} hypothesis. It differentiates the bounded projected vector and then its squared norm. Skewness is not needed for this local derivative calculation. Skewness is needed by \path{Atlas.current_antisymm}, which allows internal currents to cancel.
+
+For a finite receiving region \(S\), \path{Atlas.hasDerivAt_subset_energy} proves
+\[
+ \frac{d}{dt}\sum_{i\in S}\norm{P_i\psi(t)}^2
+ =\sum_{i\in S}\sum_{j\notin S}J_{i\leftarrow j}(t).
+\]
+The derivative on the left is a conclusion. It is derived from the vector equation and finite cancellation. The global statement \path{KomorebiPhysics.total_energy_constant} assumes the vector equation at every real time and uses the real mean value theorem. An all-time solution remains an input.
+
+\subsection{Coarsening is a construction}
+
+An address map \(r:I\to A\) defines \(Q_a=\sum_{r(i)=a}P_i\). Empty fibers cause no difficulty. The definition \path{Atlas.coarsen} proves the coarse projector laws from the fine ones. The declarations \path{Atlas.coarsen_corner}, \path{Atlas.coarsen_energy} and \path{Atlas.coarsen_current} identify the actual coarse quantities with the appropriate fine sums. Operator corners require a double sum over the receiving and source fibers.
+
+This matters for incidence notation. A matrix of zeros and ones does not automatically encode a partition. An actual address map assigns each fine sector to exactly one coarse label. Duplicating one fine label into two coarse sectors changes the normalization condition and lies outside that constructor.
+
+\subsection{Moving coordinates and whole-object rates}
+
+Block2 distinguishes unitary frame motion from arbitrary invertible similarity. In \path{KomorebiPhysics.MovingAtlas}, \path{unitaryAtlas} constructs an orthogonal transported resolution using the required unitary identities. \path{hasDerivAt_moving_coordinates} derives the derivative of the actual transformed vector \(U(t)^*\psi(t)\). The connection term comes from differentiating \(U\), not from imposing the desired transformed equation.
+
+The namespace \path{KomorebiPhysics.Deformation} allows nonunitary invertible transport. It preserves an algebraic idempotent resolution, but it does not claim that every transported idempotent stays self-adjoint. Its whole-object theorem differentiates
+\[
+ P(t)X(t)Q(t)
+\]
+with all three product-rule terms. The declarations \path{hasDerivAt_corner} and \path{hasDerivAt_whole_object} retain intrinsic motion of \(X\) and the two moving frame factors. The inverse-curve interface \path{hasDerivAt_ring_inverse} proves the inverse derivative under completeness and invertibility at the base point.
+
+The exact shear examples make these distinctions visible. In the example with corner contributions \(4N,-3N,2N\), the full rate is \(3N\). Deleting any contribution changes the answer. A co-moving object can have a nonzero laboratory derivative, and a nonunitary similarity can produce an idempotent that is not symmetric. Those are exact finite examples, not floating-point diagnostics.
+
+\section{Blocks 3 to 5: mixed dynamics and information}
+
+\subsection{State dependence does not erase the input equation}
+
+The namespace \path{KomorebiPhysics.NonlinearFlow} replaces a fixed bounded generator by a state- and time-dependent one. The packet derivative is still derived from an actual trajectory equation. Skewness is required at the trajectory point for current antisymmetry and total conservation. The declaration \path{total_constant} therefore describes conservation along a supplied global solution. It is not an existence theorem for arbitrary nonlinear equations.
+
+In \path{KomorebiPhysics.MixedTransfer}, the current and probability are finite matrix expressions. The real-valued probability is identified with the literal complex trace under the stated Hermiticity assumptions. The declaration \path{MatrixAtlas.hasDerivAt_probability} starts from the derivative of the density matrix, not from a postulated scalar probability equation. The exact rank-one specialization \path{MatrixAtlas.pureState_current} connects the mixed-state current to the vector current.
+
+\subsection{Tensor marginals and entropy}
+
+Block4 constructs the tensor atlas from actual local finite matrix atlases. The marginal formulas hold for a general joint matrix. Product factorization requires a product input and is stated separately. The \path{KomorebiPhysics.PartialTrace} constructions prove positivity and trace preservation of the reduced matrices under the appropriate joint hypotheses, and identify the resulting local probabilities with the joint marginal sums.
+
+The information functionals in \path{KomorebiPhysics.InformationTransport} are functionals of packet probabilities. The entropy is the Shannon expression
+\[
+ S(p)=-\sum_i p_i\log p_i,
+\]
+using the natural logarithm. It is not the von Neumann entropy of an arbitrary density operator. The derivative formulas require strict positivity at the base time. Their use of a logarithm is not justified merely because Lean gives total functions to division and logarithm.
+
+For an antisymmetric current satisfying the component balance law, the entropy derivative is the symmetrized current expression proved by \path{hasDerivAt_entropy_current}. This identity alone does not give a sign. The fixed real exponent in the power-sum and R\'enyi statements is not restricted to integers. The R\'enyi theorem also requires a nonempty index type and \(q\ne1\). The limit as \(q\to1\) is a separate statement.
+
+The finite entanglement witness has similarly explicit scope. The Bell example excludes every explicit finite nonnegative mixture of pure product states through a negative partial-transpose pairing. It is an exact witness within the represented finite matrix setting. Its theorem name is \path{KomorebiPhysics.QuantumInformationExamples.bell_not_finite_product_mixture}.
+
+\subsection{What detailed balance adds}
+
+Block5 constructs jump matrices with square-root rate amplitudes, then computes the gain and anticommutator terms on arbitrary coherent matrix inputs. The scalar population equation follows from the original matrix derivative. Off-diagonal coherences have the half-sum of escape rates prescribed by the actual jump convention. These statements do not supply an integrated positive solution of every Lindblad equation.
+
+In \path{KomorebiPhysics.DetailedBalance}, the fixed positive reference \(\pi\) and the detailed-balance identity are explicit. Along a positive supplied population trajectory, the relative entropy
+\[
+ D(p\Vert\pi)=\sum_i p_i\log\frac{p_i}{\pi_i}
+\]
+has a nonpositive derivative. The declarations \path{dissipation_nonneg}, \path{relativeEntropy_deriv_nonpos} and \path{relativeEntropy_antitoneOn} distinguish the algebraic sign, the pointwise derivative and monotonicity on a convex time set.
+
+The conductance form covers inactive edges. Its flux-ratio presentation uses an explicit convention there and proves equivalence on active edges. It does not rely on evaluating an undefined ordinary ratio of two zero fluxes. The equality case first states equality of ratios on active edges. Identifying the whole distribution with the reference requires positivity of every distinct-label rate and normalization of both distributions, as required by the corresponding theorem. Arbitrary antisymmetric transfer does not imply this entropy conclusion.
+
+\section{Blocks 6 to 8: cancellation and positive measurements}
+
+\subsection{Finite-order cancellation with its actual error budget}
+
+The namespace \path{KomorebiPhysics.RefinementCancellation} defines the sampled table and its extrapolation recurrence. It accepts a scale ratio \(b>1\). The factors cancelling the first terms are proved algebraically, and all recurrence denominators are proved nonzero. The analytic statements in \path{RefinementAsymptotics} then combine a finite expansion with a genuine asymptotic remainder.
+
+For a fixed finite cancellation depth, \path{dyadic_order_improvement} and \path{positive_step_order_improvement} improve the order under their input expansion hypotheses. The one-sided statement does not require the original expansion to extend to negative step sizes. Neither theorem proves convergence of an infinite formal series simply because the source displays one.
+
+The bounds in \path{RefinementBounds} retain amplification of sample error. The exact example \path{KomorebiPhysics.RefinementExamples.sampleNoise_amplified} shows why cancellation cannot be advertised as a universal contraction of noisy data. \path{RefinementAsymptotics.tower_not_extra_order} gives a genuine asymptotic sharpness statement beyond the cancelled degree. Improving the truncation order and controlling perturbations are separate obligations.
+
+\subsection{Effects, expectations and moving sources}
+
+In Block7, \path{KomorebiPhysics.EffectAtlas} replaces orthogonal projectors by positive Hermitian effects \(E_i\) with \(\sum_iE_i=I\). Its probability is
+\[
+ p_i=\inner{\psi}{E_i\psi},
+\]
+interpreted as a real number by a proved reality statement. It generally differs from \(\norm{E_i\psi}^2\). Positivity and normalization give the probability bounds. They do not imply sharpness.
+
+The effect current is explicitly antisymmetrized. Its antisymmetry therefore holds by construction, while identifying its row sum with the actual state derivative uses the skewness condition. If the effects move, \path{EffectAtlas.hasDerivAt_moving_probability} retains an additional source
+\[
+ s_i=\inner{\psi}{\dot E_i\psi}.
+\]
+Differentiating the identity resolution proves that the sources sum to zero. Omitting them would change the moving-measurement law even when total probability remains constant.
+
+A fixed stochastic postprocessing matrix also has an exact constructor. Its weights must be real, nonnegative and column normalized. The resulting effects and probabilities obey the weighted aggregation formulas, and the current matrix becomes \(RJR^{\mathsf T}\). Time-dependent weights would contribute further derivative terms and are not hidden in this fixed-weight theorem.
+
+\subsection{Dilation is universal within the finite bounded setting}
+
+Block8 begins with actual bounded channels \(C_i:H\to K_i\) satisfying a Parseval resolution. The namespace \path{KomorebiPhysics.ParsevalFamily} proves state and operator reconstruction, constructs analysis and synthesis maps, and proves that synthesis is the adjoint of analysis. The finite direct sum uses its Hilbert norm.
+
+The square-root construction then supplies channels for an arbitrary finite effect atlas on a complete complex Hilbert space. The declarations \path{EffectAtlas.sqrtFamily} and \path{EffectAtlas.exists_finite_dilation} close the factorization obligation at this level. Finite-dimensionality of \(H\) is not required. Countably many outcomes and unbounded effects require additional work.
+
+Write the analysis isometry as \(V\). The lifted identity is the projection \(Q=VV^*\) onto its image. The supported lift \(X\mapsto VXV^*\) is multiplicative, but general compression \(Y\mapsto V^*YV\) need not be. The exact compression-defect theorems explain the difference. In particular, probability reconstruction from all channel corners cannot be replaced by retaining only diagonal corners of an arbitrary operator.
+
+Finally, \path{KomorebiPhysics.CycleGauge.difference_cycle_iff} describes the ambiguity of a current determined only by continuity. Among antisymmetric arrays, two currents have equal divergence exactly when their difference has zero row sums. The triangle example gives a nonzero such cycle. The state balance law fixes divergence and boundary transfer, while leaving this cycle freedom.
+
+\section{Blocks 9 and 11: domains and actual diagonal evolution}
+
+\subsection{Three assumptions that must not be merged}
+
+The infinite interface separates strong completeness, domain invariance and graph compatibility. A \path{StrongAtlas} supplies genuine \path{HasSum} statements for projected vectors. A \path{DomainAtlas} also proves that each projector sends a vector in \(\Dom(T)\) back into \(\Dom(T)\). Its \path{GraphCompatible} predicate additionally demands convergence of finite sums in
+\[
+ \norm{x}_{T}^{2}=\norm{x}^{2}+\norm{Tx}^{2}.
+\]
+The graph norm is constructed from the Hilbert product norm. It is not the default ambient norm on the domain subtype.
+
+The exact equivalence \path{KomorebiPhysics.GraphDomain.graph_convergence_iff} identifies graph convergence with convergence of both the vectors and their operator images. Strong convergence of the projectors alone cannot justify applying an unbounded operator to a limit. The theorem \path{DomainAtlas.graph_iff_action} isolates the missing action-sum condition explicitly.
+
+The domain current theorems assume formal symmetry of \(T\), which is weaker than self-adjointness. The fixed-row theorem \path{DomainAtlas.current_hasSum} proves a genuine scalar current sum from symmetry, domain preservation and strong reconstruction. It does not assert joint summability of the two-index array. The graph-compatible formulation supplies a separate full-action limit and leads to actual finite-region boundary derivatives.
+
+\subsection{Constructing the maximal multiplier}
+
+The namespace \path{KomorebiPhysics.DiagonalDomain} constructs the real diagonal operator with eigenvalue sequence \(\lambda_n\). Its maximal domain consists of those \(x\in\ell^2\) for which \((\lambda_nx_n)_n\in\ell^2\). Self-adjointness and closedness are proved for this concrete partial operator. The domain is not declared to be all of \(\ell^2\), and a formal symmetry equation alone is not relabelled as self-adjointness.
+
+The spectral projector atlas supplies an actual graph-compatible realization. Weighted tail series control convergence of the vector and its generator image. The construction is a spectral model. Identifying it with a chosen differential oscillator, together with that operator's domain and boundary conditions, is a different theorem.
+
+\subsection{The point at which existence is supplied}
+
+The modules \path{SpectralTimeContinuity.lean}, \path{SpectralSchrodinger.lean}, \path{SpectralSolutions.lean} and \path{SpectralTimeApproximation.lean} share the namespace \path{KomorebiPhysics.SpectralEvolution}. Filenames alone therefore do not determine the namespace of the theorem to inspect.
+
+For the real diagonal spectrum, the orbit is coordinatewise phase multiplication,
+\[
+ (U(t)x)_n=e^{-it\lambda_n}x_n.
+\]
+The theorem \path{continuous_orbit} proves strong time continuity for every \(\ell^2\) initial state. \path{domain_preserved} proves invariance of the maximal domain. \path{orbit_hasDerivAt} proves the actual ambient derivative on that domain. The declaration \path{exists_unique_solution} gives global domain solutions, while \path{differentiableAt_iff_mem_domain} establishes the exact boundary:
+\[
+ t\longmapsto U(t)x\text{ is differentiable at }t_0
+ \quad\Longleftrightarrow\quad x\in\Dom(T).
+\]
+The point \(t_0\) may be any real time. Norm preservation is available for every initial state, but differentiability is not. This is why rough-state conservation cannot be justified by differentiating a nonexistent ambient derivative.
+
+The cutoff estimates \path{cutoff_uniform_in_time} and \path{cutoff_velocity_uniform} retain one fixed initial state. The velocity estimate requires domain membership. They do not give a uniform finite-cutoff approximation over the entire unit ball. The exact rough-state and cutoff-velocity examples verify that these distinctions have content.
+
+\section{Block 10: which topology a cutoff controls}
+
+The bounded diagonal module builds an operator from a bounded scalar symbol and proves its supremum norm. The truncation module then converts operator questions into exact scalar tail questions. The harmonic spectral examples instantiate this machinery, including a resolvent at real parameter zero because that particular model has a spectral gap.
+
+\begin{longtable}{@{}L{.29\textwidth}L{.32\textwidth}L{.30\textwidth}@{}}
+\toprule
+Construction & Checked behavior & Boundary retained\\
+\midrule
+\endhead
+Harmonic resolvent cutoff & Operator-norm tail tends to zero, with an exact endpoint formula. & Domain range and both inverse identities are proved.\\[3pt]
+Heat multiplier at fixed \(t>0\) & Operator-norm cutoff convergence. & At \(t=0\), cutoff error is one. Negative time has an unbounded symbol.\\[3pt]
+Phase multiplier & Strong cutoff convergence for each state. & Operator-norm cutoff error is one at every finite cutoff.\\[3pt]
+Anchored bounded transform & Norm convergence with the correct scalar tail anchor. & Zero padding has error one for the source transform.\\[3pt]
+Anchored Cayley transform & Norm convergence with the correct anchor and exact tail formula. & A wrong anchor leaves a nonvanishing error.\\
+\bottomrule
+\end{longtable}
+
+The generic criterion is \path{KomorebiPhysics.SpectralTruncation.anchored_norm_iff}. It states that the anchored truncations converge in norm exactly when the bounded symbol tends to that anchor. In mathematical notation, the approximation is
+\[
+ S_M D_a S_M+c(I-S_M).
+\]
+The exterior value \(c\) is part of the operator. It cannot be dropped just because the retained finite block has the desired entries.
+
+These are exact infinite-dimensional statements. They are stronger than checking a few large matrices and more discriminating than the unqualified phrase ``the truncations converge.'' They still concern the constructed diagonal realization, rather than a general functional calculus for every self-adjoint partial operator.
+
+\section{Blocks 12 and 13: infinite cells and residue routing}
+
+\subsection{The existence of the sum is part of the result}
+
+In Block12, \path{StrongAtlas.cell} forms a coarse cell from an arbitrary fiber, including an empty or infinite fiber. \path{StrongAtlas.coarsenInfinite} constructs the coarse strong atlas. Positivity, self-adjointness, idempotence and boundedness of the coarse projectors are proved from the fine resolution.
+
+Preserving an unbounded domain needs more than ambient convergence. For a closed operator and a graph-compatible fine atlas, \path{DomainAtlas.cell_mem_domain} proves membership of the coarse projected vector. The alternative constructor \path{coarsenOfPreserves} accepts an independently established preservation result. The source does not infer closure of a domain under arbitrary ambient limits.
+
+For coarse currents there are two distinct formulations. The iterated theorems prove both inner and outer sums in the specified order. The product-index theorems require joint summability of the corresponding scalar array. The declaration \path{KomorebiPhysics.CurrentSummationExamples.not_joint_summable} supplies an abstract antisymmetric counterexample with zero iterated sums in both orders but no joint summability. It is not presented as a particular Hamiltonian realization.
+
+The actual coarse derivative is obtained by differentiating a bounded coarse projector applied to the original trajectory. It is not inferred by an unproved exchange of an infinite sum and a derivative. In the diagonal constructed-solution specialization, the earlier existence theorem supplies the trajectory equation needed here.
+
+\subsection{Residues are bounded projectors, ladders are partial operators}
+
+Block13 uses a positive modulus through a \path{NeZero} assumption. \path{KomorebiPhysics.ResidueProjectors.projector_number_average} identifies the finite character average with the residue projector, and \path{projector_eq_mask} identifies it with the infinite coordinate mask. The normalization factor and the sign of the receiving character are retained. The infinite subseries has a proved \path{HasSum} statement.
+
+The ladder operators require their own domain. The names \path{KomorebiPhysics.LadderDomains.lower} and \path{KomorebiPhysics.LadderDomains.raise} designate actual partial operators with square-root amplitudes. Their common domain is the first-moment condition described by \path{domain_iff}. The adjoint theorems establish genuine unbounded adjoint equalities, and closedness is a consequence proved for these operators.
+
+Routing then states that lowering moves a residue label down by one and raising moves it up by one, with labels interpreted in \(\mathbb Z/M\mathbb Z\). The input remains domain-valued. Vacuum behavior is handled explicitly. A second ladder application would require membership in the relevant product domain, so a canonical commutator theorem is not inferred from one-step routing alone. Likewise, coherent-state factorial weights and a differential oscillator identification are beyond the statements represented here.
+
+\section{Blocks 14 and 15: resolvents and reconstruction}
+
+\subsection{A certificate keeps the unbounded domain visible}
+
+For a partial operator \(T\), a bounded map \(R\) is accepted as a resolvent only with domain range and both inverse identities for \(T-zI\). A bounded commutator extension \(B\) agrees with \([T,P]\) on the actual domain, and \(P\) preserves that domain. Under those conditions, \path{KomorebiPhysics.ResolventDomain.Certificate.commutator_identity} proves
+\[
+ [R,P]=-RBR.
+\]
+This identity does not apply \(T\) off its domain. The bounded map \(P\) need not be a projection and need not reduce \(T\). Its operator-norm consequence is
+\[
+ \norm{[R,P]}\le \norm R^2\norm B.
+\]
+For a symmetric operator and a genuine nonreal resolvent, the additional estimate \(\norm R\le|\operatorname{Im}z|^{-1}\) is derived. Nonzero imaginary part is explicit.
+
+The namespace \path{KomorebiPhysics.DiagonalResolvents} constructs the certificates for arbitrary real diagonal spectra and nonreal \(z\). Generic certificate consequences therefore have a concrete realization, but they do not assert resolvent existence for every merely symmetric partial operator.
+
+The converse theorem \path{Certificate.commutator_zero_iff} concerns domain invariance and vanishing of the generator commutator on that domain. The exact nonreducing-packet examples show nonzero leakage. Formal symmetry, reducing structure and a small resolvent commutator remain different properties.
+
+\subsection{Strong reconstruction and its upgrades}
+
+For a bounded \(X\), uniformly contractive cutoffs \(S_\alpha\) converging strongly to the identity give strong convergence of \(S_\alpha X S_\alpha\) to \(X\). The theorem \path{KomorebiPhysics.StrongReconstruction.compression_strong} states this at the level of each fixed vector.
+
+Compactness of \(X\) permits an operator-norm upgrade under the self-adjoint contraction hypotheses used in \path{KomorebiPhysics.CompactReconstruction.compact_compression}. Self-adjointness is a sufficient hypothesis of this theorem. The library does not claim it is necessary in every possible formulation. The proof does not obtain adjoint convergence for an arbitrary strongly convergent sequence by assumption-free inference.
+
+The Hilbert--Schmidt layer begins by proving summability of actual bounded-operator columns. The predicate \path{KomorebiPhysics.HilbertSchmidtCore.IsHS} is necessary when interpreting the scalar formula \path{hsNorm} as the norm under discussion. Basis independence, adjoint invariance and ideal bounds are proved. This is substantive Hilbert--Schmidt infrastructure, but it is not advertised as a complete bundled theory of all Schatten classes.
+
+The exact geometric diagonal example has squared Hilbert--Schmidt norm \(4/3\), residual squared Hilbert--Schmidt norm \((4/3)4^{-M}\), and residual operator norm \(2^{-M}\). The errors are nonzero at every finite cutoff. Exact tail formulas and actual limits are represented independently of plots.
+
+\subsection{Graph reconstruction does not iterate the operator}
+
+The declaration \path{KomorebiPhysics.GraphReconstruction.reconstructed} uses a domain-valued finite cutoff before applying \(T\), then applies the ambient cutoff to the result. Under graph compatibility,
+\[
+ S_\alpha T S_\alpha x\longrightarrow Tx
+ \qquad (x\in\Dom(T))
+\]
+in the ambient norm. This does not assert that \(Tx\) belongs to \(\Dom(T)\), or that these outputs converge in the graph norm of \(T\). Either strengthening would require more domain control.
+
+The actual atlas cutoffs are orthogonal projections and contractions, but a finite number of retained sectors does not imply finite-dimensional ranges. The library also contains a compact rank-one counterexample to dropping the needed cutoff hypotheses from an arbitrary sandwich theorem. This prevents a true strong statement from being silently promoted to an operator-norm statement.
+
+\section{Block 16: the finite differential boundary}
+
+The pointwise algebra in \path{KomorebiPhysics.PointwiseNoGo} is \(\C^I\) for a finite label type, with ordinary coordinatewise multiplication. A derivation is an actual complex-linear map obeying Leibniz. The declarations \path{atom_derivative_coordinate}, \path{map_atom_eq_zero} and \path{derivation_eq_zero} prove that it must vanish.
+
+The proof tests Leibniz on each coordinate idempotent. Each coordinate of its derivative is forced to be zero. Finite reconstruction by those idempotents then kills the derivative of every element. The restriction to a finite product of copies of \(\C\) matters. It is not a theorem that every finite-dimensional commutative algebra has only the zero derivation.
+
+The matrix alternative is explicit. In \path{KomorebiPhysics.CornerDerivation},
+\[
+ \delta_K(X)=i(KX-XK)
+\]
+is defined by matrix operations. The theorem \path{delta_mul} proves Leibniz. Hermitian \(K\) gives star compatibility and preservation of Hermitian inputs. Trace cyclicity gives
+\[
+ \operatorname{Tr}\bigl((\delta_KX)Y\bigr)
+ =-\operatorname{Tr}\bigl(X\delta_KY\bigr).
+\]
+The conclusion is a finite matrix integration-by-parts identity. No spatial integral or continuum boundary condition has been inserted implicitly.
+
+With \(F_{KL}=i[K,L]\), the namespace \path{KomorebiPhysics.CornerCurvature} proves
+\[
+ [\delta_K,\delta_L]X=\delta_{F_{KL}}X.
+\]
+The Jacobi identity controls the factor of \(i\) and its sign. The checked central-curvature implication distinguishes the matrix value from its induced inner action. Exact two-by-two examples establish a nonzero derivation and a nonzero curvature action.
+
+The namespace \path{KomorebiPhysics.CornerReconstruction} then reconstructs the derivative from projector corners. Inserting an intermediate resolution into both commutator terms gives the path expression. Coarse corners are exact sums of the corresponding fine corners. This is the foundations endpoint: a precise finite noncommutative differential calculus with reconstruction. Its derivations do not by themselves construct continuum spacetime, interacting gauge evolution or gravity.
+
+\section{Reading and replaying the evidence}
+
+\subsection{Use the exact receipt, not a generic filename}
+
+The historical Block16 proof guide points to \path{verification/final/report.json}. In the Block49 package that filename now holds a later cumulative run. The retained \path{verification/block17_baseline_full/report.json} instead has exactly the Block16 totals and hashes. It records a successful run on 14 September 2026, an axiom audit of 1,731 declarations and 115 successful negative controls. The allowed axiom dependencies are \path{propext}, \path{Classical.choice} and \path{Quot.sound}.
+
+The receipt's stated trust boundary is fresh local proof terms checked against the restored pinned cache, with imported Lean and Mathlib libraries not independently rebuilt in that run. For the accompanying record, all 91 mathematical source hashes and all 114 referenced log hashes were compared with the retained receipt and matched. A read-only, comment- and string-masked scan of the same mathematical files found none of the listed admission, custom-axiom, unsafe/native-evaluation or selected bypass tokens. Such a scan complements source identification. It cannot replace kernel elaboration.
+
+The negative controls are deliberately invalid examples kept apart from mathematical modules. Their success condition is an expected rejection with the appropriate diagnostic, rather than a proof of a false statement. Counts of those controls describe tests of the checking procedure and hypothesis boundaries. They do not add 115 mathematical results to the theorem total.
+
+\Needspace{16\baselineskip}
+\subsection{A compact inspection recipe}
+
+The pinned toolchain is Lean \path{v4.34.0-rc2}. The package manifest pins Mathlib to the revision beginning \path{aeb72f1e9981}. A reader can inspect selected declarations without importing the entire later physics frontier. For example, an inspection file can contain:
+
+\begin{lstlisting}
+import KomorebiPhysics.Transfer
+import KomorebiPhysics.SpectralSolutions
+import KomorebiPhysics.CornerCurvature
+
+#check KomorebiPhysics.Atlas.hasDerivAt_subset_energy
+#check KomorebiPhysics.SpectralEvolution.exists_unique_solution
+#check KomorebiPhysics.CornerCurvature.derivation_commutator
+
+#print axioms KomorebiPhysics.Atlas.hasDerivAt_subset_energy
+#print axioms KomorebiPhysics.SpectralEvolution.exists_unique_solution
+#print axioms KomorebiPhysics.CornerCurvature.derivation_commutator
+\end{lstlisting}
+
+This is a reading and replay recipe, not a record of a command run during the accompanying record. A replay should use the pinned environment and keep its own logs. The original source archive includes the historical guides, audit machinery, negative controls and dependency manifest. It does not make the present PDF a substitute for that environment.
+
+For the full physics frontier, the root \path{KomorebiPhysics.lean} aggregator in the Block49 archive stops at Block47 and omits the two latest modules. Some generic wrapper metadata also retains earlier versions. This does not alter the 91 foundation files whose identities were compared here, but it prevents a root import alone from serving as evidence that the entire Block49 frontier was freshly replayed. The separate Dirac Lean companion gives the exact later module names.
+
+\subsection{How to use the machine crosswalk}
+
+The CSV's \path{fully_qualified_name} column is the lookup key. Its \path{module} column identifies the import, while \path{source_file} and \path{source_line} identify the original declaration. These are intentionally separate because several modules share one namespace. \path{source_header} retains the literal declaration header and \path{source_sha256} identifies its containing file. The axiom column is copied from the inherited matching receipt.
+
+The JSON source map records the block counts, all module identities, receipt identity, log comparisons and scan scope. It also records that no fresh Lean check was run. The extraction script is a read-only reproduction aid. Its source-header output is not an elaborator, and its 1,731-name boundary follows the existing named-declaration inventory rather than counting every generated structure projection or compiler-generated constant.
+
+To assess a manuscript sentence, locate the corresponding declaration, read its surrounding section variables, then distinguish the hypotheses from the conclusion. For an infinite statement, check the summability or filter topology. For a partial operator, check the domain subtype. For an evolution, determine whether the trajectory is supplied or constructed. These questions turn the formal companion into a usable specification of the mathematics rather than a list of theorem names.

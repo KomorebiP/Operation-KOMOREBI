@@ -1,0 +1,153 @@
+KomorebiPhysics.Relativistic3DFourierHilbertStability.AlgebraicSpinor : Type
+KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor : Type
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.AlgebraicSpinor
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor_apply
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) (j : Fin 4) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor ψ j = ψ.ofLp j
+KomorebiPhysics.Relativistic3DFourierHilbertStability.spinorToHilbert_hilbertToSpinor
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert
+      (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor ψ) =
+    ψ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor_spinorToHilbert
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.AlgebraicSpinor) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor
+      (KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert ψ) =
+    ψ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor_add
+  (ψ φ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor (ψ + φ) =
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor ψ +
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor φ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor_smul (c : ℂ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor (c • ψ) =
+    c • KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor ψ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.inner_spinorToHilbert
+  (ψ φ : KomorebiPhysics.Relativistic3DFourierHilbertStability.AlgebraicSpinor) :
+  inner ℂ (KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert ψ)
+      (KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert φ) =
+    KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.ip ψ φ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordLinear
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor →ₗ[ℂ]
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor →L[ℂ]
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator_apply
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford)
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator H) ψ =
+    KomorebiPhysics.Relativistic3DFourierL2Generator.spinorToHilbert
+      (H.toClifford.act (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertToSpinor ψ))
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator_symmetric
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford) :
+  (↑(KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator H)).IsSymmetric
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator_selfAdjoint
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford) :
+  IsSelfAdjoint (KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator H)
+KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd : Type
+KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode : Type
+KomorebiPhysics.Relativistic3DFourierHilbertStability.alphaXHilbertOperator :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.alphaYHilbertOperator :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.alphaZHilbertOperator :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.betaHilbertOperator :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.ofReal_selfAdjoint (r : ℝ) : IsSelfAdjoint ↑r
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModeOperator (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.real_smul_hilbertClifford_symmetric (r : ℝ)
+  (H : KomorebiPhysics.Relativistic3DCliffordHilbertRefinement.HermitianClifford) :
+  (↑(↑r • KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertCliffordOperator H)).IsSymmetric
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator_symmetric (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) :
+  (↑(KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n)).IsSymmetric
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator_selfAdjoint (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) :
+  IsSelfAdjoint (KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModeOperator m n)
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModeOperator_symmetric (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) :
+  (↑(KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModeOperator m h n)).IsSymmetric
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModeOperator_selfAdjoint (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) :
+  IsSelfAdjoint (KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModeOperator m h n)
+KomorebiPhysics.Relativistic3DFourierHilbertStability.schrodingerScalar_mem_skewAdjoint (t : ℝ) :
+  -(Complex.I * ↑t) ∈ skewAdjoint ℂ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator (t : ℝ)
+  (A : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator_mem_skewAdjoint (t : ℝ)
+  {A : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd} (hA : IsSelfAdjoint A) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.hilbertTimeScaledOperator t A ∈
+    skewAdjoint KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator_mem_unitary (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t ∈
+    unitary KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator_mem_unitary (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t ∈
+    unitary KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinorEnd
+KomorebiPhysics.Relativistic3DFourierHilbertStability.norm_continuumHilbertModePropagator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t) ψ‖ = ‖ψ‖
+KomorebiPhysics.Relativistic3DFourierHilbertStability.norm_centralHilbertModePropagator (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  ‖(KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t) ψ‖ = ‖ψ‖
+KomorebiPhysics.Relativistic3DFourierHilbertStability.inner_continuumHilbertModePropagator (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ)
+  (ψ φ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  inner ℂ ((KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t) ψ)
+      ((KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertModePropagator m n t) φ) =
+    inner ℂ ψ φ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.inner_centralHilbertModePropagator (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode) (t : ℝ)
+  (ψ φ : KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  inner ℂ ((KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t) ψ)
+      ((KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertModePropagator m h n t) φ) =
+    inner ℂ ψ φ
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertPropagatedPacketL2 (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode)
+  (a :
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  KomorebiPhysics.Relativistic3DFourierL2Generator.TorusSpinorL2
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertPropagatedPacketL2 (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode)
+  (a :
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  KomorebiPhysics.Relativistic3DFourierL2Generator.TorusSpinorL2
+KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertPropagatedPacketL2_norm_sq (m t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode)
+  (a :
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  ‖KomorebiPhysics.Relativistic3DFourierHilbertStability.continuumHilbertPropagatedPacketL2 m t S a‖ ^ 2 =
+    ∑ n ∈ S, ‖a n‖ ^ 2
+KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertPropagatedPacketL2_norm_sq (m h t : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode)
+  (a :
+    KomorebiPhysics.Relativistic3DFourierHilbertStability.Mode →
+      KomorebiPhysics.Relativistic3DFourierHilbertStability.HilbertSpinor) :
+  ‖KomorebiPhysics.Relativistic3DFourierHilbertStability.centralHilbertPropagatedPacketL2 m h t S a‖ ^ 2 =
+    ∑ n ∈ S, ‖a n‖ ^ 2

@@ -1,0 +1,28 @@
+HasFDerivAt.comp_hasDerivAt.{u, v, w} {𝕜 : Type u} [NontriviallyNormedField 𝕜] {F : Type v} [NormedAddCommGroup F]
+  [NormedSpace 𝕜 F] {E : Type w} [NormedAddCommGroup E] [NormedSpace 𝕜 E] {f : 𝕜 → F} {f' : F} (x : 𝕜) {l : F → E}
+  {l' : F →L[𝕜] E} (hl : HasFDerivAt l l' (f x)) (hf : HasDerivAt f f' x) : HasDerivAt (l ∘ f) (l' f') x
+HasDerivAt.comp.{u, u_1} {𝕜 : Type u} [NontriviallyNormedField 𝕜] (x : 𝕜) {𝕜' : Type u_1} [NontriviallyNormedField 𝕜']
+  [NormedAlgebra 𝕜 𝕜'] {h : 𝕜 → 𝕜'} {h₂ : 𝕜' → 𝕜'} {h' h₂' : 𝕜'} (hh₂ : HasDerivAt h₂ h₂' (h x))
+  (hh : HasDerivAt h h' x) : HasDerivAt (h₂ ∘ h) (h₂' * h') x
+ContinuousLinearMap.restrictScalars.{u_1, u_2, u_3, u_4} {A : Type u_1} {M₁ : Type u_2} {M₂ : Type u_3} (R : Type u_4)
+  [Semiring A] [Semiring R] [AddCommMonoid M₁] [Module A M₁] [Module R M₁] [TopologicalSpace M₁] [AddCommMonoid M₂]
+  [Module A M₂] [Module R M₂] [TopologicalSpace M₂] [LinearMap.CompatibleSMul M₁ M₂ R A] (f : M₁ →L[A] M₂) : M₁ →L[R] M₂
+inner_neg_left.{u_1, u_2} {𝕜 : Type u_1} {E : Type u_2} [RCLike 𝕜] [SeminormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+  (x y : E) : inner 𝕜 (-x) y = -inner 𝕜 x y
+inner_neg_right.{u_1, u_2} {𝕜 : Type u_1} {E : Type u_2} [RCLike 𝕜] [SeminormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+  (x y : E) : inner 𝕜 x (-y) = -inner 𝕜 x y
+map_sum.{u_1, u_3, u_4, u_7} {ι : Type u_1} {M : Type u_3} {N : Type u_4} [AddCommMonoid M] [AddCommMonoid N]
+  {G : Type u_7} [FunLike G M N] [AddMonoidHomClass G M N] (g : G) (f : ι → M) (s : Finset ι) :
+  g (∑ x ∈ s, f x) = ∑ x ∈ s, g (f x)
+Finset.sum_neg_distrib.{u_1, u_5} {ι : Type u_1} {G : Type u_5} {s : Finset ι} [SubtractionCommMonoid G] (f : ι → G) :
+  ∑ x ∈ s, -f x = -∑ x ∈ s, f x
+Finset.sum_comm.{u_3, u_4, u_5} {α : Type u_3} {β : Type u_4} {γ : Type u_5} [AddCommMonoid β] {s : Finset γ}
+  {t : Finset α} {f : γ → α → β} : ∑ x ∈ s, ∑ y ∈ t, f x y = ∑ y ∈ t, ∑ x ∈ s, f x y
+Complex.reCLM_apply (z : ℂ) : Complex.reCLM z = z.re
+Complex.neg_re (z : ℂ) : (-z).re = -z.re
+Complex.add_re (z w : ℂ) : (z + w).re = z.re + w.re
+Probe.lean:13:7: error(lean.unknownIdentifier): Unknown constant `Complex.neg_I_mul_re`
+InnerProductSpace.norm_sq_eq_re_inner.{u_4, u_5} {𝕜 : Type u_4} {E : Type u_5} {inst✝ : RCLike 𝕜}
+  {inst✝¹ : SeminormedAddCommGroup E} [self : InnerProductSpace 𝕜 E] (x : E) : ‖x‖ ^ 2 = RCLike.re (inner 𝕜 x x)
+real_inner_eq_re_inner.{u_1, u_2} (𝕜 : Type u_1) {E : Type u_2} [RCLike 𝕜] [SeminormedAddCommGroup E]
+  [InnerProductSpace 𝕜 E] (x y : E) : inner ℝ x y = RCLike.re (inner 𝕜 x y)

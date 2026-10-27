@@ -1,0 +1,36 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.DetailedBalance.Balanced
+#print axioms KomorebiPhysics.DetailedBalance.ratio
+#print axioms KomorebiPhysics.DetailedBalance.conductance
+#print axioms KomorebiPhysics.DetailedBalance.relativeEntropy
+#print axioms KomorebiPhysics.DetailedBalance.dissipation
+#print axioms KomorebiPhysics.DetailedBalance.conductance_symm
+#print axioms KomorebiPhysics.DetailedBalance.equilibrium_current
+#print axioms KomorebiPhysics.DetailedBalance.ratio_pos
+#print axioms KomorebiPhysics.DetailedBalance.flux_factor
+#print axioms KomorebiPhysics.DetailedBalance.current_factor
+#print axioms KomorebiPhysics.DetailedBalance.log_difference_product_nonneg
+#print axioms KomorebiPhysics.DetailedBalance.log_ratio_product_nonneg
+#print axioms KomorebiPhysics.DetailedBalance.log_difference_product_eq_zero_iff
+#print axioms KomorebiPhysics.DetailedBalance.edge_nonneg
+#print axioms KomorebiPhysics.DetailedBalance.dissipation_nonneg
+#print axioms KomorebiPhysics.DetailedBalance.hasDerivAt_relative_term
+#print axioms KomorebiPhysics.DetailedBalance.hasDerivAt_relativeEntropy_raw
+#print axioms KomorebiPhysics.DetailedBalance.hasDerivAt_relativeEntropy
+#print axioms KomorebiPhysics.DetailedBalance.relativeEntropy_deriv_nonpos
+#print axioms KomorebiPhysics.DetailedBalance.relativeEntropy_antitoneOn
+#print axioms KomorebiPhysics.DetailedBalance.relativeEntropy_self
+#print axioms KomorebiPhysics.DetailedBalance.dissipation_self
+#print axioms KomorebiPhysics.DetailedBalance.activeFluxCost
+#print axioms KomorebiPhysics.DetailedBalance.zero_rate_iff
+#print axioms KomorebiPhysics.DetailedBalance.active_fluxes_positive
+#print axioms KomorebiPhysics.DetailedBalance.activeFluxCost_eq_edge
+#print axioms KomorebiPhysics.DetailedBalance.dissipation_eq_activeFlux
+#print axioms KomorebiPhysics.DetailedBalance.hasDerivAt_relativeEntropy_flux
+#print axioms KomorebiPhysics.DetailedBalance.relative_term_lower_bound
+#print axioms KomorebiPhysics.DetailedBalance.relativeEntropy_nonneg
+#print axioms KomorebiPhysics.DetailedBalance.dissipation_zero_iff
+#print axioms KomorebiPhysics.DetailedBalance.zero_dissipation_eq_reference
+#print axioms KomorebiPhysics.DetailedBalance.hasDerivAt_matrix_relativeEntropy
+#print axioms KomorebiPhysics.DetailedBalance.matrix_relativeEntropy_deriv_nonpos

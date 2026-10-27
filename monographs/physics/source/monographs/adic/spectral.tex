@@ -1,0 +1,1271 @@
+\section{Polyphase coordinates and folded bands}
+\label{a-spectral-polyphase}
+
+The finite Haar decomposition isolates an average and its new detail
+channels. A standard polyphase decomposition instead groups the entries
+of a cyclic lattice by their residue class. Both transformations preserve
+the full state space. An elimination begins only when some coordinates
+are solved for and removed. The spectral parameter then enters the
+remaining operator, and the eliminated degrees of freedom return as
+memory in time.
+
+We use complex Hilbert spaces with inner product linear in the second
+argument and set $\hbar=1$. All matrices in the finite sections act on
+their stated coordinate spaces. In particular, the inverse of a low
+channel block is a low channel operator, rather than a full space matrix.
+
+\subsection{Residue coordinates and exact block reconstruction}
+
+Fix an integer $p\geq2$ and $M\geq3$, and put $N=pM$. Primality is not
+needed for the identities in this section. For $0\leq r<p$, define the
+isometry $J_r:\C^M\to\C^N$ by
+\[
+ J_r|k\rangle=|pk+r\rangle,\qquad 0\leq k<M.
+\]
+Then $J_r^*J_s=\delta_{rs}I_M$ and $\sum_rJ_rJ_r^*=I_N$. The standard
+analysis map $\mathcal A$ sends $|pk+r\rangle$ to
+$|r\rangle\otimes|k\rangle$. This is a permutation unitary. For any
+operator $X$ on $\C^N$, its residue blocks $X_{rs}=J_r^*XJ_s$ reconstruct it:
+\begin{equation}
+ X=\sum_{r,s=0}^{p-1}J_rX_{rs}J_s^*,\qquad
+ (\mathcal A X\mathcal A^*)_{rs}=X_{rs}.
+ \label{a-spectral-block-reconstruction}
+\end{equation}
+The first equality follows by inserting $\sum_rJ_rJ_r^*$ on both sides
+of $X$. If $H=H^*$, its blocks satisfy $H_{rs}^*=H_{sr}$. If $U$ is
+unitary, the same insertion gives
+\begin{align}
+ \sum_rU_{rs}^*U_{rt}&=J_s^*U^*UJ_t=\delta_{st}I_M,\nonumber\\
+ \sum_sU_{rs}U_{ts}^*&=J_r^*UU^*J_t=\delta_{rt}I_M.
+ \label{a-spectral-paraunitarity}
+\end{align}
+These are the block unitary identities. Every coordinate is retained.
+
+For finite $H$, expansion of the matrix exponential proves
+\[
+ e^{-it\mathcal A H\mathcal A^*}
+   =\mathcal A e^{-itH}\mathcal A^*.
+\]
+Indeed $(\mathcal A H\mathcal A^*)^n=\mathcal A H^n\mathcal A^*$,
+and the series converges in matrix norm. The same transformation of
+each Kraus operator gives a unitarily equivalent quantum channel:
+if $\Phi(\rho)=\sum_\mu K_\mu\rho K_\mu^*$ with
+$\sum_\mu K_\mu^*K_\mu=I$, then
+\[
+ K_\mu^{\rm poly}=\mathcal A K_\mu\mathcal A^*,\qquad
+ \sum_\mu(K_\mu^{\rm poly})^*K_\mu^{\rm poly}=I.
+\]
+This is a change of coordinates in a given channel. It does not supply
+a new dissipative dynamics.
+
+\Needspace{16\baselineskip}
+\begin{proposition}[Probability currents between residue channels]
+\label{a-spectral-channel-current}
+Suppose $i\dot\psi_r=\sum_sH_{rs}\psi_s$ with $H_{rs}^*=H_{sr}$.
+The channel weights $w_r=\norm{\psi_r}^2$ satisfy
+\[
+ \dot w_r=\sum_s\mathcal J_{r\leftarrow s},\qquad
+ \mathcal J_{r\leftarrow s}
+   =2\operatorname{Im}\langle\psi_r,H_{rs}\psi_s\rangle,
+ \qquad
+ \mathcal J_{r\leftarrow s}=-\mathcal J_{s\leftarrow r}.
+\]
+Consequently $\sum_rw_r$ is constant.
+\end{proposition}
+\begin{proof}
+Differentiating the norm gives
+$\dot w_r=2\operatorname{Re}\langle\psi_r,-i\sum_sH_{rs}\psi_s\rangle$,
+which is the stated sum of imaginary parts. Self-adjoint block symmetry
+implies
+$\langle\psi_s,H_{sr}\psi_r\rangle
+=\overline{\langle\psi_r,H_{rs}\psi_s\rangle}$.
+The currents therefore cancel in pairs, including a zero diagonal current.
+\end{proof}
+Here $w_r$ is a probability or squared amplitude weight. Calling it an
+energy would require an additional energy observable and its balance law.
+
+\subsection{A Bloch symbol with a fixed shift convention}
+
+Let $S|n\rangle=|n+1\pmod N\rangle$ and
+\begin{equation}
+ H=\mu I+\kappa(S+S^*),\qquad \mu,\kappa\in\R.
+ \label{a-spectral-free-cycle}
+\end{equation}
+Use the coarse Fourier matrix
+$(F_M)_{jk}=M^{-1/2}e^{-2\pi ijk/M}$ and
+$\theta_j=2\pi j/M$. After $\mathcal A$, Fourier transformation in $k$,
+and the permutation from residue major to momentum major ordering, the
+operator becomes a direct sum of $p\times p$ symbols. To see their entries,
+note that $S$ sends $(r,k)$ to $(r+1,k)$ for $r<p-1$ and sends
+$(p-1,k)$ to $(0,k+1)$. The coarse shift has Fourier eigenvalue
+$e^{-i\theta_j}$. Thus define
+\begin{equation}
+ P_p(\theta)e_r=
+ \begin{cases}
+ e_{r+1},&r<p-1,\\
+ e^{-i\theta}e_0,&r=p-1.
+ \end{cases}
+ \qquad
+ \mathsf H_p(\theta)=\mu I_p+\kappa(P_p(\theta)+P_p(\theta)^*).
+ \label{a-spectral-bloch-symbol}
+\end{equation}
+The transformed $H$ is $\bigoplus_{j=0}^{M-1}\mathsf H_p(\theta_j)$.
+In particular, $P_p(\theta)^p=e^{-i\theta}I_p$.
+
+\begin{proposition}[Exact folded cyclic spectrum]
+\label{a-spectral-folded-bands}
+For $q=0,\ldots,p-1$, the eigenvalues of
+$\mathsf H_p(\theta)$ are
+\begin{equation}
+ E_q(\theta)=\mu+2\kappa
+     \cos\!\left(\frac{\theta+2\pi q}{p}\right).
+ \label{a-spectral-band-formula}
+\end{equation}
+At $\theta=\theta_j$, the union of these $pM$ eigenvalues, counting
+multiplicity, is exactly the spectrum of \eqref{a-spectral-free-cycle}.
+\end{proposition}
+\begin{proof}
+Put $\alpha_q=(\theta+2\pi q)/p$ and let the $r$th component of
+$v_q$ be $p^{-1/2}e^{i\alpha_qr}$. On the interior components,
+$P_p(\theta)v_q=e^{-i\alpha_q}v_q$. The wrapped component has the
+same value because $e^{ip\alpha_q}=e^{i\theta}$. The $v_q$ are
+orthonormal by the finite character sum. Applying
+$\mu I+\kappa(P_p+P_p^*)$ gives \eqref{a-spectral-band-formula}.
+Every fine Fourier index is uniquely $k=j+qM$. Its angle satisfies
+$2\pi k/(pM)=(\theta_j+2\pi q)/p$. Substitution into the fine cyclic
+eigenvalue $\mu+2\kappa\cos(2\pi k/N)$ proves the multiplicity statement.
+\end{proof}
+
+The same construction works for any circulant polynomial
+$H=\sum_\ell c_\ell S^\ell$, with symbol
+$\sum_\ell c_\ell P_p(\theta)^\ell$. It preserves all bands, whether or
+not their energies coincide. For $N=p^h$, digit reversal relates this
+standard residue split to the newest-digit adic split developed earlier.
+It is still necessary to distinguish the retained residue-zero sites
+from the retained Haar average channel. They are different subspaces.
+
+\adicfigure{09_polyphase_symbol}{Three exact folded bands for the
+nearest-neighbor cycle. The discrete markers represent the finite cyclic
+spectrum. Band folding reorganizes its multiplicities without discarding
+any eigenstate.}
+
+
+\section{Regular Schur reduction and causal memory}
+\label{a-spectral-feshbach}
+
+Let a finite Hilbert space be the orthogonal sum
+$\HH_L\oplus\HH_D$, and write a self-adjoint Hamiltonian as
+\begin{equation}
+ H=\begin{pmatrix}A&B\\B^*&D\end{pmatrix},\qquad A=A^*,\quad D=D^*.
+ \label{a-spectral-block-hamiltonian}
+\end{equation}
+Here $B:\HH_D\to\HH_L$. Let $\iota_L$ embed $\HH_L$ into the full
+space. This notation fixes the coordinate type of every compression.
+
+\subsection{The resolvent chart and its exceptional energies}
+
+\begin{theorem}[Finite Feshbach identity]
+\label{a-spectral-schur-theorem}
+If $z\notin\sigma(D)$, define
+\begin{equation}
+ \Sigma(z)=B(z-D)^{-1}B^*,\qquad
+ \mathcal S(z)=z-A-\Sigma(z).
+ \label{a-spectral-schur-definition}
+\end{equation}
+Then $z-H$ is invertible exactly when $\mathcal S(z)$ is invertible.
+On this common regular set,
+\begin{align}
+ \iota_L^*(z-H)^{-1}\iota_L&=\mathcal S(z)^{-1},\nonumber\\
+ \det(z-H)&=\det(z-D)\det\mathcal S(z).
+ \label{a-spectral-schur-identities}
+\end{align}
+For $E\in\R\setminus\sigma(D)$, an eigenvector of $H$ is equivalent to
+a nonzero solution of $\mathcal S(E)u=0$, with hidden component
+$v=(E-D)^{-1}B^*u$.
+\end{theorem}
+\begin{proof}
+Put $C=z-D$. Direct block multiplication gives
+\[
+ z-H=
+ \begin{pmatrix}I&-BC^{-1}\\0&I\end{pmatrix}
+ \begin{pmatrix}\mathcal S(z)&0\\0&C\end{pmatrix}
+ \begin{pmatrix}I&0\\-C^{-1}B^*&I\end{pmatrix}.
+\]
+Both outer factors are invertible and have determinant one. This proves
+the invertibility equivalence and determinant formula. Inverting the
+factors gives the stated upper left block. Alternatively, in
+$(z-H)(u,v)^{\mathsf T}=(f,0)^{\mathsf T}$, the lower equation gives
+$v=C^{-1}B^*u$ and the upper equation becomes $\mathcal S(z)u=f$.
+The same elimination with $f=0$ proves the eigenvector statement.
+If $u=0$ at such an $E$, invertibility of $E-D$ forces $v=0$, so a
+nonzero full eigenvector indeed has $u\ne0$.
+\end{proof}
+
+If $P_L=\iota_L\iota_L^*$, the full space compression is
+$P_L(z-H)^{-1}P_L=\iota_L\mathcal S(z)^{-1}\iota_L^*$.
+When a Haar transform $\mathcal W$ first exposes low and detail channels,
+the embedding in the original coordinates is
+$\iota_L=\mathcal W^*(|0\rangle\otimes I)$.
+The inverse on $\HH_L$ must be embedded in this way before it is compared
+with a full space matrix.
+
+The determinant equality is initially a rational identity on the regular
+set. Multiplication by $\det(z-D)$ cancels its denominators and yields the
+full characteristic polynomial, which extends across $\sigma(D)$.
+This extension does not make the displayed inverse of $z-D$ exist at
+a pole. At a resonant energy the uneliminated equations determine which
+hidden modes couple, survive, or cancel. A resonant subspace can be kept
+as part of an enlarged visible block.
+
+\subsection{Spectral residues, analytic sign, and branch weights}
+
+Let $D=\sum_\lambda\lambda E_\lambda$ be its spectral resolution. Then
+\begin{equation}
+ \Sigma(z)=\sum_\lambda\frac{B E_\lambda B^*}{z-\lambda}.
+ \label{a-spectral-self-energy-residues}
+\end{equation}
+Every residue $B E_\lambda B^*$ is positive semidefinite. Its rank records
+which directions of the hidden eigenspace reach the visible space.
+A vanishing residue removes the corresponding pole of $\Sigma$, even
+though $z-D$ is still singular there.
+
+\begin{proposition}[Upper half-plane sign and the exact visible norm]
+\label{a-spectral-resolvent-sign}
+For $z=x+iy$ with $y>0$,
+\[
+ \operatorname{Im}\Sigma(z)
+  =-yB\bigl((x-D)^2+y^2I\bigr)^{-1}B^*\leq0,
+ \qquad
+ \operatorname{Im}\mathcal S(z)\geq yI.
+\]
+In particular $\mathcal S(z)$ is invertible and
+$\norm{\mathcal S(z)^{-1}}\leq y^{-1}$.
+For real $E\notin\sigma(D)$,
+\[
+ \Sigma'(E)=-B(E-D)^{-2}B^*.
+\]
+If $(u,v)$ is a normalized full eigenvector at $E$, then
+\begin{equation}
+ 1=\langle u,(I-\Sigma'(E))u\rangle.
+ \label{a-spectral-visible-norm}
+\end{equation}
+\end{proposition}
+\begin{proof}
+For real $\lambda$,
+$\operatorname{Im}(z-\lambda)^{-1}=-y/((x-\lambda)^2+y^2)$.
+Applying this identity to the spectral sum gives the first formula and
+then the bound on $\operatorname{Im}\mathcal S$.
+For any $u$, Cauchy--Schwarz implies
+$y\norm{u}^2\leq|\langle u,\mathcal S(z)u\rangle|
+\leq\norm{u}\norm{\mathcal S(z)u}$.
+Thus $\mathcal S(z)$ has trivial kernel and an inverse of the stated
+norm in finite dimension. Differentiating the resolvent gives the minus
+sign in $\Sigma'$. The reconstructed hidden norm is
+$\norm{v}^2=\langle u,B(E-D)^{-2}B^*u\rangle$.
+Adding $\norm{u}^2$ proves \eqref{a-spectral-visible-norm}.
+\end{proof}
+
+For a one-dimensional visible block this says that an eigenstate's
+visible probability is $[1-\Sigma'(E)]^{-1}$. It is at most one, as
+required. Eliminating a normalized eigenvector therefore changes its
+normalization metric as well as its spectral equation. Solving only a
+nonlinear energy equation does not provide that probability weight.
+
+\subsection{Exact elimination in the time domain}
+
+\begin{theorem}[Causal memory with the initial hidden forcing]
+\label{a-spectral-memory-theorem}
+The finite system
+$i\dot u=Au+Bv$, $i\dot v=Dv+B^*u$, with initial data $(u_0,v_0)$,
+is equivalent to
+\begin{align}
+ i\dot u(t)&=Au(t)+B e^{-itD}v_0
+              -i\int_0^tK(t-s)u(s)\,ds,\nonumber\\
+ K(\tau)&=B e^{-i\tau D}B^*,\qquad \tau\geq0,
+ \label{a-spectral-memory-equation}
+\end{align}
+together with reconstruction
+\begin{equation}
+ v(t)=e^{-itD}v_0-i\int_0^te^{-i(t-s)D}B^*u(s)\,ds.
+ \label{a-spectral-hidden-reconstruction}
+\end{equation}
+For $\operatorname{Im}z>0$, the self-energy is its exact one-sided transform:
+\begin{equation}
+ \Sigma(z)=-i\int_0^\infty e^{iz\tau}K(\tau)\,d\tau.
+ \label{a-spectral-memory-transform}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Differentiate $e^{itD}v(t)$ and integrate the hidden equation. This gives
+\eqref{a-spectral-hidden-reconstruction}, whose substitution in the
+visible equation gives \eqref{a-spectral-memory-equation}. Conversely
+the reconstruction differentiates to the hidden equation and supplies
+the prescribed initial value, so it recovers the full evolution.
+Since $D$ is self-adjoint, $\norm{K(\tau)}\leq\norm{B}^2$.
+The factor $e^{-\operatorname{Im}z\,\tau}$ makes the transform absolutely
+convergent. On a spectral eigenvalue of $D$,
+$\int_0^\infty e^{i(z-\lambda)\tau}\,d\tau=i/(z-\lambda)$.
+The finite spectral sum then proves \eqref{a-spectral-memory-transform}.
+\end{proof}
+
+The memory is causal because it uses only $s\leq t$. An initially empty
+hidden sector removes the forcing $B e^{-itD}v_0$, not the convolution.
+In finite dimension $K$ is a finite sum of oscillatory terms. Its decay,
+a Markov approximation, or irreversible damping requires additional
+limits or assumptions. The closed full dynamics preserves
+$\norm{u(t)}^2+\norm{v(t)}^2$, while the visible norm alone can decrease
+and later return. Energy-dependent Schur reduction is consequently
+different from replacing $H$ by a fixed smaller self-adjoint matrix.
+
+
+\section{Rooted trees and radial Jacobi response}
+\label{a-spectral-radial}
+
+Let $T_{p,h}$ be a rooted $p$-ary tree of depth $h\geq1$. Vertices at
+depth $r$ have onsite energy $\epsilon_r\in\R$. Every parent-to-child
+edge from level $r$ to $r+1$ has real coupling $\gamma_r/\sqrt p$,
+where $\gamma_r\in\R$. The Hamiltonian is the corresponding real
+symmetric adjacency matrix with onsite diagonal. The level symmetry
+and this branch normalization are structural assumptions of the model.
+
+\subsection{The radial reducing subspace}
+
+Define normalized level states
+\[
+ |r\rangle=p^{-r/2}\sum_{|v|=r}|v\rangle,
+ \qquad r=0,\ldots,h.
+\]
+They are orthonormal because different levels are disjoint and level
+$r$ contains $p^r$ vertices. A direct action calculation gives
+\begin{equation}
+ H|r\rangle=\gamma_{r-1}|r-1\rangle
+              +\epsilon_r|r\rangle+\gamma_r|r+1\rangle,
+ \label{a-spectral-radial-action}
+\end{equation}
+with omitted terms at the endpoints. For example, the coefficient at
+each child at level $r+1$ is
+$p^{-r/2}\gamma_r/\sqrt p=\gamma_r p^{-(r+1)/2}$.
+At each parent at level $r-1$, the $p$ child contributions instead give
+$p\,p^{-r/2}\gamma_{r-1}/\sqrt p
+=\gamma_{r-1}p^{-(r-1)/2}$.
+
+Let $R:\C^{h+1}\to\ell^2(T_{p,h})$ send $e_r$ to $|r\rangle$.
+Equation \eqref{a-spectral-radial-action} proves $HR=RJ_h$, where
+\begin{equation}
+ J_h=\begin{pmatrix}
+ \epsilon_0&\gamma_0&&&\\
+ \gamma_0&\epsilon_1&\gamma_1&&\\
+ &\gamma_1&\epsilon_2&\ddots&\\
+ &&\ddots&\ddots&\gamma_{h-1}\\
+ &&&\gamma_{h-1}&\epsilon_h
+ \end{pmatrix}.
+ \label{a-spectral-jacobi-matrix}
+\end{equation}
+Because $H$ is self-adjoint, the orthogonal complement of $\Ran R$ is
+also invariant: for $w\perp\Ran R$,
+$\langle Re_r,Hw\rangle=\langle HRe_r,w\rangle=0$.
+Hence this is a reducing decomposition, rather than only a compressed
+approximation. The root belongs to the radial block.
+
+\subsection{Angular chains and their multiplicities}
+
+There is a more precise form of the complementary decomposition. For
+each vertex $u$ at depth $a<h$, choose an orthonormal basis of vectors
+$c=(c_0,\ldots,c_{p-1})\in\C^p$ with $\sum_dc_d=0$. For
+$s=0,\ldots,h-a-1$, set
+\begin{equation}
+ |u,c;s\rangle
+ =p^{-s/2}\sum_{d=0}^{p-1}c_d
+       \sum_{w\in\{0,\ldots,p-1\}^{s}}|u d w\rangle.
+ \label{a-spectral-angular-chain}
+\end{equation}
+For fixed $u,c$, these are unit vectors on successive levels. They obey
+the Jacobi recurrence with onsite energies
+$\epsilon_{a+1},\ldots,\epsilon_h$ and couplings
+$\gamma_{a+1},\ldots,\gamma_{h-1}$. At $s=0$ the upward amplitude into
+$u$ is proportional to $\sum_dc_d$, so it vanishes. At $s>0$ the same
+branch-counting calculation as in \eqref{a-spectral-radial-action}
+produces the neighboring chain vectors.
+
+\begin{proposition}[Complete angular-chain decomposition]
+\label{a-spectral-angular-completeness}
+The radial chain and all the chains \eqref{a-spectral-angular-chain}
+form an orthogonal decomposition of $\ell^2(T_{p,h})$. A chain starting
+at depth $r$ has length $h-r+1$ and appears with multiplicity
+$(p-1)p^{r-1}$, for $1\leq r\leq h$.
+\end{proposition}
+\begin{proof}
+Within one chain, different $s$ have disjoint level supports. Chains
+based at the same $u$ and different contrast vectors have inner product
+$\langle c,c'\rangle=0$ at a common level. If two vertices are in disjoint
+subtrees, their chains have disjoint support. If one vertex lies below
+another, the higher chain is constant, up to its fixed ancestral
+coefficient, on all children below the lower vertex at a common level.
+The lower chain has zero sum over its own child contrasts, so their
+inner product is zero. The same zero-sum calculation makes every
+angular vector orthogonal to the uniform radial level vector.
+At a fixed depth $b$, the radial vector contributes one dimension.
+The angular vectors present there contribute
+$\sum_{r=1}^b(p-1)p^{r-1}=p^b-1$ dimensions. They are orthogonal and
+therefore form a basis of that $p^b$-dimensional level space. Taking
+all levels proves completeness. There are $p^{r-1}$ choices of the
+vertex $u$ at depth $r-1$ and $p-1$ contrasts at each, giving the
+stated multiplicity.
+\end{proof}
+
+The rank $(p-1)p^{r-1}$ thus counts chains born at level $r$ or
+new Haar directions on a level. A single level's detail space is
+usually transported to the next level; it is the entire angular
+chain that is invariant under the tree Hamiltonian. The full dark
+dimension is
+\[
+ \sum_{r=1}^h(p-1)p^{r-1}(h-r+1)
+ =\sum_{b=0}^hp^b-(h+1).
+\]
+Every one of these states is invisible to a root-localized symmetric
+source because it is orthogonal to the radial reducing block.
+
+\subsection{Continued fractions and their meromorphic reading}
+
+For a tail $J_{r:h}$, put
+$g_r(z)=\langle r,(z-J_{r:h})^{-1}r\rangle$. On a common regular
+domain, scalar Schur elimination gives
+\begin{align}
+ g_h(z)&=(z-\epsilon_h)^{-1},\nonumber\\
+ g_r(z)&=\frac1{z-\epsilon_r-\gamma_r^2g_{r+1}(z)},
+          \qquad r<h.
+ \label{a-spectral-continued-fraction}
+\end{align}
+Defining $\Sigma_h=0$ and
+$\Sigma_r=\gamma_r^2/(z-\epsilon_{r+1}-\Sigma_{r+1})$ gives
+\begin{equation}
+ \langle\mathrm{root},(z-H)^{-1}\mathrm{root}\rangle
+   =g_0(z)=\frac1{z-\epsilon_0-\Sigma_0(z)}.
+ \label{a-spectral-root-green}
+\end{equation}
+The equality to the tree resolvent follows from the exact reducing
+decomposition. Equations \eqref{a-spectral-continued-fraction} are
+rational identities. Nested denominators can become singular at a
+real energy where a canceled final rational expression is finite.
+One should use the resolvent or the canceled rational function at
+such a point, rather than perform division by zero in the nested chart.
+
+The Jacobi coefficients in \eqref{a-spectral-jacobi-matrix} do not
+depend on $p$. Thus the root Green function and radial propagator
+are prime independent when the same $\epsilon_r,\gamma_r$ are used.
+The complete tree spectrum retains the $p$-dependent angular
+multiplicities. If the per-edge coupling is instead a fixed $g_r$,
+the radial coupling is $\sqrt p\,g_r$ and its response depends on $p$.
+Prime independence is therefore a consequence of the declared
+normalization, not a universality statement about arbitrary trees.
+
+\subsection{A visible two-component block}
+
+As a conditional finite model, take
+$A=H_D(k)=k\sigma_z+m_0\sigma_x$ with $k,m_0\in\R$ and
+$D=J_{1:h}\otimes I_2$. Couple the visible spinor identically to the
+first site of the tail by $B=\gamma_0(\langle1|\otimes I_2)$.
+Its self-energy is scalar in spin space:
+\[
+ \Sigma_D(z)=\sigma(z)I_2,\qquad
+ \sigma(z)=\gamma_0^2\langle1,(z-J_{1:h})^{-1}1\rangle.
+\]
+The determinant formula from Theorem~\ref{a-spectral-schur-theorem} is
+\begin{equation}
+ \det(z-H_{\rm full})
+ =\det(z-D)\bigl((z-\sigma(z))^2-k^2-m_0^2\bigr).
+ \label{a-spectral-visible-determinant}
+\end{equation}
+Consequently any eigenvalue in the regular chart obeys
+\begin{equation}
+ (E-\sigma(E))^2=k^2+m_0^2.
+ \label{a-spectral-visible-branch}
+\end{equation}
+The formula is a dressed dispersion relation of this specific model.
+Its mass, couplings, and hidden sector have been supplied. No physical
+interaction or measured dispersion follows solely from the tree split.
+
+For a nondegenerate visible spin direction with normalized low-space
+direction $u_*$, the visible weight of its normalized full eigenstate is
+$[1-\sigma'(E)]^{-1}$. If $k=m_0=0$, the spin eigenspace is degenerate,
+but the same normalization relation holds for each chosen unit vector
+in that eigenspace.
+
+If every internal tail hopping is nonzero, the first tail site is cyclic.
+One can see this without an abstract cyclicity theorem: a tail eigenvector
+with zero first component has zero second component by the first row,
+and successive rows force all later components to vanish. Therefore
+every tail eigenvector has nonzero first component. At an eigenvalue
+$\lambda$ of that tail, solvability of
+$(\lambda-D)v=B^*u$ requires its right side to be orthogonal to the tail
+eigenspace. With $\gamma_0\ne0$ and identical spin coupling this forces
+$u=0$. The visible equation would then require $Bv=0$, which forces
+$v=0$ on the tail eigenspace. Thus in this irreducible case the full
+coupled spectrum avoids the tail eigenvalues. With a vanishing hopping,
+coincident visible and hidden energies can occur and the regular-chart
+qualification in \eqref{a-spectral-visible-branch} is essential.
+
+The scalar causal kernel is
+$K(\tau)=\gamma_0^2\langle1,e^{-i\tau J_{1:h}}1\rangle$, multiplying
+$I_2$. It uses the same radial coefficients as the rational self-energy.
+Its exact causal relation is \eqref{a-spectral-memory-transform}.
+\adicfigure{08_radial_self_energy}{A branch-normalized finite tree has
+the same root response as its radial Jacobi chain. The complex-energy
+resolvent avoids real poles. The oscillatory memory is the return
+amplitude of a finite hidden chain.}
+
+
+\section{Chebyshev decimation and resonant channels}
+\label{a-spectral-chebyshev}
+
+We now eliminate intermediate residue sites in
+\eqref{a-spectral-free-cycle}, assuming $\kappa\ne0$. The retained
+sites are $C=\{0,p,\ldots,(M-1)p\}$ and the eliminated sites comprise
+the $p-1$ interior sites between adjacent retained sites. Identify
+$\ell^2(C)$ with $\C^M$ and let $T|j\rangle=|j+1\pmod M\rangle$.
+Set
+\begin{equation}
+ x=\frac{z-\mu}{\kappa},\qquad
+ R_n(x)=2T_n(x/2),
+ \label{a-spectral-normalized-energy}
+\end{equation}
+where $T_n$ is the first-kind Chebyshev polynomial. The second-kind
+polynomials $U_n$ satisfy $U_{-1}=0$, $U_0=1$ and
+$U_{n+1}(t)=2tU_n(t)-U_{n-1}(t)$.
+
+\subsection{The eliminated path fixes the Schur prefactor}
+
+The stationary equation on an interior site is
+$\psi_{n+1}=x\psi_n-\psi_{n-1}$. The eliminated block of $z-H$ in
+one cell is $\kappa K_{p-1}(x)$, where $K_n(x)$ has diagonal $x$
+and neighboring off-diagonal entries $-1$.
+
+\begin{lemma}[Dirichlet path determinant and endpoint entries]
+\label{a-spectral-path-inverse}
+For $n\geq1$, $\det K_n(x)=U_n(x/2)$. If this determinant is nonzero,
+\[
+ (K_n(x)^{-1})_{11}=(K_n(x)^{-1})_{nn}
+       =\frac{U_{n-1}(x/2)}{U_n(x/2)},\qquad
+ (K_n(x)^{-1})_{1n}=\frac1{U_n(x/2)}.
+\]
+For $n=1$ these entries all denote the same value $1/x$.
+\end{lemma}
+\begin{proof}
+Expansion along the last row gives the determinant recurrence
+$d_n=xd_{n-1}-d_{n-2}$, with $d_0=1$ and $d_1=x$.
+This is exactly the recurrence and initial data for $U_n(x/2)$.
+Deleting the first or last row and column leaves $K_{n-1}$, proving
+the diagonal inverse entries by cofactors. For the endpoint entry,
+the cofactor consists of the product of $n-1$ entries $-1$ along the
+unique path from the first endpoint to the last. Its cofactor sign is
+$(-1)^{n+1}$, so the product has total sign
+$(-1)^{n+1}(-1)^{n-1}=1$. Division by $d_n$ gives the stated value.
+\end{proof}
+
+\begin{theorem}[Exact free-cycle decimation]
+\label{a-spectral-chebyshev-schur}
+For $U_{p-1}(x/2)\ne0$, the Schur operator on the retained sublattice is
+\begin{equation}
+ \mathcal S_p(z)=\frac{\kappa}{U_{p-1}(x/2)}
+          \bigl[R_p(x)I_M-(T+T^*)\bigr].
+ \label{a-spectral-decimation-formula}
+\end{equation}
+Equivalently, $\mathcal S_p(z)=zI-H_{\rm eff}^{(p)}(z)$, where
+\begin{align}
+ H_{\rm eff}^{(p)}(z)&=\mu_p(z)I+\kappa_p(z)(T+T^*),\nonumber\\
+ \kappa_p(z)&=\frac{\kappa}{U_{p-1}(x/2)},\qquad
+ \mu_p(z)=z-\frac{\kappa R_p(x)}{U_{p-1}(x/2)}.
+ \label{a-spectral-effective-coefficients}
+\end{align}
+\end{theorem}
+\begin{proof}
+The eliminated sites split into $M$ disjoint Dirichlet paths of length
+$p-1$. Hence their resolvent exists exactly when
+$U_{p-1}(x/2)\ne0$. A retained site touches one endpoint on each of
+its two neighboring paths. Each path contributes the onsite
+self-energy $\kappa U_{p-2}/U_{p-1}$ by
+Lemma~\ref{a-spectral-path-inverse}; the two contributions add.
+The path joining two adjacent retained sites contributes off-diagonal
+self-energy $\kappa/U_{p-1}$. Thus
+\[
+ \mathcal S_p(z)
+ =\kappa\left(x-\frac{2U_{p-2}(x/2)}{U_{p-1}(x/2)}\right)I
+       -\frac{\kappa}{U_{p-1}(x/2)}(T+T^*).
+\]
+The identity
+$xU_{p-1}(x/2)-2U_{p-2}(x/2)=2T_p(x/2)$ follows from the
+three-term recurrence and $U_p-U_{p-2}=2T_p$.
+For the latter identity, substituting $x/2=\cos\theta$ gives
+$[\sin((p+1)\theta)-\sin((p-1)\theta)]/\sin\theta
+=2\cos(p\theta)$, and polynomial equality extends it to all $x$.
+This proves \eqref{a-spectral-decimation-formula} including its
+prefactor. Rearranging its diagonal gives
+\eqref{a-spectral-effective-coefficients}.
+\end{proof}
+
+The normalized effective energy is
+$(z-\mu_p(z))/\kappa_p(z)=R_p(x)$. The parameter $z$ remains fixed
+through the elimination. Since $\mu_p$ and $\kappa_p$ depend on it,
+this is an energy-dependent spectral closure, not an energy-independent
+Hamiltonian flow. For $p=2$, $R_2(x)=x^2-2$ and $U_1(x/2)=x$, giving
+\begin{equation}
+ H_{\rm eff}^{(2)}(z)
+ =\mu I+\frac{\kappa^2}{z-\mu}(2I+T+T^*),\qquad z\ne\mu.
+ \label{a-spectral-dyadic-effective}
+\end{equation}
+This decimation retains every other site. It does not retain the
+average of each neighboring pair.
+
+\subsection{The poles have an exact Dirichlet interpretation}
+
+The sine formula $U_{p-1}(\cos\theta)=\sin(p\theta)/\sin\theta$
+shows that the excluded normalized energies are
+\begin{equation}
+ x_j=2\cos(j\pi/p),\qquad
+ z_j=\mu+2\kappa\cos(j\pi/p),\quad 1\leq j<p.
+ \label{a-spectral-dirichlet-resonances}
+\end{equation}
+These are the energies of one eliminated path. Indeed its $j$th
+eigenvector has interior components $\sin(j\pi r/p)$,
+$r=1,\ldots,p-1$, and the nearest-neighbor recurrence gives precisely
+$z_j$. Both boundary values at $r=0,p$ vanish. The eigenvectors are
+orthogonal and there are $p-1$ of them, so these exhaust the path spectrum.
+
+The polynomial map $R_p$ is defined at every $x_j$, while the Schur
+coefficients in \eqref{a-spectral-effective-coefficients} are not.
+Cancelling denominators in a determinant can cross this chart boundary;
+dividing by them in an eigenvector reconstruction cannot. A correct
+description there keeps the resonant cell modes or solves the full
+finite system. The fixed poles of the eliminated path are not all
+automatically eigenvalues of the full cyclic Hamiltonian.
+
+Let $Q$ project onto the eliminated sites. On the regular chart,
+\[
+ \det(z-H)=\det(z-QHQ)\det\mathcal S_p(z),\qquad
+ \det(z-QHQ)=\bigl[\kappa^{p-1}U_{p-1}(x/2)\bigr]^M.
+\]
+Their product is a polynomial identity after cancellation. It records
+both the hidden path factor and the coarse Schur factor, including
+their cancellations at the resonant energies.
+
+\subsection{Transfer coordinates and many-to-one branch maps}
+
+Define $A(x)=\begin{pmatrix}x&-1\\1&0\end{pmatrix}$. Its determinant
+is one and induction gives
+\begin{equation}
+ A(x)^n=\begin{pmatrix}
+ U_n(x/2)&-U_{n-1}(x/2)\\
+ U_{n-1}(x/2)&-U_{n-2}(x/2)
+ \end{pmatrix},\quad n\geq1.
+ \label{a-spectral-transfer-power}
+\end{equation}
+For $n=1$ this uses $U_{-1}=0$. Multiplication by $A(x)$ advances
+the first column through the Chebyshev recurrence and places the
+negative previous first column in the second. The trace is $R_n(x)$.
+Sampling the fine recurrence every $p$ steps therefore uses the
+unimodular transfer matrix $A(x)^p$. Cayley--Hamilton gives the coarse
+recurrence $\chi_{j+1}-R_p(x)\chi_j+\chi_{j-1}=0$ for
+$\chi_j=\psi_{pj}$. It explains the normalized spectral polynomial.
+The path-inverse proof above additionally supplies the prefactor needed
+for the resolvent.
+
+The folded branches from Proposition~\ref{a-spectral-folded-bands},
+in normalized coordinates, satisfy
+\begin{equation}
+ x_{p,q}(\theta)=2\cos\!\left(\frac{\theta+2\pi q}{p}\right),
+ \qquad R_p(x_{p,q}(\theta))=2\cos\theta.
+ \label{a-spectral-branch-relation}
+\end{equation}
+The second equality is just $T_p(\cos\alpha)=\cos(p\alpha)$.
+For a coarse normalized energy in the open interval $(-2,2)$,
+choose its angle in $(0,\pi)$. These formulas supply the $p$ distinct
+real roots of $R_p(x)=2\cos\theta$. At the endpoints, some roots
+coincide and algebraic multiplicities must be retained. Globally the
+branches exchange labels when the angle crosses a cell boundary.
+There is no single-valued inverse of $R_p$ on $[-2,2]$.
+
+For the fine cycle, $x_k=2\cos(2\pi k/(pM))$ maps to
+$2\cos(2\pi k/M)$. Each coarse Fourier label has exactly $p$ fine
+preimages. If two labels already have the same numerical energy,
+their multiplicities add as usual. Band folding retains the branch
+label and its vector, whereas normalized decimation identifies all
+of these labels at the same coarse energy. Their spectral relation
+does not make elimination an invertible operator change of basis.
+
+
+\section{Composition, transfer traces, and the free spectral measure}
+\label{a-spectral-semigroup}
+
+The spectral maps compose more simply than the energy-dependent
+operators that produce them. Keeping the normalized polynomial map,
+the rational Schur chart, and the transfer matrix distinct prevents an
+exact free-chain identity from being used outside its model.
+
+\subsection{Polynomial composition and iterated regular elimination}
+
+\begin{theorem}[Chebyshev composition and Schur composition]
+\label{a-spectral-semigroup-theorem}
+For all positive integers $m,n$, the polynomial identities
+\begin{align}
+ R_n(R_m(x))&=R_{mn}(x)=R_m(R_n(x)),\nonumber\\
+ U_{mn-1}(t)&=U_{n-1}(T_m(t))\,U_{m-1}(t)
+ \label{a-spectral-polynomial-semigroup}
+\end{align}
+hold over $\C$. In a free cycle with $N=mnL$, $L\geq3$, successive
+$m$- then $n$-site decimation at a fixed $z$ agrees with direct
+$mn$-site decimation whenever its intermediate Schur inverses exist.
+Its final coefficients are
+\begin{equation}
+ \kappa_{mn}(z)=\frac{\kappa}{U_{mn-1}(x/2)},\qquad
+ \mu_{mn}(z)=z-\frac{\kappa R_{mn}(x)}{U_{mn-1}(x/2)}.
+ \label{a-spectral-iterated-coefficients}
+\end{equation}
+\end{theorem}
+\begin{proof}
+For $x=2\cos\theta$, first-kind composition gives
+$R_n(R_m(x))=2\cos(mn\theta)=R_{mn}(x)$.
+It holds on an interval and is therefore an identity of polynomials,
+including complex $x$. For $t=\cos\theta$ away from zeros of the sine
+denominators,
+\[
+ U_{n-1}(T_m(t))U_{m-1}(t)
+ =\frac{\sin(mn\theta)}{\sin(m\theta)}
+       \frac{\sin(m\theta)}{\sin\theta}
+ =U_{mn-1}(t).
+\]
+Polynomial equality extends it through those zeros and to all $t$.
+After the first regular elimination, the normalized variable is
+$x_m=(z-\mu_m)/\kappa_m=R_m(x)$. A second one gives
+\[
+ \kappa_{m,n}
+ =\frac{\kappa_m}{U_{n-1}(x_m/2)}
+ =\frac{\kappa}
+   {U_{m-1}(x/2)U_{n-1}(T_m(x/2))}
+ =\frac{\kappa}{U_{mn-1}(x/2)}.
+\]
+Similarly
+$\mu_{m,n}=z-\kappa_{m,n}R_n(R_m(x))$, which gives
+\eqref{a-spectral-iterated-coefficients}.
+At each stage the matrices remain scalar nearest-neighbor circulants
+with the displayed complex coefficients, so their algebraic Schur
+formula continues to apply. These are rational identities on a common
+regular chart. They need not be interpreted as self-adjoint matrices at
+complex $z$.
+\end{proof}
+
+The product identity in \eqref{a-spectral-polynomial-semigroup} makes
+the exceptional denominators explicit. A nonzero final denominator
+implies both denominators along that two-stage chart are nonzero.
+At a zero of the final denominator the polynomial trace composition
+is still valid, but the divided Schur formulas require a new chart or
+retained resonant modes. Iterating one prime $p$ through depth $h$,
+where the cycle has the required divisibility, replaces $p$ by $p^h$
+in \eqref{a-spectral-iterated-coefficients}. Different prime orders
+give the same regular free-chain result. A nontranslation-invariant
+onsite potential, an interacting Hamiltonian, or a field-dependent
+constraint elimination needs its own closure analysis.
+
+\subsection{What remains true for a general unimodular transfer matrix}
+
+Let $M_0\in SL_2(\C)$ and $x=\operatorname{tr}M_0$. No
+diagonalizability assumption is needed. Cayley--Hamilton gives
+$M_0^2-xM_0+I=0$, hence
+\begin{equation}
+ M_0^n=U_{n-1}(x/2)M_0-U_{n-2}(x/2)I,\qquad n\geq1,
+ \label{a-spectral-sl2-power}
+\end{equation}
+with $U_{-1}=0$. For $n=1$ it is the identity $M_0=M_0$, and for
+$n=2$ it is Cayley--Hamilton. Multiplying by $M_0$ and replacing
+$M_0^2$ by $xM_0-I$ proves the induction step. Taking traces yields
+\begin{equation}
+ \operatorname{tr}(M_0^n)=R_n(\operatorname{tr}M_0).
+ \label{a-spectral-sl2-trace}
+\end{equation}
+The coefficient identity is the same
+$xU_{n-1}-2U_{n-2}=2T_n$ used above.
+
+If $w_{k+1}=M_0w_k$, each residue subsequence satisfies
+\[
+ w_{nq+j}=M_0^j(M_0^n)^q w_0,\qquad 0\leq j<n.
+\]
+Thus ordinary matrix powering produces the normalized trace semigroup,
+including matrices with repeated eigenvalues at trace $\pm2$.
+The trace alone does not determine $M_0$, its eigenvectors, or a
+local Hamiltonian realization. In the free chain, $M_0=A(x)$ has
+the required nearest-neighbor realization. For a general transfer
+problem only the matrix power and trace statements have been proved.
+
+\subsection{The arcsine measure and the Koopman operator}
+
+On $[-2,2]$ define the probability measure
+\begin{equation}
+ d\nu(x)=\frac{dx}{\pi\sqrt{4-x^2}}.
+ \label{a-spectral-arcsine-measure}
+\end{equation}
+It is the distribution of $2\cos\theta$ for a uniform angle on the
+circle, or on $[0,\pi]$. It is also the limiting normalized spectral
+measure of the free cycles: for a continuous test function $f$,
+\[
+ \frac1N\sum_{k=0}^{N-1}f(2\cos(2\pi k/N))
+ \longrightarrow\frac1{2\pi}\int_0^{2\pi}f(2\cos\theta)\,d\theta.
+\]
+This is the Riemann-sum limit of a continuous periodic function.
+
+\Needspace{17\baselineskip}
+\begin{proposition}[Invariant free measure and exact mode routing]
+\label{a-spectral-arcsine-invariance}
+For every integer $p\geq2$, $(R_p)_*\nu=\nu$. The map
+$\mathcal K_pf=f\circ R_p$ is an isometry on $L^2(\nu)$. With
+\[
+ \phi_0=1,\qquad \phi_n(x)=\sqrt2\,T_n(x/2),\quad n\geq1,
+\]
+its action and adjoint on an orthonormal basis are
+\begin{equation}
+ \mathcal K_p\phi_n=\phi_{pn},\qquad
+ \mathcal K_p^*\phi_m=
+ \begin{cases}\phi_{m/p},&p\mid m,\\0,&p\nmid m.\end{cases}
+ \label{a-spectral-koopman-routing}
+\end{equation}
+In the first case $m=0$ is included, so $\mathcal K_p^*\phi_0=\phi_0$.
+\end{proposition}
+\begin{proof}
+For a bounded measurable $f$, use the full circle parameterization:
+\begin{align*}
+ \int f(R_p(x))\,d\nu(x)
+ &=\frac1{2\pi}\int_0^{2\pi}f(2\cos(p\theta))\,d\theta\\
+ &=\frac1{2\pi p}\int_0^{2\pi p}f(2\cos u)\,du
+ =\int f(x)\,d\nu(x).
+\end{align*}
+The last equality uses periodicity. Applying this equality to $|f|^2$
+proves the isometry, first on bounded functions and then by truncation
+on all of $L^2(\nu)$. Pulling back to $[0,\pi]$ makes the $\phi_n$
+the normalized cosine functions, and elementary cosine orthogonality
+proves their orthonormality. Their span is dense: Chebyshev polynomials
+span ordinary polynomials; those approximate continuous functions
+uniformly, for example by Bernstein polynomials after rescaling to
+$[0,1]$. The approximation follows from uniform continuity and the
+binomial variance bound, by separating $|k/n-t|\leq\delta$ from its
+complement and then letting $n\to\infty$, $\delta\to0$.
+Continuous functions are dense for this finite measure, as one sees by
+approximating interval steps in the angle coordinate by continuous
+ramps. This supplies completeness.
+Finally, Chebyshev composition gives $\mathcal K_p\phi_n=\phi_{pn}$.
+For every $n,m\geq0$,
+$\langle\phi_n,\mathcal K_p^*\phi_m\rangle
+=\langle\phi_{pn},\phi_m\rangle=\delta_{pn,m}$.
+Completeness yields the adjoint formula.
+\end{proof}
+
+$\mathcal K_p$ is an isometry with proper range, rather than a unitary:
+for example $\phi_1$ is orthogonal to its range. Its adjoint discards
+nondivisible modes. Invariance of $\nu$ is a statement about the
+normalized free spectral distribution under $R_p$. It is not a proof
+that a sequence of growing Hilbert spaces has converged to an interacting
+Hamiltonian or that its quantum state converges. The direct-limit
+operator construction has separate hypotheses in the final part.
+
+The mean logarithmic expansion of this map is also exact:
+\begin{equation}
+ \int_{-2}^2\log|R_p'(x)|\,d\nu(x)=\log p.
+ \label{a-spectral-log-expansion}
+\end{equation}
+Indeed for $x=2\cos\theta$,
+$R_p'(x)=p\sin(p\theta)/\sin\theta$. Logarithms at its finitely
+many zeros are integrable, since they have the local form
+$\log|\theta-\theta_0|$ plus a bounded term. Hence the integral is
+$\log p$ plus the difference of the integrals of
+$\log|\sin(p\theta)|$ and $\log\sin\theta$ over $[0,\pi]$.
+The substitution $u=p\theta$ and $\pi$-periodicity of
+$\log|\sin u|$ make these two integrals equal. This calculation
+does not assert the entropy of a different physical dynamics.
+
+\adicfigure{11_prime_renormalization}{The normalized maps
+$R_2$, $R_3$, and $R_5$ preserve the same arcsine spectral measure.
+The accompanying bounded moment checks illustrate the exact measure
+identity, while each Schur realization retains its own excluded poles.}
+
+
+\section{Analytic residue lanes and hypergeometric functions}
+\label{a-spectral-hypergeometric}
+
+Residue filtering also acts on coefficients of a convergent analytic
+series. Here the input is a function, not a quantum state, and the
+projector acts on its coefficient sequence. Evaluating one resulting
+lane at an operator does not generally turn that lane into a Hilbert
+space projector.
+
+\subsection{Character filtering and factorial separation}
+
+Fix an integer $L\geq2$, write $\omega_L=e^{2\pi i/L}$, and let
+$F(z)=\sum_{n=0}^\infty a_nz^n$ be analytic for $|z|<\rho$.
+The whole disk is invariant under the rotations used below. Define
+\begin{equation}
+ (\mathfrak R_{L,j}F)(z)
+ =\frac1L\sum_{\ell=0}^{L-1}\omega_L^{-j\ell}F(\omega_L^\ell z),
+ \quad 0\leq j<L.
+ \label{a-spectral-analytic-filter}
+\end{equation}
+Absolute convergence for $|z|<\rho$ and the finite character sum give
+\begin{equation}
+ (\mathfrak R_{L,j}F)(z)=\sum_{q=0}^\infty a_{Lq+j}z^{Lq+j},
+ \quad
+ \mathfrak R_{L,j}\mathfrak R_{L,k}
+   =\delta_{jk}\mathfrak R_{L,j},\quad
+ \sum_j\mathfrak R_{L,j}=I.
+ \label{a-spectral-analytic-lanes}
+\end{equation}
+To prove the coefficient formula, the coefficient of $a_nz^n$ in
+\eqref{a-spectral-analytic-filter} is
+$L^{-1}\sum_\ell\omega_L^{(n-j)\ell}$, equal to one exactly when
+$n\equiv j\pmod L$. The idempotent and reconstruction laws follow
+by filtering these coefficients again. For an entire $F$ the formulas
+hold everywhere. For a function continued outside its disk, the
+domain and any chosen branches must also support all rotations; the
+local power-series identity does not remove such analytic restrictions.
+
+Apply this filter to $e^z$ and put
+\begin{equation}
+ E_{L,j}(z)=\sum_{q=0}^\infty\frac{z^{Lq+j}}{(Lq+j)!}.
+ \label{a-spectral-factorial-lane}
+\end{equation}
+For $\alpha\in\C$, write
+$(\alpha)_q=\alpha(\alpha+1)\cdots(\alpha+q-1)$ and
+$(\alpha)_0=1$. Splitting the factorial into step-$L$ factors gives
+\begin{align}
+ \frac{(Lq+j)!}{j!}
+ &=\prod_{r=1}^{L}\prod_{k=0}^{q-1}(j+r+Lk)\nonumber\\
+ &=L^{Lq}\prod_{r=1}^{L}\left(\frac{j+r}{L}\right)_q.
+ \label{a-spectral-factorial-split}
+\end{align}
+Exactly one bottom parameter is one, at $r=L-j$. Define the multiset
+\[
+ \mathcal A_{L,j}
+ =\left\{\frac{j+r}{L}:1\leq r\leq L\right\}\setminus\{1\}.
+\]
+Every member is positive, so none is a forbidden nonpositive integer
+in a hypergeometric denominator. Since $(1)_q=q!$,
+\begin{equation}
+ E_{L,j}(z)=\frac{z^j}{j!}\,
+ {}_0F_{L-1}\!\left(\begin{matrix}-\\\mathcal A_{L,j}\end{matrix};
+                              \frac{z^L}{L^L}\right).
+ \label{a-spectral-hypergeometric-lane}
+\end{equation}
+Here ${}_0F_s(;b_1,\ldots,b_s;w)$ is defined by
+$\sum_{q\geq0}w^q/[q!\prod_r(b_r)_q]$. The ratio of successive
+terms has magnitude $|w|/[(q+1)\prod_r|q+b_r|]$, which tends to
+zero. Its series is entire in $w$, so \eqref{a-spectral-hypergeometric-lane}
+is an everywhere convergent identity with the factorial series.
+For example $\mathcal A_{3,1}=\{2/3,4/3\}$ and
+$E_{3,1}(z)=z\,{}_0F_2(;2/3,4/3;z^3/27)$.
+
+\subsection{The cyclic companion system}
+
+Termwise differentiation on compact subsets gives
+$E'_{L,j}=E_{L,j-1}$ for $j\geq1$. For $j=0$, the constant term
+vanishes under differentiation and reindexing gives
+$E'_{L,0}=E_{L,L-1}$. Let
+$\mathbf E_L=(E_{L,0},\ldots,E_{L,L-1})^{\mathsf T}$ and
+define the cyclic matrix by $(C_Lv)_0=v_{L-1}$ and
+$(C_Lv)_j=v_{j-1}$ for $j\geq1$. Then
+\begin{equation}
+ \mathbf E_L'=C_L\mathbf E_L,\qquad
+ \mathbf E_L(0)=e_0,\qquad
+ C_L^L=I,\qquad
+ \mathbf E_L(z)=e^{zC_L}e_0.
+ \label{a-spectral-companion-system}
+\end{equation}
+One can verify the last equality directly: $C_L^ne_0=e_{n\bmod L}$,
+so its $j$th exponential coordinate is exactly
+\eqref{a-spectral-factorial-lane}. Character filtering also gives
+\begin{equation}
+ E_{L,j}(z)=\frac1L\sum_{\ell=0}^{L-1}
+               \omega_L^{-j\ell}e^{\omega_L^\ell z}.
+ \label{a-spectral-root-exponential}
+\end{equation}
+Thus factorial, hypergeometric, companion-state, and root-filter forms
+describe the same analytic function. Each form has a different numerical
+conditioning: a root sum can contain cancellations even when the
+defining series has positive terms.
+
+For a general finite transfer matrix $M_1$, the residue-state identity
+$v_{Lq+j}=M_1^j(M_1^L)^qv_0$ follows by adding exponents. It needs
+no hypergeometric coefficients. A factorial lane provides a particular
+analytic coordinate system; it does not impose a unique microscopic
+Hamiltonian on every such transfer problem.
+
+\Needspace{24\baselineskip}
+\subsection{Bounded operators and controlled series errors}
+
+\begin{theorem}[Entire lane calculus for a bounded operator]
+\label{a-spectral-bounded-operator-lanes}
+Let $A_0\in\mathcal B(\HH)$ and $t\in\C$. The series
+$E_{L,j}(tA_0)$ converges absolutely in operator norm and satisfies
+\begin{align}
+ E_{L,j}(tA_0)
+ &=\frac1L\sum_{\ell=0}^{L-1}\omega_L^{-j\ell}
+                           e^{\omega_L^\ell tA_0},\nonumber\\
+ &=\frac{(tA_0)^j}{j!}\,
+ {}_0F_{L-1}\!\left(\begin{matrix}-\\\mathcal A_{L,j}\end{matrix};
+                      \frac{(tA_0)^L}{L^L}\right),\nonumber\\
+ \sum_{j=0}^{L-1}E_{L,j}(tA_0)&=e^{tA_0}.
+ \label{a-spectral-operator-lane-identities}
+\end{align}
+If all terms through degree $Q$ are retained in a lane, the omitted
+operator norm is at most
+\begin{equation}
+ e^a\frac{a^{Q+1}}{(Q+1)!},\qquad a=|t|\norm{A_0}.
+ \label{a-spectral-lane-tail-bound}
+\end{equation}
+\end{theorem}
+\begin{proof}
+The sum of norms of all exponential terms is at most $e^a$. A lane
+is a subseries of this sum, so it converges absolutely. The character
+calculation and factorial split can therefore be applied in operator
+norm, giving the first two identities. Partitioning the nonnegative
+degrees by their residues proves the third. All products are powers
+of the same operator, so there is no commuting-operator assumption.
+For the tail, bound a lane by the full tail. Since
+$(Q+1+k)!\geq(Q+1)!k!$,
+\[
+ \sum_{n=Q+1}^\infty\frac{a^n}{n!}
+ \leq\frac{a^{Q+1}}{(Q+1)!}\sum_{k=0}^\infty\frac{a^k}{k!},
+\]
+which proves \eqref{a-spectral-lane-tail-bound}.
+\end{proof}
+
+If $A_0^L=\alpha I$, the hypergeometric expression reduces every
+lane to a scalar function multiplying $A_0^j$. The propagator lies
+in the finite span of $I,A_0,\ldots,A_0^{L-1}$. A more general
+polynomial identity gives the corresponding finite algebra of powers.
+These statements follow from the supplied algebraic relation; they
+do not assert one for an arbitrary Hamiltonian.
+
+The coefficient maps $\mathfrak R_{L,j}$ in
+\eqref{a-spectral-analytic-lanes} are idempotents on analytic functions.
+The evaluated operators $E_{L,j}(tA_0)$ generally are not.
+For $L=2$, $E_{2,0}(tA_0)=\cosh(tA_0)$ and
+$E_{2,1}(tA_0)=\sinh(tA_0)$, which are neither an orthogonal
+projector family nor a pair of independent unitary evolutions.
+The sum reconstructs an evolution; an individual lane is an analytic
+contribution to it.
+
+\subsection{A squared-factorial lane for Bessel functions}
+
+The same separation gives the entire function
+\[
+ B(y)=\sum_{n=0}^\infty\frac{(-1)^ny^n}{(n!)^2}
+     ={}_0F_1(;1;-y).
+\]
+For $y\geq0$, this is $J_0(2\sqrt y)$; the entire series itself
+does not need a square-root branch. Define
+$B_{L,j}(y)=\sum_{q\geq0}(-1)^{Lq+j}y^{Lq+j}/[(Lq+j)!]^2$.
+Squaring \eqref{a-spectral-factorial-split} gives
+\begin{equation}
+ B_{L,j}(y)
+ =\frac{(-1)^jy^j}{(j!)^2}\,
+ {}_0F_{2L-1}\!\left(
+ \begin{matrix}-\\1,\mathcal A_{L,j},\mathcal A_{L,j}\end{matrix};
+ \frac{(-1)^Ly^L}{L^{2L}}\right).
+ \label{a-spectral-bessel-lane}
+\end{equation}
+One of the two $q!$ factors is the conventional hypergeometric
+factorial and the other supplies the explicit bottom parameter $1$.
+All bottom parameters are positive and the ratio test again gives
+entire convergence. Character filtering reconstructs $B=\sum_jB_{L,j}$.
+With the Euler derivative $\Theta=y\,d/dy$, termwise differentiation
+also gives the cyclic system
+\begin{equation}
+ \Theta^2B_{L,j}(y)=-yB_{L,j-1\bmod L}(y).
+ \label{a-spectral-bessel-euler}
+\end{equation}
+For a term of positive degree $n$, its new coefficient is
+$n^2(-1)^n/(n!)^2=-(-1)^{n-1}/[(n-1)!]^2$.
+The degree-zero term disappears under $\Theta^2$, which also verifies
+the wraparound case $j=0$. The scalar Gowdy Bessel mode therefore
+admits these analytic coordinates. Filtering that already-defined
+solution does not add a gravitational field equation.
+
+
+
+\section{Spectral domains and number-residue packets}
+\label{a-spectral-domains-packets}
+
+The bounded calculus has two useful continuations. An unbounded
+Hamiltonian admits spectral functions with their exact domains.
+An oscillator admits actual residue projectors on its number spectrum.
+These are distinct constructions, and only the latter is a family of
+orthogonal quantum packet projectors.
+
+\subsection{An unbounded propagator does not make every lane bounded}
+
+Let $H_\infty$ be self-adjoint with spectral measure $E$. For real $t$
+define the scalar functions
+$f_j(\lambda)=E_{L,j}(-it\lambda)$.
+The operator $f_j(H_\infty)$ has domain
+\begin{equation}
+ \Dom(f_j(H_\infty))
+ =\left\{\psi:\int_{\R}|f_j(\lambda)|^2
+                       \,d\langle\psi,E(\lambda)\psi\rangle<\infty\right\}.
+ \label{a-spectral-lane-domain}
+\end{equation}
+The scalar identity $\sum_jf_j(\lambda)=e^{-it\lambda}$ gives
+\begin{equation}
+ \sum_jf_j(H_\infty)\psi=e^{-itH_\infty}\psi,
+ \qquad \psi\in\bigcap_j\Dom(f_j(H_\infty)).
+ \label{a-spectral-unbounded-reconstruction}
+\end{equation}
+The equality holds on the stated common domain because it is a finite
+sum of spectral functions there. It does not say that each lane acts
+on every vector.
+
+For an explicit example, take $L=4$. The scalar formula gives
+\[
+ f_0(\lambda)=\tfrac12\bigl(\cosh(t\lambda)+\cos(t\lambda)\bigr),
+ \quad
+ f_2(\lambda)=\tfrac12\bigl(\cos(t\lambda)-\cosh(t\lambda)\bigr).
+\]
+If $H_\infty$ is multiplication by $\lambda$ on $L^2(\R)$ and
+$t\ne0$, these functions define unbounded operators. Their sum
+cancels the growing hyperbolic contribution. The full propagator
+$e^{-itH_\infty}$ is nevertheless unitary on all of $L^2(\R)$.
+For $L=2$, by contrast, the two Schr\"odinger lanes are
+$\cos(tH_\infty)$ and $-i\sin(tH_\infty)$, both bounded. A larger
+lane count must not inherit this special dyadic boundedness without proof.
+
+A sufficient common-domain condition is
+\begin{equation}
+ \int_{\R} e^{2|t||\lambda|}
+              \,d\langle\psi,E(\lambda)\psi\rangle<\infty,
+ \label{a-spectral-exponential-domain}
+\end{equation}
+since $|f_j(\lambda)|\leq e^{|t||\lambda|}$. Spectral cutoffs
+$P_R=E([-R,R])$ supply a dense set satisfying this condition. On
+$\Ran P_R$, the restricted Hamiltonian is bounded, the norm-series
+identities apply, and
+\[
+ \sum_jf_j(H_\infty)P_R\psi=e^{-itH_\infty}P_R\psi
+      \longrightarrow e^{-itH_\infty}\psi.
+\]
+On the common domain of the individual lanes, each term also converges
+to $f_j(H_\infty)\psi$ by its spectral-domain integrability.
+For an arbitrary vector only convergence of the summed cutoff expression
+is asserted. The domain question for an interacting Hamiltonian therefore
+remains even when a bounded surrogate has excellent numerical residuals.
+
+\subsection{A short factorial tail and its adic unit window}
+
+Let $p$ be prime, let $L=mp$ for a positive integer $m$, and take
+$0\leq j<p$. For every $q\geq0$,
+\begin{equation}
+ g_q=\frac{j!(Lq)!}{(Lq+j)!}
+       =\binom{Lq+j}{j}^{-1}\in\Z_p^\times.
+ \label{a-spectral-unit-window}
+\end{equation}
+Indeed
+$\binom{Lq+j}{j}=\prod_{r=1}^j(Lq+r)/r$.
+Each numerator and denominator is a $p$-adic unit because
+$Lq\equiv0\pmod p$ and $1\leq r<p$. For $j=0$ the empty product
+is one. The proof also covers $p=2$ in its short window. Outside this
+window, a factor can cross a multiple of $p$ and the same proof gives
+no unit guarantee. This rational coefficient statement supplies no
+claim about the $p$-adic convergence of the complex exponential series.
+
+Analytic refinement of a factorial lane is independent of this unit
+condition. Splitting $q=pr+a$, $0\leq a<p$, gives the exact identity
+\begin{equation}
+ E_{L,j}(z)=\sum_{a=0}^{p-1}E_{pL,j+aL}(z),\qquad 0\leq j<L.
+ \label{a-spectral-analytic-refinement}
+\end{equation}
+Absolute convergence permits this partition of the summation index.
+The labels $j+aL$ all lie in $[0,pL)$, but need not lie in the
+parent's short unit window. Exact complex analytic refinement and
+the local $p$-adic unit assertion therefore have separate hypotheses.
+
+\subsection{Actual orthogonal packets on the oscillator number spectrum}
+
+On the oscillator Fock space, let
+$\widehat N|n\rangle=n|n\rangle$ and define the bounded unitary
+$V=e^{2\pi i\widehat N/L}$. Its spectral residues are
+\begin{equation}
+ Q_j^{(L)}=\frac1L\sum_{\ell=0}^{L-1}\omega_L^{-j\ell}V^\ell
+          =\sum_{n\equiv j\;({\rm mod}\;L)}|n\rangle\langle n|.
+ \label{a-spectral-number-projectors}
+\end{equation}
+On every number basis vector, the same finite character sum proves the
+second equality. These $Q_j^{(L)}$ are bounded orthogonal projectors,
+$Q_jQ_k=\delta_{jk}Q_j$, and $\sum_jQ_j=I$. No exponential norm series
+for the unbounded number operator is needed; its spectral calculus
+defines $V$.
+
+For a coherent state
+\[
+ |\alpha\rangle=e^{-|\alpha|^2/2}
+        \sum_{n=0}^\infty\frac{\alpha^n}{\sqrt{n!}}|n\rangle,
+ \qquad \mu=|\alpha|^2\geq0,
+\]
+the packet probability is the Poisson residue sum
+\begin{align}
+ p_{L,j}(\mu)
+ &=\langle\alpha,Q_j^{(L)}\alpha\rangle
+   =e^{-\mu}E_{L,j}(\mu)\nonumber\\
+ &=\frac1L\sum_{\ell=0}^{L-1}\omega_L^{-j\ell}
+                      e^{\mu(\omega_L^\ell-1)}.
+ \label{a-spectral-coherent-packets}
+\end{align}
+The factorial series proves nonnegativity, including the limiting values
+$p_{L,0}(0)=1$ and $p_{L,j}(0)=0$ for $j>0$. Partition of the
+Poisson series proves $\sum_jp_{L,j}=1$. Their equivalent hypergeometric
+form is $e^{-\mu}$ times \eqref{a-spectral-hypergeometric-lane} at $z=\mu$.
+
+\begin{proposition}[Approach to uniform residue probability]
+\label{a-spectral-coherent-bound}
+For fixed $L\geq2$ and $\mu\geq0$,
+\begin{equation}
+ \left|p_{L,j}(\mu)-\frac1L\right|
+ \leq\frac1L\sum_{\ell=1}^{L-1}
+       e^{-\mu(1-\cos(2\pi\ell/L))}
+ \leq\frac{L-1}{L}
+       e^{-\mu(1-\cos(2\pi/L))}.
+ \label{a-spectral-packet-mixing-bound}
+\end{equation}
+\end{proposition}
+\begin{proof}
+In \eqref{a-spectral-coherent-packets}, the $\ell=0$ term is $1/L$.
+The modulus of every other term is
+$e^{\mu(\operatorname{Re}\omega_L^\ell-1)}/L$.
+The triangle inequality gives the first bound. Among the nonzero
+residues, the largest cosine is $\cos(2\pi/L)$, giving the second.
+\end{proof}
+
+The exponent is positive for each fixed $L$, but decreases as
+$2\pi^2/L^2$ when $L$ grows. The conclusion is therefore uniform in
+the finite packet label $j$ at fixed $L$; it is not a depth-uniform
+estimate at arbitrarily large residue modulus.
+
+Finally the annihilation operator routes adjacent residues:
+\begin{equation}
+ Q_r^{(L)}aQ_s^{(L)}=0\quad\text{unless }r\equiv s-1\pmod L,
+ \qquad
+ Q_r^{(L)}a^\dagger Q_s^{(L)}=0\quad\text{unless }r\equiv s+1\pmod L.
+ \label{a-spectral-ladder-routing}
+\end{equation}
+On a finite number-state combination this follows from
+$a|n\rangle=\sqrt n\,|n-1\rangle$ and
+$a^\dagger|n\rangle=\sqrt{n+1}\,|n+1\rangle$.
+Each residue projector preserves $\Dom(a)$ and $\Dom(a^\dagger)$,
+because it only removes terms from their weighted number norm.
+Truncation of a vector in either domain converges in the corresponding
+graph norm, so the identities extend to those domains.
+For the isolated oscillator Hamiltonian, which is a function of
+$\widehat N$, the packet projectors commute with the evolution and
+the weights stay constant. A driving term containing ladder operators
+can transfer weight according to the routing rule. Selecting such a
+drive is further model data.
+
+These packet probabilities are directly interpretable within the
+ordinary oscillator model. A physical interpretation of adic digits,
+hidden tree levels, or a preferred hypergeometric residue split requires
+an independently specified coupling and observable. The exact analytic
+and spectral coordinates derived here remain useful without making
+that identification.
+

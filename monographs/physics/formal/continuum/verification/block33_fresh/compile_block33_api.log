@@ -1,0 +1,130 @@
+KomorebiPhysics.Relativistic3DAffineConnection.Point3 : Type
+KomorebiPhysics.Relativistic3DAffineConnection.AffineForm3 : Type
+KomorebiPhysics.Relativistic3DAffineConnection.AffineConnection3 : Type
+KomorebiPhysics.Relativistic3DAffineConnection.edgeAngleX_half_add (C : AffineConnection3) (h : ℝ) (p : Point3) :
+  edgeAngleX C (h / 2) (shiftX (h / 2) p) + edgeAngleX C (h / 2) p = edgeAngleX C h p
+KomorebiPhysics.Relativistic3DAffineConnection.linkX_half_product (C : AffineConnection3) (h : ℝ) (p : Point3) :
+  linkX C (h / 2) (shiftX (h / 2) p) * linkX C (h / 2) p = linkX C h p
+KomorebiPhysics.Relativistic3DAffineConnection.linkY_half_product (C : AffineConnection3) (h : ℝ) (p : Point3) :
+  linkY C (h / 2) (shiftY (h / 2) p) * linkY C (h / 2) p = linkY C h p
+KomorebiPhysics.Relativistic3DAffineConnection.linkZ_half_product (C : AffineConnection3) (h : ℝ) (p : Point3) :
+  linkZ C (h / 2) (shiftZ (h / 2) p) * linkZ C (h / 2) p = linkZ C h p
+KomorebiPhysics.Relativistic3DAffineConnection.curvatureXY (C : AffineConnection3) : ℝ
+KomorebiPhysics.Relativistic3DAffineConnection.plaquetteXY_eq_exp_curvature (C : AffineConnection3) (h : ℝ)
+  (p : Point3) : plaquetteXY C h p = Circle.exp (h ^ 2 * curvatureXY C)
+KomorebiPhysics.Relativistic3DAffineConnection.plaquetteXZ_eq_exp_curvature (C : AffineConnection3) (h : ℝ)
+  (p : Point3) : plaquetteXZ C h p = Circle.exp (h ^ 2 * curvatureXZ C)
+KomorebiPhysics.Relativistic3DAffineConnection.plaquetteYZ_eq_exp_curvature (C : AffineConnection3) (h : ℝ)
+  (p : Point3) : plaquetteYZ C h p = Circle.exp (h ^ 2 * curvatureYZ C)
+KomorebiPhysics.Relativistic3DAffineConnection.norm_circleExp_sub_one_le (t : ℝ) : ‖↑(Circle.exp t) - 1‖ ≤ |t|
+KomorebiPhysics.Relativistic3DAffineConnection.curvatureBudget_affineCubeLinks_le (C : AffineConnection3) (h : ℝ)
+  (p : Point3) :
+  Relativistic3DCombinedDefect.curvatureBudget (affineCubeLinks C h p) ≤ h ^ 2 * affineCurvatureAmplitude C
+KomorebiPhysics.Relativistic3DAffineConnection.affineCoarseLinkXOn.{u} {Site : Type u} (C : AffineConnection3) (h : ℝ)
+  (pos : Site → Point3) : Relativistic3DCliffordTransportU1.Link
+KomorebiPhysics.Relativistic3DAffineConnection.affineHalfProductLinkXOn.{u} {Site : Type u} (C : AffineConnection3)
+  (h : ℝ) (pos : Site → Point3) : Relativistic3DCliffordTransportU1.Link
+KomorebiPhysics.Relativistic3DAffineConnection.affineHalfProductLinkXOn_eq_coarse.{u} {Site : Type u}
+  (C : AffineConnection3) (h : ℝ) (pos : Site → Point3) : affineHalfProductLinkXOn C h pos = affineCoarseLinkXOn C h pos
+KomorebiPhysics.Relativistic3DAffineConnection.affineHalfProductLinkYOn_eq_coarse.{u} {Site : Type u}
+  (C : AffineConnection3) (h : ℝ) (pos : Site → Point3) : affineHalfProductLinkYOn C h pos = affineCoarseLinkYOn C h pos
+KomorebiPhysics.Relativistic3DAffineConnection.affineHalfProductLinkZOn_eq_coarse.{u} {Site : Type u}
+  (C : AffineConnection3) (h : ℝ) (pos : Site → Point3) : affineHalfProductLinkZOn C h pos = affineCoarseLinkZOn C h pos
+KomorebiPhysics.Relativistic3DAffineConnection.norm_affineGeneratedCombinedHilbertDefect_le.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (pos : Site → Point3) (C : AffineConnection3) (h : ℝ) (p : Point3) (hm₀ : ‖m₀‖ ≤ 1)
+  (hm₁ : ‖m₁‖ ≤ 1) :
+  ‖Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz (affineHalfProductLinkXOn C h pos)
+        (affineHalfProductLinkYOn C h pos) (affineHalfProductLinkZOn C h pos) (affineCoarseLinkXOn C h pos)
+        (affineCoarseLinkYOn C h pos) (affineCoarseLinkZOn C h pos) (affineCubeLinks C h p)‖ ≤
+    h ^ 2 * affineCurvatureAmplitude C
+KomorebiPhysics.Relativistic3DAffineConnection.norm_affineCombinedHilbertDefect_le.{u} {Site : Type u} [Fintype Site]
+  [Nonempty Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (ux uy uz : Relativistic3DCliffordTransportU1.Link) (C : AffineConnection3) (h : ℝ)
+  (p : Point3) (hm₀ : ‖m₀‖ ≤ 1) (hm₁ : ‖m₁‖ ≤ 1) :
+  ‖Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz ux uy uz ux uy uz (affineCubeLinks C h p)‖ ≤
+    h ^ 2 * affineCurvatureAmplitude C
+KomorebiPhysics.Relativistic3DAffineConnection.affineCubeLinks_flat_of_curvature_eq_zero (C : AffineConnection3) (h : ℝ)
+  (p : Point3) (hxy : curvatureXY C = 0) (hxz : curvatureXZ C = 0) (hyz : curvatureYZ C = 0) :
+  (affineCubeLinks C h p).Flat
+KomorebiPhysics.Relativistic3DAffineConnection.affineCombinedHilbertDefect_eq_zero_of_flat.{u} {Site : Type u}
+  [Fintype Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (ux uy uz : Relativistic3DCliffordTransportU1.Link) (C : AffineConnection3) (h : ℝ)
+  (p : Point3) (hxy : curvatureXY C = 0) (hxz : curvatureXZ C = 0) (hyz : curvatureYZ C = 0) :
+  Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz ux uy uz ux uy uz (affineCubeLinks C h p) = 0
+KomorebiPhysics.Relativistic3DAffineConnection.affineDyadicBudget_eq (C : AffineConnection3) (a₀ : ℝ) (n : ℕ) :
+  affineDyadicBudget C a₀ n = a₀ ^ 2 * affineCurvatureAmplitude C * 4⁻¹ ^ n
+KomorebiPhysics.Relativistic3DAffineConnection.summable_affineDyadicBudget (C : AffineConnection3) (a₀ : ℝ) :
+  Summable (affineDyadicBudget C a₀)
+KomorebiPhysics.Relativistic3DAffineConnection.tendsto_affineDyadicBudget_zero (C : AffineConnection3) (a₀ : ℝ) :
+  Filter.Tendsto (affineDyadicBudget C a₀) Filter.atTop (nhds 0)
+KomorebiPhysics.Relativistic3DAffineConnection.norm_affineCombinedHilbertDefect_dyadic_le.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (ux uy uz : Relativistic3DCliffordTransportU1.Link) (C : AffineConnection3) (a₀ : ℝ)
+  (p : Point3) (hm₀ : ‖m₀‖ ≤ 1) (hm₁ : ‖m₁‖ ≤ 1) (n : ℕ) :
+  ‖Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz ux uy uz ux uy uz
+        (affineCubeLinks C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) p)‖ ≤
+    affineDyadicBudget C a₀ n
+KomorebiPhysics.Relativistic3DAffineConnection.summable_norm_affineCombinedHilbertDefect_dyadic.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (ux uy uz : Relativistic3DCliffordTransportU1.Link) (C : AffineConnection3) (a₀ : ℝ)
+  (p : Point3) (hm₀ : ‖m₀‖ ≤ 1) (hm₁ : ‖m₁‖ ≤ 1) :
+  Summable fun n =>
+    ‖Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz ux uy uz ux uy uz
+        (affineCubeLinks C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) p)‖
+KomorebiPhysics.Relativistic3DAffineConnection.norm_affineGeneratedCombinedHilbertDefect_dyadic_le.{u} {Site : Type u}
+  [Fintype Site] [Nonempty Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (pos : Site → Point3) (C : AffineConnection3) (a₀ : ℝ) (p : Point3) (hm₀ : ‖m₀‖ ≤ 1)
+  (hm₁ : ‖m₁‖ ≤ 1) (n : ℕ) :
+  ‖Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz
+        (affineHalfProductLinkXOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineHalfProductLinkYOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineHalfProductLinkZOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCoarseLinkXOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCoarseLinkYOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCoarseLinkZOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCubeLinks C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) p)‖ ≤
+    affineDyadicBudget C a₀ n
+KomorebiPhysics.Relativistic3DAffineConnection.summable_norm_affineGeneratedCombinedHilbertDefect_dyadic.{u}
+  {Site : Type u} [Fintype Site] [Nonempty Site]
+  (m₀ m₁ :
+    Relativistic3DHilbertScalarDefect.HilbertState Site →L[ℂ] Relativistic3DHilbertScalarDefect.HilbertState Site)
+  (τx τy τz : Site ≃ Site) (pos : Site → Point3) (C : AffineConnection3) (a₀ : ℝ) (p : Point3) (hm₀ : ‖m₀‖ ≤ 1)
+  (hm₁ : ‖m₁‖ ≤ 1) :
+  Summable fun n =>
+    ‖Relativistic3DHilbertFullWalkDefect.combinedHilbertDefect m₀ m₁ τx τy τz
+        (affineHalfProductLinkXOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineHalfProductLinkYOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineHalfProductLinkZOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCoarseLinkXOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCoarseLinkYOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCoarseLinkZOn C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) pos)
+        (affineCubeLinks C (Relativistic3DHilbertScalarDefect.dyadicMesh a₀ n) p)‖
+KomorebiPhysics.Relativistic3DAffineConnection.uniformBzConnection (B : ℝ) : AffineConnection3
+KomorebiPhysics.Relativistic3DAffineConnection.uniformBz_plaquetteXY (B h : ℝ) (p : Point3) :
+  plaquetteXY (uniformBzConnection B) h p = Circle.exp (h ^ 2 * B)
+KomorebiPhysics.Relativistic3DAffineConnection.uniformBz_pi_unit_plaquette_ne_one (p : Point3) :
+  plaquetteXY (uniformBzConnection Real.pi) 1 p ≠ 1
+KomorebiPhysics.Relativistic3DAffineConnection.tendsto_affineConnectionLimit.{u} {Y : Type u} [MetricSpace Y]
+  [CompleteSpace Y] (f : ℕ → Y) (C : AffineConnection3) (a₀ : ℝ)
+  (hstep : ∀ (n : ℕ), dist (f n) (f n.succ) ≤ affineDyadicBudget C a₀ n) :
+  Filter.Tendsto f Filter.atTop
+    (nhds (Relativistic3DCombinedDefect.twoBudgetSummableDefect f (fun x => 0) (affineDyadicBudget C a₀) ⋯ ⋯ ⋯).limit)
+KomorebiPhysics.Relativistic3DAffineConnection.dist_affineConnectionLimit_le_tail.{u} {Y : Type u} [MetricSpace Y]
+  [CompleteSpace Y] (f : ℕ → Y) (C : AffineConnection3) (a₀ : ℝ)
+  (hstep : ∀ (n : ℕ), dist (f n) (f n.succ) ≤ affineDyadicBudget C a₀ n) (n : ℕ) :
+  dist (f n)
+      (Relativistic3DCombinedDefect.twoBudgetSummableDefect f (fun x => 0) (affineDyadicBudget C a₀) ⋯ ⋯ ⋯).limit ≤
+    ∑' (m : ℕ), affineDyadicBudget C a₀ (n + m)

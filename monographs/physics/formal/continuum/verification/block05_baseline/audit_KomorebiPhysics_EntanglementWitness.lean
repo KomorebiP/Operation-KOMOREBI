@@ -1,0 +1,9 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.EntanglementWitness.partialTransposeRight
+#print axioms KomorebiPhysics.EntanglementWitness.partialTranspose_sum
+#print axioms KomorebiPhysics.EntanglementWitness.partialTranspose_smul
+#print axioms KomorebiPhysics.EntanglementWitness.partialTranspose_pureProduct
+#print axioms KomorebiPhysics.EntanglementWitness.HasFiniteProductDecomposition
+#print axioms KomorebiPhysics.EntanglementWitness.partialTranspose_posSemidef_of_decomposition
+#print axioms KomorebiPhysics.EntanglementWitness.no_decomposition_of_partialTranspose_not_posSemidef

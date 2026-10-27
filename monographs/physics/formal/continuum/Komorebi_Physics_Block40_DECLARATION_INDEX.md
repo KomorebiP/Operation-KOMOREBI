@@ -1,0 +1,69 @@
+# Block 40 declaration index
+
+Named declarations: **63**. Theorem declarations: **37**.
+
+| Kind | Declaration | Source line |
+|---|---|---:|
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.Axis` | 17 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.Bit` | 18 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.Address` | 19 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.Prefix` | 20 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.BitPrefix` | 21 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.CubePoint` | 22 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.octreeMeasure` | 23 |
+| `abbrev` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.Prev.cubeVolume` | 25 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisBitPrefix` | 29 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisCode` | 33 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisCode_lt` | 36 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisLowerReal` | 41 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisUpperReal` | 45 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisLowerReal_nonneg` | 48 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisLowerReal_le_one` | 53 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisUpperReal_nonneg` | 60 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisUpperReal_le_one` | 65 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.lowerCorner` | 74 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.upperCorner` | 78 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.dyadicBox` | 82 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisUpperReal_sub_lowerReal` | 85 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.measurable_dyadicBox` | 94 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.coordinate_volume_dyadicBox` | 99 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.cubeVolume_dyadicBox` | 107 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.streamPrefix_coordinate_eq_axisBitPrefix` | 134 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.binaryPartial_coordinate_eq_axisLowerReal` | 153 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.axisUpperReal_eq_lower_add_width` | 165 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.prefixCell_subset_preimage_dyadicBox` | 172 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.prefixCell_ae_eq_preimage_dyadicBox` | 197 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.octreePrefixIndicator` | 214 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanBoxIndicator` | 223 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.indicatorConstLp_eq_of_ae_eq` | 230 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.cubePullback_euclideanBoxIndicator` | 245 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.cubeAdjoint_octreePrefixIndicator` | 264 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.rangeSuccEquivIic` | 275 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.prefixToInitial` | 282 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialToPrefix` | 287 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialToPrefix_prefixToInitial` | 292 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.prefixToInitial_initialToPrefix` | 298 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialCylinder_singleton_eq_prefixCell` | 306 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.mem_prefixCell_initialToPrefix_iff` | 336 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialPrefixFinset` | 348 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.mem_initialPrefixFinset` | 355 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialCylinderIndicator_eq_sum_singletons` | 366 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.octreePrefixIndicator_mem_initialLevel` | 454 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanBoxIndicator_mem_euclideanLevel` | 475 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.octreeSingletonLevel` | 485 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.octreeSingletonLevel_le_initialLevel` | 491 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialLevel_le_octreeSingletonLevel` | 501 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.initialLevel_eq_octreeSingletonLevel` | 514 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicLevelRaw` | 522 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicLevelRaw_le_euclideanLevelRaw` | 528 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanLevelRaw_le_euclideanDyadicLevelRaw` | 539 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanLevelRaw_eq_euclideanDyadicLevelRaw` | 564 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicLevel` | 572 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanLevel_eq_euclideanDyadicLevel` | 578 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicLevel_mono` | 586 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicFiniteSubmodule` | 594 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicFiniteSubmodule_eq` | 599 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicFiniteSubmodule_dense` | 612 |
+| `def` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicProjection` | 621 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicProjection_eq` | 627 |
+| `theorem` | `KomorebiPhysics.Relativistic3DEuclideanDyadicBoxes.euclideanDyadicProjection_tendsto` | 634 |

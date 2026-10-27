@@ -1,0 +1,33 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.LindbladJumps.jump
+#print axioms KomorebiPhysics.LindbladJumps.dissipator
+#print axioms KomorebiPhysics.LindbladJumps.generator
+#print axioms KomorebiPhysics.LindbladJumps.population
+#print axioms KomorebiPhysics.LindbladJumps.current
+#print axioms KomorebiPhysics.LindbladJumps.jump_eq_smul
+#print axioms KomorebiPhysics.LindbladJumps.jump_adjoint
+#print axioms KomorebiPhysics.LindbladJumps.sqrt_rate_product
+#print axioms KomorebiPhysics.LindbladJumps.jump_adjoint_mul
+#print axioms KomorebiPhysics.LindbladJumps.jump_mul_adjoint
+#print axioms KomorebiPhysics.LindbladJumps.jump_gain
+#print axioms KomorebiPhysics.LindbladJumps.single_mul_entry
+#print axioms KomorebiPhysics.LindbladJumps.mul_single_entry
+#print axioms KomorebiPhysics.LindbladJumps.dissipator_jump_entry
+#print axioms KomorebiPhysics.LindbladJumps.dissipator_jump_diagonal
+#print axioms KomorebiPhysics.LindbladJumps.self_jump_diagonal
+#print axioms KomorebiPhysics.LindbladJumps.generator_diagonal
+#print axioms KomorebiPhysics.LindbladJumps.population_rate
+#print axioms KomorebiPhysics.LindbladJumps.population_cast
+#print axioms KomorebiPhysics.LindbladJumps.current_antisymm
+#print axioms KomorebiPhysics.LindbladJumps.current_diagonal
+#print axioms KomorebiPhysics.LindbladJumps.hasDerivAt_population
+#print axioms KomorebiPhysics.LindbladJumps.trace_dissipator
+#print axioms KomorebiPhysics.LindbladJumps.trace_generator
+#print axioms KomorebiPhysics.LindbladJumps.dissipator_hermitian
+#print axioms KomorebiPhysics.LindbladJumps.generator_hermitian
+#print axioms KomorebiPhysics.LindbladJumps.hasDerivAt_trace
+#print axioms KomorebiPhysics.LindbladJumps.total_current_zero
+#print axioms KomorebiPhysics.LindbladJumps.hasDerivAt_total_population
+#print axioms KomorebiPhysics.LindbladJumps.hasDerivAt_subset_population
+#print axioms KomorebiPhysics.LindbladJumps.trace_constant

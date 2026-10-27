@@ -1,0 +1,105 @@
+module
+
+public import KomorebiPhysics.Transfer
+public import TensorRefinement
+import all TensorRefinement
+
+/-!
+Chapter 2, (2.12)--(2.15) and (2.31)--(2.36).
+Coarsening is constructed from actual projectors. No assumption of coarse
+energy or current additivity is inserted into the construction.
+-/
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+namespace KomorebiPhysics
+open scoped BigOperators
+namespace Atlas
+variable {H I J : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+  [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
+variable (P : Atlas H I)
+
+/-- A partition is represented by an arbitrary address function. Empty fibers
+are permitted and become zero coarse projectors. -/
+def fiber (ρ : I → J) (a : J) : Finset I := Finset.univ.filter (fun i => ρ i = a)
+
+/-- Equations (2.12)--(2.14): construct a genuine coarser orthogonal atlas,
+reusing the existing checked ring-level multiplication and completeness proofs. -/
+def coarsen (ρ : I → J) : Atlas H J where
+  proj := KomorebiPaperVII.TensorRefinement.coarse P.proj ρ
+  mul_proj := KomorebiPaperVII.TensorRefinement.coarse_mul P.proj ρ P.mul_proj
+  sum_proj := KomorebiPaperVII.TensorRefinement.coarse_complete P.proj ρ P.sum_proj
+  selfAdjoint := by
+    intro a x y
+    simp only [KomorebiPaperVII.TensorRefinement.coarse, sum_apply, sum_inner, inner_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    split_ifs <;> simp_all [P.selfAdjoint]
+
+/-- Explicit operator version of (2.12). -/
+theorem coarsen_proj (ρ : I → J) (a : J) :
+    (P.coarsen ρ).proj a = ∑ i ∈ fiber ρ a, P.proj i := by
+  simp only [coarsen, KomorebiPaperVII.TensorRefinement.coarse, fiber, Finset.sum_filter]
+
+/-- Coarse state packets are sums of the corresponding fine vectors. -/
+theorem coarsen_packet (ρ : I → J) (ψ : H) (a : J) :
+    (P.coarsen ρ).packet ψ a = ∑ i ∈ fiber ρ a, P.packet ψ i := by
+  simp only [packet, P.coarsen_proj, sum_apply]
+
+/-- Equation (2.15), with all operator products kept in their noncommutative order. -/
+theorem coarsen_corner (ρ : I → J) (X : H →L[ℂ] H) (a b : J) :
+    (P.coarsen ρ).proj a * X * (P.coarsen ρ).proj b =
+      ∑ i ∈ fiber ρ a, ∑ j ∈ fiber ρ b, P.proj i * X * P.proj j := by
+  simp only [P.coarsen_proj, Finset.sum_mul, Finset.mul_sum]
+  rw [Finset.sum_comm]
+
+omit [Fintype J] [DecidableEq J] in
+/-- Pythagoras on any finite subfamily, needed to justify coarse energy addition. -/
+theorem norm_sq_packet_sum (ψ : H) (s : Finset I) :
+    ‖∑ i ∈ s, P.packet ψ i‖ ^ 2 = ∑ i ∈ s, ‖P.packet ψ i‖ ^ 2 := by
+  have h : inner ℂ (∑ i ∈ s, P.packet ψ i) (∑ i ∈ s, P.packet ψ i) =
+      ∑ i ∈ s, inner ℂ (P.packet ψ i) (P.packet ψ i) := by
+    rw [sum_inner]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [inner_sum]
+    apply Finset.sum_eq_single i
+    · intro j _ hji
+      exact P.packet_orthogonal ψ ψ i j (Ne.symm hji)
+    · intro hnot
+      exact False.elim (hnot hi)
+  have self (x : H) : (inner ℂ x x).re = ‖x‖ ^ 2 :=
+    inner_self_eq_norm_sq (𝕜 := ℂ) x
+  simpa only [Complex.re_sum, self] using congrArg Complex.re h
+
+/-- Equation (2.31), derived from orthogonality, not assumed as a coarse rule. -/
+theorem coarsen_energy (ρ : I → J) (ψ : H) (a : J) :
+    (P.coarsen ρ).energy ψ a = ∑ i ∈ fiber ρ a, P.energy ψ i := by
+  unfold energy
+  rw [P.coarsen_packet, P.norm_sq_packet_sum]
+
+/-- Equations (2.32)--(2.33): the coarse inner-product current is exactly the
+sum of fine currents, for an arbitrary bounded generator. -/
+theorem coarsen_current (ρ : I → J) (A : H →L[ℂ] H) (ψ : H) (a b : J) :
+    (P.coarsen ρ).current A ψ a b =
+      ∑ i ∈ fiber ρ a, ∑ j ∈ fiber ρ b, P.current A ψ i j := by
+  simp only [current, P.coarsen_packet, pairCurrent_sum_left, pairCurrent_sum_right]
+  rw [Finset.sum_comm]
+
+/-- Equation (2.34), as an actual derivative of the coarse norm. The right
+side has been expanded all the way to fine-sector inner-product currents. -/
+theorem hasDerivAt_coarse_energy (ρ : I → J) (A : H →L[ℂ] H)
+    {ψ : ℝ → H} {t : ℝ} (hψ : HasDerivAt ψ (A (ψ t)) t) (a : J) :
+    HasDerivAt (fun s => (P.coarsen ρ).energy (ψ s) a)
+      (∑ b, ∑ i ∈ fiber ρ a, ∑ j ∈ fiber ρ b, P.current A (ψ t) i j) t := by
+  simpa only [P.coarsen_current] using (P.coarsen ρ).hasDerivAt_packet_energy A hψ a
+
+omit [Fintype J] in
+/-- The complete same-cell fine current vanishes under skew-adjoint dynamics. -/
+theorem coarse_internal_cancel (ρ : I → J) (A : H →L[ℂ] H)
+    (hA : IsSkew A) (ψ : H) (a : J) :
+    (∑ i ∈ fiber ρ a, ∑ j ∈ fiber ρ a, P.current A ψ i j) = 0 :=
+  P.internal_current_cancel A hA ψ (fiber ρ a)
+
+end Atlas
+end KomorebiPhysics

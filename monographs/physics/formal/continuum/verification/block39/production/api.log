@@ -1,0 +1,91 @@
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState.{uE} {E : Type uE} [NormedAddCommGroup E] :
+  AddSubgroup
+    ((KomorebiPhysics.Relativistic3DBinaryLebesgue.Cube.Axis →
+        ↑unitInterval) →ₘ[KomorebiPhysics.Relativistic3DBinaryLebesgue.Cube.cubeVolume]
+      E)
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.OctreeState.{uE} {E : Type uE} [NormedAddCommGroup E] :
+  AddSubgroup
+    (KomorebiPhysics.Relativistic3DWeightedDyadicReconstruction.Octree.Address →ₘ[KomorebiPhysics.Relativistic3DWeightedDyadicReconstruction.Octree.octreeMeasure]
+      E)
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubePullback.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] :
+  ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState →ₗᵢ[ℂ]
+    ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.OctreeState
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] :
+  ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.OctreeState →L[ℂ]
+    ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint_pullback.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) :
+  KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint
+      (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubePullback f) =
+    f
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.norm_cubeAdjoint_le.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (g : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.OctreeState) :
+  ‖KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint g‖ ≤ ‖g‖
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevelRaw.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (a : ℕ) :
+  Submodule ℂ ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (a : ℕ) :
+  Submodule ℂ ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel_mono.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] {a b : ℕ} (hab : a ≤ b) :
+  KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel a ≤
+    KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel b
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint_mem_euclideanLevel.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] {a : ℕ}
+  {g : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.OctreeState}
+  (hg : g ∈ KomorebiPhysics.Relativistic3DWeightedDyadicReconstruction.Octree.initialLevelSubmodule a) :
+  KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint g ∈
+    KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel a
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.exists_euclideanLevel_approx.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+  (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) {ε : ℝ} (hε : 0 < ε) :
+  ∃ a, ∃ g ∈ KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel a, dist g f < ε
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanFiniteSubmodule.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] :
+  Submodule ℂ ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanFiniteSubmodule_dense.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] :
+  Dense ↑KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanFiniteSubmodule
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection.{uE} {E : Type uE} [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (a : ℕ) :
+  ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState →L[ℂ]
+    ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_eq_self.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] {a : ℕ}
+  {f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState}
+  (hf : f ∈ KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel a) :
+  (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f = f
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_mem.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] (a : ℕ)
+  (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) :
+  (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f ∈
+    KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel a
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_idem.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] (a : ℕ)
+  (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) :
+  (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a)
+      ((KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f) =
+    (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.norm_euclideanProjection_le.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] (a : ℕ)
+  (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) :
+  ‖(KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f‖ ≤ ‖f‖
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.norm_sub_euclideanProjection_le.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] {a : ℕ}
+  (f g : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState)
+  (hg : g ∈ KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel a) :
+  ‖f - (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f‖ ≤ ‖f - g‖
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_of_le.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] {a b : ℕ} (hab : a ≤ b)
+  (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) :
+  (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection b)
+      ((KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f) =
+    (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f
+KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_tendsto.{uE} {E : Type uE}
+  [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+  (f : ↥KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState) :
+  Filter.Tendsto (fun a => (KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection a) f)
+    Filter.atTop (nhds f)

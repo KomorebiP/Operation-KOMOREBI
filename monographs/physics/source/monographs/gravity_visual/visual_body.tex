@@ -1,0 +1,392 @@
+% Twelve deterministic Python plates. No fresh Lean or collapse run.
+\begingroup
+\renewcommand{\atlasfigure}[2]{\begin{center}\includegraphics[width=.97\linewidth,height=.34\textheight,keepaspectratio]{gravity_figures/#1.pdf}\end{center}{\small\color{muted}#2}\par}
+
+\section{Read the constraint and its domain together}
+
+A finite identity can hold exactly while its physical interpretation requires additional assumptions. A constrained step can preserve its invariants algebraically while a numerical implementation retains a nonzero solve residual. A horizon can be regular in one coordinate chart while a different regularity boundary still limits that chart. The twelve plates make these distinctions visible.
+
+The first five concern local scalar work, conformal holonomy, a polarized Gowdy mode, the centered linearized ADM symbol, and a finite nonlinear bracket obstruction. The next three concern regular reduction and a discrete Dirac-gradient step. The final four concern an explicitly chosen quasienergy model, the spherical electrovac family, scalar mass flux, and inherited first-horizon data.
+
+\paragraph{What was computed for the documented audit.}
+All figures were generated with Python and Matplotlib. Exact checks use rational matrices or symbolic polynomial expressions. The sampled families use double precision. A fresh constrained-particle computation illustrates the implicit step on a six-dimensional mechanical example. Its energy and constraint errors are numerical results with stated tolerances; it is not a gravitational evolution.
+
+The last plate redraws a previously archived scalar-collapse event table. Its data are pinned by a checksum and their mass identities are checked, but the collapse evolution, radial projection, and event extraction are not rerun. An inherited event is therefore labeled as inherited throughout.
+
+\paragraph{Conventions.}
+The conformal cell has positive orientation $dt\wedge dx$. Periodic centered differences use $D_hf_j=(f_{j+1}-f_{j-1})/(2h)$. Canonical particle coordinates are ordered $(q_1,q_2,q_3,p_1,p_2,p_3)$, with
+\[
+J=\begin{pmatrix}0&I\\-I&0\end{pmatrix}.
+\]
+Spherical strong-field plates use the ingoing Painlev\'e--Gullstrand choice $v\ge0$. Their units are $G=c=1$, with $4\pi\epsilon_0=1$ for electrovac. For the scalar sector, $\varphi=\sqrt{4\pi}\,\phi_{\mathrm{phys}}$.
+
+\paragraph{Formal boundary.}
+The gravity chapters are supported by written derivations and finite computations at their stated scope. The retained formal free-Dirac construction does not certify the gravitational model. The verification companion records the distinction between these kinds of evidence.
+
+\clearpage
+\section{A changing metric contributes geometric work}
+\atlasfigure{01_local_energy_work}{A six-cell periodic scalar system with rational field, velocity, and coefficient data. Left: interface flux and cell work. Right: the directly differentiated cell energy agrees with incoming flux minus outgoing flux plus geometric work. The equality is checked exactly before plotting.}
+
+Let $w_j=a_j/N_j$, $c_{j+1/2}=N_{j+1/2}/a_{j+1/2}$ and $v_j=N_ja_jm^2$. The finite action gives
+\[
+w_j\ddot\varphi_j+\dot w_j\dot\varphi_j
+=\frac{c_{j+1/2}\Delta_j-c_{j-1/2}\Delta_{j-1}}{h^2}
+-v_j\varphi_j,
+\qquad \Delta_j=\varphi_{j+1}-\varphi_j.
+\]
+With half of each neighboring edge energy assigned to its cell,
+\[
+e_j=\frac h2(w_j\dot\varphi_j^2+v_j\varphi_j^2)
++\frac{c_{j+1/2}\Delta_j^2+c_{j-1/2}\Delta_{j-1}^2}{4h},
+\]
+the local law is
+\[
+\dot e_j+F_{j+1/2}-F_{j-1/2}=s_j,
+\qquad
+F_{j+1/2}=-\frac{c_{j+1/2}\Delta_j}{2h}
+(\dot\varphi_j+\dot\varphi_{j+1}).
+\]
+The work term contains $-h\dot w_j\dot\varphi_j^2/2$, $h\dot v_j\varphi_j^2/2$, and the two coefficient derivatives of the edge energies. Thus a time-dependent prescribed geometry need not conserve the scalar-field energy alone. On a periodic chain, the fluxes telescope and $d\sum_j e_j/dt=\sum_j s_j$.
+
+The example specifies $h=1/2$, $w_j=1+j/10$, $c_{j+1/2}=1+(j\bmod3)/5$, and $v_j=1/3$. The script records every remaining rational input. Its six local residuals and the summed residual are exactly zero. This is an instantaneous identity for a finite scalar system on prescribed metric coefficients. It does not include an independently evolved gravitational energy.
+
+
+
+\clearpage
+\section{Conformal curvature integrates into Lorentzian holonomy}
+\atlasfigure{02_conformal_curvature}{Left: a genuine three-dimensional graph of the scalar curvature over $(t,x)$, not a spacetime embedding. Right: the integrated rapidity and two entries of the finite Lorentz boost for cells of width one and varying height.}
+
+For
+\[
+ds^2=e^{2\phi}(-dt^2+dx^2),\qquad
+\omega=(\phi_x\,dt+\phi_t\,dx)K,
+\qquad K=\begin{pmatrix}0&1\\1&0\end{pmatrix},
+\]
+all connection values are proportional to the same generator. Consequently,
+\[
+\Omega=(\phi_{tt}-\phi_{xx})K\,dt\wedge dx,
+\qquad R=2e^{-2\phi}(\phi_{tt}-\phi_{xx}).
+\]
+This plate uses signed plus-edge links $U_e=\exp(+\int_e\omega)$. Their product around a positively oriented rectangle gives
+\[
+W_\square=e^{\chi K},\qquad
+\chi=\int_\square(\phi_{tt}-\phi_{xx})\,dt\,dx
+=\int_\square\tfrac12 e^{2\phi}R\,dt\,dx.
+\]
+This example chooses $\phi=3(t^2-x^2)/20$. Then $\phi_{tt}-\phi_{xx}=3/5$ and $R=(6/5)e^{-2\phi}$. The cell $[0,1]\times[-1/2,1/2]$ has $\chi=3/5$. Independent symbolic boundary and area integrals agree exactly.
+
+Because $K^2=I$, the signed loop is $e^{\chi K}=I\cosh\chi+K\sinh\chi$. With the Cartan convention $D=d+\omega$, ordinary parallel transport is $\exp(-\int_e\omega)$ and the loop has the opposite rapidity. Both are Lorentz boosts, rather than unitary matrices in the positive Euclidean norm. The surface displays varying curvature while $e^{2\phi}R/2$ is constant. The identity uses this conformal reduction and commuting connection generator.
+
+
+
+\clearpage
+\section{An exact Gowdy mode tests constraint integrability}
+\atlasfigure{03_gowdy_mode}{Left: the exact polarized mode with $A=0.3$ and $n=2$. Right: at $\tau=0.7$, the maximum centered-difference compatibility residual for $N=32,64,128,256,512$. The reference line has slope two; the measured last-pair order is recorded in the computation manifest.}
+
+In the polarized sector $Q=0$, the reduced field equation is
+\[
+P_{\tau\tau}-e^{-2\tau}P_{\theta\theta}=0.
+\]
+Writing $x=ne^{-\tau}$ gives the exact periodic family
+\[
+P=A J_0(x)\cos(n\theta),\qquad
+P_\tau=A xJ_1(x)\cos(n\theta).
+\]
+The Bessel equation supplies $P_{\tau\tau}=-x^2P$, so the wave equation holds identically. The reduced constraint densities become
+\[
+\begin{aligned}
+\lambda_\tau&=A^2x^2\bigl[J_1(x)^2\cos^2(n\theta)
++J_0(x)^2\sin^2(n\theta)\bigr],\\
+\lambda_\theta&=-A^2nxJ_0(x)J_1(x)\sin(2n\theta).
+\end{aligned}
+\]
+Their exact identity is $\partial_\tau\lambda_\theta=\partial_\theta\lambda_\tau$. The script evaluates the left side analytically and replaces only the right side by a centered difference. The resulting nonzero residual belongs to the chosen finite approximation. The periodic momentum integral vanishes because $n$ is an integer and the density is proportional to $\sin(2n\theta)$.
+
+The plot is an analytic polarized solution, with a bounded consistency study. It does not show a newly integrated unpolarized trajectory, a global nonlinear Einstein solution, or a claim about all grid resolutions. The distinction matters because global endpoint projection and local continuum compatibility are separate conditions in the semidiscrete unpolarized system.
+
+
+
+\clearpage
+\section{The centered ADM symbol includes a Nyquist null}
+\atlasfigure{04_adm_dispersion}{Left: the one-dimensional centered-derivative symbol and its continuum comparison. The Nyquist point is a zero of the centered symbol. Right: the fixed three-dimensional mode $k=(1,2,0.5)$ approaches its continuum frequency under dyadic spacing refinement.}
+
+On a periodic Fourier mode, the centered spatial derivative acts by multiplication with $i\widetilde k_i$, where
+\[
+\widetilde k_i=\frac{\sin(k_i h)}h.
+\]
+The transverse-traceless sector of the linearized projector--ADM equations satisfies $\ddot h_{ij}=\delta^2 h_{ij}$ and hence
+\[
+\omega_h^2=\sum_i\widetilde k_i^2.
+\]
+For a fixed nonzero resolved wave vector,
+\[
+\omega_h=|k|-\frac{h^2}{6|k|}\sum_i k_i^4+O(h^4).
+\]
+The numerical panel compares the exact finite symbol with this leading correction for $h=2^{-2},\ldots,2^{-10}$. Its observed order concerns this fixed vector and finite range.
+
+At $kh=\pi$, the sampled checkerboard $(-1)^j$ has centered derivative zero. In several dimensions, a vector whose components are individually zero or Nyquist can similarly have $\widetilde k=0$. A transverse projector that divides by $|\widetilde k|^2$ is therefore defined only away from that null set. The continuum small-spacing expansion for a fixed physical mode does not remove these high-frequency finite-grid modes.
+
+Exact finite linearized constraint propagation uses commuting skew-adjoint derivatives and their Bianchi identity. It does not establish nonlinear pointwise closure or uniform agreement of the entire finite spectrum with continuum waves.
+
+
+
+\clearpage
+\section{A small Leibniz defect is still a closure defect}
+\atlasfigure{05_nonlinear_defect}{Left: exact values for a five-site nonlinear bracket counterexample. Right: the centered Leibniz defect for $f=\sin x$ and $g=\cos2x$ decreases with second-order behavior on smooth resolved data. These statements have different quantifiers.}
+
+For the finite pointwise derivative $D$, define
+\[
+\mathfrak L_D(f,g)=D(fg)-(Df)g-f(Dg).
+\]
+The scalar diffeomorphism model $\mathcal D_h[\xi]=h\sum_a\xi_ap_a(Dq)_a$ has bracket
+\[
+\begin{aligned}
+\{\mathcal D_h[\xi],\mathcal D_h[\eta]\}
+={}&\mathcal D_h[\xi D\eta-\eta D\xi]\\
+&+h\sum_a p_a\bigl[\xi_a\mathfrak L_D(\eta,Dq)_a
+-\eta_a\mathfrak L_D(\xi,Dq)_a\bigr].
+\end{aligned}
+\]
+On five periodic sites with $h=1$, take $q=e_0$, $p=\xi=e_1$ and $\eta=e_2$. Exact rational differentiation gives an actual bracket of zero, while the proposed closed right side is $-1/4$. Their difference is $1/4$. This is an explicit counterexample to that undeformed finite pointwise closure prescription.
+
+For the smooth functions in the right panel, the centered defect is $O(h^2)$. Refinement therefore controls the particular error without making it identically zero on the full finite algebra. Conversely, a matrix inner derivation $\delta_KX=i[K,X]$ obeys the product rule exactly. The script checks one fully specified rational-matrix example.
+
+Moving from the pointwise algebra to a matrix algebra removes this Leibniz obstruction, but does not supply every gravitational constraint, a continuum identification, or a globally invariant truncated band. Those additional objects and domain conditions belong to the monograph's resolved and transferred constructions.
+
+
+
+\clearpage
+\section{Regular reduction has an inverse-matrix boundary}
+\atlasfigure{06_regular_patch}{Two independent examples of inverse growth. Left: the magnitude of a fermionic primary block proportional to the triad determinant $e$ and its inverse magnitude. Right: the Dirac matrix for a constrained-particle family with radius $\rho$. The two horizontal parameters are different objects.}
+
+The physical time-gauge reduction is restricted to the oriented nondegenerate sector $e=\det(e_a{}^i)>0$. In the stated graded canonical convention,
+\[
+\{\chi_A(x),\bar\chi_B(y)\}_{\mathrm P}
+=-ie(x)\delta_{AB}\delta^3(x-y).
+\]
+The algebraic primary block is invertible when $e\ne0$. The left panel displays its scalar magnitude and inverse magnitude after removing fixed identity factors. The plot approaches the excluded boundary; it supplies no extension through a degenerate triad.
+
+The right panel uses a separate mechanical example with constraints $q\cdot q-1$ and $q\cdot p$. At $q=(\rho,0,0)$, $p=(0,1,0)$, its canonical Dirac matrix is
+\[
+\Delta=GJG^T
+=\begin{pmatrix}0&2\rho^2\\-2\rho^2&0\end{pmatrix},
+\qquad
+\sigma_{\min}(\Delta)=2\rho^2.
+\]
+Thus $\norm{\Delta^{-1}}_2=1/(2\rho^2)$. This off-surface family diagnoses rank loss at the origin. Only $\rho=1$ satisfies the unit-sphere constraint.
+
+Both examples explain why local existence and stability statements need a lower bound for the relevant singular value. Neither parameter is the spherical horizon function. A zero outgoing expansion can occur in a regular Painlev\'e--Gullstrand chart, whereas a vanishing determinant or a singular gauge-fixing matrix is a boundary of the chosen reduction.
+
+
+
+\clearpage
+\section{The Dirac tensor removes constraint directions}
+\atlasfigure{07_dirac_projection}{Left: a unit-sphere configuration with a tangent momentum arrow and a radial normal arrow. Right: the six-dimensional Dirac tensor at the rational point used in the exact check. Its two constraint-gradient rows are annihilated.}
+
+At a regular point, put $\Phi=(q\cdot q-1,q\cdot p)^T$ and $G=\nabla\Phi$. The continuous Dirac tensor is
+\[
+J_{\mathrm D}=J-JG^T(GJG^T)^{-1}GJ.
+\]
+Direct algebra gives
+\[
+J_{\mathrm D}^T=-J_{\mathrm D},\qquad GJ_{\mathrm D}=0.
+\]
+Consequently, any vector field $\dot z=J_{\mathrm D}\nabla H$ is tangent to both constraint levels. This is a symplectic constraint construction, not an ordinary Euclidean orthogonal projection of an arbitrary spatial vector.
+
+The exact benchmark takes
+\[
+q=(3/5,4/5,0),\qquad p=(-4/5,3/5,1/2).
+\]
+Here $q\cdot q=1$ and $q\cdot p=0$. Rational matrix arithmetic verifies skewness, annihilation, and rank four. The rank reduction from six to four removes the two second-class constraint directions. The heatmap shows the actual entries in the stated $(q,p)$ basis.
+
+The three-dimensional drawing displays the configuration sphere and a tangent momentum. It does not display the full six-dimensional phase space or the complete gravitational reduction. A finite gravity gauge patch uses its own constraints and gauge conditions, with a regular invertible Dirac matrix. For the endpoint discrete-gradient construction, ordinary derivatives in $G$ are replaced by two-point discrete gradients.
+
+
+
+\clearpage
+\section{The implicit equation must be solved}
+\atlasfigure{08_discrete_gradient}{A fresh 1000-step quartic constrained-particle computation with $\Delta t=0.1$. Fully resolved implicit steps are compared with a deliberately incomplete single Newton correction. The curves show actual floating errors and residuals, with values below $10^{-17}$ placed at the plotting floor.}
+
+A discrete gradient satisfies the exact chain rule
+\[
+F(z_1)-F(z_0)=\overline\nabla F(z_0,z_1)^T(z_1-z_0).
+\]
+For the endpoint matrix $G_\Delta$ of constraint discrete gradients, define
+\[
+J_{\mathrm D}^{\Delta}
+=J-JG_\Delta^T(G_\Delta JG_\Delta^T)^{-1}G_\Delta J.
+\]
+An exactly solved implicit step obeys
+\[
+z_1-z_0=\Delta t\,J_{\mathrm D}^{\Delta}\overline\nabla H.
+\]
+Skewness and $G_\Delta J_{\mathrm D}^{\Delta}=0$ then give exact preservation of $H$ and $\Phi$.
+
+The test uses $H=|p|^2/2+0.2\sum_iq_i^4/4$, $\Phi=(|q|^2-1,q\cdot p)$ and initial state $(q,p)=((1,0,0),(0,0.7,0.2))$. Its polynomial average-vector-field gradients are evaluated explicitly. The resolved run uses SciPy's hybrid root solver; every step must satisfy the declared residual and regularity checks. The negative control starts from the same state but performs only one Newton correction per step.
+
+If the retained solve residual is $r$, the invariant changes are
+\[
+\Phi(z_1)-\Phi(z_0)=G_\Delta r,
+\qquad H(z_1)-H(z_0)=\overline\nabla H^T r.
+\]
+Small numerical errors therefore support a bounded implementation check. They do not turn a floating solve into exact arithmetic. The particle experiment is a surrogate for the step algebra and is not a new Einstein--matter simulation.
+
+
+
+\clearpage
+\section{An exact quasienergy formula retains a model choice}
+\atlasfigure{09_quasienergy_branch}{Left: the odd principal-coordinate map at $\Delta=0.4$, approaching the cosine-zero boundaries. Right: the product-cosine model's positive quasienergy, compared with its continuum frequency for $m=0.7$, $k_y=0.4$, $k_z=0.2$ and $0\le k_x\le2$.}
+
+The source's free product-cosine shell is
+\[
+\cos(\Delta\omega_\Delta)
+=\cos(\Delta m)\prod_{i=1}^3\cos(\Delta k_i).
+\]
+On the interval $|\Delta x|<\pi/2$, define
+\[
+K_\Delta(x)=\operatorname{sgn}(x)
+\frac{\sqrt{-2\log\cos(\Delta x)}}{\Delta}.
+\]
+This odd increasing coordinate has inverse
+\[
+K_\Delta^{-1}(P)=\frac{\operatorname{sgn}(P)}\Delta
+\arccos\!\left(e^{-\Delta^2P^2/2}\right).
+\]
+Within the principal positive-cosine domain, the product shell becomes
+\[
+K_\Delta(\omega_\Delta)^2-\sum_iK_\Delta(k_i)^2
+=K_\Delta(m)^2.
+\]
+The script checks the inverse on 501 inputs inside the branch and the shell on 401 momenta. Cosine zeros and other branches are excluded. A formula using $|\cos|$ also needs a sign label.
+
+This exact relation belongs to the declared free model. It is not inferred from the ADM system. Factorization, branch consistency, continuum expansion, and empirical identification remain separate questions.
+
+
+
+\clearpage
+\section{An electrovac horizon is regular in the PG chart}
+\atlasfigure{10_electrovac_horizons}{Left: the Reissner--Nordstr\"om horizon function for subextremal, extremal and superextremal charges, with $M=1$. Right: radial null speeds for $Q=0.8$ in the ingoing PG chart. The shaded interval has a negative PG radicand and is outside that real flat-slice chart.}
+
+For the charged spherical family,
+\[
+F(R)=1-\frac{2M}{R}+\frac{Q^2}{R^2},\qquad
+v(R)=\sqrt{\frac{2M}{R}-\frac{Q^2}{R^2}}.
+\]
+The ingoing horizon-penetrating form is
+\[
+ds^2=-dt_{\mathrm P}^2+(dR+v\,dt_{\mathrm P})^2+R^2d\Omega^2.
+\]
+Its radial future null speeds are $dR/dt_{\mathrm P}=1-v$ and $-1-v$. A horizon occurs at $F=0$, equivalently $v=1$ in this chart. Metric coefficients remain finite there.
+
+For $|Q|<M$, the two radii are $R_\pm=M\pm\sqrt{M^2-Q^2}$. At $|Q|=M$ they coincide. The plotted superextremal case has no real zero of the horizon polynomial. These statements concern the exact electrovac family, not matter-collapse outcomes.
+
+The PG velocity is real only for $R\ge Q^2/(2M)$ when $M>0$. Its turning boundary is separate from either horizon. Reconstructions that differentiate $\sqrt{2MR-Q^2}$ need a strict positive margin there. Likewise, the triangular mass-coordinate constraint transformation needs $R'/\Lambda\ne0$ on its chosen monotone radial patch.
+
+The atlas checks the horizon polynomial and plots this explicit family. It does not rerun a finite-range radial gravity slab or supply nonspherical stability. Conditioning near extremality and a uniform strong-field refinement estimate require the additional bounds recorded in the monograph.
+
+
+
+\clearpage
+\section{Scalar mass density and mass flux have distinct signs}
+\atlasfigure{11_scalar_flux}{Coefficients of the two scalar characteristic channels as functions of the PG flow $v$. Left: the local mass-density quadratic form. Right: signed mass flux for one unit channel at a time, with $\sigma=1$. These are pointwise analytic families, not an evolved scalar packet.}
+
+In the flat-slice scalar reduction,
+\[
+m'=r^2\mathcal E,\qquad \dot m=r^2\mathcal J,
+\]
+where
+\[
+\mathcal E=\tfrac12(\Pi^2+\Phi^2)+v\Pi\Phi,
+\qquad
+\mathcal J=\sigma(\Pi+v\Phi)(\Phi+v\Pi).
+\]
+With $w_+=\Pi+\Phi$ and $w_-=\Pi-\Phi$, exact expansion gives
+\[
+\begin{aligned}
+\mathcal E&=\tfrac14(1+v)w_+^2+\tfrac14(1-v)w_-^2,\\
+\mathcal J&=\tfrac\sigma4\bigl[(1+v)^2w_+^2-(1-v)^2w_-^2\bigr].
+\end{aligned}
+\]
+For $0\le v<1$, both coefficients in the mass-density form are positive. At $v=1$, the outgoing coefficient vanishes. For $v>1$, this radial mass-density form is indefinite. A positive coercivity estimate valid outside a horizon cannot simply be carried unchanged into the trapped region.
+
+The sign of $\mathcal J$ follows $\dot m=r^2\mathcal J$. Outside the horizon, the $w_+$ channel is ingoing and its positive flux increases enclosed mass, while $w_-$ is outgoing. Inside, both coordinate characteristics are ingoing; the algebraic channel labels are retained. This mass-density form is not the local matter-energy norm. The compatibility identity $\partial_t(r^2\mathcal E)=\partial_r(r^2\mathcal J)$ uses the scalar evolution and geometry equations together.
+
+The two channel identities are checked symbolically for unrestricted symbolic $\Pi,\Phi,v,\sigma$. Their plotted coefficients cover only $0\le v\le1.5$. No scalar profile or dynamical geometry is generated by this plate.
+
+
+
+\clearpage
+\section{Inherited first-horizon data retain their provenance}
+\atlasfigure{12_trapped_refinement}{Left: seven archived radial resolutions of the first marginally outer trapped sphere. Dashed curves are the inherited fits over the six finest runs. Time and radius use separate labeled axes. Right: analytic signs of the scaled null expansions as functions of $v$, independent of the archived numerical trajectory.}
+
+For the scalar PG chart, future radial null expansions can be normalized as
+\[
+\theta_+=\frac2r(1-v),\qquad
+\theta_-=-\frac2r(1+v).
+\]
+For $r>0$ and $v\ge0$, $\theta_-<0$. A marginally outer trapped sphere satisfies
+\[
+\theta_+=0\quad\Longleftrightarrow\quad v=1
+\quad\Longleftrightarrow\quad\frac{2m}{r}=1.
+\]
+For $v>1$, both expansions are negative. This is a local trapped-sphere criterion, not a global event-horizon identification.
+
+The inherited strong pulse has amplitude $0.10$, center $10$, width $1$, and numerical radial domain $[0.05,30]$. The finest archived grid has 2400 nodes and gives
+\[
+t_{\mathrm H}=4.69182094580,\quad
+r_{\mathrm H}=3.11341154797,\quad
+m_{\mathrm H}=r_{\mathrm H}/2.
+\]
+The recorded event time is interpolated between surrounding time steps. It precedes the stored last-step time, $4.69206969694$. A field snapshot at that last step should not be silently relabeled as a field at the interpolated event.
+
+The source scalar evolution stencil has radius two, while its mass and lapse projections are triangular radial prefix solves. The complete update is therefore not a strictly finite-range map. The archived result stops at first trapped-sphere formation and uses vacuum excision instead of a regular center. It does not determine critical collapse, singularity formation, cosmic censorship, or nonspherical stability.
+
+
+
+\clearpage
+\section{Reproduce the finite assertions}
+
+From the editable source root, run
+\begin{lstlisting}
+python tools/make_gravity_figures.py
+python tools/build_documents.py Physics_Gravity_Visual_Atlas
+\end{lstlisting}
+The first command creates twelve PDF figures and twelve PNG previews. The second compiles this atlas with three XeLaTeX passes. The figure command uses NumPy, SciPy, SymPy and Matplotlib. It does not call Lean or any Einstein evolution script.
+
+The authoritative record is \code{evidence/gravity/figure_checks.json}. It records the actual software dependencies, input checksums before and after the run, output checksums, numerical tolerances, sampled ranges, runtime, and every tested assertion. The particle check includes the endpoint Dirac-matrix lower bound and the maximum implicit solve residual. The archived event input is \code{evidence/gravity/inputs/archived_scalar_event_data.json}.
+
+Each failed figure run is retained as a separate manifest. The append-only \code{figure_run_history.jsonl} records the succession of attempts. The successful record does not erase a parser failure or convert an incomplete run into a passing one. Figures are serialized in memory and written with atomic replacement, limiting the chance that an interrupted save leaves a zero-length result.
+
+\paragraph{Arithmetic and its limits.}
+Rational algebra and polynomial simplification check the exact finite identities. Numerical plots use double precision and stated tolerances; they are not interval-certified. SciPy's special functions and root solver remain dependencies of those numerical checks. The source derivations provide the general statements and their hypotheses. A successful figure manifest supplies evidence for the implemented examples, rather than a substitute proof of the whole gravity program.
+
+\paragraph{Source correspondence.}
+The plates follow the local balance, Gowdy evolution, centered constraint, quasienergy, regular reduction, electrovac, and scalar models developed in the gravity treatment. The verification companion and source concordance identify the exact source passages and computational records.
+
+\clearpage
+\section{What the plates leave to the gravity program}
+
+The finite and symmetry-reduced checks make several useful boundaries concrete. The centered symbol has a null set that a projector must respect. Smooth convergence of a pointwise bracket defect does not yield exact nonlinear closure. An algebraic inverse can become poorly conditioned near a reduction boundary. The conservation argument for a discrete-gradient step requires the implicit equation and chain-rule gradients used in that argument.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}L{.26\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+Plate family & Evidence here & Additional obligation\\
+\midrule
+Finite scalar work & Exact rational local balance & Coupled gravitational energy and physical identification\\
+Gowdy and linear ADM & Analytic mode and finite symbol checks & Uniform evolution estimates beyond the reductions\\
+Nonlinear defect & Exact finite negative control & A resolved or transferred algebra with all domains stated\\
+Dirac-gradient step & Exact tensor algebra and bounded particle solve & Gravity gauge regularity, coercivity, and uniform tower bounds\\
+Quasienergy model & Principal-branch finite identity & Independent physical identification of the model\\
+Electrovac horizons & Exact spherical analytic family & Nonspherical dynamics and broader strong-field stability\\
+Scalar trapped sphere & Archived refinement data, internal checks & Independent collapse reproduction and global continuum results\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The resolved Fourier construction also needs enough support for every product and nested operation that appears in a bracket calculation. A fixed low-frequency band is generally not invariant under nonlinear multiplication. Its alias-free inequalities are domain conditions, and inverse-triad expressions are not automatically finite Fourier polynomials.
+
+The classical BV--BFV and second-class reductions have their own hypotheses: regular derived moment maps, a tangent unreduced vector field, a nondegenerate triad, and an invertible gauge-fixing matrix where the local step is used. Finite illustrations do not remove these hypotheses. Quantum measure and anomaly questions, uniform infinite-refinement bounds, and a complete coupled radiative $3+1$ gravity solver remain separate obligations in the larger program.
+
+The companion should therefore be read alongside this atlas. It records which statements are source derivations, which checks are executable finite evidence, which numerical data are inherited, and which formal building blocks apply to the gravitational constructions.
+\endgroup

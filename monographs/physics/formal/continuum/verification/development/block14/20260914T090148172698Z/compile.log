@@ -1,0 +1,39 @@
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+KomorebiPhysics/ResolventBounds.lean:17:68: error: unsolved goals
+H : Type u_1
+inst✝¹ : NormedAddCommGroup H
+inst✝ : InnerProductSpace ℂ H
+T : H →ₗ.[ℂ] H
+hT : GraphDomain.IsSymmetric T
+z : ℂ
+x : ↥T.domain
+⊢ -(z.re * (inner ℂ ↑x ↑x).im) - z.im * (inner ℂ ↑x ↑x).re = -(z.im * ‖↑x‖ ^ 2)
+KomorebiPhysics/ResolventBounds.lean:20:4: error: This simp argument is unused:
+  inner_self_im
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [shifted_apply, inner_sub_right, inner_smul_right, Complex.sub_im, Complex.mul_im,
+    GraphDomain.symmetric_self_im_zero T hT x, inner_self_eq_norm_sq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/ResolventBounds.lean:20:19: error: This simp argument is unused:
+  inner_self_eq_norm_sq
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [shifted_apply, inner_sub_right, inner_smul_right, Complex.sub_im, Complex.mul_im,
+    GraphDomain.symmetric_self_im_zero T hT x, inner_self_im]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+KomorebiPhysics/ResolventBounds.lean:28:63: error: Application type mismatch: The argument
+  sq_nonneg ?m.105
+has type
+  0 ≤ ?m.105 ^ 2
+but is expected to have type
+  0 ≤ z.im
+in the application
+  abs_of_nonneg (sq_nonneg ?m.105)

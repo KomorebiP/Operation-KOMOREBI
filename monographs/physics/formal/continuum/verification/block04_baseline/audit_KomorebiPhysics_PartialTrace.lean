@@ -1,0 +1,36 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.PartialTrace.left
+#print axioms KomorebiPhysics.PartialTrace.right
+#print axioms KomorebiPhysics.PartialTrace.left_eq_sum_submatrix
+#print axioms KomorebiPhysics.PartialTrace.right_eq_sum_submatrix
+#print axioms KomorebiPhysics.PartialTrace.left_add
+#print axioms KomorebiPhysics.PartialTrace.right_add
+#print axioms KomorebiPhysics.PartialTrace.left_sub
+#print axioms KomorebiPhysics.PartialTrace.right_sub
+#print axioms KomorebiPhysics.PartialTrace.left_smul
+#print axioms KomorebiPhysics.PartialTrace.right_smul
+#print axioms KomorebiPhysics.PartialTrace.left_conjTranspose
+#print axioms KomorebiPhysics.PartialTrace.right_conjTranspose
+#print axioms KomorebiPhysics.PartialTrace.left_hermitian
+#print axioms KomorebiPhysics.PartialTrace.right_hermitian
+#print axioms KomorebiPhysics.PartialTrace.trace_left
+#print axioms KomorebiPhysics.PartialTrace.trace_right
+#print axioms KomorebiPhysics.PartialTrace.left_posSemidef
+#print axioms KomorebiPhysics.PartialTrace.right_posSemidef
+#print axioms KomorebiPhysics.PartialTrace.left_density
+#print axioms KomorebiPhysics.PartialTrace.right_density
+#print axioms KomorebiPhysics.PartialTrace.left_kronecker
+#print axioms KomorebiPhysics.PartialTrace.right_kronecker
+#print axioms KomorebiPhysics.PartialTrace.left_mul_local
+#print axioms KomorebiPhysics.PartialTrace.left_local_mul
+#print axioms KomorebiPhysics.PartialTrace.right_mul_local
+#print axioms KomorebiPhysics.PartialTrace.right_local_mul
+#print axioms KomorebiPhysics.PartialTrace.left_remote_cycle
+#print axioms KomorebiPhysics.PartialTrace.right_remote_cycle
+#print axioms KomorebiPhysics.PartialTrace.trace_local_left
+#print axioms KomorebiPhysics.PartialTrace.trace_local_right
+#print axioms KomorebiPhysics.PartialTrace.probability_left
+#print axioms KomorebiPhysics.PartialTrace.probability_right
+#print axioms KomorebiPhysics.PartialTrace.hasDerivAt_left
+#print axioms KomorebiPhysics.PartialTrace.hasDerivAt_right

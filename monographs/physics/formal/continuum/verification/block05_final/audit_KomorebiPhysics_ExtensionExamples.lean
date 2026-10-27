@@ -1,0 +1,25 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.ExtensionExamples.binaryAtlas
+#print axioms KomorebiPhysics.ExtensionExamples.density
+#print axioms KomorebiPhysics.ExtensionExamples.hamiltonian
+#print axioms KomorebiPhysics.ExtensionExamples.hamiltonian_hermitian
+#print axioms KomorebiPhysics.ExtensionExamples.density_hermitian
+#print axioms KomorebiPhysics.ExtensionExamples.density_posSemidef
+#print axioms KomorebiPhysics.ExtensionExamples.density_trace_one
+#print axioms KomorebiPhysics.ExtensionExamples.density_not_idempotent
+#print axioms KomorebiPhysics.ExtensionExamples.mixed_current_values
+#print axioms KomorebiPhysics.ExtensionExamples.conjugation_is_essential
+#print axioms KomorebiPhysics.ExtensionExamples.badDensity
+#print axioms KomorebiPhysics.ExtensionExamples.density_hermiticity_is_essential
+#print axioms KomorebiPhysics.ExtensionExamples.badHamiltonian
+#print axioms KomorebiPhysics.ExtensionExamples.hamiltonian_hermiticity_is_essential
+#print axioms KomorebiPhysics.ExtensionExamples.localCurve
+#print axioms KomorebiPhysics.ExtensionExamples.localCurve_hasDerivAt
+#print axioms KomorebiPhysics.ExtensionExamples.local_probability_derivatives
+#print axioms KomorebiPhysics.ExtensionExamples.overlap
+#print axioms KomorebiPhysics.ExtensionExamples.overlap_is_binary
+#print axioms KomorebiPhysics.ExtensionExamples.overlap_product_not_binary
+#print axioms KomorebiPhysics.ExtensionExamples.overlap_not_incidence
+#print axioms KomorebiPhysics.ExtensionExamples.source_total_derivative
+#print axioms KomorebiPhysics.ExtensionExamples.source_total_not_conserved

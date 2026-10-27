@@ -1,0 +1,107 @@
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.{uΩ, uI} {Ω : Type uΩ} {I : Type uI}
+  [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω) : Type (max uI uΩ)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.CellState.{uI, uE} {I : Type uI} {E : Type uE} : Type (max uI uE)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.ContinuumState.{uΩ, uE} {Ω : Type uΩ} {E : Type uE}
+  [MeasurableSpace Ω] [NormedAddCommGroup E] (μ : MeasureTheory.Measure Ω) : AddSubgroup (Ω →ₘ[μ] E)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.cellIndicatorLinear.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+  (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) (i : I) : E →ₗ[ℂ] ↥(MeasureTheory.Lp E 2 μ)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepLinear.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+  (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) : (PiLp 2 fun x => E) →ₗ[ℂ] ↥(MeasureTheory.Lp E 2 μ)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepLinear_apply.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+  (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) (ψ : PiLp 2 fun x => E) :
+  (stepLinear μ P) ψ = ∑ i, MeasureTheory.indicatorConstLp 2 ⋯ ⋯ (ψ.ofLp i)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.real_inter_eq_zero_of_ne.{uΩ, uI} {Ω : Type uΩ}
+  {I : Type uI} [MeasurableSpace Ω] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) {i j : I} (hij : i ≠ j) :
+  μ.real (P.cell i ∩ P.cell j) = 0
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.inner_cellIndicator.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [DecidableEq I] [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+  [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) (i j : I) (v w : E) :
+  inner ℂ (MeasureTheory.indicatorConstLp 2 ⋯ ⋯ v) (MeasureTheory.indicatorConstLp 2 ⋯ ⋯ w) =
+    if i = j then inner ℂ v w else 0
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.step_inner.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (ψ φ : PiLp 2 fun x => E) : inner ℂ ((stepLinear μ P) ψ) ((stepLinear μ P) φ) = inner ℂ ψ φ
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepIsometry.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) :
+  (PiLp 2 fun x => E) →ₗᵢ[ℂ] ↥(MeasureTheory.Lp E 2 μ)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.inner_single_left.{uI, uE} {I : Type uI}
+  {E : Type uE} [Fintype I] [DecidableEq I] [NormedAddCommGroup E] [InnerProductSpace ℂ E] (i : I) (v : E)
+  (ψ : PiLp 2 fun x => E) : inner ℂ (PiLp.single 2 i v) ψ = inner ℂ v (ψ.ofLp i)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.step_single.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) (i : I) (v : E) :
+  (stepIsometry μ P) (PiLp.single 2 i v) = MeasureTheory.indicatorConstLp 2 ⋯ ⋯ v
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.averagingCLM.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) :
+  ↥(MeasureTheory.Lp E 2 μ) →L[ℂ] PiLp 2 fun x => E
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.averaging_step.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (ψ : PiLp 2 fun x => E) : (averagingCLM μ P) ((stepIsometry μ P) ψ) = ψ
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.averaging_apply.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) (i : I) : ((averagingCLM μ P) f).ofLp i = ∫ (x : Ω) in P.cell i, ↑↑f x ∂μ
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) :
+  ↥(MeasureTheory.Lp E 2 μ) →L[ℂ] ↥(MeasureTheory.Lp E 2 μ)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection_apply.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) : (stepProjection μ P) f = (stepIsometry μ P) ((averagingCLM μ P) f)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection_eq_sum_cellIntegrals.{uΩ, uI, uE}
+  {Ω : Type uΩ} {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) :
+  (stepProjection μ P) f = ∑ i, MeasureTheory.indicatorConstLp 2 ⋯ ⋯ (∫ (x : Ω) in P.cell i, ↑↑f x ∂μ)
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection_step.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (ψ : PiLp 2 fun x => E) : (stepProjection μ P) ((stepIsometry μ P) ψ) = (stepIsometry μ P) ψ
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection_idem.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) : (stepProjection μ P) ((stepProjection μ P) f) = (stepProjection μ P) f
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.adjoint_stepProjection.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) :
+  ContinuousLinearMap.adjoint (stepProjection μ P) = stepProjection μ P
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.inner_step_residual.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (ψ : PiLp 2 fun x => E) (f : ↥(MeasureTheory.Lp E 2 μ)) :
+  inner ℂ ((stepIsometry μ P) ψ) (f - (stepProjection μ P) f) = 0
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.norm_sq_stepProjection_add_residual.{uΩ, uI, uE}
+  {Ω : Type uΩ} {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) : ‖f‖ ^ 2 = ‖(stepProjection μ P) f‖ ^ 2 + ‖f - (stepProjection μ P) f‖ ^ 2
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.norm_stepProjection_le.{uΩ, uI, uE} {Ω : Type uΩ}
+  {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) : ‖(stepProjection μ P) f‖ ≤ ‖f‖
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.norm_residual_le_norm_sub_step.{uΩ, uI, uE}
+  {Ω : Type uΩ} {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) (ψ : PiLp 2 fun x => E) : ‖f - (stepProjection μ P) f‖ ≤ ‖f - (stepIsometry μ P) ψ‖
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.norm_stepProjection_op_le_one.{uΩ, uI, uE}
+  {Ω : Type uΩ} {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ) :
+  ‖stepProjection μ P‖ ≤ 1
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection_eq_self_iff.{uΩ, uI, uE}
+  {Ω : Type uΩ} {I : Type uI} {E : Type uE} [MeasurableSpace Ω] [Fintype I] [DecidableEq I] [NormedAddCommGroup E]
+  [InnerProductSpace ℂ E] [CompleteSpace E] (μ : MeasureTheory.Measure Ω) (P : UnitVolumePartition μ)
+  (f : ↥(MeasureTheory.Lp E 2 μ)) : (stepProjection μ P) f = f ↔ ∃ ψ, (stepIsometry μ P) ψ = f
+KomorebiPhysics.Relativistic3DL2CellReconstruction.UnitVolumePartition.stepProjection_tendsto_of_step_approximation.{uΩ,
+    uI, uE}
+  {Ω : Type uΩ} {E : Type uE} [MeasurableSpace Ω] [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
+  (μ : MeasureTheory.Measure Ω) {ι : ℕ → Type uI} [(n : ℕ) → Fintype (ι n)] [(n : ℕ) → DecidableEq (ι n)]
+  (Pseq : (n : ℕ) → UnitVolumePartition μ) (ψ : (n : ℕ) → PiLp 2 fun x => E) (f : ↥(MeasureTheory.Lp E 2 μ))
+  (hψ : Filter.Tendsto (fun n => (stepIsometry μ (Pseq n)) (ψ n)) Filter.atTop (nhds f)) :
+  Filter.Tendsto (fun n => (stepProjection μ (Pseq n)) f) Filter.atTop (nhds f)

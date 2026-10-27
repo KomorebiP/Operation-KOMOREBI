@@ -1,0 +1,32 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.LindbladExamples.rates
+#print axioms KomorebiPhysics.LindbladExamples.rates_nonneg
+#print axioms KomorebiPhysics.LindbladExamples.jump_values
+#print axioms KomorebiPhysics.LindbladExamples.generator_value
+#print axioms KomorebiPhysics.LindbladExamples.current_values
+#print axioms KomorebiPhysics.LindbladExamples.localCurve
+#print axioms KomorebiPhysics.LindbladExamples.localCurve_hasDerivAt
+#print axioms KomorebiPhysics.LindbladExamples.local_population_derivatives
+#print axioms KomorebiPhysics.LindbladExamples.local_coherence_derivative
+#print axioms KomorebiPhysics.LindbladExamples.reference
+#print axioms KomorebiPhysics.LindbladExamples.reference_conditions
+#print axioms KomorebiPhysics.LindbladExamples.dissipation_value
+#print axioms KomorebiPhysics.LindbladExamples.local_relativeEntropy_derivative
+#print axioms KomorebiPhysics.LindbladExamples.local_relativeEntropy_strictly_decreases
+#print axioms KomorebiPhysics.LindbladExamples.source_support_is_essential
+#print axioms KomorebiPhysics.LindbladExamples.square_root_is_essential
+#print axioms KomorebiPhysics.LindbladExamples.rate_nonnegativity_is_essential
+#print axioms KomorebiPhysics.LindbladExamples.loss_terms_are_essential
+#print axioms KomorebiPhysics.LindbladExamples.half_factor_is_essential
+#print axioms KomorebiPhysics.LindbladExamples.self_jump_is_not_zero
+#print axioms KomorebiPhysics.LindbladExamples.coherent_current_is_essential
+#print axioms KomorebiPhysics.LindbladExamples.inactive_flux_is_zero
+#print axioms KomorebiPhysics.LindbladExamples.zero_dissipation_does_not_force_equilibrium
+#print axioms KomorebiPhysics.LindbladExamples.biasedDensity
+#print axioms KomorebiPhysics.LindbladExamples.biasedDensity_conditions
+#print axioms KomorebiPhysics.LindbladExamples.biasedCurve
+#print axioms KomorebiPhysics.LindbladExamples.biasedCurve_hasDerivAt
+#print axioms KomorebiPhysics.LindbladExamples.uniform_reference_not_balanced
+#print axioms KomorebiPhysics.LindbladExamples.wrong_reference_derivative
+#print axioms KomorebiPhysics.LindbladExamples.wrong_reference_strictly_increases

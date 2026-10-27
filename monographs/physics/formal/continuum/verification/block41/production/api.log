@@ -1,0 +1,138 @@
+KomorebiPhysics.Relativistic3DFourierGenerator.Spinor : Type
+KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot (k ε : ℝ) : ℝ
+KomorebiPhysics.Relativistic3DFourierGenerator.smulVectorCLM
+  (v : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  ℂ →L[ℂ] KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.smulVectorCLM_apply
+  (v : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) (z : ℂ) :
+  (KomorebiPhysics.Relativistic3DFourierGenerator.smulVectorCLM v) z = z • v
+KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot_residual_smul_isBigO (k : ℝ)
+  (v : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  (fun h => ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot k h - k) • v) =O[nhdsWithin 0 (Set.Ioi 0)] fun h =>
+    h ^ 2
+KomorebiPhysics.Relativistic3DFourierGenerator.modePhase (k h : ℝ) : ℂ
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDifferenceMultiplier (k h : ℝ) : ℂ
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDifferenceMultiplier_eq (k h : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.centralDifferenceMultiplier k h =
+    Complex.I * ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot k h)
+KomorebiPhysics.Relativistic3DFourierGenerator.norm_modePhase (k h : ℝ) :
+  ‖KomorebiPhysics.Relativistic3DFourierGenerator.modePhase k h‖ = 1
+KomorebiPhysics.Relativistic3DFourierGenerator.diracKineticMultiplier (k h : ℝ) : ℂ
+KomorebiPhysics.Relativistic3DFourierGenerator.diracKineticMultiplier_eq (k h : ℝ) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.diracKineticMultiplier k h =
+    ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot k h)
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDifferenceMultiplier_sub_isBigO (k : ℝ) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierGenerator.centralDifferenceMultiplier k h -
+        Complex.I * ↑k) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierGenerator.tendsto_centralDifferenceMultiplier (k : ℝ) :
+  Filter.Tendsto (KomorebiPhysics.Relativistic3DFourierGenerator.centralDifferenceMultiplier k)
+    (nhdsWithin 0 (Set.Ioi 0)) (nhds (Complex.I * ↑k))
+KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol (m kx ky kz : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol (m kx ky kz h : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol_zero (m kx ky kz : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol m kx ky kz 0 ψ =
+    KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol m kx ky kz ψ
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol_sub_continuum (m kx ky kz h : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol m kx ky kz h ψ -
+      KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol m kx ky kz ψ =
+    ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot kx h - kx) •
+          KomorebiPhysics.Relativistic3DCliffordTransportU1.alphaX ψ +
+        ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot ky h - ky) •
+          KomorebiPhysics.Relativistic3DCliffordTransportU1.alphaY ψ +
+      ↑(KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot kz h - kz) •
+        KomorebiPhysics.Relativistic3DCliffordTransportU1.alphaZ ψ
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol_sub_continuum_isBigO (m kx ky kz : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol m kx ky kz h ψ -
+        KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol m kx ky kz ψ) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierGenerator.tendsto_centralDiracSymbol (m kx ky kz : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  Filter.Tendsto (fun h => KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol m kx ky kz h ψ)
+    (nhdsWithin 0 (Set.Ioi 0)) (nhds (KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol m kx ky kz ψ))
+KomorebiPhysics.Relativistic3DFourierGenerator.Mode : Type
+KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint : Type
+KomorebiPhysics.Relativistic3DFourierGenerator.modeMomentum (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (i : Fin 3) : ℝ
+KomorebiPhysics.Relativistic3DFourierGenerator.torusPlaneWave (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) : ℂ
+KomorebiPhysics.Relativistic3DFourierGenerator.norm_torusPlaneWave
+  (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) :
+  ‖KomorebiPhysics.Relativistic3DFourierGenerator.torusPlaneWave n x‖ = 1
+KomorebiPhysics.Relativistic3DFourierGenerator.continuumModeAction (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.centralModeAction (m h : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.centralModeAction_sub_continuum_isBigO (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierGenerator.centralModeAction m h n ψ -
+        KomorebiPhysics.Relativistic3DFourierGenerator.continuumModeAction m n ψ) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierGenerator.tendsto_centralModeAction (m : ℝ)
+  (n : KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  Filter.Tendsto (fun h => KomorebiPhysics.Relativistic3DFourierGenerator.centralModeAction m h n ψ)
+    (nhdsWithin 0 (Set.Ioi 0)) (nhds (KomorebiPhysics.Relativistic3DFourierGenerator.continuumModeAction m n ψ))
+KomorebiPhysics.Relativistic3DFourierGenerator.continuumFourierPacketAction (m : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierGenerator.Mode → KomorebiPhysics.Relativistic3DFourierGenerator.Spinor)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.centralFourierPacketAction (m h : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierGenerator.Mode → KomorebiPhysics.Relativistic3DFourierGenerator.Spinor)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.Spinor
+KomorebiPhysics.Relativistic3DFourierGenerator.centralFourierPacketAction_sub_continuum (m h : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierGenerator.Mode → KomorebiPhysics.Relativistic3DFourierGenerator.Spinor)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.centralFourierPacketAction m h S a x -
+      KomorebiPhysics.Relativistic3DFourierGenerator.continuumFourierPacketAction m S a x =
+    ∑ n ∈ S,
+      KomorebiPhysics.Relativistic3DFourierGenerator.torusPlaneWave n x •
+        (KomorebiPhysics.Relativistic3DFourierGenerator.centralModeAction m h n (a n) -
+          KomorebiPhysics.Relativistic3DFourierGenerator.continuumModeAction m n (a n))
+KomorebiPhysics.Relativistic3DFourierGenerator.centralFourierPacketAction_sub_continuum_isBigO (m : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierGenerator.Mode → KomorebiPhysics.Relativistic3DFourierGenerator.Spinor)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) :
+  (fun h =>
+      KomorebiPhysics.Relativistic3DFourierGenerator.centralFourierPacketAction m h S a x -
+        KomorebiPhysics.Relativistic3DFourierGenerator.continuumFourierPacketAction m S a
+          x) =O[nhdsWithin 0 (Set.Ioi 0)]
+    fun h => h ^ 2
+KomorebiPhysics.Relativistic3DFourierGenerator.tendsto_centralFourierPacketAction (m : ℝ)
+  (S : Finset KomorebiPhysics.Relativistic3DFourierGenerator.Mode)
+  (a : KomorebiPhysics.Relativistic3DFourierGenerator.Mode → KomorebiPhysics.Relativistic3DFourierGenerator.Spinor)
+  (x : KomorebiPhysics.Relativistic3DFourierGenerator.TorusPoint) :
+  Filter.Tendsto (fun h => KomorebiPhysics.Relativistic3DFourierGenerator.centralFourierPacketAction m h S a x)
+    (nhdsWithin 0 (Set.Ioi 0))
+    (nhds (KomorebiPhysics.Relativistic3DFourierGenerator.continuumFourierPacketAction m S a x))
+KomorebiPhysics.Relativistic3DFourierGenerator.symbolEnergySq (m px py pz : ℝ) : ℝ
+KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol_sq (m px py pz : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol m px py pz
+      (KomorebiPhysics.Relativistic3DFourierGenerator.continuumDiracSymbol m px py pz ψ) =
+    ↑(KomorebiPhysics.Relativistic3DFourierGenerator.symbolEnergySq m px py pz) • ψ
+KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol_sq (m kx ky kz h : ℝ)
+  (ψ : KomorebiPhysics.Relativistic3DFourierGenerator.Spinor) :
+  KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol m kx ky kz h
+      (KomorebiPhysics.Relativistic3DFourierGenerator.centralDiracSymbol m kx ky kz h ψ) =
+    ↑(KomorebiPhysics.Relativistic3DFourierGenerator.symbolEnergySq m
+          (KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot kx h)
+          (KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot ky h)
+          (KomorebiPhysics.Relativistic3DFourierGenerator.sinQuot kz h)) •
+      ψ

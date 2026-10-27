@@ -1,0 +1,245 @@
+module
+
+public import QuantumPacketCore
+public import TensorRefinement
+public import Mathlib.Analysis.Calculus.Deriv.Mul
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Add
+
+/-!
+Full physics master, Chapter 2.6, equations (2.50)--(2.57).
+The derivatives below are actual real-time derivatives in a normed algebra.
+The main inverse theorem derives inverse regularity from invertibility at the
+base point and completeness; no inverse derivative is assumed in that theorem.
+Conjugation is not asserted to preserve self-adjointness unless the frame is unitary.
+-/
+
+@[expose] public section
+noncomputable section
+set_option autoImplicit false
+namespace KomorebiPhysics.Deformation
+open scoped BigOperators
+
+section Algebra
+variable {R : Type*} [Ring R]
+
+def comm (K X : R) : R := K * X - X * K
+
+def transport (U V X : R) : R := U * X * V
+
+def covariantRate (K X dX : R) : R := dX - comm K X
+
+theorem comm_mul (K X Y : R) :
+    comm K (X * Y) = comm K X * Y + X * comm K Y := by
+  unfold comm
+  noncomm_ring
+
+theorem comm_one (K : R) : comm K 1 = 0 := by simp [comm]
+
+theorem transport_mul (U V X Y : R) (hVU : V * U = 1) :
+    transport U V (X * Y) = transport U V X * transport U V Y := by
+  unfold transport
+  calc
+    U * (X * Y) * V = U * X * (V * U) * Y * V := by rw [hVU]; noncomm_ring
+    _ = _ := by noncomm_ring
+
+theorem transport_one (U V : R) (hUV : U * V = 1) :
+    transport U V 1 = 1 := by simp [transport, hUV]
+
+theorem transport_sum {I : Type*} (U V : R) (s : Finset I) (X : I → R) :
+    transport U V (∑ i ∈ s, X i) = ∑ i ∈ s, transport U V (X i) := by
+  simp only [transport, Finset.mul_sum, Finset.sum_mul]
+
+theorem transport_corner (U V P X Q : R) (hVU : V * U = 1) :
+    transport U V (P * X * Q) =
+      transport U V P * transport U V X * transport U V Q := by
+  rw [transport_mul U V (P * X) Q hVU, transport_mul U V P X hVU]
+
+/-- Similarity preserves an exact finite idempotent resolution, not its metric. -/
+def transportedFamily {I : Type*} [Fintype I] [DecidableEq I]
+    (P : KomorebiPaperVII.PacketFamily R I) (U V : R)
+    (hUV : U * V = 1) (hVU : V * U = 1) :
+    KomorebiPaperVII.PacketFamily R I where
+  proj i := transport U V (P.proj i)
+  mul_proj i j := by
+    rw [← transport_mul U V (P.proj i) (P.proj j) hVU, P.mul_proj]
+    by_cases h : i = j <;> simp [h, transport]
+  sum_proj := by
+    rw [← transport_sum, P.sum_proj]
+    exact transport_one U V hUV
+
+theorem transport_coarse {I J : Type*} [Fintype I]
+    (U V : R) (P : I → R) (address : I → J) (a : J) [DecidableEq J] :
+    transport U V (KomorebiPaperVII.TensorRefinement.coarse P address a) =
+      KomorebiPaperVII.TensorRefinement.coarse (fun i => transport U V (P i)) address a := by
+  simp only [KomorebiPaperVII.TensorRefinement.coarse, transport,
+    Finset.mul_sum, Finset.sum_mul, mul_ite, ite_mul, mul_zero, zero_mul]
+
+/-- The two moving-boundary terms combine into a commutator and an intrinsic correction. -/
+theorem corner_rate_split (K P X Q dX : R) :
+    P * dX * Q + comm K P * X * Q + P * X * comm K Q =
+      comm K (P * X * Q) + P * covariantRate K X dX * Q := by
+  unfold comm covariantRate
+  noncomm_ring
+
+/-- A purely co-moving object has no intrinsic covariant rate. -/
+theorem covariant_rate_of_comoving (K X : R) :
+    covariantRate K X (comm K X) = 0 := by simp [covariantRate]
+
+theorem sum_comm_of_resolution {I : Type*} [Fintype I]
+    (P : I → R) (hP : ∑ i, P i = 1) (K : R) :
+    (∑ i, comm K (P i)) = 0 := by
+  simp only [comm, Finset.sum_sub_distrib, ← Finset.mul_sum, ← Finset.sum_mul, hP,
+    mul_one, one_mul, sub_self]
+
+/-- Reconstructing every corner cancels all moving-frame boundary terms. -/
+theorem sum_corner_rates {I : Type*} [Fintype I]
+    (P : I → R) (hP : ∑ i, P i = 1) (K X dX : R) :
+    (∑ i, ∑ j, (P i * dX * P j + comm K (P i) * X * P j +
+      P i * X * comm K (P j))) = dX := by
+  simp only [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_mul,
+    hP, sum_comm_of_resolution P hP K, mul_one, one_mul, zero_mul, mul_zero,
+    add_zero]
+
+/-- Algebraic conversion of the differentiated conjugation into the commutator form. -/
+theorem transport_rate_identity (U V dU P : R) (hVU : V * U = 1) :
+    dU * P * V + U * P * (-(V * dU * V)) =
+      comm (dU * V) (transport U V P) := by
+  have h : (dU * V) * (U * P * V) = dU * P * V := by
+    calc
+      _ = dU * (V * U) * P * V := by noncomm_ring
+      _ = _ := by rw [hVU, mul_one]
+  unfold comm transport
+  rw [h]
+  noncomm_ring
+
+end Algebra
+
+section Calculus
+variable {R : Type*} [NormedRing R] [NormedAlgebra ℝ R]
+
+/-- Three genuine product-rule terms, retaining noncommutative order. -/
+theorem hasDerivAt_triple (P X Q : ℝ → R) (dP dX dQ : R) (t : ℝ)
+    (hP : HasDerivAt P dP t) (hX : HasDerivAt X dX t) (hQ : HasDerivAt Q dQ t) :
+    HasDerivAt (fun s => P s * X s * Q s)
+      (P t * dX * Q t + dP * X t * Q t + P t * X t * dQ) t := by
+  convert (hP.mul hX).mul hQ using 1 <;> simp only [Pi.mul_apply]
+  noncomm_ring
+
+/-- Differentiating an actual inverse-pair identity, with arbitrary supplied velocities. -/
+theorem inverse_pair_rate (U V : ℝ → R) (dU dV : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hV : HasDerivAt V dV t)
+    (hUV : ∀ s, U s * V s = 1) (hVU : V t * U t = 1) :
+    dV = -(V t * dU * V t) := by
+  have hp := hU.mul hV
+  have heq : U * V = fun _ => (1 : R) := by funext s; exact hUV s
+  rw [heq] at hp
+  have hz := hp.unique (hasDerivAt_const t (1 : R))
+  have h := congrArg (fun x => V t * x) hz
+  have he : V t * (dU * V t + U t * dV) = V t * dU * V t + dV := by
+    calc
+      _ = V t * dU * V t + (V t * U t) * dV := by noncomm_ring
+      _ = _ := by rw [hVU, one_mul]
+  rw [he, mul_zero] at h
+  exact (add_eq_zero_iff_eq_neg).mp (by simpa [add_comm] using h)
+
+/-- Formula (2.55) from differentiability of both curves, without a prescribed inverse rate. -/
+theorem hasDerivAt_inverse_pair (U V : ℝ → R) (dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hV : DifferentiableAt ℝ V t)
+    (hUV : ∀ s, U s * V s = 1) (hVU : V t * U t = 1) :
+    HasDerivAt V (-(V t * dU * V t)) t := by
+  have h := hV.hasDerivAt
+  rwa [inverse_pair_rate U V dU (deriv V t) t hU h hUV hVU] at h
+
+/-- The actual moving-projector derivative, with explicit inverse-curve derivative input. -/
+theorem hasDerivAt_transport_pair (U V : ℝ → R) (dU : R) (P : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hV : HasDerivAt V (-(V t * dU * V t)) t)
+    (hVU : V t * U t = 1) :
+    HasDerivAt (fun s => transport (U s) (V s) P)
+      (comm (dU * V t) (transport (U t) (V t) P)) t := by
+  have h := (hU.mul_const P).mul hV
+  simpa only [transport, Pi.mul_apply, transport_rate_identity _ _ _ _ hVU] using h
+
+/-- Formula (2.54) from actual projector derivatives. -/
+theorem hasDerivAt_corner (P X Q : ℝ → R) (K dX : R) (t : ℝ)
+    (hP : HasDerivAt P (comm K (P t)) t) (hX : HasDerivAt X dX t)
+    (hQ : HasDerivAt Q (comm K (Q t)) t) :
+    HasDerivAt (fun s => P s * X s * Q s)
+      (P t * dX * Q t + comm K (P t) * X t * Q t + P t * X t * comm K (Q t)) t :=
+  hasDerivAt_triple P X Q _ dX _ t hP hX hQ
+
+/-- Equivalent covariant decomposition, derived from the literal three-term rule. -/
+theorem hasDerivAt_corner_covariant (P X Q : ℝ → R) (K dX : R) (t : ℝ)
+    (hP : HasDerivAt P (comm K (P t)) t) (hX : HasDerivAt X dX t)
+    (hQ : HasDerivAt Q (comm K (Q t)) t) :
+    HasDerivAt (fun s => P s * X s * Q s)
+      (comm K (P t * X t * Q t) + P t * covariantRate K (X t) dX * Q t) t := by
+  have h := hasDerivAt_corner P X Q K dX t hP hX hQ
+  rwa [corner_rate_split] at h
+
+/-- Actual derivative of a co-moving corner is one commutator, not zero in lab coordinates. -/
+theorem hasDerivAt_comoving_corner (P X Q : ℝ → R) (K : R) (t : ℝ)
+    (hP : HasDerivAt P (comm K (P t)) t) (hX : HasDerivAt X (comm K (X t)) t)
+    (hQ : HasDerivAt Q (comm K (Q t)) t) :
+    HasDerivAt (fun s => P s * X s * Q s) (comm K (P t * X t * Q t)) t := by
+  simpa only [covariant_rate_of_comoving, mul_zero, zero_mul, add_zero] using
+    hasDerivAt_corner_covariant P X Q K (comm K (X t)) t hP hX hQ
+
+/-- A finite sum of moving projectors obeys the same commutator transport. -/
+theorem hasDerivAt_coarse_projector {I : Type*} (s : Finset I) (P : I → ℝ → R)
+    (K : R) (t : ℝ) (hP : ∀ i ∈ s, HasDerivAt (P i) (comm K (P i t)) t) :
+    HasDerivAt (fun u => ∑ i ∈ s, P i u) (comm K (∑ i ∈ s, P i t)) t := by
+  simpa only [comm, Finset.sum_sub_distrib, ← Finset.mul_sum, ← Finset.sum_mul] using
+    HasDerivAt.fun_sum hP
+
+/-- The derivative of the reconstructed object, including cancellation of all frame terms. -/
+theorem hasDerivAt_reconstructed_corners {I : Type*} [Fintype I]
+    (P : I → ℝ → R) (X : ℝ → R) (K dX : R) (t : ℝ)
+    (hP : ∀ i, HasDerivAt (P i) (comm K (P i t)) t)
+    (hX : HasDerivAt X dX t) (hres : ∑ i, P i t = 1) :
+    HasDerivAt (fun u => ∑ i, ∑ j, P i u * X u * P j u) dX t := by
+  have h := HasDerivAt.fun_sum (u := Finset.univ) (fun i _ =>
+    HasDerivAt.fun_sum (u := Finset.univ) (fun j _ =>
+      hasDerivAt_corner (P i) X (P j) K dX t (hP i) hX (hP j)))
+  rwa [sum_corner_rates (fun i => P i t) hres K (X t) dX] at h
+
+end Calculus
+
+section BanachInverse
+variable {R : Type*} [NormedRing R] [NormedAlgebra ℝ R] [CompleteSpace R]
+
+/-- The actual inverse curve is differentiated from U alone. Only invertibility at t is needed. -/
+theorem hasDerivAt_ring_inverse (U : ℝ → R) (dU : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hunit : IsUnit (U t)) :
+    HasDerivAt (fun s => Ring.inverse (U s))
+      (-(Ring.inverse (U t) * dU * Ring.inverse (U t))) t := by
+  obtain ⟨u, hu⟩ := hunit
+  have hi := hasFDerivAt_ringInverse (𝕜 := ℝ) u
+  rw [hu] at hi
+  have h := hi.comp_hasDerivAt t hU
+  simpa only [Function.comp_apply, ContinuousLinearMap.neg_apply,
+    ContinuousLinearMap.mulLeftRight_apply, ← Ring.inverse_unit, hu] using h
+
+/-- Formulas (2.50)--(2.52), (2.55)--(2.57) with no inverse regularity assumed. -/
+theorem hasDerivAt_moving_projector (U : ℝ → R) (dU P : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hunit : IsUnit (U t)) :
+    HasDerivAt (fun s => transport (U s) (Ring.inverse (U s)) P)
+      (comm (dU * Ring.inverse (U t)) (transport (U t) (Ring.inverse (U t)) P)) t :=
+  hasDerivAt_transport_pair U (fun s => Ring.inverse (U s)) dU P t hU
+    (hasDerivAt_ring_inverse U dU t hU hunit) (Ring.inverse_mul_cancel _ hunit)
+
+/-- Entire literal whole-object deformation theorem, from U and X derivatives alone. -/
+theorem hasDerivAt_whole_object (U X : ℝ → R) (dU dX P Q : R) (t : ℝ)
+    (hU : HasDerivAt U dU t) (hX : HasDerivAt X dX t) (hunit : IsUnit (U t)) :
+    let p := fun s => transport (U s) (Ring.inverse (U s)) P
+    let q := fun s => transport (U s) (Ring.inverse (U s)) Q
+    let K := dU * Ring.inverse (U t)
+    HasDerivAt (fun s => p s * X s * q s)
+      (p t * dX * q t + comm K (p t) * X t * q t + p t * X t * comm K (q t)) t := by
+  dsimp only
+  exact hasDerivAt_corner _ X _ _ dX t
+    (hasDerivAt_moving_projector U dU P t hU hunit) hX
+    (hasDerivAt_moving_projector U dU Q t hU hunit)
+
+end BanachInverse
+end KomorebiPhysics.Deformation

@@ -1,0 +1,449 @@
+\section{Links compare neighboring fibers}\label{g:links}
+
+A field assigns a vector to each site, but a local change of frame can be chosen independently at every site. A difference such as $\psi_{x+\widehat\mu}-\psi_x$ therefore needs a rule for comparing its two entries. A link supplies that rule. Its orientation is part of its definition, rather than a sign convention to be inferred after a calculation.
+
+Let $V$ be a finite periodic lattice and let every fiber be a copy of $\C^r$. We initially allow any unitary gauge group acting on this fiber. In the convention used for the spatial stencils below,
+\begin{equation}\label{g:backward-link}
+ U_{x,\mu}:\HH_{x+\widehat\mu}\longrightarrow\HH_x,
+ \qquad U_{x,\mu}^*U_{x,\mu}=U_{x,\mu}U_{x,\mu}^*=I.
+\end{equation}
+The gauge $g=(g_x)_{x\in V}$ changes coordinates by $\psi_x^g=g_x\psi_x$. Requiring the transported vector to have the frame of its destination gives
+\begin{equation}\label{g:link-transform}
+ U_{x,\mu}^g=g_xU_{x,\mu}g_{x+\widehat\mu}^{-1},
+ \qquad U_{x,\mu}^g\psi_{x+\widehat\mu}^g
+ =g_xU_{x,\mu}\psi_{x+\widehat\mu}.
+\end{equation}
+Products act on column vectors from right to left. More generally, a transporter $T_{y\leftarrow x}$ has the transformation $g_yT_{y\leftarrow x}g_x^{-1}$. This notation checks both the input and output of every product.
+
+The forward link is
+\begin{equation}\label{g:forward-link}
+ u_{x,\mu}=U_{x,\mu}^{-1}:\HH_x\longrightarrow\HH_{x+\widehat\mu},
+ \qquad u_{x,\mu}^g=g_{x+\widehat\mu}u_{x,\mu}g_x^{-1}.
+\end{equation}
+The older time-dependent Abelian walk writes this forward link as $L_j$. The later geometric Lean sources use $u$. The non-Abelian stencil and the semidiscrete Hamiltonian use the backward $U$. These formulas describe the same edge in opposite directions. In particular, reversing an edge changes its transporter to the inverse, not to the same matrix in a different notation.
+
+\begin{proposition}[Covariance of linked differences]\label{g:stencil-covariance}
+For spacing $h>0$, define
+\begin{align}
+ (D^+_{\mu,U}\psi)_x
+ &=\frac{U_{x,\mu}\psi_{x+\widehat\mu}-\psi_x}{h},\label{g:forward-difference}\\
+ (\Delta_U\psi)_x
+ &=\frac1{h^2}\sum_\mu\left(
+ U_{x,\mu}\psi_{x+\widehat\mu}
+ +U_{x-\widehat\mu,\mu}^{-1}\psi_{x-\widehat\mu}-2\psi_x\right).
+ \label{g:laplacian}
+\end{align}
+Then $D^+_{\mu,U^g}(g\psi)=gD^+_{\mu,U}\psi$ and
+$\Delta_{U^g}(g\psi)=g\Delta_U\psi$.
+\end{proposition}
+
+\begin{proof}
+For the positive edge, substitute \eqref{g:link-transform}. The two gauge factors at $x+\widehat\mu$ cancel, leaving $g_x$ on the left. For the negative edge,
+\[
+ (U_{x-\widehat\mu,\mu}^g)^{-1}g_{x-\widehat\mu}
+ =g_xU_{x-\widehat\mu,\mu}^{-1}.
+\]
+Every term in either difference therefore has the common factor $g_x$.
+\end{proof}
+
+The lattice inner product is $\inner{\phi}{\psi}_V=\sum_x\phi_x^*\psi_x$, conjugate-linear in the first entry. Periodic reindexing and unitarity also give the useful identity
+\begin{equation}\label{g:laplace-form}
+ -\inner{\psi}{\Delta_U\psi}_V
+ =\sum_{x,\mu}\left\lVert(D^+_{\mu,U}\psi)_x\right\rVert^2.
+\end{equation}
+Indeed, expanding one squared difference gives
+$h^{-2}(\norm{\psi_{x+\widehat\mu}}^2+\norm{\psi_x}^2
+-2\operatorname{Re}(\psi_x^*U_{x,\mu}\psi_{x+\widehat\mu}))$.
+Summing and shifting the first norm term produces the left side. The forward and backward hopping blocks are adjoints, so $\Delta_U$ is self-adjoint and nonpositive. This finite identity uses the periodic boundary condition; an open domain needs its boundary terms or a specified boundary condition.
+
+\gaugefigure{01_link_covariance}{A backward link $U$ and its forward inverse $u$ compare the same two fibers. Gauge factors cancel at the input and remain at the destination. The scalar example illustrates the exact transformation law.}
+
+
+
+\section{A linked walk and its actual charge flux}\label{g:linked-walk}
+
+Covariance alone does not specify a current. To obtain one, fix the walk that moves the amplitudes. Let $N\ge1$ be an integer, let $j\in\Z/N\Z$, let $\psi_j^n\in\C^2$, and let $U_j^n\in U(1)$ be backward spatial links. Let $T_j^n\in U(1)$ transport from $(j,n)$ to $(j,n+1)$. At each step choose two on-site unitary coins $C_{1,j}^n,C_{2,j}^n\in U(2)$ and define
+\begin{align}
+ \eta_j&=C_{1,j}^n\psi_j^n,\label{g:walk-coin}\\
+ \xi_j^+&=(U_{j-1}^n)^{-1}\eta_{j-1}^+,
+ &\xi_j^-&=U_j^n\eta_{j+1}^-,\label{g:walk-shift}\\
+ \psi_j^{n+1}&=T_j^n C_{2,j}^n\xi_j.\label{g:walk-step}
+\end{align}
+Here the $+$ channel moves toward increasing $j$, while the $-$ channel moves toward decreasing $j$. The legacy implementation takes the two coins to be equal half mass rotations. The argument needs only their unitarity and the fact that scalar phases commute with them.
+
+For a time-dependent scalar gauge $g_j^n$, use
+\begin{equation}\label{g:temporal-link}
+ (U_j^n)^g=g_j^nU_j^n(g_{j+1}^n)^{-1},
+ \qquad (T_j^n)^g=g_j^{n+1}T_j^n(g_j^n)^{-1}.
+\end{equation}
+Spatial transport first brings the gauge factor to site $j$ on the old slice. Temporal transport then brings it to the new slice. Thus the step operator $\mathcal W_n$ satisfies
+\begin{equation}\label{g:walk-covariance}
+ \mathcal W_n[U^g,T^g]G^n=G^{n+1}\mathcal W_n[U,T],
+ \qquad (G^n\psi)_j=g_j^n\psi_j.
+\end{equation}
+Every factor in the step is unitary on the finite state space: the two coins and temporal phases act sitewise, and the linked shift is a permutation of the separate channels followed by unit-modulus multiplication.
+
+\begin{proposition}[Exact one-step continuity]\label{g:walk-continuity}
+Set $\rho_j^n=\norm{\psi_j^n}^2$ and
+\begin{equation}\label{g:walk-current}
+ J_{j+1/2}^n=|\eta_j^+|^2-|\eta_{j+1}^-|^2.
+\end{equation}
+The linked walk obeys
+\begin{equation}\label{g:walk-balance}
+ \rho_j^{n+1}-\rho_j^n=J_{j-1/2}^n-J_{j+1/2}^n.
+\end{equation}
+Both the density and this current are gauge invariant. Total charge is conserved. For a consecutive periodic arc $A$ with specified left and right boundary edges,
+$Q_A^{n+1}-Q_A^n=J_{\partial_-A}^n-J_{\partial_+A}^n$.
+\end{proposition}
+
+\begin{proof}
+The first coin preserves the local norm, so
+$\rho_j^n=|\eta_j^+|^2+|\eta_j^-|^2$. The second coin and temporal phase preserve the norm after the shift, giving
+$\rho_j^{n+1}=|\eta_{j-1}^+|^2+|\eta_{j+1}^-|^2$.
+Subtract these expressions and group the two terms associated with each boundary edge. This is \eqref{g:walk-balance}. The transformed $\eta_j$ is $g_j^n\eta_j$, so its channel norms are unchanged. Summing the balance over the full cycle or the chosen arc cancels its internal currents.
+\end{proof}
+
+This current measures charge transferred during one discrete step. Dividing it by a chosen time step would give a rate. It is not the same expression as the instantaneous Hamiltonian current introduced below. The two expressions belong to different evolution laws, even though both produce a local balance by cancellation.
+
+\gaugefigure{06_walk_continuity}{The explicit finite coined walk supplies a current before a continuum interpretation is attempted. The plotted computation checks one-step local balance and total population for its declared finite data.}
+
+
+
+\section{Unit-circle Clifford channels in the formal transport layer}\label{g:circle-transport}
+
+The later formal development makes the directional channels depend on the Clifford matrix of that direction. Let $A=A^*$ and $A^2=I$ on a finite spinor space. Then
+\begin{equation}\label{g:clifford-projections}
+ P^+_A=\tfrac12(I+A),\qquad P^-_A=\tfrac12(I-A)
+\end{equation}
+are self-adjoint complementary orthogonal projections. Idempotence and $P_A^+P_A^-=0$ follow by expanding the products and using $A^2=I$; self-adjointness follows from $A=A^*$. Different spatial Clifford matrices generally have different spectral projections. A permanent assignment of the four spinor coordinates to two Boolean channels cannot replace this construction in all three directions.
+
+For a bijection $\tau:V\to V$ and a forward scalar link $u:V\to U(1)$, define
+\begin{equation}\label{g:clifford-shift}
+ (S_{A,\tau,u}\psi)(x)
+ =u(\tau^{-1}x)P_A^+\psi(\tau^{-1}x)
+ +u(x)^{-1}P_A^-\psi(\tau x).
+\end{equation}
+This agrees with the orientation dictionary \eqref{g:forward-link}. Its inverse is
+\begin{equation}\label{g:clifford-inverse}
+ (S_{A,\tau,u}^{-1}\phi)(x)
+ =u(x)^{-1}P_A^+\phi(\tau x)
+ +u(\tau^{-1}x)P_A^-\phi(\tau^{-1}x).
+\end{equation}
+Substitution proves both inverse identities: same-channel terms cancel the link with its inverse and mixed-channel terms vanish. Orthogonality, followed by reindexing $x$ through $\tau$ in each channel, gives
+\begin{equation}\label{g:clifford-inner}
+ \sum_x\inner{S\psi(x)}{S\phi(x)}
+ =\sum_x\inner{\psi(x)}{\phi(x)}.
+\end{equation}
+For $u^g(x)=g(\tau x)u(x)g(x)^{-1}$, direct endpoint cancellation gives $S_{A,\tau,u^g}G_g=G_gS_{A,\tau,u}$. Products of these directional steps and scalar-gauge-equivariant unitary mass steps retain covariance and inner-product preservation.
+
+The genuine unit-circle hypothesis is essential. A nonzero complex scalar is invertible, but multiplication by $2$ multiplies squared norm by $4$. The phase must therefore lie in the unit circle, not merely in $\C^\times$. Norm preservation depends on that mathematical hypothesis. The formalization companion identifies its precise type and transport conventions.
+
+The checked four-spinor construction in this layer uses scalar $U(1)$ phases. The $SU(2)$ matrices of the legacy non-Abelian chapter act on an internal two-dimensional fiber. To combine that color action with a Dirac spinor, one would specify a space such as $\C^4\otimes\C^2$, with spin projectors on the first factor and gauge transport on the second. This guarantees their commutation. No assertion here identifies the two-dimensional color fiber with the four-dimensional Clifford spinor or declares the resulting non-Abelian Dirac extension checked.
+
+
+
+\section{Plaquettes, invariant observables, and curvature phases}\label{g:plaquettes}
+
+On a two-dimensional coordinate plane, the backward links define the based plaquette
+\begin{equation}\label{g:plaquette}
+ W_{x,\mu\nu}
+ =U_{x,\mu}U_{x+\widehat\mu,\nu}
+ U_{x+\widehat\nu,\mu}^{-1}U_{x,\nu}^{-1}.
+\end{equation}
+Starting with a vector at $x$, the rightmost factor moves it to $x+\widehat\nu$; the next moves it to the far corner; the last two bring it back to $x$. The matrix product is therefore an endomorphism of the base fiber. Each intermediate gauge factor cancels in its written order, giving
+\begin{equation}\label{g:plaquette-covariance}
+ W_{x,\mu\nu}^g=g_xW_{x,\mu\nu}g_x^{-1}.
+\end{equation}
+For $U(1)$ the plaquette itself is invariant. For a noncommutative group it is its conjugacy class that is invariant; the matrix entries depend on the frame at $x$.
+
+For $SU(2)$ links, the Wilson action of the source is the finite function
+\begin{equation}\label{g:wilson-action}
+ S_W[U]=\frac1{g_{\mathrm{YM}}^2}
+ \sum_{x,\mu<\nu}\left(1-\tfrac12\operatorname{Re}\operatorname{Tr}W_{x,\mu\nu}\right),
+ \qquad g_{\mathrm{YM}}\in\R\setminus\{0\}.
+\end{equation}
+The subscript distinguishes the coupling from the site gauge $g_x$. Cyclicity of trace proves $S_W[U^g]=S_W[U]$. Since an $SU(2)$ matrix has eigenvalues $e^{i\theta},e^{-i\theta}$, a plaquette term is $1-\cos\theta\ge0$. In the Abelian case the analogous term is $1-\operatorname{Re}W$. Specifying an invariant action is not yet a construction of its Hamiltonian phase space, Gauss constraint, or a continuum interacting field theory.
+
+\subsection{An Abelian surface product}
+
+For scalar links, multiply the oriented plaquettes on the six faces of a cube. Every edge occurs twice, with opposite orientation. Commutativity permits its factors to meet and cancel, so
+\begin{equation}\label{g:abelian-cube}
+ \prod_{f\subset\partial c}W_f^{\operatorname{or}(f,c)}=1.
+\end{equation}
+The same cancellation makes the product of fine plaquettes on a rectangular patch equal its boundary holonomy. The statement is an exact group identity. If $W_f=e^{i\theta_f}$ with each $\theta_f$ chosen as a principal argument, it implies that the oriented phase sum lies in $2\pi\Z$. It does not force that sum to be zero as a real number. An unwrapped small-phase regime or a specified branch is needed for that stronger conclusion.
+
+\gaugefigure{02_abelian_plaquette}{For Abelian links, the oriented edge phases cancel around adjacent faces. A holonomy is branch independent; a displayed real phase requires a branch choice.}
+
+\subsection{Small smooth plaquettes}
+
+Suppose a smooth Abelian connection is sampled by exact line integrals, with a consistent loop orientation. Write its holonomy as $W=e^{i\theta}$, where the small real phase is $\theta=-q\int_{\square}F_{\mu\nu}\,dS$. Here $q$ is the charge and $F_{\mu\nu}$ is the corresponding oriented curvature component. Take rectangles with side lengths $a_\mu,a_\nu=O(a)$ and uniformly controlled derivatives of $F$. If the rectangle is centered at $x_c$ and $F$ is $C^2$, symmetric integration removes its linear Taylor terms:
+\begin{equation}\label{g:centered-plaquette}
+ \theta=-qa_\mu a_\nu F_{\mu\nu}(x_c)+O(a^4).
+\end{equation}
+Consequently,
+\begin{equation}\label{g:wilson-expansion}
+ 1-\operatorname{Re}W
+ =\tfrac12q^2a_\mu^2a_\nu^2 F_{\mu\nu}(x_c)^2+O(a^6).
+\end{equation}
+To see the remainder, use $1-\cos\theta=\theta^2/2+O(\theta^4)$ and $\theta=O(a^2)$. The cross term from the $O(a^4)$ phase error is $O(a^6)$, while the fourth-power term is $O(a^8)$. Evaluating the curvature at a corner instead generally leaves an $O(a^3)$ phase error and hence an $O(a^5)$ action-density error. These orders concern the chosen pointwise comparison and exact-integral sampling. They do not by themselves justify convergence of an action sum or its solutions.
+
+
+
+\section{A finite Maxwell--Dirac model and its conserved constraint}\label{g:maxwell-dirac}
+
+The finite lattice can also carry dynamical link variables. The following is the particular semidiscrete model in the Abelian source, with time continuous and space a periodic cycle of $N\ge3$ sites. It is useful because its matter current, electric work, and Gauss propagation can all be checked in the same equations.
+
+Fix $h>0$, $m\in\R$, and Hermitian spin matrices $\alpha=\alpha^*$ and $\beta=\beta^*$ on $\C^s$. Let $\psi_j\in\C^s$ and $A_j,E_j\in\R$, and set $U_j=e^{-ihA_j}$. The source absorbs the charge into $A$. Its real Hamiltonian is
+\begin{align}
+ H_h&=H_{\mathrm m}+H_E,\label{g:hamiltonian}\\
+ H_{\mathrm m}
+ &=hm\sum_j\psi_j^*\beta\psi_j
+   +\sum_j\operatorname{Im}(\psi_j^*\alpha U_j\psi_{j+1}),
+ &H_E&=\frac h2\sum_jE_j^2.\label{g:hamiltonian-parts}
+\end{align}
+Hermiticity is enough for the identities below. Additional Clifford relations specify a Dirac representation but are not needed to prove charge or energy conservation in this finite model. The action fixes all normalization and sign conventions:
+\begin{equation}\label{g:action}
+ \mathcal S_h=\int\left[
+ \frac{ih}{2}\sum_j(\psi_j^*\dot\psi_j-\dot\psi_j^*\psi_j)
+ +h\sum_jE_j\dot A_j-H_h\right]dt.
+\end{equation}
+Variations with fixed endpoint data yield $ih\dot\psi_j=\partial H_h/\partial\overline\psi_j$, $h\dot A_j=\partial H_h/\partial E_j$, and $h\dot E_j=-\partial H_h/\partial A_j$. Written out, these are
+\begin{align}
+ \dot\psi_j&=-im\beta\psi_j
+ -\frac1{2h}\alpha U_j\psi_{j+1}
+ +\frac1{2h}U_{j-1}^*\alpha\psi_{j-1},\label{g:matter-ode}\\
+ \dot A_j&=E_j,
+ &\dot E_j&=J_j,
+ &J_j&=\operatorname{Re}(\psi_j^*\alpha U_j\psi_{j+1}).
+ \label{g:field-ode}
+\end{align}
+For example, if $z_j=\psi_j^*\alpha U_j\psi_{j+1}$, then
+$\partial_{A_j}\operatorname{Im}z_j
+=\operatorname{Im}(-ihz_j)=-h\operatorname{Re}z_j$.
+This fixes the positive sign of $\dot E_j=J_j$ for the conventions in the action.
+
+\begin{theorem}[Charge balance and Gauss propagation]\label{g:gauss}
+For every differentiable solution of \eqref{g:matter-ode}--\eqref{g:field-ode}, define
+\begin{equation}\label{g:gauss-def}
+ \rho_j=\psi_j^*\psi_j,\qquad
+ \bar\rho=\frac1N\sum_j\rho_j,\qquad
+ \mathcal G_j=\frac{E_j-E_{j-1}}h+\rho_j-\bar\rho.
+\end{equation}
+Then
+\begin{equation}\label{g:gauss-balance}
+ \dot\rho_j+\frac{J_j-J_{j-1}}h=0,
+ \qquad\dot{\bar\rho}=0,
+ \qquad\dot{\mathcal G}_j=0.
+\end{equation}
+In particular, initial data satisfying $\mathcal G_j=0$ retain that constraint on their interval of existence.
+\end{theorem}
+
+\begin{proof}
+Differentiate $\rho_j$ and use $\dot\rho_j=2\operatorname{Re}(\psi_j^*\dot\psi_j)$. The mass term contributes zero, since $\psi_j^*\beta\psi_j$ is real. The forward hopping term contributes $-J_j/h$. The backward scalar is the conjugate of $\psi_{j-1}^*\alpha U_{j-1}\psi_j$, using $\alpha=\alpha^*$ and the scalar nature of $U$. Its contribution is $J_{j-1}/h$. This proves continuity. Periodic summation gives $\dot{\bar\rho}=0$. Finally,
+\[
+ \dot{\mathcal G}_j
+ =\frac{\dot E_j-\dot E_{j-1}}h+\dot\rho_j-\dot{\bar\rho}
+ =\frac{J_j-J_{j-1}}h-\frac{J_j-J_{j-1}}h=0.
+\]
+\end{proof}
+
+The subtraction of $\bar\rho$ is structural on a periodic cycle: the discrete divergence sums to zero, so a constraint containing a nonzero total charge without compensating background would be inconsistent. Equation \eqref{g:gauss-def} supplies that neutralizing mean. Conservation of $\mathcal G_j$ is a propagation theorem. It preserves an initially nonzero constraint violation too; it does not project arbitrary initial data onto the constraint surface. Summing continuity over $a\le j\le b$ gives the physical-length-weighted charge balance
+\[
+ \frac{d}{dt}\left(h\sum_{j=a}^{b}\rho_j\right)=J_{a-1}-J_b.
+\]
+
+\begin{proposition}[Electric work and total energy]\label{g:work}
+Along the same solutions,
+\begin{equation}\label{g:work-balance}
+ \dot H_E=h\sum_jE_jJ_j,\qquad
+ \dot H_{\mathrm m}=-h\sum_jE_jJ_j,\qquad
+ \dot H_h=0.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The first formula follows from $\dot E_j=J_j$. For the matter contribution, let $q_j=\partial H_{\mathrm m}/\partial\overline\psi_j=ih\dot\psi_j$. The state-dependent part of the real derivative is
+$2\operatorname{Re}\sum_jq_j^*\dot\psi_j=0$, because $q_j^*\dot\psi_j=-ih\norm{\dot\psi_j}^2$ is purely imaginary. The remaining explicit link derivative is
+\[
+ \sum_j\frac{\partial H_{\mathrm m}}{\partial A_j}\dot A_j
+ =-h\sum_jJ_jE_j.
+\]
+Adding the two sectors proves total conservation.
+\end{proof}
+
+\subsection{Which gauge transformations remain in this action?}
+
+For time-independent real $\chi_j$, the transformation
+\begin{equation}\label{g:residual-gauge}
+ \psi_j\mapsto e^{i\chi_j}\psi_j,
+ \qquad A_j\mapsto A_j+\frac{\chi_{j+1}-\chi_j}{h},
+ \qquad E_j\mapsto E_j
+\end{equation}
+leaves the action and equations invariant. In fact $U_j$ then has precisely the backward-link law \eqref{g:link-transform}, every hopping scalar $z_j$ is unchanged, and the time derivatives of the gauge parameters vanish.
+
+This is the residual symmetry of the stated temporal-gauge model. If $\chi_j$ depends on time, the matter time derivative acquires $i\dot\chi_j\psi_j$, while $\dot A_j$ acquires $(\dot\chi_{j+1}-\dot\chi_j)/h$. With $E_j$ fixed and no scalar potential in \eqref{g:action}, these changes do not preserve the displayed equations. The fully time-dependent covariance of the discrete linked walk uses its temporal link $T$; it must not be transferred to this action after that degree of freedom has been removed.
+
+The statements in this section are ordinary proofs for a declared finite-dimensional classical field model. They establish genuine interaction between its matter and electric variables. They do not constitute a Lean construction of a coupled gauge Hamiltonian, a quantized gauge field, or a global continuum Maxwell--Dirac solution.
+
+
+
+\section{What a second-order covariant stencil requires}\label{g:consistency}
+
+The exact finite identities did not assume a smooth field in the background. A continuum comparison does. Let $A$ be a real $C^2$ function near $x$, let $\psi$ be $C^3$ there, and set
+\begin{equation}\label{g:integrated-link}
+ U_h(x)=\exp\left(-i\int_x^{x+h}A(s)\,ds\right),\qquad
+ (D_h^A\psi)(x)
+ =\frac{U_h(x)\psi(x+h)-U_h(x-h)^{-1}\psi(x-h)}{2h}.
+\end{equation}
+The smooth $A$ in this paragraph is a continuum coefficient. In the finite Hamiltonian one obtains the same link by taking $A_j$ to be its edge average $h^{-1}\int_{x_j}^{x_j+h}A(s)\,ds$. This is an additional sampling prescription.
+
+\begin{proposition}[Local second-order consistency]\label{g:second-order}
+With uniform bounds on $A$ and its derivatives through order two and on $\psi$ and its derivatives through order three on a fixed neighborhood,
+\begin{equation}\label{g:stencil-limit}
+ (D_h^A\psi)(x)=(\partial_x-iA(x))\psi(x)+O(h^2)
+ \qquad(h\to0).
+\end{equation}
+The remainder is uniform over points whose neighborhoods have the same derivative bounds.
+\end{proposition}
+
+\begin{proof}
+For fixed $x$, put
+$f_x(s)=\exp(-i\int_x^{x+s}A(r)\,dr)\psi(x+s)$.
+Then the two numerator terms in \eqref{g:integrated-link} are $f_x(h)$ and $f_x(-h)$. The derivative at zero is
+$f_x'(0)=\psi'(x)-iA(x)\psi(x)$.
+Taylor expansion of $f_x$ at zero to second order with bounded third derivative gives
+$f_x(h)-f_x(-h)=2hf_x'(0)+O(h^3)$.
+Division by $2h$ proves the assertion. The derivative bounds for $A$ and $\psi$ give the required uniform bound on $f_x'''$.
+\end{proof}
+
+A midpoint link $\widetilde U_h(x)=e^{-ihA(x+h/2)}$ has the same conclusion under these bounds. The midpoint quadrature error in the integral is $O(h^3)$, and $|e^{ia}-e^{ib}|\le|a-b|$ for real $a,b$ transfers that error to the link. The two numerator perturbations are each $O(h^3)$ for bounded $\psi$, hence the stencil perturbation is $O(h^2)$.
+
+\begin{example}[Left-endpoint sampling can lose an order]\label{g:endpoint-counterexample}
+Take $A(x)=x$ near the origin and $\psi(x)=1$. With the left-endpoint prescription $\widehat U_h(x)=e^{-ihA(x)}$, the stencil at zero is
+\[
+ \frac{\widehat U_h(0)-\widehat U_h(-h)^{-1}}{2h}
+ =\frac{1-e^{-ih^2}}{2h}=\frac{i}{2}h+O(h^3).
+\]
+The continuum value $(\partial_x-iA(0))\psi(0)$ is zero. Thus this perfectly smooth input has a first-order error. The formula $U_j=e^{-ihA_j}$ by itself does not identify a second-order sampling scheme.
+\end{example}
+
+This qualification does not alter the finite Hamiltonian or its conservation laws. It isolates what is needed to interpret its link values as samples of a continuum connection. Nor does consistency of one stencil prove convergence of the coupled time evolution: stability, compatible initial data, regularity over the comparison interval, and a choice of reconstruction still have to enter that argument.
+
+
+
+\section{Non-Abelian currents and their frame dependence}\label{g:color}
+
+Now take $\psi_x\in\C^2$, $U_{x,\mu}\in SU(2)$, and local gauges $g_x\in SU(2)$, as in the legacy non-Abelian chapter. The linked scalar
+\begin{equation}\label{g:linked-scalar}
+ z_{x,\mu}=\psi_x^*U_{x,\mu}\psi_{x+\widehat\mu}
+\end{equation}
+is gauge invariant: the adjoint factor $g_x^*$ cancels $g_x$, and the factors at $x+\widehat\mu$ also cancel. It follows that the source's scalar link observable
+\begin{equation}\label{g:su2-current}
+ j_{x,\mu}=2\operatorname{Im}z_{x,\mu}
+\end{equation}
+is invariant. To obtain a continuity equation with its particular sign and normalization one must specify the hopping generator. Invariance of the observable alone is not an equation of motion for color charge.
+
+Let $\sigma^1,\sigma^2,\sigma^3$ be the Pauli matrices and define the real components $q_x^a=\psi_x^*\sigma^a\psi_x$. Expand the conjugated Pauli basis as
+\begin{equation}\label{g:adjoint-color}
+ g_x^*\sigma^a g_x=\sum_b R_x{}^a{}_b\sigma^b,
+ \qquad q_x^{g,a}=\sum_bR_x{}^a{}_bq_x^b.
+\end{equation}
+The coefficients are real because conjugation preserves traceless Hermitian matrices. The trace inner product $\tfrac12\operatorname{Tr}(AB)$ is preserved by conjugation, and the Pauli basis is orthonormal for it; hence $R_xR_x^{\mathsf T}=I$. Thus the color vector rotates while its Euclidean squared length stays fixed. The scalar charge $\psi_x^*\psi_x$ is separately invariant. A color component relative to a selected Pauli axis is not generally invariant under all local frames.
+
+The same distinction applies to a plaquette: $W$ changes by conjugation, while its trace does not. Keeping the full matrix retains transport information that a single trace can lose. Even for $SU(2)$, identical traces at separate plaquettes do not determine the relative frames needed to combine them into a larger loop.
+
+\gaugefigure{03_nonabelian_order}{Noncommuting $SU(2)$ factors retain their order. A based holonomy changes by conjugation, while the normalized Wilson trace is unchanged. The color fiber here is separate from the four-component Clifford spinor.}
+
+
+
+\section{Exact ordered refinement of a two-by-two patch}\label{g:ordered-refinement}
+
+The Abelian rule ``multiply the fine plaquettes'' hides two choices in a noncommutative group: where each plaquette is based, and in which order the transported matrices are multiplied. A $2\times2$ patch makes both choices visible without an asymptotic expansion.
+
+Write $X_{ij}$ for the backward horizontal link from $(i+1,j)$ to $(i,j)$, where $i=0,1$ and $j=0,1,2$. Write $Y_{ij}$ for the backward vertical link from $(i,j+1)$ to $(i,j)$, where $i=0,1,2$ and $j=0,1$. Define the four fine plaquettes by
+\begin{equation}\label{g:fine-plaquette}
+ W_{ij}=X_{ij}Y_{i+1,j}X_{i,j+1}^{-1}Y_{ij}^{-1},
+ \qquad i,j\in\{0,1\}.
+\end{equation}
+Each $W_{ij}$ acts at its own lower-left basepoint $(i,j)$. The two row holonomies, based at $(0,j)$, are
+\begin{equation}\label{g:row-holonomies}
+ R_j=(X_{0j}W_{1j}X_{0j}^{-1})W_{0j},
+ \qquad j=0,1.
+\end{equation}
+The conjugation transports the right plaquette into the left base fiber before multiplying it with the left plaquette.
+
+\gaugefigure[H]{04_ordered_refinement}{The four fine plaquettes are brought to common basepoints in a specified order. The exact cancellation leaves the eight outer links; a naive product omits the transport information.}
+
+\begin{theorem}[Ordered patch identity]\label{g:patch-theorem}
+For invertible links in any matrix group, the coarse boundary holonomy satisfies
+\begin{align}
+ W^{(2)}
+ &:=X_{00}X_{10}Y_{20}Y_{21}
+ X_{12}^{-1}X_{02}^{-1}Y_{01}^{-1}Y_{00}^{-1}
+ \label{g:coarse-boundary}\\
+ &=R_0Y_{00}R_1Y_{00}^{-1}.\label{g:patch-identity}
+\end{align}
+This identity requires neither small links nor commuting links.
+\end{theorem}
+
+\Needspace{10\baselineskip}
+\begin{proof}
+First expand one row while retaining the product order:
+\begin{align*}
+ R_j
+ &=X_{0j}X_{1j}Y_{2j}X_{1,j+1}^{-1}Y_{1j}^{-1}
+ X_{0j}^{-1}X_{0j}Y_{1j}X_{0,j+1}^{-1}Y_{0j}^{-1}\\
+ &=X_{0j}X_{1j}Y_{2j}X_{1,j+1}^{-1}X_{0,j+1}^{-1}Y_{0j}^{-1}.
+\end{align*}
+The adjacent pairs $X_{0j}^{-1}X_{0j}$ and $Y_{1j}^{-1}Y_{1j}$ cancel. Substituting these row expressions gives
+\begin{align*}
+ R_0Y_{00}R_1Y_{00}^{-1}
+ ={}&X_{00}X_{10}Y_{20}X_{11}^{-1}X_{01}^{-1}
+ \underbrace{Y_{00}^{-1}Y_{00}}_{I}\\
+ &\quad\cdot X_{01}X_{11}Y_{21}X_{12}^{-1}X_{02}^{-1}Y_{01}^{-1}Y_{00}^{-1}.
+\end{align*}
+Now $X_{01}^{-1}X_{01}$ cancels, followed by $X_{11}^{-1}X_{11}$. The remaining factors are exactly \eqref{g:coarse-boundary}.
+\end{proof}
+
+All terms in \eqref{g:patch-identity} transform by conjugation at $(0,0)$ once their displayed transports are included. This checks the basepoint typing as well as the algebra. In the Abelian case conjugations disappear and the fine plaquettes can be reordered, recovering the familiar surface product. In the non-Abelian case a naive product of the four untransported matrices can be formed after identifying their coordinate spaces, but it has no reason to obey the required local gauge transformation or to equal the boundary holonomy.
+
+This refinement is exact because it refers to one fixed set of fine links and its outer boundary. It does not assert that independently assigned coarse links agree with products of fine links. That separate compatibility question is the starting point of the geometric refinement estimates in the next part of the monograph.
+
+
+
+\section{Extracting a local curvature and cancelling its first error}\label{g:richardson}
+
+Exact group multiplication and approximate Lie-algebra curvature are different operations. For fixed $A,B\in\mathfrak{su}(2)$ define the commutator loop
+\begin{equation}\label{g:commutator-loop}
+ W_h=e^{hA}e^{hB}e^{-hA}e^{-hB}.
+\end{equation}
+Here $A$ and $B$ are constant skew-Hermitian traceless matrices, and $h$ is a real scalar near zero. Because $W_0=I$, a single analytic matrix logarithm near the identity can be used for all sufficiently small $|h|$. Define
+\begin{equation}\label{g:log-curvature}
+ F_h=h^{-2}\log W_h,\qquad h\ne0.
+\end{equation}
+This construction describes a local constant-matrix model of noncommuting transport. A varying connection has additional derivative terms and must be analyzed with those terms present.
+
+\gaugefigure[H]{05_curvature_richardson}{For the specified constant generators, the finite calculation illustrates first-order raw curvature error and cancellation of its leading term. The analytic statement is Proposition~\ref{g:curvature-order}; a fitted slope over finitely many scales is a diagnostic of this example.}
+
+\begin{proposition}[Local logarithmic refinement]\label{g:curvature-order}
+On the common analytic logarithm branch, in any fixed matrix norm,
+\begin{align}
+ F_h&=[A,B]+hC_3(A,B)+O(h^2),\label{g:log-series}\\
+ C_3(A,B)&=\tfrac12[A+B,[A,B]],\label{g:cubic-coefficient}\\
+ F_h^{[1]}&:=2F_{h/2}-F_h=[A,B]+O(h^2).
+ \label{g:richardson-formula}
+\end{align}
+For constant $G\in SU(2)$, simultaneous conjugation of $A,B$ conjugates both $F_h$ and $F_h^{[1]}$ by $G$.
+\end{proposition}
+
+\begin{proof}
+Multiplying the four exponential power series through degree three gives
+\[
+ W_h=I+h^2[A,B]+\frac{h^3}{2}[A+B,[A,B]]+O(h^4).
+\]
+The analytic logarithm has $\log(I+Z)=Z+O(\norm Z^2)$ near zero. Since $Z=W_h-I=O(h^2)$, its correction begins at order $h^4$. Dividing by $h^2$ proves \eqref{g:log-series}. At half spacing the linear term is $hC_3/2$, so $2F_{h/2}-F_h$ removes it exactly and leaves an $O(h^2)$ remainder. Finally, the power series for both the exponential and the local logarithm commute with conjugation. Applying them term by term proves the covariance statements.
+\end{proof}
+
+The common logarithm branch is essential: unrelated choices can introduce terms of size $h^{-2}$ after rescaling and invalidate the cancellation. The Richardson value is a linear combination of Lie-algebra estimates; it is not asserted to be the logarithm obtained by the exact patch rule.
+
+

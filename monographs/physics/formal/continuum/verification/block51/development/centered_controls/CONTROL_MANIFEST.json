@@ -1,0 +1,96 @@
+{
+  "schema": "komorebi.physics.centered-controls.v1",
+  "status": "PASS_DEVELOPMENT_CONTROLS",
+  "production_source_sha256": "db4cd13a2700dbaf180bf39d874bb32bc226e339e69cab52bdbf455f363a00ff",
+  "controls": [
+    {
+      "name": "centered_NegativeMassSpacing",
+      "path": "positive_controls/block51/centered/NegativeMassSpacing.lean",
+      "expected_exit": 0,
+      "diagnostic_regex": null,
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "dcc6768766e10f6a4e154f7b004a888e8688fabba0bfe86996209216d5288da3",
+      "purpose": "Negative mass and negative nonzero spacing are accepted, with the sharp operator bound and self-adjointness.",
+      "development_receipt": "run_010_NegativeMassSpacing.json",
+      "development_log": "run_010_NegativeMassSpacing.log",
+      "development_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "centered_PhysicalGraph",
+      "path": "positive_controls/block51/centered/PhysicalGraph.lean",
+      "expected_exit": 0,
+      "diagnostic_regex": null,
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "62cab1ccab4459bbcd6d49ad8b78730011b31fa0551cba3c3d0075c5b8cfaafe",
+      "purpose": "The full maximal-domain graph limit transports to the actual physical torus, with the punctured two-sided filter.",
+      "development_receipt": "run_002_PhysicalGraph.json",
+      "development_log": "run_002_PhysicalGraph.log",
+      "development_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "centered_ZeroMode",
+      "path": "positive_controls/block51/centered/ZeroMode.lean",
+      "expected_exit": 0,
+      "diagnostic_regex": null,
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "5179eea7e4d0b565e82277a8d404c0193d53f4ad009f7a1997636dae2b7fc4df",
+      "purpose": "The exact zero-spatial-mode symbol is the mass matrix on an explicit nonzero spinor; the global zero-spacing extension is separately zero.",
+      "development_receipt": "run_011_ZeroMode.json",
+      "development_log": "run_011_ZeroMode.log",
+      "development_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "centered_MissingGraphDomain",
+      "path": "negative_controls/block51/centered/MissingGraphDomain.lean",
+      "expected_exit": 1,
+      "diagnostic_regex": "(?s)error: Application type mismatch: The argument\\s+f\\s+has type.*?but is expected to have type.*?continuumDiracDomain m.*?in the application\\s+centered_graph_tendsto m f",
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "763e4c941e2438406a2ad2974174c932ffc3bac89cbbeaf647d7db6ea12c57a4",
+      "purpose": "Reject passing a bare square-summable field where a maximal-domain vector is required.",
+      "development_receipt": "run_004_MissingGraphDomain.json",
+      "development_log": "run_004_MissingGraphDomain.log",
+      "development_log_sha256": "96a3265cb229db3f73995fb3e314295c214373243212d91f39e69fc7efa92df2"
+    },
+    {
+      "name": "centered_MissingSpacingBound",
+      "path": "negative_controls/block51/centered/MissingSpacingBound.lean",
+      "expected_exit": 1,
+      "diagnostic_regex": "(?s)error: Type mismatch\\s+centeredCoeffOperator_norm_le m h\\s+has type\\s+h \u2260 0 \u2192",
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "e17c537d587c70c3f49206d21afcea75192579b17c508f1165e9e740c6254c69",
+      "purpose": "Reject missing witness in this bound interface. This is an interface control, not a claim that the auxiliary zero-spacing bound is false.",
+      "development_receipt": "run_005_MissingSpacingBound.json",
+      "development_log": "run_005_MissingSpacingBound.log",
+      "development_log_sha256": "38856efc4ab4a31b00ecdee066fa8a381c0be34b2ad5b3a1e5ea1f4060316fac"
+    },
+    {
+      "name": "centered_MissingSpacingEvaluation",
+      "path": "negative_controls/block51/centered/MissingSpacingEvaluation.lean",
+      "expected_exit": 1,
+      "diagnostic_regex": "(?s)error: Type mismatch\\s+centeredCoeffOperator_apply m h\\s+has type\\s+h \u2260 0 \u2192",
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "7fa0634c0751d2419c6280c4364868ccdb919123f07af4b3c433598a60293e4a",
+      "purpose": "Reject missing nonzero-spacing witness in the modal evaluation API.",
+      "development_receipt": "run_006_MissingSpacingEvaluation.json",
+      "development_log": "run_006_MissingSpacingEvaluation.log",
+      "development_log_sha256": "81245a9f4119e3542dd7d32777d3d32cfbf81e576395e6d994c09e788e2850fc"
+    },
+    {
+      "name": "centered_UnpuncturedGraph",
+      "path": "negative_controls/block51/centered/UnpuncturedGraph.lean",
+      "expected_exit": 1,
+      "diagnostic_regex": "(?s)error: Type mismatch\\s+centered_graph_tendsto m f.*?has type.*?\ud835\udcdd\\[\u2260\\] 0.*?but is expected to have type.*?\\(\ud835\udcdd 0\\)",
+      "forbidden_diagnostic_regex": "Unknown identifier|unknown module|object file|failed to synthesize|maximum recursion|TIMEOUT|invalid header|cannot find",
+      "sha256": "0a21bb14e446e817ce2eaa59cce6fd95bfbd33bfb46a5828b877af2f4e1da7fc",
+      "purpose": "Reject using a punctured-neighborhood theorem as an ordinary-neighborhood limit despite the auxiliary zero value.",
+      "development_receipt": "run_007_UnpuncturedGraph.json",
+      "development_log": "run_007_UnpuncturedGraph.log",
+      "development_log_sha256": "a186fccd8bf0bf246432030d95a2d7a73d87dc131da77c46b17ddb5c46604fdb"
+    }
+  ],
+  "counts": {
+    "accept": 3,
+    "elaboration_reject": 4
+  },
+  "scope": "Scoped centered API acceptance and intentional interface rejection controls. Final integrated runner replay remains separate."
+}

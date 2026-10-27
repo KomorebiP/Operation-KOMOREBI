@@ -1,0 +1,19 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPhysics.LindbladDynamics.coordinateAtlas
+#print axioms KomorebiPhysics.LindbladDynamics.coordinate_probability
+#print axioms KomorebiPhysics.LindbladDynamics.population_normalized
+#print axioms KomorebiPhysics.LindbladDynamics.quantumGenerator
+#print axioms KomorebiPhysics.LindbladDynamics.quantumCurrent
+#print axioms KomorebiPhysics.LindbladDynamics.trace_quantumGenerator
+#print axioms KomorebiPhysics.LindbladDynamics.quantumGenerator_hermitian
+#print axioms KomorebiPhysics.LindbladDynamics.quantumCurrent_antisymm
+#print axioms KomorebiPhysics.LindbladDynamics.quantum_population_rate
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_quantum_population
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_quantum_trace
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_quantum_subset
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_coarse_population
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_entropy
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_powerSum
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_renyi
+#print axioms KomorebiPhysics.LindbladDynamics.hasDerivAt_quantum_entropy

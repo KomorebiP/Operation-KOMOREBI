@@ -1,0 +1,23 @@
+# Block 39 declaration index
+
+- `abbrev` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.CubeState` — line 22
+- `abbrev` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.OctreeState` — line 25
+- `def` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubePullback` — line 28
+- `def` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint` — line 32
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint_pullback` — line 36
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.norm_cubeAdjoint_le` — line 45
+- `def` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevelRaw` — line 62
+- `def` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel` — line 67
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanLevel_mono` — line 71
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.cubeAdjoint_mem_euclideanLevel` — line 77
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.exists_euclideanLevel_approx` — line 84
+- `def` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanFiniteSubmodule` — line 103
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanFiniteSubmodule_dense` — line 107
+- `def` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection` — line 118
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_eq_self` — line 126
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_mem` — line 136
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_idem` — line 147
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.norm_euclideanProjection_le` — line 154
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.norm_sub_euclideanProjection_le` — line 162
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_of_le` — line 184
+- `theorem` `KomorebiPhysics.Relativistic3DEuclideanDyadicProjection.euclideanProjection_tendsto` — line 193

@@ -1,0 +1,502 @@
+\section{Geometric half-edges and exact directional refinement}
+\label{g:halfedges}
+An exact change of resolution needs both a geometry and a comparison map. Replicating each coarse state into two spectator copies gives a useful algebraic test, but it does not make the translation visit a new point between neighboring sites. The geometric construction instead inserts an actual midpoint and transports the state to it.
+
+We use the forward convention of the formal refinement modules. A link $u(x)$ transports from $x$ to $\tau x$, so
+\[
+ u^g(x)=g(\tau x)u(x)g(x)^{-1}.
+\]
+Thus $u(x)=U(x)^{-1}$ when $U(x)$ denotes the backward link used in the covariant difference stencil. Products act from right to left. All links in this part belong to $U(1)$; the unit modulus assumption is used in every Hilbert norm statement. Let $A=A^*$, $A^2=1$, act on $\C^4$, and put $P_\pm=(1\pm A)/2$. The directional transport is
+\begin{equation}
+ (S_{A,\tau,u}\psi)(x)
+ =u(\tau^{-1}x)P_+\psi(\tau^{-1}x)
+  +u(x)^{-1}P_-\psi(\tau x).
+ \label{g:source-shift}
+\end{equation}
+The channels are orthogonal. A bijective site translation and unit links therefore make this an isometry for the finite counting-space inner product established earlier.
+
+\subsection{Midpoint geometry and independent gauges}
+Write $e_x$ for the retained endpoint and $m_x$ for the midpoint of the edge $x\to\tau x$. The fine translation is the bijection
+\[
+ \sigma e_x=m_x,\qquad \sigma m_x=e_{\tau x}.
+\]
+Consequently $\sigma^2e_x=e_{\tau x}$ and $\sigma^2m_x=m_{\tau x}$. This is the precise sense in which two half translations produce one coarse translation. Assigning half the edge spacing to $\sigma$ is compatible with this combinatorics; it is not by itself a chart or continuum limit theorem.
+
+Choose unit links $a(x)$ and $b(x)$ on the first and second half-edge with
+\begin{equation}
+ b(x)a(x)=u(x).
+ \label{g:ordered-product}
+\end{equation}
+The associated fine link is $v(e_x)=a(x)$, $v(m_x)=b(x)$. The interpolation and reconstruction maps are
+\begin{align}
+ (I_a\psi)(e_x)&=\psi(x),&
+ (I_a\psi)(m_x)&=a(x)\psi(x),\label{g:edge-interpolation}\\
+ (R_a\Psi)(x)&=\tfrac12\bigl(\Psi(e_x)+a(x)^{-1}\Psi(m_x)\bigr).
+ \label{g:edge-restriction}
+\end{align}
+The midpoint is a transported value, not an independently sampled field value. This identifies exactly the subspace on which the refinement theorem acts.
+
+Coarse endpoint gauges $g(x)$ and midpoint gauges $q(x)$ may be chosen independently. The two sublinks transform by
+\[
+ a^g(x)=q(x)a(x)g(x)^{-1},\qquad
+ b^g(x)=g(\tau x)b(x)q(x)^{-1}.
+\]
+The midpoint factors cancel in $b^ga^g$, leaving the required coarse transformation. At the midpoint,
+\[
+ a^g(x)g(x)\psi(x)=q(x)a(x)\psi(x),
+\]
+while endpoint covariance is immediate. Hence interpolation commutes exactly with the corresponding gauge actions. This argument allows independent new gauge data at every inserted midpoint.
+
+\begin{theorem}[Exact two-half-step refinement]
+For every coarse state $\psi$ and subdivision satisfying \eqref{g:ordered-product},
+\begin{equation}
+ S_{A,\sigma,v}^{\,2}I_a\psi=I_aS_{A,\tau,u}\psi.
+ \label{g:half-intertwining}
+\end{equation}
+No flatness hypothesis is needed.
+\end{theorem}
+\begin{proof}
+When the fine shift is applied twice, the mixed projector terms vanish because $P_+P_-=P_-P_+=0$. The remaining positive channel travels two half-edges forward, and the negative channel travels the same pair backward. At $e_x$, the positive coefficient is $b(\tau^{-1}x)a(\tau^{-1}x)=u(\tau^{-1}x)$; the negative coefficient is $a(x)^{-1}b(x)^{-1}=u(x)^{-1}$. The result is exactly \eqref{g:source-shift}. At $m_x$, the two surviving terms are
+\[
+ a(x)u(\tau^{-1}x)P_+\psi(\tau^{-1}x)
+   +b(x)^{-1}P_-\psi(\tau x).
+\]
+Since $b(x)^{-1}=a(x)u(x)^{-1}$, this is $a(x)$ times the coarse shifted state, as required by \eqref{g:edge-interpolation}.
+\end{proof}
+
+\subsection{The measure is part of the comparison}
+For finite sites, give each fine point half the coarse weight:
+\[
+ \inner{\Psi}{\Phi}_{1/2}
+ =\tfrac12\sum_x\bigl(
+    \inner{\Psi(e_x)}{\Phi(e_x)}
+   +\inner{\Psi(m_x)}{\Phi(m_x)}\bigr).
+\]
+Unitarity of $a(x)$ then gives
+\begin{equation}
+ \inner{I_a\psi}{I_a\phi}_{1/2}=\inner{\psi}{\phi},
+ \qquad
+ \inner{I_a\psi}{\Psi}_{1/2}=\inner{\psi}{R_a\Psi}.
+ \label{g:edge-adjoint}
+\end{equation}
+The second identity follows by moving $a(x)$ from the first argument of the inner product to the second as $a(x)^{-1}$. It explains the averaging formula, including its factor $1/2$. In particular $R_aI_a=1$ and $I_aR_a$ is the orthogonal projection onto the transported midpoint subspace. Endpoint evaluation also gives a left inverse, but does not have this adjoint interpretation.
+
+A local mass step can be refined factor by factor. If a local linear map $N$ satisfies $N^2=M$, then $N$ commutes with the scalar interpolation. Consequently
+\[
+ N^2S_{A,\sigma,v}^{\,2}N^2I_a
+   =I_aMS_{A,\tau,u}M.
+\]
+Unitary spectral phases provide explicit choices of $N$. The refined expression replaces each coarse factor by its two half factors. It does not assert that two repetitions of a complete fine $N S_{A,\sigma,v}N$ walk equal the coarse walk: the intervening order would be different.
+
+\gaugefigure[H]{07_edge_subdivision}{Integrated abelian phases compose exactly under edge subdivision. For the displayed coefficient $a(s)=\sin s$, the two subinterval integrals sum to the whole-edge integral. Independently sampled coarse and fine phases can disagree; that approximation error is separate from exact transport composition.}
+
+
+
+\section{Cubical transport and the curvature obstruction}
+\label{g:cube}
+Three one-axis subdivisions do not automatically define a path-independent value at a shared corner. The issue already appears in one $2\times2\times2$ vertex cube. Let the vertices be $(x,y,z)\in\{0,1\}^3$, with positive links $\ell_x(y,z)$, $\ell_y(x,z)$ and $\ell_z(x,y)$. There are twelve links and six faces. Under a vertex gauge, every link acquires its target gauge on the left and its source inverse on the right.
+
+For example, the two positive paths across an $xy$ face at height $z$ are
+\[
+ p_{xy}(z)=\ell_y(1,z)\ell_x(0,z),\qquad
+ p_{yx}(z)=\ell_x(1,z)\ell_y(0,z).
+\]
+Define $\Omega_{xy}(z)=p_{xy}(z)p_{yx}(z)^{-1}$, and define the $xz$ and $yz$ face phases analogously. Both paths have the same endpoints, so their gauge factors cancel in this abelian ratio. Thus each $\Omega$ is gauge invariant, and $\Omega=1$ precisely when the two path phases agree.
+
+\subsection{Six paths and one Bianchi relation}
+The three coordinate directions can be traversed in six orders, denoted $p_{XYZ}$, $p_{XZY}$, $p_{YXZ}$, $p_{YZX}$, $p_{ZXY}$ and $p_{ZYX}$. These names record execution order, while link multiplication still acts from right to left. Adjacent transpositions give
+\Needspace{6\baselineskip}
+\begin{align*}
+ p_{XYZ}&=\Omega_{xy}(0)p_{YXZ},&
+ p_{XYZ}&=\Omega_{yz}(1)p_{XZY},\\
+ p_{YXZ}&=\Omega_{xz}(1)p_{YZX},&
+ p_{XZY}&=\Omega_{xz}(0)p_{ZXY},\\
+ p_{YZX}&=\Omega_{yz}(0)p_{ZYX},&
+ p_{ZXY}&=\Omega_{xy}(1)p_{ZYX}.
+\end{align*}
+Each identity follows by replacing the two-edge portion being swapped by its alternative path and its face ratio. The scalar nature of the links permits the common third edge to commute past the ratio.
+
+\begin{proposition}[Abelian cubical Bianchi identity]
+The six face phases satisfy
+\begin{equation}
+ \Omega_{yz}(1)\Omega_{xz}(0)\Omega_{xy}(1)
+ =\Omega_{xy}(0)\Omega_{xz}(1)\Omega_{yz}(0).
+ \label{g:bianchi}
+\end{equation}
+If all six faces are flat, the six corner path phases agree. Flatness of the five faces other than $xy(1)$ already forces the sixth to be flat.
+\end{proposition}
+\begin{proof}
+Use the three identities down the left route from $XYZ$ through $YXZ,YZX$ to $ZYX$, and the three down the right route through $XZY,ZXY$. They express $p_{XYZ}$ as the respective products in \eqref{g:bianchi} times $p_{ZYX}$. Cancel the unit terminal phase. If the five displayed independent face phases equal one, the identity gives $\Omega_{xy}(1)=1$. When all faces are flat, every adjacent path swap leaves the phase unchanged, and the displayed relations connect all six paths.
+\end{proof}
+
+This is a local abelian identity. A matrix-valued version must account for the basepoint and transport of each face holonomy; the preceding formula cannot simply be copied with noncommuting matrices. Local flatness also says nothing by itself about holonomy around noncontractible loops in a larger lattice.
+
+\subsection{Interpolation is possible even when it depends on a path}
+Choose one reference path from the origin to each vertex and let $r(v)$ be its transport. Then
+\[
+ (I_\ell\psi)(v)=r(v)\psi,
+ \qquad
+ \inner{\Psi}{\Phi}_{\rm cube}
+ =\tfrac18\sum_{v\in\{0,1\}^3}\inner{\Psi(v)}{\Phi(v)}.
+\]
+Every $r(v)$ is unitary, so this map is a Hilbert isometry from one spinor to the eight-child cell. Its gauge covariance follows from telescoping along the selected paths. Neither property requires flatness. What curvature obstructs is independence from the reference-path choice.
+
+Suppose two such paths have phases $p$ and $q$ with $p=\Omega q$. Their discrepancy has the exact form
+\begin{equation}
+ D(p,q;\psi)=p\psi-q\psi=q(\Omega-1)\psi,
+ \qquad
+ \norm{D(p,q;\psi)}^2=|\Omega-1|^2\norm{\psi}^2.
+ \label{g:curvature-defect}
+\end{equation}
+This is an equality, not a small-curvature approximation. It follows by factoring $q$ and using $|q|=1$. For a nonzero test spinor, the defect vanishes exactly when $\Omega=1$. The formal nonflat cube has $p_{XYZ}=-1$ and $p_{YXZ}=1$, producing a nonzero defect on the first basis spinor. Thus the distinction between covariant interpolation and path-independent interpolation is witnessed by explicit data.
+
+For later estimates, retain the five-face quantity
+\begin{align}
+ \kappa(\ell)={}&|\Omega_{xy}(0)-1|+|\Omega_{xz}(1)-1|
+  +|\Omega_{yz}(0)-1|\notag\\
+ &+|\Omega_{yz}(1)-1|+|\Omega_{xz}(0)-1|.
+ \label{g:fiveface}
+\end{align}
+The omitted face is $xy(1)$. This selection is the one used by the formal five-swap composition; the multiplicities in later constants come from this choice.
+
+\gaugefigure[H]{08_five_face_budget}{The selected five faces correspond to five adjacent swaps among the six corner paths. The sixth face is linked to them by the abelian cube Bianchi identity; it is not an independently omitted physical boundary condition.}
+
+
+
+\section{Exact straight refinement and curvature are independent}
+\label{g:independence}
+The one-edge identity can be assembled into a three-axis refinement on the fine site set $\mathrm{Site}\times\{0,1\}^3$. The half translation $\sigma_i$ toggles the corresponding child bit; when that bit carries from one to zero, it applies the coarse translation $\tau_i$ to the site. Thus $\sigma_i^2$ is the lift of $\tau_i$. A phase frame $r(s,c)\in U(1)$ defines
+\[
+ (I_r\psi)(s,c)=r(s,c)\psi(s).
+\]
+With one-eighth fine weights this is again an isometry.
+
+\subsection{The straight compatibility contract}
+For each direction, canonical fine links can be defined by
+\[
+ v_i(p)=r(\sigma_i p)\,\gamma_i(p)\,r(p)^{-1},
+\]
+where $\gamma_i(p)=1$ on a noncarrying half step and $\gamma_i(p)=u_i(s)$ on a carrying half step. Cancellation of the intermediate frame gives
+\begin{equation}
+ v_i(\sigma_i p)v_i(p)
+ =r(\sigma_i^2p)u_i(s)r(p)^{-1}.
+ \label{g:straight-contract}
+\end{equation}
+For arbitrary fine links, equation \eqref{g:straight-contract} is the explicit straight compatibility hypothesis. It is gauge covariant, and it is exactly the hypothesis needed to repeat the projector argument of \eqref{g:half-intertwining}:
+\[
+ S_{i,\mathrm{fine}}^2 I_r=I_rS_{i,\mathrm{coarse}}.
+\]
+If the mass substeps also intertwine, the identities compose through the entire execution order $M-X-Y-Z-Y-X-M$. The refined walk here replaces each coarse spatial factor by two half factors and each coarse local factor by its supplied subdivision. The result is exact on the framed subspace.
+
+The construction's internal cube links are pure frame ratios and therefore locally flat. Nevertheless, when the coarse $x$ and $y$ translations commute, the large two-by-two fine Wilson loop equals the coarse plaquette. Coarse curvature survives the refinement. Hence exact straight refinement can preserve a nontrivial coarse plaquette; it does not require that every loop become flat.
+
+\subsection{A flat cube need not reconstruct the prescribed edge}
+Conversely, take an arbitrary ordered half-link pair $(a,b)$ and call its actual product $v=ba$. It is always a subdivision of $v$, even when the separately prescribed coarse link is $u\ne v$. The exact directional defect is
+\begin{align}
+ D_{\rm fine}\psi
+  &:=S_{A,\sigma,(a,b)}^2I_a\psi-I_aS_{A,\tau,u}\psi\notag\\
+  &=I_a(S_{A,\tau,v}-S_{A,\tau,u})\psi.
+ \label{g:exact-mismatch}
+\end{align}
+The equality follows by applying the exact theorem to the product $v$ and using linearity of $I_a$. Endpoint restriction makes $I_a$ injective, so the fine defect vanishes on a state precisely when its coarse mismatch vanishes on that state. This statewise statement is not a claim that one test state detects every link error.
+
+A concrete counterexample removes any possible inference from flatness alone. Let both half-links be $i$, and prescribe $u=1$. Their product is $v=-1$. A cube whose twelve positive links are all $i$ has every face plaquette equal to one. On a one-site periodic lattice, however, $\tau=1$ and
+\[
+ S_{A,1,1}=P_++P_-=1,\qquad
+ S_{A,1,-1}=-P_+-P_-=-1.
+\]
+Thus the coarse mismatch is $-2\psi$, and the normalized fine defect has norm $2\norm{\psi}$. The same link data are perfectly flat in the path-comparison sense and maximally wrong relative to the prescribed straight link. This is the role of the quarter-turn witness in the formal source.
+
+Two questions must therefore remain separate: do the ordered fine links reconstruct the desired coarse edge, and do alternative routes between the same endpoints agree? The first is an adjacent-scale compatibility question; the second measures curvature. A reliable error estimate keeps both contributions visible.
+
+
+
+\section{Hilbert estimates with explicit constants}
+\label{g:hilbert-estimates}
+Finite-dimensional continuity is not enough to identify an operator norm with physical $\ell^2$ energy. The earlier continuous-linear packaging retains the ambient norm on a function space. The Hilbert scalar layer instead realizes a finite four-spinor field as
+\[
+ \HH_S=\ell^2(S\times\{0,1,2,3\};\C),\qquad
+ \norm{\psi}^2=\sum_{x\in S}\norm{\psi(x)}_{\C^4}^2.
+\]
+The formal realization is \code{EuclideanSpace}; its norm is identified explicitly with the real part of the previously defined state inner product. All operator norms from this point use this Hilbert structure. Assume $S$ is finite and nonempty when taking a maximum over sites.
+
+\begin{theorem}[Constant-one directional mismatch bound]
+Let $A$ be a Hermitian Clifford involution, $\tau$ a site bijection, and $u,v:S\to U(1)$. Then
+\begin{equation}
+ \norm{S_{A,\tau,v}-S_{A,\tau,u}}
+ \leq\delta(u,v):=\max_{x\in S}|v(x)-u(x)|
+ =\max_{x\in S}|v(x)u(x)^{-1}-1|.
+ \label{g:constant-one}
+\end{equation}
+The constant is independent of the number of sites. The actual half-grid defect in \eqref{g:exact-mismatch}, with half-cell Hilbert measure, obeys the same bound.
+\end{theorem}
+\begin{proof}
+At each output site the difference of the shifts has a positive-channel term and a negative-channel term. Orthogonality gives the exact energy identity
+\begin{align*}
+ \norm{(S_v-S_u)\psi}^2
+ =\sum_x\bigl[&|v(\tau^{-1}x)-u(\tau^{-1}x)|^2
+                   \norm{P_+\psi(\tau^{-1}x)}^2\\
+ &+|v(x)^{-1}-u(x)^{-1}|^2
+                   \norm{P_-\psi(\tau x)}^2\bigr].
+\end{align*}
+There is no mixed term, even though the two spinors come from different sites: they lie in orthogonal fixed channel ranges. Unit modulus implies $|v^{-1}-u^{-1}|=|v-u|$. Bound every coefficient by $\delta^2$, reindex the two sums through $\tau$, and use $\norm{P_+\eta}^2+\norm{P_-\eta}^2=\norm{\eta}^2$. The result is at most $\delta^2\norm{\psi}^2$. Taking square roots and then the operator supremum proves the first inequality. Multiplication by $u(x)^{-1}$ proves the equality of scalar maxima. Finally \eqref{g:exact-mismatch} and the isometry of $I_a$ identify the fine defect norm on every input with the coarse mismatch norm.
+\end{proof}
+
+In ordinary Euclidean coordinates on the fine site set, the half-cell measure is implemented by multiplying the interpolated coordinates by $1/\sqrt2$. Omitting this factor changes the norm and inserts an artificial $\sqrt2$ into the comparison. The quarter-turn example attains the value two, showing that the constant one cannot be reduced uniformly over all allowed data.
+
+\subsection{The telescoping mechanism for a complete walk}
+Let $I:X\to Y$ be a bounded linear comparison map and let $F_j:Y\to Y$, $C_j:X\to X$ be fine and coarse factors. Write $D_j=F_jI-IC_j$. Two factors satisfy the exact identity
+\[
+ F_2F_1I-IC_2C_1=F_2D_1+D_2C_1.
+\]
+Repeated insertion gives, in execution order $1,\ldots,N$,
+\begin{equation}
+ F_N\cdots F_1I-IC_N\cdots C_1
+ =\sum_{j=1}^N F_N\cdots F_{j+1}D_jC_{j-1}\cdots C_1.
+ \label{g:telescoping}
+\end{equation}
+Empty products are identities. If every $F_j,C_j$ is contractive, the triangle inequality and submultiplicativity yield
+\[
+ \norm{F_N\cdots F_1I-IC_N\cdots C_1}
+ \leq\sum_{j=1}^N\norm{D_j}.
+\]
+No separate bound on $I$ is needed for this form, since its contribution is already present inside each $D_j$. Exact local intertwining makes every term zero.
+
+For the scalar seven-factor estimate, both walks act on the same finite Hilbert space, with $I=1$. One uses the reconstructed links $v_x,v_y,v_z$, the other the prescribed links $u_x,u_y,u_z$, and both use the same two contractive mass factors $M_0,M_1$. With execution order $M_0-X-Y-Z-Y-X-M_1$, define $\delta_i=\delta(u_i,v_i)$. The mass defects vanish. Equation \eqref{g:telescoping} and \eqref{g:constant-one} prove
+\begin{equation}
+ \norm{W_v-W_u}\leq 2\delta_x+2\delta_y+\delta_z.
+ \label{g:sevenbudget}
+\end{equation}
+The repeated $X$ and $Y$ factors explain the coefficients two. The upper bound need not be attained by the complete walk: its individual error terms can cancel. It is an operator estimate between effective common-space walks. The separate half-grid theorem supplies the genuine normalized fine directional estimate; a general spatially varying three-axis comparison still has to provide its actual embeddings and local factor defects.
+
+\gaugefigure[H]{09_full_walk_defect}{A finite matrix illustration of the telescoping mechanism and the repeated-factor budget. The plotted common-space example tests the algebraic estimate; it is not an additional formal lattice-to-continuum theorem.}
+
+\Needspace{6\baselineskip}
+
+
+\section{A two-stage edge and path estimate}
+\label{g:two-stage}
+The cube phase discrepancies can be made into bounded operators on the same finite Hilbert state space. For $z\in U(1)$, let $P_z\psi=z\psi$ uniformly at every site. If $p=\Omega q$, then
+\[
+ P_p-P_q=q(\Omega-1)\id,\qquad
+ \norm{P_p-P_q}=|\Omega-1|.
+\]
+The norm equality uses a nonzero Hilbert space. It is the operator form of \eqref{g:curvature-defect}.
+
+The formal construction selects five ordered phase pairs, in this order:
+\[
+ (p_{XYZ},p_{YXZ}),\quad(p_{YXZ},p_{YZX}),\quad
+ (p_{YZX},p_{ZYX}),\quad(p_{XYZ},p_{XZY}),\quad
+ (p_{XZY},p_{ZXY}).
+\]
+Let $Q_f$ be the execution-order product of the first phase operators in these pairs, and $Q_c$ the product of the second ones. Identity factors can be placed at the ends to fit the seven-factor interface. Applying \eqref{g:telescoping} yields
+\[
+ \norm{Q_f-Q_c}\leq\kappa(\ell).
+\]
+These are explicitly constructed products of uniform phase operators. Calling them a path-reordering stage describes their algebraic role; it does not assert that a global spatially varying inter-cell assembly has already been constructed.
+
+\begin{theorem}[Combined finite Hilbert estimate]
+With the common-space walks and contractive mass factors from \eqref{g:sevenbudget}, define
+\[
+ D_{\rm total}=Q_fW_v-Q_cW_u.
+\]
+Then
+\begin{equation}
+ \norm{D_{\rm total}}
+ \leq 2\delta_x+2\delta_y+\delta_z+\kappa(\ell).
+ \label{g:combined-budget}
+\end{equation}
+If $v_i=u_i$ for all three directions and the cube is flat, the defect is exactly zero.
+\end{theorem}
+\begin{proof}
+Insert and subtract $Q_fW_u$:
+\[
+ D_{\rm total}=Q_f(W_v-W_u)+(Q_f-Q_c)W_u.
+\]
+All phase factors are unitary, and $W_u$ is a product of contractions. Taking norms bounds the first term by the straight-edge budget and the second by the path budget. In the exact sector the walks agree and every selected phase pair agrees, so both terms vanish before taking norms.
+\end{proof}
+
+The sum keeps the logical independence proved in Section~\ref{g:independence}. A bound on face curvature cannot replace a bound on reconstruction ratios. Conversely, exact ordered products do not remove a nonflat alternative-path discrepancy. Neither conclusion requires that the estimate be sharp for every configuration.
+
+\Needspace{6\baselineskip}
+
+
+\section{Connection-generated links and a quadratic mesh bound}
+\label{g:regular}
+The scalar budgets become useful when links arise from a specified background rather than independent phases. Consider real abelian connection components $A_x,A_y,A_z$ on a Euclidean chart. Define exact coordinate-edge angles and forward links by
+\begin{equation}
+ \theta_i(p,h)=\int_0^h A_i(p+t e_i)\,dt,
+ \qquad u_i(p,h)=e^{i\theta_i(p,h)}.
+ \label{g:integrated-links}
+\end{equation}
+The coupling is absorbed into $A_i$. These links are automatically unitary, and the interval integral is oriented when $h<0$.
+
+\subsection{Exact composition precedes every estimate}
+Continuity of $A_i$ along its own coordinate lines permits interval-integral additivity and a change of variable:
+\begin{align*}
+ \theta_i(p,h)
+ &=\int_0^{h/2}A_i(p+t e_i)\,dt
+   +\int_{h/2}^{h}A_i(p+t e_i)\,dt\\
+ &=\theta_i(p,h/2)+\theta_i(p+(h/2)e_i,h/2).
+\end{align*}
+Exponentiation gives the ordered identity
+\begin{equation}
+ u_i(p+(h/2)e_i,h/2)u_i(p,h/2)=u_i(p,h).
+ \label{g:integral-composition}
+\end{equation}
+Thus the reconstructed and prescribed links agree exactly and all three straight-edge errors vanish. This is an additivity theorem for exact line integrals. Independently approximating each integral by a quadrature rule would introduce another error term, which is not silently included in the present bound.
+
+For an affine component, $A_i(p+t e_i)=A_i(p)+t\,\partial_iA_i$, so
+\[
+ \theta_i(p,h)=hA_i(p)+\tfrac12h^2\partial_iA_i.
+\]
+The face angle is exactly $h^2F_{ij}$, where $F_{ij}=\partial_iA_j-\partial_jA_i$. Hence $\Omega_{ij}=e^{ih^2F_{ij}}$. Using $|e^{it}-1|\leq|t|$ and the selected five faces yields
+\begin{equation}
+ \norm{D_{\rm total}(h)}
+ \leq h^2\bigl(|F_{xy}|+2|F_{xz}|+2|F_{yz}|\bigr).
+ \label{g:affine-bound}
+\end{equation}
+This exact affine calculation is stronger than a truncated Taylor argument. It also fixes the orientation sign of the curvature convention.
+
+\subsection{The actual coordinate regularity assumptions}
+The more general formal connection structure records the three components, the six cross derivatives $\partial_iA_j$ for $i\ne j$, and their one-dimensional derivative identities along the relevant coordinate lines. Each component is continuous along its own integration direction. Each cross derivative is continuous along the line in its differentiation direction. Finally there are global nonnegative constants
+\[
+ |\partial_iA_j(p)|\leq B_{j\mid i}\qquad(i\ne j).
+\]
+For example, $B_{y\mid x}$ bounds the derivative of $A_y$ in the $x$ direction. These explicit hypotheses are sufficient for the coordinate arguments below. They avoid appealing to an unspecified stronger multivariable smoothness class.
+
+The fundamental theorem of calculus first gives
+\[
+ |A_j(p+h e_i)-A_j(p)|\leq B_{j\mid i}|h|.
+\]
+Integrating along the transverse $j$ edge then gives
+\begin{equation}
+ |\theta_j(p+h e_i,h)-\theta_j(p,h)|
+ \leq B_{j\mid i}|h|^2.
+ \label{g:angle-variation}
+\end{equation}
+Indeed the integrand difference is bounded by $B_{j\mid i}|h|$ at every point of an interval of length $|h|$. Oriented integration changes the sign but not this absolute bound.
+
+For the $xy$ face, the two-path angle difference is
+\begin{align*}
+ \Theta_{xy}(p,h)
+ ={}&\theta_y(p+h e_x,h)-\theta_y(p,h)\\
+    &-\bigl(\theta_x(p+h e_y,h)-\theta_x(p,h)\bigr).
+\end{align*}
+Therefore
+\[
+ |\Theta_{xy}(p,h)|\leq
+   (B_{y\mid x}+B_{x\mid y})h^2,
+ \qquad
+ |\Omega_{xy}(p,h)-1|\leq
+   (B_{y\mid x}+B_{x\mid y})h^2.
+\]
+For the last implication, $e^{it}-1=\int_0^t i e^{is}\,ds$ has absolute value at most $|t|$. The other two plane estimates follow from their corresponding cross derivatives. This proof bounds absolute derivatives separately; it does not prove a sharper general surface-integral formula that exploits cancellation inside $F_{ij}$.
+
+\begin{theorem}[Regular background estimate]
+Suppose the coordinate regularity and derivative bounds above hold. Set
+\begin{align}
+ \mathcal A_{\partial}={}&B_{y\mid x}+B_{x\mid y}
+ +2(B_{z\mid x}+B_{x\mid z})\notag\\
+ &+2(B_{z\mid y}+B_{y\mid z}).
+ \label{g:derivative-amplitude}
+\end{align}
+Generate the reconstructed and prescribed finite-site links from the exact integrals \eqref{g:integrated-links}, and generate the twelve links of the comparison cube from the same connection at a chart point $p$. For the two-stage finite Hilbert operator of Section~\ref{g:two-stage}, with the same contractive mass factors on both sides,
+\begin{equation}
+ \norm{D_{\rm total}(h)}\leq h^2\mathcal A_{\partial}.
+ \label{g:regular-bound}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Equation \eqref{g:integral-composition} makes $\delta_x=\delta_y=\delta_z=0$. Apply the appropriate face estimate to each term in \eqref{g:fiveface}. There is one $xy$ term, two $xz$ terms and two $yz$ terms, giving $\kappa\leq h^2\mathcal A_{\partial}$. Substitute in \eqref{g:combined-budget}.
+\end{proof}
+
+The formal theorem permits an arbitrary finite nonempty site type, three site bijections and a chart-position map, along with an independently specified cube basepoint. It does not impose a geometric identity between every site translation and that position map. The result is consequently an exact estimate for the declared generated operators; interpreting them as one global geometric lattice requires those additional compatibility choices.
+
+\subsection{A spatially varying witness}
+Take $A_x=A_z=0$ and $A_y(x,y,z)=\sin x$. Its curvature $F_{xy}=\cos x$ is nonconstant. The only nonzero derivative envelope is $B_{y\mid x}=1$, so $\mathcal A_{\partial}=1$. Here
+\[
+ \theta_y(p,h)=h\sin x,\qquad
+ \Omega_{xy}(p,h)=\exp\!\bigl(ih[\sin(x+h)-\sin x]\bigr).
+\]
+The other plane holonomies are one, and the two-stage defect is bounded by $h^2$. The bound is uniform in the basepoint. The trigonometric formula illustrates how actual phases can be substantially smaller than a global envelope; it does not change the envelope's role in a uniform theorem.
+
+\gaugefigure[H]{10_regular_connection}{The non-affine background $A_y=\sin x$ has varying curvature and exact line-integral links. The quadratic envelope follows from $|\partial_xA_y|\leq1$; the computed phase amplitudes illustrate this bound over the plotted finite range.}
+
+
+
+\section{Summable refinement and what a limit still requires}
+\label{g:summable}
+For the dyadic mesh $h_n=a_0 2^{-n}$, the regular estimate produces the nonnegative sequence
+\[
+ \varepsilon_n=C4^{-n},\qquad C=a_0^2\mathcal A_{\partial}.
+\]
+The actual generated operator norms are bounded by this sequence and hence are summable. This is more information than merely $\varepsilon_n\to0$. A sequence with adjacent errors tending to zero need not converge; summability controls the accumulated tail.
+
+\Needspace{11\baselineskip}
+\begin{proposition}[A complete-space limit with an explicit tail]
+Let $f_n$ be a sequence in a complete metric space and suppose
+\[
+ d(f_n,f_{n+1})\leq C4^{-n}\qquad(n\geq0),\quad C\geq0.
+\]
+Then $f_n$ converges to some $f_\infty$, and
+\begin{equation}
+ d(f_n,f_\infty)\leq\sum_{k=n}^{\infty}C4^{-k}
+ =\tfrac43C4^{-n}.
+ \label{g:dyadic-tail}
+\end{equation}
+\end{proposition}
+\begin{proof}
+For $m>n$, the triangle inequality gives
+\[
+ d(f_n,f_m)\leq\sum_{k=n}^{m-1}C4^{-k}
+ \leq\tfrac43C4^{-n}.
+\]
+The upper bound tends to zero with $n$, so the sequence is Cauchy. Completeness provides a limit. Passing $m\to\infty$ in the distance estimate proves the tail bound, and the displayed evaluation is the geometric series.
+\end{proof}
+
+The formal regular-connection limit theorem has precisely this conditional shape: it takes a sequence in a named complete metric space and an adjacent-distance hypothesis bounded by the regular dyadic budget. The source also proves summability of the actual connection-generated finite-operator norms. These are two compatible ingredients, but the operator bound alone does not manufacture the sequence $f_n$ or identify its terms across different Hilbert spaces.
+
+For a physical refinement application one must define the reconstructed states or evolutions in a common space and derive the required distance estimate from the relevant operator defects. If the input state is not normalized, its norm enters that derivation. If the number of time steps grows with the refinement level, the accumulation in time must also be estimated. A limit supplied by this abstract argument is not automatically a Dirac propagator or a solution of a coupled gauge-field system.
+
+\gaugefigure[H]{11_dyadic_budget}{For the regular connection envelope, halving the mesh quarters the one-level budget. The remaining accumulated error is bounded by the geometric tail $\frac43C4^{-n}$ once the adjacent-distance hypothesis has been established in a common complete space.}
+
+\Needspace{6\baselineskip}
+
+
+\section{From weighted cells to a continuum Hilbert space}
+\label{g:geometry-interface}
+The reconstruction blocks that follow the connection estimates supply an important part of the common-space infrastructure. They establish what finite cell coefficients mean as $L^2$ fields, then identify a concrete family of approximating subspaces. They do not by themselves transfer the gauge-coupled walk or its generator through those maps.
+
+\subsection{Cell values and normalized coefficients}
+For a measurable finite partition into cells of equal volume $v>0$, distinguish the physical constant value $q_a\in\C^4$ on cell $C_a$ from the normalized coefficient $\psi_a=\sqrt v\,q_a$. The step interpolation is
+\[
+ (J\psi)(x)=v^{-1/2}\psi_a\quad(x\in C_a),
+\]
+with equality understood almost everywhere. Direct integration gives
+\[
+ \norm{J\psi}_{L^2}^2
+ =\sum_a\int_{C_a}v^{-1}\norm{\psi_a}^2
+ =\sum_a\norm{\psi_a}^2.
+\]
+Equivalently, physical cell values carry the weighted norm $v\sum_a\norm{q_a}^2$. The adjoint averaging map yields the orthogonal projection onto the finite step subspace. Its Pythagorean decomposition proves best approximation in $L^2$.
+
+At octree depth $n$, the number of cells is $8^n$, their side scale is $2^{-n}$ and their volume is $8^{-n}$. The first construction uses infinite octant addresses with the uniform product probability measure. Finite-prefix step subspaces are nested and have dense union. The weighted normalization is thus tied to the actual measure of a prefix cell, rather than inferred from the number of coordinates alone. The later source convention \code{euclideanDyadicLevel d} uses prefix depth $d+1$; the geometric depth $n$ used here counts digits directly.
+
+\gaugefigure[htbp]{12_weighted_cells}{Eight equal children preserve a parent cell's total volume. Constant transported values use child volume weights; counting-normalized coefficients instead include the square root of the child volume. These are equivalent descriptions of the same Hilbert normalization.}
+
+\subsection{The geometric identification is an additional theorem}
+Splitting each octant digit into three bits and applying positional binary decoding gives a continuous surjection from address space onto the unit cube. The decoder is not pointwise injective: dyadic coordinates admit the familiar terminating and nonterminating binary descriptions. The measure result then proves that fair binary product measure pushes forward to cube volume, producing a norm-preserving $L^2$ pullback.
+
+At the intermediate stage, finite-resolution Euclidean subspaces are defined by adjoint transport of address-space levels. Density and strong convergence of their orthogonal projections can be proved at that stage, but it would be premature to call them ordinary dyadic-box subspaces. The next block closes this identification: a prefix cell equals the preimage of its corresponding concrete Cartesian dyadic box almost everywhere. The formal boxes are closed and share boundary faces; those faces have zero volume. Equality in $L^2$ therefore survives the binary boundary ambiguity.
+
+The transported and concrete closed levels are then proved equal. Their union is dense, and the orthogonal projections $P_n$ satisfy
+\[
+ \norm{P_nf-f}_{L^2}\longrightarrow0
+ \qquad\text{for every }f\in L^2([0,1]^3;\C^4).
+\]
+This is a state-space approximation theorem. Strong convergence of projections does not control an unbounded Dirac operator, establish graph convergence, or identify the limit of gauge-coupled propagators. Those statements need consistency on suitable domains and stability estimates for the transported operators.
+
+The resulting position is precise. Exact covariant transport, genuine geometric subdivisions, finite Hilbert defect bounds, connection-derived mesh estimates and concrete continuum approximation spaces are available as separate, source-backed layers. Their assembly into a regular-background physical Hamiltonian remains a further mathematical task. The self-adjoint free-torus Hamiltonian provides an operator endpoint for the ungauged branch; importing these background estimates into that setting requires explicit domain and comparison-map work.
+
+

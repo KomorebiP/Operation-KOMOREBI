@@ -1,0 +1,43 @@
+KomorebiPhysics/DilationDynamics.lean:24:32: error(lean.unknownIdentifier): Unknown identifier `one_comp`
+KomorebiPhysics/DilationDynamics.lean:24:2: error: Type mismatch: After simplification, term
+  synthesis_analysis V
+ has type
+  @Eq (H →L[ℂ] H) (V.synthesis ∘SL V.analysis) 1
+but is expected to have type
+  @Eq (H →L[ℂ] H) (V.synthesis ∘SL 1 ∘SL V.analysis) 1
+KomorebiPhysics/DilationDynamics.lean:39:8: error: invalid `▸` notation, expected result type of cast is 
+  V.compressOperator (ChannelDilation.coordinate K i) = V.effectAtlas.effect i
+however, the equality 
+  synthesis_eq_adjoint V
+of type 
+  V.synthesis = adjoint V.analysis
+does not contain the expected result type on either the left or the right hand side
+KomorebiPhysics/DilationDynamics.lean:79:6: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  V.synthesis ((ChannelDilation.coordinate K i) (V.analysis ψ))
+in the target expression
+  2 *
+      (inner ℂ (V.synthesis ((ChannelDilation.coordinate K i) ((adjoint V.synthesis) ψ)))
+          (A (V.synthesis ((ChannelDilation.coordinate K j) ((adjoint V.synthesis) ψ))))).re =
+    2 * (inner ℂ ((V.effectAtlas.effect i) ψ) (A ((V.effectAtlas.effect j) ψ))).re
+
+H : Type u_1
+I : Type u_2
+K : I → Type u_3
+inst✝⁷ : NormedAddCommGroup H
+inst✝⁶ : InnerProductSpace ℂ H
+inst✝⁵ : CompleteSpace H
+inst✝⁴ : Fintype I
+inst✝³ : (i : I) → NormedAddCommGroup (K i)
+inst✝² : (i : I) → InnerProductSpace ℂ (K i)
+inst✝¹ : ∀ (i : I), CompleteSpace (K i)
+V : ParsevalFamily H I K
+inst✝ : DecidableEq I
+A : H →L[ℂ] H
+hA : IsSkew A
+ψ : H
+i j : I
+he : ∀ (k : I), V.synthesis ((ChannelDilation.coordinate K k) (V.analysis ψ)) = (V.effectAtlas.effect k) ψ
+⊢ 2 *
+      (inner ℂ (V.synthesis ((ChannelDilation.coordinate K i) ((adjoint V.synthesis) ψ)))
+          (A (V.synthesis ((ChannelDilation.coordinate K j) ((adjoint V.synthesis) ψ))))).re =
+    2 * (inner ℂ ((V.effectAtlas.effect i) ψ) (A ((V.effectAtlas.effect j) ψ))).re

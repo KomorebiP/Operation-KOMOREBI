@@ -1,0 +1,33 @@
+import KomorebiPhysics.Relativistic3DHilbertScalarDefect
+
+open KomorebiPhysics
+open Relativistic3DCliffordTransportU1
+open Relativistic3DCliffordHilbertRefinement
+open Relativistic3DEdgeCompatibility
+open Relativistic3DHilbertScalarDefect
+
+#check HilbertState
+#check stateHilbertEquiv
+#check stateToHilbert_norm_sq
+#check directionalShift_sub_stateIP_re_le
+#check directionalShiftDefectHilbertCLM
+#check directionalShiftDefectHilbertCLM_opNorm_le
+#check directionalShiftDefectHilbertCLM_opNorm_le_sup
+#check HalfHilbertState
+#check halfStateToHilbert_norm_sq
+#check fineEdgeDefectHilbertCLM
+#check fineEdgeDefectHilbertCLM_norm_eq_coarse
+#check fineEdgeDefectHilbertCLM_opNorm_le
+#check fineEdgeDefectHilbertCLM_opNorm_le_sup
+#check edgeRatio
+#check edgeRatio_eq_one_iff
+#check edgeRatioSup
+#check edgeMismatchSup_eq_edgeRatioSup
+#check fineEdgeDefectHilbertCLM_opNorm_le_ratioSup
+#check dyadicMesh
+#check tendsto_dyadicMesh_zero
+#check dyadicScaleBudget
+#check summable_dyadicScaleBudget
+#check summable_dyadicTwoBudget
+#check tendsto_dyadicTwoBudgetLimit
+#check dist_dyadicTwoBudgetLimit_le_tail

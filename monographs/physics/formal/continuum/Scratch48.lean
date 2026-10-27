@@ -1,0 +1,15 @@
+import KomorebiPhysics.Relativistic3DTorusFourierEvolution
+import Mathlib.Analysis.InnerProductSpace.LinearPMap
+#check Memℓp.add
+#check Memℓp.smul
+#check Memℓp.mono
+#check lp.single
+#check lp.inner_single_left
+#check lp.inner_single_right
+#check LinearPMap.IsFormalAdjoint
+#check LinearPMap.adjoint_isFormalAdjoint
+#check LinearPMap.isSelfAdjoint_def
+#check Metric.dense_iff
+#check LinearPMap.IsClosed
+#check LinearPMap.adjoint_isClosed
+#check Submodule.mem_top

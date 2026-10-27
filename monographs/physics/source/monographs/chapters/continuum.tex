@@ -1,0 +1,301 @@
+\clearpage
+\section*{Completion and continuum evolution}
+\section{The complete coefficient Hilbert space}
+Let
+\[
+\KK=\ell^2(\Z^3;\C^4)
+=\left\{a=(a_n):\sum_{n\in\Z^3}\norm{a_n}^2<\infty\right\}.
+\]
+Its inner product is $\inner{a}{b}=\sum_n\inner{a_n}{b_n}$. Absolute convergence follows from the scalar Cauchy--Schwarz inequality. The norm therefore measures the total squared amplitude across all Fourier packets. A finite family of amplitudes embeds by assigning zero to every absent mode.
+
+For a finite set $S\subset\Z^3$, define the truncation $P_Sa$ by retaining $a_n$ when $n\in S$ and assigning zero otherwise. Then
+\[
+\norm{a-P_Sa}^2=\sum_{n\notin S}\norm{a_n}^2.
+\]
+The sum on the right can be made arbitrarily small because the full nonnegative series converges. Thus finite packets are dense in $\KK$. The statement concerns the norm of the omitted amplitudes and does not depend on a particular ordering of the integer lattice.
+
+\begin{theorem}[Completion of a modewise isometry]
+Suppose that for every mode $n$, $V_n:\C^4\to\C^4$ is a complex linear isometry. The coordinate rule $(Va)_n=V_na_n$ defines a complex linear isometry on $\KK$. If each $V_n$ has an inverse isometry $W_n$, the induced $V$ and $W$ are inverse maps on $\KK$.
+\end{theorem}
+\begin{proof}
+For each $n$, $\norm{V_na_n}^2=\norm{a_n}^2$. Summability of the latter terms gives membership of $Va$ in $\KK$, and summing the equalities gives $\norm{Va}=\norm{a}$. Linearity holds coordinatewise. The two inverse identities hold on each coordinate and therefore on the coefficient fields themselves.
+\end{proof}
+
+
+Apply this construction to
+\[
+V_n(t)=e^{-itH_n},\qquad V_{h,n}(t)=e^{-itH_{h,n}}.
+\]
+The finite-dimensional norm preservation already proved supplies its hypothesis. Define
+\[
+(U(t)a)_n=V_n(t)a_n,\qquad (U_h(t)a)_n=V_{h,n}(t)a_n.
+\]
+Both maps are everywhere-defined unitary maps on $\KK$. Their inverses are obtained at time $-t$. The modewise time-group laws imply
+\[
+U(s+t)=U(s)U(t),\qquad U_h(s+t)=U_h(s)U_h(t).
+\]
+This construction uses the bounded unitary map on each mode. It does not apply an unbounded Hamiltonian to an arbitrary coefficient field. In particular, the evolution is defined for more initial states than the Hamiltonian action constructed below.
+
+\subsection{The invariant finite packets}
+Both families commute with every finite truncation:
+\[
+U(t)P_S=P_SU(t),\qquad U_h(t)P_S=P_SU_h(t).
+\]
+The equality follows directly from the diagonal mode action. It says that the full evolution restricts to the finite-packet evolution already constructed. It also says that the missing tail evolves without feeding new amplitude into the retained mode set in this free model.
+
+This property would have to be reconsidered in a model whose coefficients couple different Fourier modes. The completion argument for a diagonal multiplier makes essential use of the simple resolved action, even though the general packet language also describes nondiagonal transfers.
+
+\section{Removing the Fourier cutoff}
+A finite-packet consistency theorem alone says nothing about an arbitrary field with infinitely many nonzero coefficients. The missing estimate must control the error introduced by truncating that field. Exact unitarity gives a bound whose tail terms do not grow with time.
+
+\begin{lemma}[Two tails and a finite core]
+Let $V$ and $W$ be linear isometries on a normed space. For any $a$ and any approximation $b$,
+\[
+\norm{Va-Wa}\le 2\norm{a-b}+\norm{Vb-Wb}.
+\]
+\end{lemma}
+\begin{proof}
+Write the residual as $V(a-b)+(Vb-Wb)+W(b-a)$. The triangle inequality bounds its norm by the sum of the three norms. Each outer term has norm $\norm{a-b}$ because its operator is an isometry.
+\end{proof}
+
+Take $V=U_h(t)$, $W=U(t)$, and $b=P_Sa$. For a fixed finite $S$, the compact-time packet estimate gives
+\[
+\norm{U_h(t)P_Sa-U(t)P_Sa}\le K_{S,a,T}h^2
+\]
+for all $|t|\le T$ and sufficiently small positive $h$. The constant is allowed to depend on the support, the amplitudes, and the time window. Combining the estimates gives
+\[
+\norm{U_h(t)a-U(t)a}\le
+2\norm{a-P_Sa}+K_{S,a,T}h^2.
+\]
+
+\begin{theorem}[Compact-time strong convergence]
+For every $a\in\KK$, every $T\ge0$, and every $\varepsilon>0$, there exists $\delta>0$ such that
+\[
+0<h<\delta,\quad |t|\le T
+\quad\Longrightarrow\quad
+\norm{U_h(t)a-U(t)a}<\varepsilon.
+\]
+\end{theorem}
+\begin{proof}
+Choose a finite $S$ such that $\norm{a-P_Sa}<\varepsilon/4$. The finite-packet theorem gives a sufficiently small positive $\delta$ for which the core residual is less than $\varepsilon/2$ throughout the time interval. The two-tail inequality then makes the full residual less than $\varepsilon$. The choice of $S$ precedes the choice of $h$ and works for every time in the same interval.
+\end{proof}
+
+
+The quantifiers are important. One initial field and one compact time interval are fixed before the mesh scale is chosen. The theorem does not assert convergence in operator norm on the entire unit ball. It also does not assign a universal $O(h^2)$ rate to every $a\in\KK$. For arbitrary square-summable data, a small Fourier tail may require a large cutoff, and the finite-core constant may grow with that cutoff.
+
+\atlasfigure{07_two_tail}{The proof separates the approximation of the initial field from the consistency estimate on finitely many modes. The diagram records the order of choices in the argument.}
+
+\section{Fourier synthesis on the physical torus}
+The scalar Fourier characters $e_n(x)=e^{2\pi i n\cdot x}$ are normalized relative to Haar measure of total mass one. For a four-spinor field, apply the scalar Fourier coefficient map to each of its four coordinates. The resulting map is
+\[
+\F:\HH\longrightarrow\KK,
+\qquad \HH=L^2(\T^3;\C^4).
+\]
+The four-spinor Parseval identity and surjectivity of synthesis produce a complex linear isometric equivalence. In ordinary notation,
+\[
+\norm{\F f}_{\KK}=\norm{f}_{\HH},\qquad
+\F^{-1}\F f=f,\qquad \F\F^{-1}a=a.
+\]
+The inverse is understood as convergence in $L^2$. A general field need not have a pointwise-convergent Fourier series, and no such convergence is required here.
+
+For a finite-support coefficient field, the inverse is the familiar finite sum
+\[
+\F^{-1}a=\sum_n e_na_n.
+\]
+The complete-space equivalence extends that reconstruction while retaining its exact norm. Its surjectivity is the step that rules out having built only a proper closed subspace of the physical field space.
+
+\begin{definition}[Physical propagators]
+Define
+\[
+\mathcal U(t)=\F^{-1}U(t)\F,
+\qquad
+\mathcal U_h(t)=\F^{-1}U_h(t)\F.
+\]
+\end{definition}
+Both preserve the physical $L^2$ norm and inner product. Their group laws follow by inserting $\F\F^{-1}=I$ between consecutive factors. Their residual satisfies the exact equality
+\[
+\norm{\mathcal U_h(t)f-\mathcal U(t)f}_{\HH}
+=\norm{U_h(t)\F f-U(t)\F f}_{\KK}.
+\]
+The compact-time convergence theorem therefore transfers to every $f\in\HH$ without an additional constant.
+
+
+\atlasfigure{10_fourier_transport}{Fourier analysis and synthesis change the representation while preserving the Hilbert norm. The operator in each representation is related by conjugation.}
+
+The physical torus in this theorem is a fixed flat compact space. The word physical identifies the function-space realization of the fields, rather than establishing empirical adequacy or deriving a spacetime geometry. Periodicity is an explicit boundary condition. The next part constructs the Hamiltonian on exactly this space and retains that same boundary condition.
+
+\clearpage
+\section*{The unbounded Hamiltonian}
+\section{A domain defined by the operator output}
+The continuum mode energy grows with $|n|$. A square-summable sequence $a_n$ need not remain square summable after multiplication by $H_n$. This is why the full Hamiltonian is represented as a partial linear map with a specified domain.
+
+Define
+\[
+\Dom(\widehat H_m)
+=\left\{a\in\KK:\sum_n\norm{H_na_n}^2<\infty\right\},
+\qquad
+(\widehat H_ma)_n=H_na_n.
+\]
+The domain is maximal for this coefficient action: it contains precisely those coefficient fields for which the stated output belongs to the ambient Hilbert space. It is a vector subspace. For example, $\norm{x+y}^2\le2\norm{x}^2+2\norm{y}^2$ and linearity of each $H_n$ prove closure under addition. Scalar multiplication preserves summability as well.
+
+Every finite-support field lies in this domain, since the output again has finite support. Density of finite-support fields therefore proves density of $\Dom(\widehat H_m)$ in $\KK$. Density matters because it gives uniqueness of an adjoint value when such a value exists.
+
+The source represents this object with Mathlib's \path{LinearPMap}. The domain is a submodule and is carried by the operator itself. It is not replaced with a total function that assigns an arbitrary value to every vector outside the domain.
+
+
+\section{The adjoint domain and self-adjointness}
+Modewise Hermiticity gives symmetry on the maximal domain. If $a,b$ belong to that domain, the two series in
+\[
+\inner{\widehat H_ma}{b}
+=\sum_n\inner{H_na_n}{b_n}
+=\sum_n\inner{a_n}{H_nb_n}
+=\inner{a}{\widehat H_mb}
+\]
+converge absolutely by Cauchy--Schwarz. This establishes the inclusion $\widehat H_m\subseteq\widehat H_m^*$, including the corresponding domain inclusion.
+
+Equality requires the converse. A merely symmetric operator can have a strictly larger adjoint domain. Here the coordinate structure makes it possible to determine that domain directly.
+
+\begin{theorem}[Self-adjoint maximal multiplier]
+The densely defined operator $\widehat H_m$ equals its Hilbert adjoint.
+\end{theorem}
+\begin{proof}
+Let $b\in\Dom(\widehat H_m^*)$ and write $c=\widehat H_m^*b$. By the adjoint relation,
+\[
+\inner{\widehat H_ma}{b}=\inner{a}{c}
+\qquad(a\in\Dom(\widehat H_m)).
+\]
+Fix a mode $n$ and choose $a$ with the single nonzero coefficient $a_n=v$, where $v\in\C^4$ is arbitrary. Such a field belongs to the maximal domain. The adjoint identity becomes
+\[
+\inner{H_nv}{b_n}=\inner{v}{c_n}.
+\]
+Hermiticity gives $\inner{v}{H_nb_n}=\inner{v}{c_n}$ for every $v$. Taking $v=H_nb_n-c_n$ shows $c_n=H_nb_n$. Because $c\in\KK$, the sequence $(H_nb_n)_n$ is square summable. Thus $b\in\Dom(\widehat H_m)$ and the two operator actions agree there. This proves $\widehat H_m^*\subseteq\widehat H_m$. Symmetry supplies the reverse inclusion.
+\end{proof}
+
+The argument identifies the output before inferring membership in the maximal domain. It therefore rules out an extra adjoint-domain vector through a concrete summability requirement, rather than assuming the desired domain equality.
+
+Closedness follows from self-adjointness. It can also be seen directly for this multiplier. If $a^{(r)}\to a$ and $\widehat H_ma^{(r)}\to b$ in $\KK$, then convergence holds at each coordinate. Since the finite matrix $H_n$ is continuous,
+\[
+b_n=\lim_rH_na_n^{(r)}=H_na_n.
+\]
+The output sequence equals $b\in\KK$, so $a$ belongs to the maximal domain and $\widehat H_ma=b$. This direct argument is included as an ordinary explanatory deduction.
+
+\section{Finite packets approximate the graph}
+For a domain vector $a$, truncation commutes with the diagonal multiplier:
+\[
+\widehat H_mP_Sa=P_S\widehat H_ma.
+\]
+Both $a$ and $\widehat H_ma$ are square summable. Given $\varepsilon>0$, choose finite sets that make each of their tails small and take their union. The resulting one finite set $S$ satisfies
+\[
+\norm{a-P_Sa}<\varepsilon,
+\qquad
+\norm{\widehat H_ma-\widehat H_mP_Sa}<\varepsilon.
+\]
+This graph-approximation statement is represented in the formal source. The finite Fourier fields are dense for the graph norm
+\[
+\norm{a}_{\mathrm{graph}}^2
+=\norm{a}^2+\norm{\widehat H_ma}^2.
+\]
+The term \emph{graph core} describes this mathematical conclusion. The source proves the simultaneous approximation theorem without introducing a separate \path{IsCore} wrapper.
+
+\atlasfigure{09_graph_truncation}{Approximating a field in its Hilbert norm and approximating it together with its Hamiltonian image are different requirements. The plotted family is a bounded illustration of the graph-tail calculation.}
+
+This result concerns truncations of one continuum operator. A lattice-to-continuum graph-convergence theorem compares different operators and still requires its own compatible-domain construction. The word graph in both phrases does not identify those two tasks.
+
+\section{The exact first-order Fourier domain}
+The Clifford square identity sharpens the definition of the maximal domain. Since $H_n^*=H_n$ and $H_n^2=(m^2+|p(n)|^2)I_4$,
+\[
+\norm{H_nv}^2
+=\inner{v}{H_n^*H_nv}
+=(m^2+|p(n)|^2)\norm{v}^2.
+\]
+For the coefficient field this gives the exact equivalence
+\[
+a\in\Dom(\widehat H_m)
+\quad\Longleftrightarrow\quad
+\sum_n(m^2+|p(n)|^2)\norm{a_n}^2<\infty.
+\]
+The mass term is already summable because $a\in\KK$. Membership is therefore equivalent to summability of $\sum_n|p(n)|^2\norm{a_n}^2$.
+
+\begin{theorem}[Weighted domain and mass independence]
+For every real $m$,
+\[
+\Dom(\widehat H_m)
+=\left\{a\in\KK:
+\sum_n(1+|p(n)|^2)\norm{a_n}^2<\infty\right\}.
+\]
+Consequently $\Dom(\widehat H_{m_1})=\Dom(\widehat H_{m_2})$ for every two real masses.
+\end{theorem}
+\begin{proof}
+The weighted energy series is the sum of the nonnegative momentum series and $m^2\sum_n\norm{a_n}^2$. The second series is finite. Thus the energy series is finite exactly when the momentum series is finite. Adding the already finite unweighted series gives precisely the displayed inhomogeneous first-order condition. This condition contains no mass parameter.
+\end{proof}
+
+
+The inhomogeneous weight retains the zero mode even when $m=0$. There is no loss of the ambient square-summability requirement in the massless case. The phrase first-order Fourier domain refers to this exact condition. It agrees with the conventional Fourier definition of periodic $H^1$ regularity; this manuscript does not claim a new checked equivalence with a separate weak-derivative implementation.
+
+\subsection{A concrete domain boundary}
+As an ordinary example, put nonzero coefficients only on the positive axis modes $n=(k,0,0)$, $k\ge1$, and set $a_n=k^{-s}v$ for a fixed unit spinor $v$. All remaining coefficients are zero. Then
+\[
+\sum_n\norm{a_n}^2=\sum_{k\ge1}k^{-2s},
+\]
+which is finite exactly when $s>1/2$. The additional momentum series is
+\[
+4\pi^2\sum_{k\ge1}k^{2-2s},
+\]
+which is finite exactly when $s>3/2$. Thus the choice $s=1$ gives an $L^2$ field outside the Hamiltonian domain, while $s=2$ gives one inside it. These thresholds use axis-supported data. A radially populated three-dimensional family has a different counting factor.
+
+\atlasfigure{08_domain_thresholds}{The norm condition and the Hamiltonian-domain condition impose different decay requirements. The exact threshold argument uses the infinite series; finite plotted partial sums only illustrate its behavior.}
+
+\section{Exact operator energy}
+For $a\in\Dom(\widehat H_m)$, summing the modal norm identity gives
+\[
+\norm{\widehat H_ma}^2
+=\sum_n(m^2+|p(n)|^2)\norm{a_n}^2.
+\]
+This is the squared norm of the Hamiltonian output. It is nonnegative. It must be distinguished from the expectation $\inner{a}{\widehat H_ma}$, which may have either sign. The finite-packet discussion of positive and negative energy branches already exhibits that distinction.
+
+An immediate ordinary consequence is the explicit graph norm
+\[
+\norm{a}_{\mathrm{graph}}^2
+=\sum_n(1+m^2+|p(n)|^2)\norm{a_n}^2.
+\]
+The graph norm is therefore equivalent to the norm defined by the first-order Fourier weight. Writing $w(n)=1+|p(n)|^2$, one has
+\[
+w(n)\le1+m^2+|p(n)|^2\le(1+m^2)w(n).
+\]
+The domains coincide for all masses even though these graph norms and the operator actions depend on the mass.
+
+\section{The Hamiltonian on physical spinor fields}
+Use the checked Fourier equivalence to define
+\[
+\Dom(H_m^{\mathrm{phys}})=\F^{-1}\Dom(\widehat H_m),
+\qquad
+H_m^{\mathrm{phys}}f=\F^{-1}\widehat H_m\F f.
+\]
+The second formula is used only for $f$ in the displayed domain. Its Fourier intertwining identity is
+\[
+\F(H_m^{\mathrm{phys}}f)=\widehat H_m(\F f).
+\]
+
+\begin{theorem}[Physical torus Hamiltonian]
+The operator $H_m^{\mathrm{phys}}$ is densely defined, symmetric, self-adjoint, and closed on $\HH=L^2(\T^3;\C^4)$. Its domain consists exactly of fields satisfying
+\[
+\sum_{n\in\Z^3}(1+|2\pi n|^2)\norm{\widehat f(n)}^2<\infty,
+\]
+and for every domain vector,
+\[
+\norm{H_m^{\mathrm{phys}}f}_{\HH}^2
+=\sum_n(m^2+|2\pi n|^2)\norm{\widehat f(n)}^2.
+\]
+\end{theorem}
+\begin{proof}
+The domain characterization is the coefficient characterization applied to $\F f$. Density transports through the isometric equivalence. For two domain vectors, transporting the inner product and using coefficient-space symmetry proves physical-space symmetry.
+
+To prove the reverse adjoint-domain inclusion, let $g$ have physical adjoint value $z$. For every coefficient domain vector $a$, test the physical adjoint identity at $\F^{-1}a$. Fourier isometry gives
+\[
+\inner{\widehat H_ma}{\F g}=\inner{a}{\F z}.
+\]
+Thus $\F g$ belongs to the coefficient adjoint domain with adjoint value $\F z$. Coefficient self-adjointness puts $\F g$ in the maximal coefficient domain, hence puts $g$ in the physical domain. The actions agree. Symmetry supplies the opposite inclusion, giving equality with the adjoint. Closedness follows, and Fourier isometry transports the exact energy sum.
+\end{proof}
+
+
+On finite Fourier polynomials, the operator agrees with the matrix differential expression $-i\sum_j\alpha_j\partial_j+m\beta$ already calculated. Its extension is specified by Fourier transport and the maximal domain, so no pointwise differentiability assumption is imposed on every $L^2$ representative. Equality with a separately constructed weak differential operator is a further interface statement if that alternate realization is introduced.

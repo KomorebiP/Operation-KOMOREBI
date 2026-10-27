@@ -1,0 +1,14 @@
+# Block 16 — failed attempts and repairs
+
+This file records failed or incomplete development paths. None is counted as verification evidence. The completed `verification/final/report.json` is authoritative.
+
+- **Pointwise no-go development.** An initial import name was invalid (`Mathlib.LinearAlgebra.Basic`), one attempted helper theorem name did not exist, and an early complex `linarith` route did not close the idempotent coordinate equation. The final proof uses available imports and direct coordinate algebra.
+- **Corner derivation development.** An early `deltaLinear` constructor path created avoidable coercion obligations. Initial star/trace manipulations and an attempted power rule also produced normalization/reindexing failures. The checked module keeps the actual matrix expression and proves the source identities directly.
+- **Curvature development.** A direct nested scalar rewrite stalled on products involving `i*i`. The final proof separates the Jacobi identity, nested derivation identity and curvature scaling, which resolves the sign explicitly.
+- **Corner reconstruction development.** Early attempts failed on scalar factoring, associativity around packet idempotents, opacity of the recovered coarse-projector definition, and nested finite-sum order. The repair uses explicit inserted-resolution lemmas, explicit packet-multiplication rewrites, `import all TensorRefinement` for the recovered definition, and a justified `Finset.sum_comm`. One warnings-as-errors issue from an unused simplifier argument was also removed.
+- **Exact-example development.** An unavailable matrix-notation import was removed. Ambiguous `commutator` naming and unused simplifier arguments were fixed. The nonzero curvature action required an explicit use of `Complex.I_mul_I`; the final exact theorem compiles.
+- **First cumulative Block 16 audit.** It failed before compilation with `Source theorem count differs from inventory`. The cause was the inherited inventory refresher recognizing declarations beginning with `theorem` but not declarations written as `@[simp] theorem`. The refresher was corrected to inventory attributed declarations. The resulting inventory rose to the correct 1,461 theorem / 1,731-name count. No mathematical theorem was weakened.
+- **One direct production invocation was interrupted by the external execution window** while the module rebuild was still in progress. It was not counted as a pass. The verifier was then run to completion as a detached process; that completed report passed.
+- **Ad hoc individual negative-control probes were interrupted by short polling windows** during development. Those probes are not evidence. The final batched negative-control audit completed and passed all controls individually by mapped diagnostic range.
+
+No failed attempt is reclassified as proof evidence, and no timeout is treated as a successful check.

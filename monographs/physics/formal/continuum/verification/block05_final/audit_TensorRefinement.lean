@@ -1,0 +1,15 @@
+import KomorebiPhysics
+
+#print axioms KomorebiPaperVII.TensorRefinement.tensor
+#print axioms KomorebiPaperVII.TensorRefinement.tensor_mul
+#print axioms KomorebiPaperVII.TensorRefinement.tensor_one
+#print axioms KomorebiPaperVII.TensorRefinement.tensor_sum
+#print axioms KomorebiPaperVII.TensorRefinement.tensor_adjoint
+#print axioms KomorebiPaperVII.TensorRefinement.fine_mul
+#print axioms KomorebiPaperVII.TensorRefinement.fine_complete
+#print axioms KomorebiPaperVII.TensorRefinement.fine_selfAdjoint
+#print axioms KomorebiPaperVII.TensorRefinement.coarse
+#print axioms KomorebiPaperVII.TensorRefinement.coarse_mul
+#print axioms KomorebiPaperVII.TensorRefinement.coarse_complete
+#print axioms KomorebiPaperVII.TensorRefinement.coarse_selfAdjoint
+#print axioms KomorebiPaperVII.TensorRefinement.tensor_polyphase_refinement

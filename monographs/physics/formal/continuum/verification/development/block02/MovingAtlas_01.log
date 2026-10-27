@@ -1,0 +1,41 @@
+KomorebiPhysics/MovingAtlas.lean:84:0: error: automatically included section variable(s) unused in theorem `KomorebiPhysics.MovingAtlas.coordinate_rate_identity`:
+  [NormedAlgebra ℝ R]
+  [StarModule ℝ R]
+  [ContinuousStar R]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [NormedAlgebra ℝ R] [StarModule ℝ R] [ContinuousStar R] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+KomorebiPhysics/MovingAtlas.lean:98:0: error: automatically included section variable(s) unused in theorem `KomorebiPhysics.MovingAtlas.hasDerivAt_operator_apply`:
+  [CompleteSpace H]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [CompleteSpace H] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+KomorebiPhysics/MovingAtlas.lean:123:2: error: Type mismatch: After simplification, term
+  h
+ has type
+  (inner ℂ (U x) (U x)).re = (inner ℂ x x).re
+but is expected to have type
+  ‖U x‖ ^ 2 = ‖x‖ ^ 2
+KomorebiPhysics/MovingAtlas.lean:159:7: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  -(star (U t) * dU * star (U t)) (ψ t) + (star (U t)) (A (ψ t))
+in the target expression
+  HasDerivAt (fun s => (star (U s)) (ψ s)) ((-(star (U t) * dU * star (U t))) (ψ t) + (star (U t)) (A (ψ t))) t
+
+H : Type u_1
+inst✝² : NormedAddCommGroup H
+inst✝¹ : InnerProductSpace ℂ H
+inst✝ : CompleteSpace H
+U : ℝ → H →L[ℂ] H
+ψ : ℝ → H
+A dU : H →L[ℂ] H
+t : ℝ
+hU : HasDerivAt U dU t
+hψ : HasDerivAt ψ (A (ψ t)) t
+hleft : star (U t) * U t = 1
+hright : ∀ (s : ℝ), U s * star (U s) = 1
+h : HasDerivAt (fun s => (star (U s)) (ψ s)) ((-(star (U t) * dU * star (U t))) (ψ t) + (star (U t)) (A (ψ t))) t
+he :
+  -(star (U t) * dU * star (U t)) (ψ t) + (star (U t)) (A (ψ t)) = (effectiveGenerator (U t) A dU) ((star (U t)) (ψ t))
+⊢ HasDerivAt (fun s => (star (U s)) (ψ s)) ((effectiveGenerator (U t) A dU) ((star (U t)) (ψ t))) t

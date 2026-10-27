@@ -1,0 +1,942 @@
+\section{Geometric transport and local work}
+\label{c:core:transport}
+
+The first gravitational question is local: how does a prescribed geometry
+change transport and energy exchange? A second question is dynamical: which
+equations determine that geometry? Keeping these questions distinct lets a
+finite model establish an exact balance law before it is coupled to a
+gravitational constraint system. Throughout this section the metric
+coefficients are supplied functions. The scalar field evolves on them.
+
+\subsection{A finite scalar action on a diagonal metric}
+
+Take a periodic chain with $N\geq3$ sites, spacing $h>0$, and indices modulo
+$N$. The continuum metric motivating its coefficients is
+\[
+ ds^2=-N(t,x)^2dt^2+a(t,x)^2dx^2,
+ \qquad N(t,x)>0,\quad a(t,x)>0.
+\]
+The repeated letter $N$ in this metric is the lapse, whereas the integer
+$N$ counts lattice sites. In the finite formulas below only the coefficient
+names $w$, $c$, and $v$ are needed:
+\[
+ w_j=\frac{a_j}{N_j}>0,\qquad
+ c_{j+1/2}=\frac{N_{j+1/2}}{a_{j+1/2}}>0,\qquad
+ v_j=N_ja_jm^2\geq0.
+\]
+Thus $N/a$ is the coordinate characteristic speed of the continuum
+massless equation. Assume these finite coefficient arrays are continuously
+differentiable in time. For a real field $\varphi_j(t)$ set
+$\Delta_j=\varphi_{j+1}-\varphi_j$ and define
+\begin{equation}
+ L_h=\frac h2\sum_jw_j\dot\varphi_j^2
+ -\frac1{2h}\sum_jc_{j+1/2}\Delta_j^2
+ -\frac h2\sum_jv_j\varphi_j^2.
+ \label{c:core:scalar-action}
+\end{equation}
+Variations with compact time support give
+\begin{equation}
+ w_j\ddot\varphi_j+\dot w_j\dot\varphi_j
+ =\frac{c_{j+1/2}\Delta_j-c_{j-1/2}\Delta_{j-1}}{h^2}
+ -v_j\varphi_j.
+ \label{c:core:scalar-evolution}
+\end{equation}
+The neighboring edge terms in the action produce the two terms in the
+spatial numerator. The time integration by parts differentiates
+$w_j\dot\varphi_j$, including the $\dot w_j\dot\varphi_j$ term.
+
+\Needspace{20\baselineskip}
+\begin{proposition}[Local energy, flux, and geometric work]
+\label{c:core:scalar-work}
+For every twice differentiable solution of
+\eqref{c:core:scalar-evolution}, define
+\begin{align}
+ e_j&=\frac h2w_j\dot\varphi_j^2+\frac h2v_j\varphi_j^2
+ +\frac{c_{j+1/2}}{4h}\Delta_j^2
+ +\frac{c_{j-1/2}}{4h}\Delta_{j-1}^2,\nonumber\\
+ F_{j+1/2}&=-\frac{c_{j+1/2}}{2h}\Delta_j
+             (\dot\varphi_j+\dot\varphi_{j+1}),\nonumber\\
+ s_j&=-\frac h2\dot w_j\dot\varphi_j^2
+ +\frac h2\dot v_j\varphi_j^2
+ +\frac{\dot c_{j+1/2}}{4h}\Delta_j^2
+ +\frac{\dot c_{j-1/2}}{4h}\Delta_{j-1}^2.
+ \label{c:core:scalar-densities}
+\end{align}
+Then
+\begin{equation}
+ \dot e_j+F_{j+1/2}-F_{j-1/2}=s_j.
+ \label{c:core:scalar-balance}
+\end{equation}
+In particular, $E_h=\sum_je_j$ satisfies
+$\dot E_h=\sum_js_j=-\partial_tL_h$, where the partial derivative holds
+$\varphi$ and $\dot\varphi$ fixed.
+\end{proposition}
+
+\begin{proof}
+Put $B_j=c_{j+1/2}\Delta_j$. Using the equation of motion, the derivative
+of the kinetic and mass terms at site $j$ is
+\[
+ \frac{\dot\varphi_j}{h}(B_j-B_{j-1})
+ -\frac h2\dot w_j\dot\varphi_j^2
+ +\frac h2\dot v_j\varphi_j^2.
+\]
+The right edge contribution differentiates to
+\[
+ \frac{\dot c_{j+1/2}\Delta_j^2}{4h}
+ +\frac{B_j}{2h}(\dot\varphi_{j+1}-\dot\varphi_j),
+\]
+and the left edge has the analogous expression. Adding these terms
+leaves
+$B_j(\dot\varphi_j+\dot\varphi_{j+1})/(2h)$ on the right and its
+negative counterpart on the left, plus $s_j$. These are exactly the flux
+terms in \eqref{c:core:scalar-balance}. Periodic summation cancels every
+interface flux. Each edge coefficient derivative appears twice with
+weight $1/(4h)$, giving $-\partial_tL_h$.
+\end{proof}
+
+Every $e_j$ is nonnegative under the stated coefficient assumptions. An
+interval of cells $r,\ldots,s$ obeys the exact coarse balance
+\[
+ \frac{d}{dt}\sum_{j=r}^se_j
+ +F_{s+1/2}-F_{r-1/2}=\sum_{j=r}^ss_j.
+\]
+Thus coarse energy is obtained by adding fine cell energies and retaining
+only the exposed boundary fluxes. This is the same cancellation mechanism
+as projector transfer, applied here to a classical field energy. Its
+physical units and constitutive coefficients come from the action.
+
+\begin{example}[Time dependent expansion]
+Let the lapse equal one, let $a(t)>0$ be spatially uniform, and let $m=0$.
+Then $w=a$, $c=1/a$, and
+\[
+ \dot E_h=-\frac h2\dot a\sum_j\dot\varphi_j^2
+ -\frac{\dot a}{2ha^2}\sum_j\Delta_j^2.
+\]
+An increasing $a$ transfers energy out of this coordinate-time field
+Hamiltonian. The supplied background receives no evolution equation
+from this calculation. A self-consistent matter--geometry model must
+also evolve its gravitational variables.
+\end{example}
+
+For a smooth field sampled at sites and a smooth coefficient sampled at
+edge midpoints, the spatial expression is second-order consistent with
+$\partial_x(c\partial_x\varphi)$. Indeed, expanding at $x_j$ gives
+\[
+ c(x_j+h/2)[\varphi(x_j+h)-\varphi(x_j)]
+ -c(x_j-h/2)[\varphi(x_j)-\varphi(x_j-h)]
+ =h^2(c\varphi_x)_x(x_j)+O(h^4).
+\]
+Uniform bounds on the requisite fourth derivatives make the remainder
+uniform on a compact spatial region. The exact finite balance holds
+without any Taylor approximation.
+
+\gravityfigure{01_local_energy_work}{A six-cell example of prescribed
+metric work. Each direct cell-energy derivative agrees with incoming
+flux minus outgoing flux plus the coefficient work term. The curves
+illustrate the exact finite identity for a prescribed background.}
+\FloatBarrier
+
+
+
+\subsection{Conformal curvature as an exact boost holonomy}
+
+Consider a twice continuously differentiable real function $\phi$ on an
+oriented $(t,x)$ rectangle, and the coframe
+\[
+ e^0=e^\phi dt,\qquad e^1=e^\phi dx,
+ \qquad ds^2=e^{2\phi}(-dt^2+dx^2).
+\]
+Write
+\[
+ K=\begin{pmatrix}0&1\\1&0\end{pmatrix},\qquad
+ \omega=(\phi_xdt+\phi_tdx)K.
+\]
+The coframe satisfies the torsion-free Cartan equations with this
+connection. Since every connection value is a multiple of the same
+matrix, $\omega\wedge\omega=0$. Therefore
+\begin{equation}
+ \Omega=d\omega=(\phi_{tt}-\phi_{xx})K\,dt\wedge dx,
+ \qquad R=2e^{-2\phi}(\phi_{tt}-\phi_{xx}).
+ \label{c:core:conformal-curvature}
+\end{equation}
+This fixes the scalar-curvature sign convention used in this monograph.
+
+We use the archive's plus-sign edge convention: for each oriented
+boundary edge define $U_e=\exp(+\int_e\omega)$. This specifies the
+signed transport observable used below. Multiplying in boundary order
+yields an exact identity
+\begin{equation}
+ W_\square
+ =\exp\left(K\oint_{\partial\square}(\phi_xdt+\phi_tdx)\right)
+ =\exp\left(\frac K2\int_\square e^{2\phi}R\,dt\,dx\right).
+ \label{c:core:conformal-holonomy}
+\end{equation}
+To see the second equality directly, integrate $\phi_{tt}$ along the
+two horizontal endpoints and $\phi_{xx}$ along the two vertical
+endpoints, with the boundary orientation from $dt\wedge dx$. This is
+the rectangular fundamental theorem of calculus. No path-order
+correction survives because the edge exponents commute.
+
+If the integrated coefficient is $\chi$, then
+\[
+ e^{\chi K}=\cosh\chi\,I+\sinh\chi\,K.
+\]
+This preserves the Lorentz form $\operatorname{diag}(-1,1)$ and has
+positive eigenvalues $e^{\chi}$ and $e^{-\chi}$. Its real principal
+matrix logarithm is $\chi K$. These are Lorentz boosts. The positive
+Hilbert norm used for unitary color transport in the gauge monograph
+is a different structure.
+
+\begin{example}[Constant curvature density]
+For $\phi(t,x)=b(t^2-x^2)/2$, one has
+\[
+ \phi_{tt}-\phi_{xx}=2b,
+ \qquad R=4b\,e^{-2\phi},
+ \qquad W_\square=e^{2b\,\operatorname{area}(\square)K}.
+\]
+The curvature density $e^{2\phi}R/2$ is constant although $R$ varies
+with position. Adding oriented subrectangle integrals reconstructs
+the coarse rapidity exactly.
+\end{example}
+
+The plus-sign observable is assigned the endpoint action
+\[
+ G(t,x)=e^{\chi(t,x)K},\qquad
+ U_{a\to b}'=G(b)U_{a\to b}G(a)^{-1}.
+\]
+It corresponds to the signed connection rule
+$\omega_+'=\omega_++d\chi\,K$. Intermediate endpoint factors cancel,
+so the loop observable is conjugated at its base point. For the
+Cartan convention $D=d+\omega$, a coframe transformation $e\mapsto Ge$
+instead gives $\omega'=\omega-d\chi\,K$ and parallel transport
+$\exp(-\int_e\omega)$. Its closed-loop rapidity is the negative of the
+rapidity of $W_\square$ defined here. The fixed-frame curvature identity
+\eqref{c:core:conformal-holonomy} is unchanged. Declaring these signs
+avoids mixing the archive's edge observable with a different Cartan
+parallel-transport convention.
+
+
+
+\section{Weak gravity as a sign and consistency benchmark}
+\label{c:core:weak-field}
+
+Weak gravity provides checks on attraction, variational signs, and
+optical observables. These checks are performed within the weak-field
+model. They do not furnish nonlinear gravitational evolution.
+
+\subsection{Radial Poisson equation and a finite variational problem}
+
+Let $G>0$, let $\rho(r)$ be a continuous spherical density, and impose
+regularity $\lim_{r\downarrow0}r^2\Phi'(r)=0$. The radial Poisson
+equation gives
+\[
+ (r^2\Phi')'=4\pi G r^2\rho,
+ \qquad M_{\rm enc}(r)=4\pi\int_0^rs^2\rho(s)\,ds,
+ \qquad \Phi'(r)=\frac{GM_{\rm enc}(r)}{r^2}.
+\]
+The acceleration is $a_r=-\Phi'$. A positive density therefore gives
+an inward radial acceleration.
+
+Putting $u(r)=r\Phi(r)$ removes the radial first derivative:
+\[
+ r^2\Phi'=ru'-u,\qquad
+ (r^2\Phi')'=ru'',\qquad u''=4\pi G r\rho.
+\]
+For fixed endpoint values, this equation is the stationary condition of
+\[
+ S[u]=\int_0^{R_0}\left[\frac{(u')^2}{2G}+4\pi r\rho u\right]dr.
+\]
+On $r_i=ih$, $i=0,\ldots,M$, with $Mh=R_0$, its finite counterpart is
+\begin{equation}
+ S_h[u]=\sum_{i=0}^{M-1}\frac{(u_{i+1}-u_i)^2}{2Gh}
+ +4\pi h\sum_{i=1}^{M-1}r_i\rho_i u_i.
+ \label{c:core:poisson-action}
+\end{equation}
+
+\begin{proposition}[Unique finite radial solution]
+\label{c:core:poisson-minimum}
+With $u_0,u_M$ fixed, $S_h$ has a unique minimizer. Its interior values
+satisfy
+\[
+ \frac{u_{i+1}-2u_i+u_{i-1}}{h^2}=4\pi G r_i\rho_i.
+\]
+\end{proposition}
+
+\begin{proof}
+Differentiation with respect to $u_i$ gives
+$(2u_i-u_{i-1}-u_{i+1})/(Gh)+4\pi h r_i\rho_i$. Setting it to zero
+gives the equation. For a variation $v$ with $v_0=v_M=0$, the Hessian
+quadratic form is
+\[
+ \frac1{Gh}\sum_{i=0}^{M-1}(v_{i+1}-v_i)^2.
+\]
+Its vanishing forces $v$ to be constant and hence zero. The finite
+Hessian is positive definite, so the quadratic action has one
+stationary point and that point is its unique minimizer.
+\end{proof}
+
+The boundary value $u_0=0$ allows a regular finite potential at the
+origin. The quotient $u/r$ is used only for $r>0$, with its continuous
+limit determined separately at $r=0$.
+
+For the normalized Gaussian density
+\[
+ \rho(r)=\frac{M_0}{(2\pi)^{3/2}\sigma^3}e^{-r^2/(2\sigma^2)},
+ \qquad \sigma>0,
+\]
+direct differentiation verifies
+\begin{align*}
+ M_{\rm enc}(r)&=M_0\left[
+ \operatorname{erf}\left(\frac r{\sqrt2\sigma}\right)
+ -\sqrt{\frac2\pi}\frac r\sigma e^{-r^2/(2\sigma^2)}\right],\\
+ \Phi(r)&=-\frac{GM_0}{r}
+ \operatorname{erf}\left(\frac r{\sqrt2\sigma}\right).
+\end{align*}
+The potential tends to zero at infinity and has the finite central
+value $-\sqrt{2/\pi}\,GM_0/\sigma$. This removes the point-source
+singularity while preserving the attractive sign.
+
+\subsection{Clocks and straight-ray optical integrals}
+
+In the stipulated first-order isotropic weak-field metric,
+\[
+ ds^2=-\left(1+\frac{2\Phi}{c_0^2}\right)c_0^2dt^2
+       +\left(1-\frac{2\Phi}{c_0^2}\right)d\mathbf x^2,
+ \qquad \left|\frac{\Phi}{c_0^2}\right|\ll1,
+\]
+a static clock has lapse $\mathcal N=\sqrt{1+2\Phi/c_0^2}$.
+The static-frequency ratio in this approximation is
+\[
+ \frac{\nu_{\rm obs}}{\nu_{\rm emit}}
+ =\frac{\mathcal N_{\rm emit}}{\mathcal N_{\rm obs}}
+ =1+\frac{\Phi_{\rm emit}-\Phi_{\rm obs}}{c_0^2}
+ +O\left(\frac{\Phi^2}{c_0^4}\right).
+\]
+For $\Phi(x,b)=-GM_0/\sqrt{x^2+b^2}$, $b>0$, evaluating the
+first-order straight-ray integrals over $[-L,L]$ gives
+\begin{align*}
+ \Delta t_{\rm Shapiro}
+ &=-\frac2{c_0^3}\int_{-L}^L\Phi(x,b)\,dx
+ =\frac{4GM_0}{c_0^3}\operatorname{asinh}\left(\frac Lb\right),\\
+ \alpha(L,b)
+ &=\frac2{c_0^2}\left|\int_{-L}^L\partial_b\Phi(x,b)\,dx\right|
+ =\frac{4GM_0L}{c_0^2b\sqrt{L^2+b^2}}.
+\end{align*}
+Here $\alpha$ is the magnitude of the deflection toward the source.
+The limit $L\to\infty$ gives $4GM_0/(c_0^2b)$. The displayed
+equalities evaluate the weak-field integrals exactly. The approximation
+to the physical ray already entered through the metric expansion and
+the undeviated integration path.
+
+
+
+\section{Gowdy evolution and reconstruction of the remaining constraint}
+\label{c:core:gowdy}
+
+The next step is an inhomogeneous nonlinear model with two gravitational
+field channels. We take the archived Gowdy reduction as specified by its
+action and constraint densities. The results below prove the internal
+variational and reconstruction identities of that reduced system.
+
+Let $P,Q$ be real smooth fields on $I\times\T$, with
+$\theta\in\R/(2\pi\Z)$ and $\gamma(\tau)=e^{-2\tau}$. Define
+\begin{equation}
+ S_G=\frac12\int_I\int_0^{2\pi}
+ \left[P_\tau^2-\gamma P_\theta^2
+ +e^{2P}(Q_\tau^2-\gamma Q_\theta^2)\right]d\theta\,d\tau.
+ \label{c:core:gowdy-action}
+\end{equation}
+Time variations vanish at the endpoints of $I$ and spatial variations
+are periodic. Integration by parts gives the two Euler--Lagrange
+expressions
+\begin{align}
+ \mathcal E_P&=P_{\tau\tau}-\gamma P_{\theta\theta}
+ -e^{2P}(Q_\tau^2-\gamma Q_\theta^2),\nonumber\\
+ \mathcal E_Q&=Q_{\tau\tau}-\gamma Q_{\theta\theta}
+ +2(P_\tau Q_\tau-\gamma P_\theta Q_\theta).
+ \label{c:core:gowdy-euler}
+\end{align}
+In particular, the $Q$ equation can first be written as
+$\partial_\tau(e^{2P}Q_\tau)-\partial_\theta(e^{2P}\gamma Q_\theta)=0$.
+The stationary equations are $\mathcal E_P=\mathcal E_Q=0$.
+
+Define the densities
+\begin{align}
+ H_G&=P_\tau^2+\gamma P_\theta^2
+ +e^{2P}(Q_\tau^2+\gamma Q_\theta^2),\nonumber\\
+ M_G&=2(P_\tau P_\theta+e^{2P}Q_\tau Q_\theta).
+ \label{c:core:gowdy-densities}
+\end{align}
+The remaining reconstruction equations are
+$\lambda_\tau=H_G$ and $\lambda_\theta=M_G$.
+
+\Needspace{14\baselineskip}
+\begin{proposition}[Local integrability and global periodicity]
+\label{c:core:gowdy-integrability}
+For twice continuously differentiable $P,Q$,
+\begin{equation}
+ \partial_\tau M_G-\partial_\theta H_G
+ =2P_\theta\mathcal E_P+2e^{2P}Q_\theta\mathcal E_Q.
+ \label{c:core:gowdy-identity}
+\end{equation}
+For a solution on $I\times\T$, a single-valued periodic $\lambda$ with
+these two derivatives exists if and only if
+$\int_0^{2\pi}M_G\,d\theta=0$ at one, and hence every, time. It is
+unique up to an additive constant.
+\end{proposition}
+
+\begin{proof}
+Differentiate the two densities. The terms with $P_\tau
+P_{\tau\theta}$ and $Q_\tau Q_{\tau\theta}$ cancel, leaving
+\[
+\begin{aligned}
+ \partial_\tau M_G-\partial_\theta H_G
+ ={}&2P_\theta(P_{\tau\tau}-\gamma P_{\theta\theta})\\
+ &+2e^{2P}\big[
+ Q_\theta(Q_{\tau\tau}-\gamma Q_{\theta\theta})
+ +2P_\tau Q_\tau Q_\theta
+ -P_\theta Q_\tau^2-\gamma P_\theta Q_\theta^2\big].
+\end{aligned}
+\]
+Substitute \eqref{c:core:gowdy-euler} and combine the two occurrences of
+$\gamma P_\theta Q_\theta^2$. This gives
+\eqref{c:core:gowdy-identity}. On a solution the identity vanishes,
+so periodicity gives $d\int M_G\,d\theta/d\tau=0$.
+
+If a periodic $\lambda$ exists, integrating $\lambda_\theta=M_G$
+forces the zero-period condition. Conversely, fix $\tau_0$ and define
+on the lifted strip
+\[
+ \lambda(\tau,\theta)=\lambda_0
+ +\int_{\tau_0}^{\tau}H_G(s,0)\,ds
+ +\int_0^{\theta}M_G(\tau,\eta)\,d\eta.
+\]
+Its $\theta$ derivative is $M_G$. Its $\tau$ derivative is $H_G$ by
+the integrability identity and the fundamental theorem of calculus.
+The zero-period condition makes it periodic. The difference of two
+such functions has both derivatives zero, so is constant.
+\end{proof}
+
+This separates a local compatibility condition from a global topology
+condition. Satisfying the evolution equations makes the reconstruction
+one-form closed. A vanishing spatial period makes it the derivative of
+a periodic potential.
+
+\subsection{An exact polarized mode}
+
+Set $Q=0$ and take an integer $n\geq1$. Define the entire function
+\[
+ J_0(x)=\sum_{m=0}^{\infty}\frac{(-1)^m(x^2/4)^m}{(m!)^2}.
+\]
+The series and its differentiated series converge uniformly on compact
+sets. Coefficient comparison gives
+$x^2J_0''+xJ_0'+x^2J_0=0$. Thus
+\begin{equation}
+ P(\tau,\theta)=A J_0(ne^{-\tau})\cos(n\theta)
+ \label{c:core:gowdy-mode}
+\end{equation}
+is an exact polarized solution. Indeed, for $x=ne^{-\tau}$,
+$\partial_\tau^2J_0(x)=x^2J_0''(x)+xJ_0'(x)=-x^2J_0(x)$,
+whereas $P_{\theta\theta}=-n^2P$. Also
+$M_G=2P_\tau P_\theta$ has zero spatial integral, so periodic
+$\lambda$ can be reconstructed.
+
+The Taylor channels can be separated without changing the physical
+mode. Put $y=x^2/4$, $\mathcal B(y)=J_0(2\sqrt y)$, and for an integer
+$r\geq2$ define
+\[
+ \mathcal B_{r,j}(y)=\sum_{q=0}^{\infty}
+ \frac{(-1)^{rq+j}y^{rq+j}}{((rq+j)!)^2},
+ \qquad j=0,\ldots,r-1.
+\]
+Then $\mathcal B=\sum_j\mathcal B_{r,j}$. With
+$\vartheta=y\,d/dy$, the coefficient identity
+\[
+ \vartheta^2\mathcal B_{r,j}+y\mathcal B_{r,j-1}=0,
+ \qquad j\pmod r,
+\]
+follows from $m^2/(m!)^2=1/((m-1)!)^2$ for $m\geq1$.
+Consequently the separated Taylor channels are coupled. Their sum
+satisfies the Bessel equation. This decomposition resolves series
+order and does not introduce additional independent gravitational
+degrees of freedom.
+
+
+
+\section{An exact finite Gowdy constraint projection}
+\label{c:core:gowdy-projection}
+
+Let $h=2\pi/N$ and use the periodic centered derivative
+\[
+ (D_hf)_j=\frac{f_{j+1}-f_{j-1}}{2h},\qquad
+ (\Delta_hf)_j=\frac{f_{j+1}-2f_j+f_{j-1}}{h^2}.
+\]
+Here $D_h^{\mathsf T}=-D_h$. With $U=\dot P$, $V=\dot Q$, the raw
+semidiscrete vector field $f_h(\tau,z)$ for $z=(P,Q,U,V)$ is
+\begin{align}
+ \dot P&=U,&\dot Q&=V,\nonumber\\
+ \dot U&=\gamma\Delta_hP+e^{2P}[V^2-\gamma(D_hQ)^2],\nonumber\\
+ \dot V&=\gamma\Delta_hQ-2[UV-\gamma(D_hP)(D_hQ)].
+ \label{c:core:gowdy-raw}
+\end{align}
+Products and exponentials in these formulas are componentwise.
+The finite global momentum is
+\begin{equation}
+ C_h(z)=2h\sum_j[U_j(D_hP)_j+e^{2P_j}V_j(D_hQ)_j].
+ \label{c:core:gowdy-momentum}
+\end{equation}
+It is linear in the velocity variables when the configuration $P,Q$
+is fixed.
+
+For the ordinary Euclidean gradients, skew-adjointness of $D_h$ gives
+\begin{align*}
+ \nabla_PC_h&=-2hD_hU+4h e^{2P}V(D_hQ),\\
+ \nabla_QC_h&=-2hD_h(e^{2P}V),\\
+ g_U:=\nabla_UC_h&=2hD_hP,
+ &g_V:=\nabla_VC_h&=2h e^{2P}D_hQ.
+\end{align*}
+Put $G_h=(0,0,g_U,g_V)$ and $d_h=\norm{g_U}_2^2+\norm{g_V}_2^2$.
+On the open region $d_h>0$, define
+\[
+ \Lambda_h=\frac{\nabla C_h\cdot f_h}{d_h},\qquad
+ \widehat f_h=f_h-\Lambda_hG_h.
+\]
+The chain rule proves the exact tangency identity
+\[
+ \nabla C_h\cdot\widehat f_h
+ =\nabla C_h\cdot f_h-\Lambda_hd_h=0.
+\]
+Every differentiable solution that remains in this region therefore
+keeps $C_h$ constant.
+
+\begin{proposition}[Exact endpoint momentum]
+\label{c:core:gowdy-endpoint}
+Start from $z_n$ and let a provisional step produce
+$\widetilde z=(\widetilde P,\widetilde Q,\widetilde U,\widetilde V)$.
+Form $\widetilde g_U,\widetilde g_V$ at its configuration and assume
+$\widetilde d_h>0$. The correction
+\[
+ \mu=\frac{C_h(\widetilde z)-C_h(z_n)}{\widetilde d_h},\qquad
+ z_{n+1}=(\widetilde P,\widetilde Q,
+ \widetilde U-\mu\widetilde g_U,
+ \widetilde V-\mu\widetilde g_V)
+\]
+satisfies $C_h(z_{n+1})=C_h(z_n)$ exactly. It is the correction of
+smallest Euclidean velocity norm at the fixed configuration.
+\end{proposition}
+
+\begin{proof}
+Linearity in the velocities gives
+$C_h(z_{n+1})=C_h(\widetilde z)-\mu\widetilde d_h$.
+For minimality, write $g=(\widetilde g_U,\widetilde g_V)$ and
+$b=C_h(z_n)-C_h(\widetilde z)$. Every admissible velocity displacement
+$v$ satisfies $g\cdot v=b$. Cauchy--Schwarz implies
+$\norm v\geq|b|/\norm g$, with equality only at
+$v=bg/\norm g^2$. This is the displayed correction.
+\end{proof}
+
+\Needspace{11\baselineskip}
+\begin{proposition}[Fixed-mesh second-order time accuracy]
+\label{c:core:gowdy-time-order}
+Fix $h$. Suppose a smooth exact solution of
+$\dot z=\widehat f_h(\tau,z)$ and its numerical steps remain in a
+compact regular neighborhood where $d_h\geq d_0>0$. Assume the mixed time and state
+derivatives of $\widehat f_h$ through order three and the state
+derivatives of $C_h$ through order four are bounded there. Apply the endpoint correction
+of Proposition~\ref{c:core:gowdy-endpoint} after explicit midpoint.
+Then its local error is $O(\Delta\tau^3)$ and its global error on a
+fixed time interval is $O(\Delta\tau^2)$.
+\end{proposition}
+
+\begin{proof}
+The explicit midpoint expansion agrees with the Taylor expansion of
+the exact flow through order two. Its provisional endpoint differs
+from the exact endpoint by $O(\Delta\tau^3)$. Since the exact flow
+keeps $C_h$ constant and $C_h$ has bounded first derivatives, the
+provisional constraint defect is also $O(\Delta\tau^3)$. The lower
+bound on the denominator and the upper bound on $g$ make the
+correction $O(\Delta\tau^3)$. Thus the corrected local error has the
+same order. Under the stated derivative bounds the corrected step
+map has Lipschitz constant at most $1+L\Delta\tau$ for small steps.
+If $e_n$ is its error against the exact solution, then
+\[
+ e_{n+1}\leq(1+L\Delta\tau)e_n+M\Delta\tau^3.
+\]
+Iterating this inequality for $n\Delta\tau\leq T$ bounds the error by
+$MT e^{LT}\Delta\tau^2$ when $e_0=0$.
+\end{proof}
+
+These are regular-chart results. For a spatially homogeneous
+configuration, $g_U=g_V=0$, and the displayed multiplier is
+undefined even though $C_h=0$. Constants in the accuracy theorem
+can depend on $h$. A claim about simultaneous spatial and temporal
+refinement additionally needs bounds uniform in $h$.
+
+The local compatibility diagnostic is a separate quantity. Define
+$H_{G,h},M_{G,h}$ by replacing spatial derivatives in
+\eqref{c:core:gowdy-densities} with $D_h$. If
+$\mathcal E_{P,h}=\dot U-\dot U_{\rm raw}$ and
+$\mathcal E_{Q,h}=\dot V-\dot V_{\rm raw}$, then
+\[
+ \mathcal I_h=\partial_\tau M_{G,h}-D_hH_{G,h}
+ -2(D_hP)\mathcal E_{P,h}
+ -2e^{2P}(D_hQ)\mathcal E_{Q,h}
+\]
+subtracts the explicit constraint-force contribution. Exact global
+momentum preservation does not force $\mathcal I_h$ to vanish at each
+site. Its refinement behavior tests whether the modified evolution
+approaches the local continuum reconstruction identity. The archived
+second-order numerical observations are experimental evidence for
+that behavior, with their tested range recorded in the companion.
+
+
+
+\section{Finite linearized ADM gravity}
+\label{c:core:adm}
+
+The symmetry-reduced model can now be compared with a finite
+three-dimensional linearized constraint system. Its exact algebraic
+closure rests on commuting linear derivatives. Nonlinear products
+will introduce an additional requirement in the next section.
+
+\subsection{Finite calculus and the quadratic action}
+
+Let $V_h$ be a finite real inner-product space. Let
+$\delta_1,\delta_2,\delta_3$ be commuting skew-adjoint operators on it:
+\[
+ \delta_i\delta_j=\delta_j\delta_i,
+ \qquad\inner{\delta_iX}{Y}_h=-\inner{X}{\delta_iY}_h,
+ \qquad\delta^2=\sum_i\delta_i^2.
+\]
+The periodic centered differences in three coordinate directions
+provide one example. All tensor inner products below sum over both
+indices, using the Frobenius inner product on symmetric tensors.
+
+Let $h_{ij}=h_{ji}$ and $\pi_{ij}=\pi_{ji}$ take values in $V_h$.
+Repeated spatial indices are summed. Put $h_{\rm tr}=h_{kk}$,
+$\pi_{\rm tr}=\pi_{kk}$ and define
+\begin{align}
+ C&=\delta_i\delta_jh_{ij}-\delta^2h_{\rm tr},
+ &C_i&=-2\delta_j\pi_{ij},\nonumber\\
+ \mathcal G_{ij}(h)&=\frac12\big[
+ \delta_k\delta_ih_{jk}+\delta_k\delta_jh_{ik}
+ -\delta^2h_{ij}-\delta_i\delta_jh_{\rm tr}
+ -\delta_{ij}C\big].
+ \label{c:core:adm-operators}
+\end{align}
+
+\begin{lemma}[Linearized finite Bianchi and adjoint identities]
+\label{c:core:adm-bianchi}
+The spatial operator obeys $\delta_j\mathcal G_{ij}(h)=0$ and is
+self-adjoint on symmetric tensors.
+\end{lemma}
+
+\begin{proof}
+Twice its divergence expands as
+\begin{align*}
+ 2\delta_j\mathcal G_{ij}
+ ={}&\delta_i\delta_j\delta_kh_{jk}
+ +\delta^2\delta_kh_{ik}-\delta^2\delta_jh_{ij}
+ -\delta_i\delta^2h_{\rm tr}\\
+ &-\delta_i\delta_k\delta_lh_{kl}
+ +\delta_i\delta^2h_{\rm tr}.
+\end{align*}
+The terms cancel in three pairs. For self-adjointness, write
+$B_i(a)=\delta_ja_{ij}$ and $A(a)=\delta_i\delta_ja_{ij}$. Two
+applications of the adjoint identity give
+\begin{align*}
+ 2\inner{a}{\mathcal G(b)}_h
+ ={}&-2\inner{B(a)}{B(b)}_h
+ +\sum_k\inner{\delta_ka}{\delta_kb}_h\\
+ &-\inner{A(a)}{b_{\rm tr}}_h
+ -\inner{a_{\rm tr}}{A(b)}_h
+ -\sum_k\inner{\delta_ka_{\rm tr}}{\delta_kb_{\rm tr}}_h.
+\end{align*}
+This expression is symmetric in $a,b$.
+\end{proof}
+
+Set
+\[
+ T_h=\inner{\pi}{\pi}_h-\tfrac12\inner{\pi_{\rm tr}}{\pi_{\rm tr}}_h,
+ \qquad U_h=\tfrac12\inner{h}{\mathcal G(h)}_h.
+\]
+With lapse perturbation $n$ and shift perturbation $n_i$, the action is
+\begin{equation}
+ S_h^{(2)}=\int\left[
+ \inner{\pi}{\dot h}_h-T_h-U_h
+ +\inner{n}{C}_h-\inner{n_i}{C_i}_h\right]dt.
+ \label{c:core:adm-action}
+\end{equation}
+Variation of $n,n_i$ imposes $C=C_i=0$. The remaining equations are
+\begin{align}
+ \dot h_{ij}&=2\pi_{ij}-\delta_{ij}\pi_{\rm tr}
+             +\delta_in_j+\delta_jn_i,\nonumber\\
+ \dot\pi_{ij}&=-\mathcal G_{ij}(h)
+              +\delta_i\delta_jn-\delta_{ij}\delta^2n.
+ \label{c:core:adm-evolution}
+\end{align}
+The kinetic gradient is $2\pi_{ij}-\delta_{ij}\pi_{\rm tr}$.
+Lemma~\ref{c:core:adm-bianchi} makes the potential gradient
+$\mathcal G(h)$. The lapse gradient follows by two spatial
+integrations by parts. Integrating the shift term once gives
+$-\langle\delta_in_j+\delta_jn_i,\pi_{ij}\rangle_h$ in the
+Lagrangian, fixing the sign in the first equation.
+
+\Needspace{16\baselineskip}
+\subsection{Constraint propagation and the canonical brackets}
+
+\Needspace{11\baselineskip}
+\begin{theorem}[Exact finite linearized closure]
+\label{c:core:adm-closure}
+For every solution of \eqref{c:core:adm-evolution},
+\[
+ \dot C=-\delta_iC_i,\qquad\dot C_i=0.
+\]
+Thus initially vanishing constraints remain zero. With the canonical
+Frobenius bracket and smearings
+$C[n]=\langle n,C\rangle_h$, $D[\xi]=\langle\xi_i,C_i\rangle_h$,
+all three brackets $\{C[n],C[m]\}$, $\{D[\xi],D[\eta]\}$, and
+$\{C[n],D[\xi]\}$ vanish identically.
+\end{theorem}
+
+\begin{proof}
+The trace of the momentum part of $\dot h$ is $-\pi_{\rm tr}$.
+Its contribution to $\dot C$ is therefore
+$2\delta_i\delta_j\pi_{ij}=-\delta_iC_i$. The shift contribution is
+\[
+ \delta_i\delta_j(\delta_in_j+\delta_jn_i)
+ -\delta^2(2\delta_kn_k)=0.
+\]
+For $\dot C_i$, the divergence of $\mathcal G$ vanishes by
+Lemma~\ref{c:core:adm-bianchi}, and
+$\delta_j(\delta_i\delta_jn-\delta_{ij}\delta^2n)=0$.
+This proves the propagation equations and their stated implication.
+
+For the bracket, use
+$\{F,G\}=\langle\nabla_hF,\nabla_\pi G\rangle_h
+-\langle\nabla_\pi F,\nabla_hG\rangle_h$.
+Two scalar constraints depend only on $h$ and two momentum
+constraints depend only on $\pi$, so their brackets vanish.
+The gradients for the mixed bracket are
+\[
+ (\nabla_hC[n])_{ij}=\delta_i\delta_jn-\delta_{ij}\delta^2n,
+ \qquad(\nabla_\pi D[\xi])_{ij}=\delta_i\xi_j+\delta_j\xi_i.
+\]
+Their contraction vanishes after one integration by parts because
+the first tensor is divergence-free.
+\end{proof}
+
+The momentum generator changes the metric perturbation by
+$h_{ij}\mapsto h_{ij}+\delta_i\xi_j+\delta_j\xi_i$.
+The corresponding change of the scalar constraint is
+$2\delta^2\delta_k\xi_k-2\delta^2\delta_k\xi_k=0$.
+No product rule is used in these cancellations.
+
+For a partition of fine spatial sites into coarse regions $A$, the
+nonnegative diagnostic
+\[
+ E_A^{\rm con}=\sum_{x\in A}h^3
+ \left(|C_x|^2+\sum_i|C_{i,x}|^2\right)
+\]
+adds exactly to the full fine diagnostic. This is an exact partition
+identity. It does not assert that differentiating a coarse field
+reconstructs its fine constraint values.
+
+
+
+\subsection{Tensor waves, positive reduced energy, and resolved dispersion}
+
+Choose $n=n_i=0$ and impose the transverse and traceless conditions
+\[
+ \delta_jh_{ij}=0,\quad h_{\rm tr}=0,
+ \qquad\delta_j\pi_{ij}=0,\quad\pi_{\rm tr}=0.
+\]
+They are preserved by the evolution because
+\[
+ \mathcal G_{ij}(h)=-\tfrac12\delta^2h_{ij},\qquad
+ \dot h=2\pi,\qquad\dot\pi=\tfrac12\delta^2h,
+ \qquad\ddot h=\delta^2h.
+\]
+On this reduced sector the energy is
+\[
+ H_{\rm TT}=\norm{\pi}_h^2
+ +\frac14\sum_k\norm{\delta_kh}_h^2\geq0.
+\]
+Its derivative is zero: substituting the two first-order equations
+reduces it to
+$\langle\pi,\delta^2h\rangle_h
++\sum_k\langle\delta_kh,\delta_k\pi\rangle_h=0$.
+
+For a Fourier mode on the periodic centered lattice, let
+$\widetilde k_i=\sin(k_ih)/h$. If $\widetilde{\mathbf k}\neq0$,
+define
+\[
+ \Pi_{ij}=\delta_{ij}
+ -\frac{\widetilde k_i\widetilde k_j}{|\widetilde{\mathbf k}|^2},
+ \qquad
+ \Lambda^{\rm TT}_{ij,kl}
+ =\tfrac12(\Pi_{ik}\Pi_{jl}+\Pi_{il}\Pi_{jk}-\Pi_{ij}\Pi_{kl}).
+\]
+For a symmetric tensor $X$, its image is
+$\Pi X\Pi-\Pi\operatorname{tr}(\Pi X)/2$. It is transverse and
+traceless because $\Pi^2=\Pi$ and $\operatorname{tr}\Pi=2$.
+Applying the map again leaves it unchanged. On the transverse
+two-plane, symmetric tensors have dimension three and the trace
+condition removes one dimension. Thus the projector has rank two.
+
+The resulting frequency obeys
+\begin{equation}
+ \omega_h^2=\sum_i\frac{\sin^2(k_ih)}{h^2}.
+ \label{c:core:adm-dispersion}
+\end{equation}
+For fixed $\mathbf k\neq0$ as $h\to0$,
+\[
+ \omega_h^2=|\mathbf k|^2-\frac{h^2}{3}\sum_i k_i^4+O(h^4),
+ \qquad
+ \omega_h=|\mathbf k|
+ -\frac{h^2}{6|\mathbf k|}\sum_i k_i^4+O(h^4).
+\]
+These follow by expanding the sine and then the positive square root.
+The regime keeps $\mathbf k$ fixed. It is not uniform up to the
+Nyquist boundary.
+
+The spatial operator in \eqref{c:core:adm-dispersion} is the sum of
+the squared centered first derivatives. It differs from the
+nearest-neighbor second-difference operator used for the raw Gowdy
+equations. For even site counts, an alternating sequence has centered
+derivative zero. Such checkerboard modes, as well as constant modes,
+belong to the derivative kernel. At a zero symbol the above TT
+projector is undefined and the rank-two argument does not apply.
+Exact constraint propagation consequently coexists with a finite
+spatial kernel that a physical continuum comparison must address.
+
+
+
+
+\gravityfigure{04_adm_dispersion}{The centered derivative has a Nyquist
+zero, while a fixed resolved mode approaches its continuum frequency
+with second-order error. The left panel is the one-dimensional symbol;
+the right panel tests a fixed mode under refinement.}
+
+\section{The nonlinear pointwise obstruction and its algebraic alternative}
+\label{c:core:nonlinear-obstruction}
+
+The linearized cancellations use commuting derivatives but never ask
+them to differentiate a product. A nonlinear diffeomorphism generator
+does. The following scalar model isolates that issue without relying
+on the more involved gravitational tensor constraints.
+
+Let a periodic real lattice have canonical brackets
+$\{q_a,p_b\}_h=\delta_{ab}/h$ and a skew matrix $D$. Define
+\[
+ \mathcal D_h[\xi]=h\sum_a\xi_ap_a(Dq)_a,
+ \qquad
+ \mathfrak L_D(f,g)=D(fg)-(Df)g-f(Dg).
+\]
+All products on this lattice are pointwise.
+
+\begin{proposition}[Exact nonlinear defect identity]
+\label{c:core:nonlinear-defect}
+For arbitrary finite arrays $q,p,\xi,\eta$,
+\begin{align}
+ \{\mathcal D_h[\xi],\mathcal D_h[\eta]\}_h
+ ={}&\mathcal D_h[\xi D\eta-\eta D\xi]\nonumber\\
+ &+h\sum_ap_a\big[
+ \xi_a\mathfrak L_D(\eta,Dq)_a
+ -\eta_a\mathfrak L_D(\xi,Dq)_a\big].
+ \label{c:core:nonlinear-defect-identity}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+Coordinate differentiation gives
+$\partial_p\mathcal D_h[\xi]=h\xi Dq$ and
+$\partial_q\mathcal D_h[\xi]=-hD(\xi p)$.
+Insert these in the canonical bracket and use $D^{\mathsf T}=-D$:
+\[
+ \{\mathcal D_h[\xi],\mathcal D_h[\eta]\}_h
+ =h\sum_ap_a\left[\xi_aD(\eta Dq)_a
+                  -\eta_aD(\xi Dq)_a\right].
+\]
+Expanding each derivative using the definition of $\mathfrak L_D$
+cancels the two $\xi\eta D^2q$ terms. The remaining product-rule
+terms give the first term of
+\eqref{c:core:nonlinear-defect-identity}, and the two defect terms
+give the second.
+\end{proof}
+
+\begin{theorem}[Finite pointwise derivation obstruction]
+\label{c:core:pointwise-no-go}
+A linear derivation on the complete pointwise algebra $\C^N$ is zero.
+Thus a nonzero finite pointwise derivative cannot obey the undeformed
+Leibniz rule on every pair of arrays.
+\end{theorem}
+
+\begin{proof}
+Let $e_a$ be the coordinate idempotents. If $D$ is a derivation, then
+$D(e_a)=D(e_a^2)=2e_aD(e_a)$. At coordinate $a$ this forces the
+component to be twice itself, hence zero. At every other coordinate
+the right side is zero. Therefore $D(e_a)=0$ for every $a$. Linearity
+and the coordinate basis imply $D=0$.
+\end{proof}
+
+The theorem rules out a universal ordinary derivation on the full
+finite pointwise algebra. For a particular generator, one must still
+inspect the contracted defect in
+\eqref{c:core:nonlinear-defect-identity}. A nonzero Leibniz defect
+does not by itself imply that every contraction is nonzero.
+
+\begin{example}[An exact bracket failure]
+\label{c:core:bracket-negative-control}
+Use $N=5$, $h=1$, and $(Df)_a=(f_{a+1}-f_{a-1})/2$.
+Take $q=e_0$, $p=\xi=e_1$, and $\eta=e_2$. Then
+$(Dq)_1=-1/2$, $(D\eta)_1=1/2$, and $\eta Dq=0$.
+The direct bracket in the preceding proof is zero, while
+\[
+ \mathcal D_h[\xi D\eta-\eta D\xi]=-\tfrac14.
+\]
+The defect is therefore exactly $+1/4$. This finite witness shows
+that the naive centered scalar constraint does fail to close
+universally in the proposed undeformed form.
+\end{example}
+
+\subsection{Smooth resolved arrays and the matrix corner route}
+
+For samples of sufficiently smooth periodic functions, the centered
+derivative obeys
+\[
+ D_hf=f'+\frac{h^2}{6}f'''+O(h^4).
+\]
+If $f,g$ have uniformly bounded derivatives through order five, its
+Leibniz defect consequently satisfies
+\begin{equation}
+ \mathfrak L_{D_h}(f,g)
+ =\frac{h^2}{2}(f''g'+f'g'')+O(h^4).
+ \label{c:core:smooth-defect}
+\end{equation}
+For fixed smooth $p,\xi,\eta,q$, with sufficiently many additional
+bounded derivatives of $q$ to control $D_hq$, the contraction in
+\eqref{c:core:nonlinear-defect-identity} is $O(h^2)$ on a fixed periodic
+interval. Each summand is uniformly $O(h^2)$ and $hN$ is the interval
+length. The coordinate-idempotent witness above is outside this
+uniformly smooth regime.
+
+A spectral derivative has an exact product rule on trigonometric
+polynomials when every product remains in the represented band without
+aliasing. Repeated products require further headroom. These restricted
+domains differ from the complete pointwise algebra. The later resolved
+constraint theorem includes explicit domain bounds.
+
+For the full matrix algebra, choose a Hermitian matrix $K$ and set
+$\delta_KX=i[K,X]$. Direct multiplication gives
+\begin{equation}
+ \delta_K(XY)=(\delta_KX)Y+X(\delta_KY).
+ \label{c:core:inner-derivation}
+\end{equation}
+It also obeys $\delta_K(X^*)=(\delta_KX)^*$,
+$\operatorname{Tr}\delta_KX=0$, and is skew-adjoint for the
+Hilbert--Schmidt inner product. The last identity follows by moving
+$K$ through the trace. These properties supply an exact finite
+product calculus on a noncommutative algebra.
+
+

@@ -1,0 +1,987 @@
+\section{One Hilbert space behind all cylinder depths}
+\label{a-limit-hilbert}
+
+An isometric refinement map compares two finite registers. An infinite
+quantum dynamics requires more: a common completed Hilbert space, a
+specified operator domain, and a topology in which the cutoffs converge.
+These requirements can all be met for the cylinder tower. They are separate
+requirements for a walk on a growing finite tree.
+
+Fix a prime $p$. The compact additive group $\Z_p$ has normalized Haar
+measure $\mu_p$, with
+\[
+ B_{m,a}=a+p^m\Z_p,\qquad 0\leq a<p^m,\qquad
+ \mu_p(B_{m,a})=p^{-m}.
+\]
+Write $\HH_p=L^2(\Z_p,\mu_p;\C)$. We use the complex inner product
+$\inner{f}{g}=\int\overline f g\,d\mu_p$, linear in its second argument.
+The $p$-adic coordinate belongs to the measurable space. Amplitudes and the
+Born probabilities use ordinary complex Hilbert space.
+
+\subsection{Counting amplitudes and Haar densities}
+
+At depth $m$, the finite space $\HH_{p,m}=\ell^2(\Z/p^m\Z)$ has counting
+inner product and orthonormal basis $e_a$. Define
+\begin{equation}
+ \mathcal U_{p,m}e_a=p^{m/2}\mathbf1_{B_{m,a}},
+ \qquad \mathcal V_m=\operatorname{span}
+ \{\mathbf1_{B_{m,a}}:0\leq a<p^m\}.
+ \label{a-limit-cylinder-embedding}
+\end{equation}
+The cylinders are disjoint. Consequently
+\[
+ \inner{\mathcal U_{p,m}e_a}{\mathcal U_{p,m}e_b}
+ =p^m\mu_p(B_{m,a}\cap B_{m,b})=\delta_{ab}.
+\]
+The same indicators span $\mathcal V_m$, so $\mathcal U_{p,m}$ is unitary
+onto this subspace. For $c=\sum_a c_ae_a$, its image has constant value
+$p^{m/2}c_a$ on $B_{m,a}$. In particular,
+\begin{equation}
+ \int_{B_{m,a}}|\mathcal U_{p,m}c|^2\,d\mu_p=|c_a|^2.
+ \label{a-limit-born-normalization}
+\end{equation}
+There is no extra probability factor after this normalization.
+
+The finite refinement map is
+\[
+ V_{p,m}e_a=\frac1{\sqrt p}
+ \sum_{d=0}^{p-1}e_{a+d p^m}.
+\]
+Since $B_{m,a}=\bigsqcup_d B_{m+1,a+d p^m}$, it satisfies
+\begin{equation}
+ \mathcal U_{p,m+1}V_{p,m}=\mathcal U_{p,m}.
+ \label{a-limit-common-embedding}
+\end{equation}
+Indeed, the coefficient on each child indicator is
+$p^{-1/2}p^{(m+1)/2}=p^{m/2}$, precisely the coefficient on the parent.
+Thus the refinement changes the address resolution of an embedded state
+without changing the function in $\HH_p$.
+
+An equivalent finite convention uses the weighted norm
+\[
+ \norm{f}_{m,\mathrm{Haar}}^2=p^{-m}\sum_a|f(a)|^2.
+\]
+Here $f(a)$ is a density amplitude rather than a counting amplitude, and
+the embedding into $\HH_p$ sends $f$ to
+$\sum_a f(a)\mathbf1_{B_{m,a}}$. Its refinement repeats the parent value
+on all children, without $p^{-1/2}$. The coordinate change
+$f(a)=p^{m/2}c_a$ identifies the two conventions. The factors
+$p^{-m}$ in the measure and $p^{m/2}$ in the counting embedding are a
+single normalization expressed in two places.
+
+\subsection{Cylinder averaging as an orthogonal projection}
+
+For $f\in\HH_p$, define
+\begin{equation}
+ (\mathsf E_m f)(x)
+ =p^m\int_{x+p^m\Z_p} f(y)\,d\mu_p(y).
+ \label{a-limit-expectation}
+\end{equation}
+The integral is defined since $L^2$ is contained in $L^1$ on this
+probability space. It produces a function constant on each depth-$m$
+cylinder.
+
+\begin{proposition}[Nested cylinder projections]
+\label{a-limit-expectation-algebra}
+The operator $\mathsf E_m$ is the orthogonal projection onto $\mathcal V_m$.
+For $m,n\geq0$,
+\begin{equation}
+ \mathsf E_m^*=\mathsf E_m,\qquad
+ \mathsf E_m^2=\mathsf E_m,\qquad
+ \mathsf E_m\mathsf E_n=\mathsf E_{\min(m,n)}.
+ \label{a-limit-projection-product}
+\end{equation}
+Moreover $\mathsf E_m f\to f$ in $L^2$ for every $f\in\HH_p$.
+\end{proposition}
+\begin{proof}
+For a cylinder-constant $g$, the integral of $f-\mathsf E_m f$ over each
+depth-$m$ cylinder is zero. Multiplying by the constant value of
+$\overline g$ there and summing shows
+$\inner{g}{f-\mathsf E_mf}=0$. The image is in $\mathcal V_m$, and averaging
+a function in $\mathcal V_m$ returns the function. These statements
+characterize the orthogonal projection and establish the first two
+identities. The spaces are nested, because every cylinder partitions into
+its children. Orthogonal projections onto nested subspaces satisfy the
+third identity: the larger projection fixes the smaller range, and the
+reverse order follows by taking adjoints.
+
+For completeness, the union of these ranges is dense. Cylinders form a
+countable clopen base for the topology on $\Z_p$ and generate its Borel
+sigma-algebra. If $f\in L^2$ is orthogonal to every cylinder indicator,
+the finite complex measure $\nu(A)=\int_A f\,d\mu_p$ vanishes on
+cylinders and their finite unions. The class of sets on which $\nu$ is
+zero contains the whole space, is closed under complements, and is
+closed under countable disjoint unions. The elementary monotone-class
+extension from the cylinder algebra therefore gives $\nu(A)=0$ for every
+Borel set. Applying this to the positive and negative level sets of the
+real and imaginary parts of $f$ yields $f=0$ almost everywhere.
+The orthogonal complement of $\bigcup_m\mathcal V_m$ is thus zero.
+
+Given $\varepsilon>0$, choose $g\in\mathcal V_M$ with
+$\norm{f-g}_2<\varepsilon$. For $m\geq M$, the projection fixes $g$, so
+$\norm{f-\mathsf E_m f}_2
+=\norm{(I-\mathsf E_m)(f-g)}_2\leq\norm{f-g}_2<\varepsilon$.
+This proves strong convergence without exchanging an infinite integral
+with a limit.
+\end{proof}
+
+The completion of the isometric direct system
+$(\HH_{p,m},V_{p,m})$ is therefore $\HH_p$: equation
+\eqref{a-limit-common-embedding} gives a single isometric map on the
+algebraic direct limit, and its image is the dense union of the
+$\mathcal V_m$. For $m\leq M$, with
+$V_{p,m\to M}=V_{p,M-1}\cdots V_{p,m}$, one also has
+\begin{equation}
+ \mathsf E_m\big|_{\mathcal V_M}
+ =\mathcal U_{p,M}V_{p,m\to M}V_{p,m\to M}^*
+ \mathcal U_{p,M}^*.
+ \label{a-limit-finite-projection}
+\end{equation}
+Both sides are the orthogonal projection in $\mathcal V_M$ onto
+$\mathcal V_m$. This is the exact relation between the finite matrices
+and the common infinite Hilbert space.
+
+\subsection{Orthogonal details and a complete Haar basis}
+
+Use $\mathsf F_0=\mathsf E_0$ and
+$\mathsf F_m=\mathsf E_m-\mathsf E_{m-1}$ for $m\geq1$. These are the
+infinite depth details called $\mathsf D_m$ in the archived chapter.
+They correspond to the finite $D_m^{(M)}$ after the embedding
+$\mathcal U_{p,M}$. Equation \eqref{a-limit-projection-product} gives
+\begin{equation}
+ \mathsf F_m\mathsf F_n=\delta_{mn}\mathsf F_m,
+ \qquad \sum_{m=0}^M\mathsf F_m=\mathsf E_M.
+ \label{a-limit-detail-algebra}
+\end{equation}
+For example, if $1\leq m<n$, the four products in
+$(\mathsf E_m-\mathsf E_{m-1})(\mathsf E_n-\mathsf E_{n-1})$
+are $\mathsf E_m,\mathsf E_m,\mathsf E_{m-1},\mathsf E_{m-1}$ and cancel.
+For $m=n$ the same expansion is
+$\mathsf E_m-\mathsf E_{m-1}$. The cases involving $m=0$ use
+$\mathsf E_0\mathsf E_n=\mathsf E_0$.
+
+Consequently
+\begin{equation}
+ \HH_p=\bigoplus_{m=0}^{\infty}\operatorname{Ran}\mathsf F_m,
+ \qquad \norm{f}_2^2=\sum_{m=0}^{\infty}\norm{\mathsf F_mf}_2^2.
+ \label{a-limit-parseval}
+\end{equation}
+The sum of the projections is $I$ in the strong operator topology.
+The detail ranks are $d_0=1$ and $d_m=(p-1)p^{m-1}$ for $m\geq1$,
+the differences of the dimensions $p^m-p^{m-1}$.
+
+For an explicit basis, put $\omega_p=\exp(2\pi i/p)$ and define
+\begin{equation}
+ \psi_{m,a,q}=p^{(m-1)/2}\sum_{d=0}^{p-1}
+ \omega_p^{qd}\mathbf1_{B_{m,a+d p^{m-1}}},
+ \quad
+ \begin{matrix}m\geq1,\quad 0\leq a<p^{m-1},\\1\leq q<p.\end{matrix}
+ \label{a-limit-haar-wavelets}
+\end{equation}
+Each has zero average over its parent, since
+$\sum_d\omega_p^{qd}=0$, and lies in $\operatorname{Ran}\mathsf F_m$.
+Its norm squared is $p^{m-1}p\,p^{-m}=1$. Distinct parents have disjoint
+support, while two characters at the same parent have inner product
+$p^{-1}\sum_d\omega_p^{(q'-q)d}=\delta_{qq'}$. The number of these
+orthonormal functions is exactly $d_m$, so they span that level.
+Together with $\psi_0=1$, they form a complete orthonormal basis by
+\eqref{a-limit-parseval}.
+
+\subsection{A statewise approximation rate}
+
+For $s>0$, define the Haar regularity norm
+\[
+ \norm{f}_{\mathfrak H_p^s}^2
+ =\sum_{m\geq0}p^{2sm}\norm{\mathsf F_mf}_2^2,
+ \qquad
+ \mathfrak H_p^s=\{f\in\HH_p:\norm{f}_{\mathfrak H_p^s}<\infty\}.
+\]
+No identification with another Sobolev convention is required here.
+The definition itself gives the quantitative cutoff estimate.
+
+\begin{proposition}[Exact tail and regularity bound]
+\label{a-limit-tail}
+For $f\in\HH_p$ and every $M\geq0$,
+\begin{equation}
+ \norm{(I-\mathsf E_M)f}_2^2
+ =\sum_{m>M}\norm{\mathsf F_mf}_2^2.
+ \label{a-limit-tail-identity}
+\end{equation}
+If $f\in\mathfrak H_p^s$, then
+\begin{equation}
+ \norm{(I-\mathsf E_M)f}_2
+ \leq p^{-s(M+1)}\norm{f}_{\mathfrak H_p^s}.
+ \label{a-limit-tail-bound}
+\end{equation}
+The convergence $\mathsf E_M\to I$ is strong and is not convergence in
+operator norm.
+\end{proposition}
+\begin{proof}
+The omitted details are orthogonal, so Parseval gives the equality.
+For $m>M$, $p^{2sm}\geq p^{2s(M+1)}$. Multiplying the omitted summands
+by this lower bound proves the squared estimate, and taking square roots
+gives \eqref{a-limit-tail-bound}. At every finite $M$ there is a unit
+vector in $\operatorname{Ran}\mathsf F_{M+1}$, on which
+$I-\mathsf E_M$ acts as the identity. Thus
+$\norm{I-\mathsf E_M}=1$ for every $M$.
+\end{proof}
+
+The rate is a bound on states in the displayed regularity class. For an
+arbitrary $L^2$ state the tail still tends to zero, but no common geometric
+rate follows. A finite array already in $\mathcal V_L$ has zero tail once
+$M\geq L$, which is a different statement from testing an infinite tail.
+
+
+\section{Self-adjoint dynamics and what a cutoff converges to}
+\label{a-limit-dynamics}
+
+\subsection{The maximal domain for level energies}
+
+Let $(\epsilon_m)_{m\geq0}$ be any sequence of real numbers. Define
+\begin{align}
+ \Dom(H_\epsilon)
+ &=\left\{f\in\HH_p:
+ \sum_{m\geq0}|\epsilon_m|^2\norm{\mathsf F_mf}_2^2<\infty\right\},
+ \nonumber\\
+ H_\epsilon f&=\sum_{m\geq0}\epsilon_m\mathsf F_mf.
+ \label{a-limit-hamiltonian-domain}
+\end{align}
+The series converges in $L^2$ exactly on this domain. It is not necessary
+to bound the energies uniformly, but it is necessary to state the domain.
+
+\begin{theorem}[Real level energies define a self-adjoint operator]
+\label{a-limit-selfadjoint}
+The operator in \eqref{a-limit-hamiltonian-domain} is densely defined,
+closed, and self-adjoint. The finite cylinder functions form an operator
+core. It is bounded if and only if $\sup_m|\epsilon_m|<\infty$, and its
+spectrum is
+\begin{equation}
+ \sigma(H_\epsilon)=\overline{\{\epsilon_m:m\geq0\}}.
+ \label{a-limit-spectrum}
+\end{equation}
+\end{theorem}
+\begin{proof}
+The orthogonal decomposition \eqref{a-limit-parseval} identifies $f$ with
+the square-summable sequence $f_m=\mathsf F_mf$. Finite sequences belong
+to the domain, so it is dense. The real multipliers imply symmetry.
+To identify the adjoint, suppose $g\in\Dom(H_\epsilon^*)$ and write
+$k=H_\epsilon^*g$. Testing the adjoint identity against an arbitrary
+vector supported on level $m$ gives $k_m=\epsilon_m g_m$. Since $k$ is
+square summable, $\sum_m|\epsilon_m|^2\norm{g_m}^2<\infty$.
+Thus $g\in\Dom(H_\epsilon)$ and the adjoint agrees with $H_\epsilon$.
+The reverse inclusion is symmetry. This proves self-adjointness and
+therefore closedness.
+
+For $f\in\Dom(H_\epsilon)$, the cylinder truncation $\mathsf E_M f$
+satisfies both
+$\norm{f-\mathsf E_M f}_2\to0$ and
+$\norm{H_\epsilon(f-\mathsf E_M f)}_2\to0$, because the two squared norms
+are the tails of convergent nonnegative series. This is precisely density
+in the graph norm and proves the core assertion.
+If the energies have supremum $C<\infty$, Parseval gives
+$\norm{H_\epsilon f}_2\leq C\norm f_2$. Conversely, a unit vector on
+level $m$ has image norm $|\epsilon_m|$, so boundedness forces a finite
+supremum.
+
+If $z$ is outside the closed energy set, the sequence
+$(\epsilon_m-z)^{-1}$ is bounded and defines an inverse for
+$H_\epsilon-z$. Its image lies in the domain because
+$\epsilon_m/(\epsilon_m-z)=1+z/(\epsilon_m-z)$ is bounded as well.
+This proves that such $z$ is in the resolvent set. An energy
+$\epsilon_m$ is an eigenvalue, while a limit point $z$ has unit level
+vectors $u_j$ with $\norm{(H_\epsilon-z)u_j}_2\to0$.
+A bounded inverse would contradict this limit. Hence the closed energy
+set is exactly the spectrum.
+\end{proof}
+
+This proof also excludes a hidden choice of boundary condition at infinite
+depth. On the finite-cylinder core, the real level operator has the unique
+self-adjoint closure just described.
+
+\subsection{Explicit spectral calculus and strong continuity}
+
+For bounded Borel $F:\R\to\C$, define
+\begin{equation}
+ F(H_\epsilon)f=\sum_{m\geq0}F(\epsilon_m)\mathsf F_mf.
+ \label{a-limit-borel-calculus}
+\end{equation}
+The series converges by Parseval and
+$\norm{F(H_\epsilon)f}_2\leq\sup_m|F(\epsilon_m)|\norm f_2$.
+The same level decomposition verifies sums, products, and adjoints of
+these multipliers directly. In particular,
+\begin{align}
+ U(t)&=e^{-itH_\epsilon}
+ =\sum_{m\geq0}e^{-it\epsilon_m}\mathsf F_m,
+ \label{a-limit-unitary}\\
+ (z-H_\epsilon)^{-1}
+ &=\sum_{m\geq0}(z-\epsilon_m)^{-1}\mathsf F_m,
+ \quad z\notin\sigma(H_\epsilon).
+ \label{a-limit-resolvent}
+\end{align}
+The projections in these sums converge strongly, not absolutely in
+operator norm in general.
+
+The modulus-one multipliers give $U(t)^*U(t)=I$ and
+$U(t+s)=U(t)U(s)$. They also give strong continuity:
+\[
+ \norm{(U(t)-U(t_0))f}_2^2
+ =\sum_m|e^{-it\epsilon_m}-e^{-it_0\epsilon_m}|^2
+ \norm{\mathsf F_mf}_2^2\longrightarrow0.
+\]
+To justify this limit, first bound the omitted summands by
+$4\sum_{m>M}\norm{\mathsf F_mf}_2^2$, then use ordinary continuity in
+the finite sum up to $M$. On $\Dom(H_\epsilon)$ the same argument,
+using $|(e^{-it\epsilon}-1)/t|\leq|\epsilon|$, proves
+\[
+ \lim_{t\to0}\frac{U(t)f-f}{t}=-iH_\epsilon f.
+\]
+Thus the declared self-adjoint operator is the generator. A general
+$L^2$ state evolves unitarily even if this derivative does not exist.
+
+\subsection{Two distinct extensions of the finite dynamics}
+
+Let $H_\epsilon^{(M)}$ be the finite restriction of $H_\epsilon$ to
+$\mathcal V_M$. One useful approximation to $U(t)$ is its embedded
+finite propagator, extended by zero on the omitted subspace:
+\begin{equation}
+ U_M^{\mathrm{emb}}(t)
+ =\sum_{m=0}^{M}e^{-it\epsilon_m}\mathsf F_m
+ =U(t)\mathsf E_M.
+ \label{a-limit-embedded-propagator}
+\end{equation}
+It is unitary on $\mathcal V_M$ and has kernel
+$\mathcal V_M^\perp$ as an operator on $\HH_p$.
+
+\Needspace{15\baselineskip}
+\begin{proposition}[Exact state error for a compatible cutoff]
+\label{a-limit-unitary-error}
+For every $f\in\HH_p$,
+\begin{equation}
+ \norm{U(t)f-U_M^{\mathrm{emb}}(t)f}_2
+ =\norm{(I-\mathsf E_M)f}_2.
+ \label{a-limit-unitary-tail}
+\end{equation}
+This equality is uniform for all real $t$. For
+$f\in\mathfrak H_p^s$, the right side is bounded by
+$p^{-s(M+1)}\norm f_{\mathfrak H_p^s}$.
+For $f\in\Dom(H_\epsilon)$ there is also the exact graph-norm identity
+\begin{align}
+ &\norm{U(t)f-U_M^{\mathrm{emb}}(t)f}_2^2
+ +\norm{H_\epsilon(U(t)f-U_M^{\mathrm{emb}}(t)f)}_2^2
+ \nonumber\\
+ &\hspace{2em}=
+ \sum_{m>M}(1+|\epsilon_m|^2)\norm{\mathsf F_mf}_2^2.
+ \label{a-limit-graph-tail}
+\end{align}
+\end{proposition}
+\begin{proof}
+The difference is the omitted orthogonal sum
+$\sum_{m>M}e^{-it\epsilon_m}\mathsf F_mf$. Its multipliers have modulus
+one, so Parseval gives \eqref{a-limit-unitary-tail}. Applying
+$H_\epsilon$ multiplies the omitted level by $\epsilon_m$ and gives the
+second identity. The domain hypothesis ensures that this second series
+is finite. The regularity estimate is Proposition \ref{a-limit-tail}.
+\end{proof}
+
+An alternative is to extend the finite Hamiltonian by the zero
+Hamiltonian on the omitted subspace:
+\[
+ \widetilde H_M=H_\epsilon\mathsf E_M
+ =\sum_{m\leq M}\epsilon_m\mathsf F_m.
+\]
+This is a bounded self-adjoint operator on all of $\HH_p$. Its
+propagator is a full-space unitary, but has a different tail:
+\begin{equation}
+ e^{-it\widetilde H_M}
+ =U_M^{\mathrm{emb}}(t)+(I-\mathsf E_M),
+ \qquad
+ \norm{(e^{-it\widetilde H_M}-U(t))f}_2
+ \leq2\norm{(I-\mathsf E_M)f}_2.
+ \label{a-limit-zero-hamiltonian-extension}
+\end{equation}
+Likewise, for nonreal $z$,
+\begin{align}
+ (z-\widetilde H_M)^{-1}
+ &=\mathsf E_M(z-H_\epsilon)^{-1}
+   +z^{-1}(I-\mathsf E_M),\nonumber\\
+ \norm{((z-\widetilde H_M)^{-1}-(z-H_\epsilon)^{-1})f}_2
+ &\leq\left(|z|^{-1}+|\operatorname{Im}z|^{-1}\right)
+ \norm{(I-\mathsf E_M)f}_2.
+ \label{a-limit-strong-resolvent}
+\end{align}
+Thus $\widetilde H_M$ converges to $H_\epsilon$ in the strong resolvent
+sense. These statements specify operators on one common Hilbert space.
+They do not compare matrices of changing dimensions without an embedding.
+
+The embedded propagators converge strongly, uniformly in time on each
+fixed state. Their operator norm error nevertheless satisfies
+\[
+ \norm{U(t)-U_M^{\mathrm{emb}}(t)}=1
+ \qquad\text{for every }M,t.
+\]
+The fully unitary extensions also converge strongly with the bound in
+\eqref{a-limit-zero-hamiltonian-extension}; norm convergence of these
+extensions needs a separate condition on the omitted phases. Neither
+assertion is a general norm-limit theorem for arbitrary quantum dynamics.
+
+\subsection{A graph-domain example with exact infinite tails}
+
+\begin{example}[Convergent states and finite energy derivatives]
+\label{a-limit-geometric-example}
+Choose one unit vector $u_m\in\operatorname{Ran}\mathsf F_m$ at every
+level, let $0<q<1$, and set
+\[
+ f_q=\sum_{m\geq0}\sqrt{(1-q)q^m}\,u_m,
+ \qquad \epsilon_m=2^m.
+\]
+Then $\norm{f_q}_2=1$ and
+\begin{equation}
+ \norm{(I-\mathsf E_M)f_q}_2^2=q^{M+1}.
+ \label{a-limit-geometric-state-tail}
+\end{equation}
+However, $f_q\in\Dom(H_\epsilon)$ exactly when $4q<1$:
+\[
+ \norm{H_\epsilon f_q}_2^2
+ =(1-q)\sum_{m\geq0}(4q)^m.
+\]
+For $q<1/4$, its graph tail is exactly
+\begin{equation}
+ q^{M+1}+\frac{(1-q)(4q)^{M+1}}{1-4q}.
+ \label{a-limit-geometric-graph-tail}
+\end{equation}
+For $q=1/8$, the state norm tail decays faster than the graph norm tail.
+For $q=1/2$, the normalized state still has a convergent $L^2$ cylinder
+approximation and a well-defined unitary evolution, but is outside the
+Hamiltonian domain. All these conclusions concern genuinely infinite
+series, rather than a finite last level with its tail set to zero.
+\end{example}
+
+\adicfigure{10_tail_graph_norm}{Exact infinite tails for the geometric
+level masses of Example \ref{a-limit-geometric-example}. The operator
+domain controls a weighted tail in addition to the state norm tail.
+The parameters are declared in the plate and its reproducible Python
+source.}
+
+\subsection{Compact resolvents and thermal weights}
+
+The omitted embedded resolvent has the exact norm
+\begin{equation}
+ \norm{(I-\mathsf E_M)(z-H_\epsilon)^{-1}}
+ =\sup_{m>M}|z-\epsilon_m|^{-1}.
+ \label{a-limit-resolvent-tail-norm}
+\end{equation}
+The upper bound follows by Parseval. For the lower bound, test on a unit
+vector at any omitted level and take the supremum. Since every level is
+nonzero and finite dimensional, this proves the following equivalence.
+
+\begin{proposition}[Exact compactness criterion]
+\label{a-limit-compact-resolvent}
+The operator $H_\epsilon$ has compact resolvent if and only if
+$|\epsilon_m|\to\infty$. In that case the embedded finite resolvents
+converge in operator norm. This is an assertion about the embedded
+resolvents, rather than the zero-Hamiltonian extensions of
+\eqref{a-limit-strong-resolvent}.
+\end{proposition}
+\begin{proof}
+If the absolute energies tend to infinity, the right side of
+\eqref{a-limit-resolvent-tail-norm} tends to zero. The retained part of the
+resolvent has finite rank, so the resolvent is a norm limit of finite-rank
+operators and is compact. Conversely, if the absolute energies do not
+tend to infinity, there are infinitely many distinct levels $m_j$ with
+$|\epsilon_{m_j}|\leq C$ for some $C$. Unit vectors $u_j$ on these levels
+are orthogonal. For a fixed nonreal $z$, their resolvent images are also
+orthogonal and have norm at least $(|z|+C)^{-1}$.
+They have no convergent subsequence. The resolvent is therefore not
+compact.
+\end{proof}
+
+When $|\epsilon_m|\to\infty$, the omitted part of the resolvent for
+$\widetilde H_M$ in \eqref{a-limit-strong-resolvent} still carries the
+constant multiplier $z^{-1}$. It does not converge in norm to the omitted
+resolvent of $H_\epsilon$. Strong resolvent convergence and norm
+convergence of an embedded finite-rank resolvent are distinct claims.
+
+For $\beta>0$, the multiplier $e^{-\beta H_\epsilon}$ is bounded precisely
+when the energies are bounded below. If there is no lower bound, the
+levelwise exponential is an unbounded operator with domain
+$\{f:\sum_m e^{-2\beta\epsilon_m}\norm{\mathsf F_mf}_2^2<\infty\}$.
+Thus a finite Euclidean intertwining identity does not by itself supply a
+bounded infinite heat semigroup.
+When bounded below, the positive operator has trace
+\begin{equation}
+ \operatorname{Tr}(e^{-\beta H_\epsilon})
+ =e^{-\beta\epsilon_0}
+ +\sum_{m\geq1}(p-1)p^{m-1}e^{-\beta\epsilon_m},
+ \label{a-limit-thermal-trace}
+\end{equation}
+possibly infinite. This follows by summing its nonnegative diagonal
+entries in the complete Haar basis. It is trace class exactly when this
+series converges. For $\epsilon_m=c m$ with $c>0$, the condition is
+$\beta c>\log p$, by the geometric-series test. For
+$\epsilon_m=p^{\alpha m}$ with $\alpha>0$, it converges for every
+$\beta>0$, since the exponential energy term eventually dominates the
+linear-in-$m$ logarithm of the multiplicity. A thermodynamic partition
+function therefore needs an energy choice and a summability condition in
+addition to Hilbert-space reconstruction.
+
+
+\section{Compatible interactions across finitely many primes}
+\label{a-limit-multiprime}
+
+\subsection{Tensor embeddings and rectangular cutoffs}
+
+Let $\mathcal P$ be a finite prime set and let $\KK_{\mathrm{tor}}$ be a
+finite-dimensional complex space for the retained torsion and dyadic sign
+registers. Set
+\begin{equation}
+ \HH_{\mathcal P}^{\infty}
+ =\KK_{\mathrm{tor}}\otimes
+ \bigotimes_{p\in\mathcal P}L^2(\Z_p,\mu_p).
+ \label{a-limit-multiprime-space}
+\end{equation}
+The corresponding finite register embeds by
+$I_{\KK_{\mathrm{tor}}}\otimes\bigotimes_p\mathcal U_{p,h_p}$.
+For a multi-depth $\mathbf h=(h_p)$, define
+\[
+ \mathsf E_{\mathbf h}
+ =I_{\KK_{\mathrm{tor}}}\otimes\bigotimes_p\mathsf E_{p,h_p}.
+\]
+Factorwise projection identities give
+\begin{equation}
+ \mathsf E_{\mathbf h}\mathsf E_{\mathbf k}
+ =\mathsf E_{\min(\mathbf h,\mathbf k)},
+ \qquad \mathsf E_{\mathbf h}f\to f
+ \quad\text{as every }h_p\to\infty.
+ \label{a-limit-rectangular-projections}
+\end{equation}
+To justify the second statement, first take an elementary tensor. The
+difference of the tensor projections and the identity is a finite
+telescoping sum, one factor of which tends strongly to zero in each term,
+while all other projection factors have norm at most one. Finite sums of
+elementary tensors are dense, and the projections are contractions. This
+extends convergence to every $f$.
+
+Refinement in distinct coordinates is path independent because
+\[
+ (V_p\otimes I)(I\otimes V_q)
+ =(I\otimes V_q)(V_p\otimes I)=V_p\otimes V_q.
+\]
+The identity on $\KK_{\mathrm{tor}}$ leaves the separately retained sign
+channel untouched by the averaging. This is a finite set of primes.
+An infinite tensor product, a restricted adelic product, and a model
+including the Archimedean place each require further choices.
+
+Define the joint detail projections
+\begin{equation}
+ \mathsf F_{\mathbf r}
+ =I_{\KK_{\mathrm{tor}}}\otimes
+ \bigotimes_{p\in\mathcal P}\mathsf F_{p,r_p},
+ \qquad \mathbf r\in\N^{\mathcal P}.
+ \label{a-limit-joint-details}
+\end{equation}
+They are pairwise orthogonal and have finite-dimensional ranges.
+Rectangular sums equal $\mathsf E_{\mathbf h}$, so their strong sum is
+the identity. This permits interactions between primes while preserving
+the exact depth filtration.
+
+\subsection{A complete block-domain theorem}
+
+The scalar weights are one particularly simple choice. The following
+editorial extension states the exact additional input for interacting
+blocks. It is useful because the torsion operators inside a joint packet
+need not commute with one another.
+
+\begin{theorem}[Self-adjoint packet blocks and compatible finite dynamics]
+\label{a-limit-block-hamiltonian}
+For every $\mathbf r$, let $A_{\mathbf r}$ be a self-adjoint operator on
+the finite-dimensional space
+$\KK_{\mathbf r}=\operatorname{Ran}\mathsf F_{\mathbf r}$.
+On $\HH_{\mathcal P}^{\infty}=\bigoplus_{\mathbf r}\KK_{\mathbf r}$ define
+\begin{align}
+ \Dom(H_A)&=\left\{f:\sum_{\mathbf r}
+ \norm{A_{\mathbf r}\mathsf F_{\mathbf r}f}^2<\infty\right\},
+ \nonumber\\
+ H_A f&=\sum_{\mathbf r}A_{\mathbf r}\mathsf F_{\mathbf r}f.
+ \label{a-limit-block-domain}
+\end{align}
+Then $H_A$ is self-adjoint, and finite rectangular packet sums form a
+core. Every rectangular range reduces $H_A$, and its finite restriction
+$H_A^{(\mathbf h)}$ satisfies exact embedding intertwining with every
+larger rectangular restriction. For bounded Borel $F$,
+\begin{equation}
+ F(H_A)f=\sum_{\mathbf r}F(A_{\mathbf r})\mathsf F_{\mathbf r}f,
+ \qquad
+ F(H_A)\mathsf E_{\mathbf h}\to F(H_A)
+ \quad\text{strongly}.
+ \label{a-limit-block-calculus}
+\end{equation}
+In particular,
+\begin{equation}
+ \norm{e^{-itH_A}(I-\mathsf E_{\mathbf h})f}
+ =\norm{(I-\mathsf E_{\mathbf h})f}.
+ \label{a-limit-block-unitary-error}
+\end{equation}
+\end{theorem}
+\begin{proof}
+Finite rectangular sums belong to the domain and are dense. Symmetry
+holds by symmetry on every block. If $g$ belongs to the adjoint domain
+and $k=H_A^*g$, testing against an arbitrary vector in
+$\KK_{\mathbf r}$ gives
+$\mathsf F_{\mathbf r}k=A_{\mathbf r}\mathsf F_{\mathbf r}g$.
+Square summability of $k$ is precisely the domain condition in
+\eqref{a-limit-block-domain}. Thus $H_A^*=H_A$. Truncating the two
+square-summable sequences $f_{\mathbf r}$ and
+$A_{\mathbf r}f_{\mathbf r}$ proves the graph-core assertion.
+
+The rectangular projection selects a collection of whole blocks, so it
+commutes with $H_A$ on the domain and reduces the operator.
+The restriction to each retained block is literally the same matrix at
+every subsequent depth. This proves the finite intertwining, and
+finite-dimensional spectral calculus on each block gives
+\eqref{a-limit-block-calculus}. Boundedness of $F$ bounds its omitted
+image by $\norm F_\infty\norm{(I-\mathsf E_{\mathbf h})f}$, proving
+strong convergence. Finally, each block exponential is unitary, so
+orthogonality of the omitted blocks gives
+\eqref{a-limit-block-unitary-error}.
+\end{proof}
+
+For example, on a joint depth packet one may take
+\[
+ A_{\mathbf r}
+ =\left(\sum_a\epsilon_{a,\mathbf r}T_a\right)
+ \otimes I_{\mathrm{phase},\mathbf r},
+ \qquad \epsilon_{a,\mathbf r}\in\R,\quad T_a=T_a^*.
+\]
+The matrices $T_a$ act on the sign and torsion factors. Their mutual
+commutation is unnecessary because their sum is self-adjoint on the
+finite block. The coefficients assigned to an existing packet are fixed
+under refinement. An extension acting wholly inside a new detail
+complement has no matrix element between that complement and the old
+range. A cross term between them would be a different model.
+
+There is also an exact construction for any \emph{specified}
+self-adjoint compatible finite family along a cofinal nested sequence.
+Suppose finite-dimensional spaces $\mathcal V_0\subset\mathcal V_1
+\subset\cdots$ have dense union, and self-adjoint $K_M$ satisfy
+$K_{M+1}f=K_Mf$ for $f\in\mathcal V_M$.
+Self-adjointness implies that $\mathcal V_M^\perp\cap\mathcal V_{M+1}$
+is invariant: for $g$ there and $f\in\mathcal V_M$,
+$\inner{f}{K_{M+1}g}=\inner{K_{M+1}f}{g}=0$.
+The initial space $\mathcal V_0$ and the successive difference spaces
+therefore have stable self-adjoint finite blocks.
+Their orthogonal direct sum with the maximal square-summability domain
+is self-adjoint by the same adjoint proof above. This is an editorial
+compatible-family construction, not an assertion that arbitrary finite
+Hamiltonians are compatible. The identities $K_{M+1}|_{\mathcal V_M}=K_M$
+are its substantive hypothesis.
+
+\subsection{An exact cross-prime entangling generator}
+
+Let $Z_{\mathrm{sign}}$ have eigenvalues $+1,-1$ on a dyadic sign qubit,
+and let $B=B^*$ act on the remaining factors. Assume there are orthonormal
+states $|b_0\rangle,|b_1\rangle$ with
+$B|b_0\rangle=0$ and $B|b_1\rangle=|b_1\rangle$.
+One concrete choice is an odd-prime torsion involution times a fixed
+odd-prime detail projector, with the torsion state in its $+1$ eigenspace.
+For real $g\neq0$, use
+\[
+ H_{\mathrm{int}}=gZ_{\mathrm{sign}}\otimes B,
+ \qquad
+ |\Psi(0)\rangle=|+_x\rangle\otimes
+ \frac{|b_0\rangle+|b_1\rangle}{\sqrt2}.
+\]
+Evolution under this explicit interaction alone gives
+\begin{equation}
+ |\Psi(t)\rangle=\frac1{\sqrt2}
+ \left(|+_x\rangle\otimes|b_0\rangle
+ +e^{-igtZ_{\mathrm{sign}}}|+_x\rangle\otimes|b_1\rangle\right).
+ \label{a-limit-entangled-state}
+\end{equation}
+Tracing out the orthogonal $b$ states yields the equally weighted mixture
+of the two displayed sign states. Their overlap is $\cos(gt)$.
+A mixture of two unit vectors with equal weights and overlap magnitude
+$c$ has eigenvalues $(1+c)/2$ and $(1-c)/2$: its trace is one and its
+determinant on their two-dimensional span is $(1-c^2)/4$.
+Thus the sign entropy in bits is
+\begin{equation}
+ S_{\mathrm{sign}}(t)
+ =h_2\left(\frac{1+|\cos(gt)|}{2}\right),
+ \quad h_2(u)=-u\log_2u-(1-u)\log_2(1-u),
+ \label{a-limit-entanglement-entropy}
+\end{equation}
+with $0\log_2 0=0$. At $t_* =\pi/(2|g|)$ the two sign states are
+orthogonal and the entropy is one bit. A fixed level projector is
+compatible under refinement, so this interaction can entangle the prime
+factors while preserving the cylinder embedding.
+The tensor factorization alone creates no entanglement. It is this
+chosen generator and initial superposition that produce the result.
+
+
+\section{Controlled leakage when compatibility is broken}
+\label{a-limit-leakage}
+
+The preceding identities are exact because the coarse range reduces the
+Hamiltonian. A weighted coupling to its complement has a different,
+quantifiable behavior. This section concerns finite-dimensional
+self-adjoint operators; no unbounded perturbation theorem is implicit.
+
+Let $V$ be an isometry from a coarse space to a finite fine space, set
+$P=VV^*$ and $Q=I-P$, and let $H_0=H_0^*$ satisfy
+$H_0V=VH_c$. Let $B=B^*$ be purely off diagonal:
+\[
+ PBP=0,\qquad QBQ=0.
+\]
+For a real $\lambda$, define $H_\lambda=H_0+\lambda B$. In the source
+model $\lambda=p^{-w}$ for an assigned weight $w\geq1$.
+
+\begin{proposition}[Defect, leakage, and a second-order self-energy]
+\label{a-limit-leakage-bounds}
+Under these hypotheses,
+\begin{align}
+ \norm{H_\lambda V-VH_c}&=|\lambda|\norm{BV},
+ \label{a-limit-defect-norm}\\
+ \norm{Qe^{-itH_\lambda}P}
+ &\leq\min\{1,|t\lambda|\norm{QBP}\}.
+ \label{a-limit-duhamel-bound}
+\end{align}
+For $z\notin\sigma(QH_\lambda Q|_{Q\HH})$, the coarse self-energy is
+\begin{equation}
+ \Sigma_P(z)=PH_\lambda Q
+ (z-QH_\lambda Q|_{Q\HH})^{-1}QH_\lambda P,
+ \label{a-limit-feshbach-definition}
+\end{equation}
+where the inverse acts only on $Q\HH$, and
+\begin{equation}
+ \norm{\Sigma_P(z)}
+ \leq\frac{|\lambda|^2\norm{PBQ}^2}
+ {\operatorname{dist}(z,\sigma(QH_\lambda Q|_{Q\HH}))}.
+ \label{a-limit-feshbach-bound}
+\end{equation}
+\end{proposition}
+\begin{proof}
+The defect is $\lambda BV$, so the first identity is immediate.
+Self-adjointness of $H_0$ makes its invariant coarse range reducing.
+Hence $Qe^{-itH_0}P=0$, and Duhamel's identity gives
+\[
+ Qe^{-itH_\lambda}P
+ =-i\lambda\int_0^t
+ Qe^{-i(t-s)H_\lambda}B e^{-isH_0}P\,ds.
+\]
+The off-diagonal assumption and reduction by $H_0$ give
+$B e^{-isH_0}P=QBP e^{-isH_0}P$. The two propagators and the exterior
+projections are contractions. Integrating the norm bound over an
+interval of length $|t|$ gives the second expression in
+\eqref{a-limit-duhamel-bound}. The bound one follows directly from
+unitarity and the norms of the projections.
+
+The coarse/detail blocks of $H_0$ vanish, so
+$PH_\lambda Q=\lambda PBQ$ and $QH_\lambda P=\lambda QBP$.
+The detail compression is self-adjoint. Diagonalizing it bounds the
+resolvent norm by the reciprocal spectral distance. Since
+$QBP=(PBQ)^*$, submultiplicativity gives
+\eqref{a-limit-feshbach-bound}.
+\end{proof}
+
+The small-time leading term is $-it\lambda QBP$. More precisely,
+\begin{equation}
+ \norm{Qe^{-itH_\lambda}P+it\lambda QBP}
+ \leq\frac{|\lambda|t^2}{2}
+ \bigl(\norm{H_\lambda}+\norm{H_0}\bigr)\norm{QBP}.
+ \label{a-limit-shorttime-remainder}
+\end{equation}
+To verify this, subtract the constant integrand $QBP$ in Duhamel's
+formula and use $\norm{e^{-iuK}-I}\leq|u|\norm K$ for a finite
+self-adjoint $K$. The two deviations are bounded by
+$(|t-s|\norm{H_\lambda}+|s|\norm{H_0})\norm{QBP}$ on the oriented
+integration interval. Their integrals are both $t^2/2$.
+For $|\lambda|\leq1$, this is a uniform $O(t^2|\lambda|)$ remainder.
+A generic $O(t^2\lambda^2)$ remainder would omit the first-order
+interaction with the background Hamiltonian.
+
+For the stipulated assignment $\lambda=p^{-w}$, the operator defect and
+this leakage upper bound scale linearly with $p^{-w}$. The self-energy
+bound is quadratic in $p^{-w}$ away from the detail spectrum. Under the
+purely off-diagonal hypothesis, $QH_\lambda Q=QH_0Q$, so the denominator
+does not depend on $\lambda$. Approaching a detail resonance removes
+that uniform estimate. These are exact finite quantum statements for a
+chosen coupling law. An integral valuation packet does not, by itself,
+force every physical interaction strength to equal $p^{-w}$.
+
+
+\section{A local walk on physical position and refinement depth}
+\label{a-limit-product-walk}
+
+\subsection{The finite graph and its unitary tick}
+
+Let $N\geq3$ and $h\geq0$. Let $C_N$ be the physical cycle and let
+$T_{p,h}$ be the rooted finite $p$-ary tree of prefixes of length at most
+$h$. The product graph is
+\[
+ \mathcal G=C_N\square T_{p,h}.
+\]
+A vertex is $v=(x,\mathbf d)$, with $x\in\Z/N\Z$ and $\mathbf d$ a
+prefix. An edge changes either $x$ by one on the cycle or the prefix by
+one parent-child step. The graph has
+$N\sum_{r=0}^h p^r$ vertices. It includes all tree depths, unlike a
+cylinder register which contains only the residues at its last depth.
+
+Let $\vec E$ denote the directed arcs and let $\tau_2=2$,
+$\tau_p=p-1$ for odd $p$. The finite arc Hilbert space is
+\[
+ \HH_{\mathrm{arc}}=\ell^2(\vec E)\otimes\C^{\tau_p}.
+\]
+For each vertex of degree $d_v$, define the normalized outgoing vector
+$s_v=d_v^{-1/2}(1,\ldots,1)$ and the Grover coin
+$G_v=2|s_v\rangle\langle s_v|-I$.
+Its square is $I$, because $|s_v\rangle\langle s_v|$ is a projection.
+Take any local unitary $R_v$ on the torsion or sign factor and put
+\[
+ C=\bigoplus_v(G_v\otimes R_v).
+\]
+The reversal shift $S$ sends the arc $v\to u$ to $u\to v$, retaining
+the internal register. It is a permutation with $S^*=S$ and $S^2=I$.
+The one-tick walk
+\begin{equation}
+ U_{p,h,N}=SC
+ \label{a-limit-walk-unitary}
+\end{equation}
+is unitary because $U_{p,h,N}^*U_{p,h,N}=C^*S^*SC=C^*C=I$.
+Here locality concerns the graph edges, with no continuum limit assumed.
+
+\subsection{Local conservation and the product cone}
+
+Write $\psi^n(v,u)$ for the internal amplitude on an arc leaving $v$
+before the coin, and $\phi^n=C\psi^n$ for its post-coin value. Define
+\[
+ \rho_v^n=\sum_{u\sim v}\norm{\psi^n(v,u)}^2,
+ \qquad F_{v\to u}^n=\norm{\phi^n(v,u)}^2.
+\]
+The local unitary coin gives
+$\sum_uF_{v\to u}^n=\rho_v^n$.
+The reversal shift gives
+$\rho_v^{n+1}=\sum_u F_{u\to v}^n$. Subtraction proves
+\begin{equation}
+ \rho_v^{n+1}-\rho_v^n
+ =\sum_{u\sim v}(F_{u\to v}^n-F_{v\to u}^n).
+ \label{a-limit-walk-continuity}
+\end{equation}
+For every set of vertices $A$, summing this equation cancels every
+internal directed flux once with its opposite occurrence. Hence
+\begin{equation}
+ \sum_{v\in A}(\rho_v^{n+1}-\rho_v^n)
+ =\sum_{\substack{u\notin A,\ v\in A\\u\sim v}}F_{u\to v}^n
+ -\sum_{\substack{v\in A,\ u\notin A\\u\sim v}}F_{v\to u}^n.
+ \label{a-limit-walk-coarse-balance}
+\end{equation}
+Taking $A$ to be all vertices gives conservation of total probability.
+The coarse identity uses a subset of vertices and does not presume
+amplitude-level Haar refinement.
+
+\begin{proposition}[Exact finite propagation]
+\label{a-limit-walk-cone}
+If the initial outgoing amplitudes are supported at $v_0$, then
+\begin{equation}
+ d_{C_N}(x,x_0)+d_T(\mathbf d,\mathbf d_0)>n
+ \quad\Longrightarrow\quad\rho_{(x,\mathbf d)}^n=0.
+ \label{a-limit-product-cone}
+\end{equation}
+For two prefixes, writing $\operatorname{lcp}$ for the length of their
+longest common prefix,
+\[
+ d_T(\mathbf d,\mathbf d_0)
+ =|\mathbf d|+|\mathbf d_0|-2\operatorname{lcp}(\mathbf d,\mathbf d_0).
+\]
+In particular, each tick allows at most one physical edge or one tree
+edge, and $\bigl||\mathbf d|-|\mathbf d_0|\bigr|\leq n$.
+\end{proposition}
+\begin{proof}
+Every path in a Cartesian product graph uses a number of physical edges
+at least the physical distance and a number of tree edges at least the
+tree distance. Their sum is a lower bound on path length. Following a
+shortest physical path and then a shortest tree path attains that sum,
+so it is the product graph distance. In a rooted tree the shortest path
+rises to the longest common prefix and then descends, giving the
+displayed formula.
+
+The claim at $n=0$ is the support hypothesis. A coin mixes outgoing
+arcs only at their common source, so it does not enlarge the vertex
+support. The shift moves the source across one edge. A state supported
+in the radius-$n$ ball is therefore supported in the radius-$(n+1)$
+ball after a tick. Induction proves the result. Since each graph edge
+changes only one factor, the individual distance and depth bounds follow.
+\end{proof}
+
+The depth difference alone is weaker than the full tree distance.
+Different prefixes at the same depth can have positive distance, so a
+plot aggregated over depth does not show the complete graph geometry.
+The cone is an exact support property of this finite coined model.
+A Lorentzian continuum dispersion law or a relativistic limiting field
+equation requires a separate scaling analysis.
+
+\adicfigure{07_product_walk}{A finite cycle--tree walk, aggregated over
+vertices at the same tree depth. The graph-distance support check uses
+the full product graph, including prefix labels. Probability plotted
+against depth alone displays only an aggregation of that geometry.}
+
+\FloatBarrier
+\Needspace{17\baselineskip}
+\subsection{Why growing this tree is not automatically Haar refinement}
+
+\begin{example}[A boundary coin breaks the canonical arc embedding]
+\label{a-limit-walk-refinement-counterexample}
+Take $h\geq1$ and $N\geq3$, and embed the old arcs of
+$C_N\square T_{p,h}$ in $C_N\square T_{p,h+1}$ by identical labels,
+with zero amplitude on new arcs. Denote this isometry by $J$.
+At an old leaf, the old degree is $d=3$: two cycle neighbors and one
+parent. The larger graph adds $p$ children, changing the degree to $d+p$.
+For an old outgoing arc basis vector $e_j$, the new Grover coin gives
+amplitude $2/(d+p)$ on each of the $p$ new outgoing child arcs. An
+internal unitary preserves its internal norm. The subsequent reversal
+shift sends these amplitudes to new arcs at the children, outside the old
+arc range. Therefore, for a unit internal state $\chi$,
+\begin{equation}
+ \norm{(I-JJ^*)U_{p,h+1,N}J(e_j\otimes\chi)}
+ =\frac{2\sqrt p}{3+p}>0.
+ \label{a-limit-walk-refinement-leakage}
+\end{equation}
+The state $JU_{p,h,N}(e_j\otimes\chi)$ has zero amplitude there, so
+$U_{p,h+1,N}J\neq JU_{p,h,N}$.
+\end{example}
+
+Each walk remains unitary, locally conservative, and confined to its
+product graph cone. A different coin family, embedding, or infinite-tree
+construction could be investigated. The canonical old-arc inclusion
+fails the compatibility hypothesis of
+Theorem \ref{a-limit-block-hamiltonian}. The cylinder limit and the tree
+walk are exact models with distinct state spaces.
+
+
+\section{The boundary of the infinite-depth result}
+\label{a-limit-scope}
+
+The exact result comprises complex $L^2$ cylinder reconstruction and
+dynamics for declared real level energies or self-adjoint packet blocks.
+State convergence uses an $L^2$ tail; graph norm convergence uses an
+operator-domain tail. Compact resolvents require energies escaping every
+bounded set, and finite thermal traces require multiplicity summability.
+Each claim has a distinct hypothesis.
+
+The source programs check finite restrictions of these formulas. Code 45
+uses three towers,
+\[
+ (p,M)=(2,7),\ (3,5),\ (5,3),
+\]
+and a fixed random seed. Their terminal zero tails do not certify an
+infinite domain or compactness; the proofs supply those conclusions.
+Code 40 tests specified dyadic/ternary interactions and weighted
+off-diagonal couplings. Code 42 tests finite product walks, whose
+unitarity does not imply compatibility with the Haar tower.
+
+C15 records finite refinement identities and C16 the conditional
+infinite-depth construction. Their archived chapter numbers predate the
+current arrangement. Exact members are chapter 31 for multi-prime
+dynamics, chapter 33 for product walks, and chapter 36 for the infinite
+Haar limit. Prime-polyphase semigroups appear in the spectral part.
+No fresh Lean compilation, unrestricted quantum-field completion,
+infinite-prime adelic construction, or experimental identification is
+claimed here.
