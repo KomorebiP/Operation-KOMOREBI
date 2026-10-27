@@ -1,0 +1,1250 @@
+\documentclass[11pt,openany]{report}
+\usepackage[letterpaper,margin=0.82in,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,tabularx,array,multirow}
+\usepackage{graphicx,float,placeins}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{needspace}
+\allowdisplaybreaks
+
+\hypersetup{
+  pdftitle={Projector-Generated Special Functions VIII},
+  pdfauthor={Komorebi P.},
+  pdfsubject={q-Hahn lowest-weight packets, q-Racah recoupling, Askey-Wilson transfer functions, and deformation geometry}
+}
+
+\definecolor{Ink}{HTML}{17202A}
+\definecolor{Blue}{HTML}{2E86AB}
+\definecolor{Teal}{HTML}{2A9D8F}
+\definecolor{Orange}{HTML}{F4A261}
+\definecolor{Magenta}{HTML}{A23E8C}
+\definecolor{Red}{HTML}{E76F51}
+\definecolor{Paper}{HTML}{FAFAF7}
+\definecolor{Muted}{HTML}{5D6D7E}
+\definecolor{CodeBG}{HTML}{F3F5F5}
+
+\pagecolor{Paper}
+\color{Ink}
+\graphicspath{{figures/}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.52em}
+\raggedbottom
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Projector-Generated Special Functions VIII}
+\fancyhead[R]{\small Komorebi P.}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Worked example}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{boundary}[theorem]{Boundary statement}
+
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\N}{\mathbb N}
+\newcommand{\e}{\mathrm e}
+\newcommand{\ii}{\mathrm i}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Id}{\mathrm I}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\spanop}{\operatorname{span}}
+\newcommand{\Cas}{\mathcal C}
+\newcommand{\Mcal}{\mathcal M}
+\newcommand{\Rcal}{\mathcal R}
+\newcommand{\Pcal}{\mathcal P}
+\newcommand{\Hcal}{\mathcal H}
+\newcommand{\ket}[1]{\left|#1\right\rangle}
+\newcommand{\bra}[1]{\left\langle#1\right|}
+\newcommand{\ip}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\qnum}[1]{\left[#1\right]_q}
+\newcommand{\qpoch}[2]{\left(#1;q\right)_{#2}}
+\newcommand{\qrise}[2]{\left[#1\right]_{q,#2}}
+\newcommand{\qbinom}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}_{q}}
+\newcommand{\entropy}{\operatorname{H}}
+\newcommand{\Res}{\operatorname{Res}}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{CodeBG},
+  frame=single,
+  rulecolor=\color{Muted!45},
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{Muted},
+  numbersep=7pt,
+  tabsize=4,
+  columns=fullflexible,
+  keepspaces=true
+}
+\lstset{style=pythonstyle}
+
+\newcommand{\FigureWide}[3]{%
+\Needspace{0.52\textheight}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth,height=0.43\textheight,keepaspectratio]{#1.pdf}
+\caption{#2 #3}
+\label{fig:#1}
+\end{figure}
+}
+
+\newcommand{\InlinePart}[1]{%
+\FloatBarrier
+\Needspace{10\baselineskip}
+\refstepcounter{part}%
+\addcontentsline{toc}{part}{\protect\numberline{\thepart}#1}%
+\vspace{1.4em}
+{\color{Blue}\Large\bfseries Part \thepart\par}
+\vspace{0.2em}
+{\color{Blue}\LARGE\bfseries #1\par}
+\vspace{0.9em}
+}
+
+\newcommand{\FlowChapter}[1]{%
+\FloatBarrier
+\Needspace{14\baselineskip}
+\refstepcounter{chapter}%
+\setcounter{section}{0}%
+\setcounter{subsection}{0}%
+\addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+\markboth{#1}{#1}%
+\vspace{1.3em}
+{\color{Muted}\large\bfseries Chapter \thechapter\par}
+\vspace{0.15em}
+{\LARGE\bfseries #1\par}
+\vspace{0.9em}
+}
+
+\title{\textbf{Projector-Generated Special Functions VIII}\\[0.25em]
+\Large q-Hahn Lowest-Weight Packets, q-Racah Recoupling, Askey-Wilson Transfer Functions, and Deformation Geometry}
+\author{Komorebi P.}
+\date{}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\pagenumbering{roman}
+\maketitle
+
+\begin{abstract}
+Papers VI and VII produced a continuous shape semigroup, positive discrete-series packet bases, classical Racah recoupling matrices, bistochastic measurement kernels, and pentagon coherence. The present paper introduces a positive deformation parameter $q$ and rebuilds the same architecture inside a symmetric $U_q(\mathfrak{su}(1,1))$ coordinate system.
+
+For $0<q\le1$, define the symmetric q-number
+\[
+\qnum{x}=\frac{q^x-q^{-x}}{q-q^{-1}},
+\]
+with the continuous value $\qnum{x}=x$ at $q=1$. The positive shape packet $D^+_{\kappa,q}$ carries the ladder
+\[
+K_0\ket n=(n+\kappa)\ket n,
+\qquad
+K_+\ket n=\sqrt{\qnum{n+1}\qnum{2\kappa+n}}\ket{n+1},
+\]
+\[
+K_-\ket n=\sqrt{\qnum n\qnum{2\kappa+n-1}}\ket{n-1}.
+\]
+The coproduct
+\[
+\Delta K_-=K_-\otimes q^{K_0}+q^{-K_0}\otimes K_-
+\]
+produces exact fixed-excitation packet spaces and a q-Casimir. The lowest-weight vector of two packets has an explicit q-Hahn coefficient formula. Three packets generate two intermediate q-Casimir atlases whose overlap is orthogonal and belongs to the q-Racah class. Squaring the overlap produces a doubly stochastic measurement kernel.
+
+For three equal half-shape packets at one excitation, the complete transform is
+\[
+\boxed{
+\Rcal_q=
+\begin{pmatrix}
+\dfrac{q}{1+q^2}&\dfrac{\sqrt{1+q^2+q^4}}{1+q^2}\\[0.8em]
+\dfrac{\sqrt{1+q^2+q^4}}{1+q^2}&-\dfrac{q}{1+q^2}
+\end{pmatrix}.
+}
+\]
+It converges to the classical Racah beam splitter at $q=1$ and to a routing swap as $q\downarrow0$. The corresponding row entropy and mixing gap are monotone in this two-channel case. A higher-excitation counterexample shows that such monotonicity is not universal.
+
+Writing $q=\e^{-\theta}$ turns the recoupling matrices into a differentiable orthogonal flow. In a continuous sign gauge, the generator
+\[
+A_N(\theta)=\Rcal_N(\theta)^{\mathsf T}\partial_\theta\Rcal_N(\theta)
+\]
+is skew-symmetric. Its Frobenius norm defines a finite deformation metric. For four packets, five q-Casimir tree bases form the associahedral pentagon, and their ordered overlap product is the identity. Every finite q-Racah packet matrix can be compiled into Givens rotations and diagonal signs.
+
+The scalar side is developed independently through the terminating q-Racah ${}_4\phi_3$ function and the continuous Askey-Wilson function. Exact duality, the $q\to1$ Racah limit, and the Askey-Wilson q-difference equation are verified symbolically or at high precision. q-Racah and Askey-Wilson functions, quantum-group recoupling, and the pentagon identity are classical. The generated contribution is the common packet architecture that retains the q-Hahn seed, projector reduction, q-Racah analysis and synthesis, stochastic measurement, deformation flow, associator certificate, and finite compiler in one system.
+
+All figures were generated by the accompanying Python program. The release contains 32 vector figures, matching PNG files, 23 built-in checks, 20 independent tests, numerical tables, and the complete source.
+\end{abstract}
+
+\chapter*{Status and claim boundary}
+\addcontentsline{toc}{chapter}{Status and claim boundary}
+The q-Racah and Askey-Wilson polynomial families are classical members of the Askey-Wilson scheme. Their q-hypergeometric definitions, orthogonality measures, duality laws, q-difference equations, and classical limits are established parts of special-function theory. Their occurrence as Clebsch-Gordan or Racah coefficients in quantum-group representation theory is also classical.
+
+This paper does not claim to have invented q-Racah polynomials, Askey-Wilson polynomials, quantum $6j$ symbols, or the abstract pentagon identity. It shows how they arise from the projector-resolved packet construction and adds a single operational language for lowest-weight reduction, analysis, synthesis, measurement, deformation transport, and compilation.
+
+The finite matrix construction uses a symmetric q-number convention and the positive real range $0<q\le1$. Other conventions are related by changes of generators and powers of $q$. Formula comparisons must therefore preserve the declared convention.
+
+The q-dependent entropy statements concern the classical channel obtained after squaring the amplitudes and discarding phase. The underlying q-Racah matrix remains exactly reversible. Entropy is monotone under each fixed bistochastic channel. It is not generally monotone as the deformation parameter itself changes.
+
+The four-body pentagon closes because every tree basis is complete in the same lowest-weight multiplicity space. The numerical product is a stringent implementation certificate, not a replacement for the abstract Biedenharn-Elliott theorem.
+
+The final quantum discussion keeps this shape-recoupling module separate from the logarithmic number Hamiltonian used in the attached zeta-governed quantum dynamics. The modules can be tensored or composed, but the present paper does not identify their spectra and does not prove the Riemann hypothesis.
+
+\begingroup
+\footnotesize
+\setlength{\parskip}{0pt}
+\tableofcontents
+\listoffigures
+\endgroup
+\clearpage
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+
+\InlinePart{q-deformed packet algebra}
+
+\FlowChapter{Symmetric q-numbers and positive shape packets}
+
+\begin{definition}[Symmetric q-number]
+For $q>0$ and $q\ne1$, define
+\[
+\boxed{
+\qnum{x}=\frac{q^x-q^{-x}}{q-q^{-1}}.
+}
+\]
+At $q=1$, define $\qnum{x}=x$ by continuity.
+\end{definition}
+
+Writing $q=\e^{-\theta}$ gives
+\[
+\qnum{x}=\frac{\sinh(x\theta)}{\sinh\theta}.
+\]
+Hence $\qnum{-x}=-\qnum{x}$ and $\qnum{x}>0$ for $x>0$.
+
+\begin{definition}[Positive q-shape packet]
+For $\kappa>0$, let $D^+_{\kappa,q}$ have orthonormal basis $\{\ket n:n\ge0\}$ with
+\[
+K_0\ket n=(n+\kappa)\ket n,
+\]
+\[
+K_+\ket n=
+\sqrt{\qnum{n+1}\qnum{2\kappa+n}}\ket{n+1},
+\]
+\[
+K_-\ket n=
+\sqrt{\qnum n\qnum{2\kappa+n-1}}\ket{n-1}.
+\]
+\end{definition}
+
+\begin{proposition}[Local q-algebra]
+On every basis vector away from a finite truncation boundary,
+\[
+[K_0,K_\pm]=\pm K_\pm,
+\qquad
+[K_-,K_+]=\qnum{2K_0}.
+\]
+\end{proposition}
+
+\begin{proof}
+The first identities follow because $K_\pm$ change $n$ by one. For the second, the coefficient of $\ket n$ in $K_-K_+\ket n$ is
+\[
+\qnum{n+1}\qnum{2\kappa+n},
+\]
+while the coefficient in $K_+K_-\ket n$ is
+\[
+\qnum n\qnum{2\kappa+n-1}.
+\]
+The elementary hyperbolic identity
+\[
+\qnum{x+1}\qnum y-\qnum x\qnum{y-1}=\qnum{x+y}
+\]
+with $x=n$ and $y=2\kappa+n$ gives $\qnum{2n+2\kappa}=\qnum{2K_0}$.
+\end{proof}
+
+\FigureWide{01_theory_pipeline}{The q-deformed packet program.}{The positive-series ladder generates a q-Hahn lowest packet, pair q-Casimir atlases, q-Racah transforms, measurement kernels, deformation flow, and four-body associator closure.}
+
+\FigureWide{02_q_number_deformation}{Symmetric q-numbers.}{As $q$ approaches one, the deformed ladder approaches the ordinary linear coordinate. Smaller $q$ amplifies large positive degrees.}
+
+\FigureWide{03_q_ladder_coefficients}{Positive-series raising coefficients.}{The local q-ladder remains exact while its high-degree growth changes strongly with the deformation parameter.}
+
+\FlowChapter{Coproduct, q-Casimir, and exact tensor routing}
+
+Define
+\[
+\Delta K_0=K_0\otimes\Id+\Id\otimes K_0,
+\]
+\[
+\boxed{
+\Delta K_\pm
+=K_\pm\otimes q^{K_0}+q^{-K_0}\otimes K_\pm.
+}
+\]
+Iterating this formula gives the total generators on any finite packet product.
+
+\begin{theorem}[Coassociative packet routing]
+The coproduct is coassociative on the declared generators. In particular,
+\[
+(\Delta\otimes\Id)\Delta K_-
+=(\Id\otimes\Delta)\Delta K_-
+\]
+and both sides equal
+\[
+K_-\otimes q^{K_0}\otimes q^{K_0}
++q^{-K_0}\otimes K_-\otimes q^{K_0}
++q^{-K_0}\otimes q^{-K_0}\otimes K_-.
+\]
+\end{theorem}
+
+\begin{proof}
+Since $K_0$ is primitive,
+\[
+q^{\Delta K_0}=q^{K_0}\otimes q^{K_0}.
+\]
+Substituting this identity into either iterated coproduct gives the same three terms. The proof for $K_+$ is identical.
+\end{proof}
+
+\begin{definition}[q-Casimir]
+Define
+\[
+\boxed{
+\Cas_q=\qnum{K_0}\qnum{K_0-1}-K_+K_-.
+}
+\]
+\end{definition}
+
+\begin{theorem}[Scalar packet Casimir]
+On $D^+_{\kappa,q}$,
+\[
+\boxed{
+\Cas_q=\qnum\kappa\qnum{\kappa-1}\Id.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+On $\ket n$ the first term is
+\[
+\qnum{n+\kappa}\qnum{n+\kappa-1},
+\]
+and the second is
+\[
+\qnum n\qnum{2\kappa+n-1}.
+\]
+The q-number identity
+\[
+\qnum{x+y}\qnum{x+y-1}-\qnum y\qnum{2x+y-1}
+=\qnum x\qnum{x-1}
+\]
+with $x=\kappa$ and $y=n$ gives the result.
+\end{proof}
+
+\FigureWide{04_q_coproduct_paths}{Coproduct paths.}{A single lowering event is routed through each factor with the q-weights required by coassociativity.}
+
+\FlowChapter{Fixed excitation and the lowest-weight multiplicity packet}
+
+For $m$ factors, let
+\[
+\Hcal_N^{(m)}
+=\spanop\{\ket{n_1,\ldots,n_m}:n_1+\cdots+n_m=N\}.
+\]
+Then
+\[
+\dim\Hcal_N^{(m)}=\binom{N+m-1}{m-1}.
+\]
+The lowest-weight multiplicity packet is
+\[
+\boxed{
+\Mcal_N^{(m)}
+=\ker\left(K_-^{[m]}\big|_{\Hcal_N^{(m)}}\right).
+}
+\]
+
+\begin{theorem}[Multiplicity dimension]
+For every $N\ge0$ and $m\ge2$,
+\[
+\boxed{
+\dim\Mcal_N^{(m)}=\binom{N+m-2}{m-2}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The lowering map sends $\Hcal_N^{(m)}$ to $\Hcal_{N-1}^{(m)}$. Order the target compositions by their last coordinate. For every target state $t$, choose the source $t+e_m$. Lowering the last factor produces $t$ with a nonzero coefficient. Lowering any earlier factor produces a target with a larger last coordinate. The corresponding square submatrix is triangular with nonzero diagonal, so the lowering map is onto. Rank-nullity gives
+\[
+\dim\Mcal_N^{(m)}
+=\binom{N+m-1}{m-1}-\binom{N+m-2}{m-1}
+=\binom{N+m-2}{m-2}.
+\]
+\end{proof}
+
+This projector reduction is output-sensitive. The full tensor level defines the kernel. All recoupling then occurs in the smaller multiplicity packet.
+
+\InlinePart{q-Hahn lowest-weight functions}
+
+\FlowChapter{Two-packet seed and closed coefficients}
+
+Take two shapes $\kappa_1,\kappa_2>0$ and total excitation $N$. Write the fixed-excitation basis as
+\[
+\ket{n,N-n},
+\qquad
+0\le n\le N.
+\]
+Set
+\[
+\lambda=q^{-(N-1+\kappa_1+\kappa_2)}.
+\]
+
+\begin{theorem}[Explicit q-Hahn lowest packet]
+A normalized lowest-weight vector is
+\[
+\boxed{
+\ket{\Omega_N}
+=\frac1{\sqrt{Z_N}}
+\sum_{n=0}^{N}
+(-\lambda)^n
+\sqrt{
+\qbinom{N}{n}
+\frac{
+\qrise{2\kappa_2+N-n}{n}
+}{
+\qrise{2\kappa_1}{n}
+}
+}
+\ket{n,N-n},
+}
+\]
+where
+\[
+\qbinom{N}{n}
+=\frac{\qnum{N}!}{\qnum n!\qnum{N-n}!}
+\]
+and
+\[
+\qrise{x}{n}=\prod_{j=0}^{n-1}\qnum{x+j}.
+\]
+\end{theorem}
+
+\begin{proof}
+Let $c_n$ be the coefficient of $\ket{n,N-n}$. The coefficient of $\ket{n,N-n-1}$ in the total lowering equation is
+\[
+q^{N-n-1+\kappa_2}
+\sqrt{\qnum{n+1}\qnum{2\kappa_1+n}}c_{n+1}
++
+q^{-(n+\kappa_1)}
+\sqrt{\qnum{N-n}\qnum{2\kappa_2+N-n-1}}c_n.
+\]
+Setting this to zero gives
+\[
+\frac{c_{n+1}}{c_n}
+=-\lambda
+\sqrt{
+\frac{
+\qnum{N-n}\qnum{2\kappa_2+N-n-1}
+}{
+\qnum{n+1}\qnum{2\kappa_1+n}
+}
+}.
+\]
+The displayed closed form has exactly this ratio. Normalization fixes $Z_N$.
+\end{proof}
+
+The squared coefficients form the discrete weight for the lowest q-Hahn packet. General coupled states are obtained by applying the total raising operator and are described by q-Hahn polynomial coordinates in the standard representation-theoretic normalization.
+
+\FigureWide{05_q_hahn_packet_distribution}{q-Hahn lowest-weight packets.}{The same total excitation is distributed differently as q changes. The alternating phase is omitted in the probability plot.}
+
+\FigureWide{06_q_hahn_classical_limit}{Classical limit of the lowest packet.}{The q-Hahn coefficient vector converges to its ordinary Hahn counterpart as q approaches one.}
+
+\begin{example}[A five-excitation seed]
+For
+\[
+N=5,
+\qquad
+(\kappa_1,\kappa_2)=(0.7,1.1),
+\qquad
+q=0.73,
+\]
+the code constructs the six coefficients from the theorem and verifies
+\[
+\norm{K_-^{[2]}\Omega_5}_\infty
+=2.22\times10^{-16}.
+\]
+The numerical residual is not the proof. It confirms that the implementation follows the exact recurrence.
+\end{example}
+
+\InlinePart{q-Racah recoupling}
+
+\FlowChapter{Two intermediate q-Casimir atlases}
+
+For three shapes, the multiplicity space has dimension $N+1$. Restrict the pair Casimirs to this space:
+\[
+\Cas_{12}^{(N)}
+=Q_N^{\mathsf T}\Cas_{12}Q_N,
+\qquad
+\Cas_{23}^{(N)}
+=Q_N^{\mathsf T}\Cas_{23}Q_N,
+\]
+where the columns of $Q_N$ form an orthonormal frame for $\Mcal_N^{(3)}$.
+
+The pair spectra are
+\[
+\boxed{
+\lambda_j^{ab}(q)
+=
+\qnum{\kappa_a+\kappa_b+j}
+\qnum{\kappa_a+\kappa_b+j-1},
+\qquad
+0\le j\le N.
+}
+\]
+Let $L_N$ diagonalize $\Cas_{12}^{(N)}$ and let $R_N$ diagonalize $\Cas_{23}^{(N)}$. The recoupling matrix is
+\[
+\boxed{
+\Rcal_N(q)=L_N^{\mathsf T}R_N.
+}
+\]
+
+\begin{theorem}[Exact analysis and synthesis]
+For every admissible finite packet,
+\[
+\boxed{
+\Rcal_N(q)^{\mathsf T}\Rcal_N(q)
+=
+\Rcal_N(q)\Rcal_N(q)^{\mathsf T}
+=
+\Id_{N+1}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Both $L_N$ and $R_N$ are orthogonal eigenbases of real symmetric operators in the same multiplicity space. Therefore
+\[
+\Rcal_N^{\mathsf T}\Rcal_N
+=R_N^{\mathsf T}L_NL_N^{\mathsf T}R_N
+=\Id.
+\]
+The other identity is identical.
+\end{proof}
+
+The classical representation-theoretic identification says that, after normalization and a parameter map determined by the three shapes and $N$, the entries of $\Rcal_N$ are q-Racah functions. Equivalently, the restricted pair Casimirs form a finite tridiagonal pair. In the left atlas,
+\[
+\Rcal_N\diag(\lambda_m^{23})\Rcal_N^{\mathsf T}
+\]
+is tridiagonal. Hence each column obeys a three-term recurrence in the left packet label.
+
+\FigureWide{10_q_casimir_spectra}{Pair q-Casimir spectra.}{The intermediate eigenvalues are exact q-number deformations of the classical quadratic spectrum.}
+
+\FigureWide{11_q_racah_heatmaps}{q-Racah recoupling matrices.}{Changing q redistributes amplitude across the same complete pair-Casimir coordinate systems.}
+
+\FigureWide{13_q_orthogonality_residual}{Analysis and synthesis residual.}{Across the tested dimensions and deformation values, the orthogonality error remains at floating-point scale.}
+
+\FigureWide{14_opposing_q_casimir}{The opposing q-Casimir in one packet atlas.}{The tridiagonal form is the operator source of the q-Racah three-term recurrence.}
+
+\FlowChapter{An exact q-controlled beam splitter}
+
+Take
+\[
+\kappa_1=\kappa_2=\kappa_3=\frac12,
+\qquad
+N=1.
+\]
+
+\begin{theorem}[Closed two-channel q-Racah transform]
+The left-to-right recoupling matrix can be chosen as
+\[
+\boxed{
+\Rcal_q=
+\begin{pmatrix}
+c_q&s_q\\
+s_q&-c_q
+\end{pmatrix},
+}
+\]
+where
+\[
+\boxed{
+c_q=\frac{q}{1+q^2}}
+\]
+and
+\[
+\boxed{
+s_q=\frac{\sqrt{1+q^2+q^4}}{1+q^2}.}
+\]
+\end{theorem}
+
+\begin{proof}
+The fixed-excitation space is spanned by $\ket{100},\ket{010},\ket{001}$. The total lowering equation is
+\[
+q x_1+x_2+q^{-1}x_3=0,
+\]
+so the lowest-weight multiplicity space is two-dimensional. Restricting either pair Casimir to this plane gives two normalized eigenvectors. Their overlap simplifies to the displayed matrix. Directly,
+\[
+c_q^2+s_q^2
+=
+\frac{q^2+1+q^2+q^4}{(1+q^2)^2}=1,
+\]
+so the matrix is orthogonal. Substitution into the restricted pair-Casimir eigenvalue equations completes the verification.
+\end{proof}
+
+At $q=1$,
+\[
+\Rcal_1=
+\begin{pmatrix}
+\frac12&\frac{\sqrt3}{2}\\[0.3em]
+\frac{\sqrt3}{2}&-\frac12
+\end{pmatrix},
+\]
+which is the classical equal-shape Racah beam splitter. As $q\downarrow0$,
+\[
+\Rcal_q\longrightarrow
+\begin{pmatrix}0&1\\1&0\end{pmatrix}.
+\]
+The deformation therefore interpolates continuously between classical mixing and sparse routing.
+
+\FigureWide{07_q_beam_splitter_amplitudes}{Closed beam-splitter amplitudes.}{The diagonal amplitude grows from zero to one half, while the transfer amplitude decreases from one to $\sqrt3/2$.}
+
+\FigureWide{08_q_beam_splitter_kernel}{Squared two-channel kernels.}{The coherent transform remains orthogonal, while the measured channel becomes a q-dependent bistochastic matrix.}
+
+\FlowChapter{Bistochastic measurement and entropy}
+
+Define
+\[
+\boxed{
+P_{jm}(q)=\abs{\Rcal_N(q)_{jm}}^2.
+}
+\]
+
+\begin{theorem}[Bistochastic q-Racah channel]
+For every finite recoupling matrix,
+\[
+P_{jm}\ge0,
+\qquad
+\sum_mP_{jm}=1,
+\qquad
+\sum_jP_{jm}=1.
+\]
+Consequently, for every probability row vector $p$,
+\[
+\boxed{
+\entropy(pP)\ge\entropy(p),
+}
+\]
+where $\entropy$ is Shannon entropy.
+\end{theorem}
+
+\begin{proof}
+The row and column sums are the squared norms of rows and columns of the orthogonal matrix. Every doubly stochastic matrix is a convex combination of permutation matrices. Shannon entropy is concave and invariant under permutations, so it cannot decrease.
+\end{proof}
+
+\FigureWide{12_q_racah_probability_kernels}{Bistochastic q-Racah kernels.}{Every amplitude matrix produces a classical measurement channel with unit row and column sums.}
+
+\begin{theorem}[Monotone one-excitation mixing]
+For the equal-shape one-excitation channel and $0<q\le1$, the row entropy and the spectral mixing gap increase with q.
+\end{theorem}
+
+\begin{proof}
+The smaller row probability is
+\[
+p(q)=c_q^2=\frac{q^2}{(1+q^2)^2}.
+\]
+It increases from zero to $1/4$. The binary entropy
+\[
+h(p)=-p\log p-(1-p)\log(1-p)
+\]
+is increasing for $0\le p\le1/2$. The two eigenvalues of the channel are $1$ and $2p-1$, so the spectral gap is
+\[
+\boxed{
+1-\abs{2p-1}=2p=\frac{2q^2}{(1+q^2)^2},
+}
+\]
+which is also increasing on $(0,1]$.
+\end{proof}
+
+\FigureWide{09_beam_splitter_entropy_gap}{Entropy and spectral gap in the exact two-channel model.}{Both increase monotonically with q.}
+
+\begin{boundary}[No universal entropy monotonicity in q]
+For higher excitation, each fixed q still gives a bistochastic channel and therefore increases entropy relative to its input. However, the row entropy need not be monotone as q varies. At $N=3$ and equal half-shapes, the second row entropy decreases from approximately $1.24488$ to $1.23710$ between $q\approx0.7772$ and $q\approx0.7884$. This negative control prevents the one-excitation theorem from being promoted to all packet levels.
+\end{boundary}
+
+\FigureWide{21_entropy_nonmonotonicity}{Higher-excitation entropy counterexample.}{A selected row of the q-Racah measurement channel is not monotone throughout the deformation interval.}
+
+\FigureWide{22_stochastic_spectral_gap}{Spectral mixing beyond two channels.}{The q-dependence of the second eigenvalue becomes level dependent and need not follow a universal monotone law.}
+
+\InlinePart{Deformation geometry}
+
+\FlowChapter{Orthogonal transport in q}
+
+Write
+\[
+q=\e^{-\theta},
+\qquad
+\theta\ge0.
+\]
+Choose a continuous sign gauge for the eigenvectors away from degeneracies and define
+\[
+R_N(\theta)=\Rcal_N(\e^{-\theta}).
+\]
+
+\begin{theorem}[Skew deformation generator]
+The matrix
+\[
+\boxed{
+A_N(\theta)
+=R_N(\theta)^{\mathsf T}\partial_\theta R_N(\theta)
+}
+\]
+is skew-symmetric, and
+\[
+\boxed{
+\partial_\theta R_N=R_NA_N.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Differentiate
+\[
+R_N^{\mathsf T}R_N=\Id.
+\]
+This gives
+\[
+(\partial_\theta R_N)^{\mathsf T}R_N
++R_N^{\mathsf T}\partial_\theta R_N=0,
+\]
+so $A_N^{\mathsf T}=-A_N$. Multiplying the definition of $A_N$ on the left by $R_N$ gives the tangent equation.
+\end{proof}
+
+Define the finite deformation metric
+\[
+\boxed{
+g_N(\theta)=\frac12\norm{A_N(\theta)}_F^2.}
+\]
+It is invariant under a constant orthogonal change of either packet atlas. A q-dependent sign jump is not a smooth gauge and must be removed before differentiation.
+
+\FigureWide{19_deformation_generator}{Skew generator of the q-flow.}{The antisymmetric matrix records which packet coordinates exchange amplitude under an infinitesimal change of deformation.}
+
+\FigureWide{20_deformation_metric}{Deformation metric across excitation.}{The sensitivity of the complete recoupling atlas grows with multiplicity dimension.}
+
+\FlowChapter{Classical and routing limits}
+
+The q-Hahn and q-Racah systems have two useful endpoints.
+
+At $q\to1$, symmetric q-numbers satisfy
+\[
+\qnum{x}=x+O((\log q)^2),
+\]
+so the packet algebra, Casimir spectra, lowest-weight vectors, and recoupling matrices converge to their ordinary $\mathfrak{su}(1,1)$ counterparts.
+
+At $q\downarrow0$, no uniform finite limit exists for every unrenormalized q-number expression. Nevertheless, selected normalized packet transforms have finite routing limits. The one-excitation beam splitter is the simplest exact example.
+
+\FigureWide{18_recoupling_classical_limit}{Classical limit of the matrix construction.}{After sign alignment, the complete q-Racah packet transform converges to the classical Racah transform.}
+
+\InlinePart{Four-body q-associators}
+
+\FlowChapter{Five complete q-Casimir tree atlases}
+
+For four packets, the multiplicity dimension is
+\[
+\boxed{
+\dim\Mcal_N^{(4)}=\binom{N+2}{2}.
+}
+\]
+Consider the five binary coupling trees
+\[
+(((12)3)4),
+\quad
+((1(23))4),
+\quad
+(1((23)4)),
+\quad
+(1(2(34))),
+\quad
+((12)(34)).
+\]
+Each tree determines two commuting intermediate q-Casimirs. Their joint eigenvectors form a complete orthonormal basis $B_r$ of the same multiplicity space.
+
+\FigureWide{23_q_pentagon_trees}{The q-deformed associahedral pentagon.}{Every vertex is a complete joint-Casimir atlas. Neighboring vertices are related by finite q-Racah packet transforms.}
+
+\begin{theorem}[Finite q-pentagon certificate]
+Let
+\[
+U_{r,r+1}=B_r^{\mathsf T}B_{r+1},
+\]
+with indices taken modulo five. Then
+\[
+\boxed{
+U_{01}U_{12}U_{23}U_{34}U_{40}=\Id.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Insert the definitions and use completeness:
+\[
+B_0^{\mathsf T}B_1
+B_1^{\mathsf T}B_2
+\cdots
+B_4^{\mathsf T}B_0
+=B_0^{\mathsf T}B_0=\Id.
+\]
+\end{proof}
+
+This linear-algebra proof explains why the numerical pentagon is a strong implementation test. Any wrong projector, packet order, omitted vector, or inconsistent tree basis prevents the telescoping product from closing.
+
+\FigureWide{24_q_pentagon_residual}{Pentagon residual over q and excitation.}{The closure error remains at floating-point scale through the tested multiplicity dimensions.}
+
+\FigureWide{25_q_pentagon_edge_matrices}{Five q-associator edges.}{Each edge has its own signed amplitude pattern, but their ordered product reconstructs the initial tree atlas.}
+
+\FlowChapter{Deforming the associator}
+
+Each edge matrix depends on $\theta=-\log q$. In a continuous gauge, define
+\[
+A_r(\theta)
+=U_r(\theta)^{\mathsf T}\partial_\theta U_r(\theta).
+\]
+Every $A_r$ is skew-symmetric. Differentiating the pentagon identity gives a transported sum of edge generators equal to zero. This is the finite flatness equation for the q-associator loop.
+
+\FigureWide{26_associator_deformation}{Deformation of the five associator edges.}{The q-flow redistributes local generator norm around the pentagon while preserving exact global closure.}
+
+\InlinePart{Finite compilation}
+
+\FlowChapter{Givens factorization of a q-Racah packet}
+
+\begin{theorem}[Finite rotation compiler]
+Every real orthogonal $d\times d$ q-Racah packet matrix admits a factorization
+\[
+\boxed{
+R=G_1^{\mathsf T}\cdots G_L^{\mathsf T}D,
+}
+\]
+where $D$ is diagonal with entries $\pm1$ and every $G_j$ is a two-coordinate Givens rotation. One may choose
+\[
+\boxed{
+L\le\frac{d(d-1)}2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply row Givens rotations from the lower left upward to eliminate all entries below the diagonal. Orthogonality forces the resulting upper triangular matrix to be diagonal with entries $\pm1$. Reversing the rotations reconstructs $R$.
+\end{proof}
+
+The compiler acts in the multiplicity packet. It does not require a dense gate acting on the full tensor-product level.
+
+\FigureWide{27_q_givens_counts}{Rotation count.}{The direct compiler reaches the worst-case triangular count only when every subdiagonal elimination is needed.}
+
+\FigureWide{28_q_givens_residual}{Compiler reconstruction residual.}{The finite rotation product reproduces the original q-Racah transform to numerical precision.}
+
+\FigureWide{32_q_packet_compiler}{Programmable q-packet execution path.}{The compiler begins with shapes, q, and total excitation, constructs only the required multiplicity projectors, and emits signed transforms, measurement kernels, or pentagon certificates.}
+
+\InlinePart{Scalar q-special functions}
+
+\FlowChapter{Terminating q-Racah function}
+
+For the q-Pochhammer symbol
+\[
+\qpoch{a}{n}=\prod_{j=0}^{n-1}(1-aq^j),
+\]
+define
+\[
+\boxed{
+R_n(\mu(y);\alpha,\beta,\gamma,\delta\mid q)
+={}_4\phi_3\!\left(
+\begin{matrix}
+q^{-n},\alpha\beta q^{n+1},q^{-y},\gamma\delta q^{y+1}\\
+\alpha q,\beta\delta q,\gamma q
+\end{matrix}
+;q,q
+\right),
+}
+\]
+where
+\[
+\mu(y)=q^{-y}+\gamma\delta q^{y+1}.
+\]
+The series terminates at $n$. A finite orthogonal family arises when one denominator parameter is $q^{-N}$.
+
+\begin{theorem}[q-Racah duality]
+The terminating function satisfies
+\[
+\boxed{
+R_n(\mu(y);\alpha,\beta,\gamma,\delta\mid q)
+=
+R_y(\mu(n);\gamma,\delta,\alpha,\beta\mid q).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+After exchanging $n$ with $y$ and $(\alpha,\beta)$ with $(\gamma,\delta)$, the four numerator q-Pochhammer factors are merely permuted. The three denominator factors are also permuted because $\delta\beta q=\beta\delta q$. Every summand is unchanged.
+\end{proof}
+
+\FigureWide{15_q_racah_polynomial_table}{A terminating q-Racah table.}{Degrees and lattice coordinates appear on equal footing, which makes duality visible before normalization by the orthogonality weights.}
+
+\FigureWide{16_q_racah_duality}{Duality residual.}{The parameter-exchanged degree-coordinate identity holds at floating-point precision.}
+
+\begin{theorem}[Termwise classical limit]
+Set
+\[
+\alpha=q^A,
+\quad
+\beta=q^B,
+\quad
+\gamma=q^G,
+\quad
+\delta=q^D.
+\]
+For fixed $n$ and $y$,
+\[
+\boxed{
+\lim_{q\to1^-}
+R_n(\mu(y);q^A,q^B,q^G,q^D\mid q)
+={}_4F_3\!\left(
+\begin{matrix}
+-n,n+A+B+1,-y,y+G+D+1\\
+A+1,B+D+1,G+1
+\end{matrix};1
+\right).
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The q-series is finite. For every fixed integer $r$,
+\[
+\frac{\qpoch{q^x}{r}}{(1-q)^r}\longrightarrow(x)_r.
+\]
+Apply this limit to each q-Pochhammer factor in every summand and cancel the equal powers of $1-q$.
+\end{proof}
+
+\FigureWide{17_q_racah_to_racah}{q-Racah to Racah.}{The finite basic-hypergeometric polynomial converges termwise to its ordinary hypergeometric counterpart.}
+
+\FlowChapter{Askey-Wilson transfer function}
+
+For $z\in\C^\times$, define the normalized Askey-Wilson function
+\[
+\boxed{
+\mathcal A_n(z)
+={}_4\phi_3\!\left(
+\begin{matrix}
+q^{-n},abcdq^{n-1},az,az^{-1}\\
+ab,ac,ad
+\end{matrix};q,q
+\right).
+}
+\]
+Define the q-difference operator
+\[
+(\mathcal Lf)(z)
+=A(z)(f(qz)-f(z))
++A(z^{-1})(f(q^{-1}z)-f(z))
++\left(1+\frac{abcd}{q}\right)f(z),
+\]
+where
+\[
+A(z)=
+\frac{(1-az)(1-bz)(1-cz)(1-dz)}{(1-z^2)(1-qz^2)}.
+\]
+
+\begin{theorem}[Askey-Wilson eigenfunction law]
+For every nonnegative integer $n$,
+\[
+\boxed{
+\mathcal L\mathcal A_n
+=
+\left(q^{-n}+abcdq^{n-1}\right)\mathcal A_n.
+}
+\]
+\end{theorem}
+
+This is the continuous spectral lift of the finite q-Racah transfer system. The q-Racah family lives on a finite quadratic q-lattice. The Askey-Wilson family lives on the continuous variable $x=(z+z^{-1})/2$ and is governed by a second-order q-difference operator.
+
+\FigureWide{29_askey_wilson_curves}{Askey-Wilson packet functions.}{Several degrees are plotted on the unit-circle coordinate $z=\e^{\ii\theta}$.}
+
+\FigureWide{30_askey_wilson_difference_residual}{q-difference certificate.}{Direct substitution of the generated functions into the Askey-Wilson operator leaves only numerical roundoff.}
+
+\FigureWide{31_q_function_class_map}{Finite and continuous q-functions.}{q-Hahn packets generate coupled bases, q-Racah functions generate finite recoupling, and Askey-Wilson functions provide the continuous spectral lift.}
+
+\InlinePart{Quantum and computational interpretation}
+
+\FlowChapter{A reversible q-shape module}
+
+The q-Racah transform can be interpreted as a finite coherent basis change. The signed amplitude matrix is reversible. Squaring the entries and measuring the target basis produces the bistochastic channel.
+
+The deformation parameter can be treated as a compile-time or control-time variable. A program may request:
+\begin{enumerate}[leftmargin=2em]
+\item a lowest-weight q-Hahn seed,
+\item a left or right pair-Casimir atlas,
+\item a signed q-Racah transform,
+\item its measured bistochastic kernel,
+\item a q-deformation tangent generator,
+\item a four-body associator certificate,
+\item a finite Givens circuit.
+\end{enumerate}
+
+This module can coexist with the logarithmic number Hamiltonian
+\[
+H\ket n=\log n\ket n
+\]
+used in the attached zeta-governed quantum dynamics. The logarithmic system supplies arithmetic time phases. The q-Racah system supplies finite shape coupling. Their tensor product is mathematically legitimate, but no theorem here identifies the q-Casimir spectrum with the nontrivial zeta zeros.
+
+\FlowChapter{What the deformation adds}
+
+The undeformed theory already has exact Racah recoupling and pentagon coherence. The q-coordinate adds four further layers.
+
+First, it creates a continuous path between distinct packet-routing geometries.
+
+Second, it turns basis sensitivity into the explicit skew generator $A_N(\theta)$.
+
+Third, it produces q-dependent bistochastic measurement channels whose mixing behavior can be studied independently of coherent reversibility.
+
+Fourth, it places the finite q-Racah packet and the continuous Askey-Wilson function inside one q-difference hierarchy.
+
+The paper's strongest new operational object is therefore not a renamed polynomial. It is the complete tuple
+\[
+\boxed{
+\left(
+\Mcal_N,
+\Cas_{12},
+\Cas_{23},
+\Rcal_N(q),
+P_N(q),
+A_N(\theta),
+\{U_r(q)\}_{r=0}^{4}
+\right).
+}
+\]
+This tuple retains the object space, the two coordinate atlases, exact synthesis, the measured channel, the deformation tangent, and the associator loop.
+
+\InlinePart{Verification and formulas}
+
+\FlowChapter{Formula registry}
+
+\begin{longtable}{L{0.29\textwidth}L{0.62\textwidth}}
+\toprule
+Object & Exact formula or certificate\\
+\midrule
+\endfirsthead
+\toprule
+Object & Exact formula or certificate\\
+\midrule
+\endhead
+Symmetric q-number & $\qnum{x}=(q^x-q^{-x})/(q-q^{-1})$\\
+Local q-algebra & $[K_-,K_+]=\qnum{2K_0}$\\
+Coproduct & $\Delta K_\pm=K_\pm\otimes q^{K_0}+q^{-K_0}\otimes K_\pm$\\
+q-Casimir & $\Cas_q=\qnum{K_0}\qnum{K_0-1}-K_+K_-$\\
+Scalar Casimir & $\Cas_q=\qnum\kappa\qnum{\kappa-1}\Id$\\
+Multiplicity dimension & $\dim\Mcal_N^{(m)}=\binom{N+m-2}{m-2}$\\
+q-Hahn ratio & $\begin{aligned}
+\frac{c_{n+1}}{c_n}={}&-q^{-(N-1+\kappa_1+\kappa_2)}\\
+&\times\sqrt{\frac{\qnum{N-n}\qnum{2\kappa_2+N-n-1}}{\qnum{n+1}\qnum{2\kappa_1+n}}}
+\end{aligned}$\\
+Pair spectrum & $\lambda_j^{ab}=\qnum{\kappa_a+\kappa_b+j}\qnum{\kappa_a+\kappa_b+j-1}$\\
+Recoupling & $\Rcal_N=L_N^{\mathsf T}R_N$\\
+Bistochastic kernel & $P_{jm}=\abs{\Rcal_{jm}}^2$\\
+Deformation generator & $A_N=\Rcal_N^{\mathsf T}\partial_\theta\Rcal_N$, $A_N^{\mathsf T}=-A_N$\\
+Pentagon & $U_{01}U_{12}U_{23}U_{34}U_{40}=\Id$\\
+q-Racah duality & $R_n(y;\alpha,\beta,\gamma,\delta)=R_y(n;\gamma,\delta,\alpha,\beta)$\\
+Askey-Wilson law & $\mathcal L\mathcal A_n=(q^{-n}+abcdq^{n-1})\mathcal A_n$\\
+Givens bound & $L\le d(d-1)/2$\\
+\bottomrule
+\end{longtable}
+
+\FlowChapter{Numerical certificate table}
+
+\begin{longtable}{L{0.42\textwidth}L{0.16\textwidth}L{0.28\textwidth}}
+\toprule
+Check & Result & Largest recorded residual or witness\\
+\midrule
+\endfirsthead
+\toprule
+Check & Result & Largest recorded residual or witness\\
+\midrule
+\endhead
+Local q-algebra & pass & $2.05\times10^{-12}$\\
+q-Hahn lowest vector & pass & $2.22\times10^{-16}$\\
+Scalar q-Casimir & pass & $5.88\times10^{-15}$\\
+q-Racah orthogonality & pass & $2.22\times10^{-15}$\\
+Pair spectrum & pass & $4.55\times10^{-13}$\\
+Opposing-Casimir tridiagonality & pass & $5.21\times10^{-12}$\\
+Closed q-beam splitter & pass & $2.22\times10^{-16}$\\
+Bistochastic kernel & pass & $2.00\times10^{-15}$\\
+Entropy nondecrease for fixed kernel & pass & no violation in 80 trials\\
+One-excitation entropy monotonicity & pass & no negative increment\\
+Higher-level monotonicity control & pass & decrement $-7.78\times10^{-3}$ found\\
+Matrix classical limit & pass & $2.82\times10^{-7}$\\
+q-Hahn classical limit & pass & $4.28\times10^{-6}$\\
+Routing limit & pass & $1.00\times10^{-5}$\\
+Skew generator & pass & $1.48\times10^{-8}$ raw gauge residual\\
+Tangent equation & pass & $5.92\times10^{-9}$\\
+Four-tree commutation & pass & $7.96\times10^{-13}$\\
+Joint diagonalization & pass & $7.33\times10^{-14}$\\
+q-pentagon & pass & $3.22\times10^{-15}$\\
+Givens compilation & pass & $8.88\times10^{-16}$\\
+q-Racah duality & pass & $2.84\times10^{-14}$\\
+q-Racah polynomial limit & pass & $4.27\times10^{-6}$\\
+Askey-Wilson q-difference equation & pass & $5.91\times10^{-13}$\\
+\bottomrule
+\end{longtable}
+
+The independent test suite repeats twenty properties through direct calls to the mathematical functions. It does not merely read the built-in check ledger.
+
+\FlowChapter{Research directions and boundaries}
+
+The present paper suggests several focused questions.
+
+\begin{enumerate}[leftmargin=2em]
+\item Determine closed shape-parameter formulas for the full q-Racah overlap in the symmetric q-number convention used here.
+\item Characterize the deformation metric $g_N(\theta)$ asymptotically as $N$ grows.
+\item Identify the precise packet conditions under which row entropy is monotone in q.
+\item Extend the finite q-Casimir construction to continuous-series Askey-Wilson transforms.
+\item Develop a q-adic or root-of-unity packet theory where semisimplicity may fail.
+\item Compile the associator loop with locality constraints rather than unrestricted Givens rotations.
+\item Couple the q-shape module to the logarithmic number Hamiltonian and determine which observables remain exactly factorized.
+\end{enumerate}
+
+The first five items are special-function and representation-theoretic questions. The last two are architecture and quantum-model questions. None is solved by the numerical figures alone.
+
+\FlowChapter{Conclusion}
+
+The q-deformation does not discard the earlier packet calculus. It enriches it.
+
+The seed is still a positive shape packet. The object space is still resolved by a lowest-weight projector. Intermediate Casimirs still create exact coordinate atlases. The recoupling matrix still supplies analysis and synthesis. The squared entries still define a measurement channel. Four coupling trees still close around a pentagon. The finite transform still compiles into two-coordinate rotations.
+
+What changes is the geometry of every layer. q alters the ladder, pair spectra, packet weights, recoupling amplitudes, stochastic mixing, and associator edges. The q-Racah and Askey-Wilson families are the scalar special functions that record this deformation.
+
+The result is a complete q-packet module:
+\[
+\boxed{
+\text{q-Hahn seed}
+\longrightarrow
+\text{q-Casimir atlases}
+\longrightarrow
+\text{q-Racah transform}
+\longrightarrow
+\text{q-pentagon}
+\longrightarrow
+\text{Askey-Wilson lift}.
+}
+\]
+The classical theory is recovered at $q=1$. Selected packet transforms acquire sparse routing limits as $q$ approaches zero. Between those endpoints, the skew generator provides a local differential description of the changing coordinate system.
+
+\appendix
+
+\FlowChapter{Selected numerical tables}
+
+\begin{table}[H]
+\centering
+\caption{Equal-shape one-excitation q-beam splitter.}
+\begin{tabular}{ccccc}
+\toprule
+$q$ & $c_q$ & $s_q$ & row entropy & spectral gap\\
+\midrule
+0.10 & 0.099010 & 0.995086 & 0.055094 & 0.019606\\
+0.25 & 0.235294 & 0.971924 & 0.214014 & 0.110727\\
+0.50 & 0.400000 & 0.916515 & 0.439670 & 0.320000\\
+0.75 & 0.480000 & 0.877268 & 0.539759 & 0.460800\\
+1.00 & 0.500000 & 0.866025 & 0.562335 & 0.500000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Four-body q-pentagon residuals at $N=4$.}
+\begin{tabular}{ccc}
+\toprule
+$q$ & multiplicity dimension & maximum residual\\
+\midrule
+0.50 & 15 & $3.22\times10^{-15}$\\
+0.70 & 15 & $4.00\times10^{-15}$\\
+0.85 & 15 & $3.55\times10^{-15}$\\
+1.00 & 15 & $3.44\times10^{-15}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\FlowChapter{Complete Python implementation}
+
+The following source generates every figure, numerical table, built-in check, and manifest used in this paper.
+
+\lstinputlisting{projector_generated_special_functions_viii.py}
+
+\FlowChapter{Bibliographic note}
+
+\begin{thebibliography}{9}
+
+\bibitem{DLMFAskeyWilson}
+NIST Digital Library of Mathematical Functions,
+Section 18.28, ``Askey-Wilson Class.''
+
+\bibitem{KoelinkVanDerJeugt}
+H. T. Koelink and J. Van der Jeugt,
+``Convolutions for orthogonal polynomials from Lie and quantum algebra representations,''
+SIAM Journal on Mathematical Analysis 29 (1998), 794--822.
+
+\bibitem{KoelinkRosengren}
+E. Koelink and H. Rosengren,
+``Harmonic analysis on the $SU(2)$ dynamical quantum group,''
+Acta Applicandae Mathematicae 69 (2001), 163--220.
+
+\bibitem{Shibukawa}
+Y. Shibukawa,
+``Clebsch--Gordan Coefficients for $\mathcal U_q(\mathfrak{su}(1,1))$ and $\mathcal U_q(\mathfrak{sl}(2))$, and Linearization Formula of Matrix Elements,''
+Publ. Res. Inst. Math. Sci. 28 (1992), 775--807.
+
+\bibitem{GenestIlievVinet}
+V. X. Genest, P. Iliev, and L. Vinet,
+``Coupling coefficients of $su_q(1,1)$ and multivariate q-Racah polynomials,''
+Nuclear Physics B 927 (2018), 97--123.
+
+\bibitem{GasperRahman}
+G. Gasper and M. Rahman,
+\emph{Basic Hypergeometric Series}, second edition,
+Cambridge University Press, 2004.
+
+\bibitem{WeiEtAl}
+S. Wei, Y. Zhai, Q. Lu, et al.,
+``The Riemann Hypothesis manifested in dynamical quantum phase transitions,''
+Nature Communications, accepted 18 June 2026,
+DOI 10.1038/s41467-026-74935-8.
+
+\end{thebibliography}
+
+\FlowChapter{Reproduction}
+
+From the source directory, run
+\begin{lstlisting}[language=bash,numbers=none]
+python projector_generated_special_functions_viii.py
+python -m pytest -q
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_VIII.tex
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_VIII.tex
+pdflatex -interaction=nonstopmode Projector_Generated_Special_Functions_VIII.tex
+\end{lstlisting}
+
+The Python step writes all 32 figure pairs, the check ledger, the selected data tables, and the machine-readable manifest before the paper is compiled.
+
+\end{document}
