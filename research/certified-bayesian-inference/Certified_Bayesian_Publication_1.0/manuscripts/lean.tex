@@ -1,0 +1,1946 @@
+\documentclass[11pt]{article}\input{common.tex}\usepackage{needspace}\renewcommand{\paperkind}{Lean companion}\setlength{\parskip}{0.35em}
+
+\lstdefinestyle{BayesSource}{style=LeanCode,aboveskip=0.4em,belowskip=0.4em,literate={∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {↔}{{$\leftrightarrow$}}1 {⇒}{{$\Rightarrow$}}1 {←}{{$\leftarrow$}}1 {∈}{{$\in$}}1 {∉}{{$\notin$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {ℕ}{{$\mathbb N$}}1 {ℚ}{{$\mathbb Q$}}1 {ℝ}{{$\mathbb R$}}1 {ℤ}{{$\mathbb Z$}}1 {Ω}{{$\Omega$}}1 {α}{{$\alpha$}}1 {β}{{$\beta$}}1 {κ}{{$\kappa$}}1 {δ}{{$\delta$}}1 {ε}{{$\varepsilon$}}1 {π}{{$\pi$}}1 {ω}{{$\omega$}}1 {σ}{{$\sigma$}}1 {τ}{{$\tau$}}1 {μ}{{$\mu$}}1 {λ}{{$\lambda$}}1 {Θ}{{$\Theta$}}1 {ξ}{{$\xi$}}1 {η}{{$\eta$}}1 {ν}{{$\nu$}}1 {χ}{{$\chi$}}1 {θ}{{$\theta$}}1 {ρ}{{$\rho$}}1 {Γ}{{$\Gamma$}}1 {Σ}{{$\Sigma$}}1 {∧}{{$\land$}}1 {∨}{{$\lor$}}1 {¬}{{$\neg$}}1 {×}{{$\times$}}1 {⊆}{{$\subseteq$}}1 {⊂}{{$\subset$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {∑}{{$\sum$}}1 {∏}{{$\prod$}}1 {∣}{{$\mid$}}1 {∘}{{$\circ$}}1 {↑}{{$\uparrow$}}1 {↓}{{$\downarrow$}}1 {▸}{{$\triangleright$}}1 {₀}{{$_0$}}1 {₁}{{$_1$}}1 {₂}{{$_2$}}1 {₃}{{$_3$}}1 {₄}{{$_4$}}1 {₅}{{$_5$}}1 {₆}{{$_6$}}1 {₇}{{$_7$}}1 {₈}{{$_8$}}1 {₉}{{$_9$}}1 {ι}{{$\iota$}}1 {υ}{{$\upsilon$}}1 {ζ}{{$\zeta$}}1 {‖}{{$\Vert$}}1 {•}{{$\bullet$}}1 {·}{{$\cdot$}}1 {⁻¹}{{$^{-1}$}}2 {⊗}{{$\otimes$}}1 {ₘ}{{$_m$}}1 {ᵐ}{{$^m$}}1 {ᵥ}{{$_v$}}1 {∂}{{$\partial$}}1 {⌊}{{$\lfloor$}}1 {⌋}{{$\rfloor$}}1 {⌈}{{$\lceil$}}1 {⌉}{{$\rceil$}}1 {⊤}{{$\top$}}1}
+
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Certified Bayesian Inference}
+\renewcommand{\KomorebiSubtitle}{One-observation Gaussian updates, exact packets, and outward-rounded evidence}
+\renewcommand{\KomorebiSeries}{Research library}
+\renewcommand{\KomorebiKind}{Lean and evidence guide}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Certified Bayesian Inference}
+\renewcommand{\KomorebiTitleSize}{38}
+\renewcommand{\KomorebiTitleLeading}{43}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{An executable proof map for the certified one-observation Gaussian solver. Actual definitions and complete proof excerpts are paired with their hypotheses, source locations, and evidence boundaries.}
+
+
+\section*{The reading contract}
+This companion explains how Certified Inference Core 1.0.0 turns finite rational model data into a returned gain, a posterior transport guarantee, and outward-rounded parameter intervals. It follows the actual project sources rather than presenting a new implementation. Every source listing is copied verbatim from the archived release, with its file and inclusive line span. Complete proof listings retain the entire declaration and proof body. Ambient namespaces, imports, finite-type instances, and previously declared variables are supplied by their source module and are not repeated in every listing. The listings become executable by opening their original modules in the pinned project.
+
+The central entry point is \path{Komorebi.CachedPosterior.runCached}. Its selected gain updates and residual cache are exact rational operations. Its final certificate and output arrays are evaluated with outward-rounded dyadic arithmetic. A separate retained branch performs rounded full-gain updates. These are two different algorithms with different convergence arguments.
+
+The archive records 117 successful active-module compilations and axiom reports for 543 named theorem or lemma declarations. Those are archived kernel checks from 12 September 2026. Fresh publication checks re-read the source bytes, manifest, successful receipts, attempted-source snapshots, logs, declaration locations, import records, and the listings printed here. A pinned Lean compiler was unavailable during this publication session, so no fresh Lean compilation is claimed. The archive contains no compiled \path{.olean} payloads. Their output hashes are preserved in receipts and agree across recorded dependency links, but cannot be rehashed from absent binaries.
+
+The scope is finite-dimensional inference for one observation update. Model inputs are exact rational factors, the noise floor is positive, packet geometry is fixed, and posterior/output tolerances are positive rationals. Singular priors and rectangular observation operators are allowed. Returned intervals enclose the parameters of the certified Joseph Gaussian. They do not separately certify the Gaussian obtained by replacing those parameters with interval centers.
+\tableofcontents
+
+\clearpage\section{Start with the returned object}
+
+A proof-oriented interface must say what a successful return means before asking how the program reaches one. The output record stores a verification precision, a rational candidate, a separate parameter precision, and interval arrays. The candidate contains the gain and the local energy bounds used in the distribution certificate. Precision fields identify the arithmetic graph that produced the certificate and arrays.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"Result","file":"Komorebi/PosteriorOutputSolver.lean","first_line":10,"last_line":14,"kind":"definition","excerpt_sha256":"97fdbeef496b0e0dc694d1484a72a9efc3ed418b0cef9f97fc2e9983737058fc"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutputSolver.lean}, lines 10--14.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+structure Result (ι κ α β : Type*) where
+  verificationPrecision : ℕ
+  candidate : RationalCandidate ι κ α β
+  parameterPrecision : ℕ
+  arrays : Arrays ι
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"ResultValid","file":"Komorebi/PosteriorOutputSolver.lean","first_line":28,"last_line":36,"kind":"definition","excerpt_sha256":"21b99e323e00ed12353865063cc9da1dc5108ea5821bebaea32836f7399e94a8"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutputSolver.lean}, lines 28--36.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+noncomputable def ResultValid (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (ε δ : ℚ) (r : Result ι κ α β) : Prop :=
+  checkCandidate M Q D r.candidate = true ∧
+  checkTolerance M r.candidate ε = true ∧
+  wasserstein2 M.posterior (M.approximation r.candidate.gain) ≤ ENNReal.ofReal (ε : ℝ) ∧
+  EnclosesParameters M r.candidate.gain r.arrays ∧ RadiiAtMost r.arrays δ ∧
+  r.parameterPrecision = outputPrecision M r.candidate.gain δ ∧
+  r.arrays = evaluate r.parameterPrecision M r.candidate.gain
+\end{lstlisting}
+
+\path{ResultValid} has seven conjuncts. The first two assert that the finite rational candidate and tolerance decisions pass. The third states the real distribution guarantee. The fourth and fifth assert coordinate enclosure and a uniform radius cap for the approximate Gaussian's parameters. The last two identify the selected output precision and actual evaluated arrays. A consumer can project the obligation it needs without interpreting a printed diagnostic string as evidence.
+
+The transport distance in source is extended nonnegative real valued. Thus \path{ENNReal.ofReal} embeds the rational tolerance into that codomain. This does not change the practical inequality $W_2\le\varepsilon$ under the established nonnegativity hypotheses. It does avoid treating a potentially infinite distance as an ordinary real number before finiteness has been proved.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"runCached","file":"Komorebi/CachedPacketOutput.lean","first_line":11,"last_line":18,"kind":"definition","excerpt_sha256":"4154399535d39d6ef82acc9aa19ea2f9bb5811ba00b585a4f606657430a64a0c"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketOutput.lean}, lines 11--18.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def runCached (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (seed : α) (scan : List α) (ε δ : ℚ) (probes : List ℕ) (B : Matrix ι κ ℚ) : Option (Result ι κ α β) :=
+  if 0 < δ then
+    match solveCached M Q D seed scan ε probes B with
+    | none => none
+    | some (p,c) => some ⟨p,c,outputPrecision M c.gain δ,represent M c.gain δ⟩
+  else none
+\end{lstlisting}
+
+The executable function first rejects a nonpositive output tolerance, then calls the cached solver. A successful candidate receives a computed parameter precision and represented arrays. A successful return is a logical event in this exact Lean program. The separate Python producer uses a provisional status until an emitted explicit instance is compiled.
+
+\section{Soundness and guaranteed success are distinct theorems}
+
+The successful-return theorem does not ask callers to supply packet or noise validity as separate hypotheses. Those obligations are enforced by the executed checks and construction. Its only substantive input premise is an equality showing that this invocation returned this result.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"runCached_sound","file":"Komorebi/CachedPacketOutput.lean","first_line":34,"last_line":51,"kind":"full_proof","excerpt_sha256":"5b36c7e0628a7312a0b474fb29e75690940eaa6348ca179e26c1687dc83e7ea2"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketOutput.lean}, lines 34--51.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem runCached_sound (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (seed : α) (scan : List α) (ε δ : ℚ) (probes : List ℕ) (B : Matrix ι κ ℚ) (r : Result ι κ α β)
+    (hr : runCached M Q D seed scan ε δ probes B = some r) : ResultValid M Q D ε δ r := by
+  unfold runCached at hr
+  split at hr
+  next hδ =>
+    cases hs : solveCached M Q D seed scan ε probes B with
+    | none => simp only [hs] at hr; contradiction
+    | some pc =>
+      obtain ⟨p,c⟩ := pc
+      simp only [hs, Option.some.injEq] at hr
+      subst r
+      obtain ⟨hc,ht⟩ := solveCached_sound M Q D seed scan ε probes B p c hs
+      obtain ⟨he,hprec⟩ := represent_spec M c.gain δ hδ
+      exact ⟨hc,ht,cached_solver_return_bounds_posterior M Q D seed scan ε probes B p c hs,
+        he,hprec,rfl,rfl⟩
+  next => contradiction
+\end{lstlisting}
+
+The proof unfolds the program, separates the rejected branch, analyzes the optional cached-solver return, and combines three established facts: the solver's candidate/tolerance soundness, its posterior bound, and the interval representation specification. The use of \path{rfl} in the last conjuncts verifies origin, not numerical approximation.
+
+Guaranteed success needs the mathematically admissible input class. It assumes a positive noise floor, valid complete output and input packet families, a supplied output seed, a scan covering every output label, and positive posterior and output tolerances. The initial gain and finite list of requested verification precisions are arbitrary. An appended sufficient-precision fallback removes dependence on the caller guessing a successful precision.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"runCached_terminates","file":"Komorebi/CachedPacketOutput.lean","first_line":20,"last_line":31,"kind":"full_proof","excerpt_sha256":"f0555e0c54b00556bb90377606d434700e4d89a9b65316a2f01cafa8eadbc23d"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketOutput.lean}, lines 20--31.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem runCached_terminates (M : RationalModel ι κ υ ω) (hs : 0 < M.noiseFloor)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (hQ : RationalPacketsValid Q) (hD : RationalPacketsValid D)
+    (seed : α) (scan : List α) (hscan : ∀ a, a ∈ scan)
+    (ε δ : ℚ) (hε : 0 < ε) (hδ : 0 < δ) (probes : List ℕ) (B : Matrix ι κ ℚ) :
+    ∃ r, runCached M Q D seed scan ε δ probes B = some r ∧ ResultValid M Q D ε δ r := by
+  obtain ⟨p,c,hret,hc,ht,hw⟩ :=
+    cached_solver_reaches_posterior_tolerance M hs Q D hQ hD seed scan hscan ε hε probes B
+  refine ⟨⟨p,c,outputPrecision M c.gain δ,represent M c.gain δ⟩, ?_, ?_⟩
+  · simp only [runCached, ite_eq_left hδ, hret]
+  · obtain ⟨he,hr⟩ := represent_spec M c.gain δ hδ
+    exact ⟨hc,ht,hw,he,hr,rfl,rfl⟩
+\end{lstlisting}
+
+This theorem proves that the program returns \emph{some} valid result. It therefore closes an existence obligation for the algorithm's own output, rather than saying only that outputs would be safe if produced. The finite fuel can be conservative. Mathematical success on unbounded exact integers/rationals does not promise that the bounded reference producer completes within a machine's time or memory limit.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"runCached_rejects_nonpositive_output_tolerance","file":"Komorebi/CachedPacketOutput.lean","first_line":53,"last_line":57,"kind":"full_proof","excerpt_sha256":"cc0be3babdec5523fed44a86488c61498df4daa34f35fb40268b4f2f2bcd5074"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketOutput.lean}, lines 53--57.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem runCached_rejects_nonpositive_output_tolerance (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (seed : α) (scan : List α) (ε δ : ℚ) (hδ : δ ≤ 0) (probes : List ℕ) (B : Matrix ι κ ℚ) :
+    runCached M Q D seed scan ε δ probes B = none := by
+  simp only [runCached, ite_eq_right (not_lt.mpr hδ)]
+\end{lstlisting}
+
+\section{The exact model is represented by factors}
+
+The four finite types separate state coordinates $\iota$, observation coordinates $\kappa$, prior-factor columns $\upsilon$, and noise-factor columns $\omega$. Their cardinalities need not coincide. Factors make covariance positivity a theorem about construction. They do not put an unchecked positive-definiteness flag inside the input record.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"RationalModel","file":"Komorebi/RationalCertificateChecker.lean","first_line":8,"last_line":14,"kind":"definition","excerpt_sha256":"57e5f4309c008749e4e6d0bd1b8eaa655eeddda570d9d355b22973b707c6cfff"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 8--14.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+structure RationalModel (ι κ υ ω : Type*) where
+  observationMatrix : Matrix κ ι ℚ
+  priorFactor : Matrix ι υ ℚ
+  noiseFactor : Matrix κ ω ℚ
+  noiseFloor : ℚ
+  mean : ι → ℚ
+  observation : κ → ℚ
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"prior","file":"Komorebi/RationalCertificateChecker.lean","first_line":28,"last_line":29,"kind":"definition","excerpt_sha256":"4dd41f09a803a8e3ed0d228ac756383ea5ae2818c0f58a34fa3ade605959cc20"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 28--29.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def prior (M : RationalModel ι κ υ ω) : Matrix ι ι ℚ :=
+  M.priorFactor * M.priorFactor.transpose
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"noise","file":"Komorebi/RationalCertificateChecker.lean","first_line":31,"last_line":32,"kind":"definition","excerpt_sha256":"dcb59124ee2ff976c39c84be8ce7999ac6801464daf652159727de9c5d0cfc40"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 31--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def noise (M : RationalModel ι κ υ ω) : Matrix κ κ ℚ :=
+  M.noiseFactor * M.noiseFactor.transpose + M.noiseFloor • 1
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"innovation","file":"Komorebi/RationalCertificateChecker.lean","first_line":34,"last_line":35,"kind":"definition","excerpt_sha256":"77bcc20b3dbe77d8ef4b6872b5f0bbef29b43ced0e9af16501e3eb36d8929cb8"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 34--35.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def innovation (M : RationalModel ι κ υ ω) : Matrix κ κ ℚ :=
+  M.observationMatrix * M.prior * M.observationMatrix.transpose + M.noise
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"residual","file":"Komorebi/RationalCertificateChecker.lean","first_line":37,"last_line":38,"kind":"definition","excerpt_sha256":"9036f077b2f53b8770680f30134d66b3102af79946de1c35143d617c0df97ed2"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 37--38.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def residual (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) : Matrix ι κ ℚ :=
+  M.prior * M.observationMatrix.transpose - B * M.innovation
+\end{lstlisting}
+
+Write $P=LL^{\mathsf T}$, $R=TT^{\mathsf T}+\sigma I$, $S=HPH^{\mathsf T}+R$, and $F(B)=PH^{\mathsf T}-BS$. Positive $\sigma$ makes $R$ positive definite even if $T$ has deficient rank. The prior $P$ may remain singular. The exact posterior gain involves $S^{-1}$, but iteration and stopping can evaluate $F(B)$ without constructing that inverse.
+
+Rational entries embed into actual finite-dimensional Euclidean spaces and continuous linear maps. The source proves compatibility of casts with matrix operations. The meaning of the rational model is consequently a real probability measure, not a symbolic tuple whose probabilistic interpretation is assumed later.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"posterior","file":"Komorebi/RationalModelSemantics.lean","first_line":69,"last_line":71,"kind":"definition","excerpt_sha256":"3fa463b077d4d21712fcdd2f6856e2376193370c50df330332cf80dba4fb4475"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalModelSemantics.lean}, lines 69--71.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def posterior (M : RationalModel ι κ υ ω) : Measure (EuclideanSpace ℝ ι) :=
+  fdPosteriorKernel (realMatrix M.observationMatrix) (realVector M.mean)
+    (realMatrix M.prior) (realMatrix M.noise) (realVector M.observation)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"approximation","file":"Komorebi/RationalModelSemantics.lean","first_line":74,"last_line":76,"kind":"definition","excerpt_sha256":"5a592fd1dc55052d549079a445de9ab3a92e883ce9066c62605208d55a25b006"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalModelSemantics.lean}, lines 74--76.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def approximation (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) : Measure (EuclideanSpace ℝ ι) :=
+  gainPosteriorLaw (realMatrix M.observationMatrix) (realVector M.mean)
+    (realMatrix M.prior) (realMatrix M.noise) (realMatrix B) (realVector M.observation)
+\end{lstlisting}
+
+The target is the explicitly selected Gaussian posterior kernel evaluated at the supplied observation. The approximation is the gain-dependent Joseph law. All distribution statements below refer to those concrete measures.
+
+\section{Why the target is a Bayesian posterior}
+
+The Gaussian semantics layer builds both orders of the same joint law. In the forward description, a prior draw passes through the affine Gaussian likelihood. In the reverse description, an observation draw passes through the displayed posterior kernel. Equality of those actual joint measures supplies disintegration.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"fd_joint_disintegration","file":"Komorebi/FDGaussianConditioning.lean","first_line":11,"last_line":21,"kind":"full_proof","excerpt_sha256":"f4d85d8926d03317e4de1d59ba4b26ad278f2bdf31f300e39467d4a6314165ac"}
+
+{\small\textcolor{teal}{\path{Komorebi/FDGaussianConditioning.lean}, lines 11--21.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem fd_joint_disintegration
+    (H : Matrix κ ι ℝ) (m : EuclideanSpace ℝ ι)
+    (P : Matrix ι ι ℝ) (R : Matrix κ κ ℝ)
+    (hP : P.PosSemidef) (hR : R.PosDef) :
+    (multivariateGaussian (matrixCLM H m) (innovationMatrix H P R)) ⊗ₘ
+        fdPosteriorKernel H m P R =
+      ((multivariateGaussian m P) ⊗ₘ gaussianAffineKernel H 0 R).map Prod.swap := by
+  apply map_pack_injective
+  rw [reverse_joint_gaussian H m P R hP hR,
+    forward_joint_gaussian H m P R hP hR.posSemidef,
+    reverseJointCov_eq_forwardJointCov H P R hP hR]
+\end{lstlisting}
+
+Taking the observation marginal identifies the evidence law. Mathlib's canonical posterior is a version of conditional probability, so its identification is an almost-everywhere statement under that evidence law. A conditional probability version can be modified on an evidence-null set without changing disintegration. The source retains this distinction rather than changing the quantifier to pointwise equality.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"fdPosteriorKernel_eq_canonical","file":"Komorebi/FDGaussianConditioning.lean","first_line":34,"last_line":46,"kind":"full_proof","excerpt_sha256":"075b33f952cb7d8f774f78eab1e29f4131370a53e6f06886f9b170944d357ada"}
+
+{\small\textcolor{teal}{\path{Komorebi/FDGaussianConditioning.lean}, lines 34--46.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem fdPosteriorKernel_eq_canonical
+    (H : Matrix κ ι ℝ) (m : EuclideanSpace ℝ ι)
+    (P : Matrix ι ι ℝ) (R : Matrix κ κ ℝ)
+    (hP : P.PosSemidef) (hR : R.PosDef) :
+    fdPosteriorKernel H m P R =ᵐ[
+      multivariateGaussian (matrixCLM H m) (innovationMatrix H P R)]
+      posterior (gaussianAffineKernel H 0 R) (multivariateGaussian m P) := by
+  have h := ae_eq_posterior_of_compProd_eq
+    (κ := gaussianAffineKernel H 0 R) (μ := multivariateGaussian m P)
+    (η := fdPosteriorKernel H m P R) (by
+      rw [fd_observation_evidence H m P R hP hR]
+      exact fd_joint_disintegration H m P R hP hR)
+  rwa [fd_observation_evidence H m P R hP hR] at h
+\end{lstlisting}
+
+The solver certificate is pointwise for the chosen explicit kernel at the supplied rational observation. The mathematical statement relating this kernel to a canonical posterior version is evidence-almost everywhere. These are compatible conclusions. They answer different version questions.
+
+Singular priors require no prior inverse in this chain. The positive-definite noise supplies the invertible innovation covariance. This is why the rotated example later can have rank-one prior support while its observation covariance is nonsingular.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"canonicalPosterior_eq_josephGaussian","file":"Komorebi/FDGaussianConditioning.lean","first_line":63,"last_line":73,"kind":"full_proof","excerpt_sha256":"f9b52efc8e5a58a4e2170acc254bdb8fdc62024bf486644b6ce22fdc35485be4"}
+
+{\small\textcolor{teal}{\path{Komorebi/FDGaussianConditioning.lean}, lines 63--73.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem canonicalPosterior_eq_josephGaussian
+    (H : Matrix κ ι ℝ) (m : EuclideanSpace ℝ ι)
+    (P : Matrix ι ι ℝ) (R : Matrix κ κ ℝ)
+    (hP : P.PosSemidef) (hR : R.PosDef) :
+    ∀ᵐ y ∂multivariateGaussian (matrixCLM H m) (innovationMatrix H P R),
+      posterior (gaussianAffineKernel H 0 R) (multivariateGaussian m P) y =
+        multivariateGaussian
+          (m + matrixCLM (gainMatrix H P R) (y - matrixCLM H m))
+          (josephCovMatrix H P R) := by
+  rw [josephCovMatrix_eq_posteriorCovMatrix H P R hP hR]
+  exact canonicalPosterior_eq_multivariateGaussian H m P R hP hR
+\end{lstlisting}
+
+\section{A residual controls distribution error}
+
+The proof couples the exact posterior and approximate Joseph law using shared Gaussian ingredients. Its squared transport cost is derived from that actual coupling. Writing $K=PH^{\mathsf T}S^{-1}$ and $v=y-Hm$, the coupling cost is
+\[
+ \|(K-B)v\|^2+\tr((K-B)S(K-B)^{\mathsf T}).
+\]
+The identity $K-B=F(B)S^{-1}$ converts this to a residual expression. This is an upper bound on the optimal transport cost, since a particular coupling need not minimize the transport problem.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"inexactGainCoupling_cost_residual","file":"Komorebi/FDInexactGainCoupling.lean","first_line":24,"last_line":35,"kind":"full_proof","excerpt_sha256":"07014dfdd232f68ed8120c8f6c45dc17970fef9ee888e762c192660027daa861"}
+
+{\small\textcolor{teal}{\path{Komorebi/FDInexactGainCoupling.lean}, lines 24--35.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem inexactGainCoupling_cost_residual (H : Matrix κ ι ℝ) (m : EuclideanSpace ℝ ι)
+    (P : Matrix ι ι ℝ) (R : Matrix κ κ ℝ) (B : Matrix ι κ ℝ)
+    (y : EuclideanSpace ℝ κ) (hP : P.PosSemidef) (hR : R.PosDef) :
+    quadraticCost (inexactGainCoupling H m P R B y) =
+      ENNReal.ofReal
+        (‖matrixCLM (gainResidual H P R B * (innovationMatrix H P R)⁻¹)
+            (y-matrixCLM H m)‖^2 +
+          (gainResidual H P R B * (innovationMatrix H P R)⁻¹ *
+            (gainResidual H P R B).transpose).trace) := by
+  rw [inexactGainCoupling_cost_gap H m P R B y hP hR,
+    ← residual_cov_eq_gap_cov H P R B hP hR,
+    gain_gap_eq_residual_mul_inv H P R B hP hR]
+\end{lstlisting}
+
+The noise floor gives $\|S^{-1}\|\le\sigma^{-1}$. A Frobenius/operator-norm majorant then removes the inverse from the final stopping quantity:
+\[
+ W_2^2\bigl(\pi_y,\widehat\pi_{B,y}\bigr)
+ \le\|F(B)\|_{\mathrm F}^2\frac{\sigma+\|v\|^2}{\sigma^2}.
+\]
+The right side is computed from the current gain, model factors, and observation. The source's explicit hypotheses make the roles of covariance positivity, positive noise floor, and its quadratic lower bound visible.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"posterior_wasserstein2Sq_le_residual_energy","file":"Komorebi/FDResidualEnergyCertificate.lean","first_line":39,"last_line":49,"kind":"full_proof","excerpt_sha256":"2ca1087d7179b9f7c0ac2f3a24e5f8f90ae1935c362b3e1197788905f2b88150"}
+
+{\small\textcolor{teal}{\path{Komorebi/FDResidualEnergyCertificate.lean}, lines 39--49.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem posterior_wasserstein2Sq_le_residual_energy
+    (H : Matrix κ ι ℝ) (m : EuclideanSpace ℝ ι)
+    (P : Matrix ι ι ℝ) (R : Matrix κ κ ℝ) (B : Matrix ι κ ℝ)
+    (y : EuclideanSpace ℝ κ) (hP : P.PosSemidef) (hR : R.PosDef)
+    (σ : ℝ) (hσ : 0 < σ) (hfloor : QuadraticLowerBound R σ) :
+    wasserstein2Sq (fdPosteriorKernel H m P R y) (gainPosteriorLaw H m P R B y) ≤
+      ENNReal.ofReal (gainResidualEnergyBudget H m P R B y σ) := by
+  apply (posterior_wasserstein2Sq_le_gain_residual H m P R B y hP hR).trans
+  apply ENNReal.ofReal_le_ofReal
+  exact quadratic_residual_cost_le_energy _ _ _ (σ⁻¹)
+    (innovation_inverse_norm_le H P R hP hR σ hσ hfloor)
+\end{lstlisting}
+
+No comparison to only a formal mean/covariance surrogate is used. The left side contains the actual target and approximation measures. A zero residual yields equality with the selected posterior law, while a small residual yields a quantitative whole-law certificate.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"gainPosteriorLaw_eq_of_residual_zero","file":"Komorebi/FDInexactGainCoupling.lean","first_line":54,"last_line":64,"kind":"full_proof","excerpt_sha256":"27b081f8f0bd92c610923ac46cd2b6fb510182b6623b36d4d28b82bb0fbec907"}
+
+{\small\textcolor{teal}{\path{Komorebi/FDInexactGainCoupling.lean}, lines 54--64.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem gainPosteriorLaw_eq_of_residual_zero
+    (H : Matrix κ ι ℝ) (m : EuclideanSpace ℝ ι)
+    (P : Matrix ι ι ℝ) (R : Matrix κ κ ℝ) (B : Matrix ι κ ℝ)
+    (y : EuclideanSpace ℝ κ) (hP : P.PosSemidef) (hR : R.PosDef)
+    (hF : gainResidual H P R B = 0) :
+    gainPosteriorLaw H m P R B y = fdPosteriorKernel H m P R y := by
+  have hg := gain_gap_eq_residual_mul_inv H P R B hP hR
+  rw [hF, Matrix.zero_mul] at hg
+  have heq : gainMatrix H P R = B := sub_eq_zero.mp hg
+  rw [← heq]
+  exact gainPosteriorLaw_exact H m P R y hP hR
+\end{lstlisting}
+
+\section{Packet geometry is checked, including completeness}
+
+Output packets $Q_a$ partition state directions. Input packets $D_b$ partition observation directions for local residual certification. Each family is a finite rational self-adjoint orthogonal resolution of the identity. Four obligations are checked: symmetry, idempotence, pairwise annihilation, and completeness. Missing the completeness clause could discard residual energy outside the listed packets.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"RationalPacketsValid","file":"Komorebi/RationalPacketCertificates.lean","first_line":13,"last_line":17,"kind":"definition","excerpt_sha256":"67aa7102609e14c1842efa1589edb64e4efc844bec7b78b2ef4e74b77eed40ee"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalPacketCertificates.lean}, lines 13--17.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+abbrev RationalPacketsValid (Q : α → Matrix ι ι ℚ) : Prop :=
+  (∀ a, (Q a).transpose = Q a) ∧
+  (∀ a, Q a * Q a = Q a) ∧
+  (∀ a b, a ≠ b → Q a * Q b = 0) ∧
+  (∑ a, Q a) = 1
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"checkRationalPackets","file":"Komorebi/RationalPacketCertificates.lean","first_line":19,"last_line":20,"kind":"definition","excerpt_sha256":"04338eed8e6187c43ce4d982dfc45892f9ce519a73335858c2eea44dfbec6caa"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalPacketCertificates.lean}, lines 19--20.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def checkRationalPackets (Q : α → Matrix ι ι ℚ) : Bool :=
+  decide (RationalPacketsValid Q)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"realPackets","file":"Komorebi/RationalPacketCertificates.lean","first_line":27,"last_line":32,"kind":"definition","excerpt_sha256":"0440257c46e0abdb81b72a4b10667f9afe71fec74442278037bb5fe36ab6bcd4"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalPacketCertificates.lean}, lines 27--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+noncomputable def realPackets (Q : α → Matrix ι ι ℚ) (h : RationalPacketsValid Q) :
+    SelfAdjointPackets ι α where
+  proj a := realMatrix (Q a)
+  symmetric a := by rw [← realMatrix_transpose, h.1 a]
+  idempotent a := by rw [← realMatrix_mul, h.2.1 a]
+  disjoint a b hab := by rw [← realMatrix_mul, h.2.2.1 a b hab, realMatrix_zero]
+\end{lstlisting}
+
+The rational predicates construct real projector geometry using exact casts. In Euclidean space, self-adjoint disjoint projections give an energy partition. In particular, the sum of output-packet squared Frobenius energies equals the entire residual energy. The two-sided packet theorem similarly accounts for both output and observation directions in the final certificate.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"sum_left_energy","file":"Komorebi/PacketSelectiveAlgebra.lean","first_line":13,"last_line":21,"kind":"full_proof","excerpt_sha256":"aa0eccf3e923fb1a8377032b10d3b7e6348a20a0199efc35ff7c8e5def143fa8"}
+
+{\small\textcolor{teal}{\path{Komorebi/PacketSelectiveAlgebra.lean}, lines 13--21.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem sum_left_energy (Q : α → Matrix ι ι ℚ) (hQ : RationalPacketsValid Q)
+    (F : Matrix ι κ ℚ) : (∑ a, rationalEnergy (Q a * F)) = rationalEnergy F := by
+  have h := matrixEnergy_sumOn_left (realPackets Q hQ) Finset.univ (realMatrix F)
+  have hc := realPackets_complete Q hQ
+  unfold SelfAdjointPackets.Complete at hc
+  rw [hc, Matrix.one_mul] at h
+  have hh : (rationalEnergy F : ℝ) = ∑ a, (rationalEnergy (Q a * F) : ℝ) := by
+    simpa only [realPackets_proj, ← realMatrix_mul, ← rationalEnergy_cast] using h
+  exact_mod_cast hh.symm
+\end{lstlisting}
+
+Packet labels can include zero projectors. What matters is the proved resolution. The seed supplies an actual label, so the chosen-output family is nonempty for the selection/convergence theorem. Duplicate scan entries are allowed. Scan coverage concerns which labels can be found, not a claim that every scanned label has positive energy.
+
+\section{The finite checker and its semantic theorem}
+
+An arbitrary producer may propose a gain and conservative local upper bounds. The finite candidate predicate requires positivity, both complete packet families, every local residual-energy bound, and an innovation-vector energy bound. The checker decides those exact rational obligations.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"RationalCandidate","file":"Komorebi/RationalCertificateChecker.lean","first_line":17,"last_line":20,"kind":"definition","excerpt_sha256":"fdc4d7265e3b4c01b9e75d1e109747bea0297146a8f335c7d36aab19c83d1103"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 17--20.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+structure RationalCandidate (ι κ α β : Type*) where
+  gain : Matrix ι κ ℚ
+  packetUpper : α → β → ℚ
+  innovationUpper : ℚ
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"ValidCandidate","file":"Komorebi/RationalCertificateChecker.lean","first_line":51,"last_line":56,"kind":"definition","excerpt_sha256":"1b8f2d5df61f1cd815af1f19dd50eaf70bd111b5b7ff24e0e4a49f5c21ad0a7b"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 51--56.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+abbrev ValidCandidate (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (c : RationalCandidate ι κ α β) : Prop :=
+  0 < M.noiseFloor ∧ RationalPacketsValid Q ∧ RationalPacketsValid D ∧
+  (∀ a b, rationalEnergy (Q a * M.residual c.gain * D b) ≤ c.packetUpper a b) ∧
+  rationalVectorEnergy M.innovationVector ≤ c.innovationUpper
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"checkCandidate","file":"Komorebi/RationalCertificateChecker.lean","first_line":59,"last_line":61,"kind":"definition","excerpt_sha256":"064e2b165fa0707898c633a5ffb52a9ca8473ea7db62df12440f08122d62b44e"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 59--61.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def checkCandidate (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (c : RationalCandidate ι κ α β) : Bool := decide (ValidCandidate M Q D c)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"checkTolerance","file":"Komorebi/RationalCertificateChecker.lean","first_line":70,"last_line":72,"kind":"definition","excerpt_sha256":"597f96893e5d4425fc38c8ccc510d6ed6b9dc772a74126569e7fab881a5047e6"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalCertificateChecker.lean}, lines 70--72.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def checkTolerance (M : RationalModel ι κ υ ω)
+    (c : RationalCandidate ι κ α β) (ε : ℚ) : Bool :=
+  decide (0 ≤ ε ∧ totalUpper c * (M.noiseFloor+c.innovationUpper) ≤ ε^2*M.noiseFloor^2)
+\end{lstlisting}
+
+The tolerance test avoids a square root. With $U=\sum_{a,b}u_{ab}$ and $V$ the innovation upper bound, it checks $U(\sigma+V)\le\varepsilon^2\sigma^2$ and nonnegative $\varepsilon$. The semantic theorem links passing Boolean decisions to the target law. Positivity of denominators is recovered from candidate validity, so algebraic division never silently assumes a nonzero noise floor.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"checked_tolerance_bounds_posterior","file":"Komorebi/RationalPosteriorCertificate.lean","first_line":55,"last_line":65,"kind":"full_proof","excerpt_sha256":"5d27dac95f2417b3ca305ddc9e09290d5438251a8524b9d422a970d7ed26e7d7"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalPosteriorCertificate.lean}, lines 55--65.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem checked_tolerance_bounds_posterior (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ) (c : RationalCandidate ι κ α β)
+    (ε : ℚ) (hc : checkCandidate M Q D c = true) (ht : checkTolerance M c ε = true) :
+    wasserstein2 M.posterior (M.approximation c.gain) ≤ ENNReal.ofReal (ε : ℝ) := by
+  have h := (checkCandidate_eq_true M Q D c).mp hc
+  have ht' := (checkTolerance_iff_score M c ε h.1).mp ht
+  apply wasserstein2_le_of_sq_le _ _ (ε : ℝ) (by exact_mod_cast ht'.1)
+  apply (checked_score_bounds_posterior M Q D c hc).trans
+  apply ENNReal.ofReal_le_ofReal
+  have hh : (candidateScore M c : ℝ) ≤ ((ε^2 : ℚ) : ℝ) := by exact_mod_cast ht'.2
+  simpa [pow_two] using hh
+\end{lstlisting}
+
+The final rounded verifier does not execute the full exact-residual \path{checkCandidate}. It checks setup, constructs outward bounds, and executes the tolerance test. Construction soundness proves that its candidate would pass the exact checker. This operational distinction matters when counting full residual recomputations and describing the arithmetic boundary.
+
+\section{Selected updates preserve unselected packets}
+
+Let $\eta=(\sigma+\tr S)^{-1}$ be the exact rational step. A selected update changes $B$ by $\eta Q_aF(B)$. Its residual satisfies
+\[
+ F(B^+)=F(B)-\eta Q_aF(B)S.
+\]
+Multiplying on the left by $Q_b$ kills the change whenever $b\ne a$, because $Q_bQ_a=0$. For the selected packet, idempotence gives the right innovation transition $I-\eta S$. These two identities justify the cache.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"packetStep","file":"Komorebi/PacketSelectiveAlgebra.lean","first_line":25,"last_line":26,"kind":"definition","excerpt_sha256":"cf342752ecf4c0003ece6146b7edfc553770d2608dae865cffa2a445339a6add"}
+
+{\small\textcolor{teal}{\path{Komorebi/PacketSelectiveAlgebra.lean}, lines 25--26.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def packetStep (M : RationalModel ι κ υ ω) (Q : Matrix ι ι ℚ)
+    (B : Matrix ι κ ℚ) : Matrix ι κ ℚ := B + M.solverStep • (Q * M.residual B)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"unselected_residual","file":"Komorebi/PacketSelectiveAlgebra.lean","first_line":37,"last_line":43,"kind":"full_proof","excerpt_sha256":"875aaa61e15d2bd11490623717a1864822e10538f66c7eccea7e9d5eadef3ffe"}
+
+{\small\textcolor{teal}{\path{Komorebi/PacketSelectiveAlgebra.lean}, lines 37--43.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem unselected_residual (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (hQ : RationalPacketsValid Q)
+    (a b : α) (hba : b ≠ a) (B : Matrix ι κ ℚ) :
+    Q b * M.residual (packetStep M (Q a) B) = Q b * M.residual B := by
+  rw [packetStep_residual]
+  simp only [Matrix.mul_sub, Matrix.mul_smul, ← Matrix.mul_assoc,
+    hQ.2.2.1 b a hba, Matrix.zero_mul, smul_zero, sub_zero]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"selected_residual","file":"Komorebi/PacketSelectiveAlgebra.lean","first_line":47,"last_line":53,"kind":"full_proof","excerpt_sha256":"4042e0416713df964ef7ccd5f20d212a3a2d6f687f040f148f0941753d23533a"}
+
+{\small\textcolor{teal}{\path{Komorebi/PacketSelectiveAlgebra.lean}, lines 47--53.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem selected_residual (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (hQ : RationalPacketsValid Q)
+    (a : α) (B : Matrix ι κ ℚ) :
+    Q a * M.residual (packetStep M (Q a) B) =
+      (Q a * M.residual B) * (1 - M.solverStep • M.innovation) := by
+  rw [packetStep_residual]
+  simp only [Matrix.mul_sub, Matrix.mul_one, Matrix.mul_smul, ← Matrix.mul_assoc, hQ.2.1 a]
+\end{lstlisting}
+
+Only output locality is asserted. An input subpacket can couple to other input directions through the innovation matrix. The retained \path{input_packet_effect} identity contains $SD_b$, and does not replace it with a diagonal or commuting expression. General input-block locality would need additional hypotheses.
+
+The spectral transition contracts the selected energy by the proved full-update rate. Summing the energy partition produces global descent weighted by the energy of the chosen packet. This is the bridge from local algebra to a terminating selection policy.
+
+\section{Maximum selection is an executed finite scan}
+
+The algorithm selects by exact rational energy. It does not assume a magical maximum oracle or a predetermined cyclic schedule. The recursive scan compares the incumbent energy to the next label and replaces it only under a strict inequality. Ties retain the incumbent.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"winner","file":"Komorebi/GreedyPacketSelection.lean","first_line":9,"last_line":11,"kind":"definition","excerpt_sha256":"2f05f68ee6abf3a1daed6428222ebb297515de4b5bd562b9910609a5284363df"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketSelection.lean}, lines 9--11.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def winner (e : α → ℚ) : α → List α → α
+  | a, [] => a
+  | a, b::rest => winner e (if e a < e b then b else a) rest
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"selectPacket_max","file":"Komorebi/GreedyPacketSelection.lean","first_line":48,"last_line":51,"kind":"full_proof","excerpt_sha256":"4ebcc40019e5f9d89628cd4d0f479a2e055127e1ebf92556108717856cea8d97"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketSelection.lean}, lines 48--51.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem selectPacket_max (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ)
+    (seed : α) (scan : List α) (hscan : ∀ a, a ∈ scan) (B : Matrix ι κ ℚ) (a : α) :
+    rationalEnergy (Q a*M.residual B) ≤ rationalEnergy (Q (selectPacket M Q seed scan B)*M.residual B) :=
+  winner_ge_member (fun b => rationalEnergy (Q b*M.residual B)) seed a scan (hscan a)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"selected_energy_share","file":"Komorebi/GreedyPacketSelection.lean","first_line":55,"last_line":65,"kind":"full_proof","excerpt_sha256":"9a61da80b1c870960a98411d0565cfa654c4b2c800793c4075da0beff31ea7d4"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketSelection.lean}, lines 55--65.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem selected_energy_share (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (hQ : RationalPacketsValid Q)
+    (seed : α) (scan : List α) (hscan : ∀ a, a ∈ scan) (B : Matrix ι κ ℚ) :
+    rationalEnergy (M.residual B) / (Fintype.card α : ℚ) ≤
+      rationalEnergy (Q (selectPacket M Q seed scan B)*M.residual B) := by
+  have hc : (0 : ℚ) < Fintype.card α := by
+    exact_mod_cast (Fintype.card_pos_iff.mpr ⟨seed⟩)
+  have hsum := Finset.sum_le_sum (fun a (_ : a ∈ Finset.univ) => selectPacket_max M Q seed scan hscan B a)
+  rw [sum_left_energy Q hQ] at hsum
+  simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul] at hsum
+  exact (div_le_iff₀ hc).mpr (by simpa only [mul_comm] using hsum)
+\end{lstlisting}
+
+Coverage of the scan implies that the executed winner has at least every packet's energy. If there are $A$ output labels, it therefore captures at least $1/A$ of the total energy. Repeated labels do not change this pigeonhole argument. The supplied seed ensures $A>0$.
+
+Combining this share with selected-packet descent yields the adaptive energy factor
+\[
+ q_{\rm adapt}=1-\frac{1-q}{A},\qquad
+ q=\left(1-\frac{\sigma}{\sigma+\tr S}\right)^2.
+\]
+It lies in $[0,1)$ under the admissible model hypotheses. This is a conservative rate bound. It need not equal the measured contraction of a particular packet or trajectory.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"adaptiveRate","file":"Komorebi/GreedyPacketSelection.lean","first_line":69,"last_line":69,"kind":"definition","excerpt_sha256":"7b555564d2b7e1538f6b764d8c1bfebee313a55a1c954ebeefce32353149ae03"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketSelection.lean}, lines 69--69.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def adaptiveRate (q : ℚ) (count : ℕ) : ℚ := 1 - (1-q)/(count : ℚ)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"greedy_score_geometric","file":"Komorebi/GreedyPacketConvergence.lean","first_line":40,"last_line":48,"kind":"full_proof","excerpt_sha256":"fb6a7b336108174304a8e3fc654daac340456863947c363852645d22f8670c30"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketConvergence.lean}, lines 40--48.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem greedy_score_geometric (M : RationalModel ι κ υ ω) (hs : 0 < M.noiseFloor)
+    (Q : α → Matrix ι ι ℚ) (hQ : RationalPacketsValid Q)
+    (seed : α) (scan : List α) (hscan : ∀ a, a ∈ scan) (B : Matrix ι κ ℚ) (n : ℕ) :
+    M.residualScore (greedyGain M Q seed scan B n) ≤
+      (adaptiveRate M.solverRate (Fintype.card α))^n*M.residualScore B := by
+  have hf : 0 ≤ (M.noiseFloor+rationalVectorEnergy M.innovationVector)/M.noiseFloor^2 :=
+    div_nonneg (add_nonneg hs.le (rationalVectorEnergy_nonneg _)) (sq_nonneg _)
+  have h := mul_le_mul_of_nonneg_right (greedy_energy_geometric M hs Q hQ seed scan hscan B n) hf
+  simpa only [RationalModel.residualScore, div_eq_mul_inv, mul_assoc] using h
+\end{lstlisting}
+
+\section{Finite fuel reserves verification slack}
+
+The solver uses an explicit rational fuel expression, avoiding logarithm evaluation and an eigenvalue oracle. A Bernoulli-type envelope turns a geometric bound into a simple ceiling. The resulting fuel can substantially overestimate the update count that early stopping actually uses.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"toleranceFuel","file":"Komorebi/GeometricFuel.lean","first_line":28,"last_line":28,"kind":"definition","excerpt_sha256":"a6f38ea7b17cf77b462fbd6b30b6494fb826d53159a386e64207802bd9f23205"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeometricFuel.lean}, lines 28--28.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def toleranceFuel (q a ε : ℚ) : ℕ := Nat.ceil (a / (ε^2 * (1-q)))
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"adaptiveFuel","file":"Komorebi/GreedyPacketConvergence.lean","first_line":51,"last_line":52,"kind":"definition","excerpt_sha256":"e1dbc0515da0c3c441b93f00f633a432f405acb5e291a476b01c1d68065b7d7e"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketConvergence.lean}, lines 51--52.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def adaptiveFuel (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) (ε : ℚ) (count : ℕ) : ℕ :=
+  toleranceFuel (adaptiveRate M.solverRate count) (M.residualScore B) (ε/2)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"greedy_score_at_fuel","file":"Komorebi/GreedyPacketConvergence.lean","first_line":54,"last_line":65,"kind":"full_proof","excerpt_sha256":"fd3f451213e07c63c826d795eb98a3941ca8791466254215ed96d80295ea7968"}
+
+{\small\textcolor{teal}{\path{Komorebi/GreedyPacketConvergence.lean}, lines 54--65.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem greedy_score_at_fuel (M : RationalModel ι κ υ ω) (hs : 0 < M.noiseFloor)
+    (Q : α → Matrix ι ι ℚ) (hQ : RationalPacketsValid Q)
+    (seed : α) (scan : List α) (hscan : ∀ a, a ∈ scan) (B : Matrix ι κ ℚ)
+    (ε : ℚ) (hε : 0 < ε) (n : ℕ) (hn : adaptiveFuel M B ε (Fintype.card α) ≤ n) :
+    M.residualScore (greedyGain M Q seed scan B n) ≤ ε^2/4 := by
+  have hr := adaptiveRate_bounds M.solverRate (Fintype.card α)
+    (M.solverRate_bounds hs).1 (M.solverRate_bounds hs).2 (Fintype.card_pos_iff.mpr ⟨seed⟩)
+  have h := (greedy_score_geometric M hs Q hQ seed scan hscan B n).trans
+    (geometric_fuel_sufficient _ _ (ε/2) hr.1 hr.2 (by positivity) n hn)
+  calc
+    _ ≤ (ε/2)^2 := h
+    _ = ε^2/4 := by ring
+\end{lstlisting}
+
+The cached score aims at $\varepsilon^2/4$, not merely $\varepsilon^2$. Once the exact score crosses that stricter threshold, the sufficient final precision can tolerate up to another $\varepsilon^2/4$ of score inflation and still pass the desired target. The construction therefore has ample strict slack. It does not depend on the rounded score decreasing monotonically with every precision increment.
+
+The theorem permits every iterate at or above the computed fuel. The operational search stops at the first passing exact score, which may be much earlier. The coordinate example uses six updates despite a fuel of 410,093, and the rotated example uses four despite a fuel of 4,267. Those values demonstrate conservatism of this formula in the included cases, not a worst-case efficiency theorem.
+
+\section{The cache invariant is proved for the executed update}
+
+The cached state stores a gain, one residual matrix per output label, their energies, and their total. The invariant links every stored quantity to the current gain's residual. It is an equation invariant, not an informal assertion that cached values remain approximately correct.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"State","file":"Komorebi/CachedPacketState.lean","first_line":13,"last_line":17,"kind":"definition","excerpt_sha256":"5cd0a86c977ae40b8ae563686ddb88165748fb4c4d07a26966f96bfedeedb022"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketState.lean}, lines 13--17.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+structure State (ι κ α : Type*) where
+  gain : Matrix ι κ ℚ
+  residuals : α → Matrix ι κ ℚ
+  energies : α → ℚ
+  total : ℚ
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"Valid","file":"Komorebi/CachedPacketState.lean","first_line":33,"last_line":36,"kind":"definition","excerpt_sha256":"d2150eca53c9c7a747d7b838428ed8926975b7f1f3583c226f34ceb4222486ac"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketState.lean}, lines 33--36.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def Valid (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ) (c : State ι κ α) : Prop :=
+  (∀ a, c.residuals a = Q a * M.residual c.gain) ∧
+  (∀ a, c.energies a = rationalEnergy (c.residuals a)) ∧
+  c.total = ∑ a, c.energies a
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"initialState","file":"Komorebi/CachedPacketState.lean","first_line":26,"last_line":31,"kind":"definition","excerpt_sha256":"c57b72d783a3e6ad6b520781f29f9bffebd1a6755a150f4b1115b07590bfd792"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketState.lean}, lines 26--31.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def initialState (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ)
+    (B : Matrix ι κ ℚ) : State ι κ α :=
+  let F := M.residual B
+  let G := fun a => Q a * F
+  let e := fun a => rationalEnergy (G a)
+  ⟨B,G,e,∑ a, e a⟩
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"step","file":"Komorebi/CachedPacketState.lean","first_line":43,"last_line":49,"kind":"definition","excerpt_sha256":"d69ace2ece85d23dcbfe9624bfac688fe004dd66f8f3c1fc5f545d33663bb48d"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketState.lean}, lines 43--49.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def step (K : Kernel κ) (a : α) (c : State ι κ α) : State ι κ α :=
+  let G := c.residuals a * K.transition
+  let e := rationalEnergy G
+  ⟨c.gain+K.step • c.residuals a,
+    fun b => if b=a then G else c.residuals b,
+    fun b => if b=a then e else c.energies b,
+    c.total-c.energies a+e⟩
+\end{lstlisting}
+
+Only the selected residual is multiplied by the precomputed transition. Only its energy is recomputed. The total changes by subtracting the old selected energy and adding the new one. The gain changes by the selected residual. The preservation proof uses the selected/unselected identities and a finite-sum difference identity.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"step_valid","file":"Komorebi/CachedPacketState.lean","first_line":66,"last_line":91,"kind":"full_proof","excerpt_sha256":"387c36da61284a7b0186be6b08976927a95bd054207b654934b2feb0f1c118b6"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketState.lean}, lines 66--91.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem step_valid (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ)
+    (hQ : RationalPacketsValid Q) (c : State ι κ α) (hc : Valid M Q c) (a : α) :
+    Valid M Q (step (prepare M) a c) := by
+  refine ⟨?_,?_,?_⟩
+  · intro b
+    rw [step_gain M Q c hc a]
+    by_cases hb : b=a
+    · subst b
+      simp only [step,ite_true,prepare,hc.1 a,selected_residual M Q hQ]
+    · rw [step_other_residual _ _ _ hb,unselected_residual M Q hQ a b hb,hc.1 b]
+  · intro b
+    by_cases hb : b=a
+    · subst b; simp only [step,ite_true]
+    · simpa only [step,ite_eq_right hb] using hc.2.1 b
+  · change c.total-c.energies a+rationalEnergy (c.residuals a*(prepare M).transition) =
+      ∑ b, if b=a then rationalEnergy (c.residuals a*(prepare M).transition) else c.energies b
+    rw [hc.2.2]
+    have hi : (fun b => if b=a then rationalEnergy (c.residuals a*(prepare M).transition) else c.energies b) =
+        (fun b => c.energies b + if b=a then rationalEnergy (c.residuals a*(prepare M).transition)-c.energies a else 0) := by
+      funext b
+      split_ifs with hb
+      · subst b; ring
+      · ring
+    rw [hi,Finset.sum_add_distrib]
+    simp only [Finset.sum_ite_eq',Finset.mem_univ,ite_true]
+    ring
+\end{lstlisting}
+
+All of these updates are exact rationals. No rounding radius is hidden in \path{Valid}. This exactness is why the source can reuse untouched energies without carrying extra approximation errors.
+
+\section{Cached execution equals the recomputed greedy trajectory}
+
+The cached total equals the full residual energy by the packet partition, and its score equals the model's direct residual score. The cache-based maximum also equals the recomputed maximum. These facts connect an efficient state representation to the previously proved gain iteration.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"score_eq","file":"Komorebi/CachedPacketState.lean","first_line":103,"last_line":107,"kind":"full_proof","excerpt_sha256":"ec474b51b0869fb30d7666975d47e4d4ab0a3914997a7d7d7b42e1a3f1c6e36a"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketState.lean}, lines 103--107.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem score_eq (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ)
+    (hQ : RationalPacketsValid Q) (c : State ι κ α) (hc : Valid M Q c) :
+    score (prepare M) c = M.residualScore c.gain := by
+  rw [score,total_eq_residual_energy M Q hQ c hc]
+  simp only [prepare,RationalModel.residualScore,div_eq_mul_inv,mul_assoc]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"chosen_eq","file":"Komorebi/CachedPacketTrajectory.lean","first_line":27,"last_line":32,"kind":"full_proof","excerpt_sha256":"f7885199e0f2bd015b597aba670cb6e11e7a2fec17e41159507996459c58c59b"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketTrajectory.lean}, lines 27--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem chosen_eq (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ)
+    (c : State ι κ α) (hc : Valid M Q c) (seed : α) (scan : List α) :
+    chosen seed scan c = selectPacket M Q seed scan c.gain := by
+  have he : c.energies = fun a => rationalEnergy (Q a*M.residual c.gain) := by
+    funext a; rw [hc.2.1 a,hc.1 a]
+  simp only [chosen,selectPacket,he]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"trajectory_gain","file":"Komorebi/CachedPacketTrajectory.lean","first_line":53,"last_line":60,"kind":"full_proof","excerpt_sha256":"4a7b3c261a2407290ad5ab8361a42f7204a05527910015d71eaee29e01a57393"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketTrajectory.lean}, lines 53--60.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem trajectory_gain (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ)
+    (hQ : RationalPacketsValid Q) (c : State ι κ α) (hc : Valid M Q c) (seed : α) (scan : List α) (n : ℕ) :
+    (trajectory (prepare M) seed scan c n).gain = greedyGain M Q seed scan c.gain n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [trajectory,advance_gain M Q _ (trajectory_valid M Q hQ c hc seed scan n),ih]
+    rfl
+\end{lstlisting}
+
+The trajectory theorem is stronger than agreement at one exported final matrix. It proves equality for every natural update count from every valid initial cached state under valid output geometry. Consequently the cached solver inherits greedy convergence without treating a reference Python implementation as an oracle.
+
+The origin theorem below further proves that a returned certificate gain came from an actual greedy iterate within the computed fuel. The final verifier cannot silently replace the proposed gain with an unrelated one.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"cached_solver_gain_origin","file":"Komorebi/CachedPacketOrigin.lean","first_line":10,"last_line":32,"kind":"full_proof","excerpt_sha256":"3d9bb31c0fd62428f94e7bfbf3e0ec848725f2ab7995f627ccf6d31032f3dfc3"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketOrigin.lean}, lines 10--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem cached_solver_gain_origin (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (seed : α) (scan : List α) (ε : ℚ) (probes : List ℕ) (B : Matrix ι κ ℚ)
+    (p : ℕ) (c : RationalCandidate ι κ α β) (hr : solveCached M Q D seed scan ε probes B = some (p,c)) :
+    ∃ k ≤ adaptiveFuel M B ε (Fintype.card α), c.gain = greedyGain M Q seed scan B k := by
+  unfold solveCached at hr
+  split at hr
+  next hg =>
+    dsimp only at hr
+    cases hsearch : search (prepare M) seed scan ε (adaptiveFuel M B ε (Fintype.card α)) (initialState M Q B) with
+    | none => simp only [hsearch] at hr; contradiction
+    | some out =>
+      simp only [hsearch] at hr
+      have hQ := ((checkSetup_eq_true M Q D).mp hg.2.1).2.1
+      obtain ⟨k,hk,he⟩ := search_origin (prepare M) seed scan ε _ (initialState M Q B) out hsearch
+      have hc := (certifyGain_origin M Q D ε probes out.gain p c hr).1
+      refine ⟨k,hk,?_⟩
+      calc
+        c.gain = out.gain := by rw [hc]; rfl
+        _ = greedyGain M Q seed scan B k := by
+          rw [he,trajectory_gain M Q hQ _ (initialState_valid M Q B)]
+          rfl
+  next => contradiction
+\end{lstlisting}
+
+\section{Search completeness closes the algorithmic existence step}
+
+The bounded search inspects the initial state's exact score, then advances until it passes or fuel is exhausted. A zero-fuel call still checks its current state. Soundness and completeness are separate induction arguments: a successful result satisfies the threshold, and a trajectory whose final permitted state passes guarantees some early-stopping result.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"search","file":"Komorebi/CachedPacketSearch.lean","first_line":10,"last_line":12,"kind":"definition","excerpt_sha256":"b5dedd8ebacb35e2da4a0d0a08e174cbceeac2ce0d4c88400d84185db1a42c86"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketSearch.lean}, lines 10--12.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def search (K : Kernel κ) (seed : α) (scan : List α) (ε : ℚ) : ℕ → State ι κ α → Option (State ι κ α)
+  | 0,c => if score K c ≤ ε^2/4 then some c else none
+  | n+1,c => if score K c ≤ ε^2/4 then some c else search K seed scan ε n (advance K seed scan c)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"search_complete","file":"Komorebi/CachedPacketSearch.lean","first_line":45,"last_line":58,"kind":"full_proof","excerpt_sha256":"08ee26df921a5a4a6a982079f762939bd43241f81a078b41c3d6cf8d09f17777"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketSearch.lean}, lines 45--58.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem search_complete (K : Kernel κ) (seed : α) (scan : List α) (ε : ℚ)
+    (n : ℕ) (c : State ι κ α) (hp : score K (trajectory K seed scan c n) ≤ ε^2/4) :
+    ∃ out, search K seed scan ε n c = some out := by
+  induction n generalizing c with
+  | zero =>
+    change score K c ≤ ε^2/4 at hp
+    exact ⟨c,by rw [search,ite_eq_left hp]⟩
+  | succ n ih =>
+    by_cases hs : score K c ≤ ε^2/4
+    · exact ⟨c,by rw [search,ite_eq_left hs]⟩
+    · have hp' : score K (trajectory K seed scan (advance K seed scan c) n) ≤ ε^2/4 := by
+        simpa only [trajectory_shift] using hp
+      obtain ⟨out,hr⟩ := ih _ hp'
+      exact ⟨out,by rw [search,ite_eq_right hs]; exact hr⟩
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"solveCached","file":"Komorebi/CachedPacketSolver.lean","first_line":14,"last_line":22,"kind":"definition","excerpt_sha256":"4cf2767c7832f1fdf9bf6e745020643b9464276d303d8c29fbd788ab68fdc3bf"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketSolver.lean}, lines 14--22.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def solveCached (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (seed : α) (scan : List α) (ε : ℚ) (probes : List ℕ) (B : Matrix ι κ ℚ) : Option (ℕ × RationalCandidate ι κ α β) :=
+  if 0 < ε ∧ checkSetup M Q D = true ∧ ∀ a, a ∈ scan then
+    let K := prepare M
+    match search K seed scan ε (adaptiveFuel M B ε (Fintype.card α)) (initialState M Q B) with
+    | none => none
+    | some c => certifyGain M Q D ε probes c.gain
+  else none
+\end{lstlisting}
+
+The entry guard checks positive posterior tolerance, setup validity, and scan coverage. \path{prepare} computes the model step, innovation transition, and score weight once. The search begins from the actual cache constructor, whose validity is immediate. A successful cached state proceeds to independent rounded verification of its gain.
+
+The solver termination proof composes established obligations rather than assuming convergence of an arbitrary cache: valid initialization, validity preservation, exact trajectory equivalence, geometric fuel sufficiency, search completeness, and final-certifier completeness.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"solveCached_terminates","file":"Komorebi/CachedPacketSolver.lean","first_line":37,"last_line":60,"kind":"full_proof","excerpt_sha256":"e17efcb408e5f02d04559a1ce58fc859d905bdca7f7677c8786508d7398d50b9"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedPacketSolver.lean}, lines 37--60.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem solveCached_terminates (M : RationalModel ι κ υ ω) (hs : 0 < M.noiseFloor)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (hQ : RationalPacketsValid Q) (hD : RationalPacketsValid D)
+    (seed : α) (scan : List α) (hscan : ∀ a, a ∈ scan)
+    (ε : ℚ) (hε : 0 < ε) (probes : List ℕ) (B : Matrix ι κ ℚ) :
+    ∃ p c, solveCached M Q D seed scan ε probes B = some (p,c) ∧
+      checkCandidate M Q D c = true ∧ checkTolerance M c ε = true := by
+  let init := initialState M Q B
+  let fuel := adaptiveFuel M B ε (Fintype.card α)
+  have hv : Valid M Q init := initialState_valid M Q B
+  have hp := trajectory_score_at_fuel M hs Q hQ init hv seed scan hscan ε hε fuel le_rfl
+  obtain ⟨out,hr⟩ := search_complete (prepare M) seed scan ε fuel init hp
+  obtain ⟨k,_,he⟩ := search_origin (prepare M) seed scan ε fuel init out hr
+  have ho : Valid M Q out := by rw [he]; exact trajectory_valid M Q hQ init hv seed scan k
+  have hb : M.residualScore out.gain ≤ ε^2/4 := by
+    rw [← score_eq M Q hQ out ho]
+    exact search_score (prepare M) seed scan ε fuel init out hr
+  obtain ⟨p,c,hc⟩ := certifyGain_complete M hs Q D hQ hD ε hε probes out.gain hb
+  have hg := (checkSetup_eq_true M Q D).mpr ⟨hs,hQ,hD⟩
+  have hout : solveCached M Q D seed scan ε probes B = some (p,c) := by
+    rw [solveCached,ite_eq_left ⟨hε,hg,hscan⟩]
+    change (match search (prepare M) seed scan ε fuel init with | none => none | some x => certifyGain M Q D ε probes x.gain) = _
+    rw [hr]; exact hc
+  exact ⟨p,c,hout,solveCached_sound M Q D seed scan ε probes B p c hout⟩
+\end{lstlisting}
+
+\section{Outward dyadic arithmetic has its own soundness proof}
+
+A scalar ball is a rational center and absolute radius. Enclosure means $|x-c|\le r$. Its radius is not enforced by the record constructor alone. A proof of enclosure implies nonnegativity, and arithmetic lemmas propagate that proof through addition, multiplication, and finite sums.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"Ball","file":"Komorebi/RationalBall.lean","first_line":11,"last_line":14,"kind":"definition","excerpt_sha256":"73e421473eebae6f325db15efba2dda04054de22edf4b2b7653a46098e58df26"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalBall.lean}, lines 11--14.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+structure Ball where
+  center : ℚ
+  radius : ℚ
+  deriving DecidableEq, Repr
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"Encloses","file":"Komorebi/RationalBall.lean","first_line":16,"last_line":16,"kind":"definition","excerpt_sha256":"d9f0a8308cfe64d4bd05bc551dd6157487229077803abe2d90655ea8e0785ff9"}
+
+{\small\textcolor{teal}{\path{Komorebi/RationalBall.lean}, lines 16--16.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def Encloses (b : Ball) (x : ℚ) : Prop := |x - b.center| ≤ b.radius
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"round","file":"Komorebi/DyadicBall.lean","first_line":22,"last_line":24,"kind":"definition","excerpt_sha256":"8b61597e16eb0af785a9c5386aa84a08369117d6f4723812f605be9ab30e6e0f"}
+
+{\small\textcolor{teal}{\path{Komorebi/DyadicBall.lean}, lines 22--24.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def round (p : ℕ) (b : Ball) : Ball :=
+  let c := down p b.center
+  ⟨c, up p (b.radius + |b.center-c|)⟩
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"round_encloses","file":"Komorebi/DyadicBall.lean","first_line":26,"last_line":33,"kind":"full_proof","excerpt_sha256":"c93156a1b49d8ee64cd6e17eb86a90b639088ca85df623b65416417b18c53c00"}
+
+{\small\textcolor{teal}{\path{Komorebi/DyadicBall.lean}, lines 26--33.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem round_encloses (p : ℕ) {b : Ball} {x : ℚ} (h : Encloses b x) :
+    Encloses (round p b) x := by
+  change |x-down p b.center| ≤ up p (b.radius+|b.center-down p b.center|)
+  calc
+    _ = |(x-b.center)+(b.center-down p b.center)| := by congr 1; ring
+    _ ≤ |x-b.center|+|b.center-down p b.center| := abs_add_le _ _
+    _ ≤ b.radius+|b.center-down p b.center| := add_le_add h le_rfl
+    _ ≤ _ := le_up _ _
+\end{lstlisting}
+
+At fractional precision $p$, centers are rounded down to a multiple of $2^{-p}$. The radius is first inflated by the displacement of the center, then rounded up. This preserves enclosure for both positive and negative quantities. Integer parts are unbounded in this mathematical implementation, so the theorem is not an IEEE floating-point overflow guarantee.
+
+The final candidate retains the gain unchanged. It evaluates each residual packet and innovation vector with outward arithmetic, then extracts conservative energy upper bounds. It is not a rounded gain update.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"roundedCandidate","file":"Komorebi/RoundedCandidate.lean","first_line":11,"last_line":16,"kind":"definition","excerpt_sha256":"f9dad73e245390a5ab6e2afbb3196d5a36b8945fb0c2d2db5de0eb8dad4603f4"}
+
+{\small\textcolor{teal}{\path{Komorebi/RoundedCandidate.lean}, lines 11--16.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def roundedCandidate (p : ℕ) (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ) (B : Matrix ι κ ℚ) :
+    RationalCandidate ι κ α β where
+  gain := B
+  packetUpper a b := matrixEnergyUpper (packetBall p M B (Q a) (D b))
+  innovationUpper := vectorEnergyUpper (innovationVectorBall p M)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"roundedCandidate_valid","file":"Komorebi/RoundedCandidate.lean","first_line":25,"last_line":32,"kind":"full_proof","excerpt_sha256":"26c45b7130ee65f90d4f1033f246822d94b109c75dfd6a34d5c0463d9a0e4b6f"}
+
+{\small\textcolor{teal}{\path{Komorebi/RoundedCandidate.lean}, lines 25--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem roundedCandidate_valid (p : ℕ) (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ) (B : Matrix ι κ ℚ)
+    (hs : 0 < M.noiseFloor) (hQ : RationalPacketsValid Q) (hD : RationalPacketsValid D) :
+    ValidCandidate M Q D (roundedCandidate p M Q D B) := by
+  refine ⟨hs, hQ, hD, ?_, ?_⟩
+  · intro a b
+    exact matrixEnergyUpper_sound (packetBall_encloses p M B (Q a) (D b))
+  · exact vectorEnergyUpper_sound (innovationVectorBall_encloses p M)
+\end{lstlisting}
+
+\section{Finite verification precision is computed, not guessed}
+
+Magnitude and radius budgets bound score inflation by a computable coefficient times the dyadic mesh. The sufficient-precision function chooses a precision for a positive slack. Every precision above that threshold has the claimed inflation bound. Individual finite-precision scores need not be monotone for this theorem to work.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"sufficientPrecision","file":"Komorebi/PrecisionCompleteness.lean","first_line":13,"last_line":15,"kind":"definition","excerpt_sha256":"a7e2d07e232f83b7758a4d100cfb2dc97f8b2cd38f5bf11e627148328f94bd56"}
+
+{\small\textcolor{teal}{\path{Komorebi/PrecisionCompleteness.lean}, lines 13--15.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def sufficientPrecision (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ) (B : Matrix ι κ ℚ) (δ : ℚ) : ℕ :=
+  precisionFor (scoreRoundCoeff M Q D B) δ
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"rounded_score_le_with_slack","file":"Komorebi/PrecisionCompleteness.lean","first_line":19,"last_line":26,"kind":"full_proof","excerpt_sha256":"54dca2ddf17f1e4e50eebee01bcd5b4e57d9a5941e5602bc1a7f744c0b187d7d"}
+
+{\small\textcolor{teal}{\path{Komorebi/PrecisionCompleteness.lean}, lines 19--26.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem rounded_score_le_with_slack (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ) (B : Matrix ι κ ℚ)
+    (hs : 0 < M.noiseFloor) (δ : ℚ) (hδ : 0 < δ) (p : ℕ)
+    (hp : sufficientPrecision M Q D B δ ≤ p) :
+    candidateScore M (roundedCandidate p M Q D B) ≤
+      candidateScore M (exactCandidate M Q D B)+δ := by
+  have hc := coefficient_mesh_le (scoreRoundCoeff M Q D B) δ hδ p hp
+  exact (rounded_score_inflation p M Q D B hs).trans (add_le_add le_rfl hc)
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"certifyGain","file":"Komorebi/RoundedSolverSearch.lean","first_line":12,"last_line":14,"kind":"definition","excerpt_sha256":"17416a0170ee065f990b9d72123b9ba7d5b2e4c4637c4b5ad35307f27e9435bb"}
+
+{\small\textcolor{teal}{\path{Komorebi/RoundedSolverSearch.lean}, lines 12--14.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def certifyGain (M : RationalModel ι κ υ ω) (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (ε : ℚ) (probes : List ℕ) (B : Matrix ι κ ℚ) : Option (ℕ × RationalCandidate ι κ α β) :=
+  certifyTagged (probes++[sufficientPrecision M Q D B (ε^2/4)]) M Q D B ε
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"certifyGain_complete","file":"Komorebi/RoundedSolverSearch.lean","first_line":25,"last_line":37,"kind":"full_proof","excerpt_sha256":"00d3c938aaf12554f70845a5b1203d7f1912b8a9d4afaf28a1482042ae1e6f3b"}
+
+{\small\textcolor{teal}{\path{Komorebi/RoundedSolverSearch.lean}, lines 25--37.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem certifyGain_complete (M : RationalModel ι κ υ ω) (hs : 0 < M.noiseFloor)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (hQ : RationalPacketsValid Q) (hD : RationalPacketsValid D)
+    (ε : ℚ) (hε : 0 < ε) (probes : List ℕ) (B : Matrix ι κ ℚ)
+    (hscore : M.residualScore B ≤ ε^2/4) :
+    ∃ p c, certifyGain M Q D ε probes B = some (p,c) := by
+  let p := sufficientPrecision M Q D B (ε^2/4)
+  have hm : candidateScore M (exactCandidate M Q D B)+ε^2/4 ≤ ε^2 := by
+    rw [exactCandidate_score M Q D hQ hD]
+    nlinarith only [hscore,sq_nonneg ε]
+  have hr := certifyRounded_of_slack M Q D B hs hQ hD ε (ε^2/4) hε.le
+    (by positivity) hm p le_rfl
+  exact certifyTagged_complete _ p (by simp [p]) M Q D B ε _ hr
+\end{lstlisting}
+
+The caller's finite probes are tried first and can find a cheap passing precision. The sufficient precision is appended regardless of whether the probe list is empty or contains repeated entries. The fallback is a theorem-backed finite completion mechanism for a gain with sufficient exact score slack.
+
+A failed rounded check does not prove that the true posterior error is too large. Conservative bounds can fail while an exact or higher-precision bound would pass. A successful check, however, is sound. This asymmetry is part of the interface and prevents interpreting a verifier rejection as a statistical impossibility result.
+
+\section{Output radius and posterior tolerance mean different things}
+
+For the returned gain $B$, the approximate Gaussian has exact rational mean $m+B(y-Hm)$ and Joseph covariance
+\[
+ (I-BH)P(I-BH)^{\mathsf T}+BRB^{\mathsf T}.
+\]
+The parameter graph encloses those entries. It does not directly enclose the exact posterior's coordinates merely because the law is close in $W_2$.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"outputMean","file":"Komorebi/PosteriorOutput.lean","first_line":13,"last_line":15,"kind":"definition","excerpt_sha256":"2eaf714db897199f997ec7fb4c8cbfffc8752c601f9c170c9bb11b768567c5f6"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutput.lean}, lines 13--15.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def outputMean [Fintype κ] [Fintype ι]
+    (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) : ι → ℚ :=
+  M.mean + B *ᵥ M.innovationVector
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"outputCovariance","file":"Komorebi/PosteriorOutput.lean","first_line":21,"last_line":25,"kind":"definition","excerpt_sha256":"db82bc661e9a1427987bfd5ad6c4508fa3f123eb74f90e9ad934ba4909342f9b"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutput.lean}, lines 21--25.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def outputCovariance [Fintype ι] [Fintype κ] [Fintype υ] [Fintype ω]
+    [DecidableEq ι] [DecidableEq κ]
+    (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) : Matrix ι ι ℚ :=
+  outputOperator M B * M.prior * (outputOperator M B).transpose +
+    B * M.noise * B.transpose
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"outputPrecision","file":"Komorebi/PosteriorOutputPrecision.lean","first_line":14,"last_line":15,"kind":"definition","excerpt_sha256":"956605a7ca607729eca6801fef04eab2a547520190318f1145a1b977b9a6e455"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutputPrecision.lean}, lines 14--15.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def outputPrecision (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) (δ : ℚ) : ℕ :=
+  precisionFor (outputCoefficient M B) δ
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"represent_spec","file":"Komorebi/PosteriorOutputPrecision.lean","first_line":56,"last_line":59,"kind":"full_proof","excerpt_sha256":"5c84ffac76219e7a5878bbfdb36ff38aaaf6b5e826cc69b002e10fd280d3ce77"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutputPrecision.lean}, lines 56--59.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem represent_spec (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ)
+    (δ : ℚ) (hδ : 0 < δ) :
+    EnclosesParameters M B (represent M B δ) ∧ RadiiAtMost (represent M B δ) δ :=
+  ⟨evaluate_encloses _ M B, evaluate_radii_le M B δ hδ _ le_rfl⟩
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"approximation_eq_output_gaussian","file":"Komorebi/PosteriorOutputSemantics.lean","first_line":36,"last_line":40,"kind":"full_proof","excerpt_sha256":"1093c321a2973ef4b9a58349723adbb2da9a4c711be30739ffd2f1d781da27bc"}
+
+{\small\textcolor{teal}{\path{Komorebi/PosteriorOutputSemantics.lean}, lines 36--40.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem approximation_eq_output_gaussian (M : RationalModel ι κ υ ω) (B : Matrix ι κ ℚ) :
+    M.approximation B =
+      multivariateGaussian (realVector (outputMean M B)) (realMatrix (outputCovariance M B)) := by
+  rw [outputMean_real, outputCovariance_real]
+  rfl
+\end{lstlisting}
+
+Here $\varepsilon$ controls the target-to-approximation transport distance, and $\delta$ controls every reported interval radius around the approximation's exact parameters. They are independently supplied tolerances and have different codomains and purposes. Shrinking $\delta$ does not change the selected gain. Shrinking $\varepsilon$ can require more gain updates.
+
+The approximation covariance is positive semidefinite by the Joseph construction under the checked model hypotheses. Independent rounding of its entries to interval centers need not preserve every covariance constraint. The enclosed exact covariance remains the semantic object certified by the result.
+
+\section{Execution example I: a rectangular coordinate model}
+
+The first complete execution has two state coordinates and one observed coordinate. The prior covariance is $\operatorname{diag}(4,1)$, the observation is the sum of the two coordinates, noise variance is one, and the prior mean is zero. The exact gain is $(2/3,1/6)^{\mathsf T}$. Coordinate output packets form a complete pair and the input packet is the one-dimensional identity.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"model","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":14,"last_line":20,"kind":"definition","excerpt_sha256":"cc87a775af9e288b56d3ae3215887a4955962de804b38fe0320a51ff0adad855"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 14--20.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def model : RationalModel (Fin 2) (Fin 1) (Fin 2) (Fin 1) where
+  observationMatrix := !![1, 1]
+  priorFactor := !![2, 0; 0, 1]
+  noiseFactor := !![0]
+  noiseFloor := 1
+  mean := ![0, 0]
+  observation := ![1]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"outputs","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":21,"last_line":21,"kind":"definition","excerpt_sha256":"1760cf6ae58361f79b61ecbcad682b51c14bb6ba87c64168645a1b9f78b3c4ad"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 21--21.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def outputs : Fin 2 → Matrix (Fin 2) (Fin 2) ℚ := ![!![1, 0; 0, 0], !![0, 0; 0, 1]]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"inputs","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":22,"last_line":22,"kind":"definition","excerpt_sha256":"4b376903ca3b6ddd1e6854e8d59a06d80745e2576edcc0915f9aabe14fd256a2"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 22--22.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def inputs : Fin 1 → Matrix (Fin 1) (Fin 1) ℚ := ![!![1]]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"finalGain","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":24,"last_line":24,"kind":"definition","excerpt_sha256":"a137c3d224ac12a84b907861897ee7112155827fcfc602d066f52d7c1677a59f"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 24--24.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def finalGain : Matrix (Fin 2) (Fin 1) ℚ := !![(228/343); (57/343)]
+\end{lstlisting}
+
+Starting from the zero gain, the executed output labels are $0,1,0,1,0,1$. The innovation variance is six, the chosen trace-cap step is $1/7$, and three visits to each packet give $B=(228/343,57/343)^{\mathsf T}$. This observation operator is rectangular, so no theorem can be relying on an inverse observation matrix.
+
+The posterior tolerance is $1/20$, the output radius cap is $1/1000$, the passing certificate precision is 12, and parameter precision is 32. The exact score $34/117649$ passes the stricter iteration threshold $\varepsilon^2/4=1/1600$. The outward certificate score $481/1048576$ passes $\varepsilon^2=1/400$.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"cached_return","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":32,"last_line":32,"kind":"full_proof","excerpt_sha256":"19431fe2b1c74f6e4cc50528281d4d5cc3a9ddba58b4dab5ff9e28fdfe886e87"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 32--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem cached_return : solveCached model outputs inputs 0 [0, 1] (1/20) [4, 12] initial = some (12,certificate) := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"output_precision_computed","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":40,"last_line":40,"kind":"full_proof","excerpt_sha256":"6d62e5edd2a34dc7e37ae9f9a6143029752e81ec34d9bf9b5976a48c615ac049"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 40--40.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem output_precision_computed : outputPrecision model finalGain (1/1000) = 32 := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"mean_centers_computed","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":41,"last_line":41,"kind":"full_proof","excerpt_sha256":"7df538ff2e5f3e4d45afc86ce63c0966413f035976e7df1f0f41929057bcd582"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 41--41.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem mean_centers_computed : (fun i => (outputArrays.mean i).center) = ![(2854963683/4294967296), (89217615/536870912)] := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"mean_radii_computed","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":42,"last_line":42,"kind":"full_proof","excerpt_sha256":"271bfabc9144d42db24079545ae00661c7ea29855a2cde9ee6c066b261b6437e"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 42--42.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem mean_radii_computed : (fun i => (outputArrays.mean i).radius) = ![(1/4294967296), (1/4294967296)] := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"covariance_radii_computed","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":44,"last_line":44,"kind":"full_proof","excerpt_sha256":"3dc395cdb0908216f067d0da22e0f00a0171493cb904c6221a00551795efd318"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 44--44.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem covariance_radii_computed : (fun i j => (outputArrays.covariance i j).radius) = !![(1/536870912), (7/4294967296); (7/4294967296), (1/536870912)] := by funext i j; fin_cases i <;> fin_cases j <;> decide +kernel
+\end{lstlisting}
+
+These values are not merely computed outside Lean and compared to a manually written certificate. The explicit module checks the actual \path{runCached} return and obtains the universal output contract by successful-return soundness.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"output_return","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":46,"last_line":48,"kind":"full_proof","excerpt_sha256":"518bc332997fc8ca927a891fc02593930ff0ff6e0ab77471021bdae8f96ba195"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 46--48.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem output_return : runCached model outputs inputs 0 [0, 1] (1/20) (1/1000) [4, 12] initial = some outputResult := by
+  simp only [runCached,ite_eq_left (show (0 : ℚ) < (1/1000) by norm_num),cached_return]
+  rfl
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"output_valid","file":"Komorebi/GeneratedCachedCoordinate.lean","first_line":49,"last_line":50,"kind":"full_proof","excerpt_sha256":"fd9e3c5ff96679f30780e1e5410516e81ea4c3df2586e1d99cf0fc96e6bd3b77"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedCoordinate.lean}, lines 49--50.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem output_valid : ResultValid model outputs inputs (1/20) (1/1000) outputResult :=
+  runCached_sound model outputs inputs 0 [0, 1] (1/20) (1/1000) [4, 12] initial outputResult output_return
+\end{lstlisting}
+
+\section{Execution example II: a singular prior and rotated packets}
+
+The second execution has $H=I_2$, $P=\begin{psmallmatrix}1&1\\1&1\end{psmallmatrix}$, $R=I_2$, and $y=(1,-1)$. The prior factor has only one column. Its rank-one prior is supported on the common-mode line, while the observation points in the difference direction. The common-mode and difference-mode rational projectors give a rotated complete packet family.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"model","file":"Komorebi/GeneratedCachedRotated.lean","first_line":14,"last_line":20,"kind":"definition","excerpt_sha256":"ef2d930d7cbeca9b28bdf74c9f288653dfc30b079709189e2e73769977f27f18"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 14--20.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def model : RationalModel (Fin 2) (Fin 2) (Fin 1) (Fin 1) where
+  observationMatrix := !![1, 0; 0, 1]
+  priorFactor := !![1; 1]
+  noiseFactor := !![0; 0]
+  noiseFloor := 1
+  mean := ![0, 0]
+  observation := ![1, -1]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"outputs","file":"Komorebi/GeneratedCachedRotated.lean","first_line":21,"last_line":21,"kind":"definition","excerpt_sha256":"3cc4bfbf3b49b405f82199803770b1ff97bcc0341034fe5112f83d0f2bd5d199"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 21--21.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def outputs : Fin 2 → Matrix (Fin 2) (Fin 2) ℚ := ![!![(1/2), (1/2); (1/2), (1/2)], !![(1/2), (-1/2); (-1/2), (1/2)]]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"inputs","file":"Komorebi/GeneratedCachedRotated.lean","first_line":22,"last_line":22,"kind":"definition","excerpt_sha256":"92fa40cdb6776f864407dbd4f6272ac89dfaa962f983eb5fcba1ad5ec7169e1b"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 22--22.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def inputs : Fin 2 → Matrix (Fin 2) (Fin 2) ℚ := ![!![(1/2), (1/2); (1/2), (1/2)], !![(1/2), (-1/2); (-1/2), (1/2)]]
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"finalGain","file":"Komorebi/GeneratedCachedRotated.lean","first_line":24,"last_line":24,"kind":"definition","excerpt_sha256":"fe2304b90bcac9cf3c4d6482f1c70b7fb604aee2808c376cad130a18877a80b8"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 24--24.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def finalGain : Matrix (Fin 2) (Fin 2) ℚ := !![(203/625), (203/625); (203/625), (203/625)]
+\end{lstlisting}
+
+All four selected labels are zero: the residual lies in the common-mode packet, and the difference packet has zero residual energy. The final gain has every entry $203/625$. Its exact score is $3072/390625$ and its rounded certificate score is $9111/1048576$. With $\varepsilon=1/4$, they pass $1/64$ and $1/16$ respectively.
+
+Both the exact posterior and approximation mean are zero in this case. The exact posterior covariance has every entry $1/3$. The final approximate Joseph covariance has every entry $130379/390625$. That distinction remains certified by the law guarantee even though the selected observation produces matching means.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"cached_return","file":"Komorebi/GeneratedCachedRotated.lean","first_line":32,"last_line":32,"kind":"full_proof","excerpt_sha256":"02c561871aa4a3b8f1c6bb5c17157bddba8c81cd0e7f8825683c415b011d9257"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 32--32.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem cached_return : solveCached model outputs inputs 0 [0, 1] (1/4) [4, 12] initial = some (12,certificate) := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"covariance_centers_computed","file":"Komorebi/GeneratedCachedRotated.lean","first_line":41,"last_line":41,"kind":"full_proof","excerpt_sha256":"b8ef68dc95fcb5182e6842f2f0d9a1db3460405c12261a374e0be7cbdb81ecdb"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 41--41.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem covariance_centers_computed : (fun i j => (outputArrays.covariance i j).center) = !![(179191533/536870912), (179191533/536870912); (179191533/536870912), (179191533/536870912)] := by funext i j; fin_cases i <;> fin_cases j <;> decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"covariance_radii_computed","file":"Komorebi/GeneratedCachedRotated.lean","first_line":42,"last_line":42,"kind":"full_proof","excerpt_sha256":"dccdcdbf4a17fecfcddcd8cffb9c0da295cc3a5dd5cb5efac4a243a55d258b45"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 42--42.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem covariance_radii_computed : (fun i j => (outputArrays.covariance i j).radius) = !![(7/4294967296), (7/4294967296); (7/4294967296), (7/4294967296)] := by funext i j; fin_cases i <;> fin_cases j <;> decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"output_return","file":"Komorebi/GeneratedCachedRotated.lean","first_line":44,"last_line":46,"kind":"full_proof","excerpt_sha256":"15eb5381a57d4391028f9340b7322d579b7dffd6dbe8a54834f276718e71a0ae"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 44--46.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem output_return : runCached model outputs inputs 0 [0, 1] (1/4) (1/1000) [4, 12] initial = some outputResult := by
+  simp only [runCached,ite_eq_left (show (0 : ℚ) < (1/1000) by norm_num),cached_return]
+  rfl
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"output_valid","file":"Komorebi/GeneratedCachedRotated.lean","first_line":47,"last_line":48,"kind":"full_proof","excerpt_sha256":"64817b01c7fbd1ec8b54db3f73b41de40f69927e346c01e58ebed12da9d86cb9"}
+
+{\small\textcolor{teal}{\path{Komorebi/GeneratedCachedRotated.lean}, lines 47--48.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem output_valid : ResultValid model outputs inputs (1/4) (1/1000) outputResult :=
+  runCached_sound model outputs inputs 0 [0, 1] (1/4) (1/1000) [4, 12] initial outputResult output_return
+\end{lstlisting}
+
+The returned intervals are very narrow compared with the supplied radius cap. This does not make the approximate covariance equal to the exact posterior covariance. It means the finite output graph represents the approximate covariance accurately. The $W_2$ theorem supplies the separate target comparison.
+
+\section{A checked counterexample prevents a false rounded-cache claim}
+
+The exact invariant cannot survive independent rounding of gain and residual centers without an additional error budget. The archived scalar example has prior variance one, observation coefficient one, noise variance one, observed value one, and zero initial gain. Its step is $1/3$. The ideal gain after one step is $1/3$, and the ideal residual is also $1/3$.
+
+Rounding those two centers down independently to precision zero produces stored gain zero and stored residual zero. The true residual of the stored gain is one. Therefore the naive cached score reports zero, while the true score is two. This is an executed counterexample with valid setup, rather than a hypothetical concern about roundoff.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"naiveRounded","file":"Komorebi/CachedRoundingBoundary.lean","first_line":20,"last_line":25,"kind":"definition","excerpt_sha256":"087d607593426ab00a1f4cdcb2fd95a8ab16d74e55cd8a5f7c6b8f7b7452ec23"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedRoundingBoundary.lean}, lines 20--25.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def naiveRounded : State (Fin 1) (Fin 1) (Fin 1) :=
+  let ideal := step (prepare model) 0 (initialState model packets zeroGain)
+  let B := fun i j => down 0 (ideal.gain i j)
+  let G := fun a i j => down 0 (ideal.residuals a i j)
+  let e := fun a => rationalEnergy (G a)
+  ⟨B,G,e,∑ a, e a⟩
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"naive_score_zero","file":"Komorebi/CachedRoundingBoundary.lean","first_line":27,"last_line":27,"kind":"full_proof","excerpt_sha256":"9235ebdb926da7fc39f12831d0902ac0b85f704838bafaa1802681cb991db855"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedRoundingBoundary.lean}, lines 27--27.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem naive_score_zero : score (prepare model) naiveRounded = 0 := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"true_score_two","file":"Komorebi/CachedRoundingBoundary.lean","first_line":28,"last_line":28,"kind":"full_proof","excerpt_sha256":"ba5954060256f9576d3a5910d9be0fb5c7ff1b8e531eb8aa14745dbdaffca39f"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedRoundingBoundary.lean}, lines 28--28.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem true_score_two : model.residualScore naiveRounded.gain = 2 := by decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"naive_cache_invalid","file":"Komorebi/CachedRoundingBoundary.lean","first_line":29,"last_line":29,"kind":"full_proof","excerpt_sha256":"cf3c5e175d5f111c9edab51cfb0b957b52b25259d5de6f25e85a5bcb19130f30"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedRoundingBoundary.lean}, lines 29--29.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem naive_cache_invalid : ¬ Valid model packets naiveRounded := by unfold Valid; decide +kernel
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"naive_final_verification_rejected","file":"Komorebi/CachedRoundingBoundary.lean","first_line":32,"last_line":33,"kind":"full_proof","excerpt_sha256":"d130aadfe28046b8b2d6e5e7a0354c1080b41a9feae569be95ddec23f2225cef"}
+
+{\small\textcolor{teal}{\path{Komorebi/CachedRoundingBoundary.lean}, lines 32--33.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem naive_final_verification_rejected :
+    Komorebi.RoundoffSolver.certifyGain model packets packets (1/10) [12] naiveRounded.gain = none := by decide +kernel
+\end{lstlisting}
+
+The independent final verifier evaluates the actual stored gain and rejects the false convergence signal for tolerance $1/10$. This gives a precise division of responsibilities: an internal heuristic or invalid cache can be misleading, but its claim does not bypass final certification. A future rounded selective cache needs a propagated cache-error invariant and its own termination proof. The existing exact invariant must not be relabeled as one.
+
+\section{Negative controls test specific failure boundaries}
+
+The archive contains three intentionally invalid Lean controls. They were expected to fail, and their successful rejection is preserved separately from successful mathematical modules. A false rational equality tests ordinary proof rejection. A placeholder tests the warnings-as-errors route. A dropped radius tests that a zero-radius interval at zero cannot enclose a distinct rational.
+\begin{center}\begin{tabularx}{\linewidth}{p{0.29\linewidth}Xr}\toprule
+Control & Obligation intentionally violated & Archived exit\\\midrule
+\path{FalseEquality} & An explicit false equality & 1\\
+\path{Placeholder} & An admitted placeholder under warning rejection & 1\\
+\path{DroppedRoundingRadius} & Enclosure of $1/1024$ by center zero and radius zero & 1\\\bottomrule
+\end{tabularx}\end{center}
+
+The radius control is copied here as a complete intentionally failing file fragment. It is not a proof excerpt from an accepted module.
+
+\begin{lstlisting}[style=BayesSource]
+import Komorebi.RationalBall
+example : Komorebi.RoundedPosterior.Encloses ⟨0,0⟩ (1/1024) := by
+  unfold Komorebi.RoundedPosterior.Encloses
+  decide +kernel
+\end{lstlisting}
+
+The expected result is rejection. A tool report that only says the command completed would be ambiguous here. The archived JSON records nonzero exit status, \path{expected_rejection=true}, source hashes, and log hashes for each control.
+
+Producer-side tests also reject malformed or unsupported inputs. They exercise parser policy and resource handling, while the Lean controls exercise proof and enclosure boundaries. Neither set proves a universal refinement theorem for the Python parser. An exported successful instance certifies the literal model and data appearing in its emitted Lean source.
+
+\section{The rounded full-gain branch remains a separate result}
+
+The source also retains a solver in which failed verification is followed by a genuinely rounded full-gain update. Its convergence analysis tracks update error and chooses an update accuracy plus finite fuel. It is not the cached selective program with rounding switched on.
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"solveRounded","file":"Komorebi/RoundedSolverSearch.lean","first_line":92,"last_line":97,"kind":"definition","excerpt_sha256":"d0bff4be246ce748864f46bdd4bb2fc7e7c047d5fcea6432ae8a0977a58fa98c"}
+
+{\small\textcolor{teal}{\path{Komorebi/RoundedSolverSearch.lean}, lines 92--97.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+def solveRounded (M : RationalModel ι κ υ ω)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (ε : ℚ) (probes : List ℕ) (B : Matrix ι κ ℚ) : Option (ℕ × RationalCandidate ι κ α β) :=
+  if 0 < ε ∧ checkSetup M Q D = true then
+    solveRoundedFuel M Q D ε probes (updateAccuracy M ε) (roundedFuel M B ε) B
+  else none
+\end{lstlisting}
+
+\Needspace{4\baselineskip}
+
+%% SOURCE_EXCERPT {"name":"solveRounded_terminates","file":"Komorebi/RoundedSolverSearch.lean","first_line":111,"last_line":124,"kind":"full_proof","excerpt_sha256":"8b7635950b5e83385acf6d04912e551db038eb7ec08d5d2d05aefe3353a9da73"}
+
+{\small\textcolor{teal}{\path{Komorebi/RoundedSolverSearch.lean}, lines 111--124.}\par}
+
+\begin{lstlisting}[style=BayesSource]
+theorem solveRounded_terminates (M : RationalModel ι κ υ ω) (hs : 0 < M.noiseFloor)
+    (Q : α → Matrix ι ι ℚ) (D : β → Matrix κ κ ℚ)
+    (hQ : RationalPacketsValid Q) (hD : RationalPacketsValid D)
+    (ε : ℚ) (hε : 0 < ε) (probes : List ℕ) (B : Matrix ι κ ℚ) :
+    ∃ p c, solveRounded M Q D ε probes B = some (p,c) ∧
+      checkCandidate M Q D c = true ∧ checkTolerance M c ε = true := by
+  have hscore := rounded_score_at_fuel M hs ε hε (updateAccuracy M ε) le_rfl
+    B (roundedFuel M B ε) le_rfl
+  have hp := certifyGain_complete M hs Q D hQ hD ε hε probes _ hscore
+  obtain ⟨p,c,hr⟩ := solveRoundedFuel_complete M Q D ε probes _ _ B hp
+  have hs0 := (checkSetup_eq_true M Q D).mpr ⟨hs,hQ,hD⟩
+  have hout : solveRounded M Q D ε probes B = some (p,c) := by
+    simpa only [solveRounded,hε,hs0,and_self,ite_true] using hr
+  exact ⟨p,c,hout,solveRounded_sound M Q D ε probes B p c hout⟩
+\end{lstlisting}
+
+This theorem confirms that the retained full-update branch also guarantees a successful certified candidate for positive tolerance under admissible model and packet hypotheses. Its proof invokes the rounded-score-at-fuel theorem, final verification completeness, and bounded-search completeness. The distinction matters when a reader asks whether the release has finite-precision updates: yes for this full branch, while selective cached gain updates in the canonical branch remain exact rationals.
+
+The seven-case bounded benchmark compares full Richardson, recomputed greedy selection, and cached greedy selection. The 21 benchmark modules certify static explicit final candidates. The two generated modules separately certify complete canonical program executions. Universal algorithm theorems and those two kinds of instance evidence should be counted separately.
+
+\section{Rebuild the pinned project without overwriting the archive}
+
+The source archive preserves the exact release and failures. A new rebuild should use a working copy, because the original rebuild script deliberately regenerates active compiled caches, audit records, seals, and result files. The following commands are a reproducible route, not a claim that they were executed during this publication session.
+
+Restore the separate Linux x86\_64 portable runtime, then confirm Lean 4.34.0-rc2 at commit \path{6a10ac8c22beadecabdbb0919c2b50214762f91d} and mathlib at \path{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}. The source package contains restoration metadata and starter information, but not the large runtime payload parts. Its metadata describes a Linux runtime intended also for x86\_64 WSL2, rather than a native Windows compiler.
+\begin{lstlisting}[language={},basicstyle=\ttfamily\small,breaklines=true,frame=single]
+# Run from the publication directory, after extracting the source archive.
+cp -a source/FD_Certified_Inference_Core_v1.0.0_Checked rebuild_work
+cd rebuild_work
+python3 checks/rebuild_release.py \
+  --runtime /path/to/Komorebi_Portable_Lean_4.34.0-rc2
+\end{lstlisting}
+
+The script compiles modules in \path{MODULE_ORDER.json}, uses one Lean thread and warnings as errors, runs negative controls and exact cache diagnostics, verifies the release seal, and reconciles benchmark reports. It removes active project caches for a clean project-source rebuild while reusing the pinned mathlib caches. This is not a clean rebuild of every external dependency from source.
+
+For a new proof-producing Python example, emit a new module in the working copy, regenerate its inventory, and rebuild:
+\begin{lstlisting}[language={},basicstyle=\ttfamily\small,breaklines=true,frame=single]
+python3 checks/cached_posterior.py examples/adaptive_coordinate.json \
+  --output results/local_cached.json \
+  --emit-lean Komorebi/LocalCached.lean \
+  --namespace LocalCached --try-precisions 4 12
+python3 checks/build_inventory.py
+python3 checks/rebuild_release.py \
+  --runtime /path/to/Komorebi_Portable_Lean_4.34.0-rc2
+\end{lstlisting}
+
+Treat \path{PASS_CACHED_PROVISIONAL} as provisional until the emitted module compiles. A reported \path{RESOURCE_LIMIT} is a bounded producer failure, not a refutation of mathematical finite termination. The default producer caps include dimension eight, 10,000 updates, rational bit limits, precision limits, scan limits, and input byte limits.
+
+The publication's read-only check is narrower and can run without Lean:
+\begin{lstlisting}[language={},basicstyle=\ttfamily\small,breaklines=true,frame=single]
+python3 scripts/lean_inventory.py
+\end{lstlisting}
+It rechecks all 939 manifest entries, all 117 final active source/snapshot/log receipts, 288 direct project dependency records, 543 declaration locations and axiom reports, and every source-attributed listing in this companion. These source consistency results are fresh checks. The September kernel runs remain archived evidence.
+
+\section{How to extend the proof without weakening the contract}
+
+A useful extension begins by choosing which invariant changes. Sequential filtering changes the target model over a sequence of observations and needs an explicit propagated state/posterior contract. Uncertain input data changes exact model semantics and requires an uncertainty interpretation. Rounded selective caching changes the exact residual equations and requires error bounds coupled to selection and convergence. A changing packet hierarchy changes the geometry that underpins energy completeness.
+
+The present theorem chain gives concrete reuse points. Gaussian disintegration and residual transport estimates can support new candidate producers. The finite checker can certify any explicitly represented gain whose rational upper bounds pass. Output representation can enclose the Joseph parameters of any supplied rational gain. What cannot be reused unchanged is a trajectory termination proof when updates, selection, or cache equations have changed.
+
+The release's current accomplishment is an integrated algorithmic theorem: within its declared input class, its own program returns a valid result, and every successful return has that result contract. Scope boundaries identify future work rather than leaving this scoped theorem unfinished. They also prevent a proof of one Gaussian update from being reported as a universal sequential Bayesian inference system.
+
+\appendix\clearpage\section{Module order and declaration map}
+
+The table follows the archived compilation order. Counts are named theorem/lemma declarations in \path{DECLARATIONS.json}; definitions and structures are not included. Support lemmas, concrete checks, and benchmark statements are counted together, so the total is not a count of independent discoveries. \path{ReleaseAxiomAudit} imports the entire project and prints axiom dependencies rather than introducing new mathematical declarations.
+\begin{longtable}{r p{0.70\linewidth} r}
+\toprule Order & Module & Count\\\midrule\endfirsthead
+\toprule Order & Module & Count\\\midrule\endhead
+
+1 & \path{RationalMatrixCertificates} & 12\\
+
+2 & \path{PacketMatrixEnergy} & 6\\
+
+3 & \path{SelfAdjointPackets} & 4\\
+
+4 & \path{RationalPacketCertificates} & 5\\
+
+5 & \path{RationalCertificateChecker} & 6\\
+
+6 & \path{RichardsonIteration} & 6\\
+
+7 & \path{GeometricFuel} & 3\\
+
+8 & \path{RationalRichardsonDefs} & 5\\
+
+9 & \path{FDGaussianTransport} & 5\\
+
+10 & \path{FDMatrixOperatorCompat} & 5\\
+
+11 & \path{FDMatrixEnergyBounds} & 5\\
+
+12 & \path{FDKalmanDefs} & 0\\
+
+13 & \path{FDInnovationIdentities} & 8\\
+
+14 & \path{FDInnovationConditioning} & 4\\
+
+15 & \path{GramNoiseFloor} & 3\\
+
+16 & \path{PacketEnergyDecomposition} & 5\\
+
+17 & \path{PacketVectorEnergy} & 5\\
+
+18 & \path{PacketEnergyRefinement} & 2\\
+
+19 & \path{PacketCoarsening} & 4\\
+
+20 & \path{FDMatrixPacketEnergy} & 5\\
+
+21 & \path{FDGaussianSum} & 3\\
+
+22 & \path{FDGaussianQuadraticMoment} & 4\\
+
+23 & \path{QuadraticTransport} & 5\\
+
+24 & \path{FDGaussianCoupling} & 6\\
+
+25 & \path{FDJointCovQuadrants} & 4\\
+
+26 & \path{FDJointCovAssembly} & 1\\
+
+27 & \path{FDPosteriorCovPSD} & 2\\
+
+28 & \path{FDInexactGainAlgebra} & 9\\
+
+29 & \path{FDGaussianKernel} & 2\\
+
+30 & \path{FDJointPacking} & 6\\
+
+31 & \path{FDJointCovPSD} & 2\\
+
+32 & \path{FDJointLiftAlgebra} & 7\\
+
+33 & \path{FDForwardJointLaw} & 1\\
+
+34 & \path{FDPosteriorKernel} & 1\\
+
+35 & \path{FDReverseJointLaw} & 1\\
+
+36 & \path{FDGaussianConditioning} & 5\\
+
+37 & \path{FDGainSampler} & 6\\
+
+38 & \path{FDInexactGainCoupling} & 5\\
+
+39 & \path{QuadraticTransportBounds} & 2\\
+
+40 & \path{FDResidualEnergyCertificate} & 3\\
+
+41 & \path{FDResidualPacketCertificate} & 4\\
+
+42 & \path{RationalModelSemantics} & 8\\
+
+43 & \path{RichardsonSpectrum} & 6\\
+
+44 & \path{RichardsonEnergy} & 5\\
+
+45 & \path{RationalRichardsonGeometry} & 8\\
+
+46 & \path{PacketSelectiveAlgebra} & 7\\
+
+47 & \path{GreedyPacketSelection} & 6\\
+
+48 & \path{RationalCandidateAcceptance} & 7\\
+
+49 & \path{RationalRichardsonConvergence} & 11\\
+
+50 & \path{GreedyPacketConvergence} & 4\\
+
+51 & \path{RationalBall} & 9\\
+
+52 & \path{DyadicBall} & 10\\
+
+53 & \path{DyadicPrecision} & 5\\
+
+54 & \path{PrecisionBudget} & 6\\
+
+55 & \path{PrecisionEnergy} & 3\\
+
+56 & \path{RoundedMatrix} & 11\\
+
+57 & \path{PrecisionMatrix} & 16\\
+
+58 & \path{RoundedModel} & 6\\
+
+59 & \path{PrecisionModel} & 6\\
+
+60 & \path{PrecisionSelection} & 1\\
+
+61 & \path{RoundoffEnergy} & 7\\
+
+62 & \path{RoundedGainEvaluation} & 6\\
+
+63 & \path{RoundoffTracking} & 6\\
+
+64 & \path{RoundoffConvergence} & 11\\
+
+65 & \path{PrecisionScoreAlgebra} & 1\\
+
+66 & \path{RoundedCandidate} & 5\\
+
+67 & \path{PrecisionScore} & 6\\
+
+68 & \path{PosteriorEnclosureBounds} & 1\\
+
+69 & \path{RationalPosteriorCertificate} & 6\\
+
+70 & \path{RoundedPosteriorSound} & 3\\
+
+71 & \path{RoundedPrecisionSearch} & 2\\
+
+72 & \path{PrecisionCompleteness} & 5\\
+
+73 & \path{TaggedPrecisionSearch} & 2\\
+
+74 & \path{RoundedSolverSearch} & 7\\
+
+75 & \path{RoundedSolverOrigin} & 3\\
+
+76 & \path{AdaptivePacketSolver} & 4\\
+
+77 & \path{AdaptivePacketInvariants} & 2\\
+
+78 & \path{AdaptivePacketOrigin} & 2\\
+
+79 & \path{AdaptivePacketPosterior} & 2\\
+
+80 & \path{PosteriorOutput} & 5\\
+
+81 & \path{PosteriorOutputPrecision} & 4\\
+
+82 & \path{PosteriorOutputSemantics} & 5\\
+
+83 & \path{RoundedSolverPosterior} & 3\\
+
+84 & \path{PosteriorOutputSolver} & 3\\
+
+85 & \path{AdaptivePacketOutput} & 3\\
+
+86 & \path{Benchmark0Cached} & 3\\
+
+87 & \path{Benchmark0Full} & 3\\
+
+88 & \path{Benchmark0Recompute} & 3\\
+
+89 & \path{Benchmark1Cached} & 3\\
+
+90 & \path{Benchmark1Full} & 3\\
+
+91 & \path{Benchmark1Recompute} & 3\\
+
+92 & \path{Benchmark2Cached} & 3\\
+
+93 & \path{Benchmark2Full} & 3\\
+
+94 & \path{Benchmark2Recompute} & 3\\
+
+95 & \path{Benchmark3Cached} & 3\\
+
+96 & \path{Benchmark3Full} & 3\\
+
+97 & \path{Benchmark3Recompute} & 3\\
+
+98 & \path{Benchmark4Cached} & 3\\
+
+99 & \path{Benchmark4Full} & 3\\
+
+100 & \path{Benchmark4Recompute} & 3\\
+
+101 & \path{Benchmark5Cached} & 3\\
+
+102 & \path{Benchmark5Full} & 3\\
+
+103 & \path{Benchmark5Recompute} & 3\\
+
+104 & \path{Benchmark6Cached} & 3\\
+
+105 & \path{Benchmark6Full} & 3\\
+
+106 & \path{Benchmark6Recompute} & 3\\
+
+107 & \path{CachedPacketState} & 7\\
+
+108 & \path{CachedPacketTrajectory} & 7\\
+
+109 & \path{CachedPacketSearch} & 3\\
+
+110 & \path{CachedPacketSolver} & 4\\
+
+111 & \path{CachedPacketOrigin} & 1\\
+
+112 & \path{CachedPacketOutput} & 3\\
+
+113 & \path{RationalSolverDecidable} & 0\\
+
+114 & \path{CachedRoundingBoundary} & 5\\
+
+115 & \path{GeneratedCachedCoordinate} & 18\\
+
+116 & \path{GeneratedCachedRotated} & 16\\
+
+117 & \path{ReleaseAxiomAudit} & 0\\
+
+\bottomrule\end{longtable}
+
+\clearpage\section{Evidence that accompanies the source}
+\begin{longtable}{p{0.35\linewidth}p{0.59\linewidth}}
+\toprule Artifact & Role\\\midrule\endfirsthead
+\toprule Artifact & Role\\\midrule\endhead
+\path{RELEASE_SCOPE.md} & The input/output finish line and named extensions.\\
+\path{PROOF_NOTE.md} & The original mathematical proof route.\\
+\path{DECLARATIONS.json} & All 543 named theorem/lemma source locations.\\
+\path{AXIOM_AUDIT.json} & Complete named-declaration coverage and permitted axiom dependencies.\\
+\path{FINAL_VERIFICATION_RECEIPT.json} & Archived final successful builds, failed attempts, environment pins, controls and diagnostic summary.\\
+\path{MANIFEST_SHA256.txt} & 939 archived file digests.\\
+\path{audit/} & Attempted-source snapshots, command receipts and exact process logs, including failed attempts.\\
+\path{results/FORMAL_INSTANCES.json} & The two complete cached execution instances and their scopes.\\
+\path{BENCHMARK_REPORT.md} & Controlled reference costs, timing methodology and limits.\\
+\path{FAILURE_LOG.md} & Preserved failures and corrections.\\
+\path{SELF_REVIEW.md} & Original internal adversarial review, with no external independence claim.\\
+\path{RUNTIME_METADATA/} & Separate runtime restoration metadata and pins.\\
+\path{reviews/lean_inventory.json} & Fresh publication-side byte, location, receipt, import and excerpt consistency results.\\\bottomrule
+\end{longtable}
+
+The archived axiom union is \path{Classical.choice}, \path{Quot.sound}, and \path{propext}. The check does not remove those foundations, prove Lean's kernel correct, or establish implementation refinement for all outside tools. It identifies the axioms reported for these named declarations and confirms that no added project axiom appears in that audit.
+
+Archived final-module process time sums to 558.439 seconds. This is the sum of measured process durations, not an independently measured end-to-end wall-clock rebuild. The same distinction applies to hardware performance claims: verified mathematical results remain valid while bounded timings answer only their recorded experimental question.
+
+The source, actual theorem contracts, execution-instance modules, failed controls, and read-only inventory make the publication reviewable at every major implication. A reader can begin at the output theorem, trace its obligations backward, and rerun the pinned working-copy build when the separate runtime is available.
+\end{document}

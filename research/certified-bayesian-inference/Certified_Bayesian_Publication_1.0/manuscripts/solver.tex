@@ -1,0 +1,777 @@
+\section{An exact selective iteration with a preserved cache}
+\label{sec:solver-cache}
+
+The posterior certificate becomes an algorithm when it is paired with a gain
+construction that is guaranteed to reach a passing certificate. The canonical
+construction in Core 1.0.0 performs exact rational selected-packet updates. It
+retains enough residual information to choose the next update without rebuilding
+the complete residual after every step. Its final certificate and parameter
+representation use outward-rounded dyadic arithmetic. These are separate stages
+with separate correctness arguments.
+
+Throughout this section, the state dimension and observation dimension are finite.
+The supplied rational model has
+\[
+ P=LL^{\mathsf T},\qquad R=NN^{\mathsf T}+\sigma I,
+ \qquad \sigma>0,
+\]
+and observation operator $H$. Put
+\[
+ S=HPH^{\mathsf T}+R,\quad v=y-Hm,\quad
+ F(B)=PH^{\mathsf T}-BS,\quad E(X)=\Frob{X}^{2}.
+\]
+The output packet family $(Q_a)_{a\in A}$ consists of rational self-adjoint,
+mutually orthogonal projectors with sum $I$. The input family $(D_b)_{b\in D}$
+has the same properties on the observation space. The output family controls
+selection and cache maintenance. The input family participates in the independent
+final certificate. No commutation relation between $S$ and the input projectors
+is assumed.
+
+Preprocessing forms three model-dependent constants:
+\begin{equation}
+ \tau=\frac{1}{\sigma+\tr S},\qquad T=I-\tau S,
+ \qquad w=\frac{\sigma+\lVert v\rVert^{2}}{\sigma^{2}}.
+ \label{eq:solver-kernel}
+\end{equation}
+All are rational. They are the fields of the record
+\path{Komorebi.CachedPosterior.Kernel}, produced by
+\path{Komorebi.CachedPosterior.prepare}. The correctness theorems use this actual
+preparation, rather than an arbitrary record whose fields happen to have the same
+names. A wrong transition matrix or weight would invalidate the correspondence
+between the stored score and the posterior certificate.
+
+\begin{definition}[Cache validity]
+A cache state is a tuple $c=(B,(G_a),(e_a),t)$ satisfying
+\begin{equation}
+ G_a=Q_aF(B),\qquad e_a=E(G_a),\qquad t=\sum_{a\in A}e_a.
+ \label{eq:solver-invariant}
+\end{equation}
+The cached score is $s(c)=tw$.
+\end{definition}
+
+Validity is an exact equality invariant. It does not mean that a stored residual
+is approximately near a true residual, nor that its energy is merely an upper
+bound. Initialization evaluates $F(B_0)$ once, projects it onto every output
+packet, computes every energy, and sums them. The theorem
+\path{initialState_valid} follows directly from the definitions. It requires no
+prediction about future iterates.
+
+Orthogonal complete packets account for the whole energy:
+\[
+ \sum_{a\in A}E(Q_aF)=E(F).
+\]
+Consequently a valid cache has $t=E(F(B))$ and
+\begin{equation}
+ s(c)=E(F(B))\frac{\sigma+\lVert v\rVert^2}{\sigma^2}=a(B).
+ \label{eq:solver-score}
+\end{equation}
+The right-hand side is the exact residual score used by the posterior error
+certificate. The declarations \path{total_eq_residual_energy} and
+\path{score_eq} establish these two identifications. The total is therefore a
+meaningful global stopping signal even though only one of its summands changes
+in an iteration.
+
+For a selected label $a$, the executed update is
+\begin{align}
+ B'&=B+\tau G_a, &G'_a&=G_aT, &e'_a&=E(G'_a),\nonumber\\
+ G'_b&=G_b\quad(b\ne a), &e'_b&=e_b\quad(b\ne a),
+ &t'&=t-e_a+e'_a.
+ \label{eq:solver-cache-step}
+\end{align}
+This is the definition \path{Komorebi.CachedPosterior.step}. It computes the new
+selected residual from the old selected residual and the precomputed transition.
+It retains unselected entries and updates the scalar total by a difference. The
+implementation does not define its new state by recomputing $F(B')$ and projecting
+that matrix onto every packet.
+
+\begin{proposition}[Preservation by the executed update]
+If the output packets satisfy the stated projector assumptions, $c$ is valid,
+and the kernel is \path{prepare M}, then the state in
+\eqref{eq:solver-cache-step} is valid.
+\end{proposition}
+\begin{proof}
+By cache validity, $G_a=Q_aF(B)$, so the gain update is the exact packet step
+$B'=B+\tau Q_aF(B)$. Expand its residual:
+\[
+ F(B')=F(B)-\tau Q_aF(B)S.
+\]
+Multiplication on the left by the selected projector gives
+\[
+ Q_aF(B')=Q_aF(B)-\tau Q_a^2F(B)S
+          =G_a(I-\tau S)=G_aT.
+\]
+For $b\ne a$, mutual orthogonality gives $Q_bQ_a=0$ and hence
+$Q_bF(B')=Q_bF(B)=G_b$. This proves every residual equality in the new cache.
+Its energy equalities hold because the selected energy is evaluated from its new
+residual and the remaining residual-energy pairs are retained. Finally, replacing
+one term in a finite sum changes that sum by exactly $-e_a+e'_a$. Thus
+$t'=\sum_b e'_b$. All three clauses of validity are preserved.
+\end{proof}
+
+This proof is realized by \path{step_valid}, using the algebraic identities
+\path{selected_residual} and \path{unselected_residual}. The declarations
+\path{step_other_residual} and \path{step_other_energy} expose the unchanged
+entries independently. The distinction between proving an invariant for an
+executed update and postulating it for a desired state is decisive: the later
+termination theorem uses the invariant at every state visited by the program.
+
+The locality is on the output side. For an input projector $D_b$,
+\[
+ F(B')D_b=F(B)D_b-\tau Q_aF(B)SD_b.
+\]
+The factor $SD_b$ can mix input directions. The source declaration
+\path{input_packet_effect} makes this effect explicit. Complete input packets
+can still account for certificate energy, but an input packet decomposition does
+not by itself make the iteration independently local in both indices.
+
+\section{Selection, exact trajectory equality, and finite fuel}
+\label{sec:solver-termination}
+
+The algorithm chooses a largest stored output energy. Its finite scan has a seed
+label and an ordered list. It replaces the incumbent label only when a scanned
+label has strictly greater energy. On an equality it preserves the incumbent.
+This tie rule appears in the definition \path{winner}, whose comparison is
+\path{e a < e b}. The scan may contain repeated labels. Completeness requires
+that every output label occurs in the scan, while the seed supplies an inhabitant
+of the label type. The proof counts the cardinality of the finite label type,
+not the length of a possibly repeated scan.
+
+\path{winner_ge_initial} and \path{winner_ge_member} prove that the final winner
+has energy at least that of the seed and of every scanned label. Under complete
+coverage, \path{selectPacket_max} therefore supplies a genuine maximum over all
+output packet energies. The argument does not prescribe a fixed schedule. The
+maximum is selected again from the current state after every update.
+
+\begin{proposition}[Exact selection and gain equality]
+For a valid cache, cached selection returns the same label as a scan of the
+recomputed energies $E(Q_aF(B))$. Starting from an initialized cache and using the
+prepared kernel, its gain after $n$ updates equals the recomputed greedy gain after
+$n$ updates, for every $n\in\N$.
+\end{proposition}
+\begin{proof}
+Each stored energy equals the corresponding recomputed energy by
+\eqref{eq:solver-invariant}. Both scans therefore receive the same energy
+function, the same seed, the same list, and the same strict comparison. Their
+outputs are equal, including ties. This is \path{chosen_eq}. The cache gain update
+then equals the recomputed greedy step by \path{advance_gain}.
+
+The initial gains agree at $n=0$. Suppose they agree at $n$. The cache at that
+index is valid by repeated application of \path{step_valid}. Equality of
+selection and equality of the gain step give equality at $n+1$. Induction proves
+the entire trajectory identity. The formal statements are
+\path{trajectory_valid} and \path{trajectory_gain}.
+\end{proof}
+
+This is stronger than convergence to the same limit. At a fixed index, the two
+rational gain matrices are identical. As a result, the convergence proof for the
+recomputed greedy algorithm transfers directly to the cached execution.
+
+Write $A_{\mathrm{count}}=|A|$ for the positive number of output labels, and set
+\begin{equation}
+ \rho=1-\frac{\sigma}{\sigma+\tr S},\qquad
+ q=\rho^2,\qquad r=1-\frac{1-q}{A_{\mathrm{count}}}.
+ \label{eq:solver-rates}
+\end{equation}
+The model factorization and positive noise floor imply that $S$ is positive
+semidefinite with quadratic lower bound $\sigma$. Its trace is nonnegative, and
+$\sigma+\tr S$ is a valid positive spectral cap. Thus $0\le\rho<1$, $0\le q<1$,
+and $0\le r<1$. No eigenvalue oracle is needed to construct these rational
+constants.
+
+The transition contracts every residual matrix:
+\[
+ E(XT)\le qE(X).
+\]
+If label $a$ is updated, its residual energy contracts by this inequality and
+all other output residuals remain unchanged. Orthogonal energy accounting gives
+\[
+ E(F(B'))\le E(F(B))-(1-q)e_a.
+\]
+Because $a$ is a maximum, $e_a\ge E(F(B))/A_{\mathrm{count}}$. It follows that
+\begin{equation}
+ E(F(B'))\le rE(F(B)),\qquad
+ a(B_n)\le r^na(B_0).
+ \label{eq:solver-geometric}
+\end{equation}
+The energy share is \path{selected_energy_share}; one-step contraction is
+\path{greedy_energy_contract}; and the score estimate is
+\path{greedy_score_geometric}. The estimate allows singular $P$, arbitrary initial
+rational $B_0$, rectangular $H$, and rational rotated packets under the same
+projector assumptions.
+
+A convergent sequence alone would not define a terminating program with an
+explicit natural-number budget. The source supplies a logarithm-free fuel:
+\begin{equation}
+ N=\left\lceil
+ \frac{a(B_0)}{(\varepsilon/2)^2(1-r)}
+ \right\rceil_{\N},\qquad \varepsilon>0.
+ \label{eq:solver-fuel}
+\end{equation}
+Here $\lceil\cdot\rceil_{\N}$ is the natural-number ceiling used by
+\path{toleranceFuel}. The canonical \path{adaptiveFuel} evaluates this expression
+from the actual model, initial gain, tolerance, and number of labels.
+
+\begin{lemma}[Rational fuel sufficiency]
+For $0\le r<1$ and $n\ge N$, the geometric envelope obeys
+$r^na(B_0)\le\varepsilon^2/4$.
+\end{lemma}
+\begin{proof}
+The source first proves
+\[
+ r^n\bigl(1+n(1-r)\bigr)\le1.
+\]
+At the induction step, the inequality
+$r(1+(n+1)(1-r))\le1+n(1-r)$ reduces to nonnegativity of
+$(n+1)(1-r)^2$. The natural ceiling in \eqref{eq:solver-fuel} gives
+$a(B_0)\le n(\varepsilon/2)^2(1-r)$. Multiplying by the nonnegative
+$r^n$ and applying the preceding bound yields the required squared tolerance.
+The proof remains valid when the contraction factor is zero. The source
+statements are \path{geometric_bernoulli}, \path{geometric_fuel_sufficient}, and
+\path{greedy_score_at_fuel}.
+\end{proof}
+
+This fuel is conservative. The geometric rate is substantially sharper than the
+reciprocal envelope used to obtain a simple rational fuel, and the executed search
+can stop much earlier. Neither the large natural fuel nor its existence is a
+claim about a practical time or memory budget.
+
+\path{search} tests the exact cached score against $\varepsilon^2/4$ at the current
+state. If the test fails and fuel remains, it advances once and decrements fuel.
+At fuel zero it still tests the last permitted state. This convention permits
+success after exactly $N$ updates. \path{search_score} proves that every returned
+state passes the score condition. \path{search_origin} proves that a returned
+state is an actual trajectory state at some $k\le N$. Finally,
+\path{search_complete} proves that a passing score at the last permitted state
+forces the search to return some state, possibly earlier.
+
+Combining preserved validity, exact trajectory equality, and fuel sufficiency
+therefore proves a finite successful cached search. There is no caller-supplied
+claim that an iteration has converged. The computed budget and proved invariant
+supply the necessary conclusion internally.
+
+\section{Independent final verification and precision fallback}
+\label{sec:solver-verification}
+
+The exact cached score is used to select a gain and establish termination. The
+successful gain is still sent to the independent certificate evaluator. That
+evaluator reconstructs rounded packet residual obligations from the actual model
+and gain. It does not accept the stored cache energies as certificate evidence.
+This separation protects successful returns from an incorrect internal stopping
+signal. The canonical route checks setup, constructs the outward-rounded
+candidate, and executes its tolerance test. Construction and setup imply that
+\path{checkCandidate} is true by theorem. A separate untrusted-candidate checker
+can recompute exact residual obligations; that is distinct from the canonical
+rounded construction route.
+
+The definition \path{solveCached} first checks a positive posterior tolerance,
+valid model and packet setup, and complete scan coverage. It prepares the kernel,
+initializes the cache, and runs the exact-score search with its computed fuel.
+Only the returned gain is passed to \path{certifyGain}. Thus certificate evaluation
+is outside the selective update loop. The definition makes one call to this final
+verification procedure, although that procedure may try several precisions.
+
+The precision schedule consists of the caller's finite list of probes followed by
+one computed fallback. The probes can be empty, repeated, or unordered. Successful
+verification records the precision actually used. The appended fallback makes
+finite success independent of a lucky externally chosen probe.
+
+Let $h_p=2^{-p}$. The dyadic evaluator propagates rational centers and outward
+radii through its arithmetic graph. Its budget calculation supplies a nonnegative
+coefficient $C_{\mathrm{ver}}(M,Q,D,B)$ independent of $p$, with
+\begin{equation}
+ \widehat a_p(B)\le a(B)+C_{\mathrm{ver}}(M,Q,D,B)h_p.
+ \label{eq:solver-inflation}
+\end{equation}
+Here $\widehat a_p$ is the actual rounded candidate score. The full expression for
+the coefficient is \path{scoreRoundCoeff}, built from packet residual energy and
+innovation-vector magnitude and radius budgets. It bounds the entire score graph,
+rather than rounding only its final exact answer. The theorem
+\path{rounded_score_inflation} proves \eqref{eq:solver-inflation}.
+
+The common precision selector is the computable integer expression
+\begin{equation}
+ \operatorname{precisionFor}(C,d)
+ =\log^{\N}_2\left(\left\lceil C/d\right\rceil_{\N}\right)+1,
+ \qquad d>0,
+ \label{eq:solver-precision}
+\end{equation}
+where $\log^{\N}_2$ denotes the natural-number logarithm \path{Nat.log}, including its
+specified value at zero. It is not a floating-point logarithm. For every precision
+at least this selected count, \path{coefficient_mesh_le} gives $C2^{-p}\le d$.
+The proof uses integer power and ceiling inequalities. The additional bit is a
+sufficient choice, not a claim that the bit count is minimal.
+
+For final verification, the solver appends
+\[
+ p_* = \operatorname{sufficientPrecision}(M,Q,D,B,\varepsilon^2/4).
+\]
+At its returned search state, $a(B)\le\varepsilon^2/4$. The fallback guarantees
+inflation at most another $\varepsilon^2/4$, so
+\[
+ \widehat a_{p_*}(B)\le\varepsilon^2/2\le\varepsilon^2.
+\]
+Positive $\varepsilon$ gives a positive inflation allowance. Valid model and
+packet setup give the candidate check, while this inequality gives the tolerance
+check. The declarations \path{certifyRounded_of_slack} and
+\path{certifyGain_complete} establish that the fallback must succeed.
+
+The stricter search threshold supplies room for rounded verification. Searching
+only until an exact score happened to equal $\varepsilon^2$ would leave no positive
+allowance for an enclosing evaluator. The construction deliberately separates
+progress from verification slack. Its inherited geometric fuel is computed for
+$\varepsilon/2$, which is exactly the square-root tolerance corresponding to
+$\varepsilon^2/4$.
+
+\begin{theorem}[Successful and complete cached gain construction]
+For rational factor-coded model data with $\sigma>0$, valid complete rational
+output and input packets, a seed and complete output scan, any positive rational
+$\varepsilon$, any finite precision probe list, and any rational initial gain,
+\path{solveCached} returns a candidate and verification precision. The candidate
+and tolerance checks pass, and its gain is an actual greedy iterate at an index
+within the computed fuel. Its Joseph Gaussian has Wasserstein distance at most
+$\varepsilon$ from the explicit posterior version established by the Bayesian
+semantics.
+\end{theorem}
+
+The source assembles these conclusions through \path{solveCached_terminates},
+\path{cached_solver_gain_origin}, and
+\path{cached_solver_reaches_posterior_tolerance}. The semantic posterior used here
+is the proved explicit Gaussian kernel version. Its agreement with Bayesian
+conditioning is established through disintegration and almost-everywhere agreement
+with canonical conditional versions, as discussed in the foundations. The theorem
+at the supplied rational observation does not assert uniqueness of every possible
+pointwise conditional version at an event of probability zero.
+
+The independent statement \path{solveCached_sound} is logically different from
+termination. It says that any successful program return satisfies both Boolean
+checks without requiring the caller to supply setup-validity proofs. A returned
+candidate has passed the evaluator's checks. Valid input hypotheses are needed
+to guarantee that a return exists; they are not external assumptions attached to
+the meaning of an already successful return.
+
+\section{Parameter arrays and the meaning of a complete result}
+\label{sec:solver-output}
+
+A useful posterior output contains more than a passing gain. For the returned
+rational gain $B$, the parameter stage represents
+\begin{align}
+ \mu_B&=m+B(y-Hm),\nonumber\\
+ V_B&=(I-BH)P(I-BH)^{\mathsf T}+BRB^{\mathsf T}.
+ \label{eq:solver-joseph-output}
+\end{align}
+These are the mean and Joseph covariance of the same Gaussian law certified by
+the Wasserstein statement. The covariance is positive semidefinite under the model
+hypotheses even when the prior is singular. The declaration
+\path{approximation_eq_output_gaussian} identifies this parameterized Gaussian
+with the approximation law used in the posterior theorem.
+
+The evaluator returns a ball for each mean coordinate and each covariance entry.
+For exact rational entry $x$, a ball $(c,r)$ means $|x-c|\le r$. Its radius is an
+arithmetic enclosure error for that parameter of the returned approximation.
+The output tolerance $\delta>0$ bounds every such radius. It is independent of
+the posterior Wasserstein tolerance $\varepsilon$.
+
+Each output arithmetic expression has a precision-independent budget coefficient.
+The source sums all mean coefficients and all covariance coefficients to obtain
+$C_{\mathrm{out}}$, defined by \path{outputCoefficient}. Every individual coefficient is
+nonnegative and no greater than this sum. It chooses
+\[
+ p_{\mathrm{out}}=\operatorname{precisionFor}(C_{\mathrm{out}},\delta)
+\]
+and evaluates the output graph at that precision. Since every entry radius is
+bounded by its coefficient times $2^{-p_{\mathrm{out}}}$, the same integer
+precision bounds all radii by $\delta$. The declarations \path{mean_coeff_le},
+\path{covariance_coeff_le}, and \path{evaluate_radii_le} establish this argument.
+\path{represent_spec} joins entrywise enclosure and the requested radius bound.
+
+The result record stores verification precision, the checked candidate, parameter
+precision, and the evaluated arrays. Its contract \path{ResultValid} contains
+seven clauses: the candidate check passes, the tolerance check passes, the
+Wasserstein bound holds, the arrays enclose the returned approximation's parameters,
+all radii are at most $\delta$, the reported parameter precision equals the actual
+precision selector, and the arrays equal the actual evaluator at that precision.
+The final two clauses make the reported representation part of the contract,
+rather than allowing arbitrary arrays that happen to satisfy a looser description.
+
+\begin{theorem}[Complete first-release output]
+Under the valid-input hypotheses above and $\delta>0$,
+\path{Komorebi.CachedPosterior.runCached} returns a result satisfying
+\path{ResultValid}. Every successful return is sound even without setup-validity
+proofs supplied by the caller. A nonpositive output-radius tolerance is rejected.
+\end{theorem}
+
+These are precisely \path{runCached_terminates}, \path{runCached_sound}, and
+\path{runCached_rejects_nonpositive_output_tolerance}. The complete contract is
+finite-dimensional inference for one observation update. It includes singular
+priors, rectangular observation operators, gain origin, computable iteration fuel,
+verification precision, and parameter precision.
+
+Two interpretations must remain separate. The intervals enclose the parameters
+of the certified Joseph Gaussian. They do not certify another Gaussian obtained
+by treating interval centers as exact mean and covariance. In particular, rounded
+covariance centers are not independently proved positive semidefinite. Likewise,
+$\delta$ is not a coordinate error bound against the exact posterior. The
+Wasserstein guarantee compares laws; the interval guarantee encloses the parameters
+of one of those laws. A theorem combining either guarantee with a new operation
+must account for that operation explicitly.
+
+The program is mathematically finite for every positive rational pair
+$(\varepsilon,\delta)$ under its declared assumptions. A reference implementation
+can still encounter a time, memory, or user-supplied resource cap. The Python tools
+report \path{RESOURCE_LIMIT} when their caps are reached. Such a cap is a limit of
+the execution environment, not a counterexample to the finite-success theorem.
+The result contract also contains no sampler and no guarantee for an external
+floating-point implementation.
+
+\section{A complete coordinate execution}
+\label{sec:solver-coordinate}
+
+The coordinate fixture has a two-dimensional state and one-dimensional
+observation:
+\[
+ P=\begin{pmatrix}4&0\\0&1\end{pmatrix},\quad H=\begin{pmatrix}1&1\end{pmatrix},
+ \quad R=1,\quad m=\begin{pmatrix}0\\0\end{pmatrix},\quad y=1.
+\]
+It is represented by $L=\operatorname{diag}(2,1)$, $N=0$, and $\sigma=1$.
+The two output projectors select the coordinate axes, and the single input
+projector is $1$. Start with $B_0=0$, seed $0$, scan $[0,1]$, probes $[4,12]$,
+$\varepsilon=1/20$, and $\delta=1/1000$.
+
+Here $S=6$, $\tau=1/7$, $T=1/7$, and $w=2$. The initial residual is $(4,1)^{\mathsf T}$,
+with packet energies $16$ and $1$. Updating one coordinate multiplies its residual
+by $1/7$ and its energy by $1/49$. The other coordinate remains exactly unchanged.
+The maximum-energy schedule therefore alternates between labels $0$ and $1$.
+The complete pre-update trace is
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+Updates already made & Selected label & $e_0$ & $e_1$ & $t$\\
+\midrule
+0 & 0 & $16$ & $1$ & $17$\\
+1 & 1 & $16/49$ & $1$ & $65/49$\\
+2 & 0 & $16/49$ & $1/49$ & $17/49$\\
+3 & 1 & $16/2401$ & $1/49$ & $65/2401$\\
+4 & 0 & $16/2401$ & $1/2401$ & $17/2401$\\
+5 & 1 & $16/117649$ & $1/2401$ & $65/117649$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+After six updates, each coordinate has been selected three times. The geometric
+sum in its gain gives
+\[
+ B_6=\begin{pmatrix}228/343\\57/343\end{pmatrix},\qquad
+ F(B_6)=\begin{pmatrix}4/343\\1/343\end{pmatrix},\qquad
+ a(B_6)=\frac{34}{117649}.
+\]
+The strict search threshold is $\varepsilon^2/4=1/1600$. At the previous state,
+$a(B_5)=130/117649>1/1600$, while $a(B_6)<1/1600$. Thus six is the actual update
+count for this stopping rule. The formal fuel is $410093$; the program uses only
+six of these allowed updates. This large difference illustrates the conservative
+fuel construction, not an ambiguity in the observed trace.
+
+At verification precision $4$, the rounded score is $25/16$ and the attempt fails.
+At precision $12$, it is $481/1048576$, which is below the required final threshold
+$\varepsilon^2=1/400$. The solver therefore returns verification precision $12$.
+A failed coarse enclosure is a failed certificate attempt, not evidence that the
+gain itself is inaccurate. Sufficiently high precision bounds the enclosure inflation.
+
+The exact posterior mean is $(2/3,1/6)^{\mathsf T}$, while the returned Joseph mean
+is the gain $B_6$ because $m=0$ and $y=1$. Parameter output uses precision $32$.
+Its mean centers are
+\[
+ \begin{pmatrix}2854963683/4294967296\\89217615/536870912\end{pmatrix}
+\]
+with radius $1/4294967296$ in each coordinate. The covariance centers are
+\[
+ \begin{pmatrix}
+ 5726720411/4294967296 & -1431643597/2147483648\\
+ -1431643597/2147483648 & 3579145495/4294967296
+ \end{pmatrix},
+\]
+and the corresponding radii are
+\[
+ \begin{pmatrix}
+ 1/536870912&7/4294967296\\
+ 7/4294967296&1/536870912
+ \end{pmatrix}.
+\]
+Every radius is smaller than $1/1000$. These fractions describe output arithmetic,
+not uncertainty intervals for model estimation. They enclose exactly the Joseph
+mean and covariance at $B_6$.
+
+The exact rational matrix enclosed by those covariance balls is
+\[
+ V_{B_6}=\frac{1}{117649}
+ \begin{pmatrix}156868&-78432\\-78432&98041\end{pmatrix}.
+\]
+It can be checked directly by substituting $B_6$ into
+\eqref{eq:solver-joseph-output}. Another useful check starts from the exact
+posterior covariance
+$V_* = \left(\begin{smallmatrix}4/3&-2/3\\-2/3&5/6\end{smallmatrix}\right)$.
+If $B_*=(2/3,1/6)^{\mathsf T}$ is the exact gain, expansion of the Joseph
+expression gives
+\[
+ V_{B_6}=V_*+6(B_6-B_*)(B_6-B_*)^{\mathsf T}.
+\]
+The gain discrepancy is
+$B_*-B_6=(2/1029,1/2058)^{\mathsf T}$, which produces the displayed matrix.
+This second calculation checks the sign of the off-diagonal entries and explains
+why the approximate covariance has an additional positive semidefinite term.
+The posterior accuracy certificate concerns the complete mean-covariance law,
+while the dyadic output stage faithfully represents these rational parameters.
+The larger output budget can still choose many more bits than the smallest
+possible entrywise enclosure would require. Its purpose is a guaranteed common
+precision, not an optimal encoding of this particular covariance.
+
+The module \path{GeneratedCachedCoordinate.lean} defines this actual model,
+initial cache, six-step cache trajectory, final gain, certificate, and result.
+Its declarations check the computed fuel, final gain, exact and rounded scores,
+each of the six chosen labels, solver return, parameter precision, every displayed
+center and radius, and the full output return. Its theorem \path{output_valid}
+applies \path{runCached_sound} to the proved return. This is a checked finite
+program example, while the universal termination theorem covers all valid inputs
+in the declared class.
+
+An earlier recomputed selective solver verified after each update and could stop
+at five updates with a passing rounded certificate. That is a different stopping
+policy. The canonical cached solver first waits for the stricter exact-score
+margin and then performs final verification. A recomputed baseline using this
+same strict margin returns the same six-step gain. Comparisons between cached and
+recomputed execution must align their stopping policy before comparing work.
+
+\section{A singular rotated execution}
+\label{sec:solver-rotated}
+
+The rotated fixture makes the prior singular and the packets non-coordinate:
+\[
+ P=J=\begin{pmatrix}1&1\\1&1\end{pmatrix},\quad H=I,
+ \quad R=I,\quad m=0,\quad y=\begin{pmatrix}1\\-1\end{pmatrix}.
+\]
+It uses the rectangular prior factor $L=(1,1)^{\mathsf T}$, zero noise factor,
+and $\sigma=1$. Both output and input packet families are
+\[
+ Q_+=\frac12\begin{pmatrix}1&1\\1&1\end{pmatrix},\qquad
+ Q_-=\frac12\begin{pmatrix}1&-1\\-1&1\end{pmatrix}.
+\]
+These project onto the common and antisymmetric directions. They are rational,
+self-adjoint, orthogonal, and complete. The prior has rank one, but the innovation
+matrix $S=I+J$ is positive definite because of the positive noise floor.
+
+Take $B_0=0$, seed $0$, scan $[0,1]$, probes $[4,12]$, $\varepsilon=1/4$, and
+$\delta=1/1000$. Here $\tr S=4$, $\tau=1/5$, and
+$T=I-(I+J)/5$. The initial residual is $J$, entirely in the $Q_+$ output packet.
+Since $JS=3J$, each selected update multiplies this residual by $2/5$. The
+$Q_-$ residual remains zero. Thus every selected label is $0$ and
+\[
+ (e_+,e_-)=(4(4/25)^n,0),\qquad B_n=\frac{1-(2/5)^n}{3}J.
+\]
+The first four pre-update energy pairs are $(4,0)$, $(16/25,0)$,
+$(64/625,0)$, and $(256/15625,0)$.
+
+After four updates,
+\[
+ B_4=\frac{203}{625}J,\qquad F(B_4)=\frac{16}{625}J,
+ \qquad a(B_4)=\frac{3072}{390625}.
+\]
+The score weight is $w=3$, because $\lVert y\rVert^2=2$. The strict margin is
+$\varepsilon^2/4=1/64$. At the previous state the score is $768/15625>1/64$;
+after the fourth it is below $1/64$. The computed fuel is $4267$. Precision $4$
+produces score $435/64$ and fails; precision $12$ produces $9111/1048576$ and
+passes the final threshold $1/16$.
+
+The exact posterior mean is zero because $Jy=0$, and the returned approximation's
+mean is also zero. Its Joseph covariance is
+\[
+ V_{B_4}=\frac{130379}{390625}J.
+\]
+The exact posterior covariance is $J/3$. Both laws remain supported in the prior's
+one-dimensional common-direction subspace. This example therefore combines a
+singular prior, rotated packet selection, a nontrivial covariance approximation,
+and a zero mean without using an inverse of the singular prior covariance.
+
+At output precision $32$, each mean center is zero with radius $1/2147483648$.
+Every covariance entry has center $179191533/536870912$ and radius
+$7/4294967296$. All output radii satisfy $\delta=1/1000$. The equality of these
+centers reflects the exact common-direction structure of the returned Joseph
+covariance. It does not turn the rounded center matrix into the object of the
+posterior theorem.
+
+\path{GeneratedCachedRotated.lean} checks the same kinds of finite obligations as
+the coordinate module: fuel, chosen labels, gain, scores, actual return, parameter
+precision, arrays, and \path{ResultValid}. The example is particularly useful for
+testing whether a presentation has accidentally assumed an invertible prior or
+coordinate-only packets. Neither assumption belongs to the solver contract.
+
+\section{The rounded-cache counterexample and the separate rounded solver}
+\label{sec:solver-rounding-boundary}
+
+Exact cache validity cannot be reused unchanged after independently rounding its
+components. The release contains a scalar counterexample with
+$P=H=R=1$, $\sigma=1$, $m=0$, $y=1$, and $B_0=0$. Then $S=2$, $\tau=1/3$,
+$w=2$, and the first exact update is
+\[
+ B_1=1/3,\qquad F(B_1)=1/3.
+\]
+The naive route separately rounds the gain center and residual center downward
+to zero fractional bits. Both become zero. It then computes the stored energy
+from the rounded residual, obtaining a stored score of zero.
+
+The actual residual at its stored gain is instead
+\[
+ F(0)=1,
+ \qquad a(0)=2.
+\]
+Thus the state claims exact internal convergence while its true residual is
+nonzero. The equality $G=QF(B)$ has been destroyed by rounding independently
+related quantities. The source module \path{CachedRoundingBoundary.lean} proves
+\path{naive_score_zero}, \path{true_score_two}, and \path{naive_cache_invalid}.
+For $\varepsilon=1/10$ and probe $[12]$, it also proves
+\path{naive_final_verification_rejected}: \path{certifyGain} returns no candidate.
+
+This result identifies both a failure and a protection. The naive rounded cache
+cannot support the exact-cache termination proof. The independent final verifier
+still rejects its false stopping signal, preserving the meaning of successful
+returns. The example does not rule out a rounded selective cache with propagated
+error bounds. Such a construction needs an enclosure relation, an error budget
+for each selected update, and a selection argument that tolerates uncertain
+energies. Those obligations are a separate extension.
+
+Core 1.0.0 already retains a different, completed rounded solver. Its update is a
+genuinely rounded full-gain Richardson step. It neither claims exact selective
+cache invariants nor selects a largest cached packet. Its declarations expose
+the whole-update defect instead. If $\widetilde B_{n+1}$ is the rounded update
+and $B_{n+1}^{\mathrm{ideal}}$ is the exact full step at the current gain, then
+\[
+ F(\widetilde B_{n+1})=F(\widetilde B_n)T
+ -(\widetilde B_{n+1}-B_{n+1}^{\mathrm{ideal}})S.
+\]
+This is \path{rounded_residual_step}. The defect is explicitly included in the
+tracking and termination argument.
+
+Writing $d$ for the number of gain entries and $h_t=2^{-t}$, the source establishes
+an all-iteration tracking bound
+\[
+ E(\widetilde B_n-B_n^{\mathrm{exact}})
+ \le\frac{6d h_t^2}{(1-q)^2}.
+\]
+Its residual-score comparison has the form
+\[
+ a(\widetilde B_n)\le2a(B_n^{\mathrm{exact}})+C_{\mathrm{round}}h_t^2,
+ \qquad
+ C_{\mathrm{round}}=
+ \frac{12dE(S)w}{(1-q)^2}.
+\]
+The source names are \path{roundedGain_tracking}, \path{roundoffScoreCoeff}, and
+\path{rounded_score_compare}. The first term is ideal progress. The second is a
+precision-dependent floor. Both are needed.
+
+The chosen update precision \path{updateAccuracy} places the floor below
+$\varepsilon^2/8$. The rounded fuel \path{roundedFuel} drives the exact full-step
+score below $(\varepsilon/4)^2=\varepsilon^2/16$. The factor of two in the
+comparison therefore gives another $\varepsilon^2/8$, so the actual rounded
+iterate reaches score at most $\varepsilon^2/4$. The same independent final
+precision fallback can certify it. \path{solveRounded_terminates} proves finite
+successful return, and \path{rounded_solver_gain_origin} identifies the result
+as an actual rounded iterate within its declared fuel.
+
+There are consequently two completed branches: exact selective updates with an
+exact cache, and genuinely rounded full-gain updates with an explicit perturbation
+bound. A rounded selective cache combining their advantages remains an extension.
+No proof for one branch is presented as a theorem about the other.
+
+\section{Measured work, execution boundaries, and extensions}
+\label{sec:solver-performance}
+
+The cached representation reduces the work needed to maintain packet residuals
+relative to recomputing every packet at every selected update. It stores the
+projected residual matrices and energies, retains unselected objects, and updates
+the total by one scalar difference. Selection still scans the stored energies.
+The amount of storage depends on the number and shape of the represented packet
+matrices. Rational numerator and denominator growth also matters in execution.
+The algebraic locality theorem alone is not a formal bit-complexity estimate.
+
+The archived bounded benchmark compares cached selective, recomputed selective,
+and full Richardson reference implementations on seven cases of dimensions at
+most eight. All use exact fraction arithmetic, the same zero-skipping matrix
+backend, the same strict exact-score stopping margin, and common requested
+posterior and output tolerances. All include setup, final rounded certification,
+and parameter output. The recomputed and cached selective branches return
+identical candidates. The full baseline maintains a full residual by recurrence
+and avoids unnecessary packet scans.
+
+One warmup precedes five repetitions with rotating method order. Archived median
+producer times and selective-iteration ratios are
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Case & Cached ms & Recomputed ms & Full ms & Iteration ratio\\
+\midrule
+coordinate & 2.38 & 2.46 & 2.33 & $1.94$\\
+rotated & 4.38 & 4.45 & 4.28 & $2.16$\\
+sparse4 & 13.84 & 14.52 & 13.79 & $2.51$\\
+dense4 & 16.34 & 17.96 & 16.34 & $3.11$\\
+sparse8 & 171.98 & 174.30 & 169.87 & $4.62$\\
+dense8 & 200.69 & 235.15 & 195.44 & $5.61$\\
+conditioned4 & 19.16 & 21.36 & 17.46 & $3.08$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The final column is recomputed-selective iteration time divided by cached
+iteration time. It excludes setup, verification, and output. The producer columns
+include these stages and exclude export and Lean checking. These are archived
+reference measurements, rather than fresh timing measurements from this
+publication session.
+
+The cache improves selective iteration in these cases, yet these measurements
+establish no overall advantage over the efficient full baseline. Several cases
+require substantially more selective updates than full updates. The dense8 case,
+for example, takes $67$ cached selective updates and $9$ full updates. Final
+certification and output account for a large part of total production cost. The
+bounded result supports a narrower conclusion: preserving a packet cache avoids
+unnecessary selective recomputation, while end-to-end performance depends on more
+than the selective update loop.
+
+Every method-case pair also exported an explicit final candidate certificate,
+for $21$ checked benchmark outputs. Their archived Lean checks certify those
+explicit rational gains and posterior tolerances. They do not certify the Python
+timing trace, counters, or numeric parameter arrays from the benchmark runs. The
+two generated coordinate and rotated modules have the stronger finite-program and
+output-array checks described above. A universal theorem about the mathematical
+output evaluator is also distinct from a universal refinement theorem for a
+Python implementation of that evaluator.
+
+The archived per-instance Lean checking measurements range from seconds to tens
+of seconds and dominate millisecond producer times. Each includes a fresh pinned
+Lean process, import, elaboration, and kernel checking with common dependencies
+already compiled. The dependency build is accounted for separately. One checking
+time per export cannot reliably rank small differences. The source reports preserve
+these distinctions, rather than combining an iteration ratio with an unrelated
+claim of total acceleration.
+
+The producer/exporter boundary is similarly precise. Python parses user data,
+executes a reference algorithm, and emits a Lean instance containing explicit
+rational data. Successful checking establishes the statement about that emitted
+instance. A universal theorem identifying arbitrary parser input with the emitted
+model is outside this release. The output record is a mathematical representation
+with checked arithmetic semantics, rather than a claim about every external file
+format or hardware arithmetic instruction.
+
+The most direct extensions now have concrete obligations. A rounded selective
+cache must propagate residual and energy enclosures and prove progress under its
+actual selection rule. Approximate maximum selection needs a quantitative energy
+share bound. A changing packet hierarchy must preserve global accounting across
+refinement and coarsening. Uncertain model inputs need their own error budget in
+both the certificate and the posterior semantics. Sequential filtering must
+account for repeated updates and transport of earlier approximation error.
+Large-scale performance work must measure preprocessing, final certification,
+output representation, rational bit growth, memory, and checking cost as well as
+iteration kernels.
+
+These extensions do not leave the first-release theorem unfinished. The closed
+contract remains exact rational, finite-dimensional, single-update Gaussian
+inference with complete fixed packets, positive tolerances, a terminating gain
+construction, independent dyadic verification, and enclosed parameters of the
+certified Joseph law. The rounded-cache counterexample and bounded performance
+result make the limits of that contract inspectable and give specific targets for
+the next stage of development.

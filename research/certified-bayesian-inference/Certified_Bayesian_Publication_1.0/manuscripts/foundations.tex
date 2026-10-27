@@ -1,0 +1,513 @@
+\section{A finite Gaussian model with an inspectable input contract}
+\label{sec:foundation-model}
+
+The inference problem concerns one observation of a finite-dimensional latent state. Let the state space be $\R^n$ and the observation space be $\R^p$. A state $X$ has prior law $\mathcal N(m,P)$, and its observation is
+\begin{equation}
+ Y=HX+V,\qquad V\sim\mathcal N(0,R),\qquad V\text{ independent of }X.
+ \label{eq:foundation-model}
+\end{equation}
+Here $H\in\R^{p\times n}$ may be rectangular, and $P\in\R^{n\times n}$ may be singular. The assumptions are $P\succeq0$ and $R\succ0$. A singular prior is an ordinary Gaussian probability law concentrated on an affine subspace. The argument does not replace that law by a nonsingular approximation or assign an artificial inverse to its covariance.
+
+We use Euclidean vector norms and the squared Frobenius energy
+\begin{equation}
+ E(A)=\Frob{A}^2=\sum_{i,j}A_{ij}^2.
+ \label{eq:foundation-energy}
+\end{equation}
+The distinction between these norms matters. A matrix energy is a finite sum of scalar squares that can be evaluated exactly on rational inputs. An operator norm is used in the proof that this energy controls distribution error. The certificate never asks a producer to supply an unverified operator norm or an approximate eigenvalue calculation.
+
+For an observed value $y$, put
+\begin{equation}
+ d=y-Hm,\qquad S=HPH^\top+R,\qquad K=PH^\top S^{-1}.
+ \label{eq:foundation-innovation}
+\end{equation}
+The matrix $S$ is the innovation covariance. It is positive definite because, for every nonzero $z\in\R^p$,
+\[
+ z^\top Sz=(H^\top z)^\top P(H^\top z)+z^\top Rz>0.
+\]
+Consequently the inverse in the definition of $K$ exists even when $P$ has a nontrivial nullspace or $H$ has deficient rank. Every inverse used by the posterior argument is an inverse on the observation space. This is the structural reason singular priors are supported.
+
+\subsection{Factor-coded rational inputs}
+
+The completed executable contract represents its model by rational matrices and vectors. Its input consists of $H$, $m$, $y$, a prior factor $L\in\Q^{n\times r}$, a noise factor $N\in\Q^{p\times s}$, and a rational number $\sigma$. The covariance matrices are derived from these inputs:
+\begin{equation}
+ P=LL^\top,\qquad R=NN^\top+\sigma I_p,\qquad \sigma>0.
+ \label{eq:foundation-factor-model}
+\end{equation}
+The factor dimensions $r$ and $s$ are finite and need not equal the state or observation dimension. The factors may have dependent columns or zero entries. The prior factor is allowed to have rank below $n$. The positive floor is checked rather than inferred from a decimal approximation.
+
+This representation makes the covariance hypotheses concrete. For every $x$,
+\[
+ x^\top LL^\top x=\|L^\top x\|^2\ge0,
+ \qquad
+ x^\top Rx=\|N^\top x\|^2+\sigma\|x\|^2.
+\]
+Thus $P$ is positive semidefinite and $R\succeq\sigma I_p\succ0$. These conclusions are proved from the factors; they are not additional statistical assumptions hidden inside a covariance record. The real semantics interprets each rational coordinate through the exact inclusion $\Q\hookrightarrow\R$. There is no intermediate conversion through hardware floating point.
+
+Factor coding is a declared restriction of the executable input language. The release does not prove that every real positive semidefinite matrix can be supplied as a rational Gram factor, or that every rational positive semidefinite matrix has a rational factor of the chosen dimensions. A user begins with the represented factors. The theorem then concerns the exact real Gaussian model determined by those factors. If an application first approximates measured real data by rationals, an error analysis for that approximation is a separate obligation.
+
+The record \path{RationalModel} in \path{Komorebi/RationalCertificateChecker.lean} stores the factors, the floor, and the observation data. Its methods \path{prior}, \path{noise}, \path{innovation}, \path{residual}, and \path{innovationVector} derive the displayed quantities. \path{RationalModelSemantics.lean} proves their interpretation in real Euclidean spaces, including \path{prior_real_posSemidef}, \path{noise_real_posDef}, \path{noise_real_floor}, and \path{real_residual}. These are the connection between the exact input record and the probability measures used later.
+
+\subsection{Why the noise floor is more than an input check}
+
+The same $\sigma$ that certifies positive noise also bounds the inverse innovation operator. Adding the positive semidefinite term $HPH^\top$ gives
+\begin{equation}
+ z^\top Sz\ge\sigma\|z\|^2\qquad\text{for all }z\in\R^p.
+ \label{eq:foundation-coercivity}
+\end{equation}
+Let $x=S^{-1}v$. Then $Sx=v$, and the Cauchy--Schwarz inequality yields
+\[
+ \sigma\|x\|^2\le x^\top Sx=x^\top v\le\|x\|\|v\|.
+\]
+If $x=0$ the desired bound is immediate. Otherwise division by $\sigma\|x\|$ gives $\|S^{-1}v\|\le\sigma^{-1}\|v\|$. Hence
+\begin{equation}
+ \|S^{-1}\|_{\mathrm{op}}\le\sigma^{-1}.
+ \label{eq:foundation-inverse-bound}
+\end{equation}
+This elementary estimate supplies an explicit certificate constant without computing the inverse. The inverse exists in the semantic proof, while the executable stopping test uses $\sigma$, an innovation vector, and a residual. This separation allows an approximate gain to be certified independently of the method that produced it.
+
+The source names these steps \path{innovation_quadraticLowerBound} and \path{innovation_inverse_norm_le} in \path{FDInnovationConditioning.lean}. The latter uses the actual inverse identity, so its conclusion is not an assumption about an arbitrary supplied matrix. A false inverse or an overstated floor cannot be inserted as an accepted semantic shortcut.
+
+\section{The explicit posterior is a genuine conditional Gaussian law}
+\label{sec:foundation-posterior}
+
+The exact posterior formula is
+\begin{equation}
+ \nu_y=\mathcal N(m+Kd,C_*),\qquad C_*=P-KHP.
+ \label{eq:foundation-exact-posterior}
+\end{equation}
+Writing this formula does not by itself establish conditional probability semantics. A matrix identity could describe a plausible mean and covariance without proving that its Gaussian is a disintegration of the prior and likelihood. The source constructs that disintegration at the level of probability measures. This section records the argument and the precise meaning of the word posterior.
+
+\subsection{A positive covariance without an inverse prior}
+
+The covariance $C_*$ admits the Joseph representation
+\begin{equation}
+ C_*=(I_n-KH)P(I_n-KH)^\top+KRK^\top.
+ \label{eq:foundation-exact-joseph}
+\end{equation}
+Each term on the right is positive semidefinite. Therefore $C_*\succeq0$, including at the singular boundary. This avoids any proof based on $P^{-1}$ or $C_*^{-1}$.
+
+\begin{lemma}[Exact Joseph identity]
+\label{lem:foundation-exact-joseph}
+Under the assumptions of Section~\ref{sec:foundation-model}, the covariance in \eqref{eq:foundation-exact-posterior} equals \eqref{eq:foundation-exact-joseph}.
+\end{lemma}
+\begin{proof}
+The innovation equation gives $KS=PH^\top$. Since $P$ and $S$ are symmetric, transposition gives $SK^\top=HP$. Thus
+\[
+ KSK^\top=KHP=PH^\top K^\top.
+\]
+Expanding the right side of \eqref{eq:foundation-exact-joseph} and collecting its two quadratic terms gives
+\begin{align*}
+ &(I_n-KH)P(I_n-KH)^\top+KRK^\top\\
+ &\quad=P-KHP-PH^\top K^\top+KSK^\top\\
+ &\quad=P-KHP.
+\end{align*}
+The last line is $C_*$. Positivity follows because each unexpanded term is a covariance congruence of a positive semidefinite matrix.
+\end{proof}
+
+The source proves \path{josephCovMatrix_eq_posteriorCovMatrix} and \path{posteriorCovMatrix_posSemidef} in \path{FDPosteriorCovPSD.lean}. The posterior kernel is then built as a Gaussian affine kernel, rather than as a formal expression requiring a nonexistent Lebesgue density on a singular state space.
+
+\subsection{Forward and reverse constructions of the same joint law}
+
+The forward construction samples $X\sim\mathcal N(m,P)$ and then samples $Y$ with conditional law $\mathcal N(HX,R)$. Its joint mean, in the order $(Y,X)$, is $(Hm,m)$. Its covariance is
+\begin{equation}
+ \begin{pmatrix}
+ S&HP\\
+ PH^\top&P
+ \end{pmatrix}.
+ \label{eq:foundation-joint-cov}
+\end{equation}
+This joint law is Gaussian because it is an affine image of independent Gaussian inputs. The argument remains valid when the input covariance has zero eigenvalues.
+
+For the reverse construction, sample $Y\sim\mathcal N(Hm,S)$ and an independent $E_*\sim\mathcal N(0,C_*)$. Define
+\[
+ Z=m+K(Y-Hm)+E_*.
+\]
+Conditional on $Y=y$, the law of $Z$ is precisely $\nu_y$. The joint mean of $(Y,Z)$ is again $(Hm,m)$. Its cross covariance is $SK^\top=HP$, and its state covariance is
+\[
+ KSK^\top+C_*=KHP+(P-KHP)=P.
+\]
+It therefore has exactly the covariance in \eqref{eq:foundation-joint-cov}. Both constructions yield Gaussian measures with the same mean and covariance, so they yield the same joint probability measure. This is a full law identity, rather than a statement that the two constructions merely agree in their first two moments without Gaussianity.
+
+\begin{theorem}[Gaussian disintegration]
+\label{thm:foundation-disintegration}
+Let $\ell(x,\cdot)=\mathcal N(Hx,R)$ be the observation kernel and let $\eta=\mathcal N(Hm,S)$ be the evidence law. Then the explicit kernel $y\mapsto\nu_y$ satisfies
+\begin{equation}
+ \eta(dy)\,\nu_y(dx)
+   =\mathcal N(m,P)(dx)\,\ell(x,dy)
+ \label{eq:foundation-disintegration}
+\end{equation}
+after exchanging the order of the two coordinates on the right. In particular, $\eta$ is the actual observation marginal and $\nu$ is a posterior version for this prior and likelihood.
+\end{theorem}
+\begin{proof}
+The forward and reverse constructions just described have the same joint Gaussian mean and covariance. The reverse construction is the product of the evidence measure with its affine Gaussian conditional kernel. The forward construction is the product of the prior measure with the likelihood kernel. Their joint equality is \eqref{eq:foundation-disintegration}. Taking the observation marginal yields the stated evidence law, and equality of the joint measures is the defining disintegration property.
+\end{proof}
+
+The raw declaration \path{fd_joint_disintegration} in \path{FDGaussianConditioning.lean} is this joint equality. \path{fd_observation_evidence} derives the evidence marginal by applying the first-coordinate marginal to that equality. These theorems use the actual measure constructions, including the joint packing and covariance identities proved in their imported modules.
+
+\subsection{Pointwise posterior version and almost-everywhere uniqueness}
+
+A regular conditional distribution is determined by its joint law only up to sets of evidence measure zero. The source accordingly proves that the explicit Gaussian kernel agrees with Mathlib's canonical Bayesian posterior evidence-almost everywhere. The relevant declarations are \path{fdPosteriorKernel_eq_canonical}, \path{canonicalPosterior_eq_multivariateGaussian}, and \path{canonicalPosterior_eq_josephGaussian}. Their almost-everywhere quantifier is part of the theorem and must remain visible when translating it to prose.
+
+For a supplied rational observation $y$, the executable contract uses the explicit version $\nu_y$. That version is defined at every such $y$ and is already proved to disintegrate the model. The solver's distance theorem is pointwise against this version. It does not prove pointwise equality to every possible modification of a canonical posterior kernel on evidence-null sets. The distinction is standard for conditional laws and does not weaken the law-level certificate that the program actually returns.
+
+In particular, observing a single real vector in a continuous model does not require the event $Y=y$ to have positive probability. Conditioning is encoded by a kernel whose integration reconstructs the joint law. The proof cannot be replaced by dividing the probability of a zero-probability event. This is one reason the measure-level construction is essential when the inference contract claims a posterior distribution guarantee.
+
+\section{An approximate gain defines a valid Joseph Gaussian}
+\label{sec:foundation-joseph}
+
+Let $B\in\R^{n\times p}$ be an arbitrary gain candidate. It need not solve the innovation equation and need not have been produced by the packet algorithm. Define
+\begin{align}
+ m_B&=m+Bd,\label{eq:foundation-approx-mean}\\
+ C_B&=(I_n-BH)P(I_n-BH)^\top+BRB^\top,\label{eq:foundation-approx-cov}\\
+ \mu_B&=\mathcal N(m_B,C_B).\label{eq:foundation-approx-law}
+\end{align}
+Every $C_B$ is positive semidefinite, since it is a sum of covariance congruences. Thus every candidate gain determines a genuine Gaussian law. This is useful for certification: an imperfect candidate is a valid distribution with a measurable error, rather than a covariance formula that can become negative merely because $B$ is inexact.
+
+One should not replace \eqref{eq:foundation-approx-cov} by $P-BHP$. The latter is the exact posterior covariance only when the required innovation identities hold. For an arbitrary candidate it need not even be symmetric. The Joseph form makes the mathematical object independent of those identities, and the final verifier certifies this same object.
+
+\subsection{Residual algebra separates the target from its approximation}
+
+Define the gain-equation residual
+\begin{equation}
+ F(B)=PH^\top-BS.
+ \label{eq:foundation-residual}
+\end{equation}
+It can be computed from the model and $B$ without using $K$. The exact target satisfies $KS=PH^\top$, so
+\begin{equation}
+ F(B)=(K-B)S,\qquad K-B=F(B)S^{-1}.
+ \label{eq:foundation-gap-residual}
+\end{equation}
+These are exact identities, not perturbative approximations. They explain how a computable defect in a linear equation controls an uncomputed target gain.
+
+\begin{proposition}[Excess covariance]
+\label{prop:foundation-excess-cov}
+For every gain $B$,
+\begin{equation}
+ C_B-C_*=(K-B)S(K-B)^\top
+          =F(B)S^{-1}F(B)^\top\succeq0.
+ \label{eq:foundation-excess-cov}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Expansion of the Joseph form gives
+\[
+ C_B=P-BHP-PH^\top B^\top+BSB^\top.
+\]
+Subtract $C_*=P-KHP$. Expanding $(K-B)S(K-B)^\top$ and using $KS=PH^\top$, $SK^\top=HP$, and $KSK^\top=KHP$ gives the same expression. The second equality follows from \eqref{eq:foundation-gap-residual} and the symmetry of $S$. Since $S\succ0$, its covariance congruence by $K-B$ is positive semidefinite.
+\end{proof}
+
+This identity is recorded as \path{gainJoseph_sub_posterior_eq_gap} and \path{gainJoseph_sub_posterior_eq_residual}; positivity is \path{gainJoseph_excess_posSemidef}, all in \path{FDInexactGainAlgebra.lean}. It shows that the approximate Joseph law has additional covariance relative to the exact posterior. It does not imply that its mean is exact, or that it is the Bayesian posterior of a second model chosen by the program.
+
+\subsection{A shared-noise construction of the two laws}
+
+Take independent centered Gaussian variables $U\sim\mathcal N(0,P)$ and $V\sim\mathcal N(0,R)$. For each gain $B$, define the mathematical affine random variable
+\begin{equation}
+ T_B=m+Bd+(I_n-BH)U-BV.
+ \label{eq:foundation-shared-sample}
+\end{equation}
+Its mean is $m_B$ and its covariance is $C_B$, so its law is $\mu_B$. At $B=K$, the exact Joseph identity identifies its law with $\nu_y$. The pair $(T_K,T_B)$, using the same inputs $(U,V)$, is therefore an actual transport plan between the exact posterior version and the approximate law.
+
+This is a mathematical random-variable construction used to prove a coupling bound. The release does not include an executable random sampler or a refinement theorem for a pseudorandom implementation. The raw name \path{gainSample} denotes the affine map in this construction. The finite executable program returns a represented gain and certified parameter enclosures, rather than samples from a Gaussian distribution.
+
+Let $\Delta=K-B$. Subtraction in \eqref{eq:foundation-shared-sample} gives
+\[
+ T_K-T_B=\Delta d-\Delta(HU+V).
+\]
+The random vector $HU+V$ is centered and has covariance $S$. The difference therefore has mean $\Delta d$ and covariance $\Delta S\Delta^\top$. Its expected squared Euclidean norm is
+\begin{equation}
+ \E\|T_K-T_B\|^2
+   =\|\Delta d\|^2+\tr(\Delta S\Delta^\top).
+ \label{eq:foundation-coupling-cost}
+\end{equation}
+The source proves both marginals and this cost. It does not assume that a producer has supplied a coupling with the desired properties. The load-bearing declarations are \path{gainSample_law}, \path{gainSample_exact_posterior_law}, and \path{inexactGainCoupling_isTransportPlan} in \path{FDGainSampler.lean}, followed by \path{inexactGainCoupling_cost_gap} in \path{FDInexactGainCoupling.lean}.
+
+The common-noise plan need not be optimal. Its value is that it is explicit and its cost has an exact residual expression. The Wasserstein distance takes an infimum over all transport plans, so the cost of any valid plan supplies an upper bound. No closed formula for the optimal transport between two covariance matrices is required.
+
+\subsection{Singular support is compatible with candidate certification}
+
+The target posterior can be supported on a proper affine subspace while an arbitrary candidate law is supported on a larger set. The construction does not require the candidate to preserve the target's support exactly. It requires a bound on the distance between the two actual measures. The explicit coupling remains meaningful because both measures are obtained from the same independent Gaussian inputs, even if the resulting affine maps have different ranks.
+
+The extreme case $P=0$ makes this especially clear. The prior is the point mass at $m$, and the model's observation carries no uncertainty about the state. The exact gain is $K=0$, and the posterior version is still the point mass at $m$. For an arbitrary candidate $B$, however, the Joseph approximation has mean $m+Bd$ and covariance $BRB^\top$. These are valid Gaussian parameters, but they need not describe a point mass. Its residual is $F(B)=-BR$, so the residual certificate measures the error introduced by that candidate rather than declaring every valid Gaussian approximation exact.
+
+For a candidate $B=0$, both its mean and covariance are exactly those of the point mass, and its residual energy is zero. This boundary calculation shows why the proof separates covariance validity from posterior accuracy. The Joseph formula supplies validity for every gain. The residual supplies accuracy for the selected gain. Neither property is inferred from the other.
+
+These observations use only the same general matrix and coupling identities. They do not require a positive prior eigenvalue, an inverse covariance on the target support, or an auxiliary regularization parameter. The declared positive floor regularizes the observation covariance, which is precisely the space where the innovation equation must be solved.
+
+\section{An inverse-free residual-energy certificate}
+\label{sec:foundation-energy-certificate}
+
+For probability laws with finite second moment, write
+\[
+ \Wtwo(\nu,\mu)^2
+ =\inf_{\pi\in\Pi(\nu,\mu)}\int\|x-z\|^2\,d\pi(x,z),
+\]
+where $\Pi(\nu,\mu)$ is the set of transport plans with the stated marginals. The formal source defines the squared quantity as a nonnegative extended-real infimum and obtains the distance by a square-root operation. The explicit finite Gaussian coupling proves that the quantities considered here are finite. The notation $\Wtwo$ in the paper is the corresponding finite distance.
+
+Using \eqref{eq:foundation-gap-residual} in \eqref{eq:foundation-coupling-cost} yields the more informative, but not directly inverse-free, bound
+\begin{equation}
+ \Wtwo(\nu_y,\mu_B)^2
+ \le\|F(B)S^{-1}d\|^2
+       +\tr\bigl(F(B)S^{-1}F(B)^\top\bigr).
+ \label{eq:foundation-residual-exact-cost}
+\end{equation}
+The source declaration \path{posterior_wasserstein2Sq_le_gain_residual} proves this inequality from the exhibited transport plan. The displayed right side is its exact cost. It is not asserted to equal the optimal squared Wasserstein distance.
+
+\begin{lemma}[Frobenius energy controls the residual cost]
+\label{lem:foundation-energy-majorant}
+If $F\in\R^{n\times p}$ and $S\succeq\sigma I_p\succ0$, then
+\begin{equation}
+ \|FS^{-1}d\|^2+\tr(FS^{-1}F^\top)
+ \le E(F)\left(\sigma^{-1}+\sigma^{-2}\|d\|^2\right).
+ \label{eq:foundation-cost-majorant}
+\end{equation}
+\end{lemma}
+\begin{proof}
+For a vector $v$, rowwise Cauchy--Schwarz gives
+\[
+ \|Fv\|^2=\sum_i\left(\sum_jF_{ij}v_j\right)^2
+ \le\sum_i\left(\sum_jF_{ij}^2\right)\|v\|^2
+ =E(F)\|v\|^2.
+\]
+Apply this with $v=S^{-1}d$ and use \eqref{eq:foundation-inverse-bound} to obtain
+\[
+ \|FS^{-1}d\|^2\le E(F)\sigma^{-2}\|d\|^2.
+\]
+If $f_i$ is the transpose of the $i$th row of $F$, then
+\[
+ \tr(FS^{-1}F^\top)=\sum_i f_i^\top S^{-1}f_i
+ \le\sum_i\|f_i\|\|S^{-1}f_i\|
+ \le\sigma^{-1}\sum_i\|f_i\|^2.
+\]
+The last sum is $E(F)$. Adding the two estimates proves the result.
+\end{proof}
+
+The formal estimate \path{quadratic_residual_cost_le_energy} in \path{FDResidualEnergyCertificate.lean} is slightly more general: it accepts an auxiliary operator $Q$ with a proved bound $\|Q\|_{\mathrm{op}}\le c$. Its application to $Q=S^{-1}$ uses the established noise-floor bound and gives the formula above.
+
+\begin{theorem}[Residual-energy posterior certificate]
+\label{thm:foundation-residual-certificate}
+For the model in \eqref{eq:foundation-model}, with $R\succeq\sigma I_p$ and $\sigma>0$, every gain $B$ satisfies
+\begin{equation}
+ \Wtwo(\nu_y,\mu_B)^2\le a(B),\qquad
+ a(B)=E(F(B))\frac{\sigma+\|d\|^2}{\sigma^2}.
+ \label{eq:foundation-score}
+\end{equation}
+In particular, for $\varepsilon\ge0$, the stopping condition
+\begin{equation}
+ E(F(B))(\sigma+\|d\|^2)\le\varepsilon^2\sigma^2
+ \label{eq:foundation-stop}
+\end{equation}
+implies $\Wtwo(\nu_y,\mu_B)\le\varepsilon$.
+\end{theorem}
+\begin{proof}
+The common-noise transport plan gives \eqref{eq:foundation-residual-exact-cost}. Lemma~\ref{lem:foundation-energy-majorant} bounds its cost by $a(B)$, establishing the first statement. Since $\sigma^2>0$, \eqref{eq:foundation-stop} is equivalent to $a(B)\le\varepsilon^2$. Taking the nonnegative square root gives the asserted distance bound.
+\end{proof}
+
+The raw declarations are \path{posterior_wasserstein2Sq_le_residual_energy} and \path{posterior_wasserstein2_le_of_residual_tolerance}. Their hypotheses include the covariance assumptions, positivity of the floor, and the floor's quadratic interpretation. In the factor-coded program, those hypotheses are discharged by the represented factors and the checked positive scalar. The user does not supply the conclusion $a(B)\ge\Wtwo^2$ as an input promise.
+
+\subsection{What the certificate depends on}
+
+The score depends on the proposed gain through $F(B)$, on the observation through $d$, and on conditioning through $\sigma$. The same residual energy can lead to different certified errors for different observations. A large innovation can amplify a gain discrepancy in the posterior mean. A small noise floor makes a residual less informative about the gain error. These are visible features of the bound, rather than implementation effects hidden in a tolerance parameter.
+
+The stopping test is sufficient and can be conservative. A score above $\varepsilon^2$ does not prove that the true distance exceeds $\varepsilon$. The coupling may have a nonoptimal cost, the inverse norm bound may be loose, and later interval evaluation may further enlarge an upper bound. Conversely, a passing verified score does prove the tolerance. The solver's convergence theorem concerns this explicit sufficient test, so its correctness does not depend on predicting how tight it will be on a particular application.
+
+If $F(B)=0$, invertibility of $S$ gives $B=K$, and the approximation is exactly the posterior version. The source proves this as \path{gainPosteriorLaw_eq_of_residual_zero}. No inference from approximately zero floating point entries is used in that theorem. For a nonzero tolerance the theorem uses the whole squared energy, allowing a candidate to pass before the gain equation is solved exactly.
+
+\subsection{The two output tolerances have different meanings}
+
+The completed solver uses a posterior-law tolerance $\varepsilon>0$ and a parameter-representation radius tolerance $\delta>0$. The first bounds $\Wtwo(\nu_y,\mu_B)$. The second bounds the radii of outward-rounded intervals containing entries of $m_B$ and $C_B$. The latter arrays are descriptions of the approximation already certified by the former theorem.
+
+An interval enclosing an entry of $C_B$ is not, by itself, an interval enclosing the corresponding entry of $C_*$. Nor does a radius at most $\delta$ certify a Gaussian formed by treating all interval centers as exact parameters. The represented gain and its Joseph law remain the semantic object. Keeping that object fixed is what permits the solver, the final certificate, and the output enclosure proof to compose without changing the meaning of the returned distribution midway through the computation.
+
+\section{Packets resolve a complete residual energy}
+\label{sec:foundation-packets}
+
+A packet family in this release is a finite collection of self-adjoint, pairwise disjoint idempotent matrices. Let $\{Q_a:a\in\mathcal A\}$ act on the state space and $\{D_b:b\in\mathcal B\}$ act on the observation space. For each family, the structural conditions are
+\begin{align}
+ Q_a^\top&=Q_a,& Q_a^2&=Q_a,& Q_aQ_{a'}&=0\quad(a\ne a'),\label{eq:foundation-output-packets}\\
+ D_b^\top&=D_b,& D_b^2&=D_b,& D_bD_{b'}&=0\quad(b\ne b').\label{eq:foundation-input-packets}
+\end{align}
+Completeness is a separate condition:
+\begin{equation}
+ \sum_{a\in\mathcal A}Q_a=I_n,\qquad
+ \sum_{b\in\mathcal B}D_b=I_p.
+ \label{eq:foundation-packet-complete}
+\end{equation}
+The self-adjoint condition makes these Euclidean orthogonal projectors. Idempotence alone would not give the required energy geometry. Completeness prevents a certificate from forgetting a residual direction outside the selected packet spans.
+
+The two-sided residual packet is
+\begin{equation}
+ F_{ab}(B)=Q_aF(B)D_b.
+ \label{eq:foundation-packet-residual}
+\end{equation}
+Each packet remains an $n\times p$ matrix, although it is supported on the output and input subspaces selected by its projectors. The notation does not assume a coordinate partition or require projectors to be diagonal. Rational rotated projectors are allowed when their exact entries satisfy the declared identities.
+
+\subsection{Orthogonality gives exact accounting}
+
+Use the Frobenius inner product $\langle A,C\rangle_{\mathrm F}=\tr(A^\top C)$. For $a\ne a'$, self-adjointness and disjointness give
+\[
+ \langle Q_aA,Q_{a'}A\rangle_{\mathrm F}
+ =\tr(A^\top Q_aQ_{a'}A)=0.
+\]
+Consequently the energy of a finite sum of output packets is the sum of their energies. The input analogue follows by transposing the matrices. Applying the two decompositions successively gives complete two-sided accounting.
+
+\begin{theorem}[Complete packet decomposition]
+\label{thm:foundation-packet-energy}
+If both families satisfy \eqref{eq:foundation-output-packets}--\eqref{eq:foundation-packet-complete}, then every $A\in\R^{n\times p}$ satisfies
+\begin{equation}
+ E(A)=\sum_{a\in\mathcal A}\sum_{b\in\mathcal B}E(Q_aAD_b).
+ \label{eq:foundation-packet-energy}
+\end{equation}
+More generally, for subsets $U\subseteq\mathcal A$ and $V\subseteq\mathcal B$,
+\begin{equation}
+ E\!\left(\left(\sum_{a\in U}Q_a\right)A
+             \left(\sum_{b\in V}D_b\right)\right)
+ =\sum_{a\in U}\sum_{b\in V}E(Q_aAD_b).
+ \label{eq:foundation-parent-energy}
+\end{equation}
+\end{theorem}
+\begin{proof}
+The sum of any subfamily of the $Q_a$ is again self-adjoint and idempotent: expansion of its square removes the off-diagonal products, and the remaining diagonal products equal the original projectors. For a self-adjoint idempotent $Q$,
+\[
+ E(QA)=\tr((QA)^\top QA)=\tr(A^\top QA).
+\]
+The trace is linear, so replacing $Q$ by a sum over $U$ proves the output decomposition. Transposition preserves energy and turns right multiplication by the sum over $V$ into left multiplication, proving the input decomposition. Combining these proves \eqref{eq:foundation-parent-energy}. Setting $U=\mathcal A$ and $V=\mathcal B$, completeness reduces the matrix inside its energy to $A$, proving \eqref{eq:foundation-packet-energy}.
+\end{proof}
+
+The source formalizes the packet structure in \path{SelfAdjointPackets.lean}. Its exact energy declarations are \path{matrixEnergy_sumOn_left}, \path{matrixEnergy_sumOn_right}, \path{matrixEnergy_sumOn_both}, and \path{matrixEnergy_eq_sum_blocks} in \path{PacketEnergyDecomposition.lean}. The local parent identity does not require global completeness. The final whole-residual identity does. This separation allows local algebra to be used without silently granting full-space coverage.
+
+Equation~\eqref{eq:foundation-parent-energy} describes aggregation within a fixed family. It does not by itself certify an algorithm that changes its hierarchy while running. The completed solver fixes its packet families before iteration. Dynamic hierarchy changes belong to a separate extension and require their own state and convergence argument.
+
+\subsection{Majorants compose with the posterior certificate}
+
+Suppose a producer supplies values $u_{ab}$ and $v$ with proved inequalities
+\begin{equation}
+ E(F_{ab}(B))\le u_{ab},\qquad \|d\|^2\le v.
+ \label{eq:foundation-packet-majorants}
+\end{equation}
+Completeness and nonnegative energy imply
+\[
+ E(F(B))\le U,\qquad U=\sum_{a,b}u_{ab}.
+\]
+Each $u_{ab}$ is nonnegative because it bounds a nonnegative quantity. Likewise $v\ge0$. The score
+\begin{equation}
+ \widehat a(B)=U\frac{\sigma+v}{\sigma^2}
+ \label{eq:foundation-majorant-score}
+\end{equation}
+therefore bounds $a(B)$ and hence the squared posterior distance. If
+\begin{equation}
+ U(\sigma+v)\le\varepsilon^2\sigma^2,\qquad\varepsilon\ge0,
+ \label{eq:foundation-majorant-stop}
+\end{equation}
+the same law tolerance follows.
+
+\begin{corollary}[Packet-majorant tolerance]
+\label{cor:foundation-packet-tolerance}
+Under the model and complete packet hypotheses, \eqref{eq:foundation-packet-majorants} and \eqref{eq:foundation-majorant-stop} imply $\Wtwo(\nu_y,\mu_B)\le\varepsilon$.
+\end{corollary}
+\begin{proof}
+Sum the packet inequalities and apply Theorem~\ref{thm:foundation-packet-energy} to obtain $E(F(B))\le U$. Since $\sigma+\|d\|^2\ge0$, and $U\ge0$,
+\[
+ E(F(B))(\sigma+\|d\|^2)
+ \le U(\sigma+\|d\|^2)
+ \le U(\sigma+v)
+ \le\varepsilon^2\sigma^2.
+\]
+Theorem~\ref{thm:foundation-residual-certificate} now applies.
+\end{proof}
+
+The source proves the residual bound from local majorants as \path{frobeniusSq_le_packet_majorants} and the tolerance result as \path{posterior_wasserstein2_le_of_packet_majorants} in \path{FDResidualPacketCertificate.lean}. The innovation-majorant combination is used by the rational checker through \path{posterior_wasserstein2Sq_le_energy_majorants} in \path{PosteriorEnclosureBounds.lean}.
+
+Majorants allow different arithmetic representations to feed the same semantic theorem. An exact rational evaluator can choose $u_{ab}=E(F_{ab}(B))$. An outward-rounded evaluator can instead supply a certified upper endpoint. The law proof needs the inequality, not an assumption that every local value was calculated with unlimited precision. The arithmetic chapters explain how the final dyadic evaluator proves those inequalities for its own operations.
+
+\subsection{Why partial packet accounting is insufficient for stopping}
+
+For a fixed residual, a sum over only some packets is no larger than the full energy. The declaration \path{sum_block_energies_le} proves this direction. It is a useful local diagnostic, but it cannot replace the whole-energy upper bound in a stopping test. A candidate can have zero residual in the inspected subspaces while retaining a large residual elsewhere.
+
+For example, take the coordinate projectors onto the two axes of $\R^2$. A residual matrix with a nonzero second row has zero energy in the first output packet. Certifying that first packet alone says nothing about the omitted row. Completeness and a bound for every packet are what change local information into a global posterior guarantee. The exact checker tests those structural and local obligations; it does not accept a producer's assertion that a chosen subset happened to be representative.
+
+The canonical selective loop uses the output-packet energies $E(Q_aF(B))$ to choose which gain component to update. Its final residual certificate may use both output and input packets. These roles are compatible but different: output packets guide the iterative correction, while complete two-sided packets organize the final verification. Neither role makes the final distribution error a collection of independent per-packet posterior distances.
+
+\section{From finite rational checks to a real-law guarantee}
+\label{sec:foundation-rational-checker}
+
+The rational checker turns the previous inequalities into an inspectable decision boundary. A candidate contains a rational gain $B$, rational packet bounds $u_{ab}$, and a rational innovation bound $v$. In the source these are the fields \path{gain}, \path{packetUpper}, and \path{innovationUpper} of \path{RationalCandidate}. Its validity proposition requires five groups of conditions: a positive noise floor, valid complete output packets, valid complete input packets, every local residual-energy inequality, and the innovation-energy inequality.
+
+The packet check is exact. It checks symmetry, idempotence, pairwise disjointness, and the sum-to-identity condition by finite rational equalities. These identities are not inferred from near-equality of floating point arrays. Exact inclusion into $\R$ preserves matrix products, transposes, finite sums, and order. A rational family that passes therefore constructs a real self-adjoint complete packet family with the geometry required in Section~\ref{sec:foundation-packets}.
+
+The energy checks are also exact finite sums. The real interpretation of rational matrix energy is the squared real Frobenius energy of the interpreted matrix. The declaration \path{rationalEnergy_cast} proves this fact, and \path{rational_packet_majorant} transfers a rational local upper bound into the real packet inequality. Likewise \path{rationalVectorEnergy_cast} identifies the rational innovation energy with the squared Euclidean norm used in the probability theorem.
+
+\subsection{Validity and tolerance are separate decisions}
+
+The first Boolean function is
+\[
+ \texttt{checkCandidate}(M,Q,D,c)
+   =\texttt{decide}(\texttt{ValidCandidate}(M,Q,D,c)).
+\]
+It recomputes the finite obligations for the explicit model, packets, and candidate. A claimed successful producer run is not one of its inputs. The equivalence \path{checkCandidate_eq_true} states that its true result is exactly candidate validity.
+
+The second Boolean function checks $\varepsilon\ge0$ and
+\[
+ \left(\sum_{a,b}u_{ab}\right)(\sigma+v)
+    \le\varepsilon^2\sigma^2.
+\]
+This function is \path{checkTolerance}. The displayed cross-multiplied form avoids evaluating square roots and does not require division in the tolerance decision. Positivity of $\sigma$, obtained through candidate validity, justifies interpreting this test as a score bound. A tolerance check alone is not a substitute for the structural and local validity checks.
+
+\begin{theorem}[Sound exact candidate checking]
+\label{thm:foundation-checked-tolerance}
+Let $M$ be a factor-coded rational model, $Q,D$ rational packet families, and $c$ a rational candidate. If both \path{checkCandidate M Q D c} and \path{checkTolerance M c epsilon} return true, then the exact real posterior version represented by $M$ and the exact real Joseph Gaussian represented by the gain of $c$ satisfy
+\begin{equation}
+ \Wtwo(M.\mathrm{posterior},M.\mathrm{approximation}(c.\mathrm{gain}))
+ \le\varepsilon.
+ \label{eq:foundation-rational-soundness}
+\end{equation}
+Here $\varepsilon$ is the real interpretation of the rational tolerance.
+\end{theorem}
+\begin{proof}
+The first check gives positivity of the floor and the four finite packet identities for each family. The factors prove the covariance and noise-floor hypotheses. The rational-to-real interpretation lemmas turn every checked local inequality into a bound on the corresponding real packet energy, and turn the innovation inequality into a bound on $\|d\|^2$. Thus the real majorant score in \eqref{eq:foundation-majorant-score} equals the interpretation of the rational candidate score. Corollary~\ref{cor:foundation-packet-tolerance}, applied to the second check, gives the law tolerance. The model semantics identifies the two laws in its conclusion with those in \eqref{eq:foundation-rational-soundness}.
+\end{proof}
+
+The exact raw theorem is \path{checked_tolerance_bounds_posterior} in \path{RationalPosteriorCertificate.lean}. Its squared precursor, \path{checked_score_bounds_posterior}, derives a bound by the interpreted rational candidate score. The route passes through \path{valid_residual_energy_bound} and \path{valid_innovation_energy_bound}, which explicitly connect the accepted finite data to the analytic quantities. These connections are why the checker certifies a distribution law rather than merely certifying internal consistency of a table of numbers.
+
+\subsection{The certificate is independent of proposal quality}
+
+A candidate proposal can come from an exact iterative solver, an external optimizer, or a finite list of speculative alternatives. The general candidate theorem requires a passing checker, rather than a theorem about that proposal process. The source's validity-preserving finite acceptance policy keeps a checked incumbent and replaces it only when its finite tests permit the replacement. The declarations \path{selected_batch_bounds_posterior} and \path{selected_batch_preserves_posterior_tolerance} show that a finite batch of untrusted proposals preserves the relevant law bound under that policy.
+
+This does not certify the parser or arbitrary code that prepares the explicit data. An exported Lean instance certifies the rational model, packets, gain, and arrays written into that instance. Connecting an external data file to those constants is an additional implementation relation. The first release supplies useful Python producers and exports, but it does not claim a universal refinement of that parser and implementation to the Lean program.
+
+The canonical cached solver is stronger in a different direction. It constructs its own exact cache from the model, produces actual greedy iterates, and proves finite success for positive tolerances under its input hypotheses. The general checker theorem remains useful because the final verification is independent of any internal claim that the iteration has converged. The subsequent chapters establish how that canonical execution reaches the certificate boundary without assuming candidate success in advance.
+
+\section{A singular-prior calculation through the full semantic chain}
+\label{sec:foundation-singular-example}
+
+Consider the rational model
+\[
+ P=\begin{pmatrix}1&0\\0&0\end{pmatrix},\qquad
+ H=\begin{pmatrix}1&1\end{pmatrix},\qquad
+ R=1,\qquad m=\begin{pmatrix}0\\0\end{pmatrix},\qquad y=1.
+\]
+It is factor-coded by $L=(1,0)^\top$, a zero noise factor, and $\sigma=1$. The second state coordinate is deterministic under the prior. Nevertheless, the observation operator includes that coordinate, and all model formulas remain well typed. The innovation covariance is $S=2$, the innovation is $d=1$, and
+\[
+ K=\begin{pmatrix}1/2\\0\end{pmatrix},\qquad
+ C_*=\begin{pmatrix}1/2&0\\0&0\end{pmatrix}.
+\]
+Thus the explicit posterior is concentrated on the first coordinate axis with mean $(1/2,0)^\top$.
+
+Choose $B=(1/3,0)^\top$. The approximate mean and Joseph covariance are
+\[
+ m_B=\begin{pmatrix}1/3\\0\end{pmatrix},\qquad
+ C_B=\begin{pmatrix}5/9&0\\0&0\end{pmatrix}.
+\]
+The residual is $F(B)=(1/3,0)^\top$, with energy $1/9$. Its exact common-noise coupling cost is
+\[
+ \|F(B)S^{-1}d\|^2+\tr(F(B)S^{-1}F(B)^\top)
+ =\frac1{36}+\frac1{18}=\frac1{12}.
+\]
+The inverse-free energy score is larger:
+\[
+ a(B)=\frac19\frac{1+1}{1^2}=\frac29.
+\]
+Both are valid upper bounds on the squared law distance. The difference illustrates the cost of replacing the exact inverse expression by an explicit noise-floor majorant. No inverse prior or inverse posterior covariance was used at any stage.
+
+For coordinate output packets and the single identity input packet, the local residual energies are $1/9$ and $0$. Their complete sum is exactly the full energy. If the rational tolerance is $\varepsilon=1/2$, the squared tolerance is $1/4$, and $2/9\le1/4$. The exact certificate therefore proves the posterior-law tolerance for this candidate. This is a worked arithmetic specialization of the general theorems, not a claim that a fresh Lean instance of these particular constants has been compiled in this publication run.
+
+The example also separates three objects that can otherwise be confused: the target conditional Gaussian $\nu_y$, the gain-defined Joseph approximation $\mu_B$, and any finite interval arrays used to describe the latter. The posterior theorem relates the first two probability laws. The output theorem encloses parameters of the second. Their composition provides a usable represented approximation whose law error and representation error are stated separately.
