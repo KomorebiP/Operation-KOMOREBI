@@ -1,0 +1,116 @@
+import KomorebiRepair.Wire
+
+/-!
+Finite rational-menu verification with reusable separating blocks.
+A block excludes every subset of its declared candidate set. Blocks need not
+be admissible themselves: they certify linear impossibility on a superset.
+Coverage is checked against every required admissible menu, not a producer-
+supplied assertion that all alternatives have been considered.
+-/
+set_option autoImplicit false
+namespace KomorebiRepair.RationalCertificates
+
+variable {m n q s : ℕ}
+
+/-- Right multiplication by a column mask keeps or zeros each output column. -/
+theorem mul_masked_entry (P : Problem m n q s) (S : Finset (Fin q))
+    (Y : Mat 1 m) (i : Fin 1) (j : Fin q) :
+    (Y * masked P S) i j = if j ∈ S then (Y * P.E) i j else 0 := by
+  by_cases hj : j ∈ S <;> simp [Matrix.mul_apply, masked, hj]
+
+/-- A separator for a larger menu also excludes every smaller menu. -/
+theorem separates_subset (P : Problem m n q s) (S T : Finset (Fin q))
+    (Y : Mat 1 m) (hTS : T ⊆ S) (hS : Separates P S Y) :
+    Separates P T Y := by
+  refine ⟨hS.1, ?_, hS.2.2⟩
+  ext i j
+  by_cases hj : j ∈ T
+  · have hs : j ∈ S := hTS hj
+    have hz := congrArg (fun A : Mat 1 q => A i j) hS.2.1
+    simpa only [mul_masked_entry, hj, hs, if_true, Matrix.zero_apply] using hz
+  · simp only [mul_masked_entry, hj, if_false, Matrix.zero_apply]
+
+/-- A block contains only data; validity is checked separately. -/
+abbrev SeparationBlock (m q : ℕ) := Finset (Fin q) × Mat 1 m
+
+def CoverValid (P : Problem m n q s) (blocks : List (SeparationBlock m q)) : Prop :=
+  ∀ b ∈ blocks, Separates P b.1 b.2
+
+def Covered (blocks : List (SeparationBlock m q)) (T : Finset (Fin q)) : Prop :=
+  ∃ b ∈ blocks, T ⊆ b.1
+
+instance (P : Problem m n q s) (blocks : List (SeparationBlock m q)) :
+    Decidable (CoverValid P blocks) := by unfold CoverValid; infer_instance
+
+instance (blocks : List (SeparationBlock m q)) (T : Finset (Fin q)) :
+    Decidable (Covered blocks T) := by unfold Covered; infer_instance
+
+theorem covered_infeasible (P : Problem m n q s)
+    (blocks : List (SeparationBlock m q)) (T : Finset (Fin q))
+    (hv : CoverValid P blocks) (hc : Covered blocks T) : ¬ Feasible P T := by
+  rcases hc with ⟨b, hb, hTb⟩
+  exact separator_sound P T b.2 (separates_subset P b.1 T b.2 hTb (hv b hb))
+
+def checkCoveredOptimal (P : Problem m n q s) (S : Finset (Fin q))
+    (U : Mat n s) (W : Mat q s) (blocks : List (SeparationBlock m q)) : Bool :=
+  decide (P.allowed S = true ∧ Equation P S U W ∧ CoverValid P blocks ∧
+    ∀ T : Finset (Fin q), P.allowed T = true → P.cost T < P.cost S → Covered blocks T)
+
+theorem checkCoveredOptimal_sound (P : Problem m n q s) (S : Finset (Fin q))
+    (U : Mat n s) (W : Mat q s) (blocks : List (SeparationBlock m q))
+    (h : checkCoveredOptimal P S U W blocks = true) :
+    P.allowed S = true ∧ Equation P S U W ∧
+    ∀ T : Finset (Fin q), P.allowed T = true → Feasible P T → P.cost S ≤ P.cost T := by
+  have hc : P.allowed S = true ∧ Equation P S U W ∧ CoverValid P blocks ∧
+      ∀ T : Finset (Fin q), P.allowed T = true → P.cost T < P.cost S → Covered blocks T :=
+    of_decide_eq_true h
+  rcases hc with ⟨ha, he, hv, hc⟩
+  refine ⟨ha, he, ?_⟩
+  intro T hT hf
+  exact le_of_not_gt (fun hlt => covered_infeasible P blocks T hv (hc T hT hlt) hf)
+
+def checkCoveredNoRepair (P : Problem m n q s)
+    (blocks : List (SeparationBlock m q)) : Bool :=
+  decide (CoverValid P blocks ∧
+    ∀ T : Finset (Fin q), P.allowed T = true → Covered blocks T)
+
+theorem checkCoveredNoRepair_sound (P : Problem m n q s)
+    (blocks : List (SeparationBlock m q))
+    (h : checkCoveredNoRepair P blocks = true) :
+    ∀ T : Finset (Fin q), P.allowed T = true → ¬ Feasible P T := by
+  have hc : CoverValid P blocks ∧
+      ∀ T : Finset (Fin q), P.allowed T = true → Covered blocks T := of_decide_eq_true h
+  intro T hT
+  exact covered_infeasible P blocks T hc.1 (hc.2 T hT)
+
+/-- Exact admissibility from a fixed, finite input table. -/
+def tableAllowed (allowed : List (Finset (Fin q))) (S : Finset (Fin q)) : Bool :=
+  decide (S ∈ allowed)
+
+/-- Cost is charged on selected entries, including zero-coefficient entries. -/
+def additiveCost (weights : Fin q → ℕ) (S : Finset (Fin q)) : ℕ :=
+  S.sum weights
+
+theorem tableAllowed_iff (allowed : List (Finset (Fin q))) (S : Finset (Fin q)) :
+    tableAllowed allowed S = true ↔ S ∈ allowed := by simp [tableAllowed]
+
+theorem additiveCost_empty (weights : Fin q → ℕ) :
+    additiveCost weights ∅ = 0 := by simp [additiveCost]
+
+/-- Diagnostic display, not a proof premise. -/
+def menuJson (S : Finset (Fin q)) : String :=
+  "[" ++ String.intercalate "," (((List.finRange q).filter (fun i => decide (i ∈ S))).map
+    (fun i => toString i.val)) ++ "]"
+
+
+/-- Echo the literal problem and all derived menu constraints for an external
+comparison. This IO string is never a theorem premise. -/
+def menuProblemJson (P : Problem m n q s) : String :=
+  "{\"D\":" ++ matrixJson P.D ++ ",\"E\":" ++ matrixJson P.E ++
+  ",\"R\":" ++ matrixJson P.R ++ ",\"menus\":[" ++
+  String.intercalate "," (((List.finRange q).sublists).map fun xs =>
+    let S := xs.toFinset
+    "{\"selected\":" ++ menuJson S ++ ",\"allowed\":" ++ toString (P.allowed S) ++
+    ",\"cost\":" ++ toString (P.cost S) ++ "}") ++ "]}"
+
+end KomorebiRepair.RationalCertificates

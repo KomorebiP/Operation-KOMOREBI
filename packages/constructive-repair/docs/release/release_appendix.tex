@@ -1,0 +1,135 @@
+\chapter{The standalone release contract}
+\label{app:release-candidate}
+
+\section{A feature freeze, not a new foundation}
+
+Release candidate 1.0.0rc1 fixes the scope of the standalone constructive repair component. It retains all 51 Lean proof modules and all 526 named theorem declarations from v0.5.0 without changing their source bytes. This pass adds an installable Python interface, stronger input validation, clean installation checks, and a bounded publication checklist. It does not add a theorem or alter the foundational interpretation of Realization Calculus.
+
+The component's mathematical contract is deliberately narrower than the full Komorebi program. It constructs exact rational repairs, certifies minimum added dimension, selects minimum cost directions from a declared finite menu, and checks finite proof trees that justify pruning that search. No repair outside the stated coefficient ring or admissible class follows from these certificates.
+
+This separation allows a stable software release without waiting for unrestricted arithmetic realization, nonlinear convergence, or a universal repair theorem. Those are different mathematical questions. The remaining release gates concern reproducibility, interfaces, and publication decisions.
+
+\section{An installed interface to the existing mathematics}
+
+The public Python module is \code{komorebi_repair}. Its small supported surface consists of exact matrices, original-problem constructors, file loading, witness production, and independent certificate checking. The internal engines remain available to the source workflows, but their helper functions are not a promise of a permanently stable external interface.
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+from komorebi_repair import ExactMatrix, menu_problem, solve, verify
+
+D = ExactMatrix.of([[1], [0], [0]])
+E = ExactMatrix.of([[0, 0], [1, 0], [1, 1]])
+R = ExactMatrix.of([[0], [1], [0]])
+p = menu_problem(D, E, R, costs=[1, 1])
+result = solve(p)
+assert result.status == "PYTHON_CERTIFICATE_VALID"
+assert result.certificate["cost"] == 2
+assert verify(p, result.certificate).status == \
+       "PYTHON_CERTIFICATE_VALID"
+\end{Verbatim}
+
+The constructor accepts integers and exact rational values from Python's \code{Fraction} type. It rejects floating point instead of silently approximating it. Matrix storage consists of immutable tuples. An explicitly supplied width must agree with the data. Empty matrices retain their supplied dimensions.
+
+The public solver copies the original problem before constructing witnesses. Its verifier checks a supplied certificate against a separate copy of that original. Altering a caller-owned dictionary after a check does not rewrite the stored result of the check. The returned certificate remains ordinary inspectable Python data, however. It is not an immutable or signed mathematical artifact merely because it appears inside a result object.
+
+For admissibility, \code{None} means every subset and an empty list means no subset. These are not interchangeable defaults. Explicit lists can be nonhereditary. Costs remain nonnegative and selected directions are charged even when a particular correction coefficient is zero.
+
+\section{Three different kinds of result}
+
+Python validation, kernel acceptance, and mathematical infeasibility must not be conflated. The installed Python interface reports \code{PYTHON_CERTIFICATE_VALID} only after checking the finite exact certificate. The certificate's kind specifies whether it is an optimal free repair, an optimal menu, or a scoped no-repair result. This status never asserts that Lean was executed.
+
+Malformed input, a failed certificate, and an exhausted search budget produce \code{UNRESOLVED}. Rejection of submitted evidence is not rejection of the underlying mathematical possibility. A no-repair result requires valid mathematical evidence in the mode and admissible universe fixed by the original problem.
+
+The separate source-archive commands can report a kernel-checked outcome after compiling the original input and certificate, auditing theorem assumptions, replaying the modules, and comparing the Lean-evaluated input with the external data. This remains a different verification stage. The Python result has no convenience flag that can declare that stage complete.
+
+\begin{scopebox}[title=The evidence stays attached to the original problem]
+A certificate cannot replace $D$, $E$, $R$, the costs, or the admissibility rule. Changing any of them defines a different input and requires a new certificate check. A previously successful result is not carried across that change by its label alone.
+\end{scopebox}
+
+The existing wire schemas retain their earlier version identifiers. A new software version does not silently reinterpret an old certificate or rewrite its canonical original-problem hash. All 72 previously exported problems and certificates are exercised through the new public interface.
+
+\section{Input boundary corrections}
+
+The release audit found three low-level matrix API weaknesses. A constructor could ignore a conflicting explicit column count. Row and column selection could accept booleans as integer indices. Direct matrix construction could accept mutable nested lists despite the intended value semantics. Each behavior has been corrected and assigned a regression test.
+
+These findings concern the external software interface. They are not counterexamples to the unchanged Lean theorems. Nevertheless, they matter: exact arithmetic is not enough when the caller's intended shape or data can change at the interface.
+
+File-size validation now bounds the bytes actually read instead of trusting an earlier file-size observation. Structural JSON nesting has an explicit limit of 128. The scanner respects quoted strings and escapes, so a bracket inside a string is not counted as an additional structure. Integer tokens and rational numerator and denominator strings have explicit length limits. Repeated keys, malformed UTF-8, floats, nonfinite values, and unsupported record fields are rejected.
+
+The first deep-nesting regression did not fail as intended because the interpreter permitted more nesting than assumed. The final implementation therefore uses its own structural bound rather than relying on a process-wide recursion setting. The failed test log and the corrected run are both retained.
+
+The current per-file bound is four mebibytes. External matrices have at most 32 rows and 32 columns. Branch menus contain at most 24 candidates, explicit admissibility tables at most 4,096 entries, and certificate trees at most 8,191 nodes. These are engineering guardrails, not mathematical restrictions of the abstract theorems.
+
+Exact arithmetic can still be expensive within those limits. A work counter is not a wall-clock or memory sandbox. The installed API is intended for local research workflows, not unrestricted public computation requests without an additional process-level resource boundary.
+
+\section{Fresh verification without a larger theorem count}
+
+The full inherited proof system was rebuilt from source and replayed again. Every named theorem's dependency list remains contained in
+\[
+\{\code{propext},\ \code{Classical.choice},\ \code{Quot.sound}\}.
+\]
+The new public interface is tested software around these mathematical certificates, not a formal proof of the entire Python program.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}Xr@{}}
+\toprule
+Release check & Result\\
+\midrule
+Unchanged Lean proof modules rebuilt and replayed & 51 / 51\\
+Named theorem dependency lists audited & 526 / 526\\
+Paired corrupted-certificate controls & 24 / 24\\
+Separate forbidden-axiom policy control & 1 / 1\\
+New public API, parser and CLI unit tests & 56 / 56\\
+Existing rational and menu unit tests rerun & 134 / 134\\
+Original prototype unit tests rerun & 20 / 20\\
+Existing exported input/certificate pairs through the API & 72 / 72\\
+New invertible-coordinate comparison pairs & 128 / 128\\
+Exact new free and menu certificate checks & 512 / 512\\
+Independent subset rank comparisons & 1,348 / 1,348\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The new coordinate experiment starts with 128 exact rational problems. It applies an invertible rational change of target coordinates to $D$, $E$, and $R$ together. Original and transformed problems must have the same free obstruction dimension and minimum admissible menu cost. The checks preserve the original costs and admissibility rules. Independent SymPy ranks provide the small-menu feasibility oracle. These are fresh exact regressions, not additional general Lean declarations.
+
+The wheel was installed into a separate Python environment without SymPy or the source checkout on its import path. Its exported branch certificate was then checked by the source-archive Lean workflow. Two fresh wheel build processes with cleaned build directories produced byte-identical wheels under the same pinned build timestamp and local tool versions. That is a local reproducibility result, not a claim about arbitrary packaging tools on every platform.
+
+One packaging attempt initially reused the build backend twice in a single interpreter. Backend command state survived the first build and the second attempt failed. The corrected build command uses a fresh process for each build. That development failure is recorded separately from the successful final reproducibility test.
+
+\section{Installation and kernel checking}
+
+The included wheel has no third-party runtime dependency. It supplies the Python producer and verifier. The source archive carries the Lean project, examples, complete monograph, and retained verification records.
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+python -m pip install --no-index --no-deps \
+  dist/komorebi_constructive_repair-1.0.0rc1-py3-none-any.whl
+komorebi-repair doctor
+komorebi-repair solve examples/branch_corpus/Branch018_input.json \
+  --output /tmp/repair-example
+\end{Verbatim}
+
+For kernel checking, use the complete existing pinned Linux toolkit:
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+python scripts/certify_branch.py \
+  examples/branch_corpus/Branch018_input.json \
+  --certificate /tmp/repair-example/certificate.json \
+  --kit /path/to/Komorebi_Portable_Lean_4.34.0-rc2 \
+  --output /tmp/repair-kernel
+\end{Verbatim}
+
+Output directories must be new. No command publishes or uploads the work. The compiler and dependency cache are intentionally not copied into the small source distribution.
+
+\section{Conditions for the final 1.0 tag}
+
+The candidate was executed on Linux x86\_64 with CPython 3.13.5. The wheel targets Python 3.10 and later syntactically, but its portability tag does not establish tested support on every interpreter and operating system. Before the final tag, the author should either exercise the intended additional combinations, including the Windows/WSL workflow, or explicitly narrow the supported-platform statement.
+
+No repository-wide public license was present in the recovered standalone package. The code and document licensing choices remain the author's publication decisions. This candidate does not invent a permission grant or advertise a particular open-source license.
+
+The last release gate is acceptance of the exact frozen archive. Its source, proof, and witness bytes must match the verification and integrity records. A later edit needs a new run rather than borrowing a previous receipt.
+
+Integration into the main Komorebi Python library and the authoritative Paper III source tree remains a separate adapter task. This candidate does not assume their APIs or pretend to have performed that integration. Similarly, the runtime, imported dependencies, external parser, source emitter, hashes, and filesystem remain explicit parts of the trust boundary. Same-kernel replay is not an independently implemented proof checker.
+
+\begin{scopebox}[title=What is ready and what remains]
+The existing rational certificate mathematics is frozen and freshly checked. The public interface, strict input handling, local installation, and certificate workflow now have release evidence. The final tag awaits bounded platform and publication decisions, not another foundational expansion or the resolution of an unrelated conjecture.
+\end{scopebox}

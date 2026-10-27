@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+"""Fresh source compilation, axiom audit, same-kernel replay and input binding.
+Run in a private working copy. The pinned dependency cache is reused, not rebuilt.
+This script is not a proof of the Python parser. All failures remain explicit.
+"""
+from pathlib import Path
+from datetime import datetime, timezone
+import subprocess,json,os,re,hashlib,shutil,sys,argparse,zipfile,tempfile,time
+ROOT=Path(__file__).resolve().parents[1]
+PIN='aeb72f1e9981b6d35b426b16dca7759be3e7ba06'
+ALLOWED={'propext','Classical.choice','Quot.sound'}
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--kit',type=Path,default=os.environ.get('KOMOREBI_LEAN_KIT'));ap.add_argument('--output',type=Path,default=ROOT/'evidence/verification/current');args=ap.parse_args()
+    if args.kit is None:ap.error('Supply --kit or KOMOREBI_LEAN_KIT')
+    kit=args.kit.resolve();p=ROOT/'lean';out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
+    result={'schema':'komorebi.repair.verification.v0.5.0','status':'RUNNING','started_utc':datetime.now(timezone.utc).isoformat(),'commands':[],'checks':{},'scope':'Standalone constructive-repair extension; imported dependencies reused'}
+    def save(): (out/'verification.json').write_text(json.dumps(result,indent=2)+'\n')
+    def check(label,ok,detail=None):
+        result['checks'][label]={'pass':bool(ok),'detail':detail};save();print(('PASS ' if ok else 'FAIL ')+label,flush=True)
+        if not ok:raise RuntimeError(label)
+    def run(label,cmd,cwd=p,timeout=120):
+        start=time.monotonic();expired=False
+        try:
+            z=subprocess.run(cmd,cwd=cwd,text=True,capture_output=True,timeout=timeout);rc=z.returncode;log=z.stdout+z.stderr
+        except subprocess.TimeoutExpired as e:
+            expired=True;rc=None
+            def text(v):return v.decode(errors='replace') if isinstance(v,bytes) else (v or '')
+            log=text(e.stdout)+text(e.stderr)
+        (out/(label+'.log')).write_text(log)
+        result['commands'].append({'label':label,'command':cmd,'cwd':str(cwd),'returncode':rc,'timed_out':expired,'seconds':round(time.monotonic()-start,4),'log':label+'.log'});save()
+        return rc,log
+    def lake(*xs):return ['bash',str(kit/'run.sh'),'lake',*xs]
+    try:
+        rc,txt=run('version',['bash',str(kit/'run.sh'),'lean','--version']);check('runtime_pin',rc==0 and '4.34.0-rc2' in txt and '6a10ac8c22beadecabdbb0919c2b50214762f91d' in txt,txt.strip())
+        rc,txt=run('attach',['bash',str(kit/'run.sh'),'attach',str(p)]);check('dependency_attachment',rc==0,txt.strip())
+        rc,txt=run('mathlib_pin',['git','-C',str(p/'.lake/packages/mathlib'),'rev-parse','HEAD']);check('mathlib_pin',rc==0 and txt.strip()==PIN,txt.strip())
+        mods=json.loads((ROOT/'evidence/modules.json').read_text());registry=json.loads((ROOT/'docs/theorem_registry.json').read_text())['theorems']
+        proof_files=[p/'KomorebiRepair'/(x.replace('.','/')+'.lean') for x in mods]
+        check('registry_names_unique',len({x['name'] for x in registry})==len(registry))
+        with zipfile.ZipFile(ROOT/'inherited/Komorebi_Constructive_Repair_Lean_v0.2.0.zip') as z:
+            unchanged=all(f.read_bytes()==z.read('Komorebi_Constructive_Repair_v0.2.0/lean/KomorebiRepair/'+f.name) for f in proof_files[:10])
+        check('baseline_ten_modules_unchanged',unchanged)
+        with zipfile.ZipFile(ROOT/'inherited/Komorebi_Constructive_Repair_v0.3.0.zip') as z:
+            oldmods=json.loads(z.read('Komorebi_Constructive_Repair_v0.3.0/evidence/modules.json'))
+            old_same=all((p/'KomorebiRepair'/(x.replace('.','/')+'.lean')).read_bytes()==
+                z.read('Komorebi_Constructive_Repair_v0.3.0/lean/KomorebiRepair/'+x.replace('.','/')+'.lean') for x in oldmods)
+        check('all_v0_3_modules_unchanged',old_same,len(oldmods))
+        with zipfile.ZipFile(ROOT/'inherited/Komorebi_Constructive_Repair_v0.4.0.zip') as z:
+            old4=json.loads(z.read('Komorebi_Constructive_Repair_v0.4.0/evidence/modules.json'))
+            same4=all((p/'KomorebiRepair'/(x.replace('.','/')+'.lean')).read_bytes()==
+                z.read('Komorebi_Constructive_Repair_v0.4.0/lean/KomorebiRepair/'+x.replace('.','/')+'.lean') for x in old4)
+        check('all_v0_4_modules_unchanged',same4,len(old4))
+        source='\n'.join(f.read_text() for f in proof_files)
+        stripped=re.sub(r'/\-.*?\-/','',source,flags=re.S);stripped=re.sub(r'--[^\n]*','',stripped)
+        bad=re.findall(r'\b(?:sorry|admit|axiom|native_decide|unsafe)\b|Lean\.ofReduceBool',stripped)
+        check('positive_source_policy',not bad,bad)
+        result['source_sha256']={str(f.relative_to(ROOT)):sha(f) for f in proof_files+[p/'KomorebiRepair.lean',p/'AxiomAudit.lean',p/'InputEcho.lean',p/'MenuInputEcho.lean',p/'BranchInputEcho.lean']}
+        own=p/'.lake/build/lib/lean';shutil.rmtree(own,ignore_errors=True);own.mkdir(parents=True)
+        for f in proof_files+[p/'KomorebiRepair.lean',p/'AxiomAudit.lean']:
+            rel=f.relative_to(p);dest=own/rel.with_suffix('.olean');dest.parent.mkdir(parents=True,exist_ok=True)
+            rc,txt=run('compile_'+f.stem,lake('env','lean','-j1','-DwarningAsError=true','-DmaxHeartbeats=3000000','-o',str(dest),str(rel)))
+            check('compile_'+f.stem,rc==0)
+            if f.stem=='AxiomAudit':
+                axioms={n:[s.strip() for s in b.split(',') if s.strip()] for n,b in re.findall(r"'([^']+)' depends on axioms:\s*\[([^\]]*)\]",txt,re.S)}
+                for n in re.findall(r"'([^']+)' does not depend on any axioms",txt):axioms[n]=[]
+                check('axiom_coverage',set(axioms)=={r['name'] for r in registry},{'expected':len(registry),'observed':len(axioms)})
+                bad={n:sorted(set(a)-ALLOWED) for n,a in axioms.items() if set(a)-ALLOWED}
+                check('axiom_whitelist',not bad,bad);result['axioms']=axioms
+        for mod in mods:
+            full='KomorebiRepair.'+mod
+            rc,txt=run('replay_'+mod.replace('.','_'),lake('env','leanchecker','--verbose',full))
+            check('replay_'+mod,rc==0 and 'replaying '+full in txt)
+        controls=json.loads((ROOT/'evidence/rejection_index.json').read_text())
+        for c in controls:
+            rc,txt=run('negative_'+c['name'],lake('env','lean','-j1','-DwarningAsError=true','certificate_negative_controls/'+c['name']+'.lean'))
+            check('rejection_'+c['name'],rc is not None and rc>0 and 'Type mismatch' in txt and '= false' in txt and '= true' in txt and 'failed to synthesize' not in txt and 'does not exist' not in txt)
+        # A deliberate assumption may compile but must never pass the axiom policy.
+        rc,txt=run('negative_CustomAxiom',lake('env','lean','-j1','-DwarningAsError=true','negative_controls/CustomAxiom.lean'))
+        check('custom_axiom_compiles_as_conditional',rc==0)
+        check('custom_axiom_policy_rejected','Counterfeit.false_input' in txt)
+        # Original numeric input is compared with actual Lean-decoded values.
+        rc,txt=run('input_echo',lake('env','lean','InputEcho.lean'));check('input_echo_executed',rc==0)
+        rows=[json.loads(x) for x in txt.splitlines() if x.startswith('{')];index=json.loads((ROOT/'evidence/export_index.json').read_text())
+        check('input_echo_complete',len(rows)==len(index) and len({r['id'] for r in rows})==len(index))
+        byid={r['id']:r for r in rows}
+        import sys
+        sys.path.insert(0,str(ROOT/'python'))
+        from repair_certificates import read_json,digest,parse_problem
+        for x in index:
+            orig=read_json(ROOT/x['input']);parse_problem(orig);echo=byid[x['case']]
+            check('input_binding_'+x['namespace'],echo['D']==orig['D']['entries'] and echo['R']==orig['R']['entries'] and digest(orig)==x['problem_sha256'])
+        rc,txt=run('python_unittest',[sys.executable,'-m','unittest','-v','test_certificates'],cwd=ROOT/'python');check('python_unittest',rc==0 and 'Ran 34 tests' in txt and 'OK' in txt)
+        # Recheck all shipped certificates; keep generation and verification separate.
+        from repair_certificates import check_certificate
+        for x in index:check_certificate(read_json(ROOT/x['input']),read_json(ROOT/x['certificate']))
+        check('shipped_python_certificates',True,len(index))
+        with tempfile.TemporaryDirectory(prefix='repair-baseline-') as td:
+            b=Path(td)/'baseline';shutil.copytree(ROOT/'python_baseline',b)
+            rc,txt=run('baseline_unittest',[sys.executable,'-m','unittest','-v','test_repair_core'],cwd=b);check('baseline_python_unittest',rc==0 and 'Ran 20 tests' in txt)
+            rc,txt=run('baseline_audit',[sys.executable,'run_audit.py'],cwd=b);check('baseline_python_audit',rc==0)
+            js=json.loads((b/'audit_summary.json').read_text());nc=len((b/'case_records.jsonl').read_text().splitlines())
+            check('baseline_scope',js['assertion_count']==71 and nc==3307,{'assertions':js['assertion_count'],'case_records':nc})
+        # Fresh v0.4.0 menu-source binding, scoped rejection and exact tests.
+        menu_controls=json.loads((ROOT/'evidence/menu_rejection_index.json').read_text())
+        for c in menu_controls:
+            rc,txt=run('menu_negative_'+c['name'],lake('env','lean','-j1','-DwarningAsError=true','menu_negative_controls/'+c['name']+'.lean'))
+            check('menu_rejection_'+c['name'],rc is not None and rc>0 and 'Type mismatch' in txt and '= false' in txt and '= true' in txt and 'failed to synthesize' not in txt and 'does not exist' not in txt)
+        rc,txt=run('menu_input_echo',lake('env','lean','MenuInputEcho.lean'))
+        check('menu_input_echo_executed',rc==0)
+        mrows=[json.loads(x) for x in txt.splitlines() if x.startswith('{')]
+        mind=json.loads((ROOT/'evidence/menu_export_index.json').read_text())
+        check('menu_echo_count',len(mrows)==len(mind))
+        import rational_menu as M
+        for x,echo in zip(mind,mrows):
+            orig=read_json(ROOT/x['input']);c=read_json(ROOT/x['certificate'])
+            check('menu_binding_'+x['namespace'],M.check_echo(orig,echo) and digest(orig)==x['problem_sha256'])
+            M.check_certificate(orig,c)
+        check('all_shipped_menu_certificates',True,len(mind))
+        rc,txt=run('menu_python_unittest',[sys.executable,'-m','unittest','-v','test_rational_menu'],cwd=ROOT/'python')
+        check('menu_python_unittest',rc==0 and 'Ran 50 tests' in txt and 'OK' in txt)
+        for ln in (ROOT/'evidence/menu_case_records.jsonl').read_text().splitlines():
+            x=json.loads(ln);M.check_certificate(x['problem'],x['certificate'])
+        check('menu_all_recorded_identities_rechecked',True,120)
+        result.update(menu_exported_problems=len(mind),menu_paired_rejections=len(menu_controls),
+            v0_4_new_general_theorems=sum(r['module']=='RationalMenuCover' for r in registry),
+            menu_optimal_exports=sum(x['kind']=='optimal_menu' for x in mind),
+            menu_no_repair_exports=sum(x['kind']=='no_admissible_repair' for x in mind))
+        # Fresh v0.5.0 structural branch certificates, no powerset checker.
+        bcontrols=json.loads((ROOT/'evidence/branch_rejection_index.json').read_text())
+        for c in bcontrols:
+            rc,txt=run('branch_negative_'+c['name'],lake('env','lean','-j1','-DwarningAsError=true','branch_negative_controls/'+c['name']+'.lean'))
+            check('branch_rejection_'+c['name'],rc is not None and rc>0 and 'Type mismatch' in txt and '= false' in txt and '= true' in txt and 'failed to synthesize' not in txt and 'does not exist' not in txt)
+        rc,txt=run('branch_input_echo',lake('env','lean','BranchInputEcho.lean'))
+        check('branch_input_echo_executed',rc==0)
+        brows=[json.loads(x) for x in txt.splitlines() if x.startswith('{')]
+        bind=json.loads((ROOT/'evidence/branch_export_index.json').read_text())
+        check('branch_echo_count',len(brows)==len(bind))
+        import branch_menu as B
+        for x,echo in zip(bind,brows):
+            orig=read_json(ROOT/x['input']);cert=read_json(ROOT/x['certificate'])
+            check('branch_binding_'+x['namespace'],B.check_echo(orig,echo) and digest(orig)==x['problem_sha256'])
+            B.check_certificate(orig,cert)
+        rc,txt=run('branch_python_unittest',[sys.executable,'-m','unittest','-v','test_branch_menu'],cwd=ROOT/'python')
+        check('branch_python_unittest',rc==0 and 'Ran 50 tests' in txt and 'OK' in txt)
+        nrecords=0
+        for ln in (ROOT/'evidence/branch_case_records.jsonl').read_text().splitlines():
+            x=json.loads(ln);B.check_certificate(x['problem'],x['certificate']);nrecords+=1
+        check('branch_all_recorded_identities_rechecked',nrecords==204,nrecords)
+        result.update(branch_exported_problems=len(bind),branch_paired_rejections=len(bcontrols),
+          v0_5_general_theorems=sum(r['module']=='BranchCertificate' for r in registry),
+          branch_optimal_exports=sum(x['kind']=='optimal_menu' for x in bind),
+          branch_no_repair_exports=sum(x['kind']=='no_admissible_repair' for x in bind))
+        result.update(status='PASS',proof_modules=len(mods),theorem_declarations=len(registry),general_new_theorems=sum(r['layer']=='general' for r in registry),exported_problems=len(index),paired_corruption_rejections=len(controls),finished_utc=datetime.now(timezone.utc).isoformat())
+        save();print('VERIFICATION PASS',flush=True);return 0
+    except Exception as e:
+        result.update(status='FAIL',error=str(e),finished_utc=datetime.now(timezone.utc).isoformat());save();print('VERIFICATION FAILED: '+str(e),flush=True);return 1
+if __name__=='__main__':raise SystemExit(main())

@@ -1,0 +1,261 @@
+\chapter{Exact rational certificates}\label{ch:rational}
+\section{Let the search propose and the kernel check}
+The finite optimizer in Chapter~\ref{ch:search} enumerates finite correction domains. Rational coefficients do not form such a domain. The appropriate interface is therefore not an enumeration of all rational assignments. A solver proposes finite rational matrices, and a verifier checks their identities in the original target.
+
+Fix matrices
+\[
+ D\in\Q^{m\times n},\qquad R\in\Q^{m\times s},\qquad E\in\Q^{m\times q}.
+\]
+The residuals are the columns of $R$. For a selected menu $S$, let $\widetilde E_S$ retain the original candidate indexing and replace unselected columns by zero. The supplied coefficient matrices have shapes $U\in\Q^{n\times s}$ and $W\in\Q^{q\times s}$. Their correction equation is
+\begin{equation}\label{eq:rational-original}
+ DU+\widetilde E_SW=-R.
+\end{equation}
+Keeping the original indexing avoids any ambiguity about a permutation of candidate columns. Coefficients on a zeroed column have no effect. The admissibility predicate and cost function belong to the original problem, not to the certificate producer.
+
+\begin{proposition}[Successful certificate]\label{prop:rational-success}
+If an admissible $S$ and rational matrices $U,W$ satisfy \eqref{eq:rational-original}, they repair every original residual.
+\end{proposition}
+\begin{proof}
+Take the $i$th column of the displayed identity. It is the original equation $Du_i+\sum_{j\in S}w_{ji}e_j=-r_i$.
+\end{proof}
+\formal{RationalCertificates.checkRepair_sound}
+
+\begin{scopebox}[title=A rejected certificate is not a rejected problem]
+Failure to parse data, a false identity, a missing witness, or a resource limit is an unresolved verification outcome. It does not establish mathematical infeasibility. A rejection of the problem requires a valid obstruction certificate with an explicit scope.
+\end{scopebox}
+
+\section{Separating obstructions}
+\begin{definition}[Separating row]
+A separating certificate for $S$ is a row $Y\in\Q^{1\times m}$ satisfying
+\begin{equation}\label{eq:rational-separator}
+ YD=0,\qquad Y\widetilde E_S=0,\qquad YR\ne0.
+\end{equation}
+The last condition asks that at least one original residual is detected. No residual index needs to be selected when the family is empty.
+\end{definition}
+
+\begin{theorem}[Sound separation]\label{thm:rational-separation}
+A separating certificate rules out a repair by the selected menu.
+\end{theorem}
+\begin{proof}
+Multiplying a supposed correction equation on the left by $Y$ gives $0=-YR$, contradicting \eqref{eq:rational-separator}.
+\end{proof}
+\formal{RationalCertificates.annihilator_kills_residual}
+\formal{RationalCertificates.checkSeparator_sound}
+
+\begin{proposition}[Linear alternative]\label{prop:rational-alternative}
+For a fixed rational menu, either the correction matrices exist or a separating row exists, but not both.
+\end{proposition}
+\begin{proof}
+Exclusivity follows from the preceding theorem. If no correction matrices exist, some residual $r_i$ lies outside the column space of $[D\ \widetilde E_S]$. Choose a basis for that space, adjoin $r_i$, and extend to a basis of $\Q^m$. The functional taking value one on $r_i$ and zero on all other chosen basis vectors is a rational separating row.
+\end{proof}
+\sourcescope{This completeness argument is an ordinary proof. The new Lean module proves certificate soundness, not a general algorithm or formal theorem producing a separator for every infeasible rational menu.}
+
+\section{Dimension certificates without a reported rank}
+Suppose an augmentation with $t$ columns succeeds. Its optimality can be certified by two additional matrices
+\[
+ H\in\Q^{t\times m},\qquad Q\in\Q^{s\times t}
+\]
+with
+\begin{equation}\label{eq:rational-dimension}
+ HD=0,\qquad HRQ=I_t.
+\end{equation}
+These identities make a lower bound on the required dimension explicit.
+
+\begin{theorem}[Dimension lower certificate]\label{thm:rational-lower}
+Assume \eqref{eq:rational-dimension}. If an arbitrary competing augmentation $E'\in\Q^{m\times w}$ has coefficients satisfying $DU'+E'W'=-R$, then $t\leq w$.
+\end{theorem}
+\begin{proof}
+Multiplication by $H$ and $Q$ gives $HE'W'Q=-I_t$, hence
+\[
+ (HE')(-W'Q)=I_t.
+\]
+Thus $HE':\Q^w\to\Q^t$ has a right inverse. It is surjective, and consequently $t\leq w$.
+\end{proof}
+\formal{RationalCertificates.dimension_certificate_right_inverse}
+\formal{RationalCertificates.dimension_certificate_lower_bound}
+
+A successful augmentation with $t$ columns attains this bound. The verifier checks the original repair identity and \eqref{eq:rational-dimension}. It does not trust a numerical rank supplied by the search program.
+\formal{RationalCertificates.checkDimension_sound}
+
+\begin{proposition}[Availability of lower certificates]
+Let $O$ be the span of the residual classes in $\Q^m/\im D$, and let $t=\dim O$. Then matrices $H,Q$ satisfying \eqref{eq:rational-dimension} exist.
+\end{proposition}
+\begin{proof}
+Choose coordinates $O\cong\Q^t$, extend that map to the whole quotient, and compose with the quotient map to obtain $H$. Then $HD=0$. The columns of $HR$ span $\Q^t$, so $HR$ has a linear right inverse $Q$.
+\end{proof}
+\sourcescope{The availability argument is an ordinary finite-dimensional proof. The concrete producer in the next chapter finds and exports such data. Its search implementation is not itself proved correct in Lean.}
+
+\section{Exact rank and menu cost}
+For $A\in\Q^{a\times b}$, a certificate of rank $d$ consists of appropriately shaped rational matrices with
+\begin{equation}\label{eq:rational-rank}
+ A=FG,\qquad PAQ=I_d,
+\end{equation}
+where the inner dimension of $FG$ is $d$.
+
+\begin{proposition}[Rank certificate]
+The identities \eqref{eq:rational-rank} imply $\rank A=d$.
+\end{proposition}
+\begin{proof}
+The factorization gives $\rank A\leq d$. The identity factorization through $A$ gives $d\leq\rank A$.
+\end{proof}
+\formal{RationalCertificates.checkRank_sound}
+
+For comparison with the original quotient statement, ordinary rank-nullity gives
+\begin{equation}\label{eq:rank-difference-new}
+ \dim O=\rank[D\ R]-\rank D.
+\end{equation}
+Indeed, the quotient map restricted to $\im D+\im R$ has kernel $\im D$ and image $O$. The current matrix verifier does not depend on a formal identification of this formula with the earlier abstract Lean quotient API. It obtains the lower bound directly from a right inverse.
+
+Minimum menu cost is a separate optimization problem. To certify a successful menu $S$, the verifier requires a separating row for every admissible menu $T$ with strictly smaller declared cost. It quantifies over all subsets of the original finite candidate universe. It does not trust an incomplete producer-supplied list.
+
+\begin{theorem}[Certified finite-menu optimum]
+An admissible successful menu, together with separating rows for every cheaper admissible menu, has minimum cost among all admissible feasible menus.
+\end{theorem}
+\begin{proof}
+A cheaper feasible menu would contradict its supplied separating row by Theorem~\ref{thm:rational-separation}.
+\end{proof}
+\formal{RationalCertificates.checkOptimal_sound}
+
+A certificate rejecting every admissible subset proves that no menu in the declared universe succeeds.
+\formal{RationalCertificates.checkNoRepair_sound}
+
+The rational example $D(u)=(u,0,0)$, $r=(0,1,0)$, $e_0=(0,1,1)$, $e_1=(0,0,1)$ is checked in the new matrix layer. Both entries repair the residual with coefficients $(-1,1)$. Rows $(0,1,0)$, $(0,1,-1)$, and $(0,1,0)$ separate the empty menu, the first singleton, and the second singleton. Thus the minimum cardinality is two. Restricting admissibility to at most one entry gives a checked complete rejection.
+\formal{RationalMenus.menu_certificate}
+\formal{RationalMenus.two_entries_minimal}
+\formal{RationalMenus.restricted_certificate}
+\formal{RationalMenus.no_small_menu}
+
+The subset search may be exponential in menu size. The free augmentation exporter developed next does not implement a scalable menu optimizer, and the existence of a free minimum says nothing about which directions occur in a prescribed menu.
+
+\chapter{Constructive attainment and the executable bridge}\label{ch:matrix-attainment}
+\section{A complete detector}
+Fix $D\in\Q^{m\times n}$ and $R\in\Q^{m\times s}$. A split correction certificate consists of
+\[
+ P\in\Q^{n\times m},\quad K\in\Q^{m\times d},\quad L\in\Q^{d\times m}
+\]
+with
+\begin{equation}\label{eq:split-certified}
+ LD=0,\qquad DP+KL=I_m.
+\end{equation}
+The first identity makes $L$ a detector that ignores original corrections. The second proves that no further information has been discarded: every target vector has the decomposition $v=DPv+KLv$. There is no assumption that $LK=I_d$, and redundant detector coordinates are permitted.
+
+\begin{theorem}[Exact detection]\label{thm:split-exact}
+Under \eqref{eq:split-certified},
+\[
+ (\exists X,\ DX=-R)\quad\Longleftrightarrow\quad LR=0.
+\]
+When $LR=0$, the explicit witness is $X=-PR$.
+\end{theorem}
+\begin{proof}
+A correction gives $0=LDX=-LR$. Conversely, $LR=0$ gives $R=(DP+KL)R=DPR$, so $D(-PR)=-R$.
+\end{proof}
+\formal{RationalCertificates.split_correctable_iff}
+
+At the quotient level, $L$ induces an injection $\Q^m/\im D\to\Q^d$. If $Lv=0$, the split identity gives $v=DPv$, proving that its class is zero. The image is $\im L$. Hence the required residual obstruction span is isomorphic to the column space of $C=LR$. This quotient interpretation is an ordinary consequence of the displayed identities.
+
+\section{The attaining construction}
+Suppose the detected residual matrix $C=LR$ has certificate data
+\[
+ F\in\Q^{d\times t},\quad G\in\Q^{t\times s},\quad
+ J\in\Q^{t\times d},\quad Q\in\Q^{s\times t}
+\]
+satisfying
+\begin{equation}\label{eq:factor-certified}
+ LR=FG,\qquad JLRQ=I_t.
+\end{equation}
+The new augmentation and its correction coefficients are not unspecified witnesses. They are
+\begin{equation}\label{eq:attaining-formula}
+ \boxed{E=KF,\qquad U=-PR,\qquad W=-G.}
+\end{equation}
+
+\begin{theorem}[Constructive minimum augmentation]\label{thm:matrix-attainment}
+Assume \eqref{eq:split-certified} and \eqref{eq:factor-certified}. The matrices in \eqref{eq:attaining-formula} satisfy $DU+EW=-R$. Every competing rational augmentation repairing the same residual family has at least $t$ added dimensions.
+\end{theorem}
+\begin{proof}
+The constructed matrices satisfy
+\[
+ DU+EW=-DPR-KFG=-DPR-KLR=-(DP+KL)R=-R.
+\]
+For the lower bound set $H=JL$. Then $HD=0$ and $HRQ=I_t$. Apply Theorem~\ref{thm:rational-lower} to every competing repair.
+\end{proof}
+\formal{RationalCertificates.split_constructs_repair}
+\formal{RationalCertificates.checkOptimalConstruction_sound}
+
+This proves attainment and minimality after checking four finite identities. The generalized inverse and the choice of a residual basis belong to the producer. They are not assumed trustworthy. A valid set of identities is sufficient, regardless of how the producer found it.
+
+\section{How the Python producer obtains the matrices}
+The executable producer uses exact rational row reduction. It selects independent columns of $D$ and extends them by standard basis vectors to a basis $B$ of $\Q^m$. The inverse $B^{-1}$ supplies the image coordinates and the complementary detector coordinates. The selected image coordinates are placed in the original domain to obtain $P$, while the complementary basis vectors form $K$ and the corresponding rows of $B^{-1}$ form $L$.
+
+For $C=LR$, the producer selects independent residual columns to form $F$. A selection matrix $Q$ records those columns. A left inverse $J$ of $F$ gives $G=JC$. The producer then forms $E,U,W$ using \eqref{eq:attaining-formula}, and checks every identity again with exact rational arithmetic before export.
+
+All of these data can be obtained over a field. The search implementation may nevertheless contain a bug, encounter a resource limit, or reject malformed input. Such events do not become mathematical no-go results. The Lean certificates verify successful outputs, not the total correctness or complexity of this search program.
+
+Zero-dimensional targets, original domains, obstruction spaces, and residual families are retained. For an already correctable residual family the construction has $t=0$, so it adds no directions. The input limit of the supplied prototype is an implementation resource bound, not a restriction on Theorem~\ref{thm:matrix-attainment}.
+
+\section{A full intermediate trace}\label{sec:matrix-worked}
+Take
+\[
+ D=\begin{pmatrix}1\\0\\0\end{pmatrix},\qquad
+ R=\begin{pmatrix}2&4\\1&2\\1&2\end{pmatrix}.
+\]
+The producer selects the first column of $D$ and the complementary second and third coordinate axes. It obtains
+\[
+ P=\begin{pmatrix}1&0&0\end{pmatrix},\quad
+ K=\begin{pmatrix}0&0\\1&0\\0&1\end{pmatrix},\quad
+ L=\begin{pmatrix}0&1&0\\0&0&1\end{pmatrix}.
+\]
+Thus $LD=0$, $DP=\operatorname{diag}(1,0,0)$, and $KL=\operatorname{diag}(0,1,1)$. The residual coordinates are
+\[
+ C=LR=\begin{pmatrix}1&2\\1&2\end{pmatrix}.
+\]
+A rank-one certificate is
+\[
+ F=\begin{pmatrix}1\\1\end{pmatrix},\quad
+ G=\begin{pmatrix}1&2\end{pmatrix},\quad
+ J=\begin{pmatrix}1&0\end{pmatrix},\quad
+ Q=\begin{pmatrix}1\\0\end{pmatrix}.
+\]
+The result is
+\[
+ E=\begin{pmatrix}0\\1\\1\end{pmatrix},\qquad
+ U=\begin{pmatrix}-2&-4\end{pmatrix},\qquad
+ W=\begin{pmatrix}-1&-2\end{pmatrix}.
+\]
+The original equations become
+\[
+ DU+EW=
+ \begin{pmatrix}-2&-4\\0&0\\0&0\end{pmatrix}+
+ \begin{pmatrix}0&0\\-1&-2\\-1&-2\end{pmatrix}=-R.
+\]
+The lower witness is $H=JL=(0,1,0)$, with $HD=0$ and $HRQ=1$. The ambient cokernel has dimension two, but the residual classes span only one direction. The construction therefore adds one direction and proves that none would be insufficient.
+\formal{Case000.certificate_checked}
+\formal{Case000.original_equations_checked}
+\formal{Case000.optimal}
+
+The fractional case uses $D=(2/3,4/3)^{\mathsf T}$ and $R=(1/2,5/6)^{\mathsf T}$. It exercises nonintegral splitting and correction coefficients while retaining exact arithmetic. Empty and rank-deficient cases are included in the same exported corpus. Every case has its own original input file, certificate file, and formal optimality statement.
+
+\section{Serialization and input identity}
+The wire format represents a rational entry by a signed decimal numerator and a positive decimal denominator. The Python decoder rejects floats, nonfinite values, duplicate object keys, zero or negative denominators, unreduced pairs, malformed dimensions, and extraneous certificate fields. Resource limits produce an invalid or unresolved outcome, not an infeasibility theorem.
+
+The generated Lean data use typed pairs in $\Z\times\N$. Their decoder returns the intended rational when the denominator is nonzero and explicitly rejects a zero denominator at the cell level. Each generated input and certificate additionally proves denominator validity for all its cells.
+\formal{RationalCertificates.decodeCell_zero}
+\formal{RationalCertificates.decodeCell_nonzero}
+\formal{RationalCertificates.decodeCell_sound}
+\formal{RationalCertificates.checkWireMatrix_sound}
+\formal{RationalCertificates.decodeWireMatrix_cell}
+
+The original matrices $D,R$ are emitted separately from certificate data. The certificate module imports them and cannot replace them through a certificate field. A canonical problem hash binds the JSON records. A diagnostic Lean echo of the decoded input matrices is compared with the original JSON values for every exported case. That echo is an additional execution check, never a theorem premise.
+
+\begin{scopebox}[title=The precise trust boundary]
+Lean checks the matrix identities, the original equations, and the minimum-dimension conclusion for the literal decoded problem in the generated input module. The numeric cell-decoding lemmas are formalized. The whole JSON parser, file system, hashing routine, and source emitter are not proved correct in Lean. Their input binding is checked by hashes, strict decoding, and a separate Lean echo. A user must still identify the intended original problem correctly.
+
+No theorem is accepted through \code{native_decide}. Concrete certificate propositions are proved with \code{decide +kernel}, and every exported theorem is included in the transitive axiom audit.
+\end{scopebox}
+
+\section{Legality and coefficient rings}
+Free minimum dimension is not minimum menu cost. The constructed direction $KF$ need not occur among supplied menu entries. When legal directions form $\im A$, an additional identity $KF=AZ$ certifies that the augmentation lies in that legal subspace. This identity also rewrites every added correction as $A(ZW)$.
+\formal{RationalCertificates.constructed_repair_in_legal_image}
+
+The availability of splitting also depends on the coefficient ring. For $D=(2)$ over $\Z$, the condition $LD=0$ forces $L=0$. The split identity would then require $2P=1$, which is impossible over $\Z$. Over $\Q$, $P=1/2$ is permitted. The current producer and checker are rational, not a certificate of integral realizability.
+
+Finally, exact rational correction is not nonlinear convergence or arithmetic representation-theoretic existence. The existing boundaries of Paper III and Conjecture 66 are unchanged. The contribution of this extension is a usable and checked witness interface inside the established calculus, not a replacement for its foundations.

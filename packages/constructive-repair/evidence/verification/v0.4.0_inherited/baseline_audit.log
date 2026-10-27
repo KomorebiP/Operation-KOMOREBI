@@ -1,0 +1,258 @@
+Komorebi — Experimental Constructive Repair Audit v0.1.0
+Computation: stdlib Fraction/rational and modular arithmetic. Deterministic seed.
+STATUS: tests of a proposed refinement, NOT new kernel-certified general theorems.
+
+==============================================================================
+TEST A — unrestricted exact linear repair (Q and finite fields)
+==============================================================================
+D columns=[(1, 0, 0, 0), (0, 1, 0, 0)]
+Residual columns=[(0, 0, 2, 0), (0, 0, 0, 3), (0, 0, 2, 3), (2, 3, 0, 0)]
+rank(D)=2; rank([D | R])=4; quotient span dimension=2
+Selected free directions indexed=[0, 1]: [(0, 0, 2, 0), (0, 0, 0, 3)]
+  residual 0: correction coefficients (D coordinates | added coordinates)=[Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1), Fraction(0, 1)]
+  residual 1: correction coefficients (D coordinates | added coordinates)=[Fraction(0, 1), Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1)]
+  residual 2: correction coefficients (D coordinates | added coordinates)=[Fraction(0, 1), Fraction(0, 1), Fraction(-1, 1), Fraction(-1, 1)]
+  residual 3: correction coefficients (D coordinates | added coordinates)=[Fraction(-2, 1), Fraction(-3, 1), Fraction(0, 1), Fraction(0, 1)]
+PASS: Independent residual basis modulo im(D) is exactly residuals 0 and 1
+PASS: All four residuals admit exact correction witnesses
+PASS: Free minimal correction dimension is 2
+
+Randomized rank/basis checks:
+  field=Q: 270/270 random cases PASS
+  field=F_2: 270/270 random cases PASS
+  field=F_3: 270/270 random cases PASS
+  field=F_5: 270/270 random cases PASS
+  field=F_7: 270/270 random cases PASS
+PASS: 1,350 random finite/rational tests completed
+
+==============================================================================
+TEST B — constrained finite menus, repair cost, and invariants
+==============================================================================
+D=[(1, 0, 0)]; target=[(0, 1, 0)]; available e1=(0, 1, 1), e2=(0, 0, 1)
+Obstruction rank=1
+single e1: NO_REPAIR_IN_SELECTED_CLASS ranks={'base': 1, 'with_repairs': 2, 'with_residuals': 3}
+single e2: NO_REPAIR_IN_SELECTED_CLASS ranks={'base': 1, 'with_repairs': 2, 'with_residuals': 3}
+pair: EXACT_REPAIR_CERTIFIED; witness=[[Fraction(0, 1), Fraction(-1, 1), Fraction(1, 1)]]
+EXPECTED-FAILURE DETECTED: Naive claim 'obstruction dimension always equals number of menu items needed' is false
+PASS: The two candidate directions jointly span the obstruction
+Optimal menu=[0, 1]; cost=2; audited subsets=4
+PASS: Minimum-cardinality permitted menu requires 2 directions
+Weighted menu: candidates=[(0, 1, 1), (0, 0, 1), (0, 1, 0)] costs=[1, 1, 9]; selected=[0, 1] cost=2
+PASS: Minimum cost differs from the minimum number of directions
+Alternate costs=[5, 5, 2] selected=[2] cost=2
+PASS: Optimal choice switches when the cost model changes
+Missing repair direction: status=NO_REPAIR_IN_ADMISSIBLE_MENU; subsets=2
+EXPECTED-FAILURE DETECTED: Finite menu cannot always repair a nonzero obstruction
+Conserved functional L(v)=v[1]. Residual=(0, 1); candidates=[(0, 1), (1, 0)]; allowed mask=[False, True]
+PASS: Invariance rejects the only candidate that could cancel the defect
+Conservation-respecting solver=NO_REPAIR_IN_ADMISSIBLE_MENU
+EXPECTED-FAILURE DETECTED: No legal repair when a preserved functional detects the residual
+Unrestricted solver=OPTIMAL_REPAIR_CERTIFIED_BY_EXHAUSTION, selected=[0]
+PASS: Unrestricted repair exists, demonstrating why the preservation profile matters
+
+==============================================================================
+TEST C — independently brute-force-check Gaussian feasibility over finite fields
+==============================================================================
+  F_2: 170/170 random systems verified by independent exhaustive enumeration
+  F_3: 170/170 random systems verified by independent exhaustive enumeration
+  F_5: 170/170 random systems verified by independent exhaustive enumeration
+PASS: 510 exact solver-vs-enumeration feasibility cross-checks
+
+==============================================================================
+TEST D — obstruction-faithful versus information-destroying transport
+==============================================================================
+Source obstruction [r]=(0, 1), rank=1
+Coarse transport b(x,y)=x: b(r)=(0,), target obstruction rank=0
+EXPECTED-FAILURE DETECTED: Vanishing transported obstruction does NOT imply vanishing source obstruction without injectivity
+Invertible transport B=[[1, 1], [0, 1]]: B(r)=(1, 1)
+PASS: Invertible transport preserves the obstruction dimension
+
+==============================================================================
+TEST E — nonlinear failure modes of the linearized obstruction
+==============================================================================
+F(x)=x^2-1 at x0=0: residual=-1, derivative D=0
+  Linear equation D·u=1: unsolvable; exact nonlinear solution x=1 gives F(1)=0
+EXPECTED-FAILURE DETECTED: Nonzero first-order obstruction need not forbid a nonlinear solution
+G(x)=x^2+x+1 at x0=0: residual=1, derivative=1, linear correction u=-1
+  G(-1)=1, and G(x)=(x+1/2)^2+3/4>0 over real x
+EXPECTED-FAILURE DETECTED: Zero linear obstruction does not guarantee a global nonlinear solution
+These examples do not contradict properly scoped local nonlinear correction theorems; no global claim follows from linearization.
+
+==============================================================================
+TEST F — filtered arithmetic repair, valid Hensel lifts and singular failures
+==============================================================================
+  {"correction_digit": 1, "derivative_mod_p": 6, "k": 1, "new": 10, "new_modulus": 49, "new_residual": 98, "old": 3, "old_modulus": 7, "old_residual": 7, "reduced_residual": 1, "status": "EXACT_DIGIT_LIFT"}
+  {"correction_digit": 2, "derivative_mod_p": 6, "k": 2, "new": 108, "new_modulus": 343, "new_residual": 11662, "old": 10, "old_modulus": 49, "old_residual": 98, "reduced_residual": 2, "status": "EXACT_DIGIT_LIFT"}
+  {"correction_digit": 6, "derivative_mod_p": 6, "k": 3, "new": 2166, "new_modulus": 2401, "new_residual": 4691554, "old": 108, "old_modulus": 343, "old_residual": 11662, "reduced_residual": 6, "status": "EXACT_DIGIT_LIFT"}
+  {"correction_digit": 1, "derivative_mod_p": 6, "k": 4, "new": 4567, "new_modulus": 16807, "new_residual": 20857487, "old": 2166, "old_modulus": 2401, "old_residual": 4691554, "reduced_residual": 1, "status": "EXACT_DIGIT_LIFT"}
+  {"correction_digit": 2, "derivative_mod_p": 6, "k": 5, "new": 38181, "new_modulus": 117649, "new_residual": 1457788759, "old": 4567, "old_modulus": 16807, "old_residual": 20857487, "reduced_residual": 2, "status": "EXACT_DIGIT_LIFT"}
+  {"correction_digit": 1, "derivative_mod_p": 6, "k": 6, "new": 155830, "new_modulus": 823543, "new_residual": 24282988898, "old": 38181, "old_modulus": 117649, "old_residual": 1457788759, "reduced_residual": 1, "status": "EXACT_DIGIT_LIFT"}
+PASS: Six consecutive exact 7-adic digit repairs were constructed
+p=2, f(x)=x²-2, root x0=0 mod 2; candidates modulo 4 are 0,2; valid lifts=[]
+EXPECTED-FAILURE DETECTED: Singular mod-2 root does NOT lift mod 4 (genuine next-depth obstruction)
+p=2, f(x)=x²-1, root x0=1; derivative=0 mod 2; x=1 lifts to all 2^k
+PASS: Nonunit derivative does not by itself forbid lifting
+
+==============================================================================
+TEST G — finite root-of-unity projector orthogonality
+==============================================================================
+PASS: ω=3 is a primitive cube root of unity in F_13
+  Π_3,0: support degrees=[0, 3, 6, 9, 12, 15, 18], coefficients=[11, 0, 0, 5, 0, 0, 8, 0, 0, 7, 0, 0, 2, 0, 0, 6, 0, 0, 6, 0]
+PASS: P_0 exact coefficient projection
+PASS: P_0 idempotent
+PASS: P_0P_1=0
+PASS: P_0P_2=0
+  Π_3,1: support degrees=[1, 4, 7, 13, 16, 19], coefficients=[0, 8, 0, 0, 5, 0, 0, 11, 0, 0, 0, 0, 0, 11, 0, 0, 5, 0, 0, 8]
+PASS: P_1 exact coefficient projection
+PASS: P_1 idempotent
+PASS: P_1P_0=0
+PASS: P_1P_2=0
+  Π_3,2: support degrees=[2, 5, 8, 11, 14, 17], coefficients=[0, 0, 6, 0, 0, 6, 0, 0, 2, 0, 0, 7, 0, 0, 8, 0, 0, 5, 0, 0]
+PASS: P_2 exact coefficient projection
+PASS: P_2 idempotent
+PASS: P_2P_0=0
+PASS: P_2P_1=0
+PASS: Sum of all root projectors reconstructs original series
+  Negative control: 1/m does not exist over F_3 when m=3
+
+==============================================================================
+TEST H — graph gluing with a fundamental cycle
+==============================================================================
+A01=[[1, 1], [0, 1]] A12=[[2, 0], [0, 1]] A02=[[1, 0], [1, 1]]
+U0=[[1, 1], [0, 1]] U1=[[1, 0], [1, 1]] U2=[[2, 1], [1, 1]]
+B01=[[1, 0], [1, 1]] B12=[[3, 1], [1, 1]] B02=[[3, 3], [2, 4]]
+Positive: status=GLUING_CERTIFIED; reconstructed U1=[[1, 0], [1, 1]], U2=[[2, 1], [1, 1]]
+  fundamental holonomies A=[[2, 2], [3, 4]] B=[[0, 1], [3, 1]]
+PASS: Chosen fundamental cycle certifies all edge intertwining constraints
+Negative: modified invertible B02=[[1, 1], [4, 3]], status=HOLONOMY_OBSTRUCTION
+  chord mismatch left=[[3, 1], [2, 1]] right=[[1, 2], [4, 2]]
+  fundamental holonomies A=[[2, 2], [3, 4]] B=[[0, 3], [4, 3]]
+EXPECTED-FAILURE DETECTED: All local edges invertible but global gluing fails
+
+==============================================================================
+TEST I — exact p-adic truncation and deliberately false weight control
+==============================================================================
+p=7, n=6, c=[1, 3, -2, 5, 1, -4, 6], S=[-2, 1, 3, -1, 4, 2, 7]
+Full integer combination E=-172627487592
+PASS: precision p^1: terms retained=1, delta divisible by p^1
+PASS: precision p^2: terms retained=1, delta divisible by p^2
+PASS: precision p^3: terms retained=2, delta divisible by p^3
+PASS: precision p^4: terms retained=2, delta divisible by p^4
+PASS: precision p^5: terms retained=3, delta divisible by p^5
+PASS: precision p^6: terms retained=3, delta divisible by p^6
+PASS: precision p^7: terms retained=4, delta divisible by p^7
+PASS: precision p^8: terms retained=4, delta divisible by p^8
+PASS: precision p^9: terms retained=5, delta divisible by p^9
+PASS: precision p^10: terms retained=5, delta divisible by p^10
+PASS: precision p^11: terms retained=6, delta divisible by p^11
+Incorrect weight model discards j=1 at L=4; actual delta=-172627487599, modulo 7^4 is 1764
+EXPECTED-FAILURE DETECTED: Overestimating a weight creates a false congruence certificate
+
+==============================================================================
+TEST J — actual classical Euler numbers and signed tangent inversion
+==============================================================================
+Signed Euler numbers (even): {0: 1, 2: -1, 4: 5, 6: -61, 8: 1385, 10: -50521, 12: 2702765, 14: -199360981, 16: 19391512145, 18: -2404879675441}
+Positive tangent numbers: {1: 1, 3: 2, 5: 16, 7: 272, 9: 7936, 11: 353792, 13: 22368256, 15: 1903757312, 17: 209865342976, 19: 29088885112832}
+PASS: Classical Euler reference values reconstructed independently from cosh·sech=1
+PASS: Tangent numbers reconstructed independently from tan'=1+tan²
+  odd N=3: 10/10 signed tangent inverse identities PASS
+  odd N=5: 10/10 signed tangent inverse identities PASS
+  odd N=7: 10/10 signed tangent inverse identities PASS
+  odd N=9: 10/10 signed tangent inverse identities PASS
+  odd N=11: 10/10 signed tangent inverse identities PASS
+  detailed N=7, n=8: terms=[639037825, -9559923128, 50084860000, -86913434048, 45749460736]
+  exact cancellation sum=1385 versus Euler E_8=1385
+PASS: Euler actual p=7,n=8 truncation M=0: tail divisible by p^2
+PASS: Euler actual p=7,n=8 truncation M=1: tail divisible by p^4
+PASS: Euler actual p=7,n=8 truncation M=2: tail divisible by p^6
+PASS: Euler actual p=7,n=8 truncation M=3: tail divisible by p^8
+  negative control: n=2,p=7, E2=-1, S2(7)=97, tail=-98, v_7=2
+EXPECTED-FAILURE DETECTED: Claiming p^3 congruence after omitting a term of weight p^2 is invalid
+
+==============================================================================
+TEST K — exact cyclotomic trace bound, including singular coefficients
+==============================================================================
+PASS: p=3, η=1: exact low-degree root-average cancellation for 1≤j<p
+  p=3, η=1: c_0=1; c_p=1/6 (v_p=-1); c_(p+1)=-1/4 (v_p=0)
+PASS: p=3, η=-1: exact low-degree root-average cancellation for 1≤j<p
+  p=3, η=-1: c_0=1; c_p=-1/6 (v_p=-1); c_(p+1)=1/4 (v_p=0)
+PASS: p=5, η=1: exact low-degree root-average cancellation for 1≤j<p
+  p=5, η=1: c_0=1; c_p=1/120 (v_p=-1); c_(p+1)=-1/48 (v_p=0)
+PASS: p=5, η=-1: exact low-degree root-average cancellation for 1≤j<p
+  p=5, η=-1: c_0=1; c_p=-1/120 (v_p=-1); c_(p+1)=1/48 (v_p=0)
+PASS: p=7, η=1: exact low-degree root-average cancellation for 1≤j<p
+  p=7, η=1: c_0=1; c_p=1/5040 (v_p=-1); c_(p+1)=-1/1440 (v_p=0)
+PASS: p=7, η=-1: exact low-degree root-average cancellation for 1≤j<p
+  p=7, η=-1: c_0=1; c_p=-1/5040 (v_p=-1); c_(p+1)=1/1440 (v_p=0)
+PASS: p=11, η=1: exact low-degree root-average cancellation for 1≤j<p
+  p=11, η=1: c_0=1; c_p=1/39916800 (v_p=-1); c_(p+1)=-1/7257600 (v_p=0)
+PASS: p=11, η=-1: exact low-degree root-average cancellation for 1≤j<p
+  p=11, η=-1: c_0=1; c_p=-1/39916800 (v_p=-1); c_(p+1)=1/7257600 (v_p=0)
+PASS: All 728 rational cyclotomic trace coefficients pass the weighted bound
+  Nonzero coefficients checked=684; exact zeros=44; minimum valuation slack=0
+
+==============================================================================
+TEST L — admissible minimum-cost menu checked by an independent coefficient enumeration
+==============================================================================
+  F_2: 100/100 globally optimized menus cross-checked using independent brute enumeration
+  F_3: 100/100 globally optimized menus cross-checked using independent brute enumeration
+PASS: 200 independent global menu optimization checks passed
+  No admissible repair among the three menu items in 24/200 scenarios
+
+==============================================================================
+TEST M — many-cycle transport coherence under exact GF(5) matrices
+==============================================================================
+  sample: vertices=5 edges=8 fundamental independent cycles=4
+  input root U0=[[1, 2], [3, 3]]; spanning-tree U_1=[[0, 2], [3, 2]]; U_4=[[1, 2], [4, 2]]
+  positive cycle failures=[]; negative corrupted chord index=[4], original B=[[0, 4], [3, 4]], changed B=[[0, 3], [1, 3]]
+PASS: 130 random many-cycle positive gluings and 130 corrupted-chord negative tests passed
+
+==============================================================================
+TEST N — finite Heisenberg phase relation from Paper XI rank-two carrier
+==============================================================================
+  X=[[0, 1], [Fraction(2, 1), 0]], Z=[[1, 0], [0, -1]], scalar a=2
+  X²=[[Fraction(2, 1), Fraction(0, 1)], [Fraction(0, 1), Fraction(2, 1)]], Z²=[[Fraction(1, 1), Fraction(0, 1)], [Fraction(0, 1), Fraction(1, 1)]], XZX^-1=[[Fraction(-1, 1), Fraction(0, 1)], [Fraction(0, 1), Fraction(1, 1)]]
+PASS: Exact rank-two finite Heisenberg commutator/phase relations hold
+EXPECTED-FAILURE DETECTED: Trivial scalar marking does not reproduce the required nontrivial projective commutator
+  Scope: finite matrix relation only; not a construction of the full p-adic inducing representation.
+
+==============================================================================
+TEST O — injectivity is required to transport *nonzero* obstruction certificates
+==============================================================================
+  F_2: 110 random commuting quotient diagrams pass rank-nonincreasing test
+  F_3: 110 random commuting quotient diagrams pass rank-nonincreasing test
+  F_5: 110 random commuting quotient diagrams pass rank-nonincreasing test
+PASS: 330 naturality checks, including genuine quotient-information losses
+  injective on tested obstruction spans=130; collapsing maps=200
+
+==============================================================================
+TEST P — nearby nonlinear solutions despite nonzero first-order obstruction
+==============================================================================
+  F(x)=x²−1/10000, start x=0, residual=-1/10000, linearized derivative=0
+  Exact nearby root x=1/100, squared=1/10000 = epsilon; distance |x|=1/100
+EXPECTED-FAILURE DETECTED: Linearized cokernel is nonzero yet an exact nonlinear solution exists within distance 0.01
+
+==============================================================================
+SUMMARY / VERIFICATION BOUNDARY
+==============================================================================
+Exact assertions/expected failures checked: 71
+Individual, reproducible cases saved: 3307
+Random structural cases: 1350
+Independent enumerated solver checks: 510
+Expected negative controls detected: 13
+  NEGATIVE CONTROL: Naive claim 'obstruction dimension always equals number of menu items needed' is false
+  NEGATIVE CONTROL: Finite menu cannot always repair a nonzero obstruction
+  NEGATIVE CONTROL: No legal repair when a preserved functional detects the residual
+  NEGATIVE CONTROL: Vanishing transported obstruction does NOT imply vanishing source obstruction without injectivity
+  NEGATIVE CONTROL: Nonzero first-order obstruction need not forbid a nonlinear solution
+  NEGATIVE CONTROL: Zero linear obstruction does not guarantee a global nonlinear solution
+  NEGATIVE CONTROL: Singular mod-2 root does NOT lift mod 4 (genuine next-depth obstruction)
+  NEGATIVE CONTROL: Root-of-unity normalized averaging undefined if characteristic divides projector order
+  NEGATIVE CONTROL: All local edges invertible but global gluing fails
+  NEGATIVE CONTROL: Overestimating a weight creates a false congruence certificate
+  NEGATIVE CONTROL: Claiming p^3 congruence after omitting a term of weight p^2 is invalid
+  NEGATIVE CONTROL: Trivial scalar marking does not reproduce the required nontrivial projective commutator
+  NEGATIVE CONTROL: Linearized cokernel is nonzero yet an exact nonlinear solution exists within distance 0.01
+Lean toolchain absent: no new Lean kernel certification claimed.
+Known limits: exact finite/rational settings only; exhaustive cost solver exponential in number of candidates.
+Verdict: restricted repair theorem and certificate algorithm PASS; unrestricted/universal repair thesis NOT ESTABLISHED.

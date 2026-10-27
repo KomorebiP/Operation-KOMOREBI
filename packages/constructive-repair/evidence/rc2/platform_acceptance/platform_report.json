@@ -1,0 +1,378 @@
+{
+  "schema": "komorebi.repair.platform-acceptance.v1",
+  "status": "PASS",
+  "started_utc": "2026-10-19T19:47:56.671898+00:00",
+  "version": "1.0.0rc2",
+  "python": "3.13.5",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "implementation": "CPython",
+  "machine": "x86_64",
+  "commands": [
+    {
+      "name": "create_venv",
+      "argv": [
+        "/opt/pyvenv/bin/python",
+        "-m",
+        "venv",
+        "/mnt/data/rc2_platform_final/isolated Python environment"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 2.668,
+      "log": "create_venv.log"
+    },
+    {
+      "name": "install_offline",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "--no-cache-dir",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/dist/komorebi_constructive_repair-1.0.0rc2-py3-none-any.whl"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.299,
+      "log": "install_offline.log"
+    },
+    {
+      "name": "installed_probe",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/scripts/installed_probe.py",
+        "--fixtures",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/examples",
+        "--prefix",
+        "/mnt/data/rc2_platform_final/isolated Python environment",
+        "--version",
+        "1.0.0rc2",
+        "--output",
+        "/mnt/data/rc2_platform_final/installed_probe.json"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.231,
+      "log": "installed_probe.log"
+    },
+    {
+      "name": "doctor",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "doctor"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.052,
+      "log": "doctor.log"
+    },
+    {
+      "name": "console_entry",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/komorebi-repair",
+        "doctor"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.048,
+      "log": "console_entry.log"
+    },
+    {
+      "name": "unicode_path_solve",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "solve",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/entr\u00e9e.json",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/r\u00e9sultat"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.056,
+      "log": "unicode_path_solve.log"
+    },
+    {
+      "name": "unicode_path_check",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "check",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/entr\u00e9e.json",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/r\u00e9sultat/certificate.json",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/v\u00e9rification"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.055,
+      "log": "unicode_path_check.log"
+    },
+    {
+      "name": "no_overwrite",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "solve",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/entr\u00e9e.json",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/donn\u00e9es and \u7814\u7a76/r\u00e9sultat"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 2,
+      "expected_returncode": 2,
+      "timed_out": false,
+      "seconds": 0.057,
+      "log": "no_overwrite.log"
+    },
+    {
+      "name": "no_repair",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "solve",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/examples/branch_corpus/Branch019_input.json",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/no repair"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.052,
+      "log": "no_repair.log"
+    },
+    {
+      "name": "budget",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "solve",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/examples/branch_corpus/Branch018_input.json",
+        "--max-nodes",
+        "0",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/budget"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 2,
+      "expected_returncode": 2,
+      "timed_out": false,
+      "seconds": 0.059,
+      "log": "budget.log"
+    },
+    {
+      "name": "corrupted_certificate",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "check",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/examples/branch_corpus/Branch018_input.json",
+        "/mnt/data/rc2_platform_final/working directory with spaces/corrupt.json",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/corrupt check"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 2,
+      "expected_returncode": 2,
+      "timed_out": false,
+      "seconds": 0.049,
+      "log": "corrupted_certificate.log"
+    },
+    {
+      "name": "invalid_utf8",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-I",
+        "-m",
+        "komorebi_repair",
+        "solve",
+        "/mnt/data/rc2_platform_final/working directory with spaces/bad.json",
+        "--output",
+        "/mnt/data/rc2_platform_final/working directory with spaces/bad input"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 2,
+      "expected_returncode": 2,
+      "timed_out": false,
+      "seconds": 0.053,
+      "log": "invalid_utf8.log"
+    },
+    {
+      "name": "ascii_environment",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-X",
+        "utf8=0",
+        "-c",
+        "import locale,sys,json; print(json.dumps({\"encoding\":locale.getpreferredencoding(False),\"utf8_mode\":sys.flags.utf8_mode}))"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.019,
+      "log": "ascii_environment.log"
+    },
+    {
+      "name": "ascii_export",
+      "argv": [
+        "/mnt/data/rc2_platform_final/isolated Python environment/bin/python",
+        "-X",
+        "utf8=0",
+        "-m",
+        "repair_certificates",
+        "export",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/examples/worked_input.json",
+        "/mnt/data/Komorebi_Constructive_Repair_v1.0.0-rc2/examples/worked_certificate.json",
+        "/mnt/data/rc2_platform_final/working directory with spaces/ascii_export"
+      ],
+      "cwd": "/mnt/data/rc2_platform_final/working directory with spaces",
+      "returncode": 0,
+      "expected_returncode": 0,
+      "timed_out": false,
+      "seconds": 0.047,
+      "log": "ascii_export.log"
+    }
+  ],
+  "checks": [
+    {
+      "name": "wheel_exists",
+      "pass": true
+    },
+    {
+      "name": "create_venv",
+      "pass": true
+    },
+    {
+      "name": "install_offline",
+      "pass": true
+    },
+    {
+      "name": "installed_probe",
+      "pass": true
+    },
+    {
+      "name": "installed_probe_status",
+      "pass": true
+    },
+    {
+      "name": "doctor",
+      "pass": true
+    },
+    {
+      "name": "doctor_no_kernel_claim",
+      "pass": true
+    },
+    {
+      "name": "doctor_version",
+      "pass": true
+    },
+    {
+      "name": "console_entry",
+      "pass": true
+    },
+    {
+      "name": "console_entry_version",
+      "pass": true
+    },
+    {
+      "name": "unicode_path_solve",
+      "pass": true
+    },
+    {
+      "name": "unicode_path_status",
+      "pass": true
+    },
+    {
+      "name": "unicode_path_check",
+      "pass": true
+    },
+    {
+      "name": "no_overwrite",
+      "pass": true
+    },
+    {
+      "name": "no_repair",
+      "pass": true
+    },
+    {
+      "name": "no_repair_scoped",
+      "pass": true
+    },
+    {
+      "name": "budget",
+      "pass": true
+    },
+    {
+      "name": "budget_unresolved",
+      "pass": true
+    },
+    {
+      "name": "corrupted_certificate",
+      "pass": true
+    },
+    {
+      "name": "invalid_utf8",
+      "pass": true
+    },
+    {
+      "name": "ascii_environment",
+      "pass": true
+    },
+    {
+      "name": "ascii_default_observed",
+      "pass": true
+    },
+    {
+      "name": "ascii_export",
+      "pass": true
+    },
+    {
+      "name": "utf8_lean_bytes",
+      "pass": true
+    }
+  ],
+  "network_access_requested": false,
+  "scope": "Python installed-wheel acceptance only, not Lean acceptance",
+  "wheel_sha256": "9f3b8b8f25aaf5a3b5754215037351df0b371cc87b736bf34fb51527abd36279",
+  "installed_cases": 72,
+  "installed_checks": 369,
+  "ascii_environment": {
+    "encoding": "ANSI_X3.4-1968",
+    "utf8_mode": 0
+  },
+  "finished_utc": "2026-10-19T19:48:00.676468+00:00"
+}

@@ -1,0 +1,1 @@
+The first rc2 typesetting inserted the new appendix after backmatter. Rendered inspection showed sections continuing as H.8 instead of a new Appendix I. The appendix was moved before backmatter and rebuilt. This was a layout defect, not a mathematical source change. First-pass TeX logs are retained under evidence/latex_rc2_first_layout.

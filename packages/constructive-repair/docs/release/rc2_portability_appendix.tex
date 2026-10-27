@@ -1,0 +1,94 @@
+\chapter{Portability and the final release gates}
+\label{app:rc2-portability}
+
+\section{A fixed technical scope}
+
+Release candidate 1.0.0rc2 retains the exact rational repair mathematics and the three existing certificate schemas. All 51 proof modules and all 526 named theorem declarations are unchanged. This continuation is a portability and release audit, not an extension of the mathematical assumptions or a larger theorem count.
+
+The support statement is now explicit. The release-tested configuration is Linux x86\_64 with CPython 3.13.5. Kernel checking additionally requires the pinned Linux Lean 4.34.0-rc2 toolkit and its recorded Mathlib revision. Other environments remain separate test targets. A portable wheel tag does not constitute evidence that those environments have been exercised.
+
+The preceding appendix records the first candidate and its tests. This appendix records the second candidate's changes and new receipts. The original archive is retained unchanged, so the two sets of evidence can be distinguished by source hashes and version.
+
+\section{A reproduced encoding defect}
+
+The audit ran the free-repair exporter with the POSIX C locale and Python's UTF-8 mode disabled. The default text encoding was therefore ASCII. The exporter tried to write a Lean conjunction symbol using that implicit encoding and returned an unresolved result. The same mathematical input had worked under a UTF-8 locale.
+
+This was a defect in source transport, not a counterexample to a repair theorem. The exact numeric certificate was valid, but the source file could not be emitted reliably in the tested locale. Python's text I/O documentation distinguishes the default locale-dependent encoding from an explicitly requested encoding \cite{pythonio}.
+
+The correction supplies UTF-8 explicitly for textual file reads, file writes, and text-mode subprocess captures in the maintained producer and release scripts. It changes no arithmetic formula or formal statement. The identical export then succeeds in the C locale. A separate end-to-end free-repair run under the same locale compiles and replays the resulting Lean certificate.
+
+\begin{scopebox}[title=The regression is specific]
+The C-locale test checks a non-UTF-8 default encoding on the actual Linux interpreter. It is not a simulation of Windows. Unicode directory and filename tests are also executed on Linux and remain identified as such.
+\end{scopebox}
+
+Two release boundaries are stronger as well. The free-repair command now checks the exact Lean commit and Mathlib revision, matching the stricter menu workflows. It checks that both the generated original-input source and the certificate source retain their initial hashes through verification. Negative controls provide a matching Lean version string with the wrong commit, and a matching Lean commit with a different Mathlib repository. Both are rejected before any proof compilation is attempted.
+
+\section{Acceptance through the installed wheel}
+
+The new platform acceptance command creates a fresh isolated Python environment and installs only the supplied local wheel. It requests neither a package index nor runtime dependencies. The probe verifies that its imported package is inside that environment, outside the source checkout, and that SymPy is absent.
+
+Every one of the 72 retained input/certificate pairs is checked through the installed API. The probe also constructs a new answer for each original problem, checks that the input was not mutated, rechecks the new certificate, and verifies that Python has not asserted kernel acceptance. Additional typed examples cover empty admissibility, exhausted work budgets, corrupted certificates, and zero-dimensional target spaces.
+
+The command-line tests use paths containing spaces and Unicode characters. They check both solving and certificate verification, the installed console entry point, preservation of existing output directories, invalid UTF-8 input, and a valid scoped no-repair result. A low search budget remains unresolved rather than being promoted to an impossibility statement.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}Xr@{}}
+\toprule
+Second-candidate check & Result\\
+\midrule
+Unchanged Lean modules rebuilt and replayed & 51 / 51\\
+Named theorem dependency lists audited & 526 / 526\\
+Paired corrupted-certificate controls & 24 / 24\\
+Forbidden-axiom policy control & 1 / 1\\
+Current public API and portability unit tests & 68 / 68\\
+Retained rational and menu unit tests & 134 / 134\\
+Original prototype unit tests & 20 / 20\\
+Retained cases exercised from the installed wheel & 72 / 72\\
+Installed API assertions & 369 / 369\\
+Platform workflow checks & 24 / 24\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The installed assertions are checks, not new mathematical discoveries or new formal declarations. The full proof verification again audits every registered declaration against the same whitelist and replays the modules through Lean's own kernel. The pinned imports are reused. No independent implementation of the kernel and no fresh rebuild of all Mathlib is claimed.
+
+The wheel is built twice in fresh build processes with cleaned build directories. The resulting bytes agree under the recorded local toolchain and fixed build timestamp. The final archive is separately extracted and checked. This is evidence about the tested artifact, not a universal reproducibility claim for arbitrary packaging tools.
+
+\section{Tested and untested environments}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Configuration & Recorded scope\\
+\midrule
+Linux x86\_64, CPython 3.13.5 & Fresh installed-wheel acceptance and Lean workflows.\\
+POSIX C locale on that host & UTF-8 mode disabled, explicit encoding regression and kernel workflow.\\
+Native Windows and WSL & Not executed. The offline Python acceptance runner is supplied.\\
+Other Python versions & Not executed in this pass. The attempted downloads failed because the host name could not be resolved.\\
+macOS, ARM and PyPy & Not tested.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The source retains its Python 3.10+ syntax and installation target. A syntax parse is not execution on that interpreter. The release-tested support scope therefore remains the specific combination above. Expanding support requires a receipt from the relevant environment, rather than an inference from source similarity.
+
+The local acceptance command is:
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+python scripts/platform_acceptance.py \
+  --output /tmp/komorebi-platform-check
+\end{Verbatim}
+
+The directory must be new. A failed environment creation or a missing local pip bootstrap is recorded as failure, not silently skipped. The report records the actual interpreter, imported package location, wheel hash, commands, and results. On Windows, the same Python script can be invoked using the interpreter under evaluation, but that command example is not itself a Windows test.
+
+\section{What remains before a public final tag}
+
+The author's code and document licensing choices remain outstanding. This candidate does not infer a particular permission grant from the existence of downloadable source or the intention to release it openly. No public repository, package index, or external publication service has been modified by this continuation.
+
+Once those choices are supplied, the selected license texts and metadata can be added, and the exact final archive rebuilt and checked. That step does not require another foundational research cycle. Main-library integration, authoritative Paper III imports, a fully formal external parser, and native arithmetic applications remain separate tasks with their own contracts.
+
+\begin{scopebox}[title=The final gate is not a new mathematical conjecture]
+For the declared standalone scope, the technical evidence concerns exact repair, constrained search, certificate checking, reproducible packaging, and the tested environment. The remaining public licensing decision belongs to the author. Unsupported platforms and unproved domain applications are not silently converted into completed work by a final version number.
+\end{scopebox}

@@ -1,0 +1,201 @@
+\chapter{Costed rational menus and rejection covers}
+\label{ch:menu-covers}
+
+The free augmentation problem asks how many new dimensions are necessary. A prescribed menu asks a different question: which available directions should be purchased, enabled, or admitted? Two menu entries can be needed for a one-dimensional obstruction, and the cheapest solution need not use the fewest entries. This chapter makes that second problem operational over the rationals.
+
+The implementation uses exact elimination to propose an answer. A separate certificate checker verifies the answer against the original matrices and the complete admissibility rule. The search procedure is outside the proof trust boundary. The returned mathematical witnesses are not.
+
+\section{The original menu contract}
+
+Fix rational matrices
+\[
+ D\in\Q^{m\times n},\qquad E\in\Q^{m\times q},\qquad R\in\Q^{m\times s}.
+\]
+The columns $e_j$ of $E$ are the available new directions. The finite family
+\[
+ \mathcal A\subseteq\mathcal P(\{0,\ldots,q-1\})
+\]
+contains exactly the admissible selections. It need not be downward closed. Nonnegative integer weights $c_j$ define the cost
+\[
+ c(S)=\sum_{j\in S}c_j.
+\]
+These matrices, selections, and costs are fixed original input. A certificate cannot replace them with another problem.
+
+Let $\widetilde E_S$ retain each column of $E$ selected by $S$ and replace every other column by zero. This convention preserves the original candidate indexing. A coefficient table $W\in\Q^{q\times s}$ may have arbitrary values in unselected rows, but those rows contribute nothing. A proposed repair consists of matrices $U,W$ with
+\begin{equation}
+ DU+\widetilde E_SW=-R.
+ \label{eq:menu-cover-primal}
+\end{equation}
+Every selected direction is charged, even if its coefficient row happens to be zero. Thus cost measures the selected menu, not merely the support of a particular coefficient table.
+
+\section{Separating blocks}
+
+An infeasible menu admits a rational separating row, by the exact linear alternative in \cref{ch:rational}. The row annihilates all available corrections while detecting at least one residual. Instead of providing a separate row for every rejected subset, we can reuse one row on all subsets of a larger rejected set.
+
+\begin{definition}[Separating block]
+A separating block is a pair $(B,Y)$, where $B\subseteq\{0,\ldots,q-1\}$ and $Y\in\Q^{1\times m}$ satisfy
+\begin{equation}
+ YD=0,\qquad Y\widetilde E_B=0,\qquad YR\ne0.
+ \label{eq:menu-cover-dual}
+\end{equation}
+The set $B$ need not itself belong to $\mathcal A$.
+\end{definition}
+
+The last condition is a matrix inequality: at least one column is detected. For an empty residual family it cannot hold, which correctly prevents a false separating witness for a vacuously solved family.
+
+\begin{lemma}[Column-mask identity]
+For every row $Y$ and column $j$,
+\[
+ (Y\widetilde E_S)_{0j}=
+ \begin{cases}
+ (YE)_{0j},&j\in S,\\
+ 0,&j\notin S.
+ \end{cases}
+\]
+\end{lemma}
+\begin{proof}
+The mask either retains the entire $j$th column or replaces it by zero. Expanding the finite matrix product gives the two cases.
+\end{proof}
+\formal{KomorebiRepair.RationalCertificates.mul_masked_entry}
+
+\begin{theorem}[Downward validity of a separator]
+If $(B,Y)$ is a separating block and $T\subseteq B$, then $Y$ also separates $T$. In particular, $T$ cannot satisfy \eqref{eq:menu-cover-primal}.
+\end{theorem}
+\begin{proof}
+For a selected column $j\in T$, one also has $j\in B$, so $(YE)_{0j}=0$ by the block identity. Every unselected column is zero after masking. Thus $Y\widetilde E_T=0$. The other two equations in \eqref{eq:menu-cover-dual} are unchanged.
+
+If a repair for $T$ existed, multiplication by $Y$ would give
+\[
+ 0=YDU+Y\widetilde E_TW=-YR,
+\]
+contradicting the detection condition.
+\end{proof}
+\formal{KomorebiRepair.RationalCertificates.separates_subset}
+
+The restriction to an admissible family does not invalidate this argument. A block can be a forbidden superset while still supplying valid mathematical evidence against its permitted subsets. What matters is that the block's own linear impossibility has been checked.
+
+\section{Complete coverage of cheaper alternatives}
+
+Let $\mathcal B$ be a finite list of separating blocks. Say that $\mathcal B$ covers $T$ when some $(B,Y)\in\mathcal B$ satisfies $T\subseteq B$. Validity of the block list and coverage of the relevant selections are separate obligations.
+
+\begin{theorem}[Certified minimum menu cost]
+Suppose the following data have been checked:
+\begin{enumerate}
+ \item $S\in\mathcal A$ and the original repair equation holds for $S,U,W$.
+ \item Every member of $\mathcal B$ is a valid separating block.
+ \item Every $T\in\mathcal A$ with $c(T)<c(S)$ is covered by $\mathcal B$.
+\end{enumerate}
+Then $S$ has minimum cost among all admissible feasible selections.
+\end{theorem}
+\begin{proof}
+The first condition supplies an admissible feasible selection. If a cheaper admissible feasible $T$ existed, the third condition would place it inside a separating block. Downward validity would make $T$ infeasible, a contradiction.
+\end{proof}
+\formal{KomorebiRepair.RationalCertificates.checkCoveredOptimal_sound}
+
+The checker quantifies over the whole finite candidate-subset universe when it verifies coverage. It does not accept a producer's claim that its own list of alternatives is complete. Equal-cost alternatives need not be rejected, and the certificate does not claim that the optimum is unique.
+
+\begin{theorem}[Certified rejection of the admissible family]
+If every block is valid and every member of $\mathcal A$ is covered, then no admissible menu repairs the residual family.
+\end{theorem}
+\begin{proof}
+Every admitted selection lies inside a valid separating block and is therefore infeasible.
+\end{proof}
+\formal{KomorebiRepair.RationalCertificates.checkCoveredNoRepair_sound}
+
+When $\mathcal A$ is empty, this conclusion is vacuous. The implementation reports that fact explicitly. It does not manufacture a nonzero obstruction or claim that the original equations have no solution without the admissibility restriction.
+
+\begin{scopebox}[title=The scope of rejection]
+An accepted rejection certificate rules out the declared admissible menus. It does not rule out a new direction outside the menu, a different coefficient ring, a changed admissibility rule, or a different arithmetic host. A failed check or exhausted time budget establishes none of these impossibility claims.
+\end{scopebox}
+
+\section{Constructing the evidence}
+
+For each candidate subset, the producer performs exact rational row reduction on the selected correction columns. It keeps the row transformation matrix as part of the computation. If the transformed residual has a nonzero entry in a zero coefficient row, that row transformation supplies a separating functional. Otherwise the pivot equations give a coefficient table for every residual. Each proposed identity is rechecked using exact arithmetic.
+
+The producer evaluates all $2^q$ selections in this bounded implementation. It chooses a feasible admitted selection of minimum declared cost, with a deterministic tie break used only for reproducibility. Alternatively, it records that none of the admitted selections passed the exact linear alternative.
+
+For rejection evidence, the producer finds inclusion-maximal infeasible subsets of the full candidate universe. Every infeasible selection is contained in such a maximal subset because the universe is finite. A separating row for each selected maximal subset therefore provides a complete supply of potential rejection blocks. The producer then greedily retains blocks that cover the required alternatives.
+
+The greedy compression is not claimed to minimize certificate size. Nor does a smaller rejection cover imply a faster search algorithm: the present producer still examines every subset. The verified conclusion concerns menu cost and the original equations, not optimal compression or polynomial-time complexity.
+
+\section{Two entries for one missing dimension}
+
+Take
+\[
+ D=\begin{pmatrix}1\\0\\0\end{pmatrix},\qquad
+ E=\begin{pmatrix}0&0\\1&0\\1&1\end{pmatrix},\qquad
+ R=\begin{pmatrix}0\\1\\0\end{pmatrix},
+\]
+with both candidate weights equal to one and every subset admitted. The chosen menu is $S=\{0,1\}$, with
+\[
+ U=(0),\qquad W=\begin{pmatrix}-1\\1\end{pmatrix}.
+\]
+Its exact repair is
+\[
+ DU+EW=\begin{pmatrix}0\\-1\\0\end{pmatrix}=-R.
+\]
+Two separating blocks suffice:
+\[
+ B_0=\{0\},\quad Y_0=(0,1,-1),\qquad
+ B_1=\{1\},\quad Y_1=(0,1,0).
+\]
+Both satisfy $Y_iD=0$, annihilate their masked candidate matrices, and give $Y_iR=1$.
+
+\begin{center}
+\begin{tabular}{@{}ccc@{}}\toprule
+Cheaper menu & Cost & Covering block\\\midrule
+$\varnothing$ & 0 & $B_0$ or $B_1$\\
+$\{0\}$ & 1 & $B_0$\\
+$\{1\}$ & 1 & $B_1$\\\bottomrule
+\end{tabular}
+\end{center}
+Thus cost two is minimal. Restricting admissibility to the three cheaper menus turns the same two blocks into a complete no-admissible-repair certificate. The unrestricted one-dimensional repair direction $R$ still exists, but it is not one of the two listed candidate directions.
+
+\sourcescope{Executed examples: Menu000 and Menu001. Each has separately emitted original input, exact rational witnesses, a Lean certificate proof, an axiom audit, and an input echo.}
+
+\section{Cost, dimension, and evidence size}
+
+A third candidate can make the cost distinction sharper. Add the direct direction $e_0=(0,1,0)$ at cost five, and price $e_1=(0,1,1)$ and $e_2=(0,0,1)$ at one each. One menu entry can now repair the residual, but the cheapest repair selects two entries, $\{1,2\}$, at total cost two. Minimum free dimension, minimum menu cardinality, and minimum menu cost are three different quantities.
+
+A separate example shows why rejection covers help. Let
+\[
+ D=\begin{pmatrix}1\\0\end{pmatrix},\qquad
+ E=\begin{pmatrix}2&3&4&5\\0&0&0&0\end{pmatrix},\qquad
+ R=\begin{pmatrix}0\\1\end{pmatrix}.
+\]
+The row $Y=(0,1)$ separates the full four-entry menu. One block therefore excludes all sixteen subsets. Adding $(0,1)$ as a new candidate would change the problem and allow a repair. The certified rejection of the original menu would remain correct.
+
+\sourcescope{Executed examples: Menu002 distinguishes cost from cardinality. Menu004 excludes all sixteen subsets with one separating block. Menu005 uses one block to cover eight cheaper selections before accepting a positive-cost direction.}
+
+\section{Fractional witnesses and independent original data}
+
+The solver is not restricted to coefficients in a finite field. For
+\[
+ D=\begin{pmatrix}1\\0\end{pmatrix},\quad
+ E=\begin{pmatrix}0\\2/3\end{pmatrix},\quad
+ R=\begin{pmatrix}1/2\\5/6\end{pmatrix},
+\]
+the selected direction at cost seven has witnesses
+\[
+ U=-1/2,\qquad W=-5/4.
+\]
+The checker verifies the exact rational equation, with no tolerance or floating-point rank test.
+
+The generated input module contains $D,E,R$, the candidate weights, and the literal admissibility table. The certificate module imports those inputs and supplies only coefficient matrices and separating blocks. Typed rational decoding and nonzero denominator proofs are retained from the preceding bridge.
+
+An independent diagnostic echo evaluates the matrices in Lean and evaluates the admissibility and cost of every candidate subset. Python compares those evaluated results with the original JSON input. This comparison catches mismatched original constraints as well as mismatched matrices. It is an executed statement-binding check, not a formal proof of the entire external JSON parser or source emitter.
+
+\section{Bounded executable use}
+
+The command \code{scripts/certify_menu.py} creates a new local directory, constructs or reads a certificate, emits the fixed input and witness modules, compiles their proofs, audits their axioms, replays the modules, and checks the original-data echo. Existing output directories are refused.
+
+\begin{Verbatim}[fontsize=\small,breaklines=true]
+export KOMOREBI_LEAN_KIT=/path/to/Komorebi_Portable_Lean_4.34.0-rc2
+python scripts/certify_menu.py examples/menu_corpus/Menu003_input.json --output /tmp/repair-menu
+\end{Verbatim}
+
+The successful mathematical outcomes are \nolinkurl{KERNEL_CHECKED_OPTIMAL_MENU} and \nolinkurl{KERNEL_CHECKED_NO_ADMISSIBLE_MENU}. Invalid data, unsupported sizes, compiler failure, and timeouts produce \code{UNRESOLVED}. A Python-valid certificate alone is not a kernel-checked result.
+
+This version limits the menu to eight candidates. Other input bounds include thirty-two rows or columns, canonical rational cells with bounded decimal length, and a four-megabyte JSON file limit. These are implementation safeguards, not hypotheses of the finite mathematical theorems. Exhaustive search is still exponential in menu size, and the time limit can be reached within the admitted size bounds.
+
+The module is a constructive extension of the correction framework already developed in Realization Calculus. It gives Komorebi Space a more explicit candidate interface for admissible finite linear repairs, but supplies no universal semantic-realization theorem. Integration into the authoritative Paper III tree and the established Komorebi Python library remains separate from this isolated, reproducible implementation.

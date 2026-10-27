@@ -1,0 +1,27 @@
+import KomorebiRepair.Generated.WorkedInput
+-- Untrusted certificate data. The original D and R are imported, not replaced.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Worked
+def P : Mat 1 3 := (Matrix.of ![![(1 : ℚ), (0 : ℚ), (0 : ℚ)]])
+def K : Mat 3 2 := (Matrix.of ![![(0 : ℚ), (0 : ℚ)], ![(1 : ℚ), (0 : ℚ)], ![(0 : ℚ), (1 : ℚ)]])
+def L : Mat 2 3 := (Matrix.of ![![(0 : ℚ), (1 : ℚ), (0 : ℚ)], ![(0 : ℚ), (0 : ℚ), (1 : ℚ)]])
+def F : Mat 2 1 := (Matrix.of ![![(1 : ℚ)], ![(1 : ℚ)]])
+def G : Mat 1 2 := (Matrix.of ![![(1 : ℚ), (2 : ℚ)]])
+def J : Mat 1 2 := (Matrix.of ![![(1 : ℚ), (0 : ℚ)]])
+def Q : Mat 2 1 := (Matrix.of ![![(1 : ℚ)], ![(0 : ℚ)]])
+def E : Mat 3 1 := (Matrix.of ![![(0 : ℚ)], ![(1 : ℚ)], ![(1 : ℚ)]])
+def U : Mat 1 2 := (Matrix.of ![![(-2 : ℚ), (-4 : ℚ)]])
+def W : Mat 1 2 := (Matrix.of ![![(-1 : ℚ), (-2 : ℚ)]])
+def H : Mat 1 3 := (Matrix.of ![![(0 : ℚ), (1 : ℚ), (0 : ℚ)]])
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide
+theorem original_equations_checked : D * U + E * W = -R := by decide
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (E' : Mat 3 w) (U' : Mat 1 2) (W' : Mat w 2),
+    D * U' + E' * W' = -R → 1 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Worked

@@ -1,0 +1,34 @@
+import KomorebiRepair.ConstructiveMatrix
+
+/-! Typed rational wire cells. JSON text parsing and file identity stay outside
+this formal layer. Generated certificates must also prove denominator validity.
+The decoded original matrix can be echoed for an independent input comparison. -/
+set_option autoImplicit false
+namespace KomorebiRepair.RationalCertificates
+
+abbrev WireMatrix (r c : ℕ) := Matrix (Fin r) (Fin c) WireCell
+
+abbrev WireMatrixValid {r c : ℕ} (A : WireMatrix r c) : Prop :=
+  ∀ i j, (A i j).2 ≠ 0
+
+def decodeWireMatrix {r c : ℕ} (A : WireMatrix r c) : Mat r c :=
+  Matrix.of fun i j => ((A i j).1 : ℚ) / ((A i j).2 : ℚ)
+
+def checkWireMatrix {r c : ℕ} (A : WireMatrix r c) : Bool :=
+  decide (WireMatrixValid A)
+
+theorem checkWireMatrix_sound {r c : ℕ} (A : WireMatrix r c)
+    (h : checkWireMatrix A = true) : WireMatrixValid A := of_decide_eq_true h
+
+theorem decodeWireMatrix_cell {r c : ℕ} (A : WireMatrix r c)
+    (h : WireMatrixValid A) (i : Fin r) (j : Fin c) :
+    decodeCell (A i j) = some (decodeWireMatrix A i j) := by
+  exact decodeCell_nonzero (A i j).1 (A i j).2 (h i j)
+
+/-- A diagnostic IO representation, never used as a premise in a theorem. -/
+def matrixJson {r c : ℕ} (A : Mat r c) : String :=
+  "[" ++ String.intercalate "," ((List.finRange r).map fun i =>
+    "[" ++ String.intercalate "," ((List.finRange c).map fun j =>
+      "[\"" ++ toString (A i j).num ++ "\",\"" ++ toString (A i j).den ++ "\"]") ++ "]") ++ "]"
+
+end KomorebiRepair.RationalCertificates

@@ -1,0 +1,29 @@
+def KomorebiRepair.RationalCertificates.intervalExcluded : {q : Nat} →
+  (table : Option.{0} (List.{0} (Finset.{0} (Fin q)))) → (lo hi : Finset.{0} (Fin q)) → Bool :=
+fun {q : Nat} (table : Option.{0} (List.{0} (Finset.{0} (Fin q)))) (lo hi : Finset.{0} (Fin q)) =>
+  @KomorebiRepair.RationalCertificates.branchAllowed.match_1.{1} q
+    (fun (table : Option.{0} (List.{0} (Finset.{0} (Fin q)))) => Bool) table (fun (_ : Unit) => Bool.false)
+    fun (xs : List.{0} (Finset.{0} (Fin q))) =>
+    @List.all.{0} (Finset.{0} (Fin q)) xs fun (T : Finset.{0} (Fin q)) =>
+      @Decidable.decide (Not (@KomorebiRepair.RationalCertificates.InInterval q lo hi T))
+        (@instDecidableNot (@KomorebiRepair.RationalCertificates.InInterval q lo hi T)
+          (@instDecidableAnd
+            (@LE.le.{0} (Finset.{0} (Fin q))
+              (@Preorder.toLE.{0} (Finset.{0} (Fin q))
+                (@PartialOrder.toPreorder.{0} (Finset.{0} (Fin q)) (@Finset.instPartialOrder.{0} (Fin q))))
+              lo T)
+            (@LE.le.{0} (Finset.{0} (Fin q))
+              (@Preorder.toLE.{0} (Finset.{0} (Fin q))
+                (@PartialOrder.toPreorder.{0} (Finset.{0} (Fin q)) (@Finset.instPartialOrder.{0} (Fin q))))
+              T hi)
+            (@Finset.instDecidableLE.{0} (Fin q) (instDecidableEqFin q) lo T)
+            (@Finset.instDecidableLE.{0} (Fin q) (instDecidableEqFin q) T hi)))
+def KomorebiRepair.RationalCertificates.checkBranch : {m n q s : Nat} →
+  (P : KomorebiRepair.RationalCertificates.BranchProblem m n q s) →
+    (threshold : Option.{0} Nat) →
+      (lo hi : Finset.{0} (Fin q)) → KomorebiRepair.RationalCertificates.BranchTree m q → Bool :=
+fun {m n q s : Nat} (P : KomorebiRepair.RationalCertificates.BranchProblem m n q s) (threshold : Option.{0} Nat)
+    (lo hi : Finset.{0} (Fin q)) (x : KomorebiRepair.RationalCertificates.BranchTree m q) =>
+  @KomorebiRepair.RationalCertificates.BranchTree.brecOn.{1} m q
+    (fun (x : KomorebiRepair.RationalCertificates.BranchTree m q) => (lo hi : Finset.{0} (Fin q)) → Bool) x
+    (@KomorebiRepair.RationalCertificates.checkBranch._f m n q s P threshold) lo hi

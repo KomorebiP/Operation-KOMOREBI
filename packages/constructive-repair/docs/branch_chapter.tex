@@ -1,0 +1,173 @@
+\chapter{Proof carrying branch search}
+\label{ch:branch-search}
+
+The preceding menu verifier checks every required selection against a family of separating blocks. That is a sound endpoint, but its coverage test still ranges over the full subset universe. A large menu may therefore be expensive to verify even when one short argument excludes almost every alternative.
+
+This chapter replaces the powerset coverage test with a finite search tree. Each node describes an interval of selections. A terminal node either proves a cost lower bound, supplies one separator for the entire interval, or checks that the original admissibility rule excludes that interval. A branching node must retain both possible decisions about one unresolved candidate.
+
+The producer may search in any order and use any heuristic. The verifier checks the submitted tree. It does not trust the producer's account of which alternatives were examined.
+
+\begin{scopebox}[title=The new verified boundary]
+The mathematical result is soundness of a finite rational certificate tree. It certifies minimum cost within the declared menu or infeasibility of the declared admissible family. It is not a proof of correctness or termination of the entire Python producer, a polynomial complexity result, or a native arithmetic realization theorem.
+
+All 37 earlier proof modules are retained unchanged. The new module reuses their exact rational repair and separator theorems.
+\end{scopebox}
+
+\section{Intervals of candidate selections}
+
+Let $J=\{0,\ldots,q-1\}$ be the original candidate index set. The matrices $D,E,R$ and the original correction equation remain fixed:
+\[
+ DU+\widetilde E_S W=-R.
+\]
+Here $\widetilde E_S$ zeros unselected columns of $E$ while retaining its original indexing. Costs are nonnegative integers attached to those same columns:
+\[
+ c(S)=\sum_{j\in S}w_j,\qquad w_j\in\N.
+\]
+The admissibility rule either permits every subset or supplies a fixed finite table of permitted subsets. An empty table permits none. It is different from the all-subsets rule.
+
+\begin{definition}[Selection interval]
+For $A\subseteq B\subseteq J$, define
+\[
+ \mathcal I(A,B)=\{T\subseteq J:A\subseteq T\subseteq B\}.
+\]
+The set $A$ contains candidates already required, and $B$ contains all candidates still permitted by the branch decisions. The unresolved indices form $B\setminus A$.
+\end{definition}
+
+\begin{lemma}[Exact branch partition]
+If $j\in B\setminus A$, then
+\[
+ \mathcal I(A,B)=
+ \mathcal I(A,B\setminus\{j\})\;\sqcup\;
+ \mathcal I(A\cup\{j\},B).
+\]
+\end{lemma}
+\begin{proof}
+Every $T\in\mathcal I(A,B)$ either excludes $j$ or includes $j$. In the first case it belongs to the left interval, and in the second it belongs to the right interval. Conversely, each child interval is contained in the parent. Their membership conditions on $j$ are incompatible, so the union is disjoint.
+\end{proof}
+
+This identity is the completeness mechanism of the verifier. A certificate cannot simply omit an inconvenient branch. Its split constructor contains both children, and the checker verifies both. The proof of \decl{checkBranch_sound} applies the two cases directly.
+
+\section{Three terminal certificates}
+
+\subsection{Cost lower bound}
+
+Nonnegative additive costs are monotone under inclusion:
+\[
+ A\subseteq T\quad\Longrightarrow\quad c(A)\leq c(T).
+\]
+Therefore, when an incumbent repair has cost $c_\ast$, the finite check
+\[
+ c_\ast\leq c(A)
+\]
+excludes every strictly cheaper repair in $\mathcal I(A,B)$. It does not say the interval is infeasible. It only says that it cannot improve the incumbent.
+\formal{KomorebiRepair.RationalCertificates.additiveCost_mono}
+
+\begin{proof}
+The sum for $c(T)$ contains all terms in the sum for $c(A)$ and only additional nonnegative terms. Apply transitivity to $c_\ast\leq c(A)\leq c(T)$.
+\end{proof}
+
+A cost leaf is forbidden in an impossibility certificate. Even a very expensive feasible repair refutes a claim that no repair exists. The implementation expresses this distinction using an optional threshold: a supplied natural number requests a lower bound, while no threshold requests infeasibility.
+
+\subsection{Separator for the upper selection}
+
+A row $Y$ is checked against the largest selection $B$ in the interval:
+\[
+ YD=0,\qquad Y\widetilde E_B=0,\qquad YR\ne0.
+\]
+Every $T\subseteq B$ uses only columns annihilated by $Y$. Consequently, the same row proves that no $T\in\mathcal I(A,B)$ repairs the family. This reuses the downward separator theorem from the previous chapter.
+
+The residual matrix in the last inequality is the original $R$. Projecting it to zero in some unrelated representation is not accepted as a repair.
+
+\subsection{Exclusion by the original admissibility rule}
+
+If admissibility is specified by a list $\mathcal A$, a terminal check establishes
+\[
+ \nexists T\in\mathcal A:\quad A\subseteq T\subseteq B.
+\]
+It examines the original list, not the powerset of $J$. For the all-subsets rule this terminal certificate is unavailable.
+\formal{KomorebiRepair.RationalCertificates.intervalExcluded_sound}
+
+It is not enough that $A$ itself be inadmissible. A larger selection in the interval might be permitted. For example, a rule that permits only the pair $\{0,1\}$ excludes the empty selection but not the interval from the empty selection to the full pair. The verifier retains this distinction and does not assume that admissibility is downward closed.
+
+\section{Soundness of the whole tree}
+
+\begin{definition}[Accepted branch tree]
+A tree for $\mathcal I(A,B)$ consists of one of the three terminal certificates above, or a split at $j\in B\setminus A$ with accepted trees for both child intervals. In lower-bound mode a cost threshold is fixed throughout the tree. In infeasibility mode cost leaves are rejected.
+\end{definition}
+
+\begin{theorem}[Structural certificate soundness]
+An accepted lower-bound tree with threshold $c_\ast$ proves
+\[
+ T\in\mathcal I(A,B),\quad T\text{ admissible and feasible}
+ \quad\Longrightarrow\quad c_\ast\leq c(T).
+\]
+An accepted infeasibility tree proves that no admissible selection in $\mathcal I(A,B)$ is feasible.
+\end{theorem}
+\formal{KomorebiRepair.RationalCertificates.checkBranch_sound}
+
+\begin{proof}
+Induct on the supplied tree. For a cost leaf, monotonicity gives the lower bound. For a separator leaf, the exact linear alternative rules out feasibility of every subset of the upper selection. For an admissibility leaf, the original table rules out the premise.
+
+At a split, the exact branch partition puts any proposed selection in one child interval. Apply that child's induction hypothesis. Both children are present in the data and checked by the verifier. This proves the assertion without enumerating every selection in the parent interval.
+\end{proof}
+
+\begin{corollary}[Minimum cost certificate]
+Suppose an admissible selection $S$ has supplied coefficients $U,W$ satisfying the original repair equation. An accepted lower-bound tree of threshold $c(S)$ on $\mathcal I(\varnothing,J)$ proves that $S$ has minimum cost among all admissible feasible selections.
+\end{corollary}
+\formal{KomorebiRepair.RationalCertificates.checkTreeOptimal_sound}
+\begin{proof}
+The supplied coefficient equation proves feasibility of $S$. Every selection lies in $\mathcal I(\varnothing,J)$. Structural soundness therefore gives $c(S)\leq c(T)$ for every admissible feasible competitor $T$.
+\end{proof}
+
+\begin{corollary}[Scoped complete rejection]
+An accepted infeasibility tree on $\mathcal I(\varnothing,J)$ proves that the declared admissible family contains no repair.
+\end{corollary}
+\formal{KomorebiRepair.RationalCertificates.checkTreeNoRepair_sound}
+
+There is no claim that directions outside $J$ cannot repair the residual. Nor does a rejected certificate establish infeasibility. A missing child, a bad separator, or an exhausted resource budget leaves the outcome unresolved.
+
+\section{How the producer constructs evidence}
+
+The Python producer traverses intervals and retains exact row-reduction witnesses. It first checks whether the original admissibility table excludes the interval. It then uses the incumbent cost to test a bound leaf. If necessary, it solves the rational linear problem on the upper selection $B$. An infeasible upper selection supplies a separator that ends the whole branch.
+
+If the lower selection $A$ is admitted and feasible, its coefficient matrix supplies a new incumbent and the interval ends at a cost leaf. Otherwise, the producer selects an unresolved index and explores both decisions. The current heuristic visits low-cost candidates first. Correctness of this heuristic is not an assumption of any theorem.
+
+The incumbent may improve while the search proceeds. Earlier cost leaves remain sound: a later incumbent has no greater cost, so any earlier lower bound also excludes improvement over the final incumbent. The finished checker uses only the final threshold and rechecks every leaf against it. It need not trust the producer's history of incumbents.
+
+Exact linear solves are cached by selection. This avoids repeating an identical solve when several intervals have the same upper or lower selection. Caching is an implementation choice outside the trusted mathematical layer.
+
+\section{A twenty-four-candidate construction}
+
+Let $b_1,b_2,b_3$ be the standard basis of $\Q^3$. Take $D(u)=ub_1$ and residual $r=b_2+b_3$. There are 24 candidate entries:
+\[
+ a_0=b_2,\qquad a_1=b_3,\qquad a_j=b_1\quad(2\leq j<24).
+\]
+Their costs are two, three, and ten for each remaining entry. All subsets are admissible.
+
+The selected repair is $S=\{0,1\}$, with cost five, original coefficient zero, and coefficient $-1$ on each selected menu direction. Its full coefficient matrix satisfies the original equation exactly.
+
+The proof tree has five nodes. At the root it splits on candidate zero. The excluded child lacks the only second-coordinate correction and has separator $(0,1,0)$. The included child splits on candidate one. Excluding candidate one has separator $(0,0,1)$. Including both reaches lower selection $\{0,1\}$ with cost five and terminates at a bound leaf.
+
+\begin{center}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule Branch & Certified conclusion\\\midrule
+Exclude candidate 0 & The second coordinate of the residual cannot be corrected.\\
+Include 0, exclude 1 & The third coordinate of the residual cannot be corrected.\\
+Include 0 and 1 & Every superset costs at least five.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+There are $2^{24}=16{,}777{,}216$ possible selections, but the producer used six distinct linear solves and submitted five tree nodes. Lean checks that tree and proves the minimum-cost conclusion for every selection. This is not an experiment that visited sixteen million cases. It is one structured problem with a short exhaustive mathematical argument.
+
+A second 24-candidate example puts every available correction on the first coordinate axis of $\Q^2$ and sets the residual to $(0,1)$. The row $(0,1)$ supplies a one-node certificate rejecting all selections. This illustrates compressed reasoning, not a claim that arbitrary difficult search problems have short certificates.
+
+\section{Performance and semantic limits}
+
+The earlier eight-candidate exhaustive producer remains available as a reference. The new producer accepts up to 24 candidates, with explicit limits on nodes and linear solves. These are implementation resource guards, not mathematical restrictions on the tree theorem.
+
+In a favorable instance, separators or cost bounds eliminate large intervals. In the worst case the tree can still approach the full binary decision tree. Neither polynomial-time search nor a polynomial-size certificate is established. With an explicit admissibility table, checking an exclusion leaf also costs work proportional to that table.
+
+The nonnegative cost requirement is essential to the implemented bound rule. If an optional candidate had negative cost, adding it could lower the cost below the lower selection's cost. The input schema rejects negative weights instead of silently applying an invalid monotonicity argument.
+
+The theorem operates on the original rational matrices and declared subset policy. It does not prove that these finite data capture a native arithmetic, analytic, or representation-theoretic construction. That remains the semantic realization obligation of the domain application. In Komorebi Space, the admissible family must retain its declared meaning. A compressed certificate cannot replace that meaning with a more convenient problem.

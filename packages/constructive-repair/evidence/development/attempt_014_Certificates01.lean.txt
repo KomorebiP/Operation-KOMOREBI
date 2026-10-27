@@ -1,0 +1,234 @@
+import KomorebiRepair.Generated.Inputs01
+-- Untrusted certificate data; original D and R are fixed imports.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Case006
+def wireP : WireMatrix 3 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1)]])
+def P : Mat 3 3 := decodeWireMatrix wireP
+def wireK : WireMatrix 3 0 := (Matrix.of fun _ j => Fin.elim0 j)
+def K : Mat 3 0 := decodeWireMatrix wireK
+def wireL : WireMatrix 0 3 := (Matrix.of fun i => Fin.elim0 i)
+def L : Mat 0 3 := decodeWireMatrix wireL
+def wireF : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def F : Mat 0 0 := decodeWireMatrix wireF
+def wireG : WireMatrix 0 2 := (Matrix.of fun i => Fin.elim0 i)
+def G : Mat 0 2 := decodeWireMatrix wireG
+def wireJ : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def J : Mat 0 0 := decodeWireMatrix wireJ
+def wireQ : WireMatrix 2 0 := (Matrix.of fun _ j => Fin.elim0 j)
+def Q : Mat 2 0 := decodeWireMatrix wireQ
+def wireE : WireMatrix 3 0 := (Matrix.of fun _ j => Fin.elim0 j)
+def E : Mat 3 0 := decodeWireMatrix wireE
+def wireU : WireMatrix 3 2 := (Matrix.of ![![(-1, 1), (-3, 1)], ![(-2, 1), (-1, 1)], ![(-3, 1), (-7, 1)]])
+def U : Mat 3 2 := decodeWireMatrix wireU
+def wireW : WireMatrix 0 2 := (Matrix.of fun i => Fin.elim0 i)
+def W : Mat 0 2 := decodeWireMatrix wireW
+def wireH : WireMatrix 0 3 := (Matrix.of fun i => Fin.elim0 i)
+def H : Mat 0 3 := decodeWireMatrix wireH
+theorem certificate_encoding_valid : WireMatrixValid wireP ∧ WireMatrixValid wireK ∧ WireMatrixValid wireL ∧ WireMatrixValid wireF ∧ WireMatrixValid wireG ∧ WireMatrixValid wireJ ∧ WireMatrixValid wireQ ∧ WireMatrixValid wireE ∧ WireMatrixValid wireU ∧ WireMatrixValid wireW ∧ WireMatrixValid wireH := by decide +kernel
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide +kernel
+theorem original_equations_checked : D * U + E * W = -R := by decide +kernel
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide +kernel
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (Eprime : Mat 3 w) (Uprime : Mat 3 2) (Wprime : Mat w 2),
+    D * Uprime + Eprime * Wprime = -R → 0 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Case006
+
+-- Untrusted certificate data; original D and R are fixed imports.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Case007
+def wireP : WireMatrix 2 3 := (Matrix.of ![![(0, 1), (0, 1), (0, 1)], ![(0, 1), (0, 1), (0, 1)]])
+def P : Mat 2 3 := decodeWireMatrix wireP
+def wireK : WireMatrix 3 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1)]])
+def K : Mat 3 3 := decodeWireMatrix wireK
+def wireL : WireMatrix 3 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1)]])
+def L : Mat 3 3 := decodeWireMatrix wireL
+def wireF : WireMatrix 3 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)], ![(1, 1), (1, 1)]])
+def F : Mat 3 2 := decodeWireMatrix wireF
+def wireG : WireMatrix 2 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)]])
+def G : Mat 2 2 := decodeWireMatrix wireG
+def wireJ : WireMatrix 2 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)]])
+def J : Mat 2 3 := decodeWireMatrix wireJ
+def wireQ : WireMatrix 2 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)]])
+def Q : Mat 2 2 := decodeWireMatrix wireQ
+def wireE : WireMatrix 3 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)], ![(1, 1), (1, 1)]])
+def E : Mat 3 2 := decodeWireMatrix wireE
+def wireU : WireMatrix 2 2 := (Matrix.of ![![(0, 1), (0, 1)], ![(0, 1), (0, 1)]])
+def U : Mat 2 2 := decodeWireMatrix wireU
+def wireW : WireMatrix 2 2 := (Matrix.of ![![(-1, 1), (0, 1)], ![(0, 1), (-1, 1)]])
+def W : Mat 2 2 := decodeWireMatrix wireW
+def wireH : WireMatrix 2 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)]])
+def H : Mat 2 3 := decodeWireMatrix wireH
+theorem certificate_encoding_valid : WireMatrixValid wireP ∧ WireMatrixValid wireK ∧ WireMatrixValid wireL ∧ WireMatrixValid wireF ∧ WireMatrixValid wireG ∧ WireMatrixValid wireJ ∧ WireMatrixValid wireQ ∧ WireMatrixValid wireE ∧ WireMatrixValid wireU ∧ WireMatrixValid wireW ∧ WireMatrixValid wireH := by decide +kernel
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide +kernel
+theorem original_equations_checked : D * U + E * W = -R := by decide +kernel
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide +kernel
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (Eprime : Mat 3 w) (Uprime : Mat 2 2) (Wprime : Mat w 2),
+    D * Uprime + Eprime * Wprime = -R → 2 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Case007
+
+-- Untrusted certificate data; original D and R are fixed imports.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Case008
+def wireP : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def P : Mat 0 0 := decodeWireMatrix wireP
+def wireK : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def K : Mat 0 0 := decodeWireMatrix wireK
+def wireL : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def L : Mat 0 0 := decodeWireMatrix wireL
+def wireF : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def F : Mat 0 0 := decodeWireMatrix wireF
+def wireG : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def G : Mat 0 0 := decodeWireMatrix wireG
+def wireJ : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def J : Mat 0 0 := decodeWireMatrix wireJ
+def wireQ : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def Q : Mat 0 0 := decodeWireMatrix wireQ
+def wireE : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def E : Mat 0 0 := decodeWireMatrix wireE
+def wireU : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def U : Mat 0 0 := decodeWireMatrix wireU
+def wireW : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def W : Mat 0 0 := decodeWireMatrix wireW
+def wireH : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def H : Mat 0 0 := decodeWireMatrix wireH
+theorem certificate_encoding_valid : WireMatrixValid wireP ∧ WireMatrixValid wireK ∧ WireMatrixValid wireL ∧ WireMatrixValid wireF ∧ WireMatrixValid wireG ∧ WireMatrixValid wireJ ∧ WireMatrixValid wireQ ∧ WireMatrixValid wireE ∧ WireMatrixValid wireU ∧ WireMatrixValid wireW ∧ WireMatrixValid wireH := by decide +kernel
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide +kernel
+theorem original_equations_checked : D * U + E * W = -R := by decide +kernel
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide +kernel
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (Eprime : Mat 0 w) (Uprime : Mat 0 0) (Wprime : Mat w 0),
+    D * Uprime + Eprime * Wprime = -R → 0 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Case008
+
+-- Untrusted certificate data; original D and R are fixed imports.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Case009
+def wireP : WireMatrix 2 4 := (Matrix.of ![![(0, 1), (1, 2), (0, 1), (0, 1)], ![(0, 1), (0, 1), (0, 1), (0, 1)]])
+def P : Mat 2 4 := decodeWireMatrix wireP
+def wireK : WireMatrix 4 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1)]])
+def K : Mat 4 3 := decodeWireMatrix wireK
+def wireL : WireMatrix 3 4 := (Matrix.of ![![(1, 1), (-1, 2), (0, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (0, 1), (1, 1)]])
+def L : Mat 3 4 := decodeWireMatrix wireL
+def wireF : WireMatrix 3 2 := (Matrix.of ![![(1, 1), (-1, 2)], ![(1, 1), (2, 1)], ![(0, 1), (1, 1)]])
+def F : Mat 3 2 := decodeWireMatrix wireF
+def wireG : WireMatrix 2 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)]])
+def G : Mat 2 2 := decodeWireMatrix wireG
+def wireJ : WireMatrix 2 3 := (Matrix.of ![![(4, 5), (1, 5), (0, 1)], ![(-2, 5), (2, 5), (0, 1)]])
+def J : Mat 2 3 := decodeWireMatrix wireJ
+def wireQ : WireMatrix 2 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)]])
+def Q : Mat 2 2 := decodeWireMatrix wireQ
+def wireE : WireMatrix 4 2 := (Matrix.of ![![(1, 1), (-1, 2)], ![(0, 1), (0, 1)], ![(1, 1), (2, 1)], ![(0, 1), (1, 1)]])
+def E : Mat 4 2 := decodeWireMatrix wireE
+def wireU : WireMatrix 2 2 := (Matrix.of ![![(0, 1), (-1, 2)], ![(0, 1), (0, 1)]])
+def U : Mat 2 2 := decodeWireMatrix wireU
+def wireW : WireMatrix 2 2 := (Matrix.of ![![(-1, 1), (0, 1)], ![(0, 1), (-1, 1)]])
+def W : Mat 2 2 := decodeWireMatrix wireW
+def wireH : WireMatrix 2 4 := (Matrix.of ![![(4, 5), (-2, 5), (1, 5), (0, 1)], ![(-2, 5), (1, 5), (2, 5), (0, 1)]])
+def H : Mat 2 4 := decodeWireMatrix wireH
+theorem certificate_encoding_valid : WireMatrixValid wireP ∧ WireMatrixValid wireK ∧ WireMatrixValid wireL ∧ WireMatrixValid wireF ∧ WireMatrixValid wireG ∧ WireMatrixValid wireJ ∧ WireMatrixValid wireQ ∧ WireMatrixValid wireE ∧ WireMatrixValid wireU ∧ WireMatrixValid wireW ∧ WireMatrixValid wireH := by decide +kernel
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide +kernel
+theorem original_equations_checked : D * U + E * W = -R := by decide +kernel
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide +kernel
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (Eprime : Mat 4 w) (Uprime : Mat 2 2) (Wprime : Mat w 2),
+    D * Uprime + Eprime * Wprime = -R → 2 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Case009
+
+-- Untrusted certificate data; original D and R are fixed imports.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Case010
+def wireP : WireMatrix 1 3 := (Matrix.of ![![(0, 1), (0, 1), (0, 1)]])
+def P : Mat 1 3 := decodeWireMatrix wireP
+def wireK : WireMatrix 3 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1)]])
+def K : Mat 3 3 := decodeWireMatrix wireK
+def wireL : WireMatrix 3 3 := (Matrix.of ![![(1, 1), (0, 1), (0, 1)], ![(0, 1), (1, 1), (0, 1)], ![(0, 1), (0, 1), (1, 1)]])
+def L : Mat 3 3 := decodeWireMatrix wireL
+def wireF : WireMatrix 3 2 := (Matrix.of ![![(1, 4), (-1, 1)], ![(1, 2), (2, 1)], ![(-1, 1), (0, 1)]])
+def F : Mat 3 2 := decodeWireMatrix wireF
+def wireG : WireMatrix 2 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)]])
+def G : Mat 2 2 := decodeWireMatrix wireG
+def wireJ : WireMatrix 2 3 := (Matrix.of ![![(2, 1), (1, 1), (0, 1)], ![(-1, 2), (1, 4), (0, 1)]])
+def J : Mat 2 3 := decodeWireMatrix wireJ
+def wireQ : WireMatrix 2 2 := (Matrix.of ![![(1, 1), (0, 1)], ![(0, 1), (1, 1)]])
+def Q : Mat 2 2 := decodeWireMatrix wireQ
+def wireE : WireMatrix 3 2 := (Matrix.of ![![(1, 4), (-1, 1)], ![(1, 2), (2, 1)], ![(-1, 1), (0, 1)]])
+def E : Mat 3 2 := decodeWireMatrix wireE
+def wireU : WireMatrix 1 2 := (Matrix.of ![![(0, 1), (0, 1)]])
+def U : Mat 1 2 := decodeWireMatrix wireU
+def wireW : WireMatrix 2 2 := (Matrix.of ![![(-1, 1), (0, 1)], ![(0, 1), (-1, 1)]])
+def W : Mat 2 2 := decodeWireMatrix wireW
+def wireH : WireMatrix 2 3 := (Matrix.of ![![(2, 1), (1, 1), (0, 1)], ![(-1, 2), (1, 4), (0, 1)]])
+def H : Mat 2 3 := decodeWireMatrix wireH
+theorem certificate_encoding_valid : WireMatrixValid wireP ∧ WireMatrixValid wireK ∧ WireMatrixValid wireL ∧ WireMatrixValid wireF ∧ WireMatrixValid wireG ∧ WireMatrixValid wireJ ∧ WireMatrixValid wireQ ∧ WireMatrixValid wireE ∧ WireMatrixValid wireU ∧ WireMatrixValid wireW ∧ WireMatrixValid wireH := by decide +kernel
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide +kernel
+theorem original_equations_checked : D * U + E * W = -R := by decide +kernel
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide +kernel
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (Eprime : Mat 3 w) (Uprime : Mat 1 2) (Wprime : Mat w 2),
+    D * Uprime + Eprime * Wprime = -R → 2 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Case010
+
+-- Untrusted certificate data; original D and R are fixed imports.
+set_option autoImplicit false
+set_option maxRecDepth 100000
+set_option maxHeartbeats 3000000
+open KomorebiRepair.RationalCertificates
+namespace Case011
+def wireP : WireMatrix 3 3 := (Matrix.of ![![(-365, 4968), (475, 2484), (22, 69)], ![(6449, 7452), (3449, 3726), (316, 207)], ![(-269, 414), (-149, 207), (-40, 23)]])
+def P : Mat 3 3 := decodeWireMatrix wireP
+def wireK : WireMatrix 3 0 := (Matrix.of fun _ j => Fin.elim0 j)
+def K : Mat 3 0 := decodeWireMatrix wireK
+def wireL : WireMatrix 0 3 := (Matrix.of fun i => Fin.elim0 i)
+def L : Mat 0 3 := decodeWireMatrix wireL
+def wireF : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def F : Mat 0 0 := decodeWireMatrix wireF
+def wireG : WireMatrix 0 1 := (Matrix.of fun i => Fin.elim0 i)
+def G : Mat 0 1 := decodeWireMatrix wireG
+def wireJ : WireMatrix 0 0 := (Matrix.of fun i => Fin.elim0 i)
+def J : Mat 0 0 := decodeWireMatrix wireJ
+def wireQ : WireMatrix 1 0 := (Matrix.of fun _ j => Fin.elim0 j)
+def Q : Mat 1 0 := decodeWireMatrix wireQ
+def wireE : WireMatrix 3 0 := (Matrix.of fun _ j => Fin.elim0 j)
+def E : Mat 3 0 := decodeWireMatrix wireE
+def wireU : WireMatrix 3 1 := (Matrix.of ![![(1315, 4968)], ![(449, 7452)], ![(-29, 414)]])
+def U : Mat 3 1 := decodeWireMatrix wireU
+def wireW : WireMatrix 0 1 := (Matrix.of fun i => Fin.elim0 i)
+def W : Mat 0 1 := decodeWireMatrix wireW
+def wireH : WireMatrix 0 3 := (Matrix.of fun i => Fin.elim0 i)
+def H : Mat 0 3 := decodeWireMatrix wireH
+theorem certificate_encoding_valid : WireMatrixValid wireP ∧ WireMatrixValid wireK ∧ WireMatrixValid wireL ∧ WireMatrixValid wireF ∧ WireMatrixValid wireG ∧ WireMatrixValid wireJ ∧ WireMatrixValid wireQ ∧ WireMatrixValid wireE ∧ WireMatrixValid wireU ∧ WireMatrixValid wireW ∧ WireMatrixValid wireH := by decide +kernel
+theorem certificate_checked : checkOptimalConstruction D R P K L F G J Q = true := by decide +kernel
+theorem original_equations_checked : D * U + E * W = -R := by decide +kernel
+theorem output_matches_construction : E = K * F ∧ U = -(P * R) ∧ W = -G := by decide +kernel
+theorem optimal : D * U + E * W = -R ∧
+    ∀ (w : ℕ) (Eprime : Mat 3 w) (Uprime : Mat 3 1) (Wprime : Mat w 1),
+    D * Uprime + Eprime * Wprime = -R → 0 ≤ w := by
+  exact ⟨original_equations_checked,
+    (checkOptimalConstruction_sound D R P K L F G J Q certificate_checked).2⟩
+end Case011

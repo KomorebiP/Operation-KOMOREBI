@@ -1,0 +1,151 @@
+\chapter{Branch certificate verification}
+
+\label{app:branch}
+
+This appendix records the v0.5.0 continuation. The full 37-module v0.4.0 proof tree is retained byte-for-byte. Fourteen additional modules supply the general branch checker, 24 exported problems, and paired corruption controls. Earlier appendices remain historical records of their respective releases.
+
+\section{General declaration correspondence}
+
+Source: \nolinkurl{lean/KomorebiRepair/BranchCertificate.lean}. Each declaration is proved with explicit matrix, cost and admissibility data. No field assumes that an optimal repair exists.
+
+\record{KomorebiRepair.RationalCertificates.intervalExcluded_sound}{42}{A checked exclusion of an interval from the original optional admissibility table rules out every admitted selection in that interval.}
+
+\record{KomorebiRepair.RationalCertificates.additiveCost_mono}{53}{Nonnegative additive column costs are monotone under inclusion of the selected set.}
+
+\record{KomorebiRepair.RationalCertificates.boundCheck_mono}{68}{A checked lower cost bound propagates to a larger cost. No threshold means impossibility, so a cost leaf cannot apply.}
+
+\record{KomorebiRepair.RationalCertificates.checkBranch_sound}{95}{Structural induction on an accepted tree gives a lower cost bound or infeasibility for every admitted feasible selection in its interval.}
+
+\record{KomorebiRepair.RationalCertificates.checkTreeOptimal_sound}{131}{A successful original coefficient equation and an accepted root tree certify minimum cost within the declared candidate universe.}
+
+\record{KomorebiRepair.RationalCertificates.checkTreeNoRepair_sound}{148}{An accepted root tree in impossibility mode excludes every selection admitted by the original rule.}
+
+\section{Exported case register}
+
+The following cases are emitted from independent original JSON inputs and exact witness records. The tree-node count is the submitted certificate size, not a count of separately evaluated subsets. Cost is omitted for a rejection result.
+
+\begin{longtable}{@{}p{0.14\linewidth}p{0.43\linewidth}rrr@{}}
+
+\toprule Case & Description & Candidates & Cost & Nodes\\\midrule\endhead
+
+Branch000 & two entry optimum & 2 & 2 & 5\\
+
+Branch001 & size one restriction & 2 & -- & 5\\
+
+Branch002 & cheaper pair & 3 & 2 & 13\\
+
+Branch003 & fractional & 1 & 7 & 3\\
+
+Branch004 & zero cost & 2 & 0 & 5\\
+
+Branch005 & nonhereditary only pair & 2 & 2 & 5\\
+
+Branch006 & empty admissible table & 2 & -- & 1\\
+
+Branch007 & empty residuals & 2 & 0 & 1\\
+
+Branch008 & zero target & 2 & 0 & 1\\
+
+Branch009 & zero domain & 2 & 2 & 5\\
+
+Branch010 & no candidates feasible & 0 & 0 & 1\\
+
+Branch011 & no candidates impossible & 0 & -- & 1\\
+
+Branch012 & multiple residuals & 2 & 6 & 5\\
+
+Branch013 & free solution forbidden & 2 & 1 & 5\\
+
+Branch014 & duplicate costs & 3 & 3 & 7\\
+
+Branch015 & incumbent improvement & 3 & 4 & 9\\
+
+Branch016 & non downward rules & 3 & 5 & 11\\
+
+Branch017 & four menu impossible & 4 & -- & 1\\
+
+Branch018 & large 24 optimum & 24 & 5 & 5\\
+
+Branch019 & large 24 impossible & 24 & -- & 1\\
+
+Branch020 & large 24 zero cost & 24 & 0 & 3\\
+
+Branch021 & large 24 finite admissibility & 24 & 5 & 5\\
+
+Branch022 & large 24 empty table & 24 & -- & 1\\
+
+Branch023 & nonempty rules empty residuals & 2 & 0 & 3\\
+
+\bottomrule\end{longtable}
+
+The register contains 18 optimal-menu certificates and 6 no-admissible-menu certificates. An empty admissibility table is explicitly vacuous. It is not evidence that a nonzero arithmetic obstruction was discovered.
+
+\section{Fresh combined verification}
+
+The current evidence record is \nolinkurl{evidence/verification/current/verification.json}. The prior current record is preserved under \nolinkurl{evidence/verification/v0.4.0_inherited}. The full combined library is recompiled from source and each module is replayed through Lean\textquotesingle s kernel against the pinned imported environment.
+
+\begin{center}\begin{tabularx}{\linewidth}{@{}Xr@{}}\toprule Check & Result\\\midrule
+
+Combined proof modules compiled and replayed & 51 / 51\\
+
+Named theorem dependencies audited & 526 / 526\\
+
+Unchanged v0.4.0 proof modules & 37 / 37\\
+
+Additional general declarations & 6\\
+
+Additional concrete declarations & 142\\
+
+New exported original-input echoes & 24 / 24\\
+
+New paired corruption controls & 10 / 10\\
+
+Previous paired corruption controls rerun & 14 / 14\\
+
+Separate forbidden-axiom policy control & 1 / 1\\
+
+New Python unit tests & 50 / 50\\
+
+New exact branch problems rechecked & 204 / 204\\
+
+Small problems compared with independent exact ranks & 199 / 199\\
+
+Individual subset rank comparisons & 3,173 / 3,173\\
+
+Comparisons with the previous exhaustive solver & 199 / 199\\
+
+Previous rational and menu unit tests rerun & 84 / 84\\
+
+Original Python unit tests rerun & 20 / 20\\
+
+Original audit case records reproduced & 3,307\\
+
+\bottomrule\end{tabularx}\end{center}
+
+The additional 142 concrete declarations are input-encoding, certificate, equation, cost and rejection proofs. They are not a count of independent mathematical discoveries. The six general results specialize classical finite optimization and linear obstruction arguments to the declared proof-tree interface.
+
+All audited theorem dependencies are contained in \{\code{propext}, \code{Classical.choice}, \code{Quot.sound}\}. Concrete reductions use \code{decide +kernel}. No new assumption axiom, \code{sorryAx}, or native-decision axiom is admitted. Replay uses Lean\textquotesingle s own kernel, not a second independently implemented checker and not a fresh proof of all Mathlib dependencies.
+
+The external comparison enumerates subsets only in the small benchmark oracle, never in the new production checker. SymPy supplies independent exact ranks for 3,173 subsets of 199 small problems. The earlier exhaustive producer agrees on the outcome and minimum cost. Ties need not return the same selected labels. Five larger structured problems are not exhaustively tested by that oracle; their exported trees receive the formal check instead.
+
+\section{Controls, command execution, and provenance}
+
+The new negative controls forge a root cost bound, falsely exclude an all-admitted interval, use a zero separator, repeat a resolved split, duplicate a cost child, swap branch meanings, alter correction coefficients, use an unselected column, choose a forbidden selection, and claim no repair despite a valid incumbent. Each corrupted checker result is proved false. A separate invalid source must then fail specifically when treating that equality as true. Missing instances and syntax errors do not count as successful mathematical rejection.
+
+The large optimal and infeasible cases were executed through the single-command interface. The command independently emits the original matrices, weights and optional admissibility table, then the witnesses. Compilation, axiom auditing, same-kernel replay, and an exact Lean input echo follow. Unlike the old menu echo, the new echo does not enumerate every derived selection: it returns the exact original policy data.
+
+A deliberately zero node budget produces \code{UNRESOLVED}, not a rejection of the mathematical problem. Rejected external evidence has the same unresolved status. A no-repair status requires an accepted certificate in the mode that forbids cost leaves.
+
+The first branch-module proof used an incorrect Boolean conjunction lemma name. The pinned compiler rejected it. The corrected proof uses \code{Bool.and_eq_true_iff}; both source and log versions are preserved.
+
+A later audit review found that inherited compilation labels used only file stems. Generated modules in distinct namespaces could therefore overwrite one another\textquotesingle s diagnostic log and check key. That run is preserved as superseded. The verifier now uses full relative module names, rejects duplicate command labels, and repeats the full combined verification. No theorem statement, proof assumption, or certificate was weakened by this correction.
+
+A separate evaluator inspection caught a more consequential implementation issue. The first version wrote a bounded-looking proposition over the admissibility list and asked Lean to infer its decision procedure. Lean instead selected a finite-type universal quantifier over candidate subsets. The theorem remained sound, but an exclusion leaf could still perform a powerset scan. The implementation now calls \code{List.all} explicitly and proves its connection to the mathematical exclusion predicate. A 24-candidate empty-table regression and a nonhereditary 24-candidate table regression exercise this path. The final verifier also inspects the elaborated definition and rejects the previous hidden powerset quantifier. Both evaluator outputs and the superseded source are retained.
+
+\section{Trust and remaining scope}
+
+Typed rational decoding and the mathematical certificate theorems are formalized. The complete JSON parser, untrusted search, source emitter, hashing and filesystem are tested, not formally verified. The kernel certifies the literal typed input in the generated source. Separate source emission, hashes, and a complete original-data echo test its binding to the supplied JSON.
+
+The producer accepts up to 24 candidates and has finite resource guardrails. Search and certificate size can remain exponential. The greedy order is not proved optimal and proof-tree size is not minimized. The certificate soundness theorem does not require the producer to exhaust its entire budget or follow a particular search order.
+
+Direct integration into the authoritative Komorebi Python library and Paper III source tree, full parser verification, and a formal quotient-to-matrix rank-difference bridge remain separate tasks. There is no new native arithmetic host construction, nonlinear convergence theorem, change to Conjecture 66, or unrestricted Komorebi Space realization claim.
