@@ -1,0 +1,121 @@
+{
+  "base_checkpoint": "LSM-0.15.0",
+  "base_archive_sha256": "85b8a25021b665da32f7328ced65d797b2a383464f01a3a2962f0b1bd8214b05",
+  "review_mode": "Read-only adversarial raw-source review by a different module author in the same model/team lineage. Not independent external review.",
+  "claims": [
+    {
+      "claim": "P46: the actual rational rotation word law has a reachable and observable three-dimensional realization, hence full behavior dimension three and no smaller finite linear realization.",
+      "source": "KomorebiLSM/RotationRank.lean",
+      "sha256": "410eaca375ec94c11cbbf2f7ab061b3bb0a2354ad5094ce77124d1a37afac552",
+      "verdict": "proved as written",
+      "hypotheses": "The explicitly constructed real Fin3 rotation/probe model in RotationModel. No supplied rank, reachability, observability or sampled-table hypothesis.",
+      "dependency_graph": [
+        "Actual initial, rotate(initial), rotate(rotate(initial)) are chronological reachable states.",
+        "The explicit rational linear combination in reachable_column_decomposition reconstructs every real three-coordinate state.",
+        "Empty, probe-zero and rotate-then-probe-zero test readouts recover t, x and y. The last coefficient is minus4/5 and is nonzero.",
+        "Realization.minimal_dimension identifies the complete behavior-space dimension from genuine reachability and observability.",
+        "The generic behavior_dimension_le theorem transfers that exact dimension to every finite realization."
+      ],
+      "obligations": [
+        {
+          "name": "actual reachable columns",
+          "status": "passed"
+        },
+        {
+          "name": "all-state spanning identity",
+          "status": "passed"
+        },
+        {
+          "name": "injective full test observation map",
+          "status": "passed"
+        },
+        {
+          "name": "full behavior dimension",
+          "status": "passed"
+        },
+        {
+          "name": "universal finite-realization lower bound",
+          "status": "passed"
+        }
+      ],
+      "boundary_checks": "The empty word is explicitly used; the result is full behavior rank, not merely rank of three arbitrary sampled columns. There is no positivity assumption on arbitrary linear coordinate states.",
+      "remaining_gap": "None in the rank claim. Canonical-cone classification and the finite-positive-generator obstruction are separate P46 obligations.",
+      "fresh_compile": {
+        "source_sha256": "410eaca375ec94c11cbbf2f7ab061b3bb0a2354ad5094ce77124d1a37afac552",
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "claim": "P47 base-norm dictionary: the actual positive-decomposition infimum of the displayed Lorentz probability cone equals max(|t|,sqrt(x\u00b2+y\u00b2)), and that cone and mass are exactly those of RotationModel.",
+      "source": "KomorebiLSM/LorentzBaseNorm.lean",
+      "sha256": "40986c88cead556427922f32bf4ffe36edd2e239dbe68c2c8c9a8460e048e178",
+      "verdict": "proved as written",
+      "hypotheses": "Finite real three-coordinate states. The cone is constructed as norm(spatial z)<=mass z; spatial is the canonical complex identification of the two real coordinates. No supplied norm equality or decomposition minimizer.",
+      "dependency_graph": [
+        "The actual carrier is closed, closed under addition/nonnegative scaling, generating, and has strictly positive mass off zero.",
+        "An explicit positive decomposition proves generation; the ProbabilityCone instance uses these derived properties.",
+        "Every positive decomposition z=u-v has cost u0+v0 at least both |z0| and norm(spatial z).",
+        "For M=max(|t|,norm w)>0, q=w/M and a=(M+t)/2,b=(M-t)/2 construct u=(a,aq),v=(b,-bq) with u-v=z and cost M. M=0 is separately proved to imply z=0.",
+        "The existing ProbabilityCone.value is the actual sInf of positive-decomposition costs. Its two universal inequalities yield value_eq.",
+        "Complex.norm_eq_sqrt_sq_add_sq proves the literal sqrt coordinate expression; carrier and mass equalities identify the instance with RotationModel.",
+        "The actual model branches form instruments for that ProbabilityCone by the already proved model cone invariance and per-action mass conservation."
+      ],
+      "obligations": [
+        {
+          "name": "actual closed generating cone",
+          "status": "passed"
+        },
+        {
+          "name": "strict positive mass",
+          "status": "passed"
+        },
+        {
+          "name": "infimum cost semantics",
+          "status": "passed"
+        },
+        {
+          "name": "universal lower bound",
+          "status": "passed"
+        },
+        {
+          "name": "attained upper bound including zero",
+          "status": "passed"
+        },
+        {
+          "name": "literal coordinate sqrt norm",
+          "status": "passed"
+        },
+        {
+          "name": "carrier and mass dictionary",
+          "status": "passed"
+        },
+        {
+          "name": "actual instrument link",
+          "status": "passed"
+        }
+      ],
+      "boundary_checks": "The zero vector and M=0 branch are handled separately. The formula holds for every signed state, not just normalized cone states or mass-zero differences. State aliases are definitionally the same Fin3 real functions; mass equality is literal proj0.",
+      "remaining_gap": "None in the base-norm dictionary. This module alone does not prove the regular-polygon approximation, its finite lift, or its observation-law TV error bound.",
+      "fresh_compile": {
+        "source_sha256": "40986c88cead556427922f32bf4ffe36edd2e239dbe68c2c8c9a8460e048e178",
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    }
+  ],
+  "reviewed_dependency_hashes": {
+    "KomorebiLSM/RotationModel.lean": "3795b6684f81ec22edbc962230adab3a70f98af9e5cdb9304e1b6e7ead3f9de1",
+    "KomorebiLSM/BaseNorm.lean": "a1306be5b5d719dd40401a5dbb2c9e937f70ffb2ffaf24e6e98d1d00cb9229bc",
+    "KomorebiLSM/BehaviorSpace.lean": "7c9a1071a136ea34eb4c92ea93e9d93563ede87dd4cecc6f67afe8c3a74b1804",
+    "KomorebiLSM/BehaviorMinimality.lean": "85007f0d4307643d2543a45abe1466373e3d8cc744545171a8b67f3d9a1b05cf"
+  },
+  "changes_to_sources": false,
+  "limits": [
+    "No external literature verification was needed for the algebraic/infimum arguments reviewed.",
+    "Pinned upstream Mathlib lemmas and previously verified LSM dependencies are used.",
+    "This report is not a cumulative package verification or a verdict on the complete P46/P47 pair."
+  ]
+}

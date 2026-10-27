@@ -1,0 +1,43 @@
+import KomorebiLSM.CoveredAdaptiveActions
+import KomorebiLSM.CoveredAdaptiveEvidence
+import KomorebiLSM.CoveredActionBoundaries
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.propensity
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.propensity_measurable
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.targetMean
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.targetMean_measurable
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.targetMean_mem_Icc
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.weightedTest
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.weightedTest_measurable
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.weightedTest_mem_Icc
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.integral_weightedTest
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Experiment
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.recorded_joint_measurable
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidence
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidence_measurable
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidence_mem_Icc
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidence_measurable_at
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidence_condExp
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.kernelMeanProcess
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess_adapted
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess_condExp
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.centeredSum_eq_kernelSum_ae
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.covered_event_measurable
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.covered_adaptive_action_certificate
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.covered_bound_at_selected_time
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.neverPolicy
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.observations
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.neverPolicy_markov
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.observations_markov
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.oneTest
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.target_propensity_zero
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.unobserved_evidence_zero
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.unobserved_mean_one
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.unobserved_joint_law_agreement
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.responseTest
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.unobserved_kernel_means_disagree
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.halfPolicy
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.halfPolicy_markov
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.half_propensity
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.covered_weight_two
+#print axioms Komorebi.LSM.CoveredAdaptiveActions.Boundaries.covered_pair_mass

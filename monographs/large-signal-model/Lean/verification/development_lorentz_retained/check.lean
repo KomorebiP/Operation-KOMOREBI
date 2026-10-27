@@ -1,0 +1,12 @@
+import Mathlib.Analysis.Complex.Basic
+#check Complex.ext
+#check Complex.ext_iff
+#check Complex.ext'
+#check Complex.ofReal_re
+#check Complex.real_smul
+#check Complex.norm_real
+#check smul_eq_mul
+#check inv_mul_le_iff₀
+#check Fin.ext_iff
+#check Fin.mk.injEq
+#print Complex.ext

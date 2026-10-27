@@ -1,0 +1,11 @@
+import KomorebiLSM.PositiveLiftTopology
+import Mathlib.Analysis.Convex.Combination
+import Mathlib.LinearAlgebra.Dual.Lemmas
+#check Convex.sum_mem
+#check convexHull_min
+#check subset_convexHull
+#check convex_convexHull
+#check Module.Dual.eval_apply_injective
+#check Module.Dual.forall_dual_apply_eq_zero_iff
+#check LinearMap.dualMap_surjective_of_injective
+#check Set.subset_def

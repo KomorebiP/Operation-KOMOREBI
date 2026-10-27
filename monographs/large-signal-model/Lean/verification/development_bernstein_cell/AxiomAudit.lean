@@ -1,0 +1,30 @@
+import KomorebiLSM.BernsteinCellPositivity
+
+#print axioms Komorebi.LSM.BernsteinRationalBasis.bernstein_natDegree_le
+#print axioms Komorebi.LSM.BernsteinRationalBasis.vector
+#print axioms Komorebi.LSM.BernsteinRationalBasis.independent
+#print axioms Komorebi.LSM.BernsteinRationalBasis.basis
+#print axioms Komorebi.LSM.BernsteinRationalBasis.basis_val
+#print axioms Komorebi.LSM.BernsteinRationalBasis.coordinates
+#print axioms Komorebi.LSM.BernsteinRationalBasis.reconstruct
+#print axioms Komorebi.LSM.BernsteinRationalBasis.monomialCoordinates
+#print axioms Komorebi.LSM.BernsteinRationalBasis.monomialCoordinates_zero
+#print axioms Komorebi.LSM.BernsteinRationalBasis.monomial_reconstruct
+#print axioms Komorebi.LSM.BernsteinRationalBasis.affineCoordinates
+#print axioms Komorebi.LSM.BernsteinRationalBasis.affine_reconstruct
+#print axioms Komorebi.LSM.BernsteinRationalBasis.affineCoordinates_zero_width
+#print axioms Komorebi.LSM.BernsteinRationalBasis.affineReal
+#print axioms Komorebi.LSM.BernsteinRationalBasis.cast_affineCoordinates
+#print axioms Komorebi.LSM.BernsteinRationalBasis.affineReal_zero_width
+#print axioms Komorebi.LSM.BernsteinRationalBasis.continuous_affineReal
+#print axioms Komorebi.LSM.BernsteinCellPositivity.affine_axis_reconstruct
+#print axioms Komorebi.LSM.BernsteinCellPositivity.coefficients
+#print axioms Komorebi.LSM.BernsteinCellPositivity.realCoefficients
+#print axioms Komorebi.LSM.BernsteinCellPositivity.cast_coefficients
+#print axioms Komorebi.LSM.BernsteinCellPositivity.support_degree
+#print axioms Komorebi.LSM.BernsteinCellPositivity.rational_reconstruction
+#print axioms Komorebi.LSM.BernsteinCellPositivity.continuous_realCoefficients
+#print axioms Komorebi.LSM.BernsteinCellPositivity.realCoefficients_zero_width
+#print axioms Komorebi.LSM.BernsteinCellPositivity.square_compact
+#print axioms Komorebi.LSM.BernsteinCellPositivity.positive_coefficients_near_zero
+#print axioms Komorebi.LSM.BernsteinCellPositivity.exists_small_positive

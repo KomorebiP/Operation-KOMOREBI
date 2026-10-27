@@ -1,0 +1,175 @@
+{
+  "claim": "P59 actual continuous time-dependent record-law TV comparison and optional conditional-event helper",
+  "verdict": "proved as written, with the conditional helper scope explicitly bounded below",
+  "reviewer": "/root/rotation_density",
+  "review_kind": "Separate-agent raw review of nonauthored main/helper modules within the same collaborative model session; not external independent certification.",
+  "sources": {
+    "BaseNormIntegration": {
+      "path": "KomorebiLSM/BaseNormIntegration.lean",
+      "sha256": "61fa39143c0f2118f9bd952223b06f307831910163c0e01bca555606ef8ef0af",
+      "lines_read": 74
+    },
+    "TimeRecords": {
+      "path": "KomorebiLSM/TimeRecords.lean",
+      "sha256": "60e9d705f1a563115042a2e3d795fd7f3c0ba3ddb1e8994cc285ef1662377ae6",
+      "lines_read": 241
+    },
+    "ContinuousTV": {
+      "path": "KomorebiLSM/ContinuousTV.lean",
+      "sha256": "1530bc9ea42cd87aba370b4925da472289506e7efa58abfd912e732de93e0d6d",
+      "lines_read": 305
+    },
+    "ConditionalEventTV": {
+      "path": "KomorebiLSM/ConditionalEventTV.lean",
+      "sha256": "d0b15e30c0409289075ac96afd6911f4f9340c5fc988ff87454397c03985da50",
+      "lines_read": 102
+    }
+  },
+  "registered_statement": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "statement_start_line": 2591,
+    "main_proof_end_line": 2624,
+    "main_statement_proof_sha256": "a2a35bdec15aa1e61909822caee4041f373aa52eedfdf0a3e34458b335d840bc"
+  },
+  "claim_card": {
+    "hypotheses": "Finite-dimensional real normed state space; finite action set; common actual ProbabilityCone and probability reference; two time-indexed DensityInstrument families; normalized initial states; one common measurable randomized full-history policy; nonnegative declared uniform integrated base-norm discrepancy bounds and a supplied initial base-norm bound.",
+    "conclusion": "For every finite horizon the literal joint action/observation record probability measures have probability-convention TV at most min(1,(e0+sum epsilon)/2), without lower branch-density margins.",
+    "conditional_helper": "For each measurable target event, literal normalized restrictions on a common measurable conditioning event with both event probabilities positive differ by at most min(1,2 TV/min event masses), and by min(1,(e0+sum epsilon)/min event masses) under the P59 budget."
+  },
+  "dependency_graph": [
+    "Actual positive-decomposition infimum -> finite-coordinate ambient bound -> continuity, integrability and convex integral inequality.",
+    "Every positive decomposition + cone preservation AE + exact integrated mass -> integrated contraction by infimum.",
+    "Normalization of actual positive states, including zero mass via fallback identity -> homogeneous discrepancy bound.",
+    "Triangle split of literal operator outputs -> integrated one-step state error.",
+    "Normalized finite-action common policy -> finite policy weights and exact weighted chronological states -> genuine counting-action/product-reference lintegral recurrence.",
+    "Actual TimeRecords probability law -> integrated comparison-state mass one -> finite accumulated state error.",
+    "AE cone membership + actual mass readout -> absolute difference of literal record densities bounded by actual state error.",
+    "Actual signed density measure half-variation identity -> actual full record-law TV capstone, with cap by probability TV at most one.",
+    "Actual conditional restrictions + eventwise full-law error + positive denominator scalar ratio estimate -> optional conditional-event bound."
+  ],
+  "obligations": [
+    {
+      "item": "Actual base norm",
+      "status": "passed",
+      "evidence": "C.value remains the sInf of masses of positive decompositions. integrated_contraction tests each such decomposition through C.le_value, using value_on_cone only after AE whole-cone positivity. Neither a contraction formula nor an ambient norm surrogate is supplied as a premise."
+    },
+    {
+      "item": "Integrability and Tonelli",
+      "status": "passed",
+      "evidence": "BaseNormIntegration derives a uniform finite-coordinate bound by K times the ambient norm; continuity and Bochner integrability follow. ContinuousTV proves measurable error integrands and uses nonnegative product lintegrals, so the history recurrence does not assume global error integrability in advance."
+    },
+    {
+      "item": "Zero positive mass",
+      "status": "passed",
+      "evidence": "integrated_discrepancy uses the existing mass_smul_normalize identity on the whole cone and normalized fallback, so zero mass contributes zero without dividing by zero or adding a density lower bound."
+    },
+    {
+      "item": "Chronology and adaptive policy",
+      "status": "passed",
+      "evidence": "TimeRecords.run uses D n on the last recorded action/observation after the prefix. Policy probability is allowed to depend measurably on the whole common history. Same policy weights multiply both compared states. Actions are integrated with counting measure and their probabilities sum exactly to one."
+    },
+    {
+      "item": "Actual finite laws",
+      "status": "passed",
+      "evidence": "TimeRecords.recordLaw is the actual product-reference measure with literal policy-weighted mass density. Its consistency, total probability and all earlier prefix marginals are proved from exact last-step integration, not assumed."
+    },
+    {
+      "item": "Error budget",
+      "status": "passed",
+      "evidence": "stateError_step splits propagated state difference from one-model instrument difference, integrates comparison mass to one, and adds epsilon n. Induction starts from the true C.value initial difference and sums the nonnegative declared errors."
+    },
+    {
+      "item": "TV bridge and half factor",
+      "status": "passed",
+      "evidence": "density_lintegral_le_stateError identifies actual finite ENNReal density toReal with cone mass AE; abs_mass_le gives the bound. record_lawTV_le invokes the genuine signed-measure half-L1 helper and converts ENNReal bounds only against a finite ofReal upper bound. Both models have actual probability instances."
+    },
+    {
+      "item": "Conditional denominator and event scope",
+      "status": "passed with explicit limit",
+      "evidence": "conditional_real rewrites the actual cond measure to a ratio. Both real event masses are strictly positive and finite; target event probabilities lie between zero and the conditioning probability. The ratio estimate gives 2 TV/p and is relaxed to the smaller mass denominator; every measurable target event is quantified."
+    }
+  ],
+  "scope_limits": [
+    "Main endpoint concerns actual finite joint action/observation measures under one common policy. It does not compare separately optimized policies, prove infinite-horizon approximation, or provide pointwise posterior contraction.",
+    "Finite-dimensional state space, finite actions and common probability reference are literal formal hypotheses. They must remain in release mapping scope.",
+    "Instrument discrepancy is measured in the actual common probability-cone norm and integrated reference, not merely coefficient residuals or sample errors.",
+    "The optional ConditionalEventTV helper proves an eventwise bound with factor2/min masses. It does not establish the nearby monograph paragraph claiming a full conditional lawTV bound min(1,delta/p). No such stronger claim is accepted by this review.",
+    "The exact half-density helper ContinuousTVDensity was authored by this reviewer, so it is not independently reviewed here. Its separate raw source review by rotation_model is recorded in RAW_DENSITY_HELPER_REVIEW.json; this provenance is not external independence.",
+    "Author all-name audit/kernel/control logs were inspected; this reviewer freshly reran only the two main/conditional isolated warnings-as-errors compiles listed below. Parent cumulative release verification remains separate."
+  ],
+  "execution_evidence": {
+    "reviewer_isolated_compiles": [
+      {
+        "module": "ContinuousTV",
+        "source_sha256": "1530bc9ea42cd87aba370b4925da472289506e7efa58abfd912e732de93e0d6d",
+        "command": [
+          "/workspace/scratch/ea498747acd5/runtime/gated-bin/lean",
+          "-j1",
+          "-DwarningAsError=true",
+          "-o",
+          "/workspace/scratch/ea498747acd5/tmp/p59_raw_density/ContinuousTV.olean",
+          "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/ContinuousTV.lean"
+        ],
+        "returncode": 0,
+        "log": "verification/development_p59/RAW_DENSITY_ContinuousTV_compile.log",
+        "isolated_output": "/workspace/scratch/ea498747acd5/tmp/p59_raw_density/ContinuousTV.olean",
+        "source_unchanged": true
+      },
+      {
+        "module": "ConditionalEventTV",
+        "source_sha256": "d0b15e30c0409289075ac96afd6911f4f9340c5fc988ff87454397c03985da50",
+        "command": [
+          "/workspace/scratch/ea498747acd5/runtime/gated-bin/lean",
+          "-j1",
+          "-DwarningAsError=true",
+          "-o",
+          "/workspace/scratch/ea498747acd5/tmp/p59_raw_density/ConditionalEventTV.olean",
+          "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/ConditionalEventTV.lean"
+        ],
+        "returncode": 0,
+        "log": "verification/development_p59/RAW_DENSITY_ConditionalEventTV_compile.log",
+        "isolated_output": "/workspace/scratch/ea498747acd5/tmp/p59_raw_density/ConditionalEventTV.olean",
+        "source_unchanged": true
+      }
+    ],
+    "author_named_axiom_records_checked": 54,
+    "author_kernel_replay_markers_inspected": [
+      "BaseNormIntegration",
+      "TimeRecords",
+      "ContinuousTV",
+      "ConditionalEventTV"
+    ],
+    "controls": [
+      {
+        "path": "negative_controls/ContinuousTVWrongHalfFactor.lean",
+        "sha256": "eb16f6dbdecf82421bc545f5679ae978f053254fb4e75f787075129f087dc418",
+        "review": "Read source and actual-False author execution log; no reviewer rerun claimed.",
+        "log": "wrong_half_control.log",
+        "boundary": "Quarter-L1 normalization contradicts the exact probability TV of two disjoint point masses."
+      },
+      {
+        "path": "negative_controls/ContinuousTVMassWithoutPositivity.lean",
+        "sha256": "529d75dac82acfda9d93f300f363ef060fbe38003f49805633e1fad0c9f92f65",
+        "review": "Read source and actual-False author execution log; no reviewer rerun claimed.",
+        "log": "mass_without_positivity_control.log",
+        "boundary": "Exact mass preservation without cone positivity permits spatial dilation and fails actual Lorentz base-norm contraction."
+      },
+      {
+        "path": "negative_controls/ConditionalEventTVZeroEvent.lean",
+        "sha256": "4edf6033b55cc0cbea083e5be0a62526df1a47de9536aab5e7282fd07ace16fb",
+        "review": "Read source and actual-False author execution log; no reviewer rerun claimed.",
+        "log": "zero_event_control.log",
+        "boundary": "A zero-mass restriction has zero conditional measure, not a probability posterior."
+      }
+    ]
+  },
+  "own_leaf_provenance": {
+    "source": "KomorebiLSM/ContinuousTVDensity.lean",
+    "sha256": "1a2abdc88870cc09f3a6052a21c85ab14756af847d4d4b3528b97230e2db3cbf",
+    "separate_raw_review": "verification/development_p59/RAW_DENSITY_HELPER_REVIEW.json",
+    "review_sha256": "736f58b2da988649d2e3bff6c06faa420a05cde2f7e47d51234e8f79c461fd47"
+  },
+  "issues": [],
+  "strongest_safe_statement": "The literal main P59 record-law TV theorem is supported as written. The optional conditional helper supports exactly its stated eventwise factor2/min-mass conclusion, with both conditioning masses positive.",
+  "utc": "2026-10-24T19:42:46.355743+00:00"
+}

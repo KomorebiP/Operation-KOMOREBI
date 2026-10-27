@@ -1,0 +1,167 @@
+import KomorebiLSM.FiniteInstrument
+import Mathlib.LinearAlgebra.Matrix.Diagonal
+
+/-! P30: positivity is an additional packet contract, not a consequence of
+reconstruction. Complete positive idempotents on an orthant are coordinate selectors. -/
+set_option autoImplicit false
+namespace Komorebi.LSM.PositivePackets
+open scoped BigOperators
+
+section Mixtures
+variable {X J : Type*} [AddCommGroup X] [Module ℝ X] [Fintype J]
+
+/-- Nonzero cone points have strictly positive mass. -/
+def StrictMass (C : Set X) (l : X →ₗ[ℝ] ℝ) : Prop :=
+  ∀ x ∈ C, x ≠ 0 → 0 < l x
+
+theorem mass_nonnegative (C : Set X) (l : X →ₗ[ℝ] ℝ) (hl : StrictMass C l)
+    (x : X) (hx : x ∈ C) : 0 ≤ l x := by
+  by_cases h : x = 0
+  · simp [h]
+  · exact (hl x hx h).le
+
+theorem mass_zero_iff (C : Set X) (l : X →ₗ[ℝ] ℝ) (hl : StrictMass C l)
+    (x : X) (hx : x ∈ C) : l x = 0 ↔ x = 0 := by
+  constructor
+  · intro hm
+    by_contra h
+    exact (ne_of_gt (hl x hx h)) hm
+  · intro h; simp [h]
+
+theorem packet_weights_sum (l : X →ₗ[ℝ] ℝ) (P : J → X →ₗ[ℝ] X)
+    (hP : ∑ j, P j = LinearMap.id) (z : X) (hz : l z = 1) :
+    ∑ j, l (P j z) = 1 := by
+  rw [← map_sum]
+  have he : ∑ j, P j z = z := by
+    simpa only [LinearMap.sum_apply,LinearMap.id_apply] using
+      congrArg (fun F : X →ₗ[ℝ] X => F z) hP
+  rw [he,hz]
+
+/-- An individual normalized packet belongs to the cone only by positivity. -/
+theorem normalized_packet (C : Set X)
+    (hscale : ∀ (c : ℝ), 0 ≤ c → ∀ x ∈ C, c • x ∈ C)
+    (l : X →ₗ[ℝ] ℝ) (P : X →ₗ[ℝ] X) (hp : ∀ x ∈ C, P x ∈ C)
+    (z : X) (hz : z ∈ C) (hw : 0 < l (P z)) :
+    (l (P z))⁻¹ • P z ∈ C ∧ l ((l (P z))⁻¹ • P z) = 1 := by
+  refine ⟨hscale _ (inv_nonneg.mpr hw.le) _ (hp z hz), ?_⟩
+  simp [ne_of_gt hw]
+
+/-- The positive-weight mixture reconstructs z; zero-weight terms vanish. -/
+theorem positive_packet_mixture [DecidableEq J] (C : Set X)
+    (l : X →ₗ[ℝ] ℝ) (hl : StrictMass C l)
+    (P : J → X →ₗ[ℝ] X) (hp : ∀ j x, x ∈ C → P j x ∈ C)
+    (hP : ∑ j, P j = LinearMap.id) (z : X) (hz : z ∈ C) :
+    ∑ j ∈ Finset.univ.filter (fun j => 0 < l (P j z)),
+      l (P j z) • ((l (P j z))⁻¹ • P j z) = z := by
+  classical
+  rw [Finset.sum_filter]
+  have he : ∑ j, P j z = z := by
+    simpa only [LinearMap.sum_apply,LinearMap.id_apply] using
+      congrArg (fun F : X →ₗ[ℝ] X => F z) hP
+  apply Eq.trans (b := ∑ j, P j z) ?_ he
+  apply Finset.sum_congr rfl
+  intro j _
+  by_cases hw : 0 < l (P j z)
+  · simp [hw,smul_smul,ne_of_gt hw]
+  · have hm : l (P j z) = 0 := le_antisymm (le_of_not_gt hw) (mass_nonnegative C l hl _ (hp j z hz))
+    have hv := (mass_zero_iff C l hl _ (hp j z hz)).mp hm
+    simp [hv]
+
+end Mixtures
+
+section Orthant
+variable {I J : Type*} [Fintype I] [DecidableEq I] [Fintype J] [DecidableEq J]
+
+/-- Positivity for all nonnegative inputs equals entrywise matrix positivity. -/
+theorem orthant_preserving_iff (M : Matrix I I ℝ) :
+    (∀ x : I → ℝ, (∀ i, 0 ≤ x i) → ∀ i, 0 ≤ M.mulVec x i) ↔
+      ∀ i j, 0 ≤ M i j := by
+  constructor
+  · intro h i j
+    have hp : ∀ k, 0 ≤ FiniteBayes.pointMass j k := by
+      intro k
+      simp only [FiniteBayes.pointMass]
+      positivity
+    have hm := h (FiniteBayes.pointMass j) hp i
+    simpa [Matrix.mulVec,dotProduct,FiniteBayes.pointMass] using hm
+  · intro h x hx i
+    exact Finset.sum_nonneg (fun j _ => mul_nonneg (h i j) (hx j))
+
+omit [Fintype I] [DecidableEq J] in
+/-- Nonnegative matrices summing to identity have no off-diagonal entries. -/
+theorem off_diagonal_zero (P : J → Matrix I I ℝ)
+    (hp : ∀ k i j, 0 ≤ P k i j) (hP : ∑ k, P k = 1)
+    (k : J) (i j : I) (hij : i ≠ j) : P k i j = 0 := by
+  have hs : ∑ k, P k i j = 0 := by
+    have he := congrArg (fun M : Matrix I I ℝ => M i j) hP
+    simpa only [Matrix.sum_apply,Matrix.one_apply_ne hij] using he
+  have he : P k i j ≤ ∑ k, P k i j :=
+    Finset.single_le_sum (fun k _ => hp k i j) (Finset.mem_univ k)
+  rw [hs] at he
+  exact le_antisymm he (hp k i j)
+
+omit [Fintype I] [DecidableEq J] in
+theorem matrix_eq_diagonal (P : J → Matrix I I ℝ)
+    (hp : ∀ k i j, 0 ≤ P k i j) (hP : ∑ k, P k = 1) (k : J) :
+    P k = Matrix.diagonal (fun i => P k i i) := by
+  ext i j
+  by_cases h : i=j
+  · subst j; simp
+  · rw [Matrix.diagonal_apply_ne _ h,off_diagonal_zero P hp hP k i j h]
+
+omit [DecidableEq J] in
+/-- Idempotence restricts each diagonal entry to zero or one. -/
+theorem diagonal_boolean (P : J → Matrix I I ℝ)
+    (hp : ∀ k i j, 0 ≤ P k i j) (hP : ∑ k, P k = 1)
+    (hid : ∀ k, P k * P k = P k) (k : J) (i : I) :
+    P k i i = 0 ∨ P k i i = 1 := by
+  have he := hid k
+  rw [matrix_eq_diagonal P hp hP k,Matrix.diagonal_mul_diagonal] at he
+  have hv := congrArg (fun M : Matrix I I ℝ => M i i) he
+  simp only [Matrix.diagonal_apply_eq] at hv
+  have hz : P k i i * (P k i i - 1) = 0 := by nlinarith
+  rcases mul_eq_zero.mp hz with h|h
+  · exact Or.inl h
+  · exact Or.inr (sub_eq_zero.mp h)
+
+/-- Completeness makes the coordinate selections disjoint and exhaustive. -/
+theorem unique_selected_packet (P : J → Matrix I I ℝ)
+    (hp : ∀ k i j, 0 ≤ P k i j) (hP : ∑ k, P k = 1)
+    (hid : ∀ k, P k * P k = P k) (i : I) : ∃! k, P k i i = 1 := by
+  have hs : ∑ k, P k i i = 1 := by
+    have he := congrArg (fun M : Matrix I I ℝ => M i i) hP
+    simpa only [Matrix.sum_apply,Matrix.one_apply_eq] using he
+  have hex : ∃ k, P k i i = 1 := by
+    by_contra hn
+    push Not at hn
+    have hz : ∀ k, P k i i = 0 := fun k =>
+      (diagonal_boolean P hp hP hid k i).resolve_right (hn k)
+    simp only [hz,Finset.sum_const_zero] at hs
+    norm_num at hs
+  obtain ⟨k,hk⟩ := hex
+  refine ⟨k,hk, ?_⟩
+  intro j hj
+  by_contra hne
+  have herase : ∑ q ∈ Finset.univ.erase k, P q i i = 0 := by
+    have he := Finset.sum_erase_add Finset.univ (fun q => P q i i) (Finset.mem_univ k)
+    rw [hs,hk] at he
+    linarith
+  have hjmem : j ∈ Finset.univ.erase k := Finset.mem_erase.mpr ⟨hne,Finset.mem_univ j⟩
+  have hjle : P j i i ≤ ∑ q ∈ Finset.univ.erase k, P q i i :=
+    Finset.single_le_sum (fun q _ => hp q i i) hjmem
+  rw [hj,herase] at hjle
+  norm_num at hjle
+
+/-- P30's orthant boundary: positive complete projectors are only selections. -/
+theorem positive_idempotents_are_coordinate_selections (P : J → Matrix I I ℝ)
+    (hp : ∀ k, ∀ x : I → ℝ, (∀ i, 0 ≤ x i) → ∀ i, 0 ≤ (P k).mulVec x i)
+    (hP : ∑ k, P k = 1) (hid : ∀ k, P k * P k = P k) :
+    (∀ k, P k = Matrix.diagonal (fun i => P k i i)) ∧
+    (∀ k i, P k i i = 0 ∨ P k i i = 1) ∧
+    (∀ i, ∃! k, P k i i = 1) := by
+  have hnonneg := fun k => (orthant_preserving_iff (P k)).mp (hp k)
+  exact ⟨matrix_eq_diagonal P hnonneg hP,
+    diagonal_boolean P hnonneg hP hid,unique_selected_packet P hnonneg hP hid⟩
+
+end Orthant
+end Komorebi.LSM.PositivePackets

@@ -1,0 +1,108 @@
+@Komorebi.LSM.ConditionalHoeffding.centered_condExp_le : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω]
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {m : MeasurableSpace Ω},
+  m ≤ mΩ →
+    ∀ (X : Ω → ℝ),
+      Measurable X →
+        (∀ᵐ (ω : Ω) ∂μ, X ω ∈ Set.Icc 0 1) →
+          ∀ (θ : ℝ), μ[fun ω => Real.exp (θ * (X ω - μ[X | m] ω)) | m] ≤ᵐ[μ] fun x => Real.exp (θ ^ 2 / 8)
+@Komorebi.LSM.PredictableResidualGeneral.sum_exp_bound : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω]
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] (ℱ : MeasureTheory.Filtration ℕ mΩ)
+  (X : ℕ → Ω → ℝ),
+  (∀ (i : ℕ), Measurable (X i)) →
+    (∀ (i : ℕ), ∀ᵐ (ω : Ω) ∂μ, X i ω ∈ Set.Icc 0 1) →
+      ∀ (θ : ℝ) (n : ℕ),
+        ∫ (ω : Ω), Real.exp (θ * Komorebi.LSM.PredictableResidual.centeredSum ℱ X n ω) ∂μ ≤ Real.exp (↑n * θ ^ 2 / 8)
+@Komorebi.LSM.PredictableResidualGeneral.predictable_sum_subgaussian : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω]
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] (ℱ : MeasureTheory.Filtration ℕ mΩ)
+  (X : ℕ → Ω → ℝ),
+  (∀ (i : ℕ), Measurable (X i)) →
+    (∀ (i : ℕ), ∀ᵐ (ω : Ω) ∂μ, X i ω ∈ Set.Icc 0 1) →
+      ∀ (n : ℕ), ProbabilityTheory.HasSubgaussianMGF (Komorebi.LSM.PredictableResidual.centeredSum ℱ X n) (↑n / 4) μ
+@Komorebi.LSM.PredictableResidualGeneral.time_uniform_rules : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω]
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {J : Type u_2} [Countable J]
+  (ℱ : MeasureTheory.Filtration ℕ mΩ) (X : J → ℕ → Ω → ℝ),
+  (∀ (j : J) (i : ℕ), Measurable (X j i)) →
+    (∀ (j : J) (i : ℕ), ∀ᵐ (ω : Ω) ∂μ, X j i ω ∈ Set.Icc 0 1) →
+      ∀ (α : J → NNReal),
+        (∀ (j : J), 0 < α j) →
+          Summable α →
+            ∀ (δ : NNReal),
+              ∑' (j : J), α j ≤ δ →
+                δ ≤ 1 →
+                  1 - ↑δ ≤
+                    μ.real
+                      {ω |
+                        ∀ (j : J) (n : ℕ),
+                          |Komorebi.LSM.PredictableResidual.centeredSum ℱ (X j) (n + 1) ω| ≤
+                            Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)}
+@Komorebi.LSM.PredictableResidualGeneral.predictable_sum_interval_rules : ∀ {Ω : Type u_1} {J : Type u_2}
+  [mΩ : MeasurableSpace Ω] [Countable J] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]
+  (ℱ : MeasureTheory.Filtration ℕ mΩ) (X : J → ℕ → Ω → ℝ) (lower width : J → ℝ),
+  (∀ (j : J), 0 ≤ width j) →
+    (∀ (j : J) (i : ℕ), Measurable (X j i)) →
+      (∀ (j : J) (i : ℕ), ∀ᵐ (ω : Ω) ∂μ, X j i ω ∈ Set.Icc (lower j) (lower j + width j)) →
+        ∀ (α : J → NNReal),
+          (∀ (j : J), 0 < α j) →
+            Summable α →
+              ∀ (δ : NNReal),
+                ∑' (j : J), α j ≤ δ →
+                  δ ≤ 1 →
+                    1 - ↑δ ≤
+                      μ.real
+                        {ω |
+                          ∀ (j : J) (n : ℕ),
+                            |Komorebi.LSM.PredictableResidual.centeredSum ℱ (X j) (n + 1) ω| ≤
+                              width j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)}
+@Komorebi.LSM.PredictableResidualGeneral.predictable_residual_interval_certificate : ∀ {Ω : Type u_1} {J : Type u_2}
+  [mΩ : MeasurableSpace Ω] [Countable J] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]
+  (ℱ : MeasureTheory.Filtration ℕ mΩ) (X p : J → ℕ → Ω → ℝ) (lower width : J → ℝ),
+  (∀ (j : J), 0 ≤ width j) →
+    (∀ (j : J) (i : ℕ), Measurable (X j i)) →
+      (∀ (j : J) (i : ℕ), ∀ᵐ (ω : Ω) ∂μ, X j i ω ∈ Set.Icc (lower j) (lower j + width j)) →
+        ∀ (α : J → NNReal),
+          (∀ (j : J), 0 < α j) →
+            Summable α →
+              ∀ (δ : NNReal),
+                ∑' (j : J), α j ≤ δ →
+                  δ ≤ 1 →
+                    MeasurableSet
+                        {ω |
+                          ∀ (j : J) (n : ℕ),
+                            |Komorebi.LSM.PredictableResidual.observedResidual (X j) (p j) (n + 1) ω -
+                                  Komorebi.LSM.PredictableResidual.conditionalDrift ℱ (X j) (p j) (n + 1) ω| ≤
+                              width j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)} ∧
+                      1 - ↑δ ≤
+                        μ.real
+                          {ω |
+                            ∀ (j : J) (n : ℕ),
+                              |Komorebi.LSM.PredictableResidual.observedResidual (X j) (p j) (n + 1) ω -
+                                    Komorebi.LSM.PredictableResidual.conditionalDrift ℱ (X j) (p j) (n + 1) ω| ≤
+                                width j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)}
+@Komorebi.LSM.PredictableResidualGeneral.registration_transport : ∀ {Ω : Type u_1} {J : Type u_2}
+  [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} {K : Type u_3} (e : K ≃ J) (ℱ : MeasureTheory.Filtration ℕ mΩ)
+  (X p : J → ℕ → Ω → ℝ) (width : J → ℝ) (α : J → NNReal),
+  Summable α →
+    (Summable fun k => α (e k)) ∧
+      ∑' (k : K), α (e k) = ∑' (j : J), α j ∧
+        {ω |
+            ∀ (k : K) (n : ℕ),
+              |Komorebi.LSM.PredictableResidual.observedResidual (X (e k)) (p (e k)) (n + 1) ω -
+                    Komorebi.LSM.PredictableResidual.conditionalDrift ℱ (X (e k)) (p (e k)) (n + 1) ω| ≤
+                width (e k) * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α (e k))} =
+          {ω |
+            ∀ (j : J) (n : ℕ),
+              |Komorebi.LSM.PredictableResidual.observedResidual (X j) (p j) (n + 1) ω -
+                    Komorebi.LSM.PredictableResidual.conditionalDrift ℱ (X j) (p j) (n + 1) ω| ≤
+                width j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)}
+@Komorebi.LSM.PredictableResidualGeneral.selected_interval_bound : ∀ {Ω : Type u_1} {J : Type u_2}
+  [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} (ℱ : MeasureTheory.Filtration ℕ mΩ) (X p : J → ℕ → Ω → ℝ)
+  (width : J → ℝ) (α : J → NNReal) (ω : Ω),
+  (∀ (j : J) (n : ℕ),
+      |Komorebi.LSM.PredictableResidual.observedResidual (X j) (p j) (n + 1) ω -
+            Komorebi.LSM.PredictableResidual.conditionalDrift ℱ (X j) (p j) (n + 1) ω| ≤
+        width j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)) →
+    ∀ (time : Ω → ℕ) (rule : Ω → J),
+      0 < time ω →
+        |Komorebi.LSM.PredictableResidual.observedResidual (X (rule ω)) (p (rule ω)) (time ω) ω -
+              Komorebi.LSM.PredictableResidual.conditionalDrift ℱ (X (rule ω)) (p (rule ω)) (time ω) ω| ≤
+          width (rule ω) * Komorebi.LSM.PredictableResidual.boundary (time ω) ↑(α (rule ω))

@@ -1,0 +1,24 @@
+import KomorebiLSM.InteriorRepair
+#print axioms Komorebi.LSM.InteriorRepair.centerReset
+#print axioms Komorebi.LSM.InteriorRepair.centerReset_apply
+#print axioms Komorebi.LSM.InteriorRepair.resetOperator
+#print axioms Komorebi.LSM.InteriorRepair.resetOperator_normalized
+#print axioms Komorebi.LSM.InteriorRepair.centerReset_mass
+#print axioms Komorebi.LSM.InteriorRepair.resetOperator_positive
+#print axioms Komorebi.LSM.InteriorRepair.repair
+#print axioms Komorebi.LSM.InteriorRepair.repair_slack
+#print axioms Komorebi.LSM.InteriorRepair.estimate_slack_lower
+#print axioms Komorebi.LSM.InteriorRepair.repair_margin
+#print axioms Komorebi.LSM.InteriorRepair.robust_repair_preserves
+#print axioms Komorebi.LSM.InteriorRepair.EstimateFamily
+#print axioms Komorebi.LSM.InteriorRepair.ResetProfile
+#print axioms Komorebi.LSM.InteriorRepair.ResetProfile.instrument
+#print axioms Komorebi.LSM.InteriorRepair.mixedFamily
+#print axioms Komorebi.LSM.InteriorRepair.repairedInstrument
+#print axioms Komorebi.LSM.InteriorRepair.EstimateFamily.ofPolynomial
+#print axioms Komorebi.LSM.InteriorRepair.ResetProfile.ofPolynomial
+#print axioms Komorebi.LSM.InteriorRepair.EstimateFamily.applied_integrable
+#print axioms Komorebi.LSM.InteriorRepair.ResetProfile.integrated_cost_le_two
+#print axioms Komorebi.LSM.InteriorRepair.repair_difference
+#print axioms Komorebi.LSM.InteriorRepair.repair_integrated_error
+#print axioms Komorebi.LSM.InteriorRepair.common_policy_law_error

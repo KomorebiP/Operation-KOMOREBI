@@ -1,0 +1,74 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true MODULE.lean",
+    "exit_code": 0,
+    "scope": "Fresh file acceptance only; integrated axiom audit and kernel replay remain parent responsibilities."
+  },
+  "claim_id": 23,
+  "claim": "For any finite active grammar subset with positive evidence, full versus zero-extended active posterior TV equals omitted posterior mass, every common predictive event differs by at most this mass, and an omitted-evidence bound gives b/(ZA+b). Along an increasing exhaustive sequence, actual posterior TV tends to zero.",
+  "input": {
+    "path": "KomorebiLSM/GrammarAccounting.lean",
+    "sha256": "d6c3771e73cd819a2676ff9e6bba5a91096a8ddb8f04988f96e70b43712a8f3e"
+  },
+  "assumptions": [
+    "w(g)=prior(g)*whole_record_likelihood(g) is nonnegative and summable.",
+    "Active set A is finite with ZA>0; hence full evidence Z>=ZA>0.",
+    "Predictive event probabilities lie in [0,1].",
+    "Omitted evidence is bounded by b; monotone exhaustive active sets for convergence."
+  ],
+  "dependency_graph": [
+    "On A, q=w/ZA >= p=w/Z; off A q=0.",
+    "Pointwise absolute difference is p+q-2*retained_p; summing gives 2-2*ZA/Z.",
+    "For d=p-q with sum zero, event weighting in [0,1] lies between negative and positive variation totals.",
+    "Actual omitted evidence is Z-ZA and b>=Z-ZA>=0; cross multiplication yields (Z-ZA)/Z<=b/(ZA+b).",
+    "Monotone exhaustive finite sets are cofinal; composing HasSum with cofinality gives ZA_n -> Z.",
+    "Positive Z implies eventually positive ZA_n, so the actual TV error is eventually equal to 1-ZA_n/Z and tends to zero."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Summability is explicit wherever infinite-sum subtraction or monotone comparison is used.",
+      "status": "passed"
+    },
+    {
+      "obligation": "All-event family bound quantifies over arbitrary event indices, so it covers every measurable event of any supplied common kernel.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Early zero-evidence stages do not invalidate convergence; eventual positivity is proved separately.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The source proves actual TV convergence rather than merely convergence of a surrogate tail scalar.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Empty active sets are excluded exactly by ZA>0; zero omitted bound gives exact agreement.",
+      "status": "passed"
+    }
+  ],
+  "residual_limits": [
+    "No claim that the true mechanism belongs to the enumerated grammar.",
+    "Predictive kernel measure construction is external input; the proof uses its event probabilities and proves their uniform bound.",
+    "The bound b requires actual omitted evidence control; likelihood densities are not assumed <=1."
+  ],
+  "strongest_safe_statement": "For any finite active grammar subset with positive evidence, full versus zero-extended active posterior TV equals omitted posterior mass, every common predictive event differs by at most this mass, and an omitted-evidence bound gives b/(ZA+b). Along an increasing exhaustive sequence, actual posterior TV tends to zero.",
+  "cheapest_next_check": "Parent integrated clean compile, exhaustive axiom audit and kernel replay against the same source hashes.",
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  }
+}

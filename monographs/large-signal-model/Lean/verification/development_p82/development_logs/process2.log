@@ -1,0 +1,64 @@
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/ObservableMomentProcess.lean:42:0: error: automatically included section variable(s) unused in theorem `Komorebi.LSM.ObservableMoments.currentState_measurable`:
+  [FiniteDimensional ℝ E]
+  [BorelSpace E]
+  [IsProbabilityMeasure μ]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] [BorelSpace E] [IsProbabilityMeasure μ] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/ObservableMomentProcess.lean:45:0: error: automatically included section variable(s) unused in theorem `Komorebi.LSM.ObservableMoments.currentAction_measurable`:
+  [FiniteDimensional ℝ E]
+  [BorelSpace E]
+  [IsProbabilityMeasure μ]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [FiniteDimensional ℝ E] [BorelSpace E] [IsProbabilityMeasure μ] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/ObservableMomentProcess.lean:162:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  μ[⇑L ∘ fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n] ω
+in the target expression
+  μ[fun ω => g (P.observation n ω) * currentState D P (n + 1) ω i | ↑ℱ n] ω =
+    (momentOperator D g (currentAction D P n ω)) (currentState D P n ω) i
+
+Ω : Type u_1
+H : Type u_2
+A : Type u_3
+Y : Type u_4
+r : ℕ
+mΩ : MeasurableSpace Ω
+mH : MeasurableSpace H
+inst✝⁵ : MeasurableSpace Y
+inst✝⁴ : MeasurableSpace A
+inst✝³ : Fintype A
+inst✝² : MeasurableSingletonClass A
+C : BaseNorm.ProbabilityCone (Fin r → ℝ)
+ν : Measure Y
+inst✝¹ : IsProbabilityMeasure ν
+D : ContinuousInstrument.DensityInstrument C ν
+μ : Measure Ω
+inst✝ : IsProbabilityMeasure μ
+ℱ : Filtration ℕ mΩ
+P : AccessibleProcess D ℱ
+a : A
+g : Y → ℝ
+hg : Measurable g
+hgi : ∀ (b : A), Integrable (fun y => g y • D.op b y) ν
+i : Fin r
+n : ℕ
+L : (Fin r → ℝ) →L[ℝ] ℝ := ContinuousLinearMap.proj i
+hi : Integrable (fun ω => g (P.observation n ω) • currentState D P (n + 1) ω) μ
+hcoord :
+  ⇑L ∘ μ[fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n] =ᵐ[μ]
+    μ[⇑L ∘ fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n]
+hvec :
+  μ[fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n] =ᵐ[μ] fun ω =>
+    (momentOperator D g (currentAction D P n ω)) (currentState D P n ω)
+ω : Ω
+hc :
+  (⇑L ∘ μ[fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n]) ω =
+    μ[⇑L ∘ fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n] ω
+hv :
+  μ[fun ω => g (P.observation n ω) • currentState D P (n + 1) ω | ↑ℱ n] ω =
+    (momentOperator D g (currentAction D P n ω)) (currentState D P n ω)
+⊢ μ[fun ω => g (P.observation n ω) * currentState D P (n + 1) ω i | ↑ℱ n] ω =
+    (momentOperator D g (currentAction D P n ω)) (currentState D P n ω) i

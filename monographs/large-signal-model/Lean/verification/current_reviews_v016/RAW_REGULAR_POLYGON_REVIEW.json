@@ -1,0 +1,114 @@
+{
+  "primary_verdict": "proved as written for the exact geometric and sufficient-vertex-budget statements in this module",
+  "scope": "RegularPolygon.lean only. This is not an audit verdict that full P47 has been integrated or verified.",
+  "source_file": "KomorebiLSM/RegularPolygon.lean",
+  "source_sha256": "a1741ce16c7788ab61fc9a3610730adfbe1db19414b2de021def10ff60aa168b",
+  "supporting_source": "KomorebiLSM/RegularPolygonAngles.lean",
+  "supporting_source_sha256": "7c9af5292af59365edade558e73916c87f9c818382a330ce0262da2679841361",
+  "base_checkpoint": "LSM-0.15.0",
+  "parent_archive_sha256": "85b8a25021b665da32f7328ced65d797b2a383464f01a3a2962f0b1bd8214b05",
+  "claim_card": {
+    "field": "Real Hilbert space underlying Complex",
+    "objects": "Actual finite regular-polygon vertices exp(2*pi*i*j/n), convex hull of their range, arbitrary circle rotation q, nonnegative attenuation alpha, exact real eta and natural-number ceiling.",
+    "hypotheses": "Finite support for the abstract hull lemma; n>=3 for regular-polygon inradius and invariance; alpha>=0 and alpha<=cos(pi/n); eta>0 for the sufficient ceiling count.",
+    "conclusions": [
+      "The closed radius-r ball is contained in the finite convex hull when actual support in every direction is at least norm(v)*r.",
+      "The regular polygon is closed and convex, contains the disk of radius cos(pi/n), and lies in the unit disk.",
+      "Zero belongs for n>=3 and one belongs for n>0.",
+      "Every arbitrary unit rotation followed by attenuation alpha<=cos(pi/n) preserves the actual polygon.",
+      "n=max(3,ceil(pi/sqrt(2*eta))) gives n>=3 and 1-eta<=cos(pi/n)."
+    ]
+  },
+  "dependency_graph": [
+    {
+      "node": "ball_subset_convexHull_of_support",
+      "depends_on": [
+        "finite convex hull compact/closed",
+        "strict real Hahn-Banach separation",
+        "real Riesz representation on Complex",
+        "Cauchy-Schwarz inequality",
+        "actual support hypothesis"
+      ]
+    },
+    {
+      "node": "closedBall_subset_polygon",
+      "depends_on": [
+        "ball_subset_convexHull_of_support",
+        "RegularPolygonAngles.support_lower"
+      ]
+    },
+    {
+      "node": "scaled_rotation_mem_polygon",
+      "depends_on": [
+        "closedBall_subset_polygon",
+        "polygon_subset_closedBall",
+        "Circle.norm_coe",
+        "alpha nonnegative"
+      ]
+    },
+    {
+      "node": "sufficient_vertex_count",
+      "depends_on": [
+        "one_sub_sq_div_two_le_cos",
+        "positive denominator/square-root algebra",
+        "actual natural ceiling/max bounds"
+      ]
+    }
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "HB separator orientation and Riesz dictionary",
+      "status": "passed",
+      "evidence": "Hahn-Banach yields f(p)<u<f(z). Riesz gives f(x)=inner(v,x). Cauchy-Schwarz and norm(z)<=r give f(z)<=norm(v)*r<=f(p), contradiction. No desired disk inclusion is assumed."
+    },
+    {
+      "obligation": "All requested regular polygon geometry concerns actual finite vertices/hull",
+      "status": "passed",
+      "evidence": "polygon is convexHull of range(vertex n); support comes from the compiled angle/finite modulo-index module, not a supplied inradius."
+    },
+    {
+      "obligation": "Outer radius and initial point",
+      "status": "passed",
+      "evidence": "Every actual vertex has norm1, convexity of the closed unit ball gives hull inclusion; j=0 gives the actual vertex1."
+    },
+    {
+      "obligation": "Arbitrary rotation/attenuation invariance",
+      "status": "passed",
+      "evidence": "Unit-circle norm multiplicativity gives norm(alpha*q*z)=alpha*norm(z)<=alpha<=cos(pi/n), hence actual inradius membership."
+    },
+    {
+      "obligation": "Exact sufficient vertex count",
+      "status": "passed",
+      "evidence": "The ceiling/max bound gives pi/n<=sqrt(2*eta); squaring nonnegative values and 1-x^2/2<=cos(x) give the target. No numerical approximation is used."
+    },
+    {
+      "obligation": "Boundary cases",
+      "status": "passed",
+      "evidence": "n=0 is admitted only for unconditional empty-hull closedness/outer-ball inclusion. n>=3 prevents zero denominator and supplies nonnegative cos radius. v=0 requires no cancellation, and the strict separation contradiction excludes zero separators automatically. eta>1 still satisfies the stronger geometric budget lemma; alpha=1-eta nonnegativity is a separate application condition."
+    },
+    {
+      "obligation": "Finite positive lift and probability-law TV bound for P47",
+      "status": "out of scope",
+      "evidence": "These are not claims in RegularPolygon.lean and require the approximation/instrument modules and their explicit domain/positivity/policy contracts."
+    }
+  ],
+  "pinned_upstream_sources": {
+    "Mathlib/Analysis/LocallyConvex/Separation.lean": "649cfe33fdb3999dfe168ee52cdfba11c45856e3fc34f7be4f971c80c772166e",
+    "Mathlib/Analysis/InnerProductSpace/Dual.lean": "08b322e273f407797546852f889b1ebd52af30616fd07cfb005e0e2a0916594c",
+    "Mathlib/Analysis/Convex/Topology.lean": "86dece874849521af2a54e5afd59c3466d63b01fd9f84452a5cb62d87fd07d2b",
+    "Mathlib/Analysis/SpecialFunctions/Trigonometric/Bounds.lean": "5694dd0431407d5dd07bf30d6b99fc03682c32c0cbc5023993af4a558e75d46b"
+  },
+  "fresh_compile": {
+    "returncode": 0,
+    "warnings_as_errors": true,
+    "log": "tmp/p47_regular_audit/compile.log",
+    "source_hash_unchanged_after_compile": true
+  },
+  "remaining_gap_in_audited_geometric_claims": null,
+  "remaining_full_P47_obligations": [
+    "Transport spatial polygon invariance into the actual three-coordinate controlled model.",
+    "Construct the finite normalized positive lift.",
+    "Derive the common-policy total-variation estimate, and retain the rational diamond specialization where stated."
+  ],
+  "review_provenance": "Separate-agent raw review of parent-authored RegularPolygon.lean in the same team/model lineage. This reviewer authored its supporting RegularPolygonAngles.lean, so the dependency leaf review is author self-review, not an independent external audit."
+}

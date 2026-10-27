@@ -1,0 +1,80 @@
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveActions.lean:181:10: error(lean.unknownIdentifier): Unknown identifier `MeasureTheory.setIntegral_compProd`
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveActions.lean:180:108: error: unsolved goals
+Ω : Type u_1
+A : Type u_2
+Y : Type u_3
+mΩ : MeasurableSpace Ω
+mA : MeasurableSpace A
+mY : MeasurableSpace Y
+inst✝³ : Fintype A
+inst✝² : DecidableEq A
+inst✝¹ : MeasurableSingletonClass A
+μ : Measure Ω
+inst✝ : IsProbabilityMeasure μ
+m : MeasurableSpace Ω
+hm : m ≤ mΩ
+action : Ω → A
+observation : Ω → Y
+E : Experiment hm action observation
+φ : Ω × Y → ℝ
+hφ : Measurable φ
+hb : ∀ (ω : Ω) (y : Y), φ (ω, y) ∈ Set.Icc 0 1
+a : A
+c : ℝ
+hc : 0 < c
+hcover : ∀ (ω : Ω), c ≤ propensity E.policy a ω
+this : MeasurableSpace Ω := mΩ
+hW : Measurable (weightedTest E.policy φ a)
+hWi : Integrable (weightedTest E.policy φ a) (μ.trim hm ⊗ₘ (E.policy ⊗ₖ E.observationKernel))
+hevi : Integrable (evidence hm E φ a) μ
+hg : Measurable (targetMean E.observationKernel φ a)
+hgi : Integrable (targetMean E.observationKernel φ a) μ
+s : Set Ω
+hs : MeasurableSet s
+a✝ : μ s < ∞
+⊢ ∫ (ω : Ω) in s, targetMean E.observationKernel φ a ω ∂μ.trim hm =
+    ∫ (p : Ω × A × Y) in s ×ˢ Set.univ, weightedTest E.policy φ a p ∂μ.trim hm ⊗ₘ (E.policy ⊗ₖ E.observationKernel)
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveActions.lean:191:8: error: synthesized type class instance is not definitionally equal to expression inferred by typing rules, synthesized
+  @Prod.instMeasurableSpace Ω (A × Y) this Prod.instMeasurableSpace
+inferred
+  @MeasurableSpace.prod Ω (A × Y) m (mA.prod mY)
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveActions.lean:190:10: error: synthesized type class instance is not definitionally equal to expression inferred by typing rules, synthesized
+  @Prod.instMeasurableSpace Ω (A × Y) this Prod.instMeasurableSpace
+inferred
+  @Prod.instMeasurableSpace Ω (A × Y) m Prod.instMeasurableSpace
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveActions.lean:189:53: error: unsolved goals
+Ω : Type u_1
+A : Type u_2
+Y : Type u_3
+mΩ : MeasurableSpace Ω
+mA : MeasurableSpace A
+mY : MeasurableSpace Y
+inst✝³ : Fintype A
+inst✝² : DecidableEq A
+inst✝¹ : MeasurableSingletonClass A
+μ : Measure Ω
+inst✝ : IsProbabilityMeasure μ
+m : MeasurableSpace Ω
+hm : m ≤ mΩ
+action : Ω → A
+observation : Ω → Y
+E : Experiment hm action observation
+φ : Ω × Y → ℝ
+hφ : Measurable φ
+hb : ∀ (ω : Ω) (y : Y), φ (ω, y) ∈ Set.Icc 0 1
+a : A
+c : ℝ
+hc : 0 < c
+hcover : ∀ (ω : Ω), c ≤ propensity E.policy a ω
+this : MeasurableSpace Ω := mΩ
+hW : Measurable (weightedTest E.policy φ a)
+hWi : Integrable (weightedTest E.policy φ a) (μ.trim hm ⊗ₘ (E.policy ⊗ₖ E.observationKernel))
+hevi : Integrable (evidence hm E φ a) μ
+hg : Measurable (targetMean E.observationKernel φ a)
+hgi : Integrable (targetMean E.observationKernel φ a) μ
+s : Set Ω
+hs : MeasurableSet s
+a✝ : μ s < ∞
+⊢ ∫ (p : Ω × A × Y) in s ×ˢ Set.univ,
+      weightedTest E.policy φ a p ∂Measure.map (fun ω => (ω, action ω, observation ω)) μ =
+    ∫ (ω : Ω) in s, evidence hm E φ a ω ∂μ

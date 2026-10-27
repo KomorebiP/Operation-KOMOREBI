@@ -1,0 +1,100 @@
+{
+  "schema": "komorebi.core-development-result.v1",
+  "created_utc": "2026-10-24T19:23:58.326643+00:00",
+  "scope": "P63 full algebraic proposal core plus the P62 actual inverse-metric dual-CS/orientation helper. This receipt does not claim final P63 acceptance integration yet.",
+  "passed": true,
+  "modules": {
+    "EllipsoidDiscovery": {
+      "source_sha256": "66b3ff61d235f5fb4665a94da7c20aec6d92e9af62033e02028cadd5d4c6f7cc",
+      "named_declarations": 44,
+      "named_theorems": 31
+    },
+    "EllipsoidDualCS": {
+      "source_sha256": "9af22c1f4071c72806a46ce70ccb9b0de1e040f21dd60a50368aa39be72af773",
+      "named_declarations": 2,
+      "named_theorems": 2
+    }
+  },
+  "compile": {
+    "fresh_after_recovery": true,
+    "warnings_as_errors": true,
+    "gated_wrapper": "runtime/gated-bin/lean",
+    "returncodes": {
+      "EllipsoidDiscovery": 0,
+      "EllipsoidDualCS": 0
+    }
+  },
+  "named_axiom_audit": {
+    "records": 46,
+    "returncode": 0,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "log_sha256": "f8bb450495a97aa1a0fad19f3e8a6607ddde0aec303dc099380409e64fbedfe2"
+  },
+  "kernel_replay": [
+    {
+      "module": "KomorebiLSM.EllipsoidDiscovery",
+      "returncode": 0,
+      "gate_generation": 2,
+      "log": "core_replay_v2.log",
+      "log_sha256": "0922c2741e3fe50ef13cb6e26042f2c1b7a85325f04280812ca046c21d684083"
+    },
+    {
+      "module": "KomorebiLSM.EllipsoidDualCS",
+      "returncode": 0,
+      "gate_generation": 2,
+      "log": "dual_replay_v2.log",
+      "log_sha256": "2147e55952993232b13369d65c9f23d1b5d686cf98df6d269da779bba6401278"
+    }
+  ],
+  "semantic_controls": [
+    {
+      "name": "EllipsoidZeroDisplacement",
+      "source_sha256": "16ea3a080c05470ec363976b2e0e28b2f76a77f90c00fc3c3eef7937c7b35705",
+      "actual_exit_code": 1,
+      "expected_goal": "False",
+      "log_sha256": "8d8f27af572463efccf85fc44b2bc1bbc7d2ff8c1164a79e42a80e3e7189117f"
+    },
+    {
+      "name": "EllipsoidSingularCenter",
+      "source_sha256": "689fb3df406080e99064992394df4eacaf330fa768d249d0c535a16011ecacea",
+      "actual_exit_code": 1,
+      "expected_goal": "False",
+      "log_sha256": "6349dc9e956ba746205dea2dd6468fef85fb684b7844015e83780e1002f3228c"
+    },
+    {
+      "name": "EllipsoidInvariantFormsNotUnique",
+      "source_sha256": "17acf97b96a2c5b9eb5823eab087f2252c4f32141bef651e6d17e9801633bff7",
+      "actual_exit_code": 1,
+      "expected_goal": "False",
+      "log_sha256": "b22e0171c447e336107fb66367215bb70172a4279b92d0116a0e184b85f0fc65"
+    }
+  ],
+  "source_recovery": {
+    "EllipsoidDiscovery": "Recovered verbatim to original frozen SHA66b3ff61... and independently recompiled after runtime restoration.",
+    "EllipsoidDualCS": "Recovered unfinished draft, then replaced invalid rw[v] by explicit change. Fresh compile/audit/replay now pass; no pre-loss successful-check receipt is claimed."
+  },
+  "development_infrastructure": "First-generation replay jobs deadlocked on gated --print-prefix and were abandoned, never accepted as successful checks. Only fresh v2 replays in this receipt count.",
+  "core_theorems": [
+    "invariant_scalar derives scalar span from actual subspace finrank=1.",
+    "normalizedMetric_unique derives unique normalized invariant form, without assuming desired uniqueness.",
+    "unique_positive_boundary_metric and positive_reference_independent prove positivity, boundary normalization and scale independence.",
+    "mass_first_block derives literal [1,0;b,A] from the actual mass row identity.",
+    "fixedCenter equations/uniqueness use the actual nonsingular inverse of I-A.",
+    "rank_one_normalized_image derives a common normalized image from true range finrank=1.",
+    "operator_only_proposal collects the algebra without asserting full-family stochastic validity.",
+    "metric_dual_cauchy_schwarz and mass_orientation use actual H inverse and actual positive-definite factor."
+  ],
+  "remaining_full_P63_obligations": [
+    "Compile EllipsoidDiscoveryP63 acceptance adapter against the complete P62 builder.",
+    "Run named audit, module replay and separate raw review on the final adapter.",
+    "Parent cumulative release verification and metadata integration."
+  ],
+  "review_provenance": "Author self-review with compiler, allowed-axiom audit, kernel replay and explicit rejection controls; not an independent mathematical audit.",
+  "dependency_hashes": {
+    "EllipsoidGeometry": "555803a6f87ff73c43389b62b599c324903c628fea9bbbefea91ffcc6b618470"
+  }
+}

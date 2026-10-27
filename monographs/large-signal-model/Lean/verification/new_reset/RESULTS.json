@@ -1,0 +1,50 @@
+{
+  "scope": [
+    "P35 full reset experiment probability certificate with positive M and N",
+    "P48 conditional sequential confidence accounting and robust accepted/stopped stages"
+  ],
+  "source_sha256": {
+    "KomorebiLSM/ResetCertificate.lean": "ae57f52cfbd98c15fa7af77ee7bfc385761a863873b282cce2b8e951c57e21fc",
+    "KomorebiLSM/SequentialConfidence.lean": "087f87085374b90c464c3afb9626938bccf77b840a2246bc63725bad54010b62",
+    "negative_controls/ResetZeroTrials.lean": "f6dd14d00010bb98f2f993b5436e2321ca931aac4a3fad68b3c28192ad680752",
+    "negative_controls/SequentialIgnoreFirstFailure.lean": "bbca0f11314c1a03cb386fbcedf26e9f9e2958eb8ad06274dcf1c7074761bbbc"
+  },
+  "verification": {
+    "warnings_as_errors_compile": true,
+    "kernel_replay": [
+      "KomorebiLSM.ResetCertificate",
+      "KomorebiLSM.SequentialConfidence"
+    ],
+    "theorems_audited": 15,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "negative_controls": {
+      "ResetZeroTrials": "rejected with unsolved False",
+      "SequentialIgnoreFirstFailure": "rejected with unsolved False"
+    }
+  },
+  "new_declarations": {
+    "ResetCertificate": {
+      "theorems": 10,
+      "definitions": 4
+    },
+    "SequentialConfidence": {
+      "theorems": 5,
+      "definitions": 0
+    }
+  },
+  "development_diagnostics": [
+    "Initial NNReal notation was misparsed; replaced with explicit NNReal.",
+    "Measurability set and absolute-value tactics required pinned-API adjustments.",
+    "An omitted explicit continuous-linear-map argument in opNorm_le_bound caused elaboration timeout; giving the map fixed it.",
+    "Unused-variable and sequencing lints were corrected."
+  ],
+  "limitations": [
+    "P35 does not prove reset independence or coverage from raw measured data. They remain declared protocol hypotheses.",
+    "P48 assumes actual conditional coverage and exact soundness over all members of each uncertainty set. It does not validate either premise from selection alone.",
+    "The mathematical statement requires a positive trial count and a nonempty selected experiment set for the logarithmic radius."
+  ]
+}

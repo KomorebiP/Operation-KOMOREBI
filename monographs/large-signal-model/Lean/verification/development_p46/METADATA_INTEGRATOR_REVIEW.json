@@ -1,0 +1,56 @@
+{
+  "review_type": "read-only static integrator and baseline-metadata review",
+  "reviewed_integrator_sha256": "b97b968285d92c4648421d5b1674247be08a014b00e2bb9f6d7f7340b9ec7e57",
+  "reviewed_baseline_metadata_sha256": "480f9070100602a9d354230c6201168d44be126f85f428e46a308586f0b052cf",
+  "actual_checker": "scripts/check_metadata.py; no scripts/verify_metadata.py exists in this package",
+  "execution": "Integrator not executed because it mutates parent-owned source/metadata. Baseline code and current tree were inspected.",
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "high-if-module-count-changes",
+      "finding": "The broad inherited-proof-count replacement can match the prefix ==10 in the newly rewritten ==109. With ten new modules it leaves109 by accident; with11 it would create119 and break the inherited-count contract.",
+      "location": "s.replace(\"len(lineage['inherited_proof_files'])==10\", ...)",
+      "fix": "Replace the entire proof-increment expression or use a digit-boundary regular expression and require exactly one intended match; never replace a prefix shared by the inherited109 comparison."
+    },
+    {
+      "id": "R2",
+      "severity": "medium",
+      "finding": "When nex changes, the integrator updates the example-count label but not the checker expression ==331 or its fixed module list. Current planned modules appear not to change that category, but the generator is inconsistent for a new dedicated example module.",
+      "fix": "Use one explicit example-module classifier/list shared by count generation and metadata check, and update the exact accepted count in both places."
+    },
+    {
+      "id": "R3",
+      "severity": "semantic-gate",
+      "finding": "Claim promotion defaults to complete and requires only that endpoints exist globally. Endpoints need not belong to the declared mapped modules, IDs/statuses are not validated up front, and this does not bind English correspondence to accepted reviews. Kernel acceptance cannot by itself prevent an unrelated or weaker theorem from being marked complete. This is a design risk, not evidence the current P46/P47/P49 mappings are false.",
+      "fix": "Require explicit validstatus, registeredID, endpoint membership in mapped modules, and a source-hash-bound acceptance review for every promoted claim. Preserve the manual review/kernel distinction."
+    },
+    {
+      "id": "R4",
+      "severity": "medium-reproducibility",
+      "finding": "PARENT names the same generic output ZIP that later packaging will overwrite. The initial SHA guard protects input identity, but after output replacement the integrator is no longer rerunnable from that path.",
+      "fix": "Pin an immutable local copy of the exact0.15 parent archive before packaging, retain its SHA, and read that copy."
+    },
+    {
+      "id": "R5",
+      "severity": "low-fail-fast",
+      "finding": "re.sub and multiple literal replacements do not verify match counts. Drift will generally fail downstream metadata or packaging, but can leave a partially rewritten working tree and obscure the actual mismatch.",
+      "fix": "Require expectedmatchcounts for structural replacements; construct the metadata script from explicit contracts or parse a versioned template instead of unrestricted text substitution."
+    },
+    {
+      "id": "R6",
+      "severity": "future-edge-case",
+      "finding": "Integrator writes next_chronological=None when no unformalized propositions remain, but the inherited checker calls min(progress[unformalized]) unconditionally. Current block retains unformalized claims, so no present failure.",
+      "fix": "Compute expected next target with a default and explicitly define whether partial mappings take precedence."
+    }
+  ],
+  "passed_design_checks": [
+    "Exact parent ZIP SHA guard",
+    "All109 inherited proof files byte-compared with parent",
+    "Active module omission/duplicate checks",
+    "All87 statement/proof hashes retained in coverage entries",
+    "Inherited controls are hashed from actual parent and later checked",
+    "Full source compilation/axiom/replay remains separate from metadata counts",
+    "Roadmap/progress disjoint complete/partial/unformalized lists are regenerated"
+  ],
+  "scope_limit": "Counts and accepted claim set were not frozen at review time; recheck generated output after final configuration and do not interpret this static review as a release PASS."
+}

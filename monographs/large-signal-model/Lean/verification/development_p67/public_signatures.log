@@ -1,0 +1,88 @@
+@Komorebi.LSM.CoveredAdaptiveActions.Experiment : {Ω : Type u_1} →
+  {A : Type u_2} →
+    {Y : Type u_3} →
+      [mΩ : MeasurableSpace Ω] →
+        [mA : MeasurableSpace A] →
+          [mY : MeasurableSpace Y] →
+            {μ : MeasureTheory.Measure Ω} →
+              {m : MeasurableSpace Ω} → m ≤ mΩ → (Ω → A) → (Ω → Y) → Type (max (max u_1 u_2) u_3)
+@Komorebi.LSM.CoveredAdaptiveActions.evidence_condExp : ∀ {Ω : Type u_1} {A : Type u_2} {Y : Type u_3}
+  [mΩ : MeasurableSpace Ω] [mA : MeasurableSpace A] [mY : MeasurableSpace Y] [Fintype A] [inst : DecidableEq A]
+  [MeasurableSingletonClass A] {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ]
+  {m : MeasurableSpace Ω} (hm : m ≤ mΩ) {action : Ω → A} {observation : Ω → Y}
+  (E : Komorebi.LSM.CoveredAdaptiveActions.Experiment hm action observation) (φ : Ω × Y → ℝ),
+  Measurable φ →
+    (∀ (ω : Ω) (y : Y), φ (ω, y) ∈ Set.Icc 0 1) →
+      ∀ (a : A) (c : ℝ),
+        0 < c →
+          (∀ (ω : Ω), c ≤ Komorebi.LSM.CoveredAdaptiveActions.propensity E.policy a ω) →
+            μ[Komorebi.LSM.CoveredAdaptiveActions.evidence hm E φ a | m] =ᵐ[μ]
+              Komorebi.LSM.CoveredAdaptiveActions.targetMean E.observationKernel φ a
+@Komorebi.LSM.CoveredAdaptiveActions.evidence_mem_Icc : ∀ {Ω : Type u_1} {A : Type u_2} {Y : Type u_3}
+  [mΩ : MeasurableSpace Ω] [mA : MeasurableSpace A] [mY : MeasurableSpace Y] [inst : DecidableEq A]
+  {μ : MeasureTheory.Measure Ω} {m : MeasurableSpace Ω} (hm : m ≤ mΩ) {action : Ω → A} {observation : Ω → Y}
+  (E : Komorebi.LSM.CoveredAdaptiveActions.Experiment hm action observation) (φ : Ω × Y → ℝ),
+  (∀ (ω : Ω) (y : Y), φ (ω, y) ∈ Set.Icc 0 1) →
+    ∀ (a : A) (c : ℝ),
+      0 < c →
+        (∀ (ω : Ω), c ≤ Komorebi.LSM.CoveredAdaptiveActions.propensity E.policy a ω) →
+          ∀ (ω : Ω), Komorebi.LSM.CoveredAdaptiveActions.evidence hm E φ a ω ∈ Set.Icc 0 (1 / c)
+@Komorebi.LSM.CoveredAdaptiveActions.covered_adaptive_action_certificate : ∀ {Ω : Type u_1} {A : Type u_2}
+  {Y : Type u_3} {J : Type u_4} [mΩ : MeasurableSpace Ω] [mA : MeasurableSpace A] [mY : MeasurableSpace Y] [Fintype A]
+  [inst : DecidableEq A] [MeasurableSingletonClass A] {μ : MeasureTheory.Measure Ω}
+  [MeasureTheory.IsProbabilityMeasure μ] [Countable J] (ℱ : MeasureTheory.Filtration ℕ mΩ) (action : ℕ → Ω → A)
+  (observation : ℕ → Ω → Y) (E : (n : ℕ) → Komorebi.LSM.CoveredAdaptiveActions.Experiment ⋯ (action n) (observation n))
+  (φ : J → ℕ → Ω × Y → ℝ) (target : J → A),
+  (∀ (n : ℕ), Measurable (action n)) →
+    (∀ (n : ℕ), Measurable (observation n)) →
+      (∀ (j : J) (n : ℕ), Measurable (φ j n)) →
+        (∀ (j : J) (n : ℕ) (ω : Ω) (y : Y), φ j n (ω, y) ∈ Set.Icc 0 1) →
+          ∀ (c : J → ℝ),
+            (∀ (j : J), 0 < c j) →
+              (∀ (j : J) (n : ℕ) (ω : Ω),
+                  c j ≤ Komorebi.LSM.CoveredAdaptiveActions.propensity (E n).policy (target j) ω) →
+                ∀ (α : J → NNReal),
+                  (∀ (j : J), 0 < α j) →
+                    Summable α →
+                      ∀ (δ : NNReal),
+                        ∑' (j : J), α j ≤ δ →
+                          δ ≤ 1 →
+                            MeasurableSet
+                                {ω |
+                                  ∀ (j : J) (n : ℕ),
+                                    |∑ i ∈ Finset.range (n + 1),
+                                            Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess ℱ action observation E φ
+                                              target j i ω -
+                                          ∑ i ∈ Finset.range (n + 1),
+                                            Komorebi.LSM.CoveredAdaptiveActions.kernelMeanProcess ℱ action observation E
+                                              φ target j i ω| ≤
+                                      1 / c j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)} ∧
+                              1 - ↑δ ≤
+                                μ.real
+                                  {ω |
+                                    ∀ (j : J) (n : ℕ),
+                                      |∑ i ∈ Finset.range (n + 1),
+                                              Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess ℱ action observation E
+                                                φ target j i ω -
+                                            ∑ i ∈ Finset.range (n + 1),
+                                              Komorebi.LSM.CoveredAdaptiveActions.kernelMeanProcess ℱ action observation
+                                                E φ target j i ω| ≤
+                                        1 / c j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)}
+@Komorebi.LSM.CoveredAdaptiveActions.covered_bound_at_selected_time : ∀ {Ω : Type u_1} {A : Type u_2} {Y : Type u_3}
+  {J : Type u_4} [mΩ : MeasurableSpace Ω] [mA : MeasurableSpace A] [mY : MeasurableSpace Y] [inst : DecidableEq A]
+  {μ : MeasureTheory.Measure Ω} (ℱ : MeasureTheory.Filtration ℕ mΩ) (action : ℕ → Ω → A) (observation : ℕ → Ω → Y)
+  (E : (n : ℕ) → Komorebi.LSM.CoveredAdaptiveActions.Experiment ⋯ (action n) (observation n)) (φ : J → ℕ → Ω × Y → ℝ)
+  (target : J → A) (c : J → ℝ) (α : J → NNReal) (ω : Ω),
+  (∀ (j : J) (n : ℕ),
+      |∑ i ∈ Finset.range (n + 1),
+              Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess ℱ action observation E φ target j i ω -
+            ∑ i ∈ Finset.range (n + 1),
+              Komorebi.LSM.CoveredAdaptiveActions.kernelMeanProcess ℱ action observation E φ target j i ω| ≤
+        1 / c j * Komorebi.LSM.PredictableResidual.boundary (n + 1) ↑(α j)) →
+    ∀ (time : Ω → ℕ) (rule : Ω → J),
+      0 < time ω →
+        |∑ i ∈ Finset.range (time ω),
+                Komorebi.LSM.CoveredAdaptiveActions.evidenceProcess ℱ action observation E φ target (rule ω) i ω -
+              ∑ i ∈ Finset.range (time ω),
+                Komorebi.LSM.CoveredAdaptiveActions.kernelMeanProcess ℱ action observation E φ target (rule ω) i ω| ≤
+          1 / c (rule ω) * Komorebi.LSM.PredictableResidual.boundary (time ω) ↑(α (rule ω))

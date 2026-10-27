@@ -1,0 +1,14 @@
+import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Topology.Order.Compact
+import Mathlib.Topology.Maps.Proper.Basic
+#check isClosedMap_fst
+#check isClosedMap_snd
+#check isClosedMap_fst_of_compactSpace
+#check IsClosedMap.fst
+#check IsCompact.isClosed_projection
+#check IsCompact.isClosed_prod
+#check isCompact_iff_compactSpace
+#check isCompact_Icc
+#check isClosed_iff_clusterPt
+#check Continuous.smul
+#check exists_dual_ne_zero

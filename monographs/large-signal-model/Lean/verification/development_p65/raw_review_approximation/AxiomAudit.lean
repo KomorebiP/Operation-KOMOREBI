@@ -1,0 +1,18 @@
+import KomorebiLSM.BernsteinCoefficientError
+
+#print axioms Komorebi.LSM.BernsteinCoefficientError.combination
+#print axioms Komorebi.LSM.BernsteinCoefficientError.combination_constant
+#print axioms Komorebi.LSM.BernsteinCoefficientError.combination_continuous
+#print axioms Komorebi.LSM.BernsteinCoefficientError.combination_integrable
+#print axioms Komorebi.LSM.BernsteinCoefficientError.combination_integral
+#print axioms Komorebi.LSM.BernsteinCoefficientError.combination_positive
+#print axioms Komorebi.LSM.BernsteinCoefficientError.fittedInstrument
+#print axioms Komorebi.LSM.BernsteinCoefficientError.coefficient_error_point
+#print axioms Komorebi.LSM.BernsteinCoefficientError.coefficient_integrated_error
+#print axioms Komorebi.LSM.BernsteinCoefficientError.integrated_triangle
+#print axioms Komorebi.LSM.BernsteinCoefficientError.maximumCoefficientError
+#print axioms Komorebi.LSM.BernsteinCoefficientError.coefficient_error_le_maximum
+#print axioms Komorebi.LSM.BernsteinCoefficientError.bias_plus_coefficient_error
+#print axioms Komorebi.LSM.BernsteinCoefficientError.uniform_bias_plus_coefficient_error
+#print axioms Komorebi.LSM.BernsteinCoefficientError.separate_correction_budget
+#print axioms Komorebi.LSM.BernsteinCoefficientError.fitted_record_probability

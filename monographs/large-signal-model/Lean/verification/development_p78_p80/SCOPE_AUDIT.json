@@ -1,0 +1,166 @@
+{
+  "claims": [
+    78,
+    80
+  ],
+  "verdict": "proved as written",
+  "review_kind": "author self-review; nonauthor raw review remains separate",
+  "reviewer": "/root/rotation_geometry",
+  "registered_spans": {
+    "P78": {
+      "statement_start_line": 3497,
+      "proof_end_line": 3507,
+      "sha256": "d68e66bd49b03cd446da824a63e6bd5e089657c84ee86a5c4a510ad77dc09d9b"
+    },
+    "P80": {
+      "statement_start_line": 3628,
+      "proof_end_line": 3636,
+      "sha256": "d25e9dbec98faf98f68cad2346fc304f3cb4cd6d74d6ed94a376b7a3b7d6a5c7"
+    }
+  },
+  "sources": {
+    "DataSelectedGeometry": "5851a12f343b4d05dbd3e03be9f0172c8b022553bc4377cf77832b0c69fa47c3",
+    "ConvexRepairBracketing": "5edd872845963dbd4b69b4bb581ebe3ebeb500a25d66ffcb31512dd3c4bc2cac",
+    "CertifiedRepairUpper": "140edab7964239bd05dac5bb3d1f8798a810d5ec45ae63ef05b202e59f71a0f0"
+  },
+  "obligations": [
+    {
+      "claim": "One fixed-coordinate model set",
+      "status": "passed",
+      "endpoints": [
+        "DataSelectedGeometry.Model",
+        "DomainValid"
+      ],
+      "evidence": "The random set consists of literal operator families and initial states in the same state space. DomainValid includes initial membership and invariance of every operator on the selected domain."
+    },
+    {
+      "claim": "Data-selected whole-set coverage implication",
+      "status": "passed",
+      "endpoints": [
+        "selected_geometry_on_coverage",
+        "selected_geometry_probability"
+      ],
+      "evidence": "At each sample, the verifier quantifies every member of the same uncertainty set U. Membership of the true model on its coverage event directly implies its selected-domain properties. The geometry type and data-dependent selection map are arbitrary; no finite enumeration or union over geometries is used. Probability versions retain measurable-event and probability-measure assumptions on arbitrary sample spaces."
+    },
+    {
+      "claim": "Withheld results do not create false confidence",
+      "status": "passed",
+      "endpoints": [
+        "false_acceptance_subset",
+        "false_acceptance_probability"
+      ],
+      "evidence": "For a sometimes-rejecting procedure, false acceptance is explicitly a subset of the original coverage failure event. A guarantee of acceptance itself is not silently inferred."
+    },
+    {
+      "claim": "Whole-state Euclidean norm",
+      "status": "passed",
+      "endpoints": [
+        "WholeState",
+        "massPart",
+        "spatialPart",
+        "whole_norm_sq",
+        "wholeInput_norm_le_sqrt_two"
+      ],
+      "evidence": "The whole state is literally EuclideanSpace R (Unit sum D), not the max-norm product space used for the Lorentz base norm. Its squared norm is absolute mass squared plus actual spatial Euclidean norm squared. A normalized Lorentz input therefore has Euclidean norm at most sqrt(2)."
+    },
+    {
+      "claim": "Second sqrt(2) from output split",
+      "status": "passed",
+      "endpoint": "combined_output_le_sqrt_two",
+      "evidence": "The sum of absolute mass and spatial Euclidean norm is at most sqrt(2) times the whole Euclidean norm, by the explicit squared split and the nonnegative square of their difference."
+    },
+    {
+      "claim": "Actual condition-number transport",
+      "status": "passed",
+      "endpoints": [
+        "conjugate_action",
+        "transformed_combined_error",
+        "data_selected_transformed_error"
+      ],
+      "evidence": "The literal matrix T Delta T inverse acts as the composition of three genuine Euclidean linear operators. Their spectral norms are the checked EuclideanMatrixNorms.spectralNorm, not Frobenius or product max norms. Chaining the actual operator bounds and both sqrt(2) factors derives exactly 2 norm(T) norm(T inverse) e. The algebraic bound is universal in T, so it applies pointwise to a data-selected known invertible atlas without a further union bound."
+    },
+    {
+      "claim": "Actual P80 feasibility",
+      "status": "passed",
+      "endpoints": [
+        "feasibleWeights",
+        "feasible_iff_linear"
+      ],
+      "evidence": "Feasibility is defined by eta in [0,1] and the actual minimum sigma at every action and observation. le_sigma_iff uses the entire normalized input ball. On that interval the center-reset slack equals the literal affine expression (1-eta) original_slack+eta."
+    },
+    {
+      "claim": "Closed interval with attained endpoint",
+      "status": "passed",
+      "endpoints": [
+        "feasible_closed",
+        "feasible_convex",
+        "one_feasible",
+        "etaStar",
+        "etaStar_feasible",
+        "etaStar_in_unit",
+        "feasible_interval"
+      ],
+      "evidence": "The feasible set is a closed intersection of actual full-domain scalar half-spaces and is convex. The full reset at eta=1 has margin one, so for kappa<=1 the set is nonempty. The actual infimum belongs to the closed set, lies in [0,1], and convexity gives exactly [etaStar,1]. etaStar and its feasibility are derived, not supplied as fields."
+    },
+    {
+      "claim": "Actual cone-positive row separator",
+      "status": "passed",
+      "endpoints": [
+        "separator",
+        "slack_le_separator",
+        "separator_positive",
+        "separator_repair_normalized"
+      ],
+      "evidence": "The functional is literally mass minus the standard real inner product of q with spatial output, representing (1,-q transpose). Linearity is proved. The norm(q)<=1 premise and genuine Cauchy-Schwarz derive positivity on the Lorentz cone and domination of oriented slack. Its reset value on normalized inputs is exactly one."
+    },
+    {
+      "claim": "Separator ratio lower bracket",
+      "status": "passed",
+      "endpoints": [
+        "separator_ratio_lower",
+        "separator_lower_endpoint"
+      ],
+      "evidence": "An actually evaluated c below kappa, together with kappa<=1, proves 1-c>0. Feasibility forces (1-eta)c+eta>=kappa; division by this positive denominator yields the exact ratio. Applying it to the derived feasible endpoint bounds etaStar."
+    },
+    {
+      "claim": "Complete-certificate upper bracket",
+      "status": "passed",
+      "endpoints": [
+        "certificate_upper_bound",
+        "CertifiedRepairUpper.bernstein_upper_bound",
+        "CertifiedRepairUpper.certified_bracket"
+      ],
+      "evidence": "The adapter consumes actual P75 rational complete-subdivision Certificate objects and exact identification of their certified polynomial family with the repaired family at etaU. The sound Certificate.margin theorem proves the full sigma constraint, hence etaU feasibility and etaStar<=etaU. It does not assume an upper feasibility result in place of the finite witness."
+    }
+  ],
+  "semantic_controls": {
+    "GeometryWholeStateIsNotMaxNorm": {
+      "sha256": "aac578f4c8c8bd8d4fd260fa0d394bdf42e30357e7d092bbedf319179de7e700",
+      "purpose": "A normalized Lorentz input has whole Euclidean norm squared two, so the false bound by one reaches False."
+    },
+    "GeometryVerifierMustCoverWholeSet": {
+      "sha256": "dede88eee3bbd33d7564ca212c3f5acacb216c3516310131e86bfa91cd64a3c7",
+      "purpose": "Both initial states have mass one and the same mass-preserving identity operator. Checking only the convenient candidate does not certify the covered true model in the chosen proper Lorentz cone; the false truth-domain assertion reaches False."
+    },
+    "RepairSeparatorMustBePositive": {
+      "sha256": "16df03c1be08291a3f67bdb81354da6bad3af386aab2404c50581bed64ec2758",
+      "purpose": "Eta zero is actually feasible for identity and kappa zero. A row with spatial norm two is not cone-positive and gives an invalid positive lower cut; that false ratio bound reaches False."
+    }
+  },
+  "scope_boundaries": [
+    "Statistical coverage of U is an upstream hypothesis, not inferred from a fitted center or a deterministic coefficient box.",
+    "A declared original atlas must be invertible; the literal conjugation bound itself needs no extra invertibility hypothesis to be algebraically true.",
+    "P80 keeps geometry, reset path and required margin fixed. It does not optimize over all geometries or repairs.",
+    "Integrated mass and initial-state admissibility remain separate from P80 margin feasibility.",
+    "A negative Bernstein coefficient alone supplies no evaluated positive-functional separator and cannot instantiate the lower-cut theorem.",
+    "The adjacent numerical repair example is outside this P80 mapping; no hypothetical certificate is claimed to establish the separate exact P79 fixture."
+  ],
+  "dependencies": [
+    "P74 checked EuclideanMatrixNorms spectral action",
+    "P71 actual Lorentz sigma and full normalized ball",
+    "P73 literal center-reset repair identity",
+    "P75 sound rational full-subdivision margin Certificate"
+  ],
+  "verification": "RESULT.json records the fresh gated warningAsError compile, all-named permitted-axiom audits, upstream exact-module replay and three semantic controls. The owner runner is the authoritative execution receipt.",
+  "remaining_gap": null
+}

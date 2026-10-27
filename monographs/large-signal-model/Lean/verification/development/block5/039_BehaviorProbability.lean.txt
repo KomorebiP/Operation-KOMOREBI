@@ -1,0 +1,85 @@
+import KomorebiLSM.ObservableRealization
+
+/-! Finite interventional word laws and normalized behavior states.
+Rank is separate from the supplied nonnegativity and causal mass identities. -/
+set_option autoImplicit false
+namespace Komorebi.LSM.Behavior
+open scoped BigOperators
+open FiniteInstruments
+variable {A O : Type*} [Fintype O]
+
+structure CausalLaw (f : List (A × O) → ℝ) : Prop where
+  initial : f [] = 1
+  nonneg : ∀ w, 0 ≤ f w
+  sum_next : ∀ h a, ∑ o, f (h ++ [(a,o)]) = f h
+
+namespace CausalLaw
+variable {f : List (A × O) → ℝ} (hf : CausalLaw f)
+
+theorem next_le (h : List (A × O)) (a : A) (o : O) :
+    f (h ++ [(a,o)]) ≤ f h := by
+  rw [← hf.sum_next h a]
+  exact Finset.single_le_sum (fun o _ => hf.nonneg _) (Finset.mem_univ o)
+
+/-- A future experiment is an event under its fixed intervention schedule. -/
+theorem extension_le (h t : List (A × O)) : f (h ++ t) ≤ f h := by
+  induction t generalizing h with
+  | nil => simp
+  | cons s t ih =>
+    have he := ih (h ++ [s])
+    have hs := hf.next_le h s.1 s.2
+    simpa only [List.append_assoc,List.singleton_append] using he.trans hs
+
+theorem word_bounds (w : List (A × O)) : 0 ≤ f w ∧ f w ≤ 1 := by
+  refine ⟨hf.nonneg w, ?_⟩
+  simpa only [List.nil_append,hf.initial] using hf.extension_le [] w
+
+theorem conditional_bounds (h t : List (A × O)) (hh : 0 < f h) :
+    0 ≤ f (h ++ t) / f h ∧ f (h ++ t) / f h ≤ 1 := by
+  exact ⟨div_nonneg (hf.nonneg _) hh.le,(div_le_one hh).mpr (hf.extension_le h t)⟩
+
+theorem conditional_observation_mass (h : List (A × O)) (a : A) (hh : 0 < f h) :
+    ∑ o, f (h ++ [(a,o)]) / f h = 1 := by
+  rw [← Finset.sum_div,hf.sum_next,div_self (ne_of_gt hh)]
+
+/-- The causal mass law extends linearly to the whole behavior space. -/
+theorem behavior_mass (v : space f) (a : A) :
+    ∑ o, mass f (branch f (a,o) v) = mass f v := by
+  suffices hx : ∀ x, x ∈ space f → (∑ o, x [(a,o)]) = x [] from hx v v.property
+  intro x hx
+  induction hx using Submodule.span_induction with
+  | mem x hx =>
+    obtain ⟨h,rfl⟩ := hx
+    simpa only [column,List.append_nil] using hf.sum_next h a
+  | zero => simp
+  | add x y hx hy ihx ihy =>
+    simp only [Pi.add_apply,Finset.sum_add_distrib,ihx,ihy]
+  | smul c x hx ih =>
+    simp only [Pi.smul_apply,smul_eq_mul,← Finset.mul_sum,ih]
+
+theorem normalized_history_nonneg (h : List (A × O)) (hh : 0 < f h)
+    (t : List (A × O)) :
+    0 ≤ (((f h)⁻¹ • history f h : space f) : List (A × O) → ℝ) t := by
+  exact mul_nonneg (inv_nonneg.mpr hh.le) (hf.nonneg _)
+
+/-- A model law is not obtained from an invertible table alone. -/
+theorem canonical_conditional_probability (h t : List (A × O)) (hh : 0 < f h) :
+    0 ≤ mass f (wordAction (branch f) t ((f h)⁻¹ • history f h)) ∧
+      mass f (wordAction (branch f) t ((f h)⁻¹ • history f h)) ≤ 1 := by
+  rw [conditional_test]
+  exact hf.conditional_bounds h t hh
+
+end CausalLaw
+
+/-- Known hidden instruments supply word-law hypotheses, not unknown-world inference. -/
+theorem instrument_causal {I : Type*} [Fintype I]
+    (T : Instrument I A O) (p : I → ℝ) (hp : FiniteBayes.IsPrior p) :
+    CausalLaw (fun w => FiniteInstruments.mass (wordAction T.branch w p)) := by
+  refine ⟨?_,fun w => (T.word_probability w p hp).1, ?_⟩
+  · simpa only [wordAction_nil,LinearMap.id_apply] using mass_prior p hp
+  · intro h a
+    simp only [wordAction_append,wordAction_cons,wordAction_nil,LinearMap.id_comp,
+      LinearMap.comp_apply]
+    exact T.instrument_mass a _
+
+end Komorebi.LSM.Behavior

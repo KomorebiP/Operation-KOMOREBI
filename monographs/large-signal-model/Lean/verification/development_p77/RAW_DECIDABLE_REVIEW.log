@@ -1,0 +1,25 @@
+@[instance_reducible] def Komorebi.LSM.BernsteinGridSearch.decidableLeafValid : (p :
+    Komorebi.LSM.TensorBernsteinCertificate.Polynomial₂) →
+  (R : Komorebi.LSM.TensorBernsteinCertificate.Rectangle) →
+    (d : Komorebi.LSM.BernsteinGridSearch.LeafData) → Decidable (Komorebi.LSM.BernsteinGridSearch.leafValid p R d) :=
+fun p R d => id inferInstance
+@[instance_reducible] def Komorebi.LSM.BernsteinGridSearch.decidableGridValid : (p :
+    Komorebi.LSM.TensorBernsteinCertificate.Polynomial₂) →
+  (R : Komorebi.LSM.TensorBernsteinCertificate.Rectangle) →
+    (N : ℕ) →
+      (d : Komorebi.LSM.BernsteinGridSearch.GridData N) →
+        Decidable (Komorebi.LSM.BernsteinGridSearch.gridValid p R N d) :=
+fun p R N d =>
+  Nat.recAux (motive := fun N =>
+    (R : Komorebi.LSM.TensorBernsteinCertificate.Rectangle) →
+      (d : Komorebi.LSM.BernsteinGridSearch.GridData N) →
+        Decidable (Komorebi.LSM.BernsteinGridSearch.gridValid p R N d))
+    (fun R d => Komorebi.LSM.BernsteinGridSearch.decidableLeafValid p R d) (fun N ih R d => id inferInstance) N R d
+@[instance_reducible] def Komorebi.LSM.StrictRationalSearch.decidableValid : {nf na ni n : ℕ} →
+  (G : Fin nf → Fin na → Fin n → Komorebi.LSM.RationalTransform.RationalMatrix) →
+    (z : Fin ni → Fin 3 → ℚ) →
+      (c : Komorebi.LSM.StrictRationalSearch.Candidate nf na) →
+        Decidable (Komorebi.LSM.StrictRationalSearch.Valid G z c) :=
+fun {nf na ni n} G z c =>
+  Prod.casesOn c fun q snd =>
+    Prod.casesOn snd fun kappa snd => Sigma.casesOn snd fun N d => id (id (id (id (id (id (id inferInstance))))))

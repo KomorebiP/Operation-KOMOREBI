@@ -1,0 +1,11 @@
+import KomorebiLSM.PredictableResidualAffine
+
+#print axioms Komorebi.LSM.PredictableResidualAffine.condExp_affine_ae
+#print axioms Komorebi.LSM.PredictableResidualAffine.centeredSum_congr_ae
+#print axioms Komorebi.LSM.PredictableResidualAffine.centeredSum_affine_ae
+#print axioms Komorebi.LSM.PredictableResidualAffine.normalizedProcess
+#print axioms Komorebi.LSM.PredictableResidualAffine.normalized_adapted
+#print axioms Komorebi.LSM.PredictableResidualAffine.normalized_mem_unit_ae
+#print axioms Komorebi.LSM.PredictableResidualAffine.affine_normalized_ae
+#print axioms Komorebi.LSM.PredictableResidualAffine.centeredSum_normalized_ae
+#print axioms Komorebi.LSM.PredictableResidualAffine.normalized_bound_transfer_ae

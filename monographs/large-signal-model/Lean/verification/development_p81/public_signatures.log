@@ -1,0 +1,44 @@
+@Komorebi.LSM.RegressionConfidence.regression_confidence_certificate : ∀ {I : Type u_1} {Ω : Type u_2}
+  [inst : Fintype I] [inst_1 : DecidableEq I] [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
+  [MeasureTheory.IsProbabilityMeasure μ] (ℱ : MeasureTheory.Filtration ℕ mΩ) (γ σ δ S : ℝ),
+  0 < γ →
+    0 < σ →
+      0 < δ →
+        ∀ (φ : ℕ → Ω → I → ℝ) (y : ℕ → Ω → ℝ) (θ : I → ℝ),
+          (∀ (n : ℕ) (i : I), Measurable fun ω => φ n ω i) →
+            (∀ (n : ℕ), Measurable (y n)) →
+              Komorebi.LSM.RegressionConfidence.euclideanNorm θ ≤ S →
+                (∀ (n : ℕ),
+                    Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian ⋯
+                      (Komorebi.LSM.RegressionConfidence.regressionNoise θ φ y n) σ μ) →
+                  MeasurableSet (Komorebi.LSM.RegressionConfidence.regressionGood γ σ δ φ y θ) ∧
+                    1 - δ ≤ μ.real (Komorebi.LSM.RegressionConfidence.regressionGood γ σ δ φ y θ) ∧
+                      ∀ ω ∈ Komorebi.LSM.RegressionConfidence.regressionGood γ σ δ φ y θ,
+                        ∀ (n : ℕ),
+                          Komorebi.LSM.RegressionConfidence.weightedNorm
+                              (Komorebi.LSM.RegressionConfidence.ridgeMatrix γ (fun i => φ i ω) n)
+                              (Komorebi.LSM.RegressionConfidence.ridgeEstimate γ (fun i => φ i ω) (fun i => y i ω) n -
+                                θ) ≤
+                            Komorebi.LSM.RegressionConfidence.noiseRadius γ σ δ (fun i => φ i ω) n + √γ * S
+@Komorebi.LSM.RegressionConfidence.gaussian_ridge_mixture : ∀ {I : Type u_1} [inst : Fintype I] [inst_1 : DecidableEq I]
+  (γ σ : ℝ),
+  0 < γ →
+    0 < σ →
+      ∀ (φ : ℕ → I → ℝ) (n : ℕ) (score : I → ℝ),
+        ∫ (q : I → ℝ),
+            Real.exp
+              (q ⬝ᵥ score / σ -
+                q ⬝ᵥ (Komorebi.LSM.RegressionConfidence.designGram φ n).mulVec q /
+                  2) ∂Komorebi.LSM.RegressionConfidence.gaussianPrior γ =
+          √((γ • 1).det / (Komorebi.LSM.RegressionConfidence.ridgeMatrix γ φ n).det) *
+            Real.exp
+              (Komorebi.LSM.RegressionConfidence.weightedNorm (Komorebi.LSM.RegressionConfidence.ridgeMatrix γ φ n)⁻¹
+                    score ^
+                  2 /
+                (2 * σ ^ 2))
+@Komorebi.LSM.RegressionConfidence.weighted_cauchy_schwarz : ∀ {I : Type u_1} [inst : Fintype I]
+  [inst_1 : DecidableEq I] {V : Matrix I I ℝ},
+  V.PosDef →
+    ∀ (e x : I → ℝ),
+      |e ⬝ᵥ x| ≤
+        Komorebi.LSM.RegressionConfidence.weightedNorm V e * Komorebi.LSM.RegressionConfidence.weightedNorm V⁻¹ x

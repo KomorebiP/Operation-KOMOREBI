@@ -1,0 +1,14 @@
+import Mathlib.Analysis.Normed.Module.Multilinear.Basic
+import KomorebiLSM.Polynomial
+#check MultilinearMap.compLinearMap
+#check ContinuousMultilinearMap.compContinuousLinearMap
+#check Finset.sum_sdiff
+#check Finset.sum_sdiff_eq_sub
+#check Pi.norm_const
+#check norm_const
+#check pi_norm_le_iff_of_nonneg
+#check pi_norm_le_iff
+#check ContinuousMultilinearMap.coe_coe
+#check ContinuousMultilinearMap.toMultilinearMap
+#check Finset.prod_le_prod
+#check LipschitzOnWith.of_dist_le_mul

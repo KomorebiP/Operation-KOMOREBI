@@ -1,0 +1,151 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "claim_id": 66,
+  "review_scope": "Supported sector only. Not a complete formalization of the full registered Proposition 66.",
+  "claim": "On a standard Borel probability sample space, any Nat-indexed family of adapted measurable [0,1] tests with strictly positive summable registered budgets alpha_j and sum alpha_j<=delta<=1 has one event of probability at least 1-delta on which every positive-time observed residual minus its actual conditional-expectation drift obeys sqrt(t/2*log(2t(t+1)/alpha_j)). The event supports arbitrary selected times/rules and nonnegative scalar multiplication of an already-bounded residual.",
+  "input": {
+    "path": "tmp/reset/PredictableResidual.lean",
+    "path_base": "workspace",
+    "sha256": "ace3ef2c5b8d499c10da957c7e34dac2b5751e7c6acc02696a36ce2b2548dc65"
+  },
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true tmp/reset/PredictableResidual.lean",
+    "exit_code": 0,
+    "scope": "Fresh supported-source acceptance only. Author isolated replay and parent release verification are separate evidence."
+  },
+  "assumptions": [
+    "StandardBorelSpace Omega for the ambient sample measurable space; actual probability measure mu.",
+    "Filtration F_i is increasing and below the ambient sigma algebra. Every X_{j,i} is measurable at F_{i+1}, and is in [0,1] mu-almost surely.",
+    "Rules are indexed by all natural numbers; alpha_j are strictly positive NNReal, summable, and sum_j alpha_j<=delta<=1.",
+    "The drift uses actual mu[X_{j,i}|F_i], not a supplied mean or MGF hypothesis. Model predictions p cancel algebraically; predictable p is a valid intended specialization.",
+    "Selected time is encoded as time(omega)+1, covering every positive selected time; selected rule may also depend on data."
+  ],
+  "dependency_graph": [
+    "A conditioning-measurable function g is conditionally constant: push the diagonal joint law through compProd_trim_condExpKernel, then disintegrate the measurable equality set g(second)=g(first).",
+    "A bounded test has integrable actual conditional expectation in [0,1]. Global centered residual lies in [-1,1], which supplies exponential integrability.",
+    "Under almost every conditional kernel, X remains in [0,1], the conditional mean is the kernel integral, and that mean is constant along the kernel fiber. Apply ordinary Hoeffding to X under the kernel, then transfer to X-E[X|F]. This yields conditional MGF proxy1/4.",
+    "The partial centered sum S_n is F_n-measurable. Trim its unconditional MGF to F_n and use conditional-MGF addition with the next increment; induction gives proxy n/4 without independence.",
+    "Two-sided Chernoff tails at b>=0 give probability <=2 exp(-2b^2/n) for every n>0.",
+    "At the displayed boundary, this tail is alpha/[n(n+1)]. Finite telescoping proves summability and total time budget<=alpha.",
+    "Countable union over time yields one-rule all-time coverage. A second countable union over registered rules spends total<=delta.",
+    "Observed residual minus actual drift cancels model predictions pointwise and equals the centered sum, giving the simultaneous certificate.",
+    "The pathwise all-time/all-rule event specializes to any selected positive time and rule; multiplying that existing inequality by c>=0 scales its boundary."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "The conditional mean is constructed using actual conditional expectation, rather than assumed centeredness.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The1/4 proxy comes from conditional width-one X, not the wider global centered residual interval[-1,1].",
+      "status": "passed"
+    },
+    {
+      "obligation": "Kernel centering uses a measurable fiber-constancy statement and the actual conditional-integral representation.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Induction preserves adaptedness and applies a conditional-MGF theorem rather than an independence theorem.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Time indexing aligns X_i with information F_i before observation and F_{i+1} afterward; range n sums i=0..n-1.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Boundary logarithm and square-root simplification retain n>0 and0<alpha<=1.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Time weights are1/[(n+1)(n+2)], matching the positive-time n(n+1) tail budget.",
+      "status": "passed"
+    },
+    {
+      "obligation": "All bad events are measurable; strict boundary violations are bounded by the non-strict Chernoff events.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The final confidence event is simultaneous over all positive times and Nat-indexed rules with one delta budget.",
+      "status": "passed"
+    },
+    {
+      "obligation": "No measurability of arbitrary model p is needed for the displayed residual-minus-drift event because p cancels exactly.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Selected times/rules need no new confidence spending; scalar scaling is a valid separate pathwise implication.",
+      "status": "passed"
+    }
+  ],
+  "full_registered_P66_verdict": "incomplete, with the smallest missing implications listed below",
+  "full_registered_P66_gaps": [
+    {
+      "id": "sample_space_generality",
+      "status": "not addressed",
+      "gap": "Remove the StandardBorelSpace Omega restriction or provide a formal reduction preserving filtration and actual conditional means. The manuscript P66 does not impose this sample-space restriction.",
+      "scope": "Full registered statement only; no gap in the supported standard Borel theorem."
+    },
+    {
+      "id": "affine_range_transport",
+      "status": "not addressed",
+      "gap": "For variables in an arbitrary fixed interval[a,a+c], formally normalize to[0,1], transport actual conditional expectations through the affine map on a single common almost-sure event, identify the centered sums, and handle c=0. scaled_selected_bound only multiplies an already-controlled scalar residual.",
+      "scope": "The full interval-width clause is not established by scalar multiplication alone."
+    },
+    {
+      "id": "rule_index_transport",
+      "status": "not addressed",
+      "gap": "Provide an explicit specialization to arbitrary finite/countable registered rule indices while preserving their original alpha budgets. Current time_uniform_rules quantifies over every j:Nat with alpha_j>0, so finite families with a fully spent budget are not directly embedded using zero-budget dummy rules.",
+      "scope": "Routine index/union wrapper still absent; the Nat-indexed countable sector is proved."
+    }
+  ],
+  "residual_limits": [
+    "The source must remain classified as partial P66 coverage until the full registered gaps are closed or the manuscript statement is explicitly restricted.",
+    "Model predictions have no formal predictability assumption in the algebraic endpoint; use the intended predictable-p specialization when calling D a conditional predictive drift.",
+    "No independence, stationarity or reset law is inferred; none is needed for this supported concentration theorem.",
+    "The bound is the elementary union-cost boundary, not an optimal confidence sequence.",
+    "This review uses the same model/team lineage and is not independent external review."
+  ],
+  "strongest_safe_statement": "On a standard Borel probability sample space, any Nat-indexed family of adapted measurable [0,1] tests with strictly positive summable registered budgets alpha_j and sum alpha_j<=delta<=1 has one event of probability at least 1-delta on which every positive-time observed residual minus its actual conditional-expectation drift obeys sqrt(t/2*log(2t(t+1)/alpha_j)). The event supports arbitrary selected times/rules and nonnegative scalar multiplication of an already-bounded residual.",
+  "cheapest_next_check": "Integrate the exact supported source under partial P66 coverage, then run the parent clean compile, exhaustive axiom audit and kernel replay. To close the full statement, prioritize affine range transport and sample-space generality rather than another bounded example.",
+  "internal_dependency_inputs": [
+    {
+      "path": "KomorebiLSM/SequentialConfidence.lean",
+      "sha256": "087f87085374b90c464c3afb9626938bccf77b840a2246bc63725bad54010b62"
+    }
+  ],
+  "upstream_leaf_checks": [
+    {
+      "path": "Mathlib/Probability/Kernel/Condexp.lean",
+      "sha256": "9819a93a23e6ac6d2868613182ebde2a5defa71b97deb90bb90d04bf3e10fb84",
+      "scope": "Inspected Markov property, diagonal compProd identity, conditional-kernel composition and actual conditional-expectation integral representation."
+    },
+    {
+      "path": "Mathlib/Probability/Moments/SubGaussian.lean",
+      "sha256": "e3302a51ed064b2c45fb405158a875cca3276cdd30951269e29ed88f10e631e7",
+      "scope": "Inspected conditional-MGF definition, conditional addition theorem, ordinary Hoeffding lemma and Chernoff tail convention."
+    }
+  ],
+  "identical_integrated_candidate": {
+    "path": "work/Komorebi_LSM_Lean_0.15.0/KomorebiLSM/PredictableResidual.lean",
+    "path_base": "workspace",
+    "sha256": "ace3ef2c5b8d499c10da957c7e34dac2b5751e7c6acc02696a36ce2b2548dc65",
+    "note": "Identical byte copy supplied by parent; retained as partial P66 mapping. This review did not modify it or rerun the final checker."
+  }
+}

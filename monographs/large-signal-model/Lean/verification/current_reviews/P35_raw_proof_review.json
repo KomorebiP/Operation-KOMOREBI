@@ -1,0 +1,86 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true MODULE.lean",
+    "exit_code": 0,
+    "scope": "Fresh file acceptance only; integrated axiom audit and kernel replay remain parent responsibilities."
+  },
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "claim_id": 35,
+  "claim": "For M>=1 prospectively fixed reset experiments and N>=1 independent bounded trials per experiment with true common expectations p(w), all empirical means have error at most sqrt(log(2M/delta)/(2N)) on one event of probability at least 1-delta. Coverage maps transfer that same event to H, every G_s and b0 with spectral bounds r*epsilon and Euclidean bound sqrt(r)*epsilon.",
+  "input": {
+    "path": "KomorebiLSM/ResetCertificate.lean",
+    "sha256": "ae57f52cfbd98c15fa7af77ee7bfc385761a863873b282cce2b8e951c57e21fc"
+  },
+  "assumptions": [
+    "Probability measure; finite nonempty experiment family W; positive trial count N; 0<delta<1.",
+    "Within each experiment, the N trials are independent measurable real variables, bounded in [0,1] almost surely, and all have expectation p(w). Indicators of successful word observations are a special case.",
+    "No cross-experiment independence. Hentry, Gentry and bentry map every desired table entry to a selected experiment.",
+    "Inputs p(w) represent the actual selected-word success probabilities; known reset and prescribed intervention law justify these expectations in an application."
+  ],
+  "dependency_graph": [
+    "Pinned mathlib Hoeffding lemma bounds each centered [0,1] trial by subGaussian proxy 1/4.",
+    "Independence preserved by centering; summing N proxies gives N/4.",
+    "Chernoff bounds for sum and its negative at threshold N*epsilon give 2*exp(-2N*epsilon^2).",
+    "Finite union over M experiments requires no dependence assumptions across different words.",
+    "Radius algebra makes 2M*exp(-2N*epsilon_N^2)=delta; measurable bad-event complement gives simultaneous good-event probability at least 1-delta.",
+    "On that same good event, entrywise matrix error <=epsilon bounds each row by Cauchy-Schwarz and yields actual Euclidean operator norm <=r*epsilon; vector sum-of-squares yields sqrt(r)*epsilon.",
+    "Coverage maps instantiate every H/G_s/b0 entry on the same event."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Constants 1/4, N/4, 2N, 2M and radius logarithm are consistent with the exact mathlib MGF convention.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The two-sided bound includes both tails; good event uses <=epsilon and complement uses >epsilon.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Measurability and probability-one total mass justify taking the complement.",
+      "status": "passed"
+    },
+    {
+      "obligation": "No independence across experiments is smuggled into the union bound.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Actual matrix spectral norm is the norm of A.toEuclideanLin.toContinuousLinearMap on EuclideanSpace, not an entrywise substitute.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Zero rank r=0 gives legitimate zero norms; repeated coverage-map words are allowed; M=0 and N=0 are excluded by the natural formula domain.",
+      "status": "passed"
+    }
+  ],
+  "residual_limits": [
+    "No validity for one dependent trajectory, post-selected experiments, unknown resets, adaptive stopping, or distribution drift without new assumptions.",
+    "No rank, gap or model-class coverage guarantee follows from concentration alone.",
+    "The monograph should state M>=1 and N>=1 explicitly; Lean already enforces these natural domains."
+  ],
+  "strongest_safe_statement": "For M>=1 prospectively fixed reset experiments and N>=1 independent bounded trials per experiment with true common expectations p(w), all empirical means have error at most sqrt(log(2M/delta)/(2N)) on one event of probability at least 1-delta. Coverage maps transfer that same event to H, every G_s and b0 with spectral bounds r*epsilon and Euclidean bound sqrt(r)*epsilon.",
+  "cheapest_next_check": "Parent integrated clean compile, exhaustive axiom audit and kernel replay against the same source hashes.",
+  "upstream_leaf_checks": [
+    {
+      "path": "Mathlib/Probability/Moments/SubGaussian.lean",
+      "sha256": "e3302a51ed064b2c45fb405158a875cca3276cdd30951269e29ed88f10e631e7",
+      "scope": "Inspected raw Hoeffding lemma, independent-sum MGF composition and Chernoff tail inequality, including constants."
+    }
+  ]
+}

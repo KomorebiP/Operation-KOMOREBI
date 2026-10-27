@@ -1,0 +1,2 @@
+import KomorebiLSM.RotationP46
+#print axioms Komorebi.LSM.RotationP46.rational_rank_three_nonpolyhedral_model

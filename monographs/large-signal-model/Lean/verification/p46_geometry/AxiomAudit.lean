@@ -1,0 +1,22 @@
+import KomorebiLSM.RotationConeGeometry
+
+#print axioms Komorebi.LSM.RotationConeGeometry.rotation_power_injective
+#print axioms Komorebi.LSM.RotationConeGeometry.disk_not_finite_convex_hull
+#print axioms Komorebi.LSM.RotationConeGeometry.norm_le_of_rotated_re_le
+#print axioms Komorebi.LSM.RotationConeGeometry.spatial_rotate
+#print axioms Komorebi.LSM.RotationConeGeometry.rotationWord
+#print axioms Komorebi.LSM.RotationConeGeometry.rotationWord_zero
+#print axioms Komorebi.LSM.RotationConeGeometry.rotationWord_succ
+#print axioms Komorebi.LSM.RotationConeGeometry.rotationWord_mass
+#print axioms Komorebi.LSM.RotationConeGeometry.rotationWord_spatial
+#print axioms Komorebi.LSM.RotationConeGeometry.rotationWord_initial
+#print axioms Komorebi.LSM.RotationConeGeometry.allTests_rotated_probe_bound
+#print axioms Komorebi.LSM.RotationConeGeometry.canonical_cone_eq
+#print axioms Komorebi.LSM.RotationConeGeometry.point_one_convex
+#print axioms Komorebi.LSM.RotationConeGeometry.unit_boundary_mem
+#print axioms Komorebi.LSM.RotationConeGeometry.unit_disk_mem
+#print axioms Komorebi.LSM.RotationConeGeometry.lorentz_subset_of_closed_invariant
+#print axioms Komorebi.LSM.RotationConeGeometry.invariant_probability_cone_unique
+#print axioms Komorebi.LSM.RotationConeGeometry.spatial_normalizedHull_eq_disk
+#print axioms Komorebi.LSM.RotationConeGeometry.no_finite_normalized_generator_certificate
+#print axioms Komorebi.LSM.RotationConeGeometry.rational_rank_three_obstruction

@@ -1,0 +1,14 @@
+import KomorebiLSM.FiniteBayes
+import KomorebiLSM.InstrumentContraction
+#check Finset.abs_sum_le_sum_abs
+#check abs_sum
+#check Finset.sum_le_sum
+#check Finset.sum_filter
+#check Finset.sum_compl_add_sum
+#check Real.norm_eq_abs
+#check Finset.sum_ite_irrel
+#check Finset.sum_ite
+#check Finset.sum_div
+#check Fin.consEquiv
+#print Seminorm
+#print AddGroupNorm

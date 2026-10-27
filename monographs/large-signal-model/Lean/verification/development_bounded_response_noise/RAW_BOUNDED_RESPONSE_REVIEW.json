@@ -1,0 +1,102 @@
+{
+  "schema": "komorebi.raw-proof-review.v1",
+  "target": "BoundedResponseNoise",
+  "verdict": "proved within the explicitly stated positive-width bounded-response scope",
+  "reviewer": "/root/rotation_geometry",
+  "source_sha256": "d0766cb383025a46dc1ed87a87b9d1c7643479368e4ac4772a8097af954347ee",
+  "source_lines": 133,
+  "named_declarations": 7,
+  "named_theorems": 7,
+  "source_edits": false,
+  "provenance": {
+    "independence": "Reviewer did not author BoundedResponseNoise or its three direct source dependencies. This is a separate nonauthor source and evidence review.",
+    "sources_read": [
+      "BoundedResponseNoise.lean in full",
+      "ConditionalHoeffding.lean in full",
+      "PredictableResidualAffine.condExp_affine_ae and surrounding transport source",
+      "ConditionalRandomMultiplier.ConditionalSubgaussian definition and downstream random-multiplier boundary",
+      "BoundedResponseWrongMean.lean in full",
+      "AUTHOR_CHECKS.json and RESULT.json with referenced logs"
+    ]
+  },
+  "evidence": {
+    "source_and_inventory_match": true,
+    "all_stage_log_hashes_match": true,
+    "all_named_audits_exactly_cover_source": true,
+    "axioms_allowed_only": true,
+    "exact_module_replay_marker": true,
+    "semantic_control_exactly_one_false_no_api_error": true,
+    "author_checks_sha256": "6e6295e2dc551bf63c127bd323f603d6e5fc8054abc05ef5660ce74fe339ad78",
+    "result_sha256": "c900a8bebf8e6333ebc95ef1a09cdf4ec33b675b53e43e6c1e5fc085e9de3883",
+    "negative_control_sha256": "2fab063b383dd6673afb0507f873436e79f31e68636809796111473e53543d84",
+    "independent_recompile": "Not repeated: frozen author checks reconciled; no concrete issue justified occupying busy development gate. Cumulative .19 checking remains mandatory and root-owned."
+  },
+  "obligations": [
+    {
+      "claim": "Actual conditional exponential structure is transported through a.e. equality",
+      "verdict": "passed",
+      "endpoints": [
+        "conditionalSubgaussian_congr"
+      ],
+      "reason": "The chosen replacement remains ambient measurable. Exponential integrability and the ordinary conditional-expectation inequality transfer through the actual a.e. equality at each fixed real coefficient. No uniform uncountable all-coefficient null event is asserted."
+    },
+    {
+      "claim": "Normalize the actual response and actual conditional mean",
+      "verdict": "passed",
+      "endpoints": [
+        "centered_interval"
+      ],
+      "reason": "For a<b, c=b-a is positive and U=(Y-a)/c is actual ambient measurable with U in[0,1] a.e. Its integrability follows from boundedness. The global affine identity a+c*U=Y and the proved conditional-expectation affine theorem give the actual centered-noise identity, not a substituted conditional mean."
+    },
+    {
+      "claim": "Derived width/2 subgaussian scale with correct constants",
+      "verdict": "passed",
+      "endpoints": [
+        "centered_interval"
+      ],
+      "reason": "The sharp unit ConditionalHoeffding theorem is applied at every actual coefficient h*c, giving exponent(h*c)^2/8. Exact real algebra identifies this with h^2*((b-a)/2)^2/2. Exponential integrability and the actual CE bound are both constructed, and negative h is covered."
+    },
+    {
+      "claim": "Regression residual requires the true conditional-mean equation",
+      "verdict": "passed",
+      "endpoints": [
+        "regression_interval"
+      ],
+      "reason": "The noise certificate is derived from response bounds. Only after the separately required actual CE(Y|m)=theta*phi a.e. is proved does the theorem identify centered response with Y-theta*phi. Predictable regressor measurability is retained and implies ambient measurability."
+    },
+    {
+      "claim": "Exact rational noise scales for the two observation ranges",
+      "verdict": "passed",
+      "endpoints": [
+        "regression_neg_one_one",
+        "regression_neg_half_one"
+      ],
+      "reason": "Exact simplification gives (1-(-1))/2=1 and (1-(-1/2))/2=3/4. No rounded or fitted noise scale is used."
+    },
+    {
+      "claim": "Correct filtration/predictability and sample-space scope",
+      "verdict": "passed",
+      "endpoints": [
+        "process_neg_one_one",
+        "process_neg_half_one"
+      ],
+      "reason": "At time n the regressor is measurable under F_n and the response under F_(n+1). Ambient response measurability follows from the filtration inclusion. The actual conditional-mean equation is under F_n. The arbitrary probability sample space is not restricted to a finite or Standard Borel domain, and no temporal independence is assumed."
+    },
+    {
+      "claim": "Wrong conditional mean has a genuine semantic boundary test",
+      "verdict": "passed",
+      "endpoints": [
+        "BoundedResponseWrongMean.actual_centered"
+      ],
+      "reason": "The control first derives the actual centered certificate for constant response1 under a point mass. It then attempts the false uncentered bound exp(1)<=exp(1/2), rejecting a replacement of the true mean1 by0 with exactly the intended False goal."
+    }
+  ],
+  "scope": [
+    "This is a bounded-response noise helper for P81/P84, not an independent coverage theorem. Actual response range and conditional-mean identities, parameter bounds and the other regression-confidence hypotheses remain required downstream.",
+    "The generic interval theorem assumes a<b; it does not claim a separate zero-width interval endpoint. Both required experiment ranges have strictly positive width, so this boundary does not limit the claimed sigma1/sigma3/4 applications.",
+    "All coefficientwise conditional exponential bounds have the coefficient fixed before the almost-everywhere conclusion. The separate random-multiplier theorem supplies predictable random coefficients where needed; this helper does not silently substitute them into uncountably many fixed-coefficient null events.",
+    "No empirical coverage or data authenticity follows merely from constructing these mathematical noise certificates."
+  ],
+  "findings": [],
+  "remaining_mathematical_obligations_for_stated_helper": []
+}

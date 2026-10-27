@@ -1,0 +1,385 @@
+# Part VII. Robust curved certificates and noisy geometry
+
+The preceding block discovered a curved probability domain from exact operators. Exact preservation is not the same as stability under uncertainty. In the worked continuous model, every pure boundary state can remain on the boundary. A perturbation too small to be conspicuous in a coefficient table can then move a predicted state outside the probability domain.
+
+This block separates three operations. A numerical procedure proposes a geometry. An exact checker decides whether the submitted polynomial family has a declared margin on that geometry. A separately stated uncertainty set determines which other families share the guarantee. If a repair changes the operators, its prediction cost is retained rather than called an exact coordinate change.
+
+The resulting construction is broader than the preceding exact conformal search. It accepts nonconformal polynomial families and certifies a full coefficient box around a repaired estimate. The reference example uses a deterministic perturbation, not an empirical confidence region. Statistical coverage is a conditional theorem, not a conclusion of that example.
+
+Lorentz-positive maps, robust convex constraints and Bernstein positivity certificates have classical antecedents [R8, R13, R21, R22]. The following arguments are self-contained specializations connecting them to the signal model's representation and evidence contracts. The nine propositions continue the numbering at 71. Their count is not a novelty claim or a count of Lean proofs.
+
+# 80. A margin that has probability meaning
+
+Let $\mathcal L_d=\{(m,v):m\geq\|v\|_2\}$, with mass row $\lambda=(1,0,\ldots,0)$. A mass preserving invertible matrix $T$ transports a proposed predictive domain to this cone. Its normalized base in the original coordinates is
+
+$$
+K_T=\{T^{-1}(1,v):\|v\|_2\leq1\}.
+$$
+
+Write $F_a(u)=TB_a(u)T^{-1}$ for the transported operator density. Observations lie in $[-1,1]$ with reference measure $du/2$. All operator densities in this block are polynomial and all equalities involving integrals use that reference measure. For each action define
+
+$$
+\sigma_a(u)=\min_{\|v\|_2\leq1}
+\left[(F_a(u)(1,v))_0-\|(F_a(u)(1,v))_{\rm sp}\|_2\right].
+$$
+
+The subscript $\rm sp$ denotes spatial coordinates, not a separate measured signal. This margin is expressed before normalization. It simultaneously controls mass orientation and distance from the curved boundary. It is coordinate dependent, so its uncertainty budget must use the same $T$.
+
+**Proposition 71. Robust oriented margin.** Suppose $\sigma_a(u)\geq\kappa_a(u)$ and an uncertain family has transported errors $\Delta_a(u)$ satisfying, for every normalized input,
+
+$$
+\begin{aligned}
+|[\Delta_a(u)(1,v)]_0|&\leq e_{a,0}(u),\\
+\|[\Delta_a(u)(1,v)]_{\rm sp}\|_2&\leq e_{a,1}(u).
+\end{aligned}
+$$
+
+If $\kappa_a(u)\geq e_{a,0}(u)+e_{a,1}(u)$, every uncertain branch preserves $\mathcal L_d$. If the uncertain family has exact integrated mass and its initial state belongs to $K_T$, it defines a valid probability model at every finite horizon. With a strict inequality, the residual slack is at least $\kappa_a-e_{a,0}-e_{a,1}$.
+
+**Proof.** For $w=F_a(u)(1,v)$ and $d=\Delta_a(u)(1,v)$,
+
+$$
+(w_0+d_0)-\|w_{\rm sp}+d_{\rm sp}\|_2
+\geq w_0-\|w_{\rm sp}\|_2-|d_0|-\|d_{\rm sp}\|_2.
+$$
+
+The right side is nonnegative under the hypothesis. Homogeneity extends the assertion from normalized inputs to the entire cone. The only zero-mass cone element is zero. Integrated mass conservation and successive cone preservation give nonnegative normalized observation laws by the same induction as in Proposition 52. A positive-density branch may be normalized. A zero-density branch is not assigned a posterior. $\square$
+
+This is a uniform deterministic guarantee. The inequalities must cover the whole observation interval and the whole normalized domain. A noise scale estimated from a few residuals does not automatically provide those inequalities. For continuous observations the displayed margin is a density margin relative to the declared measure, not a probability assigned to a single observation value.
+
+# 81. Why exact boundary preservation can have zero noise radius
+
+An exact certificate can be correct while having no tolerance to unrestricted perturbations. This is a geometrical fact, not a failure of the certificate checker.
+
+**Proposition 72. Boundary fragility under mass preserving perturbations.** Let $F$ preserve $\mathcal L_d$. Suppose a normalized input $z=(1,v)$ has a boundary image $Fz=(m,w)$ with $m=\|w\|_2$. For every $\epsilon>0$, there is a linear perturbation $\Delta$ with $\lambda\Delta=0$ and
+
+$$
+\sup_{\|v'\|_2\leq1}\|\Delta(1,v')\|_{\mathcal L_d}=\epsilon
+$$
+
+such that $(F+\Delta)z\notin\mathcal L_d$. Here the base norm is $\|(m,w)\|_{\mathcal L_d}=\max(|m|,\|w\|_2)$.
+
+**Proof.** If $w\ne0$, put $e=w/\|w\|_2$. If $w=0$, choose any spatial unit vector $e$. Define $\Delta=\epsilon(0,e)\lambda$. Its mass row vanishes and its value on every normalized input is $(0,\epsilon e)$, of base norm $\epsilon$. If $w\ne0$, the new spatial norm is $m+\epsilon$. If $w=0$, the original output mass is zero and the new spatial norm is $\epsilon$. Either image lies outside the cone. $\square$
+
+For a continuous operator family, a constant spatial perturbation of this form preserves every integrated mass row and produces the same obstruction at an observation with a boundary image. It need not preserve the algebraic restrictions of a narrower uncertainty class. Perturbing a positive congruence factor and rebuilding its congruence, for example, is different from perturbing an arbitrary predictive matrix.
+
+In the preceding exact continuous example, the direct operator at $u=0$ is $I/4$. Every normalized boundary state has a boundary image. There is therefore no positive unrestricted matrix-error radius on that domain, even though the original family is exactly valid. A robust theorem that silently treats its zero slack as positive would be false.
+
+# 82. An explicit repair and the price of its slack
+
+In Lorentz coordinates let
+
+$$
+N_a(u)=g_a(u)e_0\lambda,\qquad
+ g_a(u)\geq g_{\min}>0,\qquad \int g_a(u)\,du/2=1.
+$$
+
+This reference instrument reports a state-independent density and resets to the center. It is a mathematical model modification, not a new observation. Given an estimate $\widehat F$, define
+
+$$
+\widetilde F_a(u)=(1-\eta)\widehat F_a(u)+\eta N_a(u),
+\qquad 0\leq\eta\leq1.
+$$
+
+**Proposition 73. Interior repair with an explicit error budget.** Suppose a reference family $F^*$ is valid on $\mathcal L_d$, and the combined mass and spatial error of $\widehat F-F^*$ is at most $d_a(u)$ on normalized inputs. Then the margin of $\widetilde F_a(u)$ is at least
+
+$$
+\boxed{\eta g_a(u)-(1-\eta)d_a(u).}
+$$
+
+An additional uncertainty family with combined output error at most $\nu_a(u)$ is certified whenever
+
+$$
+\eta g_a(u)\geq(1-\eta)d_a(u)+\nu_a(u).
+$$
+
+Assume exact integrated mass for the estimate. If its integrated base-norm discrepancy from $F^*$ is at most $\varepsilon$, the corrected discrepancy is at most
+
+$$
+\boxed{(1-\eta)\varepsilon+2\eta.}
+$$
+
+When the corrected model is valid on the same cone, with the same initial state, its length-$T$ law under any common policy differs from the reference law by at most
+
+$$
+\min\left(1,\frac T2[(1-\eta)\varepsilon+2\eta]\right).
+$$
+
+**Proof.** The margin of $\widehat F$ is at least $-d_a$ by Proposition 71's inequality applied to $F^*$. Adding the reference changes only output mass, by $\eta g_a$, while scaling the remaining output by $1-\eta$. This proves the first bound and the robust implication. Integrated mass is preserved by mixing.
+
+For the error, write
+
+$$
+\widetilde F-F^*=(1-\eta)(\widehat F-F^*)+\eta(N-F^*).
+$$
+
+On a normalized input, both $N$ and $F^*$ distribute total cone mass one. Their integrated difference has base norm at most two. Integrate the triangle inequality to obtain the stated budget. The final implication is the continuous observation-law bound of Proposition 59. It requires validity of both comparison models on the same cone. $\square$
+
+For constant budgets, a sufficient repair weight is $(d+\nu)/(g_{\min}+d)$ when this number is at most one. This is not an optimality claim. The reference example instead fixes a repair weight and verifies the result independently. If an exact model already has a robust structured certificate, adding a reset may be unnecessary and would introduce avoidable bias.
+
+The term $2\eta$ is deliberately retained. A larger repair creates more room for uncertainty but can change future predictions more. The worst-case law bound can become uninformative at long horizons. Neither positivity nor mixing alone proves long-horizon predictive accuracy.
+
+# 83. Noisy invariant forms are proposals, not certificates
+
+The exact identity $A^{\mathsf T}HA=H$ need not survive estimation error. A useful proposal can still be obtained from a least-squares invariant form, but the residual must not be interpreted as a positive-cone guarantee.
+
+Let $\mathcal M_A$ map symmetric matrices into a Euclidean product space by
+
+$$
+\mathcal M_A(H)=(A^{\mathsf T}HA-H,\operatorname{tr}H).
+$$
+
+Use the Frobenius norm on symmetric matrices and the induced product norm. Assume $\mathcal M_{A^*}$ is injective and $\mathcal M_{A^*}(H^*)=(0,1)=b$. This fixes the scale of a one-dimensional invariant-form space.
+
+**Proposition 74. A posteriori proposal error.** Given $\widehat H$, let $r=\mathcal M_{\widehat A}(\widehat H)-b$. Suppose
+
+$$
+\|\mathcal M_{\widehat A}-\mathcal M_{A^*}\|\leq e_M,
+\qquad \sigma_{\min}(\mathcal M_{\widehat A})>e_M.
+$$
+
+Then
+
+$$
+\boxed{
+\|\widehat H-H^*\|_F
+\leq
+\frac{\|r\|+e_M\|\widehat H\|_F}
+{\sigma_{\min}(\mathcal M_{\widehat A})-e_M}.
+}
+$$
+
+One may take $e_M$ from the bound
+
+$$
+\|\mathcal M_{\widehat A}-\mathcal M_{A^*}\|\leq(\|\widehat A\|_2+\|A^*\|_2)\|\widehat A-A^*\|_2.
+$$
+
+For fixed centers $c^*=(I-A^*)^{-1}b^*$ and $\widehat c=(I-\widehat A)^{-1}\widehat b$, with $\|\widehat A-A^*\|_2\leq e_A$ and $\|\widehat b-b^*\|_2\leq e_b$, one has
+
+$$
+\|\widehat c-c^*\|_2
+\leq\frac{e_b+e_A\|\widehat c\|_2}
+{\sigma_{\min}(I-\widehat A)-e_A}
+$$
+
+when the denominator is positive.
+
+**Proof.** The invariant-form difference satisfies
+
+$$
+\mathcal M_{A^*}(\widehat H-H^*)
+=r-(\mathcal M_{\widehat A}-\mathcal M_{A^*})\widehat H.
+$$
+
+The least singular value of $\mathcal M_{A^*}$ is at least that of $\mathcal M_{\widehat A}$ minus $e_M$. Apply this lower bound and the triangle inequality. To bound the map perturbation, insert and subtract $\widehat A^{\mathsf T}HA^*$ and apply the Frobenius product inequality. The trace component is unchanged. Finally,
+
+$$
+(I-A^*)(\widehat c-c^*)=(\widehat b-b^*)+(\widehat A-A^*)\widehat c.
+$$
+
+The same singular-value argument proves the center bound. $\square$
+
+The theorem assumes an actual perturbation budget and a corresponding exact reference problem. The example reports numerical residuals but does not claim to have statistically certified these budgets. It uses a trace-normalized least-squares shape, a nearly rank-one image for scale, and rationalized center and factor. It accepts none of those computations as a proof of validity. The next checker uses only the submitted rational geometry and the complete polynomial operators.
+
+A rationalized invertible factor $L$ specifies $H=L^{\mathsf T}L$ exactly. Positive definiteness is then an algebraic fact even when the factor was suggested by floating-point calculations. It still does not establish operator invariance.
+
+# 84. Finite exact checking on a continuum
+
+For three predictive coordinates, the spatial unit circle admits two rational charts. For $s\in\{1,-1\}$ and $t\in[-1,1]$, put
+
+$$
+d(t)=1+t^2,\qquad
+r_s(t)=\frac{s}{d(t)}(1-t^2,2t).
+$$
+
+The charts cover the two semicircles, including their endpoints. For an operator $F_a(u)$ and required margin $\kappa\geq0$, form polynomial vectors and scalars
+
+$$
+\begin{aligned}
+w_{a,s}(u,t)&=F_a(u)(d(t),s(1-t^2),2st)^{\mathsf T},\\
+f_{a,s}(u,t)&=w_{a,s,0}(u,t)-\kappa d(t),\\
+h_{a,s}(u,t)&=f_{a,s}(u,t)^2-w_{a,s,1}(u,t)^2-w_{a,s,2}(u,t)^2.
+\end{aligned}
+$$
+
+No square root occurs in these polynomials.
+
+**Proposition 75. Rational semicircle and Bernstein certificate.** If $f_{a,s}$ and $h_{a,s}$ are nonnegative on $[-1,1]^2$ for both charts and every action, then $\sigma_a(u)\geq\kappa$ for every observation. For rational operators and geometry, nonnegative tensor-Bernstein coefficients on a complete rational subdivision of that square give a finite exact witness. If the actual margin is uniformly strictly greater than $\kappa$, sufficiently fine dyadic subdivision succeeds.
+
+**Proof.** The first polynomial inequality establishes output orientation after subtracting $\kappa d$. The second then gives
+
+$$
+w_{a,s,0}-\|(w_{a,s,1},w_{a,s,2})\|_2\geq\kappa d.
+$$
+
+Divide by $d>0$ to obtain the required margin on the circle. For fixed $u$, the function consisting of affine output mass minus the norm of affine spatial output is concave in the input. Every point in the closed disk is a convex combination of circle points. Concavity therefore extends the lower bound to the disk.
+
+On any rectangle mapped affinely to $[0,1]^2$, the tensor-Bernstein basis functions are nonnegative and sum to one. A polynomial with nonnegative coefficients in that basis is nonnegative throughout the rectangle. If the rectangles cover the square, their inequalities prove the global statement. The reference verifier checks coverage through a complete subdivision tree, not by accepting an arbitrary list of rectangles.
+
+For termination under strict margin, both $f$ and $h$ are strictly positive on the compact square. Their minima are positive. For a fixed-degree polynomial on a small cell of side at most $\delta$, its Taylor expansion at one corner has constant term equal to its value there and nonconstant coefficients bounded uniformly by $O(\delta)$. The linear change from the fixed-degree power basis to the Bernstein basis is fixed and bounded. Thus every Bernstein coefficient differs from that constant value by $O(\delta)$, uniformly over cells. At sufficiently small $\delta$ all coefficients are positive. A finite dyadic subdivision attains that size. $\square$
+
+This proof is a specialized use of classical Bernstein range bounds [R22]. It does not claim that a negative Bernstein coefficient proves the polynomial negative. Such a coefficient can merely mean that further subdivision is needed. A negative evaluated corner, by contrast, is an actual counterexample. At a zero-margin boundary, finite termination of this particular witness language is not promised. The exact conformal and matrix certificates of preceding blocks remain useful there.
+
+The two tests are both necessary to this sufficient certificate. The squared inequality alone also admits reversed mass orientation. Both charts are required. A verifier that omits one chart has not covered the circle.
+
+# 85. A finite uncertainty box and the role of convexity
+
+A robust witness should identify its uncertainty family rather than supply an unexplained tolerance. Suppose the transformed error has polynomial coefficients
+
+$$
+\Delta_a(u)=\sum_{k=0}^{D}u^kE_{a,k},\qquad
+|(E_{a,k})_{ij}|\leq r_k.
+$$
+
+All bounds are in the submitted Lorentz coordinates. For three coordinates, normalized inputs have each coordinate of magnitude at most one.
+
+**Proposition 76. Coefficient boxes and convex uncertainty.** The coefficient box satisfies the output bounds of Proposition 71 with
+
+$$
+\boxed{e_0=3\sum_{k=0}^{D}r_k,\qquad e_1=6\sum_{k=0}^{D}r_k.}
+$$
+
+Only coefficient arrays obeying $\lambda\int\Delta_a(u)\,du/2=0$ are included in the normalized uncertainty family. A checked margin at least $e_0+e_1$ certifies every such array.
+
+Alternatively, if finitely many complete polynomial operator families satisfy a common margin $\kappa$ on the same domain, every convex combination of those families satisfies that margin. Initial states may also range over a certified convex hull.
+
+For a fixed geometry, the constraints $\sigma_a(u)\geq\kappa$, exact mass, and membership in a convex data-consistency set are convex constraints on the operator coefficients and initial state. Joint optimization of geometry and operators is not asserted to be convex.
+
+**Proof.** Each output scalar is bounded by $3r_k$ on a normalized input. Bound the spatial Euclidean norm by the sum of the absolute values of its two coordinates, obtaining $6r_k$. Sum over coefficients using $|u|\leq1$. Mass conservation is a separate linear constraint and follows for every family satisfying it.
+
+For convex combinations, output mass is affine and the spatial norm is convex. Hence the margin of the combined output is at least the same combination of margins. A convex cone contains convex combinations of admissible initial states. For fixed geometry and input, the inequality affine mass minus a norm at least $\kappa$ is convex in the coefficients. Intersect over all inputs and observations, then add the linear mass constraints and the convex data set. $\square$
+
+The squared polynomial witness in Proposition 75 is a convenient verification language. Its coefficient constraints are not automatically a convex optimization formulation in unknown operators. Convexity of the underlying admissibility set must not be confused with convexity of every certificate parameterization.
+
+Likewise, a free uncertainty box in all entries contains families that violate integrated mass. The affine restriction is essential. Removing physically valid candidates from a statistical confidence set for some other reason requires its own coverage argument.
+
+# 86. What a search can guarantee
+
+The numerical proposal is one practical route. There is also a precise conditional search theorem showing why a broad class of strict curved certificates can be found without an exact conformal identity.
+
+**Proposition 77. Conditional search for strict rational curved certificates.** Consider finitely many rational polynomial operator families in three coordinates, each with exact mass, and finitely many rational normalized initial states. Suppose there exists a real mass preserving invertible $T_*$ such that every transformed initial state lies strictly inside the Lorentz cone and every transformed operator family has a common positive margin on the observation interval. Then a rational mass preserving invertible $T$, a positive rational margin, and finite rational Bernstein witnesses exist. A dovetailed enumeration of rational transforms, positive rational margins and subdivision depths eventually finds such a witness. Whenever it returns, the witness is sound for the convex hull of the supplied families.
+
+**Proof.** Inversion and matrix multiplication are continuous near $T_*$. Initial membership is strict, and the operator margin is continuous jointly in the transform, the observation, and the normalized input. The latter two range over compact sets and there are finitely many families. Thus the strict inequalities persist in a neighborhood of $T_*$. Rational mass preserving matrices are dense in that affine matrix space, and invertibility persists in a neighborhood. Choose a rational transform there and a rational positive margin smaller than the remaining minimum. Proposition 75 supplies finite subdivisions because there is still a strict gap above the chosen margin. Enumerating all finite rational descriptions and depths eventually reaches this finite witness. Proposition 76 proves the convex-hull conclusion. $\square$
+
+This is a conditional semidecision result, not a polynomial-time complexity theorem. It does not cover every valid model. Initial states on an essential boundary and families with zero margin may violate its assumptions. The implemented procedure uses a finite rationalized proposal and bounded subdivision, not this unbounded enumeration. Failure of that bounded procedure is a withheld certificate rather than a proof that no other domain works.
+
+The theorem's uncertainty families are supplied in fixed predictive coordinates. It does not establish that those families cover an unknown generating process. It demonstrates a route from a strict robust model sector to finite machine-checkable witnesses.
+
+# 87. Selection from data does not remove the uncertainty quantifier
+
+A domain can be selected after examining fitted operators without a separate statistical penalty for each geometry tried. That statement holds only when the final verification ranges over an already justified confidence set.
+
+**Proposition 78. Data-selected geometry with honest coverage.** Suppose a random set $\mathcal U$ of operators and initial states, in a declared fixed predictive coordinate system, contains the true model with probability at least $1-\delta$. A data-dependent procedure may propose any transform $T$ and any domain. If its exact verifier proves domain membership and invariance for every member of the same set $\mathcal U$, then on that coverage event the true model has the verified domain. No union bound over geometry proposals is needed for this deterministic implication.
+
+If original-coordinate perturbations satisfy $\|\Delta\|_2\leq e$, their combined mass and spatial output error after a known transform $T$ is at most
+
+$$
+\boxed{2\|T\|_2\|T^{-1}\|_2 e.}
+$$
+
+The corresponding transformed uncertainty budget must be used even when $T$ was chosen from the data.
+
+**Proof.** On the coverage event the true model is a member of the set quantified by the verifier. Its domain properties follow by direct inclusion, regardless of how $T$ was selected. For the error, a normalized Lorentz input has Euclidean norm at most $\sqrt2$. Thus the Euclidean norm of $T\Delta T^{-1}z$ is at most $\sqrt2\|T\|_2\|T^{-1}\|_2e$. The sum of its mass magnitude and spatial norm is at most $\sqrt2$ times its Euclidean norm. Multiply the two bounds. $\square$
+
+The set must not be shrunk around a convenient candidate without preserving coverage. Moving the center by a reset mixture changes the family being certified. A tube around the repaired family need not contain the original true family. Repeatedly estimating new confidence sets still requires the stage accounting of Proposition 48. Statistical rank coverage and observation identifiability remain assumptions of the upstream procedure.
+
+The final reference certificate explicitly says that no statistical coverage is claimed. Its uncertainty box is a deterministic, exactly described set around the repaired operator family. This supports a reproducible robustness statement without pretending that the example has estimated an unknown noise distribution.
+
+# 88. A complete perturbed-operator construction
+
+The input to the new proposer contains only two perturbed polynomial operators and the initial vector. A separate fixture generator creates those inputs from the preceding continuous model by adding $\pm\delta E(u)$, with opposite signs for the two actions and
+
+$$
+\delta=\frac1{2000},\qquad
+E(u)=E_0+uE_1+u^2E_2,
+$$
+
+where
+
+$$
+\begin{aligned}
+E_0&=\begin{pmatrix}0&0&0\\-1&2&0\\0&1&-1\end{pmatrix},&
+E_1&=\begin{pmatrix}0&1&-1\\1&0&1\\1&-1&0\end{pmatrix},&
+E_2&=\begin{pmatrix}0&0&0\\0&-1&1\\1&0&1\end{pmatrix}.
+\end{aligned}
+$$
+
+The perturbation preserves integrated mass. It is not a statistical sample. The proposer does not receive the predecessor metric or a hidden generator.
+
+A noisy operator ratio supplies a center and a least-squares shape. A finite observation-anchor list supplies a scale proposal. Rationalizing the center and a triangular metric factor with denominator limit 48 gives
+
+$$
+c=\begin{pmatrix}1/2\\1/2\end{pmatrix},\qquad
+L=\begin{pmatrix}123/37&-2\\0&109/41\end{pmatrix},
+$$
+
+and hence
+
+$$
+\boxed{
+H=L^{\mathsf T}L=
+\begin{pmatrix}15129/1369&-246/37\\-246/37&18605/1681\end{pmatrix}.
+}
+$$
+
+This is not the exact predecessor metric. The transformed family is not assumed conformal. The raw fitted family actually fails the proposed domain: for the direct action at $u=-1$ and Lorentz input $(1,1,0)$, its output mass is $106321/82000>0$, while the output quadratic form is
+
+$$
+-\frac{12009932651317769}{557059220496000000}<0.
+$$
+
+This is a genuine rejected input state, not a negative Bernstein coefficient of uncertain meaning. The normalized output lies outside the ellipse. No positivity certificate is claimed for the raw fit.
+
+The construction next mixes each operator with the center-reset reference using $\eta=1/8$. The exact checker proves a margin of at least $1/16$ for the resulting family. It verifies eight polynomial inequalities across both actions and both semicircle charts. The witness contains 116 subdivision leaves and 1,780 exactly recomputed nonnegative Bernstein coefficients. These are arithmetic certificate sizes, not separate theorems.
+
+The exported family admits mass and spatial perturbation budgets each equal to $1/128$, leaving certified slack $3/64$. In particular, it covers every degree-two transformed coefficient perturbation with each entry bounded by $1/4096$, subject to the exact integrated mass constraints. Proposition 76 verifies that the whole coefficient box lies inside the declared output budgets. No uncertainty vertices or future trajectories are sampled to establish that inclusion.
+
+The certificate is replayed independently from its JSON record. The record contains rational operators, initial state, transform, margin, uncertainty definition and complete subdivision trees. Floating-point proposal diagnostics are stored elsewhere and are not trusted by the replay routine.
+
+# 89. The prediction cost needs a common comparison domain
+
+A successful discovered domain does not imply that the known reference model has that same domain. To invoke a common-cone law bound, the example separately checks the corrected family on the predecessor's exact ellipse. This is a second certificate used only for comparison. It is not supplied to geometry discovery.
+
+In that comparison domain, the coefficient-wise upper bounds on the raw fitting discrepancy are
+
+$$
+\frac{11}{5000},\qquad \frac{137}{30000},\qquad \frac{37}{8000}.
+$$
+
+Using $\int_{-1}^1|u|^kdu/2=1/(k+1)$ gives the integrated upper budget $241/40000$. The same center-reset reference is valid there. Both models have the same initial state.
+
+**Proposition 79. Certified repair with a retained comparison budget.** For the exact construction of Section 88, independent replay establishes internal validity of the repaired model and its declared coefficient uncertainty family. Independent comparison-domain replay and the coefficient bounds above give
+
+$$
+\varepsilon_{\rm repaired}
+\leq\frac78\frac{241}{40000}+\frac14
+=\frac{81687}{320000}.
+$$
+
+Consequently, for any common policy and any finite horizon $T$,
+
+$$
+\boxed{
+\|P_T-\widetilde P_T\|_{\rm TV}
+\leq\min\left(1,\frac{81687T}{640000}\right).
+}
+$$
+
+This compares the unmodified reference process and the nominal repaired process. It is not a guarantee that the raw noisy model was valid or that the repaired uncertainty family contains the original reference.
+
+**Proof.** The polynomial witnesses and exact mass identities imply the nominal and robust validity statements by Propositions 71, 75 and 76. The separate comparison witness establishes the required common domain for the nominal repaired and reference operators. The absolute coefficient bounds dominate the integrated raw error by the triangle inequality. Proposition 73 then gives the displayed repair budget and law bound. All hypotheses are either exact identities in the supplied witnesses or direct norm bounds from the declared rational coefficients. $\square$
+
+The bound is conservative. It becomes one at horizon eight, so it makes no nontrivial long-horizon accuracy claim. The example's point is the separation of a verified all-horizon probability model from a finite-horizon approximation guarantee. A probability-valid model is not necessarily a close model.
+
+The noisy proposal, the failed raw fit, the repair and the comparison bound all appear in the release records. None is replaced by a more favorable trajectory score. The coefficient box is around the repaired family in the specified coordinates, not an inferred distribution of sensor noise.
+
+# 90. Seventh-block checkpoint
+
+The cumulative foundation now contains 79 propositions. The new block extends curved validity checking beyond exact conformal identities to strict-margin polynomial families, including a concrete perturbed-operator example. It gives a finite exact certificate over continuous observations and a continuum of predictive states, a conditional existence search for strict curved sectors, and the correct quantifiers for data-selected geometry.
+
+The distinction between noise and model correction is central. A zero-margin exact model may admit no unrestricted robust neighborhood. A repaired estimate can have such a neighborhood, but its correction cost belongs in the prediction budget. A deterministic neighborhood is not a statistical confidence set until an upstream coverage theorem justifies that interpretation.
+
+The reference implementation includes a numerical proposal, rationalized geometry, an exact tensor-Bernstein verifier, a coefficient-box inclusion check, deliberate rejection controls and an independent comparison-domain calculation. It does not implement a complete global optimizer over arbitrary cones, learn empirical coefficient confidence regions, establish unknown predictive rank, or prove useful long-horizon accuracy for the worked repair.
+
+The next substantive work is to reduce the conservatism of the repair and uncertainty descriptions, construct statistically covered operator sets from realistic dependent signals, and connect these strict certificates to adaptive nonlinear representation discovery. The current block establishes a reproducible finite sector rather than declaring those tasks solved. Production PR-LASM stays at 2.3.0. No new Lean verification, public publication or license change is claimed.

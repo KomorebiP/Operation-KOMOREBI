@@ -1,0 +1,197 @@
+{
+  "primary_verdict": "proved as written",
+  "review_kind": "Focused raw proof audit of the complete P47 approximation bridge, including the rational-data appendix; no frozen source edits.",
+  "source_file": "KomorebiLSM/RotationApproximation.lean",
+  "source_sha256": "890ec81d98b54c893a22d5e8c70daccf547f4df9e51a39d41e3c27b839dd9db2",
+  "named_declarations": 54,
+  "named_theorems": 37,
+  "authoritative_claim": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "section": "52. A finite approximation with an explicit price",
+    "lines": "2111-2149",
+    "proposition": "P47. Polyhedral approximation of the rotation model"
+  },
+  "claim_card": {
+    "objects": "State = Fin 3 -> Real, mass z=z 0, initial=(1,1,0). Actual rotate matrix diag(1,alpha R), with R=[[3/5,-4/5],[4/5,3/5]]. Probe/reset branches are retained. Actual regular n-gon vertices are exp(2*pi*i*j/n), embedded at mass one as columns of vertexSynthesis n. The policy is a shared action-probability kernel on each joint action/observation history.",
+    "coefficient_domains": "General operators, synthesis and positive lifts over Real; explicit alpha=2/3 certificate data are exhibited over Rational and cast into Real.",
+    "hypotheses": "For the regular polygon n>=3, alpha>=0 and alpha<=cos(pi/n). For the common-Lorentz law bound 0<=alpha<=1 and every history policy is a probability vector, including zero action weights. Diamond: 0<=alpha<=5/7. Vertex budget: 0<eta<=1 and alpha=1-eta.",
+    "conclusions": [
+      "Actual regular-vertex synthesis is surjective; its positive generated cone is invariant under every modified branch and contains the declared initial state.",
+      "Exist nonnegative lifted branch matrices, a normalized nonnegative initial vector, exact synthesis/intertwining and per-action column mass one, with equality of every finite word probability.",
+      "Exact and attenuated models are valid on the same constructed Lorentz probability cone. Actual observation-law TV under every common randomized history policy at every natural horizon T is <=min(1,T*(1-alpha)/2).",
+      "The actual Lorentz base norm, defined from positive-decomposition cost infima, equals max(abs(t),sqrt(x^2+y^2)); the discrepancy estimate is derived from this norm.",
+      "The explicit four-generator diamond is exactly abs(x)+abs(y)<=t and gives a positive lift for alpha<=5/7. At alpha=2/3 all synthesis, branch and initial-prior data are literal casts of rational data.",
+      "For eta in (0,1], n=max(3,ceilNat(pi/sqrt(2*eta))) supplies the actual regular-vertex finite certificate with attenuation alpha=1-eta."
+    ]
+  },
+  "dependency_graph": [
+    {
+      "node": "regular_polygon_positive_lift",
+      "depends_on": [
+        "actual vertexMatrix/vertexSynthesis and vertex_mass",
+        "RegularPolygon.closedBall_subset_polygon from HB/Riesz and actual angular support",
+        "regular_polygon_inscribed_hull",
+        "finite_hull_invariant and actual probe_reset",
+        "PositiveLift.positive_lift_iff",
+        "finite_vertex_certificate and operator_mass"
+      ],
+      "leaf_status": "Internal kernel-checked proof modules; no supplied polygon-inradius hypothesis remains in endpoint."
+    },
+    {
+      "node": "regular_polygon_policy_error",
+      "depends_on": [
+        "regular_vertex_surjective from a positive actual inradius",
+        "regular_polygon_invariant from the constructed positive lift",
+        "model_shared_policy_tv_bound"
+      ],
+      "leaf_status": "Internal proof; the final conjunction uses the same operator alpha throughout."
+    },
+    {
+      "node": "model_shared_policy_tv_bound",
+      "depends_on": [
+        "common_cone_instrument and cone_invariant",
+        "rotation_difference_radius and action_discrepancy",
+        "LorentzBaseNorm actual coneInstance and value_eq_sqrt",
+        "PolicyComparison.shared_policy_observation_tv_bound",
+        "FiniteTV aggregation contraction"
+      ],
+      "leaf_status": "Internal proof; norm formula and discrepancy are derived, not assumptions of the endpoint."
+    },
+    {
+      "node": "rational_diamond_certificate_data",
+      "depends_on": [
+        "explicit rational 4x4 matrices and cast identities",
+        "explicit rational synthesis matrix",
+        "rational normalized point-mass vector"
+      ],
+      "leaf_status": "Exact rational arithmetic checked by norm_num; no floating-point or external computation."
+    },
+    {
+      "node": "sufficient_vertex_positive_lift",
+      "depends_on": [
+        "RegularPolygon.sufficient_vertex_count using actual ceiling and global cosine bound",
+        "regular_polygon_positive_lift",
+        "eta<=1 supplies alpha>=0"
+      ],
+      "leaf_status": "Internal proof; not a lower bound or optimality result."
+    }
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Actual operators and exact-model identification",
+      "status": "passed",
+      "evidence": "rotationMatrix alpha has the literal rational spatial rotation block; branchMatrix retains the original probes and zero rotate branch. exact_operator identifies operator 1 with RotationModel.operator. Initial states and mass functional agree definitionally."
+    },
+    {
+      "obligation": "Cone over the actual regular n-gon, not an abstract supplied invariant cone",
+      "status": "passed",
+      "evidence": "vertexMatrix columns are point 1 (RegularPolygon.vertex n j). polygon_point_mem_hull transports the actual finite convex hull into its positive generated cone. regular_polygon_inscribed_hull discharges the generic hball using the proved actual regular-polygon disk inclusion."
+    },
+    {
+      "obligation": "Initial inclusion and all branches preserve the regular cone",
+      "status": "passed",
+      "evidence": "The actual vertex at 1 gives the declared initial state. Rotations have radius alpha times the input radius; probes have nonnegative effects because vertex radius<=1 and reset to initial. Generator preservation extends to the full positive generated cone."
+    },
+    {
+      "obligation": "Genuine finite positive stochastic lift",
+      "status": "passed",
+      "evidence": "regular_polygon_positive_lift constructs M and a0 via the actual cone invariance and PositiveLift.positive_lift_iff. The endpoint derives M>=0, IsPrior a0, V a0=initial, exact branch intertwining, per-action column mass one and all-word probability equality. No lift or desired invariance is an endpoint assumption."
+    },
+    {
+      "obligation": "Full row rank/surjectivity",
+      "status": "passed",
+      "evidence": "regular_vertex_surjective uses the strictly positive radius cos(pi/n), extracts actual positive hull representatives for (1,0), (1,r), (1,i*r), and linearly combines them to represent every (t,x,y). diamond_synthesis_surjective gives an explicit real preimage. Positivity is not incorrectly imposed on arbitrary full-row preimages."
+    },
+    {
+      "obligation": "Both models valid on the common Lorentz probability cone",
+      "status": "passed",
+      "evidence": "cone_invariant covers all modified branches for 0<=alpha<=1. operator_mass sums the actual observation branches to preserve the declared mass for each action. common_cone_instrument packages these into actual cone instruments, instantiated in model_shared_policy_tv_bound."
+    },
+    {
+      "obligation": "Actual infimum-derived Lorentz base norm",
+      "status": "passed",
+      "evidence": "LorentzBaseNorm.value_eq_sqrt is used for the constructed coneInstance, whose carrier and mass are identified with RotationModel.cone and the actual mass. Its raw proof bounds every positive decomposition below by max(abs(t),norm spatial) and exhibits an attaining decomposition, rather than postulating an arbitrary norm."
+    },
+    {
+      "obligation": "Correct policy quantifier, law object and TV half constant",
+      "status": "passed",
+      "evidence": "model_shared_policy_tv_bound compares actual ObservationTree.observationLaw for the same shared randomized policy and the same initial state, with kernels operator 1 and operator alpha. The summed per-action base-norm discrepancy is <=1-alpha. Existing common-policy record-law comparison and observation marginalization give min(1,T*(1-alpha)/2); the initial discrepancy is exactly zero."
+    },
+    {
+      "obligation": "Explicit diamond threshold and exact rational four-generator data",
+      "status": "passed",
+      "evidence": "diamond_hull identifies the actual four-column generated cone with abs(x)+abs(y)<=t. lift_nonnegative uses alpha>=0 and alpha<=5/7; matrix_intertwining and lift_mass give the actual certificate. rational_lift_matrix and rational_diamond_certificate_data exhibit Q matrices/vectors whose casts equal the real data at alpha=2/3. Rotation entries are 5/12, 1/60 and 11/20, with the correct column convention."
+    },
+    {
+      "obligation": "Ceiling certificate and attenuation range",
+      "status": "passed",
+      "evidence": "sufficient_vertex_positive_lift uses n=max(3,ceilNat(pi/sqrt(2*eta))) and the proved RegularPolygon.sufficient_vertex_count, then derives alpha=1-eta>=0 from eta<=1. The cosine condition supplies all actual regular-lift obligations."
+    },
+    {
+      "obligation": "Boundary and zero-weight cases",
+      "status": "passed",
+      "evidence": "n>=3 prevents zero denominators and gives positive inradius for surjectivity. alpha=0, eta=1 and T=0 are admitted. Policy weights may vanish; no likelihood margin or reciprocal action probability is used. The common-cone comparison also permits alpha=1 and then yields zero discrepancy; the finite regular-polygon condition itself excludes alpha=1 for finite n>=3."
+    },
+    {
+      "obligation": "Change of model is declared, with no false exactness or optimality assertion",
+      "status": "passed",
+      "evidence": "exact_and_two_thirds_probe computes original and attenuated word probabilities 4/5 and 7/10. The size theorem is only sufficient. The alpha=1 nonpolyhedral obstruction belongs to the separately proved P46 model, and is not inferred from an approximation theorem."
+    },
+    {
+      "obligation": "Independent audit of reviewer-authored angular leaf",
+      "status": "out of scope",
+      "evidence": "Reviewer authored RegularPolygonAngles.lean. This review checks the new bridge and reads the parent-authored RegularPolygon proof; it does not label the angular leaf independently reviewed."
+    },
+    {
+      "obligation": "Cumulative package verification, coverage or release persistence",
+      "status": "out of scope",
+      "evidence": "This audit records the frozen source proof and a fresh isolated compile only. Parent owns final all-module verification, metadata, archive and durable persistence."
+    }
+  ],
+  "source_pins": {
+    "KomorebiLSM/RotationApproximation.lean": "890ec81d98b54c893a22d5e8c70daccf547f4df9e51a39d41e3c27b839dd9db2",
+    "KomorebiLSM/RotationModel.lean": "3795b6684f81ec22edbc962230adab3a70f98af9e5cdb9304e1b6e7ead3f9de1",
+    "KomorebiLSM/LorentzBaseNorm.lean": "40986c88cead556427922f32bf4ffe36edd2e239dbe68c2c8c9a8460e048e178",
+    "KomorebiLSM/RegularPolygon.lean": "a1741ce16c7788ab61fc9a3610730adfbe1db19414b2de021def10ff60aa168b",
+    "KomorebiLSM/RegularPolygonAngles.lean": "7c9af5292af59365edade558e73916c87f9c818382a330ce0262da2679841361",
+    "KomorebiLSM/PolicyComparison.lean": "f3fd5f99b5ecae836f08d41ee7d3cb8865858c862c5c94b08445f2e540e6ff7d",
+    "KomorebiLSM/PositiveLift.lean": "24315170dc8b6602582d4ab6b26f62b1da61c4cb27016259201416d08ff0b54f",
+    "KomorebiLSM/BehaviorProbability.lean": "1a0d471bca8c679c1b3cc0d5773a1f8c56691c07a5b5b8693bc0a595b6d041f3",
+    "KomorebiLSM/FiniteTV.lean": "e4da3df190961cbd1c45a73671c9ca9b7cccf71239205b11f624040bcab27441",
+    "source/FOUNDATIONS_1.0.0.md": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "forbidden_source_tokens": [],
+  "compile": {
+    "source_sha256": "890ec81d98b54c893a22d5e8c70daccf547f4df9e51a39d41e3c27b839dd9db2",
+    "command": [
+      "lean",
+      "-j1",
+      "-DwarningAsError=true",
+      "-o",
+      "/workspace/scratch/ea498747acd5/tmp/p47_approx_audit/RotationApproximation.final.olean",
+      "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/RotationApproximation.lean"
+    ],
+    "cwd": "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0",
+    "returncode": 0,
+    "source_unchanged": true,
+    "olean_sha256": "cc393f19c38b60d3d8f094410ae506ce6f1a5830bc56db8087f43542a347237a",
+    "utc": "2026-10-24T18:05:18.558892+00:00",
+    "warnings_as_errors": true,
+    "log": "verification/development_p46/RAW_P47_APPROXIMATION_COMPILE.log",
+    "receipt": "verification/development_p46/RAW_P47_APPROXIMATION_COMPILE.json",
+    "stdout_stderr_empty": true,
+    "runtime": "Portable Lean 4.34.0-rc2, sourced runtime/env_v016.sh; isolated output path avoids shared .olean mutation",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "remaining_gap_in_audited_P47_claims": null,
+  "strongest_safe_statement": "All constructive, probability-law and rational-specialization clauses of P47 and its stated sufficient vertex-count consequence are proved by the listed actual-model endpoints and pinned supporting modules. This is not a new verdict on whole-monograph completion.",
+  "cheapest_next_check": "Parent final cumulative checker should import/audit/replay all 54 declarations of this final frozen revision and retain the meaningful false-claim controls before release.",
+  "review_provenance": {
+    "reviewer": "/root/rotation_density",
+    "authors_reviewed": "/root/rotation_approximation for RotationApproximation.lean and /root for RegularPolygon.lean; LorentzBaseNorm written by another team agent",
+    "independence": "Separate-agent raw bridge audit in the same team/model lineage. The reviewer authored imported RegularPolygonAngles.lean and earlier RotationDensity.lean. Those leaves are not claimed to have independent external review here.",
+    "source_editing": "No frozen proof source modified. Only this review artifact is written.",
+    "skill": "skill://plugins_6a9174204a0481918ca3798d69d2e227/proof-audit/SKILL.md"
+  },
+  "utc": "2026-10-24T18:06:00.588050+00:00"
+}

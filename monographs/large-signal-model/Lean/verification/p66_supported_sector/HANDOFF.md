@@ -1,0 +1,9 @@
+# P66 supported sector
+
+The checked source proves the bounded standard Borel sector of P66. Its public endpoint is `Komorebi.LSM.PredictableResidual.predictable_residual_certificate`. It uses actual conditional expectations and does not assume an exponential tail bound.
+
+For a probability measure on a standard Borel sample space, each test process is measurable at the end of its observation step and lies in `[0,1]` almost surely. Positive prospectively assigned rule budgets are summable with total at most the global budget. The proof derives conditional Hoeffding bounds through the conditional expectation kernel, iterates them along the filtration, spends `alpha/[t(t+1)]` over positive times, and then unions over countably many registered rules. Model predictions cancel in the difference between the observed residual and the true conditional drift. The resulting event covers every time and rule, so every selected positive time and rule is covered as well.
+
+This is a partial formalization of the manuscript proposition. Removing the standard Borel sample-space restriction remains open in this implementation. A plausible continuation is to use the conditional distribution of the real test, rather than a kernel on the whole sample space, or to prove a law-transfer construction. Neither continuation is asserted proved here. General interval scaling also still needs the conditional-expectation affine transport, including the zero-width case. The current `scaled_selected_bound` proves only scalar multiplication of an already established residual bound.
+
+Compilation with warnings as errors, kernel replay and the axiom audit passed. The rejection control spends only a half-unit budget on the first two time weights, whose sum is two thirds, and is rejected with an arithmetic false goal. Exact source identities and diagnostic notes are in `RESULTS.json`.

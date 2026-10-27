@@ -1,0 +1,15 @@
+import KomorebiLSM.WeightedReconciliation
+import Mathlib.Analysis.Normed.Module.Basic
+#check NormedAddCommGroup.induced
+#check NormedSpace.induced
+#check MetricSpace.induced
+#check Isometry.of_dist_eq
+#check LinearMap.rangeRestrict
+#check LinearMap.domRestrict
+#check LinearMap.codRestrict
+#check AddGroupNorm
+#check LipschitzWith.of_dist_le_mul
+#check LinearEquiv.ofBijective
+#check LinearEquiv.ofInjective
+#check normSeminorm
+#check Seminorm.comp

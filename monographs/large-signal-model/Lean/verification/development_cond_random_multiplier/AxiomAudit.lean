@@ -1,0 +1,18 @@
+import KomorebiLSM.ConditionalRandomMultiplier
+
+#print axioms Komorebi.LSM.RegressionConfidence.factor
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian
+#print axioms Komorebi.LSM.RegressionConfidence.factor_pos
+#print axioms Komorebi.LSM.RegressionConfidence.factor_measurable
+#print axioms Komorebi.LSM.RegressionConfidence.nonnegative_limit_budget
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.constant_factor_integrable
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.constant_factor_condExp_le
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.simple_factor
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.random_factor_setIntegral
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.random_factor_integrable
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.random_factor_condExp_le
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.bounded_weight_factor
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.weighted_factor
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.weighted_factor_integrable
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.integral_weighted_factor_le
+#print axioms Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.setIntegral_weighted_factor_le

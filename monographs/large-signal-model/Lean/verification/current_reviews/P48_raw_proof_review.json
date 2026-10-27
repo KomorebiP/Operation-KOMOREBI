@@ -1,0 +1,77 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true MODULE.lean",
+    "exit_code": 0,
+    "scope": "Fresh file acceptance only; integrated axiom audit and kernel replay remain parent responsibilities."
+  },
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "claim_id": 48,
+  "claim": "Conditional per-stage failure bounds with a summable prospective budget imply simultaneous coverage of all countably many stages with probability at least 1-delta. On that measurable coverage event, exact robust soundness and initial-state coverage imply true-model validity for every accepted proposal and any selected stage.",
+  "input": {
+    "path": "KomorebiLSM/SequentialConfidence.lean",
+    "sha256": "087f87085374b90c464c3afb9626938bccf77b840a2246bc63725bad54010b62"
+  },
+  "assumptions": [
+    "Probability measure; measurable failure sets F_n; conditioning sigma algebras m_n below ambient mOmega.",
+    "Actual conditional expectation of each failure indicator is <=delta_n almost surely.",
+    "Nonnegative finite budgets delta_n are summable and sum <=delta.",
+    "For robust conclusions, every accepted certificate is sound for every member of U_n when InitialCovered holds."
+  ],
+  "dependency_graph": [
+    "Integrate the conditional failure bound; total expectation identifies its integral with the failure-event probability.",
+    "Countable union bound is controlled by the ENNReal sum of budget coercions; Summable NNReal permits equality with the finite budget sum.",
+    "Complement of the measurable union is the simultaneously covered event, with probability at least 1-delta.",
+    "Membership of the true stage model in U_n and the supplied robust soundness implication yield validity.",
+    "All-stage validity specializes pathwise to any selected stage, so stopping-time selection requires no new union budget."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Conditional coverage is actual condExp of an indicator, not merely an informal scalar bound.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Countably many stages, NNReal/ENNReal conversions and finite total mass are explicit.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Failure-event measurability is assumed and the simultaneous coverage event is measurable.",
+      "status": "passed"
+    },
+    {
+      "obligation": "True initial-state coverage is retained as a hypothesis of robust validity.",
+      "status": "passed"
+    },
+    {
+      "obligation": "No stage independence or deterministic stopping rule is needed; arbitrary selection is covered pathwise.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The theorem generalizes to arbitrary conditioning sub-sigma algebras: past-data adaptation is unnecessary once the stipulated conditional bounds hold.",
+      "status": "passed"
+    }
+  ],
+  "residual_limits": [
+    "No confidence set is constructed by this theorem; conditional coverage must come from a justified procedure.",
+    "No global rank, reset or observation-independence guarantee is inferred.",
+    "The abstract Valid predicate need not be measurable, but the explicitly measurable simultaneous coverage event has the asserted probability and implies validity. Report the confidence claim through that event, as the manuscript does."
+  ],
+  "strongest_safe_statement": "Conditional per-stage failure bounds with a summable prospective budget imply simultaneous coverage of all countably many stages with probability at least 1-delta. On that measurable coverage event, exact robust soundness and initial-state coverage imply true-model validity for every accepted proposal and any selected stage.",
+  "cheapest_next_check": "Parent integrated clean compile, exhaustive axiom audit and kernel replay against the same source hashes."
+}

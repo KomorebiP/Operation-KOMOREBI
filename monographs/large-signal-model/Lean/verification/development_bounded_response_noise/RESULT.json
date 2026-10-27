@@ -1,0 +1,37 @@
+{
+  "schema": "komorebi.bounded-response-noise-result.v1",
+  "status": "ALL_AUTHOR_CHECKS_PASS",
+  "created_utc": "2026-10-24T21:01:14.662507+00:00",
+  "sources": {
+    "BoundedResponseNoise": {
+      "source_sha256": "d0766cb383025a46dc1ed87a87b9d1c7643479368e4ac4772a8097af954347ee",
+      "named_declarations": 7,
+      "named_theorems": 7,
+      "lines": 133
+    }
+  },
+  "named_declarations": 7,
+  "named_theorems": 7,
+  "source_target": "P81 bounded-response noise discussion and P84 sigma1/sigma3/4 derivation.",
+  "endpoints": [
+    "Komorebi.LSM.BoundedResponseNoise.centered_interval",
+    "Komorebi.LSM.BoundedResponseNoise.regression_interval",
+    "Komorebi.LSM.BoundedResponseNoise.process_neg_one_one",
+    "Komorebi.LSM.BoundedResponseNoise.process_neg_half_one"
+  ],
+  "hypotheses": "Arbitrary probability sample space, conditioning sigma algebra below ambient, ambient measurable response in[a,b] AE with a<b. Regression constructors additionally require predictable scalar regressor and actual CE(response)=theta*regressor AE. Process constructors record next-level response measurability.",
+  "actual_derivation": "U=(Y-a)/(b-a) is actually measurable and AE[0,1]. Its integrability and true affine representation give actual CE(Y)=a+(b-a)CE(U). Unit ConditionalHoeffding at parameter h*(b-a), actual centered-noise AE identity and scalar algebra supply actual exponential integrability and ordinary CE envelope with sigma=(b-a)/2. Actual mean equality then transports to Y-theta*phi, retaining ambient measurability. No noise H is supplied as an input.",
+  "specializations": "[-1,1] gives sigma1;[-1/2,1] gives sigma3/4, by exact rational simplification.",
+  "checks": {
+    "path": "verification/development_bounded_response_noise/AUTHOR_CHECKS.json",
+    "sha256": "6e6295e2dc551bf63c127bd323f603d6e5fc8054abc05ef5660ce74fe339ad78",
+    "stages": 4,
+    "fresh_compile": 1,
+    "all_named_allowed_axioms": 7,
+    "individual_module_kernel_replay": 1,
+    "semantic_false_controls": 1
+  },
+  "control": "The wrong-mean control first constructs the actual centered bounded-response certificate for constant response1, then rejects the incorrect uncentered exponential bound when the conditional mean1 is replaced by0. Exactly one intended unsolved False.",
+  "scope": "This is the noise-scale helper, not a separate empirical coverage or data authenticity claim. P84 must still provide actual response bounds/CE identities and P81 hypotheses.",
+  "raw_review": "Not independently reviewed in this receipt; root may review while consuming for P84."
+}

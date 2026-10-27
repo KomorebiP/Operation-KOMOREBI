@@ -1,0 +1,140 @@
+{
+  "claim": "P62 oriented quadratic probability certificate",
+  "review_kind": "author self-review, separate from root nonauthor raw review",
+  "reviewer": "/root/rotation_geometry",
+  "verdict": "proved as written",
+  "registered_statement": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "context_start_line": 2806,
+    "statement_start_line": 2830,
+    "proof_end_line": 2858,
+    "statement_proof_sha256": "b01290ddf413f6a716d28aaceb2aec24ed99ed2c8e2e25d8a6a6d15bf42b2b39"
+  },
+  "sources": {
+    "EllipsoidGeometry": "555803a6f87ff73c43389b62b599c324903c628fea9bbbefea91ffcc6b618470",
+    "EllipsoidDualCS": "9af22c1f4071c72806a46ce70ccb9b0de1e040f21dd60a50368aa39be72af773",
+    "OrientedEllipsoid": "c5a7bc05c887c01f522f295edc17207240e488cd1c76b76d8f4d67c4d9b67918",
+    "EllipsoidPolynomial": "43f02516a2c9e408b975b2e8ae5d253d666586ce9d538e1f979eb853cec1e2d7"
+  },
+  "obligations": [
+    {
+      "claim": "Actual proper ellipsoid probability cone",
+      "status": "passed",
+      "endpoints": [
+        "exists_factor",
+        "factorEquiv_norm_sq",
+        "lorentzTransport",
+        "cone_iff_lorentz",
+        "probabilityCone",
+        "cone_mass_pos"
+      ],
+      "evidence": "Actual SPD H supplies an invertible real square factor L with transpose(L)*L=H, including empty spatial index. Centering followed by L is an explicit mass-preserving linear equivalence to a Euclidean forward Lorentz cone. Pullback proves zero/add/nonnegative scaling, full span, closedness and strict positive mass. Strict mass also implies pointedness and zero-mass cone states vanish."
+    },
+    {
+      "claim": "Literal centered quadratic matrix",
+      "status": "passed",
+      "endpoints": [
+        "centerMatrix",
+        "diagonalForm",
+        "Q",
+        "quadratic_form",
+        "cone_iff_quadratic"
+      ],
+      "evidence": "Q is exactly S_c transpose * diag(1,-H) * S_c. The proven evaluation is m\u00b2-(x-mc) transpose H (x-mc), not a supplied abstract quadratic form."
+    },
+    {
+      "claim": "Quadratic witness propagates output quadratic sign",
+      "status": "passed",
+      "endpoint": "quadratic_output_nonneg",
+      "evidence": "Apply the actual identity B transpose Q B - tau Q=R to z. Nonnegative tau times the input quadratic and actual R PSD give the output quadratic nonnegative."
+    },
+    {
+      "claim": "Actual inverse-metric mass orientation",
+      "status": "passed",
+      "endpoints": [
+        "metric_dual_cauchy_schwarz",
+        "mass_orientation",
+        "mass_mulVec_centered"
+      ],
+      "evidence": "DualCS derives b dot y squared \u2264 (b dot H inverse b)(y dot H y) by the actual SPD factor and actual nonsingular inverse cancellation. The two orientation inequalities force beta*m+b dot centered(z) \u22650 without dividing by m. Zero input, zero mass, empty spatial dimension and equality boundaries are covered uniformly."
+    },
+    {
+      "claim": "Every actual branch preserves the forward cone",
+      "status": "passed",
+      "endpoint": "BranchCertificate.preserves",
+      "evidence": "BranchCertificate fields expose actual tau, PSD R, literal matrix identity, beta nonnegative and beta\u00b2-b transpose H inverse b nonnegative. Desired cone invariance is not a field."
+    },
+    {
+      "claim": "Finite scalar SOS certificate throughout the interval",
+      "status": "passed",
+      "endpoints": [
+        "scalar_coefficient_identity",
+        "scalarSOS_nonneg",
+        "ScalarCertificate.nonneg"
+      ],
+      "evidence": "Finitely many exact coefficients and actual degree bounds imply equality to finite sums of polynomial squares plus (1-X\u00b2) times finite sums of squares. Positivity is derived for every u in the entire closed interval, not a sampled grid."
+    },
+    {
+      "claim": "Finite PSD matrix remainder certificate",
+      "status": "passed",
+      "endpoints": [
+        "quadraticPolynomial_eval",
+        "PolynomialCertificate.branch"
+      ],
+      "evidence": "The literal matrix polynomial B transpose Q B-tau Q is checked coefficient by coefficient against an actual interval Gram polynomial. Finite PSD constant Gram matrices imply PSD remainder at every interval value via the checked P53 Gram theorem. The q=0 definition omits the second Gram term."
+    },
+    {
+      "claim": "Finite exact normalization",
+      "status": "passed",
+      "endpoints": [
+        "PolynomialCertificate.mass_preserving",
+        "polynomialDensityInstrument"
+      ],
+      "evidence": "A finite check on the actual state basis for the exact uniform moments implies the full integrated mass functional equality. Polynomial operator-norm measurability and Bochner integrability are derived from the finite coefficient family."
+    },
+    {
+      "claim": "Actual operator family retained",
+      "status": "passed",
+      "endpoints": [
+        "matrixPolynomial_eval",
+        "polynomialOperator_matrix",
+        "polynomialDensityInstrument_op",
+        "PolynomialCertificate.instrument_op"
+      ],
+      "evidence": "The constructed P52 density instrument acts by mulVec of the literal evaluated matrix polynomial. No replacement family or fitted probability kernel is substituted."
+    },
+    {
+      "claim": "All finite horizons and common policies",
+      "status": "passed",
+      "endpoints": [
+        "PolynomialCertificate.preserves",
+        "PolynomialCertificate.word_cone",
+        "PolynomialCertificate.word_mass_nonneg",
+        "PolynomialCertificate.observation_law_probability",
+        "PolynomialCertificate.record_law_probability",
+        "PolynomialCertificate.record_law_prefix"
+      ],
+      "evidence": "Every product of actual interval-valued branches stays in the cone pointwise. Exact initial mass one and actual integrated mass yield normalized complete observation laws and arbitrary measurable randomized policy joint record laws through P52; every earlier horizon is the literal prefix marginal."
+    }
+  ],
+  "orientation_control": {
+    "path": "negative_controls/EllipsoidWithoutOrientation.lean",
+    "sha256": "a7a5eda4bd32ba3cd33f6d82b358a6f9a4f82574f571795617999bbe87715187",
+    "evidence": "First proves the actual negative identity satisfies the quadratic matrix identity with tau=1 and R=0. The next assertion that its image of the mass-one center lies in the forward cone reduces to goal False. The rejection is not an import/API/parser failure."
+  },
+  "boundary_cases": [
+    "No positive lower likelihood or denominator floor is used.",
+    "Point densities are proved nonnegative and are not incorrectly bounded above by one.",
+    "Zero SOS sums and zero Gram remainders are allowed.",
+    "No completeness of the sufficient certificate language is claimed.",
+    "No numerical grid, approximate feasibility, or surrogate norm substitutes for a hypothesis."
+  ],
+  "dependencies": [
+    "P52 actual continuous density and record-law semantics",
+    "P53 finite matrix-polynomial coefficient and interval Gram theorems",
+    "Checked BaseNorm cone construction",
+    "Pinned mathlib real matrix functional calculus and finite sum Cauchy\u2013Schwarz"
+  ],
+  "verification": "RESULT.json records fresh gated warningsAsError compile, all-named axiom audits and upstream exact-module replay for all three owned modules, plus orientation negative control. All passed. DualCS has separate rank-owned receipts.",
+  "remaining_gap": null
+}

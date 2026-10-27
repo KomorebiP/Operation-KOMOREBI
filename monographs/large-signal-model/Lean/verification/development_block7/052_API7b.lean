@@ -1,0 +1,16 @@
+import KomorebiLSM.BaseNorm
+#check Metric.isCompact_iff_isClosed_bounded
+#check Metric.isCompact_of_isClosed_isBounded
+#check isCompact_sphere
+#check LinearMap.continuous_of_finiteDimensional
+#check IsCompact.inter_right
+#check IsMinOn
+#check abs_sum_le_sum_abs
+#check Fintype.sum_subtype
+#check Fin.sum_univ_three
+#check Seminorm
+#check AddGroupNorm
+#check isClosed_le
+#check Convex.convexHull_eq
+#check IsCompact.exists_isMaxOn
+#check csSup_le

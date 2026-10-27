@@ -1,0 +1,23 @@
+import KomorebiLSM.RegressionExponential
+
+#print axioms Komorebi.LSM.RegressionConfidence.projection
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_zero
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_succ
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_pos
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_eq
+#print axioms Komorebi.LSM.RegressionConfidence.projection_measurable
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_measurable
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_integrable
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_setIntegral_succ_le
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_supermartingale
+#print axioms Komorebi.LSM.RegressionConfidence.probabilityMixture
+#print axioms Komorebi.LSM.RegressionConfidence.mixture_joint_integrable
+#print axioms Komorebi.LSM.RegressionConfidence.probabilityMixture_supermartingale
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialProcess_joint_measurable
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialMixture
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialMixture_zero
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialMixture_nonneg
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialMixture_eq
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialMixture_supermartingale
+#print axioms Komorebi.LSM.RegressionConfidence.exponentialMixture_fiber_integrable_ae

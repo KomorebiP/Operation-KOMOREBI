@@ -1,0 +1,427 @@
+# Part VIII. Data-supported domains and smaller repairs
+
+The preceding block certified a perturbed operator family after mixing it with a center reset. Its all-horizon validity guarantee was exact, but its error bound became trivial at horizon eight. It also kept deterministic coefficient boxes separate from statistical confidence sets. This block addresses both limitations in declared sectors rather than weakening either distinction.
+
+First, the same fitted family and previously proposed geometry admit a smaller, independently checked repair. Second, a self-normalized martingale argument produces operator uncertainty sets from a dependent trajectory when the predictive state is an accessible, fixed observable. A nonlinear three-coordinate example connects those sets to a curved domain without a reset correction. Its geometry and feature dictionary are specified in advance. This is not a solution to discovering an unknown hidden state from the same data.
+
+The sequential-regression result is a classical self-normalized concentration theorem [R23], proved here in the form used by the signal model. The contraction argument uses standard Markov-kernel and total-variation ideas [R24]. The new block's contribution is the explicit sequence of assumptions, finite witnesses, structured uncertainty, observation-measure distinctions and executable examples connecting these tools to the realization calculus. Proposition counts are not historical-novelty counts.
+
+\newpage
+
+# 91. A smaller repair can be bracketed rather than guessed
+
+Keep the fitted operators, proposed transform and initial state from Section 88 unchanged. In Lorentz coordinates use the center-reset operator $N=e_0\lambda$, of constant density one under $du/2$. Write
+
+$$
+F_\eta=(1-\eta)\widehat F+\eta N,
+\qquad 0\leq\eta\leq1.
+$$
+
+Fix a required margin $0\leq\kappa\leq1$. Feasibility means that every action, observation and normalized input has margin at least $\kappa$. Integrated mass and initial membership remain separate requirements.
+
+**Proposition 80. Convex repair bracketing.** The feasible repair weights form a closed interval $[\eta_*,1]$. If a cone-positive functional $\ell=(1,-v^{\mathsf T})$, with $\|v\|_2\leq1$, and a normalized input $z$ give $c=\ell\widehat F_a(u)z<\kappa$, then every feasible weight satisfies
+
+$$
+\boxed{\eta\geq\frac{\kappa-c}{1-c}.}
+$$
+
+A complete certificate at a weight $\eta_U$ gives an upper bound on $\eta_*$. A negative Bernstein coefficient without a negative evaluated point does not give a lower bound.
+
+**Proof.** For a fixed input and observation, output mass minus spatial norm is a concave continuous function of the operator, hence of $\eta$. Its superlevel set is closed and convex. Intersecting these sets preserves those properties. The reset has margin one, so the intersection contains one and is an interval ending there. If $F_\eta$ has margin at least $\kappa$, every such functional satisfies $\ell F_\eta z\geq\kappa$. Since $\ell Nz=1$, this requires $(1-\eta)c+\eta\geq\kappa$. Here $1-c>0$, and solving gives the bound. A complete positive witness proves feasibility. A negative coefficient only says that a particular sufficient polynomial bound failed. $\square$
+
+## 91.1 The unchanged predecessor example
+
+Use the previous transform with center $(1/2,1/2)$ and triangular factor
+
+$$
+L=\begin{pmatrix}123/37&-2\\0&109/41\end{pmatrix}.
+$$
+
+At the direct action, observation $u=-1$, normalized input $(1,1,0)$ and functional $\ell=(1,7/25,-24/25)$, exact evaluation gives
+
+$$
+c=-\frac{17590411}{2332387500}.
+$$
+
+For the required margin $\kappa=1/64$, this proves
+
+$$
+\frac{864543451}{37599646576}
+\leq\eta_*\leq\frac1{32}.
+$$
+
+The lower endpoint is approximately $0.02299$. The upper endpoint is not a sampled estimate. A complete exact Bernstein certificate proves that $\eta=1/32$ works. The weight $1/64$ fails the requested $1/64$ margin at the displayed separating functional. This does not by itself prove that its nominal model is probability-invalid.
+
+The new certificate uses 194 leaves and 3,058 recomputed coefficients. A separate comparison-domain certificate uses 185 leaves and 2,833 coefficients. Both retain the same degree-two coefficient box of radius $1/4096$ in their respective declared Lorentz coordinates, subject to exact integrated mass. The more general mass and spatial output budgets remain $1/128$ each. Their sum equals the certified margin, so that larger output-error family has a nonnegative lower margin, not a claimed strictly positive residual margin.
+
+The reset weight has fallen from $1/8$ to $1/32$, while the deterministic uncertainty box is unchanged. No global optimization over geometry or repair operators is claimed. The current bracket concerns this fixed geometry, this reset path and this required margin.
+
+The comparison domain is checked again before invoking the law theorem. Keeping the same raw discrepancy budget $241/40000$ from Section 89 gives
+
+$$
+\varepsilon_{\mathrm{repair}}
+\leq\frac{31}{32}\frac{241}{40000}+\frac1{16}
+=\frac{87471}{1280000}.
+$$
+
+Consequently, under a common policy and identical initial states,
+
+$$
+\boxed{
+\|P_T-\widetilde P_T\|_{\mathrm{TV}}
+\leq\min\left(1,\frac{87471T}{2560000}\right).
+}
+$$
+
+The first integer horizon where this upper bound reaches one is now 30 rather than eight. The bound remains conservative. The repaired uncertainty tube is still not a confidence set for the unmodified generating process. This improvement is deterministic certificate refinement, not a new statistical experiment.
+
+\newpage
+
+# 92. Confidence from dependent observations
+
+Let $\mathcal F_{t-1}$ contain all information available before observation $t$, including its already selected action. Let $\phi_t\in\mathbb R^d$ be measurable with respect to that information. Assume
+
+$$
+Y_t=\theta_*^{\mathsf T}\phi_t+\xi_t,
+\qquad
+\mathbb E[e^{h\xi_t}\mid\mathcal F_{t-1}]
+\leq e^{h^2\sigma^2/2}
+$$
+
+for every real $h$, with $\sigma>0$, and a declared bound $\|\theta_*\|_2\leq S$. With ridge $\gamma>0$, set
+
+$$
+V_t=\gamma I+\sum_{s\leq t}\phi_s\phi_s^{\mathsf T},
+\qquad
+\widehat\theta_t=V_t^{-1}\sum_{s\leq t}\phi_sY_s.
+$$
+
+**Proposition 81. Time-uniform regression confidence.** For $0<\delta<1$, with probability at least $1-\delta$, simultaneously for every finite $t$,
+
+$$
+\boxed{
+\|\widehat\theta_t-\theta_*\|_{V_t}
+\leq
+\sigma\sqrt{
+\log\frac{\det V_t}{\det(\gamma I)}+2\log\frac1\delta
+}
++\sqrt\gamma S.
+}
+$$
+
+No independence of successive observations or of the regressors is required. The conditional mean, conditional noise and predictability hypotheses are required. The confidence set remains valid at a stopping time selected from the data.
+
+**Proof.** Put $S_t=\sum_{s\leq t}\phi_s\xi_s$. For every fixed $q$, the conditional moment bound makes
+
+$$
+\exp\left(q^{\mathsf T}S_t/\sigma
+-\tfrac12q^{\mathsf T}(V_t-\gamma I)q\right)
+$$
+
+a nonnegative supermartingale. Integrate against the fixed Gaussian law $q\sim N(0,(\gamma I)^{-1})$. Conditional Tonelli and completing the square give the nonnegative supermartingale
+
+$$
+M_t=
+\left(\frac{\det(\gamma I)}{\det V_t}\right)^{1/2}
+\exp\left(\frac{\|S_t\|_{V_t^{-1}}^2}{2\sigma^2}\right),
+\qquad M_0=1.
+$$
+
+For completeness, stop at the first crossing of $1/\delta$, then at any deterministic finite horizon. The supermartingale expectation is at most one, so the crossing probability up to that horizon is at most $\delta$. Increasing the horizon proves the same bound for any finite crossing. Off this event, taking logarithms bounds $\|S_t\|_{V_t^{-1}}$ by the square-root term. Finally,
+
+$$
+\widehat\theta_t-\theta_*
+=V_t^{-1}(S_t-\gamma\theta_*).
+$$
+
+The triangle inequality and $V_t\succeq\gamma I$ bound the ridge term by $\sqrt\gamma S$. The simultaneous event already covers every selected finite stopping time. $\square$
+
+This is the self-normalized mixture argument in [R23], not a new concentration principle. A bounded response in an interval of length $b-a$ has conditionally sub-Gaussian centered noise with $\sigma=(b-a)/2$. One direct proof differentiates its tilted log moment-generating function twice. The second derivative is a variance bounded by $(b-a)^2/4$. Integrating from zero gives the stated moment bound.
+
+The determinant term accounts for the observed design, but does not create excitation. If $\phi_t$ never probes a direction, the set need not shrink in that direction. Regressors extracted after inspecting the same response are not predictable. An estimated hidden state cannot be substituted for $\phi_t$ while silently retaining the theorem's true conditional-mean equation.
+
+# 93. From observable moment regression to operator sets
+
+There is a direct connection to the unnormalized instrument. Assume that the normalized predictive state $Z_t$ is an exact, fixed, measurable function of the available observation history. For action $a$, suppose
+
+$$
+P(U_t\in du\mid\mathcal F_{t-1})
+=\lambda B_a(u)Z_t\,\mu(du),
+\qquad
+Z_{t+1}=\frac{B_a(U_t)Z_t}{\lambda B_a(U_t)Z_t}
+$$
+
+on realized positive-density branches. Crucially, $Z_{t+1}$ must also be available from the observations using the specified state map. This is an accessibility assumption, not a consequence of successful regression.
+
+Let $B_a(u)=\sum_{k=0}^{D}\psi_k(u)C_{a,k}$. Choose functions $g_j$ so that the known matrix $W_{jk}=\int g_j(u)\psi_k(u)\,\mu(du)$ is invertible.
+
+**Proposition 82. Sequential observable-moment operator sets.**
+
+Define $M_{a,j}=\int g_j(u)B_a(u)\,\mu(du)$. Then
+
+$$
+\boxed{
+\mathbb E[g_j(U_t)Z_{t+1}\mid\mathcal F_{t-1}]
+=M_{a,j}Z_t,
+\qquad
+C_{a,k}=\sum_j(W^{-1})_{kj}M_{a,j}.
+}
+$$
+
+Under the rowwise noise and parameter-bound assumptions of Proposition 81, simultaneous confidence ellipsoids for the rows of $M_{a,j}$ give a confidence set for every $C_{a,k}$ by this known linear map. If row $i$ of $\widehat M_{a,j}-M_{a,j}$ has $V_{a,t}$-norm at most $\beta_{a,j,i}$, then for any direction $x$,
+
+$$
+\left|e_i^{\mathsf T}(\widehat C_{a,k}-C_{a,k})x\right|
+\leq
+\sum_j |(W^{-1})_{kj}|\,
+\beta_{a,j,i}\,\|x\|_{V_{a,t}^{-1}}.
+$$
+
+**Proof.** In the conditional integral, multiply the normalized state by the observation density. The denominator cancels, giving $\int g_j(u)B_a(u)Z_t\,\mu(du)$. The polynomial expansion gives $M_{a,j}=\sum_kW_{jk}C_{a,k}$ and hence the inverse formula. Apply Proposition 81 to each row, using the predictable regressor $Z_t$ on visits to action $a$, or its action-gated version. A union bound over the predeclared finite rows and moments gives simultaneous coverage. Independence between these response coordinates is unnecessary. Weighted Cauchy--Schwarz and the triangle inequality give the displayed directional bound. $\square$
+
+Exact mass constraints can be imposed by intersecting the confidence set with the known mass affine subspace. This preserves coverage because the true model is assumed to obey that law. Arbitrarily shrinking a set around a convenient corrected operator does not have the same justification. Data-selected geometry can be checked against the whole resulting set using Proposition 78.
+
+The theorem is conditional on a correct finite observation basis, accessible predictive state and parameter bounds. It does not obtain a hidden predictive state from a single dependent path without additional assumptions. Unknown dictionary discovery, state-estimation error and polynomial misspecification remain distinct problems. The following example makes the state accessible by construction rather than concealing that requirement.
+
+\newpage
+
+# 94. A nonlinear observable state with a curved moment domain
+
+For $u\in[-1,1]$, put
+
+$$
+v(u)=(1,u,u^2)^{\mathsf T},
+\qquad L_2(u)=\frac{3u^2-1}{2}.
+$$
+
+The normalized states are moments of a scalar signal:
+
+$$
+K=\{(1,x,y):x^2\leq y\leq1\}.
+$$
+
+Their cone has the finite curved description
+
+$$
+C=\left\{(m,x,y):
+\begin{pmatrix}m&x\\x&y\end{pmatrix}\succeq0,
+\quad m-y\geq0\right\},
+\qquad\lambda=(1,0,0).
+$$
+
+Assume that the declared probability measure $\mu$ on $[-1,1]$ has moments zero at orders one and three, $1/3$ at order two and $1/5$ at order four. Define a two-parameter degree-four operator density
+
+$$
+\boxed{
+B_{a,b}(u)=v(u)\,(1,au,bL_2(u)).
+}
+$$
+
+Here $a,b$ are parameters, not action labels. This example is autonomous. Its dependence on the observed signal is nonlinear because the state includes its square.
+
+**Proposition 83. Structured curved-domain certificate.** The set $K$ is the convex hull of all $v(u)$. If $|a|+|b|\leq1-\rho$ for $0\leq\rho\leq1$, then $B_{a,b}(u)$ preserves $C$ and has exact integrated mass. On a normalized state, its density is
+
+$$
+p_{a,b}(u\mid x,y)=1+a x u+b yL_2(u)\geq\rho.
+$$
+
+Every positive-density posterior is exactly $v(u)$. In particular, starting from $v(s)$ produces the observable Markov law
+
+$$
+p_{a,b}(u\mid s)=1+a s u+b s^2L_2(u).
+$$
+
+Its next conditional moments satisfy
+
+$$
+\boxed{
+\mathbb E[U_t\mid U_{t-1}=s]=\frac a3s,
+\qquad
+\mathbb E[L_2(U_t)\mid U_{t-1}=s]=\frac b5s^2.
+}
+$$
+
+**Proof.** Every distribution on $[-1,1]$ has $x^2\leq y\leq1$. Conversely, fix $|x|<1$. A point mass at $x$ gives $(x,x^2)$, while the endpoint mixture with mean $x$ gives $(x,1)$. Their convex combinations give every intermediate $y$. The cases $x=\pm1$ are immediate. Homogenizing yields the matrix and scalar inequalities, which also force the only mass-zero cone element to be zero.
+
+On $K$, $|x|\leq1$, $0\leq y\leq1$, $|u|\leq1$ and $|L_2(u)|\leq1$. Thus the density is at least $1-|a|-|b|$. Each operator output is that nonnegative scalar times $v(u)$, so lies in $C$. The first and second reference moments imply $\lambda\int B_{a,b}(u)\,\mu(du)=\lambda$. Normalization cancels the scalar density, yielding $v(u)$. Symmetry through order three gives $\int uL_2(u)d\mu=0$. The second and fourth moments give $\int L_2(u)^2d\mu=1/5$. Integrating $u$ and $L_2$ against the density proves the last two formulas. $\square$
+
+The posterior ray lies on a curved boundary. Arbitrary perturbations of its output coordinates can destroy validity, as in Proposition 72. Parameter uncertainty inside the declared family behaves differently: it changes the likelihood but not the posterior ray. A certified rectangle in $(a,b)$ can therefore be robust even though a free matrix-entry ball has no positive validity radius.
+
+This is an example of uncertainty that preserves the model's algebraic structure. It is not a claim that every real system obeys the two-parameter family. The feature dictionary $1,u,u^2$, its geometry, the reference measure and the parameter model are declared inputs to learning.
+
+# 95. A fully rational dependent-data reference experiment
+
+Both the continuous uniform measure $du/2$ and the following five-node measure satisfy the moment assumptions:
+
+$$
+\begin{array}{c|rrrrr}
+u&-1&-1/2&0&1/2&1\\\hline
+\mu\{u\}&7/90&16/45&2/15&16/45&7/90.
+\end{array}
+$$
+
+The reference experiment uses the **five-node measure**, not rounded observations from the continuous model. At each step, the conditional probability of a node is its reference weight times $p_{a,b}(u\mid s)$. Exact rational probabilities are sampled by integer draws. The learner receives only the node sequence, the measure and the declared model. The true parameters are present only in the separate generator and verification code.
+
+Matching four moments does not identify the two observation laws. The continuous model gives the set of five nodes probability zero, while the discrete model gives it probability one. Their single-observation total variation is therefore one. The continuous theorems and the exact discrete reference calculation are deliberately distinguished.
+
+For a path of $n$ transitions, use two scalar regressions,
+
+$$
+\begin{aligned}
+\phi_{a,t}&=U_{t-1}/3,&Y_{a,t}&=U_t,&\sigma_a&=1,\\
+\phi_{b,t}&=U_{t-1}^2/5,&Y_{b,t}&=L_2(U_t),&\sigma_b&=3/4.
+\end{aligned}
+$$
+
+The noise scales follow from response ranges $[-1,1]$ and $[-1/2,1]$. The prior parameter bounds are $|a|,|b|\leq1$. Each regression uses ridge one and failure probability $1/40$, giving a total failure budget $1/20$ for both parameters at every time.
+
+**Proposition 84. Exact rational outer confidence intervals.** Write $V=1+\sum\phi_t^2$ and $\widehat\theta=\sum\phi_tY_t/V$. Let $k=\lceil\log_2 V\rceil$ and $h=\lceil\log_2(1/\delta)\rceil$. A rational upper enclosure of
+
+$$
+\sigma\sqrt{\frac{(7/10)(k+2h)}{V}}+\sqrt{\frac1V}
+$$
+
+is an upper bound on Proposition 81's scalar radius. Rounding the lower interval endpoint downward and the upper endpoint upward, then intersecting with $[-1,1]$, preserves its conditional coverage. Both intervals cover their true parameters simultaneously at every time with probability at least $19/20$.
+
+**Proof.** The positive exponential series gives $e^{7/10}>1+7/10+(7/10)^2/2+(7/10)^3/6+(7/10)^4/24>2$. Hence $\log 2<7/10$, so $\log V+2\log(1/\delta)\leq(7/10)(k+2h)$. Divide the scalar regression bound by $\sqrt V$. For a nonnegative rational $x$, the smallest integer $j$ with $(j/10^{12})^2\geq x$ supplies a rational upper square-root enclosure. Integer square root and an exact final comparison compute it. Outward rounding only enlarges the interval. Intersecting with a true prior constraint preserves coverage. Apply the two-regression union bound on their time-uniform events. $\square$
+
+All counts, sums, radius enclosures and interval endpoints in this experiment are rational. No floating-point logarithm is trusted in the confidence arithmetic. An exact replay verifies the arithmetic and the declared protocol. It does not authenticate the observations, prove that a physical process satisfies the model, or measure the procedure's coverage from one pseudorandom run.
+
+## 95.1 Executed result
+
+The seeded reference path uses $a=2/5$, $b=1/5$ and initial observation zero. It was first run to 65,536 transitions and then extended along the same seeded path to 262,144. Time-uniform coverage permits that extension without spending another time-selection budget. This is not a new independent coverage experiment.
+
+At the final checkpoint, outward-rounded intervals are
+
+$$
+\boxed{
+\frac{89}{250}\leq a\leq\frac{231}{500},
+\qquad
+\frac{29}{250}\leq b\leq\frac{29}{100}.
+}
+$$
+
+Every member of this rectangle has density at least
+
+$$
+\rho=1-\frac{231}{500}-\frac{29}{100}=\frac{31}{125}.
+$$
+
+The rounded fitted center is $(409/1000,203/1000)$. It lies inside the rectangle. No reset or other coefficient correction is applied.
+
+At earlier recorded checkpoints the sufficient density-floor test withheld a whole-box certificate. Its first successful recorded checkpoint was 32,768 transitions, with floor $1/100$. This is not a claim that 32,768 is the smallest possible sample size, or even the first passing individual step. Only the declared checkpoints were evaluated. A withheld whole-box certificate does not declare the nominal fit or true process invalid.
+
+\newpage
+
+# 96. Structured uncertainty has an observable error bound
+
+Consider two parameters in a certified family. For normalized $z=(1,x,y)$, their density difference is
+
+$$
+\Delta p(u)=\Delta a\,x u+\Delta b\,yL_2(u).
+$$
+
+The state-update vector is the same $v(u)$ in both models after observing $u$. This does not make the models equivalent. Their likelihoods and hence their predicted observation laws can differ.
+
+**Proposition 85. Parameter-to-law error without a state-estimation term.** Let
+
+$$
+c_1=\int|u|\,d\mu,
+\qquad c_2=\int|L_2(u)|\,d\mu.
+$$
+
+If $|\Delta a|\leq d_a$ and $|\Delta b|\leq d_b$, the conditional observation laws on any common normalized state obey
+
+$$
+\boxed{
+\|P(\cdot\mid z)-\widehat P(\cdot\mid z)\|_{\mathrm{TV}}
+\leq\Delta:=\frac{c_1d_a+c_2d_b}{2}.
+}
+$$
+
+The same bound holds on every realized common observation history. With the same initial observation, complete future records of length $T$ have total variation at most $\min(1,T\Delta)$. For the five-node measure,
+
+$$
+c_1=\frac{23}{45},\qquad c_2=\frac{14}{45}.
+$$
+
+For $du/2$, the respective constants are $1/2$ and $2/(3\sqrt3)$.
+
+**Proof.** The first claim follows by integrating $|\Delta p|/2$, using $|x|\leq1$ and $y\leq1$. After the same observed value both models have exactly $v(u)$, so the conditional bound applies again without accumulated coordinate-state error. Telescoping conditional kernels gives the record bound, equivalently the common-history coupling argument of Proposition 69. Direct summation gives the discrete constants. For the continuous constant $c_2$, split the integral at $u=\pm1/\sqrt3$ and integrate the quadratic polynomial with its respective signs. $\square$
+
+The use of $\Delta$ here is an upper bound proved from a confidence set and a model class. It is not the lower discrepancy bound from a rejected residual test in Part VI. A test that does not reject cannot supply the displayed upper bound by itself.
+
+For the final reference rectangle and fitted center,
+
+$$
+d_a=\frac{53}{1000},\qquad d_b=\frac{87}{1000},
+\qquad
+\boxed{\Delta=\frac{2437}{90000}.}
+$$
+
+These bounds compare the fitted model with every member of the rectangle. They apply to the true process on the conditional coverage event. Even when that event fails, the rectangle's internal probability certificate remains an exact statement about its members.
+
+# 97. Long-horizon marginal control is not full-record control
+
+The previous record bound grows with $T$. A different question can have a uniform answer: how far apart are the distributions of the signal at a single future time? A lower density bound permits this distinction to be made exactly.
+
+Let $P,Q$ be Markov kernels on a common state space. Suppose $P(s,\cdot)\geq\rho\mu(\cdot)$ for every $s$, where $\mu$ is one probability measure and $0<\rho\leq1$. Suppose also $\sup_s\|P(s,\cdot)-Q(s,\cdot)\|_{\mathrm{TV}}\leq\Delta$.
+
+**Proposition 86. Uniform marginal and rolling-window stability.** For initial laws at distance $e_0$, the one-time marginal laws satisfy
+
+$$
+\boxed{
+e_t\leq\min\left(1,
+(1-\rho)^te_0+
+\frac{\Delta[1-(1-\rho)^t]}{\rho}\right).
+}
+$$
+
+For $k$ consecutive observations starting at time $t$, their joint laws are at distance at most $\min(1,e_t+(k-1)\Delta)$. A uniform small marginal bound does not in general bound the total variation of arbitrarily long complete records away from one.
+
+**Proof.** For $\rho<1$, write $P(s,\cdot)=\rho\mu+(1-\rho)R(s,\cdot)$, where $R$ is a Markov kernel. Applying a Markov kernel cannot increase total variation, by integration of bounded test functions. Thus $\|\nu P-\widetilde\nu P\|_{\mathrm{TV}}\leq(1-\rho)\|\nu-\widetilde\nu\|_{\mathrm{TV}}$. Adding and subtracting $\widetilde\nu P$ yields $e_{t+1}\leq(1-\rho)e_t+\Delta$. Iterate this inequality. The case $\rho=1$ follows directly. Applying the finite-record telescoping argument from the initial time $t$ gives the rolling-window statement.
+
+For the final assertion, take two distinct independent Bernoulli laws with parameters strictly between zero and one. Each is a Markov kernel with a positive common minorization. At any time their marginal distance is the fixed parameter difference. For a full record, test whether its empirical mean lies above the midpoint between the parameters. Under each law, Chebyshev's inequality makes the error probability tend to zero as the record length grows. The total variation of the record laws therefore tends to one. $\square$
+
+This is the standard minorization/contraction mechanism [R24], with its error accounting made explicit. It is not a stability theorem for arbitrary feedback policies that remember the full history. The reference model is autonomous and its current scalar observation is the Markov state. It also does not bound long products of unnormalized likelihood ratios.
+
+With $e_0=0$, $\rho=31/125$ and $\Delta=2437/90000$, the reference confidence rectangle gives
+
+$$
+\boxed{
+\sup_{t\geq0}e_t\leq\frac{2437}{22320}
+\approx0.10919.
+}
+$$
+
+This is a nontrivial all-time bound on **one-time marginal observation distributions**. The complete-record bound is still $\min(1,2437T/90000)$, which becomes trivial at integer horizon 37. The model does not exchange those two different claims. In live filtering after a shared observed value, its state is exactly known and the next-observation law has the separate uniform upper bound $2437/90000$.
+
+\newpage
+
+# 98. A conditional data-to-domain theorem
+
+**Proposition 87. Observable structured learning with a covered domain.** Suppose the scalar process obeys the conditional law of Proposition 83 with the declared reference measure and fixed parameters satisfying $|a|,|b|\leq1$. Use the predictable regressions, fixed dictionary and confidence protocol of Proposition 84. At a data-selected finite time, form the full outward-rounded rectangle. If its density floor $\rho$ is nonnegative, that rectangle has an exact all-horizon probability certificate on $C$. If $\rho>0$, every chosen center inside it has the marginal and record bounds of Propositions 85--86 relative to every member.
+
+With probability at least $19/20$ over the specified stochastic observation process, these implications cover its true parameter at every checked time, including a stopping time. Internal validity of a verified rectangle is deterministic. Statistical coverage remains conditional on the declared process, moment, parameter and observation assumptions.
+
+**Proof.** Proposition 84 provides one simultaneous event on which both true parameters belong to all returned intervals. Proposition 83 supplies the domain certificate for the entire rectangle whenever its sufficient density floor is nonnegative. The selected center is one of its members, and the maximum distances to the endpoints bound each parameter difference. Proposition 85 gives conditional and record error. If the floor is positive, all true conditional rows have the same lower reference component, so Proposition 86 applies to the scalar Markov process. Selection of the stopping time does not alter the already simultaneous event. None of these implications verifies the assumptions from a single sample path. $\square$
+
+No claim of empirical coverage follows from the saved run. It is one seeded finite realization of the exactly declared discrete analogue. The general confidence result is a theorem, with assumptions recorded in the certificate. Its independent checker rederives the sufficient statistics, rational radii, outer endpoints, density floor and error budgets from the saved path. It rejects a changed reference measure, a narrower claimed interval, an altered path checksum or an unsupported claim that the assumptions were independently verified.
+
+This is the point where probability-domain certification and data uncertainty become connected in an executed dependent-signal example. The family is more restrictive than an arbitrary learned operator. That restriction is visible and does useful work: it preserves the nonlinear posterior curve while uncertainty changes its likelihoods.
+
+# 99. What the block does and does not close
+
+Two separate improvements have been established.
+
+The perturbed 0.7.0 operator family now admits a four-times-smaller reset weight at the same deterministic coefficient-box radius. The witness is checked on both the discovered and comparison domains, and its prediction bound remains nontrivial for a longer finite horizon. Its geometry was reused. No new empirical coverage is attached to that example.
+
+The new scalar example learns two unknown coefficients from dependent observations of a fixed nonlinear state, constructs a time-uniform confidence rectangle, and certifies all its members on a curved domain without a reset. It also distinguishes complete-record, current-state and rolling-window prediction bounds. This example uses a separate declared model and does not establish a confidence set for the old 0.7.0 operator family.
+
+The outstanding general issue is not merely positive probabilities. It is obtaining an adequate observable representation, a correct observation basis and sufficiently informative data in a model class that remains computationally tractable. Theorems for a known dictionary cannot be used as proofs that an estimated hidden dictionary is correct. Unmodeled measurement error, nonstationary coefficients, response-dependent feature selection, unsupported reference measures and insufficient action coverage remain explicit failure modes.
+
+# 100. Release direction after the eighth block
+
+The cumulative theory contains 87 propositions with written proofs. The next step toward a foundations 1.0 should be a dependency and assumptions audit of this declared scope rather than treating every possible extension as a prerequisite. A defensible release can freeze exact realization, transfer and closure, finite observable learning, controlled instruments, probability-domain certificates, quantified approximation, and the restricted sequential learning sector now worked through.
+
+General nonlinear dictionary discovery and hidden-state identification from unrestricted noisy streams remain research directions. They need not be represented as already solved, nor silently made requirements for the finite theorems that are proved. The reference programs remain a small mathematics laboratory. Production PR-LASM stays at 2.3.0. No new Lean verification, public publication or license change is claimed.

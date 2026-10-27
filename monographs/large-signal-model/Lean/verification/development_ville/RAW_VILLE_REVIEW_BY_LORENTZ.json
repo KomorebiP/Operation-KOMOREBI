@@ -1,0 +1,96 @@
+{
+  "schema": "komorebi.ville.raw-review.v1",
+  "claim": "Actual nonnegative-supermartingale all-natural-time crossing bound used by P81",
+  "verdict": "proved as written",
+  "reviewer": "/root/lorentz_norm",
+  "review_kind": "Separate-agent raw-source review within the same collaborative model session, not an independent external referee.",
+  "reviewer_authorship": "Reviewer authored none of VilleInequality.lean; reviewer consumes its endpoint in P81.",
+  "created_utc": "2026-10-24T20:39:18.525786+00:00",
+  "source": {
+    "path": "KomorebiLSM/VilleInequality.lean",
+    "sha256": "a5a13a20dd32f80d22120d498cbcb51c7aba47f69733695c8bb77c17c649ffdc",
+    "named_declarations": 7,
+    "named_theorems": 5
+  },
+  "claim_card": {
+    "hypotheses": "An arbitrary probability sample space and Nat filtration; an actual real-valued Supermartingale M; pointwise nonnegativity at every time/sample; actual initial integral<=1; positive real crossing threshold c.",
+    "objects": "Literal finite and all-natural-time crossing events, actual bounded hitting time and stopped value.",
+    "conclusion": "The literal crossing event is measurable and has measure<=ofReal(1/c). The same bound applies to any selected natural-time crossing subset.",
+    "scope": "No Gaussian mixture, confidence event, adapted process construction or initial-expectation bound is assumed as the crossing conclusion; those remain inputs to be proved separately by the P81 application."
+  },
+  "obligations": [
+    {
+      "item": "Actual event measurability",
+      "status": "passed",
+      "evidence": "crossingUpTo_measurable and crossing_measurable express literal crossing sets as countable unions of measurable threshold events derived from actual Supermartingale strong adaptedness."
+    },
+    {
+      "item": "Bounded stopping construction",
+      "status": "passed",
+      "evidence": "tau is literally hittingBtwn on [0,N], embedded in WithTop Nat; actual stopping-time property follows from adaptedness, and hittingBtwn_le proves its deterministic finite upper bound."
+    },
+    {
+      "item": "Optional stopping direction",
+      "status": "passed",
+      "evidence": "The proof applies expected_stoppedValue_mono to the actual submartingale -M, constant initial time0 and tau. Negating both integrals gives E[M_tau]<=E[M_0]. Its hypotheses and inequality orientation match the local Mathlib theorem."
+    },
+    {
+      "item": "Crossing costs and integrability",
+      "status": "passed",
+      "evidence": "integrable_stoppedValue is derived from actual Supermartingale integrability and bounded tau. On each finite crossing, the stopped value is at least c by stoppedValue_hittingBtwn_mem. Pointwise process nonnegativity also controls stopped values outside the crossing event, so its set integral is at most its full integral."
+    },
+    {
+      "item": "Probability normalization and positive division",
+      "status": "passed",
+      "evidence": "setIntegral_ge_of_const_le_real uses the actual finite measure and measurable crossing event. c>0 is supplied before le_div_iff. Probability measure finiteness justifies conversion between real measure and ENNReal.ofReal."
+    },
+    {
+      "item": "Infinite horizon passage",
+      "status": "passed",
+      "evidence": "crossingUpTo is proved monotone in N and its increasing union is exactly the all-natural-time crossing event. measure_iUnion and iSup_le transfer the uniform finite bound with no missing tail event."
+    },
+    {
+      "item": "Initial/zero-time cases",
+      "status": "passed",
+      "evidence": "Time0 and N0 are included. The initial process value may itself be random; only its actual expectation is bounded. No assumption that M0 is pointwise1 is silently used."
+    },
+    {
+      "item": "Selected time scope",
+      "status": "passed",
+      "evidence": "selected_time_bound uses literal subset containment in the measurable all-time event. No t measurability is asserted in that generic theorem; for arbitrary t its measure expression is the outer measure and the inequality remains valid. P81 can use the stronger pathwise simultaneous event."
+    },
+    {
+      "item": "Semantic initial budget control",
+      "status": "passed",
+      "evidence": "The control constructs a genuine constant-two Supermartingale and rejects the incorrect half-probability crossing conclusion when the initial-integral budget is dropped. Reviewer rerun yields exactly one intended unsolved False."
+    }
+  ],
+  "leaf_sources": [
+    {
+      "path": "Mathlib/Probability/Martingale/OptionalStopping.lean",
+      "sha256": "9b4722e1af64186fc8747af7847f19867fa1169486b64427c9522b4ce787c55d",
+      "inspected_endpoint": "Submartingale.expected_stoppedValue_mono"
+    }
+  ],
+  "execution_evidence": {
+    "author_result": {
+      "path": "verification/development_ville/RESULT.json",
+      "sha256": "78e543c93c79ea7288eb18f6462c12031bc12102f580c56cdceccb229925ca3c",
+      "passing_stages": 4,
+      "named_allowed_axioms": 7,
+      "module_kernel_replays": 1,
+      "semantic_false_controls": 1
+    },
+    "reviewer_checks": {
+      "path": "verification/development_ville/raw_review_lorentz/CHECKS.json",
+      "sha256": "c04309cdbb39c994dce3850960e5d00bfe0a2b4602b634bebfe01391c6032d6e",
+      "passing_stages": 3,
+      "fresh_isolated_compile": true,
+      "all_named_allowed_axioms": 7,
+      "fresh_semantic_false_controls": 1,
+      "scope": "Author replay marker inspected; not independently repeated by reviewer."
+    }
+  },
+  "remaining_gap": null,
+  "strongest_safe_statement": "The actual generic Ville crossing theorem as written, for arbitrary probability spaces, actual nonnegative Nat-indexed Supermartingales and an initial integral budget, is supported."
+}

@@ -1,0 +1,36 @@
+import KomorebiLSM.CertificateLearning
+
+#print axioms Komorebi.LSM.CertificateLearning.Model
+#print axioms Komorebi.LSM.CertificateLearning.Witness
+#print axioms Komorebi.LSM.CertificateLearning.witness_valid_family
+#print axioms Komorebi.LSM.CertificateLearning.witness_initial
+#print axioms Komorebi.LSM.CertificateLearning.witness_exists_iff
+#print axioms Komorebi.LSM.CertificateLearning.robust_vertex_witness
+#print axioms Komorebi.LSM.CertificateLearning.certified_all_words
+#print axioms Komorebi.LSM.CertificateLearning.witness_surjective_of_reachable
+#print axioms Komorebi.LSM.CertificateLearning.certified_instrument
+#print axioms Komorebi.LSM.CertificateLearning.certified_initial
+#print axioms Komorebi.LSM.CertificateLearning.modelLaw
+#print axioms Komorebi.LSM.CertificateLearning.observedLaw
+#print axioms Komorebi.LSM.CertificateLearning.budget
+#print axioms Komorebi.LSM.CertificateLearning.modelLaw_prior
+#print axioms Komorebi.LSM.CertificateLearning.observedLaw_prior
+#print axioms Komorebi.LSM.CertificateLearning.certified_policy_bounds
+#print axioms Komorebi.LSM.CertificateLearning.certified_conditioning
+#print axioms Komorebi.LSM.CertificateLearning.certified_observation_conditioning
+#print axioms Komorebi.LSM.CertificateLearning.conditional_learning
+#print axioms Komorebi.LSM.CertificateLearning.conditional_selected_learning
+#print axioms Komorebi.LSM.CertificateLearning.atlasModel
+#print axioms Komorebi.LSM.CertificateLearning.atlas_normalized
+#print axioms Komorebi.LSM.CertificateLearning.atlas_surjective
+#print axioms Komorebi.LSM.CertificateLearning.atlasWitness
+#print axioms Komorebi.LSM.CertificateLearning.atlas_word_probability
+#print axioms Komorebi.LSM.CertificateLearning.full_packet_prediction
+#print axioms Komorebi.LSM.CertificateLearning.positive_packet_interpretation
+#print axioms Komorebi.LSM.CertificateLearning.positive_packet_state
+#print axioms Komorebi.LSM.CertificateLearning.observableModel
+#print axioms Komorebi.LSM.CertificateLearning.observable_word_probability
+#print axioms Komorebi.LSM.CertificateLearning.observable_minimal
+#print axioms Komorebi.LSM.CertificateLearning.observable_certificate_all_words
+#print axioms Komorebi.LSM.CertificateLearning.observable_witness_surjective
+#print axioms Komorebi.LSM.CertificateLearning.conditional_observable_learning

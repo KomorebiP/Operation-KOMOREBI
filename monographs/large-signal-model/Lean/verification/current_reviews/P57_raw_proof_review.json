@@ -1,0 +1,85 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true MODULE.lean",
+    "exit_code": 0,
+    "scope": "Fresh file acceptance only; integrated axiom audit and kernel replay remain parent responsibilities."
+  },
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "claim_id": 57,
+  "claim": "For a probability averaging measure and a finite real matrix family with square-integrable entries, the actual Bochner mean congruence equals congruence of the mean plus the centered covariance correction. The correction is PSD for PSD X, equals scalar variance times K1 X K1^T for square-integrable affine u, and has coefficient (b-a)^2/12 under actual normalized Lebesgue averaging on a nondegenerate interval.",
+  "input": {
+    "path": "KomorebiLSM/AveragedCongruence.lean",
+    "sha256": "8fd90ed1348e0ed3bd5ce2cb850212bbaafb41fae4b81e66720024306a9d2c43"
+  },
+  "assumptions": [
+    "Probability measure nu and finite real matrix indices M,N.",
+    "Every K_ij is MemLp 2; PSD conclusion additionally assumes X.PosSemidef. Symmetry is unnecessary for the identity itself.",
+    "Affine specialization assumes square-integrable scalar u.",
+    "Uniform interval specialization assumes a<b and uses cond volume (Ioc a b), hence normalized Lebesgue measure."
+  ],
+  "dependency_graph": [
+    "L2 entries imply L1 entries under the finite probability measure; each pair product is integrable by L2 Holder.",
+    "Scalar product covariance follows by expanding centered products and integrating all terms using derived integrability.",
+    "Finite sums of entry products yield the matrix identity with correct K_i,a X_a,b K_j,b orientation.",
+    "Matrix integrability is derived from entrywise integrability with Integrable.of_eval twice.",
+    "matrixMean_eq_integral uses eval_integral twice, identifying coordinate means with the actual Bochner matrix integral.",
+    "averaged_congruence_integral rewrites the coordinate result into direct Bochner integrals, using derived integrability for original and centered congruences.",
+    "Every centered congruence is PSD for PSD X; integration preserves symmetry and nonnegative quadratic forms.",
+    "For K0+u K1, the centered matrix is (u-Eu)K1, so correction is E[(u-Eu)^2] times K1 X K1^T.",
+    "The interval measure is inverse-length times restricted Lebesgue measure; mean is (a+b)/2 and polynomial integration gives variance (b-a)^2/12."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "No integrability of the desired congruence or correction is assumed as an input: it is derived from hK.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The primary endpoint now uses actual Bochner integrals, not only an unconnected custom matrixMean operation.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The bridge uses the standard finite product topology and elementwise norm, whose Bochner integral agrees coordinatewise.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The local respectTransparency elaborator option resolves Matrix/Pi instance reducibility; it is not skipKernelTC or an untrusted computation.",
+      "status": "passed"
+    },
+    {
+      "obligation": "No symmetry assumption is required for the identity; real PSD hypotheses are sufficient for the PSD correction.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The uniform variance uses actual normalized Lebesgue averaging and derives h^2/12, rather than assuming a variance oracle.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Rectangular K and zero-dimensional index sets are allowed; interval degeneracy is excluded by a<b.",
+      "status": "passed"
+    }
+  ],
+  "residual_limits": [
+    "No claim that averaging K itself gives the average quadratic action; the correction is essential.",
+    "The affine variance formula presumes scalar square integrability; the monograph should say this explicitly.",
+    "The uniform interval is nondegenerate; no density normalization is asserted at a=b."
+  ],
+  "strongest_safe_statement": "For a probability averaging measure and a finite real matrix family with square-integrable entries, the actual Bochner mean congruence equals congruence of the mean plus the centered covariance correction. The correction is PSD for PSD X, equals scalar variance times K1 X K1^T for square-integrable affine u, and has coefficient (b-a)^2/12 under actual normalized Lebesgue averaging on a nondegenerate interval.",
+  "cheapest_next_check": "Parent integrated clean compile, exhaustive axiom audit and kernel replay against the same source hashes."
+}

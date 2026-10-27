@@ -1,0 +1,287 @@
+{
+  "schema": "komorebi.raw-proof-review.v1",
+  "review_id": "RAW_P58_REVIEW",
+  "created_utc": "2026-10-24T19:35:24.271769+00:00",
+  "claim": "FOUNDATIONS Proposition 58: literal normalized positive Bochner cell averages preserve the cone and integrated mass, retain exact cell operators, and have actual induced-base-norm supremum discrepancy at most Lh, sharpened to Lh/3 for equal uniform interval cells.",
+  "primary_verdict": "proved as written",
+  "evidence_status": "pass",
+  "targets": {
+    "CellDistance": {
+      "source_sha256": "9f1f414a009db7519c7e44c3876cdeef4e0fe95f3417b8925ea79217e8d0d199",
+      "named_declarations": 7,
+      "named_theorems": 7
+    },
+    "PositiveCellApproximation": {
+      "source_sha256": "f447cd6eb99122d214a8390adb8c66ce2bd3d1fbe49f60b130f53d819b666718",
+      "named_declarations": 26,
+      "named_theorems": 17
+    },
+    "PositiveCellResolution": {
+      "source_sha256": "ea39b59ada11390f9cfda737dee60a92825f6a51b6bf50a648a0fc8f167da5a6",
+      "named_declarations": 5,
+      "named_theorems": 5
+    },
+    "PositiveCellUniform": {
+      "source_sha256": "a4930950bc7fec621f2ad34b7522ab000d498829e8bec170d132a245b117b51c",
+      "named_declarations": 11,
+      "named_theorems": 9
+    },
+    "PositiveCellP58": {
+      "source_sha256": "69d90558b2b2e1f9bad35bfebe1df50ccf4d7c2d5fdec2163cf1fa340dea0840",
+      "named_declarations": 2,
+      "named_theorems": 2
+    }
+  },
+  "named_declarations": 51,
+  "named_theorems": 40,
+  "authoritative_statement": {
+    "path": "work/Komorebi_LSM_Lean_0.18.0/source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e",
+    "locator": "Proposition 58, lines 2544-2570; actual normalized-cell-density definition and positive-mass-cell assumption immediately preceding."
+  },
+  "review_provenance": {
+    "reviewer": "/root/rotation_rank",
+    "author": "/root/lorentz_norm",
+    "kind": "separate-agent same-team internal raw-source review",
+    "independence_limit": "Not an external independent referee report or a fresh-session blind review. The reviewer inspected all five raw frozen proof files and load-bearing local dependency definitions before consulting the author final scope receipt, then freshly elaborated every target in an isolated output path. No target source was authored or edited by the reviewer.",
+    "read_only": true,
+    "target_source_edits": false
+  },
+  "claim_card": {
+    "objects": "One actual finite-dimensional ProbabilityCone C and reference probability measure mu; an actual operator-Bochner-integrable DensityInstrument; a finite measurable pairwise-disjoint positive-reference-mass partition modulo a mu-null uncovered set.",
+    "approximation": "cellAverage=mu.real(cell)^-1 times the literal continuous-linear-operator cell integral. The lifted operator is the indicator sum of these constants and is zero on the uncovered reference-null set.",
+    "norm": "The actual positive-decomposition base norm C.value. inducedNorm is sSup of C.value(Tz) on C.value(z)<=1, not a coefficient or Euclidean proxy.",
+    "hypotheses": [
+      "Every cell has strictly positive actual reference mass.",
+      "The operational cell diameter is at most h; L and the main bound h are explicitly nonnegative.",
+      "The original operator induced-norm Lipschitz bound is supplied. Cell-local pairwise bounds suffice for the general theorem, while the uniform endpoint supplies the source bound on the whole interval.",
+      "For the sharper case, the reference is actual normalized Lebesgue du/2 on [-1,1] and the partition cells are actual Ioc intervals with common positive width and endpoints inside the declared interval."
+    ],
+    "conclusions": [
+      "Pointwise cone preservation of the actual averaged operator, exact integrated mass and actual Markov kernels.",
+      "Equality of each actual CLM event-cell operator to its original counterpart.",
+      "Derived pointwise averaging inequality, integrated discrepancy and full action/base-state supremum bound Lh.",
+      "Actual two-triangle distance integral yielding the sharper full supremum bound Lh/3."
+    ],
+    "exceptional_cases": [
+      "Uncovered reference-null points are assigned zero; this preserves the cone and changes no integrated cell operator.",
+      "Zero cell masses are explicitly excluded by the source assumption, so every inverse used is valid.",
+      "The induced norm unit ball contains zero, including in a zero-dimensional state space.",
+      "The error inserts zero for an empty action/base-state index set; approximationError_eq_sup proves equality to the literal source supremum in the intended nonempty bounded sector. The Lh theorem itself supplies the needed boundedness there.",
+      "The general bound permits L=0 or h=0. In the uniform positive-mass interval case h>0 is required and follows the intended geometric meaning.",
+      "An empty cell index cannot satisfy probability-one coverage; no false nonempty partition conclusion is smuggled into the proofs.",
+      "Pseudometric observation spaces are permitted, so the source metric case is covered without restriction."
+    ]
+  },
+  "dependency_graph": [
+    {
+      "from": "DensityInstrument whole-cone a.e. positivity and operator integrability",
+      "via": "ContinuousBins.cellOperator_positive and closed-convex cone integration",
+      "to": "actual normalized cell-average positivity",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "finite actual partition and positive cell masses",
+      "via": "operator_on_cell, exact_cell_operator, integral_partition",
+      "to": "exact averaged/original CLM cell equality and integrated mass equality",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "C.value genuine seminorm/strict norm and finite dimensionality",
+      "via": "derived value upper/lower ambient norm bounds",
+      "to": "bounded nonempty induced-norm unit-ball supremum",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "actual unit-ball supremum and C.value homogeneity",
+      "via": "value_apply_le_inducedNorm",
+      "to": "operator estimate on every signed input; normalized base points have value one",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "literal cell-average subtraction identity",
+      "via": "actual finite-measure C.value integral triangle/Jensen inequality and supplied induced-norm Lipschitz bound",
+      "to": "point_error_pair_bound",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "actual pairwise cell diameter and probability reference",
+      "via": "point_error_diameter, discrepancy_le_diameter and csSup bound",
+      "to": "full actual discrepancy supremum <=Lh",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "actual real distance on an interval",
+      "via": "split at y, exact polynomial antiderivatives, integration of both triangles",
+      "to": "double integral width^3/3 and normalized expected distance width/3",
+      "leaf": "internal exact integration"
+    },
+    {
+      "from": "actual du/2 measure restriction to a cell",
+      "via": "uniform_restrict_cell, uniform_cell_mass and uniform_cell_double_distance",
+      "to": "cell mass h/2 and double-distance h^3/12",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "the real double-cell integrals and actual partition total mass one",
+      "via": "resolution_equal_intervals and discrepancy_le_resolution",
+      "to": "full supremum <=Lh/3",
+      "leaf": "internal proof"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "actual-average-object",
+      "status": "passed",
+      "evidence": "The operator is normalized by the positive real reference mass of its actual Bochner cell integral. There is no midpoint, representative observation, formal moment oracle or assumed averaged map."
+    },
+    {
+      "id": "cone-positivity",
+      "status": "passed",
+      "evidence": "cellAverage_positive derives positivity from actual cone integration and nonnegative inverse cell mass. operator_positive is pointwise and explicitly handles uncovered points by zero."
+    },
+    {
+      "id": "exact-cells-and-mass",
+      "status": "passed",
+      "evidence": "exact_cell_operator proves equality of continuous linear maps. integral_operator uses actual finite partition integration, and instrument.mass_preserving then inherits the original exact mass row. IsMarkovKernel is derived for this same constructed instrument."
+    },
+    {
+      "id": "genuine-norm",
+      "status": "passed",
+      "evidence": "C.value is the existing positive-decomposition infimum. BaseNormIntegration derives continuity/integrability and the integral triangle inequality for that value. inducedNorm_bdd uses derived norm-comparison constants only to prove boundedness, and value_apply_le_inducedNorm normalizes actual nonzero inputs by their C.value."
+    },
+    {
+      "id": "averaging-inequality-derived",
+      "status": "passed",
+      "evidence": "difference_eq_average is an actual Bochner identity. point_error_pair_bound derives the source inequality using the integral triangle estimate and actual induced norm, rather than taking the desired error bound as a hypothesis."
+    },
+    {
+      "id": "diameter-to-integrated-error",
+      "status": "passed",
+      "evidence": "point_error_diameter integrates the distance bound inside each actual cell. discrepancy_le_diameter uses probability-one a.e. coverage and the actual reference probability measure. No unproved fine-density constancy is introduced."
+    },
+    {
+      "id": "actual-supremum",
+      "status": "passed",
+      "evidence": "approximationError is the actual action/base-state discrepancy range supremum with zero inserted. Its upper bound is proved for all source inputs. approximationError_eq_sup discharges the zero-insertion distinction for a nonempty bounded source index set, whose boundedness follows from the Lh estimate."
+    },
+    {
+      "id": "uniform-distance-calculation",
+      "status": "passed",
+      "evidence": "CellDistance.integral_abs_sub splits at the actual point y and proves both triangle integrals. double_integral_abs_sub integrates to width^3/3; uniform_double_distance normalizes both actual probability references and obtains width/3."
+    },
+    {
+      "id": "uniform-reference-scaling",
+      "status": "passed",
+      "evidence": "uniform_restrict_cell proves the literal restricted du/2 measure is half Lebesgue measure. Each actual cell has mass h/2 and double-distance h^3/12. Both half factors are retained."
+    },
+    {
+      "id": "uniform-sharpening",
+      "status": "passed",
+      "evidence": "resolution is defined from actual double cell integrals, not supplied numerical bounds. resolution_equal_intervals divides by actual cell mass and sums with partition mass one, producing h/3. The integrated and supremum estimates then give Lh/3."
+    },
+    {
+      "id": "same-domain-and-measure",
+      "status": "passed",
+      "evidence": "Original and averaged instruments use the same C and mu throughout. The stated Lipschitz constant is in the real induced base norm. No coefficient-norm constant is silently identified with L."
+    },
+    {
+      "id": "edges-and-quantifiers",
+      "status": "passed",
+      "evidence": "Positive cell mass, finite index, Borel/pseudometric observation domain, zero or empty input conventions and positive equal-interval width are explicit and cover the source sector. Endpoint omissions of Ioc cells are reference-null under the actual measure."
+    },
+    {
+      "id": "connected-capstones",
+      "status": "passed",
+      "evidence": "positive_cell_average_certificate and positive_equal_interval_certificate retain actual positivity, exact mass, exact cell equality, Markov kernels and their respective full supremum bounds together."
+    },
+    {
+      "id": "no-unrestricted-inference",
+      "status": "passed",
+      "evidence": "The model class, original instrument validity, common cone/reference, partition geometry and declared Lipschitz constant remain assumptions. A sampled residual or adjacent grid estimate is not promoted to a uniform operator bound."
+    }
+  ],
+  "verification": {
+    "reviewer_fresh_compile": {
+      "modules": [
+        {
+          "module": "CellDistance",
+          "source_sha256": "9f1f414a009db7519c7e44c3876cdeef4e0fe95f3417b8925ea79217e8d0d199",
+          "returncode": 0,
+          "diagnostics": ""
+        },
+        {
+          "module": "PositiveCellApproximation",
+          "source_sha256": "f447cd6eb99122d214a8390adb8c66ce2bd3d1fbe49f60b130f53d819b666718",
+          "returncode": 0,
+          "diagnostics": ""
+        },
+        {
+          "module": "PositiveCellResolution",
+          "source_sha256": "ea39b59ada11390f9cfda737dee60a92825f6a51b6bf50a648a0fc8f167da5a6",
+          "returncode": 0,
+          "diagnostics": ""
+        },
+        {
+          "module": "PositiveCellUniform",
+          "source_sha256": "a4930950bc7fec621f2ad34b7522ab000d498829e8bec170d132a245b117b51c",
+          "returncode": 0,
+          "diagnostics": ""
+        },
+        {
+          "module": "PositiveCellP58",
+          "source_sha256": "69d90558b2b2e1f9bad35bfebe1df50ccf4d7c2d5fdec2163cf1fa340dea0840",
+          "returncode": 0,
+          "diagnostics": ""
+        }
+      ],
+      "warnings_as_errors": true,
+      "wrapper": "runtime/gated-bin/lean after runtime/env_v018.sh",
+      "receipt": "raw_reviewer_build/COMPILE_RECEIPT.json",
+      "receipt_sha256": "5ae332c73881fb4d3c46ab7f3ee713bc5ff74b40b32be8c7278233db360bde62",
+      "shared_build_mutation": false
+    },
+    "author_receipt": {
+      "path": "work/Komorebi_LSM_Lean_0.18.0/verification/development_p58/RESULT.json",
+      "sha256": "a17ce9909448eadfb517ae506e5117b589b143da292f1fd85d4c73dac3380c75",
+      "passed": true,
+      "scope": "Matching final five-source hash map,13 actual stages: five compiles, all51 named axiom audits, five exact-module replays, two semantic False controls. Reviewer did not reexecute those author replay/control stages."
+    },
+    "author_axiom_records_rechecked": {
+      "count": 51,
+      "exact_named_set_matches_raw_sources": true,
+      "allowed_only": true
+    },
+    "controls_inspected": [
+      "CellAverageMissingReferenceMass rejects treating an unnormalized half-cell integral as a unit constant density.",
+      "CellDistanceQuarter rejects replacing the actual width/3 mean separation by width/4."
+    ],
+    "forbidden_construct_scan": "No sorry, custom axiom, unsafe or native_decide in the five reviewed sources.",
+    "source_hashes_after_review": {
+      "CellDistance": "9f1f414a009db7519c7e44c3876cdeef4e0fe95f3417b8925ea79217e8d0d199",
+      "PositiveCellApproximation": "f447cd6eb99122d214a8390adb8c66ce2bd3d1fbe49f60b130f53d819b666718",
+      "PositiveCellResolution": "ea39b59ada11390f9cfda737dee60a92825f6a51b6bf50a648a0fc8f167da5a6",
+      "PositiveCellUniform": "a4930950bc7fec621f2ad34b7522ab000d498829e8bec170d132a245b117b51c",
+      "PositiveCellP58": "69d90558b2b2e1f9bad35bfebe1df50ccf4d7c2d5fdec2163cf1fa340dea0840"
+    }
+  },
+  "dependency_source_hashes": {
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/BaseNorm.lean": "a1306be5b5d719dd40401a5dbb2c9e937f70ffb2ffaf24e6e98d1d00cb9229bc",
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/BaseNormTopology.lean": "b5553b3cbc8dc89d472ee0a97dcae426e1d09b313b2a4f5b7ff3a2657bb96d37",
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/BaseNormIntegration.lean": "61fa39143c0f2118f9bd952223b06f307831910163c0e01bca555606ef8ef0af",
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/ContinuousBins.lean": "229d3145682aa76c58fe414c87f2725ab496f845c943f66824e986bc59f7c433",
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/ContinuousInstrument.lean": "fe10da9211d93574bead7d53491a048609d06855c626a5c779fef5fdc27925d9",
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/UniformIntervalMoments.lean": "a3fe1d74d5bd5d5a6dacd9daab450afe9aafd2c72a3293aa85f9ed91339e9225",
+    "work/Komorebi_LSM_Lean_0.18.0/KomorebiLSM/AveragedCongruence.lean": "8fd90ed1348e0ed3bd5ce2cb850212bbaafb41fae4b81e66720024306a9d2c43"
+  },
+  "out_of_scope": [
+    "The adjacent worked numerical matrix example deriving L=6 or a4/n bound is not claimed by these theorem endpoints and was not audited here.",
+    "P59 continuous-law total-variation propagation is a separate claim."
+  ],
+  "remaining_mathematical_gap": null,
+  "remaining_integration_gaps": [
+    "Parent cumulative release verification and metadata/artifact integration."
+  ],
+  "strongest_safe_statement": "The frozen five-module theorem sector proves every numbered P58 conclusion for the actual normalized cell-average instrument under the source common-domain/reference, positive partition and induced-norm Lipschitz assumptions, including the actual uniform equal-interval Lh/3 improvement.",
+  "cheapest_next_check": "Include these exact frozen hashes and raw review in the parent cumulative inventory/build/axiom/replay/control pass."
+}

@@ -1,0 +1,120 @@
+{
+  "target": "P59 continuous full-law comparison and eventwise conditional corollary",
+  "status": "AUTHOR_SCOPED_CHECKS_PASS",
+  "main_receipt": "verification/development_p59/MAIN_RESULTS.json",
+  "main_receipt_sha256": "05907e0e80582c1c79cc9bc60fbcfcca62b18707a84f6fe02bdb2839f8696348",
+  "main_modules": {
+    "BaseNormIntegration": {
+      "source_sha256": "61fa39143c0f2118f9bd952223b06f307831910163c0e01bca555606ef8ef0af",
+      "declarations": 5,
+      "kinds": {
+        "theorem": 5
+      }
+    },
+    "TimeRecords": {
+      "source_sha256": "60e9d705f1a563115042a2e3d795fd7f3c0ba3ddb1e8994cc285ef1662377ae6",
+      "declarations": 28,
+      "kinds": {
+        "theorem": 20,
+        "def": 6,
+        "instance": 2
+      }
+    },
+    "ContinuousTV": {
+      "source_sha256": "1530bc9ea42cd87aba370b4925da472289506e7efa58abfd912e732de93e0d6d",
+      "declarations": 16,
+      "kinds": {
+        "theorem": 14,
+        "def": 2
+      }
+    }
+  },
+  "main_endpoint": "Komorebi.LSM.ContinuousTV.record_lawTV_le",
+  "density_helper_source_sha256": "1a2abdc88870cc09f3a6052a21c85ab14756af847d4d4b3528b97230e2db3cbf",
+  "density_helper_receipt": "verification/development_continuous_tv_density/RESULTS.json",
+  "density_helper_receipt_sha256": "c576d3bfba96ec21e54ea9bf238b908c386e2e6d6fc3d7a7b524ac81d18fe81e",
+  "conditional": {
+    "source": "KomorebiLSM/ConditionalEventTV.lean",
+    "source_sha256": "d0b15e30c0409289075ac96afd6911f4f9340c5fc988ff87454397c03985da50",
+    "declarations": 5,
+    "theorems": 5,
+    "stages": [
+      {
+        "stage": "compile",
+        "exit_code": 0
+      },
+      {
+        "stage": "axiom_audit",
+        "exit_code": 0
+      },
+      {
+        "stage": "kernel_replay",
+        "exit_code": 0
+      }
+    ],
+    "axiom_dependencies": {
+      "Komorebi.LSM.ConditionalEventTV.event_error_le_tv": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "Komorebi.LSM.ConditionalEventTV.conditional_real": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "Komorebi.LSM.ConditionalEventTV.ratio_error": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "Komorebi.LSM.ConditionalEventTV.conditional_event_error": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "Komorebi.LSM.ConditionalEventTV.record_conditional_event_error": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    "negative_control": {
+      "source": "negative_controls/ConditionalEventTVZeroEvent.lean",
+      "source_sha256": "4edf6033b55cc0cbea083e5be0a62526df1a47de9536aab5e7282fd07ace16fb",
+      "exit_code": 1,
+      "failure": "actual zero-event normalization contradiction with goal False",
+      "log": "zero_event_control.log"
+    },
+    "claims": [
+      "The actual normalized restrictions cond P S and cond Q S are probability measures only with both event masses positive.",
+      "Every measurable event under these actual conditional measures has error at most min(1,2*lawTV(P,Q)/min(P(S),Q(S))).",
+      "Instantiating the actual P59 record measures gives min(1,(e0+sum epsilon)/min(P(S),Q(S))) for each conditional event."
+    ],
+    "limit": "This is eventwise conditional-measure control. It does not establish the nearby sharper full conditional-lawTV <= delta/p paragraph."
+  },
+  "author_and_helper_explicit_declarations": 59,
+  "author_and_helper_explicit_theorems": 49,
+  "separate_density_helper_review": "verification/development_p59/RAW_DENSITY_HELPER_REVIEW.json",
+  "claims": [
+    "C.value is the actual positive-decomposition infimum, with finite-coordinate ambient bound, continuity, integrability and finite-measure integral inequality derived.",
+    "Integrated contraction is derived by comparing every positive decomposition and then using C.le_value; no contraction or norm formula is assumed.",
+    "TimeRecords constructs literal time-indexed operator-product probability laws under any measurable randomized history-dependent finite-action Policy and proves consistency.",
+    "Policy-weighted unnormalized states satisfy the integrated stateError recurrence. Error accumulation is an actual continuous reference lintegral, not a finite grid or an assumed conclusion.",
+    "The actual record-density absolute-integral discrepancy is bounded by mass readout from the actual base-norm state error, using cone membership almost everywhere.",
+    "ContinuousTVDensity proves genuine half-L1 lawTV from signed-measure variation. The final theorem is TV of the actual TimeRecords record measures bounded by min(1,(e0+sum epsilon)/2).",
+    "The two instrument families may vary with time, use the same actual probability cone/reference and the same arbitrary measurable policy, and require no positive branch-density margin."
+  ],
+  "scope_limits": [
+    "Finite-dimensional real normed state space, finite action set and common probability reference measure are explicit.",
+    "DensityInstrument supplies measurable operator-norm-integrable densities, whole-cone positivity almost everywhere and exact integrated mass, with normalized initial states.",
+    "The supplied epsilon bounds are uniform integrated C.value discrepancies on the actual normalized base. Initial error uses the same actual C.value.",
+    "The theorem compares full finite joint action/observation record measures; it makes no infinite-horizon accuracy or statistical estimation claim.",
+    "The optional eventwise conditional-measure result has the explicit scope and weaker constant recorded above; no sharper full conditional norm theorem is claimed.",
+    "Same-team internal author verification and separate-agent raw reviews remain distinct from parent cumulative integration."
+  ],
+  "raw_review_status": "PASS: same-team separate-agent bounded source review, with fresh isolated compiles",
+  "utc": "2026-10-24T19:42:40.978492+00:00",
+  "raw_review": "verification/development_p59/RAW_REVIEW_BY_DENSITY.json",
+  "raw_review_sha256": "60d52243317dfb15dd0494a05c59d1c3f80f3c8412bbc404badd60a4d0121fc4"
+}

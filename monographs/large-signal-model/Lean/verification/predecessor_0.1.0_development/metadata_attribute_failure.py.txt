@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""Check source/register correspondence and axiom-parser failure behavior.
+These are metadata/tooling tests, not additional mathematical proofs.
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import re
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+def digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--out', type=Path)
+    args = ap.parse_args()
+    records = []
+    def record(name: str, condition: bool) -> None:
+        require(condition, name)
+        records.append({'name': name, 'passed': True})
+    decls = json.loads((ROOT/'DECLARATIONS.json').read_text())
+    by_name = {x['name']: x for x in decls}
+    record('91 unique named declarations', len(decls) == len(by_name) == 91)
+    for d in decls:
+        line = (ROOT/d['file']).read_text().splitlines()[d['line']-1]
+        require(re.search(r'\b'+d['kind']+r'\s+'+re.escape(d['name'].split('.')[-1])+r'\b', line) is not None,
+                f'incorrect source location: {d["name"]}')
+    record('Every declared source location resolves', True)
+    actual_count = 0
+    for path in (ROOT/'KomorebiLSM').glob('*.lean'):
+        actual_count += len(re.findall(r'^\s*(?:noncomputable\s+)?(?:theorem|def|structure|abbrev)\s+\w+',
+                                     path.read_text(), re.M))
+    record('Full named-source declaration count agrees', actual_count == len(decls))
+    record('71 theorems, 14 in the examples module',
+           sum(d['kind']=='theorem' for d in decls)==71 and
+           sum(d['kind']=='theorem' and d['module']=='Examples' for d in decls)==14)
+    cover = json.loads((ROOT/'COVERAGE.json').read_text())
+    original = json.loads((ROOT/'source/PROOF_REGISTER_1.0.0.json').read_text())
+    origins = {x['id']: x for x in original['entries']}
+    record('All 87 manuscript propositions appear exactly once',
+           sorted(x['proposition'] for x in cover['entries'])==list(range(1,88)))
+    for entry in cover['entries']:
+        require(entry['theory_statement_proof_sha256'] == origins[entry['proposition']]['statement_proof_sha256'],
+                f'changed manuscript linkage: {entry["proposition"]}')
+        for target in entry['lean_targets']:
+            require(target['name'] in by_name, 'missing Lean target')
+            require(all(target[k]==by_name[target['name']][k] for k in ('kind','file','line','module')),
+                    'inconsistent Lean target metadata')
+            require(target['source_sha256']==digest(ROOT/target['file']), 'stale Lean target hash')
+    record('Every coverage target and statement hash matches', True)
+    record('Coverage is 8 complete, 1 partial, 78 unformalized',
+           [x['proposition'] for x in cover['entries'] if x['status']=='complete']==[1,2,4,5,6,7,10,22]
+           and [x['proposition'] for x in cover['entries'] if x['status']=='partial']==[3]
+           and sum(x['status']=='not_formalized' for x in cover['entries'])==78)
+    lineage = json.loads((ROOT/'SOURCE_LINEAGE.json').read_text())
+    record('Frozen source files match declared lineage',
+           all(digest(ROOT/'source'/name)==sha for name,sha in lineage['source_files'].items()))
+    record('Original manuscript matches its original proof register hash',
+           digest(ROOT/'source/FOUNDATIONS_1.0.0.md')==original['source_sha256'])
+    audit_names = re.findall(r'^#print axioms (\S+)$',(ROOT/'AxiomAudit.lean').read_text(),re.M)
+    record('Axiom commands audit exactly the declaration inventory',
+           len(audit_names)==len(set(audit_names)) and set(audit_names)==set(by_name))
+    spec = importlib.util.spec_from_file_location('lsm_verify',ROOT/'scripts/verify.py')
+    require(spec is not None and spec.loader is not None, 'unable to load verifier')
+    mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+    record('Axiom-free parser record accepted', mod.parse_axioms("'x' does not depend on any axioms",{'x'})=={'x':[]})
+    record('Standard-axiom parser record accepted',
+           set(mod.parse_axioms("'x' depends on axioms: [propext, Classical.choice, Quot.sound]",{'x'})['x'])==mod.ALLOWED_AXIOMS)
+    for name,text,expected in [
+        ('Placeholder dependency rejected',"'x' depends on axioms: [sorryAx]",{'x'}),
+        ('Custom dependency rejected',"'x' depends on axioms: [inventedAssumption]",{'x'}),
+        ('Missing declaration rejected',"'x' does not depend on any axioms",{'x','y'}),
+        ('Extra declaration rejected',"'x' does not depend on any axioms\n'y' does not depend on any axioms",{'x'}),
+        ('Duplicate record rejected',"'x' does not depend on any axioms\n'x' does not depend on any axioms",{'x'}),
+        ('Truncated dependency record rejected',"'x' depends on axioms: [propext",{'x'}),
+    ]:
+        rejected=False
+        try: mod.parse_axioms(text,expected)
+        except ValueError: rejected=True
+        record(name,rejected)
+    result={'kind':'metadata_and_tooling','passed':True,'record_count':len(records),'records':records}
+    if args.out:
+        args.out.parent.mkdir(parents=True,exist_ok=True)
+        args.out.write_text(json.dumps(result,indent=2)+'\n')
+    print(f'PASS: {len(records)} metadata and tooling checks; not mathematical theorem counts.')
+
+if __name__=='__main__': main()

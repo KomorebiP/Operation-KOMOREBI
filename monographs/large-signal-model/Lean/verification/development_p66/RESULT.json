@@ -1,0 +1,108 @@
+{
+  "schema": "komorebi.p66.author-result.v1",
+  "status": "ALL_AUTHOR_CHECKS_PASS",
+  "created_utc": "2026-10-24T20:11:51.842511+00:00",
+  "source_target": {
+    "file": "source/FOUNDATIONS_1.0.0.md",
+    "lines": [
+      3070,
+      3106
+    ],
+    "proposition": 66
+  },
+  "scope": "Seven new P66 modules only; no claim of cumulative .19 release verification.",
+  "modules": {
+    "ConditionalBernoulli": {
+      "source_sha256": "6c28ce0cc17f998205a242790a87b025d856ec1c1a15d4cc9b6134347d03d56f",
+      "named_declarations": 2,
+      "named_theorems": 2
+    },
+    "ConditionalHoeffding": {
+      "source_sha256": "d87803fd11bfcdcdc404d48c0b0ea4fc7cb25d8b1ff49116d77c193d1cb8f1df",
+      "named_declarations": 2,
+      "named_theorems": 2
+    },
+    "CountableConfidence": {
+      "source_sha256": "7b45b66c2e87148bfd6e42d3214a2ac92f142e44fc0b05f859f897272e7ecc73",
+      "named_declarations": 4,
+      "named_theorems": 4
+    },
+    "PredictableResidualGeneral": {
+      "source_sha256": "0c80178aa6913b671a66d9fde67eb30b32e5a13bd72109705a56275a4cca7234",
+      "named_declarations": 7,
+      "named_theorems": 7
+    },
+    "PredictableResidualAnytime": {
+      "source_sha256": "f37aa6d8a94f40e71132f92aaa8d314ebd04e11b62f0b95dca8e880429981e2c",
+      "named_declarations": 3,
+      "named_theorems": 3
+    },
+    "PredictableResidualAffine": {
+      "source_sha256": "b892d53fb47d0c498ae70bf66077ac9cddb6c7b8cfe73af76df932c5e8f4e206",
+      "named_declarations": 9,
+      "named_theorems": 8
+    },
+    "PredictableResidualP66": {
+      "source_sha256": "6f19c3370a70210fc11310fabca8d8d43586789efd843c79f75c90094c03fb73",
+      "named_declarations": 7,
+      "named_theorems": 7
+    }
+  },
+  "named_declarations": 34,
+  "named_theorems": 33,
+  "checks": {
+    "path": "verification/development_p66/CHECKS.json",
+    "sha256": "a9a4f4e7ed9433fd146950370c005035b981b68375beb4a68fc274b38cb3ce04",
+    "stages": 19,
+    "individual_compiles": 7,
+    "all_named_axioms": 34,
+    "individual_kernel_replays": 7,
+    "semantic_false_controls": 3,
+    "arbitrary_space_signature_dump": true
+  },
+  "actual_endpoints": [
+    "Komorebi.LSM.ConditionalHoeffding.centered_condExp_le",
+    "Komorebi.LSM.PredictableResidualGeneral.predictable_sum_subgaussian",
+    "Komorebi.LSM.PredictableResidualAnytime.time_uniform_rules",
+    "Komorebi.LSM.PredictableResidualGeneral.predictable_residual_interval_certificate",
+    "Komorebi.LSM.PredictableResidualGeneral.predictable_residual_interval_finite",
+    "Komorebi.LSM.PredictableResidualGeneral.registration_transport",
+    "Komorebi.LSM.PredictableResidualGeneral.selected_interval_bound"
+  ],
+  "source_dictionary": {
+    "actual conditional exponential": "ConditionalHoeffding.centered_condExp_le derives it from bounded [0,1] random variables, scalar secant and actual conditional expectation. No conditional-law kernel or assumed conditional-MGF field.",
+    "arbitrary probability sample space": "Explicit measurable-space and filtration arguments; no StandardBorelSpace hypothesis.",
+    "predictable residual and drift": "Inherited exact residual_sub_drift equality connects literal residual and drift sums to actual conditional-expectation-centered sums. Changing predictions p cancel pointwise.",
+    "time and registered rules": "Actual tail plus telescoping alpha/[t(t+1)] allocation; arbitrary Countable J with summable positive NNReal budgets.",
+    "general interval": "Actual affine conditional expectation; rulewise lower and nonnegative width, including width zero.",
+    "finite/countable transport": "Finite version has literal finite budget sum. Equivalence transport preserves summability, exact tsum and simultaneous event.",
+    "selected time": "One pathwise simultaneous event covers data-selected positive finite times and registered rules."
+  },
+  "allowed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "baseline_untouched": {
+    "PredictableResidual": "ace3ef2c5b8d499c10da957c7e34dac2b5751e7c6acc02696a36ce2b2548dc65",
+    "SequentialConfidence": "087f87085374b90c464c3afb9626938bccf77b840a2246bc63725bad54010b62"
+  },
+  "negative_controls": [
+    {
+      "path": "negative_controls/ConditionalBernoulliMissingCentering.lean",
+      "source_sha256": "9922f2bb57753508dbdb8f6a61450aece272bbfd715daa51ab8e26a022fef012"
+    },
+    {
+      "path": "negative_controls/PredictableResidualMissingWidth.lean",
+      "source_sha256": "db94c20d6c1118863c93d086e587f2b90d5f2caf9592675e6d0bcbd85ba141c6"
+    },
+    {
+      "path": "negative_controls/P66DuplicatedRuleBudget.lean",
+      "source_sha256": "80be7835a0ce6f60dbc43bfc6c5bd734324afed0c58d61cc7c80aae6ec967a5c"
+    }
+  ],
+  "development_correction": "The third negative control originally failed with incidental noncomputability/API diagnostics. Its corrected source now yields exactly one intended unsolved False goal. Original rejected attempt and log are retained; mathematical sources were unchanged.",
+  "independent_raw_review": "Assigned to sibling rotation_density; pending separate receipt.",
+  "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+  "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+}

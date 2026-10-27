@@ -1,0 +1,125 @@
+{
+  "reviewer": "l2_refinement subagent",
+  "provenance": "Separate-agent raw-proof derivation in the same model/team lineage. The reviewer did not author SequentialLowerCertificate.lean. Not independent external review.",
+  "review_kind": "raw proof derivation, quantifier, actual-law semantic dictionary and vacuity audit",
+  "claim_id": 68,
+  "claim": "On the supplied simultaneous residual event, at every positive time and every registered rule, average actual next-law total variation is at least positive-part residual excess divided by time.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e",
+    "statement_lines": [
+      3145,
+      3156
+    ]
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "input": {
+    "path": "KomorebiLSM/SequentialLowerCertificate.lean",
+    "sha256": "939b100c649dc01f58f82117c76a3166905783d84717c4267682f8b0b92befc7"
+  },
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "assumptions": [
+    "An arbitrary measurable observation space, with actual P_s,j and Q_s,j probability measures on that same space.",
+    "Each actual test phi_s,j is measurable and pointwise lies in [0,1].",
+    "The observed residual is evaluated with the Q-test integral, while drift uses the P-test integral minus the Q-test integral on the same sequence.",
+    "The event premise |R_t,j-D_t,j| <= boundary_t,j holds simultaneously at all positive times and registered rules.",
+    "The conclusions are pathwise conditional implications. Proposition 66 supplies any probability/confidence interpretation externally."
+  ],
+  "dependency_graph": [
+    "lawTV is one half of the total mass of the Hahn-Jordan total variation of the actual signed difference P.toSignedMeasure-Q.toSignedMeasure.",
+    "P and Q are finite probability laws, so bounded measurable tests and their centered versions phi-1/2 are integrable.",
+    "Signed-measure integral linearity identifies the signed integral of phi-1/2 with integral_P(phi)-integral_Q(phi); equal unit masses cancel the two constant terms.",
+    "The centered test has norm <=1/2 everywhere. The vector-measure integral bound with scalar multiplication bilinear map of norm one gives the desired discrepancy bound with constant 1 relative to the probability TV convention.",
+    "The absolute drift is bounded by the finite sum of absolute mean discrepancies, hence by the finite sum of actual lawTV values.",
+    "The triangle inequality |R| <= |R-D|+|D| and the event premise imply max(|R|-boundary,0) <= |D|.",
+    "Transitivity followed by division by positive real t proves the lower certificate.",
+    "The simultaneous endpoint specializes this same implication at every t>0 and every j without adding independence or changing the event."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "Actual Jordan variation, rather than a user-supplied distance or unrelated nonnegative error budget.",
+      "status": "passed",
+      "evidence": "lawTV lines 26-28 uses SignedMeasure.totalVariation; source equality to vector variation checked in pinned Mathlib."
+    },
+    {
+      "obligation": "Arbitrary measurable observation space; no finite-alphabet or common-density restriction.",
+      "status": "passed",
+      "evidence": "Only [MeasurableSpace Omega] is required for main endpoints. MeasurableSingletonClass occurs only in the optional Dirac example."
+    },
+    {
+      "obligation": "Bounded-test inequality has constant one for tests in [0,1].",
+      "status": "passed",
+      "evidence": "Lines 70-94 center at 1/2, cancel equal law masses, and multiply variation by 1/2. No lost factor of two."
+    },
+    {
+      "obligation": "Mass cancellation is actually proved from probability normalization.",
+      "status": "passed",
+      "evidence": "Lines 76-84 invoke signed integral subtraction, ordinary integral subtraction, integral_const and measure_univ=1."
+    },
+    {
+      "obligation": "Required integrability is derived from boundedness and finite probability mass.",
+      "status": "passed",
+      "evidence": "bounded_test_integrable plus centered hp/hq integrability; vector integral subtraction hypotheses explicitly discharged."
+    },
+    {
+      "obligation": "Positive-part lower certificate follows from the residual event, without assuming the intended TV conclusion.",
+      "status": "passed",
+      "evidence": "residual_excess_le_abs_drift and abs_drift_le_tv_sum are derived separately then combined."
+    },
+    {
+      "obligation": "Correct time orientation and denominator; t=0 excluded.",
+      "status": "passed",
+      "evidence": "Finset.range t stores the first time at index zero; t>0 gives positive real denominator."
+    },
+    {
+      "obligation": "One simultaneous event supports all positive times and all rules.",
+      "status": "passed",
+      "evidence": "simultaneous_sequential_lower_certificate has the corresponding forall-t forall-j premise and conclusion."
+    },
+    {
+      "obligation": "No unjustified non-crossing upper bound.",
+      "status": "passed",
+      "evidence": "zero_test_misses_disjoint_laws exhibits zero test residual with actual TV=1, using the proved normalization of distinct Dirac laws."
+    }
+  ],
+  "upstream_source_checks": [
+    {
+      "path": "Mathlib/MeasureTheory/VectorMeasure/Integral.lean",
+      "facts": [
+        "integral_sub_vectorMeasure lines 558-562",
+        "integral_toSignedMeasure lines 671-677",
+        "norm_integral_le_of_norm_le_const lines 772 onward"
+      ],
+      "result": "Exact hypotheses and constant checked directly in pinned local source."
+    },
+    {
+      "path": "Mathlib/MeasureTheory/VectorMeasure/Variation/SignedMeasure.lean",
+      "facts": [
+        "totalVariation_eq_variation lines 63-81"
+      ],
+      "result": "Identifies Hahn-Jordan totalVariation with vector variation for the actual signed measure."
+    }
+  ],
+  "residual_limits": [
+    "This module does not prove or construct Proposition 66 concentration, its simultaneous event, or its registered false-rejection budget. It proves the exact P68 implication conditional on that event.",
+    "Conditional laws at actual histories/actions are supplied as actual probability measures. Existence of regular conditional distributions, their history measurability, predictability, and data-driven estimation are not inferred here.",
+    "The rule family is arbitrary for this pathwise implication. A probabilistic simultaneous-event construction for a registered family retains its own countability/budget assumptions.",
+    "Failure to cross gives no general TV upper bound, rank certificate, or guarantee for untested actions. The zero-test example demonstrates that limit."
+  ],
+  "strongest_safe_statement": "For arbitrary measurable observation laws and measurable [0,1]-valued tests, the full all-time/all-rule lower-TV certificate holds pathwise on the actual simultaneous residual event. No extra concentration assertion is included.",
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true work/Komorebi_LSM_Lean_0.14.0/KomorebiLSM/SequentialLowerCertificate.lean",
+    "exit_code": 0,
+    "scope": "Fresh source acceptance for the reviewed hash. Parent retains responsibility for integrated exhaustive axiom audit and kernel replay."
+  },
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "cheapest_next_check": "Integrated clean compilation, exhaustive declaration axiom audit, and kernel replay for exactly the reviewed source hash."
+}

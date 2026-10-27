@@ -1,0 +1,16 @@
+import KomorebiLSM.LorentzBoundaryFragility
+
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.UnitSpatial
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.normalizedSize
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation_apply
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation_normalized
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation_mass
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation_range
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation_rank_one
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.outwardPerturbation_size
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.exists_aligned_unit
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.boundary_fragility
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.mass_row_zero_of_subsingleton
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.zero_dimensional_impossibility
+#print axioms Komorebi.LSM.LorentzBoundaryFragility.euclidean_boundary_fragility

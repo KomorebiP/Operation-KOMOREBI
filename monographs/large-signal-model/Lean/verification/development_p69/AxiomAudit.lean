@@ -1,0 +1,49 @@
+import KomorebiLSM.KernelTVMeasurable
+import KomorebiLSM.ObservationLawKernels
+import KomorebiLSM.ObservationLawComparison
+
+#print axioms Komorebi.LSM.KernelTVMeasurable.distance
+#print axioms Komorebi.LSM.KernelTVMeasurable.leftDensity
+#print axioms Komorebi.LSM.KernelTVMeasurable.rightDensity
+#print axioms Komorebi.LSM.KernelTVMeasurable.leftDensity_measurable
+#print axioms Komorebi.LSM.KernelTVMeasurable.rightDensity_measurable
+#print axioms Komorebi.LSM.KernelTVMeasurable.leftDensity_kernel
+#print axioms Komorebi.LSM.KernelTVMeasurable.rightDensity_kernel
+#print axioms Komorebi.LSM.KernelTVMeasurable.leftDensity_measure
+#print axioms Komorebi.LSM.KernelTVMeasurable.rightDensity_measure
+#print axioms Komorebi.LSM.KernelTVMeasurable.distance_eq_lintegral
+#print axioms Komorebi.LSM.KernelTVMeasurable.distance_measurable
+#print axioms Komorebi.LSM.KernelTVMeasurable.distance_nonneg
+#print axioms Komorebi.LSM.KernelTVMeasurable.distance_le_one
+#print axioms Komorebi.LSM.KernelTVMeasurable.distance_integrable
+#print axioms Komorebi.LSM.ObservationLawKernels.History
+#print axioms Komorebi.LSM.ObservationLawKernels.initial
+#print axioms Komorebi.LSM.ObservationLawKernels.append
+#print axioms Komorebi.LSM.ObservationLawKernels.drop
+#print axioms Komorebi.LSM.ObservationLawKernels.initial_measurable
+#print axioms Komorebi.LSM.ObservationLawKernels.append_measurable
+#print axioms Komorebi.LSM.ObservationLawKernels.drop_measurable
+#print axioms Komorebi.LSM.ObservationLawKernels.Policy
+#print axioms Komorebi.LSM.ObservationLawKernels.ObservationKernel
+#print axioms Komorebi.LSM.ObservationLawKernels.law
+#print axioms Komorebi.LSM.ObservationLawKernels.law_probability_aux
+#print axioms Komorebi.LSM.ObservationLawKernels.law_probability
+#print axioms Komorebi.LSM.ObservationLawKernels.law_zero_probability
+#print axioms Komorebi.LSM.ObservationLawKernels.law_succ_probability
+#print axioms Komorebi.LSM.ObservationLawKernels.policyPrefix
+#print axioms Komorebi.LSM.ObservationLawKernels.policyPrefix_probability
+#print axioms Komorebi.LSM.ObservationLawKernels.law_consistent
+#print axioms Komorebi.LSM.ObservationLawKernels.lintegral_law_succ
+#print axioms Komorebi.LSM.ObservationLawComparison.compProd_change
+#print axioms Komorebi.LSM.ObservationLawComparison.drift
+#print axioms Komorebi.LSM.ObservationLawComparison.drift_nonneg
+#print axioms Komorebi.LSM.ObservationLawComparison.drift_integrable
+#print axioms Komorebi.LSM.ObservationLawComparison.drift_eq_iterated
+#print axioms Komorebi.LSM.ObservationLawComparison.law_step
+#print axioms Komorebi.LSM.ObservationLawComparison.lawTV_le_expected
+#print axioms Komorebi.LSM.ObservationLawComparison.lawTV_same_initial
+#print axioms Komorebi.LSM.ObservationLawComparison.drift_le_uniform
+#print axioms Komorebi.LSM.ObservationLawComparison.lawTV_le_uniform
+#print axioms Komorebi.LSM.ObservationLawComparison.lawTV_same_initial_uniform
+#print axioms Komorebi.LSM.ObservationLawComparison.lawTV_fixed_history
+#print axioms Komorebi.LSM.ObservationLawComparison.lawTV_readout

@@ -1,0 +1,30 @@
+import KomorebiLSM.RobustOrientedMargin
+
+#print axioms Komorebi.LSM.RobustOrientedMargin.slack
+#print axioms Komorebi.LSM.RobustOrientedMargin.slack_add_lower
+#print axioms Komorebi.LSM.RobustOrientedMargin.exists_minimum
+#print axioms Komorebi.LSM.RobustOrientedMargin.worstInput
+#print axioms Komorebi.LSM.RobustOrientedMargin.sigma
+#print axioms Komorebi.LSM.RobustOrientedMargin.worstInput_mem
+#print axioms Komorebi.LSM.RobustOrientedMargin.sigma_le
+#print axioms Komorebi.LSM.RobustOrientedMargin.le_sigma_iff
+#print axioms Komorebi.LSM.RobustOrientedMargin.normalized_residual
+#print axioms Komorebi.LSM.RobustOrientedMargin.residual_margin
+#print axioms Komorebi.LSM.RobustOrientedMargin.preserves_of_normalized
+#print axioms Komorebi.LSM.RobustOrientedMargin.robust_preserves
+#print axioms Komorebi.LSM.RobustOrientedMargin.strict_residual
+#print axioms Komorebi.LSM.RobustOrientedMargin.positive_posterior
+#print axioms Komorebi.LSM.RobustOrientedMargin.polynomial_add
+#print axioms Komorebi.LSM.RobustOrientedMargin.MarginCertificate
+#print axioms Komorebi.LSM.RobustOrientedMargin.MarginCertificate.preserves
+#print axioms Komorebi.LSM.RobustOrientedMargin.uncertainInstrument
+#print axioms Komorebi.LSM.RobustOrientedMargin.uncertain_record_probability
+#print axioms Komorebi.LSM.RobustOrientedMargin.pullbackOperator
+#print axioms Komorebi.LSM.RobustOrientedMargin.pullbackOperator_action
+#print axioms Komorebi.LSM.RobustOrientedMargin.pullback_weighted_action
+#print axioms Komorebi.LSM.RobustOrientedMargin.pullback_polynomial_action
+#print axioms Komorebi.LSM.RobustOrientedMargin.atlas_mass_agrees
+#print axioms Komorebi.LSM.RobustOrientedMargin.atlas_base_iff
+#print axioms Komorebi.LSM.RobustOrientedMargin.atlas_moment_mass_iff
+#print axioms Komorebi.LSM.RobustOrientedMargin.atlasUncertainInstrument
+#print axioms Komorebi.LSM.RobustOrientedMargin.atlas_record_probability

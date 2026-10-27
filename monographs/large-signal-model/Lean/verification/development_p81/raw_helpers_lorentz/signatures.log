@@ -1,0 +1,23 @@
+@Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.random_factor_condExp_le : ∀ {Ω : Type u_1}
+  {m : MeasurableSpace Ω} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} {X : Ω → ℝ} {σ : ℝ} {hm : m ≤ mΩ},
+  Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian hm X σ μ →
+    ∀ [MeasureTheory.IsProbabilityMeasure μ] (a : Ω → ℝ),
+      Measurable a → μ[Komorebi.LSM.RegressionConfidence.factor X σ a | m] ≤ᵐ[μ] fun x => 1
+@Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian.weighted_factor_integrable : ∀ {Ω : Type u_1}
+  {m : MeasurableSpace Ω} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω} {X : Ω → ℝ} {σ : ℝ} {hm : m ≤ mΩ},
+  Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian hm X σ μ →
+    ∀ [MeasureTheory.IsProbabilityMeasure μ] (a : Ω → ℝ),
+      Measurable a →
+        ∀ (W : Ω → ℝ),
+          Measurable W →
+            MeasureTheory.Integrable W μ →
+              (∀ (ω : Ω), 0 ≤ W ω) →
+                MeasureTheory.Integrable (fun ω => W ω * Komorebi.LSM.RegressionConfidence.factor X σ a ω) μ
+@Komorebi.LSM.RegressionConfidence.exponentialMixture_supermartingale : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω]
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {I : Type u_2} [inst : Fintype I]
+  (ℱ : MeasureTheory.Filtration ℕ mΩ) (σ : ℝ) (φ : ℕ → Ω → I → ℝ) (ξ : ℕ → Ω → ℝ),
+  (∀ (n : ℕ) (i : I), Measurable fun ω => φ n ω i) →
+    (∀ (n : ℕ), Measurable (ξ n)) →
+      (∀ (n : ℕ), Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian ⋯ (ξ n) σ μ) →
+        ∀ (ν : MeasureTheory.Measure (I → ℝ)) [MeasureTheory.IsProbabilityMeasure ν],
+          MeasureTheory.Supermartingale (Komorebi.LSM.RegressionConfidence.exponentialMixture σ φ ξ ν) ℱ μ

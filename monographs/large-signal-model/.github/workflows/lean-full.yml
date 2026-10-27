@@ -1,0 +1,82 @@
+name: Full clean Lean verification
+
+# This workflow is opt-in. It never publishes or modifies a release.
+"on":
+  workflow_dispatch:
+    inputs:
+      dependency_mode:
+        description: "Pinned mathlib artifacts: official cache or build from source"
+        type: choice
+        options: [cache, source]
+        default: cache
+      per_stage_timeout:
+        description: "Seconds allowed for each Lean stage"
+        type: string
+        default: "900"
+
+  workflow_call:
+    inputs:
+      dependency_mode:
+        type: string
+        default: cache
+      per_stage_timeout:
+        type: string
+        default: "900"
+    outputs:
+      verified_commit:
+        description: "Commit whose complete fresh verifier run passed"
+        value: ${{ jobs.verify.outputs.verified_commit }}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: full-lean-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Clean compilation, axiom audit, kernel replay and controls
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    outputs:
+      verified_commit: ${{ steps.verified_commit.outputs.sha }}
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      ELAN_HOME: ${{ runner.temp }}/lsm-elan
+      LSM_CI_OUTPUT: ${{ runner.temp }}/lsm-ci
+      LSM_CI_KIT: ${{ runner.temp }}/lsm-kit
+      LSM_DEPENDENCY_MODE: ${{ inputs.dependency_mode }}
+      LSM_STAGE_TIMEOUT: ${{ inputs.per_stage_timeout }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Check frozen inputs before creating build output
+        run: python3 ci/quick_checks.py --project Lean
+      - name: Install pinned elan
+        run: bash ci/install_elan.sh
+      - name: Prepare pinned Lake dependencies and verifier adapter
+        run: >-
+          python3 ci/bootstrap_lake_kit.py --project Lean
+          --kit "$LSM_CI_KIT" --mode "$LSM_DEPENDENCY_MODE"
+          --receipt "$LSM_CI_OUTPUT/bootstrap.json"
+      - name: Run the unchanged release verifier on clean project objects
+        run: >-
+          python3 ci/run_full_verification.py --project Lean
+          --kit "$LSM_CI_KIT" --out "$LSM_CI_OUTPUT/verification"
+          --timeout "$LSM_STAGE_TIMEOUT"
+      - name: Record the successfully verified commit
+        id: verified_commit
+        run: printf 'sha=%s\n' "$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+      - name: Preserve this run's receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: lean-verification-${{ github.sha }}
+          path: ${{ runner.temp }}/lsm-ci/
+          if-no-files-found: warn
+          retention-days: 14

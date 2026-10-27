@@ -1,0 +1,82 @@
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/ObservableMomentConfidence.lean:78:10: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  Measure.real ?m.457
+    (regressionGood (γ k.1) (σ k) (↑(α k)) (gatedDesign D P k.1) (gatedResponse D P k.1 (g k.2.1) k.2.2)
+        (rowParameter D g k))ᶜ
+in the target expression
+  μ.real (rowGoodEvent D P γ σ α g k)ᶜ ≤ ↑(α k)
+
+Ω : Type u_1
+H : Type u_2
+A : Type u_3
+Y : Type u_4
+p r : ℕ
+mΩ : MeasurableSpace Ω
+mH : MeasurableSpace H
+inst✝⁵ : MeasurableSpace Y
+inst✝⁴ : MeasurableSpace A
+inst✝³ : Fintype A
+inst✝² : MeasurableSingletonClass A
+C : BaseNorm.ProbabilityCone (Fin r → ℝ)
+ν : Measure Y
+inst✝¹ : IsProbabilityMeasure ν
+D : ContinuousInstrument.DensityInstrument C ν
+μ : Measure Ω
+inst✝ : IsProbabilityMeasure μ
+ℱ : Filtration ℕ mΩ
+P : AccessibleProcess D ℱ
+γ : A → ℝ
+hγ : ∀ (a : A), 0 < γ a
+σ S : RowIndex A p r → ℝ
+hσ : ∀ (k : RowIndex A p r), 0 < σ k
+α : RowIndex A p r → ℝ≥0
+hα : ∀ (k : RowIndex A p r), 0 < α k
+δ : ℝ≥0
+hbudget : ∑ k, α k ≤ δ
+g : Fin p → Y → ℝ
+hg : ∀ (j : Fin p), Measurable (g j)
+hθ : ∀ (k : RowIndex A p r), euclideanNorm (rowParameter D g k) ≤ S k
+Hnoise :
+  ∀ (k : RowIndex A p r) (n : ℕ),
+    ConditionalSubgaussian ⋯
+      (regressionNoise (rowParameter D g k) (gatedDesign D P k.1) (gatedResponse D P k.1 (g k.2.1) k.2.2) n) (σ k) μ
+hc :
+  ∀ (k : RowIndex A p r),
+    MeasurableSet
+        (regressionGood (γ k.1) (σ k) (↑(α k)) (gatedDesign D P k.1) (gatedResponse D P k.1 (g k.2.1) k.2.2)
+          (rowParameter D g k)) ∧
+      1 - ↑(α k) ≤
+          μ.real
+            (regressionGood (γ k.1) (σ k) (↑(α k)) (gatedDesign D P k.1) (gatedResponse D P k.1 (g k.2.1) k.2.2)
+              (rowParameter D g k)) ∧
+        ∀
+          ω ∈
+            regressionGood (γ k.1) (σ k) (↑(α k)) (gatedDesign D P k.1) (gatedResponse D P k.1 (g k.2.1) k.2.2)
+              (rowParameter D g k),
+          ∀ (n : ℕ),
+            weightedNorm (ridgeMatrix (γ k.1) (fun i => gatedDesign D P k.1 i ω) n)
+                (ridgeEstimate (γ k.1) (fun i => gatedDesign D P k.1 i ω)
+                    (fun i => gatedResponse D P k.1 (g k.2.1) k.2.2 i ω) n -
+                  rowParameter D g k) ≤
+              noiseRadius (γ k.1) (σ k) (↑(α k)) (fun i => gatedDesign D P k.1 i ω) n + √(γ k.1) * S k
+k : RowIndex A p r
+⊢ μ.real (rowGoodEvent D P γ σ α g k)ᶜ ≤ ↑(α k)
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/ObservableMomentConfidence.lean:83:4: error: Type mismatch: After simplification, term
+  hu
+ has type
+  @LE.le ℝ Real.instLE (1 - ↑δ) (μ.real (⋂ j, rowGoodEvent D P γ σ α g j))
+but is expected to have type
+  @LE.le ℝ Real.instLE (1 - ↑δ) (μ.real (operatorGoodEvent D P γ σ α g))
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/ObservableMomentConfidence.lean:86:4: error: Type mismatch: After simplification, term
+  hr
+ has type
+  @LE.le ℝ Real.instLE
+    (weightedNorm (ridgeMatrix (γ a) (fun i => gatedDesign D P a i ω) n)
+      (ridgeEstimate (γ a) (fun i => gatedDesign D P a i ω) (fun i_1 => gatedResponse D P a (g j) i i_1 ω) n -
+        rowParameter D g (a, j, i)))
+    (noiseRadius (γ a) (σ (a, j, i)) (↑(α (a, j, i))) (fun i => gatedDesign D P a i ω) n + √(γ a) * S (a, j, i))
+but is expected to have type
+  @LE.le ℝ Real.instLE
+    (weightedNorm (ridgeMatrix (γ a) (fun s => gatedDesign D P a s ω) n) fun l =>
+      ridgeEstimate (γ a) (fun s => gatedDesign D P a s ω) (fun s => gatedResponse D P a (g j) i s ω) n l -
+        momentMatrix D (g j) a i l)
+    (noiseRadius (γ a) (σ (a, j, i)) (↑(α (a, j, i))) (fun s => gatedDesign D P a s ω) n + √(γ a) * S (a, j, i))

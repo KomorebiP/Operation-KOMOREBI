@@ -1,0 +1,137 @@
+import KomorebiLSM.InstrumentContraction
+import KomorebiLSM.FiniteTV
+
+/-! P43: actual finite records and their unnormalized state trees.
+Every horizon is proved by induction, without a branch-likelihood lower bound. -/
+set_option autoImplicit false
+namespace Komorebi.LSM.ObservationTree
+open scoped BigOperators
+open BaseNorm FiniteBayes
+
+/-- Chronological fixed-length records. -/
+def Record (O : Type*) : ℕ → Type _
+  | 0 => PUnit
+  | n+1 => O × Record O n
+
+instance recordFintype {O : Type*} [Fintype O] : (n : ℕ) → Fintype (Record O n)
+  | 0 => inferInstanceAs (Fintype PUnit)
+  | n+1 => by
+    letI : Fintype (Record O n) := recordFintype n
+    exact inferInstanceAs (Fintype (O × Record O n))
+
+def recordList {O : Type*} : {n : ℕ} → Record O n → List O
+  | 0, _ => []
+  | _+1, w => w.1 :: recordList w.2
+
+theorem recordList_length {O : Type*} (n : ℕ) (w : Record O n) : (recordList w).length=n := by
+  induction n with
+  | zero => rfl
+  | succ n ih => exact congrArg Nat.succ (ih w.2)
+
+def recordMap {O J : Type*} (f : O → J) : {n : ℕ} → Record O n → Record J n
+  | 0, _ => PUnit.unit
+  | _+1, w => (f w.1,recordMap f w.2)
+
+variable {E O : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable [Fintype O] (C : ProbabilityCone E)
+
+/-- The next map is selected using the complete chronological prefix. -/
+def recordState (B : List O → O → E →ₗ[ℝ] E) :
+    (n : ℕ) → List O → E → Record O n → E
+  | 0, _, x, _ => x
+  | n+1, h, x, w => recordState B n (h ++ [w.1]) (B h w.1 x) w.2
+
+noncomputable def recordLaw (B : List O → O → E →ₗ[ℝ] E) (n : ℕ) (h : List O) (x : E) :
+    Record O n → ℝ := fun w => C.mass (recordState B n h x w)
+
+theorem recordState_mem (B : List O → O → E →ₗ[ℝ] E)
+    (hB : ∀ h, C.Instrument (B h)) (n : ℕ) (h : List O) (x : E) (hx : x ∈ C.carrier)
+    (w : Record O n) : recordState B n h x w ∈ C.carrier := by
+  induction n generalizing h x with
+  | zero => exact hx
+  | succ n ih => exact ih _ _ ((hB h).1 w.1 x hx) w.2
+
+theorem record_mass (B : List O → O → E →ₗ[ℝ] E)
+    (hB : ∀ h, C.Instrument (B h)) (n : ℕ) (h : List O) (x : E) :
+    ∑ w, C.recordLaw B n h x w=C.mass x := by
+  induction n generalizing h x with
+  | zero => simp [recordLaw,recordState,Record]
+  | succ n ih =>
+    change (∑ w : O × Record O n, C.recordLaw B n (h++[w.1]) (B h w.1 x) w.2)=C.mass x
+    rw [Fintype.sum_prod_type]
+    simp_rw [ih]
+    exact (hB h).2 x
+
+theorem record_prior (B : List O → O → E →ₗ[ℝ] E)
+    (hB : ∀ h, C.Instrument (B h)) (n : ℕ) (h : List O) (x : E) (hx : x ∈ C.base) :
+    IsPrior (C.recordLaw B n h x) :=
+  ⟨fun w => C.mass_nonneg (C.recordState_mem B hB n h x hx.1 w),
+    (C.record_mass B hB n h x).trans hx.2⟩
+
+noncomputable def tailBudget (ε : ℕ → ℝ) (t n : ℕ) : ℝ := ∑ k ∈ Finset.range n, ε (t+k)
+
+theorem tailBudget_succ (ε : ℕ → ℝ) (t n : ℕ) :
+    tailBudget ε t (n+1)=ε t+tailBudget ε (t+1) n := by
+  unfold tailBudget
+  rw [Finset.sum_range_succ']
+  simp only [Nat.add_zero]
+  congr 1
+  apply Finset.sum_congr rfl
+  intro k _
+  congr 1
+  omega
+
+/-- The central positive-mass-weighted tree induction. -/
+theorem record_state_error (B D : List O → O → E →ₗ[ℝ] E)
+    (hB : ∀ h, C.Instrument (B h)) (hD : ∀ h, C.Instrument (D h))
+    (ε : ℕ → ℝ) (hε : ∀ h z, z ∈ C.base → C.discrepancy (B h) (D h) z ≤ ε h.length)
+    (n : ℕ) (h : List O) (x y : E) (hy : y ∈ C.carrier) :
+    (∑ w, C.value (recordState B n h x w-recordState D n h y w)) ≤
+      C.value (x-y)+C.mass y*tailBudget ε h.length n := by
+  induction n generalizing h x y with
+  | zero => simp [recordState,Record,tailBudget]
+  | succ n ih =>
+    change (∑ w : O × Record O n, C.value
+      (recordState B n (h++[w.1]) (B h w.1 x) w.2-
+       recordState D n (h++[w.1]) (D h w.1 y) w.2)) ≤ _
+    rw [Fintype.sum_prod_type]
+    calc
+      _ ≤ ∑ o, (C.value (B h o x-D h o y)+
+          C.mass (D h o y)*tailBudget ε (h.length+1) n) := by
+        apply Finset.sum_le_sum
+        intro o _
+        simpa only [List.length_append,List.length_singleton] using
+          ih (h++[o]) (B h o x) (D h o y) ((hD h).1 o y hy)
+      _ = (∑ o, C.value (B h o x-D h o y))+C.mass y*tailBudget ε (h.length+1) n := by
+        rw [Finset.sum_add_distrib,← Finset.sum_mul,(hD h).2]
+      _ ≤ C.value (x-y)+ε h.length*C.mass y+C.mass y*tailBudget ε (h.length+1) n :=
+        add_le_add (C.instrument_pair_step (B h) (D h) (hB h) (ε h.length) (hε h) x hy) le_rfl
+      _ = C.value (x-y)+C.mass y*tailBudget ε h.length (n+1) := by
+        rw [tailBudget_succ]
+        ring
+
+/-- Total variation is bounded by the summed unnormalized state differences. -/
+theorem record_l1_le_state_error (B D : List O → O → E →ₗ[ℝ] E)
+    (n : ℕ) (h : List O) (x y : E) :
+    FiniteTV.l1 (C.recordLaw B n h x-C.recordLaw D n h y) ≤
+      ∑ w, C.value (recordState B n h x w-recordState D n h y w) := by
+  apply Finset.sum_le_sum
+  intro w _
+  simpa only [map_sub] using C.abs_mass_le (recordState B n h x w-recordState D n h y w)
+
+/-- P43 for arbitrary history-dependent finite branch families. -/
+theorem observation_tree_tv_bound (B D : List O → O → E →ₗ[ℝ] E)
+    (hB : ∀ h, C.Instrument (B h)) (hD : ∀ h, C.Instrument (D h))
+    (ε : ℕ → ℝ) (hε : ∀ h z, z ∈ C.base → C.discrepancy (B h) (D h) z ≤ ε h.length)
+    (n : ℕ) (x y : E) (hx : x ∈ C.base) (hy : y ∈ C.base) :
+    FiniteTV.distance (C.recordLaw B n [] x) (C.recordLaw D n [] y) ≤
+      min 1 (C.value (x-y)/2+(∑ t ∈ Finset.range n, ε t)/2) := by
+  apply le_min
+  · exact FiniteTV.distance_le_one _ _ (C.record_prior B hB n [] x hx) (C.record_prior D hD n [] y hy)
+  · have hb := (C.record_l1_le_state_error B D n [] x y).trans
+      (C.record_state_error B D hB hD ε hε n [] x y hy.1)
+    simp only [hy.2,one_mul,List.length_nil,tailBudget,Nat.zero_add] at hb
+    unfold FiniteTV.distance
+    linarith
+
+end Komorebi.LSM.ObservationTree

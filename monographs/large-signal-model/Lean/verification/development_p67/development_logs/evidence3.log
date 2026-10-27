@@ -1,0 +1,92 @@
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveEvidence.lean:87:2: error: Tactic `apply` failed: could not unify the conclusion of `@Measurable.norm`
+  Measurable fun a => ‖?f a‖
+with the goal
+  Measurable fun a =>
+    |∑ i ∈ Finset.range (n + 1), evidenceProcess ℱ action observation E φ target j i a -
+        ∑ i ∈ Finset.range (n + 1), kernelMeanProcess ℱ action observation E φ target j i a|
+
+Note: The full type of `@Measurable.norm` is
+  ∀ {α : Type ?u.159} {β : Type ?u.158} [inst : MeasurableSpace α] [inst_1 : NormedAddCommGroup α]
+    [OpensMeasurableSpace α] [inst_3 : MeasurableSpace β] {f : β → α}, Measurable f → Measurable fun a => ‖f a‖
+
+Ω : Type u_1
+A : Type u_2
+Y : Type u_3
+J : Type u_4
+mΩ : MeasurableSpace Ω
+mA : MeasurableSpace A
+mY : MeasurableSpace Y
+inst✝² : DecidableEq A
+inst✝¹ : MeasurableSingletonClass A
+μ : Measure Ω
+inst✝ : Countable J
+ℱ : Filtration ℕ mΩ
+action : ℕ → Ω → A
+observation : ℕ → Ω → Y
+E : (n : ℕ) → Experiment ⋯ (action n) (observation n)
+φ : J → ℕ → Ω × Y → ℝ
+target : J → A
+ha : ∀ (n : ℕ), Measurable (action n)
+hy : ∀ (n : ℕ), Measurable (observation n)
+hφ : ∀ (j : J) (n : ℕ), Measurable (φ j n)
+c : J → ℝ
+α : J → ℝ≥0
+j : J
+n : ℕ
+⊢ Measurable fun a =>
+    |∑ i ∈ Finset.range (n + 1), evidenceProcess ℱ action observation E φ target j i a -
+        ∑ i ∈ Finset.range (n + 1), kernelMeanProcess ℱ action observation E φ target j i a|
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveEvidence.lean:125:6: error: Type mismatch: After simplification, term
+  evidence_mem_Icc (Filtration.le ℱ n) (E n) (φ j n) (hb j n) (target j) (c j) (hc j) (hcover j n) ω
+ has type
+  @Membership.mem ℝ (Set ℝ) Set.instMembership (Set.Icc 0 (1 / c j)) (evidence ⋯ (E n) (φ j n) (target j) ω)
+but is expected to have type
+  @Membership.mem ℝ (Set ℝ) Set.instMembership (Set.Icc 0 (1 / c j))
+    (evidenceProcess ℱ action observation E φ target j n ω)
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveEvidence.lean:118:63: error: unsolved goals
+Ω : Type u_1
+A : Type u_2
+Y : Type u_3
+J : Type u_4
+mΩ : MeasurableSpace Ω
+mA : MeasurableSpace A
+mY : MeasurableSpace Y
+inst✝⁴ : Fintype A
+inst✝³ : DecidableEq A
+inst✝² : MeasurableSingletonClass A
+μ : Measure Ω
+inst✝¹ : IsProbabilityMeasure μ
+inst✝ : Countable J
+ℱ : Filtration ℕ mΩ
+action : ℕ → Ω → A
+observation : ℕ → Ω → Y
+E : (n : ℕ) → Experiment ⋯ (action n) (observation n)
+φ : J → ℕ → Ω × Y → ℝ
+target : J → A
+ha : ∀ (n : ℕ), Measurable (action n)
+hy : ∀ (n : ℕ), Measurable (observation n)
+hφ : ∀ (j : J) (n : ℕ), Measurable (φ j n)
+hb : ∀ (j : J) (n : ℕ) (ω : Ω) (y : Y), φ j n (ω, y) ∈ Set.Icc 0 1
+c : J → ℝ
+hc : ∀ (j : J), 0 < c j
+hcover : ∀ (j : J) (n : ℕ) (ω : Ω), c j ≤ propensity (E n).policy (target j) ω
+α : J → ℝ≥0
+hα : ∀ (j : J), 0 < α j
+hs : Summable α
+δ : ℝ≥0
+hbudget : ∑' (j : J), α j ≤ δ
+hδ1 : δ ≤ 1
+⊢ 1 - ↑δ ≤
+    μ.real
+      {ω |
+        ∀ (j : J) (n : ℕ),
+          |∑ i ∈ Finset.range (n + 1), evidenceProcess ℱ action observation E φ target j i ω -
+                ∑ i ∈ Finset.range (n + 1), kernelMeanProcess ℱ action observation E φ target j i ω| ≤
+            1 / c j * PredictableResidual.boundary (n + 1) ↑(α j)}
+work/Komorebi_LSM_Lean_0.19.0/KomorebiLSM/CoveredAdaptiveEvidence.lean:139:0: error: automatically included section variable(s) unused in theorem `Komorebi.LSM.CoveredAdaptiveActions.covered_bound_at_selected_time`:
+  [Fintype A]
+  [MeasurableSingletonClass A]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Fintype A] [MeasurableSingletonClass A] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`

@@ -1,0 +1,83 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true MODULE.lean",
+    "exit_code": 0,
+    "scope": "Fresh file acceptance only; integrated axiom audit and kernel replay remain parent responsibilities."
+  },
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  },
+  "claim_id": 68,
+  "claim": "On the supplied simultaneous residual event, average actual conditional law total variation over t>0 stages is at least the positive observed residual excess divided by t, simultaneously for all registered rules and times. The observation space is an arbitrary measurable space and TV is one half the total variation mass of the actual signed measure P-Q.",
+  "input": {
+    "path": "KomorebiLSM/SequentialLowerCertificate.lean",
+    "sha256": "939b100c649dc01f58f82117c76a3166905783d84717c4267682f8b0b92befc7"
+  },
+  "assumptions": [
+    "Each P_s and Q_s is an actual probability measure on the same measurable observation space.",
+    "Every selected test phi_s is measurable and takes values in [0,1].",
+    "The supplied simultaneous event gives abs(residual-drift)<=boundary at every time and rule; t>0.",
+    "In process applications, the supplied P_s,Q_s are the true and proposed next-observation laws on the same actual history/action, including a proposed-law definition there."
+  ],
+  "dependency_graph": [
+    "Bounded measurable tests are integrable under every probability law.",
+    "Let s=P.toSignedMeasure-Q.toSignedMeasure. The integral of phi-1/2 against s equals integral_P(phi)-integral_Q(phi), because both masses are one.",
+    "The centered test has absolute value <=1/2 everywhere. The vector-measure integral norm bound gives discrepancy <=(1/2)*s.totalVariation(univ)=lawTV(P,Q).",
+    "The absolute accumulated drift is <=sum of absolute one-step test drifts <=sum lawTV(P_s,Q_s).",
+    "On the event, triangle inequality gives positive_part(abs(R)-boundary)<=abs(D). Divide the combined inequality by t>0.",
+    "Universal hypotheses over all t and rules yield the simultaneous certificate directly."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "The laws are actual measures and lawTV uses their actual signed-measure difference, not a supplied scalar error budget.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The probability-TV factor1/2 is justified by centered test and equal masses, not an erroneous full variation bound.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Integrability is derived from measurable [0,1] boundedness and probability finiteness.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The observation space is arbitrary measurable; no finite/discrete surrogate replaces the source statement.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Time index range0..t-1 is a reindexing of manuscript1..t and t=0 is excluded.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The event bound is explicitly supplied and not mistaken for a newly proved P66 concentration theorem.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Distinct measurable point masses have TV1, while a zero test has residual0; this supports the lack of a general upper guarantee from nonrejection.",
+      "status": "passed"
+    }
+  ],
+  "residual_limits": [
+    "This proves the exact implication on P66's event. It does not construct that event or prove the separate P66 time-uniform concentration result.",
+    "No total-variation upper bound, rank certificate or guarantee on untested interventions follows from nonrejection.",
+    "The true/proposed conditional laws must refer to the same actual histories/actions; the abstract pathwise theorem does not create those kernels."
+  ],
+  "strongest_safe_statement": "On the supplied simultaneous residual event, average actual conditional law total variation over t>0 stages is at least the positive observed residual excess divided by t, simultaneously for all registered rules and times. The observation space is an arbitrary measurable space and TV is one half the total variation mass of the actual signed measure P-Q.",
+  "cheapest_next_check": "Parent integrated clean compile, exhaustive axiom audit and kernel replay against the same source hash.",
+  "record_note": "Reconstituted unchanged runtime-agent audit under a distinct filename after a pathname collision with a separate team reviewer. No new compilation was run for this rename/reconstitution."
+}

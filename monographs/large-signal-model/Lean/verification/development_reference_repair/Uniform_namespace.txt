@@ -1,0 +1,90 @@
+namespace Uniform
+
+theorem reference : Reference UniformIntervalMoments.measure where
+  probability := UniformIntervalMoments.measure_isProbability
+  support := PolynomialGram.uniform_ae_interval
+  first := by simpa [UniformIntervalMoments.moment] using UniformIntervalMoments.moment_one
+  second := UniformIntervalMoments.moment_two
+  third := by
+    change UniformIntervalMoments.moment 3=0
+    norm_num [UniformIntervalMoments.moment_formula]
+  fourth := by
+    change UniformIntervalMoments.moment 4=1/5
+    norm_num [UniformIntervalMoments.moment_formula]
+
+theorem absoluteFirst_eq : reference.absoluteFirst=1/2 := by
+  rw [Reference.absoluteFirst,UniformIntervalMoments.integral_eq]
+  have hsplit := intervalIntegral.integral_add_adjacent_intervals (μ:=volume)
+    (continuous_abs.intervalIntegrable (-1) 0) (continuous_abs.intervalIntegrable 0 1)
+  have hn : (∫ u : ℝ in (-1)..0,|u|)=∫ u : ℝ in (-1)..0,-u := by
+    apply intervalIntegral.integral_congr
+    intro u hu
+    rw [Set.uIcc_of_le (by norm_num : (-1:ℝ)≤0)] at hu
+    exact abs_of_nonpos hu.2
+  have hp : (∫ u : ℝ in 0..1,|u|)=∫ u : ℝ in 0..1,u := by
+    apply intervalIntegral.integral_congr
+    intro u hu
+    rw [Set.uIcc_of_le (by norm_num : (0:ℝ)≤1)] at hu
+    exact abs_of_nonneg hu.1
+  rw [← hsplit,hn,hp,intervalIntegral.integral_neg]
+  norm_num
+
+private theorem integral_legendre (a b : ℝ) :
+    (∫ u in a..b,legendre u)=((b^3-b)-(a^3-a))/2 := by
+  have hp : IntervalIntegrable (fun u : ℝ => 3*u^2) volume a b :=
+    (show Continuous (fun u : ℝ => 3*u^2) by fun_prop).intervalIntegrable a b
+  have hc : IntervalIntegrable (fun _ : ℝ => (1:ℝ)) volume a b :=
+    continuous_const.intervalIntegrable a b
+  simp only [legendre]
+  rw [intervalIntegral.integral_div,intervalIntegral.integral_sub hp hc,
+    intervalIntegral.integral_const_mul]
+  norm_num
+  ring
+
+theorem absoluteLegendre_eq : reference.absoluteLegendre=2/(3*Real.sqrt 3) := by
+  let q : ℝ := 1/Real.sqrt 3
+  have hs : 0<Real.sqrt 3 := Real.sqrt_pos.2 (by norm_num)
+  have hs2 : (Real.sqrt 3)^2=3 := Real.sq_sqrt (by norm_num)
+  have hq : 0<q := by dsimp [q];positivity
+  have hq2 : q^2=1/3 := by dsimp [q];rw [div_pow,hs2];norm_num
+  have hq1 : q≤1 := by nlinarith
+  have hq3 : q^3=q/3 := by rw [pow_succ,hq2];ring
+  have hneg : (∫ u in (-1:ℝ)..(-q),|legendre u|)=∫ u in (-1:ℝ)..(-q),legendre u := by
+    apply intervalIntegral.integral_congr
+    intro u hu
+    rw [Set.uIcc_of_le (by linarith : (-1:ℝ)≤-q)] at hu
+    apply abs_of_nonneg
+    dsimp [legendre]
+    have : q^2≤u^2 := by nlinarith [sq_nonneg (u+q),hu.2]
+    nlinarith
+  have hmid : (∫ u in (-q)..q,|legendre u|)=∫ u in (-q)..q,-legendre u := by
+    apply intervalIntegral.integral_congr
+    intro u hu
+    rw [Set.uIcc_of_le (by linarith : -q≤q)] at hu
+    apply abs_of_nonpos
+    dsimp [legendre]
+    have : u^2≤q^2 := by nlinarith [mul_nonneg (by linarith [hu.2] : 0≤q-u) (by linarith [hu.1] : 0≤q+u)]
+    nlinarith
+  have hpos : (∫ u in q..(1:ℝ),|legendre u|)=∫ u in q..(1:ℝ),legendre u := by
+    apply intervalIntegral.integral_congr
+    intro u hu
+    rw [Set.uIcc_of_le hq1] at hu
+    apply abs_of_nonneg
+    dsimp [legendre]
+    have : q^2≤u^2 := by nlinarith [sq_nonneg (u-q),hu.1]
+    nlinarith
+  have hc : Continuous (fun u => |legendre u|) := by unfold legendre;fun_prop
+  have hleft := intervalIntegral.integral_add_adjacent_intervals (μ:=volume)
+    (hc.intervalIntegrable (-1) (-q)) (hc.intervalIntegrable (-q) q)
+  have hright := intervalIntegral.integral_add_adjacent_intervals (μ:=volume)
+    (hc.intervalIntegrable (-1) q) (hc.intervalIntegrable q 1)
+  rw [Reference.absoluteLegendre,UniformIntervalMoments.integral_eq,← hright,← hleft,
+    hneg,hmid,hpos,intervalIntegral.integral_neg,integral_legendre,integral_legendre,integral_legendre]
+  rw [show (-q)^3= -(q^3) by ring]
+  norm_num
+  simp only [hq3]
+  dsimp [q]
+  field_simp
+  ring
+
+end Uniform

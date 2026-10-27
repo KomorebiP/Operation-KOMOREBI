@@ -1,0 +1,312 @@
+{
+  "schema": "komorebi.raw-proof-review.v1",
+  "review_id": "RAW_P49_REVIEW",
+  "created_utc": "2026-10-24T18:10:31.528182+00:00",
+  "claim": "FOUNDATIONS 1.0.0 Proposition 49: conditional observable learning with an all-horizon finite probability-domain certificate, common-policy total variation, positive-event conditioning, exact atlas transport, and complete signed-packet synthesis.",
+  "primary_verdict": "proved as written",
+  "evidence_status": "pass",
+  "review_provenance": {
+    "reviewer": "/root/rotation_rank",
+    "author": "/root/lorentz_norm",
+    "kind": "separate-agent same-team internal raw-source review",
+    "independence_limit": "Not external review or a fresh-session independent referee report. Reviewer inspected raw final definitions/proofs and exact source statement; author messages supplied the freeze hash and proposed API changes, not mathematical evidence for this verdict.",
+    "read_only": true,
+    "source_edits_made": false,
+    "scope": "One claim P49 and its local load-bearing dependency chain; no whole-manuscript audit."
+  },
+  "target": {
+    "path": "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/CertificateLearning.lean",
+    "sha256": "b24586e77d2b3589d2f67eb2611435e0cda1b8b9eedc60b755cc8c6f99f2ea0c",
+    "named_declarations": 34,
+    "named_theorems": 26,
+    "declaration_names": [
+      "Model",
+      "Witness",
+      "witness_valid_family",
+      "witness_initial",
+      "witness_exists_iff",
+      "robust_vertex_witness",
+      "certified_all_words",
+      "witness_surjective_of_reachable",
+      "certified_instrument",
+      "certified_initial",
+      "modelLaw",
+      "observedLaw",
+      "budget",
+      "modelLaw_prior",
+      "observedLaw_prior",
+      "certified_policy_bounds",
+      "certified_conditioning",
+      "certified_observation_conditioning",
+      "conditional_learning",
+      "conditional_selected_learning",
+      "atlasModel",
+      "atlas_normalized",
+      "atlas_surjective",
+      "atlasWitness",
+      "atlas_word_probability",
+      "full_packet_prediction",
+      "positive_packet_interpretation",
+      "positive_packet_state",
+      "observableModel",
+      "observable_word_probability",
+      "observable_minimal",
+      "observable_certificate_all_words",
+      "observable_witness_surjective",
+      "conditional_observable_learning"
+    ]
+  },
+  "authoritative_statement": {
+    "path": "work/Komorebi_LSM_Lean_0.16.0/source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e",
+    "locator": "Proposition 49, lines 2172-2188; P39 setup begins line 1780; P44 is explicitly the positive-event conditioning input."
+  },
+  "claim_card": {
+    "coefficient_domain": "Real finite-dimensional linear spaces; finite action and observation alphabets; arbitrary finite, possibly redundant normalized synthesis.",
+    "quantified_objects": [
+      "Linear synthesis V, mass l, l composed with V equal to coefficient sum; V surjective for full base norm.",
+      "Actual stationary controlled operator/initial pair, and literal P37 population-table realization in the observable specialization.",
+      "Witness matrices for every action-observation symbol, nonnegative entries, normalized nonnegative initial coefficient vector, exact intertwining and per-action mass law.",
+      "Actual operator/initial uncertainty set, explicit measurable coverage event with probability lower bound 1-delta, robust witnesses for every member.",
+      "One common arbitrary randomized history-dependent policy; every finite horizon including zero.",
+      "Summed branch discrepancy on every point of the same certified normalized base and an initial base-norm error bound."
+    ],
+    "conclusions": [
+      "Fitted witness gives an invariant finite probability domain, normalized initial, all-word probabilities, and actual normalized joint/observed laws at every horizon.",
+      "On the stipulated coverage event the true and fitted models share the certified domain, and joint and observation-only TV are bounded by min(1,(e0+sum epsilon)/2).",
+      "Conditioning either law on the same event has min(1,budget/true-event-mass) bound when both event masses are positive.",
+      "Exact invertible transport preserves the literal nonnegative finite certificate and all-word likelihoods.",
+      "Complete signed-packet synthesis preserves predictions; individual normalized packets are probability states only with separate cone positivity and positive mass."
+    ],
+    "boundary_cases": [
+      "No finite horizon cutoff; word and record induction theorems cover every list/natural length, including empty word/horizon zero.",
+      "Redundant generator synthesis is permitted: no injectivity or pseudoinverse norm is assumed.",
+      "An empty coefficient index cannot support Witness.prior, so it cannot spuriously certify a normalized state.",
+      "Zero policy probabilities are permitted; no lower propensity condition is introduced.",
+      "Zero-mass positive packets vanish; normalized individual states require strictly positive packet mass.",
+      "No unrestricted confidence procedure, rank discovery, protocol validity, or coverage conclusion is inferred from algebraic fits."
+    ]
+  },
+  "dependency_graph": [
+    {
+      "from": "Witness entries_nonnegative + intertwines",
+      "via": "PositiveLift.positive_lift_iff",
+      "to": "witness_valid_family; branch cone invariance",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "Witness prior + initial + l V = mass",
+      "via": "normalized_mass / normalizedHull_eq_prior_image",
+      "to": "witness_initial and certified_initial",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "Witness finite data + exact mass law",
+      "via": "finite_positive_lift_certificate / lifted_mass / lifted_word",
+      "to": "certified_all_words and actual finite instrument",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "normalized finite synthesis + full row rank",
+      "via": "BaseNorm.finiteCone with closed hull, generating carrier and strict mass",
+      "to": "actual infimum base norm and shared ProbabilityCone",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "common certified instruments, common initials, common history policy, discrepancy/initial budgets",
+      "via": "shared_randomized_policy_tv_bound and shared_policy_observation_tv_bound",
+      "to": "certified_policy_bounds on actual full joint and observation laws",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "actual normalized laws + TV bound + both positive event masses",
+      "via": "FiniteTV.conditioning_tv_bound",
+      "to": "joint and observation-only conditioning",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "explicit measurable event + assumed probability bound + actual membership coverage + whole-set robust witnesses",
+      "via": "conditional_learning / conditional_selected_learning",
+      "to": "simultaneous pathwise all-horizon validity and TV on coverage event",
+      "leaf": "conditional statistical input is exactly retained"
+    },
+    {
+      "from": "invertible conjugation and transported mass/synthesis",
+      "via": "atlasWitness / atlas_likelihood",
+      "to": "same coefficient certificate, initial prior, likelihood equality",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "packet sum is identity",
+      "via": "full_packet_prediction",
+      "to": "exact full-synthesis predictions, even with signed packets",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "separate packet cone positivity + strict cone mass + positive weight",
+      "via": "PositivePackets.normalized_packet / positive_packet_mixture",
+      "to": "individual normalized packet base membership and mixture reconstruction",
+      "leaf": "internal proof"
+    },
+    {
+      "from": "finite behavior dimension + nonsingular actual table core + rank bound + empty test",
+      "via": "Behavior.tableModel, correct, minimal, reachable",
+      "to": "literal observable true model and all-word f identity; certificate synthesis surjectivity",
+      "leaf": "internal proof"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "P49-identification",
+      "status": "passed",
+      "evidence": [
+        "observableModel is literally the existing population-table construction, not an arbitrary assumed true matrix family.",
+        "observable_word_probability proves equality to the complete process law for every word.",
+        "observable_minimal invokes the genuine behavior-space dimension theorem.",
+        "conditional_observable_learning fixes this actual model as truth."
+      ]
+    },
+    {
+      "id": "P49-actual-finite-witness",
+      "status": "passed",
+      "evidence": [
+        "Witness consists of finite nonnegative matrix entries, a prior, exact intertwining, exact per-action mass conservation, and actual initial synthesis.",
+        "No all-horizon stochastic validity, TV, or confidence conclusion is included in Witness fields.",
+        "witness_valid_family, witness_initial, certified_all_words, modelLaw_prior and observedLaw_prior derive the required validity.",
+        "witness_exists_iff also proves converse equivalence to actual finite-cone validity and normalized initial coverage."
+      ]
+    },
+    {
+      "id": "P49-common-domain-initials",
+      "status": "passed",
+      "evidence": [
+        "Every true/fitted Witness uses the same V and l in each invocation.",
+        "robust quantifies over every complete model (operators and initial) in U; Witness.initial and Witness.prior cover each initial.",
+        "robust_vertex_witness interpolates whole operator families and separately requires initial coverage; it does not mix isolated branches incompatibly."
+      ]
+    },
+    {
+      "id": "P49-full-row-rank",
+      "status": "passed",
+      "evidence": [
+        "P39 explicitly requires full row rank; hs : Surjective V is the same assumption in linear-map notation.",
+        "witness_surjective_of_reachable proves range V contains every actual reachable word state.",
+        "observable_witness_surjective discharges full row rank for any certified literal reachable tableModel.",
+        "The observable confidence wrapper retains hs explicitly because it constructs its global norm before the coverage event; this is allowed by P39 and does not add an unmotivated restriction."
+      ]
+    },
+    {
+      "id": "P49-confidence",
+      "status": "passed",
+      "evidence": [
+        "hmeas and hprob are actual measurable-set/probability statements for one supplied event.",
+        "hcover is membership of the true operator/initial pair in the corresponding U on that event.",
+        "The proof obtains the true certificate only through robust plus hcover.",
+        "Removing IsProbabilityMeasure from the generalized implication does not narrow the manuscript case; the probability-measure case is included.",
+        "No claim is made that exact algebra supplies statistical coverage."
+      ]
+    },
+    {
+      "id": "P49-data-selected-domain",
+      "status": "passed",
+      "evidence": [
+        "conditional_selected_learning allows dependent finite K omega and V omega chosen from the data.",
+        "Normalization, spanning, robust complete-model witness, error bounds and initial coverage are all instantiated in that same selected domain at each outcome.",
+        "The result remains pathwise on one explicit measurable simultaneous-coverage event; no unproved measurability of arbitrary certificate predicates is used."
+      ]
+    },
+    {
+      "id": "P49-TV-laws",
+      "status": "passed",
+      "evidence": [
+        "modelLaw is the actual action-observation recordLaw with complete policy-weighted instruments.",
+        "observedLaw is its pushforward forgetting actions.",
+        "Both laws are proved priors.",
+        "certified_policy_bounds bounds both TV distances by min(1,(e0+sum epsilon)/2) with exactly the same arbitrary history-dependent policy.",
+        "Discrepancy uses the actual finiteCone base-norm infimum on every common base point; no coefficient l1 surrogate is substituted for a redundant synthesis."
+      ]
+    },
+    {
+      "id": "P49-conditioning",
+      "status": "passed",
+      "evidence": [
+        "certified_conditioning treats full joint records and certified_observation_conditioning treats actual observation-only records.",
+        "Both retain true and fitted positive-event premises, as required to normalize both laws.",
+        "The denominator is the true event mass and the min-with-one bound is inherited from the checked P44 theorem."
+      ]
+    },
+    {
+      "id": "P49-exact-atlas",
+      "status": "passed",
+      "evidence": [
+        "atlasModel uses exact conjugation T B T inverse and initial T z0.",
+        "atlas_normalized and atlas_surjective establish the transported certificate prerequisites.",
+        "atlasWitness keeps the literal same nonnegative matrices and coefficient prior, and proves transported intertwining/mass/initial identities.",
+        "atlas_word_probability proves exact all-word likelihood preservation."
+      ]
+    },
+    {
+      "id": "P49-signed-packets",
+      "status": "passed",
+      "evidence": [
+        "full_packet_prediction uses complete synthesis sum P = id and makes no individual probability claim for signed packets.",
+        "positive_packet_interpretation separately requires each P to preserve the certified cone.",
+        "positive_packet_state requires the same cone positivity and positive packet mass before proving normalized packet base membership.",
+        "Strict mass of finiteCone makes zero-mass positive packets zero in mixture reconstruction."
+      ]
+    },
+    {
+      "id": "P49-no-circularity",
+      "status": "passed",
+      "evidence": [
+        "Internal all-horizon validity is derived from finite coefficient equalities and signs.",
+        "Statistical coverage, model-class/rank inputs, exact mass, and approximation budgets remain explicit source hypotheses.",
+        "Each local implication points to predecessor modules and no dependency points back to P49."
+      ]
+    }
+  ],
+  "verification": {
+    "fresh_isolated_compile": {
+      "command": "source runtime/env_v016.sh; lean -j1 -DwarningAsError=true -o tmp/p46_rank/CertificateLearningReview.olean work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/CertificateLearning.lean",
+      "exit_code": 0,
+      "diagnostics": "none",
+      "olean_path": "tmp/p46_rank/CertificateLearningReview.olean",
+      "shared_build_mutation": false
+    },
+    "source_hash_after_review": "b24586e77d2b3589d2f67eb2611435e0cda1b8b9eedc60b755cc8c6f99f2ea0c",
+    "forbidden_construct_scan": {
+      "patterns": [
+        "sorry",
+        "admit",
+        "axiom ",
+        "unsafe",
+        "native_decide"
+      ],
+      "matches": []
+    },
+    "reviewer_actions": "Raw theorem/definition review, exact frozen source comparison, predecessor proof checks, fresh isolated elaboration. No numerical experiment is load-bearing.",
+    "author_reported_checks_not_reexecuted_here": [
+      "all-declaration axiom audit",
+      "module kernel replay",
+      "semantic negative controls"
+    ],
+    "integration_boundary": "Parent cumulative clean build/audit/replay and archive integration are separate obligations; this review does not assert they already ran."
+  },
+  "dependency_source_hashes": {
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/CertificateLearning.lean": "b24586e77d2b3589d2f67eb2611435e0cda1b8b9eedc60b755cc8c6f99f2ea0c",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/BaseNormModels.lean": "fbb58c973fea2c083e3aa1c1a9a9e23f8bd22b8fd4126b91af4d81cc0f0fb558",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/PolicyComparison.lean": "f3fd5f99b5ecae836f08d41ee7d3cb8865858c862c5c94b08445f2e540e6ff7d",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/Conditioning.lean": "892aa0f501a02feaa8926e69f4c03d614ef93adc79e9f0f5e4826a1e89b07137",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/ConditionalStochasticCompletion.lean": "048441ba22cc2079f0f52f7913ee7e505dcdecf359acb9ae27628cf6e0029dcb",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/PositiveLift.lean": "24315170dc8b6602582d4ab6b26f62b1da61c4cb27016259201416d08ff0b54f",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/PositivePackets.lean": "9d573f0bbf2370509766d2631d949b14d26c7fbd92dd39c6f3d0133c0f3f4c0e",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/ObservableRealization.lean": "f8b6871f08f9eac98a4784ed92df2fb23288ff88530aa6abc1cc0ba15ee80eea",
+    "work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/ObservationTree.lean": "515c9e2a1a3466a55ee7056fe99561a5e149a0a175a61dabe4494bde4463769d"
+  },
+  "remaining_mathematical_gap": null,
+  "remaining_integration_gaps": [
+    "Parent metadata mapping and cumulative verification of the complete integrated release."
+  ],
+  "strongest_safe_statement": "The frozen P49 module proves the manuscript conditional theorem under the explicitly retained observable-identification, finite-domain, exact-mass, statistical-coverage, and discrepancy assumptions. It does not construct or validate a confidence procedure from arbitrary data.",
+  "cheapest_next_check": "Include the frozen module and all declarations in the parent cumulative source inventory, clean elaboration, allowed-axiom audit, kernel replay and semantic-control stages."
+}

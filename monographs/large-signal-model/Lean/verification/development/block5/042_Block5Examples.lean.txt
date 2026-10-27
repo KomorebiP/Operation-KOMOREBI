@@ -1,0 +1,226 @@
+import KomorebiLSM.BehaviorProbability
+import KomorebiLSM.Block4Examples
+import Mathlib.Data.Matrix.Notation
+
+/-! Exact population-table reconstruction and coverage counterexamples.
+The table formula contains no hidden-state matrix; the declared generator is
+used separately to prove this example's rank and probability hypotheses. -/
+set_option autoImplicit false
+namespace Komorebi.LSM.Block5Examples
+open scoped BigOperators
+open FiniteInstruments Behavior
+open Block4Examples
+
+noncomputable def process (w : List (Unit × Bool)) : ℝ :=
+  summaryMass (wordAction reducedBranch w (summary initialPrior))
+
+noncomputable def declaredModel : Behavior.Realization process (Fin 2 → ℝ) where
+  initial := summary initialPrior
+  operator := reducedBranch
+  readout := summaryMass
+  correct _ := rfl
+
+instance process_finite : FiniteDimensional ℝ (Behavior.space process) :=
+  declaredModel.behavior_finite
+
+theorem process_rank_upper : Module.finrank ℝ (Behavior.space process) ≤ 2 := by
+  simpa only [Module.finrank_fintype_fun_eq_card,Fintype.card_fin] using
+    declaredModel.behavior_dimension_le
+
+theorem process_equals_hidden (w : List (Unit × Bool)) :
+    process w = FiniteInstruments.mass (wordAction tinyInstrument.branch w initialPrior) :=
+  all_word_readouts w initialPrior
+
+theorem process_causal : Behavior.CausalLaw process := by
+  have he : process = fun w => FiniteInstruments.mass (wordAction tinyInstrument.branch w initialPrior) :=
+    funext process_equals_hidden
+  rw [he]
+  exact instrument_causal tinyInstrument initialPrior initial_prior_valid
+
+theorem every_process_word_valid (w : List (Unit × Bool)) : 0 ≤ process w ∧ process w ≤ 1 :=
+  process_causal.word_bounds w
+
+noncomputable def selected (i : Fin 2) : List (Unit × Bool) :=
+  if i.val=0 then [] else [((),true)]
+
+theorem first_test_empty : selected 0 = [] := rfl
+
+theorem initial_vector : summary initialPrior = ![(1 : ℝ),1/2] := by
+  funext i
+  fin_cases i
+  · exact initial_predictive_state.1
+  · exact initial_predictive_state.2
+
+theorem population_core : Behavior.core process selected selected =
+    !![(1 : ℝ),5/8;5/8,15/32] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [Behavior.core,selected,process,wordAction,initial_vector,summaryMass,
+      reducedBranch,reducedMatrix,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+theorem core_determinant : (Behavior.core process selected selected).det = 5/64 := by
+  rw [population_core]
+  norm_num [Matrix.det_fin_two]
+
+theorem core_invertible : IsUnit (Behavior.core process selected selected).det := by
+  rw [core_determinant]
+  norm_num
+
+theorem full_behavior_rank_two : Module.finrank ℝ (Behavior.space process) = 2 := by
+  simpa only [Fintype.card_fin] using
+    core_rank_exact process selected selected core_invertible process_rank_upper
+
+theorem no_scalar_full_rank_bound : ¬ Module.finrank ℝ (Behavior.space process) ≤ 1 := by
+  rw [full_behavior_rank_two]
+  norm_num
+
+theorem shifted_false : shiftedCore process selected selected ((),false) =
+    !![(3/8 : ℝ),5/32;3/16,5/64] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [shiftedCore,selected,process,wordAction,initial_vector,summaryMass,
+      reducedBranch,reducedMatrix,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+theorem shifted_true : shiftedCore process selected selected ((),true) =
+    !![(5/8 : ℝ),15/32;15/32,45/128] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [shiftedCore,selected,process,wordAction,initial_vector,summaryMass,
+      reducedBranch,reducedMatrix,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+theorem learned_false : reconstructed process selected selected ((),false) =
+    !![(1 : ℝ),-1;1/2,-1/2] := by
+  symm
+  apply reconstructed_unique process selected selected core_invertible
+  rw [population_core,shifted_false]
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply,Fin.sum_univ_succ]
+
+theorem learned_true : reconstructed process selected selected ((),true) =
+    !![(0 : ℝ),1;0,3/4] := by
+  symm
+  apply reconstructed_unique process selected selected core_invertible
+  rw [population_core,shifted_true]
+  ext i j
+  fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply,Fin.sum_univ_succ]
+
+theorem learned_initial : tableState process selected [] = ![(1 : ℝ),5/8] := by
+  funext i
+  fin_cases i <;>
+    norm_num [tableState,selected,process,wordAction,initial_vector,summaryMass,
+      reducedBranch,reducedMatrix,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+/-- This is the general all-word theorem applied to the exact population core. -/
+theorem learned_all_words (w : List (Unit × Bool)) :
+    (wordAction (fun s => (reconstructed process selected selected s).mulVecLin) w
+      (tableState process selected [])) 0 = process w :=
+  reconstructed_probability process selected selected core_invertible
+    process_rank_upper 0 first_test_empty w
+
+theorem learned_reachable_and_observable :
+    (tableModel process selected selected core_invertible process_rank_upper 0 first_test_empty).IsReachable ∧
+    (tableModel process selected selected core_invertible process_rank_upper 0 first_test_empty).IsObservable :=
+  ⟨tableModel_reachable process selected selected core_invertible process_rank_upper 0 first_test_empty,
+   tableModel_observable process selected selected core_invertible process_rank_upper 0 first_test_empty⟩
+
+theorem learned_two_symbols_in_time_order :
+    process [((),true),((),false)] = 5/32 ∧ process [((),false),((),true)] = 3/16 := by
+  rw [process_equals_hidden,process_equals_hidden]
+  exact ⟨true_then_false_probability,false_then_true_probability⟩
+
+theorem learned_negative_entry : reconstructed process selected selected ((),false) 0 1 = -1 := by
+  rw [learned_false]
+  rfl
+
+theorem true_history_state : tableState process selected [((),true)] = ![(5/8 : ℝ),15/32] := by
+  funext i
+  fin_cases i <;>
+    norm_num [tableState,selected,process,wordAction,initial_vector,summaryMass,
+      reducedBranch,reducedMatrix,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+theorem double_true_history_state : tableState process selected [((),true),((),true)] =
+    ![(15/32 : ℝ),45/128] := by
+  funext i
+  fin_cases i <;>
+    norm_num [tableState,selected,process,wordAction,initial_vector,summaryMass,
+      reducedBranch,reducedMatrix,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+theorem normalized_true_state :
+    (process [((),true)])⁻¹ • tableState process selected [((),true)] = ![(1 : ℝ),3/4] := by
+  have hmass := tableState_mass process selected 0 first_test_empty [((),true)]
+  rw [true_history_state] at hmass
+  rw [← hmass,true_history_state]
+  ext i
+  fin_cases i <;> norm_num
+
+theorem normalized_double_true_state :
+    (process [((),true),((),true)])⁻¹ • tableState process selected [((),true),((),true)] =
+      ![(1 : ℝ),3/4] := by
+  have hmass := tableState_mass process selected 0 first_test_empty [((),true),((),true)]
+  rw [double_true_history_state] at hmass
+  rw [← hmass,double_true_history_state]
+  ext i
+  fin_cases i <;> norm_num
+
+theorem different_histories_same_conditional_behavior :
+    (process [((),true)])⁻¹ • history process [((),true)] =
+      (process [((),true),((),true)])⁻¹ • history process [((),true),((),true)] := by
+  apply (evaluate_bijective process selected selected core_invertible process_rank_upper).1
+  simpa only [map_smul,← tableState_eq_evaluate] using
+    normalized_true_state.trans normalized_double_true_state.symm
+
+theorem different_histories_equal_every_conditional_test (t : List (Unit × Bool)) :
+    process ([((),true)] ++ t) / process [((),true)] =
+      process ([((),true),((),true)] ++ t) / process [((),true),((),true)] :=
+  (conditional_equivalence process _ _).mp different_histories_same_conditional_behavior t
+
+/-- A one-entry core is invertible, but does not cover this rank-two process. -/
+noncomputable def undersized : Fin 1 → List (Unit × Bool) := fun _ => []
+
+theorem small_core_invertible : IsUnit (Behavior.core process undersized undersized).det := by
+  have he : Behavior.core process undersized undersized = (1 : Matrix (Fin 1) (Fin 1) ℝ) := by
+    ext i j
+    fin_cases i <;> fin_cases j
+    norm_num [Behavior.core,undersized,process,wordAction,initial_vector,summaryMass]
+  rw [he,Matrix.det_one]
+  exact isUnit_one
+
+theorem undersized_true_matrix : reconstructed process undersized undersized ((),true) =
+    (5/8 : ℝ) • (1 : Matrix (Fin 1) (Fin 1) ℝ) := by
+  symm
+  apply reconstructed_unique process undersized undersized small_core_invertible
+  ext i j
+  fin_cases i <;> fin_cases j
+  norm_num [Behavior.core,undersized,shiftedCore,process,wordAction,initial_vector,summaryMass,
+    reducedBranch,reducedMatrix,Matrix.mul_apply,Matrix.mulVec,dotProduct,Fin.sum_univ_succ]
+
+theorem undersized_initial : tableState process undersized [] = fun _ => (1 : ℝ) := by
+  funext i
+  norm_num [tableState,undersized,process,wordAction,initial_vector,summaryMass]
+
+/-- An invertible finite table by itself does not identify every future word. -/
+theorem finite_table_without_coverage_fails :
+    (wordAction (fun s => (reconstructed process undersized undersized s).mulVecLin)
+      [((),true),((),true)] (tableState process undersized [])) 0 ≠
+        process [((),true),((),true)] := by
+  have hmass := tableState_mass process selected 0 first_test_empty [((),true),((),true)]
+  rw [double_true_history_state] at hmass
+  rw [← hmass]
+  norm_num [wordAction,undersized_true_matrix,undersized_initial,Matrix.mulVec,dotProduct,
+    Fin.sum_univ_succ]
+
+/-- The redundant three-state hidden model is not observable, despite reproducing f. -/
+noncomputable def hiddenModel : Behavior.Realization process (Fin 3 → ℝ) where
+  initial := initialPrior
+  operator := tinyInstrument.branch
+  readout := FiniteInstruments.mass
+  correct w := (process_equals_hidden w).symm
+
+theorem hidden_model_not_observable : ¬ hiddenModel.IsObservable := by
+  intro ho
+  apply distinct_hidden_priors
+  apply ho
+  funext w
+  exact same_every_future_word w
+
+end Komorebi.LSM.Block5Examples

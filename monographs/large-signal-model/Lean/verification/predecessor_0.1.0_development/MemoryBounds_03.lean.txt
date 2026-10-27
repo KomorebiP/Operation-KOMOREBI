@@ -1,0 +1,90 @@
+import KomorebiLSM.Normed
+import KomorebiLSM.Memory
+import Mathlib.Algebra.Field.GeomSum
+import Mathlib.Tactic.Ring
+import Mathlib.Tactic.FieldSimp
+
+/-! The one-step memory tail and unresolved-initial-state bounds in P10.
+These compare right-hand sides on the SAME history. They do not certify
+recursively generated approximate trajectories.
+-/
+set_option autoImplicit false
+open scoped BigOperators
+namespace Komorebi.LSM
+universe u v w
+variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+variable {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+variable {Y : Type w} [NormedAddCommGroup Y] [NormedSpace 𝕜 Y]
+
+theorem iterate_norm_bound (D : Y →L[𝕜] Y) {rho : ℝ}
+    (hrho : 0 ≤ rho) (hD : ‖D‖ ≤ rho) (y : Y) (k : ℕ) :
+    ‖(D^k) y‖ ≤ rho^k * ‖y‖ := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    rw [pow_succ', mul_apply_eq_comp]
+    calc
+      ‖D ((D^k) y)‖ ≤ ‖D‖ * ‖(D^k) y‖ := D.le_opNorm _
+      _ ≤ rho * ‖(D^k) y‖ := mul_le_mul_of_nonneg_right hD (norm_nonneg _)
+      _ ≤ rho * (rho^k * ‖y‖) := mul_le_mul_of_nonneg_left ih hrho
+      _ = rho^(k+1) * ‖y‖ := by rw [pow_succ']; ring
+
+theorem geometric_interval_bound {rho : ℝ} (hrho : 0 ≤ rho) (hsmall : rho < 1)
+    (H t : ℕ) : (∑ k ∈ Finset.Ico H t, rho^k) ≤ rho^H / (1-rho) := by
+  by_cases hHt : H ≤ t
+  · have hid : (∑ k ∈ Finset.Ico H t, rho^k) * (1-rho) = rho^H-rho^t := by
+      rw [geom_sum_Ico (ne_of_lt hsmall) hHt]
+      have hn : rho-1 ≠ 0 := sub_ne_zero.mpr (ne_of_lt hsmall)
+      field_simp
+      ring
+    apply (le_div_iff₀ (sub_pos.mpr hsmall)).mpr
+    rw [hid]
+    exact sub_le_self _ (pow_nonneg hrho t)
+  · rw [Finset.Ico_eq_empty_of_le (le_of_not_ge hHt)]
+    simp only [Finset.sum_empty]
+    exact div_nonneg (pow_nonneg hrho H) (sub_nonneg.mpr hsmall.le)
+
+theorem memory_kernel_bound (B : Y →L[𝕜] X) (C : X →L[𝕜] Y)
+    (D : Y →L[𝕜] Y) {rho Z : ℝ} (hrho : 0 ≤ rho) (hD : ‖D‖ ≤ rho)
+    (z : X) (hz : ‖z‖ ≤ Z) (k : ℕ) :
+    ‖B ((D^k) (C z))‖ ≤ (‖B‖ * ‖C‖ * Z) * rho^k := by
+  calc
+    ‖B ((D^k) (C z))‖ ≤ ‖B‖ * ‖(D^k) (C z)‖ := B.le_opNorm _
+    _ ≤ ‖B‖ * (rho^k * ‖C z‖) :=
+      mul_le_mul_of_nonneg_left (iterate_norm_bound D hrho hD (C z) k) (norm_nonneg B)
+    _ ≤ ‖B‖ * (rho^k * (‖C‖ * ‖z‖)) := by
+      apply mul_le_mul_of_nonneg_left _ (norm_nonneg B)
+      exact mul_le_mul_of_nonneg_left (C.le_opNorm z) (pow_nonneg hrho k)
+    _ ≤ ‖B‖ * (rho^k * (‖C‖ * Z)) := by
+      apply mul_le_mul_of_nonneg_left _ (norm_nonneg B)
+      apply mul_le_mul_of_nonneg_left _ (pow_nonneg hrho k)
+      exact mul_le_mul_of_nonneg_left hz (norm_nonneg C)
+    _ = _ := by ring
+
+theorem memory_tail_bound (B : Y →L[𝕜] X) (C : X →L[𝕜] Y)
+    (D : Y →L[𝕜] Y) {rho Z : ℝ} (hrho : 0 ≤ rho) (hsmall : rho < 1)
+    (hD : ‖D‖ ≤ rho) (hZ : 0 ≤ Z) (z : ℕ → X) (H t : ℕ)
+    (bounded : ∀ k ∈ Finset.Ico H t, ‖z (t-1-k)‖ ≤ Z) :
+    ‖∑ k ∈ Finset.Ico H t, B ((D^k) (C (z (t-1-k))))‖ ≤
+      (‖B‖ * ‖C‖ * Z) * (rho^H / (1-rho)) := by
+  calc
+    ‖∑ k ∈ Finset.Ico H t, B ((D^k) (C (z (t-1-k))))‖ ≤
+        ∑ k ∈ Finset.Ico H t, ‖B ((D^k) (C (z (t-1-k))))‖ := norm_sum_le _ _
+    _ ≤ ∑ k ∈ Finset.Ico H t, (‖B‖ * ‖C‖ * Z) * rho^k := by
+      apply Finset.sum_le_sum
+      intro k hk
+      exact memory_kernel_bound B C D hrho hD _ (bounded k hk) k
+    _ = (‖B‖ * ‖C‖ * Z) * ∑ k ∈ Finset.Ico H t, rho^k := by rw [Finset.mul_sum]
+    _ ≤ _ := mul_le_mul_of_nonneg_left (geometric_interval_bound hrho hsmall H t)
+      (mul_nonneg (mul_nonneg (norm_nonneg B) (norm_nonneg C)) hZ)
+
+theorem unresolved_initial_bound (B : Y →L[𝕜] X) (D : Y →L[𝕜] Y)
+    {rho : ℝ} (hrho : 0 ≤ rho) (hD : ‖D‖ ≤ rho) (q0 : Y) (t : ℕ) :
+    ‖B ((D^t) q0)‖ ≤ ‖B‖ * rho^t * ‖q0‖ := by
+  calc
+    ‖B ((D^t) q0)‖ ≤ ‖B‖ * ‖(D^t) q0‖ := B.le_opNorm _
+    _ ≤ ‖B‖ * (rho^t * ‖q0‖) :=
+      mul_le_mul_of_nonneg_left (iterate_norm_bound D hrho hD q0 t) (norm_nonneg B)
+    _ = _ := by ring
+
+end Komorebi.LSM

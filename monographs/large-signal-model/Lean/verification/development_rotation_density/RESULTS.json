@@ -1,0 +1,63 @@
+{
+  "target": "P46 rational rotation density dependency",
+  "parent_checkpoint": "LSM-0.15.0",
+  "parent_delivered_archive_sha256": "85b8a25021b665da32f7328ced65d797b2a383464f01a3a2962f0b1bd8214b05",
+  "verdict": "proved as written for this dependency; not a claim that full P46 is complete",
+  "module": "KomorebiLSM.RotationDensity",
+  "file": "KomorebiLSM/RotationDensity.lean",
+  "source_sha256": "b49b9eb0c6f1e7d77d6b171a63f08b5a137270c6df7aa7299f470c9c13f9b7d6",
+  "named_theorems": 10,
+  "named_definitions": 1,
+  "coefficients": "Exactly real 3/5 and 4/5 in an actual Circle element, not numerical approximations.",
+  "mechanism": "Niven gives angle/(2*pi) irrational; AddCircle irrational rotation gives dense integer powers; the compact topological group closure theorem converts this to dense nonnegative powers.",
+  "endpoints": [
+    "rotation_pow_ne_one",
+    "rotation_integer_dense",
+    "rotation_forward_dense",
+    "rotation_forward_closure",
+    "forward_closed_property",
+    "rotation_orbit_dense"
+  ],
+  "compile": {
+    "command": "source runtime/env_v016.sh; lean -j1 -DwarningAsError=true -o work/Komorebi_LSM_Lean_0.16.0/.build/lib/lean/KomorebiLSM/RotationDensity.olean work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/RotationDensity.lean",
+    "returncode": 0
+  },
+  "import_test": {
+    "returncode": 0,
+    "log": "tmp/p46_density/ImportTest.lean output reported the allowed standard dependencies"
+  },
+  "axiom_audit": {
+    "returncode": 0,
+    "named_declarations": 11,
+    "allowed_only": true,
+    "log": "axiom_audit.log"
+  },
+  "kernel_replay": {
+    "returncode": 0,
+    "log": "kernel_replay.log"
+  },
+  "negative_control": {
+    "file": "negative_controls/RotationFiniteOrder.lean",
+    "source_sha256": "95cbef485920b748f1cf762b3e343426438912c38b51d9ba197f3db78132a793",
+    "returncode": 1,
+    "reason": "Actual positive finite-period existence contradicts rotation_pow_ne_one; rejected with unsolved False, no missing identifier or import.",
+    "log": "negative_control.log"
+  },
+  "pinned_upstream_sources": {
+    "Mathlib/NumberTheory/Niven.lean": "ee07e47884c0ad44f25801cafe29621c754baf83ce433d65f945bf57af5b18d4",
+    "Mathlib/Topology/Instances/AddCircle/DenseSubgroup.lean": "45014575c8b53391541f17b1d76f274a3fa8ff10a82f61770a7ebc3fd2224282",
+    "Mathlib/Analysis/SpecialFunctions/Complex/Circle.lean": "d63cf63b6eea1b5fe73a314d61f18056d7b3fcaa419b298a28e6a8ebc614214a",
+    "Mathlib/Topology/Algebra/Group/SubmonoidClosure.lean": "a28b685a4c9ebe4b782144ffff1c4a1e47b40aee4dc08390f1e7e6e086e91299"
+  },
+  "development_diagnostics": [
+    {
+      "outcome": "ordinary Lean elaboration failure",
+      "details": "Initial attempt used a nonexistent unit-sphere membership lemma, oriented a rational equality incorrectly and tried a scaled-circle rewrite through the unscaled homeomorphism. Corrected to metric-sphere norm membership, symmetric rational equality and AddCircle.homeomorphCircle."
+    },
+    {
+      "outcome": "success",
+      "details": "Corrected main source compiled cleanly, then three geometric convenience endpoints compiled cleanly and actual module import was tested."
+    }
+  ],
+  "review_provenance": "Author self-review plus compiler, named-axiom audit and Lean kernel replay. Parent owns raw-proof correspondence review and cumulative package verification."
+}

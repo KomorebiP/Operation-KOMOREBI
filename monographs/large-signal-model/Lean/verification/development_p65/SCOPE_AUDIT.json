@@ -1,0 +1,104 @@
+{
+  "claim": "P65 certified coefficient error and approximation bias",
+  "verdict": "proved as written",
+  "review_kind": "author self-review; root nonauthor raw review is separate",
+  "reviewer": "/root/rotation_geometry",
+  "registered_statement": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "statement_start_line": 3031,
+    "proof_end_line": 3062,
+    "statement_proof_sha256": "180a67265ad2383b336068b092f4ba7150f03485ecf56ed06668a189db1961fb"
+  },
+  "source_sha256": "6e95ae9de558a8c2bbe229b80075a494cb9d59efa24ed2849a2a153320e13592",
+  "obligations": [
+    {
+      "claim": "Literal fitted Bernstein density",
+      "status": "passed",
+      "endpoint": "combination",
+      "evidence": "The fitted operator density is exactly sum over k=0..n of the actual Bernstein polynomial basis times supplied continuous linear coefficients. Constant coefficients give exactly their constant operator via the proved partition of unity."
+    },
+    {
+      "claim": "Same-cone pointwise validity",
+      "status": "passed",
+      "endpoint": "combination_positive",
+      "evidence": "For every x in the entire unit interval and every state in the common actual cone, each nonnegative Bernstein weight multiplies a cone-preserving fitted coefficient. Actual finite cone addition proves positivity; desired density positivity is not a supplied field."
+    },
+    {
+      "claim": "Exact average mass normalization",
+      "status": "passed",
+      "endpoints": [
+        "combination_integral",
+        "fittedInstrument"
+      ],
+      "evidence": "The literal operator-valued Bochner integral is exactly 1/(n+1) times the sum of coefficients, by actual Bernstein basis integrals. The assumed exact average mass identity therefore constructs a true P52 DensityInstrument. Measurability and integrability are derived from the finite continuous Bernstein combination."
+    },
+    {
+      "claim": "Actual positive-decomposition base norm",
+      "status": "passed",
+      "endpoints": [
+        "coefficient_error_point",
+        "coefficient_integrated_error"
+      ],
+      "evidence": "The norm in all inequalities is C.value, the existing infimum over actual positive decompositions. The sum inequality and exact nonnegative scalar homogeneity give pointwise sum of basis times eta; actual Bochner integration yields exactly 1/(n+1) sum eta. No auxiliary norm, finite state grid, or desired total error estimate substitutes for this derivation."
+    },
+    {
+      "claim": "Genuine P64 bias added separately",
+      "status": "passed",
+      "endpoint": "bias_plus_coefficient_error",
+      "evidence": "The exact coefficients are PositivePolynomialApproximation.coefficient, defined from the original integrable density by the actual Bernstein-weighted integrals. integrated_triangle combines their derived coefficient discrepancy with P64 approximating_instrument_discrepancy under the genuine induced C.value operator Lipschitz premise, yielding L/sqrt(3(n+2)) plus mean coefficient error."
+    },
+    {
+      "claim": "Finite action maximum",
+      "status": "passed",
+      "endpoints": [
+        "maximumCoefficientError",
+        "coefficient_error_le_maximum",
+        "uniform_bias_plus_coefficient_error"
+      ],
+      "evidence": "The maximum is the supremum of the actual finite range of action-specific mean budgets. Finite boundedness and membership prove each action budget is bounded by it. This introduces no surrogate action average or sampled maximum."
+    },
+    {
+      "claim": "Separate correction budget",
+      "status": "passed",
+      "endpoints": [
+        "integrated_triangle",
+        "separate_correction_budget"
+      ],
+      "evidence": "An additional known integrated C.value discrepancy is added by a second literal triangle inequality. The correction is an explicit separate addend and is not absorbed into the approximation term. The general integrated triangle applies to arbitrary integrable operator families; the named model corollary retains valid instruments on the same cone and reference."
+    },
+    {
+      "claim": "All finite horizons internally valid",
+      "status": "passed",
+      "endpoint": "fitted_record_probability",
+      "evidence": "The actual fitted DensityInstrument and a normalized initial state feed P52 complete joint record measures under arbitrary common measurable randomized finite-action policies. Total probability one holds at every horizon."
+    }
+  ],
+  "assumptions_retained": [
+    "One common proper probability cone and its actual base norm.",
+    "Original and fitted operators use the same normalized Lebesgue reference on [0,1].",
+    "Every fitted coefficient preserves that cone and its exact average preserves mass.",
+    "Coefficient budgets cover every normalized cone state; no statistical coverage theorem is asserted.",
+    "The original density has the actual induced-base-norm Lipschitz bound required by P64.",
+    "A further model-correction discrepancy must be separately supplied and is measured in the same actual integrated norm."
+  ],
+  "boundaries": [
+    "n=0 is included, with one coefficient and factor one.",
+    "Finite action sets may be empty; every action-indexed bound is then vacuous, and no normalized policy exists. For nonempty action sets the finite-range supremum is the actual maximum.",
+    "No positivity or nonzero lower bound is imposed on individual Bernstein basis values.",
+    "Increasing degree does not automatically reduce coefficient estimation error.",
+    "No coefficient-error budget is inferred from cone validity alone."
+  ],
+  "negative_control": {
+    "path": "negative_controls/BernsteinCoefficientErrorCannotBeBias.lean",
+    "sha256": "808a5f9f9a2c188eb4e540dee3ed50ee3e9fbb0df5c0c2630462d26441a85ab5",
+    "evidence": "The identity and two-state swap are constant positive mass-preserving coefficient families. Their actual constant-density approximation bias is zero, but the actual integrated orthant base-norm discrepancy at a normalized state is two. Dropping the coefficient error budget is rejected with goal False after positivity and mass preservation are proved."
+  },
+  "verification": "RESULT.json records fresh gated warningAsError compile, all16 named declarations axiom audit with permitted dependencies only, exact-module upstream kernel replay and the semantic negative control; all passed.",
+  "dependencies": [
+    "P64 BernsteinKernel exact basis integrals and partition of unity",
+    "P64 PositivePolynomialApproximation actual coefficients and genuine induced-base-norm bias",
+    "BaseNormIntegration integrability of actual C.value",
+    "P52 actual complete finite record measures"
+  ],
+  "remaining_gap": null
+}

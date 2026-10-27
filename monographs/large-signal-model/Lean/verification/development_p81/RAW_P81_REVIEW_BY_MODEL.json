@@ -1,0 +1,148 @@
+{
+  "kind": "P81_four_core_modules_bounded_raw_review",
+  "primary_verdict": "proved as written",
+  "status": "PASS",
+  "reviewer": "/root/rotation_model",
+  "author": "/root/lorentz_norm",
+  "review_scope": [
+    "RegressionGeometry",
+    "RegressionGaussian",
+    "RegressionRadius",
+    "RegressionConfidence"
+  ],
+  "source_freeze": {
+    "RegressionGeometry": {
+      "source_sha256": "d37deb8de89dd09d77485c2694469c215d90d9ab8ba96105d03577fbb5892b8c",
+      "named_declarations": 27,
+      "named_theorems": 21,
+      "lines": 243
+    },
+    "RegressionGaussian": {
+      "source_sha256": "c4f0374cc8eedfa2a3f4008dd0feb965ee140b1194a31be5184e5871b67cd131",
+      "named_declarations": 24,
+      "named_theorems": 21,
+      "lines": 347
+    },
+    "RegressionRadius": {
+      "source_sha256": "3a45e8fb76e8fe00d61eb7b7f220c7f83dfea61a726279b10df51ad918636ae1",
+      "named_declarations": 2,
+      "named_theorems": 1,
+      "lines": 48
+    },
+    "RegressionConfidence": {
+      "source_sha256": "eddfb1bb804347db1ee095769122e379cf2345b2c3f3d733565d781b3d234d73",
+      "named_declarations": 5,
+      "named_theorems": 3,
+      "lines": 93
+    }
+  },
+  "source_statement": {
+    "file": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e",
+    "section": "92 / Proposition 81"
+  },
+  "claim_card": {
+    "objects": "Finite coordinate index I; arbitrary measurable probability space \u03a9; filtration; real predictable design coordinates \u03c6_n; y_n measurable at F_(n+1); literal noise y_n\u2212\u03b8\u00b7\u03c6_n; positive \u03b3,\u03c3,\u03b4; true parameter Euclidean norm at most S.",
+    "noise_input": "For each fixed real h separately, actual deterministic-h exponential integrability and conditional expectation subGaussian bound from ConditionalSubgaussian. No common all-real-h almost-sure event.",
+    "conclusion": "A measurable complement of the actual Gaussian-mixture crossing event has probability at least 1\u2212\u03b4, and on it the literal ridge estimate lies in the displayed determinant-dependent ellipsoid at every finite n.",
+    "source_conventions": "n counts observations 0,...,n\u22121. This is the source finite-prefix convention after relabeling. Source 0<\u03b4<1 is included; formal theorem permits \u03b4\u22651 too, with a possibly trivial coverage lower bound."
+  },
+  "dependency_graph": [
+    {
+      "step": "Geometry",
+      "leaf": "Internal proof: literal rank-one design sum, response sum, actual inverse ridge estimator, PosDef V, quadratic norm via matrix-induced inner product; inverse bound and sqrt(\u03b3) bias derived."
+    },
+    {
+      "step": "Gaussian integral",
+      "leaf": "Pinned Mathlib Gaussian scalar integral + translation/Haar change of variables + finite product integral; internal spectral/unitary diagonalization, actual determinant and inverse-quadratic complete-square identity."
+    },
+    {
+      "step": "Gaussian probability prior",
+      "leaf": "Internal withDensity measure, actual integral density=1, genuine IsProbabilityMeasure; exact ridge mixture integral and fiber integrability derived."
+    },
+    {
+      "step": "Exponential process and mixture",
+      "leaf": "ConditionalRandomMultiplier and RegressionExponential. These were authored by this reviewer; separate review provenance belongs to RAW_P81_HELPERS_REVIEW_BY_LORENTZ.json, not this review."
+    },
+    {
+      "step": "Crossing event",
+      "leaf": "Root-authored VilleInequality actual bounded hitting/optional-stopping/measure-continuity theorem. Consumed exact API and read raw source here; separate author review recorded by norm."
+    },
+    {
+      "step": "Radius and certificate",
+      "leaf": "Internal positive logarithm inversion and exact ridge/noise equation; apply real probability of complement to the actual crossing event."
+    }
+  ],
+  "obligations": [
+    {
+      "item": "Actual objects, no scalar surrogate",
+      "status": "passed",
+      "evidence": "weightedNorm=sqrt(x\u00b7Vx), designGram=\u03a3\u03c6\u03c6\u1d40, responseVector=\u03a3\u03be\u03c6, ridgeEstimate=V\u207b\u00b9\u03a3y\u03c6; all used literally in final theorem."
+    },
+    {
+      "item": "Determinant and Gaussian normalization",
+      "status": "passed",
+      "evidence": "Scalar completed square -> finite product diagonal integral -> unitary Lebesgue preservation -> spectral determinant -> normalized withDensity prior -> exact tilted integral."
+    },
+    {
+      "item": "Regression algebra and signs",
+      "status": "passed",
+      "evidence": "Exact error identity V\u207b\u00b9(S\u2212\u03b3\u03b8); triangle/inverse lower bound yields noise term +sqrt(\u03b3)||\u03b8||. No sign or transpose change in final chain."
+    },
+    {
+      "item": "Actual all-time probability event",
+      "status": "passed",
+      "evidence": "regressionGood is complement of \u2203n,1/\u03b4\u2264actual Gaussian mixture; Ville yields probability bound; pointwise complement yields strict threshold at each n, then radius and ridge error."
+    },
+    {
+      "item": "Unbounded predictable design and arbitrary \u03a9",
+      "status": "passed",
+      "evidence": "Final hypotheses contain coordinate predictability, response next-time measurability, actual conditional subGaussian noise, \u03b8 bound and positive scalars. No design bound, PE, \u03a9 Standard Borel, or uniform-a.e.-h premise."
+    },
+    {
+      "item": "Finite selected times",
+      "status": "passed",
+      "evidence": "The same measurable event asserts \u2200n for every sample; substitution n=T(\u03c9) covers every selected finite time without a new event."
+    },
+    {
+      "item": "Boundary cases",
+      "status": "passed",
+      "evidence": "n=0 gives V=\u03b3I, score0 and mixture1. Empty finite coordinate index gives det(empty)=1 and zero norm. \u03b3=0 and \u03c3=0 excluded as in source. \u03b4=0 excluded. \u03b4\u22651 formal extension is valid/trivial when needed."
+    },
+    {
+      "item": "Smallest nontrivial reconstruction",
+      "status": "passed",
+      "evidence": "For one coordinate and one design c: V=\u03b3+c\u00b2, error=(c\u03be\u2212\u03b3\u03b8)/V, and mixture=sqrt(\u03b3/V)exp(c\u00b2\u03be\u00b2/(2\u03c3\u00b2V)); these agree with actual definitions and the universal proofs."
+    },
+    {
+      "item": "All 58 named axiom records",
+      "status": "passed",
+      "evidence": "Exact inventory match; every dependency subset of propext/Classical.choice/Quot.sound."
+    },
+    {
+      "item": "Fresh separate compile of all four frozen modules",
+      "status": "passed",
+      "evidence": "Four latest isolated warnings-as-errors compiles pass. One initial Confidence missing-object-path diagnostic is retained; copying unchanged helper dependency objects resolved it with no math change."
+    }
+  ],
+  "decisive_evidence": "No desired mixture supermartingale, determinant formula, ridge error bound, or confidence coverage conclusion appears as an input to the four-module capstone chain. The exact actual integral and actual crossing event connect to the literal estimator.",
+  "commands_and_logs": {
+    "fresh_compiles": "verification/development_p81/model_raw_review/FRESH_COMPILES.json",
+    "fresh_compiles_sha256": "fe3ffa787ffca6eb2cb7b22930e4d77d893fe54a7bef45a6fe3cdca4213ff356",
+    "all_named_axiom_log": "verification/development_p81/all_named_axiom_audit.log",
+    "all_named_axiom_log_sha256": "cab85908324baa7f3454b05e1bbd427d85633e10813a7677b4387c2a73af4a0a"
+  },
+  "remaining_gap": null,
+  "strongest_safe_statement": "Full registered P81 under its declared predictable-design, actual conditional-noise and true-parameter assumptions; no empirical validation of those assumptions is claimed.",
+  "cheapest_next_check": "Complete the author receipts and cumulative integration; no mathematical repair requested.",
+  "review_provenance": {
+    "label": "same-team separate-author raw review of these four modules; not external independent validation",
+    "authored_none_of_reviewed_four": true,
+    "shared_dependency_limit": "Reviewer authored RandomMultiplier and Exponential leaves; their independent-within-team check is norm\u2019s reciprocal review, not this report. Root Ville leaf is separately reviewed by norm. Successive agents may share model errors."
+  },
+  "limits": [
+    "No cumulative release execution is certified by this bounded review.",
+    "Author kernel-replay/control receipts are separate evidence; this review recompiled the four sources and inspected all58 axiom records, rather than claiming a second full kernel replay.",
+    "Source R23 supplies historical context; the formal chain does not assume the cited concentration theorem."
+  ]
+}

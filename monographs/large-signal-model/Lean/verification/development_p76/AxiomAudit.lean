@@ -1,0 +1,40 @@
+import KomorebiLSM.CoefficientBox3
+import KomorebiLSM.ConvexMargin
+
+#print axioms Komorebi.LSM.CoefficientBox3.Spatial
+#print axioms Komorebi.LSM.CoefficientBox3.State
+#print axioms Komorebi.LSM.CoefficientBox3.Index
+#print axioms Komorebi.LSM.CoefficientBox3.Coefficient
+#print axioms Komorebi.LSM.CoefficientBox3.coordinates
+#print axioms Komorebi.LSM.CoefficientBox3.operator
+#print axioms Komorebi.LSM.CoefficientBox3.operator_one_apply
+#print axioms Komorebi.LSM.CoefficientBox3.coordinates_operator
+#print axioms Komorebi.LSM.CoefficientBox3.normalized_coordinate_bound
+#print axioms Komorebi.LSM.CoefficientBox3.scalar_coefficient_bound
+#print axioms Komorebi.LSM.CoefficientBox3.spatial_norm_le_sum
+#print axioms Komorebi.LSM.CoefficientBox3.coefficient_output_bounds
+#print axioms Komorebi.LSM.CoefficientBox3.polynomial_mass
+#print axioms Komorebi.LSM.CoefficientBox3.polynomial_spatial
+#print axioms Komorebi.LSM.CoefficientBox3.polynomial_output_bounds
+#print axioms Komorebi.LSM.CoefficientBox3.coefficient_box_preserves
+#print axioms Komorebi.LSM.CoefficientBox3.boxCertificate
+#print axioms Komorebi.LSM.CoefficientBox3.exact_mass_with_error
+#print axioms Komorebi.LSM.CoefficientBox3.boxInstrument
+#print axioms Komorebi.LSM.CoefficientBox3.box_record_probability
+#print axioms Komorebi.LSM.ConvexMargin.slack_combination
+#print axioms Komorebi.LSM.ConvexMargin.sigma_combination
+#print axioms Komorebi.LSM.ConvexMargin.convex_margin_set
+#print axioms Komorebi.LSM.ConvexMargin.finite_margin
+#print axioms Komorebi.LSM.ConvexMargin.convex_initial_base
+#print axioms Komorebi.LSM.ConvexMargin.finite_initial
+#print axioms Komorebi.LSM.ConvexMargin.Family
+#print axioms Komorebi.LSM.ConvexMargin.evaluate
+#print axioms Komorebi.LSM.ConvexMargin.integratedMass
+#print axioms Komorebi.LSM.ConvexMargin.feasible
+#print axioms Komorebi.LSM.ConvexMargin.convex_feasible
+#print axioms Komorebi.LSM.ConvexMargin.convex_data_feasible
+#print axioms Komorebi.LSM.ConvexMargin.finite_feasible
+#print axioms Komorebi.LSM.ConvexMargin.hull_feasible
+#print axioms Komorebi.LSM.ConvexMargin.hull_initial
+#print axioms Komorebi.LSM.ConvexMargin.instrument
+#print axioms Komorebi.LSM.ConvexMargin.hull_record_probability

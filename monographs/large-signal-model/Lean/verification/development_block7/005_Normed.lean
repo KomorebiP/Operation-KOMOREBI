@@ -1,0 +1,73 @@
+import KomorebiLSM.Realization
+import KomorebiLSM.LinearClosure
+import Mathlib.Analysis.Normed.Operator.NormedSpace
+import Mathlib.Tactic.Linarith
+
+/-! Norm inequalities for P1 and P7, using actual continuous linear maps and
+Mathlib's operator norm, rather than postulated error budgets. -/
+set_option autoImplicit false
+namespace Komorebi.LSM
+universe u v w
+variable {𝕜 : Type u} [NontriviallyNormedField 𝕜]
+variable {X : Type v} [NormedAddCommGroup X] [NormedSpace 𝕜 X]
+variable {C : Type w} [NormedAddCommGroup C] [NormedSpace 𝕜 C]
+
+/-- Bridge from bounded linear realization to the exact set-level contract. -/
+def continuousRealization (A : X →L[𝕜] C) (S : C →L[𝕜] X)
+    (h : ∀ x, S (A x) = x) : Realization X C := ⟨A, S, h⟩
+
+theorem realization_norm_product (A : X →L[𝕜] C) (S : C →L[𝕜] X)
+    (h : ∀ x, S (A x) = x) (x : X) : ‖x‖ ≤ ‖S‖ * ‖A x‖ := by
+  have hs := S.le_opNorm (A x)
+  rwa [h] at hs
+
+theorem synthesis_norm_positive [Nontrivial X]
+    (A : X →L[𝕜] C) (S : C →L[𝕜] X) (h : ∀ x, S (A x) = x) :
+    0 < ‖S‖ := by
+  apply norm_pos_iff.mpr
+  intro hs
+  obtain ⟨x, hx⟩ := exists_ne (0 : X)
+  have hzero := h x
+  rw [hs, zero_apply] at hzero
+  exact hx hzero.symm
+
+theorem analysis_norm_lower [Nontrivial X]
+    (A : X →L[𝕜] C) (S : C →L[𝕜] X) (h : ∀ x, S (A x) = x) (x : X) :
+    ‖x‖ / ‖S‖ ≤ ‖A x‖ := by
+  apply (div_le_iff₀ (synthesis_norm_positive A S h)).mpr
+  simpa only [mul_comm] using realization_norm_product A S h x
+
+theorem synthesis_perturbation_bound (S : C →L[𝕜] X) (c e : C) :
+    ‖S (c + e) - S c‖ ≤ ‖S‖ * ‖e‖ := by
+  simpa only [map_add, add_sub_cancel_left] using S.le_opNorm e
+
+/-- The omitted vector is measured after applying Q, while amplification is
+measured with PLQ itself. The idempotence proof justifies that sharper form. -/
+theorem closure_norm_bound (P L : X →L[𝕜] X)
+    (idem : ∀ x, P (P x) = P x) (x : X) :
+    ‖P (L x) - P (L (P x))‖ ≤
+      ‖P.comp (L.comp (ContinuousLinearMap.id 𝕜 X - P))‖ * ‖x - P x‖ := by
+  let Q := ContinuousLinearMap.id 𝕜 X - P
+  let D := P.comp (L.comp Q)
+  have h := D.le_opNorm (Q x)
+  have hq : Q (Q x) = Q x := by
+    simp only [Q, sub_apply, ContinuousLinearMap.id_apply,
+      map_sub, idem, sub_self, sub_zero]
+  change ‖P (L (Q (Q x)))‖ ≤ ‖D‖ * ‖Q x‖ at h
+  rw [hq] at h
+  simpa only [D, Q, sub_apply, ContinuousLinearMap.id_apply,
+    map_sub] using h
+
+/-- The metric obstruction in P22 applies to every common proposed fine state. -/
+theorem refinement_worst_case_lower (w a b : X) :
+    (1 / 2 : ℝ) * ‖a - b‖ ≤ max ‖w-a‖ ‖w-b‖ := by
+  have htri : ‖a-b‖ ≤ ‖w-a‖ + ‖w-b‖ := by
+    calc
+      ‖a-b‖ = ‖(a-w)+(w-b)‖ := by congr 1; abel
+      _ ≤ ‖a-w‖ + ‖w-b‖ := norm_add_le _ _
+      _ = ‖w-a‖ + ‖w-b‖ := by rw [norm_sub_rev a w]
+  have ha := le_max_left ‖w-a‖ ‖w-b‖
+  have hb := le_max_right ‖w-a‖ ‖w-b‖
+  linarith
+
+end Komorebi.LSM

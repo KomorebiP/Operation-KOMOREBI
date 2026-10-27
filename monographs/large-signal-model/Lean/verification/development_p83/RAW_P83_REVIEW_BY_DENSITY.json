@@ -1,0 +1,81 @@
+{
+  "claim": "P83",
+  "verdict": "PASS: proved as written within the stated reference-measure hypotheses",
+  "reviewer": "rotation_density",
+  "review_type": "separate raw source and evidence review; no new Lean execution",
+  "sources": {
+    "CurvedMomentGeometry": {
+      "sha256": "925e583c1e58ef66d8c471c343fc7f5f7a9a11f54af771ef8dafc26f25e8cd2c",
+      "declarations": 21,
+      "theorems": 14
+    },
+    "CurvedMomentInstrument": {
+      "sha256": "b66f5a6d83a48836ba86b80640f221c90c1378aa614946565eb8c9d5e7277ba7",
+      "declarations": 16,
+      "theorems": 10
+    },
+    "CurvedMomentPolynomial": {
+      "sha256": "e739dec5282e8c322734c00c8cc24391bfe84879070fc3fa8f25bd2bb465c104",
+      "declarations": 6,
+      "theorems": 4
+    },
+    "CurvedMomentMarkov": {
+      "sha256": "3e9ba89da6b81bd1b6569dc5d29d0a2b3f71530bfb914d7bb3287fe1b9680639",
+      "declarations": 17,
+      "theorems": 13
+    }
+  },
+  "author_receipt": {
+    "path": "verification/development_p83/RESULT.json",
+    "sha256": "ae11479d6b46483596a0b6339bb328281c44093fdfcc57d3cb0545c286884a24",
+    "all_14_stages_pass": true
+  },
+  "author_scope_audit_sha256": "9a85b281fc79f5a0052161243121cd017f8b7ac973e13cd18b85cc4732ae6fc6",
+  "review_extent": {
+    "read_all_four_sources": true,
+    "read_both_negative_control_sources": true,
+    "source_hashes_recomputed": true,
+    "all_60_named_axiom_records_checked_allowed_only": true,
+    "all_four_kernel_replay_markers_inspected": true,
+    "both_control_logs_inspected": true,
+    "controls_reach_only_one_actual_False_error_each": true,
+    "new_compilation_or_replay_by_reviewer": false
+  },
+  "obligations": [
+    {
+      "claim": "Actual three-dimensional cone and base",
+      "finding": "Literal 2x2 moment PSD plus z2 <= z0 yields strict mass, generation, closure, and the exact normalized base. The constructive endpoint-mixture proof gives the actual convex hull of the interval curve, including boundary x^2=1."
+    },
+    {
+      "claim": "Actual instrument and reference moments",
+      "finding": "Pointwise scalar density floor derives from |a|+|b| <= 1-rho, rho >= 0. Positivity is proved on the whole cone, including zero mass. Compact support derives continuous-function integrability; exact first and second moments derive integrated mass preservation."
+    },
+    {
+      "claim": "Degree-four polynomial and conditional moments",
+      "finding": "Literal Fin 5 coefficient matrices evaluate to the actual rank-one branch. First through fourth reference moments derive the u and L2 conditional means; the fourth moment is genuinely used."
+    },
+    {
+      "claim": "Observable Markov kernel and posterior",
+      "finding": "The signal kernel is the actual instrument kernel at the curve state and is defined at every interval signal. Actual update equals the curve only on positive reference branches and almost everywhere under the actual observation kernel. The one-step observable Markov transition follows, without identifying zero-density fallback states pointwise."
+    },
+    {
+      "claim": "Actual finite records",
+      "finding": "The actual DensityInstrument supplies the P52 probability record law at every finite horizon."
+    }
+  ],
+  "claim_limits": [
+    "Reference is an explicit supplied probability measure with interval support and four stated moments; concrete uniform and five-node instances are separate P85 work.",
+    "No strict positivity rho > 0 is imposed; zero-density branches are handled almost everywhere, not by a false all-values posterior identity.",
+    "The raw source exposes global one-step Markov transition and actual record probability; it does not itself contain a standalone equality of the entire P52 record law to the completed observable Markov chain. That bridge is being implemented in P85."
+  ],
+  "provenance": {
+    "P83_sources_authored_by_reviewer": false,
+    "shared_dependency_disclosure": "CurvedMomentGeometry imports MatrixRotation.binary_quadratic_nonneg, a previously accepted P51 PSD leaf authored by this reviewer. This review does not claim independent authorship review of that leaf. P83 composition and all four new modules were reviewed separately; fresh accepted cumulative dependency checks remain parent-owned.",
+    "MatrixRotation_sha256": "2e2c6bf398a5bb7b6ca42abae28959e3305c8443cc4197c0cc018708a439f7e6"
+  },
+  "control_interpretation": {
+    "CurvedMomentNeedsScalarConstraint": "PSD alone admits curve 2; at valid a=0,b=1,u=0 the branch mass is negative. Omitting z2 <= z0 therefore breaks cone positivity.",
+    "CurvedMomentFourthMomentRequired": "A genuine finite nonnegative normalized experiment has the first three required moments but fourth moment 1/3. Its actual conditional L2 mean is 1/2 rather than 1/5, rejecting omission of the fourth-moment hypothesis."
+  },
+  "findings": []
+}

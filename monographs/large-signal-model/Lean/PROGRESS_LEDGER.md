@@ -1,0 +1,97 @@
+# Large Signal Model progress ledger
+
+## Parent checkpoint
+
+- Exact archive: aabc39484e691e3b0213ac523456d474b01ee02d5de16cf98e3e2b668d22d9bf.
+- Complete mappings: 39 of 87; no partial mappings; 48 unformalized.
+- Proof inventory: 99 modules, 1,117 named theorems, 81 negative controls.
+
+## Checkpoint LSM-0.15.0
+
+- Goal: finish the Large Signal Model formalization and monograph.
+- Goal reached: False.
+- Current state: 48/87 complete formal mappings, 1 partial, and 38 unformalized.
+- Complete additions: P11, P23, P24, P31, P35, P37, P48, P57, P68.
+- Partial additions: P66.
+- All predecessor proof modules are byte-identical; new module hashes are retained in the checkpoint JSON.
+- Internal raw-proof review is distinct from compiler acceptance and from independent external review.
+- Fresh cumulative verification: see verification/current/report.json.
+- Delivered-archive integrity and source binding: see the separate delivery-verification record; these checks do not claim a second Lean compilation or kernel replay.
+- Reference laboratory: all 29 scripts passed; no production-model training or benchmark run was introduced.
+- Monograph: full 174-page book retained, explicit assumption clarifications applied, formal status synchronized, all unchanged pages checked for text/pixel identity.
+
+## Unresolved obligations and restart
+
+The original goal remains open until every required mapping is complete. The next chronological unformalized target is P46. The exhaustive remaining IDs, scopes and track assignments are in ROADMAP_1.0.json and COVERAGE.json. The specific P66 continuation, when partial, is preserved with its source.
+
+No finite example, written proof, failed search or source hash closes an unformalized implication. Continue from CONTINUE_HERE.md and append the next checkpoint rather than rewriting this history.
+
+## Checkpoint LSM-0.16.0
+
+- Parent delivered archive SHA-256: `85b8a25021b665da32f7328ced65d797b2a383464f01a3a2962f0b1bd8214b05`.
+- Parent: 48 complete mappings, one partial (P66), 38 unformalized; 109 proof modules, 1,639 named declarations, 1,272 named theorems, 94 rejection controls.
+- Goal reached: False.
+- Current state: 51/87 complete formal mappings, 1 partial, and 35 unformalized.
+- Complete additions: P46, P47, P49.
+- Current inventory: 119 proof modules, 1,880 named declarations, 1,460 named theorems and 104 rejection controls.
+- All inherited proof and rejection-control files remain byte-identical. Source hashes are in the checkpoint and lineage records.
+- Raw-source coordinator and separate-agent internal reviews are retained with per-file hashes. They are not independent external certification.
+- Accepted execution: `verification/current/report.json` and `verification/current/metadata.json`. Historical/development receipts are not substituted for this run.
+- The archive's integrity and source-binding receipt is separate from source compilation and kernel replay. Its extraction checks do not claim another Lean run.
+- The unchanged reference laboratory retains all 29 source-bound script passes. The portable runtime retains its 16-test check.
+- The full 174-page monograph is synchronized to accepted scope and execution. Original source, corrected editable body, reproducible PDF patches, bookmarks and unchanged-page identity checks are retained.
+
+## Restart after this checkpoint
+
+The original goal remains open. Next chronological unformalized target: P50. P66 remains partial. The exhaustive remaining IDs and exact obligations are in `ROADMAP_1.0.json` and `COVERAGE.json`.
+
+No numerical example, written proof, failed search or source hash closes an unformalized implication. Continue from `CONTINUE_HERE.md` and append the next checkpoint without rewriting this retained history.
+
+## Checkpoint LSM-0.17.0
+
+- Parent delivered archive SHA-256: `ba5e964126ecc1e09d1214d983bee6fe36f9ddddc21703b19097e4d8c21015df`.
+- Parent: 51 complete mappings, one partial (P66), 35 unformalized; 119 proof modules, 1,880 named declarations, 1,460 named theorems, 104 rejection controls.
+- Goal reached: False.
+- Current state: 58/87 complete formal mappings, 1 partial, and 28 unformalized.
+- Complete additions: P50, P51, P52, P53, P54, P55, P56.
+- Current inventory: 133 proof modules, 2,299 named declarations, 1,753 named theorems and 118 rejection controls.
+- All inherited proof and rejection-control files remain byte-identical. Source hashes are in the checkpoint and lineage records.
+- Raw-source coordinator and separate-agent internal reviews are retained with per-file hashes. They are not independent external certification.
+- Accepted execution: `verification/current/report.json` and `verification/current/metadata.json`. Historical/development receipts are not substituted for this run.
+- The archive's integrity and source-binding receipt is separate from source compilation and kernel replay. Its extraction checks do not claim another Lean run.
+- The unchanged reference laboratory retains all 29 source-bound script passes. The portable runtime retains its 16-test check.
+- The full 174-page monograph is synchronized to accepted scope and execution. Original source, corrected editable body, reproducible PDF patches, bookmarks and unchanged-page identity checks are retained.
+
+## Restart after this checkpoint
+
+The original goal remains open. Next chronological unformalized target: P58. P66 remains partial. The exhaustive remaining IDs and exact obligations are in `ROADMAP_1.0.json` and `COVERAGE.json`.
+
+No numerical example, written proof, failed search or source hash closes an unformalized implication. Continue from `CONTINUE_HERE.md` and append the next checkpoint without rewriting this retained history.
+
+## Checkpoint LSM-0.18.0
+
+- Parent delivered archive SHA-256: `dc3e6a2877b94db1eba0e50334859cd1cf2f83171cca5b0e22ea60717556479b`.
+- Parent: 58 complete, one partial (P66), 28 unformalized; 133 proof modules, 2,299 named declarations, 1,753 named theorems and 118 rejection controls.
+- Goal reached: False.
+- Current state: 66/87 complete formal mappings, 1 partial, and 20 unformalized.
+- Complete additions: P58, P59, P60, P61, P62, P63, P64, P65.
+- Inventory: 155 proof modules, 2,697 named declarations, 2,042 named theorems and 137 rejection controls.
+- All inherited proof and control files remain byte-identical. Raw-source internal reviews have per-file hashes and explicit provenance.
+- Accepted cumulative execution is recorded only by `verification/current/report.json` and `verification/current/metadata.json`; individual development checks are separate.
+- Archive integrity and extracted metadata checks do not claim a second Lean compilation or replay.
+- The unchanged reference laboratory retains its 29 source-bound script passes, and the portable runtime its 16-test pass.
+- The 174-page monograph is synchronized to the accepted scope and execution. Original source, corrected editable body, reproducible PDF edits, bookmarks and unchanged-page identity checks remain included.
+
+## Restart after this checkpoint
+
+The original goal remains open. P66 is partial; P67 is the first chronological unformalized target. Read `CONTINUE_HERE.md` and the exact coverage/roadmap records. Preserve this ancestry when appending the next checkpoint.
+
+## LSM-1.0.0
+
+87/87 complete proposition mappings, 0 partial and 0 unformalized.
+
+All 155 inherited mathematical source files remain byte for byte identical to the checked parent. Of its 137 inherited rejection controls,134 remain byte for byte identical and 3 have documented test repairs removing unrelated elaboration or linter errors. Their false assertions are retained. Exact original and repaired control bytes, reasons and clean intended-rejection receipts are preserved in `history/control_repairs/` and bound by `SOURCE_LINEAGE.json`. Current mapping reviews bind the new endpoint signatures and hypotheses to the original register. Fresh cumulative execution is recorded separately in `verification/current/report.json`. All registered proposition mappings are complete. No remaining proposition obligation is recorded.
+
+## LSM-1.0.0 execution closeout
+
+All 87 registered proposition mappings are complete. Accepted execution: 254 mathematical module compilations and kernel replays, one whole-project root compilation, exact rational examples, the full 4,454-declaration axiom audit and 183 isolated intended rejections. All 145 metadata checks, 15 lexical guard cases and 33 classifier cases pass. The source checkpoint remains fixed; the separate current execution report is accepted. Three inherited controls were repaired with their original bytes and diagnostics preserved. No numbered-proposition restart obligation remains.

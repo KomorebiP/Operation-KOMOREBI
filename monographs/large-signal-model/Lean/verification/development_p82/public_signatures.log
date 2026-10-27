@@ -1,0 +1,181 @@
+@Komorebi.LSM.ObservableMoments.AccessibleState : {E : Type u_1} →
+  {A : Type u_2} →
+    {Y : Type u_3} →
+      [inst : NormedAddCommGroup E] →
+        [inst_1 : NormedSpace ℝ E] →
+          [MeasurableSpace E] →
+            [inst_3 : MeasurableSpace Y] →
+              {C : Komorebi.LSM.BaseNorm.ProbabilityCone E} →
+                {ν : MeasureTheory.Measure Y} →
+                  Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν →
+                    [MeasurableSpace A] → {H : Type u_4} → [MeasurableSpace H] → Type (max (max (max u_1 u_2) u_3) u_4)
+@Komorebi.LSM.ObservableMoments.AccessibleProcess : {Ω : Type u_1} →
+  {H : Type u_2} →
+    {E : Type u_3} →
+      {A : Type u_4} →
+        {Y : Type u_5} →
+          [mΩ : MeasurableSpace Ω] →
+            [mH : MeasurableSpace H] →
+              [inst : NormedAddCommGroup E] →
+                [inst_1 : NormedSpace ℝ E] →
+                  [MeasurableSpace E] →
+                    [inst_3 : MeasurableSpace Y] →
+                      [inst_4 : MeasurableSpace A] →
+                        [Fintype A] →
+                          [MeasurableSingletonClass A] →
+                            {C : Komorebi.LSM.BaseNorm.ProbabilityCone E} →
+                              {ν : MeasureTheory.Measure Y} →
+                                [MeasureTheory.IsProbabilityMeasure ν] →
+                                  Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν →
+                                    {μ : MeasureTheory.Measure Ω} →
+                                      MeasureTheory.Filtration ℕ mΩ → Type (max (max (max (max u_1 u_2) u_3) u_4) u_5)
+@Komorebi.LSM.ObservableMoments.accessible_conditional_moment : ∀ {E : Type u_1} {A : Type u_2} {Y : Type u_3}
+  [inst : NormedAddCommGroup E] [inst_1 : NormedSpace ℝ E] [FiniteDimensional ℝ E] [inst_3 : MeasurableSpace E]
+  [BorelSpace E] [inst_5 : MeasurableSpace Y] {C : Komorebi.LSM.BaseNorm.ProbabilityCone E}
+  {ν : MeasureTheory.Measure Y} [inst_6 : MeasureTheory.IsProbabilityMeasure ν]
+  (D : Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν) [inst_7 : MeasurableSpace A] [inst_8 : Fintype A]
+  [inst_9 : MeasurableSingletonClass A] {H : Type u_4} [inst_10 : MeasurableSpace H]
+  (X : Komorebi.LSM.ObservableMoments.AccessibleState D) {Ω : Type u_5} [inst_11 : MeasurableSpace Ω]
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] (history : Ω → H) (observation : Ω → Y),
+  Measurable history →
+    Measurable observation →
+      MeasureTheory.Measure.map (fun ω => (history ω, observation ω)) μ =
+          (MeasureTheory.Measure.map history μ).compProd (Komorebi.LSM.ObservableMoments.historyKernel D X) →
+        ∀ (g : Y → ℝ),
+          Measurable g →
+            (∀ (a : A), MeasureTheory.Integrable (fun y => g y • D.op a y) ν) →
+              μ[fun ω => g (observation ω) • ↑(X.next (history ω, observation ω)) |
+                  MeasurableSpace.comap history inferInstance] =ᵐ[μ]
+                fun ω =>
+                (Komorebi.LSM.ObservableMoments.momentOperator D g (X.action (history ω))) ↑(X.state (history ω))
+@Komorebi.LSM.ObservableMoments.process_conditional_moment : ∀ {Ω : Type u_1} {H : Type u_2} {E : Type u_3}
+  {A : Type u_4} {Y : Type u_5} [mΩ : MeasurableSpace Ω] [mH : MeasurableSpace H] [inst : NormedAddCommGroup E]
+  [inst_1 : NormedSpace ℝ E] [FiniteDimensional ℝ E] [inst_3 : MeasurableSpace E] [BorelSpace E]
+  [inst_5 : MeasurableSpace Y] [inst_6 : MeasurableSpace A] [inst_7 : Fintype A] [inst_8 : MeasurableSingletonClass A]
+  {C : Komorebi.LSM.BaseNorm.ProbabilityCone E} {ν : MeasureTheory.Measure Y}
+  [inst_9 : MeasureTheory.IsProbabilityMeasure ν] (D : Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν)
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {ℱ : MeasureTheory.Filtration ℕ mΩ}
+  (P : Komorebi.LSM.ObservableMoments.AccessibleProcess D ℱ) (g : Y → ℝ),
+  Measurable g →
+    (∀ (a : A), MeasureTheory.Integrable (fun y => g y • D.op a y) ν) →
+      ∀ (n : ℕ),
+        μ[fun ω => g (P.observation n ω) • Komorebi.LSM.ObservableMoments.currentState D P (n + 1) ω | ↑ℱ n] =ᵐ[μ]
+          fun ω =>
+          (Komorebi.LSM.ObservableMoments.momentOperator D g (Komorebi.LSM.ObservableMoments.currentAction D P n ω))
+            (Komorebi.LSM.ObservableMoments.currentState D P n ω)
+@Komorebi.LSM.ObservableMoments.gatedResponse_condExp : ∀ {Ω : Type u_1} {H : Type u_2} {A : Type u_3} {Y : Type u_4}
+  {r : ℕ} [mΩ : MeasurableSpace Ω] [mH : MeasurableSpace H] [inst : MeasurableSpace Y] [inst_1 : MeasurableSpace A]
+  [inst_2 : Fintype A] [inst_3 : MeasurableSingletonClass A] {C : Komorebi.LSM.BaseNorm.ProbabilityCone (Fin r → ℝ)}
+  {ν : MeasureTheory.Measure Y} [inst_4 : MeasureTheory.IsProbabilityMeasure ν]
+  (D : Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν) {μ : MeasureTheory.Measure Ω}
+  [MeasureTheory.IsProbabilityMeasure μ] {ℱ : MeasureTheory.Filtration ℕ mΩ}
+  (P : Komorebi.LSM.ObservableMoments.AccessibleProcess D ℱ) (a : A) (g : Y → ℝ),
+  Measurable g →
+    (∀ (b : A), MeasureTheory.Integrable (fun y => g y • D.op b y) ν) →
+      ∀ (i : Fin r) (n : ℕ),
+        μ[Komorebi.LSM.ObservableMoments.gatedResponse D P a g i n | ↑ℱ n] =ᵐ[μ] fun ω =>
+          (Komorebi.LSM.ObservableMoments.momentMatrix D g a).mulVec
+            (Komorebi.LSM.ObservableMoments.gatedDesign D P a n ω) i
+@Komorebi.LSM.ObservableMoments.coefficient_from_moments : ∀ {E : Type u_1} {A : Type u_2} {Y : Type u_3}
+  [inst : NormedAddCommGroup E] [inst_1 : NormedSpace ℝ E] [FiniteDimensional ℝ E] [inst_3 : MeasurableSpace Y]
+  {C : Komorebi.LSM.BaseNorm.ProbabilityCone E} {ν : MeasureTheory.Measure Y}
+  (D : Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν) {p : ℕ} (B : A → Fin p → E →L[ℝ] E)
+  (g ψ : Fin p → Y → ℝ),
+  (∀ (a : A) (y : Y), D.op a y = ∑ k, ψ k y • B a k) →
+    (∀ (j k : Fin p), MeasureTheory.Integrable (fun y => g j y * ψ k y) ν) →
+      IsUnit (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ) →
+        ∀ (a : A),
+          B a =
+            Komorebi.LSM.FiniteMomentIdentification.mix (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ)⁻¹
+              fun j => Komorebi.LSM.ObservableMoments.momentOperator D (g j) a
+@Komorebi.LSM.ObservableMoments.mixed_directional_error : ∀ {p r : ℕ} (W : Matrix (Fin p) (Fin p) ℝ)
+  (Mhat M : Fin p → Matrix (Fin r) (Fin r) ℝ) (V : Matrix (Fin r) (Fin r) ℝ),
+  V.PosDef →
+    ∀ (β : Fin p → Fin r → ℝ),
+      (∀ (j : Fin p) (i : Fin r),
+          (Komorebi.LSM.RegressionConfidence.weightedNorm V fun l => Mhat j i l - M j i l) ≤ β j i) →
+        ∀ (k : Fin p) (i : Fin r) (x : Fin r → ℝ),
+          |(Komorebi.LSM.FiniteMomentIdentification.mix W Mhat k).mulVec x i -
+                (Komorebi.LSM.FiniteMomentIdentification.mix W M k).mulVec x i| ≤
+            ∑ j, |W k j| * β j i * Komorebi.LSM.RegressionConfidence.weightedNorm V⁻¹ x
+@Komorebi.LSM.ObservableMoments.true_mass_region_iff : ∀ {A : Type u_1} {Y : Type u_2} {p r : ℕ}
+  [inst : MeasurableSpace Y] {C : Komorebi.LSM.BaseNorm.ProbabilityCone (Fin r → ℝ)} {ν : MeasureTheory.Measure Y}
+  (D : Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν) (B : A → Fin p → (Fin r → ℝ) →L[ℝ] Fin r → ℝ)
+  (g ψ : Fin p → Y → ℝ),
+  (∀ (a : A) (y : Y), D.op a y = ∑ k, ψ k y • B a k) →
+    (∀ (j k : Fin p), MeasureTheory.Integrable (fun y => g j y * ψ k y) ν) →
+      (∀ (k : Fin p), MeasureTheory.Integrable (ψ k) ν) →
+        IsUnit (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ) →
+          ∀ (Mhat : Komorebi.LSM.ObservableMoments.CoefficientFamily A p r) (V : A → Matrix (Fin r) (Fin r) ℝ)
+            (β : A → Fin p → Fin r → ℝ),
+            Komorebi.LSM.ObservableMoments.coefficientMatrices B ∈
+                Komorebi.LSM.ObservableMoments.massConstrainedRegion
+                  (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ) Mhat V β C.mass
+                  (Komorebi.LSM.ObservableMoments.basisIntegral ψ) ↔
+              ∀ (a : A) (j : Fin p) (i : Fin r),
+                (Komorebi.LSM.RegressionConfidence.weightedNorm (V a) fun l =>
+                    Mhat a j i l - Komorebi.LSM.ObservableMoments.momentMatrix D (g j) a i l) ≤
+                  β a j i
+@Komorebi.LSM.ObservableMoments.observable_moment_operator_confidence : ∀ {Ω : Type u_1} {H : Type u_2} {A : Type u_3}
+  {Y : Type u_4} {p r : ℕ} [mΩ : MeasurableSpace Ω] [mH : MeasurableSpace H] [inst : MeasurableSpace Y]
+  [inst_1 : MeasurableSpace A] [inst_2 : Fintype A] [inst_3 : MeasurableSingletonClass A]
+  {C : Komorebi.LSM.BaseNorm.ProbabilityCone (Fin r → ℝ)} {ν : MeasureTheory.Measure Y}
+  [inst_4 : MeasureTheory.IsProbabilityMeasure ν] (D : Komorebi.LSM.ContinuousInstrument.DensityInstrument C ν)
+  {μ : MeasureTheory.Measure Ω} [MeasureTheory.IsProbabilityMeasure μ] {ℱ : MeasureTheory.Filtration ℕ mΩ}
+  (P : Komorebi.LSM.ObservableMoments.AccessibleProcess D ℱ) (B : A → Fin p → (Fin r → ℝ) →L[ℝ] Fin r → ℝ)
+  (g ψ : Fin p → Y → ℝ),
+  (∀ (j : Fin p), Measurable (g j)) →
+    (∀ (a : A) (y : Y), D.op a y = ∑ k, ψ k y • B a k) →
+      (∀ (j k : Fin p), MeasureTheory.Integrable (fun y => g j y * ψ k y) ν) →
+        (∀ (k : Fin p), MeasureTheory.Integrable (ψ k) ν) →
+          IsUnit (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ) →
+            ∀ (γ : A → ℝ),
+              (∀ (a : A), 0 < γ a) →
+                ∀ (σ S : Komorebi.LSM.ObservableMoments.RowIndex A p r → ℝ),
+                  (∀ (k : Komorebi.LSM.ObservableMoments.RowIndex A p r), 0 < σ k) →
+                    ∀ (α : Komorebi.LSM.ObservableMoments.RowIndex A p r → NNReal),
+                      (∀ (k : Komorebi.LSM.ObservableMoments.RowIndex A p r), 0 < α k) →
+                        ∀ (δ : NNReal),
+                          ∑ k, α k ≤ δ →
+                            (∀ (k : Komorebi.LSM.ObservableMoments.RowIndex A p r),
+                                Komorebi.LSM.RegressionConfidence.euclideanNorm
+                                    (Komorebi.LSM.ObservableMoments.rowParameter D g k) ≤
+                                  S k) →
+                              (∀ (k : Komorebi.LSM.ObservableMoments.RowIndex A p r) (n : ℕ),
+                                  Komorebi.LSM.RegressionConfidence.ConditionalSubgaussian ⋯
+                                    (Komorebi.LSM.RegressionConfidence.regressionNoise
+                                      (Komorebi.LSM.ObservableMoments.rowParameter D g k)
+                                      (Komorebi.LSM.ObservableMoments.gatedDesign D P k.1)
+                                      (Komorebi.LSM.ObservableMoments.gatedResponse D P k.1 (g k.2.1) k.2.2) n)
+                                    (σ k) μ) →
+                                (∀ (j : Fin p) (n : ℕ),
+                                    μ[fun ω =>
+                                        g j (P.observation n ω) •
+                                          Komorebi.LSM.ObservableMoments.currentState D P (n + 1) ω |
+                                        ↑ℱ n] =ᵐ[μ]
+                                      fun ω =>
+                                      (Komorebi.LSM.ObservableMoments.momentOperator D (g j)
+                                          (Komorebi.LSM.ObservableMoments.currentAction D P n ω))
+                                        (Komorebi.LSM.ObservableMoments.currentState D P n ω)) ∧
+                                  (∀ (a : A) (j : Fin p) (i : Fin r) (n : ℕ),
+                                      μ[Komorebi.LSM.ObservableMoments.gatedResponse D P a (g j) i n | ↑ℱ n] =ᵐ[μ]
+                                        fun ω =>
+                                        (Komorebi.LSM.ObservableMoments.momentMatrix D (g j) a).mulVec
+                                          (Komorebi.LSM.ObservableMoments.gatedDesign D P a n ω) i) ∧
+                                    (∀ (a : A),
+                                        Komorebi.LSM.ObservableMoments.coefficientMatrices B a =
+                                          Komorebi.LSM.FiniteMomentIdentification.mix
+                                            (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ)⁻¹ fun j =>
+                                            Komorebi.LSM.ObservableMoments.momentMatrix D (g j) a) ∧
+                                      MeasurableSet (Komorebi.LSM.ObservableMoments.operatorGoodEvent D P γ σ α g) ∧
+                                        1 - ↑δ ≤ μ.real (Komorebi.LSM.ObservableMoments.operatorGoodEvent D P γ σ α g) ∧
+                                          ∀ ω ∈ Komorebi.LSM.ObservableMoments.operatorGoodEvent D P γ σ α g,
+                                            ∀ (n : ℕ),
+                                              Komorebi.LSM.ObservableMoments.coefficientMatrices B ∈
+                                                  Komorebi.LSM.ObservableMoments.massConstrainedRegion
+                                                    (Komorebi.LSM.ObservableMoments.basisMomentMatrix g ψ)
+                                                    (Komorebi.LSM.ObservableMoments.fittedMomentMatrices D P γ g n ω)
+                                                    (Komorebi.LSM.ObservableMoments.actionDesign D P γ n ω)
+                                                    (Komorebi.LSM.ObservableMoments.momentRadius D P γ σ S α n ω) C.mass
+                                                    (Komorebi.LSM.ObservableMoments.basisIntegral ψ) ∧
+                                                ∀ (a : A) (k : Fin p) (i : Fin r) (x : Fin r → ℝ), |⋯| ≤ ∑ j, ⋯

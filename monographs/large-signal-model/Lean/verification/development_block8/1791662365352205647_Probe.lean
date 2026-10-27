@@ -1,0 +1,10 @@
+import KomorebiLSM.MemoryStability
+#check Finset.sum_range_add_sum_Ico
+#check Finset.sum_subset
+#check Finset.sum_range_add_sum_Ico
+#check pow_le_one₀
+#check ContinuousLinearMap.norm_comp_le
+#check norm_sum_le
+#check Finset.sum_sub_distrib
+#check Finset.range_subset
+#check Int.natCast_ofNat

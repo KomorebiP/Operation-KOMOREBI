@@ -1,0 +1,33 @@
+import KomorebiLSM.EllipsoidPolynomial
+
+#print axioms Komorebi.LSM.OrientedEllipsoid.matrixOperator
+#print axioms Komorebi.LSM.OrientedEllipsoid.matrixOperator_apply
+#print axioms Komorebi.LSM.OrientedEllipsoid.matrixPolynomial
+#print axioms Komorebi.LSM.OrientedEllipsoid.matrixPolynomial_eval
+#print axioms Komorebi.LSM.OrientedEllipsoid.polynomialOperator
+#print axioms Komorebi.LSM.OrientedEllipsoid.polynomialOperator_matrix
+#print axioms Komorebi.LSM.OrientedEllipsoid.scalar_coefficient_identity
+#print axioms Komorebi.LSM.OrientedEllipsoid.scalarSOS
+#print axioms Komorebi.LSM.OrientedEllipsoid.scalarSOS_nonneg
+#print axioms Komorebi.LSM.OrientedEllipsoid.ScalarCertificate
+#print axioms Komorebi.LSM.OrientedEllipsoid.ScalarCertificate
+#print axioms Komorebi.LSM.OrientedEllipsoid.betaPolynomial
+#print axioms Komorebi.LSM.OrientedEllipsoid.dualPolynomial
+#print axioms Komorebi.LSM.OrientedEllipsoid.betaPolynomial_eval
+#print axioms Komorebi.LSM.OrientedEllipsoid.dualPolynomial_eval
+#print axioms Komorebi.LSM.OrientedEllipsoid.quadraticPolynomial
+#print axioms Komorebi.LSM.OrientedEllipsoid.evalMatrix_sub
+#print axioms Komorebi.LSM.OrientedEllipsoid.quadraticPolynomial_eval
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate
+#print axioms Komorebi.LSM.OrientedEllipsoid.polynomialDensityInstrument
+#print axioms Komorebi.LSM.OrientedEllipsoid.polynomialDensityInstrument_op
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.branch
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.mass_preserving
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.instrument
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.instrument_op
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.preserves
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.word_cone
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.word_mass_nonneg
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.observation_law_probability
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.record_law_probability
+#print axioms Komorebi.LSM.OrientedEllipsoid.PolynomialCertificate.record_law_prefix

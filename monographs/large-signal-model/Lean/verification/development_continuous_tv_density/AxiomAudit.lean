@@ -1,0 +1,6 @@
+import KomorebiLSM.ContinuousTVDensity
+#print axioms Komorebi.LSM.ContinuousTVDensity.toSignedMeasure_withDensity_real
+#print axioms Komorebi.LSM.ContinuousTVDensity.lawTV_withDensity_real
+#print axioms Komorebi.LSM.ContinuousTVDensity.density_lintegral_finite
+#print axioms Komorebi.LSM.ContinuousTVDensity.lawTV_withDensity_lintegral
+#print axioms Komorebi.LSM.ContinuousTVDensity.ofReal_lawTV_withDensity_lintegral

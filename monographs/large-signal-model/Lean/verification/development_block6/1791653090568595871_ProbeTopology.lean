@@ -1,0 +1,16 @@
+import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Topology.Order.Compact
+import Mathlib.Data.List.FinRange
+#check LinearMap.continuous_of_finiteDimensional
+#check LinearMap.isClosedEmbedding_of_injective
+#check Topology.IsClosedEmbedding.isCompact_preimage
+#check Topology.IsInducing.isCompact_preimage
+#check isClosed_le
+#check isClosed_eq
+#check isClosed_iInter
+#check isCompact_pi_infinite
+#check isCompact_Icc
+#check Set.Finite.of_finite_image
+#check List.finite_length_le
+#check List.finite_length
+#check List.finite_setOf_length_le

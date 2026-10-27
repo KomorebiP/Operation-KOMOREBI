@@ -1,0 +1,504 @@
+--- 0.8.0/FOUNDATIONS.md
++++ 0.9.0/FOUNDATIONS.md
+@@ -2,27 +2,39 @@
+ 
+ ## Foundations of realization, refinement and predictive closure
+ 
+-**Komorebi P. · Foundations edition 0.8.0 · 9 October 2026**
+-
+-Edition 0.8.0 adds Part VIII, Sections 91--100, and Propositions 80--87. It connects sequential data confidence, structured curved-domain certificates and marginal prediction bounds, and improves the previous deterministic repair. Production PR-LASM remains 2.3.0.
+-
+-This supplement develops the mathematical foundation of the Projector-Resolved Large Algebraic Signal Model (PR-LASM). It accompanies software release 2.3.0 without changing that release's implementation or historical verification records. Its subject is the structure of a signal model, not performance on a task suite.
+-
+-The central question is not only whether a signal can be reconstructed. It is whether a chosen description retains enough information for the transformations and inferences performed on it. A representation can be exact as an archive and insufficient as a predictive state. A predictive state can be sufficient for a specified family of dynamics without reconstructing the entire signal.
+-
+-The core organizing principle is therefore:
+-
+-> Preserve the observed signal. Declare the representation used for reasoning. Express transformations in that representation. Identify the obstruction when transformation, compression or inference fails to commute. Refine the representation or retain memory when the obstruction matters.
+-
+-The finite atlas, packet and best-basis results below consolidate the historical PR-LASM capstone [K1]. The Bayesian coarsening result is brought forward from Paper VI [K2]. The predictive-closure constructions connect these foundations to invariant-subspace and projection-memory theory [R2, R3]. Their role here is a self-contained foundation for the model, not a claim that these classical ingredients were first discovered by Komorebi.
+-
+-The numbered results have proofs in this document. Exact rational and symbolic examples accompany them. They have not been newly formalized or checked by a Lean kernel in this supplement.
+-
+-Edition 0.8.0 contains Propositions 1--87. Part I develops realization and closure. Part II begins at Section 15 with observable learning and stability. Part III begins at Section 27 with controlled stochastic realization. Part IV begins at Section 41 with certified probability domains and robust learning. Part V begins at Section 56 with curved matrix domains, continuous observation measures, population-moment learning, exact binning and controlled density approximation. The production software remains at version 2.3.0 and is not changed by this theory edition.
+-
+-Sections 14, 26, 40, 55, 69 and 79 retain historical end-of-block checkpoints. Their stated open directions are waypoints rather than the current completion ledger. Part VIII and Section 100 give the current boundary. Section 90 is also historical. The unchanged 0.7.0 archive is included for source lineage and contains the earlier archives. General proofs appear in the text, while computational records check explicit finite cases.
+-
+-\newpage
++**Komorebi P. · Foundations 0.9.0 · Audited release candidate · 9 October 2026**
++
++This volume freezes the mathematical scope at 87 propositions. It is a foundation for a family of algebraic signal models, not a claim that one implemented learner discovers every representation used in the volume. The accompanying reference laboratory implements explicit finite sectors. Production PR-LASM remains version 2.3.0.
++
++# Reading the completed argument
++
++Start with the difference between preserving an observation and retaining enough information to predict it. Sections 1–14 develop that distinction through exact atlases, packets, transfer blocks, predictive closure and memory. Sections 15–26 construct an observable linear realization under rank and coverage assumptions and control its approximations.
++
++Sections 27–55 pass to controlled probabilities. A predictive state describes future experiments, while an invariant domain gives its coordinates probability meaning. Identification from an observable table and certification of that table's fitted model remain separate requirements. Sections 56–69 extend the construction to continuous observation measures and curved matrix domains.
++
++Sections 70–90 distinguish geometry proposals from exact verification, approximation from correction, and deterministic uncertainty from statistical coverage. Sections 91–100 connect dependent observations to a covered parameter set in a restricted, fully observable nonlinear family. That last family is not the repaired operator family from the preceding example.
++
++The **Reader's Synthesis** gives a shorter mathematical route through these results. The **Proof and Evidence Register** records each proposition's assumptions, direct internal dependencies and concrete code connections. Neither document substitutes for the proofs here.
++
++## What the model specifies
++
++A signal model declares the observations it accepts, the predictive state it uses, the operators that act on that state, and the conditions under which those operators retain their meaning. When it assigns probabilities, it also declares a reference measure, a mass functional and an admissible domain. When it makes an error claim, it names the two compared objects, the norm, the horizon and the evidence supporting that comparison.
++
++The central rule is:
++
++> Preserve the observed signal. Specify the representation used for reasoning. Express transformations in that representation. Identify the defect when transformation, compression or inference fails to commute. Refine the state, retain memory or accept a quantified approximation when the defect matters.
++
++Four distinctions govern the whole volume. Lossless storage does not imply predictive sufficiency. A valid probability model need not be accurate. A fitted model's exact certificate does not establish coverage of an unknown generating process. A uniform single-time marginal bound is not a uniform bound on complete observation records.
++
++## Frozen scope and review status
++
++The numbered results are mathematical statements with written proofs. Their classical antecedents are attributed in the source lineage. The proposition count is not a novelty count. The release audit reviews the stated assumptions and the way conclusions depend on them. Finite symbolic and numerical checks exercise examples and independent certificate replays. No Lean kernel verification or independent external referee review is claimed.
++
++One statement has a boundary clarification in this edition. Proposition 72 now explicitly assumes at least one spatial coordinate. The mass-only case has no nonzero mass-preserving perturbation and is excluded. The other 86 proposition-and-proof passages are preserved byte for byte. Their upstream definitions remain part of their hypotheses.
++
++The section and proposition numbers are retained for traceability. Historical end-of-block checkpoints have been replaced by current dependency summaries. An unchanged copy of the 0.8.0 Markdown and its original audit and manifests is included under `provenance/0.8.0/`. The previously delivered predecessor archive is identified by hash, not recursively embedded again.
++
++
+ 
+ # 1. Three objects that must remain distinct
+ 
+@@ -555,19 +567,9 @@
+ 
+ omitting the second coordinate loses norm $1/1000$, but changes the next first coordinate by exactly one. The correct certificate is the product of omitted magnitude and transfer amplification.
+ 
+-# 14. First-block checkpoint and release organization
+-
+-The principal theoretical object is now a signal realization with explicit compression maps and commuting requirements. Exact archives, packets, operator descriptions and inference are connected by those requirements rather than simply listed as neighboring modules.
+-
+-The inherited core supplies exact finite atlases, complete packet synthesis, additive best-basis selection and a finite typed predictive grammar [K1, K3]. Paper VI supplies the exact inference-coarsening defect and its hypotheses [K2]. This supplement develops a connected treatment of atlas coherence, predictive quotients, compositional defects, minimal closure, joint finite stochastic closure, projection memory and bounded refinement limits.
+-
+-The additions are mathematical statements and reference calculations. They do not silently make the 2.3.0 runtime enforce atlas coherence, compute minimal predictive closures or discover the true transition law. An implementation map is supplied separately. The original source and historical manuscript remain unchanged.
+-
+-A foundations-centered release should have one primary theory volume organized by realization, packets, transport, closure, memory and inference. The mathematical examples and proof ledger belong alongside it. Software documentation should identify which definitions and laws each component implements. Empirical material can remain supplementary without being the criterion for mathematical completeness.
+-
+-The first edition identified the next substantive gaps as stable learned atlases, identification from incomplete observations, nonlinear interaction truncation, coherent program weighting under grammar growth, and adaptive refinement with learned operators. Part II now addresses explicit finite or bounded sectors of these questions. Its final section distinguishes those closed statements from the general problems that remain.
+-
+-The finite theory can be stated decisively: exact realization preserves observations, complete refinement preserves decomposition, coherent transport preserves the meaning of operators, and predictive or inferential closure holds precisely under the corresponding compatibility conditions. Where closure fails, the theory supplies a typed defect and, in the finite known-model cases above, a constructive repair.
++# 14. Connection to observable learning
++
++Exact realization, complete decomposition and operator transport provide the representation laws. Propositions 6–10 separate predictive closure, constructive refinement and memory. The remaining requirement for learning is access to a sufficient predictive state. Part II addresses a finite linear observable sector; it does not infer its rank or coverage assumptions from a successful fit.
+ 
+ \newpage
+ 
+@@ -579,7 +581,7 @@
+ 
+ The observable-state perspective has classical antecedents in predictive state representations [R5] and observable-operator learning [R7]. Finite invariant observable spaces also underlie Koopman reductions [R6]. The present development uses elementary statements proved below and identifies their specific place in Komorebi's realization and obstruction calculus. It does not import those papers' sample-complexity guarantees into this model.
+ 
+-\newpage
++
+ 
+ # 15. From hidden state to an accessible predictive state
+ 
+@@ -1122,7 +1124,7 @@
+ 
+ # 25. The finite learned-realization theorem
+ 
+-The preceding results combine into a concrete completion of one part of the learning problem. This is the strongest claim made for incomplete observations in this volume.
++The preceding results combine into a concrete completion of one part of the learning problem. This is the integrated identification claim for the autonomous linear sector.
+ 
+ **Proposition 25. Observationally grounded finite linear realization.** Assume all of the following:
+ 
+@@ -1138,46 +1140,12 @@
+ 
+ This establishes an actual route from observations to a composable algebraic signal model under explicit finite assumptions. It is more than a fit on a few points. It is also less than unrestricted nonlinear world-model discovery. In particular, the algorithm does not infer assumptions 1--3 merely by returning a matrix. The accompanying certificate keeps the data-verified identities separate from those model assumptions.
+ 
++# 26. Connection to controlled prediction
++
++Proposition 25 completes the autonomous observable linear sector under its declared coverage assumptions. It does not establish a common delay operator for arbitrary actions. Part III constructs controlled predictive states from interventional experiment probabilities. The two results are compatible routes, not interchangeable learning assumptions.
++
+ \newpage
+ 
+-# 26. Second-block checkpoint and remaining questions
+-
+-The known-operator constructions in Part I now have an observation-based continuation. There is an exact causal realization theorem for a finite linear observable sector, a data-span identifiability criterion and a fixed-space perturbation bound. Recursive memory truncation has a sufficient stability theorem. Polynomial packet omissions have a remainder bound. Learned chart descriptions can be reconciled, refinement has an explicit information requirement, and grammar growth has an evidence-preserving semantics.
+-
+-The theoretical center is a sequence of obligations:
+-
+-$$
+-\begin{gathered}
+-\text{accessible observations}\ \longrightarrow\
+-\text{declared predictive state}\ \longrightarrow\
+-\text{identified operations},\\
+-\text{typed defects}\ \longrightarrow\
+-\text{stable composition}\ \longrightarrow\
+-\text{coherent refinement and inference}.
+-\end{gathered}
+-$$
+-
+-A training residual cannot stand in for coverage of unobserved directions. A small coefficient error cannot stand in for well-conditioned synthesis. A posterior within a grammar cannot stand in for a probability that the grammar is complete.
+-
+-## 26.1 The remaining research questions are narrower
+-
+-Proposition 20 controls omissions in a declared polynomial expansion. It does not discover an invariant nonlinear dictionary or prove that its dimension stays finite. Selection and stability of nonlinear invariant features remain separate tasks [R6].
+-
+-Stochastic partially observed processes need their own accessible state construction, positive probability semantics and finite-sample control. The HMM literature gives examples under rank and separation assumptions [R7], not guarantees for an arbitrary operator grammar. Noisy feature-space learning needs subspace perturbation and rank-selection analysis. Dependent sampling and active observations need their own statistical and excitation assumptions.
+-
+-Without contraction or another stability certificate, the product-sum error bound remains valid but need not stay small. Unbounded infinite-dimensional operators still need domain control. Adaptive selection of representations still needs consistency beyond a pathwise deterministic estimate. These questions delimit the present theorems rather than invalidate their stated finite conclusions.
+-
+-## 26.2 Release and verification status
+-
+-The preceding foundations edition 0.2.0 contained Propositions 1--25, including twelve statements added in Part II. Every added statement is proved in the text. The accompanying rational, symbolic and separately labeled numerical calculations check finite examples and counterexamples. No general Lean kernel verification is claimed.
+-
+-The 2.3.0 runtime is unchanged. The output-only reference learner implements data-span identification, not unrestricted discovery. Source lineage, assumptions, implementation boundaries, calculation reports and the complete preceding foundations archive accompany this edition.
+-
+-The contribution is a connected foundation and explicit special-case repairs. Observability, predictive states, least squares, invariant subspaces, Lyapunov stability and Bayesian mixture identities have classical antecedents. The proposition count is not a count of historical discoveries.
+-
+-\newpage
+-
+-
+ # Part III. Controlled stochastic realization
+ 
+ The next step is not to rename a deterministic predictor as a probabilistic one. A stochastic signal model must say what its state predicts, which actions intervene on the process, how observations update the state, and why every resulting number is a probability. These are separate obligations. A low dimensional linear representation can satisfy its reconstruction equations while failing probability positivity.
+@@ -1186,7 +1154,7 @@
+ 
+ The classical antecedents are predictive state representations, observable operator models and finite-rank realization [R5, R7, R9]. Those traditions already use probabilities of tests and products of operators. The purpose here is to make their assumptions and consequences explicit within the realization calculus. The twelve propositions below are a connected development, not twelve claims of historical novelty. No statement here replaces a proof with a numerical check.
+ 
+-\newpage
++
+ 
+ # 27. Actions and observations are different inputs
+ 
+@@ -1258,7 +1226,7 @@
+ 
+ This proposition uses a known hidden-state model. It is not yet an observable-data learner. It also concerns all initial beliefs, whereas a model initialized at one fixed $p_0$ can have a smaller reachable predictive dimension. The next construction handles that distinction without requiring recovery of hidden states.
+ 
+-\newpage
++
+ 
+ # 28. The state is a function of possible future experiments
+ 
+@@ -1335,7 +1303,7 @@
+ 
+ Exact experiment probabilities are population quantities. The reference example below supplies rational tables from a declared process and keeps that table generator separate from the learner. Section 36 supplies one finite sampling protocol for estimating those entries. Neither a hidden matrix nor its probability cone is secretly passed to the observable learner.
+ 
+-\newpage
++
+ 
+ # 30. Probability validity is not a rank condition
+ 
+@@ -1399,7 +1367,7 @@
+ 
+ This does not prohibit useful spectral packets. It fixes their type. Signed algebraic packets can be used for transfer, approximation and diagnostics. They must be synthesized before probability interpretation unless a separate positive decomposition has been established. That distinction prevents a reconstruction identity from being misused as a Bayesian mixture identity.
+ 
+-\newpage
++
+ 
+ # 32. Action coverage is a mathematical requirement
+ 
+@@ -1461,7 +1429,7 @@
+ 
+ The inverse formula contains the unknown true basis $U$. It proves identifiability and conditioning relative to that space, not that a learner already knows a perfect decoder. When using the estimated subspace as coordinates for a realization, all boundary vectors, symbol operators and probability constraints must be transformed together. Signed singular-vector coordinates are not new independent observations.
+ 
+-\newpage
++
+ 
+ # 34. Noisy operator reconstruction in a fixed core
+ 
+@@ -1558,7 +1526,7 @@
+ 
+ When a known closed convex feasible base is available, Euclidean projection of a tentative posterior back onto that base cannot increase its distance from the true posterior. This is a declared repair to the estimator, not an identity for an unmodified update. It also does not repair negative branch probabilities of arbitrary fitted operators before normalization.
+ 
+-\newpage
++
+ 
+ # 36. A finite experimental route to the probability table
+ 
+@@ -1634,7 +1602,7 @@
+ 
+ A certificate should therefore retain both $\lambda\delta_s$ and the posterior defect. A posterior that looks correct can hide a wrong evidence model. This is the stochastic counterpart of the distinction between reconstruction and predictive closure.
+ 
+-\newpage
++
+ 
+ # 38. A complete two-action rational example
+ 
+@@ -1714,7 +1682,7 @@
+ 
+ The model's online state is not a sequence of newly measured future probabilities. It is a recursively maintained prediction initialized from learned experiment probabilities and updated after each actual action and observation. Uncertainty in those learned parameters is separate from the stochastic uncertainty in the next observation.
+ 
+-\newpage
++
+ 
+ # 39. Integrated controlled stochastic realization
+ 
+@@ -1735,25 +1703,12 @@
+ 
+ This theorem closes a finite controlled and stochastic sector of the foundational model. It does not claim unrestricted discovery of a nonlinear environment from a single trajectory. It does identify what a learned predictive state represents, why its operations compose, where its evidence comes from, and which defects change likelihoods or posteriors.
+ 
+-# 40. Third-block checkpoint
+-
+-The model now has a single framework for exact signal archives, predictive quotients, controlled probability instruments, coordinate transport, packet decompositions, and filtering. The central mathematical object is not merely a large feature vector. It is a representation together with operations and explicit admissibility conditions under which those operations preserve meaning.
+-
+-Several questions remain concrete. Finite data still require justified rank or coverage assumptions. Learning a globally invariant probability cone from partial tests is not supplied by an SVD. Continuous observations require kernels or densities with a common reference measure, and finite-alphabet proofs do not transfer by renaming their symbols. Dependence, adaptive experimentation and unknown reset states require additional statistical arguments. Useful finite nonlinear observable dictionaries need construction and approximation theory beyond the existence of a finite-rank special case.
+-
+-These are not reasons to dilute the finite conclusions. They identify the next mathematical work. In particular, the new normalized defect
+-
+-$$
+-\frac{(I-\widehat z^+\lambda)(RM_s-B_sR)p}{\mathbf1^\top M_sp}
+-$$
+-
+-provides an exact interface between representation error, packet transfer, branch evidence and posterior inference. It is the quantity a foundations-driven refinement rule would need to control, rather than an undifferentiated aggregate error.
+-
+-The reference implementation is a theory laboratory, not a replacement of the production 2.3.0 runtime. The release contains exact tables, an observable-only table learner, a separate hidden-model verifier, noise calculations, reset-sampling examples, and negative controls. None is represented as Lean kernel verification. The full general proofs are the arguments in this volume.
++# 40. From realization to admissible domains
++
++Proposition 37 identifies a finite controlled realization from a covered population table. Existence of its canonical probability cone does not provide a finite certificate for a fitted model. Part IV supplies such certificates in finite positive-lift sectors, while keeping internal validity distinct from statistical coverage.
+ 
+ \newpage
+ 
+-
+ # Part IV. Certified probability domains and robust learning
+ 
+ A matrix learned from observations is not yet a probability model. Part III made that distinction exact: a finite predictive realization needs an admissible cone preserved by its action and observation operators. It supplied a canonical cone defined by all possible future tests, but did not supply a finite way to verify that cone for an estimated model.
+@@ -1764,7 +1719,7 @@
+ 
+ The next twelve propositions continue the numbering from the preceding volume. All have proofs below. The exact computations check stated finite instances and counterexamples. They are not a Lean formalization and do not change the production PR-LASM 2.3.0 runtime.
+ 
+-\newpage
++
+ 
+ # 41. The object to be certified
+ 
+@@ -2149,7 +2104,7 @@
+ 
+ No general impossibility of all finite certificates follows. This very example has a finite quadratic certificate. The obstruction concerns polyhedral certificates, not invariant cones described by other mathematics.
+ 
+-\newpage
++
+ 
+ # 52. A finite approximation with an explicit price
+ 
+@@ -2231,15 +2186,9 @@
+ 
+ It does not turn a successful fit into unrestricted knowledge of the world. The model class, observation protocol, rank coverage, exact mass law, domain witness and approximation budget remain visible parts of the result. Failure of a finite search is a withheld certificate, not a proof of invalidity. The nonpolyhedral example explains why this distinction is necessary even for very small exact models.
+ 
+-# 55. Foundation status after this block
+-
+-The cumulative theory now contains 49 propositions. This block adds a finite route from observable operators to probability-domain certificates, robust invariance, certified correction, pre-normalization stability of full observation laws, and a precise boundary for finite positive lifts. It also supplies an observable-only interval search and a rational curved-domain counterexample with a quantified polyhedral approximation.
+-
+-These are not twelve claims of historical novelty. The positive-realization and rotation ingredients have explicit antecedents [R12, R14]. Convex invariance and ordered-space contraction are established mathematics [R13, R15]. The value of the block is the connected set of requirements, constructive witnesses, exact counterexamples and uncertainty accounting within the large signal model.
+-
+-The next open tasks are no longer simply “make the probabilities valid.” They include efficient synthesis of useful nonpolyhedral domains, informative confidence regions in poorly conditioned predictive coordinates, dependent-data and adaptive-intervention learning, continuous observation measures, and nonlinear representations whose discovery and approximation costs are controlled. A general practical solver for all such domains is not supplied here.
+-
+-The production runtime remains unchanged. The new code is an exact reference checker, a bounded rational domain search and finite verification experiments. General validity comes from the stated proof and its checked witness, not from a large number of sampled trajectories. The release ledger separates unchanged predecessor source, new results, finite arithmetic evidence, expected rejections and unexecuted work.
++# 55. From polyhedral to curved certificates
++
++A finite positive lift is one sufficient certificate language. Proposition 46 shows that a low-dimensional model can require a nonpolyhedral domain. Part V represents that same model exactly through a curved matrix domain. A failed finite-generator search is therefore not a general invalidity theorem.
+ 
+ \newpage
+ 
+@@ -2255,7 +2204,7 @@
+ 
+ This is a discrete-time theory with continuous-valued observations. It is not a continuous-time stochastic dynamics theorem. Production PR-LASM 2.3.0 is unchanged.
+ 
+-\newpage
++
+ 
+ # 56. A matrix certificate for a curved domain
+ 
+@@ -2354,7 +2303,7 @@
+ 
+ This use of symmetric positive semidefinite matrices is mathematical. It neither requires quantum hardware nor claims a quantum description of the measured system. It borrows a well-defined operator representation rather than a physical interpretation.
+ 
+-\newpage
++
+ 
+ # 58. An observation density is not a branch probability
+ 
+@@ -2840,19 +2789,9 @@
+ 
+ The construction leaves visible what is often collapsed into the phrase signal model: a represented state, an operator-valued observation density, a reference measure, a valid probability domain, an observation protocol and an approximation budget. Each is needed for a different reason.
+ 
+-# 69. Fifth-block checkpoint
+-
+-The new block addresses the specific curved-domain obstruction without damping the old rotation model. It extends the probability semantics to continuous observations, provides a finite polynomial certificate over an entire interval, and supplies a conditional event-moment reconstruction. It also proves exact bin semantics, the covariance defect of averaging transformations, and a continuous-record stability bound.
+-
+-The cumulative volume now contains 61 propositions. This count is a navigation aid, not a count of historically novel results or a measure of general intelligence. The general proofs are the arguments in the text. Exact finite checks validate the worked calculations, replay certificates and reject deliberately malformed inputs. No Lean kernel was run for this block.
+-
+-The release implements a factored polynomial certificate checker, population-moment reconstruction, exact fixed-template recognition and finite examples. It does not implement general curved-domain discovery, a generic semidefinite solver, continuous-time dynamics or a statistically trained production model. Production PR-LASM 2.3.0 remains unchanged.
+-
+-The remaining work is concentrated in representation discovery rather than in renaming the existing components. It includes useful curved-domain synthesis beyond fixed templates, controlled approximation outside a finite polynomial basis, dependent-data identification, unknown reset mechanisms, and nonlinear observables whose learning and refinement costs are bounded. The continuous moment counterexample shows why those assumptions cannot simply be omitted. The exact curved certificate shows why they also should not be confused with a need to discretize every legitimate signal model into finitely many positive states.
+-
+-
+-\newpage
+-
++# 69. From continuous semantics to discovery
++
++Part V gives event-based probability semantics, exact binning and conditional finite-moment reconstruction. Fixed-template recognition in Proposition 60 is not unrestricted geometry discovery. Parts VI–VII add restricted discovery and robust verification with their own assumptions. The continuous reference measure and the observation basis remain explicit inputs.
+ 
+ \newpage
+ 
+@@ -3274,18 +3213,9 @@
+ 
+ Those roles are related but not interchangeable. A failed search means that this construction did not provide a witness. A failed witness means its submitted identities or signs do not establish the claimed validity. A detected residual means a registered predictive condition is inconsistent with the observations at the stated error budget. These three outcomes should be reported differently.
+ 
+-# 79. Sixth-block checkpoint
+-
+-The cumulative theory contains 70 propositions. The nine additions close a restricted template-free geometry-discovery sector, give positive polynomial approximation without an exact true-degree assumption, and extend residual evidence to dependent, adaptively observed signals. The continuous example retains its operators and predictions while gaining a different certificate construction.
+-
+-The reference implementation supplies exact invariant-form discovery, an independent rational quadratic checker, finite positive-approximation examples, and a prospectively defined dependent-path experiment. It does not supply a generic noisy curved-domain optimizer, a complete algorithm for all invariant geometries, or identification of arbitrary hidden dynamics from one trajectory.
+-
+-The next substantial gaps are joint noisy geometry-and-dynamics estimation with certified uncertainty, informative rather than merely sound sequential upper guarantees, state coverage for controlled experiments, and nonlinear observable discovery with a measured representation cost. The present block does not hide those tasks behind a certificate count. It gives precise constructions and boundaries from which they can be developed.
+-
+-Production PR-LASM remains at 2.3.0. No new Lean verification, remote execution, real-signal training run, repository publication or license change is claimed. The new proofs are mathematical arguments in this volume. The accompanying calculations verify exact examples, counterexamples and certificate replay.
+-
+-\newpage
+-
++# 79. From exact geometry to robustness
++
++Propositions 62–70 distinguish structural acceptance, controlled approximation and sequential evidence. Exact zero-margin preservation does not supply a positive noise radius. Part VII examines that obstruction and gives strict-margin witnesses for selected perturbed families. Statistical nonrejection is not used as an upper accuracy bound.
+ 
+ \newpage
+ 
+@@ -3342,7 +3272,7 @@
+ 
+ An exact certificate can be correct while having no tolerance to unrestricted perturbations. This is a geometrical fact, not a failure of the certificate checker.
+ 
+-**Proposition 72. Boundary fragility under mass preserving perturbations.** Let $F$ preserve $\mathcal L_d$. Suppose a normalized input $z=(1,v)$ has a boundary image $Fz=(m,w)$ with $m=\|w\|_2$. For every $\epsilon>0$, there is a linear perturbation $\Delta$ with $\lambda\Delta=0$ and
++**Proposition 72. Boundary fragility under mass preserving perturbations.** Assume $d\geq1$. Let $F$ preserve $\mathcal L_d$. Suppose a normalized input $z=(1,v)$ has a boundary image $Fz=(m,w)$ with $m=\|w\|_2$. For every $\epsilon>0$, there is a linear perturbation $\Delta$ with $\lambda\Delta=0$ and
+ 
+ $$
+ \sup_{\|v'\|_2\leq1}\|\Delta(1,v')\|_{\mathcal L_d}=\epsilon
+@@ -3351,6 +3281,9 @@
+ such that $(F+\Delta)z\notin\mathcal L_d$. Here the base norm is $\|(m,w)\|_{\mathcal L_d}=\max(|m|,\|w\|_2)$.
+ 
+ **Proof.** If $w\ne0$, put $e=w/\|w\|_2$. If $w=0$, choose any spatial unit vector $e$. Define $\Delta=\epsilon(0,e)\lambda$. Its mass row vanishes and its value on every normalized input is $(0,\epsilon e)$, of base norm $\epsilon$. If $w\ne0$, the new spatial norm is $m+\epsilon$. If $w=0$, the original output mass is zero and the new spatial norm is $\epsilon$. Either image lies outside the cone. $\square$
++
++The positive spatial dimension is essential. When $d=0$, the state is mass alone and $\lambda$ is the identity on $\mathbb R$. The condition $\lambda\Delta=0$ forces $\Delta=0$, so a perturbation of prescribed norm $\epsilon>0$ cannot exist. This explicit boundary was missing from the earlier wording. All previously worked examples have two spatial coordinates and are unaffected.
++
+ 
+ For a continuous operator family, a constant spatial perturbation of this form preserves every integrated mass row and produces the same obstruction at an observation with a boundary image. It need not preserve the algebraic restrictions of a narrower uncertainty class. Perturbing a positive congruence factor and rebuilding its congruence, for example, is different from perturbing an arbitrary predictive matrix.
+ 
+@@ -3665,15 +3598,9 @@
+ 
+ The noisy proposal, the failed raw fit, the repair and the comparison bound all appear in the release records. None is replaced by a more favorable trajectory score. The coefficient box is around the repaired family in the specified coordinates, not an inferred distribution of sensor noise.
+ 
+-# 90. Seventh-block checkpoint
+-
+-The cumulative foundation now contains 79 propositions. The new block extends curved validity checking beyond exact conformal identities to strict-margin polynomial families, including a concrete perturbed-operator example. It gives a finite exact certificate over continuous observations and a continuum of predictive states, a conditional existence search for strict curved sectors, and the correct quantifiers for data-selected geometry.
+-
+-The distinction between noise and model correction is central. A zero-margin exact model may admit no unrestricted robust neighborhood. A repaired estimate can have such a neighborhood, but its correction cost belongs in the prediction budget. A deterministic neighborhood is not a statistical confidence set until an upstream coverage theorem justifies that interpretation.
+-
+-The reference implementation includes a numerical proposal, rationalized geometry, an exact tensor-Bernstein verifier, a coefficient-box inclusion check, deliberate rejection controls and an independent comparison-domain calculation. It does not implement a complete global optimizer over arbitrary cones, learn empirical coefficient confidence regions, establish unknown predictive rank, or prove useful long-horizon accuracy for the worked repair.
+-
+-The next substantive work is to reduce the conservatism of the repair and uncertainty descriptions, construct statistically covered operator sets from realistic dependent signals, and connect these strict certificates to adaptive nonlinear representation discovery. The current block establishes a reproducible finite sector rather than declaring those tasks solved. Production PR-LASM stays at 2.3.0. No new Lean verification, public publication or license change is claimed.
++# 90. From deterministic robustness to data confidence
++
++Part VII gives exact continuum certificates for deterministic uncertainty families. The worked repaired model is internally valid at every finite horizon, but its original comparison bound becomes trivial at horizon eight. Part VIII reduces that fixed repair and separately constructs a statistically covered domain for a supplied observable family. Its confidence statement is not transferred to the earlier repaired operators.
+ 
+ \newpage
+ 
+@@ -3685,7 +3612,7 @@
+ 
+ The sequential-regression result is a classical self-normalized concentration theorem [R23], proved here in the form used by the signal model. The contraction argument uses standard Markov-kernel and total-variation ideas [R24]. The new block's contribution is the explicit sequence of assumptions, finite witnesses, structured uncertainty, observation-measure distinctions and executable examples connecting these tools to the realization calculus. Proposition counts are not historical-novelty counts.
+ 
+-\newpage
++
+ 
+ # 91. A smaller repair can be bracketed rather than guessed
+ 
+@@ -3754,7 +3681,7 @@
+ 
+ The first integer horizon where this upper bound reaches one is now 30 rather than eight. The bound remains conservative. The repaired uncertainty tube is still not a confidence set for the unmodified generating process. This improvement is deterministic certificate refinement, not a new statistical experiment.
+ 
+-\newpage
++
+ 
+ # 92. Confidence from dependent observations
+ 
+@@ -3862,7 +3789,7 @@
+ 
+ The theorem is conditional on a correct finite observation basis, accessible predictive state and parameter bounds. It does not obtain a hidden predictive state from a single dependent path without additional assumptions. Unknown dictionary discovery, state-estimation error and polynomial misspecification remain distinct problems. The following example makes the state accessible by construction rather than concealing that requirement.
+ 
+-\newpage
++
+ 
+ # 94. A nonlinear observable state with a curved moment domain
+ 
+@@ -3990,7 +3917,7 @@
+ 
+ At earlier recorded checkpoints the sufficient density-floor test withheld a whole-box certificate. Its first successful recorded checkpoint was 32,768 transitions, with floor $1/100$. This is not a claim that 32,768 is the smallest possible sample size, or even the first passing individual step. Only the declared checkpoints were evaluated. A withheld whole-box certificate does not declare the nominal fit or true process invalid.
+ 
+-\newpage
++
+ 
+ # 96. Structured uncertainty has an observable error bound
+ 
+@@ -4075,38 +4002,30 @@
+ 
+ This is a nontrivial all-time bound on **one-time marginal observation distributions**. The complete-record bound is still $\min(1,2437T/90000)$, which becomes trivial at integer horizon 37. The model does not exchange those two different claims. In live filtering after a shared observed value, its state is exactly known and the next-observation law has the separate uniform upper bound $2437/90000$.
+ 
++
++
++# 98. A conditional data-to-domain theorem
++
++**Proposition 87. Observable structured learning with a covered domain.** Suppose the scalar process obeys the conditional law of Proposition 83 with the declared reference measure and fixed parameters satisfying $|a|,|b|\leq1$. Use the predictable regressions, fixed dictionary and confidence protocol of Proposition 84. At a data-selected finite time, form the full outward-rounded rectangle. If its density floor $\rho$ is nonnegative, that rectangle has an exact all-horizon probability certificate on $C$. If $\rho>0$, every chosen center inside it has the marginal and record bounds of Propositions 85--86 relative to every member.
++
++With probability at least $19/20$ over the specified stochastic observation process, these implications cover its true parameter at every checked time, including a stopping time. Internal validity of a verified rectangle is deterministic. Statistical coverage remains conditional on the declared process, moment, parameter and observation assumptions.
++
++**Proof.** Proposition 84 provides one simultaneous event on which both true parameters belong to all returned intervals. Proposition 83 supplies the domain certificate for the entire rectangle whenever its sufficient density floor is nonnegative. The selected center is one of its members, and the maximum distances to the endpoints bound each parameter difference. Proposition 85 gives conditional and record error. If the floor is positive, all true conditional rows have the same lower reference component, so Proposition 86 applies to the scalar Markov process. Selection of the stopping time does not alter the already simultaneous event. None of these implications verifies the assumptions from a single sample path. $\square$
++
++No claim of empirical coverage follows from the saved run. It is one seeded finite realization of the exactly declared discrete analogue. The general confidence result is a theorem, with assumptions recorded in the certificate. Its independent checker rederives the sufficient statistics, rational radii, outer endpoints, density floor and error budgets from the saved path. It rejects a changed reference measure, a narrower claimed interval, an altered path checksum or an unsupported claim that the assumptions were independently verified.
++
++This is the point where probability-domain certification and data uncertainty become connected in an executed dependent-signal example. The family is more restrictive than an arbitrary learned operator. That restriction is visible and does useful work: it preserves the nonlinear posterior curve while uncertainty changes its likelihoods.
++
++# 99. Two distinct completed reference sectors
++
++The smaller-repair construction retains the earlier operator family and geometry. Its coefficient box is deterministic, and its all-horizon validity is distinct from its finite-horizon comparison bound. The dependent-data construction learns two parameters of a different, supplied nonlinear observable family. It certifies a whole confidence rectangle without reset correction and distinguishes next-step, record and marginal bounds. Neither example establishes unrestricted representation discovery.
++
++# 100. Frozen release scope and research boundary
++
++The finite scope contains exact realization and transfer, closure and memory, conditional observable identification, controlled probability instruments, finite polyhedral and curved certificates, explicit approximation budgets, and a restricted dependent-data learning sector. The reference code and its executed examples are catalogued in the Proof and Evidence Register. General nonlinear dictionary discovery, unknown hidden-state learning, empirical sensor modeling and broad deployment remain research directions, not unstated conclusions or release prerequisites. Production PR-LASM 2.3.0 is unchanged. This 0.9.0 edition is a release candidate pending final editorial acceptance and a separate license decision before open-source publication.
++
+ \newpage
+ 
+-# 98. A conditional data-to-domain theorem
+-
+-**Proposition 87. Observable structured learning with a covered domain.** Suppose the scalar process obeys the conditional law of Proposition 83 with the declared reference measure and fixed parameters satisfying $|a|,|b|\leq1$. Use the predictable regressions, fixed dictionary and confidence protocol of Proposition 84. At a data-selected finite time, form the full outward-rounded rectangle. If its density floor $\rho$ is nonnegative, that rectangle has an exact all-horizon probability certificate on $C$. If $\rho>0$, every chosen center inside it has the marginal and record bounds of Propositions 85--86 relative to every member.
+-
+-With probability at least $19/20$ over the specified stochastic observation process, these implications cover its true parameter at every checked time, including a stopping time. Internal validity of a verified rectangle is deterministic. Statistical coverage remains conditional on the declared process, moment, parameter and observation assumptions.
+-
+-**Proof.** Proposition 84 provides one simultaneous event on which both true parameters belong to all returned intervals. Proposition 83 supplies the domain certificate for the entire rectangle whenever its sufficient density floor is nonnegative. The selected center is one of its members, and the maximum distances to the endpoints bound each parameter difference. Proposition 85 gives conditional and record error. If the floor is positive, all true conditional rows have the same lower reference component, so Proposition 86 applies to the scalar Markov process. Selection of the stopping time does not alter the already simultaneous event. None of these implications verifies the assumptions from a single sample path. $\square$
+-
+-No claim of empirical coverage follows from the saved run. It is one seeded finite realization of the exactly declared discrete analogue. The general confidence result is a theorem, with assumptions recorded in the certificate. Its independent checker rederives the sufficient statistics, rational radii, outer endpoints, density floor and error budgets from the saved path. It rejects a changed reference measure, a narrower claimed interval, an altered path checksum or an unsupported claim that the assumptions were independently verified.
+-
+-This is the point where probability-domain certification and data uncertainty become connected in an executed dependent-signal example. The family is more restrictive than an arbitrary learned operator. That restriction is visible and does useful work: it preserves the nonlinear posterior curve while uncertainty changes its likelihoods.
+-
+-# 99. What the block does and does not close
+-
+-Two separate improvements have been established.
+-
+-The perturbed 0.7.0 operator family now admits a four-times-smaller reset weight at the same deterministic coefficient-box radius. The witness is checked on both the discovered and comparison domains, and its prediction bound remains nontrivial for a longer finite horizon. Its geometry was reused. No new empirical coverage is attached to that example.
+-
+-The new scalar example learns two unknown coefficients from dependent observations of a fixed nonlinear state, constructs a time-uniform confidence rectangle, and certifies all its members on a curved domain without a reset. It also distinguishes complete-record, current-state and rolling-window prediction bounds. This example uses a separate declared model and does not establish a confidence set for the old 0.7.0 operator family.
+-
+-The outstanding general issue is not merely positive probabilities. It is obtaining an adequate observable representation, a correct observation basis and sufficiently informative data in a model class that remains computationally tractable. Theorems for a known dictionary cannot be used as proofs that an estimated hidden dictionary is correct. Unmodeled measurement error, nonstationary coefficients, response-dependent feature selection, unsupported reference measures and insufficient action coverage remain explicit failure modes.
+-
+-# 100. Release direction after the eighth block
+-
+-The cumulative theory contains 87 propositions with written proofs. The next step toward a foundations 1.0 should be a dependency and assumptions audit of this declared scope rather than treating every possible extension as a prerequisite. A defensible release can freeze exact realization, transfer and closure, finite observable learning, controlled instruments, probability-domain certificates, quantified approximation, and the restricted sequential learning sector now worked through.
+-
+-General nonlinear dictionary discovery and hidden-state identification from unrestricted noisy streams remain research directions. They need not be represented as already solved, nor silently made requirements for the finite theorems that are proved. The reference programs remain a small mathematics laboratory. Production PR-LASM stays at 2.3.0. No new Lean verification, public publication or license change is claimed.
+-
+-\newpage
+-
+ # References and source lineage
+ 
+ **[K1]** Komorebi P. *Projector-Resolved Large Algebraic Signal Model*. Historical 38-page capstone preserved in `Komorebi_PR_LASM_2.3.0_Source.zip`, `paper/Projector_Resolved_Large_Algebraic_Signal_Model.tex`. In particular, Sections 2–7 and the categorical-atlas distinction. Historical experimental claims are not used here.
+@@ -4165,10 +4084,10 @@
+ 
+ **[R22]** Tareq Hamadneh, Hassan Al-Zoubi, Hamza Alzaareer and Rafael Wisniewski. *Optimization and Positivity Certificates of Rational Functions using Bernstein Form*. arXiv:1906.11037, 2019. Primary manuscript inspected, including its Bernstein range enclosure discussion on printed pages 3--4. It supplies established positivity-certificate context. Proposition 75 gives its own tensor-product rectangle argument and strict-subdivision proof. Source: `https://arxiv.org/abs/1906.11037`.
+ 
+-**Inherited dependencies.** Proposition 52 defines continuous instrument semantics. Proposition 59 supplies the common-domain continuous-law bound. Propositions 62--63 distinguish exact ellipsoid proposals from verification. Proposition 48 supplies repeated confidence-set accounting. The new block restates the specific repair and uncertainty inequalities it uses. The unchanged 0.6.0 archive contains the full predecessor and all earlier references.
++**Inherited dependencies.** Proposition 52 defines continuous instrument semantics. Proposition 59 supplies the common-domain continuous-law bound. Propositions 62--63 distinguish exact ellipsoid proposals from verification. Proposition 48 supplies repeated confidence-set accounting. The new block restates the specific repair and uncertainty inequalities it uses. The cited earlier results are present in this cumulative volume.
+ 
+ **[R23]** Yasin Abbasi-Yadkori, David Pál and Csaba Szepesvári. *Online Least Squares Estimation with Self-Normalized Processes: An Application to Bandit Problems*. arXiv:1102.2670, version 1, 14 February 2011. The primary manuscript's Section 2, Theorem 3, and Section 5 supply the classical martingale-mixture and adaptive-regression context. Proposition 81 includes its own proof, retains conditional noise and design assumptions, and does not claim a new concentration inequality. Source checked: `https://arxiv.org/pdf/1102.2670`.
+ 
+ **[R24]** David A. Levin and Yuval Peres, with contributions by Elizabeth L. Wilmer. *Markov Chains and Mixing Times*, second edition, 2017. Chapters 4 and 5 develop total variation and coupling. The present minorization argument is proved directly and does not import a finite-state assumption into its general kernel statement. The worked reference chain is finite. Source checked: the author-hosted second-edition text, `https://pages.uoregon.edu/dlevin/MARKOV/mcmt2e.pdf`.
+ 
+-**Internal dependencies.** Part VII, especially Propositions 71, 73, 75, 76 and 79, supplies the robust checker and predecessor repair comparison. Propositions 59 and 69 supply the continuous and conditional-kernel full-law comparisons. Their source and proof passages are preserved unchanged. The independent source archive is `Komorebi_Large_Signal_Model_Foundations_0.7.0.zip`.
++**Internal dependencies.** Part VII, especially Propositions 71, 73, 75, 76 and 79, supplies the robust checker and predecessor repair comparison. Propositions 59 and 69 supply the continuous and conditional-kernel full-law comparisons. Their mathematical source passages are retained in this cumulative volume; prior archive identifiers remain in the provenance records.

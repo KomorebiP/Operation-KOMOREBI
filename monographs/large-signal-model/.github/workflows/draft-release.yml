@@ -1,0 +1,53 @@
+name: Prepare verified draft release
+
+# No push/tag trigger and no automatic publication.
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: draft-release-v1.0.0
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify the exact source commit first
+    permissions:
+      contents: read
+    uses: ./.github/workflows/lean-full.yml
+    with:
+      dependency_mode: cache
+      per_stage_timeout: "900"
+
+  draft:
+    name: Package verified bytes and create a draft
+    needs: verify
+    if: needs.verify.outputs.verified_commit == github.sha
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Recheck frozen payload on the verified commit
+        run: python3 ci/quick_checks.py --project Lean
+      - name: Build the immutable release assets
+        run: >-
+          python3 ci/package_release.py --source .
+          --out "$RUNNER_TEMP/release-assets"
+      - name: Create the static v1.0.0 draft without overwriting assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          python3 ci/create_draft_release.py
+          --source . --assets-dir "$RUNNER_TEMP/release-assets" --execute

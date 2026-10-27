@@ -1,0 +1,1 @@
+These are preserved development/orchestration scripts, with their original scratch paths and layout assumptions. They are provenance, not the portable end-user commands. For portable reproduction use the root README and scripts/verify.py. Source snapshots and compiler diagnostics are in ../development_block10/.

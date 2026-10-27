@@ -1,0 +1,67 @@
+{
+  "reviewer": "runtime subagent",
+  "provenance": "Separate-agent adversarial review in the same model/team lineage. Not independent external review.",
+  "source_foundations": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "sha256": "dd04cbc96e418b7a96648ea527b14afb53e0f6a4495320bbd2a23bf11457a90e"
+  },
+  "proof_register": {
+    "path": "source/PROOF_REGISTER_1.0.0.json",
+    "sha256": "71d092070a42e2f680877179c8bfdabdfc3e01edc4dc06adcf950e268df65943"
+  },
+  "review_kind": "raw proof derivation, quantifier, semantic dictionary and vacuity audit",
+  "verdict": "proved as written",
+  "remaining_gap": null,
+  "validation": {
+    "command": "source runtime/env.sh; lean -j1 -DwarningAsError=true MODULE.lean",
+    "exit_code": 0,
+    "scope": "Fresh file acceptance only; integrated axiom audit and kernel replay remain parent responsibilities."
+  },
+  "claim_id": 24,
+  "claim": "Splitting one parent prior mass among mixture children preserves normalized prior, evidence, posterior child total and every other posterior; joint-event mixture consistency preserves each predictive event.",
+  "input": {
+    "path": "KomorebiLSM/ProgramRefinement.lean",
+    "sha256": "617013901a92cf03eeae5d9647e1f3c6d077eb0dc3ac55f881239a1f35310ff6"
+  },
+  "assumptions": [
+    "Nonnegative priors and likelihoods; summable weights, priors and unnormalized evidence.",
+    "Child weights sum to one; original prior normalized.",
+    "Whole-record parent likelihood is the weighted child likelihood sum.",
+    "Original evidence is strictly positive; predictive event comparison additionally assumes the corresponding joint-likelihood mixture."
+  ],
+  "dependency_graph": [
+    "Factor parent prior out of the summable child evidence sum.",
+    "Replace the child evidence sum by the original parent contribution.",
+    "The original and refined positive normalizers coincide.",
+    "Divide summed child and other evidence by the common normalizer; apply the same argument to joint evidence."
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "RefinementContract prevents zero-normalizer and nonsummable-evidence vacuity.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Parent-prior zero, empty other-family, and singleton child-family remain valid.",
+      "status": "passed"
+    },
+    {
+      "obligation": "The fixed-child whole-record assumption is explicit and distinct from stepwise switching.",
+      "status": "passed"
+    },
+    {
+      "obligation": "Predictive_event_unchanged is universally quantified over scalar joint-event inputs; applying it eventwise gives the distribution assertion when inputs are actual joint likelihoods.",
+      "status": "passed"
+    }
+  ],
+  "residual_limits": [
+    "The theorem does not construct a predictive kernel or justify arbitrary numbers as joint likelihoods.",
+    "No claim that independently averaged one-step mixtures preserve a fixed-child mechanism."
+  ],
+  "strongest_safe_statement": "Splitting one parent prior mass among mixture children preserves normalized prior, evidence, posterior child total and every other posterior; joint-event mixture consistency preserves each predictive event.",
+  "cheapest_next_check": "Parent integrated clean compile, exhaustive axiom audit and kernel replay against the same source hashes.",
+  "environment": {
+    "lean_version": "4.34.0-rc2",
+    "lean_commit": "6a10ac8c22beadecabdbb0919c2b50214762f91d",
+    "mathlib_commit": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06"
+  }
+}

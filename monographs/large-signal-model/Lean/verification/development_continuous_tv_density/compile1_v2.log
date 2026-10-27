@@ -1,0 +1,56 @@
+KomorebiLSM/ContinuousTVDensity.lean:38:46: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (ν.withDensityᵥ (f - g)).variation
+in the target expression
+  1 / 2 * (ν.withDensityᵥ fun x => f x - g x).variation.real Set.univ = 1 / 2 * ∫ (x : Ω), |f x - g x| ∂ν
+
+Ω : Type u_1
+inst✝² : MeasurableSpace Ω
+ν : Measure Ω
+f g : Ω → ℝ
+inst✝¹ : IsProbabilityMeasure (ν.withDensity fun x => ENNReal.ofReal (f x))
+inst✝ : IsProbabilityMeasure (ν.withDensity fun x => ENNReal.ofReal (g x))
+hf : Integrable f ν
+hg : Integrable g ν
+hf0 : 0 ≤ᵐ[ν] f
+hg0 : 0 ≤ᵐ[ν] g
+⊢ 1 / 2 * (ν.withDensityᵥ fun x => f x - g x).variation.real Set.univ = 1 / 2 * ∫ (x : Ω), |f x - g x| ∂ν
+KomorebiLSM/ContinuousTVDensity.lean:66:46: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (ν.withDensityᵥ ((fun x => (f x).toReal) - fun x => (g x).toReal)).variation
+in the target expression
+  1 / 2 * (ν.withDensityᵥ fun x => (f x).toReal - (g x).toReal).variation.real Set.univ =
+    1 / 2 * (∫⁻ (x : Ω), ENNReal.ofReal |(f x).toReal - (g x).toReal| ∂ν).toReal
+
+Ω : Type u_1
+inst✝² : MeasurableSpace Ω
+ν : Measure Ω
+f g : Ω → ℝ≥0∞
+inst✝¹ : IsProbabilityMeasure (ν.withDensity f)
+inst✝ : IsProbabilityMeasure (ν.withDensity g)
+hf : AEMeasurable f ν
+hg : AEMeasurable g ν
+hfi : ∫⁻ (x : Ω), f x ∂ν ≠ ∞
+hgi : ∫⁻ (x : Ω), g x ∂ν ≠ ∞
+hfr : Integrable (fun x => (f x).toReal) ν
+hgr : Integrable (fun x => (g x).toReal) ν
+⊢ 1 / 2 * (ν.withDensityᵥ fun x => (f x).toReal - (g x).toReal).variation.real Set.univ =
+    1 / 2 * (∫⁻ (x : Ω), ENNReal.ofReal |(f x).toReal - (g x).toReal| ∂ν).toReal
+KomorebiLSM/ContinuousTVDensity.lean:80:4: error: Type mismatch: After simplification, term
+  LT.lt.ne (Integrable.hasFiniteIntegral (Integrable.sub hfr hgr))
+ has type
+  @Ne ℝ≥0∞ (∫⁻ (a : Ω), ‖((fun x => (f x).toReal) - fun x => (g x).toReal) a‖ₑ ∂ν) ∞
+but is expected to have type
+  @Ne ℝ≥0∞ (∫⁻ (x : Ω), ‖(f x).toReal - (g x).toReal‖ₑ ∂ν) ∞
+KomorebiLSM/ContinuousTVDensity.lean:76:74: error: unsolved goals
+Ω : Type u_1
+inst✝² : MeasurableSpace Ω
+ν : Measure Ω
+f g : Ω → ℝ≥0∞
+inst✝¹ : IsProbabilityMeasure (ν.withDensity f)
+inst✝ : IsProbabilityMeasure (ν.withDensity g)
+hf : AEMeasurable f ν
+hg : AEMeasurable g ν
+hfr : Integrable (fun x => (f x).toReal) ν
+hgr : Integrable (fun x => (g x).toReal) ν
+hfin : ∫⁻ (x : Ω), ENNReal.ofReal |(f x).toReal - (g x).toReal| ∂ν ≠ ∞
+⊢ ENNReal.ofReal (1 / 2) * ∫⁻ (x : Ω), ENNReal.ofReal |(f x).toReal - (g x).toReal| ∂ν =
+    2⁻¹ * ∫⁻ (x : Ω), ENNReal.ofReal |(f x).toReal - (g x).toReal| ∂ν

@@ -1,0 +1,378 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=0.83in,top=0.68in,bottom=0.69in,headheight=14pt,headsep=20pt]{geometry}
+\usepackage{fontspec,unicode-math,graphicx,xcolor,amsmath,booktabs,array,enumitem,fancyhdr,hyperref,microtype}
+\setmainfont{P052-Roman.otf}[Path=../Monograph/assets/fonts/,BoldFont=P052-Bold.otf,ItalicFont=P052-Italic.otf]
+\setmathfont{Latin Modern Math}
+\definecolor{ink}{HTML}{253249}
+\definecolor{teal}{HTML}{146B72}
+\definecolor{gold}{HTML}{AA7832}
+\definecolor{muted}{HTML}{667281}
+\hypersetup{colorlinks=true,linkcolor=teal,urlcolor=teal,pdftitle={Realization Calculus: Large Signal Model, A Theoretical Atlas},pdfauthor={Komorebi P.},pdfsubject={Realization, predictive closure, memory and certified probability domains}}
+\color{ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{1.5em}
+\linespread{1.06}
+\setlist[itemize]{leftmargin=1.4em,itemsep=2pt,topsep=2pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Realization Calculus}}
+\fancyhead[R]{\small\textsc{Theoretical Atlas}}
+\fancyfoot[L]{\small\color{muted}Large Signal Model}
+\fancyfoot[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\newcommand{\R}{\mathbb R}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\plate}[4]{\clearpage\pdfbookmark[1]{#2}{plate#1}\textcolor{teal}{\small\textsc{#1\quad #4}}\par\vspace{3pt}{\fontsize{23}{26}\selectfont #2}\par\vspace{3pt}{\color{muted}#3}\par\vspace{8pt}}
+\newcommand{\diagram}[2][0.98]{\begin{center}\includegraphics[width=#1\linewidth,height=2.45in,keepaspectratio]{figures/#2.pdf}\end{center}\vspace{-3pt}}
+\newcommand{\claim}[1]{\par\vspace{3pt}\textcolor{teal}{\textbf{The mathematical point.}} #1\par}
+\newcommand{\boundary}[1]{\par\vspace{3pt}{\small\textcolor{muted}{\textbf{Scope.} #1}}\par}
+\newcommand{\nav}[1]{\par{\small\textcolor{muted}{\textbf{Formal route.} #1}}\par}
+\begin{document}
+\thispagestyle{empty}
+\pdfbookmark[0]{Large Signal Model: A Theoretical Atlas}{title}
+{\small\textsc{Realization Calculus}}\par
+\vspace{51pt}
+{\fontsize{41}{44}\selectfont Large Signal\\Model}\par
+\vspace{16pt}
+{\fontsize{23}{29}\selectfont A theoretical atlas}\par
+\vspace{12pt}
+{\large Realization, predictive closure, memory\\and certified probability domains}\par
+\vspace{32pt}
+\diagram{00_architecture}
+\vspace{29pt}
+{\large Komorebi P.}\par
+\vfill
+\begin{minipage}{0.88\linewidth}
+A visual companion to the mathematical volume. Exact identities, geometric obstructions and worked rational examples connect the theory to its formal proofs.
+\end{minipage}
+\clearpage
+\pdfbookmark[1]{How to read the atlas}{route}
+\textcolor{teal}{\small\textsc{Orientation}}\par
+{\fontsize{23}{26}\selectfont Four contracts, one model}\par
+An observation, its archive, a predictive summary and a probability state carry different mathematical obligations. The theory connects them through maps whose domains and identities are explicit.
+\diagram{00_architecture}
+\begin{tabular}{@{}p{.19\linewidth}p{.32\linewidth}p{.42\linewidth}@{}}
+\toprule
+Contract & Defining identity & Question answered\\\midrule
+Reconstruction & $SA=I_X$ & Can the accepted observation be recovered?\\[5pt]
+Transport & $F_bT_{ba}=T_{ba}F_a$ & Do coordinate descriptions agree?\\[5pt]
+Closure & $\gamma F_u=\bar F_u\gamma$ & Does the summary determine its own future?\\[5pt]
+Probability & $B_oC\subseteq C$, $\lambda\sum_oB_o=\lambda$ & Are every branch and every finite record valid?\\\bottomrule
+\end{tabular}
+\vspace{10pt}
+\textbf{Reading route.} Plates 1--4 build the representation and its predictive quotient. Plates 5--9 explain interactions, lost paths, memory and observable identification. Plates 10--16 develop behavior spaces, positivity, curved geometry and statistical guarantees. Plate 17 locates the formal proofs.
+
+\textbf{Visual conventions.} Teal marks exact structure. Gold marks transported, refined or uncertain quantities. Red marks an obstruction or an omitted contribution. Every figure is drawn from a formula or an exact finite example. Curves of bounds are labeled as bounds.
+
+\boundary{The atlas selects core mechanisms from the 87 registered propositions. It introduces no new numbered theorem, fitted model, benchmark result or empirical coverage claim. Its diagrams supplement the proofs.}
+
+\plate{1}{Realizable coefficients form a subspace}{Exact storage includes a consistency condition.}{P1}
+For linear analysis and synthesis maps $A:X\to C$ and $S:C\to X$, the left-inverse law $SA=I_X$ gives injectivity of $A$. The coefficient projector is $\Pi=AS$, with
+\[
+\Pi^2=\Pi,\qquad \im\Pi=\im A,\qquad c\text{ is realizable}\iff \Pi c=c.
+\]
+\diagram[0.90]{01_consistency}
+\textbf{A redundant archive.} Take $X=\R^2$, $C=\R^3$ and
+\[
+A(x_1,x_2)=(x_1,x_2,x_1+x_2),\qquad S(c_1,c_2,c_3)=(c_1,c_2).
+\]
+Then $\Pi(c_1,c_2,c_3)=(c_1,c_2,c_1+c_2)$. The shaded plane is the set of realizable coefficients. The red segment shows synthesis followed by reanalysis of an inconsistent vector.
+\claim{A left inverse determines an idempotent consistency map. Here it is oblique: $\Pi$ is not self-adjoint. Orthogonality requires an additional hypothesis.}
+\boundary{For bounded linear maps on normed spaces, $\|S\|$ controls amplification of coefficient errors. Exact invertibility by itself gives no conditioning guarantee.}
+\nav{\texttt{Realization.lean}; norm estimates in \texttt{Normed.lean}.}
+
+\plate{2}{One operation, several coordinates}{A commuting square expresses coordinate independence.}{P2}
+Let $\mathcal C_a=\im A_a$ and $T_{ba}=A_bS_a$. Coordinate realizations are $F_a=A_aFS_a$ on $\mathcal C_a$. Both paths through the square represent the same underlying operation.
+\diagram{02_transport}
+\[
+T_{cb}T_{ba}=T_{ca},\qquad T_{aa}=I_{\mathcal C_a},\qquad
+F_bT_{ba}=T_{ba}F_a.
+\]
+Conversely, a compatible family $G_a$ on the realizable coefficient spaces determines one operation. With a supplied reference chart $r$,
+\[
+F=S_rG_rA_r,\qquad G_a=A_aFS_a.
+\]
+\claim{Compatibility is a descent condition: local coordinate descriptions belong to one object-space operation precisely when they agree under transport.}
+A fitted family's discrepancy can be measured in object space:
+\[
+S_b\bigl(G_bA_bx-T_{ba}G_aA_ax\bigr)
+=S_bG_bA_bx-S_aG_aA_ax.
+\]
+\boundary{Zero chart discrepancy establishes agreement. It does not establish correctness of the agreed predictor. Deterministic recodings of the same observation supply the same observed information.}
+\nav{\texttt{Realization.lean}. The formal construction uses a nonempty chart family.}
+
+\plate{3}{The obstruction lives in a fiber}{Equal present summaries must have equal next summaries.}{P6--P7}
+A reduced map $\bar F:\gamma(X)\to\gamma(X)$ exists exactly when
+\[
+\gamma x=\gamma x'\quad\Longrightarrow\quad\gamma Fx=\gamma Fx'.
+\]
+For linear $L$ and linear $\gamma$, this is $L(\ker\gamma)\subseteq\ker\gamma$.
+\diagram{03_fibers}
+\textbf{The running rational example.} Throughout the deterministic plates, use
+\[
+L=\begin{pmatrix}1/2&1\\1/4&1/3\end{pmatrix},\qquad
+\gamma=(1,0),\qquad x_0=(1,0)^{\mathsf T}.
+\]
+The two states $(0,0)$ and $(0,1)$ have summary zero. Their next summaries are $0$ and $1$. Thus no scalar autonomous update reproduces every state's first-coordinate dynamics.
+\claim{Predictive sufficiency is a property of entire summary fibers. A lossless archive of each full state does not make its chosen scalar summary sufficient.}
+\boundary{The diagram is a counterexample for the declared operator. In a stochastic model, the corresponding condition concerns equality of next-summary distributions.}
+\nav{\texttt{PredictiveClosure.lean}; \texttt{LinearClosure.lean}.}
+
+\plate{4}{Refinement closes an observable space}{Add the directions generated by known dynamics.}{P8, P14}
+For a known finite family $L_u$ on a $d$-dimensional space, start from the rows of a required observation $C_0$ and form
+\[
+W_{n+1}=W_n+\sum_uW_nL_u,\qquad W_0=\operatorname{row}(C_0).
+\]
+\diagram{04_refinement}
+Every strict inclusion raises dimension. After at most $d-\dim W_0$ strict enlargements, the limit $W_*$ is the least common invariant row space containing $W_0$.
+
+For the running example, the rows of
+\[
+O=\begin{pmatrix}1&0\\1/2&1\end{pmatrix},\qquad
+D=OLO^{-1}=\begin{pmatrix}0&1\\1/12&5/6\end{pmatrix}
+\]
+span $W_*=\R^{2\,*}$. The state $Ox_s=(y_s,y_{s+1})^{\mathsf T}$ therefore closes.
+\claim{The added coordinate is forced by the action of $L$ on the requested observable. In a larger system, unobserved directions unrelated to its future can remain outside $W_*$.}
+\boundary{Computing $Ox_s$ uses a forward observation. It becomes an available delay state $(y_{t-1},y_t)$ only after a one-step warm-up. Known-operator completion does not establish sensor access to arbitrary new observables.}
+\nav{\texttt{InvariantCompletion.lean}; \texttt{PredictiveCompletion.lean}; \texttt{DelayClosure.lean}.}
+
+\plate{5}{Packets decompose operations too}{Resolution changes preserve identities when every block is retained.}{P3--P5, P20}
+For complete input and output projector families,
+\[
+x=\sum_iP_ix,\qquad L=\sum_{j,i}Q_jLP_i.
+\]
+Refining either family subdivides these transfer blocks without changing their total. Orthogonal packet families also give the corresponding squared-norm decomposition.
+\diagram{05_packets}
+For a polynomial operation, multilinearity produces every ordered packet interaction:
+\[
+Q_jB_m(x,\ldots,x)=\sum_{i_1,\ldots,i_m}
+Q_jB_m(P_{i_1}x,\ldots,P_{i_m}x).
+\]
+In the scalar square, the mixed contribution is $2uv$. With $u=1$, it is linear in omitted amplitude $v$, whereas the omitted packet square is quadratic.
+\claim{A nonlinear operation acts on interactions between packets. Reconstruction energy alone does not bound an omitted packet's influence on a future quantity.}
+\boundary{Complete refinement and truncation are different operations. Truncation requires an explicit omitted-interaction estimate on its declared domain. Projectors from different atlases need not commute.}
+\nav{\texttt{PacketTree.lean}; \texttt{TreeEnergy.lean}; \texttt{Transfer.lean}; \texttt{Polynomial.lean}.}
+
+\plate{6}{Compression can erase a return path}{A two-step effect can survive when both compressed steps vanish.}{P7}
+Let $P^2=P$ and $Q=I-P$. Inserting $I=P+Q$ gives the exact defect
+\[
+\boxed{PLMP-(PLP)(PMP)=PLQMP.}
+\]
+\diagram{06_return_path}
+Take $P=\diag(1,0)$ and
+\[
+L=M=\begin{pmatrix}0&1\\1&0\end{pmatrix}.
+\]
+Then $PLP=PMP=0$, while $PLMP=P$. The missing term $PLQMP=P$ is the full return through the discarded coordinate.
+
+The running example exhibits the same mechanism in $PL^2P$:
+\[
+PL^2P-(PLP)^2
+=\begin{pmatrix}1/4&0\\0&0\end{pmatrix}.
+\]
+Starting from $(1,0)$, separate scalar compression predicts $y_2=1/4$. The exact value is $1/2$.
+\claim{The obstruction is an omitted route through the operator composition. Its size depends jointly on outgoing and returning transfer blocks.}
+\boundary{The algebra requires idempotence. An orthogonal split additionally gives the familiar Hilbert-space energy interpretation.}
+\nav{\texttt{LinearClosure.lean}; norm bounds in \texttt{Normed.lean}.}
+
+\plate{7}{Memory is an exact elimination}{The discarded state leaves a kernel and an initial transient.}{P10, P19}
+Write the split dynamics as $y_{t+1}=Ay_t+Bw_t$ and $w_{t+1}=Cy_t+Dw_t$. Eliminating $w_t$ gives
+\[
+y_{t+1}=Ay_t+\sum_{j=0}^{t-1}BD^jC\,y_{t-1-j}+BD^tw_0.
+\]
+\diagram{07_memory}
+For the running example, $A=1/2$, $B=1$, $C=1/4$, $D=1/3$ and $w_0=0$. Thus $K_j=\tfrac14\,3^{-j}$. If $|y_t|\leq1$, retaining the last $H$ history terms leaves a same-history tail at most $\Delta_H=\tfrac38\,3^{-H}$.
+
+Here $0\leq y_t\leq1$ and the truncated recursion has gain
+\[
+a_H=\frac12+\sum_{j=0}^{H-1}K_j
+=\frac78-\frac38\,3^{-H}<1.
+\]
+With the same initial state, recursive propagation therefore gives
+\[
+\sup_t|y_t-\widehat y_t|\leq\frac{\Delta_H}{1-a_H}
+=\frac{3}{3^H+3}.
+\]
+\boundary{P10's tail estimate uses the same resolved history. P19 supplies the separate stability argument for a predictor using its own history. For other initial states, retain the term $BD^tw_0$.}
+\nav{\texttt{Memory.lean}; \texttt{MemoryBounds.lean}; \texttt{MemoryStability.lean}.}
+
+\plate{8}{A local defect needs a propagation law}{Small one-step residuals can accumulate or contract.}{P18}
+Allow a representation $\gamma_t$ to change with time. Define the typed defect
+\[
+r_t(x)=\gamma_{t+1}F_t(x)-\widehat f_t\gamma_t(x).
+\]
+If $\widehat f_t$ is $\lambda_t$-Lipschitz on the relevant domain and $\|r_t(x_t)\|\leq\delta_t$, the prediction error satisfies
+\[
+e_T\leq\left(\prod_{j=0}^{T-1}\lambda_j\right)e_0
++\sum_{k=0}^{T-1}\left(\prod_{j=k+1}^{T-1}\lambda_j\right)\delta_k.
+\]
+\diagram[0.94]{08_defect}
+For a fixed representation $R$, a reference reduced operator $B$ and fitted operator $\widehat B$,
+\[
+RL-\widehat BR=(RL-BR)+(B-\widehat B)R.
+\]
+The first term is representational nonclosure. The second is estimation error. They can enter the same propagation inequality after being bounded in the state norm.
+\claim{The suffix products determine whether earlier defects are damped or amplified. The chart shows analytical envelopes, not measured prediction errors.}
+\boundary{Both the true represented state and predicted state must remain in the Lipschitz domain. Stability of each action's eigenvalues alone does not certify stability under switching.}
+\nav{\texttt{DefectPropagation.lean}.}
+
+\plate{9}{What four observations identify}{Data span, closure and coverage are separate checks.}{P14--P17}
+The running example begins $1,\tfrac12,\tfrac12,\tfrac{11}{24},\tfrac{61}{144}$. Its first four outputs give
+\[
+Z_-=\begin{pmatrix}1&1/2\\1/2&1/2\end{pmatrix},\quad
+Z_+=\begin{pmatrix}1/2&1/2\\1/2&11/24\end{pmatrix},\quad
+Z_+Z_-^{-1}=\begin{pmatrix}0&1\\1/12&5/6\end{pmatrix}.
+\]
+\diagram{09_identification}
+The determinant $\det Z_-=1/4$ establishes coverage of the \emph{declared} two-dimensional delay space. The resulting recurrence is
+\[
+y_{t+1}=\frac56y_t+\frac1{12}y_{t-1},\qquad t\geq1.
+\]
+For general paired states, a linear fit exists exactly when $\ker Z_-\subseteq\ker Z_+$. It is unique on $W=\im Z_-$, and maps $W$ to itself exactly when $\im Z_+\subseteq W$.
+\claim{These data identify the transition on their input span. The known generating system separately certifies that this span is the required full predictive state space.}
+\boundary{Finite sampled rank does not exclude a larger unexcited state space. Finite continuation agreement does not establish unrestricted discovery. Perturbations additionally require a conditioning bound.}
+\nav{\texttt{DelayClosure.lean}; \texttt{DataSpan.lean}; see the exact module map at the end.}
+
+\plate{10}{Behavior can supply the coordinates}{Future tests define a predictive state without naming hidden variables.}{P27--P28}
+For a controlled process, arrange population probabilities into a behavior table: columns index past histories and rows index future tests. Its full column span is the linear predictive behavior space.
+\[
+\begin{array}{c|ccc}
+ & h_1 & h_2 & \cdots\\\hline
+\tau_1 & p(h_1\tau_1)&p(h_2\tau_1)&\cdots\\
+\tau_2 & p(h_1\tau_2)&p(h_2\tau_2)&\cdots\\
+\vdots &\vdots&\vdots&
+\end{array}
+\]
+Assume the full behavior space has rank at most $r$. Choose an invertible $r$-by-$r$ population core $H$. Let $G_s$ be the corresponding table with a declared action-observation symbol $s$ inserted. With a compatible row/column convention,
+\[
+\boxed{B_s=G_sH^{-1}.}
+\]
+The empty-test row supplies the mass functional and a covered history supplies the initial predictive state. The factorization then transports every future test through the observable coordinates.
+\claim{The dimension is determined by independent predictive behaviors. A global behavior-rank bound and an invertible core establish that the chosen coordinates cover the full behavior space.}
+
+\textbf{Two distinct obstructions.} An invertible sampled block does not establish the full-process rank bound. A fitted linear realization does not automatically preserve a probability domain. The next plates address the latter obligation.
+
+\boundary{The reconstruction uses population tables under the stated coverage hypotheses. No finite-sample rank test here authenticates those hypotheses or an unknown hidden-state model.}
+\nav{\texttt{BehaviorSpace.lean}; \texttt{BehaviorMinimality.lean}; \newline\texttt{ObservableCore.lean}; \texttt{ObservableRealization.lean}.}
+
+\plate{11}{Probability meaning is geometric}{An operator family needs a domain, a mass map and a covered initial state.}{P29, P39--P40}
+Let $C\subseteq\R^d$ be a convex cone and $\lambda$ a linear mass map strictly positive on $C\setminus\{0\}$. Set $K=\{z\in C:\lambda z=1\}$. Linear observation operators must satisfy
+\[
+B_oC\subseteq C,\qquad \lambda\sum_o B_o=\lambda,\qquad z_0\in K.
+\]
+\diagram{10_domain}
+A finite record $o_1\cdots o_T$ has probability
+\[
+\lambda B_{o_T}\cdots B_{o_1}z_0\geq0.
+\]
+Summing over every branch repeatedly applies the mass identity and gives total probability one. A positive-probability posterior is $B_oz/(\lambda B_oz)$.
+
+\textbf{A finite-generator witness.} Let $V$ have full row rank and normalized generator columns. Nonnegative lifts $A_o$ with $B_oV=VA_o$ and $\mathbf1^{\mathsf T}\sum_oA_o=\mathbf1^{\mathsf T}$ certify the generated cone. The initial state must be a normalized nonnegative mixture of those columns.
+\claim{All-horizon validity follows by induction from a finite exact witness. Statistical proximity to a generating process is a further obligation.}
+\boundary{A zero-probability branch does not define a normalized posterior by division. A finite positive lift is sufficient, but some valid low-dimensional processes require curved domains.}
+\nav{\texttt{CanonicalCone.lean}; \texttt{PositiveLift.lean}; \texttt{PositiveLiftTopology.lean}.}
+
+\plate{12}{A curved domain can have a finite witness}{A matrix embedding changes the certificate language.}{P46, P50--P51}
+The Lorentz cone and its normalized disk admit the representation
+\[
+C=\{(m,x,y):m\geq\sqrt{x^2+y^2}\},\qquad
+J(m,x,y)=\frac12\begin{pmatrix}m+x&y\\y&m-x\end{pmatrix}.
+\]
+\diagram[0.96]{11_psd}
+Since the eigenvalues of $J$ are $(m\pm\sqrt{x^2+y^2})/2$, membership in $C$ is equivalent to $J\succeq0$. Also $\operatorname{tr}J=m$.
+
+For the exact spatial rotation $R=\bigl(\begin{smallmatrix}3/5&-4/5\\4/5&3/5\end{smallmatrix}\bigr)$ and $T=\diag(1,R)$,
+\[
+J(Tz)=\frac15WJ(z)W^{\mathsf T},\qquad
+W=\begin{pmatrix}2&-1\\1&2\end{pmatrix}.
+\]
+\claim{A rational congruence identity certifies the unchanged rotation on the curved cone. In the full P46 model, the canonical domain has no finite normalized positive-generator certificate.}
+\boundary{The drawn orbit is finite. Density and the finite-generator obstruction are proved in the volume, not established by its plotted points. The full instrument also needs its observation, mass and initial-state identities. No quantum implementation is asserted.}
+\nav{\texttt{RotationP46.lean}; \texttt{MatrixEmbedding.lean}; \texttt{MatrixRotation.lean}.}
+
+\plate{13}{Integration retains a covariance term}{Averaging an operator before quadratic action changes the instrument.}{P56--P59}
+Let $X\succeq0$, $K(u)=K_0+uK_1$ and $\bar K=\mathbb E[K(U)]$. For a scalar $U$ of finite second moment,
+\[
+\mathbb E[K(U)XK(U)^{\mathsf T}]-\bar KX\bar K^{\mathsf T}
+=\operatorname{Var}(U)K_1XK_1^{\mathsf T}\succeq0.
+\]
+\diagram{12_covariance}
+For the uniform probability measure $\mu(du)=du/2$ on $[-1,1]$, take
+\[
+K(u)=\tfrac12\diag(1+3u,1-3u),\qquad X=I/2.
+\]
+Then $\bar K=I/2$. The averaged congruence is $I/2$, with trace one. Congruence by the averaged matrix is $I/8$, with trace $1/4$. The omitted covariance correction is $3I/8$.
+\claim{The missing term is positive semidefinite and carries three quarters of the mass in this one-bin example. With $n$ equal bins, the missing mass is $3/(4n^2)$.}
+\boundary{The matrices in this example are diagonal and commute. The failure concerns the order of averaging and forming a quadratic action. A density value is interpreted relative to its declared measure.}
+\nav{See P57--P58 in the formal coverage map for exact integral and bin identities.}
+
+\plate{14}{Uncertainty on a curved domain}{Parameter uncertainty and arbitrary entrywise noise have different geometry.}{P72, P83}
+For $u\in[-1,1]$, set $v(u)=(1,u,u^2)^{\mathsf T}$. Its convex hull is
+\[
+K=\{(1,x,y):x^2\leq y\leq1\},\qquad
+C=\left\{(m,x,y):\begin{pmatrix}m&x\\x&y\end{pmatrix}\succeq0,\ m-y\geq0\right\}.
+\]
+\diagram{13_moments}
+Choose a reference probability measure on $[-1,1]$ with moments $\mathbb E U=\mathbb E U^3=0$, $\mathbb E U^2=1/3$ and $\mathbb E U^4=1/5$. With $L_2(u)=(3u^2-1)/2$, define
+\[
+B_{a,b}(u)=v(u)(1,au,bL_2(u)).
+\]
+Its normalized-state density is $p_{a,b}(u\mid x,y)=1+axu+byL_2(u)$. If $|a|+|b|\leq1-\rho$ for $\rho\in[0,1]$, it is at least $\rho$, and integrated mass is exact.
+\claim{Every positive-density posterior is the same boundary point $v(u)$ throughout this parameter family. Uncertainty changes its probability without moving its posterior ray.}
+\boundary{This protection depends on the supplied algebraic family. Free perturbations of output coordinates can leave the cone. The three-dimensional wireframe shows the homogeneous geometry, not sampled evidence.}
+\nav{\texttt{CurvedMomentGeometry.lean}; \texttt{CurvedMomentInstrument.lean}; exact P83 map in \texttt{COVERAGE.json}.}
+
+\plate{15}{A confidence set can meet an exact certificate}{The statistical event and the internal validity check do different work.}{P66, P68, P81--P84, P87}
+Assume $Y_t=\theta_*^{\mathsf T}\phi_t+\xi_t$ with predictable $\phi_t$, conditional sub-Gaussian noise of scale $\sigma>0$ and $\|\theta_*\|_2\leq S$. For ridge $\eta>0$, define $V_t=\eta I+\sum_{s\leq t}\phi_s\phi_s^{\mathsf T}$ and $\widehat\theta_t=V_t^{-1}\sum_{s\leq t}\phi_sY_s$. For $0<\delta<1$, with probability at least $1-\delta$, simultaneously for every finite $t$,
+\[
+\|\widehat\theta_t-\theta_*\|_{V_t}
+\leq\sigma\sqrt{\log\frac{\det V_t}{\det(\eta I)}+2\log(1/\delta)}+\sqrt\eta S.
+\]
+\diagram{14_uncertainty}
+In the structured moment family, a nonempty returned rectangle $\Theta$ is internally valid when its sufficient floor
+\[
+\rho_\Theta=1-\sup_{(a,b)\in\Theta}(|a|+|b|)
+\]
+is nonnegative. Statistical coverage places the true parameter in $\Theta$ on a simultaneous event. The exact domain argument applies to \emph{every} parameter in $\Theta$.
+\claim{A data-selected time is allowed by the simultaneous confidence statement. It does not convert the model, noise or predictability assumptions into observed facts.}
+\boundary{Predictable residual rejection can give a lower discrepancy certificate. Nonrejection alone supplies no upper accuracy guarantee. The drawn rectangle is schematic, not an estimated confidence set.}
+\nav{\texttt{RegressionConfidence.lean}; \texttt{PredictableResidualP66.lean};\newline\texttt{StructuredLearningCapstone.lean}.}
+
+\plate{16}{Choose the future quantity before its bound}{A long record and one distant observation are different objects.}{P85--P87}
+Start two processes from the same history or initial law and use the same action policy. If their conditional next-observation laws differ by at most $\Delta$ at every common history, telescoping gives the record bound $\min(1,T\Delta)$ in total variation.
+\diagram{15_horizons}
+For Markov kernels with a common probability measure $\mu$ and $P(s,\cdot)\geq\rho\mu(\cdot)$, $0<\rho\leq1$, and $\sup_s\|P(s,\cdot)-Q(s,\cdot)\|_{\TV}\leq\Delta$, their one-time law distances satisfy
+\[
+e_t\leq\min\!\left(1,(1-\rho)^te_0+
+\frac{\Delta[1-(1-\rho)^t]}{\rho}\right).
+\]
+A length-$k$ rolling window starting at time $t$ has distance at most $\min(1,e_t+(k-1)\Delta)$.
+\claim{Contraction can keep a single marginal close indefinitely while complete-record distinguishability tends to one. Two distinct independent Bernoulli laws already exhibit that separation.}
+\boundary{The plotted curves are analytical illustrations with declared constants. The marginal result needs actual Markov and minorization hypotheses. Arbitrary policies that remember the entire history require their own comparison argument.}
+\nav{\texttt{CurvedMomentRecordTV.lean}; \texttt{MarkovMarginals.lean}; \newline\texttt{MarkovWindows.lean}; \texttt{BernoulliRecordSeparation.lean}.}
+
+\plate{17}{From the atlas to the proofs}{The visual route points into a source-bound formal companion.}{Navigation}
+The accepted Lean release records complete mappings for all 87 registered proposition cores. Its scope is stated proposition by proposition in \texttt{Lean/COVERAGE.md} and \texttt{Lean/COVERAGE.json}. Each plate selects a mechanism from those statements.
+\par\vspace{4pt}\noindent
+{\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{37pt}>{\raggedright\arraybackslash}p{121pt}>{\raggedright\arraybackslash}p{303pt}@{}}
+\toprule
+Plates & Proof route & Primary entry modules in \texttt{Lean/KomorebiLSM/}\\\midrule
+1--2 & Reconstruction and transport & \texttt{Realization}, \texttt{Normed}\\[5pt]
+3--4 & Closure and completion & \texttt{PredictiveClosure}, \texttt{LinearClosure}, \texttt{InvariantCompletion}\\[5pt]
+5--6 & Packets and return paths & \texttt{PacketTree}, \texttt{Transfer}, \texttt{Polynomial}, \texttt{LinearClosure}\\[5pt]
+7--8 & Memory and error propagation & \texttt{Memory}, \texttt{MemoryBounds}, \texttt{MemoryStability}, \texttt{DefectPropagation}\\[5pt]
+9--10 & Observable and behavior states & Exact P14--P17 and P27--P28 entries in \texttt{COVERAGE.json}\\[5pt]
+11--12 & Probability witnesses & \texttt{PositiveLift}, \texttt{RotationP46}, \texttt{MatrixEmbedding}, \texttt{MatrixRotation}\\[5pt]
+13--14 & Integration and curved moments & Exact P57--P58 and P83 entries in \texttt{COVERAGE.json}\\[5pt]
+15--16 & Confidence and horizon bounds & \texttt{RegressionConfidence}, \texttt{StructuredLearningCapstone}, \texttt{MarkovMarginals}\\\bottomrule
+\end{tabular}}
+\par\vspace{12pt}
+\textbf{A small notation key.} $A,S$ denote analysis and synthesis; $\mathcal C=\im A$ denotes realizable coefficients; $\gamma$ denotes a predictive summary; $P,Q$ denote retained and discarded projections; $W_*$ denotes the completed observable row space; $C$ denotes a probability cone in the stochastic plates; $\lambda$ denotes its mass map. Symbols local to a plate are introduced there.
+
+\textbf{Evidence boundaries.} Written proofs, exact example calculations, kernel verification, and statistical statements are separately identified. The formal release verifies the registered mathematical cores under their hypotheses. It does not empirically authenticate a model class, noise assumption, sensor or physical process.
+
+\textbf{Reproducibility.} The companion includes the editable \LaTeX{} source, Python figure generator, exact rational example receipt and a proposition/module map. All illustrations are mathematical diagrams or declared analytical calculations. The original volume remains the source of the full statements and proofs.
+\end{document}

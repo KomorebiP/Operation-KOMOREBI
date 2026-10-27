@@ -1,0 +1,160 @@
+{
+  "normalized_claim": "The two reviewed source sectors construct the exact rational controlled rotation process, prove its Lorentz-domain all-word probability semantics, and prove density of nonnegative powers of the actual unit rotation.",
+  "primary_verdict": "proved as written",
+  "registered_target": "P46: rational rank-three model with no polyhedral probability-domain certificate",
+  "review_scope": "RotationDensity.lean and RotationModel.lean only; RotationRank.lean authored by this reviewer is explicitly not treated as an independent review and the geometric obstruction modules are outside this record.",
+  "base_checkpoint": "LSM-0.15.0",
+  "base_delivered_archive_sha256": "85b8a25021b665da32f7328ced65d797b2a383464f01a3a2962f0b1bd8214b05",
+  "inputs": {
+    "KomorebiLSM/RotationDensity.lean": "b49b9eb0c6f1e7d77d6b171a63f08b5a137270c6df7aa7299f470c9c13f9b7d6",
+    "KomorebiLSM/RotationModel.lean": "3795b6684f81ec22edbc962230adab3a70f98af9e5cdb9304e1b6e7ead3f9de1"
+  },
+  "upstream_mathlib_revision": "aeb72f1e9981b6d35b426b16dca7759be3e7ba06",
+  "upstream_inspected_sources": {
+    "Mathlib/NumberTheory/Niven.lean": "ee07e47884c0ad44f25801cafe29621c754baf83ce433d65f945bf57af5b18d4",
+    "Mathlib/Topology/Instances/AddCircle/DenseSubgroup.lean": "45014575c8b53391541f17b1d76f274a3fa8ff10a82f61770a7ebc3fd2224282",
+    "Mathlib/Topology/Algebra/Group/SubmonoidClosure.lean": "a28b685a4c9ebe4b782144ffff1c4a1e47b40aee4dc08390f1e7e6e086e91299",
+    "Mathlib/Analysis/SpecialFunctions/Complex/Circle.lean": "d63cf63b6eea1b5fe73a314d61f18056d7b3fcaa419b298a28e6a8ebc614214a"
+  },
+  "assumptions_and_conventions": [
+    "Actual coefficient field is real; rational matrices are explicitly cast from matrices over Q.",
+    "State is Fin 3 -> R with coordinates (mass,x,y), not an assumed latent-model equivalence.",
+    "False action is rotate and true action is probe; false observation is zero and true observation is one.",
+    "Chronological wordAction acts by its head first.",
+    "The actual Circle element has real part3/5, imaginary part4/5 and proved unit norm.",
+    "Normalized states satisfy the actual Lorentz inequality and mass=1. Positive-posterior statements retain a strictlypositive branch mass.",
+    "Circle compact-topological-group instances justify transfer from integer-power density to forward-power density."
+  ],
+  "dependency_graph": [
+    {
+      "claim": "Actual rational unit rotation",
+      "inputs": [
+        "rotation definition",
+        "exact squared-norm arithmetic"
+      ],
+      "status": "passed"
+    },
+    {
+      "claim": "Irrational arg/(2*pi)",
+      "inputs": [
+        "cos_arg with norm1 and nonzero rotation",
+        "pinned Niven theorem with rational cos3/5"
+      ],
+      "status": "passed"
+    },
+    {
+      "claim": "Dense integer powers",
+      "inputs": [
+        "AddCircle.denseRange_zsmul_coe_iff",
+        "homeomorphCircle at circumference2*pi",
+        "Circle.exp_arg"
+      ],
+      "status": "passed"
+    },
+    {
+      "claim": "Dense nonnegative powers",
+      "inputs": [
+        "denseRange_zpow_iff_pow for compact topological group Circle"
+      ],
+      "status": "passed"
+    },
+    {
+      "claim": "Exact branch matrices and labels",
+      "inputs": [
+        "explicit real and rational matrix definitions",
+        "operator_matrix",
+        "matrix_is_rational"
+      ],
+      "status": "passed"
+    },
+    {
+      "claim": "All-word probability semantics",
+      "inputs": [
+        "initial_mem",
+        "rotate_spatial_square",
+        "probe effects nonnegative on cone",
+        "operator_cone",
+        "word_cone",
+        "operator_mass",
+        "causal_of_normalized_cone"
+      ],
+      "status": "passed"
+    },
+    {
+      "claim": "Positive normalized posterior and probe reset",
+      "inputs": [
+        "cone_scale",
+        "operator_cone",
+        "normalize_mass",
+        "strictpositive branch assumption"
+      ],
+      "status": "passed"
+    }
+  ],
+  "obligation_matrix": [
+    {
+      "obligation": "No assumed angle irrationality or supplied orbit density",
+      "status": "passed",
+      "evidence": "Irrationality follows by contradiction from actual cos3/5 via Niven; both integer and forward density are derived."
+    },
+    {
+      "obligation": "No finite-orbit surrogate for density",
+      "status": "passed",
+      "evidence": "DenseRange quantifies over all natural powers and the entire actual Circle."
+    },
+    {
+      "obligation": "No entrywise-positive surrogate for the signed rotation",
+      "status": "passed",
+      "evidence": "Rotation preserves the spatial square exactly; probe output is a nonnegative scalar of the explicit initial state."
+    },
+    {
+      "obligation": "Nonvacuous probability state domain",
+      "status": "passed",
+      "evidence": "Initial=(1,1,0) belongs to Lorentz cone and has mass1."
+    },
+    {
+      "obligation": "All histories, including impossible histories",
+      "status": "passed",
+      "evidence": "Operator mass conservation is proved for every real state; nonnegativity holds on all word images, so the causal-law recursion includes zero-probability prefixes."
+    },
+    {
+      "obligation": "Time and label consistency",
+      "status": "passed",
+      "evidence": "wordAction_cons applies the head first; rotate0=T, rotate1=0, probe0=z0(t+x)/2, probe1=z0(t-x)/2."
+    },
+    {
+      "obligation": "Actual complex-density/matrix-orbit bridge",
+      "status": "not addressed",
+      "evidence": "The two reviewed modules independently define matching rational rotation data; explicit orbit/embedding bridge belongs to the separate geometric integration."
+    },
+    {
+      "obligation": "Canonical all-test cone equality, closed-convex invariant-cone uniqueness and no finite normalized generator certificate",
+      "status": "out of scope",
+      "evidence": "These are not concluded by either reviewed file and must be discharged in the separate cone-geometry integration."
+    },
+    {
+      "obligation": "Rank/minimality dimension three",
+      "status": "out of scope",
+      "evidence": "Separate RotationRank module, authored by this reviewer; not represented as independently audited here."
+    }
+  ],
+  "fresh_compile_checks": [
+    {
+      "module": "RotationDensity",
+      "command": "lean -j1 -DwarningAsError=true -o tmp/p46_rank/RotationDensityReview.olean work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/RotationDensity.lean",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "module": "RotationModel",
+      "command": "lean -j1 -DwarningAsError=true -o tmp/p46_rank/RotationModelReview.olean work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/RotationModel.lean",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "remaining_gap_in_reviewed_sector": "none",
+  "remaining_integrated_target_obligations": "This record alone does not certify full P46. Complete and separately audit the actual complex-to-matrix orbit bridge, canonical cone identity, invariant-cone uniqueness, finite-generator obstruction and rank-sector integration.",
+  "review_provenance": "Separate-agent raw proof review within the same model/team lineage. Not an independent external referee or another proof assistant. No mathematical source edits."
+}

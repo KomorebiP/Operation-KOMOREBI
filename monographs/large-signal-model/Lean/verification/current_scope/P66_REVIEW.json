@@ -1,0 +1,123 @@
+{
+  "claim": "P66: time-uniform predictable residual certificate",
+  "verdict": "proved as written",
+  "review_kind": "Separate-agent raw-source scope review within the same collaborative model session; no external independence claimed.",
+  "reviewer": "/root/p66_review",
+  "authorship": "Reviewer authored none of these P66 proof modules.",
+  "manuscript": {
+    "path": "source/FOUNDATIONS_REVIEWED.md",
+    "sha256": "eb81cc2f3101c237492bcf7b9d123620bfb8a45a8845d5028dbdf8868729c3bf",
+    "statement_lines": [
+      3050,
+      3083
+    ]
+  },
+  "sources": [
+    {
+      "file": "KomorebiLSM/ConditionalBernoulli.lean",
+      "sha256": "6c28ce0cc17f998205a242790a87b025d856ec1c1a15d4cc9b6134347d03d56f",
+      "lines_read": 53
+    },
+    {
+      "file": "KomorebiLSM/ConditionalHoeffding.lean",
+      "sha256": "d87803fd11bfcdcdc404d48c0b0ea4fc7cb25d8b1ff49116d77c193d1cb8f1df",
+      "lines_read": 79
+    },
+    {
+      "file": "KomorebiLSM/CountableConfidence.lean",
+      "sha256": "7b45b66c2e87148bfd6e42d3214a2ac92f142e44fc0b05f859f897272e7ecc73",
+      "lines_read": 57
+    },
+    {
+      "file": "KomorebiLSM/PredictableResidualGeneral.lean",
+      "sha256": "0c80178aa6913b671a66d9fde67eb30b32e5a13bd72109705a56275a4cca7234",
+      "lines_read": 142
+    },
+    {
+      "file": "KomorebiLSM/PredictableResidualAnytime.lean",
+      "sha256": "f37aa6d8a94f40e71132f92aaa8d314ebd04e11b62f0b95dca8e880429981e2c",
+      "lines_read": 94
+    },
+    {
+      "file": "KomorebiLSM/PredictableResidualAffine.lean",
+      "sha256": "b892d53fb47d0c498ae70bf66077ac9cddb6c7b8cfe73af76df932c5e8f4e206",
+      "lines_read": 147
+    },
+    {
+      "file": "KomorebiLSM/PredictableResidualP66.lean",
+      "sha256": "6f19c3370a70210fc11310fabca8d8d43586789efd843c79f75c90094c03fb73",
+      "lines_read": 126
+    }
+  ],
+  "claim_card": {
+    "objects": "Arbitrary measurable probability space, filtration, real adapted observations, their actual ordinary conditional means, a prospectively fixed finite/countable registered rule family, positive summable NNReal budgets, fixed real interval lower endpoints and nonnegative widths per rule.",
+    "conclusion": "One measurable event of probability at least 1-delta contains every registered rule and every positive time with width*sqrt(t/2*log(2*t*(t+1)/alpha)) residual-minus-conditional-drift bound. Exact relabeling preserves the budget and event. Positive finite data-selected rule/time obeys the same pathwise bound.",
+    "hypotheses": "Each observation is measurable at the next filtration level and almost surely in the declared interval. Actual budget tsum<=delta<=1. Width may be zero. No topology, Standard Borel sample-space, independence, stationarity, reset assumption, or assumed concentration conclusion."
+  },
+  "dependency_graph": [
+    "Exponential convexity secant and actual finite Bernoulli Hoeffding envelope -> centered scalar exponential inequality for either real theta sign.",
+    "Ordinary conditional-expectation monotonicity + exact affine CE + bounded predictable pull-out -> actual conditional centered MGF <=exp(theta^2/8).",
+    "Actual prior centered sum is current-filtration measurable and bounded -> direct total-expectation iteration -> ordinary subgaussian MGF parameter n/4.",
+    "Two signed Chernoff bounds + exact declared boundary_budget identity + telescoping time weights -> all-positive-time event for one rule.",
+    "Actual Countable J union + literal summability/tsum -> simultaneous all-rule event without padded costs.",
+    "Affine interval representation including width=0 + actual CE congruence + countable common full-measure transport -> width-scaled bound.",
+    "Pointwise residual-minus-drift cancellation -> actual measurable residual event; specialization -> selected registered rule and positive time."
+  ],
+  "obligations": [
+    {
+      "item": "Arbitrary probability sample space without StandardBorelSpace leakage",
+      "status": "passed"
+    },
+    {
+      "item": "Actual conditional mean rather than supplied predictor or MGF",
+      "status": "passed"
+    },
+    {
+      "item": "Exact sharp unit-width boundary and finite-time indices",
+      "status": "passed"
+    },
+    {
+      "item": "Integrability and predictable-factor pull-out",
+      "status": "passed"
+    },
+    {
+      "item": "Direct finite/countable budget accounting without padding",
+      "status": "passed"
+    },
+    {
+      "item": "Zero-width interval normalization and countable common AE transport",
+      "status": "passed"
+    },
+    {
+      "item": "Measurable simultaneous event despite arbitrary cancelling predictions",
+      "status": "passed"
+    },
+    {
+      "item": "Exact equivalence reindexing",
+      "status": "passed"
+    },
+    {
+      "item": "Positive finite data-selected time and registered rule",
+      "status": "passed"
+    }
+  ],
+  "source_checks": [
+    "Read every line of all seven modules, along with baseline definitions centeredSum, observedResidual, conditionalDrift, residual_sub_drift, boundary and time weights.",
+    "The auxiliary Bernoulli space is separate Bool, so its finite-space assumptions do not constrain the user probability sample space.",
+    "Width-zero branch uses normalized variable 0; original X=lower AE follows from interval degeneracy. No cancellation by a zero denominator.",
+    "All CE transport identities are intersected over countably many times and rules before transferring the simultaneous event."
+  ],
+  "execution": "This report is a fresh raw-source correspondence review only. Root cumulative compilation, axiom audit, kernel replay, and negative controls are separate evidence and are not claimed here. Historical per-module execution reports are retained but were not treated as fresh cumulative verification.",
+  "controls_read": [
+    "negative_controls/ConditionalBernoulliMissingCentering.lean",
+    "negative_controls/PredictableResidualMissingWidth.lean",
+    "negative_controls/P66DuplicatedRuleBudget.lean"
+  ],
+  "remaining_gap": null,
+  "scope_limits": [
+    "Registered rule family and budgets are fixed prospectively. No unrestricted retrospective future-dependent tests.",
+    "Interval ranges are declared per rule. No estimated-range coverage conclusion.",
+    "Target is accumulated conditional predictive drift, not a fixed reset-population probability or model-class membership.",
+    "Selected-time statement covers positive finite times on the same simultaneous event; no infinite stopping-time value is asserted."
+  ]
+}

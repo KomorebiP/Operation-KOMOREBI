@@ -1,0 +1,108 @@
+{
+  "claim": "P73 interior repair with an explicit error budget",
+  "verdict": "proved as written",
+  "review_kind": "author self-review; nonauthor raw review remains separate",
+  "reviewer": "/root/rotation_geometry",
+  "registered_statement": {
+    "path": "source/FOUNDATIONS_1.0.0.md",
+    "statement_start_line": 3308,
+    "proof_end_line": 3340,
+    "statement_proof_sha256": "c12af82ef53cd595ce2616e4a6b06642437e2f8b9b9edea40f173bfaed557806"
+  },
+  "source_sha256": "dd4986faaea4a2eba2123cbba53cf2d02fc251bca3bf4f54c650c224ff968c31",
+  "obligations": [
+    {
+      "claim": "Actual center-reset operator",
+      "status": "passed",
+      "endpoints": [
+        "centerReset",
+        "centerReset_apply",
+        "centerReset_mass",
+        "resetOperator_normalized",
+        "ResetProfile.instrument"
+      ],
+      "evidence": "The reference operator is literally g(u)e0 lambda as a continuous linear outer product. It sends (1,v) to (g(u),0), preserves the declared mass after integration, and is positive because the supplied scalar density has a strictly positive full-interval lower bound. The profile is measurable, integrable and normalized by the actual du/2 measure."
+    },
+    {
+      "claim": "Actual model mixture and exact mass",
+      "status": "passed",
+      "endpoints": [
+        "repair",
+        "EstimateFamily",
+        "mixedFamily"
+      ],
+      "evidence": "The estimate is not assumed cone-positive. It is the actual measurable/integrable operator family with exact integrated mass. The repaired family is literally (1-eta)Fhat+eta N; its exact integrated mass is derived by Bochner linearity and the two input mass identities."
+    },
+    {
+      "claim": "Polynomial sector retained",
+      "status": "passed",
+      "endpoints": [
+        "EstimateFamily.ofPolynomial",
+        "ResetProfile.ofPolynomial"
+      ],
+      "evidence": "Actual finite polynomial operator coefficients derive estimate measurability/integrability and integrated mass from exact moments. Scalar reset coefficients give a genuine polynomial profile with normalization from the same exact uniform moments. Generic family results also apply beyond this sector, without narrowing the registered polynomial case."
+    },
+    {
+      "claim": "Repair margin",
+      "status": "passed",
+      "endpoints": [
+        "repair_slack",
+        "estimate_slack_lower",
+        "repair_margin"
+      ],
+      "evidence": "The spatial output scales by nonnegative 1-eta, while reset changes only mass. The exact slack identity and P71 spatial/mass triangle inequality derive estimate slack >= -d and the actual full-domain minimum sigma(repair) >= eta*g-(1-eta)*d."
+    },
+    {
+      "claim": "Additional combined uncertainty",
+      "status": "passed",
+      "endpoint": "robust_repair_preserves",
+      "evidence": "The literal additional operator Delta has its actual combined absolute-mass and spatial-norm error bounded by nu on every normalized input. The repaired gap minus this error is nonnegative under eta*g >= (1-eta)*d+nu. P71 homogeneity, including zero input mass, derives whole-cone preservation. Probability validity of an additional uncertain family retains P71 exact integrated mass and initial admissibility requirements."
+    },
+    {
+      "claim": "Derived valid repaired model",
+      "status": "passed",
+      "endpoint": "repairedInstrument",
+      "evidence": "For a valid pointwise reference, covered estimate error and the stated repair coverage, positivity of the actual repaired family is derived. It is not a certificate field. Exact mass, measurability and Bochner integrability build the actual P52 DensityInstrument."
+    },
+    {
+      "claim": "Integrated reset cost at most two",
+      "status": "passed",
+      "endpoint": "ResetProfile.integrated_cost_le_two",
+      "evidence": "The norm is the actual Lorentz positive-decomposition value. Its triangle inequality and value-on-cone identity bound each difference by the two literal nonnegative mass densities. Their integrals are one each on normalized inputs, giving integrated cost <=2. No point density is incorrectly bounded by one or pointwise cost by two."
+    },
+    {
+      "claim": "Separate prediction cost",
+      "status": "passed",
+      "endpoints": [
+        "repair_difference",
+        "repair_integrated_error"
+      ],
+      "evidence": "The literal difference equals (1-eta)(Fhat-Fstar)+eta(N-Fstar). Actual base-norm homogeneity and triangle inequality are integrated, deriving (1-eta)*epsilon+2*eta from the supplied estimate discrepancy and the separately derived reset cost. No desired repaired-error estimate is a field."
+    },
+    {
+      "claim": "Actual common-policy law comparison",
+      "status": "passed",
+      "endpoint": "common_policy_law_error",
+      "evidence": "An actual valid corrected instrument on the same cone and uniform reference is explicitly identified with the literal repair. The same normalized initial state and arbitrary common measurable randomized policy feed P59 actual time-record measures. The derived per-step budget gives probability-convention TV <= min(1,T/2*((1-eta)*epsilon+2*eta)). Validity is retained as a separate premise and is not inferred from a discrepancy inequality alone."
+    }
+  ],
+  "assumptions_retained": [
+    "The mixing weight is in [0,1] for the full prediction-cost result.",
+    "Margin and combined errors use the same Lorentz coordinates and normalized domain.",
+    "The pointwise reference-cone hypothesis used for margins is explicit; a.e. positivity is used only where sufficient for integrated semantics.",
+    "The estimate has exact integrated mass; reset scalar densities integrate to one with respect to du/2 on [-1,1].",
+    "The estimate discrepancy must be covered for every normalized state; no coverage theorem or numerical fit is inferred.",
+    "The TV corollary retains valid comparison instruments, the same cone/reference, identical initial states and the same policy."
+  ],
+  "scope": "The sufficient repair bound is not an optimality claim, an exact coordinate change, or a claim that an uncertainty tube contains the generating process. Zero-density branches are handled under existing P52 semantics, never by flooring a denominator.",
+  "negative_control": {
+    "path": "negative_controls/InteriorRepairIsNotFree.lean",
+    "sha256": "9be2312f0a53d2cbb7dba957b4d10a1fcbd1135e4b52edc974cbc4e4fb5ebf32",
+    "evidence": "A normalized Lorentz boundary state and a genuine positive half-reset margin are first proved. With identical identity estimate and reference, a full unit-density reset still has actual integrated base-norm discrepancy one. Claiming zero repair cost reduces to goal False, with no import/API error."
+  },
+  "verification": "RESULT.json records fresh gated warningAsError compile, all23 named declarations axiom audit with allowed dependencies only, exact-module upstream kernel replay and semantic cost control. All passed.",
+  "inherited_copies": [
+    "ContinuousTV.lean and TimeRecords.lean plus their existing .18 objects were copied only where missing; inherited bytes and other .19 work were not overwritten."
+  ],
+  "remaining_gap": null
+}

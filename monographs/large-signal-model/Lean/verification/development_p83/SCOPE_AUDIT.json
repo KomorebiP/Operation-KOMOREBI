@@ -1,0 +1,137 @@
+{
+  "claim": "P83 Structured curved-domain certificate",
+  "review_kind": "author self-review; separate nonauthor review remains parent-owned",
+  "source_statement": {
+    "path": "work/Komorebi_LSM_Lean_0.18.0/source/FOUNDATIONS_1.0.0.md",
+    "start_line": 3828,
+    "end_line": 3852,
+    "raw_inclusive_lines_with_trailing_newline_sha256": "8ef7459fb67a8d41f1ea1270e36d09e66b74b0e756317636d1fe0cfbea4ee60e",
+    "registered_statement_proof_sha256": "eb12c55a9603d10a5da6d472d50930ce119a2b42fcf904e5732e5e2c8623a329"
+  },
+  "sources": {
+    "CurvedMomentGeometry": "925e583c1e58ef66d8c471c343fc7f5f7a9a11f54af771ef8dafc26f25e8cd2c",
+    "CurvedMomentInstrument": "b66f5a6d83a48836ba86b80640f221c90c1378aa614946565eb8c9d5e7277ba7",
+    "CurvedMomentPolynomial": "e739dec5282e8c322734c00c8cc24391bfe84879070fc3fa8f25bd2bb465c104",
+    "CurvedMomentMarkov": "3e9ba89da6b81bd1b6569dc5d29d0a2b3f71530bfb914d7bb3287fe1b9680639"
+  },
+  "verdict": "proved as written, subject to the explicit declared geometry/family/reference hypotheses",
+  "obligations": [
+    {
+      "obligation": "Literal curved moment cone and proper probability geometry",
+      "evidence": [
+        "momentMatrix_psd_iff",
+        "cone_iff",
+        "cone_mass_zero",
+        "cone_spans",
+        "cone_closed",
+        "probabilityCone",
+        "base_eq_normalized"
+      ],
+      "details": "PSD of the actual 2x2 matrix is equivalent to nonnegative diagonal entries and x^2<=m*y. The separate y<=m inequality is retained. Closure, addition, nonnegative scaling, generation from v(-1),v(0),v(1), and strict positivity of mass are proved. The only mass-zero state is zero."
+    },
+    {
+      "obligation": "Exact convex hull, not merely containment or closed convex hull",
+      "evidence": [
+        "convex_hull_curve"
+      ],
+      "details": "The reverse inclusion explicitly uses the endpoint mixture of mean x and the point v(x), interpolating by (y-x^2)/(1-x^2). The x^2=1 boundary is handled separately, so no denominator is assumed nonzero on the boundary."
+    },
+    {
+      "obligation": "Actual literal rank-one operator density with degree at most four",
+      "evidence": [
+        "branch",
+        "branch_apply",
+        "coefficientMatrix",
+        "coefficientOperator",
+        "branch_polynomial"
+      ],
+      "details": "Each branch is the scalar row (1,a*u,b*L2(u)) outer the submitted curve. Five explicit 3x3 coefficient matrices give equality to the actual finite operator polynomial; no desired cone-invariance field substitutes for this identity."
+    },
+    {
+      "obligation": "Density floor and all-cone positivity from the parameter inequality",
+      "evidence": [
+        "legendre_abs",
+        "likelihood_lower",
+        "branch_positive",
+        "density_lower"
+      ],
+      "details": "The bounds |x|<=1 and 0<=y<=1 are derived from the actual normalized cone. The lower bound follows from |a|+|b|<=1-rho. Positivity for every cone state follows by normalization when mass is positive and the proved zero-mass lemma otherwise."
+    },
+    {
+      "obligation": "General declared probability reference with the exact four moments",
+      "evidence": [
+        "Reference",
+        "Reference.continuous_integrable",
+        "Reference.integral_legendre",
+        "Reference.integral_likelihood",
+        "Reference.integral_polynomial"
+      ],
+      "details": "The reference is any real Borel probability measure supported almost everywhere on [-1,1], with first through fourth moments 0,1/3,0,1/5. Continuous operator and scalar integrability are proved from compact support. Exact operator-valued integrated mass follows from the first two moments and Bochner integral evaluation; the instrument contains no assumed positivity or mass conclusion beyond these literal data."
+    },
+    {
+      "obligation": "Exact positive-branch posterior and actual realized update",
+      "evidence": [
+        "posterior_curve",
+        "Reference.update_curve_ae",
+        "Reference.update_curve_kernel_ae"
+      ],
+      "details": "The algebraic normalized branch cancels its actual positive likelihood. The kernel-a.e endpoint additionally discards only branches with zero observation probability, using the actual withDensity measure. It does not require a positive density floor rho>0."
+    },
+    {
+      "obligation": "Observable Markov law, including the globally declared transition model",
+      "evidence": [
+        "curveState",
+        "Reference.signalKernel",
+        "Reference.signalKernel_markov",
+        "Reference.signalKernel_apply",
+        "Reference.signalKernel_support",
+        "Reference.observable_markov_transition"
+      ],
+      "details": "The kernel is defined at every interval-subtype prior signal and is the comap of the genuine P52 instrument kernel at v(s). Its measure is exactly mu.withDensity(ofReal(1+a*s*u+b*s^2*L2(u))). The next kernel after an actual normalized update equals this global model on almost every realized branch. No null-history fallback is silently identified with this globally defined model."
+    },
+    {
+      "obligation": "Actual conditional signal and Legendre means",
+      "evidence": [
+        "Reference.integral_signal_likelihood",
+        "Reference.integral_legendre_likelihood",
+        "Reference.signalKernel_integral",
+        "Reference.conditional_signal_mean",
+        "Reference.conditional_legendre_mean",
+        "Reference.signalKernel_continuous_integrable"
+      ],
+      "details": "The expectation integrals are against the actual probability transition kernel, giving a*s/3 and b*s^2/5. Bounded-support integrability is explicit; the fourth moment is used in the actual Legendre-square integral, not assumed as the requested final mean."
+    },
+    {
+      "obligation": "All finite-horizon law validity",
+      "evidence": [
+        "Reference.instrument",
+        "Reference.record_probability"
+      ],
+      "details": "Exact positivity and integrated mass construct a true P52 DensityInstrument on the full proper moment cone. The finite history-dependent-policy record measure is a probability measure at every finite horizon from every normalized initial state, including each v(s)."
+    }
+  ],
+  "scope": [
+    "The state dictionary, geometry, parameterized family, probability reference and its four moments are declared inputs, as in the source. No hidden-state discovery or arbitrary-kernel completeness is asserted.",
+    "Conditional moments are formalized as integrals against the actual globally defined Markov transition probability kernel, with the instrument-update transition identity supplying its process interpretation.",
+    "No independence, density floor strictly above zero, continuous-Lebesgue-only measure, or finite-support-only measure is imposed.",
+    "Concrete uniform and five-node reference instantiations belong to the P85 author; this registered theorem remains general over all references satisfying the stated moments.",
+    "The result does not give robustness against arbitrary matrix-entry perturbations: it proves the structured two-parameter certificate only."
+  ],
+  "semantic_controls": {
+    "CurvedMomentNeedsScalarConstraint": {
+      "sha256": "7da22c5bbfb1f35fdaf6e4d3fe32c69a6e2213490a64c5f605ff9ac27aad35f9",
+      "meaning": "The actual PSD matrix of v(2) passes the matrix test, while branch a=0,b=1,u=0 has negative mass. Dropping y<=m therefore gives an invalid certificate."
+    },
+    "CurvedMomentFourthMomentRequired": {
+      "sha256": "1a2b8f1a0edc6a4d6ff1c9f69c91fa6fc3ddcf267a73c9e5bcf31f8e455e006e",
+      "meaning": "A literal finite probability experiment with nodes -1,0,1 and weights 1/6,2/3,1/6 has correct first three moments and normalized nonnegative likelihood for a=0,b=1,s=1, but fourth moment 1/3. Its actual weighted Legendre expectation is 1/2, so the unsupported 1/5 mean is rejected."
+    }
+  },
+  "verification": {
+    "passed": true,
+    "result_sha256": "ae11479d6b46483596a0b6339bb328281c44093fdfcc57d3cb0545c286884a24",
+    "declarations": 60,
+    "theorems": 41,
+    "checks": "Fresh warnings-as-errors compilation, allowed-only axiom audit covering every explicitly named declaration, exact-module upstream kernel replay, and two meaningful semantic negative controls all pass."
+  }
+}

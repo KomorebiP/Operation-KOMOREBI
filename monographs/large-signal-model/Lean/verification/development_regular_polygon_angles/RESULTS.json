@@ -1,0 +1,69 @@
+{
+  "target": "P47 regular-polygon angular support dependency",
+  "parent_checkpoint": "LSM-0.15.0",
+  "parent_delivered_archive_sha256": "85b8a25021b665da32f7328ced65d797b2a383464f01a3a2962f0b1bd8214b05",
+  "scope": "Actual finite vertex family at exact unit-circle angles, all integer indices reduced modulo n, nearest angular error at most pi/n and a norm(v)*cos(pi/n) lower support bound at an actual vertex for every n>=3 and v:Complex. No polygon inradius is assumed.",
+  "source_file": "KomorebiLSM/RegularPolygonAngles.lean",
+  "source_sha256": "7c9af5292af59365edade558e73916c87f9c818382a330ce0262da2679841361",
+  "named_theorems": 5,
+  "named_definitions": 1,
+  "endpoints": [
+    "vertex",
+    "vertex_norm",
+    "int_vertex_mem",
+    "nearest_angle",
+    "inner_exp",
+    "support_lower"
+  ],
+  "control_file": "negative_controls/RegularTriangleSupportTooLarge.lean",
+  "control_sha256": "edb084a920c8a92df687bc54c41125438e89ae397811c4f74a035b1a46da9a02",
+  "control_scope": "For a triangle the support in direction -1 is at most1/2 at all3vertices, so claiming at least3/4 is rejected at False.",
+  "runs": [
+    {
+      "phase": "compile",
+      "command": [
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "-o",
+        "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0/.build/lib/lean/KomorebiLSM/RegularPolygonAngles.olean",
+        "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0/KomorebiLSM/RegularPolygonAngles.lean"
+      ],
+      "returncode": 0
+    },
+    {
+      "phase": "axiom_audit",
+      "command": [
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0/verification/development_regular_polygon_angles/AxiomAudit.lean"
+      ],
+      "returncode": 0
+    },
+    {
+      "phase": "kernel_replay",
+      "command": [
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0/scripts/ReplayModule.lean"
+      ],
+      "returncode": 0
+    },
+    {
+      "phase": "negative_control",
+      "command": [
+        "lean",
+        "-j1",
+        "-DwarningAsError=true",
+        "/workspace/scratch/ea498747acd5/work/Komorebi_LSM_Lean_0.16.0/negative_controls/RegularTriangleSupportTooLarge.lean"
+      ],
+      "returncode": 1
+    }
+  ],
+  "kernel_replay_passed": true,
+  "allowed_axioms_only": true,
+  "correspondence_review": "Author self-review; parent owns final raw review and cumulative acceptance.",
+  "development_diagnostics": "Initial draft API/cast failures resolved using explicit Int.castRingHom to transport integer division-remainder equality, root abs_sub_round and explicit real/complex trigonometric casts. Target statement unchanged."
+}

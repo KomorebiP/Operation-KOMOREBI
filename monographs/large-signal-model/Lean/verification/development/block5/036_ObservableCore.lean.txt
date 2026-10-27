@@ -1,0 +1,179 @@
+import KomorebiLSM.BehaviorMinimality
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+
+/-! P28: an invertible population core plus a global behavior-rank bound
+constructs an isomorphism, not merely interpolation of the observed columns. -/
+set_option autoImplicit false
+namespace Komorebi.LSM.Behavior
+open scoped BigOperators
+open FiniteInstruments
+variable {S I : Type*} [Fintype I] [DecidableEq I]
+
+noncomputable def evaluate (f : List S → ℝ) (tests : I → List S) :
+    space f →ₗ[ℝ] (I → ℝ) :=
+  LinearMap.pi (fun i => (LinearMap.proj (tests i)).comp (space f).subtype)
+
+omit [Fintype I] [DecidableEq I] in
+@[simp] theorem evaluate_apply (f : List S → ℝ) (tests : I → List S)
+    (v : space f) (i : I) : evaluate f tests v i = (v : List S → ℝ) (tests i) := rfl
+
+noncomputable def core (f : List S → ℝ) (tests histories : I → List S) : Matrix I I ℝ :=
+  fun i j => f (histories j ++ tests i)
+
+noncomputable def shiftedCore (f : List S → ℝ) (tests histories : I → List S)
+    (s : S) : Matrix I I ℝ :=
+  fun i j => f (histories j ++ s :: tests i)
+
+noncomputable def synthesize (f : List S → ℝ) (histories : I → List S) :
+    (I → ℝ) →ₗ[ℝ] space f :=
+  ∑ j, (LinearMap.proj j).smulRight (history f (histories j))
+
+omit [DecidableEq I] in
+@[simp] theorem synthesize_apply (f : List S → ℝ) (histories : I → List S) (c : I → ℝ) :
+    synthesize f histories c = ∑ j, c j • history f (histories j) := by
+  simp [synthesize,LinearMap.sum_apply]
+
+/-- The actual test map composed with column synthesis is exactly the core. -/
+omit [DecidableEq I] in
+theorem evaluate_synthesize (f : List S → ℝ) (tests histories : I → List S) (c : I → ℝ) :
+    evaluate f tests (synthesize f histories c) = (core f tests histories).mulVec c := by
+  funext i
+  simp [synthesize_apply,core,Matrix.mulVec,dotProduct,mul_comm]
+
+omit [DecidableEq I] in
+theorem evaluate_shift_synthesize (f : List S → ℝ) (tests histories : I → List S)
+    (s : S) (c : I → ℝ) :
+    evaluate f tests (branch f s (synthesize f histories c)) =
+      (shiftedCore f tests histories s).mulVec c := by
+  funext i
+  simp [synthesize_apply,map_sum,map_smul,shiftedCore,Matrix.mulVec,dotProduct,
+    List.append_assoc,mul_comm]
+
+/-- Invertibility yields surjectivity of the test evaluations without a rank bound. -/
+theorem evaluate_surjective (f : List S → ℝ) (tests histories : I → List S)
+    (hH : IsUnit (core f tests histories).det) : Function.Surjective (evaluate f tests) := by
+  intro z
+  have hs := Matrix.mulVec_surjective_iff_isUnit.mpr
+    ((core f tests histories).isUnit_iff_isUnit_det.mpr hH)
+  obtain ⟨c,hc⟩ := hs z
+  exact ⟨synthesize f histories c,(evaluate_synthesize f tests histories c).trans hc⟩
+
+/-- Invertibility gives a lower rank bound; the upper bound is a separate hypothesis. -/
+theorem core_rank_exact (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) :
+    Module.finrank ℝ (space f) = Fintype.card I := by
+  apply le_antisymm hr
+  simpa only [Module.finrank_fintype_fun_eq_card] using
+    LinearMap.finrank_le_finrank_of_surjective (evaluate_surjective f tests histories hH)
+
+theorem evaluate_bijective (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) :
+    Function.Bijective (evaluate f tests) := by
+  have hd : Module.finrank ℝ (space f) = Module.finrank ℝ (I → ℝ) := by
+    simpa only [Module.finrank_fintype_fun_eq_card] using core_rank_exact f tests histories hH hr
+  have hs := evaluate_surjective f tests histories hH
+  exact ⟨(LinearMap.injective_iff_surjective_of_finrank_eq_finrank hd).mpr hs,hs⟩
+
+/-- The chosen history columns span the full behavior space only after using coverage. -/
+theorem synthesize_surjective (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) :
+    Function.Surjective (synthesize f histories) := by
+  intro v
+  have hs := Matrix.mulVec_surjective_iff_isUnit.mpr
+    ((core f tests histories).isUnit_iff_isUnit_det.mpr hH)
+  obtain ⟨c,hc⟩ := hs (evaluate f tests v)
+  exact ⟨c,(evaluate_bijective f tests histories hH hr).1
+    ((evaluate_synthesize f tests histories c).trans hc)⟩
+
+noncomputable def coreEquiv (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) :
+    space f ≃ₗ[ℝ] (I → ℝ) := LinearEquiv.ofBijective _ (evaluate_bijective f tests histories hH hr)
+
+/-- Only population table entries occur in this formula. -/
+noncomputable def reconstructed (f : List S → ℝ) (tests histories : I → List S)
+    (s : S) : Matrix I I ℝ := shiftedCore f tests histories s * (core f tests histories)⁻¹
+
+/-- The formula G H^{-1} acts correctly on every behavior state. -/
+theorem reconstructed_intertwines (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) (s : S) (v : space f) :
+    (reconstructed f tests histories s).mulVec (evaluate f tests v) =
+      evaluate f tests (branch f s v) := by
+  obtain ⟨c,rfl⟩ := synthesize_surjective f tests histories hH hr v
+  rw [evaluate_synthesize,evaluate_shift_synthesize]
+  rw [Matrix.mulVec_mulVec,reconstructed,
+    Matrix.nonsing_inv_mul_cancel_right _ _ hH]
+
+theorem reconstructed_core_equation (f : List S → ℝ) (tests histories : I → List S)
+    (hH : IsUnit (core f tests histories).det) (s : S) :
+    reconstructed f tests histories s * core f tests histories = shiftedCore f tests histories s := by
+  exact Matrix.nonsing_inv_mul_cancel_right _ _ hH
+
+/-- The same full-rank core makes the reconstructed matrix unique. -/
+theorem reconstructed_unique (f : List S → ℝ) (tests histories : I → List S)
+    (hH : IsUnit (core f tests histories).det) (s : S) (D : Matrix I I ℝ)
+    (hD : D * core f tests histories = shiftedCore f tests histories s) :
+    D = reconstructed f tests histories s := by
+  rw [reconstructed,← hD,Matrix.mul_nonsing_inv_cancel_right _ _ hH]
+
+noncomputable def tableState (f : List S → ℝ) (tests : I → List S) (h : List S) : I → ℝ :=
+  fun i => f (h ++ tests i)
+
+omit [Fintype I] [DecidableEq I] in
+theorem tableState_eq_evaluate (f : List S → ℝ) (tests : I → List S) (h : List S) :
+    tableState f tests h = evaluate f tests (history f h) := rfl
+
+/-- Every history, not only the columns used in the inverse, is recovered. -/
+theorem reconstructed_state (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) (w : List S) :
+    wordAction (fun s => (reconstructed f tests histories s).mulVecLin) w
+      (tableState f tests []) = tableState f tests w := by
+  have hi : ∀ s,
+      ((reconstructed f tests histories s).mulVecLin).comp (evaluate f tests) =
+        (evaluate f tests).comp (branch f s) := by
+    intro s
+    ext v i
+    exact congrFun (reconstructed_intertwines f tests histories hH hr s v) i
+  have hw := word_intertwining (branch f)
+    (fun s => (reconstructed f tests histories s).mulVecLin) (evaluate f tests) hi w
+  have he := congrArg (fun L : space f →ₗ[ℝ] (I → ℝ) => L (history f [])) hw
+  simpa only [LinearMap.comp_apply,word_history,List.nil_append,tableState_eq_evaluate] using he
+
+omit [Fintype I] [DecidableEq I] in
+/-- A designated empty test is the literal mass coordinate. -/
+theorem tableState_mass (f : List S → ℝ) (tests : I → List S) (i0 : I)
+    (hi : tests i0 = []) (h : List S) : tableState f tests h i0 = f h := by
+  simp [tableState,hi]
+
+theorem reconstructed_probability (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) (i0 : I) (hi : tests i0 = [])
+    (w : List S) :
+    (wordAction (fun s => (reconstructed f tests histories s).mulVecLin) w
+      (tableState f tests [])) i0 = f w := by
+  rw [reconstructed_state f tests histories hH hr]
+  exact tableState_mass f tests i0 hi w
+
+/-- The inferred state is updated after a positive-probability history. -/
+theorem reconstructed_conditional_update (f : List S → ℝ) [FiniteDimensional ℝ (space f)]
+    (tests histories : I → List S) (hH : IsUnit (core f tests histories).det)
+    (hr : Module.finrank ℝ (space f) ≤ Fintype.card I) (i0 : I) (hi : tests i0 = [])
+    (h : List S) (s : S) (hh : f h ≠ 0) :
+    normalize (LinearMap.proj i0)
+      ((reconstructed f tests histories s).mulVecLin ((f h)⁻¹ • tableState f tests h)) =
+      (f (h ++ [s]))⁻¹ • tableState f tests (h ++ [s]) := by
+  have hb : (reconstructed f tests histories s).mulVecLin (tableState f tests h) =
+      tableState f tests (h ++ [s]) := by
+    simpa only [Matrix.mulVecLin_apply,tableState_eq_evaluate,branch_history] using
+      reconstructed_intertwines f tests histories hH hr s (history f h)
+  rw [map_smul,hb]
+  simp only [FiniteInstruments.normalize,map_smul,LinearMap.proj_apply,tableState_mass f tests i0 hi,
+    smul_eq_mul,mul_inv_rev,inv_inv,smul_smul]
+  rw [mul_assoc, mul_inv_cancel₀ hh, mul_one]
+
+end Komorebi.LSM.Behavior
