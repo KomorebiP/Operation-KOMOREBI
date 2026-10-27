@@ -1,0 +1,1335 @@
+--- a/src/komorebi_arc3_offline/__init__.py
++++ b/src/komorebi_arc3_offline/__init__.py
+@@ -28,5 +28,5 @@
+     "install_offline_guard",
+ ]
+ 
+-__version__ = "2.1.0"
++__version__ = "2.3.0"
+ __author__ = "Komorebi P."
+--- /dev/null
++++ b/src/komorebi_arc3_offline/_validation.py
+@@ -0,0 +1,49 @@
++"""Input contracts shared by exact numerical routines (no silent coercion)."""
++from __future__ import annotations
++from numbers import Integral
++import numpy as np
++
++
++def integer(value: object, name: str, *, minimum: int = 0) -> int:
++    if isinstance(value, (bool, np.bool_)) or not isinstance(value, Integral):
++        raise ValueError(f"{name} must be an integer >= {minimum}")
++    result = int(value)
++    if result < minimum:
++        raise ValueError(f"{name} must be an integer >= {minimum}")
++    return result
++
++
++def real_array(value: object, name: str, *, ndim: int, empty: bool = False) -> np.ndarray:
++    raw = np.asarray(value)
++    if raw.ndim != ndim or (not empty and (raw.size == 0 or 0 in raw.shape)):
++        raise ValueError(f"{name} must be a {'nonempty ' if not empty else ''}{ndim}-dimensional array")
++    if raw.dtype.kind not in "biuf":
++        raise ValueError(f"{name} must contain real numeric values, not {raw.dtype}")
++    # float64 cannot promise exact conversion of arbitrary large integer data.
++    if raw.dtype.kind in "iu" and raw.size:
++        if int(raw.min()) < -(2**53) or int(raw.max()) > 2**53:
++            raise ValueError(f"{name} integers must lie in [-2**53, 2**53] for lossless float64 conversion")
++    result = np.asarray(raw, dtype=np.float64)
++    if not np.isfinite(result).all():
++        raise ValueError(f"{name} must contain only finite values")
++    return result
++
++
++def shape2(value: object) -> tuple[int, int]:
++    if not isinstance(value, (tuple, list)) or len(value) != 2:
++        raise ValueError("shape must contain two positive integers")
++    return integer(value[0], "height", minimum=1), integer(value[1], "width", minimum=1)
++
++
++def dyadic_depth(shape: tuple[int, ...]) -> int:
++    depth = 0
++    while all(size % 2 == 0 for size in shape):
++        shape = tuple(size // 2 for size in shape)
++        depth += 1
++    return depth
++
++
++def readonly(value: object, dtype=None) -> np.ndarray:
++    array = np.array(value, dtype=dtype, copy=True)
++    array.setflags(write=False)
++    return array
+--- a/src/komorebi_arc3_offline/bayes.py
++++ b/src/komorebi_arc3_offline/bayes.py
+@@ -6,6 +6,7 @@
+ import numpy as np
+ from numpy.typing import NDArray
+ from scipy.special import gammaln, logsumexp
++from ._validation import real_array
+ 
+ FloatArray = NDArray[np.float64]
+ 
+@@ -26,9 +27,12 @@
+     log_evidence: float
+ 
+     def predict(self, features: FloatArray) -> tuple[FloatArray, FloatArray]:
+-        x = np.asarray(features, dtype=np.float64)
+-        if x.ndim == 1:
+-            x = x[None, :]
++        raw = np.asarray(features)
++        if raw.ndim == 1:
++            raw = raw[None, :]
++        x = real_array(raw, "prediction features", ndim=2, empty=True)
++        if x.shape[1] != self.coefficient_mean.shape[1]:
++            raise ValueError("prediction feature count differs from fitted design")
+         mean = x @ self.coefficient_mean.T
+         leverage = 1.0 + np.einsum("nf,fg,ng->n", x, self.coefficient_covariance, x)
+         variance = leverage[:, None] * (
+@@ -36,27 +40,34 @@
+         )
+         return mean, np.maximum(variance, 1e-12)
+ 
+-    def predictive_log_likelihood(self, features: FloatArray, targets: FloatArray) -> float:
+-        x = np.asarray(features, dtype=np.float64)
+-        y = np.asarray(targets, dtype=np.float64)
++    def predictive_log_likelihood(
++        self, features: FloatArray, targets: FloatArray,
++        *, output_indices: list[int] | None = None,
++    ) -> float:
++        raw = np.asarray(features)
++        if raw.ndim == 1:
++            raw = raw[None, :]
++        x = real_array(raw, "prediction features", ndim=2, empty=True)
++        y = real_array(targets, "prediction targets", ndim=2, empty=True)
+         mean, _ = self.predict(x)
++        if y.shape != mean.shape:
++            raise ValueError("prediction targets must match predicted rows and outputs")
++        indices = list(range(y.shape[1])) if output_indices is None else list(output_indices)
++        if not indices or len(indices) != len(set(indices)) or any(i < 0 or i >= y.shape[1] for i in indices):
++            raise ValueError("output_indices must be a nonempty set of valid output columns")
+         leverage = 1.0 + np.einsum("nf,fg,ng->n", x, self.coefficient_covariance, x)
+         degrees = 2.0 * self.posterior_shape
+         total = 0.0
+-        for output in range(y.shape[1]):
+-            scale_squared = (self.posterior_scale[output] / self.posterior_shape) * leverage
+-            scale_squared = np.maximum(scale_squared, 1e-12)
++        for output in indices:
++            scale_squared = np.maximum((self.posterior_scale[output] / self.posterior_shape) * leverage, 1e-12)
+             residual_squared = (y[:, output] - mean[:, output]) ** 2
+-            total += float(
+-                np.sum(
+-                    gammaln(0.5 * (degrees + 1.0))
+-                    - gammaln(0.5 * degrees)
+-                    - 0.5 * (np.log(degrees * np.pi) + np.log(scale_squared))
+-                    - 0.5
+-                    * (degrees + 1.0)
+-                    * np.log1p(residual_squared / (degrees * scale_squared))
+-                )
+-            )
++            total += float(np.sum(
++                gammaln(0.5 * (degrees + 1.0)) - gammaln(0.5 * degrees)
++                - 0.5 * (np.log(degrees * np.pi) + np.log(scale_squared))
++                - 0.5 * (degrees + 1.0) * np.log1p(residual_squared / (degrees * scale_squared))
++            ))
++        if not np.isfinite(total):
++            raise FloatingPointError("predictive log likelihood is not finite")
+         return total
+ 
+ 
+@@ -66,9 +77,17 @@
+     shape: float = 2.0
+     scale: float = 0.04
+ 
++    def __post_init__(self) -> None:
++        if not np.isfinite(self.prior_precision) or self.prior_precision <= 0:
++            raise ValueError("prior_precision must be finite and positive")
++        if not np.isfinite(self.shape) or self.shape <= 1:
++            raise ValueError("shape must be finite and > 1 for finite predictive variance")
++        if not np.isfinite(self.scale) or self.scale <= 0:
++            raise ValueError("scale must be finite and positive")
++
+     def fit(self, design: FloatArray, targets: FloatArray) -> FittedBayesianRegression:
+-        x = np.asarray(design, dtype=np.float64)
+-        y = np.asarray(targets, dtype=np.float64)
++        x = real_array(design, "design", ndim=2)
++        y = real_array(targets, "targets", ndim=2)
+         if x.ndim != 2 or y.ndim != 2 or x.shape[0] != y.shape[0]:
+             raise ValueError("design and targets must be two-dimensional with matching rows")
+         n, features = x.shape
+@@ -89,7 +108,9 @@
+         for output in range(outputs):
+             target = y[:, output]
+             mean = coefficient_mean[output]
+-            quadratic = float(target @ target - mean @ posterior_precision @ mean)
++            residual = target - x @ mean
++            # Equivalent to y'y - m'Lambda m, without catastrophic cancellation.
++            quadratic = float(residual @ residual + self.prior_precision * (mean @ mean))
+             scale = max(self.scale + 0.5 * quadratic, 1e-12)
+             posterior_scale[output] = scale
+             log_evidence += (
+@@ -100,6 +121,8 @@
+                 + 0.5 * (logdet_prior - logdet_posterior)
+                 - 0.5 * n * log(2.0 * np.pi)
+             )
++        if not np.isfinite(coefficient_mean).all() or not np.isfinite(posterior_scale).all() or not np.isfinite(log_evidence):
++            raise FloatingPointError("regression fit produced nonfinite values")
+         return FittedBayesianRegression(
+             coefficient_mean=coefficient_mean,
+             coefficient_covariance=covariance,
+@@ -110,7 +133,18 @@
+ 
+ 
+ def normalized_probabilities(log_weights: FloatArray) -> FloatArray:
+-    values = np.asarray(log_weights, dtype=np.float64)
++    values = np.asarray(log_weights)
++    if values.ndim != 1 or values.dtype.kind not in "biuf":
++        raise ValueError("log weights must be a one-dimensional real numeric array")
++    values = values.astype(np.float64)
++    if np.isnan(values).any():
++        raise ValueError("NaN log weights cannot define probabilities")
+     if values.size == 0:
+         return values
+-    return np.exp(values - logsumexp(values))
++    positive_infinity = np.isposinf(values)
++    if positive_infinity.any():
++        return positive_infinity.astype(np.float64) / positive_infinity.sum()
++    if not np.isfinite(values).any():
++        raise ValueError("all candidates have zero mass (-infinite log weight)")
++    probabilities = np.exp(values - logsumexp(values))
++    return probabilities / probabilities.sum()
+--- a/src/komorebi_arc3_offline/exact_atlas.py
++++ b/src/komorebi_arc3_offline/exact_atlas.py
+@@ -13,6 +13,9 @@
+ 
+ from dataclasses import dataclass
+ from typing import Mapping, Sequence
++from types import MappingProxyType
++
++from ._validation import integer, real_array, shape2, dyadic_depth, readonly
+ 
+ import numpy as np
+ from numpy.typing import NDArray
+@@ -22,23 +25,21 @@
+ 
+ 
+ def _as_float_image(image: NDArray[np.number]) -> FloatArray:
+-    array = np.asarray(image, dtype=np.float64)
+-    if array.ndim != 2:
+-        raise ValueError(f"expected a two-dimensional image, received {array.shape}")
+-    return array
++    return real_array(image, "image", ndim=2)
+ 
+ 
+ def _require_dyadic_shape(image: FloatArray, levels: int) -> None:
+-    divisor = 2**levels
+-    if image.shape[0] % divisor or image.shape[1] % divisor:
+-        raise ValueError(f"shape {image.shape} is not divisible by 2**{levels}")
++    levels = integer(levels, "levels")
++    maximum = dyadic_depth(image.shape)
++    if levels > maximum:
++        raise ValueError(f"shape {image.shape} supports at most {maximum} complete Haar levels")
+ 
+ 
+ def haar2d_forward(image: NDArray[np.number], levels: int | None = None) -> FloatArray:
+     """Return an orthonormal separable Haar transform in packed layout."""
+     array = _as_float_image(image).copy()
+-    maximum = int(np.floor(np.log2(min(array.shape))))
+-    depth = maximum if levels is None else int(levels)
++    maximum = dyadic_depth(array.shape)
++    depth = maximum if levels is None else integer(levels, "levels")
+     if depth < 0 or depth > maximum:
+         raise ValueError("invalid Haar depth")
+     _require_dyadic_shape(array, depth)
+@@ -66,8 +67,8 @@
+ def haar2d_inverse(coefficients: NDArray[np.number], levels: int | None = None) -> FloatArray:
+     """Invert :func:`haar2d_forward` exactly up to floating-point roundoff."""
+     array = _as_float_image(coefficients).copy()
+-    maximum = int(np.floor(np.log2(min(array.shape))))
+-    depth = maximum if levels is None else int(levels)
++    maximum = dyadic_depth(array.shape)
++    depth = maximum if levels is None else integer(levels, "levels")
+     if depth < 0 or depth > maximum:
+         raise ValueError("invalid Haar depth")
+     _require_dyadic_shape(array, depth)
+@@ -97,9 +98,7 @@
+ def polyphase2d_analyze(image: NDArray[np.number], modulus: int) -> dict[tuple[int, int], FloatArray]:
+     """Extract every two-dimensional residue channel."""
+     array = _as_float_image(image)
+-    order = int(modulus)
+-    if order < 1:
+-        raise ValueError("modulus must be positive")
++    order = integer(modulus, "modulus", minimum=1)
+     return {
+         (row, column): array[row::order, column::order].copy()
+         for row in range(order)
+@@ -113,7 +112,8 @@
+     modulus: int,
+ ) -> FloatArray:
+     """Interleave a complete two-dimensional polyphase family."""
+-    order = int(modulus)
++    order = integer(modulus, "modulus", minimum=1)
++    shape = shape2(shape)
+     output = np.zeros(shape, dtype=np.float64)
+     expected = {(row, column) for row in range(order) for column in range(order)}
+     if set(channels) != expected:
+@@ -122,7 +122,7 @@
+         raise ValueError(f"polyphase family is incomplete: missing={missing}, extra={extra}")
+     for (row, column), values in channels.items():
+         target = output[row::order, column::order]
+-        source = np.asarray(values, dtype=np.float64)
++        source = real_array(values, "polyphase channel", ndim=2, empty=True)
+         if source.shape != target.shape:
+             raise ValueError(f"channel {(row, column)} has shape {source.shape}, expected {target.shape}")
+         target[...] = source
+@@ -130,27 +130,32 @@
+ 
+ 
+ def color_one_hot(frame: NDArray[np.integer], palette_size: int = 16) -> FloatArray:
+-    values = np.asarray(frame, dtype=np.int64)
+-    if values.ndim != 2:
+-        raise ValueError("frame must be two-dimensional")
+-    clipped = np.clip(values, 0, palette_size - 1)
+-    return np.moveaxis(np.eye(palette_size, dtype=np.float64)[clipped], -1, 0)
++    values = real_array(frame, "categorical frame", ndim=2)
++    palette_size = integer(palette_size, "palette_size", minimum=1)
++    if palette_size > 32768:
++        raise ValueError("palette_size exceeds the int16 categorical range")
++    if np.any(values != np.rint(values)) or np.any(values < 0) or np.any(values >= palette_size):
++        raise ValueError("categorical values must be integers within the configured palette; clipping is not exact")
++    return np.moveaxis(np.eye(palette_size, dtype=np.float64)[values.astype(np.int64)], -1, 0)
+ 
+ 
+ def reconstruct_color(one_hot: NDArray[np.number]) -> NDArray[np.int16]:
+-    array = np.asarray(one_hot, dtype=np.float64)
+-    if array.ndim != 3:
+-        raise ValueError("one-hot coordinates must have shape (palette, height, width)")
++    array = real_array(one_hot, "one-hot coordinates", ndim=3)
++    if array.shape[0] > 32768:
++        raise ValueError("palette exceeds the int16 categorical range")
++    if not np.all((array == 0.0) | (array == 1.0)) or not np.all(array.sum(axis=0) == 1.0):
++        raise ValueError("color reconstruction requires exact one-hot coordinates, not soft assignments")
+     return np.argmax(array, axis=0).astype(np.int16)
+ 
+ 
+ def fourier_band_masks(shape: tuple[int, int], radial_edges: Sequence[float]) -> tuple[FloatArray, ...]:
+     """Create a disjoint complete radial partition in unitary FFT coordinates."""
++    shape = shape2(shape)
+     fy = np.fft.fftfreq(shape[0])
+     fx = np.fft.fftfreq(shape[1])
+     yy, xx = np.meshgrid(fy, fx, indexing="ij")
+     radius = np.sqrt(xx * xx + yy * yy)
+-    edges = np.asarray(radial_edges, dtype=float)
++    edges = real_array(radial_edges, "radial_edges", ndim=1)
+     if edges.ndim != 1 or edges.size < 2 or not np.all(np.diff(edges) > 0):
+         raise ValueError("radial edges must be a strictly increasing one-dimensional sequence")
+     if edges[0] > 0 or edges[-1] < float(radius.max()) - 1e-12:
+@@ -169,9 +174,15 @@
+ 
+ def fourier_project(image: NDArray[np.number], mask: NDArray[np.number]) -> FloatArray:
+     array = _as_float_image(image)
+-    selector = np.asarray(mask, dtype=np.float64)
++    selector = real_array(mask, "Fourier selector", ndim=2)
+     if selector.shape != array.shape:
+         raise ValueError("Fourier selector shape mismatch")
++    if not np.all((selector == 0.0) | (selector == 1.0)):
++        raise ValueError("a Fourier projector requires a binary selector")
++    reflected = selector[np.ix_((-np.arange(array.shape[0])) % array.shape[0],
++                               (-np.arange(array.shape[1])) % array.shape[1])]
++    if not np.array_equal(selector, reflected):
++        raise ValueError("a real Fourier projector requires conjugate-symmetric frequency selection")
+     transformed = np.fft.fft2(array, norm="ortho")
+     projected = np.fft.ifft2(transformed * selector, norm="ortho")
+     return np.real_if_close(projected, tol=1000).real.astype(np.float64)
+@@ -179,7 +190,13 @@
+ 
+ def polyphase_project(image: NDArray[np.number], modulus: int, phase: tuple[int, int]) -> FloatArray:
+     array = _as_float_image(image)
+-    row, column = phase
++    modulus = integer(modulus, "modulus", minimum=1)
++    if not isinstance(phase, (tuple, list)) or len(phase) != 2:
++        raise ValueError("phase must be a pair of residue indices")
++    row = integer(phase[0], "row phase")
++    column = integer(phase[1], "column phase")
++    if row >= modulus or column >= modulus:
++        raise ValueError("phase must lie in [0, modulus) on both axes")
+     output = np.zeros_like(array)
+     output[row::modulus, column::modulus] = array[row::modulus, column::modulus]
+     return output
+@@ -187,8 +204,11 @@
+ 
+ def wavelet_subband_slices(shape: tuple[int, int], levels: int) -> dict[str, tuple[slice, slice]]:
+     """Return packed Haar subband slices for energy and projector queries."""
++    shape = shape2(shape)
+     height, width = shape
+-    _require_dyadic_shape(np.zeros(shape), levels)
++    levels = integer(levels, "levels")
++    if levels > dyadic_depth(shape):
++        raise ValueError("shape is not divisible by the requested Haar depth")
+     output: dict[str, tuple[slice, slice]] = {}
+     current_h, current_w = height, width
+     for level in range(1, levels + 1):
+@@ -225,8 +245,24 @@
+     haar: FloatArray
+     polyphase2: Mapping[tuple[int, int], FloatArray]
+     polyphase4: Mapping[tuple[int, int], FloatArray]
+-    color: FloatArray
++    color: FloatArray | None
+     haar_levels: int
++
++    def __post_init__(self) -> None:
++        # Protect archived coordinates from accidental mutation and input aliasing.
++        for name in ("spatial", "fourier", "haar"):
++            object.__setattr__(self, name, readonly(getattr(self, name)))
++        for name in ("polyphase2", "polyphase4"):
++            object.__setattr__(self, name, MappingProxyType({
++                key: readonly(value) for key, value in getattr(self, name).items()
++            }))
++        if self.color is not None:
++            object.__setattr__(self, "color", readonly(self.color))
++
++    @property
++    def available_atlases(self) -> tuple[str, ...]:
++        linear = ("spatial", "fourier", "haar", "polyphase2", "polyphase4")
++        return linear + (("color",) if self.color is not None else ())
+ 
+     @property
+     def shape(self) -> tuple[int, int]:
+@@ -244,13 +280,15 @@
+         if atlas == "polyphase4":
+             return polyphase2d_synthesize(self.polyphase4, self.shape, 4)
+         if atlas == "color":
++            if self.color is None:
++                raise ValueError("color atlas is unavailable for non-categorical data")
+             return reconstruct_color(self.color).astype(np.float64)
+         raise KeyError(atlas)
+ 
+     def reconstruction_residuals(self) -> dict[str, float]:
+         return {
+             name: float(np.max(np.abs(self.reconstruct(name) - self.spatial)))
+-            for name in ("spatial", "fourier", "haar", "polyphase2", "polyphase4", "color")
++            for name in self.available_atlases
+         }
+ 
+     def tight_frame_synthesis(self, weights: Mapping[str, float] | None = None) -> FloatArray:
+@@ -261,10 +299,17 @@
+         identical reconstructions and is exactly the identity.
+         """
+         names = ("spatial", "fourier", "haar", "polyphase2", "polyphase4")
++        if weights is not None and set(weights) != set(names):
++            raise ValueError("weights must specify exactly the five linear atlas names")
+         chosen = {name: 1.0 for name in names} if weights is None else {name: float(weights[name]) for name in names}
++        if not all(np.isfinite(value) and value >= 0 for value in chosen.values()):
++            raise ValueError("atlas weights must be finite and nonnegative")
++        scale = max(chosen.values())
++        if scale == 0:
++            raise ValueError("at least one atlas weight must be positive")
++        # Rescale first to avoid overflow/underflow for otherwise valid weights.
++        chosen = {name: value / scale for name, value in chosen.items()}
+         denominator = sum(value * value for value in chosen.values())
+-        if denominator <= 0:
+-            raise ValueError("at least one atlas weight must be positive")
+         output = np.zeros_like(self.spatial)
+         for name, value in chosen.items():
+             output += value * value * self.reconstruct(name)
+@@ -279,6 +324,19 @@
+     angular_bins: int = 8
+     pool_sizes: tuple[int, ...] = (2, 4, 8)
+ 
++    def __post_init__(self) -> None:
++        integer(self.palette_size, "palette_size", minimum=1)
++        if self.palette_size > 32768:
++            raise ValueError("palette_size exceeds the int16 categorical range")
++        integer(self.haar_levels, "haar_levels")
++        integer(self.radial_bins, "radial_bins", minimum=1)
++        integer(self.angular_bins, "angular_bins", minimum=1)
++        if not self.pool_sizes:
++            raise ValueError("pool_sizes must not be empty")
++        for blocks in self.pool_sizes:
++            integer(blocks, "pool size", minimum=1)
++        object.__setattr__(self, "pool_sizes", tuple(self.pool_sizes))
++
+ 
+ class MultiAtlasAnalyzer:
+     """Build exact coordinates and compact multi-atlas statistics."""
+@@ -288,14 +346,16 @@
+ 
+     def analyze(self, frame: NDArray[np.integer | np.floating]) -> AtlasAnalysis:
+         spatial = _as_float_image(np.asarray(frame))
+-        levels = min(self.config.haar_levels, int(np.floor(np.log2(min(spatial.shape)))))
++        levels = min(self.config.haar_levels, dyadic_depth(spatial.shape))
++        categorical = bool(np.all(spatial == np.rint(spatial)) and
++                           np.all(spatial >= 0) and np.all(spatial < self.config.palette_size))
+         return AtlasAnalysis(
+             spatial=spatial.copy(),
+             fourier=np.fft.fft2(spatial, norm="ortho").astype(np.complex128),
+             haar=haar2d_forward(spatial, levels),
+             polyphase2=polyphase2d_analyze(spatial, 2),
+             polyphase4=polyphase2d_analyze(spatial, 4),
+-            color=color_one_hot(np.rint(spatial).astype(np.int16), self.config.palette_size),
++            color=color_one_hot(spatial, self.config.palette_size) if categorical else None,
+             haar_levels=levels,
+         )
+ 
+@@ -306,7 +366,8 @@
+         xs = np.linspace(0, width, blocks + 1, dtype=int)
+         return np.asarray(
+             [
+-                float(np.mean(array[ys[row] : ys[row + 1], xs[column] : xs[column + 1]]))
++                (float(np.mean(array[ys[row] : ys[row + 1], xs[column] : xs[column + 1]]))
++                 if ys[row] < ys[row + 1] and xs[column] < xs[column + 1] else 0.0)
+                 for row in range(blocks)
+                 for column in range(blocks)
+             ],
+@@ -319,6 +380,8 @@
+         return np.concatenate(values)
+ 
+     def color_features(self, analysis: AtlasAnalysis) -> FloatArray:
++        if analysis.color is None:
++            return np.zeros(3 * self.config.palette_size, dtype=np.float64)
+         mass = analysis.color.mean(axis=(1, 2))
+         # Row and column moments preserve rough object location for each color.
+         y = np.linspace(-1.0, 1.0, analysis.shape[0])
+@@ -362,11 +425,16 @@
+ 
+     @staticmethod
+     def polyphase_features(analysis: AtlasAnalysis, modulus: int) -> FloatArray:
++        if modulus not in (2, 4):
++            raise ValueError("feature modulus must be 2 or 4")
+         channels = analysis.polyphase2 if modulus == 2 else analysis.polyphase4
+         values: list[float] = []
+         normalization = max(1.0, float(np.max(np.abs(analysis.spatial))))
+         for phase in sorted(channels):
+             channel = np.asarray(channels[phase], dtype=float)
++            if channel.size == 0:
++                values.extend([0.0, 0.0, 0.0])
++                continue
+             values.extend(
+                 [
+                     float(channel.mean() / normalization),
+--- a/src/komorebi_arc3_offline/lasm_benchmark.py
++++ b/src/komorebi_arc3_offline/lasm_benchmark.py
+@@ -5,6 +5,7 @@
+ import time
+ from dataclasses import asdict
+ from pathlib import Path
++from ._validation import integer
+ 
+ import numpy as np
+ 
+@@ -53,12 +54,14 @@
+ 
+ 
+ def run_operator_benchmark(output_dir: Path, *, steps: int = 84, seed: int = 11) -> list[dict[str, object]]:
+-    packetizer = UltimateLASMPacketizer()
+-    scenarios = generate_program_identification_scenarios(steps=120, seed=seed)
++    steps = integer(steps, "training steps", minimum=16)
++    output_dir = Path(output_dir)
++    output_dir.mkdir(parents=True, exist_ok=True)
++    scenarios = generate_program_identification_scenarios(steps=(10 * steps + 6) // 7, seed=seed)
+     rows: list[dict[str, object]] = []
+     for scenario in scenarios:
+-        train = scenario.transitions[:84]
+-        test = scenario.transitions[84:]
++        train = scenario.transitions[:steps]
++        test = scenario.transitions[steps:]
+         programs = _benchmark_programs()
+         model = ProjectorResolvedLargeSignalModel(
+             programs=programs,
+--- a/src/komorebi_arc3_offline/lasm_cli.py
++++ b/src/komorebi_arc3_offline/lasm_cli.py
+@@ -4,6 +4,7 @@
+ import json
+ from dataclasses import asdict
+ from pathlib import Path
++import numpy as np
+ 
+ from .lasm_agent import UltimateAgentConfig, UltimateLargeSignalAgent
+ from .lasm_benchmark import run_all_benchmarks
+@@ -42,7 +43,16 @@
+         prog="komorebi-pr-lasm",
+         description="Projector-Resolved Large Algebraic Signal Model",
+     )
++    from . import __version__
++    parser.add_argument("--version", action="version", version=__version__)
+     sub = parser.add_subparsers(dest="command", required=True)
++
++    sub.add_parser("self-check", help="verify the installed core without external runtimes")
++    analyze = sub.add_parser("analyze", help="analyze a finite 1-D/2-D .npy or .csv signal without resizing")
++    analyze.add_argument("input", type=Path)
++    analyze.add_argument("--output", type=Path)
++    analyze.add_argument("--modulus", type=int, default=4)
++    analyze.add_argument("--maximum-depth", type=int, default=6)
+ 
+     benchmark = sub.add_parser("benchmark", help="run exactness, operator, and synthetic-agent benchmarks")
+     benchmark.add_argument("--output", default="results/pr_lasm_benchmark")
+@@ -73,10 +83,53 @@
+     install_offline_guard(strict=True)
+     assert_offline_guard()
+ 
++    if args.command == "self-check":
++        from komorebi_pr_lasm.diagnostics import self_check
++        summary = self_check()
++        print(json.dumps(summary, indent=2, allow_nan=False))
++        return 0 if summary["status"] == "PASS" else 1
++
++    if args.command == "analyze":
++        from komorebi_pr_lasm.signal import analyze_signal
++        from .exact_atlas import MultiAtlasAnalyzer, MultiAtlasConfig
++        try:
++            if args.input.suffix.lower() == ".npy":
++                values = np.load(args.input, allow_pickle=False)
++            elif args.input.suffix.lower() == ".csv":
++                values = np.loadtxt(args.input, delimiter=",")
++            else:
++                raise ValueError("input must be a .npy or .csv file")
++            if values.ndim == 1:
++                analysis = analyze_signal(values, modulus=args.modulus, maximum_depth=args.maximum_depth)
++                detail = {"effective_packet_depth": analysis.effective_depth, "modulus": analysis.modulus}
++            elif values.ndim == 2:
++                analysis = MultiAtlasAnalyzer(MultiAtlasConfig(haar_levels=args.maximum_depth)).analyze(values)
++                detail = {"effective_haar_depth": analysis.haar_levels, "color_available": analysis.color is not None,
++                          "polyphase_moduli": [2, 4]}
++            else:
++                raise ValueError("input must be a 1-D signal or a 2-D image")
++            summary = {"shape": list(values.shape), "residuals": analysis.reconstruction_residuals(), **detail,
++                       "scope": "finite real float64 coordinate reconstruction, not model prediction"}
++            text = json.dumps(summary, indent=2, allow_nan=False)
++            if args.output:
++                args.output.parent.mkdir(parents=True, exist_ok=True)
++                args.output.write_text(text + "\n", encoding="utf-8")
++            print(text)
++            return 0
++        except (ValueError, OSError, FloatingPointError) as exc:
++            print(json.dumps({"status": "ERROR", "message": str(exc)}))
++            return 2
++
+     if args.command == "benchmark":
+         summary = run_all_benchmarks(args.output)
+-        print(json.dumps(summary, indent=2))
+-        return 0
++        print(json.dumps(summary, indent=2, allow_nan=False))
++        exact = summary["exactness"]
++        passed = (max(exact["maximum_residuals"].values()) < 5e-10
++                  and exact["maximum_best_basis_residual"] < 5e-10
++                  and summary["operator_family_matches"] == summary["operator_scenarios"]
++                  and summary["operator_atlas_matches"] == summary["operator_scenarios"]
++                  and summary["agent_solved"] == summary["agent_games"])
++        return 0 if passed else 1
+ 
+     if args.command == "smoke":
+         output = Path(args.output).expanduser().resolve()
+--- a/src/komorebi_arc3_offline/lasm_graph.py
++++ b/src/komorebi_arc3_offline/lasm_graph.py
+@@ -75,6 +75,7 @@
+         elif existing.target != target:
+             # The model can still represent stochasticity, but a replay planner
+             # must not treat this action as a deterministic edge.
++            self.incoming[existing.target].discard(key)
+             existing.target = "<nondeterministic>"
+         existing.update(reward, level_delta, terminal_win, terminal_loss)
+         return existing
+@@ -136,7 +137,8 @@
+         candidates = [
+             stats
+             for (state, _), stats in self.edges.items()
+-            if state == source and stats.wins > 0 and stats.target != "<nondeterministic>"
++            if state == source and stats.wins == stats.visits and stats.visits > 0
++            and not stats.losses and stats.target != "<nondeterministic>"
+         ]
+         if not candidates:
+             return None
+@@ -147,6 +149,7 @@
+             stats
+             for (state, _), stats in self.edges.items()
+             if state == source and stats.level_delta_sum > 0 and not stats.losses
++            and stats.target != "<nondeterministic>"
+         ]
+         if not candidates:
+             return None
+--- a/src/komorebi_arc3_offline/lasm_model.py
++++ b/src/komorebi_arc3_offline/lasm_model.py
+@@ -11,6 +11,7 @@
+ from .lasm_programs import LASMProgram, default_lasm_programs
+ from .lasm_types import LASMFramePackets, LASMPrediction, LASMTransition
+ from .types import FloatArray
++from ._validation import integer
+ 
+ 
+ @dataclass(frozen=True)
+@@ -43,6 +44,22 @@
+     maximum_fit_records: int = 512
+     fitted: tuple[FittedLASMProgram, ...] = ()
+     fit_count: int = 0
++    refit_on_all_records: bool = True
++    fit_report: dict[str, object] = field(default_factory=dict, init=False)
++    _common_state_rank: int = field(default=0, init=False, repr=False)
++
++    def __post_init__(self) -> None:
++        self.programs = tuple(self.programs)
++        names = [program.name for program in self.programs]
++        if not names or len(names) != len(set(names)):
++            raise ValueError("program names must be nonempty and unique")
++        integer(self.minimum_records, "minimum_records", minimum=6)
++        integer(self.maximum_fit_records, "maximum_fit_records", minimum=self.minimum_records)
++        if not np.isfinite(self.validation_fraction) or not 0 < self.validation_fraction < 1:
++            raise ValueError("validation_fraction must lie strictly between zero and one")
++        penalties = [self.complexity_penalty, self.mechanism_penalty, *self.resolution_penalty.values()]
++        if not all(np.isfinite(value) and value >= 0 for value in penalties):
++            raise ValueError("model penalties must be finite and nonnegative")
+ 
+     def _fit_program(
+         self,
+@@ -57,11 +74,15 @@
+         if split < 4:
+             split = n
+         fitted = self.regression.fit(design[:split], targets[:split])
+-        predictive = (
+-            fitted.predictive_log_likelihood(design[split:], targets[split:])
+-            if split < n
+-            else fitted.log_evidence
++        # Comparing densities on differently sized target spaces is invalid.
++        # Every candidate is scored on the same nested state prefix and five
++        # shared outcome channels; extra state outputs remain useful for prediction.
++        columns = list(range(self._common_state_rank)) + list(range(targets.shape[1] - 5, targets.shape[1]))
++        predictive = fitted.predictive_log_likelihood(
++            design[split:], targets[split:], output_indices=columns
+         )
++        if self.refit_on_all_records:
++            fitted = self.regression.fit(design, targets)
+         complexity = program.complexity(design.shape[1], targets.shape[1])
+         log_prior = (
+             -self.complexity_penalty * complexity
+@@ -73,16 +94,34 @@
+     def fit(self, memory: LASMMemory | Sequence[LASMTransition]) -> tuple[FittedLASMProgram, ...]:
+         records = list(memory.records if isinstance(memory, LASMMemory) else memory)
+         records = records[-self.maximum_fit_records :]
++        self.fitted = ()
++        self.fit_report = {"status": "insufficient_records", "records": len(records),
++                           "candidate_count": len(self.programs), "failed_candidates": {}}
+         if len(records) < self.minimum_records:
+             self.fitted = ()
+             return self.fitted
++        self._common_state_rank = min(program.state_rank for program in self.programs)
++        reference = np.vstack([self.programs[0].targets(record)[:self._common_state_rank] for record in records])
++        for program in self.programs[1:]:
++            candidate = np.vstack([program.targets(record)[:self._common_state_rank] for record in records])
++            if not np.allclose(candidate, reference, rtol=1e-11, atol=1e-12):
++                self.fit_report["status"] = "incomparable_state_targets"
++                raise ValueError("candidate resolutions do not share a comparable nested state target")
++        self.fit_report.update({"common_state_rank": self._common_state_rank,
++                                "scored_output_count": self._common_state_rank + 5,
++                                "refit_on_all_records": self.refit_on_all_records})
++        failures: dict[str, str] = {}
+         provisional: list[
+             tuple[LASMProgram, FittedBayesianRegression, float, float, float, int, int]
+         ] = []
+         for program in self.programs:
+             try:
+-                fitted, predictive, log_prior, features, outputs = self._fit_program(program, records)
+-            except (ValueError, FloatingPointError, np.linalg.LinAlgError):
++                with np.errstate(over="raise", invalid="raise", divide="raise"):
++                    fitted, predictive, log_prior, features, outputs = self._fit_program(program, records)
++                if not np.isfinite(predictive + log_prior):
++                    raise FloatingPointError("candidate score is not finite")
++            except (ValueError, FloatingPointError, np.linalg.LinAlgError) as exc:
++                failures[program.name] = f"{type(exc).__name__}: {exc}"
+                 continue
+             provisional.append(
+                 (
+@@ -95,7 +134,10 @@
+                     outputs,
+                 )
+             )
++        self.fit_report["failed_candidates"] = failures
++        self.fit_report["fitted_candidates"] = len(provisional)
+         if not provisional:
++            self.fit_report["status"] = "all_candidates_failed"
+             self.fitted = ()
+             return self.fitted
+         probability = normalized_probabilities(np.asarray([row[4] for row in provisional], dtype=float))
+@@ -113,6 +155,7 @@
+             for row, weight in zip(provisional, probability, strict=True)
+         ]
+         self.fitted = tuple(sorted(completed, key=lambda item: item.posterior_probability, reverse=True))
++        self.fit_report["status"] = "fit_with_failures" if failures else "fit"
+         self.fit_count += 1
+         return self.fitted
+ 
+@@ -139,6 +182,7 @@
+             "program_probabilities": program,
+             "posterior_entropy": float(entropy),
+             "fit_count": self.fit_count,
++            "fit_report": dict(self.fit_report),
+         }
+ 
+     def _design_action(
+--- a/src/komorebi_arc3_offline/lasm_packetizer.py
++++ b/src/komorebi_arc3_offline/lasm_packetizer.py
+@@ -6,7 +6,8 @@
+ import numpy as np
+ from numpy.typing import NDArray
+ 
+-from .exact_atlas import MultiAtlasAnalyzer, MultiAtlasConfig
++from .exact_atlas import MultiAtlasAnalyzer, MultiAtlasConfig, color_one_hot
++from ._validation import integer, real_array
+ from .lasm_types import LASMFramePackets
+ from .packetizer import FramePacketizer, PacketizerConfig
+ from .types import FloatArray, IntFrame
+@@ -19,6 +20,14 @@
+     micro_dimension: int = 192
+     projection_seed: int = 20260729
+     multi_atlas: MultiAtlasConfig = MultiAtlasConfig()
++
++    def __post_init__(self) -> None:
++        dimensions = (self.macro_dimension, self.meso_dimension, self.micro_dimension)
++        for dimension in dimensions:
++            integer(dimension, "state dimension", minimum=1)
++        if not self.macro_dimension <= self.meso_dimension <= self.micro_dimension:
++            raise ValueError("state dimensions must be nested: macro <= meso <= micro")
++        integer(self.projection_seed, "projection_seed")
+ 
+ 
+ class UltimateLASMPacketizer:
+@@ -72,10 +81,17 @@
+         frame: NDArray[np.integer],
+         previous_frame: NDArray[np.integer] | None = None,
+     ) -> LASMFramePackets:
+-        normalized = self.base._normalize_frame(np.asarray(frame))
+-        previous = None if previous_frame is None else self.base._normalize_frame(np.asarray(previous_frame))
++        source = real_array(frame, "frame", ndim=2)
++        color_one_hot(source, self.config.multi_atlas.palette_size)
++        original = source.astype(np.int16)
++        normalized = self.base._normalize_frame(original)
++        previous = None
++        if previous_frame is not None:
++            prior = real_array(previous_frame, "previous frame", ndim=2)
++            color_one_hot(prior, self.config.multi_atlas.palette_size)
++            previous = self.base._normalize_frame(prior.astype(np.int16))
+         base_packets = self.base.resolve(normalized, previous)
+-        exact = self.atlas.analyze(normalized)
++        exact = self.atlas.analyze(original)
+         groups = self.atlas.feature_groups(exact)
+         group_vector = np.concatenate([groups[name] for name in sorted(groups)])
+         # The previous packetizer already includes connected objects, change,
+@@ -90,7 +106,7 @@
+             raw=raw,
+             feature_groups=groups,
+             analysis=exact,
+-            signature=self._signature(normalized),
++            signature=self._signature(original),
+             background=base_packets.background,
+             components=base_packets.components,
+             salient_points=base_packets.salient_points,
+--- a/src/komorebi_arc3_offline/lasm_programs.py
++++ b/src/komorebi_arc3_offline/lasm_programs.py
+@@ -4,6 +4,8 @@
+ from typing import Mapping, Sequence
+ 
+ import numpy as np
++from scipy.special import expit
++from ._validation import integer, real_array
+ 
+ from .lasm_memory import LASMMemory
+ from .lasm_types import LASMFramePackets, LASMTransition
+@@ -21,6 +23,20 @@
+     atlas_rank: int = 24
+     interaction_rank: int = 8
+     phase_modulus: int = 1
++
++    def __post_init__(self) -> None:
++        if not self.name or self.family not in {"linear", "quadratic", "bilinear", "delay", "fractional", "volterra", "phase", "gated", "hybrid"}:
++            raise ValueError("program must have a name and a supported operator family")
++        if self.resolution not in {"macro", "meso", "micro", "raw"}:
++            raise ValueError("unsupported state resolution")
++        if self.atlas not in {"spatial", "color", "fourier", "haar", "polyphase2", "polyphase4", "portfolio"}:
++            raise ValueError("unsupported atlas")
++        integer(self.state_rank, "state_rank", minimum=1)
++        integer(self.atlas_rank, "atlas_rank", minimum=1)
++        integer(self.interaction_rank, "interaction_rank", minimum=1)
++        integer(self.phase_modulus, "phase_modulus", minimum=1)
++        if not np.isfinite(self.complexity_weight) or self.complexity_weight <= 0:
++            raise ValueError("complexity_weight must be finite and positive")
+ 
+     @property
+     def mechanism_count(self) -> int:
+@@ -71,7 +87,7 @@
+     ) -> FloatArray:
+         state = self.state(packets)
+         atlas = self.atlas_features(packets)
+-        action = np.asarray(action_features, dtype=np.float64)
++        action = real_array(action_features, "action_features", ndim=1)
+         features: list[float] = [1.0]
+         features.extend(state.tolist())
+         features.extend(atlas.tolist())
+@@ -117,7 +133,7 @@
+             # A smooth gate allows different linear regimes without using a
+             # discontinuous target-dependent rule.
+             gate_argument = float(np.mean(atlas[: max(1, min(8, atlas.size))]))
+-            gate = 1.0 / (1.0 + np.exp(-4.0 * gate_argument))
++            gate = float(expit(4.0 * gate_argument))
+             features.append(gate)
+             features.extend((gate * state).tolist())
+             features.extend(((1.0 - gate) * state).tolist())
+--- a/src/komorebi_arc3_offline/lasm_refinement.py
++++ b/src/komorebi_arc3_offline/lasm_refinement.py
+@@ -5,6 +5,8 @@
+ from dataclasses import dataclass
+ from math import log
+ from typing import Callable, Mapping
++from types import MappingProxyType
++from ._validation import integer, real_array, readonly
+ 
+ import numpy as np
+ 
+@@ -12,16 +14,16 @@
+ 
+ 
+ def haar_pair_analyze(values: FloatArray) -> tuple[FloatArray, FloatArray]:
+-    array = np.asarray(values, dtype=np.float64)
+-    if array.ndim != 1 or array.size % 2:
++    array = real_array(values, "packet values", ndim=1)
++    if array.size % 2:
+         raise ValueError("packet split requires an even one-dimensional vector")
+     root2 = np.sqrt(2.0)
+     return (array[0::2] + array[1::2]) / root2, (array[0::2] - array[1::2]) / root2
+ 
+ 
+ def haar_pair_synthesize(low: FloatArray, high: FloatArray) -> FloatArray:
+-    low_array = np.asarray(low, dtype=np.float64)
+-    high_array = np.asarray(high, dtype=np.float64)
++    low_array = real_array(low, "low packet", ndim=1)
++    high_array = real_array(high, "high packet", ndim=1)
+     if low_array.shape != high_array.shape:
+         raise ValueError("children must have equal shape")
+     root2 = np.sqrt(2.0)
+@@ -36,10 +38,29 @@
+     coefficients: Mapping[str, FloatArray]
+     maximum_depth: int
+ 
++    def __post_init__(self) -> None:
++        depth = integer(self.maximum_depth, "maximum_depth")
++        if "" not in self.coefficients:
++            raise ValueError("packet tree must contain a root")
++        root = real_array(self.coefficients[""], "root", ndim=1)
++        if depth > root.size.bit_length() - 1 or root.size % (2**depth):
++            raise ValueError("vector length is not divisible by the requested depth")
++        expected = {format(i, f"0{d}b") if d else "" for d in range(depth + 1) for i in range(2**d)}
++        if set(self.coefficients) != expected:
++            raise ValueError("packet tree must contain every node through maximum_depth")
++        checked = {}
++        for path, values in self.coefficients.items():
++            array = real_array(values, "packet coefficients", ndim=1)
++            if array.shape != (root.size // (2**len(path)),):
++                raise ValueError(f"wrong coefficient shape for packet {path!r}")
++            checked[path] = readonly(array)
++        object.__setattr__(self, "coefficients", MappingProxyType(checked))
++
+     @classmethod
+     def analyze(cls, values: FloatArray, maximum_depth: int) -> "PacketTree":
+-        root = np.asarray(values, dtype=np.float64)
+-        if root.ndim != 1 or root.size % (2**maximum_depth):
++        root = real_array(values, "packet root", ndim=1)
++        maximum_depth = integer(maximum_depth, "maximum_depth")
++        if maximum_depth > root.size.bit_length() - 1 or root.size % (2**maximum_depth):
+             raise ValueError("vector length must be divisible by the complete packet depth")
+         packets: dict[str, FloatArray] = {"": root.copy()}
+         frontier = [""]
+@@ -58,10 +79,22 @@
+         return (left, right) if left in self.coefficients and right in self.coefficients else None
+ 
+     def synthesize(self, pruning: Mapping[str, FloatArray] | set[str] | tuple[str, ...]) -> FloatArray:
+-        if isinstance(pruning, Mapping):
+-            selected = {path: np.asarray(value, dtype=np.float64) for path, value in pruning.items()}
+-        else:
+-            selected = {path: np.asarray(self.coefficients[path], dtype=np.float64) for path in pruning}
++        paths = list(pruning)
++        if not paths or len(paths) != len(set(paths)):
++            raise ValueError("a complete pruning must be nonempty and contain no duplicate paths")
++        for path in paths:
++            if path not in self.coefficients:
++                raise ValueError(f"unknown packet path: {path!r}")
++        chosen = set(paths)
++        if any(path[:k] in chosen for path in paths for k in range(len(path))):
++            raise ValueError("selected packet family contains overlapping ancestors and descendants")
++        selected = {}
++        for path in paths:
++            value = pruning[path] if isinstance(pruning, Mapping) else self.coefficients[path]
++            array = real_array(value, "selected packet", ndim=1)
++            if array.shape != self.coefficients[path].shape:
++                raise ValueError(f"wrong coefficient shape for selected packet {path!r}")
++            selected[path] = array.copy()
+         current = dict(selected)
+         # A complete pruning contains exactly enough nodes for every branch to
+         # synthesize the root.  Combine deepest siblings until the root appears.
+@@ -119,6 +152,8 @@
+     packet_penalty: float = 0.01,
+ ) -> BestBasisResult:
+     """Find the exact minimum-cost complete pruning by bottom-up dynamic programming."""
++    if not np.isfinite(packet_penalty):
++        raise ValueError("packet_penalty must be finite")
+     values: dict[str, float] = {}
+     selections: dict[str, tuple[str, ...]] = {}
+     decisions: dict[str, str] = {}
+@@ -126,6 +161,8 @@
+     for depth in range(tree.maximum_depth, -1, -1):
+         for path in sorted(key for key in tree.coefficients if len(key) == depth):
+             direct = float(cost(tree.coefficients[path], packet_penalty))
++            if not np.isfinite(direct):
++                raise ValueError(f"nonfinite packet cost at {path!r}")
+             node_costs[path] = direct
+             children = tree.children(path)
+             if children is None:
+--- a/src/komorebi_pr_lasm/__init__.py
++++ b/src/komorebi_pr_lasm/__init__.py
+@@ -45,7 +45,7 @@
+     install_offline_guard,
+ )
+ 
+-__version__ = "2.1.0"
++__version__ = "2.3.0"
+ __author__ = "Komorebi P."
+ 
+ __all__ = [
+@@ -92,3 +92,7 @@
+     "wavelet_project",
+     "wavelet_subband_slices",
+ ]
++
++from .signal import SignalAnalysis1D, analyze_signal, polyphase_analyze, polyphase_synthesize, PolyphaseFIR, StreamingFIR
++from .archive import save_signal_archive, load_signal_archive
++__all__ += ["SignalAnalysis1D", "analyze_signal", "polyphase_analyze", "polyphase_synthesize", "PolyphaseFIR", "StreamingFIR", "save_signal_archive", "load_signal_archive"]
+--- /dev/null
++++ b/src/komorebi_pr_lasm/archive.py
+@@ -0,0 +1,89 @@
++"""Versioned, pickle-free storage of an exact 1-D signal and its analysis settings.
++
++This persists the source coordinate archive, not trained model parameters,
++agent history, or planning state. Coordinates are recomputed on load.
++The checksum detects corruption; it is not an authenticity signature.
++"""
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++from pathlib import Path
++import tempfile
++from zipfile import ZipFile
++
++import numpy as np
++
++from .signal import SignalAnalysis1D, analyze_signal
++from komorebi_arc3_offline._validation import integer, real_array
++
++
++def _digest(values: np.ndarray) -> str:
++    return hashlib.sha256(np.ascontiguousarray(values, dtype="<f8").tobytes()).hexdigest()
++
++
++def save_signal_archive(analysis: SignalAnalysis1D, path: str | Path) -> Path:
++    """Atomically replace path with a coordinate archive containing no object arrays."""
++    if not isinstance(analysis, SignalAnalysis1D):
++        raise ValueError("analysis must be a SignalAnalysis1D")
++    target = Path(path).expanduser().resolve()
++    target.parent.mkdir(parents=True, exist_ok=True)
++    values = real_array(analysis.spatial, "archive signal", ndim=1)
++    metadata = {
++        "schema_version": 1, "kind": "signal_coordinates_only", "dtype": "float64",
++        "length": int(values.size), "modulus": analysis.modulus,
++        "effective_depth": analysis.effective_depth, "sha256": _digest(values),
++    }
++    temporary: Path | None = None
++    try:
++        with tempfile.NamedTemporaryFile(dir=target.parent, prefix=".prlasm-", delete=False) as handle:
++            temporary = Path(handle.name)
++            np.savez_compressed(handle, signal=values, metadata=np.asarray(json.dumps(metadata, sort_keys=True)))
++            handle.flush()
++            os.fsync(handle.fileno())
++        os.replace(temporary, target)
++    finally:
++        if temporary is not None and temporary.exists():
++            temporary.unlink()
++    return target
++
++
++def load_signal_archive(path: str | Path, *, maximum_bytes: int = 256 * 1024 * 1024) -> SignalAnalysis1D:
++    """Validate size, schema, shape and source checksum before recomputing coordinates."""
++    maximum_bytes = integer(maximum_bytes, "maximum_bytes", minimum=1)
++    target = Path(path).expanduser().resolve()
++    with ZipFile(target) as zipped:
++        entries = zipped.infolist()
++        if len(entries) != 2 or {entry.filename for entry in entries} != {"signal.npy", "metadata.npy"}:
++            raise ValueError("archive must contain only signal.npy and metadata.npy")
++        if sum(entry.file_size for entry in entries) > maximum_bytes:
++            raise ValueError("archive exceeds the configured uncompressed size limit")
++        if next(entry for entry in entries if entry.filename == "metadata.npy").file_size > 65536:
++            raise ValueError("archive metadata is too large")
++    with np.load(target, allow_pickle=False) as stored:
++        raw_metadata = stored["metadata"]
++        if raw_metadata.shape != () or raw_metadata.dtype.kind != "U":
++            raise ValueError("archive metadata must be a scalar JSON string")
++        metadata = json.loads(str(raw_metadata))
++        if not isinstance(metadata, dict) or metadata.get("schema_version") != 1 or metadata.get("kind") != "signal_coordinates_only":
++            raise ValueError("unsupported signal archive schema")
++        raw = stored["signal"]
++        if raw.dtype != np.dtype("float64"):
++            raise ValueError("stored signal dtype must be float64")
++        values = real_array(raw, "stored signal", ndim=1)
++        if metadata.get("dtype") != "float64" or metadata.get("length") != values.size:
++            raise ValueError("archive length or dtype metadata mismatch")
++        if metadata.get("sha256") != _digest(values):
++            raise ValueError("archive source checksum mismatch")
++        depth = integer(metadata.get("effective_depth"), "effective_depth")
++        modulus = integer(metadata.get("modulus"), "modulus", minimum=1)
++        # Bound derived work too, not just the stored source payload.
++        if depth > values.size.bit_length() - 1 or values.size % (2**depth):
++            raise ValueError("archive depth is inconsistent with signal length")
++        if (depth + 1) * values.nbytes + 256 * modulus > maximum_bytes:
++            raise ValueError("derived analysis exceeds the configured size budget")
++        return analyze_signal(values.copy(), modulus=modulus, maximum_depth=depth)
++
++
++__all__ = ["save_signal_archive", "load_signal_archive"]
+--- /dev/null
++++ b/src/komorebi_pr_lasm/diagnostics.py
+@@ -0,0 +1,41 @@
++"""Small deterministic installation check, independent of ARC runtimes."""
++from __future__ import annotations
++import importlib.metadata
++import platform
++import numpy as np
++
++from .signal import analyze_signal, PolyphaseFIR, StreamingFIR
++from komorebi_arc3_offline.exact_atlas import MultiAtlasAnalyzer
++from komorebi_arc3_offline.bayes import BayesianRegression
++
++
++def self_check() -> dict[str, object]:
++    rng = np.random.default_rng(20261009)
++    x = rng.normal(size=96)
++    taps = np.asarray([0.25, 0.5, 0.25, -0.1])
++    analysis = analyze_signal(x)
++    image = MultiAtlasAnalyzer().analyze(rng.normal(size=(7, 10)))
++    bank = PolyphaseFIR(taps, modulus=3)
++    expected = np.convolve(x, taps)
++    stream = StreamingFIR(taps)
++    streamed = np.concatenate([stream.process(x[:13]), stream.process(x[13:]), stream.flush()])
++    design = np.column_stack([np.ones(50), np.linspace(-1, 1, 50)])
++    fit = BayesianRegression().fit(design, (design @ np.array([0.3, 1.2]))[:, None])
++    _, variance = fit.predict(design)
++    residuals = {
++        "signal_reconstruction": max(analysis.reconstruction_residuals().values()),
++        "irregular_image_reconstruction": max(image.reconstruction_residuals().values()),
++        "polyphase_fir": float(np.max(np.abs(bank.apply(x) - expected))),
++        "streaming_fir": float(np.max(np.abs(streamed - expected))),
++    }
++    checks = {name: residual <= 1e-10 for name, residual in residuals.items()}
++    checks["finite_predictive_variance"] = bool(np.isfinite(variance).all() and (variance > 0).all())
++    versions = {"python": platform.python_version()}
++    for package in ("numpy", "scipy"):
++        versions[package] = importlib.metadata.version(package)
++    return {"status": "PASS" if all(checks.values()) else "FAIL", "checks": checks,
++            "residuals": residuals, "environment": versions,
++            "scope": "finite installation controls; no ARC score, trained checkpoint, or universal-model claim"}
++
++
++__all__ = ["self_check"]
+--- /dev/null
++++ b/src/komorebi_pr_lasm/signal.py
+@@ -0,0 +1,196 @@
++"""Finite real-valued signal coordinates, explicit polyphase FIR blocks, and streaming.
++
++Conventions: x_s[q] = x[N*q+s], h[k] = 0 outside 0 <= k < L.
++The transfer blocks are E[r,s,m] = h[N*m+r-s].  FIR application uses
++zero extension and returns full convolution, not a circular FFT filter.
++"""
++from __future__ import annotations
++
++from dataclasses import dataclass
++from types import MappingProxyType
++from typing import Mapping
++
++import numpy as np
++
++from komorebi_arc3_offline._validation import dyadic_depth, integer, readonly, real_array
++from komorebi_arc3_offline.lasm_refinement import PacketTree
++
++
++def polyphase_analyze(values: object, modulus: int) -> dict[int, np.ndarray]:
++    x = real_array(values, "signal", ndim=1)
++    order = integer(modulus, "modulus", minimum=1)
++    return {phase: x[phase::order].copy() for phase in range(order)}
++
++
++def polyphase_synthesize(channels: Mapping[int, object], length: int, modulus: int) -> np.ndarray:
++    length = integer(length, "length", minimum=1)
++    order = integer(modulus, "modulus", minimum=1)
++    if set(channels) != set(range(order)):
++        raise ValueError("a complete residue-channel family is required")
++    output = np.empty(length, dtype=np.float64)
++    for phase in range(order):
++        values = real_array(channels[phase], "channel", ndim=1, empty=True)
++        if values.shape != output[phase::order].shape:
++            raise ValueError(f"incorrect length for phase {phase}")
++        output[phase::order] = values
++    return output
++
++
++@dataclass(frozen=True)
++class SignalAnalysis1D:
++    """Coordinate snapshot. No compressed state is substituted for the signal."""
++
++    spatial: np.ndarray
++    fourier: np.ndarray
++    polyphase: Mapping[int, np.ndarray]
++    packets: PacketTree
++    modulus: int
++
++    @property
++    def length(self) -> int:
++        return int(self.spatial.size)
++
++    @property
++    def effective_depth(self) -> int:
++        return self.packets.maximum_depth
++
++    def reconstruct(self, atlas: str = "spatial") -> np.ndarray:
++        if atlas == "spatial":
++            return self.spatial.copy()
++        if atlas == "fourier":
++            return np.fft.ifft(self.fourier, norm="ortho").real
++        if atlas == "polyphase":
++            return polyphase_synthesize(self.polyphase, self.length, self.modulus)
++        if atlas == "packets":
++            leaves = tuple(path for path in self.packets.coefficients if len(path) == self.effective_depth)
++            return self.packets.synthesize(leaves)
++        raise KeyError(atlas)
++
++    def reconstruction_residuals(self) -> dict[str, float]:
++        return {name: float(np.max(np.abs(self.reconstruct(name) - self.spatial)))
++                for name in ("spatial", "fourier", "polyphase", "packets")}
++
++
++def analyze_signal(values: object, *, modulus: int = 4, maximum_depth: int = 6) -> SignalAnalysis1D:
++    """Analyze any nonempty finite real vector without padding, clipping or resizing.
++
++    The effective Haar packet depth is the smaller of maximum_depth and the
++    power of two dividing the length. At odd length the packet tree is the root.
++    """
++    x = real_array(values, "signal", ndim=1)
++    depth = min(integer(maximum_depth, "maximum_depth"), dyadic_depth((x.size,)))
++    order = integer(modulus, "modulus", minimum=1)
++    return SignalAnalysis1D(
++        spatial=readonly(x), fourier=readonly(np.fft.fft(x, norm="ortho")),
++        polyphase=MappingProxyType({p: readonly(v) for p, v in polyphase_analyze(x, order).items()}),
++        packets=PacketTree.analyze(x, depth), modulus=order,
++    )
++
++
++class PolyphaseFIR:
++    """An explicit, finite N-by-N matrix of causal FIR transfer blocks.
++
++    ``blocks[r,s,m]`` equals h[N*m+r-s] with out-of-support taps set to zero.
++    This is an independently executable reference decomposition, not a claim
++    of acceleration over NumPy's direct convolution.
++    """
++
++    def __init__(self, taps: object, modulus: int = 4) -> None:
++        self._taps = readonly(real_array(taps, "taps", ndim=1))
++        self._modulus = integer(modulus, "modulus", minimum=1)
++        order = self._modulus
++        lag_count = (self._taps.size + order - 2) // order + 1
++        block = np.zeros((order, order, lag_count), dtype=np.float64)
++        for r in range(order):
++            for s in range(order):
++                for m in range(lag_count):
++                    index = order * m + r - s
++                    if 0 <= index < self._taps.size:
++                        block[r, s, m] = self._taps[index]
++        self._blocks = readonly(block)
++
++    @property
++    def taps(self) -> np.ndarray:
++        return self._taps
++
++    @property
++    def modulus(self) -> int:
++        return self._modulus
++
++    @property
++    def blocks(self) -> np.ndarray:
++        return self._blocks
++
++    def apply(self, values: object) -> np.ndarray:
++        x = real_array(values, "signal", ndim=1)
++        channels = polyphase_analyze(x, self.modulus)
++        output = np.zeros(x.size + self.taps.size - 1, dtype=np.float64)
++        for r in range(self.modulus):
++            lane = output[r::self.modulus]
++            for s in range(self.modulus):
++                if channels[s].size == 0:
++                    continue
++                contribution = np.convolve(channels[s], self.blocks[r, s], mode="full")
++                count = min(lane.size, contribution.size)
++                lane[:count] += contribution[:count]
++        if not np.isfinite(output).all():
++            raise FloatingPointError("FIR output overflowed float64")
++        return output
++
++    def compose(self, earlier: "PolyphaseFIR") -> "PolyphaseFIR":
++        """Apply earlier first, then this operator, using the same residue order."""
++        if not isinstance(earlier, PolyphaseFIR) or earlier.modulus != self.modulus:
++            raise ValueError("composition requires a PolyphaseFIR with the same modulus")
++        return PolyphaseFIR(np.convolve(self.taps, earlier.taps), self.modulus)
++
++
++class StreamingFIR:
++    """Chunk-independent causal FIR with an explicit finite tail and reset.
++
++    process(chunk) returns one output per input sample. flush() returns the
++    remaining L-1 samples exactly once. Processing after flush requires reset().
++    No future sample is used to produce the current output.
++    """
++
++    def __init__(self, taps: object) -> None:
++        self._taps = readonly(real_array(taps, "taps", ndim=1))
++        self.reset()
++
++    @property
++    def taps(self) -> np.ndarray:
++        return self._taps
++
++    def reset(self) -> None:
++        self._history = np.zeros(self.taps.size - 1, dtype=np.float64)
++        self._closed = False
++        self._seen = False
++
++    def process(self, values: object) -> np.ndarray:
++        if self._closed:
++            raise ValueError("stream is flushed; reset before processing more samples")
++        x = real_array(values, "chunk", ndim=1, empty=True)
++        if x.size == 0:
++            return np.empty(0, dtype=np.float64)
++        joined = np.concatenate([self._history, x])
++        offset = self.taps.size - 1
++        output = np.convolve(joined, self.taps)[offset:offset + x.size]
++        if not np.isfinite(output).all():
++            raise FloatingPointError("stream output overflowed float64")
++        if offset:
++            self._history = joined[-offset:].copy()
++        self._seen = True
++        return output
++
++    def flush(self) -> np.ndarray:
++        if self._closed:
++            return np.empty(0, dtype=np.float64)
++        if self._seen and self.taps.size > 1:
++            tail = self.process(np.zeros(self.taps.size - 1, dtype=np.float64))
++        else:
++            tail = np.empty(0, dtype=np.float64)
++        self._closed = True
++        return tail
++
++
++__all__ = ["SignalAnalysis1D", "analyze_signal", "polyphase_analyze", "polyphase_synthesize",
++           "PolyphaseFIR", "StreamingFIR"]

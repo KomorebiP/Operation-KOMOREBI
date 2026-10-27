@@ -1,0 +1,977 @@
+{
+  "version": "2.3.0",
+  "author": "Komorebi P.",
+  "date": "2026-10-09",
+  "pages": [
+    {
+      "title": "Komorebi\nLarge Signal Model",
+      "kicker": "OPERATION KOMOREBI",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "Projector-Resolved Large Algebraic Signal Model"
+        },
+        {
+          "kind": "p",
+          "text": "Release 2.3.0 · Implementation and verification guide"
+        },
+        {
+          "kind": "p",
+          "text": "Komorebi P. · 9 October 2026"
+        },
+        {
+          "kind": "figure",
+          "name": "01_reconstruction",
+          "caption": "A deterministic finite signal reconstructed from a complete packet basis. The two curves coincide to numerical precision. This illustration is not a learned prediction."
+        },
+        {
+          "kind": "note",
+          "text": "This is a locally verified source release for a finite, non-LLM algebraic model. It includes exact-coordinate machinery, typed Bayesian regression, explicit replay and planning, and a standalone continuous-signal interface. It is not a pretrained foundation-model checkpoint or an official ARC score."
+        },
+        {
+          "kind": "p",
+          "text": "The inherited core license is unchanged. This handoff has not been published to GitHub or a package index."
+        }
+      ]
+    },
+    {
+      "title": "A map of the release",
+      "kicker": "01 / ORIENTATION",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "The release separates three questions that are easy to confuse: can the original observation be reconstructed, can a restricted state predict useful quantities, and can recorded or predicted transitions support a decision? Each question has its own evidence. Exact reconstruction alone does not establish forecasting or planning competence."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Layer",
+            "Implemented role",
+            "What it does not establish"
+          ],
+          "rows": [
+            [
+              "Coordinate archive",
+              "Retain full signal samples or the original categorical frame, with invertible coordinate systems.",
+              "That a compressed feature vector is sufficient for the future."
+            ],
+            [
+              "Statistical model",
+              "Fit regression coefficients and select among declared typed operator candidates.",
+              "Unbounded program invention or open-world calibrated confidence."
+            ],
+            [
+              "Memory and planning",
+              "Record transitions and prefer evidence-supported actions in controlled systems.",
+              "General intelligence or an official external benchmark score."
+            ]
+          ],
+          "widths": [
+            1.05,
+            2.5,
+            2.6
+          ]
+        },
+        {
+          "kind": "h",
+          "text": "Which predecessor is authoritative?"
+        },
+        {
+          "kind": "p",
+          "text": "The core is a successor to komorebi-pr-lasm 2.1.0. The separately numbered ARC3 agent 2.2.0 is not its predecessor. Those packages share the compatibility import namespace and must not be installed together. The older ARC2 Bayesian diagnostic archive is preserved only as a lineage reference."
+        },
+        {
+          "kind": "p",
+          "text": "The full handoff retains the October signal-reconstruction collection and the Euler–signal bridge as companion archives. Retaining those files does not certify every theorem, import their scores, or merge their runtime code into this release."
+        },
+        {
+          "kind": "note",
+          "text": "Current source and verification records govern this release. The preserved 38-page historical capstone keeps its original date, protocol and results. Read paper/README.md before using its experimental numbers."
+        }
+      ]
+    },
+    {
+      "title": "Install and run the first check",
+      "kicker": "02 / QUICKSTART",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "Use a dedicated Python environment. The executed environment was Linux with Python 3.13.5, NumPy 2.3.5 and SciPy 1.17.0. Python 3.12 and Windows are configured in CI, but were not executed in this handoff."
+        },
+        {
+          "kind": "h",
+          "text": "Source installation on Windows"
+        },
+        {
+          "kind": "code",
+          "text": "py -3.13 -m venv .venv\n.\\.venv\\Scripts\\Activate.ps1\npython -m pip install -e \".[test]\"\npython -m komorebi_pr_lasm self-check\npython -m pytest -q -W error -m \"not local_suite\""
+        },
+        {
+          "kind": "p",
+          "text": "The dependency installation may need internet access. Runtime operations do not download a model or require a hosted inference service. On Linux, create the environment with python -m venv .venv and activate .venv/bin/activate."
+        },
+        {
+          "kind": "h",
+          "text": "An offline wheel installation"
+        },
+        {
+          "kind": "code",
+          "text": "python -m pip install --no-index --no-deps \\\n  dist/komorebi_pr_lasm-2.3.0-py3-none-any.whl\npython -m komorebi_pr_lasm self-check"
+        },
+        {
+          "kind": "p",
+          "text": "The example above uses shell continuation. In PowerShell put the wheel command on one line. NumPy and SciPy must already be installed for this fully offline route. The full handoff is not an all-platform dependency wheelhouse. In the source-only archive, the wheel is supplied separately rather than inside the repository."
+        },
+        {
+          "kind": "h",
+          "text": "Files and commands"
+        },
+        {
+          "kind": "code",
+          "text": "python -m komorebi_pr_lasm analyze signal.npy\npython -m komorebi_pr_lasm analyze signal.csv --output report.json\npython -m komorebi_pr_lasm benchmark --output results/benchmark"
+        },
+        {
+          "kind": "p",
+          "text": "The analyze command accepts a real one-dimensional signal or a real two-dimensional array. A 2D analysis uses its documented phase-2 and phase-4 atlases. A 1D analysis accepts the --modulus setting. Object arrays, nonfinite values and unsupported dimensions are rejected."
+        }
+      ]
+    },
+    {
+      "title": "The archive is not the state",
+      "kicker": "03 / REPRESENTATION",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "A finite coordinate representation can be reconstructible even when the features derived from it are lossy. PR-LASM makes that distinction explicit. The source samples and complete coordinates belong to the archive. Macro, meso and micro vectors are separate statistical summaries used by the operator model."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Object",
+            "Information retained",
+            "Typical consumer"
+          ],
+          "rows": [
+            [
+              "Original signal or frame",
+              "All accepted source samples in their original shape.",
+              "Reconstruction, integrity checks, future re-analysis."
+            ],
+            [
+              "Full Fourier / Haar coordinates",
+              "A complete transform at the declared feasible resolution.",
+              "Exact synthesis and coordinate-domain operators."
+            ],
+            [
+              "Complete packet antichain",
+              "One complete basis assembled from nodes of a finite tree.",
+              "Adaptive representation and synthesis."
+            ],
+            [
+              "Statistical features",
+              "Selected pooled features and seeded projections.",
+              "Regression and decision heuristics."
+            ],
+            [
+              "Replay graph",
+              "Previously recorded state-action outcomes.",
+              "Evidence-supported replay and diagnostics."
+            ]
+          ],
+          "widths": [
+            1.55,
+            2.45,
+            2.15
+          ]
+        },
+        {
+          "kind": "h",
+          "text": "What “exact” means here"
+        },
+        {
+          "kind": "p",
+          "text": "Spatial storage and residue reindexing preserve the accepted float64 samples. Orthogonal transform reconstruction is exact in ideal arithmetic and measured up to floating-point roundoff in this implementation. The word does not mean rational arithmetic, arbitrary-precision arithmetic, or a proof that every finite float64 magnitude is safe from overflow."
+        },
+        {
+          "kind": "p",
+          "text": "Read-only copied arrays protect snapshots from accidental mutation. They are not a cryptographic immutability guarantee. Integer inputs outside the conservative exact float64 conversion range are rejected rather than silently rounded."
+        },
+        {
+          "kind": "note",
+          "text": "A zero reconstruction residual does not establish that the learned model predicts the signal. The standalone signal interface is deterministic coordinate and filtering software. The frame-based model learns from transition records. Connecting those components into a general trained time-series agent remains a separate integration task."
+        }
+      ]
+    },
+    {
+      "title": "Continuous signals without quantization",
+      "kicker": "04 / SIGNAL COORDINATES",
+      "blocks": [
+        {
+          "kind": "code",
+          "text": "import numpy as np\nfrom komorebi_pr_lasm import analyze_signal\n\nx = np.sin(np.arange(257) * 0.13)\na = analyze_signal(x, modulus=4, maximum_depth=6)\nassert a.length == len(x)\nprint(a.effective_depth)       # 0: 257 is odd\nprint(a.reconstruction_residuals())\nnp.testing.assert_allclose(a.reconstruct(\"polyphase\"), x)"
+        },
+        {
+          "kind": "p",
+          "text": "No image palette is imposed on this vector. The signal is neither padded to a power of two nor resampled to a fixed observation size. Spatial, full Fourier, residue-channel and feasible Haar packet coordinates are exposed. An odd length has only the packet-tree root under the no-padding convention, which is a complete and valid representation."
+        },
+        {
+          "kind": "figure",
+          "name": "01_reconstruction",
+          "caption": "This 256-sample illustration has a feasible depth of six. A slowly varying carrier, a faster component and a local level change make the different coordinate roles visible."
+        },
+        {
+          "kind": "p",
+          "text": "For length L, the effective packet depth is min(maximum_depth, v2(L)), where v2(L) is the largest exponent d for which 2^d divides L. Requesting a smaller maximum depth changes the finite tree, not the source length. Reconstruction returns a new array."
+        }
+      ]
+    },
+    {
+      "title": "Fourier coordinates and real projectors",
+      "kicker": "05 / FREQUENCY",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "The forward and inverse transforms use unitary normalization. This makes squared coefficient norms comparable to source energy, up to roundoff. The archive retains the complete complex Fourier array for the real input. A display of nonnegative frequencies is only a view of that archive."
+        },
+        {
+          "kind": "figure",
+          "name": "02_fourier",
+          "caption": "Positive-frequency magnitudes of the illustrative signal. The level change distributes energy across frequencies. The plot is not a learned spectral decomposition."
+        },
+        {
+          "kind": "h",
+          "text": "A real Fourier projector has a contract"
+        },
+        {
+          "kind": "p",
+          "text": "The real-output 2D projector requires a binary mask that is symmetric under conjugate-frequency reflection. A general asymmetric frequency mask does not define the intended real orthogonal projector. Previously, discarding its imaginary output could produce an operation that was not idempotent. This release rejects the invalid mask instead of presenting that result as a projection."
+        },
+        {
+          "kind": "code",
+          "text": "# Orthogonal projector check on an admissible mask:\np = fourier_project(image, mask)\nnp.testing.assert_allclose(fourier_project(p, mask), p)"
+        },
+        {
+          "kind": "p",
+          "text": "A real-valued transfer function with nonbinary gains may define a useful filter, but it is not the binary projector implemented by that helper. Full zero-extended FIR convolution is exposed separately. Circular frequency filtering and finite convolution have different boundary conditions."
+        }
+      ]
+    },
+    {
+      "title": "Complete packet refinement",
+      "kicker": "06 / FINITE RESOLUTION",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "At every feasible split, the Haar pair map sends even and odd samples to normalized sums and differences. Its inverse reconstructs the parent from both children. A complete antichain chooses nodes that cover the tree once: no missing branch, no ancestor together with its descendant, and no duplicated path."
+        },
+        {
+          "kind": "code",
+          "text": "from komorebi_pr_lasm import analyze_signal, best_basis, l1_packet_cost\n\na = analyze_signal(x, maximum_depth=6)\nchoice = best_basis(a.packets, cost=l1_packet_cost,\n                    packet_penalty=0.5)\nreconstructed = a.packets.synthesize(choice.paths)\nnp.testing.assert_allclose(reconstructed, x)"
+        },
+        {
+          "kind": "figure",
+          "name": "04_packets",
+          "caption": "Squared coefficient norms in the selected complete basis for the illustrative signal. This example uses the supplied L1 packet cost and a packet penalty of 0.5. It is not evidence of universal compression optimality."
+        },
+        {
+          "kind": "p",
+          "text": "For a node p with children p0 and p1, the finite dynamic program compares the cost of retaining p with the sum of the children’s best costs. In shorthand, B(p) = min(C(p), B(p0) + B(p1)). The result minimizes the supplied additive cost over this finite tree. It need not minimize any other coding or predictive objective."
+        },
+        {
+          "kind": "p",
+          "text": "The tests enumerate all 677 complete antichains of a depth-four binary tree and compare the dynamic program with exhaustive costs. Separate checks reject incomplete, overlapping and malformed prunings."
+        }
+      ]
+    },
+    {
+      "title": "Residue channels make the indexing explicit",
+      "kicker": "07 / POLYPHASE",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "Choose a positive integer N. Each source index has a unique representation n = Nq + s with 0 <= s < N. Polyphase analysis groups the samples by that residue. It is a bijective reindexing, not a downsampling operation that discards the other channels."
+        },
+        {
+          "kind": "code",
+          "text": "x_s[q] = x[N*q + s]\nx[N*q + s] = x_s[q]"
+        },
+        {
+          "kind": "figure",
+          "name": "03_polyphase",
+          "caption": "The four residue channels of the illustrative signal. Vertical offsets are for display only and are stated in the legend. No offset is part of the stored coordinates."
+        },
+        {
+          "kind": "p",
+          "text": "When the source length is not a multiple of N, channel lengths differ by at most one. If N exceeds the source length, some channels are empty. Synthesis requires the full dictionary and the correct expected length for every lane. It rejects zero or nonintegral moduli rather than manufacturing a zero-filled reconstruction."
+        },
+        {
+          "kind": "code",
+          "text": "from komorebi_pr_lasm import polyphase_analyze, polyphase_synthesize\nchannels = polyphase_analyze([10., 20., 30., 40., 50.], 3)\n# {0: [10., 40.], 1: [20., 50.], 2: [30.]}\nx_again = polyphase_synthesize(channels, length=5, modulus=3)"
+        }
+      ]
+    },
+    {
+      "title": "Taps become transfer blocks",
+      "kicker": "08 / FIR OPERATORS",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "For a causal finite filter h with zero extension outside its support, write y[n] = sum_k h[k] x[n-k]. Substituting n = Nq + r and the source lane index N(q-m) + s gives an explicit matrix of lane-to-lane filters."
+        },
+        {
+          "kind": "code",
+          "text": "E[r,s,m] = h[N*m + r - s]\ny_r[q]   = sum_s sum_m E[r,s,m] * x_s[q-m]"
+        },
+        {
+          "kind": "h",
+          "text": "A hand-checkable case"
+        },
+        {
+          "kind": "p",
+          "text": "Take N = 2 and h = [1, -1/2, 1/4]. The nonzero block taps are E00 = E11 = [1, 1/4], E01 = [0, -1/2], and E10 = [-1/2]. The delay in E01 is not optional. It is the carry produced by the residue indexing."
+        },
+        {
+          "kind": "code",
+          "text": "import numpy as np\nfrom komorebi_pr_lasm import PolyphaseFIR\n\nx = np.array([1., 2., 3., 4.])\nbank = PolyphaseFIR([1., -0.5, 0.25], modulus=2)\ny = bank.apply(x)\nnp.testing.assert_allclose(y, [1., 1.5, 2.25, 3., -1.25, 1.])"
+        },
+        {
+          "kind": "figure",
+          "name": "05_fir",
+          "caption": "The separate smoothing illustration uses taps [1/4, 1/2, 1/4]. The finite output has L + K - 1 samples, including the tail. The block implementation is checked against independent direct convolution."
+        },
+        {
+          "kind": "p",
+          "text": "compose(earlier) applies the earlier filter first and then the current filter, with matching residue order. The implementation is a transparent reference operator. No speedup over optimized direct convolution or an FFT method is claimed."
+        }
+      ]
+    },
+    {
+      "title": "Streaming has state and a final tail",
+      "kicker": "09 / CAUSAL EXECUTION",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "A K-tap causal filter needs at most K-1 past samples. Processing a new chunk must preserve those samples across chunk boundaries. It must not reset merely because the caller changed the chunk size."
+        },
+        {
+          "kind": "code",
+          "text": "from komorebi_pr_lasm import StreamingFIR\n\nstream = StreamingFIR([0.25, 0.5, 0.25])\nparts = [stream.process(x[:31]), stream.process(x[31:96]),\n         stream.process(x[96:]), stream.flush()]\ny_stream = np.concatenate(parts)\nnp.testing.assert_allclose(y_stream, np.convolve(x, stream.taps))"
+        },
+        {
+          "kind": "figure",
+          "name": "06_streaming",
+          "caption": "Batch output and streaming output coincide. Dotted lines mark irregular chunk boundaries. The complete result appends the flush tail once."
+        },
+        {
+          "kind": "p",
+          "text": "process returns one output per input sample. An empty chunk produces no output and leaves the active stream intact. flush emits the remaining K-1 samples after a nonempty stream and then closes it. Repeated flush returns an empty vector. Processing after closure raises an error until reset starts a new stream."
+        },
+        {
+          "kind": "note",
+          "text": "The streaming implementation does not look ahead. It is not a general online learner, an audio device driver or a low-latency hardware implementation. Chunk equivalence and causality are tested separately from throughput."
+        }
+      ]
+    },
+    {
+      "title": "Two-dimensional data stays in its own domain",
+      "kicker": "10 / IMAGE ATLAS",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "MultiAtlasAnalyzer accepts a nonempty finite real 2D array. It preserves its shape, including tiny arrays and irregular dimensions. Spatial, Fourier, feasible Haar, phase-2 and phase-4 coordinates participate in the linear atlas. A redundant weighted synthesis normalizes valid nonnegative finite weights."
+        },
+        {
+          "kind": "code",
+          "text": "import numpy as np\nfrom komorebi_pr_lasm import MultiAtlasAnalyzer\n\nimage = np.linspace(-0.5, 1.5, 63).reshape(7, 9)\na = MultiAtlasAnalyzer().analyze(image)\nassert a.color is None\nassert a.spatial.shape == (7, 9)\nprint(a.reconstruction_residuals())"
+        },
+        {
+          "kind": "h",
+          "text": "Color is conditional, not approximate"
+        },
+        {
+          "kind": "p",
+          "text": "A color one-hot representation exists only when every accepted sample is an exact integer in the configured palette. Continuous values and out-of-palette integers do not acquire a fabricated exact color atlas by rounding or clipping. a.color is then None, and availability and residual reports reflect that. Callers upgrading from 2.1.0 must handle this explicitly."
+        },
+        {
+          "kind": "h",
+          "text": "Feasible Haar depth"
+        },
+        {
+          "kind": "p",
+          "text": "For a height H and width W, the default 2D depth cannot exceed min(v2(H), v2(W)). This prevents attempting an impossible even-pair split. Odd dimensions can legitimately use an identity-depth Haar representation. Empty feature bins contribute zero rather than a mean of an empty array."
+        },
+        {
+          "kind": "h",
+          "text": "The frame model has a further boundary"
+        },
+        {
+          "kind": "p",
+          "text": "UltimateLASMPacketizer now retains and hashes the original categorical frame. Its inherited statistical/object-feature path still uses a 64-by-64 proxy. Salient action coordinates in that legacy path remain proxy coordinates. Arbitrary-size interactive action mapping has not been established merely by fixing the archive shape."
+        },
+        {
+          "kind": "note",
+          "text": "Use the generic 1D or 2D analysis API for continuous numerical data. The inherited frame-based agent expects categorical observations and should not receive a continuous signal disguised as an integer image."
+        }
+      ]
+    },
+    {
+      "title": "What the model actually learns",
+      "kicker": "11 / TYPED OPERATORS",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "There is no neural language model inside this release. A declared program specifies an operator family, a state resolution and an atlas. It converts each observed transition into a design row. Regression then learns coefficients relating those rows to future-state changes and shared scalar outcomes."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Component",
+            "Fixed or learned?",
+            "Examples"
+          ],
+          "rows": [
+            [
+              "Coordinate transforms",
+              "Fixed definitions",
+              "Fourier, Haar, residue channels and admissible color."
+            ],
+            [
+              "Projection / feature map",
+              "Fixed or seeded",
+              "Pooled features and bounded state vectors."
+            ],
+            [
+              "Operator grammar",
+              "Declared finite candidates",
+              "Linear, quadratic, bilinear, delay, fractional-memory, Volterra, phase, gated, hybrid."
+            ],
+            [
+              "Regression coefficients",
+              "Learned from records",
+              "Posterior mean and output noise scale for each candidate."
+            ],
+            [
+              "Candidate weights",
+              "Data-dependent",
+              "Held-out predictive score combined with explicit penalties."
+            ],
+            [
+              "Replay memory",
+              "Observed and accumulated",
+              "State-action successor, progress, wins and losses."
+            ]
+          ],
+          "widths": [
+            1.55,
+            1.55,
+            3.05
+          ]
+        },
+        {
+          "kind": "h",
+          "text": "Learning does not require token prediction"
+        },
+        {
+          "kind": "p",
+          "text": "Here the learnable quantities are ordinary numerical parameters and finite candidate preferences. Their meaning comes from the typed design map. A delay candidate includes previous-state information. A phase candidate includes a periodic phase code and interactions. A gated candidate supplies smooth regimes. Regression decides how strongly those features help on the training transitions."
+        },
+        {
+          "kind": "p",
+          "text": "The grammar does not expand itself without bounds. The synthetic identification suite deliberately includes generators from the candidate families. Correct identification in that suite demonstrates implemented mechanism discrimination, not discovery of an arbitrary new physical law."
+        },
+        {
+          "kind": "note",
+          "text": "fit_report exposes insufficient records, incomparable target coordinates, per-candidate failures and fitted-candidate counts. A sharp normalized weight is conditional on the candidates that were actually fitted."
+        }
+      ]
+    },
+    {
+      "title": "Regression and uncertainty",
+      "kicker": "12 / NUMERICAL MODEL",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "Each candidate is a Bayesian linear regression after its potentially nonlinear design map. With design matrix X, target vector y and scalar prior precision lambda, the posterior precision and mean are computed from the following finite system."
+        },
+        {
+          "kind": "code",
+          "text": "Lambda = lambda * I + X.T @ X\nm      = solve(Lambda, X.T @ y)\nalpha  = alpha0 + n / 2\nbeta   = beta0 + 0.5 * (||y - X@m||^2 + lambda * ||m||^2)"
+        },
+        {
+          "kind": "p",
+          "text": "The last expression is algebraically equivalent to subtracting two large quadratic terms, but avoids the most direct catastrophic cancellation. The implementation validates positive prior precision and scale, finite inputs and compatible shapes. Each output has its own updated scale. The shared design precision is reused."
+        },
+        {
+          "kind": "code",
+          "text": "prediction_mean = x_new @ m\nprediction_var  = beta / (alpha - 1) *\n                  (1 + x_new @ inverse(Lambda) @ x_new)"
+        },
+        {
+          "kind": "p",
+          "text": "The displayed inverse is explanatory notation. The implementation uses linear algebra solves. The variance is a posterior-predictive quantity under the regression assumptions. It is not a guarantee that those assumptions describe the real environment."
+        },
+        {
+          "kind": "h",
+          "text": "Separate uncertainty sources"
+        },
+        {
+          "kind": "p",
+          "text": "A single candidate’s predictive variance and disagreement between candidates answer different questions. The model records both kinds of information. Neither resolves uncertainty caused by an omitted operator family, an insufficient state representation or a distribution shift by itself."
+        },
+        {
+          "kind": "p",
+          "text": "The inherited reward, win and loss heads remain regression outputs. Values clipped into the unit interval should be treated as bounded heuristic scores, not as externally calibrated event probabilities. Calibration studies on independent environments are not part of this release."
+        },
+        {
+          "kind": "note",
+          "text": "NaN, all-negative-infinity log weights and malformed feature arrays are rejected. A valid finite weight vector is normalized stably. This prevents numerical failure from masquerading as a confident posterior."
+        }
+      ]
+    },
+    {
+      "title": "Compare candidates on the same targets",
+      "kicker": "13 / MODEL SELECTION",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "Likelihoods on different-dimensional target spaces are not directly comparable candidate scores. The release fixes this by scoring every candidate on the smallest shared nested state prefix plus the same five scalar outcome channels. Additional native state outputs remain available for prediction but do not silently change the scored target dimension."
+        },
+        {
+          "kind": "figure",
+          "name": "07_operator_benchmark",
+          "caption": "Current seven-scenario run with 84 training records and 36 untouched test records per case. Bars show state RMSE, not scalar-outcome RMSE. Both the typed portfolio and its linear baseline use the stated refit protocol."
+        },
+        {
+          "kind": "h",
+          "text": "The internal split is not the final test set"
+        },
+        {
+          "kind": "p",
+          "text": "Of the 84 records supplied to fit, 63 fit the preliminary coefficients and 21 score candidate predictions. The default then refits supported candidates on all 84 training records. The final 36 test targets are never supplied to fit. The row counts are computed by integer arithmetic to avoid a ceiling-roundoff extra row. These are generated directly in typed feature space, not inferred from raw sensor or image data."
+        },
+        {
+          "kind": "p",
+          "text": "The historical benchmark used a different refit protocol. Therefore its median ratio of about 0.239 is not a like-for-like predecessor performance baseline for the current ratio of about 0.112. The current comparison is against the current explicitly defined linear portfolio."
+        },
+        {
+          "kind": "note",
+          "text": "The state metric improves in these cases, but not every scalar metric improves. In the current seven-case ledger, scalar-outcome RMSE is worse for several mechanisms. The row-level report is retained rather than replaced by a single favorable summary."
+        }
+      ]
+    },
+    {
+      "title": "A control that should fail",
+      "kicker": "14 / HELD-OUT EVIDENCE",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "A model can appear to learn when evaluation accidentally preserves an answer-bearing correspondence. A basic negative control deliberately breaks the training input-target pairing while leaving the independent test rows unchanged."
+        },
+        {
+          "kind": "figure",
+          "name": "09_negative_control",
+          "caption": "The target permutation degrades unseen-test regression RMSE from about 0.0105 to 1.92, a factor of about 184. The logarithmic axis makes both bars visible. This is a controlled regression diagnostic, not an adversarial robustness result."
+        },
+        {
+          "kind": "p",
+          "text": "This control uses 180 independent synthetic design rows, six features and three outputs. The first 120 rows train each regression. The last 60 are reserved for evaluation. Only the training targets are shuffled. The same test set is used for both conditions."
+        },
+        {
+          "kind": "h",
+          "text": "What the result supports"
+        },
+        {
+          "kind": "p",
+          "text": "The intact regression depends on the paired training relationship. Permuting the targets destroys that relationship and harms the measured prediction. This is useful evidence against a trivial implementation that ignores the training pairing or accidentally returns test targets."
+        },
+        {
+          "kind": "h",
+          "text": "What it does not support"
+        },
+        {
+          "kind": "p",
+          "text": "This one control does not rule out every possible data leak, prove generalization beyond the generator, establish causal identification or validate the interactive planner. Those require different interventions and separately held-out environments."
+        },
+        {
+          "kind": "note",
+          "text": "The five-seed operator sweep remains in-grammar. No external real-world signal corpus or unseen family benchmark is silently substituted for it."
+        }
+      ]
+    },
+    {
+      "title": "Memory and evidence-supported action",
+      "kicker": "15 / INTERACTIVE LAYER",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "The inherited agent combines exact transition memory, a state-action graph and the finite operator model. In the controlled games, observed progress and known successful transitions can be more reliable than uncertain extrapolation. The graph makes that distinction inspectable."
+        },
+        {
+          "kind": "h",
+          "text": "Recorded replay"
+        },
+        {
+          "kind": "p",
+          "text": "A graph edge summarizes an action observed at a state, its successor and outcomes. Repeated visits update evidence. A contradictory successor means the action is not deterministic in the recorded state description. This can reflect true stochasticity or hidden state missing from the observation."
+        },
+        {
+          "kind": "h",
+          "text": "A corrected failure mode"
+        },
+        {
+          "kind": "p",
+          "text": "The predecessor could retain stale incoming-edge information after a conflicting successor and could still recommend a nondeterministic action as a progressing replay. The release removes the stale reverse edge and excludes contradictory actions from deterministic progress selection. Winning replay also requires consistent recorded evidence, rather than one isolated past success."
+        },
+        {
+          "kind": "h",
+          "text": "Planning remains scoped"
+        },
+        {
+          "kind": "p",
+          "text": "Novelty, utility, risk and loop penalties are explicit heuristics. A model prediction is not an observed transition. Graph identity is based on the represented state, so visually identical frames with different hidden mechanics can still be aliased. The release does not assert that all such aliasing is resolved."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Check",
+            "Fresh result",
+            "Meaning"
+          ],
+          "rows": [
+            [
+              "Controlled deterministic systems",
+              "4 of 4 solved",
+              "Regression and graph integration work in these supplied finite examples."
+            ],
+            [
+              "Local environment trees",
+              "25 statically inspected",
+              "File structure and metadata are checked by the eight optional tests."
+            ],
+            [
+              "Official ARC runtime",
+              "Not run",
+              "No official ARC score is reported."
+            ],
+            [
+              "Separate ARC3 2.2 agent",
+              "Not merged",
+              "Its historical curriculum scores do not belong to this release."
+            ]
+          ],
+          "widths": [
+            1.8,
+            1.5,
+            2.85
+          ]
+        },
+        {
+          "kind": "note",
+          "text": "The four runs used 85 committed actions, 28 explicit probe actions and four resets in total. This is the supplied controlled-game protocol, not a single-trajectory official score or a general-agent claim."
+        }
+      ]
+    },
+    {
+      "title": "A source-signal archive, not a checkpoint",
+      "kicker": "16 / PERSISTENCE",
+      "blocks": [
+        {
+          "kind": "code",
+          "text": "from pathlib import Path\nfrom komorebi_pr_lasm import (\n    analyze_signal, save_signal_archive, load_signal_archive,\n)\n\na = analyze_signal(x, modulus=4)\npath = save_signal_archive(a, Path(\"results/source_signal.npz\"))\nrestored = load_signal_archive(path)\nnp.testing.assert_array_equal(restored.spatial, a.spatial)"
+        },
+        {
+          "kind": "p",
+          "text": "The archive contains two arrays: the float64 source vector and a scalar JSON metadata string. The metadata records a schema version, length, dtype, effective packet depth, residue modulus and a SHA-256 source checksum. The loader recomputes derived coordinates. It does not deserialize Python objects or execute a pickle payload."
+        },
+        {
+          "kind": "h",
+          "text": "What is checked"
+        },
+        {
+          "kind": "p",
+          "text": "The loader checks member names, uncompressed size limits, metadata size, schema identity, vector dtype and length, source checksum and feasible derived-work bounds. The writer uses a temporary file and an atomic replacement within the destination directory so an incomplete write does not replace the previous target."
+        },
+        {
+          "kind": "h",
+          "text": "What is deliberately absent"
+        },
+        {
+          "kind": "p",
+          "text": "Regression weights, transition memory, model-selection history, agent state and a reproducible planning session are not serialized by this API. Calling the result a trained-model checkpoint would be incorrect. Full agent persistence needs a separately designed schema and replay contract."
+        },
+        {
+          "kind": "h",
+          "text": "Integrity is not authenticity"
+        },
+        {
+          "kind": "p",
+          "text": "A stored checksum can detect ordinary corruption. It is not a signature from a trusted author, and a party that changes the source and recomputes the checksum can create a different internally consistent archive. External artifact hashes similarly identify the delivered bytes without proving their publisher."
+        },
+        {
+          "kind": "note",
+          "text": "Do not load arbitrary user-controlled files without your application’s own resource and trust controls. The supplied size budget is a defensive bound, not a general hostile-file security certification."
+        }
+      ]
+    },
+    {
+      "title": "The integer bridge stays an integer calculation",
+      "kicker": "17 / ARITHMETIC CONNECTION",
+      "blocks": [
+        {
+          "kind": "p",
+          "text": "The Euler companion connects residue sampling with exact coefficient transfer. The example in this release adapts a finite part of that bridge using Python integers. It does not run a floating transform on a rapidly growing Euler sequence."
+        },
+        {
+          "kind": "code",
+          "text": "Delta^k a(s; N)\n    = sum_{j=0}^k (-1)^(k-j) * C(k,j) * a[s + N*j]\n\ntransfer polynomial\n    = (1 + z)^s * ((1 + z)^N - 1)^k"
+        },
+        {
+          "kind": "p",
+          "text": "Expand the transfer polynomial as sum_r w_r z^r. Since the forward shift is 1 + Delta, substituting the unit forward-difference operator gives the finite identity Delta_N^k a(s) = sum_r w_r Delta^r a(0). The polynomial has degree s + Nk, so only finitely many coefficients are required."
+        },
+        {
+          "kind": "h",
+          "text": "A direct derivation"
+        },
+        {
+          "kind": "p",
+          "text": "Let T be the unit shift. Sampling at spacing N uses T^N - I as its difference operator. Starting at phase s multiplies by T^s. Writing T = I + Delta produces T^s (T^N - I)^k = (I + Delta)^s ((I + Delta)^N - I)^k. Expanding this polynomial gives the displayed transfer coefficients without approximating the sequence."
+        },
+        {
+          "kind": "code",
+          "text": "python examples/euler_signal_bridge.py\n# status: PASS\n# finite_integer_transfer_cases: 105\n# initial_euler_values: [1, -1, 5, -61, 1385]"
+        },
+        {
+          "kind": "p",
+          "text": "The example checks moduli 1 through 5, all phases for each modulus, and orders 0 through 6. It uses 48 precomputed even-index Euler values and exact finite differences. These 105 checks are not the entire predecessor bridge audit and do not establish a new general supercongruence."
+        },
+        {
+          "kind": "note",
+          "text": "The shared idea is a precise change of indexing and operator coordinates. The bridge is preserved as a worked connection, not as evidence that every number-theoretic claim transfers automatically to signal learning."
+        }
+      ]
+    },
+    {
+      "title": "What the audit repaired",
+      "kicker": "18 / REGRESSIONS",
+      "blocks": [
+        {
+          "kind": "table",
+          "headers": [
+            "Audit finding",
+            "Release correction"
+          ],
+          "rows": [
+            [
+              "Fractional values rounded or clipped into color coordinates.",
+              "Color atlas is absent unless exact categorical conditions hold."
+            ],
+            [
+              "Odd dimensions fail a default Haar split.",
+              "Use the largest feasible common dyadic depth."
+            ],
+            [
+              "Tiny images create empty-bin NaN features.",
+              "Empty statistical bins contribute defined zeros."
+            ],
+            [
+              "Zero modulus can yield a zero-filled fake synthesis.",
+              "Validate positive integral moduli and complete channel families."
+            ],
+            [
+              "Malformed root/pruning shape accepted.",
+              "Validate tree coefficients and complete, disjoint antichains."
+            ],
+            [
+              "All-negative-infinity scores become NaN weights.",
+              "Reject invalid log mass before normalization."
+            ],
+            [
+              "Small original frame replaced by 64-by-64 archive.",
+              "Preserve original observation and hash separately from proxy features."
+            ],
+            [
+              "Asymmetric Fourier mask silently loses imaginary output.",
+              "Require an admissible real binary projector mask."
+            ],
+            [
+              "Conflicting graph action remains a progress recommendation.",
+              "Invalidate deterministic replay and remove stale reverse edge."
+            ],
+            [
+              "Different-dimensional likelihoods compared directly.",
+              "Score identical shared target coordinates across candidates."
+            ],
+            [
+              "Regression scale computed by cancellation-prone subtraction.",
+              "Use residual energy plus prior energy."
+            ],
+            [
+              "Fit exceptions disappear without diagnostics.",
+              "Record failures and fitting status for each candidate."
+            ],
+            [
+              "Floating ceiling adds an unintended benchmark row.",
+              "Use exact integer arithmetic and a split regression test."
+            ]
+          ],
+          "widths": [
+            3.05,
+            3.1
+          ]
+        },
+        {
+          "kind": "p",
+          "text": "The first nine defects have a preserved reproduction ledger against the unchanged 2.1.0 source. Further statistical and protocol corrections are described in migration-2.3.md. Raw failed attempts and corrected reruns remain distinguishable in verification rather than being rewritten into an all-green history."
+        }
+      ]
+    },
+    {
+      "title": "The verification matrix",
+      "kicker": "19 / MEASURED SCOPE",
+      "blocks": [
+        {
+          "kind": "table",
+          "headers": [
+            "Executed layer",
+            "Result"
+          ],
+          "rows": [
+            [
+              "Public core suite, warnings as errors",
+              "184 passed"
+            ],
+            [
+              "Core plus eight optional local-fixture checks",
+              "192 passed"
+            ],
+            [
+              "FIR and streaming combinations",
+              "2,025 passed"
+            ],
+            [
+              "Additional irregular real/categorical images",
+              "160 passed"
+            ],
+            [
+              "Additional continuous signal lengths",
+              "160 passed"
+            ],
+            [
+              "Operator family and atlas, five seeds",
+              "35 of 35 for each"
+            ],
+            [
+              "Controlled deterministic interactive systems",
+              "4 of 4 solved"
+            ]
+          ],
+          "widths": [
+            4.3,
+            1.85
+          ]
+        },
+        {
+          "kind": "figure",
+          "name": "08_multiseed",
+          "caption": "Each point is one of 35 in-grammar state-prediction cases, grouped by generator seed. The horizontal reference is equal error to the current single-linear baseline."
+        },
+        {
+          "kind": "p",
+          "text": "The largest normalized FIR discrepancy was about 4.77e-16. The largest streaming discrepancy was about 3.16e-16. These normalize by max(1, maximum absolute direct-convolution output). The irregular-image sweep reached a maximum reconstruction residual of about 1.78e-14. The additional signal sweep reached about 2.66e-15."
+        },
+        {
+          "kind": "p",
+          "text": "These are finite executable checks in one environment. They are not counts of independent theorems. Runtime, BLAS behavior and last-bit floating results can vary on another platform. Raw case ledgers are included so the summary can be checked."
+        }
+      ]
+    },
+    {
+      "title": "Reproduce and inspect the release",
+      "kicker": "20 / EXECUTION RECORD",
+      "blocks": [
+        {
+          "kind": "code",
+          "text": "python -m pytest -q -W error -m \"not local_suite\"\npython -m komorebi_pr_lasm self-check\npython -m komorebi_pr_lasm benchmark --output results/benchmark\npython scripts/stress_release.py --output results/stress\npython scripts/check_repository.py\npython scripts/build_offline.py --output dist"
+        },
+        {
+          "kind": "p",
+          "text": "For reproducible CPU measurements, set OPENBLAS_NUM_THREADS=1 and OMP_NUM_THREADS=1 before starting Python. The FIR sweep uses seeds 0, 7 and 19 with nine input lengths, five residue orders, five tap lengths and three amplitudes. The operator sweep uses seeds 0, 1, 4, 11 and 23. The exact formulas and thresholds are in scripts/stress_release.py."
+        },
+        {
+          "kind": "h",
+          "text": "Evidence layout"
+        },
+        {
+          "kind": "p",
+          "text": "verification/current_benchmark contains current seven-case and four-game ledgers. verification/current_stress contains the row-level finite sweep. verification/full_tests.log and full_tests.xml record the full fixture-enabled suite. SOURCE_LINEAGE.json identifies the source archives by hash. Earlier checkpoints retain the original row-count protocol and earlier test runs."
+        },
+        {
+          "kind": "h",
+          "text": "Build route and failures"
+        },
+        {
+          "kind": "p",
+          "text": "Installing extra build tools failed because the package server could not be resolved. The installed setuptools backend was used to build the wheel and source distribution without dependency downloads. A first new test run also exposed a subprocess import-path problem in the test harness, which was corrected. The initial figure run failed on a local directory permission before output, then succeeded after that permission was corrected. A combined verification command timed out before the stress rerun finished, so that sweep was rerun separately."
+        },
+        {
+          "kind": "p",
+          "text": "The final packaging audit records clean extraction, wheel installation, source-distribution rebuilding and manifest verification when those checks have run. Use that audit rather than inferring success merely from the existence of a ZIP or a configured workflow."
+        },
+        {
+          "kind": "note",
+          "text": "No official ARC runtime, remote CI matrix, fresh Lean build or external real-signal benchmark was executed for this release. Those absences are not replaced by historical claims."
+        }
+      ]
+    },
+    {
+      "title": "Release boundaries and source record",
+      "kicker": "21 / HANDOFF",
+      "blocks": [
+        {
+          "kind": "h",
+          "text": "What is ready"
+        },
+        {
+          "kind": "p",
+          "text": "The declared finite core has audited source, regression tests, continuous-signal operations, worked examples, a reproducible synthetic evaluation path and installation artifacts. The full handoff also preserves the recovered companion archives. Those companions are not silently presented as integrated runtime modules."
+        },
+        {
+          "kind": "h",
+          "text": "What remains outside the release claim"
+        },
+        {
+          "kind": "p",
+          "text": "There is no pretrained general signal model, no complete trained-agent checkpoint format, no demonstrated open-world program induction, no official ARC score, no freshly executed proof-assistant certificate for the entire release, and no measured production scaling claim. The word “large” is the inherited model name, not a disclosed billion-parameter count or a hardware-scale benchmark."
+        },
+        {
+          "kind": "h",
+          "text": "Public publication"
+        },
+        {
+          "kind": "p",
+          "text": "The owner’s inherited all-rights-reserved license remains in place. This is a source handoff, not an open-source license grant. No GitHub repository or package index was changed. Tag workflows build artifacts without automatic public publication. Manual draft publication has an additional owner-license gate and still needs a reviewed license decision."
+        },
+        {
+          "kind": "h",
+          "text": "Primary implementation and evidence"
+        },
+        {
+          "kind": "p",
+          "text": "The current contracts are in src/komorebi_pr_lasm/signal.py and archive.py, plus exact_atlas.py, lasm_refinement.py, lasm_programs.py, bayes.py, lasm_model.py and lasm_graph.py in the compatibility implementation. tests/test_release_contracts.py and tests/test_signal_runtime.py exercise the added numerical contracts. Raw evidence is in verification."
+        },
+        {
+          "kind": "h",
+          "text": "Technical reference points"
+        },
+        {
+          "kind": "p",
+          "text": "The Fourier convention follows the unitary normalization described in NumPy’s FFT reference. The stable gate uses scipy.special.expit. Distribution builds call the installed setuptools PEP 517 backend. The publication workflow uses the maintained official artifact actions. Exact reference URLs and access date are recorded in docs/TECHNICAL_SOURCES.md."
+        },
+        {
+          "kind": "note",
+          "text": "The 38-page historical capstone, this current guide and the separate reconstruction corpus serve different purposes. Keep their versions and evidence attached when presenting the work."
+        }
+      ]
+    }
+  ]
+}
