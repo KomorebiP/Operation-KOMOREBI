@@ -1,0 +1,270 @@
+KomorebiInformation.sufficient_iff_no_obstruction.{u, v, w} {X : Type u} {O : Type v} {Y : Type w} (r : X → O)
+  (f : X → Y) : KomorebiInformation.Sufficient r f ↔ ¬∃ x y, KomorebiInformation.Obstruction r f x y
+'KomorebiInformation.sufficient_iff_no_obstruction' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.decodes_implies_sufficient.{u, v, w} {X : Type u} {O : Type v} {Y : Type w} {r : X → O} {f : X → Y}
+  {g : O → Y} (h : KomorebiInformation.Decodes r f g) : KomorebiInformation.Sufficient r f
+'KomorebiInformation.decodes_implies_sufficient' does not depend on any axioms
+KomorebiInformation.sufficient_iff_image_decoder.{u, v, w} {X : Type u} {O : Type v} {Y : Type w} (r : X → O)
+  (f : X → Y) : KomorebiInformation.Sufficient r f ↔ ∃ g, ∀ (x : X), g ⟨r x, ⋯⟩ = f x
+'KomorebiInformation.sufficient_iff_image_decoder' depends on axioms: [Classical.choice]
+KomorebiInformation.sufficient_iff_total_decoder.{u, v, w} {X : Type u} {O : Type v} {Y : Type w} [Nonempty Y]
+  (r : X → O) (f : X → Y) : KomorebiInformation.Sufficient r f ↔ ∃ g, KomorebiInformation.Decodes r f g
+'KomorebiInformation.sufficient_iff_total_decoder' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.obstruction_rejects_decoder.{u, v, w} {X : Type u} {O : Type v} {Y : Type w} {r : X → O} {f : X → Y}
+  {x y : X} (h : KomorebiInformation.Obstruction r f x y) (g : O → Y) : ¬KomorebiInformation.Decodes r f g
+'KomorebiInformation.obstruction_rejects_decoder' does not depend on any axioms
+KomorebiInformation.sufficient_refl.{u, v} {X : Type u} {O : Type v} (r : X → O) : KomorebiInformation.Sufficient r r
+'KomorebiInformation.sufficient_refl' does not depend on any axioms
+KomorebiInformation.sufficient_trans.{u, v, w, z} {X : Type u} {O : Type v} {Y : Type w} {E : Type z} {r : X → O}
+  {s : X → E} {f : X → Y} (hrs : KomorebiInformation.Sufficient r s) (hsf : KomorebiInformation.Sufficient s f) :
+  KomorebiInformation.Sufficient r f
+'KomorebiInformation.sufficient_trans' does not depend on any axioms
+KomorebiInformation.sufficient_joint_left.{u, v, w, z} {X : Type u} {O : Type v} {Y : Type w} {E : Type z} {r : X → O}
+  {f : X → Y} (h : KomorebiInformation.Sufficient r f) (u : X → E) :
+  KomorebiInformation.Sufficient (fun x => (r x, u x)) f
+'KomorebiInformation.sufficient_joint_left' does not depend on any axioms
+KomorebiInformation.repair_implies_joint_sufficient.{u, v, w, z, c} {X : Type u} {O : Type v} {Y : Type w} {E : Type z}
+  {C : Type c} {r : X → O} {f : X → Y} {u : X → E} {h : E → C} {g : O × C → Y}
+  (hg : KomorebiInformation.Repair r f u h g) : KomorebiInformation.Sufficient (fun x => (r x, u x)) f
+'KomorebiInformation.repair_implies_joint_sufficient' does not depend on any axioms
+KomorebiInformation.joint_sufficient_iff_access_repair.{u, v, w, z} {X : Type u} {O : Type v} {Y : Type w} {E : Type z}
+  [Nonempty Y] (r : X → O) (f : X → Y) (u : X → E) :
+  KomorebiInformation.Sufficient (fun x => (r x, u x)) f ↔ ∃ h g, KomorebiInformation.Repair r f u h g
+'KomorebiInformation.joint_sufficient_iff_access_repair' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.inaccessible_pair_rejects_every_code.{u, v, w, z, c} {X : Type u} {O : Type v} {Y : Type w}
+  {E : Type z} {C : Type c} {r : X → O} {f : X → Y} {u : X → E} {x y : X} (hr : r x = r y) (hu : u x = u y)
+  (hf : f x ≠ f y) (h : E → C) (g : O × C → Y) : ¬KomorebiInformation.Repair r f u h g
+'KomorebiInformation.inaccessible_pair_rejects_every_code' does not depend on any axioms
+KomorebiInformation.repair_message_injective_on_task_representatives.{u, v, w, z, c, u_1} {X : Type u} {O : Type v}
+  {Y : Type w} {E : Type z} {C : Type c} {I : Type u_1} {r : X → O} {f : X → Y} {u : X → E} {h : E → C} {g : O × C → Y}
+  (hg : KomorebiInformation.Repair r f u h g) (s : I → X) (o : O) (hr : ∀ (i : I), r (s i) = o)
+  (hf : Function.Injective (f ∘ s)) : Function.Injective (h ∘ u ∘ s)
+'KomorebiInformation.repair_message_injective_on_task_representatives' does not depend on any axioms
+KomorebiInformation.repair_alphabet_lower_bound.{u, v, w, z, c, u_1} {X : Type u} {O : Type v} {Y : Type w} {E : Type z}
+  {C : Type c} {I : Type u_1} [Fintype I] [Fintype C] {r : X → O} {f : X → Y} {u : X → E} {h : E → C} {g : O × C → Y}
+  (hg : KomorebiInformation.Repair r f u h g) (s : I → X) (o : O) (hr : ∀ (i : I), r (s i) = o)
+  (hf : Function.Injective (f ∘ s)) : Fintype.card I ≤ Fintype.card C
+'KomorebiInformation.repair_alphabet_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.sufficient_iff_kernel.{u_1, u_2, u_3, u_4} {K : Type u_1} {V : Type u_2} {O : Type u_3}
+  {Y : Type u_4} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O] [Module K O] [AddCommGroup Y]
+  [Module K Y] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) : KomorebiInformation.Sufficient ⇑R ⇑F ↔ R.ker ≤ F.ker
+'KomorebiInformation.Linear.sufficient_iff_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.exists_linear_decoder_iff_kernel.{u_1, u_2, u_3, u_4} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O] [Module K O]
+  [AddCommGroup Y] [Module K Y] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) : (∃ G, G ∘ₗ R = F) ↔ R.ker ≤ F.ker
+'KomorebiInformation.Linear.exists_linear_decoder_iff_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.access_feasibility.{u_1, u_2, u_3, u_4, u_5} {K : Type u_1} {V : Type u_2} {O : Type u_3}
+  {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O] [Module K O]
+  [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) (U : V →ₗ[K] E) :
+  (∃ G, G ∘ₗ R.prod U = F) ↔ R.ker ⊓ U.ker ≤ F.ker
+'KomorebiInformation.Linear.access_feasibility' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.arbitrary_repair_implies_kernel.{u_1, u_2, u_3, u_4, u_5, u_7} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) {Message : Type u_7} {h : E → Message} {g : O × Message → Y}
+  (hr : KomorebiInformation.Repair (⇑R) (⇑F) (⇑U) h g) : R.ker ⊓ U.ker ≤ F.ker
+'KomorebiInformation.Linear.arbitrary_repair_implies_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.access_sufficient_iff_kernel.{u_1, u_2, u_3, u_4, u_5} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) : KomorebiInformation.Sufficient (fun x => (R x, U x)) ⇑F ↔ R.ker ⊓ U.ker ≤ F.ker
+'KomorebiInformation.Linear.access_sufficient_iff_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.kernel_witness_rejects_repair.{u_1, u_2, u_3, u_4, u_5, u_7} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) (v : V) (hr : R v = 0) (hu : U v = 0) (hf : F v ≠ 0) {Message : Type u_7} (h : E → Message)
+  (g : O × Message → Y) : ¬KomorebiInformation.Repair (⇑R) (⇑F) (⇑U) h g
+'KomorebiInformation.Linear.kernel_witness_rejects_repair' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.not_feasible_iff_witness.{u_1, u_2, u_3, u_4, u_5} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) : ¬R.ker ⊓ U.ker ≤ F.ker ↔ ∃ v, R v = 0 ∧ U v = 0 ∧ F v ≠ 0
+'KomorebiInformation.Linear.not_feasible_iff_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.repair_certificate_sound.{u_1, u_2, u_3, u_4, u_5, u_6} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} {C : Type u_6} [DivisionRing K] [AddCommGroup V] [Module K V]
+  [AddCommGroup O] [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] [AddCommGroup C]
+  [Module K C] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) (U : V →ₗ[K] E) (H : E →ₗ[K] C) (G : O × C →ₗ[K] Y)
+  (hcert : G ∘ₗ R.prod (H ∘ₗ U) = F) : KomorebiInformation.Repair ⇑R ⇑F ⇑U ⇑H ⇑G
+'KomorebiInformation.Linear.repair_certificate_sound' depends on axioms: [propext, Quot.sound]
+KomorebiInformation.Linear.fiber_task_difference_iff.{u_1, u_2, u_3, u_4} {K : Type u_1} {V : Type u_2} {O : Type u_3}
+  {Y : Type u_4} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O] [Module K O] [AddCommGroup Y]
+  [Module K Y] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) (x0 : V) (y : Y) :
+  (∃ x, R x = R x0 ∧ F x = y) ↔ y - F x0 ∈ KomorebiInformation.Linear.ObstructionSpace R F
+'KomorebiInformation.Linear.fiber_task_difference_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.optimal_obstruction_space_repair.{u_1, u_2, u_3, u_4, u_5} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) (hfeas : R.ker ⊓ U.ker ≤ F.ker) : ∃ H G, G ∘ₗ R.prod (H ∘ₗ U) = F
+'KomorebiInformation.Linear.optimal_obstruction_space_repair' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.obstruction_card_le_any_repair.{u_1, u_2, u_3, u_4, u_5, u_6} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) {Message : Type u_6} [Fintype Message] [Fintype ↥(KomorebiInformation.Linear.ObstructionSpace R F)]
+  {h : E → Message} {g : O × Message → Y} (hrep : KomorebiInformation.Repair (⇑R) (⇑F) (⇑U) h g) :
+  Fintype.card ↥(KomorebiInformation.Linear.ObstructionSpace R F) ≤ Fintype.card Message
+'KomorebiInformation.Linear.obstruction_card_le_any_repair' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.obstruction_space_card.{u_1, u_2, u_3, u_4} {K : Type u_1} {V : Type u_2} {O : Type u_3}
+  {Y : Type u_4} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O] [Module K O] [AddCommGroup Y]
+  [Module K Y] [Fintype K] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  [Fintype ↥(KomorebiInformation.Linear.ObstructionSpace R F)] :
+  Fintype.card ↥(KomorebiInformation.Linear.ObstructionSpace R F) =
+    Fintype.card K ^ Module.finrank K ↥(KomorebiInformation.Linear.ObstructionSpace R F)
+'KomorebiInformation.Linear.obstruction_space_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.power_finrank_le_any_repair.{u_1, u_2, u_3, u_4, u_5, u_6} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} {E : Type u_5} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [AddCommGroup E] [Module K E] [Fintype K] (R : V →ₗ[K] O) (F : V →ₗ[K] Y)
+  (U : V →ₗ[K] E) {Message : Type u_6} [Fintype Message] [Fintype ↥(KomorebiInformation.Linear.ObstructionSpace R F)]
+  {h : E → Message} {g : O × Message → Y} (hrep : KomorebiInformation.Repair (⇑R) (⇑F) (⇑U) h g) :
+  Fintype.card K ^ Module.finrank K ↥(KomorebiInformation.Linear.ObstructionSpace R F) ≤ Fintype.card Message
+'KomorebiInformation.Linear.power_finrank_le_any_repair' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Linear.obstruction_finrank_eq_rank_increment.{u_1, u_2, u_3, u_4} {K : Type u_1} {V : Type u_2}
+  {O : Type u_3} {Y : Type u_4} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O] [Module K O]
+  [AddCommGroup Y] [Module K Y] [FiniteDimensional K V] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) :
+  Module.finrank K ↥(KomorebiInformation.Linear.ObstructionSpace R F) =
+    Module.finrank K ↥(R.prod F).range - Module.finrank K ↥R.range
+'KomorebiInformation.Linear.obstruction_finrank_eq_rank_increment' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiInformation.Linear.rank_increment_alphabet_lower_bound.{u_1, u_2, u_3, u_4, u_5, u_6} {K : Type u_1}
+  {V : Type u_2} {O : Type u_3} {Y : Type u_4} [DivisionRing K] [AddCommGroup V] [Module K V] [AddCommGroup O]
+  [Module K O] [AddCommGroup Y] [Module K Y] [Fintype K] [FiniteDimensional K V] {E : Type u_5} [AddCommGroup E]
+  [Module K E] (R : V →ₗ[K] O) (F : V →ₗ[K] Y) (U : V →ₗ[K] E) {Message : Type u_6} [Fintype Message]
+  [Fintype ↥(KomorebiInformation.Linear.ObstructionSpace R F)] {h : E → Message} {g : O × Message → Y}
+  (hrep : KomorebiInformation.Repair (⇑R) (⇑F) (⇑U) h g) :
+  Fintype.card K ^ (Module.finrank K ↥(R.prod F).range - Module.finrank K ↥R.range) ≤ Fintype.card Message
+'KomorebiInformation.Linear.rank_increment_alphabet_lower_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiInformation.Predictive.run_nil.{u_1, u_4} {X : Type u_1} {A : Type u_4} (T : A → X → X) (x : X) :
+  KomorebiInformation.Predictive.run T [] x = x
+'KomorebiInformation.Predictive.run_nil' does not depend on any axioms
+KomorebiInformation.Predictive.run_cons.{u_1, u_4} {X : Type u_1} {A : Type u_4} (T : A → X → X) (a : A) (w : List A)
+  (x : X) : KomorebiInformation.Predictive.run T (a :: w) x = KomorebiInformation.Predictive.run T w (T a x)
+'KomorebiInformation.Predictive.run_cons' does not depend on any axioms
+KomorebiInformation.Predictive.run_append.{u_1, u_4} {X : Type u_1} {A : Type u_4} (T : A → X → X) (v w : List A)
+  (x : X) :
+  KomorebiInformation.Predictive.run T (v ++ w) x =
+    KomorebiInformation.Predictive.run T w (KomorebiInformation.Predictive.run T v x)
+'KomorebiInformation.Predictive.run_append' does not depend on any axioms
+KomorebiInformation.Predictive.simulation_all_words.{u_1, u_3, u_4} {X : Type u_1} {S : Type u_3} {A : Type u_4}
+  (T : A → X → X) (M : A → S → S) (s : X → S) (hstep : ∀ (a : A) (x : X), s (T a x) = M a (s x)) (w : List A) (x : X) :
+  s (KomorebiInformation.Predictive.run T w x) = KomorebiInformation.Predictive.run M w (s x)
+'KomorebiInformation.Predictive.simulation_all_words' does not depend on any axioms
+KomorebiInformation.Predictive.observable_simulation_all_words.{u_1, u_2, u_3, u_4} {X : Type u_1} {O : Type u_2}
+  {S : Type u_3} {A : Type u_4} (T : A → X → X) (M : A → S → S) (s : X → S) (r : X → O) (d : S → O)
+  (hstep : ∀ (a : A) (x : X), s (T a x) = M a (s x)) (hobs : ∀ (x : X), r x = d (s x)) (w : List A) (x : X) :
+  r (KomorebiInformation.Predictive.run T w x) = d (KomorebiInformation.Predictive.run M w (s x))
+'KomorebiInformation.Predictive.observable_simulation_all_words' does not depend on any axioms
+KomorebiInformation.Predictive.operational_preserves_observation.{u_1, u_2, u_4} {X : Type u_1} {O : Type u_2}
+  {A : Type u_4} {T : A → X → X} {r : X → O} {x y : X} (h : KomorebiInformation.Predictive.OperationalEq T r x y) :
+  r x = r y
+'KomorebiInformation.Predictive.operational_preserves_observation' does not depend on any axioms
+KomorebiInformation.Predictive.operational_stable.{u_1, u_2, u_4} {X : Type u_1} {O : Type u_2} {A : Type u_4}
+  {T : A → X → X} {r : X → O} {x y : X} (h : KomorebiInformation.Predictive.OperationalEq T r x y) (a : A) :
+  KomorebiInformation.Predictive.OperationalEq T r (T a x) (T a y)
+'KomorebiInformation.Predictive.operational_stable' does not depend on any axioms
+KomorebiInformation.Predictive.observe_realize.{u_1, u_2, u_4} {X : Type u_1} {O : Type u_2} {A : Type u_4}
+  (T : A → X → X) (r : X → O) (x : X) :
+  KomorebiInformation.Predictive.observe T r (KomorebiInformation.Predictive.realize T r x) = r x
+'KomorebiInformation.Predictive.observe_realize' does not depend on any axioms
+KomorebiInformation.Predictive.act_realize.{u_1, u_2, u_4} {X : Type u_1} {O : Type u_2} {A : Type u_4} (T : A → X → X)
+  (r : X → O) (a : A) (x : X) :
+  KomorebiInformation.Predictive.act T r a (KomorebiInformation.Predictive.realize T r x) =
+    KomorebiInformation.Predictive.realize T r (T a x)
+'KomorebiInformation.Predictive.act_realize' depends on axioms: [Quot.sound]
+KomorebiInformation.Predictive.realize_eq_iff.{u_1, u_2, u_4} {X : Type u_1} {O : Type u_2} {A : Type u_4}
+  (T : A → X → X) (r : X → O) (x y : X) :
+  KomorebiInformation.Predictive.realize T r x = KomorebiInformation.Predictive.realize T r y ↔
+    KomorebiInformation.Predictive.OperationalEq T r x y
+'KomorebiInformation.Predictive.realize_eq_iff' depends on axioms: [propext, Quot.sound]
+KomorebiInformation.Predictive.adequate_representation_refines_operational.{u_1, u_2, u_3, u_4} {X : Type u_1}
+  {O : Type u_2} {S : Type u_3} {A : Type u_4} (T : A → X → X) (M : A → S → S) (s : X → S) (r : X → O) (d : S → O)
+  (hstep : ∀ (a : A) (x : X), s (T a x) = M a (s x)) (hobs : ∀ (x : X), r x = d (s x)) :
+  KomorebiInformation.Sufficient s (KomorebiInformation.Predictive.realize T r)
+'KomorebiInformation.Predictive.adequate_representation_refines_operational' depends on axioms: [Quot.sound]
+KomorebiInformation.Predictive.canonical_factorization.{u_1, u_2, u_3, u_4} {X : Type u_1} {O : Type u_2} {S : Type u_3}
+  {A : Type u_4} (T : A → X → X) (M : A → S → S) (s : X → S) (r : X → O) (d : S → O)
+  (hstep : ∀ (a : A) (x : X), s (T a x) = M a (s x)) (hobs : ∀ (x : X), r x = d (s x)) :
+  ∃ g, ∀ (x : X), g ⟨s x, ⋯⟩ = KomorebiInformation.Predictive.realize T r x
+'KomorebiInformation.Predictive.canonical_factorization' depends on axioms: [Classical.choice, Quot.sound]
+KomorebiInformation.Predictive.simulation_all_times.{u_1, u_3} {X : Type u_1} {S : Type u_3} (T : X → X) (M : S → S)
+  (s : X → S) (hstep : ∀ (x : X), s (T x) = M (s x)) (n : ℕ) (x : X) : s (T^[n] x) = M^[n] (s x)
+'KomorebiInformation.Predictive.simulation_all_times' depends on axioms: [propext]
+KomorebiInformation.Haar.next_output_repair.{u_1} {K : Type u_1} [Field K] (htwo : 2 ≠ 0)
+  (x : KomorebiInformation.Haar.Source K) :
+  KomorebiInformation.Haar.decoder (KomorebiInformation.Haar.coarse x)
+      (KomorebiInformation.Haar.supplement (KomorebiInformation.Haar.detail x)) =
+    KomorebiInformation.Haar.coarse (KomorebiInformation.Haar.shift x)
+'KomorebiInformation.Haar.next_output_repair' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.helper_repair_correct.{u_1} {K : Type u_1} [Field K] (htwo : 2 ≠ 0) :
+  KomorebiInformation.Repair KomorebiInformation.Haar.coarse
+    (KomorebiInformation.Haar.coarse ∘ KomorebiInformation.Haar.shift) KomorebiInformation.Haar.detail
+    KomorebiInformation.Haar.supplement fun p => KomorebiInformation.Haar.decoder p.1 p.2
+'KomorebiInformation.Haar.helper_repair_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.closed_semiconjugacy.{u_1} {K : Type u_1} [Field K] (htwo : 2 ≠ 0)
+  (x : KomorebiInformation.Haar.Source K) :
+  KomorebiInformation.Haar.closed (KomorebiInformation.Haar.shift x) =
+    KomorebiInformation.Haar.closedStep (KomorebiInformation.Haar.closed x)
+'KomorebiInformation.Haar.closed_semiconjugacy' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.closed_preserves_observation.{u_1} {K : Type u_1} [Field K]
+  (x : KomorebiInformation.Haar.Source K) :
+  KomorebiInformation.Haar.closedOutput (KomorebiInformation.Haar.closed x) = KomorebiInformation.Haar.coarse x
+'KomorebiInformation.Haar.closed_preserves_observation' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.closed_predicts_all_times.{u_1} {K : Type u_1} [Field K] (htwo : 2 ≠ 0) (n : ℕ)
+  (x : KomorebiInformation.Haar.Source K) :
+  KomorebiInformation.Haar.closed (KomorebiInformation.Haar.shift^[n] x) =
+    KomorebiInformation.Haar.closedStep^[n] (KomorebiInformation.Haar.closed x)
+'KomorebiInformation.Haar.closed_predicts_all_times' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.coarse_predicts_all_times.{u_1} {K : Type u_1} [Field K] (htwo : 2 ≠ 0) (n : ℕ)
+  (x : KomorebiInformation.Haar.Source K) :
+  KomorebiInformation.Haar.coarse (KomorebiInformation.Haar.shift^[n] x) =
+    KomorebiInformation.Haar.closedOutput (KomorebiInformation.Haar.closedStep^[n] (KomorebiInformation.Haar.closed x))
+'KomorebiInformation.Haar.coarse_predicts_all_times' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.invisible_has_zero_closed_state.{u_1} {K : Type u_1} [Field K] :
+  KomorebiInformation.Haar.closed KomorebiInformation.Haar.invisible = KomorebiInformation.Haar.closed 0
+'KomorebiInformation.Haar.invisible_has_zero_closed_state' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.invisible_ne_zero.{u_1} {K : Type u_1} [Field K] : KomorebiInformation.Haar.invisible ≠ 0
+'KomorebiInformation.Haar.invisible_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.predictive_is_not_source_reconstruction.{u_1} {K : Type u_1} [Field K] :
+  ¬KomorebiInformation.Sufficient KomorebiInformation.Haar.closed id
+'KomorebiInformation.Haar.predictive_is_not_source_reconstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+KomorebiInformation.Haar.two_shift_endpoint.{u_1} {K : Type u_1} [Field K] (x : KomorebiInformation.Haar.Source K) :
+  KomorebiInformation.Haar.coarse (KomorebiInformation.Haar.shift (KomorebiInformation.Haar.shift x)) =
+    ![KomorebiInformation.Haar.coarse x 1, KomorebiInformation.Haar.coarse x 0]
+'KomorebiInformation.Haar.two_shift_endpoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.inaccessible_observation.{u_1} {K : Type u_1} [Field K] :
+  KomorebiInformation.Haar.coarse KomorebiInformation.Haar.inaccessible = KomorebiInformation.Haar.coarse 0
+'KomorebiInformation.Haar.inaccessible_observation' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.inaccessible_first_detail.{u_1} {K : Type u_1} [Field K] :
+  KomorebiInformation.Haar.detail KomorebiInformation.Haar.inaccessible 0 = KomorebiInformation.Haar.detail 0 0
+'KomorebiInformation.Haar.inaccessible_first_detail' depends on axioms: [propext, Quot.sound]
+KomorebiInformation.Haar.inaccessible_next_output.{u_1} {K : Type u_1} [Field K] :
+  KomorebiInformation.Haar.coarse (KomorebiInformation.Haar.shift KomorebiInformation.Haar.inaccessible) ≠
+    KomorebiInformation.Haar.coarse (KomorebiInformation.Haar.shift 0)
+'KomorebiInformation.Haar.inaccessible_next_output' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.first_detail_rejects_every_code.{u_1, u_2} {K : Type u_1} [Field K] {Message : Type u_2}
+  (h : K → Message) (g : KomorebiInformation.Haar.Coarse K × Message → KomorebiInformation.Haar.Coarse K) :
+  ¬KomorebiInformation.Repair KomorebiInformation.Haar.coarse
+      (KomorebiInformation.Haar.coarse ∘ KomorebiInformation.Haar.shift) (fun x => KomorebiInformation.Haar.detail x 0)
+      h g
+'KomorebiInformation.Haar.first_detail_rejects_every_code' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.next_output_alphabet_lower_bound.{u_1, u_2} {K : Type u_1} [Field K] [Fintype K]
+  {Message : Type u_2} [Fintype Message] (h : KomorebiInformation.Haar.Coarse K → Message)
+  (g : KomorebiInformation.Haar.Coarse K × Message → KomorebiInformation.Haar.Coarse K)
+  (hrep :
+    KomorebiInformation.Repair KomorebiInformation.Haar.coarse
+      (KomorebiInformation.Haar.coarse ∘ KomorebiInformation.Haar.shift) KomorebiInformation.Haar.detail h g) :
+  Fintype.card K ≤ Fintype.card Message
+'KomorebiInformation.Haar.next_output_alphabet_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.concrete_five_state :
+  have x := ![4, 1, 3, 2];
+  KomorebiInformation.Haar.coarse (KomorebiInformation.Haar.shift x) = ![4, 1]
+'KomorebiInformation.Haar.concrete_five_state' depends on axioms: [propext, Classical.choice, Quot.sound]
+KomorebiInformation.Haar.characteristic_two_collision :
+  have x := ![1, 0, 0, 0];
+  have y := ![0, 1, 0, 0];
+  KomorebiInformation.Haar.coarse x = KomorebiInformation.Haar.coarse y ∧
+    KomorebiInformation.Haar.detail x = KomorebiInformation.Haar.detail y ∧ x ≠ y
+'KomorebiInformation.Haar.characteristic_two_collision' depends on axioms: [propext, Classical.choice, Quot.sound]

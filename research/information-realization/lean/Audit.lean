@@ -1,0 +1,177 @@
+module
+public import KomorebiInformation
+public section
+
+#check KomorebiInformation.sufficient_iff_no_obstruction
+#print axioms KomorebiInformation.sufficient_iff_no_obstruction
+
+#check KomorebiInformation.decodes_implies_sufficient
+#print axioms KomorebiInformation.decodes_implies_sufficient
+
+#check KomorebiInformation.sufficient_iff_image_decoder
+#print axioms KomorebiInformation.sufficient_iff_image_decoder
+
+#check KomorebiInformation.sufficient_iff_total_decoder
+#print axioms KomorebiInformation.sufficient_iff_total_decoder
+
+#check KomorebiInformation.obstruction_rejects_decoder
+#print axioms KomorebiInformation.obstruction_rejects_decoder
+
+#check KomorebiInformation.sufficient_refl
+#print axioms KomorebiInformation.sufficient_refl
+
+#check KomorebiInformation.sufficient_trans
+#print axioms KomorebiInformation.sufficient_trans
+
+#check KomorebiInformation.sufficient_joint_left
+#print axioms KomorebiInformation.sufficient_joint_left
+
+#check KomorebiInformation.repair_implies_joint_sufficient
+#print axioms KomorebiInformation.repair_implies_joint_sufficient
+
+#check KomorebiInformation.joint_sufficient_iff_access_repair
+#print axioms KomorebiInformation.joint_sufficient_iff_access_repair
+
+#check KomorebiInformation.inaccessible_pair_rejects_every_code
+#print axioms KomorebiInformation.inaccessible_pair_rejects_every_code
+
+#check KomorebiInformation.repair_message_injective_on_task_representatives
+#print axioms KomorebiInformation.repair_message_injective_on_task_representatives
+
+#check KomorebiInformation.repair_alphabet_lower_bound
+#print axioms KomorebiInformation.repair_alphabet_lower_bound
+
+#check KomorebiInformation.Linear.sufficient_iff_kernel
+#print axioms KomorebiInformation.Linear.sufficient_iff_kernel
+
+#check KomorebiInformation.Linear.exists_linear_decoder_iff_kernel
+#print axioms KomorebiInformation.Linear.exists_linear_decoder_iff_kernel
+
+#check KomorebiInformation.Linear.access_feasibility
+#print axioms KomorebiInformation.Linear.access_feasibility
+
+#check KomorebiInformation.Linear.arbitrary_repair_implies_kernel
+#print axioms KomorebiInformation.Linear.arbitrary_repair_implies_kernel
+
+#check KomorebiInformation.Linear.access_sufficient_iff_kernel
+#print axioms KomorebiInformation.Linear.access_sufficient_iff_kernel
+
+#check KomorebiInformation.Linear.kernel_witness_rejects_repair
+#print axioms KomorebiInformation.Linear.kernel_witness_rejects_repair
+
+#check KomorebiInformation.Linear.not_feasible_iff_witness
+#print axioms KomorebiInformation.Linear.not_feasible_iff_witness
+
+#check KomorebiInformation.Linear.repair_certificate_sound
+#print axioms KomorebiInformation.Linear.repair_certificate_sound
+
+#check KomorebiInformation.Linear.fiber_task_difference_iff
+#print axioms KomorebiInformation.Linear.fiber_task_difference_iff
+
+#check KomorebiInformation.Linear.optimal_obstruction_space_repair
+#print axioms KomorebiInformation.Linear.optimal_obstruction_space_repair
+
+#check KomorebiInformation.Linear.obstruction_card_le_any_repair
+#print axioms KomorebiInformation.Linear.obstruction_card_le_any_repair
+
+#check KomorebiInformation.Linear.obstruction_space_card
+#print axioms KomorebiInformation.Linear.obstruction_space_card
+
+#check KomorebiInformation.Linear.power_finrank_le_any_repair
+#print axioms KomorebiInformation.Linear.power_finrank_le_any_repair
+
+#check KomorebiInformation.Linear.obstruction_finrank_eq_rank_increment
+#print axioms KomorebiInformation.Linear.obstruction_finrank_eq_rank_increment
+
+#check KomorebiInformation.Linear.rank_increment_alphabet_lower_bound
+#print axioms KomorebiInformation.Linear.rank_increment_alphabet_lower_bound
+
+#check KomorebiInformation.Predictive.run_nil
+#print axioms KomorebiInformation.Predictive.run_nil
+
+#check KomorebiInformation.Predictive.run_cons
+#print axioms KomorebiInformation.Predictive.run_cons
+
+#check KomorebiInformation.Predictive.run_append
+#print axioms KomorebiInformation.Predictive.run_append
+
+#check KomorebiInformation.Predictive.simulation_all_words
+#print axioms KomorebiInformation.Predictive.simulation_all_words
+
+#check KomorebiInformation.Predictive.observable_simulation_all_words
+#print axioms KomorebiInformation.Predictive.observable_simulation_all_words
+
+#check KomorebiInformation.Predictive.operational_preserves_observation
+#print axioms KomorebiInformation.Predictive.operational_preserves_observation
+
+#check KomorebiInformation.Predictive.operational_stable
+#print axioms KomorebiInformation.Predictive.operational_stable
+
+#check KomorebiInformation.Predictive.observe_realize
+#print axioms KomorebiInformation.Predictive.observe_realize
+
+#check KomorebiInformation.Predictive.act_realize
+#print axioms KomorebiInformation.Predictive.act_realize
+
+#check KomorebiInformation.Predictive.realize_eq_iff
+#print axioms KomorebiInformation.Predictive.realize_eq_iff
+
+#check KomorebiInformation.Predictive.adequate_representation_refines_operational
+#print axioms KomorebiInformation.Predictive.adequate_representation_refines_operational
+
+#check KomorebiInformation.Predictive.canonical_factorization
+#print axioms KomorebiInformation.Predictive.canonical_factorization
+
+#check KomorebiInformation.Predictive.simulation_all_times
+#print axioms KomorebiInformation.Predictive.simulation_all_times
+
+#check KomorebiInformation.Haar.next_output_repair
+#print axioms KomorebiInformation.Haar.next_output_repair
+
+#check KomorebiInformation.Haar.helper_repair_correct
+#print axioms KomorebiInformation.Haar.helper_repair_correct
+
+#check KomorebiInformation.Haar.closed_semiconjugacy
+#print axioms KomorebiInformation.Haar.closed_semiconjugacy
+
+#check KomorebiInformation.Haar.closed_preserves_observation
+#print axioms KomorebiInformation.Haar.closed_preserves_observation
+
+#check KomorebiInformation.Haar.closed_predicts_all_times
+#print axioms KomorebiInformation.Haar.closed_predicts_all_times
+
+#check KomorebiInformation.Haar.coarse_predicts_all_times
+#print axioms KomorebiInformation.Haar.coarse_predicts_all_times
+
+#check KomorebiInformation.Haar.invisible_has_zero_closed_state
+#print axioms KomorebiInformation.Haar.invisible_has_zero_closed_state
+
+#check KomorebiInformation.Haar.invisible_ne_zero
+#print axioms KomorebiInformation.Haar.invisible_ne_zero
+
+#check KomorebiInformation.Haar.predictive_is_not_source_reconstruction
+#print axioms KomorebiInformation.Haar.predictive_is_not_source_reconstruction
+
+#check KomorebiInformation.Haar.two_shift_endpoint
+#print axioms KomorebiInformation.Haar.two_shift_endpoint
+
+#check KomorebiInformation.Haar.inaccessible_observation
+#print axioms KomorebiInformation.Haar.inaccessible_observation
+
+#check KomorebiInformation.Haar.inaccessible_first_detail
+#print axioms KomorebiInformation.Haar.inaccessible_first_detail
+
+#check KomorebiInformation.Haar.inaccessible_next_output
+#print axioms KomorebiInformation.Haar.inaccessible_next_output
+
+#check KomorebiInformation.Haar.first_detail_rejects_every_code
+#print axioms KomorebiInformation.Haar.first_detail_rejects_every_code
+
+#check KomorebiInformation.Haar.next_output_alphabet_lower_bound
+#print axioms KomorebiInformation.Haar.next_output_alphabet_lower_bound
+
+#check KomorebiInformation.Haar.concrete_five_state
+#print axioms KomorebiInformation.Haar.concrete_five_state
+
+#check KomorebiInformation.Haar.characteristic_two_collision
+#print axioms KomorebiInformation.Haar.characteristic_two_collision
