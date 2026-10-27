@@ -1,0 +1,30 @@
+Komorebi.Representation.Matrix.prime_certificate_minimum_iff {p r d t k o l : ℕ} (hp : Nat.Prime p) (hr : 0 < r)
+  (c : Komorebi.Representation.Matrix.CertificateData (ZMod (p ^ r)) d t k o l)
+  (hc : Komorebi.Representation.Matrix.Valid c) (s : Komorebi.Representation.Matrix.SmithData (ZMod (p ^ r)) d t)
+  (hs : Komorebi.Representation.Matrix.SmithValid c.encoding s) (hw : ∀ (i : Fin t), s.weights i ≠ 0) (budget : ℕ) :
+  (∃ n ≤ budget,
+      ∃ U e,
+        ∀ (x : Komorebi.Representation.Matrix.Vec (ZMod (p ^ r)) d) (w : List (Fin k)) (j : Fin o),
+          Komorebi.Representation.behavior (Komorebi.Representation.Matrix.sourceSystem c) x w j =
+            Komorebi.Representation.behavior U (e x) w j) ↔
+    t ≤ budget
+Komorebi.Representation.TorsionBoundary.two_linear_coordinates_necessary {n : ℕ}
+  (U :
+    Komorebi.Representation.System (Fin n → Komorebi.Representation.TorsionBoundary.R) (Fin 1) (Fin 2)
+      Komorebi.Representation.TorsionBoundary.R)
+  (e :
+    (Fin 2 → Komorebi.Representation.TorsionBoundary.R) →ₗ[Komorebi.Representation.TorsionBoundary.R]
+      Fin n → Komorebi.Representation.TorsionBoundary.R)
+  (he :
+    ∀ (x : Komorebi.Representation.Matrix.Vec Komorebi.Representation.TorsionBoundary.R 2) (w : List (Fin 1))
+      (j : Fin 2),
+      Komorebi.Representation.behavior
+          (Komorebi.Representation.Matrix.sourceSystem Komorebi.Representation.TorsionBoundary.data) x w j =
+        Komorebi.Representation.behavior U (e x) w j) :
+  2 ≤ n
+Komorebi.Representation.TorsionBoundary.one_nonlinear_residue_suffices
+  (x : Fin 2 → Komorebi.Representation.TorsionBoundary.R) (w : List (Fin 1)) (j : Fin 2) :
+  Komorebi.Representation.behavior
+      (Komorebi.Representation.Matrix.sourceSystem Komorebi.Representation.TorsionBoundary.data) x w j =
+    Komorebi.Representation.behavior Komorebi.Representation.TorsionBoundary.packedSystem
+      (Komorebi.Representation.TorsionBoundary.pack x) w j

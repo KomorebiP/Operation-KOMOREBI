@@ -1,0 +1,7 @@
+module
+public import TorsionEncodingBoundary
+public import CertifiedMinima
+@[expose] public section
+#check Komorebi.Representation.Matrix.prime_certificate_minimum_iff
+#check Komorebi.Representation.TorsionBoundary.two_linear_coordinates_necessary
+#check Komorebi.Representation.TorsionBoundary.one_nonlinear_residue_suffices
