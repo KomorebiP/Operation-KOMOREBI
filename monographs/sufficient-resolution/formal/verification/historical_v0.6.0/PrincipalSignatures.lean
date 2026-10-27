@@ -1,0 +1,9 @@
+import Komorebi
+#check @Komorebi.SufficientResolution.FiniteHorizon.visibleKernel_stabilizes
+#check @Komorebi.SufficientResolution.FiniteHorizon.same_future_iff_bounded
+#check @Komorebi.SufficientResolution.BehavioralMinimality.finrank_state_le_model
+#check @Komorebi.SufficientResolution.FiniteObservableModel.observableEquiv
+#check @Komorebi.SufficientResolution.FiniteObservableModel.coordinate_all_future_fidelity
+#check @Komorebi.SufficientResolution.FiniteCertificate.certificate_kernel_eq
+#check @Komorebi.SufficientResolution.FiniteCertificate.certificateEquiv_dynamics
+#check @Komorebi.SufficientResolution.ObservableExamples.smallest_dimension

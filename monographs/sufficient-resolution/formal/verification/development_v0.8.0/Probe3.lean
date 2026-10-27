@@ -1,0 +1,9 @@
+import Komorebi.SufficientResolution.SourceConditioning
+#check AddMonoidHomClass.antilipschitz_of_bound
+#check AntilipschitzWith.of_le_mul_dist
+#check ContinuousLinearMap.range_coe
+#check Submodule.isClosed_of_finiteDimensional
+#check Submodule.closed_of_finiteDimensional
+#check LinearMap.range_finrank_le
+#check IsClosed.completeSpace_coe
+#check isClosed_range_subtype_val

@@ -1,0 +1,262 @@
+def Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} : {X : Type u_1} →
+  {Z : Type u_2} →
+    [inst : NormedAddCommGroup.{u_1} X] →
+      [inst_1 : NormedSpace.{0, u_1} ℝ X] →
+        [inst_2 : NormedAddCommGroup.{u_2} Z] →
+          [inst_3 : NormedSpace.{0, u_2} ℝ Z] →
+            ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z →
+              ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X →
+                ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z →
+                  ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z :=
+fun {X} {Z} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [NormedAddCommGroup.{u_2} Z]
+    [NormedSpace.{0, u_2} ℝ Z] q L A =>
+  HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2} (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_1, u_2} q L)
+    (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_2, u_2} A q)
+def Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{u_1, u_2} : {X : Type u_1} →
+  {Z : Type u_2} →
+    [inst : NormedAddCommGroup.{u_1} X] →
+      [inst_1 : NormedSpace.{0, u_1} ℝ X] →
+        [inst_2 : NormedAddCommGroup.{u_2} Z] →
+          [inst_3 : NormedSpace.{0, u_2} ℝ Z] →
+            ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z →
+              ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X →
+                ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z →
+                  ℝ → ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z :=
+fun {X} {Z} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [NormedAddCommGroup.{u_2} Z]
+    [NormedSpace.{0, u_2} ℝ Z] q L A t =>
+  HSub.hSub.{max u_1 u_2, max u_1 u_2, max u_1 u_2}
+    (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_1, u_2} q (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L t))
+    (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_2, u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A t) q)
+def Komorebi.SufficientResolution.ExponentialBudgets.response : ℝ → ℝ → ℝ → ℝ :=
+fun a b t => ∫ (s : ℝ) in 0..t, Komorebi.SufficientResolution.ExponentialBudgets.kernel a b t s
+Komorebi.SufficientResolution.ContinuousDefect.duhamel.{u_1, u_2} {X : Type u_1} {Z : Type u_2}
+  [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X] [NormedAddCommGroup.{u_2} Z]
+  [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z] (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z) (t : ℝ) :
+  Eq.{max (u_1 + 1) (u_2 + 1)} (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{u_1, u_2} q L A t)
+    (∫ (s : ℝ) in 0..t, Komorebi.SufficientResolution.ContinuousDefect.transportKernel.{u_1, u_2} q L A t s)
+Komorebi.SufficientResolution.ContinuousDefect.generatorDefect_zero_iff.{u_1, u_2} {X : Type u_1} {Z : Type u_2}
+  [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X] [NormedAddCommGroup.{u_2} Z]
+  [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z] (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z) :
+  Eq.{max (u_1 + 1) (u_2 + 1)} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A) 0 ↔
+    ∀ (t : ℝ),
+      Eq.{max (u_1 + 1) (u_2 + 1)} (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{u_1, u_2} q L A t) 0
+Komorebi.SufficientResolution.ExponentialBudgets.response_of_ne (a b t : ℝ) (h : Ne.{1} a b) :
+  Eq.{1} (Komorebi.SufficientResolution.ExponentialBudgets.response a b t)
+    (HDiv.hDiv.{0, 0, 0} (HSub.hSub.{0, 0, 0} (Real.exp (HMul.hMul.{0, 0, 0} a t)) (Real.exp (HMul.hMul.{0, 0, 0} b t)))
+      (HSub.hSub.{0, 0, 0} a b))
+Komorebi.SufficientResolution.ExponentialBudgets.response_self (a t : ℝ) :
+  Eq.{1} (Komorebi.SufficientResolution.ExponentialBudgets.response a a t)
+    (HMul.hMul.{0, 0, 0} t (Real.exp (HMul.hMul.{0, 0, 0} a t)))
+Komorebi.SufficientResolution.ContinuousApproximation.norm_evolution_le_envelopes.{u_1, u_2} {X : Type u_1}
+  {Z : Type u_2} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X]
+  [NormedAddCommGroup.{u_2} Z] [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z]
+  (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z) (u v : ℝ → ℝ) (hu : Continuous.{0, 0} u)
+  (hv : Continuous.{0, 0} v) (ε t : ℝ) (he : LE.le.{0} 0 ε) (ht : LE.le.{0} 0 t)
+  (hd :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε)
+  (hL :
+    ∀ (s : ℝ),
+      Membership.mem.{0, 0} (Set.Icc.{0} 0 t) s →
+        LE.le.{0} (norm.{u_1} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L s)) (u s))
+  (hA :
+    ∀ (s : ℝ),
+      Membership.mem.{0, 0} (Set.Icc.{0} 0 t) s →
+        LE.le.{0} (norm.{u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A s)) (v s)) :
+  LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{u_1, u_2} q L A t))
+    (HMul.hMul.{0, 0, 0} ε (∫ (s : ℝ) in 0..t, HMul.hMul.{0, 0, 0} (v (HSub.hSub.{0, 0, 0} t s)) (u s)))
+Komorebi.SufficientResolution.ContinuousApproximation.norm_evolution_le_response.{u_1, u_2} {X : Type u_1}
+  {Z : Type u_2} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X]
+  [NormedAddCommGroup.{u_2} Z] [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z]
+  (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z) (ML MA a b ε t : ℝ) (_hML : LE.le.{0} 0 ML)
+  (_hMA : LE.le.{0} 0 MA) (he : LE.le.{0} 0 ε) (ht : LE.le.{0} 0 t)
+  (hd :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε)
+  (hL :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_1} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L s))
+          (HMul.hMul.{0, 0, 0} ML (Real.exp (HMul.hMul.{0, 0, 0} a s))))
+  (hA :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A s))
+          (HMul.hMul.{0, 0, 0} MA (Real.exp (HMul.hMul.{0, 0, 0} b s)))) :
+  LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{u_1, u_2} q L A t))
+    (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} ML MA) ε)
+      (Komorebi.SufficientResolution.ExponentialBudgets.response a b t))
+Komorebi.SufficientResolution.ContinuousApproximation.norm_output_le_response.{u_1, u_2, u_3} {X : Type u_1}
+  {Z : Type u_2} {Y : Type u_3} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X]
+  [NormedAddCommGroup.{u_2} Z] [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z] [NormedAddCommGroup.{u_3} Y]
+  [NormedSpace.{0, u_3} ℝ Y] (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z)
+  (O : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) X Y)
+  (V : ContinuousLinearMap.{0, 0, u_2, u_3} (RingHom.id.{0} ℝ) Z Y) (ML MA a b ε η t : ℝ) (hML : LE.le.{0} 0 ML)
+  (hMA : LE.le.{0} 0 MA) (he : LE.le.{0} 0 ε) (hη : LE.le.{0} 0 η) (ht : LE.le.{0} 0 t)
+  (hd :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε)
+  (ho :
+    LE.le.{0}
+      (norm.{max u_1 u_3}
+        (HSub.hSub.{max u_1 u_3, max u_1 u_3, max u_1 u_3} O (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_2, u_3} V q)))
+      η)
+  (hL :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_1} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L s))
+          (HMul.hMul.{0, 0, 0} ML (Real.exp (HMul.hMul.{0, 0, 0} a s))))
+  (hA :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A s))
+          (HMul.hMul.{0, 0, 0} MA (Real.exp (HMul.hMul.{0, 0, 0} b s)))) :
+  LE.le.{0}
+    (norm.{max u_3 u_1} (Komorebi.SufficientResolution.ContinuousDefect.outputDefect.{u_1, u_2, u_3} q L A O V t))
+    (HAdd.hAdd.{0, 0, 0} (HMul.hMul.{0, 0, 0} η (HMul.hMul.{0, 0, 0} ML (Real.exp (HMul.hMul.{0, 0, 0} a t))))
+      (HMul.hMul.{0, 0, 0} (norm.{max u_2 u_3} V)
+        (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} ML MA) ε)
+          (Komorebi.SufficientResolution.ExponentialBudgets.response a b t))))
+Komorebi.SufficientResolution.ContinuousApproximation.same_representation_bound.{u_1, u_2, u_3} {X : Type u_1}
+  {Z : Type u_2} {Y : Type u_3} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [NormedAddCommGroup.{u_2} Z]
+  [NormedSpace.{0, u_2} ℝ Z] [NormedAddCommGroup.{u_3} Y] [NormedSpace.{0, u_3} ℝ Y]
+  (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z)
+  (O : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) X Y)
+  (V : ContinuousLinearMap.{0, 0, u_2, u_3} (RingHom.id.{0} ℝ) Z Y) (t e : ℝ) (x y : X) (hxy : Eq.{u_2 + 1} (q x) (q y))
+  (hE :
+    LE.le.{0}
+      (norm.{max u_3 u_1} (Komorebi.SufficientResolution.ContinuousDefect.outputDefect.{u_1, u_2, u_3} q L A O V t))
+      e) :
+  LE.le.{0}
+    (norm.{u_3}
+      (HSub.hSub.{u_3, u_3, u_3} (O ((Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L t) x))
+        (O ((Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L t) y))))
+    (HMul.hMul.{0, 0, 0} e (norm.{u_1} (HSub.hSub.{u_1, u_1, u_1} x y)))
+Komorebi.SufficientResolution.ContinuousStability.norm_evolution_uniform.{u_1, u_2} {X : Type u_1} {Z : Type u_2}
+  [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X] [NormedAddCommGroup.{u_2} Z]
+  [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z] (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z) (ML MA ε rate t : ℝ) (hML : LE.le.{0} 0 ML)
+  (hMA : LE.le.{0} 0 MA) (he : LE.le.{0} 0 ε) (hr : LT.lt.{0} 0 rate) (ht : LE.le.{0} 0 t)
+  (hd :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε)
+  (hL :
+    ∀ (s : ℝ), LE.le.{0} 0 s → LE.le.{0} (norm.{u_1} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L s)) ML)
+  (hA :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A s))
+          (HMul.hMul.{0, 0, 0} MA (Real.exp (HMul.hMul.{0, 0, 0} (Neg.neg.{0} rate) s)))) :
+  LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{u_1, u_2} q L A t))
+    (HDiv.hDiv.{0, 0, 0} (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} ML MA) ε) rate)
+Komorebi.SufficientResolution.ContinuousStability.norm_output_uniform.{u_1, u_2, u_3} {X : Type u_1} {Z : Type u_2}
+  {Y : Type u_3} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X]
+  [NormedAddCommGroup.{u_2} Z] [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z] [NormedAddCommGroup.{u_3} Y]
+  [NormedSpace.{0, u_3} ℝ Y] (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z)
+  (O : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) X Y)
+  (V : ContinuousLinearMap.{0, 0, u_2, u_3} (RingHom.id.{0} ℝ) Z Y) (ML MA ε η rate t : ℝ) (hML : LE.le.{0} 0 ML)
+  (hMA : LE.le.{0} 0 MA) (he : LE.le.{0} 0 ε) (hη : LE.le.{0} 0 η) (hr : LT.lt.{0} 0 rate) (ht : LE.le.{0} 0 t)
+  (hd :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε)
+  (ho :
+    LE.le.{0}
+      (norm.{max u_1 u_3}
+        (HSub.hSub.{max u_1 u_3, max u_1 u_3, max u_1 u_3} O (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_2, u_3} V q)))
+      η)
+  (hL :
+    ∀ (s : ℝ), LE.le.{0} 0 s → LE.le.{0} (norm.{u_1} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L s)) ML)
+  (hA :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A s))
+          (HMul.hMul.{0, 0, 0} MA (Real.exp (HMul.hMul.{0, 0, 0} (Neg.neg.{0} rate) s)))) :
+  LE.le.{0}
+    (norm.{max u_3 u_1} (Komorebi.SufficientResolution.ContinuousDefect.outputDefect.{u_1, u_2, u_3} q L A O V t))
+    (HAdd.hAdd.{0, 0, 0} (HMul.hMul.{0, 0, 0} η ML)
+      (HMul.hMul.{0, 0, 0} (norm.{max u_2 u_3} V)
+        (HDiv.hDiv.{0, 0, 0} (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} ML MA) ε) rate)))
+Komorebi.SufficientResolution.ContinuousStability.norm_initialization_uniform.{u_1, u_2, u_3} {X : Type u_1}
+  {Z : Type u_2} {Y : Type u_3} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [CompleteSpace.{u_1} X]
+  [NormedAddCommGroup.{u_2} Z] [NormedSpace.{0, u_2} ℝ Z] [CompleteSpace.{u_2} Z] [NormedAddCommGroup.{u_3} Y]
+  [NormedSpace.{0, u_3} ℝ Y] (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z)
+  (O : ContinuousLinearMap.{0, 0, u_1, u_3} (RingHom.id.{0} ℝ) X Y)
+  (V : ContinuousLinearMap.{0, 0, u_2, u_3} (RingHom.id.{0} ℝ) Z Y) (ML MA ε η rate t : ℝ) (x : X) (z : Z)
+  (hML : LE.le.{0} 0 ML) (hMA : LE.le.{0} 0 MA) (he : LE.le.{0} 0 ε) (hη : LE.le.{0} 0 η) (hr : LT.lt.{0} 0 rate)
+  (ht : LE.le.{0} 0 t)
+  (hd :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε)
+  (ho :
+    LE.le.{0}
+      (norm.{max u_1 u_3}
+        (HSub.hSub.{max u_1 u_3, max u_1 u_3, max u_1 u_3} O (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_2, u_3} V q)))
+      η)
+  (hL :
+    ∀ (s : ℝ), LE.le.{0} 0 s → LE.le.{0} (norm.{u_1} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L s)) ML)
+  (hA :
+    ∀ (s : ℝ),
+      LE.le.{0} 0 s →
+        LE.le.{0} (norm.{u_2} (Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A s))
+          (HMul.hMul.{0, 0, 0} MA (Real.exp (HMul.hMul.{0, 0, 0} (Neg.neg.{0} rate) s)))) :
+  LE.le.{0}
+    (norm.{u_3}
+      (HSub.hSub.{u_3, u_3, u_3} (O ((Komorebi.SufficientResolution.ContinuousFlow.flow.{u_1} L t) x))
+        (V ((Komorebi.SufficientResolution.ContinuousFlow.flow.{u_2} A t) z))))
+    (HAdd.hAdd.{0, 0, 0}
+      (HMul.hMul.{0, 0, 0}
+        (HAdd.hAdd.{0, 0, 0} (HMul.hMul.{0, 0, 0} η ML)
+          (HMul.hMul.{0, 0, 0} (norm.{max u_2 u_3} V)
+            (HDiv.hDiv.{0, 0, 0} (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} ML MA) ε) rate)))
+        (norm.{u_1} x))
+      (HMul.hMul.{0, 0, 0} (norm.{max u_2 u_3} V)
+        (HMul.hMul.{0, 0, 0} (HMul.hMul.{0, 0, 0} MA (Real.exp (HMul.hMul.{0, 0, 0} (Neg.neg.{0} rate) t)))
+          (norm.{u_2} (HSub.hSub.{u_2, u_2, u_2} (q x) z)))))
+Komorebi.SufficientResolution.ContinuousStability.norm_composite_generator.{u_1, u_2, u_4} {X : Type u_1} {Z : Type u_2}
+  {W : Type u_4} [NormedAddCommGroup.{u_1} X] [NormedSpace.{0, u_1} ℝ X] [NormedAddCommGroup.{u_2} Z]
+  [NormedSpace.{0, u_2} ℝ Z] [NormedAddCommGroup.{u_4} W] [NormedSpace.{0, u_4} ℝ W]
+  (q : ContinuousLinearMap.{0, 0, u_1, u_2} (RingHom.id.{0} ℝ) X Z)
+  (p : ContinuousLinearMap.{0, 0, u_2, u_4} (RingHom.id.{0} ℝ) Z W)
+  (L : ContinuousLinearMap.{0, 0, u_1, u_1} (RingHom.id.{0} ℝ) X X)
+  (A : ContinuousLinearMap.{0, 0, u_2, u_2} (RingHom.id.{0} ℝ) Z Z)
+  (B : ContinuousLinearMap.{0, 0, u_4, u_4} (RingHom.id.{0} ℝ) W W) (ε₁ ε₂ : ℝ)
+  (h₁ :
+    LE.le.{0} (norm.{max u_2 u_1} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_2} q L A)) ε₁)
+  (h₂ :
+    LE.le.{0} (norm.{max u_4 u_2} (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_2, u_4} p A B))
+      ε₂) :
+  LE.le.{0}
+    (norm.{max u_4 u_1}
+      (Komorebi.SufficientResolution.ContinuousDefect.generatorDefect.{u_1, u_4}
+        (ContinuousLinearMap.comp.{0, 0, 0, u_1, u_2, u_4} p q) L B))
+    (HAdd.hAdd.{0, 0, 0} (HMul.hMul.{0, 0, 0} (norm.{max u_2 u_4} p) ε₁)
+      (HMul.hMul.{0, 0, 0} ε₂ (norm.{max u_1 u_2} q)))
+Komorebi.SufficientResolution.ContinuousApproxExamples.scalar_response_sharp (a b t : ℝ) (hba : LE.le.{0} b a)
+  (ht : LE.le.{0} 0 t) :
+  Eq.{1}
+    (norm.{0}
+      (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{0, 0}
+        (Komorebi.SufficientResolution.ApproximateExamples.scalar 1)
+        (Komorebi.SufficientResolution.ApproximateExamples.scalar a)
+        (Komorebi.SufficientResolution.ApproximateExamples.scalar b) t))
+    (HMul.hMul.{0, 0, 0} (HSub.hSub.{0, 0, 0} a b) (Komorebi.SufficientResolution.ExponentialBudgets.response a b t))
+Komorebi.SufficientResolution.ContinuousApproxExamples.unstable_error_unbounded (ε : ℝ) (he : LT.lt.{0} 0 ε) (B : ℝ) :
+  ∃ t,
+    LE.le.{0} 0 t ∧
+      LT.lt.{0} B
+        (norm.{0}
+          (Komorebi.SufficientResolution.ContinuousDefect.evolutionDefect.{0, 0}
+            (Komorebi.SufficientResolution.ApproximateExamples.scalar 1)
+            (Komorebi.SufficientResolution.ApproximateExamples.scalar ε)
+            (Komorebi.SufficientResolution.ApproximateExamples.scalar 0) t))

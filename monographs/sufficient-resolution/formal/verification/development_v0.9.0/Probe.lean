@@ -1,0 +1,14 @@
+import Mathlib.Analysis.InnerProductSpace.ProdL2
+#check QuotientAddGroup.le_norm_iff
+#check QuotientAddGroup.norm_mk
+#check QuotientAddGroup.norm_mk_eq_zero_iff_mem_closure
+#check Submodule.Quotient.norm_mk_le
+#check Submodule.HasOrthogonalProjection.isClosed
+#check LinearIsometryEquiv
+#check Submodule.subtypeL
+#check IsClosed.preimage
+#check Submodule.HasOrthogonalProjection.comap
+#check LinearMap.toContinuousLinearMap
+#check LinearMap.mkContinuous
+#check LinearIsometryEquiv.inner_map_map
+#check Submodule.Quotient.normedAddCommGroup

@@ -1,0 +1,144 @@
+Komorebi.SufficientResolution.TikhonovConstruction.normalEquiv.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) : G ≃L[ℝ] G
+Komorebi.SufficientResolution.TikhonovConstruction.normalEquiv_apply.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (x : G) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.normalEquiv A lam hlam) x =
+    (Komorebi.SufficientResolution.TikhonovConstruction.normal A lam) x
+Komorebi.SufficientResolution.TikhonovConstruction.normal_equation.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.normal A lam)
+      ((Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v) =
+    (ContinuousLinearMap.adjoint A) v
+Komorebi.SufficientResolution.TikhonovConstruction.normal_equation_iff.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) (x : G) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.normal A lam) x = (ContinuousLinearMap.adjoint A) v ↔
+    x = (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v
+Komorebi.SufficientResolution.TikhonovOptimality.objective_gap.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) (x : G) :
+  Komorebi.SufficientResolution.TikhonovOptimality.objective A lam v x =
+    Komorebi.SufficientResolution.TikhonovOptimality.objective A lam v
+          ((Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v) +
+        ‖A (x - (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v)‖ ^ 2 +
+      lam * ‖x - (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v‖ ^ 2
+Komorebi.SufficientResolution.TikhonovOptimality.exists_unique_minimizer.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) :
+  ∃! x,
+    ∀ (y : G),
+      Komorebi.SufficientResolution.TikhonovOptimality.objective A lam v x ≤
+        Komorebi.SufficientResolution.TikhonovOptimality.objective A lam v y
+Komorebi.SufficientResolution.TikhonovOptimality.normal_iff_minimizer.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) (x : G) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.normal A lam) x = (ContinuousLinearMap.adjoint A) v ↔
+    ∀ (y : G),
+      Komorebi.SufficientResolution.TikhonovOptimality.objective A lam v x ≤
+        Komorebi.SufficientResolution.TikhonovOptimality.objective A lam v y
+Komorebi.SufficientResolution.TikhonovBounds.regularized_opNorm_bound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) :
+  ‖Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam‖ ≤ (2 * √lam)⁻¹
+Komorebi.SufficientResolution.TikhonovBounds.approximate_solver_bound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) (x : G) :
+  ‖x - (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v‖ ≤
+    ‖(Komorebi.SufficientResolution.TikhonovConstruction.normal A lam) x - (ContinuousLinearMap.adjoint A) v‖ / lam
+Komorebi.SufficientResolution.TikhonovBounds.source_kernel_orthogonal.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (v : V) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v ∈ (↑A).kerᗮ
+Komorebi.SufficientResolution.TikhonovBias.noisy_source_error_squared.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (g : G) (e : V) :
+  ‖(Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) (A g + e) - g‖ ^ 2 =
+    ‖-(lam • (Komorebi.SufficientResolution.TikhonovConstruction.resolvent A lam hlam) ((↑A).kerᗮ.starProjection g)) +
+            (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) e‖ ^
+        2 +
+      ‖(↑A).ker.starProjection g‖ ^ 2
+Komorebi.SufficientResolution.TikhonovBias.full_conditioned_error_squared.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (alpha : ℝ) (ha : 0 < alpha)
+  (hc : Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha) (g : G) (e : V) :
+  ‖(Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) (A g + e) - g‖ ^ 2 ≤
+    (lam / (alpha ^ 2 + lam) * ‖(↑A).kerᗮ.starProjection g‖ + ‖e‖ / (2 * √lam)) ^ 2 + ‖(↑A).ker.starProjection g‖ ^ 2
+Komorebi.SufficientResolution.TikhonovBias.source_condition_noise_bound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) (w : G) (e : V) :
+  ‖(Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam)
+          (A ((ContinuousLinearMap.adjoint A) (A w)) + e) -
+        (ContinuousLinearMap.adjoint A) (A w)‖ ≤
+    lam * ‖w‖ + ‖e‖ / (2 * √lam)
+Komorebi.SufficientResolution.TikhonovPerturbation.resolvent_difference.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (lam mu : ℝ) (hlam : 0 < lam) (hmu : 0 < mu) :
+  Komorebi.SufficientResolution.TikhonovConstruction.resolvent A lam hlam -
+      Komorebi.SufficientResolution.TikhonovConstruction.resolvent C mu hmu =
+    Komorebi.SufficientResolution.TikhonovConstruction.resolvent A lam hlam ∘SL
+      (Komorebi.SufficientResolution.TikhonovConstruction.normal C mu -
+          Komorebi.SufficientResolution.TikhonovConstruction.normal A lam) ∘SL
+        Komorebi.SufficientResolution.TikhonovConstruction.resolvent C mu hmu
+Komorebi.SufficientResolution.TikhonovPerturbation.regularized_operator_difference_bound.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A C : G →L[ℝ] V) (lam : ℝ) (hlam : 0 < lam) :
+  ‖Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam -
+        Komorebi.SufficientResolution.TikhonovConstruction.regularized C lam hlam‖ ≤
+    ‖A - C‖ / lam + (‖A‖ + ‖C‖) * ‖A - C‖ / (lam * lam) * ‖C‖
+Komorebi.SufficientResolution.TikhonovPerturbation.parameter_difference_bound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam mu : ℝ) (hlam : 0 < lam) (hmu : 0 < mu) (x : G) :
+  ‖(Komorebi.SufficientResolution.TikhonovConstruction.resolvent A lam hlam) x -
+        (Komorebi.SufficientResolution.TikhonovConstruction.resolvent A mu hmu) x‖ ≤
+    |mu - lam| / (lam * mu) * ‖x‖
+Komorebi.SufficientResolution.TikhonovGlobalization.regularized_equals_pseudoinverse_iff.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (lam : ℝ) (hlam : 0 < lam)
+  (v : V) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v =
+      (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v ↔
+    (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v = 0
+Komorebi.SufficientResolution.TikhonovGlobalization.regularized_best_image_iff.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (lam : ℝ) (hlam : 0 < lam) (v : V) :
+  A ((Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v) = (↑A).range.starProjection v ↔
+    (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v = 0
+Komorebi.SufficientResolution.TikhonovGlobalization.regularized_intrinsic_error.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} {W : Type u_3} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] [NormedAddCommGroup W] [NormedSpace ℝ W] (A : G →L[ℝ] V)
+  [CompleteSpace ↥(↑A).range] (lam : ℝ) (delta : V →L[ℝ] W) (hlam : 0 < lam) (h : delta ∘SL A = 0) (v : V) :
+  ‖v - A ((Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v)‖ ^ 2 =
+    ‖(Komorebi.SufficientResolution.IntrinsicGlobalization.projectedClass (↑A) delta) v‖ ^ 2 +
+        ‖(Komorebi.SufficientResolution.OrthogonalResolution.inconsistency (↑delta).ker) v‖ ^ 2 +
+      ‖A
+            ((Komorebi.SufficientResolution.TikhonovConstruction.regularized A lam hlam) v -
+              (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v)‖ ^
+        2
+Komorebi.SufficientResolution.TikhonovExamples.scalar_regularized (c lam : ℝ) (hlam : 0 < lam) (v : ℝ) :
+  (Komorebi.SufficientResolution.TikhonovConstruction.regularized
+        (Komorebi.SufficientResolution.TikhonovExamples.scalar c) lam hlam)
+      v =
+    c * v / (c ^ 2 + lam)
+Komorebi.SufficientResolution.TikhonovExamples.sharp_noise_squared (r : ℝ) (hr : 0 < r) (v : ℝ) :
+  4 * r ^ 2 *
+      ‖(Komorebi.SufficientResolution.TikhonovConstruction.regularized
+              (Komorebi.SufficientResolution.TikhonovExamples.scalar r) (r ^ 2) ⋯)
+            v‖ ^
+        2 =
+    ‖v‖ ^ 2
+Komorebi.SufficientResolution.TikhonovExamples.arbitrarily_small_data_unit_recovery (eps : ℝ) (heps : 0 < eps) :
+  ∃ r,
+    ∃ (hr : 0 < r),
+      ∃ e,
+        ‖e‖ < eps ∧
+          (Komorebi.SufficientResolution.TikhonovConstruction.regularized
+                (Komorebi.SufficientResolution.TikhonovExamples.scalar r) (r ^ 2) ⋯)
+              e =
+            1
+Komorebi.SufficientResolution.TikhonovExamples.zero_parameter_not_unique :
+  (fun x => ‖(Komorebi.SufficientResolution.TikhonovExamples.scalar 0) x‖ ^ 2 + 0 * ‖x‖ ^ 2) 0 =
+      (fun x => ‖(Komorebi.SufficientResolution.TikhonovExamples.scalar 0) x‖ ^ 2 + 0 * ‖x‖ ^ 2) 1 ∧
+    0 ≠ 1

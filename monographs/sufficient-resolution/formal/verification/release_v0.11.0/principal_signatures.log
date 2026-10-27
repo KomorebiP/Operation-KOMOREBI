@@ -1,0 +1,53 @@
+Komorebi.SufficientResolution.TikhonovDensity.gram_range_closure.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) :
+  (↑(Komorebi.SufficientResolution.TikhonovDensity.gram A)).range.topologicalClosure = (↑A).kerᗮ
+Komorebi.SufficientResolution.TikhonovConvergence.tendsto_source.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (lam : ι → ℝ) (hlam : ∀ (i : ι), 0 < lam i)
+  (hlim : Filter.Tendsto lam f (nhds 0)) (g : G) :
+  Filter.Tendsto (fun i => (Komorebi.SufficientResolution.TikhonovConstruction.regularized A (lam i) ⋯) (A g)) f
+    (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.NoisyRegularization.noisy_inexact_solver_tendsto.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (lam : ι → ℝ)
+  (hlam : ∀ (i : ι), 0 < lam i) (hlim : Filter.Tendsto lam f (nhds 0)) (g : G) (e : ι → V) (x : ι → G)
+  (hnoise : Filter.Tendsto (fun i => ‖e i‖ / √(lam i)) f (nhds 0))
+  (hsolver :
+    Filter.Tendsto
+      (fun i =>
+        ‖(Komorebi.SufficientResolution.TikhonovConstruction.normal A (lam i)) (x i) -
+              (ContinuousLinearMap.adjoint A) (A g + e i)‖ /
+          lam i)
+      f (nhds 0)) :
+  Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.NoisyRegularization.square_schedule_consistent.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (s : ι → ℝ)
+  (hs : ∀ (i : ι), 0 < s i) (hlim : Filter.Tendsto s f (nhds 0)) (g : G) (e : ι → V) (he : ∀ (i : ι), ‖e i‖ ≤ s i ^ 2) :
+  Filter.Tendsto (fun i => (Komorebi.SufficientResolution.TikhonovConstruction.regularized A (s i ^ 2) ⋯) (A g + e i)) f
+    (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.UniformRegularization.nonclosed_sourceError_norm.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (hn : ¬IsClosed ↑(↑A).range) (lam : ℝ) (hlam : 0 < lam) :
+  ‖Komorebi.SufficientResolution.UniformRegularization.sourceError A lam hlam‖ = 1
+Komorebi.SufficientResolution.UniformRegularization.uniform_convergence_iff_closed_range.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) [f.NeBot] (lam : ι → ℝ)
+  (hlam : ∀ (i : ι), 0 < lam i) (hlim : Filter.Tendsto lam f (nhds 0)) :
+  Filter.Tendsto (fun i => Komorebi.SufficientResolution.UniformRegularization.sourceError A (lam i) ⋯) f (nhds 0) ↔
+    IsClosed ↑(↑A).range
+Komorebi.SufficientResolution.RegularizedDataLimit.fitted_data_tendsto.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (lam : ι → ℝ) (hlam : ∀ (i : ι), 0 < lam i)
+  (hlim : Filter.Tendsto lam f (nhds 0)) (v : V) :
+  Filter.Tendsto (fun i => A ((Komorebi.SufficientResolution.TikhonovConstruction.regularized A (lam i) ⋯) v)) f
+    (nhds ((↑A).range.topologicalClosure.starProjection v))
+Komorebi.SufficientResolution.RegularizedDataLimit.unrealizable_no_source_limit.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) [f.NeBot] (lam : ι → ℝ)
+  (hlam : ∀ (i : ι), 0 < lam i) (hlim : Filter.Tendsto lam f (nhds 0)) (v : V) (hv : v ∈ (↑A).range.topologicalClosure)
+  (hn : v ∉ (↑A).range) :
+  ¬∃ g,
+      Filter.Tendsto (fun i => (Komorebi.SufficientResolution.TikhonovConstruction.regularized A (lam i) ⋯) v) f
+        (nhds g)

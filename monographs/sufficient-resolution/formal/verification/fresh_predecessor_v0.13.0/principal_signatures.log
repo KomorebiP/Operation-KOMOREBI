@@ -1,0 +1,117 @@
+Komorebi.SufficientResolution.InexactResidual.image_resolvent_bound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hl : 0 < lam) (r : G) :
+  ‖A ((Komorebi.SufficientResolution.TikhonovConstruction.resolvent A lam hl) r)‖ ≤ ‖r‖ / (2 * √lam)
+Komorebi.SufficientResolution.InexactResidual.fitting_residual_difference.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hl : 0 < lam) (v : V) (x : G) :
+  |‖A x - v‖ - Komorebi.SufficientResolution.DiscrepancyResidual.residual A v lam| ≤
+    ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A lam v x‖ / (2 * √lam)
+Komorebi.SufficientResolution.InexactResidual.measured_band_transfer.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hl : 0 < lam) (v : V) (x : G) (eta tau measured omega xi : ℝ)
+  (hmeas : |measured - ‖A x - v‖| ≤ omega)
+  (hr : ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A lam v x‖ ≤ 2 * √lam * xi)
+  (hlo : eta + omega + xi ≤ measured) (hhi : measured ≤ tau * eta - omega - xi) :
+  eta ≤ Komorebi.SufficientResolution.DiscrepancyResidual.residual A v lam ∧
+    Komorebi.SufficientResolution.DiscrepancyResidual.residual A v lam ≤ tau * eta
+Komorebi.SufficientResolution.InexactDiscrepancy.measured_certificate.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hl : 0 < lam) (v : V) (x : G) (eta tau kappa measured omega xi : ℝ)
+  (hs : ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A lam v x‖ ≤ lam * kappa)
+  (hi : ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A lam v x‖ ≤ 2 * √lam * xi)
+  (hmeas : |measured - ‖A x - v‖| ≤ omega) (hlo : eta + omega + xi ≤ measured)
+  (hhi : measured ≤ tau * eta - omega - xi) :
+  Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted A v eta tau kappa x
+Komorebi.SufficientResolution.InexactDiscrepancy.near_source_rate.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (v w : V) (eta tau kappa rate : ℝ) (x : G) (hrate : 0 ≤ rate)
+  (hnoise : ‖A ((ContinuousLinearMap.adjoint A) w) - v‖ ≤ eta)
+  (hx : Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted A v eta tau kappa x)
+  (hbudget : 2 * ‖w‖ * (tau + 1) * eta ≤ rate ^ 2) : ‖x - (ContinuousLinearMap.adjoint A) w‖ ≤ kappa + rate
+Komorebi.SufficientResolution.InexactConsistency.near_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (eta kappa : ι → ℝ) (v : ι → V) (x : ι → G) (g : G)
+  (tau : ℝ) (hnoise : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hx : ∀ (i : ι), Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted A (v i) (eta i) tau (kappa i) (x i))
+  (heta : Filter.Tendsto eta f (nhds 0)) (hkappa : Filter.Tendsto kappa f (nhds 0)) :
+  Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.InexactConsistency.scaled_normal_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (lam eta measured omega : ι → ℝ)
+  (hl : ∀ (i : ι), 0 < lam i) (v : ι → V) (x : ι → G) (g : G) (tau : ℝ) (hnoise : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hm : ∀ (i : ι), |measured i - ‖A (x i) - v i‖| ≤ omega i)
+  (hlo :
+    ∀ (i : ι),
+      eta i + omega i +
+          ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A (lam i) (v i) (x i)‖ / (2 * √(lam i)) ≤
+        measured i)
+  (hhi :
+    ∀ (i : ι),
+      measured i ≤
+        tau * eta i - omega i -
+          ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A (lam i) (v i) (x i)‖ / (2 * √(lam i)))
+  (heta : Filter.Tendsto eta f (nhds 0))
+  (hscaled :
+    Filter.Tendsto
+      (fun i => ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A (lam i) (v i) (x i)‖ / lam i) f
+      (nhds 0)) :
+  Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.InexactConsistency.noise_scaled_solver_consistent.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι)
+  (lam eta measured omega xi : ι → ℝ) (hl : ∀ (i : ι), 0 < lam i) (v : ι → V) (x : ι → G) (g : G) (tau c : ℝ)
+  (hnoise : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hs :
+    ∀ (i : ι),
+      ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A (lam i) (v i) (x i)‖ ≤ lam i * (c * eta i))
+  (hi :
+    ∀ (i : ι),
+      ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A (lam i) (v i) (x i)‖ ≤ 2 * √(lam i) * xi i)
+  (hm : ∀ (i : ι), |measured i - ‖A (x i) - v i‖| ≤ omega i) (hlo : ∀ (i : ι), eta i + omega i + xi i ≤ measured i)
+  (hhi : ∀ (i : ι), measured i ≤ tau * eta i - omega i - xi i) (heta : Filter.Tendsto eta f (nhds 0)) :
+  Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.InexactToleranceCertificates.PositiveCertificate.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (v : V) (eta tau kappa : ℝ) (x : G) : Type
+Komorebi.SufficientResolution.InexactToleranceCertificates.certificate_sound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (v : V) (eta tau kappa : ℝ) (x : G)
+  (cert : Komorebi.SufficientResolution.InexactToleranceCertificates.PositiveCertificate A v eta tau kappa x) :
+  Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted A v eta tau kappa x
+Komorebi.SufficientResolution.InexactToleranceCertificates.certificate_consistent.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (eta kappa : ι → ℝ)
+  (v : ι → V) (x : ι → G) (g : G) (tau : ℝ)
+  (cert :
+    (i : ι) →
+      Komorebi.SufficientResolution.InexactToleranceCertificates.PositiveCertificate A (v i) (eta i) tau (kappa i)
+        (x i))
+  (hnoise : ∀ (i : ι), ‖A g - v i‖ ≤ eta i) (heta : Filter.Tendsto eta f (nhds 0))
+  (hkappa : Filter.Tendsto kappa f (nhds 0)) : Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.InexactToleranceCertificates.uncertain_normal_certificate.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) (lam : ℝ) (hl : 0 < lam) (v : V) (x rhat : G)
+  (eta tau kappa measured omega xi nu rhohat : ℝ)
+  (herr : ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A lam v x - rhat‖ ≤ nu) (hhat : ‖rhat‖ ≤ rhohat)
+  (hs : rhohat + nu ≤ lam * kappa) (hi : rhohat + nu ≤ 2 * √lam * xi) (hmeas : |measured - ‖A x - v‖| ≤ omega)
+  (hlo : eta + omega + xi ≤ measured) (hhi : measured ≤ tau * eta - omega - xi) :
+  Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted A v eta tau kappa x
+Komorebi.SufficientResolution.InexactToleranceCertificates.protected_window_exists_iff (eta tau omega xi : ℝ) :
+  (∃ measured, eta + omega + xi ≤ measured ∧ measured ≤ tau * eta - omega - xi) ↔ 2 * (omega + xi) ≤ (tau - 1) * eta
+Komorebi.SufficientResolution.InexactExamples.certified_nonexact_source :
+  Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted
+      (Komorebi.SufficientResolution.TikhonovExamples.scalar 1) 4 1 3 (1 / 50) (201 / 100) ∧
+    201 / 100 ≠
+      (Komorebi.SufficientResolution.TikhonovConstruction.regularized
+          (Komorebi.SufficientResolution.TikhonovExamples.scalar 1) 1 ⋯)
+        4
+Komorebi.SufficientResolution.InexactExamples.small_raw_residuals_do_not_force_convergence.{u_1} {ι : Type u_1}
+  (f : Filter ι) [f.NeBot] (s : ι → ℝ) (hs : ∀ (i : ι), 0 < s i) (hlim : Filter.Tendsto s f (nhds 0)) :
+  Filter.Tendsto
+      (fun i =>
+        ‖Komorebi.SufficientResolution.InexactResidual.normalResidual
+            (Komorebi.SufficientResolution.TikhonovExamples.scalar 0) (s i) (s i) 1‖)
+      f (nhds 0) ∧
+    Filter.Tendsto (fun i => ‖(Komorebi.SufficientResolution.TikhonovExamples.scalar 0) 1 - s i‖) f (nhds 0) ∧
+      ¬Filter.Tendsto (fun x => 1) f (nhds 0)

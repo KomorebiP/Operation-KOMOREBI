@@ -1,0 +1,36 @@
+Komorebi/SufficientResolution/RegularizedDataLimit.lean:37:6: error: Tactic `rewrite` failed: motive is not type correct:
+  fun _a =>
+    Tendsto (fun i => (regularized (ContinuousLinearMap.adjoint A) (lam i) ⋯) ((ContinuousLinearMap.adjoint A) v)) f
+      (𝓝 (_a.starProjection v))
+Error: Application type mismatch: The argument
+  Submodule.instHasOrthogonalProjectionOrthogonal (↑(ContinuousLinearMap.adjoint A)).ker
+has type
+  (↑(ContinuousLinearMap.adjoint A)).kerᗮ.HasOrthogonalProjection
+but is expected to have type
+  _a.HasOrthogonalProjection
+in the application
+  @Submodule.starProjection ℝ V Real.instRCLike inst✝² inst✝¹ _a ⋯
+
+Explanation: The rewrite tactic rewrites an expression 'e' using an equality 'a = b' by the following process. First, it looks for all 'a' in 'e'. Second, it tries to abstract these occurrences of 'a' to create a function 'm := fun _a => ...', called the *motive*, with the property that 'm a' is definitionally equal to 'e'. Third, we observe that 'congrArg' implies that 'm a = m b', which can be used with lemmas such as 'Eq.mpr' to change the goal. However, if 'e' depends on specific properties of 'a', then the motive 'm' might not typecheck.
+
+Possible solutions: use rewrite's 'occs' configuration option to limit which occurrences are rewritten, or use 'simp' or 'conv' mode, which have strategies for certain kinds of dependencies (these tactics can handle proofs and 'Decidable' instances whose types depend on the rewritten term, and 'simp' can apply user-defined '@[congr]' theorems as well).
+
+G : Type u_1
+V : Type u_2
+inst✝⁵ : NormedAddCommGroup G
+inst✝⁴ : InnerProductSpace ℝ G
+inst✝³ : CompleteSpace G
+inst✝² : NormedAddCommGroup V
+inst✝¹ : InnerProductSpace ℝ V
+inst✝ : CompleteSpace V
+A : G →L[ℝ] V
+ι : Type u_3
+f : Filter ι
+lam : ι → ℝ
+hlam : ∀ (i : ι), 0 < lam i
+hlim : Tendsto lam f (𝓝 0)
+v : V
+h :
+  Tendsto (fun i => (regularized (ContinuousLinearMap.adjoint A) (lam i) ⋯) ((ContinuousLinearMap.adjoint A) v)) f
+    (𝓝 ((↑(ContinuousLinearMap.adjoint A)).kerᗮ.starProjection v))
+⊢ Tendsto (fun i => A ((regularized A (lam i) ⋯) v)) f (𝓝 ((↑A).range.topologicalClosure.starProjection v))

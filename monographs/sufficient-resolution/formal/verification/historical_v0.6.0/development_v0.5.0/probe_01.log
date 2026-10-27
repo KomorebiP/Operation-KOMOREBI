@@ -1,0 +1,34 @@
+ContinuousLinearMap.compL.{u_1, u_4, u_7, u_9} (𝕜 : Type u_1) (E : Type u_4) (Fₗ : Type u_7) (Gₗ : Type u_9)
+  [SeminormedAddCommGroup E] [SeminormedAddCommGroup Fₗ] [SeminormedAddCommGroup Gₗ] [NontriviallyNormedField 𝕜]
+  [NormedSpace 𝕜 E] [NormedSpace 𝕜 Fₗ] [NormedSpace 𝕜 Gₗ] : (Fₗ →L[𝕜] Gₗ) →L[𝕜] (E →L[𝕜] Fₗ) →L[𝕜] E →L[𝕜] Gₗ
+ContinuousLinearMap.flip.{u_1, u_2, u_3, u_4, u_6, u_8} {𝕜 : Type u_1} {𝕜₂ : Type u_2} {𝕜₃ : Type u_3} {E : Type u_4}
+  {F : Type u_6} {G : Type u_8} [SeminormedAddCommGroup E] [SeminormedAddCommGroup F] [SeminormedAddCommGroup G]
+  [NontriviallyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] [NontriviallyNormedField 𝕜₃] [NormedSpace 𝕜 E]
+  [NormedSpace 𝕜₂ F] [NormedSpace 𝕜₃ G] {σ₂₃ : 𝕜₂ →+* 𝕜₃} {σ₁₃ : 𝕜 →+* 𝕜₃} [RingHomIsometric σ₂₃] [RingHomIsometric σ₁₃]
+  (f : E →SL[σ₁₃] F →SL[σ₂₃] G) : F →SL[σ₂₃] E →SL[σ₁₃] G
+HasSum.map.{u_1, u_2, u_3, u_4} {α : Type u_1} {β : Type u_2} {γ : Type u_3} [AddCommMonoid α] [TopologicalSpace α]
+  {f : β → α} {a : α} {L : SummationFilter β} [AddCommMonoid γ] [TopologicalSpace γ] (hf : HasSum f a L) {G : Type u_4}
+  [FunLike G α γ] [AddMonoidHomClass G α γ] (g : G) (hg : Continuous ⇑g) : HasSum (⇑g ∘ f) (g a) L
+ContinuousLinearMap.hasSum.{u_4, u_6, u_7, u_8, u_9} {ι : Type u_4} {R : Type u_6} {R₂ : Type u_7} {M : Type u_8}
+  {M₂ : Type u_9} [Semiring R] [Semiring R₂] [AddCommMonoid M] [Module R M] [AddCommMonoid M₂] [Module R₂ M₂]
+  [TopologicalSpace M] [TopologicalSpace M₂] {σ : R →+* R₂} {L : SummationFilter ι} {f : ι → M} (φ : M →SL[σ] M₂)
+  {x : M} (hf : HasSum f x L) : HasSum (fun b => φ (f b)) (φ x) L
+ContinuousLinearMap.map_tsum.{u_4, u_6, u_7, u_8, u_9} {ι : Type u_4} {R : Type u_6} {R₂ : Type u_7} {M : Type u_8}
+  {M₂ : Type u_9} [Semiring R] [Semiring R₂] [AddCommMonoid M] [Module R M] [AddCommMonoid M₂] [Module R₂ M₂]
+  [TopologicalSpace M] [TopologicalSpace M₂] {σ : R →+* R₂} {L : SummationFilter ι} [T2Space M₂] [L.NeBot] {f : ι → M}
+  (φ : M →SL[σ] M₂) (hf : Summable f L) : φ (∑'[L] (z : ι), f z) = ∑'[L] (z : ι), φ (f z)
+verification/development_v0.5.0/Probe.lean:7:7: error(lean.unknownIdentifier): Unknown constant `ContinuousLinearMap.hasDerivAt`
+hasDerivAt_const.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜] {F : Type v} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+  (x : 𝕜) (c : F) : HasDerivAt (fun x => c) 0 x
+HasDerivAt.congr_of_eventuallyEq.{u, v} {𝕜 : Type u} [NontriviallyNormedField 𝕜] {F : Type v} [NormedAddCommGroup F]
+  [NormedSpace 𝕜 F] {f f₁ : 𝕜 → F} {f' : F} {x : 𝕜} (h : HasDerivAt f f' x) (h₁ : f₁ =ᶠ[nhds x] f) : HasDerivAt f₁ f' x
+HasSum.unique.{u_1, u_2} {α : Type u_1} {β : Type u_2} [AddCommMonoid α] [TopologicalSpace α] {L : SummationFilter β}
+  {f : β → α} [T2Space α] [L.NeBot] {a₁ a₂ : α} : HasSum f a₁ L → HasSum f a₂ L → a₁ = a₂
+Continuous.clm_apply.{u_1, u_2, u_3, u_5} {𝕜 : Type u_1} [NontriviallyNormedField 𝕜] {E : Type u_2}
+  [SeminormedAddCommGroup E] [NormedSpace 𝕜 E] {F : Type u_3} [SeminormedAddCommGroup F] [NormedSpace 𝕜 F]
+  {X : Type u_5} [TopologicalSpace X] {f : X → E →L[𝕜] F} {g : X → E} (hf : Continuous f) (hg : Continuous g) :
+  Continuous fun x => (f x) (g x)
+NormedSpace.exp_series_hasSum_exp'.{u_1, u_2} {𝕂 : Type u_1} {𝔸 : Type u_2} [NontriviallyNormedField 𝕂] [CharZero 𝕂]
+  [ContinuousSMul ℚ 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸] (x : 𝔸) :
+  HasSum (fun n => (↑n.factorial)⁻¹ • x ^ n) (NormedSpace.exp x)
+verification/development_v0.5.0/Probe.lean:13:7: error(lean.unknownIdentifier): Unknown constant `ContinuousLinearMap.toLinearMap_injective`

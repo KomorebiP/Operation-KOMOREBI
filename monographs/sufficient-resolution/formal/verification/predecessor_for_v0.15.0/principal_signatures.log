@@ -1,0 +1,110 @@
+Komorebi.SufficientResolution.OperatorUncertainty.effective_data_noise.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedAddCommGroup V] [NormedSpace ℝ V] (A C : G →L[ℝ] V) (g : G) (v : V)
+  (eta delta M : ℝ) (hd : ‖C - A‖ ≤ delta) (hM : ‖g‖ ≤ M) (he : ‖A g - v‖ ≤ eta) :
+  ‖C g - v‖ ≤ Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise eta delta M
+Komorebi.SufficientResolution.OperatorUncertainty.fitting_norm_difference.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [NormedSpace ℝ G] [NormedAddCommGroup V] [NormedSpace ℝ V] (A C : G →L[ℝ] V) (x : G) (v : V)
+  (delta : ℝ) (hd : ‖C - A‖ ≤ delta) : |‖A x - v‖ - ‖C x - v‖| ≤ delta * ‖x‖
+Komorebi.SufficientResolution.OperatorResidualTransport.normal_residual_available_bound.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A C : G →L[ℝ] V) (lam : ℝ) (v : V) (x : G) (delta : ℝ)
+  (hd : ‖C - A‖ ≤ delta) :
+  ‖Komorebi.SufficientResolution.InexactResidual.normalResidual A lam v x -
+        Komorebi.SufficientResolution.InexactResidual.normalResidual C lam v x‖ ≤
+    delta * (‖C x - v‖ + (‖C‖ + delta) * ‖x‖)
+Komorebi.SufficientResolution.ChangingDiscrepancy.norm_control.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (p x : G) (v : V) (eta delta M tau : ℝ) (hd : ‖C - A‖ ≤ delta) (hM : ‖p‖ ≤ M)
+  (he : ‖A p - v‖ ≤ eta)
+  (hx :
+    Komorebi.SufficientResolution.DiscrepancyRule.Accepted C v
+      (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise eta delta M) tau x) :
+  ‖x‖ ≤ ‖p‖
+Komorebi.SufficientResolution.ChangingDiscrepancy.true_residual.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (p x : G) (v : V) (eta delta M tau : ℝ) (hd : ‖C - A‖ ≤ delta) (hM : ‖p‖ ≤ M)
+  (he : ‖A p - v‖ ≤ eta)
+  (hx :
+    Komorebi.SufficientResolution.DiscrepancyRule.Accepted C v
+      (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise eta delta M) tau x) :
+  ‖A x - A p‖ ≤ (tau + 1) * Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise eta delta M
+Komorebi.SufficientResolution.ChangingDiscrepancy.near_source_condition_rate.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (w : V) (x : G) (v : V) (eta delta M tau kappa : ℝ) (hd : ‖C - A‖ ≤ delta)
+  (hM : ‖(ContinuousLinearMap.adjoint A) w‖ ≤ M) (he : ‖A ((ContinuousLinearMap.adjoint A) w) - v‖ ≤ eta)
+  (hx :
+    Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted C v
+      (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise eta delta M) tau kappa x) :
+  ‖x - (ContinuousLinearMap.adjoint A) w‖ ^ 2 ≤
+    2 * kappa ^ 2 + 4 * ‖w‖ * (tau + 1) * Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise eta delta M
+Komorebi.SufficientResolution.ChangingConsistency.accepted_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (C : ι → G →L[ℝ] V) (eta delta : ι → ℝ) (v : ι → V)
+  (x : ι → G) (p : G) (M tau : ℝ) (hp : p ∈ (↑A).kerᗮ) (hM : ‖p‖ ≤ M) (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i)
+  (he : ∀ (i : ι), ‖A p - v i‖ ≤ eta i)
+  (hx :
+    ∀ (i : ι),
+      Komorebi.SufficientResolution.DiscrepancyRule.Accepted (C i) (v i)
+        (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise (eta i) (delta i) M) tau (x i))
+  (heta : Filter.Tendsto eta f (nhds 0)) (hdelta : Filter.Tendsto delta f (nhds 0)) : Filter.Tendsto x f (nhds p)
+Komorebi.SufficientResolution.ChangingConsistency.projected_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (C : ι → G →L[ℝ] V) (eta delta kappa : ι → ℝ)
+  (v : ι → V) (x : ι → G) (g : G) (M tau : ℝ) (hM : ‖(↑A).kerᗮ.starProjection g‖ ≤ M)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hx :
+    ∀ (i : ι),
+      Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted (C i) (v i)
+        (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise (eta i) (delta i) M) tau (kappa i) (x i))
+  (heta : Filter.Tendsto eta f (nhds 0)) (hdelta : Filter.Tendsto delta f (nhds 0))
+  (hkappa : Filter.Tendsto kappa f (nhds 0)) : Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.ChangingConsistency.true_kernel_leakage_tendsto_zero.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) {ι : Type u_3} (f : Filter ι) (C : ι → G →L[ℝ] V)
+  (eta delta kappa : ι → ℝ) (v : ι → V) (x : ι → G) (g : G) (M tau : ℝ) (hM : ‖(↑A).kerᗮ.starProjection g‖ ≤ M)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hx :
+    ∀ (i : ι),
+      Komorebi.SufficientResolution.InexactDiscrepancy.NearAccepted (C i) (v i)
+        (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise (eta i) (delta i) M) tau (kappa i) (x i))
+  (heta : Filter.Tendsto eta f (nhds 0)) (hdelta : Filter.Tendsto delta f (nhds 0))
+  (hkappa : Filter.Tendsto kappa f (nhds 0)) : Filter.Tendsto (fun i => (↑A).ker.starProjection (x i)) f (nhds 0)
+Komorebi.SufficientResolution.OperatorCertificates.Certified.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (C : G →L[ℝ] V) (v : V) (eta delta M tau kappa : ℝ) (x : G) : Prop
+Komorebi.SufficientResolution.OperatorCertificates.certified_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V) (eta delta kappa : ι → ℝ)
+  (v : ι → V) (x : ι → G) (g : G) (M tau : ℝ) (hM : ‖(↑A).kerᗮ.starProjection g‖ ≤ M)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hc :
+    ∀ (i : ι),
+      Komorebi.SufficientResolution.OperatorCertificates.Certified (C i) (v i) (eta i) (delta i) M tau (kappa i) (x i))
+  (heta : Filter.Tendsto eta f (nhds 0)) (hdelta : Filter.Tendsto delta f (nhds 0))
+  (hkappa : Filter.Tendsto kappa f (nhds 0)) : Filter.Tendsto x f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.OperatorCertificates.selected_from_allowances_consistent.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V)
+  (eta delta : ι → ℝ) (v : ι → V) (g : G) (M tau : ℝ) (hM : ‖(↑A).kerᗮ.starProjection g‖ ≤ M)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (heff : ∀ (i : ι), 0 < Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise (eta i) (delta i) M)
+  (htau : 1 < tau) (heta : Filter.Tendsto eta f (nhds 0)) (hdelta : Filter.Tendsto delta f (nhds 0)) :
+  Filter.Tendsto
+    (fun i =>
+      Komorebi.SufficientResolution.DiscrepancyRule.selectedSource (C i) (v i)
+        (Komorebi.SufficientResolution.OperatorUncertainty.effectiveNoise (eta i) (delta i) M) tau ⋯ htau ⋯)
+    f (nhds ((↑A).kerᗮ.starProjection g))
+Komorebi.SufficientResolution.OperatorUncertaintyExamples.actual_uncertain_certificate :
+  Komorebi.SufficientResolution.OperatorCertificates.Certified (Komorebi.SufficientResolution.TikhonovExamples.scalar 1)
+    (22 / 5) (1 / 10) (1 / 10) 4 3 (1 / 25) (331 / 100)
+Komorebi.SufficientResolution.OperatorUncertaintyExamples.biased_model_wrong_limit.{u_1} {ι : Type u_1} (f : Filter ι)
+  [f.NeBot] (s : ι → ℝ) (hs : ∀ (i : ι), 0 < s i) (hu : ∀ (i : ι), s i < 1) (hlim : Filter.Tendsto s f (nhds 0)) :
+  (∀ (i : ι),
+      Komorebi.SufficientResolution.DiscrepancyRule.Accepted (Komorebi.SufficientResolution.TikhonovExamples.scalar 2) 1
+        (s i) 2 ((1 - s i) / 2)) ∧
+    Filter.Tendsto (fun i => (1 - s i) / 2) f (nhds (1 / 2)) ∧ ¬Filter.Tendsto (fun i => (1 - s i) / 2) f (nhds 1)
+Komorebi.SufficientResolution.OperatorUncertaintyExamples.zero_data_rule_with_changing_kernel (s : ℝ) (hs : s ≠ 0) :
+  (↑(Komorebi.SufficientResolution.TikhonovExamples.scalar s)).ker = ⊥ ∧
+    (↑(Komorebi.SufficientResolution.TikhonovExamples.scalar 0)).ker = ⊤ ∧
+      Komorebi.SufficientResolution.DiscrepancyRule.Accepted (Komorebi.SufficientResolution.TikhonovExamples.scalar s) 0
+        1 2 0

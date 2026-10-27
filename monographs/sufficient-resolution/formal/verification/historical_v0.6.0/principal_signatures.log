@@ -1,0 +1,34 @@
+Komorebi.SufficientResolution.BlockDynamics.discrete_memory_equation.{uR, uV, uH} {R : Type uR} [CommRing R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) (n : ℕ) (y : V) (z : H) :
+  b.visible (n + 1) y z =
+    b.A (b.visible n y z) + b.B ((b.D ^ n) z) + ∑ j ∈ Finset.range n, (b.memory (n - 1 - j)) (b.visible j y z)
+Komorebi.SufficientResolution.BlockDynamics.prepared_powers_iff_memory_zero.{uR, uV, uH} {R : Type uR} [CommRing R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) :
+  (∀ (n : ℕ), b.prepared n = b.A ^ n) ↔ ∀ (k : ℕ), b.memory k = 0
+Komorebi.SufficientResolution.BlockDynamics.power_defects_zero_iff_memory_zero.{uR, uV, uH} {R : Type uR} [CommRing R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) :
+  (∀ (m n : ℕ), b.compression.defect (b.step ^ m) (b.step ^ n) = 0) ↔ ∀ (k : ℕ), b.memory k = 0
+Komorebi.SufficientResolution.BlockDynamics.prepared_powers_iff_finite_horizon.{uR, uV, uH} {R : Type uR} [Field R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) [FiniteDimensional R H] :
+  (∀ (n : ℕ), b.prepared n = b.A ^ n) ↔ ∀ n ≤ Module.finrank R H + 1, b.prepared n = b.A ^ n
+Komorebi.SufficientResolution.BlockDynamics.memory_zero_of_annihilator.{uR, uV, uH} {R : Type uR} [Field R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) (p : Polynomial R) (hp : p.Monic)
+  (hroot : (Polynomial.aeval b.D) p = 0) (h : ∀ k < p.natDegree, b.memory k = 0) (n : ℕ) : b.memory n = 0
+Komorebi.SufficientResolution.BlockDynamics.all_state_closure_iff_B_zero.{uR, uV, uH} {R : Type uR} [CommRing R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) :
+  (∀ (n : ℕ) (y : V) (z : H), b.visible n y z = (b.A ^ n) y) ↔ b.B = 0
+Komorebi.SufficientResolution.BlockDynamics.first_return_discrepancy.{uR, uV, uH} {R : Type uR} [CommRing R]
+  {V : Type uV} [AddCommGroup V] [Module R V] {H : Type uH} [AddCommGroup H] [Module R H]
+  (b : Komorebi.SufficientResolution.BlockDynamics R V H) (k : ℕ) (h : ∀ j < k, b.memory j = 0) :
+  b.prepared (k + 2) - b.A ^ (k + 2) = b.memory k
+Komorebi.SufficientResolution.SplitCompression.exact_powers_iff_canonical_finite_horizon.{uR, uX, uZ} {R : Type uR}
+  [Field R] {X : Type uX} [AddCommGroup X] [Module R X] {Z : Type uZ} [AddCommGroup Z] [Module R Z]
+  (c : Komorebi.SufficientResolution.SplitCompression R X Z) (T : X →ₗ[R] X) [FiniteDimensional R ↥c.HiddenSpace] :
+  (∀ (n : ℕ), c.coarse (T ^ n) = c.coarse T ^ n) ↔
+    ∀ n ≤ Module.finrank R ↥c.HiddenSpace + 1, c.coarse (T ^ n) = c.coarse T ^ n

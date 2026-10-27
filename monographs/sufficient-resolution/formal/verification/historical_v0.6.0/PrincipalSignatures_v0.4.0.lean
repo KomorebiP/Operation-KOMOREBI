@@ -1,0 +1,16 @@
+import Komorebi
+
+#check @Komorebi.SufficientResolution.ApproximateAlgebra.wordDefect_eq_sum
+#check @Komorebi.SufficientResolution.ApproximateBounds.norm_wordError_le_budget
+#check @Komorebi.SufficientResolution.ApproximateBounds.norm_outputError_le
+#check @Komorebi.SufficientResolution.ScalarBudgets.response_eq_sum
+#check @Komorebi.SufficientResolution.ScalarBudgets.response_of_ne
+#check @Komorebi.SufficientResolution.ScalarBudgets.response_same_succ
+#check @Komorebi.SufficientResolution.StableApproximation.norm_outputError_uniform
+#check @Komorebi.SufficientResolution.StableApproximation.norm_outputError_contractive
+#check @Komorebi.SufficientResolution.StableApproximation.norm_output_initial_contractive
+#check @Komorebi.SufficientResolution.StableApproximation.same_coarse_future_bound
+#check @Komorebi.SufficientResolution.ApproximateComposition.norm_wordError_two_stage
+#check @Komorebi.SufficientResolution.ApproximateComposition.reencode_outputError
+#check @Komorebi.SufficientResolution.ApproximateExamples.sharp_response
+#check @Komorebi.SufficientResolution.ApproximateExamples.unstable_error_unbounded

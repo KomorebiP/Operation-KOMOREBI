@@ -1,0 +1,144 @@
+--- frozen-v0.16.0/scripts/verify.py
++++ final-edition/formal/scripts/verify.py
+@@ -9,17 +9,54 @@
+ import subprocess, sys, time
+ 
+ ROOT = pathlib.Path(__file__).resolve().parents[1]
+-MODULES = ['ExactResolution', 'Compression', 'Globalization', 'ObstructionTransport', 'Behavioral', 'Examples', 'DiscreteMemory', 'MemoryClosure', 'FiniteMemory', 'SplitMemory', 'MemoryExamples', 'FiniteHorizon', 'BehavioralMinimality', 'FiniteObservableModel', 'FiniteCertificate', 'ObservableExamples', 'ApproximateAlgebra', 'ApproximateBounds', 'ScalarBudgets', 'StableApproximation', 'ApproximateComposition', 'ApproximateExamples', 'ContinuousFlow', 'VariationOfConstants', 'ExponentialTransfer', 'ContinuousMemory', 'ContinuousClosure', 'ContinuousJets', 'ContinuousSplit', 'ContinuousExamples', 'ContinuousDefect', 'ExponentialBudgets', 'ContinuousApproximation', 'ContinuousStability', 'ContinuousApproxExamples', 'OrthogonalResolution', 'HilbertGlobalization', 'HilbertConditioning', 'GlobalizationRefinement', 'FiniteGlobalization', 'GlobalizationExamples', 'MinimumNormReconstruction', 'MinimumNormOptimality', 'SourceConditioning', 'ClosedRangeReconstruction', 'ReconstructionGlobalization', 'ReconstructionExamples', 'MetricObstruction', 'MetricRepresentatives', 'IntrinsicGlobalization', 'MetricObstructionTransport', 'MetricRefinement', 'QuotientMetricBoundaries', 'TikhonovConstruction', 'TikhonovOptimality', 'TikhonovBounds', 'TikhonovBias', 'TikhonovPerturbation', 'TikhonovGlobalization', 'TikhonovExamples']
+-MODULES += ['TikhonovDensity', 'TikhonovConvergence', 'NoisyRegularization', 'UniformRegularization', 'RegularizedDataLimit']
+-
+-MODULES += ['DiscrepancyResidual', 'DiscrepancySelection', 'DiscrepancyConvergence', 'DiscrepancyRule', 'DiscrepancyBoundaries']
+-
+-MODULES += ['InexactResidual', 'InexactDiscrepancy', 'InexactConsistency', 'InexactToleranceCertificates', 'InexactExamples']
+-
+-MODULES += ['OperatorUncertainty', 'OperatorResidualTransport', 'ChangingDiscrepancy', 'ChangingConsistency', 'OperatorCertificates', 'OperatorUncertaintyExamples']
++def discover_modules():
++    """Discover and topologically order every production source module.
++
++    Only project-local import edges are ordered here; the pinned imported
++    Lean/Mathlib dependencies remain the runtime's responsibility. Missing
++    production imports and cycles fail rather than silently reducing coverage.
++    """
++    source_root = ROOT / 'Komorebi/SufficientResolution'
++    files = {p.stem: p for p in sorted(source_root.glob('*.lean'))}
++    if not files:
++        raise ValueError('No production SufficientResolution modules found')
++    dependencies = {}
++    for name, path in files.items():
++        text = re.sub(r'/\-.*?\-/', '', path.read_text(), flags=re.S)
++        text = re.sub(r'--[^\n]*', '', text)
++        imports = []
++        for match in re.finditer(r'^\s*import\s+([^\n]+)', text, flags=re.M):
++            for imported in match.group(1).split():
++                if imported.startswith('Komorebi.SufficientResolution.'):
++                    dependency = imported.removeprefix('Komorebi.SufficientResolution.')
++                    if dependency not in files:
++                        raise ValueError('Missing production import: '+name+' -> '+dependency)
++                    imports.append(dependency)
++        dependencies[name] = sorted(set(imports))
++    order, active, completed = [], set(), set()
++    def visit(name):
++        if name in completed:
++            return
++        if name in active:
++            raise ValueError('Production import cycle at '+name)
++        active.add(name)
++        for dependency in dependencies[name]:
++            visit(dependency)
++        active.remove(name)
++        completed.add(name)
++        order.append(name)
++    for name in sorted(files):
++        visit(name)
++    if set(order) != set(files) or len(order) != len(files):
++        raise ValueError('Production module coverage mismatch')
++    return order
++
++
++MODULES = discover_modules()
+ 
+ ALLOWED = {'propext', 'Classical.choice', 'Quot.sound'}
+ PIN = '4.34.0-rc2'
++LEAN_COMMIT = '6a10ac8c22beadecabdbb0919c2b50214762f91d'
+ PREFIX = 'Komorebi.SufficientResolution.'
+ 
+ 
+@@ -57,14 +94,22 @@
+ 
+ def main():
+     ap=argparse.ArgumentParser(description=__doc__)
+-    ap.add_argument('--runtime', type=pathlib.Path, required=True,
++    ap.add_argument('--runtime', type=pathlib.Path,
+                     help='Extracted Komorebi_Portable_Lean_4.34.0-rc2 directory')
++    ap.add_argument('--plan-only', action='store_true', help='Print discovered source coverage without running Lean or writing files')
+     ap.add_argument('--out', default='verification/local-replay')
+     ap.add_argument('--timeout', type=int, default=180,
+                     help='Per-command wall-clock timeout, seconds')
+     ap.add_argument('--skip-kernel-replay', action='store_true',
+                     help='Explicitly skip leanchecker; recorded as reduced verification')
+     args=ap.parse_args()
++    if args.plan_only:
++        rows=registry()
++        print(json.dumps({'source_module_count':len(MODULES),'topological_modules':MODULES,
++                          'named_declarations':len(rows),'theorem_declarations':sum(r['kind'] in ('theorem','lemma') for r in rows),
++                          'boundary':'Source discovery only; no Lean compilation or proof replay.'},indent=2))
++        return 0
++    if args.runtime is None: ap.error('--runtime is required unless --plan-only is selected')
+     kit=args.runtime.expanduser().resolve(); launcher=kit/'run.sh'
+     if not launcher.is_file(): ap.error('Missing portable runtime run.sh')
+     if args.timeout < 1: ap.error('--timeout must be positive')
+@@ -89,6 +134,9 @@
+                    ROOT/'scripts/tikhonov_certificate.py',ROOT/'scripts/check_tikhonov.py',
+                    ROOT/'examples/tikhonov_input.json',ROOT/'scripts/check_regularization_limits.py',ROOT/'scripts/verify_block11.py',ROOT/'KomorebiBlock11.lean']
+     source_inputs+=sorted((ROOT/'Komorebi').rglob('*.lean'))
++    source_inputs+=sorted((ROOT/'scripts').glob('*.py'))
++    source_inputs+=sorted((ROOT/'examples').glob('*input.json'))
++    source_inputs=sorted(set(source_inputs))
+     before={str(p.relative_to(ROOT)):sha(p) for p in source_inputs}
+ 
+     def run(name, command, expect_failure=False, contains=None):
+@@ -119,6 +167,7 @@
+     try:
+         run('attach',base+['attach',str(ROOT)])
+         version=run('lean_version',base+['lean','--version'],contains=PIN)
++        if LEAN_COMMIT not in version: raise RuntimeError('Lean commit mismatch')
+         run('lake_version',base+['lake','--version'])
+         manifest=json.loads((ROOT/'lake-manifest.json').read_text())
+         for package in manifest['packages']:
+@@ -180,6 +229,11 @@
+         run('exact_quotient_metric_sanity', [sys.executable,str(ROOT/'scripts/check_quotient_metric.py')])
+         run('exact_tikhonov_sanity', [sys.executable,str(ROOT/'scripts/check_tikhonov.py')])
+         run('exact_regularization_limits', [sys.executable,str(ROOT/'scripts/check_regularization_limits.py')])
++        run('exact_discrepancy_controls', [sys.executable,str(ROOT/'scripts/check_discrepancy.py')])
++        run('exact_inexact_discrepancy_controls', [sys.executable,str(ROOT/'scripts/check_inexact_discrepancy.py')])
++        run('exact_operator_uncertainty_controls', [sys.executable,str(ROOT/'scripts/check_operator_uncertainty.py')])
++        run('exact_generalized_discrepancy_controls', [sys.executable,str(ROOT/'scripts/check_generalized_discrepancy.py')])
++        run('exact_calibration_controls', [sys.executable,str(ROOT/'scripts/check_calibration.py')])
+         run('exact_tikhonov_cli', [sys.executable,str(ROOT/'scripts/tikhonov_certificate.py'),
+             '--input',str(ROOT/'examples/tikhonov_input.json'),'--output',str(out/'tikhonov_example.json')])
+         after={str(p.relative_to(ROOT)):sha(p) for p in source_inputs}
+@@ -194,7 +248,11 @@
+             'source_module_count':len(MODULES),'named_declarations':len(rows),
+             'theorem_declarations':sum(r['kind'] in ('theorem','lemma') for r in rows),
+             'allowed_axioms':sorted(ALLOWED),'axiom_audit_count':len(axioms),
+-            'kernel_replay_performed':not args.skip_kernel_replay,
++            'kernel_replay_performed':not args.skip_kernel_replay and sum(e['name'].startswith('kernel_') and e.get('passed',False) for e in events)==len(MODULES),
++            'topological_modules':MODULES,
++            'compiled_production_module_count':sum(e['name'].startswith('compile_') and e['name']!='compile_root' and e.get('passed',False) for e in events),
++            'replayed_production_module_count':sum(e['name'].startswith('kernel_') and e.get('passed',False) for e in events),
++            'verification_scope':'Full discovered production corpus; success requires all source modules, all enumerated names and all requested same-kernel replays. Python companions remain separate finite checks.',
+             'kernel_trust_boundary':'Same Lean kernel; imported Lean/Mathlib cache reused, not freshly replayed.',
+             'events':events,'input_artifacts':[{'path':p,'sha256':v,'sha256_after':after.get(p)} for p,v in before.items()],
+             'resource_limits':{'wall_seconds_per_command':args.timeout,'lean_num_threads':1,
+@@ -213,9 +271,9 @@
+                           'The full exponential solves the derived memory equation; converse reconstruction of arbitrary Volterra solutions is not separately formalized.',
+                           'No unbounded-generator extension, inferred flow-growth hypothesis, sampled-data guarantee, or independently implemented proof checker.']}
+     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+-    manifest={'schema_version':1,'claim_id':'KSR-0.11.0-REGULARIZATION-LIMITS',
++    manifest={'schema_version':1,'claim_id':'KSR-0.16.0-FINAL-FULL-CORPUS',
+               'repository':{'commit':None,'dirty':True,'note':'New source snapshot; input hashes recorded.'},
+-              'command':[sys.executable,'scripts/verify.py','--runtime',str(kit),'--out',args.out],
++              'command':[sys.executable,'scripts/verify.py','--runtime',str(kit),'--out',args.out]+(['--skip-kernel-replay'] if args.skip_kernel_replay else []),
+               'environment':{'software':['Lean 4.34.0-rc2','Mathlib '+ 'aeb72f1e9981b6d35b426b16dca7759be3e7ba06',
+                                          'Python '+platform.python_version(), 'SymPy '+__import__('sympy').__version__], 'hardware':platform.platform()},
+               'mathematics':{'assertion_tested':'The enumerated Lean declarations compile, have only allowlisted axioms, and replay in the same kernel.' if not args.skip_kernel_replay else 'Source compilation and axiom checks only; kernel replay explicitly skipped.',

@@ -1,0 +1,36 @@
+# Traditional paper report
+
+The traditional manuscript, *Sufficient Resolution: Exact Reduction, Hidden Memory, and Certified Reconstruction*, is a 46-page mathematical paper by Komorebi P., dated October 6, 2026. It covers all sixteen archived development blocks in 64 editorial theorem groups, SR-01 through SR-64. Each group has an explicit printed setup, statement, substantive prose proof, and exact Lean declaration anchors. The groups consolidate the archive; they do not assert that its 998 theorem declarations are 998 independent or historically new results.
+
+The reading files are `traditional/Sufficient_Resolution_Traditional.pdf`, `.tex`, and `.md`. The canonical source mapping is `traditional/Claim_Lean_Concordance.json`, with a parallel CSV. Every mapping record supplies its domain, hypotheses, exact printed `hypotheses_tex`, statement, proof, dependencies, document label, evidence status, and declaration/file/hash anchors. There are 295 anchor occurrences, 294 distinct declarations, spanning 84 production source files. All names, source paths, declaration kinds, and hashes resolve against the preserved source inventory.
+
+## Mathematical coverage and limits
+
+The paper develops exact and redundant representations, hidden-return memory, finite-dimensional behavioral minimality, approximate discrete and continuous transport, Hilbert obstruction geometry, canonical reconstruction, Tikhonov regularization, strong and uniform limiting behavior, discrepancy rules, inexact solves, changing operators, source-bound-free acceptance, and calibration frames. Worked examples expose the hidden-return index, sharp growth budgets, dense nonclosed ranges, discrepancy endpoints, and unobserved calibration directions. The final scope section identifies the stable target-only recovery bridge and the derivation of a whole-operator truth allowance from individual noisy calibration samples as open work.
+
+The manuscript preserves the following substantive gates: the compatible redundant-coordinate identity rather than the full ambient identity; reachable-image minimality rather than unconditional whole-model minimality; a finite operation alphabet for a finite word certificate; bounded autonomous real Banach generators for continuous flow; actual closed range where bounded inversion requires it; identifiable source recovery rather than recovery of a kernel component; nontrivial filters for the uniform-limit equivalence; strict discrepancy endpoint inequalities; feasibility assumptions for parameter-selection existence; and externally justified operator-norm calibration truth bounds. Noncomputable parameter witnesses are distinguished from executable interval searches. Changing operators retain the same recovery Hilbert spaces and the fixed limiting true operator. Approximate calibration frames retain their defect threshold.
+
+## Review and corrections
+
+Final self-review applied the mathematical proofreading checklist and proof-audit obligations to the authored material. A separate raw-source reviewer examined the late blocks and wrote the SR-49–SR-64 proof chunk from their exact contracts. The cross-document reviewer checked all 64 statement synopses, the complete SR-49–SR-64 proofs, the source map, and the final printed scope refinements. The independent traditional proof reviewer examined all SR-01–SR-48 proofs and 62 declarations or definitions across 26 production modules. The reviewers' own reports delimit these read-only checks; the evidence is not a fresh execution of the complete Lean project or an external historical-priority survey.
+
+Both independent publication reviews accepted the final assembled manuscript. The early-proof review checked 219 declaration locators and hashes and froze against TeX SHA-256 `05f52b2a7e0e687fdcd60eb5fc9e71ce2343a352b811081f447c2c8d16d87483` and concordance SHA-256 `0876e7a6040ec46ce1af1ab147246c7da741e1880106dcfe2707d18e48be2a83`. The final companion review confirmed every printed setup and exact agreement with the Lean guide's 64-group source map. No remaining internal mathematical defect was found within those stated review bounds.
+
+The publication review corrected the following authored scope issues without modifying the archived Lean source:
+
+- SR-12 now explicitly requires a finite operation alphabet.
+- SR-62 restores real Hilbert recovery spaces, fixed true operator, fixed nonnegative discrepancy multiplier, and an identifiable true source after the weaker calibration-frame setup. Its arbitrary-source specialization explicitly uses the identifiable projection of that same source and genuine data-error bounds.
+- Every group now prints its domain and hypotheses in both TeX and Markdown. In particular, SR-22 prints both whole-flow norm envelopes, arbitrary real growth rates, and nonnegative time; SR-16 prints the nonexpansive true-family premise for its contractive branch.
+- SR-03 prints the typed source-to-visible-to-obstruction chain. SR-47 distinguishes its pointwise noise allowance from its indexed vanishing-noise family and states the selector's strict feasibility gate.
+
+These were changes to theorem scope and quantifiers, so they were subjected to mathematical review rather than classified as copyediting. Formatting corrections resolved the cover page anchor, long inline formulas, Unicode-to-TeX setup rendering, and lost source anchors in the initial Markdown conversion. The final Markdown includes all 64 theorem titles, 64 proofs, 64 hypothesis setups, and all 295 source-anchor occurrences.
+
+## Build and visual verification
+
+The final PDF was rebuilt by `python3 build_release.py --only traditional` from the release root, using three deterministic pdfLaTeX passes. The final log has no warnings, undefined references, or overfull/underfull boxes. Its 46 physical pages were checked for text outside page bounds, with none found. Representative physical pages 1, 2, 3, 6, 11, 13, 16, 25, 34, 38, 41, and 46 were rendered; final cover, theorem setup/proof pages, late calibration material, and the closing appendix were inspected visually. The paper has 130 display-math groups. The unnumbered cover explains the difference between physical PDF pages and printed body pagination.
+
+`reviews/TRADITIONAL_QA.json` records the machine-readable counts, hashes, page-bound checks, render coverage, and review scope. The exact final PDF SHA-256 is `380ea84e66f732c5653653d109e9510d7330ab4192cc4c924ada0949f131cc9b`.
+
+For editable manuscript regeneration, run `python3 traditional/assemble_traditional.py`, then `python3 traditional/build_markdown.py`, followed by the release builder above. `traditional/build_traditional.py` also provides a standalone three-pass local build and Markdown conversion; neither builder executes Lean. The complete source ZIP includes the `.md` files, editable manuscript sources, mapping files, and rebuild scripts. The paper states this source-availability note explicitly.
+
+No production Lean source was changed by the manuscript work. Fresh whole-project Lean compilation is not claimed in this report; the formal execution provenance, adapted verification wrappers, preserved originals, and bounded computational checks are recorded separately by the release integrator.

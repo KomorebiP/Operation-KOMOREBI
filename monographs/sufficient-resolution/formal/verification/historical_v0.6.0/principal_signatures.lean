@@ -1,0 +1,10 @@
+import Komorebi
+
+#check Komorebi.SufficientResolution.BlockDynamics.discrete_memory_equation
+#check Komorebi.SufficientResolution.BlockDynamics.prepared_powers_iff_memory_zero
+#check Komorebi.SufficientResolution.BlockDynamics.power_defects_zero_iff_memory_zero
+#check Komorebi.SufficientResolution.BlockDynamics.prepared_powers_iff_finite_horizon
+#check Komorebi.SufficientResolution.BlockDynamics.memory_zero_of_annihilator
+#check Komorebi.SufficientResolution.BlockDynamics.all_state_closure_iff_B_zero
+#check Komorebi.SufficientResolution.BlockDynamics.first_return_discrepancy
+#check Komorebi.SufficientResolution.SplitCompression.exact_powers_iff_canonical_finite_horizon

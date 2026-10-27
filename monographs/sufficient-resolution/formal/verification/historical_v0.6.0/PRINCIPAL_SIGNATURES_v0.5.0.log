@@ -1,0 +1,148 @@
+@Komorebi.SufficientResolution.ContinuousFlow.variation_of_constants : ∀ {X : Type u_1} [inst : NormedAddCommGroup X]
+  [inst_1 : NormedSpace ℝ X] [CompleteSpace X] (D : X →L[ℝ] X) (z f : ℝ → X),
+  Continuous f →
+    (∀ (s : ℝ), HasDerivAt z (D (z s) + f s) s) →
+      ∀ (t : ℝ),
+        z t =
+          (Komorebi.SufficientResolution.ContinuousFlow.flow D t) (z 0) +
+            ∫ (s : ℝ) in 0..t, (Komorebi.SufficientResolution.ContinuousFlow.flow D (t - s)) (f s)
+@Komorebi.SufficientResolution.ContinuousFlow.mapped_flow_hasSum : ∀ {X : Type u_1} {W : Type u_2}
+  [inst : NormedAddCommGroup X] [inst_1 : NormedSpace ℝ X] [CompleteSpace X] [inst_3 : NormedAddCommGroup W]
+  [inst_4 : NormedSpace ℝ W] (L : X →L[ℝ] X) (K : (X →L[ℝ] X) →L[ℝ] W) (t : ℝ),
+  HasSum (fun n => ((↑n.factorial)⁻¹ * t ^ n) • K (L ^ n)) (K (Komorebi.SufficientResolution.ContinuousFlow.flow L t))
+@Komorebi.SufficientResolution.ContinuousFlow.mapped_flow_eq_iff_powers_eq : ∀ {X : Type u_1} {Z : Type u_2}
+  {W : Type u_3} [inst : NormedAddCommGroup X] [inst_1 : NormedSpace ℝ X] [CompleteSpace X]
+  [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace ℝ Z] [CompleteSpace Z] [inst_6 : NormedAddCommGroup W]
+  [inst_7 : NormedSpace ℝ W] (L : X →L[ℝ] X) (D : Z →L[ℝ] Z) (K : (X →L[ℝ] X) →L[ℝ] W) (J : (Z →L[ℝ] Z) →L[ℝ] W),
+  (∀ (t : ℝ),
+      K (Komorebi.SufficientResolution.ContinuousFlow.flow L t) =
+        J (Komorebi.SufficientResolution.ContinuousFlow.flow D t)) ↔
+    ∀ (n : ℕ), K (L ^ n) = J (D ^ n)
+@Komorebi.SufficientResolution.ContinuousFlow.compressed_flow_defect : ∀ {X : Type u_1} {Z : Type u_2}
+  [inst : NormedAddCommGroup X] [inst_1 : NormedSpace ℝ X] [CompleteSpace X] [inst_3 : NormedAddCommGroup Z]
+  [inst_4 : NormedSpace ℝ Z] (C : X →L[ℝ] Z) (R : Z →L[ℝ] X) (L : X →L[ℝ] X) (s t : ℝ),
+  C ∘SL Komorebi.SufficientResolution.ContinuousFlow.flow L (s + t) ∘SL R -
+      (C ∘SL Komorebi.SufficientResolution.ContinuousFlow.flow L s ∘SL R) ∘SL
+        C ∘SL Komorebi.SufficientResolution.ContinuousFlow.flow L t ∘SL R =
+    C ∘SL
+      Komorebi.SufficientResolution.ContinuousFlow.flow L s ∘SL
+        (1 - R ∘SL C) ∘SL Komorebi.SufficientResolution.ContinuousFlow.flow L t ∘SL R
+@Komorebi.SufficientResolution.ContinuousFlow.compressed_flow_iff_finite_generator : ∀ {X : Type u_1} {Z : Type u_2}
+  [inst : NormedAddCommGroup X] [inst_1 : NormedSpace ℝ X] [inst_2 : NormedAddCommGroup Z] [inst_3 : NormedSpace ℝ Z]
+  [CompleteSpace X] [CompleteSpace Z] (C : X →L[ℝ] Z) (R : Z →L[ℝ] X),
+  C ∘SL R = 1 →
+    ∀ (L : X →L[ℝ] X) [FiniteDimensional ℝ ↥(↑C).ker],
+      (∀ (t : ℝ),
+          C ∘SL Komorebi.SufficientResolution.ContinuousFlow.flow L t ∘SL R =
+            Komorebi.SufficientResolution.ContinuousFlow.flow (C ∘SL L ∘SL R) t) ↔
+        ∀ n ≤ Module.finrank ℝ ↥(↑C).ker + 1, C ∘SL (L ^ n) ∘SL R = C ∘SL L ∘SL R ^ n
+@Komorebi.SufficientResolution.ContinuousFlow.intertwines_flow_iff_generators : ∀ {X : Type u_1} {Z : Type u_2}
+  [inst : NormedAddCommGroup X] [inst_1 : NormedSpace ℝ X] [inst_2 : NormedAddCommGroup Z] [inst_3 : NormedSpace ℝ Z]
+  [CompleteSpace X] [CompleteSpace Z] (C : X →L[ℝ] Z) (L : X →L[ℝ] X) (A : Z →L[ℝ] Z),
+  (∀ (t : ℝ),
+      C ∘SL Komorebi.SufficientResolution.ContinuousFlow.flow L t =
+        Komorebi.SufficientResolution.ContinuousFlow.flow A t ∘SL C) ↔
+    C ∘SL L = A ∘SL C
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.hidden_elimination : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H] (y : V) (z : H)
+  (t : ℝ),
+  b.hiddenState y z t =
+    (Komorebi.SufficientResolution.ContinuousFlow.flow b.D t) z +
+      ∫ (s : ℝ) in 0..t, (Komorebi.SufficientResolution.ContinuousFlow.flow b.D (t - s)) (b.G (b.visible y z s))
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.continuous_memory_equation : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H] (y : V) (z : H)
+  (t : ℝ),
+  HasDerivAt (b.visible y z)
+    (b.A (b.visible y z t) + b.B ((Komorebi.SufficientResolution.ContinuousFlow.flow b.D t) z) +
+      ∫ (s : ℝ) in 0..t, (b.memory (t - s)) (b.visible y z s))
+    t
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_memory_equation : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H] (y : V) (t : ℝ),
+  HasDerivAt (fun s => (b.prepared s) y)
+    (b.A ((b.prepared t) y) + ∫ (s : ℝ) in 0..t, (b.memory (t - s)) ((b.prepared s) y)) t
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.full_solution_unique : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H] (x : ℝ → V × H),
+  (∀ (t : ℝ), HasDerivAt x (b.generator (x t)) t) →
+    x = fun t => (Komorebi.SufficientResolution.ContinuousFlow.flow b.generator t) (x 0)
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_exact_iff_memory_zero : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H],
+  (∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t) ↔ ∀ (t : ℝ), b.memory t = 0
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_semigroup_iff_exact : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H],
+  (∀ (s t : ℝ), b.prepared (s + t) = b.prepared s * b.prepared t) ↔
+    ∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_exact_iff_finite_memory : ∀ {V : Type u_1}
+  {H : Type u_2} [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H]
+  [inst_3 : NormedSpace ℝ H] (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V]
+  [CompleteSpace H] [FiniteDimensional ℝ H],
+  (∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t) ↔
+    ∀ k < Module.finrank ℝ H, b.memoryMoment k = 0
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_exact_iff_finite_generator : ∀ {V : Type u_1}
+  {H : Type u_2} [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H]
+  [inst_3 : NormedSpace ℝ H] (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V]
+  [CompleteSpace H] [FiniteDimensional ℝ H],
+  (∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t) ↔
+    ∀ n ≤ Module.finrank ℝ H + 1, b.generatorPrepared n = b.A ^ n
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_exact_of_annihilator : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H]
+  (p : Polynomial ℝ),
+  p.Monic →
+    (Polynomial.aeval b.linear.D) p = 0 →
+      (∀ k < p.natDegree, b.memoryMoment k = 0) →
+        ∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.all_state_closure_iff_B_zero : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H],
+  (∀ (t : ℝ) (y : V) (z : H), b.visible y z t = (Komorebi.SufficientResolution.ContinuousFlow.flow b.A t) y) ↔ b.B = 0
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.iteratedDeriv_prepared_zero : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [CompleteSpace V] [inst_3 : NormedAddCommGroup H]
+  [inst_4 : NormedSpace ℝ H] [CompleteSpace H] (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) (n : ℕ),
+  iteratedDeriv n b.prepared 0 = b.generatorPrepared n
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.iteratedDeriv_memory_zero : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  [CompleteSpace H] (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) (n : ℕ),
+  iteratedDeriv n b.memory 0 = b.memoryMoment n
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.first_return_derivative : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [CompleteSpace V] [inst_3 : NormedAddCommGroup H]
+  [inst_4 : NormedSpace ℝ H] [CompleteSpace H] (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) (k : ℕ),
+  (∀ j < k, b.memoryMoment j = 0) → iteratedDeriv (k + 2) b.prepared 0 - b.A ^ (k + 2) = b.memoryMoment k
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.prepared_exact_iff_finite_derivatives : ∀ {V : Type u_1}
+  {H : Type u_2} [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [CompleteSpace V]
+  [inst_3 : NormedAddCommGroup H] [inst_4 : NormedSpace ℝ H] [CompleteSpace H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [FiniteDimensional ℝ H],
+  (∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t) ↔
+    ∀ n ≤ Module.finrank ℝ H + 1, iteratedDeriv n b.prepared 0 = b.A ^ n
+@Komorebi.SufficientResolution.ContinuousBlockDynamics.nonclosure_has_finite_moment : ∀ {V : Type u_1} {H : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : NormedSpace ℝ V] [inst_2 : NormedAddCommGroup H] [inst_3 : NormedSpace ℝ H]
+  (b : Komorebi.SufficientResolution.ContinuousBlockDynamics V H) [CompleteSpace V] [CompleteSpace H]
+  [FiniteDimensional ℝ H],
+  (¬∀ (t : ℝ), b.prepared t = Komorebi.SufficientResolution.ContinuousFlow.flow b.A t) →
+    ∃ k < Module.finrank ℝ H, b.memoryMoment k ≠ 0
+Komorebi.SufficientResolution.ContinuousExamples.delayed_hidden_flow : ∀ (t : ℝ) (z : ℝ × ℝ),
+  (Komorebi.SufficientResolution.ContinuousFlow.flow Komorebi.SufficientResolution.ContinuousExamples.delayed.D t) z =
+    (z.1 + t * z.2, z.2)
+Komorebi.SufficientResolution.ContinuousExamples.delayed_memory : ∀ (t : ℝ),
+  Komorebi.SufficientResolution.ContinuousExamples.delayed.memory t = t • 1
+Komorebi.SufficientResolution.ContinuousExamples.delayed_first_return_derivative : iteratedDeriv 3
+      Komorebi.SufficientResolution.ContinuousExamples.delayed.prepared 0 -
+    Komorebi.SufficientResolution.ContinuousExamples.delayed.A ^ 3 =
+  1
+Komorebi.SufficientResolution.ContinuousExamples.delayed_nonclosure : ∃ t,
+  Komorebi.SufficientResolution.ContinuousExamples.delayed.prepared t ≠
+    Komorebi.SufficientResolution.ContinuousFlow.flow Komorebi.SufficientResolution.ContinuousExamples.delayed.A t
+Komorebi.SufficientResolution.ContinuousExamples.disconnected_prepared_exact : ∀ (t : ℝ),
+  Komorebi.SufficientResolution.ContinuousExamples.disconnectedReturn.prepared t =
+    Komorebi.SufficientResolution.ContinuousFlow.flow
+      Komorebi.SufficientResolution.ContinuousExamples.disconnectedReturn.A t
+Komorebi.SufficientResolution.ContinuousExamples.disconnected_all_state_not_closed : ¬∀ (t y : ℝ) (z : ℝ × ℝ),
+    Komorebi.SufficientResolution.ContinuousExamples.disconnectedReturn.visible y z t =
+      (Komorebi.SufficientResolution.ContinuousFlow.flow
+          Komorebi.SufficientResolution.ContinuousExamples.disconnectedReturn.A t)
+        y

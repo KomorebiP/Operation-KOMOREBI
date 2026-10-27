@@ -1,0 +1,118 @@
+Komorebi.SufficientResolution.GeneralizedDiscrepancy.regularized_norm_domination.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (C : G →L[ℝ] V) (v : V) (eta delta lam : ℝ) (hl : 0 < lam) (p : G)
+  (hd : 0 ≤ delta) (hp : ‖C p - v‖ ≤ Komorebi.SufficientResolution.GeneralizedDiscrepancy.candidateNoise eta delta p)
+  (hlo :
+    Komorebi.SufficientResolution.GeneralizedDiscrepancy.candidateNoise eta delta
+        ((Komorebi.SufficientResolution.TikhonovConstruction.regularized C lam hl) v) ≤
+      ‖C ((Komorebi.SufficientResolution.TikhonovConstruction.regularized C lam hl) v) - v‖) :
+  ‖(Komorebi.SufficientResolution.TikhonovConstruction.regularized C lam hl) v‖ ≤ ‖p‖
+Komorebi.SufficientResolution.GeneralizedDiscrepancy.accepted_norm_control.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (p x : G) (v : V) (eta delta tau : ℝ) (hd : ‖C - A‖ ≤ delta)
+  (he : ‖A p - v‖ ≤ eta) (hx : Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted C v eta delta tau x) :
+  ‖x‖ ≤ ‖p‖
+Komorebi.SufficientResolution.GeneralizedDiscrepancy.accepted_true_residual.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (p x : G) (v : V) (eta delta tau : ℝ) (ht : 0 ≤ tau) (hd : ‖C - A‖ ≤ delta)
+  (he : ‖A p - v‖ ≤ eta) (hx : Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted C v eta delta tau x) :
+  ‖A x - A p‖ ≤ (tau + 1) * Komorebi.SufficientResolution.GeneralizedDiscrepancy.candidateNoise eta delta p
+Komorebi.SufficientResolution.GeneralizedDiscrepancy.accepted_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V) (v : ι → V) (eta delta : ι → ℝ)
+  (x : ι → G) (p : G) (tau : ℝ) (hp : p ∈ (↑A).kerᗮ) (ht : 0 ≤ tau) (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i)
+  (he : ∀ (i : ι), ‖A p - v i‖ ≤ eta i)
+  (hx :
+    ∀ (i : ι), Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted (C i) (v i) (eta i) (delta i) tau (x i))
+  (heta0 : Filter.Tendsto eta f (nhds 0)) (hdelta0 : Filter.Tendsto delta f (nhds 0)) : Filter.Tendsto x f (nhds p)
+Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.positive_parameter_source.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A C : G →L[ℝ] V) (p : G) (v : V) (eta delta tau : ℝ) (_heta : 0 < eta)
+  (htau : 1 < tau) (hd : ‖C - A‖ ≤ delta) (he : ‖A p - v‖ ≤ eta) (hrel : delta * ‖p‖ < (tau - 1) * eta)
+  (hlarge : tau * eta < ‖v‖) :
+  ∃ lam,
+    ∃ (hl : 0 < lam),
+      have x := (Komorebi.SufficientResolution.TikhonovConstruction.regularized C lam hl) v;
+      Komorebi.SufficientResolution.DiscrepancyResidual.residual C v lam = tau * eta ∧
+        Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted C v eta delta tau x ∧ ‖x‖ ≤ ‖p‖
+Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.exists_accepted.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (p : G) (v : V) (eta delta tau : ℝ) (heta : 0 < eta) (htau : 1 < tau)
+  (hd : ‖C - A‖ ≤ delta) (he : ‖A p - v‖ ≤ eta) (hrel : delta * ‖p‖ < (tau - 1) * eta) :
+  ∃ x, Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted C v eta delta tau x ∧ ‖x‖ ≤ ‖p‖
+Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.selectedSource_accepted.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A C : G →L[ℝ] V) (p : G) (v : V) (eta delta tau : ℝ) (heta : 0 < eta)
+  (htau : 1 < tau) (hd : ‖C - A‖ ≤ delta) (he : ‖A p - v‖ ≤ eta) (hrel : delta * ‖p‖ < (tau - 1) * eta) :
+  Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted C v eta delta tau
+    (Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.selectedSource A C p v eta delta tau heta htau hd he
+      hrel)
+Komorebi.SufficientResolution.GeneralizedDiscrepancyConsistency.selected_consistent.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V)
+  (v : ι → V) (eta delta : ι → ℝ) (p : G) (tau : ℝ) (hp : p ∈ (↑A).kerᗮ) (heta : ∀ (i : ι), 0 < eta i) (htau : 1 < tau)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A p - v i‖ ≤ eta i)
+  (hrel : ∀ (i : ι), delta i * ‖p‖ < (tau - 1) * eta i) (heta0 : Filter.Tendsto eta f (nhds 0))
+  (hdelta0 : Filter.Tendsto delta f (nhds 0)) :
+  Filter.Tendsto
+    (fun i =>
+      Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.selectedSource A (C i) p (v i) (eta i) (delta i) tau
+        ⋯ htau ⋯ ⋯ ⋯)
+    f (nhds p)
+Komorebi.SufficientResolution.GeneralizedDiscrepancyConsistency.selected_error_norm_limit.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V)
+  (v : ι → V) (eta delta : ι → ℝ) (g : G) (tau : ℝ) (heta : ∀ (i : ι), 0 < eta i) (htau : 1 < tau)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A g - v i‖ ≤ eta i)
+  (hrel : ∀ (i : ι), delta i * ‖(↑A).kerᗮ.starProjection g‖ < (tau - 1) * eta i) (heta0 : Filter.Tendsto eta f (nhds 0))
+  (hdelta0 : Filter.Tendsto delta f (nhds 0)) :
+  Filter.Tendsto
+    (fun i =>
+      ‖Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.selectedSource A (C i) ((↑A).kerᗮ.starProjection g)
+            (v i) (eta i) (delta i) tau ⋯ htau ⋯ ⋯ ⋯ -
+          g‖)
+    f (nhds ‖(↑A).ker.starProjection g‖)
+Komorebi.SufficientResolution.GeneralizedInexact.near_consistent.{u_1, u_2, u_3} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V) (v : ι → V)
+  (eta delta kappa : ι → ℝ) (x : ι → G) (p : G) (tau : ℝ) (hp : p ∈ (↑A).kerᗮ) (ht : 0 ≤ tau)
+  (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A p - v i‖ ≤ eta i)
+  (hx :
+    ∀ (i : ι),
+      Komorebi.SufficientResolution.GeneralizedInexact.NearAccepted (C i) (v i) (eta i) (delta i) tau (kappa i) (x i))
+  (heta0 : Filter.Tendsto eta f (nhds 0)) (hdelta0 : Filter.Tendsto delta f (nhds 0))
+  (hkappa0 : Filter.Tendsto kappa f (nhds 0)) : Filter.Tendsto x f (nhds p)
+Komorebi.SufficientResolution.GeneralizedInexact.near_source_condition_rate.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A C : G →L[ℝ] V) (w : V) (x : G) (v : V) (eta delta tau kappa : ℝ) (ht : 0 ≤ tau)
+  (hd : ‖C - A‖ ≤ delta) (he : ‖A ((ContinuousLinearMap.adjoint A) w) - v‖ ≤ eta)
+  (hx : Komorebi.SufficientResolution.GeneralizedInexact.NearAccepted C v eta delta tau kappa x) :
+  ‖x - (ContinuousLinearMap.adjoint A) w‖ ^ 2 ≤
+    2 * kappa ^ 2 +
+      4 * ‖w‖ * (tau + 1) *
+        Komorebi.SufficientResolution.GeneralizedDiscrepancy.candidateNoise eta delta
+          ((ContinuousLinearMap.adjoint A) w)
+Komorebi.SufficientResolution.GeneralizedFeasibility.exists_accepted_of_scaled_error.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A C : G →L[ℝ] V) (p : G) (v : V) (eta delta gamma tau : ℝ) (heta : 0 < eta)
+  (htau : 1 < tau) (hd : ‖C - A‖ ≤ delta) (he : ‖A p - v‖ ≤ eta) (hscale : delta ≤ gamma * eta)
+  (hmargin : gamma * ‖p‖ < tau - 1) :
+  ∃ x, Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted C v eta delta tau x ∧ ‖x‖ ≤ ‖p‖
+Komorebi.SufficientResolution.GeneralizedFeasibility.selected_consistent_of_scaled_error.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] {ι : Type u_3} (f : Filter ι) (A : G →L[ℝ] V) (C : ι → G →L[ℝ] V)
+  (v : ι → V) (eta delta gamma : ι → ℝ) (p : G) (tau : ℝ) (hp : p ∈ (↑A).kerᗮ) (heta : ∀ (i : ι), 0 < eta i)
+  (htau : 1 < tau) (hd : ∀ (i : ι), ‖C i - A‖ ≤ delta i) (he : ∀ (i : ι), ‖A p - v i‖ ≤ eta i)
+  (hscale : ∀ (i : ι), delta i ≤ gamma i * eta i) (hmargin : ∀ (i : ι), gamma i * ‖p‖ < tau - 1)
+  (heta0 : Filter.Tendsto eta f (nhds 0)) (hdelta0 : Filter.Tendsto delta f (nhds 0)) :
+  Filter.Tendsto
+    (fun i =>
+      Komorebi.SufficientResolution.GeneralizedDiscrepancySelection.selectedSource A (C i) p (v i) (eta i) (delta i) tau
+        ⋯ htau ⋯ ⋯ ⋯)
+    f (nhds p)
+Komorebi.SufficientResolution.GeneralizedDiscrepancyExamples.identity_candidate_accepted :
+  Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted
+    (Komorebi.SufficientResolution.TikhonovExamples.scalar 1) 1 (1 / 10) 0 2 (4 / 5)
+Komorebi.SufficientResolution.GeneralizedDiscrepancyExamples.zero_model_not_accepted (x : ℝ) :
+  ¬Komorebi.SufficientResolution.GeneralizedDiscrepancy.Accepted
+      (Komorebi.SufficientResolution.TikhonovExamples.scalar 0) 1 (1 / 10) 1 2 x

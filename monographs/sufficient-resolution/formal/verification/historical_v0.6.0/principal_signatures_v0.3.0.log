@@ -1,0 +1,67 @@
+@Komorebi.SufficientResolution.FiniteHorizon.visibleKernel_stabilizes : ∀ {K : Type u_1} [inst : Field K] {X : Type u_2}
+  [inst_1 : AddCommGroup X] [inst_2 : Module K X] {Y : Type u_3} [inst_3 : AddCommGroup Y] [inst_4 : Module K Y]
+  {I : Type u_4} (T : I → X →ₗ[K] X) (O : X →ₗ[K] Y) [FiniteDimensional K X],
+  Komorebi.SufficientResolution.FiniteHorizon.visibleKernel T O (Module.finrank K ↥O.ker) =
+    Komorebi.SufficientResolution.Behavioral.invisible T O
+@Komorebi.SufficientResolution.FiniteHorizon.same_future_iff_bounded : ∀ {K : Type u_1} [inst : Field K] {X : Type u_2}
+  [inst_1 : AddCommGroup X] [inst_2 : Module K X] {Y : Type u_3} [inst_3 : AddCommGroup Y] [inst_4 : Module K Y]
+  {I : Type u_4} (T : I → X →ₗ[K] X) (O : X →ₗ[K] Y) [FiniteDimensional K X] (x y : X),
+  (∀ (w : List I),
+      O ((Komorebi.SufficientResolution.Behavioral.wordOp T w) x) =
+        O ((Komorebi.SufficientResolution.Behavioral.wordOp T w) y)) ↔
+    ∀ (w : List I),
+      w.length ≤ Module.finrank K ↥O.ker →
+        O ((Komorebi.SufficientResolution.Behavioral.wordOp T w) x) =
+          O ((Komorebi.SufficientResolution.Behavioral.wordOp T w) y)
+@Komorebi.SufficientResolution.BehavioralMinimality.finrank_state_le_model : ∀ {K : Type u_1} [inst : Field K]
+  {X : Type u_2} [inst_1 : AddCommGroup X] [inst_2 : Module K X] {Y : Type u_3} [inst_3 : AddCommGroup Y]
+  [inst_4 : Module K Y] {Z : Type u_4} [inst_5 : AddCommGroup Z] [inst_6 : Module K Z] {I : Type u_5}
+  (T : I → X →ₗ[K] X) (O : X →ₗ[K] Y) (q : X →ₗ[K] Z) (U : I → Z →ₗ[K] Z) (V : Z →ₗ[K] Y),
+  (∀ (i : I), q ∘ₗ T i = U i ∘ₗ q) →
+    V ∘ₗ q = O →
+      ∀ [FiniteDimensional K X] [FiniteDimensional K Z],
+        Module.finrank K (Komorebi.SufficientResolution.Behavioral.State T O) ≤ Module.finrank K Z
+@Komorebi.SufficientResolution.FiniteObservableModel.observableEquiv : {I : Type u_4} →
+  [inst : Fintype I] →
+    [inst_1 : DecidableEq I] →
+      {K : Type u_1} →
+        [inst_2 : Field K] →
+          {X : Type u_2} →
+            [inst_3 : AddCommGroup X] →
+              [inst_4 : Module K X] →
+                {Y : Type u_3} →
+                  [inst_5 : AddCommGroup Y] →
+                    [inst_6 : Module K Y] →
+                      (T : I → X →ₗ[K] X) →
+                        (O : X →ₗ[K] Y) →
+                          [FiniteDimensional K X] →
+                            Komorebi.SufficientResolution.Behavioral.State T O ≃ₗ[K]
+                              ↥(Komorebi.SufficientResolution.FiniteObservableModel.ObservableState T O)
+@Komorebi.SufficientResolution.FiniteObservableModel.coordinate_all_future_fidelity : ∀ {I : Type u_4}
+  [inst : Fintype I] [inst_1 : DecidableEq I] {K : Type u_1} [inst_2 : Field K] {X : Type u_2} [inst_3 : AddCommGroup X]
+  [inst_4 : Module K X] {Y : Type u_3} [inst_5 : AddCommGroup Y] [inst_6 : Module K Y] (T : I → X →ₗ[K] X)
+  (O : X →ₗ[K] Y) [inst_7 : FiniteDimensional K X] (w : List I) (x : X),
+  (Komorebi.SufficientResolution.FiniteObservableModel.coordinateObservation T O)
+      ((Komorebi.SufficientResolution.Behavioral.wordOp
+          (Komorebi.SufficientResolution.FiniteObservableModel.coordinateDynamics T O) w)
+        ((Komorebi.SufficientResolution.FiniteObservableModel.coordinateMap T O) x)) =
+    O ((Komorebi.SufficientResolution.Behavioral.wordOp T w) x)
+@Komorebi.SufficientResolution.FiniteCertificate.certificate_kernel_eq : ∀ {K : Type u_1} [inst : Field K]
+  {X : Type u_2} [inst_1 : AddCommGroup X] [inst_2 : Module K X] {Y : Type u_3} [inst_3 : AddCommGroup Y]
+  [inst_4 : Module K Y] {Z : Type u_4} [inst_5 : AddCommGroup Z] [inst_6 : Module K Z] {I : Type u_5}
+  [inst_7 : Fintype I] [inst_8 : DecidableEq I] {T : I → X →ₗ[K] X} {O : X →ₗ[K] Y} {q : X →ₗ[K] Z} {r : ℕ}
+  (c : Komorebi.SufficientResolution.FiniteCertificate.Certificate T O q r),
+  q.ker = Komorebi.SufficientResolution.Behavioral.invisible T O
+@Komorebi.SufficientResolution.FiniteCertificate.certificateEquiv_dynamics : ∀ {K : Type u_1} [inst : Field K]
+  {X : Type u_2} [inst_1 : AddCommGroup X] [inst_2 : Module K X] {Y : Type u_3} [inst_3 : AddCommGroup Y]
+  [inst_4 : Module K Y] {Z : Type u_4} [inst_5 : AddCommGroup Z] [inst_6 : Module K Z] {I : Type u_5}
+  [inst_7 : Fintype I] [inst_8 : DecidableEq I] {T : I → X →ₗ[K] X} {O : X →ₗ[K] Y} {q : X →ₗ[K] Z} {r : ℕ}
+  (c : Komorebi.SufficientResolution.FiniteCertificate.Certificate T O q r) (hq : Function.Surjective ⇑q) (i : I)
+  (z : Z),
+  (Komorebi.SufficientResolution.FiniteCertificate.certificateEquiv c hq) ((c.dynamics i) z) =
+    (Komorebi.SufficientResolution.Behavioral.induced T O i)
+      ((Komorebi.SufficientResolution.FiniteCertificate.certificateEquiv c hq) z)
+Komorebi.SufficientResolution.ObservableExamples.smallest_dimension : Module.finrank ℚ
+    (Komorebi.SufficientResolution.Behavioral.State Komorebi.SufficientResolution.ObservableExamples.operations
+      Komorebi.SufficientResolution.ObservableExamples.readout) =
+  2

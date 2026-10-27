@@ -1,0 +1,13 @@
+import Komorebi.SufficientResolution.ContinuousFlow
+#check ContinuousLinearMap.compL
+#check ContinuousLinearMap.flip
+#check HasSum.map
+#check ContinuousLinearMap.hasSum
+#check ContinuousLinearMap.map_tsum
+#check ContinuousLinearMap.hasDerivAt
+#check hasDerivAt_const
+#check HasDerivAt.congr_of_eventuallyEq
+#check HasSum.unique
+#check Continuous.clm_apply
+#check NormedSpace.exp_series_hasSum_exp'
+#check ContinuousLinearMap.toLinearMap_injective

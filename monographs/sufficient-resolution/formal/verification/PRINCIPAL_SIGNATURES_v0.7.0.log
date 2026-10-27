@@ -1,0 +1,170 @@
+@Komorebi.SufficientResolution.FiniteGlobalization.finite_residual_bound_iff_exact : ∀ {G : Type u_1} {V : Type u_2}
+  {W : Type u_3} [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V]
+  [inst_3 : InnerProductSpace ℝ V] [inst_4 : NormedAddCommGroup W] [inst_5 : NormedSpace ℝ W] (A : G →ₗ[ℝ] V)
+  (delta : V →L[ℝ] W) [FiniteDimensional ℝ V],
+  ↑delta ∘ₗ A = 0 → ((∃ c, 0 < c ∧ ∀ (v : V), Metric.infDist v ↑A.range ≤ c * ‖delta v‖) ↔ A.range = (↑delta).ker)
+@Komorebi.SufficientResolution.FiniteGlobalization.finite_conditioned_globalization : ∀ {G : Type u_1} {V : Type u_2}
+  {W : Type u_3} [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V]
+  [inst_3 : InnerProductSpace ℝ V] [inst_4 : NormedAddCommGroup W] [inst_5 : NormedSpace ℝ W] (A : G →ₗ[ℝ] V)
+  (delta : V →L[ℝ] W) [inst_6 : FiniteDimensional ℝ V],
+  ↑delta ∘ₗ A = 0 →
+    ∃ sigma,
+      0 < sigma ∧
+        Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel delta sigma ∧
+          ∀ (v : V),
+            ∃ g,
+              A g = (Komorebi.SufficientResolution.OrthogonalResolution.realized A.range) v ∧
+                ‖v - A g‖ ^ 2 =
+                    ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction A.range (↑delta).ker) v‖ ^ 2 +
+                      ‖(Komorebi.SufficientResolution.OrthogonalResolution.inconsistency (↑delta).ker) v‖ ^ 2 ∧
+                  ‖v - A g‖ ^ 2 ≤
+                    ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction A.range (↑delta).ker) v‖ ^ 2 +
+                      (‖delta v‖ / sigma) ^ 2
+@Komorebi.SufficientResolution.FiniteGlobalization.finite_unique_harmonic_representative : ∀ {G : Type u_1}
+  {V : Type u_2} {W : Type u_3} [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V]
+  [inst_3 : InnerProductSpace ℝ V] [inst_4 : NormedAddCommGroup W] [inst_5 : NormedSpace ℝ W] (A : G →ₗ[ℝ] V)
+  (delta : V →L[ℝ] W) [FiniteDimensional ℝ V],
+  ↑delta ∘ₗ A = 0 →
+    ∀ (c : Komorebi.SufficientResolution.Globalization.ObstructionSpace A ↑delta),
+      ∃! v, (Komorebi.SufficientResolution.HilbertGlobalization.harmonicToQuotient A delta) v = c
+@Komorebi.SufficientResolution.FiniteGlobalization.closed_range_best_global : ∀ {G : Type u_1} {V : Type u_2}
+  [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V] [inst_3 : InnerProductSpace ℝ V]
+  (A : G →ₗ[ℝ] V) [CompleteSpace V], IsClosed ↑A.range → ∀ (v : V), ∃ g, ‖v - A g‖ = Metric.infDist v ↑A.range
+@Komorebi.SufficientResolution.FiniteGlobalization.closed_range_zero_distance_iff_realizable : ∀ {G : Type u_1}
+  {V : Type u_2} [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V]
+  [inst_3 : InnerProductSpace ℝ V] (A : G →ₗ[ℝ] V) [CompleteSpace V],
+  IsClosed ↑A.range → ∀ (v : V), Metric.infDist v ↑A.range = 0 ↔ ∃ g, A g = v
+@Komorebi.SufficientResolution.FiniteGlobalization.finite_unique_best_preimage : ∀ {G : Type u_1} {V : Type u_2}
+  [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V] [inst_3 : InnerProductSpace ℝ V]
+  (A : G →ₗ[ℝ] V) [FiniteDimensional ℝ V],
+  Function.Injective ⇑A → ∀ (v : V), ∃! g, ‖v - A g‖ = Metric.infDist v ↑A.range
+Komorebi.SufficientResolution.GlobalizationExamples.zero_residual_cannot_bound_obstruction : ∀ (c : ℝ),
+  ¬∀ (v : ℝ), Metric.infDist v ↑⊥ ≤ c * ‖0 v‖
+Komorebi.SufficientResolution.GlobalizationExamples.scalar_conditioned_bound_attained : ∀ (s : ℝ),
+  0 < s →
+    Metric.infDist 1 ↑⊥ ^ 2 = (‖(Komorebi.SufficientResolution.GlobalizationExamples.scaledCompatibility s) 1‖ / s) ^ 2
+Komorebi.SufficientResolution.GlobalizationExamples.arbitrarily_small_residual_unit_error : ∀ (epsilon : ℝ),
+  0 < epsilon →
+    ∃ s,
+      0 < s ∧
+        (↑(Komorebi.SufficientResolution.GlobalizationExamples.scaledCompatibility s)).ker = ⊥ ∧
+          ‖(Komorebi.SufficientResolution.GlobalizationExamples.scaledCompatibility s) 1‖ = epsilon ∧
+            Metric.infDist 1 ↑⊥ = 1
+Komorebi.SufficientResolution.GlobalizationExamples.no_uniform_conditioning_over_scalar_family : ∀ (c : ℝ),
+  0 ≤ c →
+    ∃ s,
+      0 < s ∧
+        (↑(Komorebi.SufficientResolution.GlobalizationExamples.scaledCompatibility s)).ker = ⊥ ∧
+          c * ‖(Komorebi.SufficientResolution.GlobalizationExamples.scaledCompatibility s) 1‖ < Metric.infDist 1 ↑⊥
+@Komorebi.SufficientResolution.GlobalizationRefinement.obstruction_refinement_sq : ∀ {V : Type u_1}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] (R₀ R₁ K : Submodule ℝ V)
+  [inst_2 : R₀.HasOrthogonalProjection] [inst_3 : R₁.HasOrthogonalProjection] [inst_4 : K.HasOrthogonalProjection],
+  R₀ ≤ R₁ →
+    R₁ ≤ K →
+      ∀ (v : V),
+        ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R₀ K) v‖ ^ 2 =
+          ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R₁ K) v‖ ^ 2 +
+            ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R₀ R₁) v‖ ^ 2
+@Komorebi.SufficientResolution.GlobalizationRefinement.distance_refinement_sq : ∀ {V : Type u_1}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] (R₀ R₁ : Submodule ℝ V)
+  [inst_2 : R₀.HasOrthogonalProjection] [inst_3 : R₁.HasOrthogonalProjection],
+  R₀ ≤ R₁ →
+    ∀ (v : V),
+      Metric.infDist v ↑R₀ ^ 2 =
+        Metric.infDist v ↑R₁ ^ 2 + ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R₀ R₁) v‖ ^ 2
+@Komorebi.SufficientResolution.GlobalizationRefinement.no_gain_iff_equal_distance : ∀ {V : Type u_1}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] (R₀ R₁ : Submodule ℝ V)
+  [inst_2 : R₀.HasOrthogonalProjection] [inst_3 : R₁.HasOrthogonalProjection],
+  R₀ ≤ R₁ →
+    ∀ (v : V),
+      Metric.infDist v ↑R₀ = Metric.infDist v ↑R₁ ↔
+        (Komorebi.SufficientResolution.OrthogonalResolution.obstruction R₀ R₁) v = 0
+@Komorebi.SufficientResolution.HilbertConditioning.exists_coercivity_finite : ∀ {V : Type u_1} {W : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] [inst_2 : NormedAddCommGroup W]
+  [inst_3 : NormedSpace ℝ W] (delta : V →L[ℝ] W) [FiniteDimensional ℝ V],
+  ∃ sigma, 0 < sigma ∧ Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel delta sigma
+@Komorebi.SufficientResolution.HilbertConditioning.conditioned_distance_sq : ∀ {V : Type u_1} {W : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] [inst_2 : NormedAddCommGroup W]
+  [inst_3 : NormedSpace ℝ W] (delta : V →L[ℝ] W) [inst_4 : (↑delta).ker.HasOrthogonalProjection] (R : Submodule ℝ V)
+  [inst_5 : R.HasOrthogonalProjection],
+  R ≤ (↑delta).ker →
+    ∀ (sigma : ℝ),
+      0 < sigma →
+        Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel delta sigma →
+          ∀ (v : V),
+            Metric.infDist v ↑R ^ 2 ≤
+              ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R (↑delta).ker) v‖ ^ 2 +
+                (‖delta v‖ / sigma) ^ 2
+@Komorebi.SufficientResolution.HilbertConditioning.exact_of_residual_distance_bound : ∀ {V : Type u_1} {W : Type u_2}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] [inst_2 : NormedAddCommGroup W]
+  [inst_3 : NormedSpace ℝ W] (delta : V →L[ℝ] W) (R : Submodule ℝ V) [R.HasOrthogonalProjection],
+  R ≤ (↑delta).ker → ∀ (c : ℝ), (∀ (v : V), Metric.infDist v ↑R ≤ c * ‖delta v‖) → R = (↑delta).ker
+@Komorebi.SufficientResolution.HilbertGlobalization.exists_best_global_image : ∀ {G : Type u_1} {V : Type u_2}
+  [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V] [inst_3 : InnerProductSpace ℝ V]
+  (A : G →ₗ[ℝ] V) [inst_4 : A.range.HasOrthogonalProjection] (v : V),
+  ∃ g, A g = (Komorebi.SufficientResolution.OrthogonalResolution.realized A.range) v
+@Komorebi.SufficientResolution.HilbertGlobalization.obstructionEquivHarmonic : {G : Type u_1} →
+  {V : Type u_2} →
+    {W : Type u_3} →
+      [inst : AddCommGroup G] →
+        [inst_1 : Module ℝ G] →
+          [inst_2 : NormedAddCommGroup V] →
+            [inst_3 : InnerProductSpace ℝ V] →
+              [inst_4 : NormedAddCommGroup W] →
+                [inst_5 : NormedSpace ℝ W] →
+                  (A : G →ₗ[ℝ] V) →
+                    (delta : V →L[ℝ] W) →
+                      [A.range.HasOrthogonalProjection] →
+                        [(↑delta).ker.HasOrthogonalProjection] →
+                          ↑delta ∘ₗ A = 0 →
+                            Komorebi.SufficientResolution.Globalization.ObstructionSpace A ↑delta ≃ₗ[ℝ]
+                              ↥(Komorebi.SufficientResolution.OrthogonalResolution.harmonic A.range (↑delta).ker)
+@Komorebi.SufficientResolution.HilbertGlobalization.same_class_iff_same_harmonic : ∀ {G : Type u_1} {V : Type u_2}
+  {W : Type u_3} [inst : AddCommGroup G] [inst_1 : Module ℝ G] [inst_2 : NormedAddCommGroup V]
+  [inst_3 : InnerProductSpace ℝ V] [inst_4 : NormedAddCommGroup W] [inst_5 : NormedSpace ℝ W] (A : G →ₗ[ℝ] V)
+  (delta : V →L[ℝ] W) [inst_6 : A.range.HasOrthogonalProjection] [inst_7 : (↑delta).ker.HasOrthogonalProjection]
+  (h : ↑delta ∘ₗ A = 0) (v w : ↥(↑delta).ker),
+  Komorebi.SufficientResolution.Globalization.obstructionClass A (↑delta) v =
+      Komorebi.SufficientResolution.Globalization.obstructionClass A (↑delta) w ↔
+    (Komorebi.SufficientResolution.HilbertGlobalization.harmonicFromKernel A delta h) v =
+      (Komorebi.SufficientResolution.HilbertGlobalization.harmonicFromKernel A delta h) w
+@Komorebi.SufficientResolution.OrthogonalResolution.candidate_error_sq : ∀ {V : Type u_1} [inst : NormedAddCommGroup V]
+  [inst_1 : InnerProductSpace ℝ V] (R : Submodule ℝ V) [inst_2 : R.HasOrthogonalProjection] (v : V) {r : V},
+  r ∈ R →
+    ‖v - r‖ ^ 2 =
+      ‖v - (Komorebi.SufficientResolution.OrthogonalResolution.realized R) v‖ ^ 2 +
+        ‖(Komorebi.SufficientResolution.OrthogonalResolution.realized R) v - r‖ ^ 2
+@Komorebi.SufficientResolution.OrthogonalResolution.best_approximation_unique : ∀ {V : Type u_1}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] (R : Submodule ℝ V)
+  [inst_2 : R.HasOrthogonalProjection] (v : V) {r : V},
+  r ∈ R →
+    (‖v - r‖ = ‖v - (Komorebi.SufficientResolution.OrthogonalResolution.realized R) v‖ ↔
+      r = (Komorebi.SufficientResolution.OrthogonalResolution.realized R) v)
+@Komorebi.SufficientResolution.OrthogonalResolution.infDist_sq_decomposition : ∀ {V : Type u_1}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] (R K : Submodule ℝ V)
+  [inst_2 : R.HasOrthogonalProjection] [inst_3 : K.HasOrthogonalProjection],
+  R ≤ K →
+    ∀ (v : V),
+      Metric.infDist v ↑R ^ 2 =
+        ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R K) v‖ ^ 2 +
+          ‖(Komorebi.SufficientResolution.OrthogonalResolution.inconsistency K) v‖ ^ 2
+@Komorebi.SufficientResolution.OrthogonalResolution.unique_components : ∀ {V : Type u_1} [inst : NormedAddCommGroup V]
+  [inst_1 : InnerProductSpace ℝ V] (R K : Submodule ℝ V) [inst_2 : R.HasOrthogonalProjection]
+  [inst_3 : K.HasOrthogonalProjection],
+  R ≤ K →
+    ∀ (v r o i : V),
+      r ∈ R →
+        o ∈ Komorebi.SufficientResolution.OrthogonalResolution.harmonic R K →
+          i ∈ Kᗮ →
+            v = r + o + i →
+              (Komorebi.SufficientResolution.OrthogonalResolution.realized R) v = r ∧
+                (Komorebi.SufficientResolution.OrthogonalResolution.obstruction R K) v = o ∧
+                  (Komorebi.SufficientResolution.OrthogonalResolution.inconsistency K) v = i
+@Komorebi.SufficientResolution.OrthogonalResolution.obstruction_noise_bound : ∀ {V : Type u_1}
+  [inst : NormedAddCommGroup V] [inst_1 : InnerProductSpace ℝ V] (R K : Submodule ℝ V)
+  [inst_2 : R.HasOrthogonalProjection] [inst_3 : K.HasOrthogonalProjection],
+  R ≤ K →
+    ∀ (v w : V),
+      ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction R K) v -
+            (Komorebi.SufficientResolution.OrthogonalResolution.obstruction R K) w‖ ≤
+        ‖v - w‖

@@ -1,0 +1,136 @@
+@Komorebi.SufficientResolution.ApproximateAlgebra.wordDefect_eq_sum : ∀ {R : Type u_1} [inst : CommRing R]
+  {X : Type u_2} [inst_1 : AddCommGroup X] [inst_2 : Module R X] {Z : Type u_3} [inst_3 : AddCommGroup Z]
+  [inst_4 : Module R Z] {I : Type u_4} (q : X →ₗ[R] Z) (T : I → X →ₗ[R] X) (U : I → Z →ₗ[R] Z) (w : List I),
+  Komorebi.SufficientResolution.ApproximateAlgebra.wordDefect q T U w =
+    (Komorebi.SufficientResolution.ApproximateAlgebra.transportTerms q T U w).sum
+@Komorebi.SufficientResolution.ApproximateBounds.norm_wordError_le_budget : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {I : Type u_4} (q : X →L[𝕜] Z)
+  (T : I → X →L[𝕜] X) (U : I → Z →L[𝕜] Z) (a b ε : I → ℝ),
+  (∀ (i : I), 0 ≤ a i) →
+    (∀ (i : I), 0 ≤ b i) →
+      (∀ (i : I), 0 ≤ ε i) →
+        (∀ (i : I), ‖T i‖ ≤ a i) →
+          (∀ (i : I), ‖U i‖ ≤ b i) →
+            (∀ (i : I), ‖Komorebi.SufficientResolution.ApproximateBounds.stepError q T U i‖ ≤ ε i) →
+              ∀ (w : List I),
+                ‖Komorebi.SufficientResolution.ApproximateBounds.wordError q T U w‖ ≤
+                  Komorebi.SufficientResolution.ApproximateBounds.budget a b ε w
+@Komorebi.SufficientResolution.ApproximateBounds.norm_outputError_le : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {Y : Type u_4}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : NormedSpace 𝕜 Y] {I : Type u_5} (q : X →L[𝕜] Z) (T : I → X →L[𝕜] X)
+  (U : I → Z →L[𝕜] Z) (O : X →L[𝕜] Y) (V : Z →L[𝕜] Y) (a b ε : I → ℝ) (η : ℝ),
+  (∀ (i : I), 0 ≤ a i) →
+    (∀ (i : I), 0 ≤ b i) →
+      (∀ (i : I), 0 ≤ ε i) →
+        0 ≤ η →
+          (∀ (i : I), ‖T i‖ ≤ a i) →
+            (∀ (i : I), ‖U i‖ ≤ b i) →
+              (∀ (i : I), ‖Komorebi.SufficientResolution.ApproximateBounds.stepError q T U i‖ ≤ ε i) →
+                ‖O - V ∘SL q‖ ≤ η →
+                  ∀ (w : List I),
+                    ‖Komorebi.SufficientResolution.ApproximateBounds.outputError q T U O V w‖ ≤
+                      η * Komorebi.SufficientResolution.ApproximateBounds.gain a w +
+                        ‖V‖ * Komorebi.SufficientResolution.ApproximateBounds.budget a b ε w
+Komorebi.SufficientResolution.ScalarBudgets.response_eq_sum : ∀ (a b : ℝ) (n : ℕ),
+  Komorebi.SufficientResolution.ScalarBudgets.response a b n = ∑ j ∈ Finset.range n, a ^ j * b ^ (n - 1 - j)
+Komorebi.SufficientResolution.ScalarBudgets.response_of_ne : ∀ (a b : ℝ),
+  a ≠ b → ∀ (n : ℕ), Komorebi.SufficientResolution.ScalarBudgets.response a b n = (a ^ n - b ^ n) / (a - b)
+Komorebi.SufficientResolution.ScalarBudgets.response_same_succ : ∀ (a : ℝ) (n : ℕ),
+  Komorebi.SufficientResolution.ScalarBudgets.response a a (n + 1) = ↑(n + 1) * a ^ n
+@Komorebi.SufficientResolution.StableApproximation.norm_outputError_uniform : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {Y : Type u_4}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : NormedSpace 𝕜 Y] {I : Type u_5} (q : X →L[𝕜] Z) (T : I → X →L[𝕜] X)
+  (U : I → Z →L[𝕜] Z) (O : X →L[𝕜] Y) (V : Z →L[𝕜] Y) (a b ε η : ℝ),
+  0 ≤ a →
+    0 ≤ b →
+      0 ≤ ε →
+        0 ≤ η →
+          (∀ (i : I), ‖T i‖ ≤ a) →
+            (∀ (i : I), ‖U i‖ ≤ b) →
+              (∀ (i : I), ‖Komorebi.SufficientResolution.ApproximateBounds.stepError q T U i‖ ≤ ε) →
+                ‖O - V ∘SL q‖ ≤ η →
+                  ∀ (w : List I),
+                    ‖Komorebi.SufficientResolution.ApproximateBounds.outputError q T U O V w‖ ≤
+                      η * a ^ w.length + ‖V‖ * (ε * Komorebi.SufficientResolution.ScalarBudgets.response a b w.length)
+@Komorebi.SufficientResolution.StableApproximation.norm_outputError_contractive : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {Y : Type u_4}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : NormedSpace 𝕜 Y] {I : Type u_5} (q : X →L[𝕜] Z) (T : I → X →L[𝕜] X)
+  (U : I → Z →L[𝕜] Z) (O : X →L[𝕜] Y) (V : Z →L[𝕜] Y) (b ε η : ℝ),
+  0 ≤ b →
+    b < 1 →
+      0 ≤ ε →
+        0 ≤ η →
+          (∀ (i : I), ‖T i‖ ≤ 1) →
+            (∀ (i : I), ‖U i‖ ≤ b) →
+              (∀ (i : I), ‖Komorebi.SufficientResolution.ApproximateBounds.stepError q T U i‖ ≤ ε) →
+                ‖O - V ∘SL q‖ ≤ η →
+                  ∀ (w : List I),
+                    ‖Komorebi.SufficientResolution.ApproximateBounds.outputError q T U O V w‖ ≤ η + ‖V‖ * (ε / (1 - b))
+@Komorebi.SufficientResolution.StableApproximation.norm_output_initial_contractive : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {Y : Type u_4}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : NormedSpace 𝕜 Y] {I : Type u_5} (q : X →L[𝕜] Z) (T : I → X →L[𝕜] X)
+  (U : I → Z →L[𝕜] Z) (O : X →L[𝕜] Y) (V : Z →L[𝕜] Y) (b ε η : ℝ),
+  0 ≤ b →
+    b < 1 →
+      0 ≤ ε →
+        0 ≤ η →
+          (∀ (i : I), ‖T i‖ ≤ 1) →
+            (∀ (i : I), ‖U i‖ ≤ b) →
+              (∀ (i : I), ‖Komorebi.SufficientResolution.ApproximateBounds.stepError q T U i‖ ≤ ε) →
+                ‖O - V ∘SL q‖ ≤ η →
+                  ∀ (w : List I) (x : X) (z : Z),
+                    ‖O ((Komorebi.SufficientResolution.ApproximateBounds.word T w) x) -
+                          V ((Komorebi.SufficientResolution.ApproximateBounds.word U w) z)‖ ≤
+                      (η + ‖V‖ * (ε / (1 - b))) * ‖x‖ + ‖V‖ * (b ^ w.length * ‖q x - z‖)
+@Komorebi.SufficientResolution.StableApproximation.same_coarse_future_bound : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {Y : Type u_4}
+  [inst_5 : NormedAddCommGroup Y] [inst_6 : NormedSpace 𝕜 Y] {I : Type u_5} (q : X →L[𝕜] Z) (T : I → X →L[𝕜] X)
+  (U : I → Z →L[𝕜] Z) (O : X →L[𝕜] Y) (V : Z →L[𝕜] Y) (w : List I) (x y : X),
+  q x = q y →
+    ∀ (E : ℝ),
+      ‖Komorebi.SufficientResolution.ApproximateBounds.outputError q T U O V w‖ ≤ E →
+        ‖O ((Komorebi.SufficientResolution.ApproximateBounds.word T w) x) -
+              O ((Komorebi.SufficientResolution.ApproximateBounds.word T w) y)‖ ≤
+          E * ‖x - y‖
+@Komorebi.SufficientResolution.ApproximateComposition.norm_wordError_two_stage : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {W : Type u_4}
+  [inst_5 : NormedAddCommGroup W] [inst_6 : NormedSpace 𝕜 W] {I : Type u_5} (q : X →L[𝕜] Z) (p : Z →L[𝕜] W)
+  (T : I → X →L[𝕜] X) (U : I → Z →L[𝕜] Z) (S : I → W →L[𝕜] W) (w : List I) (ε₁ ε₂ : ℝ),
+  ‖Komorebi.SufficientResolution.ApproximateBounds.wordError q T U w‖ ≤ ε₁ →
+    ‖Komorebi.SufficientResolution.ApproximateBounds.wordError p U S w‖ ≤ ε₂ →
+      ‖Komorebi.SufficientResolution.ApproximateBounds.wordError (p ∘SL q) T S w‖ ≤ ‖p‖ * ε₁ + ε₂ * ‖q‖
+@Komorebi.SufficientResolution.ApproximateComposition.reencode_outputError : ∀ {𝕜 : Type u_1}
+  [inst : NontriviallyNormedField 𝕜] {X : Type u_2} [inst_1 : NormedAddCommGroup X] [inst_2 : NormedSpace 𝕜 X]
+  {Z : Type u_3} [inst_3 : NormedAddCommGroup Z] [inst_4 : NormedSpace 𝕜 Z] {W : Type u_4}
+  [inst_5 : NormedAddCommGroup W] [inst_6 : NormedSpace 𝕜 W] {Y : Type u_5} [inst_7 : NormedAddCommGroup Y]
+  [inst_8 : NormedSpace 𝕜 Y] {I : Type u_6} (q : X →L[𝕜] Z) (S : Z →L[𝕜] W) (J : W →L[𝕜] Z),
+  J ∘SL S = ContinuousLinearMap.id 𝕜 Z →
+    ∀ (T : I → X →L[𝕜] X) (U : I → Z →L[𝕜] Z) (O : X →L[𝕜] Y) (V : Z →L[𝕜] Y) (w : List I),
+      Komorebi.SufficientResolution.ApproximateBounds.outputError (S ∘SL q) T
+          (Komorebi.SufficientResolution.ApproximateComposition.reencode S J U) O (V ∘SL J) w =
+        Komorebi.SufficientResolution.ApproximateBounds.outputError q T U O V w
+Komorebi.SufficientResolution.ApproximateExamples.sharp_response : ∀ (a b : ℝ),
+  0 ≤ b →
+    b ≤ a →
+      ∀ (w : List Unit),
+        ‖Komorebi.SufficientResolution.ApproximateBounds.wordError
+              (Komorebi.SufficientResolution.ApproximateExamples.scalar 1)
+              (fun x => Komorebi.SufficientResolution.ApproximateExamples.scalar a)
+              (fun x => Komorebi.SufficientResolution.ApproximateExamples.scalar b) w‖ =
+          (a - b) * Komorebi.SufficientResolution.ScalarBudgets.response a b w.length
+Komorebi.SufficientResolution.ApproximateExamples.unstable_error_unbounded : ∀ (ε : ℝ),
+  0 < ε →
+    ∀ (B : ℝ),
+      ∃ n,
+        B <
+          ‖Komorebi.SufficientResolution.ApproximateBounds.wordError
+              (Komorebi.SufficientResolution.ApproximateExamples.scalar 1)
+              (fun x => Komorebi.SufficientResolution.ApproximateExamples.scalar (1 + ε))
+              (fun x => Komorebi.SufficientResolution.ApproximateExamples.scalar 1) (List.replicate n ())‖

@@ -1,0 +1,116 @@
+Komorebi.SufficientResolution.MinimumNormReconstruction.recover.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] : V →L[ℝ] G
+Komorebi.SufficientResolution.MinimumNormReconstruction.restrictionEquiv.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] : ↥(↑A).kerᗮ ≃L[ℝ] ↥(↑A).range
+Komorebi.SufficientResolution.MinimumNormReconstruction.image_comp_recover.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] :
+  A ∘SL Komorebi.SufficientResolution.MinimumNormReconstruction.recover A = (↑A).range.starProjection
+Komorebi.SufficientResolution.MinimumNormReconstruction.recover_comp_image.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] :
+  Komorebi.SufficientResolution.MinimumNormReconstruction.recover A ∘SL A = (↑A).kerᗮ.starProjection
+Komorebi.SufficientResolution.MinimumNormReconstruction.image_projection_symmetric.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (v w : V) :
+  inner ℝ (A ((Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v)) w =
+    inner ℝ v (A ((Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) w))
+Komorebi.SufficientResolution.MinimumNormReconstruction.source_projection_symmetric.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (g h : G) :
+  inner ℝ ((Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) (A g)) h =
+    inner ℝ g ((Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) (A h))
+Komorebi.SufficientResolution.MinimumNormOptimality.unique_minimum_norm_least_squares.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (v : V) :
+  ∃! g, ‖v - A g‖ = Metric.infDist v ↑(↑A).range ∧ ∀ (h : G), ‖v - A h‖ = Metric.infDist v ↑(↑A).range → ‖g‖ ≤ ‖h‖
+Komorebi.SufficientResolution.MinimumNormOptimality.all_least_squares_sources.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (v : V) (g : G) :
+  ‖v - A g‖ = Metric.infDist v ↑(↑A).range ↔
+    ∃ k ∈ (↑A).ker, g = (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v + k
+Komorebi.SufficientResolution.MinimumNormOptimality.noisy_source_error_sq.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (g : G) (e : V) :
+  ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) (A g + e) - g‖ ^ 2 =
+    ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) e‖ ^ 2 + ‖(↑A).ker.starProjection g‖ ^ 2
+Komorebi.SufficientResolution.SourceConditioning.exists_source_coercivity.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] :
+  ∃ alpha, 0 < alpha ∧ Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha
+Komorebi.SufficientResolution.SourceConditioning.recover_opNorm_bound.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (alpha : ℝ) (ha : 0 < alpha)
+  (hc : Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha) :
+  ‖Komorebi.SufficientResolution.MinimumNormReconstruction.recover A‖ ≤ alpha⁻¹
+Komorebi.SufficientResolution.SourceConditioning.noisy_source_bound_sq.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (alpha : ℝ) (ha : 0 < alpha)
+  (hc : Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha) (g : G) (e : V) :
+  ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) (A g + e) - g‖ ^ 2 ≤
+    (‖e‖ / alpha) ^ 2 + ‖(↑A).ker.starProjection g‖ ^ 2
+Komorebi.SufficientResolution.SourceConditioning.candidate_tolerance_bound_sq.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  (A : G →L[ℝ] V) [CompleteSpace ↥(↑A).range] (alpha : ℝ) (ha : 0 < alpha)
+  (hc : Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha) (v : V) (g : G) (tau kappa : ℝ)
+  (ht : ‖A g - (↑A).range.starProjection v‖ ≤ tau) (hk : ‖(↑A).ker.starProjection g‖ ≤ kappa) :
+  ‖g - (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v‖ ^ 2 ≤ (tau / alpha) ^ 2 + kappa ^ 2
+Komorebi.SufficientResolution.ClosedRangeReconstruction.closedRecover.{u_1, u_2} {G : Type u_1} {V : Type u_2}
+  [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V] [InnerProductSpace ℝ V]
+  [CompleteSpace V] (A : G →L[ℝ] V) (hclosed : IsClosed ↑(↑A).range) : V →L[ℝ] G
+Komorebi.SufficientResolution.ClosedRangeReconstruction.closed_range_iff_coercivity.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) :
+  IsClosed ↑(↑A).range ↔
+    ∃ alpha, 0 < alpha ∧ Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha
+Komorebi.SufficientResolution.ClosedRangeReconstruction.bounded_recovery_iff_closed_range.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) :
+  (∃ B, ∀ (g : G), B (A g) = (↑A).kerᗮ.starProjection g) ↔ IsClosed ↑(↑A).range
+Komorebi.SufficientResolution.ClosedRangeReconstruction.nonclosed_no_bounded_recovery.{u_1, u_2} {G : Type u_1}
+  {V : Type u_2} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] (A : G →L[ℝ] V) (hn : ¬IsClosed ↑(↑A).range) :
+  ¬∃ B, ∀ (g : G), B (A g) = (↑A).kerᗮ.starProjection g
+Komorebi.SufficientResolution.ReconstructionGlobalization.candidate_total_error_sq.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} {W : Type u_3} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] [NormedAddCommGroup W] [NormedSpace ℝ W] (A : G →L[ℝ] V)
+  [CompleteSpace ↥(↑A).range] (delta : V →L[ℝ] W) (h : delta ∘SL A = 0) (v : V) (g : G) :
+  ‖v - A g‖ ^ 2 =
+    ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction (↑A).range (↑delta).ker) v‖ ^ 2 +
+        ‖(Komorebi.SufficientResolution.OrthogonalResolution.inconsistency (↑delta).ker) v‖ ^ 2 +
+      ‖A (g - (Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v)‖ ^ 2
+Komorebi.SufficientResolution.ReconstructionGlobalization.two_condition_reconstruction.{u_1, u_2, u_3} {G : Type u_1}
+  {V : Type u_2} {W : Type u_3} [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [NormedAddCommGroup V]
+  [InnerProductSpace ℝ V] [CompleteSpace V] [NormedAddCommGroup W] [NormedSpace ℝ W] (A : G →L[ℝ] V)
+  [CompleteSpace ↥(↑A).range] (delta : V →L[ℝ] W) (h : delta ∘SL A = 0) (alpha sigma : ℝ) (ha : 0 < alpha)
+  (hs : 0 < sigma) (hA : Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel A alpha)
+  (hd : Komorebi.SufficientResolution.HilbertConditioning.CoerciveOffKernel delta sigma) (v : V) :
+  ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v‖ ≤ ‖v‖ / alpha ∧
+    ‖v - A ((Komorebi.SufficientResolution.MinimumNormReconstruction.recover A) v)‖ ^ 2 ≤
+      ‖(Komorebi.SufficientResolution.OrthogonalResolution.obstruction (↑A).range (↑delta).ker) v‖ ^ 2 +
+        (‖delta v‖ / sigma) ^ 2
+Komorebi.SufficientResolution.ReconstructionExamples.scalar_recover_norm (c : ℝ) (hc : 0 < c) (v : ℝ) :
+  ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover
+          (Komorebi.SufficientResolution.ReconstructionExamples.scalar c))
+        v‖ =
+    ‖v‖ / c
+Komorebi.SufficientResolution.ReconstructionExamples.arbitrarily_small_data_unit_source (epsilon : ℝ)
+  (he : 0 < epsilon) :
+  ∃ c,
+    0 < c ∧
+      ‖c‖ < epsilon ∧
+        ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover
+                (Komorebi.SufficientResolution.ReconstructionExamples.scalar c))
+              c‖ =
+          1
+Komorebi.SufficientResolution.ReconstructionExamples.no_uniform_source_conditioning :
+  ¬∃ C,
+      ∀ (c : ℝ),
+        0 < c →
+          ∀ (v : ℝ),
+            ‖(Komorebi.SufficientResolution.MinimumNormReconstruction.recover
+                    (Komorebi.SufficientResolution.ReconstructionExamples.scalar c))
+                  v‖ ≤
+              C * ‖v‖

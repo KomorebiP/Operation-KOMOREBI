@@ -1,0 +1,29 @@
+Try this:
+  [apply] abel_nf
+/mnt/data/newblock/ContinuousDefect.lean:61:39: error: unsolved goals
+X : Type u_1
+Z : Type u_2
+inst✝⁵ : NormedAddCommGroup X
+inst✝⁴ : NormedSpace ℝ X
+inst✝³ : CompleteSpace X
+inst✝² : NormedAddCommGroup Z
+inst✝¹ : NormedSpace ℝ Z
+inst✝ : CompleteSpace Z
+q : X →L[ℝ] Z
+L : X →L[ℝ] X
+A : Z →L[ℝ] Z
+t s : ℝ
+h :
+  HasDerivAt (fun y => flow A (t - y) ∘SL q ∘SL flow L y)
+    ((-(flow A (t - s) * A)) ∘SL q ∘SL flow L s + flow A (t - s) ∘SL (0 ∘SL flow L s + q ∘SL (L * flow L s))) s
+x : X
+⊢ (flow A (t + -1 • s)) (q (L ((flow L s) x))) + -1 • (flow A (t + -1 • s)) (A (q ((flow L s) x))) =
+    -1 • (flow A (t + -1 • s)) (A (q ((flow L s) x))) + (flow A (t + -1 • s)) (0 x + q (L ((flow L s) x)))
+/mnt/data/newblock/ContinuousDefect.lean:68:35: error: This simp argument is unused:
+  add_zero
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [transportKernel, generatorDefect, ContinuousLinearMap.comp_apply, neg_apply, add_apply, sub_apply,
+    map_sub, mul_apply_eq_comp, ContinuousLinearMap.zero_comp]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
