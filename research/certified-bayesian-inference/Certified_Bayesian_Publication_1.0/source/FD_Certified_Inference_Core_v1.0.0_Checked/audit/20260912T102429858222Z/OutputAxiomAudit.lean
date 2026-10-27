@@ -1,0 +1,498 @@
+import Komorebi.RationalBall
+import Komorebi.DyadicBall
+import Komorebi.DyadicPrecision
+import Komorebi.FDGaussianTransport
+import Komorebi.FDGaussianSum
+import Komorebi.FDGaussianKernel
+import Komorebi.FDJointPacking
+import Komorebi.FDKalmanDefs
+import Komorebi.FDInnovationIdentities
+import Komorebi.FDJointCovQuadrants
+import Komorebi.FDJointCovAssembly
+import Komorebi.FDPosteriorCovPSD
+import Komorebi.FDJointCovPSD
+import Komorebi.FDJointLiftAlgebra
+import Komorebi.FDForwardJointLaw
+import Komorebi.FDGaussianQuadraticMoment
+import Komorebi.FDMatrixOperatorCompat
+import Komorebi.QuadraticTransport
+import Komorebi.FDGaussianCoupling
+import Komorebi.FDInexactGainAlgebra
+import Komorebi.FDPosteriorKernel
+import Komorebi.FDReverseJointLaw
+import Komorebi.FDGaussianConditioning
+import Komorebi.FDGainSampler
+import Komorebi.FDInexactGainCoupling
+import Komorebi.FDMatrixEnergyBounds
+import Komorebi.FDInnovationConditioning
+import Komorebi.PacketMatrixEnergy
+import Komorebi.SelfAdjointPackets
+import Komorebi.PacketEnergyDecomposition
+import Komorebi.PacketVectorEnergy
+import Komorebi.PacketEnergyRefinement
+import Komorebi.PacketCoarsening
+import Komorebi.FDMatrixPacketEnergy
+import Komorebi.QuadraticTransportBounds
+import Komorebi.FDResidualEnergyCertificate
+import Komorebi.FDResidualPacketCertificate
+import Komorebi.PrecisionBudget
+import Komorebi.PrecisionEnergy
+import Komorebi.RationalMatrixCertificates
+import Komorebi.RoundedMatrix
+import Komorebi.PrecisionMatrix
+import Komorebi.RationalPacketCertificates
+import Komorebi.RationalCertificateChecker
+import Komorebi.RoundedModel
+import Komorebi.PrecisionModel
+import Komorebi.PosteriorOutput
+import Komorebi.PrecisionSelection
+import Komorebi.PosteriorOutputPrecision
+import Komorebi.GramNoiseFloor
+import Komorebi.RationalModelSemantics
+import Komorebi.PosteriorOutputSemantics
+import Komorebi.RichardsonIteration
+import Komorebi.GeometricFuel
+import Komorebi.RationalRichardsonDefs
+import Komorebi.RoundoffEnergy
+import Komorebi.RoundedGainEvaluation
+import Komorebi.RoundoffTracking
+import Komorebi.RichardsonSpectrum
+import Komorebi.RichardsonEnergy
+import Komorebi.RationalRichardsonGeometry
+import Komorebi.RationalCandidateAcceptance
+import Komorebi.RationalRichardsonConvergence
+import Komorebi.RoundoffConvergence
+import Komorebi.PrecisionScoreAlgebra
+import Komorebi.RoundedCandidate
+import Komorebi.PrecisionScore
+import Komorebi.PosteriorEnclosureBounds
+import Komorebi.RationalPosteriorCertificate
+import Komorebi.RoundedPosteriorSound
+import Komorebi.RoundedPrecisionSearch
+import Komorebi.PrecisionCompleteness
+import Komorebi.TaggedPrecisionSearch
+import Komorebi.RoundedSolverSearch
+import Komorebi.RoundedSolverPosterior
+import Komorebi.PosteriorOutputSolver
+import Komorebi.RationalSolverDecidable
+import Komorebi.GeneratedOutputRotated
+import Komorebi.GeneratedOutputScalar
+import Komorebi.PosteriorOutputBoundary
+import Komorebi.RoundedSolverOrigin
+
+#print axioms Komorebi.RoundedPosterior.exact_encloses
+#print axioms Komorebi.RoundedPosterior.radius_nonneg
+#print axioms Komorebi.RoundedPosterior.add_encloses
+#print axioms Komorebi.RoundedPosterior.neg_encloses
+#print axioms Komorebi.RoundedPosterior.sub_encloses
+#print axioms Komorebi.RoundedPosterior.mul_encloses
+#print axioms Komorebi.RoundedPosterior.sum_encloses
+#print axioms Komorebi.RoundedPosterior.abs_le_center_radius
+#print axioms Komorebi.RoundedPosterior.energyUpper_sound
+#print axioms Komorebi.RoundedPosterior.scale_pos
+#print axioms Komorebi.RoundedPosterior.down_le
+#print axioms Komorebi.RoundedPosterior.le_up
+#print axioms Komorebi.RoundedPosterior.round_encloses
+#print axioms Komorebi.RoundedPosterior.rExact_encloses
+#print axioms Komorebi.RoundedPosterior.rAdd_encloses
+#print axioms Komorebi.RoundedPosterior.rSub_encloses
+#print axioms Komorebi.RoundedPosterior.rMul_encloses
+#print axioms Komorebi.RoundedPosterior.rSum_encloses
+#print axioms Komorebi.RoundedPosterior.round_grid
+#print axioms Komorebi.RoundedPosterior.mesh_pos
+#print axioms Komorebi.RoundedPosterior.mesh_le_one
+#print axioms Komorebi.RoundedPosterior.down_error_le_mesh
+#print axioms Komorebi.RoundedPosterior.up_le_add_mesh
+#print axioms Komorebi.RoundedPosterior.round_radius_le
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_adjoint
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.imageCov_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.multivariateGaussian_map_matrixCLM
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.multivariateGaussian_map_const_add
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.multivariateGaussian_conv
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.multivariateGaussian_map_linear_product
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.multivariateGaussian_map_affine_product
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gaussianAffineKernel_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.compProd_gaussianAffineKernel
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.pack_inl
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.pack_inr
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.measurable_pack
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.pack_add
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.map_pack_injective
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_fromRows
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovationMatrix_posDef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovation_inv_mul
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovation_mul_inv
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gain_mul_innovation
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.covariance_symmetric_of_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovation_symmetric
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovation_mul_gain_transpose
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gain_innovation_gain_transpose
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.jointCov_YY
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.jointCov_XY
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.jointCov_YX
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.jointCov_XX
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.reverseJointCov_eq_forwardJointCov
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.josephCovMatrix_eq_posteriorCovMatrix
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posteriorCovMatrix_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.forwardJointCov_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.reverseJointCov_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.forwardStateLift_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.forwardNoiseLift_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.reverseEvidenceLift_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.reverseResidualLift_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.stacked_covariance
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.forward_lift_covariance
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.reverse_lift_covariance
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.forward_joint_gaussian
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gaussian_norm_sq_integrable
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gaussian_coordinate_second_moment
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gaussian_integral_norm_sq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gaussian_lintegral_norm_sq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_mul
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_add
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_sub
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_one
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_zero
+#print axioms Komorebi.QuadraticTransport.wasserstein2Sq_le_cost
+#print axioms Komorebi.QuadraticTransport.sharedMap_isTransportPlan
+#print axioms Komorebi.QuadraticTransport.quadraticCost_sharedMap
+#print axioms Komorebi.QuadraticTransport.wasserstein2Sq_map_le
+#print axioms Komorebi.QuadraticTransport.wasserstein2Sq_map_le_integral
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.affineNoiseSample_law
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.affineNoiseSample_sub
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.affineNoiseSample_difference_law
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.affineNoiseSample_transportPlan
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.affineNoiseSample_coupling_cost
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gaussian_affine_wasserstein2Sq_le
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainJoseph_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainJoseph_exact
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainJoseph_expand
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainResidual_eq_gap_mul
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gain_gap_eq_residual_mul_inv
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainJoseph_sub_posterior_eq_gap
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.residual_cov_eq_gap_cov
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainJoseph_sub_posterior_eq_residual
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainJoseph_excess_posSemidef
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.fdPosteriorKernel_apply
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.reverse_joint_gaussian
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.fd_joint_disintegration
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.fd_observation_evidence
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.fdPosteriorKernel_eq_canonical
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.canonicalPosterior_eq_multivariateGaussian
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.canonicalPosterior_eq_josephGaussian
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainSample_law
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainPosteriorLaw_exact
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainSample_exact_posterior_law
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.inexactGainCoupling_isTransportPlan
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainMean_sub
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainNoiseDifferenceCov
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.inexactGainCoupling_cost_gap
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.inexactGainCoupling_cost_residual
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2Sq_le_gain_residual
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.gainPosteriorLaw_eq_of_residual_zero
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2Sq_ne_top
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.frobeniusSq_nonneg
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.trace_mul_transpose_eq_frobeniusSq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_apply_sq_le_frobeniusSq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.trace_image_eq_sum_inner
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.trace_image_le_norm_mul_frobeniusSq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixCLM_inner_nonneg
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.inverse_norm_le_of_quadraticLowerBound
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovation_quadraticLowerBound
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.innovation_inverse_norm_le
+#print axioms Komorebi.PacketEnergy.matrixEnergy_nonneg
+#print axioms Komorebi.PacketEnergy.matrixEnergy_zero
+#print axioms Komorebi.PacketEnergy.matrixEnergy_transpose
+#print axioms Komorebi.PacketEnergy.trace_gram_eq_energy
+#print axioms Komorebi.PacketEnergy.matrixEnergy_eq_zero_iff
+#print axioms Komorebi.PacketEnergy.matrixEnergy_left_projector
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.sumOn_transpose
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.sumOn_mul_proj
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.sumOn_idempotent
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.sumOn_mul_eq_zero
+#print axioms Komorebi.PacketEnergy.matrixEnergy_sumOn_left
+#print axioms Komorebi.PacketEnergy.matrixEnergy_sumOn_right
+#print axioms Komorebi.PacketEnergy.matrixEnergy_sumOn_both
+#print axioms Komorebi.PacketEnergy.matrixEnergy_eq_sum_blocks
+#print axioms Komorebi.PacketEnergy.sum_block_energies_le
+#print axioms Komorebi.PacketEnergy.vectorEnergy_nonneg
+#print axioms Komorebi.PacketEnergy.matrixEnergy_column
+#print axioms Komorebi.PacketEnergy.mul_column
+#print axioms Komorebi.PacketEnergy.vectorEnergy_sumOn
+#print axioms Komorebi.PacketEnergy.vectorEnergy_eq_sum_packets
+#print axioms Komorebi.PacketEnergy.parent_energy_eq_descendants
+#print axioms Komorebi.PacketEnergy.parent_energy_zero_iff_descendants_zero
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.coarsen_refines
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.coarsen_sum
+#print axioms Komorebi.PacketEnergy.SelfAdjointPackets.coarsen_complete
+#print axioms Komorebi.PacketEnergy.parent_vectorEnergy_eq_descendants
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.matrixEnergy_eq_frobeniusSq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.vectorEnergy_eq_norm_sq
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.norm_sq_eq_sum_packet_norms
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.frobeniusSq_eq_sum_packets
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.frobeniusSq_parent_eq_descendants
+#print axioms Komorebi.QuadraticTransport.wasserstein2_sq
+#print axioms Komorebi.QuadraticTransport.wasserstein2_le_of_sq_le
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.quadratic_residual_cost_le_energy
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2Sq_le_residual_energy
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2_le_of_residual_tolerance
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.frobeniusSq_le_packet_majorants
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2Sq_le_packet_residual_energy
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2_le_of_packet_tolerance
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2_le_of_packet_majorants
+#print axioms Komorebi.RoundedPosterior.Budget.center_le
+#print axioms Komorebi.RoundedPosterior.Budget.input_bounds
+#print axioms Komorebi.RoundedPosterior.Budget.plus_bounds
+#print axioms Komorebi.RoundedPosterior.Budget.minus_bounds
+#print axioms Komorebi.RoundedPosterior.Budget.times_bounds
+#print axioms Komorebi.RoundedPosterior.Budget.total_bounds
+#print axioms Komorebi.RoundedPosterior.Budget.energyCoeff_nonneg
+#print axioms Komorebi.RoundedPosterior.Budget.exact_energy_le
+#print axioms Komorebi.RoundedPosterior.Budget.energy_upper_le
+#print axioms Komorebi.ExactPosterior.realMatrix_apply
+#print axioms Komorebi.ExactPosterior.realMatrix_transpose
+#print axioms Komorebi.ExactPosterior.realMatrix_zero
+#print axioms Komorebi.ExactPosterior.realMatrix_one
+#print axioms Komorebi.ExactPosterior.realMatrix_add
+#print axioms Komorebi.ExactPosterior.realMatrix_sub
+#print axioms Komorebi.ExactPosterior.realMatrix_smul
+#print axioms Komorebi.ExactPosterior.realMatrix_mul
+#print axioms Komorebi.ExactPosterior.realMatrix_sum
+#print axioms Komorebi.ExactPosterior.rational_mulVec_cast
+#print axioms Komorebi.ExactPosterior.rationalEnergy_nonneg
+#print axioms Komorebi.ExactPosterior.rationalVectorEnergy_nonneg
+#print axioms Komorebi.RoundedPosterior.matrixInput_encloses
+#print axioms Komorebi.RoundedPosterior.vectorInput_encloses
+#print axioms Komorebi.RoundedPosterior.matrixTranspose_encloses
+#print axioms Komorebi.RoundedPosterior.matrixAdd_encloses
+#print axioms Komorebi.RoundedPosterior.matrixSub_encloses
+#print axioms Komorebi.RoundedPosterior.matrixMul_encloses
+#print axioms Komorebi.RoundedPosterior.matrixVector_encloses
+#print axioms Komorebi.RoundedPosterior.vectorSub_encloses
+#print axioms Komorebi.RoundedPosterior.matrixEnergyUpper_sound
+#print axioms Komorebi.RoundedPosterior.vectorEnergyUpper_sound
+#print axioms Komorebi.RoundedPosterior.matrixEncloses_real
+#print axioms Komorebi.RoundedPosterior.budgetInput_bounds
+#print axioms Komorebi.RoundedPosterior.budgetVectorInput_bounds
+#print axioms Komorebi.RoundedPosterior.budgetTranspose_bounds
+#print axioms Komorebi.RoundedPosterior.budgetAdd_bounds
+#print axioms Komorebi.RoundedPosterior.budgetSub_bounds
+#print axioms Komorebi.RoundedPosterior.budgetMul_bounds
+#print axioms Komorebi.RoundedPosterior.budgetVector_bounds
+#print axioms Komorebi.RoundedPosterior.budgetVectorSub_bounds
+#print axioms Komorebi.RoundedPosterior.matrixEnergyCoeff_nonneg
+#print axioms Komorebi.RoundedPosterior.vectorEnergyCoeff_nonneg
+#print axioms Komorebi.RoundedPosterior.matrixEnergyMag_nonneg
+#print axioms Komorebi.RoundedPosterior.vectorEnergyMag_nonneg
+#print axioms Komorebi.RoundedPosterior.matrixEnergy_inflation
+#print axioms Komorebi.RoundedPosterior.vectorEnergy_inflation
+#print axioms Komorebi.RoundedPosterior.matrixExactEnergy_le_mag
+#print axioms Komorebi.RoundedPosterior.vectorExactEnergy_le_mag
+#print axioms Komorebi.ExactPosterior.checkRationalPackets_eq_true
+#print axioms Komorebi.ExactPosterior.realPackets_proj
+#print axioms Komorebi.ExactPosterior.realPackets_complete
+#print axioms Komorebi.ExactPosterior.rationalEnergy_cast
+#print axioms Komorebi.ExactPosterior.rational_packet_majorant
+#print axioms Komorebi.ExactPosterior.checkCandidate_eq_true
+#print axioms Komorebi.ExactPosterior.checkTolerance_eq_true
+#print axioms Komorebi.ExactPosterior.exactCandidate_valid
+#print axioms Komorebi.ExactPosterior.valid_totalUpper_nonneg
+#print axioms Komorebi.ExactPosterior.valid_innovationUpper_nonneg
+#print axioms Komorebi.ExactPosterior.valid_candidateScore_nonneg
+#print axioms Komorebi.RoundedPosterior.priorBall_encloses
+#print axioms Komorebi.RoundedPosterior.noiseBall_encloses
+#print axioms Komorebi.RoundedPosterior.innovationBall_encloses
+#print axioms Komorebi.RoundedPosterior.residualBall_encloses
+#print axioms Komorebi.RoundedPosterior.innovationVectorBall_encloses
+#print axioms Komorebi.RoundedPosterior.packetBall_encloses
+#print axioms Komorebi.RoundedPosterior.priorBudget_bounds
+#print axioms Komorebi.RoundedPosterior.noiseBudget_bounds
+#print axioms Komorebi.RoundedPosterior.innovationBudget_bounds
+#print axioms Komorebi.RoundedPosterior.residualBudget_bounds
+#print axioms Komorebi.RoundedPosterior.innovationVectorBudget_bounds
+#print axioms Komorebi.RoundedPosterior.packetBudget_bounds
+#print axioms Komorebi.PosteriorOutput.operator_bounds
+#print axioms Komorebi.PosteriorOutput.mean_bounds
+#print axioms Komorebi.PosteriorOutput.covariance_bounds
+#print axioms Komorebi.PosteriorOutput.evaluate_encloses
+#print axioms Komorebi.PosteriorOutput.evaluate_grid
+#print axioms Komorebi.RoundedPosterior.coefficient_mesh_le
+#print axioms Komorebi.PosteriorOutput.mean_coeff_le
+#print axioms Komorebi.PosteriorOutput.covariance_coeff_le
+#print axioms Komorebi.PosteriorOutput.evaluate_radii_le
+#print axioms Komorebi.PosteriorOutput.represent_spec
+#print axioms Komorebi.ExactPosterior.gram_posSemidef
+#print axioms Komorebi.ExactPosterior.gram_noise_posDef
+#print axioms Komorebi.ExactPosterior.gram_noise_floor
+#print axioms Komorebi.ExactPosterior.realVector_apply
+#print axioms Komorebi.ExactPosterior.rationalVectorEnergy_cast
+#print axioms Komorebi.ExactPosterior.RationalModel.prior_real_posSemidef
+#print axioms Komorebi.ExactPosterior.RationalModel.noise_real_posDef
+#print axioms Komorebi.ExactPosterior.RationalModel.noise_real_floor
+#print axioms Komorebi.ExactPosterior.RationalModel.real_innovation
+#print axioms Komorebi.ExactPosterior.RationalModel.real_residual
+#print axioms Komorebi.ExactPosterior.RationalModel.real_innovationVector
+#print axioms Komorebi.PosteriorOutput.outputMean_real
+#print axioms Komorebi.PosteriorOutput.outputCovariance_real
+#print axioms Komorebi.PosteriorOutput.outputCovariance_posSemidef
+#print axioms Komorebi.PosteriorOutput.approximation_eq_output_gaussian
+#print axioms Komorebi.PosteriorOutput.represented_real_errors
+#print axioms Komorebi.GainSolver.gainIter_zero
+#print axioms Komorebi.GainSolver.gainIter_succ
+#print axioms Komorebi.GainSolver.residual_gainStep
+#print axioms Komorebi.GainSolver.residual_gainIter
+#print axioms Komorebi.GainSolver.gainIter_of_zero_residual
+#print axioms Komorebi.GainSolver.gainIter_shift
+#print axioms Komorebi.GainSolver.geometric_bernoulli
+#print axioms Komorebi.GainSolver.geometric_fuel_sufficient
+#print axioms Komorebi.GainSolver.exists_geometric_tolerance
+#print axioms Komorebi.ExactPosterior.RationalModel.solverGain_zero
+#print axioms Komorebi.ExactPosterior.RationalModel.solverGain_succ
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_residual_succ
+#print axioms Komorebi.ExactPosterior.RationalModel.solverGain_of_residual_zero
+#print axioms Komorebi.ExactPosterior.RationalModel.solverGain_shift
+#print axioms Komorebi.RoundoffSolver.energy_zero
+#print axioms Komorebi.RoundoffSolver.energy_neg
+#print axioms Komorebi.RoundoffSolver.energy_young
+#print axioms Komorebi.RoundoffSolver.energy_add_le
+#print axioms Komorebi.RoundoffSolver.energy_mul_le
+#print axioms Komorebi.RoundoffSolver.energy_add_contract
+#print axioms Komorebi.RoundoffSolver.invariant_energy_floor
+#print axioms Komorebi.RoundoffSolver.updateBudget_bounds
+#print axioms Komorebi.RoundoffSolver.update_coeff_le
+#print axioms Komorebi.RoundoffSolver.rounded_step_entry_error
+#print axioms Komorebi.RoundoffSolver.entryCount_nonneg
+#print axioms Komorebi.RoundoffSolver.rounded_step_energy_error
+#print axioms Komorebi.RoundoffSolver.rounded_step_grid
+#print axioms Komorebi.RoundoffSolver.iterate_zero
+#print axioms Komorebi.RoundoffSolver.iterate_succ
+#print axioms Komorebi.RoundoffSolver.gainStep_sub
+#print axioms Komorebi.RoundoffSolver.residual_forced_step
+#print axioms Komorebi.RoundoffSolver.iterate_tracking_energy
+#print axioms Komorebi.RoundoffSolver.residual_energy_compare
+#print axioms Komorebi.GainSolver.eigenvector_action
+#print axioms Komorebi.GainSolver.eigenvalue_lower
+#print axioms Komorebi.GainSolver.psd_trace_nonneg
+#print axioms Komorebi.GainSolver.eigenvalue_le_trace
+#print axioms Komorebi.GainSolver.inner_eigenvector_action
+#print axioms Komorebi.GainSolver.richardson_vector_sq_contract
+#print axioms Komorebi.GainSolver.row_action
+#print axioms Komorebi.GainSolver.matrixEnergy_eq_row_norms
+#print axioms Komorebi.GainSolver.richardson_action
+#print axioms Komorebi.GainSolver.richardson_matrix_energy_contract
+#print axioms Komorebi.GainSolver.trace_step_energy_contract
+#print axioms Komorebi.ExactPosterior.realMatrix_trace
+#print axioms Komorebi.ExactPosterior.RationalModel.innovation_real_posSemidef
+#print axioms Komorebi.ExactPosterior.RationalModel.innovation_real_floor
+#print axioms Komorebi.ExactPosterior.RationalModel.innovation_trace_nonneg
+#print axioms Komorebi.ExactPosterior.RationalModel.spectralCap_bounds
+#print axioms Komorebi.ExactPosterior.RationalModel.solverRho_bounds
+#print axioms Komorebi.ExactPosterior.RationalModel.solverRate_bounds
+#print axioms Komorebi.ExactPosterior.RationalModel.residual_energy_transition
+#print axioms Komorebi.ExactPosterior.acceptCandidate_valid
+#print axioms Komorebi.ExactPosterior.acceptCandidate_score_le
+#print axioms Komorebi.ExactPosterior.reject_invalid_candidate
+#print axioms Komorebi.ExactPosterior.selectCandidates_valid
+#print axioms Komorebi.ExactPosterior.selectCandidates_score_le
+#print axioms Komorebi.ExactPosterior.checkTolerance_iff_score
+#print axioms Komorebi.ExactPosterior.selectCandidates_preserves_tolerance
+#print axioms Komorebi.ExactPosterior.exactCandidate_total
+#print axioms Komorebi.ExactPosterior.exactCandidate_score
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_energy_succ
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_energy_geometric
+#print axioms Komorebi.ExactPosterior.RationalModel.residualScore_nonneg
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_score_succ
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_score_geometric
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_score_nonincreasing
+#print axioms Komorebi.ExactPosterior.RationalModel.solver_score_at_fuel
+#print axioms Komorebi.ExactPosterior.solver_iteration_checked_tolerance
+#print axioms Komorebi.ExactPosterior.richardson_proposal_accepted
+#print axioms Komorebi.RoundoffSolver.roundedGain_zero
+#print axioms Komorebi.RoundoffSolver.roundedGain_succ
+#print axioms Komorebi.RoundoffSolver.rounded_residual_step
+#print axioms Komorebi.RoundoffSolver.roundedGain_tracking
+#print axioms Komorebi.RoundoffSolver.scoreWeight_nonneg
+#print axioms Komorebi.RoundoffSolver.residualScore_eq_energy_weight
+#print axioms Komorebi.RoundoffSolver.roundoffScoreCoeff_nonneg
+#print axioms Komorebi.RoundoffSolver.rounded_score_compare
+#print axioms Komorebi.RoundoffSolver.rounded_score_geometric
+#print axioms Komorebi.RoundoffSolver.selected_update_floor
+#print axioms Komorebi.RoundoffSolver.rounded_score_at_fuel
+#print axioms Komorebi.RoundedPosterior.score_inflation_algebra
+#print axioms Komorebi.RoundedPosterior.roundedCandidate_gain
+#print axioms Komorebi.RoundedPosterior.roundedCandidate_valid
+#print axioms Komorebi.RoundedPosterior.roundedCandidate_passes_exact_checker
+#print axioms Komorebi.RoundedPosterior.checkSetup_eq_true
+#print axioms Komorebi.RoundedPosterior.certifyRounded_sound
+#print axioms Komorebi.RoundedPosterior.residualRoundCoeff_nonneg
+#print axioms Komorebi.RoundedPosterior.residualEnergyMagnitude_nonneg
+#print axioms Komorebi.RoundedPosterior.scoreRoundCoeff_nonneg
+#print axioms Komorebi.RoundedPosterior.rounded_total_inflation
+#print axioms Komorebi.RoundedPosterior.exact_total_le_magnitude
+#print axioms Komorebi.RoundedPosterior.rounded_score_inflation
+#print axioms Komorebi.FiniteDimensionalGaussianKalman.posterior_wasserstein2Sq_le_energy_majorants
+#print axioms Komorebi.ExactPosterior.valid_residual_energy_bound
+#print axioms Komorebi.ExactPosterior.valid_innovation_energy_bound
+#print axioms Komorebi.ExactPosterior.checked_score_bounds_posterior
+#print axioms Komorebi.ExactPosterior.checked_tolerance_bounds_posterior
+#print axioms Komorebi.ExactPosterior.selected_batch_bounds_posterior
+#print axioms Komorebi.ExactPosterior.selected_batch_preserves_posterior_tolerance
+#print axioms Komorebi.RoundedPosterior.rounded_score_bounds_posterior
+#print axioms Komorebi.RoundedPosterior.rounded_tolerance_bounds_posterior
+#print axioms Komorebi.RoundedPosterior.rounded_return_bounds_posterior
+#print axioms Komorebi.RoundedPosterior.certifyPrecisions_sound
+#print axioms Komorebi.RoundedPosterior.precision_search_bounds_posterior
+#print axioms Komorebi.RoundedPosterior.rounded_score_le_with_slack
+#print axioms Komorebi.RoundedPosterior.certifyRounded_of_slack
+#print axioms Komorebi.RoundedPosterior.exists_precision_of_strict_score
+#print axioms Komorebi.RoundedPosterior.certifyPrecisions_complete_of_mem
+#print axioms Komorebi.RoundedPosterior.precision_schedule_of_slack
+#print axioms Komorebi.RoundedPosterior.certifyTagged_origin
+#print axioms Komorebi.RoundedPosterior.certifyTagged_complete
+#print axioms Komorebi.RoundoffSolver.certifyGain_sound
+#print axioms Komorebi.RoundoffSolver.certifyGain_complete
+#print axioms Komorebi.RoundoffSolver.solveRoundedFuel_sound
+#print axioms Komorebi.RoundoffSolver.roundedGain_shift
+#print axioms Komorebi.RoundoffSolver.solveRoundedFuel_complete
+#print axioms Komorebi.RoundoffSolver.solveRounded_sound
+#print axioms Komorebi.RoundoffSolver.solveRounded_terminates
+#print axioms Komorebi.RoundoffSolver.rounded_iterate_posterior_bound
+#print axioms Komorebi.RoundoffSolver.rounded_solver_return_bounds_posterior
+#print axioms Komorebi.RoundoffSolver.rounded_solver_reaches_posterior_tolerance
+#print axioms Komorebi.PosteriorOutput.run_terminates
+#print axioms Komorebi.PosteriorOutput.run_sound
+#print axioms Komorebi.PosteriorOutput.run_rejects_nonpositive_output_tolerance
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.accuracy_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.fuel_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.rounded_iterate_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.score_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.rounded_return
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.posterior_tolerance
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.output_precision_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.mean_centers_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.mean_radii_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.covariance_centers_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.covariance_radii_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.output_return
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputRotated.output_valid
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.accuracy_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.fuel_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.rounded_iterate_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.score_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.rounded_return
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.posterior_tolerance
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.output_precision_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.mean_centers_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.mean_radii_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.covariance_centers_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.covariance_radii_computed
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.output_return
+#print axioms Komorebi.RoundoffSolver.GeneratedOutputScalar.output_valid
+#print axioms Komorebi.PosteriorOutput.Boundary.center_values
+#print axioms Komorebi.PosteriorOutput.Boundary.original_valid
+#print axioms Komorebi.PosteriorOutput.Boundary.centers_not_posSemidef
+#print axioms Komorebi.PosteriorOutput.Boundary.original_entries_still_enclosed
+#print axioms Komorebi.RoundoffSolver.certifyGain_origin
+#print axioms Komorebi.RoundoffSolver.solveRoundedFuel_gain_origin
+#print axioms Komorebi.RoundoffSolver.rounded_solver_gain_origin
