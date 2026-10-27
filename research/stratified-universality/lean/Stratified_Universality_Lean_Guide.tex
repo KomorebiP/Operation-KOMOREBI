@@ -1,0 +1,543 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=.85in,headheight=15pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,amsthm}
+\usepackage{booktabs,longtable,array,enumitem,xcolor,seqsplit}
+\usepackage{listings,tcolorbox,fancyhdr,titlesec,hyperref}
+\definecolor{Navy}{HTML}{17324D}
+\definecolor{Teal}{HTML}{2F7A78}
+\definecolor{Pale}{HTML}{E7F0F6}
+\hypersetup{colorlinks=true,linkcolor=Navy,urlcolor=Teal,pdfauthor={Komorebi P.},pdftitle={Stratified Universality: Lean Guide and Formalization Concordance}}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small Stratified Universality: Lean Guide}\fancyhead[R]{\small Komorebi P.}\fancyfoot[C]{\thepage}
+\titleformat{\section}{\Large\bfseries\color{Navy}}{\thesection}{.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{Navy}}{\thesubsection}{.6em}{}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
+\setlist{itemsep=3pt,topsep=4pt}
+\lstset{basicstyle=\small\ttfamily,breaklines=true,columns=fullflexible,backgroundcolor=\color{Pale},frame=single,framerule=0pt,xleftmargin=6pt,xrightmargin=6pt}
+\newtcolorbox{scopebox}{colback=Pale,colframe=Navy,boxrule=.5pt,arc=0pt}
+\newcommand{\kerpair}{\operatorname{KerPair}}
+\allowdisplaybreaks
+
+% Operation Komorebi: shared publication profile.
+\usepackage{komorebi-publication}
+\renewcommand{\KomorebiTitle}{Stratified Universality for Resolved Representations}
+\renewcommand{\KomorebiSubtitle}{Profiled lane transport, semantic quotients, carrier change, and certified descent}
+\renewcommand{\KomorebiSeries}{Research library}
+\renewcommand{\KomorebiKind}{Lean and evidence guide}
+\renewcommand{\KomorebiEdition}{Standardized publication edition / 8 October 2026}
+\renewcommand{\KomorebiShortTitle}{Stratified Universality for Resolved Representat}
+\renewcommand{\KomorebiTitleSize}{31}
+\renewcommand{\KomorebiTitleLeading}{36}
+\renewcommand{\KomorebiProfile}{classical}
+\renewcommand{\KomorebiOrientation}{portrait}
+\KomorebiSetup
+\begin{document}
+\KomorebiCover
+\KomorebiOpeningNote{\begin{scopebox}
+An exact source map for finite module transport, recorded categorical and
+holonomy formalization, and the remaining semantic correspondence work.
+\end{scopebox}}
+
+\hypersetup{pageanchor=false}
+
+\hypersetup{pageanchor=true}
+\begingroup\small\setlength{\parskip}{0pt}\tableofcontents\endgroup\clearpage
+
+\section{What this guide certifies}
+This companion connects the finite transport and descent statements of
+\emph{Stratified Universality for Resolved Representations} to the actual
+formalization evidence recovered for this edition. It gives a declaration-level
+map for the inspected module normalization and a separately labeled map for
+the recorded categorical, holonomy, and cyclotomic release.
+
+The complete written monograph is not claimed to be Lean-complete. The word
+``formal'' in its title refers to explicit mathematical structures and proofs.
+Lean evidence applies to the precisely named models and declarations, with
+their hypotheses. Mathematical completion of a written theorem and completion
+of its Lean translation are separate statements.
+
+\begin{scopebox}
+\textbf{Edition status.} One complete standalone Lean source was inspected.
+The v0.7 release README and audit were read. The two matching ZIP transfers
+failed with HTTP 502. Lean and Lake were absent from PATH, so no fresh Lean
+compilation or axiom inspection was executed for this final edition.
+\end{scopebox}
+
+\section{Three evidence levels}
+\begin{enumerate}
+\item \textbf{Inspected source.} The complete 602-line
+\texttt{\seqsplit{StratifiedFoundationsCore.lean}} contains 30 theorem declarations,
+12 definitions, two structures, and 18 \texttt{\seqsplit{\#check}} commands. These are
+textual source counts. The declaration bodies and hypotheses were inspected.
+\item \textbf{Recorded release checks.} The v0.7 audit records seven production
+sources, 183 theorem/lemma declarations, warning-as-error passes, zero
+\texttt{\seqsplit{sorry}}, \texttt{\seqsplit{admit}}, or custom axiom declarations, and representative
+standard-foundation axiom reports. Those are historical recorded checks.
+Their complete source archive and compiler logs were not recovered here.
+\item \textbf{Unestablished correspondence.} The v2 semantic and doctrine
+chapters, the broader atlas claims, and all other components without an
+inspected declaration map remain unmapped in this guide. This does not
+assert that no formalization exists elsewhere.
+\end{enumerate}
+
+The source inventory, declaration concordance, and component status register
+are included as CSV and JSON files. A row with no Lean declaration is a
+coverage boundary, not a proposed certificate.
+
+\section{Source identity and reconstruction}
+The main monograph source archive contains TeX, exact Python validators,
+figures, audit records, and publication material. Its inspected file tree
+contains no \texttt{\seqsplit{.lean}}, \texttt{\seqsplit{lean-toolchain}}, \texttt{\seqsplit{lakefile}}, or
+\texttt{\seqsplit{.olean}} file. The Lean normalization is a separate release.
+
+The individually indexed standalone Core was available through a complete
+text read. Its attempted byte transfer also returned HTTP 502. The included
+copy was reconstructed from that complete read; a terminal line feed was
+restored to match the authoritative size of 22,747 bytes. Its local digest
+is recorded in the provenance JSON. Matching a published byte count is not
+an independent upstream hash authentication.
+
+This standalone Core is \emph{not} silently identified with any of the seven
+production modules in the v0.7 audit. The latter names
+\texttt{\seqsplit{AbelianCore}}, \texttt{\seqsplit{CategoricalAtlasCore}}, \texttt{\seqsplit{CategoryCore}},
+\texttt{\seqsplit{CyclotomicGaloisCore}}, \texttt{\seqsplit{GroupoidLocalSystemCore}},
+\texttt{\seqsplit{HolonomyFiniteCore}}, and \texttt{\seqsplit{ModulePolynomialCore}}.
+
+\section{The module normalization}
+The inspected namespace is
+\texttt{\seqsplit{Komorebi.StratifiedFoundations}}. Its basic structure is
+\texttt{\seqsplit{ProjectorFamily R M I}}, over a commutative ring \(R\), an additive
+commutative group \(M\), an \(R\)-module structure, and a finite index type.
+It supplies linear endomorphisms \(P_i\) satisfying
+\[
+ P_i^2=P_i,\qquad P_iP_j=0\ (i\ne j),\qquad \sum_iP_i=1_M.
+\]
+These identities are fields of the declared structure. The subsequent
+theorems quantify over every such family; they do not discover a projector
+family for an arbitrary represented object.
+
+The monograph's finite transport theorem is stated in an additive
+idempotent-complete category with chosen splittings. The inspected Core
+specializes that theorem to modules and uses fixed submodules of projectors
+as the coordinate objects. This is a meaningful normalization, but it is
+not a declaration-level proof at the full category-theoretic generality.
+
+\subsection{Why the coordinate type matters}
+The exact coordinate target is
+\[
+ \operatorname{Lane}(P)
+ =\{c:I\to M\mid P_i(c_i)=c_i\text{ for every }i\}.
+\]
+The unrestricted type \(I\to M\) would contain coordinates outside their
+lanes. Synthesis and analysis are inverse only on the resolved target.
+The definitions \texttt{\seqsplit{laneSpace}}, \texttt{\seqsplit{analysisLinear}},
+\texttt{\seqsplit{synthesisLinear}}, and \texttt{\seqsplit{laneEquiv}} implement this restriction.
+
+\section{L1: exact analysis and synthesis}
+Analysis sends \(x\) to \((P_ix)_i\); synthesis adds the coordinates.
+The source proves both inverse laws:
+\[
+ \mathsf S\mathsf A(x)=x,\qquad
+ \mathsf A\mathsf S(c)=c\quad(c\in\operatorname{Lane}(P)).
+\]
+The first law is completeness. For the second, apply \(P_j\) to the finite
+sum; orthogonality removes all terms except \(j\), whose lane condition
+returns \(c_j\). The resulting \texttt{\seqsplit{laneEquiv}} is a linear equivalence.
+
+\texttt{\seqsplit{synthesize\_analyze}} is a convenient earlier function-level lemma.
+The stronger normalized inverse pair is
+\texttt{\seqsplit{synthesisLinear\_analysisLinear}} and
+\texttt{\seqsplit{analysisLinear\_synthesisLinear}}.
+
+\section{L2: exact transfer blocks}
+For projector families \(P\) on \(M\), \(Q\) on \(N\), and a linear map
+\(T:M\to N\), the source defines
+\[
+ T_{ji}=Q_jTP_i.
+\]
+\texttt{\seqsplit{transferBlock\_reconstruction}} proves
+\[
+ T=\sum_{j,i}Q_jTP_i.
+\]
+\texttt{\seqsplit{transferBlock\_ext}} says two maps are equal if every ambient corner
+block agrees. These statements retain their full finite index types and
+module hypotheses.
+
+The printed category theorem uses typed split-lane blocks
+\(\pi_jT\iota_i:M_i\to N_j\). An ambient corner is the same block inserted
+back into the ambient source and target. Showing equality of the two
+formulations requires the chosen splitting maps and their identities;
+they must not be erased in a categorical correspondence.
+
+\section{L3: composition and path contraction}
+For \(U:N\to L\), a third projector family \(S\), and source/target
+addresses \(i,k\), the source proves
+\[
+ S_kUTP_i=\sum_j(S_kUQ_j)(Q_jTP_i).
+\]
+The declaration \texttt{\seqsplit{transferBlock\_comp\_matrix}} is the morphism-level
+two-step contraction. The finite path law for a longer chain follows by
+repeated contraction in the written theorem. A future fully explicit Lean
+map for arbitrary chain length should supply the induction and the address
+product type; this guide does not invent that declaration.
+
+Cancellation can make a composite block zero even when individual paths
+are supported. Thus support propagation gives a containment result,
+not equality of support sets.
+
+\section{L4: refinement}
+The structure \texttt{\seqsplit{Refines}} supplies a declared address map and the
+identity that every coarse projector is the finite sum of its fine
+descendants. \texttt{\seqsplit{transferBlock\_refinement}} proves
+\[
+ Q_aTP_i
+ =\sum_{\rho_Y(b)=a}\sum_{\rho_X(j)=i}Q'_bTP'_j.
+\]
+This is one exact refinement step. The full finite resolution system also
+needs identity maps and compatibility of successive address maps. Those
+are additional data, not consequences of cardinality comparisons.
+
+\section{L5: selectors and exact residuals}
+A Boolean source-target mask \(E\) keeps the ambient blocks whose addresses
+belong to \(E\):
+\[
+ \operatorname{Sel}_E(T)=\sum_{(j,i)\in E}Q_jTP_i,
+ \qquad R_E(T)=T-\operatorname{Sel}_E(T).
+\]
+The inspected source proves that a retained block is unchanged, a discarded
+block is zero, selectors are idempotent, and two selectors compose by
+intersection. The exact reconstruction law is
+\[
+ \operatorname{Sel}_E(T)+R_E(T)=T.
+\]
+The residual is retained mathematical data. Discarding blocks does not become
+lossless merely because the retained blocks have convenient labels.
+
+\section{L6: propagation through composition}
+The support relation \texttt{\seqsplit{composeSupport}} is existential composition:
+\[
+ (F\circ E)(k,i)\iff\exists j,\ F(k,j)\land E(j,i).
+\]
+\texttt{\seqsplit{select\_comp\_of\_supported}} proves that a composite lies in this
+support relation when both factors satisfy their selected-support contracts.
+
+For retained maps \(T_0,U_0\), the exact residual identity is
+\[
+ UT-U_0T_0=(U-U_0)T_0+U_0(T-T_0)+(U-U_0)(T-T_0).
+\]
+The declaration \texttt{\seqsplit{composition\_residual\_identity}} proves the general
+linear-map identity, and \texttt{\seqsplit{selected\_composition\_residual\_identity}}
+specializes it to selectors. The residual-residual term is required.
+
+No norm, tolerance, probability, or convergence claim follows from this
+algebraic identity without further hypotheses.
+
+\section{L7 and L8: realization and fold loss}
+The v0.7 report records an additive-category layer, including split-lane
+Hom/block equivalence and additive-functor realization. Its declaration
+bodies were not inspected here, so L7 has report-level coverage only.
+
+The standalone Core gives two exact fold statements for a linear map
+\(\Phi:A\to B\):
+\[
+ \Phi(x)=\Phi(y)\iff x-y\in\ker\Phi,
+\]
+and
+\[
+ L\Phi=1_A\Longrightarrow\ker\Phi=0.
+\]
+The declarations are \texttt{\seqsplit{fold\_eq\_iff\_sub\_mem\_ker}} and
+\texttt{\seqsplit{ker\_eq\_bot\_of\_leftInverse}}. A zero kernel proves injectivity;
+it does not, over an arbitrary ring, automatically supply a chosen linear
+left inverse. The monograph's sufficient split-lossless criterion uses globally typed
+selectors and supplied retractions. Constructing its injectivity or left
+inverse from those hypotheses is not declaration-mapped here.
+
+\section{Complete resolution change}
+The inspected \texttt{\seqsplit{changeResolution}} is
+\(\mathsf A_Q\mathsf S_P\), a linear equivalence between two complete
+resolved coordinate spaces on the same ambient module. Its inverse is the
+reversed change, and successive changes compose strictly. These are the
+declarations \texttt{\seqsplit{changeResolution\_symm}} and
+\texttt{\seqsplit{changeResolution\_trans}}.
+
+This is an object-level prerequisite or analogue of the printed
+Hom/block coordinate coarsening. The latter uses both source and target
+splittings and intertwines matrix multiplication; that full map is not
+declaration-mapped here.
+
+This construction retains all ambient information in each complete
+resolution. A noninjective fold or a selector deletion is governed by its
+kernel or residual instead.
+
+\section{Recorded holonomy and categorical coverage}
+The v0.7 README records the following finite normalization layers:
+\begin{itemize}
+\item multi-chart additive local systems and compatible sections;
+\item base-fiber loop-fixed normal form;
+\item categorical realization of H2--H5 under ambient Hom coherence;
+\item finite holonomy orbit descent, pair-orbit coordinate expansion,
+and exact orbital path-count multiplication;
+\item finite permutation-module equivalence between pair-orbit coordinates
+and equivariant homomorphisms.
+\end{itemize}
+The report names \texttt{\seqsplit{CoherentHomPair}} as an explicit coherence package.
+Deriving it from a complete category-valued pseudofunctor/descent-object
+layer remains a reported open formalization obligation.
+
+Object-address orbits and source-target pair orbits answer different
+questions. The former classify globally labeled projector-sum coarsenings.
+The latter classify invariant matrix positions and equivariant support
+selectors. Transitive object action can still have several pair orbits.
+
+\section{Recorded cyclotomic coverage and remaining identifications}
+The v0.7 report records exact additive-order classification of cyclic unit
+orbits, actual primitive Fourier idempotents in the group algebra, complete
+orthogonal orbit sums, coefficientwise rationality, literal descent to
+\(\mathbb Q[C_n]\), and integral Ramanujan character sums. The audit's
+representative axiom examples include
+\texttt{\seqsplit{primitiveFourierIdempotent\_sum}},
+\texttt{\seqsplit{galoisOrbitProjector\_coeff\_mem\_rational\_range}},
+\texttt{\seqsplit{rationalOrbitProjector\_sum\_divisors}},
+\texttt{\seqsplit{exists\_int\_ramanujanOrbitSum}}, and
+\texttt{\seqsplit{rationalOrbitProjector\_eq\_inv\_smul\_integralRamanujanElement}}.
+These names are recorded audit examples, not declaration bodies inspected
+in this edition.
+
+The same release explicitly leaves the following identifications open:
+\begin{enumerate}
+\item the certified integral orbit sum with
+\(c_q(\ell)=\sum_{d\mid\gcd(q,\ell)}d\,\mu(q/d)\);
+\item the associated classical Ramanujan normal form;
+\item the factor identification
+\(\mathbb Q[C_n]\widetilde E_q\cong\mathbb Q(\zeta_q)\) and full
+cyclotomic product decomposition in the printed formulation.
+\end{enumerate}
+The existence of rational orthogonal projectors is already a strong finite
+formal result. It does not supply these further identifications by naming
+the coefficient a Ramanujan sum.
+
+\section{The v2 semantic extension: a precise translation plan}
+The behavioral quotient chapters contain written results and exact finite
+validators. No matching Lean declaration body was established for those
+chapters during this edition. The following is a formalization plan,
+not executable checked Lean code.
+
+\subsection{Behavioral kernels}
+In a module slice, represent observations as linear maps and continuations
+as a monoid action by module endomorphisms. Define
+\[
+ N=\bigcap_{m,j}\ker(o_j\rho(m)).
+\]
+The module intersection exists independently of a possibly infinite product
+of observations. Prove invariance using the action multiplication law, then
+use the quotient universal property. The direction of the coarsest-quotient
+factorization is from any exact surjective representation \(Z\) to \(X/N\).
+
+\subsection{Task combination and bridge loss}
+For two task kernels, the joint task uses intersection. Their common
+coarsening uses the sum only in the linear setting with the stated task
+interpretation. A task-compatible bridge satisfies
+\(f(N_X)\subseteq N_Y\), enabling the quotient map
+\(\overline f:X/N_X\to Y/N_Y\). Its exact loss and failure of target coverage
+are separate objects:
+\[
+ \ker\overline f=f^{-1}(N_Y)/N_X,
+ \qquad\operatorname{coker}\overline f=Y/(N_Y+f(X)).
+\]
+The formal translation must prove the quotient identifications and maps,
+not merely define these expressions and assume exactness.
+
+\subsection{Carrier gates and admissibility}
+For set-valued carrier semantics, the factorization gate uses kernel pairs:
+\(\kerpair(s)\subseteq\kerpair(t)\). Equality of residual functions and
+linear dependence of residual functions must remain distinct relations.
+The v2 relation-module construction is the explicit bridge between them.
+
+Admissibility monotonicity is an infimum theorem. Formalizing nonattainment
+requires the declared topology and compactness hypotheses. An arbitrary
+Hausdorff space need not turn compactness into sequential compactness;
+the final traditional edition instead uses an attained positive minimum
+on each compact conditioned sublevel.
+No placeholder proof is supplied here for these analytic results.
+
+\section{Reading the manuscript registers}
+The final-edition component concordance retains 75 stable rows: 52 internally proved,
+12 classical imports or reinterpretations, two conditionally proved,
+six conjectural, and three framework/definition components. This register
+uses the amended final source's hypotheses, including finite branch/history
+aggregation, empty conventions, and corrected support and metric scope.
+The separate inherited v0.4 table preserves the original hypotheses as
+historical evidence. It is not the canonical final-edition scope.
+These registers track mathematical status and source selection, not a count of
+Lean-certified statements or a completion percentage.
+
+The separate manuscript result inventory records theorem, lemma,
+proposition, corollary, and conjecture environments in the frozen original
+v2.0.0 input graph. Its 242 rows preserve original labels and source coordinates,
+not amended final-edition statement text. Environment
+counts differ from component counts because one component can gather
+several results and one theorem can contain multiple clauses.
+
+The later September 24 Blocks 17--26 checksum manifest lists Markdown,
+Python, and JSON material, with no Lean entries. Its ZIP bytes were not
+recovered. Consequently it contributes no additional Lean coverage claim
+in this guide and is not silently substituted for the controlling v2 paper.
+
+\section{Reproducing the recorded Lean checks}
+The recorded v0.7 pins are Lean 4.34.0-rc2, Lean commit
+\texttt{\seqsplit{6a10ac8c22beadecabdbb0919c2b50214762f91d}}, and Mathlib commit
+\texttt{\seqsplit{aeb72f1e9981b6d35b426b16dca7759be3e7ba06}}. Use the actual recovered
+v0.7 project and its dependency files when available; do not manufacture a
+project lock from these prose pins alone.
+
+In its pinned portable environment, the release's recorded check command is:
+\begin{lstlisting}
+lake env lean -DwarningAsError=true <source>
+\end{lstlisting}
+Here \texttt{\seqsplit{<source>}} must be replaced by one actual source path from the
+release audit. An explicit example, once that module has been recovered, is:
+\begin{lstlisting}
+lake env lean -DwarningAsError=true src/CyclotomicGaloisCore.lean
+\end{lstlisting}
+The standalone inspected Core can separately be checked in a compatible
+project using:
+\begin{lstlisting}
+lake env lean -DwarningAsError=true StratifiedFoundationsCore.lean
+\end{lstlisting}
+Its compatibility with the v0.7 pin has not been freshly tested here.
+
+Retain compiler exit codes, complete logs, source digests, the toolchain and
+Mathlib revision, and declaration-level \texttt{\seqsplit{\#print axioms}} output.
+An audit name without a recovered statement is report-level evidence.
+A successful \texttt{\seqsplit{\#check}} establishes elaboration only in the executed
+environment; an unexecuted \texttt{\seqsplit{\#check}} line in a source is not a pass.
+
+The recorded standard axiom union is
+\texttt{\seqsplit{propext}}, \texttt{\seqsplit{Classical.choice}}, and \texttt{\seqsplit{Quot.sound}} for the
+representative examples. No universal axiom coverage is inferred from
+representative checks. Placeholder scanning is supplementary to compilation
+and the declaration-level axiom audit.
+
+\section{Verification boundaries for this edition}
+The final edition separately replays the principal exact Python validators.
+That execution checks finite arithmetic formulas and implementation cases.
+It is separate from Lean proof checking and does not upgrade unmapped
+semantic or analytic results to a formal certificate.
+
+No dependencies were installed and no compiler result was invented for this
+guide. The attempted transfers failed with HTTP 502. The source read and the
+historical audit read succeeded. The included reconstructed source preserves
+that distinction in its provenance. The guide supplies a usable theorem
+map and a reproduction route while preserving the written paper's actual
+mathematical statements.
+
+\clearpage
+\appendix
+\section{Clause-level concordance}
+The table uses stable manuscript labels. ``Inspected'' always means an
+inspected declaration body with no fresh compiler run. ``Recorded'' refers
+to the separate historical v0.7 evidence.
+\begin{longtable}{p{.075\textwidth}p{.35\textwidth}p{.49\textwidth}}
+\toprule Clause & Manuscript target & Inspected declarations or evidence boundary\\\midrule\endhead
+L1 & Exact analysis and synthesis\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{ProjectorFamily.synthesisLinear\_analysisLinear}}\par \texttt{\seqsplit{ProjectorFamily.analysisLinear\_synthesisLinear}}\par \texttt{\seqsplit{ProjectorFamily.laneEquiv}}\par\small Finite module normalization; resolved laneSpace, not unrestricted function space.\\\addlinespace
+L2 & Unique transfer blocks\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{transferBlock\_reconstruction}}\par \texttt{\seqsplit{transferBlock\_ext}}\par\small Ambient corner blocks Q\_j T P\_i; categorical Hom-to-split-block bijection requires additional category layer.\\\addlinespace
+L3 & Composition and finite path contraction\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{transferBlock\_comp}}\par \texttt{\seqsplit{transferBlock\_comp\_matrix}}\par\small Two-step finite contraction is inspected; iterated address-path expansion needs induction.\\\addlinespace
+L4 & Projector-sum refinement\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{transferBlock\_refinement}}\par\small One declared source and target refinement step, with fibre-sum hypotheses.\\\addlinespace
+L5 & Boolean selectors and named residuals\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{select\_idempotent}}\par \texttt{\seqsplit{select\_inter}}\par \texttt{\seqsplit{select\_add\_residual}}\par\small Selector endomorphisms on module morphisms; masks retain exact ambient blocks.\\\addlinespace
+L6 & Support and residual propagation\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{select\_comp\_of\_supported}}\par \texttt{\seqsplit{selected\_composition\_residual\_identity}}\par\small Support containment and exact three-term residual identity; no equality-of-support claim.\\\addlinespace
+L7 & Additive profile-preserving realization\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Recorded only.}\par\small Historical v0.7 report describes CategoryCore; no matching declaration body inspected here.\\\addlinespace
+L8 & Fold loss\par\small \texttt{\seqsplit{thm:block15-universal-lane-transport}} & \textbf{Inspected.}\par \texttt{\seqsplit{fold\_eq\_iff\_sub\_mem\_ker}}\par \texttt{\seqsplit{ker\_eq\_bot\_of\_leftInverse}}\par\small Linear fold kernel and supplied-left-inverse criterion inspected; construction of injectivity/left inverse from globally typed Q\_e and r\_e hypotheses is not mapped.\\\addlinespace
+RES & Complete resolution change\par\small \texttt{\seqsplit{prop:block15-certified-coarsening}} & \textbf{Inspected.}\par \texttt{\seqsplit{ProjectorFamily.changeResolution\_symm}}\par \texttt{\seqsplit{ProjectorFamily.changeResolution\_trans}}\par\small Object-level prerequisite/analogue inspected; the Hom/block coarsening map and its multiplication compatibility are not declaration-mapped here.\\\addlinespace
+H1-H5 & Holonomy-twisted compatible sections\par\small \texttt{\seqsplit{thm:block16-holonomy-twisted-lane-transport}} & \textbf{Recorded only.}\par\small Reported v0.7 GroupoidLocalSystemCore/CategoricalAtlasCore coverage; ambient Hom coherence explicitly assumed.\\\addlinespace
+BASE & Base-fiber invariant normal form\par\small \texttt{\seqsplit{cor:block16-base-fiber-invariant-normal-form}} & \textbf{Recorded only.}\par\small Reported v0.7 local-system coverage; no source body inspected in this edition.\\\addlinespace
+ORBIT & Finest globally labeled coarsening\par\small \texttt{\seqsplit{thm:block16-orbit-descent}} & \textbf{Recorded only.}\par\small Reported v0.7 HolonomyFiniteCore coverage; object and pair orbits must remain distinct.\\\addlinespace
+PAIR & Permutation orbital calculus\par\small \texttt{\seqsplit{thm:block16-permutation-orbital-calculus}} & \textbf{Recorded only.}\par\small Reported v0.7 orbit basis and path-count coverage; no inspected declaration map.\\\addlinespace
+CYC & Rational cyclotomic Fourier lanes\par\small \texttt{\seqsplit{prop:block16-rational-cyclotomic-orbit-lanes}} & \textbf{Recorded only.}\par\small Partial recorded v0.7 coverage. Classical Möbius formula and cyclotomic factor/CRT identification remain explicit formalization obligations.\\\addlinespace
+\bottomrule\end{longtable}
+\section{Inspected declaration inventory}
+All entries below occur in the included standalone Core. The source location
+is a reading coordinate, not a compiler certificate. The namespace prefix is
+\texttt{\seqsplit{Komorebi.StratifiedFoundations}}; declarations in the first projector
+namespace additionally use \texttt{\seqsplit{ProjectorFamily}}.
+\begin{longtable}{p{.1\textwidth}p{.1\textwidth}p{.7\textwidth}}
+\toprule Line & Kind & Declaration\\\midrule\endhead
+23 & structure & \texttt{\seqsplit{ProjectorFamily}}\\\addlinespace
+37 & def & \texttt{\seqsplit{ProjectorFamily.analyze}}\\\addlinespace
+41 & def & \texttt{\seqsplit{ProjectorFamily.synthesize}}\\\addlinespace
+44 & theorem & \texttt{\seqsplit{ProjectorFamily.synthesize\_analyze}}\\\addlinespace
+49 & theorem & \texttt{\seqsplit{ProjectorFamily.eq\_of\_projectors\_eq}}\\\addlinespace
+63 & def & \texttt{\seqsplit{ProjectorFamily.laneSpace}}\\\addlinespace
+74 & def & \texttt{\seqsplit{ProjectorFamily.analysisLinear}}\\\addlinespace
+80 & def & \texttt{\seqsplit{ProjectorFamily.synthesisLinear}}\\\addlinespace
+86 & theorem & \texttt{\seqsplit{ProjectorFamily.synthesisLinear\_analysisLinear}}\\\addlinespace
+93 & theorem & \texttt{\seqsplit{ProjectorFamily.analysisLinear\_synthesisLinear}}\\\addlinespace
+109 & def & \texttt{\seqsplit{ProjectorFamily.laneEquiv}}\\\addlinespace
+117 & def & \texttt{\seqsplit{ProjectorFamily.changeResolution}}\\\addlinespace
+125 & theorem & \texttt{\seqsplit{ProjectorFamily.changeResolution\_symm}}\\\addlinespace
+134 & theorem & \texttt{\seqsplit{ProjectorFamily.changeResolution\_trans}}\\\addlinespace
+156 & theorem & \texttt{\seqsplit{linearMap\_fintype\_sum\_apply}}\\\addlinespace
+164 & def & \texttt{\seqsplit{transferBlock}}\\\addlinespace
+172 & theorem & \texttt{\seqsplit{transferBlock\_reconstruction\_apply}}\\\addlinespace
+188 & theorem & \texttt{\seqsplit{transferBlock\_reconstruction}}\\\addlinespace
+198 & theorem & \texttt{\seqsplit{transferBlock\_ext}}\\\addlinespace
+217 & theorem & \texttt{\seqsplit{transferBlock\_comp}}\\\addlinespace
+235 & theorem & \texttt{\seqsplit{transferBlock\_comp\_matrix}}\\\addlinespace
+256 & def & \texttt{\seqsplit{maskBlocks}}\\\addlinespace
+263 & theorem & \texttt{\seqsplit{maskBlocks\_idempotent}}\\\addlinespace
+273 & theorem & \texttt{\seqsplit{maskBlocks\_inter}}\\\addlinespace
+283 & theorem & \texttt{\seqsplit{transferBlock\_self}}\\\addlinespace
+294 & theorem & \texttt{\seqsplit{transferBlock\_ne\_target}}\\\addlinespace
+304 & theorem & \texttt{\seqsplit{transferBlock\_ne\_source}}\\\addlinespace
+314 & def & \texttt{\seqsplit{select}}\\\addlinespace
+323 & theorem & \texttt{\seqsplit{transferBlock\_select\_of\_mem}}\\\addlinespace
+355 & theorem & \texttt{\seqsplit{transferBlock\_select\_of\_not\_mem}}\\\addlinespace
+384 & theorem & \texttt{\seqsplit{select\_idempotent}}\\\addlinespace
+399 & theorem & \texttt{\seqsplit{select\_inter}}\\\addlinespace
+422 & def & \texttt{\seqsplit{composeSupport}}\\\addlinespace
+427 & theorem & \texttt{\seqsplit{select\_comp\_of\_supported}}\\\addlinespace
+462 & def & \texttt{\seqsplit{residual}}\\\addlinespace
+470 & theorem & \texttt{\seqsplit{select\_add\_residual}}\\\addlinespace
+479 & theorem & \texttt{\seqsplit{select\_all}}\\\addlinespace
+487 & theorem & \texttt{\seqsplit{residual\_all}}\\\addlinespace
+496 & theorem & \texttt{\seqsplit{composition\_residual\_identity}}\\\addlinespace
+509 & theorem & \texttt{\seqsplit{selected\_composition\_residual\_identity}}\\\addlinespace
+524 & structure & \texttt{\seqsplit{Refines}}\\\addlinespace
+533 & theorem & \texttt{\seqsplit{transferBlock\_refinement}}\\\addlinespace
+571 & theorem & \texttt{\seqsplit{fold\_eq\_iff\_sub\_mem\_ker}}\\\addlinespace
+576 & theorem & \texttt{\seqsplit{ker\_eq\_bot\_of\_leftInverse}}\\\addlinespace
+\bottomrule\end{longtable}
+\section{Files accompanying the guide}
+\begin{description}[style=nextline]
+\item[Lean\_Concordance.csv / .json] Clause-level correspondences, evidence
+classes, exact scope boundaries, and execution status.
+\item[Inspected\_Declaration\_Inventory.csv] Every declaration found in the
+included standalone Core, with namespace and source location.
+\item[Manuscript\_Result\_Inventory.csv] The 242 statement environments in the
+frozen original v2.0.0 source graph, with original labels and reading coordinates.
+\item[Component\_Status\_Concordance.csv] The canonical 75-row final-edition
+component table, with amended hypotheses and publication-amendment notes.
+\item[Component\_Status\_Concordance\_Inherited\_v0.4.csv] The original 75-row
+table with inherited hypotheses, explicitly historical rather than canonical.
+\item[Recorded\_v0.7\_Audit\_Evidence.json] The complete readable historical
+audit record, with source identity and evidence level.
+\item[inspected\_source/] The reconstructed complete Core and provenance
+record. No compiled artifact or fabricated project lock is included.
+\end{description}
+
+\section{Evidence sources}
+\begin{enumerate}
+\item Komorebi P., \emph{Stratified Universality for Resolved Representations:
+Profiled Lane Transport, Semantic Quotients, Carrier Change, and Certified
+Descent}, Formal Foundations v2.0.0, September 23, 2026. Controlling TeX,
+theorem sections, exact validators, and component concordance.
+\item Komorebi P., \texttt{\seqsplit{StratifiedFoundationsCore.lean}}, indexed standalone
+source, September 9, 2026. Complete 602-line read; reconstructed local copy.
+\item Komorebi P., \emph{Stratified Foundations Lean Normalization v0.7.0},
+\texttt{\seqsplit{README.md}} and \texttt{\seqsplit{AUDIT.json}}, September 9, 2026. Readable
+historical verification and scope records; archive bytes unavailable here.
+\item Komorebi P., \texttt{\seqsplit{Komorebi\_Stratified\_Blocks17\_26\_SHA256SUMS.txt}},
+September 24, 2026. Later companion manifest only; archive not inspected.
+\end{enumerate}
+
+\end{document}

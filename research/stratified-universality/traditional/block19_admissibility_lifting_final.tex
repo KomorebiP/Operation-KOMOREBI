@@ -1,0 +1,365 @@
+\section{Admissibility change, geometric obstruction, and doctrine lifting}
+\label{sec:block19-admissibility-lifting}
+
+Task strengthening changes which distinctions must be retained.  Enlarging an admissible realization class changes a different quantity: which completions or normal forms are allowed.  The two variances should not be compressed into one undifferentiated order.  This section formalizes admissibility monotonicity, separates gap from nonattainment, and places enrichment problems inside the existing bridge-passport architecture.
+
+\subsection{Admissible realization classes and optimized defect}
+\label{subsec:block19-defect}
+
+\begin{definition}[Class-relative defect]
+\label{def:block19-class-relative-defect}
+Let \(X\) be a represented system, let \(\Gamma\) be a declared class of admissible auxiliary structures, and let
+\[
+ d(X,g)\in[0,\infty]
+\]
+be a defect functional.  Define
+\[
+ \delta_\Gamma(X):=\inf_{g\in\Gamma}d(X,g).
+\]
+The pair consisting of the infimum and its attainment status is the \emph{class-relative defect profile}.
+\end{definition}
+
+\begin{theorem}[Admissibility monotonicity]
+\label{thm:block19-admissibility-monotonicity}
+If \(\Gamma\subseteq\Gamma'\), then
+\[
+ \delta_{\Gamma'}(X)\leq\delta_\Gamma(X).
+\]
+Thus an obstruction in a restricted realization class need not remain an obstruction after the class is enlarged.
+\end{theorem}
+
+\begin{proof}
+The infimum on the left is taken over a superset of the candidates used on the right.
+\end{proof}
+
+\begin{definition}[Completion, gap, and escape]
+\label{def:block19-trichotomy}
+Assume \(d\geq0\).  The defect profile is:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item a \emph{completion} when \(\delta_\Gamma(X)=0\) and the infimum is attained;
+\item a \emph{gap obstruction} when \(\delta_\Gamma(X)>0\);
+\item an \emph{escape obstruction} when \(\delta_\Gamma(X)=0\) but the infimum is not attained.
+\end{enumerate}
+\end{definition}
+
+The trichotomy separates approximation from realization.  A sequence of increasingly good coordinates may approach a missing completion only by leaving every compactly controlled part of the admissible parameter space.
+
+\begin{proposition}[Compactness certificate for escape]
+\label{prop:block19-escape-compactness}
+Let \(\Gamma\) be a Hausdorff parameter space, and let \(d(X,-)\) be continuous.  Suppose every sublevel set satisfying a declared conditioning bound is compact.  If \(\delta_\Gamma(X)=0\) is not attained, then every near-minimizing sequence must eventually violate every such uniform conditioning bound.
+\end{proposition}
+
+\begin{proof}
+Fix a declared conditioning bound \(c\), write \(\Gamma_c\) for the
+parameters satisfying it, and let
+\[
+ K_c=\{g\in\Gamma_c:d(X,g)\leq 1\}.
+\]
+By hypothesis \(K_c\) is compact.  If \(K_c\) is empty, every near-minimizing
+sequence eventually has defect below \(1\) and therefore lies outside
+\(\Gamma_c\).  Otherwise continuity gives an attained minimum
+\[
+ a_c=\min_{g\in K_c}d(X,g).
+\]
+Since the zero infimum is not attained anywhere in \(\Gamma\), \(a_c>0\).
+Every near-minimizing sequence eventually has defect below
+\(\min\{1,a_c\}\), and therefore cannot belong to \(\Gamma_c\).  Since \(c\)
+was arbitrary, each fixed conditioning bound is eventually violated; in
+particular no subsequence satisfying one fixed bound can be near-minimizing.
+\end{proof}
+
+\subsection{Metric packets and intrinsic distortion}
+\label{subsec:block19-metric-distortion}
+
+Let \(T:(V,Q_s)\to(W,Q_t)\) be invertible between real or complex spaces of common finite dimension \(n\geq1\) with positive-definite metrics.  Choose factors \(Q_s=R_s^*R_s\) and \(Q_t=R_t^*R_t\), and put
+\[
+ B_Q(T):=R_tTR_s^{-1}.
+\]
+Define
+\[
+ D_Q(T)
+ :=
+ \frac{\sigma_{\max}(B_Q(T))}{\sigma_{\min}(B_Q(T))}
+ \geq1,
+ \qquad
+ \Delta_Q(T):=\log D_Q(T).
+\]
+
+\begin{proposition}[Coordinate covariance and composition]
+\label{prop:block19-distortion-cocycle}
+Simultaneous coordinate transport of \(T,Q_s,Q_t\) leaves \(D_Q(T)\) invariant.  For composable invertible maps,
+\[
+ D_Q(T_2T_1)
+ \leq
+ D_Q(T_2)D_Q(T_1),
+\]
+so
+\[
+ \Delta_Q(T_2T_1)
+ \leq
+ \Delta_Q(T_2)+\Delta_Q(T_1).
+\]
+For a closed word \(H\),
+\[
+ D_Q(H)
+ \geq
+ \frac{\max_{\lambda\in\operatorname{spec}(H)}|\lambda|}
+      {\min_{\lambda\in\operatorname{spec}(H)}|\lambda|}.
+\]
+\end{proposition}
+
+\begin{proof}
+Coordinate transport changes \(B_Q(T)\) by left and right unitary factors.  Singular-value condition numbers are submultiplicative.  The spectral lower bound follows because every eigenvalue modulus lies between the smallest and largest singular values.
+\end{proof}
+
+\begin{theorem}[Conformal metric-completion criterion]
+\label{thm:block19-metric-completion}
+Let a connected finite graph carry real or complex vector spaces of common
+dimension \(n\geq1\) and invertible edge transports \(T_e\).  Reverse traversal
+of an edge uses \(T_e^{-1}\).  At a chosen root, determinant-normalized closed
+holonomy words are
+\[
+ \widehat H:=|\det H|^{-1/n}H.
+\]
+They form the determinant-normalized holonomy representation.  Positive-definite
+vertex metrics and positive edge scales satisfying
+\[
+ T_e^*Q_{t(e)}T_e=\lambda_e^2Q_{s(e)}
+\]
+exist if and only if the determinant-normalized holonomy representation preserves a positive-definite metric at one root vertex.  Equivalently, the normalized holonomy is unitarizable.  In finite dimension, this is equivalent to relative compactness of its image.
+\end{theorem}
+
+\begin{proof}
+A compatible family makes every closed root holonomy \(H\) conformal for the
+root metric \(Q_o\).  Taking determinants fixes its positive scale as
+\(|\det H|^{1/n}\), so \(\widehat H\) preserves \(Q_o\).
+
+Conversely, suppose every normalized root holonomy preserves \(Q_o\).  Choose
+spanning-tree maps \(G_v\) from the root to each vertex and put
+\[
+ Q_v=(G_v^{-1})^*Q_oG_v^{-1}.
+\]
+For an edge \(e:u\to v\), the root word \(H_e=G_v^{-1}T_eG_u\) satisfies
+\[
+ H_e^*Q_oH_e=|\det H_e|^{2/n}Q_o.
+\]
+Consequently
+\[
+ T_e^*Q_vT_e=|\det H_e|^{2/n}Q_u,
+ \qquad \lambda_e=|\det H_e|^{1/n}>0.
+\]
+This gives the required compatible family directly.  A group preserving a
+positive-definite metric is conjugate into a compact orthogonal or unitary
+group.  Conversely, averaging an inner product over the compact closure of a
+relatively compact image gives an invariant positive-definite metric.
+\end{proof}
+
+\subsection{Exact convex-versus-quadratic separation}
+\label{subsec:block19-convex-quadratic}
+
+Consider
+\[
+ A_1=\begin{pmatrix}1&0\\1&0\end{pmatrix},
+ \qquad
+ A_2=\begin{pmatrix}0&1\\0&-1\end{pmatrix}.
+\]
+
+\begin{theorem}[Sharp geometry-class separation]
+\label{thm:block19-convex-quadratic-separation}
+The norm \(\|x\|_\infty\) satisfies
+\[
+ \max\{\|A_1x\|_\infty,\|A_2x\|_\infty\}
+ =\|x\|_\infty
+\]
+for every \(x\in\mathbb R^2\).  In contrast, for every positive-definite quadratic metric \(Q\),
+\[
+ \max\{\|A_1\|_Q,\|A_2\|_Q\}\geq\sqrt2.
+\]
+Equality holds for scalar multiples of the Euclidean metric.  Hence the exact optimal convex/Finsler bound is \(1\), while the exact optimal quadratic bound is \(\sqrt2\).
+\end{theorem}
+
+\begin{proof}
+The two images are
+\[
+ A_1(x_1,x_2)=(x_1,x_1),
+ \qquad
+ A_2(x_1,x_2)=(x_2,-x_2),
+\]
+so the first identity is immediate.
+
+Write
+\[
+ Q=\begin{pmatrix}a&c\\c&b\end{pmatrix},
+ \qquad
+ d=ab-c^2>0.
+\]
+The squared induced norms are
+\[
+ u:=\|A_1\|_Q^2
+ =\frac{b(a+b+2c)}{d},
+ \qquad
+ v:=\|A_2\|_Q^2
+ =\frac{a(a+b-2c)}{d}.
+\]
+A direct calculation gives
+\[
+ ab\bigl((a+b)^2-4c^2\bigr)-4(ab-c^2)^2
+ =ab(a-b)^2+4c^2(ab-c^2)\geq0.
+\]
+Thus \(uv\geq4\), and therefore
+\[
+ \max\{\sqrt u,\sqrt v\}\geq(uv)^{1/4}\geq\sqrt2.
+\]
+Equality forces \(a=b\) and \(c=0\), and then \(u=v=2\).
+\end{proof}
+
+This example is a sharp instance of the established gap between general extremal norms and common quadratic Lyapunov functions \cite{AndoShih1998,John1948}.  Its role here is not a novelty claim.  It proves that obstruction status must record the admissible geometry class.
+
+\subsection{Escape without positive gap}
+\label{subsec:block19-unipotent-escape}
+
+\begin{proposition}[Unipotent escape]
+\label{prop:block19-unipotent-escape}
+Let
+\[
+ H=\begin{pmatrix}1&1\\0&1\end{pmatrix}.
+\]
+There is no positive-definite metric \(Q\) with \(H^*QH=Q\).  Nevertheless, for
+\[
+ Q_s=\operatorname{diag}(s^2,1),
+\]
+we have
+\[
+ D_{Q_s}(H)\longrightarrow1
+ \qquad(s\downarrow0),
+\]
+while
+\[
+ \kappa_2(Q_s)=s^{-2}\longrightarrow\infty.
+\]
+Thus the metric-completion defect has zero infimum but is not attained.
+\end{proposition}
+
+\begin{proof}
+Writing \(Q=\begin{psmallmatrix}a&c\\c&b\end{psmallmatrix}\), the equation \(H^*QH=Q\) forces \(a=0\), contradicting positive definiteness.  For \(Q_s\), the metric-normalized matrix is
+\[
+ \begin{pmatrix}s&0\\0&1\end{pmatrix}
+ H
+ \begin{pmatrix}s^{-1}&0\\0&1\end{pmatrix}
+ =
+ \begin{pmatrix}1&s\\0&1\end{pmatrix},
+\]
+whose singular-value condition number tends to one.  The conditioning formula is immediate.
+\end{proof}
+
+\subsection{Forgetful descent and enrichment lifting}
+\label{subsec:block19-doctrine-lifting}
+
+Suppose richer categories \(\widetilde{\mathcal C}\) and \(\widetilde{\mathcal D}\) carry forgetful functors
+\[
+ U:\widetilde{\mathcal C}\to\mathcal C,
+ \qquad
+ V:\widetilde{\mathcal D}\to\mathcal D.
+\]
+
+\begin{proposition}[Forgetful descent and enhancement lifting]
+\label{prop:block19-forgetful-lifting}
+A rich bridge
+\[
+ \widetilde B:\widetilde{\mathcal C}\to\widetilde{\mathcal D}
+\]
+automatically determines an underlying bridge
+\[
+ V\widetilde B:\widetilde{\mathcal C}\to\mathcal D.
+\]
+Given only a bare bridge \(B:\mathcal C\to\mathcal D\), constructing \(\widetilde B\) together with a comparison
+\[
+ V\widetilde B\cong BU
+\]
+is a lifting problem.  Its existence, uniqueness, and residual automorphisms are additional passport fields and may carry typed obstruction objects.
+\end{proposition}
+
+\begin{proof}
+The first statement is composition.  The second is not an existence theorem but a precise reformulation of the enhancement problem: a lift is extra structure over the specified commutative square.  Any failure must therefore be recorded relative to the chosen forgetful functors and comparison data.
+\end{proof}
+
+The pattern contains several earlier obstruction mechanisms:
+\begin{center}
+\small
+\begin{tabularx}{.96\textwidth}{@{}L{.26\textwidth}L{.28\textwidth}Y@{}}
+\toprule
+Underlying structure & Requested enrichment & Typed gate or obstruction\\
+\midrule
+Projective semilinear cocycle & Linear semilinear descent & Relative Brauer class\\
+Invertible transport graph & Compatible metric packet & Unitarizability of normalized holonomy\\
+Faithful additive realization & Exact tensor fiber functor & Strong monoidal and exactness obligations\\
+Max-plus value & Finite-temperature sum semantics & Residual partition mass\\
+Bare quotient coordinates & Metric-decorated quotient & Compatible quotient metric and conditioning boundary\\
+\bottomrule
+\end{tabularx}
+\end{center}
+No single obstruction object is asserted for all rows.  The common statement concerns the shape of the lifting problem.
+
+\subsection{Two variances and the indexed architecture}
+\label{subsec:block19-indexed-architecture}
+
+Task changes and admissibility changes have opposite-looking effects.  If a task is strengthened, its behavioral kernel shrinks and its quotient retains more information:
+\[
+ N_{\mathrm{strong}}\subseteq N_{\mathrm{weak}},
+ \qquad
+ Q_{\mathrm{strong}}\twoheadrightarrow Q_{\mathrm{weak}}.
+\]
+If an admissible realization class is enlarged, the optimized defect can only decrease:
+\[
+ \Gamma\subseteq\Gamma'
+ \quad\Longrightarrow\quad
+ \delta_{\Gamma'}\leq\delta_\Gamma.
+\]
+These are different orders and should not be merged into one scalar notion of a stronger contract.
+
+\begin{definition}[Doctrine-indexed task fiber]
+\label{def:block19-task-fiber}
+For a doctrine \(D\) and represented object \(X\), let
+\[
+ \mathsf{Task}_D(X)
+\]
+denote the ordered family of continuation-stable semantic quotients admitted by the declared query universe.  Inside one fiber, kernel or congruence calculus governs task change.  A change of doctrine
+\[
+ D\longrightarrow D'
+\]
+requires a bridge passport specifying carrier transport, preserved constructions, comparison maps, and any lifting obstruction.
+\end{definition}
+
+\begin{theorem}[Relative stratified semantic synthesis]
+\label{thm:block19-relative-semantic-synthesis}
+Within the finite certified setting of this manuscript, the following statements hold.
+\begin{enumerate}
+\item Every declared semantic slice has a task-relative behavioral quotient whenever the required effective quotient exists.
+\item Inside a module-valued slice, joint tasks, common coarsenings, bridge loss, essential-image failure, and task weakening are governed by the exact sequences of \cref{sec:block17-semantic-quotients,sec:block18-carrier-observer}.
+\item Carrier changes are legal exactly on the factorization loci certified by \cref{thm:block18-carrier-factorization}; otherwise the joint semantic image is the canonical exact completion preserving both views.
+\item Observer changes may introduce additional relation objects such as \(\Rel_K(E)\); they are not inferred from carrier compatibility alone.
+\item Enlarging an admissible realization class weakens optimized defect but need not produce an attained completion.
+\item Crossing to richer structure is a typed lifting problem and does not follow from the underlying bridge without an enhancement certificate.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The clauses are respectively \cref{thm:block17-universal-behavioral-coimage,thm:block17-semantic-diamond,thm:block18-bridge-loss-exact,thm:block18-carrier-factorization,thm:block18-observer-base-change,thm:block19-admissibility-monotonicity,prop:block19-forgetful-lifting}.  No clause identifies distinct carriers, observer categories, or admissibility classes without the corresponding comparison data.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.88\textwidth]{block19_contract_axes.pdf}
+\caption{Two independent contract directions.  Horizontal task strengthening retains more semantic information.  Vertical admissibility enlargement allows more realizations and can weaken obstruction.  A commuting square is a theorem-level comparison, not an automatic identification.}
+\label{fig:block19-contract-axes}
+\end{figure}
+
+\begin{boundary}[Scope of the second-order calculus]
+\label{bnd:block19-second-order-scope}
+The indexed architecture does not establish a complete double category of all mathematical doctrines, nor does it prove that every task quotient or enrichment is effectively recognizable.  The fiberwise quotient and exact-sequence results are proved in the stated algebraic settings.  Cross-doctrine coherence remains conditional on explicit carrier, topology, metric, tensor, convergence, or higher-categorical passports.
+\end{boundary}
+
+\begin{resultbox}
+\textbf{Admissibility and lifting result.}
+Obstructions are relative to both the requested enrichment and the admissible realization class.  Enlarging that class can remove a positive gap, while zero defect may still fail to be attained.  Rich structure descends under forgetting, but reconstructing it from a bare representation is a lifting problem with its own typed gate.  The resulting architecture is a family of task-quotient fibers connected only by certified doctrine bridges.
+\end{resultbox}

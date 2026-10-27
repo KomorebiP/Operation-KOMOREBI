@@ -1,0 +1,748 @@
+\clearpage
+\section{Holonomy-twisted lane transport and orbit descent}
+\label{sec:block16-holonomy-twisted-lane-transport}
+
+The finite atlas theorem in \cref{thm:block15-lane-descent} imposed trivial
+address holonomy in order to obtain one globally fixed set of lane labels.  That
+hypothesis is sufficient for ordinary globally addressed lanes, but it is
+stronger than the hypothesis needed for transport itself.  When addresses are
+permuted around atlas loops, the local lane matrices still glue.  They glue as
+sections of a finite matrix local system rather than as one matrix with a fixed
+global row and column labeling.
+
+This section isolates that distinction.  The local analysis, synthesis,
+composition, refinement, selector, and residual laws survive arbitrary finite
+address holonomy.  The holonomy orbits then give the finest ordinary global
+coarsening obtainable by summing the original lane projectors.  Thus nontrivial
+holonomy is an obstruction to untwisted labels, not an obstruction to the
+finite transport calculus.
+
+\subsection{Holonomy-profiled lane data}
+\label{subsec:block16-holonomy-profiled-data}
+
+Let \(\mathscr G\) be a finite connected groupoid of charts.  For an arrow
+\(\gamma:U\to V\), let
+\[
+ F_\gamma:\mathcal C_U\longrightarrow\mathcal C_V
+\]
+be an additive equivalence between additive idempotent-complete categories.
+The transition functors carry specified identity and composition comparisons.
+To keep the formulas readable, those comparison isomorphisms are suppressed;
+every displayed cocycle equation is understood after inserting the declared
+comparisons.
+
+A descent object
+\[
+ A=(A_U,\theta^A_\gamma)
+\]
+consists of objects \(A_U\in\mathcal C_U\) and isomorphisms
+\[
+ \theta^A_\gamma:F_\gamma(A_U)\xrightarrow{\sim}A_V
+\]
+satisfying the identity and cocycle equations.  A descended morphism
+\(f:X\to Y\) is a compatible family \((f_U)_U\) satisfying
+\[
+ \theta^Y_\gamma F_\gamma(f_U)=f_V\theta^X_\gamma.
+\]
+
+\begin{definition}[Holonomy-profiled finite lane datum]
+\label{def:block16-holonomy-profiled-lane-datum}
+Fix a finite resolution shape \(\mathsf R\).  A holonomy-profiled finite lane
+datum on a descent object \(A\) consists of the following information.
+
+For every chart \(U\) and resolution \(r\in\mathsf R\), the object \(A_U\)
+has a finite profiled lane system
+\[
+ \left(I_{A,U,r},p^{r}_{A,U,i},A^r_{U,i},
+ \iota^r_{A,U,i},\pi^r_{A,U,i}\right)_{i\in I_{A,U,r}}
+\]
+in the sense of \cref{def:block15-finite-profiled-lane-system}.  For every
+arrow \(\gamma:U\to V\), there is an address bijection
+\[
+ \lambda^A_{\gamma,r}:I_{A,U,r}\xrightarrow{\sim}I_{A,V,r}
+\]
+and, for every address \(i\), a splitting comparison
+\[
+ \beta^A_{\gamma,r,i}:
+ F_\gamma(A^r_{U,i})\xrightarrow{\sim}
+ A^r_{V,\lambda^A_{\gamma,r}(i)}.
+\]
+They satisfy the address and splitting cocycle laws and the two compatibility
+identities
+\[
+ \theta^A_\gamma F_\gamma(\iota^r_{A,U,i})
+ =
+ \iota^r_{A,V,\lambda^A_{\gamma,r}(i)}
+ \beta^A_{\gamma,r,i},
+\]
+\[
+ \beta^A_{\gamma,r,i}F_\gamma(\pi^r_{A,U,i})
+ =
+ \pi^r_{A,V,\lambda^A_{\gamma,r}(i)}\theta^A_\gamma.
+\]
+For \(s\succeq r\), the refinement maps are equivariant:
+\[
+ \rho^{A,V}_{sr}\lambda^A_{\gamma,s}
+ =
+ \lambda^A_{\gamma,r}\rho^{A,U}_{sr}.
+\]
+No global address set and no global trivialization of the address bijections is
+assumed.
+\end{definition}
+
+\begin{definition}[Matrix local system]
+\label{def:block16-matrix-local-system}
+Let \(X,Y\) carry holonomy-profiled lane data.  At source resolution \(r\)
+and target resolution \(u\), define the matrix group over a chart \(U\) by
+\[
+ \mathscr M^{u,r}_{Y,X}(U)
+ :=
+ \bigoplus_{a\in I_{Y,U,u}}
+ \bigoplus_{i\in I_{X,U,r}}
+ \Hom_{\mathcal C_U}(X^r_{U,i},Y^u_{U,a}).
+\]
+For \(h=(h_{ai})\in\mathscr M^{u,r}_{Y,X}(U)\), define transport along
+\(\gamma:U\to V\) by
+\[
+ \left(\gamma_*h\right)_{
+ \lambda^Y_{\gamma,u}(a),\lambda^X_{\gamma,r}(i)}
+ :=
+ \beta^Y_{\gamma,u,a}
+ F_\gamma(h_{ai})
+ \left(\beta^X_{\gamma,r,i}\right)^{-1}.
+\]
+The group of compatible sections is
+\[
+ \Gamma\!\left(\mathscr G,\mathscr M^{u,r}_{Y,X}\right)
+ :=
+ \left\{(h_U)_U:\gamma_*h_U=h_V
+ \text{ for every }\gamma:U\to V\right\}.
+\]
+\end{definition}
+
+\subsection{The holonomy-twisted transport theorem}
+\label{subsec:block16-main-theorem}
+
+\begin{theorem}[Holonomy-Twisted Universal Lane Transport Theorem]
+\label{thm:block16-holonomy-twisted-lane-transport}
+Let \(X,Y,Z\) be descent objects over \(\mathscr G\), each equipped with a
+holonomy-profiled finite lane datum over the same finite resolution shape.
+Then the following statements hold.
+
+\begin{enumerate}[label=\textup{(H\arabic*)}]
+\item \textbf{Matrix local system.}
+The maps \(\gamma_*\) of
+\cref{def:block16-matrix-local-system} are additive isomorphisms and satisfy
+the identity and cocycle laws.  Hence
+\(\mathscr M^{u,r}_{Y,X}\) is a local system of abelian groups with finitely many matrix positions in every chart.
+
+\item \textbf{Exact twisted analysis and synthesis.}
+Lane analysis induces an isomorphism
+\[
+ \mathfrak A^{u,r}_{Y,X}:
+ \Hom_{\Desc(\mathscr G)}(X,Y)
+ \xrightarrow{\sim}
+ \Gamma\!\left(\mathscr G,\mathscr M^{u,r}_{Y,X}\right),
+ \qquad
+ f\longmapsto
+ \left(\bigl([f_U]^{u,r}_{ai}\bigr)_{a,i}\right)_U.
+\]
+Its inverse is chartwise lane synthesis:
+\[
+ (h_U)_U\longmapsto
+ \left(
+ \sum_{a,i}
+ \iota^u_{Y,U,a}h_{U,ai}\pi^r_{X,U,i}
+ \right)_U.
+\]
+Thus nontrivial address holonomy does not destroy the complete matrix record.
+It changes the global type of that record from a constantly labeled matrix to
+a compatible section of a matrix local system.
+
+\item \textbf{Twisted matrix composition.}
+For
+\[
+ h\in\Gamma(\mathscr G,\mathscr M^{u,r}_{Y,X}),
+ \qquad
+ k\in\Gamma(\mathscr G,\mathscr M^{v,u}_{Z,Y}),
+\]
+define chartwise contraction by
+\[
+ (k\star h)_{U,ci}
+ :=
+ \sum_{a\in I_{Y,U,u}}k_{U,ca}h_{U,ai}.
+\]
+Then \(k\star h\) is a compatible section of
+\(\mathscr M^{v,r}_{Z,X}\), and
+\[
+ \mathfrak A^{v,r}_{Z,X}(gf)
+ =
+ \mathfrak A^{v,u}_{Z,Y}(g)
+ \star
+ \mathfrak A^{u,r}_{Y,X}(f).
+\]
+The diagonal identity matrices are compatible sections.  More precisely, fix
+one declared resolution \(r_A\) for each lane-decorated descent object \(A\).
+The category with the same objects, morphism groups
+\[
+ \Gamma\!\left(\mathscr G,
+ \mathscr M^{r_B,r_A}_{B,A}\right),
+\]
+and composition \(\star\) is isomorphic, by analysis and synthesis, to the
+corresponding category of lane-decorated descent objects and their underlying
+descended morphisms.
+
+\item \textbf{Equivariant refinement.}
+Every certified fine-to-coarse coordinate change from
+\cref{prop:block15-certified-coarsening} commutes with the transition maps
+\(\gamma_*\).  It therefore defines an isomorphism of matrix local systems.
+These isomorphisms compose strictly over chains of declared resolutions and
+intertwine twisted matrix contraction.
+
+\item \textbf{Holonomy-compatible selectors and residuals.}
+Let
+\[
+ E_U\subseteq I_{Y,U,u}\times I_{X,U,r}
+\]
+be a family satisfying
+\[
+ E_V=
+ (\lambda^Y_{\gamma,u}\times\lambda^X_{\gamma,r})(E_U)
+\]
+for every arrow \(\gamma:U\to V\).  Then the local selectors
+\[
+ C_{E_U}(h_U)_{ai}
+ =
+ \begin{cases}
+ h_{U,ai},&(a,i)\in E_U,\\
+ 0,&(a,i)\notin E_U
+ \end{cases}
+\]
+assemble to an idempotent endomorphism \(C_E\) of the section group.  For two
+compatible support families \(E,F\),
+\[
+ C_EC_F=C_{E\cap F},
+ \qquad
+ R_E:=1-C_E,
+ \qquad
+ h=C_Eh+R_Eh.
+\]
+Hence named residuals remain exact under arbitrary finite address holonomy,
+provided the retained support itself is holonomy compatible.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For (H1), additivity and invertibility follow from the corresponding
+properties of \(F_\gamma\) and the splitting comparisons \(\beta\).  The
+address and splitting cocycle laws give
+\((\delta\gamma)_*=\delta_*\gamma_*\) after the declared transition
+comparisons.
+
+For (H2), let \(f=(f_U)_U\) be descended.  For a transition
+\(\gamma:U\to V\), the transported \((a,i)\)-block is
+\[
+ \begin{aligned}
+ &\beta^Y_{\gamma,u,a}
+ F_\gamma\!\left(
+ \pi^u_{Y,U,a}f_U\iota^r_{X,U,i}
+ \right)
+ \left(\beta^X_{\gamma,r,i}\right)^{-1}\\
+ &\quad=
+ \pi^u_{Y,V,\lambda^Y(a)}
+ \theta^Y_\gamma F_\gamma(f_U)(\theta^X_\gamma)^{-1}
+ \iota^r_{X,V,\lambda^X(i)}\\
+ &\quad=
+ \pi^u_{Y,V,\lambda^Y(a)}
+ f_V
+ \iota^r_{X,V,\lambda^X(i)},
+ \end{aligned}
+\]
+which is the corresponding block of \(f_V\).  Thus analysis produces a
+compatible section.
+
+Conversely, let \(h=(h_U)_U\) be a compatible section and synthesize
+\[
+ f_U:=\sum_{a,i}\iota^u_{Y,U,a}h_{U,ai}\pi^r_{X,U,i}.
+\]
+Transporting this sum, applying the splitting comparison identities, and
+reindexing through the address bijections gives \(f_V\).  Thus \((f_U)_U\) is
+a descended morphism.  Chartwise analysis and synthesis are mutually inverse
+by \cref{thm:block15-universal-lane-transport}; therefore their restrictions
+to compatible families are mutually inverse.
+
+For (H3), the local path law gives the displayed contraction formula in every
+chart.  Applying \(\gamma_*\) to a contracted block distributes over the finite
+sum and carries each product to the product of the transported blocks.  Since
+\(\lambda^Y_{\gamma,u}\) is a bijection, reindexing the intermediate address
+shows
+\[
+ \gamma_*(k_U\star h_U)
+ =
+ (\gamma_*k_U)\star(\gamma_*h_U)
+ =
+ k_V\star h_V.
+\]
+The identity section is compatible by the splitting cocycle.  The equivalence
+then follows from (H2).
+
+For (H4), the local fine-to-coarse coordinate map is analysis after synthesis.
+Both operations commute with transition by (H2), so their composite does as
+well.  The strict composition and contraction identities are the corresponding
+chartwise identities from
+\cref{cor:block15-functorial-coarsening,thm:block15-matrix-category-equivalence}.
+
+For (H5), support compatibility implies
+\(\gamma_*C_{E_U}=C_{E_V}\gamma_*\), so the selectors preserve compatible
+sections.  Every Boolean and residual identity is then checked chartwise.
+\end{proof}
+
+
+\begin{corollary}[Base-fiber invariant normal form]
+\label{cor:block16-base-fiber-invariant-normal-form}
+Fix a base chart \(U_0\).  Evaluation at \(U_0\) induces an isomorphism
+\[
+ \Gamma\!\left(\mathscr G,\mathscr M^{u,r}_{Y,X}\right)
+ \xrightarrow{\sim}
+ \mathscr M^{u,r}_{Y,X}(U_0)^{\Aut_{\mathscr G}(U_0)},
+\]
+where the right-hand side is the subgroup fixed by every loop-transport map.
+Consequently,
+\[
+ \Hom_{\Desc(\mathscr G)}(X,Y)
+ \cong
+ \mathscr M^{u,r}_{Y,X}(U_0)^{\Aut_{\mathscr G}(U_0)}.
+\]
+After choosing one arrow \(\tau_U:U_0\to U\) for each chart, the inverse sends
+a fixed base matrix \(h_0\) to the section
+\(h_U=(\tau_U)_*h_0\).  The result is independent of the chosen arrows because
+two choices differ by loop transport at \(U_0\).
+\end{corollary}
+
+\begin{proof}
+A compatible section evaluates to a loop-fixed element at \(U_0\).  Conversely,
+for an arrow \(\gamma:U\to V\), the two arrows
+\(\gamma\tau_U\) and \(\tau_V\) differ by a loop at \(U_0\); loop invariance
+therefore gives \(\gamma_*h_U=h_V\).  Evaluation and this reconstruction are
+mutually inverse.  Compose with the analysis isomorphism in (H2).
+\end{proof}
+
+\begin{remark}[What has and has not been removed]
+\label{rem:block16-removed-triviality-only}
+The theorem removes only the global address trivializations
+\(\mu_U^{A,r}\) from \cref{thm:block15-lane-descent}.  It does not remove the
+address cocycle, refinement naturality, projector compatibility, splitting
+comparisons, or additive preservation hypotheses.  Without those data, even
+the matrix transition maps are undefined or fail their cocycle law.
+\end{remark}
+
+\subsection{Monodromy orbits and the finest untwisted coarsening}
+\label{subsec:block16-orbit-descent}
+
+Fix a base chart \(U_0\).  Every loop \(\gamma\in\Aut_{\mathscr G}(U_0)\)
+acts on an address set by \(i\mapsto\lambda^A_{\gamma,r}(i)\).  Write
+\[
+ H_A^r
+ :=
+ \operatorname{im}\!\left(
+ \Aut_{\mathscr G}(U_0)
+ \longrightarrow
+ \operatorname{Sym}(I_{A,U_0,r})
+ \right)
+\]
+for the resulting finite monodromy group.  For a source-target pair, the same
+loop acts diagonally by
+\[
+ (a,i)\longmapsto
+ \left(\lambda^Y_{\gamma,u}(a),
+ \lambda^X_{\gamma,r}(i)\right).
+\]
+Its image in the symmetric group of
+\(I_{Y,U_0,u}\times I_{X,U_0,r}\) is denoted
+\(H_{Y,X}^{u,r}\).  This is the simultaneous monodromy image; it need not be
+the direct product of the two separate monodromy groups.
+
+\begin{theorem}[Orbit descent and the finest globally labeled coarsening]
+\label{thm:block16-orbit-descent}
+Under the hypotheses of
+\cref{thm:block16-holonomy-twisted-lane-transport}, the following statements
+hold.
+
+\begin{enumerate}[label=\textup{(O\arabic*)}]
+\item For every orbit \(\mathcal O\subseteq I_{A,U_0,r}\) of \(H_A^r\), path
+transport defines a path-independent orbit subset
+\(\mathcal O_U\subseteq I_{A,U,r}\) in every chart.  The local projector sums
+\[
+ P^r_{A,U,\mathcal O}
+ :=
+ \sum_{i\in\mathcal O_U}p^r_{A,U,i}
+\]
+descend to a split idempotent on \(A\).  As \(\mathcal O\) ranges over the
+monodromy orbits, these projectors are pairwise annihilating and sum to
+\(1_A\).
+
+\item The orbit projectors form the finest ordinary globally labeled
+coarsening whose local projectors are sums of the original lane projectors.
+More precisely, any globally labeled projector of the form
+\[
+ Q_U=\sum_{i\in S_U}p^r_{A,U,i}
+\]
+with \(S_V=\lambda^A_{\gamma,r}(S_U)\) and with the same global label preserved
+around every loop has \(S_{U_0}\) equal to a union of \(H_A^r\)-orbits.
+
+\item A particular local lane descends as an individually labeled global lane
+exactly when its address is fixed by \(H_A^r\).  All original lane labels
+descend simultaneously exactly when the monodromy action on the address set is
+trivial.
+
+\item Holonomy-compatible support families in (H5) are in bijection with
+unions of \(H_{Y,X}^{u,r}\)-orbits in the base pair-address set.  The minimal
+nonempty compatible supports are therefore the single pair orbits.  Their
+associated selectors need not act nontrivially on the section group: a
+single-orbit selector is nonzero exactly when that orbit supports a nonzero
+compatible section.
+
+\item If \(s\succeq r\), equivariance of the refinement map sends every fine
+monodromy orbit onto a coarse monodromy orbit.  For a coarse orbit
+\(\mathcal O\),
+\[
+ P^r_{A,\mathcal O}
+ =
+ \sum_{\substack{\mathcal Q\text{ a fine orbit}\\
+ \mathcal Q\subseteq(\rho^A_{sr})^{-1}(\mathcal O)}}
+ P^s_{A,\mathcal Q}.
+\]
+Thus orbit descent and projector-sum refinement commute exactly.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Choose a path from \(U_0\) to \(U\) and transport \(\mathcal O\) along its
+address bijection.  Two path choices differ by a loop at \(U_0\), which
+preserves \(\mathcal O\) setwise.  Hence \(\mathcal O_U\) is path independent.
+Projector compatibility gives
+\[
+ \theta^A_\gamma F_\gamma(P^r_{A,U,\mathcal O})
+ =
+ P^r_{A,V,\mathcal O}\theta^A_\gamma,
+\]
+so the orbit sums descend.  Their local splittings are the finite direct sums
+\(\bigoplus_{i\in\mathcal O_U}A^r_{U,i}\); the direct sums of the \(\beta\)-maps,
+with the induced permutation of summands, provide their descent data.  This
+proves (O1).
+
+For (O2), a globally fixed label must return to itself after every loop, so
+\(S_{U_0}\) is invariant under \(H_A^r\).  Every invariant subset of a finite
+group action is a union of orbits.  Therefore every such globally labeled
+coarsening is coarser than the orbit partition.  Statement (O3) is the
+singleton case.
+
+The same path-independence argument on the pair-address set shows that a
+compatible support family is determined by an invariant base subset, and every
+invariant base subset is a union of pair orbits.  A selector acts as the
+identity on compatible sections supported in its orbit and vanishes on the
+complementary support.  It is therefore nonzero precisely when the orbit
+supports a nonzero compatible section.  This proves (O4).
+
+Finally, equivariance of \(\rho^A_{sr}\) implies that the image of a fine orbit
+is the orbit of the image of any one of its points.  Hence the preimage of a
+coarse orbit is a union of fine orbits.  Summing the local projector-refinement
+identity over all addresses in the coarse orbit gives the formula in (O5).
+\end{proof}
+
+\begin{remark}[Object orbits and matrix orbits differ]
+\label{rem:block16-object-vs-pair-orbits}
+The orbit lanes on an object are controlled by \(H_A^r\backslash I_{A,r}\).
+Transport selectors are controlled by the generally finer orbit set
+\[
+ H_{Y,X}^{u,r}\backslash
+ \left(I_{Y,u}\times I_{X,r}\right).
+\]
+Even when an object has only one transitive address orbit, its endomorphism
+matrices can have several pair orbits.  Holonomy can therefore erase individual
+object labels while retaining a nontrivial global transport algebra.
+\end{remark}
+
+\subsection{Permutation modules and the orbital path algebra}
+\label{subsec:block16-permutation-orbital-calculus}
+
+The one-chart groupoid with automorphism group \(H\) gives a concrete exact
+model.  It also identifies the algebra carried by the pair-orbit selectors.
+
+\begin{theorem}[Permutation-module orbital lane calculus]
+\label{thm:block16-permutation-orbital-calculus}
+Let \(\kk\) be a commutative ring, let a finite group \(H\) act on finite sets
+\(I,J,K\), and let \(\kk[I],\kk[J],\kk[K]\) be the corresponding permutation
+modules.  For an orbit
+\(\mathcal O\subseteq J\times I\) under the diagonal action, let
+\(B_{\mathcal O}:\kk[I]\to\kk[J]\) be the matrix whose \((j,i)\)-entry is one
+when \((j,i)\in\mathcal O\) and zero otherwise.  Then
+\[
+ \Hom_{\kk H}(\kk[I],\kk[J])
+ =
+ \bigoplus_{\mathcal O\in H\backslash(J\times I)}
+ \kk B_{\mathcal O}.
+\]
+In particular, an equivariant matrix is exactly a matrix constant on every
+pair orbit.
+
+Let
+\[
+ \mathcal P\subseteq J\times I,
+ \qquad
+ \mathcal Q\subseteq K\times J,
+ \qquad
+ \mathcal R\subseteq K\times I
+\]
+be diagonal \(H\)-orbits.  For any \((k,i)\in\mathcal R\), define
+\[
+ c^{\mathcal R}_{\mathcal Q,\mathcal P}
+ :=
+ \#\left\{
+ j\in J:(k,j)\in\mathcal Q,
+ (j,i)\in\mathcal P
+ \right\}.
+\]
+This integer is independent of the chosen \((k,i)\in\mathcal R\), and
+\[
+ B_{\mathcal Q}B_{\mathcal P}
+ =
+ \sum_{\mathcal R\in H\backslash(K\times I)}
+ c^{\mathcal R}_{\mathcal Q,\mathcal P}B_{\mathcal R}.
+\]
+Thus the lane path law descends to an exact orbit basis with nonnegative
+integer structure constants.
+\end{theorem}
+
+\begin{proof}
+Write an arbitrary \(\kk\)-linear map as a matrix \(A=(A_{ji})\).  The
+intertwining equations for the permutation actions are equivalent to
+\[
+ A_{h j,h i}=A_{j i}
+ \qquad(h\in H).
+\]
+Hence the entries are constant on diagonal orbits.  The orbit-indicator
+matrices have disjoint supports, so they are linearly independent over every
+commutative ring and span all invariant matrices.
+
+The \((k,i)\)-entry of
+\(B_{\mathcal Q}B_{\mathcal P}\) is the displayed cardinality.  If
+\((k',i')=(hk,hi)\), then \(j\mapsto hj\) is a bijection between the two sets
+being counted.  The entry is therefore constant on \(\mathcal R\), which gives
+the orbit-basis expansion.
+\end{proof}
+
+\begin{corollary}[Orbital endomorphism algebra]
+\label{cor:block16-orbital-endomorphism-algebra}
+For one finite \(H\)-set \(I\), the pair-orbit matrices form a basis of
+\(\End_{\kk H}(\kk[I])\).  Matrix multiplication in this basis is exactly the
+finite compatible-path contraction of
+\cref{thm:block16-holonomy-twisted-lane-transport}, with the preceding
+intersection numbers as structure constants.
+\end{corollary}
+
+\begin{example}[The smallest nontrivial holonomy]
+\label{ex:block16-c2-swap}
+Let \(H=C_2=\{1,\sigma\}\) act on \(I=\{1,2\}\) by swapping the two addresses.
+On \(X=\kk^2\), let
+\[
+ S=
+ \begin{pmatrix}0&1\\1&0\end{pmatrix},
+ \qquad
+ p_1=
+ \begin{pmatrix}1&0\\0&0\end{pmatrix},
+ \qquad
+ p_2=
+ \begin{pmatrix}0&0\\0&1\end{pmatrix}.
+\]
+The individual projectors do not descend because
+\(Sp_1S^{-1}=p_2\), while their orbit sum \(p_1+p_2=1\) does descend.  The
+pair-address set has two orbits,
+\[
+ \Delta=\{(1,1),(2,2)\},
+ \qquad
+ \Omega=\{(1,2),(2,1)\}.
+\]
+Accordingly,
+\[
+ \End_{\kk C_2}(\kk^2)
+ =
+ \left\{
+ \begin{pmatrix}a&b\\b&a\end{pmatrix}:a,b\in\kk
+ \right\}
+ =
+ \kk B_\Delta\oplus\kk B_\Omega.
+\]
+The singleton endpoint selector \(\{(1,1)\}\) is not holonomy compatible and
+sends the equivariant identity matrix to \(p_1\), which is not equivariant.
+The orbit selectors \(C_\Delta\) and \(C_\Omega\) are compatible and split every
+equivariant endomorphism into its diagonal-orbit and off-diagonal-orbit parts.
+\end{example}
+
+\subsection{Cyclotomic orbit lanes over the rational field}
+\label{subsec:block16-cyclotomic-orbit-lanes}
+
+The split cyclic group algebra supplies an arithmetic realization in which the
+address monodromy and its orbit coarsening are explicit.
+
+\begin{proposition}[Rational descent of split cyclic Fourier lanes]
+\label{prop:block16-rational-cyclotomic-orbit-lanes}
+Let \(N\ge1\), let \(C_N=\langle g\rangle\), and let
+\(K=\mathbb Q(\zeta_N)\).  In \(K[C_N]\), define
+\[
+ e_j
+ :=
+ \frac1N\sum_{\ell=0}^{N-1}
+ \zeta_N^{-j\ell}g^\ell,
+ \qquad j\in\mathbb Z/N\mathbb Z.
+\]
+These are the primitive split Fourier idempotents.  For
+\(\sigma_a\in\Gal(K/\mathbb Q)\), where
+\(\sigma_a(\zeta_N)=\zeta_N^a\),
+\[
+ \sigma_a(e_j)=e_{aj}.
+\]
+The Galois orbits are indexed by divisors \(q\mid N\), with
+\[
+ \mathcal O_q
+ =
+ \left\{j\in\mathbb Z/N\mathbb Z:
+ \frac{N}{\gcd(N,j)}=q\right\}.
+\]
+Their orbit sums
+\[
+ E_q:=\sum_{j\in\mathcal O_q}e_j
+\]
+belong to \(\mathbb Q[C_N]\) and satisfy
+\[
+ E_qE_{q'}=\delta_{q,q'}E_q,
+ \qquad
+ \sum_{q\mid N}E_q=1.
+\]
+More explicitly,
+\[
+ \boxed{
+ E_q
+ =
+ \frac1N\sum_{\ell=0}^{N-1}c_q(\ell)g^\ell,}
+\]
+where
+\[
+ c_q(\ell)
+ :=
+ \sum_{\substack{1\le a\le q\\\gcd(a,q)=1}}
+ e^{2\pi i a\ell/q}
+ =
+ \sum_{d\mid\gcd(q,\ell)}d\,\mu(q/d)
+ \in\mathbb Z
+\]
+is the Ramanujan sum.  The projectors \((E_q)_{q\mid N}\) form the finest
+\(\mathbb Q\)-rational coarsening obtainable by summing the split Fourier
+idempotents, and
+\[
+ \mathbb Q[C_N]E_q\cong\mathbb Q(\zeta_q).
+\]
+\end{proposition}
+
+\begin{proof}
+Character orthogonality gives the primitive idempotent relations for the
+\(e_j\).  Applying \(\sigma_a\) to their coefficients gives
+\(\sigma_a(e_j)=e_{aj}\).  The unit group
+\((\mathbb Z/N\mathbb Z)^\times\) acts transitively on elements of
+\(\mathbb Z/N\mathbb Z\) having the same additive order, so its orbits are the
+sets \(\mathcal O_q\).
+
+Write every \(j\in\mathcal O_q\) uniquely as
+\(j=(N/q)a\) with \(a\in(\mathbb Z/q\mathbb Z)^\times\).  The coefficient of
+\(g^\ell\) in \(E_q\) is then
+\[
+ \frac1N
+ \sum_{a\in(\mathbb Z/q\mathbb Z)^\times}
+ \zeta_q^{-a\ell}
+ =
+ \frac{c_q(\ell)}{N},
+\]
+where the last equality uses the integrality and evenness of the Ramanujan
+sum.  Hence \(E_q\in\mathbb Q[C_N]\).  Orthogonality and completeness follow
+by grouping the primitive \(e_j\) by their disjoint Galois orbits.  Any rational
+sum of split primitive idempotents must be Galois invariant, so its support is a
+union of these orbits; this proves fineness.  Finally,
+\[
+ \mathbb Q[C_N]
+ \cong
+ \mathbb Q[x]/(x^N-1)
+ \cong
+ \prod_{q\mid N}\mathbb Q[x]/(\Phi_q(x))
+ \cong
+ \prod_{q\mid N}\mathbb Q(\zeta_q),
+\]
+and \(E_q\) is the identity projector of the \(q\)-th factor.
+\end{proof}
+
+\begin{boundary}[Cyclic character lanes are not coefficient-residue lanes]
+\label{bnd:block16-cyclic-character-residue-distinction}
+The preceding proposition concerns primitive character idempotents in the
+split group algebra \(K[C_N]\) and their rational Galois descent.  The
+coefficient-residue projectors \(\mathcal P_{N,j}\) on formal series from
+\cref{thm:block15-factorial-residue-realization} are defined coefficientwise
+over every commutative ring and already have fixed residue labels.  A chosen
+rotation representation relates the two constructions after scalar extension,
+but their descent data are not identical and should not be conflated.  Nothing
+in orbit descent turns the factorial step-product into an additive idempotent
+splitting.
+\end{boundary}
+
+\subsection{Exact finite validation and scope}
+\label{subsec:block16-validation-scope}
+
+The accompanying verifier tests finite permutation actions, pair-orbit bases,
+equivariant matrix composition, orbit-compatible and deliberately incompatible
+selectors, equivariant refinement, and the exact Ramanujan-sum projectors in
+\(\mathbb Q[C_N]\).  It uses exact integer arithmetic after clearing the common cyclotomic
+denominators.  These tests are
+an implementation regression for the displayed formulas, not a substitute for
+the proofs and not an external validation record.
+
+\IfFileExists{generated/block16_validation_table.tex}{%
+\input{generated/block16_validation_table.tex}%
+}{%
+\begin{table}[htbp]
+\centering
+\caption{Exact finite regression for selected holonomy-twisted lane clauses.
+Run the Block 16 verifier to generate the complete table.}
+\label{tab:block16-validation-placeholder}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Record & Status\\
+\midrule
+Machine-readable validation & Run \texttt{verify\_block16\_holonomy\_lane\_transport.py}\\
+\bottomrule
+\end{tabular}
+\end{table}%
+}
+
+\begin{resultbox}
+\textbf{Holonomy-twisted lane transport result.}
+Finite nontrivial address holonomy does not invalidate exact lane transport.
+The complete global coordinate object is a matrix local system, and descended
+morphisms are exactly its compatible sections.  Composition remains finite
+path contraction, complete resolution changes remain isomorphisms, and every
+holonomy-compatible selector retains an exact named residual.  Monodromy
+orbits give the finest ordinary globally labeled coarsening of object lanes,
+while simultaneous pair orbits give the atomic global transport selectors.  In
+permutation modules these pair orbits form an exact basis of the intertwiner
+space with integer path-count structure constants.
+\end{resultbox}
+
+\begin{boundary}[Finite twisted scope]
+\label{bnd:block16-finite-twisted-scope}
+The theorem remains finite and profiled.  It assumes invertible chart
+transitions, finite address sets, coherent address and splitting cocycles, and
+profile preservation of the operations used.  It does not prove convergence
+for countably infinite lane sums, descent across noninvertible bridges, higher
+stack effectivity, or a canonical orbit system independent of the initially
+declared lane presentation.  Orbit count is not identified with dimension,
+rank, entropy, information, or complexity.  The permutation-module and
+cyclotomic formulas have classical algebraic antecedents; their role here is to
+provide exact native realizations of the twisted lane doctrine.
+\end{boundary}

@@ -1,0 +1,432 @@
+\section{Relative semantic quotients and behavioral cores}
+\label{sec:block17-semantic-quotients}
+
+The preceding parts fix resolved signatures, profile-preserving realizations, normalized strata, typed bridges, and descent data.  A second question remains inside each such setting: which distinctions must a representation retain for a declared family of future observations?  This section formalizes that question without replacing the existing preservation-profile machinery.  The central object is a behavioral quotient computed relative to a carrier doctrine, a continuation grammar, and an observation category.
+
+\subsection{Semantic slices and resolved observational systems}
+\label{subsec:block17-semantic-slices}
+
+\begin{definition}[Semantic slice]
+\label{def:block17-semantic-slice}
+A \emph{semantic slice} is a tuple
+\[
+ \Sigma=(\mathcal A,\mathcal G,\mathcal V,\mathcal O)
+\]
+consisting of:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item a carrier doctrine \(\mathcal A\), which specifies how alternatives, routes, or packets combine;
+\item a continuation grammar \(\mathcal G\), presented here by a monoid \(M\) or by a chosen generating family of admissible endomorphisms;
+\item an observation category \(\mathcal V\), such as \(\mathbf{Set}\), \(R\text{-}\mathbf{Mod}\), or \(K\text{-}\mathbf{Vect}\);
+\item a declared family \(\mathcal O=(o_j)_{j\in J}\) of observations in \(\mathcal V\).
+\end{enumerate}
+The slice belongs to the stratum passport.  It does not replace the preservation profile \(\Pi\).  The profile specifies which constructions a bridge preserves, while the slice specifies which future distinctions define the current semantic task.
+\end{definition}
+
+\begin{definition}[Resolved observational system]
+\label{def:block17-observational-system}
+Let \(X\) be an object equipped with an action
+\[
+ \rho:M\longrightarrow \End(X)
+\]
+of a continuation monoid and with observations
+\[
+ o_j:X\longrightarrow Y_j\qquad(j\in J).
+\]
+The tuple
+\[
+ \mathsf S=(X,M,\rho,(o_j)_{j\in J})
+\]
+is a \emph{resolved observational system}.  When the indicated product exists, its behavior map is
+\[
+ \Beh_{\mathsf S}:X\longrightarrow
+ \prod_{(m,j)\in M\times J}Y_j,
+ \qquad
+ x\longmapsto\bigl(o_j(\rho(m)x)\bigr)_{m,j}.
+\]
+The \emph{relative behavioral object} is the coimage
+\[
+ Q_{\mathsf S}:=\operatorname{Coim}(\Beh_{\mathsf S})
+\]
+whenever that coimage exists.
+\end{definition}
+
+In \(\mathbf{Set}\), the behavior map identifies states exactly when every declared future observation agrees.  In a module category, the same object can be constructed directly from the intersection of kernels, without assuming that the possibly infinite product is part of the ambient profile.
+
+\begin{definition}[Behavioral congruence and linear behavioral kernel]
+\label{def:block17-behavioral-kernel}
+In \(\mathbf{Set}\) or a variety of algebras, put
+\[
+ x\equiv_{\mathsf S}y
+ \quad\Longleftrightarrow\quad
+ o_j(\rho(m)x)=o_j(\rho(m)y)
+ \quad\text{for every }m\in M,\ j\in J.
+\]
+Write \(\Theta_{\mathsf S}\) for this relation.  In \(R\text{-}\mathbf{Mod}\), define
+\[
+ N_{\mathsf S}
+ :=
+ \bigcap_{m\in M}\bigcap_{j\in J}
+ \ker(o_j\rho(m)).
+\]
+Then
+\[
+ Q_{\mathsf S}=X/N_{\mathsf S}.
+\]
+\end{definition}
+
+\begin{theorem}[Universal behavioral coimage]
+\label{thm:block17-universal-behavioral-coimage}
+Assume the relevant effective quotient or module quotient exists.  Then \(Q_{\mathsf S}\) preserves every declared future observation.  Moreover, if
+\[
+ q:X\twoheadrightarrow Z
+\]
+is any surjective representation through which every map \(o_j\rho(m)\) factors, there is a unique map
+\[
+ \overline q:Z\longrightarrow Q_{\mathsf S}
+\]
+with \(\overline q\,q:X\to Q_{\mathsf S}\) equal to the canonical quotient map.  Thus \(Q_{\mathsf S}\) is the coarsest exact representation for the declared semantic slice.
+\end{theorem}
+
+\begin{proof}
+In the relational setting, the kernel pair of \(q\) is contained in \(\Theta_{\mathsf S}\), because equality under \(q\) forces equality under every factorized future observation.  The universal property of the quotient by \(\Theta_{\mathsf S}\) gives the unique map.  In the module setting,
+\[
+ \ker q\subseteq
+ \bigcap_{m,j}\ker(o_j\rho(m))=N_{\mathsf S},
+\]
+so the ordinary quotient universal property gives the same conclusion.
+\end{proof}
+
+\begin{boundary}[No observer-independent minimum]
+\label{bnd:block17-no-absolute-minimum}
+The phrase ``minimal representation'' is meaningful only after the carrier, continuation grammar, observation category, and task have been declared.  Changing any one of these data can change the quotient.  In particular, equality of residual functions in \(\mathbf{Set}\) and linear dependence of residual functions in \(K\text{-}\mathbf{Vect}\) are different minimization problems.
+\end{boundary}
+
+\subsection{The maximal stable invisible core}
+\label{subsec:block17-stable-core}
+
+Let
+\[
+ K_0:=\bigcap_j\kerpair(o_j)
+\]
+in the relational setting and
+\[
+ N_0:=\bigcap_j\ker(o_j)
+\]
+in the linear setting.
+
+\begin{theorem}[Behavioral core theorem]
+\label{thm:block17-behavioral-core}
+The behavioral relation \(\Theta_{\mathsf S}\) is the greatest continuation-stable congruence contained in \(K_0\).  In the module setting, \(N_{\mathsf S}\) is the greatest \(\rho(M)\)-invariant submodule contained in \(N_0\).
+\end{theorem}
+
+\begin{proof}
+The identity continuation gives \(\Theta_{\mathsf S}\subseteq K_0\) and \(N_{\mathsf S}\subseteq N_0\).  If \(x\equiv_{\mathsf S}y\), then for every \(n,m\in M\) and every \(j\),
+\[
+ o_j\rho(m)\rho(n)x
+ =o_j\rho(mn)x
+ =o_j\rho(mn)y
+ =o_j\rho(m)\rho(n)y,
+\]
+so the relation is stable.  The same calculation proves invariance of \(N_{\mathsf S}\).
+
+Conversely, let \(R\subseteq K_0\) be continuation stable.  If \(xRy\), then \(\rho(m)x\,R\,\rho(m)y\) for every \(m\), and membership in \(K_0\) forces
+\[
+ o_j\rho(m)x=o_j\rho(m)y
+\]
+for every \(j\).  Hence \(R\subseteq\Theta_{\mathsf S}\).  The submodule statement is identical with relations replaced by differences.
+\end{proof}
+
+\begin{remark}[Comparison with holonomy]
+The maximal path-flat core in \cref{sec:strata-bridges-obstructions} intersects fixed spaces of closed transport words.  The behavioral core intersects kernels of future observation words.  Both constructions extract the greatest subobject on which a declared family of transformations becomes semantically invisible.  They answer different questions and are not identified without a typed comparison map.
+\end{remark}
+
+\subsection{Greatest-fixed-point construction and finite recognition}
+\label{subsec:block17-fixed-point}
+
+Assume \(M\) is generated by a family \(A\).  On congruences or submodules define
+\[
+ \Phi(R)
+ :=
+ K_0\cap\bigcap_{a\in A}\rho(a)^{-1}(R),
+\]
+with the corresponding submodule formula in the linear setting.
+
+\begin{theorem}[Coinductive characterization]
+\label{thm:block17-coinductive-characterization}
+The behavioral core is the greatest fixed point of \(\Phi\):
+\[
+ \Theta_{\mathsf S}=\nu R.\Phi(R),
+ \qquad
+ N_{\mathsf S}=\nu N.\Phi(N).
+\]
+\end{theorem}
+
+\begin{proof}
+A fixed point is precisely an invisible congruence or submodule stable under every generator, hence under the monoid generated by \(A\).  The maximality statement is therefore \cref{thm:block17-behavioral-core}.
+\end{proof}
+
+\begin{corollary}[Finite certification]
+\label{cor:block17-finite-certification}
+For finite \(X\), descending partition refinement stabilizes after finitely many strict refinements.  For finite-dimensional \(X\) over a field, the chain
+\[
+ N^{(0)}=N_0,
+ \qquad
+ N^{(r+1)}=
+ N_0\cap\bigcap_{a\in A}\rho(a)^{-1}(N^{(r)})
+\]
+stabilizes after at most \(\dim X\) strict dimension drops.  At stabilization it equals \(N_{\mathsf S}\).
+\end{corollary}
+
+\begin{proof}
+The iteration is descending and every strict inclusion of finite-dimensional subspaces lowers dimension by at least one.  The stabilized term is a fixed point of \(\Phi\), and the preceding theorem identifies the greatest fixed point.
+\end{proof}
+
+\subsection{The task--congruence Galois connection}
+\label{subsec:block17-task-galois}
+
+Fix a universe \(\mathscr Q(X)\) of admissible queries on \(X\).  For \(\mathcal Q\subseteq\mathscr Q(X)\), define
+\[
+ \Ind(\mathcal Q)
+ :=
+ \bigcap_{q\in\mathcal Q}\kerpair(q).
+\]
+For an equivalence relation or congruence \(R\), define
+\[
+ \Def(R)
+ :=
+ \{q\in\mathscr Q(X):R\subseteq\kerpair(q)\}.
+\]
+
+\begin{theorem}[Task--congruence Galois connection]
+\label{thm:block17-task-galois}
+For every query family \(\mathcal Q\) and relation \(R\),
+\[
+ \mathcal Q\subseteq\Def(R)
+ \quad\Longleftrightarrow\quad
+ R\subseteq\Ind(\mathcal Q).
+\]
+Consequently,
+\[
+ \Cl(\mathcal Q):=\Def(\Ind(\mathcal Q))
+\]
+is a closure operator on query families, and
+\[
+ \operatorname{Sat}(R):=\Ind(\Def(R))
+\]
+is the observational saturation of \(R\) relative to the admitted query universe.
+\end{theorem}
+
+\begin{proof}
+Both conditions say that every query in \(\mathcal Q\) is constant on every \(R\)-class.  The closure laws follow from the standard identities associated with an antitone Galois connection.
+\end{proof}
+
+\begin{definition}[Extensional task]
+\label{def:block17-extensional-task}
+An \emph{extensional task} is a closed query theory, equivalently a query family modulo equality of the closure \(\Cl\).  When the admitted query universe separates the desired quotients, an extensional task can equivalently be represented by its observationally definable congruence.
+\end{definition}
+
+\begin{corollary}[Task strengthening]
+\label{cor:block17-task-strengthening}
+Adding continuations or observations can only refine behavioral indistinguishability.  Thus
+\[
+ M\subseteq M',\qquad \mathcal O\subseteq\mathcal O'
+ \quad\Longrightarrow\quad
+ \Theta_{M',\mathcal O'}\subseteq\Theta_{M,\mathcal O},
+\]
+and there is a canonical forgetting map
+\[
+ Q_{M',\mathcal O'}\longrightarrow Q_{M,\mathcal O}.
+\]
+\end{corollary}
+
+\begin{boundary}[Definable tasks form a closure system]
+\label{bnd:block17-task-lattice}
+All continuation-stable congruences form a complete lattice.  Congruences definable by the chosen query universe are always closed under arbitrary meets.  Closure under joins requires an additional richness or quotient-completeness hypothesis on the query universe and is not asserted automatically.
+\end{boundary}
+
+\subsection{Semantic quotient lattice}
+\label{subsec:block17-quotient-lattice}
+
+\begin{theorem}[Semantic quotient classification, classical]
+\label{thm:block17-semantic-quotient-classification}
+Let \(X\) be an algebra in a variety.  Surjective semantic maps
+\[
+ q:X\twoheadrightarrow Q
+\]
+up to isomorphism of codomains are classified by congruences on \(X\) through
+\[
+ q\longmapsto\ker q.
+\]
+Moreover, a quotient \(q\) maps to a quotient \(r\) exactly when \(\ker q\subseteq\ker r\).
+\end{theorem}
+
+\begin{proof}
+This is the first isomorphism theorem and the universal property of quotient algebras.  It is included to fix the direction of the information order used below.
+\end{proof}
+
+\begin{corollary}[Combined and shared semantics]
+\label{cor:block17-combined-shared-semantics}
+For semantic quotients with kernels \(N\) and \(M\):
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the least common refinement has kernel \(N\cap M\);
+\item the greatest common coarsening has kernel the generated congruence join \(N\vee M\);
+\item in a module category, \(N\vee M=N+M\).
+\end{enumerate}
+\end{corollary}
+
+\subsection{The two-view semantic diamond}
+\label{subsec:block17-semantic-diamond}
+
+Let \(X\) be an \(R\)-module and let
+\[
+ s:X\twoheadrightarrow S,
+ \qquad
+ t:X\twoheadrightarrow T
+\]
+be surjective linear semantic maps.  Put
+\[
+ N=\ker s,
+ \qquad
+ M=\ker t,
+ \qquad
+ J=X/(N\cap M),
+ \qquad
+ C=X/(N+M).
+\]
+
+\begin{theorem}[Semantic diamond and exact compatibility sequence]
+\label{thm:block17-semantic-diamond}
+The canonical square
+\[
+\begin{CD}
+ J @>>> T\\
+ @VVV @VVV\\
+ S @>>> C
+\end{CD}
+\]
+is a pullback in \(R\text{-}\mathbf{Mod}\).  Equivalently,
+\[
+ J\cong S\times_C T.
+\]
+There is also a canonical short exact sequence
+\[
+ 0\longrightarrow X/(N\cap M)
+ \xrightarrow{\alpha}
+ X/N\oplus X/M
+ \xrightarrow{\beta}
+ X/(N+M)
+ \longrightarrow0,
+\]
+where
+\[
+ \alpha(x+N\cap M)=(x+N,x+M)
+\]
+and
+\[
+ \beta(a+N,b+M)=a-b+(N+M).
+\]
+\end{theorem}
+
+\begin{proof}
+The map \(\alpha\) is injective because its kernel is \(N\cap M\).  The formula for \(\beta\) is well defined and surjective.  Clearly \(\beta\alpha=0\).  If \(\beta(a+N,b+M)=0\), then
+\[
+ a-b=n+m
+\]
+for some \(n\in N\) and \(m\in M\).  Set \(x=a-n=b+m\).  Then
+\[
+ (a+N,b+M)=(x+N,x+M)=\alpha(x+N\cap M).
+\]
+Thus \(\ker\beta=\im\alpha\), proving exactness.  The kernel description of the fiber product is the same calculation.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.76\textwidth]{block17_semantic_diamond.pdf}
+\caption{The semantic diamond.  The joint representation \(J\) retains both views.  The common quotient \(C\) is the compatibility interface over which the separate coordinates glue.}
+\label{fig:block17-semantic-diamond}
+\end{figure}
+
+\begin{definition}[Relative semantic residual]
+\label{def:block17-relative-residual}
+The information needed to augment \(S\) so that it also retains \(T\) is
+\[
+ R_{T\mid S}
+ :=
+ \ker(J\to S)
+ \cong
+ N/(N\cap M)
+ \cong
+ (N+M)/M.
+\]
+\end{definition}
+
+\begin{corollary}[Factorization criterion]
+\label{cor:block17-factorization-criterion}
+The following are equivalent:
+\[
+ t\text{ factors through }s,
+ \qquad
+ N\subseteq M,
+ \qquad
+ R_{T\mid S}=0,
+ \qquad
+ J\to S\text{ is an isomorphism}.
+\]
+Moreover,
+\[
+ 0\longrightarrow R_{T\mid S}
+ \longrightarrow J
+ \longrightarrow S
+ \longrightarrow0
+\]
+is exact.
+\end{corollary}
+
+\begin{boundary}[Residuals need not split]
+\label{bnd:block17-residual-splitting}
+The exact sequence above does not canonically identify \(J\) with \(S\oplus R_{T\mid S}\).  Vector-space extensions split noncanonically.  Module, integral, semiring, filtered, or topological extensions may fail to split.  A residual packet presented as an independent coordinate therefore requires an explicit splitting theorem or constructor passport.
+\end{boundary}
+
+\subsection{Exact change of task}
+\label{subsec:block17-task-change}
+
+\begin{theorem}[Task-change exact sequence]
+\label{thm:block17-task-change}
+Let a stronger task have behavioral kernel \(N_s\), and let a weaker task have behavioral kernel \(N_w\), with
+\[
+ N_s\subseteq N_w.
+\]
+Then
+\[
+ 0\longrightarrow N_w/N_s
+ \longrightarrow X/N_s
+ \longrightarrow X/N_w
+ \longrightarrow0
+\]
+is exact.  Thus \(N_w/N_s\) is the exact semantic information discarded when the task is weakened.
+\end{theorem}
+
+\begin{proof}
+Apply the third isomorphism theorem to the chain \(N_s\subseteq N_w\subseteq X\).
+\end{proof}
+
+\begin{corollary}[Composition of task loss]
+\label{cor:block17-task-loss-composition}
+For
+\[
+ N_1\subseteq N_2\subseteq N_3,
+\]
+there is an exact sequence
+\[
+ 0\longrightarrow N_2/N_1
+ \longrightarrow N_3/N_1
+ \longrightarrow N_3/N_2
+ \longrightarrow0.
+\]
+Hence task loss composes as extension data rather than as a canonically split sum.
+\end{corollary}
+
+\begin{resultbox}
+\textbf{Semantic quotient result.}
+Inside a fixed doctrine, declared future tasks are represented by continuation-stable congruences or subobjects.  Behavioral minimization extracts the maximal stable invisible core.  Task strengthening induces canonical forgetting maps, joint tasks form semantic diamonds, and relative task loss is measured by exact quotient objects.  The construction is relative to the semantic slice and does not define an observer-independent minimum.
+\end{resultbox}

@@ -1,0 +1,555 @@
+\section{Local Newton--Mahler coordinates, affine polyphase descent, and precision ladders}
+\label{sec:block08-local}
+
+Local Mahler-polyphase atlas develops the local stratum promised by the work program.  Its purpose is not to merge every use of the word ``Mahler.''  It freezes one precise local semantic doctrine, constructs its normalized coefficient and polyphase charts, types the characteristic-zero, integral, and residue-level affine channels separately, and identifies the exact data needed to pass from finite modular dynamics to certified local analytic packets.
+
+\subsection{Two Mahler languages and the declared local doctrine}
+\label{subsec:block08-two-languages}
+
+Two constructions in the Library use the same historical name but have different variables and different semantics.
+
+\begin{enumerate}
+\item A \emph{functional-Mahler equation}
+\[
+ F(z)=R(z)F(z^p)
+\]
+is an identity for a formal coefficient series in the variable \(z\).  Cartier operators act on the coefficient index.  the periodic and rational-mask atlases use this channel over finite fields.
+\item A \emph{Newton--Mahler expansion}
+\[
+ f(x)=\sum_{r\geq0}c_r\binom xr
+\]
+is a coordinate expansion for a function of a \(p\)-adic input variable \(x\).  Affine substitutions \(x=Mq+s\) produce polyphase branches of the input domain.
+\end{enumerate}
+
+This section treats the second channel.  Fix a prime \(p\).  Let
+\[
+ \mathcal C_p=C(\mathbb Z_p,\mathbb Z_p)
+\]
+with the uniform norm, and let
+\[
+ c_0(\mathbb Z_p)
+ =
+ \left\{c=(c_r)_{r\geq0}:c_r\in\mathbb Z_p,\ c_r\longrightarrow0\right\}
+\]
+with the coefficient sup norm.
+
+\begin{theorem}[Mahler coordinate theorem]
+\label{thm:block08-mahler-coordinate}
+The synthesis map
+\[
+ \mathcal M_p:c_0(\mathbb Z_p)\longrightarrow\mathcal C_p,
+ \qquad
+ c\longmapsto
+ \left(x\longmapsto\sum_{r\geq0}c_r\binom xr\right),
+\]
+is an isometric isomorphism of \(\mathbb Z_p\)-modules.  Its inverse is
+\[
+ \boxed{c_r=\Delta^r f(0).}
+\]
+In particular, the Newton--Mahler coefficient sequence is a canonical complete coordinate for a continuous \(\mathbb Z_p\)-valued function.
+\end{theorem}
+
+\begin{proof}
+This is the classical Mahler coordinate theorem \cite{Mahler1958}.  Finite Newton interpolation gives the coefficient identity on nonnegative integers.  Continuity implies that the forward-difference coefficients tend to zero, so the binomial series converges uniformly on \(\mathbb Z_p\).  Conversely, every coefficient sequence tending to zero gives a uniformly convergent continuous function.  Uniqueness follows from the finite-difference formula.
+\end{proof}
+
+\begin{definition}[Exact valuation profile and certified class]
+\label{def:block08-weight-class}
+For \(f=\mathcal M_p(c)\), define
+\[
+ \nu_f(r)=v_p(c_r)\in\mathbb Z_{\geq0}\cup\{\infty\}.
+\]
+If \(w:\mathbb N\to\mathbb Z_{\geq0}\) is nondecreasing and tends to infinity, put
+\[
+ \mathcal M_w
+ =
+ \{c\in c_0(\mathbb Z_p):v_p(c_r)\geq w(r)\},
+ \qquad
+ \mathcal C_w=\mathcal M_p(\mathcal M_w).
+\]
+The function \(w\) is a declared precision certificate.  The class \(\mathcal C_w\) is not asserted to be a characterization of every possible notion of local analyticity.
+\end{definition}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.98\textwidth]{local_mahler_atlas.pdf}
+\caption{The normalized local atlas.  Continuous semantics, canonical Mahler coefficients, complete clopen branch packets, and branchwise Mahler coefficients are equivalent charts.  A single continuous branch remains directional.}
+\label{fig:block08-local-atlas}
+\end{figure}
+
+\subsection{Complete clopen packets and effective local descent}
+\label{subsec:block08-clopen-descent}
+
+For \(a\geq1\) and \(0\leq s<p^a\), define the branch
+\[
+ \mathcal B_{a,s}f(q)=f(p^a q+s),
+ \qquad q\in\mathbb Z_p,
+\]
+and the complete packet
+\[
+ \mathcal B_a f=\bigl(\mathcal B_{a,s}f\bigr)_{0\leq s<p^a}.
+\]
+
+\begin{theorem}[Complete clopen packet equivalence]
+\label{thm:block08-clopen-equivalence}
+The analysis map
+\[
+ \mathcal B_a:\mathcal C_p
+ \longrightarrow
+ \prod_{s=0}^{p^a-1}\mathcal C_p
+\]
+is an isometric isomorphism.  Its inverse is the piecewise synthesis
+\[
+ \boxed{
+ (\mathcal S_a g)(x)
+ =g_s\!\left(\frac{x-s}{p^a}\right)
+ \quad\text{for }x\in s+p^a\mathbb Z_p.}
+\]
+Thus the clopen residue cover of \(\mathbb Z_p\) has effective descent for both objects and equality morphisms.
+\end{theorem}
+
+\begin{proof}
+The cosets \(s+p^a\mathbb Z_p\) are pairwise disjoint, clopen, and cover \(\mathbb Z_p\).  Restriction followed by the displayed synthesis is the identity.  Conversely, synthesis followed by restriction recovers every component.  Continuity is checked separately on each clopen component, and the uniform norm is the maximum of the branch norms.
+\end{proof}
+
+\begin{theorem}[Strict nested-branch law]
+\label{thm:block08-nested-branches}
+For \(a,b\geq1\), \(0\leq s<p^a\), and \(0\leq t<p^b\),
+\[
+ \boxed{(f_{a,s})_{b,t}=f_{a+b,s+p^a t}.}
+\]
+All multiple-overlap comparison cells for the nested \(p\)-power branch atlas are identities.  Hence its higher coherence is strict rather than merely up to a chosen natural isomorphism.
+\end{theorem}
+
+\begin{proof}
+Direct substitution gives
+\[
+ f_{a,s}(p^bq+t)
+ =f(p^a(p^bq+t)+s)
+ =f(p^{a+b}q+s+p^a t).
+\]
+The address is uniquely determined in the interval \(0\leq s+p^a t<p^{a+b}\).
+\end{proof}
+
+A single branch \(\mathcal B_{a,s}\) is not injective on \(\mathcal C_p\) when \(a\geq1\): any nonzero continuous function supported on another clopen coset lies in its kernel.  The complete packet is therefore the reversible object.  This observation will be contrasted below with the finite-degree characteristic-zero polynomial chart, where one affine branch is invertible.
+
+\subsection{The affine Mahler kernel and mixed-radix coherence}
+\label{subsec:block08-affine-kernel}
+
+For \(M\geq1\), \(s\geq0\), and \(r,k\geq0\), define
+\[
+ \Phi_M(z)=(1+z)^M-1
+\]
+and
+\[
+ \boxed{
+ \Theta_{M,s}(r,k)
+ =[z^r](1+z)^s\Phi_M(z)^k.}
+\]
+Equivalently,
+\[
+ \boxed{
+ \Theta_{M,s}(r,k)
+ =\sum_{j=0}^{k}(-1)^{k-j}\binom kj\binom{Mj+s}{r}.}
+\]
+The support is finite:
+\[
+ \Theta_{M,s}(r,k)=0
+ \quad\text{unless}\quad
+ k\leq r\leq Mk+s.
+\]
+
+\begin{theorem}[Affine Newton--Mahler transfer]
+\label{thm:block08-affine-transfer}
+Let
+\[
+ f(x)=\sum_{r\geq0}c_r\binom xr
+\]
+be a convergent Mahler expansion and put \(g_s(q)=f(Mq+s)\).  Then
+\[
+ g_s(q)=\sum_{k\geq0}d_{s,k}\binom qk,
+\]
+where
+\[
+ \boxed{
+ d_{s,k}
+ =\sum_{r=k}^{Mk+s}c_r\Theta_{M,s}(r,k).}
+\]
+Every output coefficient depends on a finite source window.
+\end{theorem}
+
+\begin{proof}
+Expand
+\[
+ (1+z)^{Mq+s}
+ =(1+z)^s\bigl(1+\Phi_M(z)\bigr)^q
+ =\sum_{k\geq0}\binom qk(1+z)^s\Phi_M(z)^k.
+\]
+Taking \([z^r]\) gives the affine expansion of \(\binom{Mq+s}{r}\).  Substitution into the Mahler series gives the formula.  The finite support of \(\Theta_{M,s}\) makes each coefficient sum finite.
+\end{proof}
+
+Let \(\mathcal T_{M,s}\) denote this coefficient operator.  Conjugating the clopen packet theorem by \(\mathcal M_p\) gives the following normalized coefficient atlas.
+
+\begin{corollary}[Complete coefficient-packet equivalence]
+\label{cor:block08-coefficient-packet}
+For \(M=p^a\), the map
+\[
+ \mathcal T_a:c_0(\mathbb Z_p)
+ \longrightarrow
+ \prod_{s=0}^{p^a-1}c_0(\mathbb Z_p),
+ \qquad
+ c\longmapsto(\mathcal T_{p^a,s}c)_s,
+\]
+is a topological isomorphism.  It is the coefficient conjugate of complete clopen analysis.
+\end{corollary}
+
+\begin{theorem}[Mixed-radix kernel composition]
+\label{thm:block08-kernel-composition}
+For \(M,N\geq1\),
+\[
+ \boxed{
+ \sum_{k\geq0}
+ \Theta_{M,s}(r,k)\Theta_{N,t}(k,\ell)
+ =
+ \Theta_{MN,Mt+s}(r,\ell).}
+\]
+Equivalently,
+\[
+ \boxed{
+ \mathcal T_{N,t}\mathcal T_{M,s}
+ =
+ \mathcal T_{MN,Mt+s}.}
+\]
+When \(\gcd(M,N)=1\), the two Chinese-remainder refinement paths to a common address agree exactly.  Their holonomy is the identity.
+\end{theorem}
+
+\begin{proof}
+Apply the affine substitution \(x=Mq+s\), then \(q=Ny+t\).  The composite is \(x=MNy+Mt+s\).  Uniqueness of Mahler coefficients yields the kernel identity.  The Chinese-remainder diamond is the same equality written along two factorizations of one affine address.
+\end{proof}
+
+\begin{resultbox}
+\textbf{Normalized local atlas.}
+For every fixed prime \(p\) and depth \(a\), the following normalized charts are equivalent:
+\[
+ \boxed{
+ \mathbf{Loc}^{\mathrm{cts}}_p
+ \simeq
+ \mathbf{Mah}^{c_0}_p
+ \simeq
+ \mathbf{Branch}^{\mathrm{cts}}_{p,a}
+ \simeq
+ \mathbf{BranchMah}^{c_0}_{p,a}.}
+\]
+The first chart contains continuous functions on \(\mathbb Z_p\), the second their unique Mahler coefficients, the third the complete clopen branch packet, and the fourth the corresponding branchwise coefficient packet.  Every normalized fiber is contractible.  The descent category is therefore equivalent to the discrete semantic category \(\mathbf{Loc}^{\mathrm{cts}}_p\).
+\end{resultbox}
+
+\subsection{Finite-degree bridge ladder and collective recovery}
+\label{subsec:block08-finite-degree}
+
+The same integer kernel matrix has different categorical status after changing the coefficient doctrine.  Fix \(d\geq0\) and write
+\[
+ \mathcal M_d(R)=R^{d+1}
+\]
+for the formal truncated Mahler coefficient module.  Let
+\[
+ A_{M,s}^{(d)}
+ =\bigl[\Theta_{M,s}(r,k)\bigr]_{0\leq k,r\leq d},
+\]
+where the target degree \(k\) is the row index.
+
+\begin{theorem}[Typed affine-channel ladder]
+\label{thm:block08-channel-ladder}
+For every \(M\geq1\), \(s\geq0\), and \(d\geq0\):
+\begin{enumerate}
+\item The matrix \(A_{M,s}^{(d)}\) is upper triangular with diagonal
+\[
+ 1,M,M^2,\ldots,M^d.
+\]
+Hence
+\[
+ \boxed{\det A_{M,s}^{(d)}=M^{d(d+1)/2}.}
+\]
+Every characteristic-zero polynomial chart is invertible.
+\item On the integral lattice \(\mathbb Z^{d+1}\), one channel is injective.  If \(M>1\) and \(d\geq1\), its image has index \(M^{d(d+1)/2}\), so the channel has no integer linear left inverse.
+\item Let \(p\) be prime and put \(\beta_p=p^{v_p(M)}\).  Reduction modulo \(p\) has exact rank
+\[
+ \boxed{
+ \rank_{\mathbb F_p}\overline A_{M,s}^{(d)}
+ =\left\lfloor\frac d{\beta_p}\right\rfloor+1.}
+\]
+A local channel loses residual rank exactly at primes dividing \(M\).
+\item A complete neighboring packet can recover the source integrally.  The canonical prefix of \(\min(M,d+1)\) standard shifts has an integer left inverse, valid after base change to every commutative ring.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The diagonal follows from the leading term of \(\binom{Mq+s}{r}\), or from the generating identity for \(\Theta_{M,s}\).  The determinant gives the integral index statement.  Modulo \(p\), the first nonzero source degree in target row \(k\) is \(\beta_pk\), which gives the rank formula.  For the prefix packet, choose from channel \(s\) and target row \(k\) the equation indexed by \(n=Mk+s\).  The selected square coefficient matrix is unit lower triangular, so its inverse is integral and remains a left inverse after every base change.
+\end{proof}
+
+\begin{theorem}[Sharp standard packet size]
+\label{thm:block08-sharp-packet}
+Define
+\[
+ B(M)
+ =
+ \max\left(\{1\}\cup\{p^{v_p(M)}:p\mid M\}\right).
+\]
+The least number of standard affine channels whose stacked map has an integer left inverse is
+\[
+ \boxed{L_{\mathbb Z}(M,d)=\min(d+1,B(M)).}
+\]
+The prefix \(\{0,1,\ldots,L_{\mathbb Z}(M,d)-1\}\) attains the minimum.
+
+For a fixed modulus \(N\geq2\), set
+\[
+ B_N(M)
+ =
+ \max\left(\{1\}\cup
+ \{p^{v_p(M)}:p\mid\gcd(M,N)\}\right).
+\]
+The least packet size for a left inverse over \(\mathbb Z/N\mathbb Z\) is
+\[
+ \boxed{L_N(M,d)=\min(d+1,B_N(M)).}
+\]
+The exponents \(v_p(N)\) do not change the minimum; the first residue layer already detects the obstruction.
+\end{theorem}
+
+\begin{proof}
+This is the primary-rank and Smith/Hermite criterion of Core-Transfer Addendum 04.  At a prime \(p\mid M\), selected shifts are visible only through their residues modulo \(p^{v_p(M)}\).  A prefix of the stated length has full rank at every obstructing prime, hence a unimodular-row left inverse.  Any smaller packet fails at a prime attaining the largest relevant primary component.  A nonzero first-layer kernel vector lifts to a kernel vector at every higher prime-power depth.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.93\textwidth]{local_channel_ladder.pdf}
+\caption{The same affine Mahler kernel has four distinct bridge passports.  Characteristic-zero invertibility, integral injection, modular rank, and complete-packet splitting must not be conflated.}
+\label{fig:block08-channel-ladder}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.94\textwidth]{polyphase_kernel_sparsity.pdf}
+\caption{The finite triangular support of the affine kernel and its Frobenius-sparse residue pattern at a prime-power radix.}
+\label{fig:block08-kernel-sparsity}
+\end{figure}
+
+\subsection{Valuation ledgers and Frobenius sparsity}
+\label{subsec:block08-valuations}
+
+The coefficient transform carries a precise lower-bound calculus.
+
+\begin{theorem}[Exact branchwise valuation ledger]
+\label{thm:block08-valuation-ledger}
+For every refined coefficient,
+\[
+ \boxed{
+ v_p(d_{s,k})
+ \geq
+ \min_{k\leq r\leq Mk+s}
+ \left(v_p(c_r)+v_p(\Theta_{M,s}(r,k))\right).}
+\]
+If \(v_p(c_r)\geq w(r)\) for a nondecreasing weight \(w\), then
+\[
+ \boxed{v_p(d_{s,k})\geq w(k).}
+\]
+Thus every declared monotone Mahler precision ladder survives affine polyphase refinement.
+\end{theorem}
+
+\begin{proof}
+The transfer sum is finite.  Apply the non-Archimedean triangle inequality.  Since \(r\geq k\), monotonicity gives \(w(r)\geq w(k)\), and every kernel entry is integral.
+\end{proof}
+
+Define the min-plus certificate transform
+\[
+ \boxed{
+ (\mathfrak W_{M,s}w)(k)
+ =
+ \min_{k\leq r\leq Mk+s}
+ \left(w(r)+v_p(\Theta_{M,s}(r,k))\right).}
+\]
+This transform is a certified lower bound.  It need not be the exact output valuation, because cancellation can increase the valuation beyond the termwise minimum.
+
+\begin{theorem}[Prime-power Frobenius sparsification]
+\label{thm:block08-frobenius-sparsity}
+For \(M=p^a\),
+\[
+ \boxed{
+ \Theta_{p^a,s}(r,k)
+ \equiv
+ \binom{s}{r-p^ak}
+ \pmod p,}
+\]
+where the binomial coefficient is zero outside \(0\leq r-p^ak\leq s\).  Therefore
+\[
+ \boxed{
+ d_{s,k}
+ \equiv
+ \sum_{u=0}^{s}\binom su c_{p^ak+u}
+ \pmod p.}
+\]
+In particular,
+\[
+ \boxed{d_{0,k}\equiv c_{p^ak}\pmod p.}
+\]
+\end{theorem}
+
+\begin{proof}
+In characteristic \(p\),
+\[
+ (1+z)^{p^a}-1\equiv z^{p^a}.
+\]
+Substitute this into the generating definition of \(\Theta_{p^a,s}\) and compare coefficients.
+\end{proof}
+
+\subsection{Carmichael--Mahler state constructors and precision amplification}
+\label{subsec:block08-carmichael}
+
+Finite modular state dynamics provide a directional constructor into the local Mahler chart.  Let
+\[
+ v_{n+1}=Cv_n,
+ \qquad
+ a_n=w^{\mathsf T}C^nv_0,
+\]
+with \(C\in M_d(\mathbb Z_p)\) invertible modulo \(p\).
+
+\begin{theorem}[Matrix Carmichael--Mahler constructor]
+\label{thm:block08-matrix-carmichael}
+Assume
+\[
+ C^H=I+p^LB,
+ \qquad L\geq1.
+\]
+For every address \(j\),
+\[
+ \boxed{
+ a_{Hx+j}
+ =
+ \sum_{r\geq0}
+ p^{Lr}\binom xr
+ w^{\mathsf T}C^jB^rv_0,}
+\]
+where the series converges for \(x\in\mathbb Z_p\).  Its Mahler coefficients satisfy
+\[
+ \boxed{v_p(c_{j,r})\geq Lr,}
+\]
+and
+\[
+ \boxed{\Delta_H^r a_n\equiv0\pmod{p^{Lr}}.}
+\]
+\end{theorem}
+
+\begin{proof}
+Use
+\[
+ C^{Hx+j}=C^j(I+p^LB)^x
+\]
+and expand the principal-unit matrix power by the convergent binomial series.  One forward difference in \(x\) contributes the factor \(p^LB\).
+\end{proof}
+
+\begin{theorem}[Principal-unit precision amplification]
+\label{thm:block08-precision-amplification}
+If \(X=I+p^LB\), then for every \(a\geq0\) there exists \(B_a\in M_d(\mathbb Z_p)\) such that
+\[
+ \boxed{X^{p^a}=I+p^{L+a}B_a.}
+\]
+Consequently, for \(H_a=Hp^a\), every branch \(x\mapsto a_{H_ax+j}\) has Mahler coefficients satisfying
+\[
+ \boxed{v_p(c_{a,j,r})\geq(L+a)r.}
+\]
+Each additional \(p\)-power refinement contributes at least one further digit of precision per Mahler depth.
+\end{theorem}
+
+\begin{proof}
+Induct on \(a\).  If \(X_a=I+p^{L+a}B_a\), the binomial expansion of \(X_a^p\) has linear term divisible by \(p^{L+a+1}\), and every higher term has at least the same valuation.  Apply \cref{thm:block08-matrix-carmichael} at the refined jump.
+\end{proof}
+
+\begin{example}[Refined dyadic Fibonacci packets]
+For the Fibonacci companion matrix
+\[
+ C=\begin{pmatrix}1&1\\1&0\end{pmatrix},
+\]
+one has
+\[
+ C^{12}
+ =I+8\begin{pmatrix}29&18\\18&11\end{pmatrix}.
+\]
+Hence
+\[
+ \boxed{
+ \Delta_{12\cdot2^a}^{\,r}F_n
+ \equiv0\pmod{2^{(a+3)r}}.}
+\]
+\end{example}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.96\textwidth]{local_precision_tree.pdf}
+\caption{A principal-unit state packet acquires one additional guaranteed \(p\)-adic digit per Mahler depth at each \(p\)-power refinement.}
+\label{fig:block08-precision-tree}
+\end{figure}
+
+The state-to-local construction is directional.  A local branch can forget unreachable state directions, nonminimal coordinates, or modes annihilated by the output functional.  Recovering a state presentation requires a separate recognition or minimality theorem and is not part of the Carmichael--Mahler constructor itself.
+
+\subsection{The exact boundary with functional-Mahler masks}
+\label{subsec:block08-functional-boundary}
+
+\begin{proposition}[No canonical unrestricted bridge between the two Mahler channels]
+\label{prop:block08-no-unrestricted-mahler-bridge}
+Functional-Mahler mask data over \(\mathbb F_p\) does not determine a unique Newton--Mahler chart over \(\mathbb Z_p\), and a continuous Newton--Mahler function does not in general determine a rational functional-Mahler mask.
+\end{proposition}
+
+\begin{proof}
+A residue sequence \((\bar a_n)\) admits many integral lifts.  If \((a_n)\) is one lift, then \((a_n+pn)\) is another with the same reduction modulo \(p\).  Their Newton--Mahler coefficients differ by the nonzero coefficient sequence of \(pn\).  Thus the residue-series or functional-mask presentation cannot select one local interpolation without a declared lifting rule.
+
+Conversely, a continuous function \(f:\mathbb Z_p\to\mathbb Z_p\) canonically determines its Newton--Mahler coefficients, but rationality of an ordinary generating series or of the mask \(F(z)/F(z^p)\) is an additional property of a separate coefficient-series presentation.  Continuity alone does not supply it.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.95\textwidth]{two_mahler_languages.pdf}
+\caption{Functional-Mahler and Newton--Mahler constructions require different variables, coefficient doctrines, and normalization data.  A bridge exists only after those extra choices are declared.}
+\label{fig:block08-two-mahler-languages}
+\end{figure}
+
+\begin{boundarybox}
+\textbf{Exact local boundary.}
+Local Mahler-polyphase atlas proves a complete normalized atlas for continuous \(\mathbb Z_p\)-valued functions and their complete \(p^a\)-branch packets.  It proves exact affine coefficient transport, mixed-radix coherence, finite-degree characteristic-zero invertibility, integral split recovery, modular rank loss, valuation preservation, and principal-unit precision amplification under the printed hypotheses.  It does not identify every continuous function as locally analytic, compute exact higher valuations of every \(\Theta_{p^a,s}(r,k)\), choose an optimal mixed-radix refinement tree, or construct the combined spectral--local invariant requested by the broader program.
+\end{boundarybox}
+
+\subsection{Exact examples and finite verification}
+\label{subsec:block08-verification}
+
+For \(f(x)=x^2\), the source Mahler vector is
+\[
+ (c_0,c_1,c_2)=(0,1,2).
+\]
+The two dyadic branches are
+\[
+ f(2q)=4\binom q1+8\binom q2,
+\]
+and
+\[
+ f(2q+1)=1+8\binom q1+8\binom q2.
+\]
+This example exhibits exact finite-window coefficient transport.
+
+For a principal unit \(u=1+p\),
+\[
+ u^x=\sum_{r\geq0}p^r\binom xr.
+\]
+The branch \(x=pq\) has coefficients
+\[
+ \bigl(u^p-1\bigr)^k,
+\]
+whose valuation is at least \(2k\).  The branch therefore improves the original slope-one certificate.
+
+At \(p=2\), \(M=2\), and \(d=3\), each single reduced channel has rank two, while the two-channel packet has rank four.  This is the smallest visible instance of collective recovery.
+
+\input{generated/block08_examples_table.tex}
+\input{generated/block08_validation_table.tex}
+
+The verifier checks the affine generating identity, finite polynomial transport, triangular determinants, mixed-radix composition, Chinese-remainder diamonds, nested branch addresses, prime-power Frobenius sparsity, exact local ranks, packet minimality, integer decoders, composite primary minima, valuation ledgers, scalar principal-unit amplification, and the refined Fibonacci matrix congruences.  It also includes a negative control showing that equal residue data can have distinct Newton--Mahler lifts.
+
+\begin{resultbox}
+\textbf{Section result.}
+The local continuous, Newton--Mahler coefficient, complete clopen branch, and branch-coefficient presentations form an effective normalized atlas.  Affine polyphase kernels compose strictly and transport declared valuation ladders.  The finite-degree restriction exposes a four-level bridge ladder: reversible characteristic-zero charts, nonsplit integral channels, rank-deficient residue channels, and split neighboring packets.  Carmichael--Mahler transfer embeds finite principal-unit state dynamics into the local atlas with a certified precision slope that improves under \(p\)-power refinement.  Functional-Mahler masks remain a distinct typed channel unless coefficient lifts and interpolation data are supplied.
+\end{resultbox}

@@ -1,0 +1,381 @@
+\section{Carrier change, observer base change, and provenance}
+\label{sec:block18-carrier-observer}
+
+A behavioral quotient is computed inside an observation category, but the represented computation also has a carrier algebra.  Additive convolution, Boolean support, max-plus aggregation, and convex support geometry do not combine routes by the same law.  This section separates carrier translation from observer minimization and gives exact obstruction objects for both.
+
+\subsection{Carrier factorization and joint semantic completion}
+\label{subsec:block18-carrier-factorization}
+
+Let \(\mathcal R\) be a raw algebra of expressions or histories for a fixed operation signature.  Let
+\[
+ s:\mathcal R\longrightarrow S,
+ \qquad
+ t:\mathcal R\longrightarrow T
+\]
+be homomorphisms into two semantic carriers.
+
+\begin{theorem}[Carrier factorization gate]
+\label{thm:block18-carrier-factorization}
+There is a unique homomorphism
+\[
+ \varphi:\im(s)\longrightarrow T
+\]
+with \(t=\varphi s\) if and only if
+\[
+ \kerpair(s)\subseteq\kerpair(t).
+\]
+When the condition fails, any pair \(x,y\in\mathcal R\) satisfying
+\[
+ s(x)=s(y),
+ \qquad
+ t(x)\neq t(y)
+\]
+is an exact carrier-change obstruction witness.
+\end{theorem}
+
+\begin{proof}
+Factorization immediately implies constancy of \(t\) on every fiber of \(s\).  Conversely, define
+\[
+ \varphi(s(x)):=t(x).
+\]
+The fiber condition makes this well defined.  Since both \(s\) and \(t\) preserve every primitive operation, so does \(\varphi\).  Uniqueness follows because \(s\) is surjective onto its image.
+\end{proof}
+
+\begin{definition}[Joint semantic completion]
+\label{def:block18-joint-completion}
+Define
+\[
+ j=(s,t):\mathcal R\longrightarrow S\times T,
+ \qquad
+ J_{s,t}:=\im(j).
+\]
+The projection
+\[
+ p_s:J_{s,t}\longrightarrow\im(s)
+\]
+is the \emph{relative completion map} from the joint semantics to the source semantics.
+\end{definition}
+
+\begin{theorem}[Universal joint completion]
+\label{thm:block18-universal-joint-completion}
+The object \(J_{s,t}\) is the coarsest quotient of \(\mathcal R\) preserving both \(s\) and \(t\).  More precisely, if
+\[
+ c:\mathcal R\twoheadrightarrow C
+\]
+admits maps \(a:C\to S\) and \(b:C\to T\) with \(s=ac\) and \(t=bc\), then there is a unique map
+\[
+ C\longrightarrow J_{s,t}
+\]
+compatible with both semantics.  Furthermore,
+\[
+ t\text{ factors through }s
+ \quad\Longleftrightarrow\quad
+ p_s\text{ is an isomorphism}.
+\]
+\end{theorem}
+
+\begin{proof}
+The pair \((a,b)\) factors \(j\) through \(c\), and the image universal property gives the map to \(J_{s,t}\).  If \(t=\varphi s\), then \(J_{s,t}\) is the graph of \(\varphi\), so \(p_s\) is invertible.  Conversely, if \(p_s\) is invertible, define \(\varphi=p_t p_s^{-1}\).
+\end{proof}
+
+\subsection{Behavioral bridges and exact loss}
+\label{subsec:block18-bridge-loss}
+
+Let \(f:X\to Y\) be a linear bridge between observational systems, with behavioral kernels \(N_X\subseteq X\) and \(N_Y\subseteq Y\).
+
+\begin{definition}[Task-compatible bridge]
+\label{def:block18-task-compatible-bridge}
+The bridge is \emph{task compatible} when
+\[
+ f(N_X)\subseteq N_Y.
+\]
+Equivalently,
+\[
+ N_X\subseteq f^{-1}(N_Y).
+\]
+Then there is a unique induced map
+\[
+ \overline f:X/N_X\longrightarrow Y/N_Y.
+\]
+\end{definition}
+
+\begin{theorem}[Bridge-loss exact sequence]
+\label{thm:block18-bridge-loss-exact}
+For every task-compatible linear bridge, there is an exact sequence
+\[
+ 0\longrightarrow
+ \frac{f^{-1}(N_Y)}{N_X}
+ \longrightarrow
+ \frac{X}{N_X}
+ \xrightarrow{\overline f}
+ \frac{Y}{N_Y}
+ \longrightarrow
+ \frac{Y}{N_Y+f(X)}
+ \longrightarrow0.
+\]
+Thus
+\[
+ L_f:=\frac{f^{-1}(N_Y)}{N_X}
+\]
+measures source distinctions collapsed by the bridge, while
+\[
+ E_f:=\frac{Y}{N_Y+f(X)}
+\]
+measures target semantic states outside the essential image.
+\end{theorem}
+
+\begin{proof}
+The kernel of \(\overline f\) consists of classes \(x+N_X\) for which \(f(x)\in N_Y\), hence equals \(f^{-1}(N_Y)/N_X\).  The cokernel of \(\overline f\) is the quotient of \(Y/N_Y\) by \((f(X)+N_Y)/N_Y\), which is \(Y/(N_Y+f(X))\).
+\end{proof}
+
+\begin{corollary}[Exact semantic equivalence gate]
+\label{cor:block18-semantic-equivalence-gate}
+The induced bridge \(\overline f\) is an isomorphism exactly when
+\[
+ L_f=0
+ \qquad\text{and}\qquad
+ E_f=0.
+\]
+Faithfulness on the declared task and essential surjectivity on the declared task are therefore independent obligations.
+\end{corollary}
+
+\begin{theorem}[Loss-composition extension]
+\label{thm:block18-loss-composition}
+For induced quotient maps
+\[
+ Q_X\xrightarrow{\overline f}Q_Y\xrightarrow{\overline g}Q_Z,
+\]
+there is a natural exact sequence
+\[
+ 0\longrightarrow\ker\overline f
+ \longrightarrow\ker(\overline g\,\overline f)
+ \longrightarrow\ker\overline g\cap\im\overline f
+ \longrightarrow0.
+\]
+If \(\overline f\) is surjective, this reduces to
+\[
+ 0\longrightarrow L_f
+ \longrightarrow L_{gf}
+ \longrightarrow L_g
+ \longrightarrow0.
+\]
+\end{theorem}
+
+\begin{proof}
+Map \(x\in\ker(\overline g\,\overline f)\) to \(\overline f(x)\).  Its image is exactly \(\ker\overline g\cap\im\overline f\), and its kernel is \(\ker\overline f\).  Surjectivity of \(\overline f\) identifies the intersection with \(\ker\overline g\).
+\end{proof}
+
+\begin{boundary}[Loss is extension data]
+\label{bnd:block18-loss-extension}
+The preceding sequence need not split.  Consequently, composite information loss is not in general a scalar sum or a canonical direct sum of stagewise losses.  A numerical loss budget may be useful, but it is a further invariant of the exact extension rather than a replacement for it.
+\end{boundary}
+
+\subsection{Carrier-indexed observer packets}
+\label{subsec:block18-carrier-observer-packets}
+
+\begin{theorem}[Carrier-indexed observer packet theorem]
+\label{thm:block18-carrier-indexed-observer}
+Let \(S\) be a finite continuation-state set, let \((A,\oplus,0)\) be a commutative monoid, let \(B\) be a branch alphabet, and let
+\[
+ \delta:S\times B\longrightarrow S
+\]
+be a state transition.  Suppose every branch \(b\in B\) acts by a monoid homomorphism
+\[
+ L_b:A\longrightarrow A.
+\]
+For a state packet \(a=(a_s)_{s\in S}\), define
+\[
+ a'_t
+ :=
+ \bigoplus_{\delta(s,b)=t}L_b(a_s).
+\]
+If raw histories have already been aggregated by their state using \(\oplus\), then this update gives exactly the same result as advancing every raw history separately and aggregating afterward.
+\end{theorem}
+
+\begin{proof}
+Expand the raw history update and group all terms by their predecessor state and new branch.  Associativity and commutativity permit the regrouping.  The identity
+\[
+ L_b\!\left(\bigoplus_i x_i\right)
+ =
+ \bigoplus_i L_b(x_i)
+\]
+then moves aggregation through the branch action.  The displayed formula is the resulting statewise sum.
+\end{proof}
+
+Two important realizations have the same state skeleton but different carriers.
+\begin{enumerate}
+\item For convex value semantics, \(A\) is a family of convex bodies, \(\oplus\) is convex hull of union, and \(L_b(C)=A_b^{\mathsf T}C\).
+\item For linear polyphase routing, \(A\) is an additive convolution algebra, \(\oplus\) is coefficient addition, and \(L_b\) multiplies route kernels by the declared filter or transition weight.
+\end{enumerate}
+The theorem transports the observer skeleton only after the carrier law and the homomorphism obligations are specified.
+
+\subsection{Carrier no-go mechanisms}
+\label{subsec:block18-carrier-no-go}
+
+\begin{theorem}[Cancellation barrier]
+\label{thm:block18-cancellation-barrier}
+Let \(R\) be a nonzero ring and let \(S\) be a nontrivial zerosumfree semiring, so
+\[
+ a+b=0\Longrightarrow a=b=0.
+\]
+There is no unital semiring homomorphism \(R\to S\).
+\end{theorem}
+
+\begin{proof}
+A unital homomorphism \(\varphi\) would give
+\[
+ 0=\varphi(1+(-1))=1_S+\varphi(-1).
+\]
+Zerosumfreeness forces \(1_S=0\), contradicting nontriviality.
+\end{proof}
+
+\begin{theorem}[Idempotence barrier]
+\label{thm:block18-idempotence-barrier}
+Let \(S\) be a nontrivial unital semiring with idempotent addition, and let \(R\) be an additively cancellative nontrivial semiring.  There is no unital semiring homomorphism \(S\to R\).
+\end{theorem}
+
+\begin{proof}
+In \(S\), \(1+1=1\).  Its image in \(R\) would satisfy \(1_R+1_R=1_R\), and additive cancellation would imply \(1_R=0\).
+\end{proof}
+
+\begin{example}[Haar cancellation]
+\label{ex:block18-haar-cancellation}
+For the normalized Haar bank,
+\[
+ \ell=\frac{x_0+x_1}{\sqrt2},
+ \qquad
+ d=\frac{x_0-x_1}{\sqrt2},
+\]
+and
+\[
+ x_0=\frac{\ell+d}{\sqrt2},
+ \qquad
+ x_1=\frac{\ell-d}{\sqrt2}.
+\]
+At \(x=(1,0)\), the two route contributions to \(x_0\) are \(1/2,1/2\), while those to \(x_1\) are \(1/2,-1/2\).  Additive reconstruction returns \((1,0)\).  Replacing route addition by maximum returns \((1/2,1/2)\).  The convex/max carrier is therefore not an exact replacement for the signed additive carrier.
+\end{example}
+
+\subsection{Observer base change and the relation module}
+\label{subsec:block18-observer-base-change}
+
+Let \(E\subseteq K^M\) be the set of distinct residual future functions of a scalar series or observational system.  Set minimization retains the elements of \(E\) as distinct states.  Free linearization produces the vector space \(K^{(E)}\), while linear minimization retains only their span.
+
+\begin{theorem}[Observer base-change exact sequence]
+\label{thm:block18-observer-base-change}
+The evaluation map
+\[
+ \pi:K^{(E)}\longrightarrow\Span_K(E),
+ \qquad
+ \sum_{e\in E}a_e[e]
+ \longmapsto
+ \sum_{e\in E}a_e e
+\]
+is surjective and fits into the exact sequence
+\[
+ 0\longrightarrow\Rel_K(E)
+ \longrightarrow K^{(E)}
+ \xrightarrow{\pi}\Span_K(E)
+ \longrightarrow0,
+\]
+where
+\[
+ \Rel_K(E):=\ker\pi
+\]
+is the module of linear relations among distinct discrete residual states.  Hence Set minimization commutes with free linearization exactly when \(E\) is linearly independent.
+\end{theorem}
+
+\begin{proof}
+Surjectivity is the definition of the linear span.  The sequence is the kernel-cokernel sequence of \(\pi\).  The kernel vanishes exactly when the basis symbols \([e]\) remain linearly independent after evaluation.
+\end{proof}
+
+\begin{theorem}[Exact polyphase separation]
+\label{thm:block18-polyphase-hankel-separation}
+Fix \(N\geq1\) and \(z\neq0\).  Let \(S_z\) be the cyclic shift on \(K^N\) satisfying
+\[
+ S_z e_j=e_{j+1}\quad(j<N-1),
+ \qquad
+ S_z e_{N-1}=z e_0,
+\]
+so \(S_z^N=zI\).  Put
+\[
+ M_N=I+S_z,
+ \qquad
+ f_N(n)=e_0^{\mathsf T}M_N^n e_0.
+\]
+Then the \(N\times N\) Hankel block
+\[
+ H_{ij}=f_N(i+j),
+ \qquad 0\leq i,j<N,
+\]
+has determinant
+\[
+ \det H=\pm z^{N-1}.
+\]
+Consequently its linear residual space has dimension \(N\).  If \(z>0\), the residual functions \(k\mapsto f_N(n+k)\) are pairwise distinct, so the exact discrete future quotient is infinite while the linear continuation dimension is \(N\).
+\end{theorem}
+
+\begin{proof}
+Factor \(H=OC\), where row \(i\) of \(O\) is \(e_0^{\mathsf T}M_N^i\), and column \(j\) of \(C\) is \(M_N^j e_0\).  For \(j<N\), the binomial expansion of \((I+S_z)^j e_0\) is a unit upper-triangular change from \((e_0,\ldots,e_{N-1})\), hence \(\det C=1\).  The rows \(e_0^{\mathsf T}S_z^k\), \(0\leq k<N\), are \(e_0^{\mathsf T}\) followed by \(z e_{N-k}^{\mathsf T}\), so their determinant is \(\pm z^{N-1}\).  The binomial row change is also unit triangular, proving the determinant formula.
+
+For positive \(z\),
+\[
+ f_N(n)=\sum_{r=0}^{\lfloor n/N\rfloor}\binom n{Nr}z^r.
+\]
+The sequence is strictly increasing from index \(N-1\) onward.  Prefixes below \(N\) are distinguished by choosing the first suffix that crosses index \(N\), and later prefixes differ already at suffix zero.  Thus all residual functions are distinct.
+\end{proof}
+
+The interpretation of finite Hankel rank as minimal weighted-linear realization dimension is classical weighted-automata theory \cite{CarlylePaz1971,LiRabusseauPrecup2018}.  The displayed family is retained here because it gives an exact internal example of an infinite discrete quotient and a finite linear quotient.
+
+\subsection{Observer-conditioned convex packets}
+\label{subsec:block18-convex-provenance}
+
+Let \(S\) be a finite observer-state set and let \(C_s\subseteq\mathbb R^d\) be a compact convex body for each state.  For branch matrices \(A_b\) and transition \(\delta\), put
+\[
+ C'_t
+ =
+ \operatorname{conv}
+ \bigcup_{\delta(s,b)=t}A_b^{\mathsf T}C_s.
+\]
+
+\begin{theorem}[Observer-conditioned convex packet transport]
+\label{thm:block18-convex-packet-transport}
+For every direction \(x\),
+\[
+ h_{C'_t}(x)
+ =
+ \max_{\delta(s,b)=t}h_{C_s}(A_bx).
+\]
+Repeated updates compose exactly with branch words.  Within each fixed observer state, replacing a finite atom family by any other finite generating family of the same convex hull preserves all future value queries generated by linear branch actions.
+\end{theorem}
+
+\begin{proof}
+For a linear map \(A\),
+\[
+ h_{A^{\mathsf T}C}(x)=h_C(Ax).
+\]
+The support function of the convex hull of a finite union is the maximum of the component support functions.  These two identities give the formula.  Iteration follows from composition of the linear maps and of \(\delta\).  Equality of convex hulls is preserved by linear images and convex hull of union, proving future value equivalence.
+\end{proof}
+
+\begin{proposition}[Singular resurrection]
+\label{prop:block18-singular-resurrection}
+A provenance state carried only by a strictly interior atom may be inactive for every current nonzero linear query and yet become active after an admissible singular continuation.  In particular, if the zero map is admissible, every atom is sent to the same point and all provenance states tie.
+\end{proposition}
+
+\begin{proposition}[Invertible hiding]
+\label{prop:block18-invertible-hiding}
+Assume the total convex body is full-dimensional, query directions are nonzero, and every admissible branch matrix is invertible.  A strictly interior atom remains strictly interior under every continuation and therefore cannot maximize a nonzero linear functional.  Its provenance remains permanently hidden from the declared value query.
+\end{proposition}
+
+\begin{proof}
+Invertible linear maps preserve relative interior and full dimension.  A nonzero linear functional cannot attain its maximum at a strict interior point of a compact full-dimensional convex body.
+\end{proof}
+
+\begin{boundary}[Value, witness, and history are distinct tasks]
+\label{bnd:block18-provenance-boundary}
+Exact convex geometry determines value semantics and its derived normal-fan structure.  It does not determine branch identity, maximizing multiplicity, or raw history.  Value-only, one-witness, all-witness, and complete-history tasks therefore have different minimal quotients.  No provenance deletion rule is valid without the admissible continuation class and the downstream query family.
+\end{boundary}
+
+\begin{resultbox}
+\textbf{Carrier and observer result.}
+Exact carrier replacement is equivalent to semantic factorization.  When it fails, the joint image is the universal completion preserving both semantics.  Behavioral bridges carry independent kernel-loss and essential-image defects.  Observer minimization then depends on the observation category: discrete residual equality and linear residual span are related by an exact relation module, not by automatic identification.
+\end{resultbox}

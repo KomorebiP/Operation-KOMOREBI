@@ -1,0 +1,833 @@
+\section{Holonomic Ore charts, multisection modules, and a Fuchsian packet theorem}
+\label{sec:block09-holonomic}
+
+Holonomic atlas develops the next native stratum in the declared work program.  The general holonomic problem has two logically separate parts.  First, a D-finite series and its P-recursive coefficient sequence require normalized operator charts that remember the finite initial data lost by tail recurrences.  Second, arithmetic multisection preserves holonomicity but can change minimal order through root-orbit aliasing, resonance, and address-dependent cancellation.  The first part is closed here on the ordinary-point locus.  The second is organized in general and solved exactly for a nontrivial regular-singular family.
+
+Throughout this section, $K$ is a characteristic-zero field.  When local monodromy is discussed, $K$ is embedded in $\mathbb C$ and all local exponents are taken over an algebraic closure.
+
+\subsection{Ore annihilators and normalized holonomic charts}
+\label{subsec:block09-ore}
+
+Let
+\[
+ \mathcal D_K=K(z)\langle D\rangle,
+ \qquad
+ Dq=qD+q',
+\]
+be the differential Ore algebra, and let
+\[
+ \mathcal S_K=K(n)\langle S\rangle,
+ \qquad
+ Sq(n)=q(n+1)S,
+\]
+be the forward-shift Ore algebra.  Both are Euclidean skew-polynomial rings in their operator variable, so their nonzero left ideals have unique monic generators \cite{Ore1933}.
+
+\begin{definition}[Minimal differential annihilator]
+For a nonzero D-finite series $F\in K[[z]]$, define
+\[
+ \operatorname{Ann}_{\mathcal D}(F)
+ =
+ \{L\in\mathcal D_K:LF=0\}.
+\]
+Its unique monic generator is denoted
+\[
+ \boxed{L_F.}
+\]
+The differential order
+\[
+ r_D(F)=\operatorname{ord}_D L_F
+\]
+is the minimal scalar differential order of $F$ over $K(z)$.
+\end{definition}
+
+\begin{definition}[Minimal tail recurrence]
+For a sequence $a=(a_n)_{n\geq0}$, define its tail annihilator by
+\[
+ \operatorname{Ann}_{\rm tail}(a)
+ =
+ \{R\in\mathcal S_K:(Ra)_n=0\text{ for all sufficiently large }n\}.
+\]
+For a non-eventually-zero P-recursive sequence, its unique monic generator is denoted
+\[
+ \boxed{R_a.}
+\]
+If the sequence is eventually zero, the tail generator is $1$ and has order zero.
+\end{definition}
+
+Write
+\[
+ R_a
+ =
+ S^s+\sum_{j=0}^{s-1}r_j(n)S^j.
+\]
+Let $\nu_a$ be the least index from which $R_a$ annihilates the sequence, and define $N_a$ to be the least integer $N\geq\nu_a$ larger than every nonnegative pole of the rational functions $r_j(n)$.  Then
+\[
+ \mathfrak R(a)
+ =
+ \bigl(R_a,N_a,a_0,\ldots,a_{N_a+s-1}\bigr)
+\]
+is a canonical complete recurrence chart.  The operator controls the tail, while the finite prefix crosses every singular index and fixes the exact sequence rather than only its eventual equivalence class.
+
+\begin{proposition}[Derivative-module rank]
+\label{prop:block09-derivative-rank}
+For a nonzero D-finite series $F$,
+\[
+ \boxed{
+ r_D(F)
+ =
+ \dim_{K(z)}\operatorname{span}_{K(z)}
+ \{F,DF,D^2F,\ldots\}.}
+\]
+\end{proposition}
+
+\begin{proof}
+A differential operator of order $r$ gives a linear dependence among $F,DF,\ldots,D^rF$.  Minimality of $L_F$ says that no dependence exists among the first $r$ derivative vectors.  Therefore they form a basis of the derivative span.
+\end{proof}
+
+\subsection{The exact coefficient bridge}
+\label{subsec:block09-coefficient-bridge}
+
+The classical equivalence between P-recursive sequences and D-finite ordinary generating functions is effective in both directions \cite{Stanley1980}.  The following formulas make the finite residual explicit.
+
+Let
+\[
+ F(z)=\sum_{n\geq0}a_nz^n
+\]
+and
+\[
+ L
+ =
+ \sum_{j=0}^{r}q_j(z)D^j,
+ \qquad
+ q_j(z)=\sum_{m=0}^{d_j}q_{j,m}z^m.
+\]
+
+\begin{theorem}[Differential-to-recurrence coefficient formula]
+\label{thm:block09-diff-to-rec}
+For every $n\geq0$,
+\[
+ \boxed{
+ [z^n]LF
+ =
+ \sum_{j=0}^{r}
+ \sum_{m=0}^{\min(d_j,n)}
+ q_{j,m}
+ (n-m+j)^{\underline{j}}
+ a_{n-m+j},}
+\]
+where
+\[
+ x^{\underline j}=x(x-1)\cdots(x-j+1).
+\]
+Consequently, every polynomial-coefficient differential equation yields an explicit polynomial recurrence after a finite reindexing.
+\end{theorem}
+
+\begin{proof}
+The coefficient of $z^{n-m}$ in $D^jF$ is
+\[
+ (n-m+j)^{\underline j}a_{n-m+j}.
+\]
+Multiplication by $q_{j,m}z^m$ shifts that contribution to degree $n$.  Summing over $j$ and $m$ gives the formula.
+\end{proof}
+
+Conversely, suppose
+\[
+ \sum_{s=0}^{q}p_s(n)a_{n+s}=0
+ \qquad(n\geq N),
+\]
+where $p_s\in K[n]$, and put
+\[
+ \theta=zD.
+\]
+
+\begin{theorem}[Recurrence residual as an Euler-operator polynomial]
+\label{thm:block09-rec-to-diff}
+Define
+\[
+ \boxed{
+ Q
+ =
+ \sum_{s=0}^{q}
+ z^{q-s}p_s(\theta-s).}
+\]
+Then
+\[
+ \boxed{
+ [z^{n+q}]QF
+ =
+ \sum_{s=0}^{q}p_s(n)a_{n+s}.}
+\]
+Hence $QF$ is a polynomial of degree less than $N+q$, and
+\[
+ \boxed{D^{N+q}QF=0.}
+\]
+\end{theorem}
+
+\begin{proof}
+The operator $p_s(\theta-s)$ multiplies the coefficient of $z^k$ by $p_s(k-s)$.  After multiplication by $z^{q-s}$, the coefficient at $z^{n+q}$ is $p_s(n)a_{n+s}$.  The recurrence kills every coefficient from degree $N+q$ onward.  Differentiating more times than the residual degree gives a homogeneous annihilator.
+\end{proof}
+
+The polynomial residual is not noise.  It is the exact finite-prefix certificate that distinguishes a recurrence valid only in the tail from an identity in the full formal-series chart.
+
+\subsection{The ordinary-point holonomic atlas}
+\label{subsec:block09-ordinary-atlas}
+
+\begin{definition}[Ordinary-point locus]
+A nonzero D-finite series $F\in K[[z]]$ belongs to
+\[
+ \mathbf{Hol}^{\rm ord}_K
+\]
+when its monic minimal operator can be written
+\[
+ L_F
+ =
+ D^r+\sum_{j=0}^{r-1}\ell_j(z)D^j
+\]
+with every $\ell_j$ regular at $z=0$.
+\end{definition}
+
+The normalized jet is
+\[
+ J_0(F)
+ =
+ \bigl(F(0),F'(0),\ldots,F^{(r-1)}(0)\bigr).
+\]
+
+\begin{theorem}[Ordinary-point reconstruction]
+\label{thm:block09-ordinary-reconstruction}
+Let
+\[
+ L=D^r+\sum_{j=0}^{r-1}\ell_j(z)D^j
+\]
+with all $\ell_j$ regular at zero.  For every jet
+\[
+ (y_0,\ldots,y_{r-1})\in K^r
+\]
+there is a unique formal series $F\in K[[z]]$ satisfying
+\[
+ LF=0,
+ \qquad
+ F^{(j)}(0)=y_j.
+\]
+\end{theorem}
+
+\begin{proof}
+Write $F(z)=\sum c_nz^n$.  At coefficient degree $n$, the monic term $D^rF$ contributes
+\[
+ \frac{(n+r)!}{n!}c_{n+r},
+\]
+while every lower derivative involves only $c_0,\ldots,c_{n+r-1}$.  Characteristic zero makes the displayed coefficient invertible.  The equation therefore determines $c_{n+r}$ recursively from the jet.
+\end{proof}
+
+\begin{theorem}[Normalized ordinary holonomic atlas]
+\label{thm:block09-ordinary-atlas}
+On the ordinary-point locus, the following normalized presentations determine one another exactly:
+\[
+ \boxed{
+ \begin{aligned}
+ &F\in K[[z]],\\
+ &(L_F,J_0(F)),\\
+ &\operatorname{span}_{K(z)}\{D^jF:j\geq0\}
+   \text{ with cyclic vector }F,\\
+ &(R_a,N_a,a_0,\ldots,a_{N_a+s-1}),
+ \qquad a_n=[z^n]F.
+ \end{aligned}}
+\]
+With equality morphisms, these charts form equivalent normalized groupoids, and every fiber over a fixed semantic series is contractible.
+\end{theorem}
+
+\begin{proof}
+The series gives its unique minimal Ore operators and finite data.  The derivative module recovers $L_F$ as the first monic dependence among consecutive derivatives.  The operator and jet recover $F$ by \cref{thm:block09-ordinary-reconstruction}.  The recurrence chart reconstructs every coefficient after its singular prefix.  The two explicit coefficient formulas transport between the differential and recurrence channels.  Minimal monic normalization removes coordinate automorphisms, so each normalized fiber has only the identity.
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.97\textwidth]{holonomic_ore_atlas.pdf}
+\caption{The ordinary holonomic atlas keeps the semantic series, minimal differential operator and jet, cyclic derivative module, and minimal tail recurrence with singular prefix as separate normalized charts.}
+\label{fig:block09-ore-atlas}
+\end{figure}
+
+\subsection{General arithmetic multisection}
+\label{subsec:block09-general-multisection}
+
+For $N\geq1$ and $0\leq j<N$, define
+\[
+ \mathfrak M_{N,j}F(x)
+ =
+ \sum_{m\geq0}a_{Nm+j}x^m.
+\]
+If $\omega_N$ is a primitive $N$th root of unity and $x=t^N$, then
+\[
+ \boxed{
+ t^j\mathfrak M_{N,j}F(t^N)
+ =
+ \frac1N
+ \sum_{q=0}^{N-1}
+ \omega_N^{-jq}F(\omega_N^qt).}
+\]
+This is the character projector for the cyclic rotation action.
+
+\begin{theorem}[Holonomic multisection closure]
+\label{thm:block09-multisection-closure}
+If $F$ is D-finite, then every $\mathfrak M_{N,j}F$ is D-finite.  Equivalently, arithmetic sections of P-recursive sequences are P-recursive.
+\end{theorem}
+
+\begin{proof}
+The root-filter formula uses finitely many algebraic substitutions and a finite linear combination.  D-finite series are closed under those operations.  The resulting section has coefficients in the original base field, so the operator descends.
+\end{proof}
+
+Closure does not determine the smallest operator.  A separate exact state construction gives a useful bound.
+
+\begin{theorem}[Nonautonomous state jump]
+\label{thm:block09-state-jump}
+Suppose a P-recursive sequence is represented, beyond its singular prefix, by
+\[
+ v_{n+1}=C(n)v_n,
+ \qquad
+ a_n=\lambda(n)v_n,
+\]
+where $v_n\in K^s$ and $C(n)$ is rational.  Then the $j$th $N$-section has the jump system
+\[
+ \boxed{
+ w_{m+1}=J_{N,j}(m)w_m,}
+\]
+where
+\[
+ \boxed{
+ J_{N,j}(m)
+ =
+ C(Nm+j+N-1)\cdots C(Nm+j).}
+\]
+After denominator clearing, every scalar output has a polynomial recurrence of order at most $s$.
+\end{theorem}
+
+\begin{proof}
+Compose the $N$ consecutive one-step transfers.  The $s+1$ consecutive scalar output rows are linearly dependent over $K(m)$, producing a recurrence of order at most $s$.
+\end{proof}
+
+The root filter also gives a construction-independent order ledger before the algebraic descent from $t$ to $x=t^N$.  Work over a finite extension $E/K$ containing $\omega_N$.  Put
+\[
+ F_q(t)=F(\omega_N^qt),
+ \qquad
+ G_{N,j}(t)=\frac1N\sum_{q=0}^{N-1}\omega_N^{-jq}F_q(t).
+\]
+Let $L_q\in E(t)\langle D_t\rangle$ be the monic minimal annihilator of $F_q$.  Rotation is an Ore-algebra automorphism, so every $L_q$ has order $r=\operatorname{ord}L_F$.  Let
+\[
+ L_N^{\rm orb}=\operatorname{LCLM}(L_0,\ldots,L_{N-1}),
+ \qquad
+ r_N^{\rm orb}=\operatorname{ord}L_N^{\rm orb},
+\]
+and, when $G_{N,j}\neq0$, let $L_{N,j}^{\rm char}$ be its monic minimal annihilator with order $r_{N,j}^{\rm char}$.  For a zero character packet put $r_{N,j}^{\rm char}=0$.
+
+\begin{definition}[Root-filter alias and address-cancellation defects]
+\label{def:block09-general-defects}
+Define
+\[
+ \mathfrak a_N(F)=Nr-r_N^{\rm orb},
+ \qquad
+ \mathfrak c_{N,j}(F)=r_N^{\rm orb}-r_{N,j}^{\rm char}.
+\]
+The first quantity measures dependence already present among the rotated holonomic modules.  The second measures the additional loss caused by the $j$th character projector after the rotated orbit has been assembled.
+\end{definition}
+
+\begin{theorem}[Exact two-stage root-filter defect identity]
+\label{thm:block09-general-defect-identity}
+The defects in \cref{def:block09-general-defects} are nonnegative and satisfy
+\[
+ \boxed{
+ Nr-r_{N,j}^{\rm char}
+ =
+ \mathfrak a_N(F)+\mathfrak c_{N,j}(F).}
+\]
+Thus orbit aliasing occurs before address selection, while address cancellation occurs after the Fourier character has been applied.
+\end{theorem}
+
+\begin{proof}
+The least common left multiple has order at most the sum of the orders of its inputs, hence $r_N^{\rm orb}\leq Nr$.  It annihilates every rotated series and therefore annihilates their character sum $G_{N,j}$.  By minimality, $L_N^{\rm orb}$ belongs to the principal left annihilator ideal generated by $L_{N,j}^{\rm char}$ whenever the character sum is nonzero, so $r_{N,j}^{\rm char}\leq r_N^{\rm orb}$.  The zero case is immediate.  The displayed identity is the telescoping decomposition
+\[
+ Nr-r_{N,j}^{\rm char}
+ =
+ (Nr-r_N^{\rm orb})+(r_N^{\rm orb}-r_{N,j}^{\rm char}).
+\]
+\end{proof}
+
+\begin{boundarybox}
+\textbf{Root-filter order versus packet order.}
+The preceding theorem is exact in the rotated $t$-coordinate over $E(t)$.  The arithmetic packet is the series $\mathfrak M_{N,j}F(x)$ over the base field, related by
+\[
+ G_{N,j}(t)=t^j\mathfrak M_{N,j}F(t^N).
+\]
+Algebraic pullback, base extension, gauge multiplication, and descent may change the minimal scalar operator visible in the $x$-chart.  That comparison is a separately typed descent problem.  The exact binomial--Fuchsian family below computes both sides and therefore resolves this additional step in a nontrivial model case.
+\end{boundarybox}
+
+Let $Q^{\rm cl}_{N,j}$ be an annihilator produced by a declared closure or elimination pipeline, and let $L_{N,j}$ be the monic minimal operator of the section.  Since every annihilator belongs to the principal left ideal generated by $L_{N,j}$,
+\[
+ Q^{\rm cl}_{N,j}=A_{N,j}L_{N,j}
+\]
+for some Ore operator $A_{N,j}$.  The nonnegative quantity
+\[
+ \delta^{\rm cl}_{N,j}
+ =
+ \operatorname{ord}Q^{\rm cl}_{N,j}
+ -
+ \operatorname{ord}L_{N,j}
+\]
+measures cancellation relative to that construction.  It is not intrinsic until the construction has been fixed.
+
+\subsection{Operator singularities and local exponent packets}
+\label{subsec:block09-local-exponents}
+
+Multiply $L_F$ by a common denominator, divide the polynomial coefficients by their greatest common divisor, and normalize the leading coefficient to be monic.  This gives a unique primitive polynomial representative
+\[
+ \widetilde L_F
+ =
+ \sum_{j=0}^{r}q_j(z)D^j.
+\]
+Its operator singular support is
+\[
+ \Sigma_{\rm op}(F)
+ =
+ \{q_r(z)=0\}\cup\{\infty\}.
+\]
+Apparent singularities remain part of this operator coordinate until an explicit desingularization has been performed.
+
+Let $\alpha$ be a finite point and put
+\[
+ v_j=v_\alpha(q_j),
+ \qquad
+ \mu=\min_j(v_j-j).
+\]
+Write the first nonzero local coefficient of $q_j$ as $q_{j,v_j}$.  The indicial polynomial is
+\[
+ \boxed{
+ I_{\alpha,L}(\rho)
+ =
+ \sum_{v_j-j=\mu}
+ q_{j,v_j}\rho^{\underline j}.}
+\]
+At a regular singular point, its roots form the local exponent packet.  Over $\mathbb C$, the corresponding local monodromy eigenvalues are
+\[
+ e^{2\pi i\rho}.
+\]
+Integer differences between exponents signal resonance.  Exponent eigenvalues alone do not determine logarithmic extension data or the full monodromy conjugacy class.
+
+\begin{proposition}[Singularity orbit under multisection]
+\label{prop:block09-singularity-orbit}
+Assume $F$ is an analytic germ at zero with analytic continuation away from a finite set $\Sigma$.  Then every finite nonzero analytic singularity of $\mathfrak M_{N,j}F$ lies in
+\[
+ \boxed{
+ \Sigma^{[N]}
+ =
+ \{\alpha^N:\alpha\in\Sigma\}.}
+\]
+Distinct singularities in one fiber of $\alpha\mapsto\alpha^N$ are aliased by the multisection map.  A character projection may remove some aliased local contributions.
+\end{proposition}
+
+\begin{proof}
+Away from $\Sigma^{[N]}$ and zero, choose a local analytic branch $t=x^{1/N}$.  Every rotated argument $\omega_N^qt$ avoids $\Sigma$, so the root-filter expression is analytic.  A singularity can therefore occur only when one rotated preimage meets $\Sigma$.
+\end{proof}
+
+At nonzero regular singular points, the map $t\mapsto t^N$ is unramified.  It preserves local exponents before character projection.  At zero and infinity it is ramified, so exponent scaling must be recorded separately.
+
+\subsection{An exact binomial--Fuchsian packet family}
+\label{subsec:block09-binomial-family}
+
+The general minimal multisection problem remains open.  The family
+\[
+ \boxed{
+ F_{\lambda,\alpha}(z)
+ =
+ (1-\alpha z)^{-\lambda}}
+\]
+provides a nontrivial exact model that contains irreducible Fuchsian packets, rational collapse, finite-support aliasing, and zero-address cancellation in one parameter space.
+
+Its coefficients are
+\[
+ a_n
+ =
+ \frac{(\lambda)_n}{n!}\alpha^n.
+\]
+For $0\leq j<N$, put
+\[
+ G_{N,j}^{\lambda,\alpha}(x)
+ =
+ \sum_{m\geq0}
+ \frac{(\lambda)_{Nm+j}}{(Nm+j)!}
+ \alpha^{Nm+j}x^m.
+\]
+Define the upper and lower parameter packets
+\[
+ A_{N,j}(\lambda)
+ =
+ \left\{
+ \frac{\lambda+j+r}{N}:0\leq r<N
+ \right\},
+\]
+\[
+ B_{N,j}
+ =
+ \left\{
+ \frac{j+1+r}{N}:0\leq r<N
+ \right\}\setminus\{1\}.
+\]
+
+\begin{theorem}[Exact hypergeometric packet form]
+\label{thm:block09-hypergeom-packet}
+If $(\lambda)_j\neq0$, then
+\[
+ \boxed{
+ G_{N,j}^{\lambda,\alpha}(x)
+ =
+ \frac{(\lambda)_j\alpha^j}{j!}
+ {}_NF_{N-1}
+ \!\left(
+ \begin{matrix}A_{N,j}(\lambda)\\ B_{N,j}\end{matrix}
+ ;\alpha^Nx
+ \right).}
+\]
+Its coefficients satisfy the first-order polynomial recurrence
+\[
+ \boxed{
+ \prod_{r=0}^{N-1}(Nm+j+1+r)u_{m+1}
+ =
+ \alpha^N
+ \prod_{r=0}^{N-1}(Nm+j+\lambda+r)u_m.}
+\]
+The series is annihilated by
+\[
+ \boxed{
+ \mathcal H_{N,j}^{\lambda,\alpha}
+ =
+ \theta
+ \prod_{b\in B_{N,j}}(\theta+b-1)
+ -
+ \alpha^Nx
+ \prod_{a\in A_{N,j}(\lambda)}(\theta+a),}
+\]
+where $\theta=xD_x$.
+\end{theorem}
+
+\begin{proof}
+Split the rising factorials and ordinary factorials into their $N$ residue factors.  The multiplication formula gives the displayed hypergeometric coefficients.  Taking the ratio of consecutive packet coefficients gives the recurrence.  Coefficient comparison with the standard ${}_NF_{N-1}$ operator gives the differential equation.
+\end{proof}
+
+\begin{theorem}[Minimal differential order phase diagram]
+\label{thm:block09-order-phase}
+Let
+\[
+ r_D(N,j;\lambda)
+ =
+ r_D\bigl(G_{N,j}^{\lambda,\alpha}\bigr),
+ \qquad \alpha\neq0.
+\]
+Then:
+
+\begin{enumerate}
+\item If $\lambda\notin\mathbb Z$, then
+\[
+ \boxed{r_D(N,j;\lambda)=N.}
+\]
+\item If $\lambda=L\in\mathbb Z_{>0}$, then every packet is a nonzero rational function with exact denominator
+\[
+ (1-\alpha^Nx)^L,
+\]
+and
+\[
+ \boxed{r_D(N,j;L)=1.}
+\]
+\item If $\lambda=-M\in\mathbb Z_{\leq0}$, then $G_{N,j}^{-M,\alpha}$ is zero when $j>M$.  Otherwise it is a nonzero polynomial of degree
+\[
+ \left\lfloor\frac{M-j}{N}\right\rfloor
+\]
+and
+\[
+ \boxed{
+ r_D(N,j;-M)
+ =
+ \begin{cases}
+ 1,&j\leq M,\\
+ 0,&j>M.
+ \end{cases}}
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For nonintegral $\lambda$, no difference between an upper parameter and a completed lower parameter is an integer.  The classical irreducibility criterion for generalized hypergeometric operators therefore makes $\mathcal H_{N,j}^{\lambda,\alpha}$ irreducible of order $N$ \cite{BeukersHeckman1989}.  Since the packet is nonzero, its minimal operator has order $N$.
+
+For $L>0$, the coefficient is a polynomial of degree $L-1$ in $m$ times $\alpha^{Nm+j}$.  Its generating function is rational with denominator $(1-\alpha^Nx)^L$, and the leading polynomial term prevents cancellation of the highest denominator power.  Every nonconstant rational function has a first-order logarithmic-derivative annihilator.
+
+For $\lambda=-M$, the source series is the polynomial $(1-\alpha z)^M$.  Selecting one residue class leaves exactly the displayed finite support.  A nonzero polynomial has differential order one, while the zero function has order zero.
+\end{proof}
+
+The tail recurrence order and differential order are different invariants.  A nonzero finite-support coefficient sequence has tail recurrence order zero but its polynomial generating function has differential order one.
+
+\subsection{Orbit aliasing and address cancellation}
+\label{subsec:block09-alias-cancellation}
+
+Let $\omega_N$ be primitive and consider the rotated orbit
+\[
+ \mathcal O_N(F_{\lambda,\alpha})
+ =
+ \left
+ \{(1-\alpha\omega_N^rt)^{-\lambda}:0\leq r<N\right\}.
+\]
+Let $r_{\rm orb}$ be its dimension over the constant field.
+
+\begin{theorem}[Exact orbit rank]
+\label{thm:block09-orbit-rank}
+For the binomial family,
+\[
+ \boxed{
+ r_{\rm orb}(N;\lambda)
+ =
+ \begin{cases}
+ N,&\lambda\notin\mathbb Z_{\leq0},\\
+ \min(N,M+1),&\lambda=-M\in\mathbb Z_{\leq0}.
+ \end{cases}}
+\]
+\end{theorem}
+
+\begin{proof}
+If $\lambda$ is nonintegral, each rotated branch has a branch singularity at a different point.  If $\lambda$ is a positive integer, each has a pole at a different point.  A constant linear relation would therefore have zero coefficient at every branch.
+
+If $\lambda=-M$, expand
+\[
+ (1-\alpha\omega_N^rt)^M
+ =
+ \sum_{n=0}^{M}
+ \binom Mn(-\alpha)^n\omega_N^{rn}t^n.
+\]
+The rotation matrix is a truncated discrete Fourier matrix.  Its rank is the number of available residue classes, namely $\min(N,M+1)$.
+\end{proof}
+
+Define the alias and cancellation deficits by
+\[
+ \boxed{
+ A_N(\lambda)=N-r_{\rm orb}(N;\lambda),}
+\]
+\[
+ \boxed{
+ C_{N,j}(\lambda)
+ =
+ r_{\rm orb}(N;\lambda)
+ -r_D(N,j;\lambda).}
+\]
+Then
+\[
+ \boxed{
+ N-r_D(N,j;\lambda)
+ =
+ A_N(\lambda)+C_{N,j}(\lambda).}
+\]
+
+\begin{corollary}[Exact defect formulas]
+\label{cor:block09-defect-formulas}
+The three parameter regimes have the following signatures.
+
+\begin{enumerate}
+\item If $\lambda\notin\mathbb Z$, then
+\[
+ A_N(\lambda)=0,
+ \qquad
+ C_{N,j}(\lambda)=0.
+\]
+\item If $\lambda=L>0$, then
+\[
+ A_N(L)=0,
+ \qquad
+ C_{N,j}(L)=N-1.
+\]
+\item If $\lambda=-M\leq0$, then
+\[
+ A_N(-M)=\max(0,N-M-1),
+\]
+and
+\[
+ C_{N,j}(-M)
+ =
+ \begin{cases}
+ \min(N,M+1)-1,&j\leq M,\\
+ \min(N,M+1),&j>M.
+ \end{cases}
+\]
+\end{enumerate}
+\end{corollary}
+
+This separates two mechanisms that are easily conflated.  Orbit aliasing occurs before an address is selected.  Address cancellation occurs after the Fourier projector has been applied.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.97\textwidth]{holonomic_multisection_pipeline.pdf}
+\caption{The declared holonomic multisection pipeline.  General closure constructs an annihilator but does not prove minimality.  The binomial--Fuchsian family admits an exact orbit-rank and address-cancellation decomposition.}
+\label{fig:block09-multisection-pipeline}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.96\textwidth]{holonomic_order_phase.pdf}
+\caption{Minimal differential order in the binomial packet family.  Nonintegral exponents retain order $N$, positive integers collapse to rational order one, and nonpositive integers terminate with explicit aliasing and zero-address packets.}
+\label{fig:block09-order-phase}
+\end{figure}
+
+\subsection{Local exponent and monodromy packet}
+\label{subsec:block09-fuchsian-exponents}
+
+For $\lambda\notin\mathbb Z$, the hypergeometric operator in \cref{thm:block09-hypergeom-packet} is Fuchsian with singularities
+\[
+ \boxed{
+ 0,
+ \qquad
+ \alpha^{-N},
+ \qquad
+ \infty.}
+\]
+Its exponent packets are
+\[
+ \boxed{
+ E_0
+ =
+ \{0\}\cup\{1-b:b\in B_{N,j}\},}
+\]
+\[
+ \boxed{
+ E_{\alpha^{-N}}
+ =
+ \{0,1,\ldots,N-2,-\lambda\},}
+\]
+and
+\[
+ \boxed{
+ E_\infty
+ =
+ A_{N,j}(\lambda).}
+\]
+Modulo integers, $E_0$ is the complete $N$-torsion set
+\[
+ \left\{0,\frac1N,\ldots,\frac{N-1}{N}\right\},
+\]
+and the pairwise differences in $E_\infty$ are also $N$-torsion.
+
+\begin{proposition}[Local monodromy ledger]
+\label{prop:block09-local-monodromy}
+For nonintegral rational $\lambda$:
+
+\begin{enumerate}
+\item the monodromy eigenvalues at zero form the complete group of $N$th roots of unity;
+\item the ratios of monodromy eigenvalues at infinity are $N$th roots of unity;
+\item the distinguished nontrivial eigenvalue at $\alpha^{-N}$ is
+\[
+ e^{-2\pi i\lambda}.
+\]
+\end{enumerate}
+\end{proposition}
+
+The local eigenvalues are finite-order when $\lambda\in\mathbb Q$.  This does not imply that the global monodromy group is finite.  Connection matrices and logarithmic extension data remain additional invariants.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.94\textwidth]{holonomic_exponent_packet.pdf}
+\caption{The exact Fuchsian exponent packet of a nonintegral binomial multisection.  Root-orbit aliasing moves $N$ rotated source singularities into one finite singularity while the complete $N$-torsion exponent sets remain visible at zero and infinity.}
+\label{fig:block09-exponent-packet}
+\end{figure}
+
+
+\subsection{Marked normalized packet atlas}
+\label{subsec:block09-marked-atlas}
+
+The order theorem is most naturally a theorem about marked packets.  Without the mark, distinct choices of source exponent, scale, width, and address can represent the same zero packet or the same rational function.
+
+\begin{definition}[Marked binomial--Fuchsian packet]
+\label{def:block09-marked-packet}
+A marked packet is a tuple
+\[
+ \mathfrak b=(\alpha,\lambda,N,j;G),
+\]
+where $\alpha\neq0$, $N\geq1$, $0\leq j<N$, and
+\[
+ G(x)=G_{N,j}^{\lambda,\alpha}(x).
+\]
+The parameters $(\alpha,\lambda,N,j)$ are part of the semantic object rather than metadata to be forgotten.
+\end{definition}
+
+For a nonzero marked packet, consider the following normalized charts:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item the marked coefficient series $G$;
+\item the primitive first-order tail recurrence obtained from the exact coefficient ratio, together with its finite initial record;
+\item the monic minimal differential operator from \cref{thm:block09-order-phase}, together with the distinguished power-series solution selected by the marked coefficient record;
+\item the hypergeometric parameter packet $\bigl(A_{N,j}(\lambda),B_{N,j};\alpha^N\bigr)$ and leading coefficient;
+\item the primitive minimal-operator singular and indicial record
+\[
+ \mathscr E(G)
+ =
+ \left(
+ \Sigma_{\rm op}(G),
+ \bigl(I_{\xi,L_G}\bigr)_{\xi\in\Sigma_{\rm op}(G)}
+ \right),
+\]
+together with the orbit-rank and defect data
+\[
+ \left(r_{\rm orb},r_D,A_N,C_{N,j}\right).
+\]
+In the nonintegral Fuchsian regime, \(\mathscr E(G)\) is the explicit three-point packet
+\[
+ \left(E_0,E_{\alpha^{-N}},E_\infty\right)
+\]
+computed above.  In the integral regimes it is computed from the corresponding minimal first-order operator.  The zero packets in the terminated regime are retained as separately marked zero objects with the zero-operator convention.
+\end{enumerate}
+
+\begin{theorem}[Effective marked binomial--Fuchsian atlas]
+\label{thm:block09-marked-descent}
+The five normalized presentations above determine one another on the declared marked family.  With equality morphisms they form equivalent discrete groupoids, every normalized fiber is contractible, and objects and morphisms descend effectively.  The package
+\[
+ \boxed{
+ \mathcal J_{\rm BF}
+ =
+ \left(
+ \alpha,\lambda,N,j,
+ R_{N,j},L_{N,j},
+ A_{N,j}(\lambda),B_{N,j},
+ \mathscr E(G),
+ r_{\rm orb},r_D,A_N,C_{N,j}
+ \right)}
+\]
+is complete on this marked category.
+\end{theorem}
+
+\begin{proof}
+The mark constructs the coefficient packet directly.  Consecutive coefficient ratios give the normalized recurrence chart, and the multiplication formula gives the hypergeometric chart.  \Cref{thm:block09-order-phase} identifies the monic minimal differential operator in every parameter regime.  The primitive polynomial representative of that operator determines \(\mathscr E(G)\) by the indicial construction in \cref{subsec:block09-local-exponents}.  In the nonintegral regime, \cref{prop:block09-local-monodromy} gives its explicit Fuchsian eigenvalue ledger.  \Cref{thm:block09-orbit-rank,cor:block09-defect-formulas} compute the orbit and cancellation data in every regime.  Conversely, the displayed invariant retains the complete mark and therefore reconstructs the source packet and every normalized chart.  Uniqueness of monic Ore normalization and of the marked coefficient record leaves no nontrivial automorphism in a fiber.
+\end{proof}
+
+\subsection{Examples and exact verification}
+\label{subsec:block09-verification}
+
+The parity sections of
+\[
+ \frac{2}{1-z^2}
+\]
+give the smallest singularity-alias example.  The source singularities $1$ and $-1$ both map to $1$ under squaring.  The even address is $2/(1-x)$, while the odd address vanishes.
+
+For
+\[
+ 2\cosh z,
+\]
+the even packet is nonzero and the odd packet is zero.  There is no finite singularity, so the cancellation occurs at the level of the character-projected solution rather than by finite singularity collision.
+
+For the Catalan sequence, every arithmetic section remains hypergeometric in the packet index.  Its recurrence order is one, while its ordinary generating function remains a second-order algebraic D-finite function.  This again shows that recurrence order and scalar differential order are different coordinates.
+
+For the Ap\'ery numbers, the known two-dimensional nonautonomous state jumps to every arithmetic section.  The jump theorem gives an exact order-two recurrence bound, but the present holonomic theorem does not claim a closed minimality formula for all Ap\'ery addresses.
+
+\input{generated/block09_examples_table.tex}
+\input{generated/block09_validation_table.tex}
+
+The Holonomic atlas verifier checks the binomial packet recurrence, the generalized hypergeometric differential coefficient identity, nonresonance of the irreducible parameter packets, zero and infinity exponent torsion classes, positive-integral rational collapse, nonpositive-integral orbit rank and address support, and root-filter orthogonality.  It records 174,940 exact checks with no failures.
+
+\begin{boundarybox}
+\textbf{Exact holonomic boundary.}
+The holonomic section proves normalized minimal Ore charts on the ordinary-point locus and an exact multisection minimality theorem for the binomial--Fuchsian packet family.  It does not prove a universal formula for minimal multisection operators of arbitrary D-finite series.  Irregular singularities, Stokes data, apparent-singularity removal, resonant logarithmic extensions, general differential-module cyclicity after character projection, and a finite all-address signature for unrestricted holonomic systems remain open.
+\end{boundarybox}
+
+\begin{resultbox}
+\textbf{Section result.}
+P-recursive and D-finite presentations now form an explicit normalized atlas on the ordinary-point locus, with minimal Ore annihilators, finite prefix and jet certificates, and exact coefficient transport.  General arithmetic multisection has a typed root-filter and state-jump construction, together with an explicit construction-relative minimality defect.  The binomial--Fuchsian family supplies the first exact holonomic packet phase diagram: nonintegral exponents retain differential order $N$, positive integers collapse to rational order one, nonpositive integers terminate with a closed orbit-alias and address-cancellation formula, and the nonintegral local exponent packet exposes the complete finite torsion at zero and infinity.
+\end{resultbox}
