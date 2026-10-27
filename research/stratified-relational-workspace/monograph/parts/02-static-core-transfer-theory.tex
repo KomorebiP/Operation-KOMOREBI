@@ -1,0 +1,413 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{II}{Static Core--Transfer Theory}
+
+\topic{3}{Interaction Structure}
+
+\begin{definition}[Interaction graph]\label{def:interaction-graph}
+Let
+\[
+G=(V,E,s,t)
+\]
+be a finite directed multigraph. Parallel edges and self-loops are allowed.
+The vertex set indexes strata, participants, artifacts, models, instruments,
+or subworkspaces. An edge \(e:i\to j\) denotes an admissible directed
+translation or influence channel from \(i\) to \(j\).
+\end{definition}
+
+The directed path category is
+\[
+\mathcal C=\Path(G).
+\]
+Its objects are vertices. A path
+\[
+\gamma=e_m\cdots e_2e_1
+\]
+means that \(e_1\) is traversed first. Composition is concatenation, and the
+empty path at \(i\) is denoted \(1_i\).
+
+For every \(i\in V\), assign a finite-dimensional Hilbert space
+\[
+X_i.
+\]
+For every edge, assign a linear transfer
+\[
+T_e:X_{s(e)}\longrightarrow X_{t(e)}.
+\]
+The path transfer is
+\[
+T_\gamma=T_{e_m}\cdots T_{e_2}T_{e_1},
+\qquad
+T_{1_i}=I_{X_i}.
+\]
+Accordingly, the static transfer system is a functor
+\[
+\mathcal X:\Path(G)\longrightarrow\mathbf{FinHilb}.
+\]
+
+The finite-dimensional Hilbert assumption supplies adjoints and spectral
+tools. The exact compatible-section definitions require less and may later be
+formulated in categories such as
+\[
+\mathbf{Ban},\qquad
+\mathbf{Meas},\qquad
+\mathbf{Prob},\qquad
+\mathbf{Top},\qquad
+\mathbf{Alg}.
+\]
+
+\subtopic{3.1 Directed paths versus invertible transport}
+
+Global compatible sections make sense even when transfers are noninvertible.
+Holonomy, however, requires transport around reversible loops. To state the
+exact holonomy theorem without ambiguity, let \(|G|\) be the underlying
+undirected graph and let
+\[
+\Pi_1(G)
+\]
+denote its fundamental path groupoid. Every oriented edge is then supplied
+with a formal reverse. The core transfers extend to \(\Pi_1(G)\) only when
+the relevant maps \(H_e\) are invertible, with
+\[
+H_{e^{-1}}=H_e^{-1}.
+\]
+
+Hence two regimes will be distinguished:
+\begin{enumerate}
+\item the \emph{diagram regime}, in which arbitrary directed maps define
+compatible sections; and
+\item the \emph{local-system regime}, in which invertible core maps define a
+functor
+\[
+H:\Pi_1(G)\to\mathbf{FinHilb}^{\times}.
+\]
+\end{enumerate}
+Theorems based on holonomy will explicitly assume the second regime.
+
+\subtopic{3.2 Connectivity convention}
+
+Unless stated otherwise, connectedness means that \(|G|\) is connected. A
+root \(o\in V\) may then be joined to every vertex by a path in the underlying
+graph. If \(G\) has several connected components, the theory applies to each
+component and
+\[
+\Gamma(H)
+\cong
+\bigoplus_{\alpha}\Gamma(H|_{G_\alpha}).
+\]
+
+\subtopic{3.3 Edge weights}
+
+For approximate theory, assign strictly positive edge weights
+\[
+w_e>0.
+\]
+They may encode channel reliability, frequency, precision, experimental
+importance, or inverse noise variance. Exact compatibility is independent of
+positive rescaling of these weights, while approximate spectra are not.
+
+\begin{example}[Human--model--artifact graph]\label{ex:hma-graph}
+The motivating three-node system is represented by
+\[
+V=\{h,m,a\},
+\qquad
+E=\{h\to m,m\to a,a\to h\}.
+\]
+Additional edges may encode direct retrieval \(a\to m\), human revision
+\(h\to a\), or independent verification. The graph records permitted
+translations, not merely physical communication links.
+\end{example}
+
+\topic{4}{Core--Residual Decomposition}
+
+\begin{definition}[Admissible local decomposition]\label{def:core-residual}
+For every vertex \(i\), choose an orthogonal decomposition
+\[
+X_i=C_i\oplus R_i,
+\]
+with projectors
+\[
+P_i:X_i\to C_i,
+\qquad
+Q_i=I-P_i:X_i\to R_i.
+\]
+The subspace \(C_i\) is the candidate locally realized transferable core. The
+subspace \(R_i\) contains substrate-specific, context-specific, or otherwise
+noncore degrees of freedom relative to the present analysis.
+\end{definition}
+
+The decomposition is part of the model and is not presumed unique. Calling a
+subspace ``core'' is therefore a hypothesis requiring structural and causal
+validation. Later null tests must determine whether the chosen projectors
+identify a genuine shared channel rather than an arbitrary low-dimensional
+summary.
+
+Relative to these decompositions, every edge map has the block form
+\[
+T_e=
+\begin{pmatrix}
+H_e & U_e\\
+V_e & K_e
+\end{pmatrix},
+\]
+where
+\[
+H_e=P_{t(e)}T_eP_{s(e)}:C_{s(e)}\to C_{t(e)},
+\]
+\[
+U_e=P_{t(e)}T_eQ_{s(e)}:R_{s(e)}\to C_{t(e)},
+\]
+\[
+V_e=Q_{t(e)}T_eP_{s(e)}:C_{s(e)}\to R_{t(e)},
+\]
+\[
+K_e=Q_{t(e)}T_eQ_{s(e)}:R_{s(e)}\to R_{t(e)}.
+\]
+
+\subtopic{4.1 Structural conditions}
+
+\textbf{Core preservation} means
+\[
+V_e=0.
+\]
+A core input cannot leak into the target residual.
+
+\textbf{Core autonomy} means
+\[
+U_e=V_e=0.
+\]
+Core and residual evolve as separate transfer systems.
+
+\textbf{Core leakage}, \textbf{residual contamination}, and \textbf{total
+transfer defect} are measured by
+\[
+\lambda_e^{\mathrm{out}}=\|V_e\|,
+\qquad
+\lambda_e^{\mathrm{in}}=\|U_e\|,
+\]
+\[
+\delta_e^{\mathrm{tr}}
+=
+\|U_e\|+\|V_e\|.
+\]
+These quantities depend on the chosen norms and projectors. Their empirical
+meaning must therefore be tied to a declared intervention and prediction
+protocol.
+
+\subtopic{4.2 Composition exposes residual mediation}
+
+For composable edges \(e:i\to j\) and \(f:j\to k\), direct block
+multiplication gives
+\[
+T_fT_e
+=
+\begin{pmatrix}
+H_fH_e+U_fV_e & H_fU_e+U_fK_e\\
+V_fH_e+K_fV_e & V_fU_e+K_fK_e
+\end{pmatrix}.
+\]
+The induced core-to-core block is therefore
+\[
+P_kT_fT_eP_i
+=
+H_fH_e+U_fV_e.
+\]
+The term \(U_fV_e\) is a residual-mediated correction: information leaves the
+candidate core at the intermediate node and later re-enters it. Consequently,
+the simple path product \(H_fH_e\) faithfully represents full core transport
+only under a preservation condition such as \(V_e=0\), or under an explicit
+model that includes these mediated corrections.
+
+\begin{proposition}[Pathwise core preservation]\label{prop:pathwise-preservation}
+Suppose \(V_e=0\) for every edge in a directed path
+\(\gamma=e_m\cdots e_1\). Then
+\[
+T_\gamma(C_{s(\gamma)})\subseteq C_{t(\gamma)}
+\]
+and
+\[
+P_{t(\gamma)}T_\gamma P_{s(\gamma)}
+=
+H_{e_m}\cdots H_{e_1}.
+\]
+\end{proposition}
+
+\begin{proof}
+For a single edge, \(V_e=0\) means
+\[
+T_e(c,0)=(H_ec,0),
+\]
+so core states remain in the core. Inductively, if the first \(r\) transfers
+map \(c\) to \((H_{e_r}\cdots H_{e_1}c,0)\), applying \(T_{e_{r+1}}\) gives
+\[
+(H_{e_{r+1}}H_{e_r}\cdots H_{e_1}c,0).
+\]
+The conclusion follows after \(m\) steps.
+\end{proof}
+
+\begin{corollary}[Autonomous splitting]\label{cor:autonomous-splitting}
+If \(U_e=V_e=0\) for every edge, then the complete diagram decomposes as the
+direct sum of two diagrams,
+\[
+\mathcal X\cong H\oplus K,
+\]
+and every path transfer satisfies
+\[
+T_\gamma
+=
+\begin{pmatrix}
+H_\gamma&0\\
+0&K_\gamma
+\end{pmatrix}.
+\]
+\end{corollary}
+
+\subtopic{4.3 Exact core-transfer systems}
+
+\begin{definition}[Exact core-transfer system]\label{def:exact-core-transfer}
+An exact core-transfer system on \(G\) consists of:
+\begin{enumerate}
+\item decompositions \(X_i=C_i\oplus R_i\);
+\item core-preserving edge maps \(V_e=0\); and
+\item invertible core blocks \(H_e\in GL(C_{s(e)},C_{t(e)})\) whenever
+holonomy is invoked.
+\end{enumerate}
+\end{definition}
+
+The requirement \(V_e=0\) concerns the relation between the selected core and
+the full transfer. The requirement that \(H_e\) be invertible concerns the
+ability to compare core representations along reversed paths. They answer
+different questions and should not be conflated.
+
+\begin{remark}[Approximate systems]
+In applications neither condition need hold exactly. The approximate theory
+will replace strict invariance by low transfer energy, small leakage, and a
+spectral gap separating workspace modes from residual modes.
+\end{remark}
+
+\topic{5}{Abstract Operation Algebra}
+
+\begin{definition}[Operation algebra]\label{def:operation-algebra}
+Let \(\mathbb F\in\{\mathbb R,\mathbb C\}\). An operation algebra
+\(\mathcal A\) is a unital associative \(\mathbb F\)-algebra whose elements
+represent abstract transformations, inferential rules, questions, or
+procedures that can be realized in multiple strata.
+\end{definition}
+
+Every core space carries a unital representation
+\[
+\rho_i:\mathcal A\longrightarrow\End(C_i).
+\]
+For \(a\in\mathcal A\), the operator \(\rho_i(a)\) is the realization of the
+same abstract operation in local coordinates.
+
+\begin{definition}[Exact operation-compatible transfer]\label{def:intertwiner}
+A core transfer \(H_e:C_i\to C_j\) is operation compatible when it is an
+intertwiner:
+\[
+\boxed{
+H_e\rho_i(a)=\rho_j(a)H_e
+}
+\qquad
+\forall a\in\mathcal A.
+\]
+Equivalently, the diagram
+\[
+\begin{array}{ccc}
+C_i&\xrightarrow{\rho_i(a)}&C_i\\
+\downarrow H_e&&\downarrow H_e\\
+C_j&\xrightarrow{\rho_j(a)}&C_j
+\end{array}
+\]
+commutes for every \(a\).
+\end{definition}
+
+This condition states that translating and then operating gives the same
+result as operating and then translating. Agreement of static encodings alone
+is weaker: two nodes may store corresponding vectors while implementing
+incompatible transformations on them.
+
+\begin{proposition}[Path composition of intertwiners]\label{prop:path-intertwiner}
+If every edge of a path \(\gamma:i\to j\) intertwines the local
+\(\mathcal A\)-representations, then
+\[
+H_\gamma\rho_i(a)=\rho_j(a)H_\gamma
+\qquad
+\forall a\in\mathcal A.
+\]
+\end{proposition}
+
+\begin{proof}
+For composable intertwiners \(H_e:C_i\to C_j\) and
+\(H_f:C_j\to C_k\),
+\[
+H_fH_e\rho_i(a)
+=H_f\rho_j(a)H_e
+=\rho_k(a)H_fH_e.
+\]
+Induction over path length proves the claim.
+\end{proof}
+
+\begin{corollary}[Holonomy commutes with abstract operations]\label{cor:holonomy-commutes}
+For every loop \(\gamma:o\to o\),
+\[
+H_\gamma\rho_o(a)=\rho_o(a)H_\gamma.
+\]
+Hence
+\[
+\rho_o(\mathcal A)
+\subseteq
+\operatorname{Comm}(\Hol_o),
+\]
+where \(\operatorname{Comm}(\Hol_o)\) is the commutant of the holonomy
+representation.
+\end{corollary}
+
+\subtopic{5.1 Approximate operation compatibility}
+
+The edgewise defect is
+\[
+\Xi_e(a)
+=
+H_e\rho_{s(e)}(a)-\rho_{t(e)}(a)H_e.
+\]
+For a bounded generating family \(\mathcal G\subseteq\mathcal A\), define
+\[
+\eta_{\mathrm{int}}(\mathcal G)
+=
+\sup_{a\in\mathcal G}
+\sum_{e\in E}w_e\|\Xi_e(a)\|^2.
+\]
+When \(\mathcal A\) is normed and its unit ball is appropriate, one may take
+\[
+\mathcal G=\{a:\|a\|_{\mathcal A}\leq1\}.
+\]
+Exact representational universality means
+\[
+\eta_{\mathrm{int}}=0,
+\]
+while approximate universality means
+\[
+\eta_{\mathrm{int}}\leq\varepsilon_{\mathrm{int}}.
+\]
+The use of a generating family prevents the definition from depending on an
+unbounded rescaling of algebra elements.
+
+\begin{example}[Equivalent operations in different coordinates]\label{ex:coordinate-intertwiner}
+Let \(C_1=C_2=\mathbb R^2\), choose \(S\in GL_2(\mathbb R)\), and set
+\[
+H_{12}=S,
+\qquad
+\rho_2(a)=S\rho_1(a)S^{-1}.
+\]
+Then
+\[
+H_{12}\rho_1(a)
+=S\rho_1(a)
+=\rho_2(a)S
+=\rho_2(a)H_{12}.
+\]
+The local matrices can look different while realizing the same abstract
+operation. This is the elementary model of representation change used
+throughout the theory.
+\end{example}

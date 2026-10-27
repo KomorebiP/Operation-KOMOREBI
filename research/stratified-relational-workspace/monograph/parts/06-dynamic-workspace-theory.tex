@@ -1,0 +1,521 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{VI}{Dynamic Workspace Theory}
+
+\topic{19}{Probabilistic Local and Relational Dynamics}
+
+The static theory identifies compatible directions across a declared transfer
+network. A dynamic workspace claim requires additional probabilistic objects:
+a history, a target future, a decision problem, and an intervention family.
+These must be fixed before sufficiency or causal efficacy is evaluated.
+
+\begin{definition}[Dynamic relational realization]\label{def:dynamic-realization}
+A dynamic relational realization is defined on a probability space
+\((\Omega,\mathcal F,\mathbb P)\) and consists of:
+\begin{itemize}
+\item node states \(X_i(t)\in\mathsf X_i\) for \(i\in V\);
+\item edge messages \(M_e(t)\in\mathsf M_e\) for \(e\in E\);
+\item external inputs \(E_t\), local actions \(A_i(t)\), and disturbances
+ \(\xi_i(t),\zeta_e(t)\);
+\item time-dependent transfer data \(H_e(t)\), local core vectors \(c_i(t)\),
+ and transfer Laplacians \(L_t=L_{H(t)}\); and
+\item a future target \(Y_t^+\in\mathsf Y\).
+\end{itemize}
+All state, history, and target spaces are assumed standard Borel unless a
+stronger topology is explicitly invoked.
+\end{definition}
+
+A representative local update is
+\[
+X_i(t+1)
+=
+F_i\!\left(
+X_i(t),
+\{M_e(t):t(e)=i\},
+A_i(t),E_t,\xi_i(t)
+\right),
+\]
+with messages
+\[
+M_e(t)
+=
+K_e\!\left(
+X_{s(e)}(t),
+W_t,
+E_t,\zeta_e(t)
+\right).
+\]
+This notation permits, but does not require, the current workspace state to
+modulate future transfers.
+
+For a coalition \(A\subseteq V\), let \(\mathbf H_t^A\) denote the random
+history available to that coalition through time \(t\). Its generated
+information is
+\[
+\mathcal F_t^A=\sigma(\mathbf H_t^A).
+\]
+The full relational history is \(\mathbf H_t=\mathbf H_t^V\), with
+\[
+\mathcal F_t^A\subseteq\mathcal F_t^B
+\qquad
+\text{whenever }A\subseteq B.
+\]
+The empty-coalition history \(\mathbf H_t^\varnothing\) is the trivial
+constant statistic and represents prediction from the background target law
+alone.
+A concrete history may contain node trajectories, incident messages, actions,
+artifacts, transfer-map estimates, and the declared graph history. The exact
+contents must be reported because coalition sufficiency is relative to what a
+coalition is permitted to observe.
+
+The target \(Y_t^+\) can be a next output, a finite future trajectory, a
+research decision, a proof outcome, or any measurable downstream quantity.
+Every predictive workspace claim is therefore target-relative:
+\[
+\operatorname{WorkspaceFor}(Y_t^+)
+\centernot\Longrightarrow
+\operatorname{WorkspaceFor}(\widetilde Y_t^+).
+\]
+
+Let
+\[
+c(t)=(c_i(t))_{i\in V}
+\in
+\mathcal C_V(t),
+\qquad
+P_t=\mathbf 1_{[0,\varepsilon_t]}(L_t).
+\]
+The instantaneous structural workspace coordinate is
+\[
+\boxed{
+W_t^{\mathrm{str}}=P_tc(t)
+\in
+\Gamma_{\varepsilon_t}(H(t)).
+}
+\]
+When \(P_t\) varies with time, these coordinates inhabit a moving family of
+subspaces. Parts~X--XII will supply the transport required to compare them
+across time. In what follows, all sufficiency and intervention statements
+are made at a fixed decision time \(t\).
+
+\begin{remark}[Three objects that must not be conflated]
+The realization state \(S_t\), the complete history \(\mathbf H_t\), and the
+structural coordinate \(W_t^{\mathrm{str}}\) are different objects. The first
+is an instantaneous physical or computational state, the second contains all
+admissible past information, and the third is a low-transfer-energy statistic
+extracted from the declared core geometry.
+\end{remark}
+
+\topic{20}{Canonical Predictive and Interventional Causal States}
+
+The quotient notation
+\([\mathbf H_t]_{\sim_Y}\) expresses the right intuition but hides
+measurability and null-set issues. A canonical construction is obtained from
+regular conditional distributions.
+
+\begin{definition}[Predictive kernel and canonical state]\label{def:predictive-kernel}
+Let \(\mathsf H_t\) and \(\mathsf Y\) be standard Borel spaces. A regular
+conditional kernel is a measurable map
+\[
+K_t:\mathsf H_t\times\mathcal B(\mathsf Y)\to[0,1]
+\]
+satisfying
+\[
+K_t(h,A)
+=
+\mathbb P(Y_t^+\in A\mid\mathbf H_t=h)
+\]
+for \(\mathbb P_{\mathbf H_t}\)-almost every \(h\). Let
+\(\mathcal P(\mathsf Y)\) carry its evaluation sigma-algebra. The canonical
+predictive state is the random probability measure
+\[
+\boxed{
+Z_t
+=
+K_t(\mathbf H_t,\cdot)
+\in
+\mathcal P(\mathsf Y).
+}
+\]
+Two histories are predictively equivalent precisely when they induce the same
+conditional law of \(Y_t^+\).
+\end{definition}
+
+\begin{theorem}[Predictive-state sufficiency and minimality, \(T_{12}\)]
+\label{thm:predictive-state}
+Under Definition~\ref{def:predictive-kernel}:
+\begin{enumerate}
+\item \(Z_t\) is predictively sufficient:
+\[
+Y_t^+\indep\mathbf H_t\mid Z_t.
+\]
+\item If \(S_t=s(\mathbf H_t)\) is any other history statistic satisfying
+\[
+Y_t^+\indep\mathbf H_t\mid S_t,
+\]
+then there is a measurable map \(\phi\) such that
+\[
+Z_t=\phi(S_t)
+\qquad\text{almost surely}.
+\]
+\item Consequently, any two minimal sufficient predictive states are
+measurably isomorphic after removal of null sets.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+For every bounded measurable \(f:\mathsf Y\to\mathbb R\), define
+\[
+Z_t(f)=\int_{\mathsf Y}f(y)\,Z_t(\mathrm dy).
+\]
+By construction,
+\[
+\mathbb E[f(Y_t^+)\mid\mathbf H_t]=Z_t(f).
+\]
+Since \(Z_t\) is a measurable function of \(\mathbf H_t\), the tower property
+gives
+\[
+\mathbb E[f(Y_t^+)\mid Z_t]
+=
+\mathbb E[Z_t(f)\mid Z_t]
+=
+Z_t(f).
+\]
+Hence conditioning additionally on \(\mathbf H_t\) does not change the
+conditional expectation, which is the stated conditional independence.
+
+Now let \(S_t=s(\mathbf H_t)\) be sufficient. Then, for every measurable
+\(A\subseteq\mathsf Y\),
+\[
+K_t(\mathbf H_t,A)
+=
+\mathbb P(Y_t^+\in A\mid\mathbf H_t)
+=
+\mathbb P(Y_t^+\in A\mid S_t)
+\qquad\text{a.s.}
+\]
+Choose a countable determining class for probability measures on the standard
+Borel space \(\mathsf Y\). The values of \(K_t(\mathbf H_t,\cdot)\) on this
+class are measurable functions of \(S_t\), and therefore the complete random
+measure \(Z_t\) is a measurable function of \(S_t\). Applying this conclusion
+in both directions to two minimal sufficient states gives the final claim.
+\end{proof}
+
+\begin{remark}[Meaning of minimality]
+The theorem does not say that \(Z_t\) has the fewest numerical coordinates in
+a chosen parametrization. It says that every sufficient history statistic
+must determine \(Z_t\) almost surely. This is an information order, invariant
+under one-to-one reparametrization.
+\end{remark}
+
+For an arbitrary history statistic \(S_t=s(\mathbf H_t)\), let
+\[
+K_t^{S}(s,\cdot)
+=
+\mathbb P(Y_t^+\in\cdot\mid S_t=s).
+\]
+Whenever the conditional relative entropy is finite, define the sufficiency
+defect
+\[
+\boxed{
+\delta_{\mathrm{suff}}(S_t)
+=
+\mathbb E\!\left[
+\KL\!\left(
+K_t(\mathbf H_t,\cdot)
+\,\middle\|\,
+K_t^S(S_t,\cdot)
+\right)
+\right].
+}
+\]
+
+\begin{proposition}[Conditional-information identity]\label{prop:conditional-information}
+If \(S_t\) is a measurable function of \(\mathbf H_t\), then
+\[
+\boxed{
+\delta_{\mathrm{suff}}(S_t)
+=
+I(Y_t^+;\mathbf H_t\mid S_t).
+}
+\]
+In particular, the defect vanishes if and only if \(S_t\) is predictively
+sufficient, up to the usual almost-sure qualifications.
+\end{proposition}
+
+\begin{proof}
+The conditional mutual information is the expected relative entropy between
+the conditional law given \((\mathbf H_t,S_t)\) and the conditional law given
+\(S_t\). Because \(S_t=s(\mathbf H_t)\), the first of these is exactly
+\(K_t(\mathbf H_t,\cdot)\).
+\end{proof}
+
+Sufficiency has a direct decision-theoretic interpretation. Use the
+convention
+\[
+\TV(P,Q)=\sup_{A}|P(A)-Q(A)|.
+\]
+Let \(\mathsf A\) be a finite action set and
+\(\ell:\mathsf Y\times\mathsf A\to[0,1]\) a bounded loss. Define
+\[
+\Risk_\ell(S_t)
+=
+\inf_{d}
+\mathbb E\!\left[
+\ell\bigl(Y_t^+,d(S_t)\bigr)
+\right].
+\]
+
+\begin{proposition}[Approximate sufficiency bounds excess Bayes risk]
+\label{prop:risk-pinsker}
+Under the preceding assumptions,
+\[
+\boxed{
+0
+\leq
+\Risk_\ell(S_t)-\Risk_\ell(\mathbf H_t)
+\leq
+\mathbb E\!\left[
+\TV\!\left(K_t(\mathbf H_t),K_t^S(S_t)\right)
+\right]
+\leq
+\sqrt{\frac{\delta_{\mathrm{suff}}(S_t)}{2}}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+More information cannot increase optimal risk, giving the first inequality.
+For any fixed action, its conditional expected loss changes by at most total
+variation when the conditional law changes. Taking the infimum over actions
+preserves this bound. Conditional Pinsker inequality followed by Jensen's
+inequality gives the final estimate.
+\end{proof}
+
+For a finite target alphabet and logarithmic scoring loss
+\[
+\ell_{\log}(y,q)=-\log q(y),
+\qquad
+q\in\mathcal P(\mathsf Y),
+\]
+the identity is exact:
+\[
+\boxed{
+\Risk_{\log}(S_t)=H(Y_t^+\mid S_t),
+\qquad
+\Risk_{\log}(S_t)-\Risk_{\log}(\mathbf H_t)
+=
+I(Y_t^+;\mathbf H_t\mid S_t).
+}
+\]
+Natural logarithms measure the gap in nats; base-two logarithms measure it in
+bits.
+
+\subtopic{Intervention-indexed causal state}
+
+Observational prediction may merge histories that behave identically under the
+current policy but respond differently to future interventions. Let
+\(\mathcal I\) be a finite or countable family of interventions applied only
+after time \(t\). For each \(\iota\in\mathcal I\), let
+\[
+K_t^{\iota}(h,\cdot)
+=
+\mathbb P^{\iota}(Y_t^+\in\cdot\mid\mathbf H_t=h)
+\]
+be a regular post-intervention kernel on the common pre-intervention history
+space. Define
+\[
+\boxed{
+Z_t^{\mathcal I}
+=
+\bigl(K_t^{\iota}(\mathbf H_t,\cdot)\bigr)_{\iota\in\mathcal I}
+\in
+\mathcal P(\mathsf Y)^{\mathcal I}.
+}
+\]
+
+\begin{corollary}[Minimal simultaneous interventional state]
+\label{cor:interventional-state}
+The random element \(Z_t^{\mathcal I}\) is sufficient simultaneously for all
+post-intervention target laws. If a statistic \(S_t=s(\mathbf H_t)\)
+determines the conditional target law for every \(\iota\in\mathcal I\), then
+there exists a measurable \(\phi_{\mathcal I}\) such that
+\[
+Z_t^{\mathcal I}=\phi_{\mathcal I}(S_t)
+\qquad\text{a.s.}
+\]
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:predictive-state} componentwise. A countable product of
+standard Borel spaces is standard Borel, so the component maps combine into a
+single measurable factor map.
+\end{proof}
+
+The observational state is the special case
+\(\mathcal I=\{\operatorname{id}\}\). A causal workspace claim should align
+with \(Z_t^{\mathcal I}\) for a declared intervention family rather than only
+with the observational state.
+
+\topic{21}{Structural--Operational Alignment}
+
+A structural workspace coordinate becomes operational only when it retains the
+canonical predictive or interventional state relevant to the declared task.
+Let
+\[
+W_t=\pi_t(\mathbf H_t)
+\]
+be a measurable candidate workspace statistic satisfying the structural support
+condition
+\[
+W_t\in\Gamma_{\varepsilon_t}(H(t))
+\qquad\text{almost surely}.
+\]
+The map \(\pi_t\) may include encoding into a moving low-energy bundle; no
+canonical operational interpretation follows from the spectral projector
+alone.
+
+\begin{definition}[Exact structural--operational alignment]
+The candidate \(W_t\) is observationally aligned when there exists a measurable
+map \(\phi_t\) such that
+\[
+Z_t=\phi_t(W_t)
+\qquad\text{a.s.}
+\]
+It is \(\mathcal I\)-causally aligned when
+\[
+Z_t^{\mathcal I}=\phi_t^{\mathcal I}(W_t)
+\qquad\text{a.s.}
+\]
+\end{definition}
+
+\begin{theorem}[Exact alignment criterion]\label{thm:alignment-criterion}
+For any workspace statistic \(W_t=\pi_t(\mathbf H_t)\), the following are
+equivalent:
+\begin{enumerate}
+\item \(Y_t^+\indep\mathbf H_t\mid W_t\);
+\item \(I(Y_t^+;\mathbf H_t\mid W_t)=0\);
+\item the canonical predictive state factors through \(W_t\):
+\[
+Z_t=\phi_t(W_t)
+\quad\text{a.s.}
+\]
+for some measurable \(\phi_t\).
+\end{enumerate}
+The analogous equivalence holds simultaneously over \(\mathcal I\) with
+\(Z_t^{\mathcal I}\).
+\end{theorem}
+
+\begin{proof}
+The equivalence of the first two statements is the zero-divergence
+characterization of conditional mutual information. The first statement and
+Theorem~\ref{thm:predictive-state} imply the factorization in the third.
+Conversely, if \(Z_t=\phi_t(W_t)\), then
+\[
+\mathbb P(Y_t^+\in A\mid\mathbf H_t)
+=Z_t(A)
+=\phi_t(W_t)(A),
+\]
+which depends on the history only through \(W_t\), proving sufficiency. The
+interventional statement follows from
+Corollary~\ref{cor:interventional-state}.
+\end{proof}
+
+Define the observational alignment defect by
+\[
+\boxed{
+\delta_{\mathrm{align}}^{\mathrm{obs}}(W_t)
+=
+I_{\mathbb P}(Y_t^+;\mathbf H_t\mid W_t).
+}
+\]
+For a countable intervention family with declared weights
+\(q_\iota>0\), \(\sum_\iota q_\iota=1\), define
+\[
+\boxed{
+\delta_{\mathrm{align}}^{\mathcal I}(W_t)
+=
+\sum_{\iota\in\mathcal I}
+q_\iota
+I_{\mathbb P^\iota}
+(Y_t^+;\mathbf H_t\mid W_t).
+}
+\]
+For bounded decision losses, Proposition~\ref{prop:risk-pinsker} applies under
+each intervention and gives the weighted bound
+\[
+\sum_{\iota}q_\iota
+\left[
+\Risk_\ell^{\iota}(W_t)
+-
+\Risk_\ell^{\iota}(\mathbf H_t)
+\right]
+\leq
+\sqrt{\frac{
+\delta_{\mathrm{align}}^{\mathcal I}(W_t)}{2}}.
+\]
+
+\subtopic{Structural coherence and operational alignment are independent}
+
+The static defect
+\[
+\delta_{\mathrm{coh}}(W_t)
+\]
+and the operational defect
+\[
+\delta_{\mathrm{align}}^{\mathcal I}(W_t)
+\]
+answer different questions. The first measures compatibility under transfer.
+The second measures loss of task-relevant conditional law.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Regime & Structural status & Operational interpretation \\
+\midrule
+Low coherence defect, low alignment defect & Stable transported coordinate &
+Candidate operational workspace for the declared target and interventions. \\
+Low coherence defect, high alignment defect & Stable but task-irrelevant
+shared structure & Archive, convention, or synchronized representation. \\
+High coherence defect, low alignment defect & Predictively adequate but not
+transport-stable & Localized or brittle sufficient statistic. \\
+High coherence defect, high alignment defect & Neither stable nor sufficient &
+Rejected candidate at the stated scales. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+Thus neither low transfer energy nor high predictive performance alone is
+enough. The combined gate is
+\[
+\boxed{
+\delta_{\mathrm{coh}}(W_t)
+\leq
+\varepsilon_{\mathrm{coh}},
+\qquad
+\delta_{\mathrm{align}}^{\mathcal I}(W_t)
+\leq
+\varepsilon_{\mathrm{align}}.
+}
+\]
+
+\begin{example}[Coherent but irrelevant archive]
+Suppose every node perfectly copies a common random variable \(R\), so the
+corresponding transfer energy is zero. If \(R\indep Y_t^+\), then
+\[
+\delta_{\mathrm{coh}}(R)=0,
+\qquad
+\delta_{\mathrm{align}}^{\mathrm{obs}}(R)
+=I(Y_t^+;\mathbf H_t\mid R),
+\]
+which can be as large as the entire predictive information in the history.
+Perfect agreement therefore does not imply workspace functionality.
+\end{example}
+
+\begin{example}[Sufficient but localized statistic]
+If one node contains the canonical state \(Z_t\) and all transfers from that
+node are unstable, then \(W_t=Z_t\) is sufficient but need not lie in a stable
+low-energy transfer subspace. This is a local controller or archive, not yet a
+stratified shared workspace.
+\end{example}

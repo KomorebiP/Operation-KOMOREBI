@@ -1,0 +1,448 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{XI}{Reconstruction and Resilience}
+
+Persistence can be maintained by direct transport, but it can also be restored
+from distributed traces after a disruption. Reconstruction theory quantifies
+when a coalition contains enough information to recover the abstract core and
+how noise is amplified by that recovery.
+
+\topic{34}{Core Encoding Maps}
+
+Let \(C_*\) be a finite-dimensional abstract core. The exact static theory
+provides a complete local chart
+\[
+\overline E_i
+=
+\ev_i\circ\Psi:C_*\longrightarrow C_i,
+\]
+where \(\Psi:C_*\to\Gamma(H)\) is the root-to-section isomorphism. A participant
+or artifact need not expose that complete chart. Let
+\[
+O_i:C_i\longrightarrow\mathsf Y_i
+\]
+be the declared observation or access map and define the \emph{accessible
+encoding}
+\[
+\boxed{
+E_i=O_i\overline E_i:C_*\longrightarrow\mathsf Y_i.
+}
+\]
+For notational economy, the direct sums below use the accessible spaces
+\(\mathsf Y_i\). Thus injectivity of a full structural chart does not make a
+singleton operationally reconstructive unless its access map preserves the
+whole core.
+
+For a coalition \(S\subseteq V\), define the analysis operator
+\[
+A_S:C_*\longrightarrow\bigoplus_{i\in S}\mathsf Y_i,
+\qquad
+A_Sc=(E_ic)_{i\in S},
+\]
+and the coalition frame operator
+\[
+\boxed{
+F_S=A_S^*A_S=\sum_{i\in S}E_i^*E_i.
+}
+\]
+Set
+\[
+\alpha_S=\lambda_{\min}(F_S),
+\qquad
+\beta_S=\lambda_{\max}(F_S).
+\]
+Thus
+\[
+\alpha_S\|c\|^2
+\leq
+\|A_Sc\|^2
+\leq
+\beta_S\|c\|^2.
+\]
+
+\begin{proposition}[Coalition reconstruction criterion]\label{prop:coalition-frame-criterion}
+For a coalition \(S\), the following are equivalent:
+\begin{enumerate}
+\item \(A_S\) is injective;
+\item \(F_S\) is positive definite;
+\item \(\alpha_S>0\);
+\item there exists a linear decoder \(R_S\) with \(R_SA_S=I_{C_*}\).
+\end{enumerate}
+When these conditions hold, the canonical decoder is
+\[
+\boxed{
+R_S=A_S^\dagger=F_S^{-1}A_S^*.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+In finite dimensions,
+\[
+\ker F_S=\ker A_S
+\]
+because
+\[
+\langle c,F_Sc\rangle=\|A_Sc\|^2.
+\]
+This proves the equivalence of the first three statements. An injective linear
+map admits a left inverse, while a left inverse implies injectivity. The
+formula for the Moore--Penrose left inverse follows from full column rank.
+\end{proof}
+
+The lower frame bound \(\alpha_S\) measures recoverability. The upper bound
+\(\beta_S\) measures amplification in the forward encoding. Their ratio
+\[
+\kappa_S=\sqrt{\frac{\beta_S}{\alpha_S}}
+\]
+is the coalition condition number.
+
+\topic{35}{Stable Reconstruction Condition}
+
+\subtopic{35.1 Stable reconstruction theorem \(T_7\)}
+
+\begin{theorem}[Stable core reconstruction]\label{thm:stable-reconstruction}
+Assume \(\alpha_S>0\) and observe
+\[
+y=A_Sc+\eta.
+\]
+With the canonical estimate
+\[
+\widehat c=A_S^\dagger y,
+\]
+one has
+\[
+\boxed{
+\|\widehat c-c\|
+\leq
+\frac{\|\eta\|}{\sqrt{\alpha_S}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Since \(A_S^\dagger A_S=I_{C_*}\),
+\[
+\widehat c-c=A_S^\dagger\eta.
+\]
+The singular values of \(A_S\) are the square roots of the eigenvalues of
+\(F_S\), so
+\[
+\|A_S^\dagger\|
+=
+\frac{1}{\sigma_{\min}(A_S)}
+=
+\frac{1}{\sqrt{\alpha_S}}.
+\]
+\end{proof}
+
+\begin{corollary}[Encoding mismatch]\label{cor:encoding-mismatch}
+If the true observation is
+\[
+y=(A_S+\Delta_S)c+\eta
+\]
+but the nominal decoder \(A_S^\dagger\) is used, then
+\[
+\boxed{
+\|\widehat c-c\|
+\leq
+\frac{\|\Delta_S\|\,\|c\|+\|\eta\|}{\sqrt{\alpha_S}}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Now
+\[
+\widehat c-c=A_S^\dagger\Delta_Sc+A_S^\dagger\eta,
+\]
+and the result follows from Theorem~\ref{thm:stable-reconstruction}.
+\end{proof}
+
+\subtopic{35.2 Reconstruction as operational recovery}
+
+Geometric recovery becomes behaviorally relevant when the workspace state
+controls a predictive kernel. Let
+\[
+K_w=\mathbb P(Y\in\cdot\mid W=w)
+\]
+and suppose
+\[
+\TV(K_w,K_{w'})\leq L_Kd_W(w,w').
+\]
+
+\begin{proposition}[Exact reconstruction implies coalition sufficiency]
+\label{prop:exact-reconstruction-sufficiency}
+Let \(W\) be sufficient for \(Y\) relative to the full history \(\mathbf H\):
+\[
+Y\indep\mathbf H\mid W.
+\]
+If a coalition reconstructs the workspace exactly,
+\[
+W=R_S(\mathbf H^S)
+\qquad\text{almost surely},
+\]
+then
+\[
+\boxed{
+Y\indep\mathbf H\mid\mathbf H^S.
+}
+\]
+Under logarithmic loss,
+\[
+\boxed{
+\Risk_{\log}(S)=\Risk_{\log}(V).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Sufficiency means that the conditional target law given \(\mathbf H\) is a
+measurable function of \(W\). Exact reconstruction makes that function
+measurable with respect to \(\mathbf H^S\), which is the asserted conditional
+independence. The log-risk equality follows from
+Theorem~\ref{thm:coalition-log-risk}.
+\end{proof}
+
+\begin{proposition}[Reconstruction-to-risk transfer]\label{prop:reconstruction-risk-transfer}
+Let \(W\) be sufficient for a target \(Y\), let losses take values in
+\([0,1]\), and let a coalition construct \(\widehat W\) from its local data.
+Then its optimal Bayes risk satisfies
+\[
+\boxed{
+0\leq
+\Risk(S)-\Risk(W)
+\leq
+2L_K\,\mathbb E[d_W(W,\widehat W)].
+}
+\]
+\end{proposition}
+
+\begin{proof}
+For every pair \(w,\widehat w\), using the Bayes action for
+\(K_{\widehat w}\) under the true law \(K_w\) incurs conditional regret at
+most
+\[
+2\TV(K_w,K_{\widehat w}).
+\]
+This follows by inserting and subtracting the risk under
+\(K_{\widehat w}\) for both the chosen action and the Bayes action for
+\(K_w\). Average the bound and use the Lipschitz assumption. The coalition's
+optimal rule performs at least as well as this decoder-based rule.
+\end{proof}
+
+This proposition links Part~XI to the causal-state theory of Part~VI. A small
+geometric reconstruction error is operationally meaningful only when the
+outcome kernel changes continuously with workspace state.
+
+\topic{36}{k-Failure Resilience}
+
+For \(k\geq0\), define the worst surviving lower frame bound
+\[
+\boxed{
+\alpha^{(k)}
+=
+\min_{\substack{A\subseteq V\\|A|\leq k}}
+\alpha_{V\setminus A}.
+}
+\]
+The sequence \(\alpha^{(k)}\) is nonincreasing in \(k\).
+
+\begin{theorem}[Uniform erasure resilience]\label{thm:uniform-erasure-resilience}
+The encoding family is exactly reconstructible after every loss of at most
+\(k\) nodes if and only if
+\[
+\boxed{\alpha^{(k)}>0.}
+\]
+If surviving observations have the form
+\[
+y_{V\setminus A}=A_{V\setminus A}c+\eta_A,
+\qquad
+|A|\leq k,
+\]
+then the canonical survivor decoder obeys the uniform estimate
+\[
+\boxed{
+\|\widehat c_A-c\|
+\leq
+\frac{\|\eta_A\|}{\sqrt{\alpha^{(k)}}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Exact reconstruction for a particular survivor set is equivalent to a
+positive lower frame bound by Proposition~\ref{prop:coalition-frame-criterion}.
+Taking the minimum over all permitted erasures gives the first claim. The
+uniform noise estimate follows from Theorem~\ref{thm:stable-reconstruction}.
+\end{proof}
+
+\begin{proposition}[Dimensional obstruction]\label{prop:dimension-obstruction}
+Let \(d=\dim C_*\). If
+\[
+\sum_{i\in S}\dim \mathsf Y_i<d,
+\]
+then \(\alpha_S=0\), so \(S\) cannot reconstruct the core. Consequently,
+\(k\)-failure resilience requires
+\[
+\sum_{i\in V\setminus A}\dim \mathsf Y_i\geq d
+\]
+for every \(A\subseteq V\) with \(|A|\leq k\).
+\end{proposition}
+
+\begin{proof}
+The rank of \(A_S\) is at most the dimension of its codomain. If that
+dimension is below \(d\), then \(A_S\) is not injective.
+\end{proof}
+
+Define the accessible block support of \(c\neq0\) by
+\[
+\operatorname{supp}_E(c)
+=
+\{i\in V:E_ic\neq0\}
+\]
+and define the node-erasure distance
+\[
+\boxed{
+d_{\mathrm{er}}
+=
+\min_{c\neq0}|\operatorname{supp}_E(c)|.
+}
+\]
+
+\begin{theorem}[Exact erasure-distance criterion]
+\label{thm:erasure-distance}
+Exact reconstruction after every loss of at most \(k\) nodes is possible if
+and only if
+\[
+\boxed{
+d_{\mathrm{er}}>k.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+If \(d_{\mathrm{er}}\leq k\), choose \(c\neq0\) whose nonzero accessible
+blocks are contained in a set \(A\) with \(|A|\leq k\). The surviving analysis
+operator satisfies \(A_{V\setminus A}c=0\), so it cannot distinguish \(c\)
+from zero. Conversely, if some erasure set \(A\) of size at most \(k\) destroys
+injectivity, there exists \(c\neq0\) with \(E_ic=0\) for every \(i\notin A\).
+Thus \(\operatorname{supp}_E(c)\subseteq A\), and
+\(d_{\mathrm{er}}\leq k\).
+\end{proof}
+
+The distance criterion is combinatorial. The frame quantity
+\(\alpha^{(k)}\) is quantitative. A system may tolerate \(k\) erasures exactly
+while amplifying noise severely because \(\alpha^{(k)}\) is close to zero.
+
+\subtopic{36.1 Reconstructive handoff after replacement}
+
+Suppose node \(r\) is removed and the surviving coalition is
+\[
+S=V\setminus\{r\}.
+\]
+A replacement node \(r'\) is to receive the encoding
+\[
+E_{r'}':C_*\to\mathsf Y_{r'}'.
+\]
+
+\begin{corollary}[Handoff initialization]\label{cor:handoff-initialization}
+If \(\alpha_S>0\) and the survivors observe \(y=A_Sc+\eta\), initialize the
+replacement by
+\[
+x_{r'}^{\mathrm{init}}
+=E_{r'}'A_S^\dagger y.
+\]
+Then
+\[
+\boxed{
+\|x_{r'}^{\mathrm{init}}-E_{r'}'c\|
+\leq
+\frac{\|E_{r'}'\|\,\|\eta\|}{\sqrt{\alpha_S}}.
+}
+\]
+\end{corollary}
+
+This is the basic mathematical form of artifact-mediated or
+coalition-mediated handoff. It does not require the removed component to
+transfer its full internal state to the replacement.
+
+\topic{37}{Redundancy--Irreducibility Tension}
+
+Define the minimum reconstructing coalition size
+\[
+\boxed{
+m_{\mathrm{rec}}
+=
+\min\{|S|:\alpha_S>0\}
+}
+\]
+and the maximum exact erasure tolerance
+\[
+\boxed{
+k_{\mathrm{erase}}
+=
+\max\{k:\alpha^{(k)}>0\}.
+}
+\]
+The condition
+\[
+m_{\mathrm{rec}}\geq2
+\]
+means that no individual encoding is sufficient for exact core recovery. The
+condition
+\[
+k_{\mathrm{erase}}\geq1
+\]
+means that the system survives at least one node loss. These can hold
+simultaneously because nonlocality of encoding is not the same as fragility.
+
+\subtopic{37.1 Three-node distributed-frame example}
+
+Let
+\[
+C_*=\mathbb R^2
+\]
+and define scalar node encodings
+\[
+E_1(c_1,c_2)=c_1,
+\qquad
+E_2(c_1,c_2)=c_2,
+\qquad
+E_3(c_1,c_2)=c_1+c_2.
+\]
+Every singleton has rank one, so no node reconstructs the two-dimensional
+core. Every pair does reconstruct. For \(S=\{1,2\}\),
+\[
+F_S=I,
+\qquad
+\alpha_S=1.
+\]
+For \(S=\{1,3\}\) or \(S=\{2,3\}\), the frame eigenvalues are
+\[
+\frac{3\pm\sqrt5}{2}.
+\]
+Therefore
+\[
+\boxed{
+m_{\mathrm{rec}}=2,
+\qquad
+k_{\mathrm{erase}}=1,
+\qquad
+d_{\mathrm{er}}=2,
+\qquad
+\alpha^{(1)}=\frac{3-\sqrt5}{2}.
+}
+\]
+This realizes a workspace core that is irreducible to any singleton while
+remaining reconstructible after any one node fails.
+
+\subtopic{37.2 Relation to predictive irreducibility}
+
+The geometric quantity \(m_{\mathrm{rec}}\) and the predictive quantity
+\(k_0\) from Part~VII answer different questions. The first asks whether a
+coalition can reconstruct a declared core coordinate. The second asks whether
+a coalition is sufficient for a declared future target. Equality between them
+requires structural--operational alignment and regularity such as
+Proposition~\ref{prop:reconstruction-risk-transfer}. Neither quantity should
+be substituted for the other without those assumptions.

@@ -1,0 +1,427 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{X}{Persistence}
+
+The preceding parts identify exact and approximate workspace subspaces at a
+single time. Persistence adds three further requirements. The structural
+subspace must remain trackable while the realization changes, actual states
+must remain near that moving subspace, and the transported content must not
+collapse to a trivial zero state. These are distinct conditions.
+
+\topic{32}{Coherence-Error Dynamics}
+
+\subtopic{32.1 Time-indexed transfer systems}
+
+At time \(t\), let
+\[
+\mathcal C_V(t)=\bigoplus_{i\in V}C_i(t),
+\qquad
+\mathcal C_E(t)=\bigoplus_{e\in E}C_{t(e)}(t),
+\]
+and let
+\[
+D_t:\mathcal C_V(t)\longrightarrow\mathcal C_E(t),
+\qquad
+L_t=D_t^*D_t
+\]
+be the transfer discrepancy and transfer Laplacian. At time \(t\), the
+combinatorial graph is held fixed while the local representations, transfers,
+and metrics may vary. Changes of graph are treated later by a graph
+correspondence.
+
+To compare successive times, choose unitary identification maps
+\[
+U_t^V:\mathcal C_V(t)\longrightarrow\mathcal C_V(t+1),
+\qquad
+U_t^E:\mathcal C_E(t)\longrightarrow\mathcal C_E(t+1).
+\]
+They are comparison maps, not assumptions that the physical carriers are
+identical. Define the one-step diagram defect
+\[
+\boxed{
+\Delta_t^D
+=
+D_{t+1}U_t^V-U_t^ED_t,
+\qquad
+\delta_t^D=\|\Delta_t^D\|.
+}
+\]
+Exact temporal compatibility is the condition \(\Delta_t^D=0\).
+
+\begin{proposition}[Temporal Laplacian drift]\label{prop:temporal-laplacian-drift}
+The carried Laplacian satisfies
+\[
+\boxed{
+\left\|
+(U_t^V)^*L_{t+1}U_t^V-L_t
+\right\|
+\leq
+2\|D_t\|\delta_t^D+(\delta_t^D)^2.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Set
+\[
+B_t=(U_t^E)^*\Delta_t^D.
+\]
+Because the comparison maps are unitary,
+\[
+(U_t^E)^*D_{t+1}U_t^V=D_t+B_t,
+\qquad
+\|B_t\|=\delta_t^D.
+\]
+Hence
+\[
+(U_t^V)^*L_{t+1}U_t^V
+=(D_t+B_t)^*(D_t+B_t).
+\]
+Subtract \(D_t^*D_t\) and apply the triangle inequality.
+\end{proof}
+
+Let \(P_t\) project onto a selected rank-\(d\) low-energy workspace cluster
+of \(L_t\), and set
+\[
+\mathcal W_t=\ran P_t.
+\]
+Write
+\[
+g_t=\lambda_{d+1}(L_t)-\lambda_d(L_t)>0
+\]
+for the separating spectral gap and
+\[
+\eta_t^L=2\|D_t\|\delta_t^D+(\delta_t^D)^2.
+\]
+
+\begin{corollary}[Temporal workspace tracking]\label{cor:temporal-workspace-tracking}
+If
+\[
+\eta_t^L<\frac{g_t}{2},
+\]
+then the transported and newly extracted workspace projectors satisfy
+\[
+\boxed{
+q_t^{\mathrm{str}}
+:=
+\left\|
+P_{t+1}-U_t^VP_t(U_t^V)^*
+\right\|
+\leq
+\frac{\eta_t^L}{g_t-\eta_t^L}
+\leq
+\frac{2\eta_t^L}{g_t}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+Carry \(L_{t+1}\) back to time \(t\) using \(U_t^V\), apply
+Theorem~\ref{thm:spectral-stability}, and conjugate the resulting projector
+bound forward.
+\end{proof}
+
+The quantity \(q_t^{\mathrm{str}}\) measures structural motion after the
+declared coordinate change has been removed. A workspace may therefore move
+substantially in raw coordinates while remaining structurally unchanged.
+
+\subtopic{32.2 State tracking inside a moving workspace}
+
+Let the realized vertex state satisfy
+\[
+x_{t+1}=F_tx_t+\xi_t,
+\]
+where \(F_t:\mathcal C_V(t)\to\mathcal C_V(t+1)\) is the actual update and
+\(\xi_t\) is an unmodeled disturbance. Define the off-workspace error
+\[
+\boxed{
+e_t=\|(I-P_t)x_t\|.
+}
+\]
+Introduce
+\[
+\alpha_t
+=
+\left\|
+(I-P_{t+1})F_t(I-P_t)
+\right\|,
+\]
+which measures persistence of prior off-workspace error, and
+\[
+\ell_t
+=
+\left\|
+(I-P_{t+1})F_tP_t
+\right\|,
+\]
+which measures leakage of a valid workspace state under the update.
+
+\begin{proposition}[Grounded coherence recurrence]\label{prop:grounded-coherence-recurrence}
+Every trajectory satisfies
+\[
+\boxed{
+e_{t+1}\leq\alpha_te_t+\sigma_t,}
+\]
+where
+\[
+\boxed{
+\sigma_t
+=
+\ell_t\|P_tx_t\|
++
+\|(I-P_{t+1})\xi_t\|.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Insert \(I=P_t+(I-P_t)\) before \(x_t\), apply \(I-P_{t+1}\), and use
+submultiplicativity:
+\[
+\begin{aligned}
+e_{t+1}
+&\leq
+\|(I-P_{t+1})F_t(I-P_t)x_t\|\\
+&\quad+
+\|(I-P_{t+1})F_tP_tx_t\|
++
+\|(I-P_{t+1})\xi_t\|.
+\end{aligned}
+\]
+The displayed recurrence follows from the definitions of \(\alpha_t\) and
+\(\ell_t\).
+\end{proof}
+
+This derivation gives the contraction and disturbance terms an operational
+meaning. The scalar recurrence is not an independent postulate. It follows
+from an update rule, a moving workspace projector, and a declared disturbance
+model.
+
+\subtopic{32.3 Persistence theorem \(T_6\)}
+
+\begin{theorem}[Nonautonomous persistence theorem]\label{thm:persistence}
+Let \(e_t\geq0\) satisfy
+\[
+e_{t+1}\leq\alpha_te_t+\sigma_t,
+\qquad
+\alpha_t,\sigma_t\geq0.
+\]
+Then, for every \(t\geq1\),
+\[
+\boxed{
+\begin{aligned}
+e_t
+\leq
+&\left(\prod_{r=0}^{t-1}\alpha_r\right)e_0\\
+&+
+\sum_{j=0}^{t-1}
+\left(\prod_{r=j+1}^{t-1}\alpha_r\right)\sigma_j,
+\end{aligned}
+}
+\]
+where an empty product equals one. If
+\[
+\alpha_t\leq\bar\alpha<1,
+\qquad
+\sigma_t\leq\bar\sigma,
+\]
+then
+\[
+\boxed{
+e_t
+\leq
+\bar\alpha^te_0
++
+\frac{\bar\sigma(1-\bar\alpha^t)}{1-\bar\alpha},
+}
+\]
+and consequently
+\[
+\boxed{
+\limsup_{t\to\infty}e_t
+\leq
+\frac{\bar\sigma}{1-\bar\alpha}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Repeated substitution yields
+\[
+\begin{aligned}
+e_t
+&\leq
+\alpha_{t-1}\cdots\alpha_0e_0
++
+\alpha_{t-1}\cdots\alpha_1\sigma_0
++
+\cdots
++
+\sigma_{t-1},
+\end{aligned}
+\]
+which is the first formula. Under the uniform bounds, dominate each product by
+the corresponding power of \(\bar\alpha\) and sum the geometric series.
+\end{proof}
+
+\begin{corollary}[Vanishing-disturbance convergence]\label{cor:vanishing-disturbance}
+If \(\alpha_t\leq\bar\alpha<1\) and \(\sigma_t\to0\), then
+\[
+e_t\to0.
+\]
+More generally, if \(\sum_{t\geq0}\sigma_t<\infty\), then the disturbance
+contribution in Theorem~\ref{thm:persistence} vanishes asymptotically.
+\end{corollary}
+
+\begin{proof}
+Split the convolution sum into a finite early part, whose coefficients decay
+to zero, and a late tail on which \(\sigma_t\) is uniformly small. The
+summable case follows by the same argument.
+\end{proof}
+
+\subtopic{32.4 Mean-square persistence}
+
+For stochastic systems, pathwise bounded disturbances may be too strong. Let
+\(\{\mathcal F_t\}\) be a filtration containing the history through time
+\(t\).
+
+\begin{proposition}[Mean-square persistence]\label{prop:mean-square-persistence}
+Suppose
+\[
+\mathbb E[e_{t+1}^2\mid\mathcal F_t]
+\leq
+q e_t^2+v_t,
+\qquad
+0\leq q<1,
+\]
+and \(\mathbb E[v_t]\leq\bar v\). Then
+\[
+\boxed{
+\mathbb E[e_t^2]
+\leq
+q^t\mathbb E[e_0^2]
++
+\frac{\bar v(1-q^t)}{1-q},
+}
+\]
+so
+\[
+\limsup_{t\to\infty}\mathbb E[e_t^2]
+\leq
+\frac{\bar v}{1-q}.
+\]
+\end{proposition}
+
+\begin{proof}
+Take expectations, iterate the resulting deterministic recurrence, and sum a
+geometric series.
+\end{proof}
+
+\subtopic{32.5 The non-collapse condition}
+
+Low off-workspace error is not sufficient for meaningful persistence. The
+zero update \(F_t=0\) drives every state exactly into every linear workspace
+while destroying all content. Define the internal transport
+\[
+B_t=P_{t+1}F_tP_t:\mathcal W_t\longrightarrow\mathcal W_{t+1}
+\]
+and its non-collapse margin
+\[
+\boxed{
+\mu_t^{\mathrm{keep}}
+=
+\sigma_{\min}(B_t|_{\mathcal W_t}).
+}
+\]
+A content-preserving persistence claim requires
+\[
+\mu_t^{\mathrm{keep}}>0
+\]
+for the relevant interval, or an information-theoretic replacement when the
+workspace state is stochastic. Structural tracking, state tracking, and
+content retention are therefore separate gates.
+
+A finite-horizon persistence certificate may be recorded as
+\[
+\boxed{
+\mathcal P_{0:T}
+=
+\left(
+\max_{t<T}q_t^{\mathrm{str}},
+\max_{t\leq T}e_t,
+\min_{t<T}\mu_t^{\mathrm{keep}},
+\sum_{t<T}\sigma_t
+\right).
+}
+\]
+No single coordinate of this vector subsumes the others.
+
+\topic{33}{Interpretation of the Contraction Parameter}
+
+The inequality
+\[
+\alpha_t<1
+\]
+means that deviations already outside the current workspace are damped by the
+next update. Mechanisms that can reduce \(\alpha_t\) or \(\sigma_t\) include
+\[
+\begin{aligned}
+&\text{verification and error feedback},\\
+&\text{shared notation and stable interfaces},\\
+&\text{artifact persistence and version control},\\
+&\text{proof checking and experimental replication},\\
+&\text{handoff reconstruction and redundancy}.
+\end{aligned}
+\]
+Sources of disturbance include
+\[
+\begin{aligned}
+&\text{context loss and representational drift},\\
+&\text{miscommunication and transfer-map error},\\
+&\text{participant or model replacement},\\
+&\text{artifact corruption},\\
+&\text{unsupported inference and objective drift}.
+\end{aligned}
+\]
+
+\subtopic{33.1 Four persistence levels}
+
+The theory distinguishes:
+\[
+\begin{array}{ll}
+\text{structural persistence}
+& q_t^{\mathrm{str}}\text{ remains small},\\
+\text{state persistence}
+& e_t\text{ remains small},\\
+\text{content persistence}
+& \mu_t^{\mathrm{keep}}\text{ remains bounded away from zero},\\
+\text{operational persistence}
+& \text{predictive and causal capacities remain matched}.
+\end{array}
+\]
+The first three are developed in this part. Operational matching is incorporated
+into the identity theory of Part~XII.
+
+\subtopic{33.2 Moving-line example}
+
+Let \(\mathcal C_V(t)=\mathbb R^2\) and let \(P_t\) project onto
+\[
+u_t=(\cos\theta_t,\sin\theta_t).
+\]
+If \(U_t^V\) is rotation through
+\(\theta_{t+1}-\theta_t\) and \(F_t=U_t^V\), then a state
+\(x_t=u_t\) obeys
+\[
+e_t=e_{t+1}=0,
+\qquad
+\mu_t^{\mathrm{keep}}=1.
+\]
+The workspace changes raw coordinates but not abstract identity. If instead
+\(F_t=I\), then
+\[
+e_{t+1}
+=
+|\sin(\theta_{t+1}-\theta_t)|.
+\]
+The same structural motion now produces a state-tracking defect because the
+actual update fails to transport the content with the workspace.

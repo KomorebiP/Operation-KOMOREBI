@@ -1,0 +1,425 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{VII}{Relational Irreducibility}
+
+\topic{22}{Coalition Information and Bayes Risk}
+
+For \(A\subseteq V\), the coalition statistic is \(\mathbf H_t^A\). Given an
+action space \(\mathsf A\) and loss \(\ell\), define its unrestricted Bayes
+risk by
+\[
+\boxed{
+\Risk_\ell(A)
+=
+\inf_d
+\mathbb E\!\left[
+\ell\bigl(Y_t^+,d(\mathbf H_t^A)\bigr)
+\right].
+}
+\]
+The infimum is over measurable decision rules for which the expectation is
+defined. The full-system risk is \(\Risk_\ell(V)\).
+
+\begin{proposition}[Coalition monotonicity]\label{prop:coalition-monotonicity}
+If \(A\subseteq B\subseteq V\), then
+\[
+\Risk_\ell(B)\leq\Risk_\ell(A).
+\]
+\end{proposition}
+
+\begin{proof}
+Every decision rule available to coalition \(A\) is also available to coalition
+\(B\), which can ignore its additional information.
+\end{proof}
+
+For finite \(\mathsf Y\), logarithmic loss converts risk gaps into conditional
+information exactly.
+
+\begin{theorem}[Coalition log-risk identity]\label{thm:coalition-log-risk}
+Assume \(H(Y_t^+)<\infty\). If \(A\subseteq B\subseteq V\), then
+\[
+\boxed{
+\Risk_{\log}(A)-\Risk_{\log}(B)
+=
+I\!\left(
+Y_t^+;\mathbf H_t^B
+\mid
+\mathbf H_t^A
+\right).
+}
+\]
+In particular,
+\[
+\Risk_{\log}(A)-\Risk_{\log}(V)
+=
+I\!\left(
+Y_t^+;\mathbf H_t
+\mid
+\mathbf H_t^A
+\right).
+\]
+\end{theorem}
+
+\begin{proof}
+Under logarithmic loss the optimal report is the conditional target law, so
+\[
+\Risk_{\log}(A)=H(Y_t^+\mid\mathbf H_t^A).
+\]
+Because \(\mathbf H_t^A\) is a function of \(\mathbf H_t^B\), subtracting the
+two conditional entropies gives the stated conditional mutual information.
+\end{proof}
+
+The theorem makes the decomposition explicit: irreducibility is not an
+unqualified property of a system. It is a property relative to the chosen node
+partition, accessible histories, target, and decision loss.
+
+\topic{23}{Joint Advantage and Its Scope}
+
+Define the coalition gap
+\[
+\Delta_A^{\ell}
+=
+\Risk_\ell(A)-\Risk_\ell(V)
+\geq0.
+\]
+The node-level joint advantage is
+\[
+\boxed{
+\Delta_{\mathrm{joint}}^{\ell}
+=
+\min_{i\in V}
+\Delta_{\{i\}}^{\ell}.
+}
+\]
+Under logarithmic loss,
+\[
+\boxed{
+\Delta_{\mathrm{joint}}^{\log}
+=
+\min_{i\in V}
+I\!\left(
+Y_t^+;\mathbf H_t
+\mid
+\mathbf H_t^{\{i\}}
+\right).
+}
+\]
+Therefore
+\[
+\Delta_{\mathrm{joint}}^{\log}>0
+\]
+means that every individual component omits some predictive information
+available to the complete system.
+
+This quantity should not automatically be identified with a particular notion
+of partial-information synergy. A positive gap can arise from complementary
+information distributed across components, from higher-order interaction, or
+from both. The theory uses the operationally weaker and more directly
+testable statement:
+\[
+\text{no individual node is sufficient for the declared target.}
+\]
+
+For \(0\leq r\leq |V|\), define the order-\(r\) coalition gap profile by
+\[
+\boxed{
+\Delta^{(r)}_\ell
+=
+\min_{\substack{A\subseteq V\\|A|\leq r}}
+\left[
+\Risk_\ell(A)-\Risk_\ell(V)
+\right].
+}
+\]
+The profile is nonincreasing in \(r\) and reaches zero by \(r=|V|\).
+It records how rapidly operative capacity becomes reconstructible as larger
+coalitions are permitted.
+
+\topic{24}{Minimal Sufficient Coalition}
+
+For tolerance \(\varepsilon\geq0\), define
+\[
+\boxed{
+k_\varepsilon
+=
+\min\left\{
+|A|:
+\Risk_\ell(A)
+\leq
+\Risk_\ell(V)+\varepsilon
+\right\}.
+}
+\]
+The set of minimal coalitions is
+\[
+\mathcal K_\varepsilon
+=
+\left\{
+A\subseteq V:
+|A|=k_\varepsilon,
+\Risk_\ell(A)
+\leq
+\Risk_\ell(V)+\varepsilon
+\right\}.
+\]
+
+\begin{corollary}[Information form of coalition size]
+Under the assumptions of Theorem~\ref{thm:coalition-log-risk},
+\[
+\boxed{
+k_\varepsilon
+=
+\min\left\{
+|A|:
+I(Y_t^+;\mathbf H_t\mid\mathbf H_t^A)
+\leq\varepsilon
+\right\}.
+}
+\]
+Equivalently, \(k_\varepsilon\) is the first \(r\) for which
+\(\Delta_{\log}^{(r)}\leq\varepsilon\).
+\end{corollary}
+
+This yields a graded classification:
+\[
+\begin{aligned}
+k_0=0
+&\quad\Longrightarrow\quad
+\text{the background law alone is sufficient},\\
+k_0=1
+&\quad\Longrightarrow\quad
+\text{some individual node is sufficient},\\
+k_0\geq2
+&\quad\Longrightarrow\quad
+\text{node-level relational irreducibility},\\
+k_0=|V|
+&\quad\Longrightarrow\quad
+\text{every proper coalition is insufficient}.
+\end{aligned}
+\]
+The last condition is much stronger and should not be inferred from the first.
+
+\topic{25}{Reconstructibility of the Canonical State}
+
+Let \(d_{\mathcal P}\) be a bounded metric generating the measurable structure
+on \(\mathcal P(\mathsf Y)\). Define the reconstruction defect of the canonical
+state from coalition \(A\) by
+\[
+\delta_A^Z
+=
+\inf_{\psi_A}
+\mathbb E\!\left[
+ d_{\mathcal P}\!\left(
+ Z_t,\psi_A(\mathbf H_t^A)
+ \right)
+\right].
+\]
+
+\begin{proposition}[Sufficiency--reconstruction equivalence]
+\label{prop:sufficiency-reconstruction}
+For a coalition \(A\subseteq V\), the following are equivalent:
+\begin{enumerate}
+\item \(\mathbf H_t^A\) is sufficient for \(Y_t^+\) relative to the full
+ history;
+\item \(Z_t\) is measurable with respect to \(\mathcal F_t^A\);
+\item there exists a measurable \(\psi_A\) such that
+\[
+Z_t=\psi_A(\mathbf H_t^A)
+\qquad\text{almost surely}.
+\]
+\end{enumerate}
+Each condition implies \(\delta_A^Z=0\). Under finite-target logarithmic loss,
+they are also equivalent to
+\[
+\Risk_{\log}(A)=\Risk_{\log}(V).
+\]
+If the reconstruction infimum is known to be attained, then
+\(\delta_A^Z=0\) is itself equivalent to the three conditions.
+\end{proposition}
+
+\begin{proof}
+The equivalence of the first two statements is
+Theorem~\ref{thm:predictive-state}; the second and third are two formulations
+of measurability up to null sets. An exact reconstructor has zero expected
+metric error. The log-risk statement follows from
+Theorem~\ref{thm:coalition-log-risk} and the zero condition for conditional
+mutual information. Without an attainment or compactness condition, an
+infimum of zero alone certifies arbitrarily accurate reconstruction but need
+not supply a single exact minimizing map.
+\end{proof}
+
+For an arbitrary enriched workspace variable \(W_t\), local
+non-reconstructibility need not imply predictive irreducibility: \(W_t\) may
+contain task-irrelevant material. The equivalence is exact for the canonical
+state \(Z_t\), or for a candidate \(W_t\) known to be minimally aligned with
+it.
+
+\topic{26}{Matched Relational Nulls}
+
+A null control must preserve the local facts that the claim is not intended to
+challenge while destroying the relational organization being tested. Merely
+reducing model capacity or replacing the workspace by noise is not a matched
+null.
+
+Let \(P\) be the intact law of
+\((Y_t^+,\mathbf H_t^1,\ldots,\mathbf H_t^n)\). Define the local-marginal null
+class
+\[
+\mathcal N_{\mathrm{marg}}(P)
+=
+\left\{
+Q:
+Q_{\mathbf H_t^i}=P_{\mathbf H_t^i}
+\text{ for every }i
+\right\},
+\]
+and the stronger local-predictive-matched class
+\[
+\boxed{
+\mathcal N_{\mathrm{pred}}(P)
+=
+\left\{
+Q:
+Q_{(Y_t^+,\mathbf H_t^i)}
+=
+P_{(Y_t^+,\mathbf H_t^i)}
+\text{ for every }i
+\right\}.
+}
+\]
+Because \(\mathbf H_t^i\) can include the complete local trajectory, the latter
+class can preserve all single-component temporal and predictive behavior while
+altering cross-component organization.
+
+\begin{proposition}[Local-risk invariance under predictive matching]
+\label{prop:local-risk-null}
+If \(Q\in\mathcal N_{\mathrm{pred}}(P)\), then for every node \(i\) and every
+loss determined by \((Y_t^+,d(\mathbf H_t^i))\),
+\[
+\boxed{
+\Risk_{\ell,Q}(\{i\})
+=
+\Risk_{\ell,P}(\{i\}).
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Every such risk depends only on the joint law of
+\((Y_t^+,\mathbf H_t^i)\), which is identical under \(P\) and \(Q\).
+\end{proof}
+
+A valid null must also satisfy a declared relation-breaking condition. Examples
+include:
+\begin{itemize}
+\item permuting source--target message pairings while preserving each message
+ marginal;
+\item shuffling temporal correspondence across nodes while preserving every
+ local trajectory;
+\item permuting role bindings while preserving the local token or state
+ distributions;
+\item replacing an artifact by a matched-size, matched-format artifact whose
+ relation to the surrounding history has been destroyed; and
+\item randomizing transfer channels through a physical or software
+ intervention while preserving message rate and marginal content.
+\end{itemize}
+
+For a predeclared null \(Q\), define
+\[
+\boxed{
+\Delta_{\mathrm{tr}}(Q)
+=
+\Risk_{\ell,Q}(V)
+-
+\Risk_{\ell,P}(V).
+}
+\]
+For a finite validated panel
+\(\mathcal Q=\{Q_1,\ldots,Q_m\}\subseteq\mathcal N_{\mathrm{pred}}(P)\), report
+both the complete vector
+\[
+\boldsymbol\Delta_{\mathrm{tr}}(\mathcal Q)
+=
+\bigl(
+\Delta_{\mathrm{tr}}(Q_1),\ldots,
+\Delta_{\mathrm{tr}}(Q_m)
+\bigr)
+\]
+and the robust panel minimum
+\[
+\Delta_{\mathrm{tr}}^{\min}(\mathcal Q)
+=
+\min_{Q\in\mathcal Q}\Delta_{\mathrm{tr}}(Q).
+\]
+The panel must be fixed independently of the observed favorable gap. Otherwise
+null selection can manufacture apparent relational dependence.
+
+\topic{27}{Relational Witness Pairs}
+
+\begin{definition}[Relational witness pair]\label{def:relational-witness}
+A pair of laws \((P,Q)\) is a predictive relational witness pair for the
+decomposition \(V\) and target \(Y_t^+\) when
+\[
+Q\in\mathcal N_{\mathrm{pred}}(P)
+\]
+but
+\[
+\Risk_{\ell,Q}(V)
+\neq
+\Risk_{\ell,P}(V).
+\]
+The two systems agree on every single-node predictive marginal but differ in
+full-system operative capacity.
+\end{definition}
+
+\begin{example}[XOR witness pair]\label{ex:xor-witness}
+Under the intact law \(P\), let
+\[
+X_1,X_2\overset{\mathrm{iid}}{\sim}\operatorname{Bernoulli}(1/2),
+\qquad
+Y=X_1\oplus X_2.
+\]
+Then each \((X_i,Y)\) pair is independent and uniform, so
+\[
+H_P(Y\mid X_i)=1\text{ bit},
+\qquad
+H_P(Y\mid X_1,X_2)=0.
+\]
+Let \(Q\) make \(X_1,X_2,Y\) mutually independent fair bits. Then
+\[
+Q_{(X_i,Y)}=P_{(X_i,Y)}
+\qquad(i=1,2),
+\]
+but
+\[
+H_Q(Y\mid X_1,X_2)=1\text{ bit}.
+\]
+Therefore
+\[
+\Delta_{\mathrm{joint}}^{\log}=1\text{ bit},
+\qquad
+k_0=2,
+\qquad
+\Delta_{\mathrm{tr}}(Q)=1\text{ bit}.
+\]
+This proves predictive relational structure relative to the declared variables.
+It does not, by itself, prove that any workspace variable is causally active.
+\end{example}
+
+\begin{example}[Redundant-copy control]
+Let \(Y\) be a fair bit and set \(X_1=X_2=Y\). The two nodes are perfectly
+coherent and the full system predicts perfectly, but
+\[
+H(Y\mid X_i)=0,
+\qquad
+\Delta_{\mathrm{joint}}^{\log}=0,
+\qquad
+k_0=1.
+\]
+Duplication is therefore not relational irreducibility.
+\end{example}
+
+The witness-pair criterion is stronger than a performance comparison against a
+smaller model because it holds local predictive behavior fixed. It remains
+observational. Part~VIII adds interventions and converts predictive
+relationality into an operational causal claim.

@@ -1,0 +1,395 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{VIII}{Causal Efficacy and Reentry}
+
+\topic{28}{Feasible Workspace Interventions}
+
+A notation such as \(\operatorname{do}(W_t=w)\) is meaningful only if the
+candidate workspace is an endogenous variable in a structural causal model or
+if an intervention on underlying variables is shown to realize that value.
+Abstractly setting a projection coordinate need not correspond to any possible
+physical or computational manipulation.
+
+\begin{definition}[Time-unrolled causal realization]\label{def:causal-realization}
+A time-unrolled causal realization is a structural causal model
+\[
+\mathcal M
+=
+(\mathcal U,\mathcal V,F,\mathbb P_U)
+\]
+whose endogenous variables include the local states, messages, actions,
+artifacts, target variables, and a measurable workspace extractor
+\[
+\pi_t:\mathsf S_t\to\mathsf W_t,
+\qquad
+W_t=\pi_t(S_t).
+\]
+The unrolled graph is acyclic even when the rolled process is recurrent.
+\end{definition}
+
+\begin{definition}[Feasible implementation intervention]
+Let \(B_t\) denote declared background variables that should remain matched.
+A family \(\{\iota_w:w\in\mathsf W_t^\circ\}\) is a feasible implementation of
+workspace values on the experimental domain \(\mathsf W_t^\circ\) when:
+\begin{enumerate}
+\item each \(\iota_w\) acts only on declared manipulable parents, channels, or
+ artifacts at or after time \(t\);
+\item the intervened realization satisfies
+\[
+\pi_t(S_t^{\iota_w})=w
+\qquad\text{almost surely};
+\]
+\item the background law is matched across compared interventions; and
+\item the intervention does not directly modify \(Y_t^+\) except through
+ paths included in the declared causal design.
+\end{enumerate}
+\end{definition}
+
+Let \(D\) be a divergence or metric on probability laws. For a matched
+background value \(b\), define
+\[
+\CE_{\Workspace}(w,w';b)
+=
+D\!\left(
+\mathbb P^{\iota_w}(Y_t^+\in\cdot\mid B_t=b),
+\mathbb P^{\iota_{w'}}(Y_t^+\in\cdot\mid B_t=b)
+\right).
+\]
+For a declared comparison design \(\nu\) over \((w,w',b)\), define
+\[
+\boxed{
+\eta_{\mathrm{causal}}^{\nu}
+=
+\mathbb E_{(w,w',b)\sim\nu}
+\left[
+\CE_{\Workspace}(w,w';b)
+\right].
+}
+\]
+The maximum
+\[
+\eta_{\mathrm{causal}}^{\max}
+=
+\sup_{w,w',b}\CE_{\Workspace}(w,w';b)
+\]
+may be useful for discovery, but a design-weighted effect is harder to inflate
+by selecting a single exceptional pair after inspection.
+
+\begin{proposition}[Coordinate invariance of intervention effects]
+\label{prop:causal-gauge}
+Let \(g:\mathsf W_t\to\mathsf W_t'\) be a measurable bijection and suppose the
+reparametrized intervention family satisfies
+\[
+\iota_{g(w)}'=\iota_w.
+\]
+Then every divergence-based causal effect is preserved:
+\[
+\CE_{\Workspace'}(g(w),g(w');b)
+=
+\CE_{\Workspace}(w,w';b).
+\]
+\end{proposition}
+
+\begin{proof}
+The two labels designate the same underlying interventions and therefore induce
+the same pair of target laws. Only the coordinate name has changed.
+\end{proof}
+
+This is the causal analogue of gauge invariance. It also shows why effects
+should be attached to intervention implementations rather than to arbitrary
+numerical coordinates.
+
+\topic{29}{Causal Specificity and Transfer Mediation}
+
+A causal effect on the target is not workspace-specific if an equal-cost
+perturbation outside the candidate workspace produces the same effect. Let
+\(c(\iota)\) be a declared intervention cost and let
+\[
+\mathcal I_{\Workspace}(r),
+\qquad
+\mathcal I_{\perp}(r)
+\]
+be matched families with cost \(r\), the first changing workspace coordinates
+and the second changing complementary coordinates while preserving the
+workspace value as closely as the implementation permits.
+
+Define
+\[
+\eta_{\Workspace}(r)
+=
+\mathbb E_{\iota,\iota'\sim\mathcal I_{\Workspace}(r)}
+D\!\left(
+\mathbb P^{\iota}(Y_t^+),
+\mathbb P^{\iota'}(Y_t^+)
+\right),
+\]
+\[
+\eta_{\perp}(r)
+=
+\mathbb E_{\jmath,\jmath'\sim\mathcal I_{\perp}(r)}
+D\!\left(
+\mathbb P^{\jmath}(Y_t^+),
+\mathbb P^{\jmath'}(Y_t^+)
+\right),
+\]
+and
+\[
+\boxed{
+\Delta_{\mathrm{specific}}(r)
+=
+\eta_{\Workspace}(r)-\eta_{\perp}(r).
+}
+\]
+A positive value supports causal concentration in the candidate workspace at
+the declared perturbation scale.
+
+If the complement is defined by \(\Gamma_\varepsilon(H)^\perp\), the result is
+metric dependent. Under nonunitary gauge changes, either the metric must be
+transported with the coordinates or interventions must be matched by a
+coordinate-independent physical cost. Otherwise specificity can change merely
+because the representation was rescaled.
+
+\subtopic{Causal transfer nulls}
+
+Let \(\jmath_E\) randomize selected communication edges while preserving their
+marginal message laws, rates, and timing budget. The causal transfer gap is
+\[
+\boxed{
+\Delta_{\mathrm{tr}}^{\operatorname{do}}(\jmath_E)
+=
+\Risk_{\ell,\mathbb P^{\jmath_E}}(V)
+-
+\Risk_{\ell,\mathbb P}(V).
+}
+\]
+Unlike an observational null law, this quantity is anchored to an implemented
+channel intervention. A positive effect is evidence that the intact alignment
+of messages, rather than merely their marginal content, contributes to task
+performance.
+
+A stronger mediation test equalizes the workspace state after two distinct
+channel interventions. Let \(\mu\) be a common imposed workspace distribution,
+implemented by a feasible stochastic intervention in the sense of
+Definition~\ref{def:causal-realization}. The notation below is shorthand for
+that implementation. Define the residual mediation defect
+\[
+\delta_{\mathrm{med}}
+=
+\sup_{\jmath,\jmath'}
+D\!\left(
+\mathbb P^{\jmath,\operatorname{do}(W_t\sim\mu)}(Y_t^+),
+\mathbb P^{\jmath',\operatorname{do}(W_t\sim\mu)}(Y_t^+)
+\right).
+\]
+A small value means that once the workspace state is equalized, little of the
+channel intervention's effect remains. This supports, but does not by itself
+identify without the causal assumptions, the claim that \(W_t\) mediates the
+relevant relational influence.
+
+\topic{30}{Causal Recurrence, Loop-Mediated Reentry, and Relationality}
+
+Temporal correlation is weaker than causal recurrence. Define the total
+workspace recurrence effect at lag \(\tau\) by
+\[
+\boxed{
+\eta_{\mathrm{rec}}(\tau)
+=
+\mathbb E_{(w,w',b)\sim\nu}
+D\!\left(
+\mathbb P^{\iota_w}(W_{t+\tau}\in\cdot\mid B_t=b),
+\mathbb P^{\iota_{w'}}(W_{t+\tau}\in\cdot\mid B_t=b)
+\right).
+}
+\]
+A nonzero value shows that manipulating the present workspace changes a later
+workspace state. It may, however, be explained by direct copying or a retained
+memory register.
+
+To isolate reentry, consider the unrolled causal graph and remove every direct
+retention edge whose source and target are both workspace variables at
+successive times. Let
+\[
+\mathcal M^{\setminus\mathrm{dir}}
+\]
+denote the resulting path-specific model, preserving paths that leave the
+workspace through a nonworkspace participant, action, message, or artifact and
+later return. Define
+\[
+\boxed{
+\eta_{\mathrm{loop}}(\tau)
+=
+\mathbb E_{(w,w',b)\sim\nu}
+D\!\left(
+\mathbb P_{\mathcal M^{\setminus\mathrm{dir}}}^{\iota_w}
+(W_{t+\tau}\in\cdot\mid B_t=b),
+\mathbb P_{\mathcal M^{\setminus\mathrm{dir}}}^{\iota_{w'}}
+(W_{t+\tau}\in\cdot\mid B_t=b)
+\right).
+}
+\]
+Then the distinctions are:
+\[
+\begin{aligned}
+I(W_t;W_{t+\tau})>0
+&\quad\text{temporal dependence only},\\
+\eta_{\mathrm{rec}}(\tau)>0
+&\quad\text{causal persistence},\\
+\eta_{\mathrm{loop}}(\tau)>0
+&\quad\text{causal exit-and-return reentry}.
+\end{aligned}
+\]
+Path-specific effects require the usual consistency and no-unmeasured-confounding
+assumptions appropriate to the implementation. In software systems, edge
+interventions can often be literal. In human collaboration, these assumptions
+are substantially harder to justify.
+
+\begin{theorem}[Operational relationality, \(T_{13}\)]
+\label{thm:operational-relationality}
+Let \(\mathsf Y\) be finite, let \(P\) be the intact law at a fixed decision
+time, and let \(W_t=\pi_t(\mathbf H_t)\) be a structurally supported candidate.
+Let
+\(\mathcal Q\subseteq\mathcal N_{\mathrm{pred}}(P)\) be a nonempty,
+predeclared panel of validated relation-breaking nulls. Assume:
+\begin{enumerate}
+\item exact structural--operational alignment,
+\[
+I_P(Y_t^+;\mathbf H_t\mid W_t)=0;
+\]
+\item a positive node-level information gap,
+\[
+\delta_{\mathrm{node}}
+=
+\min_{i\in V}
+I_P(Y_t^+;\mathbf H_t\mid\mathbf H_t^i)
+>0;
+\]
+\item a positive robust matched-null gap,
+\[
+\delta_{\mathrm{null}}
+=
+\min_{Q\in\mathcal Q}
+\left[
+H_Q(Y_t^+\mid\mathbf H_t)
+-
+H_P(Y_t^+\mid\mathbf H_t)
+\right]
+>0;
+\]
+\item a feasible intervention design with
+\[
+\eta_{\mathrm{causal}}^{\nu}>0;
+\]
+\item positive matched causal specificity at some declared scale \(r\),
+\[
+\Delta_{\mathrm{specific}}(r)>0.
+\]
+\end{enumerate}
+Then, relative to the declared decomposition, target, log loss, null panel, and
+intervention family:
+\begin{enumerate}
+\item no statistic of any single-node history is sufficient for \(Y_t^+\), and
+ \(k_0\geq2\);
+\item \(W_t\) cannot be reconstructed almost surely from any single-node
+ history;
+\item every null \(Q\in\mathcal Q\) preserves all single-node predictive
+ risks but has strictly worse full-system log risk than the intact law;
+\item the candidate workspace is causally efficacious and its effect exceeds
+ that of the declared matched off-workspace perturbations.
+\end{enumerate}
+If, in addition, \(\eta_{\mathrm{loop}}(\tau)>0\), the workspace is
+loop-reentrant at lag \(\tau\).
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:coalition-log-risk}, for each node \(i\),
+\[
+\Risk_{\log,P}(\{i\})-
+\Risk_{\log,P}(V)
+=
+I_P(Y_t^+;\mathbf H_t\mid\mathbf H_t^i)
+\geq
+\delta_{\mathrm{node}}>0.
+\]
+Hence no single-node history, and therefore no statistic of one, is sufficient;
+this gives \(k_0\geq2\).
+
+Exact alignment and Theorem~\ref{thm:alignment-criterion} imply that the
+canonical predictive state factors through \(W_t\). If
+\(W_t=\psi_i(\mathbf H_t^i)\) almost surely for some node, then the canonical
+state would also be a function of \(\mathbf H_t^i\), contradicting the positive
+node gap through Proposition~\ref{prop:sufficiency-reconstruction}.
+
+For every \(Q\in\mathcal Q\), Proposition~\ref{prop:local-risk-null} gives
+\[
+\Risk_{\log,Q}(\{i\})
+=
+\Risk_{\log,P}(\{i\})
+\qquad\forall i.
+\]
+The assumed null gap gives
+\[
+\Risk_{\log,Q}(V)
+>
+\Risk_{\log,P}(V).
+\]
+Thus a description determined only by the collection of single-node predictive
+marginals cannot reproduce the intact joint capacity: it would assign the same
+local data to \(P\) and \(Q\) while their full-system risks differ.
+
+Finally, the feasible intervention effect establishes causal efficacy relative
+to the declared implementation, and the positive specificity gap shows that
+the effect exceeds the matched complementary perturbation effect. The final
+reentry statement is exactly the definition of \(\eta_{\mathrm{loop}}\).
+\end{proof}
+
+\begin{remark}[Scope of the theorem]
+The conclusion is operational and indexed by
+\[
+(V,Y_t^+,\ell,\mathcal Q,\mathcal I,\nu,r).
+\]
+Changing the decomposition, target, loss, nulls, or intervention design may
+change the verdict. The theorem does not establish metaphysical
+irreducibility, autonomous agency, selfhood, or consciousness.
+\end{remark}
+
+\subtopic{Finite certification sequence}
+
+A reproducible dynamic-causal analysis should proceed in the following order:
+\begin{enumerate}
+\item Freeze the node decomposition, accessible coalition histories, target,
+ horizon, and proper scoring loss.
+\item Estimate the structural projector on training data only and encode
+ \(W_t\) without using held-out targets.
+\item Cross-fit conditional target laws from the full history, the workspace,
+ and every declared coalition. Report alignment and coalition risk gaps.
+\item Construct the null panel before inspecting null performance. Verify
+ local-predictive matching and the intended destruction of transfer
+ organization separately.
+\item Implement feasible workspace and complementary interventions with a
+ common background and cost design. Report both causal effect and
+ specificity.
+\item Test recurrence and then cut direct retention paths to test loop-mediated
+ reentry.
+\item Report confidence intervals or finite-sample uncertainty for every gate;
+ do not substitute training accuracy for Bayes-risk or causal estimates.
+\end{enumerate}
+
+The resulting certification report is
+\[
+\boxed{
+\begin{aligned}
+\mathcal C_{\mathrm{dyn}}(W_t)
+=\bigl(&
+\delta_{\mathrm{align}}^{\mathcal I},
+\{\Delta_A^\ell\}_{A\subseteq V},
+ k_\varepsilon,
+\boldsymbol\Delta_{\mathrm{tr}}(\mathcal Q),\\
+&\eta_{\mathrm{causal}}^\nu,
+\Delta_{\mathrm{specific}}(r),
+\eta_{\mathrm{rec}}(\tau),
+\eta_{\mathrm{loop}}(\tau)
+\bigr).
+\end{aligned}
+}
+\]
+No single coordinate certifies a relational workspace.

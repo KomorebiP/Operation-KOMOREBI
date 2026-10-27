@@ -1,0 +1,728 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{XXI}{Empirical Certification and Reporting Protocol}
+
+\topic{74}{Required Experiments}
+
+A workspace claim is not certified by a single benchmark score. The complete
+protocol is organized as a sequence of declarations, held-out measurements,
+implemented interventions, matched nulls, specification sweeps, identification
+checks, and gate decisions. Every reported
+result must identify the claim level it supports. Measurements that were not
+performed remain unmeasured rather than being inferred from neighboring gates.
+
+\subtopic{74.1 Claim declaration before evaluation}
+
+Before the certification split is opened, record:
+\begin{enumerate}
+\item the full reference specification
+ \(\varsigma_0=(\mathcal D,Y^+,\ell,\tau,\mathcal I,\mathcal N,\Theta)\);
+\item the admissible decomposition family \(\mathfrak D\) and specification
+ family \(\mathfrak S\);
+\item the target trajectory \(Y^+\), loss, horizon, and environment family;
+\item the candidate structural workspace extractor;
+\item the goal family \(\mathcal G\), utility normalization, and feasible
+ action set;
+\item the intervention families \(\mathcal I_W,\mathcal I_G,\mathcal I_A,
+ \mathcal I_D,\mathcal I_R\);
+\item the null panel and the local distributions each null must preserve;
+\item the required certificate level and every numerical threshold;
+\item the formation, calibration, certification, and stress-test splits;
+\item the uncertainty procedure and resampling unit; and
+\item the stopping and model-selection rules;
+\item the experiment family and model class used for identifiability; and
+\item the complete specification-selection history and multiplicity rule.
+\end{enumerate}
+Changing any of these after observing certification outcomes creates a new
+analysis that must be reported as exploratory or evaluated on a fresh split.
+
+\subtopic{74.2 Data and intervention partition}
+
+Use at least four logically distinct partitions:
+\[
+\boxed{
+\mathcal D
+=
+\mathcal D_{\mathrm{form}}
+\sqcup
+\mathcal D_{\mathrm{cal}}
+\sqcup
+\mathcal D_{\mathrm{cert}}
+\sqcup
+\mathcal D_{\mathrm{stress}}.
+}
+\]
+Their roles are:
+\begin{description}
+\item[Formation.] Learn membership, transfer maps, workspace channels,
+ boundaries, policies, and repair models.
+\item[Calibration.] Select thresholds, intervention amplitudes, and
+ uncertainty procedures without making the final pass decision.
+\item[Certification.] Estimate the declared gates once under the frozen
+ analysis plan.
+\item[Stress test.] Evaluate distribution shift, repeated damage, replacement,
+ and long-horizon persistence.
+\end{description}
+When independent partitions are impossible, the report must state the precise
+cross-fitting or nested-resampling procedure and preserve formation leakage
+controls.
+
+\subtopic{74.3 Structural tests}
+
+Report the complete low-energy spectrum relevant to the selected threshold:
+\[
+\spec(L_H),
+\qquad
+ d_\varepsilon,
+\qquad
+ g_\varepsilon,
+\qquad
+ \delta_{\mathrm{coh}}.
+\]
+At minimum include:
+\begin{itemize}
+\item the construction and normalization of \(D_H\);
+\item edge weights and estimated transfer uncertainties;
+\item the selected eigenspace dimension and threshold rule;
+\item the spectral gap with uncertainty or perturbation bound;
+\item stability under bootstrap, seed, and representation replacement; and
+\item the exact or approximate kernel residual.
+\end{itemize}
+
+\subtopic{74.4 Transfer and operation tests}
+
+Report
+\[
+\eta_{\mathrm{int}},
+\qquad
+\delta_e^{\mathrm{tr}},
+\qquad
+\Omega_\gamma,
+\qquad
+\Lambda_\gamma,
+\]
+together with:
+\begin{itemize}
+\item the paths and cycle basis used;
+\item path-length dependence of leakage;
+\item the gauge-alignment procedure;
+\item held-out transfer-prediction error;
+\item operation-intertwining defects; and
+\item the approximate closure bound from Theorem~\(T_{10}\).
+\end{itemize}
+
+\subtopic{74.5 Predictive alignment and coalition tests}
+
+Report
+\[
+\delta_{\mathrm{align}}^{\mathcal I},
+\qquad
+\{\Delta_A^\ell\}_{A\subseteq V},
+\qquad
+ k_\varepsilon,
+\qquad
+\delta_A^Z.
+\]
+When the number of coalitions is too large for exhaustive evaluation, state the
+sampling design, include every singleton and every leave-one-out coalition,
+and report the most favorable coalition found for the reducibility null. The
+claim must not be based only on average coalition performance.
+
+\subtopic{74.6 Causal and reentry tests}
+
+Report
+\[
+\eta_{\mathrm{causal}}^\nu,
+\qquad
+\Delta_{\mathrm{specific}}(r),
+\qquad
+\delta_{\mathrm{med}},
+\qquad
+\eta_{\mathrm{rec}}(\tau),
+\qquad
+\eta_{\mathrm{loop}}(\tau).
+\]
+Every causal estimate must be paired with:
+\begin{enumerate}
+\item a concrete mechanism-level implementation;
+\item a manipulation check;
+\item matched background variables;
+\item declared direct paths that were blocked or preserved;
+\item intervention magnitude and cost;
+\item an off-workspace matched intervention; and
+\item the downstream outcome window.
+\end{enumerate}
+
+\subtopic{74.7 Persistence, reconstruction, and replacement tests}
+
+Report
+\[
+d_{\mathrm{id}}(W_t,W_{t+\tau}),
+\qquad
+\Rec_k,
+\qquad
+ e_t,
+\qquad
+\alpha^{(k)},
+\qquad
+\mu_t^{\mathrm{keep}}.
+\]
+The report must separate:
+\begin{itemize}
+\item subspace tracking from state tracking;
+\item coherence from non-collapse;
+\item reconstruction from mere prediction;
+\item repair from successor-workspace creation; and
+\item structural replacement from causal and reconstructive replacement.
+\end{itemize}
+
+\subtopic{74.8 Formation-provenance tests}
+
+Report
+\[
+\mathbf E_{\mathrm{form}},
+\qquad
+\delta^{\mathrm{scaf}},
+\qquad
+\delta^{\mathrm{leak}},
+\qquad
+\Delta_q^{\mathrm{hist}}.
+\]
+Include the external scaffold, information available to the learner, history
+shuffles, cross-scaffold retraining, and every route by which certification
+labels or target boundaries could have entered formation.
+
+\subtopic{74.9 Learned-structure and boundary tests}
+
+Report
+\[
+\|\widehat H-H_*\|,
+\qquad
+\Delta_J,
+\qquad
+\Delta_t^B,
+\qquad
+\COut_\tau(\widehat S),
+\qquad
+\CIn_\tau(\widehat S).
+\]
+Boundary reports must include the admissible candidate family, full-system and
+empty-set controls, singleton and centralized controls, score components,
+margin to the runner-up, and temporal stability under held-out environment
+drift.
+
+\subtopic{74.10 Goal and counterfactual-policy tests}
+
+Report the agency coordinates
+\[
+\eta_G(\tau),
+\qquad
+\delta_G^{\mathrm{cue}}(\tau),
+\qquad
+\eta_{G\to A},
+\qquad
+\delta_Q,
+\qquad
+\eta_{V\to A},
+\qquad
+\eta_{A\to Y},
+\qquad
+ k_{\mathrm{ctl},\varepsilon}.
+\]
+The required experiments include:
+\begin{enumerate}
+\item cue-controlled goal interventions;
+\item goal-channel ablation and permutation;
+\item counterfactual-value calibration against action interventions;
+\item value-label permutation among feasible actions;
+\item critic or value-channel blocking;
+\item action replay under held-out perturbations;
+\item policy regret or value-gap estimation; and
+\item coalition reconstruction of the complete control state.
+\end{enumerate}
+
+\subtopic{74.11 Damage and repair tests}
+
+For every damage family, report
+\[
+\eta_{D\to M},
+\qquad
+\eta_{M\to R},
+\qquad
+\eta_{R\to v},
+\qquad
+\Delta_{\mathrm{repair}}^{\mathrm{spec}},
+\qquad
+\delta_{\mathrm{rep-id}},
+\qquad
+\sup_t e_t.
+\]
+The repeated-disturbance experiment must contain:
+\begin{enumerate}
+\item a no-damage baseline;
+\item damage with repair disabled;
+\item damage with the intact repair loop;
+\item monitor ablation;
+\item cost-matched random repair;
+\item off-workspace repair;
+\item repeated and compound damage; and
+\item a held-out disturbance distribution.
+\end{enumerate}
+
+\topic{75}{Required Null Families}
+
+The core null panel is:
+\[
+\begin{aligned}
+N_1&=\text{shuffled transfer maps with validated local matching},\\
+N_2&=\text{shuffled cross-node temporal correspondence},\\
+N_3&=\text{matched-capacity local memory},\\
+N_4&=\text{matched-size irrelevant artifact},\\
+N_5&=\text{participant ablation},\\
+N_6&=\text{artifact ablation},\\
+N_7&=\text{workspace implementation intervention},\\
+N_8&=\text{matched off-workspace intervention},\\
+N_9&=\text{representation replacement},\\
+N_{10}&=\text{context reset and reconstruction},\\
+N_{11}&=\text{matched formation-history shuffle},\\
+N_{12}&=\text{cross-scaffold re-encoding and retraining},\\
+N_{13}&=\text{boundary-label and certification leakage audit},\\
+N_{14}&=\text{empty, full, singleton, and centralized boundary nulls},\\
+N_{15}&=\text{held-out transfer and membership re-estimation},\\
+N_{16}&=\text{boundary damage, use, and repair intervention},\\
+N_{17}&=\text{goal-code permutation with cues and actions matched},\\
+N_{18}&=\text{persistent external-cue rewrite with internal retention cut},\\
+N_{19}&=\text{counterfactual-value label permutation},\\
+N_{20}&=\text{critic or value-channel ablation},\\
+N_{21}&=\text{open-loop action replay under held-out perturbation},\\
+N_{22}&=\text{monitor-blind cost-matched random repair},\\
+N_{23}&=\text{off-workspace repair with matched intervention norm},\\
+N_{24}&=\text{identity-breaking reconstruction with matched task score},\\
+N_{25}&=\text{merge control for components sharing an uninterruptible controller},\\
+N_{26}&=\text{secret-sharing split of a known centralized controller},\\
+N_{27}&=\text{hidden shared-memory and common-cue exposure test},\\
+N_{28}&=\text{frozen certificate sweep across the admissible decomposition family},\\
+N_{29}&=\text{post hoc target-selection audit},\\
+N_{30}&=\text{horizon cherry-picking audit},\\
+N_{31}&=\text{loss and utility substitution audit},\\
+N_{32}&=\text{restricted intervention-family audit},\\
+N_{33}&=\text{threshold and gate-set tuning audit},\\
+N_{34}&=\text{frozen certificate sweep across the admissible specification family}.
+\end{aligned}
+\]
+
+\subtopic{75.1 Null validity record}
+
+Each observational null must state:
+\begin{itemize}
+\item the local distributions it preserves;
+\item the relational dependency it destroys;
+\item the distance between intact and null local marginals;
+\item the capacity, parameter count, and information budget; and
+\item whether null fitting used the same data budget as the intact model.
+\end{itemize}
+Each causal null must state:
+\begin{itemize}
+\item the manipulated mechanism;
+\item the matched background and intervention cost;
+\item the intended causal path destroyed or preserved;
+\item the manipulation check; and
+\item unintended direct effects detected during validation.
+\end{itemize}
+A failed manipulation check invalidates the null. It does not count as evidence
+for the workspace claim.
+
+\subtopic{75.2 Claim-specific null subsets}
+
+A successful claim requires
+\[
+\Pass(N_1,\ldots,N_{28})
+\]
+only for the subset relevant to its stated level. The subset must be frozen
+before certification. Failed applicable nulls, invalid nulls, and unmeasured
+nulls are retained separately in the final report. They must not be merged
+into a generic ``not significant'' category.
+
+\topic{76}{Certification Vector and Complete Reporting Templates}
+
+\subtopic{76.1 Extended certification vector}
+
+Use a vector rather than one aggregate score:
+\[
+\boxed{
+\begin{aligned}
+\mathcal C_{\mathrm{full}}(W)
+=\bigl(&
+ d_\varepsilon,
+ g_\varepsilon,
+ \delta_{\mathrm{coh}},
+ \delta_{\mathrm{align}}^{\mathcal I},
+ \Delta_{\mathrm{joint}}^\ell,
+ k_\varepsilon,\\
+&\boldsymbol\Delta_{\mathrm{tr}}(\mathcal Q),
+ \eta_{\mathrm{causal}}^\nu,
+ \Delta_{\mathrm{specific}}(r),
+ \eta_{\mathrm{loop}}(\tau),\\
+&d_{\mathrm{id}},
+ \Rec_k,
+ \underline{\mathbf m}_{\mathfrak D},
+ \boldsymbol\Delta_{\mathrm{dec}},
+ \mathbf E_{\mathrm{form}},
+ \delta^{\mathrm{scaf}},
+ \delta^{\mathrm{leak}},\\
+&\Delta_J,
+ \Delta_t^B,
+ \COut_\tau(\widehat S),
+ \CIn_\tau(\widehat S),\\
+&\eta_G(\tau),
+ \delta_G^{\mathrm{cue}}(\tau),
+ \eta_{G\to A},
+ \delta_Q,
+ \eta_{V\to A},
+ \eta_{A\to Y},\\
+&\eta_{D\to M},
+ \eta_{M\to R},
+ \eta_{R\to v},
+ \Delta_{\mathrm{repair}}^{\mathrm{spec}},
+ \delta_{\mathrm{rep-id}},
+ \sup_t e_t
+\bigr).
+\end{aligned}
+}
+\]
+A claim passes only when every required coordinate lies in its predeclared
+admissible region. No weighted average may compensate for a failed required
+gate.
+
+\subtopic{76.2 Claim card template}
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.29\textwidth}>{\raggedright\arraybackslash}p{0.65\textwidth}@{}}
+\toprule
+Field & Required entry \\
+\midrule
+\endfirsthead
+\toprule
+Field & Required entry \\
+\midrule
+\endhead
+Claim identifier & Unique versioned identifier tied to code and result
+artifacts. \\
+Claim level & Archive, shared representation, operational workspace,
+relational workspace, persistent workspace, self-maintaining workspace, or
+workspace agent. \\
+Reference decomposition & Nodes, artifacts, channels, local-access maps, and coalition universe. \\
+Admissible decomposition family & Plausible merges, splits, shared-resource assignments, exclusions, and audit rationale. \\
+Target and horizon & \(Y^+\), loss, utility, prediction horizon, control
+horizon, and maintenance horizon. \\
+Environment scope & Training, certification, and stress-test environment
+families. \\
+Workspace extractor & Frozen construction of \(D_H\), \(L_H\), spectral
+threshold, and state readout. \\
+Goal and policy & Goal codes, utility normalization, action set, and policy
+class. \\
+Boundary & Candidate family, score, admissibility constraints, and selected
+boundary. \\
+Interventions & Feasible workspace, goal, action, damage, and repair
+implementations. \\
+Null panel & Applicable \(N_j\), preservation targets, and fit budgets. \\
+Thresholds & Every gate direction, numerical cutoff, and uncertainty rule. \\
+Data split & Formation, calibration, certification, stress, and cross-fitting
+logic. \\
+Stopping rule & Number of seeds, runs, interventions, and any sequential
+stopping criterion. \\
+Status & Confirmatory, exploratory, replication, or audit. \\
+\bottomrule
+\end{longtable}
+
+\subtopic{76.3 Gate-estimate table template}
+
+For every required coordinate, include one row with the following fields:
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.73\textwidth}@{}}
+\toprule
+Field & Required entry \\
+\midrule
+\endfirsthead
+\toprule
+Field & Required entry \\
+\midrule
+\endhead
+Gate & Formal symbol and verbal interpretation. \\
+Estimator & Exact statistic, normalization, and software implementation. \\
+Evaluation unit & Episode, participant, graph, seed, environment, or other
+independent unit. \\
+Point estimate & Estimate on the frozen certification split. \\
+Uncertainty & Interval, bound, or posterior region with declared coverage or
+credibility. \\
+Threshold & Predeclared pass region. \\
+Manipulation status & Passed, failed, or not applicable. \\
+Decision & Pass, fail, invalid, underpowered, or unmeasured. \\
+Sensitivity & Result under reasonable alternative normalizations and
+resampling choices. \\
+Artifact reference & File, table, raw-result key, and code commit. \\
+\bottomrule
+\end{longtable}
+
+\subtopic{76.4 Intervention ledger template}
+
+\begin{longtable}{@{}p{0.20\textwidth}p{0.73\textwidth}@{}}
+\toprule
+Field & Required entry \\
+\midrule
+\endfirsthead
+\toprule
+Field & Required entry \\
+\midrule
+\endhead
+Intervention ID & Unique identifier and randomization seed. \\
+Target mechanism & Workspace coordinate, goal code, value channel, action,
+boundary, monitor, or repair channel. \\
+Implementation & Exact code path, hook, artifact edit, or mechanism change. \\
+Dose & Norm, duration, timing, and support of the intervention. \\
+Background match & Variables fixed, blocked, randomized, or balanced. \\
+Excluded paths & Direct paths intentionally removed from the causal contrast. \\
+Manipulation check & Evidence that the intended mechanism changed by the
+specified amount. \\
+Collateral effects & Changes outside the target mechanism. \\
+Outcome & Downstream variable and evaluation window. \\
+Effect estimate & Point estimate, uncertainty, and sign convention. \\
+Cost & Compute, latency, information, action, or structural cost. \\
+Validity status & Valid, invalid, ambiguous, or unmeasured. \\
+\bottomrule
+\end{longtable}
+
+\subtopic{76.5 Null ledger template}
+
+\begin{longtable}{@{}p{0.20\textwidth}p{0.73\textwidth}@{}}
+\toprule
+Field & Required entry \\
+\midrule
+\endfirsthead
+\toprule
+Field & Required entry \\
+\midrule
+\endhead
+Null ID & One of \(N_1,\ldots,N_{34}\) or a declared extension. \\
+Claim attacked & The exact explanation the null is designed to preserve or
+destroy. \\
+Matched quantities & Local marginals, capacity, training budget, action cost,
+intervention norm, or other controlled quantities. \\
+Destroyed relation & Edge alignment, temporal order, value ranking, goal
+identity, monitor mediation, or another relational feature. \\
+Fit procedure & Data, optimization, seeds, and hyperparameter budget. \\
+Validity metric & Distance from the intended matched quantities. \\
+Primary contrast & Intact minus null effect with uncertainty. \\
+Disposition & Rejects null, fails to reject, invalid null, or underpowered. \\
+Failure notes & Any mismatch or collateral mechanism change. \\
+\bottomrule
+\end{longtable}
+
+\subtopic{76.6 Agency and maintenance report template}
+
+The agency section must provide the following matrix:
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.22\textwidth}p{0.23\textwidth}X@{}}
+\toprule
+Component & Primary metric & Required contrast \\
+\midrule
+Goal semantics & Held-out \(Q_t^g\) ordering & Distinct goals reverse or alter
+at least one declared action ordering. \\
+Goal retention & \(\eta_G(\tau)\) & Goal intervention with future cues matched
+or removed. \\
+Goal use & \(\eta_{G\to A}\) & Goal intervention versus goal-label replay. \\
+Counterfactual accuracy & \(\delta_Q\) & Internal value versus external action
+interventions. \\
+Value use & \(\eta_{V\to A}\) & Value-label permutation and value-channel
+ablation. \\
+Outcome control & \(\eta_{A\to Y}\) & Feasible action intervention. \\
+Damage detection & \(\eta_{D\to M}\) & Damage versus matched no-damage. \\
+Repair mediation & \(\eta_{M\to R}\) & Monitor intervention and monitor
+ablation. \\
+Restoration & \(\eta_{R\to v}\) & Repair versus matched no-repair. \\
+Repair specificity & \(\Delta_{\mathrm{repair}}^{\mathrm{spec}}\) & Intended
+repair versus cost-matched generic action. \\
+Identity preservation & \(\delta_{\mathrm{rep-id}}\) & Pre-damage workspace
+versus post-repair workspace. \\
+Long-run maintenance & \(\sup_t e_t\) & Repeated held-out disturbances. \\
+Relational location & \(k_{\mathrm{ctl},\varepsilon}\) & Full system versus
+all single nodes and matched local nulls. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subtopic{76.7 Uncertainty and multiplicity}
+
+The independent resampling unit must match the data-generating process. Token,
+time-step, or edge resampling is invalid when dependence is organized at the
+episode, participant, graph, or environment level. Recommended procedures
+include:
+\begin{itemize}
+\item environment- or episode-level bootstrap;
+\item repeated independent training seeds;
+\item cluster-robust intervals for repeated observations;
+\item permutation tests that preserve the declared local structure;
+\item concentration bounds for uniform finite candidate families; and
+\item stress-test intervals over held-out environment families.
+\end{itemize}
+
+Pass decisions should use one-sided uncertainty bounds. For a lower-bounded
+gate \(\theta\geq\tau\), pass only when the lower confidence bound exceeds
+\(\tau\). For an upper-bounded defect \(\delta\leq\varepsilon\), pass only when
+the upper confidence bound is below \(\varepsilon\).
+
+When a conclusion ranges over \(\mathfrak S\), the uncertainty rule must be
+uniform over every gate and specification included in the claim. Report the
+pointwise interval, the family-wide lower envelope, the covering or
+multiplicity correction, and the identification status. A narrow pointwise
+interval does not establish a robust result when model or specification
+uncertainty remains wide.
+
+\subtopic{76.8 \(T_{24}\): Gatewise certification validity }
+
+\begin{theorem}[Intersection-gate false-certification control]
+\label{thm:gatewise-validity}
+Let a certificate require all gates \(G_1,\ldots,G_m\) to pass. For each gate
+\(j\), let \(H_{0j}\) denote the null that the required property is absent, and
+assume the predeclared test satisfies
+\[
+\sup_{P\in H_{0j}}
+\mathbb P_P(G_j\text{ passes})
+\leq
+\alpha_j.
+\]
+The global null is
+\[
+H_0
+=
+\bigcup_{j=1}^m H_{0j},
+\]
+meaning that at least one required property is absent. If the certificate is
+declared only when every gate passes, then
+\[
+\boxed{
+\sup_{P\in H_0}
+\mathbb P_P(\text{certificate passes})
+\leq
+\max_{1\leq j\leq m}\alpha_j.
+}
+\]
+No independence assumption among gate tests is required.
+\end{theorem}
+
+\begin{proof}
+For any \(P\in H_0\), choose an index \(j_P\) such that \(P\in H_{0j_P}\).
+The event that every gate passes is contained in the event that gate \(j_P\)
+passes. Hence
+\[
+\mathbb P_P(\text{certificate passes})
+\leq
+\mathbb P_P(G_{j_P}\text{ passes})
+\leq
+\alpha_{j_P}
+\leq
+\max_j\alpha_j.
+\]
+Taking the supremum over \(P\in H_0\) proves the claim.
+\end{proof}
+
+The theorem is an intersection-union guarantee. It applies only when the gate
+family, thresholds, and tests are fixed before certification and each gate test
+is uniformly valid for its null. Adaptive gate deletion, selective reporting,
+or repeated reuse of the certification split invalidates the bound.
+
+\subtopic{76.9 Failure taxonomy}
+
+Every gate and null receives exactly one primary status:
+\begin{description}
+\item[Pass.] The frozen estimate and uncertainty rule satisfy the threshold.
+\item[Fail.] The gate was validly measured and did not satisfy the threshold.
+\item[Invalid intervention.] The manipulation check or background match
+ failed.
+\item[Invalid null.] The null did not preserve its required local quantities
+ or exceeded its fit budget.
+\item[Underpowered.] The uncertainty interval crosses the threshold by more
+ than the declared indifference region.
+\item[Unmeasured.] No valid estimate was obtained.
+\item[Leakage.] Formation or model selection used certification information.
+\item[Exploratory.] The metric, threshold, or analysis was selected after
+ inspecting certification outcomes.
+\end{description}
+Only \emph{Pass} counts toward the formal certificate. ``Underpowered'' and
+``unmeasured'' are not failures of the underlying theory, but they are failures
+to establish the corresponding empirical claim.
+
+\subtopic{76.10 Machine-readable result record}
+
+The machine-readable record should contain at least the following top-level
+objects:
+\[
+\boxed{
+\begin{aligned}
+\mathsf{ResultRecord}
+=\{&
+\mathsf{claim},
+\mathsf{specification},
+\mathsf{specification\_family},
+\mathsf{decomposition},
+\mathsf{data\_splits},
+\mathsf{formation},\\
+&\mathsf{workspace\_extractor},
+\mathsf{goals},
+\mathsf{actions},
+\mathsf{interventions},\\
+&\mathsf{nulls},
+\mathsf{gates},
+\mathsf{identified\_sets},
+\mathsf{specification\_envelopes},
+\mathsf{uncertainty},
+\mathsf{failures},
+\mathsf{artifacts}
+\}.
+\end{aligned}
+}
+\]
+Each gate object records its symbol, estimator, direction, threshold, point
+estimate, interval, split, seed set, status, and artifact reference. Each
+intervention and null object records its manipulation check and validity
+status. The schema must preserve failed and invalid entries rather than only
+the passing subset.
+
+\subtopic{76.11 Minimum reproducibility package}
+
+A complete certification package contains:
+\begin{enumerate}
+\item the frozen claim card;
+\item source code and environment lock file;
+\item exact data or deterministic data-generation procedure;
+\item formation, calibration, certification, and stress-test manifests;
+\item learned transfer, workspace, policy, monitor, and repair parameters;
+\item raw per-run and per-intervention results;
+\item the intervention and null ledgers;
+\item the complete gate table, including failures;
+\item figures and tables regenerated from raw results;
+\item random seeds and hardware or numerical-precision information;
+\item checksums for every included artifact; and
+\item a single verification command that reproduces package integrity and the
+ reported summary tables.
+\end{enumerate}
+
+\subtopic{76.12 Decision rule}
+
+Let \(\mathcal J(L)\) be the required gate set for claim level \(L\). Then
+\[
+\boxed{
+\operatorname{Certify}_L(W;\varsigma)
+=
+\bigwedge_{j\in\mathcal J(L,\varsigma)}
+\operatorname{Pass}_j(W;\varsigma).
+}
+\]
+For a workspace-agent claim, the required set includes every structural,
+operational, relational, persistent, goal, counterfactual-control, and
+self-maintenance gate declared in Parts~IX and XVI. A specification-robust
+claim additionally requires the uniform rule of Part~XVIII across
+\(\mathfrak S\). Failure of an earlier level
+prevents certification of a later level, even when later-level behavior appears
+strong on a task benchmark.

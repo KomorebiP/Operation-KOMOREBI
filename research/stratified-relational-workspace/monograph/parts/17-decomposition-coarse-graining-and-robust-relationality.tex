@@ -1,0 +1,630 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{XVII}{Decomposition, Coarse-Graining, and Robust Relationality}
+
+Relationality is always assessed relative to a way of dividing a realization
+into components. That dependence is not a minor technicality. If every
+participant, artifact, and channel is merged into one component, the complete
+workspace becomes local by definition. If a centralized state is recoded into
+several complementary shares, the same centralized process can be made to look
+irreducibly distributed. A defensible theory must therefore say which
+partitions count as admissible, which quantities survive faithful aggregation,
+and how sensitive a certificate is to alternative descriptions of the same
+system.
+
+\topic{54}{The Decomposition Problem}
+
+Let \(\Omega\) be a finite set of primitive carriers at a declared audit
+resolution. A primitive carrier may be a person, a model instance, a process,
+a memory store, an instrument, or another independently tracked mechanism.
+The word \emph{primitive} is relative to the audit. It does not assert a final
+metaphysical atomization of the system.
+
+\begin{definition}[System decomposition]\label{def:system-decomposition}
+A decomposition of a carrier presentation is a tuple
+\[
+\mathcal D
+=
+\bigl(
+\Pi,\mathbf O,G_{\Pi},\mathcal I_{\Pi}
+\bigr),
+\]
+where:
+\begin{itemize}
+\item \(\Pi=\{B_\alpha\}_{\alpha\in A}\) is a partition of \(\Omega\);
+\item \(O_\alpha\) is the declared local-access map for block \(B_\alpha\),
+ producing the local state or history available at that component;
+\item \(G_{\Pi}\) records the declared communication, transfer, and causal
+ interfaces among the blocks; and
+\item \(\mathcal I_{\Pi}\) is the family of feasible interventions at that
+ resolution.
+\end{itemize}
+The accessible information of component \(\alpha\) is the sigma-field
+\[
+\mathscr F_\alpha^{\mathcal D}
+=
+\sigma\!\left(O_\alpha(\mathbf H_t)\right).
+\]
+Every shared bus, common memory, supervisor, or artifact that can alter more
+than one local state must appear either as its own carrier or as an explicit
+channel in \(G_{\Pi}\).
+\end{definition}
+
+The same physical realization can support several decompositions. One may
+separate a model from its executor, merge them into one computational unit, or
+treat a persistent artifact as its own component. These alternatives are not
+mere renamings when they change local access or feasible interventions. Every certificate should therefore display the full specification
+\[
+\SRW(W_t;\varsigma),
+\qquad
+\varsigma=(\mathcal D,Y^+,\ell,\tau,\mathcal I,\mathcal N,\Theta).
+\]
+This part varies the decomposition coordinate while holding the remaining
+coordinates fixed. Part~XVIII treats the full specification family.
+
+\begin{definition}[Refinement and coarsening]\label{def:decomposition-refinement}
+Let \(\mathcal D_f\) and \(\mathcal D_c\) be decompositions of the same carrier
+presentation. The fine decomposition refines the coarse decomposition,
+written
+\[
+\mathcal D_f\preceq\mathcal D_c,
+\]
+when there is a surjection
+\[
+q:V_f\longrightarrow V_c
+\]
+such that each coarse component is the union of the fine components in one
+fiber of \(q\), and its accessible information is generated only from those
+fine components. The aggregation is \emph{information faithful} when
+\[
+\mathscr F_B^{\mathcal D_c}
+=
+\bigvee_{i\in q^{-1}(B)}
+\mathscr F_i^{\mathcal D_f}
+\qquad(B\in V_c).
+\]
+It is \emph{structurally faithful} when it also retains every internal
+compatibility condition and every boundary transfer condition needed to
+recover the original global-section problem.
+\end{definition}
+
+Refinement and coarsening are directional. A coarse component may contain
+information that was spread across several finer nodes. Conversely, a fine
+description may expose internal channels that disappear when a macro-node is
+formed. The next results identify what is preserved when the aggregation is
+faithful.
+
+\topic{55}{Faithful Structural Coarse-Graining}
+
+Let the vertex set of a core-transfer diagram be partitioned as
+\[
+V=V_1\sqcup\cdots\sqcup V_m.
+\]
+Write the transfer discrepancy as
+\[
+D_H
+=
+\begin{pmatrix}
+D_{\mathrm{int}}\\
+D_{\partial}
+\end{pmatrix},
+\qquad
+D_{\mathrm{int}}
+=
+\bigoplus_{\alpha=1}^{m}D_\alpha,
+\]
+where \(D_\alpha\) contains the edge constraints internal to \(V_\alpha\),
+and \(D_{\partial}\) contains the constraints crossing between blocks. Define
+the internally coherent macro-state spaces
+\[
+W_\alpha=\ker D_\alpha,
+\qquad
+W_{\Pi}=\bigoplus_{\alpha=1}^{m}W_\alpha.
+\]
+Let
+\[
+J_\Pi:W_\Pi\hookrightarrow\mathcal C_V
+\]
+be the canonical isometric inclusion, and define the quotient discrepancy
+\[
+D_\Pi=D_{\partial}J_\Pi.
+\]
+The quotient does not replace a group of nodes by an arbitrary summary. Its
+macro-state is the complete internal section space of that group, and its
+boundary operator retains all cross-block compatibility equations.
+
+\begin{theorem}[Faithful coarse-graining]\label{thm:faithful-coarse-graining}
+For every finite partition of the vertex set,
+\[
+\boxed{
+\ker D_H
+=
+J_\Pi\ker D_\Pi.
+}
+\]
+Equivalently,
+\[
+\boxed{
+\Gamma(H)
+\cong
+\ker D_\Pi
+=
+\ker(D_\Pi^*D_\Pi).
+}
+\]
+In particular,
+\[
+\dim\Gamma(H)
+=
+\dim W_\Pi-\operatorname{rank}(D_\Pi).
+\]
+Thus faithful coarse-graining preserves the exact structural workspace even
+though it changes the number and interpretation of the displayed nodes.
+\end{theorem}
+
+\begin{proof}
+A vector \(c\in\mathcal C_V\) lies in \(\ker D_H\) exactly when
+\[
+D_{\mathrm{int}}c=0
+\qquad\text{and}\qquad
+D_{\partial}c=0.
+\]
+The first condition is equivalent to \(c=J_\Pi w\) for a unique
+\(w\in W_\Pi\). Substitution into the second condition gives
+\[
+D_\Pi w
+=
+D_{\partial}J_\Pi w
+=0.
+\]
+Hence \(c\in\ker D_H\) if and only if
+\(c=J_\Pi w\) with \(w\in\ker D_\Pi\). The Laplacian identity follows from
+\(\ker(D_\Pi^*D_\Pi)=\ker D_\Pi\), and the dimension formula is rank-nullity.
+\end{proof}
+
+The theorem supplies a precise sense in which a workspace may be represented
+at several resolutions without changing its exact core. The preservation
+fails when the macro-state discards internal section coordinates or when
+boundary equations are omitted.
+
+\begin{corollary}[Two-scale coherence bound]\label{cor:two-scale-decomposition}
+Let \(P_\Pi\) be the orthogonal projector onto \(J_\Pi W_\Pi\). Let
+\(\gamma_{\mathrm{int}}>0\) be the smallest positive eigenvalue of
+\(D_{\mathrm{int}}^*D_{\mathrm{int}}\), and let
+\(\gamma_\Pi>0\) be the smallest positive eigenvalue of
+\(D_\Pi^*D_\Pi\). Then every \(c\in\mathcal C_V\) satisfies
+\[
+\boxed{
+\operatorname{dist}(c,\Gamma(H))
+\leq
+\frac{\|D_{\mathrm{int}}c\|}{\sqrt{\gamma_{\mathrm{int}}}}
++
+\frac{
+\|D_\Pi J_\Pi^*P_\Pi c\|
+}{\sqrt{\gamma_\Pi}}.
+}
+\]
+The first term measures incoherence within macro-components. The second
+measures incompatibility among their internally coherent states.
+\end{corollary}
+
+\begin{proof}
+By the triangle inequality,
+\[
+\operatorname{dist}(c,\Gamma(H))
+\leq
+\|c-P_\Pi c\|
++
+\operatorname{dist}(P_\Pi c,\Gamma(H)).
+\]
+The workspace Poincar\'e estimate applied to \(D_{\mathrm{int}}\) bounds the
+first term. Write \(P_\Pi c=J_\Pi w\). Theorem~\ref{thm:faithful-coarse-graining}
+and the corresponding estimate for \(D_\Pi\) bound the second term by
+\(\|D_\Pi w\|/\sqrt{\gamma_\Pi}\). Since \(J_\Pi\) is isometric,
+\(w=J_\Pi^*P_\Pi c\).
+\end{proof}
+
+This decomposition is useful computationally. Internal blocks can be solved
+or compressed independently, after which only the boundary discrepancy must
+be assembled globally. It also gives a diagnostic distinction between a
+workspace that fails inside its local components and one whose local
+components are coherent but mutually incompatible.
+
+\topic{56}{Predictive Risk Under Aggregation}
+
+The structural core can be preserved by faithful coarse-graining, while
+coalition counts generally are not. Let
+\[
+\mathscr F_S^{\mathcal D}
+=
+\bigvee_{i\in S}\mathscr F_i^{\mathcal D}
+\]
+be the information available to coalition \(S\) under decomposition
+\(\mathcal D\). For a declared loss \(\ell\), write
+\[
+\Risk_{\mathcal D}(S)
+=
+\inf_f
+\mathbb E\!\left[
+\ell\bigl(Y^+,f(\mathscr F_S^{\mathcal D})\bigr)
+\right].
+\]
+
+\begin{theorem}[Bayes-risk transport under faithful aggregation]
+\label{thm:risk-aggregation}
+Suppose \(\mathcal D_f\preceq\mathcal D_c\) through
+\(q:V_f\to V_c\), and suppose the aggregation is information faithful. Then
+for every coarse coalition \(S\subseteq V_c\),
+\[
+\boxed{
+\Risk_{\mathcal D_c}(S)
+=
+\Risk_{\mathcal D_f}\bigl(q^{-1}(S)\bigr).
+}
+\]
+Consequently,
+\[
+k_\varepsilon(\mathcal D_c)
+\leq
+k_\varepsilon(\mathcal D_f),
+\]
+where coalition size is counted in displayed nodes.
+\end{theorem}
+
+\begin{proof}
+Information faithfulness gives
+\[
+\mathscr F_S^{\mathcal D_c}
+=
+\bigvee_{B\in S}
+\bigvee_{i\in q^{-1}(B)}
+\mathscr F_i^{\mathcal D_f}
+=
+\mathscr F_{q^{-1}(S)}^{\mathcal D_f}.
+\]
+The two Bayes risks optimize over the same measurable decision rules and are
+therefore equal. If a fine coalition of size \(k\) is sufficient within
+\(\varepsilon\), the set of coarse blocks meeting that coalition has at most
+\(k\) elements and contains at least the same information. This proves the
+coalition-size inequality.
+\end{proof}
+
+The theorem makes the source of a common error explicit. A minimal coalition
+size of two at one resolution can become one after those two nodes are merged.
+Node count is therefore a decomposition-relative statistic.
+
+A more stable quantity measures primitive carrier cost. Let
+\(w_\omega>0\) be a declared cost for each \(\omega\in\Omega\), and assign a
+block the cost
+\[
+c(B)=\sum_{\omega\in B}w_\omega.
+\]
+Define the sufficient support cost
+\[
+\boxed{
+s_\varepsilon(\mathcal D)
+=
+\min_{S\subseteq V_{\mathcal D}}
+\left\{
+\sum_{B\in S}c(B):
+\Risk_{\mathcal D}(S)
+\leq
+\Risk_{\mathcal D}(V_{\mathcal D})+\varepsilon
+\right\}.
+}
+\]
+If \(\mathcal D_f\preceq\mathcal D_c\) is information faithful, then
+\[
+\boxed{
+s_\varepsilon(\mathcal D_f)
+\leq
+s_\varepsilon(\mathcal D_c).}
+\]
+The fine decomposition permits every union of coarse blocks and may also
+permit cheaper sub-block coalitions. Equality holds whenever an optimal fine
+coalition is a union of complete coarse fibers. This weighted support measure
+does not remove the need to choose primitive carriers, but it prevents a
+large macro-component from being counted as a single inexpensive unit merely
+because it was assigned one node label.
+
+\topic{57}{Trivialization by Arbitrary Redescription}
+
+The dependence on decomposition is unavoidable. Two elementary constructions
+show why a certificate cannot be required to survive every mathematically
+possible partition.
+
+\begin{proposition}[Coarsening and secret-sharing trivializations]
+\label{prop:decomposition-trivialization}
+The following statements hold.
+\begin{enumerate}
+\item Any finite realization can be coarsened to a single displayed component.
+ Relative to that decomposition, the full-system state is local and
+ \(k_0\leq1\).
+\item Let \(Z\) be uniform on a finite abelian group \(\mathsf G\). Let
+ \(K\) be an independent uniform group element and define
+ \[
+ X_1=K,
+ \qquad
+ X_2=Z-K.
+ \]
+ Then
+ \[
+ I(Z;X_1)=I(Z;X_2)=0,
+ \qquad
+ H(Z\mid X_1,X_2)=0.
+ \]
+ Under logarithmic loss,
+ \[
+ \Risk(\{1\})=\Risk(\{2\})=\log|\mathsf G|,
+ \qquad
+ \Risk(\{1,2\})=0,
+ \]
+ so the declared two-node representation has \(k_0=2\) and joint advantage
+ \(\log|\mathsf G|\), even when a single centralized encoder generated both
+ shares.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The first statement follows by taking the indiscrete partition
+\(\Pi=\{\Omega\}\). For the second, conditioning on any value of \(Z\) leaves
+\(K\), and hence \(X_1\), uniform. Translation invariance of the uniform law
+also leaves \(X_2=Z-K\) uniform, so each share is independent of \(Z\). The
+pair reconstructs \(Z=X_1+X_2\), which gives the entropy and Bayes-risk
+identities.
+\end{proof}
+
+The secret-sharing example is a valid distributed code. What it does not show
+is that the process producing or using the code is causally distributed across
+the declared carriers. If one hidden controller creates both shares, stores
+the key, or jointly selects their updates, that controller belongs in the
+causal inventory. Coalition irreducibility and matched predictive nulls remain
+necessary tests, but their interpretation is conditional on a defensible
+interface model.
+
+This distinction suggests two levels of claim:
+\begin{description}
+\item[Encoding-relative relationality.] No declared local view is sufficient.
+\item[Carrier-relative relationality.] The declared views also correspond to
+admissible, separately tracked causal interfaces with no omitted common
+controller.
+\end{description}
+The stronger claim requires the decomposition audit developed next.
+
+\topic{58}{Admissible Decomposition Families}
+
+No purely formal rule can identify the uniquely correct decomposition of every
+physical or computational system. The practical goal is instead to define a
+family of decompositions that are defensible for the question being asked and
+to report how the certificate changes across that family.
+
+\begin{definition}[Admissible decomposition family]
+\label{def:admissible-decomposition-family}
+An admissible family \(\mathfrak D\) is a predeclared collection of
+decompositions of the same carrier presentation satisfying the following
+audit conditions.
+\begin{enumerate}
+\item \textbf{Carrier continuity.} Each component corresponds to a process,
+ artifact, or mechanism that can be tracked through the relevant time scale.
+\item \textbf{Access locality.} The local state contains only information
+ available through the declared component and its recorded incoming channels.
+\item \textbf{Channel completeness.} Shared memories, buses, supervisors,
+ caches, and synchronized external cues are represented explicitly.
+\item \textbf{Intervention separability.} At least some component mechanisms
+ or channels can be altered without directly rewriting the entire system.
+\item \textbf{Target independence.} The decomposition and its alternatives
+ are fixed without using held-out outcomes to manufacture a favorable result.
+\item \textbf{Resolution relevance.} A proposed split is retained only when
+ it changes access, intervention, reconstruction, or transfer structure at the
+ declared measurement resolution.
+\item \textbf{Alternative coverage.} The family contains the principal
+ plausible merges, splits, and artifact assignments that a skeptical analyst
+ would consider.
+\end{enumerate}
+\end{definition}
+
+Let \(m_q(W;\mathcal D)\) be the signed margin of gate \(q\), oriented so that
+\[
+m_q(W;\mathcal D)>0
+\]
+means that the gate passes after its uncertainty correction. Define the
+decomposition envelope
+\[
+\underline m_q
+=
+\inf_{\mathcal D\in\mathfrak D}m_q(W;\mathcal D),
+\qquad
+\overline m_q
+=
+\sup_{\mathcal D\in\mathfrak D}m_q(W;\mathcal D),
+\]
+and its sensitivity width
+\[
+\Delta_q^{\mathrm{dec}}
+=
+\overline m_q-\underline m_q.
+\]
+
+\begin{definition}[Decomposition-robust certificate]
+\label{def:decomposition-robust-certificate}
+A workspace passes the \(\mathfrak D\)-robust certificate at level \(L\) when
+\[
+\boxed{
+\operatorname{Certify}_{L,\mathfrak D}^{\mathrm{rob}}(W)
+=
+\bigwedge_{q\in\mathcal J(L)}
+\left\{
+\inf_{\mathcal D\in\mathfrak D}
+ m_q(W;\mathcal D)>0
+\right\}.
+}
+\]
+A pass for one selected decomposition is a \emph{decomposition-specific}
+claim. A pass throughout \(\mathfrak D\) is a \emph{family-robust} claim. A
+claim is \emph{decomposition fragile} when at least one required gate changes
+sign inside the admissible family.
+\end{definition}
+
+Universal invariance over all partitions is neither possible nor desirable,
+as Proposition~\ref{prop:decomposition-trivialization} shows. The family
+\(\mathfrak D\) must be broad enough to challenge the favored description and
+narrow enough to exclude partitions with no operational meaning.
+
+\topic{59}{Stability Under Decomposition Transport}
+
+Exact faithful aggregation preserves the structural core, but practical
+alternative decompositions usually introduce approximation. Their certificate
+can still be controlled by transporting a reference workspace and comparing
+gate margins.
+
+Fix a reference decomposition \(\mathcal D_0\). For each
+\(\mathcal D\in\mathfrak D\), let
+\[
+\Phi_{\mathcal D}:W^{\mathcal D_0}\longrightarrow W^{\mathcal D}
+\]
+be a declared workspace correspondence and let
+\(\delta_{\mathcal D}\) measure its structural and causal identity defect.
+Assume gate \(q\) has a transport bound
+\[
+\left|
+ m_q(\Phi_{\mathcal D}W;\mathcal D)
+ -m_q(W;\mathcal D_0)
+\right|
+\leq
+L_q\delta_{\mathcal D}+b_q(\mathcal D),
+\]
+where \(L_q\) is a sensitivity constant and \(b_q\) records model mismatch not
+captured by the identity distance.
+
+\begin{theorem}[Decomposition-transport robustness]
+\label{thm:decomposition-robustness}
+If, for every required gate \(q\),
+\[
+\boxed{
+ m_q(W;\mathcal D_0)
+>
+\sup_{\mathcal D\in\mathfrak D}
+\left(
+L_q\delta_{\mathcal D}+b_q(\mathcal D)
+\right),
+}
+\]
+then \(W\) passes the \(\mathfrak D\)-robust certificate. Conversely, if for
+some required gate
+\[
+ m_q(W;\mathcal D_0)
++
+\sup_{\mathcal D\in\mathfrak D}
+\left(
+L_q\delta_{\mathcal D}+b_q(\mathcal D)
+\right)
+<0,
+\]
+then that gate fails throughout the family.
+\end{theorem}
+
+\begin{proof}
+For every \(\mathcal D\in\mathfrak D\), the transport bound gives
+\[
+ m_q(\Phi_{\mathcal D}W;\mathcal D)
+\geq
+m_q(W;\mathcal D_0)
+-
+L_q\delta_{\mathcal D}
+-
+b_q(\mathcal D).
+\]
+The first hypothesis makes the right-hand side positive uniformly in
+\(\mathcal D\), which proves robust passage of every required gate. The second
+statement follows from the corresponding upper bound.
+\end{proof}
+
+When \(b_q\equiv0\), a convenient certificate radius is
+\[
+\boxed{
+r_{\mathrm{dec}}(W)
+=
+\min_{q:L_q>0}
+\frac{m_q(W;\mathcal D_0)}{L_q}.
+}
+\]
+Every admissible family satisfying
+\[
+\sup_{\mathcal D\in\mathfrak D}\delta_{\mathcal D}
+<
+r_{\mathrm{dec}}(W)
+\]
+preserves the sign of all required gate margins. In applications, the
+transport terms can be bounded using earlier results:
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\bfseries\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Gate family & Relevant transport control \\
+\midrule
+Structural coherence & Transfer-Laplacian projector drift and spectral gap. \\
+Predictive alignment & Divergence between transported conditional-law states. \\
+Causal efficacy & Distance between matched intervention kernels. \\
+Relationality & Coalition-risk distortion and matched-null preservation error. \\
+Reconstruction & Perturbation of lower frame bounds and handoff error. \\
+Persistence and identity & The coordinatewise identity profile from Part~XII. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The theorem is intentionally margin based. A result barely above threshold at
+one decomposition should not be described as robust when a small, defensible
+change of interface makes it disappear.
+
+\topic{60}{Decomposition Audit and Reporting}
+
+A complete decomposition audit should proceed in the following order.
+\begin{enumerate}
+\item Inventory the primitive carriers at the chosen temporal and physical
+ resolution.
+\item Record every shared resource and distinguish local state from incoming
+ information.
+\item Choose a reference decomposition from independently manipulable and
+ temporally trackable interfaces.
+\item Construct an admissible family containing the principal plausible
+ merges, splits, and artifact assignments.
+\item For every alternative, specify the correspondence to the reference
+ workspace and validate its manipulation checks.
+\item Recompute the structural, predictive, causal, coalition, reconstruction,
+ and identity margins.
+\item Report the full decomposition envelope, not only the most favorable
+ member of the family.
+\end{enumerate}
+
+The report should state:
+\[
+\begin{aligned}
+&\text{reference decomposition and audit resolution},\\
+&\text{admissible family and reasons for excluded partitions},\\
+&\text{hidden-resource and common-controller checks},\\
+&\text{faithful-aggregation maps and identity defects},\\
+&\text{gatewise minima, maxima, and sensitivity widths},\\
+&\text{strongest decomposition-specific and family-robust conclusions}.
+\end{aligned}
+\]
+
+Four controls are especially important:
+\begin{enumerate}
+\item merge components connected by an uninterruptible common controller and
+ test whether the relational claim collapses;
+\item split a known centralized controller into complementary local views and
+ verify that the protocol rejects the resulting secret-sharing appearance of
+ distributedness;
+\item expose or remove shared caches, external cues, and common memory that
+ were absent from the favored graph; and
+\item repeat the frozen certificate across the complete admissible family.
+\end{enumerate}
+
+For the motivating human--AI collaboration, this analysis changes the form of
+the empirical question. It is not enough to ask whether the human, model,
+executor, and artifact store form a workspace under one natural description.
+The stronger question is whether the same operative state and its causal role
+survive plausible alternatives, such as merging model and executor, separating
+conversation state from persistent artifacts, or making shared orchestration
+channels explicit. Those measurements have not yet been performed. The case
+therefore remains decomposition-specific and observational.

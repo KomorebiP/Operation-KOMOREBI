@@ -1,0 +1,568 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{III}{Exact Shared Cores}
+
+\topic{6}{Global Compatible Sections}
+
+From this point through Theorem~\ref{thm:limit-holonomy}, assume the core maps
+define a local system on a connected graph unless a weaker hypothesis is
+stated explicitly.
+
+\begin{definition}[Global compatible section]\label{def:global-section}
+The exact structural workspace is
+\[
+\boxed{
+\Gamma(H)
+=
+\left\{
+(c_i)_{i\in V}\in\bigoplus_{i\in V}C_i:
+\ c_{t(e)}=H_ec_{s(e)}\ \forall e\in E
+\right\}.
+}
+\]
+An element \(c=(c_i)\in\Gamma(H)\) is a global compatible section.
+\end{definition}
+
+Equivalently,
+\[
+\Gamma(H)=\varprojlim_{\Path(G)}C_i.
+\]
+A section is not a single vector copied verbatim at every vertex. It is one
+abstract element represented by a family of local vectors that agree under the
+specified translation maps.
+
+A nontrivial exact structural workspace exists when
+\[
+\dim\Gamma(H)>0.
+\]
+Its exact dimension is
+\[
+d_{\Workspace}=\dim\Gamma(H).
+\]
+
+Fix a root \(o\). The evaluation map is
+\[
+\ev_o:\Gamma(H)\to C_o,
+\qquad
+\ev_o((c_i))=c_o.
+\]
+
+\begin{lemma}[Root determination]\label{lem:root-determination}
+If \(|G|\) is connected and every core transfer is invertible, then
+\(\ev_o\) is injective. Consequently,
+\[
+\dim\Gamma(H)\leq\dim C_o.
+\]
+\end{lemma}
+
+\begin{proof}
+Choose for each vertex \(i\) a path \(\tau_i:o\to i\). Compatibility gives
+\[
+c_i=H_{\tau_i}c_o.
+\]
+Thus a section with \(c_o=0\) vanishes at every vertex. Hence \(\ev_o\) is
+injective.
+\end{proof}
+
+\begin{lemma}[Tree propagation]\label{lem:tree-propagation}
+If \(|G|\) is a tree and every \(H_e\) is invertible, then every
+\(x\in C_o\) extends uniquely to a global compatible section.
+\end{lemma}
+
+\begin{proof}
+A tree contains a unique undirected path \(\tau_i:o\to i\) for every vertex.
+Define \(c_i=H_{\tau_i}x\). Because every edge belongs to these unique path
+relations, the family is compatible. Uniqueness follows from
+Lemma~\ref{lem:root-determination}.
+\end{proof}
+
+The obstruction to a global core therefore appears only when distinct paths
+must agree. Cycles encode exactly those consistency constraints.
+
+\topic{7}{Holonomy and Path Obstruction}
+
+Fix a root \(o\in V\). For every loop class
+\[
+[\gamma]\in\pi_1(|G|,o),
+\]
+define the holonomy
+\[
+\Hol([\gamma])=H_\gamma\in GL(C_o).
+\]
+Functoriality gives a group representation
+\[
+\operatorname{hol}_o:
+\pi_1(|G|,o)\longrightarrow GL(C_o).
+\]
+Its image is the holonomy group
+\[
+\Hol_o=\operatorname{im}(\operatorname{hol}_o).
+\]
+
+The obstruction associated with a loop is
+\[
+\Omega_\gamma=H_\gamma-I_{C_o}.
+\]
+The maximal path-independent root core is
+\[
+\boxed{
+C_*
+=
+\bigcap_{\gamma:o\to o}\ker(H_\gamma-I).
+}
+\]
+Equivalently,
+\[
+C_*=C_o^{\Hol_o}=\operatorname{Fix}(\Hol_o).
+\]
+
+\subtopic{7.1 Spanning-tree reduction}
+
+Choose a spanning tree \(\mathcal T\subseteq|G|\). Let
+\[
+\tau_i:o\to i
+\]
+be the unique tree path. Every non-tree edge \(e:i\to j\) determines a
+fundamental loop
+\[
+\gamma_e=\tau_j^{-1}e\tau_i
+\]
+with transfer
+\[
+H_{\gamma_e}=H_{\tau_j}^{-1}H_eH_{\tau_i}.
+\]
+The fundamental group of a finite graph is generated freely by these cotree
+loops. Hence it is enough to impose fixed-point conditions for a finite set of
+generators.
+
+\begin{lemma}[Finite obstruction set]\label{lem:finite-obstruction}
+Let \(e_1,\ldots,e_r\) be the non-tree edges of a connected finite graph.
+Then
+\[
+C_*
+=
+\bigcap_{q=1}^{r}
+\ker(H_{\gamma_{e_q}}-I).
+\]
+\end{lemma}
+
+\begin{proof}
+A vector fixed by every generator is fixed by each inverse generator and by
+every finite product of generators and inverses. Those products represent all
+elements of \(\pi_1(|G|,o)\). The reverse inclusion is immediate.
+\end{proof}
+
+The number of independent graph cycles is
+\[
+r=|E_{\mathrm{und}}|-|V|+1
+\]
+for a connected underlying graph, after treating parallel edges with their
+multiplicity.
+
+\topic{8}{Exact Existence Theorem}
+
+\begin{theorem}[Limit--holonomy equivalence]\label{thm:limit-holonomy}
+Let \(|G|\) be connected and let
+\[
+H:\Pi_1(G)\to\mathbf{FinHilb}^{\times}
+\]
+be a finite-dimensional local system. For any root \(o\in V\), evaluation at
+the root induces a canonical vector-space isomorphism
+\[
+\boxed{
+\ev_o:\Gamma(H)
+\xrightarrow{\ \cong\ }
+C_o^{\Hol_o}
+=
+\bigcap_{\gamma:o\to o}\ker(H_\gamma-I).
+}
+\]
+Consequently,
+\[
+\Gamma(H)\neq\{0\}
+\]
+if and only if the holonomy representation contains a nonzero trivial
+subrepresentation.
+\end{theorem}
+
+\begin{proof}
+Let \(c=(c_i)\in\Gamma(H)\). For any loop \(\gamma:o\to o\), compatibility
+along the loop gives
+\[
+H_\gamma c_o=c_o.
+\]
+Therefore \(\ev_o(c)=c_o\in C_o^{\Hol_o}\). By
+Lemma~\ref{lem:root-determination}, \(\ev_o\) is injective.
+
+Conversely, let \(x\in C_o^{\Hol_o}\). Choose a path
+\(\tau_i:o\to i\) for each vertex and define
+\[
+c_i=H_{\tau_i}x.
+\]
+This definition is independent of the chosen path. Indeed, if
+\(\sigma_i:o\to i\) is another path, then
+\[
+\sigma_i^{-1}\tau_i:o\to o
+\]
+is a loop, and invariance of \(x\) gives
+\[
+H_{\sigma_i}^{-1}H_{\tau_i}x=x.
+\]
+Multiplying by \(H_{\sigma_i}\) yields
+\[
+H_{\tau_i}x=H_{\sigma_i}x.
+\]
+For any edge \(e:i\to j\), the paths \(e\tau_i\) and \(\tau_j\) both run
+from \(o\) to \(j\). Path independence therefore gives
+\[
+H_ec_i
+=H_eH_{\tau_i}x
+=H_{\tau_j}x
+=c_j.
+\]
+Thus \((c_i)\) is a global compatible section and \(\ev_o((c_i))=x\).
+Hence \(\ev_o\) is surjective and therefore an isomorphism.
+\end{proof}
+
+\begin{corollary}[Tree case]\label{cor:tree-core}
+If \(|G|\) is a tree, then \(\Hol_o=\{I\}\) and
+\[
+\Gamma(H)\cong C_o.
+\]
+In particular,
+\[
+d_{\Workspace}=\dim C_o.
+\]
+\end{corollary}
+
+\begin{corollary}[Finite matrix test]\label{cor:finite-matrix-test}
+Let \(\gamma_1,\ldots,\gamma_r\) be fundamental cycle generators and suppose
+\(\dim C_o=d\). Define the stacked obstruction matrix
+\[
+\mathcal M
+=
+\begin{pmatrix}
+H_{\gamma_1}-I\\
+\vdots\\
+H_{\gamma_r}-I
+\end{pmatrix}.
+\]
+Then
+\[
+\boxed{
+C_*=\ker\mathcal M,
+\qquad
+d_{\Workspace}=d-\operatorname{rank}(\mathcal M).
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The kernel of a vertically stacked operator is the intersection of the kernels
+of its blocks. Apply Lemma~\ref{lem:finite-obstruction} and
+Theorem~\ref{thm:limit-holonomy}.
+\end{proof}
+
+\begin{corollary}[Averaging projector for finite holonomy]\label{cor:averaging-projector}
+If \(\Hol_o\) is finite and acts unitarily, then
+\[
+P_*=
+\frac{1}{|\Hol_o|}
+\sum_{h\in\Hol_o}h
+\]
+is the orthogonal projector onto \(C_*\).
+\end{corollary}
+
+\begin{proof}
+For every \(g\in\Hol_o\), left multiplication permutes the group elements, so
+\(gP_*=P_*\). Thus \(\operatorname{ran}P_*\subseteq C_*\). If
+\(x\in C_*\), then \(P_*x=x\), so \(C_*\subseteq\operatorname{ran}P_*\).
+Unitarity gives \(P_*^*=P_*\), and the range characterization implies
+\(P_*^2=P_*\).
+\end{proof}
+
+\subtopic{8.1 Worked examples}
+
+\begin{example}[One-dimensional core surviving a contradictory cycle]\label{ex:reflection-cycle}
+Let a three-node cycle have \(C_1=C_2=C_3=\mathbb R^2\) and
+\[
+H_{12}=I,
+\qquad
+H_{23}=I,
+\qquad
+H_{31}=J,
+\qquad
+J=
+\begin{pmatrix}
+1&0\\
+0&-1
+\end{pmatrix}.
+\]
+The cycle holonomy is \(J\), hence
+\[
+C_*=\ker(J-I)=\operatorname{span}\{(1,0)^\top\}.
+\]
+The first coordinate circulates consistently through all three strata. The
+second returns with its sign reversed and therefore cannot define a nonzero
+exact shared section. Thus
+\[
+d_{\Workspace}=1.
+\]
+\end{example}
+
+\begin{example}[Local compatibility without a global nonzero core]\label{ex:rotation-obstruction}
+Let the only nontrivial cycle holonomy on \(\mathbb R^2\) be a rotation
+\[
+R_\theta=
+\begin{pmatrix}
+\cos\theta&-\sin\theta\\
+\sin\theta&\cos\theta
+\end{pmatrix}
+\]
+with \(\theta\notin2\pi\mathbb Z\). Then
+\[
+\ker(R_\theta-I)=\{0\}.
+\]
+Every edge map is individually invertible and well-defined, yet the complete
+cycle admits no nonzero exact shared core. Pairwise translatability is
+therefore insufficient for global path independence.
+\end{example}
+
+\begin{example}[Acyclic collaboration]\label{ex:tree-workspace}
+Suppose a root concept is translated into a proof, implementation, and report
+along a tree of invertible exact transfers. No alternative route returns a
+conflicting representation. The tree has trivial holonomy, so every root-core
+direction extends uniquely. This does not yet establish causal efficacy; it
+establishes only exact structural compatibility.
+\end{example}
+
+\subtopic{8.2 Interpretive consequence}
+
+The theorem gives a precise meaning to ``something shared across
+representations.'' The shared object is neither any one local vector nor an
+extra vector outside the system. It is the equivalence class of all compatible
+local realizations, canonically represented at a root by the subspace fixed by
+every translation cycle.
+
+\topic{9}{Operator Closure Theorem}
+
+\begin{theorem}[Global operation closure]\label{thm:operator-closure}
+Suppose every core transfer intertwines the representations of
+\(\mathcal A\):
+\[
+H_e\rho_{s(e)}(a)=\rho_{t(e)}(a)H_e
+\qquad
+\forall e\in E,\ a\in\mathcal A.
+\]
+Then \(\Gamma(H)\) is an \(\mathcal A\)-module under the componentwise action
+\[
+\rho_\Gamma(a)(c_i)_{i\in V}
+=
+(\rho_i(a)c_i)_{i\in V}.
+\]
+Equivalently, the holonomy-fixed root core is invariant:
+\[
+\boxed{
+\rho_o(a)C_*\subseteq C_*
+\qquad
+\forall a\in\mathcal A.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(c=(c_i)\in\Gamma(H)\). For every edge \(e:i\to j\),
+\[
+H_e\rho_i(a)c_i
+=
+\rho_j(a)H_ec_i
+=
+\rho_j(a)c_j.
+\]
+Therefore the family \((\rho_i(a)c_i)\) is compatible and belongs to
+\(\Gamma(H)\). The representation identities on each \(C_i\) hold
+componentwise, so \(\rho_\Gamma\) is an \(\mathcal A\)-representation.
+
+Under the isomorphism of Theorem~\ref{thm:limit-holonomy}, this action is
+represented at the root by \(\rho_o\). Alternatively, if \(x\in C_*\), then
+Corollary~\ref{cor:holonomy-commutes} gives, for every loop \(\gamma\),
+\[
+H_\gamma\rho_o(a)x
+=
+\rho_o(a)H_\gamma x
+=
+\rho_o(a)x.
+\]
+Hence \(\rho_o(a)x\in C_*\).
+\end{proof}
+
+\begin{corollary}[Inherited algebraic structure]\label{cor:inherited-structure}
+Any algebraic relation satisfied by \(\rho_i(\mathcal A)\) is inherited by the
+global action. In particular, if \(a,b\in\mathcal A\), then
+\[
+\rho_\Gamma(ab)=\rho_\Gamma(a)\rho_\Gamma(b),
+\qquad
+\rho_\Gamma(1)=I_{\Gamma(H)}.
+\]
+\end{corollary}
+
+The result distinguishes a shared \emph{operational} representation from a
+shared static code. A core closed under the common algebra supports the same
+abstract manipulations across strata without leaving the globally compatible
+subspace.
+
+\topic{10}{Workspace Operator Algebra}
+
+\begin{definition}[Natural workspace operators]\label{def:workspace-operator-algebra}
+Define
+\[
+\boxed{
+\mathcal O_{\Workspace}
+=
+\left\{
+(A_i)_{i\in V}:
+A_{t(e)}H_e=H_eA_{s(e)}\ \forall e
+\right\}.
+}
+\]
+Categorically,
+\[
+\mathcal O_{\Workspace}=\Nat(H,H),
+\]
+the algebra of natural endomorphisms of the local system.
+\end{definition}
+
+Pointwise addition, scalar multiplication, and composition make
+\(\mathcal O_{\Workspace}\) a unital associative algebra. Each
+\(A=(A_i)\) acts on global sections by
+\[
+\pi_{\Workspace}(A)(c_i)=(A_ic_i).
+\]
+Naturality guarantees that \((A_ic_i)\) is again compatible.
+
+\begin{theorem}[Commutant characterization]\label{thm:commutant-characterization}
+Let \(|G|\) be connected and let \(H\) be an invertible local system. Root
+evaluation induces an algebra isomorphism
+\[
+\boxed{
+\Phi_o:\mathcal O_{\Workspace}
+\xrightarrow{\ \cong\ }
+\operatorname{Comm}(\Hol_o),
+\qquad
+\Phi_o((A_i))=A_o,
+}
+\]
+where
+\[
+\operatorname{Comm}(\Hol_o)
+=
+\{B\in\End(C_o):Bh=hB\ \forall h\in\Hol_o\}.
+\]
+\end{theorem}
+
+\begin{proof}
+If \((A_i)\in\mathcal O_{\Workspace}\), naturality along every loop gives
+\[
+A_oH_\gamma=H_\gamma A_o.
+\]
+Thus \(A_o\in\operatorname{Comm}(\Hol_o)\), and \(\Phi_o\) is a well-defined
+algebra homomorphism.
+
+Choose paths \(\tau_i:o\to i\). Naturality along \(\tau_i\) gives
+\[
+A_iH_{\tau_i}=H_{\tau_i}A_o,
+\]
+so
+\[
+A_i=H_{\tau_i}A_oH_{\tau_i}^{-1}.
+\]
+Therefore \(A_o\) determines every \(A_i\), and \(\Phi_o\) is injective.
+
+Conversely, take \(B\in\operatorname{Comm}(\Hol_o)\) and define
+\[
+A_i=H_{\tau_i}BH_{\tau_i}^{-1}.
+\]
+This is independent of the chosen root path: changing \(\tau_i\) multiplies
+it by a loop holonomy that commutes with \(B\). For an edge \(e:i\to j\), the
+operator
+\[
+H_{\tau_j}^{-1}H_eH_{\tau_i}
+\]
+is a root holonomy. Commutation with \(B\) rearranges to
+\[
+A_jH_e=H_eA_i.
+\]
+Hence \((A_i)\) is natural and \(\Phi_o((A_i))=B\). Thus \(\Phi_o\) is
+surjective.
+\end{proof}
+
+The structural workspace is therefore more accurately represented by the
+triple
+\[
+\boxed{
+\Workspace_{\mathrm{static}}
+=
+\bigl(
+\Gamma(H),
+\mathcal O_{\Workspace},
+\pi_{\Workspace}
+\bigr),
+}
+\]
+not merely by the vector space \(\Gamma(H)\).
+
+\subtopic{10.1 Effective operator algebra}
+
+Some natural operators may vanish on every global section while acting
+nontrivially on locally available but globally inconsistent directions. Define
+the annihilator
+\[
+\operatorname{Ann}(\Gamma(H))
+=
+\{A\in\mathcal O_{\Workspace}:
+\pi_{\Workspace}(A)=0\}.
+\]
+The effective workspace algebra is
+\[
+\boxed{
+\mathcal O_{\Workspace}^{\mathrm{eff}}
+=
+\mathcal O_{\Workspace}/\operatorname{Ann}(\Gamma(H)).
+}
+\]
+Its action on \(\Gamma(H)\) is faithful by construction.
+
+\begin{example}[Operators in the reflection-cycle workspace]\label{ex:reflection-operators}
+For Example~\ref{ex:reflection-cycle}, the holonomy is
+\[
+J=\operatorname{diag}(1,-1).
+\]
+Its commutant consists of diagonal matrices:
+\[
+\operatorname{Comm}(J)
+=
+\left\{
+\begin{pmatrix}a&0\\0&b\end{pmatrix}:a,b\in\mathbb R
+\right\}.
+\]
+The exact workspace core is the first coordinate. Consequently, only the
+parameter \(a\) acts effectively on \(\Gamma(H)\); the \(b\)-direction belongs
+to the annihilator of the global core. Hence
+\[
+\mathcal O_{\Workspace}^{\mathrm{eff}}\cong\mathbb R.
+\]
+\end{example}
+
+\subtopic{10.2 Scope of the exact theory}
+
+Parts~I--III now establish three exact facts:
+\[
+\begin{aligned}
+&\text{global shared content is the holonomy-fixed core},\\
+&\text{universally transported operations preserve that core},\\
+&\text{natural workspace operations are the commutant of holonomy}.
+\end{aligned}
+\]
+These statements do not yet prove that the shared core is robust, causally
+used, irreducibly distributed, or temporally persistent. Those are separate
+questions developed in the approximate and dynamic theory that follows.

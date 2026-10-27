@@ -1,0 +1,687 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{XIV}{Scaffolded and Endogenous Formation}
+
+\topic{47}{Formation Systems and Scaffold Specification}
+
+The preceding parts begin with a transfer system that has already been chosen.
+A formation theory must instead explain how the nodes, edges, transfer maps,
+workspace channels, and operational boundaries are obtained. This requires a
+strict separation between the structure supplied by the experimenter and the
+structure selected from interaction history.
+
+\begin{definition}[Formation system]\label{def:formation-system}
+A \emph{workspace formation system} is a tuple
+\[
+\mathfrak F
+=
+\bigl(
+\Sigma,
+\mathcal D_{\mathrm{form}},
+\mathcal L,
+\Omega,
+\widehat\theta,
+\mathcal D_{\mathrm{cert}},
+\mathcal I_{\mathrm{form}}
+\bigr),
+\]
+where:
+\begin{itemize}
+\item \(\Sigma\) is the externally supplied scaffold;
+\item \(\mathcal D_{\mathrm{form}}\) is the formation or training history;
+\item \(\mathcal L\) is the learning or selection rule;
+\item \(\Omega\) is its internal random seed or stochastic state;
+\item \(\widehat\theta=\mathcal L(\Sigma,\mathcal D_{\mathrm{form}},\Omega)\)
+ is the learned organization;
+\item \(\mathcal D_{\mathrm{cert}}\) is held-out certification data; and
+\item \(\mathcal I_{\mathrm{form}}\) is a declared family of interventions on
+ scaffold and formation history.
+\end{itemize}
+The learned organization is decomposed as
+\[
+\widehat\theta
+=
+\bigl(
+\widehat V,
+\widehat E,
+\widehat H,
+\widehat P,
+\widehat{\mathcal O},
+\widehat B
+\bigr),
+\]
+where \(\widehat B\) is a learned operational boundary.
+\end{definition}
+
+The scaffold is itself stratified:
+\[
+\boxed{
+\Sigma
+=
+\bigl(
+\Sigma_V,
+\Sigma_E,
+\Sigma_H,
+\Sigma_P,
+\Sigma_{\mathcal O},
+\Sigma_B,
+\Sigma_Y
+\bigr).
+}
+\]
+The final coordinate \(\Sigma_Y\) records labels, targets, privileged masks,
+or other supervision that could directly reveal the intended workspace. This
+coordinate is necessary because an architecture may appear to discover a
+boundary even when the desired membership mask was encoded in its training
+labels.
+
+\subtopic{47.1 Scaffolded architecture versus scaffolded solution}
+
+A scaffold can constrain the search space without specifying its solution.
+For example, a graph neural architecture can fix the class of admissible local
+message-passing rules while leaving the active edges and transfer maps to be
+learned. Conversely, a system can use a flexible architecture while receiving
+labels that directly encode the desired workspace. The former is
+architecturally scaffolded but solution-open. The latter is solution-scaffolded.
+
+For any component \(q\) of \(\widehat\theta\), define its scaffold-only Bayes
+risk under loss \(\ell_q\) by
+\[
+\mathcal R_q^{\Sigma}
+=
+\inf_f
+\mathbb E
+\left[
+\ell_q\bigl(q,f(\Sigma,\Omega)\bigr)
+\right].
+\]
+Define the full formation risk by
+\[
+\mathcal R_q^{\Sigma,\mathcal H}
+=
+\inf_g
+\mathbb E
+\left[
+\ell_q\bigl(q,g(\Sigma,\mathcal D_{\mathrm{form}},\Omega)\bigr)
+\right].
+\]
+The history advantage is
+\[
+\boxed{
+\Delta_q^{\mathrm{hist}}
+=
+\mathcal R_q^{\Sigma}
+-
+\mathcal R_q^{\Sigma,\mathcal H}.
+}
+\]
+A positive history advantage means that formation history contains information
+about \(q\) that is not already recoverable from the declared scaffold and
+random seed.
+
+\begin{proposition}[Scaffold-only impossibility]\label{prop:scaffold-only-impossibility}
+If
+\[
+q=f(\Sigma,\Omega)
+\qquad\text{almost surely},
+\]
+then for every formation-history intervention that leaves \((\Sigma,\Omega)\)
+fixed,
+\[
+\mathcal L\!\left(q\mid
+\operatorname{do}(\mathcal D_{\mathrm{form}}=h)
+\right)
+=
+\mathcal L\!\left(q\mid
+\operatorname{do}(\mathcal D_{\mathrm{form}}=h')
+\right),
+\]
+and \(\Delta_q^{\mathrm{hist}}=0\).
+\end{proposition}
+
+\begin{proof}
+The value of \(q\) is measurable with respect to \((\Sigma,\Omega)\), so an
+intervention on formation history cannot change its conditional law when those
+variables are held fixed. The scaffold-only predictor \(f\) attains the same
+risk as any predictor that also receives formation history, hence the risk gap
+vanishes.
+\end{proof}
+
+This proposition is elementary but methodologically decisive. A structure
+that is deterministically encoded by the scaffold cannot count as discovered
+from interaction history merely because a learned network reproduces it.
+
+\subtopic{47.2 Formation and certification split}
+
+The same sample must not be used both to select a workspace and to certify its
+coherence, causal efficacy, or relational irreducibility. The required split is
+\[
+\mathcal D
+=
+\mathcal D_{\mathrm{form}}
+\sqcup
+\mathcal D_{\mathrm{cal}}
+\sqcup
+\mathcal D_{\mathrm{cert}}.
+\]
+The formation sample selects \(\widehat\theta\). The calibration sample fixes
+thresholds, regularization strengths, and intervention magnitudes. The
+certification sample evaluates the final gates without further structural
+selection. In a multi-environment study, the stronger requirement is
+\[
+\mathcal E_{\mathrm{form}}
+\cap
+\mathcal E_{\mathrm{cert}}
+=
+\varnothing,
+\]
+so that the learned organization is tested under environments not used to
+construct it.
+
+\begin{definition}[Formation leakage]\label{def:formation-leakage}
+A certification variable \(Y_{\mathrm{cert}}\) leaks into formation when the
+conditional law of \(\widehat\theta\) changes under an intervention on
+\(Y_{\mathrm{cert}}\) that should be inaccessible during formation:
+\[
+\mathcal L
+\left(
+\widehat\theta
+\mid
+\operatorname{do}(Y_{\mathrm{cert}}=y)
+\right)
+\neq
+\mathcal L
+\left(
+\widehat\theta
+\mid
+\operatorname{do}(Y_{\mathrm{cert}}=y')
+\right).
+\]
+A valid discovery claim requires a documented information barrier or an audit
+showing that this effect is absent up to tolerance.
+\end{definition}
+
+\subtopic{47.3 Origin and reality are orthogonal}
+
+The formation provenance of a workspace and its operational certification are
+separate coordinates. A fully scaffolded structure may satisfy every
+structural and causal workspace gate. A highly endogenous structure may fail
+to become coherent or causally useful. Symbolically,
+\[
+\operatorname{Endogenous}(W)
+\centernot\Longrightarrow
+\operatorname{SRW}_{\Theta}(W),
+\]
+\[
+\operatorname{SRW}_{\Theta}(W)
+\centernot\Longrightarrow
+\operatorname{Endogenous}(W).
+\]
+The theory therefore treats endogeneity as a provenance axis rather than a
+higher level on the workspace hierarchy.
+
+\topic{48}{Operational Endogeneity Signature}
+
+The ideal description-complexity expression from the symbolic outline is
+retained as a conceptual limit, but raw Kolmogorov complexity is not
+computable. A usable theory must declare a model class, a code, and an
+intervention family.
+
+\begin{definition}[Code-relative history contribution]\label{def:mdl-endogeneity}
+Let \(\mathfrak M_q\) be a declared coding or predictive model class for a
+learned component \(q\). Let
+\[
+L_{\mathfrak M_q}(q\mid Z)
+\]
+be its held-out codelength given side information \(Z\). Define
+\[
+\boxed{
+ e_q^{\mathrm{MDL}}
+ =
+ \left[
+ \frac{
+ L_{\mathfrak M_q}(q\mid\Sigma)
+ -
+ L_{\mathfrak M_q}(q\mid\Sigma,\mathcal D_{\mathrm{form}})
+ }{
+ \max\{L_{\mathfrak M_q}(q\mid\Sigma),1\}
+ }
+ \right]_{0}^{1},
+}
+\]
+where \([x]_0^1=\min\{1,\max\{0,x\}\}\).
+\end{definition}
+
+This quantity is explicitly code-relative. It must not be presented as an
+observer-independent metaphysical measure. Its role is to test whether the
+formation history provides compressive information about the learned
+organization beyond the declared scaffold.
+
+\begin{definition}[Causal formation sensitivity]\label{def:causal-formation-sensitivity}
+Let \(\iota_h\) and \(\iota_{h'}\) be matched feasible interventions that alter
+formation history while preserving the scaffold, randomization law, sample
+size, and intervention cost. For a divergence \(D\), define
+\[
+\boxed{
+ e_q^{\mathrm{causal}}
+ =
+ \mathbb E_{(h,h')\sim\nu_q}
+ D\!\left(
+ \mathcal L^{\iota_h}(q),
+ \mathcal L^{\iota_{h'}}(q)
+ \right).
+}
+\]
+A common null uses temporally or relationally shuffled histories that preserve
+local marginals but destroy the candidate formation signal.
+\end{definition}
+
+\begin{proposition}[Reparameterization invariance of causal provenance]
+\label{prop:causal-provenance-invariance}
+Let \(\phi\) be a measurable bijection on the range of \(q\), and let the
+divergence \(D\) be invariant under measurable bijections. Then
+\[
+ e_{\phi(q)}^{\mathrm{causal}}
+ =
+ e_q^{\mathrm{causal}}.
+\]
+\end{proposition}
+
+\begin{proof}
+Every intervention-induced law of \(\phi(q)\) is the pushforward of the
+corresponding law of \(q\). Bijection invariance of \(D\) preserves each
+pairwise divergence, and therefore their design-weighted expectation.
+\end{proof}
+
+The causal coordinate is therefore insensitive to a mere renaming of the
+learned structure. The MDL coordinate need not be invariant unless the coding
+class is transformed with the reparameterization.
+
+\subtopic{48.1 Scaffold dependence and cross-scaffold invariance}
+
+Endogeneity does not require independence from all scaffolds. Every learning
+system has an architecture, objective, and resource budget. The relevant
+question is whether the learned organization depends on the particular
+solution-bearing details of the scaffold.
+
+For a family \(\mathfrak S\) of admissible scaffold variants, define the
+cross-scaffold identity defect
+\[
+\boxed{
+\delta_q^{\mathrm{scaf}}
+=
+\inf_{\{J_{\sigma\sigma'}\}}
+\mathbb E_{\sigma,\sigma'\sim\pi}
+ d_q
+\left(
+J_{\sigma\sigma'}q_{\sigma},q_{\sigma'}
+\right),
+}
+\]
+where \(J_{\sigma\sigma'}\) transports the learned object between admissible
+coordinate systems. A low value indicates that the same abstract
+organization is recovered under multiple non-solution-bearing scaffolds.
+
+The complete formation signature is
+\[
+\boxed{
+\mathbf E_{\mathrm{form}}(W)
+=
+\left(
+ e_V,e_E,e_H,e_P,e_{\mathcal O},e_B;
+ \delta^{\mathrm{scaf}},
+ \delta^{\mathrm{leak}}
+\right),
+}
+\]
+where every \(e_q\) is reported as the pair
+\[
+ e_q
+=
+\left(
+ e_q^{\mathrm{MDL}},
+ e_q^{\mathrm{causal}}
+\right).
+\]
+No scalar average is permitted to hide a zero history contribution for one of
+the structures claimed to have been discovered.
+
+\subtopic{48.2 Formation certificate}
+
+For thresholds \(\Theta_{\mathrm{form}}\), define
+\[
+\operatorname{Form}_{\Theta_{\mathrm{form}}}(W)=1
+\]
+only when all applicable gates pass:
+\[
+\begin{aligned}
+& e_q^{\mathrm{MDL}}\geq \tau_q^{\mathrm{MDL}},
+&& e_q^{\mathrm{causal}}\geq \tau_q^{\mathrm{causal}},\\
+& \delta_q^{\mathrm{scaf}}\leq\varepsilon_q^{\mathrm{scaf}},
+&& \delta^{\mathrm{leak}}\leq\varepsilon_{\mathrm{leak}},\\
+& \operatorname{SRW}_{\Theta}(W)=1,
+&& \operatorname{Pass}(N_{\mathrm{form}})=1.
+\end{aligned}
+\]
+The final workspace gate is included because endogenous discovery of an
+unstable or causally irrelevant pattern is not endogenous workspace formation.
+
+\topic{49}{Learned Transfer Structure and Formation Classes}
+
+\subtopic{49.1 Gated membership and edge learning}
+
+Let
+\[
+z_i\in\{0,1\},
+\qquad
+a_e\in[0,1]
+\]
+be node-membership and edge-activation variables satisfying
+\[
+a_e\leq z_{s(e)},
+\qquad
+a_e\leq z_{t(e)}.
+\]
+A weighted learned discrepancy operator is
+\[
+(D_{a,H}c)_e
+=
+\sqrt{w_ea_e}
+\left(
+ c_{t(e)}-H_ec_{s(e)}
+\right).
+\]
+One generic formation objective is
+\[
+\boxed{
+\begin{aligned}
+\widehat\theta
+\in
+\argmin_{z,a,H,P,\mathcal O,B}
+\Bigl
+\{&
+\widehat{\mathcal R}_{\mathrm{task}}
++
+\lambda_{\mathrm{coh}}\|D_{a,H}c\|^2
++
+\lambda_E\|a\|_1
++
+\lambda_V\|z\|_1\\
+&+
+\lambda_{\mathrm{stab}}\mathcal J_{\mathrm{stab}}
++
+\lambda_{\mathrm{leak}}\mathcal J_{\mathrm{leak}}
+\Bigr\}.
+\end{aligned}
+}
+\]
+The objective is schematic rather than universal. Its purpose is to expose
+which quantities were fixed and which were optimized. If \(z\) and \(a\) are
+fixed by \(\Sigma\), only the transfer maps or local channels can be claimed as
+learned.
+
+\subtopic{49.2 Gauge-identifiable transfer learning}
+
+A learned transfer map is not absolutely identifiable when local coordinates
+are latent. Under local invertible changes
+\[
+X_u'=g_uX_u,
+\qquad
+X_v'=g_vX_v,
+\]
+the same abstract transfer is represented by
+\[
+H_{uv}'=g_vH_{uv}g_u^{-1}.
+\]
+The identifiable object is therefore the gauge class
+\[
+[H]_{\mathcal G}
+=
+\left\{
+(g_{t(e)}H_eg_{s(e)}^{-1})_{e\in E}
+:
+(g_i)_{i\in V}\in\mathcal G
+\right\}.
+\]
+Any formation claim that compares raw matrices across independently trained
+systems without gauge alignment is ill posed.
+
+\subtopic{49.3 Transfer identification theorem \(T_{15}\) }
+
+\begin{theorem}[Population transfer identification]\label{thm:transfer-identification}
+Let \(X\in\mathbb R^{d_u}\) and \(Y\in\mathbb R^{d_v}\) satisfy
+\[
+Y=H_*X+\xi,
+\qquad
+\mathbb E[\xi X^{\mathsf T}]=0,
+\]
+and assume
+\[
+\Sigma_{XX}
+=
+\mathbb E[XX^{\mathsf T}]
+\succeq
+\kappa I
+\]
+for some \(\kappa>0\). Then \(H_*\) is the unique minimizer of
+\[
+\mathcal R(H)
+=
+\mathbb E\|Y-HX\|_2^2,
+\]
+with
+\[
+\boxed{
+H_*
+=
+\Sigma_{YX}\Sigma_{XX}^{-1}.
+}
+\]
+Moreover,
+\[
+\boxed{
+\mathcal R(H)-\mathcal R(H_*)
+=
+\operatorname{tr}
+\left(
+(H-H_*)\Sigma_{XX}(H-H_*)^{\mathsf T}
+\right)
+\geq
+\kappa\|H-H_*\|_F^2.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Substitute \(Y=H_*X+\xi\) into the risk. The cross term vanishes because
+\(\mathbb E[\xi X^{\mathsf T}]=0\), giving
+\[
+\mathcal R(H)
+=
+\mathcal R(H_*)
++
+\mathbb E\|(H-H_*)X\|_2^2.
+\]
+The remaining expectation is the displayed trace. Positive definiteness of
+\(\Sigma_{XX}\) gives uniqueness and the lower bound. The normal equations
+give the covariance formula.
+\end{proof}
+
+\begin{corollary}[Deterministic empirical recovery bound]
+\label{cor:empirical-transfer-bound}
+For samples \((X_r,Y_r)_{r=1}^n\), write
+\[
+\widehat\Sigma_{XX}
+=
+\frac1n\sum_{r=1}^nX_rX_r^{\mathsf T},
+\qquad
+\widehat M
+=
+\frac1n\sum_{r=1}^n\xi_rX_r^{\mathsf T}.
+\]
+If \(\widehat\Sigma_{XX}\succeq\widehat\kappa I\), then ordinary least squares
+satisfies
+\[
+\boxed{
+\|\widehat H-H_*\|_F
+\leq
+\frac{\|\widehat M\|_F}{\widehat\kappa}.
+}
+\]
+For ridge parameter \(\tau>0\),
+\[
+\boxed{
+\|\widehat H_\tau-H_*\|_F
+\leq
+\frac{
+\|\widehat M\|_F+\tau\|H_*\|_F
+}{
+\widehat\kappa+\tau
+}.
+}
+\]
+\end{corollary}
+
+\begin{proof}
+The empirical normal equations give
+\[
+\widehat H-H_*
+=
+\widehat M\widehat\Sigma_{XX}^{-1}.
+\]
+For ridge regression,
+\[
+\widehat H_\tau-H_*
+=
+(\widehat M-\tau H_*)
+(\widehat\Sigma_{XX}+\tau I)^{-1}.
+\]
+Taking Frobenius and operator norms yields both estimates.
+\end{proof}
+
+\begin{proposition}[Gauge covariance of least squares]
+\label{prop:ols-gauge-covariance}
+Under invertible coordinate transformations
+\[
+X'=g_uX,
+\qquad
+Y'=g_vY,
+\]
+the population least-squares solution transforms as
+\[
+H_*'=g_vH_*g_u^{-1}.
+\]
+\end{proposition}
+
+\begin{proof}
+The transformed covariances are
+\[
+\Sigma_{Y'X'}=g_v\Sigma_{YX}g_u^{\mathsf T},
+\qquad
+\Sigma_{X'X'}=g_u\Sigma_{XX}g_u^{\mathsf T}.
+\]
+Substitution into the covariance formula and inversion of the second factor
+give the result.
+\end{proof}
+
+The theorem establishes identification only under excitation and exogeneity.
+When \(\Sigma_{XX}\) is singular, the transfer is identified only on the
+excited source subspace. When \(\mathbb E[\xi X^{\mathsf T}]\neq0\), regression
+recovers a predictive map rather than necessarily the intended causal
+transfer.
+
+\subtopic{49.4 Held-out structure-selection theorem \(T_{16}\) }
+
+The same finite-margin argument applies to node membership, edge selection,
+boundary selection, or a finite family of gauge-normalized transfer models.
+
+\begin{theorem}[Uniform structure-selection recovery]
+\label{thm:uniform-structure-selection}
+Let \(\mathfrak T\) be a finite candidate family with population score
+\(J:\mathfrak T\to\mathbb R\). Let
+\[
+\theta_*
+=
+\argmin_{\theta\in\mathfrak T}J(\theta)
+\]
+be unique, with margin
+\[
+\Delta_J
+=
+\min_{\theta\neq\theta_*}
+\bigl(J(\theta)-J(\theta_*)\bigr)>0.
+\]
+If a held-out estimate \(\widehat J\) satisfies
+\[
+\sup_{\theta\in\mathfrak T}
+|\widehat J(\theta)-J(\theta)|
+\leq\varepsilon,
+\]
+then every empirical minimizer \(\widehat\theta\) obeys
+\[
+\boxed{
+J(\widehat\theta)-J(\theta_*)
+\leq2\varepsilon.
+}
+\]
+If \(2\varepsilon<\Delta_J\), then
+\[
+\boxed{\widehat\theta=\theta_*.}
+\]
+\end{theorem}
+
+\begin{proof}
+By empirical optimality and uniform approximation,
+\[
+J(\widehat\theta)
+\leq
+\widehat J(\widehat\theta)+\varepsilon
+\leq
+\widehat J(\theta_*)+\varepsilon
+\leq
+J(\theta_*)+2\varepsilon.
+\]
+If \(\widehat\theta\neq\theta_*\), the margin would force an excess larger than
+\(2\varepsilon\), a contradiction.
+\end{proof}
+
+The theorem does not guarantee that the candidate class contains the correct
+organization. It states exactly what follows once a finite class, score, and
+uniform certification error are declared.
+
+\subtopic{49.5 Formation classes}
+
+The provenance classes are now defined relative to
+\[
+(\Sigma,\mathcal L,\mathcal I_{\mathrm{form}},\mathfrak M).
+\]
+They are not absolute labels.
+
+\begin{description}[leftmargin=2.1em,style=nextline]
+\item[Exogenously scaffolded.]
+The claimed nodes, edges, transfer maps, channels, operations, or boundary are
+recoverable from the scaffold alone at the declared tolerance. Their history
+advantages and causal formation sensitivities vanish.
+
+\item[Adaptively parameterized.]
+The membership and channel topology are fixed, while transfer parameters,
+local operators, or readouts are learned from interaction history. Typically
+\[
+e_H+e_P+e_{\mathcal O}>0,
+\qquad
+e_V\approx e_E\approx e_B\approx0.
+\]
+
+\item[Structurally adaptive.]
+At least one of membership, edges, or boundary is selected from history, but
+the search family and objective remain externally specified.
+
+\item[Endogenously constituted relative to the scaffold class.]
+Membership, transfer organization, and operational boundary have nonzero
+history contribution and causal formation sensitivity, survive cross-scaffold
+transport, pass leakage and matched-null tests, and produce a certified
+workspace on held-out environments.
+\end{description}
+
+The phrase ``relative to the scaffold class'' is mandatory. No finite
+experiment can establish independence from every possible external influence.

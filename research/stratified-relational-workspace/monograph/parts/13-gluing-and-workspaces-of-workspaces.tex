@@ -1,0 +1,1210 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{XIII}{Gluing and Workspaces of Workspaces}
+
+The preceding parts treat one interaction diagram at a time. A large
+collaborative system is usually assembled from overlapping local laboratories,
+subteams, artifacts, models, or task-specific workspaces. This part asks when
+those local workspaces determine one coherent global workspace, how failed
+gluing is detected, and whether recursive assembly changes the resulting
+object. The exact theory is a descent theorem. The approximate theory is a
+second transfer-Laplacian construction on the cover itself.
+
+\topic{42}{Local Workspace Covers}
+
+\subtopic{42.1 Edge-complete covers}
+
+Let
+\[
+G=(V,E)
+\]
+be a finite directed interaction graph with local core spaces \(C_i\), core
+transfers \(H_e\), vertex space \(\mathcal C_V(G)\), discrepancy operator
+\(D_G\), and exact workspace
+\[
+\mathscr W(G)
+:=
+\Gamma(H|_G)
+=
+\ker D_G.
+\]
+
+\begin{definition}[Finite workspace cover]\label{def:workspace-cover}
+A finite family of subgraphs
+\[
+\mathcal U=\{G_\alpha\}_{\alpha\in A}
+\]
+is an \emph{edge-complete workspace cover} of \(G\) when
+\[
+V=\bigcup_{\alpha\in A}V_\alpha,
+\qquad
+E=\bigcup_{\alpha\in A}E_\alpha.
+\]
+Every edge in \(E_\alpha\) carries the transfer inherited from \(G\). For a
+nonempty finite index set
+\[
+I=\{\alpha_0,\ldots,\alpha_p\}\subseteq A,
+\]
+define the intersection subgraph
+\[
+G_I
+=
+G_{\alpha_0\cdots\alpha_p}
+:=
+\bigcap_{\alpha\in I}G_\alpha
+\]
+by intersecting both vertex and edge sets. Isolated vertices are retained.
+\end{definition}
+
+Covering only the vertices is insufficient. If an edge belongs to no chart,
+its transfer equation is absent from every local workspace and cannot be
+recovered by overlap agreement. Edge completeness is therefore the minimal
+cover assumption used below.
+
+If \(K\subseteq L\subseteq G\) are subgraphs, coordinate restriction gives
+\[
+\rho_K^L:\mathcal C_V(L)\longrightarrow\mathcal C_V(K).
+\]
+Because every edge equation on \(K\) is also an edge equation on \(L\),
+restriction maps exact sections to exact sections:
+\[
+r_K^L
+:=
+\rho_K^L|_{\mathscr W(L)}:
+\mathscr W(L)\longrightarrow\mathscr W(K).
+\]
+They obey
+\[
+r_L^L=I,
+\qquad
+r_J^K r_K^L=r_J^L
+\]
+whenever \(J\subseteq K\subseteq L\). Thus \(K\mapsto\mathscr W(K)\) is a
+contravariant system of local workspaces.
+
+\subtopic{42.2 The cover nerve and overlap interfaces}
+
+The nerve \(N(\mathcal U)\) has one vertex for each chart \(G_\alpha\) and a
+\(p\)-simplex
+\[
+[\alpha_0\cdots\alpha_p]
+\]
+whenever \(G_{\alpha_0\cdots\alpha_p}\) is nonempty. The nerve records which
+local workspaces can compare states directly. It does not replace the
+underlying interaction graph: \(G\) carries the internal transfer equations,
+while \(N(\mathcal U)\) carries overlap-consistency equations between already
+constructed local objects.
+
+For pairwise overlaps write
+\[
+\mathscr W_\alpha=\mathscr W(G_\alpha),
+\qquad
+\mathscr W_{\alpha\beta}=\mathscr W(G_{\alpha\beta}),
+\]
+and
+\[
+r_{\alpha\beta}^{\alpha}:
+\mathscr W_\alpha\to\mathscr W_{\alpha\beta},
+\qquad
+r_{\alpha\beta}^{\beta}:
+\mathscr W_\beta\to\mathscr W_{\alpha\beta}.
+\]
+The interface is therefore a cospan
+\[
+\mathscr W_\alpha
+\xrightarrow{\ r_{\alpha\beta}^{\alpha}\ }
+\mathscr W_{\alpha\beta}
+\xleftarrow{\ r_{\alpha\beta}^{\beta}\ }
+\mathscr W_\beta,
+\]
+not necessarily a direct transfer map from one complete local workspace to the
+other. Both charts are compared through the content they expose on their
+common domain.
+
+\subtopic{42.3 \v{C}ech cochains of local workspaces}
+
+For \(p\geq0\), define the finite cochain space
+\[
+\check C^p(\mathcal U;\mathscr W)
+=
+\bigoplus_{\alpha_0<\cdots<\alpha_p}
+\mathscr W(G_{\alpha_0\cdots\alpha_p}),
+\]
+where empty intersections contribute the zero space. The coboundary
+\[
+\delta^p:\check C^p\longrightarrow\check C^{p+1}
+\]
+is
+\[
+\boxed{
+(\delta^p s)_{\alpha_0\cdots\alpha_{p+1}}
+=
+\sum_{j=0}^{p+1}(-1)^j
+r_{\alpha_0\cdots\alpha_{p+1}}^%
+{\alpha_0\cdots\widehat{\alpha_j}\cdots\alpha_{p+1}}
+%
+s_{\alpha_0\cdots\widehat{\alpha_j}\cdots\alpha_{p+1}}.
+}
+\]
+The restriction identities imply
+\[
+\delta^{p+1}\delta^p=0.
+\]
+For a local family \(w=(w_\alpha)_\alpha\),
+\[
+\boxed{
+(\delta^0w)_{\alpha\beta}
+=
+r_{\alpha\beta}^{\beta}w_\beta
+-
+r_{\alpha\beta}^{\alpha}w_\alpha.
+}
+\]
+Thus \(\delta^0\) is the overlap-discrepancy operator at the level of exact
+local workspaces.
+
+\topic{43}{Compatibility and Gluing Obstructions}
+
+\subtopic{43.1 Direct overlap mismatch}
+
+A family \(w=(w_\alpha)_\alpha\) is exactly compatible when
+\[
+\delta^0w=0.
+\]
+Its direct mismatch is
+\[
+\boxed{
+\mathfrak m_{\mathcal U}(w)=\delta^0w.
+}
+\]
+After choosing inner products and positive overlap weights, the mismatch
+energy is
+\[
+\boxed{
+\mathcal E_{\mathrm{ov}}(w)
+=
+\|\delta^0w\|^2
+=
+\sum_{\alpha<\beta}
+\nu_{\alpha\beta}
+\left\|
+ r_{\alpha\beta}^{\beta}w_\beta
+-r_{\alpha\beta}^{\alpha}w_\alpha
+\right\|^2.
+}
+\]
+This is the appropriate obstruction when the full local states are already
+given. Such a family glues exactly if and only if its mismatch vector itself
+vanishes. No cohomological quotient is needed for that direct question.
+
+\subtopic{43.2 Relative-only and affine descent data}
+
+A different problem arises when only relative transition data are supplied.
+Let
+\[
+b=(b_{\alpha\beta})\in\check C^1(\mathcal U;\mathscr W)
+\]
+be a prescribed family of overlap offsets. The triple-overlap consistency
+condition is
+\[
+\delta^1b=0.
+\]
+One seeks local potentials \(q=(q_\alpha)\in\check C^0\) satisfying
+\[
+\delta^0q=b.
+\]
+Define
+\[
+\boxed{
+\check H^1(\mathcal U;\mathscr W)
+=
+\frac{\ker\delta^1}{\operatorname{im}\delta^0}.
+}
+\]
+Then the affine gluing problem is solvable precisely when
+\[
+\boxed{[b]=0\quad\text{in}\quad\check H^1(\mathcal U;\mathscr W).}
+\]
+A nonzero class means that all local transition statements can be mutually
+consistent on triple overlaps while still failing to arise from any family of
+local workspace states. This is a cover-level analogue of nontrivial holonomy.
+
+\subtopic{43.3 Harmonic representative of the obstruction}
+
+Equip the finite cochain spaces with Hilbert inner products and define the
+first \v{C}ech Laplacian
+\[
+\boxed{
+\Delta_1
+=
+\delta^0(\delta^0)^*
++
+(\delta^1)^*\delta^1.
+}
+\]
+Let
+\[
+\mathcal H^1_{\mathcal U}=\ker\Delta_1.
+\]
+
+\begin{proposition}[Harmonic gluing obstruction]\label{prop:harmonic-gluing-obstruction}
+For every cocycle \(b\in\ker\delta^1\), there is an orthogonal decomposition
+\[
+\boxed{
+b=\delta^0q^\dagger+h,
+\qquad
+h\in\mathcal H^1_{\mathcal U},
+}
+\]
+where \(q^\dagger=(\delta^0)^\dagger b\) is a least-squares potential. Moreover,
+\[
+\boxed{
+\inf_q\|b-\delta^0q\|
+=
+\|h\|
+=
+\|P_{\mathcal H^1_{\mathcal U}}b\|.
+}
+\]
+Hence \(b\) is exactly integrable if and only if its harmonic component
+vanishes.
+\end{proposition}
+
+\begin{proof}
+The finite-dimensional Hodge decomposition gives
+\[
+\check C^1
+=
+\operatorname{im}\delta^0
+\oplus
+\ker\Delta_1
+\oplus
+\operatorname{im}(\delta^1)^*.
+\]
+If \(b\in\ker\delta^1\), then \(b\) is orthogonal to
+\(\operatorname{im}(\delta^1)^*\). Its remaining two orthogonal components are
+therefore an exact part \(\delta^0q^\dagger\) and a harmonic part \(h\). The
+orthogonal projection theorem gives the least-squares identity.
+\end{proof}
+
+The scalar
+\[
+\omega_{\mathcal U}(b)
+:=
+\|P_{\mathcal H^1_{\mathcal U}}b\|
+\]
+is an irreducible overlap-frustration measure. Its vanishing is
+invariant under admissible invertible coordinate changes, although its numerical
+norm depends on the chosen metric. It cannot be removed by adding local
+potentials alone.
+
+\subtopic{43.4 Cycle example}
+
+Consider three charts arranged in a cycle, with one-dimensional overlap
+spaces and oriented offsets
+\[
+b_{12},\qquad b_{23},\qquad b_{31}.
+\]
+Local potentials would have to satisfy
+\[
+q_2-q_1=b_{12},
+\qquad
+q_3-q_2=b_{23},
+\qquad
+q_1-q_3=b_{31}.
+\]
+Adding the equations gives the necessary and sufficient condition
+\[
+\boxed{
+b_{12}+b_{23}+b_{31}=0.}
+\]
+With the standard edge norm, the harmonic obstruction has magnitude
+\[
+\boxed{
+\omega_{\mathcal U}(b)
+=
+\frac{|b_{12}+b_{23}+b_{31}|}{\sqrt3}.
+}
+\]
+Every pairwise relation may be individually meaningful while the complete
+cycle remains globally inconsistent.
+
+\topic{44}{Exact Gluing Theorem T8}
+
+Let
+\[
+R_{\mathcal U}:\mathscr W(G)
+\longrightarrow
+\check C^0(\mathcal U;\mathscr W)
+\]
+be the restriction map
+\[
+R_{\mathcal U}(w)
+=
+(w|_{G_\alpha})_{\alpha\in A}.
+\]
+
+\begin{theorem}[Exact workspace gluing]\label{thm:exact-workspace-gluing}
+For every finite edge-complete workspace cover \(\mathcal U\), the sequence
+\[
+\boxed{
+0
+\longrightarrow
+\mathscr W(G)
+\xrightarrow{\ R_{\mathcal U}\ }
+\check C^0(\mathcal U;\mathscr W)
+\xrightarrow{\ \delta^0\ }
+\check C^1(\mathcal U;\mathscr W)
+}
+\]
+is exact. Equivalently,
+\[
+\boxed{
+\mathscr W(G)
+\cong
+\ker\delta^0
+\cong
+\operatorname{Eq}
+\left(
+\prod_\alpha\mathscr W_\alpha
+\rightrightarrows
+\prod_{\alpha<\beta}\mathscr W_{\alpha\beta}
+\right).
+}
+\]
+Every pairwise compatible family of exact local workspace states therefore
+glues to a unique exact global workspace state.
+\end{theorem}
+
+\begin{proof}
+The cover contains every vertex, so \(R_{\mathcal U}\) is injective. A global
+section has identical restrictions on every overlap, hence
+\(\delta^0R_{\mathcal U}=0\).
+
+Conversely, let \(w=(w_\alpha)_\alpha\in\ker\delta^0\). For each vertex
+\(i\in V\), choose any chart \(G_\alpha\) containing \(i\) and set
+\[
+c_i=(w_\alpha)_i.
+\]
+If another chart \(G_\beta\) contains \(i\), then \(i\in G_{\alpha\beta}\)
+and overlap compatibility gives
+\((w_\alpha)_i=(w_\beta)_i\). Thus \(c_i\) is well defined.
+
+For every edge \(e:i\to j\), edge completeness provides a chart
+\(G_\alpha\) containing \(e\). Since \(w_\alpha\in\mathscr W(G_\alpha)\),
+\[
+c_j=(w_\alpha)_j=H_e(w_\alpha)_i=H_ec_i.
+\]
+Hence \(c=(c_i)\in\mathscr W(G)\), and by construction
+\(R_{\mathcal U}c=w\). Uniqueness follows because the charts cover all
+vertices.
+\end{proof}
+
+\begin{corollary}[Zeroth descent cohomology]\label{cor:zeroth-descent}
+For every finite edge-complete cover,
+\[
+\boxed{
+\mathscr W(G)
+\cong
+\check H^0(\mathcal U;\mathscr W)
+=
+\ker\delta^0.
+}
+\]
+In finite dimensions,
+\[
+\boxed{
+\dim\mathscr W(G)
+=
+\sum_{\alpha\in A}\dim\mathscr W_\alpha
+-
+\operatorname{rank}(\delta^0).
+}
+\]
+\end{corollary}
+
+The theorem does not require the nerve to be acyclic. Cycles in the cover are
+allowed; their effect is encoded in the rank of \(\delta^0\) and, for
+relative-only data, in \(\check H^1\). It also shows that the local-workspace
+assignment is a genuine sheaf on the finite subgraph cover used here rather
+than merely a presheaf.
+
+\subtopic{44.1 Local nontriviality does not imply global nontriviality}
+
+Let \(G\) be the directed triangle
+\[
+1\xrightarrow{\ a\ }2
+\xrightarrow{\ b\ }3
+\xrightarrow{\ c\ }1
+\]
+with one-dimensional vertex cores. Cover it by its three edge charts. Their
+local workspaces are all one-dimensional:
+\[
+\begin{aligned}
+\mathscr W_{12}&=\{(x,ax):x\in\mathbb R\},\\
+\mathscr W_{23}&=\{(y,by):y\in\mathbb R\},\\
+\mathscr W_{31}&=\{(z,cz):z\in\mathbb R\}.
+\end{aligned}
+\]
+Overlap agreement requires
+\[
+y=ax,
+\qquad
+z=by,
+\qquad
+x=cz.
+\]
+Therefore
+\[
+(1-abc)x=0,
+\]
+and
+\[
+\boxed{
+\dim\mathscr W(G)
+=
+\begin{cases}
+1,&abc=1,\\
+0,&abc\neq1.
+\end{cases}
+}
+\]
+The meta-level gluing obstruction is exactly the original cycle holonomy.
+Strong local workspaces can therefore coexist with a trivial global core.
+
+\topic{45}{Approximate Gluing and Meta-Workspaces}
+
+\subtopic{45.1 The cover-level transfer Laplacian}
+
+First assume each local state already lies in its exact local workspace. Define
+\[
+B_{\mathcal U}
+:=
+\delta^0:
+\check C^0(\mathcal U;\mathscr W)
+\longrightarrow
+\check C^1(\mathcal U;\mathscr W)
+\]
+and the meta-Laplacian
+\[
+\boxed{
+L_{\mathcal U}^{\mathrm{meta}}
+=
+B_{\mathcal U}^*B_{\mathcal U}.
+}
+\]
+By Theorem~\ref{thm:exact-workspace-gluing},
+\[
+\boxed{
+\ker L_{\mathcal U}^{\mathrm{meta}}
+=
+R_{\mathcal U}\mathscr W(G).
+}
+\]
+Thus the gluing problem is itself a workspace problem whose ``nodes'' are
+local workspaces and whose interfaces are overlaps.
+
+Let
+\[
+\gamma_{\mathcal U}^{\mathrm{meta}}
+=
+\lambda_{\min}^+
+\left(L_{\mathcal U}^{\mathrm{meta}}\right)
+\]
+be the first positive eigenvalue.
+
+\begin{proposition}[Approximate overlap gluing]\label{prop:approx-overlap-gluing}
+For every \(w\in\check C^0(\mathcal U;\mathscr W)\),
+\[
+\boxed{
+\operatorname{dist}
+\left(
+ w,
+ R_{\mathcal U}\mathscr W(G)
+\right)^2
+\leq
+\frac{\|B_{\mathcal U}w\|^2}
+{\gamma_{\mathcal U}^{\mathrm{meta}}}.
+}
+\]
+\end{proposition}
+
+\begin{proof}
+Decompose \(w\) into its component in \(\ker L_{\mathcal U}^{\mathrm{meta}}\)
+and its orthogonal complement. On the complement,
+\(L_{\mathcal U}^{\mathrm{meta}}\geq
+\gamma_{\mathcal U}^{\mathrm{meta}}I\). Therefore
+\[
+\|B_{\mathcal U}w\|^2
+=
+\langle w,L_{\mathcal U}^{\mathrm{meta}}w\rangle
+\geq
+\gamma_{\mathcal U}^{\mathrm{meta}}
+\operatorname{dist}
+\left(w,\ker L_{\mathcal U}^{\mathrm{meta}}\right)^2.
+\]
+\end{proof}
+
+The gap \(\gamma_{\mathcal U}^{\mathrm{meta}}\) measures how strongly the cover
+penalizes disagreement. A small overlap mismatch need not imply a nearby
+global workspace when this gap is itself very small.
+
+\subtopic{45.2 Simultaneous local and overlap error}
+
+Local candidates may also violate their internal transfer equations. Define
+the local-copy space
+\[
+\widehat{\mathcal C}_{\mathcal U}
+=
+\bigoplus_{\alpha\in A}\mathcal C_V(G_\alpha)
+\]
+and the block internal discrepancy
+\[
+\widehat D_{\mathcal U}
+=
+\bigoplus_{\alpha\in A}D_{G_\alpha}.
+\]
+For \(u=(u_\alpha)_\alpha\in\widehat{\mathcal C}_{\mathcal U}\), define the
+raw overlap synchronization operator
+\[
+(S_{\mathcal U}u)_{\alpha\beta}
+=
+\rho_{G_{\alpha\beta}}^{G_\beta}u_\beta
+-
+\rho_{G_{\alpha\beta}}^{G_\alpha}u_\alpha.
+\]
+For an overlap weight \(\lambda_{\mathrm{ov}}>0\), set
+\[
+\boxed{
+K_{\mathcal U}
+=
+\begin{pmatrix}
+\widehat D_{\mathcal U}\\[0.2em]
+\sqrt{\lambda_{\mathrm{ov}}}\,S_{\mathcal U}
+\end{pmatrix},
+\qquad
+L_{\mathcal U}^{\mathrm{tot}}
+=
+K_{\mathcal U}^*K_{\mathcal U}.
+}
+\]
+Its energy is
+\[
+\boxed{
+\begin{aligned}
+\mathcal E_{\mathcal U}^{\mathrm{tot}}(u)
+={}&
+\sum_\alpha\|D_{G_\alpha}u_\alpha\|^2\\
+&+
+\lambda_{\mathrm{ov}}
+\sum_{\alpha<\beta}
+\left\|
+\rho^{G_\beta}_{G_{\alpha\beta}}u_\beta
+-
+\rho^{G_\alpha}_{G_{\alpha\beta}}u_\alpha
+\right\|^2.
+\end{aligned}
+}
+\]
+
+Let
+\[
+J_{\mathcal U}:\mathcal C_V(G)\to\widehat{\mathcal C}_{\mathcal U},
+\qquad
+J_{\mathcal U}c=(c|_{G_\alpha})_\alpha,
+\]
+be the duplication map.
+
+\begin{theorem}[Total descent kernel]\label{thm:total-descent-kernel}
+For every finite edge-complete cover,
+\[
+\boxed{
+\ker K_{\mathcal U}
+=
+J_{\mathcal U}\mathscr W(G).
+}
+\]
+Consequently, if
+\[
+\gamma_{\mathcal U}^{\mathrm{tot}}
+=
+\lambda_{\min}^+
+\left(L_{\mathcal U}^{\mathrm{tot}}\right),
+\]
+then
+\[
+\boxed{
+\operatorname{dist}
+\left(
+ u,
+ J_{\mathcal U}\mathscr W(G)
+\right)^2
+\leq
+\frac{\mathcal E_{\mathcal U}^{\mathrm{tot}}(u)}
+{\gamma_{\mathcal U}^{\mathrm{tot}}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+If \(u=J_{\mathcal U}c\) for a global exact section, every local discrepancy
+and every overlap discrepancy vanishes. Conversely, if \(K_{\mathcal U}u=0\),
+then every \(u_\alpha\) is an exact local section and the family agrees on all
+overlaps. Theorem~\ref{thm:exact-workspace-gluing} gives a unique
+\(c\in\mathscr W(G)\) with \(u=J_{\mathcal U}c\). The distance estimate follows
+from the spectral lower bound on the orthogonal complement of the kernel.
+\end{proof}
+
+This theorem combines two distinct failure modes:
+\[
+\text{local incoherence}
+\qquad\text{and}\qquad
+\text{cross-chart disagreement}.
+\]
+Neither can be hidden by the other because they occupy separate blocks of
+\(K_{\mathcal U}\).
+
+\subtopic{45.3 Least-squares global assembly}
+
+Let
+\[
+m_i=|\{\alpha:i\in V_\alpha\}|
+\]
+be the multiplicity of vertex \(i\). Then
+\[
+J_{\mathcal U}^*J_{\mathcal U}=M_{\mathcal U},
+\qquad
+(M_{\mathcal U}c)_i=m_ic_i.
+\]
+The pseudoinverse performs coordinatewise averaging:
+\[
+\boxed{
+(J_{\mathcal U}^\dagger u)_i
+=
+\frac{1}{m_i}
+\sum_{\alpha:i\in V_\alpha}(u_\alpha)_i.
+}
+\]
+Let
+\[
+\widehat u
+=
+P_{\ker K_{\mathcal U}}u
+=
+J_{\mathcal U}\widehat c.
+\]
+Then
+\[
+\widehat c
+=
+J_{\mathcal U}^\dagger\widehat u
+\]
+and
+\[
+\boxed{
+\|u-J_{\mathcal U}\widehat c\|
+\leq
+\frac{\|K_{\mathcal U}u\|}
+{\sqrt{\gamma_{\mathcal U}^{\mathrm{tot}}}}.
+}
+\]
+If \(m_{\min}=\min_i m_i\), then
+\[
+\boxed{
+\left\|
+\widehat c-J_{\mathcal U}^\dagger u
+\right\|
+\leq
+\frac{\|K_{\mathcal U}u\|}
+{\sqrt{m_{\min}\gamma_{\mathcal U}^{\mathrm{tot}}}}.
+}
+\]
+The simple overlap average and the globally coherent least-squares assembly
+are close only when the total descent energy is small relative to the cover
+gap.
+
+\subtopic{45.4 A workspace of workspaces}
+
+Define the exact meta-workspace
+\[
+\boxed{
+\mathscr W_{\mathrm{meta}}(\mathcal U)
+:=
+\ker B_{\mathcal U}
+\subseteq
+\bigoplus_\alpha\mathscr W_\alpha.
+}
+\]
+Theorem~\ref{thm:exact-workspace-gluing} gives the canonical identification
+\[
+\boxed{
+\mathscr W_{\mathrm{meta}}(\mathcal U)
+\cong
+\mathscr W(G).
+}
+\]
+Thus exact formation of a workspace from local workspaces does not create an
+additional mysterious carrier. It gives a second presentation of the same
+global compatible-section object.
+
+Suppose local operations
+\[
+A_\alpha:\mathscr W_\alpha\to\mathscr W_\alpha
+\]
+and overlap operations
+\[
+A_{\alpha\beta}:\mathscr W_{\alpha\beta}\to
+\mathscr W_{\alpha\beta}
+\]
+satisfy
+\[
+r_{\alpha\beta}^{\alpha}A_\alpha
+=
+A_{\alpha\beta}r_{\alpha\beta}^{\alpha},
+\qquad
+r_{\alpha\beta}^{\beta}A_\beta
+=
+A_{\alpha\beta}r_{\alpha\beta}^{\beta}.
+\]
+Then, with \(A^0=\bigoplus_\alpha A_\alpha\) and
+\(A^1=\bigoplus_{\alpha<\beta}A_{\alpha\beta}\),
+\[
+B_{\mathcal U}A^0=A^1B_{\mathcal U}.
+\]
+Therefore
+\[
+A^0\ker B_{\mathcal U}\subseteq\ker B_{\mathcal U}.
+\]
+The operation-closure theorem from Part~III reappears at the meta level:
+operations on subworkspaces descend globally precisely when they agree on
+interfaces.
+
+\subtopic{45.5 Descent-faithful compression}
+
+A practical hierarchy rarely transmits each complete local workspace. Let
+\[
+Q^p:\check C^p(\mathcal U;\mathscr W)\to\overline C^p
+\]
+be compression maps into smaller local and overlap representations. Suppose
+there is a compressed coboundary \(\overline\delta^p\) such that
+\[
+\boxed{
+Q^{p+1}\delta^p
+=
+\overline\delta^p Q^p.
+}
+\]
+The maps \(Q^\bullet\) then form a cochain map.
+
+\begin{definition}[Descent-faithful compression]\label{def:descent-faithful}
+The compression is \emph{descent-faithful in degree zero} when the induced map
+\[
+\boxed{
+H^0(Q):
+\ker\delta^0
+\longrightarrow
+\ker\overline\delta^0
+}
+\]
+is an isomorphism.
+\end{definition}
+
+Injectivity prevents two distinct global workspace states from collapsing to
+the same compressed meta-state. Surjectivity prevents the compressed hierarchy
+from introducing spurious compatible states that have no full-resolution
+lift. Under this condition,
+\[
+\boxed{
+\ker\overline\delta^0
+\cong
+\mathscr W(G).
+}
+\]
+This is the exact criterion for a compressed workspace of workspaces to retain
+the global core.
+
+\subtopic{45.6 Structural and operational gluing are distinct}
+
+Exact or approximate overlap coherence does not by itself establish global
+predictive sufficiency. Let \(W_t\) denote a glued structural state and let
+\[
+Z_t^{\mathrm{loc}}
+=
+(Z_{\alpha,t})_{\alpha\in A}
+\]
+be local predictive summaries recovered from its chart restrictions.
+
+\begin{proposition}[Local-to-global predictive alignment]\label{prop:local-global-predictive}
+Assume \(W_t\) is measurable with respect to the complete history
+\(\mathbf H_t\), every \(Z_{\alpha,t}\) is a measurable function of
+\(W_t|_{G_\alpha}\), and
+\[
+I(Y_t^+;\mathbf H_t\mid Z_t^{\mathrm{loc}})
+\leq
+\varepsilon.
+\]
+Then
+\[
+\boxed{
+I(Y_t^+;\mathbf H_t\mid W_t)
+\leq
+\varepsilon.
+}
+\]
+In particular, exact sufficiency of the complete local-summary tuple implies
+exact sufficiency of the glued workspace.
+\end{proposition}
+
+\begin{proof}
+The tuple \(Z_t^{\mathrm{loc}}\) is a measurable function of \(W_t\), while
+\(W_t\) is itself a history statistic. Conditioning on the finer statistic
+cannot increase the residual information that the full history carries about
+the target. Equivalently, use the conditional-law characterization from
+Theorem~\ref{thm:predictive-state}.
+\end{proof}
+
+Causal gluing requires an additional interface gate: interventions described
+in two overlapping charts must induce matched outcome laws on the overlap. A
+structurally compatible family can fail this gate, just as structurally
+identical replacement systems can fail causal identity in Part~XII.
+
+\subtopic{45.7 Anti-centralization gate}
+
+The isomorphism
+\[
+\mathscr W_{\mathrm{meta}}(\mathcal U)\cong\mathscr W(G)
+\]
+is a compositional statement, not a relational-irreducibility statement. A
+single chart may still expose enough accessible information to reconstruct the
+whole meta-state. A claim that the hierarchy is genuinely distributed must
+therefore reuse the coalition gates from Parts~VII and XI. At the chart level,
+one may require, for example,
+\[
+\alpha_{\{\alpha\}}^{\mathrm{meta}}=0
+\quad\text{for every }\alpha,
+\qquad
+\alpha_A^{\mathrm{meta}}>0
+\quad\text{for some }|A|\geq2,
+\]
+or the predictive analogue
+\[
+k_\varepsilon^{\mathrm{meta}}\geq2,
+\qquad
+\Delta_{\mathrm{joint}}^{\mathrm{meta}}>0.
+\]
+Capacity-matched local-memory and chart-ablation controls are still required.
+Hierarchical notation cannot convert a centralized copy into a relational
+workspace.
+
+\topic{46}{Hierarchical Collapse Theorem T9}
+
+\subtopic{46.1 Finite cover hierarchies}
+
+A finite workspace hierarchy is a rooted tree \(\mathcal T\). Each node
+\(a\in\mathcal T\) carries a subgraph \(G_a\). The root \(r\) carries
+\[
+G_r=G.
+\]
+For every internal node \(a\), its children
+\[
+\operatorname{Ch}(a)
+\]
+form a finite edge-complete cover of \(G_a\). Leaves carry primitive local
+workspace spaces
+\[
+W_\ell=\mathscr W(G_\ell).
+\]
+For an internal node, define recursively
+\[
+\boxed{
+W_a
+=
+\ker
+\left(
+\delta_a^0:
+\bigoplus_{b\in\operatorname{Ch}(a)}W_b
+\longrightarrow
+\bigoplus_{b<c}W_{bc}
+\right),
+}
+\]
+where the overlap spaces and restrictions are inherited from the child cover.
+
+\begin{theorem}[Exact hierarchical collapse]\label{thm:hierarchical-collapse}
+For every finite workspace hierarchy as above, there is a canonical
+isomorphism
+\[
+\boxed{
+W_a\cong\mathscr W(G_a)
+}
+\]
+for every node \(a\). In particular,
+\[
+\boxed{
+W_r\cong\mathscr W(G).
+}
+\]
+Therefore recursively gluing local workspaces, using any other finite
+parenthesization built from edge-complete intermediate covers that retain all
+required overlap objects, and solving the flattened global transfer system all
+produce the same exact workspace up to canonical isomorphism.
+\end{theorem}
+
+\begin{proof}
+Proceed upward from the leaves. The claim holds at every leaf by definition.
+Assume it holds for all children of an internal node \(a\). Replacing each
+child space \(W_b\) by its canonical copy \(\mathscr W(G_b)\), the recursive
+definition of \(W_a\) is exactly the compatible-family kernel for the
+edge-complete child cover of \(G_a\). Theorem~\ref{thm:exact-workspace-gluing}
+therefore gives
+\[
+W_a\cong\mathscr W(G_a).
+\]
+Finite induction reaches the root.
+\end{proof}
+
+\subtopic{46.2 Flattening and limit interchange}
+
+Let \(L(\mathcal T)\) be the leaf set. Repeated edge completeness implies that
+the flattened family
+\[
+\mathcal U_{\mathrm{flat}}
+=
+\{G_\ell:\ell\in L(\mathcal T)\}
+\]
+is itself an edge-complete cover of \(G\). Let
+\[
+\delta_{\mathrm{flat}}^0
+\]
+be its overlap coboundary and define
+\[
+W_{\mathrm{flat}}
+=
+\ker\delta_{\mathrm{flat}}^0.
+\]
+Theorem~\ref{thm:exact-workspace-gluing} and
+Theorem~\ref{thm:hierarchical-collapse} give
+\[
+\boxed{
+W_r
+\cong
+W_{\mathrm{flat}}
+\cong
+\mathscr W(G).
+}
+\]
+Equivalently,
+\[
+\boxed{
+\operatorname{Lim}_{\mathcal T}^{\mathrm{rec}}
+\left(
+\{\mathscr W(G_\ell)\}_{\ell\in L(\mathcal T)}
+\right)
+\cong
+\operatorname{Eq}_{\mathcal U_{\mathrm{flat}}}
+\left(
+\{\mathscr W(G_\ell)\}_{\ell\in L(\mathcal T)}
+\right).
+}
+\]
+The notation on the left means recursive finite descent along the tree; the
+right side means one-shot equalization over the flattened leaf cover. In
+finite-dimensional vector spaces, both are kernels of the same complete family
+of local and overlap constraints, grouped in different orders. Hierarchical
+collapse is therefore a finite-limit interchange property, not a claim that
+intermediate levels are physically absent or operationally irrelevant.
+
+\subtopic{46.3 Approximate hierarchical collapse}
+
+At level \(r\), let \(K_r\) be the corresponding total descent operator,
+\[
+\gamma_r
+=
+\lambda_{\min}^+(K_r^*K_r),
+\qquad
+\|K_ru_r\|\leq\varepsilon_r.
+\]
+The nearest exact compatible state then differs from \(u_r\) by at most
+\[
+\frac{\varepsilon_r}{\sqrt{\gamma_r}}.
+\]
+Allow an additional implementation, compression, or causal-summary defect
+\(\zeta_r\), and define
+\[
+\delta_r
+=
+\frac{\varepsilon_r}{\sqrt{\gamma_r}}
++
+\zeta_r.
+\]
+
+\begin{theorem}[Approximate hierarchical collapse bound]\label{thm:approx-hierarchical-collapse}
+Let
+\[
+F_r:\mathcal H_r\to\mathcal H_{r+1},
+\qquad
+\widetilde F_r:\mathcal H_r\to\mathcal H_{r+1}
+\]
+be exact and implemented level-collapse maps for
+\(r=0,\ldots,R-1\). Let \(\mathcal R_r\subseteq\mathcal H_r\) contain the exact
+and implemented states reachable at level \(r\). Assume, on \(\mathcal R_r\),
+\[
+\|F_r(x)-F_r(y)\|
+\leq
+L_r\|x-y\|
+\]
+and
+\[
+\sup_{x\in\mathcal R_r}
+\|\widetilde F_r(x)-F_r(x)\|
+\leq
+\delta_r.
+\]
+Then
+\[
+\boxed{
+\begin{aligned}
+&\left\|
+\widetilde F_{R-1}\circ\cdots\circ\widetilde F_0(x)
+-
+F_{R-1}\circ\cdots\circ F_0(x)
+\right\|\\
+&\qquad\leq
+\sum_{r=0}^{R-1}
+\left(
+\prod_{s=r+1}^{R-1}L_s
+\right)
+\delta_r.
+\end{aligned}
+}
+\]
+In particular, if \(L_r\leq1\), then the total error is at most
+\[
+\sum_{r=0}^{R-1}\delta_r.
+\]
+If \(L_r\leq L<1\) and \(\delta_r\leq\delta\), then
+\[
+\boxed{
+\text{total error}
+\leq
+\frac{\delta(1-L^R)}{1-L}
+\leq
+\frac{\delta}{1-L}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+Let \(x_r\) and \(\widetilde x_r\) be the exact and implemented states after
+\(r\) levels. Then
+\[
+\begin{aligned}
+\|\widetilde x_{r+1}-x_{r+1}\|
+&\leq
+\|\widetilde F_r(\widetilde x_r)-F_r(\widetilde x_r)\|\\
+&\quad+
+\|F_r(\widetilde x_r)-F_r(x_r)\|\\
+&\leq
+\delta_r+L_r\|\widetilde x_r-x_r\|.
+\end{aligned}
+\]
+Iterating this recurrence gives the displayed product-sum estimate. The final
+two bounds follow by summing a finite or infinite geometric series.
+\end{proof}
+
+This theorem identifies three regimes:
+\[
+\begin{array}{ll}
+L_r<1
+&\text{hierarchical correction is contractive},\\
+L_r=1
+&\text{level errors accumulate at most additively},\\
+L_r>1
+&\text{deep hierarchies can amplify early mismatch}.
+\end{array}
+\]
+A deep hierarchy is therefore stable only when its level gaps remain separated
+and its assembly maps do not magnify small overlap errors faster than those
+errors are corrected.
+
+\subtopic{46.4 Causal-kernel accumulation}
+
+Let \(K_r\) and \(\widetilde K_r\) now denote exact and implemented Markov
+kernels at successive hierarchy levels, and suppose
+\[
+\sup_x
+\operatorname{TV}
+\left(
+\widetilde K_r(x,\cdot),
+K_r(x,\cdot)
+\right)
+\leq
+\zeta_r.
+\]
+Because Markov kernels contract total variation, a telescoping argument gives
+\[
+\boxed{
+\sup_x
+\operatorname{TV}
+\left(
+\widetilde K_0\cdots\widetilde K_{R-1}(x,\cdot),
+K_0\cdots K_{R-1}(x,\cdot)
+\right)
+\leq
+\sum_{r=0}^{R-1}\zeta_r.
+}
+\]
+Thus causal semantics can also be transported through a hierarchy, but only
+under an explicit kernel-level compatibility test. Structural gluing alone
+provides no such guarantee.
+
+\subtopic{46.5 Direct versus hierarchical computation}
+
+The exact theorem states
+\[
+\boxed{
+\text{recursive exact gluing}
+=
+\text{one-shot exact gluing}.
+}
+\]
+The approximate theorem instead supplies a measurable flattening defect:
+\[
+\boxed{
+\delta_{\mathrm{flat}}^{(R)}
+=
+\left\|
+\widetilde F_{R-1}\cdots\widetilde F_0(x)
+-
+F_{R-1}\cdots F_0(x)
+\right\|.
+}
+\]
+A hierarchy is empirically justified when it reduces computation,
+communication, or local model complexity while keeping
+\(\delta_{\mathrm{flat}}^{(R)}\), predictive risk, causal-kernel mismatch, and
+anti-centralization gates within declared tolerances. Hierarchy by itself is
+not evidence of emergence.
+
+\subtopic{46.6 Gluing and hierarchical synthesis}
+
+The exact and approximate constructions can be compressed as
+\[
+\boxed{
+\begin{aligned}
+\text{local transfer systems}
+&\xrightarrow{\ \ker D_\alpha\ }
+\text{local workspaces}\\
+&\xrightarrow{\ \ker\delta^0\ }
+\text{meta-workspace}\\
+&\xrightarrow{\ \text{finite recursive descent}\ }
+\text{global workspace}.
+\end{aligned}
+}
+\]
+At exact resolution, all finite parenthesizations are canonically equivalent.
+At approximate resolution, every level contributes a defect scaled by its
+spectral gap and by downstream amplification. Relative-only overlap data can
+carry a harmonic \(H^1\) obstruction even when every local chart is internally
+coherent. Operational and relational claims still require predictive, causal,
+coalition, and null-model gates in addition to structural descent.

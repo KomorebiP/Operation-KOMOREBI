@@ -1,0 +1,801 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{IV}{Approximate Workspaces}
+
+The exact theory asks whether local core states agree perfectly under every
+transfer. Approximate theory asks three more realistic questions:
+\begin{enumerate}
+\item how strongly a candidate state violates edgewise compatibility;
+\item whether a low-defect subspace is spectrally separated from incoherent
+ directions; and
+\item how that subspace changes when transfers, metrics, or operations are
+ perturbed.
+\end{enumerate}
+Throughout Parts~IV--V, set
+\[
+\mathcal C_V=\bigoplus_{i\in V}C_i,
+\qquad
+\mathcal C_E=\bigoplus_{e\in E}C_{t(e)},
+\]
+with their Hilbert direct-sum inner products, and retain strictly positive
+weights \(w_e\).
+
+\topic{11}{Transfer Discrepancy Operator}
+
+\begin{definition}[Transfer discrepancy]\label{def:transfer-discrepancy}
+The transfer discrepancy operator is
+\[
+D_H:\mathcal C_V\longrightarrow\mathcal C_E,
+\qquad
+(D_Hc)_e
+=
+\sqrt{w_e}\bigl(c_{t(e)}-H_ec_{s(e)}\bigr).
+\]
+Its squared norm is the coherence energy
+\[
+\boxed{
+\mathcal E_H(c)
+=
+\|D_Hc\|^2
+=
+\sum_{e\in E}w_e
+\left\|c_{t(e)}-H_ec_{s(e)}\right\|^2.
+}
+\]
+The transfer Laplacian is
+\[
+\boxed{L_H=D_H^*D_H.}
+\]
+\end{definition}
+
+The operator \(D_H\) is an incidence-type derivative twisted by the edge
+transfers. It compares a state already present at the target with the state
+predicted there by translation from the source. A direction can therefore
+have low energy even when its coordinates differ substantially across nodes,
+provided those coordinates differ exactly as the transfer maps prescribe.
+
+For \(z=(z_e)_{e\in E}\in\mathcal C_E\), the adjoint is
+\[
+(D_H^*z)_i
+=
+\sum_{e:t(e)=i}\sqrt{w_e}\,z_e
+-
+\sum_{e:s(e)=i}\sqrt{w_e}\,H_e^*z_e.
+\]
+Consequently,
+\[
+\boxed{
+\begin{aligned}
+(L_Hc)_i
+={}&
+\sum_{e:t(e)=i}w_e\bigl(c_i-H_ec_{s(e)}\bigr)\\
+&+
+\sum_{e:s(e)=i}w_eH_e^*
+\bigl(H_ec_i-c_{t(e)}\bigr).
+\end{aligned}
+}
+\]
+This formula makes the two contributions at a vertex explicit: incoming
+prediction error and adjoint-propagated outgoing error.
+
+\begin{proposition}[Positivity and variational identity]\label{prop:laplacian-positive}
+The transfer Laplacian is self-adjoint and positive semidefinite. For every
+\(c\in\mathcal C_V\),
+\[
+\langle c,L_Hc\rangle=\mathcal E_H(c)\geq0.
+\]
+\end{proposition}
+
+\begin{proof}
+Self-adjointness and positivity follow from \(L_H=D_H^*D_H\). The displayed
+identity is
+\[
+\langle c,D_H^*D_Hc\rangle
+=
+\langle D_Hc,D_Hc\rangle.
+\]
+\end{proof}
+
+\begin{remark}[Weight dependence]
+Replacing \(w_e\) by another positive family does not alter \(\ker D_H\), but
+it generally changes every positive eigenvalue and therefore changes the
+approximate geometry. Edge weights are part of the metric model, not part of
+the exact compatibility relation.
+\end{remark}
+
+\topic{12}{Exact Kernel Theorem}
+
+\begin{theorem}[Transfer-Laplacian kernel theorem]\label{thm:laplacian-kernel}
+For an arbitrary finite directed core diagram, without assuming invertibility,
+\[
+\boxed{
+\ker L_H=\ker D_H=\Gamma(H).
+}
+\]
+Thus the exact compatible sections are precisely the zero-energy modes of the
+transfer Laplacian.
+\end{theorem}
+
+\begin{proof}
+If \(D_Hc=0\), then \(L_Hc=D_H^*D_Hc=0\). Conversely, if \(L_Hc=0\), then
+\[
+0=\langle c,L_Hc\rangle=\|D_Hc\|^2,
+\]
+so \(D_Hc=0\). Finally, \(D_Hc=0\) if and only if
+\[
+c_{t(e)}=H_ec_{s(e)}
+\]
+for every edge, which is exactly the definition of \(\Gamma(H)\).
+\end{proof}
+
+\begin{corollary}[Finite rank computation]\label{cor:workspace-rank-D}
+Let
+\[
+n_C=\sum_{i\in V}\dim C_i.
+\]
+Then
+\[
+\boxed{
+\dim\Gamma(H)=n_C-\operatorname{rank}(D_H).
+}
+\]
+Hence the exact workspace dimension can be obtained by a single rank or
+singular-value computation, even when holonomy is unavailable because some
+transfers are noninvertible.
+\end{corollary}
+
+\subtopic{12.1 Relation to the holonomy computation}
+
+In the local-system regime, Theorems~\ref{thm:limit-holonomy} and
+\ref{thm:laplacian-kernel} give two equivalent constructions:
+\[
+\Gamma(H)
+\cong
+C_o^{\Hol_o}
+\qquad\text{and}\qquad
+\Gamma(H)=\ker L_H.
+\]
+The first reduces the problem to cycle invariants in a root fiber. The second
+works directly on all vertex coordinates and extends to noninvertible diagrams.
+The two computations therefore serve different practical regimes rather than
+competing definitions.
+
+\topic{13}{Approximate Structural Workspace}
+
+Let
+\[
+0\leq\lambda_1\leq\lambda_2\leq\cdots\leq\lambda_N,
+\qquad
+N=\dim\mathcal C_V,
+\]
+be the eigenvalues of \(L_H\), repeated with multiplicity, and let
+\(P_I(L_H)\) denote the spectral projector associated with an interval \(I\).
+
+\begin{definition}[Threshold workspace]\label{def:threshold-workspace}
+For \(\varepsilon\geq0\), define
+\[
+\boxed{
+\Gamma_\varepsilon(H)
+=
+\ran P_{[0,\varepsilon]}(L_H).
+}
+\]
+Its dimension is
+\[
+d_\varepsilon
+=
+\#\{k:\lambda_k\leq\varepsilon\}.
+\]
+When \(0<d_\varepsilon<N\), define the boundary gap
+\[
+\boxed{
+g_\varepsilon
+=
+\lambda_{d_\varepsilon+1}-\lambda_{d_\varepsilon}.
+}
+\]
+\end{definition}
+
+The threshold \(\varepsilon\) declares which discrepancy scale is treated as
+structurally negligible. The dimension \(d_\varepsilon\) alone is not a
+robust certificate: a cluster is stable only when it is separated by a
+positive boundary gap.
+
+An equivalent index-based description fixes \(d\) and writes
+\[
+W_d=\ran P_d,
+\qquad
+P_d=P_{\{\lambda_1,\ldots,\lambda_d\}}(L_H),
+\]
+with cluster gap
+\[
+g_d=\lambda_{d+1}-\lambda_d>0.
+\]
+The index-based form is convenient for perturbation theorems because the
+workspace rank is declared explicitly.
+
+\begin{proposition}[Min--max characterization]\label{prop:minmax}
+For \(1\leq k\leq N\),
+\[
+\lambda_k
+=
+\min_{\substack{S\subseteq\mathcal C_V\\\dim S=k}}
+\ \max_{\substack{c\in S\\\|c\|=1}}
+\mathcal E_H(c).
+\]
+Consequently, the span of the first \(k\) eigenvectors minimizes the worst-case
+coherence energy among all \(k\)-dimensional candidate subspaces.
+\end{proposition}
+
+\begin{proof}
+Expand every vector in an orthonormal eigenbasis of \(L_H\). The span of the
+first \(k\) eigenvectors has maximal Rayleigh quotient \(\lambda_k\). Every
+\(k\)-dimensional subspace intersects the orthogonal complement of the first
+\(k-1\) eigenvectors nontrivially, and any unit vector in that intersection has
+Rayleigh quotient at least \(\lambda_k\).
+\end{proof}
+
+\subtopic{13.1 Exact, soft, and spurious low modes}
+
+The spectrum supports three distinct interpretations:
+\[
+\begin{array}{rcl}
+\lambda_k=0
+&\Longleftrightarrow&
+\text{exact compatible direction},\\
+0<\lambda_k\ll g_d
+&\Longrightarrow&
+\text{approximately transported direction},\\
+\lambda_k\approx\lambda_{k+1}
+&\Longrightarrow&
+\text{rank selection is unstable at that boundary}.
+\end{array}
+\]
+A low eigenvalue can still be scientifically spurious if it arises from a
+poorly chosen weight, a nearly disconnected graph, or a noncausal encoding.
+The causal and null gates in later parts remain necessary.
+
+\topic{14}{Normalized Coherence Defect}
+
+For \(c\neq0\), define the Rayleigh defect
+\[
+\delta_{\mathrm{coh}}(c)
+=
+\frac{\mathcal E_H(c)}{\|c\|^2}.
+\]
+For a nonzero subspace \(W\subseteq\mathcal C_V\), define
+\[
+\delta_{\mathrm{coh}}(W)
+=
+\sup_{\substack{c\in W\\\|c\|=1}}
+\mathcal E_H(c).
+\]
+If \(W\) is \(L_H\)-invariant, then
+\[
+\delta_{\mathrm{coh}}(W)
+=
+\|L_H|_W\|.
+\]
+In particular,
+\[
+\delta_{\mathrm{coh}}(\Gamma_\varepsilon(H))
+\leq\varepsilon.
+\]
+
+\begin{theorem}[Coherence-to-core distance estimate]\label{thm:poincare-workspace}
+Let
+\[
+W_0=\Gamma(H)=\ker L_H,
+\qquad
+r=\dim W_0,
+\]
+and suppose \(r<N\). Set
+\[
+\gamma_H=\lambda_{r+1}>0.
+\]
+Then every \(c\in\mathcal C_V\) satisfies
+\[
+\boxed{
+\operatorname{dist}(c,W_0)^2
+\leq
+\frac{\mathcal E_H(c)}{\gamma_H}.
+}
+\]
+Moreover,
+\[
+\mathcal E_H(c)
+\leq
+\|L_H\|\operatorname{dist}(c,W_0)^2.
+\]
+\end{theorem}
+
+\begin{proof}
+Write \(c=P_0c+Q_0c\), where \(P_0\) projects onto \(W_0\) and
+\(Q_0=I-P_0\). Since \(L_HP_0=0\),
+\[
+\mathcal E_H(c)
+=
+\langle Q_0c,L_HQ_0c\rangle.
+\]
+The spectrum of \(L_H\) on \(W_0^\perp\) lies in
+\([\gamma_H,\|L_H\|]\). Hence
+\[
+\gamma_H\|Q_0c\|^2
+\leq
+\mathcal E_H(c)
+\leq
+\|L_H\|\|Q_0c\|^2.
+\]
+Finally, \(\|Q_0c\|=\operatorname{dist}(c,W_0)\).
+\end{proof}
+
+This estimate is the exact sense in which a spectral gap turns small edgewise
+disagreement into closeness to a genuinely compatible global section.
+
+\subtopic{14.1 Two-node consistency cycle}
+
+Let \(C_1=C_2=\mathbb R\), use unit weights, and take two directed transfers
+\[
+H_{12}=a,
+\qquad
+H_{21}=b.
+\]
+Then
+\[
+D_H
+=
+\begin{pmatrix}
+-a&1\\
+1&-b
+\end{pmatrix},
+\qquad
+L_H
+=
+\begin{pmatrix}
+a^2+1&-(a+b)\\
+-(a+b)&b^2+1
+\end{pmatrix}.
+\]
+Writing
+\[
+\tau=a^2+b^2+2,
+\]
+the eigenvalues are
+\[
+\lambda_\pm
+=
+\frac{1}{2}
+\left(
+\tau\pm\sqrt{\tau^2-4(ab-1)^2}
+\right),
+\]
+and
+\[
+\det L_H=(ab-1)^2.
+\]
+Thus a nonzero exact shared core exists precisely when
+\[
+ab=1,
+\]
+which is exactly the trivial-holonomy condition. Away from exact consistency,
+\[
+\lambda_-\lambda_+=(ab-1)^2.
+\]
+When \(|ab-1|\) is small while \(\lambda_+\) stays bounded away from zero, the
+soft workspace eigenvalue is quadratic in the cycle mismatch:
+\[
+\lambda_-
+=
+\frac{(ab-1)^2}{\lambda_+}.
+\]
+This example connects approximate spectral coherence directly to approximate
+holonomy closure.
+
+\topic{15}{Perturbation Stability Theorem}
+
+The central robustness question is whether a selected low-energy subspace
+persists when the estimated transfer maps change. The next lemma isolates the
+finite-dimensional spectral fact needed for the answer.
+
+\begin{lemma}[Separated spectral subspaces]\label{lem:separated-subspaces}
+Let \(A\) and \(B=A+E\) be self-adjoint operators. Let \(P\) be an
+\(A\)-spectral projector whose eigenvalues lie in \(( -\infty,a]\), and let
+\(\widetilde Q\) be a \(B\)-spectral projector whose eigenvalues lie in
+\([b,\infty)\), with \(b>a\). Then
+\[
+\|P\widetilde Q\|
+\leq
+\frac{\|E\|}{b-a}.
+\]
+\end{lemma}
+
+\begin{proof}
+On \(\ran P\) and \(\ran\widetilde Q\), set
+\[
+A_P=PAP|_{\ran P},
+\qquad
+B_Q=\widetilde QB\widetilde Q|_{\ran\widetilde Q}.
+\]
+The operator \(X=P\widetilde Q\) satisfies the Sylvester equation
+\[
+A_PX-XB_Q=-PE\widetilde Q.
+\]
+Let \(\mu=(a+b)/2\). Since
+\[
+\|e^{t(A_P-\mu I)}\|\leq e^{-(b-a)t/2},
+\qquad
+\|e^{-t(B_Q-\mu I)}\|\leq e^{-(b-a)t/2},
+\]
+the inverse Sylvester operator has the convergent integral representation
+\[
+X
+=
+\int_0^\infty
+ e^{t(A_P-\mu I)}
+ (PE\widetilde Q)
+ e^{-t(B_Q-\mu I)}\,\dd t.
+\]
+Taking norms and integrating gives the result.
+\end{proof}
+
+\begin{theorem}[Spectral workspace stability]\label{thm:spectral-stability}
+Let \(L\) and \(\widetilde L=L+E\) be self-adjoint positive semidefinite
+operators on the same \(N\)-dimensional space. Suppose
+\[
+\lambda_d(L)<\lambda_{d+1}(L),
+\qquad
+g_d=\lambda_{d+1}(L)-\lambda_d(L)>0,
+\]
+and
+\[
+\eta=\|E\|<\frac{g_d}{2}.
+\]
+Let \(P_d\) and \(\widetilde P_d\) project onto the first \(d\) eigenvectors
+of \(L\) and \(\widetilde L\), respectively. Then the rank-\(d\) cluster
+remains separated and
+\[
+\boxed{
+\|P_d-\widetilde P_d\|
+\leq
+\frac{\eta}{g_d-\eta}
+\leq
+\frac{2\eta}{g_d}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+The min--max characterization gives the eigenvalue perturbation bound
+\[
+|\lambda_k(\widetilde L)-\lambda_k(L)|\leq\eta.
+\]
+Hence
+\[
+\lambda_{d+1}(\widetilde L)-\lambda_d(L)
+\geq g_d-\eta
+\]
+and
+\[
+\lambda_{d+1}(L)-\lambda_d(\widetilde L)
+\geq g_d-\eta.
+\]
+Apply Lemma~\ref{lem:separated-subspaces} first to
+\(P_d(I-\widetilde P_d)\) and then, with the roles of \(L\) and
+\(\widetilde L\) exchanged, to \((I-P_d)\widetilde P_d\). Orthogonal
+projections of equal rank satisfy
+\[
+\|P_d-\widetilde P_d\|
+=
+\max\left\{
+\|P_d(I-\widetilde P_d)\|,
+\|(I-P_d)\widetilde P_d\|
+\right\}.
+\]
+This yields the first bound. The second follows from \(\eta<g_d/2\).
+\end{proof}
+
+\subtopic{15.1 From transfer-map error to Laplacian error}
+
+Suppose the edge maps are perturbed to
+\[
+\widetilde H_e=H_e+\Delta_e
+\]
+while the weights and vertex metrics remain fixed. Define
+\[
+\boxed{
+\delta_H^2
+=
+\max_{i\in V}
+\sum_{e:s(e)=i}w_e\|\Delta_e\|^2.
+}
+\]
+Let \(F=D_{\widetilde H}-D_H\). Then
+\[
+(Fc)_e=-\sqrt{w_e}\,\Delta_ec_{s(e)},
+\qquad
+\|F\|\leq\delta_H.
+\]
+Since
+\[
+L_{\widetilde H}-L_H
+=D_H^*F+F^*D_H+F^*F,
+\]
+we obtain
+\[
+\boxed{
+\|L_{\widetilde H}-L_H\|
+\leq
+2\|D_H\|\delta_H+\delta_H^2.
+}
+\]
+
+\begin{corollary}[Edgewise stability certificate]\label{cor:edge-stability}
+If
+\[
+\eta_H=2\|D_H\|\delta_H+\delta_H^2
+<\frac{g_d}{2},
+\]
+then
+\[
+\boxed{
+\|P_d(H)-P_d(\widetilde H)\|
+\leq
+\frac{\eta_H}{g_d-\eta_H}.
+}
+\]
+\end{corollary}
+
+This converts declared edge-map uncertainty into an explicit bound on the
+motion of the extracted workspace subspace.
+
+\subtopic{15.2 Approximate operation closure}
+
+Define the vertex and edge direct-sum representations
+\[
+\rho_V(a)=\bigoplus_{i\in V}\rho_i(a),
+\qquad
+\rho_E(a)=\bigoplus_{e\in E}\rho_{t(e)}(a).
+\]
+Lift the edgewise intertwining defects to
+\[
+(\mathfrak X_a c)_e
+=
+\sqrt{w_e}\,\Xi_e(a)c_{s(e)}.
+\]
+Then the exact commutator identity is
+\[
+\boxed{
+D_H\rho_V(a)-\rho_E(a)D_H=-\mathfrak X_a.
+}
+\]
+Furthermore,
+\[
+\|\mathfrak X_a\|
+\leq
+\beta(a),
+\qquad
+\beta(a)^2
+=
+\max_{i\in V}
+\sum_{e:s(e)=i}w_e\|\Xi_e(a)\|^2.
+\]
+
+\begin{theorem}[Approximate operation-closure theorem]\label{thm:approx-operation-closure}
+Let \(P_d\) project onto the first \(d\) eigenvectors of \(L_H\), set
+\[
+\lambda_d\leq\varepsilon,
+\qquad
+\mu=\lambda_{d+1}>0,
+\]
+and let \(Q_d=I-P_d\). Then every \(a\in\mathcal A\) satisfies
+\[
+\boxed{
+\|Q_d\rho_V(a)P_d\|
+\leq
+\frac{
+\|\rho_E(a)\|\sqrt{\varepsilon}+\beta(a)
+}{\sqrt{\mu}}.
+}
+\]
+\end{theorem}
+
+\begin{proof}
+For \(x\in\ran P_d\),
+\[
+\|D_Hx\|^2
+=\langle x,L_Hx\rangle
+\leq\varepsilon\|x\|^2.
+\]
+The commutator identity gives
+\[
+\|D_H\rho_V(a)x\|
+\leq
+\|\rho_E(a)\|\sqrt{\varepsilon}\|x\|
++
+\beta(a)\|x\|.
+\]
+Because \(P_d\) and \(Q_d\) reduce \(L_H\), the two energy components are
+orthogonal and
+\[
+\|D_HQ_dy\|\leq\|D_Hy\|.
+\]
+On \(\ran Q_d\), the spectrum of \(L_H\) is bounded below by \(\mu\), so
+\[
+\sqrt{\mu}\|Q_dy\|
+\leq
+\|D_HQ_dy\|.
+\]
+Apply these inequalities to \(y=\rho_V(a)x\), then take the supremum over unit
+\(x\in\ran P_d\).
+\end{proof}
+
+\begin{corollary}[Recovery of exact operation closure]
+If \(d=\dim\ker L_H\), \(\varepsilon=0\), and every edge intertwines \(a\)
+exactly, then
+\[
+Q_d\rho_V(a)P_d=0.
+\]
+Thus Theorem~\ref{thm:approx-operation-closure} reduces to the exact
+operation-closure result of Part~III.
+\end{corollary}
+
+\begin{corollary}[Closure under projector drift]\label{cor:closure-drift}
+Let \(\widetilde P_d\) be another rank-\(d\) orthogonal projector and set
+\[
+\delta_P=\|P_d-\widetilde P_d\|.
+\]
+Then
+\[
+\boxed{
+\|(I-\widetilde P_d)\rho_V(a)\widetilde P_d\|
+\leq
+\|Q_d\rho_V(a)P_d\|
++2\|\rho_V(a)\|\delta_P.
+}
+\]
+Combining this estimate with Theorem~\ref{thm:spectral-stability} controls
+operation leakage after noisy workspace extraction.
+\end{corollary}
+
+\begin{proof}
+Subtract \(Q_d\rho_V(a)P_d\) and use
+\[
+I-\widetilde P_d-Q_d=P_d-\widetilde P_d.
+\]
+The two resulting perturbation terms are each bounded by
+\(\|\rho_V(a)\|\delta_P\).
+\end{proof}
+
+\subtopic{15.3 Core--residual path accumulation}
+
+Let a path have vertices
+\[
+i_0\xrightarrow{e_1}i_1\xrightarrow{e_2}\cdots
+\xrightarrow{e_m}i_m.
+\]
+Write
+\[
+T_r=T_{e_r},
+\quad
+H_r=H_{e_r},
+\quad
+V_r=V_{e_r},
+\]
+and let
+\[
+\iota_i^C:C_i\hookrightarrow X_i,
+\qquad
+\iota_i^R:R_i\hookrightarrow X_i
+\]
+be the canonical inclusions. Empty products below are identities.
+
+\begin{theorem}[Pathwise core--residual Duhamel formula]\label{thm:residual-duhamel}
+The deviation of full path transport from pure core transport is exactly
+\[
+\boxed{
+\begin{aligned}
+&T_m\cdots T_1\iota_{i_0}^C
+-
+\iota_{i_m}^C H_m\cdots H_1\\
+&\qquad=
+\sum_{r=1}^{m}
+T_m\cdots T_{r+1}
+\iota_{i_r}^R V_r
+H_{r-1}\cdots H_1.
+\end{aligned}
+}
+\]
+Consequently,
+\[
+\boxed{
+\begin{aligned}
+\|Q_{i_m}T_m\cdots T_1P_{i_0}\|
+\leq
+\sum_{r=1}^{m}
+&\left(\prod_{\ell=r+1}^{m}\|T_\ell\|\right)
+\|V_r\|\\
+&\times
+\left(\prod_{\ell=1}^{r-1}\|H_\ell\|\right),
+\end{aligned}
+}
+\]
+and the same right-hand side bounds
+\[
+\|P_{i_m}T_m\cdots T_1P_{i_0}-H_m\cdots H_1\|.
+\]
+\end{theorem}
+
+\begin{proof}
+For every step,
+\[
+T_r\iota_{i_{r-1}}^C
+=
+\iota_{i_r}^CH_r+
+\iota_{i_r}^RV_r.
+\]
+Telescope the sequence
+\[
+T_m\cdots T_{r+1}\iota_{i_r}^C H_r\cdots H_1,
+\qquad
+r=0,1,\ldots,m.
+\]
+The difference between consecutive terms is exactly the \(r\)-th summand in
+the displayed formula. Projection onto \(R_{i_m}\) or \(C_{i_m}\), followed
+by submultiplicativity of the operator norm, gives the two bounds.
+\end{proof}
+
+\begin{corollary}[Uniform path bound]\label{cor:uniform-path-bound}
+If along the path
+\[
+\|T_r\|\leq\tau,
+\qquad
+\|H_r\|\leq h,
+\qquad
+\|V_r\|\leq\nu,
+\]
+then the leakage and core-transport defects are bounded by
+\[
+\boxed{
+\nu\sum_{r=1}^{m}\tau^{m-r}h^{r-1}
+=
+\begin{cases}
+\displaystyle
+\nu\frac{\tau^m-h^m}{\tau-h},&\tau\neq h,\\[1.1em]
+\displaystyle
+m\nu\tau^{m-1},&\tau=h.
+\end{cases}
+}
+\]
+In particular, if \(\tau\leq1\) and \(h\leq1\), the bound is at most
+\(m\nu\).
+\end{corollary}
+
+The linear factor \(m\) in the merely nonexpansive regime is important. Small
+single-edge leakage does not by itself justify arbitrarily long transfer
+chains. Long-horizon stability requires contraction, cancellation, error
+correction, or leakage that decreases with path length.
+
+\subtopic{15.4 Residual-mediated reentry}
+
+For two consecutive transfers,
+\[
+P_{i_2}T_2T_1P_{i_0}
+=
+H_2H_1+U_2V_1,
+\]
+\[
+Q_{i_2}T_2T_1P_{i_0}
+=
+V_2H_1+K_2V_1.
+\]
+Thus leakage out of the core is first order in the blocks \(V_r\), while an
+excursion that leaves and then returns to the core contains at least one
+\(V\)-block and one later \(U\)-block. For a fixed path length, if
+\[
+\|U_r\|,\|V_r\|=O(\delta)
+\]
+and the diagonal blocks remain bounded, the residual-mediated correction to
+pure core-to-core transport is \(O(\delta^2)\), whereas terminal residual
+leakage can be \(O(\delta)\). This distinction separates loss of core
+invariance from distortion caused by temporary excursions through local
+residual degrees of freedom.

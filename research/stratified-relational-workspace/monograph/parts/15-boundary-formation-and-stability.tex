@@ -1,0 +1,337 @@
+% This file is part of the modular source for Stratified Relational Workspace Theory.
+% !TeX root = ../Stratified_Relational_Workspace_Theory.tex
+\theorypart{XV}{Boundary Formation and Stability}
+
+\topic{50}{Candidate Workspace Boundaries}
+
+A boundary is not merely a subset of physical components. It is a subset
+relative to a declared node decomposition, prediction target, intervention
+family, environment distribution, and time scale.
+
+\begin{definition}[Boundary problem]\label{def:boundary-problem}
+A boundary problem is a tuple
+\[
+\mathfrak B
+=
+\left(
+V,
+\mathfrak S,
+\tau,
+\mathcal Y,
+\mathcal I,
+\Pi,
+\mathcal G_B
+\right),
+\]
+where \(\mathfrak S\subseteq2^V\) is the admissible candidate family,
+\(\tau\) is the temporal scale, \(\mathcal Y\) is the operational target,
+\(\mathcal I\) is the feasible intervention family, \(\Pi\) is the
+environment distribution, and \(\mathcal G_B\) is a symmetry group under
+which boundaries are considered equivalent.
+\end{definition}
+
+Unless the application requires otherwise, the candidate family excludes
+\[
+\varnothing,
+\qquad
+V,
+\qquad
+\{i\}\ \text{for }i\in V.
+\]
+This anti-triviality rule prevents the empty set, the entire realization, or a
+single centralized controller from winning solely through a degenerate score.
+
+\subtopic{50.1 Observational recurrence, dependence, and outward influence}
+
+For \(S\in\mathfrak S\), define
+\[
+\Ret_\tau(S)
+=
+I\!\left(
+X_S(t+\tau);X_S(t)
+\mid X_{\bar S}(t),E_t
+\right),
+\]
+\[
+\Dep_\tau(S)
+=
+I\!\left(
+X_S(t+\tau);X_{\bar S}(t)
+\mid X_S(t),E_t
+\right),
+\]
+\[
+\Out_\tau(S)
+=
+I\!\left(
+X_{\bar S}(t+\tau);X_S(t)
+\mid X_{\bar S}(t),E_t
+\right).
+\]
+These quantities are observational. They can be nonzero because of common
+causes, selection, or feedback paths and therefore cannot alone establish a
+causal boundary.
+
+\subtopic{50.2 Causal boundary terms}
+
+Let \(\iota_{S,x}\) be a feasible intervention that changes the internal
+workspace coordinate of \(S\) to \(x\) while matching background variables and
+intervention cost. Define outward causal efficacy
+\[
+\boxed{
+\COut_\tau(S)
+=
+\mathbb E_{x,x'\sim\nu_S}
+D\!\left(
+\mathcal L^{\iota_{S,x}}
+(X_{\bar S}(t+\tau)),
+\mathcal L^{\iota_{S,x'}}
+(X_{\bar S}(t+\tau))
+\right).
+}
+\]
+Define inward causal dependence analogously by intervening on \(\bar S\) and
+measuring the future law of \(X_S\):
+\[
+\boxed{
+\CIn_\tau(S)
+=
+\mathbb E_{u,u'\sim\nu_{\bar S}}
+D\!\left(
+\mathcal L^{\iota_{\bar S,u}}
+(X_S(t+\tau)),
+\mathcal L^{\iota_{\bar S,u'}}
+(X_S(t+\tau))
+\right).
+}
+\]
+Neither term should be minimized to zero in general. A useful workspace may
+receive substantial external input. The boundary objective must instead
+express the intended balance between internal recurrence, external dependence,
+and outward efficacy.
+
+\subtopic{50.3 Structural and anti-centralization gates}
+
+For the induced subsystem on \(S\), define
+\[
+\mathsf{Coh}(S)
+=
+\operatorname{tr}
+\left(
+P_{S,d}L_SP_{S,d}
+\right),
+\]
+where \(P_{S,d}\) projects onto the selected low-energy workspace modes. Let
+\[
+\mathsf{Cut}(S)
+=
+\sum_{e:s(e)\in S,\ t(e)\notin S}w_e
++
+\sum_{e:s(e)\notin S,\ t(e)\in S}w_e.
+\]
+Let \(k_\varepsilon(S)\) be the minimal sufficient coalition size inside the
+candidate subsystem. A candidate is admissible only if
+\[
+\operatorname{SRW}_{\Theta_S}(W_S)=1,
+\qquad
+k_\varepsilon(S)\geq2,
+\]
+unless the claim explicitly concerns a centralized workspace.
+
+\topic{51}{Boundary Objective, Recovery, and Persistence}
+
+A general score is
+\[
+\boxed{
+\begin{aligned}
+\mathcal B_t(S)
+={}&
+ a_R\Ret_\tau(S)
++a_O\Out_\tau(S)
++a_C\COut_\tau(S)\\
+&-a_D\Dep_\tau(S)
+-a_I\CIn_\tau(S)
+-a_L\mathsf{Coh}(S)\\
+&-a_K\mathsf{Cut}(S)
+-a_Z\mathsf{Size}(S)
+-a_T\Instability_t(S).
+\end{aligned}
+}
+\]
+The coefficients and all normalizations are part of the boundary problem. No
+single choice is universal. The selected boundary is
+\[
+\widehat S_t
+\in
+\argmax_{S\in\mathfrak S_{\mathrm{pass}}}
+\widehat{\mathcal B}_t(S),
+\]
+where \(\mathfrak S_{\mathrm{pass}}\) contains only candidates that satisfy the
+required workspace and anti-centralization gates.
+
+\subtopic{51.1 Boundary equivalence and identifiability}
+
+If a symmetry \(g\in\mathcal G_B\) leaves the full observational and
+interventional law invariant, \(S\) and \(gS\) cannot be distinguished by the
+declared experiment. The identifiable boundary is then the orbit
+\[
+[S]_{\mathcal G_B}
+=
+\{gS:g\in\mathcal G_B\}.
+\]
+A unique subset should not be claimed when only an equivalence class is
+identifiable.
+
+\subtopic{51.2 Stable boundary recovery \(T_{17}\) }
+
+\begin{theorem}[Held-out boundary recovery]\label{thm:heldout-boundary-recovery}
+Let \(\mathfrak S_{\mathrm{pass}}\) be finite and let
+\[
+S_t^*
+=
+\argmax_{S\in\mathfrak S_{\mathrm{pass}}}
+\mathcal B_t(S)
+\]
+be unique. Define the population margin
+\[
+\Delta_t^B
+=
+\mathcal B_t(S_t^*)
+-
+\max_{S\neq S_t^*}\mathcal B_t(S)>0.
+\]
+If
+\[
+\sup_{S\in\mathfrak S_{\mathrm{pass}}}
+\left|
+\widehat{\mathcal B}_t(S)-\mathcal B_t(S)
+\right|
+\leq\varepsilon_t,
+\]
+then every empirical maximizer \(\widehat S_t\) satisfies
+\[
+\boxed{
+\mathcal B_t(S_t^*)-
+\mathcal B_t(\widehat S_t)
+\leq2\varepsilon_t.
+}
+\]
+If \(2\varepsilon_t<\Delta_t^B\), then
+\[
+\boxed{\widehat S_t=S_t^*.}
+\]
+\end{theorem}
+
+\begin{proof}
+Apply Theorem~\ref{thm:uniform-structure-selection} to
+\(J(S)=-\mathcal B_t(S)\).
+\end{proof}
+
+The theorem converts uncertainty in mutual-information estimation, causal
+interventions, structural scores, and stability penalties into an explicit
+boundary-identification condition. It also exposes when the data are
+insufficient: a small margin makes the boundary intrinsically fragile.
+
+\subtopic{51.3 Temporal boundary stability}
+
+\begin{theorem}[Boundary persistence under score drift]
+\label{thm:boundary-drift-stability}
+Assume \(S_t^*\) is the unique maximizer of \(\mathcal B_t\) with margin
+\(\Delta_t^B\), and suppose
+\[
+\sup_{S\in\mathfrak S_{\mathrm{pass}}}
+|\mathcal B_{t+1}(S)-\mathcal B_t(S)|
+\leq\delta_t.
+\]
+If
+\[
+2\delta_t<\Delta_t^B,
+\]
+then
+\[
+\boxed{S_{t+1}^*=S_t^*.}
+\]
+More generally,
+\[
+\mathcal B_{t+1}(S_{t+1}^*)
+-
+\mathcal B_{t+1}(S_t^*)
+\leq2\delta_t.
+\]
+\end{theorem}
+
+\begin{proof}
+For every competitor \(S\neq S_t^*\),
+\[
+\begin{aligned}
+\mathcal B_{t+1}(S_t^*)-
+\mathcal B_{t+1}(S)
+&\geq
+\mathcal B_t(S_t^*)-
+\mathcal B_t(S)-2\delta_t\\
+&\geq
+\Delta_t^B-2\delta_t>0.
+\end{aligned}
+\]
+Hence the maximizer is unchanged. The approximate bound follows by comparing
+both time-indexed scores at their respective maximizers.
+\end{proof}
+
+If the score depends on a parameter \(\vartheta_t\) and satisfies
+\[
+\sup_S
+|\mathcal B_{\vartheta}(S)-\mathcal B_{\vartheta'}(S)|
+\leq
+L_Bd(\vartheta,\vartheta'),
+\]
+then the sufficient stability condition becomes
+\[
+2L_Bd(\vartheta_t,\vartheta_{t+1})
+<
+\Delta_t^B.
+\]
+
+\subtopic{51.4 Analyst-discovered, system-instantiated, and self-maintained boundaries}
+
+Three claims must remain separate.
+
+\begin{description}[leftmargin=2.1em,style=nextline]
+\item[Analyst-discovered boundary.]
+An external procedure fits \(\widehat S\) after observing the system. The
+system need not represent or use that boundary.
+
+\item[System-instantiated boundary.]
+The system contains a channel, mask, or routing variable causally equivalent to
+\(\widehat S\), and interventions on that variable alter downstream operation.
+
+\item[Self-maintained boundary.]
+The system detects degradation of its boundary certificate and takes actions
+that restore membership, transfer, or reconstruction properties.
+\end{description}
+
+Only the second and third claims concern a boundary realized within the
+system. A post hoc partition that predicts behavior well is not by itself a
+self-discovered boundary.
+
+\subtopic{51.5 Boundary formation certificate}
+
+A boundary \(\widehat S\) is certified as endogenously formed only if:
+\begin{enumerate}
+\item the membership mask was not directly encoded in \(\Sigma_B\) or
+ \(\Sigma_Y\);
+\item \(e_B^{\mathrm{MDL}}\) and \(e_B^{\mathrm{causal}}\) exceed declared
+ thresholds;
+\item held-out recovery satisfies Theorem~\ref{thm:heldout-boundary-recovery};
+\item the boundary remains stable under admissible environment drift or its
+ changes are predicted by score-margin closure;
+\item matched history-shuffle and label-leakage controls fail to reproduce
+ the result, as do full-system, empty-set, singleton, and centralized
+ boundary nulls;
+\item the induced subsystem satisfies its workspace certificate; and
+\item a system-instantiation intervention demonstrates that the boundary is
+ used by the system rather than only by the analyst.
+\end{enumerate}
+
+The results below establish the statistical and deterministic stability components. They
+does not prove that an arbitrary adaptive system will spontaneously learn such
+a boundary.
